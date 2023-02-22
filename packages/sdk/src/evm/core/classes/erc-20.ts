@@ -1,10 +1,11 @@
-import { NetworkInput, TransactionResult } from "..";
+import { NetworkInput } from "..";
 import { AmountSchema } from "../../../core/schema/shared";
 import { assertEnabled, detectContractFeature } from "../../common";
 import {
   fetchCurrencyMetadata,
   fetchCurrencyValue,
 } from "../../common/currency";
+import { buildTransactionFunction } from "../../common/transactions";
 import {
   FEATURE_TOKEN,
   FEATURE_TOKEN_MINTABLE,
@@ -27,6 +28,7 @@ import { Erc20Burnable } from "./erc-20-burnable";
 import { Erc20Droppable } from "./erc-20-droppable";
 import { Erc20Mintable } from "./erc-20-mintable";
 import { Erc20SignatureMintable } from "./erc-20-signature-mintable";
+import { Transaction } from "./transactions";
 import type {
   TokenERC20,
   DropERC20,
@@ -231,17 +233,13 @@ export class Erc20<
    * ```
    * @twfeature ERC20
    */
-  public async transfer(
-    to: string,
-    amount: Amount,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("transfer", [
-        to,
-        await this.normalizeAmount(amount),
-      ]),
-    };
-  }
+  transfer = buildTransactionFunction(async (to: string, amount: Amount) => {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "transfer",
+      args: [to, await this.normalizeAmount(amount)],
+    });
+  });
 
   /**
    * Transfer Tokens From Address
@@ -261,19 +259,15 @@ export class Erc20<
    * ```
    * @twfeature ERC20
    */
-  public async transferFrom(
-    from: string,
-    to: string,
-    amount: Amount,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("transferFrom", [
-        from,
-        to,
-        await this.normalizeAmount(amount),
-      ]),
-    };
-  }
+  transferFrom = buildTransactionFunction(
+    async (from: string, to: string, amount: Amount) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "transferFrom",
+        args: [from, to, await this.normalizeAmount(amount)],
+      });
+    },
+  );
 
   /**
    * Allows the specified `spender` wallet to transfer the given `amount` of tokens to another wallet
@@ -288,17 +282,15 @@ export class Erc20<
    * ```
    * @twfeature ERC20
    */
-  public async setAllowance(
-    spender: string,
-    amount: Amount,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("approve", [
-        spender,
-        await this.normalizeAmount(amount),
-      ]),
-    };
-  }
+  setAllowance = buildTransactionFunction(
+    async (spender: string, amount: Amount) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "approve",
+        args: [spender, await this.normalizeAmount(amount)],
+      });
+    },
+  );
 
   /**
    * Transfer Tokens To Many Wallets
@@ -322,7 +314,7 @@ export class Erc20<
    * await contract.erc20.transferBatch(data);
    * ```
    */
-  public async transferBatch(args: TokenMintInput[]) {
+  transferBatch = buildTransactionFunction(async (args: TokenMintInput[]) => {
     const encoded = await Promise.all(
       args.map(async (arg) => {
         const amountWithDecimals = await this.normalizeAmount(arg.amount);
@@ -332,8 +324,12 @@ export class Erc20<
         );
       }),
     );
-    await this.contractWrapper.multiCall(encoded);
-  }
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "multicall",
+      args: [encoded],
+    });
+  });
 
   ////// ERC20 Mintable Extension //////
 
@@ -349,9 +345,12 @@ export class Erc20<
    * ```
    * @twfeature ERC20Mintable
    */
-  public async mint(amount: Amount): Promise<TransactionResult> {
-    return this.mintTo(await this.contractWrapper.getSignerAddress(), amount);
-  }
+  mint = buildTransactionFunction(async (amount: Amount) => {
+    return this.mintTo.prepare(
+      await this.contractWrapper.getSignerAddress(),
+      amount,
+    );
+  });
 
   /**
    * Mint Tokens
@@ -366,15 +365,14 @@ export class Erc20<
    * ```
    * @twfeature ERC20Mintable
    */
-  public async mintTo(
-    receiver: string,
-    amount: Amount,
-  ): Promise<TransactionResult> {
-    return assertEnabled(this.mintable, FEATURE_TOKEN_MINTABLE).to(
-      receiver,
-      amount,
-    );
-  }
+  mintTo = buildTransactionFunction(
+    async (receiver: string, amount: Amount) => {
+      return assertEnabled(this.mintable, FEATURE_TOKEN_MINTABLE).to.prepare(
+        receiver,
+        amount,
+      );
+    },
+  );
 
   /**
    * Construct a mint transaction without executing it.
@@ -382,7 +380,10 @@ export class Erc20<
    * @param receiver - Address you want to send the token to
    * @param amount - The amount of tokens you want to mint
    */
-  public async getMintTransaction(receiver: string, amount: Amount) {
+  public async getMintTransaction(
+    receiver: string,
+    amount: Amount,
+  ): Promise<Transaction> {
     return assertEnabled(
       this.mintable,
       FEATURE_TOKEN_MINTABLE,
@@ -414,11 +415,12 @@ export class Erc20<
    * ```
    * @twfeature ERC20BatchMintable
    */
-  public async mintBatchTo(args: TokenMintInput[]): Promise<TransactionResult> {
-    return assertEnabled(this.mintable?.batch, FEATURE_TOKEN_BATCH_MINTABLE).to(
-      args,
-    );
-  }
+  mintBatchTo = buildTransactionFunction(async (args: TokenMintInput[]) => {
+    return assertEnabled(
+      this.mintable?.batch,
+      FEATURE_TOKEN_BATCH_MINTABLE,
+    ).to.prepare(args);
+  });
 
   ////// ERC20 Burnable Extension //////
 
@@ -436,9 +438,11 @@ export class Erc20<
    * ```
    * @twfeature ERC20Burnable
    */
-  public async burn(amount: Amount): Promise<TransactionResult> {
-    return assertEnabled(this.burnable, FEATURE_TOKEN_BURNABLE).tokens(amount);
-  }
+  burn = buildTransactionFunction(async (amount: Amount) => {
+    return assertEnabled(this.burnable, FEATURE_TOKEN_BURNABLE).tokens.prepare(
+      amount,
+    );
+  });
 
   /**
    * Burn Tokens
@@ -457,15 +461,14 @@ export class Erc20<
    * ```
    * @twfeature ERC20Burnable
    */
-  public async burnFrom(
-    holder: string,
-    amount: Amount,
-  ): Promise<TransactionResult> {
-    return assertEnabled(this.burnable, FEATURE_TOKEN_BURNABLE).from(
-      holder,
-      amount,
-    );
-  }
+  burnFrom = buildTransactionFunction(
+    async (holder: string, amount: Amount) => {
+      return assertEnabled(this.burnable, FEATURE_TOKEN_BURNABLE).from.prepare(
+        holder,
+        amount,
+      );
+    },
+  );
 
   ////// ERC20 Claimable Extension //////
 
@@ -490,16 +493,15 @@ export class Erc20<
    * @returns - The transaction receipt
    * @twfeature ERC20ClaimableWithConditions
    */
-  public async claim(
-    amount: Amount,
-    options?: ClaimOptions,
-  ): Promise<TransactionResult> {
-    return this.claimTo(
-      await this.contractWrapper.getSignerAddress(),
-      amount,
-      options,
-    );
-  }
+  claim = buildTransactionFunction(
+    async (amount: Amount, options?: ClaimOptions) => {
+      return this.claimTo.prepare(
+        await this.contractWrapper.getSignerAddress(),
+        amount,
+        options,
+      );
+    },
+  );
 
   /**
    * Claim a certain amount of tokens to a specific Wallet
@@ -522,16 +524,18 @@ export class Erc20<
    * @returns - The transaction receipt
    * @twfeature ERC20ClaimableWithConditions
    */
-  public async claimTo(
-    destinationAddress: string,
-    amount: Amount,
-    options?: ClaimOptions,
-  ): Promise<TransactionResult> {
-    return assertEnabled(
-      this.droppable?.claim,
-      FEATURE_TOKEN_CLAIM_CONDITIONS_V2,
-    ).to(destinationAddress, amount, options);
-  }
+  claimTo = buildTransactionFunction(
+    async (
+      destinationAddress: string,
+      amount: Amount,
+      options?: ClaimOptions,
+    ) => {
+      return assertEnabled(
+        this.droppable?.claim,
+        FEATURE_TOKEN_CLAIM_CONDITIONS_V2,
+      ).to.prepare(destinationAddress, amount, options);
+    },
+  );
 
   /**
    * Configure claim conditions
