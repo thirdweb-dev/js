@@ -1,7 +1,7 @@
 import type { ContractType } from "@thirdweb-dev/sdk/evm";
 
 export type ContractId = ContractType | string;
-export type ContractCellContext = "deploy" | "create_release";
+export type ContractCellContext = "deploy" | "publish";
 
 export interface DeployableContractContractCellProps {
   cell: {

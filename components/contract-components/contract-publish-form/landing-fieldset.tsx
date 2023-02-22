@@ -1,4 +1,4 @@
-import { MarkdownRenderer } from "../released-contract/markdown-renderer";
+import { MarkdownRenderer } from "../published-contract/markdown-renderer";
 import {
   Box,
   Flex,
@@ -93,7 +93,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
           <Link
             color="blue.500"
             isExternal
-            href="https://portal.thirdweb.com/release"
+            href="https://portal.thirdweb.com/publish"
           >
             Learn more
           </Link>
@@ -216,7 +216,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
                 Version
               </FormLabel>
               {latestVersion && (
-                <Text size="body.md">latest release: {latestVersion}</Text>
+                <Text size="body.md">latest version: {latestVersion}</Text>
               )}
             </Flex>
             <Input
@@ -321,7 +321,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
         </Heading>
         <Text size="body.md" mb={4}>
           Not sure which contract type to choose?{" "}
-          <Link href="https://portal.thirdweb.com/release" color="primary.600">
+          <Link href="https://portal.thirdweb.com/publish" color="primary.600">
             Learn more
           </Link>
           .

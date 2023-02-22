@@ -6,29 +6,29 @@ import {
   ensQuery,
   fetchAllVersions,
   fetchContractPublishMetadataFromURI,
-  fetchReleasedContractInfo,
-  releaserProfileQuery,
+  fetchPublishedContractInfo,
+  publisherProfileQuery,
 } from "components/contract-components/hooks";
 import {
-  ReleaseWithVersionPage,
-  ReleaseWithVersionPageProps,
-} from "components/pages/release";
+  PublishWithVersionPage,
+  PublishWithVersionPageProps,
+} from "components/pages/publish";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
-import { getAllExploreReleases } from "data/explore";
+import { getAllExplorePublishedContracts } from "data/explore";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getEVMThirdwebSDK } from "lib/sdk";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "utils/types";
 
-type ReleasePageProps = {
+type PublishPageProps = {
   dehydratedState: DehydratedState;
-} & ReleaseWithVersionPageProps;
+} & PublishWithVersionPageProps;
 
-const ReleasePage: ThirdwebNextPage = (props: ReleasePageProps) => {
+const PublishPage: ThirdwebNextPage = (props: PublishPageProps) => {
   return (
     <PublisherSDKContext>
-      <ReleaseWithVersionPage
+      <PublishWithVersionPage
         author={props.author}
         contractName={props.contractName}
         version={props.version}
@@ -37,9 +37,9 @@ const ReleasePage: ThirdwebNextPage = (props: ReleasePageProps) => {
   );
 };
 
-ReleasePage.pageId = PageId.DeployedProgram;
+PublishPage.pageId = PageId.DeployedProgram;
 
-ReleasePage.getLayout = (page, props: ReleasePageProps) => {
+PublishPage.getLayout = (page, props: PublishPageProps) => {
   return (
     <AppLayout layout={undefined} dehydratedState={props.dehydratedState}>
       {page}
@@ -47,7 +47,7 @@ ReleasePage.getLayout = (page, props: ReleasePageProps) => {
   );
 };
 
-ReleasePage.fallback = (
+PublishPage.fallback = (
   <AppLayout layout={undefined}>
     <Flex h="100%" justifyContent="center" alignItems="center">
       <Spinner size="xl" />
@@ -55,9 +55,9 @@ ReleasePage.fallback = (
   </AppLayout>
 );
 
-export default ReleasePage;
+export default PublishPage;
 
-export const getStaticProps: GetStaticProps<ReleasePageProps> = async (ctx) => {
+export const getStaticProps: GetStaticProps<PublishPageProps> = async (ctx) => {
   const paths = ctx.params?.paths as string[];
   const [authorAddress, contractName, version = ""] = paths;
 
@@ -100,7 +100,7 @@ export const getStaticProps: GetStaticProps<ReleasePageProps> = async (ctx) => {
     } as const;
   }
 
-  const release =
+  const publishedContract =
     allVersions.find((v) => v.version === version) || allVersions[0];
 
   const ensQueries = [queryClient.prefetchQuery(ensQuery(address))];
@@ -111,16 +111,19 @@ export const getStaticProps: GetStaticProps<ReleasePageProps> = async (ctx) => {
   // this can be very slow
   await Promise.all([
     ...ensQueries,
-    queryClient.prefetchQuery(["released-contract", release], () =>
-      fetchReleasedContractInfo(polygonSdk, release),
+    queryClient.prefetchQuery(["released-contract", publishedContract], () =>
+      fetchPublishedContractInfo(polygonSdk, publishedContract),
     ),
-    queryClient.prefetchQuery(["publish-metadata", release.metadataUri], () =>
-      fetchContractPublishMetadataFromURI(release.metadataUri),
+    queryClient.prefetchQuery(
+      ["publish-metadata", publishedContract.metadataUri],
+      () => fetchContractPublishMetadataFromURI(publishedContract.metadataUri),
     ),
-    queryClient.prefetchQuery(releaserProfileQuery(release.releaser)),
+    queryClient.prefetchQuery(
+      publisherProfileQuery(publishedContract.publisher),
+    ),
   ]);
 
-  const props: ReleasePageProps = {
+  const props: PublishPageProps = {
     dehydratedState: dehydrate(queryClient),
     author: authorAddress,
     contractName,
@@ -132,7 +135,7 @@ export const getStaticProps: GetStaticProps<ReleasePageProps> = async (ctx) => {
   };
 };
 
-// generate the explore releases at build time
+// generate the explore contracts at build time
 // others will be generated at runtime via fallback
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
@@ -142,7 +145,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 function generateBuildTimePaths() {
-  const paths = getAllExploreReleases();
+  const paths = getAllExplorePublishedContracts();
   return paths.map((path) => {
     return {
       params: {

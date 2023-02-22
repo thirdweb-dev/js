@@ -270,9 +270,9 @@ async function fetchConstructorParams(
       return "";
     }
 
-    // first: attempt to get it from Release
+    // first: attempt to get it from Publish
     try {
-      const bytecode = await fetchDeployBytecodeFromReleaseMetadata(
+      const bytecode = await fetchDeployBytecodeFromPublishedContractMetadata(
         contractAddress,
         provider,
       );
@@ -286,12 +286,12 @@ async function fetchConstructorParams(
         constructorArgs = txDeployBytecode.substring(bytecodeHex.length);
       }
     } catch (e) {
-      // contracts not released through thirdweb
+      // contracts not published through thirdweb
     }
 
     // second: attempt to decode it from solc metadata bytecode
     if (!constructorArgs) {
-      // couldn't find bytecode from release, using regex to locate consturctor args thruogh solc metadata
+      // couldn't find bytecode from Publish, using regex to locate consturctor args thruogh solc metadata
       // https://docs.soliditylang.org/en/v0.8.17/metadata.html#encoding-of-the-metadata-hash-in-the-bytecode
       // {6} = solc version
       // {4} = 0033, but noticed some contracts have values other than 00 33. (uniswap)
@@ -327,7 +327,7 @@ async function fetchConstructorParams(
       );
     } catch (e) {
       throw new Error(
-        "Verifying this contract requires a release. Run `npx thirdweb release` to create a release for this contract, then try again.",
+        "Verifying this contract requires it to be published. Run `npx thirdweb publish` to publish this contract, then try again.",
       );
     }
 
@@ -339,12 +339,12 @@ async function fetchConstructorParams(
 }
 
 /**
- * Fetches the release metadata on the ContractPublisher registry (on polygon) for the given contract address (on any chain)
+ * Fetches the Publish metadata on the ContractPublisher registry (on polygon) for the given contract address (on any chain)
  * @param contractAddress
  * @param provider
  * @returns
  */
-async function fetchDeployBytecodeFromReleaseMetadata(
+async function fetchDeployBytecodeFromPublishedContractMetadata(
   contractAddress: string,
   provider: ethers.providers.Provider,
 ): Promise<string | undefined> {

@@ -6,7 +6,7 @@ export function useContractSources(contractAddress?: string) {
   return useQueryWithNetwork(
     ["contract-sources", contractAddress],
     async () => {
-      return await sdk
+      return sdk
         ?.getPublisher()
         .fetchContractSourcesFromAddress(contractAddress || "");
     },

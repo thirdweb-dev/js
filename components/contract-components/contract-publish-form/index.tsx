@@ -28,11 +28,11 @@ import { FormProvider, useForm } from "react-hook-form";
 import { IoChevronBack } from "react-icons/io5";
 import { Button, Text } from "tw-components";
 
-interface ContractReleaseFormProps {
+interface ContractPublishFormProps {
   contractId: ContractId;
 }
 
-export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
+export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   contractId,
 }) => {
   const [contractSelection, setContractSelection] = useState<
@@ -45,8 +45,8 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
 
   const router = useRouter();
   const { onSuccess, onError } = useTxNotifications(
-    "Successfully released contract",
-    "Failed to release contract",
+    "Successfully published contract",
+    "Failed to publish contract",
   );
   const address = useAddress();
   const publishMutation = usePublishMutation();
@@ -159,15 +159,18 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
     return `/${ensNameOrAddress}/${publishMetadata.data.name}`;
   }, [ensNameOrAddress, publishMetadata.data?.name]);
 
-  const isDisabled = !successRedirectUrl || !address;
+  const isDisabled = useMemo(
+    () => !successRedirectUrl || !address,
+    [successRedirectUrl, address],
+  );
 
-  const fullReleaseMetadata = useContractFullPublishMetadata(contractId);
+  const fullPublishMetadata = useContractFullPublishMetadata(contractId);
   const constructorParams = useConstructorParamsFromABI(
     publishMetadata.data?.abi,
   );
   const initializerParams = useFunctionParamsFromABI(
     publishMetadata.data?.abi,
-    fullReleaseMetadata.data?.factoryDeploymentData
+    fullPublishMetadata.data?.factoryDeploymentData
       ?.implementationInitializerFunction || "initialize",
   );
 
@@ -354,7 +357,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
               ) : (
                 <>
                   <Text fontStyle="italic">
-                    Releasing your contract is free, we cover all gas costs.
+                    Publishing your contract is free, we cover all gas costs.
                   </Text>
                   <Button
                     // differentiate this from the edit button

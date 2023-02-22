@@ -30,7 +30,7 @@ export const FactoryFieldset = () => {
           network. Your contracts will need to implement the IContract
           interface.{" "}
           <Link
-            href="https://portal.thirdweb.com/release#factory-deploys"
+            href="https://portal.thirdweb.com/publish#factory-deploys"
             color="blue.600"
           >
             Learn more

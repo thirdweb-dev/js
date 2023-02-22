@@ -75,7 +75,7 @@ function removeUndefinedFromObject(obj: Record<string, any>) {
   return newObj;
 }
 
-// metadata PRE release, only has the compiler output info (from CLI)
+// metadata PRE publish, only has the compiler output info (from CLI)
 export async function fetchContractPublishMetadataFromURI(
   contractId: ContractId,
 ) {
@@ -131,7 +131,7 @@ export function useContractPublishMetadataFromURI(contractId: ContractId) {
   );
 }
 
-// metadata PRE release, only contains the compiler output
+// metadata PRE publish, only contains the compiler output
 // if passing an address, also fetches the latest version of the matching contract
 export function useContractPrePublishMetadata(uri: string, address?: string) {
   const contractIdIpfsHash = toContractIdIpfsHash(uri);
@@ -180,7 +180,7 @@ async function fetchFullPublishMetadata(
   };
 }
 
-// Metadata POST release, contains all the extra information filled in by the user
+// Metadata POST publish, contains all the extra information filled in by the user
 export function useContractFullPublishMetadata(uri: string) {
   const contractIdIpfsHash = toContractIdIpfsHash(uri);
   const sdk = getEVMThirdwebSDK(Polygon.chainId, getDashboardChainRpc(Polygon));
@@ -209,17 +209,17 @@ export function useContractFullPublishMetadata(uri: string) {
   );
 }
 
-async function fetchReleaserProfile(publisherAddress?: string | null) {
+async function fetchPublisherProfile(publisherAddress?: string | null) {
   const sdk = getEVMThirdwebSDK(Polygon.chainId, getDashboardChainRpc(Polygon));
   invariant(publisherAddress, "address is not defined");
   return await sdk.getPublisher().getPublisherProfile(publisherAddress);
 }
 
-export function releaserProfileQuery(releaserAddress?: string) {
+export function publisherProfileQuery(publisherAddress?: string) {
   return {
-    queryKey: ["releaser-profile", releaserAddress],
-    queryFn: () => fetchReleaserProfile(releaserAddress),
-    enabled: !!releaserAddress,
+    queryKey: ["releaser-profile", publisherAddress],
+    queryFn: () => fetchPublisherProfile(publisherAddress),
+    enabled: !!publisherAddress,
     // 24h
     cacheTime: 60 * 60 * 24 * 1000,
     // 1h
@@ -228,49 +228,8 @@ export function releaserProfileQuery(releaserAddress?: string) {
   };
 }
 
-export function useReleaserProfile(publisherAddress?: string) {
-  return useQuery(releaserProfileQuery(publisherAddress));
-}
-
-export function useLatestRelease(
-  publisherAddress?: string,
-  contractName?: string,
-) {
-  return useQuery(
-    ["latest-release", publisherAddress, contractName],
-    async () => {
-      invariant(publisherAddress, "address is not defined");
-      invariant(contractName, "contract name is not defined");
-
-      const sdk = getEVMThirdwebSDK(
-        Polygon.chainId,
-        getDashboardChainRpc(Polygon),
-      );
-      const latestRelease = await sdk
-        .getPublisher()
-        .getLatest(publisherAddress, contractName);
-
-      invariant(latestRelease, "latest release is not defined");
-
-      const contractInfo = await sdk
-        .getPublisher()
-        .fetchPublishedContractInfo(latestRelease);
-
-      return {
-        ...latestRelease,
-        version: contractInfo.publishedMetadata.version,
-        name: contractInfo.publishedMetadata.name,
-        displayName: contractInfo.publishedMetadata.displayName || "",
-        description: contractInfo.publishedMetadata.description || "",
-        releaser: contractInfo.publishedMetadata.publisher || "",
-        audit: contractInfo.publishedMetadata.audit || "",
-        logo: contractInfo.publishedMetadata.logo || "",
-      };
-    },
-    {
-      enabled: !!publisherAddress && !!contractName,
-    },
-  );
+export function usePublisherProfile(publisherAddress?: string) {
+  return useQuery(publisherProfileQuery(publisherAddress));
 }
 
 export async function fetchAllVersions(
@@ -285,26 +244,26 @@ export async function fetchAllVersions(
     .getPublisher()
     .getAllVersions(publisherAddress, contractName);
 
-  const releasedVersions = [];
+  const publishedVersions = [];
 
   for (let i = 0; i < allVersions.length; i++) {
     const contractInfo = await sdk
       .getPublisher()
       .fetchPublishedContractInfo(allVersions[i]);
 
-    releasedVersions.unshift({
+    publishedVersions.unshift({
       ...allVersions[i],
       version: contractInfo.publishedMetadata.version,
       name: contractInfo.publishedMetadata.name,
       displayName: contractInfo.publishedMetadata.displayName || "",
       description: contractInfo.publishedMetadata.description || "",
-      releaser: contractInfo.publishedMetadata.publisher || "",
+      publisher: contractInfo.publishedMetadata.publisher || "",
       audit: contractInfo.publishedMetadata.audit || "",
       logo: contractInfo.publishedMetadata.logo || "",
     });
   }
 
-  return releasedVersions;
+  return publishedVersions;
 }
 
 export function useAllVersions(
@@ -321,7 +280,7 @@ export function useAllVersions(
   );
 }
 
-export function useReleasesFromDeploy(
+export function usePublishedContractsFromDeploy(
   contractAddress?: string,
   chainId?: number,
 ) {
@@ -362,7 +321,7 @@ export function useReleasesFromDeploy(
   );
 }
 
-export async function fetchReleasedContractInfo(
+export async function fetchPublishedContractInfo(
   sdk?: ThirdwebSDK,
   contract?: PublishedContract,
 ) {
@@ -371,17 +330,17 @@ export async function fetchReleasedContractInfo(
   return await sdk.getPublisher().fetchPublishedContractInfo(contract);
 }
 
-export function useReleasedContractInfo(contract: PublishedContract) {
+export function usePublishedContractInfo(contract: PublishedContract) {
   const sdk = getEVMThirdwebSDK(Polygon.chainId, getDashboardChainRpc(Polygon));
   return useQuery(
     ["released-contract", contract],
-    () => fetchReleasedContractInfo(sdk, contract),
+    () => fetchPublishedContractInfo(sdk, contract),
     {
       enabled: !!contract,
     },
   );
 }
-export function useReleasedContractFunctions(contract: PublishedContract) {
+export function usePublishedContractFunctions(contract: PublishedContract) {
   const { data: meta } = useContractPublishMetadataFromURI(
     contract.metadataUri,
   );
@@ -389,7 +348,7 @@ export function useReleasedContractFunctions(contract: PublishedContract) {
     ? extractFunctionsFromAbi(meta.abi as Abi, meta?.compilerMetadata)
     : undefined;
 }
-export function useReleasedContractEvents(contract: PublishedContract) {
+export function usePublishedContractEvents(contract: PublishedContract) {
   const { data: meta } = useContractPublishMetadataFromURI(
     contract.metadataUri,
   );
@@ -398,7 +357,7 @@ export function useReleasedContractEvents(contract: PublishedContract) {
     : undefined;
 }
 
-export function useReleasedContractCompilerMetadata(
+export function usePublishedContractCompilerMetadata(
   contract: PublishedContract,
 ) {
   return useContractPublishMetadataFromURI(contract.metadataUri);
@@ -454,7 +413,7 @@ export function usePublishMutation() {
         return Promise.all([
           invalidate([["pre-publish-metadata", variables.predeployUri]]),
           fetch(
-            `/api/revalidate/release?address=${address}&contractName=${variables.contractName}`,
+            `/api/revalidate/publish?address=${address}&contractName=${variables.contractName}`,
           ).catch((err) => console.error("failed to revalidate", err)),
         ]);
       },
@@ -475,7 +434,7 @@ export function useEditProfileMutation() {
       onSuccess: (_data, _variables, _options, invalidate) => {
         return Promise.all([
           invalidate([["releaser-profile", address]]),
-          fetch(`/api/revalidate/release?address=${address}`).catch((err) =>
+          fetch(`/api/revalidate/publish?address=${address}`).catch((err) =>
             console.error("failed to revalidate", err),
           ),
         ]);
@@ -585,14 +544,14 @@ export async function fetchPublishedContracts(
   );
 }
 
-export type ReleasedContractDetails = Awaited<
+export type PublishedContractDetails = Awaited<
   ReturnType<typeof fetchPublishedContracts>
 >[number];
 
 export function usePublishedContractsQuery(address?: string) {
   const sdk = getEVMThirdwebSDK(Polygon.chainId, getDashboardChainRpc(Polygon));
   const queryClient = useQueryClient();
-  return useQuery<ReleasedContractDetails[]>(
+  return useQuery<PublishedContractDetails[]>(
     ["published-contracts", address],
     () => {
       invariant(sdk, "sdk not provided");

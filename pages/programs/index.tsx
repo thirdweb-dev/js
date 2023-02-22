@@ -1,6 +1,6 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
-import { ReleasedContractTable } from "components/contract-components/contract-table-v2";
+import { PublishedContractTable } from "components/contract-components/contract-table-v2";
 import { PREBUILT_SOLANA_CONTRACTS_MAP } from "constants/mappings";
 // import dynamic from "next/dynamic";
 import { PageId } from "page-id";
@@ -15,10 +15,10 @@ const Programs: ThirdwebNextPage = () => {
       <Heading>Programs</Heading>
       <Text fontStyle="italic">Prebuilt solana progams for you to deploy.</Text>
       <Box id="program-table">
-        <ReleasedContractTable
+        <PublishedContractTable
           contractDetails={prebuiltSolContracts}
           isFetching={false}
-          hideReleasedBy
+          hidePublisher
         />
       </Box>
     </Flex>

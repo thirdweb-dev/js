@@ -12,7 +12,7 @@ import {
 import { PREBUILT_CONTRACTS_MAP } from "@thirdweb-dev/sdk/evm";
 import { DeployFormDrawer } from "components/contract-components/contract-deploy-form/drawer";
 import { useAllVersions, useEns } from "components/contract-components/hooks";
-import { ReleasedContract } from "components/contract-components/released-contract";
+import { PublishedContract } from "components/contract-components/published-contract";
 import { THIRDWEB_DEPLOYER_ADDRESS } from "constants/addresses";
 import { useTrack } from "hooks/analytics/useTrack";
 import { replaceIpfsUrl } from "lib/sdk";
@@ -21,13 +21,13 @@ import { useMemo } from "react";
 import { FiChevronLeft, FiImage } from "react-icons/fi";
 import { Heading, Link, Text, TrackedIconButton } from "tw-components";
 
-export interface ReleaseWithVersionPageProps {
+export interface PublishWithVersionPageProps {
   author: string;
   contractName: string;
   version: string;
 }
 
-export const ReleaseWithVersionPage: React.FC<ReleaseWithVersionPageProps> = ({
+export const PublishWithVersionPage: React.FC<PublishWithVersionPageProps> = ({
   author,
   contractName,
   version,
@@ -42,23 +42,24 @@ export const ReleaseWithVersionPage: React.FC<ReleaseWithVersionPageProps> = ({
     contractName,
   );
 
-  const release = useMemo(() => {
+  const publishedContract = useMemo(() => {
     return (
       allVersions.data?.find((v) => v.version === version) ||
       allVersions.data?.[0]
     );
   }, [allVersions?.data, version]);
 
-  // If this release is released by us and is a prebuilt contract we know about, open the custom deploy form
+  // If this contract is published by us and is a prebuilt contract we know about, open the custom deploy form
   const prebuiltContractName =
-    release?.releaser === THIRDWEB_DEPLOYER_ADDRESS
+    publishedContract?.publisher === THIRDWEB_DEPLOYER_ADDRESS
       ? Object.values(PREBUILT_CONTRACTS_MAP).find(
           (value) => value.name === contractName,
         )?.contractType
       : undefined;
 
   const deployContractId =
-    prebuiltContractName || release?.metadataUri.replace("ipfs://", "");
+    prebuiltContractName ||
+    publishedContract?.metadataUri.replace("ipfs://", "");
   return (
     <SimpleGrid columns={12} gap={{ base: 6, md: 10 }} w="full">
       <GridItem colSpan={{ base: 12, md: 8 }}>
@@ -74,12 +75,12 @@ export const ReleaseWithVersionPage: React.FC<ReleaseWithVersionPageProps> = ({
             aria-label="Back"
           />
 
-          {release?.logo ? (
+          {publishedContract?.logo ? (
             <Image
               flexShrink={0}
-              alt={release.name}
+              alt={publishedContract.name}
               borderRadius="full"
-              src={replaceIpfsUrl(release.logo)}
+              src={replaceIpfsUrl(publishedContract.logo)}
               boxSize={14}
             />
           ) : (
@@ -97,9 +98,9 @@ export const ReleaseWithVersionPage: React.FC<ReleaseWithVersionPageProps> = ({
           <Skeleton isLoaded={allVersions.isSuccess}>
             <Flex direction="column" gap={2}>
               <Heading as="h1" size="title.md">
-                {release?.displayName || release?.name}
+                {publishedContract?.displayName || publishedContract?.name}
               </Heading>
-              <Text as="h2">{release?.description}</Text>
+              <Text as="h2">{publishedContract?.description}</Text>
             </Flex>
           </Skeleton>
         </Flex>
@@ -122,12 +123,9 @@ export const ReleaseWithVersionPage: React.FC<ReleaseWithVersionPageProps> = ({
             }}
             value={version}
           >
-            {(allVersions?.data || []).map((releasedVersion, idx) => (
-              <option
-                key={releasedVersion.version}
-                value={releasedVersion.version}
-              >
-                {releasedVersion.version}
+            {(allVersions?.data || []).map(({ version: v }, idx) => (
+              <option key={v} value={v}>
+                {v}
                 {idx === 0 ? " (latest)" : ""}
               </option>
             ))}
@@ -143,7 +141,9 @@ export const ReleaseWithVersionPage: React.FC<ReleaseWithVersionPageProps> = ({
       <GridItem colSpan={12} display={{ base: "inherit", md: "none" }}>
         <Divider />
       </GridItem>
-      {release && <ReleasedContract release={release} walletOrEns={author} />}
+      {publishedContract && (
+        <PublishedContract contract={publishedContract} walletOrEns={author} />
+      )}
     </SimpleGrid>
   );
 };

@@ -39,7 +39,7 @@ export const ProxyFieldset: React.FC<ProxyFieldsetProps> = ({
           contract already available on each chain you want to support.{" "}
           <Link
             isExternal
-            href="https://portal.thirdweb.com/release#eip-1967-proxy-contracts"
+            href="https://portal.thirdweb.com/publish#eip-1967-proxy-contracts"
             color="blue.600"
           >
             Learn more

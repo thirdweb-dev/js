@@ -1,4 +1,4 @@
-import { ReleasedContractTable } from "../contract-table-v2";
+import { PublishedContractTable } from "../contract-table-v2";
 import { usePublishedContractsQuery } from "../hooks";
 import { ShowMoreButton } from "./show-more-button";
 import {
@@ -14,27 +14,27 @@ import { useMemo, useState } from "react";
 import { IoRefreshSharp } from "react-icons/io5";
 import { Button, Heading, LinkButton, Text } from "tw-components";
 
-interface ReleasedContractsProps {
+interface PublishedContractsProps {
   address?: string;
   noHeader?: boolean;
   limit?: number;
 }
 
-export const ReleasedContracts: React.FC<ReleasedContractsProps> = ({
+export const PublishedContracts: React.FC<PublishedContractsProps> = ({
   address,
   noHeader,
   limit = 10,
 }) => {
   const [showMoreLimit, setShowMoreLimit] = useState(limit);
   const trackEvent = useTrack();
-  const releasedContractsQuery = usePublishedContractsQuery(address);
+  const publishedContractsQuery = usePublishedContractsQuery(address);
 
   const slicedData = useMemo(() => {
-    if (releasedContractsQuery.data) {
-      return releasedContractsQuery.data.slice(0, showMoreLimit);
+    if (publishedContractsQuery.data) {
+      return publishedContractsQuery.data.slice(0, showMoreLimit);
     }
     return [];
-  }, [releasedContractsQuery.data, showMoreLimit]);
+  }, [publishedContractsQuery.data, showMoreLimit]);
 
   return (
     <>
@@ -46,15 +46,15 @@ export const ReleasedContracts: React.FC<ReleasedContractsProps> = ({
           direction={{ base: "column", md: "row" }}
         >
           <Flex gap={2} direction="column">
-            <Heading size="title.md">Released contracts</Heading>
+            <Heading size="title.md">Published contracts</Heading>
             <Text fontStyle="italic" maxW="container.md">
-              The list of contract instances that you have released with
+              The list of contract instances that you have published with
               thirdweb
             </Text>
           </Flex>
           <LinkButton
             colorScheme="primary"
-            href="https://portal.thirdweb.com/release"
+            href="https://portal.thirdweb.com/publish"
             isExternal
             onClick={() => {
               trackEvent({
@@ -64,33 +64,33 @@ export const ReleasedContracts: React.FC<ReleasedContractsProps> = ({
               });
             }}
           >
-            Learn more about Release
+            Learn more about Publish
           </LinkButton>
         </Flex>
       )}
-      <ReleasedContractTable
-        isFetching={releasedContractsQuery.isFetching}
+      <PublishedContractTable
+        isFetching={publishedContractsQuery.isFetching}
         contractDetails={slicedData}
-        hideReleasedBy
+        hidePublisher
       >
-        {releasedContractsQuery.isLoading && (
+        {publishedContractsQuery.isLoading && (
           <Center>
             <Flex py={4} direction="row" gap={4} align="center">
               <Spinner size="sm" />
-              <Text>Loading releases</Text>
+              <Text>Loading published contracts</Text>
             </Flex>
           </Center>
         )}
-        {releasedContractsQuery.isError && (
+        {publishedContractsQuery.isError && (
           <Center>
             <Flex mt={4} py={4} direction="column" gap={4} align="center">
               <Alert status="error" borderRadius="md">
                 <AlertIcon />
                 <AlertTitle mr={2}>
-                  Failed to fetch released contracts
+                  Failed to fetch published contracts
                 </AlertTitle>
                 <Button
-                  onClick={() => releasedContractsQuery.refetch()}
+                  onClick={() => publishedContractsQuery.refetch()}
                   leftIcon={<IoRefreshSharp />}
                   ml="auto"
                   size="sm"
@@ -102,23 +102,23 @@ export const ReleasedContracts: React.FC<ReleasedContractsProps> = ({
             </Flex>
           </Center>
         )}
-        {releasedContractsQuery.isSuccess &&
-          releasedContractsQuery.data.length === 0 && (
+        {publishedContractsQuery.isSuccess &&
+          publishedContractsQuery.data.length === 0 && (
             <Center>
               <Flex py={4} direction="column" gap={4} align="center">
-                <Text>No releases found.</Text>
+                <Text>No published contracts found.</Text>
               </Flex>
             </Center>
           )}
-        {releasedContractsQuery.isSuccess &&
-          releasedContractsQuery.data.length > slicedData.length && (
+        {publishedContractsQuery.isSuccess &&
+          publishedContractsQuery.data.length > slicedData.length && (
             <ShowMoreButton
               limit={limit}
               showMoreLimit={showMoreLimit}
               setShowMoreLimit={setShowMoreLimit}
             />
           )}
-      </ReleasedContractTable>
+      </PublishedContractTable>
     </>
   );
 };

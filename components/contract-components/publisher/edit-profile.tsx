@@ -31,11 +31,11 @@ import {
 import { MaskedAvatar } from "tw-components/masked-avatar";
 
 interface EditProfileProps {
-  releaserProfile: ProfileMetadata;
+  publisherProfile: ProfileMetadata;
 }
 
 export const EditProfile: React.FC<EditProfileProps> = ({
-  releaserProfile,
+  publisherProfile,
 }) => {
   const FORM_ID = useId();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -62,11 +62,11 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   useEffect(() => {
     if (!isDirty) {
       reset({
-        ...releaserProfile,
+        ...publisherProfile,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [releaserProfile]);
+  }, [publisherProfile]);
 
   return (
     <>

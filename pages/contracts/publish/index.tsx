@@ -8,7 +8,7 @@ import { useMemo } from "react";
 import { Heading, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
-const ContractsReleasePage: ThirdwebNextPage = () => {
+const ContractsPublishPage: ThirdwebNextPage = () => {
   const router = useRouter();
 
   const ipfsHashes = useMemo(() => {
@@ -19,24 +19,21 @@ const ContractsReleasePage: ThirdwebNextPage = () => {
   return (
     <Flex gap={8} direction="column">
       <Flex gap={2} direction="column">
-        <Heading size="title.md">Release Contracts</Heading>
+        <Heading size="title.md">Publish Contracts</Heading>
         <Text fontStyle="italic" maxW="container.md">
           Welcome to the new thirdweb contract deployment flow.
           <br />
           <Link
             color="blue.500"
             isExternal
-            href="https://portal.thirdweb.com/release"
+            href="https://portal.thirdweb.com/publish"
           >
-            Learn more about releasing your contracts.
+            Learn more about publishing your contracts.
           </Link>
         </Text>
       </Flex>
 
-      <DeployableContractTable
-        contractIds={ipfsHashes}
-        context="create_release"
-      />
+      <DeployableContractTable contractIds={ipfsHashes} context="publish" />
     </Flex>
   );
 };
@@ -45,10 +42,10 @@ const ContractsReleasePage: ThirdwebNextPage = () => {
 //   async () => (await import("components/app-layouts/app")).AppLayout,
 // );
 
-ContractsReleasePage.getLayout = function getLayout(page, props) {
+ContractsPublishPage.getLayout = function getLayout(page, props) {
   return <AppLayout {...props}>{page}</AppLayout>;
 };
 
-ContractsReleasePage.pageId = PageId.ReleaseMultiple;
+ContractsPublishPage.pageId = PageId.PublishMultiple;
 
-export default ContractsReleasePage;
+export default ContractsPublishPage;

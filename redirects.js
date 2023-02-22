@@ -27,8 +27,23 @@ function redirects() {
       permanent: false,
     },
     {
-      source: "/contracts/publish",
-      destination: "/contracts/release",
+      source: "/contracts/release",
+      destination: "/contracts/publish",
+      permanent: false,
+    },
+    {
+      source: "/contracts/release/:path*",
+      destination: "/contracts/publish/:path*",
+      permanent: false,
+    },
+    {
+      source: "/release",
+      destination: "/publish",
+      permanent: false,
+    },
+    {
+      source: "/release/:path*",
+      destination: "/publish/:path*",
       permanent: false,
     },
     {

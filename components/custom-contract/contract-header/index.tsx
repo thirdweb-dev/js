@@ -1,6 +1,6 @@
 import { ContractMetadata } from "./contract-metadata";
 import { Box, Container, Flex } from "@chakra-ui/react";
-import { ReleasedBy } from "components/contract-components/shared/released-by";
+import { PublishedBy } from "components/contract-components/shared/published-by";
 
 interface ContractHeaderProps {
   contractAddress: string;
@@ -27,7 +27,7 @@ export const ContractHeader: React.FC<ContractHeaderProps> = ({
           gap={4}
         >
           <ContractMetadata contractAddress={contractAddress} />
-          <ReleasedBy contractAddress={contractAddress} />
+          <PublishedBy contractAddress={contractAddress} />
         </Flex>
       </Container>
     </Box>

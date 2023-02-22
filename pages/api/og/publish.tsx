@@ -1,14 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from "@vercel/og";
 import { NextRequest } from "next/server";
-import { ReleaseOG } from "og-lib/url-utils";
+import { PublishedContractOG } from "og-lib/url-utils";
 
 // Make sure the font exists in the specified path:
 export const config = {
   runtime: "edge",
 };
 const bgImgUrl = new URL(
-  `og-lib/assets/release/background.png`,
+  `og-lib/assets/publish/background.png`,
   import.meta.url,
 ).toString();
 
@@ -159,7 +159,7 @@ export default async function handler(req: NextRequest) {
     return new Response("Method not allowed", { status: 405 });
   }
 
-  const releaseData = ReleaseOG.fromUrl(new URL(req.url));
+  const publishedContractData = PublishedContractOG.fromUrl(new URL(req.url));
 
   const [
     inter400,
@@ -196,9 +196,9 @@ export default async function handler(req: NextRequest) {
           <div tw="flex justify-between items-start w-full">
             <div tw="flex flex-col flex-shrink">
               <div tw="flex items-center">
-                {releaseData.logo && (
+                {publishedContractData.logo && (
                   <img
-                    src={releaseData.logo.replace(
+                    src={publishedContractData.logo.replace(
                       "ipfs://",
                       "https://gateway.ipfscdn.io/ipfs/",
                     )}
@@ -206,11 +206,13 @@ export default async function handler(req: NextRequest) {
                     alt=""
                   />
                 )}
-                <h1 tw="text-6xl font-bold text-white">{releaseData.name}</h1>
+                <h1 tw="text-6xl font-bold text-white">
+                  {publishedContractData.name}
+                </h1>
               </div>
-              {releaseData?.description && (
+              {publishedContractData?.description && (
                 <p tw="text-3xl font-medium text-gray-400 max-w-4xl">
-                  {descriptionShortener(releaseData.description)}
+                  {descriptionShortener(publishedContractData.description)}
                 </p>
               )}
             </div>
@@ -219,12 +221,12 @@ export default async function handler(req: NextRequest) {
                 alt=""
                 tw="w-32 h-32 rounded-full"
                 src={
-                  releaseData.publisherAvatar ||
-                  `https://source.boringavatars.com/marble/120/${releaseData.publisher}?colors=264653,2a9d8f,e9c46a,f4a261,e76f51&square=true`
+                  publishedContractData.publisherAvatar ||
+                  `https://source.boringavatars.com/marble/120/${publishedContractData.publisher}?colors=264653,2a9d8f,e9c46a,f4a261,e76f51&square=true`
                 }
               />
               <h2 tw="text-2xl text-white font-medium max-w-full">
-                {releaseData.publisher}
+                {publishedContractData.publisher}
               </h2>
             </div>
           </div>
@@ -236,7 +238,7 @@ export default async function handler(req: NextRequest) {
                 fontFamily: "IBM Plex Mono",
               }}
             >
-              {releaseData.extension?.length ? (
+              {publishedContractData.extension?.length ? (
                 <li
                   tw="flex flex-row items-center overflow-hidden w-full"
                   // eslint-disable-next-line react/forbid-dom-props
@@ -244,41 +246,38 @@ export default async function handler(req: NextRequest) {
                 >
                   <PackageIcon />
                   <span tw="ml-2">
-                    {Array.isArray(releaseData.extension)
-                      ? categorizeExtensions(releaseData.extension).map(
-                          ([ext, count]) => (
-                            <span
-                              key={ext}
-                              tw="flex flex-row items-center mr-3"
-                            >
-                              {ext}
-                              <span tw="text-black px-3 h-auto font-bold m-1 rounded-full text-sm bg-white opacity-90">
-                                <span tw="m-auto">{count}</span>
-                              </span>
+                    {Array.isArray(publishedContractData.extension)
+                      ? categorizeExtensions(
+                          publishedContractData.extension,
+                        ).map(([ext, count]) => (
+                          <span key={ext} tw="flex flex-row items-center mr-3">
+                            {ext}
+                            <span tw="text-black px-3 h-auto font-bold m-1 rounded-full text-sm bg-white opacity-90">
+                              <span tw="m-auto">{count}</span>
                             </span>
-                          ),
-                        )
-                      : releaseData.extension}
+                          </span>
+                        ))
+                      : publishedContractData.extension}
                   </span>
                 </li>
               ) : null}
-              {releaseData.license?.length ? (
+              {publishedContractData.license?.length ? (
                 <li tw="flex flex-row items-center">
                   <FileTextIcon />
                   <span tw="ml-2">
-                    {Array.isArray(releaseData.license)
-                      ? releaseData.license.join(", ")
-                      : releaseData.license}
+                    {Array.isArray(publishedContractData.license)
+                      ? publishedContractData.license.join(", ")
+                      : publishedContractData.license}
                   </span>
                 </li>
               ) : null}
               <li tw="flex flex-row items-center">
                 <VersionIcon />
-                <span tw="ml-2">{releaseData.version}</span>
+                <span tw="ml-2">{publishedContractData.version}</span>
               </li>
               <li tw="flex flex-row items-center">
                 <CalendarIcon />
-                <span tw="ml-2">{releaseData.publishDate}</span>
+                <span tw="ml-2">{publishedContractData.publishDate}</span>
               </li>
             </ul>
             <div tw="flex flex-shrink-0">

@@ -84,7 +84,7 @@ export function middleware(request: NextRequest) {
   }
 
   if (isPossibleEVMAddress(networkOrAddress)) {
-    return rewrite(request, `/release${pathname}`);
+    return rewrite(request, `/publish${pathname}`);
   }
 }
 

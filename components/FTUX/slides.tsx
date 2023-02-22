@@ -116,12 +116,12 @@ export const slides: Slide[] = [
         Create shareable landing pages for contracts with{" "}
         <TrackedLink
           color="blue.500"
-          href="https://portal.thirdweb.com/release"
+          href="https://portal.thirdweb.com/publish"
           category={TRACK_CATEGORY}
           label="launch-release"
           isExternal
         >
-          Release
+          Publish
         </TrackedLink>
         .
       </Text>

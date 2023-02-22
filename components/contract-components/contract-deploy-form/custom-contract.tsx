@@ -53,18 +53,18 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
   const ensQuery = useEns(address);
   const trackEvent = useTrack();
   const compilerMetadata = useContractPublishMetadataFromURI(ipfsHash);
-  const fullReleaseMetadata = useContractFullPublishMetadata(ipfsHash);
+  const fullPublishMetadata = useContractFullPublishMetadata(ipfsHash);
   const constructorParams = useConstructorParamsFromABI(
     compilerMetadata.data?.abi,
   );
   const initializerParams = useFunctionParamsFromABI(
     compilerMetadata.data?.abi,
-    fullReleaseMetadata.data?.factoryDeploymentData
+    fullPublishMetadata.data?.factoryDeploymentData
       ?.implementationInitializerFunction || "initialize",
   );
   const isFactoryDeployment =
-    (fullReleaseMetadata.data?.isDeployableViaFactory ||
-      fullReleaseMetadata.data?.isDeployableViaProxy) &&
+    (fullPublishMetadata.data?.isDeployableViaFactory ||
+      fullPublishMetadata.data?.isDeployableViaProxy) &&
     !isImplementationDeploy;
 
   const deployParams = isFactoryDeployment
@@ -72,10 +72,10 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     : constructorParams;
 
   const disabledChains =
-    isFactoryDeployment && fullReleaseMetadata.data?.factoryDeploymentData
+    isFactoryDeployment && fullPublishMetadata.data?.factoryDeploymentData
       ? SUPPORTED_CHAIN_IDS.filter((chain) => {
           const implementationAddress =
-            fullReleaseMetadata.data?.factoryDeploymentData
+            fullPublishMetadata.data?.factoryDeploymentData
               ?.implementationAddresses?.[chain];
           return (
             !implementationAddress ||
@@ -92,7 +92,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       addToDashboard: true,
       deployParams: deployParams.reduce((acc, param) => {
         acc[param.name] = replaceTemplateValues(
-          fullReleaseMetadata.data?.constructorParams?.[param.name]
+          fullPublishMetadata.data?.constructorParams?.[param.name]
             ?.defaultValue || "",
           param.type,
           {
@@ -107,7 +107,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       addToDashboard: true,
       deployParams: deployParams.reduce((acc, param) => {
         acc[param.name] = replaceTemplateValues(
-          fullReleaseMetadata.data?.constructorParams?.[param.name]
+          fullPublishMetadata.data?.constructorParams?.[param.name]
             ?.defaultValue || "",
           param.type,
           {
@@ -155,8 +155,8 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
             contractMetadata: d,
             publishMetadata: compilerMetadata.data,
             chainId: selectedChain,
-            is_proxy: fullReleaseMetadata.data?.isDeployableViaProxy,
-            is_factory: fullReleaseMetadata.data?.isDeployableViaProxy,
+            is_proxy: fullPublishMetadata.data?.isDeployableViaProxy,
+            is_factory: fullPublishMetadata.data?.isDeployableViaProxy,
           };
           // always respect this since even factory deployments cannot auto-add to registry anymore
           const addToDashboard = d.addToDashboard;
@@ -248,7 +248,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
             {Object.keys(formDeployParams).map((paramKey) => {
               const deployParam = deployParams.find((p) => p.name === paramKey);
               const contructorParams =
-                fullReleaseMetadata.data?.constructorParams || {};
+                fullPublishMetadata.data?.constructorParams || {};
               const extraMetadataParam = contructorParams[paramKey];
               return (
                 <FormControl

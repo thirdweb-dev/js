@@ -1,7 +1,7 @@
-import { useEns, useReleaserProfile } from "../hooks";
+import { useEns, usePublisherProfile } from "../hooks";
+import { PublisherSocials } from "./PublisherSocials";
 import { EditProfile } from "./edit-profile";
-import { ReleaserAvatar } from "./masked-avatar";
-import { ReleaserSocials } from "./releaser-socials";
+import { PublisherAvatar } from "./masked-avatar";
 import { Flex, Skeleton } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import {
@@ -11,16 +11,18 @@ import {
 import { useTrack } from "hooks/analytics/useTrack";
 import { Heading, Link, LinkButton } from "tw-components";
 
-interface ReleaserHeaderProps {
+const TRACKING_CATEGORY = "releaser-header";
+
+interface PublisherHeaderProps {
   wallet: string;
   page?: boolean;
 }
-export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
+export const PublisherHeader: React.FC<PublisherHeaderProps> = ({
   wallet,
   page,
 }) => {
   const ensQuery = useEns(wallet);
-  const releaserProfile = useReleaserProfile(
+  const publisherProfile = usePublisherProfile(
     ensQuery.data?.address || undefined,
   );
   const address = useAddress();
@@ -35,23 +37,23 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
     >
       <Flex direction="column" gap={4} w="full">
         <Heading as="h4" size="title.sm">
-          Released by
+          Published by
         </Heading>
 
         <Flex gap={4} alignItems="center">
-          <Skeleton isLoaded={releaserProfile.isSuccess}>
+          <Skeleton isLoaded={publisherProfile.isSuccess}>
             <Link
               href={`/${ensQuery.data?.ensName || wallet}`}
               onClick={() =>
                 trackEvent({
-                  category: "releaser-header",
+                  category: TRACKING_CATEGORY,
                   action: "click",
                   label: "releaser-avatar",
                 })
               }
             >
-              <ReleaserAvatar
-                alt="Releaser avatar"
+              <PublisherAvatar
+                alt="Publisher avatar"
                 boxSize={14}
                 address={ensQuery.data?.ensName || wallet}
               />
@@ -65,7 +67,7 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
               )}
               onClick={() =>
                 trackEvent({
-                  category: "releaser-header",
+                  category: TRACKING_CATEGORY,
                   action: "click",
                   label: "releaser-name",
                 })
@@ -73,14 +75,14 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
             >
               <Heading size="subtitle.sm" ml={2}>
                 {treatAddress(
-                  releaserProfile?.data?.name ||
+                  publisherProfile?.data?.name ||
                     ensQuery.data?.ensName ||
                     wallet,
                 )}
               </Heading>
             </Link>
-            {releaserProfile?.data && (
-              <ReleaserSocials releaserProfile={releaserProfile.data} />
+            {publisherProfile?.data && (
+              <PublisherSocials publisherProfile={publisherProfile.data} />
             )}
           </Flex>
         </Flex>
@@ -91,7 +93,7 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
           href={replaceDeployerAddress(`/${wallet}`)}
           onClick={() =>
             trackEvent({
-              category: "releaser-header",
+              category: TRACKING_CATEGORY,
               action: "click",
               label: "view-all-contracts",
             })
@@ -100,8 +102,8 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
           View all contracts
         </LinkButton>
 
-        {ensQuery.data?.address === address && releaserProfile?.data && (
-          <EditProfile releaserProfile={releaserProfile.data} />
+        {ensQuery.data?.address === address && publisherProfile?.data && (
+          <EditProfile publisherProfile={publisherProfile.data} />
         )}
       </Flex>
     </Flex>

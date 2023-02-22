@@ -2,13 +2,13 @@ import {
   useContractEnabledExtensions,
   useContractPublishMetadataFromURI,
   useEns,
-  useReleasedContractCompilerMetadata,
-  useReleasedContractEvents,
-  useReleasedContractFunctions,
-  useReleasedContractInfo,
-  useReleaserProfile,
+  usePublishedContractCompilerMetadata,
+  usePublishedContractEvents,
+  usePublishedContractFunctions,
+  usePublishedContractInfo,
+  usePublisherProfile,
 } from "../hooks";
-import { ReleaserHeader } from "../releaser/releaser-header";
+import { PublisherHeader } from "../publisher/publisher-header";
 import { MarkdownRenderer } from "./markdown-renderer";
 import {
   Divider,
@@ -22,7 +22,7 @@ import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
 import { useQuery } from "@tanstack/react-query";
 import { useAddress } from "@thirdweb-dev/react";
 import {
-  PublishedContract,
+  PublishedContract as PublishedContractType,
   PublishedMetadata,
   fetchSourceFilesFromMetadata,
 } from "@thirdweb-dev/sdk/evm";
@@ -34,7 +34,7 @@ import { correctAndUniqueLicenses } from "lib/licenses";
 import { StorageSingleton, replaceIpfsUrl } from "lib/sdk";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
-import { ReleaseOG } from "og-lib/url-utils";
+import { PublishedContractOG } from "og-lib/url-utils";
 import { useMemo } from "react";
 import { BiPencil } from "react-icons/bi";
 import { BsShieldCheck } from "react-icons/bs";
@@ -52,59 +52,59 @@ import {
 } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 
-export interface ExtendedReleasedContractInfo extends PublishedContract {
+export interface ExtendedPublishedContract extends PublishedContractType {
   name: string;
   displayName?: string;
   description: string;
   version: string;
-  releaser: string;
+  publisher: string;
   tags?: string[];
   logo?: string;
   audit?: string;
 }
 
-interface ReleasedContractProps {
-  release: ExtendedReleasedContractInfo;
+interface PublishedContractProps {
+  contract: ExtendedPublishedContract;
   walletOrEns: string;
 }
 
-export const ReleasedContract: React.FC<ReleasedContractProps> = ({
-  release,
+export const PublishedContract: React.FC<PublishedContractProps> = ({
+  contract,
   walletOrEns,
 }) => {
   const address = useAddress();
-  const releasedContractInfo = useReleasedContractInfo(release);
-  const { data: compilerInfo } = useReleasedContractCompilerMetadata(release);
+  const publishedContractInfo = usePublishedContractInfo(contract);
+  const { data: compilerInfo } = usePublishedContractCompilerMetadata(contract);
 
   const router = useRouter();
-  const contractReleaseMetadata = useContractPublishMetadataFromURI(
-    release.metadataUri,
+  const contractPublishMetadata = useContractPublishMetadataFromURI(
+    contract.metadataUri,
   );
 
   const enabledExtensions = useContractEnabledExtensions(
-    contractReleaseMetadata.data?.abi,
+    contractPublishMetadata.data?.abi,
   );
 
-  const releaserProfile = useReleaserProfile(release.releaser);
+  const publisherProfile = usePublisherProfile(contract.publisher);
 
   const currentRoute = `https://thirdweb.com${router.asPath.replace(
-    "/release",
+    "/publish",
     "",
   )}`.replace("deployer.thirdweb.eth", "thirdweb.eth");
 
-  const contractFunctions = useReleasedContractFunctions(release);
-  const contractEvents = useReleasedContractEvents(release);
+  const contractFunctions = usePublishedContractFunctions(contract);
+  const contractEvents = usePublishedContractEvents(contract);
 
-  const ensQuery = useEns(release.releaser);
+  const ensQuery = useEns(contract.publisher);
 
-  const releaserEnsOrAddress = replaceDeployerAddress(
-    shortenIfAddress(ensQuery.data?.ensName || release.releaser),
+  const publisherEnsOrAddress = replaceDeployerAddress(
+    shortenIfAddress(ensQuery.data?.ensName || contract.publisher),
   );
 
-  const releasedDate = format(
+  const publishDate = format(
     new Date(
       parseInt(
-        releasedContractInfo?.data?.publishedTimestamp.toString() || "0",
+        publishedContractInfo?.data?.publishedTimestamp.toString() || "0",
       ) * 1000,
     ),
     "MMM dd, yyyy",
@@ -112,12 +112,12 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
 
   const licenses = correctAndUniqueLicenses(compilerInfo?.licenses || []);
 
-  const releaseName = useMemo(() => {
-    if (release.displayName) {
-      return release.displayName;
+  const publishedContractName = useMemo(() => {
+    if (contract.displayName) {
+      return contract.displayName;
     }
-    return release.name;
-  }, [release.displayName, release.name]);
+    return contract.name;
+  }, [contract.displayName, contract.name]);
 
   const extensionNames = useMemo(() => {
     return enabledExtensions.map((ext) => ext.name);
@@ -125,27 +125,27 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
 
   const ogImageUrl = useMemo(
     () =>
-      ReleaseOG.toUrl({
-        name: releaseName,
-        description: release.description,
-        version: release.version,
-        publisher: releaserEnsOrAddress,
+      PublishedContractOG.toUrl({
+        name: publishedContractName,
+        description: contract.description,
+        version: contract.version,
+        publisher: publisherEnsOrAddress,
         extension: extensionNames,
         license: licenses,
-        publishDate: releasedDate,
-        publisherAvatar: releaserProfile.data?.avatar || undefined,
-        logo: release.logo,
+        publishDate,
+        publisherAvatar: publisherProfile.data?.avatar || undefined,
+        logo: contract.logo,
       }),
     [
       extensionNames,
       licenses,
-      release.description,
-      release.logo,
-      releaseName,
-      release.version,
-      releasedDate,
-      releaserEnsOrAddress,
-      releaserProfile.data?.avatar,
+      contract.description,
+      contract.logo,
+      publishedContractName,
+      contract.version,
+      publishDate,
+      publisherEnsOrAddress,
+      publisherProfile.data?.avatar,
     ],
   );
 
@@ -153,26 +153,26 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
     const url = new URL("https://twitter.com/intent/tweet");
     url.searchParams.append(
       "text",
-      `Check out this ${releaseName} contract on @thirdweb
-
+      `Check out this ${publishedContractName} contract on @thirdweb
+      
 Deploy it in one click`,
     );
     url.searchParams.append("url", currentRoute);
     return url.href;
-  }, [releaseName, currentRoute]);
+  }, [publishedContractName, currentRoute]);
 
   const sources = useQuery(
-    ["sources", release],
+    ["sources", contract],
     async () => {
       invariant(
-        contractReleaseMetadata.data?.compilerMetadata?.sources,
+        contractPublishMetadata.data?.compilerMetadata?.sources,
         "no compilerMetadata sources available",
       );
       return (
         await fetchSourceFilesFromMetadata(
           {
             metadata: {
-              sources: contractReleaseMetadata.data.compilerMetadata.sources,
+              sources: contractPublishMetadata.data.compilerMetadata.sources,
             },
           } as unknown as PublishedMetadata,
           StorageSingleton,
@@ -187,7 +187,7 @@ Deploy it in one click`,
         .slice()
         .reverse();
     },
-    { enabled: !!contractReleaseMetadata.data?.compilerMetadata?.sources },
+    { enabled: !!contractPublishMetadata.data?.compilerMetadata?.sources },
   );
 
   const title = useMemo(() => {
@@ -200,19 +200,19 @@ Deploy it in one click`,
       clearType = "ERC1155";
     }
     if (clearType) {
-      return `${releaseName} - ${clearType} | Smart Contract Release`;
+      return `${publishedContractName} - ${clearType} | Published Smart Contract`;
     }
 
-    return `${releaseName} | Smart Contract Release`;
-  }, [extensionNames, releaseName]);
+    return `${publishedContractName} | Published Smart Contract`;
+  }, [extensionNames, publishedContractName]);
 
   return (
     <>
       <NextSeo
         title={title}
-        description={`${release.description}${
-          release.description ? ". " : ""
-        }Deploy ${releaseName} in one click with thirdweb.`}
+        description={`${contract.description}${
+          contract.description ? ". " : ""
+        }Deploy ${publishedContractName} in one click with thirdweb.`}
         openGraph={{
           title,
           url: currentRoute,
@@ -221,40 +221,40 @@ Deploy it in one click`,
               url: ogImageUrl.toString(),
               width: 1200,
               height: 630,
-              alt: `${releaseName} contract on thirdweb`,
+              alt: `${publishedContractName} contract on thirdweb`,
             },
           ],
         }}
       />
       <GridItem colSpan={{ base: 12, md: 9 }}>
         <Flex flexDir="column" gap={6}>
-          {address === release.releaser && (
+          {address === contract.publisher && (
             <LinkButton
               ml="auto"
               size="sm"
               variant="outline"
               leftIcon={<Icon as={BiPencil} />}
-              href={`/contracts/release/${encodeURIComponent(
-                release.metadataUri.replace("ipfs://", ""),
+              href={`/contracts/publish/${encodeURIComponent(
+                contract.metadataUri.replace("ipfs://", ""),
               )}`}
             >
-              Edit Release
+              Edit
             </LinkButton>
           )}
-          {releasedContractInfo.data?.publishedMetadata?.readme && (
+          {publishedContractInfo.data?.publishedMetadata?.readme && (
             <Card as={Flex} flexDir="column" gap={2} p={6} position="relative">
               <MarkdownRenderer
                 markdownText={
-                  releasedContractInfo.data?.publishedMetadata?.readme
+                  publishedContractInfo.data?.publishedMetadata?.readme
                 }
               />
             </Card>
           )}
 
-          {releasedContractInfo.data?.publishedMetadata?.changelog && (
+          {publishedContractInfo.data?.publishedMetadata?.changelog && (
             <Card as={Flex} flexDir="column" gap={2} p={0}>
               <Heading px={6} pt={5} pb={2} size="title.sm">
-                {releasedContractInfo.data?.publishedMetadata?.version} Release
+                {publishedContractInfo.data?.publishedMetadata?.version} Release
                 Notes
               </Heading>
               <Divider />
@@ -264,7 +264,7 @@ Deploy it in one click`,
                 pt={2}
                 pb={5}
                 markdownText={
-                  releasedContractInfo.data?.publishedMetadata?.changelog
+                  publishedContractInfo.data?.publishedMetadata?.changelog
                 }
               />
             </Card>
@@ -275,7 +275,7 @@ Deploy it in one click`,
                 functions={contractFunctions}
                 events={contractEvents}
                 sources={sources.data}
-                abi={contractReleaseMetadata.data?.abi}
+                abi={contractPublishMetadata.data?.abi}
               />
             </Card>
           )}
@@ -283,7 +283,7 @@ Deploy it in one click`,
       </GridItem>
       <GridItem colSpan={{ base: 12, md: 3 }}>
         <Flex flexDir="column" gap={6}>
-          {walletOrEns && <ReleaserHeader wallet={walletOrEns} />}
+          {walletOrEns && <PublisherHeader wallet={walletOrEns} />}
           <Divider />
           <Flex flexDir="column" gap={4}>
             <Heading as="h4" size="title.sm">
@@ -291,22 +291,22 @@ Deploy it in one click`,
             </Heading>
             <List as={Flex} flexDir="column" gap={3}>
               <>
-                {releasedContractInfo.data?.publishedTimestamp && (
+                {publishedContractInfo.data?.publishedTimestamp && (
                   <ListItem>
                     <Flex gap={2} alignItems="flex-start">
                       <Icon color="paragraph" as={VscCalendar} boxSize={5} />
                       <Flex direction="column" gap={1}>
                         <Heading as="h5" size="label.sm">
-                          Release Date
+                          Publish Date
                         </Heading>
                         <Text size="body.md" lineHeight={1.2}>
-                          {releasedDate}
+                          {publishDate}
                         </Text>
                       </Flex>
                     </Flex>
                   </ListItem>
                 )}
-                {releasedContractInfo.data?.publishedMetadata?.audit && (
+                {publishedContractInfo.data?.publishedMetadata?.audit && (
                   <ListItem>
                     <Flex gap={2} alignItems="flex-start">
                       <Icon as={BsShieldCheck} boxSize={5} color="green" />
@@ -317,7 +317,8 @@ Deploy it in one click`,
                         <Text size="body.md" lineHeight={1.2}>
                           <Link
                             href={replaceIpfsUrl(
-                              releasedContractInfo.data.publishedMetadata.audit,
+                              publishedContractInfo.data.publishedMetadata
+                                .audit,
                             )}
                             isExternal
                             _dark={{
@@ -395,11 +396,11 @@ Deploy it in one click`,
               <ShareButton
                 url={currentRoute}
                 title={`${shortenIfAddress(
-                  releaserEnsOrAddress,
-                )}/${releaseName}`}
+                  publisherEnsOrAddress,
+                )}/${publishedContractName}`}
                 text={`Deploy ${shortenIfAddress(
-                  releaserEnsOrAddress,
-                )}/${releaseName} in one click with thirdweb.`}
+                  publisherEnsOrAddress,
+                )}/${publishedContractName} in one click with thirdweb.`}
               />
               <TrackedIconButton
                 as={LinkButton}
@@ -419,12 +420,12 @@ Deploy it in one click`,
             <Flex gap={2} alignItems="center">
               <LinkButton
                 colorScheme="blue"
-                href="https://portal.thirdweb.com/release"
+                href="https://portal.thirdweb.com/publish"
                 w="full"
                 variant="ghost"
                 isExternal
               >
-                Learn about Release
+                Learn about Publish
               </LinkButton>
             </Flex>
           </Flex>

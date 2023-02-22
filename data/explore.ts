@@ -172,13 +172,13 @@ export function getCategory(id: string): ExploreCategory | null {
   return null;
 }
 
+export type ExploreCategoryName = keyof typeof CATEGORIES;
+
 export function isExploreCategory(
   category: string,
-): category is keyof typeof CATEGORIES {
+): category is ExploreCategoryName {
   return category in CATEGORIES;
 }
-
-export type ExploreCategoryName = keyof typeof CATEGORIES;
 
 export const EXPLORE_PAGE_DATA = Object.values(CATEGORIES).filter(
   (v) => (v as ExploreCategory).showInExplore !== false,
@@ -199,7 +199,7 @@ export function prefetchCategory(
   );
 }
 
-export function getAllExploreReleases() {
+export function getAllExplorePublishedContracts() {
   const all = EXPLORE_PAGE_DATA.flatMap((category) => category.contracts);
   return [...new Set(all)];
 }
@@ -207,7 +207,9 @@ export function getAllExploreReleases() {
 export function getAllExplorePublishers() {
   return [
     ...new Set(
-      getAllExploreReleases().map((contract) => contract.split("/")[0]),
+      getAllExplorePublishedContracts().map(
+        (contract) => contract.split("/")[0],
+      ),
     ),
   ];
 }

@@ -107,11 +107,11 @@ export const PRODUCTS: NavCardProps[] = [
     icon: require("public/assets/product-icons/contracts.png"),
   },
   {
-    name: "Release",
-    label: "release",
+    name: "Publish",
+    label: "publish",
     description: "Publish your contracts on-chain",
-    link: "/release",
-    icon: require("public/assets/product-icons/release.png"),
+    link: "/publish",
+    icon: require("public/assets/product-icons/publish.png"),
   },
   {
     name: "ContractKit",

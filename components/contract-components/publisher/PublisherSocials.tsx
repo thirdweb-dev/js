@@ -13,156 +13,158 @@ import type { ProfileMetadata } from "@thirdweb-dev/sdk/evm";
 import { FiGlobe } from "react-icons/fi";
 import { LinkButton, TrackedIconButton } from "tw-components";
 
-interface ReleaserSocialsProps extends ButtonGroupProps {
-  releaserProfile: ProfileMetadata;
+const TRACKING_CATEGORY = "releaser-header";
+
+interface PublisherSocialsProps extends ButtonGroupProps {
+  publisherProfile: ProfileMetadata;
 }
 
-export const ReleaserSocials: React.FC<ReleaserSocialsProps> = ({
-  releaserProfile,
+export const PublisherSocials: React.FC<PublisherSocialsProps> = ({
+  publisherProfile,
   spacing = 0,
   size = "sm",
   ...props
 }) => (
   <ButtonGroup size={size} spacing={spacing} {...props}>
-    {releaserProfile.twitter && (
+    {publisherProfile.twitter && (
       <TrackedIconButton
         as={LinkButton}
         isExternal
         noIcon
         href={
-          releaserProfile.twitter.includes("twitter.com")
-            ? releaserProfile.twitter
-            : `https://twitter.com/${releaserProfile.twitter}`
+          publisherProfile.twitter.includes("twitter.com")
+            ? publisherProfile.twitter
+            : `https://twitter.com/${publisherProfile.twitter}`
         }
         bg="transparent"
         aria-label="twitter"
         icon={<Icon as={SiTwitter} />}
-        category="releaser-header"
+        category={TRACKING_CATEGORY}
         label="twitter"
       />
     )}
-    {releaserProfile.discord && (
+    {publisherProfile.discord && (
       <TrackedIconButton
         as={LinkButton}
         isExternal
         noIcon
-        href={releaserProfile.discord}
+        href={publisherProfile.discord}
         bg="transparent"
         aria-label="discord"
         icon={<Icon as={SiDiscord} />}
-        category="releaser-header"
+        category={TRACKING_CATEGORY}
         label="discord"
       />
     )}
-    {releaserProfile.github && (
+    {publisherProfile.github && (
       <TrackedIconButton
         as={LinkButton}
         isExternal
         noIcon
         href={
-          releaserProfile.github.includes("github.com")
-            ? releaserProfile.github
-            : `https://github.com/${releaserProfile.github}`
+          publisherProfile.github.includes("github.com")
+            ? publisherProfile.github
+            : `https://github.com/${publisherProfile.github}`
         }
         bg="transparent"
         aria-label="github"
         icon={<Icon as={SiGithub} />}
-        category="releaser-header"
+        category={TRACKING_CATEGORY}
         label="github"
       />
     )}
-    {releaserProfile.website && (
+    {publisherProfile.website && (
       <TrackedIconButton
         as={LinkButton}
         isExternal
         noIcon
-        href={releaserProfile.website}
+        href={publisherProfile.website}
         bg="transparent"
         aria-label="website"
         icon={<Icon as={FiGlobe} />}
-        category="releaser-header"
+        category={TRACKING_CATEGORY}
         label="website"
       />
     )}
 
-    {releaserProfile.medium && (
+    {publisherProfile.medium && (
       <TrackedIconButton
         as={LinkButton}
         isExternal
         noIcon
         href={
-          releaserProfile.medium.includes("medium.com")
-            ? releaserProfile.medium
-            : `https://medium.com/@${releaserProfile.medium}`
+          publisherProfile.medium.includes("medium.com")
+            ? publisherProfile.medium
+            : `https://medium.com/@${publisherProfile.medium}`
         }
         bg="transparent"
         aria-label="medium"
         icon={<Icon as={SiMedium} />}
-        category="releaser-header"
+        category={TRACKING_CATEGORY}
         label="medium"
       />
     )}
-    {releaserProfile.telegram && (
+    {publisherProfile.telegram && (
       <TrackedIconButton
         as={LinkButton}
         isExternal
         noIcon
         href={
-          releaserProfile.telegram.includes("t.me")
-            ? releaserProfile.telegram
-            : `https://t.me/${releaserProfile.telegram}`
+          publisherProfile.telegram.includes("t.me")
+            ? publisherProfile.telegram
+            : `https://t.me/${publisherProfile.telegram}`
         }
         bg="transparent"
         aria-label="telegram"
         icon={<Icon as={SiTelegram} />}
-        category="releaser-header"
+        category={TRACKING_CATEGORY}
         label="telegram"
       />
     )}
-    {releaserProfile.facebook && (
+    {publisherProfile.facebook && (
       <TrackedIconButton
         as={LinkButton}
         isExternal
         noIcon
-        href={releaserProfile.facebook}
+        href={publisherProfile.facebook}
         bg="transparent"
         aria-label="facebook"
         icon={<Icon as={SiFacebook} />}
-        category="releaser-header"
+        category={TRACKING_CATEGORY}
         label="facebook"
       />
     )}
-    {releaserProfile.reddit && (
+    {publisherProfile.reddit && (
       <TrackedIconButton
         as={LinkButton}
         isExternal
         noIcon
         href={
-          releaserProfile.reddit.includes("reddit.com")
-            ? releaserProfile.reddit
-            : `https://reddit.com/user/${releaserProfile.reddit}`
+          publisherProfile.reddit.includes("reddit.com")
+            ? publisherProfile.reddit
+            : `https://reddit.com/user/${publisherProfile.reddit}`
         }
         bg="transparent"
         aria-label="reddit"
         icon={<Icon as={SiReddit} />}
-        category="releaser-header"
+        category={TRACKING_CATEGORY}
         label="reddit"
       />
     )}
-    {releaserProfile.linkedin && (
+    {publisherProfile.linkedin && (
       <TrackedIconButton
         as={LinkButton}
         isExternal
         noIcon
         href={
-          releaserProfile.linkedin.includes("linkedin.com")
-            ? releaserProfile.linkedin
-            : `https://linkedin.com/in/${releaserProfile.linkedin}`
+          publisherProfile.linkedin.includes("linkedin.com")
+            ? publisherProfile.linkedin
+            : `https://linkedin.com/in/${publisherProfile.linkedin}`
         }
         bg="transparent"
         aria-label="linkedin"
         icon={<Icon as={SiLinkedin} />}
-        category="releaser-header"
+        category={TRACKING_CATEGORY}
         label="linkedin"
       />
     )}

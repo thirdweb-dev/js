@@ -1,6 +1,6 @@
 import { getAbsoluteUrl } from "lib/vercel-utils";
 
-interface OGImageRelease {
+interface OGImagePublishedContract {
   name: string;
   version: string;
   publishDate: string;
@@ -16,7 +16,7 @@ interface OgImageProfile {
   displayName: string;
   bio?: string;
   avatar?: string;
-  releaseCnt?: string;
+  publishedCnt?: string;
 }
 
 interface OgImageContract {
@@ -26,15 +26,15 @@ interface OgImageContract {
   logo?: string;
   deployer?: string;
   erc?: string;
-  // maybe later add release metadata
-  // releaseMeta?: Pick<
-  //   OGImageRelease,
+  // maybe later add publish metadata
+  // publishMeta?: Pick<
+  //   OGImagePublishedContract,
   //   "name" | "version" | "publishDate" | "logo"
   // >;
 }
 
 type OgProps = {
-  release: OGImageRelease;
+  publishedContract: OGImagePublishedContract;
   profile: OgImageProfile;
   contract: OgImageContract;
 };
@@ -59,7 +59,7 @@ function toUrl<TOgType extends keyof OgProps>(
 
 function fromUrl(type: keyof OgProps, url: URL): OgProps[typeof type] {
   switch (type) {
-    case "release":
+    case "publishedContract":
       return {
         name: url.searchParams.get("name") || "",
         version: url.searchParams.get("version") || "",
@@ -76,7 +76,7 @@ function fromUrl(type: keyof OgProps, url: URL): OgProps[typeof type] {
         displayName: url.searchParams.get("displayName") || "",
         bio: url.searchParams.get("bio") || undefined,
         avatar: url.searchParams.get("avatar") || undefined,
-        releaseCnt: url.searchParams.get("releaseCnt") || undefined,
+        publishedCnt: url.searchParams.get("publishedCnt") || undefined,
       } as OgProps["profile"];
     case "contract":
       return {
@@ -92,9 +92,11 @@ function fromUrl(type: keyof OgProps, url: URL): OgProps[typeof type] {
   }
 }
 
-export const ReleaseOG = {
-  toUrl: (props: OgProps["release"]) => toUrl("release", props),
-  fromUrl: (url: URL) => fromUrl("release", url) as OgProps["release"],
+export const PublishedContractOG = {
+  toUrl: (props: OgProps["publishedContract"]) =>
+    toUrl("publishedContract", props),
+  fromUrl: (url: URL) =>
+    fromUrl("publishedContract", url) as OgProps["publishedContract"],
 };
 
 export const ProfileOG = {

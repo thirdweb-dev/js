@@ -180,7 +180,7 @@ const SearchResult: React.FC<{
           top={0}
           right={0}
           transform="translate(33%, -33%)"
-          aria-label="Open release"
+          aria-label="Open published contract"
           opacity={0}
           _dark={{
             bg: "white",

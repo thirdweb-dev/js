@@ -16,7 +16,7 @@ import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { ChakraNextImage } from "components/Image";
 import { AppLayout } from "components/app-layouts/app";
 import { DeployedContracts } from "components/contract-components/tables/deployed-contracts";
-import { ReleasedContracts } from "components/contract-components/tables/released-contracts";
+import { PublishedContracts } from "components/contract-components/tables/published-contracts";
 import { FancyEVMIcon } from "components/icons/Ethereum";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { PageId } from "page-id";
@@ -65,11 +65,11 @@ const Contracts: ThirdwebNextPage = () => {
                   }}
                 >
                   <ChakraNextImage
-                    src={require("public/assets/product-icons/release.png")}
+                    src={require("public/assets/product-icons/publish.png")}
                     alt=""
                     boxSize={6}
                   />
-                  <Heading size="label.lg">Released Contracts</Heading>
+                  <Heading size="label.lg">Published Contracts</Heading>
                 </Tab>
               </TabList>
               <TabPanels px={0} py={2}>
@@ -129,7 +129,7 @@ const PublishedContractsPage: React.FC<ContractsProps> = ({ address }) => {
     <Flex direction="column" gap={8}>
       {/* this section needs to be on the publishersdk context (polygon SDK) */}
       <PublisherSDKContext>
-        <ReleasedContracts address={address} />
+        <PublishedContracts address={address} />
       </PublisherSDKContext>
     </Flex>
   );

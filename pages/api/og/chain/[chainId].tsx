@@ -3,8 +3,6 @@ import { ImageResponse } from "@vercel/og";
 import { NextRequest } from "next/server";
 import { getAllChainRecords } from "utils/allChainsRecords";
 
-// import { ReleaseOG } from "og-lib/url-utils";
-
 // Make sure the font exists in the specified path:
 export const config = {
   runtime: "edge",
@@ -90,8 +88,6 @@ export default async function handler(req: NextRequest) {
   if (!chain) {
     return new Response("Chain not found", { status: 400 });
   }
-
-  // const releaseData = ReleaseOG.fromUrl(new URL(req.url));
 
   const iconUrl = chain.icon?.url.replace(
     "ipfs://",

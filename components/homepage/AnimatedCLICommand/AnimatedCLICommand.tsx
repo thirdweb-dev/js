@@ -99,7 +99,7 @@ const CopyButton: React.FC<{ text: string }> = ({ text }) => {
 };
 
 export const AnimatedCLICommand: React.FC = () => {
-  const spanRef = useCycledTyping(["create", "deploy", "release"]);
+  const spanRef = useCycledTyping(["create", "deploy", "publish"]);
 
   return (
     <Flex

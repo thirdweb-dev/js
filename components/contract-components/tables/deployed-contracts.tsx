@@ -28,7 +28,7 @@ import {
   SchemaForPrebuiltContractType,
 } from "@thirdweb-dev/sdk/evm";
 import { ChakraNextImage } from "components/Image";
-import { useReleasesFromDeploy } from "components/contract-components/hooks";
+import { usePublishedContractsFromDeploy } from "components/contract-components/hooks";
 import { GettingStartedBox } from "components/getting-started/box";
 import { GettingStartedCard } from "components/getting-started/card";
 import { ChainIcon } from "components/icons/ChainIcon";
@@ -388,7 +388,7 @@ const AsyncContractTypeCell: React.FC<AsyncContractTypeCellProps> = ({
 
   const contractType = contractTypeQuery.data;
   const isPrebuiltContract = contractType && contractType !== "custom";
-  const releasesFromDeploy = useReleasesFromDeploy(
+  const publishedContractsFromDeploy = usePublishedContractsFromDeploy(
     isPrebuiltContract ? undefined : cell.address || undefined,
     cell.chainId,
   );
@@ -412,11 +412,11 @@ const AsyncContractTypeCell: React.FC<AsyncContractTypeCellProps> = ({
     );
   }
 
-  const actualRelease = releasesFromDeploy.data
-    ? releasesFromDeploy.data[0]
+  const actualPublishedContract = publishedContractsFromDeploy.data
+    ? publishedContractsFromDeploy.data[0]
     : null;
 
-  if (!releasesFromDeploy.isLoading && !actualRelease) {
+  if (!publishedContractsFromDeploy.isLoading && !actualPublishedContract) {
     return (
       <Flex align="center" gap={2}>
         {imgSrc ? (
@@ -431,15 +431,15 @@ const AsyncContractTypeCell: React.FC<AsyncContractTypeCellProps> = ({
 
   return (
     <Flex align="center" gap={2}>
-      <Skeleton isLoaded={!releasesFromDeploy.isLoading && !!imgSrc}>
+      <Skeleton isLoaded={!publishedContractsFromDeploy.isLoading && !!imgSrc}>
         {imgSrc ? (
           <ChakraNextImage boxSize={8} src={imgSrc} alt={Custom} />
         ) : (
           <Box boxSize={8} />
         )}
       </Skeleton>
-      <Skeleton isLoaded={!releasesFromDeploy.isLoading}>
-        <Text size="label.md">{actualRelease?.name || Custom}</Text>
+      <Skeleton isLoaded={!publishedContractsFromDeploy.isLoading}>
+        <Text size="label.md">{actualPublishedContract?.name || Custom}</Text>
       </Skeleton>
     </Flex>
   );

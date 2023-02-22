@@ -25,7 +25,7 @@ import {
   AbiFunction,
   ValidContractInstance,
 } from "@thirdweb-dev/sdk/evm";
-import { MarkdownRenderer } from "components/contract-components/released-contract/markdown-renderer";
+import { MarkdownRenderer } from "components/contract-components/published-contract/markdown-renderer";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { FiEdit2, FiEye } from "react-icons/fi";
