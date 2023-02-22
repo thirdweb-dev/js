@@ -12,4 +12,5 @@ export interface EmailWalletConnectorOptions {
 
 export interface EmailWalletConnectionArgs {
   email: string;
+  handleOTP: () => Promise<string>;
 }

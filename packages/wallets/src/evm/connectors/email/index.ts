@@ -40,17 +40,22 @@ export class EmailWalletConnector extends TWConnector<EmailWalletConnectionArgs>
     if (!email) {
       throw new Error("No Email provided");
     }
-    let getUser = await this.paper.getUser();
-    switch (getUser.status) {
+    let user = await this.paper.getUser();
+    switch (user.status) {
       case UserStatus.LOGGED_OUT: {
         const authResult = await this.paper.auth.loginWithPaperEmailOtp({
           email,
         });
         this.user = authResult.user;
+        /**
+          await Paper.auth.sendPaperEmailLoginOtp({ email });
+          const otp = await args?.handleOTP();
+          const user = await Paper.auth.verifyPaperEmailLoginOtp({ email, otp });
+         */
         break;
       }
       case UserStatus.LOGGED_IN_WALLET_INITIALIZED: {
-        this.user = getUser;
+        this.user = user;
         break;
       }
     }
