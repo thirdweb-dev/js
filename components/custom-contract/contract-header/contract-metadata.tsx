@@ -1,6 +1,6 @@
 import { MetadataHeader } from "./metadata-header";
-import { Box } from "@chakra-ui/react";
 import { useContract, useContractMetadata } from "@thirdweb-dev/react";
+import { useEffect, useState } from "react";
 
 interface ContractMetadataProps {
   contractAddress: string;
@@ -13,11 +13,18 @@ export const ContractMetadata: React.FC<ContractMetadataProps> = ({
 
   const metadataQuery = useContractMetadata(contract);
 
-  if (metadataQuery.isError) {
-    return <Box>Failed to load contract metadata</Box>;
-  }
+  const [wasError, setWasError] = useState(false);
+  useEffect(() => {
+    if (metadataQuery.isError) {
+      setWasError(true);
+    } else if (metadataQuery.isSuccess) {
+      setWasError(false);
+    }
+  }, [metadataQuery.isError, metadataQuery.isSuccess]);
+
   return (
     <MetadataHeader
+      isError={metadataQuery.isError || wasError}
       isLoaded={metadataQuery.isSuccess}
       data={metadataQuery.data}
       address={contractAddress}

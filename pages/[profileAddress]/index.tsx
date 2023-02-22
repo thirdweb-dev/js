@@ -107,7 +107,6 @@ const UserPage: ThirdwebNextPage = (props: UserPageProps) => {
             : undefined,
           url: currentRoute,
         }}
-        canonical={currentRoute}
       />
 
       <Flex flexDir="column" gap={12}>

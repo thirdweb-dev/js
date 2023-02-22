@@ -12,6 +12,7 @@ import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
 interface MetadataHeaderProps {
   isLoaded: boolean;
+  isError?: boolean;
   address?: string;
   contractTypeImage?: StaticImageData;
   data?: {
@@ -23,6 +24,7 @@ interface MetadataHeaderProps {
 
 export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
   isLoaded,
+  isError,
   address,
   data,
 }) => {
@@ -42,7 +44,6 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
     "deployer.thirdweb.eth",
     "thirdweb.eth",
   );
-
   const ogImage = useMemo(() => {
     if (!displayName || !address || !data) {
       return undefined;
@@ -58,10 +59,9 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
 
   return (
     <>
-      {isLoaded && displayName ? (
+      {isLoaded && displayName && !isError ? (
         <NextSeo
           title={displayName}
-          canonical={currentRoute}
           openGraph={{
             title: displayName,
             images: ogImage
@@ -79,7 +79,7 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
         />
       ) : null}
       <Flex align={{ base: "flex-start", md: "center" }} gap={4}>
-        {data?.image || !isLoaded ? (
+        {(data?.image || !isLoaded) && !isError ? (
           <Skeleton
             isLoaded={isLoaded}
             flexShrink={0}
@@ -104,19 +104,31 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
         ) : null}
 
         <Flex direction="column" gap={2} align="flex-start">
-          <Skeleton isLoaded={isLoaded}>
-            <Heading size="title.md">{data?.name ? data?.name : ""}</Heading>
-          </Skeleton>
-          <Skeleton isLoaded={isLoaded}>
-            <Text
-              maxW="2xl"
-              title={data?.description || undefined}
-              size="body.sm"
-              noOfLines={3}
-            >
-              {isLoaded ? data?.description : ""}
+          {isError ? (
+            <Heading size="title.md">No Contract Metadata Detected</Heading>
+          ) : (
+            <Skeleton isLoaded={isLoaded}>
+              <Heading size="title.md">{data?.name ? data?.name : ""}</Heading>
+            </Skeleton>
+          )}
+          {isError ? (
+            <Text maxW="lg" size="body.sm" noOfLines={3}>
+              This contract does not implement any standards that can be used to
+              retrieve metadata. Other contract functionality will still be
+              available.
             </Text>
-          </Skeleton>
+          ) : (
+            <Skeleton isLoaded={isLoaded}>
+              <Text
+                maxW="2xl"
+                title={data?.description || undefined}
+                size="body.sm"
+                noOfLines={3}
+              >
+                {isLoaded ? data?.description : ""}
+              </Text>
+            </Skeleton>
+          )}
           <Flex gap={2}>
             <AddressCopyButton size="xs" address={address} />
             <AddToDashboardToggleButton contractAddress={address} />

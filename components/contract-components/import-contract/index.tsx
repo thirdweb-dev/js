@@ -10,7 +10,7 @@ import {
 import { Chain } from "@thirdweb-dev/chains";
 import { ChakraNextImage } from "components/Image";
 import { useCallback, useEffect, useRef } from "react";
-import { FiCheck } from "react-icons/fi";
+import { FiCheck, FiExternalLink } from "react-icons/fi";
 import { Button, Card, Heading, Text, TrackedLink } from "tw-components";
 
 interface ImportContractProps {
@@ -97,24 +97,68 @@ export const ImportContract: React.FC<ImportContractProps> = ({
               )}
             </Flex>
             <Text>
-              {importContract.isError
-                ? `We could not resolve your contract's ABI or it might be deployed on a network that is not yet supported by import`
-                : `This is a one-time action. Once imported, the contract can be
-              accessed by everyone. This can take up to a few minutes.`}
+              {importContract.isError ? (
+                <>
+                  We could not resolve your contract&apos;s ABI or your contract
+                  may be deployed on a network that is not yet supported for
+                  automatic import. You can{" "}
+                  <TrackedLink
+                    href="https://sourcify.dev/#/verifier"
+                    category="import-contract"
+                    label="sourcify"
+                    fontSize="inherit"
+                    fontWeight="inherit"
+                    isExternal
+                    color="heading"
+                  >
+                    verify your contract on Sourcify
+                  </TrackedLink>{" "}
+                  and then try{" "}
+                  <Button
+                    onClick={handleImportContract}
+                    variant="link"
+                    fontSize="inherit"
+                    fontWeight="inherit"
+                  >
+                    importing again
+                  </Button>
+                  .
+                </>
+              ) : (
+                `This is a one-time action. Once imported, the contract can be
+              accessed by everyone. This can take up to a few minutes.`
+              )}
             </Text>
 
             <Flex direction="column" gap={1.5} align="center">
-              {!importContract.isSuccess && !autoImport && (
+              {importContract.isError ? (
                 <Button
+                  as={TrackedLink}
+                  href="https://sourcify.dev/#/verifier"
+                  category="import-contract"
+                  label="sourcify"
                   w="full"
-                  colorScheme="blue"
-                  isLoading={importContract.isLoading}
-                  isDisabled={importContract.isSuccess || !chain}
-                  loadingText="Importing"
-                  onClick={handleImportContract}
+                  colorScheme="purple"
+                  isExternal
+                  textDecor="none!important"
+                  rightIcon={<Icon as={FiExternalLink} />}
                 >
-                  Import Contract
+                  Verify Contract on Sourcify
                 </Button>
+              ) : (
+                !importContract.isSuccess &&
+                !autoImport && (
+                  <Button
+                    w="full"
+                    colorScheme="blue"
+                    isLoading={importContract.isLoading}
+                    isDisabled={importContract.isSuccess || !chain}
+                    loadingText="Importing"
+                    onClick={handleImportContract}
+                  >
+                    Import Contract
+                  </Button>
+                )
               )}
             </Flex>
 
