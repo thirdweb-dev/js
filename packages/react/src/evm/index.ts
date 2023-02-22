@@ -9,6 +9,7 @@ export * from "./hooks/wagmi-required/useConnect";
 export * from "./hooks/connectors/useMetamask";
 export * from "./hooks/connectors/useWalletConnect";
 export * from "./hooks/connectors/useWalletLink";
+export * from "./connectors/gnosis-safe";
 
 // ui components
 export * from "./components/MediaRenderer";
