@@ -40,6 +40,7 @@ import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelec
 import { FileInput } from "components/shared/FileInput";
 import { BuiltinContractMap, DisabledChainsMap } from "constants/mappings";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
+import { verifyContract } from "contract-ui/tabs/sources/page";
 import { constants, utils } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useConfiguredChain } from "hooks/chains/configureChains";
@@ -259,6 +260,18 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                 chainId: selectedChain,
                 address: contractAddress,
               });
+
+              // try verifying the contract, might as well
+              try {
+                // we don't await this, just kick it off and be done with it
+                verifyContract({
+                  contractAddress,
+                  chainId: selectedChain,
+                });
+              } catch (e) {
+                // ignore
+              }
+
               trackEvent({
                 category: "builtin-contract",
                 action: "deploy",

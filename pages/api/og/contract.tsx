@@ -87,7 +87,7 @@ function descriptionShortener(description: string) {
   if (words[words.length - 1].length < 4) {
     words = words.slice(0, -1);
   }
-  if (words[words.length - 1].endsWith(".")) {
+  if (words[words.length - 1]?.endsWith(".")) {
     return words.join(" ");
   }
   if (!shortened) {

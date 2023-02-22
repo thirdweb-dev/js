@@ -31,23 +31,33 @@ interface CustomContractSourcesPageProps {
   contractAddress?: string;
 }
 
-function useVerifyCall(shouldFetch: boolean, contractAddress?: string) {
+type VerifyContractParams = {
+  contractAddress: string;
+  chainId: number;
+};
+
+export async function verifyContract({
+  contractAddress,
+  chainId,
+}: VerifyContractParams) {
+  const response = await fetch("/api/verify", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      contractAddress,
+      chainId,
+    }),
+  });
+  return response.json();
+}
+
+function useVerifyCall(shouldFetch: boolean, contractAddress = "") {
   const chainId = useDashboardEVMChainId();
   return useQueryWithNetwork(
     ["verify", contractAddress],
-    async () => {
-      const response = await fetch("/api/verify", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contractAddress,
-          chainId,
-        }),
-      });
-      return response.json();
-    },
+    () => (chainId ? verifyContract({ contractAddress, chainId }) : null),
     {
       enabled: !!contractAddress && !!chainId && shouldFetch,
     },

@@ -62,7 +62,7 @@ function contractSearchQuery(
       }
       let address = searchQuery;
       // if it's an ens address first resolve the real address
-      if (searchQuery.endsWith(".eth")) {
+      if (searchQuery?.endsWith(".eth")) {
         const ensResult = await fetchEns(queryClient, searchQuery);
         if (!ensResult.address) {
           throw new Error("Failed to resolve ENS name.");

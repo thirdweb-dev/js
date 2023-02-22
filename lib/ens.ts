@@ -10,7 +10,7 @@ export interface ENSResolveResult {
 }
 
 export function isEnsName(name: string): boolean {
-  return name.endsWith(".eth");
+  return name?.endsWith(".eth");
 }
 
 export async function resolveAddressToEnsName(

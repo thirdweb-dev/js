@@ -99,7 +99,7 @@ const isValidBytes = (value: string, solidityType: string) => {
     return true;
   }
 
-  if (value.startsWith("[") && value.endsWith("]")) {
+  if (value?.startsWith("[") && value?.endsWith("]")) {
     try {
       const arrayify = JSON.parse(value);
       return isBytesType ? !!arrayify.length : arrayify.length === maxLength;

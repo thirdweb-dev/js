@@ -104,9 +104,9 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
       ["audio", "video", "text/html", "model/*"].some((type: string) =>
         file.type.includes(type),
       ) ||
-      file.name.endsWith(".glb") ||
-      file.name.endsWith(".usdz") ||
-      file.name.endsWith(".gltf")
+      file.name?.endsWith(".glb") ||
+      file.name?.endsWith(".usdz") ||
+      file.name?.endsWith(".gltf")
     ) {
       // audio, video, html, and glb (3d) files
       setValue("animation_url", file);
@@ -115,7 +115,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
       }
     } else if (
       ["text", "application/pdf"].some((type: string) =>
-        file.type.includes(type),
+        file.type?.includes(type),
       )
     ) {
       // text and pdf files

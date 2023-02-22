@@ -16,7 +16,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   if (
     !utils.isAddress(ensNameOrAddress) &&
-    !ensNameOrAddress.endsWith(".eth")
+    !ensNameOrAddress?.endsWith(".eth")
   ) {
     return res.status(400).json({ error: "address / ens name are not valid" });
   }

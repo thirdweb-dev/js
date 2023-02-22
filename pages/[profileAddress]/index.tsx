@@ -48,7 +48,7 @@ const UserPage: ThirdwebNextPage = (props: UserPageProps) => {
     if (
       previousPath !== "[profileAddress]" &&
       props.profileAddress?.startsWith("Qm") &&
-      !props.profileAddress.endsWith(".eth")
+      !props.profileAddress?.endsWith(".eth")
     ) {
       router.replace(`/contracts/deploy/${previousPath}`);
     }

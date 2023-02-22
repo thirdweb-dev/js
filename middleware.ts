@@ -89,7 +89,7 @@ export function middleware(request: NextRequest) {
 }
 
 function isPossibleEVMAddress(address: string) {
-  return address.startsWith("0x") || address.endsWith(".eth");
+  return address?.startsWith("0x") || address?.endsWith(".eth");
 }
 
 // utils for rewriting and redirecting with relative paths

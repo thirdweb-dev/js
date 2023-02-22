@@ -61,7 +61,7 @@ export const SolidityInput = React.forwardRef<
       />
     );
   } else */
-  if (solidityType.endsWith("[]")) {
+  if (solidityType?.endsWith("[]")) {
     return (
       <SolidityRawInput
         formContext={form}
@@ -71,8 +71,8 @@ export const SolidityInput = React.forwardRef<
       />
     );
   } else if (
-    solidityType.startsWith("uint") ||
-    solidityType.startsWith("int")
+    solidityType?.startsWith("uint") ||
+    solidityType?.startsWith("int")
   ) {
     return (
       <SolidityIntInput

@@ -122,7 +122,7 @@ function formatSnippet(
       ?.replace(/{{contract_address}}/gm, contractAddress)
       ?.replace(
         /{{chainName}}/gm,
-        !chainName || chainName.startsWith("0x") || chainName.endsWith(".eth")
+        !chainName || chainName?.startsWith("0x") || chainName?.endsWith(".eth")
           ? "goerli"
           : chainName,
       )

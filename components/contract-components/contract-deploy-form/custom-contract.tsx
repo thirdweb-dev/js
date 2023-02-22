@@ -15,6 +15,7 @@ import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelec
 import { DisabledChainsMap } from "constants/mappings";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
+import { verifyContract } from "contract-ui/tabs/sources/page";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useConfiguredChain } from "hooks/chains/configureChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -176,6 +177,18 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   chainId: selectedChain,
                   address: deployedContractAddress,
                 });
+
+                // try verifying the contract, might as well
+                try {
+                  // we don't await this, just kick it off and be done with it
+                  verifyContract({
+                    contractAddress: deployedContractAddress,
+                    chainId: selectedChain,
+                  });
+                } catch (e) {
+                  // ignore
+                }
+
                 trackEvent({
                   category: "custom-contract",
                   action: "deploy",

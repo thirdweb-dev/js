@@ -72,7 +72,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
       setNoCsv(false);
 
       const csv = acceptedFiles.find(
-        (f) => csvMimeTypes.includes(f.type) || f.name.endsWith(".csv"),
+        (f) => csvMimeTypes.includes(f.type) || f.name?.endsWith(".csv"),
       );
       if (!csv) {
         console.error(
