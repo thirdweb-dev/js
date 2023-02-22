@@ -1,27 +1,23 @@
-import { Overlay } from "../../components/Overlay";
+import { Modal } from "../../components/Modal";
 import { Spacer } from "../../components/Spacer";
-import { Button, IconButton } from "../../components/buttons";
+import { Button } from "../../components/buttons";
 import {
   fontSize,
   iconSize,
-  media,
   radius,
-  shadow,
   spacing,
   Theme,
 } from "../../design-system";
-import { scrollbar } from "../../design-system/styles";
 import { useInstalledWallets } from "../hooks/useInstalledWallets";
+import { CoinbaseWalletIcon } from "./icons/CoinbaseWalletIcon";
+import { DeviceWalletIcon } from "./icons/DeviceWalletIcon";
+import { MetamaskIcon } from "./icons/MetamaskIcon";
+import { InstallCoinbaseWallet } from "./install-ui/InstallCoinbase";
 import { CoinbaseWalletSetup } from "./setup-ui/CoinbaseWaletSetup";
 import { ConnectToDeviceWallet } from "./setup-ui/DeviceWalletSetup";
 import { MetamaskWalletSetup } from "./setup-ui/MetamaskWalletSetup";
-import { CoinbaseWalletIcon } from "./setup-ui/shared/icons/CoinbaseWalletIcon";
-import { DeviceWalletIcon } from "./setup-ui/shared/icons/DeviceWalletIcon";
-import { MetamaskIcon } from "./setup-ui/shared/icons/MetamaskIcon";
-import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as Dialog from "@radix-ui/react-dialog";
-import { Cross2Icon } from "@radix-ui/react-icons";
 import {
   useConnect,
   useConnectingToWallet,
@@ -55,8 +51,14 @@ const walletNames: Record<SupportedWallet["id"], string> = {
 export const ConnectWalletFlow = () => {
   const connectingToWallet = useConnectingToWallet();
   const [showUI, setShowUI] = useState<
-    "deviceWallet" | "metamask" | "networkList" | "coinbaseWallet" | "walletConnect"
-  >("networkList");
+    | "deviceWallet"
+    | "metamask"
+    | "walletList"
+    | "coinbaseWallet"
+    | "installCoinbaseWallet"
+    | "walletConnect"
+  >("walletList");
+
   const connect = useConnect();
   const wallets = useWallets();
   const installedWallets = useInstalledWallets();
@@ -66,14 +68,14 @@ export const ConnectWalletFlow = () => {
   // when the dialog is closed, reset the showUI state
   useEffect(() => {
     if (!open) {
-      setShowUI("networkList");
+      setShowUI("walletList");
     }
   }, [open]);
 
   // when wallet connection is complete or cancelled, show the network list
   useEffect(() => {
     if (!connectingToWallet) {
-      setShowUI("networkList");
+      setShowUI("walletList");
     }
   }, [connectingToWallet]);
 
@@ -93,12 +95,7 @@ export const ConnectWalletFlow = () => {
           wallet.id === "coinbaseWallet" &&
           !installedWallets.coinbaseWallet
         ) {
-          // TEMPORARY
-          // open coinbase wallet extension page in new tab
-          window.open(
-            "https://chrome.google.com/webstore/detail/coinbase-wallet-extension/hnfanknocfeofbddgcijnmhnfnkdnaad",
-            "_blank",
-          );
+          setShowUI("installCoinbaseWallet");
         } else {
           connect(wallet, {});
           setShowUI(wallet.id);
@@ -108,94 +105,71 @@ export const ConnectWalletFlow = () => {
     installed: installedWallets[wallet.id],
   }));
 
-  const handleBack = () => setShowUI("networkList");
+  const handleBack = () => setShowUI("walletList");
 
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
-      {/* Trigger */}
-      <Dialog.Trigger asChild>
+    <Modal
+      style={{
+        maxWidth: "500px",
+      }}
+      open={open}
+      setOpen={setOpen}
+      trigger={
         <Button variant="inverted" type="button">
           Connect Wallet
         </Button>
-      </Dialog.Trigger>
+      }
+    >
+      {showUI === "installCoinbaseWallet" && (
+        <InstallCoinbaseWallet onBack={handleBack} />
+      )}
 
-      {/* Overlay */}
-      <Dialog.Overlay asChild>
-        <Overlay />
-      </Dialog.Overlay>
+      {showUI === "walletList" && (
+        <>
+          <DialogTitle>Connect your wallet</DialogTitle>
 
-      {/* Dialog */}
-      <Dialog.Portal>
-        <Dialog.Content asChild>
-          <DialogContent>
-            {showUI === "networkList" && (
-              <>
-                <Dialog.Title asChild>
-                  <DialogTitle>Connect your wallet</DialogTitle>
-                </Dialog.Title>
+          <Spacer y="xl" />
 
-                <Spacer y="xl" />
-
-                <NetworkList>
-                  {walletsMeta.map((Wallet) => {
-                    return (
-                      <li key={Wallet.id}>
-                        <NetworkButton
-                          type="button"
-                          onClick={() => {
-                            Wallet.onClick();
-                          }}
-                        >
-                          {Wallet.icon}
-                          <WalletName>{Wallet.name}</WalletName>
-                          {Wallet.installed && <Badge> Installed </Badge>}
-                        </NetworkButton>
-                      </li>
-                    );
-                  })}
-                </NetworkList>
-              </>
-            )}
-
-            {/* Show Connecting UI for various wallets */}
-            {showUI === "metamask" && (
-              <MetamaskWalletSetup onBack={handleBack} />
-            )}
-
-            {showUI === "deviceWallet" && (
-              <ConnectToDeviceWallet onBack={handleBack} />
-            )}
-
-            {showUI === "coinbaseWallet" && (
-              <CoinbaseWalletSetup onBack={handleBack} />
-            )}
-
-            {/* Close Icon */}
-            <CrossContainer>
-              <Dialog.Close asChild>
-                <IconButton
-                  variant="secondary"
-                  type="button"
-                  aria-label="Close"
-                >
-                  <Cross2Icon
-                    style={{
-                      width: iconSize.md,
-                      height: iconSize.md,
-                      color: "inherit",
+          <WalletList>
+            {walletsMeta.map((Wallet) => {
+              return (
+                <li key={Wallet.id}>
+                  <WalletButton
+                    type="button"
+                    onClick={() => {
+                      Wallet.onClick();
                     }}
-                  />
-                </IconButton>
-              </Dialog.Close>
-            </CrossContainer>
-          </DialogContent>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+                  >
+                    {Wallet.icon}
+                    <WalletName>{Wallet.name}</WalletName>
+                    {Wallet.installed && (
+                      <InstallBadge> Installed </InstallBadge>
+                    )}
+                  </WalletButton>
+                </li>
+              );
+            })}
+          </WalletList>
+        </>
+      )}
+
+      {/* Show Connecting UI for various wallets */}
+      {showUI === "metamask" && <MetamaskWalletSetup onBack={handleBack} />}
+
+      {showUI === "deviceWallet" && (
+        <ConnectToDeviceWallet onBack={handleBack} />
+      )}
+
+      {showUI === "coinbaseWallet" && (
+        <CoinbaseWalletSetup onBack={handleBack} />
+      )}
+    </Modal>
   );
 };
 
-const Badge = styled.span<{ theme?: Theme }>`
+// styles
+
+const InstallBadge = styled.span<{ theme?: Theme }>`
   padding: ${spacing.xxs} ${spacing.xs};
   font-size: ${fontSize.sm};
   background-color: ${(p) => p.theme.badge.secondary};
@@ -203,74 +177,19 @@ const Badge = styled.span<{ theme?: Theme }>`
   margin-left: auto;
 `;
 
-const CrossContainer = styled.div`
-  position: absolute;
-  top: ${spacing.lg};
-  right: ${spacing.lg};
-
-  ${media.mobile} {
-    right: ${spacing.md};
-  }
-`;
-
-// styles
-
-const contentShowAnimation = keyframes`
-from {
-    opacity: 0;
-    transform: translate(-50%, -48%) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-`;
-
-const DialogContent = styled.div<{ theme?: Theme }>`
-  background-color: ${(p) => p.theme.bg.base};
-  border-radius: ${radius.lg};
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: calc(100vw - 40px);
-  max-width: 500px;
-  max-height: 85vh;
-  overflow-y: auto;
-  padding: ${spacing.lg};
-  padding-bottom: ${spacing.xl};
-  animation: ${contentShowAnimation} 150ms cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: ${shadow.lg};
-
-  &:focus {
-    outline: none;
-  }
-
-  ${media.mobile} {
-    padding: ${spacing.lg} ${spacing.md};
-  }
-
-  ${(p) =>
-    scrollbar({
-      track: "transparent",
-      thumb: p.theme.bg.elevated,
-      hover: p.theme.bg.highlighted,
-    })}
-`;
-
 const WalletName = styled.span`
   font-size: ${fontSize.md};
   font-weight: 500;
 `;
 
-const DialogTitle = styled.h2<{ theme?: Theme }>`
+const DialogTitle = styled(Dialog.Title)<{ theme?: Theme }>`
   margin: 0;
   font-weight: 500;
   color: ${(p) => p.theme.text.neutral};
   font-size: ${fontSize.lg};
 `;
 
-const NetworkList = styled.ul`
+const WalletList = styled.ul`
   all: unset;
   list-style-type: none;
   display: flex;
@@ -278,7 +197,7 @@ const NetworkList = styled.ul`
   gap: ${spacing.xs};
 `;
 
-const NetworkButton = styled.button<{ theme?: Theme }>`
+const WalletButton = styled.button<{ theme?: Theme }>`
   all: unset;
   padding: ${spacing.sm} ${spacing.md};
   border-radius: ${radius.sm};

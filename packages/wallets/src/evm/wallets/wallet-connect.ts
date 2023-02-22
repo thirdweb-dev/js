@@ -11,9 +11,10 @@ export type WalletConnectOptions = {
 }
 
 export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
-  #connector?: TWConnector;
   #walletConnectConnector?: WalletConnectConnector;
   #provider?: WalletConnectProvider;
+
+  connector?: TWConnector;
 
   protected sessionStorageKey = '__TW__:session';
   protected walletServiceStorageKey = '__TW__:walletService';
@@ -31,7 +32,7 @@ export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
   }
 
   protected async getConnector(): Promise<TWConnector> {
-    if (!this.#connector) {
+    if (!this.connector) {
       // import the connector dynamically
       const { WalletConnectConnector } = await import(
         "../connectors/wallet-connect"
@@ -47,14 +48,14 @@ export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
         },
       });
       console.log('after created', this.#walletConnectConnector.connect)
-      this.#connector = new WagmiAdapter(this.#walletConnectConnector);
+      this.connector = new WagmiAdapter(this.#walletConnectConnector);
       console.log('after wagmi adapter created')
       this.#provider = await this.#walletConnectConnector.getProvider();
       console.log('after this.provider', this.#provider)
 
       this.#setupListeners();
     }
-    return this.#connector;
+    return this.connector;
   }
 
   #maybeThrowError = (error: any) => {

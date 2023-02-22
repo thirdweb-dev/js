@@ -7,6 +7,7 @@ import {
   WalletConnectWalletType,
 } from "../types/wallet";
 import { transformChainToMinimalWagmiChain } from "../utils";
+import { ThirdwebThemeContext } from "./theme-context";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import {
   AsyncStorage,
@@ -52,7 +53,7 @@ type ThirdwebWalletContextData = {
   createWalletStorage: CreateAsyncStorage;
   switchChain: (chain: number) => Promise<void>;
   activeChainId?: number;
-  accountAddress?: string;
+  handleWalletConnect: (walletId: InstanceType<SupportedWallet>) => void;
   displayUri?: string;
 };
 
@@ -72,7 +73,6 @@ export function ThirdwebWalletProvider(
 ) {
   const [signer, setSigner] = useState<Signer | undefined>(undefined);
   const [activeChainId, setActiveChainId] = useState<number | undefined>();
-  const [accountAddress, setAccountAddress] = useState<string | undefined>();
   const [displayUri, setDisplayUri] = useState<string | undefined>();
 
   const [activeWallet, setActiveWallet] = useState<
@@ -93,6 +93,8 @@ export function ThirdwebWalletProvider(
   if (!deviceWalletStorage) {
     deviceWalletStorage = props.createWalletStorage("deviceWallet");
   }
+
+  const theme = useContext(ThirdwebThemeContext);
 
   const createWalletInstance = useCallback(
     <W extends SupportedWallet>(Wallet: W) => {
@@ -138,6 +140,7 @@ export function ThirdwebWalletProvider(
       if (Wallet.id === "coinbaseWallet") {
         return new (Wallet as CoinbaseWalletType)({
           ...walletOptions,
+          darkMode: theme === "dark",
         });
       }
 
@@ -152,10 +155,10 @@ export function ThirdwebWalletProvider(
 
       throw new Error(`Unsupported wallet`);
     },
-    [props],
+    [props, theme],
   );
 
-  const handleWalletConnected = useCallback(
+  const handleWalletConnect = useCallback(
     async (wallet: InstanceType<SupportedWallet>) => {
       const _signer = await wallet.getSigner();
       const _chainId = await _signer.getChainId();
@@ -202,15 +205,14 @@ export function ThirdwebWalletProvider(
       );
       if (Wallet && Wallet.id !== "deviceWallet") {
         const wallet = createWalletInstance(Wallet);
-        const _address = await wallet.autoConnect();
-        setAccountAddress(_address);
-        handleWalletConnected(wallet);
+        await wallet.autoConnect();
+        handleWalletConnect(wallet);
       }
     })();
   }, [
     createWalletInstance,
     props.supportedWallets,
-    handleWalletConnected,
+    handleWalletConnect,
     props.shouldAutoConnect,
   ]);
 
@@ -236,9 +238,8 @@ export function ThirdwebWalletProvider(
 
         setIsConnectingToWallet(Wallet.id);
 
-        const address = await wallet.connect(_connectedParams);
-        setAccountAddress(address);
-        handleWalletConnected(wallet);
+        await wallet.connect(_connectedParams);
+        handleWalletConnect(wallet);
       }
 
       // Metamask
@@ -253,9 +254,8 @@ export function ThirdwebWalletProvider(
 
         try {
           setIsConnectingToWallet(Wallet.id);
-          const address = await wallet.connect(_connectedParams);
-          setAccountAddress(address);
-          handleWalletConnected(wallet);
+          await wallet.connect(_connectedParams);
+          handleWalletConnect(wallet);
         } catch (e: any) {
           if (e.message === "Resource unavailable") {
             // if we have already requested metamask earlier and asking again
@@ -284,9 +284,8 @@ export function ThirdwebWalletProvider(
 
         try {
           setIsConnectingToWallet(Wallet.id);
-          const address = await wallet.connect(_connectedParams);
-          setAccountAddress(address);
-          handleWalletConnected(wallet);
+          await wallet.connect(_connectedParams);
+          handleWalletConnect(wallet);
         } catch (e: any) {
           setIsConnectingToWallet(undefined);
         }
@@ -305,14 +304,14 @@ export function ThirdwebWalletProvider(
           setIsConnectingToWallet(Wallet.id);
           const address = await wallet.connect(_connectedParams);
           setAccountAddress(address);
-          handleWalletConnected(wallet);
+          handleWalletConnect(wallet);
         } catch (e: any) {
           throw e;
           setIsConnectingToWallet(undefined);
         }
       }
     },
-    [createWalletInstance, handleWalletConnected, onWCOpenWallet],
+    [createWalletInstance, handleWalletConnect, onWCOpenWallet],
   );
 
   const disconnectWallet = useCallback(() => {
@@ -333,6 +332,30 @@ export function ThirdwebWalletProvider(
     });
   }, [activeWallet, onWCOpenWallet]);
 
+  // when wallet's network or account is changed using the extension, update UI
+  useEffect(() => {
+    if (!activeWallet) {
+      return;
+    }
+
+    activeWallet.connector?.getProvider().then((provider) => {
+      if (!provider) {
+        return;
+      }
+
+      const update = async () => {
+        const _signer = await activeWallet.getSigner();
+        const _chainId = await _signer.getChainId();
+        setSigner(_signer);
+        setActiveChainId(_chainId);
+      };
+
+      // TODO - once the wallet.addListener('change', cb) is working - use that
+      provider.on("chainChanged", update);
+      provider.on("accountsChanged", update);
+    });
+  }, [activeWallet]);
+
   return (
     <ThirdwebWalletContext.Provider
       value={{
@@ -346,8 +369,8 @@ export function ThirdwebWalletProvider(
         createWalletStorage: props.createWalletStorage,
         switchChain,
         activeChainId,
-        accountAddress,
         displayUri,
+        handleWalletConnect,
       }}
     >
       {props.children}

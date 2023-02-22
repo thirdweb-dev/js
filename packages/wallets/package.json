@@ -141,7 +141,7 @@
   "dependencies": {
     "@walletconnect/ethereum-provider": "^2.4.5",
     "eventemitter3": "^5.0.0",
-    "localforage": "^1.10.0"
+    "buffer": "^6.0.3"
   },
   "peerDependencies": {
     "@aws-sdk/client-secrets-manager": "^3.256.0",

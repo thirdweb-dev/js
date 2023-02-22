@@ -3,7 +3,7 @@ import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 
 export class MetaMask extends AbstractBrowserWallet {
-  #connector?: TWConnector;
+  connector?: TWConnector;
   connectorStorage: AsyncStorage;
 
   static id = "metamask" as const;
@@ -18,10 +18,10 @@ export class MetaMask extends AbstractBrowserWallet {
   }
 
   protected async getConnector(): Promise<TWConnector> {
-    if (!this.#connector) {
+    if (!this.connector) {
       // import the connector dynamically
       const { MetaMaskConnector } = await import("../connectors/metamask");
-      this.#connector = new WagmiAdapter(
+      this.connector = new WagmiAdapter(
         new MetaMaskConnector({
           chains: this.chains,
           connectorStorage: this.connectorStorage,
@@ -31,6 +31,6 @@ export class MetaMask extends AbstractBrowserWallet {
         }),
       );
     }
-    return this.#connector;
+    return this.connector;
   }
 }
