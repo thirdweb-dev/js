@@ -8,6 +8,7 @@ import {
   NotFoundError,
 } from "../../common";
 import { FALLBACK_METADATA, fetchTokenMetadata } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
 import {
   FEATURE_NFT,
   FEATURE_NFT_BATCH_MINTABLE,
@@ -25,11 +26,7 @@ import { BaseDropERC721, BaseERC721 } from "../../types/eips";
 import { ClaimOptions, UploadProgressEvent } from "../../types/index";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
-import {
-  NetworkInput,
-  TransactionResult,
-  TransactionResultWithId,
-} from "../types";
+import { NetworkInput, TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc721Burnable } from "./erc-721-burnable";
 import { Erc721LazyMintable } from "./erc-721-lazymintable";
@@ -37,7 +34,7 @@ import { Erc721Mintable } from "./erc-721-mintable";
 import { Erc721Supply } from "./erc-721-supply";
 import { Erc721TieredDrop } from "./erc-721-tiered-drop";
 import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-signature-mintable";
-import { Transaction, buildTransactionFunction } from "./transactions";
+import { Transaction } from "./transactions";
 import type {
   DropERC721,
   IBurnableERC721,
@@ -217,17 +214,15 @@ export class Erc721<
    *
    * @internal
    */
-  public async setApprovalForAll(
-    operator: string,
-    approved: boolean,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("setApprovalForAll", [
-        operator,
-        approved,
-      ]),
-    };
-  }
+  setApprovalForAll = buildTransactionFunction(
+    async (operator: string, approved: boolean) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "setApprovalForAll",
+        args: [operator, approved],
+      });
+    },
+  );
 
   /**
    * Approve an operator for the NFT owner. Operators can call transferFrom or safeTransferFrom for the specified token.
@@ -236,17 +231,15 @@ export class Erc721<
    *
    * @internal
    */
-  public async setApprovalForToken(
-    operator: string,
-    tokenId: BigNumberish,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("approve", [
-        operator,
-        tokenId,
-      ]),
-    };
-  }
+  setApprovalForToken = buildTransactionFunction(
+    async (operator: string, tokenId: BigNumberish) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "approve",
+        args: [operator, tokenId],
+      });
+    },
+  );
 
   ////// ERC721 Supply Extension //////
 

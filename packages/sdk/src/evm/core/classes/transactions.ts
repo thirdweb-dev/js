@@ -8,15 +8,17 @@ import { isBrowser } from "../../common/utils";
 import { ChainId } from "../../constants/chains";
 import { ContractSource } from "../../schema/contracts/custom";
 import {
+  ParseTransactionReceipt,
   TransactionOptionsWithContract,
   TransactionOptionsWithContractInfo,
   TransactionOptionsWithContractWrapper,
 } from "../../types/transactions";
+import { TransactionResult } from "../types";
 import { ConnectionInfo } from "@ethersproject/web";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, CallOverrides, ethers } from "ethers";
 
-export class Transaction {
+export class Transaction<TResult = TransactionResult> {
   private contract: ethers.Contract;
   private method: string;
   private args: any[];
@@ -24,8 +26,11 @@ export class Transaction {
   private provider: ethers.providers.Provider;
   private signer: ethers.Signer;
   private storage: ThirdwebStorage;
+  private parse?: ParseTransactionReceipt<TResult>;
 
-  static fromContractWrapper(options: TransactionOptionsWithContractWrapper) {
+  static fromContractWrapper<TResult = TransactionResult>(
+    options: TransactionOptionsWithContractWrapper<TResult>,
+  ): Transaction<TResult> {
     const signer = options.contractWrapper.getSigner();
     if (!signer) {
       throw new Error(
@@ -43,9 +48,9 @@ export class Transaction {
     return new Transaction(optionsWithContract);
   }
 
-  static async fromContractInfo(
-    options: TransactionOptionsWithContractInfo,
-  ): Promise<Transaction> {
+  static async fromContractInfo<TResult = TransactionResult>(
+    options: TransactionOptionsWithContractInfo<TResult>,
+  ): Promise<Transaction<TResult>> {
     const storage = options.storage || new ThirdwebStorage();
 
     let contractAbi = options.contractAbi;
@@ -79,12 +84,13 @@ export class Transaction {
     return new Transaction(optionsWithContract);
   }
 
-  constructor(options: TransactionOptionsWithContract) {
+  constructor(options: TransactionOptionsWithContract<TResult>) {
     this.method = options.method;
     this.args = options.args;
     this.overrides = options.overrides || {};
     this.provider = options.provider;
     this.signer = options.signer;
+    this.parse = options.parse as ParseTransactionReceipt<TResult> | undefined;
 
     // Connect provider to signer if it isn't already connected
     if (!this.signer.provider) {
@@ -232,7 +238,7 @@ export class Transaction {
   /**
    * Send the transaction and wait for it to be mined
    */
-  async execute(): Promise<ethers.providers.TransactionReceipt> {
+  async execute(): Promise<TResult> {
     // TODO: Add submitted and completed events
     const tx = await this.send();
 
@@ -248,7 +254,11 @@ export class Transaction {
       throw await this.transactionError(err);
     }
 
-    return receipt;
+    if (this.parse) {
+      return this.parse(receipt);
+    }
+
+    return { receipt } as TransactionResult as TResult;
   }
 
   /**
@@ -441,7 +451,7 @@ export class Transactions {
     return this.transactions;
   }
 
-  async executeAll(): Promise<ethers.providers.TransactionReceipt[]> {
+  async executeAll(): Promise<TransactionResult[]> {
     let receipts = [];
     for (const transaction of this.transactions) {
       const receipt = await transaction.execute();
