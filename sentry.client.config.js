@@ -17,6 +17,13 @@ Sentry.init({
   // `release` value here - use the environment variable `SENTRY_RELEASE`, so
   // that it will also get attached to your source maps
 
+  // replays
+  // don't record replays for generic sessions
+  replaysSessionSampleRate: 0,
+  // record replays for errors
+  replaysOnErrorSampleRate: 1.0,
+  integrations: [new Sentry.Replay()],
+
   ignoreErrors: sentryOptions.ignoreErrors,
   denyUrls: sentryOptions.denyUrls,
 });
