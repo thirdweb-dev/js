@@ -23,7 +23,7 @@ export class CoinbaseWallet extends AbstractBrowserWallet {
         new CoinbaseWalletConnector({
           chains: this.chains,
           options: {
-            appName: this.options.appName,
+            appName: this.options.dappMetadata.name,
             reloadOnDisconnect: false,
           },
         }),

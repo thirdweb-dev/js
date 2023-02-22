@@ -7293,6 +7293,11 @@
   resolved "https://registry.yarnpkg.com/@wagmi/chains/-/chains-0.2.7.tgz#07029a66ee5e86fbf699e8fd3b6163f11b8799d0"
   integrity sha512-Oqnkl5n9MTBdMzgIwwdSKEDfm0Vdv2CYBaDyTa5SiTjFNaIfT6MRATLg7KbI3JydfxqJphsVFL+TZZqFvkte/g==
 
+"@wagmi/chains@0.2.8":
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/@wagmi/chains/-/chains-0.2.8.tgz#eece43702f719d7de4193dc993668e0d783937b5"
+  integrity sha512-owGdAL75bE0JOzVTm5SOci458RrdD+FTJ6D238A+0VV9SQCz5N8vK9VBxhcEKXexjhzMM+CJZqFBTyxNsmNlLw==
+
 "@wagmi/connectors@0.1.10":
   version "0.1.10"
   resolved "https://registry.yarnpkg.com/@wagmi/connectors/-/connectors-0.1.10.tgz#101a25fae908f29cc28caede0dde958711119adb"
@@ -7309,6 +7314,21 @@
   version "0.2.5"
   resolved "https://registry.yarnpkg.com/@wagmi/connectors/-/connectors-0.2.5.tgz#b9a55c2f49b448ff573806fee9e755e2ccc16e56"
   integrity sha512-saS5wps+R5SCs4ka9BG4vlaS4xDKn8GRt5y/f6v8RYBhat+H+3DGBowwGLN/OLtu744VKY8sIsm8/GRy2tXbsg==
+  dependencies:
+    "@coinbase/wallet-sdk" "^3.5.4"
+    "@ledgerhq/connect-kit-loader" "^1.0.1"
+    "@safe-global/safe-apps-provider" "^0.15.2"
+    "@safe-global/safe-apps-sdk" "^7.9.0"
+    "@walletconnect/ethereum-provider" "^1.8.0"
+    "@walletconnect/universal-provider" "2.3.3"
+    "@web3modal/standalone" "^2.1.1"
+    abitype "^0.3.0"
+    eventemitter3 "^4.0.7"
+
+"@wagmi/connectors@0.2.6":
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/@wagmi/connectors/-/connectors-0.2.6.tgz#b96025ebf8f0ec33fea12fa643afe7269f833de4"
+  integrity sha512-I7tsKgbwF6o5aUu6gQk4YMo7fe3iLAgmbFT06/FHlSLKIxI16qkKwjTt04k9WhdDRDYaJH+DqUEyam1jP+jvIg==
   dependencies:
     "@coinbase/wallet-sdk" "^3.5.4"
     "@ledgerhq/connect-kit-loader" "^1.0.1"
@@ -7339,6 +7359,17 @@
     "@wagmi/chains" "0.1.14"
     "@wagmi/connectors" "0.1.10"
     abitype "^0.2.5"
+    eventemitter3 "^4.0.7"
+    zustand "^4.3.1"
+
+"@wagmi/core@^0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-0.9.6.tgz#19969e3f1711071d594754c08c82f0705c585dab"
+  integrity sha512-TGAnA9sNjm3s8evBVxN3yRjZqKGBlhFW1Bk2nX1C1UtlrA5uTIPDWGxHw0CAPmSnE4MLL89Um4JA12jubNqLZg==
+  dependencies:
+    "@wagmi/chains" "0.2.8"
+    "@wagmi/connectors" "0.2.6"
+    abitype "^0.3.0"
     eventemitter3 "^4.0.7"
     zustand "^4.3.1"
 
@@ -19194,11 +19225,6 @@ postcss@^8.0.9, postcss@^8.3.5, postcss@^8.4.18, postcss@^8.4.19, postcss@^8.4.4
     nanoid "^3.3.4"
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
-
-postinstall-postinstall@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/postinstall-postinstall/-/postinstall-postinstall-2.1.0.tgz#4f7f77441ef539d1512c40bd04c71b06a4704ca3"
-  integrity sha512-7hQX6ZlZXIoRiWNrbMQaLzUUfH+sSx39u8EJ9HYuDc1kLo9IXKWjM5RSquZN1ad5GnH8CGFM78fsAAQi3OKEEQ==
 
 preact-render-to-string@^5.1.19:
   version "5.2.6"

@@ -127,6 +127,7 @@ export interface ThirdwebProviderProps<
 
 const defaultdAppMeta: DAppMetaData = {
   name: "thirdweb powered dApp",
+  url: 'https://thirdweb.com'
 };
 
 export const ThirdwebProvider = <

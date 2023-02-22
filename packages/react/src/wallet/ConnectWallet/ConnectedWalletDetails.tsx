@@ -44,6 +44,7 @@ const walletIcons: Record<
   metamask: MetamaskIcon,
   deviceWallet: DeviceWalletIcon,
   coinbaseWallet: CoinbaseWalletIcon,
+  walletConnect: CoinbaseWalletIcon,
 };
 
 const ChainIcon: React.FC<{ src: string }> = (props) => {
@@ -51,7 +52,7 @@ const ChainIcon: React.FC<{ src: string }> = (props) => {
     <img
       src={props.src}
       onError={(e) => {
-        if (e.currentTarget.src === defaultChainIcon) return;
+        if (e.currentTarget.src === defaultChainIcon) {return;}
         e.currentTarget.src = defaultChainIcon;
       }}
       alt={`C`}

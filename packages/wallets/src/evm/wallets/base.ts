@@ -3,6 +3,7 @@ import { thirdwebChains } from "../constants/chains";
 import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
 import type { Chain } from "@wagmi/core";
+import type { DAppMetaData } from "../../core/types/dAppMeta"
 
 export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   chains?: Chain[];
@@ -10,7 +11,7 @@ export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   shouldAutoConnect?: boolean;
   coordinatorStorage: AsyncStorage;
   walletStorage: AsyncStorage;
-  appName: string;
+  dappMetadata: DAppMetaData;
 } & TOpts;
 
 export abstract class AbstractBrowserWallet<
@@ -36,6 +37,7 @@ export abstract class AbstractBrowserWallet<
   protected abstract getConnector(): Promise<TWConnector<TConnectParams>>;
 
   async autoConnect() {
+    console.log('autoConnect')
     const lastConnectedWallet = await this.coordinatorStorage.getItem(
       "lastConnectedWallet",
     );
@@ -53,9 +55,12 @@ export abstract class AbstractBrowserWallet<
         parsedParams = undefined;
       }
 
+      console.log('autoConnect.getConnector')
       const connector = await this.getConnector();
 
+
       if (!(await connector.isConnected())) {
+        console.log('this.connect')
         return await this.connect(parsedParams);
       }
     }
@@ -97,7 +102,7 @@ export abstract class AbstractBrowserWallet<
         "lastConnectedWallet",
         this.walletId,
       );
-    } catch {}
+    } catch { }
 
     return connectedAddress;
   }
@@ -113,8 +118,8 @@ export abstract class AbstractBrowserWallet<
   public async disconnect() {
     const connector = await this.getConnector();
     if (connector) {
-      connector.removeAllListeners();
       await connector.disconnect();
+      connector.removeAllListeners();
       // get the last connected wallet and check if it's this wallet, if so, remove it
       const lastConnectedWallet = await this.coordinatorStorage.getItem(
         "lastConnectedWallet",

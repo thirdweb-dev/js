@@ -4,6 +4,7 @@ import {
   DeviceWalletType,
   MetaMaskWalletType,
   SupportedWallet,
+  WalletConnectWalletType,
 } from "../types/wallet";
 import { transformChainToMinimalWagmiChain } from "../utils";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
@@ -21,6 +22,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { TW_WC_PROJECT_ID } from "../constants/wc";
 
 let coordinatorStorage: AsyncStorage;
 let deviceWalletStorage: AsyncStorage;
@@ -51,6 +53,7 @@ type ThirdwebWalletContextData = {
   switchChain: (chain: number) => Promise<void>;
   activeChainId?: number;
   accountAddress?: string;
+  displayUri?: string;
 };
 
 const ThirdwebWalletContext = createContext<
@@ -70,6 +73,7 @@ export function ThirdwebWalletProvider(
   const [signer, setSigner] = useState<Signer | undefined>(undefined);
   const [activeChainId, setActiveChainId] = useState<number | undefined>();
   const [accountAddress, setAccountAddress] = useState<string | undefined>();
+  const [displayUri, setDisplayUri] = useState<string | undefined>();
 
   const [activeWallet, setActiveWallet] = useState<
     InstanceType<SupportedWallet> | undefined
@@ -108,7 +112,7 @@ export function ThirdwebWalletProvider(
         shouldAutoConnect: props.shouldAutoConnect,
         coordinatorStorage,
         walletStorage: walletStorage,
-        appName: props.dAppMeta.name,
+        dappMetadata: props.dAppMeta,
       };
 
       // Device wallet
@@ -134,6 +138,15 @@ export function ThirdwebWalletProvider(
       if (Wallet.id === "coinbaseWallet") {
         return new (Wallet as CoinbaseWalletType)({
           ...walletOptions,
+        });
+      }
+
+      // WalletConnect
+      if (Wallet.id === "walletConnect") {
+        return new (Wallet as WalletConnectWalletType)({
+          ...walletOptions,
+          projectId: TW_WC_PROJECT_ID,
+          qrcode: false // TODO: we need to set this depending on React vs RN.
         });
       }
 
@@ -200,6 +213,12 @@ export function ThirdwebWalletProvider(
     handleWalletConnected,
     props.shouldAutoConnect,
   ]);
+
+  const onWCOpenWallet = useCallback((uri?: string) => {
+    if (uri) {
+      setDisplayUri(uri);
+    }
+  }, []);
 
   const connectWallet = useCallback(
     async <W extends SupportedWallet>(
@@ -272,8 +291,28 @@ export function ThirdwebWalletProvider(
           setIsConnectingToWallet(undefined);
         }
       }
+
+      // WalletConnect
+      else if (Wallet.id === "walletConnect") {
+        const _connectedParams = connectParams as NonNullable<
+          Parameters<InstanceType<WalletConnectWalletType>["connect"]>[0]
+        >;
+        const wallet = createWalletInstance(
+          Wallet as WalletConnectWalletType,
+        ) as InstanceType<WalletConnectWalletType>;
+        wallet.on('open_wallet', onWCOpenWallet);
+        try {
+          setIsConnectingToWallet(Wallet.id);
+          const address = await wallet.connect(_connectedParams);
+          setAccountAddress(address);
+          handleWalletConnected(wallet);
+        } catch (e: any) {
+          throw e;
+          setIsConnectingToWallet(undefined);
+        }
+      }
     },
-    [createWalletInstance, handleWalletConnected],
+    [createWalletInstance, handleWalletConnected, onWCOpenWallet],
   );
 
   const disconnectWallet = useCallback(() => {
@@ -281,12 +320,18 @@ export function ThirdwebWalletProvider(
     if (!activeWallet) {
       return;
     }
+
+    if (activeWallet.walletId === 'walletConnect') {
+      activeWallet.removeListener('open_wallet', onWCOpenWallet);
+    }
+
     activeWallet.disconnect().then(() => {
       setSigner(undefined);
       setActiveChainId(undefined);
       setActiveWallet(undefined);
+      setDisplayUri(undefined);
     });
-  }, [activeWallet]);
+  }, [activeWallet, onWCOpenWallet]);
 
   return (
     <ThirdwebWalletContext.Provider
@@ -302,6 +347,7 @@ export function ThirdwebWalletProvider(
         switchChain,
         activeChainId,
         accountAddress,
+        displayUri,
       }}
     >
       {props.children}

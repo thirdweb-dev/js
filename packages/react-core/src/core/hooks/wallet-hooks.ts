@@ -134,3 +134,16 @@ export function useWalletSigner() {
   );
   return context.signer;
 }
+
+/**
+ *
+ * @returns the display uri from wallet connect. Usually used in mobile environments
+ */
+export function useDisplayUri() {
+  const context = useThirdwebWallet();
+  invariant(
+    context,
+    "useDisplayUri() must be used within a <ThirdwebProvider/>",
+  );
+  return context.displayUri;
+}

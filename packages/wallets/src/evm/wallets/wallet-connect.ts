@@ -3,12 +3,11 @@ import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 import type { WalletConnectConnector } from "../connectors/wallet-connect";
 import { ConnectorData } from '@wagmi/core';
-import { WalletType } from "../constants/wallets";
-import { formatMobileLink, getWalletLink } from "../utils/mobile";
 import { SignClientTypes } from "@walletconnect/types";
 
 export type WalletConnectOptions = {
-  projectId: string
+  projectId: string,
+  qrcode: boolean
 }
 
 export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
@@ -37,49 +36,23 @@ export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
       const { WalletConnectConnector } = await import(
         "../connectors/wallet-connect"
       );
+      console.log('create walletConnectConnector')
       this.#walletConnectConnector = new WalletConnectConnector({
         chains: this.chains,
         options: {
-          qrcode: false,
+          qrcode: this.options.qrcode,
           projectId: this.options.projectId,
+          dappMetadata: this.options.dappMetadata,
+          storage: this.walletStorage
         },
       });
+      console.log('after created', this.#walletConnectConnector.connect)
       this.#connector = new WagmiAdapter(this.#walletConnectConnector);
+      console.log('after wagmi adapter created')
       this.#provider = await this.#walletConnectConnector.getProvider();
+      console.log('after this.provider', this.#provider)
 
       this.#setupListeners();
-
-      // this.#walletConnectConnector.on("request_sent", async (error) => {
-      //   maybeThrowError(error);
-      //   if (Platform.OS === 'android') {
-      //     const { peerMeta } = nextConnector;
-      //     if (!!peerMeta && typeof peerMeta === 'object') {
-      //       const [maybeShortName] = `${peerMeta.name || ''}`.toLowerCase().split(/\s+/);
-      //       if (typeof maybeShortName === 'string' && !!maybeShortName.length) {
-      //         const { walletServices } = parentContext;
-      //         const [...maybeMatchingServices] = (walletServices || []).filter(({ metadata: { shortName } }) => {
-      //           return `${shortName}`.toLowerCase() === maybeShortName;
-      //         });
-      //         if (maybeMatchingServices.length === 1) {
-      //           const [detectedWalletService] = maybeMatchingServices;
-      //           const url = formatWalletServiceUrl(detectedWalletService);
-      //           if (await Linking.canOpenURL(url)) {
-      //             return Linking.openURL(url);
-      //           }
-      //         }
-      //       }
-      //     }
-      //     Linking.openURL('wc:');
-      //   }
-      //   else if (Platform.OS !== 'web') {
-      //     const walletService = await storage.getItem(walletServiceStorageKey);
-      //     if (!walletService) {
-      //       return maybeThrowError(new Error('Cached WalletService not found.'));
-      //     }
-      //     const url = formatWalletServiceUrl(walletService);
-      //     return (await Linking.canOpenURL(url)) && Linking.openURL(url);
-      //   }
-      // });
     }
     return this.#connector;
   }
@@ -91,14 +64,20 @@ export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
   };
 
   #onConnect = async (data: ConnectorData<WalletConnectProvider>) => {
+    console.log('onConnect')
+
     this.#provider = data.provider;
     if (!this.#provider?.session) {
       throw new Error('WalletConnect session not found after connecting.');
     }
+
+    this.#provider.signer.client.on('session_request_sent', this.#onSessionRequestSent);
+
     await this.walletStorage.setItem(this.sessionStorageKey, JSON.stringify(this.#provider.session));
   }
 
   #onDisconnect = async () => {
+    console.log('walletConnect onDisconnect')
     await Promise.all([
       this.walletStorage.setItem(this.sessionStorageKey, ''),
       this.walletStorage.setItem(this.walletServiceStorageKey, ''),
@@ -107,15 +86,16 @@ export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
   }
 
   #onChange = async (payload: any) => {
+    console.log('walletConnect onChange', payload)
     if (payload.chain) {
       // chain changed
-
     } else if (payload.account) {
       //account change
     }
   }
 
   #onMessage = async (payload: any) => {
+    console.log('onMessage', payload)
     switch (payload.type) {
       case 'display_uri':
         this.emit('open_wallet', payload.data);
@@ -123,40 +103,22 @@ export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
     }
   }
 
-  #onSessionUpdate = async (error: any) => {
-    this.#maybeThrowError(error);
-    if (!this.#provider?.session) {
-      throw new Error('WalletConnect session not found.');
-    }
-    await this.walletStorage.setItem(this.sessionStorageKey, JSON.stringify(this.#provider.session));
-  }
-
-  #onSessionRequest = async (params: SignClientTypes.EventArguments["session_request"]) => {
-    const handleSessionRequestSent = (
-      payload: SignClientTypes.EventArguments["session_request_sent"],
-    ) => {
-      // only handle the request if it matches the request and topic
-      if (payload.request !== params.params.request || payload.topic !== params.topic) {
-        return;
-      }
-      this.#provider?.signer.removeListener("session_request_sent", handleSessionRequestSent);
-      // open wallet after request is sent
-      this.emit('open_wallet');
-    };
-
-    this.#provider?.signer.on('session_request_sent', handleSessionRequestSent);
-  }
+  #onSessionRequestSent = () => {
+    console.log('onSessionRequestSent.emit open_wallet');
+    // open wallet after request is sent
+    this.emit('open_wallet');
+  };
 
   #setupListeners() {
     if (!this.#walletConnectConnector) {
       return;
     }
     this.#removeListeners();
+    console.log('settingupListeners in wc wallet', this.#provider === undefined)
     this.#walletConnectConnector.on('connect', this.#onConnect);
     this.#walletConnectConnector.on('disconnect', this.#onDisconnect);
     this.#walletConnectConnector.on('change', this.#onChange);
     this.#walletConnectConnector.on('message', this.#onMessage);
-    this.#provider?.signer.on('session_request', this.#onSessionRequest);
   }
 
   #removeListeners() {
@@ -167,6 +129,6 @@ export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
     this.#walletConnectConnector.removeListener('disconnect', this.#onDisconnect);
     this.#walletConnectConnector.removeListener('change', this.#onChange);
     this.#walletConnectConnector.removeListener('message', this.#onMessage);
-    this.#provider?.signer.removeListener('session_request', this.#onSessionRequest);
+    this.#provider?.signer.client.removeListener('session_request_sent', this.#onSessionRequestSent);
   }
 }

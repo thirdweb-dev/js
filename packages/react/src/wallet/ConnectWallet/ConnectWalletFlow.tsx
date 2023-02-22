@@ -42,18 +42,20 @@ const walletIcons: Record<SupportedWallet["id"], JSX.Element> = {
   metamask: metamaskIcon,
   deviceWallet: deviceWalletIcon,
   coinbaseWallet: coinbaseWalletIcon,
+  walletConnect: coinbaseWalletIcon,
 };
 
 const walletNames: Record<SupportedWallet["id"], string> = {
   metamask: "Metamask",
   deviceWallet: "Device Wallet",
   coinbaseWallet: "Coinbase Wallet",
+  walletConnect: "Wallet Connect"
 };
 
 export const ConnectWalletFlow = () => {
   const connectingToWallet = useConnectingToWallet();
   const [showUI, setShowUI] = useState<
-    "deviceWallet" | "metamask" | "networkList" | "coinbaseWallet"
+    "deviceWallet" | "metamask" | "networkList" | "coinbaseWallet" | "walletConnect"
   >("networkList");
   const connect = useConnect();
   const wallets = useWallets();

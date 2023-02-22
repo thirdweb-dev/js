@@ -22,7 +22,10 @@ export {
     useDisconnect,
     useSupportedChains,
     useWallets,
+    useDisplayUri,
 } from "@thirdweb-dev/react-core";
+
+export type { SupportedWallet } from "@thirdweb-dev/react-core";
 
 // re-export everything from react-core
 export * from "@thirdweb-dev/react-core/evm";

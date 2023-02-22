@@ -14,6 +14,7 @@ export {
   useSwitchChain,
   useWallets,
   useAccountAddress,
+  useDisplayUri,
 } from "./core/hooks/wallet-hooks";
 export {
   useDeviceWalletStorage,

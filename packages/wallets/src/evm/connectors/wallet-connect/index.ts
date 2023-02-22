@@ -9,10 +9,14 @@ import {
 import type WalletConnectProvider from '@walletconnect/ethereum-provider'
 import { providers } from 'ethers'
 import { getAddress, hexValue } from 'ethers/lib/utils.js'
+import { AsyncStorage } from '../../../core'
+import { DAppMetaData } from '../../../core/types/dAppMeta'
 
 type WalletConnectOptions = {
   projectId: string
   qrcode?: boolean,
+  dappMetadata: DAppMetaData,
+  storage: AsyncStorage
   /**
    * If a new chain is added to a previously existing configured connector `chains`, this flag
    * will determine if that chain should be considered as stale. A stale chain is a chain that
@@ -71,14 +75,17 @@ export class WalletConnectConnector extends Connector<
 
   #provider?: WalletConnectProvider
   #initProviderPromise?: Promise<void>
+  #storage: AsyncStorage
 
   constructor(config: { chains?: Chain[]; options: WalletConnectOptions }) {
     super({ ...config, options: { isNewChainsStale: true, ...config.options } })
+    this.#storage = config.options.storage
     this.#createProvider()
   }
 
   async connect({ chainId, pairingTopic }: ConnectConfig = {}) {
     try {
+      console.log('wc.onConnect')
       let targetChainId = chainId
       if (!targetChainId) {
         const lastUsedChainId = getClient().lastUsedChainId
@@ -93,9 +100,10 @@ export class WalletConnectConnector extends Connector<
       }
 
       const provider = await this.getProvider()
+      console.log('wc.provider.setupListeners')
       this.#setupListeners()
 
-      const isChainsStale = this.#isChainsStale()
+      const isChainsStale = await this.#isChainsStale()
 
       // If there is an active session with stale chains, disconnect the current session.
       if (provider.session && isChainsStale) {
@@ -167,7 +175,11 @@ export class WalletConnectConnector extends Connector<
   }
 
   async getProvider({ chainId }: { chainId?: number } = {}) {
-    if (!this.#provider) { await this.#createProvider() }
+    console.log('wcConnector.getProvider');
+    if (!this.#provider) {
+      console.log('!provider');
+      await this.#createProvider()
+    }
     if (chainId) { await this.switchChain(chainId) }
     if (!this.#provider) { throw new Error('No provider found.') }
     return this.#provider
@@ -187,7 +199,7 @@ export class WalletConnectConnector extends Connector<
         this.getAccount(),
         this.getProvider(),
       ])
-      const isChainsStale = this.#isChainsStale()
+      const isChainsStale = await this.#isChainsStale()
 
       // If an account does not exist on the session, then the connector is unauthorized.
       if (!account) { return false }
@@ -229,7 +241,7 @@ export class WalletConnectConnector extends Connector<
             },
           ],
         })
-        const requestedChains = this.#getRequestedChainsIds()
+        const requestedChains = await this.#getRequestedChainsIds()
         requestedChains.push(chainId)
         this.#setRequestedChainsIds(requestedChains)
       }
@@ -262,8 +274,11 @@ export class WalletConnectConnector extends Connector<
       OPTIONAL_EVENTS,
       OPTIONAL_METHODS,
     } = await import('@walletconnect/ethereum-provider')
+    console.log('wcConnector.initProvider.default', EthereumProvider.init)
     const [defaultChain, ...optionalChains] = this.chains.map(({ id }) => id)
+    console.log('wcConnector.initProvider', defaultChain)
     if (defaultChain) {
+      console.log('dappMeta', this.options.dappMetadata)
       // EthereumProvider populates & deduplicates required methods and events internally
       this.#provider = await EthereumProvider.init({
         showQrModal: this.options.qrcode !== false,
@@ -272,6 +287,12 @@ export class WalletConnectConnector extends Connector<
         optionalEvents: OPTIONAL_EVENTS,
         chains: [defaultChain],
         optionalChains: optionalChains,
+        metadata: {
+          name: this.options.dappMetadata.name,
+          description: this.options.dappMetadata.description || '',
+          url: this.options.dappMetadata.url,
+          icons: [this.options.dappMetadata.logoUrl || '']
+        },
         rpcMap: Object.fromEntries(
           this.chains.map((chain) => [
             chain.id,
@@ -279,6 +300,7 @@ export class WalletConnectConnector extends Connector<
           ]),
         ),
       })
+      console.log('ethProvider created', this.#provider)
     }
   }
 
@@ -304,12 +326,12 @@ export class WalletConnectConnector extends Connector<
    *
    * Also check that dapp supports at least 1 chain from previously approved session.
    */
-  #isChainsStale() {
+  async #isChainsStale() {
     const namespaceMethods = this.#getNamespaceMethods()
     if (namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) { return false }
     if (!this.options.isNewChainsStale) { return false }
 
-    const requestedChains = this.#getRequestedChainsIds()
+    const requestedChains = await this.#getRequestedChainsIds()
     const connectorChains = this.chains.map(({ id }) => id)
     const namespaceChains = this.#getNamespaceChainsIds()
 
@@ -343,11 +365,12 @@ export class WalletConnectConnector extends Connector<
   }
 
   #setRequestedChainsIds(chains: number[]) {
-    localStorage.setItem(REQUESTED_CHAINS_KEY, JSON.stringify(chains))
+    console.log('chains', chains.length)
+    this.#storage.setItem(REQUESTED_CHAINS_KEY, JSON.stringify(chains))
   }
 
-  #getRequestedChainsIds(): number[] {
-    const data = localStorage.getItem(REQUESTED_CHAINS_KEY)
+  async #getRequestedChainsIds(): Promise<number[]> {
+    const data = await this.#storage.getItem(REQUESTED_CHAINS_KEY)
     return data ? JSON.parse(data) : []
   }
 
@@ -382,10 +405,12 @@ export class WalletConnectConnector extends Connector<
   }
 
   protected onDisplayUri = (uri: string) => {
+    console.log('wc.display_uri', uri);
     this.emit('message', { type: 'display_uri', data: uri })
   }
 
   protected onConnect = () => {
+    console.log('wc.onConnect');
     this.emit('connect', { provider: this.#provider })
   }
 }
