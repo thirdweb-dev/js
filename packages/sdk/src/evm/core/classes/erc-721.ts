@@ -366,9 +366,12 @@ export class Erc721<
    * ```
    * @twfeature ERC721Mintable
    */
-  public async mint(metadata: NFTMetadataOrUri) {
-    return this.mintTo(await this.contractWrapper.getSignerAddress(), metadata);
-  }
+  mint = buildTransactionFunction(async (metadata: NFTMetadataOrUri) => {
+    return this.mintTo.prepare(
+      await this.contractWrapper.getSignerAddress(),
+      metadata,
+    );
+  });
 
   /**
    * Mint a unique NFT
@@ -394,12 +397,14 @@ export class Erc721<
    * ```
    * @twfeature ERC721Mintable
    */
-  public async mintTo(receiver: string, metadata: NFTMetadataOrUri) {
-    return assertEnabled(this.mintable, FEATURE_NFT_MINTABLE).to(
-      receiver,
-      metadata,
-    );
-  }
+  mintTo = buildTransactionFunction(
+    async (receiver: string, metadata: NFTMetadataOrUri) => {
+      return assertEnabled(this.mintable, FEATURE_NFT_MINTABLE).to.prepare(
+        receiver,
+        metadata,
+      );
+    },
+  );
 
   /**
    * Construct a mint transaction without executing it.
@@ -411,10 +416,7 @@ export class Erc721<
     receiver: string,
     metadata: NFTMetadataOrUri,
   ) {
-    return assertEnabled(
-      this.mintable,
-      FEATURE_NFT_MINTABLE,
-    ).getMintTransaction(receiver, metadata);
+    return this.mintTo.prepare(receiver, metadata);
   }
 
   ////// ERC721 Batch Mintable Extension //////
@@ -444,12 +446,14 @@ export class Erc721<
    * ```
    * @twfeature ERC721BatchMintable
    */
-  public async mintBatch(metadatas: NFTMetadataOrUri[]) {
-    return this.mintBatchTo(
-      await this.contractWrapper.getSignerAddress(),
-      metadatas,
-    );
-  }
+  mintBatch = buildTransactionFunction(
+    async (metadatas: NFTMetadataOrUri[]) => {
+      return this.mintBatchTo.prepare(
+        await this.contractWrapper.getSignerAddress(),
+        metadatas,
+      );
+    },
+  );
 
   /**
    * Mint Many unique NFTs
@@ -479,12 +483,14 @@ export class Erc721<
    * ```
    * @twfeature ERC721BatchMintable
    */
-  public async mintBatchTo(receiver: string, metadatas: NFTMetadataOrUri[]) {
-    return assertEnabled(this.mintable?.batch, FEATURE_NFT_BATCH_MINTABLE).to(
-      receiver,
-      metadatas,
-    );
-  }
+  mintBatchTo = buildTransactionFunction(
+    async (receiver: string, metadatas: NFTMetadataOrUri[]) => {
+      return assertEnabled(
+        this.mintable?.batch,
+        FEATURE_NFT_BATCH_MINTABLE,
+      ).to.prepare(receiver, metadatas);
+    },
+  );
 
   ////// ERC721 Burnable Extension //////
 
@@ -498,9 +504,11 @@ export class Erc721<
    * ```
    * @twfeature ERC721Burnable
    */
-  public async burn(tokenId: BigNumberish) {
-    return assertEnabled(this.burnable, FEATURE_NFT_BURNABLE).token(tokenId);
-  }
+  burn = buildTransactionFunction(async (tokenId: BigNumberish) => {
+    return assertEnabled(this.burnable, FEATURE_NFT_BURNABLE).token.prepare(
+      tokenId,
+    );
+  });
 
   ////// ERC721 LazyMint Extension //////
 
@@ -531,17 +539,19 @@ export class Erc721<
    * @param options - optional upload progress callback
    * @twfeature ERC721LazyMintable
    */
-  public async lazyMint(
-    metadatas: NFTMetadataOrUri[],
-    options?: {
-      onProgress: (event: UploadProgressEvent) => void;
+  lazyMint = buildTransactionFunction(
+    async (
+      metadatas: NFTMetadataOrUri[],
+      options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+      },
+    ) => {
+      return assertEnabled(
+        this.lazyMintable,
+        FEATURE_NFT_LAZY_MINTABLE,
+      ).lazyMint.prepare(metadatas, options);
     },
-  ) {
-    return assertEnabled(this.lazyMintable, FEATURE_NFT_LAZY_MINTABLE).lazyMint(
-      metadatas,
-      options,
-    );
-  }
+  );
 
   ////// ERC721 Claimable Extension //////
 
@@ -565,13 +575,15 @@ export class Erc721<
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    * @twfeature ERC721Claimable
    */
-  public async claim(quantity: BigNumberish, options?: ClaimOptions) {
-    return this.claimTo(
-      await this.contractWrapper.getSignerAddress(),
-      quantity,
-      options,
-    );
-  }
+  claim = buildTransactionFunction(
+    async (quantity: BigNumberish, options?: ClaimOptions) => {
+      return this.claimTo.prepare(
+        await this.contractWrapper.getSignerAddress(),
+        quantity,
+        options,
+      );
+    },
+  );
 
   /**
    * Claim unique NFTs to a specific Wallet
@@ -595,21 +607,27 @@ export class Erc721<
    * @twfeature ERC721Claimable
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
-  public async claimTo(
-    destinationAddress: string,
-    quantity: BigNumberish,
-    options?: ClaimOptions,
-  ): Promise<TransactionResultWithId<NFT>[]> {
-    const claimWithConditions = this.lazyMintable?.claimWithConditions;
-    const claim = this.lazyMintable?.claim;
-    if (claimWithConditions) {
-      return claimWithConditions.to(destinationAddress, quantity, options);
-    }
-    if (claim) {
-      return claim.to(destinationAddress, quantity, options);
-    }
-    throw new ExtensionNotImplementedError(FEATURE_NFT_CLAIM_CUSTOM);
-  }
+  claimTo = buildTransactionFunction(
+    async (
+      destinationAddress: string,
+      quantity: BigNumberish,
+      options?: ClaimOptions,
+    ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
+      const claimWithConditions = this.lazyMintable?.claimWithConditions;
+      const claim = this.lazyMintable?.claim;
+      if (claimWithConditions) {
+        return claimWithConditions.to.prepare(
+          destinationAddress,
+          quantity,
+          options,
+        );
+      }
+      if (claim) {
+        return claim.to.prepare(destinationAddress, quantity, options);
+      }
+      throw new ExtensionNotImplementedError(FEATURE_NFT_CLAIM_CUSTOM);
+    },
+  );
 
   /**
    * Construct a claim transaction without executing it.
@@ -622,7 +640,7 @@ export class Erc721<
     destinationAddress: string,
     quantity: BigNumberish,
     options?: ClaimOptions,
-  ) {
+  ): Promise<Transaction> {
     const claimWithConditions = this.lazyMintable?.claimWithConditions;
     const claim = this.lazyMintable?.claim;
     if (claimWithConditions) {
@@ -643,12 +661,6 @@ export class Erc721<
     if (hasFunction<DropERC721>("nextTokenIdToClaim", contract)) {
       return contract.readContract.nextTokenIdToClaim();
     }
-    if (hasFunction<SignatureDrop>("totalMinted", contract)) {
-      return contract.readContract.totalMinted();
-    }
-    throw new Error(
-      "No function found on contract to get total claimed supply",
-    );
   }
 
   /**

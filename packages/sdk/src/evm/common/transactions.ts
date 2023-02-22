@@ -9,6 +9,6 @@ export function buildTransactionFunction<TResult = TransactionResult>(
     return tx.execute();
   }
 
-  executeFn.transaction = fn;
+  executeFn.prepare = fn;
   return executeFn;
 }

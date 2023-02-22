@@ -1,10 +1,12 @@
 import { NFT, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { uploadOrExtractURIs } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_BATCH_MINTABLE } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc721 } from "./erc-721";
+import { Transaction } from "./transactions";
 import type { IMintableERC721, IMulticall } from "@thirdweb-dev/contracts-js";
 import { TokensMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IMintableERC721";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -62,32 +64,38 @@ export class Erc721BatchMintable implements DetectableFeature {
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```
    */
-  public async to(
-    to: string,
-    metadatas: NFTMetadataOrUri[],
-  ): Promise<TransactionResultWithId<NFT>[]> {
-    const uris = await uploadOrExtractURIs(metadatas, this.storage);
-    const encoded = uris.map((uri) =>
-      this.contractWrapper.readContract.interface.encodeFunctionData("mintTo", [
-        to,
-        uri,
-      ]),
-    );
-    const receipt = await this.contractWrapper.multiCall(encoded);
-    const events = this.contractWrapper.parseLogs<TokensMintedEvent>(
-      "TokensMinted",
-      receipt.logs,
-    );
-    if (events.length === 0 || events.length < metadatas.length) {
-      throw new Error("TokenMinted event not found, minting failed");
-    }
-    return events.map((e) => {
-      const id = e.args.tokenIdMinted;
-      return {
-        id,
-        receipt,
-        data: () => this.erc721.get(id),
-      };
-    });
-  }
+  to = buildTransactionFunction(
+    async (to: string, metadatas: NFTMetadataOrUri[]) => {
+      const uris = await uploadOrExtractURIs(metadatas, this.storage);
+      const encoded = uris.map((uri) =>
+        this.contractWrapper.readContract.interface.encodeFunctionData(
+          "mintTo",
+          [to, uri],
+        ),
+      );
+
+      return Transaction.fromContractWrapper<TransactionResultWithId<NFT>[]>({
+        contractWrapper: this.contractWrapper,
+        method: "multicall",
+        args: [encoded],
+        parse: (receipt) => {
+          const events = this.contractWrapper.parseLogs<TokensMintedEvent>(
+            "TokensMinted",
+            receipt.logs,
+          );
+          if (events.length === 0 || events.length < metadatas.length) {
+            throw new Error("TokenMinted event not found, minting failed");
+          }
+          return events.map((e) => {
+            const id = e.args.tokenIdMinted;
+            return {
+              id,
+              receipt,
+              data: () => this.erc721.get(id),
+            };
+          });
+        },
+      });
+    },
+  );
 }

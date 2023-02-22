@@ -312,7 +312,7 @@ describe("Custom Contracts", async () => {
       name: "Custom NFT",
     });
     initialBalance = await c.erc721.balanceOf(samWallet.address);
-    const tx = await c.erc721.transfer.transaction(samWallet.address, 0);
+    const tx = await c.erc721.transfer.prepare(samWallet.address, 0);
     await tx.execute();
     balance = await c.erc721.balanceOf(samWallet.address);
     expect(balance.toString()).to.eq(initialBalance.add(1).toString());

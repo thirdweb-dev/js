@@ -134,6 +134,10 @@ export class Transaction<TResult = TransactionResult> {
     this.setOverrides({ maxPriorityFeePerGas });
   }
 
+  setParse(parse: ParseTransactionReceipt<TResult>) {
+    this.parse = parse;
+  }
+
   /**
    * Encode the function data for this transaction
    */
