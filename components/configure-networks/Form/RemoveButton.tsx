@@ -41,11 +41,11 @@ export const RemoveButton: React.FC<{ onRemove: () => void }> = ({
         </PopoverHeader>
         <PopoverFooter border="none" display="flex">
           <ButtonGroup size="sm">
-            <Button colorScheme="red" onClick={onRemove}>
-              Remove Network
-            </Button>
             <Button onClick={deletePopover.onClose} variant="ghost">
               Cancel
+            </Button>
+            <Button colorScheme="red" onClick={onRemove}>
+              Remove Network
             </Button>
           </ButtonGroup>
         </PopoverFooter>

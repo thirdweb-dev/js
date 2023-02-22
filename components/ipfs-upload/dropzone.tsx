@@ -49,7 +49,13 @@ export const IpfsUploadDropzone: React.FC<IpfsUploadDropzoneProps> = () => {
   });
   return (
     <Flex flexDir="column" gap={4}>
-      <AspectRatio ratio={{ base: 3 / 4, md: 16 / 9 }} w="100%">
+      <AspectRatio
+        ratio={{
+          base: droppedFiles.length ? 1 : 8 / 4,
+          md: droppedFiles.length ? 16 / 9 : 36 / 9,
+        }}
+        w="100%"
+      >
         {droppedFiles.length ? (
           <Box border="2px solid" borderColor="borderColor" borderRadius="xl">
             <FileUpload files={droppedFiles} updateFiles={setDroppedFiles} />
@@ -60,8 +66,8 @@ export const IpfsUploadDropzone: React.FC<IpfsUploadDropzoneProps> = () => {
             borderColor="borderColor"
             borderRadius="xl"
           >
-            <Text size="label.lg" color="gray.700">
-              Please connect your wallet to beging uploading.
+            <Text size="label.lg" color="gray.700" textAlign="center">
+              Please connect your wallet to begin uploading.
             </Text>
           </Center>
         ) : (

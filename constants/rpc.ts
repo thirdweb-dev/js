@@ -3,6 +3,9 @@ import { DashboardSolanaNetwork } from "utils/solanaUtils";
 export const DASHBOARD_THIRDWEB_API_KEY =
   "ed043a51ae23b0db3873f5a38b77ab28175fa496f15d3c53cf70401be89b622a";
 
+export const EMBED_THIRDWEB_API_KEY =
+  "5a9bc94b87f7cbbbfbbc234bf1e07f0adf5f3cf3012c9f26f9fc9820d64df93a";
+
 export const RPC_ENV =
   (process.env.VERCEL_ENV || process.env.NEXT_PUBLIC_VERCEL_ENV) ===
   "production"

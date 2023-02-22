@@ -13,8 +13,20 @@ import {
   useClipboard,
 } from "@chakra-ui/react";
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
+import {
+  Chain,
+  configureChain,
+  getChainRPC,
+  minimizeChain,
+} from "@thirdweb-dev/chains";
 import { DropContract } from "@thirdweb-dev/react";
+import {
+  DASHBOARD_THIRDWEB_API_KEY,
+  EMBED_THIRDWEB_API_KEY,
+} from "constants/rpc";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useAllChainsData } from "hooks/chains/allChains";
+import { useConfiguredChainsRecord } from "hooks/chains/configureChains";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { FiCopy } from "react-icons/fi";
@@ -32,12 +44,11 @@ interface EmbedSetupProps {
   ercOrMarketplace: string;
 }
 
-const IPFS_URI = "ipfs://QmRHAgPic1HeakAw9EU7WRjt4NPE19pWb8hCorRNhw4Zdy";
+const IPFS_URI = "ipfs://QmbAgC8YwY36n8H2kuvSWsRisxDZ15QZw3xGZyk9aDvcv7";
 
 interface IframeSrcOptions {
-  rpcUrl: string;
   ipfsGateway: string;
-  chainId?: number;
+  chain: string;
   tokenId?: string;
   listingId?: string;
   listingType?: string;
@@ -82,14 +93,13 @@ const buildIframeSrc = (
 ): string => {
   const contractEmbedHash = `${IPFS_URI}/${ercOrMarketplace}.html`;
 
-  if (!contract || !options || !contractEmbedHash || !options.chainId) {
+  if (!contract || !options || !contractEmbedHash) {
     return "";
   }
 
   const {
-    rpcUrl,
     ipfsGateway,
-    chainId,
+    chain,
     tokenId,
     listingId,
     listingType,
@@ -106,7 +116,7 @@ const buildIframeSrc = (
   const url = new URL(contractEmbedHash.replace("ipfs://", ipfsGateway));
 
   url.searchParams.append("contract", contract.getAddress());
-  url.searchParams.append("chainId", chainId.toString());
+  url.searchParams.append("chain", chain);
 
   if (tokenId !== undefined && ercOrMarketplace === "erc1155") {
     url.searchParams.append("tokenId", tokenId.toString());
@@ -127,9 +137,6 @@ const buildIframeSrc = (
     listingType === "english-auction"
   ) {
     url.searchParams.append("englishAuctionId", englishAuctionId.toString());
-  }
-  if (rpcUrl) {
-    url.searchParams.append("rpcUrl", rpcUrl);
   }
   if (isValidUrl(relayUrl)) {
     url.searchParams.append("relayUrl", relayUrl || "");
@@ -157,6 +164,38 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   ercOrMarketplace,
 }) => {
   const trackEvent = useTrack();
+
+  const chainId = useDashboardEVMChainId();
+  const { chainIdToChainRecord } = useAllChainsData();
+  const configuredChains = useConfiguredChainsRecord();
+
+  const configuredChain =
+    configuredChains[chainId as keyof typeof configuredChains];
+  const allChain =
+    chainIdToChainRecord[chainId as keyof typeof chainIdToChainRecord];
+
+  const chain = useMemo(() => {
+    if (configuredChain) {
+      const rpc = configuredChain.rpc[0];
+
+      if (rpc.includes(DASHBOARD_THIRDWEB_API_KEY)) {
+        return configureChain(configuredChain, {
+          rpc: rpc.replace(DASHBOARD_THIRDWEB_API_KEY, EMBED_THIRDWEB_API_KEY),
+        });
+      }
+
+      return configuredChain;
+    }
+    if (allChain) {
+      const rpc = getChainRPC(allChain, {
+        // embeds API key
+        thirdwebApiKey: EMBED_THIRDWEB_API_KEY,
+      });
+      return configureChain(allChain, { rpc });
+    }
+    return undefined;
+  }, [configuredChain, allChain]);
+
   const { register, watch } = useForm<{
     ipfsGateway: string;
     rpcUrl: string;
@@ -174,6 +213,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
     gasless: string;
   }>({
     defaultValues: {
+      rpcUrl: chain?.rpc[0],
       ipfsGateway: "https://gateway.ipfscdn.io/ipfs/",
       tokenId: "0",
       listingId: "0",
@@ -186,11 +226,15 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
     reValidateMode: "onChange",
   });
 
-  const chainId = useDashboardEVMChainId();
   const isMobile = useBreakpointValue({ base: true, md: false });
 
+  const configuredChainWithNewRpc = configureChain(chain as Chain, {
+    rpc: watch("rpcUrl"),
+  });
+  const minimizedChain = minimizeChain(configuredChainWithNewRpc);
+
   const iframeSrc = buildIframeSrc(contract, ercOrMarketplace, {
-    chainId,
+    chain: JSON.stringify(minimizedChain),
     ...watch(),
   });
 

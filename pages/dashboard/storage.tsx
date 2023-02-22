@@ -66,7 +66,7 @@ const DashboardStorage: ThirdwebNextPage = () => {
         }}
       />
       <GridItem as={Flex} colSpan={{ xl: 3 }} direction="column" gap={8}>
-        <Flex flexDir="column" gap={{ base: 16, md: 16 }}>
+        <Flex flexDir="column" gap={{ base: 4, md: 16 }}>
           <Flex flexDir="column" gap={2}>
             <Heading size="title.lg" as="h1">
               Storage
