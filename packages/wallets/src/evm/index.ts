@@ -18,3 +18,4 @@ export * from "./wallets/magic-auth";
 export * from "./wallets/metamask";
 export * from "./wallets/private-key";
 export * from "./wallets/wallet-connect";
+export * from "./wallets/wallet-connect-v1";

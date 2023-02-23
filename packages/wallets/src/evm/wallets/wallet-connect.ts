@@ -3,7 +3,6 @@ import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 import type { WalletConnectConnector } from "../connectors/wallet-connect";
 import { ConnectorData } from '@wagmi/core';
-import { SignClientTypes } from "@walletconnect/types";
 
 export type WalletConnectOptions = {
   projectId: string,
@@ -16,12 +15,7 @@ export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
 
   connector?: TWConnector;
 
-  protected sessionStorageKey = '__TW__:session';
-  protected walletServiceStorageKey = '__TW__:walletService';
-
   static id = "walletConnect" as const;
-
-  static test = "walletConnect";
 
   public get walletName() {
     return "WalletConnect" as const;
@@ -68,21 +62,13 @@ export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
     console.log('onConnect')
 
     this.#provider = data.provider;
-    if (!this.#provider?.session) {
-      throw new Error('WalletConnect session not found after connecting.');
+    if (!this.#provider) {
+      throw new Error('WalletConnect provider not found after connecting.');
     }
-
-    this.#provider.signer.client.on('session_request_sent', this.#onSessionRequestSent);
-
-    await this.walletStorage.setItem(this.sessionStorageKey, JSON.stringify(this.#provider.session));
   }
 
   #onDisconnect = async () => {
     console.log('walletConnect onDisconnect')
-    await Promise.all([
-      this.walletStorage.setItem(this.sessionStorageKey, ''),
-      this.walletStorage.setItem(this.walletServiceStorageKey, ''),
-    ]);
     this.#removeListeners();
   }
 
@@ -120,6 +106,7 @@ export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
     this.#walletConnectConnector.on('disconnect', this.#onDisconnect);
     this.#walletConnectConnector.on('change', this.#onChange);
     this.#walletConnectConnector.on('message', this.#onMessage);
+    this.#provider?.signer.client.on('session_request_sent', this.#onSessionRequestSent);
   }
 
   #removeListeners() {

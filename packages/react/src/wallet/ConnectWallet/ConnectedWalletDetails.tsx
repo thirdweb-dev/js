@@ -41,6 +41,7 @@ const walletIcons: Record<
   deviceWallet: DeviceWalletIcon,
   coinbaseWallet: CoinbaseWalletIcon,
   walletConnect: CoinbaseWalletIcon,
+  walletConnectV1: CoinbaseWalletIcon,
 };
 
 export const ConnectedWalletDetails = () => {

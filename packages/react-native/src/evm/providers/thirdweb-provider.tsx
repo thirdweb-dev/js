@@ -1,5 +1,5 @@
 import { ThirdwebProvider as ThirdwebProviderCore, ThirdwebProviderProps } from "@thirdweb-dev/react-core";
-import { DeviceBrowserWallet, WalletConnect } from "@thirdweb-dev/wallets";
+import { DeviceBrowserWallet, WalletConnect, WalletConnectV1 } from "@thirdweb-dev/wallets";
 import React, { useMemo } from "react";
 import { createAsyncLocalStorage } from "../../core/AsyncStorage";
 
@@ -16,8 +16,12 @@ export function ThirdwebProviderRN({children, createWalletStorage: createWalletS
     }
 
     return supportedWallets.map((wallet) => {
-      // for all wallets supported by wallet connect, we use wc in RN.
-      return wallet.id !== 'deviceWallet' && wallet.id !== 'coinbaseWallet' ? WalletConnect : wallet
+      switch (wallet.id) {
+        case "metamask":
+          return WalletConnectV1;
+        default:
+          return wallet;
+      }
     });
   }, [supportedWallets]);
 
