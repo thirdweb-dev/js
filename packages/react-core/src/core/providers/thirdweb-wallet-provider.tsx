@@ -1,3 +1,4 @@
+import { TW_WC_PROJECT_ID } from "../constants/wc";
 import { DAppMetaData } from "../types/dAppMeta";
 import {
   CoinbaseWalletType,
@@ -23,7 +24,6 @@ import {
   useEffect,
   useState,
 } from "react";
-import { TW_WC_PROJECT_ID } from "../constants/wc";
 
 let coordinatorStorage: AsyncStorage;
 let deviceWalletStorage: AsyncStorage;
@@ -149,7 +149,9 @@ export function ThirdwebWalletProvider(
         return new (Wallet as WalletConnectWalletType)({
           ...walletOptions,
           projectId: TW_WC_PROJECT_ID,
-          qrcode: false // TODO: we need to set this depending on React vs RN.
+          // TODO - move this to class itself - use wrapper wallet classes
+          // true for react, false for react-native
+          qrcode: typeof document !== "undefined",
         });
       }
 
@@ -229,8 +231,10 @@ export function ThirdwebWalletProvider(
     ) => {
       // Device wallet
       if (Wallet.id === "deviceWallet") {
-        const _connectedParams =
-          connectParams as WalletConnectParams<DeviceWalletType>;
+        const _connectedParams = {
+          chainId: props.activeChain.chainId,
+          ...(connectParams as WalletConnectParams<DeviceWalletType>),
+        };
 
         const wallet = createWalletInstance(
           Wallet as DeviceWalletType,
@@ -238,52 +242,47 @@ export function ThirdwebWalletProvider(
 
         setIsConnectingToWallet(Wallet.id);
 
-        await wallet.connect(_connectedParams);
-        handleWalletConnect(wallet);
+        try {
+          await wallet.connect(_connectedParams);
+          handleWalletConnect(wallet);
+        } catch (e) {
+          setIsConnectingToWallet(undefined);
+        }
       }
 
       // Metamask
       else if (Wallet.id === "metamask") {
-        const _connectedParams = connectParams as NonNullable<
-          Parameters<InstanceType<MetaMaskWalletType>["connect"]>[0]
-        >;
+        const _connectedParams = {
+          chainId: props.activeChain.chainId,
+          ...(connectParams as WalletConnectParams<MetaMaskWalletType>),
+        };
 
         const wallet = createWalletInstance(
           Wallet as MetaMaskWalletType,
         ) as InstanceType<MetaMaskWalletType>;
 
+        setIsConnectingToWallet(Wallet.id);
         try {
-          setIsConnectingToWallet(Wallet.id);
           await wallet.connect(_connectedParams);
           handleWalletConnect(wallet);
         } catch (e: any) {
-          if (e.message === "Resource unavailable") {
-            // if we have already requested metamask earlier and asking again
-            // in that case metamask is still in connecting status, so don't reset
-            // reset when user rejects the connect request
-            wallet.addListener("error", () => {
-              setIsConnectingToWallet(undefined);
-            });
-          } else {
-            setIsConnectingToWallet(undefined);
-          }
-
-          throw e;
+          setIsConnectingToWallet(undefined);
         }
       }
 
       // Coinbase
       else if (Wallet.id === "coinbaseWallet") {
-        const _connectedParams = connectParams as NonNullable<
-          Parameters<InstanceType<CoinbaseWalletType>["connect"]>[0]
-        >;
+        const _connectedParams = {
+          chainId: props.activeChain.chainId,
+          ...(connectParams as WalletConnectParams<CoinbaseWalletType>),
+        };
 
         const wallet = createWalletInstance(
           Wallet as CoinbaseWalletType,
         ) as InstanceType<CoinbaseWalletType>;
 
+        setIsConnectingToWallet(Wallet.id);
         try {
-          setIsConnectingToWallet(Wallet.id);
           await wallet.connect(_connectedParams);
           handleWalletConnect(wallet);
         } catch (e: any) {
@@ -293,19 +292,21 @@ export function ThirdwebWalletProvider(
 
       // WalletConnect
       else if (Wallet.id === "walletConnect") {
-        const _connectedParams = connectParams as NonNullable<
-          Parameters<InstanceType<WalletConnectWalletType>["connect"]>[0]
-        >;
+        const _connectedParams = {
+          chainId: props.activeChain.chainId,
+          ...(connectParams as WalletConnectParams<WalletConnectWalletType>),
+        };
+
         const wallet = createWalletInstance(
           Wallet as WalletConnectWalletType,
         ) as InstanceType<WalletConnectWalletType>;
-        wallet.on('open_wallet', onWCOpenWallet);
+        wallet.on("open_wallet", onWCOpenWallet);
+
+        setIsConnectingToWallet(Wallet.id);
         try {
-          setIsConnectingToWallet(Wallet.id);
-          const address = await wallet.connect(_connectedParams);
+          await wallet.connect(_connectedParams);
           handleWalletConnect(wallet);
         } catch (e: any) {
-          throw e;
           setIsConnectingToWallet(undefined);
         }
       }
@@ -319,8 +320,8 @@ export function ThirdwebWalletProvider(
       return;
     }
 
-    if (activeWallet.walletId === 'walletConnect') {
-      activeWallet.removeListener('open_wallet', onWCOpenWallet);
+    if (activeWallet.walletId === "walletConnect") {
+      activeWallet.removeListener("open_wallet", onWCOpenWallet);
     }
 
     activeWallet.disconnect().then(() => {
