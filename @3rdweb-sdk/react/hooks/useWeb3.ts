@@ -11,18 +11,6 @@ interface NetworkMetadata {
   iconSizes?: readonly number[];
 }
 
-export const FAUCETS: Partial<Record<ChainId, string>> = {
-  [ChainId.Goerli]: "https://faucet.paradigm.xyz/",
-  [ChainId.Mumbai]: "https://mumbaifaucet.com",
-  [ChainId.AvalancheFujiTestnet]: "https://faucet.avax.network/",
-  [ChainId.FantomTestnet]: "https://faucet.fantom.network/",
-
-  [ChainId.BinanceSmartChainTestnet]:
-    "https://testnet.binance.org/faucet-smart",
-  [ChainId.OptimismGoerli]: "https://app.optimism.io/bridge/deposit",
-  [ChainId.ArbitrumGoerli]: "https://bridge.arbitrum.io/?l2ChainId=421613",
-};
-
 const defaultIcon = `https://gateway.ipfscdn.io/ipfs/QmNTemZCjCGyN8x9vFQFyAHVeZc9QZu4nCiSANNaZX5Buq/unknown-logo.png`;
 
 export function useWeb3() {

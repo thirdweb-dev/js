@@ -4,7 +4,6 @@ import { Ethereum, Solana } from "@thirdweb-dev/chain-icons";
 import { CmdKSearch } from "components/cmd-k-search";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
 import { Logo } from "components/logo";
-import { InsufficientFunds } from "components/notices/InsufficientFunds";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { FiFile, FiGlobe, FiHelpCircle } from "react-icons/fi";
@@ -293,7 +292,6 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
             </Flex>
           </Stack>
         </Container>
-        {pathname === "/contracts" && <InsufficientFunds />}
       </Flex>
     </Flex>
   );
