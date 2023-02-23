@@ -65,7 +65,7 @@ export const NFTDetails: React.FC<NFTDetailsProps> = ({
           gap={4}
           href={nftsHref}
         >
-          View all -&gt;
+          View All -&gt;
         </TrackedLink>
       </Flex>
       {showSupplyCards && <SupplyCards contract={contract} />}

@@ -64,7 +64,7 @@ export const LatestEvents: React.FC<LatestEventsProps> = ({
           gap={4}
           href={eventsHref}
         >
-          View all events -&gt;
+          View All -&gt;
         </TrackedLink>
       </Flex>
       {address && (
@@ -214,7 +214,9 @@ export const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
         >
           {transaction.events.slice(0, 2).map((e, idx) => (
             <LinkButton key={idx} href={`${href}?event=${e.eventName}`}>
-              {e.eventName}
+              <Text color="white" fontWeight="600" isTruncated>
+                {e.eventName}
+              </Text>
             </LinkButton>
           ))}
           {transaction.events.length > 2 && (

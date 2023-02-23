@@ -72,7 +72,7 @@ export const PermissionsTable: React.FC<PermissionsTableProps> = ({
           gap={4}
           href={permissionsHref}
         >
-          View all permissions -&gt;
+          View All -&gt;
         </TrackedLink>
       </Flex>
       {contract && (

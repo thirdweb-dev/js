@@ -125,7 +125,9 @@ const MarketplaceV1Details: React.FC<
     <Flex gap={6} flexDirection="column">
       <Heading size="title.sm">Listings</Heading>
       <ListingStats contract={contract} />
-      {!listingsQuery.isLoading && listings.length === 0 ? null : (
+      {(!listingsCountQuery.isLoading &&
+        BigNumber.from(listingsCountQuery.data || 0).eq(0)) ||
+      (!listingsQuery.isLoading && listings.length === 0) ? null : (
         <>
           <Flex align="center" justify="space-between" w="full">
             <Heading size="label.lg">Recent Listings</Heading>
@@ -139,7 +141,7 @@ const MarketplaceV1Details: React.FC<
               gap={4}
               href={listingsHref}
             >
-              View listings -&gt;
+              View All -&gt;
             </TrackedLink>
           </Flex>
           <ListingCards
@@ -182,7 +184,14 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
     [listingsQuery?.data],
   );
 
-  return !listingsQuery.isLoading && listings.length === 0 ? null : (
+  if (!countQuery.isLoading && BigNumber.from(countQuery.data || 0).eq(0)) {
+    return null;
+  }
+  if (!listingsQuery.isLoading && listings.length === 0) {
+    return null;
+  }
+
+  return (
     <>
       <Flex align="center" justify="space-between" w="full">
         <Heading size="label.lg">Direct Listings</Heading>
@@ -196,7 +205,7 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
           gap={4}
           href={directListingsHref}
         >
-          View direct listings -&gt;
+          View All -&gt;
         </TrackedLink>
       </Flex>
       <ListingCards
@@ -231,7 +240,14 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
     [auctionsQuery?.data],
   );
 
-  return !auctionsQuery.isLoading && auctions.length === 0 ? null : (
+  if (!countQuery.isLoading && BigNumber.from(countQuery.data || 0).eq(0)) {
+    return null;
+  }
+  if (!auctionsQuery.isLoading && auctions.length === 0) {
+    return null;
+  }
+
+  return (
     <>
       <Flex align="center" justify="space-between" w="full">
         <Heading size="label.lg">English Auctions</Heading>
@@ -245,7 +261,7 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
           gap={4}
           href={englishAuctionsHref}
         >
-          View english auctions -&gt;
+          View All -&gt;
         </TrackedLink>
       </Flex>
       <ListingCards
@@ -357,13 +373,15 @@ const ListingCards: React.FC<ListingCardsProps> = ({
               <Skeleton w={!isLoading ? "100%" : "50%"} isLoaded={!isLoading}>
                 <Heading size="label.md">{listing.asset.name}</Heading>
               </Skeleton>
-              <SkeletonText isLoaded={!isLoading}>
-                <Text size="body.sm">
-                  {listing.type === "direct-listing"
-                    ? "Direct Listing"
-                    : "English Auction"}
-                </Text>
-              </SkeletonText>
+              {isMarketplaceV1 && (
+                <SkeletonText isLoaded={!isLoading}>
+                  <Text size="body.sm">
+                    {listing.type === "direct-listing"
+                      ? "Direct Listing"
+                      : "English Auction"}
+                  </Text>
+                </SkeletonText>
+              )}
 
               <Text size="body.sm" mt={4}>
                 Seller
