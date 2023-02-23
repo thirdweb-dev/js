@@ -299,7 +299,13 @@ describe("Custom Contracts", async () => {
   });
 
   it("should transfer erc721", async () => {
-    const c = await sdk.getContract(nftContractAddress);
+    sdk.updateSignerOrProvider(adminWallet);
+    const address = await sdk.deployer.deployNFTCollection({
+      name: "NFT",
+      primary_sale_recipient: adminWallet.address,
+    });
+    const c = await sdk.getContract(address);
+
     await c.erc721.mintTo(adminWallet.address, {
       name: "Custom NFT",
     });
@@ -312,7 +318,7 @@ describe("Custom Contracts", async () => {
       name: "Custom NFT",
     });
     initialBalance = await c.erc721.balanceOf(samWallet.address);
-    const tx = await c.erc721.transfer.prepare(samWallet.address, 0);
+    const tx = await c.erc721.transfer.prepare(samWallet.address, 1);
     await tx.execute();
     balance = await c.erc721.balanceOf(samWallet.address);
     expect(balance.toString()).to.eq(initialBalance.add(1).toString());

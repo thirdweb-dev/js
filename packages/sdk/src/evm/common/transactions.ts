@@ -22,10 +22,11 @@ import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
 import { BigNumber, BytesLike, ethers } from "ethers";
 import invariant from "tiny-invariant";
 
-export function buildTransactionFunction<TResult = TransactionResult>(
-  fn: (...args: any[]) => Promise<Transaction<TResult>>,
-) {
-  async function executeFn(...args: any[]): Promise<TResult> {
+export function buildTransactionFunction<
+  TResult = TransactionResult,
+  TArgs extends unknown[] = unknown[],
+>(fn: (...args: TArgs) => Promise<Transaction<TResult>>) {
+  async function executeFn(...args: TArgs): Promise<TResult> {
     const tx = await fn(...args);
     return tx.execute();
   }
