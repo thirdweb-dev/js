@@ -5,6 +5,7 @@ import {
   DeviceWalletType,
   MetaMaskWalletType,
   SupportedWallet,
+  WalletConnectV1WalletType,
   WalletConnectWalletType,
   WalletConnectV1WalletType
 } from "../types/wallet";
@@ -145,7 +146,7 @@ export function ThirdwebWalletProvider(
         });
       }
 
-      // WalletConnect
+      // WalletConnect v2
       if (Wallet.id === "walletConnect") {
         return new (Wallet as WalletConnectWalletType)({
           ...walletOptions,
@@ -298,7 +299,7 @@ export function ThirdwebWalletProvider(
         }
       }
 
-      // WalletConnect
+      // WalletConnect v2
       else if (Wallet.id === "walletConnect") {
         const _connectedParams = {
           chainId: props.activeChain.chainId,
@@ -319,7 +320,7 @@ export function ThirdwebWalletProvider(
         }
       }
 
-      // WalletConnect
+      // WalletConnect v1
       else if (Wallet.id === "walletConnectV1") {
         const _connectedParams = {
           chainId: props.activeChain.chainId,
@@ -381,9 +382,18 @@ export function ThirdwebWalletProvider(
 
       // TODO - once the wallet.addListener('change', cb) is working - use that
       provider.on("chainChanged", update);
-      provider.on("accountsChanged", update);
+      provider.on("accountsChanged", (accounts) => {
+        if (accounts.length === 0) {
+          disconnectWallet();
+        } else {
+          update();
+        }
+      });
+      provider.on("disconnect", () => {
+        disconnectWallet();
+      });
     });
-  }, [activeWallet]);
+  }, [activeWallet, disconnectWallet]);
 
   return (
     <ThirdwebWalletContext.Provider

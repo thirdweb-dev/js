@@ -12,6 +12,7 @@ import { useInstalledWallets } from "../hooks/useInstalledWallets";
 import { CoinbaseWalletIcon } from "./icons/CoinbaseWalletIcon";
 import { DeviceWalletIcon } from "./icons/DeviceWalletIcon";
 import { MetamaskIcon } from "./icons/MetamaskIcon";
+import { WalletConnectIcon } from "./icons/WalletConnectIcon";
 import { CoinbaseWalletSetup } from "./setup-ui/CoinbaseWaletSetup";
 import { ConnectToDeviceWallet } from "./setup-ui/DeviceWalletSetup";
 import { MetamaskWalletSetup } from "./setup-ui/MetamaskWalletSetup";
@@ -25,20 +26,18 @@ import {
 import { SupportedWallet } from "@thirdweb-dev/react-core/src/core/types/wallet";
 import { useEffect, useState } from "react";
 
-const metamaskIcon = <MetamaskIcon width={iconSize.lg} height={iconSize.lg} />;
-const deviceWalletIcon = (
-  <DeviceWalletIcon width={iconSize.lg} height={iconSize.lg} />
-);
-const coinbaseWalletIcon = (
-  <CoinbaseWalletIcon width={iconSize.lg} height={iconSize.lg} />
+const walletConnectIcon = (
+  <WalletConnectIcon width={iconSize.lg} height={iconSize.lg} />
 );
 
 const walletIcons: Record<SupportedWallet["id"], JSX.Element> = {
-  metamask: metamaskIcon,
-  deviceWallet: deviceWalletIcon,
-  coinbaseWallet: coinbaseWalletIcon,
-  walletConnect: coinbaseWalletIcon,
-  walletConnectV1: coinbaseWalletIcon,
+  metamask: <MetamaskIcon width={iconSize.lg} height={iconSize.lg} />,
+  deviceWallet: <DeviceWalletIcon width={iconSize.lg} height={iconSize.lg} />,
+  coinbaseWallet: (
+    <CoinbaseWalletIcon width={iconSize.lg} height={iconSize.lg} />
+  ),
+  walletConnect: walletConnectIcon,
+  walletConnectV1: walletConnectIcon,
 };
 
 const walletNames: Record<SupportedWallet["id"], string> = {
@@ -46,7 +45,7 @@ const walletNames: Record<SupportedWallet["id"], string> = {
   deviceWallet: "Device Wallet",
   coinbaseWallet: "Coinbase Wallet",
   walletConnect: "Wallet Connect",
-  walletConnectV1: "Wallet Connect V1"
+  walletConnectV1: "Wallet Connect V1",
 };
 
 export const ConnectWalletFlow = () => {

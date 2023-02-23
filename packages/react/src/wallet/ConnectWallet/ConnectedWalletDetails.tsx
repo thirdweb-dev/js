@@ -17,7 +17,7 @@ import { CoinbaseWalletIcon } from "./icons/CoinbaseWalletIcon";
 import { DeviceWalletIcon } from "./icons/DeviceWalletIcon";
 import { ExitIcon } from "./icons/ExitIcon";
 import { MetamaskIcon } from "./icons/MetamaskIcon";
-// import "./styles.css";
+import { WalletConnectIcon } from "./icons/WalletConnectIcon";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
@@ -40,8 +40,8 @@ const walletIcons: Record<
   metamask: MetamaskIcon,
   deviceWallet: DeviceWalletIcon,
   coinbaseWallet: CoinbaseWalletIcon,
-  walletConnect: CoinbaseWalletIcon,
-  walletConnectV1: CoinbaseWalletIcon,
+  walletConnect: WalletConnectIcon,
+  walletConnectV1: WalletConnectIcon,
 };
 
 export const ConnectedWalletDetails = () => {

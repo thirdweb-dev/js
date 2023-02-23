@@ -6,4 +6,5 @@ export {
   CoinbaseWallet,
   DeviceBrowserWallet as DeviceWallet,
   WalletConnect,
+  WalletConnectV1,
 } from "@thirdweb-dev/wallets";
