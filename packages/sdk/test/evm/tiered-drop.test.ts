@@ -1,45 +1,91 @@
-import { NATIVE_TOKEN_ADDRESS, ThirdwebSDK } from "../../src/evm";
+import { NATIVE_TOKEN_ADDRESS } from "../../src/evm";
 import { SmartContract } from "../../src/evm/contracts/smart-contract";
-import { signers } from "./before-setup";
+import { sdk, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { TieredDrop__factory } from "@thirdweb-dev/contracts-js";
 import { expect, assert } from "chai";
 
 describe("Tiered Drop Contract", async () => {
   let contract: SmartContract;
-  let sdk: ThirdwebSDK;
   let adminWallet: SignerWithAddress;
   let claimerWallet: SignerWithAddress;
 
   async function deployTieredDrop() {
-    // This needs to match the release for the currently used ABI
-    const releaseUri =
-      "ipfs://QmXu9ezFNgXBX1juLZ7kwdf5KpTD1x9GPHnk14QB2NpUvK/0";
-    const address = await sdk.deployer.deployContractFromUri(releaseUri, [], {
-      forceDirectDeploy: true,
-    });
+    const walletAddress = await sdk.wallet.getAddress();
+
+    // // This needs to match the release for the currently used ABI
+    // const releaseUri =
+    //   "ipfs://QmUEL18CuMxWT6WeY6s8g3ruS8Ds1ZDNy1wa5GNmi1cFY6/0";
+    // const address = await sdk.deployer.deployContractFromUri(
+    //   releaseUri,
+    //   [
+    //     walletAddress, // defaultAdmin
+    //     "Tiered Drop #1", // name
+    //     "TD", // symbol
+    //     "ipfs://QmUj5kNz7Xe5AEhV2YvHiCKfMSL5YZpD4E18QLLYEsGBcd/0", // contractUri
+    //     [], // trustedForwarders
+    //     walletAddress, // saleRecipient
+    //     walletAddress, // royaltyRecipient
+    //     0, // royaltyBps
+    //   ],
+    //   {
+    //     forceDirectDeploy: true,
+    //   },
+    // );
+
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
+    const implementationAddress = process.env
+      .tieredDropImplementationAddress as string;
+    const address = await sdk.deployer.deployProxy(
+      implementationAddress,
+      TieredDrop__factory.abi,
+      "initialize",
+      [
+        walletAddress, // defaultAdmin
+        "Tiered Drop #1", // name
+        "TD", // symbol
+        "ipfs://QmUj5kNz7Xe5AEhV2YvHiCKfMSL5YZpD4E18QLLYEsGBcd/0", // contractUri
+        [], // trustedForwarders
+        walletAddress, // saleRecipient
+        walletAddress, // royaltyRecipient
+        0, // royaltyBps
+      ],
+    );
+
+    // const address = await sdk.deployer.deployReleasedContract(
+    //   "0x2Ee4c2e9666Ff48DE2779EB6f33cDC342d761372",
+    //   "TieredDrop",
+    //   [
+    //     walletAddress, // defaultAdmin
+    //     "Tiered Drop #1", // name
+    //     "TD", // symbol
+    //     "ipfs://QmUj5kNz7Xe5AEhV2YvHiCKfMSL5YZpD4E18QLLYEsGBcd/0", // contractUri
+    //     [], // trustedForwarders
+    //     walletAddress, // saleRecipient
+    //     walletAddress, // royaltyRecipient
+    //     0, // royaltyBps
+    //   ],
+    // );
 
     const tieredDrop = await sdk.getContract(address);
 
-    const walletAddress = await sdk.wallet.getAddress();
-    await tieredDrop.call(
-      "initialize",
-      walletAddress, // defaultAdmin
-      "Tiered Drop #1", // name
-      "TD", // symbol
-      "ipfs://QmUj5kNz7Xe5AEhV2YvHiCKfMSL5YZpD4E18QLLYEsGBcd/0", // contractUri
-      [], // trustedForwarders
-      walletAddress, // saleRecipient
-      walletAddress, // royaltyRecipient
-      0, // royaltyBps
-    );
+    // await tieredDrop.call(
+    //   "initialize",
+    //   walletAddress, // defaultAdmin
+    //   "Tiered Drop #1", // name
+    //   "TD", // symbol
+    //   "ipfs://QmUj5kNz7Xe5AEhV2YvHiCKfMSL5YZpD4E18QLLYEsGBcd/0", // contractUri
+    //   [], // trustedForwarders
+    //   walletAddress, // saleRecipient
+    //   walletAddress, // royaltyRecipient
+    //   0, // royaltyBps
+    // );
 
     return tieredDrop;
   }
 
   before(async () => {
     [adminWallet, claimerWallet] = signers;
-    sdk = new ThirdwebSDK(adminWallet);
-
     contract = await deployTieredDrop();
   });
 

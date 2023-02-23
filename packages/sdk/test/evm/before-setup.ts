@@ -1,5 +1,4 @@
 import {
-  Abi,
   ChainId,
   CONTRACTS_MAP,
   ContractType,
@@ -18,6 +17,7 @@ import {
   TokenDropInitializer,
   TokenInitializer,
   VoteInitializer,
+  Abi,
 } from "../../src/evm";
 import {
   Plugin,
@@ -25,24 +25,23 @@ import {
   PluginMetadata,
 } from "../../src/evm/types/plugins";
 import { MockStorage } from "./mock/MockStorage";
+import { deployContractAndUploadMetadata } from "./utils";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   ContractPublisher,
   ContractPublisher__factory,
-  DropERC1155__factory,
-  DropERC1155_V2__factory,
   DropERC20__factory,
   DropERC20_V2__factory,
-  DropERC721__factory,
-  DropERC721_V3__factory,
   Marketplace__factory,
   MockContractPublisher,
   MockContractPublisher__factory,
   Multiwrap__factory,
-  Pack__factory,
-  SignatureDrop__factory,
-  SignatureDrop_V4__factory,
+  PermissionsEnumerable__factory,
+  PluginRegistry,
+  PluginRegistry__factory,
   Split__factory,
+  TieredDrop__factory,
+  TieredDropLogic__factory,
   TokenERC1155__factory,
   TokenERC20__factory,
   TokenERC721__factory,
@@ -50,12 +49,6 @@ import {
   TWFactory__factory,
   TWRegistry,
   TWRegistry__factory,
-  TWMultichainRegistry,
-  TWMultichainRegistry__factory,
-  MultichainRegistryCore,
-  MultichainRegistryCore__factory,
-  PluginRegistry__factory,
-  PluginRegistry,
   VoteERC20__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -191,16 +184,13 @@ export const mochaHooks = {
           factories.push(TokenERC721__factory);
           break;
         case NFTDropInitializer.contractType:
-          factories.push(DropERC721_V3__factory, DropERC721__factory);
           break;
         case SignatureDropInitializer.contractType:
-          factories.push(SignatureDrop_V4__factory, SignatureDrop__factory);
           break;
         case EditionInitializer.contractType:
           factories.push(TokenERC1155__factory);
           break;
         case EditionDropInitializer.contractType:
-          factories.push(DropERC1155_V2__factory, DropERC1155__factory);
           break;
         case SplitInitializer.contractType:
           factories.push(Split__factory);
@@ -212,7 +202,6 @@ export const mochaHooks = {
           factories.push(Marketplace__factory);
           break;
         case PackInitializer.contractType:
-          factories.push(Pack__factory);
           break;
         case MultiwrapInitializer.contractType:
           factories.push(Multiwrap__factory);
@@ -242,6 +231,14 @@ export const mochaHooks = {
       }
     }
 
+    // setup tiered drop
+    const tieredDropEntrypointAddress = await setupTieredDrop();
+    const tx = await thirdwebFactoryDeployer.approveImplementation(
+      tieredDropEntrypointAddress,
+      true,
+    );
+    await tx.wait();
+
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     process.env.registryAddress = thirdwebRegistryAddress;
     // eslint-disable-next-line turbo/no-undeclared-env-vars
@@ -249,7 +246,7 @@ export const mochaHooks = {
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     process.env.contractPublisherAddress = contractPublisher.address;
     // eslint-disable-next-line turbo/no-undeclared-env-vars
-    process.env.multiChainRegistryAddress = await setupMultichainRegistry();
+    process.env.tieredDropImplementationAddress = tieredDropEntrypointAddress;
 
     storage = MockStorage();
     sdk = new ThirdwebSDK(
@@ -283,8 +280,8 @@ const generatePluginFunctions = (
   const pluginInterface = new ethers.utils.Interface(pluginAbi);
   const pluginFunctions: PluginFunction[] = [];
   // TODO - filter out common functions like _msgSender(), contractType(), etc.
-  for (const fnFragment of Object.values(pluginInterface.functions)) {
-    const fn = pluginInterface.getFunction(fnFragment.name);
+  for (const fnName of Object.keys(pluginInterface.functions)) {
+    const fn = pluginInterface.getFunction(fnName);
     if (fn.name.includes("_")) {
       continue;
     }
@@ -295,35 +292,54 @@ const generatePluginFunctions = (
   }
   return pluginFunctions;
 };
-// Setup multichain registry for tests
-async function setupMultichainRegistry(): Promise<string> {
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function setupTieredDrop(): Promise<string> {
   const plugins: Plugin[] = [];
   const pluginNames: string[] = [];
 
-  // multichain registry core plugin
-  const multichainRegistryCoreDeployer = (await new ethers.ContractFactory(
-    MultichainRegistryCore__factory.abi,
-    MultichainRegistryCore__factory.bytecode,
-  )
-    .connect(signer)
-    .deploy()) as MultichainRegistryCore;
-  const multichainRegistryCore =
-    await multichainRegistryCoreDeployer.deployed();
-
-  const functionsCore: PluginFunction[] = generatePluginFunctions(
-    multichainRegistryCore.address,
-    MultichainRegistryCore__factory.abi,
+  // PermissionsEnumerable plugin
+  const permissionsAddress = await deployContractAndUploadMetadata(
+    PermissionsEnumerable__factory.abi,
+    PermissionsEnumerable__factory.bytecode,
+    signer,
   );
-  const metadataCore: PluginMetadata = {
-    name: "MultichainRegistryCore",
+  const functionsPermissions: PluginFunction[] = generatePluginFunctions(
+    permissionsAddress,
+    PermissionsEnumerable__factory.abi,
+  );
+  const metadataPermissions: PluginMetadata = {
+    name: "PermissionsEnumerable",
     metadataURI: "",
-    implementation: multichainRegistryCore.address,
+    implementation: permissionsAddress,
   };
   plugins.push({
-    metadata: metadataCore,
-    functions: functionsCore,
+    metadata: metadataPermissions,
+    functions: functionsPermissions,
   });
-  pluginNames.push("MultichainRegistryCore");
+  pluginNames.push("PermissionsEnumerable");
+
+  // Logic
+  const tieredDropLogicAddress = await deployContractAndUploadMetadata(
+    TieredDropLogic__factory.abi,
+    TieredDropLogic__factory.bytecode,
+    signer,
+    [],
+  );
+  const functionsTieredDropLogic: PluginFunction[] = generatePluginFunctions(
+    tieredDropLogicAddress,
+    TieredDropLogic__factory.abi,
+  );
+  const metadataTieredDropLogic: PluginMetadata = {
+    name: "TieredDropLogic",
+    metadataURI: "",
+    implementation: tieredDropLogicAddress,
+  };
+  plugins.push({
+    metadata: metadataTieredDropLogic,
+    functions: functionsTieredDropLogic,
+  });
+  pluginNames.push("TieredDropLogic");
 
   // Add plugins to plugin-registry
   await Promise.all(
@@ -332,22 +348,15 @@ async function setupMultichainRegistry(): Promise<string> {
     }),
   );
 
-  // Add util plugin names
-  pluginNames.push("PermissionsEnumerable");
-  pluginNames.push("ContractMetadata");
-  pluginNames.push("ERC2771Context");
-  pluginNames.push("PlatformFee");
+  // Router
+  const tieredDropAddress = await deployContractAndUploadMetadata(
+    TieredDrop__factory.abi,
+    TieredDrop__factory.bytecode,
+    signer,
+    [plugins],
+  );
 
-  const multichainRegistryRouterDeployer = (await new ethers.ContractFactory(
-    TWMultichainRegistry__factory.abi,
-    TWMultichainRegistry__factory.bytecode,
-  )
-    .connect(signer)
-    .deploy(pluginRegistry.address, pluginNames)) as TWMultichainRegistry;
-  const multichainRegistryRouter =
-    await multichainRegistryRouterDeployer.deployed();
-
-  return multichainRegistryRouter.address;
+  return tieredDropAddress;
 }
 
 export {

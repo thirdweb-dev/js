@@ -58,13 +58,15 @@ export class Erc721TieredDrop implements DetectableFeature {
       batches.ranges
         .map((range, i) => {
           const nftsInRange = [];
-          const baseUri = batches.baseURIs[i];
+          const baseUri = batches.baseURIs[i].replace(/\/$/, "");
           for (
             let j = range.startIdInclusive.toNumber();
             j < range.endIdNonInclusive.toNumber();
             j++
           ) {
             const uri = `${baseUri}/${j}`;
+            console.log(uri);
+
             const metadata = this.storage.downloadJSON(uri);
             nftsInRange.push(metadata);
           }

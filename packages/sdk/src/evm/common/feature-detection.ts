@@ -21,6 +21,7 @@ import {
 } from "../schema/contracts/custom";
 import { ExtensionNotImplementedError } from "./error";
 import { fetchContractMetadata } from "./metadata-resolver";
+import { unique } from "./utils";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import bs58 from "bs58";
 import { BaseContract, BigNumber, ethers } from "ethers";
@@ -57,8 +58,11 @@ export function matchesPrebuiltAbi<T extends BaseContract>(
  */
 export function hasMatchingAbi(contractAbi: Abi, featureAbis: readonly Abi[]) {
   const contractFn = extractFunctionsFromAbi(contractAbi);
-  const interfaceFn = featureAbis.flatMap((i: any) =>
-    extractFunctionsFromAbi(i),
+  const interfaceFn = unique(
+    featureAbis.flatMap((i: any) => extractFunctionsFromAbi(i)),
+    (a, b): boolean => {
+      return a.name === b.name && a.inputs.length === b.inputs.length;
+    },
   );
   // match every function and their arguments
   const intersection = contractFn.filter((fn) => {
@@ -81,6 +85,7 @@ export function hasMatchingAbi(contractAbi: Abi, featureAbis: readonly Abi[]) {
     );
     return match !== undefined;
   });
+
   return intersection.length === interfaceFn.length;
 }
 
