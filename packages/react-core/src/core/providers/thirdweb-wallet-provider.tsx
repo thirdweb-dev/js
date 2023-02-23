@@ -6,6 +6,7 @@ import {
   MetaMaskWalletType,
   SupportedWallet,
   WalletConnectWalletType,
+  WalletConnectV1WalletType
 } from "../types/wallet";
 import { transformChainToMinimalWagmiChain } from "../utils";
 import { ThirdwebThemeContext } from "./theme-context";
@@ -152,6 +153,13 @@ export function ThirdwebWalletProvider(
           // TODO - move this to class itself - use wrapper wallet classes
           // true for react, false for react-native
           qrcode: typeof document !== "undefined",
+        });
+      }
+
+      // WalletConnectV1
+      if (Wallet.id === "walletConnectV1") {
+        return new (Wallet as WalletConnectV1WalletType)({
+          ...walletOptions,
         });
       }
 
@@ -310,8 +318,29 @@ export function ThirdwebWalletProvider(
           setIsConnectingToWallet(undefined);
         }
       }
+
+      // WalletConnect
+      else if (Wallet.id === "walletConnectV1") {
+        const _connectedParams = {
+          chainId: props.activeChain.chainId,
+          ...(connectParams as WalletConnectParams<WalletConnectWalletType>),
+        };
+
+        const wallet = createWalletInstance(
+          Wallet as WalletConnectV1WalletType,
+        ) as InstanceType<WalletConnectV1WalletType>;
+        wallet.on("open_wallet", onWCOpenWallet);
+
+        setIsConnectingToWallet(Wallet.id);
+        try {
+          await wallet.connect(_connectedParams);
+          handleWalletConnect(wallet);
+        } catch (e: any) {
+          setIsConnectingToWallet(undefined);
+        }
+      }
     },
-    [createWalletInstance, handleWalletConnect, onWCOpenWallet],
+    [createWalletInstance, handleWalletConnect, onWCOpenWallet, props.activeChain.chainId],
   );
 
   const disconnectWallet = useCallback(() => {
@@ -320,7 +349,7 @@ export function ThirdwebWalletProvider(
       return;
     }
 
-    if (activeWallet.walletId === "walletConnect") {
+    if (activeWallet.walletId.includes("walletConnect")) {
       activeWallet.removeListener("open_wallet", onWCOpenWallet);
     }
 

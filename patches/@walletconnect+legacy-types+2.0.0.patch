@@ -1,0 +1,12 @@
+diff --git a/node_modules/@walletconnect/legacy-types/dist/cjs/jsonrpc.d.ts b/node_modules/@walletconnect/legacy-types/dist/cjs/jsonrpc.d.ts
+index 7c2f8f0..0ae2346 100644
+--- a/node_modules/@walletconnect/legacy-types/dist/cjs/jsonrpc.d.ts
++++ b/node_modules/@walletconnect/legacy-types/dist/cjs/jsonrpc.d.ts
+@@ -66,6 +66,7 @@ export interface IWCRpcConnectionOptions {
+     chainId?: number;
+     storageId?: string;
+     signingMethods?: string[];
++    qrCodeModal?: IQRCodeModal;
+     qrcodeModalOptions?: IQRCodeModalOptions;
+     clientMeta?: IClientMeta;
+ }

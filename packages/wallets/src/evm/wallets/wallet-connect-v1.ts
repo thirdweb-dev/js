@@ -5,7 +5,7 @@ import { ConnectorData } from '@wagmi/core';
 import type { WalletConnectV1Connector } from "../connectors/wallet-connect-v1";
 
 export type WalletConnectV1Options = {
-    qrcode: boolean
+    qrcode?: boolean
 } & ConstructorParameters<
     typeof WalletConnectProvider
 >[0]
@@ -36,7 +36,11 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
             this.#walletConnectConnector = new WalletConnectV1Connector({
                 chains: this.chains,
                 options: {
-                    qrcode: this.options.qrcode,
+                    qrcode: true,
+                    qrCodeModal: {
+                        open: this.#onOpenModal,
+                        close: this.#onCloseModal,
+                    },
                     clientMeta: {
                         description: this.options.dappMetadata.description || '',
                         url: this.options.dappMetadata.url,
@@ -55,6 +59,12 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
         }
         return this.connector;
     }
+
+    #onOpenModal = (uri: string) => {
+        this.emit('open_wallet', uri);
+    }
+
+    #onCloseModal = () => { };
 
     #onConnect = async (data: ConnectorData<WalletConnectProvider>) => {
         console.log('onConnect')

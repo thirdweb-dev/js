@@ -400,6 +400,7 @@ export class WalletConnectConnector extends Connector<
   }
 
   protected onDisconnect = () => {
+    console.log('wc.Connector.onDisconnect');
     this.#setRequestedChainsIds([])
     this.emit('disconnect')
   }
