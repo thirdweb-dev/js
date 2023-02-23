@@ -19,7 +19,11 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../../src/evm";
-import { Plugin } from "../../src/evm/types/plugins";
+import {
+  Plugin,
+  PluginFunction,
+  PluginMetadata,
+} from "../../src/evm/types/plugins";
 import { MockStorage } from "./mock/MockStorage";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
@@ -46,17 +50,16 @@ import {
   TWFactory__factory,
   TWRegistry,
   TWRegistry__factory,
-  TWMultichainRegistryRouter,
-  TWMultichainRegistryRouter__factory,
-  TWMultichainRegistryLogic,
-  TWMultichainRegistryLogic__factory,
-  PluginMap,
-  PluginMap__factory,
+  TWMultichainRegistry,
+  TWMultichainRegistry__factory,
+  MultichainRegistryCore,
+  MultichainRegistryCore__factory,
+  PluginRegistry__factory,
+  PluginRegistry,
   VoteERC20__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
-import { FormatTypes, FunctionFragment, Interface } from "ethers/lib/utils";
 import hardhat from "hardhat";
 
 // it's there, trust me bro
@@ -74,6 +77,7 @@ let signer: SignerWithAddress;
 let signers: SignerWithAddress[];
 let storage: ThirdwebStorage;
 let implementations: { [key in ContractType]?: string };
+let pluginRegistry: PluginRegistry;
 
 const fastForwardTime = async (timeInSeconds: number): Promise<void> => {
   const now = Math.floor(Date.now() / 1000);
@@ -100,6 +104,14 @@ export const mochaHooks = {
     const trustedForwarderAddress =
       "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
     await jsonProvider.send("hardhat_reset", []);
+
+    const pluginRegistryDeployer = (await new ethers.ContractFactory(
+      PluginRegistry__factory.abi,
+      PluginRegistry__factory.bytecode,
+    )
+      .connect(signer)
+      .deploy(signer.address)) as PluginRegistry;
+    pluginRegistry = await pluginRegistryDeployer.deployed();
 
     const registry = (await new ethers.ContractFactory(
       TWRegistry__factory.abi,
@@ -237,9 +249,7 @@ export const mochaHooks = {
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     process.env.contractPublisherAddress = contractPublisher.address;
     // eslint-disable-next-line turbo/no-undeclared-env-vars
-    process.env.multiChainRegistryAddress = await setupMultichainRegistry(
-      trustedForwarderAddress,
-    );
+    process.env.multiChainRegistryAddress = await setupMultichainRegistry();
 
     storage = MockStorage();
     sdk = new ThirdwebSDK(
@@ -254,58 +264,86 @@ export const mochaHooks = {
   },
 };
 
+const getFunctionSignature = (fnInputs: any): string => {
+  return (
+    "(" +
+    fnInputs
+      .map((i) => {
+        return i.type === "tuple" ? getFunctionSignature(i.components) : i.type;
+      })
+      .join(",") +
+    ")"
+  );
+};
+
 const generatePluginFunctions = (
   pluginAddress: string,
   pluginAbi: Abi,
-): Plugin[] => {
+): PluginFunction[] => {
   const pluginInterface = new ethers.utils.Interface(pluginAbi);
-  const pluginFunctions: Plugin[] = [];
+  const pluginFunctions: PluginFunction[] = [];
   // TODO - filter out common functions like _msgSender(), contractType(), etc.
   for (const fnFragment of Object.values(pluginInterface.functions)) {
     const fn = pluginInterface.getFunction(fnFragment.name);
+    if (fn.name.includes("_")) {
+      continue;
+    }
     pluginFunctions.push({
       functionSelector: pluginInterface.getSighash(fn),
-      functionSignature:
-        fn.name + "(" + fn.inputs.map((i) => i.type).join(",") + ")",
-      pluginAddress,
+      functionSignature: fn.name + getFunctionSignature(fn.inputs),
     });
   }
   return pluginFunctions;
 };
-
 // Setup multichain registry for tests
-async function setupMultichainRegistry(
-  trustedForwarderAddress: string,
-): Promise<string> {
-  const multichainRegistryLogicDeployer = (await new ethers.ContractFactory(
-    TWMultichainRegistryLogic__factory.abi,
-    TWMultichainRegistryLogic__factory.bytecode,
+async function setupMultichainRegistry(): Promise<string> {
+  const plugins: Plugin[] = [];
+  const pluginNames: string[] = [];
+
+  // multichain registry core plugin
+  const multichainRegistryCoreDeployer = (await new ethers.ContractFactory(
+    MultichainRegistryCore__factory.abi,
+    MultichainRegistryCore__factory.bytecode,
   )
     .connect(signer)
-    .deploy()) as TWMultichainRegistryLogic;
-  const multichainRegistryLogic =
-    await multichainRegistryLogicDeployer.deployed();
+    .deploy()) as MultichainRegistryCore;
+  const multichainRegistryCore =
+    await multichainRegistryCoreDeployer.deployed();
 
-  const plugins: Plugin[] = generatePluginFunctions(
-    multichainRegistryLogic.address,
-    TWMultichainRegistryLogic__factory.abi,
+  const functionsCore: PluginFunction[] = generatePluginFunctions(
+    multichainRegistryCore.address,
+    MultichainRegistryCore__factory.abi,
+  );
+  const metadataCore: PluginMetadata = {
+    name: "MultichainRegistryCore",
+    metadataURI: "",
+    implementation: multichainRegistryCore.address,
+  };
+  plugins.push({
+    metadata: metadataCore,
+    functions: functionsCore,
+  });
+  pluginNames.push("MultichainRegistryCore");
+
+  // Add plugins to plugin-registry
+  await Promise.all(
+    plugins.map((plugin) => {
+      return pluginRegistry.addPlugin(plugin);
+    }),
   );
 
-  const pluginMapDeployer = (await new ethers.ContractFactory(
-    PluginMap__factory.abi,
-    PluginMap__factory.bytecode,
-  )
-    .connect(signer)
-    .deploy(plugins)) as PluginMap;
-  const pluginMap = await pluginMapDeployer.deployed();
+  // Add util plugin names
+  pluginNames.push("PermissionsEnumerable");
+  pluginNames.push("ContractMetadata");
+  pluginNames.push("ERC2771Context");
+  pluginNames.push("PlatformFee");
+
   const multichainRegistryRouterDeployer = (await new ethers.ContractFactory(
-    TWMultichainRegistryRouter__factory.abi,
-    TWMultichainRegistryRouter__factory.bytecode,
+    TWMultichainRegistry__factory.abi,
+    TWMultichainRegistry__factory.bytecode,
   )
     .connect(signer)
-    .deploy(pluginMap.address, [
-      trustedForwarderAddress,
-    ])) as TWMultichainRegistryRouter;
+    .deploy(pluginRegistry.address, pluginNames)) as TWMultichainRegistry;
   const multichainRegistryRouter =
     await multichainRegistryRouterDeployer.deployed();
 

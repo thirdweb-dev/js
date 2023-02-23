@@ -13,7 +13,7 @@ import IMintableERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableER
 import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.json";
 import SignatureMintERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC721.json";
 import SignatureMintERC721_V1Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC721_V1.json";
-import TieredDropAbi from "@thirdweb-dev/contracts-js/dist/abis/LazyMintWithTier.json";
+import TieredDropAbi from "@thirdweb-dev/contracts-js/dist/abis/TieredDropLogic.json";
 
 export const FEATURE_NFT_BURNABLE = {
   name: "ERC721Burnable",

@@ -14,11 +14,14 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult, TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc721 } from "./erc-721";
-import type { TieredDrop, ISignatureAction } from "@thirdweb-dev/contracts-js";
+import type {
+  TieredDropLogic,
+  ISignatureAction,
+} from "@thirdweb-dev/contracts-js";
 import {
   TokensLazyMintedEvent,
   TokensClaimedEvent,
-} from "@thirdweb-dev/contracts-js/dist/declarations/src/TieredDrop";
+} from "@thirdweb-dev/contracts-js/dist/declarations/src/TieredDropLogic";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumberish, ethers } from "ethers";
 import invariant from "tiny-invariant";
@@ -26,13 +29,13 @@ import invariant from "tiny-invariant";
 export class Erc721TieredDrop implements DetectableFeature {
   featureName = FEATURE_NFT_TIERED_DROP.name;
 
-  private contractWrapper: ContractWrapper<TieredDrop>;
+  private contractWrapper: ContractWrapper<TieredDropLogic>;
   private erc721: Erc721;
   private storage: ThirdwebStorage;
 
   constructor(
     erc721: Erc721,
-    contractWrapper: ContractWrapper<TieredDrop>,
+    contractWrapper: ContractWrapper<TieredDropLogic>,
     storage: ThirdwebStorage,
   ) {
     this.erc721 = erc721;
