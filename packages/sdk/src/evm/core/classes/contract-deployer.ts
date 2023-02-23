@@ -1,12 +1,16 @@
-import { getDeployArguments } from "../../common/deploy";
 import {
   extractConstructorParamsFromAbi,
   extractFunctionParamsFromAbi,
   fetchExtendedReleaseMetadata,
   fetchPreDeployMetadata,
-} from "../../common/index";
-import { ChainId, EventType, getNativeTokenByChainId } from "../../constants";
-import { getContractAddressByChainId } from "../../constants/addresses";
+} from "../../common";
+import { getDeployArguments } from "../../common/deploy";
+import {
+  ChainId,
+  EventType,
+  getContractAddressByChainId,
+  getNativeTokenByChainId,
+} from "../../constants";
 import {
   EditionDropInitializer,
   EditionInitializer,
@@ -24,9 +28,12 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../../contracts";
-import { SDKOptions } from "../../schema/sdk-options";
-import { DeployEvent, DeployEvents } from "../../types";
+import { SDKOptions } from "../../schema";
 import {
+  DeployEvent,
+  DeployEvents,
+  DeployMetadata,
+  DeployOptions,
   MarketplaceContractDeployMetadata,
   MarketplaceV3ContractDeployMetadata,
   MultiwrapContractDeployMetadata,
@@ -34,11 +41,7 @@ import {
   SplitContractDeployMetadata,
   TokenContractDeployMetadata,
   VoteContractDeployMetadata,
-} from "../../types/deploy/deploy-metadata";
-import {
-  DeployMetadata,
-  DeployOptions,
-} from "../../types/deploy/deploy-options";
+} from "../../types";
 import { ThirdwebSDK } from "../sdk";
 import {
   ContractType,
@@ -477,7 +480,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       return deployedAddress;
     }
 
-    // For all other chains, fetch from released contracts
+    // For all other chains, fetch from published contracts
     // resolve contract name from type
     const contractName = getContractName(contractType);
     invariant(contractName, "Contract name not found");
@@ -492,15 +495,15 @@ export class ContractDeployer extends RPCConnectionHandler {
     );
 
     const activeChainId = (await this.getProvider().getNetwork()).chainId;
-    // fetch the release URI from the ContractPublisher contract
-    const release = await this.fetchReleaseFromPolygon(
+    // fetch the publish URI from the ContractPublisher contract
+    const publishedContract = await this.fetchPublishedContractFromPolygon(
       THIRDWEB_DEPLOYER,
       contractName,
       version,
     );
-    // fetch the deploy metadata from the release URI
+    // fetch the deploy metadata from the publish URI
     const deployMeta = await this.fetchAndCacheDeployMetadata(
-      release.metadataUri,
+      publishedContract.metadataUri,
     );
     let implementationAddress =
       deployMeta.extendedMetadata?.factoryDeploymentData
@@ -508,11 +511,11 @@ export class ContractDeployer extends RPCConnectionHandler {
 
     if (implementationAddress) {
       // implementation exists on the current chain, continue with normal flow
-      return this.deployContractFromUri(release.metadataUri, constructorParams);
+      return this.deployContractFromUri(publishedContract.metadataUri, constructorParams);
     } else {
       // implementation does NOT exist on chain, deploy the implementation first, then deploy a proxy
       implementationAddress = await this.deployContractFromUri(
-        release.metadataUri,
+        publishedContract.metadataUri,
         this.getConstructorParamsForImplementation(contractType, activeChainId),
         {
           forceDirectDeploy: true,
@@ -542,25 +545,25 @@ export class ContractDeployer extends RPCConnectionHandler {
   }
 
   /**
-   * Deploy any released contract by its name
-   * @param releaserAddress the address of the releaser
+   * Deploy any published contract by its name
+   * @param publisherAddress the address of the publisher
    * @param contractName the name of the contract to deploy
    * @param constructorParams the constructor params to pass to the contract
    */
   public async deployReleasedContract(
-    releaserAddress: string,
+    publisherAddress: string,
     contractName: string,
     constructorParams: any[],
     version = "latest",
     options?: DeployOptions,
   ): Promise<string> {
-    const release = await this.fetchReleaseFromPolygon(
-      releaserAddress,
+    const publishedContract = await this.fetchPublishedContractFromPolygon(
+      publisherAddress,
       contractName,
       version,
     );
     return await this.deployContractFromUri(
-      release.metadataUri,
+      publishedContract.metadataUri,
       constructorParams,
       options,
     );
@@ -896,20 +899,20 @@ export class ContractDeployer extends RPCConnectionHandler {
     return data;
   }
 
-  private async fetchReleaseFromPolygon(
-    releaserAddress: string,
+  private async fetchPublishedContractFromPolygon(
+    publisherAddress: string,
     contractName: string,
     version: string,
   ) {
-    const release = await new ThirdwebSDK("polygon")
+    const publishedContract = await new ThirdwebSDK("polygon")
       .getPublisher()
-      .getVersion(releaserAddress, contractName, version);
-    if (!release) {
+      .getVersion(publisherAddress, contractName, version);
+    if (!publishedContract) {
       throw new Error(
-        `No release found for '${contractName}' at version '${version}' by '${releaserAddress}'`,
+        `No published contract found for '${contractName}' at version '${version}' by '${publisherAddress}'`,
       );
     }
-    return release;
+    return publishedContract;
   }
 
   private getConstructorParamsForImplementation(

@@ -13,7 +13,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
- # To use Remote Caching, uncomment the next lines and follow the steps below.
+  # To use Remote Caching, uncomment the next lines and follow the steps below.
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
@@ -84,7 +84,12 @@ jobs:
           key: ${{ github.sha }}-${{ github.run_number }}
 
       - run: yarn test
-  
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./packages/sdk/coverage/evm/lcov.info,./packages/sdk/coverage/solana/lcov.info,
+
   e2e:
     name: E2E Tests
     runs-on: ubuntu-latest-16
@@ -110,33 +115,3 @@ jobs:
         run: yarn e2e
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
-
-  size:
-    name: Size Comparison
-    runs-on: ubuntu-latest-8
-    needs: build
-    timeout-minutes: 30
-    # only run on pull requests that are targeting main
-    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main'
-
-    steps:
-      - name: Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          check-latest: true
-
-      - uses: actions/cache@v3
-        timeout-minutes: 5
-        id: restore-build
-        with:
-          path: ./*
-          key: ${{ github.sha }}-${{ github.run_number }}
-          
-      - uses: preactjs/compressed-size-action@v2
-        with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          strip-hash: "\\-(\\w{8})(?:\\.esm|\\.cjs)"
-          minimum-change-threshold: 100
-          # exclude source maps, node modules and any test related files
-          exclude: "{**/*.map,**/node_modules/**,**/test/**}"

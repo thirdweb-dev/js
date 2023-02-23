@@ -8,8 +8,8 @@
 <h1 align="center"><a href='http://thirdweb.com/'>thirdweb</a> JavaScript/TypeScript monorepo</h1>
 
 <p align="center">
-    <a href="https://github.com/thirdweb-dev/js/actions/workflows/CI.yml">
-        <img alt="Build Status" src="https://github.com/thirdweb-dev/js/actions/workflows/CI.yml/badge.svg"/>
+    <a href="https://github.com/thirdweb-dev/js/actions/workflows/build-test-lint.yml">
+        <img alt="Build Status" src="https://github.com/thirdweb-dev/js/actions/workflows/build-test-lint.yml/badge.svg"/>
     </a>
     <a href="https://discord.gg/thirdweb">
         <img alt="Join our Discord!" src="https://img.shields.io/discord/834227967404146718.svg?color=7289da&label=discord&logo=discord&style=flat"/>

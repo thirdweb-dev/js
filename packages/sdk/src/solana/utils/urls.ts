@@ -1,5 +1,5 @@
 import { getRpcUrl } from "../../core/constants/urls";
-import { Network } from "../types/index";
+import { Network } from "../types";
 import { Metaplex } from "@metaplex-foundation/js";
 import { Cluster, clusterApiUrl } from "@solana/web3.js";
 

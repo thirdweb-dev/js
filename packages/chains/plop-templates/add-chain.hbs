@@ -1,0 +1,11 @@
+// @ts-check
+/** @typedef { import("../../src/types").Chain } Chain */
+
+/** @type {Omit<Chain, "slug">} */
+export default {
+  {{> namePartial}}
+  {{> chainPartial}}
+  {{> shortNamePartial}}
+  {{> chainIdPartial}}
+  {{> isTestnetPartial}}
+};
