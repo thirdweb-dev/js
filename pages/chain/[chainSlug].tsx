@@ -114,9 +114,10 @@ const ChainPage: ThirdwebNextPage = ({
   }, [chain.chainId, configuredChainRecord]);
 
   const rpcStats = useChainStats(chain);
-  const toast = useToast();
 
   const address = useAddress();
+
+  const toast = useToast();
 
   const title = `${chain.name} (${chain.nativeCurrency.symbol}) | RPC, Smart Contracts, Blockchain SDKs`;
   const description = `Deploy smart contracts to ${
@@ -226,17 +227,12 @@ const ChainPage: ThirdwebNextPage = ({
                           label: chain.slug,
                         });
 
-                        // toast({
-                        //   title: "Chain added",
-                        //   description: `You can now use ${chain.name} on Thirdweb`,
-                        //   status: "success",
-                        //   duration: 3000,
-                        // });
-
-                        setTimeout(() => {
-                          // wait 150ms then reload to fix the chain not added bug
-                          window.location.reload();
-                        }, 150);
+                        toast({
+                          title: "Chain added",
+                          description: `You can now use ${chain.name} on Thirdweb`,
+                          status: "success",
+                          duration: 3000,
+                        });
                       }}
                     >
                       Add chain

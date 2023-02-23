@@ -1,20 +1,11 @@
 import { ConfigureNetworks } from "./ConfigureNetworks";
 import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
-  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
-import { IoReload } from "react-icons/io5";
-import { Button } from "tw-components";
 
 export interface AddNetworkModalProps {
   onClose: () => void;
@@ -23,29 +14,8 @@ export interface AddNetworkModalProps {
 export const ConfigureNetworkModal: React.FC<AddNetworkModalProps> = (
   props,
 ) => {
-  const [isNewNetworkAdded, setIsNewNetworkAdded] = useState(false);
-  const cancelRef = useRef<HTMLButtonElement | null>(null);
-  const [showReloadAlert, setShowReloadAlert] = useState(false);
-
-  const handleReloadAlertClose = () => {
-    if (isNewNetworkAdded) {
-      // for whatever reason changing network config requires a page-reload to take effect
-      window.location.reload();
-    } else {
-      props.onClose();
-    }
-  };
-
-  const handleModalClose = () => {
-    if (isNewNetworkAdded) {
-      setShowReloadAlert(true);
-    } else {
-      props.onClose();
-    }
-  };
-
   return (
-    <Modal isOpen={true} onClose={handleModalClose}>
+    <Modal isOpen={true} onClose={props.onClose}>
       <ModalOverlay />
       <ModalContent
         borderRadius="xl"
@@ -63,37 +33,11 @@ export const ConfigureNetworkModal: React.FC<AddNetworkModalProps> = (
         >
           <ConfigureNetworks
             onNetworkAdded={() => {
-              setIsNewNetworkAdded(true);
+              // setIsNewNetworkAdded(true);
             }}
           />
         </ModalBody>
       </ModalContent>
-
-      {/* Alert Dialog for Reload */}
-      <AlertDialog
-        isOpen={showReloadAlert}
-        leastDestructiveRef={cancelRef}
-        onClose={handleReloadAlertClose}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Reload required to apply network changes
-            </AlertDialogHeader>
-
-            <AlertDialogFooter>
-              <Button
-                colorScheme="blue"
-                onClick={handleReloadAlertClose}
-                ml={3}
-                leftIcon={<Icon as={IoReload} />}
-              >
-                Reload
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
     </Modal>
   );
 };

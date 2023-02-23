@@ -54,11 +54,14 @@ import { GNOSIS_TO_CHAIN_ID } from "constants/mappings";
 import { CustomSDKContext } from "contexts/custom-sdk-context";
 import { constants, utils } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useConfiguredChain } from "hooks/chains/configureChains";
+import {
+  useConfiguredChain,
+  useConfiguredChainsRecord,
+} from "hooks/chains/configureChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { StaticImageData } from "next/image";
 import posthog from "posthog-js";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiCheck, FiChevronDown, FiCopy, FiUser } from "react-icons/fi";
 import { IoMdSettings } from "react-icons/io";
@@ -98,6 +101,72 @@ export interface EcosystemButtonprops extends ButtonProps {
   shrinkMobile?: boolean;
 }
 
+export function useNetworkWithPatchedSwitching() {
+  const [network, switchNetwork] = useNetwork();
+  const actuallyCanAttemptSwitch = !!switchNetwork;
+  const [{ data }] = useConnect();
+  const connector = data?.connector;
+  const { onError } = useTxNotifications("", "Failed to switch network");
+  const configuredChains = useConfiguredChainsRecord();
+
+  const patchedSwitchNetwork = useCallback(
+    async (chainId: number) => {
+      if (actuallyCanAttemptSwitch && chainId && configuredChains) {
+        const res = await switchNetwork(chainId);
+        if (res.error && res.error.name === "AddChainError") {
+          if (connector && connector.getProvider()) {
+            const chain = configuredChains[chainId];
+            if (!chain) {
+              throw new Error("Chain not configured");
+            }
+            try {
+              await connector.getProvider().request({
+                method: "wallet_addEthereumChain",
+                params: [
+                  {
+                    chainId: `0x${chain.chainId.toString(16)}`,
+                    chainName: chain.name,
+                    nativeCurrency: chain.nativeCurrency,
+                    rpcUrls: chain.rpc,
+                    blockExplorerUrls: chain?.explorers?.map(
+                      (explorer) => explorer.url,
+                    ),
+                  },
+                ],
+              });
+              // added chain successfully, try switching again
+              const newRes = await switchNetwork(chainId);
+              if (newRes.error) {
+                throw newRes.error;
+              }
+            } catch (err) {
+              onError(err as Error);
+            }
+          } else {
+            onError(res.error);
+          }
+        }
+      }
+    },
+    [
+      actuallyCanAttemptSwitch,
+      switchNetwork,
+      connector,
+      configuredChains,
+      onError,
+    ],
+  );
+
+  return useMemo(
+    () =>
+      [
+        network,
+        actuallyCanAttemptSwitch ? patchedSwitchNetwork : undefined,
+      ] as const,
+    [network, patchedSwitchNetwork, actuallyCanAttemptSwitch],
+  );
+}
+
 export const ConnectWallet: React.FC<EcosystemButtonprops> = ({
   ecosystem = "either",
   ...buttonProps
@@ -112,7 +181,7 @@ export const ConnectWallet: React.FC<EcosystemButtonprops> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const disconnect = useDisconnect();
   const disconnectFully = useDisconnect({ reconnectPrevious: false });
-  const [network, switchNetwork] = useNetwork();
+  const [network, switchNetwork] = useNetworkWithPatchedSwitching();
   const address = useAddress();
   const chainId = useChainId();
 
