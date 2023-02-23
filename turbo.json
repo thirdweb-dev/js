@@ -66,12 +66,12 @@
       "dependsOn": ["build"]
     },
     "test:solana": {
-      "outputs": [],
+      "outputs": ["coverage/solana/**"],
       "inputs": ["src/core/**", "src/solana/**", "test/solana/**"],
       "dependsOn": ["build"]
     },
     "test:evm": {
-      "outputs": [],
+      "outputs": ["coverage/evm/**"],
       "inputs": ["src/core/**", "src/evm/**", "test/evm/**"],
       "dependsOn": ["build"]
     },

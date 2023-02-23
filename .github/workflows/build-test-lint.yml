@@ -85,6 +85,11 @@ jobs:
 
       - run: yarn test
 
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./packages/sdk/coverage/evm/lcov.info,./packages/sdk/coverage/solana/lcov.info,
+
   e2e:
     name: E2E Tests
     runs-on: ubuntu-latest-16
