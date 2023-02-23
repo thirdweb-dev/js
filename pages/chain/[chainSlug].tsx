@@ -226,12 +226,17 @@ const ChainPage: ThirdwebNextPage = ({
                           label: chain.slug,
                         });
 
-                        toast({
-                          title: "Chain added",
-                          description: `You can now use ${chain.name} on Thirdweb`,
-                          status: "success",
-                          duration: 3000,
-                        });
+                        // toast({
+                        //   title: "Chain added",
+                        //   description: `You can now use ${chain.name} on Thirdweb`,
+                        //   status: "success",
+                        //   duration: 3000,
+                        // });
+
+                        setTimeout(() => {
+                          // wait 150ms then reload to fix the chain not added bug
+                          window.location.reload();
+                        }, 150);
                       }}
                     >
                       Add chain
