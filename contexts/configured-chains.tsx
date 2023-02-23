@@ -1,5 +1,11 @@
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
-import React, { createContext, useEffect, useMemo, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 // extra information on top of Chain interface
 // all keys added here must be optional
@@ -29,31 +35,48 @@ export const UpdateConfiguredChainsContext = createContext<
   UpdateConfiguredChains | undefined
 >(undefined);
 
+// util to unique chains by chainId
+export function uniqueChains(chains: StoredChain[]): StoredChain[] {
+  const chainsRecord: Record<number, StoredChain> = {};
+  chains.forEach((chain) => {
+    chainsRecord[chain.chainId] = chain;
+  });
+  return Object.values(chainsRecord);
+}
+
 /**
  * if no networks are configured by the user, return the defaultChains
  */
 export function ConfiguredChainsProvider(props: { children: React.ReactNode }) {
-  const [configuredNetworks, setConfiguredNetworks] = useState<StoredChain[]>(
-    () => {
-      if (typeof window === "undefined") {
-        return defaultChains;
+  const [configuredNetworks, _setConfiguredNetworks] =
+    useState<StoredChain[]>(defaultChains);
+
+  // this proxies the setstate function to also update the localstorage under the hood
+  const setConfiguredNetworks: React.Dispatch<
+    React.SetStateAction<StoredChain[]>
+  > = useCallback((updater) => {
+    _setConfiguredNetworks((prev) => {
+      if (typeof updater === "function") {
+        const newConfiguredNetworks = uniqueChains(updater(prev));
+        configuredChainsStorage.set(newConfiguredNetworks);
+        return newConfiguredNetworks;
+      } else {
+        const newChains = uniqueChains(updater);
+        configuredChainsStorage.set(newChains);
+        return newChains;
       }
+    });
+  }, []);
 
-      // todo - use indexedDb instead of localStorage
-      const listFromCookies = configuredChainsStorage.get();
-
-      if (listFromCookies.length === 0) {
-        return defaultChains;
-      }
-
-      return listFromCookies;
-    },
-  );
-
-  // update storage when configuredNetworks changes
+  // set the configured networks initially
+  // has to happen in useEffect because otherwise we mismatch with server state potentially
   useEffect(() => {
-    configuredChainsStorage.set(configuredNetworks);
-  }, [configuredNetworks]);
+    // todo - use indexedDb instead of localStorage
+    const listFromCookies = uniqueChains(configuredChainsStorage.get());
+    if (listFromCookies.length > 0) {
+      _setConfiguredNetworks(listFromCookies);
+    }
+  }, []);
 
   const updator: UpdateConfiguredChains = useMemo(() => {
     return {
