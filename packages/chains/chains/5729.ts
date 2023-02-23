@@ -1,5 +1,5 @@
 export default {
-  "name": "Hika Network",
+  "name": "Hika Network Testnet",
   "title": "Hika Network Testnet",
   "chain": "HIK",
   "icon": {
@@ -9,7 +9,7 @@ export default {
     "format": "png"
   },
   "rpc": [
-    "https://hika-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://hika-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.hika.network/"
   ],
   "faucets": [],
@@ -30,5 +30,5 @@ export default {
     }
   ],
   "testnet": true,
-  "slug": "hika-network"
+  "slug": "hika-network-testnet"
 } as const;
