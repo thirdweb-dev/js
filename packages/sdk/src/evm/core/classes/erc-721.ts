@@ -22,8 +22,8 @@ import {
   FEATURE_NFT_TIERED_DROP,
   FEATURE_NFT_SIGNATURE_MINTABLE_V2,
 } from "../../constants/erc721-features";
+import { ClaimOptions, UploadProgressEvent } from "../../types";
 import { BaseDropERC721, BaseERC721 } from "../../types/eips";
-import { ClaimOptions, UploadProgressEvent } from "../../types/index";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { NetworkInput, TransactionResultWithId } from "../types";

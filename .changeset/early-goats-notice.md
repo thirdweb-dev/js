@@ -2,4 +2,4 @@
 "@thirdweb-dev/chains": patch
 ---
 
-update chains
+Update Chains

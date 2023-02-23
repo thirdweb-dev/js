@@ -1,4 +1,9 @@
-import { includesErrorMessage } from "../../common";
+import { TransactionResult, TransactionTask } from "..";
+import {
+  detectContractFeature,
+  hasFunction,
+  includesErrorMessage,
+} from "../../common";
 import {
   abstractContractModelToLegacy,
   abstractContractModelToNew,
@@ -11,10 +16,6 @@ import {
   updateExistingClaimConditions,
 } from "../../common/claim-conditions";
 import { isNativeToken } from "../../common/currency";
-import {
-  detectContractFeature,
-  hasFunction,
-} from "../../common/feature-detection";
 import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
 import { buildTransactionFunction } from "../../common/transactions";
 import { isNode } from "../../common/utils";

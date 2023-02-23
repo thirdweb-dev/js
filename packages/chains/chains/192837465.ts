@@ -22,6 +22,12 @@ export default {
       "standard": "none"
     }
   ],
+  "icon": {
+    "url": "ipfs://Qmc9AJGg9aNhoH56n3deaZeUc8Ty1jDYJsW6Lu6hgSZH4S",
+    "height": 512,
+    "width": 512,
+    "format": "png"
+  },
   "testnet": false,
   "slug": "gather-network"
 } as const;
