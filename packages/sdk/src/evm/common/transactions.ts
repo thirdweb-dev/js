@@ -23,8 +23,8 @@ import { BigNumber, BytesLike, ethers } from "ethers";
 import invariant from "tiny-invariant";
 
 export function buildTransactionFunction<
+  TArgs extends any[],
   TResult = TransactionResult,
-  TArgs extends unknown[] = unknown[],
 >(fn: (...args: TArgs) => Promise<Transaction<TResult>>) {
   async function executeFn(...args: TArgs): Promise<TResult> {
     const tx = await fn(...args);
