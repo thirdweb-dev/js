@@ -132,7 +132,7 @@ export class Erc721LazyMintable implements DetectableFeature {
       options?: {
         onProgress: (event: UploadProgressEvent) => void;
       },
-    ) => {
+    ): Promise<Transaction<TransactionResultWithId<NFTMetadata>[]>> => {
       const startFileNumber = await this.erc721.nextTokenIdToMint();
       const batch = await uploadOrExtractURIs(
         metadatas,
@@ -143,9 +143,7 @@ export class Erc721LazyMintable implements DetectableFeature {
       // ensure baseUri is the same for the entire batch
       const baseUri = getBaseUriFromBatch(batch);
 
-      return Transaction.fromContractWrapper<
-        TransactionResultWithId<NFTMetadata>[]
-      >({
+      return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "lazyMint",
         args: [

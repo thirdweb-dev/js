@@ -1,4 +1,4 @@
-import { detectContractFeature } from "../../common";
+import { detectContractFeature, hasFunction } from "../../common";
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
@@ -19,12 +19,13 @@ import { Transaction } from "./transactions";
 import type {
   ISignatureMintERC721,
   ITokenERC721,
+  Multicall,
   SignatureMintERC721,
   TokenERC721,
 } from "@thirdweb-dev/contracts-js";
 import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/SignatureDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -71,49 +72,64 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
       const mintRequest = signedPayload.payload;
       const signature = signedPayload.signature;
 
-      const isLegacyNFTContract = await this.isLegacyNFTContract();
-
-      let message;
-      let price;
-      if (isLegacyNFTContract) {
-        message = await this.mapLegacyPayloadToContractStruct(mintRequest);
-        price = message.price;
-      } else {
-        message = await this.mapPayloadToContractStruct(mintRequest);
-        price = message.pricePerToken.mul(message.quantity);
-      }
-
       const overrides = await this.contractWrapper.getCallOverrides();
+      const parse = (receipt: ethers.providers.TransactionReceipt) => {
+        const t =
+          this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
+            "TokensMintedWithSignature",
+            receipt.logs,
+          );
+        if (t.length === 0) {
+          throw new Error("No MintWithSignature event found");
+        }
+        const id = t[0].args.tokenIdMinted;
+        return {
+          id,
+          receipt,
+        };
+      };
 
-      // TODO: Transaction Sequence Pattern
-      await setErc20Allowance(
-        this.contractWrapper,
-        price,
-        mintRequest.currencyAddress,
-        overrides,
-      );
+      if (await this.isLegacyNFTContract()) {
+        const message = await this.mapLegacyPayloadToContractStruct(
+          mintRequest,
+        );
+        const price = message.price;
 
-      return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper,
-        method: "mintWithSignature",
-        args: [message, signature],
-        overrides,
-        parse: (receipt) => {
-          const t =
-            this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
-              "TokensMintedWithSignature",
-              receipt.logs,
-            );
-          if (t.length === 0) {
-            throw new Error("No MintWithSignature event found");
-          }
-          const id = t[0].args.tokenIdMinted;
-          return {
-            id,
-            receipt,
-          };
-        },
-      });
+        // TODO: Transaction Sequence Pattern
+        await setErc20Allowance(
+          this.contractWrapper,
+          price,
+          mintRequest.currencyAddress,
+          overrides,
+        );
+
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper,
+          method: "mintWithSignature",
+          args: [message, signature],
+          overrides,
+          parse,
+        });
+      } else {
+        const message = await this.mapPayloadToContractStruct(mintRequest);
+        const price = message.pricePerToken.mul(message.quantity);
+
+        // TODO: Transaction Sequence Pattern
+        await setErc20Allowance(
+          this.contractWrapper,
+          price,
+          mintRequest.currencyAddress,
+          overrides,
+        );
+
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper,
+          method: "mintWithSignature",
+          args: [message, signature],
+          overrides,
+          parse,
+        });
+      }
     },
   );
 
@@ -169,25 +185,29 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
         }
       });
 
-      return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper,
-        method: "multicall",
-        args: [encoded],
-        parse: (receipt) => {
-          const events =
-            this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
-              "TokensMintedWithSignature",
-              receipt.logs,
-            );
-          if (events.length === 0) {
-            throw new Error("No MintWithSignature event found");
-          }
-          return events.map((log) => ({
-            id: log.args.tokenIdMinted,
-            receipt,
-          }));
-        },
-      });
+      if (hasFunction<Multicall>("multicall", this.contractWrapper)) {
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper,
+          method: "multicall",
+          args: [encoded],
+          parse: (receipt) => {
+            const events =
+              this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
+                "TokensMintedWithSignature",
+                receipt.logs,
+              );
+            if (events.length === 0) {
+              throw new Error("No MintWithSignature event found");
+            }
+            return events.map((log) => ({
+              id: log.args.tokenIdMinted,
+              receipt,
+            }));
+          },
+        });
+      } else {
+        throw new Error("Multicall not available on this contract!");
+      }
     },
   );
 

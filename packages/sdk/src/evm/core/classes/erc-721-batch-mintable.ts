@@ -65,7 +65,10 @@ export class Erc721BatchMintable implements DetectableFeature {
    * ```
    */
   to = buildTransactionFunction(
-    async (to: string, metadatas: NFTMetadataOrUri[]) => {
+    async (
+      to: string,
+      metadatas: NFTMetadataOrUri[],
+    ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
       const uris = await uploadOrExtractURIs(metadatas, this.storage);
       const encoded = uris.map((uri) =>
         this.contractWrapper.readContract.interface.encodeFunctionData(
@@ -74,7 +77,7 @@ export class Erc721BatchMintable implements DetectableFeature {
         ),
       );
 
-      return Transaction.fromContractWrapper<TransactionResultWithId<NFT>[]>({
+      return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "multicall",
         args: [encoded],

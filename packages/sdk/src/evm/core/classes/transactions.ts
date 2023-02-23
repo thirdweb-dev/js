@@ -4,19 +4,22 @@ import {
   fetchContractMetadataFromAddress,
   fetchSourceFilesFromMetadata,
 } from "../../common/metadata-resolver";
+import { defaultGaslessSendFunction } from "../../common/transactions";
 import { isBrowser } from "../../common/utils";
 import { ChainId } from "../../constants/chains";
 import { ContractSource } from "../../schema/contracts/custom";
+import { SDKOptionsOutput } from "../../schema/sdk-options";
 import {
   ParseTransactionReceipt,
   TransactionOptionsWithContract,
   TransactionOptionsWithContractInfo,
   TransactionOptionsWithContractWrapper,
 } from "../../types/transactions";
-import { TransactionResult } from "../types";
+import { GaslessTransaction, TransactionResult } from "../types";
 import { ConnectionInfo } from "@ethersproject/web";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, CallOverrides, ethers } from "ethers";
+import invariant from "tiny-invariant";
 
 export class Transaction<TResult = TransactionResult> {
   private contract: ethers.Contract;
@@ -26,10 +29,14 @@ export class Transaction<TResult = TransactionResult> {
   private provider: ethers.providers.Provider;
   private signer: ethers.Signer;
   private storage: ThirdwebStorage;
+  private gaslessOptions?: SDKOptionsOutput["gasless"];
   private parse?: ParseTransactionReceipt<TResult>;
 
-  static fromContractWrapper<TResult = TransactionResult>(
-    options: TransactionOptionsWithContractWrapper<TResult>,
+  static fromContractWrapper<
+    TContract extends ethers.BaseContract,
+    TResult = TransactionResult,
+  >(
+    options: TransactionOptionsWithContractWrapper<TContract, TResult>,
   ): Transaction<TResult> {
     const signer = options.contractWrapper.getSigner();
     if (!signer) {
@@ -90,6 +97,7 @@ export class Transaction<TResult = TransactionResult> {
     this.overrides = options.overrides || {};
     this.provider = options.provider;
     this.signer = options.signer;
+    this.gaslessOptions = options.gasless;
     this.parse = options.parse as ParseTransactionReceipt<TResult> | undefined;
 
     // Connect provider to signer if it isn't already connected
@@ -207,6 +215,14 @@ export class Transaction<TResult = TransactionResult> {
       throw this.functionError();
     }
 
+    if (
+      this.gaslessOptions &&
+      ("openzeppelin" in this.gaslessOptions ||
+        "biconomy" in this.gaslessOptions)
+    ) {
+      return this.sendGasless();
+    }
+
     const gasOverrides = this.getGasOverrides();
     const overrides = { ...gasOverrides, ...this.overrides };
 
@@ -270,6 +286,95 @@ export class Transaction<TResult = TransactionResult> {
    */
   private async getSignerAddress() {
     return this.signer.getAddress();
+  }
+
+  /**
+   * Execute the transaction with gasless
+   */
+  private async sendGasless(): Promise<ethers.ContractTransaction> {
+    invariant(
+      this.gaslessOptions &&
+        ("openzeppelin" in this.gaslessOptions ||
+          "biconomy" in this.gaslessOptions),
+      "No gasless options set on this transaction!",
+    );
+
+    const args = [...this.args];
+
+    if (
+      this.method === "multicall" &&
+      Array.isArray(this.args[0]) &&
+      args[0].length > 0
+    ) {
+      const from = await this.getSignerAddress();
+      args[0] = args[0].map((tx: any) =>
+        ethers.utils.solidityPack(["bytes", "address"], [tx, from]),
+      );
+    }
+
+    invariant(
+      this.signer,
+      "Cannot execute gasless transaction without valid signer",
+    );
+
+    const chainId = (await this.provider.getNetwork()).chainId;
+    const from = await (this.overrides.from || this.getSignerAddress());
+    const to = this.contract.address;
+    const value = this.overrides?.value || 0;
+
+    if (BigNumber.from(value).gt(0)) {
+      throw new Error(
+        "Cannot send native token value with gasless transaction",
+      );
+    }
+
+    const data = this.contract.interface.encodeFunctionData(this.method, args);
+
+    let gas = BigNumber.from(0);
+    try {
+      const gasEstimate = await (this.contract.estimateGas as any)[this.method](
+        ...args,
+      );
+      gas = gasEstimate.mul(2);
+    } catch (e) {
+      // ignore
+    }
+
+    // in some cases WalletConnect doesn't properly gives an estimate for how much gas it would actually use.
+    // as a fix, we're setting it to a high arbitrary number (500k) as the gas limit that should cover for most function calls.
+    if (gas.lt(100000)) {
+      gas = BigNumber.from(500000);
+    }
+
+    // check for gas override in callOverrides
+    if (
+      this.overrides.gasLimit &&
+      BigNumber.from(this.overrides.gasLimit).gt(gas)
+    ) {
+      gas = BigNumber.from(this.overrides.gasLimit);
+    }
+
+    const tx: GaslessTransaction = {
+      from,
+      to,
+      data,
+      chainId,
+      gasLimit: gas,
+      functionName: this.method,
+      functionArgs: args,
+      callOverrides: this.overrides,
+    };
+
+    const txHash = await defaultGaslessSendFunction(
+      tx,
+      this.signer,
+      this.provider,
+      this.gaslessOptions,
+    );
+
+    const sentTx = await this.provider.getTransaction(txHash);
+    sentTx.wait = async () => this.provider.waitForTransaction(txHash);
+    return sentTx;
   }
 
   /**

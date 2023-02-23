@@ -1,5 +1,6 @@
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { TransactionResult } from "../core/types";
+import { SDKOptionsOutput } from "../schema/sdk-options";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 
@@ -13,13 +14,16 @@ type TransactionOptions<TResult = TransactionResult> = {
   overrides?: ethers.CallOverrides;
   storage?: ThirdwebStorage;
   parse?: ParseTransactionReceipt<TResult>;
+  gasless?: SDKOptionsOutput["gasless"];
 };
 
 export type TransactionOptionsWithContractWrapper<
+  TContract extends ethers.BaseContract,
   TResult = TransactionResult,
-  TContract extends ethers.BaseContract = ethers.BaseContract,
+  TMethod extends keyof TContract["functions"] = keyof TContract["functions"],
 > = TransactionOptions<TResult> & {
-  method: keyof TContract["interface"]["functions"];
+  method: TMethod;
+  args: Parameters<TContract["functions"][TMethod]>;
   contractWrapper: ContractWrapper<TContract>;
 };
 

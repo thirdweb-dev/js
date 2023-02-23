@@ -661,6 +661,12 @@ export class Erc721<
     if (hasFunction<DropERC721>("nextTokenIdToClaim", contract)) {
       return contract.readContract.nextTokenIdToClaim();
     }
+    if (hasFunction<SignatureDrop>("totalMinted", contract)) {
+      return contract.readContract.totalMinted();
+    }
+    throw new Error(
+      "No function found on contract to get total claimed supply",
+    );
   }
 
   /**

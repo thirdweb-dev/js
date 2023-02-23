@@ -761,6 +761,7 @@ export class DropClaimConditions<
     if (detectContractFeature<IERC20Metadata>(this.contractWrapper, "ERC20")) {
       return this.contractWrapper.readContract.decimals();
     } else {
+      return Promise.resolve(0);
     }
   }
 
