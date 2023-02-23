@@ -1,6 +1,7 @@
 export default {
-  "name": "Hika Devnet",
-  "chain": "Hika Network Testnet",
+  "name": "Hika Network",
+  "title": "Hika Network Testnet",
+  "chain": "HIK",
   "icon": {
     "url": "ipfs://QmW44FPm3CMM2JDs8BQxLNvUtykkUtrGkQkQsUDJSi3Gmp",
     "width": 350,
@@ -8,7 +9,7 @@ export default {
     "format": "png"
   },
   "rpc": [
-    "https://hika-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://hika-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.hika.network/"
   ],
   "faucets": [],
@@ -29,5 +30,5 @@ export default {
     }
   ],
   "testnet": true,
-  "slug": "hika-devnet"
+  "slug": "hika-network"
 } as const;
