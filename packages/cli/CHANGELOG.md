@@ -1,5 +1,12 @@
 # thirdweb
 
+## 0.9.25
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.9.5
+
 ## 0.9.24
 
 ### Patch Changes
