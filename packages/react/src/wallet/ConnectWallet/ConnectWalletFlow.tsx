@@ -12,7 +12,6 @@ import { useInstalledWallets } from "../hooks/useInstalledWallets";
 import { CoinbaseWalletIcon } from "./icons/CoinbaseWalletIcon";
 import { DeviceWalletIcon } from "./icons/DeviceWalletIcon";
 import { MetamaskIcon } from "./icons/MetamaskIcon";
-import { InstallCoinbaseWallet } from "./install-ui/InstallCoinbase";
 import { CoinbaseWalletSetup } from "./setup-ui/CoinbaseWaletSetup";
 import { ConnectToDeviceWallet } from "./setup-ui/DeviceWalletSetup";
 import { MetamaskWalletSetup } from "./setup-ui/MetamaskWalletSetup";
@@ -58,6 +57,7 @@ export const ConnectWalletFlow = () => {
     | "walletList"
     | "coinbaseWallet"
     | "installCoinbaseWallet"
+    | "installWalletConnect"
     | "walletConnect"
     | "walletConnectV1"
   >("walletList");
@@ -65,7 +65,6 @@ export const ConnectWalletFlow = () => {
   const connect = useConnect();
   const wallets = useWallets();
   const installedWallets = useInstalledWallets();
-
   const [open, setOpen] = useState(false);
 
   // when the dialog is closed, reset the showUI state
@@ -89,21 +88,35 @@ export const ConnectWalletFlow = () => {
     onClick: () => {
       if (wallet.id === "deviceWallet") {
         setShowUI("deviceWallet");
-      } else {
-        if (wallet.id === "metamask" && !installedWallets.metamask) {
-          // open metamask extension page in new tab
-          // TEMPORARY
-          window.open("https://metamask.io/download/", "_blank");
-        } else if (
-          wallet.id === "coinbaseWallet" &&
-          !installedWallets.coinbaseWallet
-        ) {
-          setShowUI("installCoinbaseWallet");
-        } else {
-          connect(wallet, {});
-          setShowUI(wallet.id);
-        }
+        return;
       }
+
+      // if metamask is not installed, open the metamask download page
+      if (wallet.id === "metamask" && !installedWallets.metamask) {
+        // open metamask extension page in new tab
+        // TEMPORARY
+        window.open("https://metamask.io/download/", "_blank");
+        return;
+      }
+
+      // if coinbase wallet is not installed, open the coinbase wallet install page
+      if (wallet.id === "coinbaseWallet" && !installedWallets.coinbaseWallet) {
+        setShowUI("installCoinbaseWallet");
+        connect(wallet, {});
+        setOpen(false);
+        return;
+      }
+
+      // if wallet connect is not installed, open the wallet connect install page
+      if (wallet.id === "walletConnect" && !installedWallets.walletConnect) {
+        setShowUI("installWalletConnect");
+        connect(wallet, {});
+        setOpen(false);
+        return;
+      }
+
+      connect(wallet, {});
+      setShowUI(wallet.id);
     },
     installed: installedWallets[wallet.id],
   }));
@@ -123,10 +136,6 @@ export const ConnectWalletFlow = () => {
         </Button>
       }
     >
-      {showUI === "installCoinbaseWallet" && (
-        <InstallCoinbaseWallet onBack={handleBack} />
-      )}
-
       {showUI === "walletList" && (
         <>
           <DialogTitle>Connect your wallet</DialogTitle>

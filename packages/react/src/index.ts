@@ -5,4 +5,5 @@ export {
   MetaMask as MetamaskWallet,
   CoinbaseWallet,
   DeviceBrowserWallet as DeviceWallet,
+  WalletConnect,
 } from "@thirdweb-dev/wallets";
