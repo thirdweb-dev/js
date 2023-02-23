@@ -1,5 +1,5 @@
 import { NativeToken } from "../types/currency";
-import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
+import { ChainId, getSupportedChains, SUPPORTED_CHAIN_ID } from "./chains";
 import { ethers } from "ethers";
 
 /**
@@ -185,6 +185,19 @@ export const NATIVE_TOKENS: Record<
  * @public
  */
 export function getNativeTokenByChainId(chainId: ChainId): NativeToken {
+  const chain = getSupportedChains().find((c) => c.chainId === chainId);
+  if (chain && chain.nativeCurrency) {
+    return {
+      name: chain.nativeCurrency.name,
+      symbol: chain.nativeCurrency.symbol,
+      decimals: 18,
+      wrapped: {
+        address: ethers.constants.AddressZero,
+        name: `Wrapped ${chain.nativeCurrency.name}`,
+        symbol: `W${chain.nativeCurrency.symbol}`,
+      },
+    };
+  }
   return (
     NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID] || {
       name: "Ether",

@@ -1,6 +1,10 @@
 import { fetchCurrencyValue } from "../common/currency";
 import { getCompositePluginABI } from "../common/plugin";
-import { getChainProvider, NATIVE_TOKEN_ADDRESS } from "../constants";
+import {
+  getChainProvider,
+  NATIVE_TOKEN_ADDRESS,
+  setSupportedChains,
+} from "../constants";
 import {
   getContractTypeForRemoteName,
   PREBUILT_CONTRACTS_MAP,
@@ -177,6 +181,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       network = network.chainId;
     }
     super(network, options);
+    setSupportedChains(options?.supportedChains);
     this.storageHandler = storage;
     this.storage = storage;
     this.wallet = new UserWallet(network, options);
