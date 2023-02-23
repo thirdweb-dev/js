@@ -150,6 +150,9 @@
     "buffer": "^6.0.3",
     "eventemitter3": "^5.0.0"
   },
+  "resolutions": {
+    "@walletconnect/ethereum-provider": "^2.4.5"
+  },
   "peerDependencies": {
     "@aws-sdk/client-secrets-manager": "^3.256.0",
     "@coinbase/wallet-sdk": "^3.6.3",

@@ -57,7 +57,6 @@ export class WalletConnectV1Connector extends Connector<
             provider.on('accountsChanged', this.onAccountsChanged)
             provider.on('chainChanged', this.onChainChanged)
             provider.on('disconnect', this.onDisconnect)
-            provider.on('open', this.onOpen);
 
             // Defer message to the next tick to ensure wallet connect data (provided by `.enable()`) is available
             setTimeout(() => this.emit('message', { type: 'connecting' }), 0)
@@ -122,8 +121,8 @@ export class WalletConnectV1Connector extends Connector<
         if (!this.#provider || chainId || create) {
             const rpc = !this.options?.infuraId
                 ? this.chains.reduce(
-                    (rpc, chain) => ({
-                        ...rpc,
+                    (rpc_, chain) => ({
+                        ...rpc_,
                         [chain.id]: chain.rpcUrls.default.http[0],
                     }),
                     {},
@@ -214,12 +213,6 @@ export class WalletConnectV1Connector extends Connector<
     }
 
     protected onChainChanged = (chainId: number | string) => {
-        const id = normalizeChainId(chainId)
-        const unsupported = this.isChainUnsupported(id)
-        this.emit('change', { chain: { id, unsupported } })
-    }
-
-    protected onOpen = () => {
         const id = normalizeChainId(chainId)
         const unsupported = this.isChainUnsupported(id)
         this.emit('change', { chain: { id, unsupported } })

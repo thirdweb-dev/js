@@ -26,17 +26,6 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
         super(WalletConnectV1.id, options);
     }
 
-    protected open(uri: string, cb: () => void) {
-        console.log('uri', uri)
-        console.log('cb', cb)
-        try {
-            // Linking.openURL(uri);
-        } catch (error) {
-            console.log('error', error)
-        }
-        return undefined;
-    };
-
     protected async getConnector(): Promise<TWConnector> {
         if (!this.connector) {
             // import the connector dynamically
@@ -48,8 +37,6 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
                 chains: this.chains,
                 options: {
                     qrcode: this.options.qrcode,
-                    open: this.open,
-                    close: () => { },
                     clientMeta: {
                         description: this.options.dappMetadata.description || '',
                         url: this.options.dappMetadata.url,
@@ -68,12 +55,6 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
         }
         return this.connector;
     }
-
-    #maybeThrowError = (error: any) => {
-        if (error) {
-            throw error;
-        }
-    };
 
     #onConnect = async (data: ConnectorData<WalletConnectProvider>) => {
         console.log('onConnect')
