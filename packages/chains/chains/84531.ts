@@ -2,7 +2,7 @@ export default {
   "name": "Base Goerli Testnet",
   "chain": "ETH",
   "rpc": [
-    "https://base-goerli-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://base-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli.base.org"
   ],
   "faucets": [
@@ -36,5 +36,5 @@ export default {
     "width": 512,
     "format": "png"
   },
-  "slug": "base-goerli-testnet"
+  "slug": "base-goerli"
 } as const;
