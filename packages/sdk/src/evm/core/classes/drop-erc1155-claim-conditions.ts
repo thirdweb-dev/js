@@ -1,4 +1,3 @@
-import { TransactionResult, TransactionTask } from "..";
 import {
   detectContractFeature,
   hasFunction,
