@@ -3,6 +3,7 @@ import { SlideStateProps, TRACK_CATEGORY } from "../shared";
 import { lastSlideIndex, slides } from "../slides";
 import { ConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { Box, ButtonGroup, Center, Flex } from "@chakra-ui/react";
+import { useShouldShowTOSNotice } from "components/notices/PrivacyNotice";
 import { motion } from "framer-motion";
 import { useTrack } from "hooks/analytics/useTrack";
 import React from "react";
@@ -53,6 +54,7 @@ export const ContentContainer: React.FC<SlideStateProps> = ({
   setSlideIndex,
 }) => {
   const track = useTrack();
+  const [, setHasAcceptedTOS] = useShouldShowTOSNotice();
 
   const goToNextStep = () => {
     const nextSlideIndex = slideIndex + 1;
@@ -115,7 +117,9 @@ export const ContentContainer: React.FC<SlideStateProps> = ({
             </Button>
 
             {isLastSlide ? (
-              <ConnectWallet />
+              <Box onClick={() => setHasAcceptedTOS(true)}>
+                <ConnectWallet />
+              </Box>
             ) : (
               <Button
                 autoFocus
