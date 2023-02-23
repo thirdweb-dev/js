@@ -13,26 +13,6 @@ describe("Tiered Drop Contract", async () => {
   async function deployTieredDrop() {
     const walletAddress = await sdk.wallet.getAddress();
 
-    // // This needs to match the release for the currently used ABI
-    // const releaseUri =
-    //   "ipfs://QmUEL18CuMxWT6WeY6s8g3ruS8Ds1ZDNy1wa5GNmi1cFY6/0";
-    // const address = await sdk.deployer.deployContractFromUri(
-    //   releaseUri,
-    //   [
-    //     walletAddress, // defaultAdmin
-    //     "Tiered Drop #1", // name
-    //     "TD", // symbol
-    //     "ipfs://QmUj5kNz7Xe5AEhV2YvHiCKfMSL5YZpD4E18QLLYEsGBcd/0", // contractUri
-    //     [], // trustedForwarders
-    //     walletAddress, // saleRecipient
-    //     walletAddress, // royaltyRecipient
-    //     0, // royaltyBps
-    //   ],
-    //   {
-    //     forceDirectDeploy: true,
-    //   },
-    // );
-
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     const implementationAddress = process.env
       .tieredDropImplementationAddress as string;
@@ -52,35 +32,7 @@ describe("Tiered Drop Contract", async () => {
       ],
     );
 
-    // const address = await sdk.deployer.deployReleasedContract(
-    //   "0x2Ee4c2e9666Ff48DE2779EB6f33cDC342d761372",
-    //   "TieredDrop",
-    //   [
-    //     walletAddress, // defaultAdmin
-    //     "Tiered Drop #1", // name
-    //     "TD", // symbol
-    //     "ipfs://QmUj5kNz7Xe5AEhV2YvHiCKfMSL5YZpD4E18QLLYEsGBcd/0", // contractUri
-    //     [], // trustedForwarders
-    //     walletAddress, // saleRecipient
-    //     walletAddress, // royaltyRecipient
-    //     0, // royaltyBps
-    //   ],
-    // );
-
     const tieredDrop = await sdk.getContract(address);
-
-    // await tieredDrop.call(
-    //   "initialize",
-    //   walletAddress, // defaultAdmin
-    //   "Tiered Drop #1", // name
-    //   "TD", // symbol
-    //   "ipfs://QmUj5kNz7Xe5AEhV2YvHiCKfMSL5YZpD4E18QLLYEsGBcd/0", // contractUri
-    //   [], // trustedForwarders
-    //   walletAddress, // saleRecipient
-    //   walletAddress, // royaltyRecipient
-    //   0, // royaltyBps
-    // );
-
     return tieredDrop;
   }
 

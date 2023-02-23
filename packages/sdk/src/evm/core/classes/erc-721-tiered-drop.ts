@@ -55,28 +55,33 @@ export class Erc721TieredDrop implements DetectableFeature {
     }
 
     const nfts = await Promise.all(
-      batches.ranges
-        .map((range, i) => {
-          const nftsInRange = [];
-          const baseUri = batches.baseURIs[i].replace(/\/$/, "");
-          for (
-            let j = range.startIdInclusive.toNumber();
-            j < range.endIdNonInclusive.toNumber();
-            j++
-          ) {
-            const uri = `${baseUri}/${j}`;
-            console.log(uri);
+      batches.ranges.map(async (range, i) => {
+        const nftsInRange = [];
+        const baseUri = batches.baseURIs[i].replace(/\/$/, "");
 
-            const metadata = this.storage.downloadJSON(uri);
-            nftsInRange.push(metadata);
-          }
+        const isDelayedReveal =
+          await this.contractWrapper.readContract.isEncryptedBatch(
+            range.endIdNonInclusive,
+          );
 
-          return nftsInRange;
-        })
-        .flat(),
+        for (
+          let j = range.startIdInclusive.toNumber();
+          j < range.endIdNonInclusive.toNumber();
+          j++
+        ) {
+          const uri = isDelayedReveal
+            ? `${baseUri}/${range.startIdInclusive.toNumber()}`
+            : `${baseUri}/${j}`;
+
+          const metadata: NFTMetadata = await this.storage.downloadJSON(uri);
+          nftsInRange.push(metadata);
+        }
+
+        return nftsInRange;
+      }),
     );
 
-    return nfts;
+    return await Promise.all(nfts.flat());
   }
 
   public async getTokensInTier(tier: string): Promise<NFT[]> {
