@@ -1,4 +1,5 @@
 import {
+  Box,
   Center,
   Flex,
   Icon,
@@ -29,7 +30,7 @@ import {
   MdNavigateNext,
 } from "react-icons/md";
 import { CellProps, Column, usePagination, useTable } from "react-table";
-import { Card, Heading, Text } from "tw-components";
+import { Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
 interface ContractOverviewNFTGetAllProps {
@@ -151,7 +152,13 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
 
   return (
     <Flex gap={4} direction="column">
-      <Card maxW="100%" overflowX="auto" position="relative" px={0} py={0}>
+      <Box
+        maxW="100%"
+        overflowX="auto"
+        position="relative"
+        p={0}
+        borderTopRadius="lg"
+      >
         {getAllQueryResult.isFetching && (
           <Spinner
             color="primary"
@@ -174,14 +181,14 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
               <Tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
                   // eslint-disable-next-line react/jsx-key
-                  <Th {...column.getHeaderProps()} py={5}>
-                    <Text as="label" size="label.md">
+                  <Th {...column.getHeaderProps()} border="none">
+                    <Text as="label" size="label.sm" color="faded">
                       {column.render("Header")}
                     </Text>
                   </Th>
                 ))}
                 {/* // Need to add an empty header for the drawer button */}
-                <Th />
+                <Th border="none" />
               </Tr>
             ))}
           </Thead>
@@ -204,14 +211,19 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                   pointerEvents={failedToLoad ? "none" : "auto"}
                   opacity={failedToLoad ? 0.3 : 1}
                   cursor={failedToLoad ? "not-allowed" : "pointer"}
+                  borderColor="borderColor"
                 >
                   {row.cells.map((cell) => (
                     // eslint-disable-next-line react/jsx-key
-                    <Td {...cell.getCellProps()} borderBottomWidth="inherit">
+                    <Td
+                      {...cell.getCellProps()}
+                      borderBottomWidth="inherit"
+                      borderColor="borderColor"
+                    >
                       {cell.render("Cell")}
                     </Td>
                   ))}
-                  <Td borderBottomWidth="inherit">
+                  <Td borderBottomWidth="inherit" borderColor="borderColor">
                     {!failedToLoad && <Icon as={FiArrowRight} />}
                   </Td>
                 </Tr>
@@ -241,7 +253,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
             )}
           </Tbody>
         </Table>
-      </Card>
+      </Box>
       <Center w="100%">
         <Flex gap={2} direction="row" align="center">
           <IconButton

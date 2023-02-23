@@ -1,5 +1,6 @@
 import { LISTING_STATUS } from "./types";
 import {
+  Box,
   ButtonGroup,
   Center,
   Flex,
@@ -40,7 +41,7 @@ import {
   MdNavigateNext,
 } from "react-icons/md";
 import { Cell, Column, usePagination, useTable } from "react-table";
-import { Button, Card, Heading, Text } from "tw-components";
+import { Button, Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
 const tableColumns: Column<DirectListingV3 | EnglishAuction>[] = [
@@ -198,7 +199,13 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
         </Button>
       </ButtonGroup>
 
-      <Card maxW="100%" overflowX="auto" position="relative" px={0} py={0}>
+      <Box
+        maxW="100%"
+        overflowX="auto"
+        position="relative"
+        p={0}
+        borderTopRadius="lg"
+      >
         {((listingsToShow === "all" && getAllQueryResult.isFetching) ||
           (listingsToShow === "valid" && getValidQueryResult.isFetching)) && (
           <Spinner
@@ -223,14 +230,14 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
               <Tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
                   // eslint-disable-next-line react/jsx-key
-                  <Th {...column.getHeaderProps()} py={5}>
-                    <Text as="label" size="label.md">
+                  <Th {...column.getHeaderProps()} border="none">
+                    <Text as="label" size="label.sm" color="faded">
                       {column.render("Header")}
                     </Text>
                   </Th>
                 ))}
                 {/* // Need to add an empty header for the drawer button */}
-                <Th />
+                <Th border="none" />
               </Tr>
             ))}
           </Thead>
@@ -249,14 +256,19 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
                   // end hack
                   borderBottomWidth={1}
                   _last={{ borderBottomWidth: 0 }}
+                  borderColor="borderColor"
                 >
                   {row.cells.map((cell) => (
                     // eslint-disable-next-line react/jsx-key
-                    <Td {...cell.getCellProps()} borderBottomWidth={"inherit"}>
+                    <Td
+                      {...cell.getCellProps()}
+                      borderBottomWidth="inherit"
+                      borderColor="borderColor"
+                    >
                       {cell.render("Cell")}
                     </Td>
                   ))}
-                  <Td borderBottomWidth="inherit">
+                  <Td borderBottomWidth="inherit" borderColor="borderColor">
                     <Icon as={FiArrowRight} />
                   </Td>
                 </Tr>
@@ -288,7 +300,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
             )}
           </Tbody>
         </Table>
-      </Card>
+      </Box>
       <Center w="100%">
         <Flex gap={2} direction="row" align="center">
           <IconButton

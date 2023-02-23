@@ -2,7 +2,6 @@ import {
   Box,
   Container,
   Flex,
-  Icon,
   Spinner,
   useBreakpointValue,
   usePrevious,
@@ -18,8 +17,6 @@ import { useIsomorphicLayoutEffect } from "framer-motion";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useRouter } from "next/router";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { FiXCircle } from "react-icons/fi";
-import { VscExtensions } from "react-icons/vsc";
 import { Button, LinkButton } from "tw-components";
 import { isBrowser } from "utils/isBrowser";
 
@@ -186,13 +183,10 @@ const ContractSubnav: React.FC<ContractSubnavProps> = ({ routes }) => {
             <ContractSubNavLinkButton
               icon={
                 route.isEnabled !== undefined ? (
-                  route.isEnabled === "enabled" ? (
-                    <Icon as={VscExtensions} color="green.500" />
-                  ) : route.isEnabled === "loading" ? (
+                  route.isEnabled ===
+                  "enabled" ? undefined : route.isEnabled === "loading" ? (
                     <Spinner color="purple.500" size="xs" />
-                  ) : (
-                    <Icon as={FiXCircle} color="red.500" />
-                  )
+                  ) : undefined
                 ) : undefined
               }
               key={route.path}

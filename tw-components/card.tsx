@@ -37,13 +37,6 @@ export const CardElevationWrapper: ComponentWithChildren = ({ children }) => {
   );
 };
 
-const cardStackBgMap: Record<number, string> = {
-  0: "backgroundHighlight",
-  1: "backgroundCardHighlight",
-  2: "backgroundHighlight",
-  3: "backgroundCardHighlight",
-};
-
 export interface CardProps extends BoxProps {
   outlineBorder?: {
     gradient: string;
@@ -66,12 +59,10 @@ export const Card: React.FC<CardProps> = ({
   outlineBorder,
   ...requiredBoxProps
 }) => {
-  const cardStackLevel = useContext(CardStackContext);
-
   const combinedProps = { ...{ ...defaultBoxProps, ...requiredBoxProps } };
 
   return (
-    <CardElevationWrapper>
+    <>
       {outlineBorder ? (
         <Box
           p={outlineBorder.width}
@@ -91,9 +82,6 @@ export const Card: React.FC<CardProps> = ({
           />
 
           <Box
-            backgroundColor={
-              cardStackBgMap[cardStackLevel] || "backgroundHighlight"
-            }
             {...combinedProps}
             w="full"
             borderRadius={getBorderRadius(combinedProps.borderRadius)}
@@ -103,14 +91,14 @@ export const Card: React.FC<CardProps> = ({
         </Box>
       ) : (
         <Box
-          backgroundColor={
-            cardStackBgMap[cardStackLevel] || "backgroundHighlight"
-          }
           {...combinedProps}
+          _light={{
+            bg: "white",
+          }}
         >
           {children}
         </Box>
       )}
-    </CardElevationWrapper>
+    </>
   );
 };

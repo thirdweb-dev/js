@@ -4,7 +4,6 @@ import {
   Divider,
   Flex,
   GridItem,
-  Icon,
   List,
   ListItem,
   SimpleGrid,
@@ -28,7 +27,6 @@ import {
 import { MarkdownRenderer } from "components/contract-components/published-contract/markdown-renderer";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
-import { FiEdit2, FiEye } from "react-icons/fi";
 import { Badge, Button, Card, Heading, Text } from "tw-components";
 
 interface ContractFunctionProps {
@@ -79,17 +77,22 @@ export const ContractFunction: React.FC<ContractFunctionProps> = ({
           <Divider my={2} />
           <Flex flexDir="column" gap={3}>
             <Heading size="label.lg">Inputs</Heading>
-            <Card borderRadius="md" p={0} overflowX="auto" position="relative">
+            <Box
+              borderTopRadius="lg"
+              p={0}
+              overflowX="auto"
+              position="relative"
+            >
               <Table size="sm">
                 <Thead>
                   <Tr>
-                    <Th py={2} borderBottomColor="borderColor">
-                      <Heading as="label" size="label.sm">
+                    <Th border="none">
+                      <Heading as="label" size="label.sm" color="faded">
                         Name
                       </Heading>
                     </Th>
-                    <Th py={2} borderBottomColor="borderColor">
-                      <Heading as="label" size="label.sm">
+                    <Th border="none">
+                      <Heading as="label" size="label.sm" color="faded">
                         Type
                       </Heading>
                     </Th>
@@ -124,7 +127,7 @@ export const ContractFunction: React.FC<ContractFunctionProps> = ({
                   ))}
                 </Tbody>
               </Table>
-            </Card>
+            </Box>
           </Flex>
         </>
       ) : null}
@@ -187,11 +190,16 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
       >
         <List height="100%" overflowX="hidden">
           {(writeFunctions.length > 0 || viewFunctions.length > 0) && (
-            <Tabs h="100%" position="relative" display="flex" flexDir="column">
+            <Tabs
+              colorScheme="gray"
+              h="100%"
+              position="relative"
+              display="flex"
+              flexDir="column"
+            >
               <TabList as={Flex}>
                 {writeFunctions.length > 0 && (
                   <Tab gap={2} flex={"1 1 0"}>
-                    <Icon boxSize={3} as={FiEdit2} />
                     <Heading color="inherit" my={1} size="label.md">
                       Write
                     </Heading>
@@ -199,7 +207,6 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
                 )}
                 {viewFunctions.length > 0 && (
                   <Tab gap={2} flex={"1 1 0"}>
-                    <Icon boxSize={3} as={FiEye} />
                     <Heading color="inherit" my={1} size="label.md">
                       Read
                     </Heading>

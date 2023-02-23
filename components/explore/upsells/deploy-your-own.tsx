@@ -51,8 +51,8 @@ export const DeployUpsellCard: React.FC = () => {
                 label: "contract_kit",
               }}
               fontWeight={400}
-              _light={{ color: "blue.500", _hover: { color: "blue.700" } }}
-              _dark={{ color: "blue.300", _hover: { color: "blue.500" } }}
+              _light={{ color: "blue.500", _hover: { color: "blue.500" } }}
+              _dark={{ color: "blue.400", _hover: { color: "blue.500" } }}
               size="sm"
               href="https://portal.thirdweb.com/contractkit"
               isExternal
@@ -86,8 +86,8 @@ export const DeployUpsellCard: React.FC = () => {
               }}
               size="sm"
               fontWeight={400}
-              _light={{ color: "blue.500", _hover: { color: "blue.700" } }}
-              _dark={{ color: "blue.300", _hover: { color: "blue.500" } }}
+              _light={{ color: "blue.500", _hover: { color: "blue.500" } }}
+              _dark={{ color: "blue.400", _hover: { color: "blue.500" } }}
               href="https://portal.thirdweb.com/deploy"
               isExternal
               variant="link"

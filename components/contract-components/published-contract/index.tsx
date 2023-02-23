@@ -322,12 +322,12 @@ Deploy it in one click`,
                             )}
                             isExternal
                             _dark={{
-                              color: "blue.300",
+                              color: "blue.400",
                               _hover: { color: "blue.500" },
                             }}
                             _light={{
                               color: "blue.500",
-                              _hover: { color: "blue.700" },
+                              _hover: { color: "blue.500" },
                             }}
                           >
                             View Audit Report

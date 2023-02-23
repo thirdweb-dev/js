@@ -348,7 +348,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
   // Render the UI for your table
   return (
     <Flex flexGrow={1} overflow="auto">
-      <Box w="100%">
+      <Box w="100%" borderTopRadius="lg">
         <Table {...getTableProps()}>
           <Thead>
             {headerGroups.map((headerGroup) => (
@@ -356,8 +356,8 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
               <Tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
                   // eslint-disable-next-line react/jsx-key
-                  <Th {...column.getHeaderProps()}>
-                    <Text as="label" size="label.md">
+                  <Th {...column.getHeaderProps()} border="none">
+                    <Text as="label" size="label.sm" color="faded">
                       {column.render("Header")}
                     </Text>
                   </Th>
@@ -374,7 +374,9 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
                   {row.cells.map((cell) => {
                     return (
                       // eslint-disable-next-line react/jsx-key
-                      <Td {...cell.getCellProps()}>{cell.render("Cell")}</Td>
+                      <Td {...cell.getCellProps()} borderColor="borderColor">
+                        {cell.render("Cell")}
+                      </Td>
                     );
                   })}
                 </Tr>

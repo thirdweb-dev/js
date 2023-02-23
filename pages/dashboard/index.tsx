@@ -74,8 +74,8 @@ const Dashboard: ThirdwebNextPage = (
   }, []);
 
   return (
-    <SimpleGrid columns={{ base: 1, xl: 4 }} gap={8} mt={{ base: 2, md: 10 }}>
-      <GridItem colSpan={{ xl: 3 }}>
+    <SimpleGrid columns={{ base: 1, lg: 4 }} gap={16} mt={{ base: 2, md: 10 }}>
+      <GridItem colSpan={{ lg: 3 }}>
         <ClientOnly fadeInDuration={600} ssr={null}>
           {!isLoading && (
             <>

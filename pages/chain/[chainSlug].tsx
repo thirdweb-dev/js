@@ -437,7 +437,7 @@ const ChainPage: ThirdwebNextPage = ({
                   const [publisher, contractId] =
                     publishedContractId.split("/");
                   return (
-                    <GridItem key={contractId} colSpan={4}>
+                    <GridItem key={contractId} colSpan={{ base: 6, md: 4 }}>
                       <ContractCard
                         slim
                         key={publishedContractId}

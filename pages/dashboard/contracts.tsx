@@ -4,7 +4,6 @@ import {
   Container,
   Divider,
   Flex,
-  Icon,
   Tab,
   TabList,
   TabPanel,
@@ -13,11 +12,9 @@ import {
 } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
-import { ChakraNextImage } from "components/Image";
 import { AppLayout } from "components/app-layouts/app";
 import { DeployedContracts } from "components/contract-components/tables/deployed-contracts";
 import { PublishedContracts } from "components/contract-components/tables/published-contracts";
-import { FancyEVMIcon } from "components/icons/Ethereum";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { PageId } from "page-id";
 import { useEffect, useState } from "react";
@@ -47,28 +44,17 @@ const Contracts: ThirdwebNextPage = () => {
       {!isLoading && (
         <>
           {address ? (
-            <Tabs isLazy lazyBehavior="keepMounted">
+            <Tabs isLazy lazyBehavior="keepMounted" colorScheme="gray">
               <TabList
                 px={0}
                 borderBottomColor="borderColor"
                 borderBottomWidth="1px"
                 overflowX={{ base: "auto", md: "inherit" }}
               >
-                <Tab gap={2} _selected={{ borderBottomColor: "purple.500" }}>
-                  <Icon opacity={0.85} boxSize={6} as={FancyEVMIcon} />
+                <Tab gap={2}>
                   <Heading size="label.lg">Deployed Contracts</Heading>
                 </Tab>
-                <Tab
-                  gap={2}
-                  _selected={{
-                    borderBottomColor: "#FBFF5C",
-                  }}
-                >
-                  <ChakraNextImage
-                    src={require("public/assets/product-icons/publish.png")}
-                    alt=""
-                    boxSize={6}
-                  />
+                <Tab gap={2}>
                   <Heading size="label.lg">Published Contracts</Heading>
                 </Tab>
               </TabList>

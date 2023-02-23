@@ -1,4 +1,5 @@
 import {
+  Box,
   BoxProps,
   Link,
   ListItem,
@@ -16,7 +17,7 @@ import { Language } from "prism-react-renderer";
 import { onlyText } from "react-children-utilities";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Card, CodeBlock, Heading, Text } from "tw-components";
+import { CodeBlock, Heading, Text } from "tw-components";
 
 const ChakraReactMarkdown = chakra(ReactMarkdown);
 
@@ -96,7 +97,7 @@ export const MarkdownRenderer: React.FC<
         a: (props) => (
           <Link
             _dark={{
-              color: "blue.300",
+              color: "blue.400",
               _hover: {
                 color: "blue.500",
               },
@@ -104,7 +105,7 @@ export const MarkdownRenderer: React.FC<
             _light={{
               color: "blue.500",
               _hover: {
-                color: "blue.700",
+                color: "blue.500",
               },
             }}
             isExternal
@@ -144,27 +145,27 @@ export const MarkdownRenderer: React.FC<
           <Text size="body.md" mb={4} {...props} lineHeight={1.5} />
         ),
         table: (props) => (
-          <Card
+          <Box
             maxW="100%"
             overflowX="auto"
             position="relative"
             px={0}
             py={0}
             mb={4}
+            borderTopRadius="lg"
           >
             <Table {...props} />
-          </Card>
+          </Box>
         ),
         th: ({ children: c, ...props }) => (
           <Th
             {...(props as unknown as any)}
             textAlign="left!important"
-            borderColor="borderColor"
+            border="none"
           >
-            {" "}
-            <Text as="label" size="label.md">
+            <Text as="label" size="label.sm" color="faded">
               {c}
-            </Text>{" "}
+            </Text>
           </Th>
         ),
         td: (props) => (
@@ -175,13 +176,7 @@ export const MarkdownRenderer: React.FC<
             borderBottomWidth={"inherit"}
           />
         ),
-        thead: (props) => (
-          <Thead
-            {...props}
-            bg="blackAlpha.50"
-            _dark={{ bg: "whiteAlpha.50" }}
-          />
-        ),
+        thead: (props) => <Thead {...props} />,
         tbody: (props) => <Tbody {...props} />,
         tr: (props) => (
           <Tr

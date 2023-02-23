@@ -2,7 +2,7 @@ import { ChakraNextLink } from "./link";
 import { convertFontSizeToCSSVar } from "./utils/typography";
 import {
   Button as ChakraButton,
-  ButtonProps as ChakraButtonprops,
+  ButtonProps as ChakraButtonProps,
   Icon,
   IconButton,
   IconButtonProps,
@@ -26,7 +26,7 @@ export const buttonSizesMap = {
 
 export type PossibleButtonSize = keyof typeof buttonSizesMap;
 
-export interface ButtonProps extends Omit<ChakraButtonprops, "size"> {
+export interface ButtonProps extends Omit<ChakraButtonProps, "size"> {
   size?: PossibleButtonSize;
   fromcolor?: string;
   tocolor?: string;
@@ -41,7 +41,6 @@ export const Button = forwardRef<ButtonProps, "button">(
     if (!(_size in buttonSizesMap)) {
       _size = "md";
     }
-
     const props: ButtonProps = {
       fontWeight: fontWeights.label,
       lineHeight: lineHeights.label,
@@ -68,7 +67,16 @@ export const Button = forwardRef<ButtonProps, "button">(
         </LightMode>
       );
     }
-    return <ChakraButton {...props} ref={ref} />;
+
+    return (
+      <ChakraButton
+        {...props}
+        fontWeight={fontWeights.label}
+        lineHeight={lineHeights.label}
+        letterSpacing={letterSpacings.label}
+        ref={ref}
+      />
+    );
   },
 );
 

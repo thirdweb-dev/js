@@ -1,6 +1,7 @@
 import BuiltinSolanaDeployForm from "../contract-deploy-form/solana-program";
 import { PublishedContractDetails } from "../hooks";
 import {
+  Box,
   Flex,
   Icon,
   Image,
@@ -18,7 +19,6 @@ import {
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Solana } from "@thirdweb-dev/chain-icons";
 import { ThirdwebSDKProvider, useSDK } from "@thirdweb-dev/react/solana";
 import { ContractType } from "@thirdweb-dev/sdk/evm";
 import type {
@@ -29,7 +29,6 @@ import type {
 import { ChakraNextImage } from "components/Image";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { replaceDeployerAddress } from "components/explore/publisher";
-import { FancyEVMIcon } from "components/icons/Ethereum";
 import {
   BuiltinContractDetails,
   FeatureIconMap,
@@ -148,40 +147,6 @@ export const PublishedContractTable: ComponentWithChildren<
         accessor: (row) => ({ audit: row.audit, ecosystem: row.ecosystem }),
         Cell: (cell: any) => (
           <Flex align="center" as="span" gap="2">
-            {cell.value.ecosystem === "evm" ? (
-              <Tooltip
-                p={0}
-                bg="transparent"
-                boxShadow="none"
-                label={
-                  <Card py={2} px={4}>
-                    <Text size="label.sm">EVM</Text>
-                  </Card>
-                }
-                borderRadius="lg"
-                placement="top"
-                shouldWrapChildren
-              >
-                <Icon as={FancyEVMIcon} opacity={0.85} boxSize={4} />
-              </Tooltip>
-            ) : (
-              <Tooltip
-                p={0}
-                bg="transparent"
-                boxShadow="none"
-                label={
-                  <Card py={2} px={4}>
-                    <Text size="label.sm">Solana</Text>
-                  </Card>
-                }
-                borderRadius="lg"
-                placement="top"
-                shouldWrapChildren
-              >
-                <Icon as={Solana} boxSize={4} />
-              </Tooltip>
-            )}
-
             {cell.value.audit ? (
               <Tooltip
                 p={0}
@@ -235,7 +200,7 @@ export const PublishedContractTable: ComponentWithChildren<
     data: rows,
   });
   return (
-    <Card p={0} overflowX="auto" position="relative">
+    <Box borderTopRadius="lg" p={0} overflowX="auto" position="relative">
       {isFetching && (
         <Spinner
           color="primary"
@@ -252,18 +217,14 @@ export const PublishedContractTable: ComponentWithChildren<
             <Tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
                 // eslint-disable-next-line react/jsx-key
-                <Th
-                  {...column.getHeaderProps()}
-                  py={5}
-                  borderBottomColor="borderColor"
-                >
-                  <Text as="label" size="label.md">
+                <Th {...column.getHeaderProps()} border="none">
+                  <Text as="label" size="label.sm" color="faded">
                     {column.render("Header")}
                   </Text>
                 </Th>
               ))}
-              {/* // Need to add an empty header for the icon button */}
-              <Th borderBottomColor="borderColor" />
+              {/* Need to add an empty header for the icon button */}
+              <Th border="none" />
             </Tr>
           ))}
         </Thead>
@@ -275,7 +236,7 @@ export const PublishedContractTable: ComponentWithChildren<
         </Tbody>
       </Table>
       {children}
-    </Card>
+    </Box>
   );
 };
 

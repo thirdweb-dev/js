@@ -17,7 +17,7 @@ import Highlight, {
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import Prism from "prism-react-renderer/prism";
-import darkThemeDefault from "prism-react-renderer/themes/oceanicNext";
+import darkThemeDefault from "prism-react-renderer/themes/vsDark";
 import lightThemeDefault from "prism-react-renderer/themes/vsLight";
 import { useEffect } from "react";
 import { FiCopy } from "react-icons/fi";

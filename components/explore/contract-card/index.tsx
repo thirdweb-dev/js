@@ -1,10 +1,8 @@
 import { ContractPublisher, replaceDeployerAddress } from "../publisher";
-// import { ExtensionBar } from "./extension-bar";
 import {
   Center,
   Flex,
   Icon,
-  IconButton,
   Image,
   LinkBox,
   LinkOverlay,
@@ -19,7 +17,7 @@ import { getDashboardChainRpc } from "lib/rpc";
 import { getEVMThirdwebSDK, replaceIpfsUrl } from "lib/sdk";
 import { useMemo } from "react";
 import { BsShieldCheck } from "react-icons/bs";
-import { FiArrowUpRight, FiImage } from "react-icons/fi";
+import { FiImage } from "react-icons/fi";
 import invariant from "tiny-invariant";
 import { Button, Card, Heading, Link, Text, TrackedLink } from "tw-components";
 
@@ -74,42 +72,17 @@ export const ContractCard: React.FC<ContractCardProps> = ({
         transition="150ms border-color ease-in-out"
         _hover={{
           _dark: {
-            borderColor: "white",
+            borderColor: "blue.400",
           },
           _light: {
-            borderColor: "black",
+            borderColor: "blue.600",
           },
         }}
         h="full"
         overflow="hidden"
       >
         <Flex p={3} gap={3} flexDir="column" h="full">
-          {slim ? (
-            <IconButton
-              variant="solid"
-              icon={<Icon as={FiArrowUpRight} />}
-              size="sm"
-              p={0}
-              borderRadius="full"
-              position="absolute"
-              top={0}
-              right={0}
-              transform="translate(33%, -33%)"
-              aria-label="Open contract"
-              opacity={0}
-              _dark={{
-                bg: "white",
-                color: "black",
-              }}
-              _light={{
-                bg: "black",
-                color: "white",
-              }}
-              _groupHover={{
-                opacity: 1,
-              }}
-            />
-          ) : (
+          {slim ? null : (
             <Flex align="center" justify="space-between">
               <Skeleton
                 boxSize={8}

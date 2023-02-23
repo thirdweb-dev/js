@@ -86,10 +86,10 @@ export const UpdateNotice: ComponentWithChildren<UpdatenoticeProps> = ({
           _light={{
             color: "blue.500",
             _hover: { color: "blue.600" },
-            _active: { color: "blue.700" },
+            _active: { color: "blue.500" },
           }}
           _dark={{
-            color: "blue.300",
+            color: "blue.400",
             _hover: { color: "blue.400" },
             _active: { color: "blue.500" },
           }}

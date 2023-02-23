@@ -28,7 +28,7 @@ import {
   MdNavigateNext,
 } from "react-icons/md";
 import { Column, usePagination, useTable } from "react-table";
-import { Card, CodeBlock, Text } from "tw-components";
+import { CodeBlock, Text } from "tw-components";
 import { parseDescription } from "utils/parseDescription";
 
 const FileImage: React.FC<ImageProps> = ({ src, ...props }) => {
@@ -158,7 +158,13 @@ export const BatchTable: React.FC<BatchTableProps> = ({
   // Render the UI for your table
   return (
     <Flex flexGrow={1} overflow="auto">
-      <Card maxW="100%" overflowX="auto" position="relative" px={0} py={0}>
+      <Box
+        maxW="100%"
+        overflowX="auto"
+        position="relative"
+        p={0}
+        borderTopRadius="lg"
+      >
         <Table {...getTableProps()}>
           <Thead>
             {headerGroups.map((headerGroup) => (
@@ -166,8 +172,8 @@ export const BatchTable: React.FC<BatchTableProps> = ({
               <Tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
                   // eslint-disable-next-line react/jsx-key
-                  <Th {...column.getHeaderProps()} py={5}>
-                    <Text as="label" size="label.md">
+                  <Th {...column.getHeaderProps()} border="none">
+                    <Text as="label" size="label.sm" color="faded">
                       {column.render("Header")}
                     </Text>
                   </Th>
@@ -188,7 +194,11 @@ export const BatchTable: React.FC<BatchTableProps> = ({
                   {row.cells.map((cell) => {
                     return (
                       // eslint-disable-next-line react/jsx-key
-                      <Td {...cell.getCellProps()} borderBottomWidth="inherit">
+                      <Td
+                        {...cell.getCellProps()}
+                        borderBottomWidth="inherit"
+                        borderColor="borderColor"
+                      >
                         {cell.render("Cell")}
                       </Td>
                     );
@@ -198,7 +208,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
             })}
           </Tbody>
         </Table>
-      </Card>
+      </Box>
 
       <Portal containerRef={portalRef}>
         <Center w="100%">

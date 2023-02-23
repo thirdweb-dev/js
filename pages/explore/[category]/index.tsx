@@ -76,9 +76,9 @@ const ExploreCategoryPage: ThirdwebNextPage = (
               <Link
                 _light={{
                   color: "blue.500",
-                  _hover: { color: "blue.700" },
+                  _hover: { color: "blue.500" },
                 }}
-                _dark={{ color: "blue.300", _hover: { color: "blue.500" } }}
+                _dark={{ color: "blue.400", _hover: { color: "blue.500" } }}
                 isExternal
                 href={props.category.learnMore}
               >

@@ -1,3 +1,4 @@
+import { skeletonTheme } from "./chakra-componens/skeleton";
 import { colors } from "./colors";
 import { fontWeights, letterSpacings, lineHeights } from "./typography";
 import { Theme, extendTheme } from "@chakra-ui/react";
@@ -36,6 +37,7 @@ const chakraTheme: Theme = extendTheme({
     },
   },
   components: {
+    Skeleton: skeletonTheme,
     Heading: {
       baseStyle: {
         color: "heading",
@@ -177,11 +179,11 @@ const chakraTheme: Theme = extendTheme({
     Menu: {
       baseStyle: {
         list: {
-          bg: "backgroundCardHighlight",
+          bg: "backgroundHighlight",
           py: 0,
         },
         item: {
-          bg: "backgroundCardHighlight",
+          bg: "backgroundHighlight",
           _hover: {
             bg: "accent.200",
           },
@@ -192,7 +194,7 @@ const chakraTheme: Theme = extendTheme({
     Table: {
       baseStyle: {
         thead: {
-          background: "backgroundCardHighlight",
+          background: "backgroundHighlight",
         },
         cell: {
           borderColor: "borderColor",
@@ -215,7 +217,7 @@ const chakraTheme: Theme = extendTheme({
       // accent color
       "accent.100": {
         default: "gray.100",
-        _dark: "gray.800",
+        _dark: "gray.900",
       },
       "accent.200": {
         default: "gray.200",
@@ -268,17 +270,18 @@ const chakraTheme: Theme = extendTheme({
       bgBlack: { default: "black", _dark: "white" },
       bgWhite: { default: "white", _dark: "black" },
       backgroundBody: { default: "backgroundLight", _dark: "backgroundDark" },
-      backgroundHighlight: { default: "white", _dark: "#1B2129" },
-      backgroundCardHighlight: { default: "white", _dark: "#0F1318" },
+      backgroundHighlight: { default: "white", _dark: "#131417" },
+      backgroundCardHighlight: { default: "white", _dark: "#232429" },
       wordmark: { default: "#262A36", _dark: "whiteAlpha.900" },
-      heading: { default: "#262A36", _dark: "whiteAlpha.900" },
-      paragraph: { default: "rgba(39, 46, 54, 0.9)", _dark: "gray.500" },
+      heading: { default: "#262A36", _dark: "#ECECEC" },
+      paragraph: { default: "rgba(39, 46, 54, 0.9)", _dark: "#b2b2b2" },
+      faded: { default: "rgba(39, 46, 54, 0.6)", _dark: "#646D7A" },
       headingLight: { default: "#F2FBFF", _dark: "#262A36" },
       paragraphLight: {
         default: "rgba(242, 251, 255, 0.8)",
         _dark: "rgba(39, 46, 54, 0.9)",
       },
-      borderColor: { default: "gray.200", _dark: "whiteAlpha.100" },
+      borderColor: { default: "gray.200", _dark: "#272B30" },
       opaqueBg: {
         default: "whiteAlpha.500",
         _dark: "blackAlpha.600",

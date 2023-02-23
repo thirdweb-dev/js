@@ -194,7 +194,7 @@ const NetworkListItem: React.FC<{
         alignItems="center"
         gap={3}
         _dark={{
-          borderColor: props.isActive ? "blue.300" : "transparent",
+          borderColor: props.isActive ? "blue.400" : "transparent",
           bg: props.isActive ? "inputBg" : "transparent",
         }}
         _light={{
@@ -220,7 +220,7 @@ const NetworkListItem: React.FC<{
         borderRadius={0}
         lineHeight={1.5}
       >
-        <ChainIcon size={20} ipfsSrc={props.img} sizes={props.iconSizes} />
+        <ChainIcon size={16} ipfsSrc={props.img} sizes={props.iconSizes} />
         {props.name}
       </Button>
     </ListItem>
@@ -250,7 +250,7 @@ const AddNetworkItem: React.FC<{
         bg="transparent"
       >
         <Flex alignItems="center" gap={3}>
-          <ChainIcon size={20} ipfsSrc={props.img} sizes={props.iconSizes} />
+          <ChainIcon size={16} ipfsSrc={props.img} sizes={props.iconSizes} />
           {props.name}
         </Flex>
 

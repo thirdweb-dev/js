@@ -1,4 +1,5 @@
 import {
+  Box,
   ButtonGroup,
   Center,
   Divider,
@@ -22,7 +23,7 @@ import {
 } from "@tanstack/react-table";
 import { SetStateAction, useMemo, useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
-import { Button, Card, Text } from "tw-components";
+import { Button, Text } from "tw-components";
 
 type TWTableProps<TRowData> = {
   columns: ColumnDef<TRowData, any>[];
@@ -102,25 +103,22 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
   });
 
   return (
-    <Card p={0} overflowX="auto" position="relative" overflowY="hidden">
-      <Table
-        bg="backgroundHighlight"
-        p={4}
-        borderTopRadius="lg"
-        overflow="hidden"
-      >
+    <Box
+      p={0}
+      overflowX="auto"
+      position="relative"
+      overflowY="hidden"
+      borderTopRadius="lg"
+    >
+      <Table>
         <Thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <Tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <Th
-                  key={header.id}
-                  colSpan={header.colSpan}
-                  borderBottomColor="borderColor"
-                >
+                <Th key={header.id} colSpan={header.colSpan} border="none">
                   {header.isPlaceholder ? null : (
                     <Flex align="center" gap={2}>
-                      <Text as="label" size="label.md">
+                      <Text as="label" size="label.sm" color="faded">
                         {flexRender(
                           header.column.columnDef.header,
                           header.getContext(),
@@ -137,7 +135,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                 </Th>
               ))}
               {/* if the row is clickable we want an arrow to show */}
-              {tableProps.onRowClick && <Th borderBottomColor="borderColor" />}
+              {tableProps.onRowClick && <Th border="none" />}
             </Tr>
           ))}
         </Thead>
@@ -219,7 +217,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
         showMoreLimit={showMoreLimit}
         setShowMoreLimit={setShowMoreLimit}
       />
-    </Card>
+    </Box>
   );
 }
 

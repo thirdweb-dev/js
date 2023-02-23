@@ -24,7 +24,6 @@ import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { replaceIpfsUrl } from "lib/sdk";
 import { Dispatch, SetStateAction } from "react";
 import { useFormContext } from "react-hook-form";
-import { BsCode, BsEye } from "react-icons/bs";
 import { FiTrash, FiUpload } from "react-icons/fi";
 import {
   Card,
@@ -166,18 +165,16 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
           formatting is supported.
         </Text>
         <FormControl isInvalid={!!form.formState.errors.readme}>
-          <Tabs isLazy lazyBehavior="keepMounted" colorScheme="purple">
+          <Tabs isLazy lazyBehavior="keepMounted" colorScheme="gray">
             <TabList
               px={0}
               borderBottomColor="borderColor"
               borderBottomWidth="1px"
             >
               <Tab gap={2}>
-                <Icon as={BsCode} my={2} />
                 <Heading size="label.lg">Write</Heading>
               </Tab>
               <Tab gap={2}>
-                <Icon as={BsEye} my={2} />
                 <Heading size="label.lg">Preview</Heading>
               </Tab>
             </TabList>
@@ -231,18 +228,16 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
           {latestVersion && (
             <FormControl isInvalid={!!form.formState.errors.changelog}>
               <FormLabel>Release notes</FormLabel>
-              <Tabs isLazy lazyBehavior="keepMounted" colorScheme="purple">
+              <Tabs isLazy lazyBehavior="keepMounted" colorScheme="gray">
                 <TabList
                   px={0}
                   borderBottomColor="borderColor"
                   borderBottomWidth="1px"
                 >
                   <Tab gap={2}>
-                    <Icon as={BsCode} my={2} />
                     <Heading size="label.lg">Write</Heading>
                   </Tab>
                   <Tab gap={2}>
-                    <Icon as={BsEye} my={2} />
                     <Heading size="label.lg">Preview</Heading>
                   </Tab>
                 </TabList>

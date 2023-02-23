@@ -19,7 +19,7 @@ export const Changelog: React.FC<ChangelogProps> = ({ changelog }) => {
         position="absolute"
         h="95%"
         borderRight="1px solid"
-        borderColor="gray.800"
+        borderColor="#24262D"
         _light={{
           borderColor: "gray.300",
         }}
@@ -31,7 +31,7 @@ export const Changelog: React.FC<ChangelogProps> = ({ changelog }) => {
           <Text
             userSelect="none"
             mt="-5px"
-            color="gray.800"
+            color="#24262D"
             _light={{
               color: "gray.300",
             }}
@@ -51,7 +51,7 @@ export const Changelog: React.FC<ChangelogProps> = ({ changelog }) => {
             >
               <Text color="inherit">{item.title}</Text>
             </Link>
-            <Text color="gray.700" size="body.sm">
+            <Text color="faded" size="body.sm">
               {formatDistance(new Date(item.published_at), Date.now(), {
                 addSuffix: true,
               })}
@@ -66,7 +66,7 @@ export const Changelog: React.FC<ChangelogProps> = ({ changelog }) => {
         _hover={{ textDecor: "none" }}
         role="group"
       >
-        <Text color="gray.700" _groupHover={{ color: "blue.500" }}>
+        <Text color="faded" _groupHover={{ color: "blue.500" }}>
           View all changes{" "}
           <Text
             fontWeight="inherit"

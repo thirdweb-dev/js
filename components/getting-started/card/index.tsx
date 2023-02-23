@@ -35,11 +35,11 @@ export const GettingStartedCard: ComponentWithChildren<
           _light={{
             color: "blue.500",
             _hover: {
-              color: "blue.700",
+              color: "blue.500",
             },
           }}
           _dark={{
-            color: "blue.300",
+            color: "blue.400",
             _hover: {
               color: "blue.500",
             },

@@ -41,7 +41,6 @@ import { FiArrowRight, FiPlus } from "react-icons/fi";
 import { Column, Row, useTable } from "react-table";
 import {
   Badge,
-  Card,
   ChakraNextLink,
   CodeBlock,
   Heading,
@@ -233,12 +232,9 @@ export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
             <Flex align="center" gap={2}>
               <ChainIcon size={24} ipfsSrc={data.icon} sizes={data.iconSizes} />
               <Text size="label.md">{data.chainName}</Text>
-              {data.isTestnet !== "unknown" && (
-                <Badge
-                  colorScheme={data.isTestnet ? "blue" : "green"}
-                  textTransform="capitalize"
-                >
-                  {data.isTestnet ? "Testnet" : "Mainnet"}
+              {data.isTestnet !== "unknown" && data.isTestnet && (
+                <Badge colorScheme="gray" textTransform="capitalize">
+                  Testnet
                 </Badge>
               )}
             </Flex>
@@ -272,7 +268,13 @@ export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
     });
 
   return (
-    <Card p={0} overflowX="auto" position="relative" overflowY="hidden">
+    <Box
+      borderTopRadius="lg"
+      p={0}
+      overflowX="auto"
+      position="relative"
+      overflowY="hidden"
+    >
       {isFetching && (
         <Spinner
           color="primary"
@@ -282,29 +284,17 @@ export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
           right={4}
         />
       )}
-      <Table
-        {...getTableProps()}
-        bg="backgroundHighlight"
-        p={4}
-        borderTopRadius="lg"
-        overflow="hidden"
-      >
+      <Table {...getTableProps()}>
         <Thead>
           {headerGroups.map((headerGroup) => (
             // eslint-disable-next-line react/jsx-key
             <Tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
                 // eslint-disable-next-line react/jsx-key
-                <Th
-                  borderBottomColor="borderColor"
-                  {...column.getHeaderProps()}
-                >
-                  <Flex align="center" gap={2}>
-                    <Text as="label" size="label.md">
-                      {column.render("Header")}
-                    </Text>
-                    {column.render("Filter")}
-                  </Flex>
+                <Th {...column.getHeaderProps()} border="none">
+                  <Text as="label" size="label.sm" color="faded">
+                    {column.render("Header")}
+                  </Text>
                 </Th>
               ))}
             </Tr>
@@ -324,7 +314,7 @@ export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
         </Tbody>
       </Table>
       {children}
-    </Card>
+    </Box>
   );
 };
 
@@ -470,8 +460,8 @@ const AsyncContractNameCell: React.FC<AsyncContractNameCellProps> = ({
     <Skeleton isLoaded={!metadataQuery.isLoading}>
       <ChakraNextLink href={`/${chainSlug}/${cell.address}`} passHref>
         <Text
-          color="blue.700"
-          _dark={{ color: "blue.300" }}
+          color="blue.500"
+          _dark={{ color: "blue.400" }}
           size="label.md"
           _groupHover={{ textDecor: "underline" }}
         >

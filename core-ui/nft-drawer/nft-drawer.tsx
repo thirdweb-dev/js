@@ -66,7 +66,7 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
           </Flex>
         </Flex>
 
-        <Tabs isLazy lazyBehavior="keepMounted">
+        <Tabs isLazy lazyBehavior="keepMounted" colorScheme="gray">
           <TabList
             px={0}
             borderBottomColor="borderColor"

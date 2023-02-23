@@ -150,12 +150,12 @@ export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
           bg={editingChain ? "transparent" : "inputBg"}
           mb={8}
           _dark={{
-            borderColor: editingChain ? "transparent" : "blue.300",
-            color: "blue.300",
+            borderColor: editingChain ? "transparent" : "blue.400",
+            color: "blue.400",
           }}
           _light={{
-            borderColor: editingChain ? "transparent" : "gray.800",
-            color: "blue.700",
+            borderColor: editingChain ? "transparent" : "blue.600",
+            color: "blue.600",
           }}
           _hover={{
             bg: "inputBg",
@@ -223,6 +223,7 @@ export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
 
         {!editingChain && (
           <Tabs
+            colorScheme="gray"
             onChange={(index) => {
               setTabIndex(index);
             }}

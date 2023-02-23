@@ -25,9 +25,9 @@ export const ContractRow: React.FC<ContractRowProps> = ({ category }) => {
                 <Link
                   _light={{
                     color: "blue.500",
-                    _hover: { color: "blue.700" },
+                    _hover: { color: "blue.500" },
                   }}
-                  _dark={{ color: "blue.300", _hover: { color: "blue.500" } }}
+                  _dark={{ color: "blue.400", _hover: { color: "blue.500" } }}
                   isExternal
                   href={category.learnMore}
                 >
@@ -46,7 +46,7 @@ export const ContractRow: React.FC<ContractRowProps> = ({ category }) => {
             href={`/explore/${category.id}`}
             fontWeight={500}
             _dark={{
-              color: "blue.300",
+              color: "blue.400",
               _hover: {
                 color: "blue.500",
               },
@@ -54,7 +54,7 @@ export const ContractRow: React.FC<ContractRowProps> = ({ category }) => {
             _light={{
               color: "blue.500",
               _hover: {
-                color: "blue.700",
+                color: "blue.500",
               },
             }}
           >

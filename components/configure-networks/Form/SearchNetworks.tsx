@@ -121,12 +121,7 @@ export const SearchNetworks: React.FC<SearchNetworksProps> = (props) => {
             _placeholder={{
               fontWeight: 500,
             }}
-            _dark={{
-              background: props.isSearchOpen ? "#1b1f25 !important" : "inputBg",
-            }}
-            _light={{
-              background: props.isSearchOpen ? "white !important" : "inputBg",
-            }}
+            bg={props.isSearchOpen ? "backgroundHighlight" : "inputBg"}
             type="text"
             autoComplete="off"
             placeholder="Search by Name or Chain ID"
@@ -187,7 +182,7 @@ export const SearchNetworks: React.FC<SearchNetworksProps> = (props) => {
                 icon={
                   <Icon
                     _dark={{
-                      color: "blue.300",
+                      color: "accent.700",
                     }}
                     _light={{
                       color: "accent.700",
@@ -236,12 +231,7 @@ export const SearchNetworks: React.FC<SearchNetworksProps> = (props) => {
           borderTopRightRadius={0}
           position="absolute"
           zIndex={10}
-          _dark={{
-            background: "#1b1f25",
-          }}
-          _light={{
-            background: "white",
-          }}
+          bg="backgroundHighlight"
           boxShadow={"0 16px 32px rgba(0,0,0,0.15)"}
           w="100%"
         >
