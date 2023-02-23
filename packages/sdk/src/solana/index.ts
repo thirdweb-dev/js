@@ -9,7 +9,7 @@ export * from "./programs/token";
 // sdk
 export * from "./sdk";
 // types
-export * from "./types/index";
+export * from "./types";
 export * from "./types/common";
 export * from "./types/programs";
 export * from "./types/programs/nft-drop";

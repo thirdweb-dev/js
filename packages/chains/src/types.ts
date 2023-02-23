@@ -33,6 +33,7 @@ export type Chain = {
   testnet: boolean;
   slug: string;
   slip44?: number;
+  status?: string;
 };
 
 // MinimalChain is a subset of Chain with only the fields that are required / non-optional
