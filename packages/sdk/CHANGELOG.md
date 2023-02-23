@@ -1,5 +1,115 @@
 # @thirdweb-dev/sdk
 
+## 3.9.5
+
+### Patch Changes
+
+- Updated dependencies [[`d7deaa4`](https://github.com/thirdweb-dev/js/commit/d7deaa48f2f943deb8f2ad7459d17de930c00517), [`b7a5b45`](https://github.com/thirdweb-dev/js/commit/b7a5b454415596316f58a75f14472631242cc115)]:
+  - @thirdweb-dev/chains@0.1.5
+
+## 3.9.4
+
+### Patch Changes
+
+- [#616](https://github.com/thirdweb-dev/js/pull/616) [`5712650`](https://github.com/thirdweb-dev/js/commit/5712650074e2415bbea4173a0bb68d727ff2db90) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle custom currencies for all chains
+
+- Updated dependencies [[`a3472a1`](https://github.com/thirdweb-dev/js/commit/a3472a133175826d052ee986907de014e3cf3ad9), [`5712650`](https://github.com/thirdweb-dev/js/commit/5712650074e2415bbea4173a0bb68d727ff2db90)]:
+  - @thirdweb-dev/chains@0.1.4
+
+## 3.9.3
+
+### Patch Changes
+
+- Updated dependencies [[`3d644fb`](https://github.com/thirdweb-dev/js/commit/3d644fb8cbae8bc3ee624505831b9f5c6996898a)]:
+  - @thirdweb-dev/chains@0.1.3
+
+## 3.9.2
+
+### Patch Changes
+
+- [#604](https://github.com/thirdweb-dev/js/pull/604) [`f3408d0`](https://github.com/thirdweb-dev/js/commit/f3408d05d84ff8418a3f76961367e47565ed32b4) Thanks [@jnsdls](https://github.com/jnsdls)! - fix possible crash in StaticJsonRpcBatchProvider
+
+- [#601](https://github.com/thirdweb-dev/js/pull/601) [`66cf1fb`](https://github.com/thirdweb-dev/js/commit/66cf1fb5c2e8deb486543ee028d786bb8eef6c19) Thanks [@jnsdls](https://github.com/jnsdls)! - upgrade dependencies
+
+- Updated dependencies [[`66cf1fb`](https://github.com/thirdweb-dev/js/commit/66cf1fb5c2e8deb486543ee028d786bb8eef6c19)]:
+  - @thirdweb-dev/storage@1.0.10
+  - @thirdweb-dev/chains@0.1.2
+
+## 3.9.1
+
+### Patch Changes
+
+- Updated dependencies [[`300fe4a`](https://github.com/thirdweb-dev/js/commit/300fe4a933f83ac59f89ff019f173cdfc6a2cdff), [`f580b8a`](https://github.com/thirdweb-dev/js/commit/f580b8ac06534df24b0194cbc632b4a8fd447611)]:
+  - @thirdweb-dev/storage@1.0.9
+  - @thirdweb-dev/chains@0.1.1
+
+## 3.9.0
+
+### Minor Changes
+
+- [`af8cf40`](https://github.com/thirdweb-dev/js/commit/af8cf40e4e1dab6afcc7622f7f9bbcfc6e8534d8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - ## Now supports Any EVM - Any Contract!
+
+  - Can now create a `ThirdwebSDK` instance passing: chain id (any EVM chain) / chain name (only supported ones) / RPC url / Provider / Signer
+  - Ability to pass and override any chain information in the new `supportedChains` property of the `SDKOptions`
+  - Support for local nodes! Simply create an SDK with `ChainId.Localhost` or your own local URL to interact with contracts and wallets on your local node
+  - While connected to a local node, request funds to the connected wallet using `await sdk.wallet.requestFunds(0.1)`
+  - Any contract can now be used without passing any ABI, simply by importing the contract on thirdweb.com/chain/contract_address
+
+### Patch Changes
+
+- [`af8cf40`](https://github.com/thirdweb-dev/js/commit/af8cf40e4e1dab6afcc7622f7f9bbcfc6e8534d8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - fix getting contract metadata from multichain registry when readonly rpc is defined
+
+- [`5d25ee1`](https://github.com/thirdweb-dev/js/commit/5d25ee1ab7abb4bfbded283a18f2d7740bb6995d) Thanks [@jnsdls](https://github.com/jnsdls)! - fix `getMultiChainContractList` in case of custom chains
+
+- [#585](https://github.com/thirdweb-dev/js/pull/585) [`4d77c18`](https://github.com/thirdweb-dev/js/commit/4d77c185d90f134bbbccd04615cd4873bcf0bd83) Thanks [@adam-maj](https://github.com/adam-maj)! - Update tiered drop value calculation
+
+- [`af8cf40`](https://github.com/thirdweb-dev/js/commit/af8cf40e4e1dab6afcc7622f7f9bbcfc6e8534d8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support local nodes and expose ThirdwebSDK.fromLocalNode()
+
+- [#577](https://github.com/thirdweb-dev/js/pull/577) [`44d56e4`](https://github.com/thirdweb-dev/js/commit/44d56e4a91f6937e32969453cdccd488798ac910) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Check how many NFTs a specific wallet has claimed to return the proper error on getClaimIneligibilityReasons
+
+- [#590](https://github.com/thirdweb-dev/js/pull/590) [`44cce2f`](https://github.com/thirdweb-dev/js/commit/44cce2f2b18e5f772974c7851797d7d36fea273c) Thanks [@jnsdls](https://github.com/jnsdls)! - allow passing a `Chain` to initialize the SDK
+
+- Updated dependencies [[`6a50719`](https://github.com/thirdweb-dev/js/commit/6a507194861b0712fd753c49ac63a8af68eb21d5), [`af8cf40`](https://github.com/thirdweb-dev/js/commit/af8cf40e4e1dab6afcc7622f7f9bbcfc6e8534d8), [`5d25ee1`](https://github.com/thirdweb-dev/js/commit/5d25ee1ab7abb4bfbded283a18f2d7740bb6995d), [`d0bcd2c`](https://github.com/thirdweb-dev/js/commit/d0bcd2c5871ca9480efc8d97e27e337eb9bbf830), [`017b0d5`](https://github.com/thirdweb-dev/js/commit/017b0d56b64651b290440b60789e058afba9f9a5), [`500a0e6`](https://github.com/thirdweb-dev/js/commit/500a0e671b3feb01aedd2c34443b682d0934f389)]:
+  - @thirdweb-dev/chains@0.1.0
+
+## 3.8.2
+
+### Patch Changes
+
+- [#555](https://github.com/thirdweb-dev/js/pull/555) [`55b00ef`](https://github.com/thirdweb-dev/js/commit/55b00eff2668eb751b9f907e035b3a0c122d2183) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add gas estimators to each marketplace plugin
+
+- Updated dependencies [[`76d219e`](https://github.com/thirdweb-dev/js/commit/76d219e6bea1496b45623b3081152854ce1eaa6e)]:
+  - @thirdweb-dev/contracts-js@1.3.1
+  - @thirdweb-dev/storage@1.0.8
+
+## 3.8.1
+
+### Patch Changes
+
+- [#550](https://github.com/thirdweb-dev/js/pull/550) [`448b357`](https://github.com/thirdweb-dev/js/commit/448b357ed4b864e05e531837ca3bc97fbcab3291) Thanks [@adam-maj](https://github.com/adam-maj)! - Add solidity stack trace to error messages
+
+## 3.8.0
+
+### Minor Changes
+
+- [#474](https://github.com/thirdweb-dev/js/pull/474) [`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Introducing marketplace-v3 class
+
+### Patch Changes
+
+- [#547](https://github.com/thirdweb-dev/js/pull/547) [`0b38dac`](https://github.com/thirdweb-dev/js/commit/0b38dac852e54d0bccd263631f4342aee39d7c29) Thanks [@adam-maj](https://github.com/adam-maj)! - Add proper error hanling for no funds error
+
+- [#545](https://github.com/thirdweb-dev/js/pull/545) [`29d0c62`](https://github.com/thirdweb-dev/js/commit/29d0c62610cdb88f75d19574bddcb028b5c40393) Thanks [@adam-maj](https://github.com/adam-maj)! - Add error info fields to transaction error
+
+- [#474](https://github.com/thirdweb-dev/js/pull/474) [`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Support for Plugin Pattern based contracts
+
+- [#539](https://github.com/thirdweb-dev/js/pull/539) [`f295ec6`](https://github.com/thirdweb-dev/js/commit/f295ec67b4cc422c51beda94cbc4d54a31ce9566) Thanks [@adam-maj](https://github.com/adam-maj)! - Upgrade error messages on failed transactions
+
+- [#544](https://github.com/thirdweb-dev/js/pull/544) [`f1aecc3`](https://github.com/thirdweb-dev/js/commit/f1aecc30499e39fb23a205bade939bd939f0d0e4) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Contracts v3.4.0
+
+- Updated dependencies [[`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c), [`912738b`](https://github.com/thirdweb-dev/js/commit/912738bd0afdf81e118c720811911ba3d1979ac0), [`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c), [`f1aecc3`](https://github.com/thirdweb-dev/js/commit/f1aecc30499e39fb23a205bade939bd939f0d0e4)]:
+  - @thirdweb-dev/contracts-js@1.3.0
+  - @thirdweb-dev/storage@1.0.7
+
 ## 3.7.4
 
 ### Patch Changes

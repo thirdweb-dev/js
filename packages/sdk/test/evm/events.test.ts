@@ -8,10 +8,7 @@ import {
 import { sdk, signers } from "./before-setup";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import {
-  MockContractPublisher__factory,
-  TWFactory__factory,
-} from "@thirdweb-dev/contracts-js";
+import { MockContractPublisher__factory } from "@thirdweb-dev/contracts-js";
 import { expect } from "chai";
 import { ethers } from "ethers";
 

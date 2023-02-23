@@ -1,5 +1,29 @@
 # @thirdweb-dev/storage
 
+## 1.0.10
+
+### Patch Changes
+
+- [#601](https://github.com/thirdweb-dev/js/pull/601) [`66cf1fb`](https://github.com/thirdweb-dev/js/commit/66cf1fb5c2e8deb486543ee028d786bb8eef6c19) Thanks [@jnsdls](https://github.com/jnsdls)! - upgrade dependencies
+
+## 1.0.9
+
+### Patch Changes
+
+- [#597](https://github.com/thirdweb-dev/js/pull/597) [`300fe4a`](https://github.com/thirdweb-dev/js/commit/300fe4a933f83ac59f89ff019f173cdfc6a2cdff) Thanks [@adam-maj](https://github.com/adam-maj)! - Update storage to take metadata
+
+## 1.0.8
+
+### Patch Changes
+
+- [#553](https://github.com/thirdweb-dev/js/pull/553) [`76d219e`](https://github.com/thirdweb-dev/js/commit/76d219e6bea1496b45623b3081152854ce1eaa6e) Thanks [@jnsdls](https://github.com/jnsdls)! - force release
+
+## 1.0.7
+
+### Patch Changes
+
+- [#474](https://github.com/thirdweb-dev/js/pull/474) [`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Edit mock uploader, downloader
+
 ## 1.0.6
 
 ### Patch Changes

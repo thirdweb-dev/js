@@ -1,5 +1,7 @@
+import { ChainNames } from "../constants";
 import type { CONTRACTS_MAP, PREBUILT_CONTRACTS_MAP } from "../contracts";
 import type { SmartContract } from "../contracts/smart-contract";
+import type { Chain } from "@thirdweb-dev/chains";
 import { BigNumber, BytesLike, CallOverrides, Signer, providers } from "ethers";
 
 // --- utility types extracted from from ts-toolbelt --- //
@@ -43,10 +45,11 @@ export type ContractForPrebuiltContractType<
   TContractType extends PrebuiltContractType,
 > = PrebuiltContractsInstances[TContractType];
 
-export type NetworkOrSignerOrProvider =
-  | providers.Networkish
-  | Signer
-  | providers.Provider;
+export type ChainOrRpc = ChainNames | (string & {});
+export type ChainIdOrName = number | ChainOrRpc;
+export type ChainIdOrNameOrChain = ChainIdOrName | Chain;
+export type NetworkInput = ChainIdOrName | Signer | providers.Provider;
+
 export type ValueOf<T> = T[keyof T];
 
 export type SignerOrProvider = Signer | providers.Provider;

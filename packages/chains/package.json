@@ -1,0 +1,38 @@
+{
+  "name": "@thirdweb-dev/chains",
+  "version": "0.1.5",
+  "main": "dist/thirdweb-dev-chains.cjs.js",
+  "module": "dist/thirdweb-dev-chains.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/thirdweb-dev-chains.esm.js",
+      "default": "./dist/thirdweb-dev-chains.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/wallets",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/thirdweb-dev/js/issues"
+  },
+  "author": "thirdweb eng <eng@thirdweb.com>",
+  "devDependencies": {
+    "axios": "^0.27.2",
+    "plop": "^3.1.2",
+    "typescript": "^4.7.4"
+  },
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts"
+    ],
+    "exports": true
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "node ./scripts/generate-package.mjs && tsc && preconstruct build",
+    "push": "yalc push",
+    "plop": "plop",
+    "add-chain": "plop add-chain",
+    "override-chain": "plop override-chain"
+  }
+}

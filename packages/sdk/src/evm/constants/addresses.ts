@@ -3,6 +3,12 @@ import { ChainId, SUPPORTED_CHAIN_ID, SUPPORTED_CHAIN_IDS } from "./chains";
 import { constants } from "ethers";
 
 /**
+ * publicly available wallet for local nodes
+ */
+export const LOCAL_NODE_PKEY =
+  "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+
+/**
  * @internal
  */
 export const OZ_DEFENDER_FORWARDER_ADDRESS =
@@ -142,12 +148,30 @@ export const CONTRACT_ADDRESSES: Record<
     twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
     twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
   },
+  [ChainId.Hardhat]: {
+    openzeppelinForwarder: constants.AddressZero,
+    openzeppelinForwarderEOA: constants.AddressZero,
+    biconomyForwarder: constants.AddressZero,
+    twFactory: constants.AddressZero,
+    twRegistry: constants.AddressZero,
+    twBYOCRegistry: constants.AddressZero,
+  },
+  [ChainId.Localhost]: {
+    openzeppelinForwarder: constants.AddressZero,
+    openzeppelinForwarderEOA: constants.AddressZero,
+    biconomyForwarder: constants.AddressZero,
+    twFactory: constants.AddressZero,
+    twRegistry: constants.AddressZero,
+    twBYOCRegistry: constants.AddressZero,
+  },
 };
 
 type DropContract = Extract<
   PrebuiltContractType,
   "nft-drop" | "token-drop" | "edition-drop" | "signature-drop"
 >;
+
+// @deprecated - should not be needed anymore, rely on the publish data instead
 export const APPROVED_IMPLEMENTATIONS: Record<
   SUPPORTED_CHAIN_ID,
   Record<DropContract, string>
@@ -236,6 +260,18 @@ export const APPROVED_IMPLEMENTATIONS: Record<
     "token-drop": "",
     "signature-drop": "", // TODO
   },
+  [ChainId.Hardhat]: {
+    "nft-drop": "",
+    "edition-drop": "",
+    "token-drop": "",
+    "signature-drop": "", // TODO
+  },
+  [ChainId.Localhost]: {
+    "nft-drop": "",
+    "edition-drop": "",
+    "token-drop": "",
+    "signature-drop": "", // TODO
+  },
 };
 
 /**
@@ -262,9 +298,9 @@ export function getApprovedImplementation(
 export function getContractAddressByChainId(
   chainId: SUPPORTED_CHAIN_ID | ChainId.Hardhat,
   contractName: keyof typeof CONTRACT_ADDRESSES[SUPPORTED_CHAIN_ID],
-): string {
+): string | undefined {
   // for testing only
-  if (chainId === ChainId.Hardhat) {
+  if (chainId === ChainId.Hardhat || chainId === ChainId.Localhost) {
     if (contractName === "twFactory") {
       // eslint-disable-next-line turbo/no-undeclared-env-vars
       return process.env.factoryAddress as string;
@@ -276,7 +312,7 @@ export function getContractAddressByChainId(
     }
   }
   // real output here
-  return CONTRACT_ADDRESSES[chainId][contractName];
+  return CONTRACT_ADDRESSES[chainId]?.[contractName];
 }
 
 /**

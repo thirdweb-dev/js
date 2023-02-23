@@ -9,11 +9,7 @@ import {
   FEATURE_PRIMARY_SALE,
   FEATURE_ROYALTY,
 } from "../constants/thirdweb-features";
-import {
-  ContractEncoder,
-  ContractOwner,
-  NetworkOrSignerOrProvider,
-} from "../core";
+import { ContractEncoder, ContractOwner, NetworkInput } from "../core";
 import { ContractAppURI } from "../core/classes/contract-appuri";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
@@ -146,7 +142,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   }
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     address: string,
     abi: ContractInterface,
     storage: ThirdwebStorage,
@@ -182,7 +178,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     this.appURI = new ContractAppURI(this.contractWrapper, this.metadata);
   }
 
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
+  onNetworkUpdated(network: NetworkInput): void {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 

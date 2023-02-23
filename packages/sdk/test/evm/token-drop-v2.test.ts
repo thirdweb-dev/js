@@ -5,7 +5,7 @@ import {
   TokenDropInitializer,
   TokenInitializer,
 } from "../../src/evm";
-import { expectError, sdk, signers, storage } from "./before-setup";
+import { expectError, sdk, signers } from "./before-setup";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
@@ -39,9 +39,9 @@ describe("Token Drop Contract (v2)", async () => {
         platform_fee_basis_points: 10,
         platform_fee_recipient: AddressZero,
       },
-      2,
+      "2",
     );
-    dropContract = await sdk.getTokenDrop(address);
+    dropContract = await sdk.getContract(address, "token-drop");
   });
 
   it("comprehensive test", async () => {

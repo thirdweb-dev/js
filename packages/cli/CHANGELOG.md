@@ -1,5 +1,74 @@
 # thirdweb
 
+## 0.9.25
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.9.5
+
+## 0.9.24
+
+### Patch Changes
+
+- Updated dependencies [[`5712650`](https://github.com/thirdweb-dev/js/commit/5712650074e2415bbea4173a0bb68d727ff2db90)]:
+  - @thirdweb-dev/sdk@3.9.4
+
+## 0.9.23
+
+### Patch Changes
+
+- [#567](https://github.com/thirdweb-dev/js/pull/567) [`8b68f20`](https://github.com/thirdweb-dev/js/commit/8b68f206789f478c9a2198ad8c277329583bdc31) Thanks [@shift4id](https://github.com/shift4id)! - `thirdweb release` is deprecated, use `thirdweb publish` instead
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.9.3
+
+## 0.9.22
+
+### Patch Changes
+
+- Updated dependencies [[`f3408d0`](https://github.com/thirdweb-dev/js/commit/f3408d05d84ff8418a3f76961367e47565ed32b4), [`66cf1fb`](https://github.com/thirdweb-dev/js/commit/66cf1fb5c2e8deb486543ee028d786bb8eef6c19)]:
+  - @thirdweb-dev/sdk@3.9.2
+
+## 0.9.21
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.9.1
+
+## 0.9.20
+
+### Patch Changes
+
+- [#591](https://github.com/thirdweb-dev/js/pull/591) [`61d41db`](https://github.com/thirdweb-dev/js/commit/61d41db7699d999d4f71038b5376dd95e9c0d5a5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix create with templates with no package.json
+
+- Updated dependencies [[`af8cf40`](https://github.com/thirdweb-dev/js/commit/af8cf40e4e1dab6afcc7622f7f9bbcfc6e8534d8), [`5d25ee1`](https://github.com/thirdweb-dev/js/commit/5d25ee1ab7abb4bfbded283a18f2d7740bb6995d), [`4d77c18`](https://github.com/thirdweb-dev/js/commit/4d77c185d90f134bbbccd04615cd4873bcf0bd83), [`af8cf40`](https://github.com/thirdweb-dev/js/commit/af8cf40e4e1dab6afcc7622f7f9bbcfc6e8534d8), [`44d56e4`](https://github.com/thirdweb-dev/js/commit/44d56e4a91f6937e32969453cdccd488798ac910), [`44cce2f`](https://github.com/thirdweb-dev/js/commit/44cce2f2b18e5f772974c7851797d7d36fea273c), [`af8cf40`](https://github.com/thirdweb-dev/js/commit/af8cf40e4e1dab6afcc7622f7f9bbcfc6e8534d8)]:
+  - @thirdweb-dev/sdk@3.9.0
+
+## 0.9.19
+
+### Patch Changes
+
+- Updated dependencies [[`55b00ef`](https://github.com/thirdweb-dev/js/commit/55b00eff2668eb751b9f907e035b3a0c122d2183)]:
+  - @thirdweb-dev/sdk@3.8.2
+
+## 0.9.18
+
+### Patch Changes
+
+- Updated dependencies [[`448b357`](https://github.com/thirdweb-dev/js/commit/448b357ed4b864e05e531837ca3bc97fbcab3291)]:
+  - @thirdweb-dev/sdk@3.8.1
+
+## 0.9.17
+
+### Patch Changes
+
+- [#549](https://github.com/thirdweb-dev/js/pull/549) [`912738b`](https://github.com/thirdweb-dev/js/commit/912738bd0afdf81e118c720811911ba3d1979ac0) Thanks [@kumaryash90](https://github.com/kumaryash90)! - add staking bases to CLI
+
+- Updated dependencies [[`0b38dac`](https://github.com/thirdweb-dev/js/commit/0b38dac852e54d0bccd263631f4342aee39d7c29), [`29d0c62`](https://github.com/thirdweb-dev/js/commit/29d0c62610cdb88f75d19574bddcb028b5c40393), [`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c), [`f295ec6`](https://github.com/thirdweb-dev/js/commit/f295ec67b4cc422c51beda94cbc4d54a31ce9566), [`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c), [`f1aecc3`](https://github.com/thirdweb-dev/js/commit/f1aecc30499e39fb23a205bade939bd939f0d0e4)]:
+  - @thirdweb-dev/sdk@3.8.0
+
 ## 0.9.16
 
 ### Patch Changes

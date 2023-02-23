@@ -6,9 +6,9 @@ import {
   fetchPreDeployMetadata,
   fetchRawPredeployMetadata,
   fetchSourceFilesFromMetadata,
+  isIncrementalVersion,
   resolveContractUriFromAddress,
 } from "../../common";
-import { isIncrementalVersion } from "../../common/version-checker";
 import { getContractPublisherAddress } from "../../constants";
 import {
   AbiFunction,
@@ -24,9 +24,9 @@ import {
   PublishedContract,
   PublishedContractFetched,
   PublishedContractSchema,
-} from "../../schema/contracts/custom";
-import { SDKOptions } from "../../schema/sdk-options";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
+  SDKOptions,
+} from "../../schema";
+import { NetworkInput, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
 import type {
@@ -48,7 +48,7 @@ export class ContractPublisher extends RPCConnectionHandler {
   private publisher: ContractWrapper<OnChainContractPublisher>;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     options: SDKOptions,
     storage: ThirdwebStorage,
   ) {
@@ -62,9 +62,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     );
   }
 
-  public override updateSignerOrProvider(
-    network: NetworkOrSignerOrProvider,
-  ): void {
+  public override updateSignerOrProvider(network: NetworkInput): void {
     super.updateSignerOrProvider(network);
     this.publisher.updateSignerOrProvider(network);
   }
@@ -311,7 +309,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       (metadata) => metadata.publishedMetadata.version === version,
     );
     invariant(versionMatch, "Contract version not found");
-    // match the version back to the contract based on the release timestamp
+    // match the version back to the contract based on the published timestamp
     return allVersions.find(
       (contract) => contract.timestamp === versionMatch.publishedTimestamp,
     );

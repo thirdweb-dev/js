@@ -1,4 +1,4 @@
-import { NFTMetadataInput } from "../../src/core/schema/nft";
+import { NFTMetadataInput, NFTMetadataOrUri } from "../../src/core/schema/nft";
 import {
   ClaimEligibility,
   NATIVE_TOKEN_ADDRESS,
@@ -41,9 +41,9 @@ describe("NFT Drop Contract (v3)", async () => {
         platform_fee_basis_points: 10,
         platform_fee_recipient: AddressZero,
       },
-      3,
+      "3",
     );
-    dropContract = await sdk.getNFTDrop(address);
+    dropContract = await sdk.getContract(address, "nft-drop");
   });
 
   it("should lazy mint with URI", async () => {
@@ -57,7 +57,7 @@ describe("NFT Drop Contract (v3)", async () => {
   });
 
   it("comprehensive test", async () => {
-    const metadata = [];
+    const metadata: NFTMetadataOrUri[] = [];
     for (let i = 0; i < 10; i++) {
       metadata.push({ name: `test${i}`, description: `desc${i}` });
     }
@@ -95,7 +95,7 @@ describe("NFT Drop Contract (v3)", async () => {
   });
 
   it("comprehensive test with allowlist", async () => {
-    const metadata = [];
+    const metadata: NFTMetadataOrUri[] = [];
     for (let i = 0; i < 10; i++) {
       metadata.push({ name: `test${i}`, description: `desc${i}` });
     }
@@ -211,12 +211,12 @@ describe("NFT Drop Contract (v3)", async () => {
     let proof = await dropContract.claimConditions.getClaimerProofs(
       bobWallet.address,
     );
-    expect(proof.address).to.eq(bobWallet.address);
+    expect(proof?.address).to.eq(bobWallet.address);
     proof = await dropContract.claimConditions.getClaimerProofs(
       bobWallet.address,
       0,
     );
-    expect(proof.address).to.eq(bobWallet.address);
+    expect(proof?.address).to.eq(bobWallet.address);
     proof = await dropContract.claimConditions.getClaimerProofs(
       samWallet.address,
     );
@@ -225,7 +225,7 @@ describe("NFT Drop Contract (v3)", async () => {
       samWallet.address,
       0,
     );
-    expect(proof.address).to.eq(samWallet.address);
+    expect(proof?.address).to.eq(samWallet.address);
   });
 
   it("should return snapshot data on claim conditions", async () => {

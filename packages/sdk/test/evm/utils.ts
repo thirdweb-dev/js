@@ -17,7 +17,7 @@ export const deployContractAndUploadMetadata = async (
   return deployed.address;
 };
 
-export const mockUploadContractMetadata = async (address: string, abi: any) => {
+const mockUploadContractMetadata = async (address: string, abi: any) => {
   const ipfsHash = (await resolveContractUriFromAddress(
     address,
     defaultProvider,

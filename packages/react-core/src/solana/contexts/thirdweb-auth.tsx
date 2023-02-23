@@ -18,7 +18,7 @@ export interface ThirdwebAuthConfig {
    * The backend URL of the authentication endoints. For example, if your endpoints are
    * at `/api/auth/login`, `/api/auth/logout`, etc. then this should be set to `/api/auth`.
    */
-  authUrl: string;
+  authUrl?: string;
 
   /**
    * The frontend domain used to generate the login payload.
@@ -51,7 +51,7 @@ export const ThirdwebAuthProvider: React.FC<
 
     const context: ThirdwebAuthContext = {
       ...value,
-      authUrl: value.authUrl.replace(/\/$/, ""),
+      authUrl: value.authUrl?.replace(/\/$/, ""),
       auth: undefined,
     };
 

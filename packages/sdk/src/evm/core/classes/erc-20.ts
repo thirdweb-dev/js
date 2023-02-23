@@ -1,4 +1,4 @@
-import { NetworkOrSignerOrProvider, TransactionResult } from "..";
+import { NetworkInput, TransactionResult } from "..";
 import { AmountSchema } from "../../../core/schema/shared";
 import { assertEnabled, detectContractFeature } from "../../common";
 import {
@@ -85,7 +85,7 @@ export class Erc20<
   /**
    * @internal
    */
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
+  onNetworkUpdated(network: NetworkInput): void {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 

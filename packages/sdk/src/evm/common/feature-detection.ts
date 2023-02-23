@@ -451,7 +451,7 @@ export async function fetchPreDeployMetadata(
 }
 
 /**
- * Fetch and parse the full metadata AFTER creating a release, with all the extra information (version, readme, etc)
+ * Fetch and parse the full metadata AFTER publishing a contract, with all the extra information (version, readme, etc)
  * @internal
  * @param publishMetadataUri
  * @param storage

@@ -6,7 +6,7 @@
 <h1 align="center">thirdweb TypeScript SDK</h1>
 <p align="center">
 <a href="https://www.npmjs.com/package/@thirdweb-dev/sdk"><img src="https://img.shields.io/npm/v/@thirdweb-dev/sdk?color=red&label=npm&logo=npm" alt="npm version"/></a>
-<a href="https://github.com/thirdweb-dev/js/actions/workflows/CI.yml"><img alt="Build Status" src="https://github.com/thirdweb-dev/js/actions/workflows/CI.yml/badge.svg"/></a>
+<a href="https://github.com/thirdweb-dev/js/actions/workflows/build-test-lint.yml"><img alt="Build Status" src="https://github.com/thirdweb-dev/js/actions/workflows/build-test-lint.yml/badge.svg"/></a>
 <a href="https://discord.gg/thirdweb"><img alt="Join our Discord!" src="https://img.shields.io/discord/834227967404146718.svg?color=7289da&label=discord&logo=discord&style=flat"/></a>
 
 </p>
@@ -18,13 +18,13 @@
 Install the latest version of the SDK with `npm`:
 
 ```shell
-npm install @thirdweb-dev/sdk ethers
+npm install @thirdweb-dev/sdk ethers@5
 ```
 
 or with `yarn`:
 
 ```shell
-yarn add @thirdweb-dev/sdk ethers
+yarn add @thirdweb-dev/sdk ethers@5
 ```
 
 ## Quick start

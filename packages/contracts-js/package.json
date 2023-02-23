@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/contracts-js",
-  "version": "1.2.3",
+  "version": "1.3.1",
   "main": "dist/thirdweb-dev-contracts-js.cjs.js",
   "module": "dist/thirdweb-dev-contracts-js.esm.js",
   "license": "Apache-2.0",
@@ -34,6 +34,7 @@
     "clean": "rm -rf dist/",
     "typechain": "rm -rf ./src && typechain --target ethers-v5 --out-dir src '../../node_modules/@thirdweb-dev/contracts/abi/*.json'",
     "extract-abi": "node ./scripts/extract-abis.mjs",
-    "build": "yarn typechain && tsc && yarn preconstruct build && yarn extract-abi"
+    "build": "yarn typechain && tsc && yarn preconstruct build && yarn extract-abi",
+    "push": "yalc push"
   }
 }

@@ -18,7 +18,6 @@ import React, {
   lazy,
   Suspense,
 } from "react";
-import useDimensions from "react-cool-dimensions";
 
 const ModelViewer = lazy(() => import("./ModelViewer"));
 
@@ -37,6 +36,8 @@ export interface SharedMediaProps {
   controls?: HTMLVideoElement["controls"];
 
   children?: ReactNode;
+
+  mimeType?: string;
 }
 
 /**
@@ -66,7 +67,7 @@ interface PlayButtonProps {
   isPlaying: boolean;
 }
 
-const PlayButton: React.VFC<PlayButtonProps> = ({ onClick, isPlaying }) => {
+const PlayButton: React.FC<PlayButtonProps> = ({ onClick, isPlaying }) => {
   const [isHovering, setIsHovering] = useState(false);
   const onMouseEnter = () => setIsHovering(true);
   const onMouseLeave = () => setIsHovering(false);
@@ -293,23 +294,10 @@ AudioPlayer.displayName = "AudioPlayer";
 
 const IframePlayer = React.forwardRef<HTMLIFrameElement, MediaRendererProps>(
   ({ src, alt, poster, requireInteraction, style, ...restProps }, ref) => {
-    const { observe, width: elWidth } = useDimensions<HTMLDivElement | null>();
     const [playing, setPlaying] = useState(!requireInteraction);
 
-    if (elWidth < 300) {
-      return (
-        <div ref={observe}>
-          <LinkPlayer style={style} src={src} alt={alt} {...restProps} />
-        </div>
-      );
-    }
-
     return (
-      <div
-        style={{ position: "relative", ...style }}
-        {...restProps}
-        ref={observe}
-      >
+      <div style={{ position: "relative", ...style }} {...restProps}>
         <iframe
           src={playing ? src ?? undefined : undefined}
           ref={ref}
@@ -435,12 +423,28 @@ export const MediaRenderer = React.forwardRef<
   MediaRendererProps
 >(
   (
-    { src, poster, alt, requireInteraction = false, width = "300px", height = "300px", style, ...restProps },
+    {
+      src,
+      poster,
+      alt,
+      requireInteraction = false,
+      width = "300px",
+      height = "300px",
+      style,
+      mimeType,
+      ...restProps
+    },
     ref,
   ) => {
-    const mergedStyle: React.CSSProperties = { objectFit: "contain", width, height, ...style };
-    const videoOrImageSrc = useResolvedMediaType(src ?? undefined);
+    const mergedStyle: React.CSSProperties = {
+      objectFit: "contain",
+      width,
+      height,
+      ...style,
+    };
+    const videoOrImageSrc = useResolvedMediaType(src ?? undefined, mimeType);
     const possiblePosterSrc = useResolvedMediaType(poster ?? undefined);
+
     if (!videoOrImageSrc.mimeType) {
       return (
         <img
@@ -559,13 +563,14 @@ export interface MediaType {
  * }
  * ```
  */
-export function useResolvedMediaType(uri?: string) {
+export function useResolvedMediaType(uri?: string, mimeType?: string) {
   const resolvedUrl = useMemo(() => resolveIpfsUri(uri), [uri]);
   const resolvedMimType = useQuery(
     ["mime-type", resolvedUrl],
     () => resolveMimeType(resolvedUrl),
     {
-      enabled: !!resolvedUrl,
+      enabled: !!resolvedUrl && !mimeType,
+      initialData: mimeType,
     },
   );
 

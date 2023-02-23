@@ -16,7 +16,7 @@ import { Erc1155SignatureMintable } from "../../core/classes/erc-1155-signature-
 import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import {
-  NetworkOrSignerOrProvider,
+  NetworkInput,
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
@@ -100,7 +100,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
   public owner: ContractOwner<TokenERC1155>;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
@@ -140,7 +140,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
   /**
    * @internal
    */
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
+  onNetworkUpdated(network: NetworkInput): void {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 

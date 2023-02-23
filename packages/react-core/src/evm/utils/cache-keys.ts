@@ -1,5 +1,4 @@
 import { RequiredParam } from "../../core/query-utils/required-param";
-import { SupportedChainId } from "../constants/chain";
 import { ContractAddress, WalletAddress } from "../types";
 import { QueryClient, QueryKey } from "@tanstack/react-query";
 import type {
@@ -78,7 +77,7 @@ export const cacheKeys = {
   },
   wallet: {
     balance: (
-      chainId: SupportedChainId,
+      chainId: number,
       walletAddress: RequiredParam<WalletAddress>,
       tokenAddress?: ContractAddress,
     ) =>
@@ -266,6 +265,84 @@ export const cacheKeys = {
             "auction",
             "getWinner",
             { listingId },
+          ]),
+      },
+
+      directListings: {
+        getAll: (
+          contractAddress: RequiredParam<ContractAddress>,
+          params?: MarketplaceFilter,
+        ) =>
+          createContractCacheKey(
+            contractAddress,
+            params
+              ? ["getAllDirectListings", params]
+              : ["getAllDirectListings"],
+          ),
+        getAllValid: (
+          contractAddress: RequiredParam<ContractAddress>,
+          params?: MarketplaceFilter,
+        ) =>
+          createContractCacheKey(
+            contractAddress,
+            params
+              ? ["getAllValidDirectListings", params]
+              : ["getAllValidDirectListings"],
+          ),
+        getListing: (
+          contractAddress: RequiredParam<ContractAddress>,
+          listingId: RequiredParam<BigNumberish>,
+        ) =>
+          createContractCacheKey(contractAddress, [
+            "getListing",
+            { listingId },
+          ]),
+        getTotalCount: (contractAddress: RequiredParam<ContractAddress>) =>
+          createContractCacheKey(contractAddress, [
+            "getTotalDirectListingsCount",
+          ]),
+      },
+
+      englishAuctions: {
+        getAll: (
+          contractAddress: RequiredParam<ContractAddress>,
+          params?: MarketplaceFilter,
+        ) =>
+          createContractCacheKey(
+            contractAddress,
+            params
+              ? ["getAllEnglishAuctions", params]
+              : ["getAllEnglishAuctions"],
+          ),
+        getAllValid: (
+          contractAddress: RequiredParam<ContractAddress>,
+          params?: MarketplaceFilter,
+        ) =>
+          createContractCacheKey(
+            contractAddress,
+            params
+              ? ["getAllEValidEnglishAuctions", params]
+              : ["getAllEValidEnglishAuctions"],
+          ),
+        getAuction: (
+          contractAddress: RequiredParam<ContractAddress>,
+          auctionId: RequiredParam<BigNumberish>,
+        ) =>
+          createContractCacheKey(contractAddress, [
+            "getAuction",
+            { auctionId },
+          ]),
+        getWinningBid: (
+          contractAddress: RequiredParam<ContractAddress>,
+          auctionId: RequiredParam<BigNumberish>,
+        ) =>
+          createContractCacheKey(contractAddress, [
+            "getWinningBid",
+            { auctionId },
+          ]),
+        getTotalCount: (contractAddress: RequiredParam<ContractAddress>) =>
+          createContractCacheKey(contractAddress, [
+            "getTotalEnglishAuctionsCount",
           ]),
       },
     },

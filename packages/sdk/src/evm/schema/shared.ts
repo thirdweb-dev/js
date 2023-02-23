@@ -65,3 +65,15 @@ export const CallOverrideSchema: z.ZodType<CallOverrides> = z
     type: z.number().optional(),
   })
   .strict();
+
+export const ChainInfoInputSchema = z.object({
+  rpc: z.array(z.string().url()),
+  chainId: z.number(),
+  nativeCurrency: z.object({
+    name: z.string(),
+    symbol: z.string(),
+    decimals: z.literal(18),
+  }),
+});
+
+export type ChainInfo = z.infer<typeof ChainInfoInputSchema>;

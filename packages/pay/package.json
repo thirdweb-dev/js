@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/pay",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "dist/thirdweb-dev-pay.cjs.js",
   "module": "dist/thirdweb-dev-pay.esm.js",
   "exports": {
@@ -29,9 +29,6 @@
       "index.ts",
       "integrations/**"
     ],
-    "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
-      "exports": true
-    },
     "exports": true
   },
   "sideEffects": false,

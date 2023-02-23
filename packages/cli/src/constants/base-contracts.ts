@@ -113,6 +113,28 @@ contract Contract is ERC1155Base {
     {}
 
 }`,
+  Staking721Base: `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/base/Staking721Base.sol";
+
+contract Contract is Staking721Base {
+      constructor(
+        uint256 _timeUnit,
+        uint256 _rewardsPerUnitTime,
+        address _nftCollection,
+        address _rewardToken,
+        address _nativeTokenWrapper
+    )
+        Staking721Base(
+            _timeUnit,
+            _rewardsPerUnitTime,
+            _nftCollection,
+            _rewardToken,
+            _nativeTokenWrapper
+        )
+    {}
+}`,
   ERC1155SignatureMint: `// SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
@@ -180,6 +202,28 @@ contract Contract is ERC1155Drop {
             _royaltyRecipient,
             _royaltyBps,
             _primarySaleRecipient
+        )
+    {}
+}`,
+  Staking1155Base: `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/base/Staking1155Base.sol";
+
+contract Contract is Staking1155Base {
+      constructor(
+        uint256 _defaultTimeUnit,
+        uint256 _defaultRewardsPerUnitTime,
+        address _stakingToken,
+        address _rewardToken,
+        address _nativeTokenWrapper
+    )
+        Staking1155Base(
+            _defaultTimeUnit,
+            _defaultRewardsPerUnitTime,
+            _stakingToken,
+            _rewardToken,
+            _nativeTokenWrapper
         )
     {}
 }`,
@@ -286,6 +330,30 @@ contract Contract is ERC20DropVote {
             _name,
             _symbol,
             _primarySaleRecipient
+        )
+    {}
+}`,
+  Staking20Base: `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/base/Staking20Base.sol";
+
+contract Contract is Staking20Base {
+      constructor(
+        uint256 _timeUnit,
+        uint256 _rewardRatioNumerator,
+        uint256 _rewardRatioDenominator,
+        address _stakingToken,
+        address _rewardToken,
+        address _nativeTokenWrapper
+    )
+        Staking20Base(
+            _timeUnit,
+            _rewardRatioNumerator,
+            _rewardRatioDenominator,
+            _stakingToken,
+            _rewardToken,
+            _nativeTokenWrapper
         )
     {}
 }`,

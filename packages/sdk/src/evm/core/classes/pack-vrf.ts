@@ -1,8 +1,4 @@
-import {
-  ContractEvents,
-  NetworkOrSignerOrProvider,
-  TransactionResultWithId,
-} from "..";
+import { ContractEvents, NetworkInput, TransactionResultWithId } from "..";
 import { fetchCurrencyMetadata } from "../../common";
 import { LINK_TOKEN_ADDRESS } from "../../constants";
 import { FEATURE_PACK_VRF } from "../../constants/thirdweb-features";
@@ -32,7 +28,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
   private events: ContractEvents<PackVRFDirect>;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions,
@@ -50,7 +46,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
     this.events = new ContractEvents(this.contractWrapper);
   }
 
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
+  onNetworkUpdated(network: NetworkInput): void {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
