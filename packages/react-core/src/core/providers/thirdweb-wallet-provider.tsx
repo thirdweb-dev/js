@@ -5,7 +5,6 @@ import {
   DeviceWalletType,
   MetaMaskWalletType,
   SupportedWallet,
-  WalletConnectV1WalletType,
   WalletConnectWalletType,
   WalletConnectV1WalletType
 } from "../types/wallet";

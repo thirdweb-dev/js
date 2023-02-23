@@ -37,7 +37,7 @@ export abstract class AbstractBrowserWallet<
   protected abstract getConnector(): Promise<TWConnector<TConnectParams>>;
 
   async autoConnect() {
-    console.log('autoConnect')
+    console.log('autoConnect.abstractwallet: ', this.walletId)
     const lastConnectedWallet = await this.coordinatorStorage.getItem(
       "lastConnectedWallet",
     );
@@ -69,6 +69,7 @@ export abstract class AbstractBrowserWallet<
   async connect(
     connectOptions?: ConnectParams<TConnectParams>,
   ): Promise<string> {
+    console.log('connect.abstractwallet: ', this.walletId)
     const connector = await this.getConnector();
 
     // setup listeners to re-expose events

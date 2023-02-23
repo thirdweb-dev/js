@@ -50,10 +50,12 @@ export class WalletConnectV1Connector extends Connector<
                 }
             }
 
+            console.log('wcv1Connector.gettingclient')
             const provider = await this.getProvider({
                 chainId: targetChainId,
                 create: true,
             })
+            console.log('wcv1Connector after getProvider')
             provider.on('accountsChanged', this.onAccountsChanged)
             provider.on('chainChanged', this.onChainChanged)
             provider.on('disconnect', this.onDisconnect)
@@ -129,6 +131,7 @@ export class WalletConnectV1Connector extends Connector<
                 )
                 : {}
 
+            console.log('wcv1Connector.createing wcV1Provider. legacy-provider')
             const WalletConnectProvider = (
                 await import('@walletconnect/legacy-provider')
             ).default
@@ -137,6 +140,7 @@ export class WalletConnectV1Connector extends Connector<
                 chainId,
                 rpc: { ...rpc, ...this.options?.rpc },
             })
+            console.log('wcv1Connector.created wcV1Provider')
         }
 
         return this.#provider
@@ -219,6 +223,7 @@ export class WalletConnectV1Connector extends Connector<
     }
 
     protected onDisconnect = () => {
+        console.log('wcv1Connector.onDisconnect')
         this.emit('disconnect')
     }
 }

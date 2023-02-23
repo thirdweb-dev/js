@@ -27,12 +27,13 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
     }
 
     protected async getConnector(): Promise<TWConnector> {
+        console.log('wcv1.getConnector')
         if (!this.connector) {
             // import the connector dynamically
             const { WalletConnectV1Connector } = await import(
                 "../connectors/wallet-connect-v1"
             );
-            console.log('create walletConnectConnector')
+            console.log('create walletConnectConnectorV1')
             this.#walletConnectConnector = new WalletConnectV1Connector({
                 chains: this.chains,
                 options: {
@@ -49,11 +50,11 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
                     },
                 },
             });
-            console.log('after created', this.#walletConnectConnector.connect)
+            console.log('after created V1', this.#walletConnectConnector.connect)
             this.connector = new WagmiAdapter(this.#walletConnectConnector);
-            console.log('after wagmi adapter created')
+            console.log('after wagmi adapter created V1')
             this.#provider = await this.#walletConnectConnector.getProvider();
-            console.log('after this.provider', this.#provider)
+            console.log('after this.provider v1', this.#provider)
 
             this.#setupListeners();
         }
@@ -61,13 +62,14 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
     }
 
     #onOpenModal = (uri: string) => {
+        console.log('wcv1.open_wallet')
         this.emit('open_wallet', uri);
     }
 
     #onCloseModal = () => { };
 
     #onConnect = async (data: ConnectorData<WalletConnectProvider>) => {
-        console.log('onConnect')
+        console.log('wcv1.onConnect')
 
         this.#provider = data.provider;
         if (!this.#provider) {
@@ -76,12 +78,12 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
     }
 
     #onDisconnect = async () => {
-        console.log('walletConnect onDisconnect')
+        console.log('walletConnectV1 onDisconnect')
         this.#removeListeners();
     }
 
     #onChange = async (payload: any) => {
-        console.log('walletConnect onChange', payload)
+        console.log('walletConnectV1 onChange', payload)
         if (payload.chain) {
             // chain changed
         } else if (payload.account) {
@@ -90,7 +92,7 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
     }
 
     #onMessage = async (payload: any) => {
-        console.log('onMessage', payload)
+        console.log('walletConnectV1.onMessage', payload)
         switch (payload.type) {
             case 'display_uri':
                 this.emit('open_wallet', payload.data);
@@ -105,11 +107,12 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
     };
 
     #setupListeners() {
+        console.log('wcv1.setupListeners')
         if (!this.#walletConnectConnector) {
             return;
         }
         this.#removeListeners();
-        console.log('settingupListeners in wc wallet', this.#provider === undefined)
+        console.log('walletConnectV1.settingupListeners in wc wallet', this.#provider === undefined)
         this.#walletConnectConnector.on('connect', this.#onConnect);
         this.#walletConnectConnector.on('disconnect', this.#onDisconnect);
         this.#walletConnectConnector.on('change', this.#onChange);

@@ -19,7 +19,7 @@ export function ThirdwebProviderRN({children, createWalletStorage: createWalletS
       switch (wallet.id) {
         case "metamask":
           return WalletConnectV1;
-        case "walletconnect":
+        case "walletConnect":
           return WalletConnect;
         default:
           return wallet;
