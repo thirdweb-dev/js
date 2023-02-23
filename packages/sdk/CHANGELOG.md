@@ -1,5 +1,12 @@
 # @thirdweb-dev/sdk
 
+## 3.9.5
+
+### Patch Changes
+
+- Updated dependencies [[`d7deaa4`](https://github.com/thirdweb-dev/js/commit/d7deaa48f2f943deb8f2ad7459d17de930c00517), [`b7a5b45`](https://github.com/thirdweb-dev/js/commit/b7a5b454415596316f58a75f14472631242cc115)]:
+  - @thirdweb-dev/chains@0.1.5
+
 ## 3.9.4
 
 ### Patch Changes
