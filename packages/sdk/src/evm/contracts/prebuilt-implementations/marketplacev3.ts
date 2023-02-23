@@ -25,6 +25,9 @@ import type {
   DirectListingsLogic,
   EnglishAuctionsLogic,
   OffersLogic,
+  PlatformFee,
+  IPermissions,
+  IPlatformFee,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { CallOverrides } from "ethers";
@@ -53,13 +56,13 @@ export class MarketplaceV3 implements UpdateableNetwork {
   public encoder: ContractEncoder<MarketplaceV3Contract>;
   public events: ContractEvents<MarketplaceV3Contract>;
   public estimator: GasCostEstimator<MarketplaceV3Contract>;
-  public platformFees: ContractPlatformFee<MarketplaceV3Contract>;
+  public platformFees: ContractPlatformFee<IPlatformFee>;
   public metadata: ContractMetadata<
     MarketplaceV3Contract,
     typeof MarketplaceV3ContractSchema
   >;
   public roles: ContractRoles<
-    MarketplaceV3Contract,
+    IPermissions,
     (typeof MarketplaceV3.contractRoles)[number]
   >;
   /**
@@ -219,13 +222,15 @@ export class MarketplaceV3 implements UpdateableNetwork {
       this.storage,
     );
     this.roles = new ContractRoles(
-      this.contractWrapper,
+      this.contractWrapper as unknown as ContractWrapper<IPermissions>,
       MarketplaceV3.contractRoles,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
-    this.platformFees = new ContractPlatformFee(this.contractWrapper);
+    this.platformFees = new ContractPlatformFee(
+      this.contractWrapper as unknown as ContractWrapper<IPlatformFee>,
+    );
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 

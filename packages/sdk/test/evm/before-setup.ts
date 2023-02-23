@@ -68,6 +68,13 @@ import {
   Permissions,
   MetaTx__factory,
   MetaTx,
+  PermissionsEnumerableImpl__factory,
+  PermissionsEnumerable,
+  PermissionsEnumerableImpl,
+  PlatformFeeImpl__factory,
+  PlatformFeeImpl,
+  ContractMetadataImpl__factory,
+  ContractMetadataImpl,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -264,7 +271,9 @@ export const mochaHooks = {
     }
 
     // setup marketplace-v3 and add implementation to factory
-    const marketplaceEntrypointAddress = await setupMarketplaceV3();
+    const marketplaceEntrypointAddress = await setupMarketplaceV3(
+      trustedForwarderAddress,
+    );
     const tx = await thirdwebFactoryDeployer.addImplementation(
       marketplaceEntrypointAddress,
     );
@@ -277,9 +286,7 @@ export const mochaHooks = {
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     process.env.contractPublisherAddress = contractPublisher.address;
     // eslint-disable-next-line turbo/no-undeclared-env-vars
-    process.env.multiChainRegistryAddress = await setupMultichainRegistry(
-      trustedForwarderAddress,
-    );
+    process.env.multiChainRegistryAddress = await setupMultichainRegistry();
 
     storage = MockStorage();
     sdk = new ThirdwebSDK(
@@ -327,57 +334,9 @@ const generatePluginFunctions = (
 };
 
 // Setup multichain registry for tests
-async function setupMultichainRegistry(
-  trustedForwarderAddress: string,
-): Promise<string> {
+async function setupMultichainRegistry(): Promise<string> {
   const plugins: Plugin[] = [];
   const pluginNames: string[] = [];
-
-  // Permissions plugin
-  const permissionsDeployer = (await new ethers.ContractFactory(
-    Permissions__factory.abi,
-    Permissions__factory.bytecode,
-  )
-    .connect(signer)
-    .deploy()) as Permissions;
-  const permissions = await permissionsDeployer.deployed();
-  const functionsPermissions: PluginFunction[] = generatePluginFunctions(
-    permissions.address,
-    Permissions__factory.abi,
-  );
-  const metadataPermissions: PluginMetadata = {
-    name: "Permissions",
-    metadataURI: "",
-    implementation: permissions.address,
-  };
-  plugins.push({
-    metadata: metadataPermissions,
-    functions: functionsPermissions,
-  });
-  pluginNames.push("Permissions");
-
-  // MetaTx plugin
-  const metaTxDeployer = (await new ethers.ContractFactory(
-    MetaTx__factory.abi,
-    MetaTx__factory.bytecode,
-  )
-    .connect(signer)
-    .deploy([trustedForwarderAddress])) as MetaTx;
-  const metaTx = await metaTxDeployer.deployed();
-  const functionsMetaTx: PluginFunction[] = generatePluginFunctions(
-    metaTx.address,
-    MetaTx__factory.abi,
-  );
-  const metadataMetaTx: PluginMetadata = {
-    name: "ERC2771Context",
-    metadataURI: "",
-    implementation: metaTx.address,
-  };
-  plugins.push({
-    metadata: metadataMetaTx,
-    functions: functionsMetaTx,
-  });
-  pluginNames.push("ERC2771Context");
 
   // multichain registry core plugin
   const multichainRegistryCoreDeployer = (await new ethers.ContractFactory(
@@ -411,6 +370,12 @@ async function setupMultichainRegistry(
     }),
   );
 
+  // Add util plugin names
+  pluginNames.push("PermissionsEnumerable");
+  pluginNames.push("ContractMetadata");
+  pluginNames.push("ERC2771Context");
+  pluginNames.push("PlatformFee");
+
   const multichainRegistryRouterDeployer = (await new ethers.ContractFactory(
     TWMultichainRegistry__factory.abi,
     TWMultichainRegistry__factory.bytecode,
@@ -424,9 +389,96 @@ async function setupMultichainRegistry(
 }
 
 // Setup marketplace-v3 for tests
-async function setupMarketplaceV3(): Promise<string> {
+async function setupMarketplaceV3(
+  trustedForwarderAddress: string,
+): Promise<string> {
   const plugins: Plugin[] = [];
   const pluginNames: string[] = [];
+
+  // PermissionsEnumerable plugin
+  const permissionsAddress = await deployContractAndUploadMetadata(
+    PermissionsEnumerableImpl__factory.abi,
+    PermissionsEnumerableImpl__factory.bytecode,
+    signer,
+  );
+  const functionsPermissions: PluginFunction[] = generatePluginFunctions(
+    permissionsAddress,
+    PermissionsEnumerableImpl__factory.abi,
+  );
+  const metadataPermissions: PluginMetadata = {
+    name: "PermissionsEnumerable",
+    metadataURI: "",
+    implementation: permissionsAddress,
+  };
+  plugins.push({
+    metadata: metadataPermissions,
+    functions: functionsPermissions,
+  });
+  pluginNames.push("PermissionsEnumerable");
+
+  // PlatformFee plugin
+  const platformFeeAddress = await deployContractAndUploadMetadata(
+    PlatformFeeImpl__factory.abi,
+    PlatformFeeImpl__factory.bytecode,
+    signer,
+  );
+  const functionsPlatformFee: PluginFunction[] = generatePluginFunctions(
+    platformFeeAddress,
+    PlatformFeeImpl__factory.abi,
+  );
+  const metadataPlatformFee: PluginMetadata = {
+    name: "PlatformFee",
+    metadataURI: "",
+    implementation: platformFeeAddress,
+  };
+  plugins.push({
+    metadata: metadataPlatformFee,
+    functions: functionsPlatformFee,
+  });
+  pluginNames.push("PlatformFee");
+
+  // ContractMetadata plugin
+  const contractMetadataAddress = await deployContractAndUploadMetadata(
+    ContractMetadataImpl__factory.abi,
+    ContractMetadataImpl__factory.bytecode,
+    signer,
+  );
+  const functionsContractMetadata: PluginFunction[] = generatePluginFunctions(
+    contractMetadataAddress,
+    ContractMetadataImpl__factory.abi,
+  );
+  const metadataContractMetadata: PluginMetadata = {
+    name: "ContractMetadata",
+    metadataURI: "",
+    implementation: contractMetadataAddress,
+  };
+  plugins.push({
+    metadata: metadataContractMetadata,
+    functions: functionsContractMetadata,
+  });
+  pluginNames.push("ContractMetadata");
+
+  // MetaTx plugin
+  const metaTxAddress = await deployContractAndUploadMetadata(
+    MetaTx__factory.abi,
+    MetaTx__factory.bytecode,
+    signer,
+    [[trustedForwarderAddress]],
+  );
+  const functionsMetaTx: PluginFunction[] = generatePluginFunctions(
+    metaTxAddress,
+    MetaTx__factory.abi,
+  );
+  const metadataMetaTx: PluginMetadata = {
+    name: "ERC2771Context",
+    metadataURI: "",
+    implementation: metaTxAddress,
+  };
+  plugins.push({
+    metadata: metadataMetaTx,
+    functions: functionsMetaTx,
+  });
+  pluginNames.push("ERC2771Context");
 
   // Direct Listings
   const directListingsPluginAddress = await deployContractAndUploadMetadata(
