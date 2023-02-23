@@ -21,7 +21,7 @@ export const ModelViewer = React.forwardRef<HTMLDivElement, MediaRendererProps>(
             alt={alt || "3D Model"}
             camera-controls
             poster={poster ? poster : null}
-            style={{ width: '100%', height: '100%'} as CSSStyleDeclaration}
+            style={{ width: "100%", height: "100%" } as CSSStyleDeclaration}
           />
         ) : null}
       </div>

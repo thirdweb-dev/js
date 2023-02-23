@@ -211,9 +211,9 @@ export async function createContractProject({
     console.log("    Deploys your contracts with the thirdweb deploy flow.");
     console.log();
     console.log(
-      chalk.cyan(`  ${packageManager}${useYarn ? "" : " run"} release`),
+      chalk.cyan(`  ${packageManager}${useYarn ? "" : " run"} publish`),
     );
-    console.log("    Releases your contracts with the thirdweb release flow.");
+    console.log("    Publishes your contracts with the thirdweb publish flow.");
     console.log();
     console.log("We suggest that you begin by typing:");
     console.log();
