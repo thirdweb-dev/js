@@ -5,6 +5,7 @@ import {
   DeviceWalletType,
   MetaMaskWalletType,
   SupportedWallet,
+  WalletConnectV1WalletType,
   WalletConnectWalletType,
 } from "../types/wallet";
 import { transformChainToMinimalWagmiChain } from "../utils";
@@ -144,11 +145,22 @@ export function ThirdwebWalletProvider(
         });
       }
 
-      // WalletConnect
+      // WalletConnect v2
       if (Wallet.id === "walletConnect") {
         return new (Wallet as WalletConnectWalletType)({
           ...walletOptions,
           projectId: TW_WC_PROJECT_ID,
+          // TODO - move this to class itself - use wrapper wallet classes
+          // true for react, false for react-native
+          qrcode: typeof document !== "undefined",
+        });
+      }
+
+      // WalletConnect V1
+      if (Wallet.id === "walletConnectV1") {
+        return new (Wallet as WalletConnectV1WalletType)({
+          ...walletOptions,
+          // projectId: TW_WC_PROJECT_ID,
           // TODO - move this to class itself - use wrapper wallet classes
           // true for react, false for react-native
           qrcode: typeof document !== "undefined",
@@ -290,7 +302,7 @@ export function ThirdwebWalletProvider(
         }
       }
 
-      // WalletConnect
+      // WalletConnect v2
       else if (Wallet.id === "walletConnect") {
         const _connectedParams = {
           chainId: props.activeChain.chainId,
@@ -300,6 +312,28 @@ export function ThirdwebWalletProvider(
         const wallet = createWalletInstance(
           Wallet as WalletConnectWalletType,
         ) as InstanceType<WalletConnectWalletType>;
+        wallet.on("open_wallet", onWCOpenWallet);
+
+        setIsConnectingToWallet(Wallet.id);
+        try {
+          await wallet.connect(_connectedParams);
+          handleWalletConnect(wallet);
+        } catch (e: any) {
+          setIsConnectingToWallet(undefined);
+        }
+      }
+
+      // WalletConnect v1
+      else if (Wallet.id === "walletConnectV1") {
+        const _connectedParams = {
+          chainId: props.activeChain.chainId,
+          ...(connectParams as WalletConnectParams<WalletConnectWalletType>),
+        };
+
+        const wallet = createWalletInstance(
+          Wallet as WalletConnectV1WalletType,
+        ) as InstanceType<WalletConnectV1WalletType>;
+
         wallet.on("open_wallet", onWCOpenWallet);
 
         setIsConnectingToWallet(Wallet.id);
@@ -352,9 +386,18 @@ export function ThirdwebWalletProvider(
 
       // TODO - once the wallet.addListener('change', cb) is working - use that
       provider.on("chainChanged", update);
-      provider.on("accountsChanged", update);
+      provider.on("accountsChanged", (accounts) => {
+        if (accounts.length === 0) {
+          disconnectWallet();
+        } else {
+          update();
+        }
+      });
+      provider.on("disconnect", () => {
+        disconnectWallet();
+      });
     });
-  }, [activeWallet]);
+  }, [activeWallet, disconnectWallet]);
 
   return (
     <ThirdwebWalletContext.Provider
