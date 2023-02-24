@@ -22,22 +22,22 @@ export const getAllPluginsAbi = [
         components: [
           {
             internalType: "bytes4",
-            name: "selector",
+            name: "functionSelector",
             type: "bytes4",
+          },
+          {
+            internalType: "string",
+            name: "functionSignature",
+            type: "string",
           },
           {
             internalType: "address",
             name: "pluginAddress",
             type: "address",
           },
-          {
-            internalType: "string",
-            name: "functionString",
-            type: "string",
-          },
         ],
-        internalType: "struct IMap.Plugin[]",
-        name: "_plugins",
+        internalType: "struct IPluginMap.Plugin[]",
+        name: "registered",
         type: "tuple[]",
       },
     ],
