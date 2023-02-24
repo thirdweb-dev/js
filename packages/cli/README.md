@@ -6,6 +6,7 @@
 <h1 align="center">thirdweb CLI</h1>
 <p align="center">
 <a href="https://www.npmjs.com/package/@thirdweb-dev/cli"><img src="https://img.shields.io/npm/v/@thirdweb-dev/cli?color=red&logo=npm" alt="npm version"/></a>
+<a href="https://github.com/thirdweb-dev/js/actions/workflows/build-test-lint.yml"><img alt="Build Status" src="https://github.com/thirdweb-dev/js/actions/workflows/build-test-lint.yml/badge.svg"/></a>
 <a href="https://discord.gg/thirdweb"><img alt="Join our Discord!" src="https://img.shields.io/discord/834227967404146718.svg?color=7289da&label=discord&logo=discord&style=flat"/></a>
 
 </p>
@@ -41,10 +42,10 @@ Deploying contracts this way gives you access to:
 ## Releasing your contract
 
 ```shell
-npx thirdweb@latest release
+npx thirdweb@latest publish
 ```
 
-Creates an official release of your contract, along with:
+Creates an official published contract, along with:
 
 - author attribution
 - contract information
@@ -52,9 +53,9 @@ Creates an official release of your contract, along with:
 - versioning
 - release notes
 
-Creating releases this way gives you shareable URL to let others to deploy your contracts in one click. It lets you manage released versions and get attribution for deployed contracts. Contract releases are registered on-chain (Polygon) and IPFS, for free (gasless).
+Publishing contracts this way gives you shareable URL to let others deploy your contracts in one click. It lets you manage published versions and get attribution for deployed contracts. Published contracts are registered on-chain (Polygon) and IPFS, for free (gasless).
 
-Deploying released contracts give deployers access to automatic SDKs to integrate into their app and dashboards to manage and monitor the deployed contracts.
+Deploying published contracts give deployers access to automatic SDKs to integrate into their app and dashboards to manage and monitor the deployed contracts.
 
 ## Detecting contract extensions
 
@@ -94,7 +95,7 @@ Clone the repo and run this command after installing the CLI tool:
 
 ```bash
 $ cd examples/hardhat
-$ npx thirdweb@latest release
+$ npx thirdweb@latest publish
 ```
 
 ## Local Development
@@ -106,11 +107,13 @@ The simplest way to work on the CLI locally is to:
 ```bash
 git clone https://github.com/thirdweb-dev/js.git
 ```
+
 2. From the project root run
 
 ```bash
 yarn && yarn build
 ```
+
 3. From inside `js/packages/cli` Run the `build:watch` command to compile any changes in real time
 
 ```bash

@@ -18,7 +18,7 @@ export interface ThirdwebNftMediaProps extends SharedMediaProps {
  * This component can be used to render NFTs from the thirdweb SDK.
  * It will render the animation_url if it exists, otherwise it will render the image.
  * The default size is 300px by 300px, but this can be changed using the `width` and `height` props.
- * 
+ *
  * Props: {@link ThirdwebNftMediaProps}
  *
  * @example
@@ -43,7 +43,7 @@ export interface ThirdwebNftMediaProps extends SharedMediaProps {
 export const ThirdwebNftMedia = React.forwardRef<
   HTMLMediaElement,
   ThirdwebNftMediaProps
-  >(({ metadata, width = "300px", height = "300px", style, ...props }, ref) => {
+>(({ metadata, width = "300px", height = "300px", style, ...props }, ref) => {
   return (
     <MediaRenderer
       src={metadata.animation_url || metadata.image}
@@ -52,7 +52,7 @@ export const ThirdwebNftMedia = React.forwardRef<
       ref={ref}
       width={width}
       height={height}
-      style={{ ...style }} 
+      style={{ ...style }}
       {...props}
     />
   );
