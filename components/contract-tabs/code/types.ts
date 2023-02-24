@@ -4,7 +4,8 @@ export type CodeEnvironment =
   | "web3button"
   | "react"
   | "python"
-  | "go";
+  | "go"
+  | "unity";
 
 export interface SupportedEnvironment {
   environment: CodeEnvironment;

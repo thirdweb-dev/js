@@ -5,6 +5,7 @@ import { SiJavascript } from "@react-icons/all-files/si/SiJavascript";
 import { SiPython } from "@react-icons/all-files/si/SiPython";
 import { SiReact } from "@react-icons/all-files/si/SiReact";
 import { SiTypescript } from "@react-icons/all-files/si/SiTypescript";
+import { SiUnity } from "@react-icons/all-files/si/SiUnity";
 import { Dispatch, SetStateAction, useMemo } from "react";
 import { Button, CodeBlock, Text, TrackedLink } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
@@ -53,6 +54,12 @@ const Environments: SupportedEnvironment[] = [
     title: "Go",
     icon: SiGo,
     colorScheme: "blue",
+  },
+  {
+    environment: "unity",
+    title: "Unity",
+    icon: SiUnity,
+    colorScheme: "purple",
   },
 ];
 
@@ -121,6 +128,8 @@ export const CodeSegment: React.FC<ICodeSegment> = ({
             : activeEnvironment === "react" ||
               activeEnvironment === "web3button"
             ? "jsx"
+            : activeEnvironment === "unity"
+            ? "cpp"
             : activeEnvironment
         }
       />

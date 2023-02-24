@@ -19,6 +19,7 @@ import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { AppLayout } from "components/app-layouts/app";
 import { ContractCard } from "components/explore/contract-card";
 import { ChainIcon } from "components/icons/ChainIcon";
+import { CodeOverview } from "contract-ui/tabs/code/components/code-overview";
 import { ExploreCategory, prefetchCategory } from "data/explore";
 import { useTrack } from "hooks/analytics/useTrack";
 import {
@@ -126,6 +127,23 @@ const ChainPage: ThirdwebNextPage = ({
     chain.nativeCurrency.symbol
   } RPCs, ${chain.faucets?.length ? "faucets," : "dApps"} & explorers.`;
 
+  const addNetwork = () => {
+    updateConfiguredNetworks.add([chain]);
+    trackEvent({
+      category: CHAIN_CATEGORY,
+      chain,
+      action: "add_chain",
+      label: chain.slug,
+    });
+
+    toast({
+      title: "Chain added",
+      description: `You can now use ${chain.name} on thirdweb`,
+      status: "success",
+      duration: 3000,
+    });
+  };
+
   return (
     <>
       <NextSeo
@@ -218,22 +236,7 @@ const ChainPage: ThirdwebNextPage = ({
                       leftIcon={
                         <Icon w={5} h={5} color="inherit" as={IoIosAdd} />
                       }
-                      onClick={() => {
-                        updateConfiguredNetworks.add([chain]);
-                        trackEvent({
-                          category: CHAIN_CATEGORY,
-                          chain,
-                          action: "add_chain",
-                          label: chain.slug,
-                        });
-
-                        toast({
-                          title: "Chain added",
-                          description: `You can now use ${chain.name} on Thirdweb`,
-                          status: "success",
-                          duration: 3000,
-                        });
-                      }}
+                      onClick={addNetwork}
                     >
                       Add chain
                     </Button>
@@ -428,6 +431,8 @@ const ChainPage: ThirdwebNextPage = ({
             </SimpleGrid>
           </ChainSectionElement>
         ) : null}
+        <Divider />
+        <CodeOverview onlyInstall chain={chain} />
         {category && (
           <>
             <Divider />
@@ -437,7 +442,11 @@ const ChainPage: ThirdwebNextPage = ({
                   const [publisher, contractId] =
                     publishedContractId.split("/");
                   return (
-                    <GridItem key={contractId} colSpan={{ base: 6, md: 4 }}>
+                    <GridItem
+                      key={contractId}
+                      colSpan={{ base: 6, md: 4 }}
+                      onClick={!isConfigured ? addNetwork : undefined}
+                    >
                       <ContractCard
                         slim
                         key={publishedContractId}

@@ -682,3 +682,7 @@ export function fetchEns(queryClient: QueryClient, addressOrEnsName: string) {
 export function useContractFunctions(abi: Abi) {
   return abi ? extractFunctionsFromAbi(abi) : undefined;
 }
+
+export function useContractEvents(abi: Abi) {
+  return abi ? extractEventsFromAbi(abi) : undefined;
+}

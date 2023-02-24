@@ -56,6 +56,7 @@ const INSTALL_COMMANDS = {
     react: "npm install @thirdweb-dev/sdk @thirdweb-dev/react ethers@5",
     python: "pip install thirdweb-sdk",
     go: "go get github.com/thirdweb-dev/go-sdk/thirdweb",
+    unity: ``,
   },
   solana: {
     typescript: "npm install @thirdweb-dev/sdk",
@@ -64,6 +65,7 @@ const INSTALL_COMMANDS = {
       "npm install @thirdweb-dev/sdk @thirdweb-dev/react @solana/wallet-adapter-wallets @solana/wallet-adapter-react",
     python: "pip install thirdweb-sdk",
     go: "go get github.com/thirdweb-dev/go-sdk/thirdweb",
+    unity: ``,
   },
 };
 
