@@ -19,6 +19,8 @@ export const KeyFeatureLayout: ComponentWithChildren<LayoutProps> = ({
 }) => {
   return (
     <Flex
+      maxW="container.page"
+      mx="auto"
       my={144}
       position="relative"
       direction="column"
