@@ -49,7 +49,7 @@ export async function getCompositePluginABI(
         (item: any) => item.metadata.implementation,
       );
 
-      // get ABIs of extension contracts
+      // get ABIs of extension contracts --
       pluginABIs = await getPluginABI(pluginAddresses, provider, storage);
     } else if (isPluginRouter) {
       const contract = new ContractWrapper(
