@@ -55,6 +55,7 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
     append(address);
     setAddress("");
   };
+
   return (
     <Stack spacing={2}>
       {!fields?.length && (
@@ -206,7 +207,12 @@ const PermissionAddress: React.FC<PermissionAddressProps> = ({
             />
           </Tooltip>
         </InputLeftAddon>
-        <Input variant="filled" fontFamily="mono" value={member} px={2} />
+        <Input
+          variant="filled"
+          fontFamily="mono"
+          defaultValue={member}
+          px={2}
+        />
         <AdminOrSelfOnly
           contract={contract as ValidContractInstance}
           self={member}

@@ -1,3 +1,4 @@
+import Extensions from "../../../contract-ui/tabs/overview/components/Extensions";
 import {
   useContractEnabledExtensions,
   useContractPublishMetadataFromURI,
@@ -38,7 +39,6 @@ import { PublishedContractOG } from "og-lib/url-utils";
 import { useMemo } from "react";
 import { BiPencil } from "react-icons/bi";
 import { BsShieldCheck } from "react-icons/bs";
-import { FcCheckmark } from "react-icons/fc";
 import { VscBook, VscCalendar } from "react-icons/vsc";
 import invariant from "tiny-invariant";
 import {
@@ -48,7 +48,6 @@ import {
   LinkButton,
   Text,
   TrackedIconButton,
-  TrackedLink,
 } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 
@@ -355,38 +354,9 @@ Deploy it in one click`,
             </List>
           </Flex>
           <Divider />
-          <Flex flexDir="column" gap={4}>
-            <Heading as="h4" size="title.sm">
-              Extensions
-            </Heading>
-            <List as={Flex} flexDir="column" gap={3}>
-              {enabledExtensions.length ? (
-                enabledExtensions.map((extension) => (
-                  <ListItem key={extension.name}>
-                    <Flex gap={2} alignItems="center">
-                      <Icon as={FcCheckmark} boxSize={5} />
-                      <Text size="label.md">
-                        <TrackedLink
-                          href={`https://portal.thirdweb.com/contracts/${extension.docLinks.contracts}`}
-                          isExternal
-                          category="extension"
-                          label={extension.name}
-                        >
-                          {extension.name}
-                        </TrackedLink>
-                      </Text>
-                    </Flex>
-                  </ListItem>
-                ))
-              ) : (
-                <ListItem>
-                  <Text size="body.md" fontStyle="italic">
-                    No extensions detected
-                  </Text>
-                </ListItem>
-              )}
-            </List>
-          </Flex>
+          {contractPublishMetadata.data?.abi && (
+            <Extensions abi={contractPublishMetadata.data?.abi} />
+          )}
           <Divider />
           <Flex flexDir="column" gap={4}>
             <Heading as="h4" size="title.sm">

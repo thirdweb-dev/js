@@ -19,6 +19,7 @@ import {
   useEnglishAuctionsCount,
   useListings,
   useListingsCount,
+  useTotalCirculatingSupply,
 } from "@thirdweb-dev/react";
 import {
   AuctionListing,
@@ -141,7 +142,7 @@ const MarketplaceV1Details: React.FC<
               gap={4}
               href={listingsHref}
             >
-              View All -&gt;
+              View all -&gt;
             </TrackedLink>
           </Flex>
           <ListingCards
@@ -205,7 +206,7 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
           gap={4}
           href={directListingsHref}
         >
-          View All -&gt;
+          View all -&gt;
         </TrackedLink>
       </Flex>
       <ListingCards
@@ -261,7 +262,7 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
           gap={4}
           href={englishAuctionsHref}
         >
-          View All -&gt;
+          View all -&gt;
         </TrackedLink>
       </Flex>
       <ListingCards
