@@ -21,7 +21,7 @@ type Equals<A1, A2> = (<A>() => A extends A2 ? 1 : 0) extends <
 export type PrebuiltContractsMap = typeof PREBUILT_CONTRACTS_MAP;
 export type PrebuiltContractsInstances = {
   [K in keyof PrebuiltContractsMap]: Awaited<
-    ReturnType<typeof PREBUILT_CONTRACTS_MAP[K]["initialize"]>
+    ReturnType<(typeof PREBUILT_CONTRACTS_MAP)[K]["initialize"]>
   >;
 };
 export type ContractsMap = typeof CONTRACTS_MAP;
@@ -47,8 +47,8 @@ export type ContractForPrebuiltContractType<
 
 export type ChainOrRpc = ChainNames | (string & {});
 export type ChainIdOrName = number | ChainOrRpc;
-export type ChainIdOrNameOrChain = ChainIdOrName | Chain;
-export type NetworkInput = ChainIdOrName | Signer | providers.Provider;
+export type ChainOrRpcUrl = ChainIdOrName | Chain;
+export type NetworkInput = ChainOrRpcUrl | Signer | providers.Provider;
 
 export type ValueOf<T> = T[keyof T];
 
