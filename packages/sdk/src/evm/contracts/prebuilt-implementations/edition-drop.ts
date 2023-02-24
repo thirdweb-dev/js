@@ -1,5 +1,5 @@
 import { QueryAllParams } from "../../../core/schema/QueryParams";
-import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
+import { NFT } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
 import { buildTransactionFunction } from "../../common/transactions";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
@@ -18,13 +18,13 @@ import { Erc1155 } from "../../core/classes/erc-1155";
 import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
-import { NetworkInput, TransactionResultWithId } from "../../core/types";
+import { NetworkInput } from "../../core/types";
 import { PaperCheckout } from "../../integrations/thirdweb-checkout";
 import { Abi } from "../../schema/contracts/custom";
 import { DropErc1155ContractSchema } from "../../schema/contracts/drop-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";
 import { PrebuiltEditionDrop } from "../../types/eips";
-import { ThirdwebStorage, UploadProgressEvent } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
@@ -262,16 +262,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * @param metadatas - The metadata to include in the batch.
    * @param options - optional upload progress callback
    */
-  createBatch = buildTransactionFunction(
-    async (
-      metadatas: NFTMetadataOrUri[],
-      options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-      },
-    ): Promise<Transaction<TransactionResultWithId<NFTMetadata>[]>> => {
-      return this.erc1155.lazyMint.prepare(metadatas, options);
-    },
-  );
+  createBatch = this.erc1155.lazyMint;
 
   /**
    * Construct a claim transaction without executing it.
@@ -376,11 +367,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * const result = await contract.burnTokens(tokenId, amount);
    * ```
    */
-  burnTokens = buildTransactionFunction(
-    async (tokenId: BigNumberish, amount: BigNumberish) => {
-      return this.erc1155.burn.prepare(tokenId, amount);
-    },
-  );
+  burnTokens = this.erc1155.burn;
 
   /**
    * @internal
