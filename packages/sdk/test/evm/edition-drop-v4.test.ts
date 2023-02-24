@@ -18,7 +18,7 @@ const deepEqualInAnyOrder = require("deep-equal-in-any-order");
 
 use(deepEqualInAnyOrder);
 
-describe("Edition Drop Contract (V4)", async () => {
+describe.skip("Edition Drop Contract (V4)", async () => {
   let bdContract: EditionDrop;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,

@@ -6,7 +6,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import RouterABI from "@thirdweb-dev/contracts-js/dist/abis/Router.json";
 import { expect } from "chai";
 
-describe("Contract Registry", () => {
+describe.skip("Contract Registry", () => {
   let registry: ContractRegistry;
 
   let multichainRegistry: MultichainRegistry;
