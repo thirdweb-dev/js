@@ -64,7 +64,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     options: SDKOptions = {},
     storage: ThirdwebStorage = new ThirdwebStorage(),
   ) {
-    const signer = await wallet.getSigner();
+    const provider = getChainProvider(network, options);
+    let signer = await wallet.getSigner();
+    signer = signer.connect(provider);
+
     return ThirdwebSDK.fromSigner(signer, network, options, storage);
   }
 
