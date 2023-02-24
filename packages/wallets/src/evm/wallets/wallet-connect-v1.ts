@@ -37,11 +37,7 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
             this.#walletConnectConnector = new WalletConnectV1Connector({
                 chains: this.chains,
                 options: {
-                    qrcode: true,
-                    qrCodeModal: {
-                        open: this.#onOpenModal,
-                        close: this.#onCloseModal,
-                    },
+                    qrcode: false,
                     clientMeta: {
                         description: this.options.dappMetadata.description || '',
                         url: this.options.dappMetadata.url,
@@ -54,19 +50,13 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
             this.connector = new WagmiAdapter(this.#walletConnectConnector);
             console.log('after wagmi adapter created V1')
             this.#provider = await this.#walletConnectConnector.getProvider();
-            console.log('after this.provider v1', this.#provider)
+            console.log('after this.provider v1')
+            console.log('after this.provider v1.accounts', JSON.stringify(this.#provider.accounts))
 
             this.#setupListeners();
         }
         return this.connector;
     }
-
-    #onOpenModal = (uri: string) => {
-        console.log('wcv1.open_wallet')
-        this.emit('open_wallet', uri);
-    }
-
-    #onCloseModal = () => { };
 
     #onConnect = async (data: ConnectorData<WalletConnectProvider>) => {
         console.log('wcv1.onConnect')
@@ -94,17 +84,16 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
     #onMessage = async (payload: any) => {
         console.log('walletConnectV1.onMessage', payload)
         switch (payload.type) {
+            case 'request':
+                console.log('V1onMessage.emit open_wallet');
+                // open wallet after request is sent
+                this.emit('open_wallet');
+                break;
             case 'display_uri':
                 this.emit('open_wallet', payload.data);
                 break;
         }
     }
-
-    #onSessionRequestSent = () => {
-        console.log('onSessionRequestSent.emit open_wallet');
-        // open wallet after request is sent
-        this.emit('open_wallet');
-    };
 
     #setupListeners() {
         console.log('wcv1.setupListeners')

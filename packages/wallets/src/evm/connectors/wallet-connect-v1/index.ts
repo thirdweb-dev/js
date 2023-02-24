@@ -1,8 +1,7 @@
-import { Connector, ProviderRpcError } from '@wagmi/core'
+import { Connector, getClient, ProviderRpcError } from '@wagmi/core'
 import {
     SwitchChainError,
     UserRejectedRequestError,
-    getClient,
     normalizeChainId,
 } from '@wagmi/core'
 import type { Chain } from '@wagmi/core/chains'
@@ -42,8 +41,9 @@ export class WalletConnectV1Connector extends Connector<
 
     async connect({ chainId }: { chainId?: number } = {}) {
         try {
-            let targetChainId = chainId
+            let targetChainId = chainId;
             if (!targetChainId) {
+                console.log('get client on autoconnect')
                 const lastUsedChainId = getClient().lastUsedChainId
                 if (lastUsedChainId && !this.isChainUnsupported(lastUsedChainId)) {
                     targetChainId = lastUsedChainId
@@ -59,11 +59,14 @@ export class WalletConnectV1Connector extends Connector<
             provider.on('accountsChanged', this.onAccountsChanged)
             provider.on('chainChanged', this.onChainChanged)
             provider.on('disconnect', this.onDisconnect)
+            provider.on('message', this.onMessage);
+            provider.connector.on('display_uri', this.onDisplayUri)
 
             // Defer message to the next tick to ensure wallet connect data (provided by `.enable()`) is available
             setTimeout(() => this.emit('message', { type: 'connecting' }), 0)
 
             const accounts = await provider.enable()
+            console.log('wcv1Connector after enable', JSON.stringify(accounts))
             const account = getAddress(accounts[0] as string)
             const id = await this.getChainId()
             const unsupported = this.isChainUnsupported(id)
@@ -97,6 +100,7 @@ export class WalletConnectV1Connector extends Connector<
         provider.removeListener('accountsChanged', this.onAccountsChanged)
         provider.removeListener('chainChanged', this.onChainChanged)
         provider.removeListener('disconnect', this.onDisconnect)
+        provider.removeListener('message', this.onMessage);
 
         // typeof localStorage !== 'undefined' &&
         //     localStorage.removeItem('walletconnect')
@@ -120,6 +124,7 @@ export class WalletConnectV1Connector extends Connector<
         create,
     }: { chainId?: number; create?: boolean } = {}) {
         // Force create new provider
+        console.log('wcv1Connector.getProvider.inside', JSON.stringify(this.#provider?.accounts))
         if (!this.#provider || chainId || create) {
             const rpc = !this.options?.infuraId
                 ? this.chains.reduce(
@@ -135,10 +140,12 @@ export class WalletConnectV1Connector extends Connector<
             const WalletConnectProvider = (
                 await import('@walletconnect/legacy-provider')
             ).default
+            console.log('setLocalProvider')
             this.#provider = new WalletConnectProvider({
                 ...this.options,
                 chainId,
                 rpc: { ...rpc, ...this.options?.rpc },
+                // sessionStorage: new SessionStorage(opts.connectorOpts.storageId);
             })
             console.log('wcv1Connector.created wcV1Provider')
         }
@@ -206,6 +213,20 @@ export class WalletConnectV1Connector extends Connector<
             }
             throw new SwitchChainError(error)
         }
+    }
+
+    protected onDisplayUri = (error: any, payload: { params: string[] }) => {
+        if (error) {
+            this.emit('message', { data: error, type: 'display_uri_error' })
+        }
+        this.emit('message', { data: payload.params[0], type: 'display_uri' })
+    }
+
+    protected onMessage = (message: {
+        type: string;
+        data: unknown;
+    }) => {
+        this.emit('message', message);
     }
 
     protected onAccountsChanged = (accounts: string[]) => {

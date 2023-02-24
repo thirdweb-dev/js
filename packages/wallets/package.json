@@ -163,7 +163,7 @@
     "@paperxyz/embedded-wallet-service-sdk": "^0.0.16",
     "@solana/web3.js": "^1.73.0",
     "@thirdweb-dev/chains": "*",
-    "@wagmi/core": "^0.9.6",
+    "@wagmi/core": ">=0.9.x",
     "@walletconnect/ethereum-provider": "^2.4.6",
     "@walletconnect/legacy-provider": "^2.0.0",
     "bs58": "^5.0.0",

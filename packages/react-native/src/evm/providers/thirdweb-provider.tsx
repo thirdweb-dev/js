@@ -1,13 +1,16 @@
 import { ThirdwebProvider as ThirdwebProviderCore, ThirdwebProviderProps } from "@thirdweb-dev/react-core";
 import { DeviceBrowserWallet, WalletConnect, WalletConnectV1 } from "@thirdweb-dev/wallets";
-import React, { useMemo } from "react";
+import { wallets } from "../constants/wallets";
+import { SupportedWallet } from "../types/wallet";
+import React, { PropsWithChildren, useMemo } from "react";
 import { createAsyncLocalStorage } from "../../core/AsyncStorage";
 
-export function ThirdwebProviderRN({children, createWalletStorage: createWalletStorageProp, supportedWallets, ...props} : 
-  React.PropsWithChildren<{createWalletStorage?: ThirdwebProviderProps['createWalletStorage']} & Omit<
-    ThirdwebProviderProps,
-    "createWalletStorage"
-  >>,
+export type ThirdwebProviderRNProps = PropsWithChildren<{
+  supportedWallets: SupportedWallet[]
+  createWalletStorage?: ThirdwebProviderProps['createWalletStorage']
+} & Omit<ThirdwebProviderProps, "supportedWallets" | "createWalletStorage">>;
+
+export function ThirdwebProviderRN({children, createWalletStorage: createWalletStorageProp, supportedWallets, ...props} : ThirdwebProviderRNProps,
 ) {
 
   const supportedWalletsRN = useMemo(() => {
@@ -16,13 +19,10 @@ export function ThirdwebProviderRN({children, createWalletStorage: createWalletS
     }
 
     return supportedWallets.map((wallet) => {
-      switch (wallet.id) {
-        case "metamask":
-          return WalletConnectV1;
-        case "walletConnect":
-          return WalletConnect;
-        default:
-          return wallet;
+      if (wallets[wallet].sdks.includes('sign_v2')) {
+        return WalletConnect;
+      } else {
+        return WalletConnectV1;
       }
     });
   }, [supportedWallets]);

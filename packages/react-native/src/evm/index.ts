@@ -1,3 +1,5 @@
+// export { ConnectWallet } from "./components/ConnectWallet";
+
 export { ChainId } from "@thirdweb-dev/sdk";
 
 // providers
@@ -8,7 +10,8 @@ export * from "./providers/thirdweb-provider";
 export * from "./hooks/wagmi-required/useAccount";
 export * from "./hooks/wagmi-required/useNetwork";
 export * from "./hooks/connectors/useWalletConnect";
-// export * from "./hooks/wagmi-required/useDisconnect";
+
+export { SupportedWallet } from './types/wallet';
 
 export {
     useActiveWallet,
@@ -24,8 +27,6 @@ export {
     useWallets,
     useDisplayUri,
 } from "@thirdweb-dev/react-core";
-
-export type { SupportedWallet } from "@thirdweb-dev/react-core";
 
 // re-export everything from react-core
 export * from "@thirdweb-dev/react-core/evm";

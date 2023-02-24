@@ -16,6 +16,7 @@ export interface WalletEvents {
   disconnect(): void;
   error(error: Error): void;
   open_wallet(uri?: string): void;
+  request(): void;
 }
 
 const EIP1271_ABI = [

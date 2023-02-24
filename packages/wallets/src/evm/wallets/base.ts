@@ -109,6 +109,7 @@ export abstract class AbstractBrowserWallet<
   }
 
   async getSigner() {
+    console.log('getSigner.abstractwallet: ')
     const connector = await this.getConnector();
     if (!connector) {
       throw new Error("Wallet not connected");
@@ -117,6 +118,7 @@ export abstract class AbstractBrowserWallet<
   }
 
   public async disconnect() {
+    console.log('disconnect.abstractwallet: ')
     const connector = await this.getConnector();
     if (connector) {
       await connector.disconnect();
@@ -132,6 +134,7 @@ export abstract class AbstractBrowserWallet<
   }
 
   async switchChain(chainId: number): Promise<void> {
+    console.log('getSigner.switchChain: ')
     const connector = await this.getConnector();
     if (!connector) {
       throw new Error("Wallet not connected");
