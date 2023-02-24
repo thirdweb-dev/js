@@ -70,7 +70,7 @@ let signer: SignerWithAddress;
 let signers: SignerWithAddress[];
 let storage: ThirdwebStorage;
 let implementations: { [key in ContractType]?: string };
-let ExtensionRegistry: ExtensionRegistry;
+let extensionRegistry: ExtensionRegistry;
 
 const fastForwardTime = async (timeInSeconds: number): Promise<void> => {
   const now = Math.floor(Date.now() / 1000);
@@ -104,7 +104,7 @@ export const mochaHooks = {
     )
       .connect(signer)
       .deploy(signer.address)) as ExtensionRegistry;
-    ExtensionRegistry = await ExtensionRegistryDeployer.deployed();
+    extensionRegistry = await ExtensionRegistryDeployer.deployed();
 
     const registry = (await new ethers.ContractFactory(
       TWRegistry__factory.abi,
@@ -344,7 +344,7 @@ async function setupTieredDrop(): Promise<string> {
   // Add plugins to plugin-registry
   await Promise.all(
     plugins.map((plugin) => {
-      return ExtensionRegistry.addPlugin(plugin);
+      return extensionRegistry.addExtension(plugin);
     }),
   );
 
