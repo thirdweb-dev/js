@@ -37,8 +37,8 @@ import {
   MockContractPublisher__factory,
   Multiwrap__factory,
   PermissionsEnumerable__factory,
-  PluginRegistry,
-  PluginRegistry__factory,
+  ExtensionRegistry,
+  ExtensionRegistry__factory,
   Split__factory,
   TieredDrop__factory,
   TieredDropLogic__factory,
@@ -70,7 +70,7 @@ let signer: SignerWithAddress;
 let signers: SignerWithAddress[];
 let storage: ThirdwebStorage;
 let implementations: { [key in ContractType]?: string };
-let pluginRegistry: PluginRegistry;
+let ExtensionRegistry: ExtensionRegistry;
 
 const fastForwardTime = async (timeInSeconds: number): Promise<void> => {
   const now = Math.floor(Date.now() / 1000);
@@ -98,13 +98,13 @@ export const mochaHooks = {
       "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
     await jsonProvider.send("hardhat_reset", []);
 
-    const pluginRegistryDeployer = (await new ethers.ContractFactory(
-      PluginRegistry__factory.abi,
-      PluginRegistry__factory.bytecode,
+    const ExtensionRegistryDeployer = (await new ethers.ContractFactory(
+      ExtensionRegistry__factory.abi,
+      ExtensionRegistry__factory.bytecode,
     )
       .connect(signer)
-      .deploy(signer.address)) as PluginRegistry;
-    pluginRegistry = await pluginRegistryDeployer.deployed();
+      .deploy(signer.address)) as ExtensionRegistry;
+    ExtensionRegistry = await ExtensionRegistryDeployer.deployed();
 
     const registry = (await new ethers.ContractFactory(
       TWRegistry__factory.abi,
@@ -344,7 +344,7 @@ async function setupTieredDrop(): Promise<string> {
   // Add plugins to plugin-registry
   await Promise.all(
     plugins.map((plugin) => {
-      return pluginRegistry.addPlugin(plugin);
+      return ExtensionRegistry.addPlugin(plugin);
     }),
   );
 
