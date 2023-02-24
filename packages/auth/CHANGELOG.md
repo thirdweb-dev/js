@@ -1,5 +1,17 @@
 # @thirdweb-dev/auth
 
+## 3.0.6
+
+### Patch Changes
+
+- [#601](https://github.com/thirdweb-dev/js/pull/601) [`66cf1fb`](https://github.com/thirdweb-dev/js/commit/66cf1fb5c2e8deb486543ee028d786bb8eef6c19) Thanks [@jnsdls](https://github.com/jnsdls)! - upgrade dependencies
+
+## 3.0.5
+
+### Patch Changes
+
+- [#588](https://github.com/thirdweb-dev/js/pull/588) [`f0de81d`](https://github.com/thirdweb-dev/js/commit/f0de81d4b1ba33b2ac73ed16cfdea8fd4eb5da9e) Thanks [@adam-maj](https://github.com/adam-maj)! - Add verify login to auth
+
 ## 3.0.4
 
 ### Patch Changes

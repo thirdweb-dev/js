@@ -36,6 +36,8 @@ export interface SharedMediaProps {
   controls?: HTMLVideoElement["controls"];
 
   children?: ReactNode;
+
+  mimeType?: string;
 }
 
 /**
@@ -65,7 +67,7 @@ interface PlayButtonProps {
   isPlaying: boolean;
 }
 
-const PlayButton: React.VFC<PlayButtonProps> = ({ onClick, isPlaying }) => {
+const PlayButton: React.FC<PlayButtonProps> = ({ onClick, isPlaying }) => {
   const [isHovering, setIsHovering] = useState(false);
   const onMouseEnter = () => setIsHovering(true);
   const onMouseLeave = () => setIsHovering(false);
@@ -295,10 +297,7 @@ const IframePlayer = React.forwardRef<HTMLIFrameElement, MediaRendererProps>(
     const [playing, setPlaying] = useState(!requireInteraction);
 
     return (
-      <div
-        style={{ position: "relative", ...style }}
-        {...restProps}
-      >
+      <div style={{ position: "relative", ...style }} {...restProps}>
         <iframe
           src={playing ? src ?? undefined : undefined}
           ref={ref}
@@ -432,6 +431,7 @@ export const MediaRenderer = React.forwardRef<
       width = "300px",
       height = "300px",
       style,
+      mimeType,
       ...restProps
     },
     ref,
@@ -442,7 +442,7 @@ export const MediaRenderer = React.forwardRef<
       height,
       ...style,
     };
-    const videoOrImageSrc = useResolvedMediaType(src ?? undefined);
+    const videoOrImageSrc = useResolvedMediaType(src ?? undefined, mimeType);
     const possiblePosterSrc = useResolvedMediaType(poster ?? undefined);
 
     if (!videoOrImageSrc.mimeType) {
@@ -563,13 +563,14 @@ export interface MediaType {
  * }
  * ```
  */
-export function useResolvedMediaType(uri?: string) {
+export function useResolvedMediaType(uri?: string, mimeType?: string) {
   const resolvedUrl = useMemo(() => resolveIpfsUri(uri), [uri]);
   const resolvedMimType = useQuery(
     ["mime-type", resolvedUrl],
     () => resolveMimeType(resolvedUrl),
     {
-      enabled: !!resolvedUrl,
+      enabled: !!resolvedUrl && !mimeType,
+      initialData: mimeType,
     },
   );
 

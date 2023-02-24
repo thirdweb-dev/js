@@ -1,3 +1,6 @@
+import { ChainInfo } from "../schema";
+import { defaultChains } from "@thirdweb-dev/chains";
+
 /**
  * @public
  */
@@ -62,3 +65,25 @@ export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[] = [
   ChainId.Hardhat,
   ChainId.Localhost,
 ];
+
+// @ts-expect-error
+let supportedChains: ChainInfo[] = defaultChains;
+
+/**
+ * @internal
+ */
+export function setSupportedChains(chains: ChainInfo[] | undefined) {
+  if (chains && chains.length > 0) {
+    supportedChains = chains;
+  } else {
+    // @ts-expect-error
+    supportedChains = defaultChains;
+  }
+}
+
+/**
+ * @internal
+ */
+export function getSupportedChains() {
+  return supportedChains;
+}

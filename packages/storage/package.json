@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/storage",
-  "version": "1.0.8",
+  "version": "1.0.10",
   "main": "dist/thirdweb-dev-storage.cjs.js",
   "module": "dist/thirdweb-dev-storage.esm.js",
   "exports": {
@@ -29,9 +29,6 @@
     "dist/"
   ],
   "preconstruct": {
-    "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
-      "exports": true
-    },
     "exports": true
   },
   "devDependencies": {

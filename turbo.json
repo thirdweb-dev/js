@@ -11,7 +11,7 @@
       "inputs": [
         "package.json",
         "scripts/**",
-        "overrides.json",
+        "data/**",
         "src/types.ts",
         "src/utils.ts"
       ]
@@ -36,6 +36,14 @@
       "outputs": ["dist/**", "evm/**", "solana/**"],
       "dependsOn": ["^build"]
     },
+    "@thirdweb-dev/react-native#build": {
+      "outputs": ["dist/**"],
+      "dependsOn": ["^build"]
+    },
+    "@thirdweb-dev/react-native-compat#build": {
+      "outputs": ["src/**"],
+      "dependsOn": ["^build"]
+    },
     "@thirdweb-dev/auth#build": {
       "outputs": [
         "dist/**",
@@ -58,12 +66,12 @@
       "dependsOn": ["build"]
     },
     "test:solana": {
-      "outputs": [],
+      "outputs": ["coverage/solana/**"],
       "inputs": ["src/core/**", "src/solana/**", "test/solana/**"],
       "dependsOn": ["build"]
     },
     "test:evm": {
-      "outputs": [],
+      "outputs": ["coverage/evm/**"],
       "inputs": ["src/core/**", "src/evm/**", "test/evm/**"],
       "dependsOn": ["build"]
     },
@@ -72,18 +80,33 @@
       "inputs": ["src/**"],
       "dependsOn": ["build"]
     },
-    "e2e:e2e-cra-5": {
-      "outputs": ["build"],
+    "e2e-cra-5#build": {
+      "outputs": ["build/**"],
+      "inputs": ["src/**", "fixtures/**"],
+      "dependsOn": ["^build"]
+    },
+    "e2e-next-12#build": {
+      "outputs": [".next/**"],
+      "inputs": ["src/**", "fixtures/**"],
+      "dependsOn": ["^build"]
+    },
+    "e2e-vite-3#build": {
+      "outputs": ["dist/**"],
+      "inputs": ["src/**", "fixtures/**"],
+      "dependsOn": ["^build"]
+    },
+    "e2e-cra-5#e2e": {
+      "outputs": ["playwright-report/**"],
       "inputs": ["src/**", "fixtures/**"],
       "dependsOn": ["build"]
     },
-    "e2e:e2e-next-12": {
-      "outputs": [".next"],
+    "e2e-next-12#e2e": {
+      "outputs": ["playwright-report/**"],
       "inputs": ["src/**", "fixtures/**"],
       "dependsOn": ["build"]
     },
-    "e2e:e2e-vite-3": {
-      "outputs": ["dist"],
+    "e2e-vite-3#e2e": {
+      "outputs": ["playwright-report/**"],
       "inputs": ["src/**", "fixtures/**"],
       "dependsOn": ["build"]
     },

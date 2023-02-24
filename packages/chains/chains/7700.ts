@@ -24,8 +24,13 @@ export default {
       "standard": "none"
     },
     {
-      "name": "Canto Cosmos Explorer (BigDipper)",
-      "url": "https://cosmos.explorer.canto.io",
+      "name": "Canto Cosmos Explorer",
+      "url": "https://cosmos-explorers.neobase.one",
+      "standard": "none"
+    },
+    {
+      "name": "Canto EVM Explorer (Blockscout)",
+      "url": "https://tuber.build",
       "standard": "none"
     }
   ],

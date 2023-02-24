@@ -7,7 +7,6 @@ import {
   EditionDropInitializer,
   EditionInitializer,
   getNativeTokenByChainId,
-  LOCAL_NODE_PKEY,
   MarketplaceInitializer,
   MultiwrapInitializer,
   NFTCollectionInitializer,
@@ -68,6 +67,7 @@ import {
   Permissions,
   MetaTx__factory,
   MetaTx,
+<<<<<<< HEAD
   PermissionsEnumerableImpl__factory,
   PermissionsEnumerable,
   PermissionsEnumerableImpl,
@@ -75,6 +75,8 @@ import {
   PlatformFeeImpl,
   ContractMetadataImpl__factory,
   ContractMetadataImpl,
+=======
+>>>>>>> main
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -334,6 +336,7 @@ const generatePluginFunctions = (
 };
 
 // Setup multichain registry for tests
+<<<<<<< HEAD
 async function setupMultichainRegistry(): Promise<string> {
   const plugins: Plugin[] = [];
   const pluginNames: string[] = [];
@@ -348,6 +351,70 @@ async function setupMultichainRegistry(): Promise<string> {
   const multichainRegistryCore =
     await multichainRegistryCoreDeployer.deployed();
 
+=======
+async function setupMultichainRegistry(
+  trustedForwarderAddress: string,
+): Promise<string> {
+  const plugins: Plugin[] = [];
+  const pluginNames: string[] = [];
+
+  // Permissions plugin
+  const permissionsDeployer = (await new ethers.ContractFactory(
+    Permissions__factory.abi,
+    Permissions__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy()) as Permissions;
+  const permissions = await permissionsDeployer.deployed();
+  const functionsPermissions: PluginFunction[] = generatePluginFunctions(
+    permissions.address,
+    Permissions__factory.abi,
+  );
+  const metadataPermissions: PluginMetadata = {
+    name: "Permissions",
+    metadataURI: "",
+    implementation: permissions.address,
+  };
+  plugins.push({
+    metadata: metadataPermissions,
+    functions: functionsPermissions,
+  });
+  pluginNames.push("Permissions");
+
+  // MetaTx plugin
+  const metaTxDeployer = (await new ethers.ContractFactory(
+    MetaTx__factory.abi,
+    MetaTx__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy([trustedForwarderAddress])) as MetaTx;
+  const metaTx = await metaTxDeployer.deployed();
+  const functionsMetaTx: PluginFunction[] = generatePluginFunctions(
+    metaTx.address,
+    MetaTx__factory.abi,
+  );
+  const metadataMetaTx: PluginMetadata = {
+    name: "ERC2771Context",
+    metadataURI: "",
+    implementation: metaTx.address,
+  };
+  plugins.push({
+    metadata: metadataMetaTx,
+    functions: functionsMetaTx,
+  });
+  pluginNames.push("ERC2771Context");
+
+  // multichain registry core plugin
+  const multichainRegistryCoreDeployer = (await new ethers.ContractFactory(
+    MultichainRegistryCore__factory.abi,
+    MultichainRegistryCore__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy()) as MultichainRegistryCore;
+  const multichainRegistryCore =
+    await multichainRegistryCoreDeployer.deployed();
+
+>>>>>>> main
   const functionsCore: PluginFunction[] = generatePluginFunctions(
     multichainRegistryCore.address,
     MultichainRegistryCore__factory.abi,
@@ -370,12 +437,15 @@ async function setupMultichainRegistry(): Promise<string> {
     }),
   );
 
+<<<<<<< HEAD
   // Add util plugin names
   pluginNames.push("PermissionsEnumerable");
   pluginNames.push("ContractMetadata");
   pluginNames.push("ERC2771Context");
   pluginNames.push("PlatformFee");
 
+=======
+>>>>>>> main
   const multichainRegistryRouterDeployer = (await new ethers.ContractFactory(
     TWMultichainRegistry__factory.abi,
     TWMultichainRegistry__factory.bytecode,
@@ -389,6 +459,7 @@ async function setupMultichainRegistry(): Promise<string> {
 }
 
 // Setup marketplace-v3 for tests
+<<<<<<< HEAD
 async function setupMarketplaceV3(
   trustedForwarderAddress: string,
 ): Promise<string> {
@@ -480,6 +551,12 @@ async function setupMarketplaceV3(
   });
   pluginNames.push("ERC2771Context");
 
+=======
+async function setupMarketplaceV3(): Promise<string> {
+  const plugins: Plugin[] = [];
+  const pluginNames: string[] = [];
+
+>>>>>>> main
   // Direct Listings
   const directListingsPluginAddress = await deployContractAndUploadMetadata(
     DirectListingsLogic__factory.abi,

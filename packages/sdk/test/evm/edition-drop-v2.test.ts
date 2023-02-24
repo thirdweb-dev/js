@@ -1,4 +1,4 @@
-import { NFTMetadata, NFTMetadataInput } from "../../src/core/schema/nft";
+import { NFTMetadataInput, NFTMetadataOrUri } from "../../src/core/schema/nft";
 import {
   ClaimEligibility,
   EditionDrop,
@@ -6,12 +6,11 @@ import {
   NATIVE_TOKEN_ADDRESS,
   TokenInitializer,
 } from "../../src/evm";
-import { expectError, sdk, signers, storage } from "./before-setup";
+import { expectError, sdk, signers } from "./before-setup";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { DropERC1155_V2__factory } from "@thirdweb-dev/contracts-js";
 import { assert, expect, use } from "chai";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
 
 global.fetch = require("cross-fetch");
@@ -74,7 +73,6 @@ describe("Edition Drop Contract (V2)", async () => {
       1,
     );
     const cost2 = await claimTx.estimateGasCostInEther();
-    console.log("cost2", cost2);
     expect(parseFloat(cost2)).gt(0);
   });
 
@@ -117,7 +115,7 @@ describe("Edition Drop Contract (V2)", async () => {
   });
 
   it("comprehensive test with allowlist", async () => {
-    const metadata = [];
+    const metadata: NFTMetadataOrUri[] = [];
     for (let i = 0; i < 6; i++) {
       metadata.push({ name: `test${i}`, description: `desc${i}` });
     }

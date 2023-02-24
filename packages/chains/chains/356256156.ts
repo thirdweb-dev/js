@@ -5,7 +5,9 @@ export default {
     "https://gather-testnet-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.gather.network"
   ],
-  "faucets": [],
+  "faucets": [
+    "https://testnet-faucet.gather.network/"
+  ],
   "nativeCurrency": {
     "name": "Gather",
     "symbol": "GTH",
@@ -23,5 +25,11 @@ export default {
     }
   ],
   "testnet": true,
+  "icon": {
+    "url": "ipfs://Qmc9AJGg9aNhoH56n3deaZeUc8Ty1jDYJsW6Lu6hgSZH4S",
+    "height": 512,
+    "width": 512,
+    "format": "png"
+  },
   "slug": "gather-testnet-network"
 } as const;

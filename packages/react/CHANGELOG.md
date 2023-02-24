@@ -1,5 +1,58 @@
 # @thirdweb-dev/react
 
+## 3.9.5
+
+### Patch Changes
+
+- Updated dependencies [[`d7deaa4`](https://github.com/thirdweb-dev/js/commit/d7deaa48f2f943deb8f2ad7459d17de930c00517), [`b7a5b45`](https://github.com/thirdweb-dev/js/commit/b7a5b454415596316f58a75f14472631242cc115)]:
+  - @thirdweb-dev/chains@0.1.5
+  - @thirdweb-dev/react-core@3.9.5
+  - @thirdweb-dev/wallets@0.2.6
+
+## 3.9.4
+
+### Patch Changes
+
+- Updated dependencies [[`a3472a1`](https://github.com/thirdweb-dev/js/commit/a3472a133175826d052ee986907de014e3cf3ad9), [`5712650`](https://github.com/thirdweb-dev/js/commit/5712650074e2415bbea4173a0bb68d727ff2db90)]:
+  - @thirdweb-dev/chains@0.1.4
+  - @thirdweb-dev/react-core@3.9.4
+  - @thirdweb-dev/wallets@0.2.5
+
+## 3.9.3
+
+### Patch Changes
+
+- [#608](https://github.com/thirdweb-dev/js/pull/608) [`3d644fb`](https://github.com/thirdweb-dev/js/commit/3d644fb8cbae8bc3ee624505831b9f5c6996898a) Thanks [@jnsdls](https://github.com/jnsdls)! - `<MediaRenderer />` now accepts an optional mime type prop
+
+- Updated dependencies [[`3d644fb`](https://github.com/thirdweb-dev/js/commit/3d644fb8cbae8bc3ee624505831b9f5c6996898a)]:
+  - @thirdweb-dev/chains@0.1.3
+  - @thirdweb-dev/react-core@3.9.3
+  - @thirdweb-dev/wallets@0.2.4
+
+## 3.9.2
+
+### Patch Changes
+
+- [#601](https://github.com/thirdweb-dev/js/pull/601) [`66cf1fb`](https://github.com/thirdweb-dev/js/commit/66cf1fb5c2e8deb486543ee028d786bb8eef6c19) Thanks [@jnsdls](https://github.com/jnsdls)! - upgrade dependencies
+
+- Updated dependencies [[`66cf1fb`](https://github.com/thirdweb-dev/js/commit/66cf1fb5c2e8deb486543ee028d786bb8eef6c19)]:
+  - @thirdweb-dev/react-core@3.9.2
+  - @thirdweb-dev/wallets@0.2.3
+  - @thirdweb-dev/chains@0.1.2
+
+## 3.9.1
+
+### Patch Changes
+
+- [#599](https://github.com/thirdweb-dev/js/pull/599) [`f580b8a`](https://github.com/thirdweb-dev/js/commit/f580b8ac06534df24b0194cbc632b4a8fd447611) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix readonly chain mismatch
+
+- [#588](https://github.com/thirdweb-dev/js/pull/588) [`f0de81d`](https://github.com/thirdweb-dev/js/commit/f0de81d4b1ba33b2ac73ed16cfdea8fd4eb5da9e) Thanks [@adam-maj](https://github.com/adam-maj)! - Update to use new Auth
+
+- Updated dependencies [[`f0de81d`](https://github.com/thirdweb-dev/js/commit/f0de81d4b1ba33b2ac73ed16cfdea8fd4eb5da9e), [`f580b8a`](https://github.com/thirdweb-dev/js/commit/f580b8ac06534df24b0194cbc632b4a8fd447611)]:
+  - @thirdweb-dev/react-core@3.9.1
+  - @thirdweb-dev/chains@0.1.1
+  - @thirdweb-dev/wallets@0.2.2
+
 ## 3.9.0
 
 ### Minor Changes

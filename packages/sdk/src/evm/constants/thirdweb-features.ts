@@ -11,6 +11,7 @@ import IPermissionsEnumerableAbi from "@thirdweb-dev/contracts-js/dist/abis/IPer
 import IThirdwebPlatformFeeAbi from "@thirdweb-dev/contracts-js/dist/abis/IPlatformFee.json";
 import IThirdwebPrimarySaleAbi from "@thirdweb-dev/contracts-js/dist/abis/IPrimarySale.json";
 import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/dist/abis/IRoyalty.json";
+import ITWRouterAbi from "@thirdweb-dev/contracts-js/dist/abis/ITWRouter.json";
 import IOwnableAbi from "@thirdweb-dev/contracts-js/dist/abis/Ownable.json";
 
 export const FEATURE_ROYALTY = {
