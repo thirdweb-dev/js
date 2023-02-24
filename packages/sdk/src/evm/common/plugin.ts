@@ -3,7 +3,7 @@ import { Abi, AbiSchema, SDKOptions } from "../schema";
 import { isFeatureEnabled } from "./feature-detection";
 import { fetchContractMetadataFromAddress } from "./metadata-resolver";
 import { unique } from "./utils";
-import type { ITWRouter } from "@thirdweb-dev/contracts-js";
+import type { IDefaultPluginSet } from "@thirdweb-dev/contracts-js";
 import RouterABI from "@thirdweb-dev/contracts-js/dist/abis/ITWRouter.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -27,7 +27,7 @@ export async function getCompositePluginABI(
       "PluginRouter",
     );
     if (isPluginRouter) {
-      const contract = new ContractWrapper<ITWRouter>(
+      const contract = new ContractWrapper<IDefaultPluginSet>(
         provider,
         address,
         RouterABI,
