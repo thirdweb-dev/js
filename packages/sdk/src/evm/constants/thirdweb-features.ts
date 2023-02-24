@@ -9,7 +9,6 @@ import IPermissionsAbi from "@thirdweb-dev/contracts-js/dist/abis/IPermissions.j
 import IPermissionsEnumerableAbi from "@thirdweb-dev/contracts-js/dist/abis/IPermissionsEnumerable.json";
 import IThirdwebPlatformFeeAbi from "@thirdweb-dev/contracts-js/dist/abis/IPlatformFee.json";
 import IThirdwebPrimarySaleAbi from "@thirdweb-dev/contracts-js/dist/abis/IPrimarySale.json";
-import IRouterAbi from "@thirdweb-dev/contracts-js/dist/abis/IRouter.json";
 import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/dist/abis/IRoyalty.json";
 import IOwnableAbi from "@thirdweb-dev/contracts-js/dist/abis/Ownable.json";
 
