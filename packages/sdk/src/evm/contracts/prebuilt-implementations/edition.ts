@@ -249,6 +249,8 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    * This is useful for estimating the gas cost of a mint transaction, overriding transaction options and having fine grained control over the transaction execution.
    * @param receiver - Address you want to send the token to
    * @param metadataWithSupply - The metadata of the NFT you want to mint
+   *
+   * @deprecated `contract.mint.prepare(...args)`
    */
   getMintTransaction = this.erc1155.getMintTransaction;
 

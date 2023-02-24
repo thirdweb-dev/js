@@ -220,6 +220,8 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * This is useful for estimating the gas cost of a mint transaction, overriding transaction options and having fine grained control over the transaction execution.
    * @param receiver - Address you want to send the token to
    * @param metadata - The metadata of the NFT you want to mint
+   *
+   * @deprecated Use `contract.mint.prepare(...args)` instead
    */
   getMintTransaction = this.erc721.getMintTransaction;
 
