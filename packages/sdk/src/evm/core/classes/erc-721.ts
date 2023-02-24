@@ -411,6 +411,8 @@ export class Erc721<
    * This is useful for estimating the gas cost of a mint transaction, overriding transaction options and having fine grained control over the transaction execution.
    * @param receiver - Address you want to send the token to
    * @param metadata - The metadata of the NFT you want to mint
+   *
+   * @deprecated Use `contract.erc721.mint.prepare(...args)` instead
    */
   public async getMintTransaction(
     receiver: string,
@@ -635,6 +637,8 @@ export class Erc721<
    * @param destinationAddress
    * @param quantity
    * @param options
+   *
+   * @deprecated Use `contract.erc721.claim.prepare(...args)` instead
    */
   public async getClaimTransaction(
     destinationAddress: string,

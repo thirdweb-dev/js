@@ -94,6 +94,9 @@ export class Erc721Mintable implements DetectableFeature {
     },
   );
 
+  /**
+   * @deprecated Use `contract.erc721.mint.prepare(...args)` instead
+   */
   public async getMintTransaction(
     to: string,
     metadata: NFTMetadataOrUri,

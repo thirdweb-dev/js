@@ -74,6 +74,7 @@ export class Erc1155Mintable implements DetectableFeature {
    * const tokenId = tx.id; // the id of the NFT minted
    * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
+   *
    */
   to = buildTransactionFunction(
     async (
@@ -103,6 +104,9 @@ export class Erc1155Mintable implements DetectableFeature {
     },
   );
 
+  /**
+   * @deprecated Use `contract.erc1155.mint.prepare(...args)` instead
+   */
   public async getMintTransaction(
     to: string,
     metadataWithSupply: EditionMetadataOrUri,

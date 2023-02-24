@@ -33,6 +33,8 @@ export class ERC1155Claimable implements DetectableFeature {
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
    * @param options - Options for claiming the NFTs
+   *
+   * @deprecated Use `contract.erc1155.claim.prepare(...args)` instead
    */
   public async getClaimTransaction(
     destinationAddress: string,

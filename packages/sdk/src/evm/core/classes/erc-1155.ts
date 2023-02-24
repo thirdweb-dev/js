@@ -479,6 +479,8 @@ export class Erc1155<
    * This is useful for estimating the gas cost of a mint transaction, overriding transaction options and having fine grained control over the transaction execution.
    * @param receiver - Address you want to send the token to
    * @param metadataWithSupply - The metadata of the NFT you want to mint
+   *
+   * @deprecated Use `contract.erc1155.mint.prepare(...args)` instead
    */
   public async getMintTransaction(
     receiver: string,
@@ -806,6 +808,8 @@ export class Erc1155<
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
    * @param options - Optional claim verification data (e.g. price, currency, etc...)
+   *
+   * @deprecated Use `contract.erc1155.claim.prepare(...args)` instead
    */
   public async getClaimTransaction(
     destinationAddress: string,

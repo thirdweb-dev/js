@@ -42,6 +42,8 @@ export class Erc721Claimable implements DetectableFeature {
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
    * @param options - Options for claiming the NFTs
+   *
+   * @deprecated Use `contract.erc721.claim.prepare(...args)` instead
    */
   public async getClaimTransaction(
     destinationAddress: string,

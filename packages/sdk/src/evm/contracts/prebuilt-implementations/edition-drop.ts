@@ -272,6 +272,8 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * @param quantity - Quantity of the tokens you want to claim
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    * @param claimData - Optional claim verification data (e.g. price, allowlist proof, etc...)
+   *
+   * @deprecated Use `contract.erc1155.claim.prepare(...args)` instead
    */
   public async getClaimTransaction(
     destinationAddress: string,

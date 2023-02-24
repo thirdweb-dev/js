@@ -390,6 +390,8 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * @param destinationAddress
    * @param quantity
    * @param checkERC20Allowance
+   *
+   * @deprecated Use `contract.erc721.claim.prepare(...args)` instead
    */
   getClaimTransaction = this.erc721.getClaimTransaction;
 

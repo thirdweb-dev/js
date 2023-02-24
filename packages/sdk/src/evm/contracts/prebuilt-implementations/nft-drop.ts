@@ -376,6 +376,8 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * @param destinationAddress
    * @param quantity
    * @param checkERC20Allowance
+   *
+   * @deprecated Use `contract.erc721.claim.prepare(...args)` instead
    */
   public async getClaimTransaction(
     destinationAddress: string,

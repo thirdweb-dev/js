@@ -841,6 +841,8 @@ export class DropClaimConditions<
    * @param destinationAddress
    * @param quantity
    * @param options
+   *
+   * @deprecated Use `contract.erc721.claim.prepare(...args)` instead
    */
   public async getClaimTransaction(
     destinationAddress: string,

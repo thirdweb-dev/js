@@ -882,6 +882,8 @@ export class DropErc1155ClaimConditions<
    * @param destinationAddress - Address you want to send the token to
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
+   *
+   * @deprecated Use `contract.erc1155.claim.prepare(...args)` instead
    */
   public async getClaimTransaction(
     destinationAddress: string,

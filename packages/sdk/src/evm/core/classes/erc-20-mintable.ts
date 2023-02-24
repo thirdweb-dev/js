@@ -51,6 +51,9 @@ export class Erc20Mintable implements DetectableFeature {
     return await this.getMintTransaction(to, amount);
   });
 
+  /**
+   * @deprecated Use `contract.erc20.mint.prepare(...args)` instead
+   */
   public async getMintTransaction(
     to: string,
     amount: Amount,
