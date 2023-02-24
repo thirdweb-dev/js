@@ -25,7 +25,6 @@ import type {
   DirectListingsLogic,
   EnglishAuctionsLogic,
   OffersLogic,
-  PlatformFee,
   IPermissions,
   IPlatformFee,
 } from "@thirdweb-dev/contracts-js";
