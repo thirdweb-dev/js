@@ -99,7 +99,7 @@ export function getSignerAndProvider(
     provider = getChainProvider(network, options);
   }
 
-  if (options?.readonlySettings) {
+  if (options?.readonlySettings && !provider) {
     // If readonly settings are specified, then overwrite the provider
     provider = getProviderFromRpcUrl(
       options.readonlySettings.rpcUrl,
