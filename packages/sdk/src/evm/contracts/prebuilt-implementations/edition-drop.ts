@@ -177,7 +177,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
   // TODO getAllClaimerAddresses() - should be done via an indexer
 
   /**
-   * Get All Minted NFTs
+   * Get all NFTs
    *
    * @remarks Get all the data associated with every NFT in this contract.
    *
@@ -195,7 +195,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
   }
 
   /**
-   * Get Owned NFTs
+   * Get all NFTs owned by a specific wallet
    *
    * @remarks Get all the data associated with the NFTs owned by a specific wallet.
    *

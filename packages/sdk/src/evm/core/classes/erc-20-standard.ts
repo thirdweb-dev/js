@@ -112,7 +112,7 @@ export class StandardErc20<
   }
 
   /**
-   * The total supply for this Token
+   * The total supply for this token
    * @remarks Get how much supply has been minted
    * @example
    * ```javascript

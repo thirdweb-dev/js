@@ -119,6 +119,9 @@ function findSlug(chain) {
   if (slug === "binance-smart-chain-testnet") {
     slug = "binance-testnet";
   }
+  if (slug === "base-goerli-testnet") {
+    slug = "base-goerli";
+  }
   // end special cases
 
   takenSlugs[slug] = true;

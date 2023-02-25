@@ -11,7 +11,7 @@
       "inputs": [
         "package.json",
         "scripts/**",
-        "overrides.json",
+        "data/**",
         "src/types.ts",
         "src/utils.ts"
       ]

@@ -46,7 +46,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    ****************************/
 
   /**
-   * Call this to get get a list of addresses for all supported roles on the contract.
+   * Get all members of all roles
    * @remarks See {@link ContractRoles.get} to get a list of addresses that are members of a specific role.
    * @example
    * ```javascript
@@ -68,7 +68,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
   }
 
   /**
-   * Call this to get a list of addresses that are members of a specific role.
+   * Get all member of a specific role
    * @remarks See {@link ContractRoles.getAll} to get get a list of addresses for all supported roles on the contract.
    * @param role - The Role to to get a memberlist for.
    * @returns The list of addresses that are members of the specific role.
@@ -108,9 +108,9 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
   }
 
   /**
-   * Call this to OVERWRITE the list of addresses that are members of specific roles.
+   * Overwrite the list of members for specific roles
    *
-   * Every role in the list will be overwritten with the new list of addresses provided with them.
+   * @remarks Every role in the list will be overwritten with the new list of addresses provided with them.
    * If you want to add or remove addresses for a single address use {@link ContractRoles.grant} and {@link ContractRoles.revoke} respectively instead.
    * @param rolesWithAddresses - A record of {@link Role}s to lists of addresses that should be members of the given role.
    * @throws If you are requestiong a role that does not exist on the contract this will throw an error.
@@ -205,7 +205,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    ****************************/
 
   /**
-   * Call this to grant a role to a specific address.
+   * Grant a role to a specific address
    *
    * @remarks Make sure you are sure you want to grant the role to the address.
    *
@@ -236,7 +236,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
   }
 
   /**
-   * Call this to revoke a role from a specific address.
+   * Revoke a role from a specific address
    *
    * @remarks
    *

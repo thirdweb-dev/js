@@ -119,7 +119,7 @@ export class StandardErc1155<
   }
 
   /**
-   * Transfer a single NFT
+   * Transfer an NFT
    *
    * @remarks Transfer an NFT from the connected wallet to another wallet.
    *

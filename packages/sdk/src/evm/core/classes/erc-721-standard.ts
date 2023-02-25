@@ -61,7 +61,7 @@ export class StandardErc721<
   }
 
   /**
-   * Get All Minted NFTs
+   * Get all NFTs
    *
    * @remarks Get all the data associated with every NFT in this contract.
    *
@@ -80,7 +80,7 @@ export class StandardErc721<
   }
 
   /**
-   * Get Owned NFTs
+   * Get all NFTs owned by a specific wallet
    *
    * @remarks Get all the data associated with the NFTs owned by a specific wallet.
    *
@@ -107,7 +107,7 @@ export class StandardErc721<
   }
 
   /**
-   * Get the total count NFTs minted in this contract
+   * Get total minted supply count
    */
   public async totalSupply() {
     return this.erc721.totalCirculatingSupply();
@@ -171,7 +171,7 @@ export class StandardErc721<
   }
 
   /**
-   * Transfer a single NFT
+   * Transfer an NFT
    *
    * @remarks Transfer an NFT from the connected wallet to another wallet.
    *

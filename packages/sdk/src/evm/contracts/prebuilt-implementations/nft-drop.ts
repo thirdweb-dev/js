@@ -518,7 +518,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
   }
 
   /**
-   * Transfer a single NFT
+   * Transfer an NFT
    *
    * @remarks Transfer an NFT from the connected wallet to another wallet.
    *
