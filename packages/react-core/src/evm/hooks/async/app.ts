@@ -14,7 +14,7 @@ import invariant from "tiny-invariant";
 import { useSDKChainId } from "../../providers/thirdweb-sdk-provider";
 
 /**
- * Use this to get the appURI of a deployed {@link SmartContract}
+ * Get App URI
  *
  * @example
  * ```javascript
@@ -23,7 +23,7 @@ import { useSDKChainId } from "../../providers/thirdweb-sdk-provider";
  *
  * @param contract - the {@link SmartContract} instance of the contract to get the appURI of
  * @returns a response object that includes the appURI of the contract
- * @twfeature AppURI
+ * @twfeature AppURI | ContractMetadata
  * @beta
  */
 export function useAppURI<TContract extends SmartContract>(
@@ -46,7 +46,8 @@ export function useAppURI<TContract extends SmartContract>(
 }
 
 /**
- * Use this to update the appURI of your {@link SmartContract}
+ * Set App URI
+ * 
  * @example
  * ```jsx
  * const Component = () => {
@@ -72,7 +73,7 @@ export function useAppURI<TContract extends SmartContract>(
  * ```
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to update the appURI of a contract
- * @twfeature AppURI
+ * @twfeature AppURI | ContractMetadata
  * @beta
  */
 export function useSetAppURI(

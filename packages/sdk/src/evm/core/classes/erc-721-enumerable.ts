@@ -32,7 +32,7 @@ export class Erc721Enumerable implements DetectableFeature {
   }
 
   /**
-   * Get Owned NFTs
+   * Get all NFTs owned by a specific wallet
    *
    * @remarks Get all the data associated with the NFTs owned by a specific wallet.
    *

@@ -92,7 +92,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * const claimConditions = [
    *   {
    *     startTime: presaleStartTime, // start the presale now
-   *     maxQuantity: 2, // limit how many mints for this presale
+   *     maxClaimableSupply: 2, // limit how many mints for this presale
    *     price: 0.01, // presale price
    *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
    *   },
@@ -180,7 +180,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
   // TODO getAllClaimerAddresses() - should be done via an indexer
 
   /**
-   * Get All Minted NFTs
+   * Get all NFTs
    *
    * @remarks Get all the data associated with every NFT in this contract.
    *
@@ -198,7 +198,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
   }
 
   /**
-   * Get Owned NFTs
+   * Get all NFTs owned by a specific wallet
    *
    * @remarks Get all the data associated with the NFTs owned by a specific wallet.
    *

@@ -113,7 +113,7 @@ export class Erc1155<
   ////// Standard ERC1155 functions //////
 
   /**
-   * Get a single NFT Metadata
+   * Get a single NFT
    *
    * @example
    * ```javascript
@@ -159,7 +159,7 @@ export class Erc1155<
   }
 
   /**
-   * Get NFT balance
+   * Get NFT balance of a specific wallet
    *
    * @remarks Get a wallets NFT balance (number of NFTs in this contract owned by the wallet).
    *
@@ -180,7 +180,7 @@ export class Erc1155<
   }
 
   /**
-   * Get NFT Balance for the currently connected wallet
+   * Get NFT balance for the currently connected wallet
    */
   public async balance(tokenId: BigNumberish): Promise<BigNumber> {
     return await this.balanceOf(
@@ -202,7 +202,7 @@ export class Erc1155<
   }
 
   /**
-   * Transfer a single NFT
+   * Transfer an NFT
    *
    * @remarks Transfer an NFT from the connected wallet to another wallet.
    *
@@ -351,7 +351,7 @@ export class Erc1155<
    * ```
    * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs queried.
-   * @twfeature ERC1155Enumerable
+   * @twfeature ERC1155Enumerable 
    */
   public async getAll(queryParams?: QueryAllParams): Promise<NFT[]> {
     return assertEnabled(this.query, FEATURE_EDITION_ENUMERABLE).all(
@@ -369,17 +369,19 @@ export class Erc1155<
    * ```
    * @returns the total number of NFTs minted in this contract
    * @public
+   * @twfeature ERC1155Enumerable
    */
   public async totalCount(): Promise<BigNumber> {
     return assertEnabled(this.query, FEATURE_EDITION_ENUMERABLE).totalCount();
   }
 
   /**
-   * Get the supply of token for a given tokenId.
+   * Get the total supply of a specific NFT
    * @remarks This is **not** the sum of supply of all NFTs in the contract.
    *
    * @returns the total number of NFTs minted in this contract
    * @public
+   * @twfeature ERC1155Enumerable
    */
   public async totalCirculatingSupply(
     tokenId: BigNumberish,
@@ -391,7 +393,7 @@ export class Erc1155<
   }
 
   /**
-   * Get owned NFTs
+   * Get all NFTs owned by a specific wallet
    *
    * @remarks Get all the data associated with the NFTs owned by a specific wallet.
    *
@@ -414,7 +416,7 @@ export class Erc1155<
   ////// ERC1155 Mintable Extension //////
 
   /**
-   * Mint a single NFT
+   * Mint an NFT
    *
    * @remarks Mint an NFT with a limited supply to the connected wallet.
    *
@@ -452,7 +454,7 @@ export class Erc1155<
   }
 
   /**
-   * Mint a single NFT to a specific wallet
+   * Mint an NFT to a specific wallet
    *
    * @remarks Mint an NFT with a limited supply to a specified wallet.
    *
@@ -557,9 +559,9 @@ export class Erc1155<
   ////// ERC1155 BatchMintable Extension //////
 
   /**
-   * Mint many NFTs
+   * Mint multiple NFTs at once
    *
-   * @remarks Mint many different NFTs with limited supplies to the connected wallet.
+   * @remarks Mint multiple different NFTs with limited supplies to the connected wallet.
    *
    * @example
    * ```javascript
@@ -597,9 +599,9 @@ export class Erc1155<
   }
 
   /**
-   * Mint many NFTs to a specific wallet
+   * Mint multiple NFTs at once to a specific wallet
    *
-   * @remarks Mint many different NFTs with limited supplies to a specified wallet.
+   * @remarks Mint multiple different NFTs with limited supplies to a specified wallet.
    *
    * @example
    * ```javascript
@@ -935,7 +937,7 @@ export class Erc1155<
    * const claimConditions = [
    *   {
    *     startTime: presaleStartTime, // start the presale now
-   *     maxQuantity: 2, // limit how many mints for this presale
+   *     maxClaimableSupply: 2, // limit how many mints for this presale
    *     price: 0.01, // presale price
    *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
    *   },

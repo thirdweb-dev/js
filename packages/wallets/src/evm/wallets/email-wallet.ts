@@ -1,4 +1,3 @@
-import { PaperChainMap } from "../connectors/email";
 import {
   EmailWalletConnectionArgs,
   EmailWalletOptions,
@@ -26,14 +25,10 @@ export class EmailWallet extends AbstractBrowserWallet<
 
   protected async getConnector(): Promise<TWConnector> {
     if (!this.#connector) {
-      const chainName = PaperChainMap[this.options.chainId];
-      if (!chainName) {
-        throw new Error("Unsupported chain id: " + this.options.chainId);
-      }
       const { EmailWalletConnector } = await import("../connectors/email");
       this.#connector = new EmailWalletConnector({
         clientId: this.options.clientId,
-        chain: chainName,
+        chain: this.options.chain,
       });
     }
     return this.#connector;

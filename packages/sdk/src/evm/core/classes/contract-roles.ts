@@ -46,7 +46,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    ****************************/
 
   /**
-   * Get get a list of addresses for all supported roles
+   * Get all members of all roles
    * @remarks See {@link ContractRoles.get} to get a list of addresses that are members of a specific role.
    * @example
    * ```javascript
@@ -56,7 +56,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * @throws If the contract does not support roles this will throw an error.
    *
    * @public
-   * @twfeature Permissions
+   * @twfeature PermissionsEnumerable
    */
   public async getAll(): Promise<Record<TRole, string[]>> {
     invariant(this.roles.length, "this contract has no support for roles");
@@ -68,7 +68,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
   }
 
   /**
-   * Get a list of addresses that are members of a specific role
+   * Get all members of a specific role
    * @remarks See {@link ContractRoles.getAll} to get get a list of addresses for all supported roles on the contract.
    * @param role - The Role to to get a memberlist for.
    * @returns The list of addresses that are members of the specific role.
@@ -108,7 +108,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
   }
 
   /**
-   * Overwrite the list of addresses for specific roles
+   * Overwrite the list of members for specific roles
    *
    * @remarks Every role in the list will be overwritten with the new list of addresses provided with them.
    * If you want to add or remove addresses for a single address use {@link ContractRoles.grant} and {@link ContractRoles.revoke} respectively instead.
@@ -211,7 +211,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    *
    * @example
    * ```javascript
-   * await contract.roles.grant("minter", "0x1234567890123456789012345678901234567890");
+   * await contract.roles.grant("minter", "{{wallet_address}}");
    * ```
    *
    * @param role - The {@link Role} to grant to the address
@@ -248,7 +248,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    *
    * @example
    * ```javascript
-   * await contract.roles.revoke("minter", "0x1234567890123456789012345678901234567890");
+   * await contract.roles.revoke("minter", "{{wallet_address}}");
    * ```
    *
    * @param role - The {@link Role} to revoke

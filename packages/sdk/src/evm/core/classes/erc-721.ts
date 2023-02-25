@@ -115,7 +115,7 @@ export class Erc721<
   ////// Standard ERC721 Extension //////
 
   /**
-   * Get a single NFT Metadata
+   * Get a single NFT
    *
    * @example
    * ```javascript
@@ -150,7 +150,7 @@ export class Erc721<
   }
 
   /**
-   * Get NFT balance
+   * Get NFT balance of a specific wallet
    *
    * @remarks Get a wallets NFT balance (number of NFTs in this contract owned by the wallet).
    *
@@ -167,7 +167,7 @@ export class Erc721<
   }
 
   /**
-   * Get NFT Balance for the currently connected wallet
+   * Get NFT balance for the currently connected wallet
    */
   public async balance(): Promise<BigNumber> {
     return await this.balanceOf(await this.contractWrapper.getSignerAddress());
@@ -186,7 +186,7 @@ export class Erc721<
   }
 
   /**
-   * Transfer a single NFT
+   * Transfer an NFT
    *
    * @remarks Transfer an NFT from the connected wallet to another wallet.
    *
@@ -264,7 +264,7 @@ export class Erc721<
   ////// ERC721 Supply Extension //////
 
   /**
-   * Get all minted NFTs
+   * Get all NFTs
    *
    * @remarks Get all the data associated with every NFT in this contract.
    *
@@ -277,7 +277,7 @@ export class Erc721<
    * ```
    * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs queried.
-   * @twfeature ERC721Supply
+   * @twfeature ERC721Supply | ERC721Enumerable
    */
   public async getAll(queryParams?: QueryAllParams) {
     return assertEnabled(this.query, FEATURE_NFT_SUPPLY).all(queryParams);
@@ -291,7 +291,7 @@ export class Erc721<
    * console.log(owners);
    * ```
    * @returns an array of token ids and owners
-   * @twfeature ERC721Supply
+   * @twfeature ERC721Supply | ERC721Enumerable
    */
   public async getAllOwners() {
     return assertEnabled(this.query, FEATURE_NFT_SUPPLY).allOwners();
@@ -315,6 +315,7 @@ export class Erc721<
 
   /**
    * Get the total count NFTs minted in this contract
+   * @twfeature ERC721Supply | ERC721Enumerable
    */
   public async totalCirculatingSupply() {
     return assertEnabled(
@@ -326,7 +327,7 @@ export class Erc721<
   ////// ERC721 Enumerable Extension //////
 
   /**
-   * Get owned NFTs
+   * Get all NFTs owned by a specific wallet
    *
    * @remarks Get all the data associated with the NFTs owned by a specific wallet.
    *
@@ -376,9 +377,9 @@ export class Erc721<
   ////// ERC721 Mintable Extension //////
 
   /**
-   * Mint a single NFT
+   * Mint an NFT 
    *
-   * @remarks Mint a single NFT to the connected wallet.
+   * @remarks Mint an NFT to the connected wallet.
    *
    * @example
    * ```javascript
@@ -401,7 +402,7 @@ export class Erc721<
   }
 
   /**
-   * Mint a single NFT to a speicific wallet
+   * Mint an NFT to a specific wallet
    *
    * @remarks Mint a unique NFT to a specified wallet.
    *
@@ -725,7 +726,7 @@ export class Erc721<
    * const claimConditions = [
    *   {
    *     startTime: presaleStartTime, // start the presale now
-   *     maxQuantity: 2, // limit how many mints for this presale
+   *     maxClaimableSupply: 2, // limit how many mints for this presale
    *     price: 0.01, // presale price
    *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
    *   },
@@ -750,6 +751,7 @@ export class Erc721<
   /**
    * Tiered Drop
    * @remarks Drop lazy minted NFTs using a tiered drop mechanism.
+   * @twfeature ERC721TieredDrop
    */
   get tieredDrop() {
     return assertEnabled(this.tieredDropable, FEATURE_NFT_TIERED_DROP);

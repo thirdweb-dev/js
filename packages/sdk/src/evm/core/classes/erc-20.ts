@@ -133,13 +133,12 @@ export class Erc20<
   }
 
   /**
-   * Get token balance
+   * Get token balance for a specific wallet
    *
    * @remarks Get a wallets token balance.
    *
    * @example
    * ```javascript
-   * // Address of the wallet to check token balance
    * const walletAddress = "{{wallet_address}}";
    * const balance = await contract.erc20.balanceOf(walletAddress);
    * ```
@@ -154,7 +153,7 @@ export class Erc20<
   }
 
   /**
-   * Get the total supply for this Token
+   * Get the total supply for this token
    * @remarks Get how much supply has been minted
    * @example
    * ```javascript
@@ -489,7 +488,7 @@ export class Erc20<
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    * @param claimData
    * @returns - The transaction receipt
-   * @twfeature ERC20ClaimableWithConditions
+   * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1
    */
   public async claim(
     amount: Amount,
@@ -521,7 +520,7 @@ export class Erc20<
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    * @param claimData
    * @returns - The transaction receipt
-   * @twfeature ERC20ClaimableWithConditions
+   * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1
    */
   public async claimTo(
     destinationAddress: string,
@@ -544,7 +543,7 @@ export class Erc20<
    * const claimConditions = [
    *   {
    *     startTime: presaleStartTime, // start the presale now
-   *     maxQuantity: 2, // limit how many mints for this presale
+   *     maxClaimableSupply: 2, // limit how many mints for this presale
    *     price: 0.01, // presale price
    *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
    *   },
@@ -555,7 +554,7 @@ export class Erc20<
    * ]);
    * await contract.erc20.claimConditions.set(claimConditions);
    * ```
-   * @twfeature ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1
+   * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1
    */
   get claimConditions() {
     return assertEnabled(
