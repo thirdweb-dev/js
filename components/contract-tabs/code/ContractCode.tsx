@@ -180,7 +180,7 @@ export const ContractCode: React.FC<ContractCodeProps> = ({
           ) : (
             <>
               <Heading size="title.sm">Getting started</Heading>
-              <Text>First, install the latest version of the SDK.</Text>
+              <Text>First, install the latest version of the SDK:</Text>
               <CodeBlock
                 language="bash"
                 code={

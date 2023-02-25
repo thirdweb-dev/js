@@ -1,7 +1,6 @@
 import { useContractEnabledExtensions } from "../../../../components/contract-components/hooks";
-import { Flex, Icon, List, ListItem } from "@chakra-ui/react";
+import { Flex, Image, List, ListItem } from "@chakra-ui/react";
 import { ContractInterface } from "ethers";
-import { FcCheckmark } from "react-icons/fc";
 import { Heading, Text, TrackedLink } from "tw-components";
 
 type ExtensionsProps = {
@@ -21,7 +20,12 @@ const Extensions: React.FC<ExtensionsProps> = ({ abi }) => {
           enabledExtensions.map((extension) => (
             <ListItem key={extension.name}>
               <Flex gap={2} alignItems="center">
-                <Icon as={FcCheckmark} boxSize={5} />
+                <Image
+                  src="/assets/dashboard/extension-check.svg"
+                  alt="Extension detected"
+                  objectFit="contain"
+                  mb="2px"
+                />
                 <Text size="label.md">
                   <TrackedLink
                     href={`https://portal.thirdweb.com/contracts/${extension.docLinks.contracts}`}

@@ -98,7 +98,7 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
           {abi && (
             <TabPanel>
               <Flex direction="column" gap={6}>
-                <CodeOverview abi={abi} />
+                <CodeOverview abi={abi} noSidebar />
               </Flex>
             </TabPanel>
           )}

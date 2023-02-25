@@ -40,6 +40,7 @@ import {
   extractFunctionsFromAbi,
   fetchPreDeployMetadata,
 } from "@thirdweb-dev/sdk/evm";
+import { SnippetApiResponse } from "components/contract-tabs/code/types";
 import { BuiltinContractMap } from "constants/mappings";
 import { utils } from "ethers";
 import { useConfiguredChain } from "hooks/chains/configureChains";
@@ -685,4 +686,13 @@ export function useContractFunctions(abi: Abi) {
 
 export function useContractEvents(abi: Abi) {
   return abi ? extractEventsFromAbi(abi) : undefined;
+}
+
+export function useFeatureContractCodeSnippetQuery() {
+  return useQuery(["feature-code-snippet"], async () => {
+    const res = await fetch(
+      `https://raw.githubusercontent.com/thirdweb-dev/docs/main/docs/feature_snippets_sdk.json`,
+    );
+    return (await res.json()) as SnippetApiResponse;
+  });
 }
