@@ -56,7 +56,7 @@ export class ContractAppURI<TContract extends BaseContract>
   /**
    * Set App URI
    * @param appURI - the uri to set (typically an IPFS hash)
-   * @example@
+   * @example
    * ```javascript
    * const appURI = "ipfs://some_ipfs_hash"; 
    * await contract.appURI.set(appURI);
