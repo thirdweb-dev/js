@@ -44,7 +44,7 @@ export class ContractRoyalty<
   }
 
   /**
-   * Gets the royalty recipient and fee
+   * Get the royalty recipient and fee
    * @returns - The royalty recipient and BPS
    * @example
    * ```javascript
@@ -66,7 +66,7 @@ export class ContractRoyalty<
   }
 
   /**
-   * Gets the royalty recipient and fee of a particular token
+   * Get the royalty recipient and fee of a particular token
    * @returns - The royalty recipient and BPS
    * @example
    * ```javascript
