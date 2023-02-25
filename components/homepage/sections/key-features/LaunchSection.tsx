@@ -52,7 +52,7 @@ export const LaunchSection: React.FC = () => {
             _hover={{ textDecoration: "none" }}
           >
             <Flex gap={6} flexDir="column">
-              <Heading size="label.xl" lineHeight="1.2" as="h4">
+              <Heading size="label.xl" fontSize="22" lineHeight="1.2" as="h4">
                 Ship your contracts on-chain effortlessly with{" "}
                 <GradientText
                   as={LinkOverlay}
@@ -111,7 +111,7 @@ export const LaunchSection: React.FC = () => {
             _hover={{ textDecoration: "none" }}
           >
             <Flex gap={6} flexDir="column">
-              <Heading size="label.xl" lineHeight="1.2" as="h4">
+              <Heading size="label.xl" fontSize="22" lineHeight="1.2" as="h4">
                 Make your contracts discoverable with{" "}
                 <GradientText
                   as={LinkOverlay}

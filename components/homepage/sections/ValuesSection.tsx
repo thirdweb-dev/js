@@ -59,7 +59,7 @@ const ValueCard: React.FC<FeatureCardProps> = ({ title, description }) => {
 
 export const ValuesSection: React.FC = () => {
   return (
-    <HomepageSection my={24} px={{ base: 4, lg: 0 }}>
+    <HomepageSection my={24}>
       <Heading
         as="h3"
         fontSize={{ base: "32px", md: "48px" }}

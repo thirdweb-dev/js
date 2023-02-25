@@ -51,7 +51,13 @@ export const ManageSection: React.FC = () => {
             px={14}
             _hover={{ textDecoration: "none" }}
           >
-            <Heading size="label.xl" lineHeight="1.2" py={12} as="h4">
+            <Heading
+              size="label.xl"
+              fontSize="22"
+              lineHeight="1.2"
+              py={12}
+              as="h4"
+            >
               Monitor and configure your contracts from your{" "}
               <GradientText
                 as={LinkOverlay}
@@ -92,7 +98,13 @@ export const ManageSection: React.FC = () => {
             color="#9786DF60"
           />
           <Flex h="full" position="relative" flexDir="column" px={14}>
-            <Heading size="label.xl" lineHeight="1.2" py={12} as="h4">
+            <Heading
+              size="label.xl"
+              fontSize="22"
+              lineHeight="1.2"
+              py={12}
+              as="h4"
+            >
               Collaborate with your team and{" "}
               <GradientText
                 category={TRACKING_CATEGORY}
@@ -144,6 +156,7 @@ export const ManageSection: React.FC = () => {
               <Heading
                 lineHeight="1.2"
                 size="label.xl"
+                fontSize="22"
                 maxW={320}
                 textAlign={{ base: "center", md: "left" }}
                 as="h4"
