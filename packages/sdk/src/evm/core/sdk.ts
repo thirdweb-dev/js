@@ -1,15 +1,18 @@
-import { fetchCurrencyValue } from "../common/currency";
+import { fetchCurrencyValue } from "../common";
 import { getCompositePluginABI } from "../common/plugin";
-import { getChainProvider, NATIVE_TOKEN_ADDRESS } from "../constants";
+import {
+  getChainProvider,
+  NATIVE_TOKEN_ADDRESS,
+  setSupportedChains,
+} from "../constants";
 import {
   getContractTypeForRemoteName,
   PREBUILT_CONTRACTS_MAP,
 } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
-import { AbiSchema } from "../schema";
-import { SDKOptions } from "../schema/sdk-options";
-import { ContractWithMetadata, CurrencyValue } from "../types/index";
-import { ContractDeployer } from "./classes/contract-deployer";
+import { AbiSchema, SDKOptions } from "../schema";
+import { ContractWithMetadata, CurrencyValue } from "../types";
+import { ContractDeployer } from "./classes";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { MultichainRegistry } from "./classes/multichain-registry";
 import {
@@ -177,6 +180,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       network = network.chainId;
     }
     super(network, options);
+    setSupportedChains(options?.supportedChains);
     this.storageHandler = storage;
     this.storage = storage;
     this.wallet = new UserWallet(network, options);

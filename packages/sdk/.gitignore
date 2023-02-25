@@ -3,3 +3,5 @@ etc/
 temp/
 temp-evm/
 temp-solana/
+.nyc_output/
+coverage/
