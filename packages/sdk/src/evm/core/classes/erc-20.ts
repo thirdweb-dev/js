@@ -99,8 +99,8 @@ export class Erc20<
   ////// Standard ERC20 Extension //////
 
   /**
-   * Get the token Metadata (name, symbol, etc...)
-   *
+   * Get the token metadata
+   * @remarks name, symbol, etc...
    * @example
    * ```javascript
    * const token = await contract.erc20.get();
@@ -116,7 +116,7 @@ export class Erc20<
   }
 
   /**
-   * Get Token Balance for the currently connected wallet
+   * Get token balance for the currently connected wallet
    *
    * @remarks Get a wallets token balance.
    *
@@ -133,7 +133,7 @@ export class Erc20<
   }
 
   /**
-   * Get Token Balance
+   * Get token balance
    *
    * @remarks Get a wallets token balance.
    *
@@ -154,7 +154,7 @@ export class Erc20<
   }
 
   /**
-   * The total supply for this Token
+   * Get the total supply for this Token
    * @remarks Get how much supply has been minted
    * @example
    * ```javascript
@@ -169,7 +169,7 @@ export class Erc20<
   }
 
   /**
-   * Get Token Allowance
+   * Get token allowance
    *
    * @remarks Get the allowance of a 'spender' wallet over the connected wallet's funds - the allowance of a different address for a token is the amount of tokens that the `spender` wallet is allowed to spend on behalf of the connected wallet.
    *
@@ -191,7 +191,7 @@ export class Erc20<
   }
 
   /**
-   * Get Token Allowance
+   * Get token allowance of a specific wallet
    *
    * @remarks Get the allowance of one wallet over another wallet's funds - the allowance of a different address for a token is the amount of tokens that the wallet is allowed to spend on behalf of the specified wallet.
    *
@@ -217,7 +217,7 @@ export class Erc20<
   }
 
   /**
-   * Transfer Tokens
+   * Transfer tokens
    *
    * @remarks Transfer tokens from the connected wallet to another wallet.
    *
@@ -244,7 +244,7 @@ export class Erc20<
   }
 
   /**
-   * Transfer Tokens From Address
+   * Transfer tokens from a specific address
    *
    * @remarks Transfer tokens from one wallet to another
    *
@@ -276,8 +276,8 @@ export class Erc20<
   }
 
   /**
-   * Allows the specified `spender` wallet to transfer the given `amount` of tokens to another wallet
-   *
+   * Set token allowance
+   * @remarks Allows the specified `spender` wallet to transfer the given `amount` of tokens to another wallet
    * @example
    * ```javascript
    * // Address of the wallet to allow transfers from
@@ -301,7 +301,7 @@ export class Erc20<
   }
 
   /**
-   * Transfer Tokens To Many Wallets
+   * Transfer tokens to many wallets
    *
    * @remarks Mint tokens from the connected wallet to many wallets
    *
@@ -338,14 +338,14 @@ export class Erc20<
   ////// ERC20 Mintable Extension //////
 
   /**
-   * Mint Tokens
+   * Mint tokens
    *
    * @remarks Mint tokens to the connected wallet.
    *
    * @example
    * ```javascript
    * const amount = "1.5"; // The amount of this token you want to mint
-   * await contract.erc20.mint(toAddress, amount);
+   * await contract.erc20.mint(amount);
    * ```
    * @twfeature ERC20Mintable
    */
@@ -354,7 +354,7 @@ export class Erc20<
   }
 
   /**
-   * Mint Tokens
+   * Mint tokens to a specific wallet
    *
    * @remarks Mint tokens to a specified address.
    *
@@ -377,10 +377,11 @@ export class Erc20<
   }
 
   /**
-   * Construct a mint transaction without executing it.
-   * This is useful for estimating the gas cost of a mint transaction, overriding transaction options and having fine grained control over the transaction execution.
+   * Construct a mint transaction without executing it
+   * @remakrs This is useful for estimating the gas cost of a mint transaction, overriding transaction options and having fine grained control over the transaction execution.
    * @param receiver - Address you want to send the token to
    * @param amount - The amount of tokens you want to mint
+   * @twfeature ERC20Mintable
    */
   public async getMintTransaction(receiver: string, amount: Amount) {
     return assertEnabled(
@@ -392,7 +393,7 @@ export class Erc20<
   ////// ERC20 BatchMintable Extension //////
 
   /**
-   * Mint Tokens To Many Wallets
+   * Mint tokens to many wallets
    *
    * @remarks Mint tokens to many wallets in one transaction.
    *
@@ -423,7 +424,7 @@ export class Erc20<
   ////// ERC20 Burnable Extension //////
 
   /**
-   * Burn Tokens
+   * Burn tokens
    *
    * @remarks Burn tokens held by the connected wallet
    *
@@ -441,7 +442,7 @@ export class Erc20<
   }
 
   /**
-   * Burn Tokens
+   * Burn tokens from a specific wallet
    *
    * @remarks Burn tokens held by the specified wallet
    *
@@ -470,7 +471,7 @@ export class Erc20<
   ////// ERC20 Claimable Extension //////
 
   /**
-   * Claim a certain amount of tokens to the connected Wallet
+   * Claim tokens
    *
    * @remarks Let the specified wallet claim Tokens.
    *
@@ -502,7 +503,7 @@ export class Erc20<
   }
 
   /**
-   * Claim a certain amount of tokens to a specific Wallet
+   * Claim tokens to a specific wallet
    *
    * @remarks Let the specified wallet claim Tokens.
    *
@@ -554,7 +555,7 @@ export class Erc20<
    * ]);
    * await contract.erc20.claimConditions.set(claimConditions);
    * ```
-   * @twfeature ERC20ClaimableWithConditions
+   * @twfeature ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1
    */
   get claimConditions() {
     return assertEnabled(
@@ -566,7 +567,7 @@ export class Erc20<
   ////// ERC20 SignatureMint Extension //////
 
   /**
-   * Signature Minting
+   * Mint with signature
    * @remarks Generate dynamic tokens with your own signature, and let others mint them using that signature.
    * @example
    * ```javascript

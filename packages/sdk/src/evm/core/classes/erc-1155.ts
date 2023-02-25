@@ -117,7 +117,8 @@ export class Erc1155<
    *
    * @example
    * ```javascript
-   * const nft = await contract.erc1155.get(0);
+   * const tokenId = 0;
+   * const nft = await contract.erc1155.get(tokenId);
    * ```
    * @param tokenId - the tokenId of the NFT to retrieve
    * @returns The NFT metadata
@@ -143,16 +144,22 @@ export class Erc1155<
   }
 
   /**
-   * Returns the total supply of a specific token
+   * Get the total supply of a specific token
+   * @example
+   * ```javascript
+   * const tokenId = 0;
+   * const nft = await contract.erc1155.totalSupply(tokenId);
+   * ```
    * @param tokenId - The token ID to get the total supply of
    * @returns the total supply
+   * @twfeature ERC1155
    */
   public async totalSupply(tokenId: BigNumberish): Promise<BigNumber> {
     return await this.contractWrapper.readContract.totalSupply(tokenId);
   }
 
   /**
-   * Get NFT Balance
+   * Get NFT balance
    *
    * @remarks Get a wallets NFT balance (number of NFTs in this contract owned by the wallet).
    *
@@ -228,11 +235,16 @@ export class Erc1155<
   }
 
   /**
-   * Approve or remove operator as an operator for the caller. Operators can call transferFrom or safeTransferFrom for any token owned by the caller.
+   * Set approval for all NFTs
+   * @remarks Approve or remove operator as an operator for the caller. Operators can call transferFrom or safeTransferFrom for any token owned by the caller.
+   * @example
+   * ```javascript
+   * const operator = "{{wallet_address}}";
+   * await contract.erc1155.setApprovalForAll(operator, true);
+   * ```
    * @param operator - the operator's address
    * @param approved - whether to approve or remove
-   *
-   * @internal
+   * @twfeature ERC1155
    */
   public async setApprovalForAll(
     operator: string,
@@ -266,7 +278,7 @@ export class Erc1155<
    *    quantity: 3,
    *  },
    * ];
-   * await contract.airdrop(tokenId, addresses);
+   * await contract.erc1155.airdrop(tokenId, addresses);
    *
    * // You can also pass an array of addresses, it will airdrop 1 NFT per address
    * const tokenId = "0";
@@ -275,6 +287,7 @@ export class Erc1155<
    * ]
    * await contract.erc1155.airdrop(tokenId, addresses);
    * ```
+   * @twfeature ERC1155BatchTransferable
    */
   public async airdrop(
     tokenId: BigNumberish,
@@ -326,7 +339,7 @@ export class Erc1155<
   ////// ERC1155 Enumerable Extension //////
 
   /**
-   * Get All NFTs
+   * Get all NFTs
    *
    * @remarks Get all the data associated with every NFT in this contract.
    *
@@ -347,9 +360,13 @@ export class Erc1155<
   }
 
   /**
-   * Get the number of NFTs minted
+   * Get the total number of NFTs minted
    * @remarks This returns the total number of NFTs minted in this contract, **not** the total supply of a given token.
-   *
+   * @example
+   * ```javascript
+   * const count = await contract.erc1155.totalCount();
+   * console.log(count);
+   * ```
    * @returns the total number of NFTs minted in this contract
    * @public
    */
@@ -374,7 +391,7 @@ export class Erc1155<
   }
 
   /**
-   * Get Owned NFTs
+   * Get owned NFTs
    *
    * @remarks Get all the data associated with the NFTs owned by a specific wallet.
    *
@@ -397,7 +414,7 @@ export class Erc1155<
   ////// ERC1155 Mintable Extension //////
 
   /**
-   * Mint an NFT with a limited supply
+   * Mint a single NFT
    *
    * @remarks Mint an NFT with a limited supply to the connected wallet.
    *
@@ -435,7 +452,7 @@ export class Erc1155<
   }
 
   /**
-   * Mint an NFT with a limited supply
+   * Mint a single NFT to a specific wallet
    *
    * @remarks Mint an NFT with a limited supply to a specified wallet.
    *
@@ -478,6 +495,7 @@ export class Erc1155<
    * This is useful for estimating the gas cost of a mint transaction, overriding transaction options and having fine grained control over the transaction execution.
    * @param receiver - Address you want to send the token to
    * @param metadataWithSupply - The metadata of the NFT you want to mint
+   * @twfeature ERC1155Mintable
    */
   public async getMintTransaction(
     receiver: string,
@@ -523,6 +541,7 @@ export class Erc1155<
    * @param to - the address to mint to
    * @param tokenId - the token id of the NFT to increase supply of
    * @param additionalSupply - the additional amount to mint
+   * @twfeature ERC1155Mintable
    */
   public async mintAdditionalSupplyTo(
     receiver: string,
@@ -538,7 +557,7 @@ export class Erc1155<
   ////// ERC1155 BatchMintable Extension //////
 
   /**
-   * Mint Many NFTs with limited supplies
+   * Mint many NFTs
    *
    * @remarks Mint many different NFTs with limited supplies to the connected wallet.
    *
@@ -578,7 +597,7 @@ export class Erc1155<
   }
 
   /**
-   * Mint Many NFTs with limited supplies
+   * Mint many NFTs to a specific wallet
    *
    * @remarks Mint many different NFTs with limited supplies to a specified wallet.
    *
@@ -624,7 +643,7 @@ export class Erc1155<
   ////// ERC1155 Burnable Extension //////
 
   /**
-   * Burn a specified amount of a NFTs
+   * Burn NFTs
    *
    * @remarks Burn the specified NFTs from the connected wallet
    *
@@ -653,7 +672,7 @@ export class Erc1155<
   }
 
   /**
-   * Burn a specified amount of a NFTs
+   * Burn NFTs from a specific wallet
    *
    * @remarks Burn the specified NFTs from a specified wallet
    *
@@ -716,7 +735,7 @@ export class Erc1155<
   }
 
   /**
-   * Burn a batch of NFTs
+   * Burn a batch of NFTs from a specific wallet
    *
    * @remarks Burn the batch NFTs from the specified wallet
    *
@@ -752,7 +771,7 @@ export class Erc1155<
   ////// ERC721 LazyMint Extension //////
 
   /**
-   * Create a batch of NFTs to be claimed in the future
+   * Lazy mint NFTs
    *
    * @remarks Create batch allows you to create a batch of many NFTs in one transaction.
    *
@@ -776,7 +795,7 @@ export class Erc1155<
    *
    * @param metadatas - The metadata to include in the batch.
    * @param options - optional upload progress callback
-   * @twfeature ERC1155LazyMintable
+   * @twfeature ERC1155LazyMintableV1 | ERC1155LazyMintableV2
    */
   public async lazyMint(
     metadatas: NFTMetadataOrUri[],
@@ -846,7 +865,7 @@ export class Erc1155<
    * @param options - Optional claim verification data (e.g. price, currency, etc...)
    *
    * @returns - Receipt for the transaction
-   * @twfeature ERC1155Claimable
+   * @twfeature ERC1155ClaimCustom | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
    */
   public async claim(
     tokenId: BigNumberish,
@@ -882,7 +901,7 @@ export class Erc1155<
    * @param options - Optional claim verification data (e.g. price, currency, etc...)
    *
    * @returns - Receipt for the transaction
-   * @twfeature ERC1155Claimable
+   * @twfeature ERC1155ClaimCustom | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
    */
   public async claimTo(
     destinationAddress: string,
@@ -927,7 +946,7 @@ export class Erc1155<
    * ]);
    * await contract.erc1155.claimConditions.set(tokenId, claimConditions);
    * ```
-   * @twfeature ERC1155ClaimableWithConditions
+   * @twfeature ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
    */
   get claimConditions() {
     return assertEnabled(
@@ -939,7 +958,7 @@ export class Erc1155<
   ////// ERC1155 SignatureMintable Extension //////
 
   /**
-   * Signature Minting
+   * Mint with signature
    * @remarks Generate dynamic NFTs with your own signature, and let others mint them using that signature.
    * @example
    * ```javascript
@@ -963,7 +982,7 @@ export class Erc1155<
   ////// ERC1155 DelayedReveal Extension //////
 
   /**
-   * Delayed reveal
+   * Mint delayed reveal NFTs
    * @remarks Create a batch of encrypted NFTs that can be revealed at a later time.
    * @example
    * ```javascript
