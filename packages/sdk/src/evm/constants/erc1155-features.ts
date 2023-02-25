@@ -132,6 +132,17 @@ export const FEATURE_EDITION_SIGNATURE_MINTABLE = {
   features: {},
 } as const;
 
+export const FEATURE_EDITION_BATCH_TRASNFERABLE = {
+  name: "ERC1155BatchTransferable",
+  namespace: "",
+  docLinks: {
+    sdk: "sdk.erc1155",
+    contracts: "IMulticall",
+  },
+  abis: [Erc1155Abi, MulticallAbi],
+  features: {},
+} as const;
+
 export const FEATURE_EDITION_BATCH_MINTABLE = {
   name: "ERC1155BatchMintable",
   namespace: "edition.mint.batch",
