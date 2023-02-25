@@ -14,7 +14,7 @@ import invariant from "tiny-invariant";
 import { useSDKChainId } from "../../providers/thirdweb-sdk-provider";
 
 /**
- * Use this to get the appURI of a deployed {@link SmartContract}
+ * Get App URI
  *
  * @example
  * ```javascript
@@ -46,7 +46,8 @@ export function useAppURI<TContract extends SmartContract>(
 }
 
 /**
- * Use this to update the appURI of your {@link SmartContract}
+ * Set App URI
+ * 
  * @example
  * ```jsx
  * const Component = () => {
