@@ -692,7 +692,7 @@ export function useOffers(
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: createDirectListing,
  *     isLoading,
@@ -770,7 +770,7 @@ export function useCreateDirectListing<
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: createAuctionListing,
  *     isLoading,
@@ -848,7 +848,7 @@ export function useCreateAuctionListing<
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: cancelListing,
  *     isLoading,
@@ -915,7 +915,7 @@ export function useCancelListing(contract: RequiredParam<Marketplace>) {
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: cancelDirectListing,
  *     isLoading,
@@ -975,7 +975,7 @@ export function useCancelDirectListing(contract: RequiredParam<MarketplaceV3>) {
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: cancelEnglishAuction,
  *     isLoading,
@@ -1037,7 +1037,7 @@ export function useCancelEnglishAuction(
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: makeBid,
  *     isLoading,
@@ -1095,7 +1095,7 @@ export function useMakeBid(contract: RequiredParam<Marketplace>) {
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: makeOffer,
  *     isLoading,
@@ -1153,7 +1153,7 @@ export function useMakeOffer(contract: RequiredParam<Marketplace>) {
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: acceptOffer,
  *     isLoading,
@@ -1212,7 +1212,7 @@ export function useAcceptDirectListingOffer(
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: executeAuctionSale,
  *     isLoading,
@@ -1269,7 +1269,7 @@ export function useExecuteAuctionSale(contract: RequiredParam<Marketplace>) {
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: buyNow,
  *     isLoading,

@@ -434,7 +434,7 @@ export function useActiveClaimConditionForWallet(
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: setClaimConditions,
  *     isLoading,
@@ -508,7 +508,7 @@ export function useSetClaimConditions(
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: resetClaimConditions,
  *     isLoading,
