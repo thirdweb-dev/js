@@ -54,7 +54,7 @@ type GetAllReturnType<TContract extends ContractWithRoles> = Promise<
  *
  * @param contract - an instance of a {@link SmartContract}
  * @returns a list of addresses for all supported roles on the contract.
- * @twfeature Permissions
+ * @twfeature PermissionsEnumerable
  * @beta
  */
 export function useAllRoleMembers<TContract extends ContractWithRoles>(
@@ -76,7 +76,7 @@ export function useAllRoleMembers<TContract extends ContractWithRoles>(
 }
 
 /**
- * Get all member of a specific role
+ * Get all members of a specific role
  *
  * @example
  * ```jsx
@@ -119,7 +119,7 @@ export function useRoleMembers<TContract extends ContractWithRoles>(
  * @param role - the role to check the member against, see {@link Role}
  * @param walletAddress - the address to check
  * @returns true if the address is a member of the role, or false if not
- * @twfeature Permissions
+ * @twfeature PermissionsEnumerable
  * @beta
  */
 export function useIsAddressRole<TContract extends ContractWithRoles>(
@@ -241,7 +241,7 @@ export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
  *
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to grant a member of a role on the contract
- * @twfeature Permissions
+ * @twfeature Permissions | PermissionsEnumerable
  * @beta
  */
 export function useGrantRole<TContract extends ContractWithRoles>(
@@ -301,7 +301,7 @@ export function useGrantRole<TContract extends ContractWithRoles>(
  *
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to revoke a role from a member on the contract
- * @twfeature Permissions
+ * @twfeature Permissions | PermissionsEnumerable
  * @beta
  */
 export function useRevokeRole<TContract extends ContractWithRoles>(

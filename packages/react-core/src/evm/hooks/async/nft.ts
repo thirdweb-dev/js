@@ -82,7 +82,7 @@ export function useNFT<TContract extends NFTContract>(
  * @param contract - an instance of a {@link NFTContract}
  * @param queryParams - query params to pass to the query for pagination
  * @returns a response object that includes an array of NFTs
- * @twfeature ERC721Supply | ERC721Enumerable | ERC1155Supply | ERC1155Enumerable
+ * @twfeature ERC721Supply | ERC721Enumerable | ERC1155Enumerable
  * @beta
  */
 export function useNFTs<TContract extends NFTContract>(
@@ -221,7 +221,7 @@ export function useTotalCirculatingSupply(
  * @param ownerWalletAddress - the wallet adress to get owned tokens for
  * @returns a response object that includes the list of owned tokens
  * @beta
- * @twfeature ERC721Enumerable | ERC1155Enumerable | ERC721Supply | ERC1155Supply
+ * @twfeature ERC721Enumerable | ERC1155Enumerable | ERC721Supply
  */
 export function useOwnedNFTs<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
