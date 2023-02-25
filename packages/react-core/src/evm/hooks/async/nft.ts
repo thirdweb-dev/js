@@ -114,11 +114,11 @@ export function useNFTs<TContract extends NFTContract>(
 }
 
 /**
- * Use this to get the total count of NFT tokens of your {@link NFTContract}.
+ * Get total supply count
  *
  * @example
  * ```javascript
- * const { contract } = useContract({{contract_address}});
+ * const { contract } = useContract"({{contract_address}}");
  * const { data: count, isLoading, error } = useTotalCount(contract);
  * ```
  *
@@ -165,7 +165,7 @@ export function useTotalCount<TContract extends NFTContract>(
  *
  * @example
  * ```javascript
- * const { contract } = useContract({{contract_address}});
+ * const { contract } = useContract"({{contract_address}}");
  * const { data: totalCirculatingSupply, isLoading, error } = useTotalCirculatingSupply(contract);
  * ```
  *
@@ -214,7 +214,7 @@ export function useTotalCirculatingSupply(
  *
  * @example
  * ```javascript
- * const { data: ownedNFTs, isLoading, error } = useOwnedNFTs(contract, {{wallet_address}});
+ * const { data: ownedNFTs, isLoading, error } = useOwnedNFTs(contract, "{{wallet_address}}");
  * ```
  *
  * @param contract - an instance of a {@link NFTContract}
@@ -254,11 +254,10 @@ export function useOwnedNFTs<TContract extends NFTContract>(
  *
  * @example
  * ```javascript
- * const { contract } = useContract({{contract_address}});
- * const { data: ownerBalance, isLoading, error } = useNFTBalance(contract, {{wallet_address}});
+ * const { data: ownerBalance, isLoading, error } = useNFTBalance(contract, "{{wallet_address}}");
  * // for ERC1155 contracts, you can also pass a tokenId
  * const tokenId = 0;
- * const { data: ownerBalance, isLoading, error } = useNFTBalance(contract, {{wallet_address}}, tokenId);
+ * const { data: ownerBalance, isLoading, error } = useNFTBalance(contract, "{{wallet_address}}", tokenId);
  * ```
  *
  * @param contract - an instance of a {@link NFTContract}
@@ -317,7 +316,7 @@ export function useNFTBalance(
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract({{contract_address}});
+ *   const { contract } = useContract"({{contract_address}}");
  *   const {
  *     mutate: mintNft,
  *     isLoading,
@@ -389,7 +388,7 @@ export function useMintNFT<TContract extends NFTContract>(
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract({{contract_address}});
+ *   const { contract } = useContract"({{contract_address}}");
  *   const {
  *     mutate: mintNftSupply,
  *     isLoading,
@@ -452,7 +451,7 @@ export function useMintNFTSupply(contract: Erc1155) {
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract({{contract_address}});
+ *   const { contract } = useContract"({{contract_address}}");
  *   const {
  *     mutate: transferNFT,
  *     isLoading,
@@ -466,7 +465,10 @@ export function useMintNFTSupply(contract: Erc1155) {
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => transferNFT({ to: "{{wallet_address}}", tokenId: 2 })}
+ *       onClick={() => transferNFT({ 
+ *         to: "{{wallet_address}}", 
+ *         tokenId: 2 
+ *       })}
  *     >
  *       Transfer
  *     </button>
@@ -519,7 +521,7 @@ export function useTransferNFT<TContract extends NFTContract>(
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract({{contract_address}});
+ *   const { contract } = useContract"({{contract_address}}");
  *   const {
  *     mutate: airdropNFT,
  *     isLoading,
@@ -585,7 +587,7 @@ export function useAirdropNFT(contract: Erc1155) {
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract({{contract_address}});
+ *   const { contract } = useContract"({{contract_address}}");
  *   const {
  *     mutate: burnNFT,
  *     isLoading,

@@ -211,7 +211,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    *
    * @example
    * ```javascript
-   * await contract.roles.grant("minter", "0x1234567890123456789012345678901234567890");
+   * await contract.roles.grant("minter", "{{wallet_address}}");
    * ```
    *
    * @param role - The {@link Role} to grant to the address
@@ -248,7 +248,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    *
    * @example
    * ```javascript
-   * await contract.roles.revoke("minter", "0x1234567890123456789012345678901234567890");
+   * await contract.roles.revoke("minter", "{{wallet_address}}");
    * ```
    *
    * @param role - The {@link Role} to revoke

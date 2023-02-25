@@ -112,7 +112,7 @@ export class StandardErc721<
   }
 
   /**
-   * Get a single NFT Metadata
+   * Get a single NFT
    *
    * @example
    * ```javascript

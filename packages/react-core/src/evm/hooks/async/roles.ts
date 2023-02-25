@@ -158,6 +158,7 @@ export function useIsAddressRole<TContract extends ContractWithRoles>(
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract"({{contract_address}}");
  *   const {
  *     mutate: overwriteRoles,
  *     isLoading,
@@ -216,6 +217,7 @@ export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract"({{contract_address}}");
  *   const {
  *     mutate: grantRole,
  *     isLoading,
@@ -275,6 +277,7 @@ export function useGrantRole<TContract extends ContractWithRoles>(
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract"({{contract_address}}");
  *   const {
  *     mutate: revokeRole,
  *     isLoading,

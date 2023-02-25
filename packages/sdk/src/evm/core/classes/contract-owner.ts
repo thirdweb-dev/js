@@ -40,7 +40,7 @@ export class ContractOwner<TContract extends Ownable>
    *
    * @example
    * ```javascript
-   * const newOwnerAddress = {{wallet_address}};
+   * const newOwnerAddress = "{{wallet_address}}";
    * await contract.owner.set(newOwnerAddress);
    * ```
    * @twfeature Ownable
