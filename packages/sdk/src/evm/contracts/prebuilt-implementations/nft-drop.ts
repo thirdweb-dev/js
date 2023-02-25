@@ -101,7 +101,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * const claimConditions = [
    *   {
    *     startTime: presaleStartTime, // start the presale now
-   *     maxQuantity: 2, // limit how many mints for this presale
+   *     maxClaimableSupply: 2, // limit how many mints for this presale
    *     price: 0.01, // presale price
    *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
    *   },
@@ -468,7 +468,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    ******************************/
 
   /**
-   * Get a single NFT Metadata
+   * Get a single NFT
    *
    * @example
    * ```javascript

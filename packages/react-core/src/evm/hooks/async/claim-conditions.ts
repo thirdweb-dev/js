@@ -293,7 +293,7 @@ export function useClaimIneligibilityReasons(
  * 
  * @example
  * ```javascript
- * const { data: activeClaimConditionForWallet, isLoading, error } = useActiveClaimConditionForWallet(contract, {{wallet_address}});
+ * const { data: activeClaimConditionForWallet, isLoading, error } = useActiveClaimConditionForWallet(contract, "{{wallet_address}}");
  * ```
  *
  * @param contract - an instance of a contract that extends the  ERC20, ERC721 or ERC1155 spec and implements the `claimConditions` extension.
@@ -434,7 +434,7 @@ export function useActiveClaimConditionForWallet(
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract({{contract_address}});
+ *   const { contract } = useContract"({{contract_address}}");
  *   const {
  *     mutate: setClaimConditions,
  *     isLoading,
@@ -508,7 +508,7 @@ export function useSetClaimConditions(
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract({{contract_address}});
+ *   const { contract } = useContract"({{contract_address}}");
  *   const {
  *     mutate: resetClaimConditions,
  *     isLoading,

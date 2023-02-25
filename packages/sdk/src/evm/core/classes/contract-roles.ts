@@ -56,7 +56,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * @throws If the contract does not support roles this will throw an error.
    *
    * @public
-   * @twfeature Permissions
+   * @twfeature PermissionsEnumerable
    */
   public async getAll(): Promise<Record<TRole, string[]>> {
     invariant(this.roles.length, "this contract has no support for roles");
@@ -68,7 +68,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
   }
 
   /**
-   * Get all member of a specific role
+   * Get all members of a specific role
    * @remarks See {@link ContractRoles.getAll} to get get a list of addresses for all supported roles on the contract.
    * @param role - The Role to to get a memberlist for.
    * @returns The list of addresses that are members of the specific role.
@@ -211,7 +211,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    *
    * @example
    * ```javascript
-   * await contract.roles.grant("minter", "0x1234567890123456789012345678901234567890");
+   * await contract.roles.grant("minter", "{{wallet_address}}");
    * ```
    *
    * @param role - The {@link Role} to grant to the address
@@ -248,7 +248,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    *
    * @example
    * ```javascript
-   * await contract.roles.revoke("minter", "0x1234567890123456789012345678901234567890");
+   * await contract.roles.revoke("minter", "{{wallet_address}}");
    * ```
    *
    * @param role - The {@link Role} to revoke
