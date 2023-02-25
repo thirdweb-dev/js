@@ -37,7 +37,7 @@ export function useAppURI<TContract extends SmartContract>(
         "appURI" in contract && contract.appURI,
         "Contract does not support appURI",
       );
-      return await contract.appURI.get();
+      return await contract.app.get();
     },
     {
       enabled: !!contract,
@@ -88,7 +88,7 @@ export function useSetAppURI(
         "appURI" in contract && contract.appURI,
         "Contract does not support appURI",
       );
-      return contract.appURI.set(params.uri);
+      return contract.app.set(params.uri);
     },
     {
       onSettled: () =>
