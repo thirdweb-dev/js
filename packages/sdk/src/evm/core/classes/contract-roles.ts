@@ -46,7 +46,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    ****************************/
 
   /**
-   * Get get a list of addresses for all supported roles on the contract
+   * Get get a list of addresses for all supported roles
    * @remarks See {@link ContractRoles.get} to get a list of addresses that are members of a specific role.
    * @example
    * ```javascript
@@ -108,7 +108,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
   }
 
   /**
-   * Overwrite the list of addresses that are members of specific roles.
+   * Overwrite the list of addresses for specific roles
    *
    * @remarks Every role in the list will be overwritten with the new list of addresses provided with them.
    * If you want to add or remove addresses for a single address use {@link ContractRoles.grant} and {@link ContractRoles.revoke} respectively instead.
@@ -236,7 +236,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
   }
 
   /**
-   * Revoke a role from a specific address.
+   * Revoke a role from a specific address
    *
    * @remarks
    *

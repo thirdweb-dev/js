@@ -35,6 +35,8 @@ export class ContractPlatformFee<TContract extends IPlatformFee>
    * @example
    * ```javascript
    * const feeInfo = await contract.platformFee.get();
+   * console.log(feeInfo.platform_fee_recipient);
+   * console.log(feeInfo.platform_fee_basis_points);
    * ```
    * @twfeature PlatformFee
    */
