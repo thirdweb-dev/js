@@ -3,6 +3,7 @@ import { FEATURE_TOKEN } from "../constants/erc20-features";
 import { FEATURE_NFT } from "../constants/erc721-features";
 import { FEATURE_EDITION } from "../constants/erc1155-features";
 import {
+  FEATURE_APPURI,
   FEATURE_OWNER,
   FEATURE_PERMISSIONS,
   FEATURE_PLATFORM_FEE,
@@ -29,6 +30,7 @@ import { CustomContractSchema } from "../schema/contracts/custom";
 import { SDKOptions } from "../schema/sdk-options";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
 import type {
+  AppURI,
   IPermissions,
   IPlatformFee,
   IPrimarySale,
@@ -78,7 +80,6 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   public publishedMetadata: ContractPublishedMetadata<TContract>;
   public abi: ContractInterface;
   public metadata: ContractMetadata<BaseContract, any>;
-  public appURI: ContractAppURI<BaseContract>;
 
   /**
    * Handle royalties
@@ -136,6 +137,13 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     return assertEnabled(this.detectErc1155(), FEATURE_EDITION);
   }
 
+  /**
+   * Auto-detects AppURI standard functions.
+   */
+  get appURI(): ContractAppURI<BaseContract> {
+    return assertEnabled(this.detectAppURI(), FEATURE_APPURI);
+  }
+
   private _chainId: number;
   get chainId() {
     return this._chainId;
@@ -174,8 +182,6 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
       CustomContractSchema,
       this.storage,
     );
-
-    this.appURI = new ContractAppURI(this.contractWrapper, this.metadata);
   }
 
   onNetworkUpdated(network: NetworkInput): void {
@@ -283,6 +289,13 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   private detectOwnable() {
     if (detectContractFeature<Ownable>(this.contractWrapper, "Ownable")) {
       return new ContractOwner(this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectAppURI() {
+    if (detectContractFeature<AppURI>(this.contractWrapper, "AppURI")) {
+      return new ContractAppURI(this.contractWrapper, this.metadata);
     }
     return undefined;
   }
