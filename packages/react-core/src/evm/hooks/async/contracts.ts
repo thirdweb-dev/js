@@ -273,11 +273,11 @@ export function useContract(
 }
 
 /**
- * Use this to get the contract metadata for a (built-in or custom) contract.
+ * Get the metadata of this contract
  *
  * @example
  * ```javascript
- * const { data: contractMetadata, isLoading, error } = useContractMetadata(>);
+ * const { data: contractMetadata, isLoading } = useContractMetadata(contract);
  * ```
  *
  * @param contract - the {@link ValidContractInstance} instance of the contract to get the metadata for
@@ -305,7 +305,37 @@ export function useContractMetadata<TContract extends ValidContractInstance>(
 }
 
 /**
- * @internal
+ * Update the metadata of this contract
+ *
+ * @example
+ * ```jsx
+ * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
+ *   const {
+ *     mutate: updateContractMetadata,
+ *     isLoading,
+ *     error,
+ *   } = useContractMetadataUpdate(contract);
+ *
+ *   if (error) {
+ *     console.error("failed to update contract metadata", error);
+ *   }
+ *
+ *   return (
+ *     <button
+ *       disabled={isLoading}
+ *       onClick={() => updateContractMetadata({ name: "New name", description: "New description" })}
+ *     >
+ *       Update contract metadata
+ *     </button>
+ *   );
+ * };
+ * ```
+ *
+ * @param contract - the {@link ValidContractInstance} instance of the contract to get the metadata for
+ * @returns a response object that includes the contract metadata of the deployed contract
+ * @twfeature ContractMetadata
+ * @beta
  */
 export function useContractMetadataUpdate(
   contract: RequiredParam<ValidContractInstance>,
@@ -337,7 +367,12 @@ export function useContractMetadataUpdate(
  */
 
 /**
- * Use this to query (and subscribe) to events or a specific event on a contract.
+ * Get or subscribe to contract events
+ * 
+ * @example
+ * ```javascript
+ * const { data: contractEvents, isLoading } = useContractEvents(contract);
+ * ```
  *
  * @param contract - the {@link ValidContractInstance} instance of the contract to listen to events for
  * @param eventName - the name of the event to query for (omit this or pass `undefined` to query for all events)
@@ -428,7 +463,7 @@ export function useContractEvents(
 }
 
 /**
- * Use this to get data from a contract read-function call.
+ * Get data from a contract read-function call
  *
  * @example
  * ```javascript
@@ -463,7 +498,7 @@ export function useContractRead(
 }
 
 /**
- * Use this to get a function to make a write call to your contract
+ * Mke a write call to your contract
  *
  * @example
  * ```javascript

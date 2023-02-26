@@ -59,7 +59,7 @@ export class StandardErc1155<
   ////// Standard ERC1155 functions //////
 
   /**
-   * Get a single NFT Metadata
+   * Get a single NFT
    *
    * @example
    * ```javascript
@@ -118,7 +118,7 @@ export class StandardErc1155<
   }
 
   /**
-   * Transfer a single NFT
+   * Transfer an NFT
    *
    * @remarks Transfer an NFT from the connected wallet to another wallet.
    *

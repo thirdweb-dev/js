@@ -43,7 +43,7 @@ export class Erc721Supply implements DetectableFeature {
   }
 
   /**
-   * Get All Minted NFTs
+   * Get all NFTs
    *
    * @remarks Get all the data associated with every NFT in this contract.
    *

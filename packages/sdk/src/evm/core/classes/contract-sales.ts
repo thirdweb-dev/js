@@ -26,7 +26,7 @@ export class ContractPrimarySale<TContract extends IPrimarySale>
   }
 
   /**
-   * Get the primary sale recipient.
+   * Get the primary sale recipient
    * @returns the wallet address.
    * @example
    * ```javascript

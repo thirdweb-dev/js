@@ -104,7 +104,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * const presaleStartTime = new Date();
    * const claimCondition = {
    *     startTime: presaleStartTime, // start the presale now
-   *     maxQuantity: 2, // limit how many mints for this presale
+   *     maxClaimableSupply: 2, // limit how many mints for this presale
    *     price: 0.01, // presale price
    *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
    * };
