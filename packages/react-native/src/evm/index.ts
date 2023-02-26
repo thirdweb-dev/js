@@ -1,4 +1,4 @@
-// export { ConnectWallet } from "./components/ConnectWallet";
+export { ConnectWallet } from "./components/ConnectWallet";
 
 export { ChainId } from "@thirdweb-dev/sdk";
 

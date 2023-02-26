@@ -29,6 +29,7 @@ export const ChooseWalletContent = ({
               style={[styles.row, {marginBottom: marginBottom}]}
               onPress={() => onChooseWallet(item)}>
               <Image
+                alt='wallet logo'
                 style={styles.walletImage}
                 source={{uri: item.image_url.sm}}
               />

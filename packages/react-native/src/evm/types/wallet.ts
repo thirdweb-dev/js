@@ -1,4 +1,4 @@
-import { wallets } from "../constants/wallets";
+import { walletsMetadata } from "../constants/walletsMetadata";
 
 export type Wallet = {
   name: string;
@@ -17,4 +17,4 @@ export type Wallet = {
   };
 };
 
-export type SupportedWallet = keyof typeof wallets;
+export type SupportedWallet = keyof typeof walletsMetadata & 'devicewallet';

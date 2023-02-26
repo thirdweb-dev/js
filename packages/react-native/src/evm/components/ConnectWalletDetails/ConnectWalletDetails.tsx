@@ -1,5 +1,6 @@
+import { shortenString } from '../../utils/addresses';
 import React from 'react';
-import {Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {Text, StyleSheet, TouchableOpacity, View} from 'react-native';
 
 export type ConnectWalletDetailsProps = {
   address: string;
@@ -8,7 +9,9 @@ export type ConnectWalletDetailsProps = {
 export const ConnectWalletDetails = ({address}: ConnectWalletDetailsProps) => {
   return (
     <TouchableOpacity style={styles.connectWalletButton}>
-        <Text style={styles.text}>{address}</Text>
+        <View />
+        <Text style={styles.text}>{shortenString(address)}</Text>
+        <Text>V</Text>
     </TouchableOpacity>
   );
 };
@@ -24,7 +27,7 @@ const styles = StyleSheet.create({
   connectWalletButton: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#131417',
     borderRadius: 12,

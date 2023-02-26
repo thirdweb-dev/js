@@ -1,5 +1,5 @@
 import React, {ReactNode} from 'react';
-import {Image, StyleSheet, TouchableOpacity, View, Text} from 'react-native';
+import {StyleSheet, TouchableOpacity, View, Text} from 'react-native';
 
 interface ChooseWalletHeaderProps {
   close: () => void;
@@ -24,10 +24,7 @@ export const ChooseWalletHeader = ({
           style={styles.closeContainer}
           onPress={() => close()}
           hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}>
-          <Image
-            style={styles.closeImage}
-            source={require('../../../assets/icons/close.png')}
-          />
+          <Text>X</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.subHeader}>

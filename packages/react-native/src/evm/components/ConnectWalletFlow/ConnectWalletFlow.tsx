@@ -1,14 +1,25 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {TWModal} from '../base/modal/TWModal';
-import {wallets} from '../../constants/wallets';
 import {Wallet} from '../../types/wallet';
 import {ChooseWallet} from './ChooseWallet/ChooseWallet';
 import {ConnectingWallet} from './ConnectingWallet/ConnectingWallet';
+import { useConnect, useWallets } from '@thirdweb-dev/react-core';
+import { getWallets } from '../../utils/wallets';
 
 export const ConnectWalletFlow: React.FC<{theme?: 'dark' | 'light'}> = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [activeWallet, setActiveWallet] = useState<Wallet | undefined>();
+
+  const connect = useConnect();
+  const supportedWallets = useWallets();
+
+  useEffect(() => {
+    if (activeWallet) {
+      connect(supportedWallets[0], {});
+    }
+  }, [activeWallet, connect, supportedWallets]);
+
 
   const onConnectPress = () => {
     setModalVisible(true);
@@ -30,7 +41,7 @@ export const ConnectWalletFlow: React.FC<{theme?: 'dark' | 'light'}> = () => {
           <ConnectingWallet wallet={activeWallet} onClose={onClose} />
         ) : (
           <ChooseWallet
-            wallets={Object.values(wallets)}
+            wallets={getWallets()}
             onChooseWallet={onChooseWallet}
             onClose={onClose}
           />

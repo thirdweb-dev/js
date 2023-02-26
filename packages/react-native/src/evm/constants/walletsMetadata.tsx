@@ -1,6 +1,6 @@
 import { Wallet } from "evm/types/wallet";
 
-export const wallets: Record<string, Wallet> = {
+export const walletsMetadata: Record<string, Wallet> = {
   rainbow: {
     name: 'Rainbow',
     homepage: 'https://rainbow.me/',

@@ -19,22 +19,14 @@ export const ConnectWalletHeader = ({
           style={styles.closeContainer}
           onPress={() => close()}
           hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}>
-          <Image
-            alt='back button'
-            style={styles.navIcon}
-            source={require('../../../assets/icons/back.png')}
-          />
+          <Text>{'<'}</Text>
         </TouchableOpacity>
         <Image alt='wallet logo' style={styles.walletLogo} source={{uri: walletLogoUrl}} />
         <TouchableOpacity
           style={styles.closeContainer}
           onPress={() => close()}
           hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}>
-          <Image
-            alt='close button'
-            style={styles.navIcon}
-            source={require('../../../assets/icons/close.png')}
-          />
+          <Text>X</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.subHeader}>

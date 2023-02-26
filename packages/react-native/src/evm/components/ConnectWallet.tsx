@@ -4,7 +4,7 @@ import {Animated} from 'react-native';
 import {ConnectWalletDetails} from './ConnectWalletDetails/ConnectWalletDetails';
 import { useAddress } from '@thirdweb-dev/react-core';
 
-export const ConnectWallet: React.FC<{theme?: 'dark' | 'light'}> = () => {
+export const ConnectWallet = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const address = useAddress();
@@ -18,7 +18,7 @@ export const ConnectWallet: React.FC<{theme?: 'dark' | 'light'}> = () => {
   }, [fadeAnim]);
 
   return (
-    <Animated.View style={{opacity: fadeAnim}}>
+    <Animated.View style={{opacity: fadeAnim, width: 200}}>
       {address ? <ConnectWalletDetails address={address} /> : <ConnectWalletFlow />}
     </Animated.View>
   );
