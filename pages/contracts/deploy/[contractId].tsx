@@ -19,14 +19,12 @@ import {
 import { ContractIdImage } from "components/contract-components/shared/contract-id-image";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
-// import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { useEffect, useRef } from "react";
 import { FiArrowLeft, FiExternalLink } from "react-icons/fi";
 import { VscExtensions } from "react-icons/vsc";
 import { Card, Heading, LinkButton, Text, TrackedLink } from "tw-components";
-import { pushToPreviousRoute } from "utils/pushToPreviousRoute";
 import { ThirdwebNextPage } from "utils/types";
 
 const ContractDeployDetailPage: ThirdwebNextPage = () => {
@@ -63,7 +61,7 @@ const ContractDeployDetailPage: ThirdwebNextPage = () => {
               <IconButton
                 variant="ghost"
                 aria-label="back"
-                onClick={() => pushToPreviousRoute(router)}
+                onClick={() => router.back()}
                 icon={<Icon boxSize={6} as={FiArrowLeft} />}
               />
             )}
