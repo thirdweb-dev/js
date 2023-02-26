@@ -16,6 +16,7 @@ interface ICodeSegment {
   setEnvironment: Dispatch<SetStateAction<CodeEnvironment>>;
   isInstallCommand?: boolean;
   hideTabs?: boolean;
+  onlyTabs?: boolean;
 }
 
 const Environments: SupportedEnvironment[] = [
@@ -69,6 +70,7 @@ export const CodeSegment: React.FC<ICodeSegment> = ({
   setEnvironment,
   isInstallCommand,
   hideTabs,
+  onlyTabs,
 }) => {
   const activeEnvironment: CodeEnvironment = useMemo(() => {
     return (
@@ -120,31 +122,35 @@ export const CodeSegment: React.FC<ICodeSegment> = ({
         </Flex>
       )}
 
-      <CodeBlock
-        code={code}
-        language={
-          isInstallCommand
-            ? "bash"
-            : activeEnvironment === "react" ||
-              activeEnvironment === "web3button"
-            ? "jsx"
-            : activeEnvironment === "unity"
-            ? "cpp"
-            : activeEnvironment
-        }
-      />
-      {activeEnvironment === "web3button" && (
-        <Text>
-          <TrackedLink
-            href="https://portal.thirdweb.com/ui-components/web3button"
-            isExternal
-            category="code-tab"
-            label="web3button"
-          >
-            Read the full documentation on Web3Button
-          </TrackedLink>
-          .
-        </Text>
+      {onlyTabs ? null : (
+        <>
+          <CodeBlock
+            code={code}
+            language={
+              isInstallCommand
+                ? "bash"
+                : activeEnvironment === "react" ||
+                  activeEnvironment === "web3button"
+                ? "jsx"
+                : activeEnvironment === "unity"
+                ? "cpp"
+                : activeEnvironment
+            }
+          />
+          {activeEnvironment === "web3button" && (
+            <Text>
+              <TrackedLink
+                href="https://portal.thirdweb.com/ui-components/web3button"
+                isExternal
+                category="code-tab"
+                label="web3button"
+              >
+                Read the full documentation on Web3Button
+              </TrackedLink>
+              .
+            </Text>
+          )}
+        </>
       )}
     </Stack>
   );

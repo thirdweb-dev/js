@@ -19,6 +19,7 @@ import {
   Tabs,
 } from "@chakra-ui/react";
 import { Chain } from "@thirdweb-dev/chains";
+import { useAddress } from "@thirdweb-dev/react";
 import {
   Abi,
   AbiEvent,
@@ -54,16 +55,16 @@ const COMMANDS = {
   install: {
     javascript: "npm install @thirdweb-dev/sdk ethers@5",
     react: "npm install @thirdweb-dev/react @thirdweb-dev/sdk ethers@5",
-    web3button: "npm install @thirdweb-dev/react @thirdweb-dev/sdk ethers@5",
+    web3button: "",
     python: "pip install thirdweb-sdk",
     go: "go get github.com/thirdweb-dev/go-sdk/thirdweb",
-    unity: `// Download the .unitypackage from the latest release: https://github.com/thirdweb-dev/unity-sdk/releases 
+    unity: `// Download the .unitypackage from the latest release: 
+// https://github.com/thirdweb-dev/unity-sdk/releases 
 // and drag it into your project`,
   },
   setup: {
     javascript: `import {{chainName}} from "@thirdweb-dev/chains";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
-
 
 const sdk = new ThirdwebSDK({{chainName}});
 const contract = await sdk.getContract("{{contract_address}}");`,
@@ -79,24 +80,9 @@ function App() {
 }
 
 function Component() {
-  // While isLoading is true, contract is undefined.
-  const { contract, isLoading, error } = useContract("{{contract_address}}");
-  // Now you can use the contract in the rest of the component
+  const { contract, isLoading } = useContract("{{contract_address}}");
 }`,
-    web3button: `import { Web3Button } from "@thirdweb-dev/react";
-
-function Component() {
-  return (
-    <Web3Button
-      contractAddress="{{contract_address}}"
-      action={(contract) => {
-        // Any action with your contract
-      }}
-    >
-      Do something
-    </Web3Button>
-  )
-}`,
+    web3button: ``,
     python: `from thirdweb import ThirdwebSDK
 
 sdk = ThirdwebSDK("{{chainNameOrRpc}}")
@@ -217,11 +203,12 @@ interface SnippetOptions {
   args?: string[];
   chainName?: string;
   rpcUrl?: string;
+  address?: string;
 }
 
 function formatSnippet(
   snippet: Record<CodeEnvironment, any>,
-  { contractAddress, fn, args, chainName, rpcUrl }: SnippetOptions,
+  { contractAddress, fn, args, chainName, rpcUrl, address }: SnippetOptions,
 ) {
   const code = { ...snippet };
   for (const key of Object.keys(code)) {
@@ -229,6 +216,8 @@ function formatSnippet(
 
     code[env] = code[env]
       ?.replace(/{{contract_address}}/gm, contractAddress)
+      ?.replace(/{{wallet_address}}/gm, address)
+
       ?.replace(
         'import {{chainName}} from "@thirdweb-dev/chains";',
         preSupportedSlugs.includes(chainName as string)
@@ -276,8 +265,11 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
   chain,
   noSidebar = false,
 }) => {
-  const { data } = useFeatureContractCodeSnippetQuery();
+  const [environment, setEnvironment] = useState<CodeEnvironment>("react");
+  const [tab, setTab] = useState("write");
+  const { data } = useFeatureContractCodeSnippetQuery(environment);
   const enabledExtensions = useContractEnabledExtensions(abi);
+  const address = useAddress();
 
   const filteredData = useMemo(() => {
     if (!data) {
@@ -294,9 +286,6 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
   const chainInfo = useConfiguredChain(chainId || -1);
   const chainName = chain?.slug || chainInfo?.slug;
   const rpc = chain?.rpc[0] || chainInfo?.rpc[0];
-
-  const [environment, setEnvironment] = useState<CodeEnvironment>("react");
-  const [tab, setTab] = useState("write");
 
   const functions = useContractFunctions(abi as Abi);
   const events = useContractEvents(abi as Abi);
@@ -329,32 +318,44 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
         flexDir="column"
         gap={12}
       >
-        <Flex flexDirection="column" gap={3}>
+        <Flex flexDirection="column" gap={4}>
           <Flex flexDir="column" gap={2} id="getting-started">
             <Heading size="title.md">
               Getting Started {chain ? `with ${chain.name}` : null}
             </Heading>
-            <Text>First, install the latest version of the SDK:</Text>
           </Flex>
-          <CodeSegment
-            environment={environment}
-            setEnvironment={setEnvironment}
-            snippet={COMMANDS.install}
-            isInstallCommand
-          />
-          <Text>
-            Follow along below to get started using this contract in your code.
-          </Text>
-          <CodeSegment
-            environment={environment}
-            setEnvironment={setEnvironment}
-            snippet={formatSnippet(COMMANDS.setup as any, {
-              contractAddress,
-              chainName,
-              rpcUrl: rpc,
-            })}
-            hideTabs
-          />
+          <Flex flexDir="column" gap={2}>
+            <Text>Choose a language:</Text>
+            <CodeSegment
+              onlyTabs
+              environment={environment}
+              setEnvironment={setEnvironment}
+              snippet={COMMANDS.install}
+            />
+          </Flex>
+          <Flex flexDir="column" gap={2}>
+            <Text>Install the latest version of the SDK:</Text>
+            <CodeSegment
+              hideTabs
+              isInstallCommand
+              environment={environment}
+              setEnvironment={setEnvironment}
+              snippet={COMMANDS.install}
+            />
+          </Flex>
+          <Flex flexDir="column" gap={2}>
+            <Text>Initialize the SDK and contract on your project:</Text>
+            <CodeSegment
+              environment={environment}
+              setEnvironment={setEnvironment}
+              snippet={formatSnippet(COMMANDS.setup as any, {
+                contractAddress,
+                chainName,
+                rpcUrl: rpc,
+              })}
+              hideTabs
+            />
+          </Flex>
         </Flex>
         {!onlyInstall ? (
           <>
@@ -408,14 +409,16 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                                   </Text>
                                   <AccordionIcon />
                                 </AccordionButton>
-                                <AccordionPanel px={0} pt={0}>
+                                <AccordionPanel px={0}>
                                   <Flex flexDir="column" gap={4}>
                                     <CodeSegment
+                                      hideTabs
                                       environment={environment}
                                       setEnvironment={setEnvironment}
                                       snippet={formatSnippet(ext.examples, {
                                         contractAddress,
                                         chainName,
+                                        address,
                                       })}
                                     />
                                   </Flex>
