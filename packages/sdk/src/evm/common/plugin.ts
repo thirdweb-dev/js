@@ -1,10 +1,12 @@
+import {
+  getAllExtensionsAbi,
+  getAllPluginsAbi,
+} from "../constants/thirdweb-features";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Abi, AbiSchema, SDKOptions } from "../schema";
 import { isFeatureEnabled } from "./feature-detection";
 import { fetchContractMetadataFromAddress } from "./metadata-resolver";
 import { unique } from "./utils";
-import type { IRouter } from "@thirdweb-dev/contracts-js";
-import RouterABI from "@thirdweb-dev/contracts-js/dist/abis/Router.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 
@@ -26,22 +28,43 @@ export async function getCompositePluginABI(
       AbiSchema.parse(abi),
       "PluginRouter",
     );
-    if (isPluginRouter) {
-      const contract = new ContractWrapper<IRouter>(
+    const isExtensionRouter: boolean = isFeatureEnabled(
+      AbiSchema.parse(abi),
+      "ExtensionRouter",
+    );
+    if (isExtensionRouter) {
+      const contract = new ContractWrapper(
         provider,
         address,
-        RouterABI,
+        getAllExtensionsAbi,
         options,
       );
 
-      const pluginMap = await contract.readContract.getAllPlugins();
+      const plugins = await contract.call("getAllExtensions");
 
       // get extension addresses
-      const allPlugins = pluginMap.map((item) => item.pluginAddress);
+      const pluginAddresses = plugins.map(
+        (item: any) => item.metadata.implementation,
+      );
+
+      // get ABIs of extension contracts --
+      pluginABIs = await getPluginABI(pluginAddresses, provider, storage);
+    } else if (isPluginRouter) {
+      const contract = new ContractWrapper(
+        provider,
+        address,
+        getAllPluginsAbi,
+        options,
+      );
+
+      const pluginMap = await contract.call("getAllPlugins");
+
+      // get extension addresses
+      const allPlugins = pluginMap.map((item: any) => item.pluginAddress);
       const plugins = Array.from(new Set(allPlugins));
 
       // get ABIs of extension contracts
-      pluginABIs = await getPluginABI(plugins, provider, storage);
+      pluginABIs = await getPluginABI(plugins as string[], provider, storage);
     }
   } catch (err) {}
 
