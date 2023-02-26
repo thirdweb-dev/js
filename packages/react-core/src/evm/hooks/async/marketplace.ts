@@ -1148,7 +1148,9 @@ export function useMakeOffer(contract: RequiredParam<Marketplace>) {
 }
 
 /**
- * Accept an offer on a direct listing from an offeror, will accept the latest offer by the given offeror.
+ * Accept a specific offer on a direct listing 
+ * 
+ * @remarks will accept the latest offer by the given offeror.
  *
  * @example
  * ```jsx
@@ -1177,7 +1179,6 @@ export function useMakeOffer(contract: RequiredParam<Marketplace>) {
  *
  * @param contract - an instance of a Marketplace contract
  * @returns a mutation object that can be used to accept an offer on a direct listing
- * @twfeature DirectListings
  */
 export function useAcceptDirectListingOffer(
   contract: RequiredParam<Marketplace>,
