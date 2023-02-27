@@ -154,6 +154,9 @@ export function ThirdwebWalletProvider(
         return new (Wallet as WalletConnectWalletType)({
           ...walletOptions,
           projectId: TW_WC_PROJECT_ID,
+          // TODO - move this to class itself - use wrapper wallet classes
+          // true for react, false for react-native
+          qrcode: typeof document !== "undefined",
         });
       }
 
@@ -161,6 +164,9 @@ export function ThirdwebWalletProvider(
       if (Wallet.id === "walletConnectV1") {
         return new (Wallet as WalletConnectV1WalletType)({
           ...walletOptions,
+          // TODO - move this to class itself - use wrapper wallet classes
+          // true for react, false for react-native
+          qrcode: typeof document !== "undefined",
         });
       }
 
