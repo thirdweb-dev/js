@@ -1,12 +1,12 @@
 import chakraTheme from "../theme";
 import { ChakraProvider, theme } from "@chakra-ui/react";
 import { Global, css } from "@emotion/react";
-import { IBM_Plex_Mono, Inter } from "@next/font/google";
 import type { DehydratedState } from "@tanstack/react-query";
 import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
 import PlausibleProvider from "next-plausible";
 import { DefaultSeo } from "next-seo";
 import type { AppProps } from "next/app";
+import { IBM_Plex_Mono, Inter } from "next/font/google";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import posthog from "posthog-js";
