@@ -396,7 +396,6 @@ export class DropClaimConditions<
       }
     }
 
-    // TODO (cc) check for max claimable per wallet and how much each wallet has claimed
     if (
       this.isNewSinglePhaseDrop(this.contractWrapper) ||
       this.isNewMultiphaseDrop(this.contractWrapper)
@@ -546,7 +545,7 @@ export class DropClaimConditions<
    * const claimConditions = [
    *   {
    *     startTime: presaleStartTime, // start the presale now
-   *     maxQuantity: 2, // limit how many mints for this presale
+   *     maxClaimableSupply: 2, // limit how many mints for this presale
    *     price: 0.01, // presale price
    *     snapshot: snapshots, // limit minting to only certain addresses
    *   },

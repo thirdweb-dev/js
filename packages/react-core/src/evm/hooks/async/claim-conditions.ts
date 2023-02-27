@@ -49,25 +49,17 @@ export type SetClaimConditionsParams = {
 /** **********************/
 
 /**
- * Use this to get the active claim condition for ERC20, ERC721 or ERC1155 based contracts. They need to extend the `claimCondition` extension for this hook to work.
+ * Get the active claim condition
  *
  * @example
  * ```javascript
- * const { data: activeClaimCondition, isLoading, error } = useActiveClaimCondition(<YourERC20ContractInstance>);
- * ```
- * @example
- * ```javascript
- * const { data: activeClaimCondition, isLoading, error } = useActiveClaimCondition(<YourERC721ContractInstance>);
- * ```
- * @example
- * ```javascript
- * const { data: activeClaimCondition, isLoading, error } = useActiveClaimCondition(<YourERC1155ContractInstance>, <tokenId>);
+ * const { data: activeClaimCondition, isLoading, error } = useActiveClaimCondition(contract);
  * ```
  *
  * @param contract - an instance of a contract that extends the ERC721, ERC1155 or ERC20 spec and implements the `claimConditions` extension.
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
  * @returns a response object with the currently active claim condition
- * @twfeature ERC721ClaimableWithConditions | ERC1155ClaimableWithConditions | ERC20ClaimableWithConditions
+ * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
  * @beta
  */
 export function useActiveClaimCondition(
@@ -110,19 +102,11 @@ export function useActiveClaimCondition(
 }
 
 /**
- * Use this to get the claimer proofs for an adddress for ERC20, ERC721 or ERC1155 based contracts. They need to extend the `claimCondition` extension for this hook to work.
+ * Get claimer proofs
  *
  * @example
  * ```javascript
- * const { data: claimerProofs, isLoading, error } = useClaimerProofs(<YourERC20ContractInstance>);
- * ```
- * @example
- * ```javascript
- * const { data: claimerProofs, isLoading, error } = useClaimerProofs(<YourERC721ContractInstance>);
- * ```
- * @example
- * ```javascript
- * const { data: claimerProofs, isLoading, error } = useClaimerProofs(<YourERC1155ContractInstance>, <tokenId>);
+ * const { data: claimerProofs, isLoading, error } = useClaimerProofs(contract);
  * ```
  *
  * @param contract - an instance of a contract that extends the ERC721, ERC1155 or ERC20 spec and implements the `claimConditions` extension.
@@ -130,7 +114,7 @@ export function useActiveClaimCondition(
  * @param tokenId - the id of the token to fetch the claimer proofs for (if the contract is an ERC1155 contract)
  * @param claimConditionId - optional the claim condition id to get the proofs for
  * @returns a response object with the snapshot for the provided address
- * @twfeature ERC721ClaimableWithConditions | ERC1155ClaimableWithConditions | ERC20ClaimableWithConditions
+ * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
  * @beta
  */
 export function useClaimerProofs(
@@ -183,25 +167,17 @@ export function useClaimerProofs(
 }
 
 /**
- * Use this to get all claim conditions for ERC20, ERC721 or ERC1155 based contracts. They need to extend the `claimCondition` extension for this hook to work.
+ * Get all claim conditions
  *
  * @example
  * ```javascript
- * const { data: claimConditions, isLoading, error } = useClaimConditions(<YourERC20ContractInstance>);
- * ```
- * @example
- * ```javascript
- * const { data: claimConditions, isLoading, error } = useClaimConditions(<YourERC721ContractInstance>);
- * ```
- * @example
- * ```javascript
- * const { data: claimConditions, isLoading, error } = useClaimConditions(<YourERC1155ContractInstance>, <tokenId>);
+ * const { data: claimConditions, isLoading, error } = useClaimConditions(contract);
  * ```
  *
  * @param contract - an instance of a contract that extends the ERC721, ERC1155 or ERC20 spec and implements the `claimConditions` extension.
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
  * @returns a response object with the list of claim conditions
- * @twfeature ERC721ClaimableWithConditions | ERC1155ClaimableWithConditions | ERC20ClaimableWithConditions
+ * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
  * @beta
  */
 export function useClaimConditions(
@@ -244,25 +220,18 @@ export function useClaimConditions(
 }
 
 /**
- * Use this to check for reasons that prevent claiming for either  ERC20, ERC721 or ERC1155 based contracts. They need to extend the `claimCondition` extension for this hook to work.
+ * Get the reasons why a specific wallet can't claim
+ * 
  * @example
  * ```javascript
- * const { data: activeClaimCondition, isLoading, error } = useClaimIneligibilityReasons(<YourERC20ContractInstance>, { walletAddress: <walletAddress> });
- * ```
- * @example
- * ```javascript
- * const { data: claimIneligibilityReasons, isLoading, error } = useClaimIneligibilityReasons(<YourERC721ContractInstance>, { quantity: <quantity>, walletAddress: <walletAddress> });
- * ```
- * @example
- * ```javascript
- * const { data: claimIneligibilityReasons, isLoading, error } = useClaimIneligibilityReasons(<YourERC1155ContractInstance>, { quantity: <quantity>, walletAddress: <walletAddress> }, <tokenId>);
+ * const { data: claimIneligibilityReasons, isLoading, error } = useClaimIneligibilityReasons(contract, { walletAddress: "{{wallet_address}}" });
  * ```
  *
  * @param contract - an instance of a contract that extends the  ERC20, ERC721 or ERC1155 spec and implements the `claimConditions` extension.
  * @param eligibilityParams - the parameters for the eligibility check, see: {@link ClaimIneligibilityParams}
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
  * @returns a response object with the resons for the claim ineligibility
- * @twfeature ERC721ClaimableWithConditions | ERC1155ClaimableWithConditions | ERC20ClaimableWithConditions
+ * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
  * @beta
  */
 export function useClaimIneligibilityReasons(
@@ -320,12 +289,18 @@ export function useClaimIneligibilityReasons(
 }
 
 /**
- * Use this to check the claim condition for a given wallet address (including checking for overrides that may exist for that given wallet address).
+ * Get the active claim condition for a specific wallet
+ * 
+ * @example
+ * ```javascript
+ * const { data: activeClaimConditionForWallet, isLoading, error } = useActiveClaimConditionForWallet(contract, "{{wallet_address}}");
+ * ```
  *
  * @param contract - an instance of a contract that extends the  ERC20, ERC721 or ERC1155 spec and implements the `claimConditions` extension.
  * @param walletAddress - the wallet address to check the active claim condition for
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
  * @returns the active claim conditon for the wallet address or null if there is no active claim condition
+ * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
  *
  * @beta
  */
@@ -454,12 +429,12 @@ export function useActiveClaimConditionForWallet(
 /** **********************/
 
 /**
- * Use this to set claim conditions on your {@link DropContract}
+ * Set claim conditions
  *
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract(<ContractAddress>);
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: setClaimConditions,
  *     isLoading,
@@ -473,7 +448,7 @@ export function useActiveClaimConditionForWallet(
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => setClaimConditions({ phases: [{ price: 2, maxQuantity: 100 }] })}
+ *       onClick={() => setClaimConditions({ phases: [{ price: 2, maxClaimableSupply: 100 }] })}
  *     >
  *       Set Claim Conditions!
  *     </button>
@@ -483,7 +458,7 @@ export function useActiveClaimConditionForWallet(
  *
  * @param contract - an instance of a {@link DropContract}
  * @returns a mutation object that can be used to set claim conditions
- * @twfeature ERC721ClaimableWithConditions | ERC1155ClaimableWithConditions | ERC20ClaimableWithConditions
+ * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
  * @beta
  */
 export function useSetClaimConditions(
@@ -528,12 +503,12 @@ export function useSetClaimConditions(
 }
 
 /**
- * Use this to reset claim conditions on your {@link DropContract}
+ * Reset claim conditions
  *
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract(<ContractAddress>);
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: resetClaimConditions,
  *     isLoading,
@@ -557,7 +532,7 @@ export function useSetClaimConditions(
  *
  * @param contract - an instance of a {@link DropContract}
  * @returns a mutation object that can be used to reset claim conditions
- * @twfeature ERC721ClaimableWithConditions | ERC1155ClaimableWithConditions | ERC20ClaimableWithConditions
+ * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
  * @beta
  */
 export function useResetClaimConditions(

@@ -44,11 +44,13 @@ export class ContractRoyalty<
   }
 
   /**
-   * Gets the royalty recipient and BPS (basis points) of the contract
+   * Get the royalty recipient and fee
    * @returns - The royalty recipient and BPS
    * @example
    * ```javascript
    * const royaltyInfo = await contract.royalties.getDefaultRoyaltyInfo();
+   * console.log(royaltyInfo.fee_recipient);
+   * console.log(royaltyInfo.seller_fee_basis_points);
    * ```
    * @public
    * @twfeature Royalty
@@ -64,11 +66,13 @@ export class ContractRoyalty<
   }
 
   /**
-   * Gets the royalty recipient and BPS (basis points) of a particular token
+   * Get the royalty recipient and fee of a particular token
    * @returns - The royalty recipient and BPS
    * @example
    * ```javascript
    * const royaltyInfo = await contract.royalties.getDefaultRoyaltyInfo();
+   * console.log(royaltyInfo.fee_recipient);
+   * console.log(royaltyInfo.seller_fee_basis_points);
    * ```
    * @public
    * @twfeature Royalty
@@ -83,7 +87,7 @@ export class ContractRoyalty<
   }
 
   /**
-   * Set the royalty recipient and fee for a contract
+   * Set the royalty recipient and fee
    * @param royaltyData - the royalty recipient and fee
    *  @example
    * ```javascript
@@ -152,6 +156,7 @@ export class ContractRoyalty<
    * @param royaltyData - the royalty recipient and fee
    * @example
    * ```javascript
+   * const tokenId = 0;
    * await contract.roles.setTokenRoyaltyInfo(tokenId, {
    *   seller_fee_basis_points: 100, // 1% royalty fee
    *   fee_recipient: "0x...", // the fee recipient
