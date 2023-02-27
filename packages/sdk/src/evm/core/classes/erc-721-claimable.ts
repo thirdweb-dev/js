@@ -1,12 +1,13 @@
 import { NFT } from "../../../core/schema/nft";
 import { calculateClaimCost } from "../../common/claim-conditions";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_CLAIM_CUSTOM } from "../../constants/erc721-features";
 import { ClaimOptions } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
-import { TransactionTask } from "./TransactionTask";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc721 } from "./erc-721";
+import { Transaction } from "./transactions";
 import type { IClaimableERC721 } from "@thirdweb-dev/contracts-js";
 import { TokensClaimedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IClaimableERC721";
 import { BigNumber, BigNumberish, CallOverrides } from "ethers";
@@ -41,12 +42,15 @@ export class Erc721Claimable implements DetectableFeature {
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
    * @param options - Options for claiming the NFTs
+   *
+   * @deprecated Use `contract.erc721.claim.prepare(...args)` instead
    */
   public async getClaimTransaction(
     destinationAddress: string,
     quantity: BigNumberish,
     options?: ClaimOptions,
-  ): Promise<TransactionTask> {
+  ): Promise<Transaction> {
+    // TODO: Transaction Sequence Pattern
     let overrides: CallOverrides = {};
     if (options && options.pricePerToken) {
       overrides = await calculateClaimCost(
@@ -57,9 +61,9 @@ export class Erc721Claimable implements DetectableFeature {
         options.checkERC20Allowance,
       );
     }
-    return TransactionTask.make({
+    return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
-      functionName: "claim",
+      method: "claim",
       args: [destinationAddress, quantity],
       overrides,
     });
@@ -86,31 +90,36 @@ export class Erc721Claimable implements DetectableFeature {
    *
    * @returns - Receipt for the transaction
    */
-  public async to(
-    destinationAddress: string,
-    quantity: BigNumberish,
-    options?: ClaimOptions,
-  ): Promise<TransactionResultWithId<NFT>[]> {
-    const task = await this.getClaimTransaction(
-      destinationAddress,
-      quantity,
-      options,
-    );
-    const { receipt } = await task.execute();
-    const event = this.contractWrapper.parseLogs<TokensClaimedEvent>(
-      "TokensClaimed",
-      receipt?.logs,
-    );
-    const startingIndex: BigNumber = event[0].args.startTokenId;
-    const endingIndex = startingIndex.add(quantity);
-    const results: TransactionResultWithId<NFT>[] = [];
-    for (let id = startingIndex; id.lt(endingIndex); id = id.add(1)) {
-      results.push({
-        id,
-        receipt,
-        data: () => this.erc721.get(id),
+  to = buildTransactionFunction(
+    async (
+      destinationAddress: string,
+      quantity: BigNumberish,
+      options?: ClaimOptions,
+    ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
+      // TODO: Transaction Sequence Pattern
+      const tx = (await this.getClaimTransaction(
+        destinationAddress,
+        quantity,
+        options,
+      )) as any as Transaction<TransactionResultWithId<NFT>[]>;
+      tx.setParse((receipt) => {
+        const event = this.contractWrapper.parseLogs<TokensClaimedEvent>(
+          "TokensClaimed",
+          receipt?.logs,
+        );
+        const startingIndex: BigNumber = event[0].args.startTokenId;
+        const endingIndex = startingIndex.add(quantity);
+        const results: TransactionResultWithId<NFT>[] = [];
+        for (let id = startingIndex; id.lt(endingIndex); id = id.add(1)) {
+          results.push({
+            id,
+            receipt,
+            data: () => this.erc721.get(id),
+          });
+        }
+        return results;
       });
-    }
-    return results;
-  }
+      return tx;
+    },
+  );
 }

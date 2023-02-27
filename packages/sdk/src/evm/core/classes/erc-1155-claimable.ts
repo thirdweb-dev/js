@@ -1,10 +1,10 @@
 import { calculateClaimCost } from "../../common/claim-conditions";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_CLAIM_CUSTOM } from "../../constants/erc1155-features";
 import { ClaimOptions } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { TransactionResult } from "../types";
-import { TransactionTask } from "./TransactionTask";
 import { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
 import type { IClaimableERC1155 } from "@thirdweb-dev/contracts-js";
 import { BigNumberish, CallOverrides } from "ethers";
 
@@ -33,13 +33,15 @@ export class ERC1155Claimable implements DetectableFeature {
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
    * @param options - Options for claiming the NFTs
+   *
+   * @deprecated Use `contract.erc1155.claim.prepare(...args)` instead
    */
   public async getClaimTransaction(
     destinationAddress: string,
     tokenId: BigNumberish,
     quantity: BigNumberish,
     options?: ClaimOptions,
-  ): Promise<TransactionTask> {
+  ): Promise<Transaction> {
     let overrides: CallOverrides = {};
     if (options && options.pricePerToken) {
       overrides = await calculateClaimCost(
@@ -50,9 +52,9 @@ export class ERC1155Claimable implements DetectableFeature {
         options.checkERC20Allowance,
       );
     }
-    return TransactionTask.make({
+    return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
-      functionName: "claim",
+      method: "claim",
       args: [destinationAddress, tokenId, quantity],
       overrides,
     });
@@ -80,18 +82,19 @@ export class ERC1155Claimable implements DetectableFeature {
    *
    * @returns - Receipt for the transaction
    */
-  public async to(
-    destinationAddress: string,
-    tokenId: BigNumberish,
-    quantity: BigNumberish,
-    options?: ClaimOptions,
-  ): Promise<TransactionResult> {
-    const tx = await this.getClaimTransaction(
-      destinationAddress,
-      tokenId,
-      quantity,
-      options,
-    );
-    return await tx.execute();
-  }
+  to = buildTransactionFunction(
+    async (
+      destinationAddress: string,
+      tokenId: BigNumberish,
+      quantity: BigNumberish,
+      options?: ClaimOptions,
+    ) => {
+      return await this.getClaimTransaction(
+        destinationAddress,
+        tokenId,
+        quantity,
+        options,
+      );
+    },
+  );
 }

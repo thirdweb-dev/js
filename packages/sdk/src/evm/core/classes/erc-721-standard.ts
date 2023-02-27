@@ -1,10 +1,12 @@
 import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
+import { buildTransactionFunction } from "../../common/transactions";
 import { BaseERC721 } from "../../types/eips";
 import { UpdateableNetwork } from "../interfaces/contract";
-import { NetworkInput, TransactionResult } from "../types";
+import { NetworkInput } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc721 } from "./erc-721";
+import { Transaction } from "./transactions";
 import type {
   DropERC721,
   SignatureDrop,
@@ -180,12 +182,11 @@ export class StandardErc721<
    * await contract.transfer(walletAddress, tokenId);
    * ```
    */
-  public async transfer(
-    to: string,
-    tokenId: BigNumberish,
-  ): Promise<TransactionResult> {
-    return this.erc721.transfer(to, tokenId);
-  }
+  transfer = buildTransactionFunction(
+    async (to: string, tokenId: BigNumberish): Promise<Transaction> => {
+      return this.erc721.transfer.prepare(to, tokenId);
+    },
+  );
 
   /**
    * Approve or remove operator as an operator for the caller. Operators can call transferFrom or safeTransferFrom for any token owned by the caller.
@@ -194,12 +195,11 @@ export class StandardErc721<
    *
    * @internal
    */
-  public async setApprovalForAll(
-    operator: string,
-    approved: boolean,
-  ): Promise<TransactionResult> {
-    return this.erc721.setApprovalForAll(operator, approved);
-  }
+  setApprovalForAll = buildTransactionFunction(
+    async (operator: string, approved: boolean): Promise<Transaction> => {
+      return this.erc721.setApprovalForAll.prepare(operator, approved);
+    },
+  );
 
   /**
    * Approve an operator for the NFT owner. Operators can call transferFrom or safeTransferFrom for the specified token.
@@ -208,15 +208,13 @@ export class StandardErc721<
    *
    * @internal
    */
-  public async setApprovalForToken(
-    operator: string,
-    tokenId: BigNumberish,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("approve", [
-        operator,
-        tokenId,
-      ]),
-    };
-  }
+  setApprovalForToken = buildTransactionFunction(
+    async (operator: string, tokenId: BigNumberish): Promise<Transaction> => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "approve",
+        args: [operator, tokenId],
+      });
+    },
+  );
 }
