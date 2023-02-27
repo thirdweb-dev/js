@@ -160,6 +160,7 @@ export function ThirdwebWalletProvider(
       if (Wallet.id === "walletConnectV1") {
         return new (Wallet as WalletConnectV1WalletType)({
           ...walletOptions,
+          qrcode: false
         });
       }
 

@@ -24,7 +24,7 @@ export class EmailWallet extends AbstractBrowserWallet<
   }
 
   protected async getConnector(): Promise<TWConnector> {
-    if (!this.#connector) {
+    if (!this.connector) {
       const { EmailWalletConnector } = await import("../connectors/email");
       this.connector = new EmailWalletConnector({
         clientId: this.options.clientId,
