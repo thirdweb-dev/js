@@ -110,7 +110,7 @@ export class Erc1155<
   ////// Standard ERC1155 functions //////
 
   /**
-   * Get a single NFT Metadata
+   * Get a single NFT
    *
    * @example
    * ```javascript
@@ -156,7 +156,7 @@ export class Erc1155<
   }
 
   /**
-   * Get NFT balance
+   * Get NFT balance of a specific wallet
    *
    * @remarks Get a wallets NFT balance (number of NFTs in this contract owned by the wallet).
    *
@@ -952,7 +952,7 @@ export class Erc1155<
    * const claimConditions = [
    *   {
    *     startTime: presaleStartTime, // start the presale now
-   *     maxQuantity: 2, // limit how many mints for this presale
+   *     maxClaimableSupply: 2, // limit how many mints for this presale
    *     price: 0.01, // presale price
    *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
    *   },

@@ -60,7 +60,7 @@ export class StandardErc1155<
   ////// Standard ERC1155 functions //////
 
   /**
-   * Get a single NFT Metadata
+   * Get a single NFT
    *
    * @example
    * ```javascript

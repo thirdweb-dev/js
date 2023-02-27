@@ -113,7 +113,7 @@ export class Erc721<
   ////// Standard ERC721 Extension //////
 
   /**
-   * Get a single NFT Metadata
+   * Get a single NFT
    *
    * @example
    * ```javascript
@@ -269,7 +269,7 @@ export class Erc721<
    * ```
    * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs queried.
-   * @twfeature ERC721Supply
+   * @twfeature ERC721Supply | ERC721Enumerable
    */
   public async getAll(queryParams?: QueryAllParams) {
     return assertEnabled(this.query, FEATURE_NFT_SUPPLY).all(queryParams);
@@ -283,7 +283,7 @@ export class Erc721<
    * console.log(owners);
    * ```
    * @returns an array of token ids and owners
-   * @twfeature ERC721Supply
+   * @twfeature ERC721Supply | ERC721Enumerable
    */
   public async getAllOwners() {
     return assertEnabled(this.query, FEATURE_NFT_SUPPLY).allOwners();
@@ -307,7 +307,7 @@ export class Erc721<
 
   /**
    * Get the total count NFTs minted in this contract
-   * @twfeature ERC721Supply
+   * @twfeature ERC721Supply | ERC721Enumerable
    */
   public async totalCirculatingSupply() {
     return assertEnabled(
@@ -740,7 +740,7 @@ export class Erc721<
    * const claimConditions = [
    *   {
    *     startTime: presaleStartTime, // start the presale now
-   *     maxQuantity: 2, // limit how many mints for this presale
+   *     maxClaimableSupply: 2, // limit how many mints for this presale
    *     price: 0.01, // presale price
    *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
    *   },

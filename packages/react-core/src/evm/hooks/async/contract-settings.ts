@@ -56,7 +56,7 @@ export function usePrimarySaleRecipient(
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract({{contract_address}});
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: updatePrimarySalesRecipient,
  *     isLoading,
@@ -150,7 +150,7 @@ export function useRoyaltySettings(
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract({{contract_address}});
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: updateRoyaltySettings,
  *     isLoading,
@@ -247,7 +247,7 @@ export function usePlatformFees(
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract({{contract_address}});
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: updatePlatformFees,
  *     isLoading,
@@ -340,7 +340,7 @@ export function useMetadata(contract: RequiredParam<ValidContractInstance>) {
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract({{contract_address}});
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: updateMetadata,
  *     isLoading,
@@ -366,7 +366,6 @@ export function useMetadata(contract: RequiredParam<ValidContractInstance>) {
  * ```
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to update the metadata
- * @twfeature ContractMetadata
  * @beta
  */
 export function useUpdateMetadata(

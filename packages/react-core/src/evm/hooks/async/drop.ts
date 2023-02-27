@@ -182,7 +182,7 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract({{contract_address}});
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: claimNFT,
  *     isLoading,
@@ -270,7 +270,7 @@ export function useClaimNFT<TContract extends DropContract>(
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract({{contract_address}});
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: lazyMint,
  *     isLoading,
@@ -342,7 +342,7 @@ export function useLazyMint<TContract extends DropContract>(
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract({{contract_address}});
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: delayedRevealLazyMint,
  *     isLoading,
@@ -423,7 +423,7 @@ export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract({{contract_address}});
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: revealLazyMint,
  *     isLoading,
