@@ -26,7 +26,6 @@ export * from "./enums";
 export * from "./common";
 export * from "./constants";
 export * from "./contracts";
-export * from "./functions";
 
 // export integration things
 export * from "./integrations/thirdweb-checkout";
@@ -46,3 +45,7 @@ export type { Token } from "./contracts/prebuilt-implementations/token";
 export type { TokenDrop } from "./contracts/prebuilt-implementations/token-drop";
 export type { Vote } from "./contracts/prebuilt-implementations/vote";
 export type { SmartContract } from "./contracts/smart-contract";
+
+// Explicitly export all functions and types that we want from /functions
+export * from "./functions/getContract";
+export * from "./functions/getContractFromAbi";
