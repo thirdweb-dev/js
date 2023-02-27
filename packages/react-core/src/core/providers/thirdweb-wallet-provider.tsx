@@ -6,7 +6,7 @@ import {
   MetaMaskWalletType,
   SupportedWallet,
   WalletConnectWalletType,
-  WalletConnectV1WalletType
+  WalletConnectV1WalletType,
 } from "../types/wallet";
 import { transformChainToMinimalWagmiChain } from "../utils";
 import { ThirdwebThemeContext } from "./theme-context";
@@ -54,6 +54,7 @@ type ThirdwebWalletContextData = {
   createWalletStorage: CreateAsyncStorage;
   switchChain: (chain: number) => Promise<void>;
   activeChainId?: number;
+  chainIdToConnect?: number;
   handleWalletConnect: (walletId: InstanceType<SupportedWallet>) => void;
   displayUri?: string;
 };
@@ -94,6 +95,9 @@ export function ThirdwebWalletProvider(
   if (!deviceWalletStorage) {
     deviceWalletStorage = props.createWalletStorage("deviceWallet");
   }
+
+  // connect to this chain when wallet is connected
+  const chainIdToConnect = props.activeChain.chainId;
 
   const theme = useContext(ThirdwebThemeContext);
 
@@ -150,9 +154,6 @@ export function ThirdwebWalletProvider(
         return new (Wallet as WalletConnectWalletType)({
           ...walletOptions,
           projectId: TW_WC_PROJECT_ID,
-          // TODO - move this to class itself - use wrapper wallet classes
-          // true for react, false for react-native
-          qrcode: typeof document !== "undefined",
         });
       }
 
@@ -160,7 +161,6 @@ export function ThirdwebWalletProvider(
       if (Wallet.id === "walletConnectV1") {
         return new (Wallet as WalletConnectV1WalletType)({
           ...walletOptions,
-          qrcode: false
         });
       }
 
@@ -241,7 +241,7 @@ export function ThirdwebWalletProvider(
       // Device wallet
       if (Wallet.id === "deviceWallet") {
         const _connectedParams = {
-          chainId: props.activeChain.chainId,
+          chainId: chainIdToConnect,
           ...(connectParams as WalletConnectParams<DeviceWalletType>),
         };
 
@@ -262,7 +262,7 @@ export function ThirdwebWalletProvider(
       // Metamask
       else if (Wallet.id === "metamask") {
         const _connectedParams = {
-          chainId: props.activeChain.chainId,
+          chainId: chainIdToConnect,
           ...(connectParams as WalletConnectParams<MetaMaskWalletType>),
         };
 
@@ -282,7 +282,7 @@ export function ThirdwebWalletProvider(
       // Coinbase
       else if (Wallet.id === "coinbaseWallet") {
         const _connectedParams = {
-          chainId: props.activeChain.chainId,
+          chainId: chainIdToConnect,
           ...(connectParams as WalletConnectParams<CoinbaseWalletType>),
         };
 
@@ -302,7 +302,7 @@ export function ThirdwebWalletProvider(
       // WalletConnect v2
       else if (Wallet.id === "walletConnect") {
         const _connectedParams = {
-          chainId: props.activeChain.chainId,
+          chainId: chainIdToConnect,
           ...(connectParams as WalletConnectParams<WalletConnectWalletType>),
         };
 
@@ -323,7 +323,7 @@ export function ThirdwebWalletProvider(
       // WalletConnect v1
       else if (Wallet.id === "walletConnectV1") {
         const _connectedParams = {
-          chainId: props.activeChain.chainId,
+          chainId: chainIdToConnect,
           ...(connectParams as WalletConnectParams<WalletConnectWalletType>),
         };
 
@@ -341,7 +341,12 @@ export function ThirdwebWalletProvider(
         }
       }
     },
-    [createWalletInstance, handleWalletConnect, onWCOpenWallet, props.activeChain.chainId],
+    [
+      createWalletInstance,
+      handleWalletConnect,
+      onWCOpenWallet,
+      chainIdToConnect,
+    ],
   );
 
   const disconnectWallet = useCallback(() => {
@@ -368,17 +373,17 @@ export function ThirdwebWalletProvider(
       return;
     }
 
+    const update = async () => {
+      const _signer = await activeWallet.getSigner();
+      const _chainId = await _signer.getChainId();
+      setSigner(_signer);
+      setActiveChainId(_chainId);
+    };
+
     activeWallet.connector?.getProvider().then((provider) => {
       if (!provider) {
         return;
       }
-
-      const update = async () => {
-        const _signer = await activeWallet.getSigner();
-        const _chainId = await _signer.getChainId();
-        setSigner(_signer);
-        setActiveChainId(_chainId);
-      };
 
       // TODO - once the wallet.addListener('change', cb) is working - use that
       provider.on("chainChanged", update);
@@ -410,6 +415,7 @@ export function ThirdwebWalletProvider(
         activeChainId,
         displayUri,
         handleWalletConnect,
+        chainIdToConnect,
       }}
     >
       {props.children}

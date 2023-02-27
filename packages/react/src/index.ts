@@ -2,9 +2,9 @@
 export * from "./evm";
 
 export {
-  MetaMask as MetamaskWallet,
+  MetamaskWallet,
   CoinbaseWallet,
-  DeviceBrowserWallet as DeviceWallet,
+  DeviceWallet,
   WalletConnect,
   WalletConnectV1,
-} from "@thirdweb-dev/wallets";
+} from "./wallet/wallets";

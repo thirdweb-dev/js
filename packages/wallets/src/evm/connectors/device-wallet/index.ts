@@ -4,7 +4,8 @@ import type {
   DeviceWalletImpl,
 } from "../../wallets/device-wallet";
 import type { Chain } from "@thirdweb-dev/chains";
-import { ethers } from "ethers";
+import type { Signer } from "ethers";
+import { providers } from "ethers";
 
 export type DeviceWalletConnectorOptions = {
   chain: Pick<Chain, "chainId" | "rpc">;
@@ -18,8 +19,8 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
   // chainId: number;
   #wallet: DeviceWalletImpl;
 
-  #provider?: ethers.providers.Provider;
-  #signer?: ethers.Signer;
+  #provider?: providers.Provider;
+  #signer?: Signer;
 
   protected shimDisconnectKey = "deviceWallet.shimDisconnect";
 
@@ -79,7 +80,7 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
 
   async getProvider() {
     if (!this.#provider) {
-      this.#provider = new ethers.providers.JsonRpcBatchProvider(
+      this.#provider = new providers.JsonRpcBatchProvider(
         this.options.chain.rpc[0],
       );
     }

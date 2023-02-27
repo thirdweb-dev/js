@@ -1,5 +1,5 @@
-import { ethers } from "ethers";
+import type { Signer } from "ethers";
 
 export interface EVMWallet {
-  getSigner(): Promise<ethers.Signer>;
+  getSigner(): Promise<Signer>;
 }

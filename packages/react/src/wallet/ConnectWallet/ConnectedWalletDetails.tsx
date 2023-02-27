@@ -30,6 +30,7 @@ import {
   useBalance,
   useDisconnect,
   useSupportedChains,
+  MetaMaskWalletType,
 } from "@thirdweb-dev/react-core";
 import { useMemo, useState } from "react";
 
@@ -63,6 +64,19 @@ export const ConnectedWalletDetails = () => {
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
   const [open, setOpen] = useState(false);
 
+  // can not switch network if
+  // * no wallet is connected
+  // * wallet is walletConnectV1, walletConnectV2, or deviceWallet
+  // * wallet is metamask and but it is using the walletConnectConnector under the hood
+  const disableNetworkSwitching =
+    !activeWallet ||
+    activeWallet.walletId === "walletConnectV1" ||
+    activeWallet.walletId === "walletConnectV2" ||
+    activeWallet.walletId === "deviceWallet" ||
+    (activeWallet.walletId === "metamask" &&
+      !!(activeWallet as InstanceType<MetaMaskWalletType>)
+        .walletConnectConnector);
+
   return (
     <>
       {showNetworkSelector && (
@@ -73,6 +87,7 @@ export const ConnectedWalletDetails = () => {
       )}
 
       <DropdownMenu.Root open={open} onOpenChange={setOpen}>
+        {/* Trigger */}
         <DropdownMenu.Trigger asChild>
           <WalletInfoButton type="button">
             <ChainIcon chain={chain} size={iconSize.lg} />
@@ -97,6 +112,7 @@ export const ConnectedWalletDetails = () => {
 
         <DropdownMenu.Portal>
           <DropdownMenuContent side="bottom" align="end" sideOffset={10}>
+            {/* Balance and Account Address */}
             <DropdownMenuItem>
               <div
                 style={{
@@ -140,8 +156,7 @@ export const ConnectedWalletDetails = () => {
 
             <Spacer y="xl" />
 
-            {/* Network Selector */}
-
+            {/* Network Switcher */}
             <DropdownMenuItem>
               <PrimaryLabel htmlFor="current-network">
                 Current Network
@@ -150,6 +165,7 @@ export const ConnectedWalletDetails = () => {
               <MenuButton
                 id="current-network"
                 type="button"
+                disabled={disableNetworkSwitching}
                 onClick={() => {
                   setShowNetworkSelector(true);
                 }}
@@ -277,9 +293,16 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   color: ${(props) => props.theme.text.neutral};
   gap: ${spacing.sm};
 
-  &:hover {
+  &:not([disabled]):hover {
     transition: background 150ms ease;
     background: ${(props) => props.theme.bg.elevated};
+  }
+
+  &[disabled] {
+    cursor: not-allowed;
+    svg {
+      display: none;
+    }
   }
 `;
 

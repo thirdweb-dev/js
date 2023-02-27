@@ -1,120 +1,106 @@
-import type WalletConnectProvider from '@walletconnect/legacy-provider';
+import type { WalletConnectV1Connector } from "../connectors/wallet-connect-v1";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
-import { ConnectorData } from '@wagmi/core';
-import type { WalletConnectV1Connector } from "../connectors/wallet-connect-v1";
+import { ConnectorData } from "@wagmi/core";
+import type WalletConnectProvider from "@walletconnect/legacy-provider";
 
 export type WalletConnectV1Options = {
-    qrcode: boolean
-} & ConstructorParameters<
-    typeof WalletConnectProvider
->[0]
+  qrcode?: boolean;
+} & ConstructorParameters<typeof WalletConnectProvider>[0];
 
 export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Options> {
-    #walletConnectConnector?: WalletConnectV1Connector;
-    #provider?: WalletConnectProvider;
+  #walletConnectConnector?: WalletConnectV1Connector;
+  #provider?: WalletConnectProvider;
 
-    connector?: TWConnector;
+  connector?: TWConnector;
 
-    static id = "walletConnectV1" as const;
+  static id = "walletConnectV1" as const;
 
-    public get walletName() {
-        return "WalletConnect" as const;
+  public get walletName() {
+    return "WalletConnect" as const;
+  }
+
+  constructor(options: WalletOptions<WalletConnectV1Options>) {
+    super(WalletConnectV1.id, options);
+  }
+
+  protected async getConnector(): Promise<TWConnector> {
+    if (!this.connector) {
+      // import the connector dynamically
+      const { WalletConnectV1Connector } = await import(
+        "../connectors/wallet-connect-v1"
+      );
+      this.#walletConnectConnector = new WalletConnectV1Connector({
+        chains: this.chains,
+        options: {
+          qrcode: this.options.qrcode,
+          clientMeta: {
+            description: this.options.dappMetadata.description || "",
+            url: this.options.dappMetadata.url,
+            icons: [this.options.dappMetadata.logoUrl || ""],
+            name: this.options.dappMetadata.name,
+          },
+        },
+      });
+      this.connector = new WagmiAdapter(this.#walletConnectConnector);
+      this.#provider = await this.#walletConnectConnector.getProvider();
+      this.#setupListeners();
     }
+    return this.connector;
+  }
 
-    constructor(options: WalletOptions<WalletConnectV1Options>) {
-        super(WalletConnectV1.id, options);
+  #onConnect = async (data: ConnectorData<WalletConnectProvider>) => {
+    this.#provider = data.provider;
+    if (!this.#provider) {
+      throw new Error("WalletConnect provider not found after connecting.");
     }
+  };
 
-    protected async getConnector(): Promise<TWConnector> {
-        console.log('wcv1.getConnector')
-        if (!this.connector) {
-            // import the connector dynamically
-            const { WalletConnectV1Connector } = await import(
-                "../connectors/wallet-connect-v1"
-            );
-            console.log('create walletConnectConnectorV1')
-            this.#walletConnectConnector = new WalletConnectV1Connector({
-                chains: this.chains,
-                options: {
-                    qrcode: this.options.qrcode,
-                    clientMeta: {
-                        description: this.options.dappMetadata.description || '',
-                        url: this.options.dappMetadata.url,
-                        icons: [this.options.dappMetadata.logoUrl || ''],
-                        name: this.options.dappMetadata.name
-                    },
-                },
-            });
-            console.log('after created V1', this.#walletConnectConnector.connect)
-            this.connector = new WagmiAdapter(this.#walletConnectConnector);
-            console.log('after wagmi adapter created V1')
-            this.#provider = await this.#walletConnectConnector.getProvider();
-            console.log('after this.provider v1')
-            console.log('after this.provider v1.accounts', JSON.stringify(this.#provider.accounts))
+  #onDisconnect = async () => {
+    this.#removeListeners();
+  };
 
-            this.#setupListeners();
-        }
-        return this.connector;
+  #onChange = async (payload: any) => {
+    if (payload.chain) {
+      // chain changed
+    } else if (payload.account) {
+      //account change
     }
+  };
 
-    #onConnect = async (data: ConnectorData<WalletConnectProvider>) => {
-        console.log('wcv1.onConnect')
-
-        this.#provider = data.provider;
-        if (!this.#provider) {
-            throw new Error('WalletConnect provider not found after connecting.');
-        }
+  #onMessage = async (payload: any) => {
+    switch (payload.type) {
+      case "request":
+        // open wallet after request is sent
+        this.emit("open_wallet");
+        break;
+      case "display_uri":
+        this.emit("open_wallet", payload.data);
+        break;
     }
+  };
 
-    #onDisconnect = async () => {
-        console.log('walletConnectV1 onDisconnect')
-        this.#removeListeners();
+  #setupListeners() {
+    if (!this.#walletConnectConnector) {
+      return;
     }
+    this.#removeListeners();
+    this.#walletConnectConnector.on("connect", this.#onConnect);
+    this.#walletConnectConnector.on("disconnect", this.#onDisconnect);
+    this.#walletConnectConnector.on("change", this.#onChange);
+    this.#walletConnectConnector.on("message", this.#onMessage);
+  }
 
-    #onChange = async (payload: any) => {
-        console.log('walletConnectV1 onChange', payload)
-        if (payload.chain) {
-            // chain changed
-        } else if (payload.account) {
-            //account change
-        }
+  #removeListeners() {
+    if (!this.#walletConnectConnector) {
+      return;
     }
-
-    #onMessage = async (payload: any) => {
-        console.log('walletConnectV1.onMessage', payload)
-        switch (payload.type) {
-            case 'request':
-                console.log('V1onMessage.emit open_wallet');
-                // open wallet after request is sent
-                this.emit('open_wallet');
-                break;
-            case 'display_uri':
-                this.emit('open_wallet', payload.data);
-                break;
-        }
-    }
-
-    #setupListeners() {
-        console.log('wcv1.setupListeners')
-        if (!this.#walletConnectConnector) {
-            return;
-        }
-        this.#removeListeners();
-        console.log('walletConnectV1.settingupListeners in wc wallet', this.#provider === undefined)
-        this.#walletConnectConnector.on('connect', this.#onConnect);
-        this.#walletConnectConnector.on('disconnect', this.#onDisconnect);
-        this.#walletConnectConnector.on('change', this.#onChange);
-        this.#walletConnectConnector.on('message', this.#onMessage);
-    }
-
-    #removeListeners() {
-        if (!this.#walletConnectConnector) {
-            return;
-        }
-        this.#walletConnectConnector.removeListener('connect', this.#onConnect);
-        this.#walletConnectConnector.removeListener('disconnect', this.#onDisconnect);
-        this.#walletConnectConnector.removeListener('change', this.#onChange);
-        this.#walletConnectConnector.removeListener('message', this.#onMessage);
-    }
+    this.#walletConnectConnector.removeListener("connect", this.#onConnect);
+    this.#walletConnectConnector.removeListener(
+      "disconnect",
+      this.#onDisconnect,
+    );
+    this.#walletConnectConnector.removeListener("change", this.#onChange);
+    this.#walletConnectConnector.removeListener("message", this.#onMessage);
+  }
 }

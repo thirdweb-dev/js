@@ -11,7 +11,7 @@ import {
   normalizeChainId,
   UserRejectedRequestError,
 } from "@wagmi/core";
-import { getAddress } from "ethers/lib/utils.js";
+import { utils } from "ethers";
 import { Magic } from "magic-sdk";
 
 interface MagicConnectOptions extends MagicOptions {
@@ -105,7 +105,7 @@ export class MagicConnectConnector extends MagicConnector {
           );
 
           return {
-            account: getAddress(account),
+            account: utils.getAddress(account),
             chain: {
               id: chainId_,
               unsupported: false,

@@ -1,5 +1,6 @@
 import { Modal } from "../../components/Modal";
 import { Spacer } from "../../components/Spacer";
+import { Spinner } from "../../components/Spinner";
 import { Button } from "../../components/buttons";
 import {
   fontSize,
@@ -16,6 +17,8 @@ import { WalletConnectIcon } from "./icons/WalletConnectIcon";
 import { CoinbaseWalletSetup } from "./setup-ui/CoinbaseWaletSetup";
 import { ConnectToDeviceWallet } from "./setup-ui/DeviceWalletSetup";
 import { MetamaskWalletSetup } from "./setup-ui/MetamaskWalletSetup";
+import { ScanMetamask } from "./setup-ui/scanMetamask";
+import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as Dialog from "@radix-ui/react-dialog";
 import {
@@ -23,7 +26,7 @@ import {
   useConnectingToWallet,
   useWallets,
 } from "@thirdweb-dev/react-core";
-import { SupportedWallet } from "@thirdweb-dev/react-core/src/core/types/wallet";
+import { SupportedWallet } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 
 const walletConnectIcon = (
@@ -44,7 +47,7 @@ const walletNames: Record<SupportedWallet["id"], string> = {
   metamask: "Metamask",
   deviceWallet: "Device Wallet",
   coinbaseWallet: "Coinbase Wallet",
-  walletConnect: "Wallet Connect",
+  walletConnect: "Wallet Connect V2",
   walletConnectV1: "Wallet Connect V1",
 };
 
@@ -59,6 +62,7 @@ export const ConnectWalletFlow = () => {
     | "installWalletConnect"
     | "walletConnect"
     | "walletConnectV1"
+    | "scanMetamask"
   >("walletList");
 
   const connect = useConnect();
@@ -90,11 +94,9 @@ export const ConnectWalletFlow = () => {
         return;
       }
 
-      // if metamask is not installed, open the metamask download page
+      // if metamask is not installed
       if (wallet.id === "metamask" && !installedWallets.metamask) {
-        // open metamask extension page in new tab
-        // TEMPORARY
-        window.open("https://metamask.io/download/", "_blank");
+        setShowUI("scanMetamask");
         return;
       }
 
@@ -106,21 +108,15 @@ export const ConnectWalletFlow = () => {
         return;
       }
 
-      // if wallet connect is not installed, open the wallet connect install page
-      if (wallet.id === "walletConnect" && !installedWallets.walletConnect) {
-        setShowUI("installWalletConnect");
-        connect(wallet, {});
-        setOpen(false);
-        return;
-      }
-
       connect(wallet, {});
-      setShowUI(wallet.id);
+      setOpen(false);
     },
     installed: installedWallets[wallet.id],
   }));
 
   const handleBack = () => setShowUI("walletList");
+
+  const theme = useTheme() as Theme;
 
   return (
     <Modal
@@ -130,8 +126,18 @@ export const ConnectWalletFlow = () => {
       open={open}
       setOpen={setOpen}
       trigger={
-        <Button variant="inverted" type="button">
-          Connect Wallet
+        <Button
+          variant="inverted"
+          type="button"
+          style={{
+            minWidth: "140px",
+          }}
+        >
+          {connectingToWallet ? (
+            <Spinner size="md" color={theme.text.inverted} />
+          ) : (
+            "Connect Wallet"
+          )}
         </Button>
       }
     >
@@ -142,18 +148,18 @@ export const ConnectWalletFlow = () => {
           <Spacer y="xl" />
 
           <WalletList>
-            {walletsMeta.map((Wallet) => {
+            {walletsMeta.map((WalletMeta) => {
               return (
-                <li key={Wallet.id}>
+                <li key={WalletMeta.id}>
                   <WalletButton
                     type="button"
                     onClick={() => {
-                      Wallet.onClick();
+                      WalletMeta.onClick();
                     }}
                   >
-                    {Wallet.icon}
-                    <WalletName>{Wallet.name}</WalletName>
-                    {Wallet.installed && (
+                    {WalletMeta.icon}
+                    <WalletName>{WalletMeta.name}</WalletName>
+                    {WalletMeta.installed && (
                       <InstallBadge> Installed </InstallBadge>
                     )}
                   </WalletButton>
@@ -170,6 +176,8 @@ export const ConnectWalletFlow = () => {
       {showUI === "deviceWallet" && (
         <ConnectToDeviceWallet onBack={handleBack} />
       )}
+
+      {showUI === "scanMetamask" && <ScanMetamask onBack={handleBack} />}
 
       {showUI === "coinbaseWallet" && (
         <CoinbaseWalletSetup onBack={handleBack} />

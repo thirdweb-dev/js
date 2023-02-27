@@ -1,5 +1,5 @@
 import { Connector } from "@wagmi/core";
-import { ethers } from "ethers";
+import type { Signer, providers } from "ethers";
 import EventEmitter from "eventemitter3";
 
 export abstract class TWConnector<
@@ -8,8 +8,8 @@ export abstract class TWConnector<
   abstract connect(args?: ConnectParams<TConnectParams>): Promise<string>;
   abstract disconnect(): Promise<void>;
   abstract getAddress(): Promise<string>;
-  abstract getSigner(): Promise<ethers.Signer>;
-  abstract getProvider(): Promise<ethers.providers.Provider>;
+  abstract getSigner(): Promise<Signer>;
+  abstract getProvider(): Promise<providers.Provider>;
   abstract switchChain(chainId: number): Promise<void>;
   abstract isConnected(): Promise<boolean>;
 }
@@ -30,10 +30,22 @@ export class WagmiAdapter<
 
   async connect(args?: ConnectParams<TConnectParams>): Promise<string> {
     const chainId = args?.chainId;
+
+    this.wagmiConnector.addListener("connect", (data) => {
+      this.emit("connect", data);
+    });
+
+    this.wagmiConnector.addListener("change", (data) => {
+      this.emit("change", data);
+    });
+
     const result = await this.wagmiConnector.connect({ chainId });
     return result.account;
   }
   disconnect(): Promise<void> {
+    this.wagmiConnector.removeAllListeners("connect");
+    this.wagmiConnector.removeAllListeners("change");
+
     return this.wagmiConnector.disconnect();
   }
   isConnected(): Promise<boolean> {
@@ -42,10 +54,10 @@ export class WagmiAdapter<
   getAddress(): Promise<string> {
     return this.wagmiConnector.getAccount();
   }
-  getSigner(): Promise<ethers.Signer> {
+  getSigner(): Promise<Signer> {
     return this.wagmiConnector.getSigner();
   }
-  getProvider(): Promise<ethers.providers.Provider> {
+  getProvider(): Promise<providers.Provider> {
     return this.wagmiConnector.getProvider();
   }
   async switchChain(chainId: number): Promise<void> {

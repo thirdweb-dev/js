@@ -19,3 +19,6 @@ export * from "./wallets/metamask";
 export * from "./wallets/private-key";
 export * from "./wallets/wallet-connect";
 export * from "./wallets/wallet-connect-v1";
+export type { MetamaskWalletOptions } from "./wallets/metamask";
+export type { WalletConnectV1Options } from "./wallets/wallet-connect-v1";
+export type { WalletConnectOptions } from "./wallets/wallet-connect";

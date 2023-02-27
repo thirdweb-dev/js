@@ -4,8 +4,7 @@ import { OAuthExtension, OAuthProvider } from "@magic-ext/oauth";
 import { InstanceWithExtensions, SDKBase } from "@magic-sdk/provider";
 import { RPCProviderModule } from "@magic-sdk/provider/dist/types/modules/rpc-provider";
 import { Chain, Connector, normalizeChainId } from "@wagmi/core";
-import { providers, Signer } from "ethers";
-import { getAddress } from "ethers/lib/utils";
+import { providers, Signer, utils } from "ethers";
 import type { AbstractProvider } from "web3-core";
 
 const IS_SERVER = typeof window === "undefined";
@@ -50,7 +49,7 @@ export abstract class MagicConnector extends Connector<
     );
     const signer = provider.getSigner();
     const account = await signer.getAddress();
-    return getAddress(account);
+    return utils.getAddress(account);
   }
 
   async getUserDetailsByForm(
@@ -101,7 +100,7 @@ export abstract class MagicConnector extends Connector<
     if (accounts.length === 0) {
       this.emit("disconnect");
     } else {
-      this.emit("change", { account: getAddress(accounts[0]) });
+      this.emit("change", { account: utils.getAddress(accounts[0]) });
     }
   }
 

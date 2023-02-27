@@ -1,7 +1,8 @@
 import { Ecosystem, GenericAuthWallet } from "../../core";
 import { SUPPORTED_CHAIN_ID, supportedChains } from "../constants/chains";
 import { EVMWallet } from "../interfaces";
-import { ethers } from "ethers";
+import type { Signer } from "ethers";
+import { providers, Contract, utils } from "ethers";
 import EventEmitter from "eventemitter3";
 
 export type WalletData = {
@@ -36,11 +37,11 @@ export const checkContractWalletSignature = async (
     return false;
   }
 
-  const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
-  const walletContract = new ethers.Contract(address, EIP1271_ABI, provider);
-  const hashMessage = ethers.utils.hashMessage(message);
+  const provider = new providers.JsonRpcProvider(rpcUrl);
+  const walletContract = new Contract(address, EIP1271_ABI, provider);
+  const _hashMessage = utils.hashMessage(message);
   try {
-    const res = await walletContract.isValidSignature(hashMessage, signature);
+    const res = await walletContract.isValidSignature(_hashMessage, signature);
     return res === EIP1271_MAGICVALUE;
   } catch {
     return false;
@@ -49,39 +50,50 @@ export const checkContractWalletSignature = async (
 
 export abstract class AbstractWallet
   extends EventEmitter<WalletEvents>
-  implements GenericAuthWallet, EVMWallet {
+  implements GenericAuthWallet, EVMWallet
+{
   public type: Ecosystem = "evm";
-  protected signer: ethers.Signer | undefined;
+  protected signer: Signer | undefined;
 
-  public abstract getSigner(): Promise<ethers.Signer>;
+  public abstract getSigner(): Promise<Signer>;
 
+  /**
+   * @returns the account address from connected wallet
+   */
   public async getAddress(): Promise<string> {
     const signer = await this.getCachedSigner();
     return signer.getAddress();
   }
 
+  /**
+   * @returns the chain id from connected wallet
+   */
   public async getChainId(): Promise<number> {
     const signer = await this.getCachedSigner();
     return signer.getChainId();
   }
 
+  /**
+   * @returns the signature of the message
+   */
   public async signMessage(message: string): Promise<string> {
     const signer = await this.getCachedSigner();
     return await signer.signMessage(message);
   }
 
+  /**
+   * verify the signature of a message
+   * @returns `true` if the signature is valid, `false` otherwise
+   */
   public async verifySignature(
     message: string,
     signature: string,
     address: string,
     chainId?: number,
   ): Promise<boolean> {
-    const messageHash = ethers.utils.hashMessage(message);
-    const messageHashBytes = ethers.utils.arrayify(messageHash);
-    const recoveredAddress = ethers.utils.recoverAddress(
-      messageHashBytes,
-      signature,
-    );
+    const messageHash = utils.hashMessage(message);
+    const messageHashBytes = utils.arrayify(messageHash);
+    const recoveredAddress = utils.recoverAddress(messageHashBytes, signature);
 
     if (recoveredAddress === address) {
       return true;
@@ -105,7 +117,7 @@ export abstract class AbstractWallet
     return false;
   }
 
-  public async getCachedSigner(): Promise<ethers.Signer> {
+  public async getCachedSigner(): Promise<Signer> {
     if (!!this.signer) {
       return this.signer;
     }

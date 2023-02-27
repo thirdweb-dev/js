@@ -9,7 +9,7 @@ import {
   PaperEmbeddedWalletSdk,
   UserStatus,
 } from "@paperxyz/embedded-wallet-service-sdk";
-import { ethers, Signer } from "ethers";
+import type { providers, Signer } from "ethers";
 
 export const PaperChainMap: Record<number, Chains> = {
   1: "Ethereum",
@@ -97,7 +97,7 @@ export class EmailWalletConnector extends TWConnector<EmailWalletConnectionArgs>
     }
   }
 
-  async getProvider(): Promise<ethers.providers.Provider> {
+  async getProvider(): Promise<providers.Provider> {
     const signer = await this.getSigner();
     if (!signer.provider) {
       throw new Error("Provider not found");
