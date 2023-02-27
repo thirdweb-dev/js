@@ -227,7 +227,7 @@ function formatSnippet(
       ?.replace(
         /{{chainName}}/gm,
         !chainName || chainName?.startsWith("0x") || chainName?.endsWith(".eth")
-          ? "goerli"
+          ? '"ethereum"'
           : preSupportedSlugs.includes(chainName)
           ? `"${chainName}"`
           : env === "javascript"
