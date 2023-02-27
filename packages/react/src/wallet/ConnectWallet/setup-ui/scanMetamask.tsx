@@ -23,7 +23,10 @@ import { lazy } from "react";
 
 const QrCode = lazy(() => import("react-qr-code"));
 
-export const ScanMetamask: React.FC<{ onBack: () => void }> = (props) => {
+export const ScanMetamask: React.FC<{
+  onBack: () => void;
+  onGetStarted: () => void;
+}> = (props) => {
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | null>(null);
   const twWalletContext = useThirdwebWallet();
@@ -106,9 +109,9 @@ export const ScanMetamask: React.FC<{ onBack: () => void }> = (props) => {
 
         <Spacer y="xl" />
 
-        <HelperLink href="/foo/bar" target="_blank">
+        <LinkButton onClick={props.onGetStarted}>
           Don't have Metamask Wallet?
-        </HelperLink>
+        </LinkButton>
       </div>
     </>
   );
@@ -160,4 +163,11 @@ const StyledSkeleton = styled(Skeleton)`
     width: 150px;
     height: 150px;
   }
+`;
+
+const LinkButton = styled.button<{ theme?: Theme }>`
+  all: unset;
+  color: ${(p) => p.theme.link.primary};
+  font-size: ${fontSize.sm};
+  cursor: pointer;
 `;

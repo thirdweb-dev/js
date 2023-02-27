@@ -16,7 +16,8 @@ import { MetamaskIcon } from "./icons/MetamaskIcon";
 import { WalletConnectIcon } from "./icons/WalletConnectIcon";
 import { CoinbaseWalletSetup } from "./setup-ui/CoinbaseWaletSetup";
 import { ConnectToDeviceWallet } from "./setup-ui/DeviceWalletSetup";
-import { MetamaskWalletSetup } from "./setup-ui/MetamaskWalletSetup";
+import { MetamaskConnecting } from "./setup-ui/MetamaskConnecting";
+import { MetamaskGetStarted } from "./setup-ui/MetamaskGetStarted";
 import { ScanMetamask } from "./setup-ui/scanMetamask";
 import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
@@ -43,6 +44,14 @@ const walletIcons: Record<SupportedWallet["id"], JSX.Element> = {
   walletConnectV1: walletConnectIcon,
 };
 
+type Screen =
+  | "deviceWallet/connect"
+  | "metamask/connecting"
+  | "walletList"
+  | "coinbase/connecting"
+  | "metamask/scan"
+  | "metamask/get-started";
+
 const walletNames: Record<SupportedWallet["id"], string> = {
   metamask: "Metamask",
   deviceWallet: "Device Wallet",
@@ -53,17 +62,7 @@ const walletNames: Record<SupportedWallet["id"], string> = {
 
 export const ConnectWalletFlow = () => {
   const connectingToWallet = useConnectingToWallet();
-  const [showUI, setShowUI] = useState<
-    | "deviceWallet"
-    | "metamask"
-    | "walletList"
-    | "coinbaseWallet"
-    | "installCoinbaseWallet"
-    | "installWalletConnect"
-    | "walletConnect"
-    | "walletConnectV1"
-    | "scanMetamask"
-  >("walletList");
+  const [showScreen, setShowScreen] = useState<Screen>("walletList");
 
   const connect = useConnect();
   const wallets = useWallets();
@@ -73,7 +72,7 @@ export const ConnectWalletFlow = () => {
   // when the dialog is closed, reset the showUI state
   useEffect(() => {
     if (!open) {
-      setShowUI("walletList");
+      setShowScreen("walletList");
     }
   }, [open]);
 
@@ -84,7 +83,7 @@ export const ConnectWalletFlow = () => {
     onClick: async () => {
       // Device Wallet
       if (wallet.id === "deviceWallet") {
-        setShowUI("deviceWallet");
+        setShowScreen("deviceWallet/connect");
         return;
       }
 
@@ -92,13 +91,13 @@ export const ConnectWalletFlow = () => {
       if (wallet.id === "metamask") {
         if (installedWallets.metamask) {
           try {
-            setShowUI("metamask");
+            setShowScreen("metamask/connecting");
             await connect(wallet, {});
           } catch (e) {
-            setShowUI("walletList");
+            setShowScreen("walletList");
           }
         } else {
-          setShowUI("scanMetamask");
+          setShowScreen("metamask/scan");
         }
         return;
       }
@@ -107,10 +106,10 @@ export const ConnectWalletFlow = () => {
       if (wallet.id === "coinbaseWallet") {
         if (installedWallets.coinbaseWallet) {
           try {
-            setShowUI("coinbaseWallet");
+            setShowScreen("coinbase/connecting");
             await connect(wallet, {});
           } catch (e) {
-            setShowUI("walletList");
+            setShowScreen("walletList");
             setOpen(false);
           }
         } else {
@@ -127,7 +126,7 @@ export const ConnectWalletFlow = () => {
     installed: installedWallets[wallet.id],
   }));
 
-  const handleBack = () => setShowUI("walletList");
+  const handleBack = () => setShowScreen("walletList");
 
   const theme = useTheme() as Theme;
 
@@ -154,13 +153,11 @@ export const ConnectWalletFlow = () => {
         </Button>
       }
     >
-      {showUI === "walletList" && (
+      {showScreen === "walletList" && (
         <>
           <DialogTitle>Connect your wallet</DialogTitle>
-
           <Spacer y="xl" />
-
-          <WalletList>
+          <WalletListUl>
             {walletsMeta.map((WalletMeta) => {
               return (
                 <li key={WalletMeta.id}>
@@ -179,20 +176,36 @@ export const ConnectWalletFlow = () => {
                 </li>
               );
             })}
-          </WalletList>
+          </WalletListUl>
         </>
       )}
 
-      {/* Show Connecting UI for various wallets */}
-      {showUI === "metamask" && <MetamaskWalletSetup onBack={handleBack} />}
+      {showScreen === "metamask/get-started" && (
+        <MetamaskGetStarted
+          onBack={() => {
+            setShowScreen("metamask/scan");
+          }}
+        />
+      )}
 
-      {showUI === "deviceWallet" && (
+      {showScreen === "metamask/connecting" && (
+        <MetamaskConnecting onBack={handleBack} />
+      )}
+
+      {showScreen === "deviceWallet/connect" && (
         <ConnectToDeviceWallet onBack={handleBack} />
       )}
 
-      {showUI === "scanMetamask" && <ScanMetamask onBack={handleBack} />}
+      {showScreen === "metamask/scan" && (
+        <ScanMetamask
+          onBack={handleBack}
+          onGetStarted={() => {
+            setShowScreen("metamask/get-started");
+          }}
+        />
+      )}
 
-      {showUI === "coinbaseWallet" && (
+      {showScreen === "coinbase/connecting" && (
         <CoinbaseWalletSetup onBack={handleBack} />
       )}
     </Modal>
@@ -221,12 +234,13 @@ const DialogTitle = styled(Dialog.Title)<{ theme?: Theme }>`
   font-size: ${fontSize.lg};
 `;
 
-const WalletList = styled.ul`
+const WalletListUl = styled.ul`
   all: unset;
   list-style-type: none;
   display: flex;
   flex-direction: column;
   gap: ${spacing.xs};
+  box-sizing: border-box;
 `;
 
 const WalletButton = styled.button<{ theme?: Theme }>`

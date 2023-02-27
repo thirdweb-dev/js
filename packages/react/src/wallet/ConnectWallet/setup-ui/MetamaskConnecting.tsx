@@ -11,9 +11,7 @@ import {
 import styled from "@emotion/styled";
 import { blue } from "@radix-ui/colors";
 
-export const MetamaskWalletSetup: React.FC<{ onBack: () => void }> = (
-  props,
-) => {
+export const MetamaskConnecting: React.FC<{ onBack: () => void }> = (props) => {
   return (
     <>
       <BackButton onClick={props.onBack} />
