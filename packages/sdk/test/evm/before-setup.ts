@@ -32,19 +32,12 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   ContractPublisher,
   ContractPublisher__factory,
-  DropERC1155__factory,
-  DropERC1155_V2__factory,
   DropERC20__factory,
   DropERC20_V2__factory,
-  DropERC721__factory,
-  DropERC721_V3__factory,
   Marketplace__factory,
   MockContractPublisher,
   MockContractPublisher__factory,
   Multiwrap__factory,
-  Pack__factory,
-  SignatureDrop__factory,
-  SignatureDrop_V4__factory,
   Split__factory,
   TokenERC1155__factory,
   TokenERC20__factory,
@@ -66,15 +59,14 @@ import {
   Permissions,
   MetaTx__factory,
   MetaTx,
-  PermissionsEnumerableImpl__factory,
   PermissionsEnumerable,
-  PermissionsEnumerableImpl,
   PlatformFeeImpl__factory,
   PlatformFeeImpl,
   ContractMetadataImpl__factory,
   ContractMetadataImpl,
   ExtensionRegistry,
   ExtensionRegistry__factory,
+  PermissionsEnumerable__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -219,16 +211,19 @@ export const mochaHooks = {
           factories.push(TokenERC721__factory);
           break;
         case NFTDropInitializer.contractType:
-          factories.push(DropERC721_V3__factory, DropERC721__factory);
+          // disabled temporarily -- size issue in dynamic contracts pattern exetnsions
+          // factories.push(DropERC721_V3__factory, DropERC721__factory);
           break;
         case SignatureDropInitializer.contractType:
-          factories.push(SignatureDrop_V4__factory, SignatureDrop__factory);
+          // disabled temporarily -- size issue in dynamic contracts pattern exetnsions
+          // factories.push(SignatureDrop_V4__factory, SignatureDrop__factory);
           break;
         case EditionInitializer.contractType:
           factories.push(TokenERC1155__factory);
           break;
         case EditionDropInitializer.contractType:
-          factories.push(DropERC1155_V2__factory, DropERC1155__factory);
+          // disabled temporarily -- size issue in dynamic contracts pattern exetnsions
+          // factories.push(DropERC1155_V2__factory, DropERC1155__factory);
           break;
         case SplitInitializer.contractType:
           factories.push(Split__factory);
@@ -240,7 +235,8 @@ export const mochaHooks = {
           factories.push(Marketplace__factory);
           break;
         case PackInitializer.contractType:
-          factories.push(Pack__factory);
+          // disabled temporarily -- size issue in dynamic contracts pattern exetnsions
+          // factories.push(Pack__factory);
           break;
         case MultiwrapInitializer.contractType:
           factories.push(Multiwrap__factory);
@@ -395,13 +391,13 @@ async function setupMarketplaceV3(
 
   // PermissionsEnumerable plugin
   const permissionsAddress = await deployContractAndUploadMetadata(
-    PermissionsEnumerableImpl__factory.abi,
-    PermissionsEnumerableImpl__factory.bytecode,
+    PermissionsEnumerable__factory.abi,
+    PermissionsEnumerable__factory.bytecode,
     signer,
   );
   const functionsPermissions: PluginFunction[] = generatePluginFunctions(
     permissionsAddress,
-    PermissionsEnumerableImpl__factory.abi,
+    PermissionsEnumerable__factory.abi,
   );
   const metadataPermissions: PluginMetadata = {
     name: "PermissionsEnumerable",

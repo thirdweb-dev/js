@@ -16,7 +16,8 @@ import invariant from "tiny-invariant";
 
 global.fetch = require("cross-fetch");
 
-describe("Signature drop tests (v5)", async () => {
+// TODO: enable tests (disabled temporarily)
+describe.skip("Signature drop tests (v5)", async () => {
   let signatureDropContract: SignatureDrop;
   let customTokenContract: Token;
   let tokenAddress: string;
