@@ -16,27 +16,27 @@ import { getAddress, hexValue } from 'ethers/lib/utils.js'
  * - Rainbow (rainbow.me)
  * - Trust Wallet (trustwallet.com)
  */
-const switchChainAllowedRegex = /(imtoken|metamask|rainbow|trust wallet)/i
+const switchChainAllowedRegex = /(imtoken|metamask|rainbow|trust wallet)/i;
 
 type WalletConnectOptions = ConstructorParameters<
     typeof WalletConnectProvider
->[0]
+>[0];
 
-type WalletConnectSigner = providers.JsonRpcSigner
+type WalletConnectSigner = providers.JsonRpcSigner;
 
 export class WalletConnectV1Connector extends Connector<
     WalletConnectProvider,
     WalletConnectOptions,
     WalletConnectSigner
 > {
-    readonly id = 'walletConnectV1'
-    readonly name = 'WalletConnectV1'
-    readonly ready = true
+    readonly id = "walletConnectV1";
+    readonly name = "WalletConnectV1";
+    readonly ready = true;
 
-    #provider?: WalletConnectProvider
+    #provider?: WalletConnectProvider;
 
     constructor(config: { chains?: Chain[]; options: WalletConnectOptions }) {
-        super(config)
+        super(config);
     }
 
     async connect({ chainId }: { chainId?: number } = {}) {
@@ -44,9 +44,9 @@ export class WalletConnectV1Connector extends Connector<
             let targetChainId = chainId;
             if (!targetChainId) {
                 console.log('get client on autoconnect')
-                const lastUsedChainId = getClient().lastUsedChainId
+                const lastUsedChainId = getClient().lastUsedChainId;
                 if (lastUsedChainId && !this.isChainUnsupported(lastUsedChainId)) {
-                    targetChainId = lastUsedChainId
+                    targetChainId = lastUsedChainId;
                 }
             }
 
@@ -54,28 +54,28 @@ export class WalletConnectV1Connector extends Connector<
             const provider = await this.getProvider({
                 chainId: targetChainId,
                 create: true,
-            })
-            console.log('wcv1Connector after getProvider')
-            provider.on('accountsChanged', this.onAccountsChanged)
-            provider.on('chainChanged', this.onChainChanged)
-            provider.on('disconnect', this.onDisconnect)
+            });
+            console.log('wcv1Connector after getProvider');
+            provider.on('accountsChanged', this.onAccountsChanged);
+            provider.on('chainChanged', this.onChainChanged);
+            provider.on('disconnect', this.onDisconnect);
             provider.on('message', this.onMessage);
-            provider.connector.on('display_uri', this.onDisplayUri)
+            provider.connector.on('display_uri', this.onDisplayUri);
 
             // Defer message to the next tick to ensure wallet connect data (provided by `.enable()`) is available
-            setTimeout(() => this.emit('message', { type: 'connecting' }), 0)
+            setTimeout(() => this.emit('message', { type: 'connecting' }), 0);
 
-            const accounts = await provider.enable()
+            const accounts = await provider.enable();
             console.log('wcv1Connector after enable', JSON.stringify(accounts))
-            const account = getAddress(accounts[0] as string)
-            const id = await this.getChainId()
-            const unsupported = this.isChainUnsupported(id)
+            const account = getAddress(accounts[0] as string);
+            const id = await this.getChainId();
+            const unsupported = this.isChainUnsupported(id);
 
             // Not all WalletConnect options support programmatic chain switching
             // Only enable for wallet options that do
-            const walletName = provider.connector?.peerMeta?.name ?? ''
+            const walletName = provider.connector?.peerMeta?.name ?? '';
             if (switchChainAllowedRegex.test(walletName)) {
-                this.switchChain = this.#switchChain
+                this.switchChain = this.#switchChain;
             }
 
             return {
@@ -97,9 +97,9 @@ export class WalletConnectV1Connector extends Connector<
         const provider = await this.getProvider()
         await provider.disconnect()
 
-        provider.removeListener('accountsChanged', this.onAccountsChanged)
-        provider.removeListener('chainChanged', this.onChainChanged)
-        provider.removeListener('disconnect', this.onDisconnect)
+        provider.removeListener('accountsChanged', this.onAccountsChanged);
+        provider.removeListener('chainChanged', this.onChainChanged);
+        provider.removeListener('disconnect', this.onDisconnect);
         provider.removeListener('message', this.onMessage);
 
         // typeof localStorage !== 'undefined' &&
@@ -107,10 +107,10 @@ export class WalletConnectV1Connector extends Connector<
     }
 
     async getAccount() {
-        const provider = await this.getProvider()
-        const accounts = provider.accounts
+        const provider = await this.getProvider();
+        const accounts = provider.accounts;
         // return checksum address
-        return getAddress(accounts[0] as string)
+        return getAddress(accounts[0] as string);
     }
 
     async getChainId() {

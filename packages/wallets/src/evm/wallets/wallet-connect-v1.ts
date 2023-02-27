@@ -5,7 +5,7 @@ import { ConnectorData } from '@wagmi/core';
 import type { WalletConnectV1Connector } from "../connectors/wallet-connect-v1";
 
 export type WalletConnectV1Options = {
-    qrcode?: boolean
+    qrcode: boolean
 } & ConstructorParameters<
     typeof WalletConnectProvider
 >[0]
@@ -37,7 +37,7 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
             this.#walletConnectConnector = new WalletConnectV1Connector({
                 chains: this.chains,
                 options: {
-                    qrcode: false,
+                    qrcode: this.options.qrcode,
                     clientMeta: {
                         description: this.options.dappMetadata.description || '',
                         url: this.options.dappMetadata.url,
