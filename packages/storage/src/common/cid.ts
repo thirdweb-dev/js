@@ -1,4 +1,4 @@
-const { importer } = require("ipfs-unixfs-importer");
+import { importer } from "ipfs-unixfs-importer";
 
 type CIDVersion = 0 | 1;
 
@@ -21,7 +21,7 @@ export async function getCID(
 
   let lastCid;
   for await (const { cid } of importer(
-    [{ content }],
+    [{ content }] as any,
     dummyBlockstore as any,
     options,
   )) {
