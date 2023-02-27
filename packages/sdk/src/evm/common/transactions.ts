@@ -19,6 +19,7 @@ import {
 import { signEIP2612Permit } from "./permit";
 import { signTypedDataInternal } from "./sign";
 import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
+import fetch from "cross-fetch";
 import { BigNumber, BytesLike, ethers } from "ethers";
 import invariant from "tiny-invariant";
 

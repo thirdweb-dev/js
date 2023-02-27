@@ -45,11 +45,12 @@ export class Transaction<TResult = TransactionResult> {
       );
     }
 
-    const optionsWithContract = {
+    const optionsWithContract: TransactionOptionsWithContract<TResult> = {
       ...options,
       contract: options.contractWrapper.writeContract,
       provider: options.contractWrapper.getProvider(),
       signer,
+      gasless: options.contractWrapper.options.gasless,
     };
 
     return new Transaction(optionsWithContract);
