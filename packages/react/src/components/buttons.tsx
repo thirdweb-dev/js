@@ -14,6 +14,7 @@ export const Button = styled.button<{
   padding: ${spacing.sm} ${spacing.md};
   font-size: ${fontSize.md};
   font-weight: 500;
+  box-sizing: border-box;
 
   &:focus {
     box-shadow: 0 0 0 3px

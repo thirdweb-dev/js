@@ -116,6 +116,10 @@ export class CoinbaseWalletConnector extends Connector<
     const accounts = await provider.request<Address[]>({
       method: "eth_accounts",
     });
+
+    if (accounts.length === 0) {
+      throw new Error("No accounts found");
+    }
     // return checksum address
     return getAddress(accounts[0] as string);
   }
@@ -297,5 +301,10 @@ export class CoinbaseWalletConnector extends Connector<
 
   #isUserRejectedRequestError(error: unknown) {
     return /(user rejected)/i.test((error as Error).message);
+  }
+
+  async getQrCode() {
+    await this.getProvider();
+    return this.#client!.getQrUrl();
   }
 }

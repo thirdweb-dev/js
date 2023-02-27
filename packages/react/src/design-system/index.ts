@@ -1,4 +1,5 @@
 import { blue, gray, mauveDark, red } from "@radix-ui/colors";
+import { mauve } from "@radix-ui/colors";
 
 export const darkTheme = {
   overlay: {
@@ -12,7 +13,7 @@ export const darkTheme = {
     invertedFocused: mauveDark.mauve7,
   },
   badge: {
-    secondary: mauveDark.mauve7,
+    secondary: mauveDark.mauve6,
   },
   text: {
     neutral: mauveDark.mauve12,
@@ -29,6 +30,7 @@ export const darkTheme = {
   input: {
     bg: mauveDark.mauve3,
     bgHover: mauveDark.mauve5,
+    outline: mauveDark.mauve5,
     focusRing: blue.blue9,
     errorRing: red.red9,
   },
@@ -39,30 +41,31 @@ export const lightTheme: typeof darkTheme = {
     subdued: "rgba(0, 0, 0, 0.4)",
   },
   bg: {
-    base: gray.gray1,
-    elevated: gray.gray4,
-    highlighted: gray.gray7,
-    inverted: gray.gray12,
-    invertedFocused: gray.gray7,
+    base: mauve.mauve1,
+    elevated: mauve.mauve4,
+    highlighted: mauve.mauve6,
+    inverted: mauve.mauve12,
+    invertedFocused: mauve.mauve7,
   },
   badge: {
-    secondary: gray.gray7,
+    secondary: mauve.mauve1,
   },
   text: {
-    neutral: gray.gray12,
-    inverted: gray.gray1,
-    secondary: gray.gray10,
+    neutral: mauve.mauve12,
+    inverted: mauve.mauve1,
+    secondary: mauve.mauve10,
   },
   icon: {
-    secondary: gray.gray10,
-    primary: gray.gray12,
+    secondary: mauve.mauve10,
+    primary: mauve.mauve12,
   },
   link: {
     primary: blue.blue11,
   },
   input: {
-    bg: mauveDark.mauve3,
+    bg: mauve.mauve3,
     bgHover: mauveDark.mauve5,
+    outline: mauve.mauve7,
     focusRing: blue.blue10,
     errorRing: red.red10,
   },
@@ -96,6 +99,7 @@ export const radius = {
 };
 
 export const iconSize = {
+  sm: "16px",
   md: "24px",
   lg: "32px",
   xl: "48px",
