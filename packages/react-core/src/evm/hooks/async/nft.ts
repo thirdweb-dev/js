@@ -118,7 +118,7 @@ export function useNFTs<TContract extends NFTContract>(
  *
  * @example
  * ```javascript
- * const { contract } = useContract"({{contract_address}}");
+ * const { contract } = useContract("{{contract_address}}");
  * const { data: count, isLoading, error } = useTotalCount(contract);
  * ```
  *
@@ -165,7 +165,7 @@ export function useTotalCount<TContract extends NFTContract>(
  *
  * @example
  * ```javascript
- * const { contract } = useContract"({{contract_address}}");
+ * const { contract } = useContract("{{contract_address}}");
  * const { data: totalCirculatingSupply, isLoading, error } = useTotalCirculatingSupply(contract);
  * ```
  *
@@ -316,7 +316,7 @@ export function useNFTBalance(
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: mintNft,
  *     isLoading,
@@ -388,7 +388,7 @@ export function useMintNFT<TContract extends NFTContract>(
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: mintNftSupply,
  *     isLoading,
@@ -451,7 +451,7 @@ export function useMintNFTSupply(contract: Erc1155) {
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: transferNFT,
  *     isLoading,
@@ -521,7 +521,7 @@ export function useTransferNFT<TContract extends NFTContract>(
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: airdropNFT,
  *     isLoading,
@@ -587,7 +587,7 @@ export function useAirdropNFT(contract: Erc1155) {
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: burnNFT,
  *     isLoading,
