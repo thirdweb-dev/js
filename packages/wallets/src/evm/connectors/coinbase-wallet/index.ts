@@ -67,9 +67,16 @@ export class CoinbaseWalletConnector extends Connector<
       let id = await this.getChainId();
       let unsupported = this.isChainUnsupported(id);
       if (chainId && id !== chainId) {
-        const chain = await this.switchChain(chainId);
-        id = chain.id;
-        unsupported = this.isChainUnsupported(id);
+        try {
+          const chain = await this.switchChain(chainId);
+          id = chain.id;
+          unsupported = this.isChainUnsupported(id);
+        } catch (e) {
+          console.error(
+            `Connected but failed to switch to desired chain ${chainId}`,
+            e,
+          );
+        }
       }
 
       return {

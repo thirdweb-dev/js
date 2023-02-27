@@ -75,13 +75,18 @@ export const CreateDeviceWallet = () => {
   const connect = useConnect();
   const passwordMismatch = confirmPassword && password !== confirmPassword;
 
+  const handleConnect = () => {
+    if (passwordMismatch) return;
+    connect(DeviceBrowserWallet, {
+      password,
+    });
+  };
+
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        connect(DeviceBrowserWallet, {
-          password,
-        });
+        handleConnect();
       }}
     >
       {/* Password */}
@@ -145,7 +150,7 @@ export const ReconnectDeviceWallet = () => {
     }
   }, [deviceStorage]);
 
-  const handleSubmit = async () => {
+  const handleReconnect = async () => {
     try {
       await connect(DeviceBrowserWallet, {
         password,
@@ -160,7 +165,7 @@ export const ReconnectDeviceWallet = () => {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          handleSubmit();
+          handleReconnect();
         }}
       >
         {/* Address */}
@@ -178,6 +183,7 @@ export const ReconnectDeviceWallet = () => {
 
         {/* Password */}
         <FormFieldWithIconButton
+          required
           name="current-password"
           autocomplete="current-password"
           id="current-password"

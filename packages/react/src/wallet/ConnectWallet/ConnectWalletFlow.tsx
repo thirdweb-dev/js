@@ -77,37 +77,50 @@ export const ConnectWalletFlow = () => {
     }
   }, [open]);
 
-  // when wallet connection is complete or cancelled, show the network list
-  useEffect(() => {
-    if (!connectingToWallet) {
-      setShowUI("walletList");
-    }
-  }, [connectingToWallet]);
-
   const walletsMeta = wallets.map((wallet) => ({
     id: wallet.id,
     name: walletNames[wallet.id],
     icon: walletIcons[wallet.id],
-    onClick: () => {
+    onClick: async () => {
+      // Device Wallet
       if (wallet.id === "deviceWallet") {
         setShowUI("deviceWallet");
         return;
       }
 
-      // if metamask is not installed
-      if (wallet.id === "metamask" && !installedWallets.metamask) {
-        setShowUI("scanMetamask");
+      // Metamask
+      if (wallet.id === "metamask") {
+        if (installedWallets.metamask) {
+          try {
+            setShowUI("metamask");
+            await connect(wallet, {});
+          } catch (e) {
+            setShowUI("walletList");
+          }
+        } else {
+          setShowUI("scanMetamask");
+        }
         return;
       }
 
-      // if coinbase wallet is not installed, open the coinbase wallet install page
-      if (wallet.id === "coinbaseWallet" && !installedWallets.coinbaseWallet) {
-        setShowUI("installCoinbaseWallet");
-        connect(wallet, {});
-        setOpen(false);
+      // Coinbase Wallet
+      if (wallet.id === "coinbaseWallet") {
+        if (installedWallets.coinbaseWallet) {
+          try {
+            setShowUI("coinbaseWallet");
+            await connect(wallet, {});
+          } catch (e) {
+            setShowUI("walletList");
+            setOpen(false);
+          }
+        } else {
+          connect(wallet, {});
+          setOpen(false);
+        }
         return;
       }
 
+      // Wallet Connect v1, and v2
       connect(wallet, {});
       setOpen(false);
     },

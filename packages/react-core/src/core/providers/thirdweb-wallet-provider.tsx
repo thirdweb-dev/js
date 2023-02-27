@@ -254,8 +254,9 @@ export function ThirdwebWalletProvider(
         try {
           await wallet.connect(_connectedParams);
           handleWalletConnect(wallet);
-        } catch (e) {
+        } catch (e: any) {
           setIsConnectingToWallet(undefined);
+          throw e;
         }
       }
 
@@ -276,6 +277,7 @@ export function ThirdwebWalletProvider(
           handleWalletConnect(wallet);
         } catch (e: any) {
           setIsConnectingToWallet(undefined);
+          throw e;
         }
       }
 
@@ -296,6 +298,7 @@ export function ThirdwebWalletProvider(
           handleWalletConnect(wallet);
         } catch (e: any) {
           setIsConnectingToWallet(undefined);
+          throw e;
         }
       }
 
@@ -317,6 +320,7 @@ export function ThirdwebWalletProvider(
           handleWalletConnect(wallet);
         } catch (e: any) {
           setIsConnectingToWallet(undefined);
+          throw e;
         }
       }
 
@@ -338,6 +342,7 @@ export function ThirdwebWalletProvider(
           handleWalletConnect(wallet);
         } catch (e: any) {
           setIsConnectingToWallet(undefined);
+          throw e;
         }
       }
     },
