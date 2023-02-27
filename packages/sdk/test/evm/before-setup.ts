@@ -57,13 +57,11 @@ import {
   TWMultichainRegistry__factory,
   MultichainRegistryCore,
   MultichainRegistryCore__factory,
-  PluginRegistry__factory,
   VoteERC20__factory,
-  MarketplaceV3__factory,
+  MarketplaceRouter__factory,
   DirectListingsLogic__factory,
   EnglishAuctionsLogic__factory,
   OffersLogic__factory,
-  PluginRegistry,
   Permissions__factory,
   Permissions,
   MetaTx__factory,
@@ -75,6 +73,8 @@ import {
   PlatformFeeImpl,
   ContractMetadataImpl__factory,
   ContractMetadataImpl,
+  ExtensionRegistry,
+  ExtensionRegistry__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -96,7 +96,7 @@ let signers: SignerWithAddress[];
 let storage: ThirdwebStorage;
 let implementations: { [key in ContractType]?: string };
 let mock_weth_address: string;
-let pluginRegistry: PluginRegistry;
+let extensionRegistry: ExtensionRegistry;
 
 const fastForwardTime = async (timeInSeconds: number): Promise<void> => {
   const now = Math.floor(Date.now() / 1000);
@@ -134,12 +134,12 @@ export const mochaHooks = {
     mock_weth_address = mock_weth.address;
 
     const pluginRegistryDeployer = (await new ethers.ContractFactory(
-      PluginRegistry__factory.abi,
-      PluginRegistry__factory.bytecode,
+      ExtensionRegistry__factory.abi,
+      ExtensionRegistry__factory.bytecode,
     )
       .connect(signer)
-      .deploy(signer.address)) as PluginRegistry;
-    pluginRegistry = await pluginRegistryDeployer.deployed();
+      .deploy(signer.address)) as ExtensionRegistry;
+    extensionRegistry = await pluginRegistryDeployer.deployed();
 
     const registry = (await new ethers.ContractFactory(
       TWRegistry__factory.abi,
@@ -366,7 +366,7 @@ async function setupMultichainRegistry(): Promise<string> {
   // Add plugins to plugin-registry
   await Promise.all(
     plugins.map((plugin) => {
-      return pluginRegistry.addPlugin(plugin);
+      return extensionRegistry.addExtension(plugin);
     }),
   );
 
@@ -379,7 +379,7 @@ async function setupMultichainRegistry(): Promise<string> {
     TWMultichainRegistry__factory.bytecode,
   )
     .connect(signer)
-    .deploy(pluginRegistry.address, pluginNames)) as TWMultichainRegistry;
+    .deploy(extensionRegistry.address, pluginNames)) as TWMultichainRegistry;
   const multichainRegistryRouter =
     await multichainRegistryRouterDeployer.deployed();
 
@@ -546,16 +546,16 @@ async function setupMarketplaceV3(
   // Add plugins to plugin-registry
   await Promise.all(
     plugins.map((plugin) => {
-      return pluginRegistry.addPlugin(plugin);
+      return extensionRegistry.addExtension(plugin);
     }),
   );
 
   // Router
   const marketplaceV3Address = await deployContractAndUploadMetadata(
-    MarketplaceV3__factory.abi,
-    MarketplaceV3__factory.bytecode,
+    MarketplaceRouter__factory.abi,
+    MarketplaceRouter__factory.bytecode,
     signer,
-    [pluginRegistry.address, pluginNames],
+    [extensionRegistry.address, pluginNames],
   );
   return marketplaceV3Address;
 }

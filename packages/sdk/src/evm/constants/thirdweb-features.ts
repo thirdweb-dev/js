@@ -1,7 +1,6 @@
 import IERC2771ContextAbi from "@thirdweb-dev/contracts-js/dist/abis/ERC2771Context.json";
 import IAppURI from "@thirdweb-dev/contracts-js/dist/abis/IAppURI.json";
 import IContractMetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IContractMetadata.json";
-import IDefaultPluginSetAbi from "@thirdweb-dev/contracts-js/dist/abis/IDefaultPluginSet.json";
 import IDirectListingsAbi from "@thirdweb-dev/contracts-js/dist/abis/IDirectListings.json";
 import IEnglishAuctionsAbi from "@thirdweb-dev/contracts-js/dist/abis/IEnglishAuctions.json";
 import IOffersAbi from "@thirdweb-dev/contracts-js/dist/abis/IOffers.json";
@@ -11,7 +10,6 @@ import IPermissionsEnumerableAbi from "@thirdweb-dev/contracts-js/dist/abis/IPer
 import IThirdwebPlatformFeeAbi from "@thirdweb-dev/contracts-js/dist/abis/IPlatformFee.json";
 import IThirdwebPrimarySaleAbi from "@thirdweb-dev/contracts-js/dist/abis/IPrimarySale.json";
 import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/dist/abis/IRoyalty.json";
-import ITWRouterAbi from "@thirdweb-dev/contracts-js/dist/abis/ITWRouter.json";
 import IOwnableAbi from "@thirdweb-dev/contracts-js/dist/abis/Ownable.json";
 
 export const getAllPluginsAbi = [

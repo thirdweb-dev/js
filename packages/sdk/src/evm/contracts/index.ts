@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { getPrebuiltInfo } from "../common/legacy";
 import { fetchAbiFromAddress } from "../common/metadata-resolver";
-import { getCompositePluginABI, joinABIs } from "../common/plugin";
+import { getCompositePluginABI } from "../common/plugin";
 import { ALL_ROLES } from "../common/role";
 import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
 import type {
@@ -21,11 +21,7 @@ import {
   TokenErc721ContractSchema,
   VoteContractSchema,
 } from "../schema";
-import {
-  Abi,
-  AbiSchema,
-  CustomContractSchema,
-} from "../schema/contracts/custom";
+import { Abi } from "../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { MarketplaceV3ContractSchema } from "../schema/contracts/marketplacev3";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
@@ -167,7 +163,7 @@ export const MarketplaceInitializer = {
 };
 
 export const MarketplaceV3Initializer = {
-  name: "MarketplaceV3" as const,
+  name: "MarketplaceRouter" as const,
   contractType: "marketplace-v3" as const,
   schema: MarketplaceV3ContractSchema,
   roles: ["admin", "lister", "asset"] as const,
@@ -202,7 +198,9 @@ export const MarketplaceV3Initializer = {
 
     // Deprecated - only needed for backwards compatibility with non-published contracts - should remove in v4
     const localAbi = (
-      await import("@thirdweb-dev/contracts-js/dist/abis/MarketplaceV3.json")
+      await import(
+        "@thirdweb-dev/contracts-js/dist/abis/MarketplaceRouter.json"
+      )
     ).default;
     return await getCompositePluginABI(
       address,
