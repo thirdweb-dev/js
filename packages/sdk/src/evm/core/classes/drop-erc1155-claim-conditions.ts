@@ -1,4 +1,9 @@
-import { includesErrorMessage } from "../../common";
+import { TransactionResult, TransactionTask } from "..";
+import {
+  detectContractFeature,
+  hasFunction,
+  includesErrorMessage,
+} from "../../common";
 import {
   abstractContractModelToLegacy,
   abstractContractModelToNew,
@@ -11,10 +16,6 @@ import {
   updateExistingClaimConditions,
 } from "../../common/claim-conditions";
 import { isNativeToken } from "../../common/currency";
-import {
-  detectContractFeature,
-  hasFunction,
-} from "../../common/feature-detection";
 import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
 import { isNode } from "../../common/utils";
 import { ClaimEligibility } from "../../enums";
@@ -34,7 +35,6 @@ import {
   BaseClaimConditionERC1155,
   PrebuiltEditionDrop,
 } from "../../types/eips";
-import { TransactionResult, TransactionTask } from "../index";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
@@ -524,7 +524,7 @@ export class DropErc1155ClaimConditions<
    * const claimConditions = [
    *   {
    *     startTime: presaleStartTime, // start the presale now
-   *     maxQuantity: 2, // limit how many mints for this presale
+   *     maxClaimableSupply: 2, // limit how many mints for this presale
    *     price: 0.01, // presale price
    *     snapshot: snapshots, // limit minting to only certain addresses
    *   },
@@ -570,7 +570,7 @@ export class DropErc1155ClaimConditions<
    *     tokenId: 0,
    *     claimConditions: [{
    *       startTime: new Date(), // start the claim phase now
-   *       maxQuantity: 2, // limit how many mints for this tokenId
+   *       maxClaimableSupply: 2, // limit how many mints for this tokenId
    *       price: 0.01, // price for this tokenId
    *       snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
    *     }]

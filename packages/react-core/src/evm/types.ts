@@ -41,9 +41,9 @@ type AddEthereumChainParameter = {
 
 export type Chain = {
   id: number;
-  name: AddEthereumChainParameter['chainName'];
-  nativeCurrency?: AddEthereumChainParameter['nativeCurrency'];
-  rpcUrls: AddEthereumChainParameter['rpcUrls'];
+  name: AddEthereumChainParameter["chainName"];
+  nativeCurrency?: AddEthereumChainParameter["nativeCurrency"];
+  rpcUrls: AddEthereumChainParameter["rpcUrls"];
   blockExplorers?: {
     name: string;
     url: string;
@@ -88,7 +88,7 @@ export type TokenBurnParams = {
  * The possible NFT contract types.
  * @example
  * ```javascript
- * const { contract } = useContract(<ContractAddress>);
+ * const { contract } = useContract("{{contract_address}}");
  * ```
  * @beta
  */
@@ -103,7 +103,7 @@ export type NFTContract =
  * The possible Token contract types.
  * @example
  * ```javascript
- * const { contract } = useContract(<ContractAddress>);
+ * const { contract } = useContract("{{contract_address}}");
  * ```
  * @beta
  */
@@ -256,16 +256,16 @@ export type ExecuteAuctionSale = {
 
 export type BuyNowParams<TListingType = ListingType> =
   TListingType extends ListingType.Direct
-  ? {
-    id: BigNumberish;
-    type: ListingType.Direct;
-    buyAmount: BigNumberish;
-    buyForWallet?: WalletAddress;
-  }
-  : {
-    id: BigNumberish;
-    type: ListingType.Auction;
-  };
+    ? {
+        id: BigNumberish;
+        type: ListingType.Direct;
+        buyAmount: BigNumberish;
+        buyForWallet?: WalletAddress;
+      }
+    : {
+        id: BigNumberish;
+        type: ListingType.Auction;
+      };
 
 // TOKEN DROP //
 

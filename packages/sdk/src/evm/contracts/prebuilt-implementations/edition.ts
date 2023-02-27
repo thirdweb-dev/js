@@ -153,7 +153,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    *******************************/
 
   /**
-   * Get All Minted NFTs
+   * Get all NFTs
    *
    * @remarks Get all the data associated with every NFT in this contract.
    *
@@ -171,7 +171,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
   }
 
   /**
-   * Get Owned NFTs
+   * Get all NFTs owned by a specific wallet
    *
    * @remarks Get all the data associated with the NFTs owned by a specific wallet.
    *

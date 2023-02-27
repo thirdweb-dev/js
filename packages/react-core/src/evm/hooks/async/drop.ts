@@ -31,11 +31,11 @@ import invariant from "tiny-invariant";
 /** **********************/
 
 /**
- * Use this to get a list of *unclaimed* NFT tokens of your ERC721 Drop contract.
+ * Get all unclaimed NFTs
  *
  * @example
  * ```javascript
- * const { data: unclaimedNfts, isLoading, error } = useUnclaimedNFTs(<YourERC721DropContractInstance>, { start: 0, count: 100 });
+ * const { data: unclaimedNfts, isLoading, error } = useUnclaimedNFTs(contract, { start: 0, count: 100 });
  * ```
  *
  * @param contract - an instance of a contract that extends the Erc721 spec (nft drop, custom contract that follows the Erc721 & drop spec)
@@ -65,13 +65,13 @@ export function useUnclaimedNFTs(
 }
 
 /**
- * Use this to get a list of *claimed* (minted) NFT tokens of your ERC721 Drop contract.
+ * Get all claimed NFTs
  *
  * @remarks Equivalent to using {@link useNFTs}.
  *
  * @example
  * ```javascript
- * const { data: claimedNFTs, isLoading, error } = useClaimedNFTs(<YourERC721DropContractInstance>, { start: 0, count: 100 });
+ * const { data: claimedNFTs, isLoading, error } = useClaimedNFTs(contract, { start: 0, count: 100 });
  * ```
  *
  * @param contract - an instance of a {@link DropContract}
@@ -124,7 +124,7 @@ export function useUnclaimedNFTSupply(contract: RequiredParam<DropContract>) {
 }
 
 /**
-
+ * Get the total number of claimed NFTs
  *
  * @param contract - an instance of a {@link DropContract}
  * @returns a response object that includes the number of NFTs that are claimed
@@ -147,6 +147,7 @@ export function useClaimedNFTSupply(contract: RequiredParam<DropContract>) {
 }
 
 /**
+ * Get all unrevealed batches
  *
  * @param contract - an instance of a {@link RevealableContract}
  * @returns a response object that gets the batches to still be revealed
@@ -176,14 +177,14 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
 /**     WRITE HOOKS     **/
 /** **********************/
 /**
- * Use this to claim a NFT on your {@link DropContract}
+ * Claim an NFT to a specific wallet
  *
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract(<ContractAddress>);
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
- *     mutate: claimNft,
+ *     mutate: claimNFT,
  *     isLoading,
  *     error,
  *   } = useClaimNFT(contract);
@@ -195,7 +196,7 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => claimNft({ to: "0x...", quantity: 1 })}
+ *       onClick={() => claimNFT({ to: "{{wallet_address}}", quantity: 1 })}
  *     >
  *       Claim NFT!
  *     </button>
@@ -264,7 +265,32 @@ export function useClaimNFT<TContract extends DropContract>(
 }
 
 /**
- * Use this to lazy mint a batch of NFTs on your {@link DropContract}
+ * Lazy mint NFTs
+ * 
+ * @example
+ * ```jsx
+ * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
+ *   const {
+ *     mutate: lazyMint,
+ *     isLoading,
+ *     error,
+ *   } = useLazyMint(contract);
+ *
+ *   if (error) {
+ *     console.error("failed to lazy mint NFT", error);
+ *   }
+ *
+ *   return (
+ *     <button
+ *       disabled={isLoading}
+ *       onClick={() => lazyMint({ metadatas: [{ name: "My NFT!"}] })}
+ *     >
+ *       Lazy mint NFT!
+ *     </button>
+ *   );
+ * };
+ * ```
  *
  * @param contract - an instance of a {@link NFTContract} with the drop extension
  * @param onProgress - an optional callback that will be called with the progress of the upload
@@ -311,7 +337,32 @@ export function useLazyMint<TContract extends DropContract>(
 }
 
 /**
- * Use this to lazy mint a batch of delayed reveal NFTs on your {@link DropContract}
+ * Lazy mint NFTs with delayed reveal
+ * 
+ * @example
+ * ```jsx
+ * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
+ *   const {
+ *     mutate: delayedRevealLazyMint,
+ *     isLoading,
+ *     error,
+ *   } = useDelayedRevealLazyMint(contract);
+ *
+ *   if (error) {
+ *     console.error("failed to lazy mint NFT", error);
+ *   }
+ *
+ *   return (
+ *     <button
+ *       disabled={isLoading}
+ *       onClick={() => delayedRevealLazyMint({ metadatas: [{ name: "My NFT!"}] })}
+ *     >
+ *       Delayed Reveal Lazy mint NFT!
+ *     </button>
+ *   );
+ * };
+ * ```
  *
  * @param contract - an instance of a {@link DropContract}
  * @param onProgress - an optional callback that will be called with the progress of the upload
@@ -367,7 +418,32 @@ export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
 }
 
 /**
- * Use this to reveal a batch of delayed reveal NFTs on your {@link RevealableContract}
+ * Reveal a batch of delayed reveal NFTs
+ * 
+ * @example
+ * ```jsx
+ * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
+ *   const {
+ *     mutate: revealLazyMint,
+ *     isLoading,
+ *     error,
+ *   } = useRevealLazyMint(contract);
+ *
+ *   if (error) {
+ *     console.error("failed to reveal batch", error);
+ *   }
+ *
+ *   return (
+ *     <button
+ *       disabled={isLoading}
+ *       onClick={() => revealLazyMint({ batchId: "0", password: "my-password" })}
+ *     >
+ *       Reveal batch!
+ *     </button>
+ *   );
+ * };
+ * ```
  *
  * @param contract - an instance of a {@link RevealableContract}
  * @returns a mutation object that can be used to reveal a batch of delayed reveal NFTs

@@ -2,7 +2,7 @@ export default {
   "name": "Base Goerli Testnet",
   "chain": "ETH",
   "rpc": [
-    "https://base-goerli-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://base-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli.base.org"
   ],
   "faucets": [
@@ -19,16 +19,22 @@ export default {
   "networkId": 84531,
   "explorers": [
     {
-      "name": "basescan",
-      "url": "https://goerli.basescan.org",
+      "name": "basescout",
+      "url": "https://base-goerli.blockscout.com",
       "standard": "none"
     },
     {
-      "name": "basescout",
-      "url": "https://base-goerli.blockscout.com",
+      "name": "basescan",
+      "url": "https://goerli.basescan.org",
       "standard": "none"
     }
   ],
   "testnet": true,
-  "slug": "base-goerli-testnet"
+  "icon": {
+    "url": "ipfs://QmW5Vn15HeRkScMfPcW12ZdZcC2yUASpu6eCsECRdEmjjj/base-512.png",
+    "height": 512,
+    "width": 512,
+    "format": "png"
+  },
+  "slug": "base-goerli"
 } as const;
