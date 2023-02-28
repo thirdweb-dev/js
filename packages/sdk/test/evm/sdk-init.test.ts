@@ -85,7 +85,7 @@ describe("SDK Initialization", async () => {
   it("Should be able to connect directly via http RPC URL", async () => {
     const sdk = new ThirdwebSDK("http://localhost:8545");
     const network = await sdk.getProvider().getNetwork();
-    expect(network.chainId).to.equal(1337);
+    expect(network.chainId).to.equal(31337);
   });
 
   it.skip("Should be able to connect directly via websocket RPC URL", async () => {
