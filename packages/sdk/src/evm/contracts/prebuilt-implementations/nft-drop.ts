@@ -2,7 +2,7 @@ import {
   DEFAULT_QUERY_ALL_COUNT,
   QueryAllParams,
 } from "../../../core/schema/QueryParams";
-import { NFT, NFTMetadata } from "../../../core/schema/nft";
+import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
@@ -28,6 +28,7 @@ import { Abi } from "../../schema/contracts/custom";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import { PrebuiltNFTDrop } from "../../types/eips";
+import { UploadProgressEvent } from "../../types/events";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
@@ -368,7 +369,16 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * @param metadatas - The metadata to include in the batch.
    * @param options - optional upload progress callback
    */
-  createBatch = this.erc721.lazyMint;
+  createBatch = buildTransactionFunction(
+    async (
+      metadatas: NFTMetadataOrUri[],
+      options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+      },
+    ): Promise<Transaction<TransactionResultWithId<NFTMetadata>[]>> => {
+      return this.erc721.lazyMint.prepare(metadatas, options);
+    },
+  );
 
   /**
    * Construct a claim transaction without executing it.
@@ -454,7 +464,9 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * ```
    *
    */
-  burn = this.erc721.burn;
+  burn = buildTransactionFunction(async (tokenId: BigNumberish) => {
+    return this.erc721.burn.prepare(tokenId);
+  });
 
   /******************************
    * STANDARD ERC721 FUNCTIONS
@@ -529,7 +541,12 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * await contract.transfer(walletAddress, tokenId);
    * ```
    */
-  transfer = this.erc721.transfer;
+  transfer = buildTransactionFunction(
+    async (to: string, tokenId: BigNumberish) => {
+      return this.erc721.transfer.prepare(to, tokenId);
+    },
+  );
+
   /**
    * Approve or remove operator as an operator for the caller. Operators can call transferFrom or safeTransferFrom for any token owned by the caller.
    * @param operator - the operator's address
@@ -537,7 +554,11 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    *
    * @internal
    */
-  setApprovalForAll = this.erc721.setApprovalForAll;
+  setApprovalForAll = buildTransactionFunction(
+    async (operator: string, approved: boolean) => {
+      return this.erc721.setApprovalForAll.prepare(operator, approved);
+    },
+  );
 
   /**
    * Approve an operator for the NFT owner. Operators can call transferFrom or safeTransferFrom for the specified token.
