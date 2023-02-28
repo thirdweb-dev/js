@@ -24,6 +24,8 @@ export const GeneralCta: React.FC<GeneralCtaProps> = ({
         <Icon
           as={BsLightningCharge}
           color="#1D64EF"
+          transitionDuration="slow"
+          transitionTimingFunction="easeOut"
           _groupHover={{ color: "#E0507A" }}
         />
       }

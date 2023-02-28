@@ -54,7 +54,7 @@ export const NewsletterSection = () => {
                 Sign up for our newsletter
               </Text>
               <Text>
-                Join 40,000+ builders and stay up to date with our latest
+                Join 70,000+ builders and stay up to date with our latest
                 updates and news.
               </Text>
             </Stack>
