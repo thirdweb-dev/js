@@ -37,7 +37,7 @@ export const Input = styled.input<{
     ${(p) => {
       switch (p.variant) {
         case "outline":
-          return p.theme.bg.highlighted;
+          return p.theme.input.outline;
         case "transparent":
           return "transparent";
         case "secondary":
@@ -69,7 +69,7 @@ export const Input = styled.input<{
 export const InputContainer = styled.div<{ theme?: Theme }>`
   display: flex;
   border-radius: ${radius.sm};
-  box-shadow: 0 0 0px 1.5px ${(p) => p.theme.bg.highlighted};
+  box-shadow: 0 0 0px 1.5px ${(p) => p.theme.input.outline};
 
   /* show focus ring on container instead of input  */
   &:focus-within {

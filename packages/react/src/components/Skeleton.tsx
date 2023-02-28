@@ -28,6 +28,6 @@ const SkeletonDiv = styled.div<{ theme?: Theme }>`
   background-size: 200% 200%;
   --skeleton-c-1: ${(p) => p.theme.bg.elevated};
   --skeleton-c-2: ${(p) => p.theme.bg.highlighted};
-  animation: ${skeletonAnimation} 1s ease-in-out infinite alternate;
+  animation: ${skeletonAnimation} 500ms ease-in-out infinite alternate;
   border-radius: ${radius.sm};
 `;

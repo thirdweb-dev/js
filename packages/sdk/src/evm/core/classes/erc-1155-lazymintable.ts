@@ -2,6 +2,7 @@ import { NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { detectContractFeature } from "../../common/feature-detection";
 import { getPrebuiltInfo } from "../../common/legacy";
 import { uploadOrExtractURIs } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
 import {
   FEATURE_EDITION_LAZY_MINTABLE_V2,
   FEATURE_EDITION_REVEALABLE,
@@ -19,7 +20,11 @@ import { DelayedReveal } from "./delayed-reveal";
 import { Erc1155 } from "./erc-1155";
 import { ERC1155Claimable } from "./erc-1155-claimable";
 import { Erc1155ClaimableWithConditions } from "./erc-1155-claimable-with-conditions";
-import type { IClaimableERC1155 } from "@thirdweb-dev/contracts-js";
+import { Transaction } from "./transactions";
+import type {
+  DropERC1155_V2,
+  IClaimableERC1155,
+} from "@thirdweb-dev/contracts-js";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -117,61 +122,80 @@ export class Erc1155LazyMintable implements DetectableFeature {
    * @param metadatas - The metadata to include in the batch.
    * @param options - optional upload progress callback
    */
-  public async lazyMint(
-    metadatas: NFTMetadataOrUri[],
-    options?: {
-      onProgress: (event: UploadProgressEvent) => void;
-    },
-  ): Promise<TransactionResultWithId<NFTMetadata>[]> {
-    const startFileNumber = await this.erc1155.nextTokenIdToMint();
-    const batch = await uploadOrExtractURIs(
-      metadatas,
-      this.storage,
-      startFileNumber.toNumber(),
-      options,
-    );
-    // ensure baseUri is the same for the entire batch
-    const baseUri = batch[0].substring(0, batch[0].lastIndexOf("/"));
-    for (let i = 0; i < batch.length; i++) {
-      const uri = batch[i].substring(0, batch[i].lastIndexOf("/"));
-      if (baseUri !== uri) {
-        throw new Error(
-          `Can only create batches with the same base URI for every entry in the batch. Expected '${baseUri}' but got '${uri}'`,
-        );
+  lazyMint = buildTransactionFunction(
+    async (
+      metadatas: NFTMetadataOrUri[],
+      options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+      },
+    ): Promise<Transaction<TransactionResultWithId<NFTMetadata>[]>> => {
+      const startFileNumber = await this.erc1155.nextTokenIdToMint();
+      const batch = await uploadOrExtractURIs(
+        metadatas,
+        this.storage,
+        startFileNumber.toNumber(),
+        options,
+      );
+      // ensure baseUri is the same for the entire batch
+      const baseUri = batch[0].substring(0, batch[0].lastIndexOf("/"));
+      for (let i = 0; i < batch.length; i++) {
+        const uri = batch[i].substring(0, batch[i].lastIndexOf("/"));
+        if (baseUri !== uri) {
+          throw new Error(
+            `Can only create batches with the same base URI for every entry in the batch. Expected '${baseUri}' but got '${uri}'`,
+          );
+        }
       }
-    }
-    const isLegacyEditionDropContract =
-      await this.isLegacyEditionDropContract();
-    let receipt;
-    if (isLegacyEditionDropContract) {
-      receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-        batch.length,
-        `${baseUri.endsWith("/") ? baseUri : `${baseUri}/`}`,
-      ]);
-    } else {
-      // new contracts/extensions have support for delayed reveal that adds an extra parameter to lazyMint
-      receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-        batch.length,
-        `${baseUri.endsWith("/") ? baseUri : `${baseUri}/`}`,
-        ethers.utils.toUtf8Bytes(""),
-      ]);
-    }
-    const event = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
-      "TokensLazyMinted",
-      receipt?.logs,
-    );
-    const startingIndex = event[0].args.startTokenId;
-    const endingIndex = event[0].args.endTokenId;
-    const results: TransactionResultWithId<NFTMetadata>[] = [];
-    for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
-      results.push({
-        id,
-        receipt,
-        data: () => this.erc1155.getTokenMetadata(id),
-      });
-    }
-    return results;
-  }
+
+      const parse = (receipt: ethers.providers.TransactionReceipt) => {
+        const event = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
+          "TokensLazyMinted",
+          receipt?.logs,
+        );
+        const startingIndex = event[0].args.startTokenId;
+        const endingIndex = event[0].args.endTokenId;
+        const results: TransactionResultWithId<NFTMetadata>[] = [];
+        for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
+          results.push({
+            id,
+            receipt,
+            data: () => this.erc1155.getTokenMetadata(id),
+          });
+        }
+        return results;
+      };
+
+      const prebuiltInfo = await getPrebuiltInfo(
+        this.contractWrapper.readContract.address,
+        this.contractWrapper.getProvider(),
+      );
+      if (
+        this.isLegacyEditionDropContract(this.contractWrapper, prebuiltInfo)
+      ) {
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper,
+          method: "lazyMint",
+          args: [
+            batch.length,
+            `${baseUri.endsWith("/") ? baseUri : `${baseUri}/`}`,
+          ],
+          parse,
+        });
+      } else {
+        // new contracts/extensions have support for delayed reveal that adds an extra parameter to lazyMint
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper,
+          method: "lazyMint",
+          args: [
+            batch.length,
+            `${baseUri.endsWith("/") ? baseUri : `${baseUri}/`}`,
+            ethers.utils.toUtf8Bytes(""),
+          ],
+          parse,
+        });
+      }
+    },
+  );
 
   /** ******************************
    * PRIVATE FUNCTIONS
@@ -237,11 +261,10 @@ export class Erc1155LazyMintable implements DetectableFeature {
     return undefined;
   }
 
-  private async isLegacyEditionDropContract() {
-    const info = await getPrebuiltInfo(
-      this.contractWrapper.readContract.address,
-      this.contractWrapper.getProvider(),
-    );
-    return info && info.type === "DropERC1155" && info.version < 3;
+  private isLegacyEditionDropContract(
+    contractWrapper: ContractWrapper<any>,
+    info: Awaited<ReturnType<typeof getPrebuiltInfo>>,
+  ): contractWrapper is ContractWrapper<DropERC1155_V2> {
+    return (info && info.type === "DropERC1155" && info.version < 3) || false;
   }
 }

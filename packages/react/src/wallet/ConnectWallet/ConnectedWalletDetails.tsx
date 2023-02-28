@@ -12,6 +12,7 @@ import {
   Theme,
 } from "../../design-system";
 import { shortenString } from "../../evm/utils/addresses";
+import { useInstalledWallets } from "../hooks/useInstalledWallets";
 import { NetworkSelector } from "./NetworkSelector";
 import { CoinbaseWalletIcon } from "./icons/CoinbaseWalletIcon";
 import { DeviceWalletIcon } from "./icons/DeviceWalletIcon";
@@ -30,7 +31,6 @@ import {
   useBalance,
   useDisconnect,
   useSupportedChains,
-  MetaMaskWalletType,
 } from "@thirdweb-dev/react-core";
 import { useMemo, useState } from "react";
 
@@ -64,18 +64,18 @@ export const ConnectedWalletDetails = () => {
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
   const [open, setOpen] = useState(false);
 
+  const installedWallets = useInstalledWallets();
+
   // can not switch network if
   // * no wallet is connected
   // * wallet is walletConnectV1, walletConnectV2, or deviceWallet
-  // * wallet is metamask and but it is using the walletConnectConnector under the hood
+  // * wallet is non-injected metamask
   const disableNetworkSwitching =
     !activeWallet ||
     activeWallet.walletId === "walletConnectV1" ||
     activeWallet.walletId === "walletConnectV2" ||
     activeWallet.walletId === "deviceWallet" ||
-    (activeWallet.walletId === "metamask" &&
-      !!(activeWallet as InstanceType<MetaMaskWalletType>)
-        .walletConnectConnector);
+    (activeWallet.walletId === "metamask" && !installedWallets.metamask);
 
   return (
     <>
@@ -231,7 +231,7 @@ const WalletInfoButton = styled.button<{ theme?: Theme }>`
   display: flex;
   align-items: center;
   gap: ${spacing.md};
-  box-shadow: ${shadow.md};
+  box-shadow: ${shadow.sm};
   min-width: 200px;
   box-sizing: border-box;
 

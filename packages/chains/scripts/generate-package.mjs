@@ -206,5 +206,11 @@ export * from "./types";
 export * from "./utils";
 export const defaultChains = [Ethereum, Goerli, Polygon, Mumbai, Arbitrum, ArbitrumGoerli, Optimism, OptimismGoerli, Binance, BinanceTestnet, Fantom, FantomTestnet, Avalanche, AvalancheFuji, Localhost];
 export const allChains = [${exportNames.join(", ")}];
-`,
+export function getChainByChainId(chainId: number): Chain {
+  const chain = allChains.find(chain => chain.chainId === chainId);
+  if (!chain) {
+    throw new Error(\`Chain with chainId \${chainId} not found\`);
+  }
+  return chain;
+}`,
 );

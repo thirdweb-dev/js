@@ -14,10 +14,12 @@ import { CoinbaseWalletIcon } from "./icons/CoinbaseWalletIcon";
 import { DeviceWalletIcon } from "./icons/DeviceWalletIcon";
 import { MetamaskIcon } from "./icons/MetamaskIcon";
 import { WalletConnectIcon } from "./icons/WalletConnectIcon";
+import { CoinbaseGetStarted } from "./setup-ui/CoinbaseGetStarted";
 import { CoinbaseWalletSetup } from "./setup-ui/CoinbaseWaletSetup";
 import { ConnectToDeviceWallet } from "./setup-ui/DeviceWalletSetup";
 import { MetamaskConnecting } from "./setup-ui/MetamaskConnecting";
 import { MetamaskGetStarted } from "./setup-ui/MetamaskGetStarted";
+import { ScanCoinbase } from "./setup-ui/scanCoinbase";
 import { ScanMetamask } from "./setup-ui/scanMetamask";
 import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
@@ -49,8 +51,10 @@ type Screen =
   | "metamask/connecting"
   | "walletList"
   | "coinbase/connecting"
+  | "coinbase/scan"
   | "metamask/scan"
-  | "metamask/get-started";
+  | "metamask/get-started"
+  | "coinbase/get-started";
 
 const walletNames: Record<SupportedWallet["id"], string> = {
   metamask: "Metamask",
@@ -80,6 +84,7 @@ export const ConnectWalletFlow = () => {
     id: wallet.id,
     name: walletNames[wallet.id],
     icon: walletIcons[wallet.id],
+    installed: installedWallets[wallet.id],
     onClick: async () => {
       // Device Wallet
       if (wallet.id === "deviceWallet") {
@@ -113,8 +118,7 @@ export const ConnectWalletFlow = () => {
             setOpen(false);
           }
         } else {
-          connect(wallet, {});
-          setOpen(false);
+          setShowScreen("coinbase/scan");
         }
         return;
       }
@@ -123,7 +127,6 @@ export const ConnectWalletFlow = () => {
       connect(wallet, {});
       setOpen(false);
     },
-    installed: installedWallets[wallet.id],
   }));
 
   const handleBack = () => setShowScreen("walletList");
@@ -144,9 +147,10 @@ export const ConnectWalletFlow = () => {
           style={{
             minWidth: "140px",
           }}
+          aria-label={connectingToWallet ? "Connecting" : "Connect Wallet"}
         >
           {connectingToWallet ? (
-            <Spinner size="md" color={theme.text.inverted} />
+            <Spinner size="sm" color={theme.text.inverted} />
           ) : (
             "Connect Wallet"
           )}
@@ -188,6 +192,14 @@ export const ConnectWalletFlow = () => {
         />
       )}
 
+      {showScreen === "coinbase/get-started" && (
+        <CoinbaseGetStarted
+          onBack={() => {
+            setShowScreen("coinbase/scan");
+          }}
+        />
+      )}
+
       {showScreen === "metamask/connecting" && (
         <MetamaskConnecting onBack={handleBack} />
       )}
@@ -201,6 +213,15 @@ export const ConnectWalletFlow = () => {
           onBack={handleBack}
           onGetStarted={() => {
             setShowScreen("metamask/get-started");
+          }}
+        />
+      )}
+
+      {showScreen === "coinbase/scan" && (
+        <ScanCoinbase
+          onBack={handleBack}
+          onGetStarted={() => {
+            setShowScreen("coinbase/get-started");
           }}
         />
       )}
