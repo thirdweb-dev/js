@@ -18,6 +18,12 @@ export default {
   "shortName": "bakerloo-0",
   "chainId": 65010000,
   "networkId": 65010000,
+  "icon": {
+    "url": "ipfs://Qmae5oAFpcCG1MEMBwGbNodHAR3wqPBxQkon28AF2SfKTX",
+    "width": 81,
+    "height": 81,
+    "format": "svg"
+  },
   "explorers": [
     {
       "name": "autonity-blockscout",
