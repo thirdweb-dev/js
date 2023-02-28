@@ -1,6 +1,7 @@
 import { NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { detectContractFeature } from "../../common/feature-detection";
 import { getBaseUriFromBatch, uploadOrExtractURIs } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
 import {
   FEATURE_NFT_LAZY_MINTABLE,
   FEATURE_NFT_REVEALABLE,
@@ -18,6 +19,7 @@ import { DelayedReveal } from "./delayed-reveal";
 import { Erc721 } from "./erc-721";
 import { Erc721Claimable } from "./erc-721-claimable";
 import { Erc721ClaimableWithConditions } from "./erc-721-claimable-with-conditions";
+import { Transaction } from "./transactions";
 import type { IClaimableERC721 } from "@thirdweb-dev/contracts-js";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -124,43 +126,51 @@ export class Erc721LazyMintable implements DetectableFeature {
    * @param metadatas - The metadata to include in the batch.
    * @param options - optional upload progress callback
    */
-  public async lazyMint(
-    metadatas: NFTMetadataOrUri[],
-    options?: {
-      onProgress: (event: UploadProgressEvent) => void;
-    },
-  ): Promise<TransactionResultWithId<NFTMetadata>[]> {
-    const startFileNumber = await this.erc721.nextTokenIdToMint();
-    const batch = await uploadOrExtractURIs(
-      metadatas,
-      this.storage,
-      startFileNumber.toNumber(),
-      options,
-    );
-    // ensure baseUri is the same for the entire batch
-    const baseUri = getBaseUriFromBatch(batch);
+  lazyMint = buildTransactionFunction(
+    async (
+      metadatas: NFTMetadataOrUri[],
+      options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+      },
+    ): Promise<Transaction<TransactionResultWithId<NFTMetadata>[]>> => {
+      const startFileNumber = await this.erc721.nextTokenIdToMint();
+      const batch = await uploadOrExtractURIs(
+        metadatas,
+        this.storage,
+        startFileNumber.toNumber(),
+        options,
+      );
+      // ensure baseUri is the same for the entire batch
+      const baseUri = getBaseUriFromBatch(batch);
 
-    const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      batch.length,
-      baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
-      ethers.utils.toUtf8Bytes(""),
-    ]);
-    const event = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
-      "TokensLazyMinted",
-      receipt?.logs,
-    );
-    const startingIndex = event[0].args.startTokenId;
-    const endingIndex = event[0].args.endTokenId;
-    const results: TransactionResultWithId<NFTMetadata>[] = [];
-    for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
-      results.push({
-        id,
-        receipt,
-        data: () => this.erc721.getTokenMetadata(id),
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "lazyMint",
+        args: [
+          batch.length,
+          baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
+          ethers.utils.toUtf8Bytes(""),
+        ],
+        parse: (receipt) => {
+          const event = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
+            "TokensLazyMinted",
+            receipt?.logs,
+          );
+          const startingIndex = event[0].args.startTokenId;
+          const endingIndex = event[0].args.endTokenId;
+          const results: TransactionResultWithId<NFTMetadata>[] = [];
+          for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
+            results.push({
+              id,
+              receipt,
+              data: () => this.erc721.getTokenMetadata(id),
+            });
+          }
+          return results;
+        },
       });
-    }
-    return results;
-  }
+    },
+  );
 
   /** ******************************
    * PRIVATE FUNCTIONS

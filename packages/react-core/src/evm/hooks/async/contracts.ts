@@ -310,7 +310,7 @@ export function useContractMetadata<TContract extends ValidContractInstance>(
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: updateContractMetadata,
  *     isLoading,
