@@ -1,4 +1,6 @@
+import { NFT, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
+import { buildTransactionFunction } from "../../common/transactions";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -13,13 +15,14 @@ import { Erc721 } from "../../core/classes/erc-721";
 import { StandardErc721 } from "../../core/classes/erc-721-standard";
 import { Erc721WithQuantitySignatureMintable } from "../../core/classes/erc-721-with-quantity-signature-mintable";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
-import type { NetworkInput } from "../../core/types";
+import { Transaction } from "../../core/classes/transactions";
+import type { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { Abi } from "../../schema/contracts/custom";
 import { TokenErc721ContractSchema } from "../../schema/contracts/token-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import type { TokenERC721 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { CallOverrides, constants } from "ethers";
+import { BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -188,7 +191,13 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
    */
-  mint = this.erc721.mint;
+  mint = buildTransactionFunction(
+    async (
+      metadata: NFTMetadataOrUri,
+    ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
+      return this.erc721.mint.prepare(metadata);
+    },
+  );
 
   /**
    * Mint a unique NFT
@@ -213,7 +222,14 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
    */
-  mintTo = this.erc721.mintTo;
+  mintTo = buildTransactionFunction(
+    async (
+      walletAddress: string,
+      metadata: NFTMetadataOrUri,
+    ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
+      return this.erc721.mintTo.prepare(walletAddress, metadata);
+    },
+  );
 
   /**
    * Construct a mint transaction without executing it.
@@ -223,7 +239,12 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    *
    * @deprecated Use `contract.mint.prepare(...args)` instead
    */
-  getMintTransaction = this.erc721.getMintTransaction;
+  public async getMintTransaction(
+    receiver: string,
+    metadata: NFTMetadataOrUri,
+  ): Promise<Transaction> {
+    return this.erc721.getMintTransaction(receiver, metadata);
+  }
 
   /**
    * Mint Many unique NFTs
@@ -249,7 +270,13 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```
    */
-  mintBatch = this.erc721.mintBatch;
+  mintBatch = buildTransactionFunction(
+    async (
+      metadata: NFTMetadataOrUri[],
+    ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
+      return this.erc721.mintBatch.prepare(metadata);
+    },
+  );
 
   /**
    * Mint Many unique NFTs
@@ -278,7 +305,14 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```
    */
-  mintBatchTo = this.erc721.mintBatchTo;
+  mintBatchTo = buildTransactionFunction(
+    async (
+      walletAddress: string,
+      metadata: NFTMetadataOrUri[],
+    ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
+      return this.erc721.mintBatchTo.prepare(walletAddress, metadata);
+    },
+  );
 
   /**
    * Burn a single NFT
@@ -289,7 +323,9 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * const result = await contract.burnToken(tokenId);
    * ```
    */
-  burn = this.erc721.burn;
+  burn = buildTransactionFunction((tokenId: BigNumberish) => {
+    return this.erc721.burn.prepare(tokenId);
+  });
 
   /**
    * @internal
