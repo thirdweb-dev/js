@@ -1,7 +1,8 @@
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_BURNABLE } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
 import type { IBurnableERC721 } from "@thirdweb-dev/contracts-js";
 import { BigNumberish } from "ethers";
 
@@ -27,9 +28,11 @@ export class Erc721Burnable implements DetectableFeature {
    * await contract.nft.burn.token(tokenId);
    * ```
    */
-  public async token(tokenId: BigNumberish): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burn", [tokenId]),
-    };
-  }
+  token = buildTransactionFunction(async (tokenId: BigNumberish) => {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "burn",
+      args: [tokenId],
+    });
+  });
 }

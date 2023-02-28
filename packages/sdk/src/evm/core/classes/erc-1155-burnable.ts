@@ -1,7 +1,8 @@
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_BURNABLE } from "../../constants/erc1155-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
 import type { IBurnableERC1155 } from "@thirdweb-dev/contracts-js";
 import { BigNumberish } from "ethers";
 
@@ -32,13 +33,12 @@ export class Erc1155Burnable implements DetectableFeature {
    * const result = await contract.edition.burn.tokens(tokenId, amount);
    * ```
    */
-  public async tokens(
-    tokenId: BigNumberish,
-    amount: BigNumberish,
-  ): Promise<TransactionResult> {
-    const account = await this.contractWrapper.getSignerAddress();
-    return this.from(account, tokenId, amount);
-  }
+  tokens = buildTransactionFunction(
+    async (tokenId: BigNumberish, amount: BigNumberish) => {
+      const account = await this.contractWrapper.getSignerAddress();
+      return this.from.prepare(account, tokenId, amount);
+    },
+  );
 
   /**
    * Burn a specified amount of a NFTs
@@ -61,19 +61,15 @@ export class Erc1155Burnable implements DetectableFeature {
    * const result = await contract.edition.burn.from(account, tokenId, amount);
    * ```
    */
-  public async from(
-    account: string,
-    tokenId: BigNumberish,
-    amount: BigNumberish,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burn", [
-        account,
-        tokenId,
-        amount,
-      ]),
-    };
-  }
+  from = buildTransactionFunction(
+    async (account: string, tokenId: BigNumberish, amount: BigNumberish) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "burn",
+        args: [account, tokenId, amount],
+      });
+    },
+  );
 
   /**
    * Burn a batch of NFTs
@@ -93,13 +89,12 @@ export class Erc1155Burnable implements DetectableFeature {
    * const result = await contract.edition.burn.batch(tokenIds, amounts);
    * ```
    */
-  public async batch(
-    tokenIds: BigNumberish[],
-    amounts: BigNumberish[],
-  ): Promise<TransactionResult> {
-    const account = await this.contractWrapper.getSignerAddress();
-    return this.batchFrom(account, tokenIds, amounts);
-  }
+  batch = buildTransactionFunction(
+    async (tokenIds: BigNumberish[], amounts: BigNumberish[]) => {
+      const account = await this.contractWrapper.getSignerAddress();
+      return this.batchFrom.prepare(account, tokenIds, amounts);
+    },
+  );
 
   /**
    * Burn a batch of NFTs
@@ -122,17 +117,17 @@ export class Erc1155Burnable implements DetectableFeature {
    * const result = await contract.edition.burn.batchFrom(account, tokenIds, amounts);
    * ```
    */
-  public async batchFrom(
-    account: string,
-    tokenIds: BigNumberish[],
-    amounts: BigNumberish[],
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burnBatch", [
-        account,
-        tokenIds,
-        amounts,
-      ]),
-    };
-  }
+  batchFrom = buildTransactionFunction(
+    async (
+      account: string,
+      tokenIds: BigNumberish[],
+      amounts: BigNumberish[],
+    ) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "burnBatch",
+        args: [account, tokenIds, amounts],
+      });
+    },
+  );
 }

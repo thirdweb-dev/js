@@ -1,4 +1,5 @@
 import { getRoleHash } from "../../common";
+import { buildTransactionFunction } from "../../common/transactions";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -11,7 +12,8 @@ import { TokenERC20History } from "../../core/classes/erc-20-history";
 import { Erc20SignatureMintable } from "../../core/classes/erc-20-signature-mintable";
 import { StandardErc20 } from "../../core/classes/erc-20-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
-import { NetworkInput, TransactionResult } from "../../core/types";
+import { Transaction } from "../../core/classes/transactions";
+import { NetworkInput } from "../../core/types";
 import { Abi } from "../../schema/contracts/custom";
 import { TokenErc20ContractSchema } from "../../schema/contracts/token-erc20";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -43,7 +45,7 @@ export class Token extends StandardErc20<TokenERC20> {
     TokenERC20,
     typeof TokenErc20ContractSchema
   >;
-  public roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>;
+  public roles: ContractRoles<TokenERC20, (typeof Token.contractRoles)[number]>;
   public encoder: ContractEncoder<TokenERC20>;
   public estimator: GasCostEstimator<TokenERC20>;
   public history: TokenERC20History;
@@ -165,9 +167,9 @@ export class Token extends StandardErc20<TokenERC20> {
    *
    * @remarks See {@link Token.mintTo}
    */
-  public async mint(amount: Amount): Promise<TransactionResult> {
-    return this.erc20.mint(amount);
-  }
+  mint = buildTransactionFunction(async (amount: Amount) => {
+    return this.erc20.mint.prepare(amount);
+  });
 
   /**
    * Mint Tokens
@@ -182,17 +184,22 @@ export class Token extends StandardErc20<TokenERC20> {
    * await contract.mintTo(toAddress, amount);
    * ```
    */
-  public async mintTo(to: string, amount: Amount): Promise<TransactionResult> {
-    return this.erc20.mintTo(to, amount);
-  }
+  mintTo = buildTransactionFunction(async (to: string, amount: Amount) => {
+    return this.erc20.mintTo.prepare(to, amount);
+  });
 
   /**
    * Construct a mint transaction without executing it.
    * This is useful for estimating the gas cost of a mint transaction, overriding transaction options and having fine grained control over the transaction execution.
    * @param receiver - Address you want to send the token to
    * @param amount - The amount of tokens you want to mint
+   *
+   * @deprecated Use `contract.mint.prepare(...args)` instead
    */
-  public async getMintTransaction(to: string, amount: Amount) {
+  public async getMintTransaction(
+    to: string,
+    amount: Amount,
+  ): Promise<Transaction> {
     return this.erc20.getMintTransaction(to, amount);
   }
 
@@ -218,9 +225,9 @@ export class Token extends StandardErc20<TokenERC20> {
    * await contract.mintBatchTo(data);
    * ```
    */
-  public async mintBatchTo(args: TokenMintInput[]): Promise<TransactionResult> {
-    return this.erc20.mintBatchTo(args);
-  }
+  mintBatchTo = buildTransactionFunction(async (args: TokenMintInput[]) => {
+    return this.erc20.mintBatchTo.prepare(args);
+  });
 
   /**
    * Lets you delegate your voting power to the delegateeAddress
@@ -228,15 +235,13 @@ export class Token extends StandardErc20<TokenERC20> {
    * @param delegateeAddress - delegatee wallet address
    * @alpha
    */
-  public async delegateTo(
-    delegateeAddress: string,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("delegate", [
-        delegateeAddress,
-      ]),
-    };
-  }
+  delegateTo = buildTransactionFunction(async (delegateeAddress: string) => {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "delegate",
+      args: [delegateeAddress],
+    });
+  });
 
   /**
    * Burn Tokens
@@ -251,9 +256,9 @@ export class Token extends StandardErc20<TokenERC20> {
    * await contract.burnTokens(amount);
    * ```
    */
-  public async burn(amount: Amount): Promise<TransactionResult> {
-    return this.erc20.burn(amount);
-  }
+  burn = buildTransactionFunction((amount: Amount) => {
+    return this.erc20.burn.prepare(amount);
+  });
 
   /**
    * Burn Tokens
@@ -271,12 +276,11 @@ export class Token extends StandardErc20<TokenERC20> {
    * await contract.burnFrom(holderAddress, amount);
    * ```
    */
-  public async burnFrom(
-    holder: string,
-    amount: Amount,
-  ): Promise<TransactionResult> {
-    return this.erc20.burnFrom(holder, amount);
-  }
+  burnFrom = buildTransactionFunction(
+    async (holder: string, amount: Amount) => {
+      return this.erc20.burnFrom.prepare(holder, amount);
+    },
+  );
 
   /**
    * @internal

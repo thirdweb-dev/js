@@ -8,6 +8,7 @@ import {
   NotFoundError,
 } from "../../common";
 import { FALLBACK_METADATA, fetchTokenMetadata } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
 import {
   FEATURE_EDITION,
   FEATURE_EDITION_BATCH_MINTABLE,
@@ -31,18 +32,14 @@ import {
 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
-import {
-  NetworkInput,
-  TransactionResult,
-  TransactionResultWithId,
-} from "../types";
-import { TransactionTask } from "./TransactionTask";
+import { NetworkInput, TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc1155Burnable } from "./erc-1155-burnable";
 import { Erc1155Enumerable } from "./erc-1155-enumerable";
 import { Erc1155LazyMintable } from "./erc-1155-lazymintable";
 import { Erc1155Mintable } from "./erc-1155-mintable";
 import { Erc1155SignatureMintable } from "./erc-1155-signature-mintable";
+import { Transaction } from "./transactions";
 import type {
   DropERC1155,
   IBurnableERC1155,
@@ -216,23 +213,21 @@ export class Erc1155<
    * ```
    * @twfeature ERC1155
    */
-  public async transfer(
-    to: string,
-    tokenId: BigNumberish,
-    amount: BigNumberish,
-    data: BytesLike = [0],
-  ): Promise<TransactionResult> {
-    const from = await this.contractWrapper.getSignerAddress();
-    return {
-      receipt: await this.contractWrapper.sendTransaction("safeTransferFrom", [
-        from,
-        to,
-        tokenId,
-        amount,
-        data,
-      ]),
-    };
-  }
+  transfer = buildTransactionFunction(
+    async (
+      to: string,
+      tokenId: BigNumberish,
+      amount: BigNumberish,
+      data: BytesLike = [0],
+    ) => {
+      const from = await this.contractWrapper.getSignerAddress();
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "safeTransferFrom",
+        args: [from, to, tokenId, amount, data],
+      });
+    },
+  );
 
   /**
    * Set approval for all NFTs
@@ -246,17 +241,15 @@ export class Erc1155<
    * @param approved - whether to approve or remove
    * @twfeature ERC1155
    */
-  public async setApprovalForAll(
-    operator: string,
-    approved: boolean,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("setApprovalForAll", [
-        operator,
-        approved,
-      ]),
-    };
-  }
+  setApprovalForAll = buildTransactionFunction(
+    async (operator: string, approved: boolean) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "setApprovalForAll",
+        args: [operator, approved],
+      });
+    },
+  );
 
   /**
    * Airdrop multiple NFTs
@@ -289,38 +282,42 @@ export class Erc1155<
    * ```
    * @twfeature ERC1155BatchTransferable
    */
-  public async airdrop(
-    tokenId: BigNumberish,
-    addresses: AirdropInput,
-    data: BytesLike = [0],
-  ): Promise<TransactionResult> {
-    const from = await this.contractWrapper.getSignerAddress();
+  airdrop = buildTransactionFunction(
+    async (
+      tokenId: BigNumberish,
+      addresses: AirdropInput,
+      data: BytesLike = [0],
+    ) => {
+      const from = await this.contractWrapper.getSignerAddress();
 
-    const balanceOf = await this.balanceOf(from, tokenId);
+      const balanceOf = await this.balanceOf(from, tokenId);
 
-    const input = AirdropInputSchema.parse(addresses);
+      const input = AirdropInputSchema.parse(addresses);
 
-    const totalToAirdrop = input.reduce((prev, curr) => {
-      return prev + Number(curr?.quantity || 1);
-    }, 0);
+      const totalToAirdrop = input.reduce((prev, curr) => {
+        return prev + Number(curr?.quantity || 1);
+      }, 0);
 
-    if (balanceOf.toNumber() < totalToAirdrop) {
-      throw new Error(
-        `The caller owns ${balanceOf.toNumber()} NFTs, but wants to airdrop ${totalToAirdrop} NFTs.`,
-      );
-    }
+      if (balanceOf.toNumber() < totalToAirdrop) {
+        throw new Error(
+          `The caller owns ${balanceOf.toNumber()} NFTs, but wants to airdrop ${totalToAirdrop} NFTs.`,
+        );
+      }
 
-    const encoded = input.map(({ address: to, quantity }) => {
-      return this.contractWrapper.readContract.interface.encodeFunctionData(
-        "safeTransferFrom",
-        [from, to, tokenId, quantity, data],
-      );
-    });
+      const encoded = input.map(({ address: to, quantity }) => {
+        return this.contractWrapper.readContract.interface.encodeFunctionData(
+          "safeTransferFrom",
+          [from, to, tokenId, quantity, data],
+        );
+      });
 
-    return {
-      receipt: await this.contractWrapper.multiCall(encoded),
-    };
-  }
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "multicall",
+        args: [encoded],
+      });
+    },
+  );
 
   /**
    * Return the next available token ID to mint
@@ -351,7 +348,7 @@ export class Erc1155<
    * ```
    * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs queried.
-   * @twfeature ERC1155Enumerable 
+   * @twfeature ERC1155Enumerable
    */
   public async getAll(queryParams?: QueryAllParams): Promise<NFT[]> {
     return assertEnabled(this.query, FEATURE_EDITION_ENUMERABLE).all(
@@ -444,14 +441,16 @@ export class Erc1155<
    * ```
    * @twfeature ERC1155Mintable
    */
-  public async mint(
-    metadataWithSupply: EditionMetadataOrUri,
-  ): Promise<TransactionResultWithId<NFT>> {
-    return this.mintTo(
-      await this.contractWrapper.getSignerAddress(),
-      metadataWithSupply,
-    );
-  }
+  mint = buildTransactionFunction(
+    async (
+      metadataWithSupply: EditionMetadataOrUri,
+    ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
+      return this.mintTo.prepare(
+        await this.contractWrapper.getSignerAddress(),
+        metadataWithSupply,
+      );
+    },
+  );
 
   /**
    * Mint an NFT to a specific wallet
@@ -482,27 +481,31 @@ export class Erc1155<
    * ```
    * @twfeature ERC1155Mintable
    */
-  public async mintTo(
-    receiver: string,
-    metadataWithSupply: EditionMetadataOrUri,
-  ): Promise<TransactionResultWithId<NFT>> {
-    return assertEnabled(this.mintable, FEATURE_EDITION_MINTABLE).to(
-      receiver,
-      metadataWithSupply,
-    );
-  }
+  mintTo = buildTransactionFunction(
+    async (
+      receiver: string,
+      metadataWithSupply: EditionMetadataOrUri,
+    ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
+      return assertEnabled(this.mintable, FEATURE_EDITION_MINTABLE).to.prepare(
+        receiver,
+        metadataWithSupply,
+      );
+    },
+  );
 
   /**
    * Construct a mint transaction without executing it.
    * This is useful for estimating the gas cost of a mint transaction, overriding transaction options and having fine grained control over the transaction execution.
    * @param receiver - Address you want to send the token to
    * @param metadataWithSupply - The metadata of the NFT you want to mint
+   *
+   * @deprecated Use `contract.erc1155.mint.prepare(...args)` instead
    * @twfeature ERC1155Mintable
    */
   public async getMintTransaction(
     receiver: string,
     metadataWithSupply: EditionMetadataOrUri,
-  ) {
+  ): Promise<Transaction> {
     return assertEnabled(
       this.mintable,
       FEATURE_EDITION_MINTABLE,
@@ -523,19 +526,21 @@ export class Erc1155<
    * @param additionalSupply - the additional amount to mint
    * @twfeature ERC1155Mintable
    */
-  public async mintAdditionalSupply(
-    tokenId: BigNumberish,
-    additionalSupply: BigNumberish,
-  ): Promise<TransactionResultWithId<NFT>> {
-    return assertEnabled(
-      this.mintable,
-      FEATURE_EDITION_MINTABLE,
-    ).additionalSupplyTo(
-      await this.contractWrapper.getSignerAddress(),
-      tokenId,
-      additionalSupply,
-    );
-  }
+  mintAdditionalSupply = buildTransactionFunction(
+    async (
+      tokenId: BigNumberish,
+      additionalSupply: BigNumberish,
+    ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
+      return assertEnabled(
+        this.mintable,
+        FEATURE_EDITION_MINTABLE,
+      ).additionalSupplyTo.prepare(
+        await this.contractWrapper.getSignerAddress(),
+        tokenId,
+        additionalSupply,
+      );
+    },
+  );
 
   /**
    * Increase the supply of an existing NFT and mint it to a given wallet address
@@ -545,16 +550,18 @@ export class Erc1155<
    * @param additionalSupply - the additional amount to mint
    * @twfeature ERC1155Mintable
    */
-  public async mintAdditionalSupplyTo(
-    receiver: string,
-    tokenId: BigNumberish,
-    additionalSupply: BigNumberish,
-  ): Promise<TransactionResultWithId<NFT>> {
-    return assertEnabled(
-      this.mintable,
-      FEATURE_EDITION_MINTABLE,
-    ).additionalSupplyTo(receiver, tokenId, additionalSupply);
-  }
+  mintAdditionalSupplyTo = buildTransactionFunction(
+    async (
+      receiver: string,
+      tokenId: BigNumberish,
+      additionalSupply: BigNumberish,
+    ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
+      return assertEnabled(
+        this.mintable,
+        FEATURE_EDITION_MINTABLE,
+      ).additionalSupplyTo.prepare(receiver, tokenId, additionalSupply);
+    },
+  );
 
   ////// ERC1155 BatchMintable Extension //////
 
@@ -589,14 +596,16 @@ export class Erc1155<
    * ```
    * @twfeature ERC1155BatchMintable
    */
-  public async mintBatch(
-    metadataWithSupply: EditionMetadataOrUri[],
-  ): Promise<TransactionResultWithId<NFT>[]> {
-    return this.mintBatchTo(
-      await this.contractWrapper.getSignerAddress(),
-      metadataWithSupply,
-    );
-  }
+  mintBatch = buildTransactionFunction(
+    async (
+      metadataWithSupply: EditionMetadataOrUri[],
+    ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
+      return this.mintBatchTo.prepare(
+        await this.contractWrapper.getSignerAddress(),
+        metadataWithSupply,
+      );
+    },
+  );
 
   /**
    * Mint multiple NFTs at once to a specific wallet
@@ -632,15 +641,17 @@ export class Erc1155<
    * ```
    * @twfeature ERC1155BatchMintable
    */
-  public async mintBatchTo(
-    receiver: string,
-    metadataWithSupply: EditionMetadataOrUri[],
-  ): Promise<TransactionResultWithId<NFT>[]> {
-    return assertEnabled(
-      this.mintable?.batch,
-      FEATURE_EDITION_BATCH_MINTABLE,
-    ).to(receiver, metadataWithSupply);
-  }
+  mintBatchTo = buildTransactionFunction(
+    async (
+      receiver: string,
+      metadataWithSupply: EditionMetadataOrUri[],
+    ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
+      return assertEnabled(
+        this.mintable?.batch,
+        FEATURE_EDITION_BATCH_MINTABLE,
+      ).to.prepare(receiver, metadataWithSupply);
+    },
+  );
 
   ////// ERC1155 Burnable Extension //////
 
@@ -663,15 +674,14 @@ export class Erc1155<
    * ```
    * @twfeature ERC1155Burnable
    */
-  public async burn(
-    tokenId: BigNumberish,
-    amount: BigNumberish,
-  ): Promise<TransactionResult> {
-    return assertEnabled(this.burnable, FEATURE_EDITION_BURNABLE).tokens(
-      tokenId,
-      amount,
-    );
-  }
+  burn = buildTransactionFunction(
+    async (tokenId: BigNumberish, amount: BigNumberish) => {
+      return assertEnabled(
+        this.burnable,
+        FEATURE_EDITION_BURNABLE,
+      ).tokens.prepare(tokenId, amount);
+    },
+  );
 
   /**
    * Burn NFTs from a specific wallet
@@ -695,17 +705,14 @@ export class Erc1155<
    * ```
    * @twfeature ERC1155Burnable
    */
-  public async burnFrom(
-    account: string,
-    tokenId: BigNumberish,
-    amount: BigNumberish,
-  ): Promise<TransactionResult> {
-    return assertEnabled(this.burnable, FEATURE_EDITION_BURNABLE).from(
-      account,
-      tokenId,
-      amount,
-    );
-  }
+  burnFrom = buildTransactionFunction(
+    async (account: string, tokenId: BigNumberish, amount: BigNumberish) => {
+      return assertEnabled(
+        this.burnable,
+        FEATURE_EDITION_BURNABLE,
+      ).from.prepare(account, tokenId, amount);
+    },
+  );
 
   /**
    * Burn a batch of NFTs
@@ -726,15 +733,14 @@ export class Erc1155<
    * ```
    * @twfeature ERC1155Burnable
    */
-  public async burnBatch(
-    tokenIds: BigNumberish[],
-    amounts: BigNumberish[],
-  ): Promise<TransactionResult> {
-    return assertEnabled(this.burnable, FEATURE_EDITION_BURNABLE).batch(
-      tokenIds,
-      amounts,
-    );
-  }
+  burnBatch = buildTransactionFunction(
+    async (tokenIds: BigNumberish[], amounts: BigNumberish[]) => {
+      return assertEnabled(
+        this.burnable,
+        FEATURE_EDITION_BURNABLE,
+      ).batch.prepare(tokenIds, amounts);
+    },
+  );
 
   /**
    * Burn a batch of NFTs from a specific wallet
@@ -758,17 +764,18 @@ export class Erc1155<
    * ```
    * @twfeature ERC1155Burnable
    */
-  public async burnBatchFrom(
-    account: string,
-    tokenIds: BigNumberish[],
-    amounts: BigNumberish[],
-  ): Promise<TransactionResult> {
-    return assertEnabled(this.burnable, FEATURE_EDITION_BURNABLE).batchFrom(
-      account,
-      tokenIds,
-      amounts,
-    );
-  }
+  burnBatchFrom = buildTransactionFunction(
+    async (
+      account: string,
+      tokenIds: BigNumberish[],
+      amounts: BigNumberish[],
+    ) => {
+      return assertEnabled(
+        this.burnable,
+        FEATURE_EDITION_BURNABLE,
+      ).batchFrom.prepare(account, tokenIds, amounts);
+    },
+  );
 
   ////// ERC721 LazyMint Extension //////
 
@@ -799,17 +806,19 @@ export class Erc1155<
    * @param options - optional upload progress callback
    * @twfeature ERC1155LazyMintableV1 | ERC1155LazyMintableV2
    */
-  public async lazyMint(
-    metadatas: NFTMetadataOrUri[],
-    options?: {
-      onProgress: (event: UploadProgressEvent) => void;
+  lazyMint = buildTransactionFunction(
+    async (
+      metadatas: NFTMetadataOrUri[],
+      options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+      },
+    ): Promise<Transaction<TransactionResultWithId<NFTMetadata>[]>> => {
+      return assertEnabled(
+        this.lazyMintable,
+        FEATURE_EDITION_LAZY_MINTABLE_V2,
+      ).lazyMint.prepare(metadatas, options);
     },
-  ): Promise<TransactionResultWithId<NFTMetadata>[]> {
-    return assertEnabled(
-      this.lazyMintable,
-      FEATURE_EDITION_LAZY_MINTABLE_V2,
-    ).lazyMint(metadatas, options);
-  }
+  );
 
   ////// ERC1155 Claimable Extension //////
 
@@ -820,13 +829,15 @@ export class Erc1155<
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
    * @param options - Optional claim verification data (e.g. price, currency, etc...)
+   *
+   * @deprecated Use `contract.erc1155.claim.prepare(...args)` instead
    */
   public async getClaimTransaction(
     destinationAddress: string,
     tokenId: BigNumberish,
     quantity: BigNumberish,
     options?: ClaimOptions,
-  ): Promise<TransactionTask> {
+  ): Promise<Transaction> {
     const claimWithConditions = this.lazyMintable?.claimWithConditions;
     const claim = this.lazyMintable?.claim;
     if (claimWithConditions) {
@@ -869,18 +880,20 @@ export class Erc1155<
    * @returns - Receipt for the transaction
    * @twfeature ERC1155ClaimCustom | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
    */
-  public async claim(
-    tokenId: BigNumberish,
-    quantity: BigNumberish,
-    options?: ClaimOptions,
-  ): Promise<TransactionResult> {
-    return this.claimTo(
-      await this.contractWrapper.getSignerAddress(),
-      tokenId,
-      quantity,
-      options,
-    );
-  }
+  claim = buildTransactionFunction(
+    async (
+      tokenId: BigNumberish,
+      quantity: BigNumberish,
+      options?: ClaimOptions,
+    ) => {
+      return this.claimTo.prepare(
+        await this.contractWrapper.getSignerAddress(),
+        tokenId,
+        quantity,
+        options,
+      );
+    },
+  );
 
   /**
    * Claim NFTs to a specific Wallet
@@ -905,27 +918,29 @@ export class Erc1155<
    * @returns - Receipt for the transaction
    * @twfeature ERC1155ClaimCustom | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
    */
-  public async claimTo(
-    destinationAddress: string,
-    tokenId: BigNumberish,
-    quantity: BigNumberish,
-    options?: ClaimOptions,
-  ): Promise<TransactionResult> {
-    const claimWithConditions = this.lazyMintable?.claimWithConditions;
-    const claim = this.lazyMintable?.claim;
-    if (claimWithConditions) {
-      return claimWithConditions.to(
-        destinationAddress,
-        tokenId,
-        quantity,
-        options,
-      );
-    }
-    if (claim) {
-      return claim.to(destinationAddress, tokenId, quantity, options);
-    }
-    throw new ExtensionNotImplementedError(FEATURE_EDITION_CLAIM_CUSTOM);
-  }
+  claimTo = buildTransactionFunction(
+    async (
+      destinationAddress: string,
+      tokenId: BigNumberish,
+      quantity: BigNumberish,
+      options?: ClaimOptions,
+    ) => {
+      const claimWithConditions = this.lazyMintable?.claimWithConditions;
+      const claim = this.lazyMintable?.claim;
+      if (claimWithConditions) {
+        return claimWithConditions.to.prepare(
+          destinationAddress,
+          tokenId,
+          quantity,
+          options,
+        );
+      }
+      if (claim) {
+        return claim.to.prepare(destinationAddress, tokenId, quantity, options);
+      }
+      throw new ExtensionNotImplementedError(FEATURE_EDITION_CLAIM_CUSTOM);
+    },
+  );
 
   /**
    * Configure claim conditions
@@ -1047,7 +1062,6 @@ export class Erc1155<
     ) {
       return new Erc1155Enumerable(this, this.contractWrapper);
     }
-    return undefined;
   }
 
   private detectErc1155Mintable(): Erc1155Mintable | undefined {
