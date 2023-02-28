@@ -12,7 +12,7 @@ import {
   PREBUILT_CONTRACTS_MAP,
 } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
-import { AbiSchema, SDKOptions, StorageConfigInput } from "../schema";
+import { AbiSchema, SDKOptions } from "../schema";
 import { ContractWithMetadata, CurrencyValue } from "../types";
 import { ContractDeployer } from "./classes";
 import { ContractPublisher } from "./classes/contract-publisher";
@@ -64,7 +64,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     wallet: EVMWallet,
     network: ChainOrRpcUrl,
     options: SDKOptions = {},
-    storage?: StorageConfigInput,
+    storage?: ThirdwebStorage,
   ) {
     const signer = await wallet.getSigner();
     return ThirdwebSDK.fromSigner(signer, network, options, storage);
@@ -94,7 +94,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     signer: Signer,
     network?: ChainOrRpcUrl,
     options: SDKOptions = {},
-    storage?: StorageConfigInput,
+    storage?: ThirdwebStorage,
   ): ThirdwebSDK {
     let signerWithProvider = signer;
     if (network && !signer.provider) {
@@ -135,7 +135,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     privateKey: string,
     network: ChainOrRpcUrl,
     options: SDKOptions = {},
-    storage?: StorageConfigInput,
+    storage?: ThirdwebStorage,
   ): ThirdwebSDK {
     const provider = getChainProvider(network, options);
     const signer = new ethers.Wallet(privateKey, provider);
@@ -176,7 +176,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   constructor(
     network: NetworkInput,
     options: SDKOptions = {},
-    storageConfig: StorageConfigInput = new ThirdwebStorage(),
+    storage?: ThirdwebStorage,
   ) {
     if (isChainConfig(network)) {
       options = {
@@ -189,12 +189,12 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     super(network, options);
     setSupportedChains(options?.supportedChains);
 
-    const storage = createStorage(storageConfig);
-    this.storage = storage;
-    this.storageHandler = storage;
+    const configuredStorage = createStorage(storage, options);
+    this.storage = configuredStorage;
+    this.storageHandler = configuredStorage;
 
     this.wallet = new UserWallet(network, options);
-    this.deployer = new ContractDeployer(network, options, storage);
+    this.deployer = new ContractDeployer(network, options, configuredStorage);
     this.multiChainRegistry = new MultichainRegistry(
       network,
       this.storageHandler,

@@ -1,17 +1,15 @@
-import { StorageConfigInput, StorageConfigSchema } from "../schema";
+import { SDKOptions } from "../schema";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
-function isStorage(config: StorageConfigInput): config is ThirdwebStorage {
-  return config instanceof ThirdwebStorage;
-}
-
-export function createStorage(config: StorageConfigInput): ThirdwebStorage {
-  const storage = StorageConfigSchema.parse(config);
-  if (isStorage(config)) {
-    return storage as ThirdwebStorage;
+export function createStorage(
+  storage?: ThirdwebStorage,
+  options?: SDKOptions,
+): ThirdwebStorage {
+  if (storage) {
+    return storage;
+  } else if (options?.gatewayUrls) {
+    return new ThirdwebStorage({ gatewayUrls: options.gatewayUrls });
   } else {
-    return new ThirdwebStorage(
-      storage as Exclude<StorageConfigInput, ThirdwebStorage>,
-    );
+    return new ThirdwebStorage();
   }
 }
