@@ -3,8 +3,10 @@ import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 import { Buffer } from "buffer";
 
-// Coinbase SDK uses Buffer which requires a global polyfill
-window.Buffer = Buffer;
+if (typeof window !== "undefined") {
+  // Coinbase SDK uses Buffer for rendering the QRCode which requires a global polyfill
+  window.Buffer = Buffer;
+}
 
 export class CoinbaseWallet extends AbstractBrowserWallet<{
   darkMode: boolean;
