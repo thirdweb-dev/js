@@ -2,6 +2,7 @@ import {
   Box,
   Container,
   Flex,
+  Image,
   Spinner,
   useBreakpointValue,
   usePrevious,
@@ -183,8 +184,13 @@ const ContractSubnav: React.FC<ContractSubnavProps> = ({ routes }) => {
             <ContractSubNavLinkButton
               icon={
                 route.isEnabled !== undefined ? (
-                  route.isEnabled ===
-                  "enabled" ? undefined : route.isEnabled === "loading" ? (
+                  route.isEnabled === "enabled" ? (
+                    <Image
+                      src="/assets/dashboard/extension-check.svg"
+                      alt="Extension detected"
+                      objectFit="contain"
+                    />
+                  ) : route.isEnabled === "loading" ? (
                     <Spinner color="purple.500" size="xs" />
                   ) : undefined
                 ) : undefined
