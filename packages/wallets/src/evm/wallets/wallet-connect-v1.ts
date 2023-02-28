@@ -64,9 +64,9 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
 
   #onChange = async (payload: any) => {
     if (payload.chain) {
-      this.emit("open_wallet");
+      // chain changed
     } else if (payload.account) {
-      this.emit("open_wallet");
+      //account change
     }
   };
 
