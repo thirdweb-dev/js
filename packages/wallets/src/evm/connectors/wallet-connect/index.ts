@@ -9,12 +9,13 @@ import {
   Connector,
 } from "@wagmi/core";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
+import { EthereumProviderOptions } from "@walletconnect/ethereum-provider/dist/types/EthereumProvider";
 import { providers } from "ethers";
 import { getAddress, hexValue } from "ethers/lib/utils.js";
 
 type WalletConnectOptions = {
-  projectId: string;
-  qrcode?: boolean;
+  projectId: EthereumProviderOptions["projectId"];
+  qrcode?: EthereumProviderOptions["showQrModal"];
   dappMetadata: DAppMetaData;
   storage: AsyncStorage;
   /**

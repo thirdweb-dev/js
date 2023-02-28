@@ -43,14 +43,24 @@ export abstract class AbstractBrowserWallet<
       "lastConnectedWallet",
     );
 
+    console.log("WalletConnectV1Connector", "autoconnect");
+
     // return if the last connected wallet is not this wallet
-    if (lastConnectedWallet !== this.walletId) return;
+    if (lastConnectedWallet !== this.walletId) {
+      return;
+    }
+
+    console.log("WalletConnectV1Connector", "same wallet");
 
     const connector = await this.getConnector();
     const isConnected = await connector.isConnected();
 
+    console.log("WalletConnectV1Connector.isConnected", isConnected);
+
     // return if already connected
-    if (isConnected) return;
+    if (isConnected) {
+      return;
+    }
 
     const lastConnectionParams = await this.walletStorage.getItem(
       "lastConnectedParams",
@@ -63,6 +73,8 @@ export abstract class AbstractBrowserWallet<
     } catch {
       parsedParams = undefined;
     }
+
+    console.log("WalletConnectV1Connector.lastParams", lastConnectionParams);
 
     // connect and return the account address
     return await this.connect(parsedParams);
@@ -87,7 +99,10 @@ export abstract class AbstractBrowserWallet<
       });
 
       if (data.chain?.id) {
-        this.walletStorage.setItem("lastConnectedChain", data.chain?.id + "");
+        this.walletStorage.setItem(
+          "lastConnectedChain",
+          String(data.chain?.id),
+        );
       }
     });
 
@@ -105,8 +120,12 @@ export abstract class AbstractBrowserWallet<
     connector.on("disconnect", () => this.emit("disconnect"));
     connector.on("error", (error) => this.emit("error", error));
 
+    console.log("Base.Connecting: ", this.walletId);
+
     // end event listener setups
-    let connectedAddress = await connector.connect(connectOptions);
+    const connectedAddress = await connector.connect(connectOptions);
+
+    console.log("Base.Connecting.address: ", connectedAddress);
     // do not break on coordinator error
     try {
       // Store the last connected params in secure storage

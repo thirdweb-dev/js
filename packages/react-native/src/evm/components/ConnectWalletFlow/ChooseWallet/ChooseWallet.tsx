@@ -1,21 +1,22 @@
-import React, {ReactNode} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {Wallet} from '../../../types/wallet';
-import {ChooseWalletContent} from './ChooseWalletContent';
-import {ChooseWalletHeader} from './ChooseWalletHeader';
+import { WalletMeta } from "../../../types/wallet";
+import { ModalFooter } from "../../base/modal/ModalFooter";
+import { ModalHeaderTextClose } from "../../base/modal/ModalHeaderTextClose";
+import { ChooseWalletContent } from "./ChooseWalletContent";
+import React, { ReactNode } from "react";
+import { View } from "react-native";
 
 export type ChooseWalletProps = {
   headerText?: ReactNode | string;
   subHeaderText?: ReactNode | string;
   footer?: ReactNode;
-  onChooseWallet: (wallet: Wallet) => void;
+  onChooseWallet: (wallet: WalletMeta) => void;
   onClose: () => void;
-  wallets: Wallet[];
+  wallets: WalletMeta[];
 };
 
 export function ChooseWallet({
-  headerText,
-  subHeaderText,
+  headerText = "Choose your Wallet",
+  subHeaderText = "Select the wallet that you want to connect to Thirdweb",
   wallets,
   footer,
   onChooseWallet,
@@ -23,35 +24,13 @@ export function ChooseWallet({
 }: ChooseWalletProps) {
   return (
     <View>
-      <ChooseWalletHeader
+      <ModalHeaderTextClose
+        onClose={onClose}
         headerText={headerText}
         subHeaderText={subHeaderText}
-        close={onClose}
       />
       <ChooseWalletContent wallets={wallets} onChooseWallet={onChooseWallet} />
-      {footer ? (
-        footer
-      ) : (
-        <TouchableOpacity style={styles.footer}>
-          <Text style={styles.footerText}>Need help getting started?</Text>
-        </TouchableOpacity>
-      )}
+      {footer ? footer : <ModalFooter footer={"Need help getting started?"} />}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  footer: {
-    marginTop: 24,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  footerText: {
-    fontWeight: '500',
-    fontSize: 14,
-    lineHeight: 24,
-    color: '#3385FF',
-    letterSpacing: -0.02,
-  },
-});

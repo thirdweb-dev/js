@@ -30,6 +30,7 @@
     "@thirdweb-dev/sdk": "*",
     "@thirdweb-dev/storage": "*",
     "@thirdweb-dev/wallets": "*",
+    "react-native-svg": "^13.8.0",
     "tiny-invariant": "^1.2.0",
     "wagmi": "^0.11.0"
   },

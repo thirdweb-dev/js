@@ -1,25 +1,40 @@
-import React, {useEffect, useState} from 'react';
-import {Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {TWModal} from '../base/modal/TWModal';
-import {Wallet} from '../../types/wallet';
-import {ChooseWallet} from './ChooseWallet/ChooseWallet';
-import {ConnectingWallet} from './ConnectingWallet/ConnectingWallet';
-import { useConnect, useWallets } from '@thirdweb-dev/react-core';
-import { getWallets } from '../../utils/wallets';
+import {
+  useSupportedWallets,
+  useWalletsContext,
+} from "../../contexts/wallets-context";
+import { WalletMeta } from "../../types/wallet";
+import { getWallets } from "../../utils/wallets";
+import { TWModal } from "../base/modal/TWModal";
+import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
+import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
+import {
+  useConnect,
+  useDisplayUri,
+  useWallets,
+} from "@thirdweb-dev/react-core";
+import { WalletConnect, WalletConnectV1 } from "@thirdweb-dev/wallets";
+import React, { useEffect, useState } from "react";
+import { Text, StyleSheet, TouchableOpacity, Linking } from "react-native";
+import invariant from "tiny-invariant";
 
-export const ConnectWalletFlow: React.FC<{theme?: 'dark' | 'light'}> = () => {
+export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [activeWallet, setActiveWallet] = useState<Wallet | undefined>();
+  const { activeWalletMeta, setActiveWalletMeta } = useWalletsContext();
 
   const connect = useConnect();
-  const supportedWallets = useWallets();
+  const supportedWallets = useSupportedWallets();
+  const walletClasses = useWallets();
+  const displayUri = useDisplayUri();
 
   useEffect(() => {
-    if (activeWallet) {
-      connect(supportedWallets[0], {});
-    }
-  }, [activeWallet, connect, supportedWallets]);
+    if (displayUri && activeWalletMeta?.mobile.universal) {
+      const encodedUri = encodeURIComponent(displayUri);
+      const fullUrl = `${activeWalletMeta?.mobile.universal}/wc?uri=${encodedUri}`;
+      console.log("useEffect.url", fullUrl);
 
+      Linking.openURL(fullUrl);
+    }
+  }, [activeWalletMeta?.mobile.universal, displayUri]);
 
   const onConnectPress = () => {
     setModalVisible(true);
@@ -27,21 +42,33 @@ export const ConnectWalletFlow: React.FC<{theme?: 'dark' | 'light'}> = () => {
 
   const onClose = () => {
     setModalVisible(false);
-    setActiveWallet(undefined);
+    setActiveWalletMeta(undefined);
   };
 
-  const onChooseWallet = (wallet: Wallet) => {
-    setActiveWallet(wallet);
+  const onChooseWallet = (wallet_: WalletMeta) => {
+    setActiveWalletMeta(wallet_);
+
+    if (wallet_.versions.includes("2")) {
+      connect(WalletConnect, {});
+    } else if (wallet_.versions.includes("1")) {
+      connect(WalletConnectV1, {});
+    } else {
+      const walletClass = walletClasses.find(
+        (item) => item.id === wallet_.name,
+      );
+      invariant(walletClass, "Wallet class not found");
+      connect(walletClass, {});
+    }
   };
 
   return (
     <>
       <TWModal isVisible={modalVisible}>
-        {activeWallet ? (
-          <ConnectingWallet wallet={activeWallet} onClose={onClose} />
+        {activeWalletMeta ? (
+          <ConnectingWallet wallet={activeWalletMeta} onClose={onClose} />
         ) : (
           <ChooseWallet
-            wallets={getWallets()}
+            wallets={getWallets(supportedWallets)}
             onChooseWallet={onChooseWallet}
             onClose={onClose}
           />
@@ -50,7 +77,8 @@ export const ConnectWalletFlow: React.FC<{theme?: 'dark' | 'light'}> = () => {
 
       <TouchableOpacity
         style={styles.connectWalletButton}
-        onPress={onConnectPress}>
+        onPress={onConnectPress}
+      >
         <Text style={styles.darkText}>Connect Wallet</Text>
       </TouchableOpacity>
     </>
@@ -59,33 +87,33 @@ export const ConnectWalletFlow: React.FC<{theme?: 'dark' | 'light'}> = () => {
 
 const styles = StyleSheet.create({
   connectWalletView: {
-    height: '50',
-    minWidth: '200px',
-    width: '100%',
+    height: "50",
+    minWidth: "200px",
+    width: "100%",
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   whiteText: {
-    color: 'white',
-    textAlign: 'center',
-    fontWeight: '700',
+    color: "white",
+    textAlign: "center",
+    fontWeight: "700",
   },
   darkText: {
-    color: 'black',
-    textAlign: 'center',
-    fontWeight: '600',
+    color: "black",
+    textAlign: "center",
+    fontWeight: "600",
     fontSize: 16,
   },
   connectWalletButton: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: 'white',
-    backgroundColor: '#FFFFFF',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "white",
+    backgroundColor: "#FFFFFF",
     borderRadius: 8,
     paddingHorizontal: 24,
     paddingVertical: 12,

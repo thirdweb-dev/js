@@ -1,20 +1,15 @@
-import React, {ReactNode} from 'react';
-import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {Wallet} from '../../../types/wallet';
-import {ConnectWalletHeader} from './ConnectingWalletHeader';
+import { WalletMeta } from "../../../types/wallet";
+import { ModalFooter } from "../../base/modal/ModalFooter";
+import { ConnectWalletHeader } from "./ConnectingWalletHeader";
+import React, { ReactNode } from "react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 export type ConnectingWalletProps = {
   headerText?: ReactNode | string;
   subHeaderText?: ReactNode | string;
   footer?: ReactNode;
   onClose: () => void;
-  wallet: Wallet;
+  wallet: WalletMeta;
 };
 
 export function ConnectingWallet({
@@ -26,7 +21,7 @@ export function ConnectingWallet({
   return (
     <View>
       <ConnectWalletHeader
-        walletLogoUrl={wallet.image_url.lg}
+        walletLogoUrl={wallet.image_url}
         subHeaderText={subHeaderText}
         close={onClose}
       />
@@ -39,46 +34,29 @@ export function ConnectingWallet({
       {footer ? (
         footer
       ) : (
-        <TouchableOpacity style={styles.footer}>
-          <Text style={styles.footerText}>
-            Having troubles connecting to {wallet.name}?
-          </Text>
-        </TouchableOpacity>
+        <ModalFooter footer={`Having troubles connecting to ${wallet.name}?`} />
       )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  footer: {
-    marginTop: 24,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  footerText: {
-    fontWeight: '500',
-    fontSize: 14,
-    lineHeight: 24,
-    color: '#3385FF',
-    letterSpacing: -0.02,
-  },
   text: {
-    fontWeight: '500',
-    color: '#646D7A',
+    fontWeight: "500",
+    color: "#646D7A",
     fontSize: 16,
     lineHeight: 24,
     letterSpacing: -0.02,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 18,
   },
   connectingContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignContent: "center",
+    alignItems: "center",
     paddingHorizontal: 4,
     marginTop: 18,
   },

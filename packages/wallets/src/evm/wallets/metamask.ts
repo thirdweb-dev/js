@@ -53,6 +53,7 @@ export class MetaMask extends AbstractBrowserWallet {
       } else {
         const walletConnectConnector = new WalletConnectV1Connector({
           chains: this.chains,
+          storage: this.connectorStorage,
           options: {
             clientMeta: {
               name: this.options.dappMetadata.name,

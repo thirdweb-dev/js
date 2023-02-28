@@ -1,4 +1,5 @@
-import React from 'react';
+import { WalletMeta } from "../../../types/wallet";
+import React from "react";
 import {
   StyleSheet,
   View,
@@ -6,12 +7,11 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
-} from 'react-native';
-import {Wallet} from '../../../types/wallet';
+} from "react-native";
 
 interface InitialExplorerContentProps {
-  wallets: Wallet[];
-  onChooseWallet: (wallet: Wallet) => void;
+  wallets: WalletMeta[];
+  onChooseWallet: (wallet: WalletMeta) => void;
 }
 
 export const ChooseWalletContent = ({
@@ -21,17 +21,19 @@ export const ChooseWalletContent = ({
   return (
     <View style={styles.explorerContainer}>
       <FlatList
+        keyExtractor={(item) => item.name}
         data={wallets}
-        renderItem={({item, index}) => {
+        renderItem={({ item, index }) => {
           const marginBottom = index === wallets.length - 1 ? 0 : 8;
           return (
             <TouchableOpacity
-              style={[styles.row, {marginBottom: marginBottom}]}
-              onPress={() => onChooseWallet(item)}>
+              style={[styles.row, { marginBottom: marginBottom }]}
+              onPress={() => onChooseWallet(item)}
+            >
               <Image
-                alt='wallet logo'
+                alt="wallet logo"
                 style={styles.walletImage}
-                source={{uri: item.image_url.sm}}
+                source={{ uri: item.image_url }}
               />
               <Text style={styles.rowWalletText}>{item.name}</Text>
             </TouchableOpacity>
@@ -44,20 +46,20 @@ export const ChooseWalletContent = ({
 
 const styles = StyleSheet.create({
   rowWalletText: {
-    fontWeight: '600',
-    color: '#F1F1F1',
+    fontWeight: "600",
+    color: "#F1F1F1",
     fontSize: 16,
     lineHeight: 24,
     letterSpacing: -0.02,
   },
   row: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#232429',
+    backgroundColor: "#232429",
     borderRadius: 12,
   },
   walletImage: {
@@ -66,11 +68,11 @@ const styles = StyleSheet.create({
     marginRight: 16,
   },
   explorerContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 4,
     marginTop: 25,
   },

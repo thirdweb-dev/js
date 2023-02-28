@@ -1,20 +1,13 @@
 import { walletsMetadata } from "../constants/walletsMetadata";
 
-export type Wallet = {
+export type WalletMeta = {
   name: string;
-  homepage: string;
-  chains: string[];
-  versions: ('1' | '2')[];
-  sdks: ('sign_v1' | 'sign_v2')[];
-  image_url: {
-    sm: string;
-    md: string;
-    lg: string;
-  };
+  versions: ("1" | "2" | "custom")[];
+  image_url: string;
   mobile: {
     native: string;
     universal: string;
   };
 };
 
-export type SupportedWallet = keyof typeof walletsMetadata & 'devicewallet';
+export type SupportedWallet = keyof typeof walletsMetadata;

@@ -1,6 +1,8 @@
 import { walletsMetadata } from "../constants/walletsMetadata";
-import { Wallet } from "../types/wallet";
+import { SupportedWallet, WalletMeta } from "../types/wallet";
 
-export function getWallets(): Wallet[] {
-    return [walletsMetadata['metamask']];
+export function getWallets(supportedWallets: SupportedWallet[]): WalletMeta[] {
+  return supportedWallets.map(
+    (wallet) => walletsMetadata[wallet] as WalletMeta,
+  );
 }

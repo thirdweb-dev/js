@@ -1,13 +1,14 @@
+import { AsyncStorage } from "../../../core/AsyncStorage";
 import {
   SwitchChainError,
   UserRejectedRequestError,
   ChainNotConfiguredError,
-  getClient,
   normalizeChainId,
   Connector,
   ProviderRpcError,
 } from "@wagmi/core";
 import type { Chain } from "@wagmi/core";
+import WalletConnect from "@walletconnect/legacy-client";
 import type WalletConnectProvider from "@walletconnect/legacy-provider";
 import { utils, providers } from "ethers";
 
@@ -19,6 +20,8 @@ import { utils, providers } from "ethers";
  * - Trust Wallet (trustwallet.com)
  */
 const switchChainAllowedRegex = /(imtoken|metamask|rainbow|trust wallet)/i;
+
+const LAST_USED_CHAIN_ID = "last-used-chain-id";
 
 type WalletConnectOptions = ConstructorParameters<
   typeof WalletConnectProvider
@@ -36,21 +39,35 @@ export class WalletConnectV1Connector extends Connector<
   readonly ready = true;
 
   #provider?: WalletConnectProvider;
+  #storage: AsyncStorage;
 
-  constructor(config: { chains?: Chain[]; options: WalletConnectOptions }) {
+  constructor(config: {
+    chains?: Chain[];
+    storage: AsyncStorage;
+    options: WalletConnectOptions;
+  }) {
     super(config);
+
+    this.#storage = config.storage;
   }
 
   async connect({ chainId }: { chainId?: number } = {}) {
+    console.log("WalletConnectV1Connector connector", "connect");
     try {
       let targetChainId = chainId;
       if (!targetChainId) {
-        const lastUsedChainId = getClient().lastUsedChainId;
+        const lastUsedChainIdStr = await this.#storage.getItem(
+          LAST_USED_CHAIN_ID,
+        );
+        const lastUsedChainId = lastUsedChainIdStr
+          ? parseInt(lastUsedChainIdStr)
+          : undefined;
         if (lastUsedChainId && !this.isChainUnsupported(lastUsedChainId)) {
           targetChainId = lastUsedChainId;
         }
       }
 
+      console.log("WalletConnectV1Connector connector", "getProvider");
       const provider = await this.getProvider({
         chainId: targetChainId,
         create: true,
@@ -60,11 +77,14 @@ export class WalletConnectV1Connector extends Connector<
       provider.on("disconnect", this.onDisconnect);
       provider.on("message", this.onMessage);
       provider.connector.on("display_uri", this.onDisplayUri);
+      provider.connector.on("call_request_sent", this.onRequestSent);
 
       // Defer message to the next tick to ensure wallet connect data (provided by `.enable()`) is available
       setTimeout(() => this.emit("message", { type: "connecting" }), 0);
 
+      console.log("WalletConnectV1Connector connector", "enable");
       const accounts = await provider.enable();
+      console.log("WalletConnectV1Connector connector", "after.enable");
       const account = utils.getAddress(accounts[0] as string);
       let id = await this.getChainId();
       let unsupported = this.isChainUnsupported(id);
@@ -72,6 +92,11 @@ export class WalletConnectV1Connector extends Connector<
       // Not all WalletConnect options support programmatic chain switching
       // Only enable for wallet options that do
       const walletName = provider.connector?.peerMeta?.name ?? "";
+      console.log(
+        "WalletConnectV1Connector connector",
+        "walletName",
+        walletName,
+      );
       if (switchChainAllowedRegex.test(walletName)) {
         this.switchChain = this.#switchChain;
 
@@ -87,12 +112,14 @@ export class WalletConnectV1Connector extends Connector<
         }
       }
 
+      console.log("WalletConnectV1Connector connector", "emit.connect");
       this.emit("connect", {
         account,
         chain: { id, unsupported },
         provider,
       });
 
+      console.log("WalletConnectV1Connector connector account", account);
       return {
         account,
         chain: { id, unsupported },
@@ -116,6 +143,8 @@ export class WalletConnectV1Connector extends Connector<
     provider.removeListener("chainChanged", this.onChainChanged);
     provider.removeListener("disconnect", this.onDisconnect);
     provider.removeListener("message", this.onMessage);
+    (provider.connector as WalletConnect).off("display_uri");
+    (provider.connector as WalletConnect).off("call_request_sent");
 
     // typeof localStorage !== 'undefined' &&
     //     localStorage.removeItem('walletconnect')
@@ -275,6 +304,13 @@ export class WalletConnectV1Connector extends Connector<
     this.emit("message", { data: payload.params[0], type: "display_uri" });
   };
 
+  protected onRequestSent = (error: any, payload: { params: string[] }) => {
+    if (error) {
+      this.emit("message", { data: error, type: "request" });
+    }
+    this.emit("message", { data: payload.params[0], type: "request" });
+  };
+
   protected onMessage = (message: { type: string; data: unknown }) => {
     this.emit("message", message);
   };
@@ -290,10 +326,12 @@ export class WalletConnectV1Connector extends Connector<
   protected onChainChanged = (chainId: number | string) => {
     const id = normalizeChainId(chainId);
     const unsupported = this.isChainUnsupported(id);
+    this.#storage.setItem(LAST_USED_CHAIN_ID, String(chainId));
     this.emit("change", { chain: { id, unsupported } });
   };
 
   protected onDisconnect = () => {
+    this.#storage.removeItem(LAST_USED_CHAIN_ID);
     this.emit("disconnect");
   };
 }
