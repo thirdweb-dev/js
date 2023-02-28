@@ -29,7 +29,7 @@ export const ConditionsNotSet: React.FC<ConditionsNotSetProps> = ({
       // TODO (cc) check this
       claimConditions.data.every((cc) => cc.maxClaimableSupply === "0"));
 
-  const chainSlug = useEVMContractInfo();
+  const chainSlug = useEVMContractInfo()?.chainSlug || "";
 
   if (dismissed || !isClaimable || !noClaimConditions || !contract) {
     return null;
