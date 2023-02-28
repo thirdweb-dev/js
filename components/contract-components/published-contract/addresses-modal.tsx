@@ -9,7 +9,6 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import { getChainByChainId } from "@thirdweb-dev/chains";
 import { Heading, Text } from "tw-components";
 
 interface AddressesModalProps {
@@ -53,9 +52,7 @@ export const AddressesModal: React.FC<AddressesModalProps> = ({
                     alignItems={{ base: "auto", md: "center" }}
                     justifyContent="space-between"
                   >
-                    <Text size="body.sm">
-                      {getChainByChainId(parseInt(chainId)).name}
-                    </Text>
+                    <Text size="body.sm">{chainId}</Text>
                     <Link
                       href={`https://thirdweb.com/${chainId}/${address}`}
                       isExternal
