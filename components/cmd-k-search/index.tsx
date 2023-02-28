@@ -175,10 +175,8 @@ const getSearchQuery = ({
   page?: number;
   perPage?: number;
 }) =>
-  `https://search.thirdweb.com/collections/contracts/documents/search?q=${query}&query_by=name,+symbol,+contract_address,+deployer_address&query_by_weights=3,+3,+2,+1&page=${page}&per_page=${perPage}&exhaustive_search=true${
-    walletAddress
-      ? `&sort_by=_eval(deployer_address:${walletAddress}):desc`
-      : ""
+  `https://search.thirdweb.com/collections/contracts/documents/search?q=${query}&query_by=name,+symbol,+contract_address,+deployer_address&query_by_weights=3,+3,+2,+1&page=${page}&per_page=${perPage}&exhaustive_search=true&sort_by=testnet:asc${
+    walletAddress ? `,_eval(deployer_address:${walletAddress}):desc` : ""
   }`;
 
 function contractTypesenseSearchQuery(
