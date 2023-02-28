@@ -19,6 +19,7 @@ let framework: string = "";
 let language: string = "";
 let baseContract: string = "";
 let chain: string = "";
+let createExtension: boolean = false;
 /* let createType: string = "app"; */
 
 export async function twCreate(
@@ -89,6 +90,10 @@ export async function twCreate(
 
     if (options.hardhat) {
       framework = "hardhat";
+    }
+
+    if(options.extension) {
+      createExtension = true;
     }
   }
 
@@ -329,7 +334,7 @@ export async function twCreate(
     }
 
     // Select base contract
-    if (projectType === "contract" && !baseContract) {
+    if (projectType === "contract" && !baseContract && !createExtension) {
       let standard = "none";
       const standardPrompt = await prompts({
         type: "select",
@@ -443,6 +448,7 @@ export async function twCreate(
         contractName,
         baseContract,
         onlyContract,
+        createExtension
       });
     }
   } catch (reason) {
