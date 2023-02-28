@@ -248,8 +248,9 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
    * await contract.burnTokens(amount);
    * ```
    */
-  burnTokens = this.erc20.burn;
-
+  burnTokens = buildTransactionFunction(async (amount: Amount) => {
+    return this.erc20.burn.prepare(amount);
+  });
   /**
    * Burn Tokens
    *
@@ -266,7 +267,11 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
    * await contract.burnFrom(holderAddress, amount);
    * ```
    */
-  burnFrom = this.erc20.burnFrom;
+  burnFrom = buildTransactionFunction(
+    async (holder: string, amount: Amount) => {
+      return this.erc20.burnFrom.prepare(holder, amount);
+    },
+  );
 
   /**
    * @internal

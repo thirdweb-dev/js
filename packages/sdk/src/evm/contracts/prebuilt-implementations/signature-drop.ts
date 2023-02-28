@@ -2,8 +2,9 @@ import {
   DEFAULT_QUERY_ALL_COUNT,
   QueryAllParams,
 } from "../../../core/schema/QueryParams";
-import { NFT, NFTMetadata } from "../../../core/schema/nft";
+import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
@@ -21,14 +22,17 @@ import { Erc721 } from "../../core/classes/erc-721";
 import { StandardErc721 } from "../../core/classes/erc-721-standard";
 import { Erc721WithQuantitySignatureMintable } from "../../core/classes/erc-721-with-quantity-signature-mintable";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
-import { NetworkInput } from "../../core/types";
+import { Transaction } from "../../core/classes/transactions";
+import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { PaperCheckout } from "../../integrations/thirdweb-checkout";
 import { Abi } from "../../schema/contracts/custom";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
+import { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
+import { UploadProgressEvent } from "../../types/events";
 import type { SignatureDrop as SignatureDropContract } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, CallOverrides, constants } from "ethers";
+import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
  * Setup a collection of NFTs where when it comes to minting, you can authorize
@@ -382,7 +386,16 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * @param metadatas - The metadata to include in the batch.
    * @param options - optional upload progress callback
    */
-  createBatch = this.erc721.lazyMint;
+  createBatch = buildTransactionFunction(
+    async (
+      metadatas: NFTMetadataOrUri[],
+      options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+      },
+    ): Promise<Transaction<TransactionResultWithId<NFTMetadata>[]>> => {
+      return this.erc721.lazyMint.prepare(metadatas, options);
+    },
+  );
 
   /**
    * Construct a claim transaction without executing it.
@@ -393,7 +406,17 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    *
    * @deprecated Use `contract.erc721.claim.prepare(...args)` instead
    */
-  getClaimTransaction = this.erc721.getClaimTransaction;
+  public async getClaimTransaction(
+    destinationAddress: string,
+    quantity: BigNumberish,
+    options?: ClaimOptions,
+  ): Promise<Transaction> {
+    return this.erc721.getClaimTransaction(
+      destinationAddress,
+      quantity,
+      options,
+    );
+  }
 
   /**
    * Claim unique NFTs to a specific Wallet
@@ -417,7 +440,15 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
-  claimTo = this.erc721.claimTo;
+  claimTo = buildTransactionFunction(
+    async (
+      destinationAddress: string,
+      quantity: BigNumberish,
+      options?: ClaimOptions,
+    ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
+      return this.erc721.claimTo.prepare(destinationAddress, quantity, options);
+    },
+  );
 
   /**
    * Claim NFTs to the connected wallet.
@@ -426,7 +457,14 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
-  claim = this.erc721.claim;
+  claim = buildTransactionFunction(
+    async (
+      quantity: BigNumberish,
+      options?: ClaimOptions,
+    ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
+      return this.erc721.claim.prepare(quantity, options);
+    },
+  );
 
   /**
    * Burn a single NFT
@@ -436,7 +474,9 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * const result = await contract.burnToken(tokenId);
    * ```
    */
-  burn = this.erc721.burn;
+  burn = buildTransactionFunction(async (tokenId: BigNumberish) => {
+    return this.erc721.burn.prepare(tokenId);
+  });
 
   /**
    * @internal
