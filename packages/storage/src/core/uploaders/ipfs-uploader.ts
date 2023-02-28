@@ -60,7 +60,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       fileNames.map((name) => decodeURIComponent(name)),
       !options?.uploadWithoutDirectory,
     );
-    if (await isUploaded(cid)) {
+    if ((await isUploaded(cid)) && !options?.alwaysUpload) {
       if (options?.uploadWithoutDirectory) {
         return [`ipfs://${cid}`];
       } else {
