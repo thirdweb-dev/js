@@ -15,7 +15,7 @@ describe("Functions", async () => {
   it("getContractFromAbi should resolve contract with ABI", async () => {
     const address = await sdk.deployer.deployToken({
       name: "Token",
-      primary_sale_recipient: "",
+      primary_sale_recipient: adminWallet.address,
     });
     const contract = await getContractFromAbi({
       address,
@@ -26,10 +26,10 @@ describe("Functions", async () => {
     expect(balance.toString()).to.equal("0");
   });
 
-  it("getContract shoul resolve contract with contract type", async () => {
+  it("getContract should resolve contract with contract type", async () => {
     const address = await sdk.deployer.deployToken({
       name: "Token",
-      primary_sale_recipient: "",
+      primary_sale_recipient: adminWallet.address,
     });
     const contract = (await getContract({
       address,
@@ -43,7 +43,7 @@ describe("Functions", async () => {
   it("getContract should resolve contract without type", async () => {
     const address = await sdk.deployer.deployToken({
       name: "Token",
-      primary_sale_recipient: "",
+      primary_sale_recipient: adminWallet.address,
     });
     const contract = (await getContract({
       address,
