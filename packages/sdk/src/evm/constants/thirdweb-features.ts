@@ -159,6 +159,17 @@ export const FEATURE_PERMISSIONS = {
   },
 } as const;
 
+export const FEATURE_METADATA = {
+  name: "ContractMetadata",
+  namespace: "metadata",
+  docLinks: {
+    sdk: "sdk.contractmetadata",
+    contracts: "ContractMetadata",
+  },
+  abis: [IContractMetadataAbi],
+  features: {},
+} as const;
+
 export const FEATURE_APPURI = {
   name: "AppURI",
   namespace: "appURI",
@@ -168,18 +179,6 @@ export const FEATURE_APPURI = {
   },
   abis: [IAppURI],
   features: {},
-} as const;
-
-
-export const FEATURE_METADATA = {
-  name: "ContractMetadata",
-  namespace: "metadata",
-  docLinks: {
-    sdk: "sdk.contractmetadata",
-    contracts: "ContractMetadata",
-  },
-  abis: [IContractMetadataAbi],
-  features: {[FEATURE_APPURI.name]: FEATURE_APPURI},
 } as const;
 
 export const FEATURE_OWNER = {
