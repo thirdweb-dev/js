@@ -1,5 +1,6 @@
 import { fetchCurrencyValue } from "../common";
 import { getCompositePluginABI } from "../common/plugin";
+import { createStorage } from "../common/storage";
 import {
   getChainProvider,
   isChainConfig,
@@ -63,7 +64,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     wallet: EVMWallet,
     network: ChainOrRpcUrl,
     options: SDKOptions = {},
-    storage: ThirdwebStorage = new ThirdwebStorage(),
+    storage?: ThirdwebStorage,
   ) {
     const signer = await wallet.getSigner();
     return ThirdwebSDK.fromSigner(signer, network, options, storage);
@@ -93,7 +94,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     signer: Signer,
     network?: ChainOrRpcUrl,
     options: SDKOptions = {},
-    storage: ThirdwebStorage = new ThirdwebStorage(),
+    storage?: ThirdwebStorage,
   ): ThirdwebSDK {
     let signerWithProvider = signer;
     if (network && !signer.provider) {
@@ -134,7 +135,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     privateKey: string,
     network: ChainOrRpcUrl,
     options: SDKOptions = {},
-    storage: ThirdwebStorage = new ThirdwebStorage(),
+    storage?: ThirdwebStorage,
   ): ThirdwebSDK {
     const provider = getChainProvider(network, options);
     const signer = new ethers.Wallet(privateKey, provider);
@@ -175,7 +176,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   constructor(
     network: NetworkInput,
     options: SDKOptions = {},
-    storage: ThirdwebStorage = new ThirdwebStorage(),
+    storage?: ThirdwebStorage,
   ) {
     if (isChainConfig(network)) {
       options = {
@@ -187,10 +188,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
     super(network, options);
     setSupportedChains(options?.supportedChains);
-    this.storageHandler = storage;
-    this.storage = storage;
+
+    const configuredStorage = createStorage(storage, options);
+    this.storage = configuredStorage;
+    this.storageHandler = configuredStorage;
+
     this.wallet = new UserWallet(network, options);
-    this.deployer = new ContractDeployer(network, options, storage);
+    this.deployer = new ContractDeployer(network, options, configuredStorage);
     this.multiChainRegistry = new MultichainRegistry(
       network,
       this.storageHandler,
