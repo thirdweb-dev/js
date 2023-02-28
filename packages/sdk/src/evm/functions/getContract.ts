@@ -1,7 +1,12 @@
 import { PREBUILT_CONTRACTS_MAP } from "../contracts";
+import { SmartContract } from "../contracts/smart-contract";
 import { ContractPublisher } from "../core/classes/contract-publisher";
 import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
-import { NetworkInput, PrebuiltContractType } from "../core/types";
+import {
+  ContractForPrebuiltContractType,
+  NetworkInput,
+  PrebuiltContractType,
+} from "../core/types";
 import { SDKOptions } from "../schema/sdk-options";
 import { getContractFromAbi } from "./getContractFromAbi";
 import {
@@ -17,15 +22,22 @@ import { resolveContractType } from "./utils/contract";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ContractInterface } from "ethers";
 
-export type GetContractParams = {
+export type GetContractParams<TContractType extends PrebuiltContractType> = {
   address: string;
-  contractTypeOrAbi?: PrebuiltContractType | ContractInterface;
+  contractTypeOrAbi?: PrebuiltContractType | ContractInterface | TContractType;
   network: NetworkInput;
   storage?: ThirdwebStorage;
   sdkOptions?: SDKOptions;
 };
 
-export async function getContract(params: GetContractParams) {
+type ReturnedContractType<TContractType extends PrebuiltContractType> =
+  TContractType extends PrebuiltContractType
+    ? ContractForPrebuiltContractType<TContractType>
+    : SmartContract;
+
+export async function getContract<TContractType extends PrebuiltContractType>(
+  params: GetContractParams<TContractType>,
+): Promise<ReturnedContractType<TContractType>> {
   const [signer, provider] = getSignerAndProvider(
     params.network,
     params.sdkOptions,
@@ -33,7 +45,10 @@ export async function getContract(params: GetContractParams) {
   const chainId = (await provider.getNetwork()).chainId;
 
   if (inContractCache(params.address, chainId)) {
-    return getCachedContract(params.address, chainId);
+    return getCachedContract(
+      params.address,
+      chainId,
+    ) as ReturnedContractType<TContractType>;
   }
 
   if (!params.contractTypeOrAbi || params.contractTypeOrAbi === "custom") {
@@ -57,14 +72,20 @@ export async function getContract(params: GetContractParams) {
       const metadata = await publisher.fetchCompilerMetadataFromAddress(
         params.address,
       );
-      return getContractFromAbi({ ...params, abi: metadata.abi });
+      return getContractFromAbi({
+        ...params,
+        abi: metadata.abi,
+      }) as ReturnedContractType<TContractType>;
     } else {
       const abi = await PREBUILT_CONTRACTS_MAP[contractType].getAbi(
         params.address,
         provider,
         getCachedStorage(params.storage),
       );
-      return getContractFromAbi({ ...params, abi });
+      return getContractFromAbi({
+        ...params,
+        abi,
+      }) as ReturnedContractType<TContractType>;
     }
   } else if (
     typeof params.contractTypeOrAbi === "string" &&
@@ -79,8 +100,11 @@ export async function getContract(params: GetContractParams) {
       params.sdkOptions,
     );
     cacheContract(contract, params.address, chainId);
-    return contract;
+    return contract as ReturnedContractType<TContractType>;
   } else {
-    return getContractFromAbi({ ...params, abi: params.contractTypeOrAbi });
+    return getContractFromAbi({
+      ...params,
+      abi: params.contractTypeOrAbi,
+    }) as ReturnedContractType<TContractType>;
   }
 }
