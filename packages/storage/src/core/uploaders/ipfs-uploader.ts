@@ -57,7 +57,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
 
     const cid = await getCIDForUpload(
       data,
-      fileNames,
+      fileNames.map((name) => decodeURIComponent(name)),
       !options?.uploadWithoutDirectory,
     );
     if (await isUploaded(cid)) {
