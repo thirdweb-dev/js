@@ -205,6 +205,7 @@ export {
   useConnectedWallet,
   useAddress,
   useChainId,
+  useActiveChain,
 } from "./hooks/wallet";
 
 export { useStorageUpload, useStorage } from "./hooks/storage";
