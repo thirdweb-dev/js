@@ -1,19 +1,31 @@
+import { FileOrBufferOrString } from "../types";
+import { DEFAULT_GATEWAY_URLS } from "./urls";
+import { isBufferOrStringWithName } from "./utils";
 import { importer } from "ipfs-unixfs-importer";
 
 type CIDVersion = 0 | 1;
 
 export async function getCID(
-  data: string | Uint8Array,
+  data: FileOrBufferOrString[],
+  wrapWithDirectory = true,
   cidVersion: CIDVersion = 0,
 ) {
-  const options = { onlyHash: true, cidVersion };
+  const options = { onlyHash: true, wrapWithDirectory, cidVersion };
 
-  let content: Uint8Array;
-  if (typeof data === "string") {
-    content = new TextEncoder().encode(data as string);
-  } else {
-    content = data;
-  }
+  const content: Uint8Array[] = data.map((file) => {
+    if (typeof file === "string") {
+      return new TextEncoder().encode(file);
+    } else if (isBufferOrStringWithName(file)) {
+      if (typeof file.data === "string") {
+        return new TextEncoder().encode(file.data);
+      } else {
+        return file.data as Uint8Array;
+      }
+    } else {
+      return file as Uint8Array;
+    }
+  });
+  const cleanedContent = content.map((c) => ({ content: c }));
 
   const dummyBlockstore = {
     put: async () => {},
@@ -21,7 +33,7 @@ export async function getCID(
 
   let lastCid;
   for await (const { cid } of importer(
-    [{ content }] as any,
+    cleanedContent as any,
     dummyBlockstore as any,
     options,
   )) {
@@ -29,4 +41,11 @@ export async function getCID(
   }
 
   return `${lastCid}`;
+}
+
+export async function isUploaded(cid: string) {
+  const res = await fetch(`${DEFAULT_GATEWAY_URLS["ipfs://"][0]}${cid}`, {
+    method: "HEAD",
+  });
+  return res.ok;
 }

@@ -1,3 +1,4 @@
+import { getCID, isUploaded } from "../../common";
 import { PINATA_IPFS_URL, TW_IPFS_SERVER_URL } from "../../common/urls";
 import {
   isBrowser,
@@ -53,6 +54,15 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
 
     const formData = new FormData();
     const { form, fileNames } = this.buildFormData(formData, data, options);
+
+    const cid = await getCID(data, !options?.uploadWithoutDirectory);
+    if (await isUploaded(cid)) {
+      if (options?.uploadWithoutDirectory) {
+        return [`ipfs://${cid}`];
+      } else {
+        return fileNames.map((name) => `ipfs://${cid}/${name}`);
+      }
+    }
 
     if (isBrowser()) {
       return this.uploadBatchBrowser(form, fileNames, options);
