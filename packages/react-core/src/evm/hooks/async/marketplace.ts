@@ -38,11 +38,12 @@ import invariant from "tiny-invariant";
 /** **********************/
 
 /**
- * Use this to get a specific listing from the marketplace.
+ * Get a listing
  *
  * @example
  * ```javascript
- * const { data: listing, isLoading, error } = useListing(<YourMarketplaceContractInstance>, <listingId>);
+ * const listingId = 0; // the listing id to check
+ * const { data: listing, isLoading, error } = useListing(contract, listingId);
  * ```
  *
  * @param contract - an instance of a marketplace contract
@@ -70,17 +71,18 @@ export function useListing(
 }
 
 /**
- * Use this to get a specific direct listing from the marketplace v3.
+ * Get a direct listing
  *
  * @example
  * ```javascript
- * const { data: directListing, isLoading, error } = useListing(<YourMarketplaceV3ContractInstance>, <listingId>);
+ * const listingId = 0; // the listing id to check
+ * const { data: directListing, isLoading, error } = useListing(contract, listingId);
  * ```
  *
  * @param contract - an instance of a marketplace v3 contract
  * @param listingId - the listing id to check
  * @returns a response object that includes the desired direct listing
- * @internal
+ * @twfeature DirectListings
  */
 export function useDirectListing(
   contract: RequiredParam<MarketplaceV3>,
@@ -105,17 +107,18 @@ export function useDirectListing(
 }
 
 /**
- * Use this to get a specific english auction from the marketplace v3.
+ * Get an english auction
  *
  * @example
  * ```javascript
- * const { data: englishAuction, isLoading, error } = useEnglishAuction(<YourMarketplaceV3ContractInstance>, <auctionId>);
+ * const auctionId = 0; // the listing id to check
+ * const { data: englishAuction, isLoading, error } = useEnglishAuction(contract, auctionId);
  * ```
  *
  * @param contract - an instance of a marketplace v3 contract
  * @param auctionId - the auction id to check
  * @returns a response object that includes the desired english auction
- * @internal
+ * @twfeature EnglishAuctions
  */
 export function useEnglishAuction(
   contract: RequiredParam<MarketplaceV3>,
@@ -140,11 +143,11 @@ export function useEnglishAuction(
 }
 
 /**
- * Use this to get a list all listings from your marketplace contract.
+ * Get all listings
  *
  * @example
  * ```javascript
- * const { data: listings, isLoading, error } = useListings(<YourMarketplaceContractInstance>, { start: 0, count: 100 });
+ * const { data: listings, isLoading, error } = useListings(contract, { start: 0, count: 100 });
  * ```
  *
  * @param contract - an instance of a marketplace contract
@@ -171,17 +174,17 @@ export function useListings(
 }
 
 /**
- * Use this to get a list all direct listings from your marketplace v3 contract.
+ * Get all direct listings
  *
  * @example
  * ```javascript
- * const { data: directListings, isLoading, error } = useDirectListings(<YourMarketplaceV3ContractInstance>, { start: 0, count: 100 });
+ * const { data: directListings, isLoading, error } = useDirectListings(contract, { start: 0, count: 100 });
  * ```
  *
  * @param contract - an instance of a marketplace v3 contract
  * @param filter - filter to pass to the query for the sake of pagination & filtering
  * @returns a response object that includes an array of direct listings
- * @internal
+ * @twfeature DirectListings
  */
 export function useDirectListings(
   contract: RequiredParam<MarketplaceV3>,
@@ -205,17 +208,17 @@ export function useDirectListings(
 }
 
 /**
- * Use this to get a list all valid direct listings from your marketplace v3 contract.
+ * Get all valid direct listings
  *
  * @example
  * ```javascript
- * const { data: directListings, isLoading, error } = useValidDirectListings(<YourMarketplaceV3ContractInstance>, { start: 0, count: 100 });
+ * const { data: validDirectListings, isLoading, error } = useValidDirectListings(contract, { start: 0, count: 100 });
  * ```
  *
  * @param contract - an instance of a marketplace v3 contract
  * @param filter - filter to pass to the query for the sake of pagination & filtering
  * @returns a response object that includes an array of direct listings
- * @internal
+ * @twfeature DirectListings
  */
 export function useValidDirectListings(
   contract: RequiredParam<MarketplaceV3>,
@@ -239,17 +242,17 @@ export function useValidDirectListings(
 }
 
 /**
- * Use this to get a list all english auctions from your marketplace v3 contract.
+ * Get all english auctions
  *
  * @example
  * ```javascript
- * const { data: englishAuctions, isLoading, error } = useEnglishAuctions(<YourMarketplaceV3ContractInstance>, { start: 0, count: 100 });
+ * const { data: englishAuctions, isLoading, error } = useEnglishAuctions(contract, { start: 0, count: 100 });
  * ```
  *
  * @param contract - an instance of a marketplace v3 contract
  * @param filter - filter to pass to the query for the sake of pagination & filtering
  * @returns a response object that includes an array of english auctions
- * @internal
+ * @twfeature EnglishAuctions
  */
 export function useEnglishAuctions(
   contract: RequiredParam<MarketplaceV3>,
@@ -273,17 +276,17 @@ export function useEnglishAuctions(
 }
 
 /**
- * Use this to get a list all valid english auctions from your marketplace v3 contract.
+ * Get all valid english auctions
  *
  * @example
  * ```javascript
- * const { data: englishAuctions, isLoading, error } = useValidEnglishAuctions(<YourMarketplaceV3ContractInstance>, { start: 0, count: 100 });
+ * const { data: validEnglishAuctions, isLoading, error } = useValidEnglishAuctions(contract, { start: 0, count: 100 });
  * ```
  *
  * @param contract - an instance of a marketplace v3 contract
  * @param filter - filter to pass to the query for the sake of pagination & filtering
  * @returns a response object that includes an array of english auctions
- * @internal
+ * @twfeature EnglishAuctions
  */
 export function useValidEnglishAuctions(
   contract: RequiredParam<MarketplaceV3>,
@@ -307,11 +310,11 @@ export function useValidEnglishAuctions(
 }
 
 /**
- * Use this to get a count of all listings on your marketplace contract.
+ * Get the total count of listings
  *
  * @example
  * ```javascript
- * const { data: listingsCount, isLoading, error } = useListingsCount(<YourMarketplaceContractInstance>);
+ * const { data: listingsCount, isLoading, error } = useListingsCount(contract);
  * ```
  *
  * @param contract - an instance of a marketplace contract
@@ -333,16 +336,16 @@ export function useListingsCount(contract: RequiredParam<Marketplace>) {
 }
 
 /**
- * Use this to get a count of all direct listings on your marketplace v3 contract.
+ * Get the total count of direct listings
  *
  * @example
  * ```javascript
- * const { data: listingsCount, isLoading, error } = useListingsCount(<YourMarketplaceV3ContractInstance>);
+ * const { data: directListingsCount, isLoading, error } = useDirectListingsCount(contract);
  * ```
  *
  * @param contract - an instance of a marketplace v3 contract
  * @returns a response object that includes the direct listings count
- * @internal
+ * @twfeature DirectListings
  */
 export function useDirectListingsCount(contract: RequiredParam<MarketplaceV3>) {
   const contractAddress = contract?.getAddress();
@@ -361,16 +364,16 @@ export function useDirectListingsCount(contract: RequiredParam<MarketplaceV3>) {
 }
 
 /**
- * Use this to get a count of all direct listings on your marketplace v3 contract.
+ * Get the total count of english auctions
  *
  * @example
  * ```javascript
- * const { data: englishAuctionsCount, isLoading, error } = useEnglishAuctionsCount(<YourMarketplaceV3ContractInstance>);
+ * const { data: englishAuctionsCount, isLoading, error } = useEnglishAuctionsCount(contract);
  * ```
  *
  * @param contract - an instance of a marketplace v3 contract
  * @returns a response object that includes the direct english actions count
- * @internal
+ * @twfeature EnglishAuctions
  */
 export function useEnglishAuctionsCount(
   contract: RequiredParam<MarketplaceV3>,
@@ -391,11 +394,11 @@ export function useEnglishAuctionsCount(
 }
 
 /**
- * Use this to get a list active listings from your marketplace contract.
+ * Get all active listings
  *
  * @example
  * ```javascript
- * const { data: listings, isLoading, error } = useActiveListings(<YourMarketplaceContractInstance>, { seller: "0x...", tokenContract: "0x...", tokenId: 1, start: 0, count: 100 });
+ * const { data: listings, isLoading, error } = useActiveListings(contract, { seller: "{{wallet_adress}}", tokenContract: "0x...", tokenId: 1, start: 0, count: 100 });
  * ```
  *
  * @param contract - an instance of a marketplace contract
@@ -423,11 +426,12 @@ export function useActiveListings(
 }
 
 /**
- * Use this to get a the winning bid for an auction listing from your marketplace contract.
+ * Get the winning bid for an auction
  *
  * @example
  * ```javascript
- * const { data: winningBid, isLoading, error } = useWinningBid(<YourMarketplaceContractInstance>, <listingId>);
+ * const listingId = 0;
+ * const { data: winningBid, isLoading, error } = useWinningBid(contract, listingId);
  * ```
  *
  * @param contract - an instance of a marketplace contract
@@ -461,17 +465,18 @@ export function useWinningBid(
 }
 
 /**
- * Use this to get a the winning bid for an auction listing from your marketplace v3 contract.
+ * Get the winning bid for an english auction
  *
  * @example
  * ```javascript
- * const { data: winningBid, isLoading, error } = useWinningBid(<YourMarketplaceV3ContractInstance>, <listingId>);
+ * const listingId = 0;
+ * const { data: winningBid, isLoading, error } = useWinningBid(contract, listingId);
  * ```
  *
  * @param contract - an instance of a marketplace contract
  * @param auctionId - the auction id to check
  * @returns a response object that includes the {@link Bid} that is winning the auction
- * @beta
+ * @twfeature EnglishAuctions
  */
 export function useEnglishAuctionWinningBid(
   contract: RequiredParam<MarketplaceV3>,
@@ -499,17 +504,18 @@ export function useEnglishAuctionWinningBid(
 }
 
 /**
- * Use this to get the winner of an auction listing from your marketplace contract.
+ * Get the winner of an english auction
  *
  * @example
  * ```javascript
- * const { data: auctionWinner, isLoading, error } = useAuctionWinner(<YourMarketplaceContractInstance>, <listingId>);
+ * const listingId = 0;
+ * const { data: auctionWinner, isLoading, error } = useAuctionWinner(contract, listingId);
  * ```
  *
  * @param contract - an instance of a marketplace contract
  * @param listingId - the listing id to check
  * @returns a response object that includes the address of the winner of the auction or undefined if there is no winner yet
- * @beta
+ * @twfeature EnglishAuctions
  */
 export function useAuctionWinner(
   contract: RequiredParam<Marketplace | MarketplaceV3>,
@@ -549,18 +555,18 @@ export function useAuctionWinner(
 }
 
 /**
- * Use this to get the buffer in basis points between offers from your marketplace contract.
+ * Get the bid buffer for an english auction
  *
  * @example
  * ```javascript
- * const { data: auctionWinner, isLoading, error } = useBidBuffer(<YourMarketplaceContractInstance>);
+ * const { data: bidBuffer, isLoading, error } = useBidBuffer(contract);
  * ```
  *
  * @param contract - an instance of a marketplace contract
  * @param listingId - the listing id to check (only necessary for marketplace v3)
 
  * @returns a response object that includes an array of listings
- * @beta
+ * @twfeature EnglishAuctions
  */
 export function useBidBuffer(
   contract: RequiredParam<Marketplace | MarketplaceV3>,
@@ -599,17 +605,18 @@ export function useBidBuffer(
 }
 
 /**
- * Use this to get the minimum next bid for the auction listing from your marketplace contract.
+ * Get the minimum next bid for an english auction
  *
  * @example
  * ```javascript
- * const { data: minimumNextBid, isLoading, error } = useMinimumNextBid(<YourMarketplaceContractInstance>, <listingId>);
+ * const listingId = 0;
+ * const { data: minimumNextBid, isLoading, error } = useMinimumNextBid(contract, listingId);
  * ```
  *
  * @param contract - an instance of a marketplace contract
  * @param listingId - the listing id to check
  * @returns a response object that includes the minimum next bid for the auction listing
- * @beta
+ * @twfeature EnglishAucton
  */
 export function useMinimumNextBid(
   contract: RequiredParam<Marketplace | MarketplaceV3>,
@@ -648,21 +655,49 @@ export function useMinimumNextBid(
   );
 }
 
+/**
+ * Get all the offers for a listing
+ *
+ * @remarks Fetch all the offers for a specified direct or auction listing.
+ * @example
+ * ```javascript
+ * const listingId = 0;
+ * const { data: offers, isLoading, error } = useOffers(contract, listingId);
+ * ```
+ *
+ * @param contract - an instance of a Marketplace contract
+ * @param listingId - the id of the listing to fetch offers for
+ * @beta
+ */
+export function useOffers(
+  contract: RequiredParam<Marketplace>,
+  listingId: RequiredParam<BigNumberish>,
+) {
+  const result = useContractEvents(contract, "NewOffer");
+  return {
+    ...result,
+    data: result.data
+      ?.filter((ev) => ev.data.listingId.eq(listingId))
+      ?.map((ev) => ev.data),
+  };
+}
+
 /** **********************/
 /**     WRITE HOOKS     **/
 /** **********************/
 
 /**
- * Use this to create a new Direct Listing on your marketplace contract.
+ * Create a new direct listing
  *
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: createDirectListing,
  *     isLoading,
  *     error,
- *   } = useCreateDirectListing(">>YourMarketplaceContractInstance<<");
+ *   } = useCreateDirectListing(contract);
  *
  *   if (error) {
  *     console.error("failed to create direct listing", error);
@@ -681,7 +716,7 @@ export function useMinimumNextBid(
  *
  * @param contract - an instance of a Marketplace contract
  * @returns a mutation object that can be used to create a new direct listing
- * @beta
+ * @twfeature DirectListings
  */
 export function useCreateDirectListing<
   TMarketplace extends Marketplace | MarketplaceV3,
@@ -730,16 +765,17 @@ export function useCreateDirectListing<
 }
 
 /**
- * Use this to create a new Auction Listing on your marketplace contract.
+ * Create a new english auction
  *
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: createAuctionListing,
  *     isLoading,
  *     error,
- *   } = useCreateAuctionListing(">>YourMarketplaceContractInstance<<");
+ *   } = useCreateAuctionListing(contract);
  *
  *   if (error) {
  *     console.error("failed to create auction listing", error);
@@ -758,7 +794,7 @@ export function useCreateDirectListing<
  *
  * @param contract - an instance of a Marketplace contract
  * @returns a mutation object that can be used to create a new auction listing
- * @beta
+ * @twfeature EnglishAuctions
  */
 export function useCreateAuctionListing<
   TMarketplace extends Marketplace | MarketplaceV3,
@@ -807,16 +843,17 @@ export function useCreateAuctionListing<
 }
 
 /**
- * Use this to cancel a listing on your marketplace contract.
+ * Cancel a listing
  *
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: cancelListing,
  *     isLoading,
  *     error,
- *   } = useCancelListing(">>YourMarketplaceContractInstance<<");
+ *   } = useCancelListing(contract);
  *
  *   if (error) {
  *     console.error("failed to cancel auction listing", error);
@@ -825,7 +862,7 @@ export function useCreateAuctionListing<
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => cancelListing()}
+ *       onClick={cancelListing}
  *     >
  *       Cancel Auction Listing!
  *     </button>
@@ -873,16 +910,17 @@ export function useCancelListing(contract: RequiredParam<Marketplace>) {
 }
 
 /**
- * Use this to cancel a direct listing on your marketplace v3 contract.
+ * Cancel a direct listing
  *
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: cancelDirectListing,
  *     isLoading,
  *     error,
- *   } = useCancelDirectListing(">>YourMarketplaceV3ContractInstance<<");
+ *   } = useCancelDirectListing(contract);
  *
  *   if (error) {
  *     console.error("failed to cancel direct listing", error);
@@ -891,7 +929,7 @@ export function useCancelListing(contract: RequiredParam<Marketplace>) {
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => cancelListing()}
+ *       onClick={cancelDirectListing}
  *     >
  *       Cancel Direct Listing
  *     </button>
@@ -901,7 +939,7 @@ export function useCancelListing(contract: RequiredParam<Marketplace>) {
  *
  * @param contract - an instance of a Marketplace v3 contract
  * @returns a mutation object that can be used to cancel a direct listing
- * @internal
+ * @twfeature DirectListings
  */
 export function useCancelDirectListing(contract: RequiredParam<MarketplaceV3>) {
   const activeChainId = useSDKChainId();
@@ -932,16 +970,17 @@ export function useCancelDirectListing(contract: RequiredParam<MarketplaceV3>) {
 }
 
 /**
- * Use this to cancel a direct listing on your marketplace v3 contract.
+ * Cancel an english auction
  *
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: cancelEnglishAuction,
  *     isLoading,
  *     error,
- *   } = useCancelEnglishAuction(">>YourMarketplaceV3ContractInstance<<");
+ *   } = useCancelEnglishAuction(contract);
  *
  *   if (error) {
  *     console.error("failed to cancel english auction", error);
@@ -950,7 +989,7 @@ export function useCancelDirectListing(contract: RequiredParam<MarketplaceV3>) {
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => cancelEnglishAuction()}
+ *       onClick={cancelEnglishAuction}
  *     >
  *       Cancel English Auction
  *     </button>
@@ -960,7 +999,7 @@ export function useCancelDirectListing(contract: RequiredParam<MarketplaceV3>) {
  *
  * @param contract - an instance of a Marketplace v3 contract
  * @returns a mutation object that can be used to cancel an english auction
- * @internal
+ * @twfeature EnglishAuctions
  */
 export function useCancelEnglishAuction(
   contract: RequiredParam<MarketplaceV3>,
@@ -993,16 +1032,17 @@ export function useCancelEnglishAuction(
 }
 
 /**
- * Use this to place a bid on an auction listing from your marketplace contract.
+ * Make a bid on an auction listing
  *
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: makeBid,
  *     isLoading,
  *     error,
- *   } = useMakeBid(">>YourMarketplaceContractInstance<<");
+ *   } = useMakeBid(contract);
  *
  *   if (error) {
  *     console.error("failed to make a bid", error);
@@ -1050,16 +1090,17 @@ export function useMakeBid(contract: RequiredParam<Marketplace>) {
 }
 
 /**
- * Use this to make an offer on direct or auction listing from your marketplace contract.
+ * Nake an offer on a direct or auction listing
  *
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: makeOffer,
  *     isLoading,
  *     error,
- *   } = useMakeOffer(">>YourMarketplaceContractInstance<<");
+ *   } = useMakeOffer(contract);
  *
  *   if (error) {
  *     console.error("failed to make a bid", error);
@@ -1107,16 +1148,19 @@ export function useMakeOffer(contract: RequiredParam<Marketplace>) {
 }
 
 /**
- * Accept an offer on a direct listing from an offeror, will accept the latest offer by the given offeror.
+ * Accept a specific offer on a direct listing 
+ * 
+ * @remarks will accept the latest offer by the given offeror.
  *
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: acceptOffer,
  *     isLoading,
  *     error,
- *   } = useAcceptDirectListingOffer(">>YourMarketplaceContractInstance<<");
+ *   } = useAcceptDirectListingOffer(contract);
  *
  *   if (error) {
  *     console.error("failed to accept offer", error);
@@ -1125,7 +1169,7 @@ export function useMakeOffer(contract: RequiredParam<Marketplace>) {
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => acceptOffer({ listingId: 1, addressOfOfferor: "0x..." })}
+ *       onClick={() => acceptOffer({ listingId: 1, addressOfOfferor: "{{wallet_address}}" })}
  *     >
  *       Accept offer
  *     </button>
@@ -1135,7 +1179,6 @@ export function useMakeOffer(contract: RequiredParam<Marketplace>) {
  *
  * @param contract - an instance of a Marketplace contract
  * @returns a mutation object that can be used to accept an offer on a direct listing
- * @beta
  */
 export function useAcceptDirectListingOffer(
   contract: RequiredParam<Marketplace>,
@@ -1170,11 +1213,12 @@ export function useAcceptDirectListingOffer(
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: executeAuctionSale,
  *     isLoading,
  *     error,
- *   } = useExecuteAuctionSale(">>YourMarketplaceContractInstance<<");
+ *   } = useExecuteAuctionSale(contract);
  *
  *   if (error) {
  *     console.error("failed to execute sale", error);
@@ -1221,42 +1265,17 @@ export function useExecuteAuctionSale(contract: RequiredParam<Marketplace>) {
 }
 
 /**
- * Get all the offers for a listing
- *
- * @remarks Fetch all the offers for a specified direct or auction listing.
- * @example
- * ```javascript
- * const { data: offers, isLoading, error } = useOffers(<YourMarketplaceContractInstance>, <listingId>);
- * ```
- *
- * @param contract - an instance of a Marketplace contract
- * @param listingId - the id of the listing to fetch offers for
- * @beta
- */
-export function useOffers(
-  contract: RequiredParam<Marketplace>,
-  listingId: RequiredParam<BigNumberish>,
-) {
-  const result = useContractEvents(contract, "NewOffer");
-  return {
-    ...result,
-    data: result.data
-      ?.filter((ev) => ev.data.listingId.eq(listingId))
-      ?.map((ev) => ev.data),
-  };
-}
-
-/**
- * Use this to buy out an auction listing from your marketplace contract.
+ * Buy out an auction listing
  *
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: buyNow,
  *     isLoading,
  *     error,
- *   } = useBuyNow(">>YourMarketplaceContractInstance<<");
+ *   } = useBuyNow(contract);
  *
  *   if (error) {
  *     console.error("failed to buyout listing", error);

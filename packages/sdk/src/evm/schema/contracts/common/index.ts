@@ -13,7 +13,7 @@ export const CommonContractSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
   image: FileOrBufferOrStringSchema.optional(),
-  external_link: z.string().url().optional(),
+  external_link: z.string().optional(),
 });
 
 export type CommonContractSchemaInput = z.input<typeof CommonContractSchema>;

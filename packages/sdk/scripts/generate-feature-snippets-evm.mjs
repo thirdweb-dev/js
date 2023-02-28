@@ -92,11 +92,18 @@ function parseExampleTag(docComment) {
 }
 
 function parseTWFeatureTag(docComment) {
-  const exampleBlocks = docComment._customBlocks.filter(
+  const featureBlocks = docComment._customBlocks.filter(
     (b) => b._blockTag._tagName === "@twfeature",
   );
-  const examplesString = Formatter.renderDocNodes(exampleBlocks);
-  return examplesString.split("\n").filter(Boolean)[1];
+  const featuresString = Formatter.renderDocNodes(featureBlocks);
+  return featuresString.split(" | ").map((f) =>
+    f
+      .trim()
+      .replace(/\\n/g, "")
+      .replace("\n\n", "")
+      .replace(/`/g, "")
+      .replace(/@twfeature/g, ""),
+  );
 }
 
 const baseDocUrl = "https://docs.thirdweb.com/typescript/sdk.";
@@ -119,24 +126,26 @@ const parseMembers = (members, kind, contractName) => {
     .map((m) => {
       const parserContext = tsdocParser.parseString(m.docComment);
       const docComment = parserContext.docComment;
-      const feature = parseTWFeatureTag(docComment);
-      if (feature) {
-        const examples = parseExampleTag(docComment);
-        if (Object.keys(examples).length > 0) {
-          const example = {
-            name: m.name,
-            summary: Formatter.renderDocNode(docComment.summarySection),
-            remarks: docComment.remarksBlock
-              ? Formatter.renderDocNode(docComment.remarksBlock.content)
-              : null,
-            examples,
-            reference: {
-              javascript: extractReferenceLink(m, kind, contractName),
-            },
-          };
-          features[feature] = features[feature]
-            ? features[feature].concat(example)
-            : [example];
+      const featureNames = parseTWFeatureTag(docComment);
+      if (featureNames.length > 0) {
+        for (const feature of featureNames) {
+          const examples = parseExampleTag(docComment);
+          if (Object.keys(examples).length > 0) {
+            const example = {
+              name: m.name,
+              summary: Formatter.renderDocNode(docComment.summarySection),
+              remarks: docComment.remarksBlock
+                ? Formatter.renderDocNode(docComment.remarksBlock.content)
+                : null,
+              examples,
+              reference: {
+                javascript: extractReferenceLink(m, kind, contractName),
+              },
+            };
+            features[feature] = features[feature]
+              ? features[feature].concat(example)
+              : [example];
+          }
         }
       }
     })
