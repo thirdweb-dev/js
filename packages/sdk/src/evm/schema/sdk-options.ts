@@ -1,6 +1,7 @@
 import { DEFAULT_API_KEY } from "../../core/constants/urls";
 import { ChainInfoInputSchema } from "./shared";
 import { defaultChains } from "@thirdweb-dev/chains";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { z } from "zod";
 
 /**
@@ -55,6 +56,13 @@ export const SDKOptionsSchema = z
     gasSettings: { maxPriceInGwei: 300, speed: "fastest" },
   });
 
+export const StorageConfigSchema = z.union([
+  z.object({
+    gatewayUrls: z.array(z.string().url()),
+  }),
+  z.instanceof(ThirdwebStorage),
+]);
+
 /**
  * @public
  * All these configuration options are optional with sane defaults:
@@ -89,3 +97,7 @@ export type SDKOptions = z.input<typeof SDKOptionsSchema>;
  * @internal
  */
 export type SDKOptionsOutput = z.output<typeof SDKOptionsSchema>;
+/**
+ * @public
+ */
+export type StorageConfigInput = z.input<typeof StorageConfigSchema>;
