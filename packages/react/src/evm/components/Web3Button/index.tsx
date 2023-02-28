@@ -36,7 +36,7 @@ interface Web3ButtonProps<TActionFn extends ActionFn> {
   isDisabled?: boolean;
   // the fn to execute
   action: TActionFn;
-  theme: "dark" | "light";
+  theme?: "dark" | "light";
 }
 
 /**
@@ -82,7 +82,7 @@ export const Web3Button = <TAction extends ActionFn>({
 
   const { contract } = useContract(contractAddress, contractAbi || "custom");
   const thirdwebTheme = useContext(ThirdwebThemeContext);
-  const themeToUse = theme || thirdwebTheme;
+  const themeToUse = theme || thirdwebTheme || "dark";
 
   const actionMutation = useMutation(
     async () => {
