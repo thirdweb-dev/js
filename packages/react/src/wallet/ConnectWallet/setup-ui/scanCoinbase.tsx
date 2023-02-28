@@ -42,7 +42,7 @@ export const ScanCoinbase: React.FC<{
       onGetStarted={props.onGetStarted}
       qrCodeUri={qrCodeUri}
       walletName="Coinbase"
-      QRIcon={<CoinbaseWalletIcon width={iconSize.xl} height={iconSize.xl} />}
+      QRIcon={<CoinbaseWalletIcon width={iconSize.lg} height={iconSize.lg} />}
     />
   );
 };
