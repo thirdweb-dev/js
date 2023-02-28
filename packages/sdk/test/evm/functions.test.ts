@@ -37,7 +37,7 @@ describe("Functions", async () => {
       contractTypeOrAbi: "token",
     })) as any as Token;
     const balance = await contract.balance();
-    expect(balance.toString()).to.equal("0");
+    expect(balance.displayValue).to.equal("0");
   });
 
   it("getContract should resolve contract without type", async () => {
@@ -50,6 +50,6 @@ describe("Functions", async () => {
       network: adminWallet,
     })) as any as SmartContract;
     const balance = await contract.erc20.balance();
-    expect(balance.toString()).to.equal("0");
+    expect(balance.displayValue).to.equal("0");
   });
 });
