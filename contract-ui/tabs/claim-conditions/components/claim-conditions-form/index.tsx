@@ -217,7 +217,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
   });
 
   const handleFormSubmit = form.handleSubmit(async (d) => {
-    const category = isErc20 ? "token" : "NFT";
+    const category = isErc20 ? "token" : "nft";
 
     trackEvent({
       category,
