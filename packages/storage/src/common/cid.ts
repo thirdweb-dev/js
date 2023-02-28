@@ -1,31 +1,49 @@
 import { FileOrBufferOrString } from "../types";
 import { DEFAULT_GATEWAY_URLS } from "./urls";
 import { isBufferOrStringWithName } from "./utils";
+import fetch from "cross-fetch";
 import { importer } from "ipfs-unixfs-importer";
 
 type CIDVersion = 0 | 1;
+type ContentWithPath = {
+  path?: string;
+  content: Uint8Array;
+};
+
+export async function getCIDForUpload(
+  data: FileOrBufferOrString[],
+  fileNames: string[],
+  wrapWithDirectory = true,
+  cidVersion: CIDVersion = 0,
+) {
+  const contentWithPath: ContentWithPath[] = data.map((file, i) => {
+    const path = fileNames[i];
+
+    let content: Uint8Array;
+    if (typeof file === "string") {
+      content = new TextEncoder().encode(file);
+    } else if (isBufferOrStringWithName(file)) {
+      if (typeof file.data === "string") {
+        content = new TextEncoder().encode(file.data);
+      } else {
+        content = file.data as Uint8Array;
+      }
+    } else {
+      content = file as Uint8Array;
+    }
+
+    return { path, content };
+  });
+
+  return getCID(contentWithPath, wrapWithDirectory, cidVersion);
+}
 
 export async function getCID(
-  data: FileOrBufferOrString[],
+  content: ContentWithPath[],
   wrapWithDirectory = true,
   cidVersion: CIDVersion = 0,
 ) {
   const options = { onlyHash: true, wrapWithDirectory, cidVersion };
-
-  const content: Uint8Array[] = data.map((file) => {
-    if (typeof file === "string") {
-      return new TextEncoder().encode(file);
-    } else if (isBufferOrStringWithName(file)) {
-      if (typeof file.data === "string") {
-        return new TextEncoder().encode(file.data);
-      } else {
-        return file.data as Uint8Array;
-      }
-    } else {
-      return file as Uint8Array;
-    }
-  });
-  const cleanedContent = content.map((c) => ({ content: c }));
 
   const dummyBlockstore = {
     put: async () => {},
@@ -33,7 +51,7 @@ export async function getCID(
 
   let lastCid;
   for await (const { cid } of importer(
-    cleanedContent as any,
+    content as any,
     dummyBlockstore as any,
     options,
   )) {
