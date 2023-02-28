@@ -17,23 +17,6 @@ export {
   useThirdwebWallet,
 } from "../core/providers/thirdweb-wallet-provider";
 
-export * from "./hooks/async/contract-settings";
-export * from "./hooks/async/roles";
-export * from "./hooks/async/app";
-
-// thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)
-export * from "./hooks/auth";
-export * from "./hooks/storage";
-export * from "./hooks/useSigner";
-export * from "./hooks/useReadonlySDK";
-export * from "./hooks/useNetworkMismatch";
-export * from "./hooks/wallet";
-
-// contexts
-export * from "./contexts/thirdweb-auth";
-export * from "./contexts/thirdweb-config";
-export * from "./contexts/thirdweb-wallet";
-
 // re-exports
 export { ChainId } from "@thirdweb-dev/sdk";
 
@@ -232,6 +215,7 @@ export { useNetworkMismatch } from "./hooks/useNetworkMismatch";
 export { useReadonlySDK } from "./hooks/useReadonlySDK";
 export { useSigner } from "./hooks/useSigner";
 export { useSupportedChains } from "./hooks/useSupportedChains";
+export { useAppURI, useSetAppURI } from "./hooks/async/app";
 
 // sdk provider
 export {
