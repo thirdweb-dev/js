@@ -72,11 +72,12 @@ export class ContractMetadata<
     return this.schema.input.parse(metadata);
   }
   /**
-   * Get the metadata of a contract
+   * Get the metadata of this contract
    * @remarks Get the metadata of a contract
    * @example
    * ```javascript
    * const metadata = await contract.metadata.get();
+   * console.log(metadata);
    * ```
    * @public
    * @returns the metadata of the given contract
@@ -102,14 +103,28 @@ export class ContractMetadata<
         } catch (err) {
           // no-op
         }
-        const publishedMetadata = await fetchContractMetadataFromAddress(
-          this.contractWrapper.readContract.address,
-          this.contractWrapper.getProvider(),
-          this.storage,
-        );
+
+        let contractSymbol: string | undefined;
+        try {
+          if (hasFunction<IERC20Metadata>("symbol", this.contractWrapper)) {
+            contractSymbol = await this.contractWrapper.readContract.symbol();
+          }
+        } catch (err) {
+          // no-op
+        }
+
+        let publishedMetadata;
+        try {
+          publishedMetadata = await fetchContractMetadataFromAddress(
+            this.contractWrapper.readContract.address,
+            this.contractWrapper.getProvider(),
+            this.storage,
+          );
+        } catch (err) {}
         data = {
-          name: contractName || publishedMetadata.name,
-          description: publishedMetadata.info.title,
+          name: contractName || publishedMetadata?.name,
+          symbol: contractSymbol,
+          description: publishedMetadata?.info.title,
         };
       } catch (e) {
         throw new Error("Could not fetch contract metadata");
@@ -119,13 +134,13 @@ export class ContractMetadata<
     return this.parseOutputMetadata(data);
   }
   /**
-   * Set the metadata of a contract
+   * Set the metadata of this contract
    * @remarks OVERWRITE the metadata of a contract
    * @example
    * ```javascript
    * await contract.metadata.set({
-   *  name: "My Contract",
-   *  description: "My contract description"
+   *   name: "My Contract",
+   *   description: "My contract description"
    * })
    * ```
    * @public
@@ -152,8 +167,7 @@ export class ContractMetadata<
    * @example
    * ```javascript
    * await contract.metadata.update({
-   *   name: "My Contract",
-   *   description: "My contract description"
+   *   description: "My new contract description"
    * })
    * ```
    * @public

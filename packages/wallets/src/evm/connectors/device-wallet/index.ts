@@ -7,12 +7,7 @@ import type { Chain } from "@thirdweb-dev/chains";
 import { ethers } from "ethers";
 
 export type DeviceWalletConnectorOptions = {
-  chain:
-    | {
-        chainId: number;
-        rpc: string[];
-      }
-    | Chain;
+  chain: Pick<Chain, "chainId" | "rpc">;
   wallet: DeviceWalletImpl;
 };
 

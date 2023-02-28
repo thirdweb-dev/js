@@ -88,7 +88,7 @@ export type TokenBurnParams = {
  * The possible NFT contract types.
  * @example
  * ```javascript
- * const { contract } = useContract(<ContractAddress>);
+ * const { contract } = useContract("{{contract_address}}");
  * ```
  * @beta
  */
@@ -103,7 +103,7 @@ export type NFTContract =
  * The possible Token contract types.
  * @example
  * ```javascript
- * const { contract } = useContract(<ContractAddress>);
+ * const { contract } = useContract("{{contract_address}}");
  * ```
  * @beta
  */

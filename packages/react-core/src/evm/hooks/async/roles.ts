@@ -45,11 +45,11 @@ type GetAllReturnType<TContract extends ContractWithRoles> = Promise<
 /** **********************/
 
 /**
- * Use this to get the roles of a {@link SmartContract}
+ * Get all members of all roles
  *
  * @example
  * ```jsx
- * const { data: roles, isLoading, error } = useAllRoleMembers(SmartContract);
+ * const { data: roles, isLoading, error } = useAllRoleMembers(contract);
  * ```
  *
  * @param contract - an instance of a {@link SmartContract}
@@ -76,7 +76,7 @@ export function useAllRoleMembers<TContract extends ContractWithRoles>(
 }
 
 /**
- * Use this to get the members of a role on a {@link SmartContract}
+ * Get all members of a specific role
  *
  * @example
  * ```jsx
@@ -86,7 +86,7 @@ export function useAllRoleMembers<TContract extends ContractWithRoles>(
  * @param contract - an instance of a {@link SmartContract}
  * @param role - the role to get the members of, see {@link Role}
  * @returns a list of addresses that are members of the role
- * @twfeature PermissionsEnumerable
+ * @twfeature Permissions
  * @beta
  */
 export function useRoleMembers<TContract extends ContractWithRoles>(
@@ -108,18 +108,18 @@ export function useRoleMembers<TContract extends ContractWithRoles>(
 }
 
 /**
- * Use this to check if a {@link WalletAddress} is a member of a role on a {@link SmartContract}
+ * Check if an address is a member of a specific role
  *
  * @example
  * ```jsx
- * const { data: isMember, isLoading, error } = useIsAddressRole(SmartContract, "admin", "0x123");
+ * const { data: isMember, isLoading, error } = useIsAddressRole(contract, "admin", "{{wallet_address}}");
  * ```
  *
  * @param contract - an instance of a {@link SmartContract}
  * @param role - the role to check the member against, see {@link Role}
  * @param walletAddress - the address to check
  * @returns true if the address is a member of the role, or false if not
- * @twfeature Permissions
+ * @twfeature PermissionsEnumerable
  * @beta
  */
 export function useIsAddressRole<TContract extends ContractWithRoles>(
@@ -153,16 +153,17 @@ export function useIsAddressRole<TContract extends ContractWithRoles>(
 /** **********************/
 
 /**
- * Use this to OVERWRITE the list of addresses that are members of specific roles
+ * Overwrite the list of members for specific roles
  *
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: overwriteRoles,
  *     isLoading,
  *     error,
- *   } = useSetAllRoleMembers(SmartContract);
+ *   } = useSetAllRoleMembers(contract);
  *
  *   if (error) {
  *     console.error("failed to overwrite roles", error);
@@ -171,7 +172,7 @@ export function useIsAddressRole<TContract extends ContractWithRoles>(
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => overwriteRoles({  rolesWithAddresses: { minter: [] } })}
+ *       onClick={() => overwriteRoles({ rolesWithAddresses: { minter: ["{{wallet_address}"] } })}
  *     >
  *       Overwrite Roles
  *     </button>
@@ -181,7 +182,7 @@ export function useIsAddressRole<TContract extends ContractWithRoles>(
  *
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to overwrite all roles on the contract
- * @twfeature PermissionsEnumerable
+ * @twfeature Permissions
  * @beta
  */
 export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
@@ -210,19 +211,18 @@ export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
   );
 }
 
-// const { mutate } = useSetAllRoleMembers(undefined as unknown as NFTCollection);
-
 /**
- * Use this to grant a {@link WalletAddress} a specific role on a {@link SmartContract}
+ * Grant a role to a specific address
  *
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: grantRole,
  *     isLoading,
  *     error,
- *   } = useGrantRole(SmartContract);
+ *   } = useGrantRole(contract);
  *
  *   if (error) {
  *     console.error("failed to grant role", error);
@@ -231,7 +231,7 @@ export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => grantRole({  role: "admin", address: "0x123" })}
+ *       onClick={() => grantRole({ role: "admin", address: {{wallet_address}} })}
  *     >
  *       Grant Role
  *     </button>
@@ -241,7 +241,7 @@ export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
  *
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to grant a member of a role on the contract
- * @twfeature Permissions
+ * @twfeature Permissions | PermissionsEnumerable
  * @beta
  */
 export function useGrantRole<TContract extends ContractWithRoles>(
@@ -272,16 +272,17 @@ export function useGrantRole<TContract extends ContractWithRoles>(
 }
 
 /**
- * Use this to revoke a {@link WalletAddress} a specific role on a {@link SmartContract}
+ * Revoke a role from a specific address
  *
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: revokeRole,
  *     isLoading,
  *     error,
- *   } = useRevokeRole(SmartContract);
+ *   } = useRevokeRole(contract);
  *
  *   if (error) {
  *     console.error("failed to revoke role", error);
@@ -290,7 +291,7 @@ export function useGrantRole<TContract extends ContractWithRoles>(
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => revokeRole({  role: "admin", address: "0x123" })}
+ *       onClick={() => revokeRole({ role: "admin", address: {{wallet_address}} })}
  *     >
  *       Revoke Role
  *     </button>
@@ -300,7 +301,7 @@ export function useGrantRole<TContract extends ContractWithRoles>(
  *
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to revoke a role from a member on the contract
- * @twfeature Permissions
+ * @twfeature Permissions | PermissionsEnumerable
  * @beta
  */
 export function useRevokeRole<TContract extends ContractWithRoles>(
