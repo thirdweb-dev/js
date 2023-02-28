@@ -1,10 +1,11 @@
-import { NetworkInput, TransactionResult } from "..";
+import { NetworkInput } from "..";
 import { AmountSchema } from "../../../core/schema/shared";
 import { assertEnabled, detectContractFeature } from "../../common";
 import {
   fetchCurrencyMetadata,
   fetchCurrencyValue,
 } from "../../common/currency";
+import { buildTransactionFunction } from "../../common/transactions";
 import {
   FEATURE_TOKEN,
   FEATURE_TOKEN_MINTABLE,
@@ -27,6 +28,7 @@ import { Erc20Burnable } from "./erc-20-burnable";
 import { Erc20Droppable } from "./erc-20-droppable";
 import { Erc20Mintable } from "./erc-20-mintable";
 import { Erc20SignatureMintable } from "./erc-20-signature-mintable";
+import { Transaction } from "./transactions";
 import type {
   TokenERC20,
   DropERC20,
@@ -99,8 +101,8 @@ export class Erc20<
   ////// Standard ERC20 Extension //////
 
   /**
-   * Get the token Metadata (name, symbol, etc...)
-   *
+   * Get the token metadata
+   * @remarks name, symbol, etc...
    * @example
    * ```javascript
    * const token = await contract.erc20.get();
@@ -116,7 +118,7 @@ export class Erc20<
   }
 
   /**
-   * Get Token Balance for the currently connected wallet
+   * Get token balance for the currently connected wallet
    *
    * @remarks Get a wallets token balance.
    *
@@ -133,13 +135,12 @@ export class Erc20<
   }
 
   /**
-   * Get Token Balance
+   * Get token balance for a specific wallet
    *
    * @remarks Get a wallets token balance.
    *
    * @example
    * ```javascript
-   * // Address of the wallet to check token balance
    * const walletAddress = "{{wallet_address}}";
    * const balance = await contract.erc20.balanceOf(walletAddress);
    * ```
@@ -154,7 +155,7 @@ export class Erc20<
   }
 
   /**
-   * The total supply for this Token
+   * Get the total supply for this token
    * @remarks Get how much supply has been minted
    * @example
    * ```javascript
@@ -169,7 +170,7 @@ export class Erc20<
   }
 
   /**
-   * Get Token Allowance
+   * Get token allowance
    *
    * @remarks Get the allowance of a 'spender' wallet over the connected wallet's funds - the allowance of a different address for a token is the amount of tokens that the `spender` wallet is allowed to spend on behalf of the connected wallet.
    *
@@ -191,7 +192,7 @@ export class Erc20<
   }
 
   /**
-   * Get Token Allowance
+   * Get token allowance of a specific wallet
    *
    * @remarks Get the allowance of one wallet over another wallet's funds - the allowance of a different address for a token is the amount of tokens that the wallet is allowed to spend on behalf of the specified wallet.
    *
@@ -217,7 +218,7 @@ export class Erc20<
   }
 
   /**
-   * Transfer Tokens
+   * Transfer tokens
    *
    * @remarks Transfer tokens from the connected wallet to another wallet.
    *
@@ -231,20 +232,16 @@ export class Erc20<
    * ```
    * @twfeature ERC20
    */
-  public async transfer(
-    to: string,
-    amount: Amount,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("transfer", [
-        to,
-        await this.normalizeAmount(amount),
-      ]),
-    };
-  }
+  transfer = buildTransactionFunction(async (to: string, amount: Amount) => {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "transfer",
+      args: [to, await this.normalizeAmount(amount)],
+    });
+  });
 
   /**
-   * Transfer Tokens From Address
+   * Transfer tokens from a specific address
    *
    * @remarks Transfer tokens from one wallet to another
    *
@@ -261,23 +258,19 @@ export class Erc20<
    * ```
    * @twfeature ERC20
    */
-  public async transferFrom(
-    from: string,
-    to: string,
-    amount: Amount,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("transferFrom", [
-        from,
-        to,
-        await this.normalizeAmount(amount),
-      ]),
-    };
-  }
+  transferFrom = buildTransactionFunction(
+    async (from: string, to: string, amount: Amount) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "transferFrom",
+        args: [from, to, await this.normalizeAmount(amount)],
+      });
+    },
+  );
 
   /**
-   * Allows the specified `spender` wallet to transfer the given `amount` of tokens to another wallet
-   *
+   * Set token allowance
+   * @remarks Allows the specified `spender` wallet to transfer the given `amount` of tokens to another wallet
    * @example
    * ```javascript
    * // Address of the wallet to allow transfers from
@@ -288,20 +281,18 @@ export class Erc20<
    * ```
    * @twfeature ERC20
    */
-  public async setAllowance(
-    spender: string,
-    amount: Amount,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("approve", [
-        spender,
-        await this.normalizeAmount(amount),
-      ]),
-    };
-  }
+  setAllowance = buildTransactionFunction(
+    async (spender: string, amount: Amount) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "approve",
+        args: [spender, await this.normalizeAmount(amount)],
+      });
+    },
+  );
 
   /**
-   * Transfer Tokens To Many Wallets
+   * Transfer tokens to many wallets
    *
    * @remarks Mint tokens from the connected wallet to many wallets
    *
@@ -322,7 +313,7 @@ export class Erc20<
    * await contract.erc20.transferBatch(data);
    * ```
    */
-  public async transferBatch(args: TokenMintInput[]) {
+  transferBatch = buildTransactionFunction(async (args: TokenMintInput[]) => {
     const encoded = await Promise.all(
       args.map(async (arg) => {
         const amountWithDecimals = await this.normalizeAmount(arg.amount);
@@ -332,29 +323,36 @@ export class Erc20<
         );
       }),
     );
-    await this.contractWrapper.multiCall(encoded);
-  }
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "multicall",
+      args: [encoded],
+    });
+  });
 
   ////// ERC20 Mintable Extension //////
 
   /**
-   * Mint Tokens
+   * Mint tokens
    *
    * @remarks Mint tokens to the connected wallet.
    *
    * @example
    * ```javascript
    * const amount = "1.5"; // The amount of this token you want to mint
-   * await contract.erc20.mint(toAddress, amount);
+   * await contract.erc20.mint(amount);
    * ```
    * @twfeature ERC20Mintable
    */
-  public async mint(amount: Amount): Promise<TransactionResult> {
-    return this.mintTo(await this.contractWrapper.getSignerAddress(), amount);
-  }
+  mint = buildTransactionFunction(async (amount: Amount) => {
+    return this.mintTo.prepare(
+      await this.contractWrapper.getSignerAddress(),
+      amount,
+    );
+  });
 
   /**
-   * Mint Tokens
+   * Mint tokens to a specific wallet
    *
    * @remarks Mint tokens to a specified address.
    *
@@ -366,23 +364,28 @@ export class Erc20<
    * ```
    * @twfeature ERC20Mintable
    */
-  public async mintTo(
-    receiver: string,
-    amount: Amount,
-  ): Promise<TransactionResult> {
-    return assertEnabled(this.mintable, FEATURE_TOKEN_MINTABLE).to(
-      receiver,
-      amount,
-    );
-  }
+  mintTo = buildTransactionFunction(
+    async (receiver: string, amount: Amount) => {
+      return assertEnabled(this.mintable, FEATURE_TOKEN_MINTABLE).to.prepare(
+        receiver,
+        amount,
+      );
+    },
+  );
 
   /**
-   * Construct a mint transaction without executing it.
-   * This is useful for estimating the gas cost of a mint transaction, overriding transaction options and having fine grained control over the transaction execution.
+   * Construct a mint transaction without executing it
+   * @remakrs This is useful for estimating the gas cost of a mint transaction, overriding transaction options and having fine grained control over the transaction execution.
    * @param receiver - Address you want to send the token to
    * @param amount - The amount of tokens you want to mint
+   *
+   * @deprecated Use `contract.erc20.mint.prepare(...args)` instead
+   * @twfeature ERC20Mintable
    */
-  public async getMintTransaction(receiver: string, amount: Amount) {
+  public async getMintTransaction(
+    receiver: string,
+    amount: Amount,
+  ): Promise<Transaction> {
     return assertEnabled(
       this.mintable,
       FEATURE_TOKEN_MINTABLE,
@@ -392,7 +395,7 @@ export class Erc20<
   ////// ERC20 BatchMintable Extension //////
 
   /**
-   * Mint Tokens To Many Wallets
+   * Mint tokens to many wallets
    *
    * @remarks Mint tokens to many wallets in one transaction.
    *
@@ -414,16 +417,17 @@ export class Erc20<
    * ```
    * @twfeature ERC20BatchMintable
    */
-  public async mintBatchTo(args: TokenMintInput[]): Promise<TransactionResult> {
-    return assertEnabled(this.mintable?.batch, FEATURE_TOKEN_BATCH_MINTABLE).to(
-      args,
-    );
-  }
+  mintBatchTo = buildTransactionFunction(async (args: TokenMintInput[]) => {
+    return assertEnabled(
+      this.mintable?.batch,
+      FEATURE_TOKEN_BATCH_MINTABLE,
+    ).to.prepare(args);
+  });
 
   ////// ERC20 Burnable Extension //////
 
   /**
-   * Burn Tokens
+   * Burn tokens
    *
    * @remarks Burn tokens held by the connected wallet
    *
@@ -436,12 +440,14 @@ export class Erc20<
    * ```
    * @twfeature ERC20Burnable
    */
-  public async burn(amount: Amount): Promise<TransactionResult> {
-    return assertEnabled(this.burnable, FEATURE_TOKEN_BURNABLE).tokens(amount);
-  }
+  burn = buildTransactionFunction(async (amount: Amount) => {
+    return assertEnabled(this.burnable, FEATURE_TOKEN_BURNABLE).tokens.prepare(
+      amount,
+    );
+  });
 
   /**
-   * Burn Tokens
+   * Burn tokens from a specific wallet
    *
    * @remarks Burn tokens held by the specified wallet
    *
@@ -457,20 +463,19 @@ export class Erc20<
    * ```
    * @twfeature ERC20Burnable
    */
-  public async burnFrom(
-    holder: string,
-    amount: Amount,
-  ): Promise<TransactionResult> {
-    return assertEnabled(this.burnable, FEATURE_TOKEN_BURNABLE).from(
-      holder,
-      amount,
-    );
-  }
+  burnFrom = buildTransactionFunction(
+    async (holder: string, amount: Amount) => {
+      return assertEnabled(this.burnable, FEATURE_TOKEN_BURNABLE).from.prepare(
+        holder,
+        amount,
+      );
+    },
+  );
 
   ////// ERC20 Claimable Extension //////
 
   /**
-   * Claim a certain amount of tokens to the connected Wallet
+   * Claim tokens
    *
    * @remarks Let the specified wallet claim Tokens.
    *
@@ -488,21 +493,20 @@ export class Erc20<
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    * @param claimData
    * @returns - The transaction receipt
-   * @twfeature ERC20ClaimableWithConditions
+   * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1
    */
-  public async claim(
-    amount: Amount,
-    options?: ClaimOptions,
-  ): Promise<TransactionResult> {
-    return this.claimTo(
-      await this.contractWrapper.getSignerAddress(),
-      amount,
-      options,
-    );
-  }
+  claim = buildTransactionFunction(
+    async (amount: Amount, options?: ClaimOptions) => {
+      return this.claimTo.prepare(
+        await this.contractWrapper.getSignerAddress(),
+        amount,
+        options,
+      );
+    },
+  );
 
   /**
-   * Claim a certain amount of tokens to a specific Wallet
+   * Claim tokens to a specific wallet
    *
    * @remarks Let the specified wallet claim Tokens.
    *
@@ -520,18 +524,20 @@ export class Erc20<
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    * @param claimData
    * @returns - The transaction receipt
-   * @twfeature ERC20ClaimableWithConditions
+   * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1
    */
-  public async claimTo(
-    destinationAddress: string,
-    amount: Amount,
-    options?: ClaimOptions,
-  ): Promise<TransactionResult> {
-    return assertEnabled(
-      this.droppable?.claim,
-      FEATURE_TOKEN_CLAIM_CONDITIONS_V2,
-    ).to(destinationAddress, amount, options);
-  }
+  claimTo = buildTransactionFunction(
+    async (
+      destinationAddress: string,
+      amount: Amount,
+      options?: ClaimOptions,
+    ) => {
+      return assertEnabled(
+        this.droppable?.claim,
+        FEATURE_TOKEN_CLAIM_CONDITIONS_V2,
+      ).to.prepare(destinationAddress, amount, options);
+    },
+  );
 
   /**
    * Configure claim conditions
@@ -543,7 +549,7 @@ export class Erc20<
    * const claimConditions = [
    *   {
    *     startTime: presaleStartTime, // start the presale now
-   *     maxQuantity: 2, // limit how many mints for this presale
+   *     maxClaimableSupply: 2, // limit how many mints for this presale
    *     price: 0.01, // presale price
    *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
    *   },
@@ -554,7 +560,7 @@ export class Erc20<
    * ]);
    * await contract.erc20.claimConditions.set(claimConditions);
    * ```
-   * @twfeature ERC20ClaimableWithConditions
+   * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1
    */
   get claimConditions() {
     return assertEnabled(
@@ -566,7 +572,7 @@ export class Erc20<
   ////// ERC20 SignatureMint Extension //////
 
   /**
-   * Signature Minting
+   * Mint with signature
    * @remarks Generate dynamic tokens with your own signature, and let others mint them using that signature.
    * @example
    * ```javascript

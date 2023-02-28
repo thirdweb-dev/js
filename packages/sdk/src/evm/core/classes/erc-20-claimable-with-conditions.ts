@@ -1,10 +1,10 @@
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_TOKEN_CLAIM_CONDITIONS_V2 } from "../../constants/erc20-features";
 import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ClaimOptions } from "../../types";
 import { Amount } from "../../types/currency";
 import { BaseDropERC20 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { TransactionResult } from "../types";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { DropClaimConditions } from "./drop-claim-conditions";
@@ -32,7 +32,7 @@ export class Erc20ClaimableWithConditions implements DetectableFeature {
    * const claimConditions = [
    *   {
    *     startTime: presaleStartTime, // start the presale now
-   *     maxQuantity: 2, // limit how many mints for this presale
+   *     maxClaimableSupply: 2, // limit how many mints for this presale
    *     price: 0.01, // presale price
    *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
    *   },
@@ -90,17 +90,18 @@ export class Erc20ClaimableWithConditions implements DetectableFeature {
    * @param claimData
    * @returns - The transaction receipt
    */
-  public async to(
-    destinationAddress: string,
-    amount: Amount,
-    options?: ClaimOptions,
-  ): Promise<TransactionResult> {
-    const quantity = await this.erc20.normalizeAmount(amount);
-    const task = await this.conditions.getClaimTransaction(
-      destinationAddress,
-      quantity,
-      options,
-    );
-    return await task.execute();
-  }
+  to = buildTransactionFunction(
+    async (
+      destinationAddress: string,
+      amount: Amount,
+      options?: ClaimOptions,
+    ) => {
+      const quantity = await this.erc20.normalizeAmount(amount);
+      return await this.conditions.getClaimTransaction(
+        destinationAddress,
+        quantity,
+        options,
+      );
+    },
+  );
 }

@@ -32,9 +32,12 @@ export class ContractPlatformFee<TContract extends IPlatformFee>
 
   /**
    * Get the platform fee recipient and basis points
-   *  * @example
+   * 
+   * @example
    * ```javascript
    * const feeInfo = await contract.platformFee.get();
+   * console.log(feeInfo.platform_fee_recipient);
+   * console.log(feeInfo.platform_fee_basis_points);
    * ```
    * @twfeature PlatformFee
    */
@@ -49,13 +52,16 @@ export class ContractPlatformFee<TContract extends IPlatformFee>
 
   /**
    * Set the platform fee recipient and basis points
-   * @param platformFeeInfo - the platform fee information
+   * 
+   * @example
    * ```javascript
    * await contract.platformFee.set({
    *   platform_fee_basis_points: 100, // 1% fee
    *   platform_fee_recipient: "0x..." // the fee recipient
    * })
    * ```
+   * 
+   * @param platformFeeInfo - the platform fee information
    * @twfeature PlatformFee
    */
   public async set(

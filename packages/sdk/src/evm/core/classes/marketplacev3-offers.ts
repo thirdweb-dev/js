@@ -68,6 +68,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
 
   /**
    * Get the total number of offers
+   * 
    * @returns Returns the total number of offers created.
    * @public
    *
@@ -75,13 +76,14 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * ```javascript
    * const totalOffers = await contract.offers.getTotalCount();
    * ```
+   * @twfeature Offers
    */
   public async getTotalCount(): Promise<BigNumber> {
     return await this.contractWrapper.readContract.totalOffers();
   }
 
   /**
-   * Get all offers.
+   * Get all offers
    *
    * @example
    * ```javascript
@@ -90,6 +92,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    *
    * @param filter - optional filter parameters
    * @returns the Offer object array
+   * @twfeature Offers
    */
   public async getAll(filter?: MarketplaceFilter): Promise<OfferV3[]> {
     const totalOffers = await this.getTotalCount();
@@ -117,7 +120,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
   }
 
   /**
-   * Get all valid offers.
+   * Get all valid offers
    *
    * @example
    * ```javascript
@@ -126,6 +129,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    *
    * @param filter - optional filter parameters
    * @returns the Offer object array
+   * @twfeature Offers
    */
   public async getAllValid(filter?: MarketplaceFilter): Promise<OfferV3[]> {
     const totalOffers = await this.getTotalCount();
@@ -153,7 +157,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
   }
 
   /**
-   * Get a offer by id
+   * Get a single offer
    *
    * @example
    * ```javascript
@@ -163,6 +167,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    *
    * @param offerId - the listing id
    * @returns the Direct listing object
+   * @twfeature Offers
    */
   public async getOffer(offerId: BigNumberish): Promise<OfferV3> {
     const offer = await this.contractWrapper.readContract.getOffer(offerId);
@@ -175,7 +180,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    *******************************/
 
   /**
-   * Make Offer
+   * Make an offer
    *
    * @remarks Make an offer on the marketplace for an asset.
    *
@@ -201,6 +206,9 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * const receipt = tx.receipt; // the transaction receipt
    * const id = tx.id; // the id of the newly created offer
    * ```
+   * @param offer - the offer data
+   * @returns the transaction receipt and the id of the newly created offer
+   * @twfeature Offers
    */
   public async makeOffer(
     offer: OfferInputParams,
@@ -255,7 +263,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
   }
 
   /**
-   * Cancel Offer
+   * Cancel an offer
    *
    * @remarks Cancel an offer on the marketplace
    *
@@ -266,6 +274,9 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    *
    * await contract.offers.cancelOffer(offerId);
    * ```
+   * @param offerId - the offer id
+   * @returns the transaction receipt
+   * @twfeature Offers
    */
   public async cancelOffer(offerId: BigNumberish): Promise<TransactionResult> {
     return {
@@ -287,6 +298,8 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * ```
    *
    * @param offerId - The offer id
+   * @returns the transaction receipt
+   * @twfeature Offers
    */
   public async acceptOffer(offerId: BigNumberish): Promise<TransactionResult> {
     const offer = await this.validateOffer(BigNumber.from(offerId));
