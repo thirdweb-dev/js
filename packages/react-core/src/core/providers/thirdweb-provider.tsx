@@ -21,12 +21,6 @@ import {
 } from "@thirdweb-dev/wallets";
 import React, { useMemo } from "react";
 
-const defaultSupportedWallets: SupportedWallet[] = [
-  MetaMask,
-  CoinbaseWallet,
-  DeviceBrowserWallet,
-];
-
 // this allows autocomplete to work for the chainId prop but still allows `number` and `string` to be passed (for dynamically passed chain data)
 type ChainIdIsh = (string | number) & { __chainIdIsh: never };
 
@@ -75,7 +69,7 @@ export interface ThirdwebProviderProps<
    * };
    * ```
    */
-  supportedWallets?: SupportedWallet[];
+  supportedWallets: SupportedWallet[];
 
   /**
    * Metadata to pass to wallet connect and walletlink wallet connect. (Used to show *which* dApp is being connected to in mobile wallets that support it)
@@ -130,7 +124,7 @@ export interface ThirdwebProviderProps<
 
 const defaultdAppMeta: DAppMetaData = {
   name: "thirdweb powered dApp",
-  url: 'https://thirdweb.com'
+  url: "https://thirdweb.com",
 };
 
 export const ThirdwebProvider = <
@@ -149,7 +143,6 @@ export const ThirdwebProvider = <
   const supportedChains =
     props.supportedChains || (defaultChains as any as TChains);
 
-  const supportedWallets = props.supportedWallets || defaultSupportedWallets;
   const dAppMeta = props.dAppMeta || defaultdAppMeta;
 
   const activeChainId = useMemo(() => {
@@ -189,7 +182,7 @@ export const ThirdwebProvider = <
     <ThirdwebThemeContext.Provider value={props.theme || "dark"}>
       <ThirdwebWalletProvider
         chains={supportedChains}
-        supportedWallets={supportedWallets}
+        supportedWallets={props.supportedWallets}
         shouldAutoConnect={props.autoConnect}
         createWalletStorage={props.createWalletStorage}
         dAppMeta={dAppMeta}

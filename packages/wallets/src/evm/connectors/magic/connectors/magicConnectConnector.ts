@@ -1,3 +1,9 @@
+import {
+  ChainNotConfiguredError,
+  normalizeChainId,
+  UserRejectedRequestError,
+  Chain,
+} from "../../../../lib/wagmi-core";
 import { MagicConnector, MagicOptions } from "./magicConnector";
 import { ConnectExtension } from "@magic-ext/connect";
 import {
@@ -5,12 +11,6 @@ import {
   MagicSDKAdditionalConfiguration,
   SDKBase,
 } from "@magic-sdk/provider";
-import {
-  Chain,
-  ChainNotConfiguredError,
-  normalizeChainId,
-  UserRejectedRequestError,
-} from "@wagmi/core";
 import { utils } from "ethers";
 import { Magic } from "magic-sdk";
 

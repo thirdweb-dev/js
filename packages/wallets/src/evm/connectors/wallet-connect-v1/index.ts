@@ -6,8 +6,8 @@ import {
   normalizeChainId,
   Connector,
   ProviderRpcError,
-} from "@wagmi/core";
-import type { Chain } from "@wagmi/core";
+  Chain,
+} from "../../../lib/wagmi-core";
 import WalletConnect from "@walletconnect/legacy-client";
 import type WalletConnectProvider from "@walletconnect/legacy-provider";
 import { utils, providers } from "ethers";

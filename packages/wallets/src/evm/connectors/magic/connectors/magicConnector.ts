@@ -1,9 +1,9 @@
+import { Chain, Connector, normalizeChainId } from "../../../../lib/wagmi-core";
 import { createModal } from "../modal/view";
 import { ConnectExtension } from "@magic-ext/connect";
 import { OAuthExtension, OAuthProvider } from "@magic-ext/oauth";
 import { InstanceWithExtensions, SDKBase } from "@magic-sdk/provider";
 import { RPCProviderModule } from "@magic-sdk/provider/dist/types/modules/rpc-provider";
-import { Chain, Connector, normalizeChainId } from "@wagmi/core";
 import { providers, Signer, utils } from "ethers";
 import type { AbstractProvider } from "web3-core";
 

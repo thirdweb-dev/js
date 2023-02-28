@@ -1,11 +1,16 @@
 import { createAsyncLocalStorage } from "../../core/WalletStorage";
+import {
+  CoinbaseWallet,
+  DeviceWallet,
+  MetamaskWallet,
+} from "../../wallet/wallets";
 import { ThirdwebProvider as ThirdwebProviderCore } from "@thirdweb-dev/react-core";
 import { ComponentProps } from "react";
 
 interface ThirdwebProviderProps
   extends Omit<
     ComponentProps<typeof ThirdwebProviderCore>,
-    "createWalletStorage"
+    "createWalletStorage" | "supportedWallets"
   > {
   /**
    * Wallets that will be supported by the dApp
@@ -51,6 +56,9 @@ export const ThirdwebProvider: React.FC<ThirdwebProviderProps> = (props) => {
     <ThirdwebProviderCore
       {...props}
       createWalletStorage={createAsyncLocalStorage}
+      supportedWallets={
+        props.supportedWallets || [MetamaskWallet, CoinbaseWallet, DeviceWallet]
+      }
     />
   );
 };

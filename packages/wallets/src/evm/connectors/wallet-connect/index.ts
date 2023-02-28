@@ -6,7 +6,7 @@ import {
   SwitchChainError,
   UserRejectedRequestError,
   Connector,
-} from "@wagmi/core";
+} from "../../../lib/wagmi-core";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { EthereumProviderOptions } from "@walletconnect/ethereum-provider/dist/types/EthereumProvider";
 import { providers } from "ethers";

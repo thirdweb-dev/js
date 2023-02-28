@@ -1,4 +1,4 @@
-import type { Chain } from "@wagmi/core";
+import type { Chain } from "../../lib/wagmi-core";
 
 const arbitrum: Chain = {
   id: 42_161,

@@ -1,7 +1,7 @@
+import type { ConnectorData } from "../../lib/wagmi-core";
 import type { WalletConnectConnector } from "../connectors/wallet-connect";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
-import { ConnectorData } from "@wagmi/core";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
 
 export type WalletConnectOptions = {

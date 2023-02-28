@@ -6,18 +6,23 @@ import {
 export function useInstalledWallets() {
   const deviceWalletStorage = useDeviceWalletStorage();
 
-  const isMetamaskInstalled = window.ethereum?.isMetaMask;
+  const isMetamaskInstalled =
+    typeof window !== "undefined" ? window.ethereum?.isMetaMask : false;
 
   const isCoinbaseWalletInstalled =
-    window.ethereum?.isCoinbaseWallet ||
-    (window.ethereum as any)?.providers?.some((p: any) => p.isCoinbaseWallet);
+    typeof window !== "undefined"
+      ? window.ethereum?.isCoinbaseWallet ||
+        (window.ethereum as any)?.providers?.some(
+          (p: any) => p.isCoinbaseWallet,
+        )
+      : false;
 
   const installedWallets: Record<SupportedWallet["id"], boolean> = {
     metamask: !!isMetamaskInstalled,
     coinbaseWallet: !!isCoinbaseWalletInstalled,
     deviceWallet: !!deviceWalletStorage,
     walletConnect: false,
-    walletConnectV1: false
+    walletConnectV1: false,
   };
 
   return installedWallets;
