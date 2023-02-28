@@ -39,6 +39,8 @@ export async function twCreate(
     projectType = "app";
   } else if (pType === "contract" || options.contract) {
     projectType = "contract";
+  } else if (pType === "extension" || options.extension) {
+    projectType = "extension";
   }
 
   if (projectType === "app") {
@@ -91,10 +93,6 @@ export async function twCreate(
     if (options.hardhat) {
       framework = "hardhat";
     }
-
-    if(options.extension) {
-      createExtension = true;
-    }
   }
 
   if (options.framework) {
@@ -109,6 +107,7 @@ export async function twCreate(
       choices: [
         { title: "App", value: "app" },
         { title: "Contract", value: "contract" },
+        { title: "Dynamic Contract Extension", value: "extension" },
       ],
     });
 
@@ -121,9 +120,21 @@ export async function twCreate(
     projectType = "app";
   }
 
+  if(projectType === "extension") {
+    createExtension = true;
+
+    if (options.forge) {
+      framework = "forge";
+    }
+
+    if (options.hardhat) {
+      framework = "hardhat";
+    }
+  }
+
   // Whether to only create a new contract without the project
   let onlyContract = false;
-  if (projectType === "contract") {
+  if (projectType === "contract" || projectType === "extension") {
     const resolvedProjectPath = path.resolve(projectPath);
     const contractProjectType = await detect(resolvedProjectPath, {});
 
@@ -159,7 +170,7 @@ export async function twCreate(
   if (!onlyContract) {
     if (!projectPath) {
       const defaultName =
-        projectType === "contract" ? "thirdweb-contracts" : "thirdweb-app";
+        (projectType === "contract" || projectType === "extension") ? "thirdweb-contracts" : "thirdweb-app";
       const res = await prompts({
         type: "text",
         name: "path",
@@ -263,7 +274,7 @@ export async function twCreate(
       }
 
       if (
-        projectType === "contract" &&
+        (projectType === "contract" || projectType === "extension") &&
         framework !== "forge" &&
         framework !== "hardhat"
       ) {
@@ -294,7 +305,7 @@ export async function twCreate(
     }
   }
 
-  if (projectType === "contract") {
+  if (projectType === "contract" || projectType === "extension") {
     // Select contract name
     if (!contractName) {
       const defaultName = "MyContract";
