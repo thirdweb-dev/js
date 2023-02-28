@@ -64,9 +64,13 @@ const walletNames: Record<SupportedWallet["id"], string> = {
   walletConnectV1: "Wallet Connect V1",
 };
 
-export const ConnectWalletFlow = () => {
+export const ConnectWalletFlow: React.FC<{
+  btnClass?: string;
+  btnTitle?: string;
+}> = (props) => {
   const connectingToWallet = useConnectingToWallet();
   const [showScreen, setShowScreen] = useState<Screen>("walletList");
+  const btnTitle = props.btnTitle || "Connect Wallet";
 
   const connect = useConnect();
   const wallets = useWallets();
@@ -142,17 +146,18 @@ export const ConnectWalletFlow = () => {
       setOpen={setOpen}
       trigger={
         <Button
+          className={props.btnClass}
           variant="inverted"
           type="button"
           style={{
             minWidth: "140px",
           }}
-          aria-label={connectingToWallet ? "Connecting" : "Connect Wallet"}
+          aria-label={connectingToWallet ? "Connecting" : btnTitle}
         >
           {connectingToWallet ? (
             <Spinner size="sm" color={theme.text.inverted} />
           ) : (
-            "Connect Wallet"
+            btnTitle
           )}
         </Button>
       }

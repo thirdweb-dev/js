@@ -1,4 +1,4 @@
-import { darkTheme, lightTheme } from "../../design-system";
+import { darkTheme, lightTheme, Theme } from "../../design-system";
 import { ConnectWalletFlow } from "./ConnectWalletFlow";
 import { ConnectedWalletDetails } from "./ConnectedWalletDetails";
 import { keyframes, ThemeProvider } from "@emotion/react";
@@ -9,21 +9,40 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useContext } from "react";
 
+type ConnectWalletProps = {
+  className?: string;
+  theme?: "dark" | "light" | Theme;
+  btnTitle?: string;
+};
+
 /**
  * A component that allows the user to connect their wallet.
  *
  * The button must be descendant of `ThirdwebProvider` in order to function.
  */
-export const ConnectWallet: React.FC<{ theme?: "dark" | "light" }> = (
-  props,
-) => {
+export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   const activeWallet = useActiveWallet();
   const themeFromCore = useContext(ThirdwebThemeContext);
   const theme = props.theme || themeFromCore || "dark";
   return (
-    <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
+    <ThemeProvider
+      theme={
+        typeof theme === "object"
+          ? theme
+          : theme === "dark"
+          ? darkTheme
+          : lightTheme
+      }
+    >
       <FadeIn>
-        {!activeWallet ? <ConnectWalletFlow /> : <ConnectedWalletDetails />}
+        {!activeWallet ? (
+          <ConnectWalletFlow
+            btnClass={props.className}
+            btnTitle={props.btnTitle}
+          />
+        ) : (
+          <ConnectedWalletDetails />
+        )}
       </FadeIn>
     </ThemeProvider>
   );
