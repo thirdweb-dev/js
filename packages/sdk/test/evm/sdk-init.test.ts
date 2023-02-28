@@ -96,6 +96,6 @@ describe("SDK Initialization", async () => {
 
     const sdk = new ThirdwebSDK("ws://localhost:8545");
     const network = await sdk.getProvider().getNetwork();
-    expect(network.chainId).to.equal(1337);
+    expect(network.chainId).to.equal(31337);
   });
 });
