@@ -434,7 +434,7 @@ export const CmdKSearch: React.FC = () => {
               autoFocus
               border="none"
               borderRadius="none"
-              placeholder="Search any contract address"
+              placeholder="Search any contract"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
             />
@@ -558,7 +558,7 @@ const SearchResult: React.FC<SearchResultProps> = ({
           </Heading>
         </LinkOverlay>
         <Heading pointerEvents="none" as="h4" opacity={0.6} size="subtitle.xs">
-          {chain.name}
+          {chain.name} - {shortenIfAddress(result.address)}
         </Heading>
       </Flex>
       <Flex ml="auto" align="center" gap={3} flexShrink={0}>
