@@ -10,8 +10,8 @@ export function createStorage(config: StorageConfigInput): ThirdwebStorage {
   if (isStorage(config)) {
     return storage as ThirdwebStorage;
   } else {
-    return new ThirdwebStorage({
-      gatewayUrls: storage as Exclude<StorageConfigInput, ThirdwebStorage>,
-    });
+    return new ThirdwebStorage(
+      storage as Exclude<StorageConfigInput, ThirdwebStorage>,
+    );
   }
 }

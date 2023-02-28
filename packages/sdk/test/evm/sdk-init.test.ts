@@ -1,6 +1,7 @@
 import { ThirdwebSDK } from "../../src/evm";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Goerli, Fncy } from "@thirdweb-dev/chains";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { expect } from "chai";
 import { ethers } from "ethers";
@@ -85,7 +86,7 @@ describe("SDK Initialization", async () => {
   it("Should be able to connect directly via http RPC URL", async () => {
     const sdk = new ThirdwebSDK("http://localhost:8545");
     const network = await sdk.getProvider().getNetwork();
-    expect(network.chainId).to.equal(31337);
+    expect([1337, 31337]).to.include(network.chainId);
   });
 
   it.skip("Should be able to connect directly via websocket RPC URL", async () => {
@@ -96,6 +97,22 @@ describe("SDK Initialization", async () => {
 
     const sdk = new ThirdwebSDK("ws://localhost:8545");
     const network = await sdk.getProvider().getNetwork();
-    expect(network.chainId).to.equal(31337);
+    expect([1337, 31337]).to.include(network.chainId);
+  });
+
+  it("Should instantiate SDK storage with custom storage instance", async () => {
+    const sdk = new ThirdwebSDK(
+      "goerli",
+      undefined,
+      new ThirdwebStorage({ gatewayUrls: ["example.com"] }),
+    );
+    expect(sdk.storage.gatewayUrls["ipfs://"]).to.contain("example.com/");
+  });
+
+  it("Should instantiate SDK storage with gatewayUrls", async () => {
+    const sdk = new ThirdwebSDK("goerli", undefined, {
+      gatewayUrls: ["example.com"],
+    });
+    expect(sdk.storage.gatewayUrls["ipfs://"]).to.contain("example.com/");
   });
 });

@@ -58,7 +58,7 @@ export const SDKOptionsSchema = z
 
 export const StorageConfigSchema = z.union([
   z.object({
-    gatewayUrls: z.array(z.string().url()),
+    gatewayUrls: z.array(z.string()),
   }),
   z.instanceof(ThirdwebStorage),
 ]);
