@@ -15,6 +15,9 @@ export * from "./hooks/connectors/useMetamask";
 export * from "./hooks/connectors/useWalletConnect";
 export * from "./hooks/connectors/useWalletLink";
 
+// export use gnosis
+export * from "./connectors/gnosis-safe";
+
 // ui components
 export * from "./components/MediaRenderer";
 export * from "./components/NftMedia";
