@@ -10,6 +10,7 @@ import {
   usePublisherProfile,
 } from "../hooks";
 import { PublisherHeader } from "../publisher/publisher-header";
+import { AddressesModal } from "./addresses-modal";
 import { MarkdownRenderer } from "./markdown-renderer";
 import {
   Divider,
@@ -39,7 +40,7 @@ import { PublishedContractOG } from "og-lib/url-utils";
 import { useMemo } from "react";
 import { BiPencil } from "react-icons/bi";
 import { BsShieldCheck } from "react-icons/bs";
-import { VscBook, VscCalendar } from "react-icons/vsc";
+import { VscBook, VscCalendar, VscServer } from "react-icons/vsc";
 import invariant from "tiny-invariant";
 import {
   Card,
@@ -205,6 +206,26 @@ Deploy it in one click`,
     return `${publishedContractName} | Published Smart Contract`;
   }, [extensionNames, publishedContractName]);
 
+  const implementationAddresses = useMemo(
+    () =>
+      publishedContractInfo.data?.publishedMetadata?.factoryDeploymentData
+        ?.implementationAddresses,
+    [
+      publishedContractInfo.data?.publishedMetadata?.factoryDeploymentData
+        ?.implementationAddresses,
+    ],
+  );
+
+  const factoryAddresses = useMemo(
+    () =>
+      publishedContractInfo.data?.publishedMetadata?.factoryDeploymentData
+        ?.factoryAddresses,
+    [
+      publishedContractInfo.data?.publishedMetadata?.factoryDeploymentData
+        ?.factoryAddresses,
+    ],
+  );
+
   return (
     <>
       <NextSeo
@@ -350,6 +371,39 @@ Deploy it in one click`,
                     </Flex>
                   </Flex>
                 </ListItem>
+                {publishedContractInfo.data?.publishedMetadata
+                  ?.isDeployableViaProxy ||
+                publishedContractInfo.data?.publishedMetadata
+                  ?.isDeployableViaFactory ? (
+                  <ListItem>
+                    <Flex gap={2} alignItems="flex-start">
+                      <Icon color="paragraph" as={VscServer} boxSize={5} />
+                      <Flex direction="column" gap={1}>
+                        <Heading as="h5" size="label.sm">
+                          {publishedContractInfo.data?.publishedMetadata
+                            ?.isDeployableViaFactory
+                            ? "Factory"
+                            : "Proxy"}{" "}
+                          Enabled
+                        </Heading>
+                        {implementationAddresses ? (
+                          <AddressesModal
+                            chainAddressRecord={implementationAddresses}
+                            title="Implementations"
+                          />
+                        ) : null}
+                        {factoryAddresses &&
+                        publishedContractInfo.data?.publishedMetadata
+                          ?.isDeployableViaFactory ? (
+                          <AddressesModal
+                            chainAddressRecord={factoryAddresses}
+                            title="Factories"
+                          />
+                        ) : null}
+                      </Flex>
+                    </Flex>
+                  </ListItem>
+                ) : null}
               </>
             </List>
           </Flex>
