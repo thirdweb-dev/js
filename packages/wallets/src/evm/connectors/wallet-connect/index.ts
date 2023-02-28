@@ -5,7 +5,6 @@ import {
   ProviderRpcError,
   SwitchChainError,
   UserRejectedRequestError,
-  getClient,
   Connector,
 } from "@wagmi/core";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
@@ -89,18 +88,7 @@ export class WalletConnectConnector extends Connector<
 
   async connect({ chainId, pairingTopic }: ConnectConfig = {}) {
     try {
-      let targetChainId = chainId;
-      if (!targetChainId) {
-        const lastUsedChainId = getClient().lastUsedChainId;
-        if (lastUsedChainId && !this.isChainUnsupported(lastUsedChainId)) {
-          targetChainId = lastUsedChainId;
-        } else {
-          targetChainId = this.chains[0]?.id;
-        }
-      }
-      if (!targetChainId) {
-        throw new Error("No chains found on connector.");
-      }
+      let targetChainId = chainId || 1;
 
       const provider = await this.getProvider();
       this.#setupListeners();
