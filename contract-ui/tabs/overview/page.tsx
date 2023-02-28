@@ -4,7 +4,6 @@ import { LatestEvents } from "./components/LatestEvents";
 import { MarketplaceDetails } from "./components/MarketplaceDetails";
 import { NFTDetails } from "./components/NFTDetails";
 import { PermissionsTable } from "./components/PermissionsTable";
-import { ShareContract } from "./components/ShareContract";
 import { TokenDetails } from "./components/TokenDetails";
 import { getGuidesAndTemplates } from "./helpers/getGuidesAndTemplates";
 import { Divider, Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
@@ -84,10 +83,6 @@ export const CustomContractOverviewPage: React.FC<
             />
           )}
         <BuildYourApp trackingCategory={TRACKING_CATEGORY} />
-        <ShareContract
-          address={contractAddress}
-          trackingCategory={TRACKING_CATEGORY}
-        />
       </GridItem>
       <GridItem as={Flex} direction="column" gap={6}>
         {contract?.abi && <Extensions abi={contract?.abi} />}
