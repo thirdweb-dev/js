@@ -2,6 +2,7 @@ import { fetchCurrencyValue } from "../common";
 import { getCompositePluginABI } from "../common/plugin";
 import {
   getChainProvider,
+  isChainConfig,
   NATIVE_TOKEN_ADDRESS,
   setSupportedChains,
 } from "../constants";
@@ -20,7 +21,7 @@ import {
   RPCConnectionHandler,
 } from "./classes/rpc-connection-handler";
 import type {
-  ChainIdOrNameOrChain,
+  ChainOrRpcUrl,
   ContractForPrebuiltContractType,
   ContractType,
   NetworkInput,
@@ -60,7 +61,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   static async fromWallet(
     wallet: EVMWallet,
-    network: ChainIdOrNameOrChain,
+    network: ChainOrRpcUrl,
     options: SDKOptions = {},
     storage: ThirdwebStorage = new ThirdwebStorage(),
   ) {
@@ -90,12 +91,22 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   static fromSigner(
     signer: Signer,
-    network?: ChainIdOrNameOrChain,
+    network?: ChainOrRpcUrl,
     options: SDKOptions = {},
     storage: ThirdwebStorage = new ThirdwebStorage(),
   ): ThirdwebSDK {
-    const sdk = new ThirdwebSDK(network || signer, options, storage);
-    sdk.updateSignerOrProvider(signer);
+    let signerWithProvider = signer;
+    if (network && !signer.provider) {
+      const provider = getChainProvider(network, options);
+      signerWithProvider = signer.connect(provider);
+    }
+
+    const sdk = new ThirdwebSDK(
+      network || signerWithProvider,
+      options,
+      storage,
+    );
+    sdk.updateSignerOrProvider(signerWithProvider);
     return sdk;
   }
 
@@ -121,13 +132,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   static fromPrivateKey(
     privateKey: string,
-    network: ChainIdOrNameOrChain,
+    network: ChainOrRpcUrl,
     options: SDKOptions = {},
     storage: ThirdwebStorage = new ThirdwebStorage(),
   ): ThirdwebSDK {
     const provider = getChainProvider(network, options);
     const signer = new ethers.Wallet(privateKey, provider);
-    return ThirdwebSDK.fromSigner(signer, network, options, storage);
+    return new ThirdwebSDK(signer, options, storage);
   }
 
   /**
@@ -162,23 +173,18 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public storage: ThirdwebStorage;
 
   constructor(
-    network: NetworkInput | Chain,
+    network: NetworkInput,
     options: SDKOptions = {},
     storage: ThirdwebStorage = new ThirdwebStorage(),
   ) {
-    if (
-      typeof network !== "string" &&
-      typeof network !== "number" &&
-      !ethers.Signer.isSigner(network) &&
-      !ethers.providers.Provider.isProvider(network)
-    ) {
+    if (isChainConfig(network)) {
       options = {
         ...options,
-        // @ts-expect-error - we know that the network is assignable desipite the readonly mismatch
+        // @ts-expect-error - we know that the network is assignable despite the readonly mismatch
         supportedChains: [network, ...(options.supportedChains || [])],
       };
-      network = network.chainId;
     }
+
     super(network, options);
     setSupportedChains(options?.supportedChains);
     this.storageHandler = storage;

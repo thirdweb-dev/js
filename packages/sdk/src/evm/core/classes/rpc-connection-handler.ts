@@ -1,11 +1,11 @@
-import { getChainProvider, getReadOnlyProvider } from "../../constants/urls";
+import { getChainProvider, getProviderFromRpcUrl } from "../../constants/urls";
 import {
   SDKOptions,
   SDKOptionsOutput,
   SDKOptionsSchema,
 } from "../../schema/sdk-options";
 import { NetworkInput } from "../types";
-import { ethers, Signer, providers } from "ethers";
+import { Signer, providers } from "ethers";
 import EventEmitter from "eventemitter3";
 
 /**
@@ -85,37 +85,39 @@ export function getSignerAndProvider(
   let provider: providers.Provider | undefined;
 
   if (Signer.isSigner(network)) {
+    // Here, we have an ethers.Signer
     signer = network;
     if (network.provider) {
       provider = network.provider;
     }
+  } else if (providers.Provider.isProvider(network)) {
+    // Here, we have an ethers.providers.Provider
+    provider = network;
+  } else {
+    // Here, we must have a ChainOrRpcUrl, which is a chain name, chain id, rpc url, or chain config
+    // All of which, getChainProvider can handle for us
+    provider = getChainProvider(network, options);
   }
 
   if (options?.readonlySettings) {
-    provider = getReadOnlyProvider(
+    // If readonly settings are specified, then overwrite the provider
+    provider = getProviderFromRpcUrl(
       options.readonlySettings.rpcUrl,
       options.readonlySettings.chainId,
     );
   }
 
+  // At this point, if we don't have a provider, don't default to a random chain
+  // Instead, just throw an error
   if (!provider) {
-    if (providers.Provider.isProvider(network)) {
-      provider = network;
-    } else if (!Signer.isSigner(network)) {
-      if (typeof network === "string" || typeof network === "number") {
-        provider = getChainProvider(network, options);
-      } else {
-        // no a signer, not a provider, not a string? try with default provider
-        provider = ethers.getDefaultProvider(network);
-      }
+    if (signer) {
+      throw new Error(
+        "No provider passed to the SDK! Please make sure that your signer is connected to a provider!",
+      );
     }
-  }
 
-  if (!provider) {
-    // we should really never hit this case!
-    provider = ethers.getDefaultProvider();
-    console.error(
-      "No provider found, using default provider on default chain!",
+    throw new Error(
+      "No provider found! Make sure to specify which network to connect to, or pass a signer or provider to the SDK!",
     );
   }
 
