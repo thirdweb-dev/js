@@ -1,4 +1,4 @@
-import { fetchCurrencyValue } from "../common";
+import { fetchCurrencyValue, getAllDetectedFeatureNames } from "../common";
 import { createStorage } from "../common/storage";
 import {
   getChainProvider,
@@ -10,7 +10,7 @@ import { SmartContract } from "../contracts/smart-contract";
 import { getContract } from "../functions/getContract";
 import { getContractFromAbi } from "../functions/getContractFromAbi";
 import { resolveContractType } from "../functions/utils/contract";
-import { SDKOptions } from "../schema";
+import { Abi, SDKOptions } from "../schema";
 import { ContractWithMetadata, CurrencyValue } from "../types";
 import { ContractDeployer } from "./classes";
 import { ContractPublisher } from "./classes/contract-publisher";
@@ -506,6 +506,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           contractType: () => this.resolveContractType(address),
           metadata: async () =>
             (await this.getContract(address)).metadata.get(),
+          extensions: async () =>
+            getAllDetectedFeatureNames(
+              (await this.getContract(address)).abi as Abi,
+            ),
         };
       }),
     );
@@ -534,6 +538,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           chainId,
           contractType: async () => "custom" as const,
           metadata: async () => ({}),
+          extensions: async () => [],
         };
       }
       try {
@@ -548,12 +553,17 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           });
           sdkMap[chainId] = chainSDK;
         }
+
         return {
           address,
           chainId,
           contractType: () => chainSDK.resolveContractType(address),
           metadata: async () =>
             (await chainSDK.getContract(address)).metadata.get(),
+          extensions: async () =>
+            getAllDetectedFeatureNames(
+              (await chainSDK.getContract(address)).abi as Abi,
+            ),
         };
       } catch (e) {
         return {
@@ -561,6 +571,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           chainId,
           contractType: async () => "custom" as const,
           metadata: async () => ({}),
+          extensions: async () => [],
         };
       }
     });
