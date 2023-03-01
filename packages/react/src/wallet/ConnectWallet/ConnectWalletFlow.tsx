@@ -15,8 +15,8 @@ import { CoinbaseWalletIcon } from "./icons/CoinbaseWalletIcon";
 import { DeviceWalletIcon } from "./icons/DeviceWalletIcon";
 import { MetamaskIcon } from "./icons/MetamaskIcon";
 import { WalletConnectIcon } from "./icons/WalletConnectIcon";
+import { CoinbaseWalletSetup } from "./setup-ui/CoinbaseConnecting";
 import { CoinbaseGetStarted } from "./setup-ui/CoinbaseGetStarted";
-import { CoinbaseWalletSetup } from "./setup-ui/CoinbaseWaletSetup";
 import { ConnectToDeviceWallet } from "./setup-ui/DeviceWalletSetup";
 import { MetamaskConnecting } from "./setup-ui/MetamaskConnecting";
 import { MetamaskGetStarted } from "./setup-ui/MetamaskGetStarted";
@@ -179,8 +179,8 @@ export const ConnectWalletFlow: React.FC<{
     >
       {showScreen === "walletList" && (
         <>
-          <DialogTitle>Connect your wallet</DialogTitle>
-          <Spacer y="xl" />
+          <DialogTitle>Choose your wallet</DialogTitle>
+          <Spacer y="xxl" />
           <WalletListUl>
             {walletsMeta.map((WalletMeta) => {
               return (
@@ -257,7 +257,7 @@ export const ConnectWalletFlow: React.FC<{
 
 const InstallBadge = styled.span<{ theme?: Theme }>`
   padding: ${spacing.xxs} ${spacing.xs};
-  font-size: ${fontSize.sm};
+  font-size: ${fontSize.xs};
   background-color: ${(p) => p.theme.badge.secondary};
   border-radius: ${radius.lg};
   margin-left: auto;

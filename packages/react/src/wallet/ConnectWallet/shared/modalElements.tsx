@@ -1,5 +1,5 @@
 import { IconButton } from "../../../components/buttons";
-import { Theme, fontSize } from "../../../design-system";
+import { Theme, fontSize, media } from "../../../design-system";
 import { iconSize } from "../../../design-system";
 import styled from "@emotion/styled";
 import { Title } from "@radix-ui/react-dialog";
@@ -10,6 +10,9 @@ export const ModalTitle = styled(Title)<{ theme?: Theme }>`
   font-weight: 500;
   font-size: ${fontSize.lg};
   color: ${(p) => p.theme.text.neutral};
+  ${media.mobile} {
+    text-align: center;
+  }
 `;
 
 export const ModalDescription = styled.p<{ theme?: Theme }>`
@@ -18,6 +21,9 @@ export const ModalDescription = styled.p<{ theme?: Theme }>`
   font-size: ${fontSize.md};
   color: ${(p) => p.theme.text.secondary};
   line-height: 1.5;
+  ${media.mobile} {
+    text-align: center;
+  }
 `;
 
 export const BackButton: React.FC<{
@@ -40,4 +46,8 @@ export const HelperLink = styled.a<{ theme?: Theme }>`
   color: ${(p) => p.theme.link.primary};
   font-size: ${fontSize.sm};
   text-decoration: none;
+  display: block;
+  ${media.mobile} {
+    text-align: center;
+  }
 `;

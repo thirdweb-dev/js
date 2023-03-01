@@ -5,6 +5,7 @@ import { Input } from "../../components/formElements";
 import {
   fontSize,
   iconSize,
+  media,
   radius,
   spacing,
   Theme,
@@ -161,12 +162,6 @@ const NetworkList: React.FC<{
   );
 };
 
-// const Description = styled.p<{ theme?: Theme }>`
-//   margin: 0;
-//   font-size: ${fontSize.md};
-//   color: ${(p) => p.theme.text.secondary};
-// `;
-
 const TabButton = styled(Tabs.Trigger)<{ theme?: Theme }>`
   all: unset;
   font-size: ${fontSize.md};
@@ -222,6 +217,10 @@ const NetworkButton = styled.button<{ theme?: Theme }>`
   }
   &[data-active="true"] {
     background: ${(p) => p.theme.bg.highlighted};
+  }
+
+  ${media.mobile} {
+    font-size: ${fontSize.sm};
   }
 `;
 
