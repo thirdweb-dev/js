@@ -4,6 +4,7 @@ import DropERC20_V2Abi from "@thirdweb-dev/contracts-js/dist/abis/IDropERC20_V2.
 import IDropSinglePhase from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase.json";
 import IDropSinglePhaseV1 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase_V1.json";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
+import IERC20PermitAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC20Permit.json";
 import IMintableERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableERC20.json";
 import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.json";
 import ISignatureMintERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC20.json";
@@ -98,6 +99,17 @@ export const FEATURE_TOKEN_MINTABLE = {
   },
 } as const;
 
+export const FEATURE_TOKEN_PERMIT = {
+  name: "ERC20Permit",
+  namespace: "token.permit",
+  docLinks: {
+    sdk: "sdk.erc20permit",
+    contracts: "IERC20Permit",
+  },
+  abis: [ERC20Abi, IERC20PermitAbi],
+  features: {},
+} as const;
+
 export const FEATURE_TOKEN = {
   name: "ERC20",
   namespace: "token",
@@ -114,5 +126,6 @@ export const FEATURE_TOKEN = {
     [FEATURE_TOKEN_CLAIM_PHASES_V1.name]: FEATURE_TOKEN_CLAIM_PHASES_V1,
     [FEATURE_TOKEN_CLAIM_PHASES_V2.name]: FEATURE_TOKEN_CLAIM_PHASES_V2,
     [FEATURE_TOKEN_SIGNATURE_MINTABLE.name]: FEATURE_TOKEN_SIGNATURE_MINTABLE,
+    [FEATURE_TOKEN_PERMIT.name]: FEATURE_TOKEN_PERMIT,
   },
 } as const;

@@ -55,17 +55,28 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     const formData = new FormData();
     const { form, fileNames } = this.buildFormData(formData, data, options);
 
-    const cid = await getCIDForUpload(
-      data,
-      fileNames.map((name) => decodeURIComponent(name)),
-      !options?.uploadWithoutDirectory,
-    );
-    if ((await isUploaded(cid)) && !options?.alwaysUpload) {
-      if (options?.uploadWithoutDirectory) {
-        return [`ipfs://${cid}`];
-      } else {
-        return fileNames.map((name) => `ipfs://${cid}/${name}`);
+    try {
+      const cid = await getCIDForUpload(
+        data,
+        fileNames.map((name) => decodeURIComponent(name)),
+        !options?.uploadWithoutDirectory,
+      );
+      if ((await isUploaded(cid)) && !options?.alwaysUpload) {
+        if (options?.onProgress) {
+          options?.onProgress({
+            progress: 100,
+            total: 100,
+          });
+        }
+
+        if (options?.uploadWithoutDirectory) {
+          return [`ipfs://${cid}`];
+        } else {
+          return fileNames.map((name) => `ipfs://${cid}/${name}`);
+        }
       }
+    } catch {
+      // no-op
     }
 
     if (isBrowser()) {

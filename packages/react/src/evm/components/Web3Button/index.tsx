@@ -3,7 +3,7 @@ import { Button } from "../../../components/buttons";
 import { darkTheme, lightTheme } from "../../../design-system";
 import { ConnectWallet } from "../../../wallet/ConnectWallet/ConnectWallet";
 import { ThemeProvider } from "@emotion/react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   ThirdwebThemeContext,
   useAddress,
@@ -15,7 +15,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import type { SmartContract } from "@thirdweb-dev/sdk";
 import type { CallOverrides, ContractInterface } from "ethers";
-import { PropsWithChildren, useContext, useMemo } from "react";
+import { PropsWithChildren, useContext } from "react";
 import invariant from "tiny-invariant";
 
 type ActionFn = (contract: SmartContract) => any;
@@ -80,6 +80,8 @@ export const Web3Button = <TAction extends ActionFn>({
   const needToSwitchChain =
     sdkChainId && walletChainId && sdkChainId !== walletChainId;
 
+  const queryClient = useQueryClient();
+
   const { contract } = useContract(contractAddress, contractAbi || "custom");
   const thirdwebTheme = useContext(ThirdwebThemeContext);
   const themeToUse = theme || thirdwebTheme || "dark";
@@ -98,7 +100,9 @@ export const Web3Button = <TAction extends ActionFn>({
         onSubmit();
       }
 
-      return await action(contract);
+      // Wait for the promise to resolve, so errors get caught by onError
+      const result = await action(contract);
+      return result;
     },
     {
       onSuccess: (res) => {
@@ -114,14 +118,7 @@ export const Web3Button = <TAction extends ActionFn>({
           onError(err as Error);
         }
       },
-      // TODO bring back invalidation
-      // onSettled: () =>
-      //   queryClient.invalidateQueries(
-      //     createCacheKeyWithNetwork(
-      //       createContractCacheKey(contractAddress),
-      //       sdkChainId,
-      //     ),
-      //   ),
+      onSettled: () => queryClient.invalidateQueries(),
     },
   );
 
