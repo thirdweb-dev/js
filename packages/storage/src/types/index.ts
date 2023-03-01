@@ -4,9 +4,9 @@ import { IStorageUploader, UploadOptions } from "./upload";
 export type ThirdwebStorageOptions<T extends UploadOptions> = {
   uploader?: IStorageUploader<T>;
   downloader?: IStorageDownloader;
-  gatewayUrls?: GatewayUrls;
+  gatewayUrls?: GatewayUrls | string[];
 };
 
-export * from "./upload";
 export * from "./download";
+export * from "./upload";
 export * from "./data";
