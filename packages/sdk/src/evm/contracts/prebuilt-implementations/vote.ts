@@ -8,6 +8,7 @@ import { ContractInterceptor } from "../../core/classes/contract-interceptor";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
+import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import {
   NetworkInput,
@@ -470,6 +471,24 @@ export class Vote implements UpdateableNetwork {
         descriptionHash,
       ]),
     };
+  }
+
+  /**
+   * @internal
+   */
+  public async prepare<
+    TMethod extends keyof VoteERC20["functions"] = keyof VoteERC20["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<VoteERC20["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
   }
 
   /**

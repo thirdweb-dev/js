@@ -481,6 +481,24 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   /**
    * @internal
    */
+  public async prepare<
+    TMethod extends keyof SignatureDropContract["functions"] = keyof SignatureDropContract["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<SignatureDropContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
+  }
+
+  /**
+   * @internal
+   */
   public async call(
     functionName: string,
     ...args: unknown[] | [...unknown[], CallOverrides]
