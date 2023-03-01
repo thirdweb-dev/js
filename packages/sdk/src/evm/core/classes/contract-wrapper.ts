@@ -348,7 +348,12 @@ export class ContractWrapper<
         throw new Error("No signer found");
       }
 
-      return signer.signTransaction(tx);
+      const signedTx = await signer.signTransaction(tx);
+
+      return {
+        transaction: tx,
+        signature: signedTx,
+      };
     }
   }
 
