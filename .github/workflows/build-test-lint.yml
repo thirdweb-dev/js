@@ -145,7 +145,7 @@ jobs:
       - name: Deploy pre-release
         shell: bash
         run: |
-          export GITHUB_TOKEN=${AUTOMATION_TOKEN}
+          export GITHUB_TOKEN=${GITHUB_TOKEN}
           yarn version-packages:CI
           yarn release:CI
         env:
