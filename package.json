@@ -30,8 +30,6 @@
     "release:nightly": "node ./scripts/pre-release.mjs && changeset publish --tag nightly",
     "version-packages:dev": "changeset version --snapshot dev",
     "release:dev": "node ./scripts/pre-release.mjs && changeset publish --tag dev --no-git-tag",
-    "version-packages:CI": "changeset version --snapshot CI",
-    "release:CI": "node ./scripts/pre-release.mjs && changeset publish --tag CI --no-git-tag",
     "push": "turbo run push --filter=./packages/*"
   },
   "packageManager": "yarn@1.22.19",
