@@ -143,7 +143,9 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Deploy pre-release
+        shell: bash
         run: |
+          export GITHUB_TOKEN=${AUTOMATION_TOKEN}
           yarn version-packages:CI
           yarn release:CI
         env:
