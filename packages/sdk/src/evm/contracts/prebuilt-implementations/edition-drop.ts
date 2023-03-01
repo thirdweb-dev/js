@@ -1,7 +1,7 @@
 import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
-import { TransactionTask } from "../../core/classes/TransactionTask";
+import { buildTransactionFunction } from "../../common/transactions";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -17,11 +17,8 @@ import { DropErc1155History } from "../../core/classes/drop-erc1155-history";
 import { Erc1155 } from "../../core/classes/erc-1155";
 import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
-import {
-  NetworkInput,
-  TransactionResult,
-  TransactionResultWithId,
-} from "../../core/types";
+import { Transaction } from "../../core/classes/transactions";
+import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { PaperCheckout } from "../../integrations/thirdweb-checkout";
 import { Abi } from "../../schema/contracts/custom";
 import { DropErc1155ContractSchema } from "../../schema/contracts/drop-erc1155";
@@ -59,7 +56,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
   >;
   public roles: ContractRoles<
     PrebuiltEditionDrop,
-    typeof EditionDrop.contractRoles[number]
+    (typeof EditionDrop.contractRoles)[number]
   >;
   /**
    * Configure royalties
@@ -265,14 +262,16 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * @param metadatas - The metadata to include in the batch.
    * @param options - optional upload progress callback
    */
-  public async createBatch(
-    metadatas: NFTMetadataOrUri[],
-    options?: {
-      onProgress: (event: UploadProgressEvent) => void;
+  createBatch = buildTransactionFunction(
+    async (
+      metadatas: NFTMetadataOrUri[],
+      options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+      },
+    ): Promise<Transaction<TransactionResultWithId<NFTMetadata>[]>> => {
+      return this.erc1155.lazyMint.prepare(metadatas, options);
     },
-  ): Promise<TransactionResultWithId<NFTMetadata>[]> {
-    return this.erc1155.lazyMint(metadatas, options);
-  }
+  );
 
   /**
    * Construct a claim transaction without executing it.
@@ -282,13 +281,15 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * @param quantity - Quantity of the tokens you want to claim
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    * @param claimData - Optional claim verification data (e.g. price, allowlist proof, etc...)
+   *
+   * @deprecated Use `contract.erc1155.claim.prepare(...args)` instead
    */
   public async getClaimTransaction(
     destinationAddress: string,
     tokenId: BigNumberish,
     quantity: BigNumberish,
     checkERC20Allowance = true, // TODO split up allowance checks
-  ): Promise<TransactionTask> {
+  ): Promise<Transaction> {
     return this.erc1155.getClaimTransaction(
       destinationAddress,
       tokenId,
@@ -320,16 +321,23 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    *
    * @returns - Receipt for the transaction
    */
-  public async claimTo(
-    destinationAddress: string,
-    tokenId: BigNumberish,
-    quantity: BigNumberish,
-    checkERC20Allowance = true,
-  ): Promise<TransactionResult> {
-    return this.erc1155.claimTo(destinationAddress, tokenId, quantity, {
-      checkERC20Allowance,
-    });
-  }
+  claimTo = buildTransactionFunction(
+    async (
+      destinationAddress: string,
+      tokenId: BigNumberish,
+      quantity: BigNumberish,
+      checkERC20Allowance = true,
+    ) => {
+      return this.erc1155.claimTo.prepare(
+        destinationAddress,
+        tokenId,
+        quantity,
+        {
+          checkERC20Allowance,
+        },
+      );
+    },
+  );
 
   /**
    * Claim a token to the connected wallet
@@ -343,14 +351,21 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    *
    * @returns - Receipt for the transaction
    */
-  public async claim(
-    tokenId: BigNumberish,
-    quantity: BigNumberish,
-    checkERC20Allowance = true,
-  ): Promise<TransactionResult> {
-    const address = await this.contractWrapper.getSignerAddress();
-    return this.claimTo(address, tokenId, quantity, checkERC20Allowance);
-  }
+  claim = buildTransactionFunction(
+    async (
+      tokenId: BigNumberish,
+      quantity: BigNumberish,
+      checkERC20Allowance = true,
+    ) => {
+      const address = await this.contractWrapper.getSignerAddress();
+      return this.claimTo.prepare(
+        address,
+        tokenId,
+        quantity,
+        checkERC20Allowance,
+      );
+    },
+  );
 
   /**
    * Burn a specified amount of a NFT
@@ -363,12 +378,11 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * const result = await contract.burnTokens(tokenId, amount);
    * ```
    */
-  public async burnTokens(
-    tokenId: BigNumberish,
-    amount: BigNumberish,
-  ): Promise<TransactionResult> {
-    return this.erc1155.burn(tokenId, amount);
-  }
+  burnTokens = buildTransactionFunction(
+    async (tokenId: BigNumberish, amount: BigNumberish) => {
+      return this.erc1155.burn.prepare(tokenId, amount);
+    },
+  );
 
   /**
    * @internal

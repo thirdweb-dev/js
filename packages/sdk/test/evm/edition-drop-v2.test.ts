@@ -72,8 +72,8 @@ describe("Edition Drop Contract (V2)", async () => {
       0,
       1,
     );
-    const cost2 = await claimTx.estimateGasCostInEther();
-    expect(parseFloat(cost2)).gt(0);
+    const cost2 = await claimTx.estimateGasCost();
+    expect(parseFloat(cost2.ether)).gt(0);
   });
 
   it("comprehensive test", async () => {

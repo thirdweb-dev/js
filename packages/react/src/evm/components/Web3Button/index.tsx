@@ -3,7 +3,7 @@ import { ConnectWallet } from "../ConnectWallet";
 import { Button } from "../shared/Button";
 import { ThemeProvider, ThemeProviderProps } from "../shared/ThemeProvider";
 import { FiWifi } from "@react-icons/all-files/fi/FiWifi";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   useSDKChainId,
   useContract,
@@ -77,6 +77,8 @@ export const Web3Button = <TAction extends ActionFn>({
 
   const hasMismatch = useNetworkMismatch();
 
+  const queryClient = useQueryClient();
+
   const switchToChainId = useMemo(() => {
     if (sdkChainId && walletChainId && sdkChainId !== walletChainId) {
       return sdkChainId;
@@ -105,7 +107,9 @@ export const Web3Button = <TAction extends ActionFn>({
         onSubmit();
       }
 
-      return await action(contract);
+      // Wait for the promise to resolve, so errors get caught by onError
+      const result = await action(contract);
+      return result;
     },
     {
       onSuccess: (res) => {
@@ -121,14 +125,7 @@ export const Web3Button = <TAction extends ActionFn>({
           onError(err as Error);
         }
       },
-      // TODO bring back invalidation
-      // onSettled: () =>
-      //   queryClient.invalidateQueries(
-      //     createCacheKeyWithNetwork(
-      //       createContractCacheKey(contractAddress),
-      //       sdkChainId,
-      //     ),
-      //   ),
+      onSettled: () => queryClient.invalidateQueries(),
     },
   );
   if (!address) {

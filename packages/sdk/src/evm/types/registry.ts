@@ -19,4 +19,5 @@ export type ContractWithMetadata = {
   chainId: number;
   contractType: () => Promise<ContractType>;
   metadata: () => Promise<{ name: string }>;
+  extensions: () => Promise<string[]>;
 };

@@ -1,12 +1,12 @@
 import { detectContractFeature } from "../../common";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_TOKEN_MINTABLE } from "../../constants/erc20-features";
 import { Amount } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { TransactionResult } from "../types";
-import { TransactionTask } from "./TransactionTask";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20 } from "./erc-20";
 import { Erc20BatchMintable } from "./erc-20-batch-mintable";
+import { Transaction } from "./transactions";
 import type { IMintableERC20, IMulticall } from "@thirdweb-dev/contracts-js";
 
 /**
@@ -47,18 +47,20 @@ export class Erc20Mintable implements DetectableFeature {
    * await contract.token.mint.to(toAddress, amount);
    * ```
    */
-  public async to(to: string, amount: Amount): Promise<TransactionResult> {
-    const tx = await this.getMintTransaction(to, amount);
-    return tx.execute();
-  }
+  to = buildTransactionFunction(async (to: string, amount: Amount) => {
+    return await this.getMintTransaction(to, amount);
+  });
 
+  /**
+   * @deprecated Use `contract.erc20.mint.prepare(...args)` instead
+   */
   public async getMintTransaction(
     to: string,
     amount: Amount,
-  ): Promise<TransactionTask> {
-    return TransactionTask.make({
+  ): Promise<Transaction> {
+    return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
-      functionName: "mintTo",
+      method: "mintTo",
       args: [to, await this.erc20.normalizeAmount(amount)],
     });
   }

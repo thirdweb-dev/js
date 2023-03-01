@@ -35,7 +35,7 @@ import type {
   IPlatformFee,
   IPrimarySale,
   IRoyalty,
-    ContractMetadata as ContractMetadataType,
+  ContractMetadata as ContractMetadataType,
   Ownable,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -118,14 +118,6 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   }
 
   /**
-   * Set and get the app of the contract
-   */
-  get app(): ContractAppURI<AppURI, ContractMetadataType> {
-    return assertEnabled(this.detectApp(), FEATURE_APPURI);
-  }
-
-
-  /**
    * Auto-detects ERC20 standard functions.
    */
   get erc20(): Erc20 {
@@ -144,6 +136,13 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
    */
   get erc1155(): Erc1155 {
     return assertEnabled(this.detectErc1155(), FEATURE_EDITION);
+  }
+
+  /**
+   * Auto-detects AppURI standard functions.
+   */
+  get app(): ContractAppURI<AppURI> {
+    return assertEnabled(this.detectApp(), FEATURE_APPURI);
   }
 
   private _chainId: number;
@@ -296,15 +295,20 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   }
 
   private detectApp() {
-      const metadata = new ContractMetadata(
-        this.contractWrapper,
-        CustomContractSchema,
-        this.storage,
-      );
+    const metadata = new ContractMetadata(
+      this.contractWrapper,
+      CustomContractSchema,
+      this.storage,
+    );
 
     if (detectContractFeature<AppURI>(this.contractWrapper, "AppURI")) {
       return new ContractAppURI(this.contractWrapper, metadata);
-    }else if (detectContractFeature<ContractMetadataType>(this.contractWrapper, "ContractMetadata")) {
+    } else if (
+      detectContractFeature<ContractMetadataType>(
+        this.contractWrapper,
+        "ContractMetadata",
+      )
+    ) {
       return new ContractAppURI(this.contractWrapper, metadata);
     }
     return undefined;

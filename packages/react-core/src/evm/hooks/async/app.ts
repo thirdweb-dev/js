@@ -2,16 +2,15 @@ import {
   RequiredParam,
   requiredParamInvariant,
 } from "../../../core/query-utils/required-param";
+import { useSDKChainId } from "../../providers/thirdweb-sdk-provider";
 import {
-  cacheKeys, invalidateContractAndBalances,
+  cacheKeys,
+  invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
-import {
-  SmartContract,
-} from "@thirdweb-dev/sdk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { SmartContract } from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
-import { useSDKChainId } from "../../providers/thirdweb-sdk-provider";
 
 /**
  * Get App URI
@@ -33,11 +32,8 @@ export function useAppURI<TContract extends SmartContract>(
     cacheKeys.contract.app.get(contract?.getAddress()),
     async () => {
       requiredParamInvariant(contract, "Contract is required");
-      invariant(
-        "appURI" in contract && contract.appURI,
-        "Contract does not support appURI",
-      );
-      return await contract.app.get();
+      invariant(contract.appURI, "Contract does not support appURI");
+      return await contract.appURI.get();
     },
     {
       enabled: !!contract,
@@ -47,7 +43,7 @@ export function useAppURI<TContract extends SmartContract>(
 
 /**
  * Set App URI
- * 
+ *
  * @example
  * ```jsx
  * const Component = () => {
@@ -76,20 +72,23 @@ export function useAppURI<TContract extends SmartContract>(
  * @twfeature AppURI | ContractMetadata
  * @beta
  */
-export function useSetAppURI(
-  contract: RequiredParam<SmartContract>,
-) {
+export function useSetAppURI(contract: RequiredParam<SmartContract>) {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();
   const activeChainId = useSDKChainId();
   return useMutation(
     (params: { uri: string }) => {
       requiredParamInvariant(contract, "Contract is required");
+<<<<<<< HEAD
       invariant(
         "appURI" in contract && contract.appURI,
         "Contract does not support appURI",
       );
       return contract.app.set(params.uri);
+=======
+      invariant(contract.appURI, "Contract does not support appURI");
+      return contract.appURI.set(params.uri);
+>>>>>>> main
     },
     {
       onSettled: () =>
