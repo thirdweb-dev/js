@@ -1,9 +1,9 @@
 import { createAsyncLocalStorage } from "../../core/AsyncStorage";
 import { DEFAULT_API_KEY } from "../constants/rpc";
 import { walletsMetadata } from "../constants/walletsMetadata";
+import { ThirdwebContextProvider } from "../contexts/thirdweb-context-provider";
 import { WalletsProvider } from "../contexts/wallets-context";
 import { SupportedWallet, WalletMeta } from "../types/wallet";
-import { ThirdwebContextProvider } from "./thirdweb-context-provider";
 import {
   ThirdwebProvider as ThirdwebProviderCore,
   ThirdwebProviderProps,

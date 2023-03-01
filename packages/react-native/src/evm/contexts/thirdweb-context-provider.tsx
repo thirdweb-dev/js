@@ -1,5 +1,5 @@
-import { useWalletsContext } from "../contexts/wallets-context";
-import { getWallets } from "../utils/wallets";
+import { getWalletMeta } from "../utils/wallets";
+import { useWalletsContext } from "./wallets-context";
 import { useActiveWallet } from "@thirdweb-dev/react-core";
 import { WalletConnect, WalletConnectV1 } from "@thirdweb-dev/wallets";
 import { PropsWithChildren, useEffect } from "react";
@@ -16,7 +16,7 @@ export const ThirdwebContextProvider = ({ children }: PropsWithChildren) => {
         activeWallet instanceof WalletConnectV1
       ) {
         console.log("setActiveWallet", activeWallet);
-        setActiveWalletMeta(getWallets(activeWallet));
+        setActiveWalletMeta(getWalletMeta(activeWallet));
       }
     } else {
       setActiveWalletMeta(undefined);
