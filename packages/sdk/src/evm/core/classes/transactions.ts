@@ -209,6 +209,17 @@ export class Transaction<TResult = TransactionResult> {
   }
 
   /**
+   * Sign the transaction without sending it
+   */
+  async sign(): Promise<string> {
+    const tx = await this.contract.populateTransaction[this.method](
+      ...this.args,
+      this.overrides,
+    );
+    return this.contract.signer.signTransaction(tx);
+  }
+
+  /**
    * Send the transaction without waiting for it to be mined.
    */
   async send(): Promise<ethers.ContractTransaction> {

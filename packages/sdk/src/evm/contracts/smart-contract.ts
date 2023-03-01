@@ -192,6 +192,17 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     return this.contractWrapper.readContract.address;
   }
 
+  public async prepare<
+    TMethod extends keyof TContract["functions"] = keyof TContract["functions"],
+  >(
+    functionName: TMethod,
+    ...args:
+      | Parameters<TContract["functions"][TMethod]>
+      | [...Parameters<TContract["functions"][TMethod]>, CallOverrides]
+  ) {
+    return this.contractWrapper.prepare(functionName, ...args);
+  }
+
   /**
    * Call any function on this contract
    * @example

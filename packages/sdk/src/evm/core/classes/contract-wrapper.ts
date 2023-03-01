@@ -28,6 +28,7 @@ import {
   PermitRequestMessage,
 } from "../types";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
+import { Transaction } from "./transactions";
 import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import fetch from "cross-fetch";
@@ -267,6 +268,87 @@ export class ContractWrapper<
    */
   public withTransactionOverride(hook: () => CallOverrides) {
     this.customOverrides = hook;
+  }
+
+  /**
+   * @internal
+   */
+  public async prepare<
+    TMethod extends keyof TContract["functions"] = keyof TContract["functions"],
+  >(
+    functionName: TMethod,
+    ...args:
+      | Parameters<TContract["functions"][TMethod]>
+      | [...Parameters<TContract["functions"][TMethod]>, CallOverrides]
+  ) {
+    // parse last arg as tx options if present
+    let txOptions: CallOverrides | undefined;
+    try {
+      if (args.length > 0 && typeof args[args.length - 1] === "object") {
+        const last = args[args.length - 1];
+        txOptions = CallOverrideSchema.parse(last);
+        // if call overrides found, remove it from args array
+        args = args.slice(0, args.length - 1) as Parameters<
+          TContract["functions"][TMethod]
+        >;
+      }
+    } catch (e) {
+      // no-op
+    }
+
+    const functions = extractFunctionsFromAbi(AbiSchema.parse(this.abi)).filter(
+      (f) => f.name === functionName,
+    );
+
+    if (!functions.length) {
+      throw new Error(
+        `Function "${
+          functionName as string
+        }" not found in contract. Check your dashboard for the list of functions available`,
+      );
+    }
+    const fn = functions.find(
+      (f) => f.name === functionName && f.inputs.length === args.length,
+    );
+
+    // TODO extract this and re-use for deploy function to check constructor args
+    if (!fn) {
+      throw new Error(
+        `Function "${functionName as string}" requires ${
+          functions[0].inputs.length
+        } arguments, but ${
+          args.length
+        } were provided.\nExpected function signature: ${
+          functions[0].signature
+        }`,
+      );
+    }
+
+    const ethersFnName = `${functionName as string}(${fn.inputs
+      .map((i) => i.type)
+      .join()})` as TMethod;
+
+    // check if the function exists on the contract, otherwise use the name passed in
+    const fnName =
+      ethersFnName in this.readContract.functions ? ethersFnName : functionName;
+
+    // TODO validate each argument
+    if (fn.stateMutability === "view" || fn.stateMutability === "pure") {
+      throw new Error(
+        `Function ${
+          functionName as string
+        } is not a write function. Use call() instead.`,
+      );
+    } else {
+      return new Transaction({
+        contract: this.writeContract,
+        signer: this.getSigner() as ethers.Signer,
+        provider: this.getProvider(),
+        method: fnName as string,
+        args,
+        overrides: txOptions,
+      });
+    }
   }
 
   /**
