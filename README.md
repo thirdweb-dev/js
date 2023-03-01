@@ -5,7 +5,7 @@
     <br />
 </p>
 
-<h1 align="center"><a href='http://thirdweb.com/'>thirdweb</a> JavaScript/TypeScript monorepo</h1>
+<h1 align="center"><a href='https://thirdweb.com/'>thirdweb</a> JavaScript/TypeScript monorepo</h1>
 
 <p align="center">
     <a href="https://github.com/thirdweb-dev/js/actions/workflows/build-test-lint.yml">

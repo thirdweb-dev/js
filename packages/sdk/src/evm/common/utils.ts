@@ -1,7 +1,7 @@
 /**
  * @internal
  */
-// @ts-expext-error window is not defined
+// @ts-expect-error window is not defined
 export const isBrowser = () => typeof window !== "undefined";
 
 /**

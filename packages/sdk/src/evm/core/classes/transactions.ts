@@ -341,7 +341,7 @@ export class Transaction<TResult = TransactionResult> {
       // ignore
     }
 
-    // in some cases WalletConnect doesn't properly gives an estimate for how much gas it would actually use.
+    // in some cases WalletConnect doesn't properly give an estimate for how much gas it would actually use.
     // as a fix, we're setting it to a high arbitrary number (500k) as the gas limit that should cover for most function calls.
     if (gas.lt(100000)) {
       gas = BigNumber.from(500000);

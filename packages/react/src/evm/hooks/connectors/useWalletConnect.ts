@@ -14,7 +14,7 @@ globalThis.Buffer = Buffer;
  *
  *
  * @example
- * We can allows user to connect their mobile wallets as follows:
+ * We can allow user to connect their mobile wallets as follows:
  * ```javascript
  * import { useWalletConnect } from "@thirdweb-dev/react"
  *
