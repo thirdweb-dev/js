@@ -330,6 +330,24 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
   /**
    * @internal
    */
+  public async prepare<
+    TMethod extends keyof TokenERC721["functions"] = keyof TokenERC721["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<TokenERC721["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
+  }
+
+  /**
+   * @internal
+   */
   public async call(
     functionName: string,
     ...args: unknown[] | [...unknown[], CallOverrides]
