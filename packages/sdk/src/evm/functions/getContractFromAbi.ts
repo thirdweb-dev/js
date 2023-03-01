@@ -1,7 +1,7 @@
 import { getCompositePluginABI } from "../common/plugin";
 import { SmartContract } from "../contracts/smart-contract";
 import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
-import { NetworkInput, ValidContractInstance } from "../core/types";
+import { NetworkInput } from "../core/types";
 import { AbiSchema } from "../schema/contracts/custom";
 import { SDKOptions } from "../schema/sdk-options";
 import {
@@ -23,7 +23,7 @@ export type GetContractFromAbiParams = {
 
 export async function getContractFromAbi(
   params: GetContractFromAbiParams,
-): Promise<ValidContractInstance> {
+): Promise<SmartContract> {
   const [signer, provider] = getSignerAndProvider(
     params.network,
     params.sdkOptions,
@@ -31,7 +31,7 @@ export async function getContractFromAbi(
   const chainId = (await provider.getNetwork()).chainId;
 
   if (inContractCache(params.address, chainId)) {
-    return getCachedContract(params.address, chainId);
+    return getCachedContract(params.address, chainId) as SmartContract;
   }
 
   const parsedAbi =
