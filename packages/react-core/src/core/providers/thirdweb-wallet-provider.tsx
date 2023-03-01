@@ -212,6 +212,11 @@ export function ThirdwebWalletProvider(
       return;
     }
 
+    if (activeWallet) {
+      // there's already an active wallet, don't auto connect
+      return;
+    }
+
     (async () => {
       const lastConnectedWalletId = await coordinatorStorage.getItem(
         "lastConnectedWallet",
@@ -231,6 +236,7 @@ export function ThirdwebWalletProvider(
     props.supportedWallets,
     handleWalletConnect,
     props.shouldAutoConnect,
+    activeWallet,
   ]);
 
   const onWCOpenWallet = useCallback((uri?: string) => {

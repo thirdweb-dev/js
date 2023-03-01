@@ -17,7 +17,9 @@ import invariant from "tiny-invariant";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [activeWalletMeta, setActiveWalletMeta] = useState<WalletMeta>();
+  const [activeWalletMeta, setActiveWalletMeta] = useState<
+    WalletMeta | undefined
+  >();
 
   const connect = useConnect();
   const supportedWallets = useSupportedWallets();
@@ -58,11 +60,20 @@ export const ConnectWalletFlow = () => {
     }
   };
 
+  const onBackPress = () => {
+    console.log("onbackpress");
+    setActiveWalletMeta(undefined);
+  };
+
   return (
     <>
       <TWModal isVisible={modalVisible}>
         {activeWalletMeta ? (
-          <ConnectingWallet wallet={activeWalletMeta} onClose={onClose} />
+          <ConnectingWallet
+            wallet={activeWalletMeta}
+            onClose={onClose}
+            onBackPress={onBackPress}
+          />
         ) : (
           <ChooseWallet
             wallets={getWalletsMeta(supportedWallets)}

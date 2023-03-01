@@ -5,6 +5,7 @@ import { Image, StyleSheet, TouchableOpacity, View, Text } from "react-native";
 
 interface ConnectWalletHeaderProps {
   close: () => void;
+  onBackPress: () => void;
   walletLogoUrl: string;
   subHeaderText?: ReactNode | string;
 }
@@ -13,13 +14,14 @@ export const ConnectWalletHeader = ({
   subHeaderText = "Connecting your wallet",
   walletLogoUrl,
   close,
+  onBackPress,
 }: ConnectWalletHeaderProps) => {
   return (
     <>
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.closeContainer}
-          onPress={() => close()}
+          onPress={onBackPress}
           hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
         >
           <BackIcon size={14} />

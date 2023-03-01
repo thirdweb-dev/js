@@ -76,12 +76,6 @@ export class WalletConnectV1Connector extends Connector<
         chainId: targetChainId,
         create: true,
       });
-      provider.on("accountsChanged", this.onAccountsChanged);
-      provider.on("chainChanged", this.onChainChanged);
-      provider.on("disconnect", this.onDisconnect);
-      provider.on("message", this.onMessage);
-      provider.connector.on("display_uri", this.onDisplayUri);
-      provider.connector.on("call_request_sent", this.onRequestSent);
 
       // Defer message to the next tick to ensure wallet connect data (provided by `.enable()`) is available
       setTimeout(() => this.emit("message", { type: "connecting" }), 0);
@@ -183,16 +177,25 @@ export class WalletConnectV1Connector extends Connector<
         await import("@walletconnect/legacy-provider")
       ).default;
 
+      console.log("Connector.getProvider");
       const sessionStr = await this.#storage.getItem(LAST_SESSION);
       const session = sessionStr ? JSON.parse(sessionStr) : undefined;
       this.walletName = session?.peerMeta?.name || undefined;
+      console.log("Connector.getProvider.session", session);
 
       this.#provider = new WalletConnectProvider({
         ...this.options,
         chainId,
         rpc: { ...rpc, ...this.options?.rpc },
-        //session: session ? (session as IWalletConnectSession) : undefined,
+        session: session ? (session as IWalletConnectSession) : undefined,
       });
+
+      this.#provider.on("accountsChanged", this.onAccountsChanged);
+      this.#provider.on("chainChanged", this.onChainChanged);
+      this.#provider.on("disconnect", this.onDisconnect);
+      this.#provider.on("message", this.onMessage);
+      this.#provider.connector.on("display_uri", this.onDisplayUri);
+      this.#provider.connector.on("call_request_sent", this.onRequestSent);
     }
 
     return this.#provider;

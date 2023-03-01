@@ -59,6 +59,7 @@ export abstract class AbstractBrowserWallet<
 
     // return if already connected
     if (isConnected) {
+      this.#subscribeToEvents(connector);
       return;
     }
 
@@ -89,8 +90,33 @@ export abstract class AbstractBrowserWallet<
     console.log("connect.abstractwallet: ", this.walletId);
     const connector = await this.getConnector();
 
-    // subscribe to connector for events
+    this.#subscribeToEvents(connector);
 
+    console.log("Base.Connecting: ", this.walletId);
+
+    // end event listener setups
+    const connectedAddress = await connector.connect(connectOptions);
+
+    console.log("Base.Connecting.address: ", connectedAddress);
+    // do not break on coordinator error
+    try {
+      // Store the last connected params in secure storage
+      // await this.walletStorage.setItem(
+      //   "lastConnectedParams",
+      //   JSON.stringify(connectOptions),
+      // );
+      await this.coordinatorStorage.setItem(
+        "lastConnectedWallet",
+        this.walletId,
+      );
+    } catch {}
+
+    return connectedAddress;
+  }
+
+  async #subscribeToEvents(connector: TWConnector) {
+    // subscribe to connector for events
+    console.log("BaseWallet.subscribeToEvents");
     connector.on("connect", (data) => {
       this.coordinatorStorage.setItem("lastConnectedWallet", this.walletId);
       this.emit("connect", {
@@ -122,27 +148,6 @@ export abstract class AbstractBrowserWallet<
 
     connector.on("disconnect", () => this.emit("disconnect"));
     connector.on("error", (error) => this.emit("error", error));
-
-    console.log("Base.Connecting: ", this.walletId);
-
-    // end event listener setups
-    const connectedAddress = await connector.connect(connectOptions);
-
-    console.log("Base.Connecting.address: ", connectedAddress);
-    // do not break on coordinator error
-    try {
-      // Store the last connected params in secure storage
-      // await this.walletStorage.setItem(
-      //   "lastConnectedParams",
-      //   JSON.stringify(connectOptions),
-      // );
-      await this.coordinatorStorage.setItem(
-        "lastConnectedWallet",
-        this.walletId,
-      );
-    } catch {}
-
-    return connectedAddress;
   }
 
   async getSigner() {

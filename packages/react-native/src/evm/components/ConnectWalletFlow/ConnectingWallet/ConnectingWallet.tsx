@@ -9,6 +9,7 @@ export type ConnectingWalletProps = {
   subHeaderText?: ReactNode | string;
   footer?: ReactNode;
   onClose: () => void;
+  onBackPress: () => void;
   wallet: WalletMeta;
 };
 
@@ -17,10 +18,12 @@ export function ConnectingWallet({
   wallet,
   footer,
   onClose,
+  onBackPress,
 }: ConnectingWalletProps) {
   return (
     <View>
       <ConnectWalletHeader
+        onBackPress={onBackPress}
         walletLogoUrl={wallet.image_url}
         subHeaderText={subHeaderText}
         close={onClose}
