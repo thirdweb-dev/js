@@ -28,6 +28,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 25
+          persist-credentials: true
 
       - name: Install
         uses: ./.github/composite-actions/install
@@ -115,3 +116,36 @@ jobs:
         run: yarn e2e
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
+
+  release:
+    name: Release PR
+    runs-on: ubuntu-latest-16
+    needs: build
+    # only run if the event is a pull request and the pull request is not Version Packages
+    if: github.event_name == 'pull_request' && github.event.pull_request.title != 'Version Packages'
+    steps:
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          check-latest: true
+
+      - uses: actions/cache@v3
+        timeout-minutes: 5
+        id: restore-build
+        with:
+          path: ./*
+          key: ${{ github.sha }}-${{ github.run_number }}
+
+      - name: Configure NPM
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Deploy pre-release
+        run: |
+          yarn changeset version --snapshot CI
+          yarn changeset publish --tag CI --no-git-tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
