@@ -249,6 +249,11 @@ export const ThirdwebSDKProvider = <
     ) {
       return supportedChains as Readonly<Chain[]>;
     }
+    // if the active chain is already present in the supported chains, return the supported chains
+    if (supportedChains.find((c) => c.chainId === activeChain.chainId)) {
+      return supportedChains as Readonly<Chain[]>;
+    }
+    // otherwise return the supported chains + the active chain
     return [...supportedChains, activeChain] as Readonly<Chain[]>;
   }, [supportedChains, activeChain]);
 
