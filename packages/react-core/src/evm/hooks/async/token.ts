@@ -132,7 +132,7 @@ export function useTokenDecimals(contract: RequiredParam<TokenContract>) {
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: mintTokens,
  *     isLoading,
@@ -191,7 +191,7 @@ export function useMintToken(contract: RequiredParam<TokenContract>) {
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: claimTokens,
  *     isLoading,
@@ -252,7 +252,7 @@ export function useClaimToken(contract: RequiredParam<TokenContract>) {
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: transferTokens,
  *     isLoading,
@@ -311,7 +311,7 @@ export function useTransferToken(contract: RequiredParam<TokenContract>) {
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: transferBatchTokens,
  *     isLoading,
@@ -377,7 +377,7 @@ export function useTransferBatchToken(contract: RequiredParam<TokenContract>) {
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract"({{contract_address}}");
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: burnTokens,
  *     isLoading,

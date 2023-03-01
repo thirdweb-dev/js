@@ -72,7 +72,8 @@ export class MarketplaceV3EnglishAuctions<
    *******************************/
 
   /**
-   * Get the total number of english auctions.
+   * Get the total number of english auctions
+   * 
    * @returns Returns the total number of auctions created.
    * @public
    *
@@ -80,13 +81,14 @@ export class MarketplaceV3EnglishAuctions<
    * ```javascript
    * const totalAuctions = await contract.englishAuctions.getTotalCount();
    * ```
+   * @twfeature EnglishAuctions
    */
   public async getTotalCount(): Promise<BigNumber> {
     return await this.contractWrapper.readContract.totalAuctions();
   }
 
   /**
-   * Get all auctions.
+   * Get all english auctions
    *
    * @example
    * ```javascript
@@ -95,6 +97,7 @@ export class MarketplaceV3EnglishAuctions<
    *
    * @param filter - optional filter parameters
    * @returns the Auction object array
+   * @twfeature EnglishAuctions
    */
   public async getAll(filter?: MarketplaceFilter): Promise<EnglishAuction[]> {
     const totalAuctions = await this.getTotalCount();
@@ -122,7 +125,7 @@ export class MarketplaceV3EnglishAuctions<
   }
 
   /**
-   * Get all valid auctions.
+   * Get all valid english auctions
    *
    * @example
    * ```javascript
@@ -131,6 +134,7 @@ export class MarketplaceV3EnglishAuctions<
    *
    * @param filter - optional filter parameters
    * @returns the Auction object array
+   * @twfeature EnglishAuctions
    */
   public async getAllValid(
     filter?: MarketplaceFilter,
@@ -160,7 +164,7 @@ export class MarketplaceV3EnglishAuctions<
   }
 
   /**
-   * Get an Auction by id.
+   * Get a single english auction
    *
    * @example
    * ```javascript
@@ -170,6 +174,7 @@ export class MarketplaceV3EnglishAuctions<
    *
    * @param auctionId - the auction Id
    * @returns the Auction object
+   * @twfeature EnglishAuctions
    */
   public async getAuction(auctionId: BigNumberish): Promise<EnglishAuction> {
     const auction = await this.contractWrapper.readContract.getAuction(
@@ -180,7 +185,7 @@ export class MarketplaceV3EnglishAuctions<
   }
 
   /**
-   * Get Highest Bid
+   * Get winning bid of an english auction
    *
    * @remarks Get the current highest bid of an active auction.
    *
@@ -188,12 +193,10 @@ export class MarketplaceV3EnglishAuctions<
    * ```javascript
    * // The ID of the auction
    * const auctionId = 0;
-   *
-   * contract.englishAuctions.
-   *   .getWinningBid(auctionId)
-   *   .then((bid) => console.log(bid))
-   *   .catch((err) => console.error(err));
+   * const winningBid = await contract.englishAuctions.getWinningBid(auctionId);
    * ```
+   * @param auctionId - the auction Id
+   * @twfeature EnglishAuctions
    */
   public async getWinningBid(
     auctionId: BigNumberish,
@@ -214,11 +217,19 @@ export class MarketplaceV3EnglishAuctions<
   }
 
   /**
-   * Check if a bid-amount is/will be a winning bid.
+   * Check if a bid is or will be a winning bid
+   * 
+   * @example
+   * ```javascript
+   * const auctionId = 0;
+   * const bidAmount = 100;
+   * const isWinningBid = await contract.englishAuctions.isWinningBid(auctionId, bidAmount);
+   * ```
    *
    * @param auctionId - Auction Id
    * @param bidAmount - Amount to bid
-   * @returns the Auction object
+   * @returns true if the bid is or will be a winning bid
+   * @twfeature EnglishAuctions
    */
   public async isWinningBid(
     auctionId: BigNumberish,
@@ -231,20 +242,19 @@ export class MarketplaceV3EnglishAuctions<
   }
 
   /**
-   * Get Auction Winner
+   * Get the winner for a specific english auction
    *
    * @remarks Get the winner of the auction after an auction ends.
    *
    * @example
    * ```javascript
-   * // The auction ID of the auction that closed
+   * // The auction ID of a closed english auction
    * const auctionId = 0;
-   *
-   * contract.englishAuctions.
-   *   .getWinner(auctionId)
-   *   .then((auctionWinner) => console.log(auctionWinner))
-   *   .catch((err) => console.error(err));
+   * const auctionWinner = await contract.englishAuctions.getWinner(auctionId);
    * ```
+   * @param auctionId - the auction Id
+   * @returns the address of the auction winner
+   * @twfeature EnglishAuctions
    */
   public async getWinner(auctionId: BigNumberish): Promise<string> {
     const auction = await this.validateAuction(BigNumber.from(auctionId));
@@ -280,7 +290,7 @@ export class MarketplaceV3EnglishAuctions<
    *******************************/
 
   /**
-   * Create Auction
+   * Create an english auction
    *
    * @remarks Create a new auction where people can bid on an asset.
    *
@@ -314,6 +324,9 @@ export class MarketplaceV3EnglishAuctions<
    * const receipt = tx.receipt; // the transaction receipt
    * const id = tx.id; // the id of the newly created auction
    * ```
+   * @param auction - the auction data
+   * @returns the transaction hash and the auction id
+   * @twfeature EnglishAuctions
    */
   public async createAuction(
     auction: EnglishAuctionInputParams,
@@ -379,17 +392,20 @@ export class MarketplaceV3EnglishAuctions<
   }
 
   /**
-   * Buyout Auction
+   * Buyout an english auction
    *
    * @remarks Buy a specific auction from the marketplace.
    *
    * @example
    * ```javascript
-   * // The auction ID of the asset you want to buy
+   * // The auction ID you want to buy
    * const auctionId = 0;
    *
    * await contract.englishAuctions.buyoutAuction(auctionId);
    * ```
+   * @param auctionId - the auction id
+   * @returns the transaction result
+   * @twfeature EnglishAuctions
    */
   public async buyoutAuction(
     auctionId: BigNumberish,
@@ -411,7 +427,7 @@ export class MarketplaceV3EnglishAuctions<
   }
 
   /**
-   * Bid On Auction
+   * Bid on an english auction
    *
    * @remarks Make a bid on an auction
    *
@@ -424,6 +440,10 @@ export class MarketplaceV3EnglishAuctions<
    *
    * await contract.englishAuctions.makeBid(auctionId, bidAmount);
    * ```
+   * @param auctionId - the auction id
+   * @param bidAmount - the amount you are willing to bid
+   * @returns the transaction result
+   * @twfeature EnglishAuctions
    */
   public async makeBid(
     auctionId: BigNumberish,
@@ -483,7 +503,7 @@ export class MarketplaceV3EnglishAuctions<
   }
 
   /**
-   * Cancel Auction
+   * Cancel an english auction
    *
    * @remarks Cancel an auction on the marketplace
    *
@@ -494,6 +514,9 @@ export class MarketplaceV3EnglishAuctions<
    *
    * await contract.englishAuctions.cancelAuction(auctionId);
    * ```
+   * @param auctionId - the auction id
+   * @returns the transaction result
+   * @twfeature EnglishAuctions
    */
   public async cancelAuction(
     auctionId: BigNumberish,
@@ -511,7 +534,7 @@ export class MarketplaceV3EnglishAuctions<
   }
 
   /**
-   * Close the Auction for the buyer
+   * Close the english auction for the bidder
    *
    * @remarks Closes the Auction and executes the sale for the buyer.
    *
@@ -524,6 +547,8 @@ export class MarketplaceV3EnglishAuctions<
    *
    * @param auctionId - the auction id to close
    * @param closeFor - optionally pass the winning bid offeror address to close the auction on their behalf
+   * @returns the transaction result
+   * @twfeature EnglishAuctions
    */
   public async closeAuctionForBidder(
     auctionId: BigNumberish,
@@ -553,7 +578,7 @@ export class MarketplaceV3EnglishAuctions<
   }
 
   /**
-   * Close the Auction for the seller, i.e. the auction creator
+   * Close the english auction for the seller
    *
    * @remarks Closes the Auction and executes the sale for the seller.
    *
@@ -565,6 +590,8 @@ export class MarketplaceV3EnglishAuctions<
    * ```
    *
    * @param auctionId - the auction id to close
+   * @returns the transaction result
+   * @twfeature EnglishAuctions
    */
   public async closeAuctionForSeller(
     auctionId: BigNumberish,
@@ -590,7 +617,7 @@ export class MarketplaceV3EnglishAuctions<
   }
 
   /**
-   * Execute the Auction Sale
+   * Close the english auction for both the seller and the bidder
    *
    * @remarks Closes the Auction and executes the sale for both parties.
    *
@@ -602,6 +629,8 @@ export class MarketplaceV3EnglishAuctions<
    * ```
    *
    * @param auctionId - the auction to close
+   * @returns the transaction result
+   * @twfeature EnglishAuctions
    */
   public async executeSale(auctionId: BigNumberish) {
     const auction = await this.validateAuction(BigNumber.from(auctionId));
@@ -631,17 +660,36 @@ export class MarketplaceV3EnglishAuctions<
   }
 
   /**
-   * Get the buffer in basis points between bids for an auction.
+   * Get the buffer for an english auction
+   *  
+   * @example
+   * ```javascript
+   * // The ID of the auction you want to get the buffer for
+   * const auctionId = "0";
+   * const buffer = await contract.englishAuctions.getBidBufferBps(auctionId);
+   * ```
    *
    * @param auctionId - id of the auction
+   * @returns the buffer in basis points
+   * @twfeature EnglishAuctions
    */
   public async getBidBufferBps(auctionId: BigNumberish): Promise<number> {
     return (await this.getAuction(auctionId)).bidBufferBps;
   }
 
   /**
-   * returns the minimum bid a user can place to outbid the previous highest bid
+   * Get the minimum next bid for an english auction
+   * 
+   * @example
+   * ```javascript
+   * // The ID of the auction you want to get the minimum next bid for
+   * const auctionId = "0";
+   * const minimumNextBid = await contract.englishAuctions.getMinimumNextBid(auctionId);
+   * ```
+   * 
+   * @returns the minimum bid a user can place to outbid the previous highest bid
    * @param auctionId - id of the auction
+   * @twfeature EnglishAuctions
    */
   public async getMinimumNextBid(
     auctionId: BigNumberish,

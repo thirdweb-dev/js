@@ -16,6 +16,7 @@ export * from "./hooks/async/claim-conditions";
 
 export * from "./hooks/async/contract-settings";
 export * from "./hooks/async/roles";
+export * from "./hooks/async/app";
 
 // thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)
 export * from "./hooks/auth";
