@@ -77,7 +77,7 @@ jobs:
 
       - name: Deploy pre-release
         run: |
-          yarn changeset version --snapshot dev
-          yarn changeset publish --tag dev --no-git-tag
+          yarn version-packages:dev
+          yarn release:dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

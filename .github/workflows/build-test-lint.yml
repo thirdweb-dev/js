@@ -144,7 +144,7 @@ jobs:
 
       - name: Deploy pre-release
         run: |
-          yarn changeset version --snapshot CI
-          yarn changeset publish --tag CI --no-git-tag
+          yarn version-packages:CI
+          yarn release:CI
         env:
           GITHUB_TOKEN: ${{ secrets.AUTOMATION_TOKEN }}
