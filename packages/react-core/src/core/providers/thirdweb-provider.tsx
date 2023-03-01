@@ -104,11 +104,6 @@ export interface ThirdwebProviderProps<
   infuraApiKey?: string;
 
   /**
-   * The chainId that your dApp is running on.
-   * @deprecated - use `network` instead
-   */
-  desiredChainId?: number | undefined;
-  /**
    * A partial map of chainIds to rpc urls to use for certain chains
    * If not provided, will default to the rpcUrls of the chain objects for the supported chains
    * @deprecated - use `chains` instead
@@ -136,28 +131,11 @@ export const ThirdwebProvider = <
   if (props.chainRpc) {
     showDeprecationWarning("chainRpc", "supportedChains");
   }
-  if (props.desiredChainId) {
-    showDeprecationWarning("desiredChainId", "activeChain");
-  }
 
   const supportedChains =
     props.supportedChains || (defaultChains as any as TChains);
 
   const dAppMeta = props.dAppMeta || defaultdAppMeta;
-
-  const activeChainId = useMemo(() => {
-    if (!props.activeChain) {
-      return undefined;
-    }
-    if (
-      typeof props.activeChain === "string" ||
-      typeof props.activeChain === "number"
-    ) {
-      return props.activeChain;
-    }
-    return props.activeChain.chainId;
-  }, [props.activeChain]);
-
   const activeChainObj = useMemo(() => {
     if (typeof props.activeChain === "string") {
       return (
@@ -192,7 +170,7 @@ export const ThirdwebProvider = <
           queryClient={props.queryClient}
           sdkOptions={props.sdkOptions}
           supportedChains={supportedChains}
-          activeChain={activeChainId || props.desiredChainId}
+          activeChain={activeChainObj}
           storageInterface={props.storageInterface}
           authConfig={props.authConfig}
           thirdwebApiKey={props.thirdwebApiKey}
