@@ -1,6 +1,9 @@
 import { darkTheme, lightTheme, Theme } from "../../design-system";
 import { ConnectWalletFlow } from "./ConnectWalletFlow";
-import { ConnectedWalletDetails } from "./ConnectedWalletDetails";
+import {
+  ConnectedWalletDetails,
+  DropDownPosition,
+} from "./ConnectedWalletDetails";
 import { keyframes, ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
 import {
@@ -13,6 +16,7 @@ type ConnectWalletProps = {
   className?: string;
   theme?: "dark" | "light" | Theme;
   btnTitle?: string;
+  dropdownPosition?: DropDownPosition;
 };
 
 /**
@@ -41,7 +45,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
             btnTitle={props.btnTitle}
           />
         ) : (
-          <ConnectedWalletDetails />
+          <ConnectedWalletDetails dropdownPosition={props.dropdownPosition} />
         )}
       </FadeIn>
     </ThemeProvider>

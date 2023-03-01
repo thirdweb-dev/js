@@ -45,7 +45,14 @@ const walletIcons: Record<
   walletConnectV1: WalletConnectIcon,
 };
 
-export const ConnectedWalletDetails = () => {
+export type DropDownPosition = {
+  side: "top" | "bottom" | "left" | "right";
+  align: "start" | "center" | "end";
+};
+
+export const ConnectedWalletDetails: React.FC<{
+  dropdownPosition?: DropDownPosition;
+}> = (props) => {
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
   const activeChainId = useActiveChainId();
@@ -111,7 +118,11 @@ export const ConnectedWalletDetails = () => {
         </DropdownMenu.Trigger>
 
         <DropdownMenu.Portal>
-          <DropdownMenuContent side="bottom" align="end" sideOffset={10}>
+          <DropdownMenuContent
+            side={props.dropdownPosition?.side || "bottom"}
+            align={props.dropdownPosition?.align || "end"}
+            sideOffset={10}
+          >
             {/* Balance and Account Address */}
             <DropdownMenuItem>
               <div
@@ -219,6 +230,7 @@ const DropdownMenuContent = styled(DropdownMenu.Content)<{ theme?: Theme }>`
   box-shadow: ${shadow.lg};
   animation: ${slideUpAndFade} 400ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
+  border: 1px solid ${(props) => props.theme.bg.highlighted};
 `;
 
 const WalletInfoButton = styled.button<{ theme?: Theme }>`
