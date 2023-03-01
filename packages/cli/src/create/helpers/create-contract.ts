@@ -27,6 +27,14 @@ interface ICreateContractProject {
   createExtension: boolean;
 }
 
+function isErrorLike(err: unknown): err is { message: string } {
+  return (
+    typeof err === "object" &&
+    err !== null &&
+    typeof (err as { message?: unknown }).message === "string"
+  );
+}
+
 export async function createContractProject({
   contractPath,
   packageManager,
@@ -139,14 +147,6 @@ export async function createContractProject({
 
     process.chdir(root);
 
-    function isErrorLike(err: unknown): err is { message: string } {
-      return (
-        typeof err === "object" &&
-        err !== null &&
-        typeof (err as { message?: unknown }).message === "string"
-      );
-    }
-
     try {
       console.log(`Downloading files. This might take a moment.`);
 
@@ -189,7 +189,7 @@ export async function createContractProject({
       if(!baseContract && createExtension) {
 
         const extensionBoilerplate = readExtensionBoilerPlate(contractObjectName);
-  
+
         // Set the contents of the Contract.sol file to the extension contract storage library boilerplate
         let contractFile = "";
         contractFile = path.join(root, contractName);
@@ -201,7 +201,7 @@ export async function createContractProject({
           fs.unlinkSync(path.join(root, "src", "Contract.sol"));
           contractFile = path.join(root, "src", contractName);
         }
-  
+
         // Write the extension storage library to the MyContract.sol file
         await writeFile(contractFile, extensionBoilerplate);
       }
