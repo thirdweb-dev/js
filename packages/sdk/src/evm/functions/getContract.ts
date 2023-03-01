@@ -11,12 +11,9 @@ import { SDKOptions } from "../schema/sdk-options";
 import { getContractFromAbi } from "./getContractFromAbi";
 import {
   cacheContract,
-  cachePublisher,
   getCachedContract,
-  getCachedPublisher,
   getCachedStorage,
   inContractCache,
-  inPublisherCache,
 } from "./utils/cache";
 import { resolveContractType } from "./utils/contract";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -57,25 +54,25 @@ export async function getContract<TContractType extends PrebuiltContractType>(
       provider,
     });
     if (contractType === "custom") {
-      let publisher: ContractPublisher;
-      if (inPublisherCache(chainId)) {
-        publisher = getCachedPublisher(chainId);
-      } else {
-        publisher = new ContractPublisher(
-          params.network,
-          params.sdkOptions,
-          getCachedStorage(params.storage),
-        );
-        cachePublisher(publisher, chainId);
-      }
-
-      const metadata = await publisher.fetchCompilerMetadataFromAddress(
-        params.address,
+      const publisher = new ContractPublisher(
+        params.network,
+        params.sdkOptions,
+        getCachedStorage(params.storage),
       );
-      return getContractFromAbi({
-        ...params,
-        abi: metadata.abi,
-      }) as ReturnedContractType<TContractType>;
+
+      try {
+        const metadata = await publisher.fetchCompilerMetadataFromAddress(
+          params.address,
+        );
+        return getContractFromAbi({
+          ...params,
+          abi: metadata.abi,
+        }) as ReturnedContractType<TContractType>;
+      } catch {
+        throw new Error(
+          `No ABI found for this contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${params.address}`,
+        );
+      }
     } else {
       const abi = await PREBUILT_CONTRACTS_MAP[contractType].getAbi(
         params.address,
