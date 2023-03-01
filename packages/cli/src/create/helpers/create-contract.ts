@@ -116,7 +116,7 @@ export async function createContractProject({
       await writeFile(contractFile, extensionBoilerplate);
 
       console.log(
-        `${chalk.green("Success!")} Create your ${contractName} extension at ${contractPath}`,
+        `${chalk.green("Success!")} Created your ${contractName} extension at ${contractPath}`,
       );
     }
 
