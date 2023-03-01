@@ -1521,7 +1521,18 @@ export const allChains = [Ethereum, ExpanseNetwork, Ropsten, Rinkeby, Goerli, Et
 export function getChainByChainId(chainId: number): Chain {
   const chain = allChains.find(chain => chain.chainId === chainId);
   if (!chain) {
-    throw new Error(`Chain with chainId ${chainId} not found`);
+    throw new Error(`Chain with chainId "${chainId}" not found`);
   }
   return chain;
 }
+
+export function getChainBySlug(slug: string): Chain {
+  const chain = allChains.find(chain => chain.slug === slug);
+  if (!chain) {
+    throw new Error(`Chain with slug "${slug}" not found`);
+  }
+  return chain;
+}
+
+export type ChainSlug = typeof allChains[number]["slug"];
+export type ChainId = typeof allChains[number]["chainId"];

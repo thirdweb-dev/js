@@ -25,6 +25,21 @@ export const PINATA_IPFS_URL = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 /**
  * @internal
  */
+export function parseGatewayUrls(
+  gatewayUrls?: GatewayUrls | string[],
+): GatewayUrls {
+  if (Array.isArray(gatewayUrls)) {
+    return {
+      "ipfs://": gatewayUrls,
+    };
+  }
+
+  return gatewayUrls || {};
+}
+
+/**
+ * @internal
+ */
 export function prepareGatewayUrls(gatewayUrls?: GatewayUrls): GatewayUrls {
   const allGatewayUrls = {
     ...gatewayUrls,
