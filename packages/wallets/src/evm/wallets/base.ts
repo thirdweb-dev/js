@@ -1,9 +1,9 @@
 import { AsyncStorage } from "../../core/AsyncStorage";
 import type { DAppMetaData } from "../../core/types/dAppMeta";
+import type { Chain } from "../../lib/wagmi-core";
 import { thirdwebChains } from "../constants/chains";
 import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
-import type { Chain } from "@wagmi/core";
 
 export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   chains?: Chain[];

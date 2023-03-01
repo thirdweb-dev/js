@@ -211,6 +211,7 @@ export {
   useConnectedWallet,
   useAddress,
   useChainId,
+  useActiveChain,
 } from "./evm/hooks/wallet";
 
 export { useStorageUpload, useStorage } from "./evm/hooks/storage";

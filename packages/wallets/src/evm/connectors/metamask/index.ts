@@ -1,5 +1,4 @@
 import { AsyncStorage } from "../../../core/AsyncStorage";
-import { InjectedConnector } from "../injected";
 import {
   Chain,
   ConnectorNotFoundError,
@@ -8,7 +7,8 @@ import {
   ResourceUnavailableError,
   RpcError,
   UserRejectedRequestError,
-} from "@wagmi/core";
+} from "../../../lib/wagmi-core";
+import { InjectedConnector } from "../injected";
 import type { Address } from "abitype";
 import { utils } from "ethers";
 

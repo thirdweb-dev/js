@@ -100,7 +100,7 @@ const QrCodeIconContainer = styled.div`
   display: flex;
   justify-content: center;
   align-content: center;
-  padding: ${spacing.xxs};
+  padding: 4px;
 `;
 
 const QRCodeContainer = styled.div`

@@ -1,4 +1,4 @@
-import { Connector } from "@wagmi/core";
+import { Connector } from "../../lib/wagmi-core";
 import type { Signer, providers } from "ethers";
 import EventEmitter from "eventemitter3";
 

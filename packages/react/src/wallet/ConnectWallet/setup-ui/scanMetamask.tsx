@@ -40,7 +40,7 @@ export const ScanMetamask: React.FC<{
       onGetStarted={props.onGetStarted}
       qrCodeUri={qrCodeUri}
       walletName="Coinbase"
-      QRIcon={<MetamaskIcon width={iconSize.xl} height={iconSize.xl} />}
+      QRIcon={<MetamaskIcon width={iconSize.lg} height={iconSize.lg} />}
     />
   );
 };

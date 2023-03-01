@@ -1,18 +1,18 @@
+import { Connector } from "../../../lib/wagmi-connectors";
+import {
+  UserRejectedRequestError,
+  ChainNotConfiguredError,
+  AddChainError,
+  SwitchChainError,
+  normalizeChainId,
+  Chain,
+  ProviderRpcError,
+} from "../../../lib/wagmi-core";
 import type {
   CoinbaseWalletProvider,
   CoinbaseWalletSDK,
 } from "@coinbase/wallet-sdk";
 import type { CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/CoinbaseWalletSDK";
-import {
-  AddChainError,
-  Chain,
-  ChainNotConfiguredError,
-  Connector,
-  normalizeChainId,
-  ProviderRpcError,
-  SwitchChainError,
-  UserRejectedRequestError,
-} from "@wagmi/core";
 import type { Address } from "abitype";
 import { providers } from "ethers";
 import { getAddress, hexValue } from "ethers/lib/utils.js";

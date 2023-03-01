@@ -1,19 +1,19 @@
 import { AsyncStorage } from "../../../core/AsyncStorage";
-import { getInjectedName } from "../../utils/getInjectedName";
+import { Connector } from "../../../lib/wagmi-connectors";
 import {
   AddChainError,
-  Chain,
   ChainNotConfiguredError,
-  Connector,
   ConnectorNotFoundError,
-  Ethereum,
   normalizeChainId,
   ProviderRpcError,
   ResourceUnavailableError,
   RpcError,
   SwitchChainError,
   UserRejectedRequestError,
-} from "@wagmi/core";
+  Chain,
+  Ethereum,
+} from "../../../lib/wagmi-core";
+import { getInjectedName } from "../../utils/getInjectedName";
 import type { Address } from "abitype";
 import { providers } from "ethers";
 import { utils } from "ethers";
