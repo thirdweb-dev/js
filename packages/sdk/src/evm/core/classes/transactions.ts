@@ -224,8 +224,8 @@ export class Transaction<TResult = TransactionResult> {
       return this.sendGasless();
     }
 
-    const gasOverrides = this.getGasOverrides();
-    const overrides = { ...gasOverrides, ...this.overrides };
+    const gasOverrides = await this.getGasOverrides();
+    const overrides: CallOverrides = { ...gasOverrides, ...this.overrides };
 
     // First, if no gasLimit is passed, call estimate gas ourselves
     if (!overrides.gasLimit) {
