@@ -50,6 +50,7 @@ export const SDKOptionsSchema = z
         }),
       ])
       .optional(),
+    gatewayUrls: z.array(z.string()).optional(),
   })
   .default({
     gasSettings: { maxPriceInGwei: 300, speed: "fastest" },
@@ -89,3 +90,6 @@ export type SDKOptions = z.input<typeof SDKOptionsSchema>;
  * @internal
  */
 export type SDKOptionsOutput = z.output<typeof SDKOptionsSchema>;
+/**
+ * @public
+ */

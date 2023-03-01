@@ -103,14 +103,28 @@ export class ContractMetadata<
         } catch (err) {
           // no-op
         }
-        const publishedMetadata = await fetchContractMetadataFromAddress(
-          this.contractWrapper.readContract.address,
-          this.contractWrapper.getProvider(),
-          this.storage,
-        );
+
+        let contractSymbol: string | undefined;
+        try {
+          if (hasFunction<IERC20Metadata>("symbol", this.contractWrapper)) {
+            contractSymbol = await this.contractWrapper.readContract.symbol();
+          }
+        } catch (err) {
+          // no-op
+        }
+
+        let publishedMetadata;
+        try {
+          publishedMetadata = await fetchContractMetadataFromAddress(
+            this.contractWrapper.readContract.address,
+            this.contractWrapper.getProvider(),
+            this.storage,
+          );
+        } catch (err) {}
         data = {
-          name: contractName || publishedMetadata.name,
-          description: publishedMetadata.info.title,
+          name: contractName || publishedMetadata?.name,
+          symbol: contractSymbol,
+          description: publishedMetadata?.info.title,
         };
       } catch (e) {
         throw new Error("Could not fetch contract metadata");

@@ -1,4 +1,4 @@
-import { prepareGatewayUrls } from "../common";
+import { parseGatewayUrls, prepareGatewayUrls } from "../common";
 import {
   extractObjectFiles,
   isFileOrBuffer,
@@ -55,7 +55,9 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
   constructor(options?: ThirdwebStorageOptions<T>) {
     this.uploader = options?.uploader || new IpfsUploader();
     this.downloader = options?.downloader || new StorageDownloader();
-    this.gatewayUrls = prepareGatewayUrls(options?.gatewayUrls);
+    this.gatewayUrls = prepareGatewayUrls(
+      parseGatewayUrls(options?.gatewayUrls),
+    );
   }
 
   /**

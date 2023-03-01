@@ -1,6 +1,7 @@
 import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
+import { buildTransactionFunction } from "../../common/transactions";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -15,13 +16,15 @@ import { Erc1155 } from "../../core/classes/erc-1155";
 import { Erc1155SignatureMintable } from "../../core/classes/erc-1155-signature-mintable";
 import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
-import { NetworkInput } from "../../core/types";
+import { Transaction } from "../../core/classes/transactions";
+import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { Abi } from "../../schema/contracts/custom";
 import { TokenErc1155ContractSchema } from "../../schema/contracts/token-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";
+import { EditionMetadataOrUri } from "../../schema/tokens/edition";
 import type { TokenERC1155 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, CallOverrides, constants } from "ethers";
+import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.
@@ -212,7 +215,13 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    *
    * @remarks See {@link Edition.mintTo}
    */
-  mint = this.erc1155.mint;
+  mint = buildTransactionFunction(
+    async (
+      metadataWithSupply: EditionMetadataOrUri,
+    ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
+      return this.erc1155.mint.prepare(metadataWithSupply);
+    },
+  );
 
   /**
    * Mint an NFT with a limited supply
@@ -242,7 +251,14 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
    */
-  mintTo = this.erc1155.mintTo;
+  mintTo = buildTransactionFunction(
+    async (
+      to: string,
+      metadataWithSupply: EditionMetadataOrUri,
+    ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
+      return this.erc1155.mintTo.prepare(to, metadataWithSupply);
+    },
+  );
 
   /**
    * Construct a mint transaction without executing it.
@@ -252,7 +268,12 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    *
    * @deprecated `contract.mint.prepare(...args)`
    */
-  getMintTransaction = this.erc1155.getMintTransaction;
+  public async getMintTransaction(
+    receiver: string,
+    metadataWithSupply: EditionMetadataOrUri,
+  ): Promise<Transaction> {
+    return this.erc1155.getMintTransaction(receiver, metadataWithSupply);
+  }
 
   /**
    * Increase the supply of an existing NFT and mint it to the connected wallet
@@ -260,7 +281,17 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    * @param tokenId - the token id of the NFT to increase supply of
    * @param additionalSupply - the additional amount to mint
    */
-  mintAdditionalSupply = this.erc1155.mintAdditionalSupply;
+  mintAdditionalSupply = buildTransactionFunction(
+    async (
+      tokenId: BigNumberish,
+      additionalSupply: BigNumberish,
+    ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
+      return this.erc1155.mintAdditionalSupply.prepare(
+        tokenId,
+        additionalSupply,
+      );
+    },
+  );
 
   /**
    * Increase the supply of an existing NFT and mint it to a given wallet address
@@ -269,14 +300,32 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    * @param tokenId - the token id of the NFT to increase supply of
    * @param additionalSupply - the additional amount to mint
    */
-  mintAdditionalSupplyTo = this.erc1155.mintAdditionalSupplyTo;
+  mintAdditionalSupplyTo = buildTransactionFunction(
+    async (
+      to: string,
+      tokenId: BigNumberish,
+      additionalSupply: BigNumberish,
+    ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
+      return this.erc1155.mintAdditionalSupplyTo.prepare(
+        to,
+        tokenId,
+        additionalSupply,
+      );
+    },
+  );
 
   /**
    * Mint Many NFTs for the connected wallet
    *
    * @remarks See {@link Edition.mintBatchTo}
    */
-  mintBatch = this.erc1155.mintBatch;
+  mintBatch = buildTransactionFunction(
+    async (
+      metadatas: EditionMetadataOrUri[],
+    ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
+      return this.erc1155.mintBatch.prepare(metadatas);
+    },
+  );
 
   /**
    * Mint Many NFTs with limited supplies
@@ -311,7 +360,14 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```
    */
-  mintBatchTo = this.erc1155.mintBatchTo;
+  mintBatchTo = buildTransactionFunction(
+    async (
+      to: string,
+      metadataWithSupply: EditionMetadataOrUri[],
+    ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
+      return this.erc1155.mintBatchTo.prepare(to, metadataWithSupply);
+    },
+  );
 
   /**
    * Burn a specified amount of a NFT
@@ -324,7 +380,11 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    * const result = await contract.burnTokens(tokenId, amount);
    * ```
    */
-  burn = this.erc1155.burn;
+  burn = buildTransactionFunction(
+    async (tokenId: BigNumberish, amount: BigNumberish) => {
+      return this.erc1155.burn.prepare(tokenId, amount);
+    },
+  );
 
   /**
    * @internal
