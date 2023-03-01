@@ -21,5 +21,8 @@ export * from "./components/NftMedia";
 export * from "./components/ConnectWallet";
 export * from "./components/Web3Button";
 
+// use gnosis
+export * from "./connectors/gnosis-safe";
+
 // re-export everything from react-core
 export * from "@thirdweb-dev/react-core/evm";
