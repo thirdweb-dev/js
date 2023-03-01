@@ -389,6 +389,24 @@ export class Edition extends StandardErc1155<TokenERC1155> {
   /**
    * @internal
    */
+  public async prepare<
+    TMethod extends keyof TokenERC1155["functions"] = keyof TokenERC1155["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<TokenERC1155["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
+  }
+
+  /**
+   * @internal
+   */
   public async call(
     functionName: string,
     ...args: unknown[] | [...unknown[], CallOverrides]
