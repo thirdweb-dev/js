@@ -170,7 +170,8 @@ export function useTotalCount<TContract extends NFTContract>(
  * ```
  *
  * @param contract - an instance of a {@link NFTContract}
- * @returns a response object that incudes the total minted supply
+ * @param tokenId - required for ERC1155, the tokenId to look up
+ * @returns a response object that includes the total minted supply
  * @beta
  * @twfeature ERC721Supply | ERC1155Enumerable
  */
@@ -218,7 +219,7 @@ export function useTotalCirculatingSupply(
  * ```
  *
  * @param contract - an instance of a {@link NFTContract}
- * @param ownerWalletAddress - the wallet adress to get owned tokens for
+ * @param ownerWalletAddress - the wallet address to get owned tokens for
  * @returns a response object that includes the list of owned tokens
  * @beta
  * @twfeature ERC721Enumerable | ERC1155Enumerable | ERC721Supply
@@ -261,7 +262,8 @@ export function useOwnedNFTs<TContract extends NFTContract>(
  * ```
  *
  * @param contract - an instance of a {@link NFTContract}
- * @param ownerWalletAddress - the wallet adress to check the balance of
+ * @param ownerWalletAddress - the wallet address to check the balance of
+ * @param tokenId - required for ERC1155, the tokenId to look up
  * @returns a response object that includes the total balance of the owner
  * @twfeature ERC721 | ERC1155
  * @beta
@@ -465,9 +467,9 @@ export function useMintNFTSupply(contract: Erc1155) {
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => transferNFT({ 
- *         to: "{{wallet_address}}", 
- *         tokenId: 2 
+ *       onClick={() => transferNFT({
+ *         to: "{{wallet_address}}",
+ *         tokenId: 2
  *       })}
  *     >
  *       Transfer
@@ -538,7 +540,7 @@ export function useTransferNFT<TContract extends NFTContract>(
  *       onClick={() => airdropNFT({
  *          tokenId: 2,
  *          addresses: [
- *            { address: "{{wallet_address}}", quantity: 2 }, 
+ *            { address: "{{wallet_address}}", quantity: 2 },
  *            { address: "{{wallet_address}}", quantity: 4 } }
  *          ]
  *       )}

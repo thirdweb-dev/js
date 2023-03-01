@@ -10,7 +10,6 @@ dist-ssr
 .cache
 server/dist
 public/dist
-.turbo
 ./packages/contracts-js/abis
 .idea/
 .yalc/
