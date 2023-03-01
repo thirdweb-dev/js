@@ -4,7 +4,10 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
-import type { AppURI } from "@thirdweb-dev/contracts-js";
+import type {
+  AppURI,
+  ContractMetadata as ContractMetadataType,
+} from "@thirdweb-dev/contracts-js";
 import { BaseContract } from "ethers";
 
 /**
@@ -20,15 +23,19 @@ import { BaseContract } from "ethers";
  * ```
  * @public
  */
-export class ContractAppURI<TContract extends BaseContract>
-  implements DetectableFeature
+export class ContractAppURI<
+  TContract extends AppURI,
+  TContractMetadata extends ContractMetadataType,
+> implements DetectableFeature
 {
   featureName = FEATURE_APPURI.name;
   private contractWrapper;
   metadata: ContractMetadata<BaseContract, any>;
 
   constructor(
-    contractWrapper: ContractWrapper<TContract>,
+    contractWrapper:
+      | ContractWrapper<TContract>
+      | ContractWrapper<TContractMetadata>,
     metadata: ContractMetadata<BaseContract, any>,
   ) {
     this.contractWrapper = contractWrapper;
@@ -41,16 +48,16 @@ export class ContractAppURI<TContract extends BaseContract>
    * @example
    * ```javascript
    * const appURI = await contract.appURI.get(appURI);
-   * console.log(appURI) // "ipfs://some_ipfs_hash"; 
+   * console.log(appURI) // "ipfs://some_ipfs_hash";
    * ```
    * @twfeature AppURI | ContractMetadata
    */
-  public async get() {
+  public async get(): Promise<string> {
     if (detectContractFeature<AppURI>(this.contractWrapper, "AppURI")) {
       return await this.contractWrapper.readContract.appURI();
     }
 
-    return (await this.metadata.get()).appURI || "";
+    return (await this.metadata.get()).app_uri || Promise.resolve("");
   }
 
   /**
@@ -58,7 +65,7 @@ export class ContractAppURI<TContract extends BaseContract>
    * @param appURI - the uri to set (typically an IPFS hash)
    * @example
    * ```javascript
-   * const appURI = "ipfs://some_ipfs_hash"; 
+   * const appURI = "ipfs://some_ipfs_hash";
    * await contract.appURI.set(appURI);
    * ```
    * @twfeature AppURI | ContractMetadata

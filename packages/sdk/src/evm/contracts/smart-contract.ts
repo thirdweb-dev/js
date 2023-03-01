@@ -10,7 +10,12 @@ import {
   FEATURE_PRIMARY_SALE,
   FEATURE_ROYALTY,
 } from "../constants/thirdweb-features";
-import { ContractEncoder, ContractOwner, NetworkInput } from "../core";
+import {
+  ContractEncoder,
+  ContractOwner,
+  NetworkInput,
+  Transaction,
+} from "../core";
 import { ContractAppURI } from "../core/classes/contract-appuri";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
@@ -35,6 +40,7 @@ import type {
   IPlatformFee,
   IPrimarySale,
   IRoyalty,
+  ContractMetadata as ContractMetadataType,
   Ownable,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -140,8 +146,8 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   /**
    * Auto-detects AppURI standard functions.
    */
-  get appURI(): ContractAppURI<BaseContract> {
-    return assertEnabled(this.detectAppURI(), FEATURE_APPURI);
+  get app(): ContractAppURI<AppURI, ContractMetadataType> {
+    return assertEnabled(this.detectApp(), FEATURE_APPURI);
   }
 
   private _chainId: number;
@@ -190,6 +196,24 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
 
   getAddress(): string {
     return this.contractWrapper.readContract.address;
+  }
+
+  /**
+   * Prepare a transaction for sending
+   */
+  public async prepare<
+    TMethod extends keyof TContract["functions"] = keyof TContract["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<TContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
   }
 
   /**
@@ -293,12 +317,22 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     return undefined;
   }
 
-  private detectAppURI() {
-    if (
-      detectContractFeature<AppURI>(this.contractWrapper, "AppURI") ||
-      detectContractFeature(this.contractWrapper, "ContractMetadata")
+  private detectApp() {
+    const metadata = new ContractMetadata(
+      this.contractWrapper,
+      CustomContractSchema,
+      this.storage,
+    );
+
+    if (detectContractFeature<AppURI>(this.contractWrapper, "AppURI")) {
+      return new ContractAppURI(this.contractWrapper, metadata);
+    } else if (
+      detectContractFeature<ContractMetadataType>(
+        this.contractWrapper,
+        "ContractMetadata",
+      )
     ) {
-      return new ContractAppURI(this.contractWrapper, this.metadata);
+      return new ContractAppURI(this.contractWrapper, metadata);
     }
     return undefined;
   }
