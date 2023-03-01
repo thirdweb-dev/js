@@ -468,6 +468,7 @@ const polygonMumbai: Chain = {
 
 /**
  * @public
+ * @deprecated - use the chainId number directly instead
  */
 export enum ChainId {
   Mainnet = 1,
@@ -488,6 +489,7 @@ export enum ChainId {
 
 /**
  * @public
+ * @deprecated - thirdweb now supports all evm chains, for a list of chain install the @thirdweb-dev/chains package
  */
 export type SUPPORTED_CHAIN_ID =
   | ChainId.Mainnet
@@ -507,6 +509,7 @@ export type SUPPORTED_CHAIN_ID =
 
 /**
  * @public
+ * @deprecated - thirdweb now supports all evm chains, for a list of chain install the @thirdweb-dev/chains package
  */
 export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[] = [
   ChainId.Mainnet,
@@ -534,45 +537,8 @@ export const NATIVE_TOKEN_ADDRESS =
 export const DEFAULT_API_KEY =
   "c6634ad2d97b74baf15ff556016830c251050e6c36b9da508ce3ec80095d3dc1";
 
-function getRpcNameFromChainId(chainId: SUPPORTED_CHAIN_ID): string {
-  switch (chainId) {
-    case ChainId.Mainnet:
-      return "mainnet";
-    case ChainId.Goerli:
-      return "goerli";
-    case ChainId.Polygon:
-      return "polygon";
-    case ChainId.Mumbai:
-      return "mumbai";
-    case ChainId.Avalanche:
-      return "avalanche";
-    case ChainId.AvalancheFujiTestnet:
-      return "avalanche-fuji";
-    case ChainId.Fantom:
-      return "fantom";
-    case ChainId.FantomTestnet:
-      return "fantom-testnet";
-    case ChainId.Arbitrum:
-      return "arbitrum";
-    case ChainId.ArbitrumGoerli:
-      return "arbitrum-goerli";
-    case ChainId.Optimism:
-      return "optimism";
-    case ChainId.OptimismGoerli:
-      return "optimism-goerli";
-    case ChainId.BinanceSmartChainMainnet:
-      return "bsc";
-    case ChainId.BinanceSmartChainTestnet:
-      return "bsc-testnet";
-    default:
-      throw new Error("Unsupported chain id");
-  }
-}
-
-export function getRpcUrl(chainId: SUPPORTED_CHAIN_ID) {
-  return `https://${getRpcNameFromChainId(
-    chainId,
-  )}.rpc.thirdweb.com/${DEFAULT_API_KEY}`;
+export function getRpcUrl(chainId: number) {
+  return `https://${chainId}.rpc.thirdweb.com/${DEFAULT_API_KEY}`;
 }
 
 function enhanceChain<TChain extends Chain>(chain: TChain) {

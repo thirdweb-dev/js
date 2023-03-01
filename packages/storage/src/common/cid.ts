@@ -16,24 +16,29 @@ export async function getCIDForUpload(
   wrapWithDirectory = true,
   cidVersion: CIDVersion = 0,
 ) {
-  const contentWithPath: ContentWithPath[] = data.map((file, i) => {
-    const path = fileNames[i];
+  const contentWithPath: ContentWithPath[] = await Promise.all(
+    data.map(async (file, i) => {
+      const path = fileNames[i];
 
-    let content: Uint8Array;
-    if (typeof file === "string") {
-      content = new TextEncoder().encode(file);
-    } else if (isBufferOrStringWithName(file)) {
-      if (typeof file.data === "string") {
-        content = new TextEncoder().encode(file.data);
+      let content: Uint8Array;
+      if (typeof file === "string") {
+        content = new TextEncoder().encode(file);
+      } else if (isBufferOrStringWithName(file)) {
+        if (typeof file.data === "string") {
+          content = new TextEncoder().encode(file.data);
+        } else {
+          content = file.data as Uint8Array;
+        }
+      } else if (Buffer.isBuffer(file)) {
+        content = file as Uint8Array;
       } else {
-        content = file.data as Uint8Array;
+        const buffer = await file.arrayBuffer();
+        content = new Uint8Array(buffer);
       }
-    } else {
-      content = file as Uint8Array;
-    }
 
-    return { path, content };
-  });
+      return { path, content };
+    }),
+  );
 
   return getCID(contentWithPath, wrapWithDirectory, cidVersion);
 }
