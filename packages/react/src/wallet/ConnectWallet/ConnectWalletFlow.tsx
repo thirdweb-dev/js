@@ -9,6 +9,7 @@ import {
   spacing,
   Theme,
 } from "../../design-system";
+import { isMobile } from "../../evm/utils/isMobile";
 import { useInstalledWallets } from "../hooks/useInstalledWallets";
 import { CoinbaseWalletIcon } from "./icons/CoinbaseWalletIcon";
 import { DeviceWalletIcon } from "./icons/DeviceWalletIcon";
@@ -105,8 +106,19 @@ export const ConnectWalletFlow: React.FC<{
           } catch (e) {
             setShowScreen("walletList");
           }
-        } else {
-          setShowScreen("metamask/scan");
+        }
+
+        // if metamask is not injected
+        else {
+          // on mobile, open metamask app link
+          if (isMobile()) {
+            window.open(
+              `https://metamask.app.link/dapp/${window.location.toString()}`,
+            );
+          } else {
+            // on desktop, show the metamask scan qr code
+            setShowScreen("metamask/scan");
+          }
         }
         return;
       }
