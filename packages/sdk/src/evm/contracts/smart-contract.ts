@@ -141,7 +141,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   /**
    * Auto-detects AppURI standard functions.
    */
-  get app(): ContractAppURI<AppURI> {
+  get app(): ContractAppURI<AppURI, ContractMetadataType> {
     return assertEnabled(this.detectApp(), FEATURE_APPURI);
   }
 
