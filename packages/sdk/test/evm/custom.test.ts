@@ -324,6 +324,30 @@ describe("Custom Contracts", async () => {
     expect(balance.toString()).to.eq(initialBalance.add(1).toString());
   });
 
+  it("should sign transfer erc721 transaction", async () => {
+    const address = await sdk.deployer.deployNFTCollection({
+      name: "NFT",
+      primary_sale_recipient: adminWallet.address,
+    });
+    const c = await sdk.getContract(address);
+
+    let isApproved = await c.erc721.isApproved(
+      adminWallet.address,
+      samWallet.address,
+    );
+    expect(isApproved).to.equal(false);
+
+    const tx = await c.prepare("setAppprovalForAll", [samWallet.address, true]);
+    const sentTx = await sdk.getProvider().sendTransaction(tx);
+    await sentTx.wait();
+
+    isApproved = await c.erc721.isApproved(
+      adminWallet.address,
+      samWallet.address,
+    );
+    expect(isApproved).to.equal(true);
+  });
+
   it("should detect feature: erc721 burnable", async () => {
     const c = await sdk.getContract(nftContractAddress);
     await c.erc721.mintTo(adminWallet.address, {

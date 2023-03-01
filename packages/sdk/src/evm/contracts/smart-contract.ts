@@ -199,7 +199,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     ...args:
       | Parameters<TContract["functions"][TMethod]>
       | [...Parameters<TContract["functions"][TMethod]>, CallOverrides]
-  ) {
+  ): Promise<string> {
     return this.contractWrapper.prepare(functionName, ...args);
   }
 

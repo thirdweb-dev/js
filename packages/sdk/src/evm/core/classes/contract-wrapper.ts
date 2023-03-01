@@ -280,7 +280,7 @@ export class ContractWrapper<
     ...args:
       | Parameters<TContract["functions"][TMethod]>
       | [...Parameters<TContract["functions"][TMethod]>, CallOverrides]
-  ) {
+  ): Promise<string> {
     // parse last arg as tx options if present
     let txOptions: CallOverrides | undefined;
     try {
@@ -340,7 +340,7 @@ export class ContractWrapper<
         } is not a write function. Use call() instead.`,
       );
     } else {
-      return new Transaction({
+      const tx = new Transaction({
         contract: this.writeContract,
         signer: this.getSigner() as ethers.Signer,
         provider: this.getProvider(),
@@ -348,6 +348,7 @@ export class ContractWrapper<
         args,
         overrides: txOptions,
       });
+      return tx.sign();
     }
   }
 
