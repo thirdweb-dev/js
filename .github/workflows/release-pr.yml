@@ -78,14 +78,15 @@ jobs:
       - name: Deploy pre-release
         id: changesets
         run: |
-          yarn version-packages:dev
-          yarn release:dev
+          yarn changeset version --snapshot dev
+          node ./scripts/pre-release.mjs
+          yarn changeset publish --tag dev --no-git-tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Add Comment output
+      - name: Add Comment Output
         uses: thollander/actions-comment-pull-request@v2
-        if: steps.changesets.outputs.hasChangesets == 'false'
+        if: steps.changesets.outputs.hasChangesets == 'true'
         with:
           message: |
             **Preview Release Created**
