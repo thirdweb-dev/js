@@ -366,6 +366,8 @@ export function ThirdwebWalletProvider(
       return;
     }
 
+    console.log("disconnecting wallet", activeWallet.walletId);
+
     if (activeWallet.walletId.includes("walletConnect")) {
       activeWallet.removeListener("open_wallet", onWCOpenWallet);
     }

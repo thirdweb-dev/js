@@ -18,8 +18,6 @@ export function useBalance(tokenAddress?: ContractAddress) {
 
   const { wallet, address, chainId } = useThirdwebConnectedWalletContext();
 
-  console.log("useBalance: ", address, chainId);
-
   const cacheKey = useMemo(() => {
     return cacheKeys.wallet.balance(chainId || -1, address, tokenAddress);
   }, [chainId, tokenAddress, address]);

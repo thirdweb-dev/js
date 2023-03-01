@@ -18,8 +18,6 @@ export const WalletDetailsModalHeader = ({
   const balanceQuery = useBalance();
   const activeWalletMeta = useActiveWalletMeta();
 
-  console.log("balanceQuery", balanceQuery);
-
   return (
     <>
       <View style={styles.header}>

@@ -1,7 +1,9 @@
 import { createAsyncLocalStorage } from "../../core/AsyncStorage";
+import { DEFAULT_API_KEY } from "../constants/rpc";
 import { walletsMetadata } from "../constants/walletsMetadata";
 import { WalletsProvider } from "../contexts/wallets-context";
 import { SupportedWallet, WalletMeta } from "../types/wallet";
+import { ThirdwebContextProvider } from "./thirdweb-context-provider";
 import {
   ThirdwebProvider as ThirdwebProviderCore,
   ThirdwebProviderProps,
@@ -24,6 +26,7 @@ export function ThirdwebProviderRN({
   children,
   createWalletStorage: createWalletStorageProp,
   supportedWallets,
+  thirdwebApiKey = DEFAULT_API_KEY,
   ...props
 }: ThirdwebProviderRNProps) {
   const [activeWalletMeta, setActiveWalletMeta] = useState<
@@ -61,10 +64,11 @@ export function ThirdwebProviderRN({
     >
       <ThirdwebProviderCore
         {...props}
+        thirdwebApiKey={thirdwebApiKey}
         supportedWallets={supportedWalletsRN}
         createWalletStorage={createWalletStorageProp || createAsyncLocalStorage}
       >
-        {children}
+        <ThirdwebContextProvider>{children}</ThirdwebContextProvider>
       </ThirdwebProviderCore>
     </WalletsProvider>
   );

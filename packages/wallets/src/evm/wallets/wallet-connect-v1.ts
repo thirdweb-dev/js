@@ -17,7 +17,9 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
   static id = "walletConnectV1" as const;
 
   public get walletName() {
-    return "WalletConnect" as const;
+    return (
+      this.#walletConnectConnector?.walletName || ("WalletConnect" as const)
+    );
   }
 
   constructor(options: WalletOptions<WalletConnectV1Options>) {
@@ -77,6 +79,7 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
         this.emit("open_wallet");
         break;
       case "display_uri":
+        console.log("display_uri", payload.data);
         this.emit("open_wallet", payload.data);
         break;
     }

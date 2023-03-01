@@ -4,10 +4,20 @@ import { Address } from "../base/Address";
 import { ChainIcon } from "../base/ChainIcon";
 import { WalletIcon } from "../base/WalletIcon";
 import { WalletDetailsModal } from "./WalletDetailsModal";
-import { useActiveWallet, useDisconnect } from "@thirdweb-dev/react-core";
+import {
+  useActiveWallet,
+  useBalance,
+  useDisconnect,
+} from "@thirdweb-dev/react-core";
 import { useActiveChain } from "@thirdweb-dev/react-core/evm";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity, Linking } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  Linking,
+  View,
+  Text,
+} from "react-native";
 
 export type ConnectWalletDetailsProps = {
   address: string;
@@ -24,6 +34,7 @@ export const ConnectWalletDetails = ({
   const activeWalletMeta = useActiveWalletMeta();
   const disconnect = useDisconnect();
   const chain = useActiveChain();
+  const balanceQuery = useBalance();
 
   useEffect(() => {
     console.log("listen to open wallet", activeWalletMeta);
@@ -88,16 +99,43 @@ export const ConnectWalletDetails = ({
         isVisible={isNetworkSelectorModalVisible}
         onClose={onSelectorModalClose}
       />
-      <TouchableOpacity style={styles.connectWalletButton} onPress={onPress}>
-        <ChainIcon size={24} chainIconUrl={chain?.icon?.url} />
-        <Address address={address} />
-        <WalletIcon size={24} iconUri={activeWalletMeta?.image_url || ""} />
+      <TouchableOpacity style={styles.walletDetails} onPress={onPress}>
+        <ChainIcon size={32} chainIconUrl={chain?.icon?.url} />
+        <View style={styles.walletInfo}>
+          <Text style={styles.balance}>
+            {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
+            {balanceQuery.data?.symbol}
+          </Text>
+          <Address style={styles.address} address={address} />
+        </View>
+        <WalletIcon size={32} iconUri={activeWalletMeta?.image_url || ""} />
       </TouchableOpacity>
     </>
   );
 };
 
 const styles = StyleSheet.create({
+  address: {
+    color: "#646D7A",
+    textAlign: "left",
+    fontWeight: "600",
+    fontSize: 12,
+    lineHeight: 16,
+  },
+  walletInfo: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    alignContent: "center",
+    flexDirection: "column",
+    marginLeft: 5,
+  },
+  balance: {
+    fontSize: 14,
+    fontWeight: "600",
+    lineHeight: 16,
+    color: "#F1F1F1",
+  },
   text: {
     color: "#F1F1F1",
     textAlign: "center",
@@ -105,17 +143,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
   },
-  connectWalletButton: {
+  walletDetails: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
+    alignContent: "center",
     alignItems: "center",
+    justifyContent: "flex-start",
     backgroundColor: "#131417",
     borderRadius: 12,
     borderColor: "#646D7A",
     borderWidth: 0.5,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    gap: 8,
   },
 });

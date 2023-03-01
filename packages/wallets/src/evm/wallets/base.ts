@@ -109,7 +109,10 @@ export abstract class AbstractBrowserWallet<
     connector.on("change", (data) => {
       this.emit("change", { address: data.account, chainId: data.chain?.id });
       if (data.chain?.id) {
-        this.walletStorage.setItem("lastConnectedChain", data.chain?.id);
+        this.walletStorage.setItem(
+          "lastConnectedChain",
+          String(data.chain?.id),
+        );
       }
     });
 
@@ -153,7 +156,9 @@ export abstract class AbstractBrowserWallet<
 
   public async disconnect() {
     const connector = await this.getConnector();
+    console.log("wallet.base disconnect", connector);
     if (connector) {
+      console.log("wallet.base.connector disconnect");
       await connector.disconnect();
       connector.removeAllListeners();
       // get the last connected wallet and check if it's this wallet, if so, remove it

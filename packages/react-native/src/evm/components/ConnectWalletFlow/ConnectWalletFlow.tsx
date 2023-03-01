@@ -1,9 +1,7 @@
-import {
-  useSupportedWallets,
-  useWalletsContext,
-} from "../../contexts/wallets-context";
+import { useSupportedWallets } from "../../contexts/wallets-context";
 import { WalletMeta } from "../../types/wallet";
-import { getWallets } from "../../utils/wallets";
+import { formatDisplayUri } from "../../utils/uri";
+import { getWalletsMeta } from "../../utils/wallets";
 import { TWModal } from "../base/modal/TWModal";
 import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
@@ -19,7 +17,7 @@ import invariant from "tiny-invariant";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const { activeWalletMeta, setActiveWalletMeta } = useWalletsContext();
+  const [activeWalletMeta, setActiveWalletMeta] = useState<WalletMeta>();
 
   const connect = useConnect();
   const supportedWallets = useSupportedWallets();
@@ -27,14 +25,13 @@ export const ConnectWalletFlow = () => {
   const displayUri = useDisplayUri();
 
   useEffect(() => {
-    if (displayUri && activeWalletMeta?.mobile.universal) {
-      const encodedUri = encodeURIComponent(displayUri);
-      const fullUrl = `${activeWalletMeta?.mobile.universal}/wc?uri=${encodedUri}`;
+    if (displayUri && activeWalletMeta && modalVisible) {
+      const fullUrl = formatDisplayUri(displayUri, activeWalletMeta);
       console.log("useEffect.url", fullUrl);
 
       Linking.openURL(fullUrl);
     }
-  }, [activeWalletMeta?.mobile.universal, displayUri]);
+  }, [activeWalletMeta, displayUri, modalVisible]);
 
   const onConnectPress = () => {
     setModalVisible(true);
@@ -68,7 +65,7 @@ export const ConnectWalletFlow = () => {
           <ConnectingWallet wallet={activeWalletMeta} onClose={onClose} />
         ) : (
           <ChooseWallet
-            wallets={getWallets(supportedWallets)}
+            wallets={getWalletsMeta(supportedWallets)}
             onChooseWallet={onChooseWallet}
             onClose={onClose}
           />
