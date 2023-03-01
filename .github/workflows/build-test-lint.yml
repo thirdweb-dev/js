@@ -148,4 +148,4 @@ jobs:
           yarn changeset version --snapshot CI
           yarn changeset publish --tag CI --no-git-tag
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.AUTOMATION_TOKEN }}
