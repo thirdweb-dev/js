@@ -62,6 +62,13 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         !options?.uploadWithoutDirectory,
       );
       if ((await isUploaded(cid)) && !options?.alwaysUpload) {
+        if (options?.onProgress) {
+          options?.onProgress({
+            progress: 100,
+            total: 100,
+          });
+        }
+
         if (options?.uploadWithoutDirectory) {
           return [`ipfs://${cid}`];
         } else {
