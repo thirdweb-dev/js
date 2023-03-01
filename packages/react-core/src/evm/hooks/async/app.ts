@@ -32,8 +32,8 @@ export function useAppURI<TContract extends SmartContract>(
     cacheKeys.contract.app.get(contract?.getAddress()),
     async () => {
       requiredParamInvariant(contract, "Contract is required");
-      invariant(contract.appURI, "Contract does not support appURI");
-      return await contract.appURI.get();
+      invariant(contract.app, "Contract does not support appURI");
+      return await contract.app.get();
     },
     {
       enabled: !!contract,
@@ -79,16 +79,11 @@ export function useSetAppURI(contract: RequiredParam<SmartContract>) {
   return useMutation(
     (params: { uri: string }) => {
       requiredParamInvariant(contract, "Contract is required");
-<<<<<<< HEAD
       invariant(
         "appURI" in contract && contract.appURI,
         "Contract does not support appURI",
       );
       return contract.app.set(params.uri);
-=======
-      invariant(contract.appURI, "Contract does not support appURI");
-      return contract.appURI.set(params.uri);
->>>>>>> main
     },
     {
       onSettled: () =>
