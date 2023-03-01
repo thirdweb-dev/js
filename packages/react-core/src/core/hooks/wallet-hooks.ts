@@ -54,20 +54,22 @@ export function useDisconnect() {
 
 /**
  *
- * @returns ID of the wallet that is currently being connected,
+ * @returns the connection status of the wallet
  *
- * `undefined` if :
- * * no wallet is being connected
- * * or a wallet is already connected
- * * or no wallet is connected
+ * It can be one of the following:
+ * 1. `unknown` - when wallet connection status is not yet known
+ * 2. `connecting` - when wallet is connecting
+ * 3. `connected` - when wallet is connected
+ * 4. `disconnected` - when wallet is disconnected
+ *
  */
-export function useConnectingToWallet() {
+export function useConnectionStatus() {
   const context = useThirdwebWallet();
   invariant(
     context,
-    "useConnectingToWallet() must be used within a <ThirdwebProvider/>",
+    "useConnectionStatus() must be used within a <ThirdwebProvider/>",
   );
-  return context.connectingToWallet;
+  return context.connectionStatus;
 }
 
 /**

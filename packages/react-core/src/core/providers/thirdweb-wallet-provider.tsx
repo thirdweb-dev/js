@@ -36,7 +36,7 @@ type WalletConnectParams<W extends SupportedWallet> = NonNullable<
   Parameters<InstanceType<W>["connect"]>[0]
 >;
 
-type ConnectingToWallet = SupportedWallet["id"];
+type ConnectionStatus = "unknown" | "connected" | "disconnected" | "connecting";
 
 type ThirdwebWalletContextData = {
   wallets: SupportedWallet[];
@@ -47,7 +47,8 @@ type ThirdwebWalletContextData = {
     connectParams: WalletConnectParams<W>,
   ) => Promise<void>;
   disconnect: () => void;
-  connectingToWallet?: ConnectingToWallet;
+  connectionStatus: ConnectionStatus;
+  setConnectionStatus: (status: ConnectionStatus) => void;
   createWalletInstance: (
     Wallet: SupportedWallet,
   ) => InstanceType<SupportedWallet>;
@@ -76,12 +77,11 @@ export function ThirdwebWalletProvider(
   const [signer, setSigner] = useState<Signer | undefined>(undefined);
   const [activeChainId, setActiveChainId] = useState<number | undefined>();
   const [displayUri, setDisplayUri] = useState<string | undefined>();
+  const [connectionStatus, setConnectionStatus] =
+    useState<ConnectionStatus>("unknown");
 
   const [activeWallet, setActiveWallet] = useState<
     InstanceType<SupportedWallet> | undefined
-  >();
-  const [connectingToWallet, setIsConnectingToWallet] = useState<
-    ConnectingToWallet | undefined
   >();
 
   if (!coordinatorStorage) {
@@ -182,7 +182,7 @@ export function ThirdwebWalletProvider(
       setSigner(_signer);
       setActiveChainId(_chainId);
       setActiveWallet(wallet);
-      setIsConnectingToWallet(undefined);
+      setConnectionStatus("connected");
     },
     [],
   );
@@ -209,6 +209,7 @@ export function ThirdwebWalletProvider(
     // if explicitly set to false, don't auto connect
     // by default, auto connect
     if (props.shouldAutoConnect === false) {
+      setConnectionStatus("disconnected");
       return;
     }
 
@@ -225,10 +226,19 @@ export function ThirdwebWalletProvider(
       const Wallet = props.supportedWallets.find(
         (W) => W.id === lastConnectedWalletId,
       );
+
       if (Wallet && Wallet.id !== "deviceWallet") {
         const wallet = createWalletInstance(Wallet);
-        await wallet.autoConnect();
-        handleWalletConnect(wallet);
+        try {
+          setConnectionStatus("connecting");
+          await wallet.autoConnect();
+          handleWalletConnect(wallet);
+        } catch (e) {
+          setConnectionStatus("disconnected");
+          throw e;
+        }
+      } else {
+        setConnectionStatus("disconnected");
       }
     })();
   }, [
@@ -261,13 +271,13 @@ export function ThirdwebWalletProvider(
           Wallet as DeviceWalletType,
         ) as InstanceType<DeviceWalletType>;
 
-        setIsConnectingToWallet(Wallet.id);
+        setConnectionStatus("connecting");
 
         try {
           await wallet.connect(_connectedParams);
           handleWalletConnect(wallet);
         } catch (e: any) {
-          setIsConnectingToWallet(undefined);
+          setConnectionStatus("disconnected");
           throw e;
         }
       }
@@ -283,12 +293,12 @@ export function ThirdwebWalletProvider(
           Wallet as MetaMaskWalletType,
         ) as InstanceType<MetaMaskWalletType>;
 
-        setIsConnectingToWallet(Wallet.id);
+        setConnectionStatus("connecting");
         try {
           await wallet.connect(_connectedParams);
           handleWalletConnect(wallet);
         } catch (e: any) {
-          setIsConnectingToWallet(undefined);
+          setConnectionStatus("disconnected");
           throw e;
         }
       }
@@ -304,12 +314,12 @@ export function ThirdwebWalletProvider(
           Wallet as CoinbaseWalletType,
         ) as InstanceType<CoinbaseWalletType>;
 
-        setIsConnectingToWallet(Wallet.id);
+        setConnectionStatus("connecting");
         try {
           await wallet.connect(_connectedParams);
           handleWalletConnect(wallet);
         } catch (e: any) {
-          setIsConnectingToWallet(undefined);
+          setConnectionStatus("disconnected");
           throw e;
         }
       }
@@ -326,12 +336,12 @@ export function ThirdwebWalletProvider(
         ) as InstanceType<WalletConnectWalletType>;
         wallet.on("open_wallet", onWCOpenWallet);
 
-        setIsConnectingToWallet(Wallet.id);
+        setConnectionStatus("connecting");
         try {
           await wallet.connect(_connectedParams);
           handleWalletConnect(wallet);
         } catch (e: any) {
-          setIsConnectingToWallet(undefined);
+          setConnectionStatus("disconnected");
           throw e;
         }
       }
@@ -348,12 +358,12 @@ export function ThirdwebWalletProvider(
         ) as InstanceType<WalletConnectV1WalletType>;
         wallet.on("open_wallet", onWCOpenWallet);
 
-        setIsConnectingToWallet(Wallet.id);
+        setConnectionStatus("connecting");
         try {
           await wallet.connect(_connectedParams);
           handleWalletConnect(wallet);
         } catch (e: any) {
-          setIsConnectingToWallet(undefined);
+          setConnectionStatus("disconnected");
           throw e;
         }
       }
@@ -427,7 +437,8 @@ export function ThirdwebWalletProvider(
         connect: connectWallet,
         signer,
         activeWallet,
-        connectingToWallet: connectingToWallet,
+        connectionStatus,
+        setConnectionStatus,
         createWalletInstance: createWalletInstance,
         createWalletStorage: props.createWalletStorage,
         switchChain,

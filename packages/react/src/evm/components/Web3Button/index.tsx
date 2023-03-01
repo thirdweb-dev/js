@@ -12,6 +12,7 @@ import {
   useNetworkMismatch,
   useSDKChainId,
   useSwitchChain,
+  useConnectionStatus,
 } from "@thirdweb-dev/react-core";
 import type { SmartContract } from "@thirdweb-dev/sdk";
 import type { CallOverrides, ContractInterface } from "ethers";
@@ -79,6 +80,7 @@ export const Web3Button = <TAction extends ActionFn>({
   const hasMismatch = useNetworkMismatch();
   const needToSwitchChain =
     sdkChainId && walletChainId && sdkChainId !== walletChainId;
+  const connectionStatus = useConnectionStatus();
 
   const queryClient = useQueryClient();
 
@@ -131,7 +133,12 @@ export const Web3Button = <TAction extends ActionFn>({
 
   if (hasMismatch) {
     content = "Switch Network";
-  } else if (actionMutation.isLoading || !contract) {
+  } else if (
+    actionMutation.isLoading ||
+    !contract ||
+    connectionStatus === "connecting" ||
+    connectionStatus === "unknown"
+  ) {
     content = (
       <Spinner size="sm" color={themeToUse === "dark" ? "black" : "white"} />
     );

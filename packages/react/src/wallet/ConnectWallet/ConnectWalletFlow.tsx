@@ -26,7 +26,7 @@ import styled from "@emotion/styled";
 import * as Dialog from "@radix-ui/react-dialog";
 import {
   useConnect,
-  useConnectingToWallet,
+  useConnectionStatus,
   useWallets,
 } from "@thirdweb-dev/react-core";
 import { SupportedWallet } from "@thirdweb-dev/react-core";
@@ -68,7 +68,7 @@ export const ConnectWalletFlow: React.FC<{
   btnClass?: string;
   btnTitle?: string;
 }> = (props) => {
-  const connectingToWallet = useConnectingToWallet();
+  const connectionStatus = useConnectionStatus();
   const [showScreen, setShowScreen] = useState<Screen>("walletList");
   const btnTitle = props.btnTitle || "Connect Wallet";
 
@@ -152,9 +152,12 @@ export const ConnectWalletFlow: React.FC<{
           style={{
             minWidth: "140px",
           }}
-          aria-label={connectingToWallet ? "Connecting" : btnTitle}
+          aria-label={
+            connectionStatus === "connecting" ? "Connecting" : btnTitle
+          }
         >
-          {connectingToWallet ? (
+          {connectionStatus === "connecting" ||
+          connectionStatus === "unknown" ? (
             <Spinner size="sm" color={theme.text.inverted} />
           ) : (
             btnTitle
