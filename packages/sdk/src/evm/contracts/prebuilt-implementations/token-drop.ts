@@ -276,6 +276,24 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
   /**
    * @internal
    */
+  public async prepare<
+    TMethod extends keyof PrebuiltTokenDrop["functions"] = keyof PrebuiltTokenDrop["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<PrebuiltTokenDrop["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
+  }
+
+  /**
+   * @internal
+   */
   public async call(
     functionName: string,
     ...args: unknown[] | [...unknown[], CallOverrides]

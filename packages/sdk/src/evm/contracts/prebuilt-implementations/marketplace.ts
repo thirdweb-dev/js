@@ -14,6 +14,7 @@ import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { MarketplaceAuction } from "../../core/classes/marketplace-auction";
 import { MarketplaceDirect } from "../../core/classes/marketplace-direct";
+import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput, TransactionResult } from "../../core/types";
 import { ListingType } from "../../enums";
@@ -61,7 +62,7 @@ export class Marketplace implements UpdateableNetwork {
   >;
   public roles: ContractRoles<
     MarketplaceContract,
-    typeof Marketplace.contractRoles[number]
+    (typeof Marketplace.contractRoles)[number]
   >;
   /**
    * @internal
@@ -630,6 +631,24 @@ export class Marketplace implements UpdateableNetwork {
       rawListings = rawListings.slice(0, count);
     }
     return rawListings;
+  }
+
+  /**
+   * @internal
+   */
+  public async prepare<
+    TMethod extends keyof MarketplaceContract["functions"] = keyof MarketplaceContract["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<MarketplaceContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
   }
 
   /**
