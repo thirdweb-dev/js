@@ -624,6 +624,28 @@ export const PREBUILT_CONTRACTS_MAP = {
   [VoteInitializer.contractType]: VoteInitializer,
 } as const;
 
+export const PREBUILT_CONTRACTS_APPURI_MAP = {
+  [EditionDropInitializer.contractType]:
+    "ipfs://QmbAgC8YwY36n8H2kuvSWsRisxDZ15QZw3xGZyk9aDvcv7/erc1155.html",
+  [EditionInitializer.contractType]: "",
+  [MarketplaceInitializer.contractType]:
+    "ipfs://QmbAgC8YwY36n8H2kuvSWsRisxDZ15QZw3xGZyk9aDvcv7/marketplace.html",
+  [MarketplaceV3Initializer.contractType]:
+    "ipfs://QmbAgC8YwY36n8H2kuvSWsRisxDZ15QZw3xGZyk9aDvcv7/marketplace-v3.html",
+  [MultiwrapInitializer.contractType]: "",
+  [NFTCollectionInitializer.contractType]: "",
+  [NFTDropInitializer.contractType]:
+    "ipfs://QmbAgC8YwY36n8H2kuvSWsRisxDZ15QZw3xGZyk9aDvcv7/erc721.html",
+  [PackInitializer.contractType]: "",
+  [SignatureDropInitializer.contractType]:
+    "ipfs://QmbAgC8YwY36n8H2kuvSWsRisxDZ15QZw3xGZyk9aDvcv7/erc721.html",
+  [SplitInitializer.contractType]: "",
+  [TokenDropInitializer.contractType]:
+    "ipfs://QmbAgC8YwY36n8H2kuvSWsRisxDZ15QZw3xGZyk9aDvcv7/erc20.html",
+  [TokenInitializer.contractType]: "",
+  [VoteInitializer.contractType]: "",
+} as const;
+
 const SmartContract = {
   name: "SmartContract" as const,
   contractType: "custom" as const,
