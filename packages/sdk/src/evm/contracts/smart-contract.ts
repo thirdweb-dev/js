@@ -294,7 +294,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   }
 
   private detectAppURI() {
-    if (detectContractFeature<AppURI>(this.contractWrapper, "AppURI")) {
+    if (detectContractFeature<AppURI>(this.contractWrapper, "AppURI") || detectContractFeature<ContractMetadata, this.metadata>(this.contractWrapper, "ContractMetadata")) {
       return new ContractAppURI(this.contractWrapper, this.metadata);
     }
     return undefined;
