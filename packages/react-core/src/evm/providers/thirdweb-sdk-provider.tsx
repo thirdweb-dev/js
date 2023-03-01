@@ -147,10 +147,17 @@ const WrappedThirdwebSDKProvider = <
       }
     }
 
+    // TODO: find a better way to fix the type error
+    type ForcedChainType = {
+      rpc: string[];
+      chainId: number;
+      nativeCurrency: { symbol: string; name: string; decimals: 18 };
+    };
+
     const mergedOptions = {
       readonlySettings,
       ...sdkOptions,
-      chains: supportedChains,
+      supportedChains: supportedChains as any as ForcedChainType[],
     };
 
     let sdk_: ThirdwebSDK | undefined = undefined;
