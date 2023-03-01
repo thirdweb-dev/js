@@ -113,45 +113,97 @@ export class Transaction<TResult = TransactionResult> {
     this.storage = options.storage || new ThirdwebStorage();
   }
 
-  setOverrides(overrides: CallOverrides) {
+  getMethod() {
+    return this.method;
+  }
+
+  getArgs() {
+    return this.args;
+  }
+
+  getOverrides() {
+    return this.overrides;
+  }
+
+  getGaslessOptions() {
+    return this.gaslessOptions;
+  }
+
+  setArgs(args: any[]): Transaction<TResult> {
+    this.args = args;
+    return this;
+  }
+
+  setOverrides(overrides: CallOverrides): Transaction<TResult> {
+    this.overrides = overrides;
+    return this;
+  }
+
+  updateOverrides(overrides: CallOverrides): Transaction<TResult> {
     this.overrides = { ...this.overrides, ...overrides };
+    return this;
   }
 
-  setFrom(from: CallOverrides["from"]) {
-    this.setOverrides({ from });
+  setValue(value: CallOverrides["value"]): Transaction<TResult> {
+    this.updateOverrides({ value });
+    return this;
   }
 
-  setValue(value: CallOverrides["value"]) {
-    this.setOverrides({ value });
+  setGasLimit(gasLimit: CallOverrides["gasLimit"]): Transaction<TResult> {
+    this.updateOverrides({ gasLimit });
+    return this;
   }
 
-  setGasLimit(gasLimit: CallOverrides["gasLimit"]) {
-    this.setOverrides({ gasLimit });
+  setGasPrice(gasPrice: CallOverrides["gasPrice"]): Transaction<TResult> {
+    this.updateOverrides({ gasPrice });
+    return this;
   }
 
-  setGasPrice(gasPrice: CallOverrides["gasPrice"]) {
-    this.setOverrides({ gasPrice });
-  }
-
-  setMaxFeePerGas(maxFeePerGas: CallOverrides["maxFeePerGas"]) {
-    this.setOverrides({ maxFeePerGas });
+  setMaxFeePerGas(
+    maxFeePerGas: CallOverrides["maxFeePerGas"],
+  ): Transaction<TResult> {
+    this.updateOverrides({ maxFeePerGas });
+    return this;
   }
 
   setMaxPriorityFeePerGas(
     maxPriorityFeePerGas: CallOverrides["maxPriorityFeePerGas"],
-  ) {
-    this.setOverrides({ maxPriorityFeePerGas });
+  ): Transaction<TResult> {
+    this.updateOverrides({ maxPriorityFeePerGas });
+    return this;
   }
 
-  setParse(parse: ParseTransactionReceipt<TResult>) {
+  setGaslessOptions(
+    options: SDKOptionsOutput["gasless"],
+  ): Transaction<TResult> {
+    this.gaslessOptions = options;
+    return this;
+  }
+
+  setParse(parse: ParseTransactionReceipt<TResult>): Transaction<TResult> {
     this.parse = parse;
+    return this;
   }
 
   /**
    * Encode the function data for this transaction
    */
-  encode() {
+  encode(): string {
     return this.contract.interface.encodeFunctionData(this.method, this.args);
+  }
+
+  /**
+   * Get the signed transaction
+   */
+  async sign(): Promise<string> {
+    const gasOverrides = await this.getGasOverrides();
+    const overrides: CallOverrides = { ...gasOverrides, ...this.overrides };
+
+    const tx = await this.contract.populateTransaction[this.method](
+      ...this.args,
+      overrides,
+    );
+    return this.signer.signTransaction(tx);
   }
 
   /**
@@ -539,35 +591,5 @@ export class Transaction<TResult = TransactionResult> {
       contractName,
       sources,
     });
-  }
-}
-
-export class Transactions {
-  private transactions: Transaction[];
-
-  constructor(transactions: Transaction[]) {
-    this.transactions = transactions;
-  }
-
-  add(transaction: Transaction) {
-    this.transactions.push(transaction);
-  }
-
-  get(index: number) {
-    return this.transactions[index];
-  }
-
-  getAll() {
-    return this.transactions;
-  }
-
-  async executeAll(): Promise<TransactionResult[]> {
-    let receipts = [];
-    for (const transaction of this.transactions) {
-      const receipt = await transaction.execute();
-      receipts.push(receipt);
-    }
-
-    return receipts;
   }
 }
