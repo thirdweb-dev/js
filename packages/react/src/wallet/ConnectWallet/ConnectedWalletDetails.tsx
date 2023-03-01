@@ -70,15 +70,18 @@ export const ConnectedWalletDetails: React.FC<{
 
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
   const [open, setOpen] = useState(false);
+  const supportedChains = useSupportedChains();
 
   const installedWallets = useInstalledWallets();
 
   // can not switch network if
   // * no wallet is connected
+  // * only one supported network
   // * wallet is walletConnectV1, walletConnectV2, or deviceWallet
   // * wallet is non-injected metamask
   const disableNetworkSwitching =
     !activeWallet ||
+    supportedChains.length === 1 ||
     activeWallet.walletId === "walletConnectV1" ||
     activeWallet.walletId === "walletConnectV2" ||
     activeWallet.walletId === "deviceWallet" ||
