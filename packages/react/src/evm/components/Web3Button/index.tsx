@@ -107,7 +107,9 @@ export const Web3Button = <TAction extends ActionFn>({
         onSubmit();
       }
 
-      return await action(contract);
+      // Wait for the promise to resolve, so errors get caught by onError
+      const result = await action(contract);
+      return result;
     },
     {
       onSuccess: (res) => {
