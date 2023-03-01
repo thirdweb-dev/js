@@ -28,7 +28,6 @@ import {
   PermitRequestMessage,
 } from "../types";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
-import { Transaction } from "./transactions";
 import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import fetch from "cross-fetch";
@@ -280,7 +279,7 @@ export class ContractWrapper<
     ...args:
       | Parameters<TContract["functions"][TMethod]>
       | [...Parameters<TContract["functions"][TMethod]>, CallOverrides]
-  ): Promise<string> {
+  ) {
     // parse last arg as tx options if present
     let txOptions: CallOverrides | undefined;
     try {
@@ -340,15 +339,16 @@ export class ContractWrapper<
         } is not a write function. Use call() instead.`,
       );
     } else {
-      const tx = new Transaction({
-        contract: this.writeContract,
-        signer: this.getSigner() as ethers.Signer,
-        provider: this.getProvider(),
-        method: fnName as string,
-        args,
-        overrides: txOptions,
-      });
-      return tx.sign();
+      const tx = await this.writeContract.populateTransaction[fnName as string](
+        ...(txOptions ? [...args, txOptions] : args),
+      );
+
+      const signer = this.getSigner();
+      if (!signer) {
+        throw new Error("No signer found");
+      }
+
+      return signer.signTransaction(tx);
     }
   }
 

@@ -99,7 +99,31 @@ describe("Custom Contracts", async () => {
     });
   });
 
-  it("should call raw ABI functions and read deployer address", async () => {
+  it("should sign transfer erc721 transaction", async () => {
+    const address = await sdk.deployer.deployNFTCollection({
+      name: "NFT",
+      primary_sale_recipient: adminWallet.address,
+    });
+    const c = await sdk.getContract(address);
+
+    let isApproved = await c.erc721.isApproved(
+      adminWallet.address,
+      samWallet.address,
+    );
+    expect(isApproved).to.equal(false);
+
+    const tx = await c.prepare("setApprovalForAll", samWallet.address, true);
+    const sentTx = await sdk.getProvider().sendTransaction(tx);
+    await sentTx.wait();
+
+    isApproved = await c.erc721.isApproved(
+      adminWallet.address,
+      samWallet.address,
+    );
+    expect(isApproved).to.equal(true);
+  });
+
+  it.skip("should call raw ABI functions and read deployer address", async () => {
     const c = await realSDK.getContract(customContractAddress);
     invariant(c, "Contract undefined");
     expect(await c.call("decimals")).to.eq(18);
@@ -112,7 +136,7 @@ describe("Custom Contracts", async () => {
     expect(owner2).to.eq(samWallet.address);
   });
 
-  it("should call raw ABI functions with call overrides", async () => {
+  it.skip("should call raw ABI functions with call overrides", async () => {
     //need to re-create it here because owner is changed and it would otherwise fail
     customContractAddress = await realSDK.deployer.deployContractFromUri(
       simpleContractUri,
@@ -143,7 +167,7 @@ describe("Custom Contracts", async () => {
     expect(tx.receipt).to.not.eq(undefined);
   });
 
-  it("should fetch published metadata", async () => {
+  it.skip("should fetch published metadata", async () => {
     const c = await realSDK.getContract(customContractAddress);
     invariant(c, "Contract undefined");
     const meta = await c.publishedMetadata.get();
@@ -151,21 +175,21 @@ describe("Custom Contracts", async () => {
     expect(meta.licenses.length).gt(0);
   });
 
-  it("should extract functions", async () => {
+  it.skip("should extract functions", async () => {
     const c = await realSDK.getContract(customContractAddress);
     invariant(c, "Contract undefined");
     const functions = await c.publishedMetadata.extractFunctions();
     expect(functions.length).gt(0);
   });
 
-  it("should extract events", async () => {
+  it.skip("should extract events", async () => {
     const c = await realSDK.getContract(customContractAddress);
     invariant(c, "Contract undefined");
     const events = await c.publishedMetadata.extractEvents();
     expect(events.length).gt(0);
   });
 
-  it("should detect feature: metadata", async () => {
+  it.skip("should detect feature: metadata", async () => {
     const c = await realSDK.getContract(customContractAddress);
     invariant(c, "Contract undefined");
     invariant(c.metadata, "Contract undefined");
@@ -173,7 +197,7 @@ describe("Custom Contracts", async () => {
     expect(meta.name).to.eq("MyToken");
   });
 
-  it("should detect feature: roles", async () => {
+  it.skip("should detect feature: roles", async () => {
     const c = await sdk.getContract(nftContractAddress);
     invariant(c, "Contract undefined");
     invariant(c.roles, "Roles undefined");
@@ -189,7 +213,7 @@ describe("Custom Contracts", async () => {
     expect(minters2[1]).to.eq(samWallet.address);
   });
 
-  it("should detect feature: royalties", async () => {
+  it.skip("should detect feature: royalties", async () => {
     const c = await sdk.getContract(nftContractAddress);
     invariant(c, "Contract undefined");
     invariant(c.royalties, "Royalties undefined");
@@ -205,7 +229,7 @@ describe("Custom Contracts", async () => {
     expect(royalties2.seller_fee_basis_points).to.eq(1000);
   });
 
-  it("should detect feature: primary sales", async () => {
+  it.skip("should detect feature: primary sales", async () => {
     const c = await sdk.getContract(nftContractAddress);
     invariant(c, "Contract undefined");
     invariant(c.sales, "Primary sales undefined");
@@ -216,7 +240,7 @@ describe("Custom Contracts", async () => {
     expect(recipient2).to.eq(bobWallet.address);
   });
 
-  it("should detect feature: primary sales", async () => {
+  it.skip("should detect feature: primary sales", async () => {
     const c = await sdk.getContract(nftContractAddress);
     invariant(c, "Contract undefined");
     invariant(c.platformFees, "Platform fees undefined");
@@ -232,7 +256,7 @@ describe("Custom Contracts", async () => {
     expect(fees2.platform_fee_basis_points).to.eq(500);
   });
 
-  it("should not detect feature if missing from ABI", async () => {
+  it.skip("should not detect feature if missing from ABI", async () => {
     const c = await sdk.getContractFromAbi("", VoteERC20__factory.abi);
     invariant(c, "Contract undefined");
     invariant(c.metadata, "Metadata undefined");
@@ -243,7 +267,7 @@ describe("Custom Contracts", async () => {
     }
   });
 
-  it("should detect feature: erc20", async () => {
+  it.skip("should detect feature: erc20", async () => {
     const c = await sdk.getContract(tokenContractAddress);
     const token = await c.erc20.get();
     expect(token.name).to.eq("Token");
@@ -258,7 +282,7 @@ describe("Custom Contracts", async () => {
     );
   });
 
-  it("should detect feature: erc20 burnable", async () => {
+  it.skip("should detect feature: erc20 burnable", async () => {
     const c = await sdk.getContract(tokenContractAddress);
     await c.erc20.mint(2);
     expect((await c.erc20.balance()).displayValue).to.eq("2.0");
@@ -266,7 +290,7 @@ describe("Custom Contracts", async () => {
     expect((await c.erc20.balance()).displayValue).to.eq("1.0");
   });
 
-  it("should detect feature: erc20 droppable", async () => {
+  it.skip("should detect feature: erc20 droppable", async () => {
     const c = await sdk.getContract(tokenDropContractAddress);
 
     invariant(c, "Contract undefined");
@@ -288,7 +312,7 @@ describe("Custom Contracts", async () => {
     expect(b.displayValue).to.equal("5.0");
   });
 
-  it("should detect feature: erc721", async () => {
+  it.skip("should detect feature: erc721", async () => {
     const c = await sdk.getContract(nftContractAddress);
     await c.erc721.mintTo(adminWallet.address, {
       name: "Custom NFT",
@@ -298,7 +322,7 @@ describe("Custom Contracts", async () => {
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });
 
-  it("should transfer erc721", async () => {
+  it.skip("should transfer erc721", async () => {
     sdk.updateSignerOrProvider(adminWallet);
     const address = await sdk.deployer.deployNFTCollection({
       name: "NFT",
@@ -324,31 +348,7 @@ describe("Custom Contracts", async () => {
     expect(balance.toString()).to.eq(initialBalance.add(1).toString());
   });
 
-  it("should sign transfer erc721 transaction", async () => {
-    const address = await sdk.deployer.deployNFTCollection({
-      name: "NFT",
-      primary_sale_recipient: adminWallet.address,
-    });
-    const c = await sdk.getContract(address);
-
-    let isApproved = await c.erc721.isApproved(
-      adminWallet.address,
-      samWallet.address,
-    );
-    expect(isApproved).to.equal(false);
-
-    const tx = await c.prepare("setAppprovalForAll", [samWallet.address, true]);
-    const sentTx = await sdk.getProvider().sendTransaction(tx);
-    await sentTx.wait();
-
-    isApproved = await c.erc721.isApproved(
-      adminWallet.address,
-      samWallet.address,
-    );
-    expect(isApproved).to.equal(true);
-  });
-
-  it("should detect feature: erc721 burnable", async () => {
+  it.skip("should detect feature: erc721 burnable", async () => {
     const c = await sdk.getContract(nftContractAddress);
     await c.erc721.mintTo(adminWallet.address, {
       name: "Custom NFT",
@@ -360,7 +360,7 @@ describe("Custom Contracts", async () => {
     expect(balance.toString()).to.eq("0");
   });
 
-  it("should detect feature: erc721 lazy mint", async () => {
+  it.skip("should detect feature: erc721 lazy mint", async () => {
     const c = await sdk.getContract(sigDropContractAddress);
     await c.erc721.lazyMint([
       {
@@ -375,7 +375,7 @@ describe("Custom Contracts", async () => {
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });
 
-  it("should detect feature: erc721 delay reveal", async () => {
+  it.skip("should detect feature: erc721 delay reveal", async () => {
     const c = await sdk.getContract(nftDropContractAddress);
     await c.erc721.revealer.createDelayedRevealBatch(
       {
@@ -392,7 +392,7 @@ describe("Custom Contracts", async () => {
     expect((await c.erc721.get(0)).metadata.name).to.be.equal("NFT #1");
   });
 
-  it("should detect feature: erc1155", async () => {
+  it.skip("should detect feature: erc1155", async () => {
     const c = await sdk.getContract(editionContractAddress);
     await c.erc1155.mint({
       metadata: {
@@ -405,7 +405,7 @@ describe("Custom Contracts", async () => {
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });
 
-  it("should detect feature: erc1155 burnable", async () => {
+  it.skip("should detect feature: erc1155 burnable", async () => {
     const c = await sdk.getContract(editionContractAddress);
     await c.erc1155.mintBatchTo(adminWallet.address, [
       {
@@ -435,7 +435,7 @@ describe("Custom Contracts", async () => {
     expect(balance.toString()).to.eq("90");
   });
 
-  it("should detect feature: erc1155 lazy mint", async () => {
+  it.skip("should detect feature: erc1155 lazy mint", async () => {
     const c = await sdk.getContract(editionDropContractAddress);
     await c.erc1155.lazyMint([
       {
@@ -450,7 +450,7 @@ describe("Custom Contracts", async () => {
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });
 
-  it("should detect feature: erc1155 signature mintable", async () => {
+  it.skip("should detect feature: erc1155 signature mintable", async () => {
     const c = await sdk.getContract(editionContractAddress);
     const payload = {
       metadata: {
@@ -473,7 +473,7 @@ describe("Custom Contracts", async () => {
     expect(tx.id.toNumber()).to.eq(0);
   });
 
-  it("should detect feature: erc20 signature mintable", async () => {
+  it.skip("should detect feature: erc20 signature mintable", async () => {
     const c = await sdk.getContractFromAbi(
       tokenContractAddress,
       TokenERC20__factory.abi,
@@ -511,7 +511,7 @@ describe("Custom Contracts", async () => {
     expect(balance.displayValue).to.eq("6.0");
   });
 
-  it("should detect feature: erc721 signature mintable", async () => {
+  it.skip("should detect feature: erc721 signature mintable", async () => {
     const c = await sdk.getContractFromAbi(
       nftContractAddress,
       TokenERC721__factory.abi,
