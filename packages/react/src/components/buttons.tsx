@@ -51,6 +51,10 @@ export const Button = styled.button<{
   &:active {
     transform: translateY(1px);
   }
+
+  &[disabled] {
+    cursor: not-allowed;
+  }
 `;
 
 // for rendering a button with an icon

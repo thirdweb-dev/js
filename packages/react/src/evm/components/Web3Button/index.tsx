@@ -126,27 +126,31 @@ export const Web3Button = <TAction extends ActionFn>({
     return <ConnectWallet theme={theme} />;
   }
 
+  let content = children;
+  let buttonDisabled = false;
+
+  if (hasMismatch) {
+    content = "Switch Network";
+  } else if (actionMutation.isLoading || !contract) {
+    content = (
+      <Spinner size="sm" color={themeToUse === "dark" ? "black" : "white"} />
+    );
+    buttonDisabled = true;
+  }
+
   return (
     <ThemeProvider theme={themeToUse === "dark" ? darkTheme : lightTheme}>
       <Button
         variant="inverted"
         className={className}
         onClick={() => actionMutation.mutate()}
-        disabled={!contract || (hasMismatch ? false : isDisabled)}
+        disabled={buttonDisabled || isDisabled}
         style={{
           minWidth: "120px",
+          minHeight: "43px",
         }}
       >
-        {actionMutation.isLoading || !contract ? (
-          <Spinner
-            size="sm"
-            color={themeToUse === "dark" ? "black" : "white"}
-          />
-        ) : hasMismatch ? (
-          "Switch Network"
-        ) : (
-          children
-        )}
+        {content}
       </Button>
     </ThemeProvider>
   );
