@@ -60,7 +60,7 @@ const Commerce: ThirdwebNextPage = () => {
         title="Build Web3 Commerce apps easily"
         description="With thirdweb you can now add powerful web3 features to your Shopify storefront enabling tokengated commerce, NFT loyalty programs, digital collectible sales, and more."
         buttonText="Get started"
-        buttonLink="https://blog.thirdweb.com/tag/shopify/"
+        buttonLink="https://portal.thirdweb.com/commercekit"
         gradient="linear-gradient(147.15deg, #9BC055 30.17%, #7629E7 100.01%)"
         image={require("public/assets/solutions-pages/commerce/hero.png")}
         type="Solutions"
