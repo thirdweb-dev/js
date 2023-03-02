@@ -2,25 +2,29 @@ import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
 import {
   BackButton,
-  ModalTitle,
-  ModalDescription,
   HelperLink,
+  ModalDescription,
+  ModalTitle,
 } from "../../../components/modalElements";
-import { media, spacing } from "../../../design-system";
+import { iconSize, media, spacing } from "../../../design-system";
 import { isMobile } from "../../../evm/utils/isMobile";
+import { IconFC } from "../icons/types";
 import styled from "@emotion/styled";
 import { blue } from "@radix-ui/colors";
 
 export const ConnectingScreen: React.FC<{
   onBack: () => void;
-  icon: React.ReactNode;
+  WalletIcon: IconFC;
   walletName: string;
   supportLink: string;
 }> = (props) => {
+  const { WalletIcon } = props;
   return (
     <>
       <BackButton onClick={props.onBack} />
-      <IconContainer>{props.icon}</IconContainer>
+      <IconContainer>
+        <WalletIcon size={iconSize.xl} />
+      </IconContainer>
       <Spacer y="lg" />
       <TitleContainer>
         <ModalTitle>Connecting your wallet</ModalTitle>

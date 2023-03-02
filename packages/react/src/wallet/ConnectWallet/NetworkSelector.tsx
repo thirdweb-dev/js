@@ -169,6 +169,7 @@ const TabButton = styled(Tabs.Trigger)<{ theme?: Theme }>`
   color: ${(p) => p.theme.text.secondary};
   cursor: pointer;
   padding: ${spacing.sm} ${spacing.md};
+  -webkit-tap-highlight-color: transparent;
   border-radius: ${radius.lg};
   transition: background 0.2s ease, color 0.2s ease;
   &[data-state="active"] {

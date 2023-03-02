@@ -21,6 +21,7 @@ import { DeviceWalletIcon } from "./icons/DeviceWalletIcon";
 import { ExitIcon } from "./icons/ExitIcon";
 import { MetamaskIcon } from "./icons/MetamaskIcon";
 import { WalletConnectIcon } from "./icons/WalletConnectIcon";
+import { IconFC } from "./icons/types";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
@@ -38,10 +39,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useMemo, useState } from "react";
 
-const walletIcons: Record<
-  SupportedWallet["id"],
-  React.FC<{ width: string; height: string }>
-> = {
+const walletIcons: Record<SupportedWallet["id"], IconFC> = {
   metamask: MetamaskIcon,
   deviceWallet: DeviceWalletIcon,
   coinbaseWallet: CoinbaseWalletIcon,
@@ -114,7 +112,7 @@ export const ConnectedWalletDetails: React.FC<{
         <WalletAddress>{shortenString(address || "")}</WalletAddress>
       </ColFlex>
 
-      {WalletIcon && <WalletIcon width={iconSize.lg} height={iconSize.lg} />}
+      {WalletIcon && <WalletIcon size={iconSize.lg} />}
     </WalletInfoButton>
   );
 
@@ -128,7 +126,7 @@ export const ConnectedWalletDetails: React.FC<{
           gap: spacing.md,
         }}
       >
-        {WalletIcon && <WalletIcon width={iconSize.xl} height={iconSize.xl} />}
+        {WalletIcon && <WalletIcon size={iconSize.xl} />}
 
         <ColFlex>
           <AccountAddress> {shortenString(address || "")}</AccountAddress>
@@ -146,7 +144,7 @@ export const ConnectedWalletDetails: React.FC<{
             disconnect();
           }}
         >
-          <ExitIcon width={iconSize.md} height={iconSize.md} />
+          <ExitIcon size={iconSize.md} />
         </DisconnectIconButton>
       </div>
 

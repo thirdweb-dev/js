@@ -1,11 +1,11 @@
-export const CoinbaseWalletIcon: React.FC<{ width: string; height: string }> = (
-  props,
-) => {
+import { IconFC } from "./types";
+
+export const CoinbaseWalletIcon: IconFC = ({ size }) => {
   return (
     <svg
       viewBox="0 0 28 28"
-      width={props.width}
-      height={props.height}
+      width={size}
+      height={size}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >

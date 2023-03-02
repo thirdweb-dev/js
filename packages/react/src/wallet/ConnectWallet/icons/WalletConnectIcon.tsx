@@ -1,11 +1,11 @@
-export const WalletConnectIcon: React.FC<{ width: string; height: string }> = (
-  props,
-) => {
+import { IconFC } from "./types";
+
+export const WalletConnectIcon: IconFC = ({ size }) => {
   return (
     <svg
       viewBox="0 0 28 28"
-      width={props.width}
-      height={props.height}
+      width={size}
+      height={size}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
