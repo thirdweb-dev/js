@@ -1,4 +1,5 @@
 import { fetchCurrencyValue } from "../../common/currency";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -20,7 +21,7 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, CallOverrides, Contract } from "ethers";
+import { BaseContract, BigNumber, CallOverrides, Contract } from "ethers";
 
 /**
  * Create custom royalty splits to distribute funds.
@@ -44,6 +45,8 @@ export class Split implements UpdateableNetwork {
 
   public abi: Abi;
   public metadata: ContractMetadata<SplitContract, typeof SplitsContractSchema>;
+
+  public app: ContractAppURI<BaseContract>;
   public encoder: ContractEncoder<SplitContract>;
   public estimator: GasCostEstimator<SplitContract>;
   public events: ContractEvents<SplitContract>;
@@ -84,6 +87,8 @@ export class Split implements UpdateableNetwork {
       SplitsContractSchema,
       this.storage,
     );
+
+    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
     this.roles = new ContractRoles(this.contractWrapper, Split.contractRoles);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);

@@ -6,6 +6,7 @@ import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -32,7 +33,13 @@ import { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
 import { UploadProgressEvent } from "../../types/events";
 import type { SignatureDrop as SignatureDropContract } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
+import {
+  BaseContract,
+  BigNumber,
+  BigNumberish,
+  CallOverrides,
+  constants,
+} from "ethers";
 
 /**
  * Setup a collection of NFTs where when it comes to minting, you can authorize
@@ -62,6 +69,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     SignatureDropContract,
     typeof DropErc721ContractSchema
   >;
+  public app: ContractAppURI<BaseContract>;
   public sales: ContractPrimarySale<SignatureDropContract>;
   public platformFees: ContractPlatformFee<SignatureDropContract>;
   public events: ContractEvents<SignatureDropContract>;
@@ -185,6 +193,8 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
       DropErc721ContractSchema,
       this.storage,
     );
+
+    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
     this.roles = new ContractRoles(
       this.contractWrapper,
       SignatureDrop.contractRoles,

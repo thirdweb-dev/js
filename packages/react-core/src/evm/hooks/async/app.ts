@@ -9,7 +9,7 @@ import {
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { SmartContract } from "@thirdweb-dev/sdk";
+import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
 
 /**
@@ -25,7 +25,7 @@ import invariant from "tiny-invariant";
  * @twfeature AppURI | ContractMetadata
  * @beta
  */
-export function useAppURI<TContract extends SmartContract>(
+export function useAppURI<TContract extends ValidContractInstance>(
   contract: RequiredParam<TContract>,
 ) {
   return useQueryWithNetwork<string>(
@@ -72,7 +72,7 @@ export function useAppURI<TContract extends SmartContract>(
  * @twfeature AppURI | ContractMetadata
  * @beta
  */
-export function useSetAppURI(contract: RequiredParam<SmartContract>) {
+export function useSetAppURI(contract: RequiredParam<ValidContractInstance>) {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();
   const activeChainId = useSDKChainId();
