@@ -6712,11 +6712,6 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-11.11.6.tgz#df929d1bb2eee5afdda598a41930fe50b43eaa6a"
   integrity sha512-Exw4yUWMBXM3X+8oqzJNRqZSwUAaS4+7NdvHqQuFi/d+synz++xmX3QIf+BFqneW8N31R8Ky+sikfZUXq07ggQ==
 
-"@types/node@>=13.7.0":
-  version "18.14.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.14.2.tgz#c076ed1d7b6095078ad3cf21dfeea951842778b1"
-  integrity sha512-1uEQxww3DaghA0RxqHx0O0ppVlo43pJhepY51OxuQIKHpjbnYLA7vcdwioNPzIqmC2u3I/dmylcqjlh0e7AyUA==
-
 "@types/node@^12.12.54", "@types/node@^12.12.6", "@types/node@^12.7.1":
   version "12.20.55"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.55.tgz#c329cbd434c42164f846b909bd6f85b5537f6240"
@@ -11944,12 +11939,12 @@ eslint-config-react-app@^7.0.1:
     eslint-plugin-react-hooks "^4.3.0"
     eslint-plugin-testing-library "^5.0.1"
 
-eslint-config-turbo@latest:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/eslint-config-turbo/-/eslint-config-turbo-0.0.9.tgz#7aaf6d57b8fa794f40b9a554511449a669e6447f"
-  integrity sha512-j1cTdx3tRmKo0csyfQKhpuT8dynK9oddbK5nmrShoMpXI2qMbxHLYH7MWAid4FmJN8rYympy3VKw5U63Yazycg==
+eslint-config-turbo@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/eslint-config-turbo/-/eslint-config-turbo-0.0.8.tgz#f23c133d5241ec85e1ddd9c08a55c4a20915c15a"
+  integrity sha512-ijj6uv0QX2kWahg3OYnTK1/q4MueXsqY2uE4MP9yeUA5CzVhL7GU+biKlv1BfMMqPltixHUcpZoW4yyNLCnMiw==
   dependencies:
-    eslint-plugin-turbo "0.0.9"
+    eslint-plugin-turbo "0.0.8"
 
 eslint-import-resolver-node@^0.3.6, eslint-import-resolver-node@^0.3.7:
   version "0.3.7"
@@ -12127,10 +12122,10 @@ eslint-plugin-tsdoc@^0.2.16:
     "@microsoft/tsdoc" "0.14.2"
     "@microsoft/tsdoc-config" "0.16.2"
 
-eslint-plugin-turbo@0.0.9:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-turbo/-/eslint-plugin-turbo-0.0.9.tgz#bdf2b7c98af43fb7cadae746ea9b395b3e6bf8dc"
-  integrity sha512-fEsuSnYU3GLtT+s66mUuzDL1LaSieIx5uk3tPO0ToGv7hI2XzOfP24aPkQItTBGl7kq2JaVkRzPwcnfz8hkp0w==
+eslint-plugin-turbo@0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-turbo/-/eslint-plugin-turbo-0.0.8.tgz#aafd2a9cc97b7e85373c1c05c1e493c622d4b3bc"
+  integrity sha512-pExSCmjWw/KFKb3/0PVqxiWb30FbcwDEf6kKv3alvNBSVEzDHalyAGHc9klbLSG+nFmbkfNE3Ky/UHDryCqt8g==
 
 eslint-scope@5.1.1, eslint-scope@^5.1.1:
   version "5.1.1"

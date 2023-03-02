@@ -65,7 +65,9 @@ const main = async () => {
         // no-op
       }
 
-      if (!shouldCheckVersion) return;
+      if (!shouldCheckVersion) {
+        return;
+      }
 
       const versionSpinner = spinner("Checking for updates...");
       await import("update-notifier").then(
@@ -283,7 +285,9 @@ const main = async () => {
     .option("--contract", "Deploy a smart contract to blockchains")
     .action(async (options) => {
       const url = await deploy(options);
-      if (url) await open(url);
+      if (url) {
+        await open(url);
+      }
     });
 
   program
