@@ -76,8 +76,22 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Deploy pre-release
-        run: |
-          yarn changeset version --snapshot dev
-          yarn changeset publish --tag dev --no-git-tag
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: yarn changeset version --snapshot dev && node ./scripts/pre-release.mjs
+          publish: yarn changeset publish --tag dev --no-git-tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Add Comment Output
+        uses: thollander/actions-comment-pull-request@v2
+        if: steps.changesets.outputs.published == 'true'
+        with:
+          message: |
+            **Preview Release Created**
+
+            This PR has been deployed to NPM as a preview release.
+            ```json
+            ${{ steps.changesets.outputs.publishedPackages }}
+            ```
