@@ -15,6 +15,7 @@ export const Button = styled.button<{
   font-size: ${fontSize.md};
   font-weight: 500;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 
   &:focus {
     box-shadow: 0 0 0 3px
@@ -68,6 +69,7 @@ export const IconButton = styled.button<{
   align-items: center;
   justify-content: center;
   border-radius: ${radius.sm};
+  -webkit-tap-highlight-color: transparent;
   color: ${(p) => {
     switch (p.variant) {
       case "neutral":
@@ -77,7 +79,7 @@ export const IconButton = styled.button<{
     }
   }};
   padding: 2px;
-  transition: background 0.1s ease-in-out, color 0.1s ease-in-out;
+  transition: background 0.2s ease, color 0.2s ease;
   &:hover {
     background: ${(p) => p.theme.bg.elevated};
     color: ${(p) => p.theme.text.neutral};
@@ -93,6 +95,7 @@ export const InputButton = styled.button<{ theme?: Theme }>`
   border-radius: ${radius.sm};
   padding: ${spacing.sm};
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
   color: ${(p) => p.theme.text.secondary};
   &:hover {
     color: ${(p) => p.theme.text.neutral};

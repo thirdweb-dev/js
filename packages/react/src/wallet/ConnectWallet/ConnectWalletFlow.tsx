@@ -180,7 +180,7 @@ export const ConnectWalletFlow: React.FC<{
       {showScreen === "walletList" && (
         <>
           <DialogTitle>Choose your wallet</DialogTitle>
-          <Spacer y="xxl" />
+          <Spacer y="xl" />
           <WalletListUl>
             {walletsMeta.map((WalletMeta) => {
               return (

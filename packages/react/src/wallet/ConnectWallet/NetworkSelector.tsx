@@ -65,9 +65,7 @@ export const NetworkSelector: React.FC<{
         paddingBottom: "0px",
       }}
     >
-      <Spacer y="lg" />
-      {/* <Description>Choose a network to connect to the application</Description>
-      <Spacer y="lg" /> */}
+      <Spacer y="xl" />
 
       <Tabs.Root className="TabsRoot" defaultValue="all">
         <Tabs.List
@@ -100,6 +98,9 @@ export const NetworkSelector: React.FC<{
         >
           <StyledMagnifyingGlassIcon />
           <SearchInput
+            style={{
+              boxShadow: "none",
+            }}
             variant="secondary"
             placeholder="Search Networks"
             value={searchTerm}
@@ -183,7 +184,8 @@ const NetworkListUl = styled.ul<{ theme?: Theme }>`
   display: flex;
   flex-direction: column;
   gap: ${spacing.xs};
-  height: 340px;
+  max-height: 340px;
+  min-height: 200px;
   overflow: auto;
   padding-right: 10px;
   padding-bottom: ${spacing.lg};
@@ -213,9 +215,6 @@ const NetworkButton = styled.button<{ theme?: Theme }>`
   color: ${(p) => p.theme.text.neutral};
   font-weight: 500;
   &:hover {
-    background: ${(p) => p.theme.bg.highlighted};
-  }
-  &[data-active="true"] {
     background: ${(p) => p.theme.bg.highlighted};
   }
 

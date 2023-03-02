@@ -22,6 +22,7 @@ export const Modal: React.FC<{
   children: React.ReactNode;
   title?: string;
   style?: React.CSSProperties;
+  hideCloseIcon?: boolean;
 }> = (props) => {
   return (
     <Dialog.Root open={props.open} onOpenChange={props.setOpen}>
@@ -44,23 +45,25 @@ export const Modal: React.FC<{
             {props.children}
 
             {/* Close Icon */}
-            <CrossContainer>
-              <Dialog.Close asChild>
-                <IconButton
-                  variant="secondary"
-                  type="button"
-                  aria-label="Close"
-                >
-                  <Cross2Icon
-                    style={{
-                      width: iconSize.md,
-                      height: iconSize.md,
-                      color: "inherit",
-                    }}
-                  />
-                </IconButton>
-              </Dialog.Close>
-            </CrossContainer>
+            {!props.hideCloseIcon && (
+              <CrossContainer>
+                <Dialog.Close asChild>
+                  <IconButton
+                    variant="secondary"
+                    type="button"
+                    aria-label="Close"
+                  >
+                    <Cross2Icon
+                      style={{
+                        width: iconSize.md,
+                        height: iconSize.md,
+                        color: "inherit",
+                      }}
+                    />
+                  </IconButton>
+                </Dialog.Close>
+              </CrossContainer>
+            )}
           </DialogContent>
         </Dialog.Content>
       </Dialog.Portal>
@@ -135,7 +138,8 @@ const DialogContent = styled.div<{ theme?: Theme }>`
     max-width: 100vw;
     transform: none;
     width: 100vw;
-    animation: ${modalAnimationMobile} 250ms ease;
+    animation: ${modalAnimationMobile} 0.35s cubic-bezier(0.15, 1.15, 0.6, 1);
+    border-radius: ${radius.xxl};
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
   }
