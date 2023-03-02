@@ -17,12 +17,12 @@ import invariant from "tiny-invariant";
  *
  * @example
  * ```javascript
- * const { data: contractMetadata, isLoading, error } = useAppURI(SmartContract;
+ * const { data: contractMetadata, isLoading, error } = useAppURI(contract);
  * ```
  *
  * @param contract - the {@link SmartContract} instance of the contract to get the appURI of
  * @returns a response object that includes the appURI of the contract
- * @twfeature AppURI | ContractMetadata
+ * @twfeature AppURI
  * @beta
  */
 export function useAppURI<TContract extends ValidContractInstance>(
@@ -51,7 +51,7 @@ export function useAppURI<TContract extends ValidContractInstance>(
  *     mutate: useSetAppURI,
  *     isLoading,
  *     error,
- *   } = useSetAppURI(SmartContract);
+ *   } = useSetAppURI(contract);
  *
  *   if (error) {
  *     console.error("failed to update appURI", error);
@@ -69,7 +69,7 @@ export function useAppURI<TContract extends ValidContractInstance>(
  * ```
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to update the appURI of a contract
- * @twfeature AppURI | ContractMetadata
+ * @twfeature AppUR
  * @beta
  */
 export function useSetAppURI(contract: RequiredParam<ValidContractInstance>) {

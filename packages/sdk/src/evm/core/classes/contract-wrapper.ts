@@ -51,7 +51,7 @@ import invariant from "tiny-invariant";
 export class ContractWrapper<
   TContract extends BaseContract,
 > extends RPCConnectionHandler {
-  // TOOO: In another PR, make this storage private, and have extending classes pass
+  // TODO: In another PR, make this storage private, and have extending classes pass
   // down storage to be stored in contract wrapper.
   #storage: ThirdwebStorage;
   private isValidContract = false;

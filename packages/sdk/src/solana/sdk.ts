@@ -51,7 +51,7 @@ export class ThirdwebSDK {
   }
 
   /**
-   * reate a new SDK instance connected with the given private key
+   * Create a new SDK instance connected with the given private key
    * @param network - The network to connect to
    * @param privateKey - The private key to use
    * @param storage - The storage provider to use or IPFS by default

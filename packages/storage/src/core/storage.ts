@@ -227,7 +227,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
 
     if (options?.uploadWithGatewayUrl || this.uploader.uploadWithGatewayUrl) {
       // If flag is set, replace all schemes with their preferred gateway URL
-      // Ex: used for Solana, where services don't resolve schemes for you, so URLs must be useable by default
+      // Ex: used for Solana, where services don't resolve schemes for you, so URLs must be usable by default
       cleaned = replaceObjectSchemesWithGatewayUrls(
         cleaned,
         this.gatewayUrls,

@@ -16,6 +16,6 @@
   },
   "snapshot": {
     "useCalculatedVersion": true,
-    "prereleaseTemplate": "{tag}-{commit}"
+    "prereleaseTemplate": "{tag}-{datetime}-{commit}"
   }
 }

@@ -43,7 +43,7 @@ export class ContractAppURI<TContract extends BaseContract>
    * const appURI = await contract.appURI.get(appURI);
    * console.log(appURI) // "ipfs://some_ipfs_hash";
    * ```
-   * @twfeature AppURI | ContractMetadata
+   * @twfeature AppURI
    */
   public async get(): Promise<string> {
     if (detectContractFeature<IAppURI>(this.contractWrapper, "AppURI")) {
@@ -63,7 +63,7 @@ export class ContractAppURI<TContract extends BaseContract>
    * const appURI = "ipfs://some_ipfs_hash";
    * await contract.appURI.set(appURI);
    * ```
-   * @twfeature AppURI | ContractMetadata
+   * @twfeature AppURI
    */
   public async set(appURI: string): Promise<TransactionResult> {
     if (detectContractFeature<IAppURI>(this.contractWrapper, "AppURI")) {

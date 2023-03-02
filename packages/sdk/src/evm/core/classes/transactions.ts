@@ -113,45 +113,135 @@ export class Transaction<TResult = TransactionResult> {
     this.storage = options.storage || new ThirdwebStorage();
   }
 
-  setOverrides(overrides: CallOverrides) {
+  getMethod() {
+    return this.method;
+  }
+
+  getArgs() {
+    return this.args;
+  }
+
+  getOverrides() {
+    return this.overrides;
+  }
+
+  getValue() {
+    return this.overrides.value || 0;
+  }
+
+  getGaslessOptions() {
+    return this.gaslessOptions;
+  }
+
+  setArgs(args: any[]): Transaction<TResult> {
+    this.args = args;
+    return this;
+  }
+
+  setOverrides(overrides: CallOverrides): Transaction<TResult> {
+    this.overrides = overrides;
+    return this;
+  }
+
+  updateOverrides(overrides: CallOverrides): Transaction<TResult> {
     this.overrides = { ...this.overrides, ...overrides };
+    return this;
   }
 
-  setFrom(from: CallOverrides["from"]) {
-    this.setOverrides({ from });
+  setValue(value: CallOverrides["value"]): Transaction<TResult> {
+    this.updateOverrides({ value });
+    return this;
   }
 
-  setValue(value: CallOverrides["value"]) {
-    this.setOverrides({ value });
+  setGasLimit(gasLimit: CallOverrides["gasLimit"]): Transaction<TResult> {
+    this.updateOverrides({ gasLimit });
+    return this;
   }
 
-  setGasLimit(gasLimit: CallOverrides["gasLimit"]) {
-    this.setOverrides({ gasLimit });
+  setGasPrice(gasPrice: CallOverrides["gasPrice"]): Transaction<TResult> {
+    this.updateOverrides({ gasPrice });
+    return this;
   }
 
-  setGasPrice(gasPrice: CallOverrides["gasPrice"]) {
-    this.setOverrides({ gasPrice });
+  setNonce(nonce: CallOverrides["nonce"]): Transaction<TResult> {
+    this.updateOverrides({ nonce });
+    return this;
   }
 
-  setMaxFeePerGas(maxFeePerGas: CallOverrides["maxFeePerGas"]) {
-    this.setOverrides({ maxFeePerGas });
+  setMaxFeePerGas(
+    maxFeePerGas: CallOverrides["maxFeePerGas"],
+  ): Transaction<TResult> {
+    this.updateOverrides({ maxFeePerGas });
+    return this;
   }
 
   setMaxPriorityFeePerGas(
     maxPriorityFeePerGas: CallOverrides["maxPriorityFeePerGas"],
-  ) {
-    this.setOverrides({ maxPriorityFeePerGas });
+  ): Transaction<TResult> {
+    this.updateOverrides({ maxPriorityFeePerGas });
+    return this;
   }
 
-  setParse(parse: ParseTransactionReceipt<TResult>) {
+  setType(type: CallOverrides["type"]): Transaction<TResult> {
+    this.updateOverrides({ type });
+    return this;
+  }
+
+  setAccessList(accessList: CallOverrides["accessList"]): Transaction<TResult> {
+    this.updateOverrides({ accessList });
+    return this;
+  }
+
+  setCustomData(customData: CallOverrides["customData"]): Transaction<TResult> {
+    this.updateOverrides({ customData });
+    return this;
+  }
+
+  setCcipReadEnabled(
+    ccipReadEnabled: CallOverrides["ccipReadEnabled"],
+  ): Transaction<TResult> {
+    this.updateOverrides({ ccipReadEnabled });
+    return this;
+  }
+
+  setGaslessOptions(
+    options: SDKOptionsOutput["gasless"],
+  ): Transaction<TResult> {
+    this.gaslessOptions = options;
+    return this;
+  }
+
+  setParse(parse: ParseTransactionReceipt<TResult>): Transaction<TResult> {
     this.parse = parse;
+    return this;
   }
 
   /**
    * Encode the function data for this transaction
    */
-  encode() {
+  encode(): string {
     return this.contract.interface.encodeFunctionData(this.method, this.args);
+  }
+
+  /**
+   * Get the signed transaction
+   */
+  async sign(): Promise<string> {
+    const gasOverrides = await this.getGasOverrides();
+    const overrides: CallOverrides = { ...gasOverrides, ...this.overrides };
+
+    // First, if no gasLimit is passed, call estimate gas ourselves
+    if (!overrides.gasLimit) {
+      overrides.gasLimit = await this.estimateGasLimit();
+    }
+
+    const tx = await this.contract.populateTransaction[this.method](
+      ...this.args,
+      overrides,
+    );
+    const populatedTx = await this.contract.signer.populateTransaction(tx);
+    const signedTx = await this.contract.signer.signTransaction(populatedTx);
+    return signedTx;
   }
 
   /**
@@ -341,7 +431,7 @@ export class Transaction<TResult = TransactionResult> {
       // ignore
     }
 
-    // in some cases WalletConnect doesn't properly gives an estimate for how much gas it would actually use.
+    // in some cases WalletConnect doesn't properly give an estimate for how much gas it would actually use.
     // as a fix, we're setting it to a high arbitrary number (500k) as the gas limit that should cover for most function calls.
     if (gas.lt(100000)) {
       gas = BigNumber.from(500000);
@@ -539,35 +629,5 @@ export class Transaction<TResult = TransactionResult> {
       contractName,
       sources,
     });
-  }
-}
-
-export class Transactions {
-  private transactions: Transaction[];
-
-  constructor(transactions: Transaction[]) {
-    this.transactions = transactions;
-  }
-
-  add(transaction: Transaction) {
-    this.transactions.push(transaction);
-  }
-
-  get(index: number) {
-    return this.transactions[index];
-  }
-
-  getAll() {
-    return this.transactions;
-  }
-
-  async executeAll(): Promise<TransactionResult[]> {
-    let receipts = [];
-    for (const transaction of this.transactions) {
-      const receipt = await transaction.execute();
-      receipts.push(receipt);
-    }
-
-    return receipts;
   }
 }
