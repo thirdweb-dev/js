@@ -21,9 +21,6 @@ import {
 } from "@thirdweb-dev/wallets";
 import React, { useMemo } from "react";
 
-// this allows autocomplete to work for the chainId prop but still allows `number` and `string` to be passed (for dynamically passed chain data)
-type ChainIdIsh = (string | number) & { __chainIdIsh: never };
-
 /**
  * The possible props for the ThirdwebProvider.
  */
@@ -33,11 +30,7 @@ export interface ThirdwebProviderProps<
   /**
    * The network to use for the SDK.
    */
-  activeChain?:
-    | TChains[number]["chainId"]
-    | TChains[number]["slug"]
-    | Chain
-    | ChainIdIsh;
+  activeChain?: TChains[number]["chainId"] | TChains[number]["slug"] | Chain;
 
   /**
    * Chains to support. If not provided, will default to the chains supported by the SDK.
@@ -137,19 +130,19 @@ export const ThirdwebProvider = <
 
   const dAppMeta = props.dAppMeta || defaultdAppMeta;
   const activeChainObj = useMemo(() => {
-    if (typeof props.activeChain === "string") {
-      return (
-        supportedChains.find((chain) => chain.slug === props.activeChain) ||
-        supportedChains[0] ||
-        defaultChains[0]
-      );
+    if (!props.activeChain) {
+      return supportedChains[0];
     }
-
     if (typeof props.activeChain === "number") {
       return (
         supportedChains.find((chain) => chain.chainId === props.activeChain) ||
-        supportedChains[0] ||
-        defaultChains[0]
+        supportedChains[0]
+      );
+    }
+    if (typeof props.activeChain === "string") {
+      return (
+        supportedChains.find((chain) => chain.slug === props.activeChain) ||
+        supportedChains[0]
       );
     }
 
@@ -170,7 +163,7 @@ export const ThirdwebProvider = <
           queryClient={props.queryClient}
           sdkOptions={props.sdkOptions}
           supportedChains={supportedChains}
-          activeChain={activeChainObj}
+          activeChain={activeChainObj.chainId}
           storageInterface={props.storageInterface}
           authConfig={props.authConfig}
           thirdwebApiKey={props.thirdwebApiKey}
