@@ -1,5 +1,6 @@
 import {
   Box,
+  ButtonGroup,
   Divider,
   Flex,
   Icon,
@@ -36,7 +37,7 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { FiArrowRight, FiSearch, FiX } from "react-icons/fi";
 import invariant from "tiny-invariant";
-import { Card, Heading, Link, Text } from "tw-components";
+import { Button, Card, Heading, Link, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 
 type ContractSearchResult = {
@@ -167,26 +168,55 @@ const typesenseApiKey =
 const getSearchQuery = ({
   query,
   walletAddress = "",
+  searchMode = "all",
   page = 1,
   perPage = 10,
 }: {
   query: string;
   walletAddress?: string;
+  searchMode: SearchMode;
   page?: number;
   perPage?: number;
-}) =>
-  `https://search.thirdweb.com/collections/contracts/documents/search?q=${query}&query_by=name,+symbol,+contract_address,+deployer_address&query_by_weights=3,+3,+2,+1&page=${page}&per_page=${perPage}&exhaustive_search=true&sort_by=testnet:asc${
-    walletAddress ? `,_eval(deployer_address:${walletAddress}):desc` : ""
-  }`;
+}) => {
+  const baseUrl = new URL(
+    "https://search.thirdweb.com/collections/contracts/documents/search",
+  );
+  baseUrl.searchParams.set("q", query);
+  baseUrl.searchParams.set(
+    "query_by",
+    "name,symbol,contract_address,deployer_address",
+  );
+  baseUrl.searchParams.set("query_by_weights", "3,3,2,1");
+  baseUrl.searchParams.set("page", page.toString());
+  baseUrl.searchParams.set("per_page", perPage.toString());
+  baseUrl.searchParams.set("exhaustive_search", "true");
+  baseUrl.searchParams.set(
+    "sort_by",
+    `testnet:asc${
+      walletAddress ? `,_eval(deployer_address:${walletAddress}):desc` : ""
+    }`,
+  );
+
+  if (searchMode === "mainnet") {
+    baseUrl.searchParams.set("filter_by", "testnet:false");
+  } else if (searchMode === "testnet") {
+    baseUrl.searchParams.set("filter_by", "testnet:true");
+  }
+  return baseUrl.toString();
+};
 
 function contractTypesenseSearchQuery(
   searchQuery: string,
   walletAddress = "",
+  searchMode: SearchMode,
   queryClient: QueryClient,
   trackEvent: ReturnType<typeof useTrack>,
 ) {
   return {
-    queryKey: ["typesense-contract-search", { search: searchQuery }],
+    queryKey: [
+      "typesense-contract-search",
+      { search: searchQuery, searchMode, walletAddress },
+    ],
     queryFn: async () => {
       invariant(typesenseApiKey, "No typesense api key");
       invariant(queryClient, "No query client");
@@ -199,7 +229,11 @@ function contractTypesenseSearchQuery(
       });
 
       const res = await fetch(
-        getSearchQuery({ query: searchQuery, walletAddress }),
+        getSearchQuery({
+          query: searchQuery,
+          walletAddress,
+          searchMode,
+        }),
         {
           headers: {
             "x-typesense-api-key": typesenseApiKey,
@@ -262,8 +296,12 @@ function useContractSearch(searchQuery: string) {
     }),
   });
 }
+
+type SearchMode = "all" | "mainnet" | "testnet";
+
 export const CmdKSearch: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const [searchMode, setSearchMode] = useState<SearchMode>("mainnet");
   const trackEvent = useTrack();
   const queryClient = useQueryClient();
 
@@ -289,6 +327,7 @@ export const CmdKSearch: React.FC = () => {
     contractTypesenseSearchQuery(
       debouncedSearchValue,
       walletAddress,
+      searchMode,
       queryClient,
       trackEvent,
     ),
@@ -454,6 +493,34 @@ export const CmdKSearch: React.FC = () => {
           {searchValue.length > 0 && (!isFetching || data.length) ? (
             <Flex px={2} direction="column">
               <Divider borderColor="borderColor" />
+
+              <ButtonGroup size="xs" my={2}>
+                <Button
+                  variant={searchMode === "all" ? "solid" : "ghost"}
+                  onClick={() => {
+                    setSearchMode("all");
+                  }}
+                >
+                  All
+                </Button>
+                <Button
+                  variant={searchMode === "mainnet" ? "solid" : "ghost"}
+                  onClick={() => {
+                    setSearchMode("mainnet");
+                  }}
+                >
+                  Mainnet
+                </Button>
+                <Button
+                  variant={searchMode === "testnet" ? "solid" : "ghost"}
+                  onClick={() => {
+                    setSearchMode("testnet");
+                  }}
+                >
+                  Testnet
+                </Button>
+              </ButtonGroup>
+
               <Flex py={2}>
                 {error ? (
                   <Text
