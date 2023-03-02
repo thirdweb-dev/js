@@ -18,7 +18,7 @@ export const ConnectWallet = () => {
   }, [fadeAnim]);
 
   return (
-    <Animated.View style={{ opacity: fadeAnim, width: 200 }}>
+    <Animated.View style={{ opacity: fadeAnim }}>
       {address ? (
         <ConnectWalletDetails address={address} />
       ) : (

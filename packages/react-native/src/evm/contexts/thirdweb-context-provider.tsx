@@ -15,7 +15,6 @@ export const ThirdwebContextProvider = ({ children }: PropsWithChildren) => {
         activeWallet instanceof WalletConnect ||
         activeWallet instanceof WalletConnectV1
       ) {
-        console.log("setActiveWallet", activeWallet);
         setActiveWalletMeta(getWalletMeta(activeWallet));
       }
     } else {
