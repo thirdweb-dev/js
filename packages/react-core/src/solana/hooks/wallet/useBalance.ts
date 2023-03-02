@@ -27,7 +27,7 @@ export function balanceQuery(sdk: RequiredParam<ThirdwebSDK>) {
 /**
  * Get the currently connected wallet balance
  *
- * @returns the balace of the connected wallet
+ * @returns the balance of the connected wallet
  */
 export function useBalance() {
   const sdk = useSDK();

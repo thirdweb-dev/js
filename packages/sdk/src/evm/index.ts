@@ -30,7 +30,7 @@ export * from "./contracts";
 // export integration things
 export * from "./integrations/thirdweb-checkout";
 
-// explcitly export the *TYPES* of prebuilt contracts
+// explicitly export the *TYPES* of prebuilt contracts
 export type { Edition } from "./contracts/prebuilt-implementations/edition";
 export type { EditionDrop } from "./contracts/prebuilt-implementations/edition-drop";
 export type { Marketplace } from "./contracts/prebuilt-implementations/marketplace";

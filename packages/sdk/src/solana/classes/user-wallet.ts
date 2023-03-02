@@ -92,7 +92,7 @@ export class UserWallet {
   }
 
   /**
-   * Disconnect the connect wallet from the SDK
+   * Disconnect the connected wallet from the SDK
    *
    * @example
    * ```jsx
