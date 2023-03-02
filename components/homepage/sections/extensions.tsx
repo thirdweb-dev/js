@@ -23,7 +23,7 @@ export const ExtensionsSection: React.FC = () => {
     <HomepageSection my={24}>
       <Flex align="center" gap={{ base: 0, md: 4 }} mb={12} direction="column">
         <Heading as="h3" size="title.2xl" color="white" textAlign="center">
-          Extension driven framework
+          Contract-driven framework.
         </Heading>
         <Text
           maxW="container.sm"
