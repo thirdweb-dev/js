@@ -86,7 +86,7 @@ jobs:
 
       - name: Add Comment Output
         uses: thollander/actions-comment-pull-request@v2
-        if: steps.changesets.outputs.hasChangesets == 'true'
+        if: steps.changesets.outputs.hasChangesets == true
         with:
           message: |
             **Preview Release Created**
