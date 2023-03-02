@@ -159,11 +159,7 @@ const main = async () => {
 
               await new Promise((resolve, reject) => {
                 exec(command, (err, stdout, stderr) => {
-                  if (err) {
-                    reject(err);
-                    return;
-                  }
-
+                  if (err) return reject(err);
                   resolve({ stdout, stderr });
                 });
               });
