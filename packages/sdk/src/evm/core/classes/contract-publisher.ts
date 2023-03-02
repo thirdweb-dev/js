@@ -4,14 +4,15 @@ import {
   fetchContractMetadataFromAddress,
   fetchExtendedReleaseMetadata,
   fetchPreDeployMetadata,
-  fetchRawPredeployMetadata,
   fetchSourceFilesFromMetadata,
   isIncrementalVersion,
   resolveContractUriFromAddress,
 } from "../../common";
-import { getContractPublisherAddress } from "../../constants";
+import { getCompositePluginABI } from "../../common/plugin";
+import { getChainProvider, getContractPublisherAddress } from "../../constants";
 import {
   AbiFunction,
+  AbiSchema,
   ContractParam,
   ContractSource,
   ExtraPublishMetadata,
@@ -26,6 +27,7 @@ import {
   PublishedContractSchema,
   SDKOptions,
 } from "../../schema";
+import { ThirdwebSDK } from "../sdk";
 import { NetworkInput, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
@@ -337,10 +339,32 @@ export class ContractPublisher extends RPCConnectionHandler {
     invariant(signer, "A signer is required");
     const publisher = await signer.getAddress();
 
-    const predeployMetadata = await fetchRawPredeployMetadata(
+    const predeployMetadata = await fetchPreDeployMetadata(
       predeployUri,
       this.storage,
     );
+
+    if (extraMetadata.factoryDeploymentData?.implementationAddresses) {
+      const implementationsAddresses = Object.entries(
+        extraMetadata.factoryDeploymentData.implementationAddresses,
+      );
+
+      for (const [network, implementation] of implementationsAddresses) {
+        if (implementation !== "") {
+          try {
+            const composite = await getCompositePluginABI(
+              implementation,
+              predeployMetadata.abi,
+              getChainProvider(parseInt(network), {}), // pass empty object for options instead of this.options
+              {}, // pass empty object for options instead of this.options
+              this.storage,
+            );
+            extraMetadata.compositeAbi = AbiSchema.parse(composite);
+          } catch {}
+          break;
+        }
+      }
+    }
 
     // ensure version is incremental
     const latestContract = await this.getLatest(

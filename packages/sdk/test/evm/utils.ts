@@ -8,16 +8,21 @@ export const deployContractAndUploadMetadata = async (
   bytecode: string,
   signer: ethers.Signer,
   args: any[] = [],
+  contractName: string = "default-name",
 ) => {
   const deployer = await new ethers.ContractFactory(abi, bytecode)
     .connect(signer)
     .deploy(...args);
   const deployed = await deployer.deployed();
-  await mockUploadContractMetadata(deployed.address, abi);
+  await mockUploadContractMetadata(contractName, deployed.address, abi);
   return deployed.address;
 };
 
-const mockUploadContractMetadata = async (address: string, abi: any) => {
+const mockUploadContractMetadata = async (
+  contractName: string,
+  address: string,
+  abi: any,
+) => {
   const ipfsHash = (await resolveContractUriFromAddress(
     address,
     defaultProvider,
@@ -31,7 +36,9 @@ const mockUploadContractMetadata = async (address: string, abi: any) => {
       userdoc: {},
     },
     settings: {
-      compilationTarget: {},
+      compilationTarget: {
+        contract: contractName,
+      },
       evmVersion: {},
       metadata: {},
       optimizer: {},
@@ -40,7 +47,21 @@ const mockUploadContractMetadata = async (address: string, abi: any) => {
     sources: {},
     version: 1,
   };
-  const cid = ipfsHash.replace("ipfs://", "");
+  const metadataCID = ipfsHash.replace("ipfs://", "");
+  await mockUploadWithCID(metadataCID, JSON.stringify(metadata));
 
-  await mockUploadWithCID(cid, JSON.stringify(metadata));
+  // mock bytecode
+  const bytecodeUri = ipfsHash.concat("bytecode");
+  const bytecodeCID = bytecodeUri.replace("ipfs://", "");
+  await mockUploadWithCID(bytecodeCID, "0x6060");
+
+  // mock raw-metadata
+  const rawMeta = {
+    name: "name",
+    metadataUri: ipfsHash,
+    bytecodeUri: bytecodeUri,
+  };
+  const rawMetaUri = ipfsHash.concat("rawMeta");
+  const rawMetaCID = rawMetaUri.replace("ipfs://", "");
+  await mockUploadWithCID(rawMetaCID, JSON.stringify(rawMeta));
 };

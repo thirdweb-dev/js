@@ -5,13 +5,19 @@ import {
   resolveContractUriFromAddress,
   ThirdwebSDK,
 } from "../../src/evm";
-import { implementations, signers } from "./before-setup";
+import {
+  defaultProvider,
+  implementations,
+  signers,
+  sdk as mockSdk,
+} from "./before-setup";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   DropERC721__factory,
   DropERC721_V3__factory,
   TokenERC721__factory,
+  MarketplaceV3__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { expect } from "chai";
@@ -524,4 +530,110 @@ describe("Publishing", async () => {
     ]);
     expect(addr).to.not.eq(undefined);
   });
+
+  it("Composite Abi for Extension Router", async () => {
+    const ipfsHash = (await resolveContractUriFromAddress(
+      implementations["marketplace-v3"] as string,
+      defaultProvider,
+    )) as string;
+
+    const pub = await mockSdk.getPublisher();
+    const tx = await pub.publish(ipfsHash.concat("rawMeta"), {
+      version: "0.0.1",
+      isDeployableViaFactory: true,
+      factoryDeploymentData: {
+        implementationInitializerFunction: "initialize",
+        implementationAddresses: {
+          [ChainId.Hardhat]: implementations["marketplace-v3"] || "",
+        },
+        factoryAddresses: {
+          // eslint-disable-next-line turbo/no-undeclared-env-vars
+          [ChainId.Hardhat]: (process.env.factoryAddress as string) || "",
+        },
+      },
+    });
+    const contract = await tx.data();
+    expect(contract.id).to.eq("MarketplaceV3");
+
+    const fullMetadata = await pub.fetchFullPublishMetadata(
+      contract.metadataUri,
+    );
+    const compositeAbi = fullMetadata.compositeAbi;
+    expect(
+      compositeAbi != undefined &&
+        compositeAbi.length > MarketplaceV3__factory.abi.length,
+    );
+    // console.log(fullMetadata.compositeAbi);
+  });
+
+  // it("Composite Abi for Plugin Router", async () => {
+  //   const targetAbi = [
+  //     {
+  //       type: "function",
+  //       name: "getAllPlugins",
+  //       inputs: [],
+  //       outputs: [
+  //         {
+  //           type: "tuple[]",
+  //           name: "registered",
+  //           components: [
+  //             {
+  //               type: "bytes4",
+  //               name: "functionSelector",
+  //               internalType: "bytes4",
+  //             },
+  //             {
+  //               type: "string",
+  //               name: "functionSignature",
+  //               internalType: "string",
+  //             },
+  //             {
+  //               type: "address",
+  //               name: "pluginAddress",
+  //               internalType: "address",
+  //             },
+  //           ],
+  //           internalType: "struct IPluginMap.Plugin[]",
+  //         },
+  //       ],
+  //       stateMutability: "view",
+  //     },
+  //   ];
+  //   const realSDK = new ThirdwebSDK(adminWallet);
+  //   const pub = await realSDK.getPublisher();
+
+  //   const fullMetadata = await pub.fetchFullPublishMetadata(
+  //     "ipfs://QmWXjEPpa9M3ZBZBGW2WfzM69ZCzGbBCrtbvECTRTsbR8g/0",
+  //   );
+  //   const compositeAbi = fullMetadata.compositeAbi;
+  //   expect(
+  //     compositeAbi != undefined &&
+  //       compositeAbi.length > MarketplaceRouter__factory.abi.length,
+  //   );
+  //   console.log(fullMetadata.compositeAbi);
+  //   console.log(fullMetadata.compositeAbi?.length);
+
+  //   if (fullMetadata.factoryDeploymentData?.implementationAddresses) {
+  //     const implementationsAddresses = Object.entries(
+  //       fullMetadata.factoryDeploymentData.implementationAddresses,
+  //     );
+
+  //     for (const [network, implementation] of implementationsAddresses) {
+  //       if (implementation !== "") {
+  //         console.log("implementation: ", implementation);
+  //         const compositeAbi = await getCompositePluginABI(
+  //           implementation,
+  //           targetAbi,
+  //           getChainProvider(parseInt(network), {}),
+  //           {},
+  //           realSDK.storage,
+  //         );
+  //         console.log("composite abi: ", compositeAbi);
+
+  //         fullMetadata.compositeAbi = AbiSchema.parse(compositeAbi);
+  //         break;
+  //       }
+  //     }
+  //   }
+  // });
 });

@@ -33,6 +33,11 @@ export async function getCompositePluginABI(
       "ExtensionRouter",
     );
     if (isExtensionRouter) {
+      console.log(
+        "Extension router: ",
+        address,
+        (await provider.getNetwork()).chainId,
+      );
       const contract = new ContractWrapper(
         provider,
         address,
@@ -50,6 +55,11 @@ export async function getCompositePluginABI(
       // get ABIs of extension contracts --
       pluginABIs = await getPluginABI(pluginAddresses, provider, storage);
     } else if (isPluginRouter) {
+      console.log(
+        "Plugin router: ",
+        address,
+        (await provider.getNetwork()).chainId,
+      );
       const contract = new ContractWrapper(
         provider,
         address,
@@ -66,7 +76,14 @@ export async function getCompositePluginABI(
       // get ABIs of extension contracts
       pluginABIs = await getPluginABI(plugins as string[], provider, storage);
     }
-  } catch (err) {}
+  } catch (err) {
+    console.warn(
+      "couldn't fetch composite abi: ",
+      address,
+      (await provider.getNetwork()).chainId,
+      err,
+    );
+  }
 
   return pluginABIs.length > 0 ? joinABIs([abi, ...pluginABIs]) : abi;
 }

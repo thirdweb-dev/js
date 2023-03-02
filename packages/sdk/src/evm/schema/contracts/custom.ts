@@ -167,6 +167,7 @@ export const ExtraPublishMetadataSchemaInput = z
           .catchall(z.any()),
       )
       .optional(),
+    compositeAbi: AbiSchema.optional(),
   })
   .catchall(z.any());
 
