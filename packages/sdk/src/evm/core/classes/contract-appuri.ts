@@ -79,6 +79,6 @@ export class ContractAppURI<
       };
     }
 
-    return await this.metadata.update({ appURI });
+    return await this.metadata.update({ app_uri: appURI });
   }
 }
