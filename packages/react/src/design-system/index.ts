@@ -1,5 +1,4 @@
-import { blue, mauveDark, tomato } from "@radix-ui/colors";
-import { mauve } from "@radix-ui/colors";
+import { blue, green, mauve, mauveDark, tomato } from "@radix-ui/colors";
 
 export const darkTheme = {
   overlay: {
@@ -27,6 +26,7 @@ export const darkTheme = {
     secondary: mauveDark.mauve11,
     primary: mauveDark.mauve12,
     danger: tomato.tomato9,
+    success: green.green7,
   },
   link: {
     primary: blue.blue9,
@@ -66,6 +66,7 @@ export const lightTheme: typeof darkTheme = {
     secondary: mauve.mauve10,
     primary: mauve.mauve12,
     danger: tomato.tomato9,
+    success: green.green9,
   },
   link: {
     primary: blue.blue11,
