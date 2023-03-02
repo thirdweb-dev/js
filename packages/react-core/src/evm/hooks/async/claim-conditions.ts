@@ -221,7 +221,7 @@ export function useClaimConditions(
 
 /**
  * Get the reasons why a specific wallet can't claim
- * 
+ *
  * @example
  * ```javascript
  * const { data: claimIneligibilityReasons, isLoading, error } = useClaimIneligibilityReasons(contract, { walletAddress: "{{wallet_address}}" });
@@ -230,7 +230,7 @@ export function useClaimConditions(
  * @param contract - an instance of a contract that extends the  ERC20, ERC721 or ERC1155 spec and implements the `claimConditions` extension.
  * @param eligibilityParams - the parameters for the eligibility check, see: {@link ClaimIneligibilityParams}
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
- * @returns a response object with the resons for the claim ineligibility
+ * @returns a response object with the reasons for the claim ineligibility
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
  * @beta
  */
@@ -290,7 +290,7 @@ export function useClaimIneligibilityReasons(
 
 /**
  * Get the active claim condition for a specific wallet
- * 
+ *
  * @example
  * ```javascript
  * const { data: activeClaimConditionForWallet, isLoading, error } = useActiveClaimConditionForWallet(contract, "{{wallet_address}}");

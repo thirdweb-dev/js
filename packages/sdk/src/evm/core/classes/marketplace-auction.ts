@@ -326,14 +326,14 @@ export class MarketplaceAuction {
     const bidBuffer = await this.contractWrapper.readContract.bidBufferBps();
     const winningBid = await this.getWinningBid(listingId);
     if (winningBid) {
-      const isWinnner = isWinningBid(
+      const isWinner = isWinningBid(
         winningBid.pricePerToken,
         normalizedPrice,
         bidBuffer,
       );
 
       invariant(
-        isWinnner,
+        isWinner,
         "Bid price is too low based on the current winning bid and the bid buffer",
       );
     } else {

@@ -368,7 +368,7 @@ export function useContractMetadataUpdate(
 
 /**
  * Get or subscribe to contract events
- * 
+ *
  * @example
  * ```javascript
  * const { data: contractEvents, isLoading } = useContractEvents(contract);
@@ -376,7 +376,7 @@ export function useContractMetadataUpdate(
  *
  * @param contract - the {@link ValidContractInstance} instance of the contract to listen to events for
  * @param eventName - the name of the event to query for (omit this or pass `undefined` to query for all events)
- * @param options - options incldues the filters ({@link QueryAllEvents}) for the query as well as if you want to subscribe to real-time updates (default: true)
+ * @param options - options includes the filters ({@link QueryAllEvents}) for the query as well as if you want to subscribe to real-time updates (default: true)
  * @returns a response object that includes the contract events
  * @beta
  */

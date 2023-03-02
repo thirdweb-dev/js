@@ -47,7 +47,7 @@ export const uploadContractMetadata = async (
 
 describe("Publishing", async () => {
   let simpleContractUri: string;
-  let contructorParamsContractUri: string;
+  let constructorParamsContractUri: string;
   let adminWallet: SignerWithAddress;
   let samWallet: SignerWithAddress;
   let bobWallet: SignerWithAddress;
@@ -59,7 +59,7 @@ describe("Publishing", async () => {
     simpleContractUri =
       "ipfs://QmNPcYsXDAZvQZXCG73WSjdiwffZkNkoJYwrDDtcgM142A/0";
     // if we change the test data - await uploadContractMetadata("Greeter", storage);
-    contructorParamsContractUri =
+    constructorParamsContractUri =
       "ipfs://QmT5Dx3xigHr6BPG8scxbX7JaAucHRD9UPXc6FCtgcNn5e/0";
   });
 
@@ -227,7 +227,7 @@ describe("Publishing", async () => {
   it("should publish constructor params contract", async () => {
     sdk.updateSignerOrProvider(bobWallet);
     const publisher = sdk.getPublisher();
-    const tx = await publisher.publish(contructorParamsContractUri, {
+    const tx = await publisher.publish(constructorParamsContractUri, {
       version: "0.0.1",
     });
     const contract = await tx.data();
@@ -371,7 +371,7 @@ describe("Publishing", async () => {
     expect(meta.name).to.eq("Hello");
   });
 
-  it("ERC721Dropable multiphase feature detection", async () => {
+  it("ERC721Droppable multiphase feature detection", async () => {
     const ipfsUri = "ipfs://Qmbu57WNPmmGuNZEiEAVi9yeXxGK2GkJRBbRMaPxs9KS5b";
     const addr = await sdk.deployer.deployContractFromUri(ipfsUri, []);
     const c = await sdk.getContract(addr);

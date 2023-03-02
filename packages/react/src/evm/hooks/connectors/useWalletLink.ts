@@ -56,7 +56,7 @@ export function useCoinbaseWallet() {
 }
 
 /**
- * Convienience hook for connecting to a wallet via WalletLink (coinbase wallet)
+ * Convenience hook for connecting to a wallet via WalletLink (coinbase wallet)
  * @returns a function that will prompt the user to connect their wallet via WalletLink (coinbase wallet)
  * @internal
  */

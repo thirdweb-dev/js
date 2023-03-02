@@ -1,7 +1,7 @@
 import invariant from "tiny-invariant";
 
 /**
- * Makes a parameter required to be passed, but still allowes it to be null or undefined.
+ * Makes a parameter required to be passed, but still allows it to be null or undefined.
  *
  * @beta
  */

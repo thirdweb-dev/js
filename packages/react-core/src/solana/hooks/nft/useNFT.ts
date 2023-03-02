@@ -28,8 +28,7 @@ export function nftGetOneQuery(
 /**
  * Get the metadata for a minted NFT
  * @param program - The NFT program to get NFT metadata from
- * @param - tokenAdress - The mint address of the NFT to get the metadata of
- *
+ * @param tokenAddress - The mint address of the NFT to get the metadata of *
  * @example
  * ```jsx
  * import { useProgram, useNFT } from "@thirdweb-dev/react/solana";
