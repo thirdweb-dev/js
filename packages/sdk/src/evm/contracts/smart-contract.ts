@@ -35,13 +35,13 @@ import { CustomContractSchema } from "../schema/contracts/custom";
 import { SDKOptions } from "../schema/sdk-options";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
 import type {
-  AppURI,
   IPermissions,
   IPlatformFee,
   IPrimarySale,
   IRoyalty,
-  ContractMetadata as ContractMetadataType,
   Ownable,
+  IAppURI,
+  IContractMetadata,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides, ContractInterface } from "ethers";
@@ -146,7 +146,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   /**
    * Auto-detects AppURI standard functions.
    */
-  get app(): ContractAppURI<AppURI, ContractMetadataType> {
+  get app(): ContractAppURI<IAppURI | IContractMetadata> {
     return assertEnabled(this.detectApp(), FEATURE_APPURI);
   }
 
@@ -324,10 +324,10 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
       this.storage,
     );
 
-    if (detectContractFeature<AppURI>(this.contractWrapper, "AppURI")) {
+    if (detectContractFeature<IAppURI>(this.contractWrapper, "AppURI")) {
       return new ContractAppURI(this.contractWrapper, metadata);
     } else if (
-      detectContractFeature<ContractMetadataType>(
+      detectContractFeature<IContractMetadata>(
         this.contractWrapper,
         "ContractMetadata",
       )

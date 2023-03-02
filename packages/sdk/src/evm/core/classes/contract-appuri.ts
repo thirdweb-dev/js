@@ -4,10 +4,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
-import type {
-  AppURI,
-  ContractMetadata as ContractMetadataType,
-} from "@thirdweb-dev/contracts-js";
+import type { IAppURI } from "@thirdweb-dev/contracts-js";
 import { BaseContract } from "ethers";
 
 /**
@@ -23,19 +20,15 @@ import { BaseContract } from "ethers";
  * ```
  * @public
  */
-export class ContractAppURI<
-  TContract extends AppURI,
-  TContractMetadata extends ContractMetadataType,
-> implements DetectableFeature
+export class ContractAppURI<TContract extends BaseContract>
+  implements DetectableFeature
 {
   featureName = FEATURE_APPURI.name;
   private contractWrapper;
   metadata: ContractMetadata<BaseContract, any>;
 
   constructor(
-    contractWrapper:
-      | ContractWrapper<TContract>
-      | ContractWrapper<TContractMetadata>,
+    contractWrapper: ContractWrapper<TContract>,
     metadata: ContractMetadata<BaseContract, any>,
   ) {
     this.contractWrapper = contractWrapper;
@@ -53,11 +46,13 @@ export class ContractAppURI<
    * @twfeature AppURI | ContractMetadata
    */
   public async get(): Promise<string> {
-    if (detectContractFeature<AppURI>(this.contractWrapper, "AppURI")) {
+    if (detectContractFeature<IAppURI>(this.contractWrapper, "AppURI")) {
       return await this.contractWrapper.readContract.appURI();
     }
-
-    return (await this.metadata.get()).app_uri || Promise.resolve("");
+    return (
+      Promise.resolve((await this.metadata.get()).app_uri) ||
+      Promise.resolve("")
+    );
   }
 
   /**
@@ -71,7 +66,7 @@ export class ContractAppURI<
    * @twfeature AppURI | ContractMetadata
    */
   public async set(appURI: string): Promise<TransactionResult> {
-    if (detectContractFeature<AppURI>(this.contractWrapper, "AppURI")) {
+    if (detectContractFeature<IAppURI>(this.contractWrapper, "AppURI")) {
       return {
         receipt: await this.contractWrapper.sendTransaction("setAppURI", [
           appURI,
