@@ -14,7 +14,7 @@ import { AwsKmsSigner, AwsKmsSignerCredentials } from "ethers-aws-kms-signer";
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk"
  * import { AwsKmsWallet } from "@thirdweb-dev/sdk/evm/wallets"
  *
- * const wallet = new AwsKmsallet({
+ * const wallet = new AwsKmsWallet({
  *   region: "us-east-1",
  *   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
  *   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -35,7 +35,7 @@ export class AwsKmsWallet extends AbstractWallet {
     return this.signer as ethers.Signer;
   }
 
-  // Add _signTypedData method onto the signer for now so we don't need to reimpliment
+  // Add _signTypedData method onto the signer for now so we don't need to reimplement
   // The entire AWS KMS signer repository and maintain it ourselves.
   private updateSigner(signer: AwsKmsSigner): AwsKmsSigner {
     (signer as any)._signTypedData = async function (

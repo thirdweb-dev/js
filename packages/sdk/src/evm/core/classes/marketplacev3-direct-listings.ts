@@ -85,7 +85,8 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    *******************************/
 
   /**
-   * Get the total number of direct listings.
+   * Get the total number of direct listings
+   *
    * @returns Returns the total number of direct listings created.
    * @public
    *
@@ -93,22 +94,23 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * ```javascript
    * const totalListings = await contract.directListings.getTotalCount();
    * ```
+   * @twfeature DirectListings
    */
   public async getTotalCount(): Promise<BigNumber> {
     return await this.contractWrapper.readContract.totalListings();
   }
 
   /**
-   * Get all direct listings.
+   * Get all direct listings
    *
    * @example
    * ```javascript
    * const listings = await contract.directListings.getAll();
-   * const priceOfFirstListing = listings[0].price;
    * ```
    *
    * @param filter - optional filter parameters
    * @returns the Direct listing object array
+   * @twfeature DirectListings
    */
   public async getAll(filter?: MarketplaceFilter): Promise<DirectListingV3[]> {
     const totalListings = await this.getTotalCount();
@@ -136,19 +138,18 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   }
 
   /**
-   * Get all valid direct listings.
+   * Get all valid direct listings
    *
-   * A valid listing is where the listing is active,
-   * and the creator still owns & has approved Marketplace to transfer the listed NFTs.
+   * @remark A valid listing is where the listing is active, and the creator still owns & has approved Marketplace to transfer the listed NFTs.
    *
    * @example
    * ```javascript
    * const listings = await contract.directListings.getAllValid();
-   * const priceOfFirstListing = listings[0].price;
    * ```
    *
    * @param filter - optional filter parameters
    * @returns the Direct listing object array
+   * @twfeature DirectListings
    */
   public async getAllValid(
     filter?: MarketplaceFilter,
@@ -178,7 +179,13 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   }
 
   /**
-   * Get a direct listing by id.
+   * Get a single direct listing
+   *
+   * @example
+   * ```javascript
+   * const listingId = 0;
+   * const listing = await contract.directListings.getListing(listingId);
+   * ```
    *
    * @param listingId - the listing id
    * @returns the Direct listing object
@@ -188,6 +195,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * const listingId = 0;
    * const listing = await contract.directListings.getListing(listingId);
    * ```
+   * @twfeature DirectListings
    */
   public async getListing(listingId: BigNumberish): Promise<DirectListingV3> {
     const listing = await this.contractWrapper.readContract.getListing(
@@ -198,10 +206,16 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   }
 
   /**
-   * Check whether a buyer is approved for a reserved listing.
+   * Check if a buyer is approved for a specific direct listing
+   *
+   * @example
+   * ```javascript
+   * const listingId = 0;
+   * const isBuyerApproved = await contract.directListings.isBuyerApprovedForListing(listingId, "{{wallet_address}}");
    *
    * @param listingId - the listing id
    * @param buyer - buyer address
+   * @twfeature DirectListings
    */
   public async isBuyerApprovedForListing(
     listingId: BigNumberish,
@@ -220,10 +234,18 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   }
 
   /**
-   * Check whether a currency is approved for a listing.
+   * Check if a currency is approved for a specific direct listing
+   *
+   * @example
+   * ```javascript
+   * const listingId = 0;
+   * const currencyContractAddress = '0x1234';
+   * const isApproved = await contract.directListings.isCurrencyApprovedForListing(listingId, currencyContractAddress);
+   * ```
    *
    * @param listingId - the listing id
    * @param currency - currency address
+   * @twfeature DirectListings
    */
   public async isCurrencyApprovedForListing(
     listingId: BigNumberish,
@@ -238,10 +260,18 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   }
 
   /**
-   * Check price per token for an approved currency.
+   * Check price per token for an approved currency
+   *
+   * @example
+   * ```javascript
+   * const listingId = 0;
+   * const currencyContractAddress = '0x1234';
+   * const price = await contract.directListings.currencyPriceForListing(listingId, currencyContractAddress);
+   * ```
    *
    * @param listingId - the listing id
    * @param currencyContractAddress - currency contract address
+   * @twfeature DirectListings
    */
   public async currencyPriceForListing(
     listingId: BigNumberish,
@@ -275,7 +305,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    *******************************/
 
   /**
-   * Create Direct Listing
+   * Create new direct listing
    *
    * @remarks Create a new listing on the marketplace where people can buy an asset directly.
    *
@@ -305,6 +335,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * const receipt = tx.receipt; // the transaction receipt
    * const id = tx.id; // the id of the newly created listing
    * ```
+   * @twfeature DirectListings
    */
   public async createListing(
     listing: DirectListingInputParams,
@@ -362,9 +393,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   }
 
   /**
-   * Update a Direct listing with new metadata.
-   *
-   * Note: cannot update a listing with a new quantity of 0. Use `cancelDirectListing` to remove a listing instead.
+   * Update a direct listing
    *
    * @param listing - the new listing information
    *
@@ -397,6 +426,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * const receipt = tx.receipt; // the transaction receipt
    * const id = tx.id; // the id of the newly created listing
    * ```
+   * @twfeature DirectListings
    */
   public async updateListing(
     listingId: BigNumberish,
@@ -461,6 +491,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    *
    * await contract.directListings.cancelListing(listingId);
    * ```
+   * @twfeature DirectListings
    */
   public async cancelListing(
     listingId: BigNumberish,
@@ -473,7 +504,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   }
 
   /**
-   * Buy from a Listing
+   * Buy direct listing for a specific wallet
    *
    * @remarks Buy from a specific direct listing from the marketplace.
    *
@@ -484,12 +515,13 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * // Quantity of the asset you want to buy
    * const quantityDesired = 1;
    *
-   * await contract.directListings.buyFromListing(listingId, quantityDesired);
+   * await contract.directListings.buyFromListing(listingId, quantityDesired, "{{wallet_address}}");
    * ```
    *
    * @param listingId - The listing id to buy
    * @param quantityDesired - the quantity to buy
    * @param receiver - optional receiver of the bought listing if different from the connected wallet
+   * @twfeature DirectListings
    */
   public async buyFromListing(
     listingId: BigNumberish,
@@ -526,20 +558,21 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   }
 
   /**
-   * Approve buyer for reserved listing.
+   * Approve buyer for a reserved direct listing
    *
    * @remarks Approve a buyer to buy from a reserved listing.
    *
    * @example
    * ```javascript
-   * // The listing ID of the direct listing you want approve buyer for
+   * // The listing ID of the direct listing you want to approve buyer for
    * const listingId = "0";
    *
-   * await contract.directListings.approveBuyerForReservedListing(listingId, buyer);
+   * await contract.directListings.approveBuyerForReservedListing(listingId, "{{wallet_address}}");
    * ```
    *
    * @param listingId - The listing id to buy
    * @param buyer - Address of buyer being approved
+   * @twfeature DirectListings
    */
   public async approveBuyerForReservedListing(
     listingId: BigNumberish,
@@ -562,14 +595,14 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   }
 
   /**
-   * Revoke approval of a buyer for reserved listing.
+   * Revoke approval of a buyer for a reserved direct listing
    *
    * @example
    * ```javascript
-   * // The listing ID of the direct listing you want approve buyer for
+   * // The listing ID of the direct listing you want to approve buyer for
    * const listingId = "0";
    *
-   * await contract.directListings.revokeBuyerApprovalForReservedListing(listingId, buyer);
+   * await contract.directListings.revokeBuyerApprovalForReservedListing(listingId, "{{wallet_address}}");
    * ```
    *
    * @param listingId - The listing id to buy
@@ -594,12 +627,12 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   }
 
   /**
-   * Approve a currency for a listing.
+   * Approve a currency for a direct listing
    *
    *
    * @example
    * ```javascript
-   * // The listing ID of the direct listing you want approve currency for
+   * // The listing ID of the direct listing you want to approve currency for
    * const listingId = "0";
    *
    * await contract.directListings.approveCurrencyForListing(listingId, currencyContractAddress, pricePerTokenInCurrency);
@@ -608,6 +641,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * @param listingId - The listing id to buy
    * @param currencyContractAddress - Address of currency being approved
    * @param pricePerTokenInCurrency - Price per token in the currency
+   * @twfeature DirectListings
    */
   public async approveCurrencyForListing(
     listingId: BigNumberish,
@@ -642,7 +676,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   }
 
   /**
-   * Revoke approval of a currency from a listing.
+   * Revoke approval of a currency for a direct listing
    *
    *
    * @example
@@ -655,6 +689,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    *
    * @param listingId - The listing id to buy
    * @param currencyContractAddress - Address of currency
+   * @twfeature DirectListings
    */
   public async revokeCurrencyApprovalForListing(
     listingId: BigNumberish,

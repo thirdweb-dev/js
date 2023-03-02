@@ -63,7 +63,7 @@ export async function upload(
       "Uploading file to IPFS. This may take a while depending on file sizes.",
     );
     uri = await storage.upload(file, { uploadWithoutDirectory: true });
-    spin.succeed("Succesfully uploaded file to IPFS.");
+    spin.succeed("Successfully uploaded file to IPFS.");
   } else {
     return Promise.reject("Invalid path provided");
   }

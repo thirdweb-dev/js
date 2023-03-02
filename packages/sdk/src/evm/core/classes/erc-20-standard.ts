@@ -1,3 +1,4 @@
+import { buildTransactionFunction } from "../../common/transactions";
 import { TokenMintInput } from "../../schema/tokens/token";
 import { Amount, Currency, CurrencyValue } from "../../types/currency";
 import { BaseERC20, BaseSignatureMintERC20 } from "../../types/eips";
@@ -111,7 +112,7 @@ export class StandardErc20<
   }
 
   /**
-   * The total supply for this Token
+   * The total supply for this token
    * @remarks Get how much supply has been minted
    * @example
    * ```javascript
@@ -181,12 +182,9 @@ export class StandardErc20<
    * await contract.transfer(toAddress, amount);
    * ```
    */
-  public async transfer(
-    to: string,
-    amount: Amount,
-  ): Promise<TransactionResult> {
-    return this.erc20.transfer(to, amount);
-  }
+  transfer = buildTransactionFunction(async (to: string, amount: Amount) => {
+    return this.erc20.transfer.prepare(to, amount);
+  });
 
   /**
    * Transfer Tokens From Address
@@ -205,13 +203,11 @@ export class StandardErc20<
    * await contract.transferFrom(fromAddress, toAddress, amount);
    * ```
    */
-  public async transferFrom(
-    from: string,
-    to: string,
-    amount: Amount,
-  ): Promise<TransactionResult> {
-    return this.erc20.transferFrom(from, to, amount);
-  }
+  transferFrom = buildTransactionFunction(
+    async (from: string, to: string, amount: Amount) => {
+      return this.erc20.transferFrom.prepare(from, to, amount);
+    },
+  );
 
   /**
    * Allows the specified `spender` wallet to transfer the given `amount` of tokens to another wallet

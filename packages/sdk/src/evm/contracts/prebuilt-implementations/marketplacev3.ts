@@ -15,6 +15,7 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { MarketplaceV3DirectListings } from "../../core/classes/marketplacev3-direct-listings";
 import { MarketplaceV3EnglishAuctions } from "../../core/classes/marketplacev3-english-auction";
 import { MarketplaceV3Offers } from "../../core/classes/marketplacev3-offers";
+import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput } from "../../core/types";
 import { Abi } from "../../schema/contracts/custom";
@@ -239,6 +240,24 @@ export class MarketplaceV3 implements UpdateableNetwork {
 
   getAddress(): string {
     return this.contractWrapper.readContract.address;
+  }
+
+  /**
+   * @internal
+   */
+  public async prepare<
+    TMethod extends keyof MarketplaceV3Contract["functions"] = keyof MarketplaceV3Contract["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<MarketplaceV3Contract["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
   }
 
   /**

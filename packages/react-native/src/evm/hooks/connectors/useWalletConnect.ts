@@ -14,7 +14,7 @@ import UniversalProvider from "@walletconnect/universal-provider/dist/types/Univ
  *
  *
  * @example
- * We can allows user to connect their mobile wallets as follows:
+ * We can allow user to connect their mobile wallets as follows:
  * ```javascript
  * import { useWalletConnect } from "@thirdweb-dev/react-native"
  *
@@ -59,20 +59,20 @@ export function useWalletConnect() {
   }, [wagmiConnectError]);
 
   useEffect(() => {
-    // wagmi storage doesn't support async storage on mobile so we need to manually connect
+    // wagmi storage doesn't support async storage on mobile, so we need to manually connect
     // https://github.com/wagmi-dev/wagmi/discussions/1630
     const getProvider = async () => {
       const provider = await walletConnector.getProvider();
       const univProvider = provider as unknown as UniversalProvider;
 
-      // waiting on wagmi to update to latest universal provider (tag 2.4.2)
+      // waiting on wagmi to update the latest universal provider (tag 2.4.2)
       // univProvider.client.on('session_request_sent', ({ topic, request, chainId }) => {
       //   // redirect to wallet
       //   Linking.openURL(displayUri);
       // });
 
       if (univProvider.client.session.length > 0) {
-        // wc client does not report a successful initialization
+        // wc client does not report a successful initialization,
         // so we need to wait for it to initialize before connecting
         setTimeout(() => {
           connect({ connector: walletConnector });

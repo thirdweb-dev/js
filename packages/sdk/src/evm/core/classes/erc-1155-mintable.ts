@@ -1,14 +1,15 @@
 import { NFT } from "../../../core/schema/nft";
 import { detectContractFeature } from "../../common";
 import { uploadOrExtractURI } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_MINTABLE } from "../../constants/erc1155-features";
 import { EditionMetadataOrUri } from "../../schema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
-import { TransactionTask } from "./TransactionTask";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc1155 } from "./erc-1155";
 import { Erc1155BatchMintable } from "./erc-1155-batch-mintable";
+import { Transaction } from "./transactions";
 import type { IMintableERC1155, IMulticall } from "@thirdweb-dev/contracts-js";
 import { TransferSingleEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ITokenERC1155";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -73,39 +74,50 @@ export class Erc1155Mintable implements DetectableFeature {
    * const tokenId = tx.id; // the id of the NFT minted
    * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
+   *
    */
-  public async to(
-    to: string,
-    metadataWithSupply: EditionMetadataOrUri,
-  ): Promise<TransactionResultWithId<NFT>> {
-    const tx = await this.getMintTransaction(to, metadataWithSupply);
-    const { receipt } = await tx.execute();
-    const event = this.contractWrapper.parseLogs<TransferSingleEvent>(
-      "TransferSingle",
-      receipt?.logs,
-    );
-    if (event.length === 0) {
-      throw new Error("TransferSingleEvent event not found");
-    }
-    const id = event[0].args.id;
-    return {
-      id,
-      receipt,
-      data: () => this.erc1155.get(id.toString()),
-    };
-  }
+  to = buildTransactionFunction(
+    async (
+      to: string,
+      metadataWithSupply: EditionMetadataOrUri,
+    ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
+      const tx = (await this.getMintTransaction(
+        to,
+        metadataWithSupply,
+      )) as any as Transaction<TransactionResultWithId<NFT>>;
+      tx.setParse((receipt) => {
+        const event = this.contractWrapper.parseLogs<TransferSingleEvent>(
+          "TransferSingle",
+          receipt?.logs,
+        );
+        if (event.length === 0) {
+          throw new Error("TransferSingleEvent event not found");
+        }
+        const id = event[0].args.id;
+        return {
+          id,
+          receipt,
+          data: () => this.erc1155.get(id.toString()),
+        };
+      });
+      return tx;
+    },
+  );
 
+  /**
+   * @deprecated Use `contract.erc1155.mint.prepare(...args)` instead
+   */
   public async getMintTransaction(
     to: string,
     metadataWithSupply: EditionMetadataOrUri,
-  ): Promise<TransactionTask> {
+  ): Promise<Transaction> {
     const uri = await uploadOrExtractURI(
       metadataWithSupply.metadata,
       this.storage,
     );
-    return TransactionTask.make({
+    return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
-      functionName: "mintTo",
+      method: "mintTo",
       args: [to, ethers.constants.MaxUint256, uri, metadataWithSupply.supply],
     });
   }
@@ -127,24 +139,27 @@ export class Erc1155Mintable implements DetectableFeature {
    * const tx = await contract.edition.mint.additionalSupplyTo(toAddress, tokenId, additionalSupply);
    * ```
    */
-  public async additionalSupplyTo(
-    to: string,
-    tokenId: BigNumberish,
-    additionalSupply: BigNumberish,
-  ): Promise<TransactionResultWithId<NFT>> {
-    const metadata = await this.erc1155.getTokenMetadata(tokenId);
-    const receipt = await this.contractWrapper.sendTransaction("mintTo", [
-      to,
-      tokenId,
-      metadata.uri,
-      additionalSupply,
-    ]);
-    return {
-      id: BigNumber.from(tokenId),
-      receipt,
-      data: () => this.erc1155.get(tokenId),
-    };
-  }
+  additionalSupplyTo = buildTransactionFunction(
+    async (
+      to: string,
+      tokenId: BigNumberish,
+      additionalSupply: BigNumberish,
+    ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
+      const metadata = await this.erc1155.getTokenMetadata(tokenId);
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "mintTo",
+        args: [to, tokenId, metadata.uri, additionalSupply],
+        parse: (receipt) => {
+          return {
+            id: BigNumber.from(tokenId),
+            receipt,
+            data: () => this.erc1155.get(tokenId),
+          };
+        },
+      });
+    },
+  );
 
   private detectErc1155BatchMintable() {
     if (
@@ -159,6 +174,5 @@ export class Erc1155Mintable implements DetectableFeature {
         this.storage,
       );
     }
-    return undefined;
   }
 }

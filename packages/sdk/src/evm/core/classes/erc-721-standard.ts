@@ -1,10 +1,12 @@
 import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
+import { buildTransactionFunction } from "../../common/transactions";
 import { BaseERC721 } from "../../types/eips";
 import { UpdateableNetwork } from "../interfaces/contract";
-import { NetworkInput, TransactionResult } from "../types";
+import { NetworkInput } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc721 } from "./erc-721";
+import { Transaction } from "./transactions";
 import type {
   DropERC721,
   SignatureDrop,
@@ -59,7 +61,7 @@ export class StandardErc721<
   }
 
   /**
-   * Get All Minted NFTs
+   * Get all NFTs
    *
    * @remarks Get all the data associated with every NFT in this contract.
    *
@@ -78,7 +80,7 @@ export class StandardErc721<
   }
 
   /**
-   * Get Owned NFTs
+   * Get all NFTs owned by a specific wallet
    *
    * @remarks Get all the data associated with the NFTs owned by a specific wallet.
    *
@@ -105,14 +107,14 @@ export class StandardErc721<
   }
 
   /**
-   * Get the total count NFTs minted in this contract
+   * Get total minted supply count
    */
   public async totalSupply() {
     return this.erc721.totalCirculatingSupply();
   }
 
   /**
-   * Get a single NFT Metadata
+   * Get a single NFT
    *
    * @example
    * ```javascript
@@ -169,7 +171,7 @@ export class StandardErc721<
   }
 
   /**
-   * Transfer a single NFT
+   * Transfer an NFT
    *
    * @remarks Transfer an NFT from the connected wallet to another wallet.
    *
@@ -180,12 +182,11 @@ export class StandardErc721<
    * await contract.transfer(walletAddress, tokenId);
    * ```
    */
-  public async transfer(
-    to: string,
-    tokenId: BigNumberish,
-  ): Promise<TransactionResult> {
-    return this.erc721.transfer(to, tokenId);
-  }
+  transfer = buildTransactionFunction(
+    async (to: string, tokenId: BigNumberish): Promise<Transaction> => {
+      return this.erc721.transfer.prepare(to, tokenId);
+    },
+  );
 
   /**
    * Approve or remove operator as an operator for the caller. Operators can call transferFrom or safeTransferFrom for any token owned by the caller.
@@ -194,12 +195,11 @@ export class StandardErc721<
    *
    * @internal
    */
-  public async setApprovalForAll(
-    operator: string,
-    approved: boolean,
-  ): Promise<TransactionResult> {
-    return this.erc721.setApprovalForAll(operator, approved);
-  }
+  setApprovalForAll = buildTransactionFunction(
+    async (operator: string, approved: boolean): Promise<Transaction> => {
+      return this.erc721.setApprovalForAll.prepare(operator, approved);
+    },
+  );
 
   /**
    * Approve an operator for the NFT owner. Operators can call transferFrom or safeTransferFrom for the specified token.
@@ -208,15 +208,13 @@ export class StandardErc721<
    *
    * @internal
    */
-  public async setApprovalForToken(
-    operator: string,
-    tokenId: BigNumberish,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("approve", [
-        operator,
-        tokenId,
-      ]),
-    };
-  }
+  setApprovalForToken = buildTransactionFunction(
+    async (operator: string, tokenId: BigNumberish): Promise<Transaction> => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "approve",
+        args: [operator, tokenId],
+      });
+    },
+  );
 }

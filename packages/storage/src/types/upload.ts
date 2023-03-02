@@ -78,4 +78,8 @@ export type IpfsUploadBatchOptions = {
    * Optional metadata to associate with this upload
    */
   metadata?: Record<string, string>;
+  /**
+   * Optionally, always reupload even if the file already exists
+   */
+  alwaysUpload?: boolean;
 };

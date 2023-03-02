@@ -174,10 +174,10 @@ describe.skip("NFT Drop Contract (v3)", async () => {
       },
     ]);
     await dropContract.claimConditions.set([{}]);
-    const task = await dropContract.getClaimTransaction(adminWallet.address, 1);
-    expect((await task.estimateGasLimit()).toNumber()).gt(0);
-    const tx = await task.submit();
-    await tx.wait();
+    const tx = await dropContract.getClaimTransaction(adminWallet.address, 1);
+    expect((await tx.estimateGasLimit()).toNumber()).gt(0);
+    const sentTx = await tx.send();
+    await sentTx.wait();
     const nft = await dropContract.get(0);
     expect(nft.owner).to.eq(adminWallet.address);
   });
@@ -314,7 +314,7 @@ describe.skip("NFT Drop Contract (v3)", async () => {
     await dropContract.createBatch(metadata);
 
     /**
-     * Claiming 1 tokens with proofs: 0xe9707d0e6171f728f7473c24cc0432a9b07eaaf1efed6a137a4a8c12c79552d9,0xb1a5bda84b83f7f014abcf0cf69cab5a4de1c3ececa8123a5e4aaacb01f63f83
+     * Claiming 1 token with proofs: 0xe9707d0e6171f728f7473c24cc0432a9b07eaaf1efed6a137a4a8c12c79552d9,0xb1a5bda84b83f7f014abcf0cf69cab5a4de1c3ececa8123a5e4aaacb01f63f83
      */
 
     for (const member of testWallets) {
@@ -342,7 +342,7 @@ describe.skip("NFT Drop Contract (v3)", async () => {
     await dropContract.createBatch(metadata);
 
     /**
-     * Claiming 1 tokens with proofs: 0xe9707d0e6171f728f7473c24cc0432a9b07eaaf1efed6a137a4a8c12c79552d9,0xb1a5bda84b83f7f014abcf0cf69cab5a4de1c3ececa8123a5e4aaacb01f63f83
+     * Claiming 1 token with proofs: 0xe9707d0e6171f728f7473c24cc0432a9b07eaaf1efed6a137a4a8c12c79552d9,0xb1a5bda84b83f7f014abcf0cf69cab5a4de1c3ececa8123a5e4aaacb01f63f83
      */
 
     for (const member of testWallets) {

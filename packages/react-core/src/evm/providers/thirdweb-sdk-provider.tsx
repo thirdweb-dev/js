@@ -91,7 +91,7 @@ const WrappedThirdwebSDKProvider = <
   activeChain,
   signer,
   children,
-  thirdwebApiKey = DEFAULT_API_KEY,
+  thirdwebApiKey,
   infuraApiKey,
   alchemyApiKey,
 }: React.PropsWithChildren<
@@ -147,10 +147,17 @@ const WrappedThirdwebSDKProvider = <
       }
     }
 
+    // TODO: find a better way to fix the type error
+    type ForcedChainType = {
+      rpc: string[];
+      chainId: number;
+      nativeCurrency: { symbol: string; name: string; decimals: 18 };
+    };
+
     const mergedOptions = {
       readonlySettings,
       ...sdkOptions,
-      chains: supportedChains,
+      supportedChains: supportedChains as any as ForcedChainType[],
     };
 
     let sdk_: ThirdwebSDK | undefined = undefined;
@@ -229,7 +236,7 @@ export const ThirdwebSDKProvider = <
   // @ts-expect-error - different subtype of Chain[] but this works fine
   supportedChains = defaultChains,
   activeChain,
-  thirdwebApiKey,
+  thirdwebApiKey = DEFAULT_API_KEY,
   alchemyApiKey,
   infuraApiKey,
   ...restProps
