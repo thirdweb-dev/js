@@ -1,6 +1,6 @@
-import { iconSize } from "../../../design-system";
-import { MetamaskIcon } from "../icons/MetamaskIcon";
-import { ConnectingScreen } from "./ConnectingScreen";
+import { iconSize } from "../../../../design-system";
+import { MetamaskIcon } from "../../icons/MetamaskIcon";
+import { ConnectingScreen } from "../ConnectingScreen";
 
 export const MetamaskConnecting: React.FC<{ onBack: () => void }> = (props) => {
   return (

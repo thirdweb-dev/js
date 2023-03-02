@@ -1,7 +1,7 @@
-import { iconSize } from "../../../design-system";
-import { CoinbaseWallet } from "../../wallets";
-import { CoinbaseWalletIcon } from "../icons/CoinbaseWalletIcon";
-import { ScanScreen } from "./ScanScreen";
+import { iconSize } from "../../../../design-system";
+import { CoinbaseWallet } from "../../../wallets";
+import { CoinbaseWalletIcon } from "../../icons/CoinbaseWalletIcon";
+import { ScanScreen } from "../ScanScreen";
 import {
   useCreateWalletInstance,
   useThirdwebWallet,

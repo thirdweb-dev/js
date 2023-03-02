@@ -1,7 +1,7 @@
-import { iconSize } from "../../../design-system";
-import { MetamaskWallet } from "../../wallets";
-import { MetamaskIcon } from "../icons/MetamaskIcon";
-import { ScanScreen } from "./ScanScreen";
+import { iconSize } from "../../../../design-system";
+import { MetamaskWallet } from "../../../wallets";
+import { MetamaskIcon } from "../../icons/MetamaskIcon";
+import { ScanScreen } from "../ScanScreen";
 import {
   useCreateWalletInstance,
   useThirdwebWallet,

@@ -1,13 +1,13 @@
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
-import { media, spacing } from "../../../design-system";
-import { isMobile } from "../../../evm/utils/isMobile";
 import {
   BackButton,
   ModalTitle,
   ModalDescription,
   HelperLink,
-} from "../shared/modalElements";
+} from "../../../components/modalElements";
+import { media, spacing } from "../../../design-system";
+import { isMobile } from "../../../evm/utils/isMobile";
 import styled from "@emotion/styled";
 import { blue } from "@radix-ui/colors";
 

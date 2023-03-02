@@ -1,15 +1,15 @@
 import { Spacer } from "../../../components/Spacer";
+import {
+  BackButton,
+  ModalTitle,
+  ModalDescription,
+} from "../../../components/modalElements";
 import { iconSize, spacing, radius } from "../../../design-system";
 import { Theme } from "../../../design-system/index";
 import { AppleStoreIcon } from "../icons/AppleStoreIcon";
 import { ChromeIcon } from "../icons/ChromeIcon";
 import { GooglePlayStoreIcon } from "../icons/GooglePlayStoreIcon";
 import { MetamaskIcon } from "../icons/MetamaskIcon";
-import {
-  BackButton,
-  ModalTitle,
-  ModalDescription,
-} from "../shared/modalElements";
 import styled from "@emotion/styled";
 
 export const GetStartedScreen: React.FC<{

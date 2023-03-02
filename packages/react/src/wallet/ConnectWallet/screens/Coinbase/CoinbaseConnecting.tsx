@@ -1,6 +1,6 @@
-import { iconSize } from "../../../design-system";
-import { CoinbaseWalletIcon } from "../icons/CoinbaseWalletIcon";
-import { ConnectingScreen } from "./ConnectingScreen";
+import { iconSize } from "../../../../design-system";
+import { CoinbaseWalletIcon } from "../../icons/CoinbaseWalletIcon";
+import { ConnectingScreen } from "../ConnectingScreen";
 
 export const CoinbaseWalletSetup: React.FC<{ onBack: () => void }> = (
   props,
