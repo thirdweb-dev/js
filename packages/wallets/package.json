@@ -153,7 +153,8 @@
     "@aws-sdk/client-secrets-manager": "^3.256.0",
     "@magic-ext/oauth": "^4.1.0",
     "@walletconnect/legacy-provider": "^2.0.0",
-    "@magic-ext/connect": "^3.1.0"
+    "@magic-ext/connect": "^3.1.0",
+    "magic-sdk": "^10.1.0"
   },
   "resolutions": {
     "@walletconnect/ethereum-provider": "^2.4.6"
@@ -169,7 +170,6 @@
     "@walletconnect/ethereum-provider": "^2.4.6",
     "bs58": "^5.0.0",
     "ethers": "^5.7.2",
-    "magic-sdk": "^10.1.0",
     "tweetnacl": "^1.0.3"
   },
   "peerDependenciesMeta": {
@@ -223,7 +223,6 @@
     "abitype": "^0.2.5",
     "bs58": "^5.0.0",
     "ethers": "^5.7.2",
-    "magic-sdk": "^10.1.0",
     "tweetnacl": "^1.0.3",
     "typescript": "^4.7.4"
   },

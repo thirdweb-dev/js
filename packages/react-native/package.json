@@ -30,6 +30,7 @@
     "@thirdweb-dev/sdk": "*",
     "@thirdweb-dev/storage": "*",
     "@thirdweb-dev/wallets": "*",
+    "react-native-modal": "^13.0.1",
     "react-native-svg": "^13.8.0",
     "tiny-invariant": "^1.2.0",
     "wagmi": "^0.11.0"
@@ -54,7 +55,6 @@
     "prettier": "^2.4.1",
     "react": "^18.2.0",
     "react-native": "^0.71.0",
-    "react-native-modal": "^13.0.0",
     "react-native-test-app": "^2.3.1",
     "react-test-renderer": "^18.2.0",
     "typescript": "^4.8.4"
@@ -63,8 +63,7 @@
     "@react-native-async-storage/async-storage": "*",
     "ethers": ">=5.5.1 <6",
     "react": ">=18.0.0",
-    "react-native": ">=0.70.0",
-    "react-native-modal": ">=13.0.0"
+    "react-native": ">=0.70.0"
   },
   "engines": {
     "node": ">= 16.0.0"
