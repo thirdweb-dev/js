@@ -392,7 +392,7 @@ describe("Token Drop Contract (v2)", async () => {
       assert.isFalse(canClaim);
     });
 
-    it("should transform qunatities back to readable values", async () => {
+    it("should transform quantities back to readable values", async () => {
       await dropContract.claimConditions.set([
         {
           maxClaimableSupply: "10.8",

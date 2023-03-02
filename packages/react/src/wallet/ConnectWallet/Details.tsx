@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { ChainIcon } from "../../components/ChainIcon";
+import { Modal } from "../../components/Modal";
 import { Skeleton } from "../../components/Skeleton";
 import { Spacer } from "../../components/Spacer";
 import { IconButton } from "../../components/buttons";
@@ -12,6 +13,7 @@ import {
   Theme,
 } from "../../design-system";
 import { shortenString } from "../../evm/utils/addresses";
+import { isMobile } from "../../evm/utils/isMobile";
 import { useInstalledWallets } from "../hooks/useInstalledWallets";
 import { NetworkSelector } from "./NetworkSelector";
 import { CoinbaseWalletIcon } from "./icons/CoinbaseWalletIcon";
@@ -23,6 +25,7 @@ import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { GearIcon } from "@radix-ui/react-icons";
+import { defaultChains } from "@thirdweb-dev/chains";
 import {
   SupportedWallet,
   useActiveChainId,
@@ -65,6 +68,12 @@ export const ConnectedWalletDetails: React.FC<{
     return chains.find((_chain) => _chain.chainId === activeChainId);
   }, [activeChainId, chains]);
 
+  const unknownChain = useMemo(() => {
+    if (!chain) {
+      return defaultChains.find((c) => c.chainId === activeChainId);
+    }
+  }, [activeChainId, chain]);
+
   const WalletIcon = activeWallet
     ? walletIcons[activeWallet.walletId as SupportedWallet["id"]]
     : null;
@@ -89,128 +98,141 @@ export const ConnectedWalletDetails: React.FC<{
     activeWallet.walletId === "deviceWallet" ||
     (activeWallet.walletId === "metamask" && !installedWallets.metamask);
 
+  const trigger = (
+    <WalletInfoButton type="button">
+      <ChainIcon chain={chain} size={iconSize.lg} />
+
+      <ColFlex>
+        {!balanceQuery.isLoading ? (
+          <WalletBalance>
+            {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
+            {balanceQuery.data?.symbol}
+          </WalletBalance>
+        ) : (
+          <Skeleton height={fontSize.md} />
+        )}
+        <WalletAddress>{shortenString(address || "")}</WalletAddress>
+      </ColFlex>
+
+      {WalletIcon && <WalletIcon width={iconSize.lg} height={iconSize.lg} />}
+    </WalletInfoButton>
+  );
+
+  const content = (
+    <div>
+      {/* Balance and Account Address */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: spacing.md,
+        }}
+      >
+        {WalletIcon && <WalletIcon width={iconSize.xl} height={iconSize.xl} />}
+
+        <ColFlex>
+          <AccountAddress> {shortenString(address || "")}</AccountAddress>
+          <AccountBalance>
+            {" "}
+            {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
+            {balanceQuery.data?.symbol}{" "}
+          </AccountBalance>
+        </ColFlex>
+
+        <DisconnectIconButton
+          type="button"
+          variant="secondary"
+          onClick={() => {
+            disconnect();
+          }}
+        >
+          <ExitIcon width={iconSize.md} height={iconSize.md} />
+        </DisconnectIconButton>
+      </div>
+
+      <Spacer y="xl" />
+
+      {/* Network Switcher */}
+      <div>
+        <PrimaryLabel htmlFor="current-network">Current Network</PrimaryLabel>
+        <Spacer y="sm" />
+        <MenuButton
+          id="current-network"
+          type="button"
+          disabled={disableNetworkSwitching}
+          onClick={() => {
+            setOpen(false);
+            setShowNetworkSelector(true);
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              position: "relative",
+            }}
+          >
+            <ChainIcon
+              chain={chain || unknownChain}
+              size={iconSize.lg}
+              active
+            />
+          </div>
+          {chain?.name || unknownChain?.name || "Unknown Chain"}
+          <StyledGearIcon
+            style={{
+              flexShrink: 0,
+              marginLeft: "auto",
+              width: "20px",
+              height: "20px",
+            }}
+          />
+        </MenuButton>
+      </div>
+
+      <Spacer y="md" />
+    </div>
+  );
+
   return (
     <>
+      {isMobile() ? (
+        <Modal
+          trigger={trigger}
+          open={open}
+          setOpen={setOpen}
+          hideCloseIcon={true}
+        >
+          <div
+            style={{
+              minHeight: "200px",
+            }}
+          >
+            {content}
+          </div>
+        </Modal>
+      ) : (
+        <DropdownMenu.Root open={open} onOpenChange={setOpen}>
+          <DropdownMenu.Trigger asChild>{trigger}</DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropDownContent
+              asChild
+              side={props.dropdownPosition?.side || "bottom"}
+              align={props.dropdownPosition?.align || "end"}
+              sideOffset={10}
+            >
+              {content}
+            </DropDownContent>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
+      )}
+
       {showNetworkSelector && (
         <NetworkSelector
           open={showNetworkSelector}
           setOpen={setShowNetworkSelector}
         />
       )}
-
-      <DropdownMenu.Root open={open} onOpenChange={setOpen}>
-        {/* Trigger */}
-        <DropdownMenu.Trigger asChild>
-          <WalletInfoButton type="button">
-            <ChainIcon chain={chain} size={iconSize.lg} />
-
-            <ColFlex>
-              {!balanceQuery.isLoading ? (
-                <WalletBalance>
-                  {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
-                  {balanceQuery.data?.symbol}
-                </WalletBalance>
-              ) : (
-                <Skeleton height={fontSize.md} />
-              )}
-              <WalletAddress>{shortenString(address || "")}</WalletAddress>
-            </ColFlex>
-
-            {WalletIcon && (
-              <WalletIcon width={iconSize.lg} height={iconSize.lg} />
-            )}
-          </WalletInfoButton>
-        </DropdownMenu.Trigger>
-
-        <DropdownMenu.Portal>
-          <DropdownMenuContent
-            side={props.dropdownPosition?.side || "bottom"}
-            align={props.dropdownPosition?.align || "end"}
-            sideOffset={10}
-          >
-            {/* Balance and Account Address */}
-            <DropdownMenuItem>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: spacing.md,
-                }}
-              >
-                {WalletIcon && (
-                  <WalletIcon width={iconSize.xl} height={iconSize.xl} />
-                )}
-
-                <ColFlex>
-                  <AccountAddress>
-                    {" "}
-                    {shortenString(address || "")}
-                  </AccountAddress>
-                  <AccountBalance>
-                    {" "}
-                    {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
-                    {balanceQuery.data?.symbol}{" "}
-                  </AccountBalance>
-                </ColFlex>
-
-                <IconButton
-                  type="button"
-                  variant="secondary"
-                  onClick={() => {
-                    disconnect();
-                  }}
-                  style={{
-                    marginRight: `-${spacing.xxs}`,
-                    marginLeft: "auto",
-                    padding: spacing.xs,
-                  }}
-                >
-                  <ExitIcon width={iconSize.md} height={iconSize.md} />
-                </IconButton>
-              </div>
-            </DropdownMenuItem>
-
-            <Spacer y="xl" />
-
-            {/* Network Switcher */}
-            <DropdownMenuItem>
-              <PrimaryLabel htmlFor="current-network">
-                Current Network
-              </PrimaryLabel>
-              <Spacer y="sm" />
-              <MenuButton
-                id="current-network"
-                type="button"
-                disabled={disableNetworkSwitching}
-                onClick={() => {
-                  setShowNetworkSelector(true);
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    position: "relative",
-                  }}
-                >
-                  <ChainIcon chain={chain} size={iconSize.lg} active />
-                </div>
-                {chain?.name || "Unknown Chain"}
-                <StyledGearIcon
-                  style={{
-                    flexShrink: 0,
-                    marginLeft: "auto",
-                    width: "20px",
-                    height: "20px",
-                  }}
-                />
-              </MenuButton>
-            </DropdownMenuItem>
-
-            <Spacer y="md" />
-          </DropdownMenuContent>
-        </DropdownMenu.Portal>
-      </DropdownMenu.Root>
     </>
   );
 };
@@ -226,16 +248,16 @@ const slideUpAndFade = keyframes`
   }
 `;
 
-const DropdownMenuContent = styled(DropdownMenu.Content)<{ theme?: Theme }>`
+const DropDownContent = styled(DropdownMenu.Content)<{ theme?: Theme }>`
   width: 360px;
   max-width: 100%;
-  background-color: ${(props) => props.theme.bg.base};
-  border-radius: ${radius.sm};
+  border-radius: ${radius.lg};
   padding: ${spacing.lg};
   box-shadow: ${shadow.lg};
   animation: ${slideUpAndFade} 400ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
   border: 1px solid ${(props) => props.theme.bg.highlighted};
+  background-color: ${(props) => props.theme.bg.base};
 `;
 
 const WalletInfoButton = styled.button<{ theme?: Theme }>`
@@ -251,10 +273,11 @@ const WalletInfoButton = styled.button<{ theme?: Theme }>`
   box-shadow: ${shadow.sm};
   min-width: 200px;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 
   &:hover {
-    transition: background 150ms ease;
-    background: ${(props) => props.theme.bg.elevated};
+    transition: background 250ms ease;
+    background: ${(props) => props.theme.bg.baseHover};
     border-color: ${(props) => props.theme.bg.highlighted};
   }
 `;
@@ -309,10 +332,11 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   font-weight: 500;
   color: ${(props) => props.theme.text.neutral};
   gap: ${spacing.sm};
+  -webkit-tap-highlight-color: transparent;
 
   &:not([disabled]):hover {
     transition: background 150ms ease;
-    background: ${(props) => props.theme.bg.elevated};
+    background: ${(props) => props.theme.bg.baseHover};
   }
 
   &[disabled] {
@@ -329,4 +353,15 @@ export const DropdownMenuItem = styled(DropdownMenu.Item)<{ theme?: Theme }>`
 
 export const StyledGearIcon = styled(GearIcon)<{ theme?: Theme }>`
   color: ${(props) => props.theme.text.secondary};
+`;
+
+const DisconnectIconButton = styled(IconButton)<{ theme?: Theme }>`
+  margin-right: -${spacing.xxs};
+  margin-left: auto;
+  padding: ${spacing.xxs};
+  color: ${(props) => props.theme.icon.danger};
+  &:hover {
+    color: ${(props) => props.theme.icon.danger};
+    background: ${(props) => props.theme.bg.danger};
+  }
 `;

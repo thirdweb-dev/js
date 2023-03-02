@@ -1,13 +1,13 @@
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
-import { media, spacing } from "../../../design-system";
-import { isMobile } from "../../../evm/utils/isMobile";
 import {
   BackButton,
   ModalTitle,
   ModalDescription,
   HelperLink,
-} from "../shared/modalElements";
+} from "../../../components/modalElements";
+import { media, spacing } from "../../../design-system";
+import { isMobile } from "../../../evm/utils/isMobile";
 import styled from "@emotion/styled";
 import { blue } from "@radix-ui/colors";
 
@@ -20,7 +20,6 @@ export const ConnectingScreen: React.FC<{
   return (
     <>
       <BackButton onClick={props.onBack} />
-      <Spacer y="lg" />
       <IconContainer>{props.icon}</IconContainer>
       <Spacer y="lg" />
       <TitleContainer>
@@ -47,12 +46,13 @@ const TitleContainer = styled.div`
   ${media.mobile} {
     flex-direction: column;
     align-items: center;
-    gap: ${spacing.lg};
+    gap: ${spacing.xl};
   }
 `;
 
 const IconContainer = styled.div`
   display: flex;
+  margin-top: ${spacing.lg};
   ${media.mobile} {
     justify-content: center;
     margin-top: 0;

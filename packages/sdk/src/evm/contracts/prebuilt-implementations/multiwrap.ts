@@ -15,6 +15,7 @@ import { ContractRoyalty } from "../../core/classes/contract-royalty";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { StandardErc721 } from "../../core/classes/erc-721-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
+import { Transaction } from "../../core/classes/transactions";
 import {
   NetworkInput,
   TransactionResult,
@@ -70,7 +71,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
   public events: ContractEvents<MultiwrapContract>;
   public roles: ContractRoles<
     MultiwrapContract,
-    typeof Multiwrap.contractRoles[number]
+    (typeof Multiwrap.contractRoles)[number]
   >;
 
   /**
@@ -387,6 +388,24 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
       }
     }
     return tokens;
+  }
+
+  /**
+   * @internal
+   */
+  public async prepare<
+    TMethod extends keyof MultiwrapContract["functions"] = keyof MultiwrapContract["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<MultiwrapContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
   }
 
   /**

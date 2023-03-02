@@ -2,13 +2,13 @@ import { FadeIn } from "../../../components/FadeIn";
 import { Skeleton } from "../../../components/Skeleton";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
-import { fontSize, radius, shadow, spacing } from "../../../design-system";
-import { Theme, media } from "../../../design-system/index";
 import {
   BackButton,
   ModalTitle,
   ModalDescription,
-} from "../shared/modalElements";
+} from "../../../components/modalElements";
+import { fontSize, radius, shadow, spacing } from "../../../design-system";
+import { Theme, media } from "../../../design-system/index";
 import styled from "@emotion/styled";
 import { blue } from "@radix-ui/colors";
 import { lazy } from "react";

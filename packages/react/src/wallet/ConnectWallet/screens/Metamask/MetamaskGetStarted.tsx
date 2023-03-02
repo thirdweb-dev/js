@@ -1,6 +1,6 @@
-import { iconSize } from "../../../design-system";
-import { MetamaskIcon } from "../icons/MetamaskIcon";
-import { GetStartedScreen } from "./GetStartedScreen";
+import { iconSize } from "../../../../design-system";
+import { MetamaskIcon } from "../../icons/MetamaskIcon";
+import { GetStartedScreen } from "../GetStartedScreen";
 
 export const MetamaskGetStarted: React.FC<{ onBack: () => void }> = (props) => {
   return (

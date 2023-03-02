@@ -76,8 +76,10 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Deploy pre-release
+        id: changesets
         run: |
           yarn changeset version --snapshot dev
+          node ./scripts/pre-release.mjs
           yarn changeset publish --tag dev --no-git-tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -46,10 +46,10 @@ export class DelayedReveal<
   constructor(
     contractWrapper: ContractWrapper<T>,
     storage: ThirdwebStorage,
-    fetureName: FeatureName,
+    featureName: FeatureName,
     nextTokenIdToMintFn: () => Promise<BigNumber>,
   ) {
-    this.featureName = fetureName;
+    this.featureName = featureName;
     this.nextTokenIdToMintFn = nextTokenIdToMintFn;
     this.contractWrapper = contractWrapper;
     this.storage = storage;
@@ -124,7 +124,7 @@ export class DelayedReveal<
 
     const baseUri = getBaseUriFromBatch(uris);
     const baseUriId = await this.contractWrapper.readContract.getBaseURICount();
-    const hashedPassword = await this.hashDelayRevealPasword(
+    const hashedPassword = await this.hashDelayRevealPassword(
       baseUriId,
       password,
     );
@@ -193,7 +193,7 @@ export class DelayedReveal<
     if (!password) {
       throw new Error("Password is required");
     }
-    const key = await this.hashDelayRevealPasword(batchId, password);
+    const key = await this.hashDelayRevealPassword(batchId, password);
     // performing the reveal locally to make sure it'd succeed before sending the transaction
     try {
       const decryptedUri = await this.contractWrapper
@@ -307,7 +307,7 @@ export class DelayedReveal<
    *
    * @internal
    */
-  private async hashDelayRevealPasword(
+  private async hashDelayRevealPassword(
     batchTokenIndex: BigNumberish,
     password: string,
   ) {

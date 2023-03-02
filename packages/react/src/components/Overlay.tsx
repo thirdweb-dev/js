@@ -16,5 +16,5 @@ export const Overlay = styled.div<{ theme?: Theme }>`
   z-index: 9999;
   position: fixed;
   inset: 0;
-  animation: ${overlayEnter} 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  animation: ${overlayEnter} 400ms cubic-bezier(0.16, 1, 0.3, 1);
 `;

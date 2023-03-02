@@ -1,17 +1,17 @@
-import { Spacer } from "../../../components/Spacer";
-import { Spinner } from "../../../components/Spinner";
-import { Button } from "../../../components/buttons";
+import { Spacer } from "../../../../components/Spacer";
+import { Spinner } from "../../../../components/Spinner";
+import { Button } from "../../../../components/buttons";
 import {
   FormField,
   FormFieldWithIconButton,
-} from "../../../components/formFields";
-import { iconSize, media, spacing } from "../../../design-system";
-import { DeviceWalletIcon } from "../icons/DeviceWalletIcon";
+} from "../../../../components/formFields";
 import {
   BackButton,
   ModalDescription,
   ModalTitle,
-} from "../shared/modalElements";
+} from "../../../../components/modalElements";
+import { iconSize, media, spacing } from "../../../../design-system";
+import { DeviceWalletIcon } from "../../icons/DeviceWalletIcon";
 import styled from "@emotion/styled";
 import { blue } from "@radix-ui/colors";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";

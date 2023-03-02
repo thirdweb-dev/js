@@ -1,4 +1,4 @@
-import { blue, gray, mauveDark, red } from "@radix-ui/colors";
+import { blue, mauveDark, tomato } from "@radix-ui/colors";
 import { mauve } from "@radix-ui/colors";
 
 export const darkTheme = {
@@ -7,10 +7,13 @@ export const darkTheme = {
   },
   bg: {
     base: mauveDark.mauve1,
+    baseHover: mauveDark.mauve2,
     elevated: mauveDark.mauve3,
+    elevatedHover: mauveDark.mauve4,
     highlighted: mauveDark.mauve5,
     inverted: mauveDark.mauve12,
     invertedFocused: mauveDark.mauve7,
+    danger: tomato.tomato12,
   },
   badge: {
     secondary: mauveDark.mauve6,
@@ -23,6 +26,7 @@ export const darkTheme = {
   icon: {
     secondary: mauveDark.mauve11,
     primary: mauveDark.mauve12,
+    danger: tomato.tomato9,
   },
   link: {
     primary: blue.blue9,
@@ -32,7 +36,7 @@ export const darkTheme = {
     bgHover: mauveDark.mauve5,
     outline: mauveDark.mauve5,
     focusRing: blue.blue9,
-    errorRing: red.red9,
+    errorRing: tomato.tomato9,
   },
 };
 
@@ -42,10 +46,13 @@ export const lightTheme: typeof darkTheme = {
   },
   bg: {
     base: mauve.mauve1,
+    baseHover: mauve.mauve2,
     elevated: mauve.mauve4,
+    elevatedHover: mauve.mauve5,
     highlighted: mauve.mauve6,
     inverted: mauve.mauve12,
     invertedFocused: mauve.mauve7,
+    danger: tomato.tomato4,
   },
   badge: {
     secondary: mauve.mauve1,
@@ -58,6 +65,7 @@ export const lightTheme: typeof darkTheme = {
   icon: {
     secondary: mauve.mauve10,
     primary: mauve.mauve12,
+    danger: tomato.tomato9,
   },
   link: {
     primary: blue.blue11,
@@ -67,7 +75,7 @@ export const lightTheme: typeof darkTheme = {
     bgHover: mauveDark.mauve5,
     outline: mauve.mauve7,
     focusRing: blue.blue10,
-    errorRing: red.red10,
+    errorRing: tomato.tomato10,
   },
 };
 
@@ -96,6 +104,7 @@ export const radius = {
   md: "8px",
   lg: "12px",
   xl: "20px",
+  xxl: "32px",
 };
 
 export const iconSize = {
@@ -113,6 +122,6 @@ export const media = {
 export const shadow = {
   sm: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
   md: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
-  lg: "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+  lg: "0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
   xl: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
 };
