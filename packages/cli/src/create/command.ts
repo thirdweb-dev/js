@@ -44,60 +44,26 @@ export async function twCreate(
   }
 
   if (projectType === "app") {
-    if (options.typescript) {
-      language = "typescript";
-    }
+    if (options.typescript) language = "typescript";
+    if (options.javascript) language = "javascript";
 
-    if (options.javascript) {
-      language = "javascript";
-    }
+    if (options.next) framework = "next";
+    if (options.cra) framework = "cra";
+    if (options.vite) framework = "vite";
+    if (options.node) framework = "node";
+    if (options.express) framework = "express";
+    if (options.reactNative) framework = "react-native";
 
-    if (options.next) {
-      framework = "next";
-    }
-
-    if (options.cra) {
-      framework = "cra";
-    }
-
-    if (options.vite) {
-      framework = "vite";
-    }
-
-    if (options.node) {
-      framework = "node";
-    }
-
-    if (options.express) {
-      framework = "express";
-    }
-
-    if (options.reactNative) {
-      framework = "react-native";
-    }
-
-    if (options.solana) {
-      chain = "solana";
-    }
-
-    if (options.evm) {
-      chain = "evm";
-    }
+    if (options.solana) chain = "solana";
+    if (options.evm) chain = "evm";
   }
 
   if (projectType === "contract") {
-    if (options.forge) {
-      framework = "forge";
-    }
-
-    if (options.hardhat) {
-      framework = "hardhat";
-    }
+    if (options.forge) framework = "forge";
+    if (options.hardhat) framework = "hardhat";
   }
 
-  if (options.framework) {
-    framework = options.framework;
-  }
+  if (options.framework) framework = options.framework;
 
   if (!projectType && !options.template) {
     const res = await prompts({
@@ -111,25 +77,19 @@ export async function twCreate(
       ],
     });
 
-    if (typeof res.projectType === "string") {
+    if (typeof res.projectType === "string")
       projectType = res.projectType.trim();
-    }
   } else if (!projectType || options.template) {
     // If no project type is specified, but a template is, we assume the user wants to create an app.
     // We do this so old users can still use the --template flag to create an app.
     projectType = "app";
   }
 
-  if(projectType === "extension") {
+  if (projectType === "extension") {
     createExtension = true;
 
-    if (options.forge) {
-      framework = "forge";
-    }
-
-    if (options.hardhat) {
-      framework = "hardhat";
-    }
+    if (options.forge) framework = "forge";
+    if (options.hardhat) framework = "hardhat";
   }
 
   // Whether to only create a new contract without the project
@@ -170,7 +130,9 @@ export async function twCreate(
   if (!onlyContract) {
     if (!projectPath) {
       const defaultName =
-        (projectType === "contract" || projectType === "extension") ? "thirdweb-contracts" : "thirdweb-app";
+        projectType === "contract" || projectType === "extension"
+          ? "thirdweb-contracts"
+          : "thirdweb-app";
       const res = await prompts({
         type: "text",
         name: "path",
@@ -181,16 +143,15 @@ export async function twCreate(
           const validation = validateNpmName(
             path.basename(path.resolve(name.toLowerCase())),
           );
-          if (validation.valid) {
-            return true;
-          }
-          return "Invalid project name: " + validation.problems?.[0];
+          return (
+            validation.valid ||
+            "Invalid project name: " + validation.problems?.[0]
+          );
         },
       });
 
-      if (typeof res.path === "string") {
+      if (typeof res.path === "string")
         projectPath = path.join(projectPath, res.path.trim());
-      }
     }
 
     if (!projectPath) {
@@ -220,11 +181,8 @@ export async function twCreate(
           ],
         });
 
-        if (res.chain === "solana") {
-          chain = "solana";
-        } else {
-          chain = "evm";
-        }
+        if (res.chain === "solana") chain = "solana";
+        else chain = "evm";
       }
 
       if (projectType === "app" && !framework) {
@@ -440,7 +398,7 @@ export async function twCreate(
     : getPkgManager();
 
   const template =
-    typeof options.template === "string" && options.template.trim();
+    typeof options.template === "string" ? options.template.trim() : undefined;
   try {
     if (projectType === "app") {
       await createApp({
@@ -459,7 +417,7 @@ export async function twCreate(
         contractName,
         baseContract,
         onlyContract,
-        createExtension
+        createExtension,
       });
     }
   } catch (reason) {
