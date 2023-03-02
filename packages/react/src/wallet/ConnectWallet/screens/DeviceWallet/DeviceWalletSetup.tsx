@@ -45,7 +45,7 @@ export const ConnectToDeviceWallet: React.FC<{ onBack: () => void }> = (
     <>
       <BackButton onClick={props.onBack} />
       <IconContainer>
-        <DeviceWalletIcon width={iconSize.xl} height={iconSize.xl} />
+        <DeviceWalletIcon size={iconSize.xl} />
       </IconContainer>
       <Spacer y="md" />
       <ModalTitle>Device Wallet</ModalTitle>

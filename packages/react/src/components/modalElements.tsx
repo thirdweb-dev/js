@@ -43,6 +43,8 @@ export const BackButton: React.FC<{
 };
 
 export const HelperLink = styled.a<{ theme?: Theme }>`
+  all: unset;
+  cursor: pointer;
   color: ${(p) => p.theme.link.primary};
   font-size: ${fontSize.sm};
   text-decoration: none;

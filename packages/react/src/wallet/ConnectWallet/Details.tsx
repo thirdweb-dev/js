@@ -1,8 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import { ChainIcon } from "../../components/ChainIcon";
+import { CopyIcon } from "../../components/CopyIcon";
 import { Modal } from "../../components/Modal";
 import { Skeleton } from "../../components/Skeleton";
 import { Spacer } from "../../components/Spacer";
+import { ToolTip } from "../../components/Tooltip";
 import { IconButton } from "../../components/buttons";
 import {
   fontSize,
@@ -19,8 +21,10 @@ import { NetworkSelector } from "./NetworkSelector";
 import { CoinbaseWalletIcon } from "./icons/CoinbaseWalletIcon";
 import { DeviceWalletIcon } from "./icons/DeviceWalletIcon";
 import { ExitIcon } from "./icons/ExitIcon";
+import { GenericWalletIcon } from "./icons/GenericWalletIcon";
 import { MetamaskIcon } from "./icons/MetamaskIcon";
 import { WalletConnectIcon } from "./icons/WalletConnectIcon";
+import { IconFC } from "./icons/types";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
@@ -36,12 +40,10 @@ import {
   useNetworkMismatch,
   useSupportedChains,
 } from "@thirdweb-dev/react-core";
+import { DeviceWalletType } from "@thirdweb-dev/react-core/dist/declarations/src";
 import { useMemo, useState } from "react";
 
-const walletIcons: Record<
-  SupportedWallet["id"],
-  React.FC<{ width: string; height: string }>
-> = {
+const walletIcons: Record<SupportedWallet["id"], IconFC> = {
   metamask: MetamaskIcon,
   deviceWallet: DeviceWalletIcon,
   coinbaseWallet: CoinbaseWalletIcon,
@@ -98,6 +100,20 @@ export const ConnectedWalletDetails: React.FC<{
     activeWallet.walletId === "deviceWallet" ||
     (activeWallet.walletId === "metamask" && !installedWallets.metamask);
 
+  const handleDeviceWalletExport = async () => {
+    const deviceWallet = activeWallet as InstanceType<DeviceWalletType>;
+    const walletData = await deviceWallet.getWalletData();
+    if (!walletData) {
+      throw new Error("No wallet data found");
+    }
+
+    downloadAsFile(
+      JSON.parse(walletData.encryptedData),
+      "wallet.json",
+      "application/json",
+    );
+  };
+
   const trigger = (
     <WalletInfoButton type="button">
       <ChainIcon chain={chain} size={iconSize.lg} />
@@ -114,7 +130,7 @@ export const ConnectedWalletDetails: React.FC<{
         <WalletAddress>{shortenString(address || "")}</WalletAddress>
       </ColFlex>
 
-      {WalletIcon && <WalletIcon width={iconSize.lg} height={iconSize.lg} />}
+      {WalletIcon && <WalletIcon size={iconSize.lg} />}
     </WalletInfoButton>
   );
 
@@ -128,10 +144,20 @@ export const ConnectedWalletDetails: React.FC<{
           gap: spacing.md,
         }}
       >
-        {WalletIcon && <WalletIcon width={iconSize.xl} height={iconSize.xl} />}
+        {WalletIcon && <WalletIcon size={iconSize.xl} />}
 
         <ColFlex>
-          <AccountAddress> {shortenString(address || "")}</AccountAddress>
+          <div
+            style={{
+              display: "flex",
+              gap: spacing.xs,
+            }}
+          >
+            <AccountAddress> {shortenString(address || "")}</AccountAddress>
+            <IconButton variant="secondary">
+              <CopyIcon text={address || ""} />
+            </IconButton>
+          </div>
           <AccountBalance>
             {" "}
             {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
@@ -139,18 +165,40 @@ export const ConnectedWalletDetails: React.FC<{
           </AccountBalance>
         </ColFlex>
 
-        <DisconnectIconButton
-          type="button"
-          variant="secondary"
-          onClick={() => {
-            disconnect();
-          }}
-        >
-          <ExitIcon width={iconSize.md} height={iconSize.md} />
-        </DisconnectIconButton>
+        <ToolTip tip="Disconnect Wallet">
+          <DisconnectIconButton
+            type="button"
+            variant="secondary"
+            onClick={() => {
+              disconnect();
+            }}
+          >
+            <ExitIcon size={iconSize.md} />
+          </DisconnectIconButton>
+        </ToolTip>
       </div>
 
-      <Spacer y="xl" />
+      {activeWallet?.walletId === "deviceWallet" ? (
+        <>
+          <Spacer y="md" />
+
+          <MenuButton
+            onClick={handleDeviceWalletExport}
+            style={{
+              fontSize: fontSize.sm,
+            }}
+          >
+            <GenericWalletIconContainer>
+              <GenericWalletIcon size={iconSize.sm} />
+            </GenericWalletIconContainer>
+            Export Device Wallet{" "}
+          </MenuButton>
+
+          <Spacer y="xl" />
+        </>
+      ) : (
+        <Spacer y="xl" />
+      )}
 
       {/* Network Switcher */}
       <div>
@@ -365,3 +413,27 @@ const DisconnectIconButton = styled(IconButton)<{ theme?: Theme }>`
     background: ${(props) => props.theme.bg.danger};
   }
 `;
+
+const GenericWalletIconContainer = styled.div<{ theme?: Theme }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${(props) => props.theme.icon.secondary};
+`;
+
+// utils
+
+function downloadAsFile(data: any, fileName: string, fileType: string) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], {
+    type: fileType,
+  });
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.style.display = "none";
+  a.click();
+  URL.revokeObjectURL(a.href);
+}

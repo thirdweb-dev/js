@@ -1,4 +1,6 @@
-export const GooglePlayStoreIcon: React.FC<{ size: string }> = ({ size }) => {
+import { IconFC } from "./types";
+
+export const GooglePlayStoreIcon: IconFC = ({ size }) => {
   return (
     <svg
       width={size}

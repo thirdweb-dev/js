@@ -25,18 +25,12 @@ import {
 import { SupportedWallet } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 
-const walletConnectIcon = (
-  <WalletConnectIcon width={iconSize.lg} height={iconSize.lg} />
-);
-
 const walletIcons: Record<SupportedWallet["id"], JSX.Element> = {
-  metamask: <MetamaskIcon width={iconSize.lg} height={iconSize.lg} />,
-  deviceWallet: <DeviceWalletIcon width={iconSize.lg} height={iconSize.lg} />,
-  coinbaseWallet: (
-    <CoinbaseWalletIcon width={iconSize.lg} height={iconSize.lg} />
-  ),
-  walletConnect: walletConnectIcon,
-  walletConnectV1: walletConnectIcon,
+  metamask: <MetamaskIcon size={iconSize.lg} />,
+  deviceWallet: <DeviceWalletIcon size={iconSize.lg} />,
+  coinbaseWallet: <CoinbaseWalletIcon size={iconSize.lg} />,
+  walletConnect: <WalletConnectIcon size={iconSize.lg} />,
+  walletConnectV1: <WalletConnectIcon size={iconSize.lg} />,
 };
 
 type Screen =

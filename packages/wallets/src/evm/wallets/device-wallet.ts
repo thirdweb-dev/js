@@ -25,7 +25,7 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
   DeviceWalletConnectionArgs
 > {
   connector?: TWConnector;
-
+  #walletImpl?: DeviceWalletImpl;
   static id = "deviceWallet" as const;
 
   public get walletName() {
@@ -65,8 +65,18 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
         chain: this.options.chain,
         wallet,
       });
+
+      this.#walletImpl = wallet;
     }
     return this.connector;
+  }
+
+  getWalletData() {
+    if (!this.#walletImpl) {
+      throw new Error("Wallet not initialized");
+    }
+
+    return this.#walletImpl.getWalletData();
   }
 }
 
@@ -149,6 +159,10 @@ export class DeviceWalletImpl extends AbstractWallet {
   async export(password: string): Promise<string> {
     const wallet = (await this.getSigner()) as ethers.Wallet;
     return wallet.encrypt(password);
+  }
+
+  getWalletData() {
+    return this.options.storage.getWalletData();
   }
 }
 
