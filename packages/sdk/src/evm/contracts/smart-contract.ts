@@ -200,7 +200,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   /**
    * Prepare a transaction for sending
    */
-  public async prepare<
+  public prepare<
     TMethod extends keyof TContract["functions"] = keyof TContract["functions"],
   >(
     method: string & TMethod,

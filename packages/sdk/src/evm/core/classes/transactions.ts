@@ -125,6 +125,10 @@ export class Transaction<TResult = TransactionResult> {
     return this.overrides;
   }
 
+  getValue() {
+    return this.overrides.value || 0;
+  }
+
   getGaslessOptions() {
     return this.gaslessOptions;
   }
@@ -159,6 +163,11 @@ export class Transaction<TResult = TransactionResult> {
     return this;
   }
 
+  setNonce(nonce: CallOverrides["nonce"]): Transaction<TResult> {
+    this.updateOverrides({ nonce });
+    return this;
+  }
+
   setMaxFeePerGas(
     maxFeePerGas: CallOverrides["maxFeePerGas"],
   ): Transaction<TResult> {
@@ -170,6 +179,28 @@ export class Transaction<TResult = TransactionResult> {
     maxPriorityFeePerGas: CallOverrides["maxPriorityFeePerGas"],
   ): Transaction<TResult> {
     this.updateOverrides({ maxPriorityFeePerGas });
+    return this;
+  }
+
+  setType(type: CallOverrides["type"]): Transaction<TResult> {
+    this.updateOverrides({ type });
+    return this;
+  }
+
+  setAccessList(accessList: CallOverrides["accessList"]): Transaction<TResult> {
+    this.updateOverrides({ accessList });
+    return this;
+  }
+
+  setCustomData(customData: CallOverrides["customData"]): Transaction<TResult> {
+    this.updateOverrides({ customData });
+    return this;
+  }
+
+  setCcipReadEnabled(
+    ccipReadEnabled: CallOverrides["ccipReadEnabled"],
+  ): Transaction<TResult> {
+    this.updateOverrides({ ccipReadEnabled });
     return this;
   }
 
