@@ -49,10 +49,10 @@ export class ContractAppURI<TContract extends BaseContract>
     if (detectContractFeature<IAppURI>(this.contractWrapper, "AppURI")) {
       return await this.contractWrapper.readContract.appURI();
     }
-    return (
-      Promise.resolve((await this.metadata.get()).app_uri) ||
-      Promise.resolve("")
-    );
+
+    const appUri = (await this.metadata.get()).app_uri;
+
+    return Promise.resolve(`ipfs://${appUri.split("/ipfs/")[1]}` || Promise.resolve(""));
   }
 
   /**
