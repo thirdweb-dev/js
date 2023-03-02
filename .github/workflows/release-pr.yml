@@ -83,14 +83,3 @@ jobs:
           yarn changeset publish --tag dev --no-git-tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Add Comment Output
-        uses: thollander/actions-comment-pull-request@v2
-        with:
-          message: |
-            **Preview Release Created**
-
-            This PR has been deployed to NPM as a preview release.
-            ```json
-            ${{ steps.changesets.outputs.publishedPackages }}
-            ```
