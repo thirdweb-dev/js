@@ -8,6 +8,7 @@ import { ContractInterceptor } from "../../core/classes/contract-interceptor";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
+import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import {
   NetworkInput,
@@ -357,7 +358,7 @@ export class Vote implements UpdateableNetwork {
    *     // The amount of the native currency to send in this transaction
    *     nativeTokenValue: 0,
    *     // Transaction data that will be executed when the proposal is executed
-   *     // This is an example transfer transaction with a token contract (which you would need to setup in code)
+   *     // This is an example transfer transaction with a token contract (which you would need to set up in code)
    *     transactionData: tokenContract.encoder.encode(
    *       "transfer", [
    *         fromAddress,
@@ -447,7 +448,7 @@ export class Vote implements UpdateableNetwork {
    *
    * @example
    * ```javascript
-   * // The proposal ID ofthe proposal you want to execute
+   * // The proposal ID of the proposal you want to execute
    * const proposalId = "0"
    * await contract.execute(proposalId);
    * ```
@@ -470,6 +471,24 @@ export class Vote implements UpdateableNetwork {
         descriptionHash,
       ]),
     };
+  }
+
+  /**
+   * @internal
+   */
+  public async prepare<
+    TMethod extends keyof VoteERC20["functions"] = keyof VoteERC20["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<VoteERC20["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
   }
 
   /**

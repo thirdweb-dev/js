@@ -15,7 +15,7 @@ import { useContract } from "../async/contracts";
  *
  *   // Now you can use the split contract in the rest of the component
  *
- *   // For example, this function will retrun all the receipients of the split
+ *   // For example, this function will return all the recipients of the split
  *   async function getRecipients() {
  *     const recipients = await contract.getAllRecipients()
  *     return recipients

@@ -113,7 +113,7 @@ export function getChainProvider(
     // no-op
   }
 
-  // if we still don't have a url fall back to just using the chainId in the rpc and try that shit
+  // if we still don't have an url fall back to just using the chainId in the rpc and try that shit
   if (!rpcUrl) {
     rpcUrl = `https://${chainId}.rpc.thirdweb.com/${
       options.thirdwebApiKey || DEFAULT_API_KEY

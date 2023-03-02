@@ -10,7 +10,12 @@ import {
   FEATURE_PRIMARY_SALE,
   FEATURE_ROYALTY,
 } from "../constants/thirdweb-features";
-import { ContractEncoder, ContractOwner, NetworkInput } from "../core";
+import {
+  ContractEncoder,
+  ContractOwner,
+  NetworkInput,
+  Transaction,
+} from "../core";
 import { ContractAppURI } from "../core/classes/contract-appuri";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
@@ -190,6 +195,24 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
 
   getAddress(): string {
     return this.contractWrapper.readContract.address;
+  }
+
+  /**
+   * Prepare a transaction for sending
+   */
+  public prepare<
+    TMethod extends keyof TContract["functions"] = keyof TContract["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<TContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
   }
 
   /**

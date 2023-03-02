@@ -192,7 +192,7 @@ export class UserWallet {
   /**
    * Sign a typed data structure (EIP712) with the connected wallet private key
    * @param domain - the domain as EIP712 standard
-   * @param types - the strcuture and data types as defined by the EIP712 standard
+   * @param types - the structure and data types as defined by the EIP712 standard
    * @param message - the data to sign
    * @returns the payload and its associated signature
    *
