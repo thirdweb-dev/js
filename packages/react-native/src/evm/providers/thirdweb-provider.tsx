@@ -5,7 +5,7 @@ import { ThirdwebContextProvider } from "../contexts/thirdweb-context-provider";
 import { WalletsProvider } from "../contexts/wallets-context";
 import { SupportedWallet, WalletMeta } from "../types/wallet";
 import {
-  ThirdwebProvider as ThirdwebProviderCore,
+  ThirdwebProvider,
   ThirdwebProviderProps,
 } from "@thirdweb-dev/react-core";
 import {
@@ -17,16 +17,16 @@ import React, { PropsWithChildren, useMemo, useState } from "react";
 
 export type ThirdwebProviderRNProps = PropsWithChildren<
   {
-    supportedWallets: SupportedWallet[];
+    supportedWallets?: SupportedWallet[];
     createWalletStorage?: ThirdwebProviderProps["createWalletStorage"];
   } & Omit<ThirdwebProviderProps, "supportedWallets" | "createWalletStorage">
 >;
 
 export function ThirdwebProviderRN({
   children,
-  createWalletStorage: createWalletStorageProp,
-  supportedWallets,
+  createWalletStorage,
   thirdwebApiKey = DEFAULT_API_KEY,
+  supportedWallets = ["metamask", "rainbow"],
   ...props
 }: ThirdwebProviderRNProps) {
   const [activeWalletMeta, setActiveWalletMeta] = useState<
@@ -62,14 +62,16 @@ export function ThirdwebProviderRN({
         setActiveWalletMeta,
       }}
     >
-      <ThirdwebProviderCore
+      <ThirdwebProvider
         {...props}
         thirdwebApiKey={thirdwebApiKey}
         supportedWallets={supportedWalletsRN}
-        createWalletStorage={createWalletStorageProp || createAsyncLocalStorage}
+        createWalletStorage={
+          createWalletStorage ? createWalletStorage : createAsyncLocalStorage
+        }
       >
         <ThirdwebContextProvider>{children}</ThirdwebContextProvider>
-      </ThirdwebProviderCore>
+      </ThirdwebProvider>
     </WalletsProvider>
   );
 }
