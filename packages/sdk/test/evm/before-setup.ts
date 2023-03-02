@@ -67,6 +67,13 @@ import {
   ExtensionRegistry,
   ExtensionRegistry__factory,
   PermissionsEnumerable__factory,
+  DropERC1155_V2__factory,
+  DropERC1155__factory,
+  DropERC721_V3__factory,
+  DropERC721__factory,
+  Pack__factory,
+  SignatureDrop_V4__factory,
+  SignatureDrop__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -211,19 +218,16 @@ export const mochaHooks = {
           factories.push(TokenERC721__factory);
           break;
         case NFTDropInitializer.contractType:
-          // disabled temporarily -- size issue in dynamic contracts pattern exetnsions
-          // factories.push(DropERC721_V3__factory, DropERC721__factory);
+          factories.push(DropERC721_V3__factory, DropERC721__factory);
           break;
         case SignatureDropInitializer.contractType:
-          // disabled temporarily -- size issue in dynamic contracts pattern exetnsions
-          // factories.push(SignatureDrop_V4__factory, SignatureDrop__factory);
+          factories.push(SignatureDrop_V4__factory, SignatureDrop__factory);
           break;
         case EditionInitializer.contractType:
           factories.push(TokenERC1155__factory);
           break;
         case EditionDropInitializer.contractType:
-          // disabled temporarily -- size issue in dynamic contracts pattern exetnsions
-          // factories.push(DropERC1155_V2__factory, DropERC1155__factory);
+          factories.push(DropERC1155_V2__factory, DropERC1155__factory);
           break;
         case SplitInitializer.contractType:
           factories.push(Split__factory);
@@ -235,8 +239,7 @@ export const mochaHooks = {
           factories.push(Marketplace__factory);
           break;
         case PackInitializer.contractType:
-          // disabled temporarily -- size issue in dynamic contracts pattern exetnsions
-          // factories.push(Pack__factory);
+          factories.push(Pack__factory);
           break;
         case MultiwrapInitializer.contractType:
           factories.push(Multiwrap__factory);

@@ -13,7 +13,7 @@ import { BigNumber } from "ethers";
 global.fetch = require("cross-fetch");
 
 // TODO: enable tests (disabled temporarily)
-describe.skip("Pack Contract", async () => {
+describe("Pack Contract", async () => {
   let packContract: Pack;
   let bundleContract: Edition;
 

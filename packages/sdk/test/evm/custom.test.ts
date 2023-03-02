@@ -18,7 +18,7 @@ import invariant from "tiny-invariant";
 global.fetch = require("cross-fetch");
 
 // TODO: enable tests (disabled temporarily)
-describe.skip("Custom Contracts", async () => {
+describe("Custom Contracts", async () => {
   let customContractAddress: string;
   let nftContractAddress: string;
   let tokenContractAddress: string;

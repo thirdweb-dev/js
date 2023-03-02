@@ -16,7 +16,7 @@ import invariant from "tiny-invariant";
 global.fetch = require("cross-fetch");
 
 // TODO: enable tests (disabled temporarily)
-describe.skip("NFT Drop Contract (v4)", async () => {
+describe("NFT Drop Contract (v4)", async () => {
   let dropContract: NFTDrop;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,

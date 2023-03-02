@@ -15,7 +15,7 @@ import { ethers } from "ethers";
 global.fetch = require("cross-fetch");
 
 // TODO: enable tests (disabled temporarily)
-describe.skip("Events", async () => {
+describe("Events", async () => {
   let dropContract: NFTDrop;
   let dropContract2: NFTDrop;
   let nftContract: NFTCollection;
