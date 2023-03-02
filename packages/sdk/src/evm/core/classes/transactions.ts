@@ -199,11 +199,18 @@ export class Transaction<TResult = TransactionResult> {
     const gasOverrides = await this.getGasOverrides();
     const overrides: CallOverrides = { ...gasOverrides, ...this.overrides };
 
+    // First, if no gasLimit is passed, call estimate gas ourselves
+    if (!overrides.gasLimit) {
+      overrides.gasLimit = await this.estimateGasLimit();
+    }
+
     const tx = await this.contract.populateTransaction[this.method](
       ...this.args,
       overrides,
     );
-    return this.signer.signTransaction(tx);
+    const populatedTx = await this.contract.signer.populateTransaction(tx);
+    const signedTx = await this.contract.signer.signTransaction(populatedTx);
+    return signedTx;
   }
 
   /**
