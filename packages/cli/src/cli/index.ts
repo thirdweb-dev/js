@@ -112,7 +112,7 @@ const main = async () => {
                   `Now using CLI version ${versionInfo.latest}. Continuing execution...`,
                 );
 
-                await new Promise((done, failed) => {
+                await new Promise((resolve, reject) => {
                   const shell = spawn(
                     `npx --yes thirdweb@latest ${process.argv
                       .slice(2)
@@ -122,9 +122,9 @@ const main = async () => {
                   );
                   shell.on("close", (code) => {
                     if (code === 0) {
-                      done("");
+                      resolve("");
                     } else {
-                      failed();
+                      reject();
                     }
                   });
                 });
@@ -157,14 +157,14 @@ const main = async () => {
                   process.exit(1);
               }
 
-              await new Promise((done, failed) => {
+              await new Promise((resolve, reject) => {
                 exec(command, (err, stdout, stderr) => {
                   if (err) {
-                    failed(err);
+                    reject(err);
                     return;
                   }
 
-                  done({ stdout, stderr });
+                  resolve({ stdout, stderr });
                 });
               });
 
@@ -178,7 +178,7 @@ const main = async () => {
                 !installation.isGlobal || installation.packageManager === "npm"
                   ? `npx thirdweb`
                   : `thirdweb`;
-              await new Promise((done, failed) => {
+              await new Promise((resolve, reject) => {
                 const shell = spawn(
                   `${executionCommand} ${process.argv.slice(2).join(" ")}`,
                   [],
@@ -186,9 +186,9 @@ const main = async () => {
                 );
                 shell.on("close", (code) => {
                   if (code === 0) {
-                    done("");
+                    resolve("");
                   } else {
-                    failed();
+                    reject();
                   }
                 });
               });
