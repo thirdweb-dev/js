@@ -54,10 +54,7 @@ const main = async () => {
         if (lastCheckCache.isCached) {
           const lastVersionCheck = new Date(lastCheckCache.value);
           // Don't check for updates if already checked within past 24 hours
-          if (
-            new Date().getTime() - lastVersionCheck.getTime() <
-            1000 * 60 * 60 * 24
-          ) {
+          if (Date.now() - lastVersionCheck.getTime() < 1000 * 60 * 60 * 24) {
             shouldCheckVersion = false;
           }
         }

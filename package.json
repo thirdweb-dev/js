@@ -22,7 +22,7 @@
     "lint": "turbo run lint",
     "fix": "turbo run fix",
     "clean": "turbo run clean && rm -rf node_modules",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format": "prettier --write \"packages/cli/**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "node ./scripts/pre-release.mjs && changeset publish",
