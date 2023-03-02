@@ -86,11 +86,14 @@ jobs:
 
       - name: Add Comment Output
         uses: thollander/actions-comment-pull-request@v2
+        if: steps.changesets.outputs.published == 'true'
+        env:
+          changeset_outputs_published_packages: ${{ steps.changesets.outputs.publishedPackages }}
         with:
           message: |
             **Preview Release Created**
 
             This PR has been deployed to NPM as a preview release.
             ```json
-            ${{ steps.changesets.outputs.publishedPackages }}
+            ${{changeset_outputs_published_packages}}
             ```
