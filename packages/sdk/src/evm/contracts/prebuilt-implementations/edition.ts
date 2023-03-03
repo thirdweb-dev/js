@@ -2,6 +2,7 @@ import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
 import { buildTransactionFunction } from "../../common/transactions";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -24,7 +25,13 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { EditionMetadataOrUri } from "../../schema/tokens/edition";
 import type { TokenERC1155 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
+import {
+  BaseContract,
+  BigNumber,
+  BigNumberish,
+  CallOverrides,
+  constants,
+} from "ethers";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.
@@ -48,6 +55,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
     TokenERC1155,
     typeof TokenErc1155ContractSchema
   >;
+  public app: ContractAppURI<BaseContract>;
   public roles: ContractRoles<
     TokenERC1155,
     (typeof Edition.contractRoles)[number]
@@ -118,6 +126,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
       TokenErc1155ContractSchema,
       this.storage,
     );
+    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
     this.roles = new ContractRoles(this.contractWrapper, Edition.contractRoles);
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.sales = new ContractPrimarySale(this.contractWrapper);
