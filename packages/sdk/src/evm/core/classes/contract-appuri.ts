@@ -4,7 +4,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
-import type { AppURI } from "@thirdweb-dev/contracts-js";
+import type { IAppURI } from "@thirdweb-dev/contracts-js";
 import { BaseContract } from "ethers";
 
 /**
@@ -45,12 +45,14 @@ export class ContractAppURI<TContract extends BaseContract>
    * ```
    * @twfeature AppURI
    */
-  public async get() {
-    if (detectContractFeature<AppURI>(this.contractWrapper, "AppURI")) {
+  public async get(): Promise<string> {
+    if (detectContractFeature<IAppURI>(this.contractWrapper, "AppURI")) {
       return await this.contractWrapper.readContract.appURI();
     }
 
-    return (await this.metadata.get()).appURI || "";
+    const appUri = (await this.metadata.get()).app_uri;
+
+    return Promise.resolve(`ipfs://${appUri.split("/ipfs/")[1]}` || Promise.resolve(""));
   }
 
   /**
@@ -64,7 +66,7 @@ export class ContractAppURI<TContract extends BaseContract>
    * @twfeature AppURI
    */
   public async set(appURI: string): Promise<TransactionResult> {
-    if (detectContractFeature<AppURI>(this.contractWrapper, "AppURI")) {
+    if (detectContractFeature<IAppURI>(this.contractWrapper, "AppURI")) {
       return {
         receipt: await this.contractWrapper.sendTransaction("setAppURI", [
           appURI,
@@ -72,6 +74,6 @@ export class ContractAppURI<TContract extends BaseContract>
       };
     }
 
-    return await this.metadata.update({ appURI });
+    return await this.metadata.update({ app_uri: appURI });
   }
 }

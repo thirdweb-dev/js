@@ -1,5 +1,6 @@
 import { getRoleHash } from "../../common";
 import { buildTransactionFunction } from "../../common/transactions";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -19,7 +20,7 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { Amount, CurrencyValue } from "../../types";
 import { PrebuiltTokenDrop } from "../../types/eips";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { CallOverrides, constants } from "ethers";
+import { BaseContract, CallOverrides, constants } from "ethers";
 
 /**
  * Create a Drop contract for a standard crypto token or cryptocurrency.
@@ -42,6 +43,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
     PrebuiltTokenDrop,
     typeof DropErc20ContractSchema
   >;
+  public app: ContractAppURI<BaseContract>;
   public roles: ContractRoles<
     PrebuiltTokenDrop,
     (typeof TokenDrop.contractRoles)[number]
@@ -100,6 +102,8 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
       DropErc20ContractSchema,
       this.storage,
     );
+
+    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
     this.roles = new ContractRoles(
       this.contractWrapper,
       TokenDrop.contractRoles,
