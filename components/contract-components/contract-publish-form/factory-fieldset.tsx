@@ -1,23 +1,18 @@
 import { PasteInput } from "./PasteInput";
-import { useWeb3 } from "@3rdweb-sdk/react";
 import { Flex, FormControl } from "@chakra-ui/react";
-import { SUPPORTED_CHAIN_IDS } from "@thirdweb-dev/sdk";
+import { useConfiguredChains } from "hooks/chains/configureChains";
 import { useMemo } from "react";
 import { FormLabel, Heading, Link, Text } from "tw-components";
 
 export const FactoryFieldset = () => {
-  const { getNetworkMetadata } = useWeb3();
+  const configuredChains = useConfiguredChains();
 
   const { mainnets, testnets } = useMemo(() => {
-    const networks = SUPPORTED_CHAIN_IDS.map((supportedChain) => {
-      return getNetworkMetadata(supportedChain);
-    });
-
     return {
-      mainnets: networks.filter((n) => !n.isTestnet),
-      testnets: networks.filter((n) => n.isTestnet),
+      mainnets: configuredChains.filter((n) => !n.testnet),
+      testnets: configuredChains.filter((n) => n.testnet),
     };
-  }, [getNetworkMetadata]);
+  }, [configuredChains]);
 
   return (
     <Flex gap={16} direction="column" as="fieldset">
@@ -40,7 +35,7 @@ export const FactoryFieldset = () => {
       </Flex>
       <Flex flexDir="column" gap={4}>
         <Heading size="title.md">Mainnets</Heading>
-        {mainnets.map(({ chainId, chainName }) => (
+        {mainnets.map(({ chainId, name }) => (
           <FormControl key={`factory${chainId}`}>
             <Flex gap={4} alignItems="center">
               <FormLabel
@@ -48,7 +43,7 @@ export const FactoryFieldset = () => {
                 width={{ base: "150px", md: "270px" }}
                 lineHeight="150%"
               >
-                {chainName}
+                {name}
               </FormLabel>
               <PasteInput
                 formKey={`factoryDeploymentData.factoryAddresses.${chainId}`}
@@ -59,7 +54,7 @@ export const FactoryFieldset = () => {
       </Flex>
       <Flex flexDir="column" gap={4}>
         <Heading size="title.md">Testnets</Heading>
-        {testnets.map(({ chainId, chainName }) => (
+        {testnets.map(({ chainId, name }) => (
           <FormControl key={`factory${chainId}`}>
             <Flex gap={4} alignItems="center">
               <FormLabel
@@ -67,7 +62,7 @@ export const FactoryFieldset = () => {
                 width={{ base: "150px", md: "270px" }}
                 lineHeight="150%"
               >
-                {chainName}
+                {name}
               </FormLabel>
               <PasteInput
                 formKey={`factoryDeploymentData.factoryAddresses.${chainId}`}

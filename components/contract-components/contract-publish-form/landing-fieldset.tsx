@@ -134,8 +134,9 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
           >
             <FormLabel>Contract Name</FormLabel>
             <Input
-              {...form.register("displayName", { required: true })}
               placeholder="Ex. MyContract"
+              value={form.watch("displayName")}
+              onChange={(e) => form.setValue("displayName", e.target.value)}
             />
             <FormErrorMessage>
               {form.formState.errors?.displayName?.message}
@@ -144,9 +145,10 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
           <FormControl isInvalid={!!form.formState.errors.description}>
             <FormLabel>Description</FormLabel>
             <Textarea
-              {...form.register("description")}
               rows={2}
               placeholder="Briefly describe what your contract does."
+              value={form.watch("description")}
+              onChange={(e) => form.setValue("description", e.target.value)}
             />
 
             <FormErrorMessage>
@@ -181,7 +183,8 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
             <TabPanels pt={2}>
               <TabPanel px={0} pb={0}>
                 <Textarea
-                  {...form.register("readme")}
+                  value={form.watch("readme")}
+                  onChange={(e) => form.setValue("readme", e.target.value)}
                   rows={12}
                   placeholder="Describe how users can use this contract. Add links if relevant."
                 />
@@ -217,7 +220,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
               )}
             </Flex>
             <Input
-              {...form.register("version", { required: true })}
+              value={form.watch("version")}
               placeholder={placeholderVersion}
               onChange={handleVersionChange}
             />
@@ -244,7 +247,10 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
                 <TabPanels pt={2}>
                   <TabPanel px={0} pb={0}>
                     <Textarea
-                      {...form.register("changelog")}
+                      value={form.watch("changelog")}
+                      onChange={(e) =>
+                        form.setValue("changelog", e.target.value)
+                      }
                       placeholder="Mention what is new in this version of your contract."
                     />
                     <FormErrorMessage>
@@ -269,6 +275,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
                 <Input
                   isDisabled
                   value={form.watch("audit")?.name}
+                  onChange={(e) => form.setValue("audit", e.target.value)}
                   placeholder="ipfs://..."
                 />
                 <InputRightElement>
@@ -283,7 +290,11 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
               </InputGroup>
             ) : (
               <InputGroup>
-                <Input {...form.register("audit")} placeholder="ipfs://..." />
+                <Input
+                  value={form.watch("audit")?.name}
+                  onChange={(e) => form.setValue("audit", e.target.value)}
+                  placeholder="ipfs://..."
+                />
                 <InputRightElement>
                   <Tooltip label="Upload file" shouldWrapChildren>
                     <FileInput

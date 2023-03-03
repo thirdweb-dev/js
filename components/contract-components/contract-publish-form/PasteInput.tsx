@@ -16,10 +16,15 @@ export const PasteInput: React.FC<PasteInputProps> = ({
   formKey,
   ...inputProps
 }) => {
-  const { register, setValue } = useFormContext();
+  const form = useFormContext();
   return (
     <InputGroup width="full">
-      <Input {...register(formKey)} placeholder="0x..." {...inputProps} />
+      <Input
+        value={form.watch(formKey)}
+        onChange={(e) => form.setValue(formKey, e.target.value)}
+        placeholder="0x..."
+        {...inputProps}
+      />
       <InputRightElement
         pointerEvents="auto"
         children={
@@ -34,7 +39,7 @@ export const PasteInput: React.FC<PasteInputProps> = ({
               navigator.clipboard
                 .readText()
                 .then((text) => {
-                  setValue(formKey, text);
+                  form.setValue(formKey, text);
                 })
                 .catch((err) => {
                   console.error("failed to paste from clipboard", err);

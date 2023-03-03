@@ -1,8 +1,8 @@
 import { DeployFormDrawer } from "../contract-deploy-form/drawer";
 import { PasteInput } from "./PasteInput";
-import { useWeb3 } from "@3rdweb-sdk/react";
 import { Flex, FormControl, Input } from "@chakra-ui/react";
-import { SUPPORTED_CHAIN_ID, SUPPORTED_CHAIN_IDS } from "@thirdweb-dev/sdk";
+import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
+import { useConfiguredChains } from "hooks/chains/configureChains";
 import { Dispatch, SetStateAction, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { FormLabel, Heading, Link, Text } from "tw-components";
@@ -17,18 +17,14 @@ export const ProxyFieldset: React.FC<ProxyFieldsetProps> = ({
   contractId,
 }) => {
   const form = useFormContext();
-  const { getNetworkMetadata } = useWeb3();
+  const configuredChains = useConfiguredChains();
 
   const { mainnets, testnets } = useMemo(() => {
-    const networks = SUPPORTED_CHAIN_IDS.map((supportedChain) => {
-      return getNetworkMetadata(supportedChain);
-    });
-
     return {
-      mainnets: networks.filter((n) => !n.isTestnet),
-      testnets: networks.filter((n) => n.isTestnet),
+      mainnets: configuredChains.filter((n) => !n.testnet),
+      testnets: configuredChains.filter((n) => n.testnet),
     };
-  }, [getNetworkMetadata]);
+  }, [configuredChains]);
 
   return (
     <Flex gap={12} direction="column" as="fieldset">
@@ -49,7 +45,7 @@ export const ProxyFieldset: React.FC<ProxyFieldsetProps> = ({
       <Flex flexDir="column" gap={16} mt={8}>
         <Flex flexDir="column" gap={4}>
           <Heading size="title.md">Mainnets</Heading>
-          {mainnets.map(({ chainId, chainName }) => (
+          {mainnets.map(({ chainId, name }) => (
             <FormControl key={`implementation${chainId}`}>
               <Flex gap={4} alignItems="center">
                 <FormLabel
@@ -57,7 +53,7 @@ export const ProxyFieldset: React.FC<ProxyFieldsetProps> = ({
                   width={{ base: "150px", md: "270px" }}
                   lineHeight="150%"
                 >
-                  {chainName}
+                  {name}
                 </FormLabel>
                 <PasteInput
                   formKey={`factoryDeploymentData.implementationAddresses.${chainId}`}
@@ -83,7 +79,7 @@ export const ProxyFieldset: React.FC<ProxyFieldsetProps> = ({
         </Flex>
         <Flex flexDir="column" gap={4}>
           <Heading size="title.md">Testnets</Heading>
-          {testnets.map(({ chainId, chainName }) => (
+          {testnets.map(({ chainId, name }) => (
             <FormControl key={`implementation${chainId}`}>
               <Flex gap={4} alignItems="center">
                 <FormLabel
@@ -91,7 +87,7 @@ export const ProxyFieldset: React.FC<ProxyFieldsetProps> = ({
                   width={{ base: "150px", md: "270px" }}
                   lineHeight="150%"
                 >
-                  {chainName}
+                  {name}
                 </FormLabel>
                 <PasteInput
                   formKey={`factoryDeploymentData.implementationAddresses.${chainId}`}
@@ -126,10 +122,17 @@ export const ProxyFieldset: React.FC<ProxyFieldsetProps> = ({
           <FormControl isRequired>
             {/** TODO this should be a selector of ABI functions **/}
             <Input
-              {...form.register(
-                `factoryDeploymentData.implementationInitializerFunction`,
-                { required: true },
-              )}
+              value={
+                form.watch(
+                  `factoryDeploymentData.implementationInitializerFunction`,
+                )?.name
+              }
+              onChange={(e) =>
+                form.setValue(
+                  `factoryDeploymentData.implementationInitializerFunction`,
+                  e.target.value,
+                )
+              }
               placeholder="function name to invoke"
               defaultValue="initialize"
             />
