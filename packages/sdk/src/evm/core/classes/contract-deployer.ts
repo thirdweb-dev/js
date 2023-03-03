@@ -21,6 +21,7 @@ import {
   NFTCollectionInitializer,
   NFTDropInitializer,
   PackInitializer,
+  PREBUILT_CONTRACTS_APPURI_MAP,
   PREBUILT_CONTRACTS_MAP,
   SignatureDropInitializer,
   SplitInitializer,
@@ -449,9 +450,12 @@ export class ContractDeployer extends RPCConnectionHandler {
   ): Promise<string> {
     const signer = this.getSigner();
     invariant(signer, "A signer is required to deploy contracts");
-    const parsedMetadata = await PREBUILT_CONTRACTS_MAP[
-      contractType
-    ].schema.deploy.parseAsync(contractMetadata);
+    const parsedMetadata = await {
+      app_uri: PREBUILT_CONTRACTS_APPURI_MAP[contractType],
+      ...PREBUILT_CONTRACTS_MAP[contractType].schema.deploy.parseAsync(
+        contractMetadata,
+      ),
+    };
     if (this.hasLocalFactory()) {
       // old behavior for unit tests, deploy from local factory
       // parse version into the first number of the version string (or undefined if unparseable)

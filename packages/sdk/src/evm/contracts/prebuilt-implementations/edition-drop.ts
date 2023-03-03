@@ -2,6 +2,7 @@ import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
 import { buildTransactionFunction } from "../../common/transactions";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -54,6 +55,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
     PrebuiltEditionDrop,
     typeof DropErc1155ContractSchema
   >;
+  public app: ContractAppURI<PrebuiltEditionDrop>;
   public roles: ContractRoles<
     PrebuiltEditionDrop,
     (typeof EditionDrop.contractRoles)[number]
@@ -135,6 +137,11 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       DropErc1155ContractSchema,
+      this.storage,
+    );
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
       this.storage,
     );
     this.roles = new ContractRoles(

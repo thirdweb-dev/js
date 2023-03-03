@@ -9,7 +9,7 @@ export default {
   },
   "rpc": [
     "https://dogcoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-rpc.dogcoin.network"
+    "https://mainnet-rpc.dogcoin.me"
   ],
   "faucets": [
     "https://faucet.dogcoin.network"

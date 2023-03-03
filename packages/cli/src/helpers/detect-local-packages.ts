@@ -13,9 +13,7 @@ export async function findPackageInstallation(): Promise<
   const isLocal = await isInstalledLocally();
   if (isLocal) {
     const packageManager = await import("detect-package-manager").then(
-      ({ detect }) => {
-        return detect();
-      },
+      ({ detect }) => detect(),
     );
 
     return { packageManager, isGlobal: false };
