@@ -63,6 +63,7 @@ type ConnectConfig = {
 const NAMESPACE = "eip155";
 const REQUESTED_CHAINS_KEY = "wagmi.requestedChains";
 const ADD_ETH_CHAIN_METHOD = "wallet_addEthereumChain";
+const LAST_USED_CHAIN_ID = "last-used-chain-id";
 
 export class WalletConnectConnector extends Connector<
   WalletConnectProvider,
@@ -88,7 +89,23 @@ export class WalletConnectConnector extends Connector<
 
   async connect({ chainId, pairingTopic }: ConnectConfig = {}) {
     try {
-      let targetChainId = chainId || 1;
+      let targetChainId = chainId;
+      if (!targetChainId) {
+        const lastUsedChainIdStr = await this.#storage.getItem(
+          LAST_USED_CHAIN_ID,
+        );
+        const lastUsedChainId = lastUsedChainIdStr
+          ? parseInt(lastUsedChainIdStr)
+          : undefined;
+        if (lastUsedChainId && !this.isChainUnsupported(lastUsedChainId)) {
+          targetChainId = lastUsedChainId;
+        } else {
+          targetChainId = this.chains[0]?.id;
+        }
+      }
+      if (!targetChainId) {
+        throw new Error("No chains found on connector.");
+      }
 
       const provider = await this.getProvider();
       this.#setupListeners();
@@ -405,11 +422,13 @@ export class WalletConnectConnector extends Connector<
   protected onChainChanged = (chainId: number | string) => {
     const id = Number(chainId);
     const unsupported = this.isChainUnsupported(id);
+    this.#storage.setItem(LAST_USED_CHAIN_ID, String(chainId));
     this.emit("change", { chain: { id, unsupported } });
   };
 
   protected onDisconnect = () => {
     this.#setRequestedChainsIds([]);
+    this.#storage.removeItem(LAST_USED_CHAIN_ID);
     this.emit("disconnect");
   };
 
