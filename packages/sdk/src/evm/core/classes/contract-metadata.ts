@@ -68,8 +68,8 @@ export class ContractMetadata<
   /**
    * @internal
    */
-  public parseInputMetadata(metadata: any): z.input<TSchema["input"]> {
-    return this.schema.input.parse(metadata);
+  public parseInputMetadata(metadata: any): Promise<z.input<TSchema["input"]>> {
+    return this.schema.input.parseAsync(metadata);
   }
   /**
    * Get the metadata of this contract

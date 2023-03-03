@@ -59,7 +59,7 @@ export class ContractRoyalty<
     const [royaltyRecipient, royaltyBps] =
       await this.contractWrapper.readContract.getDefaultRoyaltyInfo();
     // parse it on the way out to make sure we default things if they are not set
-    return CommonRoyaltySchema.parse({
+    return CommonRoyaltySchema.parseAsync({
       fee_recipient: royaltyRecipient,
       seller_fee_basis_points: royaltyBps,
     });
@@ -80,7 +80,7 @@ export class ContractRoyalty<
   public async getTokenRoyaltyInfo(tokenId: BigNumberish) {
     const [royaltyRecipient, royaltyBps] =
       await this.contractWrapper.readContract.getRoyaltyInfoForToken(tokenId);
-    return CommonRoyaltySchema.parse({
+    return CommonRoyaltySchema.parseAsync({
       fee_recipient: royaltyRecipient,
       seller_fee_basis_points: royaltyBps,
     });
@@ -107,7 +107,7 @@ export class ContractRoyalty<
 
     // update the metadata with the new royalty data
     // if one of the keys is "undefined" it will be ignored (which is the desired behavior)
-    const mergedMetadata = this.metadata.parseInputMetadata({
+    const mergedMetadata = await this.metadata.parseInputMetadata({
       ...oldMetadata,
       ...royaltyData,
     });

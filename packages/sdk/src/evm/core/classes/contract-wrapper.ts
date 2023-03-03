@@ -281,7 +281,7 @@ export class ContractWrapper<
     try {
       if (args.length > 0 && typeof args[args.length - 1] === "object") {
         const last = args[args.length - 1];
-        txOptions = CallOverrideSchema.parse(last);
+        txOptions = await CallOverrideSchema.parseAsync(last);
         // if call overrides found, remove it from args array
         args = args.slice(0, args.length - 1);
       }

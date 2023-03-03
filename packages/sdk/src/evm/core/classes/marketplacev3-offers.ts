@@ -68,7 +68,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
 
   /**
    * Get the total number of offers
-   * 
+   *
    * @returns Returns the total number of offers created.
    * @public
    *
@@ -213,7 +213,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
   public async makeOffer(
     offer: OfferInputParams,
   ): Promise<TransactionResultWithId> {
-    const parsedOffer = OfferInputParamsSchema.parse(offer);
+    const parsedOffer = await OfferInputParamsSchema.parseAsync(offer);
 
     const chainId = await this.contractWrapper.getChainID();
     const currency = isNativeToken(parsedOffer.currencyContractAddress)

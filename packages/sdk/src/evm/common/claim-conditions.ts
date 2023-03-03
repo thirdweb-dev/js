@@ -182,7 +182,7 @@ export async function fetchSnapshot(
       const smt = await ShardedMerkleTree.fromUri(snapshotUri, storage);
       return smt?.getAllEntries() || null;
     } else {
-      const snapshotData = SnapshotSchema.parse(raw);
+      const snapshotData = await SnapshotSchema.parseAsync(raw);
       if (merkleRoot === snapshotData.merkleRoot) {
         return snapshotData.claims.map((claim) => ({
           address: claim.address,
@@ -222,7 +222,7 @@ export async function fetchSnapshotEntryForAddress(
       );
     }
     // legacy non-sharded, just fetch it all and filter out
-    const snapshotData = SnapshotSchema.parse(raw);
+    const snapshotData = await SnapshotSchema.parseAsync(raw);
     if (merkleRoot === snapshotData.merkleRoot) {
       return (
         snapshotData.claims.find(
@@ -256,14 +256,14 @@ export async function updateExistingClaimConditions(
   const priceInTokens = ethers.utils.formatUnits(priceInWei, priceDecimals);
 
   // merge existing (output format) with incoming (input format)
-  const newConditionParsed = ClaimConditionInputSchema.parse({
+  const newConditionParsed = await ClaimConditionInputSchema.parseAsync({
     ...existingConditions[index],
     price: priceInTokens,
     ...claimConditionInput,
   });
 
   // convert to output claim condition
-  const mergedConditionOutput = ClaimConditionOutputSchema.parse({
+  const mergedConditionOutput = await ClaimConditionOutputSchema.parseAsync({
     ...newConditionParsed,
     price: priceInWei,
   });
@@ -362,7 +362,9 @@ export async function processClaimConditionInputs(
     storage,
     snapshotFormatVersion,
   );
-  const parsedInputs = ClaimConditionInputArray.parse(inputsWithSnapshots);
+  const parsedInputs = await ClaimConditionInputArray.parseAsync(
+    inputsWithSnapshots,
+  );
   // Convert processed inputs to the format the contract expects, and sort by timestamp
   const sortedConditions: AbstractClaimConditionContractStruct[] = (
     await Promise.all(
@@ -524,7 +526,7 @@ export async function transformResultToClaimCondition(
   if (pm.metadata) {
     resolvedMetadata = await storage.downloadJSON(pm.metadata);
   }
-  return ClaimConditionOutputSchema.parse({
+  return ClaimConditionOutputSchema.parseAsync({
     startTime: pm.startTimestamp,
     maxClaimableSupply,
     maxClaimablePerWallet,

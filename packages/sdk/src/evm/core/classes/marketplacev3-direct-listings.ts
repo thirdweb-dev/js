@@ -340,7 +340,9 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   public async createListing(
     listing: DirectListingInputParams,
   ): Promise<TransactionResultWithId> {
-    const parsedListing = DirectListingInputParamsSchema.parse(listing);
+    const parsedListing = await DirectListingInputParamsSchema.parseAsync(
+      listing,
+    );
 
     await handleTokenApproval(
       this.contractWrapper,
@@ -432,7 +434,9 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
     listingId: BigNumberish,
     listing: DirectListingInputParams,
   ): Promise<TransactionResultWithId> {
-    const parsedListing = DirectListingInputParamsSchema.parse(listing);
+    const parsedListing = await DirectListingInputParamsSchema.parseAsync(
+      listing,
+    );
 
     await handleTokenApproval(
       this.contractWrapper,

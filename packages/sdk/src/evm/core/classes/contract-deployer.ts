@@ -449,10 +449,9 @@ export class ContractDeployer extends RPCConnectionHandler {
   ): Promise<string> {
     const signer = this.getSigner();
     invariant(signer, "A signer is required to deploy contracts");
-    const parsedMetadata =
-      PREBUILT_CONTRACTS_MAP[contractType].schema.deploy.parse(
-        contractMetadata,
-      );
+    const parsedMetadata = await PREBUILT_CONTRACTS_MAP[
+      contractType
+    ].schema.deploy.parseAsync(contractMetadata);
     if (this.hasLocalFactory()) {
       // old behavior for unit tests, deploy from local factory
       // parse version into the first number of the version string (or undefined if unparseable)
@@ -511,7 +510,10 @@ export class ContractDeployer extends RPCConnectionHandler {
 
     if (implementationAddress) {
       // implementation exists on the current chain, continue with normal flow
-      return this.deployContractFromUri(publishedContract.metadataUri, constructorParams);
+      return this.deployContractFromUri(
+        publishedContract.metadataUri,
+        constructorParams,
+      );
     } else {
       // implementation does NOT exist on chain, deploy the implementation first, then deploy a proxy
       implementationAddress = await this.deployContractFromUri(

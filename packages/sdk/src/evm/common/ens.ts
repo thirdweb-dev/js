@@ -2,7 +2,7 @@ import { DEFAULT_API_KEY } from "../../core/constants/urls";
 import { providers } from "ethers";
 
 type CachedEns = {
-  address: string;
+  address: string | null;
   expirationTime: Date;
 };
 
@@ -17,6 +17,11 @@ async function refreshCache(ens: string): Promise<string | null> {
   const address = await provider.resolveName(ens);
 
   if (!address) {
+    // If they don't have an ENS, only cache for 30s
+    ENS_CACHE.set(ens, {
+      address: null,
+      expirationTime: new Date(Date.now() + 1000 * 30),
+    });
     return null;
   }
 
@@ -25,14 +30,12 @@ async function refreshCache(ens: string): Promise<string | null> {
     address,
     expirationTime: new Date(Date.now() + 1000 * 60 * 5),
   });
-
   return address;
 }
 
 export async function resolveEns(ens: string): Promise<string | null> {
-  if (ENS_CACHE.has(ens)) {
-    const cachedEns = ENS_CACHE.get(ens) as CachedEns;
-
+  const cachedEns = ENS_CACHE.get(ens);
+  if (!!cachedEns && !!cachedEns.address) {
     // Trigger refresh if cache is expired, but don't block on it (SWR)
     if (cachedEns.expirationTime > new Date()) {
       refreshCache(ens);

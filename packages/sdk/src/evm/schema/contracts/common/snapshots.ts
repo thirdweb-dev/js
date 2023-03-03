@@ -42,12 +42,15 @@ export type ShardedSnapshot = {
  * @internal
  */
 export const SnapshotInputSchema = z.union([
-  z.array(z.string()).transform((strings) =>
-    strings.map((address) =>
-      SnapshotEntryInput.parse({
-        address,
-      }),
-    ),
+  z.array(z.string()).transform(
+    async (strings) =>
+      await Promise.all(
+        strings.map((address) =>
+          SnapshotEntryInput.parseAsync({
+            address,
+          }),
+        ),
+      ),
   ),
   z.array(SnapshotEntryInput),
 ]);

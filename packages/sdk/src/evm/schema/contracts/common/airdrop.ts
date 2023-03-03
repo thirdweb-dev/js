@@ -14,12 +14,15 @@ export const AirdropAddressInput = z.object({
  * @internal
  */
 export const AirdropInputSchema = z.union([
-  z.array(z.string()).transform((strings) =>
-    strings.map((address) =>
-      AirdropAddressInput.parse({
-        address,
-      }),
-    ),
+  z.array(z.string()).transform(
+    async (strings) =>
+      await Promise.all(
+        strings.map((address) =>
+          AirdropAddressInput.parseAsync({
+            address,
+          }),
+        ),
+      ),
   ),
   z.array(AirdropAddressInput),
 ]);

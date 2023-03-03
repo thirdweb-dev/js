@@ -90,14 +90,16 @@ describe("Snapshots", async () => {
   [SnapshotFormatVersion.V1, SnapshotFormatVersion.V2].forEach(
     (snapshotVersion) => {
       it("should generate valid proofs:" + snapshotVersion, async () => {
-        const hashedLeafs = members.map((l) =>
-          ShardedMerkleTree.hashEntry(
-            SnapshotEntryInput.parse({
-              address: l,
-            }),
-            0,
-            18,
-            snapshotVersion,
+        const hashedLeafs = await Promise.all(
+          members.map(async (l) =>
+            ShardedMerkleTree.hashEntry(
+              await SnapshotEntryInput.parseAsync({
+                address: l,
+              }),
+              0,
+              18,
+              snapshotVersion,
+            ),
           ),
         );
         const tree = new MerkleTree(hashedLeafs, ethers.utils.keccak256, {
@@ -116,7 +118,7 @@ describe("Snapshots", async () => {
         for (const leaf of members) {
           const expectedProof = tree.getHexProof(
             ShardedMerkleTree.hashEntry(
-              SnapshotEntryInput.parse({
+              await SnapshotEntryInput.parseAsync({
                 address: leaf,
               }),
               0,
