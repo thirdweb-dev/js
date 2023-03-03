@@ -4,6 +4,7 @@ import { isNativeToken } from "../../common/currency";
 import { mapOffer } from "../../common/marketplace";
 import { getRoleHash } from "../../common/role";
 import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -28,7 +29,13 @@ import { UnmappedOffer } from "../../types/marketplace/UnmappedOffer";
 import type { Marketplace as MarketplaceContract } from "@thirdweb-dev/contracts-js";
 import { NewOfferEventObject } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
+import {
+  BaseContract,
+  BigNumber,
+  BigNumberish,
+  CallOverrides,
+  constants,
+} from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -60,6 +67,7 @@ export class Marketplace implements UpdateableNetwork {
     MarketplaceContract,
     typeof MarketplaceContractSchema
   >;
+  public app: ContractAppURI<BaseContract>;
   public roles: ContractRoles<
     MarketplaceContract,
     (typeof Marketplace.contractRoles)[number]
@@ -167,6 +175,8 @@ export class Marketplace implements UpdateableNetwork {
       MarketplaceContractSchema,
       this.storage,
     );
+
+    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
     this.roles = new ContractRoles(
       this.contractWrapper,
       Marketplace.contractRoles,
