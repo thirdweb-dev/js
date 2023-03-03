@@ -74,6 +74,7 @@ import {
   Pack__factory,
   SignatureDrop_V4__factory,
   SignatureDrop__factory,
+  PermissionsEnumerableImpl__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -137,7 +138,7 @@ export const mochaHooks = {
       ExtensionRegistry__factory.bytecode,
     )
       .connect(signer)
-      .deploy(signer.address)) as ExtensionRegistry;
+      .deploy(signer.address, [])) as ExtensionRegistry;
     extensionRegistry = await pluginRegistryDeployer.deployed();
 
     const registry = (await new ethers.ContractFactory(
@@ -394,13 +395,13 @@ async function setupMarketplaceV3(
 
   // PermissionsEnumerable plugin
   const permissionsAddress = await deployContractAndUploadMetadata(
-    PermissionsEnumerable__factory.abi,
-    PermissionsEnumerable__factory.bytecode,
+    PermissionsEnumerableImpl__factory.abi,
+    PermissionsEnumerableImpl__factory.bytecode,
     signer,
   );
   const functionsPermissions: PluginFunction[] = generatePluginFunctions(
     permissionsAddress,
-    PermissionsEnumerable__factory.abi,
+    PermissionsEnumerableImpl__factory.abi,
   );
   const metadataPermissions: PluginMetadata = {
     name: "PermissionsEnumerable",
