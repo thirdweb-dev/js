@@ -72,7 +72,7 @@ export const ChainInfoInputSchema = z.object({
   nativeCurrency: z.object({
     name: z.string(),
     symbol: z.string(),
-    decimals: z.literal(18),
+    decimals: z.number(),
   }),
 });
 
