@@ -9,6 +9,7 @@ import {
   isIncrementalVersion,
   resolveContractUriFromAddress,
 } from "../../common";
+import { buildTransactionFunction } from "../../common/transactions";
 import { getContractPublisherAddress } from "../../constants";
 import {
   AbiFunction,
@@ -29,6 +30,7 @@ import {
 import { NetworkInput, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
+import { Transaction } from "./transactions";
 import type {
   ContractPublisher as OnChainContractPublisher,
   IContractPublisher,
@@ -217,20 +219,20 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @internal
    * @param profileMetadata
    */
-  public async updatePublisherProfile(
-    profileMetadata: ProfileMetadataInput,
-  ): Promise<TransactionResult> {
-    const signer = this.getSigner();
-    invariant(signer, "A signer is required");
-    const publisher = await signer.getAddress();
-    const profileUri = await this.storage.upload(profileMetadata);
-    return {
-      receipt: await this.publisher.sendTransaction("setPublisherProfileUri", [
-        publisher,
-        profileUri,
-      ]),
-    };
-  }
+  updatePublisherProfile = buildTransactionFunction(
+    async (profileMetadata: ProfileMetadataInput) => {
+      const signer = this.getSigner();
+      invariant(signer, "A signer is required");
+      const publisher = await signer.getAddress();
+      const profileUri = await this.storage.upload(profileMetadata);
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.publisher,
+        method: "setPublisherProfileUri",
+        args: [publisher, profileUri],
+      });
+    },
+  );
 
   /**
    * @internal
@@ -329,88 +331,100 @@ export class ContractPublisher extends RPCConnectionHandler {
     return undefined;
   }
 
-  public async publish(
-    predeployUri: string,
-    extraMetadata: ExtraPublishMetadata,
-  ): Promise<TransactionResult<PublishedContract>> {
-    const signer = this.getSigner();
-    invariant(signer, "A signer is required");
-    const publisher = await signer.getAddress();
+  publish = buildTransactionFunction(
+    async (
+      predeployUri: string,
+      extraMetadata: ExtraPublishMetadata,
+    ): Promise<Transaction<TransactionResult<PublishedContract>>> => {
+      const signer = this.getSigner();
+      invariant(signer, "A signer is required");
+      const publisher = await signer.getAddress();
 
-    const predeployMetadata = await fetchRawPredeployMetadata(
-      predeployUri,
-      this.storage,
-    );
-
-    // ensure version is incremental
-    const latestContract = await this.getLatest(
-      publisher,
-      predeployMetadata.name,
-    );
-    if (latestContract && latestContract.metadataUri) {
-      const latestMetadata = await this.fetchPublishedContractInfo(
-        latestContract,
+      const predeployMetadata = await fetchRawPredeployMetadata(
+        predeployUri,
+        this.storage,
       );
-      const latestVersion = latestMetadata.publishedMetadata.version;
-      if (!isIncrementalVersion(latestVersion, extraMetadata.version)) {
-        throw Error(
-          `Version ${extraMetadata.version} is not greater than ${latestVersion}`,
-        );
-      }
-    }
 
-    const fetchedBytecode = await (
-      await this.storage.download(predeployMetadata.bytecodeUri)
-    ).text();
-    const bytecode = fetchedBytecode.startsWith("0x")
-      ? fetchedBytecode
-      : `0x${fetchedBytecode}`;
-
-    const bytecodeHash = utils.solidityKeccak256(["bytes"], [bytecode]);
-    const contractId = predeployMetadata.name;
-
-    const fullMetadata = FullPublishMetadataSchemaInput.parse({
-      ...extraMetadata,
-      metadataUri: predeployMetadata.metadataUri,
-      bytecodeUri: predeployMetadata.bytecodeUri,
-      name: predeployMetadata.name,
-      analytics: predeployMetadata.analytics,
-      publisher,
-    });
-    const fullMetadataUri = await this.storage.upload(fullMetadata);
-    const receipt = await this.publisher.sendTransaction("publishContract", [
-      publisher,
-      contractId,
-      fullMetadataUri,
-      predeployMetadata.metadataUri,
-      bytecodeHash,
-      constants.AddressZero,
-    ]);
-    const events = this.publisher.parseLogs<ContractPublishedEvent>(
-      "ContractPublished",
-      receipt.logs,
-    );
-    if (events.length < 1) {
-      throw new Error("No ContractPublished event found");
-    }
-    const contract = events[0].args.publishedContract;
-    return {
-      receipt,
-      data: async () => this.toPublishedContract(contract),
-    };
-  }
-
-  public async unpublish(
-    publisher: string,
-    contractId: string,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.publisher.sendTransaction("unpublishContract", [
+      // ensure version is incremental
+      const latestContract = await this.getLatest(
         publisher,
-        contractId,
-      ]),
-    };
-  }
+        predeployMetadata.name,
+      );
+      if (latestContract && latestContract.metadataUri) {
+        const latestMetadata = await this.fetchPublishedContractInfo(
+          latestContract,
+        );
+        const latestVersion = latestMetadata.publishedMetadata.version;
+        if (!isIncrementalVersion(latestVersion, extraMetadata.version)) {
+          throw Error(
+            `Version ${extraMetadata.version} is not greater than ${latestVersion}`,
+          );
+        }
+      }
+
+      const fetchedBytecode = await (
+        await this.storage.download(predeployMetadata.bytecodeUri)
+      ).text();
+      const bytecode = fetchedBytecode.startsWith("0x")
+        ? fetchedBytecode
+        : `0x${fetchedBytecode}`;
+
+      const bytecodeHash = utils.solidityKeccak256(["bytes"], [bytecode]);
+      const contractId = predeployMetadata.name;
+
+      const fullMetadata = FullPublishMetadataSchemaInput.parse({
+        ...extraMetadata,
+        metadataUri: predeployMetadata.metadataUri,
+        bytecodeUri: predeployMetadata.bytecodeUri,
+        name: predeployMetadata.name,
+        analytics: predeployMetadata.analytics,
+        publisher,
+      });
+      const fullMetadataUri = await this.storage.upload(fullMetadata);
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.publisher,
+        method: "publishContract",
+        args: [
+          publisher,
+          contractId,
+          fullMetadataUri,
+          predeployMetadata.metadataUri,
+          bytecodeHash,
+          constants.AddressZero,
+        ],
+        parse: (receipt) => {
+          const events = this.publisher.parseLogs<ContractPublishedEvent>(
+            "ContractPublished",
+            receipt.logs,
+          );
+
+          if (events.length < 1) {
+            throw new Error("No ContractPublished event found");
+          }
+
+          const contract = events[0].args.publishedContract;
+          return {
+            receipt,
+            data: async () => this.toPublishedContract(contract),
+          };
+        },
+      });
+    },
+  );
+
+  unpublish = buildTransactionFunction(
+    async (
+      publisher: string,
+      contractId: string,
+    ): Promise<Transaction<TransactionResult>> => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.publisher,
+        method: "unpublishContract",
+        args: [publisher, contractId],
+      });
+    },
+  );
 
   private toPublishedContract(
     contractModel: IContractPublisher.CustomContractInstanceStruct,
