@@ -2,8 +2,12 @@ import type {
   CoinbaseMobileWalletConnector,
   CoinbaseMobileWalletConnectorOptions,
 } from "../connectors/coinbase-wallet-mobile";
-import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
-import { AbstractBrowserWallet, WalletOptions } from "./base";
+import {
+  AbstractBrowserWallet,
+  TWConnector,
+  WagmiAdapter,
+  WalletOptions,
+} from "@thirdweb-dev/wallets";
 
 export class CoinbaseWalletMobile extends AbstractBrowserWallet<CoinbaseMobileWalletConnectorOptions> {
   connector?: TWConnector;

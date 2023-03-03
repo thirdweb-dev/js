@@ -1,4 +1,9 @@
-import { Connector } from "../../../lib/wagmi-connectors";
+import { configure } from "@coinbase/wallet-mobile-sdk";
+import type {
+  WalletMobileSDKEVMProvider,
+  WalletMobileSDKProviderOptions,
+} from "@coinbase/wallet-mobile-sdk/build/WalletMobileSDKEVMProvider";
+import type { ConfigurationParams } from "@coinbase/wallet-mobile-sdk/src/CoinbaseWalletSDK.types";
 import {
   UserRejectedRequestError,
   ChainNotConfiguredError,
@@ -7,13 +12,8 @@ import {
   normalizeChainId,
   Chain,
   ProviderRpcError,
-} from "../../../lib/wagmi-core";
-import { configure } from "@coinbase/wallet-mobile-sdk";
-import type {
-  WalletMobileSDKEVMProvider,
-  WalletMobileSDKProviderOptions,
-} from "@coinbase/wallet-mobile-sdk/build/WalletMobileSDKEVMProvider";
-import type { ConfigurationParams } from "@coinbase/wallet-mobile-sdk/src/CoinbaseWalletSDK.types";
+} from "@thirdweb-dev/wallets";
+import { Connector } from "@thirdweb-dev/wallets";
 import type { Address } from "abitype";
 import { providers } from "ethers";
 import { getAddress, hexValue } from "ethers/lib/utils.js";
@@ -42,7 +42,7 @@ export class CoinbaseMobileWalletConnector extends Connector<
   readonly name = "Coinbase Wallet";
   readonly ready = true;
 
-  #provider?: WalletMobileSDKEVMProvider;
+  provider?: WalletMobileSDKEVMProvider;
 
   constructor({
     chains,
@@ -114,7 +114,7 @@ export class CoinbaseMobileWalletConnector extends Connector<
   }
 
   async disconnect() {
-    if (!this.#provider) {
+    if (!this.provider) {
       return;
     }
 
@@ -145,7 +145,7 @@ export class CoinbaseMobileWalletConnector extends Connector<
   }
 
   async getProvider() {
-    if (!this.#provider) {
+    if (!this.provider) {
       let CoinbaseWalletMobileSDK = (
         await import(
           "@coinbase/wallet-mobile-sdk/build/WalletMobileSDKEVMProvider"
@@ -170,9 +170,9 @@ export class CoinbaseMobileWalletConnector extends Connector<
       const jsonRpcUrl =
         this.options.jsonRpcUrl || chain?.rpcUrls.default.http[0];
 
-      this.#provider = new CoinbaseWalletMobileSDK({ jsonRpcUrl, chainId });
+      this.provider = new CoinbaseWalletMobileSDK({ jsonRpcUrl, chainId });
     }
-    return this.#provider;
+    return this.provider;
   }
 
   async getSigner({ chainId }: { chainId?: number } = {}) {
@@ -239,14 +239,14 @@ export class CoinbaseMobileWalletConnector extends Connector<
           });
           return chain;
         } catch (addError) {
-          if (this.#isUserRejectedRequestError(addError)) {
+          if (this.isUserRejectedRequestError(addError)) {
             throw new UserRejectedRequestError(addError);
           }
           throw new AddChainError();
         }
       }
 
-      if (this.#isUserRejectedRequestError(error)) {
+      if (this.isUserRejectedRequestError(error)) {
         throw new UserRejectedRequestError(error);
       }
       throw new SwitchChainError(error);
@@ -297,7 +297,7 @@ export class CoinbaseMobileWalletConnector extends Connector<
     this.emit("disconnect");
   };
 
-  #isUserRejectedRequestError(error: unknown) {
+  isUserRejectedRequestError(error: unknown) {
     return /(user rejected)/i.test((error as Error).message);
   }
 }
