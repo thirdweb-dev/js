@@ -17,10 +17,10 @@ import { BaseContract } from "ethers";
  * @example
  * ```javascript
  * const contract = await sdk.getContract("{{contract_address}}");
- * const appURI = await contract.appuri.get();
+ * const appURI = await contract.app.get();
  * appURI = "ipfs://some_ipfs_hash";
  *
- * await contract.appuri.set(appURI)
+ * await contract.app.set(appURI)
  * ```
  * @public
  */
@@ -47,7 +47,7 @@ export class ContractAppURI<TContract extends BaseContract>
    * @returns the appURI (typically an IPFS hash)
    * @example
    * ```javascript
-   * const appURI = await contract.appURI.get(appURI);
+   * const appURI = await contract.app.get();
    * console.log(appURI) // "ipfs://some_ipfs_hash";
    * ```
    * @twfeature AppURI
@@ -69,7 +69,7 @@ export class ContractAppURI<TContract extends BaseContract>
    * @example
    * ```javascript
    * const appURI = "ipfs://some_ipfs_hash";
-   * await contract.appURI.set(appURI);
+   * await contract.app.set(appURI);
    * ```
    * @twfeature AppURI
    */
