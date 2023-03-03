@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { getCompositeExtensionABI } from "../common/extension";
 import { getPrebuiltInfo } from "../common/legacy";
 import { fetchAbiFromAddress } from "../common/metadata-resolver";
-import { getCompositePluginABI } from "../common/plugin";
 import { ALL_ROLES } from "../common/role";
 import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
 import type {
@@ -193,7 +193,13 @@ export const MarketplaceV3Initializer = {
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
     if (abi) {
-      return await getCompositePluginABI(address, abi, provider, {}, storage);
+      return await getCompositeExtensionABI(
+        address,
+        abi,
+        provider,
+        {},
+        storage,
+      );
     }
 
     // Deprecated - only needed for backwards compatibility with non-published contracts - should remove in v4
@@ -202,7 +208,7 @@ export const MarketplaceV3Initializer = {
         "@thirdweb-dev/contracts-js/dist/abis/MarketplaceRouter.json"
       )
     ).default;
-    return await getCompositePluginABI(
+    return await getCompositeExtensionABI(
       address,
       localAbi,
       provider,

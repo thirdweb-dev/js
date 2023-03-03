@@ -1,4 +1,4 @@
-import { getCompositePluginABI } from "../common/plugin";
+import { getCompositeExtensionABI } from "../common/extension";
 import { SmartContract } from "../contracts/smart-contract";
 import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
 import { NetworkInput } from "../core/types";
@@ -39,7 +39,7 @@ export async function getContractFromAbi(
   const contract = new SmartContract(
     signer || provider,
     params.address,
-    await getCompositePluginABI(
+    await getCompositeExtensionABI(
       params.address,
       AbiSchema.parse(parsedAbi),
       provider,

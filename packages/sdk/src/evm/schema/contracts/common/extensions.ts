@@ -5,7 +5,7 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const PluginMetadataInput = z.object({
+export const ExtensionMetadataInput = z.object({
   name: z.string(),
   metadataURI: z.string(),
   implementation: AddressSchema,
@@ -14,7 +14,7 @@ export const PluginMetadataInput = z.object({
 /**
  * @internal
  */
-export const PluginFunctionInput = z.object({
+export const ExtensionFunctionInput = z.object({
   functionSelector: BytesLikeSchema,
   functionSignature: z.string(),
 });
@@ -22,7 +22,7 @@ export const PluginFunctionInput = z.object({
 /**
  * @internal
  */
-export const PluginInput = z.object({
-  metadata: PluginMetadataInput,
-  functions: z.array(PluginFunctionInput),
+export const ExtensionInput = z.object({
+  metadata: ExtensionMetadataInput,
+  functions: z.array(ExtensionFunctionInput),
 });

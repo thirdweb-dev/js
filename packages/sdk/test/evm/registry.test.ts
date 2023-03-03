@@ -1,4 +1,4 @@
-import { joinABIs } from "../../src/evm/common/plugin";
+import { joinABIs } from "../../src/evm/common/extension";
 import { MultichainRegistry } from "../../src/evm/core/classes/multichain-registry";
 import { ContractRegistry } from "../../src/evm/core/classes/registry";
 import { sdk, signers } from "./before-setup";

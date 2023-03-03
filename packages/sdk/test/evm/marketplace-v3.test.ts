@@ -1083,7 +1083,7 @@ describe("Marketplace V3", async () => {
           },
         );
       } catch (err) {
-        // TODO: handle errors from plugins
+        // TODO: handle errors from extensions
       }
     });
   });

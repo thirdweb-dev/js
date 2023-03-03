@@ -13,14 +13,14 @@ import { ethers } from "ethers";
 /**
  * @internal
  */
-export async function getCompositePluginABI(
+export async function getCompositeExtensionABI(
   address: string,
   abi: Abi,
   provider: ethers.providers.Provider,
   options: SDKOptions,
   storage: ThirdwebStorage,
 ): Promise<Abi> {
-  let pluginABIs: Abi[] = [];
+  let extensionABIs: Abi[] = [];
 
   try {
     // check if contract is plugin-pattern
@@ -40,15 +40,19 @@ export async function getCompositePluginABI(
         options,
       );
 
-      const plugins = await contract.call("getAllExtensions");
+      const extensions = await contract.call("getAllExtensions");
 
       // get extension addresses
-      const pluginAddresses = plugins.map(
+      const extensionAddresses = extensions.map(
         (item: any) => item.metadata.implementation,
       );
 
       // get ABIs of extension contracts --
-      pluginABIs = await getPluginABI(pluginAddresses, provider, storage);
+      extensionABIs = await getExtensionABI(
+        extensionAddresses,
+        provider,
+        storage,
+      );
     } else if (isPluginRouter) {
       const contract = new ContractWrapper(
         provider,
@@ -59,22 +63,26 @@ export async function getCompositePluginABI(
 
       const pluginMap = await contract.call("getAllPlugins");
 
-      // get extension addresses
+      // get plugin addresses
       const allPlugins = pluginMap.map((item: any) => item.pluginAddress);
       const plugins = Array.from(new Set(allPlugins));
 
       // get ABIs of extension contracts
-      pluginABIs = await getPluginABI(plugins as string[], provider, storage);
+      extensionABIs = await getExtensionABI(
+        plugins as string[],
+        provider,
+        storage,
+      );
     }
   } catch (err) {}
 
-  return pluginABIs.length > 0 ? joinABIs([abi, ...pluginABIs]) : abi;
+  return extensionABIs.length > 0 ? joinABIs([abi, ...extensionABIs]) : abi;
 }
 
 /**
  * @internal
  */
-async function getPluginABI(
+async function getExtensionABI(
   addresses: string[],
   provider: ethers.providers.Provider,
   storage: ThirdwebStorage,
@@ -84,7 +92,7 @@ async function getPluginABI(
       addresses.map((address) =>
         fetchContractMetadataFromAddress(address, provider, storage).catch(
           (err) => {
-            console.error(`Failed to fetch plug-in for ${address}`, err);
+            console.error(`Failed to fetch extension for ${address}`, err);
             return { abi: [] };
           },
         ),

@@ -21,10 +21,10 @@ import {
   VoteInitializer,
 } from "../../src/evm";
 import {
-  Plugin,
-  PluginFunction,
-  PluginMetadata,
-} from "../../src/evm/types/plugins";
+  Extension,
+  ExtensionFunction,
+  ExtensionMetadata,
+} from "../../src/evm/types/extensions";
 import { MockStorage } from "./mock/MockStorage";
 import weth from "./mock/WETH9.json";
 import { deployContractAndUploadMetadata } from "./utils";
@@ -133,13 +133,13 @@ export const mochaHooks = {
     const mock_weth = await (await mock_weth_deployer).deployed();
     mock_weth_address = mock_weth.address;
 
-    const pluginRegistryDeployer = (await new ethers.ContractFactory(
+    const extensionRegistryDeployer = (await new ethers.ContractFactory(
       ExtensionRegistry__factory.abi,
       ExtensionRegistry__factory.bytecode,
     )
       .connect(signer)
       .deploy(signer.address, [])) as ExtensionRegistry;
-    extensionRegistry = await pluginRegistryDeployer.deployed();
+    extensionRegistry = await extensionRegistryDeployer.deployed();
 
     const registry = (await new ethers.ContractFactory(
       TWRegistry__factory.abi,
@@ -313,85 +313,85 @@ const getFunctionSignature = (fnInputs: any): string => {
   );
 };
 
-const generatePluginFunctions = (
-  pluginAddress: string,
-  pluginAbi: Abi,
-): PluginFunction[] => {
-  const pluginInterface = new ethers.utils.Interface(pluginAbi);
-  const pluginFunctions: PluginFunction[] = [];
+const generateExtensionFunctions = (
+  extensionAddress: string,
+  extensionAbi: Abi,
+): ExtensionFunction[] => {
+  const extensionInterface = new ethers.utils.Interface(extensionAbi);
+  const extensionFunctions: ExtensionFunction[] = [];
   // TODO - filter out common functions like _msgSender(), contractType(), etc.
-  for (const fnFragment of Object.values(pluginInterface.functions)) {
-    const fn = pluginInterface.getFunction(fnFragment.name);
+  for (const fnFragment of Object.values(extensionInterface.functions)) {
+    const fn = extensionInterface.getFunction(fnFragment.name);
     if (fn.name.includes("_")) {
       continue;
     }
-    pluginFunctions.push({
-      functionSelector: pluginInterface.getSighash(fn),
+    extensionFunctions.push({
+      functionSelector: extensionInterface.getSighash(fn),
       functionSignature: fn.name + getFunctionSignature(fn.inputs),
     });
   }
-  return pluginFunctions;
+  return extensionFunctions;
 };
 
-async function deployPlugins(pluginInfo: any[]): Promise<any[]> {
-  const plugins: Plugin[] = [];
-  const pluginNames: string[] = [];
+async function deployExtensions(extensionInfo: any[]): Promise<any[]> {
+  const extensions: Extension[] = [];
+  const extensionNames: string[] = [];
 
-  for (const plugin of pluginInfo) {
-    const pluginAddress = await deployContractAndUploadMetadata(
-      plugin.factory.abi,
-      plugin.factory.bytecode,
+  for (const extension of extensionInfo) {
+    const extensionAddress = await deployContractAndUploadMetadata(
+      extension.factory.abi,
+      extension.factory.bytecode,
       signer,
-      plugin.args,
+      extension.args,
     );
-    const pluginFunctions: PluginFunction[] = generatePluginFunctions(
-      pluginAddress,
-      plugin.factory.abi,
+    const extensionFunctions: ExtensionFunction[] = generateExtensionFunctions(
+      extensionAddress,
+      extension.factory.abi,
     );
-    const pluginMetadata: PluginMetadata = {
-      name: plugin.name,
+    const extensionMetadata: ExtensionMetadata = {
+      name: extension.name,
       metadataURI: "",
-      implementation: pluginAddress,
+      implementation: extensionAddress,
     };
-    plugins.push({
-      metadata: pluginMetadata,
-      functions: pluginFunctions,
+    extensions.push({
+      metadata: extensionMetadata,
+      functions: extensionFunctions,
     });
-    pluginNames.push(plugin.name);
+    extensionNames.push(extension.name);
   }
 
-  return [plugins, pluginNames];
+  return [extensions, extensionNames];
 }
 
 // Setup multichain registry for tests
 async function setupMultichainRegistry(): Promise<string> {
-  const pluginInfo: any[] = [];
+  const extensionInfo: any[] = [];
 
-  pluginInfo.push({
+  extensionInfo.push({
     factory: MultichainRegistryCore__factory,
     name: "MultichainRegistryCore",
     args: [],
   });
 
-  const [plugins, pluginNames] = await deployPlugins(pluginInfo);
+  const [extensions, extensionNames] = await deployExtensions(extensionInfo);
 
-  // Add plugins to plugin-registry
+  // Add extensions to extension-registry
   await Promise.all(
-    plugins.map((plugin) => {
-      return extensionRegistry.addExtension(plugin);
+    extensions.map((extension) => {
+      return extensionRegistry.addExtension(extension);
     }),
   );
 
-  // Add other util plugin names -- registry already has these (from marketplace-v3 setup)
-  pluginNames.push("PermissionsEnumerable");
-  pluginNames.push("ERC2771Context");
+  // Add other util extension names -- registry already has these (from marketplace-v3 setup)
+  extensionNames.push("PermissionsEnumerable");
+  extensionNames.push("ERC2771Context");
 
   const multichainRegistryRouterDeployer = (await new ethers.ContractFactory(
     TWMultichainRegistry__factory.abi,
     TWMultichainRegistry__factory.bytecode,
   )
     .connect(signer)
-    .deploy(extensionRegistry.address, pluginNames)) as TWMultichainRegistry;
+    .deploy(extensionRegistry.address, extensionNames)) as TWMultichainRegistry;
   const multichainRegistryRouter =
     await multichainRegistryRouterDeployer.deployed();
 
@@ -402,56 +402,56 @@ async function setupMultichainRegistry(): Promise<string> {
 async function setupMarketplaceV3(
   trustedForwarderAddress: string,
 ): Promise<string> {
-  const pluginInfo: any[] = [];
+  const extensionInfo: any[] = [];
 
-  pluginInfo.push({
+  extensionInfo.push({
     factory: PermissionsEnumerableImpl__factory,
     name: "PermissionsEnumerable",
     args: [],
   });
 
-  pluginInfo.push({
+  extensionInfo.push({
     factory: PlatformFeeImpl__factory,
     name: "PlatformFee",
     args: [],
   });
 
-  pluginInfo.push({
+  extensionInfo.push({
     factory: ContractMetadataImpl__factory,
     name: "ContractMetadata",
     args: [],
   });
 
-  pluginInfo.push({
+  extensionInfo.push({
     factory: MetaTx__factory,
     name: "ERC2771Context",
     args: [[trustedForwarderAddress]],
   });
 
-  pluginInfo.push({
+  extensionInfo.push({
     factory: DirectListingsLogic__factory,
     name: "DirectListingsLogic",
     args: [mock_weth_address],
   });
 
-  pluginInfo.push({
+  extensionInfo.push({
     factory: EnglishAuctionsLogic__factory,
     name: "EnglishAuctionsLogic",
     args: [mock_weth_address],
   });
 
-  pluginInfo.push({
+  extensionInfo.push({
     factory: OffersLogic__factory,
     name: "OffersLogic",
     args: [],
   });
 
-  const [plugins, pluginNames] = await deployPlugins(pluginInfo);
+  const [extensions, extensionNames] = await deployExtensions(extensionInfo);
 
-  // Add plugins to plugin-registry
+  // Add extensions to extension-registry
   await Promise.all(
-    plugins.map((plugin) => {
-      return extensionRegistry.addExtension(plugin);
+    extensions.map((extension) => {
+      return extensionRegistry.addExtension(extension);
     }),
   );
 
@@ -460,7 +460,7 @@ async function setupMarketplaceV3(
     MarketplaceRouter__factory.abi,
     MarketplaceRouter__factory.bytecode,
     signer,
-    [extensionRegistry.address, pluginNames],
+    [extensionRegistry.address, extensionNames],
   );
   return marketplaceV3Address;
 }
