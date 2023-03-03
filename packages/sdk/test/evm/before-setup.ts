@@ -77,7 +77,7 @@ import {
   PermissionsEnumerableImpl__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers } from "ethers";
+import { ContractFactory, ethers } from "ethers";
 import hardhat from "hardhat";
 
 // it's there, trust me bro
@@ -333,35 +333,47 @@ const generatePluginFunctions = (
   return pluginFunctions;
 };
 
-// Setup multichain registry for tests
-async function setupMultichainRegistry(): Promise<string> {
+async function deployPlugins(pluginInfo: any[]): Promise<any[]> {
   const plugins: Plugin[] = [];
   const pluginNames: string[] = [];
 
-  // multichain registry core plugin
-  const multichainRegistryCoreDeployer = (await new ethers.ContractFactory(
-    MultichainRegistryCore__factory.abi,
-    MultichainRegistryCore__factory.bytecode,
-  )
-    .connect(signer)
-    .deploy()) as MultichainRegistryCore;
-  const multichainRegistryCore =
-    await multichainRegistryCoreDeployer.deployed();
+  for (const plugin of pluginInfo) {
+    const pluginAddress = await deployContractAndUploadMetadata(
+      plugin.factory.abi,
+      plugin.factory.bytecode,
+      signer,
+      plugin.args,
+    );
+    const pluginFunctions: PluginFunction[] = generatePluginFunctions(
+      pluginAddress,
+      plugin.factory.abi,
+    );
+    const pluginMetadata: PluginMetadata = {
+      name: plugin.name,
+      metadataURI: "",
+      implementation: pluginAddress,
+    };
+    plugins.push({
+      metadata: pluginMetadata,
+      functions: pluginFunctions,
+    });
+    pluginNames.push(plugin.name);
+  }
 
-  const functionsCore: PluginFunction[] = generatePluginFunctions(
-    multichainRegistryCore.address,
-    MultichainRegistryCore__factory.abi,
-  );
-  const metadataCore: PluginMetadata = {
+  return [plugins, pluginNames];
+}
+
+// Setup multichain registry for tests
+async function setupMultichainRegistry(): Promise<string> {
+  const pluginInfo: any[] = [];
+
+  pluginInfo.push({
+    factory: MultichainRegistryCore__factory,
     name: "MultichainRegistryCore",
-    metadataURI: "",
-    implementation: multichainRegistryCore.address,
-  };
-  plugins.push({
-    metadata: metadataCore,
-    functions: functionsCore,
+    args: [],
   });
-  pluginNames.push("MultichainRegistryCore");
+
+  const [plugins, pluginNames] = await deployPlugins(pluginInfo);
 
   // Add plugins to plugin-registry
   await Promise.all(
@@ -370,7 +382,7 @@ async function setupMultichainRegistry(): Promise<string> {
     }),
   );
 
-  // Add util plugin names
+  // Add other util plugin names -- registry already has these (from marketplace-v3 setup)
   pluginNames.push("PermissionsEnumerable");
   pluginNames.push("ERC2771Context");
 
@@ -390,158 +402,51 @@ async function setupMultichainRegistry(): Promise<string> {
 async function setupMarketplaceV3(
   trustedForwarderAddress: string,
 ): Promise<string> {
-  const plugins: Plugin[] = [];
-  const pluginNames: string[] = [];
+  const pluginInfo: any[] = [];
 
-  // PermissionsEnumerable plugin
-  const permissionsAddress = await deployContractAndUploadMetadata(
-    PermissionsEnumerableImpl__factory.abi,
-    PermissionsEnumerableImpl__factory.bytecode,
-    signer,
-  );
-  const functionsPermissions: PluginFunction[] = generatePluginFunctions(
-    permissionsAddress,
-    PermissionsEnumerableImpl__factory.abi,
-  );
-  const metadataPermissions: PluginMetadata = {
+  pluginInfo.push({
+    factory: PermissionsEnumerableImpl__factory,
     name: "PermissionsEnumerable",
-    metadataURI: "",
-    implementation: permissionsAddress,
-  };
-  plugins.push({
-    metadata: metadataPermissions,
-    functions: functionsPermissions,
+    args: [],
   });
-  pluginNames.push("PermissionsEnumerable");
 
-  // PlatformFee plugin
-  const platformFeeAddress = await deployContractAndUploadMetadata(
-    PlatformFeeImpl__factory.abi,
-    PlatformFeeImpl__factory.bytecode,
-    signer,
-  );
-  const functionsPlatformFee: PluginFunction[] = generatePluginFunctions(
-    platformFeeAddress,
-    PlatformFeeImpl__factory.abi,
-  );
-  const metadataPlatformFee: PluginMetadata = {
+  pluginInfo.push({
+    factory: PlatformFeeImpl__factory,
     name: "PlatformFee",
-    metadataURI: "",
-    implementation: platformFeeAddress,
-  };
-  plugins.push({
-    metadata: metadataPlatformFee,
-    functions: functionsPlatformFee,
+    args: [],
   });
-  pluginNames.push("PlatformFee");
 
-  // ContractMetadata plugin
-  const contractMetadataAddress = await deployContractAndUploadMetadata(
-    ContractMetadataImpl__factory.abi,
-    ContractMetadataImpl__factory.bytecode,
-    signer,
-  );
-  const functionsContractMetadata: PluginFunction[] = generatePluginFunctions(
-    contractMetadataAddress,
-    ContractMetadataImpl__factory.abi,
-  );
-  const metadataContractMetadata: PluginMetadata = {
+  pluginInfo.push({
+    factory: ContractMetadataImpl__factory,
     name: "ContractMetadata",
-    metadataURI: "",
-    implementation: contractMetadataAddress,
-  };
-  plugins.push({
-    metadata: metadataContractMetadata,
-    functions: functionsContractMetadata,
+    args: [],
   });
-  pluginNames.push("ContractMetadata");
 
-  // MetaTx plugin
-  const metaTxAddress = await deployContractAndUploadMetadata(
-    MetaTx__factory.abi,
-    MetaTx__factory.bytecode,
-    signer,
-    [[trustedForwarderAddress]],
-  );
-  const functionsMetaTx: PluginFunction[] = generatePluginFunctions(
-    metaTxAddress,
-    MetaTx__factory.abi,
-  );
-  const metadataMetaTx: PluginMetadata = {
+  pluginInfo.push({
+    factory: MetaTx__factory,
     name: "ERC2771Context",
-    metadataURI: "",
-    implementation: metaTxAddress,
-  };
-  plugins.push({
-    metadata: metadataMetaTx,
-    functions: functionsMetaTx,
+    args: [[trustedForwarderAddress]],
   });
-  pluginNames.push("ERC2771Context");
 
-  // Direct Listings
-  const directListingsPluginAddress = await deployContractAndUploadMetadata(
-    DirectListingsLogic__factory.abi,
-    DirectListingsLogic__factory.bytecode,
-    signer,
-    [mock_weth_address],
-  );
-  const functionsDirectListings: PluginFunction[] = generatePluginFunctions(
-    directListingsPluginAddress,
-    DirectListingsLogic__factory.abi,
-  );
-  const metadataDirectListings: PluginMetadata = {
+  pluginInfo.push({
+    factory: DirectListingsLogic__factory,
     name: "DirectListingsLogic",
-    metadataURI: "",
-    implementation: directListingsPluginAddress,
-  };
-  plugins.push({
-    metadata: metadataDirectListings,
-    functions: functionsDirectListings,
+    args: [mock_weth_address],
   });
-  pluginNames.push("DirectListingsLogic");
 
-  // English Auctions
-  const englishAuctionPluginAddress = await deployContractAndUploadMetadata(
-    EnglishAuctionsLogic__factory.abi,
-    EnglishAuctionsLogic__factory.bytecode,
-    signer,
-    [mock_weth_address],
-  );
-  const functionsEnglishAuctions: PluginFunction[] = generatePluginFunctions(
-    englishAuctionPluginAddress,
-    EnglishAuctionsLogic__factory.abi,
-  );
-  const metadataEnglishAuctions: PluginMetadata = {
+  pluginInfo.push({
+    factory: EnglishAuctionsLogic__factory,
     name: "EnglishAuctionsLogic",
-    metadataURI: "",
-    implementation: englishAuctionPluginAddress,
-  };
-  plugins.push({
-    metadata: metadataEnglishAuctions,
-    functions: functionsEnglishAuctions,
+    args: [mock_weth_address],
   });
-  pluginNames.push("EnglishAuctionsLogic");
 
-  // Offers
-  const offersLogicPluginAddress = await deployContractAndUploadMetadata(
-    OffersLogic__factory.abi,
-    OffersLogic__factory.bytecode,
-    signer,
-  );
-  const functionsOffers: PluginFunction[] = generatePluginFunctions(
-    offersLogicPluginAddress,
-    OffersLogic__factory.abi,
-  );
-  const metadataOffers: PluginMetadata = {
+  pluginInfo.push({
+    factory: OffersLogic__factory,
     name: "OffersLogic",
-    metadataURI: "",
-    implementation: offersLogicPluginAddress,
-  };
-  plugins.push({
-    metadata: metadataOffers,
-    functions: functionsOffers,
+    args: [],
   });
-  pluginNames.push("OffersLogic");
+
+  const [plugins, pluginNames] = await deployPlugins(pluginInfo);
 
   // Add plugins to plugin-registry
   await Promise.all(
