@@ -142,7 +142,11 @@ export class Pack extends StandardErc1155<PackContract> {
       PackContractSchema,
       this.storage,
     );
-    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.roles = new ContractRoles(this.contractWrapper, Pack.contractRoles);
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.encoder = new ContractEncoder(this.contractWrapper);

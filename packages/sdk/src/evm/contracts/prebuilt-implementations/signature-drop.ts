@@ -188,7 +188,11 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
       this.storage,
     );
 
-    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.roles = new ContractRoles(
       this.contractWrapper,
       SignatureDrop.contractRoles,

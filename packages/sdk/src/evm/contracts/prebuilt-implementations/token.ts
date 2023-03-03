@@ -95,7 +95,11 @@ export class Token extends StandardErc20<TokenERC20> {
       TokenErc20ContractSchema,
       this.storage,
     );
-    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.roles = new ContractRoles(this.contractWrapper, Token.contractRoles);
     this.sales = new ContractPrimarySale(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);

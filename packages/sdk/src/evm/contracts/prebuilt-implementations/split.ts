@@ -88,7 +88,11 @@ export class Split implements UpdateableNetwork {
       this.storage,
     );
 
-    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.roles = new ContractRoles(this.contractWrapper, Split.contractRoles);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);

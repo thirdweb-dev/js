@@ -121,7 +121,11 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
       MultiwrapContractSchema,
       this.storage,
     );
-    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.roles = new ContractRoles(
       this.contractWrapper,
       Multiwrap.contractRoles,

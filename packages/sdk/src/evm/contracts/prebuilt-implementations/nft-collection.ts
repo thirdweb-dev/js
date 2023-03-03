@@ -126,7 +126,11 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
       this.storage,
     );
 
-    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.roles = new ContractRoles(
       this.contractWrapper,
       NFTCollection.contractRoles,

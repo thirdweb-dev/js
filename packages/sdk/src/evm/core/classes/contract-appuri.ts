@@ -5,6 +5,10 @@ import { TransactionResult } from "../types";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import type { IAppURI } from "@thirdweb-dev/contracts-js";
+import {
+  replaceGatewayUrlWithScheme,
+  ThirdwebStorage,
+} from "@thirdweb-dev/storage";
 import { BaseContract } from "ethers";
 
 /**
@@ -26,13 +30,16 @@ export class ContractAppURI<TContract extends BaseContract>
   featureName = FEATURE_APPURI.name;
   private contractWrapper;
   metadata: ContractMetadata<BaseContract, any>;
+  storage: ThirdwebStorage;
 
   constructor(
     contractWrapper: ContractWrapper<TContract>,
     metadata: ContractMetadata<BaseContract, any>,
+    storage: ThirdwebStorage,
   ) {
     this.contractWrapper = contractWrapper;
     this.metadata = metadata;
+    this.storage = storage;
   }
 
   /**
@@ -50,9 +57,10 @@ export class ContractAppURI<TContract extends BaseContract>
       return await this.contractWrapper.readContract.appURI();
     }
 
-    const appUri = (await this.metadata.get()).app_uri;
-
-    return Promise.resolve(`ipfs://${appUri.split("/ipfs/")[1]}` || Promise.resolve(""));
+    return replaceGatewayUrlWithScheme(
+      (await this.metadata.get()).app_uri || "",
+      this.storage.gatewayUrls,
+    );
   }
 
   /**

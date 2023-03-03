@@ -176,7 +176,11 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
       DropErc721ContractSchema,
       this.storage,
     );
-    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.roles = new ContractRoles(this.contractWrapper, NFTDrop.contractRoles);
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.sales = new ContractPrimarySale(this.contractWrapper);

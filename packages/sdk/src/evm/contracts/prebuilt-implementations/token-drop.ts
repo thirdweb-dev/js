@@ -103,7 +103,11 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
       this.storage,
     );
 
-    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.roles = new ContractRoles(
       this.contractWrapper,
       TokenDrop.contractRoles,

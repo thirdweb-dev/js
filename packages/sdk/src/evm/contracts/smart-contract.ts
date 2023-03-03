@@ -325,14 +325,14 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     );
 
     if (detectContractFeature<IAppURI>(this.contractWrapper, "AppURI")) {
-      return new ContractAppURI(this.contractWrapper, metadata);
+      return new ContractAppURI(this.contractWrapper, metadata, this.storage);
     } else if (
       detectContractFeature<IContractMetadata>(
         this.contractWrapper,
         "ContractMetadata",
       )
     ) {
-      return new ContractAppURI(this.contractWrapper, metadata);
+      return new ContractAppURI(this.contractWrapper, metadata, this.storage);
     }
     return undefined;
   }

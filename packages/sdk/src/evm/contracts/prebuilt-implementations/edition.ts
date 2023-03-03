@@ -120,7 +120,11 @@ export class Edition extends StandardErc1155<TokenERC1155> {
       TokenErc1155ContractSchema,
       this.storage,
     );
-    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.roles = new ContractRoles(this.contractWrapper, Edition.contractRoles);
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.sales = new ContractPrimarySale(this.contractWrapper);

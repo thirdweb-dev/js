@@ -139,7 +139,11 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
       DropErc1155ContractSchema,
       this.storage,
     );
-    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.roles = new ContractRoles(
       this.contractWrapper,
       EditionDrop.contractRoles,

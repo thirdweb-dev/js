@@ -223,7 +223,11 @@ export class MarketplaceV3 implements UpdateableNetwork {
       this.storage,
     );
 
-    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.roles = new ContractRoles(
       this.contractWrapper,
       MarketplaceV3.contractRoles,
