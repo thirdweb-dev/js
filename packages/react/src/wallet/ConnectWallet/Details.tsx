@@ -17,6 +17,7 @@ import {
 import { shortenString } from "../../evm/utils/addresses";
 import { isMobile } from "../../evm/utils/isMobile";
 import { useInstalledWallets } from "../hooks/useInstalledWallets";
+import { DeviceWallet } from "../wallets";
 import { NetworkSelector } from "./NetworkSelector";
 import { CoinbaseWalletIcon } from "./icons/CoinbaseWalletIcon";
 import { DeviceWalletIcon } from "./icons/DeviceWalletIcon";
@@ -40,7 +41,6 @@ import {
   useNetworkMismatch,
   useSupportedChains,
 } from "@thirdweb-dev/react-core";
-import { DeviceWalletType } from "@thirdweb-dev/react-core/dist/declarations/src";
 import { useMemo, useState } from "react";
 
 const walletIcons: Record<SupportedWallet["id"], IconFC> = {
@@ -49,7 +49,6 @@ const walletIcons: Record<SupportedWallet["id"], IconFC> = {
   coinbaseWallet: CoinbaseWalletIcon,
   walletConnect: WalletConnectIcon,
   walletConnectV1: WalletConnectIcon,
-  // coinbaseWalletMobile: CoinbaseWalletIcon,
 };
 
 export type DropDownPosition = {
@@ -102,7 +101,7 @@ export const ConnectedWalletDetails: React.FC<{
     (activeWallet.walletId === "metamask" && !installedWallets.metamask);
 
   const handleDeviceWalletExport = async () => {
-    const deviceWallet = activeWallet as InstanceType<DeviceWalletType>;
+    const deviceWallet = activeWallet as InstanceType<typeof DeviceWallet>;
     const walletData = await deviceWallet.getWalletData();
     if (!walletData) {
       throw new Error("No wallet data found");

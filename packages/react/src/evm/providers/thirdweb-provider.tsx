@@ -4,7 +4,10 @@ import {
   DeviceWallet,
   MetamaskWallet,
 } from "../../wallet/wallets";
-import { ThirdwebProvider as ThirdwebProviderCore } from "@thirdweb-dev/react-core";
+import {
+  SupportedWallet,
+  ThirdwebProvider as ThirdwebProviderCore,
+} from "@thirdweb-dev/react-core";
 import { ComponentProps } from "react";
 
 interface ThirdwebProviderProps
@@ -25,9 +28,7 @@ interface ThirdwebProviderProps
    * />
    * ```
    */
-  supportedWallets?: ComponentProps<
-    typeof ThirdwebProviderCore
-  >["supportedWallets"];
+  supportedWallets?: SupportedWallet[];
 }
 
 /**

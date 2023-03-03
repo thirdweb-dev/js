@@ -12,10 +12,7 @@ export {
   useSwitchChain,
   useWallets,
 } from "../core/hooks/wallet-hooks";
-export {
-  useDeviceWalletStorage,
-  useThirdwebWallet,
-} from "../core/providers/thirdweb-wallet-provider";
+export { useThirdwebWallet } from "../core/providers/thirdweb-wallet-provider";
 
 // re-exports
 export { ChainId } from "@thirdweb-dev/sdk";
@@ -26,14 +23,7 @@ export * from "./types";
 // Utilities and Others
 export { shouldNeverPersistQuery } from "../core/query-utils/query-key";
 export type { RequiredParam } from "../core/query-utils/required-param";
-export type {
-  SupportedWallet,
-  MetaMaskWalletType,
-  CoinbaseWalletType,
-  WalletConnectV1WalletType,
-  WalletConnectWalletType,
-  DeviceWalletType,
-} from "../core/types/wallet";
+export type { SupportedWallet } from "../core/types/wallet";
 
 // auth
 export {

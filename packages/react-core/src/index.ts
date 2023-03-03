@@ -1,5 +1,7 @@
 // main entry point = evm
 
+export { TW_WC_PROJECT_ID } from "./core/constants/wc";
+
 // constants
 export { __DEV__ } from "./core/constants/runtime";
 
@@ -15,10 +17,7 @@ export {
   useWallets,
   useDisplayUri,
 } from "./core/hooks/wallet-hooks";
-export {
-  useDeviceWalletStorage,
-  useThirdwebWallet,
-} from "./core/providers/thirdweb-wallet-provider";
+export { useThirdwebWallet } from "./core/providers/thirdweb-wallet-provider";
 
 // ThirdwebProvider
 export { ThirdwebProvider } from "./core/providers/thirdweb-provider";
@@ -27,14 +26,7 @@ export type { ThirdwebProviderProps } from "./core/providers/thirdweb-provider";
 // Utilities and Others
 export { shouldNeverPersistQuery } from "./core/query-utils/query-key";
 export type { RequiredParam } from "./core/query-utils/required-param";
-export type {
-  SupportedWallet,
-  MetaMaskWalletType,
-  CoinbaseWalletType,
-  WalletConnectV1WalletType,
-  WalletConnectWalletType,
-  DeviceWalletType,
-} from "./core/types/wallet";
+export type { SupportedWallet } from "./core/types/wallet";
 
 // auth
 export {

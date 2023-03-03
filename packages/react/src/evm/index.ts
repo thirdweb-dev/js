@@ -1,14 +1,3 @@
-// export * from "./hooks/connectors/useMetamask";
-// export * from "./hooks/connectors/useWalletConnect";
-// export * from "./hooks/connectors/useWalletLink";
-// require to be inside `<ThirdwebProvider />`
-// export * from "./hooks/wagmi-required/useAccount";
-// export * from "./hooks/wagmi-required/useConnect";
-// export * from "./hooks/wagmi-required/useDisconnect";
-// export * from "./hooks/wagmi-required/useNetwork";
-
-// export these from core directly
-
 export { ConnectWallet } from "../wallet/ConnectWallet/ConnectWallet";
 // ui components
 export * from "./components/MediaRenderer";
@@ -31,10 +20,7 @@ export {
   useSwitchChain,
   useWallets,
 } from "@thirdweb-dev/react-core";
-export {
-  useDeviceWalletStorage,
-  useThirdwebWallet,
-} from "@thirdweb-dev/react-core";
+export { useThirdwebWallet } from "@thirdweb-dev/react-core";
 
 // Utilities and Others
 export { shouldNeverPersistQuery } from "@thirdweb-dev/react-core";

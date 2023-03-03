@@ -1,7 +1,5 @@
-import {
-  SupportedWallet,
-  useDeviceWalletStorage,
-} from "@thirdweb-dev/react-core";
+import { useDeviceWalletStorage } from "./useDeviceWalletStorage";
+import { SupportedWallet } from "@thirdweb-dev/react-core";
 
 export function useInstalledWallets() {
   const deviceWalletStorage = useDeviceWalletStorage();

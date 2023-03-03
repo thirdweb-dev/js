@@ -21,7 +21,6 @@ export {
   useConnect,
   useConnectionStatus,
   useCreateWalletInstance,
-  useDeviceWalletStorage,
   useDisconnect,
   useSupportedChains,
   useWallets,

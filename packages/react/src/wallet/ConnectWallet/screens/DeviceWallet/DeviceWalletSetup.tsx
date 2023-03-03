@@ -11,12 +11,13 @@ import {
   ModalTitle,
 } from "../../../../components/modalElements";
 import { iconSize, media, spacing } from "../../../../design-system";
+import { useDeviceWalletStorage } from "../../../hooks/useDeviceWalletStorage";
+import { DeviceWallet } from "../../../wallets";
 import { DeviceWalletIcon } from "../../icons/DeviceWalletIcon";
 import styled from "@emotion/styled";
 import { blue } from "@radix-ui/colors";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
-import { useConnect, useDeviceWalletStorage } from "@thirdweb-dev/react-core";
-import { DeviceBrowserWallet } from "@thirdweb-dev/wallets";
+import { useConnect } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 
 export const ConnectToDeviceWallet: React.FC<{ onBack: () => void }> = (
@@ -78,7 +79,7 @@ export const CreateDeviceWallet = () => {
 
   const handleConnect = () => {
     if (passwordMismatch) return;
-    connect(DeviceBrowserWallet, {
+    connect(DeviceWallet, {
       password,
     });
   };
@@ -153,7 +154,7 @@ export const ReconnectDeviceWallet = () => {
 
   const handleReconnect = async () => {
     try {
-      await connect(DeviceBrowserWallet, {
+      await connect(DeviceWallet, {
         password,
       });
     } catch (e) {

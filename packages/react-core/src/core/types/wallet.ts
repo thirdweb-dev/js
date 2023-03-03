@@ -1,22 +1,27 @@
-import type {
-  CoinbaseWallet,
-  DeviceBrowserWallet,
-  MetaMask,
-  WalletConnect,
-  WalletConnectV1,
+import { Chain as TWChain } from "@thirdweb-dev/chains";
+import {
+  AbstractBrowserWallet,
+  AsyncStorage,
+  DAppMetaData,
+  TWConnector,
 } from "@thirdweb-dev/wallets";
+import { Chain } from "@wagmi/core";
 
-export type DeviceWalletType = typeof DeviceBrowserWallet;
-export type MetaMaskWalletType = typeof MetaMask;
-export type CoinbaseWalletType = typeof CoinbaseWallet;
-// export type CoinbaseWalletMobileType = typeof CoinbaseWalletMobile;
-export type WalletConnectWalletType = typeof WalletConnect;
-export type WalletConnectV1WalletType = typeof WalletConnectV1;
+export type WalletOptions = {
+  chains?: Chain[];
+  shouldAutoConnect?: boolean;
+  coordinatorStorage: AsyncStorage;
+  dappMetadata: DAppMetaData;
+  theme?: "light" | "dark";
+  // for device wallet
+  chain: TWChain;
+};
 
-export type SupportedWallet =
-  | DeviceWalletType
-  | MetaMaskWalletType
-  | CoinbaseWalletType
-  // | CoinbaseWalletMobileType
-  | WalletConnectWalletType
-  | WalletConnectV1WalletType;
+type SupportedWalletInstance = InstanceType<typeof AbstractBrowserWallet> & {
+  connector?: TWConnector;
+};
+
+export type SupportedWallet = {
+  id: string;
+  new (options: WalletOptions): SupportedWalletInstance;
+};
