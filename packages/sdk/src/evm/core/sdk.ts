@@ -1,5 +1,5 @@
 import { fetchCurrencyValue, getAllDetectedFeatureNames } from "../common";
-import { getCompositePluginABI } from "../common/plugin";
+import { getCompositeExtensionABI } from "../common/extension";
 import { createStorage } from "../common/storage";
 import {
   getChainProvider,
@@ -692,7 +692,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     const contract = new SmartContract(
       this.getSignerOrProvider(),
       address,
-      await getCompositePluginABI(
+      await getCompositeExtensionABI(
         address,
         AbiSchema.parse(parsedABI),
         provider,
