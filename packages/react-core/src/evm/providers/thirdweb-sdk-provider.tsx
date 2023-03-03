@@ -124,7 +124,8 @@ const WrappedThirdwebSDKProvider = <
     type ForcedChainType = {
       rpc: string[];
       chainId: number;
-      nativeCurrency: { symbol: string; name: string; decimals: 18 };
+      nativeCurrency: { symbol: string; name: string; decimals: number };
+      slug: string;
     };
 
     const mergedOptions = {
