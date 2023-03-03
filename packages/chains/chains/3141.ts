@@ -10,6 +10,7 @@ export default {
   "rpc": [
     "https://filecoin-hyperspace-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.hyperspace.node.glif.io/rpc/v1",
+    "https://rpc.ankr.com/filecoin_testnet",
     "https://filecoin-hyperspace.chainstacklabs.com/rpc/v1"
   ],
   "faucets": [

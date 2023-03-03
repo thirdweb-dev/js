@@ -6,6 +6,7 @@ import {
   FEATURE_PERMISSIONS,
   FEATURE_PLATFORM_FEE,
 } from "../../constants/thirdweb-features";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -62,6 +63,8 @@ export class MarketplaceV3 implements UpdateableNetwork {
     MarketplaceV3Contract,
     typeof MarketplaceV3ContractSchema
   >;
+
+  public app: ContractAppURI<MarketplaceV3Contract>;
   /**
    * @internal
    */
@@ -231,6 +234,11 @@ export class MarketplaceV3 implements UpdateableNetwork {
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       MarketplaceV3ContractSchema,
+      this.storage,
+    );
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
       this.storage,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);

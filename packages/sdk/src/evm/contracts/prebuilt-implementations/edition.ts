@@ -2,6 +2,7 @@ import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
 import { buildTransactionFunction } from "../../common/transactions";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -48,6 +49,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
     TokenERC1155,
     typeof TokenErc1155ContractSchema
   >;
+  public app: ContractAppURI<TokenERC1155>;
   public roles: ContractRoles<
     TokenERC1155,
     (typeof Edition.contractRoles)[number]
@@ -116,6 +118,11 @@ export class Edition extends StandardErc1155<TokenERC1155> {
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       TokenErc1155ContractSchema,
+      this.storage,
+    );
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
       this.storage,
     );
     this.roles = new ContractRoles(this.contractWrapper, Edition.contractRoles);

@@ -3,7 +3,6 @@ import ViteDetector from "../core/detection/vite";
 import YarnDetector from "../core/detection/yarn";
 import { runCommand } from "../create/helpers/run-command";
 import { upload } from "../storage/command";
-import { DEFAULT_IPFS_GATEWAY } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 export async function deployApp(distPath = "dist", projectPath = ".") {
@@ -33,9 +32,8 @@ export async function deployApp(distPath = "dist", projectPath = ".") {
   }
 
   try {
-    let url = await upload(storage, distPath);
-    url = url.replace("ipfs://", DEFAULT_IPFS_GATEWAY);
-    return `${url}/index.html`;
+    const uri = await upload(storage, distPath);
+    return `https://thirdweb.com/app/deploy/${uri.replace("ipfs://", "")}`;
   } catch (err) {
     console.error("Can't upload project");
     return Promise.reject("Can't upload project");
