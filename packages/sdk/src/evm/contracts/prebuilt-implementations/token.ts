@@ -22,7 +22,7 @@ import { TokenMintInput } from "../../schema/tokens/token";
 import { Amount, CurrencyValue } from "../../types";
 import type { TokenERC20 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BaseContract, CallOverrides, constants } from "ethers";
+import { CallOverrides, constants } from "ethers";
 
 /**
  * Create a standard crypto token or cryptocurrency.
@@ -47,7 +47,7 @@ export class Token extends StandardErc20<TokenERC20> {
     typeof TokenErc20ContractSchema
   >;
 
-  public app: ContractAppURI<BaseContract>;
+  public app: ContractAppURI<TokenERC20>;
   public roles: ContractRoles<TokenERC20, (typeof Token.contractRoles)[number]>;
   public encoder: ContractEncoder<TokenERC20>;
   public estimator: GasCostEstimator<TokenERC20>;
@@ -95,7 +95,11 @@ export class Token extends StandardErc20<TokenERC20> {
       TokenErc20ContractSchema,
       this.storage,
     );
-    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.roles = new ContractRoles(this.contractWrapper, Token.contractRoles);
     this.sales = new ContractPrimarySale(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);

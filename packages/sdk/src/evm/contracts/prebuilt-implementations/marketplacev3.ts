@@ -29,7 +29,7 @@ import type {
   OffersLogic,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BaseContract, CallOverrides } from "ethers";
+import { CallOverrides } from "ethers";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -61,7 +61,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
     typeof MarketplaceContractSchema
   >;
 
-  public app: ContractAppURI<BaseContract>;
+  public app: ContractAppURI<MarketplaceV3Contract>;
   public roles: ContractRoles<
     MarketplaceV3Contract,
     (typeof MarketplaceV3.contractRoles)[number]
@@ -223,7 +223,11 @@ export class MarketplaceV3 implements UpdateableNetwork {
       this.storage,
     );
 
-    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.roles = new ContractRoles(
       this.contractWrapper,
       MarketplaceV3.contractRoles,

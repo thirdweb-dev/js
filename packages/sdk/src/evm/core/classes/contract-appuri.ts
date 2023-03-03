@@ -5,6 +5,10 @@ import { TransactionResult } from "../types";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import type { IAppURI } from "@thirdweb-dev/contracts-js";
+import {
+  replaceGatewayUrlWithScheme,
+  ThirdwebStorage,
+} from "@thirdweb-dev/storage";
 import { BaseContract } from "ethers";
 
 /**
@@ -13,10 +17,10 @@ import { BaseContract } from "ethers";
  * @example
  * ```javascript
  * const contract = await sdk.getContract("{{contract_address}}");
- * const appURI = await contract.appuri.get();
+ * const appURI = await contract.app.get();
  * appURI = "ipfs://some_ipfs_hash";
  *
- * await contract.appuri.set(appURI)
+ * await contract.app.set(appURI)
  * ```
  * @public
  */
@@ -26,13 +30,16 @@ export class ContractAppURI<TContract extends BaseContract>
   featureName = FEATURE_APPURI.name;
   private contractWrapper;
   metadata: ContractMetadata<BaseContract, any>;
+  storage: ThirdwebStorage;
 
   constructor(
     contractWrapper: ContractWrapper<TContract>,
     metadata: ContractMetadata<BaseContract, any>,
+    storage: ThirdwebStorage,
   ) {
     this.contractWrapper = contractWrapper;
     this.metadata = metadata;
+    this.storage = storage;
   }
 
   /**
@@ -40,7 +47,7 @@ export class ContractAppURI<TContract extends BaseContract>
    * @returns the appURI (typically an IPFS hash)
    * @example
    * ```javascript
-   * const appURI = await contract.appURI.get(appURI);
+   * const appURI = await contract.app.get();
    * console.log(appURI) // "ipfs://some_ipfs_hash";
    * ```
    * @twfeature AppURI
@@ -50,9 +57,10 @@ export class ContractAppURI<TContract extends BaseContract>
       return await this.contractWrapper.readContract.appURI();
     }
 
-    const appUri = (await this.metadata.get()).app_uri;
-
-    return Promise.resolve(`ipfs://${appUri.split("/ipfs/")[1]}` || Promise.resolve(""));
+    return replaceGatewayUrlWithScheme(
+      (await this.metadata.get()).app_uri || "",
+      this.storage.gatewayUrls,
+    );
   }
 
   /**
@@ -61,7 +69,7 @@ export class ContractAppURI<TContract extends BaseContract>
    * @example
    * ```javascript
    * const appURI = "ipfs://some_ipfs_hash";
-   * await contract.appURI.set(appURI);
+   * await contract.app.set(appURI);
    * ```
    * @twfeature AppURI
    */

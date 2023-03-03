@@ -32,7 +32,6 @@ import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { ProposalCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/VoteERC20";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
-  BaseContract,
   BigNumber,
   BigNumberish,
   CallOverrides,
@@ -60,7 +59,7 @@ export class Vote implements UpdateableNetwork {
 
   public abi: Abi;
   public metadata: ContractMetadata<VoteERC20, typeof VoteContractSchema>;
-  public app: ContractAppURI<BaseContract>;
+  public app: ContractAppURI<VoteERC20>;
   public encoder: ContractEncoder<VoteERC20>;
   public estimator: GasCostEstimator<VoteERC20>;
   public events: ContractEvents<VoteERC20>;
@@ -98,7 +97,11 @@ export class Vote implements UpdateableNetwork {
       this.storage,
     );
 
-    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);

@@ -29,13 +29,7 @@ import { UnmappedOffer } from "../../types/marketplace/UnmappedOffer";
 import type { Marketplace as MarketplaceContract } from "@thirdweb-dev/contracts-js";
 import { NewOfferEventObject } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
-  BaseContract,
-  BigNumber,
-  BigNumberish,
-  CallOverrides,
-  constants,
-} from "ethers";
+import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -67,7 +61,7 @@ export class Marketplace implements UpdateableNetwork {
     MarketplaceContract,
     typeof MarketplaceContractSchema
   >;
-  public app: ContractAppURI<BaseContract>;
+  public app: ContractAppURI<MarketplaceContract>;
   public roles: ContractRoles<
     MarketplaceContract,
     (typeof Marketplace.contractRoles)[number]
@@ -176,7 +170,11 @@ export class Marketplace implements UpdateableNetwork {
       this.storage,
     );
 
-    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.roles = new ContractRoles(
       this.contractWrapper,
       Marketplace.contractRoles,

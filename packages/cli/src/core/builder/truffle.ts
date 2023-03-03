@@ -36,14 +36,12 @@ export class TruffleBuilder extends BaseBuilder {
       logger.debug("Processing:", file.replace(buildPath, ""));
       const contractJsonFile = readFileSync(file, "utf-8");
       const contractInfo = JSON.parse(contractJsonFile);
-      const contractName = contractInfo.contractName;
-      const metadata = contractInfo.metadata;
-      const bytecode = contractInfo.bytecode;
-      const deployedBytecode = contractInfo.deployedBytecode;
-      const parsedMetadata = JSON.parse(metadata);
-      const abi = parsedMetadata.output.abi;
+      const { contractName, metadata, bytecode, deployedBytecode } =
+        contractInfo;
+      const meta = JSON.parse(metadata);
+      const abi = meta.output.abi;
 
-      const target = parsedMetadata.settings.compilationTarget;
+      const target = meta.settings.compilationTarget;
       if (
         Object.keys(target).length === 0 ||
         Object.keys(target)[0].includes("@")
@@ -53,7 +51,6 @@ export class TruffleBuilder extends BaseBuilder {
         continue;
       }
 
-      const meta = JSON.parse(metadata);
       const sources = Object.keys(meta.sources)
         .map((path) => {
           path = path.replace("project:/", "");
@@ -73,9 +70,7 @@ export class TruffleBuilder extends BaseBuilder {
         })
         .filter((path) => path !== undefined) as string[];
 
-      const fileNames = Object.keys(
-        parsedMetadata?.settings?.compilationTarget || {},
-      );
+      const fileNames = Object.keys(meta?.settings?.compilationTarget || {});
       const fileName = fileNames.length > 0 ? fileNames[0] : "";
 
       if (this.shouldProcessContract(abi, deployedBytecode, contractName)) {

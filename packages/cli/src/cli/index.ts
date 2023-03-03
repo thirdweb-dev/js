@@ -54,10 +54,7 @@ const main = async () => {
         if (lastCheckCache.isCached) {
           const lastVersionCheck = new Date(lastCheckCache.value);
           // Don't check for updates if already checked within past 24 hours
-          if (
-            new Date().getTime() - lastVersionCheck.getTime() <
-            1000 * 60 * 60 * 24
-          ) {
+          if (Date.now() - lastVersionCheck.getTime() < 1000 * 60 * 60 * 24) {
             shouldCheckVersion = false;
           }
         }
@@ -115,7 +112,7 @@ const main = async () => {
                   `Now using CLI version ${versionInfo.latest}. Continuing execution...`,
                 );
 
-                await new Promise((done, failed) => {
+                await new Promise((resolve, reject) => {
                   const shell = spawn(
                     `npx --yes thirdweb@latest ${process.argv
                       .slice(2)
@@ -125,9 +122,9 @@ const main = async () => {
                   );
                   shell.on("close", (code) => {
                     if (code === 0) {
-                      done("");
+                      resolve("");
                     } else {
-                      failed();
+                      reject();
                     }
                   });
                 });
@@ -160,14 +157,10 @@ const main = async () => {
                   process.exit(1);
               }
 
-              await new Promise((done, failed) => {
+              await new Promise((resolve, reject) => {
                 exec(command, (err, stdout, stderr) => {
-                  if (err) {
-                    failed(err);
-                    return;
-                  }
-
-                  done({ stdout, stderr });
+                  if (err) {return reject(err);}
+                  resolve({ stdout, stderr });
                 });
               });
 
@@ -181,7 +174,7 @@ const main = async () => {
                 !installation.isGlobal || installation.packageManager === "npm"
                   ? `npx thirdweb`
                   : `thirdweb`;
-              await new Promise((done, failed) => {
+              await new Promise((resolve, reject) => {
                 const shell = spawn(
                   `${executionCommand} ${process.argv.slice(2).join(" ")}`,
                   [],
@@ -189,9 +182,9 @@ const main = async () => {
                 );
                 shell.on("close", (code) => {
                   if (code === 0) {
-                    done("");
+                    resolve("");
                   } else {
-                    failed();
+                    reject();
                   }
                 });
               });
@@ -286,7 +279,7 @@ const main = async () => {
     .action(async (options) => {
       const url = await deploy(options);
       if (url) {
-        open(url);
+        await open(url);
       }
     });
 
@@ -315,7 +308,7 @@ const main = async () => {
           url.toString(),
         )}`,
       );
-      open(url.toString());
+      await open(url.toString());
     });
 
   program
@@ -342,7 +335,7 @@ const main = async () => {
           url.toString(),
         )}`,
       );
-      open(url.toString());
+      await open(url.toString());
     });
 
   program

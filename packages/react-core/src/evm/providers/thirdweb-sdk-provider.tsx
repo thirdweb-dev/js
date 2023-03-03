@@ -17,7 +17,7 @@ import {
 } from "@thirdweb-dev/sdk/evm";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { Signer } from "ethers";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";
 
 interface TWSDKContext {
