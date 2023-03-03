@@ -14,6 +14,7 @@ export const CommonContractSchema = z.object({
   description: z.string().optional(),
   image: FileOrBufferOrStringSchema.optional(),
   external_link: z.string().optional(),
+  app_uri: z.string().optional(),
 });
 
 export type CommonContractSchemaInput = z.input<typeof CommonContractSchema>;

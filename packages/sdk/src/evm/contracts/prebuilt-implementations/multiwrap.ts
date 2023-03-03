@@ -6,6 +6,7 @@ import {
 } from "../../common/currency";
 import { isTokenApprovedForTransfer } from "../../common/marketplace";
 import { uploadOrExtractURI } from "../../common/nft";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
@@ -36,7 +37,7 @@ import {
   TokensWrappedEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/Multiwrap";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumberish, CallOverrides, ethers } from "ethers";
+import { BaseContract, BigNumberish, CallOverrides, ethers } from "ethers";
 
 /**
  * Multiwrap lets you wrap any number of ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token bundle.
@@ -68,6 +69,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
     MultiwrapContract,
     typeof MultiwrapContractSchema
   >;
+  public app: ContractAppURI<BaseContract>;
   public events: ContractEvents<MultiwrapContract>;
   public roles: ContractRoles<
     MultiwrapContract,
@@ -119,7 +121,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
       MultiwrapContractSchema,
       this.storage,
     );
-
+    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
     this.roles = new ContractRoles(
       this.contractWrapper,
       Multiwrap.contractRoles,

@@ -6,6 +6,7 @@ import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -30,7 +31,13 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { PrebuiltNFTDrop } from "../../types/eips";
 import { UploadProgressEvent } from "../../types/events";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
+import {
+  BaseContract,
+  BigNumber,
+  BigNumberish,
+  CallOverrides,
+  constants,
+} from "ethers";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -56,6 +63,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
     PrebuiltNFTDrop,
     typeof DropErc721ContractSchema
   >;
+  public app: ContractAppURI<BaseContract>;
   public sales: ContractPrimarySale<PrebuiltNFTDrop>;
   public platformFees: ContractPlatformFee<PrebuiltNFTDrop>;
   public events: ContractEvents<PrebuiltNFTDrop>;
@@ -174,6 +182,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
       DropErc721ContractSchema,
       this.storage,
     );
+    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
     this.roles = new ContractRoles(this.contractWrapper, NFTDrop.contractRoles);
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.sales = new ContractPrimarySale(this.contractWrapper);

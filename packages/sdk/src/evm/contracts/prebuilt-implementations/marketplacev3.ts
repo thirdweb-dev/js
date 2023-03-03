@@ -4,6 +4,7 @@ import {
   FEATURE_ENGLISH_AUCTIONS,
   FEATURE_OFFERS,
 } from "../../constants/thirdweb-features";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -28,7 +29,7 @@ import type {
   OffersLogic,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { CallOverrides } from "ethers";
+import { BaseContract, CallOverrides } from "ethers";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -59,6 +60,8 @@ export class MarketplaceV3 implements UpdateableNetwork {
     MarketplaceV3Contract,
     typeof MarketplaceContractSchema
   >;
+
+  public app: ContractAppURI<BaseContract>;
   public roles: ContractRoles<
     MarketplaceV3Contract,
     (typeof MarketplaceV3.contractRoles)[number]
@@ -219,6 +222,8 @@ export class MarketplaceV3 implements UpdateableNetwork {
       MarketplaceContractSchema,
       this.storage,
     );
+
+    this.app = new ContractAppURI(this.contractWrapper, this.metadata);
     this.roles = new ContractRoles(
       this.contractWrapper,
       MarketplaceV3.contractRoles,
