@@ -74,6 +74,7 @@ export const ChainInfoInputSchema = z.object({
     symbol: z.string(),
     decimals: z.number(),
   }),
+  slug: z.string(),
 });
 
 export type ChainInfo = z.infer<typeof ChainInfoInputSchema>;
