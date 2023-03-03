@@ -1,7 +1,7 @@
 import type { Chain } from "../../lib/wagmi-core";
 
 const arbitrum: Chain = {
-  id: 42_161,
+  id: 42161,
   name: "Arbitrum One",
   network: "arbitrum",
   nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
@@ -34,7 +34,7 @@ const arbitrum: Chain = {
 };
 
 const arbitrumGoerli: Chain = {
-  id: 421_613,
+  id: 421613,
   name: "Arbitrum Goerli",
   network: "arbitrum-goerli",
   nativeCurrency: {
@@ -72,7 +72,7 @@ const arbitrumGoerli: Chain = {
 };
 
 const avalanche: Chain = {
-  id: 43_114,
+  id: 43114,
   name: "Avalanche",
   network: "avalanche",
   nativeCurrency: {
@@ -97,7 +97,7 @@ const avalanche: Chain = {
 };
 
 const avalancheFuji: Chain = {
-  id: 43_113,
+  id: 43113,
   name: "Avalanche Fuji",
   network: "avalanche-fuji",
   nativeCurrency: {
@@ -427,7 +427,7 @@ const polygon: Chain = {
 };
 
 const polygonMumbai: Chain = {
-  id: 80_001,
+  id: 80001,
   name: "Polygon Mumbai",
   network: "maticmum",
   nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 },

@@ -179,7 +179,8 @@
     "@walletconnect/ethereum-provider": "^2.4.6",
     "bs58": "^5.0.0",
     "ethers": "^5.7.2",
-    "tweetnacl": "^1.0.3"
+    "tweetnacl": "^1.0.3",
+    "expo": "^46.0.0"
   },
   "peerDependenciesMeta": {
     "@thirdweb-dev/chains": {
