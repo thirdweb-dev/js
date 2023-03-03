@@ -1,6 +1,6 @@
 import { hasBaseContract, readBaseContract } from "./base-contracts";
-import { readExtensionBoilerPlate } from "./extension-contract-boilerplate";
 import { DownloadError } from "./create-app";
+import { readExtensionBoilerPlate } from "./extension-contract-boilerplate";
 import { PackageManager } from "./get-pkg-manager";
 import { tryGitInit } from "./git";
 import { hasForge } from "./has-forge";
@@ -27,6 +27,14 @@ interface ICreateContractProject {
   createExtension: boolean;
 }
 
+function isErrorLike(err: unknown): err is { message: string } {
+  return (
+    typeof err === "object" &&
+    err !== null &&
+    typeof (err as { message?: unknown }).message === "string"
+  );
+}
+
 export async function createContractProject({
   contractPath,
   packageManager,
@@ -34,7 +42,7 @@ export async function createContractProject({
   contractName,
   baseContract,
   onlyContract,
-  createExtension
+  createExtension,
 }: ICreateContractProject) {
   // Check that the selected base contract is valid
   if (baseContract) {
@@ -104,8 +112,7 @@ export async function createContractProject({
       );
     }
 
-    if(!baseContract && createExtension) {
-
+    if (!baseContract && createExtension) {
       const extensionBoilerplate = readExtensionBoilerPlate(contractObjectName);
 
       // Set the contents of the Contract.sol file to the extension contract storage library boilerplate
@@ -116,10 +123,11 @@ export async function createContractProject({
       await writeFile(contractFile, extensionBoilerplate);
 
       console.log(
-        `${chalk.green("Success!")} Created your ${contractName} extension at ${contractPath}`,
+        `${chalk.green(
+          "Success!",
+        )} Created your ${contractName} extension at ${contractPath}`,
       );
     }
-
   } else {
     // Otherwise, create a new contracts project
     const projectName = path.basename(root);
@@ -138,14 +146,6 @@ export async function createContractProject({
     console.log();
 
     process.chdir(root);
-
-    function isErrorLike(err: unknown): err is { message: string } {
-      return (
-        typeof err === "object" &&
-        err !== null &&
-        typeof (err as { message?: unknown }).message === "string"
-      );
-    }
 
     try {
       console.log(`Downloading files. This might take a moment.`);
@@ -186,10 +186,10 @@ export async function createContractProject({
         await writeFile(contractFile, baseContractText);
       }
 
-      if(!baseContract && createExtension) {
+      if (!baseContract && createExtension) {
+        const extensionBoilerplate =
+          readExtensionBoilerPlate(contractObjectName);
 
-        const extensionBoilerplate = readExtensionBoilerPlate(contractObjectName);
-  
         // Set the contents of the Contract.sol file to the extension contract storage library boilerplate
         let contractFile = "";
         contractFile = path.join(root, contractName);
@@ -201,11 +201,10 @@ export async function createContractProject({
           fs.unlinkSync(path.join(root, "src", "Contract.sol"));
           contractFile = path.join(root, "src", contractName);
         }
-  
+
         // Write the extension storage library to the MyContract.sol file
         await writeFile(contractFile, extensionBoilerplate);
       }
-
     } catch (reason) {
       throw new DownloadError(
         isErrorLike(reason) ? reason.message : String(reason),

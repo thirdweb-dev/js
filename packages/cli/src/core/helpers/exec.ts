@@ -5,14 +5,14 @@ export async function execute(
   projectPath: string,
   options = { log: false, cwd: projectPath },
 ): Promise<{ stdout: string; stderr: string }> {
-  return new Promise((done, failed) => {
+  return new Promise((resolve, reject) => {
     exec(command, { ...options }, (err, stdout, stderr) => {
       if (err) {
-        failed(err);
+        reject(err);
         return;
       }
 
-      done({ stdout, stderr });
+      resolve({ stdout, stderr });
     });
   });
 }
