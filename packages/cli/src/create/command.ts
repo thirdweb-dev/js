@@ -47,7 +47,6 @@ export async function twCreate(
     if (options.typescript) {
       language = "typescript";
     }
-
     if (options.javascript) {
       language = "javascript";
     }
@@ -55,23 +54,18 @@ export async function twCreate(
     if (options.next) {
       framework = "next";
     }
-
     if (options.cra) {
       framework = "cra";
     }
-
     if (options.vite) {
       framework = "vite";
     }
-
     if (options.node) {
       framework = "node";
     }
-
     if (options.express) {
       framework = "express";
     }
-
     if (options.reactNative) {
       framework = "react-native";
     }
@@ -79,7 +73,6 @@ export async function twCreate(
     if (options.solana) {
       chain = "solana";
     }
-
     if (options.evm) {
       chain = "evm";
     }
@@ -89,7 +82,6 @@ export async function twCreate(
     if (options.forge) {
       framework = "forge";
     }
-
     if (options.hardhat) {
       framework = "hardhat";
     }
@@ -120,13 +112,12 @@ export async function twCreate(
     projectType = "app";
   }
 
-  if(projectType === "extension") {
+  if (projectType === "extension") {
     createExtension = true;
 
     if (options.forge) {
       framework = "forge";
     }
-
     if (options.hardhat) {
       framework = "hardhat";
     }
@@ -170,7 +161,9 @@ export async function twCreate(
   if (!onlyContract) {
     if (!projectPath) {
       const defaultName =
-        (projectType === "contract" || projectType === "extension") ? "thirdweb-contracts" : "thirdweb-app";
+        projectType === "contract" || projectType === "extension"
+          ? "thirdweb-contracts"
+          : "thirdweb-app";
       const res = await prompts({
         type: "text",
         name: "path",
@@ -181,10 +174,10 @@ export async function twCreate(
           const validation = validateNpmName(
             path.basename(path.resolve(name.toLowerCase())),
           );
-          if (validation.valid) {
-            return true;
-          }
-          return "Invalid project name: " + validation.problems?.[0];
+          return (
+            validation.valid ||
+            "Invalid project name: " + validation.problems?.[0]
+          );
         },
       });
 
@@ -440,7 +433,7 @@ export async function twCreate(
     : getPkgManager();
 
   const template =
-    typeof options.template === "string" && options.template.trim();
+    typeof options.template === "string" ? options.template.trim() : undefined;
   try {
     if (projectType === "app") {
       await createApp({
@@ -459,7 +452,7 @@ export async function twCreate(
         contractName,
         baseContract,
         onlyContract,
-        createExtension
+        createExtension,
       });
     }
   } catch (reason) {
