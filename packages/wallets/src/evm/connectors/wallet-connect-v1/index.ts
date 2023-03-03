@@ -95,24 +95,24 @@ export class WalletConnectV1Connector extends Connector<
         "peerMeta",
         this.walletName,
       );
-      // if (switchChainAllowedRegex.test(this.walletName)) {
-      //   console.log(
-      //     "WalletConnectV1Connector connector.inside switchChainAllowedRegex",
-      //   );
-      //   this.switchChain = this.#switchChain;
+      if (switchChainAllowedRegex.test(this.walletName)) {
+        console.log(
+          "WalletConnectV1Connector connector.inside switchChainAllowedRegex",
+        );
+        this.switchChain = this.#switchChain;
 
-      //   // switch to target chainId
-      //   if (chainId) {
-      //     try {
-      //       console.log("Calls switchChain");
-      //       await this.switchChain(chainId);
-      //       id = chainId;
-      //       unsupported = this.isChainUnsupported(id);
-      //     } catch (e) {
-      //       console.error("could not switch chain", e);
-      //     }
-      //   }
-      // }
+        // switch to target chainId
+        if (chainId) {
+          try {
+            console.log("Calls switchChain");
+            await this.switchChain(chainId);
+            id = chainId;
+            unsupported = this.isChainUnsupported(id);
+          } catch (e) {
+            console.error("could not switch chain", e);
+          }
+        }
+      }
 
       this.#handleConnected();
       console.log("WalletConnectV1Connector connector", "emit.connect");

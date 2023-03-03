@@ -12,7 +12,7 @@ import { InjectedConnector } from "../injected";
 import type { Address } from "abitype";
 import { utils } from "ethers";
 
-function isWindoWethereum(w: Window): w is Window & { ethereum: Ethereum } {
+function isWindowEthereum(w: Window): w is Window & { ethereum: Ethereum } {
   return "ethereum" in window;
 }
 
@@ -73,7 +73,7 @@ export class MetaMaskConnector extends InjectedConnector {
         if (typeof window === "undefined") {
           return;
         }
-        if (isWindoWethereum(window)) {
+        if (isWindowEthereum(window)) {
           if (window.ethereum?.providers) {
             return window.ethereum.providers.find(getReady);
           }

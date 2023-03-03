@@ -94,21 +94,6 @@ export const ConnectWalletFlow = () => {
 };
 
 const styles = StyleSheet.create({
-  connectWalletView: {
-    height: "50",
-    minWidth: "200px",
-    width: "100%",
-  },
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  whiteText: {
-    color: "white",
-    textAlign: "center",
-    fontWeight: "700",
-  },
   darkText: {
     color: "black",
     textAlign: "center",
@@ -123,8 +108,7 @@ const styles = StyleSheet.create({
     color: "white",
     backgroundColor: "#FFFFFF",
     borderRadius: 8,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    gap: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
   },
 });

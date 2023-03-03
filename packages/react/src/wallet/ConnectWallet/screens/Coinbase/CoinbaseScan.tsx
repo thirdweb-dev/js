@@ -1,7 +1,6 @@
-import { iconSize } from "../../../design-system";
-import { CoinbaseWallet } from "../../wallets";
-import { CoinbaseWalletIcon } from "../icons/CoinbaseWalletIcon";
-import { ScanScreen } from "./ScanScreen";
+import { CoinbaseWallet } from "../../../wallets";
+import { CoinbaseWalletIcon } from "../../icons/CoinbaseWalletIcon";
+import { ScanScreen } from "../ScanScreen";
 import {
   useCreateWalletInstance,
   useThirdwebWallet,
@@ -42,7 +41,7 @@ export const ScanCoinbase: React.FC<{
       onGetStarted={props.onGetStarted}
       qrCodeUri={qrCodeUri}
       walletName="Coinbase"
-      QRIcon={<CoinbaseWalletIcon width={iconSize.lg} height={iconSize.lg} />}
+      WalletIcon={CoinbaseWalletIcon}
     />
   );
 };

@@ -189,7 +189,7 @@ describe("Marketplace Contract", async () => {
     });
 
     // TODO deploy WETH on hardhat
-    it.skip("should list acuction with native token", async () => {
+    it.skip("should list auction with native token", async () => {
       const tx = await marketplaceContract.auction.createListing({
         assetContractAddress: dummyNftContract.getAddress(),
         buyoutPricePerToken: 1,

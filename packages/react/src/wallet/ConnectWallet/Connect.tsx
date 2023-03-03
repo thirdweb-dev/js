@@ -1,29 +1,22 @@
 import { Modal } from "../../components/Modal";
-import { Spacer } from "../../components/Spacer";
 import { Spinner } from "../../components/Spinner";
 import { Button } from "../../components/buttons";
-import {
-  fontSize,
-  iconSize,
-  radius,
-  spacing,
-  Theme,
-} from "../../design-system";
+import { iconSize, Theme } from "../../design-system";
+import { isMobile } from "../../evm/utils/isMobile";
 import { useInstalledWallets } from "../hooks/useInstalledWallets";
+import { WalletSelector } from "./WalletSelector";
 import { CoinbaseWalletIcon } from "./icons/CoinbaseWalletIcon";
 import { DeviceWalletIcon } from "./icons/DeviceWalletIcon";
 import { MetamaskIcon } from "./icons/MetamaskIcon";
 import { WalletConnectIcon } from "./icons/WalletConnectIcon";
-import { CoinbaseGetStarted } from "./setup-ui/CoinbaseGetStarted";
-import { CoinbaseWalletSetup } from "./setup-ui/CoinbaseWaletSetup";
-import { ConnectToDeviceWallet } from "./setup-ui/DeviceWalletSetup";
-import { MetamaskConnecting } from "./setup-ui/MetamaskConnecting";
-import { MetamaskGetStarted } from "./setup-ui/MetamaskGetStarted";
-import { ScanCoinbase } from "./setup-ui/scanCoinbase";
-import { ScanMetamask } from "./setup-ui/scanMetamask";
+import { CoinbaseWalletSetup } from "./screens/Coinbase/CoinbaseConnecting";
+import { CoinbaseGetStarted } from "./screens/Coinbase/CoinbaseGetStarted";
+import { ScanCoinbase } from "./screens/Coinbase/CoinbaseScan";
+import { ConnectToDeviceWallet } from "./screens/DeviceWallet/DeviceWalletSetup";
+import { MetamaskConnecting } from "./screens/Metamask/MetamaskConnecting";
+import { MetamaskGetStarted } from "./screens/Metamask/MetamaskGetStarted";
+import { ScanMetamask } from "./screens/Metamask/MetamaskScan";
 import { useTheme } from "@emotion/react";
-import styled from "@emotion/styled";
-import * as Dialog from "@radix-ui/react-dialog";
 import {
   useConnect,
   useConnectionStatus,
@@ -32,18 +25,12 @@ import {
 import { SupportedWallet } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 
-const walletConnectIcon = (
-  <WalletConnectIcon width={iconSize.lg} height={iconSize.lg} />
-);
-
 const walletIcons: Record<SupportedWallet["id"], JSX.Element> = {
-  metamask: <MetamaskIcon width={iconSize.lg} height={iconSize.lg} />,
-  deviceWallet: <DeviceWalletIcon width={iconSize.lg} height={iconSize.lg} />,
-  coinbaseWallet: (
-    <CoinbaseWalletIcon width={iconSize.lg} height={iconSize.lg} />
-  ),
-  walletConnect: walletConnectIcon,
-  walletConnectV1: walletConnectIcon,
+  metamask: <MetamaskIcon size={iconSize.lg} />,
+  deviceWallet: <DeviceWalletIcon size={iconSize.lg} />,
+  coinbaseWallet: <CoinbaseWalletIcon size={iconSize.lg} />,
+  walletConnect: <WalletConnectIcon size={iconSize.lg} />,
+  walletConnectV1: <WalletConnectIcon size={iconSize.lg} />,
 };
 
 type Screen =
@@ -62,6 +49,14 @@ const walletNames: Record<SupportedWallet["id"], string> = {
   coinbaseWallet: "Coinbase Wallet",
   walletConnect: "Wallet Connect V2",
   walletConnectV1: "Wallet Connect V1",
+};
+
+export type WalletMeta = {
+  id: SupportedWallet["id"];
+  name: string;
+  icon: JSX.Element;
+  installed: boolean;
+  onClick: () => Promise<void>;
 };
 
 export const ConnectWalletFlow: React.FC<{
@@ -84,7 +79,7 @@ export const ConnectWalletFlow: React.FC<{
     }
   }, [open]);
 
-  const walletsMeta = wallets.map((wallet) => ({
+  const walletsMeta: WalletMeta[] = wallets.map((wallet) => ({
     id: wallet.id,
     name: walletNames[wallet.id],
     icon: walletIcons[wallet.id],
@@ -93,11 +88,10 @@ export const ConnectWalletFlow: React.FC<{
       // Device Wallet
       if (wallet.id === "deviceWallet") {
         setShowScreen("deviceWallet/connect");
-        return;
       }
 
       // Metamask
-      if (wallet.id === "metamask") {
+      else if (wallet.id === "metamask") {
         if (installedWallets.metamask) {
           try {
             setShowScreen("metamask/connecting");
@@ -105,14 +99,24 @@ export const ConnectWalletFlow: React.FC<{
           } catch (e) {
             setShowScreen("walletList");
           }
-        } else {
-          setShowScreen("metamask/scan");
         }
-        return;
+
+        // if metamask is not injected
+        else {
+          // on mobile, open metamask app link
+          if (isMobile()) {
+            window.open(
+              `https://metamask.app.link/dapp/${window.location.toString()}`,
+            );
+          } else {
+            // on desktop, show the metamask scan qr code
+            setShowScreen("metamask/scan");
+          }
+        }
       }
 
       // Coinbase Wallet
-      if (wallet.id === "coinbaseWallet") {
+      else if (wallet.id === "coinbaseWallet") {
         if (installedWallets.coinbaseWallet) {
           try {
             setShowScreen("coinbase/connecting");
@@ -124,12 +128,13 @@ export const ConnectWalletFlow: React.FC<{
         } else {
           setShowScreen("coinbase/scan");
         }
-        return;
       }
 
       // Wallet Connect v1, and v2
-      connect(wallet, {});
-      setOpen(false);
+      else {
+        connect(wallet, {});
+        setOpen(false);
+      }
     },
   }));
 
@@ -166,30 +171,7 @@ export const ConnectWalletFlow: React.FC<{
       }
     >
       {showScreen === "walletList" && (
-        <>
-          <DialogTitle>Connect your wallet</DialogTitle>
-          <Spacer y="xl" />
-          <WalletListUl>
-            {walletsMeta.map((WalletMeta) => {
-              return (
-                <li key={WalletMeta.id}>
-                  <WalletButton
-                    type="button"
-                    onClick={() => {
-                      WalletMeta.onClick();
-                    }}
-                  >
-                    {WalletMeta.icon}
-                    <WalletName>{WalletMeta.name}</WalletName>
-                    {WalletMeta.installed && (
-                      <InstallBadge> Installed </InstallBadge>
-                    )}
-                  </WalletButton>
-                </li>
-              );
-            })}
-          </WalletListUl>
-        </>
+        <WalletSelector walletsMeta={walletsMeta} />
       )}
 
       {showScreen === "metamask/get-started" && (
@@ -240,52 +222,3 @@ export const ConnectWalletFlow: React.FC<{
     </Modal>
   );
 };
-
-// styles
-
-const InstallBadge = styled.span<{ theme?: Theme }>`
-  padding: ${spacing.xxs} ${spacing.xs};
-  font-size: ${fontSize.sm};
-  background-color: ${(p) => p.theme.badge.secondary};
-  border-radius: ${radius.lg};
-  margin-left: auto;
-`;
-
-const WalletName = styled.span`
-  font-size: ${fontSize.md};
-  font-weight: 500;
-`;
-
-const DialogTitle = styled(Dialog.Title)<{ theme?: Theme }>`
-  margin: 0;
-  font-weight: 500;
-  color: ${(p) => p.theme.text.neutral};
-  font-size: ${fontSize.lg};
-`;
-
-const WalletListUl = styled.ul`
-  all: unset;
-  list-style-type: none;
-  display: flex;
-  flex-direction: column;
-  gap: ${spacing.xs};
-  box-sizing: border-box;
-`;
-
-const WalletButton = styled.button<{ theme?: Theme }>`
-  all: unset;
-  padding: ${spacing.sm} ${spacing.md};
-  border-radius: ${radius.sm};
-  display: flex;
-  align-items: center;
-  gap: ${spacing.md};
-  cursor: pointer;
-  box-sizing: border-box;
-  width: 100%;
-  color: ${(p) => p.theme.text.neutral};
-  background: ${(p) => p.theme.bg.elevated};
-  transition: 100ms ease;
-  &:hover {
-    background: ${(p) => p.theme.bg.highlighted};
-  }
-`;

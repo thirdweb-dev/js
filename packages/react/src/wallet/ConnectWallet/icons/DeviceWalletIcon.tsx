@@ -1,10 +1,10 @@
-export const DeviceWalletIcon: React.FC<{ width: string; height: string }> = (
-  props,
-) => {
+import { IconFC } from "./types";
+
+export const DeviceWalletIcon: IconFC = ({ size }) => {
   return (
     <svg
-      width={props.width}
-      height={props.height}
+      width={size}
+      height={size}
       viewBox="0 0 32 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

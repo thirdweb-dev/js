@@ -5,6 +5,7 @@ import { Input } from "../../components/formElements";
 import {
   fontSize,
   iconSize,
+  media,
   radius,
   spacing,
   Theme,
@@ -64,9 +65,7 @@ export const NetworkSelector: React.FC<{
         paddingBottom: "0px",
       }}
     >
-      <Spacer y="lg" />
-      {/* <Description>Choose a network to connect to the application</Description>
-      <Spacer y="lg" /> */}
+      <Spacer y="xl" />
 
       <Tabs.Root className="TabsRoot" defaultValue="all">
         <Tabs.List
@@ -99,6 +98,9 @@ export const NetworkSelector: React.FC<{
         >
           <StyledMagnifyingGlassIcon />
           <SearchInput
+            style={{
+              boxShadow: "none",
+            }}
             variant="secondary"
             placeholder="Search Networks"
             value={searchTerm}
@@ -161,18 +163,13 @@ const NetworkList: React.FC<{
   );
 };
 
-// const Description = styled.p<{ theme?: Theme }>`
-//   margin: 0;
-//   font-size: ${fontSize.md};
-//   color: ${(p) => p.theme.text.secondary};
-// `;
-
 const TabButton = styled(Tabs.Trigger)<{ theme?: Theme }>`
   all: unset;
   font-size: ${fontSize.md};
   color: ${(p) => p.theme.text.secondary};
   cursor: pointer;
   padding: ${spacing.sm} ${spacing.md};
+  -webkit-tap-highlight-color: transparent;
   border-radius: ${radius.lg};
   transition: background 0.2s ease, color 0.2s ease;
   &[data-state="active"] {
@@ -188,7 +185,8 @@ const NetworkListUl = styled.ul<{ theme?: Theme }>`
   display: flex;
   flex-direction: column;
   gap: ${spacing.xs};
-  height: 340px;
+  max-height: 340px;
+  min-height: 200px;
   overflow: auto;
   padding-right: 10px;
   padding-bottom: ${spacing.lg};
@@ -220,8 +218,9 @@ const NetworkButton = styled.button<{ theme?: Theme }>`
   &:hover {
     background: ${(p) => p.theme.bg.highlighted};
   }
-  &[data-active="true"] {
-    background: ${(p) => p.theme.bg.highlighted};
+
+  ${media.mobile} {
+    font-size: ${fontSize.sm};
   }
 `;
 

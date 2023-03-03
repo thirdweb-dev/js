@@ -1,17 +1,17 @@
-import { Spacer } from "../../../components/Spacer";
-import { Spinner } from "../../../components/Spinner";
-import { Button } from "../../../components/buttons";
+import { Spacer } from "../../../../components/Spacer";
+import { Spinner } from "../../../../components/Spinner";
+import { Button } from "../../../../components/buttons";
 import {
   FormField,
   FormFieldWithIconButton,
-} from "../../../components/formFields";
-import { iconSize } from "../../../design-system";
-import { DeviceWalletIcon } from "../icons/DeviceWalletIcon";
+} from "../../../../components/formFields";
 import {
   BackButton,
   ModalDescription,
   ModalTitle,
-} from "../shared/modalElements";
+} from "../../../../components/modalElements";
+import { iconSize, media, spacing } from "../../../../design-system";
+import { DeviceWalletIcon } from "../../icons/DeviceWalletIcon";
 import styled from "@emotion/styled";
 import { blue } from "@radix-ui/colors";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
@@ -44,8 +44,9 @@ export const ConnectToDeviceWallet: React.FC<{ onBack: () => void }> = (
   return (
     <>
       <BackButton onClick={props.onBack} />
-      <Spacer y="lg" />
-      <DeviceWalletIcon width={iconSize.xl} height={iconSize.xl} />
+      <IconContainer>
+        <DeviceWalletIcon size={iconSize.xl} />
+      </IconContainer>
       <Spacer y="md" />
       <ModalTitle>Device Wallet</ModalTitle>
 
@@ -224,4 +225,13 @@ const LoadingSpinnerContainer = styled.div`
 const FormFooter = styled.div`
   display: flex;
   justify-content: flex-end;
+`;
+
+const IconContainer = styled.div`
+  display: flex;
+  margin-top: ${spacing.lg};
+  ${media.mobile} {
+    justify-content: center;
+    margin-top: 0;
+  }
 `;

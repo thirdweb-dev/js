@@ -22,6 +22,7 @@ export const Modal: React.FC<{
   children: React.ReactNode;
   title?: string;
   style?: React.CSSProperties;
+  hideCloseIcon?: boolean;
 }> = (props) => {
   return (
     <Dialog.Root open={props.open} onOpenChange={props.setOpen}>
@@ -44,23 +45,25 @@ export const Modal: React.FC<{
             {props.children}
 
             {/* Close Icon */}
-            <CrossContainer>
-              <Dialog.Close asChild>
-                <IconButton
-                  variant="secondary"
-                  type="button"
-                  aria-label="Close"
-                >
-                  <Cross2Icon
-                    style={{
-                      width: iconSize.md,
-                      height: iconSize.md,
-                      color: "inherit",
-                    }}
-                  />
-                </IconButton>
-              </Dialog.Close>
-            </CrossContainer>
+            {!props.hideCloseIcon && (
+              <CrossContainer>
+                <Dialog.Close asChild>
+                  <IconButton
+                    variant="secondary"
+                    type="button"
+                    aria-label="Close"
+                  >
+                    <Cross2Icon
+                      style={{
+                        width: iconSize.md,
+                        height: iconSize.md,
+                        color: "inherit",
+                      }}
+                    />
+                  </IconButton>
+                </Dialog.Close>
+              </CrossContainer>
+            )}
           </DialogContent>
         </Dialog.Content>
       </Dialog.Portal>
@@ -78,8 +81,8 @@ const CrossContainer = styled.div`
   }
 `;
 
-const contentShowAnimation = keyframes`
-from {
+const modalAnimationDesktop = keyframes`
+  from {
     opacity: 0;
     transform: translate(-50%, -48%) scale(0.96);
   }
@@ -89,10 +92,21 @@ from {
   }
 `;
 
+const modalAnimationMobile = keyframes`
+  from {
+    opacity: 0;
+    transform: translate(0, 50%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+`;
+
 const DialogContent = styled.div<{ theme?: Theme }>`
   z-index: 10000;
   background-color: ${(p) => p.theme.bg.base};
-  border-radius: ${radius.lg};
+  border-radius: ${radius.xl};
   position: fixed;
   top: 50%;
   left: 50%;
@@ -101,15 +115,11 @@ const DialogContent = styled.div<{ theme?: Theme }>`
   overflow-y: auto;
   padding: ${spacing.lg};
   padding-bottom: ${spacing.xl};
-  animation: ${contentShowAnimation} 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  animation: ${modalAnimationDesktop} 200ms ease;
   box-shadow: ${shadow.lg};
 
   &:focus {
     outline: none;
-  }
-
-  ${media.mobile} {
-    padding: ${spacing.lg} ${spacing.md};
   }
 
   ${(p) =>
@@ -118,6 +128,21 @@ const DialogContent = styled.div<{ theme?: Theme }>`
       thumb: p.theme.bg.elevated,
       hover: p.theme.bg.highlighted,
     })}
+
+  /* open from bottom on mobile */
+  ${media.mobile} {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: 100vw;
+    transform: none;
+    width: 100vw;
+    animation: ${modalAnimationMobile} 0.35s cubic-bezier(0.15, 1.15, 0.6, 1);
+    border-radius: ${radius.xxl};
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
 `;
 
 const DialogTitle = styled(Dialog.Title)<{ theme?: Theme }>`
