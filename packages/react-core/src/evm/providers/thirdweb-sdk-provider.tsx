@@ -17,7 +17,7 @@ import {
 } from "@thirdweb-dev/sdk/evm";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { Signer } from "ethers";
-import { createContext, useContext, useEffect, useMemo } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import invariant from "tiny-invariant";
 
 interface TWSDKContext {
@@ -84,7 +84,9 @@ const WrappedThirdwebSDKProvider = <
     return activeChain.chainId;
   }, [activeChain, supportedChains]);
 
-  const sdk = useMemo(() => {
+  const [sdk, setSDK] = useState<ThirdwebSDK | undefined>(undefined);
+
+  useEffect(() => {
     // on the server we can't do anything (?)
     if (typeof window === "undefined") {
       return undefined;
@@ -152,12 +154,15 @@ const WrappedThirdwebSDKProvider = <
         console.error(
           "No chains configured, please pass a chain or chains to the ThirdwebProvider",
         );
-        return undefined;
+        setSDK(undefined);
+        return;
       }
     }
 
+    // set the chainId on the sdk instance to compare things later
     (sdk_ as any)._chainId = chainId;
-    return sdk_;
+
+    setSDK(sdk_);
   }, [
     activeChainId,
     alchemyApiKey,
@@ -177,14 +182,16 @@ const WrappedThirdwebSDKProvider = <
         sdk.updateSignerOrProvider(activeChainId);
       }
     }
-  }, [sdk, signer, activeChainId]);
+    // we know what we're doing
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sdk, (sdk as any)?._chainId, signer, activeChainId]);
 
   const ctxValue = useMemo(
     () => ({
-      sdk,
+      sdk: sdk && (sdk as any)._chainId === activeChainId ? sdk : undefined,
       _inProvider: true as const,
     }),
-    [sdk],
+    [activeChainId, sdk],
   );
 
   return (
@@ -299,5 +306,5 @@ export function useSDK(): ThirdwebSDK | undefined {
  */
 export function useSDKChainId(): number | undefined {
   const sdk = useSDK();
-  return (sdk?.getProvider() as any)?._network?.chainId;
+  return (sdk as any)?._chainId;
 }
