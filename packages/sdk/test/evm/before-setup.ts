@@ -286,7 +286,9 @@ export const mochaHooks = {
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     process.env.contractPublisherAddress = contractPublisher.address;
     // eslint-disable-next-line turbo/no-undeclared-env-vars
-    process.env.multiChainRegistryAddress = await setupMultichainRegistry();
+    process.env.multiChainRegistryAddress = await setupMultichainRegistry(
+      trustedForwarderAddress,
+    );
 
     storage = MockStorage();
     sdk = new ThirdwebSDK(
@@ -364,7 +366,9 @@ async function deployExtensions(extensionInfo: any[]): Promise<any[]> {
 }
 
 // Setup multichain registry for tests
-async function setupMultichainRegistry(): Promise<string> {
+async function setupMultichainRegistry(
+  trustedForwarderAddress: string,
+): Promise<string> {
   const extensionInfo: any[] = [];
 
   extensionInfo.push({
@@ -391,7 +395,9 @@ async function setupMultichainRegistry(): Promise<string> {
     TWMultichainRegistry__factory.bytecode,
   )
     .connect(signer)
-    .deploy(extensionRegistry.address, extensionNames)) as TWMultichainRegistry;
+    .deploy(extensionRegistry.address, extensionNames, signer.address, [
+      trustedForwarderAddress,
+    ])) as TWMultichainRegistry;
   const multichainRegistryRouter =
     await multichainRegistryRouterDeployer.deployed();
 
