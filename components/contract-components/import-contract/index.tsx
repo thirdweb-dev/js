@@ -17,13 +17,20 @@ interface ImportContractProps {
   contractAddress: string;
   chain: Chain | null;
   autoImport?: boolean;
-  onImport: () => void;
+  onImport: ({
+    contractAddress,
+    chain,
+  }: {
+    contractAddress: string;
+    chain: Chain;
+  }) => void;
 }
 
 export const ImportContract: React.FC<ImportContractProps> = ({
   contractAddress,
   chain,
   autoImport,
+
   onImport,
 }) => {
   const importContract = useImportContract();

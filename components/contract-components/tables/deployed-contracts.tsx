@@ -1,3 +1,4 @@
+import { ImportModal } from "../import-contract/modal";
 import { ShowMoreButton } from "./show-more-button";
 import {
   useAllContractList,
@@ -6,6 +7,7 @@ import {
 } from "@3rdweb-sdk/react";
 import {
   Box,
+  ButtonGroup,
   Center,
   Flex,
   Icon,
@@ -17,6 +19,7 @@ import {
   Th,
   Thead,
   Tr,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -37,10 +40,11 @@ import { useChainSlug } from "hooks/chains/chainSlug";
 import { useConfiguredChains } from "hooks/chains/configureChains";
 import { useRouter } from "next/router";
 import React, { useMemo, useState } from "react";
-import { FiArrowRight, FiPlus } from "react-icons/fi";
+import { FiArrowRight, FiFilePlus, FiPlus } from "react-icons/fi";
 import { Column, Row, useTable } from "react-table";
 import {
   Badge,
+  Button,
   ChakraNextLink,
   CodeBlock,
   Heading,
@@ -74,30 +78,47 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
 
   const router = useRouter();
 
+  const modalState = useDisclosure();
+
   return (
     <>
       {!noHeader && (
-        <Flex
-          justify="space-between"
-          align="top"
-          gap={4}
-          direction={{ base: "column", md: "row" }}
-        >
-          <Flex gap={2} direction="column">
-            <Heading size="title.md">Deployed contracts</Heading>
-            <Text fontStyle="italic" maxW="container.md">
-              The list of contract instances that you have deployed with
-              thirdweb across all networks.
-            </Text>
-          </Flex>
-          <LinkButton
-            leftIcon={<FiPlus />}
-            colorScheme="primary"
-            href="/explore"
+        <>
+          <ImportModal
+            isOpen={modalState.isOpen}
+            onClose={modalState.onClose}
+          />
+          <Flex
+            justify="space-between"
+            align="top"
+            gap={4}
+            direction={{ base: "column", md: "row" }}
           >
-            Deploy new contract
-          </LinkButton>
-        </Flex>
+            <Flex gap={2} direction="column">
+              <Heading size="title.md">Deployed contracts</Heading>
+              <Text fontStyle="italic" maxW="container.md">
+                The list of contract instances that you have deployed with
+                thirdweb across all networks.
+              </Text>
+            </Flex>
+            <ButtonGroup>
+              <Button
+                leftIcon={<FiFilePlus />}
+                variant="outline"
+                onClick={modalState.onOpen}
+              >
+                Import contract
+              </Button>
+              <LinkButton
+                rightIcon={<FiPlus />}
+                colorScheme="primary"
+                href="/explore"
+              >
+                Deploy contract
+              </LinkButton>
+            </ButtonGroup>
+          </Flex>
+        </>
       )}
 
       <ContractTable combinedList={slicedData}>

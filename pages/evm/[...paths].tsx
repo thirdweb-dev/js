@@ -3,6 +3,7 @@ import {
   useEVMContractInfo,
   useSetEVMContractInfo,
 } from "@3rdweb-sdk/react";
+import { useAddContractMutation } from "@3rdweb-sdk/react/hooks/useRegistry";
 import { Alert, AlertIcon, Box, Flex, Spinner } from "@chakra-ui/react";
 import { DehydratedState, QueryClient, dehydrate } from "@tanstack/react-query";
 import { useContract } from "@thirdweb-dev/react";
@@ -132,7 +133,10 @@ const EVMContractPage: ThirdwebNextPage = () => {
   const activeTab = router.query?.paths?.[2] || "overview";
   const contractQuery = useContract(contractAddress);
   const requiresImport = !!useSingleQueryParam("import");
+  const autoAddToDashboard = !!useSingleQueryParam("add");
   const [manuallyImported, setManuallyImported] = useState(false);
+
+  const addToDashboard = useAddContractMutation();
 
   useEffect(() => {
     setManuallyImported(false);
@@ -215,9 +219,21 @@ const EVMContractPage: ThirdwebNextPage = () => {
         contractAddress={contractAddress}
         chain={chain}
         autoImport={!!requiresImport}
-        onImport={() => {
+        onImport={async () => {
           // stop showing import contract
           setManuallyImported(true);
+
+          if (autoAddToDashboard && chain?.chainId) {
+            // add to dashboard
+            try {
+              await addToDashboard.mutateAsync({
+                chainId: chain.chainId,
+                contractAddress,
+              });
+            } catch (e) {
+              // failed to add to dashboard
+            }
+          }
 
           // remove search query param from url without reloading the page or triggering change in router
           const url = new URL(window.location.href);
