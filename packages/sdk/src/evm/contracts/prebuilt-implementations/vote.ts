@@ -2,6 +2,7 @@ import {
   fetchCurrencyMetadata,
   fetchCurrencyValue,
 } from "../../common/currency";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -58,6 +59,7 @@ export class Vote implements UpdateableNetwork {
 
   public abi: Abi;
   public metadata: ContractMetadata<VoteERC20, typeof VoteContractSchema>;
+  public app: ContractAppURI<VoteERC20>;
   public encoder: ContractEncoder<VoteERC20>;
   public estimator: GasCostEstimator<VoteERC20>;
   public events: ContractEvents<VoteERC20>;
@@ -92,6 +94,12 @@ export class Vote implements UpdateableNetwork {
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       VoteContractSchema,
+      this.storage,
+    );
+
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
       this.storage,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);

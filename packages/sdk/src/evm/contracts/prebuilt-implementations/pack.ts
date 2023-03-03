@@ -10,6 +10,7 @@ import { isTokenApprovedForTransfer } from "../../common/marketplace";
 import { uploadOrExtractURI } from "../../common/nft";
 import { getRoleHash } from "../../common/role";
 import { FEATURE_PACK_VRF } from "../../constants/thirdweb-features";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -66,6 +67,7 @@ export class Pack extends StandardErc1155<PackContract> {
 
   public abi: Abi;
   public metadata: ContractMetadata<PackContract, typeof PackContractSchema>;
+  public app: ContractAppURI<PackContract>;
   public roles: ContractRoles<
     PackContract,
     (typeof Pack.contractRoles)[number]
@@ -138,6 +140,11 @@ export class Pack extends StandardErc1155<PackContract> {
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       PackContractSchema,
+      this.storage,
+    );
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
       this.storage,
     );
     this.roles = new ContractRoles(this.contractWrapper, Pack.contractRoles);

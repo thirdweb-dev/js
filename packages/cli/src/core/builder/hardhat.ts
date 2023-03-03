@@ -97,8 +97,7 @@ export class HardhatBuilder extends BaseBuilder {
 
           const bytecode = info.evm.bytecode.object;
           const deployedBytecode = info.evm.deployedBytecode.object;
-          const metadata = info.metadata;
-          const abi = info.abi;
+          const { metadata, abi } = info;
 
           const meta = JSON.parse(metadata);
           const sources = Object.keys(meta.sources)

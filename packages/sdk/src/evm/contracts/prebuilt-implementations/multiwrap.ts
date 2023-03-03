@@ -6,6 +6,7 @@ import {
 } from "../../common/currency";
 import { isTokenApprovedForTransfer } from "../../common/marketplace";
 import { uploadOrExtractURI } from "../../common/nft";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
@@ -68,6 +69,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
     MultiwrapContract,
     typeof MultiwrapContractSchema
   >;
+  public app: ContractAppURI<MultiwrapContract>;
   public events: ContractEvents<MultiwrapContract>;
   public roles: ContractRoles<
     MultiwrapContract,
@@ -119,7 +121,11 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
       MultiwrapContractSchema,
       this.storage,
     );
-
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.roles = new ContractRoles(
       this.contractWrapper,
       Multiwrap.contractRoles,

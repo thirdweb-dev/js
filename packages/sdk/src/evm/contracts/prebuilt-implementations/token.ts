@@ -1,5 +1,6 @@
 import { getRoleHash } from "../../common";
 import { buildTransactionFunction } from "../../common/transactions";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -45,6 +46,8 @@ export class Token extends StandardErc20<TokenERC20> {
     TokenERC20,
     typeof TokenErc20ContractSchema
   >;
+
+  public app: ContractAppURI<TokenERC20>;
   public roles: ContractRoles<TokenERC20, (typeof Token.contractRoles)[number]>;
   public encoder: ContractEncoder<TokenERC20>;
   public estimator: GasCostEstimator<TokenERC20>;
@@ -90,6 +93,11 @@ export class Token extends StandardErc20<TokenERC20> {
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       TokenErc20ContractSchema,
+      this.storage,
+    );
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
       this.storage,
     );
     this.roles = new ContractRoles(this.contractWrapper, Token.contractRoles);
