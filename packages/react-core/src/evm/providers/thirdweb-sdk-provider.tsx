@@ -84,9 +84,7 @@ const WrappedThirdwebSDKProvider = <
     return activeChain.chainId;
   }, [activeChain, supportedChains]);
 
-  const [sdk, setSDK] = useState<ThirdwebSDK | undefined>(undefined);
-
-  useEffect(() => {
+  const sdk = useMemo(() => {
     // on the server we can't do anything (?)
     if (typeof window === "undefined") {
       return undefined;
@@ -154,15 +152,14 @@ const WrappedThirdwebSDKProvider = <
         console.error(
           "No chains configured, please pass a chain or chains to the ThirdwebProvider",
         );
-        setSDK(undefined);
-        return;
+        return undefined;
       }
     }
 
     // set the chainId on the sdk instance to compare things later
     (sdk_ as any)._chainId = chainId;
 
-    setSDK(sdk_);
+    return sdk_;
   }, [
     activeChainId,
     alchemyApiKey,
