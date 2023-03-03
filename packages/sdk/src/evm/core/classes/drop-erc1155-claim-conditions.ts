@@ -695,7 +695,7 @@ export class DropErc1155ClaimConditions<
 
       // upload new merkle roots to snapshot URIs if updated
       if (!deepEqual(metadata.merkle, merkleInfo)) {
-        const mergedMetadata = this.metadata.parseInputMetadata({
+        const mergedMetadata = await this.metadata.parseInputMetadata({
           ...metadata,
           merkle: merkleInfo,
         });
