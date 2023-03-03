@@ -26,13 +26,7 @@ import { DropErc1155ContractSchema } from "../../schema/contracts/drop-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";
 import { PrebuiltEditionDrop } from "../../types/eips";
 import { ThirdwebStorage, UploadProgressEvent } from "@thirdweb-dev/storage";
-import {
-  BaseContract,
-  BigNumber,
-  BigNumberish,
-  CallOverrides,
-  constants,
-} from "ethers";
+import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -61,7 +55,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
     PrebuiltEditionDrop,
     typeof DropErc1155ContractSchema
   >;
-  public app: ContractAppURI<BaseContract>;
+  public app: ContractAppURI<PrebuiltEditionDrop>;
   public roles: ContractRoles<
     PrebuiltEditionDrop,
     (typeof EditionDrop.contractRoles)[number]

@@ -25,13 +25,7 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { EditionMetadataOrUri } from "../../schema/tokens/edition";
 import type { TokenERC1155 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
-  BaseContract,
-  BigNumber,
-  BigNumberish,
-  CallOverrides,
-  constants,
-} from "ethers";
+import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.
@@ -55,7 +49,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
     TokenERC1155,
     typeof TokenErc1155ContractSchema
   >;
-  public app: ContractAppURI<BaseContract>;
+  public app: ContractAppURI<TokenERC1155>;
   public roles: ContractRoles<
     TokenERC1155,
     (typeof Edition.contractRoles)[number]

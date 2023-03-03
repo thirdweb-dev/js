@@ -37,7 +37,7 @@ import {
   TokensWrappedEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/Multiwrap";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BaseContract, BigNumberish, CallOverrides, ethers } from "ethers";
+import { BigNumberish, CallOverrides, ethers } from "ethers";
 
 /**
  * Multiwrap lets you wrap any number of ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token bundle.
@@ -69,7 +69,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
     MultiwrapContract,
     typeof MultiwrapContractSchema
   >;
-  public app: ContractAppURI<BaseContract>;
+  public app: ContractAppURI<MultiwrapContract>;
   public events: ContractEvents<MultiwrapContract>;
   public roles: ContractRoles<
     MultiwrapContract,

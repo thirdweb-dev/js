@@ -33,13 +33,7 @@ import { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
 import { UploadProgressEvent } from "../../types/events";
 import type { SignatureDrop as SignatureDropContract } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
-  BaseContract,
-  BigNumber,
-  BigNumberish,
-  CallOverrides,
-  constants,
-} from "ethers";
+import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
  * Setup a collection of NFTs where when it comes to minting, you can authorize
@@ -69,7 +63,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     SignatureDropContract,
     typeof DropErc721ContractSchema
   >;
-  public app: ContractAppURI<BaseContract>;
+  public app: ContractAppURI<SignatureDropContract>;
   public sales: ContractPrimarySale<SignatureDropContract>;
   public platformFees: ContractPlatformFee<SignatureDropContract>;
   public events: ContractEvents<SignatureDropContract>;

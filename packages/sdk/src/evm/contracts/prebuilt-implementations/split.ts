@@ -21,7 +21,7 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BaseContract, BigNumber, CallOverrides, Contract } from "ethers";
+import { BigNumber, CallOverrides, Contract } from "ethers";
 
 /**
  * Create custom royalty splits to distribute funds.
@@ -46,7 +46,7 @@ export class Split implements UpdateableNetwork {
   public abi: Abi;
   public metadata: ContractMetadata<SplitContract, typeof SplitsContractSchema>;
 
-  public app: ContractAppURI<BaseContract>;
+  public app: ContractAppURI<SplitContract>;
   public encoder: ContractEncoder<SplitContract>;
   public estimator: GasCostEstimator<SplitContract>;
   public events: ContractEvents<SplitContract>;

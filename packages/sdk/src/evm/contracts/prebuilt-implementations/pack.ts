@@ -46,13 +46,7 @@ import {
   PackOpenedEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/Pack";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
-  BaseContract,
-  BigNumber,
-  BigNumberish,
-  CallOverrides,
-  ethers,
-} from "ethers";
+import { BigNumber, BigNumberish, CallOverrides, ethers } from "ethers";
 
 /**
  * Create lootboxes of NFTs with rarity based open mechanics.
@@ -73,7 +67,7 @@ export class Pack extends StandardErc1155<PackContract> {
 
   public abi: Abi;
   public metadata: ContractMetadata<PackContract, typeof PackContractSchema>;
-  public app: ContractAppURI<BaseContract>;
+  public app: ContractAppURI<PackContract>;
   public roles: ContractRoles<
     PackContract,
     (typeof Pack.contractRoles)[number]

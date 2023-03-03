@@ -20,7 +20,7 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { Amount, CurrencyValue } from "../../types";
 import { PrebuiltTokenDrop } from "../../types/eips";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BaseContract, CallOverrides, constants } from "ethers";
+import { CallOverrides, constants } from "ethers";
 
 /**
  * Create a Drop contract for a standard crypto token or cryptocurrency.
@@ -43,7 +43,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
     PrebuiltTokenDrop,
     typeof DropErc20ContractSchema
   >;
-  public app: ContractAppURI<BaseContract>;
+  public app: ContractAppURI<PrebuiltTokenDrop>;
   public roles: ContractRoles<
     PrebuiltTokenDrop,
     (typeof TokenDrop.contractRoles)[number]
