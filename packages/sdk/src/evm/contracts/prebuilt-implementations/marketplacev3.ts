@@ -3,6 +3,8 @@ import {
   FEATURE_DIRECT_LISTINGS,
   FEATURE_ENGLISH_AUCTIONS,
   FEATURE_OFFERS,
+  FEATURE_PERMISSIONS,
+  FEATURE_PLATFORM_FEE,
 } from "../../constants/thirdweb-features";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
@@ -56,19 +58,29 @@ export class MarketplaceV3 implements UpdateableNetwork {
   public encoder: ContractEncoder<MarketplaceV3Contract>;
   public events: ContractEvents<MarketplaceV3Contract>;
   public estimator: GasCostEstimator<MarketplaceV3Contract>;
-  public platformFees: ContractPlatformFee<IPlatformFee>;
   public metadata: ContractMetadata<
     MarketplaceV3Contract,
     typeof MarketplaceV3ContractSchema
-  >;
-  public roles: ContractRoles<
-    IPermissions,
-    (typeof MarketplaceV3.contractRoles)[number]
   >;
   /**
    * @internal
    */
   public interceptor: ContractInterceptor<MarketplaceV3Contract>;
+
+  /**
+   * Handle permissions
+   */
+  get roles(): ContractRoles<IPermissions, any> {
+    return assertEnabled(this.detectRoles(), FEATURE_PERMISSIONS);
+  }
+
+  /**
+   * Handle platform fees
+   */
+  get platformFees(): ContractPlatformFee<IPlatformFee> {
+    return assertEnabled(this.detectPlatformFees(), FEATURE_PLATFORM_FEE);
+  }
+
   /**
    * Direct listings
    * @remarks Create and manage direct listings in your marketplace.
@@ -221,16 +233,9 @@ export class MarketplaceV3 implements UpdateableNetwork {
       MarketplaceV3ContractSchema,
       this.storage,
     );
-    this.roles = new ContractRoles(
-      this.contractWrapper as unknown as ContractWrapper<IPermissions>,
-      MarketplaceV3.contractRoles,
-    );
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
-    this.platformFees = new ContractPlatformFee(
-      this.contractWrapper as unknown as ContractWrapper<IPlatformFee>,
-    );
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
@@ -273,6 +278,27 @@ export class MarketplaceV3 implements UpdateableNetwork {
   /** ********************
    * FEATURE DETECTION
    * ********************/
+
+  private detectRoles() {
+    if (
+      detectContractFeature<IPermissions>(this.contractWrapper, "Permissions")
+    ) {
+      return new ContractRoles(
+        this.contractWrapper,
+        MarketplaceV3.contractRoles,
+      );
+    }
+    return undefined;
+  }
+
+  private detectPlatformFees() {
+    if (
+      detectContractFeature<IPlatformFee>(this.contractWrapper, "PlatformFee")
+    ) {
+      return new ContractPlatformFee(this.contractWrapper);
+    }
+    return undefined;
+  }
 
   private detectDirectListings() {
     if (
