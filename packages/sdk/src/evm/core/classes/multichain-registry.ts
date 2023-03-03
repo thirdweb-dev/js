@@ -1,4 +1,5 @@
-import { NetworkInput, TransactionResult } from "..";
+import { NetworkInput, Transaction, TransactionResult } from "..";
+import { buildTransactionFunction } from "../../common/transactions";
 import { getMultichainRegistryAddress } from "../../constants/addresses";
 import { PublishedMetadata } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -86,56 +87,67 @@ export class MultichainRegistry {
       }));
   }
 
-  public async addContract(
-    contract: AddContractInput,
-  ): Promise<TransactionResult> {
-    return await this.addContracts([contract]);
-  }
+  addContract = buildTransactionFunction(
+    async (
+      contract: AddContractInput,
+    ): Promise<Transaction<TransactionResult>> => {
+      return await this.addContracts.prepare([contract]);
+    },
+  );
 
-  public async addContracts(
-    contracts: AddContractInput[],
-  ): Promise<TransactionResult> {
-    const deployerAddress = await this.registryRouter.getSignerAddress();
-    const encoded: string[] = [];
-    contracts.forEach((contact) => {
-      encoded.push(
-        this.registryCore.readContract.interface.encodeFunctionData("add", [
-          deployerAddress,
-          contact.address,
-          contact.chainId,
-          contact.metadataURI || "",
-        ]),
-      );
-    });
+  addContracts = buildTransactionFunction(
+    async (
+      contracts: AddContractInput[],
+    ): Promise<Transaction<TransactionResult>> => {
+      const deployerAddress = await this.registryRouter.getSignerAddress();
+      const encoded: string[] = [];
+      contracts.forEach((contact) => {
+        encoded.push(
+          this.registryCore.readContract.interface.encodeFunctionData("add", [
+            deployerAddress,
+            contact.address,
+            contact.chainId,
+            contact.metadataURI || "",
+          ]),
+        );
+      });
 
-    return {
-      receipt: await this.registryRouter.multiCall(encoded),
-    };
-  }
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.registryRouter,
+        method: "multicall",
+        args: [encoded],
+      });
+    },
+  );
 
-  public async removeContract(
-    contract: ContractInput,
-  ): Promise<TransactionResult> {
-    return await this.removeContracts([contract]);
-  }
+  removeContract = buildTransactionFunction(
+    async (
+      contract: ContractInput,
+    ): Promise<Transaction<TransactionResult>> => {
+      return await this.removeContracts.prepare([contract]);
+    },
+  );
 
-  public async removeContracts(
-    contracts: ContractInput[],
-  ): Promise<TransactionResult> {
-    const deployerAddress = await this.registryRouter.getSignerAddress();
-    const encoded: string[] = [];
-    contracts.forEach((contract) => {
-      encoded.push(
-        this.registryCore.readContract.interface.encodeFunctionData("remove", [
-          deployerAddress,
-          contract.address,
-          contract.chainId,
-        ]),
-      );
-    });
+  removeContracts = buildTransactionFunction(
+    async (
+      contracts: ContractInput[],
+    ): Promise<Transaction<TransactionResult>> => {
+      const deployerAddress = await this.registryRouter.getSignerAddress();
+      const encoded: string[] = [];
+      contracts.forEach((contract) => {
+        encoded.push(
+          this.registryCore.readContract.interface.encodeFunctionData(
+            "remove",
+            [deployerAddress, contract.address, contract.chainId],
+          ),
+        );
+      });
 
-    return {
-      receipt: await this.registryRouter.multiCall(encoded),
-    };
-  }
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.registryRouter,
+        method: "multicall",
+        args: [encoded],
+      });
+    },
+  );
 }
