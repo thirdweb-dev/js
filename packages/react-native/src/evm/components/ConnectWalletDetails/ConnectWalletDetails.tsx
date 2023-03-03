@@ -37,27 +37,15 @@ export const ConnectWalletDetails = ({
   const balanceQuery = useBalance();
 
   useEffect(() => {
-    console.log("listen to open wallet", activeWalletMeta);
     if (activeWallet?.walletId.includes("walletConnect")) {
       activeWallet.on("open_wallet", (uri?: string) => {
-        console.log("open_wallet", uri);
-        console.log(
-          "open_wallet.universal",
-          activeWalletMeta?.mobile.universal,
-          uri,
-        );
         if (!uri && activeWalletMeta?.mobile.universal) {
-          console.log(
-            "open_wallet.universal",
-            activeWalletMeta?.mobile.universal,
-          );
           Linking.openURL(activeWalletMeta?.mobile.universal);
         }
       });
     }
 
     return () => {
-      console.log("unlisten to open wallet");
       if (activeWallet?.walletId.includes("walletConnect")) {
         activeWallet.off("open_wallet");
       }

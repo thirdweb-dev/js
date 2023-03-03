@@ -43,19 +43,13 @@ export abstract class AbstractBrowserWallet<
       "lastConnectedWallet",
     );
 
-    console.log("WalletConnectV1Connector", "autoconnect");
-
     // return if the last connected wallet is not this wallet
     if (lastConnectedWallet !== this.walletId) {
       return;
     }
 
-    console.log("WalletConnectV1Connector", "same wallet");
-
     const connector = await this.getConnector();
     const isConnected = await connector.isConnected();
-
-    console.log("WalletConnectV1Connector.isConnected", isConnected);
 
     // return if already connected
     if (isConnected) {
@@ -75,8 +69,6 @@ export abstract class AbstractBrowserWallet<
       parsedParams = undefined;
     }
 
-    console.log("WalletConnectV1Connector.lastParams", lastConnectionParams);
-
     // connect and return the account address
     return await this.connect(parsedParams);
   }
@@ -87,17 +79,13 @@ export abstract class AbstractBrowserWallet<
   async connect(
     connectOptions?: ConnectParams<TConnectParams>,
   ): Promise<string> {
-    console.log("connect.abstractwallet: ", this.walletId);
     const connector = await this.getConnector();
 
     this.#subscribeToEvents(connector);
 
-    console.log("Base.Connecting: ", this.walletId);
-
     // end event listener setups
     const connectedAddress = await connector.connect(connectOptions);
 
-    console.log("Base.Connecting.address: ", connectedAddress);
     // do not break on coordinator error
     try {
       // Store the last connected params in secure storage
@@ -116,7 +104,6 @@ export abstract class AbstractBrowserWallet<
 
   async #subscribeToEvents(connector: TWConnector) {
     // subscribe to connector for events
-    console.log("BaseWallet.subscribeToEvents");
     connector.on("connect", (data) => {
       this.coordinatorStorage.setItem("lastConnectedWallet", this.walletId);
       this.emit("connect", {
@@ -151,7 +138,6 @@ export abstract class AbstractBrowserWallet<
   }
 
   async getSigner() {
-    console.log("getSigner.abstractwallet: ");
     const connector = await this.getConnector();
     if (!connector) {
       throw new Error("Wallet not connected");
@@ -161,9 +147,7 @@ export abstract class AbstractBrowserWallet<
 
   public async disconnect() {
     const connector = await this.getConnector();
-    console.log("wallet.base disconnect", connector);
     if (connector) {
-      console.log("wallet.base.connector disconnect");
       await connector.disconnect();
       connector.removeAllListeners();
       // get the last connected wallet and check if it's this wallet, if so, remove it

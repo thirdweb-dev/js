@@ -17,7 +17,6 @@ export function getWalletsMeta(
 export function getWalletMeta(
   classInstance: InstanceType<SupportedWallet>,
 ): WalletMeta {
-  console.log("getWalletMeta", classInstance.walletName);
   const walletMeta = Object.values(walletsMetadata).find((wallet) => {
     return (
       classInstance.walletName

@@ -32,7 +32,6 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
       const { WalletConnectV1Connector } = await import(
         "../connectors/wallet-connect-v1"
       );
-      console.log("WalletConnectV1Connector", "getConnector");
       this.#walletConnectConnector = new WalletConnectV1Connector({
         chains: this.chains,
         storage: this.walletStorage,
@@ -74,12 +73,12 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
 
   #onMessage = async (payload: any) => {
     switch (payload.type) {
-      case "request":
-        // open wallet after request is sent
+      case "request": // open wallet after request is sent
+      case "add_chain": // open wallet after chain is added
+      case "switch_chain": // open wallet after chain is switched
         this.emit("open_wallet");
         break;
       case "display_uri":
-        console.log("display_uri", payload.data);
         this.emit("open_wallet", payload.data);
         break;
     }

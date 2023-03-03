@@ -56,7 +56,6 @@ export class WalletConnectV1Connector extends Connector<
   }
 
   async connect({ chainId }: { chainId?: number } = {}) {
-    console.log("WalletConnectV1Connector connector", "connect");
     try {
       let targetChainId = chainId;
       if (!targetChainId) {
@@ -71,7 +70,6 @@ export class WalletConnectV1Connector extends Connector<
         }
       }
 
-      console.log("WalletConnectV1Connector connector", "getProvider");
       const provider = await this.getProvider({
         chainId: targetChainId,
         create: true,
@@ -80,9 +78,7 @@ export class WalletConnectV1Connector extends Connector<
       // Defer message to the next tick to ensure wallet connect data (provided by `.enable()`) is available
       setTimeout(() => this.emit("message", { type: "connecting" }), 0);
 
-      console.log("WalletConnectV1Connector connector", "enable");
       const accounts = await provider.enable();
-      console.log("WalletConnectV1Connector connector", "after.enable");
       const account = utils.getAddress(accounts[0] as string);
       let id = await this.getChainId();
       let unsupported = this.isChainUnsupported(id);
@@ -90,21 +86,12 @@ export class WalletConnectV1Connector extends Connector<
       // Not all WalletConnect options support programmatic chain switching
       // Only enable for wallet options that do
       this.walletName = provider.connector?.peerMeta?.name ?? "";
-      console.log(
-        "WalletConnectV1Connector connector",
-        "peerMeta",
-        this.walletName,
-      );
       if (switchChainAllowedRegex.test(this.walletName)) {
-        console.log(
-          "WalletConnectV1Connector connector.inside switchChainAllowedRegex",
-        );
         this.switchChain = this.#switchChain;
 
         // switch to target chainId
         if (chainId) {
           try {
-            console.log("Calls switchChain");
             await this.switchChain(chainId);
             id = chainId;
             unsupported = this.isChainUnsupported(id);
@@ -115,14 +102,12 @@ export class WalletConnectV1Connector extends Connector<
       }
 
       this.#handleConnected();
-      console.log("WalletConnectV1Connector connector", "emit.connect");
       this.emit("connect", {
         account,
         chain: { id, unsupported },
         provider,
       });
 
-      console.log("WalletConnectV1Connector connector account", account);
       return {
         account,
         chain: { id, unsupported },
@@ -139,7 +124,6 @@ export class WalletConnectV1Connector extends Connector<
   }
 
   async disconnect() {
-    console.log("WalletConnectV1Connector", "disconnect");
     const provider = await this.getProvider();
     await provider.disconnect();
   }
@@ -177,11 +161,9 @@ export class WalletConnectV1Connector extends Connector<
         await import("@walletconnect/legacy-provider")
       ).default;
 
-      console.log("Connector.getProvider");
       const sessionStr = await this.#storage.getItem(LAST_SESSION);
       const session = sessionStr ? JSON.parse(sessionStr) : undefined;
       this.walletName = session?.peerMeta?.name || undefined;
-      console.log("Connector.getProvider.session", session);
 
       this.#provider = new WalletConnectProvider({
         ...this.options,
@@ -230,6 +212,7 @@ export class WalletConnectV1Connector extends Connector<
       // to ensure the chain has been switched. This is because there could be a case
       // where a wallet may not resolve the `wallet_switchEthereumChain` method, or
       // resolves slower than `chainChanged`.
+      this.emit("message", { type: "switch_chain" });
       await Promise.race([
         provider.request({
           method: "wallet_switchEthereumChain",
@@ -275,6 +258,7 @@ export class WalletConnectV1Connector extends Connector<
       if (/Unrecognized chain ID/i.test(message)) {
         // configure it
         try {
+          this.emit("message", { type: "add_chain" });
           await provider.request({
             method: "wallet_addEthereumChain",
             params: [
@@ -347,7 +331,6 @@ export class WalletConnectV1Connector extends Connector<
   };
 
   protected onDisconnect = async () => {
-    console.log("WCV1Connector.onDisconnect");
     this.walletName = undefined;
     this.#storage.removeItem(LAST_USED_CHAIN_ID);
     this.#storage.removeItem(LAST_SESSION);

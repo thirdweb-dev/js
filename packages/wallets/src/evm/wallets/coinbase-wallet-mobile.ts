@@ -32,9 +32,7 @@ export class CoinbaseWalletMobile extends AbstractBrowserWallet<CoinbaseMobileWa
         },
       });
 
-      cbConnector.on("connect", () => {
-        console.log("Coinbase Wallet connected");
-      });
+      cbConnector.on("connect", () => {});
 
       this.coinbaseConnector = cbConnector;
       this.connector = new WagmiAdapter(cbConnector);

@@ -21,8 +21,6 @@ export const ConnectWalletFlow = () => {
     WalletMeta | undefined
   >();
 
-  console.log("activeWalletMeta", activeWalletMeta);
-
   const connect = useConnect();
   const supportedWallets = useSupportedWallets();
   const walletClasses = useWallets();
@@ -31,7 +29,6 @@ export const ConnectWalletFlow = () => {
   useEffect(() => {
     if (displayUri && activeWalletMeta && modalVisible) {
       const fullUrl = formatDisplayUri(displayUri, activeWalletMeta);
-      console.log("useEffect.url", fullUrl);
 
       Linking.openURL(fullUrl);
     }
@@ -55,8 +52,6 @@ export const ConnectWalletFlow = () => {
       connect(WalletConnectV1, {});
     } else {
       const walletClass = walletClasses.find((item) => {
-        console.log("ittem.id", item.id);
-        console.log("wallet_.name", wallet_.id);
         return item.id.toLowerCase().includes(wallet_.id.toLowerCase());
       });
       invariant(walletClass, "Wallet class not found");
@@ -65,7 +60,6 @@ export const ConnectWalletFlow = () => {
   };
 
   const onBackPress = () => {
-    console.log("onbackpress");
     setActiveWalletMeta(undefined);
   };
 

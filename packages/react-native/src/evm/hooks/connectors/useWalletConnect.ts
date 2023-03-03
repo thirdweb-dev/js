@@ -1,9 +1,9 @@
+import UniversalProvider from "@walletconnect/universal-provider/dist/types/UniversalProvider";
 import { useEffect, useState } from "react";
+import { Linking } from "react-native";
 import invariant from "tiny-invariant";
 import { useClient, useConnect, useDisconnect } from "wagmi";
 import { WalletConnectConnector } from "wagmi/dist/connectors/walletConnect";
-import { Linking } from "react-native";
-import UniversalProvider from "@walletconnect/universal-provider/dist/types/UniversalProvider";
 
 /**
  * Hook for connecting to a mobile wallet with Wallet Connect
@@ -41,8 +41,13 @@ export function useWalletConnect() {
   const [displayUri, setDisplayUri] = useState<string | undefined>();
   const [connectError, setConnectError] = useState<Error | null>();
 
-  const { connect, connectors, error: wagmiConnectError, isLoading, isSuccess } =
-    useConnect();
+  const {
+    connect,
+    connectors,
+    error: wagmiConnectError,
+    isLoading,
+    isSuccess,
+  } = useConnect();
 
   const walletConnector = connectors.find(
     (c) => c.id === "walletConnect",
@@ -78,36 +83,46 @@ export function useWalletConnect() {
           connect({ connector: walletConnector });
         }, 100);
       }
-    }
+    };
 
     getProvider();
     // eslint-disable-next-line react-hooks/exhaustive-deps -- we only want to run this once
-  }, [])
+  }, []);
 
   useEffect(() => {
-    walletConnector.addListener('message', async ({ type, data }) => {
+    walletConnector.addListener("message", async ({ type, data }) => {
       switch (type) {
-        case 'display_uri':
-          invariant(typeof data === 'string', 'display_uri message data must be a string')
+        case "display_uri":
+          invariant(
+            typeof data === "string",
+            "display_uri message data must be a string",
+          );
           // store first part of the uri to trigger wallet connect
           setDisplayUri(data);
           Linking.openURL(data);
           break;
       }
-    })
-
-    walletConnector.addListener('connect', () => {
-      console.log('walletConnector connect')
     });
 
-    walletConnector.addListener('disconnect', () => {
+    walletConnector.addListener("connect", () => {});
+
+    walletConnector.addListener("disconnect", () => {
       // we need to disconnect wagmi when the connector disconnects
       disconnect();
-    })
+    });
     return () => {
       walletConnector.removeAllListeners();
-    }
+    };
   }, [disconnect, walletConnector]);
 
-  return { connector: walletConnector, connect: () => { connect({ connector: walletConnector }) }, isLoading: isLoading, isSuccess: isSuccess, connectError, displayUri }
+  return {
+    connector: walletConnector,
+    connect: () => {
+      connect({ connector: walletConnector });
+    },
+    isLoading: isLoading,
+    isSuccess: isSuccess,
+    connectError,
+    displayUri,
+  };
 }
