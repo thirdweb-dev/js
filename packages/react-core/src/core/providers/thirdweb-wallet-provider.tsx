@@ -2,12 +2,11 @@ import { TW_WC_PROJECT_ID } from "../constants/wc";
 import { DAppMetaData } from "../types/dAppMeta";
 import {
   CoinbaseWalletType,
-  CoinbaseWalletMobileType,
   DeviceWalletType,
   MetaMaskWalletType,
   SupportedWallet,
-  WalletConnectWalletType,
   WalletConnectV1WalletType,
+  WalletConnectWalletType,
 } from "../types/wallet";
 import { transformChainToMinimalWagmiChain } from "../utils";
 import { ThirdwebThemeContext } from "./theme-context";
@@ -151,13 +150,13 @@ export function ThirdwebWalletProvider(
       }
 
       // Coinbase Mobile
-      if (Wallet.id === "coinbaseWalletMobile") {
-        return new (Wallet as CoinbaseWalletMobileType)({
-          ...walletOptions,
-          callbackURL: new URL("https://thirdweb.com"),
-          hostURL: new URL("https://thirdweb.com"),
-        });
-      }
+      // if (Wallet.id === "coinbaseWalletMobile") {
+      //   return new (Wallet as CoinbaseWalletMobileType)({
+      //     ...walletOptions,
+      //     callbackURL: new URL("https://thirdweb.com"),
+      //     hostURL: new URL("https://thirdweb.com"),
+      //   });
+      // }
 
       // WalletConnect v2
       if (Wallet.id === "walletConnect") {
@@ -335,25 +334,25 @@ export function ThirdwebWalletProvider(
       }
 
       // Coinbase
-      else if (Wallet.id === "coinbaseWalletMobile") {
-        const _connectedParams = {
-          chainId: chainIdToConnect,
-          ...(connectParams as WalletConnectParams<CoinbaseWalletMobileType>),
-        };
+      // else if (Wallet.id === "coinbaseWalletMobile") {
+      //   const _connectedParams = {
+      //     chainId: chainIdToConnect,
+      //     ...(connectParams as WalletConnectParams<CoinbaseWalletMobileType>),
+      //   };
 
-        const wallet = createWalletInstance(
-          Wallet as CoinbaseWalletMobileType,
-        ) as InstanceType<CoinbaseWalletMobileType>;
+      //   const wallet = createWalletInstance(
+      //     Wallet as CoinbaseWalletMobileType,
+      //   ) as InstanceType<CoinbaseWalletMobileType>;
 
-        setConnectionStatus("connecting");
-        try {
-          await wallet.connect(_connectedParams);
-          handleWalletConnect(wallet);
-        } catch (e: any) {
-          setConnectionStatus("disconnected");
-          throw e;
-        }
-      }
+      //   setConnectionStatus("connecting");
+      //   try {
+      //     await wallet.connect(_connectedParams);
+      //     handleWalletConnect(wallet);
+      //   } catch (e: any) {
+      //     setConnectionStatus("disconnected");
+      //     throw e;
+      //   }
+      // }
 
       // WalletConnect v2
       else if (Wallet.id === "walletConnect") {

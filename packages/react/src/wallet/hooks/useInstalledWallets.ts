@@ -23,7 +23,7 @@ export function useInstalledWallets() {
     deviceWallet: !!deviceWalletStorage,
     walletConnect: false,
     walletConnectV1: false,
-    coinbaseWalletMobile: false,
+    // coinbaseWalletMobile: false,
   };
 
   return installedWallets;
