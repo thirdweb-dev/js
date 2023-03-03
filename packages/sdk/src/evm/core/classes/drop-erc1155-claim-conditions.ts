@@ -1,4 +1,8 @@
-import { includesErrorMessage } from "../../common";
+import {
+  detectContractFeature,
+  hasFunction,
+  includesErrorMessage,
+} from "../../common";
 import {
   abstractContractModelToLegacy,
   abstractContractModelToNew,
@@ -11,11 +15,8 @@ import {
   updateExistingClaimConditions,
 } from "../../common/claim-conditions";
 import { isNativeToken } from "../../common/currency";
-import {
-  detectContractFeature,
-  hasFunction,
-} from "../../common/feature-detection";
 import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
+import { buildTransactionFunction } from "../../common/transactions";
 import { isNode } from "../../common/utils";
 import { ClaimEligibility } from "../../enums";
 import {
@@ -34,9 +35,9 @@ import {
   BaseClaimConditionERC1155,
   PrebuiltEditionDrop,
 } from "../../types/eips";
-import { TransactionResult, TransactionTask } from "../index";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
 import type {
   ContractMetadata as ContractMetadataContract,
   Drop1155,
@@ -524,7 +525,7 @@ export class DropErc1155ClaimConditions<
    * const claimConditions = [
    *   {
    *     startTime: presaleStartTime, // start the presale now
-   *     maxQuantity: 2, // limit how many mints for this presale
+   *     maxClaimableSupply: 2, // limit how many mints for this presale
    *     price: 0.01, // presale price
    *     snapshot: snapshots, // limit minting to only certain addresses
    *   },
@@ -542,21 +543,23 @@ export class DropErc1155ClaimConditions<
    * @param claimConditionInputs - The claim conditions
    * @param resetClaimEligibilityForAll - Whether to reset the state of who already claimed NFTs previously
    */
-  public async set(
-    tokenId: BigNumberish,
-    claimConditionInputs: ClaimConditionInput[],
-    resetClaimEligibilityForAll = false,
-  ): Promise<TransactionResult> {
-    return this.setBatch(
-      [
-        {
-          tokenId,
-          claimConditions: claimConditionInputs,
-        },
-      ],
-      resetClaimEligibilityForAll,
-    );
-  }
+  set = buildTransactionFunction(
+    async (
+      tokenId: BigNumberish,
+      claimConditionInputs: ClaimConditionInput[],
+      resetClaimEligibilityForAll = false,
+    ) => {
+      return this.setBatch.prepare(
+        [
+          {
+            tokenId,
+            claimConditions: claimConditionInputs,
+          },
+        ],
+        resetClaimEligibilityForAll,
+      );
+    },
+  );
 
   /**
    * Set claim conditions on multiple NFTs at once
@@ -570,7 +573,7 @@ export class DropErc1155ClaimConditions<
    *     tokenId: 0,
    *     claimConditions: [{
    *       startTime: new Date(), // start the claim phase now
-   *       maxQuantity: 2, // limit how many mints for this tokenId
+   *       maxClaimableSupply: 2, // limit how many mints for this tokenId
    *       price: 0.01, // price for this tokenId
    *       snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
    *     }]
@@ -590,189 +593,193 @@ export class DropErc1155ClaimConditions<
    * @param claimConditionsForToken - The claim conditions for each NFT
    * @param resetClaimEligibilityForAll - Whether to reset the state of who already claimed NFTs previously
    */
-  public async setBatch(
-    claimConditionsForToken: ClaimConditionsForToken[],
-    resetClaimEligibilityForAll = false,
-  ) {
-    const merkleInfo: { [key: string]: string } = {};
-    const processedClaimConditions = await Promise.all(
-      claimConditionsForToken.map(async ({ tokenId, claimConditions }) => {
-        // sanitize for single phase deletions
-        let claimConditionsProcessed = claimConditions;
-        if (this.isLegacySinglePhaseDrop(this.contractWrapper)) {
-          resetClaimEligibilityForAll = true;
-          if (claimConditions.length === 0) {
-            claimConditionsProcessed = [
-              {
-                startTime: new Date(0),
-                currencyAddress: ethers.constants.AddressZero,
-                price: 0,
-                maxClaimableSupply: 0,
-                maxClaimablePerWallet: 0,
-                waitInSeconds: 0,
-                merkleRootHash: utils.hexZeroPad([0], 32),
-                snapshot: [],
-              },
-            ];
-          } else if (claimConditions.length > 1) {
-            throw new Error(
-              "Single phase drop contract cannot have multiple claim conditions, only one is allowed",
-            );
+  setBatch = buildTransactionFunction(
+    async (
+      claimConditionsForToken: ClaimConditionsForToken[],
+      resetClaimEligibilityForAll = false,
+    ) => {
+      const merkleInfo: { [key: string]: string } = {};
+      const processedClaimConditions = await Promise.all(
+        claimConditionsForToken.map(async ({ tokenId, claimConditions }) => {
+          // sanitize for single phase deletions
+          let claimConditionsProcessed = claimConditions;
+          if (this.isLegacySinglePhaseDrop(this.contractWrapper)) {
+            resetClaimEligibilityForAll = true;
+            if (claimConditions.length === 0) {
+              claimConditionsProcessed = [
+                {
+                  startTime: new Date(0),
+                  currencyAddress: ethers.constants.AddressZero,
+                  price: 0,
+                  maxClaimableSupply: 0,
+                  maxClaimablePerWallet: 0,
+                  waitInSeconds: 0,
+                  merkleRootHash: utils.hexZeroPad([0], 32),
+                  snapshot: [],
+                },
+              ];
+            } else if (claimConditions.length > 1) {
+              throw new Error(
+                "Single phase drop contract cannot have multiple claim conditions, only one is allowed",
+              );
+            }
           }
-        }
-        // if using new snapshot format, make sure that maxClaimablePerWallet is set if allowlist is set as well
-        if (
-          this.isNewSinglePhaseDrop(this.contractWrapper) ||
-          this.isNewMultiphaseDrop(this.contractWrapper)
-        ) {
-          claimConditionsProcessed.forEach((cc) => {
-            if (
-              cc.snapshot &&
-              cc.snapshot.length > 0 &&
-              (cc.maxClaimablePerWallet === undefined ||
-                cc.maxClaimablePerWallet === "unlimited")
-            ) {
-              throw new Error(
-                "maxClaimablePerWallet must be set to a specific value when an allowlist is set.\n" +
-                  "Set it to 0 to only allow addresses in the allowlist to claim the amount specified in the allowlist." +
-                  "\n\nex:\n" +
-                  "contract.claimConditions.set(tokenId, [{ snapshot: [{ address: '0x...', maxClaimable: 1 }], maxClaimablePerWallet: 0 }])",
-              );
-            }
-            if (
-              cc.snapshot &&
-              cc.snapshot.length > 0 &&
-              cc.maxClaimablePerWallet?.toString() === "0" &&
-              cc.snapshot
-                .map((s) => {
-                  if (typeof s === "string") {
-                    return 0;
-                  } else {
-                    return Number(s.maxClaimable?.toString() || 0);
-                  }
-                })
-                .reduce((acc, current) => {
-                  return acc + current;
-                }, 0) === 0
-            ) {
-              throw new Error(
-                "maxClaimablePerWallet is set to 0, and all addresses in the allowlist have max claimable 0. This means that no one can claim.",
-              );
-            }
+          // if using new snapshot format, make sure that maxClaimablePerWallet is set if allowlist is set as well
+          if (
+            this.isNewSinglePhaseDrop(this.contractWrapper) ||
+            this.isNewMultiphaseDrop(this.contractWrapper)
+          ) {
+            claimConditionsProcessed.forEach((cc) => {
+              if (
+                cc.snapshot &&
+                cc.snapshot.length > 0 &&
+                (cc.maxClaimablePerWallet === undefined ||
+                  cc.maxClaimablePerWallet === "unlimited")
+              ) {
+                throw new Error(
+                  "maxClaimablePerWallet must be set to a specific value when an allowlist is set.\n" +
+                    "Set it to 0 to only allow addresses in the allowlist to claim the amount specified in the allowlist." +
+                    "\n\nex:\n" +
+                    "contract.claimConditions.set(tokenId, [{ snapshot: [{ address: '0x...', maxClaimable: 1 }], maxClaimablePerWallet: 0 }])",
+                );
+              }
+              if (
+                cc.snapshot &&
+                cc.snapshot.length > 0 &&
+                cc.maxClaimablePerWallet?.toString() === "0" &&
+                cc.snapshot
+                  .map((s) => {
+                    if (typeof s === "string") {
+                      return 0;
+                    } else {
+                      return Number(s.maxClaimable?.toString() || 0);
+                    }
+                  })
+                  .reduce((acc, current) => {
+                    return acc + current;
+                  }, 0) === 0
+              ) {
+                throw new Error(
+                  "maxClaimablePerWallet is set to 0, and all addresses in the allowlist have max claimable 0. This means that no one can claim.",
+                );
+              }
+            });
+          }
+          // process inputs
+          const { snapshotInfos, sortedConditions } =
+            await processClaimConditionInputs(
+              claimConditionsProcessed,
+              0,
+              this.contractWrapper.getProvider(),
+              this.storage,
+              this.getSnapshotFormatVersion(),
+            );
+
+          snapshotInfos.forEach((s) => {
+            merkleInfo[s.merkleRoot] = s.snapshotUri;
           });
-        }
-        // process inputs
-        const { snapshotInfos, sortedConditions } =
-          await processClaimConditionInputs(
-            claimConditionsProcessed,
-            0,
-            this.contractWrapper.getProvider(),
-            this.storage,
-            this.getSnapshotFormatVersion(),
-          );
-
-        snapshotInfos.forEach((s) => {
-          merkleInfo[s.merkleRoot] = s.snapshotUri;
-        });
-        return {
-          tokenId,
-          sortedConditions,
-        };
-      }),
-    );
-
-    const metadata = await this.metadata.get();
-    const encoded: string[] = [];
-
-    // keep the old merkle roots from other tokenIds
-    for (const key of Object.keys(metadata.merkle || {})) {
-      merkleInfo[key] = metadata.merkle[key];
-    }
-
-    // upload new merkle roots to snapshot URIs if updated
-    if (!deepEqual(metadata.merkle, merkleInfo)) {
-      const mergedMetadata = this.metadata.parseInputMetadata({
-        ...metadata,
-        merkle: merkleInfo,
-      });
-      // using internal method to just upload, avoids one contract call
-      const contractURI = await this.metadata._parseAndUploadMetadata(
-        mergedMetadata,
+          return {
+            tokenId,
+            sortedConditions,
+          };
+        }),
       );
 
-      if (
-        hasFunction<ContractMetadataContract>(
-          "setContractURI",
-          this.contractWrapper,
-        )
-      ) {
-        encoded.push(
-          this.contractWrapper.readContract.interface.encodeFunctionData(
+      const metadata = await this.metadata.get();
+      const encoded: string[] = [];
+
+      // keep the old merkle roots from other tokenIds
+      for (const key of Object.keys(metadata.merkle || {})) {
+        merkleInfo[key] = metadata.merkle[key];
+      }
+
+      // upload new merkle roots to snapshot URIs if updated
+      if (!deepEqual(metadata.merkle, merkleInfo)) {
+        const mergedMetadata = this.metadata.parseInputMetadata({
+          ...metadata,
+          merkle: merkleInfo,
+        });
+        // using internal method to just upload, avoids one contract call
+        const contractURI = await this.metadata._parseAndUploadMetadata(
+          mergedMetadata,
+        );
+
+        if (
+          hasFunction<ContractMetadataContract>(
             "setContractURI",
-            [contractURI],
-          ),
-        );
-      } else {
-        throw new Error(
-          "Setting a merkle root requires implementing ContractMetadata in your contract to support storing a merkle root.",
-        );
+            this.contractWrapper,
+          )
+        ) {
+          encoded.push(
+            this.contractWrapper.readContract.interface.encodeFunctionData(
+              "setContractURI",
+              [contractURI],
+            ),
+          );
+        } else {
+          throw new Error(
+            "Setting a merkle root requires implementing ContractMetadata in your contract to support storing a merkle root.",
+          );
+        }
       }
-    }
 
-    processedClaimConditions.forEach(({ tokenId, sortedConditions }) => {
-      if (this.isLegacySinglePhaseDrop(this.contractWrapper)) {
-        encoded.push(
-          this.contractWrapper.readContract.interface.encodeFunctionData(
-            "setClaimConditions",
-            [
-              tokenId,
-              abstractContractModelToLegacy(sortedConditions[0]),
-              resetClaimEligibilityForAll,
-            ],
-          ),
-        );
-      } else if (this.isLegacyMultiPhaseDrop(this.contractWrapper)) {
-        encoded.push(
-          this.contractWrapper.readContract.interface.encodeFunctionData(
-            "setClaimConditions",
-            [
-              tokenId,
-              sortedConditions.map(abstractContractModelToLegacy),
-              resetClaimEligibilityForAll,
-            ],
-          ),
-        );
-      } else if (this.isNewSinglePhaseDrop(this.contractWrapper)) {
-        encoded.push(
-          this.contractWrapper.readContract.interface.encodeFunctionData(
-            "setClaimConditions",
-            [
-              tokenId,
-              abstractContractModelToNew(sortedConditions[0]),
-              resetClaimEligibilityForAll,
-            ],
-          ),
-        );
-      } else if (this.isNewMultiphaseDrop(this.contractWrapper)) {
-        encoded.push(
-          this.contractWrapper.readContract.interface.encodeFunctionData(
-            "setClaimConditions",
-            [
-              tokenId,
-              sortedConditions.map(abstractContractModelToNew),
-              resetClaimEligibilityForAll,
-            ],
-          ),
-        );
-      } else {
-        throw new Error("Contract does not support claim conditions");
-      }
-    });
+      processedClaimConditions.forEach(({ tokenId, sortedConditions }) => {
+        if (this.isLegacySinglePhaseDrop(this.contractWrapper)) {
+          encoded.push(
+            this.contractWrapper.readContract.interface.encodeFunctionData(
+              "setClaimConditions",
+              [
+                tokenId,
+                abstractContractModelToLegacy(sortedConditions[0]),
+                resetClaimEligibilityForAll,
+              ],
+            ),
+          );
+        } else if (this.isLegacyMultiPhaseDrop(this.contractWrapper)) {
+          encoded.push(
+            this.contractWrapper.readContract.interface.encodeFunctionData(
+              "setClaimConditions",
+              [
+                tokenId,
+                sortedConditions.map(abstractContractModelToLegacy),
+                resetClaimEligibilityForAll,
+              ],
+            ),
+          );
+        } else if (this.isNewSinglePhaseDrop(this.contractWrapper)) {
+          encoded.push(
+            this.contractWrapper.readContract.interface.encodeFunctionData(
+              "setClaimConditions",
+              [
+                tokenId,
+                abstractContractModelToNew(sortedConditions[0]),
+                resetClaimEligibilityForAll,
+              ],
+            ),
+          );
+        } else if (this.isNewMultiphaseDrop(this.contractWrapper)) {
+          encoded.push(
+            this.contractWrapper.readContract.interface.encodeFunctionData(
+              "setClaimConditions",
+              [
+                tokenId,
+                sortedConditions.map(abstractContractModelToNew),
+                resetClaimEligibilityForAll,
+              ],
+            ),
+          );
+        } else {
+          throw new Error("Contract does not support claim conditions");
+        }
+      });
 
-    return {
-      receipt: await this.contractWrapper.multiCall(encoded),
-    };
-  }
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "multicall",
+        args: [encoded],
+      });
+    },
+  );
 
   /**
    * Update a single claim condition with new data.
@@ -780,19 +787,21 @@ export class DropErc1155ClaimConditions<
    * @param index - the index of the claim condition to update, as given by the index from the result of `getAll()`
    * @param claimConditionInput - the new data to update, previous data will be retained
    */
-  public async update(
-    tokenId: BigNumberish,
-    index: number,
-    claimConditionInput: ClaimConditionInput,
-  ): Promise<TransactionResult> {
-    const existingConditions = await this.getAll(tokenId);
-    const newConditionInputs = await updateExistingClaimConditions(
-      index,
-      claimConditionInput,
-      existingConditions,
-    );
-    return await this.set(tokenId, newConditionInputs);
-  }
+  update = buildTransactionFunction(
+    async (
+      tokenId: BigNumberish,
+      index: number,
+      claimConditionInput: ClaimConditionInput,
+    ) => {
+      const existingConditions = await this.getAll(tokenId);
+      const newConditionInputs = await updateExistingClaimConditions(
+        index,
+        claimConditionInput,
+        existingConditions,
+      );
+      return await this.set.prepare(tokenId, newConditionInputs);
+    },
+  );
 
   /**
    * Returns proofs and the overrides required for the transaction.
@@ -873,13 +882,15 @@ export class DropErc1155ClaimConditions<
    * @param destinationAddress - Address you want to send the token to
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
+   *
+   * @deprecated Use `contract.erc1155.claim.prepare(...args)` instead
    */
   public async getClaimTransaction(
     destinationAddress: string,
     tokenId: BigNumberish,
     quantity: BigNumberish,
     options?: ClaimOptions,
-  ): Promise<TransactionTask> {
+  ): Promise<Transaction> {
     if (options?.pricePerToken) {
       throw new Error(
         "Price per token should be set via claim conditions by calling `contract.erc1155.claimConditions.set()`",
@@ -890,9 +901,9 @@ export class DropErc1155ClaimConditions<
       quantity,
       options?.checkERC20Allowance || true,
     );
-    return TransactionTask.make({
+    return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
-      functionName: "claim",
+      method: "claim",
       args: await this.getClaimArguments(
         tokenId,
         destinationAddress,

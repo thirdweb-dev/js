@@ -29,12 +29,12 @@ import invariant from "tiny-invariant";
 /** **********************/
 
 /**
- * Use this to get an individual NFT token of your {@link NFTContract}.
+ * Get a single NFT
  *
  * @example
  * ```javascript
- * const { contract } = useContract(<ContractAddress>);
- * const { data: nft, isLoading, error } = useNFT(contract, <tokenId>);
+ * const tokenId = 0; // the tokenId to look up
+ * const { data: nft, isLoading, error } = useNFT(contract, tokenId);
  * ```
  *
  * @param contract - an instance of a {@link NFTContract}
@@ -72,18 +72,17 @@ export function useNFT<TContract extends NFTContract>(
 }
 
 /**
- * Use this to get a list of NFT tokens of your {@link NFTContract}.
+ * Get all NFTs
  *
  * @example
  * ```javascript
- * const { contract } = useContract(<ContractAddress>);
  * const { data: nfts, isLoading, error } = useNFTs(contract, { start: 0, count: 100 });
  * ```
  *
  * @param contract - an instance of a {@link NFTContract}
- * @param queryParams - query params to pass to the query for the sake of pagination
+ * @param queryParams - query params to pass to the query for pagination
  * @returns a response object that includes an array of NFTs
- * @twfeature ERC721Supply | ERC1155Enumerable
+ * @twfeature ERC721Supply | ERC721Enumerable | ERC1155Enumerable
  * @beta
  */
 export function useNFTs<TContract extends NFTContract>(
@@ -115,11 +114,11 @@ export function useNFTs<TContract extends NFTContract>(
 }
 
 /**
- * Use this to get the total count of NFT tokens of your {@link NFTContract}.
+ * Get total supply count
  *
  * @example
  * ```javascript
- * const { contract } = useContract(<ContractAddress>);
+ * const { contract } = useContract("{{contract_address}}");
  * const { data: count, isLoading, error } = useTotalCount(contract);
  * ```
  *
@@ -162,16 +161,17 @@ export function useTotalCount<TContract extends NFTContract>(
 }
 
 /**
- * Use this to get a the total (minted) supply of your {@link NFTContract}.
+ * Get total minted supply count
  *
  * @example
  * ```javascript
- * const { contract } = useContract(<ContractAddress>);
+ * const { contract } = useContract("{{contract_address}}");
  * const { data: totalCirculatingSupply, isLoading, error } = useTotalCirculatingSupply(contract);
  * ```
  *
  * @param contract - an instance of a {@link NFTContract}
- * @returns a response object that incudes the total minted supply
+ * @param tokenId - required for ERC1155, the tokenId to look up
+ * @returns a response object that includes the total minted supply
  * @beta
  * @twfeature ERC721Supply | ERC1155Enumerable
  */
@@ -211,19 +211,18 @@ export function useTotalCirculatingSupply(
 }
 
 /**
- * Use this to get a the owned NFTs for a specific {@link Erc721OrErc1155} and wallet address.
+ * Get all NFTs owned by a specific wallet
  *
  * @example
  * ```javascript
- * const { contract } = useContract(<ContractAddress>);
- * const { data: ownedNFTs, isLoading, error } = useOwnedNFTs(contract, <OwnerWalletAddress>);
+ * const { data: ownedNFTs, isLoading, error } = useOwnedNFTs(contract, "{{wallet_address}}");
  * ```
  *
  * @param contract - an instance of a {@link NFTContract}
- * @param ownerWalletAddress - the wallet adress to get owned tokens for
+ * @param ownerWalletAddress - the wallet address to get owned tokens for
  * @returns a response object that includes the list of owned tokens
  * @beta
- * @twfeature ERC721Enumerable | ERC1155Enumerable
+ * @twfeature ERC721Enumerable | ERC1155Enumerable | ERC721Supply
  */
 export function useOwnedNFTs<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
@@ -252,16 +251,19 @@ export function useOwnedNFTs<TContract extends NFTContract>(
 }
 
 /**
- * Use this to get a the total balance of a {@link NFTContract} and wallet address.
+ * Get NFT balance of a specific wallet
  *
  * @example
  * ```javascript
- * const { contract } = useContract(<ContractAddress>);
- * const { data: ownerBalance, isLoading, error } = useNFTBalance(contract, <OwnerWalletAddress>);
+ * const { data: ownerBalance, isLoading, error } = useNFTBalance(contract, "{{wallet_address}}");
+ * // for ERC1155 contracts, you can also pass a tokenId
+ * const tokenId = 0;
+ * const { data: ownerBalance, isLoading, error } = useNFTBalance(contract, "{{wallet_address}}", tokenId);
  * ```
  *
  * @param contract - an instance of a {@link NFTContract}
- * @param ownerWalletAddress - the wallet adress to check the balance of
+ * @param ownerWalletAddress - the wallet address to check the balance of
+ * @param tokenId - required for ERC1155, the tokenId to look up
  * @returns a response object that includes the total balance of the owner
  * @twfeature ERC721 | ERC1155
  * @beta
@@ -311,36 +313,12 @@ export function useNFTBalance(
 /** **********************/
 
 /**
- * Use this to mint a new NFT on your {@link Erc721OrErc1155}
+ * Mint an NFT to a specific wallet
  *
  * @example
  * ```jsx
  * const Component = () => {
- *   const nftDrop = useNFTDrop(<ContractAddress>);
- *   const {
- *     mutate: mintNft,
- *     isLoading,
- *     error,
- *   } = useMintNFT(nftDrop);
- *
- *   if (error) {
- *     console.error("failed to mint nft", error);
- *   }
- *
- *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => mintNft({ name: "My awesome NFT!", to: "0x..." })}
- *     >
- *       Mint!
- *     </button>
- *   );
- * };
- * ```
- * @example
- * ```jsx
- * const Component = () => {
- *   const { contract } = useContract(<ContractAddress>);
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: mintNft,
  *     isLoading,
@@ -348,13 +326,13 @@ export function useNFTBalance(
  *   } = useMintNFT(contract);
  *
  *   if (error) {
- *     console.error("failed to mint nft", error);
+ *     console.error("failed to mint NFT", error);
  *   }
  *
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => mintNft({ name: "My awesome NFT!", to: "0x..." })}
+ *       onClick={() => mintNft({ name: "My awesome NFT!", to: "{{wallet_address}}" })}
  *     >
  *       Mint!
  *     </button>
@@ -407,12 +385,12 @@ export function useMintNFT<TContract extends NFTContract>(
 }
 
 /**
- * Use this to mint a new NFT on your {@link Erc1155}
+ * Increase the supply of an existing NFT
  *
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract(<ContractAddress>);
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: mintNftSupply,
  *     isLoading,
@@ -426,7 +404,7 @@ export function useMintNFT<TContract extends NFTContract>(
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => mintNftSupply({ tokenId: 0, additionalSupply: 100, to: "0x..."})}
+ *       onClick={() => mintNftSupply({ tokenId: 0, additionalSupply: 100, to: "{{wallet_address}}"})}
  *     >
  *       Mint Additional Supply!
  *     </button>
@@ -470,12 +448,12 @@ export function useMintNFTSupply(contract: Erc1155) {
 }
 
 /**
- * Use this to transfer tokens on your {@link NFTContract}
+ * Transfer an NFT
  *
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract(<ContractAddress>);
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: transferNFT,
  *     isLoading,
@@ -483,13 +461,16 @@ export function useMintNFTSupply(contract: Erc1155) {
  *   } = useTransferNFT(contract);
  *
  *   if (error) {
- *     console.error("failed to transfer nft", error);
+ *     console.error("failed to transfer NFT", error);
  *   }
  *
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => transferNFT({ to: "0x...", tokenId: 2 })}
+ *       onClick={() => transferNFT({
+ *         to: "{{wallet_address}}",
+ *         tokenId: 2
+ *       })}
  *     >
  *       Transfer
  *     </button>
@@ -537,38 +518,12 @@ export function useTransferNFT<TContract extends NFTContract>(
 }
 
 /**
- * Use this to transfer tokens on your {@link Erc1155}
+ * Airdrop NFTs to a list of wallets
  *
  * @example
  * ```jsx
  * const Component = () => {
- *   const editionDrop = useContract(<ContractAddress>, "edition-drop");
- *   const {
- *     mutate: airdropNFT,
- *     isLoading,
- *     error,
- *   } = useAirdropNFT(editionDrop);
- *
- *   if (error) {
- *     console.error("failed to transfer batch NFTs", error);
- *   }
- *
- *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => airdropNFT({
- *          tokenId: 2,
- *          addresses: [{ address: "0x...", quantity: 2 }, { address: "0x...", quantity: 4 } }]
- *       )}
- *     >
- *       Airdrop NFT
- *     </button>
- * };
- * ```
- * @example
- * ```jsx
- * const Component = () => {
- *   const { contract } = useContract(<ContractAddress>);
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: airdropNFT,
  *     isLoading,
@@ -584,7 +539,10 @@ export function useTransferNFT<TContract extends NFTContract>(
  *       disabled={isLoading}
  *       onClick={() => airdropNFT({
  *          tokenId: 2,
- *          addresses: [{ address: "0x...", quantity: 2 }, { address: "0x...", quantity: 4 } }]
+ *          addresses: [
+ *            { address: "{{wallet_address}}", quantity: 2 },
+ *            { address: "{{wallet_address}}", quantity: 4 } }
+ *          ]
  *       )}
  *     >
  *       Airdrop NFT
@@ -626,50 +584,26 @@ export function useAirdropNFT(contract: Erc1155) {
 /** **********************/
 
 /**
- * Use this to burn an NFT on your {@link Erc721OrErc1155}
+ * Burn an NFT
  *
  * @example
  * ```jsx
  * const Component = () => {
- *   const nftDrop = useNFTDrop(<ContractAddress>);
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
- *     mutate: burnNft,
- *     isLoading,
- *     error,
- *   } = useBurnNFT(nftDrop);
- *
- *   if (error) {
- *     console.error("failed to burn nft", error);
- *   }
- *
- *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => burnNft({ tokenId: 0 })}
- *     >
- *       Burn!
- *     </button>
- *   );
- * };
- * ```
- * @example
- * ```jsx
- * const Component = () => {
- *   const { contract } = useContract(<ContractAddress>);
- *   const {
- *     mutate: burnNft,
+ *     mutate: burnNFT,
  *     isLoading,
  *     error,
  *   } = useBurnNFT(contract);
  *
  *   if (error) {
- *     console.error("failed to burn nft", error);
+ *     console.error("failed to burn NFT", error);
  *   }
  *
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => burnNft({ tokenId: 0 })}
+ *       onClick={() => burnNFT({ tokenId: 0, amount: 1 })}
  *     >
  *       Burn!
  *     </button>

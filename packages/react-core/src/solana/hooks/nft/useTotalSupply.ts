@@ -21,7 +21,7 @@ export function nftTotalSupplyQuery(
 }
 
 /**
- * Get the totaly supply of NFTs on the program
+ * Get the total supply of NFTs on the program
  * @param program - The NFT program to get the total supply of
  *
  * @example

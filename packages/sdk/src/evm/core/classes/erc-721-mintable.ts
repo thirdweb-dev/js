@@ -1,13 +1,14 @@
 import { NFT, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { detectContractFeature } from "../../common";
 import { uploadOrExtractURI } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_MINTABLE } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
-import { TransactionTask } from "./TransactionTask";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc721 } from "./erc-721";
 import { Erc721BatchMintable } from "./erc-721-batch-mintable";
+import { Transaction } from "./transactions";
 import type { IMintableERC721, IMulticall } from "@thirdweb-dev/contracts-js";
 import { TransferEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ITokenERC721";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -64,37 +65,43 @@ export class Erc721Mintable implements DetectableFeature {
    * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
    */
-  public async to(
-    to: string,
-    metadata: NFTMetadataOrUri,
-  ): Promise<TransactionResultWithId<NFT>> {
-    const tx = await this.getMintTransaction(to, metadata);
-    const { receipt } = await tx.execute();
-    const event = this.contractWrapper.parseLogs<TransferEvent>(
-      "Transfer",
-      receipt?.logs,
-    );
-    if (event.length === 0) {
-      throw new Error("TransferEvent event not found");
-    }
-    const id = event[0].args.tokenId;
-    return {
-      id,
-      receipt,
-      data: () => this.erc721.get(id),
-    };
-  }
+  to = buildTransactionFunction(
+    async (
+      to: string,
+      metadata: NFTMetadataOrUri,
+    ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
+      const uri = await uploadOrExtractURI(metadata, this.storage);
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "mintTo",
+        args: [to, uri],
+        parse: (receipt) => {
+          const event = this.contractWrapper.parseLogs<TransferEvent>(
+            "Transfer",
+            receipt?.logs,
+          );
+          if (event.length === 0) {
+            throw new Error("TransferEvent event not found");
+          }
+          const id = event[0].args.tokenId;
+          return {
+            id,
+            receipt,
+            data: () => this.erc721.get(id),
+          };
+        },
+      });
+    },
+  );
 
+  /**
+   * @deprecated Use `contract.erc721.mint.prepare(...args)` instead
+   */
   public async getMintTransaction(
     to: string,
     metadata: NFTMetadataOrUri,
-  ): Promise<TransactionTask> {
-    const uri = await uploadOrExtractURI(metadata, this.storage);
-    return TransactionTask.make({
-      contractWrapper: this.contractWrapper,
-      functionName: "mintTo",
-      args: [to, uri],
-    });
+  ): Promise<Transaction> {
+    return this.to.prepare(to, metadata);
   }
 
   private detectErc721BatchMintable(): Erc721BatchMintable | undefined {

@@ -9,9 +9,98 @@ import IPermissionsAbi from "@thirdweb-dev/contracts-js/dist/abis/IPermissions.j
 import IPermissionsEnumerableAbi from "@thirdweb-dev/contracts-js/dist/abis/IPermissionsEnumerable.json";
 import IThirdwebPlatformFeeAbi from "@thirdweb-dev/contracts-js/dist/abis/IPlatformFee.json";
 import IThirdwebPrimarySaleAbi from "@thirdweb-dev/contracts-js/dist/abis/IPrimarySale.json";
-import IRouterAbi from "@thirdweb-dev/contracts-js/dist/abis/IRouter.json";
 import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/dist/abis/IRoyalty.json";
 import IOwnableAbi from "@thirdweb-dev/contracts-js/dist/abis/Ownable.json";
+
+export const getAllPluginsAbi = [
+  {
+    inputs: [],
+    name: "getAllPlugins",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "bytes4",
+            name: "functionSelector",
+            type: "bytes4",
+          },
+          {
+            internalType: "string",
+            name: "functionSignature",
+            type: "string",
+          },
+          {
+            internalType: "address",
+            name: "pluginAddress",
+            type: "address",
+          },
+        ],
+        internalType: "struct IPluginMap.Plugin[]",
+        name: "registered",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+];
+
+export const getAllExtensionsAbi = [
+  {
+    inputs: [],
+    name: "getAllExtensions",
+    outputs: [
+      {
+        components: [
+          {
+            components: [
+              {
+                internalType: "string",
+                name: "name",
+                type: "string",
+              },
+              {
+                internalType: "string",
+                name: "metadataURI",
+                type: "string",
+              },
+              {
+                internalType: "address",
+                name: "implementation",
+                type: "address",
+              },
+            ],
+            internalType: "struct IExtension.ExtensionMetadata",
+            name: "metadata",
+            type: "tuple",
+          },
+          {
+            components: [
+              {
+                internalType: "bytes4",
+                name: "functionSelector",
+                type: "bytes4",
+              },
+              {
+                internalType: "string",
+                name: "functionSignature",
+                type: "string",
+              },
+            ],
+            internalType: "struct IExtension.ExtensionFunction[]",
+            name: "functions",
+            type: "tuple[]",
+          },
+        ],
+        internalType: "struct IExtension.Extension[]",
+        name: "allExtensions",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+];
 
 export const FEATURE_ROYALTY = {
   name: "Royalty",
@@ -133,7 +222,18 @@ export const FEATURE_PLUGIN_ROUTER = {
     sdk: "sdk.pluginrouter",
     contracts: "IRouter",
   },
-  abis: [IRouterAbi],
+  abis: [getAllPluginsAbi],
+  features: {},
+} as const;
+
+export const FEATURE_EXTENSION_ROUTER = {
+  name: "ExtensionRouter",
+  namespace: "extension.router",
+  docLinks: {
+    sdk: "",
+    contracts: "",
+  },
+  abis: [getAllExtensionsAbi],
   features: {},
 } as const;
 

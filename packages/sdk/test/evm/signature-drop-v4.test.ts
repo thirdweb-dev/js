@@ -661,7 +661,7 @@ describe("Signature drop tests (v4)", async () => {
       await signatureDropContract.createBatch(metadata);
 
       /**
-       * Claiming 1 tokens with proofs: 0xe9707d0e6171f728f7473c24cc0432a9b07eaaf1efed6a137a4a8c12c79552d9,0xb1a5bda84b83f7f014abcf0cf69cab5a4de1c3ececa8123a5e4aaacb01f63f83
+       * Claiming 1 token with proofs: 0xe9707d0e6171f728f7473c24cc0432a9b07eaaf1efed6a137a4a8c12c79552d9,0xb1a5bda84b83f7f014abcf0cf69cab5a4de1c3ececa8123a5e4aaacb01f63f83
        */
 
       for (const member of testWallets) {
@@ -689,7 +689,7 @@ describe("Signature drop tests (v4)", async () => {
       await signatureDropContract.createBatch(metadata);
 
       /**
-       * Claiming 1 tokens with proofs: 0xe9707d0e6171f728f7473c24cc0432a9b07eaaf1efed6a137a4a8c12c79552d9,0xb1a5bda84b83f7f014abcf0cf69cab5a4de1c3ececa8123a5e4aaacb01f63f83
+       * Claiming 1 token with proofs: 0xe9707d0e6171f728f7473c24cc0432a9b07eaaf1efed6a137a4a8c12c79552d9,0xb1a5bda84b83f7f014abcf0cf69cab5a4de1c3ececa8123a5e4aaacb01f63f83
        */
 
       for (const member of testWallets) {

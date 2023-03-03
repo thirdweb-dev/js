@@ -1,11 +1,15 @@
+// @ts-check
 import axios from "axios";
 import merge from "deepmerge";
 import fs from "fs";
+import path from "path";
 
-const combineMerge = (target, source, options) => {
+/** @typedef {import("../src/types").Chain} Chain */
+
+const combineMerge = (target, source) => {
   let destination = target.slice();
 
-  source.forEach((item, index) => {
+  source.forEach((item) => {
     if (target.indexOf(item) === -1) {
       destination = [item, ...destination];
     }
@@ -15,16 +19,39 @@ const combineMerge = (target, source, options) => {
 
 const chainsDir = "./chains";
 
-/** @typedef {{name: string, chain: string, icon: string, rpc: string[], faucets?: any[], nativeCurrency: {name: string, symbol: string, decimals: number}, infoURL?: string, shortName: string, chainId: number, networkId: number, slip44?: number, ens: {registry: string}, explorers?: {name: string, url: string, standard: string}[] }} Chain */
-
 const chainsJsonUrl = "https://chainid.network/chains.json";
 const iconRoute =
   "https://raw.githubusercontent.com/ethereum-lists/chains/master/_data/icons";
 
-const overrides = JSON.parse(fs.readFileSync("./overrides.json"));
+/** @type {Record<number, Partial<Chain>>} */
+let overrides = {};
+
+// get all overides by reading the overrides directory and importing them
+const overridesDir = path.join(process.cwd(), "./data/overrides");
+const overridesFiles = fs.readdirSync(overridesDir);
+for (const file of overridesFiles) {
+  const override = await import(path.join(overridesDir, file));
+  // get file name without extension
+  const chainId = parseInt(file.split(".")[0]);
+  overrides[chainId] = override.default;
+}
+
+// chains from remote src
 
 /** @type {Chain[]} */
 let chains = (await axios.get(chainsJsonUrl)).data;
+// immediately filter out localhost
+chains = chains.filter((c) => c.chainId !== 1337);
+
+// additional chains
+
+// get all additional chains by reading the additional chains directory and importing them
+const additionalChainsDir = path.join(process.cwd(), "./data/additional");
+const additionalChainsFiles = fs.readdirSync(additionalChainsDir);
+for (const file of additionalChainsFiles) {
+  const additionalChain = await import(path.join(additionalChainsDir, file));
+  chains.push(additionalChain.default);
+}
 
 chains = chains
   .filter((c) => c.status !== "deprecated")
@@ -43,32 +70,6 @@ chains = chains
       testnet,
     };
   });
-
-chains = chains.filter((c) => c.chainId !== 1337);
-// inject in localhost
-chains.push({
-  name: "Localhost",
-  chain: "ETH",
-  rpc: ["http://localhost:8545"],
-  faucets: [],
-  nativeCurrency: {
-    name: "Ether",
-    symbol: "ETH",
-    decimals: 18,
-  },
-  // hard code eth icon for now
-  icon: {
-    url: "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
-    height: 512,
-    width: 512,
-    format: "png",
-    sizes: [16, 32, 64, 128, 256, 512],
-  },
-  shortName: "local",
-  chainId: 1337,
-  networkId: 1337,
-  testnet: true,
-});
 
 const imports = [];
 const exports = [];
@@ -117,6 +118,9 @@ function findSlug(chain) {
   }
   if (slug === "binance-smart-chain-testnet") {
     slug = "binance-testnet";
+  }
+  if (slug === "base-goerli-testnet") {
+    slug = "base-goerli";
   }
   // end special cases
 
@@ -202,5 +206,23 @@ export * from "./types";
 export * from "./utils";
 export const defaultChains = [Ethereum, Goerli, Polygon, Mumbai, Arbitrum, ArbitrumGoerli, Optimism, OptimismGoerli, Binance, BinanceTestnet, Fantom, FantomTestnet, Avalanche, AvalancheFuji, Localhost];
 export const allChains = [${exportNames.join(", ")}];
-`,
+
+export function getChainByChainId(chainId: number): Chain {
+  const chain = allChains.find(chain => chain.chainId === chainId);
+  if (!chain) {
+    throw new Error(\`Chain with chainId "\${chainId}" not found\`);
+  }
+  return chain;
+}
+
+export function getChainBySlug(slug: string): Chain {
+  const chain = allChains.find(chain => chain.slug === slug);
+  if (!chain) {
+    throw new Error(\`Chain with slug "\${slug}" not found\`);
+  }
+  return chain;
+}
+
+export type ChainSlug = typeof allChains[number]["slug"];
+export type ChainId = typeof allChains[number]["chainId"];`,
 );

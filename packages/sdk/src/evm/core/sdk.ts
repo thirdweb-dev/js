@@ -1,23 +1,23 @@
-import { fetchCurrencyValue } from "../common/currency";
-import { getCompositePluginABI } from "../common/plugin";
-import { getChainProvider, NATIVE_TOKEN_ADDRESS } from "../constants";
+import { fetchCurrencyValue, getAllDetectedFeatureNames } from "../common";
+import { createStorage } from "../common/storage";
 import {
-  getContractTypeForRemoteName,
-  PREBUILT_CONTRACTS_MAP,
-} from "../contracts";
+  getChainProvider,
+  isChainConfig,
+  NATIVE_TOKEN_ADDRESS,
+  setSupportedChains,
+} from "../constants";
 import { SmartContract } from "../contracts/smart-contract";
-import { AbiSchema } from "../schema";
-import { SDKOptions } from "../schema/sdk-options";
-import { ContractWithMetadata, CurrencyValue } from "../types/index";
-import { ContractDeployer } from "./classes/contract-deployer";
+import { getContract } from "../functions/getContract";
+import { getContractFromAbi } from "../functions/getContractFromAbi";
+import { resolveContractType } from "../functions/utils/contract";
+import { Abi, SDKOptions } from "../schema";
+import { ContractWithMetadata, CurrencyValue } from "../types";
+import { ContractDeployer } from "./classes";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { MultichainRegistry } from "./classes/multichain-registry";
-import {
-  getSignerAndProvider,
-  RPCConnectionHandler,
-} from "./classes/rpc-connection-handler";
+import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
 import type {
-  ChainIdOrNameOrChain,
+  ChainOrRpcUrl,
   ContractForPrebuiltContractType,
   ContractType,
   NetworkInput,
@@ -26,10 +26,9 @@ import type {
 } from "./types";
 import { UserWallet } from "./wallet/user-wallet";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
-import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { EVMWallet } from "@thirdweb-dev/wallets";
-import { Contract, ContractInterface, ethers, Signer } from "ethers";
+import { ContractInterface, ethers, Signer } from "ethers";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -57,9 +56,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   static async fromWallet(
     wallet: EVMWallet,
-    network: ChainIdOrNameOrChain,
+    network: ChainOrRpcUrl,
     options: SDKOptions = {},
-    storage: ThirdwebStorage = new ThirdwebStorage(),
+    storage?: ThirdwebStorage,
   ) {
     const signer = await wallet.getSigner();
     return ThirdwebSDK.fromSigner(signer, network, options, storage);
@@ -87,12 +86,22 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   static fromSigner(
     signer: Signer,
-    network?: ChainIdOrNameOrChain,
+    network?: ChainOrRpcUrl,
     options: SDKOptions = {},
-    storage: ThirdwebStorage = new ThirdwebStorage(),
+    storage?: ThirdwebStorage,
   ): ThirdwebSDK {
-    const sdk = new ThirdwebSDK(network || signer, options, storage);
-    sdk.updateSignerOrProvider(signer);
+    let signerWithProvider = signer;
+    if (network && !signer.provider) {
+      const provider = getChainProvider(network, options);
+      signerWithProvider = signer.connect(provider);
+    }
+
+    const sdk = new ThirdwebSDK(
+      network || signerWithProvider,
+      options,
+      storage,
+    );
+    sdk.updateSignerOrProvider(signerWithProvider);
     return sdk;
   }
 
@@ -118,13 +127,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   static fromPrivateKey(
     privateKey: string,
-    network: ChainIdOrNameOrChain,
+    network: ChainOrRpcUrl,
     options: SDKOptions = {},
-    storage: ThirdwebStorage = new ThirdwebStorage(),
+    storage?: ThirdwebStorage,
   ): ThirdwebSDK {
     const provider = getChainProvider(network, options);
     const signer = new ethers.Wallet(privateKey, provider);
-    return ThirdwebSDK.fromSigner(signer, network, options, storage);
+    return new ThirdwebSDK(signer, options, storage);
   }
 
   /**
@@ -159,28 +168,27 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public storage: ThirdwebStorage;
 
   constructor(
-    network: NetworkInput | Chain,
+    network: NetworkInput,
     options: SDKOptions = {},
-    storage: ThirdwebStorage = new ThirdwebStorage(),
+    storage?: ThirdwebStorage,
   ) {
-    if (
-      typeof network !== "string" &&
-      typeof network !== "number" &&
-      !ethers.Signer.isSigner(network) &&
-      !ethers.providers.Provider.isProvider(network)
-    ) {
+    if (isChainConfig(network)) {
       options = {
         ...options,
-        // @ts-expect-error - we know that the network is assignable desipite the readonly mismatch
+        // @ts-expect-error - we know that the network is assignable despite the readonly mismatch
         supportedChains: [network, ...(options.supportedChains || [])],
       };
-      network = network.chainId;
     }
+
     super(network, options);
-    this.storageHandler = storage;
-    this.storage = storage;
+    setSupportedChains(options?.supportedChains);
+
+    const configuredStorage = createStorage(storage, options);
+    this.storage = configuredStorage;
+    this.storageHandler = configuredStorage;
+
     this.wallet = new UserWallet(network, options);
-    this.deployer = new ContractDeployer(network, options, storage);
+    this.deployer = new ContractDeployer(network, options, configuredStorage);
     this.multiChainRegistry = new MultichainRegistry(
       network,
       this.storageHandler,
@@ -433,62 +441,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     address: string,
     contractTypeOrABI?: PrebuiltContractType | ContractInterface,
   ): Promise<ValidContractInstance> {
-    // if we have a contract in the cache we will return it
-    // we will do this **without** checking any contract type things for simplicity, this may have to change in the future?
-    if (this.contractCache.has(address)) {
-      // we know this will be there since we check the has above
-      return this.contractCache.get(address) as ValidContractInstance;
-    }
-
-    let newContract: ValidContractInstance;
-
-    // if we don't have a contractType or ABI then we will have to resolve it regardless
-    // we also handle it being "custom" just in case...
-    if (!contractTypeOrABI || contractTypeOrABI === "custom") {
-      const resolvedContractType = await this.resolveContractType(address);
-      if (resolvedContractType === "custom") {
-        // if it's a custom contract we gotta fetch the compiler metadata
-        try {
-          const metadata =
-            await this.getPublisher().fetchCompilerMetadataFromAddress(address);
-          newContract = await this.getContractFromAbi(address, metadata.abi);
-        } catch (e) {
-          const chainId = (await this.getProvider().getNetwork()).chainId;
-          throw new Error(
-            `No ABI found for this contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${address}`,
-          );
-        }
-      } else {
-        // otherwise if it's a prebuilt contract we can just use the contract type
-        const contractAbi = await PREBUILT_CONTRACTS_MAP[
-          resolvedContractType
-        ].getAbi(address, this.getProvider(), this.storage);
-        newContract = await this.getContractFromAbi(address, contractAbi);
-      }
-    }
-    // if it's a builtin contract type we can just use the contract type to initialize the contract instance
-    else if (
-      typeof contractTypeOrABI === "string" &&
-      contractTypeOrABI in PREBUILT_CONTRACTS_MAP
-    ) {
-      newContract = await PREBUILT_CONTRACTS_MAP[
-        contractTypeOrABI as keyof typeof PREBUILT_CONTRACTS_MAP
-      ].initialize(
-        this.getSignerOrProvider(),
-        address,
-        this.storage,
-        this.options,
-      );
-    }
-    // otherwise it has to be an ABI
-    else {
-      newContract = await this.getContractFromAbi(address, contractTypeOrABI);
-    }
-
-    // set whatever we have on the cache
-    this.contractCache.set(address, newContract);
-    // return it
-    return newContract;
+    const contract = await getContract({
+      address,
+      contractTypeOrAbi: contractTypeOrABI,
+      network: this.getSignerOrProvider(),
+      storage: this.storage,
+      sdkOptions: this.options,
+    });
+    this.contractCache.set(address, contract);
+    return contract;
   }
 
   /**
@@ -512,21 +473,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public async resolveContractType(
     contractAddress: string,
   ): Promise<ContractType> {
-    try {
-      const contract = new Contract(
-        contractAddress,
-        IThirdwebContractABI,
-        // !provider only! - signer can break things here!
-        this.getProvider(),
-      );
-      const remoteContractType = ethers.utils
-        .toUtf8String(await contract.contractType())
-        // eslint-disable-next-line no-control-regex
-        .replace(/\x00/g, "");
-      return getContractTypeForRemoteName(remoteContractType);
-    } catch (err) {
-      return "custom";
-    }
+    return resolveContractType({
+      address: contractAddress,
+      provider: this.getProvider(),
+    });
   }
 
   /**
@@ -556,6 +506,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           contractType: () => this.resolveContractType(address),
           metadata: async () =>
             (await this.getContract(address)).metadata.get(),
+          extensions: async () =>
+            getAllDetectedFeatureNames(
+              (await this.getContract(address)).abi as Abi,
+            ),
         };
       }),
     );
@@ -584,6 +538,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           chainId,
           contractType: async () => "custom" as const,
           metadata: async () => ({}),
+          extensions: async () => [],
         };
       }
       try {
@@ -598,12 +553,17 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           });
           sdkMap[chainId] = chainSDK;
         }
+
         return {
           address,
           chainId,
           contractType: () => chainSDK.resolveContractType(address),
           metadata: async () =>
             (await chainSDK.getContract(address)).metadata.get(),
+          extensions: async () =>
+            getAllDetectedFeatureNames(
+              (await chainSDK.getContract(address)).abi as Abi,
+            ),
         };
       } catch (e) {
         return {
@@ -611,6 +571,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           chainId,
           contractType: async () => "custom" as const,
           metadata: async () => ({}),
+          extensions: async () => [],
         };
       }
     });
@@ -654,30 +615,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * ```
    */
   public async getContractFromAbi(address: string, abi: ContractInterface) {
-    if (this.contractCache.has(address)) {
-      return this.contractCache.get(address) as SmartContract;
-    }
-    const [, provider] = getSignerAndProvider(
-      this.getSignerOrProvider(),
-      this.options,
-    );
-
-    const parsedABI = typeof abi === "string" ? JSON.parse(abi) : abi;
-    // TODO we still might want to lazy-fy this
-    const contract = new SmartContract(
-      this.getSignerOrProvider(),
+    const contract = await getContractFromAbi({
       address,
-      await getCompositePluginABI(
-        address,
-        AbiSchema.parse(parsedABI),
-        provider,
-        this.options,
-        this.storage,
-      ),
-      this.storageHandler,
-      this.options,
-      (await provider.getNetwork()).chainId,
-    );
+      abi,
+      network: this.getSignerOrProvider(),
+      storage: this.storage,
+      sdkOptions: this.options,
+    });
     this.contractCache.set(address, contract);
     return contract;
   }

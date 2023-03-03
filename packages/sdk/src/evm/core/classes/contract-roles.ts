@@ -46,7 +46,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    ****************************/
 
   /**
-   * Call this to get get a list of addresses for all supported roles on the contract.
+   * Get all members of all roles
    * @remarks See {@link ContractRoles.get} to get a list of addresses that are members of a specific role.
    * @example
    * ```javascript
@@ -56,7 +56,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * @throws If the contract does not support roles this will throw an error.
    *
    * @public
-   * @twfeature Permissions
+   * @twfeature PermissionsEnumerable
    */
   public async getAll(): Promise<Record<TRole, string[]>> {
     invariant(this.roles.length, "this contract has no support for roles");
@@ -68,11 +68,11 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
   }
 
   /**
-   * Call this to get a list of addresses that are members of a specific role.
+   * Get all members of a specific role
    * @remarks See {@link ContractRoles.getAll} to get get a list of addresses for all supported roles on the contract.
    * @param role - The Role to to get a memberlist for.
    * @returns The list of addresses that are members of the specific role.
-   * @throws If you are requestiong a role that does not exist on the contract this will throw an error.
+   * @throws If you are requesting a role that does not exist on the contract this will throw an error.
    *
    * @example Say you want to get the list of addresses that are members of the minter role.
    * ```javascript
@@ -108,12 +108,12 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
   }
 
   /**
-   * Call this to OVERWRITE the list of addresses that are members of specific roles.
+   * Overwrite the list of members for specific roles
    *
-   * Every role in the list will be overwritten with the new list of addresses provided with them.
+   * @remarks Every role in the list will be overwritten with the new list of addresses provided with them.
    * If you want to add or remove addresses for a single address use {@link ContractRoles.grant} and {@link ContractRoles.revoke} respectively instead.
    * @param rolesWithAddresses - A record of {@link Role}s to lists of addresses that should be members of the given role.
-   * @throws If you are requestiong a role that does not exist on the contract this will throw an error.
+   * @throws If you are requesting a role that does not exist on the contract this will throw an error.
    * @example Say you want to overwrite the list of addresses that are members of the minter role.
    * ```javascript
    * const minterAddresses = await contract.roles.get("minter");
@@ -205,13 +205,13 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    ****************************/
 
   /**
-   * Call this to grant a role to a specific address.
+   * Grant a role to a specific address
    *
    * @remarks Make sure you are sure you want to grant the role to the address.
    *
    * @example
    * ```javascript
-   * await contract.roles.grant("minter", "0x1234567890123456789012345678901234567890");
+   * await contract.roles.grant("minter", "{{wallet_address}}");
    * ```
    *
    * @param role - The {@link Role} to grant to the address
@@ -236,7 +236,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
   }
 
   /**
-   * Call this to revoke a role from a specific address.
+   * Revoke a role from a specific address
    *
    * @remarks
    *
@@ -248,7 +248,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    *
    * @example
    * ```javascript
-   * await contract.roles.revoke("minter", "0x1234567890123456789012345678901234567890");
+   * await contract.roles.revoke("minter", "{{wallet_address}}");
    * ```
    *
    * @param role - The {@link Role} to revoke

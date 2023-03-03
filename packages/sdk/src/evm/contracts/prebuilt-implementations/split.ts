@@ -6,6 +6,7 @@ import { ContractMetadata } from "../../core/classes/contract-metadata";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
+import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput, TransactionResult } from "../../core/types";
 import { Abi } from "../../schema/contracts/custom";
@@ -48,7 +49,7 @@ export class Split implements UpdateableNetwork {
   public events: ContractEvents<SplitContract>;
   public roles: ContractRoles<
     SplitContract,
-    typeof Split.contractRoles[number]
+    (typeof Split.contractRoles)[number]
   >;
   /**
    * @internal
@@ -369,6 +370,24 @@ export class Split implements UpdateableNetwork {
       await this.contractWrapper.readContract.totalShares(),
     );
     return totalRoyaltyAvailable.sub(alreadyReleased);
+  }
+
+  /**
+   * @internal
+   */
+  public async prepare<
+    TMethod extends keyof SplitContract["functions"] = keyof SplitContract["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<SplitContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
   }
 
   /**

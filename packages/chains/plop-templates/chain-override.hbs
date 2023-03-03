@@ -1,0 +1,22 @@
+// @ts-check
+/** @typedef { import("../../src/types").Chain } Chain */
+
+/** @type {Partial<Chain>} */
+export default {
+  {{!-- if we have a name --}}
+  {{#if name}}
+  {{> namePartial}}
+  {{/if}}
+  {{!-- if we have a chain --}}
+  {{#if chain}}
+  {{> chainPartial}}
+  {{/if}}
+  {{#if shortName}}
+  {{> shortNamePartial}}
+  {{/if}}
+  {{!-- chainId always exists --}}
+  {{> chainIdPartial}}
+  {{#if isTestnet}}
+  {{> isTestnetPartial}}
+  {{/if}}
+};

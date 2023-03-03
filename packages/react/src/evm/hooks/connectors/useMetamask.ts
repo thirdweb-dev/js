@@ -76,7 +76,7 @@ export function useMetamask() {
       });
     }
 
-    // otherwise we have MM avaiable, so we can just use it
+    // otherwise we have MM available, so we can just use it
     return await connect(connector);
   };
 }

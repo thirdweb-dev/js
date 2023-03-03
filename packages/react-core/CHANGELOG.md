@@ -1,5 +1,26 @@
 # @thirdweb-dev/react-core
 
+## 3.9.5
+
+### Patch Changes
+
+- Updated dependencies [[`d7deaa4`](https://github.com/thirdweb-dev/js/commit/d7deaa48f2f943deb8f2ad7459d17de930c00517), [`b7a5b45`](https://github.com/thirdweb-dev/js/commit/b7a5b454415596316f58a75f14472631242cc115)]:
+  - @thirdweb-dev/chains@0.1.5
+
+## 3.9.4
+
+### Patch Changes
+
+- Updated dependencies [[`a3472a1`](https://github.com/thirdweb-dev/js/commit/a3472a133175826d052ee986907de014e3cf3ad9), [`5712650`](https://github.com/thirdweb-dev/js/commit/5712650074e2415bbea4173a0bb68d727ff2db90)]:
+  - @thirdweb-dev/chains@0.1.4
+
+## 3.9.3
+
+### Patch Changes
+
+- Updated dependencies [[`3d644fb`](https://github.com/thirdweb-dev/js/commit/3d644fb8cbae8bc3ee624505831b9f5c6996898a)]:
+  - @thirdweb-dev/chains@0.1.3
+
 ## 3.9.2
 
 ### Patch Changes

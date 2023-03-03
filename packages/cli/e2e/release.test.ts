@@ -6,8 +6,8 @@ import { resolve } from "path";
 // this creates an app, can take some time that's fine
 jest.setTimeout(120_000);
 
-describe("npx thirdweb release", () => {
-  it("should return release page url", async () => {
+describe("npx thirdweb publish", () => {
+  it("should return publish page url", async () => {
     const { spawn, cleanup, exists, path } = await prepareEnvironment();
 
     await copyFile(
@@ -16,7 +16,7 @@ describe("npx thirdweb release", () => {
     );
 
     const { waitForText, waitForFinish, getExitCode, writeText, getStderr } =
-      await spawn("node", "./dist/cli/index.js release");
+      await spawn("node", "./dist/cli/index.js publish");
 
     expect(await exists("BasicContract.sol")).toEqual(true);
 
@@ -27,7 +27,7 @@ describe("npx thirdweb release", () => {
     await waitForFinish();
 
     expect(getStderr().at(-1)).toContain(
-      "https://thirdweb.com/contracts/release/",
+      "https://thirdweb.com/contracts/publish/",
     );
 
     // the process should exit with code 0

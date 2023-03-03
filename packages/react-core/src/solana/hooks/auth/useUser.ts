@@ -36,7 +36,7 @@ export function useUser<
         "Please specify an authUrl in the authConfig.",
       );
 
-      // We include credentials so we can getUser even if API is on different URL
+      // We include credentials, so we can getUser even if API is on different URL
       const res = await fetch(`${authConfig.authUrl}/user`, {
         credentials: "include",
       });

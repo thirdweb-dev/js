@@ -1,3 +1,4 @@
+import { TransactionResult, TransactionResultWithId } from "..";
 import {
   CommonNFTInput,
   NFTMetadata,
@@ -9,13 +10,11 @@ import {
   getBaseUriFromBatch,
 } from "../../common/nft";
 import { FeatureName } from "../../constants/contract-features";
-import { BatchToReveal } from "../../types/delayed-reveal";
+import { BatchToReveal, UploadProgressEvent } from "../../types";
 import {
   BaseDelayedRevealERC1155,
   BaseDelayedRevealERC721,
 } from "../../types/eips";
-import { UploadProgressEvent } from "../../types/events";
-import { TransactionResult, TransactionResultWithId } from "../index";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
   DropERC721_V3,
@@ -47,10 +46,10 @@ export class DelayedReveal<
   constructor(
     contractWrapper: ContractWrapper<T>,
     storage: ThirdwebStorage,
-    fetureName: FeatureName,
+    featureName: FeatureName,
     nextTokenIdToMintFn: () => Promise<BigNumber>,
   ) {
-    this.featureName = fetureName;
+    this.featureName = featureName;
     this.nextTokenIdToMintFn = nextTokenIdToMintFn;
     this.contractWrapper = contractWrapper;
     this.storage = storage;
@@ -125,7 +124,7 @@ export class DelayedReveal<
 
     const baseUri = getBaseUriFromBatch(uris);
     const baseUriId = await this.contractWrapper.readContract.getBaseURICount();
-    const hashedPassword = await this.hashDelayRevealPasword(
+    const hashedPassword = await this.hashDelayRevealPassword(
       baseUriId,
       password,
     );
@@ -194,7 +193,7 @@ export class DelayedReveal<
     if (!password) {
       throw new Error("Password is required");
     }
-    const key = await this.hashDelayRevealPasword(batchId, password);
+    const key = await this.hashDelayRevealPassword(batchId, password);
     // performing the reveal locally to make sure it'd succeed before sending the transaction
     try {
       const decryptedUri = await this.contractWrapper
@@ -308,7 +307,7 @@ export class DelayedReveal<
    *
    * @internal
    */
-  private async hashDelayRevealPasword(
+  private async hashDelayRevealPassword(
     batchTokenIndex: BigNumberish,
     password: string,
   ) {

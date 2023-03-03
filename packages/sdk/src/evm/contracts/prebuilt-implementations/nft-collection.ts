@@ -1,5 +1,6 @@
 import { NFT, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
+import { buildTransactionFunction } from "../../common/transactions";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -14,11 +15,8 @@ import { Erc721 } from "../../core/classes/erc-721";
 import { StandardErc721 } from "../../core/classes/erc-721-standard";
 import { Erc721WithQuantitySignatureMintable } from "../../core/classes/erc-721-with-quantity-signature-mintable";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
-import type {
-  NetworkInput,
-  TransactionResult,
-  TransactionResultWithId,
-} from "../../core/types";
+import { Transaction } from "../../core/classes/transactions";
+import type { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { Abi } from "../../schema/contracts/custom";
 import { TokenErc721ContractSchema } from "../../schema/contracts/token-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -50,7 +48,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
   >;
   public roles: ContractRoles<
     TokenERC721,
-    typeof NFTCollection.contractRoles[number]
+    (typeof NFTCollection.contractRoles)[number]
   >;
   public encoder: ContractEncoder<TokenERC721>;
   public estimator: GasCostEstimator<TokenERC721>;
@@ -193,11 +191,13 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
    */
-  public async mint(
-    metadata: NFTMetadataOrUri,
-  ): Promise<TransactionResultWithId<NFT>> {
-    return this.erc721.mint(metadata);
-  }
+  mint = buildTransactionFunction(
+    async (
+      metadata: NFTMetadataOrUri,
+    ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
+      return this.erc721.mint.prepare(metadata);
+    },
+  );
 
   /**
    * Mint a unique NFT
@@ -222,23 +222,27 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
    */
-  public async mintTo(
-    walletAddress: string,
-    metadata: NFTMetadataOrUri,
-  ): Promise<TransactionResultWithId<NFT>> {
-    return this.erc721.mintTo(walletAddress, metadata);
-  }
+  mintTo = buildTransactionFunction(
+    async (
+      walletAddress: string,
+      metadata: NFTMetadataOrUri,
+    ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
+      return this.erc721.mintTo.prepare(walletAddress, metadata);
+    },
+  );
 
   /**
    * Construct a mint transaction without executing it.
    * This is useful for estimating the gas cost of a mint transaction, overriding transaction options and having fine grained control over the transaction execution.
    * @param receiver - Address you want to send the token to
    * @param metadata - The metadata of the NFT you want to mint
+   *
+   * @deprecated Use `contract.mint.prepare(...args)` instead
    */
   public async getMintTransaction(
     receiver: string,
     metadata: NFTMetadataOrUri,
-  ) {
+  ): Promise<Transaction> {
     return this.erc721.getMintTransaction(receiver, metadata);
   }
 
@@ -266,11 +270,13 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```
    */
-  public async mintBatch(
-    metadata: NFTMetadataOrUri[],
-  ): Promise<TransactionResultWithId<NFT>[]> {
-    return this.erc721.mintBatch(metadata);
-  }
+  mintBatch = buildTransactionFunction(
+    async (
+      metadata: NFTMetadataOrUri[],
+    ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
+      return this.erc721.mintBatch.prepare(metadata);
+    },
+  );
 
   /**
    * Mint Many unique NFTs
@@ -299,12 +305,14 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```
    */
-  public async mintBatchTo(
-    walletAddress: string,
-    metadata: NFTMetadataOrUri[],
-  ): Promise<TransactionResultWithId<NFT>[]> {
-    return this.erc721.mintBatchTo(walletAddress, metadata);
-  }
+  mintBatchTo = buildTransactionFunction(
+    async (
+      walletAddress: string,
+      metadata: NFTMetadataOrUri[],
+    ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
+      return this.erc721.mintBatchTo.prepare(walletAddress, metadata);
+    },
+  );
 
   /**
    * Burn a single NFT
@@ -315,8 +323,26 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * const result = await contract.burnToken(tokenId);
    * ```
    */
-  public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
-    return this.erc721.burn(tokenId);
+  burn = buildTransactionFunction((tokenId: BigNumberish) => {
+    return this.erc721.burn.prepare(tokenId);
+  });
+
+  /**
+   * @internal
+   */
+  public async prepare<
+    TMethod extends keyof TokenERC721["functions"] = keyof TokenERC721["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<TokenERC721["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
   }
 
   /**

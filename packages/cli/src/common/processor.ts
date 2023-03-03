@@ -13,7 +13,7 @@ import path from "path";
 
 export async function processProject(
   options: any,
-  command: "deploy" | "release",
+  command: "deploy" | "publish",
 ) {
   // TODO: allow overriding the default storage
   const storage = new ThirdwebStorage();
