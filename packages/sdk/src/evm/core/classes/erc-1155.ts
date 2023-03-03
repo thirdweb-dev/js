@@ -292,7 +292,7 @@ export class Erc1155<
 
       const balanceOf = await this.balanceOf(from, tokenId);
 
-      const input = AirdropInputSchema.parse(addresses);
+      const input = await AirdropInputSchema.parseAsync(addresses);
 
       const totalToAirdrop = input.reduce((prev, curr) => {
         return prev + Number(curr?.quantity || 1);

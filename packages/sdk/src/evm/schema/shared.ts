@@ -1,3 +1,4 @@
+import { EnsSchema } from "./ens";
 import { BigNumber, CallOverrides, utils } from "ethers";
 import { z } from "zod";
 
@@ -27,13 +28,20 @@ export const BigNumberTransformSchema = z
     return BigNumber.from(arg).toString();
   });
 
-export const AddressSchema = z.string().refine(
-  (arg) => utils.isAddress(arg),
-  (out) => {
-    return {
-      message: `${out} is not a valid address`,
-    };
-  },
+// Important for address check to come before ENS so network request is only made when necessary
+export const AddressSchema = z.union(
+  [
+    z.string().refine(
+      (arg) => utils.isAddress(arg),
+      (out) => {
+        return {
+          message: `${out} is not a valid address`,
+        };
+      },
+    ),
+    EnsSchema,
+  ],
+  { invalid_type_error: "Provided value was not a valid address or ENS name" },
 );
 
 export const RawDateSchema = z.date().transform((i) => {
