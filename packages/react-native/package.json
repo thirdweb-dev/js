@@ -33,7 +33,8 @@
     "react-native-modal": "^13.0.1",
     "react-native-svg": "^13.8.0",
     "tiny-invariant": "^1.2.0",
-    "wagmi": "^0.11.0"
+    "wagmi": "^0.11.0",
+    "@coinbase/wallet-mobile-sdk": "^1.0.4"
   },
   "sideEffects:": false,
   "devDependencies": {

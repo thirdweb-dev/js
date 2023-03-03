@@ -109,10 +109,6 @@
       "module": "./evm/connectors/device-wallet/dist/thirdweb-dev-wallets-evm-connectors-device-wallet.esm.js",
       "default": "./evm/connectors/device-wallet/dist/thirdweb-dev-wallets-evm-connectors-device-wallet.cjs.js"
     },
-    "./evm/wallets/coinbase-wallet-mobile": {
-      "module": "./evm/wallets/coinbase-wallet-mobile/dist/thirdweb-dev-wallets-evm-wallets-coinbase-wallet-mobile.esm.js",
-      "default": "./evm/wallets/coinbase-wallet-mobile/dist/thirdweb-dev-wallets-evm-wallets-coinbase-wallet-mobile.cjs.js"
-    },
     "./evm/connectors/wallet-connect": {
       "module": "./evm/connectors/wallet-connect/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect.esm.js",
       "default": "./evm/connectors/wallet-connect/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect.cjs.js"
@@ -124,10 +120,6 @@
     "./evm/connectors/wallet-connect-v1": {
       "module": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect-v1.esm.js",
       "default": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect-v1.cjs.js"
-    },
-    "./evm/connectors/coinbase-wallet-mobile": {
-      "module": "./evm/connectors/coinbase-wallet-mobile/dist/thirdweb-dev-wallets-evm-connectors-coinbase-wallet-mobile.esm.js",
-      "default": "./evm/connectors/coinbase-wallet-mobile/dist/thirdweb-dev-wallets-evm-connectors-coinbase-wallet-mobile.cjs.js"
     },
     "./package.json": "./package.json"
   },
@@ -156,7 +148,6 @@
   "sideEffects": false,
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.256.0",
-    "@coinbase/wallet-mobile-sdk": "^1.0.4",
     "@magic-ext/connect": "^3.1.0",
     "@magic-ext/oauth": "^4.1.0",
     "@walletconnect/legacy-provider": "^2.0.0",

@@ -1,6 +1,4 @@
 export { Connector } from "../lib/wagmi-connectors";
-export { WagmiAdapter } from "./interfaces/tw-connector";
-
 export type { DAppMetaData } from "../core/types/dAppMeta";
 export {
   AddChainError,
@@ -12,6 +10,7 @@ export {
 } from "../lib/wagmi-core";
 export type { EVMWallet } from "./interfaces";
 export type { ConnectParams, TWConnector } from "./interfaces/tw-connector";
+export { WagmiAdapter } from "./interfaces/tw-connector";
 export type {
   AbstractWallet,
   WalletData,
@@ -35,6 +34,7 @@ export * from "./wallets/wallet-connect";
 export type { WalletConnectOptions } from "./wallets/wallet-connect";
 
 export type { Chain } from "../lib/wagmi-core";
+
 export * from "./wallets/wallet-connect-v1";
 export type { WalletConnectV1Options } from "./wallets/wallet-connect-v1";
 export type { CoinbaseWalletOptions } from "./wallets/coinbase-wallet";
