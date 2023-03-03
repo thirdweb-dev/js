@@ -2,6 +2,7 @@ import { TW_WC_PROJECT_ID } from "../constants/wc";
 import { DAppMetaData } from "../types/dAppMeta";
 import {
   CoinbaseWalletType,
+  CoinbaseWalletMobileType,
   DeviceWalletType,
   MetaMaskWalletType,
   SupportedWallet,
@@ -146,6 +147,15 @@ export function ThirdwebWalletProvider(
         return new (Wallet as CoinbaseWalletType)({
           ...walletOptions,
           darkMode: theme === "dark",
+        });
+      }
+
+      // Coinbase Mobile
+      if (Wallet.id === "coinbaseWalletMobile") {
+        return new (Wallet as CoinbaseWalletMobileType)({
+          ...walletOptions,
+          callbackURL: new URL("https://thirdweb.com"),
+          hostURL: new URL("https://thirdweb.com"),
         });
       }
 
@@ -313,6 +323,27 @@ export function ThirdwebWalletProvider(
         const wallet = createWalletInstance(
           Wallet as CoinbaseWalletType,
         ) as InstanceType<CoinbaseWalletType>;
+
+        setConnectionStatus("connecting");
+        try {
+          await wallet.connect(_connectedParams);
+          handleWalletConnect(wallet);
+        } catch (e: any) {
+          setConnectionStatus("disconnected");
+          throw e;
+        }
+      }
+
+      // Coinbase
+      else if (Wallet.id === "coinbaseWalletMobile") {
+        const _connectedParams = {
+          chainId: chainIdToConnect,
+          ...(connectParams as WalletConnectParams<CoinbaseWalletMobileType>),
+        };
+
+        const wallet = createWalletInstance(
+          Wallet as CoinbaseWalletMobileType,
+        ) as InstanceType<CoinbaseWalletMobileType>;
 
         setConnectionStatus("connecting");
         try {

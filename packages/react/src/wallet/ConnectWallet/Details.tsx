@@ -49,6 +49,7 @@ const walletIcons: Record<SupportedWallet["id"], IconFC> = {
   coinbaseWallet: CoinbaseWalletIcon,
   walletConnect: WalletConnectIcon,
   walletConnectV1: WalletConnectIcon,
+  coinbaseWalletMobile: CoinbaseWalletIcon,
 };
 
 export type DropDownPosition = {

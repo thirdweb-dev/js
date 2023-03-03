@@ -1,5 +1,6 @@
 export const walletsMetadata = {
   rainbow: {
+    id: "rainbow",
     name: "Rainbow",
     versions: ["1"],
     image_url:
@@ -10,6 +11,7 @@ export const walletsMetadata = {
     },
   },
   trustwallet: {
+    id: "trustwallet",
     name: "Trust Wallet",
     versions: ["1", "2"],
     image_url:
@@ -20,6 +22,7 @@ export const walletsMetadata = {
     },
   },
   metamask: {
+    id: "metamask",
     name: "MetaMask",
     versions: ["1"],
     image_url:
@@ -29,7 +32,19 @@ export const walletsMetadata = {
       universal: "https://metamask.app.link",
     },
   },
+  coinbase: {
+    id: "coinbase",
+    name: "Coinbase Wallet",
+    versions: ["custom"],
+    image_url:
+      "https://gateway.ipfscdn.io/ipfs/QmRz8mF7sW7sXJ4oLhWhYDcouwB2zGzvdfJCtVmdkTUWma/18060234.png",
+    mobile: {
+      native: "",
+      universal: "",
+    },
+  },
   deviceWallet: {
+    id: "deviceWallet",
     name: "Device Wallet",
     versions: ["custom"],
     image_url: "",

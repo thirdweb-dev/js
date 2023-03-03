@@ -10,6 +10,7 @@ export * from "./wallets/aws-secrets-manager";
 // just the types
 export type { AbstractBrowserWallet, WalletOptions } from "./wallets/base";
 export * from "./wallets/coinbase-wallet";
+export * from "./wallets/coinbase-wallet-mobile";
 export * from "./wallets/device-wallet";
 export type { DeviceWalletConnectionArgs } from "./wallets/device-wallet";
 export * from "./wallets/ethers";

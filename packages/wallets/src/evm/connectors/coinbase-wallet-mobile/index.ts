@@ -8,28 +8,34 @@ import {
   Chain,
   ProviderRpcError,
 } from "../../../lib/wagmi-core";
-import type { WalletMobileSDKEVMProvider } from "@coinbase/wallet-mobile-sdk/build/WalletMobileSDKEVMProvider";
-import type { CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/CoinbaseWalletSDK";
+import { configure } from "@coinbase/wallet-mobile-sdk";
+import type {
+  WalletMobileSDKEVMProvider,
+  WalletMobileSDKProviderOptions,
+} from "@coinbase/wallet-mobile-sdk/build/WalletMobileSDKEVMProvider";
+import type { ConfigurationParams } from "@coinbase/wallet-mobile-sdk/src/CoinbaseWalletSDK.types";
 import type { Address } from "abitype";
 import { providers } from "ethers";
 import { getAddress, hexValue } from "ethers/lib/utils.js";
 
-type Options = CoinbaseWalletSDKOptions & {
-  /**
-   * Fallback Ethereum JSON RPC URL
-   * @default ""
-   */
-  jsonRpcUrl?: string;
-  /**
-   * Fallback Ethereum Chain ID
-   * @default 1
-   */
-  chainId?: number;
-};
+export type CoinbaseMobileWalletConnectorOptions =
+  WalletMobileSDKProviderOptions &
+    ConfigurationParams & {
+      /**
+       * Fallback Ethereum JSON RPC URL
+       * @default ""
+       */
+      jsonRpcUrl?: string;
+      /**
+       * Fallback Ethereum Chain ID
+       * @default 1
+       */
+      chainId?: number;
+    };
 
 export class CoinbaseMobileWalletConnector extends Connector<
   WalletMobileSDKEVMProvider,
-  Options,
+  CoinbaseMobileWalletConnectorOptions,
   providers.JsonRpcSigner
 > {
   readonly id = "coinbaseWallet";
@@ -38,13 +44,24 @@ export class CoinbaseMobileWalletConnector extends Connector<
 
   #provider?: WalletMobileSDKEVMProvider;
 
-  constructor({ chains, options }: { chains?: Chain[]; options: Options }) {
+  constructor({
+    chains,
+    options,
+  }: {
+    chains?: Chain[];
+    options: CoinbaseMobileWalletConnectorOptions;
+  }) {
     super({
       chains,
       options: {
-        reloadOnDisconnect: false,
         ...options,
       },
+    });
+
+    configure({
+      callbackURL: options.callbackURL,
+      hostURL: options.hostURL,
+      hostPackageName: options.hostPackageName,
     });
   }
 
@@ -57,10 +74,10 @@ export class CoinbaseMobileWalletConnector extends Connector<
 
       this.emit("message", { type: "connecting" });
 
-      const address = await provider.request({
+      const account = (await provider.request({
         method: "eth_requestAccounts",
         params: [],
-      });
+      })) as Address;
       // Switch to chain if provided
       let id = await this.getChainId();
       let unsupported = this.isChainUnsupported(id);
@@ -78,7 +95,7 @@ export class CoinbaseMobileWalletConnector extends Connector<
       }
 
       return {
-        address,
+        account,
         chain: { id, unsupported },
         provider: new providers.Web3Provider(
           provider as unknown as providers.ExternalProvider,

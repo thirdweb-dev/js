@@ -24,4 +24,8 @@ export interface DAppMetaData {
    * optional - whether to show the connect dialog in darkmode or not
    */
   isDarkMode?: boolean;
+  /**
+   * optional - Callback url for returning to your dapp after the wallet connection process
+   */
+  callbackUrl?: string;
 }

@@ -1,10 +1,13 @@
 import { walletsMetadata } from "../constants/walletsMetadata";
-import { SupportedWallet, WalletMeta } from "../types/wallet";
-import { WalletConnect, WalletConnectV1 } from "@thirdweb-dev/wallets";
+import {
+  SupportedWallet as SupportedWalletMeta,
+  WalletMeta,
+} from "../types/wallet";
+import { SupportedWallet } from "@thirdweb-dev/react-core";
 import invariant from "tiny-invariant";
 
 export function getWalletsMeta(
-  supportedWallets: SupportedWallet[],
+  supportedWallets: SupportedWalletMeta[],
 ): WalletMeta[] {
   return supportedWallets.map(
     (wallet) => walletsMetadata[wallet] as WalletMeta,
@@ -12,13 +15,16 @@ export function getWalletsMeta(
 }
 
 export function getWalletMeta(
-  classInstance: WalletConnect | WalletConnectV1,
+  classInstance: InstanceType<SupportedWallet>,
 ): WalletMeta {
   console.log("getWalletMeta", classInstance.walletName);
   const walletMeta = Object.values(walletsMetadata).find((wallet) => {
-    return classInstance.walletName
-      .toLowerCase()
-      .includes(wallet.name.toLowerCase());
+    return (
+      classInstance.walletName
+        .toLowerCase()
+        .includes(wallet.name.toLowerCase()) ||
+      classInstance.walletName.toLowerCase().includes(wallet.id.toLowerCase())
+    );
   });
 
   invariant(walletMeta, "Wallet not found");

@@ -31,6 +31,7 @@ const walletIcons: Record<SupportedWallet["id"], JSX.Element> = {
   coinbaseWallet: <CoinbaseWalletIcon size={iconSize.lg} />,
   walletConnect: <WalletConnectIcon size={iconSize.lg} />,
   walletConnectV1: <WalletConnectIcon size={iconSize.lg} />,
+  coinbaseWalletMobile: <></>,
 };
 
 type Screen =
@@ -49,6 +50,7 @@ const walletNames: Record<SupportedWallet["id"], string> = {
   coinbaseWallet: "Coinbase Wallet",
   walletConnect: "Wallet Connect V2",
   walletConnectV1: "Wallet Connect V1",
+  coinbaseWalletMobile: "",
 };
 
 export type WalletMeta = {

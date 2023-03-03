@@ -21,6 +21,8 @@ export const ConnectWalletFlow = () => {
     WalletMeta | undefined
   >();
 
+  console.log("activeWalletMeta", activeWalletMeta);
+
   const connect = useConnect();
   const supportedWallets = useSupportedWallets();
   const walletClasses = useWallets();
@@ -52,9 +54,11 @@ export const ConnectWalletFlow = () => {
     } else if (wallet_.versions.includes("1")) {
       connect(WalletConnectV1, {});
     } else {
-      const walletClass = walletClasses.find(
-        (item) => item.id === wallet_.name,
-      );
+      const walletClass = walletClasses.find((item) => {
+        console.log("ittem.id", item.id);
+        console.log("wallet_.name", wallet_.id);
+        return item.id.toLowerCase().includes(wallet_.id.toLowerCase());
+      });
       invariant(walletClass, "Wallet class not found");
       connect(walletClass, {});
     }
