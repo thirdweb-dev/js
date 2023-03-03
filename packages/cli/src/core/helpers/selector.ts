@@ -1,5 +1,7 @@
 import { ContractPayload } from "../interfaces/ContractPayload";
+import { PreDeployedRouter } from "../../constants/router-contracts";
 import chalk from "chalk";
+import prompts from "prompts";
 
 const { MultiSelect } = require("enquirer");
 
@@ -32,5 +34,17 @@ export function createContractsPrompt(
         return this.primary;
       },
     },
+  });
+}
+
+export async function createRouterPrompt(
+  choices: { title: string; value: string }[],
+  message: string,
+) {
+  return await prompts({
+    type: "select",
+    name: "routerType",
+    message: message,
+    choices: choices,
   });
 }
