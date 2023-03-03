@@ -106,9 +106,6 @@ export interface DAppMetaData {
   isDarkMode?: boolean;
 }
 
-// this allows autocomplete to work for the chainId prop but still allows `number` and `string` to be passed (for dynamically passed chain data)
-type ChainIdIsh = (string | number) & { __chainIdIsh: never };
-
 /**
  * The possible props for the ThirdwebProvider.
  */
@@ -118,11 +115,7 @@ export interface ThirdwebProviderProps<
   /**
    * The network to use for the SDK.
    */
-  activeChain?:
-    | TChains[number]["chainId"]
-    | TChains[number]["slug"]
-    | Chain
-    | ChainIdIsh;
+  activeChain?: TChains[number]["chainId"] | TChains[number]["slug"] | Chain;
 
   /**
    * Chains to support. If not provided, will default to the chains supported by the SDK.
@@ -265,14 +258,16 @@ export const ThirdwebProvider = <
 
   const activeChainId = useMemo(() => {
     if (!activeChain) {
-      return undefined;
+      return supportedChains[0]?.chainId;
     }
-    if (typeof activeChain === "string" || typeof activeChain === "number") {
+    if (typeof activeChain === "number") {
       return activeChain;
     }
+    if (typeof activeChain === "string") {
+      return supportedChains.find((c) => c.slug === activeChain)?.chainId;
+    }
     return activeChain.chainId;
-  }, [activeChain]);
-
+  }, [activeChain, supportedChains]);
   const wagmiProps: WagmiproviderProps = useMemo(() => {
     const wagmiChains = mergedChains.map(transformChainToMinimalWagmiChain);
 
@@ -405,7 +400,6 @@ export const ThirdwebProvider = <
       <ThirdwebSDKProviderWagmiWrapper
         queryClient={queryClient}
         sdkOptions={sdkOptions}
-        // @ts-expect-error - we are passing the wrong type here, but it's ok because we are passing the correct type to the provider
         supportedChains={mergedChains}
         // desiredChainId is deprecated, we will remove it in the future but still need to pass it here for now
         activeChain={activeChainId || desiredChainId}
