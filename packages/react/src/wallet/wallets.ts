@@ -1,42 +1,112 @@
+import { createAsyncLocalStorage } from "../core/WalletStorage";
+import { Chain as TWChain } from "@thirdweb-dev/chains";
+import { TW_WC_PROJECT_ID } from "@thirdweb-dev/react-core";
+import type {
+  DeviceWalletOptions as DeviceWalletCoreOptions,
+  MetamaskWalletOptions as MetamaskCoreOptions,
+  WalletConnectOptions,
+  WalletConnectV1Options,
+  WalletOptions,
+  CoinbaseWalletOptions as CoinbaseWalletOptionsCore,
+} from "@thirdweb-dev/wallets";
 import {
-  MetaMask as MetamaskWalletCore,
   CoinbaseWallet as CoinbaseWalletCore,
   DeviceBrowserWallet as DeviceWalletCore,
+  MetaMask as MetamaskWalletCore,
   WalletConnect as WalletConnectCore,
   WalletConnectV1 as WalletConnectV1Core,
 } from "@thirdweb-dev/wallets";
-import type {
-  MetamaskWalletOptions,
-  WalletConnectV1Options,
-  WalletConnectOptions,
-  WalletOptions,
-} from "@thirdweb-dev/wallets";
 
+const walletStorages = {
+  metamask: createAsyncLocalStorage("metamask"),
+  walletConnect: createAsyncLocalStorage("walletConnect"),
+  walletConnectV1: createAsyncLocalStorage("walletConnectV1"),
+  deviceWallet: createAsyncLocalStorage("deviceWallet"),
+  coinbase: createAsyncLocalStorage("coinbase"),
+};
+
+type MetamaskWalletOptions = Omit<
+  MetamaskCoreOptions,
+  "connectorStorage" | "walletStorage"
+>;
+
+const connectorStorage = createAsyncLocalStorage("connector");
 export class MetamaskWallet extends MetamaskWalletCore {
   isInjected: boolean;
   constructor(options: MetamaskWalletOptions) {
-    super(options);
+    super({
+      ...options,
+      connectorStorage,
+      walletStorage: walletStorages.metamask,
+    });
     this.isInjected = !!window.ethereum?.isMetaMask;
   }
 }
 
+type WC1Options = Omit<
+  WalletOptions<WalletConnectV1Options>,
+  "qrcode" | "walletStorage"
+>;
 export class WalletConnectV1 extends WalletConnectV1Core {
-  constructor(options: WalletOptions<WalletConnectV1Options>) {
+  constructor(options: WC1Options) {
     super({
       ...options,
       qrcode: true,
+      walletStorage: walletStorages.walletConnectV1,
     });
   }
 }
+
+type WC2Options = Omit<
+  WalletOptions<WalletConnectOptions>,
+  "projectId" | "qrcode" | "walletStorage"
+>;
 
 export class WalletConnect extends WalletConnectCore {
-  constructor(options: WalletOptions<WalletConnectOptions>) {
+  constructor(options: WC2Options) {
     super({
       ...options,
       qrcode: true,
+      projectId: TW_WC_PROJECT_ID,
+      walletStorage: walletStorages.walletConnect,
     });
   }
 }
 
-export const CoinbaseWallet = CoinbaseWalletCore;
-export const DeviceWallet = DeviceWalletCore;
+const deviceWalletStorage = createAsyncLocalStorage("deviceWallet");
+
+type DeviceWalletOptions = Omit<
+  WalletOptions<DeviceWalletCoreOptions>,
+  "storage" | "storageType" | "walletStorage"
+> & { chain: TWChain };
+
+export class DeviceWallet extends DeviceWalletCore {
+  constructor(options: DeviceWalletOptions) {
+    super({
+      ...options,
+      storage: deviceWalletStorage,
+      storageType: "asyncStore",
+      walletStorage: walletStorages.deviceWallet,
+    });
+  }
+
+  static getStoredData() {
+    const key = DeviceWalletCore.getDataStorageKey();
+    return deviceWalletStorage.getItem(key);
+  }
+
+  static getStoredAddress() {
+    const key = DeviceWalletCore.getAddressStorageKey();
+    return deviceWalletStorage.getItem(key);
+  }
+}
+
+type CoinbaseWalletOptions = Omit<CoinbaseWalletOptionsCore, "walletStorage">;
+export class CoinbaseWallet extends CoinbaseWalletCore {
+  constructor(options: CoinbaseWalletOptions) {
+    super({
+      ...options,
+      walletStorage: walletStorages.walletConnect,
+    });
+  }
+}

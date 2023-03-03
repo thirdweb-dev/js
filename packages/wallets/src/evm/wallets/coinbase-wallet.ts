@@ -8,8 +8,10 @@ if (typeof window !== "undefined") {
   window.Buffer = Buffer;
 }
 
+export type CoinbaseWalletOptions = WalletOptions<{ theme?: "light" | "dark" }>;
+
 export class CoinbaseWallet extends AbstractBrowserWallet<{
-  darkMode: boolean;
+  theme?: "light" | "dark";
 }> {
   connector?: TWConnector;
   coinbaseConnector?: CoinbaseWalletConnector;
@@ -19,7 +21,7 @@ export class CoinbaseWallet extends AbstractBrowserWallet<{
     return "Coinbase Wallet" as const;
   }
 
-  constructor(options: WalletOptions<{ darkMode: boolean }>) {
+  constructor(options: CoinbaseWalletOptions) {
     super(CoinbaseWallet.id, options);
   }
 
@@ -35,7 +37,7 @@ export class CoinbaseWallet extends AbstractBrowserWallet<{
         options: {
           appName: this.options.dappMetadata.name,
           reloadOnDisconnect: false,
-          darkMode: this.options.darkMode,
+          darkMode: this.options.theme === "dark",
           headlessMode: true,
         },
       });

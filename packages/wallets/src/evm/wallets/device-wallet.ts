@@ -20,6 +20,10 @@ export type DeviceWalletConnectionArgs = {
   password: string;
 };
 
+// no need for prefixing here - AsyncStorage is already namespaced
+const STORAGE_KEY_DATA = "data";
+const STORAGE_KEY_ADDR = "address";
+
 export class DeviceBrowserWallet extends AbstractBrowserWallet<
   DeviceWalletOptions,
   DeviceWalletConnectionArgs
@@ -77,6 +81,14 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
     }
 
     return this.#walletImpl.getWalletData();
+  }
+
+  static getAddressStorageKey() {
+    return STORAGE_KEY_ADDR;
+  }
+
+  static getDataStorageKey() {
+    return STORAGE_KEY_DATA;
   }
 }
 
@@ -182,16 +194,14 @@ type DeviceWalletImplOptions = {
 
 class AsyncWalletStorage implements IWalletStore {
   private storage: AsyncStorage;
-  // no need for prefixing here - AsyncStorage is already namespaced
-  private STORAGE_KEY_DATA = "data";
-  private STORAGE_KEY_ADDR = "address";
+
   constructor(storage: AsyncStorage) {
     this.storage = storage;
   }
   async getWalletData(): Promise<WalletData | null> {
     const [address, encryptedData] = await Promise.all([
-      this.storage.getItem(this.STORAGE_KEY_ADDR),
-      this.storage.getItem(this.STORAGE_KEY_DATA),
+      this.storage.getItem(STORAGE_KEY_ADDR),
+      this.storage.getItem(STORAGE_KEY_DATA),
     ]);
 
     if (!address || !encryptedData) {
@@ -205,8 +215,8 @@ class AsyncWalletStorage implements IWalletStore {
 
   async storeWalletData(data: WalletData): Promise<void> {
     await Promise.all([
-      this.storage.setItem(this.STORAGE_KEY_ADDR, data.address),
-      this.storage.setItem(this.STORAGE_KEY_DATA, data.encryptedData),
+      this.storage.setItem(STORAGE_KEY_ADDR, data.address),
+      this.storage.setItem(STORAGE_KEY_DATA, data.encryptedData),
     ]);
   }
 }

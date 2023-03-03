@@ -18,11 +18,11 @@ import { MetamaskGetStarted } from "./screens/Metamask/MetamaskGetStarted";
 import { ScanMetamask } from "./screens/Metamask/MetamaskScan";
 import { useTheme } from "@emotion/react";
 import {
+  SupportedWallet,
   useConnect,
   useConnectionStatus,
   useWallets,
 } from "@thirdweb-dev/react-core";
-import { SupportedWallet } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 
 const walletIcons: Record<SupportedWallet["id"], JSX.Element> = {
@@ -31,7 +31,7 @@ const walletIcons: Record<SupportedWallet["id"], JSX.Element> = {
   coinbaseWallet: <CoinbaseWalletIcon size={iconSize.lg} />,
   walletConnect: <WalletConnectIcon size={iconSize.lg} />,
   walletConnectV1: <WalletConnectIcon size={iconSize.lg} />,
-  coinbaseWalletMobile: <></>,
+  // coinbaseWalletMobile: <></>,
 };
 
 type Screen =
@@ -50,7 +50,7 @@ const walletNames: Record<SupportedWallet["id"], string> = {
   coinbaseWallet: "Coinbase Wallet",
   walletConnect: "Wallet Connect V2",
   walletConnectV1: "Wallet Connect V1",
-  coinbaseWalletMobile: "",
+  // coinbaseWalletMobile: "",
 };
 
 export type WalletMeta = {

@@ -12,7 +12,6 @@ import {
   DeviceBrowserWallet,
   WalletConnect,
   WalletConnectV1,
-  CoinbaseWalletMobile,
 } from "@thirdweb-dev/wallets";
 import React, { PropsWithChildren, useMemo, useState } from "react";
 
@@ -48,8 +47,8 @@ export function ThirdwebProviderRN({
         switch (wallet) {
           case "deviceWallet":
             return DeviceBrowserWallet;
-          case "coinbase":
-            return CoinbaseWalletMobile;
+          // case "coinbase":
+          //   return CoinbaseWalletMobile;
         }
 
         throw new Error("Unsupported wallet: " + wallet);
