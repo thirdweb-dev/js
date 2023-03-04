@@ -31,41 +31,38 @@ export async function install(distPath = "dist", projectPath = ".") {
     ...supportedAppFrameworks,
   ];
 
-  supportedContractFrameworks.forEach((detector) => {
-    console.log(`Detected ${detector.projectType} project`);
-
-    const addCmd = hasYarn ? "yarn add" : "npm i";
-
-    runCommand(addCmd, ["@thirdweb-dev/contract"]);
-
-    // if (detector.projectType === "hardhat") {
-    //
-    // }
-  });
-
-  possibleProjects.forEach((detector) => {
-    console.log(`Detected ${detector.projectType} project`);
-
-    const addCmd = hasYarn ? "yarn add" : "npm i";
-
-    if (detector.projectType === "cra" || detector.projectType === "next" || detector.projectType === "vite") {
-      runCommand(addCmd, ["@thirdweb-dev/react", "@thirdweb-dev/sdk", "ethers^5"]);
-    }
-
-    // add vite
-    // add next
-    // add create-react-app
-  }
-
   if (possibleProjects.length === 0) {
     throw new Error("No supported project detected");
   }
 
+  const dependencies = new Set<string>();
+
+  supportedContractFrameworks.forEach((detector) => {
+    console.log(`Detected ${detector.projectType} project`);
+
+    dependencies.add("@thirdweb-dev/contract");
+  });
+
+  supportedAppFrameworks.forEach((detector) => {
+    console.log(`Detected ${detector.projectType} project`);
+
+    dependencies.add("@thirdweb-dev/react");
+    dependencies.add("@thirdweb-dev/sdk");
+    dependencies.add("ethers^5");
+
+    // add new webpack.ProvidePlugin({ process: "process/browser", Buffer: ["buffer", "Buffer"] })
+    // if (detector.projectType === "cra") { }
+
+    // add react plugin to vite config.plugins
+    // add { global: "globalThis", process.env: { } } to vite config.define
+    // if (detector.projectType === "vite") { }
+  });
+
   try {
     if (hasYarn) {
-      await runCommand("yarn", ["build"]);
+      await runCommand("yarn add", [...dependencies]);
     } else if (hasNPM) {
-      await runCommand("npm", ["build"]);
+      await runCommand("npm install", [...dependencies]);
     }
   } catch (err) {
     console.error("Can't build project");

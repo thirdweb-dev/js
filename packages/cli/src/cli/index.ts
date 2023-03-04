@@ -7,6 +7,7 @@ import { CacheEntry } from "../core/types/cache";
 import { twCreate } from "../create/command";
 import { deploy } from "../deploy";
 import { findPackageInstallation } from "../helpers/detect-local-packages";
+import { install } from "../install/command";
 import { upload } from "../storage/command";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import chalk from "chalk";
@@ -194,6 +195,15 @@ const main = async () => {
           }
         },
       );
+    });
+
+  program
+    .command("install [projectPath]")
+    .description(
+      "Install thirdweb into your project. If no path is specified, the current directory will be used.",
+    )
+    .action(async (type, path) => {
+      await install(type, path);
     });
 
   program
