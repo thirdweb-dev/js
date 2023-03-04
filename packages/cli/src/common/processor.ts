@@ -116,6 +116,13 @@ export async function processProject(
     selectedRouter = ROUTER_CONTRACTS[routerType];
   }
 
+  if(options.dynamic && !selectedRouter) {
+    error(
+      `No router selected. Please select a router contract to deploy.`,
+    );
+    process.exit(1);
+  }
+
   if (options.dynamic && !selectedRouter.name) {
     error(
       `No router selected. Please select a router contract to deploy.`,
@@ -197,8 +204,6 @@ export async function processProject(
     process.exit(0);
   }
 
-  const loader = spinner("Uploading contract data...");
-
   const soliditySDKPackage = "@thirdweb-dev/contracts";
   let usesSoliditySDK = false;
 
@@ -218,6 +223,8 @@ export async function processProject(
     writeFileSync("./deployArgs.json", outputDeployArgs, "utf-8");
     info("Deployment parameters written to deployArgs.json in your project directory");
   }
+
+  const loader = spinner("Uploading contract data...");
 
   try {
 
