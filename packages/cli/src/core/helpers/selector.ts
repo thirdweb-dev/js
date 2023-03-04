@@ -1,5 +1,4 @@
 import { ContractPayload } from "../interfaces/ContractPayload";
-import { PreDeployedRouter } from "../../constants/router-contracts";
 import chalk from "chalk";
 import prompts from "prompts";
 
