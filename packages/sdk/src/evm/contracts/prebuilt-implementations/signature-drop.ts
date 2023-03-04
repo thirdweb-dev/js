@@ -6,6 +6,7 @@ import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -62,6 +63,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     SignatureDropContract,
     typeof DropErc721ContractSchema
   >;
+  public app: ContractAppURI<SignatureDropContract>;
   public sales: ContractPrimarySale<SignatureDropContract>;
   public platformFees: ContractPlatformFee<SignatureDropContract>;
   public events: ContractEvents<SignatureDropContract>;
@@ -183,6 +185,12 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       DropErc721ContractSchema,
+      this.storage,
+    );
+
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
       this.storage,
     );
     this.roles = new ContractRoles(
@@ -477,6 +485,24 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   burn = buildTransactionFunction(async (tokenId: BigNumberish) => {
     return this.erc721.burn.prepare(tokenId);
   });
+
+  /**
+   * @internal
+   */
+  public async prepare<
+    TMethod extends keyof SignatureDropContract["functions"] = keyof SignatureDropContract["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<SignatureDropContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
+  }
 
   /**
    * @internal

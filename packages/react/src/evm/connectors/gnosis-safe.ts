@@ -9,7 +9,7 @@ import {
   useContext as useWagmiContext,
 } from "wagmi";
 
-// exerpt from https://docs.gnosis-safe.io/backend/available-services
+// excerpt from https://docs.gnosis-safe.io/backend/available-services
 const CHAIN_ID_TO_GNOSIS_SERVER_URL = {
   // mainnet
   1: "https://safe-transaction-mainnet.safe.global",

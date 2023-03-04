@@ -32,7 +32,7 @@ import invariant from "tiny-invariant";
  * ```
  *
  * @param contract - an instance of a {@link TokenContract}
- * @returns a response object that incudes the total minted supply
+ * @returns a response object that includes the total minted supply
  * @twfeature ERC20
  * @beta
  */
@@ -214,7 +214,7 @@ export function useMintToken(contract: RequiredParam<TokenContract>) {
  * ```
  *
  * @param contract - an instance of a {@link TokenContract}
- * @returns a mutation object that can be used to tokens to the wallet specificed in the params
+ * @returns a mutation object that can be used to tokens to the wallet specified in the params
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1
  * @beta
  */

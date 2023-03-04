@@ -1,5 +1,6 @@
 import { getRoleHash } from "../../common";
 import { buildTransactionFunction } from "../../common/transactions";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -42,6 +43,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
     PrebuiltTokenDrop,
     typeof DropErc20ContractSchema
   >;
+  public app: ContractAppURI<PrebuiltTokenDrop>;
   public roles: ContractRoles<
     PrebuiltTokenDrop,
     (typeof TokenDrop.contractRoles)[number]
@@ -98,6 +100,12 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       DropErc20ContractSchema,
+      this.storage,
+    );
+
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
       this.storage,
     );
     this.roles = new ContractRoles(
@@ -272,6 +280,24 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
       return this.erc20.burnFrom.prepare(holder, amount);
     },
   );
+
+  /**
+   * @internal
+   */
+  public async prepare<
+    TMethod extends keyof PrebuiltTokenDrop["functions"] = keyof PrebuiltTokenDrop["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<PrebuiltTokenDrop["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
+  }
 
   /**
    * @internal

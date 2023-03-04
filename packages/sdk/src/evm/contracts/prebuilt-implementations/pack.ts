@@ -10,6 +10,7 @@ import { isTokenApprovedForTransfer } from "../../common/marketplace";
 import { uploadOrExtractURI } from "../../common/nft";
 import { getRoleHash } from "../../common/role";
 import { FEATURE_PACK_VRF } from "../../constants/thirdweb-features";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -22,6 +23,7 @@ import { Erc1155 } from "../../core/classes/erc-1155";
 import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { PackVRF } from "../../core/classes/pack-vrf";
+import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { Abi } from "../../schema";
 import { PackContractSchema } from "../../schema/contracts/packs";
@@ -65,7 +67,11 @@ export class Pack extends StandardErc1155<PackContract> {
 
   public abi: Abi;
   public metadata: ContractMetadata<PackContract, typeof PackContractSchema>;
-  public roles: ContractRoles<PackContract, typeof Pack.contractRoles[number]>;
+  public app: ContractAppURI<PackContract>;
+  public roles: ContractRoles<
+    PackContract,
+    (typeof Pack.contractRoles)[number]
+  >;
   public encoder: ContractEncoder<PackContract>;
   public events: ContractEvents<PackContract>;
   public estimator: GasCostEstimator<PackContract>;
@@ -134,6 +140,11 @@ export class Pack extends StandardErc1155<PackContract> {
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       PackContractSchema,
+      this.storage,
+    );
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
       this.storage,
     );
     this.roles = new ContractRoles(this.contractWrapper, Pack.contractRoles);
@@ -724,6 +735,24 @@ export class Pack extends StandardErc1155<PackContract> {
       contents,
       numOfRewardUnits,
     };
+  }
+
+  /**
+   * @internal
+   */
+  public async prepare<
+    TMethod extends keyof PackContract["functions"] = keyof PackContract["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<PackContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
   }
 
   /**

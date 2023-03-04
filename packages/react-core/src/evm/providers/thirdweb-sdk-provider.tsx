@@ -17,7 +17,7 @@ import {
 } from "@thirdweb-dev/sdk/evm";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { Signer } from "ethers";
-import { createContext, useContext, useMemo } from "react";
+import { createContext, useContext, useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";
 
 interface TWSDKContext {
@@ -26,28 +26,6 @@ interface TWSDKContext {
 }
 
 const ThirdwebSDKContext = createContext<TWSDKContext>({});
-
-function resolveChainIdFromNetwork(
-  network?: number | string,
-  chains: Readonly<Chain[]> = defaultChains,
-): number | undefined {
-  let chainId: number | undefined = undefined;
-  // try to resolve the chainId
-  if (typeof network === "number") {
-    if (chains.find((c) => c.chainId === network)) {
-      chainId = network;
-    }
-  } else if (typeof network === "string") {
-    const chain = chains.find((c) => c.slug === network);
-    if (chain) {
-      chainId = chain.chainId;
-    }
-  }
-  return chainId;
-}
-
-// this allows autocomplete to work for the chainId prop but still allows `number` and `string` to be passed (for dynamically passed chain data)
-type ChainIdIsh = (string | number) & { __chainIdIsh: never };
 
 export interface ThirdwebSDKProviderProps<
   TChains extends Chain[] = typeof defaultChains,
@@ -65,11 +43,7 @@ export interface ThirdwebSDKProviderProps<
   authConfig?: ThirdwebAuthConfig;
 
   // the network to use - optional, defaults to undefined
-  activeChain?:
-    | TChains[number]["chainId"]
-    | TChains[number]["slug"]
-    | ChainIdIsh
-    | Chain;
+  activeChain?: TChains[number]["chainId"] | TChains[number]["slug"] | Chain;
 
   // api keys that can be passed
   thirdwebApiKey?: string;
@@ -91,7 +65,7 @@ const WrappedThirdwebSDKProvider = <
   activeChain,
   signer,
   children,
-  thirdwebApiKey = DEFAULT_API_KEY,
+  thirdwebApiKey,
   infuraApiKey,
   alchemyApiKey,
 }: React.PropsWithChildren<
@@ -99,25 +73,24 @@ const WrappedThirdwebSDKProvider = <
 >) => {
   const activeChainId = useMemo(() => {
     if (!activeChain) {
-      return undefined;
+      return supportedChains[0]?.chainId;
     }
-    if (typeof activeChain === "string" || typeof activeChain === "number") {
+    if (typeof activeChain === "number") {
       return activeChain;
     }
+    if (typeof activeChain === "string") {
+      return supportedChains.find((c) => c.slug === activeChain)?.chainId;
+    }
     return activeChain.chainId;
-  }, [activeChain]);
+  }, [activeChain, supportedChains]);
 
   const sdk = useMemo(() => {
     // on the server we can't do anything (?)
     if (typeof window === "undefined") {
       return undefined;
     }
-    let chainId = resolveChainIdFromNetwork(activeChainId, supportedChains);
-    if (signer && !chainId) {
-      try {
-        chainId = (signer?.provider as any)?._network?.chainId;
-      } catch (e) {}
-    }
+    let chainId = activeChainId;
+
     const supportedChain = supportedChains.find((c) => c.chainId === chainId);
 
     if (!supportedChain && chainId !== undefined) {
@@ -147,22 +120,23 @@ const WrappedThirdwebSDKProvider = <
       }
     }
 
+    // TODO: find a better way to fix the type error
+    type ForcedChainType = {
+      rpc: string[];
+      chainId: number;
+      nativeCurrency: { symbol: string; name: string; decimals: number };
+      slug: string;
+    };
+
     const mergedOptions = {
       readonlySettings,
       ...sdkOptions,
-      chains: supportedChains,
+      supportedChains: supportedChains as any as ForcedChainType[],
     };
 
     let sdk_: ThirdwebSDK | undefined = undefined;
 
-    if (signer) {
-      // sdk from signer
-      sdk_ = new ThirdwebSDK(
-        signer,
-        { ...mergedOptions, infuraApiKey, alchemyApiKey, thirdwebApiKey },
-        storageInterface,
-      );
-    } else if (chainId) {
+    if (chainId) {
       // sdk from chainId
       sdk_ = new ThirdwebSDK(
         chainId,
@@ -183,6 +157,8 @@ const WrappedThirdwebSDKProvider = <
       }
     }
 
+    // set the chainId on the sdk instance to compare things later
+    (sdk_ as any)._chainId = chainId;
     return sdk_;
   }, [
     activeChainId,
@@ -190,17 +166,29 @@ const WrappedThirdwebSDKProvider = <
     infuraApiKey,
     supportedChains,
     sdkOptions,
-    signer,
     storageInterface,
     thirdwebApiKey,
   ]);
 
+  useEffect(() => {
+    // if we have an sdk and a signer update the signer
+    if (sdk && (sdk as any)._chainId === activeChainId) {
+      if (signer) {
+        sdk.updateSignerOrProvider(signer);
+      } else if (activeChainId) {
+        sdk.updateSignerOrProvider(activeChainId);
+      }
+    }
+    // we know what we're doing
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sdk, (sdk as any)?._chainId, signer, activeChainId]);
+
   const ctxValue = useMemo(
     () => ({
-      sdk,
+      sdk: sdk && (sdk as any)._chainId === activeChainId ? sdk : undefined,
       _inProvider: true as const,
     }),
-    [sdk],
+    [activeChainId, sdk],
   );
 
   return (
@@ -229,7 +217,7 @@ export const ThirdwebSDKProvider = <
   // @ts-expect-error - different subtype of Chain[] but this works fine
   supportedChains = defaultChains,
   activeChain,
-  thirdwebApiKey,
+  thirdwebApiKey = DEFAULT_API_KEY,
   alchemyApiKey,
   infuraApiKey,
   ...restProps
@@ -242,7 +230,14 @@ export const ThirdwebSDKProvider = <
     ) {
       return supportedChains as Readonly<Chain[]>;
     }
-    return [...supportedChains, activeChain] as Readonly<Chain[]>;
+    const _mergedChains = [...supportedChains, activeChain] as Readonly<
+      Chain[]
+    >;
+    // return a _mergedChains uniqued by chainId key
+    return _mergedChains.filter(
+      (chain, index, self) =>
+        index === self.findIndex((c) => c.chainId === chain.chainId),
+    );
   }, [supportedChains, activeChain]);
 
   return (
@@ -308,5 +303,5 @@ export function useSDK(): ThirdwebSDK | undefined {
  */
 export function useSDKChainId(): number | undefined {
   const sdk = useSDK();
-  return (sdk?.getProvider() as any)?._network?.chainId;
+  return (sdk as any)?._chainId;
 }

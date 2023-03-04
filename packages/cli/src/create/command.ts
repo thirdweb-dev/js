@@ -19,6 +19,7 @@ let framework: string = "";
 let language: string = "";
 let baseContract: string = "";
 let chain: string = "";
+let createExtension: boolean = false;
 /* let createType: string = "app"; */
 
 export async function twCreate(
@@ -38,13 +39,14 @@ export async function twCreate(
     projectType = "app";
   } else if (pType === "contract" || options.contract) {
     projectType = "contract";
+  } else if (pType === "extension" || options.extension) {
+    projectType = "extension";
   }
 
   if (projectType === "app") {
     if (options.typescript) {
       language = "typescript";
     }
-
     if (options.javascript) {
       language = "javascript";
     }
@@ -52,23 +54,18 @@ export async function twCreate(
     if (options.next) {
       framework = "next";
     }
-
     if (options.cra) {
       framework = "cra";
     }
-
     if (options.vite) {
       framework = "vite";
     }
-
     if (options.node) {
       framework = "node";
     }
-
     if (options.express) {
       framework = "express";
     }
-
     if (options.reactNative) {
       framework = "react-native";
     }
@@ -76,7 +73,6 @@ export async function twCreate(
     if (options.solana) {
       chain = "solana";
     }
-
     if (options.evm) {
       chain = "evm";
     }
@@ -86,7 +82,6 @@ export async function twCreate(
     if (options.forge) {
       framework = "forge";
     }
-
     if (options.hardhat) {
       framework = "hardhat";
     }
@@ -104,6 +99,7 @@ export async function twCreate(
       choices: [
         { title: "App", value: "app" },
         { title: "Contract", value: "contract" },
+        { title: "Dynamic Contract Extension", value: "extension" },
       ],
     });
 
@@ -116,9 +112,20 @@ export async function twCreate(
     projectType = "app";
   }
 
+  if (projectType === "extension") {
+    createExtension = true;
+
+    if (options.forge) {
+      framework = "forge";
+    }
+    if (options.hardhat) {
+      framework = "hardhat";
+    }
+  }
+
   // Whether to only create a new contract without the project
   let onlyContract = false;
-  if (projectType === "contract") {
+  if (projectType === "contract" || projectType === "extension") {
     const resolvedProjectPath = path.resolve(projectPath);
     const contractProjectType = await detect(resolvedProjectPath, {});
 
@@ -154,7 +161,9 @@ export async function twCreate(
   if (!onlyContract) {
     if (!projectPath) {
       const defaultName =
-        projectType === "contract" ? "thirdweb-contracts" : "thirdweb-app";
+        projectType === "contract" || projectType === "extension"
+          ? "thirdweb-contracts"
+          : "thirdweb-app";
       const res = await prompts({
         type: "text",
         name: "path",
@@ -165,10 +174,10 @@ export async function twCreate(
           const validation = validateNpmName(
             path.basename(path.resolve(name.toLowerCase())),
           );
-          if (validation.valid) {
-            return true;
-          }
-          return "Invalid project name: " + validation.problems?.[0];
+          return (
+            validation.valid ||
+            "Invalid project name: " + validation.problems?.[0]
+          );
         },
       });
 
@@ -258,7 +267,7 @@ export async function twCreate(
       }
 
       if (
-        projectType === "contract" &&
+        (projectType === "contract" || projectType === "extension") &&
         framework !== "forge" &&
         framework !== "hardhat"
       ) {
@@ -289,7 +298,7 @@ export async function twCreate(
     }
   }
 
-  if (projectType === "contract") {
+  if (projectType === "contract" || projectType === "extension") {
     // Select contract name
     if (!contractName) {
       const defaultName = "MyContract";
@@ -329,7 +338,7 @@ export async function twCreate(
     }
 
     // Select base contract
-    if (projectType === "contract" && !baseContract) {
+    if (projectType === "contract" && !baseContract && !createExtension) {
       let standard = "none";
       const standardPrompt = await prompts({
         type: "select",
@@ -424,7 +433,7 @@ export async function twCreate(
     : getPkgManager();
 
   const template =
-    typeof options.template === "string" && options.template.trim();
+    typeof options.template === "string" ? options.template.trim() : undefined;
   try {
     if (projectType === "app") {
       await createApp({
@@ -443,6 +452,7 @@ export async function twCreate(
         contractName,
         baseContract,
         onlyContract,
+        createExtension,
       });
     }
   } catch (reason) {

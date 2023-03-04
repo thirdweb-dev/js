@@ -40,8 +40,7 @@ export class BrownieBuilder extends BaseBuilder {
       const contractJsonFile = readFileSync(file, "utf-8");
 
       const contractInfo = JSON.parse(contractJsonFile);
-      const abi = contractInfo.abi;
-      const bytecode = contractInfo.bytecode;
+      const { abi, bytecode } = contractInfo;
 
       for (const input of abi) {
         if (this.isThirdwebContract(input)) {

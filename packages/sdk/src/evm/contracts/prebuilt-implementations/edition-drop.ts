@@ -2,6 +2,7 @@ import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
 import { buildTransactionFunction } from "../../common/transactions";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -54,6 +55,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
     PrebuiltEditionDrop,
     typeof DropErc1155ContractSchema
   >;
+  public app: ContractAppURI<PrebuiltEditionDrop>;
   public roles: ContractRoles<
     PrebuiltEditionDrop,
     (typeof EditionDrop.contractRoles)[number]
@@ -135,6 +137,11 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       DropErc1155ContractSchema,
+      this.storage,
+    );
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
       this.storage,
     );
     this.roles = new ContractRoles(
@@ -383,6 +390,24 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
       return this.erc1155.burn.prepare(tokenId, amount);
     },
   );
+
+  /**
+   * @internal
+   */
+  public async prepare<
+    TMethod extends keyof PrebuiltEditionDrop["functions"] = keyof PrebuiltEditionDrop["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<PrebuiltEditionDrop["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
+  }
 
   /**
    * @internal

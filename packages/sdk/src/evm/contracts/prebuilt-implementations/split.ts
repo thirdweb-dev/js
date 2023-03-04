@@ -1,4 +1,5 @@
 import { fetchCurrencyValue } from "../../common/currency";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -6,6 +7,7 @@ import { ContractMetadata } from "../../core/classes/contract-metadata";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
+import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput, TransactionResult } from "../../core/types";
 import { Abi } from "../../schema/contracts/custom";
@@ -43,12 +45,14 @@ export class Split implements UpdateableNetwork {
 
   public abi: Abi;
   public metadata: ContractMetadata<SplitContract, typeof SplitsContractSchema>;
+
+  public app: ContractAppURI<SplitContract>;
   public encoder: ContractEncoder<SplitContract>;
   public estimator: GasCostEstimator<SplitContract>;
   public events: ContractEvents<SplitContract>;
   public roles: ContractRoles<
     SplitContract,
-    typeof Split.contractRoles[number]
+    (typeof Split.contractRoles)[number]
   >;
   /**
    * @internal
@@ -81,6 +85,12 @@ export class Split implements UpdateableNetwork {
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       SplitsContractSchema,
+      this.storage,
+    );
+
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
       this.storage,
     );
     this.roles = new ContractRoles(this.contractWrapper, Split.contractRoles);
@@ -369,6 +379,24 @@ export class Split implements UpdateableNetwork {
       await this.contractWrapper.readContract.totalShares(),
     );
     return totalRoyaltyAvailable.sub(alreadyReleased);
+  }
+
+  /**
+   * @internal
+   */
+  public async prepare<
+    TMethod extends keyof SplitContract["functions"] = keyof SplitContract["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<SplitContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
   }
 
   /**

@@ -19,7 +19,7 @@ export default async function detect(
     new HardhatDetector(),
     new FoundryDetector(),
     new TruffleDetector(),
-    // new BrownieDetector(), TODO brownie does not support outputing metadata yet
+    // new BrownieDetector(), TODO brownie does not support outputting metadata yet
   ];
 
   const possibleProjectTypes = detectors

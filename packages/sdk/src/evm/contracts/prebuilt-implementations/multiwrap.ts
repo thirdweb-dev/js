@@ -6,6 +6,7 @@ import {
 } from "../../common/currency";
 import { isTokenApprovedForTransfer } from "../../common/marketplace";
 import { uploadOrExtractURI } from "../../common/nft";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
@@ -15,6 +16,7 @@ import { ContractRoyalty } from "../../core/classes/contract-royalty";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { StandardErc721 } from "../../core/classes/erc-721-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
+import { Transaction } from "../../core/classes/transactions";
 import {
   NetworkInput,
   TransactionResult,
@@ -67,10 +69,11 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
     MultiwrapContract,
     typeof MultiwrapContractSchema
   >;
+  public app: ContractAppURI<MultiwrapContract>;
   public events: ContractEvents<MultiwrapContract>;
   public roles: ContractRoles<
     MultiwrapContract,
-    typeof Multiwrap.contractRoles[number]
+    (typeof Multiwrap.contractRoles)[number]
   >;
 
   /**
@@ -118,7 +121,11 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
       MultiwrapContractSchema,
       this.storage,
     );
-
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.roles = new ContractRoles(
       this.contractWrapper,
       Multiwrap.contractRoles,
@@ -387,6 +394,24 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
       }
     }
     return tokens;
+  }
+
+  /**
+   * @internal
+   */
+  public async prepare<
+    TMethod extends keyof MultiwrapContract["functions"] = keyof MultiwrapContract["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<MultiwrapContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
   }
 
   /**

@@ -4,6 +4,7 @@ import { isNativeToken } from "../../common/currency";
 import { mapOffer } from "../../common/marketplace";
 import { getRoleHash } from "../../common/role";
 import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -14,6 +15,7 @@ import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { MarketplaceAuction } from "../../core/classes/marketplace-auction";
 import { MarketplaceDirect } from "../../core/classes/marketplace-direct";
+import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput, TransactionResult } from "../../core/types";
 import { ListingType } from "../../enums";
@@ -59,9 +61,10 @@ export class Marketplace implements UpdateableNetwork {
     MarketplaceContract,
     typeof MarketplaceContractSchema
   >;
+  public app: ContractAppURI<MarketplaceContract>;
   public roles: ContractRoles<
     MarketplaceContract,
-    typeof Marketplace.contractRoles[number]
+    (typeof Marketplace.contractRoles)[number]
   >;
   /**
    * @internal
@@ -164,6 +167,12 @@ export class Marketplace implements UpdateableNetwork {
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       MarketplaceContractSchema,
+      this.storage,
+    );
+
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
       this.storage,
     );
     this.roles = new ContractRoles(
@@ -630,6 +639,24 @@ export class Marketplace implements UpdateableNetwork {
       rawListings = rawListings.slice(0, count);
     }
     return rawListings;
+  }
+
+  /**
+   * @internal
+   */
+  public async prepare<
+    TMethod extends keyof MarketplaceContract["functions"] = keyof MarketplaceContract["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<MarketplaceContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
   }
 
   /**

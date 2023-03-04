@@ -2,12 +2,14 @@ import {
   fetchCurrencyMetadata,
   fetchCurrencyValue,
 } from "../../common/currency";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
+import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import {
   NetworkInput,
@@ -57,6 +59,7 @@ export class Vote implements UpdateableNetwork {
 
   public abi: Abi;
   public metadata: ContractMetadata<VoteERC20, typeof VoteContractSchema>;
+  public app: ContractAppURI<VoteERC20>;
   public encoder: ContractEncoder<VoteERC20>;
   public estimator: GasCostEstimator<VoteERC20>;
   public events: ContractEvents<VoteERC20>;
@@ -91,6 +94,12 @@ export class Vote implements UpdateableNetwork {
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       VoteContractSchema,
+      this.storage,
+    );
+
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
       this.storage,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
@@ -357,7 +366,7 @@ export class Vote implements UpdateableNetwork {
    *     // The amount of the native currency to send in this transaction
    *     nativeTokenValue: 0,
    *     // Transaction data that will be executed when the proposal is executed
-   *     // This is an example transfer transaction with a token contract (which you would need to setup in code)
+   *     // This is an example transfer transaction with a token contract (which you would need to set up in code)
    *     transactionData: tokenContract.encoder.encode(
    *       "transfer", [
    *         fromAddress,
@@ -447,7 +456,7 @@ export class Vote implements UpdateableNetwork {
    *
    * @example
    * ```javascript
-   * // The proposal ID ofthe proposal you want to execute
+   * // The proposal ID of the proposal you want to execute
    * const proposalId = "0"
    * await contract.execute(proposalId);
    * ```
@@ -470,6 +479,24 @@ export class Vote implements UpdateableNetwork {
         descriptionHash,
       ]),
     };
+  }
+
+  /**
+   * @internal
+   */
+  public async prepare<
+    TMethod extends keyof VoteERC20["functions"] = keyof VoteERC20["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<VoteERC20["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
   }
 
   /**
