@@ -4,6 +4,7 @@ import { isNativeToken } from "../../common/currency";
 import { mapOffer } from "../../common/marketplace";
 import { getRoleHash } from "../../common/role";
 import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -60,6 +61,7 @@ export class Marketplace implements UpdateableNetwork {
     MarketplaceContract,
     typeof MarketplaceContractSchema
   >;
+  public app: ContractAppURI<MarketplaceContract>;
   public roles: ContractRoles<
     MarketplaceContract,
     (typeof Marketplace.contractRoles)[number]
@@ -165,6 +167,12 @@ export class Marketplace implements UpdateableNetwork {
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       MarketplaceContractSchema,
+      this.storage,
+    );
+
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
       this.storage,
     );
     this.roles = new ContractRoles(

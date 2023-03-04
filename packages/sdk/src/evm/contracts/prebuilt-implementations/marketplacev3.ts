@@ -4,6 +4,7 @@ import {
   FEATURE_ENGLISH_AUCTIONS,
   FEATURE_OFFERS,
 } from "../../constants/thirdweb-features";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -59,6 +60,8 @@ export class MarketplaceV3 implements UpdateableNetwork {
     MarketplaceV3Contract,
     typeof MarketplaceContractSchema
   >;
+
+  public app: ContractAppURI<MarketplaceV3Contract>;
   public roles: ContractRoles<
     MarketplaceV3Contract,
     (typeof MarketplaceV3.contractRoles)[number]
@@ -217,6 +220,12 @@ export class MarketplaceV3 implements UpdateableNetwork {
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       MarketplaceContractSchema,
+      this.storage,
+    );
+
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
       this.storage,
     );
     this.roles = new ContractRoles(

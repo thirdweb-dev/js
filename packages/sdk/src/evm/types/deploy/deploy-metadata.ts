@@ -50,6 +50,11 @@ export interface NFTContractDeployMetadata {
    * The percentage (in basis points) of platform fees
    */
   platform_fee_basis_points?: number;
+
+  /**
+   * The default app for this contract
+   */
+  app_uri?: string;
 }
 
 /**
@@ -93,6 +98,11 @@ export interface TokenContractDeployMetadata {
    * The percentage (in basis points) of platform fees
    */
   platform_fee_basis_points?: number;
+
+  /**
+   * The default app for this contract
+   */
+  app_uri?: string;
 }
 
 /**
@@ -128,6 +138,11 @@ export interface MarketplaceContractDeployMetadata {
    * The percentage (in basis points) of platform fees
    */
   platform_fee_basis_points?: number;
+
+  /**
+   * The default app for this contract
+   */
+  app_uri?: string;
 }
 
 /**
@@ -163,6 +178,10 @@ export interface MarketplaceV3ContractDeployMetadata {
    * The percentage (in basis points) of platform fees
    */
   platform_fee_basis_points?: number;
+  /**
+   * The default app for this contract
+   */
+  app_uri?: string;
 }
 
 /**
@@ -212,6 +231,10 @@ export interface VoteContractDeployMetadata {
    * The minimum fraction to be met to pass a proposal
    */
   voting_quorum_fraction?: number;
+  /**
+   * The default app for this contract
+   */
+  app_uri?: string;
 }
 
 /**
@@ -257,6 +280,10 @@ export interface SplitContractDeployMetadata {
    * The list of recipients and their share of the split
    */
   recipients: SplitRecipientInput[];
+  /**
+   * The default app for this contract
+   */
+  app_uri?: string;
 }
 
 /**
@@ -296,4 +323,8 @@ export interface MultiwrapContractDeployMetadata {
    * The percentage (in basis points) of royalties for secondary sales
    */
   seller_fee_basis_points?: number;
+  /**
+   * The default app for this contract
+   */
+  app_uri?: string;
 }

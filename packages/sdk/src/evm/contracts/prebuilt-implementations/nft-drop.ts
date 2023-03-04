@@ -6,6 +6,7 @@ import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -56,6 +57,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
     PrebuiltNFTDrop,
     typeof DropErc721ContractSchema
   >;
+  public app: ContractAppURI<PrebuiltNFTDrop>;
   public sales: ContractPrimarySale<PrebuiltNFTDrop>;
   public platformFees: ContractPlatformFee<PrebuiltNFTDrop>;
   public events: ContractEvents<PrebuiltNFTDrop>;
@@ -172,6 +174,11 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       DropErc721ContractSchema,
+      this.storage,
+    );
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
       this.storage,
     );
     this.roles = new ContractRoles(this.contractWrapper, NFTDrop.contractRoles);
