@@ -85,6 +85,7 @@ const LazyCustomContractSourcesPage = dynamic(() =>
 export type EnhancedRoute<T = any> = {
   title: string;
   path: string;
+  isDefault?: true;
   isEnabled?: ExtensionDetectedState;
   component: ComponentType<T>;
 };
@@ -118,16 +119,19 @@ export function useContractRouteConfig(
       path: "overview",
       // not lazy because this is typically the landing spot so we want it to always be there immediately
       component: CustomContractOverviewPage,
+      isDefault: true,
     },
     {
       title: "Explorer",
       path: "explorer",
       component: LazyContractExplorerPage,
+      isDefault: true,
     },
     {
       title: "Events",
       path: "events",
       component: LazyContractEventsPage,
+      isDefault: true,
     },
     {
       title: "NFTs",
@@ -248,16 +252,19 @@ export function useContractRouteConfig(
       title: "Code",
       path: "code",
       component: LazyContractCodePage,
+      isDefault: true,
     },
     {
       title: "Settings",
       path: "settings",
       component: LazyCustomContractSettingsPage,
+      isDefault: true,
     },
     {
       title: "Sources",
       path: "sources",
       component: LazyCustomContractSourcesPage,
+      isDefault: true,
     },
   ];
 }

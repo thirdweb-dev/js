@@ -1,6 +1,6 @@
 import { ContractMetadata } from "./contract-metadata";
 import { Box, Container, Flex } from "@chakra-ui/react";
-import { PublishedBy } from "components/contract-components/shared/published-by";
+import { AddToDashboardToggleButton } from "contract-ui/components/add-to-dashboard";
 
 interface ContractHeaderProps {
   contractAddress: string;
@@ -10,15 +10,7 @@ export const ContractHeader: React.FC<ContractHeaderProps> = ({
   contractAddress,
 }) => {
   return (
-    <Box
-      borderColor="borderColor"
-      borderTopWidth={1}
-      borderBottomWidth={1}
-      bg="backgroundHighlight"
-      w="full"
-      as="aside"
-      py={6}
-    >
+    <Box borderColor="borderColor" borderBottomWidth={1} w="full" pb={8}>
       <Container maxW="container.page">
         <Flex
           justify="space-between"
@@ -27,7 +19,7 @@ export const ContractHeader: React.FC<ContractHeaderProps> = ({
           gap={4}
         >
           <ContractMetadata contractAddress={contractAddress} />
-          <PublishedBy contractAddress={contractAddress} />
+          <AddToDashboardToggleButton contractAddress={contractAddress} />
         </Flex>
       </Container>
     </Box>

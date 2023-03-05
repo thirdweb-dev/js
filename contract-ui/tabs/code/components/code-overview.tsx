@@ -311,7 +311,13 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
   );
 
   return (
-    <SimpleGrid columns={12} gap={8} justifyContent="space-between">
+    <SimpleGrid
+      columns={12}
+      gap={16}
+      justifyContent="space-between"
+      maxW="full"
+      overflowX={{ base: "scroll", md: "hidden" }}
+    >
       <GridItem
         as={Flex}
         colSpan={{ base: 12, md: noSidebar ? 12 : 9 }}

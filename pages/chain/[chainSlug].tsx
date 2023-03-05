@@ -437,7 +437,7 @@ const ChainPage: ThirdwebNextPage = ({
           <>
             <Divider />
             <ChainSectionElement colSpan={12} label="Popular Contracts">
-              <SimpleGrid columns={{ base: 6, md: 12 }} gridGap={6} mt={2}>
+              <SimpleGrid columns={{ base: 6, md: 12 }} gap={6} mt={2}>
                 {category.contracts.map((publishedContractId, idx) => {
                   const [publisher, contractId] =
                     publishedContractId.split("/");
@@ -446,9 +446,10 @@ const ChainPage: ThirdwebNextPage = ({
                       key={contractId}
                       colSpan={{ base: 6, md: 4 }}
                       onClick={!isConfigured ? addNetwork : undefined}
+                      h="full"
+                      display="grid"
                     >
                       <ContractCard
-                        slim
                         key={publishedContractId}
                         publisher={publisher}
                         contractId={contractId}

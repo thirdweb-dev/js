@@ -97,7 +97,15 @@ const Dashboard: ThirdwebNextPage = (
                         overflow="hidden"
                         position="relative"
                       >
-                        <Card p={0} overflow="hidden">
+                        <Card
+                          p={0}
+                          overflow="hidden"
+                          bg="linear-gradient(158.84deg, rgba(255, 255, 255, 0.05) 13.95%, rgba(255, 255, 255, 0) 38.68%)"
+                          _groupHover={{
+                            borderColor: "blue.500",
+                          }}
+                          transitionDuration="200ms"
+                        >
                           <Flex direction="column" gap={3} p={6}>
                             <LinkOverlay
                               as={TrackedLink}

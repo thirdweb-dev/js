@@ -433,7 +433,7 @@ export const CmdKSearch: React.FC = () => {
   return (
     <>
       <InputGroup
-        display={{ base: "none", md: "block" }}
+        display={{ base: "none", lg: "block" }}
         minW="300px"
         size="sm"
         onClick={() => setOpen(true)}
@@ -453,7 +453,7 @@ export const CmdKSearch: React.FC = () => {
       <IconButton
         aria-label="Search any contract"
         variant="ghost"
-        display={{ base: "inherit", md: "none" }}
+        display={{ base: "inherit", lg: "none" }}
         icon={<Icon as={FiSearch} />}
         onClick={() => setOpen(true)}
       />

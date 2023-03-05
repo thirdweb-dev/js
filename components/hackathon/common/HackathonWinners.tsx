@@ -1,4 +1,4 @@
-import { Flex, Icon, LinkOverlay, SimpleGrid } from "@chakra-ui/react";
+import { Flex, Icon, LinkBox, LinkOverlay, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { FiExternalLink } from "react-icons/fi";
 import { Heading, Text } from "tw-components";
@@ -45,9 +45,7 @@ export const HackathonWinners: React.FC<HackathonWinnersProps> = ({
         alignSelf="center"
       >
         {winners.map(({ name, image, link, position }) => (
-          <LinkOverlay
-            href={link}
-            isExternal
+          <LinkBox
             key={name}
             _hover={{
               boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.2)",
@@ -72,9 +70,11 @@ export const HackathonWinners: React.FC<HackathonWinnersProps> = ({
               roundedTop="lg"
             />
             <Flex flexDir="column" pl={4} mt={5}>
-              <Heading size="title.md" color="white">
-                {name}
-              </Heading>
+              <LinkOverlay href={link} isExternal>
+                <Heading size="title.md" color="white">
+                  {name}
+                </Heading>
+              </LinkOverlay>
               <Text as="h4" fontSize="md" color="gray.200">
                 {position}
               </Text>
@@ -87,7 +87,7 @@ export const HackathonWinners: React.FC<HackathonWinnersProps> = ({
               ml="auto"
               mr={4}
             />
-          </LinkOverlay>
+          </LinkBox>
         ))}
       </SimpleGrid>
     </Flex>

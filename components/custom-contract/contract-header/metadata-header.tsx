@@ -1,6 +1,5 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { Flex, Image, Skeleton } from "@chakra-ui/react";
-import { AddToDashboardToggleButton } from "contract-ui/components/add-to-dashboard";
 import { useConfiguredChain } from "hooks/chains/configureChains";
 import { NextSeo } from "next-seo";
 import { StaticImageData } from "next/image";
@@ -85,7 +84,7 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
             flexShrink={0}
             borderRadius="lg"
             overflow="hidden"
-            boxSize={{ base: 16, md: 32 }}
+            boxSize={{ base: 16, md: 24 }}
             position="relative"
           >
             {data?.image ? (
@@ -131,7 +130,6 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
           )}
           <Flex gap={2}>
             <AddressCopyButton size="xs" address={address} />
-            <AddToDashboardToggleButton contractAddress={address} />
           </Flex>
         </Flex>
       </Flex>

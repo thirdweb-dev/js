@@ -9,6 +9,7 @@ import { getGuidesAndTemplates } from "./helpers/getGuidesAndTemplates";
 import { Divider, Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
 import { contractType, useContract } from "@thirdweb-dev/react";
 import { Abi, getAllDetectedFeatureNames } from "@thirdweb-dev/sdk";
+import { PublishedBy } from "components/contract-components/shared/published-by";
 import { RelevantDataSection } from "components/dashboard/RelevantDataSection";
 import { useMemo } from "react";
 
@@ -41,8 +42,8 @@ export const CustomContractOverviewPage: React.FC<
   }
 
   return (
-    <SimpleGrid columns={{ base: 1, xl: 4 }} gap={8}>
-      <GridItem as={Flex} colSpan={{ xl: 3 }} direction="column" gap={16}>
+    <SimpleGrid columns={{ base: 1, xl: 10 }} gap={20}>
+      <GridItem as={Flex} colSpan={{ xl: 7 }} direction="column" gap={16}>
         {contract &&
           (contractTypeData === "marketplace" ||
             ["DirectListings", "EnglishAuctions"].some((type) =>
@@ -84,7 +85,8 @@ export const CustomContractOverviewPage: React.FC<
           )}
         <BuildYourApp trackingCategory={TRACKING_CATEGORY} />
       </GridItem>
-      <GridItem as={Flex} direction="column" gap={6}>
+      <GridItem colSpan={{ xl: 3 }} as={Flex} direction="column" gap={6}>
+        <PublishedBy contractAddress={contractAddress} />
         {contract?.abi && <Extensions abi={contract?.abi} />}
         {(guides.length > 0 || templates.length > 0) && <Divider />}
         <RelevantDataSection

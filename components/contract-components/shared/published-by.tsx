@@ -1,5 +1,4 @@
 import { useEVMContractInfo } from "@3rdweb-sdk/react";
-import { Box } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import {
   useEns,
@@ -7,7 +6,6 @@ import {
 } from "components/contract-components/hooks";
 import { ContractCard } from "components/explore/contract-card";
 import { useMemo } from "react";
-import { CardElevationWrapper } from "tw-components";
 
 interface PublishedByProps {
   contractAddress: string;
@@ -47,15 +45,10 @@ export const PublishedBy: React.FC<PublishedByProps> = ({
   }
 
   return (
-    <Box maxW={{ base: "100%", md: "330px" }}>
-      <CardElevationWrapper>
-        <ContractCard
-          contractId={publishedContractToShow.name}
-          publisher={publisherAddress}
-          version={publishedContractToShow.version}
-          slim
-        />
-      </CardElevationWrapper>
-    </Box>
+    <ContractCard
+      contractId={publishedContractToShow.name}
+      publisher={publisherAddress}
+      version={publishedContractToShow.version}
+    />
   );
 };

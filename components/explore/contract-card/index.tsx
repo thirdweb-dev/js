@@ -1,9 +1,7 @@
 import { ContractPublisher, replaceDeployerAddress } from "../publisher";
 import {
-  Center,
   Flex,
   Icon,
-  Image,
   LinkBox,
   LinkOverlay,
   Skeleton,
@@ -17,15 +15,13 @@ import { getDashboardChainRpc } from "lib/rpc";
 import { getEVMThirdwebSDK, replaceIpfsUrl } from "lib/sdk";
 import { useMemo } from "react";
 import { BsShieldCheck } from "react-icons/bs";
-import { FiImage } from "react-icons/fi";
 import invariant from "tiny-invariant";
-import { Button, Card, Heading, Link, Text, TrackedLink } from "tw-components";
+import { Card, Heading, Link, Text, TrackedLink } from "tw-components";
 
 interface ContractCardProps {
   publisher: string;
   contractId: string;
   version?: string;
-  slim?: boolean;
   tracking?: {
     source: string;
     itemIndex: `${number}`;
@@ -36,7 +32,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
   publisher,
   contractId,
   version = "latest",
-  slim,
+
   tracking,
 }) => {
   const publishedContractResult = usePublishedContract(
@@ -60,14 +56,13 @@ export const ContractCard: React.FC<ContractCardProps> = ({
 
   return !publishedContractResult.isLoading &&
     !publishedContractResult.data?.id ? null : (
-    <LinkBox as="article" minW="300px">
+    <LinkBox as="article">
       <Card
-        p={0}
+        h="full"
+        p={4}
         role="group"
-        display="flex"
+        as={Flex}
         flexDirection="column"
-        gap={0}
-        minHeight={slim ? undefined : "170px"}
         borderColor="borderColor"
         transition="150ms border-color ease-in-out"
         _hover={{
@@ -78,183 +73,106 @@ export const ContractCard: React.FC<ContractCardProps> = ({
             borderColor: "blue.600",
           },
         }}
-        h="full"
         overflow="hidden"
+        bg="linear-gradient(158.84deg, rgba(255, 255, 255, 0.05) 13.95%, rgba(255, 255, 255, 0) 38.68%)"
+        gap={3}
+        flexDir="column"
       >
-        <Flex p={3} gap={3} flexDir="column" h="full">
-          {slim ? null : (
-            <Flex align="center" justify="space-between">
-              <Skeleton
-                boxSize={8}
-                borderRadius="full"
-                overflow="hidden"
-                isLoaded={!showSkeleton}
-              >
-                {publishedContractResult.data?.logo ? (
-                  <Image
-                    alt={
-                      publishedContractResult.data?.displayName ||
-                      publishedContractResult.data?.name
-                    }
-                    boxSize="full"
-                    src={replaceIpfsUrl(
-                      publishedContractResult.data?.logo || "",
-                    )}
-                  />
-                ) : (
-                  <Center
-                    boxSize="full"
-                    borderWidth="1px"
-                    borderColor="borderColor"
-                    borderRadius="50%"
-                  >
-                    <Icon boxSize="50%" color="accent.300" as={FiImage} />
-                  </Center>
-                )}
+        <Flex
+          align="center"
+          gap={1}
+          color="rgba(255,255,255,.7)"
+          _light={{ color: "rgba(0,0,0,.6)" }}
+        >
+          {(showSkeleton || publishedContractResult.data?.audit) && (
+            <Flex
+              isExternal
+              as={Link}
+              align="center"
+              gap={0}
+              href={replaceIpfsUrl(publishedContractResult.data?.audit || "")}
+              _dark={{
+                color: "green.300",
+              }}
+              _light={{
+                color: "green.600",
+              }}
+            >
+              <Skeleton boxSize={5} isLoaded={!showSkeleton}>
+                <Icon as={BsShieldCheck} />
               </Skeleton>
-              <Skeleton isLoaded={!showSkeleton} borderRadius="full">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  borderRadius="full"
-                  borderColor="borderColor"
-                  fontSize={12}
-                  _groupHover={{
-                    _dark: {
-                      bg: "white",
-                      color: "black",
-                    },
-                    _light: {
-                      bg: "black",
-                      color: "white",
-                    },
-                  }}
-                >
-                  Deploy
-                </Button>
+              <Skeleton isLoaded={!showSkeleton}>
+                <Text color="inherit" size="label.sm" fontWeight={500}>
+                  Audited
+                </Text>
               </Skeleton>
             </Flex>
           )}
-
-          <Flex direction="column" gap={2}>
-            <Flex gap={1} align="center">
-              {slim && (publishedContractResult.data?.logo || showSkeleton) && (
-                <Skeleton
-                  boxSize={5}
-                  borderRadius="full"
-                  overflow="hidden"
-                  isLoaded={!showSkeleton}
-                >
-                  {publishedContractResult.data?.logo && (
-                    <Image
-                      alt={
-                        publishedContractResult.data?.displayName ||
-                        publishedContractResult.data?.name
-                      }
-                      boxSize="full"
-                      src={replaceIpfsUrl(
-                        publishedContractResult.data?.logo || "",
-                      )}
-                    />
-                  )}
-                </Skeleton>
-              )}
-              <Skeleton
-                noOfLines={1}
-                isLoaded={!showSkeleton}
-                w={showSkeleton ? "50%" : "auto"}
-              >
-                <LinkOverlay
-                  as={TrackedLink}
-                  category="contract_card"
-                  label={contractId}
-                  href={href}
-                  trackingProps={{
-                    publisher,
-                    contractId,
-                    version,
-                    ...(tracking || {}),
-                  }}
-                  _hover={{ textDecor: "none" }}
-                >
-                  <Heading as="h3" noOfLines={1} size="label.lg">
-                    {publishedContractResult.data?.displayName ||
-                      publishedContractResult.data?.name}
-                  </Heading>
-                </LinkOverlay>
+          {showSkeleton ||
+            (publishedContractResult.data?.version &&
+              publishedContractResult.data?.audit && (
+                <Text size="label.sm">·</Text>
+              ))}
+          {(showSkeleton || publishedContractResult.data?.version) && (
+            <Flex align="center" gap={0.5}>
+              <Skeleton isLoaded={!showSkeleton}>
+                <Text color="inherit" size="label.sm" fontWeight={500}>
+                  v{publishedContractResult.data?.version}
+                </Text>
               </Skeleton>
             </Flex>
-            <SkeletonText
-              isLoaded={!showSkeleton}
-              spacing={3}
-              noOfLines={2}
-              my={showSkeleton ? 2 : 0}
-            >
-              <Text size="body.md" noOfLines={slim ? 1 : 2}>
-                {publishedContractResult.data?.description}
-              </Text>
-            </SkeletonText>
-          </Flex>
-          <Flex
-            mt="auto"
-            pt={1}
-            justify="space-between"
-            align="center"
-            as="footer"
-          >
-            <ContractPublisher
-              addressOrEns={publishedContractResult.data?.publisher}
-              showSkeleton={showSkeleton}
-            />
-            <Flex
-              align="center"
-              gap={4}
-              color="rgba(255,255,255,.7)"
-              _light={{ color: "rgba(0,0,0,.6)" }}
-            >
-              {(showSkeleton || publishedContractResult.data?.audit) && (
-                <Flex
-                  isExternal
-                  as={Link}
-                  align="center"
-                  gap={0.5}
-                  href={replaceIpfsUrl(
-                    publishedContractResult.data?.audit || "",
-                  )}
-                  _hover={{
-                    _dark: {
-                      color: "green.300",
-                    },
-                    _light: {
-                      color: "green.500",
-                    },
-                  }}
-                >
-                  <Skeleton boxSize={5} isLoaded={!showSkeleton}>
-                    <Icon as={BsShieldCheck} />
-                  </Skeleton>
-                  <Skeleton isLoaded={!showSkeleton}>
-                    <Text color="inherit" size="label.sm" fontWeight={500}>
-                      Audited
-                    </Text>
-                  </Skeleton>
-                </Flex>
-              )}
-              {(showSkeleton || publishedContractResult.data?.version) && (
-                <Flex align="center" gap={0.5}>
-                  <Skeleton isLoaded={!showSkeleton}>
-                    <Text color="inherit" size="label.sm" fontWeight={500}>
-                      v{publishedContractResult.data?.version}
-                    </Text>
-                  </Skeleton>
-                </Flex>
-              )}
-            </Flex>
-          </Flex>
+          )}
         </Flex>
-        {/* <ExtensionBar
-          extensions={publishedContractResult.data?.extensions || []}
-        /> */}
+
+        <Flex direction="column" gap={4}>
+          <Skeleton
+            noOfLines={1}
+            isLoaded={!showSkeleton}
+            w={showSkeleton ? "50%" : "auto"}
+          >
+            <LinkOverlay
+              as={TrackedLink}
+              category="contract_card"
+              label={contractId}
+              href={href}
+              trackingProps={{
+                publisher,
+                contractId,
+                version,
+                ...(tracking || {}),
+              }}
+              _hover={{ textDecor: "none" }}
+            >
+              <Heading as="h3" noOfLines={1} size="label.lg">
+                {publishedContractResult.data?.displayName ||
+                  publishedContractResult.data?.name}
+              </Heading>
+            </LinkOverlay>
+          </Skeleton>
+
+          <SkeletonText
+            isLoaded={!showSkeleton}
+            spacing={3}
+            noOfLines={2}
+            my={showSkeleton ? 2 : 0}
+          >
+            <Text size="body.md" noOfLines={2}>
+              {publishedContractResult.data?.description}
+            </Text>
+          </SkeletonText>
+        </Flex>
+        <Flex
+          pt={3}
+          mt="auto"
+          justify="space-between"
+          align="center"
+          as="footer"
+        >
+          <ContractPublisher
+            addressOrEns={publishedContractResult.data?.publisher}
+            showSkeleton={showSkeleton}
+          />
+        </Flex>
       </Card>
     </LinkBox>
   );

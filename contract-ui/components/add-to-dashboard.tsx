@@ -13,7 +13,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { getDashboardChainRpc } from "lib/rpc";
 import { useMemo, useState } from "react";
-import { FiMinus, FiPlus } from "react-icons/fi";
+import { FiPlus } from "react-icons/fi";
 import { Button } from "tw-components";
 
 const TRACKING_CATEGORY = "add_to_dashboard_upsell";
@@ -110,8 +110,6 @@ export const AddToDashboardToggleButton: React.FC<AddToDashboardCardProps> = ({
   return isAlreadyOnDashboard ? (
     <Button
       variant="outline"
-      size="xs"
-      leftIcon={<Icon as={FiMinus} />}
       isLoading={addContract.isLoading || statusUnknown}
       isDisabled={!chain?.chainId}
       onClick={() => {
@@ -157,8 +155,15 @@ export const AddToDashboardToggleButton: React.FC<AddToDashboardCardProps> = ({
     </Button>
   ) : (
     <Button
-      variant="outline"
-      size="xs"
+      variant="solid"
+      bg="bgBlack"
+      color="bgWhite"
+      _hover={{
+        opacity: 0.85,
+      }}
+      _active={{
+        opacity: 0.75,
+      }}
       leftIcon={<Icon as={FiPlus} />}
       isLoading={addContract.isLoading || statusUnknown}
       isDisabled={!chain?.chainId || isAlreadyOnDashboard}
