@@ -218,6 +218,7 @@ interface ContractTableProps {
     address: string;
     contractType: () => Promise<ContractType>;
     metadata: () => Promise<z.output<typeof CommonContractOutputSchema>>;
+    extensions: () => Promise<string[]>;
   }[];
   isFetching?: boolean;
 }

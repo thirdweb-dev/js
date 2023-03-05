@@ -17,7 +17,7 @@ import {
   useProgram,
   useSetClaimConditions,
 } from "@thirdweb-dev/react/solana";
-import { NFTDropUpdateableConditionsInputSchema } from "@thirdweb-dev/sdk/solana";
+import { NFTDropUpdatableConditionsInputSchema } from "@thirdweb-dev/sdk/solana";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { PriceInput } from "contract-ui/tabs/claim-conditions/components/price-input";
@@ -93,7 +93,7 @@ const ClaimConditionsProgramForm: React.FC<{ address: string }> = ({
   }, [query.data]);
 
   const { register, setValue, getFieldState, formState, watch, handleSubmit } =
-    useForm<z.input<typeof NFTDropUpdateableConditionsInputSchema>>({
+    useForm<z.input<typeof NFTDropUpdatableConditionsInputSchema>>({
       defaultValues: transformedQueryData,
       values: transformedQueryData,
       resetOptions: {
