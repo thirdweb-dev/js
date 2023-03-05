@@ -99,7 +99,7 @@ describe("NFTDrop", async () => {
     const claimed = await drop.getAllClaimed();
 
     expect(all.length).to.equal(5);
-    expect(all.filter((nft) => nft.supply > 0).length).to.equal(3);
+    expect(all.filter((nft) => parseInt(nft.supply) > 0).length).to.equal(3);
     expect(claimed.length).to.equal(3);
   });
 
@@ -118,7 +118,7 @@ describe("NFTDrop", async () => {
 
     const all = await burnDrop.getAllClaimed();
     expect(all.length).to.eq(2);
-    expect(all[0].supply).to.eq(1);
+    expect(all[0].supply).to.eq("1");
 
     await burnDrop.burn(all[0].metadata.id);
     const all2 = await burnDrop.getAllClaimed();
@@ -205,7 +205,7 @@ describe("NFTDrop", async () => {
     let all = await contract.getAll();
     expect(all.length).to.equal(5);
     expect(all[0].metadata.name).to.equal("NFT #1");
-    expect(all.filter((nft) => nft.supply > 0).length).to.equal(0);
+    expect(all.filter((nft) => parseInt(nft.supply) > 0).length).to.equal(0);
 
     await contract.claimConditions.set({
       price: 0,
@@ -215,15 +215,15 @@ describe("NFTDrop", async () => {
     await contract.claim(2);
     all = await contract.getAll();
     expect(all.length).to.equal(5);
-    expect(all[0].supply).to.equal(1);
-    expect(all[1].supply).to.equal(1);
-    expect(all[2].supply).to.equal(0);
+    expect(all[0].supply).to.equal("1");
+    expect(all[1].supply).to.equal("1");
+    expect(all[2].supply).to.equal("0");
 
     all = await contract.getAll({ start: 2, count: 3 });
     expect(all.length).to.equal(3);
-    expect(all.filter((nft) => nft.supply > 0).length).to.equal(0);
+    expect(all.filter((nft) => parseInt(nft.supply) > 0).length).to.equal(0);
 
     all = await contract.getAll({ start: 0, count: 3 });
-    expect(all.filter((nft) => nft.supply > 0).length).to.equal(2);
+    expect(all.filter((nft) => parseInt(nft.supply) > 0).length).to.equal(2);
   });
 });

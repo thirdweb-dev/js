@@ -91,10 +91,10 @@ describe("Edition Contract", async () => {
       supply: 10,
     });
     const nft = await bundleContract.get(tx.id);
-    expect(nft.supply).to.eq(10);
+    expect(nft.supply).to.eq("10");
     await bundleContract.mintAdditionalSupply(tx.id, 10);
     const nft2 = await bundleContract.get(tx.id);
-    expect(nft2.supply).to.eq(20);
+    expect(nft2.supply).to.eq("20");
   });
 
   it("should mint with URI", async () => {
@@ -138,8 +138,8 @@ describe("Edition Contract", async () => {
     expect(nfts).to.be.an("array").length(1);
     expect(nfts[0].metadata.image).to.be.equal("fake://myownfakeipfs");
     expect(nfts[0].owner).to.be.equal(adminWallet.address);
-    expect(nfts[0].quantityOwned).to.be.equal(100);
-    expect(nfts[0].supply).to.be.equal(100);
+    expect(nfts[0].quantityOwned).to.be.equal("100");
+    expect(nfts[0].supply).to.be.equal("100");
 
     const bobsNfts = await bundleContract.getOwned(bobWallet.address);
     expect(bobsNfts)
@@ -148,11 +148,11 @@ describe("Edition Contract", async () => {
 
     await bundleContract.transfer(bobWallet.address, 0, 20);
     const adminNft = await bundleContract.getOwned(adminWallet.address);
-    expect(adminNft[0].quantityOwned).to.be.equal(80);
+    expect(adminNft[0].quantityOwned).to.be.equal("80");
     const bobsNftsAfterTransfer = await bundleContract.getOwned(
       bobWallet.address,
     );
-    expect(bobsNftsAfterTransfer[0].quantityOwned).to.be.equal(20);
+    expect(bobsNftsAfterTransfer[0].quantityOwned).to.be.equal("20");
   });
 
   it("should airdrop edition tokens to different wallets", async () => {
@@ -179,8 +179,8 @@ describe("Edition Contract", async () => {
 
     const samOwned = await bundleContract.getOwned(samWallet.address);
     const bobOwned = await bundleContract.getOwned(bobWallet.address);
-    expect(samOwned[0].quantityOwned).to.be.equal(5);
-    expect(bobOwned[0].quantityOwned).to.be.equal(3);
+    expect(samOwned[0].quantityOwned).to.be.equal("5");
+    expect(bobOwned[0].quantityOwned).to.be.equal("3");
   });
 
   it("should fail airdrop because not enough NFTs owned", async () => {

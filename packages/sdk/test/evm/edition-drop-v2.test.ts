@@ -235,7 +235,7 @@ describe("Edition Drop Contract (V2)", async () => {
       await bdContract.claim("0", 1);
     }
     const bundle = await bdContract.get("0");
-    assert(bundle.supply === testWallets.length);
+    assert(parseInt(bundle.supply) === testWallets.length);
 
     const claimers = await bdContract.history.getAllClaimerAddresses("0");
     expect(claimers.length).to.eq(testWallets.length);
@@ -278,7 +278,7 @@ describe("Edition Drop Contract (V2)", async () => {
       }
     }
     const bundle = await bdContract.get("0");
-    assert(bundle.supply === testWallets.length - 1);
+    assert(parseInt(bundle.supply) === testWallets.length - 1);
   });
 
   it("should return the newly minted tokens", async () => {
@@ -801,7 +801,7 @@ describe("Edition Drop Contract (V2)", async () => {
         samWallet.address,
     );
     assert(
-      (await bdContract.getOwned(samWallet.address))[0].quantityOwned === 3,
+      (await bdContract.getOwned(samWallet.address))[0].quantityOwned === "3",
     );
   });
 
