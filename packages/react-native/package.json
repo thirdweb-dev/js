@@ -15,7 +15,6 @@
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
-    "build": "tsc",
     "push": "yalc push"
   },
   "keywords": [
