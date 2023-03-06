@@ -4,6 +4,7 @@ import { Button } from "../../components/buttons";
 import { iconSize, Theme } from "../../design-system";
 import { isMobile } from "../../evm/utils/isMobile";
 import { useInstalledWallets } from "../hooks/useInstalledWallets";
+import { WalletMeta } from "../types";
 import { WalletSelector } from "./WalletSelector";
 import { CoinbaseWalletIcon } from "./icons/CoinbaseWalletIcon";
 import { DeviceWalletIcon } from "./icons/DeviceWalletIcon";
