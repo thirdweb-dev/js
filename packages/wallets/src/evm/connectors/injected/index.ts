@@ -324,7 +324,9 @@ export class InjectedConnector extends Connector<
         params: [{ chainId: chainIdHex }],
       });
       const chain = this.chains.find((_chain) => _chain.id === chainId);
-      if (chain) return chain;
+      if (chain) {
+        return chain;
+      }
 
       return {
         id: chainId,

@@ -16,7 +16,9 @@ export const ScanCoinbase: React.FC<{
   const twWalletContext = useThirdwebWallet();
 
   useEffect(() => {
-    if (!twWalletContext) return;
+    if (!twWalletContext) {
+      return;
+    }
 
     const coinbaseWallet = createInstance(CoinbaseWallet) as InstanceType<
       typeof CoinbaseWallet
@@ -33,7 +35,7 @@ export const ScanCoinbase: React.FC<{
       .then(() => {
         twWalletContext.handleWalletConnect(coinbaseWallet);
       });
-  }, [twWalletContext]);
+  }, [createInstance, twWalletContext]);
 
   return (
     <ScanScreen

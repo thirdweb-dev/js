@@ -305,6 +305,9 @@ export class CoinbaseWalletConnector extends Connector<
 
   async getQrCode() {
     await this.getProvider();
-    return this.#client!.getQrUrl();
+    if (!this.#client) {
+      throw new Error("Coinbase Wallet SDK not initialized");
+    }
+    return this.#client.getQrUrl();
   }
 }

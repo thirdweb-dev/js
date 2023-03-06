@@ -175,6 +175,7 @@ export function ThirdwebWalletProvider(
     handleWalletConnect,
     props.shouldAutoConnect,
     activeWallet,
+    connectionStatus,
   ]);
 
   const connectWallet = useCallback(

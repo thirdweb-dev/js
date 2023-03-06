@@ -53,14 +53,6 @@ const walletNames: Record<SupportedWallet["id"], string> = {
   // coinbaseWalletMobile: "",
 };
 
-export type WalletMeta = {
-  id: SupportedWallet["id"];
-  name: string;
-  icon: JSX.Element;
-  installed: boolean;
-  onClick: () => Promise<void>;
-};
-
 export const ConnectWalletFlow: React.FC<{
   btnClass?: string;
   btnTitle?: string;

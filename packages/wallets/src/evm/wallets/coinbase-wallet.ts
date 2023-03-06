@@ -55,6 +55,6 @@ export class CoinbaseWallet extends AbstractBrowserWallet<{
     if (!this.coinbaseConnector) {
       throw new Error("Coinbase connector not initialized");
     }
-    return this.coinbaseConnector!.getQrCode();
+    return this.coinbaseConnector.getQrCode();
   }
 }

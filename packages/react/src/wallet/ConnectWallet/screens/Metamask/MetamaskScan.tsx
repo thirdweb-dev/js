@@ -16,7 +16,9 @@ export const ScanMetamask: React.FC<{
   const twWalletContext = useThirdwebWallet();
 
   useEffect(() => {
-    if (!twWalletContext) return;
+    if (!twWalletContext) {
+      return;
+    }
 
     const metamask = createInstance(MetamaskWallet) as InstanceType<
       typeof MetamaskWallet
@@ -31,7 +33,7 @@ export const ScanMetamask: React.FC<{
         twWalletContext.handleWalletConnect(metamask);
       },
     });
-  }, [twWalletContext]);
+  }, [createInstance, twWalletContext]);
 
   return (
     <ScanScreen

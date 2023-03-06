@@ -1,7 +1,7 @@
 import { Spacer } from "../../components/Spacer";
 import { ModalTitle } from "../../components/modalElements";
-import { fontSize, media, radius, spacing, Theme } from "../../design-system";
-import { WalletMeta } from "./Connect";
+import { fontSize, radius, spacing, Theme } from "../../design-system";
+import { WalletMeta } from "../types";
 import styled from "@emotion/styled";
 
 export const WalletSelector: React.FC<{ walletsMeta: WalletMeta[] }> = (
@@ -20,18 +20,18 @@ export const WalletSelector: React.FC<{ walletsMeta: WalletMeta[] }> = (
       <Spacer y="xl" />
 
       <WalletList>
-        {props.walletsMeta.map((WalletMeta) => {
+        {props.walletsMeta.map((walletMeta) => {
           return (
-            <li key={WalletMeta.id}>
+            <li key={walletMeta.id}>
               <WalletButton
                 type="button"
                 onClick={() => {
-                  WalletMeta.onClick();
+                  walletMeta.onClick();
                 }}
               >
-                {WalletMeta.icon}
-                <WalletName>{WalletMeta.name}</WalletName>
-                {WalletMeta.installed && (
+                {walletMeta.icon}
+                <WalletName>{walletMeta.name}</WalletName>
+                {walletMeta.installed && (
                   <InstallBadge> Installed </InstallBadge>
                 )}
               </WalletButton>

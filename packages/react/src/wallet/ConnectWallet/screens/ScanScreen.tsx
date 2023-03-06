@@ -65,7 +65,7 @@ export const ScanScreen: React.FC<{
         <Spacer y="xl" />
 
         <LinkButton onClick={props.onGetStarted}>
-          Don't have {props.walletName} Wallet?
+          Don&apos;t have ${props.walletName} Wallet?
         </LinkButton>
       </div>
     </>

@@ -1,6 +1,6 @@
-import { goerli } from "../../lib/wagmi-chains/goerli";
-import { mainnet } from "../../lib/wagmi-chains/mainnet";
-import type { Address, Chain } from "../../lib/wagmi-core";
+import { goerli } from "../wagmi-chains/goerli";
+import { mainnet } from "../wagmi-chains/mainnet";
+import type { Address, Chain } from "../wagmi-core";
 import { default as EventEmitter } from "eventemitter3";
 
 export type ConnectorData<Provider = any> = {
@@ -69,11 +69,12 @@ export abstract class Connector<
   protected getBlockExplorerUrls(chain: Chain) {
     const { default: blockExplorer, ...blockExplorers } =
       chain.blockExplorers ?? {};
-    if (blockExplorer)
+    if (blockExplorer) {
       return [
         blockExplorer.url,
         ...Object.values(blockExplorers).map((x) => x.url),
       ];
+    }
   }
 
   protected isChainUnsupported(chainId: number) {

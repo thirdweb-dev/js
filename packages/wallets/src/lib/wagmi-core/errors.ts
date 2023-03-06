@@ -24,9 +24,12 @@ export class RpcError<T = undefined> extends Error {
     },
   ) {
     const { cause, code, data } = options;
-    if (!Number.isInteger(code)) throw new Error('"code" must be an integer.');
-    if (!message || typeof message !== "string")
+    if (!Number.isInteger(code)) {
+      throw new Error('"code" must be an integer.');
+    }
+    if (!message || typeof message !== "string") {
       throw new Error('"message" must be a nonempty string.');
+    }
 
     super(message);
     this.cause = cause;
@@ -59,10 +62,11 @@ export class ProviderRpcError<T = undefined> extends RpcError<T> {
     },
   ) {
     const { cause, code, data } = options;
-    if (!(Number.isInteger(code) && code >= 1000 && code <= 4999))
+    if (!(Number.isInteger(code) && code >= 1000 && code <= 4999)) {
       throw new Error(
         '"code" must be an integer such that: 1000 <= code <= 4999',
       );
+    }
 
     super(message, { cause, code, data });
   }

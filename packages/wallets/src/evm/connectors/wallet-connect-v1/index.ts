@@ -297,7 +297,7 @@ export class WalletConnectV1Connector extends Connector<
     this.#storage.setItem(LAST_SESSION, sessionStr);
   }
 
-  protected onSwitchChain = (chainId: string) => {
+  protected onSwitchChain = () => {
     this.emit("message", { type: "switch_chain" });
   };
 

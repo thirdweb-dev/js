@@ -78,7 +78,9 @@ export const CreateDeviceWallet = () => {
   const passwordMismatch = confirmPassword && password !== confirmPassword;
 
   const handleConnect = () => {
-    if (passwordMismatch) return;
+    if (passwordMismatch){
+      return;
+    }
     connect(DeviceWallet, {
       password,
     });
