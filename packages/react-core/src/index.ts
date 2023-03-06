@@ -29,6 +29,7 @@ export type { RequiredParam } from "./core/query-utils/required-param";
 export type {
   SupportedWallet,
   ExtraCoreWalletOptions,
+  SupportedWalletInstance,
 } from "./core/types/wallet";
 
 // auth
