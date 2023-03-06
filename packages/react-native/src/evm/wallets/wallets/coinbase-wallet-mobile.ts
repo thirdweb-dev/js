@@ -9,6 +9,11 @@ import {
   WalletOptions,
 } from "@thirdweb-dev/wallets";
 
+type CoinbaseWalletOptions = Omit<
+  WalletOptions<CoinbaseMobileWalletConnectorOptions>,
+  "callbackURL"
+>;
+
 export class CoinbaseWalletMobile extends AbstractBrowserWallet<CoinbaseMobileWalletConnectorOptions> {
   connector?: TWConnector;
   coinbaseConnector?: CoinbaseMobileWalletConnector;
@@ -18,8 +23,8 @@ export class CoinbaseWalletMobile extends AbstractBrowserWallet<CoinbaseMobileWa
     return "Coinbase Wallet Mobile" as const;
   }
 
-  constructor(options: WalletOptions<CoinbaseMobileWalletConnectorOptions>) {
-    super(CoinbaseWalletMobile.id, options);
+  constructor(options: CoinbaseWalletOptions) {
+    super(CoinbaseWalletMobile.id, { ...options, callbackURL: "" });
   }
 
   protected async getConnector(): Promise<TWConnector> {

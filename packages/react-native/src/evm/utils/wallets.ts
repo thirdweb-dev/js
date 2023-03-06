@@ -3,7 +3,7 @@ import {
   SupportedWallet as SupportedWalletMeta,
   WalletMeta,
 } from "../types/wallet";
-import { SupportedWallet } from "@thirdweb-dev/react-core";
+import { SupportedWalletInstance } from "@thirdweb-dev/react-core";
 import invariant from "tiny-invariant";
 
 export function getWalletsMeta(
@@ -15,7 +15,7 @@ export function getWalletsMeta(
 }
 
 export function getWalletMeta(
-  classInstance: InstanceType<SupportedWallet>,
+  classInstance: SupportedWalletInstance,
 ): WalletMeta {
   const walletMeta = Object.values(walletsMetadata).find((wallet) => {
     return (

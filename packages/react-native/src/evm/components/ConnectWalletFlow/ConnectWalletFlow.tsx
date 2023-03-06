@@ -47,9 +47,16 @@ export const ConnectWalletFlow = () => {
     setActiveWalletMeta(wallet_);
 
     if (wallet_.versions.includes("2")) {
-      connect(WalletConnect, {});
+      // default to v2
+      const walletClass = walletClasses.find((w) => w.id === WalletConnect.id);
+      invariant(walletClass, "Wallet class not found");
+      connect(walletClass, {});
     } else if (wallet_.versions.includes("1")) {
-      connect(WalletConnectV1, {});
+      const walletClass = walletClasses.find(
+        (w) => w.id === WalletConnectV1.id,
+      );
+      invariant(walletClass, "Wallet class not found");
+      connect(walletClass, {});
     } else {
       const walletClass = walletClasses.find((item) => {
         return item.id.toLowerCase().includes(wallet_.id.toLowerCase());

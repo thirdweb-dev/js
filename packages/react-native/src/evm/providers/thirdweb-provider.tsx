@@ -1,19 +1,16 @@
 import { createAsyncLocalStorage } from "../../core/AsyncStorage";
 import { DEFAULT_API_KEY } from "../constants/rpc";
-import { walletsMetadata } from "../constants/walletsMetadata";
 import { ThirdwebContextProvider } from "../contexts/thirdweb-context-provider";
 import { WalletsProvider } from "../contexts/wallets-context";
-import { SupportedWallet, WalletMeta } from "../types/wallet";
+import { WalletMeta } from "../types/wallet";
+import { CoinbaseWalletMobile } from "../wallets/wallets/coinbase-wallet-mobile";
+import { MetamaskWallet } from "../wallets/wallets/wallets";
 import {
+  SupportedWallet,
   ThirdwebProvider,
   ThirdwebProviderProps,
 } from "@thirdweb-dev/react-core";
-import {
-  DeviceBrowserWallet,
-  WalletConnect,
-  WalletConnectV1,
-} from "@thirdweb-dev/wallets";
-import React, { PropsWithChildren, useMemo, useState } from "react";
+import React, { PropsWithChildren, useState } from "react";
 
 export type ThirdwebProviderRNProps = PropsWithChildren<
   {
@@ -26,35 +23,12 @@ export function ThirdwebProviderRN({
   children,
   createWalletStorage,
   thirdwebApiKey = DEFAULT_API_KEY,
-  supportedWallets = ["metamask", "coinbase"],
+  supportedWallets = [MetamaskWallet, CoinbaseWalletMobile],
   ...props
 }: ThirdwebProviderRNProps) {
   const [activeWalletMeta, setActiveWalletMeta] = useState<
     WalletMeta | undefined
   >();
-
-  const supportedWalletsRN = useMemo(() => {
-    if (!supportedWallets) {
-      return [WalletConnect, DeviceBrowserWallet];
-    }
-
-    return supportedWallets.map((wallet) => {
-      if (walletsMetadata[wallet].versions.includes("2")) {
-        return WalletConnect;
-      } else if (walletsMetadata[wallet].versions.includes("1")) {
-        return WalletConnectV1;
-      } else {
-        switch (wallet) {
-          case "deviceWallet":
-            return DeviceBrowserWallet;
-          // case "coinbase":
-          //   return CoinbaseWalletMobile;
-        }
-
-        throw new Error("Unsupported wallet: " + wallet);
-      }
-    });
-  }, [supportedWallets]);
 
   return (
     <WalletsProvider
@@ -67,7 +41,7 @@ export function ThirdwebProviderRN({
       <ThirdwebProvider
         {...props}
         thirdwebApiKey={thirdwebApiKey}
-        supportedWallets={supportedWalletsRN}
+        supportedWallets={supportedWallets}
         createWalletStorage={
           createWalletStorage ? createWalletStorage : createAsyncLocalStorage
         }
