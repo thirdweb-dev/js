@@ -1,6 +1,6 @@
 import { createAsyncLocalStorage } from "../core/WalletStorage";
-import { Chain as TWChain } from "@thirdweb-dev/chains";
 import { TW_WC_PROJECT_ID } from "@thirdweb-dev/react-core";
+import { ExtraCoreWalletOptions } from "@thirdweb-dev/react-core";
 import type {
   DeviceWalletOptions as DeviceWalletCoreOptions,
   MetamaskWalletOptions as MetamaskCoreOptions,
@@ -25,10 +25,13 @@ const walletStorages = {
   coinbase: createAsyncLocalStorage("coinbase"),
 };
 
+// Metamask ----------------------------------------
+
 type MetamaskWalletOptions = Omit<
   MetamaskCoreOptions,
   "connectorStorage" | "walletStorage"
->;
+> &
+  ExtraCoreWalletOptions;
 
 const connectorStorage = createAsyncLocalStorage("connector");
 export class MetamaskWallet extends MetamaskWalletCore {
@@ -43,24 +46,34 @@ export class MetamaskWallet extends MetamaskWalletCore {
   }
 }
 
+// WalletConnect v1 ----------------------------------------
+
 type WC1Options = Omit<
   WalletOptions<WalletConnectV1Options>,
   "qrcode" | "walletStorage"
->;
+> &
+  ExtraCoreWalletOptions;
 export class WalletConnectV1 extends WalletConnectV1Core {
   constructor(options: WC1Options) {
     super({
       ...options,
       qrcode: true,
       walletStorage: walletStorages.walletConnectV1,
+      dappMetadata: {
+        ...options.dappMetadata,
+        isDarkMode: options.theme === "dark",
+      },
     });
   }
 }
 
+// WalletConnect v2 ----------------------------------------
+
 type WC2Options = Omit<
   WalletOptions<WalletConnectOptions>,
   "projectId" | "qrcode" | "walletStorage"
->;
+> &
+  ExtraCoreWalletOptions;
 
 export class WalletConnect extends WalletConnectCore {
   constructor(options: WC2Options) {
@@ -69,16 +82,23 @@ export class WalletConnect extends WalletConnectCore {
       qrcode: true,
       projectId: TW_WC_PROJECT_ID,
       walletStorage: walletStorages.walletConnect,
+      dappMetadata: {
+        ...options.dappMetadata,
+        isDarkMode: options.theme === "dark",
+      },
     });
   }
 }
+
+// Device Wallet ----------------------------------------
 
 const deviceWalletStorage = createAsyncLocalStorage("deviceWallet");
 
 type DeviceWalletOptions = Omit<
   WalletOptions<DeviceWalletCoreOptions>,
   "storage" | "storageType" | "walletStorage"
-> & { chain: TWChain };
+> &
+  ExtraCoreWalletOptions;
 
 export class DeviceWallet extends DeviceWalletCore {
   constructor(options: DeviceWalletOptions) {
@@ -101,12 +121,19 @@ export class DeviceWallet extends DeviceWalletCore {
   }
 }
 
-type CoinbaseWalletOptions = Omit<CoinbaseWalletOptionsCore, "walletStorage">;
+// Coinbase Wallet ----------------------------------------
+
+type CoinbaseWalletOptions = Omit<CoinbaseWalletOptionsCore, "walletStorage"> &
+  ExtraCoreWalletOptions;
 export class CoinbaseWallet extends CoinbaseWalletCore {
   constructor(options: CoinbaseWalletOptions) {
     super({
       ...options,
       walletStorage: walletStorages.walletConnect,
+      dappMetadata: {
+        ...options.dappMetadata,
+        isDarkMode: options.theme === "dark",
+      },
     });
   }
 }

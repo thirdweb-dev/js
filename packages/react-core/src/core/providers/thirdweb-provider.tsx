@@ -13,12 +13,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import type { SDKOptions } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
-  CoinbaseWallet,
-  CreateAsyncStorage,
-  DeviceBrowserWallet,
-  MetaMask,
-} from "@thirdweb-dev/wallets";
+import type { CreateAsyncStorage } from "@thirdweb-dev/wallets";
 import React, { useMemo } from "react";
 
 /**

@@ -30,7 +30,7 @@ describe("NFTCollection", async () => {
     const nft = await collection.get(mint);
     expect(nft.metadata.name).to.eq("Test NFT");
     expect(nft.owner).to.eq(sdk.wallet.getAddress());
-    expect(nft.supply).to.eq(1);
+    expect(nft.supply).to.eq("1");
     expect(nft.metadata);
   });
 
@@ -60,10 +60,10 @@ describe("NFTCollection", async () => {
       description: "Test Description",
     });
     let nft = await collection.get(mint);
-    expect(nft.supply).to.eq(1);
+    expect(nft.supply).to.eq("1");
     await collection.mintAdditionalSupply(mint, 2);
     nft = await collection.get(mint);
-    expect(nft.supply).to.eq(3);
+    expect(nft.supply).to.eq("3");
   });
 
   it("should transfer NFTs", async () => {
@@ -103,7 +103,7 @@ describe("NFTCollection", async () => {
     expect(balance).to.equal(1);
 
     const supply = await collection.supplyOf(mint);
-    expect(supply).to.equal(4);
+    expect(supply).to.equal("4");
   });
 
   it("test supply of", async () => {
@@ -118,7 +118,7 @@ describe("NFTCollection", async () => {
     }
 
     const supply = await collection.supplyOf(mint);
-    expect(supply).to.equal(amount + 1);
+    expect(parseInt(supply)).to.equal(amount + 1);
   });
 
   it("test burn supply", async () => {
@@ -128,11 +128,11 @@ describe("NFTCollection", async () => {
     });
 
     let supply = await collection.supplyOf(mint);
-    expect(supply).to.equal(1);
+    expect(supply).to.equal("1");
 
     await collection.burn(mint);
     supply = await collection.supplyOf(mint);
-    expect(supply).to.equal(0);
+    expect(supply).to.equal("0");
   });
 
   it("should burn nfts", async () => {

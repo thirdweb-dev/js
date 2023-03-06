@@ -7,15 +7,19 @@ import {
 } from "@thirdweb-dev/wallets";
 import { Chain } from "@wagmi/core";
 
+// these are extra options provided by the react-core package
+export type ExtraCoreWalletOptions = {
+  theme?: "light" | "dark";
+  // for device wallet
+  chain: TWChain;
+};
+
 export type WalletOptions = {
   chains?: Chain[];
   shouldAutoConnect?: boolean;
   coordinatorStorage: AsyncStorage;
   dappMetadata: DAppMetaData;
-  theme?: "light" | "dark";
-  // for device wallet
-  chain: TWChain;
-};
+} & ExtraCoreWalletOptions;
 
 type SupportedWalletInstance = InstanceType<typeof AbstractBrowserWallet> & {
   connector?: TWConnector;

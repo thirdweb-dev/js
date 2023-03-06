@@ -26,7 +26,10 @@ export type { ThirdwebProviderProps } from "./core/providers/thirdweb-provider";
 // Utilities and Others
 export { shouldNeverPersistQuery } from "./core/query-utils/query-key";
 export type { RequiredParam } from "./core/query-utils/required-param";
-export type { SupportedWallet } from "./core/types/wallet";
+export type {
+  SupportedWallet,
+  ExtraCoreWalletOptions,
+} from "./core/types/wallet";
 
 // auth
 export {

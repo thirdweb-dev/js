@@ -125,6 +125,7 @@ const WrappedThirdwebSDKProvider = <
       rpc: string[];
       chainId: number;
       nativeCurrency: { symbol: string; name: string; decimals: 18 };
+      slug: string;
     };
 
     const mergedOptions = {
