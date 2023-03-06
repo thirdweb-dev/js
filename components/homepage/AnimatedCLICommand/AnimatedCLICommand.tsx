@@ -64,7 +64,7 @@ function useCycledTyping(texts: string[]) {
         span.textContent = "";
       }
     };
-  });
+  }, [texts]);
 
   return spanRef;
 }
