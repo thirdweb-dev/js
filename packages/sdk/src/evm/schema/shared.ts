@@ -31,13 +31,8 @@ export const BigNumberTransformSchema = z
 // Important for address check to come before ENS so network request is only made when necessary
 export const AddressSchema = z.union(
   [
-    z.string().refine(
-      (arg) => utils.isAddress(arg),
-      (out) => {
-        return {
-          message: `${out} is not a valid address`,
-        };
-      },
+    z.custom<`0x${string}`>(
+      (address) => typeof address === "string" && utils.isAddress(address),
     ),
     EnsSchema,
   ],
@@ -86,3 +81,5 @@ export const ChainInfoInputSchema = z.object({
 });
 
 export type ChainInfo = z.infer<typeof ChainInfoInputSchema>;
+
+export type AddressInput = z.input<typeof AddressSchema>;
