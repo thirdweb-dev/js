@@ -15,7 +15,6 @@ export {
   useDisconnect,
   useSwitchChain,
   useWallets,
-  useDisplayUri,
 } from "./core/hooks/wallet-hooks";
 export { useThirdwebWallet } from "./core/providers/thirdweb-wallet-provider";
 
@@ -29,6 +28,7 @@ export type { RequiredParam } from "./core/query-utils/required-param";
 export type {
   SupportedWallet,
   ExtraCoreWalletOptions,
+  SupportedWalletInstance,
 } from "./core/types/wallet";
 
 // auth

@@ -1,5 +1,3 @@
-import { walletsMetadata } from "../constants/walletsMetadata";
-
 export type WalletMeta = {
   id: string;
   name: string;
@@ -10,5 +8,3 @@ export type WalletMeta = {
     universal: string;
   };
 };
-
-export type SupportedWallet = keyof typeof walletsMetadata;

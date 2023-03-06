@@ -1,18 +1,12 @@
-import { useSupportedWallets } from "../../contexts/wallets-context";
 import { WalletMeta } from "../../types/wallet";
-import { formatDisplayUri } from "../../utils/uri";
 import { getWalletsMeta } from "../../utils/wallets";
 import { TWModal } from "../base/modal/TWModal";
 import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
-import {
-  useConnect,
-  useDisplayUri,
-  useWallets,
-} from "@thirdweb-dev/react-core";
+import { useConnect, useWallets } from "@thirdweb-dev/react-core";
 import { WalletConnect, WalletConnectV1 } from "@thirdweb-dev/wallets";
-import React, { useEffect, useState } from "react";
-import { Text, StyleSheet, TouchableOpacity, Linking } from "react-native";
+import React, { useState } from "react";
+import { Text, StyleSheet, TouchableOpacity } from "react-native";
 import invariant from "tiny-invariant";
 
 export const ConnectWalletFlow = () => {
@@ -22,17 +16,8 @@ export const ConnectWalletFlow = () => {
   >();
 
   const connect = useConnect();
-  const supportedWallets = useSupportedWallets();
+  const supportedWallets = useWallets();
   const walletClasses = useWallets();
-  const displayUri = useDisplayUri();
-
-  useEffect(() => {
-    if (displayUri && activeWalletMeta && modalVisible) {
-      const fullUrl = formatDisplayUri(displayUri, activeWalletMeta);
-
-      Linking.openURL(fullUrl);
-    }
-  }, [activeWalletMeta, displayUri, modalVisible]);
 
   const onConnectPress = () => {
     setModalVisible(true);
@@ -47,9 +32,16 @@ export const ConnectWalletFlow = () => {
     setActiveWalletMeta(wallet_);
 
     if (wallet_.versions.includes("2")) {
-      connect(WalletConnect, {});
+      // default to v2
+      const walletClass = walletClasses.find((w) => w.id === WalletConnect.id);
+      invariant(walletClass, "Wallet class not found");
+      connect(walletClass, {});
     } else if (wallet_.versions.includes("1")) {
-      connect(WalletConnectV1, {});
+      const walletClass = walletClasses.find(
+        (w) => w.id === WalletConnectV1.id,
+      );
+      invariant(walletClass, "Wallet class not found");
+      connect(walletClass, {});
     } else {
       const walletClass = walletClasses.find((item) => {
         return item.id.toLowerCase().includes(wallet_.id.toLowerCase());

@@ -21,7 +21,9 @@ export type WalletOptions = {
   dappMetadata: DAppMetaData;
 } & ExtraCoreWalletOptions;
 
-type SupportedWalletInstance = InstanceType<typeof AbstractBrowserWallet> & {
+export type SupportedWalletInstance = InstanceType<
+  typeof AbstractBrowserWallet
+> & {
   connector?: TWConnector;
 };
 

@@ -1,7 +1,11 @@
+import { noopStorage } from "../../../core/AsyncStorage";
+import { walletsMetadata } from "../../constants/walletsMetadata";
+import { WalletMeta } from "../../types/wallet";
 import type {
   CoinbaseMobileWalletConnector,
   CoinbaseMobileWalletConnectorOptions,
 } from "../connectors/coinbase-wallet-mobile";
+import { IWalletWithMetadata } from "./wallets";
 import {
   AbstractBrowserWallet,
   TWConnector,
@@ -9,7 +13,15 @@ import {
   WalletOptions,
 } from "@thirdweb-dev/wallets";
 
-export class CoinbaseWalletMobile extends AbstractBrowserWallet<CoinbaseMobileWalletConnectorOptions> {
+type CoinbaseWalletOptions = Omit<
+  WalletOptions<CoinbaseMobileWalletConnectorOptions>,
+  "callbackURL" | "walletStorage"
+>;
+
+export class CoinbaseWalletMobile
+  extends AbstractBrowserWallet<CoinbaseMobileWalletConnectorOptions>
+  implements IWalletWithMetadata
+{
   connector?: TWConnector;
   coinbaseConnector?: CoinbaseMobileWalletConnector;
 
@@ -18,8 +30,16 @@ export class CoinbaseWalletMobile extends AbstractBrowserWallet<CoinbaseMobileWa
     return "Coinbase Wallet Mobile" as const;
   }
 
-  constructor(options: WalletOptions<CoinbaseMobileWalletConnectorOptions>) {
-    super(CoinbaseWalletMobile.id, options);
+  constructor(options: CoinbaseWalletOptions) {
+    super(CoinbaseWalletMobile.id, {
+      ...options,
+      callbackURL: new URL("https://thirdweb.com"),
+      walletStorage: new noopStorage(),
+    });
+  }
+
+  getMetadata(): WalletMeta {
+    return walletsMetadata.coinbase as WalletMeta;
   }
 
   protected async getConnector(): Promise<TWConnector> {
