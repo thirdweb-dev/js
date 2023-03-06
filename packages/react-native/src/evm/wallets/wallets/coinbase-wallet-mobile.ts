@@ -1,3 +1,4 @@
+import { noopStorage } from "../../../core/AsyncStorage";
 import type {
   CoinbaseMobileWalletConnector,
   CoinbaseMobileWalletConnectorOptions,
@@ -11,7 +12,7 @@ import {
 
 type CoinbaseWalletOptions = Omit<
   WalletOptions<CoinbaseMobileWalletConnectorOptions>,
-  "callbackURL"
+  "callbackURL" | "walletStorage"
 >;
 
 export class CoinbaseWalletMobile extends AbstractBrowserWallet<CoinbaseMobileWalletConnectorOptions> {
@@ -24,7 +25,11 @@ export class CoinbaseWalletMobile extends AbstractBrowserWallet<CoinbaseMobileWa
   }
 
   constructor(options: CoinbaseWalletOptions) {
-    super(CoinbaseWalletMobile.id, { ...options, callbackURL: "" });
+    super(CoinbaseWalletMobile.id, {
+      ...options,
+      callbackURL: new URL("https://thirdweb.com"),
+      walletStorage: new noopStorage(),
+    });
   }
 
   protected async getConnector(): Promise<TWConnector> {

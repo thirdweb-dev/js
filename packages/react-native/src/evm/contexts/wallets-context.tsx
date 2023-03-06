@@ -1,4 +1,5 @@
-import { SupportedWallet, WalletMeta } from "../types/wallet";
+import { WalletMeta } from "../types/wallet";
+import { SupportedWallet } from "@thirdweb-dev/react-core";
 import React, { PropsWithChildren, createContext, useContext } from "react";
 import invariant from "tiny-invariant";
 

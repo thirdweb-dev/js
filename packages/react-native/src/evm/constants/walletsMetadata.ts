@@ -10,8 +10,8 @@ export const walletsMetadata = {
       universal: "https://rnbwapp.com",
     },
   },
-  trustwallet: {
-    id: "trustwallet",
+  trust: {
+    id: "trust",
     name: "Trust Wallet",
     versions: ["1", "2"],
     image_url:
@@ -43,8 +43,8 @@ export const walletsMetadata = {
       universal: "",
     },
   },
-  deviceWallet: {
-    id: "deviceWallet",
+  device: {
+    id: "device",
     name: "Device Wallet",
     versions: ["custom"],
     image_url: "",
