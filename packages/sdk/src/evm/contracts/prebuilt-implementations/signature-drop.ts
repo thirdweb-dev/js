@@ -26,6 +26,7 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { PaperCheckout } from "../../integrations/thirdweb-checkout";
+import { Address, AddressOrEns } from "../../schema";
 import { Abi } from "../../schema/contracts/custom";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -236,8 +237,8 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
-    return this.contractWrapper.readContract.address;
+  getAddress(): Address {
+    return this.contractWrapper.readContract.address as Address;
   }
 
   /** ******************************
@@ -415,7 +416,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * @deprecated Use `contract.erc721.claim.prepare(...args)` instead
    */
   public async getClaimTransaction(
-    destinationAddress: string,
+    destinationAddress: AddressOrEns,
     quantity: BigNumberish,
     options?: ClaimOptions,
   ): Promise<Transaction> {
@@ -450,7 +451,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    */
   claimTo = buildTransactionFunction(
     async (
-      destinationAddress: string,
+      destinationAddress: AddressOrEns,
       quantity: BigNumberish,
       options?: ClaimOptions,
     ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {

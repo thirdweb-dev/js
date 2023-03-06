@@ -6,6 +6,7 @@ import {
   hasERC20Allowance,
   normalizePriceValue,
 } from "../../common/currency";
+import { resolveAddress } from "../../common/ens";
 import { isTokenApprovedForTransfer } from "../../common/marketplace";
 import { uploadOrExtractURI } from "../../common/nft";
 import { getRoleHash } from "../../common/role";
@@ -25,7 +26,7 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { PackVRF } from "../../core/classes/pack-vrf";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { Abi } from "../../schema";
+import { Abi, Address, AddressOrEns } from "../../schema";
 import { PackContractSchema } from "../../schema/contracts/packs";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
@@ -165,8 +166,8 @@ export class Pack extends StandardErc1155<PackContract> {
     this._vrf?.onNetworkUpdated(network);
   }
 
-  getAddress(): string {
-    return this.contractWrapper.readContract.address;
+  getAddress(): Address {
+    return this.contractWrapper.readContract.address as Address;
   }
 
   /** ******************************
@@ -223,7 +224,7 @@ export class Pack extends StandardErc1155<PackContract> {
    *
    * @returns The pack metadata for all the owned packs in the contract.
    */
-  public async getOwned(walletAddress?: string): Promise<NFT[]> {
+  public async getOwned(walletAddress?: AddressOrEns): Promise<NFT[]> {
     return this.erc1155.getOwned(walletAddress);
   }
 
@@ -287,7 +288,7 @@ export class Pack extends StandardErc1155<PackContract> {
             tokenMetadata.decimals,
           );
           erc20Rewards.push({
-            contractAddress: reward.assetContract,
+            contractAddress: reward.assetContract as Address,
             quantityPerReward: amount.toString(),
             totalRewards: BigNumber.from(rewardAmount).div(amount).toString(),
           });
@@ -295,14 +296,14 @@ export class Pack extends StandardErc1155<PackContract> {
         }
         case 1: {
           erc721Rewards.push({
-            contractAddress: reward.assetContract,
+            contractAddress: reward.assetContract as Address,
             tokenId: reward.tokenId.toString(),
           });
           break;
         }
         case 2: {
           erc1155Rewards.push({
-            contractAddress: reward.assetContract,
+            contractAddress: reward.assetContract as Address,
             tokenId: reward.tokenId.toString(),
             quantityPerReward: amount.toString(),
             totalRewards: BigNumber.from(reward.totalAmount)
@@ -499,7 +500,7 @@ export class Pack extends StandardErc1155<PackContract> {
    * ```
    */
   public async createTo(
-    to: string,
+    to: AddressOrEns,
     metadataWithRewards: PackMetadataInput,
   ): Promise<TransactionResultWithId<NFT>> {
     const uri = await uploadOrExtractURI(
@@ -526,7 +527,7 @@ export class Pack extends StandardErc1155<PackContract> {
       uri,
       parsedMetadata.openStartTime,
       parsedMetadata.rewardsPerPack,
-      to,
+      await resolveAddress(to),
     ]);
 
     const event = this.contractWrapper.parseLogs<PackCreatedEvent>(
@@ -599,7 +600,7 @@ export class Pack extends StandardErc1155<PackContract> {
             reward.assetContract,
           );
           erc20Rewards.push({
-            contractAddress: reward.assetContract,
+            contractAddress: reward.assetContract as Address,
             quantityPerReward: ethers.utils
               .formatUnits(reward.totalAmount, tokenMetadata.decimals)
               .toString(),
@@ -608,14 +609,14 @@ export class Pack extends StandardErc1155<PackContract> {
         }
         case 1: {
           erc721Rewards.push({
-            contractAddress: reward.assetContract,
+            contractAddress: reward.assetContract as Address,
             tokenId: reward.tokenId.toString(),
           });
           break;
         }
         case 2: {
           erc1155Rewards.push({
-            contractAddress: reward.assetContract,
+            contractAddress: reward.assetContract as Address,
             tokenId: reward.tokenId.toString(),
             quantityPerReward: reward.totalAmount.toString(),
           });

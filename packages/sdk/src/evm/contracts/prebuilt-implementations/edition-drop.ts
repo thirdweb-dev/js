@@ -21,6 +21,7 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { PaperCheckout } from "../../integrations/thirdweb-checkout";
+import { Address, AddressOrEns } from "../../schema";
 import { Abi } from "../../schema/contracts/custom";
 import { DropErc1155ContractSchema } from "../../schema/contracts/drop-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -173,8 +174,8 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
-    return this.contractWrapper.readContract.address;
+  getAddress(): Address {
+    return this.contractWrapper.readContract.address as Address;
   }
 
   /** ******************************
@@ -215,7 +216,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    *
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async getOwned(walletAddress?: string): Promise<NFT[]> {
+  public async getOwned(walletAddress?: AddressOrEns): Promise<NFT[]> {
     return this.erc1155.getOwned(walletAddress);
   }
 
@@ -292,7 +293,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * @deprecated Use `contract.erc1155.claim.prepare(...args)` instead
    */
   public async getClaimTransaction(
-    destinationAddress: string,
+    destinationAddress: AddressOrEns,
     tokenId: BigNumberish,
     quantity: BigNumberish,
     checkERC20Allowance = true, // TODO split up allowance checks
@@ -330,7 +331,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    */
   claimTo = buildTransactionFunction(
     async (
-      destinationAddress: string,
+      destinationAddress: AddressOrEns,
       tokenId: BigNumberish,
       quantity: BigNumberish,
       checkERC20Allowance = true,

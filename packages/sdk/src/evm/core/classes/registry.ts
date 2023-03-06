@@ -1,5 +1,7 @@
 import { TransactionResult } from "..";
+import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
+import { AddressOrEns } from "../../schema";
 import { SDKOptions } from "../../schema/sdk-options";
 import { NetworkInput } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
@@ -20,9 +22,11 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
     super(network, registryAddress, TWRegistryABI, options);
   }
 
-  public async getContractAddresses(walletAddress: string) {
+  public async getContractAddresses(walletAddress: AddressOrEns) {
     // TODO @fixme the filter here is necessary because for some reason getAll returns a 0x0 address for the first entry
-    return (await this.readContract.getAll(walletAddress)).filter(
+    return (
+      await this.readContract.getAll(await resolveAddress(walletAddress))
+    ).filter(
       (adr) =>
         utils.isAddress(adr) && adr.toLowerCase() !== constants.AddressZero,
     );
@@ -30,7 +34,7 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
 
   addContract = buildTransactionFunction(
     async (
-      contractAddress: string,
+      contractAddress: AddressOrEns,
     ): Promise<Transaction<TransactionResult>> => {
       return await this.addContracts.prepare([contractAddress]);
     },
@@ -38,19 +42,18 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
 
   addContracts = buildTransactionFunction(
     async (
-      contractAddresses: string[],
+      contractAddresses: AddressOrEns[],
     ): Promise<Transaction<TransactionResult>> => {
       const deployerAddress = await this.getSignerAddress();
 
-      const encoded: string[] = [];
-      contractAddresses.forEach((address) => {
-        encoded.push(
+      const encoded: string[] = await Promise.all(
+        contractAddresses.map(async (address) =>
           this.readContract.interface.encodeFunctionData("add", [
             deployerAddress,
-            address,
+            await resolveAddress(address),
           ]),
-        );
-      });
+        ),
+      );
 
       return Transaction.fromContractWrapper({
         contractWrapper: this,
@@ -62,7 +65,7 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
 
   removeContract = buildTransactionFunction(
     async (
-      contractAddress: string,
+      contractAddress: AddressOrEns,
     ): Promise<Transaction<TransactionResult>> => {
       return await this.removeContracts.prepare([contractAddress]);
     },
@@ -70,19 +73,18 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
 
   removeContracts = buildTransactionFunction(
     async (
-      contractAddresses: string[],
+      contractAddresses: AddressOrEns[],
     ): Promise<Transaction<TransactionResult>> => {
       const deployerAddress = await this.getSignerAddress();
 
-      const encoded: string[] = [];
-      contractAddresses.forEach((address) => {
-        encoded.push(
+      const encoded: string[] = await Promise.all(
+        contractAddresses.map(async (address) =>
           this.readContract.interface.encodeFunctionData("remove", [
             deployerAddress,
-            address,
+            await resolveAddress(address),
           ]),
-        );
-      });
+        ),
+      );
 
       return Transaction.fromContractWrapper({
         contractWrapper: this,

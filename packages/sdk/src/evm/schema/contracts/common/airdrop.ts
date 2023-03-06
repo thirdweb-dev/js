@@ -1,12 +1,12 @@
 import { AmountSchema } from "../../../../core/schema/shared";
-import { AddressSchema } from "../../shared";
+import { AddressOrEnsSchema } from "../../shared";
 import { z } from "zod";
 
 /**
  * @internal
  */
 export const AirdropAddressInput = z.object({
-  address: AddressSchema,
+  address: AddressOrEnsSchema,
   quantity: AmountSchema.default(1),
 });
 

@@ -1,4 +1,5 @@
 import { buildTransactionFunction } from "../../common/transactions";
+import { AddressOrEns } from "../../schema";
 import { TokenMintInput } from "../../schema/tokens/token";
 import { Amount, Currency, CurrencyValue } from "../../types/currency";
 import { BaseERC20, BaseSignatureMintERC20 } from "../../types/eips";
@@ -107,7 +108,7 @@ export class StandardErc20<
    *
    * @returns The balance of a specific wallet.
    */
-  public async balanceOf(address: string): Promise<CurrencyValue> {
+  public async balanceOf(address: AddressOrEns): Promise<CurrencyValue> {
     return this.erc20.balanceOf(address);
   }
 
@@ -137,7 +138,7 @@ export class StandardErc20<
    *
    * @returns The allowance of one wallet over anothers funds.
    */
-  public async allowance(spender: string): Promise<CurrencyValue> {
+  public async allowance(spender: AddressOrEns): Promise<CurrencyValue> {
     return await this.erc20.allowance(spender);
   }
 
@@ -158,8 +159,8 @@ export class StandardErc20<
    * @returns The allowance of one wallet over anothers funds.
    */
   public async allowanceOf(
-    owner: string,
-    spender: string,
+    owner: AddressOrEns,
+    spender: AddressOrEns,
   ): Promise<CurrencyValue> {
     return await this.erc20.allowanceOf(owner, spender);
   }
@@ -182,9 +183,11 @@ export class StandardErc20<
    * await contract.transfer(toAddress, amount);
    * ```
    */
-  transfer = buildTransactionFunction(async (to: string, amount: Amount) => {
-    return this.erc20.transfer.prepare(to, amount);
-  });
+  transfer = buildTransactionFunction(
+    async (to: AddressOrEns, amount: Amount) => {
+      return this.erc20.transfer.prepare(to, amount);
+    },
+  );
 
   /**
    * Transfer Tokens From Address
@@ -204,7 +207,7 @@ export class StandardErc20<
    * ```
    */
   transferFrom = buildTransactionFunction(
-    async (from: string, to: string, amount: Amount) => {
+    async (from: AddressOrEns, to: AddressOrEns, amount: Amount) => {
       return this.erc20.transferFrom.prepare(from, to, amount);
     },
   );
@@ -222,7 +225,7 @@ export class StandardErc20<
    * ```
    */
   public async setAllowance(
-    spender: string,
+    spender: AddressOrEns,
     amount: Amount,
   ): Promise<TransactionResult> {
     return this.erc20.setAllowance(spender, amount);

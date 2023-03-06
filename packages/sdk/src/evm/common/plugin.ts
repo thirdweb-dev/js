@@ -3,7 +3,7 @@ import {
   getAllPluginsAbi,
 } from "../constants/thirdweb-features";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { Abi, AbiSchema, SDKOptions } from "../schema";
+import { Abi, AbiSchema, Address, SDKOptions } from "../schema";
 import { isFeatureEnabled } from "./feature-detection";
 import { fetchContractMetadataFromAddress } from "./metadata-resolver";
 import { unique } from "./utils";
@@ -64,7 +64,7 @@ export async function getCompositePluginABI(
       const plugins = Array.from(new Set(allPlugins));
 
       // get ABIs of extension contracts
-      pluginABIs = await getPluginABI(plugins as string[], provider, storage);
+      pluginABIs = await getPluginABI(plugins as Address[], provider, storage);
     }
   } catch (err) {}
 
@@ -75,7 +75,7 @@ export async function getCompositePluginABI(
  * @internal
  */
 async function getPluginABI(
-  addresses: string[],
+  addresses: Address[],
   provider: ethers.providers.Provider,
   storage: ThirdwebStorage,
 ): Promise<Abi[]> {

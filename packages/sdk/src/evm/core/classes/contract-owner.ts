@@ -1,4 +1,6 @@
+import { resolveAddress } from "../../common/ens";
 import { FEATURE_OWNER } from "../../constants/thirdweb-features";
+import { AddressOrEns } from "../../schema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
@@ -45,10 +47,11 @@ export class ContractOwner<TContract extends Ownable>
    * ```
    * @twfeature Ownable
    */
-  public async set(address: string): Promise<TransactionResult> {
+  public async set(address: AddressOrEns): Promise<TransactionResult> {
+    const resolvedAddress = await resolveAddress(address);
     return {
       receipt: await this.contractWrapper.sendTransaction("setOwner", [
-        address,
+        resolvedAddress,
       ]),
     };
   }

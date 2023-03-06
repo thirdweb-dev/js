@@ -1,6 +1,7 @@
 import { Quantity } from "../../core/schema/shared";
 import { NATIVE_TOKEN_ADDRESS } from "../constants";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { Address } from "../schema";
 import {
   AbstractClaimConditionContractStruct,
   ClaimConditionInputArray,
@@ -66,7 +67,7 @@ export async function prepareClaim(
   );
   let proofs = [utils.hexZeroPad([0], 32)];
   let priceInProof = activeClaimCondition.price; // the price to send to the contract in claim proofs
-  let currencyAddressInProof = activeClaimCondition.currencyAddress;
+  let currencyAddressInProof = activeClaimCondition.currencyAddress as Address;
   try {
     if (
       !activeClaimCondition.merkleRootHash
@@ -101,7 +102,8 @@ export async function prepareClaim(
                 snapshotEntry.currencyAddress || ethers.constants.AddressZero,
               );
         currencyAddressInProof =
-          snapshotEntry.currencyAddress || ethers.constants.AddressZero;
+          snapshotEntry.currencyAddress ||
+          (ethers.constants.AddressZero as Address);
       } else {
         // if no snapshot entry, and it's a v1 format (exclusive allowlist) then address can't claim
         if (snapshotFormatVersion === SnapshotFormatVersion.V1) {
@@ -131,10 +133,11 @@ export async function prepareClaim(
       ? priceInProof
       : activeClaimCondition.price;
   // same for currency address
-  const currencyAddress =
+  const currencyAddress = (
     currencyAddressInProof !== ethers.constants.AddressZero
       ? currencyAddressInProof
-      : activeClaimCondition.currencyAddress;
+      : activeClaimCondition.currencyAddress
+  ) as Address;
   if (pricePerToken.gt(0)) {
     if (isNativeToken(currencyAddress)) {
       overrides["value"] = BigNumber.from(pricePerToken)
@@ -581,7 +584,7 @@ export async function calculateClaimCost(
   contractWrapper: ContractWrapper<any>,
   pricePerToken: Price,
   quantity: BigNumberish,
-  currencyAddress?: string,
+  currencyAddress?: Address,
   checkERC20Allowance?: boolean,
 ): Promise<Promise<CallOverrides>> {
   let overrides: CallOverrides = {};

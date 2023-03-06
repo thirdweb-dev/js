@@ -1,9 +1,10 @@
 import { NFT } from "../../../core/schema/nft";
 import { detectContractFeature } from "../../common";
+import { resolveAddress } from "../../common/ens";
 import { uploadOrExtractURI } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_MINTABLE } from "../../constants/erc1155-features";
-import { EditionMetadataOrUri } from "../../schema";
+import { AddressOrEns, EditionMetadataOrUri } from "../../schema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
@@ -78,7 +79,7 @@ export class Erc1155Mintable implements DetectableFeature {
    */
   to = buildTransactionFunction(
     async (
-      to: string,
+      to: AddressOrEns,
       metadataWithSupply: EditionMetadataOrUri,
     ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
       const tx = (await this.getMintTransaction(
@@ -108,7 +109,7 @@ export class Erc1155Mintable implements DetectableFeature {
    * @deprecated Use `contract.erc1155.mint.prepare(...args)` instead
    */
   public async getMintTransaction(
-    to: string,
+    to: AddressOrEns,
     metadataWithSupply: EditionMetadataOrUri,
   ): Promise<Transaction> {
     const uri = await uploadOrExtractURI(
@@ -118,7 +119,12 @@ export class Erc1155Mintable implements DetectableFeature {
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
       method: "mintTo",
-      args: [to, ethers.constants.MaxUint256, uri, metadataWithSupply.supply],
+      args: [
+        await resolveAddress(to),
+        ethers.constants.MaxUint256,
+        uri,
+        metadataWithSupply.supply,
+      ],
     });
   }
 
@@ -141,7 +147,7 @@ export class Erc1155Mintable implements DetectableFeature {
    */
   additionalSupplyTo = buildTransactionFunction(
     async (
-      to: string,
+      to: AddressOrEns,
       tokenId: BigNumberish,
       additionalSupply: BigNumberish,
     ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
@@ -149,7 +155,12 @@ export class Erc1155Mintable implements DetectableFeature {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "mintTo",
-        args: [to, tokenId, metadata.uri, additionalSupply],
+        args: [
+          await resolveAddress(to),
+          tokenId,
+          metadata.uri,
+          additionalSupply,
+        ],
         parse: (receipt) => {
           return {
             id: BigNumber.from(tokenId),

@@ -6,6 +6,7 @@ import {
   normalizePriceValue,
   setErc20Allowance,
 } from "../../common/currency";
+import { resolveAddress } from "../../common/ens";
 import {
   handleTokenApproval,
   isTokenApprovedForTransfer,
@@ -18,6 +19,7 @@ import {
   InterfaceId_IERC721,
 } from "../../constants/contract";
 import { ListingType } from "../../enums";
+import { Address, AddressOrEns } from "../../schema";
 import { Price } from "../../types/currency";
 import {
   DirectListing,
@@ -104,13 +106,13 @@ export class MarketplaceDirect {
    */
   public async getActiveOffer(
     listingId: BigNumberish,
-    address: string,
+    address: AddressOrEns,
   ): Promise<Offer | undefined> {
     await this.validateListing(BigNumber.from(listingId));
     invariant(utils.isAddress(address), "Address must be a valid address");
     const offers = await this.contractWrapper.readContract.offers(
       listingId,
-      address,
+      await resolveAddress(address),
     );
     if (offers.offeror === constants.AddressZero) {
       return undefined;
@@ -161,10 +163,17 @@ export class MarketplaceDirect {
   ): Promise<TransactionResultWithId> {
     validateNewListingParam(listing);
 
+    const resolvedAssetAddress = await resolveAddress(
+      listing.assetContractAddress,
+    );
+    const resolvedCurrencyAddress = await resolveAddress(
+      listing.currencyContractAddress,
+    );
+
     await handleTokenApproval(
       this.contractWrapper,
       this.getAddress(),
-      listing.assetContractAddress,
+      resolvedAssetAddress,
       listing.tokenId,
       await this.contractWrapper.getSignerAddress(),
     );
@@ -172,7 +181,7 @@ export class MarketplaceDirect {
     const normalizedPricePerToken = await normalizePriceValue(
       this.contractWrapper.getProvider(),
       listing.buyoutPricePerToken,
-      listing.currencyContractAddress,
+      resolvedCurrencyAddress,
     );
 
     let listingStartTime = Math.floor(listing.startTimestamp.getTime() / 1000);
@@ -186,12 +195,10 @@ export class MarketplaceDirect {
       "createListing",
       [
         {
-          assetContract: listing.assetContractAddress,
+          assetContract: resolvedAssetAddress,
           tokenId: listing.tokenId,
           buyoutPricePerToken: normalizedPricePerToken,
-          currencyToAccept: cleanCurrencyAddress(
-            listing.currencyContractAddress,
-          ),
+          currencyToAccept: cleanCurrencyAddress(resolvedCurrencyAddress),
           listingType: ListingType.Direct,
           quantityToList: listing.quantity,
           reservePricePerToken: normalizedPricePerToken,
@@ -244,7 +251,7 @@ export class MarketplaceDirect {
   public async makeOffer(
     listingId: BigNumberish,
     quantityDesired: BigNumberish,
-    currencyContractAddress: string,
+    currencyContractAddress: AddressOrEns,
     pricePerToken: Price,
     expirationDate?: Date,
   ): Promise<TransactionResult> {
@@ -316,21 +323,22 @@ export class MarketplaceDirect {
    */
   public async acceptOffer(
     listingId: BigNumberish,
-    addressOfOfferor: string,
+    addressOfOfferor: AddressOrEns,
   ): Promise<TransactionResult> {
     /**
      * TODO:
      * - Provide better error handling if offer is too low.
      */
     await this.validateListing(BigNumber.from(listingId));
+    const resolvedAddress = await resolveAddress(addressOfOfferor);
     const offer = await this.contractWrapper.readContract.offers(
       listingId,
-      addressOfOfferor,
+      resolvedAddress,
     );
     return {
       receipt: await this.contractWrapper.sendTransaction("acceptOffer", [
         listingId,
-        addressOfOfferor,
+        resolvedAddress,
         offer.currency,
         offer.pricePerToken,
       ]),
@@ -359,7 +367,7 @@ export class MarketplaceDirect {
   public async buyoutListing(
     listingId: BigNumberish,
     quantityDesired: BigNumberish,
-    receiver?: string,
+    receiver?: AddressOrEns,
   ): Promise<TransactionResult> {
     const listing = await this.validateListing(BigNumber.from(listingId));
     const { valid, error } = await this.isStillValidListing(
@@ -406,7 +414,7 @@ export class MarketplaceDirect {
         listing.quantity,
         listing.buyoutPrice, // reserve price, doesn't matter for direct listing
         listing.buyoutPrice,
-        listing.currencyContractAddress,
+        await resolveAddress(listing.currencyContractAddress),
         listing.startTimeInSeconds,
         listing.secondsUntilEnd,
       ]),
@@ -466,9 +474,9 @@ export class MarketplaceDirect {
     listing: IMarketplace.ListingStruct,
   ): Promise<DirectListing> {
     return {
-      assetContractAddress: listing.assetContract,
+      assetContractAddress: listing.assetContract as Address,
       buyoutPrice: BigNumber.from(listing.buyoutPricePerToken),
-      currencyContractAddress: listing.currency,
+      currencyContractAddress: listing.currency as Address,
       buyoutCurrencyValuePerToken: await fetchCurrencyValue(
         this.contractWrapper.getProvider(),
         listing.currency,
@@ -485,7 +493,7 @@ export class MarketplaceDirect {
         this.storage,
       ),
       secondsUntilEnd: listing.endTime,
-      sellerAddress: listing.tokenOwner,
+      sellerAddress: listing.tokenOwner as Address,
       type: ListingType.Direct,
     };
   }

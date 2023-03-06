@@ -4,6 +4,7 @@ import {
   hasERC20Allowance,
   normalizePriceValue,
 } from "../../common/currency";
+import { resolveAddress } from "../../common/ens";
 import { isTokenApprovedForTransfer } from "../../common/marketplace";
 import { uploadOrExtractURI } from "../../common/nft";
 import { ContractAppURI } from "../../core";
@@ -22,7 +23,7 @@ import {
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
-import { Abi, SDKOptions } from "../../schema";
+import { Abi, AddressOrEns, SDKOptions } from "../../schema";
 import { MultiwrapContractSchema } from "../../schema/contracts/multiwrap";
 import {
   ERC1155Wrappable,
@@ -241,13 +242,15 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
   public async wrap(
     contents: TokensToWrap,
     wrappedTokenMetadata: NFTMetadataOrUri,
-    recipientAddress?: string,
+    recipientAddress?: AddressOrEns,
   ): Promise<TransactionResultWithId<NFT>> {
     const uri = await uploadOrExtractURI(wrappedTokenMetadata, this.storage);
 
-    const recipient = recipientAddress
-      ? recipientAddress
-      : await this.contractWrapper.getSignerAddress();
+    const recipient = await resolveAddress(
+      recipientAddress
+        ? recipientAddress
+        : await this.contractWrapper.getSignerAddress(),
+    );
 
     const tokens = await this.toTokenStructList(contents);
     const receipt = await this.contractWrapper.sendTransaction("wrap", [
@@ -282,11 +285,13 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
    */
   public async unwrap(
     wrappedTokenId: BigNumberish,
-    recipientAddress?: string,
+    recipientAddress?: AddressOrEns,
   ): Promise<TransactionResult> {
-    const recipient = recipientAddress
-      ? recipientAddress
-      : await this.contractWrapper.getSignerAddress();
+    const recipient = await resolveAddress(
+      recipientAddress
+        ? recipientAddress
+        : await this.contractWrapper.getSignerAddress(),
+    );
     return {
       receipt: await this.contractWrapper.sendTransaction("unwrap", [
         wrappedTokenId,

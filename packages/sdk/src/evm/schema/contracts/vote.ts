@@ -1,5 +1,9 @@
 import { PercentSchema } from "../../../core/schema/shared";
-import { AddressSchema, BigNumberishSchema, BigNumberSchema } from "../shared";
+import {
+  AddressOrEnsSchema,
+  BigNumberishSchema,
+  BigNumberSchema,
+} from "../shared";
 import {
   CommonContractOutputSchema,
   CommonContractSchema,
@@ -10,7 +14,7 @@ import { z } from "zod";
 export const VoteSettingsInputSchema = z.object({
   voting_delay_in_blocks: z.number().min(0).default(0),
   voting_period_in_blocks: z.number().min(1).default(1),
-  voting_token_address: AddressSchema,
+  voting_token_address: AddressOrEnsSchema,
   voting_quorum_fraction: PercentSchema.default(0),
   proposal_token_threshold: BigNumberishSchema.default(1),
 });

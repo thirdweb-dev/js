@@ -18,7 +18,7 @@ import { isBrowser } from "../../common/utils";
 import { CONTRACT_ADDRESSES, ChainId } from "../../constants";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import { EventType } from "../../constants/events";
-import { CallOverrideSchema } from "../../schema";
+import { Address, CallOverrideSchema } from "../../schema";
 import { AbiSchema, ContractSource } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
@@ -108,14 +108,14 @@ export class ContractWrapper<
   /**
    * @internal
    */
-  public async getSignerAddress(): Promise<string> {
+  public async getSignerAddress(): Promise<Address> {
     const signer = this.getSigner();
     if (!signer) {
       throw new Error(
         "This action requires a connected wallet to sign the transaction. Please pass a valid signer to the SDK.",
       );
     }
-    return await signer.getAddress();
+    return (await signer.getAddress()) as Address;
   }
 
   /**
@@ -520,7 +520,7 @@ export class ContractWrapper<
     let contractName: string | undefined = undefined;
     try {
       const metadata = await fetchContractMetadataFromAddress(
-        this.readContract.address,
+        this.readContract.address as Address,
         this.getProvider(),
         this.#storage,
       );

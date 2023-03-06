@@ -28,16 +28,14 @@ export const BigNumberTransformSchema = z
     return BigNumber.from(arg).toString();
   });
 
-// Important for address check to come before ENS so network request is only made when necessary
-export const AddressSchema = z.union(
-  [
-    z.custom<`0x${string}`>(
-      (address) => typeof address === "string" && utils.isAddress(address),
-    ),
-    EnsSchema,
-  ],
-  { invalid_type_error: "Provided value was not a valid address or ENS name" },
+export const AddressSchema = z.custom<Address>(
+  (address) => typeof address === "string" && utils.isAddress(address),
 );
+
+// Important for address check to come before ENS so network request is only made when necessary
+export const AddressOrEnsSchema = z.union([AddressSchema, EnsSchema], {
+  invalid_type_error: "Provided value was not a valid address or ENS name",
+});
 
 export const RawDateSchema = z.date().transform((i) => {
   return BigNumber.from(Math.floor(i.getTime() / 1000));
@@ -64,7 +62,7 @@ export const CallOverrideSchema: z.ZodType<CallOverrides> = z
     nonce: BigNumberishSchema.optional(),
     value: BigNumberishSchema.optional(),
     blockTag: z.union([z.string(), z.number()]).optional(),
-    from: AddressSchema.optional(),
+    from: AddressOrEnsSchema.optional(),
     type: z.number().optional(),
   })
   .strict();
@@ -82,4 +80,8 @@ export const ChainInfoInputSchema = z.object({
 
 export type ChainInfo = z.infer<typeof ChainInfoInputSchema>;
 
-export type AddressInput = z.input<typeof AddressSchema>;
+// Use this everywhere even though it's just string so we can optionally switch it out
+// more easily if we want to later
+export type AddressOrEns = z.input<typeof AddressOrEnsSchema>;
+export type Ens = `${string}.eth` | `${string}.cb.id`;
+export type Address = `0x${string}`;

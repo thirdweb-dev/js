@@ -1,4 +1,5 @@
 import { DEFAULT_API_KEY } from "../../core/constants/urls";
+import { Address, AddressOrEns, AddressOrEnsSchema } from "../schema";
 import { providers } from "ethers";
 
 type CachedEns = {
@@ -45,4 +46,10 @@ export async function resolveEns(ens: string): Promise<string | null> {
   }
 
   return refreshCache(ens);
+}
+
+export async function resolveAddress(
+  addressOrEns: AddressOrEns,
+): Promise<Address> {
+  return AddressOrEnsSchema.parseAsync(addressOrEns);
 }

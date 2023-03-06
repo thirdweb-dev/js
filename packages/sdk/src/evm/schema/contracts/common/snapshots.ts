@@ -1,5 +1,5 @@
 import { QuantitySchema } from "../../../../core/schema/shared";
-import { AddressSchema } from "../../shared";
+import { AddressOrEnsSchema } from "../../shared";
 import { ethers } from "ethers";
 import { z } from "zod";
 
@@ -11,10 +11,10 @@ export const MerkleSchema = z.object({
 });
 
 export const SnapshotEntryInput = z.object({
-  address: AddressSchema,
+  address: AddressOrEnsSchema,
   maxClaimable: QuantitySchema.default(0), // defaults to 0
   price: QuantitySchema.optional(), // defaults to unlimited, but can be undefined in old snapshots
-  currencyAddress: AddressSchema.default(
+  currencyAddress: AddressOrEnsSchema.default(
     ethers.constants.AddressZero,
   ).optional(), // defaults to AddressZero, but can be undefined for old snapshots
 });

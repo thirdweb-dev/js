@@ -11,6 +11,7 @@ import {
   normalizePriceValue,
   setErc20Allowance,
 } from "../../common/currency";
+import { resolveAddress } from "../../common/ens";
 import {
   handleTokenApproval,
   isWinningBid,
@@ -19,6 +20,7 @@ import {
 } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { ListingType } from "../../enums";
+import { Address } from "../../schema/shared";
 import { CurrencyValue, Price } from "../../types/currency";
 import {
   AuctionListing,
@@ -206,10 +208,17 @@ export class MarketplaceAuction {
   ): Promise<TransactionResultWithId> {
     validateNewListingParam(listing);
 
+    const resolvedAssetAddress = await resolveAddress(
+      listing.assetContractAddress,
+    );
+    const resolvedCurrencyAddress = await resolveAddress(
+      listing.currencyContractAddress,
+    );
+
     await handleTokenApproval(
       this.contractWrapper,
       this.getAddress(),
-      listing.assetContractAddress,
+      resolvedAssetAddress,
       listing.tokenId,
       await this.contractWrapper.getSignerAddress(),
     );
@@ -217,13 +226,13 @@ export class MarketplaceAuction {
     const normalizedPricePerToken = await normalizePriceValue(
       this.contractWrapper.getProvider(),
       listing.buyoutPricePerToken,
-      listing.currencyContractAddress,
+      resolvedCurrencyAddress,
     );
 
     const normalizedReservePrice = await normalizePriceValue(
       this.contractWrapper.getProvider(),
       listing.reservePricePerToken,
-      listing.currencyContractAddress,
+      resolvedCurrencyAddress,
     );
 
     let listingStartTime = Math.floor(listing.startTimestamp.getTime() / 1000);
@@ -237,12 +246,10 @@ export class MarketplaceAuction {
       "createListing",
       [
         {
-          assetContract: listing.assetContractAddress,
+          assetContract: resolvedAssetAddress,
           tokenId: listing.tokenId,
           buyoutPricePerToken: normalizedPricePerToken,
-          currencyToAccept: cleanCurrencyAddress(
-            listing.currencyContractAddress,
-          ),
+          currencyToAccept: cleanCurrencyAddress(resolvedCurrencyAddress),
           listingType: ListingType.Auction,
           quantityToList: listing.quantity,
           reservePricePerToken: normalizedReservePrice,
@@ -581,9 +588,9 @@ export class MarketplaceAuction {
     listing: IMarketplace.ListingStruct,
   ): Promise<AuctionListing> {
     return {
-      assetContractAddress: listing.assetContract,
+      assetContractAddress: listing.assetContract as Address,
       buyoutPrice: BigNumber.from(listing.buyoutPricePerToken),
-      currencyContractAddress: listing.currency,
+      currencyContractAddress: listing.currency as Address,
       buyoutCurrencyValuePerToken: await fetchCurrencyValue(
         this.contractWrapper.getProvider(),
         listing.currency,
@@ -606,7 +613,7 @@ export class MarketplaceAuction {
       ),
       reservePrice: BigNumber.from(listing.reservePricePerToken),
       endTimeInEpochSeconds: listing.endTime,
-      sellerAddress: listing.tokenOwner,
+      sellerAddress: listing.tokenOwner as Address,
       type: ListingType.Auction,
     };
   }

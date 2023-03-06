@@ -67,7 +67,7 @@ export class ContractPlatformFee<TContract extends IPlatformFee>
   public async set(
     platformFeeInfo: z.input<typeof CommonPlatformFeeSchema>,
   ): Promise<TransactionResult> {
-    const parsed = CommonPlatformFeeSchema.parse(platformFeeInfo);
+    const parsed = await CommonPlatformFeeSchema.parseAsync(platformFeeInfo);
     return {
       receipt: await this.contractWrapper.sendTransaction(
         "setPlatformFeeInfo",

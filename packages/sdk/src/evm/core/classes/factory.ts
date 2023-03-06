@@ -20,6 +20,7 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../../contracts";
+import { Address } from "../../schema";
 import { SDKOptions } from "../../schema/sdk-options";
 import { DeployEvents } from "../../types";
 import {
@@ -83,17 +84,17 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     >,
     eventEmitter: EventEmitter<DeployEvents>,
     version?: number,
-  ): Promise<string> {
+  ): Promise<Address> {
     const contract = PREBUILT_CONTRACTS_MAP[contractType];
     const metadata = await contract.schema.deploy.parseAsync(contractMetadata);
 
     // TODO: is there any special pre-processing we need to do before uploading?
     const contractURI = await this.storage.upload(metadata);
 
-    const implementationAddress = await this.getImplementation(
+    const implementationAddress = (await this.getImplementation(
       contract,
       version,
-    );
+    )) as Address | undefined;
 
     if (
       !implementationAddress ||
@@ -146,17 +147,17 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       transactionHash: receipt.transactionHash,
     });
 
-    return contractAddress;
+    return contractAddress as Address;
   }
 
   // TODO once IContractFactory is implemented, this can be probably be moved to its own class
   public async deployProxyByImplementation(
-    implementationAddress: string,
+    implementationAddress: Address,
     implementationAbi: ContractInterface,
     initializerFunction: string,
     initializerArgs: any[],
     eventEmitter: EventEmitter<DeployEvents>,
-  ): Promise<string> {
+  ): Promise<Address> {
     const encodedFunc = Contract.getInterface(
       implementationAbi,
     ).encodeFunctionData(initializerFunction, initializerArgs);
@@ -183,7 +184,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       transactionHash: receipt.transactionHash,
     });
 
-    return contractAddress;
+    return contractAddress as Address;
   }
 
   /**

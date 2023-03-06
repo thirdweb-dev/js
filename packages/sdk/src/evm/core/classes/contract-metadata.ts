@@ -5,6 +5,7 @@ import {
   fetchContractMetadataFromAddress,
 } from "../../common";
 import { FEATURE_METADATA } from "../../constants/thirdweb-features";
+import { Address } from "../../schema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
@@ -118,7 +119,7 @@ export class ContractMetadata<
         let publishedMetadata;
         try {
           publishedMetadata = await fetchContractMetadataFromAddress(
-            this.contractWrapper.readContract.address,
+            this.contractWrapper.readContract.address as Address,
             this.contractWrapper.getProvider(),
             this.storage,
           );

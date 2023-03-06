@@ -19,6 +19,7 @@ import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
+import { Address, AddressOrEns } from "../../schema";
 import { Abi } from "../../schema/contracts/custom";
 import { TokenErc1155ContractSchema } from "../../schema/contracts/token-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -149,8 +150,8 @@ export class Edition extends StandardErc1155<TokenERC1155> {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
-    return this.contractWrapper.readContract.address;
+  getAddress(): Address {
+    return this.contractWrapper.readContract.address as Address;
   }
 
   /** ******************************
@@ -189,7 +190,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    *
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async getOwned(walletAddress?: string): Promise<NFT[]> {
+  public async getOwned(walletAddress?: AddressOrEns): Promise<NFT[]> {
     return this.erc1155.getOwned(walletAddress);
   }
 
@@ -260,7 +261,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    */
   mintTo = buildTransactionFunction(
     async (
-      to: string,
+      to: AddressOrEns,
       metadataWithSupply: EditionMetadataOrUri,
     ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
       return this.erc1155.mintTo.prepare(to, metadataWithSupply);
@@ -276,7 +277,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    * @deprecated `contract.mint.prepare(...args)`
    */
   public async getMintTransaction(
-    receiver: string,
+    receiver: AddressOrEns,
     metadataWithSupply: EditionMetadataOrUri,
   ): Promise<Transaction> {
     return this.erc1155.getMintTransaction(receiver, metadataWithSupply);
@@ -309,7 +310,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    */
   mintAdditionalSupplyTo = buildTransactionFunction(
     async (
-      to: string,
+      to: AddressOrEns,
       tokenId: BigNumberish,
       additionalSupply: BigNumberish,
     ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
@@ -369,7 +370,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    */
   mintBatchTo = buildTransactionFunction(
     async (
-      to: string,
+      to: AddressOrEns,
       metadataWithSupply: EditionMetadataOrUri[],
     ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
       return this.erc1155.mintBatchTo.prepare(to, metadataWithSupply);

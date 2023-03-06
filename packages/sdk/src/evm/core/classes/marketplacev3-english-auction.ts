@@ -6,10 +6,12 @@ import {
   normalizePriceValue,
   setErc20Allowance,
 } from "../../common/currency";
+import { resolveAddress } from "../../common/ens";
 import { getAllInBatches, handleTokenApproval } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { FEATURE_ENGLISH_AUCTIONS } from "../../constants/thirdweb-features";
 import { Status } from "../../enums";
+import { Address, AddressOrEns } from "../../schema";
 import {
   EnglishAuctionInputParams,
   EnglishAuctionInputParamsSchema,
@@ -73,7 +75,7 @@ export class MarketplaceV3EnglishAuctions<
 
   /**
    * Get the total number of english auctions
-   * 
+   *
    * @returns Returns the total number of auctions created.
    * @public
    *
@@ -117,7 +119,7 @@ export class MarketplaceV3EnglishAuctions<
     );
     rawAuctions = batches.flat();
 
-    const filteredAuctions = this.applyFilter(rawAuctions, filter);
+    const filteredAuctions = await this.applyFilter(rawAuctions, filter);
 
     return await Promise.all(
       filteredAuctions.map((auction) => this.mapAuction(auction)),
@@ -156,7 +158,7 @@ export class MarketplaceV3EnglishAuctions<
     );
     rawAuctions = batches.flat();
 
-    const filteredAuctions = this.applyFilter(rawAuctions, filter);
+    const filteredAuctions = await this.applyFilter(rawAuctions, filter);
 
     return await Promise.all(
       filteredAuctions.map((auction) => this.mapAuction(auction)),
@@ -210,15 +212,15 @@ export class MarketplaceV3EnglishAuctions<
     }
     return await this.mapBid(
       auctionId.toString(),
-      bid._bidder,
-      bid._currency,
+      bid._bidder as Address,
+      bid._currency as Address,
       bid._bidAmount.toString(),
     );
   }
 
   /**
    * Check if a bid is or will be a winning bid
-   * 
+   *
    * @example
    * ```javascript
    * const auctionId = 0;
@@ -256,7 +258,7 @@ export class MarketplaceV3EnglishAuctions<
    * @returns the address of the auction winner
    * @twfeature EnglishAuctions
    */
-  public async getWinner(auctionId: BigNumberish): Promise<string> {
+  public async getWinner(auctionId: BigNumberish): Promise<Address> {
     const auction = await this.validateAuction(BigNumber.from(auctionId));
     const bid = await this.contractWrapper.readContract.getWinningBid(
       auctionId,
@@ -266,7 +268,7 @@ export class MarketplaceV3EnglishAuctions<
 
     // if we have a winner in the map and the current time is past the endtime of the auction return the address of the winner
     if (now.gt(endTime) && bid._bidder !== constants.AddressZero) {
-      return bid._bidder;
+      return bid._bidder as Address;
     }
     // otherwise fall back to query filter things
 
@@ -282,7 +284,7 @@ export class MarketplaceV3EnglishAuctions<
         `Could not find auction with ID ${auctionId} in closed auctions`,
       );
     }
-    return closed.args.winningBidder;
+    return closed.args.winningBidder as Address;
   }
 
   /** ******************************
@@ -552,7 +554,7 @@ export class MarketplaceV3EnglishAuctions<
    */
   public async closeAuctionForBidder(
     auctionId: BigNumberish,
-    closeFor?: string,
+    closeFor?: AddressOrEns,
   ): Promise<TransactionResult> {
     if (!closeFor) {
       closeFor = await this.contractWrapper.getSignerAddress();
@@ -661,7 +663,7 @@ export class MarketplaceV3EnglishAuctions<
 
   /**
    * Get the buffer for an english auction
-   *  
+   *
    * @example
    * ```javascript
    * // The ID of the auction you want to get the buffer for
@@ -679,14 +681,14 @@ export class MarketplaceV3EnglishAuctions<
 
   /**
    * Get the minimum next bid for an english auction
-   * 
+   *
    * @example
    * ```javascript
    * // The ID of the auction you want to get the minimum next bid for
    * const auctionId = "0";
    * const minimumNextBid = await contract.englishAuctions.getMinimumNextBid(auctionId);
    * ```
-   * 
+   *
    * @returns the minimum bid a user can place to outbid the previous highest bid
    * @param auctionId - id of the auction
    * @twfeature EnglishAuctions
@@ -770,11 +772,11 @@ export class MarketplaceV3EnglishAuctions<
 
     return {
       id: auction.auctionId.toString(),
-      creatorAddress: auction.auctionCreator,
-      assetContractAddress: auction.assetContract,
+      creatorAddress: auction.auctionCreator as Address,
+      assetContractAddress: auction.assetContract as Address,
       tokenId: auction.tokenId.toString(),
       quantity: auction.quantity.toString(),
-      currencyContractAddress: auction.currency,
+      currencyContractAddress: auction.currency as Address,
       minimumBidAmount: auction.minimumBidAmount.toString(),
       minimumBidCurrencyValue: await fetchCurrencyValue(
         this.contractWrapper.getProvider(),
@@ -812,24 +814,28 @@ export class MarketplaceV3EnglishAuctions<
    */
   private async mapBid(
     auctionId: string,
-    bidderAddress: string,
-    currencyContractAddress: string,
+    bidderAddress: AddressOrEns,
+    currencyContractAddress: AddressOrEns,
     bidAmount: string,
   ): Promise<Bid> {
+    const resolvedBidderAddress = await resolveAddress(bidderAddress);
+    const resolvedCurrencyAddress = await resolveAddress(
+      currencyContractAddress,
+    );
     return {
       auctionId,
-      bidderAddress,
-      currencyContractAddress,
+      bidderAddress: resolvedBidderAddress,
+      currencyContractAddress: resolvedCurrencyAddress,
       bidAmount,
       bidAmountCurrencyValue: await fetchCurrencyValue(
         this.contractWrapper.getProvider(),
-        currencyContractAddress,
+        resolvedCurrencyAddress,
         bidAmount,
       ),
     } as Bid;
   }
 
-  private applyFilter(
+  private async applyFilter(
     auctions: IEnglishAuctions.AuctionStructOutput[],
     filter?: MarketplaceFilter,
   ) {
@@ -837,17 +843,19 @@ export class MarketplaceV3EnglishAuctions<
 
     if (filter) {
       if (filter.seller) {
+        const resolvedSeller = await resolveAddress(filter.seller);
         rawAuctions = rawAuctions.filter(
           (seller) =>
             seller.auctionCreator.toString().toLowerCase() ===
-            filter?.seller?.toString().toLowerCase(),
+            resolvedSeller?.toString().toLowerCase(),
         );
       }
       if (filter.tokenContract) {
+        const resolvedToken = await resolveAddress(filter.tokenContract);
         rawAuctions = rawAuctions.filter(
           (tokenContract) =>
             tokenContract.assetContract.toString().toLowerCase() ===
-            filter?.tokenContract?.toString().toLowerCase(),
+            resolvedToken?.toString().toLowerCase(),
         );
       }
 

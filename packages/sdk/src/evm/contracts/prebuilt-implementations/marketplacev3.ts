@@ -22,6 +22,7 @@ import { NetworkInput } from "../../core/types";
 import { Abi } from "../../schema/contracts/custom";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
+import { Address } from "../../schema/shared";
 import type {
   MarketplaceV3 as MarketplaceV3Contract,
   DirectListingsLogic,
@@ -243,8 +244,8 @@ export class MarketplaceV3 implements UpdateableNetwork {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
-    return this.contractWrapper.readContract.address;
+  getAddress(): Address {
+    return this.contractWrapper.readContract.address as Address;
   }
 
   /**
