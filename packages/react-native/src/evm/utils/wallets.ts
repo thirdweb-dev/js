@@ -1,29 +1,30 @@
 import { walletsMetadata } from "../constants/walletsMetadata";
+import { WalletMeta } from "../types/wallet";
 import {
-  SupportedWallet as SupportedWalletMeta,
-  WalletMeta,
-} from "../types/wallet";
-import { SupportedWalletInstance } from "@thirdweb-dev/react-core";
+  SupportedWallet,
+  SupportedWalletInstance,
+} from "@thirdweb-dev/react-core";
 import invariant from "tiny-invariant";
 
 export function getWalletsMeta(
-  supportedWallets: SupportedWalletMeta[],
+  supportedWallets: SupportedWallet[],
 ): WalletMeta[] {
-  return supportedWallets.map(
-    (wallet) => walletsMetadata[wallet] as WalletMeta,
-  );
+  console.log("supportedWallets", supportedWallets);
+  console.log("supportedWallets[0]", supportedWallets[0].name);
+  return supportedWallets.map((wallet) => {
+    return Object.values(walletsMetadata).find((w) =>
+      wallet.name.toLowerCase().includes(w.id.toLowerCase()),
+    ) as WalletMeta;
+  });
 }
 
 export function getWalletMeta(
   classInstance: SupportedWalletInstance,
 ): WalletMeta {
   const walletMeta = Object.values(walletsMetadata).find((wallet) => {
-    return (
-      classInstance.walletName
-        .toLowerCase()
-        .includes(wallet.name.toLowerCase()) ||
-      classInstance.walletName.toLowerCase().includes(wallet.id.toLowerCase())
-    );
+    return classInstance.walletId
+      .toLowerCase()
+      .includes(wallet.name.toLowerCase());
   });
 
   invariant(walletMeta, "Wallet not found");

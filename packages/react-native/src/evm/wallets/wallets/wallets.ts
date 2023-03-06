@@ -1,3 +1,4 @@
+import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
 import { TW_WC_PROJECT_ID } from "../../constants/walletConnect";
 import { ExtraCoreWalletOptions } from "@thirdweb-dev/react-core";
 import type {
@@ -11,7 +12,6 @@ import {
   WalletConnect as WalletConnectCore,
   WalletConnectV1 as WalletConnectV1Core,
 } from "@thirdweb-dev/wallets";
-import { createAsyncLocalStorage } from "core/AsyncStorage";
 
 const DEFAULT_NAME_METADATA = "Dapp powered by Thirdweb";
 const DEFAULT_URL_METADATA = "thirdweb.com";
