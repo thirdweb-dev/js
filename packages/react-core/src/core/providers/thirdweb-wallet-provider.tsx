@@ -94,6 +94,7 @@ export function ThirdwebWalletProvider(
         ...walletOptions,
         chain: props.activeChain,
         coordinatorStorage,
+        theme: theme,
       });
     },
     [props, theme],
@@ -199,13 +200,15 @@ export function ThirdwebWalletProvider(
         throw e;
       }
     },
-    [
-      createWalletInstance,
-      handleWalletConnect,
-      onWCOpenWallet,
-      chainIdToConnect,
-    ],
+    [createWalletInstance, handleWalletConnect, chainIdToConnect],
   );
+
+  const onWalletDisconnect = useCallback(() => {
+    setSigner(undefined);
+    setActiveChainId(undefined);
+    setActiveWallet(undefined);
+    setDisplayUri(undefined);
+  }, []);
 
   const disconnectWallet = useCallback(() => {
     // get the connected wallet
@@ -218,12 +221,9 @@ export function ThirdwebWalletProvider(
     }
 
     activeWallet.disconnect().then(() => {
-      setSigner(undefined);
-      setActiveChainId(undefined);
-      setActiveWallet(undefined);
-      setDisplayUri(undefined);
+      onWalletDisconnect();
     });
-  }, [activeWallet, onWCOpenWallet]);
+  }, [activeWallet, onWCOpenWallet, onWalletDisconnect]);
 
   // when wallet's network or account is changed using the extension, update UI
   useEffect(() => {
@@ -247,16 +247,18 @@ export function ThirdwebWalletProvider(
       provider.on("chainChanged", update);
       provider.on("accountsChanged", (accounts) => {
         if (accounts.length === 0) {
+          // do not use onWalletDisconnect() here
           disconnectWallet();
         } else {
           update();
         }
       });
       provider.on("disconnect", () => {
-        disconnectWallet();
+        // do not use disconnectWallet() here
+        onWalletDisconnect();
       });
     });
-  }, [activeWallet, disconnectWallet]);
+  }, [activeWallet, disconnectWallet, onWalletDisconnect]);
 
   return (
     <ThirdwebWalletContext.Provider
