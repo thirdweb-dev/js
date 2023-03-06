@@ -1,3 +1,4 @@
+import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import {
   AspectRatio,
   Flex,
@@ -70,6 +71,7 @@ export const NFTDetails: React.FC<NFTDetailsProps> = ({
       </Flex>
       {showSupplyCards && <SupplyCards contract={contract} />}
       <NFTCards
+        contractAddress={contract.getAddress()}
         nfts={displayableNFTs}
         trackingCategory={trackingCategory}
         isLoading={nftQuery.isLoading}
@@ -83,7 +85,7 @@ const dummyMetadata: (idx: number) => NFT = (idx) => ({
     name: "Loading...",
     description: "lorem ipsum loading sit amet",
     id: `${idx}`,
-    uri: "",
+    uri: `1-0x123-${idx}`,
   },
   owner: `0x_fake_${idx}`,
   type: "ERC721",
@@ -94,14 +96,17 @@ interface ContractOverviewNFTGetAllProps {
   nfts: NFT[];
   trackingCategory: TrackedLinkProps["category"];
   isLoading: boolean;
+  contractAddress: string;
 }
 const NFTCards: React.FC<ContractOverviewNFTGetAllProps> = ({
   nfts,
+  contractAddress,
   trackingCategory,
   isLoading,
 }) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const nftsHref = useTabHref("nfts");
+  const chainId = useDashboardEVMChainId();
 
   nfts = isLoading
     ? Array.from({ length: isMobile ? 2 : 3 }).map((_, idx) =>
@@ -112,7 +117,7 @@ const NFTCards: React.FC<ContractOverviewNFTGetAllProps> = ({
     <SimpleGrid gap={{ base: 3, md: 6 }} columns={{ base: 2, md: 3 }}>
       {nfts.map((token) => (
         <GridItem
-          key={token.owner}
+          key={`${chainId}-${contractAddress}-${token.metadata.id}}`}
           as={TrackedLink}
           category={trackingCategory}
           href={nftsHref}
