@@ -16,6 +16,7 @@ import type {
   Token,
   Multiwrap,
   Pack,
+  AddressOrEns,
 } from "@thirdweb-dev/sdk";
 import type { Edition } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/edition";
 import type { EditionDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/edition-drop";
@@ -55,13 +56,13 @@ export type Chain = {
  * A wallet address.
  * @beta
  */
-export type WalletAddress = string;
+export type WalletAddress = AddressOrEns;
 
 /**
  * A contract address.
  * @beta
  */
-export type ContractAddress = string;
+export type ContractAddress = AddressOrEns;
 
 /**
  * The parameters to pass to the mint and transfer functions.
@@ -69,7 +70,7 @@ export type ContractAddress = string;
  * @beta
  */
 export type TokenParams = {
-  to: WalletAddress;
+  to: AddressOrEns;
   amount: Amount;
 };
 
@@ -270,7 +271,7 @@ export type BuyNowParams<TListingType = ListingType> =
 // TOKEN DROP //
 
 export type ClaimTokenParams = {
-  to: WalletAddress;
+  to: AddressOrEns;
   amount: Amount;
   checkERC20Allowance?: boolean;
 };

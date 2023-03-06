@@ -84,4 +84,4 @@ export type ChainInfo = z.infer<typeof ChainInfoInputSchema>;
 // more easily if we want to later
 export type AddressOrEns = z.input<typeof AddressOrEnsSchema>;
 export type Ens = `${string}.eth` | `${string}.cb.id`;
-export type Address = `0x${string}`;
+export type Address = string; // `0x${string}`;

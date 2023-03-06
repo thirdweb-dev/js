@@ -31,6 +31,7 @@ import { Erc721 } from "../core/classes/erc-721";
 import { Erc1155 } from "../core/classes/erc-1155";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { UpdateableNetwork } from "../core/interfaces/contract";
+import { Address } from "../schema";
 import { CustomContractSchema } from "../schema/contracts/custom";
 import { SDKOptions } from "../schema/sdk-options";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
@@ -194,8 +195,8 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
-    return this.contractWrapper.readContract.address;
+  getAddress(): Address {
+    return this.contractWrapper.readContract.address as Address;
   }
 
   /**

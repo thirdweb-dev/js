@@ -22,7 +22,7 @@ import {
   FEATURE_EDITION_CLAIM_CONDITIONS_V2,
   FEATURE_EDITION_LAZY_MINTABLE_V2,
 } from "../../constants/erc1155-features";
-import { AddressOrEns } from "../../schema";
+import { Address, AddressOrEns } from "../../schema";
 import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
 import { EditionMetadataOrUri } from "../../schema/tokens/edition";
 import { ClaimOptions, UploadProgressEvent } from "../../types";
@@ -105,8 +105,8 @@ export class Erc1155<
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
-    return this.contractWrapper.readContract.address;
+  getAddress(): Address {
+    return this.contractWrapper.readContract.address as Address;
   }
 
   ////// Standard ERC1155 functions //////
