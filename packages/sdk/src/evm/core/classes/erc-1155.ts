@@ -136,7 +136,7 @@ export class Erc1155<
       owner: ethers.constants.AddressZero,
       metadata,
       type: "ERC1155",
-      supply: supply.toNumber(),
+      supply: supply.toString(),
     };
   }
 

@@ -122,7 +122,7 @@ export class Erc1155Enumerable implements DetectableFeature {
         return {
           ...editionMetadata,
           owner: address,
-          quantityOwned: b.balance.toNumber(),
+          quantityOwned: b.balance.toString(),
         };
       }),
     );

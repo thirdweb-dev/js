@@ -133,7 +133,7 @@ export class Erc721<
         ...FALLBACK_METADATA,
       })),
     ]);
-    return { owner, metadata, type: "ERC721", supply: 1 };
+    return { owner, metadata, type: "ERC721", supply: "1" };
   }
 
   /**

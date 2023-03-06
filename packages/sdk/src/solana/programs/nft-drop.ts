@@ -214,7 +214,7 @@ export class NFTDrop {
             uri: item.uri,
           },
           owner: PublicKey.default.toBase58(),
-          supply: 0,
+          supply: "0",
           type: "metaplex",
         } as NFT;
       }),
