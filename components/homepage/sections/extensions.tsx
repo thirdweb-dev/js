@@ -1,7 +1,6 @@
-import { AspectRatio, Box, Container, Flex, Image } from "@chakra-ui/react";
-import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
+import { KeyFeatureLayout } from "./key-features/KeyFeatureLayout";
+import { AspectRatio, Box, Image } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { Heading, Text } from "tw-components";
 
 export const ExtensionsSection: React.FC = () => {
   const [isHovering, setIsHovering] = useState(false);
@@ -20,27 +19,15 @@ export const ExtensionsSection: React.FC = () => {
   }, [isHovering]);
 
   return (
-    <HomepageSection my={24}>
-      <Flex align="center" gap={{ base: 0, md: 4 }} mb={12} direction="column">
-        <Heading as="h3" size="title.2xl" color="white" textAlign="center">
-          Contract-driven framework.
-        </Heading>
-        <Text
-          maxW="container.sm"
-          py={8}
-          mb={4}
-          as="h4"
-          size="body.lg"
-          color="whiteAlpha.700"
-          textAlign="center"
-          fontSize={{ base: "14px", md: "16px" }}
-        >
-          Our framework detects standards and common patterns in your contracts
-          to unlock smarter SDKs, custom admin dashboards, and tailored data
-          feeds.
-        </Text>
-      </Flex>
-      <Container maxW="container.sm">
+    <>
+      <KeyFeatureLayout
+        title="Extensions"
+        titleGradient="linear-gradient(246.04deg, #3385FF 9.81%, #91B7F0 76.17%, #95BBF2 93.64%)"
+        headline="Contract-driven framework."
+        description="Our framework detects standards and common patterns in your
+            contracts to unlock smarter SDKs, custom admin dashboards, and
+            tailored data feeds."
+      >
         <AspectRatio ratio={915 / 589} w="full">
           <Box
             onMouseOver={() => {
@@ -76,7 +63,7 @@ export const ExtensionsSection: React.FC = () => {
             />
           </Box>
         </AspectRatio>
-      </Container>
-    </HomepageSection>
+      </KeyFeatureLayout>
+    </>
   );
 };
