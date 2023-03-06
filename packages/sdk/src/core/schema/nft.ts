@@ -57,6 +57,6 @@ export type NFT = {
   metadata: NFTMetadata;
   owner: string;
   type: "ERC1155" | "ERC721" | "metaplex";
-  supply: number;
-  quantityOwned?: number;
+  supply: string;
+  quantityOwned?: string;
 };
