@@ -170,8 +170,8 @@ const ChainPage: ThirdwebNextPage = ({
         _dark={{
           bg: "linear-gradient(180deg, rgba(0,0,0,.0) 0%, rgba(0,0,0,.5) 100%)",
         }}
-        pb={{ base: 16, md: 20 }}
-        mb={6}
+        pb={{ base: 12, md: 20 }}
+        mb={{ base: 2, md: 6 }}
         boxShadow="lg"
       >
         <Container
@@ -193,11 +193,20 @@ const ChainPage: ThirdwebNextPage = ({
             gap={4}
             flexDirection={{ base: "column", md: "row" }}
           >
-            <Flex gap={6} align="center" flexGrow={1}>
+            <Flex
+              gap={6}
+              align="center"
+              flexGrow={1}
+              flexDir={{ base: "column", md: "row" }}
+            >
               <Center boxSize={20} overflow="hidden">
                 <ChainIcon ipfsSrc={chain.icon?.url} size={80} />
               </Center>
-              <Flex direction="column" gap={3}>
+              <Flex
+                direction="column"
+                gap={3}
+                alignItems={{ base: "center", md: "inherit" }}
+              >
                 <Heading size="title.lg" as="h1">
                   {chain.name} {chain.chain.length > 10 && <br />}
                   <Box
@@ -432,7 +441,7 @@ const ChainPage: ThirdwebNextPage = ({
           </ChainSectionElement>
         ) : null}
         <Divider />
-        <CodeOverview onlyInstall chain={chain} />
+        <CodeOverview onlyInstall chain={chain} noSidebar />
         {category && (
           <>
             <Divider />

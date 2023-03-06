@@ -20,6 +20,7 @@ import {
   Skeleton,
   Stack,
   Tooltip,
+  useBreakpointValue,
   useClipboard,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -184,6 +185,7 @@ export const ConnectWallet: React.FC<EcosystemButtonprops> = ({
   const [network, switchNetwork] = useNetworkWithPatchedSwitching();
   const address = useAddress();
   const chainId = useChainId();
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   const { hasCopied, onCopy, setValue } = useClipboard(address || "");
   const {
@@ -355,8 +357,8 @@ export const ConnectWallet: React.FC<EcosystemButtonprops> = ({
                   {networkMetadata.symbol}
                 </Heading>
                 <Text size="label.sm" color="accent.600">
-                  {shortenIfAddress(ensQuery.data?.ensName || address, true)} (
-                  {networkMetadata.chainName})
+                  {shortenIfAddress(ensQuery.data?.ensName || address, true)}
+                  {isMobile ? null : ` (${networkMetadata.chainName})`}
                 </Text>
               </Flex>
 

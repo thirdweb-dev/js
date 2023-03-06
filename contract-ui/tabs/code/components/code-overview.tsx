@@ -317,6 +317,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
       justifyContent="space-between"
       maxW="full"
       overflowX={{ base: "scroll", md: "hidden" }}
+      display={{ base: "block", md: "grid" }}
     >
       <GridItem
         as={Flex}
@@ -649,6 +650,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
           colSpan={{ base: 12, md: 3 }}
           flexDir="column"
           gap={3}
+          mt={12}
         >
           <Link href="#getting-started">
             <Text size="body.md">Getting Started</Text>

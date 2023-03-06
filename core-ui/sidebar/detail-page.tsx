@@ -129,7 +129,7 @@ export const ContractProgramSidebar: React.FC<ContractSidebarProps> = ({
         </Box>
         <Box
           display={{ base: "block", md: "none" }}
-          position="fixed"
+          position={openState.isOpen ? "fixed" : "absolute"}
           top="200px"
           bottom={0}
           right={0}
