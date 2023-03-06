@@ -2,9 +2,7 @@ import { media, radius, shadow, spacing } from "../design-system";
 import { FadeIn } from "./FadeIn";
 import { Skeleton } from "./Skeleton";
 import styled from "@emotion/styled";
-import { lazy, Suspense } from "react";
-
-const ReactQrCode = lazy(() => import("react-qr-code"));
+import ReactQrCode from "react-qr-code";
 
 export const QRCode: React.FC<{
   qrCodeUri?: string;
@@ -19,18 +17,15 @@ export const QRCode: React.FC<{
         alignItems: "center",
       }}
     >
-      <Suspense fallback={<QRSkeleton height="200px" width="200px" />}>
-        {props.qrCodeUri ? (
-          <FadeIn>
-            <QRCodeContainer>
-              <StyledReactQrCode value={props.qrCodeUri} />
-            </QRCodeContainer>
-          </FadeIn>
-        ) : (
-          <QRSkeleton height="200px" width="200px" />
-        )}
-      </Suspense>
-
+      {props.qrCodeUri ? (
+        <FadeIn>
+          <QRCodeContainer>
+            <StyledReactQrCode value={props.qrCodeUri} />
+          </QRCodeContainer>
+        </FadeIn>
+      ) : (
+        <QRSkeleton height="200px" width="200px" />
+      )}
       {props.QRIcon && (
         <QrCodeIconContainer>{props.QRIcon}</QrCodeIconContainer>
       )}

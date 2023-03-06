@@ -129,20 +129,24 @@ export const Web3Button = <TAction extends ActionFn>({
   }
 
   let content = children;
-  let buttonDisabled = false;
+  let buttonDisabled = !!isDisabled;
+  let buttonLoading = false;
 
-  if (hasMismatch) {
-    content = "Switch Network";
-  } else if (
-    actionMutation.isLoading ||
-    !contract ||
-    connectionStatus === "connecting" ||
-    connectionStatus === "unknown"
-  ) {
-    content = (
-      <Spinner size="sm" color={themeToUse === "dark" ? "black" : "white"} />
-    );
-    buttonDisabled = true;
+  // if button is disabled, show original action
+  if (!buttonDisabled) {
+    if (hasMismatch) {
+      content = "Switch Network";
+    } else if (
+      actionMutation.isLoading ||
+      !contract ||
+      connectionStatus === "connecting" ||
+      connectionStatus === "unknown"
+    ) {
+      content = (
+        <Spinner size="sm" color={themeToUse === "dark" ? "black" : "white"} />
+      );
+      buttonLoading = true;
+    }
   }
 
   return (
@@ -151,7 +155,7 @@ export const Web3Button = <TAction extends ActionFn>({
         variant="inverted"
         className={className}
         onClick={() => actionMutation.mutate()}
-        disabled={buttonDisabled || isDisabled}
+        disabled={buttonDisabled || buttonLoading}
         style={{
           minWidth: "120px",
           minHeight: "43px",
