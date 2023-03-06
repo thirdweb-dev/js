@@ -73,6 +73,7 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
             type="submit"
             transactionCount={1}
             isLoading={false}
+            isGasless
           >
             Import
           </TransactionButton>

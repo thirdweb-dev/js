@@ -19,12 +19,13 @@ import { CHAIN_ID_TO_GNOSIS } from "constants/mappings";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { BiTransferAlt } from "react-icons/bi";
 import { FiInfo } from "react-icons/fi";
-import { Card, Heading, LinkButton, Text } from "tw-components";
+import { Button, Card, Heading, LinkButton, Text } from "tw-components";
 
 export interface TransactionButtonProps
   extends Omit<EcosystemButtonprops, "leftIcon"> {
   transactionCount: number;
   isLoading: boolean;
+  isGasless?: boolean;
 }
 
 export const TransactionButton: React.FC<TransactionButtonProps> = ({
@@ -35,6 +36,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   colorScheme,
   variant,
   ecosystem,
+  isGasless,
   ...restButtonProps
 }) => {
   const colorMode = useColorMode();
@@ -68,6 +70,10 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
     return !!evmAddress || !!solAddress?.toBase58();
   }, [ecosystem, evmAddress, solAddress]);
 
+  const ButtonComponent = useMemo(() => {
+    return isGasless ? Button : MismatchButton;
+  }, [isGasless]);
+
   return (
     <Popover
       returnFocusOnClose={false}
@@ -76,7 +82,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
       isOpen={connectorRequiresExternalConfirmation && isLoading}
     >
       <PopoverTrigger>
-        <MismatchButton
+        <ButtonComponent
           ecosystem={ecosystem}
           borderRadius="md"
           position="relative"
@@ -147,7 +153,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
               </Flex>
             </Center>
           </Tooltip>
-        </MismatchButton>
+        </ButtonComponent>
       </PopoverTrigger>
       <Card
         maxW="sm"
