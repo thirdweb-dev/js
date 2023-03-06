@@ -1,8 +1,8 @@
 import { DisconnectIcon } from "../../assets/disconnect";
-import { useActiveWalletMeta } from "../../contexts/wallets-context";
+import { IWalletWithMetadata } from "../../wallets/wallets/wallets";
 import { Address } from "../base/Address";
 import { WalletIcon } from "../base/WalletIcon";
-import { useBalance } from "@thirdweb-dev/react-core";
+import { useActiveWallet, useBalance } from "@thirdweb-dev/react-core";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 
@@ -16,12 +16,18 @@ export const WalletDetailsModalHeader = ({
   onDisconnectPress,
 }: WalletDetailsModalHeaderProps) => {
   const balanceQuery = useBalance();
-  const activeWalletMeta = useActiveWalletMeta();
+  const activeWallet = useActiveWallet();
 
   return (
     <>
       <View style={styles.header}>
-        <WalletIcon size={40} iconUri={activeWalletMeta?.image_url || ""} />
+        <WalletIcon
+          size={40}
+          iconUri={
+            (activeWallet as unknown as IWalletWithMetadata).getMetadata()
+              .image_url || ""
+          }
+        />
         <View style={styles.walletInfo}>
           <Address address={address} />
           <Text style={styles.balance}>

@@ -176,6 +176,7 @@ export class WalletConnectV1Connector extends Connector<
       this.#provider.on("chainChanged", this.onChainChanged);
       this.#provider.on("disconnect", this.onDisconnect);
       this.#provider.on("message", this.onMessage);
+      this.#provider.on("switchChain", this.onSwitchChain);
       this.#provider.connector.on("display_uri", this.onDisplayUri);
       this.#provider.connector.on("call_request_sent", this.onRequestSent);
     }
@@ -212,7 +213,6 @@ export class WalletConnectV1Connector extends Connector<
       // to ensure the chain has been switched. This is because there could be a case
       // where a wallet may not resolve the `wallet_switchEthereumChain` method, or
       // resolves slower than `chainChanged`.
-      this.emit("message", { type: "switch_chain" });
       await Promise.race([
         provider.request({
           method: "wallet_switchEthereumChain",
@@ -296,6 +296,10 @@ export class WalletConnectV1Connector extends Connector<
 
     this.#storage.setItem(LAST_SESSION, sessionStr);
   }
+
+  protected onSwitchChain = (chainId: string) => {
+    this.emit("message", { type: "switch_chain" });
+  };
 
   protected onDisplayUri = (error: any, payload: { params: string[] }) => {
     if (error) {

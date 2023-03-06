@@ -42,7 +42,6 @@ type ThirdwebWalletContextData = {
   activeChainId?: number;
   chainIdToConnect?: number;
   handleWalletConnect: (walletId: InstanceType<SupportedWallet>) => void;
-  displayUri?: string;
 };
 
 const ThirdwebWalletContext = createContext<
@@ -61,7 +60,6 @@ export function ThirdwebWalletProvider(
 ) {
   const [signer, setSigner] = useState<Signer | undefined>(undefined);
   const [activeChainId, setActiveChainId] = useState<number | undefined>();
-  const [displayUri, setDisplayUri] = useState<string | undefined>();
   const [connectionStatus, setConnectionStatus] =
     useState<ConnectionStatus>("unknown");
 
@@ -143,6 +141,11 @@ export function ThirdwebWalletProvider(
       return;
     }
 
+    if (connectionStatus !== "unknown") {
+      // only try to auto connect if we're in the unknown state
+      return;
+    }
+
     (async () => {
       const lastConnectedWalletId = await coordinatorStorage.getItem(
         "lastConnectedWallet",
@@ -174,12 +177,6 @@ export function ThirdwebWalletProvider(
     activeWallet,
   ]);
 
-  const onWCOpenWallet = useCallback((uri?: string) => {
-    if (uri) {
-      setDisplayUri(uri);
-    }
-  }, []);
-
   const connectWallet = useCallback(
     async <W extends SupportedWallet>(
       Wallet: W,
@@ -204,10 +201,10 @@ export function ThirdwebWalletProvider(
   );
 
   const onWalletDisconnect = useCallback(() => {
+    setConnectionStatus("disconnected");
     setSigner(undefined);
     setActiveChainId(undefined);
     setActiveWallet(undefined);
-    setDisplayUri(undefined);
   }, []);
 
   const disconnectWallet = useCallback(() => {
@@ -216,14 +213,10 @@ export function ThirdwebWalletProvider(
       return;
     }
 
-    if (activeWallet.walletId.includes("walletConnect")) {
-      activeWallet.removeListener("open_wallet", onWCOpenWallet);
-    }
-
     activeWallet.disconnect().then(() => {
       onWalletDisconnect();
     });
-  }, [activeWallet, onWCOpenWallet, onWalletDisconnect]);
+  }, [activeWallet, onWalletDisconnect]);
 
   // when wallet's network or account is changed using the extension, update UI
   useEffect(() => {
@@ -274,7 +267,6 @@ export function ThirdwebWalletProvider(
         createWalletStorage: props.createWalletStorage,
         switchChain,
         activeChainId,
-        displayUri,
         handleWalletConnect,
         chainIdToConnect,
       }}

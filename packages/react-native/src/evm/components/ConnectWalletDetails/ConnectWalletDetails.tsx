@@ -1,4 +1,4 @@
-import { useActiveWalletMeta } from "../../contexts/wallets-context";
+import { IWalletWithMetadata } from "../../wallets/wallets/wallets";
 import { NetworkSelectorModal } from "../NetworkSelector/NetworkSelectorModal";
 import { Address } from "../base/Address";
 import { ChainIcon } from "../base/ChainIcon";
@@ -31,26 +31,32 @@ export const ConnectWalletDetails = ({
     useState(false);
 
   const activeWallet = useActiveWallet();
-  const activeWalletMeta = useActiveWalletMeta();
   const disconnect = useDisconnect();
   const chain = useActiveChain();
   const balanceQuery = useBalance();
 
   useEffect(() => {
-    if (activeWallet?.walletId.includes("walletConnect")) {
+    console.log("activeWallet.useEffect", activeWallet);
+    if (activeWallet) {
+      const mobileUrl = (
+        activeWallet as unknown as IWalletWithMetadata
+      ).getMetadata().mobile.universal;
+      console.log("activeWallet.mobileUrl", mobileUrl);
       activeWallet.on("open_wallet", (uri?: string) => {
-        if (!uri && activeWalletMeta?.mobile.universal) {
-          Linking.openURL(activeWalletMeta?.mobile.universal);
+        console.log("activeWallet.open_wallet");
+        if (!uri && mobileUrl) {
+          Linking.openURL(mobileUrl);
         }
       });
     }
 
     return () => {
       if (activeWallet?.walletId.includes("walletConnect")) {
+        console.log("remove listener");
         activeWallet.off("open_wallet");
       }
     };
-  }, [activeWallet, activeWalletMeta, activeWalletMeta?.mobile.universal]);
+  }, [activeWallet]);
 
   const onPress = () => {
     setIsDetailsModalVisible(true);
@@ -96,7 +102,13 @@ export const ConnectWalletDetails = ({
           </Text>
           <Address style={styles.address} address={address} />
         </View>
-        <WalletIcon size={32} iconUri={activeWalletMeta?.image_url || ""} />
+        <WalletIcon
+          size={32}
+          iconUri={
+            (activeWallet as unknown as IWalletWithMetadata).getMetadata()
+              .image_url || ""
+          }
+        />
       </TouchableOpacity>
     </>
   );

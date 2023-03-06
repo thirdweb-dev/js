@@ -1,5 +1,8 @@
 import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
 import { TW_WC_PROJECT_ID } from "../../constants/walletConnect";
+import { walletsMetadata } from "../../constants/walletsMetadata";
+import { WalletMeta } from "../../types/wallet";
+import { formatDisplayUri } from "../../utils/uri";
 import { ExtraCoreWalletOptions } from "@thirdweb-dev/react-core";
 import type {
   DeviceWalletOptions as DeviceWalletCoreOptions,
@@ -12,6 +15,7 @@ import {
   WalletConnect as WalletConnectCore,
   WalletConnectV1 as WalletConnectV1Core,
 } from "@thirdweb-dev/wallets";
+import { Linking } from "react-native";
 
 const DEFAULT_NAME_METADATA = "Dapp powered by Thirdweb";
 const DEFAULT_URL_METADATA = "thirdweb.com";
@@ -23,13 +27,19 @@ type WC1Options = Omit<
 > &
   ExtraCoreWalletOptions;
 
-export class MetamaskWallet extends WalletConnectV1Core {
+export interface IWalletWithMetadata {
+  getMetadata(): WalletMeta;
+}
+
+export class MetamaskWallet
+  extends WalletConnectV1Core
+  implements IWalletWithMetadata
+{
   constructor(options: WC1Options) {
     const storage = createAsyncLocalStorage("metamask");
     super({
       ...options,
       walletStorage: storage,
-      coordinatorStorage: storage,
       qrcode: false,
       dappMetadata: {
         url: options.clientMeta?.url || DEFAULT_URL_METADATA,
@@ -38,6 +48,24 @@ export class MetamaskWallet extends WalletConnectV1Core {
         description: options.clientMeta?.description,
       },
     });
+
+    console.log("add listener to open_wallet");
+    this.on("open_wallet", this._onWCOpenWallet);
+  }
+
+  getMetadata() {
+    return walletsMetadata.metamask as WalletMeta;
+  }
+
+  _onWCOpenWallet(uri?: string) {
+    console.log("on open wallet", uri);
+    const meta = this.getMetadata();
+
+    if (uri) {
+      const fullUrl = formatDisplayUri(uri, meta);
+
+      Linking.openURL(fullUrl);
+    }
   }
 }
 

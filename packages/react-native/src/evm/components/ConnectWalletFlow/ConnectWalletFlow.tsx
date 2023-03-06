@@ -1,18 +1,12 @@
-import { useSupportedWallets } from "../../contexts/wallets-context";
 import { WalletMeta } from "../../types/wallet";
-import { formatDisplayUri } from "../../utils/uri";
 import { getWalletsMeta } from "../../utils/wallets";
 import { TWModal } from "../base/modal/TWModal";
 import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
-import {
-  useConnect,
-  useDisplayUri,
-  useWallets,
-} from "@thirdweb-dev/react-core";
+import { useConnect, useWallets } from "@thirdweb-dev/react-core";
 import { WalletConnect, WalletConnectV1 } from "@thirdweb-dev/wallets";
-import React, { useEffect, useState } from "react";
-import { Text, StyleSheet, TouchableOpacity, Linking } from "react-native";
+import React, { useState } from "react";
+import { Text, StyleSheet, TouchableOpacity } from "react-native";
 import invariant from "tiny-invariant";
 
 export const ConnectWalletFlow = () => {
@@ -22,17 +16,8 @@ export const ConnectWalletFlow = () => {
   >();
 
   const connect = useConnect();
-  const supportedWallets = useSupportedWallets();
+  const supportedWallets = useWallets();
   const walletClasses = useWallets();
-  const displayUri = useDisplayUri();
-
-  useEffect(() => {
-    if (displayUri && activeWalletMeta && modalVisible) {
-      const fullUrl = formatDisplayUri(displayUri, activeWalletMeta);
-
-      Linking.openURL(fullUrl);
-    }
-  }, [activeWalletMeta, displayUri, modalVisible]);
 
   const onConnectPress = () => {
     setModalVisible(true);

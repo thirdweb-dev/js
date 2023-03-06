@@ -22,7 +22,6 @@ export {
   useDisconnect,
   useSupportedChains,
   useWallets,
-  useDisplayUri,
 } from "@thirdweb-dev/react-core";
 
 // re-export everything from react-core

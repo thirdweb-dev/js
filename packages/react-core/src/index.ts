@@ -15,7 +15,6 @@ export {
   useDisconnect,
   useSwitchChain,
   useWallets,
-  useDisplayUri,
 } from "./core/hooks/wallet-hooks";
 export { useThirdwebWallet } from "./core/providers/thirdweb-wallet-provider";
 
