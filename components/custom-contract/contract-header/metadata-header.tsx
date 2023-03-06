@@ -19,6 +19,7 @@ interface MetadataHeaderProps {
     description?: string | null;
     image?: string | null;
   };
+  ecosystem?: "solana" | "evm";
 }
 
 export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
@@ -26,6 +27,7 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
   isError,
   address,
   data,
+  ecosystem,
 }) => {
   const chainId = useDashboardEVMChainId();
   const chainInfo = useConfiguredChain(chainId || -1);
@@ -104,7 +106,10 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
 
         <Flex direction="column" gap={2} align="flex-start">
           {isError ? (
-            <Heading size="title.md">No Contract Metadata Detected</Heading>
+            <Heading size="title.md">
+              No {ecosystem === "solana" ? "Program" : "Contract"} Metadata
+              Detected
+            </Heading>
           ) : (
             <Skeleton isLoaded={isLoaded}>
               <Heading size="title.md">{data?.name ? data?.name : ""}</Heading>
@@ -112,9 +117,9 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
           )}
           {isError ? (
             <Text maxW="lg" size="body.sm" noOfLines={3}>
-              This contract does not implement any standards that can be used to
-              retrieve metadata. Other contract functionality will still be
-              available.
+              This {ecosystem === "solana" ? "program" : "contract"} does not
+              implement any standards that can be used to retrieve metadata. All
+              other functionality is still available.
             </Text>
           ) : (
             <Skeleton isLoaded={isLoaded}>

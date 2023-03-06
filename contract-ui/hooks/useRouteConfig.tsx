@@ -1,12 +1,9 @@
 import { contractType, useContract } from "@thirdweb-dev/react";
-import {
-  ExtensionDetectedState,
-  extensionDetectedState,
-} from "components/buttons/ExtensionDetectButton";
+import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { useEns } from "components/contract-components/hooks";
 import { CustomContractOverviewPage } from "contract-ui/tabs/overview/page";
+import { EnhancedRoute } from "contract-ui/types/types";
 import dynamic from "next/dynamic";
-import { ComponentType } from "react";
 
 // evm
 const LazyContractExplorerPage = dynamic(() =>
@@ -81,15 +78,6 @@ const LazyCustomContractSourcesPage = dynamic(() =>
   ),
 );
 // end evm
-
-export type EnhancedRoute<T = any> = {
-  title: string;
-  path: string;
-  isDefault?: true;
-  isEnabled?: ExtensionDetectedState;
-  component: ComponentType<T>;
-};
-
 export function useContractRouteConfig(
   contractAddress: string,
 ): EnhancedRoute[] {

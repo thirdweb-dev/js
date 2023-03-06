@@ -1,9 +1,8 @@
 import { Flex } from "@chakra-ui/react";
 import { useProgram } from "@thirdweb-dev/react/solana";
-import { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { ProgramOverviewTab } from "components/pages/program";
+import { EnhancedRoute } from "contract-ui/types/types";
 import dynamic from "next/dynamic";
-import { ComponentType } from "react";
 import { Card, Heading, Text } from "tw-components";
 
 // solana
@@ -25,13 +24,6 @@ const LazyProgramSettingsTab = dynamic(() =>
 );
 // end solana
 
-export type EnhancedRoute<T = any> = {
-  title: string;
-  path: string;
-  isEnabled?: ExtensionDetectedState;
-  component: ComponentType<T>;
-};
-
 export function useProgramRouteConfig(programAddress: string): EnhancedRoute[] {
   const { data: program, isLoading } = useProgram(programAddress);
 
@@ -41,6 +33,7 @@ export function useProgramRouteConfig(programAddress: string): EnhancedRoute[] {
       path: "overview",
       // not lazy because it's the typcial landing page
       component: ProgramOverviewTab,
+      isDefault: true,
     },
     {
       title: "Claim Conditions",
@@ -51,15 +44,18 @@ export function useProgramRouteConfig(programAddress: string): EnhancedRoute[] {
         : program?.accountType === "nft-drop"
         ? "enabled"
         : "disabled",
+      isDefault: true,
     },
     {
       title: "Code",
       path: "code",
       component: LazyProgramCodeTab,
+      isDefault: true,
     },
     {
       title: "Settings",
       path: "settings",
+      isDefault: true,
       component:
         program?.accountType === "nft-collection"
           ? LazyProgramSettingsTab

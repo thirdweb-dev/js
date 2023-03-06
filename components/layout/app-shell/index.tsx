@@ -1,10 +1,10 @@
-import { SIDEBAR_TUNNEL_ID } from "./sidebar";
 import { ConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { Container, Flex, Grid, GridItem, Icon } from "@chakra-ui/react";
 import { Ethereum, Solana } from "@thirdweb-dev/chain-icons";
 import { CmdKSearch } from "components/cmd-k-search";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
 import { Logo } from "components/logo";
+import { SIDEBAR_TUNNEL_ID } from "core-ui/sidebar/tunnel";
 import { useRouter } from "next/router";
 import { FiFile, FiGlobe, FiHelpCircle } from "react-icons/fi";
 import {

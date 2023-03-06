@@ -9,33 +9,23 @@ import { useMemo } from "react";
 
 interface ProgramMetadataProps {
   address: string;
+  programQuery: ReturnType<typeof useProgram>;
+  metadataQuery: ReturnType<typeof useProgramMetadata>;
 }
 
 export const ProgramMetadata: React.FC<ProgramMetadataProps> = ({
   address,
+  programQuery,
+  metadataQuery,
 }) => {
-  const programQuery = useProgram(address);
-  const metadataQuery = useProgramMetadata(programQuery.data);
-
   const contractTypeImage = useMemo(() => {
     return programQuery.data
       ? PREBUILT_SOLANA_CONTRACTS_MAP[programQuery.data.accountType].icon
       : FeatureIconMap["custom"];
   }, [programQuery.data]);
 
-  if (metadataQuery.isError) {
-    return <Box>Failed to load program metadata</Box>;
-  }
   return (
-    <Box
-      borderColor="borderColor"
-      borderTopWidth={1}
-      borderBottomWidth={1}
-      bg="backgroundHighlight"
-      w="full"
-      as="aside"
-      py={6}
-    >
+    <Box borderColor="borderColor" borderBottomWidth={1} w="full" pb={8}>
       <Container maxW="container.page">
         <Flex
           justify="space-between"
@@ -44,6 +34,8 @@ export const ProgramMetadata: React.FC<ProgramMetadataProps> = ({
           gap={4}
         >
           <MetadataHeader
+            ecosystem="solana"
+            isError={metadataQuery.isError}
             isLoaded={metadataQuery.isSuccess}
             data={metadataQuery.data}
             address={address}

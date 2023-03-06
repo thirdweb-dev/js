@@ -1,16 +1,20 @@
-import { Flex, Spinner } from "@chakra-ui/react";
+import { Box, Container, Flex, Spinner } from "@chakra-ui/react";
 import { DehydratedState } from "@tanstack/react-query";
+import { useProgram, useProgramMetadata } from "@thirdweb-dev/react/solana";
 import { AppLayout } from "components/app-layouts/app";
 import {
   SolanaProgramInfo,
   SolanaProgramInfoProvider,
 } from "contexts/solana-program";
+import { DropNotReady } from "contract-ui/tabs/claim-conditions/components/drop-not-ready";
+import { ContractProgramSidebar } from "core-ui/sidebar/detail-page";
 import { isPossibleSolanaAddress } from "lib/address-utils";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { ProgramMetadata } from "program-ui/common/program-metadata";
-import { ProgramTabRouter } from "program-ui/layout/tab-router";
+import { useProgramRouteConfig } from "program-ui/hooks/useRouteConfig";
+import { useMemo } from "react";
 import { getSolNetworkFromNetworkPath } from "utils/solanaUtils";
 import { ThirdwebNextPage } from "utils/types";
 
@@ -23,12 +27,39 @@ const SolanaProgramPage: ThirdwebNextPage = (props: SolanaProgramProps) => {
   const { programAddress } = props.programInfo;
   const router = useRouter();
 
+  const programQuery = useProgram(programAddress);
+  const programMetadataQuery = useProgramMetadata(programQuery.program);
   const activeTab = router.query?.paths?.[2] || "overview";
+
+  const routes = useProgramRouteConfig(programAddress);
+
+  const activeRoute = useMemo(
+    () => routes.find((route) => route.path === activeTab),
+    [activeTab, routes],
+  );
+
   return (
-    <>
-      <ProgramMetadata address={programAddress} />
-      <ProgramTabRouter address={programAddress} path={activeTab} />
-    </>
+    <Flex direction="column" w="100%">
+      <ProgramMetadata
+        address={programAddress}
+        metadataQuery={programMetadataQuery}
+        programQuery={programQuery}
+      />
+      <ContractProgramSidebar
+        address={programAddress}
+        metadataQuery={programMetadataQuery}
+        routes={routes}
+        activeRoute={activeRoute}
+      />
+      <Container maxW="container.page">
+        <Box pt={8}>
+          <DropNotReady address={programAddress} />
+          {activeRoute?.component && (
+            <activeRoute.component address={programAddress} />
+          )}
+        </Box>
+      </Container>
+    </Flex>
   );
 };
 
@@ -37,10 +68,7 @@ SolanaProgramPage.pageId = PageId.DeployedProgram;
 SolanaProgramPage.getLayout = (page, pageProps: SolanaProgramProps) => {
   // app layout has to come first in both getLayout and fallback
   return (
-    <AppLayout
-      layout={"custom-contract"}
-      dehydratedState={{ mutations: [], queries: [] }}
-    >
+    <AppLayout layout={"custom-contract"}>
       <SolanaProgramInfoProvider value={pageProps.programInfo}>
         {page}
       </SolanaProgramInfoProvider>
