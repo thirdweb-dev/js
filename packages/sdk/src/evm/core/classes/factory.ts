@@ -91,10 +91,8 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     // TODO: is there any special pre-processing we need to do before uploading?
     const contractURI = await this.storage.upload(metadata);
 
-    const implementationAddress = (await this.getImplementation(
-      contract,
-      version,
-    )) as Address | undefined;
+    const implementationAddress =
+      (await this.getImplementation(contract, version)) || undefined;
 
     if (
       !implementationAddress ||
@@ -147,7 +145,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       transactionHash: receipt.transactionHash,
     });
 
-    return contractAddress as Address;
+    return contractAddress;
   }
 
   // TODO once IContractFactory is implemented, this can be probably be moved to its own class
@@ -184,7 +182,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       transactionHash: receipt.transactionHash,
     });
 
-    return contractAddress as Address;
+    return contractAddress;
   }
 
   /**

@@ -3,7 +3,6 @@ import {
   extractFunctionsFromAbi,
   fetchContractMetadataFromAddress,
 } from "../../common";
-import { Address } from "../../schema";
 import {
   AbiEvent,
   AbiFunction,
@@ -41,7 +40,7 @@ export class ContractPublishedMetadata<TContract extends BaseContract> {
       return this._cachedMetadata;
     }
     this._cachedMetadata = await fetchContractMetadataFromAddress(
-      this.contractWrapper.readContract.address as Address,
+      this.contractWrapper.readContract.address,
       this.contractWrapper.getProvider(),
       this.storage,
     );

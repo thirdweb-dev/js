@@ -67,7 +67,7 @@ export async function prepareClaim(
   );
   let proofs = [utils.hexZeroPad([0], 32)];
   let priceInProof = activeClaimCondition.price; // the price to send to the contract in claim proofs
-  let currencyAddressInProof = activeClaimCondition.currencyAddress as Address;
+  let currencyAddressInProof = activeClaimCondition.currencyAddress;
   try {
     if (
       !activeClaimCondition.merkleRootHash
@@ -102,8 +102,7 @@ export async function prepareClaim(
                 snapshotEntry.currencyAddress || ethers.constants.AddressZero,
               );
         currencyAddressInProof =
-          snapshotEntry.currencyAddress ||
-          (ethers.constants.AddressZero as Address);
+          snapshotEntry.currencyAddress || ethers.constants.AddressZero;
       } else {
         // if no snapshot entry, and it's a v1 format (exclusive allowlist) then address can't claim
         if (snapshotFormatVersion === SnapshotFormatVersion.V1) {
@@ -133,11 +132,10 @@ export async function prepareClaim(
       ? priceInProof
       : activeClaimCondition.price;
   // same for currency address
-  const currencyAddress = (
+  const currencyAddress =
     currencyAddressInProof !== ethers.constants.AddressZero
       ? currencyAddressInProof
-      : activeClaimCondition.currencyAddress
-  ) as Address;
+      : activeClaimCondition.currencyAddress;
   if (pricePerToken.gt(0)) {
     if (isNativeToken(currencyAddress)) {
       overrides["value"] = BigNumber.from(pricePerToken)

@@ -17,7 +17,7 @@ import {
 } from "../../constants/contract";
 import { FEATURE_DIRECT_LISTINGS } from "../../constants/thirdweb-features";
 import { Status } from "../../enums";
-import { Address, AddressOrEns } from "../../schema";
+import { AddressOrEns } from "../../schema";
 import {
   DirectListingInputParams,
   DirectListingInputParamsSchema,
@@ -785,8 +785,8 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
     }
 
     return {
-      assetContractAddress: listing.assetContract as Address,
-      currencyContractAddress: listing.currency as Address,
+      assetContractAddress: listing.assetContract,
+      currencyContractAddress: listing.currency,
       pricePerToken: listing.pricePerToken.toString(),
       currencyValuePerToken: await fetchCurrencyValue(
         this.contractWrapper.getProvider(),
@@ -804,7 +804,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
         this.storage,
       ),
       endTimeInSeconds: BigNumber.from(listing.endTimestamp).toNumber(),
-      creatorAddress: listing.listingCreator as Address,
+      creatorAddress: listing.listingCreator,
       isReservedListing: listing.reserved,
       status: status,
     };

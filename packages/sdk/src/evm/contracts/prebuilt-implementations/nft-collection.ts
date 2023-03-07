@@ -159,7 +159,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address as Address;
+    return this.contractWrapper.readContract.address;
   }
 
   /** ******************************

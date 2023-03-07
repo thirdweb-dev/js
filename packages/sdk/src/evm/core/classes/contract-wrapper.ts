@@ -115,7 +115,7 @@ export class ContractWrapper<
         "This action requires a connected wallet to sign the transaction. Please pass a valid signer to the SDK.",
       );
     }
-    return (await signer.getAddress()) as Address;
+    return await signer.getAddress();
   }
 
   /**
@@ -520,7 +520,7 @@ export class ContractWrapper<
     let contractName: string | undefined = undefined;
     try {
       const metadata = await fetchContractMetadataFromAddress(
-        this.readContract.address as Address,
+        this.readContract.address,
         this.getProvider(),
         this.#storage,
       );

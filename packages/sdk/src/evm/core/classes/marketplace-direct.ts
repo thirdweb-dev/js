@@ -19,7 +19,7 @@ import {
   InterfaceId_IERC721,
 } from "../../constants/contract";
 import { ListingType } from "../../enums";
-import { Address, AddressOrEns } from "../../schema";
+import { AddressOrEns } from "../../schema";
 import { Price } from "../../types/currency";
 import {
   DirectListing,
@@ -474,9 +474,9 @@ export class MarketplaceDirect {
     listing: IMarketplace.ListingStruct,
   ): Promise<DirectListing> {
     return {
-      assetContractAddress: listing.assetContract as Address,
+      assetContractAddress: listing.assetContract,
       buyoutPrice: BigNumber.from(listing.buyoutPricePerToken),
-      currencyContractAddress: listing.currency as Address,
+      currencyContractAddress: listing.currency,
       buyoutCurrencyValuePerToken: await fetchCurrencyValue(
         this.contractWrapper.getProvider(),
         listing.currency,
@@ -493,7 +493,7 @@ export class MarketplaceDirect {
         this.storage,
       ),
       secondsUntilEnd: listing.endTime,
-      sellerAddress: listing.tokenOwner as Address,
+      sellerAddress: listing.tokenOwner,
       type: ListingType.Direct,
     };
   }

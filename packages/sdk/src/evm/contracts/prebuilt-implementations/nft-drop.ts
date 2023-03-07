@@ -215,7 +215,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address as Address;
+    return this.contractWrapper.readContract.address;
   }
 
   /** ******************************

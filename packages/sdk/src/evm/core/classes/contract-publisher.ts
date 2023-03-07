@@ -14,7 +14,6 @@ import { buildTransactionFunction } from "../../common/transactions";
 import { getContractPublisherAddress } from "../../constants";
 import {
   AbiFunction,
-  Address,
   AddressOrEns,
   ContractParam,
   ContractSource,
@@ -231,7 +230,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     async (profileMetadata: ProfileMetadataInput) => {
       const signer = this.getSigner();
       invariant(signer, "A signer is required");
-      const publisher = (await signer.getAddress()) as Address;
+      const publisher = await signer.getAddress();
       const profileUri = await this.storage.upload(profileMetadata);
 
       return Transaction.fromContractWrapper({
@@ -356,7 +355,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     ): Promise<Transaction<TransactionResult<PublishedContract>>> => {
       const signer = this.getSigner();
       invariant(signer, "A signer is required");
-      const publisher = (await signer.getAddress()) as Address;
+      const publisher = await signer.getAddress();
 
       const predeployMetadata = await fetchRawPredeployMetadata(
         predeployUri,

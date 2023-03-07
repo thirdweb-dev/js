@@ -13,7 +13,7 @@ import {
   getContractTypeForRemoteName,
 } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
-import { Abi, AbiSchema, Address, AddressOrEns, SDKOptions } from "../schema";
+import { Abi, AbiSchema, AddressOrEns, SDKOptions } from "../schema";
 import { ContractWithMetadata, CurrencyValue } from "../types";
 import { ContractDeployer } from "./classes";
 import { ContractPublisher } from "./classes/contract-publisher";
@@ -581,14 +581,14 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     return await Promise.all(
       addresses.map(async (address) => {
         return {
-          address: address as Address,
+          address: address,
           chainId,
-          contractType: () => this.resolveContractType(address as Address),
+          contractType: () => this.resolveContractType(address),
           metadata: async () =>
-            (await this.getContract(address as Address)).metadata.get(),
+            (await this.getContract(address)).metadata.get(),
           extensions: async () =>
             getAllDetectedFeatureNames(
-              (await this.getContract(address as Address)).abi as Abi,
+              (await this.getContract(address)).abi as Abi,
             ),
         };
       }),

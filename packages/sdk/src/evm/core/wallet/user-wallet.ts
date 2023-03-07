@@ -249,7 +249,7 @@ export class UserWallet {
   public recoverAddress(message: string, signature: string): Address {
     const messageHash = ethers.utils.hashMessage(message);
     const messageHashBytes = ethers.utils.arrayify(messageHash);
-    return ethers.utils.recoverAddress(messageHashBytes, signature) as Address;
+    return ethers.utils.recoverAddress(messageHashBytes, signature);
   }
 
   /**

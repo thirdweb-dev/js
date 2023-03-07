@@ -151,7 +151,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address as Address;
+    return this.contractWrapper.readContract.address;
   }
 
   /** ******************************

@@ -212,8 +212,8 @@ export class MarketplaceV3EnglishAuctions<
     }
     return await this.mapBid(
       auctionId.toString(),
-      bid._bidder as Address,
-      bid._currency as Address,
+      bid._bidder,
+      bid._currency,
       bid._bidAmount.toString(),
     );
   }
@@ -268,7 +268,7 @@ export class MarketplaceV3EnglishAuctions<
 
     // if we have a winner in the map and the current time is past the endtime of the auction return the address of the winner
     if (now.gt(endTime) && bid._bidder !== constants.AddressZero) {
-      return bid._bidder as Address;
+      return bid._bidder;
     }
     // otherwise fall back to query filter things
 
@@ -284,7 +284,7 @@ export class MarketplaceV3EnglishAuctions<
         `Could not find auction with ID ${auctionId} in closed auctions`,
       );
     }
-    return closed.args.winningBidder as Address;
+    return closed.args.winningBidder;
   }
 
   /** ******************************
@@ -772,11 +772,11 @@ export class MarketplaceV3EnglishAuctions<
 
     return {
       id: auction.auctionId.toString(),
-      creatorAddress: auction.auctionCreator as Address,
-      assetContractAddress: auction.assetContract as Address,
+      creatorAddress: auction.auctionCreator,
+      assetContractAddress: auction.assetContract,
       tokenId: auction.tokenId.toString(),
       quantity: auction.quantity.toString(),
-      currencyContractAddress: auction.currency as Address,
+      currencyContractAddress: auction.currency,
       minimumBidAmount: auction.minimumBidAmount.toString(),
       minimumBidCurrencyValue: await fetchCurrencyValue(
         this.contractWrapper.getProvider(),

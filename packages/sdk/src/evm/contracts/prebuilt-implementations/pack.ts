@@ -167,7 +167,7 @@ export class Pack extends StandardErc1155<PackContract> {
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address as Address;
+    return this.contractWrapper.readContract.address;
   }
 
   /** ******************************
@@ -288,7 +288,7 @@ export class Pack extends StandardErc1155<PackContract> {
             tokenMetadata.decimals,
           );
           erc20Rewards.push({
-            contractAddress: reward.assetContract as Address,
+            contractAddress: reward.assetContract,
             quantityPerReward: amount.toString(),
             totalRewards: BigNumber.from(rewardAmount).div(amount).toString(),
           });
@@ -296,14 +296,14 @@ export class Pack extends StandardErc1155<PackContract> {
         }
         case 1: {
           erc721Rewards.push({
-            contractAddress: reward.assetContract as Address,
+            contractAddress: reward.assetContract,
             tokenId: reward.tokenId.toString(),
           });
           break;
         }
         case 2: {
           erc1155Rewards.push({
-            contractAddress: reward.assetContract as Address,
+            contractAddress: reward.assetContract,
             tokenId: reward.tokenId.toString(),
             quantityPerReward: amount.toString(),
             totalRewards: BigNumber.from(reward.totalAmount)
@@ -600,7 +600,7 @@ export class Pack extends StandardErc1155<PackContract> {
             reward.assetContract,
           );
           erc20Rewards.push({
-            contractAddress: reward.assetContract as Address,
+            contractAddress: reward.assetContract,
             quantityPerReward: ethers.utils
               .formatUnits(reward.totalAmount, tokenMetadata.decimals)
               .toString(),
@@ -609,14 +609,14 @@ export class Pack extends StandardErc1155<PackContract> {
         }
         case 1: {
           erc721Rewards.push({
-            contractAddress: reward.assetContract as Address,
+            contractAddress: reward.assetContract,
             tokenId: reward.tokenId.toString(),
           });
           break;
         }
         case 2: {
           erc1155Rewards.push({
-            contractAddress: reward.assetContract as Address,
+            contractAddress: reward.assetContract,
             tokenId: reward.tokenId.toString(),
             quantityPerReward: reward.totalAmount.toString(),
           });

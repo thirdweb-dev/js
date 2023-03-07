@@ -867,7 +867,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       contractAddress: deployedContract.address,
       transactionHash: deployedContract.deployTransaction.hash,
     });
-    return deployedContract.address as Address;
+    return deployedContract.address;
   }
 
   /**

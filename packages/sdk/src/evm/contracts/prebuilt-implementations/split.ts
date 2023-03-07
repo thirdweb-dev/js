@@ -107,7 +107,7 @@ export class Split implements UpdateableNetwork {
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address as Address;
+    return this.contractWrapper.readContract.address;
   }
 
   /** ******************************
@@ -132,9 +132,9 @@ export class Split implements UpdateableNetwork {
       await this.contractWrapper.readContract.payeeCount();
     while (index.lt(totalRecipients)) {
       try {
-        const recipientAddress = (await this.contractWrapper.readContract.payee(
+        const recipientAddress = await this.contractWrapper.readContract.payee(
           index,
-        )) as Address;
+        );
         recipients.push(
           await this.getRecipientSplitPercentage(recipientAddress),
         );

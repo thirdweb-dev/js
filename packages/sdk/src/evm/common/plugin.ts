@@ -64,7 +64,7 @@ export async function getCompositePluginABI(
       const plugins = Array.from(new Set(allPlugins));
 
       // get ABIs of extension contracts
-      pluginABIs = await getPluginABI(plugins as Address[], provider, storage);
+      pluginABIs = await getPluginABI(plugins as any[], provider, storage);
     }
   } catch (err) {}
 

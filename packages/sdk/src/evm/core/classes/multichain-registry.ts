@@ -2,7 +2,7 @@ import { NetworkInput, Transaction, TransactionResult } from "..";
 import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import { getMultichainRegistryAddress } from "../../constants/addresses";
-import { Address, AddressOrEns } from "../../schema";
+import { AddressOrEns } from "../../schema";
 import { PublishedMetadata } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import { AddContractInput, ContractInput, DeployedContract } from "../../types";
@@ -88,7 +88,7 @@ export class MultichainRegistry {
           result.deploymentAddress.toLowerCase() !== constants.AddressZero,
       )
       .map((result) => ({
-        address: result.deploymentAddress as Address,
+        address: result.deploymentAddress,
         chainId: result.chainId.toNumber(),
       }));
   }

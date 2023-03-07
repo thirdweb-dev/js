@@ -167,9 +167,9 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
    * @returns the address of your vote delegatee
    */
   public async getDelegationOf(account: AddressOrEns): Promise<Address> {
-    return (await this.contractWrapper.readContract.delegates(
+    return await this.contractWrapper.readContract.delegates(
       await resolveAddress(account),
-    )) as Address;
+    );
   }
 
   /**

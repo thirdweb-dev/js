@@ -59,7 +59,7 @@ export class StandardErc721<
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address as Address;
+    return this.contractWrapper.readContract.address;
   }
 
   /**

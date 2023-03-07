@@ -7,7 +7,6 @@ import {
 import { defaultGaslessSendFunction } from "../../common/transactions";
 import { isBrowser } from "../../common/utils";
 import { ChainId } from "../../constants/chains";
-import { Address } from "../../schema";
 import { ContractSource } from "../../schema/contracts/custom";
 import { SDKOptionsOutput } from "../../schema/sdk-options";
 import {
@@ -66,7 +65,7 @@ export class Transaction<TResult = TransactionResult> {
     if (!contractAbi) {
       try {
         const metadata = await fetchContractMetadataFromAddress(
-          options.contractAddress as Address,
+          options.contractAddress,
           options.provider,
           storage,
         );
@@ -601,7 +600,7 @@ export class Transaction<TResult = TransactionResult> {
     let contractName: string | undefined = undefined;
     try {
       const metadata = await fetchContractMetadataFromAddress(
-        this.contract.address as Address,
+        this.contract.address,
         this.provider,
         this.storage,
       );

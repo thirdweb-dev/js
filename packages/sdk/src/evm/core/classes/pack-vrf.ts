@@ -51,7 +51,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
   }
 
@@ -150,7 +150,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
             reward.assetContract,
           );
           erc20Rewards.push({
-            contractAddress: reward.assetContract as Address,
+            contractAddress: reward.assetContract,
             quantityPerReward: ethers.utils
               .formatUnits(reward.totalAmount, tokenMetadata.decimals)
               .toString(),
@@ -159,14 +159,14 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
         }
         case 1: {
           erc721Rewards.push({
-            contractAddress: reward.assetContract as Address,
+            contractAddress: reward.assetContract,
             tokenId: reward.tokenId.toString(),
           });
           break;
         }
         case 2: {
           erc1155Rewards.push({
-            contractAddress: reward.assetContract as Address,
+            contractAddress: reward.assetContract,
             tokenId: reward.tokenId.toString(),
             quantityPerReward: reward.totalAmount.toString(),
           });
@@ -206,7 +206,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
       async (event) => {
         callback(
           event.data.packId.toString(),
-          event.data.opener as Address,
+          event.data.opener,
           await this.parseRewards(event.data.rewardUnitsDistributed),
         );
       },
@@ -291,7 +291,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    */
   public async getLinkBalance(): Promise<CurrencyValue> {
     return this.getLinkContract().balanceOf(
-      this.contractWrapper.readContract.address as Address,
+      this.contractWrapper.readContract.address,
     );
   }
 
@@ -309,7 +309,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    */
   public async transferLink(amount: Amount) {
     await this.getLinkContract().transfer(
-      this.contractWrapper.readContract.address as Address,
+      this.contractWrapper.readContract.address,
       amount,
     );
   }

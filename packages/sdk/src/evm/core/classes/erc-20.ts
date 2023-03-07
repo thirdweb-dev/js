@@ -96,7 +96,7 @@ export class Erc20<
    * @internal
    */
   getAddress(): Address {
-    return this.contractWrapper.readContract.address as Address;
+    return this.contractWrapper.readContract.address;
   }
 
   ////// Standard ERC20 Extension //////

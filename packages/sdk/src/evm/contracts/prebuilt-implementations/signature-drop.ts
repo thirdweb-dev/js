@@ -238,7 +238,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address as Address;
+    return this.contractWrapper.readContract.address;
   }
 
   /** ******************************

@@ -196,7 +196,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address as Address;
+    return this.contractWrapper.readContract.address;
   }
 
   /**

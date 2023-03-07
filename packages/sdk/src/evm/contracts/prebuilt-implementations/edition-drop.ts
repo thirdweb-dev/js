@@ -175,7 +175,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address as Address;
+    return this.contractWrapper.readContract.address;
   }
 
   /** ******************************

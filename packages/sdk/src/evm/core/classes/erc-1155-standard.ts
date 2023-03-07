@@ -55,7 +55,7 @@ export class StandardErc1155<
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address as Address;
+    return this.contractWrapper.readContract.address;
   }
 
   ////// Standard ERC1155 functions //////

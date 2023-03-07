@@ -22,7 +22,7 @@ import { ListingType } from "../../enums";
 import { Abi } from "../../schema/contracts/custom";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
-import { Address, AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared";
 import { Price } from "../../types/currency";
 import { AuctionListing, DirectListing, Offer } from "../../types/marketplace";
 import { MarketplaceFilter } from "../../types/marketplace/MarketPlaceFilter";
@@ -450,9 +450,9 @@ export class Marketplace implements UpdateableNetwork {
         return await this.direct.makeOffer(
           listingId,
           quantity,
-          (isNativeToken(listing.currency)
+          isNativeToken(listing.currency)
             ? NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID].wrapped.address
-            : listing.currency) as Address,
+            : listing.currency,
           pricePerToken,
         );
       }

@@ -20,7 +20,6 @@ import {
 } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { ListingType } from "../../enums";
-import { Address } from "../../schema/shared";
 import { CurrencyValue, Price } from "../../types/currency";
 import {
   AuctionListing,
@@ -588,9 +587,9 @@ export class MarketplaceAuction {
     listing: IMarketplace.ListingStruct,
   ): Promise<AuctionListing> {
     return {
-      assetContractAddress: listing.assetContract as Address,
+      assetContractAddress: listing.assetContract,
       buyoutPrice: BigNumber.from(listing.buyoutPricePerToken),
-      currencyContractAddress: listing.currency as Address,
+      currencyContractAddress: listing.currency,
       buyoutCurrencyValuePerToken: await fetchCurrencyValue(
         this.contractWrapper.getProvider(),
         listing.currency,
@@ -613,7 +612,7 @@ export class MarketplaceAuction {
       ),
       reservePrice: BigNumber.from(listing.reservePricePerToken),
       endTimeInEpochSeconds: listing.endTime,
-      sellerAddress: listing.tokenOwner as Address,
+      sellerAddress: listing.tokenOwner,
       type: ListingType.Auction,
     };
   }
