@@ -30,7 +30,8 @@ let overrides = {};
 const overridesDir = path.join(process.cwd(), "./data/overrides");
 const overridesFiles = fs.readdirSync(overridesDir);
 for (const file of overridesFiles) {
-  const override = await import(path.join(overridesDir, file));
+  // file:// is required for windows builds
+  const override = await import(path.join("file://", overridesDir, file));
   // get file name without extension
   const chainId = parseInt(file.split(".")[0]);
   overrides[chainId] = override.default;
@@ -49,7 +50,10 @@ chains = chains.filter((c) => c.chainId !== 1337);
 const additionalChainsDir = path.join(process.cwd(), "./data/additional");
 const additionalChainsFiles = fs.readdirSync(additionalChainsDir);
 for (const file of additionalChainsFiles) {
-  const additionalChain = await import(path.join(additionalChainsDir, file));
+  // file:// is required for windows builds
+  const additionalChain = await import(
+    path.join("file://", additionalChainsDir, file)
+  );
   chains.push(additionalChain.default);
 }
 
