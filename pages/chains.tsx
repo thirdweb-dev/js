@@ -155,7 +155,7 @@ const SearchResult: React.FC<{
         display="flex"
         flexDir="column"
         gap={4}
-        px={6}
+        px={5}
         // bg="transparent"
         borderColor="borderColor"
         transition="150ms border-color ease-in-out"
@@ -256,12 +256,12 @@ const SearchResult: React.FC<{
           )}
         </Flex>
 
-        <SimpleGrid pointerEvents="none" gap={12} columns={12}>
-          <Flex as={GridItem} colSpan={4} flexDir="column" gap={1}>
+        <SimpleGrid pointerEvents="none" gap={12} columns={2}>
+          <Flex as={GridItem} flexDir="column" gap={1}>
             <Text opacity={0.6}>Chain ID</Text>
             <Text size="label.md">{chain.chainId}</Text>
           </Flex>
-          <Flex as={GridItem} flexDir="column" colSpan={8} gap={1}>
+          <Flex as={GridItem} flexDir="column" gap={1}>
             <Text opacity={0.6}>Native Token</Text>
             <Text size="label.md">{chain.symbol}</Text>
           </Flex>
