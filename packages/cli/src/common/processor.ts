@@ -418,41 +418,7 @@ async function formatToExtensions(contracts: ContractPayload[]): Promise<{extens
     }
 
     // Get Bytecode.
-    const constructorFragment = abi.find((fragment: any) => fragment.type === "constructor");
-    let extensionBytecode = contract.bytecode;
-
-    let constructorArgs: ConstructorArg[] = [];
-
-    if(constructorFragment) {
-
-      if(constructorFragment.inputs) {
-
-        for(const input of constructorFragment.inputs) {
-
-          // TODO: account for all relevant constructor argument types.
-          if(input.type === "address") {
-            
-            const response = await prompts({
-              type: "text",
-              name: "value",
-              message: `[${contract.name}]: Enter value for ${input.name}: `,
-              validate: value => !ethers.utils.isAddress(value) ? `Invalid address provided` : true
-            });
-
-            constructorArgs.push({
-              type: "address",
-              value: response.value
-            });
-
-            extensionBytecode = ethers.utils.solidityPack(["bytes", "bytes"], [extensionBytecode, ethers.utils.defaultAbiCoder.encode(["address"], [response.value])]);
-          }
-        }
-        
-      }
-      
-    }
-
-    extensionBytecode = ethers.utils.solidityPack(["bytes", "bytes"], [extensionBytecode, ethers.utils.defaultAbiCoder.encode(constructorArgs.map(item => item.type), constructorArgs.map(item => item.value))]);
+    const extensionBytecode = await getDeployBytecode(contract, abi);
 
 		extensions.push({
       metadata,
@@ -467,6 +433,61 @@ async function formatToExtensions(contracts: ContractPayload[]): Promise<{extens
 	}
 
   return { extensions, extensionDeployArgs };
+}
+
+async function getDeployBytecode(contract: ContractPayload, abi: Parameters<typeof detectFeatures>[0]): Promise<string> {
+  // Get Bytecode.
+  const constructorFragment = abi.find((fragment: any) => fragment.type === "constructor");
+  let extensionBytecode = contract.bytecode;
+
+  let constructorArgs: ConstructorArg[] = [];
+
+  if(constructorFragment) {
+
+    if(constructorFragment.inputs) {
+
+      for(const input of constructorFragment.inputs) {
+
+        // TODO: account for all relevant constructor argument types.
+
+        console.log(input.type)
+
+        switch(input.type) {
+          case "address":
+            const responseOne = await prompts({
+              type: "text",
+              name: "value",
+              message: `[${contract.name}]: Enter value for ${input.name}: `,
+              validate: value => !ethers.utils.isAddress(value) ? `Invalid address provided` : true
+            });
+  
+            constructorArgs.push({
+              type: "address",
+              value: responseOne.value
+            });
+            break;
+          case "address[]":
+          const responseTwo = await prompts({
+            type: "text",
+            name: "value",
+            message: `[${contract.name}]: Enter value for ${input.name}: `,
+            validate: value => (JSON.parse(value) as string[]).filter(val => !ethers.utils.isAddress(val)).length === 0 ? true : `Invalid input provided`
+          });
+
+          constructorArgs.push({
+            type: "address[]",
+            value: JSON.parse(responseTwo.value)
+          });
+          default:
+            break;
+        }
+      }
+
+      extensionBytecode = ethers.utils.solidityPack(["bytes", "bytes"], [extensionBytecode, ethers.utils.defaultAbiCoder.encode(constructorArgs.map(item => item.type), constructorArgs.map(item => item.value))]);
+    }
+  }
+
+  return extensionBytecode;
 }
 
 async function getMetadataURIForExtension(contract: ContractPayload, storage: ThirdwebStorage): Promise<string> {
