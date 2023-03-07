@@ -14,7 +14,7 @@ import ora from "ora";
 import path from "path";
 
 import { Extension, ExtensionFunction, ExtensionMetadata, ExtensionDeployArgs } from "../core/interfaces/Extension";
-import { EXTENSION_REGISTRY_ADDRESS, ROUTER_CONTRACTS, PreDeployedRouter, TWRouterParams, RouterParams } from "../constants/router-contracts";
+import { EXTENSION_REGISTRY_ADDRESS, ROUTER_CONTRACTS, REGISTER_EXTENSION_FACTORY, ContractScript, TWRouterParams, RouterParams } from "../constants/router-contracts";
 
 export async function processProject(
   options: any,
@@ -99,7 +99,7 @@ export async function processProject(
     process.exit(1);
   }
 
-  let selectedRouter: PreDeployedRouter = { name: "", metadataUri: "", bytecodeUri: ""};
+  let selectedRouter: ContractScript = { name: "", metadataUri: "", bytecodeUri: ""};
   if(options.dynamic) {
 
     const choices = Object.keys(ROUTER_CONTRACTS).map((key) => { return { title: key, value: key } });
@@ -183,9 +183,14 @@ export async function processProject(
           value: c,
         };
       });
+
+      const promptText = options.registerExtension 
+        ? "Choose which extensions to deploy and register in the Extension Registry"
+        : options.dynamic ? "Choose which extensions to add to your contract" : `Choose which contract(s) to ${command}`;
+
       const prompt = createContractsPrompt(
         choices,
-        options.dynamic ? "Choose which extensions to add to your contract" : `Choose which contract(s) to ${command}`,
+        promptText,
       );
       const selection: Record<string, ContractPayload> = await prompt.run();
       selectedContracts = Object.keys(selection).map((key) => selection[key]);
@@ -207,18 +212,28 @@ export async function processProject(
   const soliditySDKPackage = "@thirdweb-dev/contracts";
   let usesSoliditySDK = false;
 
-  if(selectedRouter.name === "thirdweb-router") {
-    const deployArgs: TWRouterParams = {
-      extensionRegistry: EXTENSION_REGISTRY_ADDRESS,
-      extensionNames: selectedContracts.map((c) => c.name),
-    }
-
-    const outputDeployArgs = JSON.stringify(deployArgs, undefined, 2);
-    writeFileSync("./deployArgs.json", outputDeployArgs, "utf-8");
-    info("Deployment parameters written to deployArgs.json in your project directory");
-  } else {
-    const deployArgs: RouterParams = await formatToExtensions(selectedContracts);
+  if(options.dynamic) {
+    if(selectedRouter.name === "thirdweb-router") {
+      const deployArgs: TWRouterParams = {
+        extensionRegistry: EXTENSION_REGISTRY_ADDRESS,
+        extensionNames: selectedContracts.map((c) => c.name),
+      }
   
+      const outputDeployArgs = JSON.stringify(deployArgs, undefined, 2);
+      writeFileSync("./deployArgs.json", outputDeployArgs, "utf-8");
+      info("Deployment parameters written to deployArgs.json in your project directory");
+    } else {
+      const deployArgs: RouterParams = await formatToExtensions(selectedContracts);
+    
+      const outputDeployArgs = JSON.stringify(deployArgs, undefined, 2);
+      writeFileSync("./deployArgs.json", outputDeployArgs, "utf-8");
+      info("Deployment parameters written to deployArgs.json in your project directory");
+    }
+  }
+
+  if(options.registerExtension) {
+    const deployArgs: RouterParams = await formatToExtensions(selectedContracts);
+    
     const outputDeployArgs = JSON.stringify(deployArgs, undefined, 2);
     writeFileSync("./deployArgs.json", outputDeployArgs, "utf-8");
     info("Deployment parameters written to deployArgs.json in your project directory");
@@ -286,6 +301,24 @@ export async function processProject(
         analytics,
       })
 
+    } else if (options.registerExtension) {
+        
+        const analytics = {
+          command,
+          contract_name: REGISTER_EXTENSION_FACTORY.name,
+          cli_version: cliVersion,
+          project_type: projectType,
+          from_ci: options.ci || false,
+          uses_contract_extensions: usesSoliditySDK,
+        };
+  
+        combinedContents.push({
+          name: REGISTER_EXTENSION_FACTORY.name,
+          metadataUri: REGISTER_EXTENSION_FACTORY.metadataUri,
+          bytecodeUri: REGISTER_EXTENSION_FACTORY.bytecodeUri,
+          analytics,
+        })
+  
     } else {
     
       combinedContents = selectedContracts.map((c, i) => {
@@ -386,7 +419,7 @@ async function formatToExtensions(contracts: ContractPayload[]): Promise<{extens
     extensionDeployArgs.push({
       name: contract.name,
       amount: 0,
-      salt: ethers.utils.keccak256(ethers.utils.toUtf8Bytes(contract.name)),
+      salt: ethers.utils.keccak256(ethers.utils.randomBytes(32)),
       bytecode: contract.bytecode
     })
 	}

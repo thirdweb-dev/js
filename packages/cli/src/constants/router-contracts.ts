@@ -1,6 +1,6 @@
 import { Extension, ExtensionDeployArgs } from "../core/interfaces/Extension";
 
-export interface PreDeployedRouter {
+export interface ContractScript {
   name: string;
   metadataUri: string;
   bytecodeUri: string;
@@ -18,7 +18,7 @@ export interface TWRouterParams {
 
 export const EXTENSION_REGISTRY_ADDRESS: string = "0x0000000000000000000000000000000000000000";
 
-export const ROUTER_CONTRACTS: Record<string, PreDeployedRouter> = {
+export const ROUTER_CONTRACTS: Record<string, ContractScript> = {
   "upgradeable": {
     name: "RouterUpgradeableFactory",
     metadataUri: "ipfs://QmdqXhoJg9RfDDURHxtHKDprh3VvyWEwZWVtQvnvXMannF",
@@ -34,4 +34,10 @@ export const ROUTER_CONTRACTS: Record<string, PreDeployedRouter> = {
     metadataUri: "ipfs://QmbrV9NUBZAXqoSHpdTzxsZjtubdqumgt6WTMLV8RW3tkV",
     bytecodeUri: "ipfs://QmYjMfB1uhnnsdz6qmmc3bBAv8jmnniCkjXpDU6jGN8H5s/1",
   }
+}
+
+export const REGISTER_EXTENSION_FACTORY: ContractScript = {
+  name: "RegisterExtensionFactory",
+  metadataUri: "ipfs://QmYJjUUc6VZY8h8bAFa1EREwWpYkHmKAENZ3hE1BvXt93W",
+  bytecodeUri: "ipfs://QmYwzXEPRyk7SSo13radgSJVTJMLYQFX1ZV4U18Jmzki2b/0",
 }
