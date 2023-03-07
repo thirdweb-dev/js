@@ -70,7 +70,7 @@ export type ContractAddress = AddressOrEns;
  * @beta
  */
 export type TokenParams = {
-  to: AddressOrEns;
+  to: WalletAddress;
   amount: Amount;
 };
 
@@ -271,7 +271,7 @@ export type BuyNowParams<TListingType = ListingType> =
 // TOKEN DROP //
 
 export type ClaimTokenParams = {
-  to: AddressOrEns;
+  to: WalletAddress;
   amount: Amount;
   checkERC20Allowance?: boolean;
 };

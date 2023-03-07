@@ -2,7 +2,6 @@ import { useThirdwebConnectedWalletContext } from "../contexts/thirdweb-wallet";
 import { ContractAddress } from "../types";
 import { cacheKeys } from "../utils/cache-keys";
 import { useQuery } from "@tanstack/react-query";
-import { Address } from "@thirdweb-dev/sdk";
 import { useMemo } from "react";
 
 /**
@@ -18,11 +17,7 @@ export function useBalance(tokenAddress?: ContractAddress) {
   const { wallet, address, chainId } = useThirdwebConnectedWalletContext();
 
   const cacheKey = useMemo(() => {
-    return cacheKeys.wallet.balance(
-      chainId || -1,
-      address as Address,
-      tokenAddress,
-    );
+    return cacheKeys.wallet.balance(chainId || -1, address, tokenAddress);
   }, [chainId, tokenAddress, address]);
 
   return useQuery(
