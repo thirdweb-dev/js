@@ -12,6 +12,7 @@ import { readFileSync, writeFileSync } from "fs";
 import { ethers } from "ethers";
 import ora from "ora";
 import path from "path";
+import prompts from "prompts";
 
 import { Extension, ExtensionFunction, ExtensionMetadata, ExtensionDeployArgs } from "../core/interfaces/Extension";
 import { EXTENSION_REGISTRY_ADDRESS, ROUTER_CONTRACTS, REGISTER_EXTENSION_FACTORY, ContractScript, TWRouterParams, RouterParams } from "../constants/router-contracts";
@@ -379,9 +380,13 @@ export function getUrl(hashes: string[], command: string) {
   return url;
 }
 
+interface ConstructorArg {
+  type: string;
+  value: any;
+}
 
 async function formatToExtensions(contracts: ContractPayload[]): Promise<{extensions: Extension[], extensionDeployArgs: ExtensionDeployArgs[]}> {
-
+  
   const storage = new ThirdwebStorage();
   const extensions: Extension[] = [];
   const extensionDeployArgs: ExtensionDeployArgs[] = [];
@@ -412,6 +417,43 @@ async function formatToExtensions(contracts: ContractPayload[]): Promise<{extens
         });
     }
 
+    // Get Bytecode.
+    const constructorFragment = abi.find((fragment: any) => fragment.type === "constructor");
+    let extensionBytecode = contract.bytecode;
+
+    let constructorArgs: ConstructorArg[] = [];
+
+    if(constructorFragment) {
+
+      if(constructorFragment.inputs) {
+
+        for(const input of constructorFragment.inputs) {
+
+          // TODO: account for all relevant constructor argument types.
+          if(input.type === "address") {
+            
+            const response = await prompts({
+              type: "text",
+              name: "value",
+              message: `[${contract.name}]: Enter value for ${input.name}: `,
+              validate: value => !ethers.utils.isAddress(value) ? `Invalid address provided` : true
+            });
+
+            constructorArgs.push({
+              type: "address",
+              value: response.value
+            });
+
+            extensionBytecode = ethers.utils.solidityPack(["bytes", "bytes"], [extensionBytecode, ethers.utils.defaultAbiCoder.encode(["address"], [response.value])]);
+          }
+        }
+        
+      }
+      
+    }
+
+    extensionBytecode = ethers.utils.solidityPack(["bytes", "bytes"], [extensionBytecode, ethers.utils.defaultAbiCoder.encode(constructorArgs.map(item => item.type), constructorArgs.map(item => item.value))]);
+
 		extensions.push({
       metadata,
 			functions
@@ -419,8 +461,8 @@ async function formatToExtensions(contracts: ContractPayload[]): Promise<{extens
     extensionDeployArgs.push({
       name: contract.name,
       amount: 0,
-      salt: ethers.utils.keccak256(ethers.utils.randomBytes(32)),
-      bytecode: contract.bytecode
+      salt: ethers.utils.keccak256(ethers.utils.toUtf8Bytes(contract.name)),
+      bytecode: extensionBytecode
     })
 	}
 
