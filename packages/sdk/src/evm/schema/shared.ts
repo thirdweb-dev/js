@@ -30,6 +30,11 @@ export const BigNumberTransformSchema = z
 
 export const AddressSchema = z.custom<Address>(
   (address) => typeof address === "string" && utils.isAddress(address),
+  (out) => {
+    return {
+      message: `${out} is not a valid address`,
+    };
+  },
 );
 
 // Important for address check to come before ENS so network request is only made when necessary
