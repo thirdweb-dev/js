@@ -33,7 +33,7 @@ export async function deployApp(distPath = "dist", projectPath = ".") {
 
   try {
     const uri = await upload(storage, distPath);
-    return `https://thirdweb.com/app/deploy/${uri.replace("ipfs://", "")}`;
+    return `https://nightly.thirdweb.com/app/deploy/${uri.replace("ipfs://", "")}`;
   } catch (err) {
     console.error("Can't upload project");
     return Promise.reject("Can't upload project");
