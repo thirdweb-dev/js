@@ -276,6 +276,7 @@ const main = async () => {
     )
     .option("--app", "Deploy a web app to decentralized storage")
     .option("--contract", "Deploy a smart contract to blockchains")
+    .option("--dynamic", "Deploy a dynamic smart contract made up of extensions to blockchains")
     .action(async (options) => {
       const url = await deploy(options);
       if (url) {
