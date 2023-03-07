@@ -5,6 +5,7 @@ export default {
   "rpc": [
     "https://sepolia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.sepolia.org",
+    "https://rpc2.sepolia.org",
     "https://rpc-sepolia.rockx.com"
   ],
   "faucets": [
