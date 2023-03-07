@@ -48,15 +48,6 @@ export abstract class AbstractBrowserWallet<
       return;
     }
 
-    const connector = await this.getConnector();
-    const isConnected = await connector.isConnected();
-
-    // return if already connected
-    if (isConnected) {
-      this.#subscribeToEvents(connector);
-      return;
-    }
-
     const lastConnectionParams = await this.walletStorage.getItem(
       "lastConnectedParams",
     );
@@ -133,7 +124,10 @@ export abstract class AbstractBrowserWallet<
       this.emit("message", data);
     });
 
-    connector.on("disconnect", () => this.emit("disconnect"));
+    connector.on("disconnect", async () => {
+      await this.onDisconnect();
+      this.emit("disconnect");
+    });
     connector.on("error", (error) => this.emit("error", error));
   }
 
@@ -145,18 +139,21 @@ export abstract class AbstractBrowserWallet<
     return await connector.getSigner();
   }
 
+  protected async onDisconnect() {
+    const lastConnectedWallet = await this.coordinatorStorage.getItem(
+      "lastConnectedWallet",
+    );
+    if (lastConnectedWallet === this.walletId) {
+      await this.coordinatorStorage.removeItem("lastConnectedWallet");
+    }
+  }
+
   public async disconnect() {
     const connector = await this.getConnector();
     if (connector) {
       await connector.disconnect();
       connector.removeAllListeners();
-      // get the last connected wallet and check if it's this wallet, if so, remove it
-      const lastConnectedWallet = await this.coordinatorStorage.getItem(
-        "lastConnectedWallet",
-      );
-      if (lastConnectedWallet === this.walletId) {
-        await this.coordinatorStorage.removeItem("lastConnectedWallet");
-      }
+      await this.onDisconnect();
     }
   }
 

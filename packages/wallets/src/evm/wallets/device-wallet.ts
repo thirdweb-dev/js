@@ -1,17 +1,13 @@
 import { AsyncStorage } from "../../core";
+import { Chain } from "../../lib/wagmi-core";
+import { thirdwebChains } from "../constants/chains";
 import { TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
-import type { Chain } from "@thirdweb-dev/chains";
 import { ethers } from "ethers";
 
 export type DeviceWalletOptions = {
-  chain:
-    | {
-        chainId: number;
-        rpc: string[];
-      }
-    | Chain;
+  chain: Chain;
   storageType?: "asyncStore" | "credentialStore";
   storage: AsyncStorage;
 };
@@ -31,6 +27,7 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
   connector?: TWConnector;
   #walletImpl?: DeviceWalletImpl;
   static id = "deviceWallet" as const;
+  options: WalletOptions<DeviceWalletOptions>;
 
   public get walletName() {
     return "Device Wallet" as const;
@@ -41,6 +38,7 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
       ...options,
       shouldAutoConnect: false, // TODO figure the autoconnect flow
     });
+    this.options = options;
   }
 
   protected async getConnector(): Promise<TWConnector> {
@@ -68,6 +66,7 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
       this.connector = new DeviceWalletConnector({
         chain: this.options.chain,
         wallet,
+        chains: this.options.chains || thirdwebChains,
       });
 
       this.#walletImpl = wallet;

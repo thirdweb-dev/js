@@ -97,7 +97,6 @@ export const ConnectedWalletDetails: React.FC<{
     (supportedChains.length === 1 && !networkMismatch) ||
     activeWallet.walletId === "walletConnectV1" ||
     activeWallet.walletId === "walletConnectV2" ||
-    activeWallet.walletId === "deviceWallet" ||
     (activeWallet.walletId === "metamask" && !installedWallets.metamask);
 
   const handleDeviceWalletExport = async () => {

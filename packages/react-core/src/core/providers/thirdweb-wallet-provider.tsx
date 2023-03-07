@@ -90,7 +90,7 @@ export function ThirdwebWalletProvider(
 
       return new Wallet({
         ...walletOptions,
-        chain: props.activeChain,
+        chain: transformChainToMinimalWagmiChain(props.activeChain),
         coordinatorStorage,
         theme: theme,
       });
@@ -194,6 +194,7 @@ export function ThirdwebWalletProvider(
         await wallet.connect(_connectedParams);
         handleWalletConnect(wallet);
       } catch (e: any) {
+        console.log("disconnected ");
         setConnectionStatus("disconnected");
         throw e;
       }
@@ -232,27 +233,14 @@ export function ThirdwebWalletProvider(
       setActiveChainId(_chainId);
     };
 
-    activeWallet.connector?.getProvider().then((provider) => {
-      if (!provider) {
-        return;
-      }
-
-      // TODO - once the wallet.addListener('change', cb) is working - use that
-      provider.on("chainChanged", update);
-      provider.on("accountsChanged", (accounts) => {
-        if (accounts.length === 0) {
-          // do not use onWalletDisconnect() here
-          disconnectWallet();
-        } else {
-          update();
-        }
-      });
-      provider.on("disconnect", () => {
-        // do not use disconnectWallet() here
-        onWalletDisconnect();
-      });
+    activeWallet.addListener("change", () => {
+      update();
     });
-  }, [activeWallet, disconnectWallet, onWalletDisconnect]);
+
+    activeWallet.addListener("disconnect", () => {
+      onWalletDisconnect();
+    });
+  }, [activeWallet, onWalletDisconnect]);
 
   return (
     <ThirdwebWalletContext.Provider

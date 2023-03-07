@@ -423,9 +423,9 @@ export class InjectedConnector extends Connector<
    * * emits `change` event if connected to a different account
    * * emits `disconnect` event if no accounts available
    */
-  protected onAccountsChanged = (accounts: string[]) => {
+  protected onAccountsChanged = async (accounts: string[]) => {
     if (accounts.length === 0) {
-      this.emit("disconnect");
+      await this.onDisconnect();
     } else {
       this.emit("change", {
         account: utils.getAddress(accounts[0] as string),

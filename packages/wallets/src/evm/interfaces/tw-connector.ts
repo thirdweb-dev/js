@@ -39,6 +39,10 @@ export class WagmiAdapter<
       this.emit("change", data);
     });
 
+    this.wagmiConnector.addListener("disconnect", () => {
+      this.emit("disconnect");
+    });
+
     const result = await this.wagmiConnector.connect({ chainId });
     return result.account;
   }

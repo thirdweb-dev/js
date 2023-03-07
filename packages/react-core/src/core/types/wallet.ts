@@ -1,4 +1,3 @@
-import { Chain as TWChain } from "@thirdweb-dev/chains";
 import {
   AbstractBrowserWallet,
   AsyncStorage,
@@ -11,7 +10,7 @@ import { Chain } from "@wagmi/core";
 export type ExtraCoreWalletOptions = {
   theme?: "light" | "dark";
   // for device wallet
-  chain: TWChain;
+  chain: Chain;
 };
 
 export type WalletOptions = {
