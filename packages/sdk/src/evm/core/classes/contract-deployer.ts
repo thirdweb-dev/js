@@ -453,9 +453,9 @@ export class ContractDeployer extends RPCConnectionHandler {
     invariant(signer, "A signer is required to deploy contracts");
     const parsedMetadata = await {
       app_uri: PREBUILT_CONTRACTS_APPURI_MAP[contractType],
-      ...PREBUILT_CONTRACTS_MAP[contractType].schema.deploy.parseAsync(
+      ...(await PREBUILT_CONTRACTS_MAP[contractType].schema.deploy.parseAsync(
         contractMetadata,
-      ),
+      )),
     };
     if (this.hasLocalFactory()) {
       // old behavior for unit tests, deploy from local factory
