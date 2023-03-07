@@ -1,5 +1,13 @@
 # @thirdweb-dev/wallets
 
+## 0.2.7
+
+### Patch Changes
+
+- [#665](https://github.com/thirdweb-dev/js/pull/665) [`6ef52dc9`](https://github.com/thirdweb-dev/js/commit/6ef52dc916251d72416ba5a8b63b428770f54e75) Thanks [@shift4id](https://github.com/shift4id)! - Fix spelling throughout all packages
+
+- [#612](https://github.com/thirdweb-dev/js/pull/612) [`e50911bc`](https://github.com/thirdweb-dev/js/commit/e50911bc065dda99945d906d8b166f49d7a89677) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Email wallet RPC support
+
 ## 0.2.6
 
 ## 0.2.5
