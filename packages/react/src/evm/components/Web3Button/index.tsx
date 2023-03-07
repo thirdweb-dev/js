@@ -35,6 +35,7 @@ interface Web3ButtonProps<TActionFn extends ActionFn>
   isDisabled?: boolean;
   // the fn to execute
   action: TActionFn;
+  type?: "button" | "submit" | "reset";
 }
 
 /**
@@ -68,6 +69,7 @@ export const Web3Button = <TAction extends ActionFn>({
   children,
   action,
   className,
+  type,
   ...themeProps
 }: PropsWithChildren<Web3ButtonProps<TAction>>) => {
   const address = useAddress();
@@ -137,6 +139,7 @@ export const Web3Button = <TAction extends ActionFn>({
   return (
     <ThemeProvider {...themeProps}>
       <Button
+        type={type}
         className={className}
         style={{ height: "50px", minWidth: "200px", width: "100%" }}
         isLoading={mutation.isLoading || !contract}
