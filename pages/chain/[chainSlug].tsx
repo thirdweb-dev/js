@@ -205,7 +205,7 @@ const ChainPage: ThirdwebNextPage = ({
               <Flex
                 direction="column"
                 gap={3}
-                alignItems={{ base: "center", md: "inherit" }}
+                alignItems={{ base: "center", md: "flex-start" }}
               >
                 <Heading size="title.lg" as="h1">
                   {chain.name} {chain.chain.length > 10 && <br />}
