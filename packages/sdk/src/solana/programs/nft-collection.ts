@@ -229,7 +229,7 @@ export class NFTCollection {
    * const supply = await program.supplyOf(address);
    * ```
    */
-  async supplyOf(nftAddress: string): Promise<number> {
+  async supplyOf(nftAddress: string): Promise<string> {
     return this.nft.supplyOf(nftAddress);
   }
 

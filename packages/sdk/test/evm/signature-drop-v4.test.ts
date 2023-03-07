@@ -181,7 +181,7 @@ describe("Signature drop tests (v4)", async () => {
     });
 
     it("comprehensive test", async () => {
-      const metadata = [];
+      const metadata: NFTMetadataInput[] = [];
       for (let i = 0; i < 10; i++) {
         metadata.push({ name: `test${i}`, description: `desc${i}` });
       }
@@ -221,7 +221,7 @@ describe("Signature drop tests (v4)", async () => {
     });
 
     it("comprehensive test with allowlist", async () => {
-      const metadata = [];
+      const metadata: NFTMetadataInput[] = [];
       for (let i = 0; i < 10; i++) {
         metadata.push({ name: `test${i}`, description: `desc${i}` });
       }
