@@ -48,4 +48,15 @@ describe("Address & ENS", async () => {
       "0xede3a75aca635c531b6198c230f3da67949678fe",
     );
   });
+
+  it("Should resolve ENS subdomains", async () => {
+    const address = await sdk.deployer.deployNFTCollection({
+      name: "NFT",
+      primary_sale_recipient: "deployer.thirdweb.eth",
+    });
+    const contract = await sdk.getContract(address);
+    expect((await contract.sales.getRecipient()).toLowerCase()).to.equal(
+      "0xdd99b75f095d0c4d5112ace938e4e6ed962fb024",
+    );
+  });
 });
