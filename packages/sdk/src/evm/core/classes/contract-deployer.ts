@@ -451,12 +451,14 @@ export class ContractDeployer extends RPCConnectionHandler {
   ): Promise<Address> {
     const signer = this.getSigner();
     invariant(signer, "A signer is required to deploy contracts");
-    const parsedMetadata = await {
+
+    const parsedMetadata = {
       app_uri: PREBUILT_CONTRACTS_APPURI_MAP[contractType],
-      ...PREBUILT_CONTRACTS_MAP[contractType].schema.deploy.parseAsync(
+      ...(await PREBUILT_CONTRACTS_MAP[contractType].schema.deploy.parseAsync(
         contractMetadata,
-      ),
+      )),
     };
+
     if (this.hasLocalFactory()) {
       // old behavior for unit tests, deploy from local factory
       // parse version into the first number of the version string (or undefined if unparseable)
