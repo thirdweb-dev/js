@@ -11,7 +11,10 @@ module.exports = {
     policies: [
       {
         userAgent: "*",
-        allow: "/",
+        [process.env.VERCEL_ENV !== "preview" &&
+        process.env.VERCEL_ENV !== "development"
+          ? "allow"
+          : "disallow"]: "/",
       },
       {
         userAgent: "*",
