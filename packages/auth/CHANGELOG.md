@@ -1,5 +1,11 @@
 # @thirdweb-dev/auth
 
+## 3.0.7
+
+### Patch Changes
+
+- [#665](https://github.com/thirdweb-dev/js/pull/665) [`6ef52dc9`](https://github.com/thirdweb-dev/js/commit/6ef52dc916251d72416ba5a8b63b428770f54e75) Thanks [@shift4id](https://github.com/shift4id)! - Fix spelling throughout all packages
+
 ## 3.0.6
 
 ### Patch Changes
