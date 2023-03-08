@@ -626,7 +626,7 @@ export const PREBUILT_CONTRACTS_MAP = {
 
 export const PREBUILT_CONTRACTS_APPURI_MAP = {
   [EditionDropInitializer.contractType]:
-    "ipfs://QmbAgC8YwY36n8H2kuvSWsRisxDZ15QZw3xGZyk9aDvcv7/erc1155.html",
+    "ipfs://QmNm3wRzpKYWo1SRtJfgfxtvudp5p2nXD6EttcsQJHwTmk",
   [EditionInitializer.contractType]: "",
   [MarketplaceInitializer.contractType]:
     "ipfs://QmbAgC8YwY36n8H2kuvSWsRisxDZ15QZw3xGZyk9aDvcv7/marketplace.html",
@@ -635,10 +635,10 @@ export const PREBUILT_CONTRACTS_APPURI_MAP = {
   [MultiwrapInitializer.contractType]: "",
   [NFTCollectionInitializer.contractType]: "",
   [NFTDropInitializer.contractType]:
-    "ipfs://QmbAgC8YwY36n8H2kuvSWsRisxDZ15QZw3xGZyk9aDvcv7/erc721.html",
+    "ipfs://QmZptmVipc6SGFbKAyXcxGgohzTwYRXZ9LauRX5ite1xDK",
   [PackInitializer.contractType]: "",
   [SignatureDropInitializer.contractType]:
-    "ipfs://QmbAgC8YwY36n8H2kuvSWsRisxDZ15QZw3xGZyk9aDvcv7/erc721.html",
+    "ipfs://QmZptmVipc6SGFbKAyXcxGgohzTwYRXZ9LauRX5ite1xDK",
   [SplitInitializer.contractType]: "",
   [TokenDropInitializer.contractType]:
     "ipfs://QmbAgC8YwY36n8H2kuvSWsRisxDZ15QZw3xGZyk9aDvcv7/erc20.html",
