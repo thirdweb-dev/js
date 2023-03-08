@@ -1,8 +1,10 @@
+import { useAppTheme } from "../../../styles/hooks";
 import { WalletMeta } from "../../../types/wallet";
+import Text from "../../base/Text";
 import { ModalFooter } from "../../base/modal/ModalFooter";
 import { ConnectWalletHeader } from "./ConnectingWalletHeader";
 import React, { ReactNode } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 export type ConnectingWalletProps = {
   headerText?: ReactNode | string;
@@ -20,6 +22,8 @@ export function ConnectingWallet({
   onClose,
   onBackPress,
 }: ConnectingWalletProps) {
+  const theme = useAppTheme();
+
   return (
     <View>
       <ConnectWalletHeader
@@ -29,8 +33,8 @@ export function ConnectingWallet({
         close={onClose}
       />
       <View style={styles.connectingContainer}>
-        <ActivityIndicator size="small" color="#C4C4C4" />
-        <Text style={styles.text}>
+        <ActivityIndicator size="small" color={theme.colors.linkPrimary} />
+        <Text variant="bodySmallSecondary" mt="md">
           Connect your wallet through the {wallet.name} application.
         </Text>
       </View>
@@ -44,15 +48,6 @@ export function ConnectingWallet({
 }
 
 const styles = StyleSheet.create({
-  text: {
-    fontWeight: "500",
-    color: "#646D7A",
-    fontSize: 16,
-    lineHeight: 24,
-    letterSpacing: -0.02,
-    textAlign: "center",
-    marginTop: 18,
-  },
   connectingContainer: {
     display: "flex",
     flexDirection: "column",

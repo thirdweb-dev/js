@@ -1,3 +1,4 @@
+import { useAppTheme } from "../../../styles/hooks";
 import React, { PropsWithChildren } from "react";
 import { StyleSheet, View, Dimensions } from "react-native";
 import Modal, { ModalProps } from "react-native-modal";
@@ -12,9 +13,13 @@ export type TWModalProps = PropsWithChildren<
 
 // Populate with the data...
 export function TWModal({ children, isVisible, ...props }: TWModalProps) {
+  const theme = useAppTheme();
+
   return (
     <Modal useNativeDriver isVisible={isVisible} {...props}>
-      <View style={styles.modal}>
+      <View
+        style={[styles.modal, { backgroundColor: theme.colors.background }]}
+      >
         <View style={styles.contentContainer}>{children}</View>
       </View>
     </Modal>
@@ -27,7 +32,6 @@ const styles = StyleSheet.create({
     bottom: -20,
     left: -20,
     width: DEVICE_WIDTH,
-    backgroundColor: "#131417",
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     padding: 24,

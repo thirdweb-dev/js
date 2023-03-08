@@ -1,26 +1,14 @@
+import { Theme } from "../../styles/theme";
 import { shortenString } from "../../utils/addresses";
+import Text from "./Text";
 import React from "react";
-import { TextStyle } from "react-native";
-import { StyleSheet, Text } from "react-native/";
 
 export const Address = ({
   address,
-  style,
+  variant = "bodyLarge",
 }: {
   address: string;
-  style?: TextStyle;
+  variant?: keyof Theme["textVariants"];
 }) => {
-  return (
-    <Text style={{ ...styles.text, ...style }}>{shortenString(address)}</Text>
-  );
+  return <Text variant={variant}>{shortenString(address)}</Text>;
 };
-
-const styles = StyleSheet.create({
-  text: {
-    color: "#F1F1F1",
-    textAlign: "center",
-    fontWeight: "600",
-    fontSize: 16,
-    lineHeight: 24,
-  },
-});

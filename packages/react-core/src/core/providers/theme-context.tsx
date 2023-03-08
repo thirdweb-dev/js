@@ -1,3 +1,5 @@
 import { createContext } from "react";
 
-export const ThirdwebThemeContext = createContext<"light" | "dark">("dark");
+export const ThirdwebThemeContext = createContext<"light" | "dark" | undefined>(
+  undefined,
+);

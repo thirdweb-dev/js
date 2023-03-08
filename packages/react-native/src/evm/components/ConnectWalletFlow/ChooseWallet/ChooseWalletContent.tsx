@@ -1,13 +1,8 @@
 import { WalletMeta } from "../../../types/wallet";
+import BaseButton from "../../base/BaseButton";
+import Text from "../../base/Text";
 import React from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import { StyleSheet, View, FlatList, Image } from "react-native";
 
 interface InitialExplorerContentProps {
   wallets: WalletMeta[];
@@ -24,10 +19,12 @@ export const ChooseWalletContent = ({
         keyExtractor={(item) => item.name}
         data={wallets}
         renderItem={({ item, index }) => {
-          const marginBottom = index === wallets.length - 1 ? 0 : 8;
+          const marginBottom = index === wallets.length - 1 ? "none" : "xxs";
           return (
-            <TouchableOpacity
-              style={[styles.row, { marginBottom: marginBottom }]}
+            <BaseButton
+              mb={marginBottom}
+              style={styles.row}
+              backgroundColor="backgroundHighlight"
               onPress={() => onChooseWallet(item)}
             >
               <Image
@@ -35,8 +32,8 @@ export const ChooseWalletContent = ({
                 style={styles.walletImage}
                 source={{ uri: item.image_url }}
               />
-              <Text style={styles.rowWalletText}>{item.name}</Text>
-            </TouchableOpacity>
+              <Text variant="bodyLarge">{item.name}</Text>
+            </BaseButton>
           );
         }}
       />
@@ -45,13 +42,6 @@ export const ChooseWalletContent = ({
 };
 
 const styles = StyleSheet.create({
-  rowWalletText: {
-    fontWeight: "600",
-    color: "#F1F1F1",
-    fontSize: 16,
-    lineHeight: 24,
-    letterSpacing: -0.02,
-  },
   row: {
     display: "flex",
     flexDirection: "row",
@@ -59,7 +49,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: "#232429",
     borderRadius: 12,
   },
   walletImage: {

@@ -1,9 +1,13 @@
 import { IWalletWithMetadata } from "../../wallets/wallets/wallets";
 import { NetworkSelectorModal } from "../NetworkSelector/NetworkSelectorModal";
 import { Address } from "../base/Address";
+import BaseButton from "../base/BaseButton";
 import { ChainIcon } from "../base/ChainIcon";
+import Text from "../base/Text";
 import { WalletIcon } from "../base/WalletIcon";
-import { WalletDetailsModal } from "./WalletDetailsModal";
+import { TWModal } from "../base/modal/TWModal";
+import { NetworkButton } from "./NetworkButton";
+import { WalletDetailsModalHeader } from "./WalletDetailsModalHeader";
 import {
   useActiveWallet,
   useBalance,
@@ -11,13 +15,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useActiveChain } from "@thirdweb-dev/react-core/evm";
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  Linking,
-  View,
-  Text,
-} from "react-native";
+import { StyleSheet, Linking, View } from "react-native";
 
 export type ConnectWalletDetailsProps = {
   address: string;
@@ -29,6 +27,7 @@ export const ConnectWalletDetails = ({
   const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false);
   const [isNetworkSelectorModalVisible, setIsNetworkSelectorModalVisible] =
     useState(false);
+  const [isDisconnecting, setIsDisconnecting] = useState(false);
 
   const activeWallet = useActiveWallet();
   const disconnect = useDisconnect();
@@ -63,7 +62,10 @@ export const ConnectWalletDetails = ({
   };
 
   const onDisconnectPress = () => {
-    disconnect();
+    setIsDisconnecting(true);
+    disconnect().finally(() => {
+      setIsDisconnecting(false);
+    });
   };
 
   const onChangeNetworkPress = () => {
@@ -81,26 +83,42 @@ export const ConnectWalletDetails = ({
 
   return (
     <>
-      <WalletDetailsModal
-        onBackdropPress={onBackdropPress}
-        onDisconnectPress={onDisconnectPress}
-        address={address}
-        onChangeNetworkPress={onChangeNetworkPress}
+      <TWModal
         isVisible={isDetailsModalVisible}
-      />
+        onBackdropPress={onBackdropPress}
+      >
+        <WalletDetailsModalHeader
+          address={address}
+          onDisconnectPress={onDisconnectPress}
+          loading={isDisconnecting}
+        />
+        <View style={styles.currentNetwork}>
+          <Text variant="bodySmallSecondary">Current Network</Text>
+        </View>
+        <NetworkButton
+          chainIconUrl={chain?.icon?.url || ""}
+          chainName={chain?.name || ""}
+          onPress={onChangeNetworkPress}
+        />
+      </TWModal>
 
       <NetworkSelectorModal
         isVisible={isNetworkSelectorModalVisible}
         onClose={onSelectorModalClose}
       />
-      <TouchableOpacity style={styles.walletDetails} onPress={onPress}>
+      <BaseButton
+        backgroundColor="background"
+        borderColor="border"
+        style={styles.walletDetails}
+        onPress={onPress}
+      >
         <ChainIcon size={32} chainIconUrl={chain?.icon?.url} />
         <View style={styles.walletInfo}>
-          <Text style={styles.balance}>
+          <Text variant="bodySmall">
             {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
             {balanceQuery.data?.symbol}
           </Text>
-          <Address style={styles.address} address={address} />
+          <Address variant="bodySmallSecondary" address={address} />
         </View>
         <WalletIcon
           size={32}
@@ -109,19 +127,12 @@ export const ConnectWalletDetails = ({
               .image_url || ""
           }
         />
-      </TouchableOpacity>
+      </BaseButton>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  address: {
-    color: "#646D7A",
-    textAlign: "left",
-    fontWeight: "600",
-    fontSize: 12,
-    lineHeight: 16,
-  },
   walletInfo: {
     flex: 1,
     justifyContent: "flex-start",
@@ -130,31 +141,24 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     marginLeft: 5,
   },
-  balance: {
-    fontSize: 14,
-    fontWeight: "600",
-    lineHeight: 16,
-    color: "#F1F1F1",
-  },
-  text: {
-    color: "#F1F1F1",
-    textAlign: "center",
-    fontWeight: "600",
-    fontSize: 16,
-    lineHeight: 24,
-  },
   walletDetails: {
     display: "flex",
     flexDirection: "row",
     alignContent: "center",
     alignItems: "center",
     justifyContent: "flex-start",
-    backgroundColor: "#131417",
     borderRadius: 12,
-    borderColor: "#646D7A",
     borderWidth: 0.5,
     paddingHorizontal: 10,
     paddingVertical: 12,
     minWidth: 200,
+  },
+  currentNetwork: {
+    display: "flex",
+    flexDirection: "column",
+    alignContent: "flex-start",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    marginTop: 36,
   },
 });

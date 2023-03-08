@@ -31,7 +31,7 @@ type ThirdwebWalletContextData = {
     wallet: W,
     connectParams: WalletConnectParams<W>,
   ) => Promise<void>;
-  disconnect: () => void;
+  disconnect: () => Promise<void>;
   connectionStatus: ConnectionStatus;
   setConnectionStatus: (status: ConnectionStatus) => void;
   createWalletInstance: (
@@ -92,7 +92,7 @@ export function ThirdwebWalletProvider(
         ...walletOptions,
         chain: transformChainToMinimalWagmiChain(props.activeChain),
         coordinatorStorage,
-        theme: theme,
+        theme: theme || "dark",
       });
     },
     [props, theme],
@@ -209,13 +209,13 @@ export function ThirdwebWalletProvider(
     setActiveWallet(undefined);
   }, []);
 
-  const disconnectWallet = useCallback(() => {
+  const disconnectWallet = useCallback(async () => {
     // get the connected wallet
     if (!activeWallet) {
-      return;
+      return Promise.resolve();
     }
 
-    activeWallet.disconnect().then(() => {
+    return activeWallet.disconnect().then(() => {
       onWalletDisconnect();
     });
   }, [activeWallet, onWalletDisconnect]);

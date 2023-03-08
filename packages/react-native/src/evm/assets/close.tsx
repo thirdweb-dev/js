@@ -1,7 +1,7 @@
 import React from "react";
 import Svg, { Path } from "react-native-svg";
 
-export const CloseIcon = ({ size }: { size: number }) => {
+const CloseIcon = ({ size }: { size: number }) => {
   return (
     <Svg width={size} height={size} viewBox="0 0 14 14" fill="none">
       <Path
@@ -11,3 +11,5 @@ export const CloseIcon = ({ size }: { size: number }) => {
     </Svg>
   );
 };
+
+export default CloseIcon;

@@ -1,12 +1,14 @@
 import { WalletMeta } from "../../types/wallet";
 import { getWalletsMeta } from "../../utils/wallets";
+import BaseButton from "../base/BaseButton";
+import Text from "../base/Text";
 import { TWModal } from "../base/modal/TWModal";
 import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
 import { useConnect, useWallets } from "@thirdweb-dev/react-core";
 import { WalletConnect, WalletConnectV1 } from "@thirdweb-dev/wallets";
 import React, { useState } from "react";
-import { Text, StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet } from "react-native";
 import invariant from "tiny-invariant";
 
 export const ConnectWalletFlow = () => {
@@ -31,24 +33,24 @@ export const ConnectWalletFlow = () => {
   const onChooseWallet = (wallet_: WalletMeta) => {
     setActiveWalletMeta(wallet_);
 
+    let walletClass;
     if (wallet_.versions.includes("2")) {
       // default to v2
-      const walletClass = walletClasses.find((w) => w.id === WalletConnect.id);
+      walletClass = walletClasses.find((w) => w.id === WalletConnect.id);
       invariant(walletClass, "Wallet class not found");
-      connect(walletClass, {});
     } else if (wallet_.versions.includes("1")) {
-      const walletClass = walletClasses.find(
-        (w) => w.id === WalletConnectV1.id,
-      );
+      walletClass = walletClasses.find((w) => w.id === WalletConnectV1.id);
       invariant(walletClass, "Wallet class not found");
-      connect(walletClass, {});
     } else {
-      const walletClass = walletClasses.find((item) => {
+      walletClass = walletClasses.find((item) => {
         return item.id.toLowerCase().includes(wallet_.id.toLowerCase());
       });
       invariant(walletClass, "Wallet class not found");
-      connect(walletClass, {});
     }
+    connect(walletClass, {}).catch((error) => {
+      console.log("error", error);
+      onBackPress();
+    });
   };
 
   const onBackPress = () => {
@@ -73,30 +75,25 @@ export const ConnectWalletFlow = () => {
         )}
       </TWModal>
 
-      <TouchableOpacity
-        style={styles.connectWalletButton}
+      <BaseButton
+        backgroundColor="white"
         onPress={onConnectPress}
+        style={styles.connectWalletButton}
       >
-        <Text style={styles.darkText}>Connect Wallet</Text>
-      </TouchableOpacity>
+        <Text variant="bodyLarge" color="black">
+          Connect Wallet
+        </Text>
+      </BaseButton>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  darkText: {
-    color: "black",
-    textAlign: "center",
-    fontWeight: "600",
-    fontSize: 16,
-  },
   connectWalletButton: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    color: "white",
-    backgroundColor: "#FFFFFF",
     borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 10,

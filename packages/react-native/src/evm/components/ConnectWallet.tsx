@@ -1,10 +1,15 @@
+import { ThemeProvider, ThemeProviderProps } from "../styles/ThemeProvider";
 import { ConnectWalletDetails } from "./ConnectWalletDetails/ConnectWalletDetails";
 import { ConnectWalletFlow } from "./ConnectWalletFlow/ConnectWalletFlow";
 import { useAddress } from "@thirdweb-dev/react-core";
 import React, { useEffect, useRef } from "react";
 import { Animated } from "react-native";
 
-export const ConnectWallet = () => {
+export type ConnectWalletProps = {
+  theme?: ThemeProviderProps["theme"];
+};
+
+export const ConnectWallet = ({ theme }: ConnectWalletProps) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const address = useAddress();
@@ -18,12 +23,14 @@ export const ConnectWallet = () => {
   }, [fadeAnim]);
 
   return (
-    <Animated.View style={{ opacity: fadeAnim }}>
-      {address ? (
-        <ConnectWalletDetails address={address} />
-      ) : (
-        <ConnectWalletFlow />
-      )}
-    </Animated.View>
+    <ThemeProvider theme={theme}>
+      <Animated.View style={{ opacity: fadeAnim }}>
+        {address ? (
+          <ConnectWalletDetails address={address} />
+        ) : (
+          <ConnectWalletFlow />
+        )}
+      </Animated.View>
+    </ThemeProvider>
   );
 };

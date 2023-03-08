@@ -1,7 +1,8 @@
-import { BackIcon } from "../../../assets/back";
-import { CloseIcon } from "../../../assets/close";
+import { Icon } from "../../../assets/icon";
+import { useAppTheme } from "../../../styles/hooks";
+import Text from "../../base/Text";
 import React, { ReactNode } from "react";
-import { Image, StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 
 interface ConnectWalletHeaderProps {
   close: () => void;
@@ -16,32 +17,31 @@ export const ConnectWalletHeader = ({
   close,
   onBackPress,
 }: ConnectWalletHeaderProps) => {
+  const theme = useAppTheme();
   return (
     <>
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.closeContainer}
+        <Icon
+          type="back"
+          size={14}
           onPress={onBackPress}
-          hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-        >
-          <BackIcon size={14} />
-        </TouchableOpacity>
+          color={theme.colors.iconPrimary}
+        />
         <Image
           alt="wallet logo"
           style={styles.walletLogo}
           source={{ uri: walletLogoUrl }}
         />
-        <TouchableOpacity
-          style={styles.closeContainer}
-          onPress={() => close()}
-          hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-        >
-          <CloseIcon size={14} />
-        </TouchableOpacity>
+        <Icon
+          type="close"
+          size={14}
+          onPress={close}
+          color={theme.colors.iconPrimary}
+        />
       </View>
       <View style={styles.subHeader}>
         {typeof subHeaderText === "string" ? (
-          <Text style={styles.subHeaderText}>{subHeaderText}</Text>
+          <Text variant="subHeader">{subHeaderText}</Text>
         ) : (
           subHeaderText
         )}
@@ -51,13 +51,6 @@ export const ConnectWalletHeader = ({
 };
 
 const styles = StyleSheet.create({
-  subHeaderText: {
-    fontSize: 20,
-    fontWeight: "700",
-    lineHeight: 32,
-    color: "#F1F1F1",
-    letterSpacing: -0.02,
-  },
   header: {
     display: "flex",
     flexDirection: "row",
@@ -72,16 +65,5 @@ const styles = StyleSheet.create({
   walletLogo: {
     width: 56,
     height: 56,
-  },
-  closeContainer: {
-    height: 28,
-    width: 28,
-    backgroundColor: "#141414",
-    borderRadius: 14,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "rgba(0, 0, 0, 0.1)",
   },
 });

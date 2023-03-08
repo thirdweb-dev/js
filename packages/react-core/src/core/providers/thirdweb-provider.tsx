@@ -145,7 +145,7 @@ export const ThirdwebProvider = <
   }, [props.activeChain, supportedChains]);
 
   return (
-    <ThirdwebThemeContext.Provider value={props.theme || "dark"}>
+    <ThirdwebThemeContext.Provider value={props.theme}>
       <ThirdwebWalletProvider
         chains={supportedChains}
         supportedWallets={props.supportedWallets}

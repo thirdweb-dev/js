@@ -3,6 +3,7 @@ export default {
   "chain": "FTM",
   "rpc": [
     "https://fantom.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://fantom.publicnode.com",
     "https://rpc.ftm.tools"
   ],
   "faucets": [
