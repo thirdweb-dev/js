@@ -35,14 +35,11 @@ export const ConnectWalletDetails = ({
   const balanceQuery = useBalance();
 
   useEffect(() => {
-    console.log("activeWallet.useEffect", activeWallet);
     if (activeWallet) {
       const mobileUrl = (
         activeWallet as unknown as IWalletWithMetadata
       ).getMetadata().mobile.universal;
-      console.log("activeWallet.mobileUrl", mobileUrl);
       activeWallet.on("open_wallet", (uri?: string) => {
-        console.log("activeWallet.open_wallet");
         if (!uri && mobileUrl) {
           Linking.openURL(mobileUrl);
         }

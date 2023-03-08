@@ -275,11 +275,6 @@ export class CoinbaseMobileWalletConnector extends Connector<
     });
   }
 
-  protected onConnect() {
-    console.log("onConnect.CoinbaseWallet");
-    // this.provider = this.getProvider();
-  }
-
   protected onAccountsChanged = (accounts: string[]) => {
     if (accounts.length === 0) {
       this.emit("disconnect");

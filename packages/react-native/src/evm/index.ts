@@ -1,3 +1,6 @@
+export { CoinbaseWalletMobile } from "./wallets/wallets/coinbase-wallet-mobile";
+export { MetaMaskWallet } from "./wallets/wallets/wallets";
+
 export { ConnectWallet } from "./components/ConnectWallet";
 
 export { ChainId } from "@thirdweb-dev/sdk";

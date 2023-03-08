@@ -102,7 +102,6 @@ export function ThirdwebWalletProvider(
     async (wallet: InstanceType<SupportedWallet>) => {
       const _signer = await wallet.getSigner();
       const _chainId = await _signer.getChainId();
-      console.log("handleWalletConnected.signer", _signer);
       setSigner(_signer);
       setActiveChainId(_chainId);
       setActiveWallet(wallet);

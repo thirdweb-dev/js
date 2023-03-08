@@ -1,7 +1,7 @@
 import { createAsyncLocalStorage } from "../../core/AsyncStorage";
 import { DEFAULT_API_KEY } from "../constants/rpc";
 import { CoinbaseWalletMobile } from "../wallets/wallets/coinbase-wallet-mobile";
-import { MetamaskWallet } from "../wallets/wallets/wallets";
+import { MetaMaskWallet } from "../wallets/wallets/wallets";
 import {
   SupportedWallet,
   ThirdwebProvider as ThirdwebProviderCore,
@@ -11,6 +11,19 @@ import React, { PropsWithChildren } from "react";
 
 export type ThirdwebProviderProps = PropsWithChildren<
   {
+    /**
+     * Wallets that will be supported by the dApp
+     * @defaultValue [MetaMaskWallet, CoinbaseWalletMobile]
+     *
+     * @example
+     * ```jsx
+     * import { MetamaskWallet, CoinbaseWallet, DeviceWallet } from "@thirdweb-dev/react-native";
+     *
+     * <ThirdwebProvider
+     *  supportedWallets={[MetaMaskWallet, CoinbaseWallet, DeviceWallet]}
+     * />
+     * ```
+     */
     supportedWallets?: SupportedWallet[];
     createWalletStorage?: ThirdwebProviderCoreProps["createWalletStorage"];
   } & Omit<
@@ -19,6 +32,25 @@ export type ThirdwebProviderProps = PropsWithChildren<
   >
 >;
 
+/**
+ *
+ * The `<ThirdwebProvider />` component lets you control what networks you want users to connect to,
+ * what types of wallets can connect to your app, and the settings for the [Thirdweb SDK](https://docs.thirdweb.com/typescript).
+ *
+ * @example
+ * You can wrap your application with the provider as follows:
+ *
+ * import { ThirdwebProvider } from "@thirdweb-dev/react-native";
+ *
+ * const App = () => {
+ *   return (
+ *     <ThirdwebProvider>
+ *       <YourApp />
+ *     </ThirdwebProvider>
+ *   );
+ * };
+ *
+ */
 export function ThirdwebProvider({
   children,
   createWalletStorage,
@@ -33,7 +65,7 @@ export function ThirdwebProvider({
       supportedWallets={
         supportedWallets?.length
           ? supportedWallets
-          : [MetamaskWallet, CoinbaseWalletMobile]
+          : [MetaMaskWallet, CoinbaseWalletMobile]
       }
       createWalletStorage={
         createWalletStorage ? createWalletStorage : createAsyncLocalStorage

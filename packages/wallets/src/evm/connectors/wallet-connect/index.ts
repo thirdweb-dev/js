@@ -434,7 +434,7 @@ export class WalletConnectConnector extends Connector<
     this.emit("disconnect");
   };
 
-  protected onDisplayUri = async (uri: string) => {
+  protected onDisplayUri = (uri: string) => {
     this.emit("message", { type: "display_uri", data: uri });
   };
 

@@ -132,6 +132,8 @@ export class InjectedConnector extends Connector<
         throw new ConnectorNotFoundError();
       }
 
+      this.setupListeners();
+
       // emit "connecting" event
       this.emit("message", { type: "connecting" });
 
@@ -246,12 +248,7 @@ export class InjectedConnector extends Connector<
     const provider = this.options.getProvider();
     if (provider) {
       this.#provider = provider;
-      // subscribe to provider events if available
-      if (provider.on) {
-        provider.on("accountsChanged", this.onAccountsChanged);
-        provider.on("chainChanged", this.onChainChanged);
-        provider.on("disconnect", this.onDisconnect);
-      }
+      // setting listeners
     }
     return this.#provider as Ethereum;
   }
@@ -415,6 +412,16 @@ export class InjectedConnector extends Connector<
         },
       },
     });
+  }
+
+  protected async setupListeners() {
+    const provider = await this.getProvider();
+    // subscribe to provider events if available
+    if (provider.on) {
+      provider.on("accountsChanged", this.onAccountsChanged);
+      provider.on("chainChanged", this.onChainChanged);
+      provider.on("disconnect", this.onDisconnect);
+    }
   }
 
   /**

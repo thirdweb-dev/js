@@ -31,7 +31,7 @@ export interface IWalletWithMetadata {
   getMetadata(): WalletMeta;
 }
 
-export class MetamaskWallet
+export class MetaMaskWallet
   extends WalletConnectV1Core
   implements IWalletWithMetadata
 {
@@ -49,7 +49,6 @@ export class MetamaskWallet
       },
     });
 
-    console.log("add listener to open_wallet");
     this.on("open_wallet", this._onWCOpenWallet);
   }
 
@@ -58,7 +57,6 @@ export class MetamaskWallet
   }
 
   _onWCOpenWallet(uri?: string) {
-    console.log("on open wallet", uri);
     const meta = this.getMetadata();
 
     if (uri) {
