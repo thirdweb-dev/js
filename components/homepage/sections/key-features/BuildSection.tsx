@@ -149,7 +149,6 @@ export const BuildSection: React.FC = () => {
           as={SimpleGrid}
           columns={{ md: 2 }}
           colSpan={{ md: 9 }}
-          h="full"
           bg="#070707"
           rounded="lg"
           overflow="hidden"
