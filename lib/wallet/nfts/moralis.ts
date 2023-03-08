@@ -54,7 +54,7 @@ export async function transformMoralisResponseToNFT(
                 )
               : moralisNft.token_uri,
             owner,
-            supply: parseInt(moralisNft.amount || "1"),
+            supply: moralisNft.amount || "1",
             type: moralisNft.contract_type,
           } as WalletNFT;
         } catch (e) {

@@ -1,6 +1,7 @@
 import { useAllContractList } from "@3rdweb-sdk/react";
 import { ConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
+  Box,
   Container,
   Divider,
   Flex,
@@ -40,51 +41,53 @@ const Contracts: ThirdwebNextPage = () => {
   }, []);
 
   return (
-    <ClientOnly fadeInDuration={600} ssr={null}>
-      {!isLoading && (
-        <>
-          {address ? (
-            <Tabs isLazy lazyBehavior="keepMounted" colorScheme="gray">
-              <TabList
-                px={0}
-                borderBottomColor="borderColor"
-                borderBottomWidth="1px"
-                overflowX={{ base: "auto", md: "inherit" }}
-              >
-                <Tab gap={2}>
-                  <Heading size="label.lg">Deployed Contracts</Heading>
-                </Tab>
-                <Tab gap={2}>
-                  <Heading size="label.lg">Published Contracts</Heading>
-                </Tab>
-              </TabList>
-              <TabPanels px={0} py={2}>
-                <TabPanel px={0}>
-                  <EVMContracts address={address} />
-                </TabPanel>
-                <TabPanel px={0}>
-                  <PublishedContractsPage address={address} />
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
-          ) : (
-            <Container maxW="lg">
-              <Card p={6} as={Flex} flexDir="column" gap={2}>
-                <Heading as="h2" size="title.sm">
-                  Please connect your wallet
-                </Heading>
-                <Text>
-                  In order to interact with your contracts you need to connect
-                  an EVM compatible wallet.
-                </Text>
-                <Divider my={4} />
-                <ConnectWallet ecosystem="evm" />
-              </Card>
-            </Container>
-          )}
-        </>
-      )}
-    </ClientOnly>
+    <Box pt={8}>
+      <ClientOnly fadeInDuration={600} ssr={null}>
+        {!isLoading && (
+          <>
+            {address ? (
+              <Tabs isLazy lazyBehavior="keepMounted" colorScheme="gray">
+                <TabList
+                  px={0}
+                  borderBottomColor="borderColor"
+                  borderBottomWidth="1px"
+                  overflowX={{ base: "auto", md: "inherit" }}
+                >
+                  <Tab gap={2}>
+                    <Heading size="label.lg">Deployed Contracts</Heading>
+                  </Tab>
+                  <Tab gap={2}>
+                    <Heading size="label.lg">Published Contracts</Heading>
+                  </Tab>
+                </TabList>
+                <TabPanels px={0} py={2}>
+                  <TabPanel px={0}>
+                    <EVMContracts address={address} />
+                  </TabPanel>
+                  <TabPanel px={0}>
+                    <PublishedContractsPage address={address} />
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
+            ) : (
+              <Container maxW="lg">
+                <Card p={6} as={Flex} flexDir="column" gap={2}>
+                  <Heading as="h2" size="title.sm">
+                    Please connect your wallet
+                  </Heading>
+                  <Text>
+                    In order to interact with your contracts you need to connect
+                    an EVM compatible wallet.
+                  </Text>
+                  <Divider my={4} />
+                  <ConnectWallet ecosystem="evm" />
+                </Card>
+              </Container>
+            )}
+          </>
+        )}
+      </ClientOnly>
+    </Box>
   );
 };
 

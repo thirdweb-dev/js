@@ -172,6 +172,7 @@ const ChainPage: ThirdwebNextPage = ({
         }}
         pb={{ base: 12, md: 20 }}
         mb={{ base: 2, md: 6 }}
+        mt={-8}
         boxShadow="lg"
       >
         <Container

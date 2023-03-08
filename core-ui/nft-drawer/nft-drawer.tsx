@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { PublicKey } from "@solana/web3.js";
 import type { NFT } from "@thirdweb-dev/sdk";
+import { BigNumber } from "ethers";
 import React from "react";
 import { Badge, Card, CodeBlock, Drawer, Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
@@ -93,19 +94,20 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
                       <AddressCopyButton size="xs" address={tokenId} tokenId />
                     </GridItem>
 
-                    {renderData.type !== "ERC1155" && renderData.supply < 2 && (
-                      <>
-                        <GridItem colSpan={3}>
-                          <Heading size="label.md">Owner</Heading>
-                        </GridItem>
-                        <GridItem colSpan={9}>
-                          <AddressCopyButton
-                            size="xs"
-                            address={renderData.owner}
-                          />
-                        </GridItem>
-                      </>
-                    )}
+                    {renderData.type !== "ERC1155" &&
+                      BigNumber.from(renderData.supply).lt(2) && (
+                        <>
+                          <GridItem colSpan={3}>
+                            <Heading size="label.md">Owner</Heading>
+                          </GridItem>
+                          <GridItem colSpan={9}>
+                            <AddressCopyButton
+                              size="xs"
+                              address={renderData.owner}
+                            />
+                          </GridItem>
+                        </>
+                      )}
                     <GridItem colSpan={3}>
                       <Heading size="label.md">Token Standard</Heading>
                     </GridItem>

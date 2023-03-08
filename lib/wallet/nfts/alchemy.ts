@@ -60,7 +60,7 @@ export async function transformAlchemyResponseToNFT(
                 )
               : rawUri,
             owner,
-            supply: parseInt(alchemyNFT.balance || "1"),
+            supply: alchemyNFT.balance || "1",
             type: alchemyNFT.id.tokenMetadata.tokenType,
           } as WalletNFT;
         } catch (e) {

@@ -89,7 +89,7 @@ const dummyMetadata: (idx: number) => NFT = (idx) => ({
   },
   owner: `0x_fake_${idx}`,
   type: "ERC721",
-  supply: 1,
+  supply: "1",
 });
 
 interface ContractOverviewNFTGetAllProps {

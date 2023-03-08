@@ -46,6 +46,7 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
         position="sticky"
         top={0}
         zIndex="sticky"
+        boxShadow="md"
       />
       <GridItem
         minH={{ base: "100vh", md: "unset" }}
@@ -76,7 +77,8 @@ const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
       colSpan={{ base: 2, md: 2 }}
       rowSpan={1}
       background="backgroundHighlight"
-      zIndex="banner"
+      zIndex="sticky"
+      boxShadow="md"
     >
       <Container
         maxW="100%"
@@ -242,6 +244,7 @@ const AppFooter: React.FC = () => {
       flexDir={{ base: "column", md: "row" }}
       justifyContent="center"
       bg="backgroundHighlight"
+      zIndex="sticky"
     >
       <TrackedLink
         isExternal
