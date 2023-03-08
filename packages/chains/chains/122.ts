@@ -15,6 +15,12 @@ export default {
   "shortName": "fuse",
   "chainId": 122,
   "networkId": 122,
+  "icon": {
+    "url": "ipfs://QmQg8aqyeaMfHvjzFDtZkb8dUNRYhFezPp8UYVc1HnLpRW/green.png",
+    "format": "png",
+    "width": 512,
+    "height": 512
+  },
   "testnet": false,
   "slug": "fuse"
 } as const;
