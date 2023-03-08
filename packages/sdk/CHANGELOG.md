@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 3.10.1
+
+### Patch Changes
+
+- [#688](https://github.com/thirdweb-dev/js/pull/688) [`68d52f99`](https://github.com/thirdweb-dev/js/commit/68d52f99b36c6744e45872d0bdebafbbf7d09b59) Thanks [@adam-maj](https://github.com/adam-maj)! - Poll if transaction can't be found yet on gasless
+
 ## 3.10.0
 
 ### Minor Changes

@@ -37,6 +37,7 @@ interface Web3ButtonProps<TActionFn extends ActionFn> {
   isDisabled?: boolean;
   // the fn to execute
   action: TActionFn;
+  type?: "button" | "submit" | "reset";
   theme?: "dark" | "light";
 }
 
@@ -71,6 +72,7 @@ export const Web3Button = <TAction extends ActionFn>({
   children,
   action,
   className,
+  type,
   theme,
 }: PropsWithChildren<Web3ButtonProps<TAction>>) => {
   const address = useAddress();
@@ -153,6 +155,7 @@ export const Web3Button = <TAction extends ActionFn>({
     <ThemeProvider theme={themeToUse === "dark" ? darkTheme : lightTheme}>
       <Button
         variant="inverted"
+        type={type}
         className={className}
         onClick={() => actionMutation.mutate()}
         disabled={buttonDisabled || buttonLoading}
