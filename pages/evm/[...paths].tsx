@@ -30,16 +30,25 @@ import {
 } from "hooks/chains/configureChains";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { getDashboardChainRpc } from "lib/rpc";
+import { getEVMThirdwebSDK } from "lib/sdk";
 import { GetStaticPaths, GetStaticProps } from "next";
+import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
+import { ContractOG } from "og-lib/url-utils";
 import { PageId } from "page-id";
 import { useEffect, useMemo, useState } from "react";
 import { getAllChainRecords } from "utils/allChainsRecords";
 import { ThirdwebNextPage } from "utils/types";
+import { shortenIfAddress } from "utils/usedapp-external";
 
 type EVMContractProps = {
   contractInfo: EVMContractInfo;
   dehydratedState: DehydratedState;
+  contractMetadata?: {
+    name: string;
+    image?: string | null;
+    description?: string | null;
+  };
 };
 
 const EVMContractPage: ThirdwebNextPage = () => {
@@ -285,22 +294,57 @@ const EVMContractPage: ThirdwebNextPage = () => {
 export default EVMContractPage;
 EVMContractPage.pageId = PageId.DeployedContract;
 EVMContractPage.getLayout = (page, props: EVMContractProps) => {
-  // app layout has to come first in both getLayout and fallback
+  const displayName = `${
+    props.contractMetadata?.name ||
+    shortenIfAddress(props.contractInfo.contractAddress) ||
+    "Contract"
+  } | ${props.contractInfo.chain?.name}`;
+
+  const ogImage = ContractOG.toUrl({
+    displayName,
+    contractAddress: props.contractInfo.contractAddress,
+    logo: props.contractMetadata?.image || "",
+    description: props.contractMetadata?.description || "",
+  });
+
+  const url = `https://thirdweb.com/${props.contractInfo.chainSlug}/${props.contractInfo.contractAddress}/`;
+
   return (
+    // app layout has to come first in both getLayout and fallback
     <AppLayout
       layout={"custom-contract"}
       dehydratedState={props.dehydratedState}
       // has to be passed directly because the provider can not be above app layout in the tree
       contractInfo={props.contractInfo}
+      noSEOOverride
     >
-      {page}
+      <>
+        <NextSeo
+          title={displayName}
+          openGraph={{
+            title: displayName,
+            images: ogImage
+              ? [
+                  {
+                    url: ogImage.toString(),
+                    alt: ``,
+                    width: 1200,
+                    height: 630,
+                  },
+                ]
+              : undefined,
+            url,
+          }}
+        />
+        {page}
+      </>
     </AppLayout>
   );
 };
 
 // app layout has to come first in both getLayout and fallback
 EVMContractPage.fallback = (
-  <AppLayout layout={"custom-contract"}>
+  <AppLayout layout={"custom-contract"} noSEOOverride>
     <Flex h="100%" justifyContent="center" alignItems="center">
       <Spinner size="xl" />
     </Flex>
@@ -313,15 +357,33 @@ const { slugToChain } = getAllChainRecords();
 export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
   const [chainSlug, contractAddress] = ctx.params?.paths as string[];
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(ensQuery(contractAddress));
+  const { address } = await queryClient.fetchQuery(ensQuery(contractAddress));
+  // if we cannot get a contract address this becomes a 404
+  if (!address) {
+    return {
+      notFound: true,
+    };
+  }
+  const chain = chainSlug in slugToChain ? slugToChain[chainSlug] : null;
+
+  let contractMetadata;
+
+  if (chain) {
+    // create the SDK on the chain
+    const sdk = getEVMThirdwebSDK(chain.chainId, getDashboardChainRpc(chain));
+    // get the contract metadata
+    contractMetadata = await (await sdk.getContract(address)).metadata.get();
+  }
+
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
       contractInfo: {
         chainSlug,
         contractAddress,
-        chain: chainSlug in slugToChain ? slugToChain[chainSlug] : null,
+        chain,
       },
+      contractMetadata: JSON.parse(JSON.stringify(contractMetadata)),
     },
   };
 };

@@ -16,6 +16,7 @@
     "build:analyze": "ANALYZE=true yarn build"
   },
   "dependencies": {
+    "@chakra-ui/next-js": "^2.0.1",
     "@chakra-ui/react": "^2.4.3",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
