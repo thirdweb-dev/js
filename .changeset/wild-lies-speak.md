@@ -2,4 +2,4 @@
 "@thirdweb-dev/sdk": patch
 ---
 
-fix `appUri` build
+New app uri defaults
