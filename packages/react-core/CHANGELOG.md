@@ -1,5 +1,11 @@
 # @thirdweb-dev/react-core
 
+## 3.10.1
+
+### Patch Changes
+
+- [#684](https://github.com/thirdweb-dev/js/pull/684) [`9efeba38`](https://github.com/thirdweb-dev/js/commit/9efeba38f06783b78e2c947ad878350173f4e07a) Thanks [@adam-maj](https://github.com/adam-maj)! - Update auth hooks to include credentials on login
+
 ## 3.10.0
 
 ### Patch Changes
