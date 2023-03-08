@@ -1,5 +1,22 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.2.15
+
+### Patch Changes
+
+- Updated dependencies [[`68d52f99`](https://github.com/thirdweb-dev/js/commit/68d52f99b36c6744e45872d0bdebafbbf7d09b59)]:
+  - @thirdweb-dev/sdk@3.10.1
+
+## 0.2.14
+
+### Patch Changes
+
+- Updated dependencies [[`a7e908b5`](https://github.com/thirdweb-dev/js/commit/a7e908b5fe60803e64b418cf42e081ca75123a45), [`61ef6964`](https://github.com/thirdweb-dev/js/commit/61ef69649fb605f6079dd9bbef12b739b02dda30), [`2f4cd928`](https://github.com/thirdweb-dev/js/commit/2f4cd92848a6c8cec4e86654f376a6d15bdd2b52), [`8a8a37f6`](https://github.com/thirdweb-dev/js/commit/8a8a37f6d3468b2a9c9736834bc39a3eee4754f4), [`63f552d7`](https://github.com/thirdweb-dev/js/commit/63f552d736a549532eb4d6a05cfe66a771b190b9), [`fb346ffd`](https://github.com/thirdweb-dev/js/commit/fb346ffd45edf9f50cc8c68a0c318eee39a6d9c6), [`e081075b`](https://github.com/thirdweb-dev/js/commit/e081075b2cebc7edad855481366bd9864ddba102), [`d8dec9fc`](https://github.com/thirdweb-dev/js/commit/d8dec9fc19079c79729857c36e45102c90fb7e0a), [`478780f6`](https://github.com/thirdweb-dev/js/commit/478780f6349595c17a7b3cd7de7668973c201d65), [`b83ea525`](https://github.com/thirdweb-dev/js/commit/b83ea5251bcd07feaab02a7ad1be202ccc6147fd), [`541dfeea`](https://github.com/thirdweb-dev/js/commit/541dfeeabaa744880cf78b310a9d61db4dfb32b3), [`6ef52dc9`](https://github.com/thirdweb-dev/js/commit/6ef52dc916251d72416ba5a8b63b428770f54e75), [`0c883044`](https://github.com/thirdweb-dev/js/commit/0c88304464ef4461a660a374198e893c578c8de0), [`0666f37c`](https://github.com/thirdweb-dev/js/commit/0666f37c13ed4b824e238325f9d13b9af785e0b0), [`85250cf7`](https://github.com/thirdweb-dev/js/commit/85250cf71190092b61023d56d1e786d395a008a6), [`e50911bc`](https://github.com/thirdweb-dev/js/commit/e50911bc065dda99945d906d8b166f49d7a89677), [`b80024c6`](https://github.com/thirdweb-dev/js/commit/b80024c6cca17541c9b5ebb51c1476e9f210d3ab), [`8845bf96`](https://github.com/thirdweb-dev/js/commit/8845bf960e18c89d0e1f2fe1c370f4e2f4e855d0), [`2335f000`](https://github.com/thirdweb-dev/js/commit/2335f000c9023dd47b1a341a4dd40ed674e9bcdb), [`696c384a`](https://github.com/thirdweb-dev/js/commit/696c384a348890202e37cbd8488b1b1eceb4e8c2), [`3740a0bf`](https://github.com/thirdweb-dev/js/commit/3740a0bf5db1301dbd93a97ab4c9343429a4e12d), [`cc7ce8b1`](https://github.com/thirdweb-dev/js/commit/cc7ce8b1e8f73288b5c00a29e0000bea9867e8c1), [`91f5a2fd`](https://github.com/thirdweb-dev/js/commit/91f5a2fd5cb2f5aed6498defdb1feeabb283db6c), [`537785fe`](https://github.com/thirdweb-dev/js/commit/537785fed0021345b0d1cec37658e43c65931f9f), [`29c1cf7e`](https://github.com/thirdweb-dev/js/commit/29c1cf7eff60221d05e87060f3c96a83343218e6), [`b6b0855b`](https://github.com/thirdweb-dev/js/commit/b6b0855b81854ec3d5dd3c763a1ad2a235837cc9), [`2a8cc289`](https://github.com/thirdweb-dev/js/commit/2a8cc289ac42273800554a247cb9259a8f0329d7), [`1e1a3912`](https://github.com/thirdweb-dev/js/commit/1e1a39123bad2b96c332ebb58b25369b31dd9de7), [`dc08aa73`](https://github.com/thirdweb-dev/js/commit/dc08aa731f92ce3c2dd232378637a3075137367d), [`bd6be0ba`](https://github.com/thirdweb-dev/js/commit/bd6be0bae78511878c2344949bb212dab30ec30c)]:
+  - @thirdweb-dev/sdk@3.10.0
+  - @thirdweb-dev/storage@1.1.0
+  - @thirdweb-dev/wallets@0.2.7
+  - @thirdweb-dev/auth@3.0.7
+
 ## 0.2.13
 
 ### Patch Changes

@@ -1,5 +1,23 @@
 # @thirdweb-dev/storage
 
+## 1.1.0
+
+### Minor Changes
+
+- [#637](https://github.com/thirdweb-dev/js/pull/637) [`8a8a37f6`](https://github.com/thirdweb-dev/js/commit/8a8a37f6d3468b2a9c9736834bc39a3eee4754f4) Thanks [@adam-maj](https://github.com/adam-maj)! - Pre-compute IPFS hashes before uploading
+
+### Patch Changes
+
+- [#644](https://github.com/thirdweb-dev/js/pull/644) [`63f552d7`](https://github.com/thirdweb-dev/js/commit/63f552d736a549532eb4d6a05cfe66a771b190b9) Thanks [@adam-maj](https://github.com/adam-maj)! - Update storage config to accept gatewayUrls
+
+- [#648](https://github.com/thirdweb-dev/js/pull/648) [`fb346ffd`](https://github.com/thirdweb-dev/js/commit/fb346ffd45edf9f50cc8c68a0c318eee39a6d9c6) Thanks [@adam-maj](https://github.com/adam-maj)! - Send on progress event if already uploaded
+
+- [#665](https://github.com/thirdweb-dev/js/pull/665) [`6ef52dc9`](https://github.com/thirdweb-dev/js/commit/6ef52dc916251d72416ba5a8b63b428770f54e75) Thanks [@shift4id](https://github.com/shift4id)! - Fix spelling throughout all packages
+
+- [#646](https://github.com/thirdweb-dev/js/pull/646) [`cc7ce8b1`](https://github.com/thirdweb-dev/js/commit/cc7ce8b1e8f73288b5c00a29e0000bea9867e8c1) Thanks [@adam-maj](https://github.com/adam-maj)! - Enable CID prediction for File type
+
+- [#645](https://github.com/thirdweb-dev/js/pull/645) [`29c1cf7e`](https://github.com/thirdweb-dev/js/commit/29c1cf7eff60221d05e87060f3c96a83343218e6) Thanks [@adam-maj](https://github.com/adam-maj)! - Make cid checking non-blocking
+
 ## 1.0.10
 
 ### Patch Changes
