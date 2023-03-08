@@ -40,7 +40,7 @@
     "@thirdweb-dev/chain-icons": "^1.0.5",
     "@thirdweb-dev/chains": "^0.1.6",
     "@thirdweb-dev/react": "^3.10.0",
-    "@thirdweb-dev/sdk": "^3.10.0",
+    "@thirdweb-dev/sdk": "3.10.1-dev-20230308053314-187f4af",
     "@thirdweb-dev/storage": "^1.1.0",
     "@types/cookie": "^0.5.1",
     "@vercel/og": "^0.4.0",
