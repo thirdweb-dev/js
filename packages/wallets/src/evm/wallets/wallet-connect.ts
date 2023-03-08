@@ -53,14 +53,14 @@ export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
     }
   };
 
-  #onConnect = async (data: ConnectorData<WalletConnectProvider>) => {
+  #onConnect = (data: ConnectorData<WalletConnectProvider>) => {
     this.#provider = data.provider;
     if (!this.#provider) {
       throw new Error("WalletConnect provider not found after connecting.");
     }
   };
 
-  #onDisconnect = async () => {
+  #onDisconnect = () => {
     this.#removeListeners();
   };
 
@@ -72,7 +72,7 @@ export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
     }
   };
 
-  #onMessage = async (payload: any) => {
+  #onMessage = (payload: any) => {
     switch (payload.type) {
       case "display_uri":
         this.emit("open_wallet", payload.data);

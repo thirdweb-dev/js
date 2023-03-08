@@ -24,6 +24,7 @@ export class CoinbaseWalletMobile
 {
   connector?: TWConnector;
   coinbaseConnector?: CoinbaseMobileWalletConnector;
+  provider?: CoinbaseMobileWalletConnector["provider"];
 
   static id = "coinbaseWalletMobile" as const;
   public get walletName() {
@@ -60,6 +61,7 @@ export class CoinbaseWalletMobile
 
       this.coinbaseConnector = cbConnector;
       this.connector = new WagmiAdapter(cbConnector);
+      this.provider = await this.coinbaseConnector.getProvider();
     }
     return this.connector;
   }

@@ -108,13 +108,6 @@ export class MetaMaskConnector extends InjectedConnector {
         throw new ConnectorNotFoundError();
       }
 
-      // Subscribe to Metamask provider events
-      if (provider.on) {
-        provider.on("accountsChanged", this.onAccountsChanged);
-        provider.on("chainChanged", this.onChainChanged);
-        provider.on("disconnect", this.onDisconnect);
-      }
-
       // emit "connecting" event
       this.emit("message", { type: "connecting" });
 

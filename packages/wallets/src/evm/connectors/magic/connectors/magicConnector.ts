@@ -77,6 +77,11 @@ export abstract class MagicConnector extends Connector<
     }
     const magic = this.getMagicSDK();
     this.provider = magic.rpcProvider;
+    if (this.provider.on) {
+      this.provider.on("accountsChanged", this.onAccountsChanged);
+      this.provider.on("chainChanged", this.onChainChanged);
+      this.provider.on("disconnect", this.onDisconnect);
+    }
     return this.provider;
   }
 

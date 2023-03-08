@@ -172,13 +172,7 @@ export class WalletConnectV1Connector extends Connector<
         session: session ? (session as IWalletConnectSession) : undefined,
       });
 
-      this.#provider.on("accountsChanged", this.onAccountsChanged);
-      this.#provider.on("chainChanged", this.onChainChanged);
-      this.#provider.on("disconnect", this.onDisconnect);
-      this.#provider.on("message", this.onMessage);
-      this.#provider.on("switchChain", this.onSwitchChain);
-      this.#provider.connector.on("display_uri", this.onDisplayUri);
-      this.#provider.connector.on("call_request_sent", this.onRequestSent);
+      this.#setupListeners();
     }
 
     return this.#provider;
@@ -297,11 +291,43 @@ export class WalletConnectV1Connector extends Connector<
     this.#storage.setItem(LAST_SESSION, sessionStr);
   }
 
+  #setupListeners() {
+    if (!this.#provider) {
+      return;
+    }
+    this.#removeListeners();
+
+    this.#provider.on("accountsChanged", this.onAccountsChanged);
+    this.#provider.on("chainChanged", this.onChainChanged);
+    this.#provider.on("disconnect", this.onDisconnect);
+    this.#provider.on("message", this.onMessage);
+    this.#provider.on("switchChain", this.onSwitchChain);
+    this.#provider.connector.on("display_uri", this.onDisplayUri);
+    this.#provider.connector.on("call_request_sent", this.onRequestSent);
+  }
+
+  #removeListeners() {
+    if (!this.#provider) {
+      return;
+    }
+
+    this.#provider.removeListener("accountsChanged", this.onAccountsChanged);
+    this.#provider.removeListener("chainChanged", this.onChainChanged);
+    this.#provider.removeListener("disconnect", this.onDisconnect);
+    this.#provider.removeListener("message", this.onMessage);
+    this.#provider.removeListener("switchChain", this.onSwitchChain);
+    (this.#provider.connector as WalletConnect).off("display_uri");
+    (this.#provider.connector as WalletConnect).off("call_request_sent");
+  }
+
   protected onSwitchChain = () => {
     this.emit("message", { type: "switch_chain" });
   };
 
-  protected onDisplayUri = (error: any, payload: { params: string[] }) => {
+  protected onDisplayUri = async (
+    error: any,
+    payload: { params: string[] },
+  ) => {
     if (error) {
       this.emit("message", { data: error, type: "display_uri_error" });
     }
@@ -339,14 +365,7 @@ export class WalletConnectV1Connector extends Connector<
     this.#storage.removeItem(LAST_USED_CHAIN_ID);
     this.#storage.removeItem(LAST_SESSION);
 
-    const provider = await this.getProvider();
-
-    provider.removeListener("accountsChanged", this.onAccountsChanged);
-    provider.removeListener("chainChanged", this.onChainChanged);
-    provider.removeListener("disconnect", this.onDisconnect);
-    provider.removeListener("message", this.onMessage);
-    (provider.connector as WalletConnect).off("display_uri");
-    (provider.connector as WalletConnect).off("call_request_sent");
+    this.#removeListeners();
 
     this.emit("disconnect");
   };

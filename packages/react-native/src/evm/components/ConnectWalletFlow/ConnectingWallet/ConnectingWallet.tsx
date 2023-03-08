@@ -4,7 +4,7 @@ import Text from "../../base/Text";
 import { ModalFooter } from "../../base/modal/ModalFooter";
 import { ConnectWalletHeader } from "./ConnectingWalletHeader";
 import React, { ReactNode } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Linking, StyleSheet, View } from "react-native";
 
 export type ConnectingWalletProps = {
   headerText?: ReactNode | string;
@@ -24,6 +24,10 @@ export function ConnectingWallet({
 }: ConnectingWalletProps) {
   const theme = useAppTheme();
 
+  const onFooterPress = () => {
+    Linking.openURL("https://support.thirdweb.com/");
+  };
+
   return (
     <View>
       <ConnectWalletHeader
@@ -41,7 +45,10 @@ export function ConnectingWallet({
       {footer ? (
         footer
       ) : (
-        <ModalFooter footer={`Having troubles connecting to ${wallet.name}?`} />
+        <ModalFooter
+          footer={`Having troubles connecting to ${wallet.name}?`}
+          onPress={onFooterPress}
+        />
       )}
     </View>
   );

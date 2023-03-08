@@ -74,6 +74,13 @@ export abstract class AbstractBrowserWallet<
 
     this.#subscribeToEvents(connector);
 
+    const isConnected = await connector.isConnected();
+    // return if already connected
+    if (isConnected) {
+      const address = await connector.getAddress();
+      return address;
+    }
+
     // end event listener setups
     const connectedAddress = await connector.connect(connectOptions);
 

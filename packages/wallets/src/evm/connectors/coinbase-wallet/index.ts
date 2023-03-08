@@ -55,9 +55,6 @@ export class CoinbaseWalletConnector extends Connector<
   async connect({ chainId }: { chainId?: number } = {}) {
     try {
       const provider = await this.getProvider();
-      provider.on("accountsChanged", this.onAccountsChanged);
-      provider.on("chainChanged", this.onChainChanged);
-      provider.on("disconnect", this.onDisconnect);
 
       this.emit("message", { type: "connecting" });
 
@@ -173,6 +170,7 @@ export class CoinbaseWalletConnector extends Connector<
         this.options.jsonRpcUrl || chain?.rpcUrls.default.http[0];
 
       this.#provider = this.#client.makeWeb3Provider(jsonRpcUrl, chainId);
+      this.#setupListeners(this.#provider);
     }
     return this.#provider;
   }
@@ -301,6 +299,12 @@ export class CoinbaseWalletConnector extends Connector<
 
   #isUserRejectedRequestError(error: unknown) {
     return /(user rejected)/i.test((error as Error).message);
+  }
+
+  #setupListeners(provider: CoinbaseWalletProvider) {
+    provider.on("accountsChanged", this.onAccountsChanged);
+    provider.on("chainChanged", this.onChainChanged);
+    provider.on("disconnect", this.onDisconnect);
   }
 
   async getQrCode() {

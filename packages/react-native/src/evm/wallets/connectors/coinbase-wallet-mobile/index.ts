@@ -68,9 +68,6 @@ export class CoinbaseMobileWalletConnector extends Connector<
   async connect({ chainId }: { chainId?: number } = {}) {
     try {
       const provider = await this.getProvider();
-      provider.on("accountsChanged", this.onAccountsChanged);
-      provider.on("chainChanged", this.onChainChanged);
-      provider.on("disconnect", this.onDisconnect);
 
       this.emit("message", { type: "connecting" });
 
@@ -118,11 +115,8 @@ export class CoinbaseMobileWalletConnector extends Connector<
       return;
     }
 
-    const provider = await this.getProvider();
-    provider.removeListener("accountsChanged", this.onAccountsChanged);
-    provider.removeListener("chainChanged", this.onChainChanged);
-    provider.removeListener("disconnect", this.onDisconnect);
-    provider.disconnect();
+    this.removeListeners();
+    this.provider.disconnect();
   }
 
   async getAccount() {
@@ -171,6 +165,8 @@ export class CoinbaseMobileWalletConnector extends Connector<
         this.options.jsonRpcUrl || chain?.rpcUrls.default.http[0];
 
       this.provider = new CoinbaseWalletMobileSDK({ jsonRpcUrl, chainId });
+
+      this.setupListeners();
     }
     return this.provider;
   }
@@ -279,6 +275,11 @@ export class CoinbaseMobileWalletConnector extends Connector<
     });
   }
 
+  protected onConnect() {
+    console.log("onConnect.CoinbaseWallet");
+    // this.provider = this.getProvider();
+  }
+
   protected onAccountsChanged = (accounts: string[]) => {
     if (accounts.length === 0) {
       this.emit("disconnect");
@@ -293,7 +294,31 @@ export class CoinbaseMobileWalletConnector extends Connector<
     this.emit("change", { chain: { id, unsupported } });
   };
 
+  setupListeners() {
+    if (!this.provider) {
+      return;
+    }
+
+    this.removeListeners();
+    this.provider.on("connect", this.onConnect);
+    this.provider.on("accountsChanged", this.onAccountsChanged);
+    this.provider.on("chainChanged", this.onChainChanged);
+    this.provider.on("disconnect", this.onDisconnect);
+  }
+
+  removeListeners() {
+    if (!this.provider) {
+      return;
+    }
+
+    this.provider.removeListener("connect", this.onConnect);
+    this.provider.removeListener("accountsChanged", this.onAccountsChanged);
+    this.provider.removeListener("chainChanged", this.onChainChanged);
+    this.provider.removeListener("disconnect", this.onDisconnect);
+  }
+
   protected onDisconnect = () => {
+    this.removeListeners();
     this.emit("disconnect");
   };
 

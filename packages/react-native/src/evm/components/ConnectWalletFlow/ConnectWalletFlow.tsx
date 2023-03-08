@@ -70,6 +70,7 @@ export const ConnectWalletFlow = () => {
           <ChooseWallet
             wallets={getWalletsMeta(supportedWallets)}
             onChooseWallet={onChooseWallet}
+            footer={<></>}
             onClose={onClose}
           />
         )}

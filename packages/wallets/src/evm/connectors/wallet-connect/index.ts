@@ -108,7 +108,6 @@ export class WalletConnectConnector extends Connector<
       }
 
       const provider = await this.getProvider();
-      this.#setupListeners();
 
       const isChainsStale = await this.#isChainsStale();
 
@@ -193,6 +192,7 @@ export class WalletConnectConnector extends Connector<
     if (!this.#provider) {
       throw new Error("No provider found.");
     }
+
     return this.#provider;
   }
 
@@ -311,6 +311,8 @@ export class WalletConnectConnector extends Connector<
           this.chains.map((chain) => [chain.id, chain.rpcUrls.default.http[0]]),
         ),
       });
+
+      this.#setupListeners();
     }
   }
 
@@ -432,7 +434,7 @@ export class WalletConnectConnector extends Connector<
     this.emit("disconnect");
   };
 
-  protected onDisplayUri = (uri: string) => {
+  protected onDisplayUri = async (uri: string) => {
     this.emit("message", { type: "display_uri", data: uri });
   };
 

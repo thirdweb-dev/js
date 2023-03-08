@@ -52,14 +52,14 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
     return this.connector;
   }
 
-  #onConnect = async (data: ConnectorData<WalletConnectProvider>) => {
+  #onConnect = (data: ConnectorData<WalletConnectProvider>) => {
     this.#provider = data.provider;
     if (!this.#provider) {
       throw new Error("WalletConnect provider not found after connecting.");
     }
   };
 
-  #onDisconnect = async () => {
+  #onDisconnect = () => {
     this.#removeListeners();
   };
 
@@ -71,7 +71,7 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
     }
   };
 
-  #onMessage = async (payload: any) => {
+  #onMessage = (payload: any) => {
     switch (payload.type) {
       case "request": // open wallet after request is sent
       case "add_chain": // open wallet after chain is added
