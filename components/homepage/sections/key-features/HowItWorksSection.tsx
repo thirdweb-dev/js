@@ -6,70 +6,81 @@ import { Heading, TrackedLink } from "tw-components";
 
 const TRACKING_CATEGORY = "how_it_works_section";
 
-const devTools = [
+const data: { title: string; icons: Item[] }[] = [
   {
-    icon: require("/public/assets/landingpage/howitworks-contractkit.png"),
-    title: "ContractKit",
-    href: "/contractkit",
+    title: "DEV TOOLS",
+    icons: [
+      {
+        icon: require("/public/assets/landingpage/howitworks-contractkit.png"),
+        title: "ContractKit",
+        href: "/contractkit",
+      },
+      {
+        icon: require("/public/assets/landingpage/howitworks-explore.png"),
+        title: "Explore",
+        href: "/explore",
+      },
+      {
+        icon: require("/public/assets/landingpage/howitworks-sdk.png"),
+        title: "SDK",
+        href: "/sdk",
+      },
+      {
+        icon: require("/public/assets/landingpage/howitworks-ui.png"),
+        title: "UI Components",
+        href: "/ui-components",
+      },
+      {
+        icon: require("/public/assets/landingpage/howitworks-deploy.png"),
+        title: "Deploy",
+        href: "/deploy",
+      },
+      {
+        icon: require("/public/assets/landingpage/howitworks-publish.png"),
+        title: "Publish",
+        href: "/publish",
+      },
+      {
+        icon: require("/public/assets/landingpage/howitworks-dashboard.png"),
+        title: "Dashboard",
+        href: "/dashboards",
+      },
+    ],
   },
   {
-    icon: require("/public/assets/landingpage/howitworks-explore.png"),
-    title: "Explore",
-    href: "/explore",
-  },
-  {
-    icon: require("/public/assets/landingpage/howitworks-sdk.png"),
-    title: "SDK",
-    href: "/sdk",
-  },
-  {
-    icon: require("/public/assets/landingpage/howitworks-ui.png"),
-    title: "UI Components",
-    href: "/ui-components",
-  },
-  {
-    icon: require("/public/assets/landingpage/howitworks-deploy.png"),
-    title: "Deploy",
-    href: "/deploy",
-  },
-  {
-    icon: require("/public/assets/landingpage/howitworks-publish.png"),
-    title: "Publish",
-    href: "/publish",
-  },
-  {
-    icon: require("/public/assets/landingpage/howitworks-dashboard.png"),
-    title: "Dashboard",
-    href: "/dashboards",
-  },
-];
-
-const infrastructure = [
-  {
-    icon: require("/public/assets/landingpage/howitworks-indexer.png"),
-    title: "Data Feeds",
-  },
-  {
-    icon: require("/public/assets/landingpage/howitworks-gasless.png"),
-    title: "Gasless Relayer",
-  },
-  {
-    icon: require("/public/assets/landingpage/howitworks-fiat.png"),
-    title: "Fiat On-Ramp",
-  },
-  {
-    icon: require("/public/assets/landingpage/howitworks-storage.png"),
-    title: "Storage",
-    href: "/storage",
-  },
-  {
-    icon: require("/public/assets/landingpage/howitworks-wallet.png"),
-    title: "Wallet",
-  },
-  {
-    icon: require("/public/assets/landingpage/howitworks-auth.png"),
-    title: "Auth",
-    href: "/auth",
+    title: "INFRASTRUCTURE",
+    icons: [
+      {
+        icon: require("/public/assets/landingpage/howitworks-indexer.png"),
+        title: "Data Feeds",
+      },
+      {
+        icon: require("/public/assets/landingpage/howitworks-gasless.png"),
+        title: "Gasless Relayer",
+      },
+      {
+        icon: require("/public/assets/landingpage/howitworks-fiat.png"),
+        title: "Fiat On-Ramp",
+      },
+      {
+        icon: require("/public/assets/landingpage/howitworks-storage.png"),
+        title: "Storage",
+        href: "/storage",
+      },
+      {
+        icon: require("/public/assets/landingpage/howitworks-rpc.png"),
+        title: "RPC",
+      },
+      {
+        icon: require("/public/assets/landingpage/howitworks-wallet.png"),
+        title: "Wallet",
+      },
+      {
+        icon: require("/public/assets/landingpage/howitworks-auth.png"),
+        title: "Auth",
+        href: "/auth",
+      },
+    ],
   },
 ];
 
@@ -210,73 +221,49 @@ export const HowItWorksSection: React.FC = () => {
         <Flex
           w={{ base: "full", md: "auto" }}
           order={{ base: 1, md: 2 }}
+          gap={{ base: 4, md: 8 }}
           grow={1}
           flexDir="column"
         >
-          <Heading
-            size="title.xs"
-            color="#A0A0A0"
-            textAlign="center"
-            fontSize="0.7rem"
-            letterSpacing={1.1}
-            lineHeight="1"
-            mt="-0.95rem"
-            pb={2}
-            as="h4"
-          >
-            DEV TOOLS
-          </Heading>
-          <Flex rounded="8" border="2px #171717 solid" w="full" h="full">
-            <SimpleGrid
-              my="auto"
-              w="full"
-              columns={{ base: 3, lg: 7 }}
-              gap="1rem 0"
-              py={6}
-              px={4}
-            >
-              {devTools.map((item, index) => (
-                <GridItem
-                  key={item.title}
-                  colSpan={{
-                    base: index === 6 ? 3 : 1,
-                    lg: 1,
-                  }}
+          {data.map(({ title, icons }) => (
+            <Box key={title}>
+              <Heading
+                size="title.xs"
+                color="#A0A0A0"
+                textAlign="center"
+                fontSize="0.7rem"
+                letterSpacing={1.1}
+                lineHeight="1"
+                mt="-0.95rem"
+                pb={2}
+                as="h4"
+              >
+                {title}
+              </Heading>
+              <Flex rounded="8" border="2px #171717 solid" w="full" h="full">
+                <SimpleGrid
+                  my="auto"
+                  w="full"
+                  columns={{ base: 3, lg: 7 }}
+                  gap="1rem 0"
+                  py={6}
+                  px={4}
                 >
-                  <Item item={item} />
-                </GridItem>
-              ))}
-            </SimpleGrid>
-          </Flex>
-          <Heading
-            size="title.xs"
-            color="#A0A0A0"
-            textAlign="center"
-            fontSize="0.7rem"
-            letterSpacing={1.1}
-            lineHeight="1"
-            mt={{ base: 4, md: 8 }}
-            pb={2}
-            as="h4"
-          >
-            INFRASTRUCTURE
-          </Heading>
-          <Flex rounded="8" border="2px #171717 solid" w="full" h="full">
-            <SimpleGrid
-              my="auto"
-              w="full"
-              columns={{ base: 3, lg: 6 }}
-              gap="1rem 0"
-              py={6}
-              px={4}
-            >
-              {infrastructure.map((item) => (
-                <GridItem key={item.title}>
-                  <Item item={item} />
-                </GridItem>
-              ))}
-            </SimpleGrid>
-          </Flex>
+                  {icons.map((item, index) => (
+                    <GridItem
+                      key={item.title}
+                      colSpan={{
+                        base: index === 6 ? 3 : 1,
+                        lg: 1,
+                      }}
+                    >
+                      <Item item={item} />
+                    </GridItem>
+                  ))}
+                </SimpleGrid>
+              </Flex>
+            </Box>
+          ))}
         </Flex>
       </Flex>
     </KeyFeatureLayout>
