@@ -23,14 +23,18 @@ export function ThirdwebProvider({
   children,
   createWalletStorage,
   thirdwebApiKey = DEFAULT_API_KEY,
-  supportedWallets = [MetamaskWallet, CoinbaseWalletMobile],
+  supportedWallets,
   ...props
 }: ThirdwebProviderProps) {
   return (
     <ThirdwebProviderCore
       {...props}
       thirdwebApiKey={thirdwebApiKey}
-      supportedWallets={supportedWallets}
+      supportedWallets={
+        supportedWallets?.length
+          ? supportedWallets
+          : [MetamaskWallet, CoinbaseWalletMobile]
+      }
       createWalletStorage={
         createWalletStorage ? createWalletStorage : createAsyncLocalStorage
       }
