@@ -11,12 +11,12 @@ import { z } from "zod";
  */
 export const CommonNFTInput = z
   .object({
-    name: z.union([z.string(), z.number()]).optional(),
-    description: z.string().nullable().optional(),
+    name: z.union([z.string(), z.number()]).optional().nullable(),
+    description: z.string().nullable().optional().nullable(),
     image: FileOrBufferOrStringSchema.nullable().optional(),
     external_url: FileOrBufferOrStringSchema.nullable().optional(),
-    animation_url: FileOrBufferOrStringSchema.optional(),
-    background_color: HexColor.optional(),
+    animation_url: FileOrBufferOrStringSchema.optional().nullable(),
+    background_color: HexColor.optional().nullable(),
     properties: OptionalPropertiesInput,
     attributes: OptionalPropertiesInput,
   })

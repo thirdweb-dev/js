@@ -61,15 +61,17 @@ export class ContractMetadata<
   /**
    * @internal
    */
-  public parseOutputMetadata(metadata: any): z.output<TSchema["output"]> {
-    return this.schema.output.parse(metadata);
+  public parseOutputMetadata(
+    metadata: any,
+  ): Promise<z.output<TSchema["output"]>> {
+    return this.schema.output.parseAsync(metadata);
   }
 
   /**
    * @internal
    */
-  public parseInputMetadata(metadata: any): z.input<TSchema["input"]> {
-    return this.schema.input.parse(metadata);
+  public parseInputMetadata(metadata: any): Promise<z.input<TSchema["input"]>> {
+    return this.schema.input.parseAsync(metadata);
   }
   /**
    * Get the metadata of this contract
@@ -188,7 +190,7 @@ export class ContractMetadata<
    * @returns
    */
   public async _parseAndUploadMetadata(metadata: z.input<TSchema["input"]>) {
-    const parsedMetadata = this.parseInputMetadata(metadata);
+    const parsedMetadata = await this.parseInputMetadata(metadata);
     return this.storage.upload(parsedMetadata);
   }
 

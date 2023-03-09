@@ -1,5 +1,7 @@
+import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_BURNABLE } from "../../constants/erc1155-features";
+import { AddressOrEns } from "../../schema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
@@ -62,11 +64,15 @@ export class Erc1155Burnable implements DetectableFeature {
    * ```
    */
   from = buildTransactionFunction(
-    async (account: string, tokenId: BigNumberish, amount: BigNumberish) => {
+    async (
+      account: AddressOrEns,
+      tokenId: BigNumberish,
+      amount: BigNumberish,
+    ) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "burn",
-        args: [account, tokenId, amount],
+        args: [await resolveAddress(account), tokenId, amount],
       });
     },
   );
@@ -119,14 +125,14 @@ export class Erc1155Burnable implements DetectableFeature {
    */
   batchFrom = buildTransactionFunction(
     async (
-      account: string,
+      account: AddressOrEns,
       tokenIds: BigNumberish[],
       amounts: BigNumberish[],
     ) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "burnBatch",
-        args: [account, tokenIds, amounts],
+        args: [await resolveAddress(account), tokenIds, amounts],
       });
     },
   );

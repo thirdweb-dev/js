@@ -1,8 +1,9 @@
 import { NFT } from "../../../core/schema/nft";
+import { resolveAddress } from "../../common/ens";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_BATCH_MINTABLE } from "../../constants/erc1155-features";
-import { EditionMetadataOrUri } from "../../schema";
+import { AddressOrEns, EditionMetadataOrUri } from "../../schema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
@@ -74,16 +75,24 @@ export class Erc1155BatchMintable implements DetectableFeature {
    */
   to = buildTransactionFunction(
     async (
-      to: string,
+      to: AddressOrEns,
       metadataWithSupply: EditionMetadataOrUri[],
     ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
       const metadatas = metadataWithSupply.map((a) => a.metadata);
       const supplies = metadataWithSupply.map((a) => a.supply);
       const uris = await uploadOrExtractURIs(metadatas, this.storage);
-      const encoded = uris.map((uri, index) =>
-        this.contractWrapper.readContract.interface.encodeFunctionData(
-          "mintTo",
-          [to, ethers.constants.MaxUint256, uri, supplies[index]],
+      const resolvedAddress = await resolveAddress(to);
+      const encoded = await Promise.all(
+        uris.map(async (uri, index) =>
+          this.contractWrapper.readContract.interface.encodeFunctionData(
+            "mintTo",
+            [
+              resolvedAddress,
+              ethers.constants.MaxUint256,
+              uri,
+              supplies[index],
+            ],
+          ),
         ),
       );
       return Transaction.fromContractWrapper({

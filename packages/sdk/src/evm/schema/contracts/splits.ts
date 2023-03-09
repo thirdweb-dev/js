@@ -1,5 +1,5 @@
 import { BasisPointsSchema } from "../../../core/schema/shared";
-import { AddressSchema } from "../shared";
+import { AddressOrEnsSchema } from "../shared";
 import {
   CommonContractOutputSchema,
   CommonContractSchema,
@@ -8,12 +8,12 @@ import {
 import { z } from "zod";
 
 const SplitRecipientInputSchema = z.object({
-  address: AddressSchema,
+  address: AddressOrEnsSchema,
   sharesBps: BasisPointsSchema.gt(0, "Shares must be greater than 0"),
 });
 
 const SplitRecipientOuputSchema = SplitRecipientInputSchema.extend({
-  address: AddressSchema,
+  address: AddressOrEnsSchema,
   sharesBps: BasisPointsSchema,
 });
 

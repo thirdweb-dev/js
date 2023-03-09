@@ -1,33 +1,33 @@
 import { ConnectParams, TWConnector } from "../../interfaces/tw-connector";
 import {
-  EmailWalletConnectionArgs,
-  EmailWalletConnectorOptions,
+  PaperWalletConnectionArgs,
+  PaperWalletConnectorOptions,
 } from "./types";
 import {
-  Chains,
+  Chain,
   InitializedUser,
   PaperEmbeddedWalletSdk,
   UserStatus,
 } from "@paperxyz/embedded-wallet-service-sdk";
 import { ethers, Signer } from "ethers";
 
-export const PaperChainMap: Record<number, Chains> = {
+export const PaperChainMap: Record<number, Chain> = {
   1: "Ethereum",
   5: "Goerli",
   137: "Polygon",
   80001: "Mumbai",
 };
 
-export class EmailWalletConnector extends TWConnector<EmailWalletConnectionArgs> {
-  readonly id: string = "email-wallet";
-  readonly name: string = "Email Wallet";
+export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs> {
+  readonly id: string = "paper-wallet";
+  readonly name: string = "Paper Wallet";
   ready: boolean = true;
 
   private user: InitializedUser | null = null;
   private paper?: PaperEmbeddedWalletSdk;
-  private options: EmailWalletConnectorOptions;
+  private options: PaperWalletConnectorOptions;
 
-  constructor(options: EmailWalletConnectorOptions) {
+  constructor(options: PaperWalletConnectorOptions) {
     super();
     this.options = options;
   }
@@ -45,7 +45,7 @@ export class EmailWalletConnector extends TWConnector<EmailWalletConnectionArgs>
     }
   }
 
-  async connect(args?: ConnectParams<EmailWalletConnectionArgs>) {
+  async connect(args?: ConnectParams<PaperWalletConnectionArgs>) {
     const email = args?.email;
     if (!email) {
       throw new Error("No Email provided");
@@ -61,12 +61,6 @@ export class EmailWalletConnector extends TWConnector<EmailWalletConnectionArgs>
           email,
         });
         this.user = authResult.user;
-        /**
-          TODO headless support
-          await Paper.auth.sendPaperEmailLoginOtp({ email });
-          const otp = await args?.handleOTP();
-          const user = await Paper.auth.verifyPaperEmailLoginOtp({ email, otp });
-         */
         break;
       }
       case UserStatus.LOGGED_IN_WALLET_INITIALIZED: {
@@ -85,7 +79,8 @@ export class EmailWalletConnector extends TWConnector<EmailWalletConnectionArgs>
   }
 
   async getAddress(): Promise<string> {
-    return await this.getUser().wallet.getAddress();
+    const signer = await this.getSigner();
+    return signer.getAddress();
   }
 
   async isConnected(): Promise<boolean> {

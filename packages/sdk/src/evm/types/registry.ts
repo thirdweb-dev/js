@@ -1,7 +1,8 @@
 import { ContractType } from "../core";
+import { Address, AddressOrEns } from "../schema";
 
 export type ContractInput = {
-  address: string;
+  address: AddressOrEns;
   chainId: number;
 };
 
@@ -10,12 +11,12 @@ export type AddContractInput = ContractInput & {
 };
 
 export type DeployedContract = {
-  address: string;
+  address: Address;
   chainId: number;
 };
 
 export type ContractWithMetadata = {
-  address: string;
+  address: Address;
   chainId: number;
   contractType: () => Promise<ContractType>;
   metadata: () => Promise<{ name: string }>;

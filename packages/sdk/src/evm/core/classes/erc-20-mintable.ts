@@ -1,6 +1,8 @@
 import { detectContractFeature } from "../../common";
+import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_TOKEN_MINTABLE } from "../../constants/erc20-features";
+import { AddressOrEns } from "../../schema";
 import { Amount } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
@@ -47,7 +49,7 @@ export class Erc20Mintable implements DetectableFeature {
    * await contract.token.mint.to(toAddress, amount);
    * ```
    */
-  to = buildTransactionFunction(async (to: string, amount: Amount) => {
+  to = buildTransactionFunction(async (to: AddressOrEns, amount: Amount) => {
     return await this.getMintTransaction(to, amount);
   });
 
@@ -55,13 +57,16 @@ export class Erc20Mintable implements DetectableFeature {
    * @deprecated Use `contract.erc20.mint.prepare(...args)` instead
    */
   public async getMintTransaction(
-    to: string,
+    to: AddressOrEns,
     amount: Amount,
   ): Promise<Transaction> {
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
       method: "mintTo",
-      args: [to, await this.erc20.normalizeAmount(amount)],
+      args: [
+        await resolveAddress(to),
+        await this.erc20.normalizeAmount(amount),
+      ],
     });
   }
 

@@ -32,7 +32,7 @@ export class ContractPlatformFee<TContract extends IPlatformFee>
 
   /**
    * Get the platform fee recipient and basis points
-   * 
+   *
    * @example
    * ```javascript
    * const feeInfo = await contract.platformFee.get();
@@ -44,7 +44,7 @@ export class ContractPlatformFee<TContract extends IPlatformFee>
   public async get() {
     const [platformFeeRecipient, platformFeeBps] =
       await this.contractWrapper.readContract.getPlatformFeeInfo();
-    return CommonPlatformFeeSchema.parse({
+    return CommonPlatformFeeSchema.parseAsync({
       platform_fee_recipient: platformFeeRecipient,
       platform_fee_basis_points: platformFeeBps,
     });
@@ -52,7 +52,7 @@ export class ContractPlatformFee<TContract extends IPlatformFee>
 
   /**
    * Set the platform fee recipient and basis points
-   * 
+   *
    * @example
    * ```javascript
    * await contract.platformFee.set({
@@ -60,14 +60,14 @@ export class ContractPlatformFee<TContract extends IPlatformFee>
    *   platform_fee_recipient: "0x..." // the fee recipient
    * })
    * ```
-   * 
+   *
    * @param platformFeeInfo - the platform fee information
    * @twfeature PlatformFee
    */
   public async set(
     platformFeeInfo: z.input<typeof CommonPlatformFeeSchema>,
   ): Promise<TransactionResult> {
-    const parsed = CommonPlatformFeeSchema.parse(platformFeeInfo);
+    const parsed = await CommonPlatformFeeSchema.parseAsync(platformFeeInfo);
     return {
       receipt: await this.contractWrapper.sendTransaction(
         "setPlatformFeeInfo",

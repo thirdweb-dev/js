@@ -81,7 +81,9 @@ export class Deployer {
    * ```
    */
   async createToken(tokenMetadata: TokenMetadataInput): Promise<string> {
-    const tokenMetadataParsed = TokenMetadataInputSchema.parse(tokenMetadata);
+    const tokenMetadataParsed = await TokenMetadataInputSchema.parseAsync(
+      tokenMetadata,
+    );
     const uri = await this.storage.upload(tokenMetadataParsed);
     const mint = Keypair.generate();
     const owner = this.metaplex.identity().publicKey;
@@ -152,7 +154,9 @@ export class Deployer {
   async createNftCollection(
     collectionMetadata: NFTCollectionMetadataInput,
   ): Promise<string> {
-    const parsed = NFTCollectionMetadataInputSchema.parse(collectionMetadata);
+    const parsed = await NFTCollectionMetadataInputSchema.parseAsync(
+      collectionMetadata,
+    );
     const uri = await this.storage.upload(parsed);
 
     const collectionMint = Keypair.generate();
@@ -207,9 +211,11 @@ export class Deployer {
    * ```
    */
   async createNftDrop(metadata: NFTDropContractInput): Promise<string> {
-    const collectionInfo = NFTCollectionMetadataInputSchema.parse(metadata);
+    const collectionInfo = await NFTCollectionMetadataInputSchema.parseAsync(
+      metadata,
+    );
     const candyMachineInfo =
-      NFTDropInitialConditionsInputSchema.parse(metadata);
+      await NFTDropInitialConditionsInputSchema.parseAsync(metadata);
     const uri = await this.storage.upload(collectionInfo);
 
     const collectionMint = Keypair.generate();

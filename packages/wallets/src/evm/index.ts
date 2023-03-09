@@ -8,6 +8,7 @@ export * from "./wallets/magic-auth";
 export * from "./wallets/private-key";
 export * from "./wallets/ethers";
 export * from "./wallets/device-wallet";
+export * from "./wallets/paper-wallet";
 // just the types
 export type { AbstractBrowserWallet, WalletOptions } from "./wallets/base";
 export type { WalletData, WalletEvents } from "./wallets/abstract";

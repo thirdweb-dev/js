@@ -1,12 +1,12 @@
 import { AmountSchema } from "../../../core/schema/shared";
-import { AddressSchema } from "../shared";
+import { AddressOrEnsSchema } from "../shared";
 import { z } from "zod";
 
 /**
  * @internal
  */
 export const TokenMintInputSchema = z.object({
-  toAddress: AddressSchema,
+  toAddress: AddressOrEnsSchema,
   amount: AmountSchema,
 });
 

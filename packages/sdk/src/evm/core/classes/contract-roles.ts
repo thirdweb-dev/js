@@ -1,7 +1,9 @@
 import { hasFunction } from "../../common";
+import { resolveAddress } from "../../common/ens";
 import { MissingRoleError } from "../../common/error";
 import { getRoleHash, Role } from "../../common/role";
 import { FEATURE_PERMISSIONS } from "../../constants/thirdweb-features";
+import { Address, AddressOrEns } from "../../schema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
@@ -127,7 +129,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    *
    * */
   public async setAll(rolesWithAddresses: {
-    [key in TRole]?: string[];
+    [key in TRole]?: AddressOrEns[];
   }): Promise<TransactionResult> {
     const roles = Object.keys(rolesWithAddresses) as TRole[];
     invariant(roles.length, "you must provide at least one role to set");
@@ -141,8 +143,17 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
     const sortedRoles = roles.sort((role) => (role === "admin" ? 1 : -1));
     for (let i = 0; i < sortedRoles.length; i++) {
       const role = sortedRoles[i];
-      const addresses: string[] = rolesWithAddresses[role] || [];
-      const currentAddresses = currentRoles[role] || [];
+      const addresses: Address[] = await Promise.all(
+        rolesWithAddresses[role]?.map(
+          async (addressOrEns) => await resolveAddress(addressOrEns),
+        ) || [],
+      );
+      const currentAddresses: Address[] = await Promise.all(
+        currentRoles[role]?.map(
+          async (addressOrEns) =>
+            await resolveAddress(addressOrEns as AddressOrEns),
+        ) || [],
+      );
       const toAdd = addresses.filter(
         (address) => !currentAddresses.includes(address),
       );
@@ -187,14 +198,17 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    *
    * @internal
    */
-  public async verify(roles: TRole[], address: string): Promise<void> {
+  public async verify(roles: TRole[], address: AddressOrEns): Promise<void> {
     await Promise.all(
       roles.map(async (role) => {
         const members = await this.get(role);
+        const resolvedAddress: Address = await resolveAddress(address);
         if (
-          !members.map((a) => a.toLowerCase()).includes(address.toLowerCase())
+          !members
+            .map((a) => a.toLowerCase())
+            .includes(resolvedAddress.toLowerCase())
         ) {
-          throw new MissingRoleError(address, role);
+          throw new MissingRoleError(resolvedAddress, role);
         }
       }),
     );
@@ -222,15 +236,20 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * @public
    * @twfeature Permissions
    */
-  public async grant(role: TRole, address: string): Promise<TransactionResult> {
+  public async grant(
+    role: TRole,
+    address: AddressOrEns,
+  ): Promise<TransactionResult> {
     invariant(
       this.roles.includes(role),
       `this contract does not support the "${role}" role`,
     );
+
+    const resolvedAddress: Address = await resolveAddress(address);
     return {
       receipt: await this.contractWrapper.sendTransaction("grantRole", [
         getRoleHash(role),
-        address,
+        resolvedAddress,
       ]),
     };
   }
@@ -261,17 +280,20 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    */
   public async revoke(
     role: TRole,
-    address: string,
+    address: AddressOrEns,
   ): Promise<TransactionResult> {
     invariant(
       this.roles.includes(role),
       `this contract does not support the "${role}" role`,
     );
-    const revokeFunctionName = await this.getRevokeRoleFunctionName(address);
+    const resolvedAddress = await resolveAddress(address);
+    const revokeFunctionName = await this.getRevokeRoleFunctionName(
+      resolvedAddress,
+    );
     return {
       receipt: await this.contractWrapper.sendTransaction(revokeFunctionName, [
         getRoleHash(role),
-        address,
+        resolvedAddress,
       ]),
     };
   }
@@ -280,9 +302,10 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * PRIVATE FUNCTIONS
    ****************************/
 
-  private async getRevokeRoleFunctionName(address: string) {
+  private async getRevokeRoleFunctionName(address: AddressOrEns) {
+    const resolvedAddress = await resolveAddress(address);
     const signerAddress = await this.contractWrapper.getSignerAddress();
-    if (signerAddress.toLowerCase() === address.toLowerCase()) {
+    if (signerAddress.toLowerCase() === resolvedAddress.toLowerCase()) {
       return "renounceRole";
     }
     return "revokeRole";
