@@ -22,6 +22,7 @@ import { ListingType } from "../../enums";
 import { Abi } from "../../schema/contracts/custom";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
+import { AddressOrEns } from "../../schema/shared";
 import { Price } from "../../types/currency";
 import { AuctionListing, DirectListing, Offer } from "../../types/marketplace";
 import { MarketplaceFilter } from "../../types/marketplace/MarketPlaceFilter";
@@ -383,7 +384,7 @@ export class Marketplace implements UpdateableNetwork {
   public async buyoutListing(
     listingId: BigNumberish,
     quantityDesired?: BigNumberish,
-    receiver?: string,
+    receiver?: AddressOrEns,
   ): Promise<TransactionResult> {
     const listing = await this.contractWrapper.readContract.listings(listingId);
     if (listing.listingId.toString() !== listingId.toString()) {

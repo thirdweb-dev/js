@@ -4,6 +4,7 @@ import {
   normalizePriceValue,
   setErc20Allowance,
 } from "../../common/currency";
+import { resolveAddress } from "../../common/ens";
 import { getAllInBatches, handleTokenApproval } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
@@ -68,7 +69,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
 
   /**
    * Get the total number of offers
-   * 
+   *
    * @returns Returns the total number of offers created.
    * @public
    *
@@ -112,7 +113,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
     );
     rawOffers = batches.flat();
 
-    const filteredOffers = this.applyFilter(rawOffers, filter);
+    const filteredOffers = await this.applyFilter(rawOffers, filter);
 
     return await Promise.all(
       filteredOffers.map((offer) => this.mapOffer(offer)),
@@ -149,7 +150,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
     );
     rawOffers = batches.flat();
 
-    const filteredOffers = this.applyFilter(rawOffers, filter);
+    const filteredOffers = await this.applyFilter(rawOffers, filter);
 
     return await Promise.all(
       filteredOffers.map((offer) => this.mapOffer(offer)),
@@ -213,7 +214,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
   public async makeOffer(
     offer: OfferInputParams,
   ): Promise<TransactionResultWithId> {
-    const parsedOffer = OfferInputParamsSchema.parse(offer);
+    const parsedOffer = await OfferInputParamsSchema.parseAsync(offer);
 
     const chainId = await this.contractWrapper.getChainID();
     const currency = isNativeToken(parsedOffer.currencyContractAddress)
@@ -450,7 +451,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
     };
   }
 
-  private applyFilter(
+  private async applyFilter(
     offers: IOffers.OfferStructOutput[],
     filter?: MarketplaceFilter,
   ) {
@@ -458,17 +459,19 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
 
     if (filter) {
       if (filter.offeror) {
+        const resolvedOfferor = await resolveAddress(filter.offeror);
         rawOffers = rawOffers.filter(
           (offeror) =>
             offeror.offeror.toString().toLowerCase() ===
-            filter?.offeror?.toString().toLowerCase(),
+            resolvedOfferor?.toString().toLowerCase(),
         );
       }
       if (filter.tokenContract) {
+        const resolvedToken = await resolveAddress(filter.tokenContract);
         rawOffers = rawOffers.filter(
           (tokenContract) =>
             tokenContract.assetContract.toString().toLowerCase() ===
-            filter?.tokenContract?.toString().toLowerCase(),
+            resolvedToken?.toString().toLowerCase(),
         );
       }
 

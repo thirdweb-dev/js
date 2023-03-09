@@ -1,4 +1,5 @@
 import { FEATURE_PRIMARY_SALE } from "../../constants/thirdweb-features";
+import { Address } from "../../schema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
@@ -35,7 +36,7 @@ export class ContractPrimarySale<TContract extends IPrimarySale>
    * @public
    * @twfeature PrimarySale
    */
-  public async getRecipient(): Promise<string> {
+  public async getRecipient(): Promise<Address> {
     return await this.contractWrapper.readContract.primarySaleRecipient();
   }
 

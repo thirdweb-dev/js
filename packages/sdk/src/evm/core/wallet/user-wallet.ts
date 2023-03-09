@@ -3,6 +3,7 @@ import {
   isNativeToken,
   normalizePriceValue,
 } from "../../common/currency";
+import { resolveAddress } from "../../common/ens";
 import { EIP712Domain, signTypedDataInternal } from "../../common/sign";
 import {
   ChainId,
@@ -10,7 +11,7 @@ import {
   LOCAL_NODE_PKEY,
   NATIVE_TOKEN_ADDRESS,
 } from "../../constants";
-import { SDKOptions } from "../../schema";
+import { Address, AddressOrEns, SDKOptions } from "../../schema";
 import { Amount, CurrencyValue } from "../../types";
 import { ContractWrapper } from "../classes/contract-wrapper";
 import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
@@ -79,22 +80,25 @@ export class UserWallet {
    * @param currencyAddress - Optional - ERC20 contract address of the token to transfer
    */
   async transfer(
-    to: string,
+    to: AddressOrEns,
     amount: Amount,
-    currencyAddress = NATIVE_TOKEN_ADDRESS,
+    currencyAddress: AddressOrEns = NATIVE_TOKEN_ADDRESS,
   ): Promise<TransactionResult> {
+    const resolvedTo = await resolveAddress(to);
+    const resolvedCurrency = await resolveAddress(currencyAddress);
+
     const signer = this.requireWallet();
     const amountInWei = await normalizePriceValue(
       this.connection.getProvider(),
       amount,
       currencyAddress,
     );
-    if (isNativeToken(currencyAddress)) {
+    if (isNativeToken(resolvedCurrency)) {
       // native token transfer
       const from = await signer.getAddress();
       const tx = await signer.sendTransaction({
         from,
-        to,
+        to: resolvedTo,
         value: amountInWei,
       });
       return {
@@ -103,9 +107,9 @@ export class UserWallet {
     } else {
       // ERC20 token transfer
       return {
-        receipt: await this.createErc20(currencyAddress).sendTransaction(
+        receipt: await this.createErc20(resolvedCurrency).sendTransaction(
           "transfer",
-          [to, amountInWei],
+          [resolvedTo, amountInWei],
         ),
       };
     }
@@ -123,19 +127,21 @@ export class UserWallet {
    * ```
    */
   async balance(
-    currencyAddress = NATIVE_TOKEN_ADDRESS,
+    currencyAddress: AddressOrEns = NATIVE_TOKEN_ADDRESS,
   ): Promise<CurrencyValue> {
     this.requireWallet();
+
+    const resolvedCurrency = await resolveAddress(currencyAddress);
     const provider = this.connection.getProvider();
     let balance: BigNumber;
-    if (isNativeToken(currencyAddress)) {
+    if (isNativeToken(resolvedCurrency)) {
       balance = await provider.getBalance(await this.getAddress());
     } else {
-      balance = await this.createErc20(currencyAddress).readContract.balanceOf(
+      balance = await this.createErc20(resolvedCurrency).readContract.balanceOf(
         await this.getAddress(),
       );
     }
-    return await fetchCurrencyValue(provider, currencyAddress, balance);
+    return await fetchCurrencyValue(provider, resolvedCurrency, balance);
   }
 
   /**
@@ -145,8 +151,8 @@ export class UserWallet {
    * const address = await sdk.wallet.getAddress();
    * ```
    */
-  public async getAddress(): Promise<string> {
-    return await this.requireWallet().getAddress();
+  public async getAddress(): Promise<Address> {
+    return (await this.requireWallet().getAddress()) as Address;
   }
 
   /**
@@ -240,7 +246,7 @@ export class UserWallet {
    * const address = sdk.wallet.recoverAddress(message, signature);
    * ```
    */
-  public recoverAddress(message: string, signature: string): string {
+  public recoverAddress(message: string, signature: string): Address {
     const messageHash = ethers.utils.hashMessage(message);
     const messageHashBytes = ethers.utils.arrayify(messageHash);
     return ethers.utils.recoverAddress(messageHashBytes, signature);
@@ -295,7 +301,7 @@ export class UserWallet {
     return signer;
   }
 
-  private createErc20(currencyAddress: string) {
+  private createErc20(currencyAddress: Address) {
     return new ContractWrapper<IERC20>(
       this.connection.getSignerOrProvider(),
       currencyAddress,

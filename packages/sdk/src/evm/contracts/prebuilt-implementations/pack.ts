@@ -6,6 +6,7 @@ import {
   hasERC20Allowance,
   normalizePriceValue,
 } from "../../common/currency";
+import { resolveAddress } from "../../common/ens";
 import { isTokenApprovedForTransfer } from "../../common/marketplace";
 import { uploadOrExtractURI } from "../../common/nft";
 import { getRoleHash } from "../../common/role";
@@ -25,7 +26,7 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { PackVRF } from "../../core/classes/pack-vrf";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { Abi } from "../../schema";
+import { Abi, Address, AddressOrEns } from "../../schema";
 import { PackContractSchema } from "../../schema/contracts/packs";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
@@ -165,7 +166,7 @@ export class Pack extends StandardErc1155<PackContract> {
     this._vrf?.onNetworkUpdated(network);
   }
 
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
   }
 
@@ -223,7 +224,7 @@ export class Pack extends StandardErc1155<PackContract> {
    *
    * @returns The pack metadata for all the owned packs in the contract.
    */
-  public async getOwned(walletAddress?: string): Promise<NFT[]> {
+  public async getOwned(walletAddress?: AddressOrEns): Promise<NFT[]> {
     return this.erc1155.getOwned(walletAddress);
   }
 
@@ -422,7 +423,9 @@ export class Pack extends StandardErc1155<PackContract> {
     packContents: PackRewards,
   ) {
     const signerAddress = await this.contractWrapper.getSignerAddress();
-    const parsedContents = PackRewardsOutputSchema.parse(packContents);
+    const parsedContents = await PackRewardsOutputSchema.parseAsync(
+      packContents,
+    );
     const { contents, numOfRewardUnits } = await this.toPackContentArgs(
       parsedContents,
     );
@@ -497,7 +500,7 @@ export class Pack extends StandardErc1155<PackContract> {
    * ```
    */
   public async createTo(
-    to: string,
+    to: AddressOrEns,
     metadataWithRewards: PackMetadataInput,
   ): Promise<TransactionResultWithId<NFT>> {
     const uri = await uploadOrExtractURI(
@@ -505,7 +508,9 @@ export class Pack extends StandardErc1155<PackContract> {
       this.storage,
     );
 
-    const parsedMetadata = PackMetadataInputSchema.parse(metadataWithRewards);
+    const parsedMetadata = await PackMetadataInputSchema.parseAsync(
+      metadataWithRewards,
+    );
     const { erc20Rewards, erc721Rewards, erc1155Rewards } = parsedMetadata;
     const rewardsData: PackRewardsOutput = {
       erc20Rewards,
@@ -522,7 +527,7 @@ export class Pack extends StandardErc1155<PackContract> {
       uri,
       parsedMetadata.openStartTime,
       parsedMetadata.rewardsPerPack,
-      to,
+      await resolveAddress(to),
     ]);
 
     const event = this.contractWrapper.parseLogs<PackCreatedEvent>(

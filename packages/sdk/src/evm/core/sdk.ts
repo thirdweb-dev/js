@@ -1,4 +1,5 @@
 import { fetchCurrencyValue, getAllDetectedFeatureNames } from "../common";
+import { resolveAddress } from "../common/ens";
 import { getCompositePluginABI } from "../common/plugin";
 import { createStorage } from "../common/storage";
 import {
@@ -12,7 +13,7 @@ import {
   getContractTypeForRemoteName,
 } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
-import { Abi, AbiSchema, SDKOptions } from "../schema";
+import { Abi, AbiSchema, AddressOrEns, SDKOptions } from "../schema";
 import { ContractWithMetadata, CurrencyValue } from "../types";
 import { ContractDeployer } from "./classes";
 import { ContractPublisher } from "./classes/contract-publisher";
@@ -226,7 +227,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * + const dropContract = await sdk.getContract("0x1234...", "nft-drop");
    * ```
    */
-  public async getNFTDrop(contractAddress: string) {
+  public async getNFTDrop(contractAddress: AddressOrEns) {
     return await this.getContract(contractAddress, "nft-drop");
   }
 
@@ -240,7 +241,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * + const signatureDrop = await sdk.getContract("0x1234...", "signature-drop");
    * ```
    */
-  public async getSignatureDrop(contractAddress: string) {
+  public async getSignatureDrop(contractAddress: AddressOrEns) {
     return await this.getContract(contractAddress, "signature-drop");
   }
 
@@ -254,7 +255,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * + const signatureDrop = await sdk.getContract("0x1234...", "nft-collection");
    * ```
    */
-  public async getNFTCollection(contractAddress: string) {
+  public async getNFTCollection(contractAddress: AddressOrEns) {
     return await this.getContract(contractAddress, "nft-collection");
   }
 
@@ -268,7 +269,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * + const editionDrop = await sdk.getContract("0x1234...", "edition-drop");
    * ```
    */
-  public async getEditionDrop(contractAddress: string) {
+  public async getEditionDrop(contractAddress: AddressOrEns) {
     return await this.getContract(contractAddress, "edition-drop");
   }
 
@@ -282,7 +283,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * + const edition = await sdk.getContract("0x1234...", "edition");
    * ```
    */
-  public async getEdition(contractAddress: string) {
+  public async getEdition(contractAddress: AddressOrEns) {
     return await this.getContract(contractAddress, "edition");
   }
 
@@ -296,7 +297,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * + const tokenDrop = await sdk.getContract("0x1234...", "token-drop");
    * ```
    */
-  public async getTokenDrop(contractAddress: string) {
+  public async getTokenDrop(contractAddress: AddressOrEns) {
     return await this.getContract(contractAddress, "token-drop");
   }
 
@@ -310,7 +311,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * + const token = await sdk.getContract("0x1234...", "token");
    * ```
    */
-  public async getToken(contractAddress: string) {
+  public async getToken(contractAddress: AddressOrEns) {
     return await this.getContract(contractAddress, "token");
   }
 
@@ -324,7 +325,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * + const vote = await sdk.getContract("0x1234...", "vote");
    * ```
    */
-  public async getVote(contractAddress: string) {
+  public async getVote(contractAddress: AddressOrEns) {
     return await this.getContract(contractAddress, "vote");
   }
 
@@ -338,7 +339,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * + const split = await sdk.getContract("0x1234...", "split");
    * ```
    */
-  public async getSplit(contractAddress: string) {
+  public async getSplit(contractAddress: AddressOrEns) {
     return await this.getContract(contractAddress, "split");
   }
 
@@ -352,7 +353,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * + const marketplace = await sdk.getContract("0x1234...", "marketplace");
    * ```
    */
-  public async getMarketplace(contractAddress: string) {
+  public async getMarketplace(contractAddress: AddressOrEns) {
     return await this.getContract(contractAddress, "marketplace");
   }
 
@@ -366,7 +367,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * + const marketplace = await sdk.getContract("0x1234...", "marketplace-v3");
    * ```
    */
-  public async getMarketplaceV3(contractAddress: string) {
+  public async getMarketplaceV3(contractAddress: AddressOrEns) {
     return await this.getContract(contractAddress, "marketplace-v3");
   }
 
@@ -380,7 +381,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * + const pack = await sdk.getContract("0x1234...", "pack");
    * ```
    */
-  public async getPack(contractAddress: string) {
+  public async getPack(contractAddress: AddressOrEns) {
     return await this.getContract(contractAddress, "pack");
   }
 
@@ -394,7 +395,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * + const multiWrap = await sdk.getContract("0x1234...", "multiwrap");
    * ```
    */
-  public async getMultiwrap(contractAddress: string) {
+  public async getMultiwrap(contractAddress: AddressOrEns) {
     return await this.getContract(contractAddress, "multiwrap");
   }
 
@@ -408,7 +409,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * const contract = await sdk.getContract("{{contract_address}}");
    * ```
    */
-  public async getContract(address: string): Promise<SmartContract>;
+  public async getContract(address: AddressOrEns): Promise<SmartContract>;
   /**
    * Get an instance of a Custom ThirdwebContract
    * @param address - the address of the deployed contract
@@ -421,7 +422,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * ```
    */
   public async getContract<TContractType extends ContractType>(
-    address: string,
+    address: AddressOrEns,
     contractType: TContractType,
   ): Promise<
     TContractType extends PrebuiltContractType
@@ -440,18 +441,20 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * ```
    */
   public async getContract(
-    address: string,
+    address: AddressOrEns,
     abi: ContractInterface,
   ): Promise<SmartContract>;
   public async getContract(
-    address: string,
+    address: AddressOrEns,
     contractTypeOrABI?: PrebuiltContractType | ContractInterface,
   ): Promise<ValidContractInstance> {
+    const resolvedAddress = await resolveAddress(address);
+
     // if we have a contract in the cache we will return it
     // we will do this **without** checking any contract type things for simplicity, this may have to change in the future?
-    if (this.contractCache.has(address)) {
+    if (this.contractCache.has(resolvedAddress)) {
       // we know this will be there since we check the has above
-      return this.contractCache.get(address) as ValidContractInstance;
+      return this.contractCache.get(resolvedAddress) as ValidContractInstance;
     }
 
     let newContract: ValidContractInstance;
@@ -461,8 +464,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     if (!contractTypeOrABI || contractTypeOrABI === "custom") {
       try {
         const metadata =
-          await this.getPublisher().fetchCompilerMetadataFromAddress(address);
-        newContract = await this.getContractFromAbi(address, metadata.abi);
+          await this.getPublisher().fetchCompilerMetadataFromAddress(
+            resolvedAddress,
+          );
+        newContract = await this.getContractFromAbi(
+          resolvedAddress,
+          metadata.abi,
+        );
       } catch (e) {
         // try resolving the contract type (legacy contracts)
         const resolvedContractType = await this.resolveContractType(address);
@@ -476,7 +484,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           // we cant fetch the ABI, and we don't know the contract type, throw an error
           const chainId = (await this.getProvider().getNetwork()).chainId;
           throw new Error(
-            `No ABI found for this contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${address}`,
+            `No ABI found for this contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${resolvedAddress}`,
           );
         }
       }
@@ -490,18 +498,21 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         contractTypeOrABI as keyof typeof PREBUILT_CONTRACTS_MAP
       ].initialize(
         this.getSignerOrProvider(),
-        address,
+        resolvedAddress,
         this.storage,
         this.options,
       );
     }
     // otherwise it has to be an ABI
     else {
-      newContract = await this.getContractFromAbi(address, contractTypeOrABI);
+      newContract = await this.getContractFromAbi(
+        resolvedAddress,
+        contractTypeOrABI,
+      );
     }
 
     // set whatever we have on the cache
-    this.contractCache.set(address, newContract);
+    this.contractCache.set(resolvedAddress, newContract);
     // return it
     return newContract;
   }
@@ -511,7 +522,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @deprecated use {@link getContract} directly instead
    */
   public async getBuiltInContract<TContractType extends PrebuiltContractType>(
-    address: string,
+    address: AddressOrEns,
     contractType: TContractType,
   ): Promise<ContractForPrebuiltContractType<TContractType>> {
     return (await this.getContract(address, contractType)) as Promise<
@@ -525,11 +536,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    *
    */
   public async resolveContractType(
-    contractAddress: string,
+    contractAddress: AddressOrEns,
   ): Promise<ContractType> {
     try {
       const contract = new Contract(
-        contractAddress,
+        await resolveAddress(contractAddress),
         IThirdwebContractABI,
         // !provider only! - signer can break things here!
         this.getProvider(),
@@ -553,20 +564,20 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * ```
    */
   public async getContractList(
-    walletAddress: string,
+    walletAddress: AddressOrEns,
   ): Promise<ContractWithMetadata[]> {
     // TODO - this only reads from the current registry chain, not the multichain registry
     const addresses =
       (await (
         await this.deployer.getRegistry()
-      )?.getContractAddresses(walletAddress)) || [];
+      )?.getContractAddresses(await resolveAddress(walletAddress))) || [];
 
     const chainId = (await this.getProvider().getNetwork()).chainId;
 
     return await Promise.all(
       addresses.map(async (address) => {
         return {
-          address,
+          address: address,
           chainId,
           contractType: () => this.resolveContractType(address),
           metadata: async () =>
@@ -581,7 +592,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   }
 
   public async getMultichainContractList(
-    walletAddress: string,
+    walletAddress: AddressOrEns,
     chains: Chain[] = defaultChains,
   ): Promise<ContractWithMetadata[]> {
     const contracts = await this.multiChainRegistry.getContractAddresses(
@@ -679,9 +690,14 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * );
    * ```
    */
-  public async getContractFromAbi(address: string, abi: ContractInterface) {
-    if (this.contractCache.has(address)) {
-      return this.contractCache.get(address) as SmartContract;
+  public async getContractFromAbi(
+    address: AddressOrEns,
+    abi: ContractInterface,
+  ) {
+    const resolvedAddress = await resolveAddress(address);
+
+    if (this.contractCache.has(resolvedAddress)) {
+      return this.contractCache.get(resolvedAddress) as SmartContract;
     }
     const [, provider] = getSignerAndProvider(
       this.getSignerOrProvider(),
@@ -692,9 +708,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // TODO we still might want to lazy-fy this
     const contract = new SmartContract(
       this.getSignerOrProvider(),
-      address,
+      resolvedAddress,
       await getCompositePluginABI(
-        address,
+        resolvedAddress,
         AbiSchema.parse(parsedABI),
         provider,
         this.options,
@@ -704,7 +720,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       this.options,
       (await provider.getNetwork()).chainId,
     );
-    this.contractCache.set(address, contract);
+    this.contractCache.set(resolvedAddress, contract);
     return contract;
   }
 
@@ -717,11 +733,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * ```
    * @param address - the address to check the balance for
    */
-  public async getBalance(address: string): Promise<CurrencyValue> {
+  public async getBalance(address: AddressOrEns): Promise<CurrencyValue> {
     return fetchCurrencyValue(
       this.getProvider(),
       NATIVE_TOKEN_ADDRESS,
-      await this.getProvider().getBalance(address),
+      await this.getProvider().getBalance(await resolveAddress(address)),
     );
   }
 

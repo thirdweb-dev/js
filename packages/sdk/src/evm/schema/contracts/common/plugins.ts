@@ -1,5 +1,5 @@
 import { BytesLikeSchema } from "../../../../core/schema/shared";
-import { AddressSchema } from "../../shared";
+import { AddressOrEnsSchema } from "../../shared";
 import { z } from "zod";
 
 /**
@@ -8,5 +8,5 @@ import { z } from "zod";
 export const PluginMapInput = z.object({
   functionSelector: BytesLikeSchema,
   functionSignature: z.string(),
-  pluginAddress: AddressSchema,
+  pluginAddress: AddressOrEnsSchema,
 });

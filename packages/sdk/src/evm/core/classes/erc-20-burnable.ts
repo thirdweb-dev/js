@@ -1,5 +1,7 @@
+import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_TOKEN_BURNABLE } from "../../constants/erc20-features";
+import { AddressOrEns } from "../../schema";
 import { Amount } from "../../types/currency";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
@@ -55,11 +57,16 @@ export class Erc20Burnable implements DetectableFeature {
    * await contract.token.burn.from(holderAddress, amount);
    * ```
    */
-  from = buildTransactionFunction(async (holder: string, amount: Amount) => {
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "burnFrom",
-      args: [holder, await this.erc20.normalizeAmount(amount)],
-    });
-  });
+  from = buildTransactionFunction(
+    async (holder: AddressOrEns, amount: Amount) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "burnFrom",
+        args: [
+          await resolveAddress(holder),
+          await this.erc20.normalizeAmount(amount),
+        ],
+      });
+    },
+  );
 }

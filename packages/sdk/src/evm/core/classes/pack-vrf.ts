@@ -1,8 +1,9 @@
 import { ContractEvents, NetworkInput, TransactionResultWithId } from "..";
 import { fetchCurrencyMetadata } from "../../common";
+import { resolveAddress } from "../../common/ens";
 import { LINK_TOKEN_ADDRESS } from "../../constants";
 import { FEATURE_PACK_VRF } from "../../constants/thirdweb-features";
-import { PackRewards, SDKOptions } from "../../schema";
+import { Address, AddressOrEns, PackRewards, SDKOptions } from "../../schema";
 import { Amount, CurrencyValue } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
@@ -50,20 +51,20 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
   }
 
   /**
    * Open pack
-   * 
-   * @example 
+   *
+   * @example
    * ```javascript
    * const tokenId = 0;
    * const amount = 1;
    * const receipt = await contract.pack.open(tokenId, amount);
    * ```
-   * 
+   *
    * @remarks Open a pack using Chainlink VRFs random number generation
    * @remarks This will return a transaction result with the requestId of the open request, NOT the contents of the pack
    * @remarks To get the contents of the pack, you must call claimRewards once the VRF request has been fulfilled
@@ -102,12 +103,12 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
 
   /**
    * Claim the rewards from an opened pack
-   * 
+   *
    * @example
    * ```javascript
    * const rewards = await contract.pack.claimRewards();
    * ```
-   * 
+   *
    * @remarks This will return the contents of the pack
    * @remarks Make sure to check if the VRF request has been fulfilled using canClaimRewards() before calling this method
    * @returns the random rewards from opening a pack
@@ -183,7 +184,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
 
   /**
    * Setup a listener for when a pack is opened
-   * 
+   *
    * @example
    * ```javascript
    * const unsubscribe = await contract.pack.addPackOpenEventListener((packId, openerAddress, rewards) => {
@@ -196,7 +197,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
   public async addPackOpenEventListener(
     callback: (
       packId: string,
-      openerAddress: string,
+      openerAddress: Address,
       rewards: PackRewards,
     ) => void,
   ) {
@@ -214,7 +215,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
 
   /**
    * Check if a specific wallet can claim rewards after opening a pack
-   * 
+   *
    * @example
    * ```javascript
    * const canClaim = await contract.pack.canClaimRewards("{{wallet_address}}");
@@ -223,23 +224,26 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * @returns whether the connected address can claim rewards after opening a pack
    * @twfeature PackVRF
    */
-  public async canClaimRewards(claimerAddress?: string): Promise<boolean> {
-    const address =
-      claimerAddress || (await this.contractWrapper.getSignerAddress());
+  public async canClaimRewards(
+    claimerAddress?: AddressOrEns,
+  ): Promise<boolean> {
+    const address = await resolveAddress(
+      claimerAddress || (await this.contractWrapper.getSignerAddress()),
+    );
     return await this.contractWrapper.readContract.canClaimRewards(address);
   }
 
   /**
    * Open a pack and claim the rewards
    * @remarks This function will only start the flow of opening a pack, the rewards will be granted automatically to the connected address after VRF request is fulfilled
-   * 
+   *
    * @example
    * ```javascript
    * const packId = 0;
    * const amount = 1;
    * const { id } = await contract.pack.openAndClaim(packId, amount);
    * ```
-   * 
+   *
    * @param packId The id of the pack to open
    * @param amount Optional: the amount of packs to open, defaults to 1
    * @param gasLimit Optional: the gas limit to use for the VRF callback transaction, defaults to 500000
@@ -276,12 +280,12 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
 
   /**
    * Get the LINK balance of the contract
-   * 
+   *
    * @example
    * ```javascript
    * const balance = await contract.pack.getLinkBalance();
    * ```
-   * 
+   *
    * @returns the balance of LINK in the contract
    * @twfeature PackVRF
    */
@@ -293,13 +297,13 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
 
   /**
    * Transfer LINK to this contract
-   * 
+   *
    * @example
    * ```javascript
    * const amount = 1;
    * await contract.pack.transferLink(amount);
    * ```
-   * 
+   *
    * @param amount the amount of LINK to transfer to the contract
    * @twfeature PackVRF
    */

@@ -2,6 +2,7 @@ import {
   fetchCurrencyMetadata,
   fetchCurrencyValue,
 } from "../../common/currency";
+import { resolveAddress } from "../../common/ens";
 import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
@@ -17,7 +18,7 @@ import {
   TransactionResultWithId,
 } from "../../core/types";
 import { VoteType } from "../../enums";
-import { Abi } from "../../schema";
+import { Abi, Address, AddressOrEns } from "../../schema";
 import { VoteContractSchema } from "../../schema/contracts/vote";
 import { SDKOptions } from "../../schema/sdk-options";
 import { CurrencyValue } from "../../types/currency";
@@ -112,7 +113,7 @@ export class Vote implements UpdateableNetwork {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
   }
 
@@ -221,12 +222,15 @@ export class Vote implements UpdateableNetwork {
    */
   public async hasVoted(
     proposalId: string,
-    account?: string,
+    account?: AddressOrEns,
   ): Promise<boolean> {
     if (!account) {
       account = await this.contractWrapper.getSignerAddress();
     }
-    return this.contractWrapper.readContract.hasVoted(proposalId, account);
+    return this.contractWrapper.readContract.hasVoted(
+      proposalId,
+      await resolveAddress(account),
+    );
   }
 
   /**
@@ -287,9 +291,11 @@ export class Vote implements UpdateableNetwork {
    *
    * @returns - The balance of the project in the native token of the chain
    */
-  public async balanceOfToken(tokenAddress: string): Promise<CurrencyValue> {
+  public async balanceOfToken(
+    tokenAddress: AddressOrEns,
+  ): Promise<CurrencyValue> {
     const erc20 = new Contract(
-      tokenAddress,
+      await resolveAddress(tokenAddress),
       ERC20Abi,
       this.contractWrapper.getProvider(),
     ) as IERC20;

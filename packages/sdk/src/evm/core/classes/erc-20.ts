@@ -5,6 +5,7 @@ import {
   fetchCurrencyMetadata,
   fetchCurrencyValue,
 } from "../../common/currency";
+import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import {
   FEATURE_TOKEN,
@@ -14,7 +15,7 @@ import {
   FEATURE_TOKEN_SIGNATURE_MINTABLE,
   FEATURE_TOKEN_CLAIM_CONDITIONS_V2,
 } from "../../constants/erc20-features";
-import { TokenMintInput } from "../../schema";
+import { Address, AddressOrEns, TokenMintInput } from "../../schema";
 import { Currency, CurrencyValue, Amount, ClaimOptions } from "../../types";
 import {
   BaseERC20,
@@ -94,7 +95,7 @@ export class Erc20<
   /**
    * @internal
    */
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
   }
 
@@ -148,9 +149,11 @@ export class Erc20<
    * @returns The balance of a specific wallet.
    * @twfeature ERC20
    */
-  public async balanceOf(address: string): Promise<CurrencyValue> {
+  public async balanceOf(address: AddressOrEns): Promise<CurrencyValue> {
     return this.getValue(
-      await this.contractWrapper.readContract.balanceOf(address),
+      await this.contractWrapper.readContract.balanceOf(
+        await resolveAddress(address),
+      ),
     );
   }
 
@@ -184,10 +187,10 @@ export class Erc20<
    * @returns The allowance of one wallet over anothers funds.
    * @twfeature ERC20
    */
-  public async allowance(spender: string): Promise<CurrencyValue> {
+  public async allowance(spender: AddressOrEns): Promise<CurrencyValue> {
     return await this.allowanceOf(
       await this.contractWrapper.getSignerAddress(),
-      spender,
+      await resolveAddress(spender),
     );
   }
 
@@ -209,11 +212,14 @@ export class Erc20<
    * @twfeature ERC20
    */
   public async allowanceOf(
-    owner: string,
-    spender: string,
+    owner: AddressOrEns,
+    spender: AddressOrEns,
   ): Promise<CurrencyValue> {
     return await this.getValue(
-      await this.contractWrapper.readContract.allowance(owner, spender),
+      await this.contractWrapper.readContract.allowance(
+        await resolveAddress(owner),
+        await resolveAddress(spender),
+      ),
     );
   }
 
@@ -232,13 +238,15 @@ export class Erc20<
    * ```
    * @twfeature ERC20
    */
-  transfer = buildTransactionFunction(async (to: string, amount: Amount) => {
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "transfer",
-      args: [to, await this.normalizeAmount(amount)],
-    });
-  });
+  transfer = buildTransactionFunction(
+    async (to: AddressOrEns, amount: Amount) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "transfer",
+        args: [await resolveAddress(to), await this.normalizeAmount(amount)],
+      });
+    },
+  );
 
   /**
    * Transfer tokens from a specific address
@@ -259,11 +267,15 @@ export class Erc20<
    * @twfeature ERC20
    */
   transferFrom = buildTransactionFunction(
-    async (from: string, to: string, amount: Amount) => {
+    async (from: AddressOrEns, to: AddressOrEns, amount: Amount) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "transferFrom",
-        args: [from, to, await this.normalizeAmount(amount)],
+        args: [
+          await resolveAddress(from),
+          await resolveAddress(to),
+          await this.normalizeAmount(amount),
+        ],
       });
     },
   );
@@ -282,11 +294,14 @@ export class Erc20<
    * @twfeature ERC20
    */
   setAllowance = buildTransactionFunction(
-    async (spender: string, amount: Amount) => {
+    async (spender: AddressOrEns, amount: Amount) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "approve",
-        args: [spender, await this.normalizeAmount(amount)],
+        args: [
+          await resolveAddress(spender),
+          await this.normalizeAmount(amount),
+        ],
       });
     },
   );
@@ -319,7 +334,7 @@ export class Erc20<
         const amountWithDecimals = await this.normalizeAmount(arg.amount);
         return this.contractWrapper.readContract.interface.encodeFunctionData(
           "transfer",
-          [arg.toAddress, amountWithDecimals],
+          [await resolveAddress(arg.toAddress), amountWithDecimals],
         );
       }),
     );
@@ -365,7 +380,7 @@ export class Erc20<
    * @twfeature ERC20Mintable
    */
   mintTo = buildTransactionFunction(
-    async (receiver: string, amount: Amount) => {
+    async (receiver: AddressOrEns, amount: Amount) => {
       return assertEnabled(this.mintable, FEATURE_TOKEN_MINTABLE).to.prepare(
         receiver,
         amount,
@@ -383,7 +398,7 @@ export class Erc20<
    * @twfeature ERC20Mintable
    */
   public async getMintTransaction(
-    receiver: string,
+    receiver: AddressOrEns,
     amount: Amount,
   ): Promise<Transaction> {
     return assertEnabled(
@@ -464,7 +479,7 @@ export class Erc20<
    * @twfeature ERC20Burnable
    */
   burnFrom = buildTransactionFunction(
-    async (holder: string, amount: Amount) => {
+    async (holder: AddressOrEns, amount: Amount) => {
       return assertEnabled(this.burnable, FEATURE_TOKEN_BURNABLE).from.prepare(
         holder,
         amount,
@@ -528,7 +543,7 @@ export class Erc20<
    */
   claimTo = buildTransactionFunction(
     async (
-      destinationAddress: string,
+      destinationAddress: AddressOrEns,
       amount: Amount,
       options?: ClaimOptions,
     ) => {
