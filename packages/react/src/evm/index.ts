@@ -18,6 +18,7 @@ export { __DEV__ } from "@thirdweb-dev/react-core";
 // wallet hooks
 export {
   useActiveChainId,
+  useActiveChain,
   useActiveWallet,
   useConnect,
   useConnectionStatus,
@@ -264,3 +265,5 @@ export {
   getErc721,
   getErc20,
 } from "@thirdweb-dev/react-core";
+
+export { ChainId } from "@thirdweb-dev/sdk";
