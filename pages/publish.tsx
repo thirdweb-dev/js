@@ -13,15 +13,15 @@ const TRACKING_CATEGORY = "publish";
 
 const PUBLISH_GUIDES = [
   {
-    title: "Introducing thirdweb Release",
+    title: "Introducing thirdweb Publish",
     image:
-      "https://blog.thirdweb.com/content/images/size/w2000/2022/09/Blog-thumbnail_tw-release.png",
+      "https://blog.thirdweb.com/content/images/size/w2000/2023/02/publish-ogimage.png",
     link: "https://blog.thirdweb.com/thirdweb-release/",
   },
   {
-    title: "Register Your Contracts Using Release",
+    title: "Share your smart contracts with thirdweb Publish",
     image:
-      "https://blog.thirdweb.com/content/images/size/w2000/2022/09/register-your-smart-contracts-using-thirdweb-release.png",
+      "https://blog.thirdweb.com/content/images/size/w2000/2023/03/Publish-your-smart-contracts-to-all-of-web3-2.png",
     link: "https://blog.thirdweb.com/guides/register-your-contract-using-thirdweb-release/",
   },
 ];
