@@ -6485,28 +6485,7 @@
   resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.24.10.tgz#758e1f5b2d7faf7316d299facd272a9f64c26299"
   integrity sha512-2QywqXEAGBIUoTdgn1lAB4/C8QEqwXHj2jrCLeYTk2xVGtLiPEUD8jcMoeB2noclbiW2mMt4+Fq7fZStuz3wAQ==
 
-"@tanstack/query-persist-client-core@4.24.10":
-  version "4.24.10"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-persist-client-core/-/query-persist-client-core-4.24.10.tgz#7495dba607f6d59639cb4e4fda83a9c7d0edb0ba"
-  integrity sha512-ObE7k4/TN1EgYMrTCkR43UIvviCtT27QcbE14CgdqeOVRSJ+oiIgXlfir69bcgBUW5Ba7S0ezY2SNV6IfSRNrw==
-  dependencies:
-    "@tanstack/query-core" "4.24.10"
-
-"@tanstack/query-sync-storage-persister@^4.14.5":
-  version "4.24.10"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-sync-storage-persister/-/query-sync-storage-persister-4.24.10.tgz#3043e48b52a928b8434cbd595325fd91e5e87f23"
-  integrity sha512-bS/vUHmzlnj7FiUZaPEUsEPitiaX2bzPJ9DuqQf7HCNMgqV/pwie90q90XIpGHUw8cF/6e3RnHF346OkH/XehQ==
-  dependencies:
-    "@tanstack/query-persist-client-core" "4.24.10"
-
-"@tanstack/react-query-persist-client@^4.14.5":
-  version "4.24.10"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query-persist-client/-/react-query-persist-client-4.24.10.tgz#f9033f0157b83672fcf2f60223c788ab4e948ee4"
-  integrity sha512-Ta8PQua5aJK5F1w1ckX1xFnA4ohNpoeLUvApxtpMb3DKfs1XmyeFaddwyhP7La/EdjTtiInBJ2TmEAjG7EqhCw==
-  dependencies:
-    "@tanstack/query-persist-client-core" "4.24.10"
-
-"@tanstack/react-query@^4.0.10", "@tanstack/react-query@^4.14.5":
+"@tanstack/react-query@^4.0.10":
   version "4.24.10"
   resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.24.10.tgz#2e1004bb1d1f55198961a21e875e2c65ec865130"
   integrity sha512-FY1DixytOcNNCydPQXLxuKEV7VSST32CAuJ55BjhDNqASnMLZn+6c30yQBMrODjmWMNwzfjMZnq0Vw7C62Fwow==
@@ -7449,17 +7428,6 @@
     abitype "^0.3.0"
     eventemitter3 "^4.0.7"
 
-"@wagmi/core@0.9.7", "@wagmi/core@^0.9.6":
-  version "0.9.7"
-  resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-0.9.7.tgz#291063c872baa25419bdedc66c0e766bb7eea91c"
-  integrity sha512-9NYoxpEM+sYAv0Jg3DvMbWTnJguPwiqs61382ATU5dqMsYF1v17ngg6S15gg8oIv9Y7nYrLsiFsQ9qkNYzKlJA==
-  dependencies:
-    "@wagmi/chains" "0.2.9"
-    "@wagmi/connectors" "0.2.7"
-    abitype "^0.3.0"
-    eventemitter3 "^4.0.7"
-    zustand "^4.3.1"
-
 "@wagmi/core@^0.8.18":
   version "0.8.19"
   resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-0.8.19.tgz#5be36bae1e57da60bc3c3c63cc3d94b343337e7b"
@@ -7468,6 +7436,17 @@
     "@wagmi/chains" "0.1.14"
     "@wagmi/connectors" "0.1.10"
     abitype "^0.2.5"
+    eventemitter3 "^4.0.7"
+    zustand "^4.3.1"
+
+"@wagmi/core@^0.9.6":
+  version "0.9.7"
+  resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-0.9.7.tgz#291063c872baa25419bdedc66c0e766bb7eea91c"
+  integrity sha512-9NYoxpEM+sYAv0Jg3DvMbWTnJguPwiqs61382ATU5dqMsYF1v17ngg6S15gg8oIv9Y7nYrLsiFsQ9qkNYzKlJA==
+  dependencies:
+    "@wagmi/chains" "0.2.9"
+    "@wagmi/connectors" "0.2.7"
+    abitype "^0.3.0"
     eventemitter3 "^4.0.7"
     zustand "^4.3.1"
 
@@ -10551,6 +10530,11 @@ commondir@^1.0.1:
   resolved "https://registry.yarnpkg.com/commondir/-/commondir-1.0.1.tgz#ddd800da0c66127393cca5950ea968a3aaf1253b"
   integrity sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg==
 
+compare-versions@^3.4.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/compare-versions/-/compare-versions-3.6.0.tgz#1a5689913685e5a87637b8d3ffca75514ec41d62"
+  integrity sha512-W6Af2Iw1z4CB7q4uU4hv646dW9GQuBM+YpC0UvUCWSD8w90SJjp+ujJuXaEMtAXBtSqGfMPuFOVn4/+FlaqfBA==
+
 component-emitter@^1.2.1:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/component-emitter/-/component-emitter-1.3.0.tgz#16e4070fba8ae29b679f2215853ee181ab2eabc0"
@@ -13172,6 +13156,14 @@ expect@^29.0.0, expect@^29.4.3:
     jest-matcher-utils "^29.4.3"
     jest-message-util "^29.4.3"
     jest-util "^29.4.3"
+
+expo-modules-core@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/expo-modules-core/-/expo-modules-core-1.2.4.tgz#06c0e92b952ae2d3b3329dbeadb6da4f01965d63"
+  integrity sha512-AV0NCTy9O8xQqpKgX6gvsDzV1ogpCzYpGxqM85Vw1xHsOF51s7Avu7NdNjBPUZOVuDderUXAvd97dWrtefSKcA==
+  dependencies:
+    compare-versions "^3.4.0"
+    invariant "^2.2.4"
 
 exponential-backoff@^3.1.0:
   version "3.1.1"
@@ -23696,18 +23688,6 @@ wagmi-core@0.1.22:
   dependencies:
     "@ethersproject/providers" "^5.5.1"
     eventemitter3 "^4.0.7"
-
-wagmi@^0.11.0:
-  version "0.11.7"
-  resolved "https://registry.yarnpkg.com/wagmi/-/wagmi-0.11.7.tgz#b3224d5ffb63ac530822fea8b7f241fb8ca6f350"
-  integrity sha512-IiB1TxTVn+xvjju3ZNQfiwfiB6EZj1h3CO7Zt8q0PEDRN76jqniaeOV7QAnfBgtbqmVh2co4Miaz1rRtvVPMTQ==
-  dependencies:
-    "@tanstack/query-sync-storage-persister" "^4.14.5"
-    "@tanstack/react-query" "^4.14.5"
-    "@tanstack/react-query-persist-client" "^4.14.5"
-    "@wagmi/core" "0.9.7"
-    abitype "^0.3.0"
-    use-sync-external-store "^1.2.0"
 
 wagmi@^0.2.28:
   version "0.2.28"

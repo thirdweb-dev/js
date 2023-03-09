@@ -1,5 +1,5 @@
 import { useAppTheme } from "../../../styles/hooks";
-import { WalletMeta } from "../../../types/wallet";
+import { WalletMeta } from "../../../types/walletMeta";
 import Text from "../../base/Text";
 import { ModalFooter } from "../../base/modal/ModalFooter";
 import { ConnectWalletHeader } from "./ConnectingWalletHeader";

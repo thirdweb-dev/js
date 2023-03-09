@@ -11,7 +11,7 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 interface WalletDetailsModalHeaderProps {
   address: string;
   onDisconnectPress: () => void;
-  loading: boolean;
+  loading?: boolean;
 }
 
 export const WalletDetailsModalHeader = ({

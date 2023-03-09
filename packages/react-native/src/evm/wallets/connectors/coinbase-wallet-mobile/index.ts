@@ -295,7 +295,6 @@ export class CoinbaseMobileWalletConnector extends Connector<
     }
 
     this.removeListeners();
-    this.provider.on("connect", this.onConnect);
     this.provider.on("accountsChanged", this.onAccountsChanged);
     this.provider.on("chainChanged", this.onChainChanged);
     this.provider.on("disconnect", this.onDisconnect);
@@ -306,7 +305,6 @@ export class CoinbaseMobileWalletConnector extends Connector<
       return;
     }
 
-    this.provider.removeListener("connect", this.onConnect);
     this.provider.removeListener("accountsChanged", this.onAccountsChanged);
     this.provider.removeListener("chainChanged", this.onChainChanged);
     this.provider.removeListener("disconnect", this.onDisconnect);

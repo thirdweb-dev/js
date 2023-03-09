@@ -1,4 +1,4 @@
-import { WalletMeta } from "../../../types/wallet";
+import { WalletMeta } from "../../../types/walletMeta";
 import { ModalFooter } from "../../base/modal/ModalFooter";
 import { ModalHeaderTextClose } from "../../base/modal/ModalHeaderTextClose";
 import { ChooseWalletContent } from "./ChooseWalletContent";

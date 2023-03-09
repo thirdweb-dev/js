@@ -1,5 +1,5 @@
 import { walletsMetadata } from "../constants/walletsMetadata";
-import { WalletMeta } from "../types/wallet";
+import { WalletMeta } from "../types/walletMeta";
 import { SupportedWallet } from "@thirdweb-dev/react-core";
 
 export function getWalletsMeta(

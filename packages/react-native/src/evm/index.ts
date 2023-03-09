@@ -2,17 +2,13 @@ export { CoinbaseWalletMobile } from "./wallets/wallets/coinbase-wallet-mobile";
 export { MetaMaskWallet } from "./wallets/wallets/wallets";
 
 export { ConnectWallet } from "./components/ConnectWallet";
+export { Web3Button } from "./components/Web3Button";
 
 export { ChainId } from "@thirdweb-dev/sdk";
 
 // providers
 // export * from "./providers/full";
 export * from "./providers/thirdweb-provider";
-
-// require to be inside `<ThirdwebProvider />`
-export * from "./hooks/wagmi-required/useAccount";
-export * from "./hooks/wagmi-required/useNetwork";
-export * from "./hooks/connectors/useWalletConnect";
 
 export {
   useActiveWallet,

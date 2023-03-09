@@ -1,6 +1,6 @@
 import { noopStorage } from "../../../core/AsyncStorage";
 import { walletsMetadata } from "../../constants/walletsMetadata";
-import { WalletMeta } from "../../types/wallet";
+import { WalletMeta } from "../../types/walletMeta";
 import type {
   CoinbaseMobileWalletConnector,
   CoinbaseMobileWalletConnectorOptions,

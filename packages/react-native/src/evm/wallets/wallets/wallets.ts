@@ -1,7 +1,7 @@
 import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
 import { TW_WC_PROJECT_ID } from "../../constants/walletConnect";
 import { walletsMetadata } from "../../constants/walletsMetadata";
-import { WalletMeta } from "../../types/wallet";
+import { WalletMeta } from "../../types/walletMeta";
 import { formatDisplayUri } from "../../utils/uri";
 import { ExtraCoreWalletOptions } from "@thirdweb-dev/react-core";
 import type {
