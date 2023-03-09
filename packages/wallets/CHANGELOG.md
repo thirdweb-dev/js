@@ -1,5 +1,13 @@
 # @thirdweb-dev/wallets
 
+## 0.2.8
+
+### Patch Changes
+
+- [#696](https://github.com/thirdweb-dev/js/pull/696) [`d30e3f4d`](https://github.com/thirdweb-dev/js/commit/d30e3f4db3d74589429e17da1a56e89e9e1082ab) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Upgrade Paper SDK
+
+- [#692](https://github.com/thirdweb-dev/js/pull/692) [`31a252a0`](https://github.com/thirdweb-dev/js/commit/31a252a0ecafe338d1fbb3000b5dec55274a2d84) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Cleanup PaperWallet integration
+
 ## 0.2.7
 
 ### Patch Changes

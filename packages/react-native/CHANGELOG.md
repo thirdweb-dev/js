@@ -1,5 +1,13 @@
 # @thirdweb-dev/react-native
 
+## 0.1.8
+
+### Patch Changes
+
+- Updated dependencies [[`2682f582`](https://github.com/thirdweb-dev/js/commit/2682f5823e5c71947f5c6a71918a0285f253fd18), [`d5f18b40`](https://github.com/thirdweb-dev/js/commit/d5f18b403a6f3ced0e1929b5c032f63325708304), [`2efe5be3`](https://github.com/thirdweb-dev/js/commit/2efe5be3ad2df4e80c0048c8fd35018ecf2d8dd9), [`baeb7427`](https://github.com/thirdweb-dev/js/commit/baeb74274e878cfbc237ef2aa676faa257606300)]:
+  - @thirdweb-dev/sdk@3.10.2
+  - @thirdweb-dev/react-core@3.10.2
+
 ## 0.1.7
 
 ### Patch Changes
