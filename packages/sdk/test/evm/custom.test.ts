@@ -40,6 +40,7 @@ describe("Custom Contracts", async () => {
     // if we update the test data - await uploadContractMetadata("Greeter", storage);
 
     // only create this once by default (hits IPFS!)
+    // TODO use mock storage instead
     customContractAddress = await realSDK.deployer.deployContractFromUri(
       simpleContractUri,
       [],

@@ -462,6 +462,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // if we don't have a contractType or ABI then we will have to resolve it regardless
     // we also handle it being "custom" just in case...
     if (!contractTypeOrABI || contractTypeOrABI === "custom") {
+<<<<<<< HEAD
       const resolvedContractType = await this.resolveContractType(
         resolvedAddress,
       );
@@ -490,6 +491,16 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         newContract = await this.getContractFromAbi(
           resolvedAddress,
           contractAbi,
+=======
+      try {
+        const metadata =
+          await this.getPublisher().fetchCompilerMetadataFromAddress(address);
+        newContract = await this.getContractFromAbi(address, metadata.abi);
+      } catch (e) {
+        const chainId = (await this.getProvider().getNetwork()).chainId;
+        throw new Error(
+          `No ABI found for this contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${address}`,
+>>>>>>> main
         );
       }
     }
