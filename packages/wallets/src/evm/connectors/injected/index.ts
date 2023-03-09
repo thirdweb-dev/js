@@ -414,9 +414,8 @@ export class InjectedConnector extends Connector<
     });
   }
 
-  protected async setupListeners() {
+  async setupListeners() {
     const provider = await this.getProvider();
-    // subscribe to provider events if available
     if (provider.on) {
       provider.on("accountsChanged", this.onAccountsChanged);
       provider.on("chainChanged", this.onChainChanged);

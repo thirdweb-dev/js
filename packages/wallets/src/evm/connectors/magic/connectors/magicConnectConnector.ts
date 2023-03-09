@@ -54,11 +54,7 @@ export class MagicConnectConnector extends MagicConnector {
     try {
       const provider = await this.getProvider();
 
-      if (provider.on) {
-        provider.on("accountsChanged", this.onAccountsChanged);
-        provider.on("chainChanged", this.onChainChanged);
-        provider.on("disconnect", this.onDisconnect);
-      }
+      this.setupListeners();
 
       // Check if there is a user logged in
       const isAuthenticated = await this.isAuthorized();
@@ -172,5 +168,14 @@ export class MagicConnectConnector extends MagicConnector {
     }
     await this.connect({ chainId });
     return chain;
+  }
+
+  async setupListeners() {
+    const provider = await this.getProvider();
+    if (provider.on) {
+      provider.on("accountsChanged", this.onAccountsChanged);
+      provider.on("chainChanged", this.onChainChanged);
+      provider.on("disconnect", this.onDisconnect);
+    }
   }
 }

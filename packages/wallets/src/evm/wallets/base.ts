@@ -75,9 +75,9 @@ export abstract class AbstractBrowserWallet<
     this.#subscribeToEvents(connector);
 
     const isConnected = await connector.isConnected();
-    // return if already connected
     if (isConnected) {
       const address = await connector.getAddress();
+      connector.setupListeners();
       return address;
     }
 
@@ -86,11 +86,10 @@ export abstract class AbstractBrowserWallet<
 
     // do not break on coordinator error
     try {
-      // Store the last connected params in secure storage
-      // await this.walletStorage.setItem(
-      //   "lastConnectedParams",
-      //   JSON.stringify(connectOptions),
-      // );
+      await this.walletStorage.setItem(
+        "lastConnectedParams",
+        JSON.stringify(connectOptions),
+      );
       await this.coordinatorStorage.setItem(
         "lastConnectedWallet",
         this.walletId,

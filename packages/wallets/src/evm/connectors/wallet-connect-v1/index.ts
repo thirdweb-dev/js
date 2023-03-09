@@ -172,7 +172,7 @@ export class WalletConnectV1Connector extends Connector<
         session: session ? (session as IWalletConnectSession) : undefined,
       });
 
-      this.#setupListeners();
+      this.setupListeners();
     }
 
     return this.#provider;
@@ -291,7 +291,7 @@ export class WalletConnectV1Connector extends Connector<
     this.#storage.setItem(LAST_SESSION, sessionStr);
   }
 
-  #setupListeners() {
+  async setupListeners() {
     if (!this.#provider) {
       return;
     }

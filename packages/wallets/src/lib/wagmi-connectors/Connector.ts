@@ -80,4 +80,6 @@ export abstract class Connector<
   protected isChainUnsupported(chainId: number) {
     return !this.chains.some((x) => x.id === chainId);
   }
+
+  abstract setupListeners(): Promise<void>;
 }

@@ -11,6 +11,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 
@@ -126,9 +127,12 @@ export function ThirdwebWalletProvider(
     [activeWallet],
   );
 
+  const autoConnectTriggered = useRef(false);
+
   // Auto Connect
   // TODO - Can't do auto connect for Device Wallet right now
   useEffect(() => {
+    if (autoConnectTriggered.current) return;
     // if explicitly set to false, don't auto connect
     // by default, auto connect
     if (props.shouldAutoConnect === false) {
@@ -145,6 +149,8 @@ export function ThirdwebWalletProvider(
       // only try to auto connect if we're in the unknown state
       return;
     }
+
+    autoConnectTriggered.current = true;
 
     (async () => {
       const lastConnectedWalletId = await coordinatorStorage.getItem(
@@ -194,7 +200,7 @@ export function ThirdwebWalletProvider(
         await wallet.connect(_connectedParams);
         handleWalletConnect(wallet);
       } catch (e: any) {
-        console.log("disconnected ");
+        console.error(e);
         setConnectionStatus("disconnected");
         throw e;
       }

@@ -289,7 +289,7 @@ export class CoinbaseMobileWalletConnector extends Connector<
     this.emit("change", { chain: { id, unsupported } });
   };
 
-  setupListeners() {
+  async setupListeners() {
     if (!this.provider) {
       return;
     }
