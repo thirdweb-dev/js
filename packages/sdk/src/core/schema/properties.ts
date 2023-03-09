@@ -10,4 +10,5 @@ const PropertiesInput = z
  */
 export const OptionalPropertiesInput = z
   .union([z.array(PropertiesInput), PropertiesInput])
-  .optional();
+  .optional()
+  .nullable();
