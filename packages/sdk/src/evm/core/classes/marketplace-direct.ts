@@ -14,6 +14,7 @@ import {
   validateNewListingParam,
 } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
 import {
   InterfaceId_IERC1155,
   InterfaceId_IERC721,
@@ -26,8 +27,8 @@ import {
   NewDirectListing,
   Offer,
 } from "../../types/marketplace";
-import { TransactionResult, TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
 import type {
   IERC1155,
   IERC165,
@@ -158,69 +159,73 @@ export class MarketplaceDirect {
    * const id = tx.id; // the id of the newly created listing
    * ```
    */
-  public async createListing(
-    listing: NewDirectListing,
-  ): Promise<TransactionResultWithId> {
-    validateNewListingParam(listing);
+  createListing = buildTransactionFunction(
+    async (listing: NewDirectListing) => {
+      validateNewListingParam(listing);
 
-    const resolvedAssetAddress = await resolveAddress(
-      listing.assetContractAddress,
-    );
-    const resolvedCurrencyAddress = await resolveAddress(
-      listing.currencyContractAddress,
-    );
+      const resolvedAssetAddress = await resolveAddress(
+        listing.assetContractAddress,
+      );
+      const resolvedCurrencyAddress = await resolveAddress(
+        listing.currencyContractAddress,
+      );
 
-    await handleTokenApproval(
-      this.contractWrapper,
-      this.getAddress(),
-      resolvedAssetAddress,
-      listing.tokenId,
-      await this.contractWrapper.getSignerAddress(),
-    );
+      await handleTokenApproval(
+        this.contractWrapper,
+        this.getAddress(),
+        resolvedAssetAddress,
+        listing.tokenId,
+        await this.contractWrapper.getSignerAddress(),
+      );
 
-    const normalizedPricePerToken = await normalizePriceValue(
-      this.contractWrapper.getProvider(),
-      listing.buyoutPricePerToken,
-      resolvedCurrencyAddress,
-    );
+      const normalizedPricePerToken = await normalizePriceValue(
+        this.contractWrapper.getProvider(),
+        listing.buyoutPricePerToken,
+        resolvedCurrencyAddress,
+      );
 
-    let listingStartTime = Math.floor(listing.startTimestamp.getTime() / 1000);
-    const block = await this.contractWrapper.getProvider().getBlock("latest");
-    const blockTime = block.timestamp;
-    if (listingStartTime < blockTime) {
-      listingStartTime = blockTime;
-    }
+      let listingStartTime = Math.floor(
+        listing.startTimestamp.getTime() / 1000,
+      );
+      const block = await this.contractWrapper.getProvider().getBlock("latest");
+      const blockTime = block.timestamp;
+      if (listingStartTime < blockTime) {
+        listingStartTime = blockTime;
+      }
 
-    const receipt = await this.contractWrapper.sendTransaction(
-      "createListing",
-      [
-        {
-          assetContract: resolvedAssetAddress,
-          tokenId: listing.tokenId,
-          buyoutPricePerToken: normalizedPricePerToken,
-          currencyToAccept: cleanCurrencyAddress(resolvedCurrencyAddress),
-          listingType: ListingType.Direct,
-          quantityToList: listing.quantity,
-          reservePricePerToken: normalizedPricePerToken,
-          secondsUntilEndTime: listing.listingDurationInSeconds,
-          startTime: BigNumber.from(listingStartTime),
-        } as IMarketplace.ListingParametersStruct,
-      ],
-      {
-        // Higher gas limit for create listing
-        gasLimit: 500000,
-      },
-    );
-
-    const event = this.contractWrapper.parseLogs<ListingAddedEvent>(
-      "ListingAdded",
-      receipt?.logs,
-    );
-    return {
-      id: event[0].args.listingId,
-      receipt,
-    };
-  }
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "createListing",
+        args: [
+          {
+            assetContract: resolvedAssetAddress,
+            tokenId: listing.tokenId,
+            buyoutPricePerToken: normalizedPricePerToken,
+            currencyToAccept: cleanCurrencyAddress(resolvedCurrencyAddress),
+            listingType: ListingType.Direct,
+            quantityToList: listing.quantity,
+            reservePricePerToken: normalizedPricePerToken,
+            secondsUntilEndTime: listing.listingDurationInSeconds,
+            startTime: BigNumber.from(listingStartTime),
+          } as IMarketplace.ListingParametersStruct,
+        ],
+        overrides: {
+          // Higher gas limit for create listing
+          gasLimit: 500000,
+        },
+        parse: (receipt) => {
+          const event = this.contractWrapper.parseLogs<ListingAddedEvent>(
+            "ListingAdded",
+            receipt?.logs,
+          );
+          return {
+            id: event[0].args.listingId,
+            receipt,
+          };
+        },
+      });
+    },
+  );
 
   /**
    * Make an offer for a Direct Listing
@@ -248,53 +253,54 @@ export class MarketplaceDirect {
    * );
    * ```
    */
-  public async makeOffer(
-    listingId: BigNumberish,
-    quantityDesired: BigNumberish,
-    currencyContractAddress: AddressOrEns,
-    pricePerToken: Price,
-    expirationDate?: Date,
-  ): Promise<TransactionResult> {
-    if (isNativeToken(currencyContractAddress)) {
-      throw new Error(
-        "You must use the wrapped native token address when making an offer with a native token",
+  makeOffer = buildTransactionFunction(
+    async (
+      listingId: BigNumberish,
+      quantityDesired: BigNumberish,
+      currencyContractAddress: AddressOrEns,
+      pricePerToken: Price,
+      expirationDate?: Date,
+    ) => {
+      if (isNativeToken(currencyContractAddress)) {
+        throw new Error(
+          "You must use the wrapped native token address when making an offer with a native token",
+        );
+      }
+
+      const normalizedPrice = await normalizePriceValue(
+        this.contractWrapper.getProvider(),
+        pricePerToken,
+        currencyContractAddress,
       );
-    }
 
-    const normalizedPrice = await normalizePriceValue(
-      this.contractWrapper.getProvider(),
-      pricePerToken,
-      currencyContractAddress,
-    );
+      try {
+        await this.getListing(listingId);
+      } catch (err) {
+        console.error("Failed to get listing, err =", err);
+        throw new Error(`Error getting the listing with id ${listingId}`);
+      }
 
-    try {
-      await this.getListing(listingId);
-    } catch (err) {
-      console.error("Failed to get listing, err =", err);
-      throw new Error(`Error getting the listing with id ${listingId}`);
-    }
-
-    const quantity = BigNumber.from(quantityDesired);
-    const value = BigNumber.from(normalizedPrice).mul(quantity);
-    const overrides = (await this.contractWrapper.getCallOverrides()) || {};
-    await setErc20Allowance(
-      this.contractWrapper,
-      value,
-      currencyContractAddress,
-      overrides,
-    );
-
-    let expirationTimestamp = ethers.constants.MaxUint256;
-    if (expirationDate) {
-      expirationTimestamp = BigNumber.from(
-        Math.floor(expirationDate.getTime() / 1000),
+      const quantity = BigNumber.from(quantityDesired);
+      const value = BigNumber.from(normalizedPrice).mul(quantity);
+      const overrides = (await this.contractWrapper.getCallOverrides()) || {};
+      await setErc20Allowance(
+        this.contractWrapper,
+        value,
+        currencyContractAddress,
+        overrides,
       );
-    }
 
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "offer",
-        [
+      let expirationTimestamp = ethers.constants.MaxUint256;
+      if (expirationDate) {
+        expirationTimestamp = BigNumber.from(
+          Math.floor(expirationDate.getTime() / 1000),
+        );
+      }
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "offer",
+        args: [
           listingId,
           quantityDesired,
           currencyContractAddress,
@@ -302,9 +308,9 @@ export class MarketplaceDirect {
           expirationTimestamp,
         ],
         overrides,
-      ),
-    };
-  }
+      });
+    },
+  );
 
   /**
    * Accept an offer on a direct listing
@@ -321,29 +327,26 @@ export class MarketplaceDirect {
    * await contract.direct.acceptOffer(listingId, offeror);
    * ```
    */
-  public async acceptOffer(
-    listingId: BigNumberish,
-    addressOfOfferor: AddressOrEns,
-  ): Promise<TransactionResult> {
-    /**
-     * TODO:
-     * - Provide better error handling if offer is too low.
-     */
-    await this.validateListing(BigNumber.from(listingId));
-    const resolvedAddress = await resolveAddress(addressOfOfferor);
-    const offer = await this.contractWrapper.readContract.offers(
-      listingId,
-      resolvedAddress,
-    );
-    return {
-      receipt: await this.contractWrapper.sendTransaction("acceptOffer", [
+  acceptOffer = buildTransactionFunction(
+    async (listingId: BigNumberish, addressOfOfferor: AddressOrEns) => {
+      /**
+       * TODO:
+       * - Provide better error handling if offer is too low.
+       */
+      await this.validateListing(BigNumber.from(listingId));
+      const resolvedAddress = await resolveAddress(addressOfOfferor);
+      const offer = await this.contractWrapper.readContract.offers(
         listingId,
         resolvedAddress,
-        offer.currency,
-        offer.pricePerToken,
-      ]),
-    };
-  }
+      );
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "acceptOffer",
+        args: [listingId, resolvedAddress, offer.currency, offer.pricePerToken],
+      });
+    },
+  );
 
   /**
    * Buy a Listing
@@ -364,39 +367,47 @@ export class MarketplaceDirect {
    * @param quantityDesired - the quantity to buy
    * @param receiver - optional receiver of the bought listing if different from the connected wallet
    */
-  public async buyoutListing(
-    listingId: BigNumberish,
-    quantityDesired: BigNumberish,
-    receiver?: AddressOrEns,
-  ): Promise<TransactionResult> {
-    const listing = await this.validateListing(BigNumber.from(listingId));
-    const { valid, error } = await this.isStillValidListing(
-      listing,
-      quantityDesired,
-    );
-    if (!valid) {
-      throw new Error(`Listing ${listingId} is no longer valid. ${error}`);
-    }
-    const buyFor = receiver
-      ? receiver
-      : await this.contractWrapper.getSignerAddress();
-    const quantity = BigNumber.from(quantityDesired);
-    const value = BigNumber.from(listing.buyoutPrice).mul(quantity);
-    const overrides = (await this.contractWrapper.getCallOverrides()) || {};
-    await setErc20Allowance(
-      this.contractWrapper,
-      value,
-      listing.currencyContractAddress,
-      overrides,
-    );
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "buy",
-        [listingId, buyFor, quantity, listing.currencyContractAddress, value],
+  buyoutListing = buildTransactionFunction(
+    async (
+      listingId: BigNumberish,
+      quantityDesired: BigNumberish,
+      receiver?: AddressOrEns,
+    ) => {
+      const listing = await this.validateListing(BigNumber.from(listingId));
+      const { valid, error } = await this.isStillValidListing(
+        listing,
+        quantityDesired,
+      );
+      if (!valid) {
+        throw new Error(`Listing ${listingId} is no longer valid. ${error}`);
+      }
+      const buyFor = receiver
+        ? receiver
+        : await this.contractWrapper.getSignerAddress();
+      const quantity = BigNumber.from(quantityDesired);
+      const value = BigNumber.from(listing.buyoutPrice).mul(quantity);
+      const overrides = (await this.contractWrapper.getCallOverrides()) || {};
+      await setErc20Allowance(
+        this.contractWrapper,
+        value,
+        listing.currencyContractAddress,
         overrides,
-      ),
-    };
-  }
+      );
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "buy",
+        args: [
+          listingId,
+          buyFor,
+          quantity,
+          listing.currencyContractAddress,
+          value,
+        ],
+        overrides,
+      });
+    },
+  );
 
   /**
    * Update a Direct listing with new metadata.
@@ -405,11 +416,11 @@ export class MarketplaceDirect {
    *
    * @param listing - the new listing information
    */
-  public async updateListing(
-    listing: DirectListing,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("updateListing", [
+  updateListing = buildTransactionFunction(async (listing: DirectListing) => {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "updateListing",
+      args: [
         listing.id,
         listing.quantity,
         listing.buyoutPrice, // reserve price, doesn't matter for direct listing
@@ -417,9 +428,9 @@ export class MarketplaceDirect {
         await resolveAddress(listing.currencyContractAddress),
         listing.startTimeInSeconds,
         listing.secondsUntilEnd,
-      ]),
-    };
-  }
+      ],
+    });
+  });
 
   /**
    * Cancel Direct Listing
@@ -434,16 +445,13 @@ export class MarketplaceDirect {
    * await contract.direct.cancelListing(listingId);
    * ```
    */
-  public async cancelListing(
-    listingId: BigNumberish,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "cancelDirectListing",
-        [listingId],
-      ),
-    };
-  }
+  cancelListing = buildTransactionFunction(async (listingId: BigNumberish) => {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "cancelDirectListing",
+      args: [listingId],
+    });
+  });
 
   /** ******************************
    * PRIVATE FUNCTIONS
