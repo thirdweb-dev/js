@@ -48,7 +48,7 @@ type EVMContractProps = {
     name: string;
     image?: string | null;
     description?: string | null;
-  };
+  } | null;
 };
 
 const EVMContractPage: ThirdwebNextPage = () => {
@@ -369,10 +369,14 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
   let contractMetadata;
 
   if (chain) {
-    // create the SDK on the chain
-    const sdk = getEVMThirdwebSDK(chain.chainId, getDashboardChainRpc(chain));
-    // get the contract metadata
-    contractMetadata = await (await sdk.getContract(address)).metadata.get();
+    try {
+      // create the SDK on the chain
+      const sdk = getEVMThirdwebSDK(chain.chainId, getDashboardChainRpc(chain));
+      // get the contract metadata
+      contractMetadata = await (await sdk.getContract(address)).metadata.get();
+    } catch (e) {
+      // ignore, most likely requires import
+    }
   }
 
   return {
@@ -383,7 +387,9 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
         contractAddress,
         chain,
       },
-      contractMetadata: JSON.parse(JSON.stringify(contractMetadata)),
+      contractMetadata: contractMetadata
+        ? JSON.parse(JSON.stringify(contractMetadata))
+        : null,
     },
   };
 };
