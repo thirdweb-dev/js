@@ -201,7 +201,9 @@ export const MarketplaceV3Initializer = {
 
     // Deprecated - only needed for backwards compatibility with non-published contracts - should remove in v4
     const localAbi = (
-      await import("@thirdweb-dev/contracts-js/dist/abis/MarketplaceV3.json")
+      await import(
+        "@thirdweb-dev/contracts-js/dist/abis/MarketplaceRouter.json"
+      )
     ).default;
     return await getCompositePluginABI(
       address,

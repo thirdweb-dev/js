@@ -55,7 +55,7 @@ import {
   PluginMap,
   PluginMap__factory,
   VoteERC20__factory,
-  MarketplaceV3__factory,
+  MarketplaceRouter__factory,
   DirectListingsLogic__factory,
   EnglishAuctionsLogic__factory,
   OffersLogic__factory,
@@ -393,8 +393,8 @@ async function setupMarketplaceV3(): Promise<string> {
 
   // Router
   const marketplaceV3Address = await deployContractAndUploadMetadata(
-    MarketplaceV3__factory.abi,
-    MarketplaceV3__factory.bytecode,
+    MarketplaceRouter__factory.abi,
+    MarketplaceRouter__factory.bytecode,
     signer,
     [pluginMapAddress],
   );

@@ -23,7 +23,7 @@ import { Abi } from "../../schema/contracts/custom";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
 import type {
-  MarketplaceV3 as MarketplaceV3Contract,
+  MarketplaceRouter as MarketplaceV3Contract,
   DirectListingsLogic,
   EnglishAuctionsLogic,
   OffersLogic,
