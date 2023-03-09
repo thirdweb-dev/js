@@ -3,14 +3,20 @@
   "version": "0.1.6",
   "main": "dist/thirdweb-dev-chains.cjs.js",
   "module": "dist/thirdweb-dev-chains.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains.esm.js": "./dist/thirdweb-dev-chains.browser.esm.js"
+  },
   "exports": {
     ".": {
-      "module": "./dist/thirdweb-dev-chains.esm.js",
+      "module": {
+        "browser": "./dist/thirdweb-dev-chains.browser.esm.js",
+        "default": "./dist/thirdweb-dev-chains.esm.js"
+      },
       "default": "./dist/thirdweb-dev-chains.cjs.js"
     },
     "./package.json": "./package.json"
   },
-  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/wallets",
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/chains",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/thirdweb-dev/js/issues"
@@ -26,7 +32,11 @@
     "entrypoints": [
       "index.ts"
     ],
-    "exports": true
+    "exports": {
+      "envConditions": [
+        "browser"
+      ]
+    }
   },
   "sideEffects": false,
   "scripts": {
