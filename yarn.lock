@@ -4373,10 +4373,10 @@
   resolved "https://registry.yarnpkg.com/@panva/hkdf/-/hkdf-1.0.4.tgz#4e02bb248402ff6c5c024e23a68438e2b0e69d67"
   integrity sha512-003xWiCuvePbLaPHT+CRuaV4GlyCAVm6XYSbBZDHoWZGn1mNkVKFaDbGJjjxmEFvizUwlCoM6O18FCBMMky2zQ==
 
-"@paperxyz/embedded-wallet-service-sdk@^0.0.16":
-  version "0.0.16"
-  resolved "https://registry.yarnpkg.com/@paperxyz/embedded-wallet-service-sdk/-/embedded-wallet-service-sdk-0.0.16.tgz#0826a114f28268a2f9ef8457c8c453d284c2708e"
-  integrity sha512-6XDxSS5+W9ReVwHhBBlt7M+FZwfrtpMwiiIOmdN8xvU6C4wbgwFaSUE5BgyUFeprYB1NNr9iC9UE7oPX7dqnwQ==
+"@paperxyz/embedded-wallet-service-sdk@^0.0.18":
+  version "0.0.18"
+  resolved "https://registry.yarnpkg.com/@paperxyz/embedded-wallet-service-sdk/-/embedded-wallet-service-sdk-0.0.18.tgz#6e55ef2464bf13d4073d4e33cd0c922f19684c08"
+  integrity sha512-sMjd+3ZZpRky3dRmu2mX/hgYewU8RDOokhVp9ABqMKjOTsjC1n9Qg4DVsqhzWlEUd7hUtGcYAi3k2iH5cGnd6w==
   dependencies:
     "@ethersproject/abstract-signer" "^5.7.0"
     "@ethersproject/bytes" "^5.7.0"
