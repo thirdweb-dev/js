@@ -462,45 +462,19 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // if we don't have a contractType or ABI then we will have to resolve it regardless
     // we also handle it being "custom" just in case...
     if (!contractTypeOrABI || contractTypeOrABI === "custom") {
-<<<<<<< HEAD
-      const resolvedContractType = await this.resolveContractType(
-        resolvedAddress,
-      );
-      if (resolvedContractType === "custom") {
-        // if it's a custom contract we gotta fetch the compiler metadata
-        try {
-          const metadata =
-            await this.getPublisher().fetchCompilerMetadataFromAddress(
-              resolvedAddress,
-            );
-          newContract = await this.getContractFromAbi(
-            resolvedAddress,
-            metadata.abi,
-          );
-        } catch (e) {
-          const chainId = (await this.getProvider().getNetwork()).chainId;
-          throw new Error(
-            `No ABI found for this contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${resolvedAddress}`,
-          );
-        }
-      } else {
-        // otherwise if it's a prebuilt contract we can just use the contract type
-        const contractAbi = await PREBUILT_CONTRACTS_MAP[
-          resolvedContractType
-        ].getAbi(resolvedAddress, this.getProvider(), this.storage);
-        newContract = await this.getContractFromAbi(
-          resolvedAddress,
-          contractAbi,
-=======
       try {
         const metadata =
-          await this.getPublisher().fetchCompilerMetadataFromAddress(address);
-        newContract = await this.getContractFromAbi(address, metadata.abi);
+          await this.getPublisher().fetchCompilerMetadataFromAddress(
+            resolvedAddress,
+          );
+        newContract = await this.getContractFromAbi(
+          resolvedAddress,
+          metadata.abi,
+        );
       } catch (e) {
         const chainId = (await this.getProvider().getNetwork()).chainId;
         throw new Error(
-          `No ABI found for this contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${address}`,
->>>>>>> main
+          `No ABI found for this contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${resolvedAddress}`,
         );
       }
     }
