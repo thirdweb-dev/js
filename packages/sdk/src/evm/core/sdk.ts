@@ -472,10 +472,21 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           metadata.abi,
         );
       } catch (e) {
-        const chainId = (await this.getProvider().getNetwork()).chainId;
-        throw new Error(
-          `No ABI found for this contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${resolvedAddress}`,
-        );
+        // try resolving the contract type (legacy contracts)
+        const resolvedContractType = await this.resolveContractType(address);
+        if (resolvedContractType && resolvedContractType !== "custom") {
+          // otherwise if it's a prebuilt contract we can just use the contract type
+          const contractAbi = await PREBUILT_CONTRACTS_MAP[
+            resolvedContractType
+          ].getAbi(address, this.getProvider(), this.storage);
+          newContract = await this.getContractFromAbi(address, contractAbi);
+        } else {
+          // we cant fetch the ABI, and we don't know the contract type, throw an error
+          const chainId = (await this.getProvider().getNetwork()).chainId;
+          throw new Error(
+            `No ABI found for this contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${resolvedAddress}`,
+          );
+        }
       }
     }
     // if it's a builtin contract type we can just use the contract type to initialize the contract instance

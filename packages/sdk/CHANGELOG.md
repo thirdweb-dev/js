@@ -1,5 +1,17 @@
 # @thirdweb-dev/sdk
 
+## 3.10.2
+
+### Patch Changes
+
+- [#697](https://github.com/thirdweb-dev/js/pull/697) [`2682f582`](https://github.com/thirdweb-dev/js/commit/2682f5823e5c71947f5c6a71918a0285f253fd18) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix fetching ABI on legacy contracts
+
+- [#693](https://github.com/thirdweb-dev/js/pull/693) [`d5f18b40`](https://github.com/thirdweb-dev/js/commit/d5f18b403a6f3ced0e1929b5c032f63325708304) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix passing only chain name as the network to connect to
+
+- [#694](https://github.com/thirdweb-dev/js/pull/694) [`2efe5be3`](https://github.com/thirdweb-dev/js/commit/2efe5be3ad2df4e80c0048c8fd35018ecf2d8dd9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Optimize getContract calls with no type
+
+- [#687](https://github.com/thirdweb-dev/js/pull/687) [`baeb7427`](https://github.com/thirdweb-dev/js/commit/baeb74274e878cfbc237ef2aa676faa257606300) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - New app uri defaults
+
 ## 3.10.1
 
 ### Patch Changes
