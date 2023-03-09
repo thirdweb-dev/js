@@ -196,9 +196,10 @@ const NavLink: ComponentWithChildren<NavLinkProps> = ({
 }) => {
   const { query } = useRouter();
   const [computedBasePath, tabHref] = useMemo(() => {
-    const [network, address, tab = ""] = (
-      (query.paths as string[]) || []
-    ).filter((c) => c !== "evm" && c !== "solana");
+    const [network, address, tab = ""] = [
+      ...new Set(((query.paths as string[]) || []).filter((c) => c !== "evm")),
+    ];
+
     return [`/${network}/${address}`, tab] as const;
   }, [query.paths]);
 

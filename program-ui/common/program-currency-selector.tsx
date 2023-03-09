@@ -137,11 +137,11 @@ export const ProgramCurrencySelector: React.FC<
           </option>
         )}
         {customCurrency ? (
-          <option key={customCurrency} value={customCurrency}>
+          <option key={`${customCurrency}_custom`} value={customCurrency}>
             {customCurrency} (Custom)
           </option>
         ) : activeCurrency ? (
-          <option key={activeCurrency} value={activeCurrency}>
+          <option key={`${activeCurrency}_active`} value={activeCurrency}>
             {activeCurrency} (Custom)
           </option>
         ) : null}
