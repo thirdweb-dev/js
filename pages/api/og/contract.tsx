@@ -103,7 +103,7 @@ export default async function handler(req: NextRequest) {
   return new ImageResponse(
     (
       <div
-        tw="w-full h-full flex justify-center py-8 px-8"
+        tw="w-full h-full flex justify-center py-8 px-8 "
         // eslint-disable-next-line react/forbid-dom-props
         style={{
           background: "#000",
@@ -112,7 +112,7 @@ export default async function handler(req: NextRequest) {
       >
         {/* the actual component starts here */}
 
-        <div tw="flex flex-col my-auto">
+        <div tw="flex flex-col my-auto w-full">
           {/* if we have a logo render it */}
           {contractData.logo && (
             <img
@@ -125,7 +125,7 @@ export default async function handler(req: NextRequest) {
           {contractData.displayName &&
           contractData.displayName !== contractData.contractAddress ? (
             <h3
-              tw="text-2xl font-bold flex mx-auto text-center my-0 mb-4"
+              tw="text-2xl font-bold flex text-center my-0 mb-4 mx-auto"
               style={{
                 color: "#626262",
               }}
@@ -133,18 +133,11 @@ export default async function handler(req: NextRequest) {
               {shortenString(contractData.contractAddress)}
             </h3>
           ) : null}
-          <h1
-            tw="text-6xl text-white font-bold flex mx-auto text-center my-0"
-            style={{
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              textWrap: "balance",
-            }}
-          >
+          <h1 tw="text-6xl text-white font-bold flex text-center my-0 mx-auto">
             {textShortener(contractData.displayName) ||
               shortenString(contractData.contractAddress)}
           </h1>
-          <h2 tw="text-4xl text-white opacity-80 font-medium flex mx-auto text-center my-0 mt-10">
+          <h2 tw="text-4xl text-white opacity-80 font-medium flex text-center my-0 mt-10 mx-auto">
             {contractData.chainName}
           </h2>
         </div>
@@ -155,7 +148,7 @@ export default async function handler(req: NextRequest) {
       </div>
     ),
     {
-      debug: false,
+      debug: true,
       width: 1200,
       height: 630,
       fonts: [
