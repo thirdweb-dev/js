@@ -301,10 +301,10 @@ EVMContractPage.getLayout = (page, props: EVMContractProps) => {
   } | ${props.contractInfo.chain?.name}`;
 
   const ogImage = ContractOG.toUrl({
-    displayName,
+    displayName: props.contractMetadata?.name || "",
     contractAddress: props.contractInfo.contractAddress,
     logo: props.contractMetadata?.image || "",
-    description: props.contractMetadata?.description || "",
+    chainName: props.contractInfo.chain?.name || "",
   });
 
   const url = `https://thirdweb.com/${props.contractInfo.chainSlug}/${props.contractInfo.contractAddress}/`;

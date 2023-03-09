@@ -130,8 +130,8 @@ export default async function handler(req: NextRequest) {
         )}
 
         <div tw="w-full h-full flex flex-col items-center">
-          <div tw="flex flex-col my-auto align-middle">
-            <h1 tw="text-6xl font-bold text-white text-center max-w-2xl">
+          <div tw="flex flex-col my-auto">
+            <h1 tw="text-6xl font-bold text-white text-center max-w-2xl mx-auto">
               {chain.name}
             </h1>
             <div tw="flex mx-auto mt-14">
