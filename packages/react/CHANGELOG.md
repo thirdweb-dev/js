@@ -1,5 +1,12 @@
 # @thirdweb-dev/react
 
+## 3.10.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/react-core@3.10.3
+
 ## 3.10.2
 
 ### Patch Changes
