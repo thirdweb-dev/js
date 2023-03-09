@@ -1,6 +1,6 @@
 import { DAppMetaData } from "../types/dAppMeta";
 import { SupportedWallet } from "../types/wallet";
-import { transformChainToMinimalWagmiChain } from "../utils";
+import { timeoutPromise, transformChainToMinimalWagmiChain } from "../utils";
 import { ThirdwebThemeContext } from "./theme-context";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { AsyncStorage, CreateAsyncStorage } from "@thirdweb-dev/wallets";
@@ -165,7 +165,13 @@ export function ThirdwebWalletProvider(
         const wallet = createWalletInstance(Wallet);
         try {
           setConnectionStatus("connecting");
-          await wallet.autoConnect();
+          // give up auto connect if it takes more than 3 seconds
+          // this is to handle the edge case when trying to auto-connect to wallet that does not exist anymore (extension is uninstalled)
+          await timeoutPromise(
+            3000,
+            wallet.autoConnect(),
+            `AutoConnect timeout`,
+          );
           handleWalletConnect(wallet);
         } catch (e) {
           setConnectionStatus("disconnected");
