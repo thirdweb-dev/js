@@ -48,7 +48,6 @@ export const ConnectWalletDetails = ({
 
     return () => {
       if (activeWallet?.walletId.includes("walletConnect")) {
-        console.log("remove listener");
         activeWallet.off("open_wallet");
       }
     };

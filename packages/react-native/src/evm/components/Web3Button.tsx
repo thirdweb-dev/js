@@ -128,8 +128,6 @@ export const Web3Button = <TAction extends ActionFn>({
   let buttonDisabled = !!isDisabled;
   let buttonLoading = false;
 
-  console.log("mutation", actionMutation.isLoading);
-
   // if button is disabled, show original action
   if (!buttonDisabled) {
     if (hasMismatch) {
