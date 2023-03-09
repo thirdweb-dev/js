@@ -20,16 +20,16 @@ import { Linking } from "react-native";
 const DEFAULT_NAME_METADATA = "Dapp powered by Thirdweb";
 const DEFAULT_URL_METADATA = "thirdweb.com";
 
+export interface IWalletWithMetadata {
+  getMetadata(): WalletMeta;
+}
+
 // Metamask ----------------------------------------
 type WC1Options = Omit<
   WalletOptions<WalletConnectV1Options>,
   "qrcode" | "walletStorage"
 > &
   ExtraCoreWalletOptions;
-
-export interface IWalletWithMetadata {
-  getMetadata(): WalletMeta;
-}
 
 export class MetaMaskWallet
   extends WalletConnectV1Core
@@ -39,6 +39,7 @@ export class MetaMaskWallet
     const storage = createAsyncLocalStorage("metamask");
     super({
       ...options,
+      walletId: "metamask",
       walletStorage: storage,
       qrcode: false,
       dappMetadata: {
@@ -49,11 +50,64 @@ export class MetaMaskWallet
       },
     });
 
+    console.log("Metamask.Constructor");
+    console.log("Metamask", this.getMetadata());
+
     this.on("open_wallet", this._onWCOpenWallet);
+
+    this.on("disconnect", () => {
+      this.removeAllListeners();
+    });
   }
 
   getMetadata() {
     return walletsMetadata.metamask as WalletMeta;
+  }
+
+  _onWCOpenWallet(uri?: string) {
+    const meta = this.getMetadata();
+
+    if (uri) {
+      const fullUrl = formatDisplayUri(uri, meta);
+
+      Linking.openURL(fullUrl);
+    }
+  }
+}
+
+// Rainbow ----------------------------------------
+
+export class RainbowWallet
+  extends WalletConnectV1Core
+  implements IWalletWithMetadata
+{
+  constructor(options: WC1Options) {
+    const storage = createAsyncLocalStorage("rainbow");
+    super({
+      ...options,
+      walletId: "rainbow",
+      walletStorage: storage,
+      qrcode: false,
+      dappMetadata: {
+        url: options.clientMeta?.url || DEFAULT_URL_METADATA,
+        name: options.clientMeta?.name || DEFAULT_NAME_METADATA,
+        logoUrl: options.clientMeta?.icons?.[0],
+        description: options.clientMeta?.description,
+      },
+    });
+
+    console.log("RainbowWallet.Constructor");
+    console.log("Rainbow", this.getMetadata());
+
+    this.on("open_wallet", this._onWCOpenWallet);
+
+    this.on("disconnect", () => {
+      this.removeAllListeners();
+    });
+  }
+
+  getMetadata() {
+    return walletsMetadata.rainbow as WalletMeta;
   }
 
   _onWCOpenWallet(uri?: string) {
@@ -74,18 +128,42 @@ type WC2Options = Omit<
   "projectId" | "qrcode" | "walletStorage"
 >;
 
-export class TrustWallet extends WalletConnectCore {
+export class TrustWallet
+  extends WalletConnectCore
+  implements IWalletWithMetadata
+{
   constructor(options: WC2Options) {
     const storage = createAsyncLocalStorage("trustwallet");
     super({
       ...options,
-      qrcode: true,
+      walletId: "trust",
+      qrcode: false,
       projectId: TW_WC_PROJECT_ID,
       walletStorage: storage,
       dappMetadata: {
         ...options.dappMetadata,
       },
     });
+
+    this.on("open_wallet", this._onWCOpenWallet);
+
+    this.on("disconnect", () => {
+      this.removeAllListeners();
+    });
+  }
+
+  getMetadata() {
+    return walletsMetadata.trust as WalletMeta;
+  }
+
+  _onWCOpenWallet(uri?: string) {
+    const meta = this.getMetadata();
+
+    if (uri) {
+      const fullUrl = formatDisplayUri(uri, meta);
+
+      Linking.openURL(fullUrl);
+    }
   }
 }
 

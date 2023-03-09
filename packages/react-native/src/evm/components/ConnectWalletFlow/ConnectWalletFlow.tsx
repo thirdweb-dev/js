@@ -6,7 +6,6 @@ import { TWModal } from "../base/modal/TWModal";
 import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
 import { useConnect, useWallets } from "@thirdweb-dev/react-core";
-import { WalletConnect, WalletConnectV1 } from "@thirdweb-dev/wallets";
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import invariant from "tiny-invariant";
@@ -35,11 +34,17 @@ export const ConnectWalletFlow = () => {
 
     let walletClass;
     if (wallet_.versions.includes("2")) {
+      console.log("walletMeta.id", wallet_.id);
       // default to v2
-      walletClass = walletClasses.find((w) => w.id === WalletConnect.id);
+      walletClass = supportedWallets.find((wallet) => {
+        console.log("wallet.name", wallet.name);
+        return wallet.name.toLowerCase().includes(wallet_.id.toLowerCase());
+      });
       invariant(walletClass, "Wallet class not found");
     } else if (wallet_.versions.includes("1")) {
-      walletClass = walletClasses.find((w) => w.id === WalletConnectV1.id);
+      walletClass = supportedWallets.find((wallet) => {
+        return wallet.name.toLowerCase().includes(wallet_.id.toLowerCase());
+      });
       invariant(walletClass, "Wallet class not found");
     } else {
       walletClass = walletClasses.find((item) => {
@@ -47,10 +52,11 @@ export const ConnectWalletFlow = () => {
       });
       invariant(walletClass, "Wallet class not found");
     }
-    connect(walletClass, {}).catch((error) => {
-      console.log("error", error);
-      onBackPress();
-    });
+    connect(walletClass, {});
+    // .catch((error) => {
+    //   console.log("error", error);
+    //   onBackPress();
+    // });
   };
 
   const onBackPress = () => {

@@ -39,6 +39,7 @@ export const ConnectWalletDetails = ({
       const mobileUrl = (
         activeWallet as unknown as IWalletWithMetadata
       ).getMetadata().mobile.universal;
+      console.log("mobileUrl: ", mobileUrl);
       activeWallet.on("open_wallet", (uri?: string) => {
         if (!uri && mobileUrl) {
           Linking.openURL(mobileUrl);

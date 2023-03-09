@@ -17,7 +17,6 @@ import {
 import { shortenString } from "../../evm/utils/addresses";
 import { isMobile } from "../../evm/utils/isMobile";
 import { useCanSwitchNetwork } from "../hooks/useCanSwitchNetwork";
-import { useInstalledWallets } from "../hooks/useInstalledWallets";
 import { DeviceWallet } from "../wallets";
 import { NetworkSelector } from "./NetworkSelector";
 import { CoinbaseWalletIcon } from "./icons/CoinbaseWalletIcon";
@@ -39,7 +38,6 @@ import {
   useAddress,
   useBalance,
   useDisconnect,
-  useNetworkMismatch,
   useSupportedChains,
 } from "@thirdweb-dev/react-core";
 import { useMemo, useState } from "react";

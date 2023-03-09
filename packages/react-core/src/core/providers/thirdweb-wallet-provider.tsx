@@ -132,7 +132,9 @@ export function ThirdwebWalletProvider(
   // Auto Connect
   // TODO - Can't do auto connect for Device Wallet right now
   useEffect(() => {
-    if (autoConnectTriggered.current) return;
+    if (autoConnectTriggered.current) {
+      return;
+    }
     // if explicitly set to false, don't auto connect
     // by default, auto connect
     if (props.shouldAutoConnect === false) {
@@ -153,13 +155,22 @@ export function ThirdwebWalletProvider(
     autoConnectTriggered.current = true;
 
     (async () => {
-      const lastConnectedWalletId = await coordinatorStorage.getItem(
+      const lastConnectedWallet = await coordinatorStorage.getItem(
         "lastConnectedWallet",
       );
 
-      const Wallet = props.supportedWallets.find(
-        (W) => W.id === lastConnectedWalletId,
-      );
+      const Wallet = lastConnectedWallet
+        ? props.supportedWallets.find((W) => {
+            console.log("lastConnectedWallet", lastConnectedWallet);
+            console.log("W.name", W.name);
+
+            return W.name
+              .toLowerCase()
+              .includes(lastConnectedWallet?.toLowerCase() || "");
+          })
+        : undefined;
+
+      console.log("found wallet", Wallet);
 
       if (Wallet && Wallet.id !== "deviceWallet") {
         const wallet = createWalletInstance(Wallet);

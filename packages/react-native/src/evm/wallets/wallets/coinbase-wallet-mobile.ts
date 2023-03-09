@@ -36,6 +36,7 @@ export class CoinbaseWalletMobile
       ...options,
       callbackURL: new URL("https://thirdweb.com"),
       walletStorage: new noopStorage(),
+      walletId: "coinbase",
     });
   }
 

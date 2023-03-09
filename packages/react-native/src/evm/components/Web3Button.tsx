@@ -139,7 +139,7 @@ export const Web3Button = <TAction extends ActionFn>({
       connectionStatus === "unknown"
     ) {
       content = <ActivityIndicator size="small" color={"black"} />;
-      buttonLoading = true;
+      //   buttonLoading = true;
     }
   }
 
