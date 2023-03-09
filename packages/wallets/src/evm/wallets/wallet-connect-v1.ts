@@ -23,7 +23,7 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
   }
 
   constructor(options: WalletOptions<WalletConnectV1Options>) {
-    super(WalletConnectV1.id, options);
+    super(options.walletId || WalletConnectV1.id, options);
   }
 
   protected async getConnector(): Promise<TWConnector> {

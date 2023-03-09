@@ -9,6 +9,7 @@ export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   chains?: Chain[];
   // default: true
   shouldAutoConnect?: boolean;
+  walletId?: string;
   coordinatorStorage: AsyncStorage;
   walletStorage: AsyncStorage;
   dappMetadata: DAppMetaData;
@@ -39,12 +40,15 @@ export abstract class AbstractBrowserWallet<
    * connect to the wallet if the last connected wallet is this wallet and not already connected
    */
   async autoConnect() {
-    const lastConnectedWallet = await this.coordinatorStorage.getItem(
+    const lastConnectedWalletName = await this.coordinatorStorage.getItem(
       "lastConnectedWallet",
     );
 
+    console.log("lastConnectedWalletName", lastConnectedWalletName);
+    console.log("this.walletId", this.walletId);
+
     // return if the last connected wallet is not this wallet
-    if (lastConnectedWallet !== this.walletId) {
+    if (lastConnectedWalletName !== this.walletId) {
       return;
     }
 
@@ -90,6 +94,8 @@ export abstract class AbstractBrowserWallet<
     };
 
     const isConnected = await connector.isConnected();
+
+    console.log("isConnected", isConnected);
 
     if (isConnected) {
       const address = await connector.getAddress();
