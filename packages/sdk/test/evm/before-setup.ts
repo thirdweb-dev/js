@@ -173,16 +173,13 @@ export const mochaHooks = {
           return await deployContractAndUploadMetadata(abi, bytecode, signer, [
             nativeTokenWrapperAddress,
           ]);
-        // return await contractFactory.deploy(nativeTokenWrapperAddress);
         case PackInitializer.contractType:
           const addr = getNativeTokenByChainId(ChainId.Hardhat).wrapped.address;
-          // return await contractFactory.deploy(addr, trustedForwarderAddress);
           return await deployContractAndUploadMetadata(abi, bytecode, signer, [
             addr,
             trustedForwarderAddress,
           ]);
         default:
-          // return await contractFactory.deploy();
           return await deployContractAndUploadMetadata(abi, bytecode, signer);
       }
     }
