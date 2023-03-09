@@ -1,6 +1,6 @@
 import { DAppMetaData } from "../types/dAppMeta";
 import { SupportedWallet } from "../types/wallet";
-import { transformChainToMinimalWagmiChain } from "../utils";
+import { timeoutPromise, transformChainToMinimalWagmiChain } from "../utils";
 import { ThirdwebThemeContext } from "./theme-context";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { AsyncStorage, CreateAsyncStorage } from "@thirdweb-dev/wallets";
@@ -11,6 +11,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 
@@ -126,9 +127,12 @@ export function ThirdwebWalletProvider(
     [activeWallet],
   );
 
+  const autoConnectTriggered = useRef(false);
+
   // Auto Connect
   // TODO - Can't do auto connect for Device Wallet right now
   useEffect(() => {
+    if (autoConnectTriggered.current) return;
     // if explicitly set to false, don't auto connect
     // by default, auto connect
     if (props.shouldAutoConnect === false) {
@@ -146,6 +150,8 @@ export function ThirdwebWalletProvider(
       return;
     }
 
+    autoConnectTriggered.current = true;
+
     (async () => {
       const lastConnectedWalletId = await coordinatorStorage.getItem(
         "lastConnectedWallet",
@@ -159,7 +165,13 @@ export function ThirdwebWalletProvider(
         const wallet = createWalletInstance(Wallet);
         try {
           setConnectionStatus("connecting");
-          await wallet.autoConnect();
+          // give up auto connect if it takes more than 3 seconds
+          // this is to handle the edge case when trying to auto-connect to wallet that does not exist anymore (extension is uninstalled)
+          await timeoutPromise(
+            3000,
+            wallet.autoConnect(),
+            `AutoConnect timeout`,
+          );
           handleWalletConnect(wallet);
         } catch (e) {
           setConnectionStatus("disconnected");
@@ -194,7 +206,7 @@ export function ThirdwebWalletProvider(
         await wallet.connect(_connectedParams);
         handleWalletConnect(wallet);
       } catch (e: any) {
-        console.log("disconnected ");
+        console.error(e);
         setConnectionStatus("disconnected");
         throw e;
       }

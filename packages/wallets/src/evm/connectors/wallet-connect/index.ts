@@ -312,7 +312,7 @@ export class WalletConnectConnector extends Connector<
         ),
       });
 
-      this.#setupListeners();
+      this.setupListeners();
     }
   }
 
@@ -361,7 +361,7 @@ export class WalletConnectConnector extends Connector<
     return !connectorChains.every((id) => requestedChains.includes(id));
   }
 
-  #setupListeners() {
+  async setupListeners() {
     if (!this.#provider) {
       return;
     }

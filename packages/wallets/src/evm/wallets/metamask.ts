@@ -1,5 +1,5 @@
 import { AsyncStorage } from "../../core/AsyncStorage";
-import { WalletConnectV1Connector } from "../connectors/wallet-connect-v1";
+import type { WalletConnectV1Connector as WalletConnectV1ConnectorType } from "../connectors/wallet-connect-v1";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 
@@ -18,7 +18,7 @@ export class MetaMask extends AbstractBrowserWallet {
   connector?: TWConnector;
   connectorStorage: AsyncStorage;
   isInjected?: boolean;
-  walletConnectConnector?: WalletConnectV1Connector;
+  walletConnectConnector?: WalletConnectV1ConnectorType;
 
   static id = "metamask" as const;
 
@@ -51,6 +51,10 @@ export class MetaMask extends AbstractBrowserWallet {
 
         this.connector = new WagmiAdapter(metamaskConnector);
       } else {
+        const { WalletConnectV1Connector } = await import(
+          "../connectors/wallet-connect-v1"
+        );
+
         const walletConnectConnector = new WalletConnectV1Connector({
           chains: this.chains,
           storage: this.connectorStorage,

@@ -56,7 +56,7 @@ export class CoinbaseWalletConnector extends Connector<
     try {
       const provider = await this.getProvider();
 
-      this.#setupListeners();
+      this.setupListeners();
 
       this.emit("message", { type: "connecting" });
 
@@ -302,7 +302,7 @@ export class CoinbaseWalletConnector extends Connector<
     return /(user rejected)/i.test((error as Error).message);
   }
 
-  async #setupListeners() {
+  async setupListeners() {
     const provider = await this.getProvider();
 
     provider.on("accountsChanged", this.onAccountsChanged);

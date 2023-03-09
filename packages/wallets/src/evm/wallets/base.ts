@@ -74,30 +74,33 @@ export abstract class AbstractBrowserWallet<
 
     this.#subscribeToEvents(connector);
 
+    const saveToStorage = async () => {
+      try {
+        await this.walletStorage.setItem(
+          "lastConnectedParams",
+          JSON.stringify(connectOptions),
+        );
+        await this.coordinatorStorage.setItem(
+          "lastConnectedWallet",
+          this.walletId,
+        );
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
     const isConnected = await connector.isConnected();
-    // return if already connected
+
     if (isConnected) {
       const address = await connector.getAddress();
+      connector.setupListeners();
+      await saveToStorage();
+      return address;
+    } else {
+      const address = await connector.connect(connectOptions);
+      await saveToStorage();
       return address;
     }
-
-    // end event listener setups
-    const connectedAddress = await connector.connect(connectOptions);
-
-    // do not break on coordinator error
-    try {
-      // Store the last connected params in secure storage
-      // await this.walletStorage.setItem(
-      //   "lastConnectedParams",
-      //   JSON.stringify(connectOptions),
-      // );
-      await this.coordinatorStorage.setItem(
-        "lastConnectedWallet",
-        this.walletId,
-      );
-    } catch {}
-
-    return connectedAddress;
   }
 
   async #subscribeToEvents(connector: TWConnector) {

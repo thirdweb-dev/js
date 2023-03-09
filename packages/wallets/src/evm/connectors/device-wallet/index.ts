@@ -119,4 +119,6 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
     const unsupported = !this.options.chains.find((c) => c.id === id);
     this.emit("change", { chain: { id, unsupported } });
   };
+
+  async setupListeners() {}
 }

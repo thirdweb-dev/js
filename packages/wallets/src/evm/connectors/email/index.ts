@@ -136,4 +136,6 @@ export class EmailWalletConnector extends TWConnector<EmailWalletConnectionArgs>
     }
     return this.user;
   }
+
+  async setupListeners() {}
 }

@@ -189,14 +189,4 @@ export class MetaMaskConnector extends InjectedConnector {
       throw error;
     }
   }
-
-  protected async setupListeners() {
-    const provider = await this.getProvider();
-    // Subscribe to Metamask provider events
-    if (provider.on) {
-      provider.on("accountsChanged", this.onAccountsChanged);
-      provider.on("chainChanged", this.onChainChanged);
-      provider.on("disconnect", this.onDisconnect);
-    }
-  }
 }

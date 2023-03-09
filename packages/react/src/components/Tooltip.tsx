@@ -6,13 +6,14 @@ import * as RadixTooltip from "@radix-ui/react-tooltip";
 export const ToolTip: React.FC<{
   children: React.ReactNode;
   tip: React.ReactNode;
+  sideOffset?: number;
 }> = (props) => {
   return (
     <RadixTooltip.Provider>
       <RadixTooltip.Root>
         <RadixTooltip.Trigger asChild>{props.children}</RadixTooltip.Trigger>
         <RadixTooltip.Portal>
-          <TooltipContent sideOffset={5}>
+          <TooltipContent sideOffset={props.sideOffset || 6}>
             {props.tip}
             <TooltipArrow />
           </TooltipContent>
