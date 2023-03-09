@@ -1,0 +1,4 @@
+{
+  "main": "dist/thirdweb-dev-wallets-evm-connectors-paper.cjs.js",
+  "module": "dist/thirdweb-dev-wallets-evm-connectors-paper.esm.js"
+}

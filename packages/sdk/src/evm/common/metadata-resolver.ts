@@ -65,6 +65,11 @@ export async function fetchContractMetadataFromAddress(
           chainId,
           address,
         );
+      if (!importedUri) {
+        throw new Error(
+          `Could not resolve metadata for contract at ${address}`,
+        );
+      }
       metadata = await fetchContractMetadata(importedUri, storage);
     } catch (err) {
       throw new Error(`Could not resolve metadata for contract at ${address}`);
