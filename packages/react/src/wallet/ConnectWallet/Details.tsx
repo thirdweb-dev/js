@@ -16,6 +16,7 @@ import {
 } from "../../design-system";
 import { shortenString } from "../../evm/utils/addresses";
 import { isMobile } from "../../evm/utils/isMobile";
+import { useCanSwitchNetwork } from "../hooks/useCanSwitchNetwork";
 import { useInstalledWallets } from "../hooks/useInstalledWallets";
 import { DeviceWallet } from "../wallets";
 import { NetworkSelector } from "./NetworkSelector";
@@ -82,22 +83,13 @@ export const ConnectedWalletDetails: React.FC<{
 
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
   const [open, setOpen] = useState(false);
-  const supportedChains = useSupportedChains();
-  const networkMismatch = useNetworkMismatch();
-
-  const installedWallets = useInstalledWallets();
 
   // can not switch network if
   // * no wallet is connected
   // * only one supported network and connected to that network
   // * wallet is walletConnectV1, walletConnectV2, or deviceWallet
   // * wallet is non-injected metamask
-  const disableNetworkSwitching =
-    !activeWallet ||
-    (supportedChains.length === 1 && !networkMismatch) ||
-    activeWallet.walletId === "walletConnectV1" ||
-    activeWallet.walletId === "walletConnectV2" ||
-    (activeWallet.walletId === "metamask" && !installedWallets.metamask);
+  const disableNetworkSwitching = !useCanSwitchNetwork();
 
   const handleDeviceWalletExport = async () => {
     const deviceWallet = activeWallet as InstanceType<typeof DeviceWallet>;
@@ -131,6 +123,37 @@ export const ConnectedWalletDetails: React.FC<{
 
       {WalletIcon && <WalletIcon size={iconSize.lg} />}
     </WalletInfoButton>
+  );
+
+  const networkSwitcherButton = (
+    <MenuButton
+      id="current-network"
+      type="button"
+      disabled={disableNetworkSwitching}
+      onClick={() => {
+        setOpen(false);
+        setShowNetworkSelector(true);
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          position: "relative",
+        }}
+      >
+        <ChainIcon chain={chain || unknownChain} size={iconSize.lg} active />
+      </div>
+      {chain?.name || unknownChain?.name || "Unknown Chain"}
+      <StyledGearIcon
+        style={{
+          flexShrink: 0,
+          marginLeft: "auto",
+          width: "20px",
+          height: "20px",
+        }}
+      />
+    </MenuButton>
   );
 
   const content = (
@@ -203,38 +226,13 @@ export const ConnectedWalletDetails: React.FC<{
       <div>
         <PrimaryLabel htmlFor="current-network">Current Network</PrimaryLabel>
         <Spacer y="sm" />
-        <MenuButton
-          id="current-network"
-          type="button"
-          disabled={disableNetworkSwitching}
-          onClick={() => {
-            setOpen(false);
-            setShowNetworkSelector(true);
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              position: "relative",
-            }}
-          >
-            <ChainIcon
-              chain={chain || unknownChain}
-              size={iconSize.lg}
-              active
-            />
-          </div>
-          {chain?.name || unknownChain?.name || "Unknown Chain"}
-          <StyledGearIcon
-            style={{
-              flexShrink: 0,
-              marginLeft: "auto",
-              width: "20px",
-              height: "20px",
-            }}
-          />
-        </MenuButton>
+        {!disableNetworkSwitching ? (
+          networkSwitcherButton
+        ) : (
+          <ToolTip tip="Switch Network from Wallet App" sideOffset={10}>
+            {networkSwitcherButton}
+          </ToolTip>
+        )}
       </div>
 
       <Spacer y="md" />

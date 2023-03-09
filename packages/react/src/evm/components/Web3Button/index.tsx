@@ -1,7 +1,9 @@
 import { Spinner } from "../../../components/Spinner";
+import { ToolTip } from "../../../components/Tooltip";
 import { Button } from "../../../components/buttons";
 import { darkTheme, lightTheme } from "../../../design-system";
 import { ConnectWallet } from "../../../wallet/ConnectWallet/ConnectWallet";
+import { useCanSwitchNetwork } from "../../../wallet/hooks/useCanSwitchNetwork";
 import { ThemeProvider } from "@emotion/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -85,6 +87,7 @@ export const Web3Button = <TAction extends ActionFn>({
   const connectionStatus = useConnectionStatus();
 
   const queryClient = useQueryClient();
+  const canSwitchNetwork = useCanSwitchNetwork();
 
   const { contract } = useContract(contractAddress, contractAbi || "custom");
   const thirdwebTheme = useContext(ThirdwebThemeContext);
@@ -133,11 +136,18 @@ export const Web3Button = <TAction extends ActionFn>({
   let content = children;
   let buttonDisabled = !!isDisabled;
   let buttonLoading = false;
+  let showTooltip = false;
 
   // if button is disabled, show original action
   if (!buttonDisabled) {
     if (hasMismatch) {
-      content = "Switch Network";
+      if (!canSwitchNetwork) {
+        showTooltip = true;
+        content = "Network Mismatch";
+        buttonDisabled = true;
+      } else {
+        content = "Switch Network";
+      }
     } else if (
       actionMutation.isLoading ||
       !contract ||
@@ -151,21 +161,29 @@ export const Web3Button = <TAction extends ActionFn>({
     }
   }
 
+  const btn = (
+    <Button
+      variant="inverted"
+      type={type}
+      className={className}
+      onClick={() => actionMutation.mutate()}
+      disabled={buttonDisabled || buttonLoading}
+      style={{
+        minWidth: "120px",
+        minHeight: "43px",
+      }}
+    >
+      {content}
+    </Button>
+  );
+
   return (
     <ThemeProvider theme={themeToUse === "dark" ? darkTheme : lightTheme}>
-      <Button
-        variant="inverted"
-        type={type}
-        className={className}
-        onClick={() => actionMutation.mutate()}
-        disabled={buttonDisabled || buttonLoading}
-        style={{
-          minWidth: "120px",
-          minHeight: "43px",
-        }}
-      >
-        {content}
-      </Button>
+      {showTooltip ? (
+        <ToolTip tip="Change Network from Wallet App">{btn}</ToolTip>
+      ) : (
+        btn
+      )}
     </ThemeProvider>
   );
 };
