@@ -61,7 +61,7 @@ import {
   OffersLogic__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers } from "ethers";
+import { ContractInterface, ethers } from "ethers";
 import hardhat from "hardhat";
 
 // it's there, trust me bro
@@ -160,21 +160,30 @@ export const mochaHooks = {
     await contractPublisher.deployed();
 
     async function deployContract(
-      contractFactory: ethers.ContractFactory,
+      abi: ContractInterface,
+      bytecode: string,
       contractType: ContractType,
-    ): Promise<ethers.Contract> {
+    ): Promise<string> {
       switch (contractType) {
         case MarketplaceInitializer.contractType:
         case MultiwrapInitializer.contractType:
           const nativeTokenWrapperAddress = getNativeTokenByChainId(
             ChainId.Hardhat,
           ).wrapped.address;
-          return await contractFactory.deploy(nativeTokenWrapperAddress);
+          return await deployContractAndUploadMetadata(abi, bytecode, signer, [
+            nativeTokenWrapperAddress,
+          ]);
+        // return await contractFactory.deploy(nativeTokenWrapperAddress);
         case PackInitializer.contractType:
           const addr = getNativeTokenByChainId(ChainId.Hardhat).wrapped.address;
-          return await contractFactory.deploy(addr, trustedForwarderAddress);
+          // return await contractFactory.deploy(addr, trustedForwarderAddress);
+          return await deployContractAndUploadMetadata(abi, bytecode, signer, [
+            addr,
+            trustedForwarderAddress,
+          ]);
         default:
-          return await contractFactory.deploy();
+          // return await contractFactory.deploy();
+          return await deployContractAndUploadMetadata(abi, bytecode, signer);
       }
     }
 
@@ -225,23 +234,15 @@ export const mochaHooks = {
       }
 
       for (const factory of factories) {
-        const contractFactory = new ethers.ContractFactory(
+        const addr = await deployContract(
           factory.abi,
           factory.bytecode,
-        ).connect(signer);
-
-        const deployedContract: ethers.Contract = await deployContract(
-          contractFactory,
           contractType as ContractType,
         );
 
-        await deployedContract.deployed();
-        const tx = await thirdwebFactoryDeployer.addImplementation(
-          deployedContract.address,
-        );
+        const tx = await thirdwebFactoryDeployer.addImplementation(addr);
         await tx.wait();
-        implementations[contractType as ContractType] =
-          deployedContract.address;
+        implementations[contractType as ContractType] = addr;
       }
     }
 
