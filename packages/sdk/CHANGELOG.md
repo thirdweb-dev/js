@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 3.10.3
+
+### Patch Changes
+
+- [#698](https://github.com/thirdweb-dev/js/pull/698) [`713d3187`](https://github.com/thirdweb-dev/js/commit/713d3187be14643e891d6c04400308802e9e5d04) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix fetching NFTs with null metadata
+
 ## 3.10.2
 
 ### Patch Changes
