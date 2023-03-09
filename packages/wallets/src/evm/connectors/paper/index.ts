@@ -4,14 +4,14 @@ import {
   PaperWalletConnectorOptions,
 } from "./types";
 import {
-  Chains,
+  Chain,
   InitializedUser,
   PaperEmbeddedWalletSdk,
   UserStatus,
 } from "@paperxyz/embedded-wallet-service-sdk";
 import { ethers, Signer } from "ethers";
 
-export const PaperChainMap: Record<number, Chains> = {
+export const PaperChainMap: Record<number, Chain> = {
   1: "Ethereum",
   5: "Goerli",
   137: "Polygon",
@@ -79,7 +79,8 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
   }
 
   async getAddress(): Promise<string> {
-    return await this.getUser().wallet.getAddress();
+    const signer = await this.getSigner();
+    return signer.getAddress();
   }
 
   async isConnected(): Promise<boolean> {
