@@ -1,6 +1,5 @@
-import { goerli } from "../wagmi-chains/goerli";
-import { mainnet } from "../wagmi-chains/mainnet";
-import type { Address, Chain } from "../wagmi-core";
+import type { Address } from "../wagmi-core";
+import { Chain, Ethereum, Goerli } from "@thirdweb-dev/chains";
 import { default as EventEmitter } from "eventemitter3";
 
 export type ConnectorData<Provider = any> = {
@@ -34,7 +33,7 @@ export abstract class Connector<
   abstract readonly ready: boolean;
 
   constructor({
-    chains = [mainnet, goerli],
+    chains = [Ethereum, Goerli],
     options,
   }: {
     chains?: Chain[];
@@ -67,18 +66,14 @@ export abstract class Connector<
   protected abstract onDisconnect(error: Error): void;
 
   protected getBlockExplorerUrls(chain: Chain) {
-    const { default: blockExplorer, ...blockExplorers } =
-      chain.blockExplorers ?? {};
-    if (blockExplorer) {
-      return [
-        blockExplorer.url,
-        ...Object.values(blockExplorers).map((x) => x.url),
-      ];
+    const explorers = chain.explorers ?? [];
+    if (explorers.length > 0) {
+      return Object.values(explorers).map((x) => x.url);
     }
   }
 
   protected isChainUnsupported(chainId: number) {
-    return !this.chains.some((x) => x.id === chainId);
+    return !this.chains.some((x) => x.chainId === chainId);
   }
 
   abstract setupListeners(): Promise<void>;

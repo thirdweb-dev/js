@@ -6,8 +6,8 @@ import {
   normalizeChainId,
   Connector,
   ProviderRpcError,
-  Chain,
 } from "../../../lib/wagmi-core";
+import { Chain } from "@thirdweb-dev/chains";
 import WalletConnect from "@walletconnect/legacy-client";
 import type WalletConnectProvider from "@walletconnect/legacy-provider";
 import { IWalletConnectSession } from "@walletconnect/legacy-types";
@@ -151,7 +151,7 @@ export class WalletConnectV1Connector extends Connector<
         ? this.chains.reduce(
             (rpc_, chain) => ({
               ...rpc_,
-              [chain.id]: chain.rpcUrls.default.http[0],
+              [chain.chainId]: chain.rpc[0],
             }),
             {},
           )
@@ -221,13 +221,17 @@ export class WalletConnectV1Connector extends Connector<
         ),
       ]);
       return (
-        this.chains.find((x) => x.id === chainId) ??
+        this.chains.find((x) => x.chainId === chainId) ??
         ({
-          id: chainId,
+          chainId: chainId,
           name: `Chain ${chainIdHex}`,
           network: `${chainIdHex}`,
           nativeCurrency: { name: "Ether", decimals: 18, symbol: "ETH" },
-          rpcUrls: { default: { http: [""] }, public: { http: [""] } },
+          rpc: [""],
+          shortName: "eth",
+          chain: "ETH",
+          slug: "ethereum",
+          testnet: false,
         } as Chain)
       );
     } catch (error) {
@@ -239,7 +243,7 @@ export class WalletConnectV1Connector extends Connector<
         throw new UserRejectedRequestError(error);
       }
 
-      const chain = this.chains.find((x) => x.id === chainId);
+      const chain = this.chains.find((x) => x.chainId === chainId);
 
       // if chain is not supported
       if (!chain) {
@@ -260,11 +264,7 @@ export class WalletConnectV1Connector extends Connector<
                 chainId: chainIdHex,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpcUrls: [
-                  chain.rpcUrls.public?.http[0] ??
-                    chain.rpcUrls.default.http[0] ??
-                    "",
-                ],
+                rpcUrls: [chain.rpc[0] ?? ""],
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],
@@ -335,9 +335,11 @@ export class WalletConnectV1Connector extends Connector<
   };
 
   protected onRequestSent = (error: any, payload: { params: string[] }) => {
+    console.log("onRequestSent", error);
     if (error) {
       this.emit("message", { data: error, type: "request" });
     }
+    console.log("onRequestSent.message sent");
     this.emit("message", { data: payload.params[0], type: "request" });
   };
 

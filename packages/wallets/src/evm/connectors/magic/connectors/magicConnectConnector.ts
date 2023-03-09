@@ -2,7 +2,6 @@ import {
   ChainNotConfiguredError,
   normalizeChainId,
   UserRejectedRequestError,
-  Chain,
 } from "../../../../lib/wagmi-core";
 import { MagicConnector, MagicOptions } from "./magicConnector";
 import { ConnectExtension } from "@magic-ext/connect";
@@ -11,6 +10,7 @@ import {
   MagicSDKAdditionalConfiguration,
   SDKBase,
 } from "@magic-sdk/provider";
+import { Chain } from "@thirdweb-dev/chains";
 import { utils } from "ethers";
 import { Magic } from "magic-sdk";
 
@@ -40,13 +40,13 @@ export class MagicConnectConnector extends MagicConnector {
   async connect({ chainId }: { chainId?: number }) {
     // for a specific chainId we will overwrite the magicSDKConfiguration
     if (chainId) {
-      const chain = this.chains.find((c) => c.id === chainId);
+      const chain = this.chains.find((c) => c.chainId === chainId);
       if (chain) {
         this.magicSdkConfiguration = {
           ...this.magicSdkConfiguration,
           network: {
-            chainId: chain.id,
-            rpcUrl: chain.rpcUrls.default.http[0],
+            chainId: chain.chainId,
+            rpcUrl: chain.rpc[0],
           },
         };
       }
@@ -162,7 +162,7 @@ export class MagicConnectConnector extends MagicConnector {
 
   async switchChain(chainId: number): Promise<Chain> {
     // check if the chain is supported
-    const chain = this.chains.find((c) => c.id === chainId);
+    const chain = this.chains.find((c) => c.chainId === chainId);
     if (!chain) {
       throw new ChainNotConfiguredError({ chainId, connectorId: this.id });
     }

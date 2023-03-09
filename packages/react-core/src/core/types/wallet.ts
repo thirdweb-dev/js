@@ -1,10 +1,10 @@
 import {
   AbstractBrowserWallet,
   AsyncStorage,
+  Chain,
   DAppMetaData,
   TWConnector,
 } from "@thirdweb-dev/wallets";
-import { Chain } from "@wagmi/core";
 
 // these are extra options provided by the react-core package
 export type ExtraCoreWalletOptions = {

@@ -72,10 +72,12 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
   };
 
   #onMessage = (payload: any) => {
+    console.log("onMessage", payload);
     switch (payload.type) {
       case "request": // open wallet after request is sent
       case "add_chain": // open wallet after chain is added
       case "switch_chain": // open wallet after chain is switched
+        console.log("emit_open_wallet", payload);
         this.emit("open_wallet");
         break;
       case "display_uri":
@@ -89,6 +91,7 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
       return;
     }
     this.#removeListeners();
+    console.log("wcv1Wallet.setListeners");
     this.#walletConnectConnector.on("connect", this.#onConnect);
     this.#walletConnectConnector.on("disconnect", this.#onDisconnect);
     this.#walletConnectConnector.on("change", this.#onChange);
@@ -99,6 +102,7 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
     if (!this.#walletConnectConnector) {
       return;
     }
+    console.log("wcv1Wallet.removeListeners");
     this.#walletConnectConnector.removeListener("connect", this.#onConnect);
     this.#walletConnectConnector.removeListener(
       "disconnect",

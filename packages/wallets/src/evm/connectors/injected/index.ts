@@ -10,10 +10,10 @@ import {
   RpcError,
   SwitchChainError,
   UserRejectedRequestError,
-  Chain,
   Ethereum,
 } from "../../../lib/wagmi-core";
 import { getInjectedName } from "../../utils/getInjectedName";
+import { Chain } from "@thirdweb-dev/chains";
 import type { Address } from "abitype";
 import { providers } from "ethers";
 import { utils } from "ethers";
@@ -319,23 +319,26 @@ export class InjectedConnector extends Connector<
         method: "wallet_switchEthereumChain",
         params: [{ chainId: chainIdHex }],
       });
-      const chain = this.chains.find((_chain) => _chain.id === chainId);
+      const chain = this.chains.find((_chain) => _chain.chainId === chainId);
       if (chain) {
         return chain;
       }
 
       return {
-        id: chainId,
+        chainId: chainId,
         name: `Chain ${chainIdHex}`,
-        network: `${chainIdHex}`,
+        slug: `${chainIdHex}`,
         nativeCurrency: { name: "Ether", decimals: 18, symbol: "ETH" },
-        rpcUrls: { default: { http: [""] }, public: { http: [""] } },
+        rpc: [""],
+        chain: "",
+        shortName: "",
+        testnet: true,
       };
     } catch (error) {
       // if could not switch to given chainIdHex
 
       // if tried to connect to a chain that is not configured
-      const chain = this.chains.find((_chain) => _chain.id === chainId);
+      const chain = this.chains.find((_chain) => _chain.chainId === chainId);
       if (!chain) {
         throw new ChainNotConfiguredError({ chainId, connectorId: this.id });
       }
@@ -357,11 +360,7 @@ export class InjectedConnector extends Connector<
                 chainId: chainIdHex,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpcUrls: [
-                  chain.rpcUrls.public?.http[0] ??
-                    chain.rpcUrls.default.http[0] ??
-                    "",
-                ],
+                rpcUrls: [chain.rpc[0] || ""],
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],

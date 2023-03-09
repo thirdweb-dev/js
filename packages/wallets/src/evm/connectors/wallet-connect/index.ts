@@ -1,12 +1,12 @@
 import { AsyncStorage } from "../../../core";
 import { DAppMetaData } from "../../../core/types/dAppMeta";
 import {
-  Chain,
   ProviderRpcError,
   SwitchChainError,
   UserRejectedRequestError,
   Connector,
 } from "../../../lib/wagmi-core";
+import { Chain } from "@thirdweb-dev/chains";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { EthereumProviderOptions } from "@walletconnect/ethereum-provider/dist/types/EthereumProvider";
 import { providers } from "ethers";
@@ -87,9 +87,9 @@ export class WalletConnectConnector extends Connector<
     this.#createProvider();
   }
 
-  async connect({ chainId, pairingTopic }: ConnectConfig = {}) {
+  async connect({ chainId: chainIdP, pairingTopic }: ConnectConfig = {}) {
     try {
-      let targetChainId = chainId;
+      let targetChainId = chainIdP;
       if (!targetChainId) {
         const lastUsedChainIdStr = await this.#storage.getItem(
           LAST_USED_CHAIN_ID,
@@ -100,7 +100,7 @@ export class WalletConnectConnector extends Connector<
         if (lastUsedChainId && !this.isChainUnsupported(lastUsedChainId)) {
           targetChainId = lastUsedChainId;
         } else {
-          targetChainId = this.chains[0]?.id;
+          targetChainId = this.chains[0]?.chainId;
         }
       }
       if (!targetChainId) {
@@ -119,8 +119,8 @@ export class WalletConnectConnector extends Connector<
       // If there no active session, or the chains are stale, connect.
       if (!provider.session || isChainsStale) {
         const optionalChains = this.chains
-          .filter((chain) => chain.id !== targetChainId)
-          .map((optionalChain) => optionalChain.id);
+          .filter((chain) => chain.chainId !== targetChainId)
+          .map((optionalChain) => optionalChain.chainId);
 
         this.emit("message", { type: "connecting" });
 
@@ -130,7 +130,7 @@ export class WalletConnectConnector extends Connector<
           optionalChains,
         });
 
-        this.#setRequestedChainsIds(this.chains.map(({ id }) => id));
+        this.#setRequestedChainsIds(this.chains.map(({ chainId }) => chainId));
       }
 
       // If session exists and chains are authorized, enable provider for required chain
@@ -232,7 +232,7 @@ export class WalletConnectConnector extends Connector<
   }
 
   async switchChain(chainId: number) {
-    const chain = this.chains.find((chain_) => chain_.id === chainId);
+    const chain = this.chains.find((chain_) => chain_.chainId === chainId);
     if (!chain) {
       throw new SwitchChainError(new Error("chain not found on connector."));
     }
@@ -248,11 +248,13 @@ export class WalletConnectConnector extends Connector<
           method: ADD_ETH_CHAIN_METHOD,
           params: [
             {
-              chainId: hexValue(chain.id),
-              blockExplorerUrls: [chain.blockExplorers?.default],
+              chainId: hexValue(chain.chainId),
+              blockExplorerUrls: [
+                chain.explorers?.length ? chain.explorers[0] : undefined,
+              ],
               chainName: chain.name,
               nativeCurrency: chain.nativeCurrency,
-              rpcUrls: [...chain.rpcUrls.default.http],
+              rpcUrls: [...chain.rpc],
             },
           ],
         });
@@ -291,7 +293,9 @@ export class WalletConnectConnector extends Connector<
       OPTIONAL_EVENTS,
       OPTIONAL_METHODS,
     } = await import("@walletconnect/ethereum-provider");
-    const [defaultChain, ...optionalChains] = this.chains.map(({ id }) => id);
+    const [defaultChain, ...optionalChains] = this.chains.map(
+      ({ chainId }) => chainId,
+    );
     if (defaultChain) {
       // EthereumProvider populates & deduplicates required methods and events internally
       this.#provider = await EthereumProvider.init({
@@ -308,7 +312,7 @@ export class WalletConnectConnector extends Connector<
           icons: [this.options.dappMetadata.logoUrl || ""],
         },
         rpcMap: Object.fromEntries(
-          this.chains.map((chain) => [chain.id, chain.rpcUrls.default.http[0]]),
+          this.chains.map((chain) => [chain.chainId, chain.rpc[0]]),
         ),
       });
 
@@ -348,7 +352,7 @@ export class WalletConnectConnector extends Connector<
     }
 
     const requestedChains = await this.#getRequestedChainsIds();
-    const connectorChains = this.chains.map(({ id }) => id);
+    const connectorChains = this.chains.map(({ chainId }) => chainId);
     const namespaceChains = this.#getNamespaceChainsIds();
 
     if (

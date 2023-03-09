@@ -99,9 +99,11 @@ export class RainbowWallet
     console.log("RainbowWallet.Constructor");
     console.log("Rainbow", this.getMetadata());
 
+    console.log("constructor.RegisterOpenWallet");
     this.on("open_wallet", this._onWCOpenWallet);
 
     this.on("disconnect", () => {
+      console.log("constructor.disconnect");
       this.removeAllListeners();
     });
   }
@@ -111,10 +113,15 @@ export class RainbowWallet
   }
 
   _onWCOpenWallet(uri?: string) {
+    console.log("onOpenWallet");
     const meta = this.getMetadata();
 
     if (uri) {
       const fullUrl = formatDisplayUri(uri, meta);
+
+      Linking.openURL(fullUrl);
+    } else {
+      const fullUrl = formatDisplayUri("", meta);
 
       Linking.openURL(fullUrl);
     }
@@ -161,6 +168,10 @@ export class TrustWallet
 
     if (uri) {
       const fullUrl = formatDisplayUri(uri, meta);
+
+      Linking.openURL(fullUrl);
+    } else {
+      const fullUrl = formatDisplayUri("", meta);
 
       Linking.openURL(fullUrl);
     }

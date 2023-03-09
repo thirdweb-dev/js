@@ -1,6 +1,5 @@
 import { AsyncStorage } from "../../../core/AsyncStorage";
 import {
-  Chain,
   ConnectorNotFoundError,
   Ethereum,
   InjectedConnectorOptions,
@@ -9,6 +8,7 @@ import {
   UserRejectedRequestError,
 } from "../../../lib/wagmi-core";
 import { InjectedConnector } from "../injected";
+import { Chain } from "@thirdweb-dev/chains";
 import type { Address } from "abitype";
 import { utils } from "ethers";
 

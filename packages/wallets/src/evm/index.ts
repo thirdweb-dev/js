@@ -33,7 +33,7 @@ export * from "./wallets/private-key";
 export * from "./wallets/wallet-connect";
 export type { WalletConnectOptions } from "./wallets/wallet-connect";
 
-export type { Chain } from "../lib/wagmi-core";
+export type { Chain } from "@thirdweb-dev/chains";
 
 export * from "./wallets/wallet-connect-v1";
 export type { WalletConnectV1Options } from "./wallets/wallet-connect-v1";

@@ -81,7 +81,7 @@ export class CoinbaseMobileWalletConnector extends Connector<
       if (chainId && id !== chainId) {
         try {
           const chain = await this.switchChain(chainId);
-          id = chain.id;
+          id = chain.chainId;
           unsupported = this.isChainUnsupported(id);
         } catch (e) {
           console.error(
@@ -158,11 +158,10 @@ export class CoinbaseMobileWalletConnector extends Connector<
       }
 
       const chain =
-        this.chains.find((chain_) => chain_.id === this.options.chainId) ||
+        this.chains.find((chain_) => chain_.chainId === this.options.chainId) ||
         this.chains[0];
       const chainId = this.options.chainId;
-      const jsonRpcUrl =
-        this.options.jsonRpcUrl || chain?.rpcUrls.default.http[0];
+      const jsonRpcUrl = this.options.jsonRpcUrl || chain?.rpc[0];
 
       this.provider = new CoinbaseWalletMobileSDK({ jsonRpcUrl, chainId });
 
@@ -201,16 +200,19 @@ export class CoinbaseMobileWalletConnector extends Connector<
         params: [{ chainId: id }],
       });
       return (
-        this.chains.find((x) => x.id === chainId) ?? {
-          id: chainId,
+        this.chains.find((x) => x.chainId === chainId) ?? {
+          chainId: chainId,
           name: `Chain ${id}`,
-          network: `${id}`,
+          slug: `${id}`,
           nativeCurrency: { name: "Ether", decimals: 18, symbol: "ETH" },
-          rpcUrls: { default: { http: [""] }, public: { http: [""] } },
+          rpc: [""],
+          shortName: "eth",
+          testnet: false,
+          chain: "ethereum",
         }
       );
     } catch (error) {
-      const chain = this.chains.find((x) => x.id === chainId);
+      const chain = this.chains.find((x) => x.chainId === chainId);
       if (!chain) {
         throw new ChainNotConfiguredError({ chainId, connectorId: this.id });
       }
@@ -225,10 +227,7 @@ export class CoinbaseMobileWalletConnector extends Connector<
                 chainId: id,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpcUrls: [
-                  chain.rpcUrls.public?.http[0] ??
-                    chain.rpcUrls.default.http[0],
-                ],
+                rpcUrls: [chain.rpc[0] ?? ""],
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],

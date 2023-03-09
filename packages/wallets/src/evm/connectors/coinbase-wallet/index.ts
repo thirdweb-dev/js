@@ -5,7 +5,6 @@ import {
   AddChainError,
   SwitchChainError,
   normalizeChainId,
-  Chain,
   ProviderRpcError,
 } from "../../../lib/wagmi-core";
 import type {
@@ -13,6 +12,7 @@ import type {
   CoinbaseWalletSDK,
 } from "@coinbase/wallet-sdk";
 import type { CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/CoinbaseWalletSDK";
+import { Chain } from "@thirdweb-dev/chains";
 import type { Address } from "abitype";
 import { providers } from "ethers";
 import { getAddress, hexValue } from "ethers/lib/utils.js";
@@ -68,7 +68,7 @@ export class CoinbaseWalletConnector extends Connector<
       if (chainId && id !== chainId) {
         try {
           const chain = await this.switchChain(chainId);
-          id = chain.id;
+          id = chain.chainId;
           unsupported = this.isChainUnsupported(id);
         } catch (e) {
           console.error(
@@ -164,12 +164,11 @@ export class CoinbaseWalletConnector extends Connector<
       const chain =
         this.chains.find((chain_) =>
           this.options.chainId
-            ? chain_.id === this.options.chainId
-            : chain_.id === walletExtensionChainId,
+            ? chain_.chainId === this.options.chainId
+            : chain_.chainId === walletExtensionChainId,
         ) || this.chains[0];
-      const chainId = this.options.chainId || chain?.id;
-      const jsonRpcUrl =
-        this.options.jsonRpcUrl || chain?.rpcUrls.default.http[0];
+      const chainId = this.options.chainId || chain?.chainId;
+      const jsonRpcUrl = this.options.jsonRpcUrl || chain?.rpc[0];
 
       this.#provider = this.#client.makeWeb3Provider(jsonRpcUrl, chainId);
     }
@@ -206,16 +205,19 @@ export class CoinbaseWalletConnector extends Connector<
         params: [{ chainId: id }],
       });
       return (
-        this.chains.find((x) => x.id === chainId) ?? {
-          id: chainId,
+        this.chains.find((x) => x.chainId === chainId) ?? {
+          chainId: chainId,
           name: `Chain ${id}`,
-          network: `${id}`,
+          slug: `${id}`,
           nativeCurrency: { name: "Ether", decimals: 18, symbol: "ETH" },
-          rpcUrls: { default: { http: [""] }, public: { http: [""] } },
+          rpc: [""],
+          testnet: false,
+          chain: "ethereum",
+          shortName: "eth",
         }
       );
     } catch (error) {
-      const chain = this.chains.find((x) => x.id === chainId);
+      const chain = this.chains.find((x) => x.chainId === chainId);
       if (!chain) {
         throw new ChainNotConfiguredError({ chainId, connectorId: this.id });
       }
@@ -230,10 +232,7 @@ export class CoinbaseWalletConnector extends Connector<
                 chainId: id,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpcUrls: [
-                  chain.rpcUrls.public?.http[0] ??
-                    chain.rpcUrls.default.http[0],
-                ],
+                rpcUrls: chain.rpc[0],
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],

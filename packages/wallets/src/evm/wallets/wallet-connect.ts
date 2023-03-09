@@ -81,6 +81,7 @@ export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
   };
 
   #onSessionRequestSent = () => {
+    console.log("wcWallet", "session request sent");
     // open wallet after request is sent
     this.emit("open_wallet");
   };
@@ -111,6 +112,7 @@ export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
     );
     this.#walletConnectConnector.removeListener("change", this.#onChange);
     this.#walletConnectConnector.removeListener("message", this.#onMessage);
+    console.log("wcConnector", this.#provider?.signer.client);
     this.#provider?.signer.client.removeListener(
       "session_request_sent",
       this.#onSessionRequestSent,

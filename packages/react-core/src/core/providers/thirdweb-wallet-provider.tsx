@@ -1,6 +1,6 @@
 import { DAppMetaData } from "../types/dAppMeta";
 import { SupportedWallet } from "../types/wallet";
-import { timeoutPromise, transformChainToMinimalWagmiChain } from "../utils";
+import { timeoutPromise } from "../utils";
 import { ThirdwebThemeContext } from "./theme-context";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { AsyncStorage, CreateAsyncStorage } from "@thirdweb-dev/wallets";
@@ -79,9 +79,7 @@ export function ThirdwebWalletProvider(
 
   const createWalletInstance = useCallback(
     (Wallet: SupportedWallet) => {
-      const walletChains =
-        props.chains.map(transformChainToMinimalWagmiChain) ||
-        defaultChains.map(transformChainToMinimalWagmiChain);
+      const walletChains = props.chains || defaultChains;
 
       let walletOptions = {
         chains: walletChains,
@@ -91,7 +89,7 @@ export function ThirdwebWalletProvider(
 
       return new Wallet({
         ...walletOptions,
-        chain: transformChainToMinimalWagmiChain(props.activeChain),
+        chain: props.activeChain,
         coordinatorStorage,
         theme: theme || "dark",
       });

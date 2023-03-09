@@ -31,8 +31,7 @@ export const checkContractWalletSignature = async (
   address: string,
   chainId: number,
 ): Promise<boolean> => {
-  const rpcUrl =
-    supportedChains[chainId as SUPPORTED_CHAIN_ID]?.rpcUrls.default.http[0];
+  const rpcUrl = supportedChains[chainId as SUPPORTED_CHAIN_ID]?.rpc[0];
   if (!rpcUrl) {
     return false;
   }

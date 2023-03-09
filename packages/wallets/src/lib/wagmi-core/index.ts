@@ -26,13 +26,9 @@ export { getProvider } from "./getProvider";
 // TODO remove unused exports from ./errors
 
 export type {
-  Chain,
   Ethereum,
   InjectedConnectorOptions,
   ConnectorData,
   Address,
 } from "@wagmi/core";
 export { Connector } from "../wagmi-connectors";
-
-export { mainnet } from "../wagmi-chains/mainnet";
-export { goerli } from "../wagmi-chains/goerli";
