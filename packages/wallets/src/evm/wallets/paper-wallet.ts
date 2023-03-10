@@ -38,6 +38,7 @@ export class PaperWallet extends AbstractBrowserWallet<
     return this.connector;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async updateChains(chains: Chain[]) {
     // no op
   }

@@ -135,6 +135,7 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
 
   async setupListeners() {}
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateChains(chains: Chain[]): void {
     // no op
   }
