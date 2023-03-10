@@ -456,7 +456,6 @@ const ChainPage: ThirdwebNextPage = ({
                       key={contractId}
                       colSpan={{ base: 6, md: 4 }}
                       onClick={!isConfigured ? addNetwork : undefined}
-                      h="full"
                       display="grid"
                     >
                       <ContractCard
