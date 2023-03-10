@@ -17,9 +17,6 @@ export { useThirdwebWallet } from "../core/providers/thirdweb-wallet-provider";
 // re-exports
 export { ChainId } from "@thirdweb-dev/sdk";
 
-// types
-export * from "./types";
-
 // Utilities and Others
 export { shouldNeverPersistQuery } from "../core/query-utils/query-key";
 export type { RequiredParam } from "../core/query-utils/required-param";
