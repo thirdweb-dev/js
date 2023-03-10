@@ -37,7 +37,6 @@
     "tiny-invariant": "^1.2.0",
     "react-native-mmkv": "2.5.1"
   },
-  "sideEffects:": false,
   "resolutions": {
     "react-native-mmkv": "2.5.1"
   },
