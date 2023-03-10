@@ -262,10 +262,6 @@ export class MarketplaceAuction {
             startTime: BigNumber.from(listingStartTime),
           } as IMarketplace.ListingParametersStruct,
         ],
-        overrides: {
-          // Higher gas limit for create listing
-          gasLimit: 500000,
-        },
         parse: (receipt) => {
           const event = this.contractWrapper.parseLogs<ListingAddedEvent>(
             "ListingAdded",
