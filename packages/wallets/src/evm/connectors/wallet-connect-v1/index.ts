@@ -7,9 +7,9 @@ import {
   Connector,
   ProviderRpcError,
 } from "../../../lib/wagmi-core";
+import type WalletConnectProvider from "./walletconnect-legacy-provider/index";
 import { Chain } from "@thirdweb-dev/chains";
 import WalletConnect from "@walletconnect/legacy-client";
-import type WalletConnectProvider from "@walletconnect/legacy-provider";
 import { IWalletConnectSession } from "@walletconnect/legacy-types";
 import { utils, providers } from "ethers";
 
@@ -158,7 +158,7 @@ export class WalletConnectV1Connector extends Connector<
         : {};
 
       const WalletConnectProvider = (
-        await import("@walletconnect/legacy-provider")
+        await import("./walletconnect-legacy-provider/index")
       ).default;
 
       const sessionStr = await this.#storage.getItem(LAST_SESSION);

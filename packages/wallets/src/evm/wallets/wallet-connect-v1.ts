@@ -1,8 +1,8 @@
 import type { ConnectorData } from "../../lib/wagmi-core";
 import type { WalletConnectV1Connector } from "../connectors/wallet-connect-v1";
+import type WalletConnectProvider from "../connectors/wallet-connect-v1/walletconnect-legacy-provider";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
-import type WalletConnectProvider from "@walletconnect/legacy-provider";
 
 export type WalletConnectV1Options = {
   qrcode?: boolean;
