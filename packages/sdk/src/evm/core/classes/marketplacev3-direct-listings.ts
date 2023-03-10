@@ -389,10 +389,6 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
             reserved: parsedListing.isReservedListing,
           } as IDirectListings.ListingParametersStruct,
         ],
-        overrides: {
-          // Higher gas limit for create listing
-          gasLimit: 500000,
-        },
         parse: (receipt) => {
           const event = this.contractWrapper.parseLogs<NewListingEvent>(
             "NewListing",
@@ -484,10 +480,6 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
             reserved: parsedListing.isReservedListing,
           } as IDirectListings.ListingParametersStruct,
         ],
-        overrides: {
-          // Higher gas limit for create listing
-          gasLimit: 500000,
-        },
         parse: (receipt) => {
           const event = this.contractWrapper.parseLogs<UpdatedListingEvent>(
             "UpdatedListing",

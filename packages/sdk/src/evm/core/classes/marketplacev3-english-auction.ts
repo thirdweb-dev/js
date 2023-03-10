@@ -384,10 +384,6 @@ export class MarketplaceV3EnglishAuctions<
             endTimestamp: parsedAuction.endTimestamp,
           } as IEnglishAuctions.AuctionParametersStruct,
         ],
-        overrides: {
-          // Higher gas limit for create auction
-          gasLimit: 500000,
-        },
         parse: (receipt) => {
           const event = this.contractWrapper.parseLogs<NewAuctionEvent>(
             "NewAuction",
