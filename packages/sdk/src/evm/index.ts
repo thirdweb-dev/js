@@ -49,3 +49,4 @@ export type { SmartContract } from "./contracts/smart-contract";
 // Explicitly export all functions and types that we want from /functions
 export * from "./functions/getContract";
 export * from "./functions/getContractFromAbi";
+export * from "./functions/getBalance";
