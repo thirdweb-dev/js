@@ -4,11 +4,11 @@ import invariant from "tiny-invariant";
 /**
  * @returns the current active wallet instance
  */
-export function useActiveWallet() {
+export function useWallet() {
   const context = useThirdwebWallet();
   invariant(
     context,
-    "useActiveWallet() hook must be used within a <ThirdwebProvider/>",
+    "useWallet() hook must be used within a <ThirdwebProvider/>",
   );
   return context.activeWallet;
 }
@@ -96,30 +96,4 @@ export function useSwitchChain() {
     "useSwitchChain() must be used within a <ThirdwebProvider/>",
   );
   return context.switchChain;
-}
-
-/**
- *
- * @returns a method to get the chainId of currently connected network/chain
- */
-export function useActiveChainId() {
-  const context = useThirdwebWallet();
-  invariant(
-    context,
-    "useActiveChainId() must be used within a <ThirdwebProvider/>",
-  );
-  return context.activeChainId;
-}
-
-/**
- *
- * @returns the signer of the connected wallet
- */
-export function useWalletSigner() {
-  const context = useThirdwebWallet();
-  invariant(
-    context,
-    "useWalletSigner() must be used within a <ThirdwebProvider/>",
-  );
-  return context.signer;
 }

@@ -16,7 +16,7 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import * as Tabs from "@radix-ui/react-tabs";
 import { Chain } from "@thirdweb-dev/chains";
 import {
-  useActiveChainId,
+  useChainId,
   useSupportedChains,
   useSwitchChain,
 } from "@thirdweb-dev/react-core";
@@ -133,7 +133,7 @@ const NetworkList: React.FC<{
   onNetworkSelect: () => void;
 }> = (props) => {
   const switchChain = useSwitchChain();
-  const activeChainId = useActiveChainId();
+  const activeChainId = useChainId();
   return (
     <NetworkListUl>
       {props.chains.map((chain) => (

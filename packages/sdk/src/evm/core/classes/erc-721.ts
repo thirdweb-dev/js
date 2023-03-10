@@ -7,6 +7,7 @@ import {
   hasFunction,
   NotFoundError,
 } from "../../common";
+import { resolveAddress } from "../../common/ens";
 import { FALLBACK_METADATA, fetchTokenMetadata } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import {
@@ -22,6 +23,7 @@ import {
   FEATURE_NFT_TIERED_DROP,
   FEATURE_NFT_SIGNATURE_MINTABLE_V2,
 } from "../../constants/erc721-features";
+import { Address, AddressOrEns } from "../../schema";
 import { ClaimOptions, UploadProgressEvent } from "../../types";
 import { BaseDropERC721, BaseERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
@@ -106,7 +108,7 @@ export class Erc721<
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
   }
 
@@ -160,8 +162,10 @@ export class Erc721<
    * ```
    * @twfeature ERC721
    */
-  public async balanceOf(address: string): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.balanceOf(address);
+  public async balanceOf(address: AddressOrEns): Promise<BigNumber> {
+    return await this.contractWrapper.readContract.balanceOf(
+      await resolveAddress(address),
+    );
   }
 
   /**
@@ -176,10 +180,13 @@ export class Erc721<
    * @param address - the wallet address
    * @param operator - the operator address
    */
-  public async isApproved(address: string, operator: string): Promise<boolean> {
+  public async isApproved(
+    address: AddressOrEns,
+    operator: AddressOrEns,
+  ): Promise<boolean> {
     return await this.contractWrapper.readContract.isApprovedForAll(
-      address,
-      operator,
+      await resolveAddress(address),
+      await resolveAddress(operator),
     );
   }
 
@@ -197,12 +204,12 @@ export class Erc721<
    * @twfeature ERC721
    */
   transfer = buildTransactionFunction(
-    async (to: string, tokenId: BigNumberish) => {
+    async (to: AddressOrEns, tokenId: BigNumberish) => {
       const from = await this.contractWrapper.getSignerAddress();
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "transferFrom(address,address,uint256)",
-        args: [from, to, tokenId],
+        args: [from, await resolveAddress(to), tokenId],
       });
     },
   );
@@ -220,11 +227,11 @@ export class Erc721<
    * @twfeature ERC721
    */
   setApprovalForAll = buildTransactionFunction(
-    async (operator: string, approved: boolean) => {
+    async (operator: AddressOrEns, approved: boolean) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "setApprovalForAll",
-        args: [operator, approved],
+        args: [await resolveAddress(operator), approved],
       });
     },
   );
@@ -244,11 +251,11 @@ export class Erc721<
    * @internal
    */
   setApprovalForToken = buildTransactionFunction(
-    async (operator: string, tokenId: BigNumberish) => {
+    async (operator: AddressOrEns, tokenId: BigNumberish) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "approve",
-        args: [operator, tokenId],
+        args: [await resolveAddress(operator), tokenId],
       });
     },
   );
@@ -334,7 +341,11 @@ export class Erc721<
    * @returns The NFT metadata for all NFTs in the contract.
    * @twfeature ERC721Supply | ERC721Enumerable
    */
-  public async getOwned(walletAddress?: string) {
+  public async getOwned(walletAddress?: AddressOrEns) {
+    if (walletAddress) {
+      walletAddress = await resolveAddress(walletAddress);
+    }
+
     if (this.query?.owned) {
       return this.query.owned.all(walletAddress);
     } else {
@@ -353,7 +364,11 @@ export class Erc721<
    * Get all token ids of NFTs owned by a specific wallet.
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
    */
-  public async getOwnedTokenIds(walletAddress?: string) {
+  public async getOwnedTokenIds(walletAddress?: AddressOrEns) {
+    if (walletAddress) {
+      walletAddress = await resolveAddress(walletAddress);
+    }
+
     if (this.query?.owned) {
       return this.query.owned.tokenIds(walletAddress);
     } else {
@@ -421,7 +436,7 @@ export class Erc721<
    * @twfeature ERC721Mintable
    */
   mintTo = buildTransactionFunction(
-    async (receiver: string, metadata: NFTMetadataOrUri) => {
+    async (receiver: AddressOrEns, metadata: NFTMetadataOrUri) => {
       return assertEnabled(this.mintable, FEATURE_NFT_MINTABLE).to.prepare(
         receiver,
         metadata,
@@ -439,7 +454,7 @@ export class Erc721<
    * @twfeature ERC721Mintable
    */
   public async getMintTransaction(
-    receiver: string,
+    receiver: AddressOrEns,
     metadata: NFTMetadataOrUri,
   ) {
     return this.mintTo.prepare(receiver, metadata);
@@ -510,7 +525,7 @@ export class Erc721<
    * @twfeature ERC721BatchMintable
    */
   mintBatchTo = buildTransactionFunction(
-    async (receiver: string, metadatas: NFTMetadataOrUri[]) => {
+    async (receiver: AddressOrEns, metadatas: NFTMetadataOrUri[]) => {
       return assertEnabled(
         this.mintable?.batch,
         FEATURE_NFT_BATCH_MINTABLE,
@@ -635,7 +650,7 @@ export class Erc721<
    */
   claimTo = buildTransactionFunction(
     async (
-      destinationAddress: string,
+      destinationAddress: AddressOrEns,
       quantity: BigNumberish,
       options?: ClaimOptions,
     ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
@@ -666,7 +681,7 @@ export class Erc721<
    * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1
    */
   public async getClaimTransaction(
-    destinationAddress: string,
+    destinationAddress: AddressOrEns,
     quantity: BigNumberish,
     options?: ClaimOptions,
   ): Promise<Transaction> {

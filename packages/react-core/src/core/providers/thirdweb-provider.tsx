@@ -3,12 +3,14 @@ import {
   ThirdwebSDKProvider,
   ThirdwebSDKProviderProps,
 } from "../../evm/providers/thirdweb-sdk-provider";
-import { useWalletSigner } from "../hooks/wallet-hooks";
 import { DAppMetaData } from "../types/dAppMeta";
 import { SupportedWallet } from "../types/wallet";
 import { showDeprecationWarning } from "../utils";
 import { ThirdwebThemeContext } from "./theme-context";
-import { ThirdwebWalletProvider } from "./thirdweb-wallet-provider";
+import {
+  ThirdwebWalletProvider,
+  useThirdwebWallet,
+} from "./thirdweb-wallet-provider";
 import { QueryClient } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import type { SDKOptions } from "@thirdweb-dev/sdk";
@@ -19,7 +21,7 @@ import React, { useMemo } from "react";
 /**
  * The possible props for the ThirdwebProvider.
  */
-export interface ThirdwebProviderProps<
+export interface ThirdwebProviderCoreProps<
   TChains extends Chain[] = typeof defaultChains,
 > {
   /**
@@ -110,10 +112,10 @@ const defaultdAppMeta: DAppMetaData = {
   url: "https://thirdweb.com",
 };
 
-export const ThirdwebProvider = <
+export const ThirdwebProviderCore = <
   TChains extends Chain[] = typeof defaultChains,
 >(
-  props: React.PropsWithChildren<ThirdwebProviderProps<TChains>>,
+  props: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>,
 ) => {
   // deprecations
   if (props.chainRpc) {
@@ -178,7 +180,7 @@ const ThirdwebSDKProviderWrapper = <TChains extends Chain[]>({
 }: React.PropsWithChildren<
   Omit<ThirdwebSDKProviderProps<TChains>, "signer">
 >) => {
-  const signer = useWalletSigner();
+  const signer = useThirdwebWallet()?.signer;
 
   return (
     <ThirdwebSDKProvider signer={signer} {...props}>

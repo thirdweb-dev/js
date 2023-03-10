@@ -1,4 +1,5 @@
 import { Connector } from "../../lib/wagmi-core";
+import { Chain } from "@thirdweb-dev/chains";
 import type { Signer, providers } from "ethers";
 import EventEmitter from "eventemitter3";
 
@@ -13,6 +14,7 @@ export abstract class TWConnector<
   abstract switchChain(chainId: number): Promise<void>;
   abstract isConnected(): Promise<boolean>;
   abstract setupListeners(): Promise<void>;
+  abstract updateChains(chains: Chain[]): void;
 }
 
 export type ConnectParams<TOpts extends Record<string, any> = {}> = {
@@ -76,5 +78,9 @@ export class WagmiAdapter<
     });
 
     await this.wagmiConnector.setupListeners();
+  }
+
+  updateChains(chains: Chain[]) {
+    this.wagmiConnector.updateChains(chains);
   }
 }

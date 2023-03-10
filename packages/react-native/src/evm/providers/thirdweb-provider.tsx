@@ -8,8 +8,8 @@ import {
 import { CoinbaseWallet } from "../wallets/wallets/coinbase-wallet";
 import {
   SupportedWallet as SupportedWalletCore,
-  ThirdwebProvider as ThirdwebProviderCore,
-  ThirdwebProviderProps as ThirdwebProviderCoreProps,
+  ThirdwebProviderCore,
+  ThirdwebProviderCoreProps,
 } from "@thirdweb-dev/react-core";
 import React, { PropsWithChildren, useMemo } from "react";
 

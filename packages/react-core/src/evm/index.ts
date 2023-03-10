@@ -1,10 +1,14 @@
+export { ThirdwebThemeContext } from "../core/providers/theme-context";
+export { ThirdwebProviderCore } from "../core/providers/thirdweb-provider";
+export type { ThirdwebProviderCoreProps } from "../core/providers/thirdweb-provider";
+
 // constants
 export { __DEV__ } from "../core/constants/runtime";
+export { TW_WC_PROJECT_ID } from "../core/constants/wc";
 
 // wallet hooks
 export {
-  useActiveChainId,
-  useActiveWallet,
+  useWallet,
   useConnect,
   useConnectionStatus,
   useCreateWalletInstance,
@@ -14,16 +18,25 @@ export {
 } from "../core/hooks/wallet-hooks";
 export { useThirdwebWallet } from "../core/providers/thirdweb-wallet-provider";
 
+// connected wallet hooks
+export {
+  useBalance,
+  useConnectedWallet,
+  useAddress,
+  useChainId,
+  useActiveChain,
+} from "./hooks/wallet";
+
 // re-exports
 export { ChainId } from "@thirdweb-dev/sdk";
-
-// types
-export * from "./types";
 
 // Utilities and Others
 export { shouldNeverPersistQuery } from "../core/query-utils/query-key";
 export type { RequiredParam } from "../core/query-utils/required-param";
-export type { SupportedWallet } from "../core/types/wallet";
+export type {
+  SupportedWallet,
+  ExtraCoreWalletOptions,
+} from "../core/types/wallet";
 
 // auth
 export {
@@ -190,15 +203,6 @@ export {
   useMultiwrap,
   useSignatureDrop,
 } from "./hooks/contracts";
-
-// connected wallet hooks
-export {
-  useBalance,
-  useConnectedWallet,
-  useAddress,
-  useChainId,
-  useActiveChain,
-} from "./hooks/wallet";
 
 export { useStorageUpload, useStorage } from "./hooks/storage";
 export { useNetworkMismatch } from "./hooks/useNetworkMismatch";

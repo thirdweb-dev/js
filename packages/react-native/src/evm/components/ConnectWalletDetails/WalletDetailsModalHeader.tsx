@@ -4,7 +4,7 @@ import { IWalletWithMetadata } from "../../types/wallets";
 import { Address } from "../base/Address";
 import Text from "../base/Text";
 import { WalletIcon } from "../base/WalletIcon";
-import { useActiveWallet, useBalance } from "@thirdweb-dev/react-core";
+import { useWallet, useBalance } from "@thirdweb-dev/react-core";
 import React from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 
@@ -21,7 +21,7 @@ export const WalletDetailsModalHeader = ({
 }: WalletDetailsModalHeaderProps) => {
   const theme = useAppTheme();
   const balanceQuery = useBalance();
-  const activeWallet = useActiveWallet();
+  const activeWallet = useWallet();
 
   return (
     <>

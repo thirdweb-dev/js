@@ -4,8 +4,10 @@ import {
   hasERC20Allowance,
   normalizePriceValue,
 } from "../../common/currency";
+import { resolveAddress } from "../../common/ens";
 import { isTokenApprovedForTransfer } from "../../common/marketplace";
 import { uploadOrExtractURI } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
 import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
@@ -17,12 +19,8 @@ import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { StandardErc721 } from "../../core/classes/erc-721-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
-import {
-  NetworkInput,
-  TransactionResult,
-  TransactionResultWithId,
-} from "../../core/types";
-import { Abi, SDKOptions } from "../../schema";
+import { NetworkInput, TransactionResultWithId } from "../../core/types";
+import { Abi, AddressOrEns, SDKOptions } from "../../schema";
 import { MultiwrapContractSchema } from "../../schema/contracts/multiwrap";
 import {
   ERC1155Wrappable,
@@ -238,38 +236,44 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
    * @param wrappedTokenMetadata - metadata to represent the wrapped token bundle
    * @param recipientAddress - Optional. The address to send the wrapped token bundle to
    */
-  public async wrap(
-    contents: TokensToWrap,
-    wrappedTokenMetadata: NFTMetadataOrUri,
-    recipientAddress?: string,
-  ): Promise<TransactionResultWithId<NFT>> {
-    const uri = await uploadOrExtractURI(wrappedTokenMetadata, this.storage);
+  wrap = buildTransactionFunction(
+    async (
+      contents: TokensToWrap,
+      wrappedTokenMetadata: NFTMetadataOrUri,
+      recipientAddress?: AddressOrEns,
+    ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
+      const uri = await uploadOrExtractURI(wrappedTokenMetadata, this.storage);
 
-    const recipient = recipientAddress
-      ? recipientAddress
-      : await this.contractWrapper.getSignerAddress();
+      const recipient = await resolveAddress(
+        recipientAddress
+          ? recipientAddress
+          : await this.contractWrapper.getSignerAddress(),
+      );
 
-    const tokens = await this.toTokenStructList(contents);
-    const receipt = await this.contractWrapper.sendTransaction("wrap", [
-      tokens,
-      uri,
-      recipient,
-    ]);
+      const tokens = await this.toTokenStructList(contents);
 
-    const event = this.contractWrapper.parseLogs<TokensWrappedEvent>(
-      "TokensWrapped",
-      receipt?.logs,
-    );
-    if (event.length === 0) {
-      throw new Error("TokensWrapped event not found");
-    }
-    const tokenId = event[0].args.tokenIdOfWrappedToken;
-    return {
-      id: tokenId,
-      receipt,
-      data: () => this.get(tokenId),
-    };
-  }
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "wrap",
+        args: [tokens, uri, recipient],
+        parse: (receipt) => {
+          const event = this.contractWrapper.parseLogs<TokensWrappedEvent>(
+            "TokensWrapped",
+            receipt?.logs,
+          );
+          if (event.length === 0) {
+            throw new Error("TokensWrapped event not found");
+          }
+          const tokenId = event[0].args.tokenIdOfWrappedToken;
+          return {
+            id: tokenId,
+            receipt,
+            data: () => this.get(tokenId),
+          };
+        },
+      });
+    },
+  );
 
   /**
    * Unwrap a wrapped token bundle, and retrieve its contents
@@ -280,20 +284,21 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
    * @param wrappedTokenId - the id of the wrapped token bundle
    * @param recipientAddress - Optional. The address to send the unwrapped tokens to
    */
-  public async unwrap(
-    wrappedTokenId: BigNumberish,
-    recipientAddress?: string,
-  ): Promise<TransactionResult> {
-    const recipient = recipientAddress
-      ? recipientAddress
-      : await this.contractWrapper.getSignerAddress();
-    return {
-      receipt: await this.contractWrapper.sendTransaction("unwrap", [
-        wrappedTokenId,
-        recipient,
-      ]),
-    };
-  }
+  unwrap = buildTransactionFunction(
+    async (wrappedTokenId: BigNumberish, recipientAddress?: AddressOrEns) => {
+      const recipient = await resolveAddress(
+        recipientAddress
+          ? recipientAddress
+          : await this.contractWrapper.getSignerAddress(),
+      );
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "unwrap",
+        args: [wrappedTokenId, recipient],
+      });
+    },
+  );
 
   /** ******************************
    * PRIVATE FUNCTIONS

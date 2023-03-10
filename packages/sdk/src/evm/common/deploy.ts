@@ -50,7 +50,9 @@ export async function getDeployArguments<
   switch (contractType) {
     case NFTDropInitializer.contractType:
     case NFTCollectionInitializer.contractType:
-      const erc721metadata = NFTDropInitializer.schema.deploy.parse(metadata);
+      const erc721metadata = await NFTDropInitializer.schema.deploy.parseAsync(
+        metadata,
+      );
       return [
         signerAddress,
         erc721metadata.name,
@@ -65,7 +67,7 @@ export async function getDeployArguments<
       ];
     case SignatureDropInitializer.contractType:
       const signatureDropmetadata =
-        SignatureDropInitializer.schema.deploy.parse(metadata);
+        await SignatureDropInitializer.schema.deploy.parseAsync(metadata);
       return [
         signerAddress,
         signatureDropmetadata.name,
@@ -80,7 +82,7 @@ export async function getDeployArguments<
       ];
     case MultiwrapInitializer.contractType:
       const multiwrapMetadata =
-        MultiwrapInitializer.schema.deploy.parse(metadata);
+        await MultiwrapInitializer.schema.deploy.parseAsync(metadata);
       return [
         signerAddress,
         multiwrapMetadata.name,
@@ -93,7 +95,7 @@ export async function getDeployArguments<
     case EditionDropInitializer.contractType:
     case EditionInitializer.contractType:
       const erc1155metadata =
-        EditionDropInitializer.schema.deploy.parse(metadata);
+        await EditionDropInitializer.schema.deploy.parseAsync(metadata);
       return [
         signerAddress,
         erc1155metadata.name,
@@ -108,7 +110,9 @@ export async function getDeployArguments<
       ];
     case TokenDropInitializer.contractType:
     case TokenInitializer.contractType:
-      const erc20metadata = TokenInitializer.schema.deploy.parse(metadata);
+      const erc20metadata = await TokenInitializer.schema.deploy.parseAsync(
+        metadata,
+      );
       return [
         signerAddress,
         erc20metadata.name,
@@ -120,7 +124,9 @@ export async function getDeployArguments<
         erc20metadata.platform_fee_basis_points,
       ];
     case VoteInitializer.contractType:
-      const voteMetadata = VoteInitializer.schema.deploy.parse(metadata);
+      const voteMetadata = await VoteInitializer.schema.deploy.parseAsync(
+        metadata,
+      );
       return [
         voteMetadata.name,
         contractURI,
@@ -132,7 +138,9 @@ export async function getDeployArguments<
         voteMetadata.voting_quorum_fraction,
       ];
     case SplitInitializer.contractType:
-      const splitsMetadata = SplitInitializer.schema.deploy.parse(metadata);
+      const splitsMetadata = await SplitInitializer.schema.deploy.parseAsync(
+        metadata,
+      );
       return [
         signerAddress,
         contractURI,
@@ -143,7 +151,7 @@ export async function getDeployArguments<
     case MarketplaceInitializer.contractType:
     case MarketplaceV3Initializer.contractType:
       const marketplaceMetadata =
-        MarketplaceInitializer.schema.deploy.parse(metadata);
+        await MarketplaceInitializer.schema.deploy.parseAsync(metadata);
       return [
         signerAddress,
         contractURI,
@@ -152,7 +160,9 @@ export async function getDeployArguments<
         marketplaceMetadata.platform_fee_basis_points,
       ];
     case PackInitializer.contractType:
-      const packsMetadata = PackInitializer.schema.deploy.parse(metadata);
+      const packsMetadata = await PackInitializer.schema.deploy.parseAsync(
+        metadata,
+      );
       return [
         signerAddress,
         packsMetadata.name,

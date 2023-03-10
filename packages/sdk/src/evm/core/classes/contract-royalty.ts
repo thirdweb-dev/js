@@ -1,12 +1,15 @@
 import { hasFunction } from "../../common";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_ROYALTY } from "../../constants/thirdweb-features";
 import { CommonRoyaltySchema } from "../../schema/contracts/common";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractMetadata, IGenericSchemaType } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
 import type {
   ContractMetadata as ContractMetadataContract,
+  IMulticall,
   IRoyalty,
 } from "@thirdweb-dev/contracts-js";
 import { BigNumberish } from "ethers";
@@ -59,7 +62,7 @@ export class ContractRoyalty<
     const [royaltyRecipient, royaltyBps] =
       await this.contractWrapper.readContract.getDefaultRoyaltyInfo();
     // parse it on the way out to make sure we default things if they are not set
-    return CommonRoyaltySchema.parse({
+    return CommonRoyaltySchema.parseAsync({
       fee_recipient: royaltyRecipient,
       seller_fee_basis_points: royaltyBps,
     });
@@ -80,7 +83,7 @@ export class ContractRoyalty<
   public async getTokenRoyaltyInfo(tokenId: BigNumberish) {
     const [royaltyRecipient, royaltyBps] =
       await this.contractWrapper.readContract.getRoyaltyInfoForToken(tokenId);
-    return CommonRoyaltySchema.parse({
+    return CommonRoyaltySchema.parseAsync({
       fee_recipient: royaltyRecipient,
       seller_fee_basis_points: royaltyBps,
     });
@@ -99,56 +102,67 @@ export class ContractRoyalty<
    * @public
    * @twfeature Royalty
    */
-  public async setDefaultRoyaltyInfo(
-    royaltyData: z.input<typeof CommonRoyaltySchema>,
-  ): Promise<TransactionResult<z.output<typeof CommonRoyaltySchema>>> {
-    // read the metadata from the contract
-    const oldMetadata = await this.metadata.get();
+  setDefaultRoyaltyInfo = buildTransactionFunction(
+    async (
+      royaltyData: z.input<typeof CommonRoyaltySchema>,
+    ): Promise<
+      Transaction<TransactionResult<z.output<typeof CommonRoyaltySchema>>>
+    > => {
+      // read the metadata from the contract
+      const oldMetadata = await this.metadata.get();
 
-    // update the metadata with the new royalty data
-    // if one of the keys is "undefined" it will be ignored (which is the desired behavior)
-    const mergedMetadata = this.metadata.parseInputMetadata({
-      ...oldMetadata,
-      ...royaltyData,
-    });
+      // update the metadata with the new royalty data
+      // if one of the keys is "undefined" it will be ignored (which is the desired behavior)
+      const mergedMetadata = await this.metadata.parseInputMetadata({
+        ...oldMetadata,
+        ...royaltyData,
+      });
 
-    // why not use this.metadata.set()? - because that would end up sending it's own separate transaction to `setContractURI`
-    // but we want to send both the `setRoyaltyInfo` and `setContractURI` in one transaction!
-    const contractURI = await this.metadata._parseAndUploadMetadata(
-      mergedMetadata,
-    );
-
-    if (
-      hasFunction<ContractMetadataContract>(
-        "setContractURI",
-        this.contractWrapper,
-      )
-    ) {
-      // encode both the functions we want to send
-      const encoded = [
-        this.contractWrapper.readContract.interface.encodeFunctionData(
-          "setDefaultRoyaltyInfo",
-          [
-            mergedMetadata.fee_recipient,
-            mergedMetadata.seller_fee_basis_points,
-          ],
-        ),
-        this.contractWrapper.readContract.interface.encodeFunctionData(
-          "setContractURI",
-          [contractURI],
-        ),
-      ];
-      // actually send the transaction and return the receipt + a way to get the new royalty info
-      return {
-        receipt: await this.contractWrapper.multiCall(encoded),
-        data: () => this.getDefaultRoyaltyInfo(),
-      };
-    } else {
-      throw new Error(
-        "Updating royalties requires implementing ContractMetadata in your contract to support marketplaces like OpenSea.",
+      // why not use this.metadata.set()? - because that would end up sending it's own separate transaction to `setContractURI`
+      // but we want to send both the `setRoyaltyInfo` and `setContractURI` in one transaction!
+      const contractURI = await this.metadata._parseAndUploadMetadata(
+        mergedMetadata,
       );
-    }
-  }
+
+      if (
+        hasFunction<ContractMetadataContract>(
+          "setContractURI",
+          this.contractWrapper,
+        )
+      ) {
+        // encode both the functions we want to send
+        const encoded = [
+          this.contractWrapper.readContract.interface.encodeFunctionData(
+            "setDefaultRoyaltyInfo",
+            [
+              mergedMetadata.fee_recipient,
+              mergedMetadata.seller_fee_basis_points,
+            ],
+          ),
+          this.contractWrapper.readContract.interface.encodeFunctionData(
+            "setContractURI",
+            [contractURI],
+          ),
+        ];
+        // actually send the transaction and return the receipt + a way to get the new royalty info
+
+        return Transaction.fromContractWrapper({
+          contractWrapper: this
+            .contractWrapper as unknown as ContractWrapper<IMulticall>,
+          method: "multicall",
+          args: [encoded],
+          parse: (receipt) => ({
+            receipt,
+            data: () => this.getDefaultRoyaltyInfo(),
+          }),
+        });
+      } else {
+        throw new Error(
+          "Updating royalties requires implementing ContractMetadata in your contract to support marketplaces like OpenSea.",
+        );
+      }
+    },
+  );
 
   /**
    * Set the royalty recipient and fee for a particular token
@@ -165,20 +179,25 @@ export class ContractRoyalty<
    * @public
    * @twfeature Royalty
    */
-  public async setTokenRoyaltyInfo(
-    tokenId: BigNumberish,
-    royaltyData: z.input<typeof CommonRoyaltySchema>,
-  ) {
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "setRoyaltyInfoForToken",
-        [
+  setTokenRoyaltyInfo = buildTransactionFunction(
+    async (
+      tokenId: BigNumberish,
+      royaltyData: z.input<typeof CommonRoyaltySchema>,
+    ) => {
+      const parsedRoyaltyData = CommonRoyaltySchema.parse(royaltyData);
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper as ContractWrapper<IRoyalty>,
+        method: "setRoyaltyInfoForToken",
+        args: [
           tokenId,
-          royaltyData.fee_recipient,
-          royaltyData.seller_fee_basis_points,
+          parsedRoyaltyData.fee_recipient,
+          parsedRoyaltyData.seller_fee_basis_points,
         ],
-      ),
-      data: () => this.getDefaultRoyaltyInfo(),
-    };
-  }
+        parse: (receipt) => ({
+          receipt,
+          data: () => this.getDefaultRoyaltyInfo(),
+        }),
+      });
+    },
+  );
 }

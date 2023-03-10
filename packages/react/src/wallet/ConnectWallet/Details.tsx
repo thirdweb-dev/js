@@ -33,12 +33,12 @@ import { GearIcon } from "@radix-ui/react-icons";
 import { defaultChains } from "@thirdweb-dev/chains";
 import {
   SupportedWallet,
-  useActiveChainId,
-  useActiveWallet,
   useAddress,
   useBalance,
+  useChainId,
   useDisconnect,
   useSupportedChains,
+  useWallet,
 } from "@thirdweb-dev/react-core";
 import { useMemo, useState } from "react";
 
@@ -60,10 +60,10 @@ export const ConnectedWalletDetails: React.FC<{
 }> = (props) => {
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
-  const activeChainId = useActiveChainId();
+  const activeChainId = useChainId();
   const address = useAddress();
   const balanceQuery = useBalance();
-  const activeWallet = useActiveWallet();
+  const activeWallet = useWallet();
 
   const chain = useMemo(() => {
     return chains.find((_chain) => _chain.chainId === activeChainId);
@@ -116,6 +116,7 @@ export const ConnectedWalletDetails: React.FC<{
         ) : (
           <Skeleton height={fontSize.md} />
         )}
+        <Spacer y="xxs" />
         <WalletAddress>{shortenString(address || "")}</WalletAddress>
       </ColFlex>
 
@@ -301,6 +302,7 @@ const DropDownContent = styled(DropdownMenu.Content)<{ theme?: Theme }>`
   will-change: transform, opacity;
   border: 1px solid ${(props) => props.theme.bg.highlighted};
   background-color: ${(props) => props.theme.bg.base};
+  z-index: 1000000;
 `;
 
 const WalletInfoButton = styled.button<{ theme?: Theme }>`
@@ -317,6 +319,7 @@ const WalletInfoButton = styled.button<{ theme?: Theme }>`
   min-width: 200px;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
+  line-height: 1;
 
   &:hover {
     transition: background 250ms ease;
@@ -334,7 +337,6 @@ const WalletAddress = styled.span<{ theme?: Theme }>`
 const ColFlex = styled.div<{ theme?: Theme }>`
   display: flex;
   flex-direction: column;
-  gap: 4px;
 `;
 
 const WalletBalance = styled.span<{ theme?: Theme }>`

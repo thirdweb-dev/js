@@ -1,7 +1,7 @@
 import { AmountSchema } from "../../../core/schema/shared";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants";
 import {
-  AddressSchema,
+  AddressOrEnsSchema,
   BigNumberishSchema,
   EndDateSchema,
   RawDateSchema,
@@ -15,7 +15,7 @@ export const DirectListingInputParamsSchema = z.object({
   /**
    * The address of the asset being listed.
    */
-  assetContractAddress: AddressSchema,
+  assetContractAddress: AddressOrEnsSchema,
 
   /**
    * The ID of the token to list.
@@ -32,7 +32,7 @@ export const DirectListingInputParamsSchema = z.object({
   /**
    * The address of the currency to accept for the listing.
    */
-  currencyContractAddress: AddressSchema.default(NATIVE_TOKEN_ADDRESS),
+  currencyContractAddress: AddressOrEnsSchema.default(NATIVE_TOKEN_ADDRESS),
 
   /**
    * The price to pay per unit of NFTs listed.

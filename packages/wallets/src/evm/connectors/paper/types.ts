@@ -1,16 +1,15 @@
 import { Chain } from "@thirdweb-dev/chains";
 
-export type EmailWalletOptions = {
+export type PaperWalletOptions = {
   clientId: string;
   chain: Pick<Chain, "chainId" | "rpc">;
 };
 
-export interface EmailWalletConnectorOptions {
+export interface PaperWalletConnectorOptions {
   clientId: string;
   chain: Pick<Chain, "chainId" | "rpc">;
 }
 
-export interface EmailWalletConnectionArgs {
+export interface PaperWalletConnectionArgs {
   email: string;
-  handleOTP: () => Promise<string>;
 }

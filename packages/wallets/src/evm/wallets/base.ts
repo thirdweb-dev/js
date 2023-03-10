@@ -178,4 +178,10 @@ export abstract class AbstractBrowserWallet<
     }
     return await connector.switchChain(chainId);
   }
+
+  async updateChains(chains: Chain[]) {
+    this.chains = chains;
+    const connector = await this.getConnector();
+    connector.updateChains(chains);
+  }
 }
