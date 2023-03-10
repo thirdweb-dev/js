@@ -7,25 +7,43 @@
   "main": "dist/thirdweb-dev-react.cjs.js",
   "types": "dist/thirdweb-dev-react.cjs.d.ts",
   "module": "dist/thirdweb-dev-react.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-react.esm.js": "./dist/thirdweb-dev-react.browser.esm.js"
+  },
   "exports": {
     ".": {
-      "module": "./dist/thirdweb-dev-react.esm.js",
+      "module": {
+        "browser": "./dist/thirdweb-dev-react.browser.esm.js",
+        "default": "./dist/thirdweb-dev-react.esm.js"
+      },
       "default": "./dist/thirdweb-dev-react.cjs.js"
     },
     "./evm": {
-      "module": "./evm/dist/thirdweb-dev-react-evm.esm.js",
+      "module": {
+        "browser": "./evm/dist/thirdweb-dev-react-evm.browser.esm.js",
+        "default": "./evm/dist/thirdweb-dev-react-evm.esm.js"
+      },
       "default": "./evm/dist/thirdweb-dev-react-evm.cjs.js"
     },
     "./solana": {
-      "module": "./solana/dist/thirdweb-dev-react-solana.esm.js",
+      "module": {
+        "browser": "./solana/dist/thirdweb-dev-react-solana.browser.esm.js",
+        "default": "./solana/dist/thirdweb-dev-react-solana.esm.js"
+      },
       "default": "./solana/dist/thirdweb-dev-react-solana.cjs.js"
     },
     "./evm/connectors/magic": {
-      "module": "./evm/connectors/magic/dist/thirdweb-dev-react-evm-connectors-magic.esm.js",
+      "module": {
+        "browser": "./evm/connectors/magic/dist/thirdweb-dev-react-evm-connectors-magic.browser.esm.js",
+        "default": "./evm/connectors/magic/dist/thirdweb-dev-react-evm-connectors-magic.esm.js"
+      },
       "default": "./evm/connectors/magic/dist/thirdweb-dev-react-evm-connectors-magic.cjs.js"
     },
     "./evm/connectors/gnosis-safe": {
-      "module": "./evm/connectors/gnosis-safe/dist/thirdweb-dev-react-evm-connectors-gnosis-safe.esm.js",
+      "module": {
+        "browser": "./evm/connectors/gnosis-safe/dist/thirdweb-dev-react-evm-connectors-gnosis-safe.browser.esm.js",
+        "default": "./evm/connectors/gnosis-safe/dist/thirdweb-dev-react-evm-connectors-gnosis-safe.esm.js"
+      },
       "default": "./evm/connectors/gnosis-safe/dist/thirdweb-dev-react-evm-connectors-gnosis-safe.cjs.js"
     },
     "./package.json": "./package.json"
@@ -42,7 +60,11 @@
       "evm/index.ts",
       "evm/connectors/**.ts"
     ],
-    "exports": true
+    "exports": {
+      "envConditions": [
+        "browser"
+      ]
+    }
   },
   "private": false,
   "scripts": {
@@ -97,9 +119,6 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "@thirdweb-dev/react-core": "*",
-    "@thirdweb-dev/wallets": "*",
-    "@thirdweb-dev/chains": "*",
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
     "@google/model-viewer": "^2.1.1",
@@ -108,6 +127,9 @@
     "@safe-global/safe-ethers-adapters": "0.1.0-alpha.13",
     "@safe-global/safe-ethers-lib": "^1.7.0",
     "@tanstack/react-query": "^4.0.10",
+    "@thirdweb-dev/chains": "*",
+    "@thirdweb-dev/react-core": "*",
+    "@thirdweb-dev/wallets": "*",
     "@zag-js/menu": "0.3.4",
     "@zag-js/react": "0.3.4",
     "buffer": "^6.0.3",
