@@ -4,17 +4,19 @@ import FoundryDetector from "../core/detection/foundry";
 import HardhatDetector from "../core/detection/hardhat";
 import NextDetector from "../core/detection/next";
 import NPMDetector from "../core/detection/npm";
+import SolcDetector from "../core/detection/solc";
 import TruffleDetector from "../core/detection/truffle";
 import ViteDetector from "../core/detection/vite";
 import YarnDetector from "../core/detection/yarn";
 import { runCommand } from "../create/helpers/run-command";
 
-export async function install(distPath = "dist", projectPath = ".") {
+export async function install(projectPath = ".", options: any) {
   const supportedContractFrameworks = [
     new BrownieDetector(),
     new FoundryDetector(),
     new HardhatDetector(),
     new TruffleDetector(),
+    new SolcDetector(),
   ].filter((detector) => detector.matches(projectPath));
 
   const supportedAppFrameworks = [
@@ -26,46 +28,43 @@ export async function install(distPath = "dist", projectPath = ".") {
   const hasYarn = new YarnDetector().matches(".");
   const hasNPM = new NPMDetector().matches(".");
 
-  const possibleProjects = [
-    ...supportedContractFrameworks,
-    ...supportedAppFrameworks,
-  ];
+  const version = options.dev
+    ? "@dev"
+    : options.nightly
+    ? "@nightly"
+    : "@latest";
 
-  if (possibleProjects.length === 0) {
+  if (
+    supportedAppFrameworks.length === 0 &&
+    supportedContractFrameworks.length === 0
+  ) {
     throw new Error("No supported project detected");
   }
 
-  const dependencies = new Set<string>();
+  const dependenciesToAdd = new Set<string>();
 
   supportedContractFrameworks.forEach((detector) => {
     console.log(`Detected ${detector.projectType} project`);
 
-    dependencies.add("@thirdweb-dev/contract");
+    dependenciesToAdd.add(`@thirdweb-dev/contracts${version}`);
   });
 
   supportedAppFrameworks.forEach((detector) => {
     console.log(`Detected ${detector.projectType} project`);
 
-    dependencies.add("@thirdweb-dev/react");
-    dependencies.add("@thirdweb-dev/sdk");
-    dependencies.add("ethers^5");
-
-    // add new webpack.ProvidePlugin({ process: "process/browser", Buffer: ["buffer", "Buffer"] })
-    // if (detector.projectType === "cra") { }
-
-    // add react plugin to vite config.plugins
-    // add { global: "globalThis", process.env: { } } to vite config.define
-    // if (detector.projectType === "vite") { }
+    dependenciesToAdd.add(`@thirdweb-dev/react${version}`);
+    dependenciesToAdd.add(`@thirdweb-dev/sdk${version}`);
+    dependenciesToAdd.add("ethers@5");
   });
 
   try {
     if (hasYarn) {
-      await runCommand("yarn add", [...dependencies]);
+      await runCommand("yarn add", [...dependenciesToAdd]);
     } else if (hasNPM) {
-      await runCommand("npm install", [...dependencies]);
+      await runCommand("npm install", [...dependenciesToAdd]);
     }
   } catch (err) {
-    console.error("Can't build project");
-    return Promise.reject("Can't build project");
+    console.error("Can't install within project");
+    return Promise.reject("Can't install within project");
   }
 }

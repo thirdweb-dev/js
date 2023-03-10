@@ -204,8 +204,10 @@ const main = async () => {
     .description(
       "Install thirdweb into your project. If no path is specified, the current directory will be used.",
     )
-    .action(async (type, path) => {
-      await install(type, path);
+    .option("--nightly", "Install the nightly version of packages.")
+    .option("--dev", "Install the dev version of packages")
+    .action(async (path, options) => {
+      await install(path, options);
     });
 
   program
@@ -288,7 +290,10 @@ const main = async () => {
     )
     .option("--app", "Deploy a web app to decentralized storage")
     .option("--contract", "Deploy a smart contract to blockchains")
-    .option("--dynamic", "Deploy a dynamic smart contract made up of extensions to blockchains")
+    .option(
+      "--dynamic",
+      "Deploy a dynamic smart contract made up of extensions to blockchains",
+    )
     .action(async (options) => {
       const url = await deploy(options);
       if (url) {
