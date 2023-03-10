@@ -1,4 +1,4 @@
-import { WalletMeta } from "../../../types/walletMeta";
+import { WalletMeta } from "../../../types/wallets";
 import BaseButton from "../../base/BaseButton";
 import Text from "../../base/Text";
 import React from "react";

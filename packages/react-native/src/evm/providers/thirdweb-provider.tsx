@@ -1,13 +1,23 @@
 import { createAsyncLocalStorage } from "../../core/AsyncStorage";
 import { DEFAULT_API_KEY } from "../constants/rpc";
-import { CoinbaseWalletMobile } from "../wallets/wallets/coinbase-wallet-mobile";
-import { MetaMaskWallet } from "../wallets/wallets/wallets";
 import {
-  SupportedWallet,
+  MetaMaskWallet,
+  RainbowWallet,
+  TrustWallet,
+} from "../wallets/wallets/all";
+import { CoinbaseWallet } from "../wallets/wallets/coinbase-wallet";
+import {
+  SupportedWallet as SupportedWalletCore,
   ThirdwebProvider as ThirdwebProviderCore,
   ThirdwebProviderProps as ThirdwebProviderCoreProps,
 } from "@thirdweb-dev/react-core";
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useMemo } from "react";
+
+export type ImplementedWallet =
+  | typeof MetaMaskWallet
+  | typeof RainbowWallet
+  | typeof CoinbaseWallet
+  | typeof TrustWallet;
 
 export type ThirdwebProviderProps = PropsWithChildren<
   {
@@ -24,7 +34,7 @@ export type ThirdwebProviderProps = PropsWithChildren<
      * />
      * ```
      */
-    supportedWallets?: SupportedWallet[];
+    supportedWallets?: ImplementedWallet[];
     createWalletStorage?: ThirdwebProviderCoreProps["createWalletStorage"];
   } & Omit<
     ThirdwebProviderCoreProps,
@@ -58,15 +68,19 @@ export function ThirdwebProvider({
   supportedWallets,
   ...props
 }: ThirdwebProviderProps) {
+  const supportedWalletsRN = useMemo(() => {
+    const wallets = supportedWallets?.length
+      ? supportedWallets
+      : [MetaMaskWallet, CoinbaseWallet];
+
+    return wallets as SupportedWalletCore[];
+  }, [supportedWallets]);
+
   return (
     <ThirdwebProviderCore
       {...props}
       thirdwebApiKey={thirdwebApiKey}
-      supportedWallets={
-        supportedWallets?.length
-          ? supportedWallets
-          : [MetaMaskWallet, CoinbaseWalletMobile]
-      }
+      supportedWallets={supportedWalletsRN}
       createWalletStorage={
         createWalletStorage ? createWalletStorage : createAsyncLocalStorage
       }

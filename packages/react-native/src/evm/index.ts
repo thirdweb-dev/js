@@ -1,9 +1,9 @@
-export { CoinbaseWalletMobile } from "./wallets/wallets/coinbase-wallet-mobile";
+export { CoinbaseWallet } from "./wallets/wallets/coinbase-wallet";
 export {
   MetaMaskWallet,
   RainbowWallet,
   TrustWallet,
-} from "./wallets/wallets/wallets";
+} from "./wallets/wallets/all";
 
 export { ConnectWallet } from "./components/ConnectWallet";
 export { Web3Button } from "./components/Web3Button";

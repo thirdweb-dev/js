@@ -159,16 +159,11 @@ export function ThirdwebWalletProvider(
 
       const Wallet = lastConnectedWallet
         ? props.supportedWallets.find((W) => {
-            console.log("lastConnectedWallet", lastConnectedWallet);
-            console.log("W.name", W.name);
-
             return W.name
               .toLowerCase()
               .includes(lastConnectedWallet?.toLowerCase() || "");
           })
         : undefined;
-
-      console.log("found wallet", Wallet);
 
       if (Wallet && Wallet.id !== "deviceWallet") {
         const wallet = createWalletInstance(Wallet);

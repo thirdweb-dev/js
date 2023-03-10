@@ -8,3 +8,7 @@ export type WalletMeta = {
     universal: string;
   };
 };
+
+export interface IWalletWithMetadata {
+  getMetadata(): WalletMeta;
+}

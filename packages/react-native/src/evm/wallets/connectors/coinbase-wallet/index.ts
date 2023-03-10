@@ -18,24 +18,23 @@ import type { Address } from "abitype";
 import { providers } from "ethers";
 import { getAddress, hexValue } from "ethers/lib/utils.js";
 
-export type CoinbaseMobileWalletConnectorOptions =
-  WalletMobileSDKProviderOptions &
-    ConfigurationParams & {
-      /**
-       * Fallback Ethereum JSON RPC URL
-       * @default ""
-       */
-      jsonRpcUrl?: string;
-      /**
-       * Fallback Ethereum Chain ID
-       * @default 1
-       */
-      chainId?: number;
-    };
+export type CoinbaseWalletConnectorOptions = WalletMobileSDKProviderOptions &
+  ConfigurationParams & {
+    /**
+     * Fallback Ethereum JSON RPC URL
+     * @default ""
+     */
+    jsonRpcUrl?: string;
+    /**
+     * Fallback Ethereum Chain ID
+     * @default 1
+     */
+    chainId?: number;
+  };
 
-export class CoinbaseMobileWalletConnector extends Connector<
+export class CoinbaseWalletConnector extends Connector<
   WalletMobileSDKEVMProvider,
-  CoinbaseMobileWalletConnectorOptions,
+  CoinbaseWalletConnectorOptions,
   providers.JsonRpcSigner
 > {
   readonly id = "coinbaseWallet";
@@ -49,7 +48,7 @@ export class CoinbaseMobileWalletConnector extends Connector<
     options,
   }: {
     chains?: Chain[];
-    options: CoinbaseMobileWalletConnectorOptions;
+    options: CoinbaseWalletConnectorOptions;
   }) {
     super({
       chains,

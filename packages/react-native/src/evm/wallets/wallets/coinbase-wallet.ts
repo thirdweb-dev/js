@@ -1,11 +1,10 @@
 import { noopStorage } from "../../../core/AsyncStorage";
 import { walletsMetadata } from "../../constants/walletsMetadata";
-import { WalletMeta } from "../../types/walletMeta";
+import { IWalletWithMetadata, WalletMeta } from "../../types/wallets";
 import type {
-  CoinbaseMobileWalletConnector,
-  CoinbaseMobileWalletConnectorOptions,
-} from "../connectors/coinbase-wallet-mobile";
-import { IWalletWithMetadata } from "./wallets";
+  CoinbaseWalletConnector,
+  CoinbaseWalletConnectorOptions,
+} from "../connectors/coinbase-wallet";
 import {
   AbstractBrowserWallet,
   TWConnector,
@@ -14,25 +13,25 @@ import {
 } from "@thirdweb-dev/wallets";
 
 type CoinbaseWalletOptions = Omit<
-  WalletOptions<CoinbaseMobileWalletConnectorOptions>,
+  WalletOptions<CoinbaseWalletConnectorOptions>,
   "callbackURL" | "walletStorage"
 >;
 
-export class CoinbaseWalletMobile
-  extends AbstractBrowserWallet<CoinbaseMobileWalletConnectorOptions>
+export class CoinbaseWallet
+  extends AbstractBrowserWallet<CoinbaseWalletConnectorOptions>
   implements IWalletWithMetadata
 {
   connector?: TWConnector;
-  coinbaseConnector?: CoinbaseMobileWalletConnector;
-  provider?: CoinbaseMobileWalletConnector["provider"];
+  coinbaseConnector?: CoinbaseWalletConnector;
+  provider?: CoinbaseWalletConnector["provider"];
 
-  static id = "coinbaseWalletMobile" as const;
+  static id = "coinbaseWallet" as const;
   public get walletName() {
-    return "Coinbase Wallet Mobile" as const;
+    return "Coinbase Wallet" as const;
   }
 
   constructor(options: CoinbaseWalletOptions) {
-    super(CoinbaseWalletMobile.id, {
+    super(CoinbaseWallet.id, {
       ...options,
       callbackURL: new URL("https://thirdweb.com"),
       walletStorage: new noopStorage(),
@@ -47,11 +46,11 @@ export class CoinbaseWalletMobile
   protected async getConnector(): Promise<TWConnector> {
     if (!this.connector) {
       // import the connector dynamically
-      const { CoinbaseMobileWalletConnector } = await import(
-        "../connectors/coinbase-wallet-mobile"
+      const { CoinbaseWalletConnector: CoinbaseWalletConnector } = await import(
+        "../connectors/coinbase-wallet"
       );
 
-      const cbConnector = new CoinbaseMobileWalletConnector({
+      const cbConnector = new CoinbaseWalletConnector({
         chains: this.chains,
         options: {
           ...this.options,

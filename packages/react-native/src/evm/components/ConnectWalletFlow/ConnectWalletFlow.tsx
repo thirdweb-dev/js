@@ -1,4 +1,4 @@
-import { WalletMeta } from "../../types/walletMeta";
+import { WalletMeta } from "../../types/wallets";
 import { getWalletsMeta } from "../../utils/wallets";
 import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
@@ -34,10 +34,8 @@ export const ConnectWalletFlow = () => {
 
     let walletClass;
     if (wallet_.versions.includes("2")) {
-      console.log("walletMeta.id", wallet_.id);
       // default to v2
       walletClass = supportedWallets.find((wallet) => {
-        console.log("wallet.name", wallet.name);
         return wallet.name.toLowerCase().includes(wallet_.id.toLowerCase());
       });
       invariant(walletClass, "Wallet class not found");
@@ -52,11 +50,10 @@ export const ConnectWalletFlow = () => {
       });
       invariant(walletClass, "Wallet class not found");
     }
-    connect(walletClass, {});
-    // .catch((error) => {
-    //   console.log("error", error);
-    //   onBackPress();
-    // });
+    connect(walletClass, {}).catch((error) => {
+      console.log("error", error);
+      onBackPress();
+    });
   };
 
   const onBackPress = () => {

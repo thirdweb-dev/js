@@ -1,4 +1,4 @@
-import { WalletMeta } from "../types/walletMeta";
+import { WalletMeta } from "../types/wallets";
 
 export function formatDisplayUri(uri: string, walletMeta: WalletMeta) {
   const encodedUri: string = encodeURIComponent(uri);

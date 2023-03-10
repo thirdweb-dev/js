@@ -14,7 +14,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import type { SmartContract } from "@thirdweb-dev/sdk";
 import type { CallOverrides, ContractInterface } from "ethers";
-import { PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren } from "react";
 import React from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import invariant from "tiny-invariant";
@@ -120,13 +120,6 @@ export const Web3Button = <TAction extends ActionFn>({
     },
   );
 
-  useEffect(() => {
-    if (connectionStatus !== "connected" && actionMutation.isLoading) {
-      console.log("reset mutation", actionMutation.isLoading);
-      actionMutation.reset();
-    }
-  }, [actionMutation, connectionStatus]);
-
   if (!address) {
     return <ConnectWallet theme={theme} />;
   }
@@ -134,11 +127,6 @@ export const Web3Button = <TAction extends ActionFn>({
   let content = children;
   let buttonDisabled = !!isDisabled;
   let buttonLoading = false;
-
-  console.log("connectionStatus", connectionStatus);
-  console.log("mutationStatus", actionMutation.isLoading);
-  console.log("walletChainId", walletChainId);
-  console.log("sdkChainId", sdkChainId);
 
   // if button is disabled, show original action
   if (!buttonDisabled) {
@@ -160,16 +148,7 @@ export const Web3Button = <TAction extends ActionFn>({
       <BaseButton
         backgroundColor="white"
         onPress={() => {
-          console.log("triggerMutation");
           actionMutation.mutate();
-          console.log("triggerMutation after");
-          setTimeout(() => {
-            console.log("resetMutation.before", actionMutation.isLoading);
-            if (actionMutation.isLoading) {
-              console.log("resetMutation");
-              actionMutation.reset();
-            }
-          }, 5000);
         }}
         style={styles.actionButton}
         disabled={buttonDisabled || buttonLoading}

@@ -335,11 +335,10 @@ export class WalletConnectV1Connector extends Connector<
   };
 
   protected onRequestSent = (error: any, payload: { params: string[] }) => {
-    console.log("onRequestSent", error);
     if (error) {
+      console.log("wcV1.onRequestSent", error);
       this.emit("message", { data: error, type: "request" });
     }
-    console.log("onRequestSent.message sent");
     this.emit("message", { data: payload.params[0], type: "request" });
   };
 

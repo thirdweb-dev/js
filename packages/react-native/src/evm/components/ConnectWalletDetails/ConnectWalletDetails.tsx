@@ -1,4 +1,4 @@
-import { IWalletWithMetadata } from "../../wallets/wallets/wallets";
+import { IWalletWithMetadata } from "../../types/wallets";
 import { NetworkSelectorModal } from "../NetworkSelector/NetworkSelectorModal";
 import { Address } from "../base/Address";
 import BaseButton from "../base/BaseButton";
@@ -14,8 +14,8 @@ import {
   useDisconnect,
 } from "@thirdweb-dev/react-core";
 import { useActiveChain } from "@thirdweb-dev/react-core/evm";
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Linking, View } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View } from "react-native";
 
 export type ConnectWalletDetailsProps = {
   address: string;
@@ -34,26 +34,6 @@ export const ConnectWalletDetails = ({
   const chain = useActiveChain();
   const balanceQuery = useBalance();
 
-  useEffect(() => {
-    if (activeWallet) {
-      const mobileUrl = (
-        activeWallet as unknown as IWalletWithMetadata
-      ).getMetadata().mobile.universal;
-      console.log("mobileUrl: ", mobileUrl);
-      activeWallet.on("open_wallet", (uri?: string) => {
-        if (!uri && mobileUrl) {
-          Linking.openURL(mobileUrl);
-        }
-      });
-    }
-
-    return () => {
-      if (activeWallet?.walletId.includes("walletConnect")) {
-        activeWallet.off("open_wallet");
-      }
-    };
-  }, [activeWallet]);
-
   const onPress = () => {
     setIsDetailsModalVisible(true);
   };
@@ -66,6 +46,7 @@ export const ConnectWalletDetails = ({
   };
 
   const onChangeNetworkPress = () => {
+    // TODO: implement this
     // setIsDetailsModalVisible(false);
     // setIsNetworkSelectorModalVisible(true);
   };

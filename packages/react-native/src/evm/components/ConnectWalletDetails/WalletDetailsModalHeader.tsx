@@ -1,6 +1,6 @@
 import { Icon } from "../../assets/icon";
 import { useAppTheme } from "../../styles/hooks";
-import { IWalletWithMetadata } from "../../wallets/wallets/wallets";
+import { IWalletWithMetadata } from "../../types/wallets";
 import { Address } from "../base/Address";
 import Text from "../base/Text";
 import { WalletIcon } from "../base/WalletIcon";

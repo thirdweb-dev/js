@@ -1,7 +1,7 @@
 import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
 import { TW_WC_PROJECT_ID } from "../../constants/walletConnect";
 import { walletsMetadata } from "../../constants/walletsMetadata";
-import { WalletMeta } from "../../types/walletMeta";
+import { IWalletWithMetadata, WalletMeta } from "../../types/wallets";
 import { formatDisplayUri } from "../../utils/uri";
 import { ExtraCoreWalletOptions } from "@thirdweb-dev/react-core";
 import type {
@@ -19,10 +19,6 @@ import { Linking } from "react-native";
 
 const DEFAULT_NAME_METADATA = "Dapp powered by Thirdweb";
 const DEFAULT_URL_METADATA = "thirdweb.com";
-
-export interface IWalletWithMetadata {
-  getMetadata(): WalletMeta;
-}
 
 // Metamask ----------------------------------------
 type WC1Options = Omit<
@@ -50,9 +46,6 @@ export class MetaMaskWallet
       },
     });
 
-    console.log("Metamask.Constructor");
-    console.log("Metamask", this.getMetadata());
-
     this.on("open_wallet", this._onWCOpenWallet);
 
     this.on("disconnect", () => {
@@ -69,6 +62,10 @@ export class MetaMaskWallet
 
     if (uri) {
       const fullUrl = formatDisplayUri(uri, meta);
+
+      Linking.openURL(fullUrl);
+    } else {
+      const fullUrl = formatDisplayUri("", meta);
 
       Linking.openURL(fullUrl);
     }
@@ -95,15 +92,9 @@ export class RainbowWallet
         description: options.clientMeta?.description,
       },
     });
-
-    console.log("RainbowWallet.Constructor");
-    console.log("Rainbow", this.getMetadata());
-
-    console.log("constructor.RegisterOpenWallet");
     this.on("open_wallet", this._onWCOpenWallet);
 
     this.on("disconnect", () => {
-      console.log("constructor.disconnect");
       this.removeAllListeners();
     });
   }
@@ -113,7 +104,6 @@ export class RainbowWallet
   }
 
   _onWCOpenWallet(uri?: string) {
-    console.log("onOpenWallet");
     const meta = this.getMetadata();
 
     if (uri) {

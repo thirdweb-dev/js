@@ -44,9 +44,6 @@ export abstract class AbstractBrowserWallet<
       "lastConnectedWallet",
     );
 
-    console.log("lastConnectedWalletName", lastConnectedWalletName);
-    console.log("this.walletId", this.walletId);
-
     // return if the last connected wallet is not this wallet
     if (lastConnectedWalletName !== this.walletId) {
       return;
@@ -94,8 +91,6 @@ export abstract class AbstractBrowserWallet<
     };
 
     const isConnected = await connector.isConnected();
-
-    console.log("isConnected", isConnected);
 
     if (isConnected) {
       const address = await connector.getAddress();
