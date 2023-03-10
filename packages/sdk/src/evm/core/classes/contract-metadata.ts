@@ -4,10 +4,12 @@ import {
   hasFunction,
   fetchContractMetadataFromAddress,
 } from "../../common";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_METADATA } from "../../constants/thirdweb-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
 import type {
   IContractMetadata,
   IERC20Metadata,
@@ -135,6 +137,7 @@ export class ContractMetadata<
 
     return this.parseOutputMetadata(data);
   }
+
   /**
    * Set the metadata of this contract
    * @remarks OVERWRITE the metadata of a contract
@@ -149,19 +152,28 @@ export class ContractMetadata<
    * @param metadata - the metadata to set
    * @twfeature ContractMetadata
    */
-  public async set(metadata: z.input<TSchema["input"]>) {
-    const uri = await this._parseAndUploadMetadata(metadata);
+  set = buildTransactionFunction(
+    async (metadata: z.input<TSchema["input"]>) => {
+      const uri = await this._parseAndUploadMetadata(metadata);
 
-    const wrapper = this.contractWrapper;
-    if (this.supportsContractMetadata(wrapper)) {
-      const receipt = await wrapper.sendTransaction("setContractURI", [uri]);
-      return { receipt, data: this.get } as TransactionResult<
-        z.output<TSchema["output"]>
-      >;
-    } else {
-      throw new ExtensionNotImplementedError(FEATURE_METADATA);
-    }
-  }
+      const wrapper = this.contractWrapper;
+      if (this.supportsContractMetadata(wrapper)) {
+        return Transaction.fromContractWrapper({
+          contractWrapper: this
+            .contractWrapper as unknown as ContractWrapper<IContractMetadata>,
+          method: "setContractURI",
+          args: [uri],
+          parse: (receipt) => {
+            return { receipt, data: this.get } as TransactionResult<
+              z.output<TSchema["output"]>
+            >;
+          },
+        });
+      } else {
+        throw new ExtensionNotImplementedError(FEATURE_METADATA);
+      }
+    },
+  );
 
   /**
    * Update the metadata of a contract
@@ -176,12 +188,14 @@ export class ContractMetadata<
    * @param metadata - the metadata to update
    * @twfeature ContractMetadata
    * */
-  public async update(metadata: Partial<z.input<TSchema["input"]>>) {
-    return await this.set({
-      ...(await this.get()),
-      ...metadata,
-    });
-  }
+  update = buildTransactionFunction(
+    async (metadata: Partial<z.input<TSchema["input"]>>) => {
+      return await this.set.prepare({
+        ...(await this.get()),
+        ...metadata,
+      });
+    },
+  );
 
   /**
    *
