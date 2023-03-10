@@ -41,12 +41,13 @@ export const Changelog: React.FC<ChangelogProps> = ({ changelog }) => {
           </Text>
           <Flex flexDir="column">
             <Link
+              isExternal
               _hover={{
                 _light: { color: "blue.600" },
                 _dark: { color: "blue.400" },
                 textDecor: "underline",
               }}
-              href={item.url}
+              href={`${item.url}?utm_source=thirdweb&utm_campaign=changelog`}
               role="group"
             >
               <Text color="inherit">{item.title}</Text>
@@ -60,7 +61,7 @@ export const Changelog: React.FC<ChangelogProps> = ({ changelog }) => {
         </Flex>
       ))}
       <Link
-        href="https://blog.thirdweb.com/changelog/"
+        href="https://blog.thirdweb.com/changelog?utm_source=thirdweb&utm_campaign=changelog"
         isExternal
         ml={8}
         _hover={{ textDecor: "none" }}
