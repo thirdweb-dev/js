@@ -59,7 +59,9 @@ export async function install(projectPath = ".", options: any) {
 
     dependenciesToAdd.add(`@thirdweb-dev/react${version}`);
     dependenciesToAdd.add(`@thirdweb-dev/sdk${version}`);
-    if (!hasEthers) dependenciesToAdd.add("ethers@5");
+    if (!hasEthers) {
+      dependenciesToAdd.add("ethers@5");
+    }
   });
 
   try {
