@@ -1,5 +1,6 @@
 import { fetchCurrencyValue } from "../../common/currency";
 import { resolveAddress } from "../../common/ens";
+import { buildTransactionFunction } from "../../common/transactions";
 import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
@@ -10,7 +11,7 @@ import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
-import { NetworkInput, TransactionResult } from "../../core/types";
+import { NetworkInput } from "../../core/types";
 import { Address, AddressOrEns } from "../../schema";
 import { Abi } from "../../schema/contracts/custom";
 import { SplitsContractSchema } from "../../schema/contracts/splits";
@@ -308,15 +309,13 @@ export class Split implements UpdateableNetwork {
    *
    * @param walletAddress - The address to distributes the amount to
    */
-  public async withdraw(
-    walletAddress: AddressOrEns,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("release(address)", [
-        await resolveAddress(walletAddress),
-      ]),
-    };
-  }
+  withdraw = buildTransactionFunction(async (walletAddress: AddressOrEns) => {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "release(address)",
+      args: [await resolveAddress(walletAddress)],
+    });
+  });
 
   /**
    * Triggers a transfer to account of the amount of a given currency they are owed.
@@ -324,20 +323,18 @@ export class Split implements UpdateableNetwork {
    * @param walletAddress - The address to distributes the amount to
    * @param tokenAddress - The address of the currency contract to distribute funds
    */
-  public async withdrawToken(
-    walletAddress: AddressOrEns,
-    tokenAddress: AddressOrEns,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "release(address,address)",
-        [
+  withdrawToken = buildTransactionFunction(
+    async (walletAddress: AddressOrEns, tokenAddress: AddressOrEns) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "release(address,address)",
+        args: [
           await resolveAddress(tokenAddress),
           await resolveAddress(walletAddress),
         ],
-      ),
-    };
-  }
+      });
+    },
+  );
 
   /**
    * Distribute Funds
@@ -349,11 +346,13 @@ export class Split implements UpdateableNetwork {
    * await contract.distribute();
    * ```
    */
-  public async distribute(): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("distribute()", []),
-    };
-  }
+  distribute = buildTransactionFunction(async () => {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "distribute()",
+      args: [],
+    });
+  });
 
   /**
    * Distribute Funds
@@ -369,16 +368,15 @@ export class Split implements UpdateableNetwork {
    *
    * @param tokenAddress - The address of the currency contract to distribute funds
    */
-  public async distributeToken(
-    tokenAddress: AddressOrEns,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "distribute(address)",
-        [await resolveAddress(tokenAddress)],
-      ),
-    };
-  }
+  distributeToken = buildTransactionFunction(
+    async (tokenAddress: AddressOrEns) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "distribute(address)",
+        args: [await resolveAddress(tokenAddress)],
+      });
+    },
+  );
 
   /** ******************************
    * PRIVATE FUNCTIONS

@@ -7,6 +7,7 @@ import {
 import { resolveAddress } from "../../common/ens";
 import { getAllInBatches, handleTokenApproval } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
 import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
 import { FEATURE_OFFERS } from "../../constants/thirdweb-features";
 import { Status } from "../../enums";
@@ -17,12 +18,13 @@ import {
 import { MarketplaceFilter } from "../../types";
 import { OfferV3 } from "../../types/marketplacev3";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { TransactionResult, TransactionResultWithId } from "../types";
+import { TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractEvents } from "./contract-events";
 import { ContractInterceptor } from "./contract-interceptor";
 import { ContractWrapper } from "./contract-wrapper";
 import { GasCostEstimator } from "./gas-cost-estimator";
+import { Transaction } from "./transactions";
 import type { IERC20, IOffers, OffersLogic } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { NewOfferEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/OffersLogic";
@@ -211,57 +213,61 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the transaction receipt and the id of the newly created offer
    * @twfeature Offers
    */
-  public async makeOffer(
-    offer: OfferInputParams,
-  ): Promise<TransactionResultWithId> {
-    const parsedOffer = await OfferInputParamsSchema.parseAsync(offer);
+  makeOffer = buildTransactionFunction(
+    async (
+      offer: OfferInputParams,
+    ): Promise<Transaction<TransactionResultWithId>> => {
+      const parsedOffer = await OfferInputParamsSchema.parseAsync(offer);
 
-    const chainId = await this.contractWrapper.getChainID();
-    const currency = isNativeToken(parsedOffer.currencyContractAddress)
-      ? NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID].wrapped.address
-      : parsedOffer.currencyContractAddress;
+      const chainId = await this.contractWrapper.getChainID();
+      const currency = isNativeToken(parsedOffer.currencyContractAddress)
+        ? NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID].wrapped.address
+        : parsedOffer.currencyContractAddress;
 
-    const normalizedTotalPrice = await normalizePriceValue(
-      this.contractWrapper.getProvider(),
-      parsedOffer.totalPrice,
-      currency,
-    );
+      const normalizedTotalPrice = await normalizePriceValue(
+        this.contractWrapper.getProvider(),
+        parsedOffer.totalPrice,
+        currency,
+      );
 
-    const overrides = await this.contractWrapper.getCallOverrides();
-    await setErc20Allowance(
-      this.contractWrapper,
-      normalizedTotalPrice,
-      currency,
-      overrides,
-    );
+      const overrides = await this.contractWrapper.getCallOverrides();
+      await setErc20Allowance(
+        this.contractWrapper,
+        normalizedTotalPrice,
+        currency,
+        overrides,
+      );
 
-    const receipt = await this.contractWrapper.sendTransaction(
-      "makeOffer",
-      [
-        {
-          assetContract: parsedOffer.assetContractAddress,
-          tokenId: parsedOffer.tokenId,
-          quantity: parsedOffer.quantity,
-          currency: currency,
-          totalPrice: normalizedTotalPrice,
-          expirationTimestamp: parsedOffer.endTimestamp,
-        } as IOffers.OfferParamsStruct,
-      ],
-      {
-        // Higher gas limit for create listing
-        gasLimit: 500000,
-      },
-    );
-
-    const event = this.contractWrapper.parseLogs<NewOfferEvent>(
-      "NewOffer",
-      receipt?.logs,
-    );
-    return {
-      id: event[0].args.offerId,
-      receipt,
-    };
-  }
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "makeOffer",
+        args: [
+          {
+            assetContract: parsedOffer.assetContractAddress,
+            tokenId: parsedOffer.tokenId,
+            quantity: parsedOffer.quantity,
+            currency: currency,
+            totalPrice: normalizedTotalPrice,
+            expirationTimestamp: parsedOffer.endTimestamp,
+          } as IOffers.OfferParamsStruct,
+        ],
+        overrides: {
+          // Higher gas limit for create listing
+          gasLimit: 500000,
+        },
+        parse: (receipt) => {
+          const event = this.contractWrapper.parseLogs<NewOfferEvent>(
+            "NewOffer",
+            receipt?.logs,
+          );
+          return {
+            id: event[0].args.offerId,
+            receipt,
+          };
+        },
+      });
+    },
+  );
 
   /**
    * Cancel an offer
@@ -279,13 +285,13 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the transaction receipt
    * @twfeature Offers
    */
-  public async cancelOffer(offerId: BigNumberish): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("cancelOffer", [
-        offerId,
-      ]),
-    };
-  }
+  cancelOffer = buildTransactionFunction(async (offerId: BigNumberish) => {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "cancelOffer",
+      args: [offerId],
+    });
+  });
 
   /**
    * Accept an offer
@@ -302,7 +308,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the transaction receipt
    * @twfeature Offers
    */
-  public async acceptOffer(offerId: BigNumberish): Promise<TransactionResult> {
+  acceptOffer = buildTransactionFunction(async (offerId: BigNumberish) => {
     const offer = await this.validateOffer(BigNumber.from(offerId));
     const { valid, error } = await this.isStillValidOffer(offer);
     if (!valid) {
@@ -318,14 +324,13 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
       await this.contractWrapper.getSignerAddress(),
     );
 
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "acceptOffer",
-        [offerId],
-        overrides,
-      ),
-    };
-  }
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "acceptOffer",
+      args: [offerId],
+      overrides,
+    });
+  });
 
   /** ******************************
    * PRIVATE FUNCTIONS

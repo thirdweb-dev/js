@@ -1,4 +1,7 @@
 {
   "main": "dist/thirdweb-dev-auth-evm.cjs.js",
-  "module": "dist/thirdweb-dev-auth-evm.esm.js"
+  "module": "dist/thirdweb-dev-auth-evm.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-auth-evm.esm.js": "./dist/thirdweb-dev-auth-evm.browser.esm.js"
+  }
 }
