@@ -1,0 +1,8 @@
+{
+  "main": "dist/thirdweb-dev-contracts-js-factories-TWMinimalFactory__factory.cjs.js",
+  "module": "dist/thirdweb-dev-contracts-js-factories-TWMinimalFactory__factory.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-contracts-js-factories-TWMinimalFactory__factory.cjs.js": "./dist/thirdweb-dev-contracts-js-factories-TWMinimalFactory__factory.browser.cjs.js",
+    "./dist/thirdweb-dev-contracts-js-factories-TWMinimalFactory__factory.esm.js": "./dist/thirdweb-dev-contracts-js-factories-TWMinimalFactory__factory.browser.esm.js"
+  }
+}

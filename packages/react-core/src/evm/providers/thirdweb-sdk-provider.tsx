@@ -232,9 +232,10 @@ export const ThirdwebSDKProvider = <
       return supportedChains as Readonly<Chain[]>;
     }
 
-    const _mergedChains = [...supportedChains, activeChain] as Readonly<
-      Chain[]
-    >;
+    const _mergedChains = [
+      ...supportedChains.filter((c) => c.chainId !== activeChain.chainId),
+      activeChain,
+    ] as Readonly<Chain[]>;
     // return a _mergedChains uniqued by chainId key
     return _mergedChains.filter(
       (chain, index, self) =>
