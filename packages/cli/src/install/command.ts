@@ -9,6 +9,7 @@ import TruffleDetector from "../core/detection/truffle";
 import ViteDetector from "../core/detection/vite";
 import YarnDetector from "../core/detection/yarn";
 import { runCommand } from "../create/helpers/run-command";
+import fs from "fs";
 
 export async function install(projectPath = ".", options: any) {
   const supportedContractFrameworks = [
@@ -27,6 +28,10 @@ export async function install(projectPath = ".", options: any) {
 
   const hasYarn = new YarnDetector().matches(".");
   const hasNPM = new NPMDetector().matches(".");
+
+  const packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"));
+  const hasEthers =
+    !!packageJson.dependencies?.ethers || !!packageJson.devDependencies?.ethers;
 
   const version = options.dev
     ? "@dev"
@@ -54,7 +59,7 @@ export async function install(projectPath = ".", options: any) {
 
     dependenciesToAdd.add(`@thirdweb-dev/react${version}`);
     dependenciesToAdd.add(`@thirdweb-dev/sdk${version}`);
-    dependenciesToAdd.add("ethers@5");
+    if (!hasEthers) dependenciesToAdd.add("ethers@5");
   });
 
   try {
