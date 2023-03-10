@@ -9,6 +9,7 @@ import {
 import { resolveAddress } from "../../common/ens";
 import { getAllInBatches, handleTokenApproval } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_ENGLISH_AUCTIONS } from "../../constants/thirdweb-features";
 import { Status } from "../../enums";
 import { Address, AddressOrEns } from "../../schema";
@@ -20,15 +21,17 @@ import { MarketplaceFilter } from "../../types";
 import { CurrencyValue, Price } from "../../types/currency";
 import { EnglishAuction, Bid } from "../../types/marketplacev3";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { TransactionResult, TransactionResultWithId } from "../types";
+import { TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractEvents } from "./contract-events";
 import { ContractInterceptor } from "./contract-interceptor";
 import { ContractWrapper } from "./contract-wrapper";
 import { GasCostEstimator } from "./gas-cost-estimator";
+import { Transaction } from "./transactions";
 import type {
   IEnglishAuctions,
   EnglishAuctionsLogic,
+  IMulticall,
 } from "@thirdweb-dev/contracts-js";
 import { NewAuctionEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IEnglishAuctions";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -330,68 +333,74 @@ export class MarketplaceV3EnglishAuctions<
    * @returns the transaction hash and the auction id
    * @twfeature EnglishAuctions
    */
-  public async createAuction(
-    auction: EnglishAuctionInputParams,
-  ): Promise<TransactionResultWithId> {
-    const parsedAuction = EnglishAuctionInputParamsSchema.parse(auction);
+  createAuction = buildTransactionFunction(
+    async (
+      auction: EnglishAuctionInputParams,
+    ): Promise<Transaction<TransactionResultWithId>> => {
+      const parsedAuction = EnglishAuctionInputParamsSchema.parse(auction);
 
-    await handleTokenApproval(
-      this.contractWrapper,
-      this.getAddress(),
-      parsedAuction.assetContractAddress,
-      parsedAuction.tokenId,
-      await this.contractWrapper.getSignerAddress(),
-    );
+      await handleTokenApproval(
+        this.contractWrapper,
+        this.getAddress(),
+        parsedAuction.assetContractAddress,
+        parsedAuction.tokenId,
+        await this.contractWrapper.getSignerAddress(),
+      );
 
-    const normalizedBuyoutAmount = await normalizePriceValue(
-      this.contractWrapper.getProvider(),
-      parsedAuction.buyoutBidAmount,
-      parsedAuction.currencyContractAddress,
-    );
+      const normalizedBuyoutAmount = await normalizePriceValue(
+        this.contractWrapper.getProvider(),
+        parsedAuction.buyoutBidAmount,
+        parsedAuction.currencyContractAddress,
+      );
 
-    const normalizedMinBidAmount = await normalizePriceValue(
-      this.contractWrapper.getProvider(),
-      parsedAuction.minimumBidAmount,
-      parsedAuction.currencyContractAddress,
-    );
+      const normalizedMinBidAmount = await normalizePriceValue(
+        this.contractWrapper.getProvider(),
+        parsedAuction.minimumBidAmount,
+        parsedAuction.currencyContractAddress,
+      );
 
-    const block = await this.contractWrapper.getProvider().getBlock("latest");
-    const blockTime = block.timestamp;
-    if (parsedAuction.startTimestamp.lt(blockTime)) {
-      parsedAuction.startTimestamp = BigNumber.from(blockTime);
-    }
+      const block = await this.contractWrapper.getProvider().getBlock("latest");
+      const blockTime = block.timestamp;
+      if (parsedAuction.startTimestamp.lt(blockTime)) {
+        parsedAuction.startTimestamp = BigNumber.from(blockTime);
+      }
 
-    const receipt = await this.contractWrapper.sendTransaction(
-      "createAuction",
-      [
-        {
-          assetContract: parsedAuction.assetContractAddress,
-          tokenId: parsedAuction.tokenId,
-          quantity: parsedAuction.quantity,
-          currency: cleanCurrencyAddress(parsedAuction.currencyContractAddress),
-          minimumBidAmount: normalizedMinBidAmount,
-          buyoutBidAmount: normalizedBuyoutAmount,
-          timeBufferInSeconds: parsedAuction.timeBufferInSeconds,
-          bidBufferBps: parsedAuction.bidBufferBps,
-          startTimestamp: parsedAuction.startTimestamp,
-          endTimestamp: parsedAuction.endTimestamp,
-        } as IEnglishAuctions.AuctionParametersStruct,
-      ],
-      {
-        // Higher gas limit for create auction
-        gasLimit: 500000,
-      },
-    );
-
-    const event = this.contractWrapper.parseLogs<NewAuctionEvent>(
-      "NewAuction",
-      receipt?.logs,
-    );
-    return {
-      id: event[0].args.auctionId,
-      receipt,
-    };
-  }
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "createAuction",
+        args: [
+          {
+            assetContract: parsedAuction.assetContractAddress,
+            tokenId: parsedAuction.tokenId,
+            quantity: parsedAuction.quantity,
+            currency: cleanCurrencyAddress(
+              parsedAuction.currencyContractAddress,
+            ),
+            minimumBidAmount: normalizedMinBidAmount,
+            buyoutBidAmount: normalizedBuyoutAmount,
+            timeBufferInSeconds: parsedAuction.timeBufferInSeconds,
+            bidBufferBps: parsedAuction.bidBufferBps,
+            startTimestamp: parsedAuction.startTimestamp,
+            endTimestamp: parsedAuction.endTimestamp,
+          } as IEnglishAuctions.AuctionParametersStruct,
+        ],
+        overrides: {
+          // Higher gas limit for create auction
+          gasLimit: 500000,
+        },
+        parse: (receipt) => {
+          const event = this.contractWrapper.parseLogs<NewAuctionEvent>(
+            "NewAuction",
+            receipt.logs,
+          )[0];
+          return {
+            id: event.args.auctionId,
+            receipt,
+          };
+        },
+      });
+    },
+  );
 
   /**
    * Buyout an english auction
@@ -409,9 +418,7 @@ export class MarketplaceV3EnglishAuctions<
    * @returns the transaction result
    * @twfeature EnglishAuctions
    */
-  public async buyoutAuction(
-    auctionId: BigNumberish,
-  ): Promise<TransactionResult> {
+  buyoutAuction = buildTransactionFunction(async (auctionId: BigNumberish) => {
     const auction = await this.validateAuction(BigNumber.from(auctionId));
 
     const currencyMetadata = await fetchCurrencyMetadata(
@@ -419,14 +426,14 @@ export class MarketplaceV3EnglishAuctions<
       auction.currencyContractAddress,
     );
 
-    return this.makeBid(
+    return this.makeBid.prepare(
       auctionId,
       ethers.utils.formatUnits(
         auction.buyoutBidAmount,
         currencyMetadata.decimals,
       ),
     );
-  }
+  });
 
   /**
    * Bid on an english auction
@@ -447,62 +454,64 @@ export class MarketplaceV3EnglishAuctions<
    * @returns the transaction result
    * @twfeature EnglishAuctions
    */
-  public async makeBid(
-    auctionId: BigNumberish,
-    bidAmount: Price,
-  ): Promise<TransactionResult> {
-    const auction = await this.validateAuction(BigNumber.from(auctionId));
+  makeBid = buildTransactionFunction(
+    async (auctionId: BigNumberish, bidAmount: Price) => {
+      const auction = await this.validateAuction(BigNumber.from(auctionId));
 
-    const normalizedBidAmount = await normalizePriceValue(
-      this.contractWrapper.getProvider(),
-      bidAmount,
-      auction.currencyContractAddress,
-    );
-    if (normalizedBidAmount.eq(BigNumber.from(0))) {
-      throw new Error("Cannot make a bid with 0 value");
-    }
-
-    if (
-      BigNumber.from(auction.buyoutBidAmount).gt(0) &&
-      normalizedBidAmount.gt(auction.buyoutBidAmount)
-    ) {
-      throw new Error(
-        "Bid amount must be less than or equal to buyoutBidAmount",
+      const normalizedBidAmount = await normalizePriceValue(
+        this.contractWrapper.getProvider(),
+        bidAmount,
+        auction.currencyContractAddress,
       );
-    }
+      if (normalizedBidAmount.eq(BigNumber.from(0))) {
+        throw new Error("Cannot make a bid with 0 value");
+      }
 
-    const winningBid = await this.getWinningBid(auctionId);
-    if (winningBid) {
-      const isWinnner = await this.isWinningBid(auctionId, normalizedBidAmount);
+      if (
+        BigNumber.from(auction.buyoutBidAmount).gt(0) &&
+        normalizedBidAmount.gt(auction.buyoutBidAmount)
+      ) {
+        throw new Error(
+          "Bid amount must be less than or equal to buyoutBidAmount",
+        );
+      }
 
-      invariant(
-        isWinnner,
-        "Bid price is too low based on the current winning bid and the bid buffer",
-      );
-    } else {
-      const tokenPrice = normalizedBidAmount;
-      const minimumBidAmount = BigNumber.from(auction.minimumBidAmount);
-      invariant(
-        tokenPrice.gte(minimumBidAmount),
-        "Bid price is too low based on minimum bid amount",
-      );
-    }
+      const winningBid = await this.getWinningBid(auctionId);
+      if (winningBid) {
+        const isWinnner = await this.isWinningBid(
+          auctionId,
+          normalizedBidAmount,
+        );
 
-    const overrides = (await this.contractWrapper.getCallOverrides()) || {};
-    await setErc20Allowance(
-      this.contractWrapper,
-      normalizedBidAmount,
-      auction.currencyContractAddress,
-      overrides,
-    );
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "bidInAuction",
-        [auctionId, normalizedBidAmount],
+        invariant(
+          isWinnner,
+          "Bid price is too low based on the current winning bid and the bid buffer",
+        );
+      } else {
+        const tokenPrice = normalizedBidAmount;
+        const minimumBidAmount = BigNumber.from(auction.minimumBidAmount);
+        invariant(
+          tokenPrice.gte(minimumBidAmount),
+          "Bid price is too low based on minimum bid amount",
+        );
+      }
+
+      const overrides = (await this.contractWrapper.getCallOverrides()) || {};
+      await setErc20Allowance(
+        this.contractWrapper,
+        normalizedBidAmount,
+        auction.currencyContractAddress,
         overrides,
-      ),
-    };
-  }
+      );
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "bidInAuction",
+        args: [auctionId, normalizedBidAmount],
+        overrides,
+      });
+    },
+  );
 
   /**
    * Cancel an english auction
@@ -520,20 +529,18 @@ export class MarketplaceV3EnglishAuctions<
    * @returns the transaction result
    * @twfeature EnglishAuctions
    */
-  public async cancelAuction(
-    auctionId: BigNumberish,
-  ): Promise<TransactionResult> {
+  cancelAuction = buildTransactionFunction(async (auctionId: BigNumberish) => {
     const winningBid = await this.getWinningBid(auctionId);
     if (winningBid) {
       throw new Error(`Bids already made.`);
     }
 
-    return {
-      receipt: await this.contractWrapper.sendTransaction("cancelAuction", [
-        auctionId,
-      ]),
-    };
-  }
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "cancelAuction",
+      args: [auctionId],
+    });
+  });
 
   /**
    * Close the english auction for the bidder
@@ -552,32 +559,30 @@ export class MarketplaceV3EnglishAuctions<
    * @returns the transaction result
    * @twfeature EnglishAuctions
    */
-  public async closeAuctionForBidder(
-    auctionId: BigNumberish,
-    closeFor?: AddressOrEns,
-  ): Promise<TransactionResult> {
-    if (!closeFor) {
-      closeFor = await this.contractWrapper.getSignerAddress();
-    }
-    const auction = await this.validateAuction(BigNumber.from(auctionId));
-    try {
-      return {
-        receipt: await this.contractWrapper.sendTransaction(
-          "collectAuctionTokens",
-          [BigNumber.from(auctionId)],
-        ),
-      };
-    } catch (err: any) {
-      if (err.message.includes("Marketplace: auction still active.")) {
-        throw new AuctionHasNotEndedError(
-          auctionId.toString(),
-          auction.endTimeInSeconds.toString(),
-        );
-      } else {
-        throw err;
+  closeAuctionForBidder = buildTransactionFunction(
+    async (auctionId: BigNumberish, closeFor?: AddressOrEns) => {
+      if (!closeFor) {
+        closeFor = await this.contractWrapper.getSignerAddress();
       }
-    }
-  }
+      const auction = await this.validateAuction(BigNumber.from(auctionId));
+      try {
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper,
+          method: "collectAuctionTokens",
+          args: [BigNumber.from(auctionId)],
+        });
+      } catch (err: any) {
+        if (err.message.includes("Marketplace: auction still active.")) {
+          throw new AuctionHasNotEndedError(
+            auctionId.toString(),
+            auction.endTimeInSeconds.toString(),
+          );
+        } else {
+          throw err;
+        }
+      }
+    },
+  );
 
   /**
    * Close the english auction for the seller
@@ -595,28 +600,27 @@ export class MarketplaceV3EnglishAuctions<
    * @returns the transaction result
    * @twfeature EnglishAuctions
    */
-  public async closeAuctionForSeller(
-    auctionId: BigNumberish,
-  ): Promise<TransactionResult> {
-    const auction = await this.validateAuction(BigNumber.from(auctionId));
-    try {
-      return {
-        receipt: await this.contractWrapper.sendTransaction(
-          "collectAuctionPayout",
-          [BigNumber.from(auctionId)],
-        ),
-      };
-    } catch (err: any) {
-      if (err.message.includes("Marketplace: auction still active.")) {
-        throw new AuctionHasNotEndedError(
-          auctionId.toString(),
-          auction.endTimeInSeconds.toString(),
-        );
-      } else {
-        throw err;
+  closeAuctionForSeller = buildTransactionFunction(
+    async (auctionId: BigNumberish) => {
+      const auction = await this.validateAuction(BigNumber.from(auctionId));
+      try {
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper,
+          method: "collectAuctionPayout",
+          args: [BigNumber.from(auctionId)],
+        });
+      } catch (err: any) {
+        if (err.message.includes("Marketplace: auction still active.")) {
+          throw new AuctionHasNotEndedError(
+            auctionId.toString(),
+            auction.endTimeInSeconds.toString(),
+          );
+        } else {
+          throw err;
+        }
       }
-    }
-  }
+    },
+  );
 
   /**
    * Close the english auction for both the seller and the bidder
@@ -634,7 +638,7 @@ export class MarketplaceV3EnglishAuctions<
    * @returns the transaction result
    * @twfeature EnglishAuctions
    */
-  public async executeSale(auctionId: BigNumberish) {
+  executeSale = buildTransactionFunction(async (auctionId: BigNumberish) => {
     const auction = await this.validateAuction(BigNumber.from(auctionId));
     try {
       const winningBid = await this.getWinningBid(auctionId);
@@ -645,10 +649,12 @@ export class MarketplaceV3EnglishAuctions<
       const closeForBuyer = this.encoder.encode("collectAuctionTokens", [
         auctionId,
       ]);
-      return await this.contractWrapper.multiCall([
-        closeForSeller,
-        closeForBuyer,
-      ]);
+      return Transaction.fromContractWrapper({
+        contractWrapper: this
+          .contractWrapper as unknown as ContractWrapper<IMulticall>,
+        method: "multicall",
+        args: [[closeForSeller, closeForBuyer]],
+      });
     } catch (err: any) {
       if (err.message.includes("Marketplace: auction still active.")) {
         throw new AuctionHasNotEndedError(
@@ -659,7 +665,7 @@ export class MarketplaceV3EnglishAuctions<
         throw err;
       }
     }
-  }
+  });
 
   /**
    * Get the buffer for an english auction
