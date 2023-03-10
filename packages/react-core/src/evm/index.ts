@@ -8,7 +8,6 @@ export { TW_WC_PROJECT_ID } from "../core/constants/wc";
 
 // wallet hooks
 export {
-  useActiveChainId,
   useWallet,
   useConnect,
   useConnectionStatus,

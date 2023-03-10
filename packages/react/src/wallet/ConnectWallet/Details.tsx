@@ -33,9 +33,9 @@ import { GearIcon } from "@radix-ui/react-icons";
 import { defaultChains } from "@thirdweb-dev/chains";
 import {
   SupportedWallet,
-  useActiveChainId,
   useAddress,
   useBalance,
+  useChainId,
   useDisconnect,
   useSupportedChains,
   useWallet,
@@ -60,7 +60,7 @@ export const ConnectedWalletDetails: React.FC<{
 }> = (props) => {
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
-  const activeChainId = useActiveChainId();
+  const activeChainId = useChainId();
   const address = useAddress();
   const balanceQuery = useBalance();
   const activeWallet = useWallet();

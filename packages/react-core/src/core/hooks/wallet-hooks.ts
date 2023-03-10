@@ -97,16 +97,3 @@ export function useSwitchChain() {
   );
   return context.switchChain;
 }
-
-/**
- *
- * @returns a method to get the chainId of currently connected network/chain
- */
-export function useActiveChainId() {
-  const context = useThirdwebWallet();
-  invariant(
-    context,
-    "useActiveChainId() must be used within a <ThirdwebProvider/>",
-  );
-  return context.activeChainId;
-}
