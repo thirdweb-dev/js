@@ -16,6 +16,8 @@ export const Button = styled.button<{
   font-weight: 500;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
+  line-height: 1;
+  flex-shrink: 0;
 
   &:focus {
     box-shadow: 0 0 0 3px

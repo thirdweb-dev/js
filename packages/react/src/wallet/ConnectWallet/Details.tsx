@@ -116,6 +116,7 @@ export const ConnectedWalletDetails: React.FC<{
         ) : (
           <Skeleton height={fontSize.md} />
         )}
+        <Spacer y="xxs" />
         <WalletAddress>{shortenString(address || "")}</WalletAddress>
       </ColFlex>
 
@@ -301,6 +302,7 @@ const DropDownContent = styled(DropdownMenu.Content)<{ theme?: Theme }>`
   will-change: transform, opacity;
   border: 1px solid ${(props) => props.theme.bg.highlighted};
   background-color: ${(props) => props.theme.bg.base};
+  z-index: 1000000;
 `;
 
 const WalletInfoButton = styled.button<{ theme?: Theme }>`
@@ -317,6 +319,7 @@ const WalletInfoButton = styled.button<{ theme?: Theme }>`
   min-width: 200px;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
+  line-height: 1;
 
   &:hover {
     transition: background 250ms ease;
@@ -334,7 +337,6 @@ const WalletAddress = styled.span<{ theme?: Theme }>`
 const ColFlex = styled.div<{ theme?: Theme }>`
   display: flex;
   flex-direction: column;
-  gap: 4px;
 `;
 
 const WalletBalance = styled.span<{ theme?: Theme }>`
