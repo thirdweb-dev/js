@@ -84,6 +84,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
     async (
       tokenId: BigNumberish,
       amount: BigNumberish = 1,
+      gasLimit = 500000,
     ): Promise<Transaction<TransactionResultWithId>> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -91,7 +92,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
         args: [tokenId, amount],
         overrides: {
           // Higher gas limit for opening packs
-          gasLimit: 500000,
+          gasLimit,
         },
         parse: (receipt) => {
           let id = BigNumber.from(0);
@@ -127,14 +128,14 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * @twfeature PackVRF
    */
   claimRewards = buildTransactionFunction(
-    async (): Promise<Transaction<Promise<PackRewards>>> => {
+    async (gasLimit = 500000): Promise<Transaction<Promise<PackRewards>>> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "claimRewards",
         args: [],
         overrides: {
           // Higher gas limit for opening packs
-          gasLimit: 500000,
+          gasLimit,
         },
         parse: async (receipt) => {
           const event = this.contractWrapper.parseLogs<PackOpenedEvent>(

@@ -253,7 +253,10 @@ export const ThirdwebProvider = <
     ) {
       return supportedChains as Readonly<Chain[]>;
     }
-    return [...supportedChains, activeChain] as Readonly<Chain[]>;
+    return [
+      ...supportedChains.filter((c) => c.chainId !== activeChain.chainId),
+      activeChain,
+    ] as Readonly<Chain[]>;
   }, [supportedChains, activeChain]);
 
   const activeChainId = useMemo(() => {

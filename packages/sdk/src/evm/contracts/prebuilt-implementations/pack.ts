@@ -577,6 +577,7 @@ export class Pack extends StandardErc1155<PackContract> {
     async (
       tokenId: BigNumberish,
       amount: BigNumberish = 1,
+      gasLimit = 500000,
     ): Promise<Transaction<Promise<PackRewards>>> => {
       if (this._vrf) {
         throw new Error(
@@ -590,7 +591,7 @@ export class Pack extends StandardErc1155<PackContract> {
         args: [tokenId, amount],
         overrides: {
           // Higher gas limit for opening packs
-          gasLimit: 500000,
+          gasLimit,
         },
         parse: async (receipt) => {
           const event = this.contractWrapper.parseLogs<PackOpenedEvent>(

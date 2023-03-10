@@ -251,10 +251,6 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
             expirationTimestamp: parsedOffer.endTimestamp,
           } as IOffers.OfferParamsStruct,
         ],
-        overrides: {
-          // Higher gas limit for create listing
-          gasLimit: 500000,
-        },
         parse: (receipt) => {
           const event = this.contractWrapper.parseLogs<NewOfferEvent>(
             "NewOffer",
