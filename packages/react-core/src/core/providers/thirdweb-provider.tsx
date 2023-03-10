@@ -19,7 +19,7 @@ import React, { useMemo } from "react";
 /**
  * The possible props for the ThirdwebProvider.
  */
-export interface ThirdwebProviderProps<
+export interface ThirdwebProviderCoreProps<
   TChains extends Chain[] = typeof defaultChains,
 > {
   /**
@@ -110,10 +110,10 @@ const defaultdAppMeta: DAppMetaData = {
   url: "https://thirdweb.com",
 };
 
-export const ThirdwebProvider = <
+export const ThirdwebProviderCore = <
   TChains extends Chain[] = typeof defaultChains,
 >(
-  props: React.PropsWithChildren<ThirdwebProviderProps<TChains>>,
+  props: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>,
 ) => {
   // deprecations
   if (props.chainRpc) {

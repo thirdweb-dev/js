@@ -4,11 +4,11 @@ import invariant from "tiny-invariant";
 /**
  * @returns the current active wallet instance
  */
-export function useActiveWallet() {
+export function useWallet() {
   const context = useThirdwebWallet();
   invariant(
     context,
-    "useActiveWallet() hook must be used within a <ThirdwebProvider/>",
+    "useWallet() hook must be used within a <ThirdwebProvider/>",
   );
   return context.activeWallet;
 }

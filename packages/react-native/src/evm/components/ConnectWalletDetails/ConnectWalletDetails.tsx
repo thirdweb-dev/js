@@ -8,11 +8,7 @@ import { WalletIcon } from "../base/WalletIcon";
 import { TWModal } from "../base/modal/TWModal";
 import { NetworkButton } from "./NetworkButton";
 import { WalletDetailsModalHeader } from "./WalletDetailsModalHeader";
-import {
-  useActiveWallet,
-  useBalance,
-  useDisconnect,
-} from "@thirdweb-dev/react-core";
+import { useWallet, useBalance, useDisconnect } from "@thirdweb-dev/react-core";
 import { useActiveChain } from "@thirdweb-dev/react-core/evm";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -29,7 +25,7 @@ export const ConnectWalletDetails = ({
     useState(false);
   const [isDisconnecting, setIsDisconnecting] = useState(false);
 
-  const activeWallet = useActiveWallet();
+  const activeWallet = useWallet();
   const disconnect = useDisconnect();
   const chain = useActiveChain();
   const balanceQuery = useBalance();

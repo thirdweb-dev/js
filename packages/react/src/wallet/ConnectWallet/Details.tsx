@@ -34,11 +34,11 @@ import { defaultChains } from "@thirdweb-dev/chains";
 import {
   SupportedWallet,
   useActiveChainId,
-  useActiveWallet,
   useAddress,
   useBalance,
   useDisconnect,
   useSupportedChains,
+  useWallet,
 } from "@thirdweb-dev/react-core";
 import { useMemo, useState } from "react";
 
@@ -63,7 +63,7 @@ export const ConnectedWalletDetails: React.FC<{
   const activeChainId = useActiveChainId();
   const address = useAddress();
   const balanceQuery = useBalance();
-  const activeWallet = useActiveWallet();
+  const activeWallet = useWallet();
 
   const chain = useMemo(() => {
     return chains.find((_chain) => _chain.chainId === activeChainId);

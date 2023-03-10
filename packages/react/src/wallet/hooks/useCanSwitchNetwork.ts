@@ -1,12 +1,12 @@
 import { useInstalledWallets } from "./useInstalledWallets";
 import {
-  useActiveWallet,
+  useWallet,
   useSupportedChains,
   useNetworkMismatch,
 } from "@thirdweb-dev/react-core";
 
 export function useCanSwitchNetwork() {
-  const activeWallet = useActiveWallet();
+  const activeWallet = useWallet();
   const supportedChains = useSupportedChains();
   const networkMismatch = useNetworkMismatch();
   const installedWallets = useInstalledWallets();

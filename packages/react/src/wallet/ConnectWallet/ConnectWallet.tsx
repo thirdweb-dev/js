@@ -2,10 +2,7 @@ import { darkTheme, lightTheme, Theme } from "../../design-system";
 import { ConnectWalletFlow } from "./Connect";
 import { ConnectedWalletDetails, DropDownPosition } from "./Details";
 import { ThemeProvider } from "@emotion/react";
-import {
-  ThirdwebThemeContext,
-  useActiveWallet,
-} from "@thirdweb-dev/react-core";
+import { ThirdwebThemeContext, useWallet } from "@thirdweb-dev/react-core";
 import { useContext } from "react";
 
 type ConnectWalletProps = {
@@ -21,7 +18,7 @@ type ConnectWalletProps = {
  * The button must be descendant of `ThirdwebProvider` in order to function.
  */
 export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
-  const activeWallet = useActiveWallet();
+  const activeWallet = useWallet();
   const themeFromCore = useContext(ThirdwebThemeContext);
   const theme = props.theme || themeFromCore || "dark";
   return (

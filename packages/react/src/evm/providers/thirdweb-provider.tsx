@@ -6,7 +6,7 @@ import {
 } from "../../wallet/wallets";
 import {
   SupportedWallet,
-  ThirdwebProvider as ThirdwebProviderCore,
+  ThirdwebProviderCore,
 } from "@thirdweb-dev/react-core";
 import { ComponentProps } from "react";
 
