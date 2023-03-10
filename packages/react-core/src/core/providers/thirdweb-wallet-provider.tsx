@@ -269,6 +269,11 @@ export function ThirdwebWalletProvider(
     activeWallet.addListener("disconnect", () => {
       onWalletDisconnect();
     });
+
+    return () => {
+      activeWallet.removeListener("change");
+      activeWallet.removeListener("disconnect");
+    };
   }, [activeWallet, onWalletDisconnect]);
 
   return (
