@@ -102,11 +102,11 @@ export function getChainProvider(
   // Build a map of chainId -> ChainInfo based on the supportedChains
   const rpcMap: Record<number, ChainInfo> = buildDefaultMap(options);
 
-  // Resolve the chain id from the network, which could be a chain, chain name, or chain id
-  const chainId = getChainIdFromNetwork(network, options);
-
   let rpcUrl = "";
+  let chainId;
   try {
+    // Resolve the chain id from the network, which could be a chain, chain name, or chain id
+    chainId = getChainIdFromNetwork(network, options);
     // Attempt to get the RPC url from the map based on the chainId
     rpcUrl = getChainRPC(rpcMap[chainId], {
       thirdwebApiKey: options.thirdwebApiKey || DEFAULT_API_KEY,
@@ -114,13 +114,12 @@ export function getChainProvider(
       alchemyApiKey: options.alchemyApiKey,
     });
   } catch (e) {
-    console.warn("Failed to get chain RPC", e);
     // no-op
   }
 
-  // if we still don't have an url fall back to just using the chainId in the rpc and try that shit
+  // if we still don't have an url fall back to just using the chainId or slug in the rpc and try that
   if (!rpcUrl) {
-    rpcUrl = `https://${chainId}.rpc.thirdweb.com/${
+    rpcUrl = `https://${chainId || network}.rpc.thirdweb.com/${
       options.thirdwebApiKey || DEFAULT_API_KEY
     }`;
   }

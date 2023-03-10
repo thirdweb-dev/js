@@ -140,7 +140,7 @@ export class ShardedMerkleTree {
     snapshotFormatVersion: SnapshotFormatVersion,
     shardNybbles = SHARD_NYBBLES,
   ): Promise<ShardedSnapshot> {
-    const inputs = SnapshotInputSchema.parse(snapshotInput);
+    const inputs = await SnapshotInputSchema.parseAsync(snapshotInput);
     // TODO Could also derive shardNybbles from input size
     const shards: Record<string, SnapshotEntry[]> = {};
     for (const snapshotEntry of inputs) {
@@ -281,7 +281,7 @@ export class ShardedMerkleTree {
     const proof = this.trees[shardId]
       .getProof(leaf)
       .map((i) => "0x" + i.data.toString("hex"));
-    return SnapshotEntryWithProofSchema.parse({
+    return SnapshotEntryWithProofSchema.parseAsync({
       ...entry,
       proof: proof.concat(shard.proofs),
     });

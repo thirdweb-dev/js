@@ -1,6 +1,8 @@
 import { NetworkInput, Transaction, TransactionResult } from "..";
+import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import { getMultichainRegistryAddress } from "../../constants/addresses";
+import { AddressOrEns } from "../../schema";
 import { PublishedMetadata } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import { AddContractInput, ContractInput, DeployedContract } from "../../types";
@@ -50,17 +52,17 @@ export class MultichainRegistry {
 
   public async getContractMetadataURI(
     chainId: number,
-    address: string,
+    address: AddressOrEns,
   ): Promise<string> {
     return await this.registryLogic.readContract.getMetadataUri(
       chainId,
-      address,
+      await resolveAddress(address),
     );
   }
 
   public async getContractMetadata(
     chainId: number,
-    address: string,
+    address: AddressOrEns,
   ): Promise<PublishedMetadata> {
     const uri = await this.getContractMetadataURI(chainId, address);
     if (!uri) {
@@ -73,9 +75,13 @@ export class MultichainRegistry {
   }
 
   public async getContractAddresses(
-    walletAddress: string,
+    walletAddress: AddressOrEns,
   ): Promise<DeployedContract[]> {
-    return (await this.registryLogic.readContract.getAll(walletAddress))
+    return (
+      await this.registryLogic.readContract.getAll(
+        await resolveAddress(walletAddress),
+      )
+    )
       .filter(
         (result) =>
           utils.isAddress(result.deploymentAddress) &&
@@ -133,15 +139,18 @@ export class MultichainRegistry {
       contracts: ContractInput[],
     ): Promise<Transaction<TransactionResult>> => {
       const deployerAddress = await this.registryRouter.getSignerAddress();
-      const encoded: string[] = [];
-      contracts.forEach((contract) => {
-        encoded.push(
+      const encoded: string[] = await Promise.all(
+        contracts.map(async (contract) =>
           this.registryLogic.readContract.interface.encodeFunctionData(
             "remove",
-            [deployerAddress, contract.address, contract.chainId],
+            [
+              deployerAddress,
+              await resolveAddress(contract.address),
+              contract.chainId,
+            ],
           ),
-        );
-      });
+        ),
+      );
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.registryRouter,

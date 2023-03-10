@@ -18,7 +18,7 @@ import { isBrowser } from "../../common/utils";
 import { CONTRACT_ADDRESSES, ChainId } from "../../constants";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import { EventType } from "../../constants/events";
-import { CallOverrideSchema } from "../../schema";
+import { Address, CallOverrideSchema } from "../../schema";
 import { AbiSchema, ContractSource } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
@@ -108,7 +108,7 @@ export class ContractWrapper<
   /**
    * @internal
    */
-  public async getSignerAddress(): Promise<string> {
+  public async getSignerAddress(): Promise<Address> {
     const signer = this.getSigner();
     if (!signer) {
       throw new Error(
@@ -281,7 +281,7 @@ export class ContractWrapper<
     try {
       if (args.length > 0 && typeof args[args.length - 1] === "object") {
         const last = args[args.length - 1];
-        txOptions = CallOverrideSchema.parse(last);
+        txOptions = await CallOverrideSchema.parseAsync(last);
         // if call overrides found, remove it from args array
         args = args.slice(0, args.length - 1);
       }

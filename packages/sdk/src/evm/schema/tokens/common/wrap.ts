@@ -1,12 +1,12 @@
 import { AmountSchema } from "../../../../core/schema/shared";
-import { AddressSchema, BigNumberishSchema } from "../../shared";
+import { AddressOrEnsSchema, BigNumberishSchema } from "../../shared";
 import { z } from "zod";
 
 /**
  * @internal
  */
 const CommonWrappableSchema = z.object({
-  contractAddress: AddressSchema,
+  contractAddress: AddressOrEnsSchema,
 });
 
 /**

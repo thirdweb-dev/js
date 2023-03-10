@@ -1,3 +1,4 @@
+import { AddressOrEns } from "../../schema";
 import { CurrencyValue } from "../currency";
 import { BigNumber, BigNumberish } from "ethers";
 
@@ -10,7 +11,7 @@ export interface Offer {
   /**
    * The address of the buyer who made the offer.
    */
-  buyerAddress: string;
+  buyerAddress: AddressOrEns;
 
   /**
    * The quantity of tokens to be bought.
@@ -30,5 +31,5 @@ export interface Offer {
   /**
    * The currency contract address of the offer token.
    */
-  currencyContractAddress: string;
+  currencyContractAddress: AddressOrEns;
 }

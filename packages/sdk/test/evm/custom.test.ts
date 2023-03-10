@@ -40,6 +40,7 @@ describe("Custom Contracts", async () => {
     // if we update the test data - await uploadContractMetadata("Greeter", storage);
 
     // only create this once by default (hits IPFS!)
+    // TODO use mock storage instead
     customContractAddress = await realSDK.deployer.deployContractFromUri(
       simpleContractUri,
       [],
@@ -233,7 +234,11 @@ describe("Custom Contracts", async () => {
   });
 
   it("should not detect feature if missing from ABI", async () => {
-    const c = await sdk.getContractFromAbi("", VoteERC20__factory.abi);
+    const address = await sdk.deployer.deployVote({
+      name: "My Vote",
+      voting_token_address: adminWallet.address,
+    });
+    const c = await sdk.getContractFromAbi(address, VoteERC20__factory.abi);
     invariant(c, "Contract undefined");
     invariant(c.metadata, "Metadata undefined");
     try {

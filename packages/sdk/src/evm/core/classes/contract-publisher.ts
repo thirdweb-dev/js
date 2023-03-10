@@ -9,10 +9,12 @@ import {
   isIncrementalVersion,
   resolveContractUriFromAddress,
 } from "../../common";
+import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import { getContractPublisherAddress } from "../../constants";
 import {
   AbiFunction,
+  AddressOrEns,
   ContractParam,
   ContractSource,
   ExtraPublishMetadata,
@@ -106,7 +108,7 @@ export class ContractPublisher extends RPCConnectionHandler {
    */
   public async fetchPrePublishMetadata(
     prepublishUri: string,
-    publisherAddress: string,
+    publisherAddress: AddressOrEns,
   ): Promise<{
     preDeployMetadata: PreDeployMetadataFetched;
     latestPublishedContractMetadata?: PublishedContractFetched;
@@ -131,9 +133,10 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @internal
    * @param address
    */
-  public async fetchCompilerMetadataFromAddress(address: string) {
+  public async fetchCompilerMetadataFromAddress(address: AddressOrEns) {
+    const resolvedAddress = await resolveAddress(address);
     return fetchContractMetadataFromAddress(
-      address,
+      resolvedAddress,
       this.getProvider(),
       this.storage,
     );
@@ -195,9 +198,10 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @internal
    * TODO clean this up (see method above, too)
    */
-  public async resolveContractUriFromAddress(address: string) {
+  public async resolveContractUriFromAddress(address: AddressOrEns) {
+    const resolvedAddress = await resolveAddress(address);
     const contractUri = await resolveContractUriFromAddress(
-      address,
+      resolvedAddress,
       this.getProvider(),
     );
     invariant(contractUri, "Could not resolve contract URI from address");
@@ -209,9 +213,12 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @param address
    */
   public async fetchContractSourcesFromAddress(
-    address: string,
+    address: AddressOrEns,
   ): Promise<ContractSource[]> {
-    const metadata = await this.fetchCompilerMetadataFromAddress(address);
+    const resolvedAddress = await resolveAddress(address);
+    const metadata = await this.fetchCompilerMetadataFromAddress(
+      resolvedAddress,
+    );
     return await fetchSourceFilesFromMetadata(metadata, this.storage);
   }
 
@@ -239,10 +246,11 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @param publisherAddress
    */
   public async getPublisherProfile(
-    publisherAddress: string,
+    publisherAddress: AddressOrEns,
   ): Promise<ProfileMetadata> {
+    const resolvedPublisherAddress = await resolveAddress(publisherAddress);
     const profileUri = await this.publisher.readContract.getPublisherProfileUri(
-      publisherAddress,
+      resolvedPublisherAddress,
     );
     if (!profileUri || profileUri.length === 0) {
       return {};
@@ -256,9 +264,12 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @internal
    * @param publisherAddress
    */
-  public async getAll(publisherAddress: string): Promise<PublishedContract[]> {
+  public async getAll(
+    publisherAddress: AddressOrEns,
+  ): Promise<PublishedContract[]> {
+    const resolvedPublisherAddress = await resolveAddress(publisherAddress);
     const data = await this.publisher.readContract.getAllPublishedContracts(
-      publisherAddress,
+      resolvedPublisherAddress,
     );
     // since we can fetch from multiple publisher contracts, just keep the latest one in the list
     const map = data.reduce((acc, curr) => {
@@ -279,12 +290,13 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @param contractId
    */
   public async getAllVersions(
-    publisherAddress: string,
+    publisherAddress: AddressOrEns,
     contractId: string,
   ): Promise<PublishedContract[]> {
+    const resolvedPublisherAddress = await resolveAddress(publisherAddress);
     const contractStructs =
       await this.publisher.readContract.getPublishedContractVersions(
-        publisherAddress,
+        resolvedPublisherAddress,
         contractId,
       );
     if (contractStructs.length === 0) {
@@ -294,14 +306,18 @@ export class ContractPublisher extends RPCConnectionHandler {
   }
 
   public async getVersion(
-    publisherAddress: string,
+    publisherAddress: AddressOrEns,
     contractId: string,
     version = "latest",
   ): Promise<PublishedContract | undefined> {
+    const resolvedPublisherAddress = await resolveAddress(publisherAddress);
     if (version === "latest") {
-      return this.getLatest(publisherAddress, contractId);
+      return this.getLatest(resolvedPublisherAddress, contractId);
     }
-    const allVersions = await this.getAllVersions(publisherAddress, contractId);
+    const allVersions = await this.getAllVersions(
+      resolvedPublisherAddress,
+      contractId,
+    );
     // get the metadata for each version
     const versionMetadata = await Promise.all(
       allVersions.map((contract) => this.fetchPublishedContractInfo(contract)),
@@ -318,11 +334,12 @@ export class ContractPublisher extends RPCConnectionHandler {
   }
 
   public async getLatest(
-    publisherAddress: string,
+    publisherAddress: AddressOrEns,
     contractId: string,
   ): Promise<PublishedContract | undefined> {
+    const resolvedPublisherAddress = await resolveAddress(publisherAddress);
     const model = await this.publisher.readContract.getPublishedContract(
-      publisherAddress,
+      resolvedPublisherAddress,
       contractId,
     );
     if (model && model.publishMetadataUri) {
@@ -415,13 +432,14 @@ export class ContractPublisher extends RPCConnectionHandler {
 
   unpublish = buildTransactionFunction(
     async (
-      publisher: string,
+      publisher: AddressOrEns,
       contractId: string,
     ): Promise<Transaction<TransactionResult>> => {
+      const resolvedPublisher = await resolveAddress(publisher);
       return Transaction.fromContractWrapper({
         contractWrapper: this.publisher,
         method: "unpublishContract",
-        args: [publisher, contractId],
+        args: [resolvedPublisher, contractId],
       });
     },
   );
