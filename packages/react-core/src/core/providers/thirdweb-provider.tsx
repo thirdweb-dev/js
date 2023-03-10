@@ -3,12 +3,14 @@ import {
   ThirdwebSDKProvider,
   ThirdwebSDKProviderProps,
 } from "../../evm/providers/thirdweb-sdk-provider";
-import { useWalletSigner } from "../hooks/wallet-hooks";
 import { DAppMetaData } from "../types/dAppMeta";
 import { SupportedWallet } from "../types/wallet";
 import { showDeprecationWarning } from "../utils";
 import { ThirdwebThemeContext } from "./theme-context";
-import { ThirdwebWalletProvider } from "./thirdweb-wallet-provider";
+import {
+  ThirdwebWalletProvider,
+  useThirdwebWallet,
+} from "./thirdweb-wallet-provider";
 import { QueryClient } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import type { SDKOptions } from "@thirdweb-dev/sdk";
@@ -178,7 +180,7 @@ const ThirdwebSDKProviderWrapper = <TChains extends Chain[]>({
 }: React.PropsWithChildren<
   Omit<ThirdwebSDKProviderProps<TChains>, "signer">
 >) => {
-  const signer = useWalletSigner();
+  const signer = useThirdwebWallet()?.signer;
 
   return (
     <ThirdwebSDKProvider signer={signer} {...props}>

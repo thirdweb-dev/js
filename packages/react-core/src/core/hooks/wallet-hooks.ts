@@ -110,16 +110,3 @@ export function useActiveChainId() {
   );
   return context.activeChainId;
 }
-
-/**
- *
- * @returns the signer of the connected wallet
- */
-export function useWalletSigner() {
-  const context = useThirdwebWallet();
-  invariant(
-    context,
-    "useWalletSigner() must be used within a <ThirdwebProvider/>",
-  );
-  return context.signer;
-}
