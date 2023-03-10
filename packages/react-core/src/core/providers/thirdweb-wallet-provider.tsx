@@ -94,8 +94,21 @@ export function ThirdwebWalletProvider(
         theme: theme || "dark",
       });
     },
-    [props, theme],
+    [
+      props.chains,
+      props.shouldAutoConnect,
+      props.dAppMeta,
+      props.activeChain,
+      theme,
+    ],
   );
+
+  // if props.chains is updated, update the active wallet's chains
+  useEffect(() => {
+    if (activeWallet) {
+      activeWallet.updateChains(props.chains);
+    }
+  }, [activeWallet, props.chains]);
 
   const handleWalletConnect = useCallback(
     async (wallet: InstanceType<SupportedWallet>) => {

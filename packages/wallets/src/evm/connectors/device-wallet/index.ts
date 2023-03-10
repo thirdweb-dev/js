@@ -120,4 +120,8 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
   };
 
   async setupListeners() {}
+
+  updateChains(chains: Chain[]): void {
+    this.options.chains = chains;
+  }
 }

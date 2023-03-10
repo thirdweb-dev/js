@@ -9,6 +9,7 @@ import {
   PaperEmbeddedWalletSdk,
   UserStatus,
 } from "@paperxyz/embedded-wallet-service-sdk";
+import { Chain } from "@thirdweb-dev/chains";
 import type { providers, Signer } from "ethers";
 
 export const PaperChainMap: Record<number, Chains> = {
@@ -138,4 +139,8 @@ export class EmailWalletConnector extends TWConnector<EmailWalletConnectionArgs>
   }
 
   async setupListeners() {}
+
+  updateChains(chains: Chain[]): void {
+    // no op
+  }
 }

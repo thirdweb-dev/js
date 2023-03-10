@@ -26,7 +26,7 @@ export abstract class Connector<
   /** Connector name */
   abstract readonly name: string;
   /** Chains connector supports */
-  readonly chains: Chain[];
+  chains: Chain[];
   /** Options to use with connector */
   readonly options: Options;
   /** Whether connector is usable */
@@ -77,4 +77,8 @@ export abstract class Connector<
   }
 
   abstract setupListeners(): Promise<void>;
+
+  updateChains(chains: Chain[]) {
+    this.chains = chains;
+  }
 }
