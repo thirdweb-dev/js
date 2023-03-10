@@ -2,6 +2,7 @@ import { DEFAULT_API_KEY } from "../../core/constants";
 import { showDeprecationWarning } from "../../core/utils";
 import type { GnosisSafeConnector } from "../connectors/gnosis-safe";
 import type { MagicConnector } from "../connectors/magic";
+import { uniqueBy } from "../utils/array";
 import { QueryClient } from "@tanstack/react-query";
 import { Chain, defaultChains, getChainRPC } from "@thirdweb-dev/chains";
 import {
@@ -253,7 +254,9 @@ export const ThirdwebProvider = <
     ) {
       return supportedChains as Readonly<Chain[]>;
     }
-    return [...supportedChains, activeChain] as Readonly<Chain[]>;
+    return uniqueBy([activeChain, ...supportedChains], "chainId") as Readonly<
+      Chain[]
+    >;
   }, [supportedChains, activeChain]);
 
   const activeChainId = useMemo(() => {
