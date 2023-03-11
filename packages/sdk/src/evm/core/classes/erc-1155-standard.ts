@@ -1,5 +1,6 @@
 import { NFT } from "../../../core/schema/nft";
 import { buildTransactionFunction } from "../../common/transactions";
+import { Address, AddressOrEns } from "../../schema";
 import { AirdropInput } from "../../types/airdrop/airdrop";
 import { BaseERC1155, BaseSignatureMintERC1155 } from "../../types/eips";
 import { UpdateableNetwork } from "../interfaces/contract";
@@ -53,7 +54,7 @@ export class StandardErc1155<
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
   }
 
@@ -96,7 +97,7 @@ export class StandardErc1155<
    * ```
    */
   public async balanceOf(
-    address: string,
+    address: AddressOrEns,
     tokenId: BigNumberish,
   ): Promise<BigNumber> {
     return this.erc1155.balanceOf(address, tokenId);
@@ -114,7 +115,10 @@ export class StandardErc1155<
    * @param address - the wallet address
    * @param operator - the operator address
    */
-  public async isApproved(address: string, operator: string): Promise<boolean> {
+  public async isApproved(
+    address: AddressOrEns,
+    operator: AddressOrEns,
+  ): Promise<boolean> {
     return this.erc1155.isApproved(address, operator);
   }
 
@@ -134,7 +138,7 @@ export class StandardErc1155<
    */
   transfer = buildTransactionFunction(
     async (
-      to: string,
+      to: AddressOrEns,
       tokenId: BigNumberish,
       amount: BigNumberish,
       data: BytesLike = [0],
@@ -151,7 +155,7 @@ export class StandardErc1155<
    * @internal
    */
   setApprovalForAll = buildTransactionFunction(
-    async (operator: string, approved: boolean) => {
+    async (operator: AddressOrEns, approved: boolean) => {
       return this.erc1155.setApprovalForAll.prepare(operator, approved);
     },
   );

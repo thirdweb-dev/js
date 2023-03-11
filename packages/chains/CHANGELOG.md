@@ -1,5 +1,17 @@
 # @thirdweb-dev/chains
 
+## 0.1.6
+
+### Patch Changes
+
+- [#635](https://github.com/thirdweb-dev/js/pull/635) [`7832041c`](https://github.com/thirdweb-dev/js/commit/7832041c0fb25852489c73453c2b26e844d94582) Thanks [@jnsdls](https://github.com/jnsdls)! - Add additional chains
+
+- [#643](https://github.com/thirdweb-dev/js/pull/643) [`85250cf7`](https://github.com/thirdweb-dev/js/commit/85250cf71190092b61023d56d1e786d395a008a6) Thanks [@jnsdls](https://github.com/jnsdls)! - expose `getChainBySlug` and `ChainSlug` and `ChainId` type
+
+- [#638](https://github.com/thirdweb-dev/js/pull/638) [`e33bd2a8`](https://github.com/thirdweb-dev/js/commit/e33bd2a856bbc2e2f6b0c90b46be5166281875ae) Thanks [@jnsdls](https://github.com/jnsdls)! - Add `getChainByChainId()` to retrieve chain by chainId
+
+- [#685](https://github.com/thirdweb-dev/js/pull/685) [`4355518a`](https://github.com/thirdweb-dev/js/commit/4355518afea68cd8026d3ab8a0144c15d66b9e24) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
 ## 0.1.5
 
 ### Patch Changes

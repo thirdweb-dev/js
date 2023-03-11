@@ -2,7 +2,7 @@ import {
   BasisPointsSchema,
   FileOrBufferOrStringSchema,
 } from "../../../../core/schema/shared";
-import { AddressSchema } from "../../shared";
+import { AddressOrEnsSchema } from "../../shared";
 import { constants } from "ethers";
 import { z } from "zod";
 
@@ -14,6 +14,7 @@ export const CommonContractSchema = z.object({
   description: z.string().optional(),
   image: FileOrBufferOrStringSchema.optional(),
   external_link: z.string().optional(),
+  app_uri: z.string().optional(),
 });
 
 export type CommonContractSchemaInput = z.input<typeof CommonContractSchema>;
@@ -46,7 +47,7 @@ export const CommonRoyaltySchema = z.object({
    * to this address.
    * @internalremarks used by OpenSea "fee_recipient"
    */
-  fee_recipient: AddressSchema.default(constants.AddressZero),
+  fee_recipient: AddressOrEnsSchema.default(constants.AddressZero),
 });
 
 /**
@@ -56,7 +57,7 @@ export const CommonPrimarySaleSchema = z.object({
   /**
    * primary sale recipient address
    */
-  primary_sale_recipient: AddressSchema,
+  primary_sale_recipient: AddressOrEnsSchema,
 });
 
 /**
@@ -70,14 +71,14 @@ export const CommonPlatformFeeSchema = z.object({
   /**
    * platform fee recipient address
    */
-  platform_fee_recipient: AddressSchema.default(constants.AddressZero),
+  platform_fee_recipient: AddressOrEnsSchema.default(constants.AddressZero),
 });
 
 /**
  * @internal
  */
 export const CommonTrustedForwarderSchema = z.object({
-  trusted_forwarders: z.array(AddressSchema).default([]),
+  trusted_forwarders: z.array(AddressOrEnsSchema).default([]),
 });
 
 /**

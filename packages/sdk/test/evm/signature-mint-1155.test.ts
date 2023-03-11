@@ -242,7 +242,7 @@ describe("Edition sig minting", async () => {
       });
       await editionContract.signature.mint(additional);
       const nft = await editionContract.get(tx.id);
-      expect(nft.supply).to.eq(101);
+      expect(nft.supply).to.eq("101");
     });
 
     it("should mint additional supply of one tokenId", async () => {

@@ -206,7 +206,7 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
  *
  * @param contract - an instance of a {@link DropContract}
  * @returns a mutation object that can be used to claim a NFT to the wallet specificed in the params
- * @twfeature ERC721Claimable | ERC1155Claimable
+ * @twfeature ERC721Claimable | ERC1155Claimable | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
  * @beta
  */
 export function useClaimNFT<TContract extends DropContract>(

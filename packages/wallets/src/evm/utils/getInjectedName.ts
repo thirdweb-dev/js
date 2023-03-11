@@ -1,4 +1,4 @@
-import { Ethereum } from "@wagmi/core";
+import { Ethereum } from "../../lib/wagmi-core";
 
 export function getInjectedName(ethereum?: Ethereum) {
   if (!ethereum) {

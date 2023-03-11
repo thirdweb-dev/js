@@ -1,25 +1,15 @@
-// providers
-export { ThirdwebProvider } from "./providers/thirdweb-provider";
-export type {
-  ThirdwebProviderProps,
-  WalletConnector,
-  DAppMetaData,
-} from "./providers/thirdweb-provider";
+export { ConnectWallet } from "../wallet/ConnectWallet/ConnectWallet";
 
-// require to be inside `<ThirdwebProvider />`
-export * from "./hooks/wagmi-required/useAccount";
-export * from "./hooks/wagmi-required/useNetwork";
-export * from "./hooks/wagmi-required/useDisconnect";
-export * from "./hooks/wagmi-required/useConnect";
-export * from "./hooks/connectors/useMetamask";
-export * from "./hooks/connectors/useWalletConnect";
-export * from "./hooks/connectors/useWalletLink";
-
-// ui components
+// UI components
 export * from "./components/MediaRenderer";
 export * from "./components/NftMedia";
-export * from "./components/ConnectWallet";
 export * from "./components/Web3Button";
+export { ThirdwebProvider } from "./providers/thirdweb-provider";
 
-// re-export everything from react-core
-export * from "@thirdweb-dev/react-core/evm";
+// wallet/hooks
+export { useDeviceWalletStorage } from "../wallet/hooks/useDeviceWalletStorage";
+export { useInstalledWallets } from "../wallet/hooks/useInstalledWallets";
+export { useCanSwitchNetwork } from "../wallet/hooks/useCanSwitchNetwork";
+
+// react-core
+export * from "@thirdweb-dev/react-core";

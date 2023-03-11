@@ -3,7 +3,8 @@ export default {
   "chain": "CRO",
   "rpc": [
     "https://cronos-beta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://evm.cronos.org"
+    "https://evm.cronos.org",
+    "https://cronos-evm.publicnode.com"
   ],
   "features": [
     {

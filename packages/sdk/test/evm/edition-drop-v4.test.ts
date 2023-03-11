@@ -79,13 +79,13 @@ describe("Edition Drop Contract (V4)", async () => {
       0,
       bobWallet.address,
     );
-    expect(proof.address).to.eq(bobWallet.address);
+    expect(proof?.address).to.eq(bobWallet.address);
     proof = await bdContract.claimConditions.getClaimerProofs(
       0,
       bobWallet.address,
       0,
     );
-    expect(proof.address).to.eq(bobWallet.address);
+    expect(proof?.address).to.eq(bobWallet.address);
     proof = await bdContract.claimConditions.getClaimerProofs(
       0,
       samWallet.address,
@@ -96,7 +96,7 @@ describe("Edition Drop Contract (V4)", async () => {
       samWallet.address,
       0,
     );
-    expect(proof.address).to.eq(samWallet.address);
+    expect(proof?.address).to.eq(samWallet.address);
   });
 
   it("should estimate gas cost", async () => {
@@ -159,7 +159,7 @@ describe("Edition Drop Contract (V4)", async () => {
       await bdContract.claim("0", 1);
     }
     const bundle = await bdContract.get("0");
-    assert(bundle.supply === testWallets.length);
+    assert(parseInt(bundle.supply) === testWallets.length);
 
     const claimers = await bdContract.history.getAllClaimerAddresses("0");
     expect(claimers.length).to.eq(testWallets.length);
@@ -206,7 +206,7 @@ describe("Edition Drop Contract (V4)", async () => {
       }
     }
     const bundle = await bdContract.get("0");
-    assert(bundle.supply === testWallets.length - 1);
+    assert(parseInt(bundle.supply) === testWallets.length - 1);
   });
 
   it("should return the newly minted tokens", async () => {
@@ -737,7 +737,7 @@ describe("Edition Drop Contract (V4)", async () => {
         samWallet.address,
     );
     assert(
-      (await bdContract.getOwned(samWallet.address))[0].quantityOwned === 3,
+      (await bdContract.getOwned(samWallet.address))[0].quantityOwned === "3",
     );
   });
 

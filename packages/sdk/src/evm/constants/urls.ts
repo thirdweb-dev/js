@@ -1,7 +1,12 @@
 import { DEFAULT_API_KEY } from "../../core/constants/urls";
 import { ChainOrRpcUrl, NetworkInput } from "../core";
 import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
-import { ChainInfo, SDKOptions, SDKOptionsSchema } from "../schema";
+import {
+  ChainInfo,
+  SDKOptions,
+  SDKOptionsOutput,
+  SDKOptionsSchema,
+} from "../schema";
 import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
 import { getChainRPC, Chain } from "@thirdweb-dev/chains";
 import { ethers, providers } from "ethers";
@@ -97,11 +102,11 @@ export function getChainProvider(
   // Build a map of chainId -> ChainInfo based on the supportedChains
   const rpcMap: Record<number, ChainInfo> = buildDefaultMap(options);
 
-  // Resolve the chain id from the network, which could be a chain, chain name, or chain id
-  const chainId = getChainIdFromNetwork(network);
-
   let rpcUrl = "";
+  let chainId;
   try {
+    // Resolve the chain id from the network, which could be a chain, chain name, or chain id
+    chainId = getChainIdFromNetwork(network, options);
     // Attempt to get the RPC url from the map based on the chainId
     rpcUrl = getChainRPC(rpcMap[chainId], {
       thirdwebApiKey: options.thirdwebApiKey || DEFAULT_API_KEY,
@@ -109,40 +114,49 @@ export function getChainProvider(
       alchemyApiKey: options.alchemyApiKey,
     });
   } catch (e) {
-    console.warn("Failed to get chain RPC", e);
     // no-op
   }
 
-  // if we still don't have an url fall back to just using the chainId in the rpc and try that shit
+  // if we still don't have an url fall back to just using the chainId or slug in the rpc and try that
   if (!rpcUrl) {
-    rpcUrl = `https://${chainId}.rpc.thirdweb.com/${
+    rpcUrl = `https://${chainId || network}.rpc.thirdweb.com/${
       options.thirdwebApiKey || DEFAULT_API_KEY
     }`;
   }
 
   if (!rpcUrl) {
     throw new Error(
-      `No rpc url found for chain ${network}. Please provide a valid rpc url via the 'chains' property of the sdk options.`,
+      `No rpc url found for chain ${network}. Please provide a valid rpc url via the 'supportedChains' property of the sdk options.`,
     );
   }
 
   return getProviderFromRpcUrl(rpcUrl, chainId);
 }
 
-export function getChainIdFromNetwork(network: ChainOrRpcUrl): number {
+export function getChainIdFromNetwork(
+  network: ChainOrRpcUrl,
+  options: SDKOptionsOutput,
+): number {
   if (isChainConfig(network)) {
     // If it's a chain just return the chain id
     return network.chainId;
   } else if (typeof network === "number") {
     // If it's a number (chainId) return it directly
     return network;
-  } else if (network in CHAIN_NAME_TO_ID) {
+  } else {
     // If it's a string (chain name) return the chain id from the map
-    return CHAIN_NAME_TO_ID[network as ChainNames];
+    const chainNameToId = options.supportedChains.reduce((acc, curr) => {
+      acc[curr.slug] = curr.chainId;
+      return acc;
+    }, {} as Record<string, number>);
+
+    if (network in chainNameToId) {
+      return chainNameToId[network];
+    }
   }
 
   throw new Error(
-    `Cannot resolve chainId from: ${network} - please pass the chainId instead and specify it in the 'chains' property of the SDK options.`,
+    `Cannot resolve chainId from: ${network} - please pass the chainId instead and specify it in the 'supportedChains' property of the SDK options.`,
   );
 }
 

@@ -1,26 +1,41 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "3.9.5",
+  "version": "3.10.3",
   "description": "The main thirdweb SDK.",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/sdk",
   "license": "Apache-2.0",
   "main": "dist/thirdweb-dev-sdk.cjs.js",
   "module": "dist/thirdweb-dev-sdk.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-sdk.esm.js": "./dist/thirdweb-dev-sdk.browser.esm.js"
+  },
   "exports": {
     ".": {
-      "module": "./dist/thirdweb-dev-sdk.esm.js",
+      "module": {
+        "browser": "./dist/thirdweb-dev-sdk.browser.esm.js",
+        "default": "./dist/thirdweb-dev-sdk.esm.js"
+      },
       "default": "./dist/thirdweb-dev-sdk.cjs.js"
     },
     "./evm": {
-      "module": "./evm/dist/thirdweb-dev-sdk-evm.esm.js",
+      "module": {
+        "browser": "./evm/dist/thirdweb-dev-sdk-evm.browser.esm.js",
+        "default": "./evm/dist/thirdweb-dev-sdk-evm.esm.js"
+      },
       "default": "./evm/dist/thirdweb-dev-sdk-evm.cjs.js"
     },
     "./solana": {
-      "module": "./solana/dist/thirdweb-dev-sdk-solana.esm.js",
+      "module": {
+        "browser": "./solana/dist/thirdweb-dev-sdk-solana.browser.esm.js",
+        "default": "./solana/dist/thirdweb-dev-sdk-solana.esm.js"
+      },
       "default": "./solana/dist/thirdweb-dev-sdk-solana.cjs.js"
     },
     "./solana/server": {
-      "module": "./solana/server/dist/thirdweb-dev-sdk-solana-server.esm.js",
+      "module": {
+        "browser": "./solana/server/dist/thirdweb-dev-sdk-solana-server.browser.esm.js",
+        "default": "./solana/server/dist/thirdweb-dev-sdk-solana-server.esm.js"
+      },
       "default": "./solana/server/dist/thirdweb-dev-sdk-solana-server.cjs.js"
     },
     "./package.json": "./package.json"
@@ -38,7 +53,11 @@
       "solana/index.ts",
       "solana/server/index.ts"
     ],
-    "exports": true
+    "exports": {
+      "envConditions": [
+        "browser"
+      ]
+    }
   },
   "sideEffects": false,
   "scripts": {
@@ -62,6 +81,7 @@
     "push": "yalc push"
   },
   "devDependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.256.0",
     "@metaplex-foundation/amman": "^0.12.0",
     "@metaplex-foundation/amman-client": "^0.2.1",
     "@metaplex-foundation/js": "^0.17.6",
@@ -75,7 +95,7 @@
     "@solana/spl-token": "^0.3.5",
     "@solana/web3.js": "^1.62.0",
     "@swc-node/register": "^1.5.1",
-    "@swc/core": "^1.2.177",
+    "@swc/core": "^1.3.23",
     "@thirdweb-dev/wallets": "*",
     "@types/chai": "^4.3.3",
     "@types/deep-equal-in-any-order": "^1.0.1",
@@ -93,8 +113,9 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-tsdoc": "^0.2.16",
     "ethers": "^5.7.2",
+    "ethers-aws-kms-signer": "^1.3.2",
     "hardhat": "^2.9.3",
-    "mocha": "^10.0.0",
+    "mocha": "^10.2.0",
     "nyc": "^15.1.0",
     "prettier": "^2.7.1",
     "typescript": "^4.7.4"
@@ -138,6 +159,7 @@
     "@thirdweb-dev/storage": "*",
     "bn.js": "^5.2.1",
     "bs58": "^5.0.0",
+    "buffer": "^6.0.3",
     "cross-fetch": "^3.1.5",
     "eventemitter3": "^5.0.0",
     "fast-deep-equal": "^3.1.3",
@@ -146,7 +168,7 @@
     "tweetnacl": "^1.0.3",
     "uuid": "^9.0.0",
     "yaml": "^2.1.1",
-    "zod": "^3.11.6"
+    "zod": "^3.20.2"
   },
   "resolutions": {
     "bn.js": "^5.2.1",

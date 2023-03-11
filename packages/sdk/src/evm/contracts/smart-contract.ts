@@ -31,16 +31,18 @@ import { Erc721 } from "../core/classes/erc-721";
 import { Erc1155 } from "../core/classes/erc-1155";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { UpdateableNetwork } from "../core/interfaces/contract";
+import { Address } from "../schema";
 import { CustomContractSchema } from "../schema/contracts/custom";
 import { SDKOptions } from "../schema/sdk-options";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
 import type {
-  AppURI,
   IPermissions,
   IPlatformFee,
   IPrimarySale,
   IRoyalty,
   Ownable,
+  IAppURI,
+  IContractMetadata,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides, ContractInterface } from "ethers";
@@ -145,8 +147,8 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   /**
    * Auto-detects AppURI standard functions.
    */
-  get appURI(): ContractAppURI<BaseContract> {
-    return assertEnabled(this.detectAppURI(), FEATURE_APPURI);
+  get app(): ContractAppURI<IAppURI | IContractMetadata> {
+    return assertEnabled(this.detectApp(), FEATURE_APPURI);
   }
 
   private _chainId: number;
@@ -193,7 +195,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
   }
 
@@ -316,12 +318,22 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     return undefined;
   }
 
-  private detectAppURI() {
-    if (
-      detectContractFeature<AppURI>(this.contractWrapper, "AppURI") ||
-      detectContractFeature(this.contractWrapper, "ContractMetadata")
+  private detectApp() {
+    const metadata = new ContractMetadata(
+      this.contractWrapper,
+      CustomContractSchema,
+      this.storage,
+    );
+
+    if (detectContractFeature<IAppURI>(this.contractWrapper, "AppURI")) {
+      return new ContractAppURI(this.contractWrapper, metadata, this.storage);
+    } else if (
+      detectContractFeature<IContractMetadata>(
+        this.contractWrapper,
+        "ContractMetadata",
+      )
     ) {
-      return new ContractAppURI(this.contractWrapper, this.metadata);
+      return new ContractAppURI(this.contractWrapper, metadata, this.storage);
     }
     return undefined;
   }

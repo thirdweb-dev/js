@@ -6,6 +6,8 @@ import {
 import { resolveOrGenerateId } from "../../../common/signature-minting";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
 import {
+  AddressOrEnsSchema,
+  AddressSchema,
   BigNumberishSchema,
   BigNumberSchema,
   EndDateSchema,
@@ -18,20 +20,21 @@ import { z } from "zod";
  * @internal
  */
 export const BaseSignaturePayloadInput = z.object({
-  to: z
-    .string()
-    .refine((address) => address.toLowerCase() !== constants.AddressZero, {
+  to: AddressOrEnsSchema.refine(
+    (address) => address.toLowerCase() !== constants.AddressZero,
+    {
       message: "Cannot create payload to mint to zero address",
-    }),
+    },
+  ),
   price: AmountSchema.default(0),
-  currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),
+  currencyAddress: AddressSchema.default(NATIVE_TOKEN_ADDRESS),
   mintStartTime: StartDateSchema,
   mintEndTime: EndDateSchema,
   uid: z
     .string()
     .optional()
     .transform((arg) => resolveOrGenerateId(arg)),
-  primarySaleRecipient: z.string().default(constants.AddressZero),
+  primarySaleRecipient: AddressOrEnsSchema.default(constants.AddressZero),
 });
 
 /**

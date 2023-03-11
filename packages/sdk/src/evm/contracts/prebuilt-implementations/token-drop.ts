@@ -1,5 +1,7 @@
 import { getRoleHash } from "../../common";
+import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -13,6 +15,7 @@ import { StandardErc20 } from "../../core/classes/erc-20-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput } from "../../core/types";
+import { Address, AddressOrEns } from "../../schema";
 import { Abi } from "../../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../../schema/contracts/drop-erc20";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -42,6 +45,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
     PrebuiltTokenDrop,
     typeof DropErc20ContractSchema
   >;
+  public app: ContractAppURI<PrebuiltTokenDrop>;
   public roles: ContractRoles<
     PrebuiltTokenDrop,
     (typeof TokenDrop.contractRoles)[number]
@@ -100,6 +104,12 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
       DropErc20ContractSchema,
       this.storage,
     );
+
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.roles = new ContractRoles(
       this.contractWrapper,
       TokenDrop.contractRoles,
@@ -132,9 +142,11 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
     );
   }
 
-  public async getVoteBalanceOf(account: string): Promise<CurrencyValue> {
+  public async getVoteBalanceOf(account: AddressOrEns): Promise<CurrencyValue> {
     return await this.erc20.getValue(
-      await this.contractWrapper.readContract.getVotes(account),
+      await this.contractWrapper.readContract.getVotes(
+        await resolveAddress(account),
+      ),
     );
   }
 
@@ -143,7 +155,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
    *
    * @returns the address of your vote delegatee
    */
-  public async getDelegation(): Promise<string> {
+  public async getDelegation(): Promise<Address> {
     return await this.getDelegationOf(
       await this.contractWrapper.getSignerAddress(),
     );
@@ -154,8 +166,10 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
    *
    * @returns the address of your vote delegatee
    */
-  public async getDelegationOf(account: string): Promise<string> {
-    return await this.contractWrapper.readContract.delegates(account);
+  public async getDelegationOf(account: AddressOrEns): Promise<Address> {
+    return await this.contractWrapper.readContract.delegates(
+      await resolveAddress(account),
+    );
   }
 
   /**
@@ -211,7 +225,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
    */
   claimTo = buildTransactionFunction(
     async (
-      destinationAddress: string,
+      destinationAddress: AddressOrEns,
       amount: Amount,
       checkERC20Allowance = true,
     ) => {
@@ -227,13 +241,15 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
    * @param delegateeAddress - delegatee wallet address
    * @alpha
    */
-  delegateTo = buildTransactionFunction(async (delegateeAddress: string) => {
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "delegate",
-      args: [delegateeAddress],
-    });
-  });
+  delegateTo = buildTransactionFunction(
+    async (delegateeAddress: AddressOrEns) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "delegate",
+        args: [await resolveAddress(delegateeAddress)],
+      });
+    },
+  );
 
   /**
    * Burn Tokens
@@ -268,7 +284,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
    * ```
    */
   burnFrom = buildTransactionFunction(
-    async (holder: string, amount: Amount) => {
+    async (holder: AddressOrEns, amount: Amount) => {
       return this.erc20.burnFrom.prepare(holder, amount);
     },
   );

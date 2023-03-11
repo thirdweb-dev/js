@@ -49,7 +49,8 @@ describe("Signature drop tests (v5)", async () => {
           seller_fee_basis_points: 0,
         },
         "5",
-      ), 'signature-drop'
+      ), 
+      'signature-drop'
     );
 
     meta = {

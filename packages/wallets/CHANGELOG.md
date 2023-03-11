@@ -1,5 +1,21 @@
 # @thirdweb-dev/wallets
 
+## 0.2.8
+
+### Patch Changes
+
+- [#696](https://github.com/thirdweb-dev/js/pull/696) [`d30e3f4d`](https://github.com/thirdweb-dev/js/commit/d30e3f4db3d74589429e17da1a56e89e9e1082ab) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Upgrade Paper SDK
+
+- [#692](https://github.com/thirdweb-dev/js/pull/692) [`31a252a0`](https://github.com/thirdweb-dev/js/commit/31a252a0ecafe338d1fbb3000b5dec55274a2d84) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Cleanup PaperWallet integration
+
+## 0.2.7
+
+### Patch Changes
+
+- [#665](https://github.com/thirdweb-dev/js/pull/665) [`6ef52dc9`](https://github.com/thirdweb-dev/js/commit/6ef52dc916251d72416ba5a8b63b428770f54e75) Thanks [@shift4id](https://github.com/shift4id)! - Fix spelling throughout all packages
+
+- [#612](https://github.com/thirdweb-dev/js/pull/612) [`e50911bc`](https://github.com/thirdweb-dev/js/commit/e50911bc065dda99945d906d8b166f49d7a89677) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Email wallet RPC support
+
 ## 0.2.6
 
 ## 0.2.5

@@ -2,6 +2,7 @@ import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
 import { buildTransactionFunction } from "../../common/transactions";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -18,6 +19,7 @@ import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
+import { Address, AddressOrEns } from "../../schema";
 import { Abi } from "../../schema/contracts/custom";
 import { TokenErc1155ContractSchema } from "../../schema/contracts/token-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -48,6 +50,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
     TokenERC1155,
     typeof TokenErc1155ContractSchema
   >;
+  public app: ContractAppURI<TokenERC1155>;
   public roles: ContractRoles<
     TokenERC1155,
     (typeof Edition.contractRoles)[number]
@@ -118,6 +121,11 @@ export class Edition extends StandardErc1155<TokenERC1155> {
       TokenErc1155ContractSchema,
       this.storage,
     );
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.roles = new ContractRoles(this.contractWrapper, Edition.contractRoles);
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.sales = new ContractPrimarySale(this.contractWrapper);
@@ -142,7 +150,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
   }
 
@@ -182,7 +190,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    *
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async getOwned(walletAddress?: string): Promise<NFT[]> {
+  public async getOwned(walletAddress?: AddressOrEns): Promise<NFT[]> {
     return this.erc1155.getOwned(walletAddress);
   }
 
@@ -253,7 +261,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    */
   mintTo = buildTransactionFunction(
     async (
-      to: string,
+      to: AddressOrEns,
       metadataWithSupply: EditionMetadataOrUri,
     ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
       return this.erc1155.mintTo.prepare(to, metadataWithSupply);
@@ -269,7 +277,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    * @deprecated `contract.mint.prepare(...args)`
    */
   public async getMintTransaction(
-    receiver: string,
+    receiver: AddressOrEns,
     metadataWithSupply: EditionMetadataOrUri,
   ): Promise<Transaction> {
     return this.erc1155.getMintTransaction(receiver, metadataWithSupply);
@@ -302,7 +310,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    */
   mintAdditionalSupplyTo = buildTransactionFunction(
     async (
-      to: string,
+      to: AddressOrEns,
       tokenId: BigNumberish,
       additionalSupply: BigNumberish,
     ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
@@ -362,7 +370,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    */
   mintBatchTo = buildTransactionFunction(
     async (
-      to: string,
+      to: AddressOrEns,
       metadataWithSupply: EditionMetadataOrUri[],
     ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
       return this.erc1155.mintBatchTo.prepare(to, metadataWithSupply);

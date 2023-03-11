@@ -2,6 +2,7 @@ import { NFT } from "../../../core/schema/nft";
 import { calculateClaimCost } from "../../common/claim-conditions";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_CLAIM_CUSTOM } from "../../constants/erc721-features";
+import { AddressOrEns } from "../../schema";
 import { ClaimOptions } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
@@ -46,7 +47,7 @@ export class Erc721Claimable implements DetectableFeature {
    * @deprecated Use `contract.erc721.claim.prepare(...args)` instead
    */
   public async getClaimTransaction(
-    destinationAddress: string,
+    destinationAddress: AddressOrEns,
     quantity: BigNumberish,
     options?: ClaimOptions,
   ): Promise<Transaction> {
@@ -92,7 +93,7 @@ export class Erc721Claimable implements DetectableFeature {
    */
   to = buildTransactionFunction(
     async (
-      destinationAddress: string,
+      destinationAddress: AddressOrEns,
       quantity: BigNumberish,
       options?: ClaimOptions,
     ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {

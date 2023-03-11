@@ -124,7 +124,8 @@ const WrappedThirdwebSDKProvider = <
     type ForcedChainType = {
       rpc: string[];
       chainId: number;
-      nativeCurrency: { symbol: string; name: string; decimals: 18 };
+      nativeCurrency: { symbol: string; name: string; decimals: number };
+      slug: string;
     };
 
     const mergedOptions = {
@@ -156,7 +157,9 @@ const WrappedThirdwebSDKProvider = <
       }
     }
 
+    // set the chainId on the sdk instance to compare things later
     (sdk_ as any)._chainId = chainId;
+
     return sdk_;
   }, [
     activeChainId,
@@ -177,14 +180,16 @@ const WrappedThirdwebSDKProvider = <
         sdk.updateSignerOrProvider(activeChainId);
       }
     }
-  }, [sdk, signer, activeChainId]);
+    // we know what we're doing
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sdk, (sdk as any)?._chainId, signer, activeChainId]);
 
   const ctxValue = useMemo(
     () => ({
-      sdk,
+      sdk: sdk && (sdk as any)._chainId === activeChainId ? sdk : undefined,
       _inProvider: true as const,
     }),
-    [sdk],
+    [activeChainId, sdk],
   );
 
   return (
@@ -226,9 +231,11 @@ export const ThirdwebSDKProvider = <
     ) {
       return supportedChains as Readonly<Chain[]>;
     }
-    const _mergedChains = [...supportedChains, activeChain] as Readonly<
-      Chain[]
-    >;
+
+    const _mergedChains = [
+      ...supportedChains.filter((c) => c.chainId !== activeChain.chainId),
+      activeChain,
+    ] as Readonly<Chain[]>;
     // return a _mergedChains uniqued by chainId key
     return _mergedChains.filter(
       (chain, index, self) =>
@@ -239,7 +246,7 @@ export const ThirdwebSDKProvider = <
   return (
     <ThirdwebConfigProvider
       value={{
-        chains: mergedChains,
+        chains: mergedChains as Chain[],
         thirdwebApiKey,
         alchemyApiKey,
         infuraApiKey,
@@ -299,5 +306,5 @@ export function useSDK(): ThirdwebSDK | undefined {
  */
 export function useSDKChainId(): number | undefined {
   const sdk = useSDK();
-  return (sdk?.getProvider() as any)?._network?.chainId;
+  return (sdk as any)?._chainId;
 }

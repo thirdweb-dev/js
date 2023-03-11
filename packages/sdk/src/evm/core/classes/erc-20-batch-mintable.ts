@@ -1,3 +1,4 @@
+import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_TOKEN_BATCH_MINTABLE } from "../../constants/erc20-features";
 import { TokenMintInput } from "../../schema";
@@ -58,7 +59,10 @@ export class Erc20BatchMintable implements DetectableFeature {
       encoded.push(
         this.contractWrapper.readContract.interface.encodeFunctionData(
           "mintTo",
-          [arg.toAddress, await this.erc20.normalizeAmount(arg.amount)],
+          [
+            await resolveAddress(arg.toAddress),
+            await this.erc20.normalizeAmount(arg.amount),
+          ],
         ),
       );
     }

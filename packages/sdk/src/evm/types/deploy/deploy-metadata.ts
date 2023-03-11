@@ -1,3 +1,4 @@
+import { AddressOrEns } from "../../schema";
 import { FileOrBufferOrString } from "@thirdweb-dev/storage";
 import type { BigNumberish, Bytes } from "ethers";
 
@@ -29,15 +30,15 @@ export interface NFTContractDeployMetadata {
   /**
    * Custom gasless trusted forwarder addresses
    */
-  trusted_forwarders?: string[];
+  trusted_forwarders?: AddressOrEns[];
   /**
    * The address that will receive the proceeds from primary sales
    */
-  primary_sale_recipient: string;
+  primary_sale_recipient: AddressOrEns;
   /**
    * The address that will receive the proceeds from secondary sales (royalties)
    */
-  fee_recipient?: string;
+  fee_recipient?: AddressOrEns;
   /**
    * The percentage (in basis points) of royalties for secondary sales
    */
@@ -45,11 +46,16 @@ export interface NFTContractDeployMetadata {
   /**
    * The address that will receive the proceeds from platform fees
    */
-  platform_fee_recipient?: string;
+  platform_fee_recipient?: AddressOrEns;
   /**
    * The percentage (in basis points) of platform fees
    */
   platform_fee_basis_points?: number;
+
+  /**
+   * The default app for this contract
+   */
+  app_uri?: string;
 }
 
 /**
@@ -80,19 +86,24 @@ export interface TokenContractDeployMetadata {
   /**
    * Custom gasless trusted forwarder addresses
    */
-  trusted_forwarders?: string[];
+  trusted_forwarders?: AddressOrEns[];
   /**
    * The address that will receive the proceeds from primary sales
    */
-  primary_sale_recipient: string;
+  primary_sale_recipient: AddressOrEns;
   /**
    * The address that will receive the proceeds from platform fees
    */
-  platform_fee_recipient?: string;
+  platform_fee_recipient?: AddressOrEns;
   /**
    * The percentage (in basis points) of platform fees
    */
   platform_fee_basis_points?: number;
+
+  /**
+   * The default app for this contract
+   */
+  app_uri?: string;
 }
 
 /**
@@ -119,15 +130,20 @@ export interface MarketplaceContractDeployMetadata {
   /**
    * Custom gasless trusted forwarder addresses
    */
-  trusted_forwarders?: string[];
+  trusted_forwarders?: AddressOrEns[];
   /**
    * The address that will receive the proceeds from platform fees
    */
-  platform_fee_recipient?: string;
+  platform_fee_recipient?: AddressOrEns;
   /**
    * The percentage (in basis points) of platform fees
    */
   platform_fee_basis_points?: number;
+
+  /**
+   * The default app for this contract
+   */
+  app_uri?: string;
 }
 
 /**
@@ -154,15 +170,19 @@ export interface MarketplaceV3ContractDeployMetadata {
   /**
    * Custom gasless trusted forwarder addresses
    */
-  trusted_forwarders?: string[];
+  trusted_forwarders?: AddressOrEns[];
   /**
    * The address that will receive the proceeds from platform fees
    */
-  platform_fee_recipient?: string;
+  platform_fee_recipient?: AddressOrEns;
   /**
    * The percentage (in basis points) of platform fees
    */
   platform_fee_basis_points?: number;
+  /**
+   * The default app for this contract
+   */
+  app_uri?: string;
 }
 
 /**
@@ -189,11 +209,11 @@ export interface VoteContractDeployMetadata {
   /**
    * Custom gasless trusted forwarder addresses
    */
-  trusted_forwarders?: string[];
+  trusted_forwarders?: AddressOrEns[];
   /**
    * The address of the governance token contract representing votes
    */
-  voting_token_address: string;
+  voting_token_address: AddressOrEns;
   /**
    * The delay in blocks before voting can begin on proposals
    * Specified in number of blocks. Assuming block time of around 13.14 seconds, 1 day = 6570 blocks, 1 week = 45992 blocks.
@@ -212,6 +232,10 @@ export interface VoteContractDeployMetadata {
    * The minimum fraction to be met to pass a proposal
    */
   voting_quorum_fraction?: number;
+  /**
+   * The default app for this contract
+   */
+  app_uri?: string;
 }
 
 /**
@@ -221,7 +245,7 @@ export interface SplitRecipientInput {
   /**
    * The recipient address
    */
-  address: string;
+  address: AddressOrEns;
   /**
    * the shares in basis point (5% = 500) that address is owed from the total funds
    */
@@ -252,11 +276,15 @@ export interface SplitContractDeployMetadata {
   /**
    * Custom gasless trusted forwarder addresses
    */
-  trusted_forwarders?: string[];
+  trusted_forwarders?: AddressOrEns[];
   /**
    * The list of recipients and their share of the split
    */
   recipients: SplitRecipientInput[];
+  /**
+   * The default app for this contract
+   */
+  app_uri?: string;
 }
 
 /**
@@ -287,13 +315,17 @@ export interface MultiwrapContractDeployMetadata {
   /**
    * Custom gasless trusted forwarder addresses
    */
-  trusted_forwarders?: string[];
+  trusted_forwarders?: AddressOrEns[];
   /**
    * The address that will receive the proceeds from secondary sales (royalties)
    */
-  fee_recipient?: string;
+  fee_recipient?: AddressOrEns;
   /**
    * The percentage (in basis points) of royalties for secondary sales
    */
   seller_fee_basis_points?: number;
+  /**
+   * The default app for this contract
+   */
+  app_uri?: string;
 }

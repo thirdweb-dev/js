@@ -1,14 +1,14 @@
-import { __DEV__ } from "../constants/runtime";
+import { __DEV__ } from "../../core/constants/runtime";
 import { useThirdwebConfigContext } from "./thirdweb-config";
 import { getChainRPC } from "@thirdweb-dev/chains";
 import { UserWallet } from "@thirdweb-dev/sdk";
 import { Signer } from "ethers";
 import React, {
-  PropsWithChildren,
   createContext,
+  PropsWithChildren,
   useContext,
-  useState,
   useEffect,
+  useState,
 } from "react";
 
 interface ThirdwebConnectedWalletContext {
