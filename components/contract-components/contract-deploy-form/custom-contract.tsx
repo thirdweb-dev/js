@@ -71,24 +71,18 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     ? initializerParams
     : constructorParams;
 
-  // for our own contracts, we force enable all chains since the SDK has fallbacks in place to deploy everywhere
-  const shouldForceEnableAllChains =
-    fullPublishMetadata?.data?.publisher === "deployer.thirdweb.eth" ||
-    fullPublishMetadata?.data?.publisher ===
-      "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
-  const disabledChains = shouldForceEnableAllChains
-    ? undefined
-    : isFactoryDeployment && fullPublishMetadata.data?.factoryDeploymentData
-    ? SUPPORTED_CHAIN_IDS.filter((chain) => {
-        const implementationAddress =
-          fullPublishMetadata.data?.factoryDeploymentData
-            ?.implementationAddresses?.[chain];
-        return (
-          !implementationAddress ||
-          (implementationAddress && implementationAddress.length === 0)
-        );
-      })
-    : undefined;
+  const disabledChains =
+    isFactoryDeployment && fullPublishMetadata.data?.factoryDeploymentData
+      ? SUPPORTED_CHAIN_IDS.filter((chain) => {
+          const implementationAddress =
+            fullPublishMetadata.data?.factoryDeploymentData
+              ?.implementationAddresses?.[chain];
+          return (
+            !implementationAddress ||
+            (implementationAddress && implementationAddress.length === 0)
+          );
+        })
+      : undefined;
 
   const form = useForm<{
     addToDashboard: boolean;
