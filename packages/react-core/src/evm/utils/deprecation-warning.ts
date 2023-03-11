@@ -1,4 +1,4 @@
-import { __DEV__ } from "../constants/runtime";
+import { __DEV__ } from "../../core/constants/runtime";
 
 const warnSet = new Set<`${string}:${string}`>();
 

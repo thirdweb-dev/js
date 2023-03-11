@@ -24,15 +24,22 @@
     "android"
   ],
   "dependencies": {
+    "@coinbase/wallet-mobile-sdk": "^1.0.4",
+    "@shopify/restyle": "^2.4.1",
     "@tanstack/react-query": "^4.0.10",
     "@thirdweb-dev/chains": "*",
     "@thirdweb-dev/react-core": "*",
     "@thirdweb-dev/sdk": "*",
     "@thirdweb-dev/storage": "*",
+    "@thirdweb-dev/wallets": "*",
+    "react-native-modal": "^13.0.1",
+    "react-native-svg": "^13.8.0",
     "tiny-invariant": "^1.2.0",
-    "wagmi": "^0.11.0"
+    "react-native-mmkv": "2.5.1"
   },
-  "sideEffects:": false,
+  "resolutions": {
+    "react-native-mmkv": "2.5.1"
+  },
   "devDependencies": {
     "@babel/core": "^7.19.3",
     "@react-native-async-storage/async-storage": "*",
@@ -59,8 +66,8 @@
     "typescript": "^4.7.4"
   },
   "peerDependencies": {
-    "@react-native-async-storage/async-storage": "*",
     "ethers": ">=5.5.1 <6",
+    "expo": "^47.0.0",
     "react": ">=18.0.0",
     "react-native": ">=0.70.0"
   },

@@ -4,7 +4,7 @@ export default {
   "chain": "Elysium",
   "rpc": [
     "https://elysium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://elysium-rpc.vulcanforged.com"
+    "https://rpc.elysiumchain.tech/"
   ],
   "faucets": [],
   "nativeCurrency": {

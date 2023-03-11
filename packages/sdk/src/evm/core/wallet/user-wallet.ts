@@ -18,7 +18,7 @@ import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
 import { NetworkInput, TransactionResult } from "../types";
 import type { IERC20 } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
-import { ethers, BigNumber, providers, Signer, TypedDataField } from "ethers";
+import { BigNumber, ethers, providers, Signer, TypedDataField } from "ethers";
 import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
 

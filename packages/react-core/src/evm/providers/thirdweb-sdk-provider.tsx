@@ -159,6 +159,7 @@ const WrappedThirdwebSDKProvider = <
 
     // set the chainId on the sdk instance to compare things later
     (sdk_ as any)._chainId = chainId;
+
     return sdk_;
   }, [
     activeChainId,
@@ -230,9 +231,11 @@ export const ThirdwebSDKProvider = <
     ) {
       return supportedChains as Readonly<Chain[]>;
     }
-    const _mergedChains = [...supportedChains, activeChain] as Readonly<
-      Chain[]
-    >;
+
+    const _mergedChains = [
+      ...supportedChains.filter((c) => c.chainId !== activeChain.chainId),
+      activeChain,
+    ] as Readonly<Chain[]>;
     // return a _mergedChains uniqued by chainId key
     return _mergedChains.filter(
       (chain, index, self) =>
@@ -243,7 +246,7 @@ export const ThirdwebSDKProvider = <
   return (
     <ThirdwebConfigProvider
       value={{
-        chains: mergedChains,
+        chains: mergedChains as Chain[],
         thirdwebApiKey,
         alchemyApiKey,
         infuraApiKey,
