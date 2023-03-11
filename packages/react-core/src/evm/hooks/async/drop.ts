@@ -21,6 +21,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   NFTMetadataInput,
   QueryAllParams,
+  SignatureDrop,
+  SmartContract,
   UploadProgressEvent,
 } from "@thirdweb-dev/sdk";
 import { NFTDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/nft-drop";
@@ -102,11 +104,13 @@ export function useClaimedNFTs(
 
 /**
  *
- * @param contract - an instance of a {@link NFTDrop}
+ * @param contract - an instance of a contract that extends the Erc721 spec (nft drop, custom contract that follows the Erc721 & drop spec)
  * @returns a response object that includes the number of NFTs that are unclaimed
  * @twfeature ERC721LazyMintable
  */
-export function useUnclaimedNFTSupply(contract: RequiredParam<NFTDrop>) {
+export function useUnclaimedNFTSupply(
+  contract: RequiredParam<NFTDrop | SignatureDrop | SmartContract | null>,
+) {
   const contractAddress = contract?.getAddress();
   const { erc721 } = getErcs(contract);
   return useQueryWithNetwork(
@@ -126,11 +130,13 @@ export function useUnclaimedNFTSupply(contract: RequiredParam<NFTDrop>) {
 /**
  * Get the total number of claimed NFTs
  *
- * @param contract - an instance of a {@link NFTDrop}
+ * @param contract - an instance of a contract that extends the Erc721 spec (nft drop, custom contract that follows the Erc721 & drop spec)
  * @returns a response object that includes the number of NFTs that are claimed
  * @twfeature ERC721LazyMintable
  */
-export function useClaimedNFTSupply(contract: RequiredParam<NFTDrop>) {
+export function useClaimedNFTSupply(
+  contract: RequiredParam<NFTDrop | SignatureDrop | SmartContract | null>,
+) {
   const contractAddress = contract?.getAddress();
   const { erc721 } = getErcs(contract);
   return useQueryWithNetwork(
