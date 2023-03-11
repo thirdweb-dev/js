@@ -38,10 +38,10 @@ import invariant from "tiny-invariant";
  * const { data: unclaimedNfts, isLoading, error } = useUnclaimedNFTs(contract, { start: 0, count: 100 });
  * ```
  *
- * @param contract - an instance of a contract that extends the Erc721 spec (nft drop, custom contract that follows the Erc721 & drop spec)
+ * @param contract - an instance of a {@link NFTDrop}.
  * @param queryParams - query params to pass to the query for the sake of pagination
  * @returns a response object that includes an array of NFTs that are unclaimed
- * @twfeature ERC721LazyMintable | ERC1155LazyMintable
+ * @twfeature ERC721LazyMintable
  * @beta
  */
 export function useUnclaimedNFTs(
@@ -74,10 +74,10 @@ export function useUnclaimedNFTs(
  * const { data: claimedNFTs, isLoading, error } = useClaimedNFTs(contract, { start: 0, count: 100 });
  * ```
  *
- * @param contract - an instance of a {@link DropContract}
+ * @param contract - an instance of a {@link NFTDrop}
  * @param queryParams - query params to pass to the query for the sake of pagination
  * @returns a response object that includes an array of NFTs that are claimed
- * @twfeature ERC721LazyMintable | ERC1155LazyMintable
+ * @twfeature ERC721LazyMintable
  * @beta
  */
 export function useClaimedNFTs(
@@ -104,9 +104,9 @@ export function useClaimedNFTs(
  *
  * @param contract - an instance of a {@link NFTDrop}
  * @returns a response object that includes the number of NFTs that are unclaimed
- * @twfeature ERC721LazyMintable | ERC1155LazyMintable
+ * @twfeature ERC721LazyMintable
  */
-export function useUnclaimedNFTSupply(contract: RequiredParam<DropContract>) {
+export function useUnclaimedNFTSupply(contract: RequiredParam<NFTDrop>) {
   const contractAddress = contract?.getAddress();
   const { erc721 } = getErcs(contract);
   return useQueryWithNetwork(
@@ -126,11 +126,11 @@ export function useUnclaimedNFTSupply(contract: RequiredParam<DropContract>) {
 /**
  * Get the total number of claimed NFTs
  *
- * @param contract - an instance of a {@link DropContract}
+ * @param contract - an instance of a {@link NFTDrop}
  * @returns a response object that includes the number of NFTs that are claimed
- * @twfeature ERC721LazyMintable | ERC1155LazyMintable
+ * @twfeature ERC721LazyMintable
  */
-export function useClaimedNFTSupply(contract: RequiredParam<DropContract>) {
+export function useClaimedNFTSupply(contract: RequiredParam<NFTDrop>) {
   const contractAddress = contract?.getAddress();
   const { erc721 } = getErcs(contract);
   return useQueryWithNetwork(
@@ -266,7 +266,7 @@ export function useClaimNFT<TContract extends DropContract>(
 
 /**
  * Lazy mint NFTs
- * 
+ *
  * @example
  * ```jsx
  * const Component = () => {
@@ -338,7 +338,7 @@ export function useLazyMint<TContract extends DropContract>(
 
 /**
  * Lazy mint NFTs with delayed reveal
- * 
+ *
  * @example
  * ```jsx
  * const Component = () => {
@@ -419,7 +419,7 @@ export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
 
 /**
  * Reveal a batch of delayed reveal NFTs
- * 
+ *
  * @example
  * ```jsx
  * const Component = () => {
