@@ -5,8 +5,10 @@ import { tryGitInit } from "./git";
 import { install } from "./install";
 import { isFolderEmpty } from "./is-folder-empty";
 import { getOnline } from "./is-online";
+import { isReactNative } from "./is-react-native";
 import { isWriteable } from "./is-writeable";
 import { makeDir } from "./make-dir";
+import { podInstall } from "./pod-install";
 import { downloadAndExtractRepo, hasTemplate } from "./templates";
 import retry from "async-retry";
 import chalk from "chalk";
@@ -96,6 +98,7 @@ export async function createApp({
     );
   }
 
+  let reactNative = false;
   if (template) {
     /**
      * If a template repository is provided, clone it.
@@ -138,6 +141,11 @@ export async function createApp({
 
     await install(root, null, { packageManager, isOnline });
     console.log();
+
+    reactNative = await isReactNative(template);
+    if (reactNative) {
+      await podInstall(root, isOnline);
+    }
   } else if (framework) {
     /**
      * If a framework is provided, clone it.
@@ -198,7 +206,7 @@ export async function createApp({
   let startOrDev: string | undefined;
   if (framework && (framework === "next" || framework === "vite")) {
     startOrDev = "dev";
-  } else if (template) {
+  } else if (template && !reactNative) {
     startOrDev = await getStartOrDev(template);
   }
 
@@ -225,6 +233,25 @@ export async function createApp({
     );
     console.log("    Builds the app for production.");
     console.log();
+  } else if (reactNative) {
+    console.log(
+      chalk.cyan(
+        `  ${packageManager}${
+          useYarn || startOrDev === "start" ? "" : "run "
+        } android`,
+      ),
+    );
+    console.log("    Runs your app on an Android emulator or device.");
+    console.log();
+    console.log(
+      chalk.cyan(
+        `  ${packageManager}${
+          useYarn || startOrDev === "start" ? "" : "run "
+        } ios`,
+      ),
+    );
+    console.log("    Runs your app on an iOS emulator or device.");
+    console.log();
   }
 
   console.log("We suggest that you begin by typing:");
@@ -240,5 +267,6 @@ export async function createApp({
       )}`,
     );
   }
+
   console.log();
 }
