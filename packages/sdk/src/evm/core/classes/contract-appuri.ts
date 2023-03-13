@@ -1,9 +1,11 @@
 import { detectContractFeature } from "../../common";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_APPURI } from "../../constants/thirdweb-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
 import type { IAppURI } from "@thirdweb-dev/contracts-js";
 import {
   replaceGatewayUrlWithScheme,
@@ -73,15 +75,17 @@ export class ContractAppURI<TContract extends BaseContract>
    * ```
    * @twfeature AppURI
    */
-  public async set(appURI: string): Promise<TransactionResult> {
-    if (detectContractFeature<IAppURI>(this.contractWrapper, "AppURI")) {
-      return {
-        receipt: await this.contractWrapper.sendTransaction("setAppURI", [
-          appURI,
-        ]),
-      };
-    }
+  set = buildTransactionFunction(
+    async (appURI: string): Promise<Transaction<TransactionResult>> => {
+      if (detectContractFeature<IAppURI>(this.contractWrapper, "AppURI")) {
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper as ContractWrapper<IAppURI>,
+          method: "setAppURI",
+          args: [appURI],
+        });
+      }
 
-    return await this.metadata.update({ app_uri: appURI });
-  }
+      return await this.metadata.update.prepare({ app_uri: appURI });
+    },
+  );
 }

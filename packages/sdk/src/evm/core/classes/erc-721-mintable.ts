@@ -1,8 +1,10 @@
 import { NFT, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { detectContractFeature } from "../../common";
+import { resolveAddress } from "../../common/ens";
 import { uploadOrExtractURI } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_MINTABLE } from "../../constants/erc721-features";
+import { AddressOrEns } from "../../schema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
@@ -67,14 +69,14 @@ export class Erc721Mintable implements DetectableFeature {
    */
   to = buildTransactionFunction(
     async (
-      to: string,
+      to: AddressOrEns,
       metadata: NFTMetadataOrUri,
     ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
       const uri = await uploadOrExtractURI(metadata, this.storage);
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "mintTo",
-        args: [to, uri],
+        args: [await resolveAddress(to), uri],
         parse: (receipt) => {
           const event = this.contractWrapper.parseLogs<TransferEvent>(
             "Transfer",
@@ -98,10 +100,10 @@ export class Erc721Mintable implements DetectableFeature {
    * @deprecated Use `contract.erc721.mint.prepare(...args)` instead
    */
   public async getMintTransaction(
-    to: string,
+    to: AddressOrEns,
     metadata: NFTMetadataOrUri,
   ): Promise<Transaction> {
-    return this.to.prepare(to, metadata);
+    return this.to.prepare(await resolveAddress(to), metadata);
   }
 
   private detectErc721BatchMintable(): Erc721BatchMintable | undefined {

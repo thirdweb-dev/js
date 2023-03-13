@@ -195,8 +195,8 @@ export class Erc20SignatureMintable implements DetectableFeature {
       await this.contractWrapper.getSignerAddress(),
     );
 
-    const parsedRequests: FilledSignaturePayload20[] = payloadsToSign.map((m) =>
-      Signature20PayloadInput.parse(m),
+    const parsedRequests: FilledSignaturePayload20[] = await Promise.all(
+      payloadsToSign.map((m) => Signature20PayloadInput.parseAsync(m)),
     );
 
     const chainId = await this.contractWrapper.getChainID();
@@ -208,7 +208,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
 
     return await Promise.all(
       parsedRequests.map(async (m) => {
-        const finalPayload = Signature20PayloadOutput.parse(m);
+        const finalPayload = await Signature20PayloadOutput.parseAsync(m);
         const signature = await this.contractWrapper.signTypedData(
           signer,
           {

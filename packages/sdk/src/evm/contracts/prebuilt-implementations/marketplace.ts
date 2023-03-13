@@ -3,6 +3,7 @@ import { ListingNotFoundError } from "../../common";
 import { isNativeToken } from "../../common/currency";
 import { mapOffer } from "../../common/marketplace";
 import { getRoleHash } from "../../common/role";
+import { buildTransactionFunction } from "../../common/transactions";
 import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
 import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
@@ -17,11 +18,12 @@ import { MarketplaceAuction } from "../../core/classes/marketplace-auction";
 import { MarketplaceDirect } from "../../core/classes/marketplace-direct";
 import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
-import { NetworkInput, TransactionResult } from "../../core/types";
+import { NetworkInput } from "../../core/types";
 import { ListingType } from "../../enums";
 import { Abi } from "../../schema/contracts/custom";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
+import { AddressOrEns } from "../../schema/shared";
 import { Price } from "../../types/currency";
 import { AuctionListing, DirectListing, Offer } from "../../types/marketplace";
 import { MarketplaceFilter } from "../../types/marketplace/MarketPlaceFilter";
@@ -380,34 +382,38 @@ export class Marketplace implements UpdateableNetwork {
    * @param quantityDesired - the quantity that you want to buy (for ERC1155 tokens)
    * @param receiver - optional receiver of the bought listing if different from the connected wallet (for direct listings only)
    */
-  public async buyoutListing(
-    listingId: BigNumberish,
-    quantityDesired?: BigNumberish,
-    receiver?: string,
-  ): Promise<TransactionResult> {
-    const listing = await this.contractWrapper.readContract.listings(listingId);
-    if (listing.listingId.toString() !== listingId.toString()) {
-      throw new ListingNotFoundError(this.getAddress(), listingId.toString());
-    }
-    switch (listing.listingType) {
-      case ListingType.Direct: {
-        invariant(
-          quantityDesired !== undefined,
-          "quantityDesired is required when buying out a direct listing",
-        );
-        return await this.direct.buyoutListing(
-          listingId,
-          quantityDesired,
-          receiver,
-        );
+  buyoutListing = buildTransactionFunction(
+    async (
+      listingId: BigNumberish,
+      quantityDesired?: BigNumberish,
+      receiver?: AddressOrEns,
+    ) => {
+      const listing = await this.contractWrapper.readContract.listings(
+        listingId,
+      );
+      if (listing.listingId.toString() !== listingId.toString()) {
+        throw new ListingNotFoundError(this.getAddress(), listingId.toString());
       }
-      case ListingType.Auction: {
-        return await this.auction.buyoutListing(listingId);
+      switch (listing.listingType) {
+        case ListingType.Direct: {
+          invariant(
+            quantityDesired !== undefined,
+            "quantityDesired is required when buying out a direct listing",
+          );
+          return await this.direct.buyoutListing.prepare(
+            listingId,
+            quantityDesired,
+            receiver,
+          );
+        }
+        case ListingType.Auction: {
+          return await this.auction.buyoutListing.prepare(listingId);
+        }
+        default:
+          throw Error(`Unknown listing type: ${listing.listingType}`);
       }
-      default:
-        throw Error(`Unknown listing type: ${listing.listingType}`);
-    }
-  }
+    },
+  );
 
   /**
    * Make an offer for a Direct or Auction Listing
@@ -430,38 +436,42 @@ export class Marketplace implements UpdateableNetwork {
    * );
    * ```
    */
-  public async makeOffer(
-    listingId: BigNumberish,
-    pricePerToken: Price,
-    quantity?: BigNumberish,
-  ): Promise<TransactionResult> {
-    const listing = await this.contractWrapper.readContract.listings(listingId);
-    if (listing.listingId.toString() !== listingId.toString()) {
-      throw new ListingNotFoundError(this.getAddress(), listingId.toString());
-    }
-    const chainId = await this.contractWrapper.getChainID();
-    switch (listing.listingType) {
-      case ListingType.Direct: {
-        invariant(
-          quantity,
-          "quantity is required when making an offer on a direct listing",
-        );
-        return await this.direct.makeOffer(
-          listingId,
-          quantity,
-          isNativeToken(listing.currency)
-            ? NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID].wrapped.address
-            : listing.currency,
-          pricePerToken,
-        );
+  makeOffer = buildTransactionFunction(
+    async (
+      listingId: BigNumberish,
+      pricePerToken: Price,
+      quantity?: BigNumberish,
+    ) => {
+      const listing = await this.contractWrapper.readContract.listings(
+        listingId,
+      );
+      if (listing.listingId.toString() !== listingId.toString()) {
+        throw new ListingNotFoundError(this.getAddress(), listingId.toString());
       }
-      case ListingType.Auction: {
-        return await this.auction.makeBid(listingId, pricePerToken);
+      const chainId = await this.contractWrapper.getChainID();
+      switch (listing.listingType) {
+        case ListingType.Direct: {
+          invariant(
+            quantity,
+            "quantity is required when making an offer on a direct listing",
+          );
+          return await this.direct.makeOffer.prepare(
+            listingId,
+            quantity,
+            isNativeToken(listing.currency)
+              ? NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID].wrapped.address
+              : listing.currency,
+            pricePerToken,
+          );
+        }
+        case ListingType.Auction: {
+          return await this.auction.makeBid.prepare(listingId, pricePerToken);
+        }
+        default:
+          throw Error(`Unknown listing type: ${listing.listingType}`);
       }
-      default:
-        throw Error(`Unknown listing type: ${listing.listingType}`);
-    }
-  }
+    },
+  );
 
   /**
    * Set the Auction bid buffer
@@ -474,18 +484,22 @@ export class Marketplace implements UpdateableNetwork {
    * ```
    * @param bufferBps - the bps value
    */
-  public async setBidBufferBps(bufferBps: BigNumberish): Promise<void> {
-    await this.roles.verify(
-      ["admin"],
-      await this.contractWrapper.getSignerAddress(),
-    );
+  setBidBufferBps = buildTransactionFunction(
+    async (bufferBps: BigNumberish) => {
+      await this.roles.verify(
+        ["admin"],
+        await this.contractWrapper.getSignerAddress(),
+      );
 
-    const timeBuffer = await this.getTimeBufferInSeconds();
-    await this.contractWrapper.sendTransaction("setAuctionBuffers", [
-      timeBuffer,
-      BigNumber.from(bufferBps),
-    ]);
-  }
+      const timeBuffer = await this.getTimeBufferInSeconds();
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "setAuctionBuffers",
+        args: [timeBuffer, BigNumber.from(bufferBps)],
+      });
+    },
+  );
 
   /**
    * Set the Auction Time buffer:
@@ -498,48 +512,59 @@ export class Marketplace implements UpdateableNetwork {
    * ```
    * @param bufferInSeconds - the seconds value
    */
-  public async setTimeBufferInSeconds(
-    bufferInSeconds: BigNumberish,
-  ): Promise<void> {
-    await this.roles.verify(
-      ["admin"],
-      await this.contractWrapper.getSignerAddress(),
-    );
+  setTimeBufferInSeconds = buildTransactionFunction(
+    async (bufferInSeconds: BigNumberish) => {
+      await this.roles.verify(
+        ["admin"],
+        await this.contractWrapper.getSignerAddress(),
+      );
 
-    const bidBuffer = await this.getBidBufferBps();
-    await this.contractWrapper.sendTransaction("setAuctionBuffers", [
-      BigNumber.from(bufferInSeconds),
-      bidBuffer,
-    ]);
-  }
+      const bidBuffer = await this.getBidBufferBps();
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "setAuctionBuffers",
+        args: [BigNumber.from(bufferInSeconds), bidBuffer],
+      });
+    },
+  );
 
   /**
    * Restrict listing NFTs only from the specified NFT contract address.
    * It is possible to allow listing from multiple contract addresses.
    * @param contractAddress - the NFT contract address
    */
-  public async allowListingFromSpecificAssetOnly(contractAddress: string) {
-    const encoded: string[] = [];
-    const members = await this.roles.get("asset");
-    if (members.includes(constants.AddressZero)) {
+  allowListingFromSpecificAssetOnly = buildTransactionFunction(
+    async (contractAddress: string) => {
+      const encoded: string[] = [];
+      const members = await this.roles.get("asset");
+      if (members.includes(constants.AddressZero)) {
+        encoded.push(
+          this.encoder.encode("revokeRole", [
+            getRoleHash("asset"),
+            constants.AddressZero,
+          ]),
+        );
+      }
       encoded.push(
-        this.encoder.encode("revokeRole", [
+        this.encoder.encode("grantRole", [
           getRoleHash("asset"),
-          constants.AddressZero,
+          contractAddress,
         ]),
       );
-    }
-    encoded.push(
-      this.encoder.encode("grantRole", [getRoleHash("asset"), contractAddress]),
-    );
 
-    await this.contractWrapper.multiCall(encoded);
-  }
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "multicall",
+        args: [encoded],
+      });
+    },
+  );
 
   /**
    * Allow listings from any NFT contract
    */
-  public async allowListingFromAnyAsset() {
+  allowListingFromAnyAsset = buildTransactionFunction(async () => {
     const encoded: string[] = [];
     const members = await this.roles.get("asset");
     for (const addr in members) {
@@ -553,8 +578,13 @@ export class Marketplace implements UpdateableNetwork {
         constants.AddressZero,
       ]),
     );
-    await this.contractWrapper.multiCall(encoded);
-  }
+
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "multicall",
+      args: [encoded],
+    });
+  });
 
   /** ******************************
    * PRIVATE FUNCTIONS

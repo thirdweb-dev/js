@@ -5,6 +5,7 @@ import {
   AbiSchema,
   ContractInfoSchema,
   ContractSource,
+  Address,
 } from "../schema";
 import { resolveContractUriFromAddress } from "./feature-detection";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -38,7 +39,7 @@ function getFromCache(address: string, chainId: number) {
  * @param storage
  */
 export async function fetchContractMetadataFromAddress(
-  address: string,
+  address: Address,
   provider: providers.Provider,
   storage: ThirdwebStorage,
 ) {
@@ -65,6 +66,11 @@ export async function fetchContractMetadataFromAddress(
           chainId,
           address,
         );
+      if (!importedUri) {
+        throw new Error(
+          `Could not resolve metadata for contract at ${address}`,
+        );
+      }
       metadata = await fetchContractMetadata(importedUri, storage);
     } catch (err) {
       throw new Error(`Could not resolve metadata for contract at ${address}`);
@@ -85,7 +91,7 @@ export async function fetchContractMetadataFromAddress(
  * @returns
  */
 export async function fetchAbiFromAddress(
-  address: string,
+  address: Address,
   provider: providers.Provider,
   storage: ThirdwebStorage,
 ): Promise<Abi | undefined> {

@@ -10,6 +10,7 @@ import type {
   PrebuiltContractType,
 } from "../core/types";
 import {
+  Address,
   DropErc1155ContractSchema,
   DropErc721ContractSchema,
   MarketplaceContractSchema,
@@ -21,11 +22,7 @@ import {
   TokenErc721ContractSchema,
   VoteContractSchema,
 } from "../schema";
-import {
-  Abi,
-  AbiSchema,
-  CustomContractSchema,
-} from "../schema/contracts/custom";
+import { Abi } from "../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -33,7 +30,7 @@ import { ethers } from "ethers";
 
 type InitalizeParams = [
   network: NetworkInput,
-  address: string,
+  address: Address,
   storage: ThirdwebStorage,
   options?: SDKOptions,
 ];
@@ -63,7 +60,7 @@ export const EditionDropInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -109,7 +106,7 @@ export const EditionInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -149,7 +146,7 @@ export const MarketplaceInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -166,7 +163,7 @@ export const MarketplaceInitializer = {
 };
 
 export const MarketplaceV3Initializer = {
-  name: "MarketplaceRouter" as const,
+  name: "MarketplaceV3" as const,
   contractType: "marketplace-v3" as const,
   schema: MarketplaceContractSchema,
   roles: ["admin", "lister", "asset"] as const,
@@ -190,7 +187,7 @@ export const MarketplaceV3Initializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -238,7 +235,7 @@ export const MultiwrapInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -278,7 +275,7 @@ export const NFTCollectionInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -318,7 +315,7 @@ export const NFTDropInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -365,7 +362,7 @@ export const PackInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ): Promise<Abi> => {
@@ -405,7 +402,7 @@ export const SignatureDropInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -455,7 +452,7 @@ export const SplitInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -495,7 +492,7 @@ export const TokenDropInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -538,7 +535,7 @@ export const TokenInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -579,7 +576,7 @@ export const VoteInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -594,7 +591,7 @@ export const VoteInitializer = {
 };
 
 async function getContractInfo(
-  address: string,
+  address: Address,
   provider: ethers.providers.Provider,
 ) {
   try {

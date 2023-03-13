@@ -4,6 +4,7 @@ export async function runCommand(
   command: string,
   args: string[],
   logging: boolean = false,
+  onData?: (data: any) => void,
 ) {
   return new Promise<void>((resolve, reject) => {
     /**
@@ -11,6 +12,9 @@ export async function runCommand(
      */
     const child = spawn(command, args);
     child.stdout?.on("data", (data) => {
+      if (onData) {
+        onData(data);
+      }
       if (logging) {
         console.log(data.toString());
       }

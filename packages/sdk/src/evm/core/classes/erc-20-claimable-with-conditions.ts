@@ -1,5 +1,6 @@
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_TOKEN_CLAIM_CONDITIONS_V2 } from "../../constants/erc20-features";
+import { AddressOrEns } from "../../schema";
 import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ClaimOptions } from "../../types";
 import { Amount } from "../../types/currency";
@@ -92,7 +93,7 @@ export class Erc20ClaimableWithConditions implements DetectableFeature {
    */
   to = buildTransactionFunction(
     async (
-      destinationAddress: string,
+      destinationAddress: AddressOrEns,
       amount: Amount,
       options?: ClaimOptions,
     ) => {

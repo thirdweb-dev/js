@@ -150,7 +150,9 @@ export class ClaimConditions {
    * ```
    */
   async set(metadata: NFTDropConditionsInput): Promise<TransactionResult> {
-    const parsed = NFTDropUpdatableConditionsInputSchema.parse(metadata);
+    const parsed = await NFTDropUpdatableConditionsInputSchema.parseAsync(
+      metadata,
+    );
 
     // recipients
     let wallet: PublicKey | undefined = parsed.primarySaleRecipient

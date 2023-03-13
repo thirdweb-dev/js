@@ -1,3 +1,4 @@
+import { AddressOrEns } from "../../schema";
 import { Price } from "../currency";
 import { BigNumberish } from "ethers";
 
@@ -10,7 +11,7 @@ export interface NewDirectListing {
   /**
    * The address of the asset being listed.
    */
-  assetContractAddress: string;
+  assetContractAddress: AddressOrEns;
 
   /**
    * The ID of the token to list.
@@ -37,7 +38,7 @@ export interface NewDirectListing {
   /**
    * The address of the currency to accept for the listing.
    */
-  currencyContractAddress: string;
+  currencyContractAddress: AddressOrEns;
 
   /**
    * The buyout price of the listing.

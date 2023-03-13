@@ -323,8 +323,8 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   ): Promise<SignedPayload721WithQuantitySignature[]> {
     const isLegacyNFTContract = await this.isLegacyNFTContract();
 
-    const parsedRequests = payloadsToSign.map((m) =>
-      Signature721WithQuantityInput.parse(m),
+    const parsedRequests = await Promise.all(
+      payloadsToSign.map((m) => Signature721WithQuantityInput.parseAsync(m)),
     );
 
     const metadatas = parsedRequests.map((r) => r.metadata);
@@ -337,7 +337,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
     return await Promise.all(
       parsedRequests.map(async (m, i) => {
         const uri = uris[i];
-        const finalPayload = Signature721WithQuantityOutput.parse({
+        const finalPayload = await Signature721WithQuantityOutput.parseAsync({
           ...m,
           uri,
         });
