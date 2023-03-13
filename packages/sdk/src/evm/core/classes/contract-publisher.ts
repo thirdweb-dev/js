@@ -30,7 +30,6 @@ import {
   PublishedContractSchema,
   SDKOptions,
 } from "../../schema";
-import { ThirdwebSDK } from "../sdk";
 import { NetworkInput, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
