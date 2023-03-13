@@ -40,7 +40,7 @@ import invariant from "tiny-invariant";
  * const { data: unclaimedNfts, isLoading, error } = useUnclaimedNFTs(contract, { start: 0, count: 100 });
  * ```
  *
- * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop,  or any custom contract that extends the ERC721 spec)
+ * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
  * @param queryParams - query params to pass to the query for the sake of pagination
  * @returns a response object that includes an array of NFTs that are unclaimed
  * @twfeature ERC721LazyMintable
@@ -76,7 +76,7 @@ export function useUnclaimedNFTs(
  * const { data: claimedNFTs, isLoading, error } = useClaimedNFTs(contract, { start: 0, count: 100 });
  * ```
  *
- * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop,  or any custom contract that extends the ERC721 spec)
+ * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
  * @param queryParams - query params to pass to the query for the sake of pagination
  * @returns a response object that includes an array of NFTs that are claimed
  * @twfeature ERC721LazyMintable
@@ -104,7 +104,7 @@ export function useClaimedNFTs(
 
 /**
  *
- * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop,  or any custom contract that extends the ERC721 spec)
+ * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
  * @returns a response object that includes the number of NFTs that are unclaimed
  * @twfeature ERC721LazyMintable
  */
@@ -130,7 +130,7 @@ export function useUnclaimedNFTSupply(
 /**
  * Get the total number of claimed NFTs
  *
- * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop,  or any custom contract that extends the ERC721 spec)
+ * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
  * @returns a response object that includes the number of NFTs that are claimed
  * @twfeature ERC721LazyMintable
  */
