@@ -8,20 +8,14 @@ import {
   isIncrementalVersion,
   resolveContractUriFromAddress,
 } from "../../common";
-<<<<<<< HEAD
+import { resolveAddress } from "../../common/ens";
 import { getCompositePluginABI } from "../../common/plugin";
+import { buildTransactionFunction } from "../../common/transactions";
 import { getChainProvider, getContractPublisherAddress } from "../../constants";
 import {
   AbiFunction,
-  AbiSchema,
-=======
-import { resolveAddress } from "../../common/ens";
-import { buildTransactionFunction } from "../../common/transactions";
-import { getContractPublisherAddress } from "../../constants";
-import {
-  AbiFunction,
   AddressOrEns,
->>>>>>> main
+  AbiSchema,
   ContractParam,
   ContractSource,
   ExtraPublishMetadata,
@@ -365,42 +359,32 @@ export class ContractPublisher extends RPCConnectionHandler {
       invariant(signer, "A signer is required");
       const publisher = await signer.getAddress();
 
-    const predeployMetadata = await fetchPreDeployMetadata(
-      predeployUri,
-      this.storage,
-    );
-
-    if (extraMetadata.factoryDeploymentData?.implementationAddresses) {
-      const implementationsAddresses = Object.entries(
-        extraMetadata.factoryDeploymentData.implementationAddresses,
+      const predeployMetadata = await fetchPreDeployMetadata(
+        predeployUri,
+        this.storage,
       );
 
-      for (const [network, implementation] of implementationsAddresses) {
-        if (implementation !== "") {
-          try {
-            const composite = await getCompositePluginABI(
-              implementation,
-              predeployMetadata.abi,
-              getChainProvider(parseInt(network), {}), // pass empty object for options instead of this.options
-              {}, // pass empty object for options instead of this.options
-              this.storage,
-            );
-            extraMetadata.compositeAbi = AbiSchema.parse(composite);
-          } catch {}
-          break;
+      if (extraMetadata.factoryDeploymentData?.implementationAddresses) {
+        const implementationsAddresses = Object.entries(
+          extraMetadata.factoryDeploymentData.implementationAddresses,
+        );
+
+        for (const [network, implementation] of implementationsAddresses) {
+          if (implementation !== "") {
+            try {
+              const composite = await getCompositePluginABI(
+                implementation,
+                predeployMetadata.abi,
+                getChainProvider(parseInt(network), {}), // pass empty object for options instead of this.options
+                {}, // pass empty object for options instead of this.options
+                this.storage,
+              );
+              extraMetadata.compositeAbi = AbiSchema.parse(composite);
+            } catch {}
+            break;
+          }
         }
       }
-    }
-
-    // ensure version is incremental
-    const latestContract = await this.getLatest(
-      publisher,
-      predeployMetadata.name,
-    );
-    if (latestContract && latestContract.metadataUri) {
-      const latestMetadata = await this.fetchPublishedContractInfo(
-        latestContract,
-      );
 
       // ensure version is incremental
       const latestContract = await this.getLatest(
@@ -411,6 +395,7 @@ export class ContractPublisher extends RPCConnectionHandler {
         const latestMetadata = await this.fetchPublishedContractInfo(
           latestContract,
         );
+
         const latestVersion = latestMetadata.publishedMetadata.version;
         if (!isIncrementalVersion(latestVersion, extraMetadata.version)) {
           throw Error(
