@@ -1,7 +1,7 @@
 import { FileOrBufferOrStringSchema } from "../../../core/schema/shared";
 import { toSemver } from "../../common";
 import {
-  AddressSchema,
+  AddressOrEnsSchema,
   BigNumberishSchema,
   BigNumberTransformSchema,
 } from "../shared";
@@ -189,7 +189,7 @@ export type ExtraPublishMetadata = z.input<
 export const FullPublishMetadataSchemaInput = PreDeployMetadata.merge(
   ExtraPublishMetadataSchemaInput,
 ).extend({
-  publisher: AddressSchema.optional(),
+  publisher: AddressOrEnsSchema.optional(),
 });
 /**
  * @internal
@@ -197,7 +197,7 @@ export const FullPublishMetadataSchemaInput = PreDeployMetadata.merge(
 export const FullPublishMetadataSchemaOutput = PreDeployMetadata.merge(
   ExtraPublishMetadataSchemaOutput,
 ).extend({
-  publisher: AddressSchema.optional(),
+  publisher: AddressOrEnsSchema.optional(),
 });
 export type FullPublishMetadata = z.infer<
   typeof FullPublishMetadataSchemaOutput

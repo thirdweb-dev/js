@@ -4,6 +4,7 @@ import {
   FEATURE_ENGLISH_AUCTIONS,
   FEATURE_OFFERS,
 } from "../../constants/thirdweb-features";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -21,6 +22,7 @@ import { NetworkInput } from "../../core/types";
 import { Abi } from "../../schema/contracts/custom";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
+import { Address } from "../../schema/shared";
 import type {
   MarketplaceV3 as MarketplaceV3Contract,
   DirectListingsLogic,
@@ -59,6 +61,8 @@ export class MarketplaceV3 implements UpdateableNetwork {
     MarketplaceV3Contract,
     typeof MarketplaceContractSchema
   >;
+
+  public app: ContractAppURI<MarketplaceV3Contract>;
   public roles: ContractRoles<
     MarketplaceV3Contract,
     (typeof MarketplaceV3.contractRoles)[number]
@@ -219,6 +223,12 @@ export class MarketplaceV3 implements UpdateableNetwork {
       MarketplaceContractSchema,
       this.storage,
     );
+
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.roles = new ContractRoles(
       this.contractWrapper,
       MarketplaceV3.contractRoles,
@@ -234,7 +244,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
   }
 

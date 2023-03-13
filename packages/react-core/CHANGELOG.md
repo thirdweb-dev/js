@@ -1,5 +1,41 @@
 # @thirdweb-dev/react-core
 
+## 3.10.3
+
+## 3.10.2
+
+## 3.10.1
+
+### Patch Changes
+
+- [#684](https://github.com/thirdweb-dev/js/pull/684) [`9efeba38`](https://github.com/thirdweb-dev/js/commit/9efeba38f06783b78e2c947ad878350173f4e07a) Thanks [@adam-maj](https://github.com/adam-maj)! - Update auth hooks to include credentials on login
+
+## 3.10.0
+
+### Patch Changes
+
+- [#670](https://github.com/thirdweb-dev/js/pull/670) [`6ae39277`](https://github.com/thirdweb-dev/js/commit/6ae39277a1d2ea507cedcde7ae62439758e4d6e0) Thanks [@jnsdls](https://github.com/jnsdls)! - improve signer resilience
+
+- [#668](https://github.com/thirdweb-dev/js/pull/668) [`8f46a2ee`](https://github.com/thirdweb-dev/js/commit/8f46a2eef59d2b21b68e38338ed2b3a820421501) Thanks [@jnsdls](https://github.com/jnsdls)! - FIX signer being updated
+
+- [#650](https://github.com/thirdweb-dev/js/pull/650) [`8d5b418e`](https://github.com/thirdweb-dev/js/commit/8d5b418e78fcf692f72aed5fe49358e40720d80c) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Fix invariant for appURI hooks
+
+- [#665](https://github.com/thirdweb-dev/js/pull/665) [`6ef52dc9`](https://github.com/thirdweb-dev/js/commit/6ef52dc916251d72416ba5a8b63b428770f54e75) Thanks [@shift4id](https://github.com/shift4id)! - Fix spelling throughout all packages
+
+- [#672](https://github.com/thirdweb-dev/js/pull/672) [`2676fc01`](https://github.com/thirdweb-dev/js/commit/2676fc01f4d8eabc90e71fad1f14b4b29806d2bd) Thanks [@jnsdls](https://github.com/jnsdls)! - back to use-memo
+
+- [#662](https://github.com/thirdweb-dev/js/pull/662) [`3740a0bf`](https://github.com/thirdweb-dev/js/commit/3740a0bf5db1301dbd93a97ab4c9343429a4e12d) Thanks [@furqanrydhan](https://github.com/furqanrydhan)! - switch appuri -> app
+
+- [#626](https://github.com/thirdweb-dev/js/pull/626) [`91f5a2fd`](https://github.com/thirdweb-dev/js/commit/91f5a2fd5cb2f5aed6498defdb1feeabb283db6c) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Improve comments and examples in the documentation
+
+- [#625](https://github.com/thirdweb-dev/js/pull/625) [`23cd88ec`](https://github.com/thirdweb-dev/js/commit/23cd88ec3a2af86eafeac258fdc8c5b4ce3196f2) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add appURI get/set
+
+- [#660](https://github.com/thirdweb-dev/js/pull/660) [`87a101ad`](https://github.com/thirdweb-dev/js/commit/87a101ad56430e793c9f22b583fea204dfed0554) Thanks [@MananTank](https://github.com/MananTank)! - Fix Wrong Currency symbol in non-default chains
+
+- Updated dependencies [[`7832041c`](https://github.com/thirdweb-dev/js/commit/7832041c0fb25852489c73453c2b26e844d94582), [`6ef52dc9`](https://github.com/thirdweb-dev/js/commit/6ef52dc916251d72416ba5a8b63b428770f54e75), [`85250cf7`](https://github.com/thirdweb-dev/js/commit/85250cf71190092b61023d56d1e786d395a008a6), [`e33bd2a8`](https://github.com/thirdweb-dev/js/commit/e33bd2a856bbc2e2f6b0c90b46be5166281875ae), [`4355518a`](https://github.com/thirdweb-dev/js/commit/4355518afea68cd8026d3ab8a0144c15d66b9e24)]:
+  - @thirdweb-dev/chains@0.1.6
+  - @thirdweb-dev/auth@3.0.7
+
 ## 3.9.5
 
 ### Patch Changes

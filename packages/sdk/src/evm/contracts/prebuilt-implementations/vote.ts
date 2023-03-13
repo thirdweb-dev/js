@@ -2,6 +2,9 @@ import {
   fetchCurrencyMetadata,
   fetchCurrencyValue,
 } from "../../common/currency";
+import { resolveAddress } from "../../common/ens";
+import { buildTransactionFunction } from "../../common/transactions";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -10,13 +13,9 @@ import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
-import {
-  NetworkInput,
-  TransactionResult,
-  TransactionResultWithId,
-} from "../../core/types";
+import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { VoteType } from "../../enums";
-import { Abi } from "../../schema";
+import { Abi, Address, AddressOrEns } from "../../schema";
 import { VoteContractSchema } from "../../schema/contracts/vote";
 import { SDKOptions } from "../../schema/sdk-options";
 import { CurrencyValue } from "../../types/currency";
@@ -58,6 +57,7 @@ export class Vote implements UpdateableNetwork {
 
   public abi: Abi;
   public metadata: ContractMetadata<VoteERC20, typeof VoteContractSchema>;
+  public app: ContractAppURI<VoteERC20>;
   public encoder: ContractEncoder<VoteERC20>;
   public estimator: GasCostEstimator<VoteERC20>;
   public events: ContractEvents<VoteERC20>;
@@ -94,6 +94,12 @@ export class Vote implements UpdateableNetwork {
       VoteContractSchema,
       this.storage,
     );
+
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
@@ -104,7 +110,7 @@ export class Vote implements UpdateableNetwork {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
   }
 
@@ -213,12 +219,15 @@ export class Vote implements UpdateableNetwork {
    */
   public async hasVoted(
     proposalId: string,
-    account?: string,
+    account?: AddressOrEns,
   ): Promise<boolean> {
     if (!account) {
       account = await this.contractWrapper.getSignerAddress();
     }
-    return this.contractWrapper.readContract.hasVoted(proposalId, account);
+    return this.contractWrapper.readContract.hasVoted(
+      proposalId,
+      await resolveAddress(account),
+    );
   }
 
   /**
@@ -279,9 +288,11 @@ export class Vote implements UpdateableNetwork {
    *
    * @returns - The balance of the project in the native token of the chain
    */
-  public async balanceOfToken(tokenAddress: string): Promise<CurrencyValue> {
+  public async balanceOfToken(
+    tokenAddress: AddressOrEns,
+  ): Promise<CurrencyValue> {
     const erc20 = new Contract(
-      tokenAddress,
+      await resolveAddress(tokenAddress),
       ERC20Abi,
       this.contractWrapper.getProvider(),
     ) as IERC20;
@@ -375,37 +386,41 @@ export class Vote implements UpdateableNetwork {
    * @param executions - A set of executable transactions that will be run if the proposal is passed and executed.
    * @returns - The id of the created proposal and the transaction receipt.
    */
-  public async propose(
-    description: string,
-    executions?: ProposalExecutable[],
-  ): Promise<TransactionResultWithId> {
-    if (!executions) {
-      executions = [
-        {
-          toAddress: this.contractWrapper.readContract.address,
-          nativeTokenValue: 0,
-          transactionData: "0x",
+  propose = buildTransactionFunction(
+    async (
+      description: string,
+      executions?: ProposalExecutable[],
+    ): Promise<Transaction<TransactionResultWithId>> => {
+      if (!executions) {
+        executions = [
+          {
+            toAddress: this.contractWrapper.readContract.address,
+            nativeTokenValue: 0,
+            transactionData: "0x",
+          },
+        ];
+      }
+      const tos = executions.map((p) => p.toAddress);
+      const values = executions.map((p) => p.nativeTokenValue);
+      const datas = executions.map((p) => p.transactionData);
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "propose",
+        args: [tos, values, datas, description],
+        parse: (receipt) => {
+          const event = this.contractWrapper.parseLogs<ProposalCreatedEvent>(
+            "ProposalCreated",
+            receipt?.logs,
+          );
+          return {
+            id: event[0].args.proposalId,
+            receipt,
+          };
         },
-      ];
-    }
-    const tos = executions.map((p) => p.toAddress);
-    const values = executions.map((p) => p.nativeTokenValue);
-    const datas = executions.map((p) => p.transactionData);
-    const receipt = await this.contractWrapper.sendTransaction("propose", [
-      tos,
-      values,
-      datas,
-      description,
-    ]);
-    const event = this.contractWrapper.parseLogs<ProposalCreatedEvent>(
-      "ProposalCreated",
-      receipt?.logs,
-    );
-    return {
-      id: event[0].args.proposalId,
-      receipt,
-    };
-  }
+      });
+    },
+  );
 
   /**
    * Vote
@@ -427,19 +442,16 @@ export class Vote implements UpdateableNetwork {
    * @param voteType - The position the voter is taking on their vote.
    * @param reason - (optional) The reason for the vote.
    */
-  public async vote(
-    proposalId: string,
-    voteType: VoteType,
-    reason = "",
-  ): Promise<TransactionResult> {
-    await this.ensureExists(proposalId);
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "castVoteWithReason",
-        [proposalId, voteType, reason],
-      ),
-    };
-  }
+  vote = buildTransactionFunction(
+    async (proposalId: string, voteType: VoteType, reason = "") => {
+      await this.ensureExists(proposalId);
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "castVoteWithReason",
+        args: [proposalId, voteType, reason],
+      });
+    },
+  );
 
   /**
    * Execute Proposal
@@ -455,7 +467,7 @@ export class Vote implements UpdateableNetwork {
    *
    * @param proposalId - The proposal id to execute.
    */
-  public async execute(proposalId: string): Promise<TransactionResult> {
+  execute = buildTransactionFunction(async (proposalId: string) => {
     await this.ensureExists(proposalId);
 
     const proposal = await this.get(proposalId);
@@ -463,15 +475,13 @@ export class Vote implements UpdateableNetwork {
     const values = proposal.executions.map((p) => p.nativeTokenValue);
     const datas = proposal.executions.map((p) => p.transactionData);
     const descriptionHash = ethers.utils.id(proposal.description);
-    return {
-      receipt: await this.contractWrapper.sendTransaction("execute", [
-        tos,
-        values,
-        datas,
-        descriptionHash,
-      ]),
-    };
-  }
+
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "execute",
+      args: [tos, values, datas, descriptionHash],
+    });
+  });
 
   /**
    * @internal

@@ -1,50 +1,85 @@
 // Providers
-export * from "./providers/base";
+export { ThirdwebSDKProvider, useSDK } from "./providers/base";
 
 /**
  * Hooks
  */
 // Program
-export * from "./hooks/program/useProgram";
-export * from "./hooks/program/useProgramMetadata";
-export * from "./hooks/program/useProgramAccountType";
+export { programQuery, useProgram } from "./hooks/program/useProgram";
+export type { UseProgramResult } from "./hooks/program/useProgram";
+
+export {
+  programMetadataQuery,
+  useProgramMetadata,
+} from "./hooks/program/useProgramMetadata";
+
+export {
+  programAccountTypeQuery,
+  useProgramAccountType,
+} from "./hooks/program/useProgramAccountType";
 
 // NFT Shared
-export * from "./hooks/nft/useNFTs";
-export * from "./hooks/nft/useTransferNFT";
-export * from "./hooks/nft/useBurnNFT";
-export * from "./hooks/nft/useRoyaltySettings";
-export * from "./hooks/nft/useUpdateRoyaltySettings";
-export * from "./hooks/nft/useCreators";
-export * from "./hooks/nft/useUpdateCreators";
-export * from "./hooks/nft/useTotalSupply";
+export { nftGetAllQuery, useNFTs } from "./hooks/nft/useNFTs";
+export { useTransferNFT } from "./hooks/nft/useTransferNFT";
+export type { TransferNFTMutationParams } from "./hooks/nft/useTransferNFT";
+
+export { useBurnNFT } from "./hooks/nft/useBurnNFT";
+export {
+  nftRoyaltyQuery,
+  useRoyaltySettings,
+} from "./hooks/nft/useRoyaltySettings";
+export { useUpdateRoyaltySettings } from "./hooks/nft/useUpdateRoyaltySettings";
+export { nftCreatorsQuery, useCreators } from "./hooks/nft/useCreators";
+export { useUpdateCreators } from "./hooks/nft/useUpdateCreators";
+export {
+  nftTotalSupplyQuery,
+  useTotalSupply,
+} from "./hooks/nft/useTotalSupply";
 
 // NFT Collection
-export * from "./hooks/nft/collection/useMintNFT";
-export * from "./hooks/nft/collection/useMintNFTSupply";
+export { useMintNFT } from "./hooks/nft/collection/useMintNFT";
+export { useMintNFTSupply } from "./hooks/nft/collection/useMintNFTSupply";
 
 // NFT Drop
-export * from "./hooks/nft/drop/useLazyMint";
-export * from "./hooks/nft/drop/useClaimedSupply";
-export * from "./hooks/nft/drop/useUnclaimedSupply";
-export * from "./hooks/nft/drop/useClaimNFT";
-export * from "./hooks/nft/drop/useClaimConditions";
-export * from "./hooks/nft/drop/useSetClaimConditions";
+export { useLazyMint } from "./hooks/nft/drop/useLazyMint";
+export {
+  dropTotalClaimedSupplyQuery,
+  useDropTotalClaimedSupply,
+} from "./hooks/nft/drop/useClaimedSupply";
+export {
+  dropUnclaimedSupplyQuery,
+  useDropUnclaimedSupply,
+} from "./hooks/nft/drop/useUnclaimedSupply";
+export { useClaimNFT } from "./hooks/nft/drop/useClaimNFT";
+export {
+  claimConditionsQuery,
+  useClaimConditions,
+} from "./hooks/nft/drop/useClaimConditions";
+export { useSetClaimConditions } from "./hooks/nft/drop/useSetClaimConditions";
 
 // Token
-export * from "./hooks/token/useTokenSupply";
-export * from "./hooks/token/useTokenBalance";
-export * from "./hooks/token/useMintToken";
-export * from "./hooks/token/useTransferToken";
+export { tokenSupplyQuery, useTokenSupply } from "./hooks/token/useTokenSupply";
+export {
+  tokenBalanceQuery,
+  useTokenBalance,
+} from "./hooks/token/useTokenBalance";
+export { useMintToken } from "./hooks/token/useMintToken";
+export type { TransferTokenMutationParams } from "./hooks/token/useTransferToken";
+export { useTransferToken } from "./hooks/token/useTransferToken";
 
 // Auth
-export * from "./hooks/auth";
+export { useAuth, useLogin, useLogout, useUser } from "./hooks/auth";
+export type { UserWithData, LoginConfig } from "./hooks/auth";
 
 //Wallet
-export * from "./hooks/wallet/useBalance";
+export { balanceQuery, useBalance } from "./hooks/wallet/useBalance";
 
 //Contexts
-export * from "./contexts/thirdweb-auth";
+export type { ThirdwebAuthConfig } from "./contexts/thirdweb-auth";
+export {
+  ThirdwebAuthProvider,
+  useThirdwebAuthContext,
+} from "./contexts/thirdweb-auth";
 
 // Utilities and Others
 export { shouldNeverPersistQuery } from "../core/query-utils/query-key";

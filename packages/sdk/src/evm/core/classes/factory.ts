@@ -1,4 +1,5 @@
 import { getDeployArguments } from "../../common/deploy";
+import { buildTransactionFunction } from "../../common/transactions";
 import {
   getApprovedImplementation,
   getDefaultTrustedForwarders,
@@ -20,6 +21,7 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../../contracts";
+import { Address } from "../../schema";
 import { SDKOptions } from "../../schema/sdk-options";
 import { DeployEvents } from "../../types";
 import {
@@ -28,6 +30,7 @@ import {
   PrebuiltContractType,
 } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
 import type { TWFactory } from "@thirdweb-dev/contracts-js";
 import TWFactoryAbi from "@thirdweb-dev/contracts-js/dist/abis/TWFactory.json";
 import { ProxyDeployedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TWFactory";
@@ -76,115 +79,126 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     this.storage = storage;
   }
 
-  public async deploy<TContractType extends PrebuiltContractType>(
-    contractType: TContractType,
-    contractMetadata: z.input<
-      DeploySchemaForPrebuiltContractType<TContractType>
-    >,
-    eventEmitter: EventEmitter<DeployEvents>,
-    version?: number,
-  ): Promise<string> {
-    const contract = PREBUILT_CONTRACTS_MAP[contractType];
-    const metadata = contract.schema.deploy.parse(contractMetadata);
+  deploy = buildTransactionFunction(
+    async <TContractType extends PrebuiltContractType>(
+      contractType: TContractType,
+      contractMetadata: z.input<
+        DeploySchemaForPrebuiltContractType<TContractType>
+      >,
+      eventEmitter: EventEmitter<DeployEvents>,
+      version?: number,
+    ): Promise<Transaction<Address>> => {
+      const contract = PREBUILT_CONTRACTS_MAP[contractType];
+      const metadata = await contract.schema.deploy.parseAsync(
+        contractMetadata,
+      );
 
-    // TODO: is there any special pre-processing we need to do before uploading?
-    const contractURI = await this.storage.upload(metadata);
+      // TODO: is there any special pre-processing we need to do before uploading?
+      const contractURI = await this.storage.upload(metadata);
 
-    const implementationAddress = await this.getImplementation(
-      contract,
-      version,
-    );
+      const implementationAddress =
+        (await this.getImplementation(contract, version)) || undefined;
 
-    if (
-      !implementationAddress ||
-      implementationAddress === constants.AddressZero
-    ) {
-      throw new Error(`No implementation found for ${contractType}`);
-    }
+      if (
+        !implementationAddress ||
+        implementationAddress === constants.AddressZero
+      ) {
+        throw new Error(`No implementation found for ${contractType}`);
+      }
 
-    const ABI = await contract.getAbi(
-      implementationAddress,
-      this.getProvider(),
-      this.storage,
-    );
+      const ABI = await contract.getAbi(
+        implementationAddress,
+        this.getProvider(),
+        this.storage,
+      );
 
-    const signer = this.getSigner();
-    invariant(signer, "A signer is required to deploy contracts");
+      const signer = this.getSigner();
+      invariant(signer, "A signer is required to deploy contracts");
 
-    const args = await getDeployArguments(
-      contractType,
-      metadata,
-      contractURI,
-      signer,
-    );
+      const args = await getDeployArguments(
+        contractType,
+        metadata,
+        contractURI,
+        signer,
+      );
 
-    const encodedFunc = Contract.getInterface(ABI).encodeFunctionData(
-      "initialize",
-      args,
-    );
+      const encodedFunc = Contract.getInterface(ABI).encodeFunctionData(
+        "initialize",
+        args,
+      );
 
-    const blockNumber = await this.getProvider().getBlockNumber();
-    const salt = ethers.utils.formatBytes32String(blockNumber.toString());
-    const receipt = await this.sendTransaction("deployProxyByImplementation", [
-      implementationAddress,
-      encodedFunc,
-      salt,
-    ]);
+      const blockNumber = await this.getProvider().getBlockNumber();
+      const salt = ethers.utils.formatBytes32String(blockNumber.toString());
 
-    const events = this.parseLogs<ProxyDeployedEvent>(
-      "ProxyDeployed",
-      receipt.logs,
-    );
-    if (events.length < 1) {
-      throw new Error("No ProxyDeployed event found");
-    }
+      return Transaction.fromContractWrapper({
+        contractWrapper: this,
+        method: "deployProxyByImplementation",
+        args: [implementationAddress, encodedFunc, salt],
+        parse: (receipt) => {
+          const events = this.parseLogs<ProxyDeployedEvent>(
+            "ProxyDeployed",
+            receipt.logs,
+          );
+          if (events.length < 1) {
+            throw new Error("No ProxyDeployed event found");
+          }
 
-    const contractAddress = events[0].args.proxy;
-    eventEmitter.emit("contractDeployed", {
-      status: "completed",
-      contractAddress,
-      transactionHash: receipt.transactionHash,
-    });
+          const contractAddress = events[0].args.proxy;
+          eventEmitter.emit("contractDeployed", {
+            status: "completed",
+            contractAddress,
+            transactionHash: receipt.transactionHash,
+          });
 
-    return contractAddress;
-  }
+          return contractAddress;
+        },
+      });
+    },
+  );
 
   // TODO once IContractFactory is implemented, this can be probably be moved to its own class
-  public async deployProxyByImplementation(
-    implementationAddress: string,
-    implementationAbi: ContractInterface,
-    initializerFunction: string,
-    initializerArgs: any[],
-    eventEmitter: EventEmitter<DeployEvents>,
-  ): Promise<string> {
-    const encodedFunc = Contract.getInterface(
-      implementationAbi,
-    ).encodeFunctionData(initializerFunction, initializerArgs);
+  deployProxyByImplementation = buildTransactionFunction(
+    async (
+      implementationAddress: Address,
+      implementationAbi: ContractInterface,
+      initializerFunction: string,
+      initializerArgs: any[],
+      eventEmitter: EventEmitter<DeployEvents>,
+    ): Promise<Transaction<Address>> => {
+      const encodedFunc = Contract.getInterface(
+        implementationAbi,
+      ).encodeFunctionData(initializerFunction, initializerArgs);
 
-    const blockNumber = await this.getProvider().getBlockNumber();
-    const receipt = await this.sendTransaction("deployProxyByImplementation", [
-      implementationAddress,
-      encodedFunc,
-      ethers.utils.formatBytes32String(blockNumber.toString()),
-    ]);
+      const blockNumber = await this.getProvider().getBlockNumber();
+      return Transaction.fromContractWrapper({
+        contractWrapper: this,
+        method: "deployProxyByImplementation",
+        args: [
+          implementationAddress,
+          encodedFunc,
+          ethers.utils.formatBytes32String(blockNumber.toString()),
+        ],
+        parse: (receipt) => {
+          const events = this.parseLogs<ProxyDeployedEvent>(
+            "ProxyDeployed",
+            receipt.logs,
+          );
+          if (events.length < 1) {
+            throw new Error("No ProxyDeployed event found");
+          }
 
-    const events = this.parseLogs<ProxyDeployedEvent>(
-      "ProxyDeployed",
-      receipt.logs,
-    );
-    if (events.length < 1) {
-      throw new Error("No ProxyDeployed event found");
-    }
+          const contractAddress = events[0].args.proxy;
+          eventEmitter.emit("contractDeployed", {
+            status: "completed",
+            contractAddress,
+            transactionHash: receipt.transactionHash,
+          });
 
-    const contractAddress = events[0].args.proxy;
-    eventEmitter.emit("contractDeployed", {
-      status: "completed",
-      contractAddress,
-      transactionHash: receipt.transactionHash,
-    });
-
-    return contractAddress;
-  }
+          return contractAddress;
+        },
+      });
+    },
+  );
 
   /**
    *
@@ -210,7 +224,8 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     switch (contractType) {
       case NFTDropInitializer.contractType:
       case NFTCollectionInitializer.contractType:
-        const erc721metadata = NFTDropInitializer.schema.deploy.parse(metadata);
+        const erc721metadata =
+          await NFTDropInitializer.schema.deploy.parseAsync(metadata);
         return [
           await this.getSignerAddress(),
           erc721metadata.name,
@@ -225,7 +240,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         ];
       case SignatureDropInitializer.contractType:
         const signatureDropmetadata =
-          SignatureDropInitializer.schema.deploy.parse(metadata);
+          await SignatureDropInitializer.schema.deploy.parseAsync(metadata);
         return [
           await this.getSignerAddress(),
           signatureDropmetadata.name,
@@ -240,7 +255,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         ];
       case MultiwrapInitializer.contractType:
         const multiwrapMetadata =
-          MultiwrapInitializer.schema.deploy.parse(metadata);
+          await MultiwrapInitializer.schema.deploy.parseAsync(metadata);
         return [
           await this.getSignerAddress(),
           multiwrapMetadata.name,
@@ -253,7 +268,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       case EditionDropInitializer.contractType:
       case EditionInitializer.contractType:
         const erc1155metadata =
-          EditionDropInitializer.schema.deploy.parse(metadata);
+          await EditionDropInitializer.schema.deploy.parseAsync(metadata);
         return [
           await this.getSignerAddress(),
           erc1155metadata.name,
@@ -268,7 +283,9 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         ];
       case TokenDropInitializer.contractType:
       case TokenInitializer.contractType:
-        const erc20metadata = TokenInitializer.schema.deploy.parse(metadata);
+        const erc20metadata = await TokenInitializer.schema.deploy.parseAsync(
+          metadata,
+        );
         return [
           await this.getSignerAddress(),
           erc20metadata.name,
@@ -280,7 +297,9 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc20metadata.platform_fee_basis_points,
         ];
       case VoteInitializer.contractType:
-        const voteMetadata = VoteInitializer.schema.deploy.parse(metadata);
+        const voteMetadata = await VoteInitializer.schema.deploy.parseAsync(
+          metadata,
+        );
         return [
           voteMetadata.name,
           contractURI,
@@ -292,7 +311,9 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           voteMetadata.voting_quorum_fraction,
         ];
       case SplitInitializer.contractType:
-        const splitsMetadata = SplitInitializer.schema.deploy.parse(metadata);
+        const splitsMetadata = await SplitInitializer.schema.deploy.parseAsync(
+          metadata,
+        );
         return [
           await this.getSignerAddress(),
           contractURI,
@@ -302,7 +323,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         ];
       case MarketplaceInitializer.contractType:
         const marketplaceMetadata =
-          MarketplaceInitializer.schema.deploy.parse(metadata);
+          await MarketplaceInitializer.schema.deploy.parseAsync(metadata);
         return [
           await this.getSignerAddress(),
           contractURI,
@@ -312,7 +333,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         ];
       case MarketplaceV3Initializer.contractType:
         const marketplaceV3Metadata =
-          MarketplaceV3Initializer.schema.deploy.parse(metadata);
+          await MarketplaceV3Initializer.schema.deploy.parseAsync(metadata);
         return [
           await this.getSignerAddress(),
           contractURI,
@@ -321,7 +342,9 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           marketplaceV3Metadata.platform_fee_basis_points,
         ];
       case PackInitializer.contractType:
-        const packsMetadata = PackInitializer.schema.deploy.parse(metadata);
+        const packsMetadata = await PackInitializer.schema.deploy.parseAsync(
+          metadata,
+        );
         return [
           await this.getSignerAddress(),
           packsMetadata.name,
@@ -342,7 +365,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
   }
 
   private async getImplementation(
-    contract: typeof PREBUILT_CONTRACTS_MAP[PrebuiltContractType],
+    contract: (typeof PREBUILT_CONTRACTS_MAP)[PrebuiltContractType],
     version?: number,
   ) {
     const encodedType = ethers.utils.formatBytes32String(contract.name);

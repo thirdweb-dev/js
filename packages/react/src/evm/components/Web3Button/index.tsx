@@ -1,25 +1,29 @@
-import { useNetwork } from "../../hooks/wagmi-required/useNetwork";
-import { ConnectWallet } from "../ConnectWallet";
-import { Button } from "../shared/Button";
-import { ThemeProvider, ThemeProviderProps } from "../shared/ThemeProvider";
-import { FiWifi } from "@react-icons/all-files/fi/FiWifi";
+import { Spinner } from "../../../components/Spinner";
+import { ToolTip } from "../../../components/Tooltip";
+import { Button } from "../../../components/buttons";
+import { darkTheme, lightTheme } from "../../../design-system";
+import { ConnectWallet } from "../../../wallet/ConnectWallet/ConnectWallet";
+import { useCanSwitchNetwork } from "../../../wallet/hooks/useCanSwitchNetwork";
+import { ThemeProvider } from "@emotion/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  useSDKChainId,
-  useContract,
-  useNetworkMismatch,
+  ThirdwebThemeContext,
   useAddress,
   useChainId,
-} from "@thirdweb-dev/react-core/evm";
+  useContract,
+  useNetworkMismatch,
+  useSDKChainId,
+  useSwitchChain,
+  useConnectionStatus,
+} from "@thirdweb-dev/react-core";
 import type { SmartContract } from "@thirdweb-dev/sdk";
 import type { CallOverrides, ContractInterface } from "ethers";
-import { PropsWithChildren, useMemo } from "react";
+import { PropsWithChildren, useContext } from "react";
 import invariant from "tiny-invariant";
 
 type ActionFn = (contract: SmartContract) => any;
 
-interface Web3ButtonProps<TActionFn extends ActionFn>
-  extends ThemeProviderProps {
+interface Web3ButtonProps<TActionFn extends ActionFn> {
   className?: string;
   contractAddress: `0x${string}` | `${string}.eth` | string;
   contractAbi?: ContractInterface;
@@ -29,12 +33,14 @@ interface Web3ButtonProps<TActionFn extends ActionFn>
   onSuccess?: (result: Awaited<ReturnType<TActionFn>>) => void;
   // called with any error that might happen
   onError?: (error: Error) => void;
-  // called when the function is called
+  // called before the `action` function is called
   onSubmit?: () => void;
   // disabled state
   isDisabled?: boolean;
   // the fn to execute
   action: TActionFn;
+  type?: "button" | "submit" | "reset";
+  theme?: "dark" | "light";
 }
 
 /**
@@ -68,40 +74,34 @@ export const Web3Button = <TAction extends ActionFn>({
   children,
   action,
   className,
-  ...themeProps
+  type,
+  theme,
 }: PropsWithChildren<Web3ButtonProps<TAction>>) => {
   const address = useAddress();
   const walletChainId = useChainId();
   const sdkChainId = useSDKChainId();
-  const [, switchNetwork] = useNetwork();
-
+  const switchChain = useSwitchChain();
   const hasMismatch = useNetworkMismatch();
+  const needToSwitchChain =
+    sdkChainId && walletChainId && sdkChainId !== walletChainId;
+  const connectionStatus = useConnectionStatus();
 
   const queryClient = useQueryClient();
-
-  const switchToChainId = useMemo(() => {
-    if (sdkChainId && walletChainId && sdkChainId !== walletChainId) {
-      return sdkChainId;
-    }
-    return null;
-  }, [sdkChainId, walletChainId]);
+  const canSwitchNetwork = useCanSwitchNetwork();
 
   const { contract } = useContract(contractAddress, contractAbi || "custom");
+  const thirdwebTheme = useContext(ThirdwebThemeContext);
+  const themeToUse = theme || thirdwebTheme || "dark";
 
-  // TODO move all of this logic to react-core, it's pure logic
-  const mutation = useMutation(
+  const actionMutation = useMutation(
     async () => {
-      if (switchToChainId) {
-        if (switchNetwork) {
-          await switchNetwork(switchToChainId);
-          return "__NETWORK_SWITCHED__";
-        } else {
-          throw new Error(
-            "need to switch chain but connected wallet does not support switching",
-          );
-        }
-      }
       invariant(contract, "contract is not ready yet");
+
+      // if need to switch the chain to perform the action
+      if (needToSwitchChain) {
+        await switchChain(sdkChainId);
+        return "__NETWORK_SWITCHED__";
+      }
 
       if (onSubmit) {
         onSubmit();
@@ -128,26 +128,62 @@ export const Web3Button = <TAction extends ActionFn>({
       onSettled: () => queryClient.invalidateQueries(),
     },
   );
+
   if (!address) {
-    return <ConnectWallet className={className} {...themeProps} />;
+    return <ConnectWallet theme={theme} />;
   }
 
-  const willSwitchNetwork = hasMismatch && !!switchNetwork;
+  let content = children;
+  let buttonDisabled = !!isDisabled;
+  let buttonLoading = false;
+  let showTooltip = false;
+
+  // if button is disabled, show original action
+  if (!buttonDisabled) {
+    if (hasMismatch) {
+      if (!canSwitchNetwork) {
+        showTooltip = true;
+        content = "Network Mismatch";
+        buttonDisabled = true;
+      } else {
+        content = "Switch Network";
+      }
+    } else if (
+      actionMutation.isLoading ||
+      !contract ||
+      connectionStatus === "connecting" ||
+      connectionStatus === "unknown"
+    ) {
+      content = (
+        <Spinner size="sm" color={themeToUse === "dark" ? "black" : "white"} />
+      );
+      buttonLoading = true;
+    }
+  }
+
+  const btn = (
+    <Button
+      variant="inverted"
+      type={type}
+      className={className}
+      onClick={() => actionMutation.mutate()}
+      disabled={buttonDisabled || buttonLoading}
+      style={{
+        minWidth: "120px",
+        minHeight: "43px",
+      }}
+    >
+      {content}
+    </Button>
+  );
 
   return (
-    <ThemeProvider {...themeProps}>
-      <Button
-        className={className}
-        style={{ height: "50px", minWidth: "200px", width: "100%" }}
-        isLoading={mutation.isLoading || !contract}
-        onClick={() => mutation.mutate()}
-        isDisabled={willSwitchNetwork ? false : isDisabled}
-        leftElement={
-          willSwitchNetwork ? <FiWifi width="1em" height="1em" /> : undefined
-        }
-      >
-        {willSwitchNetwork ? "Switch Network" : children}
-      </Button>
+    <ThemeProvider theme={themeToUse === "dark" ? darkTheme : lightTheme}>
+      {showTooltip ? (
+        <ToolTip tip="Change Network from Wallet App">{btn}</ToolTip>
+      ) : (
+        btn
+      )}
     </ThemeProvider>
   );
 };

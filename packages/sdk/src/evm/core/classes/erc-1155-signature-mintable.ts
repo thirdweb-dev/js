@@ -352,7 +352,11 @@ export class Erc1155SignatureMintable implements DetectableFeature {
     );
 
     const parsedRequests: FilledSignaturePayload1155WithTokenId[] =
-      payloadsToSign.map((m) => Signature1155PayloadInputWithTokenId.parse(m));
+      await Promise.all(
+        payloadsToSign.map((m) =>
+          Signature1155PayloadInputWithTokenId.parseAsync(m),
+        ),
+      );
 
     const metadatas = parsedRequests.map((r) => r.metadata);
     const uris = await uploadOrExtractURIs(metadatas, this.storage);
@@ -370,7 +374,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
     return await Promise.all(
       parsedRequests.map(async (m, i) => {
         const uri = uris[i];
-        const finalPayload = Signature1155PayloadOutput.parse({
+        const finalPayload = await Signature1155PayloadOutput.parseAsync({
           ...m,
           uri,
         });

@@ -1,7 +1,7 @@
 import { AmountSchema } from "../../../core/schema/shared";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants";
 import {
-  AddressSchema,
+  AddressOrEnsSchema,
   BigNumberishSchema,
   EndDateSchema,
   RawDateSchema,
@@ -15,7 +15,7 @@ export const EnglishAuctionInputParamsSchema = z.object({
   /**
    * The address of the asset being auctioned.
    */
-  assetContractAddress: AddressSchema,
+  assetContractAddress: AddressOrEnsSchema,
 
   /**
    * The ID of the token to auction.
@@ -32,7 +32,7 @@ export const EnglishAuctionInputParamsSchema = z.object({
   /**
    * The address of the currency to accept for the listing.
    */
-  currencyContractAddress: AddressSchema.default(NATIVE_TOKEN_ADDRESS),
+  currencyContractAddress: AddressOrEnsSchema.default(NATIVE_TOKEN_ADDRESS),
 
   /**
    * The minimum price that a bid must be in order to be accepted.

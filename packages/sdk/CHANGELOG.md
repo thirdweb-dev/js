@@ -1,5 +1,89 @@
 # @thirdweb-dev/sdk
 
+## 3.10.3
+
+### Patch Changes
+
+- [#698](https://github.com/thirdweb-dev/js/pull/698) [`713d3187`](https://github.com/thirdweb-dev/js/commit/713d3187be14643e891d6c04400308802e9e5d04) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix fetching NFTs with null metadata
+
+## 3.10.2
+
+### Patch Changes
+
+- [#697](https://github.com/thirdweb-dev/js/pull/697) [`2682f582`](https://github.com/thirdweb-dev/js/commit/2682f5823e5c71947f5c6a71918a0285f253fd18) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix fetching ABI on legacy contracts
+
+- [#693](https://github.com/thirdweb-dev/js/pull/693) [`d5f18b40`](https://github.com/thirdweb-dev/js/commit/d5f18b403a6f3ced0e1929b5c032f63325708304) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix passing only chain name as the network to connect to
+
+- [#694](https://github.com/thirdweb-dev/js/pull/694) [`2efe5be3`](https://github.com/thirdweb-dev/js/commit/2efe5be3ad2df4e80c0048c8fd35018ecf2d8dd9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Optimize getContract calls with no type
+
+- [#687](https://github.com/thirdweb-dev/js/pull/687) [`baeb7427`](https://github.com/thirdweb-dev/js/commit/baeb74274e878cfbc237ef2aa676faa257606300) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - New app uri defaults
+
+## 3.10.1
+
+### Patch Changes
+
+- [#688](https://github.com/thirdweb-dev/js/pull/688) [`68d52f99`](https://github.com/thirdweb-dev/js/commit/68d52f99b36c6744e45872d0bdebafbbf7d09b59) Thanks [@adam-maj](https://github.com/adam-maj)! - Poll if transaction can't be found yet on gasless
+
+## 3.10.0
+
+### Minor Changes
+
+- [#566](https://github.com/thirdweb-dev/js/pull/566) [`1e1a3912`](https://github.com/thirdweb-dev/js/commit/1e1a39123bad2b96c332ebb58b25369b31dd9de7) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for new transaction pattern to all function calls
+
+### Patch Changes
+
+- [#676](https://github.com/thirdweb-dev/js/pull/676) [`a7e908b5`](https://github.com/thirdweb-dev/js/commit/a7e908b5fe60803e64b418cf42e081ca75123a45) Thanks [@adam-maj](https://github.com/adam-maj)! - Add transaction builder to registries
+
+- [#671](https://github.com/thirdweb-dev/js/pull/671) [`61ef6964`](https://github.com/thirdweb-dev/js/commit/61ef69649fb605f6079dd9bbef12b739b02dda30) Thanks [@furqanrydhan](https://github.com/furqanrydhan)! - comment fixes
+
+- [#661](https://github.com/thirdweb-dev/js/pull/661) [`2f4cd928`](https://github.com/thirdweb-dev/js/commit/2f4cd92848a6c8cec4e86654f376a6d15bdd2b52) Thanks [@adam-maj](https://github.com/adam-maj)! - Add prepare function to all contracts
+
+- [#644](https://github.com/thirdweb-dev/js/pull/644) [`63f552d7`](https://github.com/thirdweb-dev/js/commit/63f552d736a549532eb4d6a05cfe66a771b190b9) Thanks [@adam-maj](https://github.com/adam-maj)! - Update storage config to accept gatewayUrls
+
+- [#663](https://github.com/thirdweb-dev/js/pull/663) [`e081075b`](https://github.com/thirdweb-dev/js/commit/e081075b2cebc7edad855481366bd9864ddba102) Thanks [@adam-maj](https://github.com/adam-maj)! - Add tx.sign() and expose get functions for transaction
+
+- [#674](https://github.com/thirdweb-dev/js/pull/674) [`d8dec9fc`](https://github.com/thirdweb-dev/js/commit/d8dec9fc19079c79729857c36e45102c90fb7e0a) Thanks [@adam-maj](https://github.com/adam-maj)! - Allow passing through number into chain
+
+- [#621](https://github.com/thirdweb-dev/js/pull/621) [`478780f6`](https://github.com/thirdweb-dev/js/commit/478780f6349595c17a7b3cd7de7668973c201d65) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Feature for extension router
+
+- [#631](https://github.com/thirdweb-dev/js/pull/631) [`b83ea525`](https://github.com/thirdweb-dev/js/commit/b83ea5251bcd07feaab02a7ad1be202ccc6147fd) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Fix detection of appURI extension
+
+- [#640](https://github.com/thirdweb-dev/js/pull/640) [`541dfeea`](https://github.com/thirdweb-dev/js/commit/541dfeeabaa744880cf78b310a9d61db4dfb32b3) Thanks [@adam-maj](https://github.com/adam-maj)! - Fix bound transaction functions
+
+- [#665](https://github.com/thirdweb-dev/js/pull/665) [`6ef52dc9`](https://github.com/thirdweb-dev/js/commit/6ef52dc916251d72416ba5a8b63b428770f54e75) Thanks [@shift4id](https://github.com/shift4id)! - Fix spelling throughout all packages
+
+- [#673](https://github.com/thirdweb-dev/js/pull/673) [`0c883044`](https://github.com/thirdweb-dev/js/commit/0c88304464ef4461a660a374198e893c578c8de0) Thanks [@adam-maj](https://github.com/adam-maj)! - Don't use functions in sdk.getContract
+
+- [#623](https://github.com/thirdweb-dev/js/pull/623) [`0666f37c`](https://github.com/thirdweb-dev/js/commit/0666f37c13ed4b824e238325f9d13b9af785e0b0) Thanks [@adam-maj](https://github.com/adam-maj)! - Cleanup signer and provider connection logic
+
+- [#643](https://github.com/thirdweb-dev/js/pull/643) [`85250cf7`](https://github.com/thirdweb-dev/js/commit/85250cf71190092b61023d56d1e786d395a008a6) Thanks [@jnsdls](https://github.com/jnsdls)! - autoComplete `chain.slug` and `chain.chainId` for `new ThirdwebSDK()`
+
+- [#655](https://github.com/thirdweb-dev/js/pull/655) [`b80024c6`](https://github.com/thirdweb-dev/js/commit/b80024c6cca17541c9b5ebb51c1476e9f210d3ab) Thanks [@jakeloo](https://github.com/jakeloo)! - Add ERC20Permit detection
+
+- [#659](https://github.com/thirdweb-dev/js/pull/659) [`8845bf96`](https://github.com/thirdweb-dev/js/commit/8845bf960e18c89d0e1f2fe1c370f4e2f4e855d0) Thanks [@adam-maj](https://github.com/adam-maj)! - await getGasOverrides
+
+- [#679](https://github.com/thirdweb-dev/js/pull/679) [`2335f000`](https://github.com/thirdweb-dev/js/commit/2335f000c9023dd47b1a341a4dd40ed674e9bcdb) Thanks [@jnsdls](https://github.com/jnsdls)! - `NFT.supply` type switched to `string` type to prevent javascript `number` overflow
+
+- [#654](https://github.com/thirdweb-dev/js/pull/654) [`696c384a`](https://github.com/thirdweb-dev/js/commit/696c384a348890202e37cbd8488b1b1eceb4e8c2) Thanks [@jnsdls](https://github.com/jnsdls)! - fix `appUri` build
+
+- [#662](https://github.com/thirdweb-dev/js/pull/662) [`3740a0bf`](https://github.com/thirdweb-dev/js/commit/3740a0bf5db1301dbd93a97ab4c9343429a4e12d) Thanks [@furqanrydhan](https://github.com/furqanrydhan)! - switch appuri -> app
+
+- [#626](https://github.com/thirdweb-dev/js/pull/626) [`91f5a2fd`](https://github.com/thirdweb-dev/js/commit/91f5a2fd5cb2f5aed6498defdb1feeabb283db6c) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Improve comments and examples in the documentation
+
+- [#628](https://github.com/thirdweb-dev/js/pull/628) [`537785fe`](https://github.com/thirdweb-dev/js/commit/537785fed0021345b0d1cec37658e43c65931f9f) Thanks [@adam-maj](https://github.com/adam-maj)! - Add getContract and getContractFromAbi functions
+
+- [#667](https://github.com/thirdweb-dev/js/pull/667) [`b6b0855b`](https://github.com/thirdweb-dev/js/commit/b6b0855b81854ec3d5dd3c763a1ad2a235837cc9) Thanks [@adam-maj](https://github.com/adam-maj)! - Allow setting extra overrides in transaction
+
+- [#675](https://github.com/thirdweb-dev/js/pull/675) [`2a8cc289`](https://github.com/thirdweb-dev/js/commit/2a8cc289ac42273800554a247cb9259a8f0329d7) Thanks [@adam-maj](https://github.com/adam-maj)! - Add transaction builders to publisher
+
+- [#642](https://github.com/thirdweb-dev/js/pull/642) [`dc08aa73`](https://github.com/thirdweb-dev/js/commit/dc08aa731f92ce3c2dd232378637a3075137367d) Thanks [@furqanrydhan](https://github.com/furqanrydhan)! - better contract metadata compatibility
+
+- [#653](https://github.com/thirdweb-dev/js/pull/653) [`bd6be0ba`](https://github.com/thirdweb-dev/js/commit/bd6be0bae78511878c2344949bb212dab30ec30c) Thanks [@jnsdls](https://github.com/jnsdls)! - add `extensions` getter to `sdk.getContractList()` and `sdk.getMultiChainContractList()` return types
+
+- Updated dependencies [[`8a8a37f6`](https://github.com/thirdweb-dev/js/commit/8a8a37f6d3468b2a9c9736834bc39a3eee4754f4), [`63f552d7`](https://github.com/thirdweb-dev/js/commit/63f552d736a549532eb4d6a05cfe66a771b190b9), [`fb346ffd`](https://github.com/thirdweb-dev/js/commit/fb346ffd45edf9f50cc8c68a0c318eee39a6d9c6), [`7832041c`](https://github.com/thirdweb-dev/js/commit/7832041c0fb25852489c73453c2b26e844d94582), [`6ef52dc9`](https://github.com/thirdweb-dev/js/commit/6ef52dc916251d72416ba5a8b63b428770f54e75), [`85250cf7`](https://github.com/thirdweb-dev/js/commit/85250cf71190092b61023d56d1e786d395a008a6), [`e33bd2a8`](https://github.com/thirdweb-dev/js/commit/e33bd2a856bbc2e2f6b0c90b46be5166281875ae), [`4355518a`](https://github.com/thirdweb-dev/js/commit/4355518afea68cd8026d3ab8a0144c15d66b9e24), [`cc7ce8b1`](https://github.com/thirdweb-dev/js/commit/cc7ce8b1e8f73288b5c00a29e0000bea9867e8c1), [`29c1cf7e`](https://github.com/thirdweb-dev/js/commit/29c1cf7eff60221d05e87060f3c96a83343218e6)]:
+  - @thirdweb-dev/storage@1.1.0
+  - @thirdweb-dev/chains@0.1.6
+
 ## 3.9.5
 
 ### Patch Changes
