@@ -11,4 +11,5 @@ export default {
     sizes: [16, 32, 64, 128, 256, 512],
   },
   rpc: ["https://eth-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}"],
+  faucets: ["https://faucet.paradigm.xyz/"],
 };
