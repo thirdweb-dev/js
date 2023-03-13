@@ -21,11 +21,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   NFTMetadataInput,
   QueryAllParams,
-  SignatureDrop,
-  SmartContract,
   UploadProgressEvent,
 } from "@thirdweb-dev/sdk";
 import { NFTDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/nft-drop";
+import { SignatureDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/signature-drop";
+import { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/smart-contract";
 import invariant from "tiny-invariant";
 
 /** **********************/
