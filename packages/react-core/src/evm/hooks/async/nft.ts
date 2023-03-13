@@ -177,7 +177,7 @@ export function useTotalCount<TContract extends NFTContract>(
  */
 export function useTotalCirculatingSupply(
   contract: RequiredParam<NFTContract>,
-  tokenId: RequiredParam<BigNumberish>,
+  tokenId?: RequiredParam<BigNumberish>,
 ) {
   const contractAddress = contract?.getAddress();
   const { erc721, erc1155 } = getErcs(contract);
