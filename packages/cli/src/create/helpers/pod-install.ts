@@ -3,6 +3,8 @@ import { runCommand } from "./run-command";
 import chalk from "chalk";
 import path from "path";
 
+const RUBY_VERSION = "2.7.6";
+
 /**
  * Check if CocoaPods is installed and run `pod install` if it is.
  *
@@ -18,6 +20,24 @@ export function podInstall(root: string, isOnline: boolean): Promise<void> {
       console.log();
       reject();
     }
+
+    try {
+      await runCommand("ruby", ["-v"], false, (dataBfr) => {
+        const data = String(dataBfr);
+        if (!data.includes(RUBY_VERSION)) {
+          console.error(
+            `Your current ruby version is not supported by this project: ${data}`,
+          );
+          console.error(
+            "Please, set your ruby version to 2.7.6 and run `bundle install && cd ios && pod install` inside your project's directory.",
+          );
+          process.exit(1);
+        }
+      });
+    } catch (error) {
+      reject(error);
+    }
+
     try {
       await runCommand("bundle", ["install"], true);
     } catch (error) {
