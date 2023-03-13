@@ -4,14 +4,15 @@ import {
   PaperWalletConnectorOptions,
 } from "./types";
 import {
-  Chain,
+  Chain as PChain,
   InitializedUser,
   PaperEmbeddedWalletSdk,
   UserStatus,
 } from "@paperxyz/embedded-wallet-service-sdk";
-import { ethers, Signer } from "ethers";
+import { Chain } from "@thirdweb-dev/chains";
+import type { providers, Signer } from "ethers";
 
-export const PaperChainMap: Record<number, Chain> = {
+export const PaperChainMap: Record<number, PChain> = {
   1: "Ethereum",
   5: "Goerli",
   137: "Polygon",
@@ -92,7 +93,7 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
     }
   }
 
-  async getProvider(): Promise<ethers.providers.Provider> {
+  async getProvider(): Promise<providers.Provider> {
     const signer = await this.getSigner();
     if (!signer.provider) {
       throw new Error("Provider not found");
@@ -130,5 +131,12 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
       throw new Error("User not found");
     }
     return this.user;
+  }
+
+  async setupListeners() {}
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  updateChains(chains: Chain[]): void {
+    // no op
   }
 }

@@ -29,6 +29,7 @@ import { Connector, useAccount, useContext as useWagmiContext } from "wagmi";
  * Once users disconnect their wallet, the `useAddress`, `useChainId`, `useAccount`, and `useNetwork` hooks will no longer return values until a user connects their wallet again.
  *
  * @public
+ * @deprecated - TODO remove this
  */
 export function useDisconnect(options?: { reconnectPrevious?: boolean }) {
   const wagmiContext = useWagmiContext();

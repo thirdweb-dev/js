@@ -28,7 +28,9 @@
     "release": "node ./scripts/pre-release.mjs && changeset publish",
     "version-packages:nightly": "changeset version --snapshot nightly",
     "release:nightly": "node ./scripts/pre-release.mjs && changeset publish --tag nightly",
-    "push": "turbo run push --filter=./packages/*"
+    "push": "turbo run push --filter=./packages/*",
+    "hotlink-init": "node ./scripts/hotlink/hotlink-init.mjs",
+    "hotlink-revert": "node ./scripts/hotlink/hotlink-revert.mjs"
   },
   "packageManager": "yarn@1.22.19",
   "dependencies": {
@@ -39,7 +41,6 @@
     "@trivago/prettier-plugin-sort-imports": "^4.0.0",
     "eslint": "^8.21.0",
     "mocha": "^10.2.0",
-    "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.7.1",
     "turbo": "^1.8.3",
     "yalc": "^1.0.0-pre.53"

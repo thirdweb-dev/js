@@ -1,3 +1,8 @@
+import {
+  ChainNotConfiguredError,
+  normalizeChainId,
+  UserRejectedRequestError,
+} from "../../../../lib/wagmi-core";
 import { MagicConnector, MagicOptions } from "./magicConnector";
 import { ConnectExtension } from "@magic-ext/connect";
 import {
@@ -5,13 +10,8 @@ import {
   MagicSDKAdditionalConfiguration,
   SDKBase,
 } from "@magic-sdk/provider";
-import {
-  Chain,
-  ChainNotConfiguredError,
-  normalizeChainId,
-  UserRejectedRequestError,
-} from "@wagmi/core";
-import { getAddress } from "ethers/lib/utils.js";
+import { Chain } from "@thirdweb-dev/chains";
+import { utils } from "ethers";
 import { Magic } from "magic-sdk";
 
 interface MagicConnectOptions extends MagicOptions {
@@ -40,13 +40,13 @@ export class MagicConnectConnector extends MagicConnector {
   async connect({ chainId }: { chainId?: number }) {
     // for a specific chainId we will overwrite the magicSDKConfiguration
     if (chainId) {
-      const chain = this.chains.find((c) => c.id === chainId);
+      const chain = this.chains.find((c) => c.chainId === chainId);
       if (chain) {
         this.magicSdkConfiguration = {
           ...this.magicSdkConfiguration,
           network: {
-            chainId: chain.id,
-            rpcUrl: chain.rpcUrls.default.http[0],
+            chainId: chain.chainId,
+            rpcUrl: chain.rpc[0],
           },
         };
       }
@@ -54,11 +54,7 @@ export class MagicConnectConnector extends MagicConnector {
     try {
       const provider = await this.getProvider();
 
-      if (provider.on) {
-        provider.on("accountsChanged", this.onAccountsChanged);
-        provider.on("chainChanged", this.onChainChanged);
-        provider.on("disconnect", this.onDisconnect);
-      }
+      this.setupListeners();
 
       // Check if there is a user logged in
       const isAuthenticated = await this.isAuthorized();
@@ -105,7 +101,7 @@ export class MagicConnectConnector extends MagicConnector {
           );
 
           return {
-            account: getAddress(account),
+            account: utils.getAddress(account),
             chain: {
               id: chainId_,
               unsupported: false,
@@ -166,11 +162,20 @@ export class MagicConnectConnector extends MagicConnector {
 
   async switchChain(chainId: number): Promise<Chain> {
     // check if the chain is supported
-    const chain = this.chains.find((c) => c.id === chainId);
+    const chain = this.chains.find((c) => c.chainId === chainId);
     if (!chain) {
       throw new ChainNotConfiguredError({ chainId, connectorId: this.id });
     }
     await this.connect({ chainId });
     return chain;
+  }
+
+  async setupListeners() {
+    const provider = await this.getProvider();
+    if (provider.on) {
+      provider.on("accountsChanged", this.onAccountsChanged);
+      provider.on("chainChanged", this.onChainChanged);
+      provider.on("disconnect", this.onDisconnect);
+    }
   }
 }
