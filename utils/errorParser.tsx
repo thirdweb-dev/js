@@ -105,7 +105,7 @@ function parseErrorCode(error: ErrorWithCode): string | JSX.Element | void {
         `;
       }
 
-      if (error.data.message.includes("max code size exceeded")) {
+      if (error.data?.message?.includes("max code size exceeded")) {
         return `
           This contract is bigger than the size limit (24,567 bytes). 
           You need to reduce the size of the contract before deploying. 
