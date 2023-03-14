@@ -32,7 +32,7 @@ import {
 import { BigNumber } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useConfiguredChain } from "hooks/chains/configureChains";
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { VscDebugDisconnect } from "react-icons/vsc";
 import { Button, Card, Heading, Text } from "tw-components";
 
@@ -141,7 +141,7 @@ export const MismatchButton = React.forwardRef<
           </Button>
         </PopoverTrigger>
         <Card
-          maxW="sm"
+          maxW={{ base: "xs", md: "sm" }}
           w="auto"
           as={PopoverContent}
           bg="backgroundCardHighlight"
@@ -198,6 +198,13 @@ const MismatchNotice: React.FC<{
     onClose();
   }, [chain, actuallyCanAttemptSwitch, desiredChainId, onClose, switchNetwork]);
 
+  const shortenedName = useMemo(() => {
+    if (!chain?.name) {
+      return undefined;
+    }
+    return chain.name.length > 19 ? chain.name.slice(0, 19) : undefined;
+  }, [chain?.name]);
+
   return (
     <Flex direction="column" gap={4}>
       <Heading size="label.lg">
@@ -228,8 +235,12 @@ const MismatchNotice: React.FC<{
         isDisabled={!actuallyCanAttemptSwitch}
         colorScheme="orange"
         textTransform="capitalize"
+        noOfLines={1}
       >
-        Switch wallet {chain ? `to ${chain.name}` : ""}
+        Switch wallet{" "}
+        {chain
+          ? `to ${shortenedName ? `${shortenedName}...` : chain.name}`
+          : ""}
       </Button>
 
       {!actuallyCanAttemptSwitch && (
