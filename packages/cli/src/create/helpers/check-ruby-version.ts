@@ -1,7 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { runCommand } from "./run-command";
+import chalk from "chalk";
 
-const MIN_SUPPORTED_RUBY_VERSION = "2.6";
+export const MIN_SUPPORTED_RUBY_VERSION = "2.6";
 
 /**
  * Checks if the current ruby version is supported by the project.
@@ -19,12 +20,19 @@ export function checkRubyVersion(): Promise<void> {
         const version = data.split(" ")[1];
         if (version < MIN_SUPPORTED_RUBY_VERSION) {
           console.error(
-            `Your current ruby version is not supported by this project: ${version}`,
+            `Your current ruby version: ${chalk.red(
+              `"${version}"`,
+            )}, is not supported by this project.`,
           );
           console.error(
-            `Please, set your ruby version to at least ${MIN_SUPPORTED_RUBY_VERSION} and try again.`,
+            `Please, set your ruby version to a minimum of ${chalk.green(
+              `"${MIN_SUPPORTED_RUBY_VERSION}"`,
+            )} and try again.`,
           );
+          console.log();
           process.exit(1);
+        } else {
+          resolve();
         }
       });
     } catch (error) {
