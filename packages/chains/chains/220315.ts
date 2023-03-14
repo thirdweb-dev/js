@@ -33,7 +33,6 @@ export default {
     {
       "name": "explorer masnet",
       "url": "https://explorer.masnet.ai",
-      "icon": "explorer",
       "standard": "EIP3091"
     }
   ],
