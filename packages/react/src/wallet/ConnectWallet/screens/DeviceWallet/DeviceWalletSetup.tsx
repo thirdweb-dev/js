@@ -15,7 +15,6 @@ import { useDeviceWalletStorage } from "../../../hooks/useDeviceWalletStorage";
 import { DeviceWallet } from "../../../wallets";
 import { DeviceWalletIcon } from "../../icons/DeviceWalletIcon";
 import styled from "@emotion/styled";
-import { blue } from "@radix-ui/colors";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { useConnect } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
@@ -28,7 +27,7 @@ export const ConnectToDeviceWallet: React.FC<{ onBack: () => void }> = (
   if (!deviceStorage) {
     return (
       <LoadingSpinnerContainer>
-        <Spinner size="lg" color={blue.blue10} />
+        <Spinner size="lg" color="primary" />
       </LoadingSpinnerContainer>
     );
   }
@@ -78,7 +77,7 @@ export const CreateDeviceWallet = () => {
   const passwordMismatch = confirmPassword && password !== confirmPassword;
 
   const handleConnect = () => {
-    if (passwordMismatch){
+    if (passwordMismatch) {
       return;
     }
     connect(DeviceWallet, {

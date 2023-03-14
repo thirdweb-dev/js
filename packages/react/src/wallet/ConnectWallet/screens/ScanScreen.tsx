@@ -10,7 +10,6 @@ import { fontSize, iconSize, spacing } from "../../../design-system";
 import { Theme } from "../../../design-system/index";
 import { IconFC } from "../icons/types";
 import styled from "@emotion/styled";
-import { blue } from "@radix-ui/colors";
 
 export const ScanScreen: React.FC<{
   onBack: () => void;
@@ -59,7 +58,7 @@ export const ScanScreen: React.FC<{
             justifyContent: "center",
           }}
         >
-          <Spinner size="md" color={blue.blue10} />
+          <Spinner size="md" color="link" />
         </div>
 
         <Spacer y="xl" />

@@ -9,7 +9,7 @@ export type MetamaskWalletOptions = WalletOptions<{
 }>;
 
 type ConnectWithQrCodeArgs = {
-  chainId: number;
+  chainId?: number;
   onQrCodeUri: (uri: string) => void;
   onConnected: (accountAddress: string) => void;
 };

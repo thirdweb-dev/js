@@ -66,10 +66,8 @@ export abstract class Connector<
   protected abstract onDisconnect(error: Error): void;
 
   protected getBlockExplorerUrls(chain: Chain) {
-    const explorers = chain.explorers ?? [];
-    if (explorers.length > 0) {
-      return Object.values(explorers).map((x) => x.url);
-    }
+    const explorers = chain.explorers?.map((x) => x.url) ?? [];
+    return explorers.length > 0 ? explorers : undefined;
   }
 
   protected isChainUnsupported(chainId: number) {

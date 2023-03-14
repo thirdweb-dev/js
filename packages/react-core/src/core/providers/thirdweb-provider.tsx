@@ -5,7 +5,6 @@ import {
 } from "../../evm/providers/thirdweb-sdk-provider";
 import { DAppMetaData } from "../types/dAppMeta";
 import { SupportedWallet } from "../types/wallet";
-import { showDeprecationWarning } from "../utils";
 import { ThirdwebThemeContext } from "./theme-context";
 import {
   ThirdwebWalletProvider,
@@ -93,16 +92,14 @@ export interface ThirdwebProviderCoreProps<
   alchemyApiKey?: string;
   infuraApiKey?: string;
 
-  /**
-   * A partial map of chainIds to rpc urls to use for certain chains
-   * If not provided, will default to the rpcUrls of the chain objects for the supported chains
-   * @deprecated - use `chains` instead
-   */
-  chainRpc?: Record<number, string>;
-
   theme?: "light" | "dark";
 
   createWalletStorage: CreateAsyncStorage;
+
+  /**
+   * Whether or not to automatically switch to wallet's network to active chain
+   */
+  autoSwitch?: boolean;
 }
 
 // SDK handles this under the hood for us
@@ -117,33 +114,22 @@ export const ThirdwebProviderCore = <
 >(
   props: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>,
 ) => {
-  // deprecations
-  if (props.chainRpc) {
-    showDeprecationWarning("chainRpc", "supportedChains");
-  }
-
   const supportedChains =
     props.supportedChains || (defaultChains as any as TChains);
 
   const dAppMeta = props.dAppMeta || defaultdAppMeta;
+
   const activeChainObj = useMemo(() => {
-    if (!props.activeChain) {
-      return supportedChains[0];
-    }
     if (typeof props.activeChain === "number") {
-      return (
-        supportedChains.find((chain) => chain.chainId === props.activeChain) ||
-        supportedChains[0]
+      return supportedChains.find(
+        (chain) => chain.chainId === props.activeChain,
       );
     }
     if (typeof props.activeChain === "string") {
-      return (
-        supportedChains.find((chain) => chain.slug === props.activeChain) ||
-        supportedChains[0]
-      );
+      return supportedChains.find((chain) => chain.slug === props.activeChain);
     }
 
-    return props.activeChain || supportedChains[0] || defaultChains[0];
+    return props.activeChain;
   }, [props.activeChain, supportedChains]);
 
   return (
@@ -155,12 +141,13 @@ export const ThirdwebProviderCore = <
         createWalletStorage={props.createWalletStorage}
         dAppMeta={dAppMeta}
         activeChain={activeChainObj}
+        autoSwitch={props.autoSwitch}
       >
         <ThirdwebSDKProviderWrapper
           queryClient={props.queryClient}
           sdkOptions={props.sdkOptions}
           supportedChains={supportedChains}
-          activeChain={activeChainObj.chainId}
+          activeChain={activeChainObj}
           storageInterface={props.storageInterface}
           authConfig={props.authConfig}
           thirdwebApiKey={props.thirdwebApiKey}
