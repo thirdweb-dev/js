@@ -4,6 +4,7 @@ import {
   MetaMaskWallet,
   RainbowWallet,
   TrustWallet,
+  WalletConnectV1Wallet,
 } from "../wallets/wallets/all";
 import { CoinbaseWallet } from "../wallets/wallets/coinbase-wallet";
 import {
@@ -17,7 +18,8 @@ export type ImplementedWallet =
   | typeof MetaMaskWallet
   | typeof RainbowWallet
   | typeof CoinbaseWallet
-  | typeof TrustWallet;
+  | typeof TrustWallet
+  | typeof WalletConnectV1Wallet;
 
 export type ThirdwebProviderProps = PropsWithChildren<
   {
