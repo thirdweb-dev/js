@@ -8,5 +8,5 @@ export function formatDisplayUri(uri: string, walletMeta: WalletMeta) {
     ? `${walletMeta.mobile.native}${
         walletMeta.mobile.native.endsWith(":") ? "//" : "/"
       }wc?uri=${encodedUri}`
-    : `wc://${encodedUri}`;
+    : `${uri}`;
 }
