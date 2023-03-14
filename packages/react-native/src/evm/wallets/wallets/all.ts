@@ -18,7 +18,7 @@ import {
 import { Linking } from "react-native";
 
 const DEFAULT_NAME_METADATA = "Dapp powered by Thirdweb";
-const DEFAULT_URL_METADATA = "thirdweb.com";
+const DEFAULT_URL_METADATA = "https://thirdweb.com";
 
 // Metamask ----------------------------------------
 type WC1Options = Omit<

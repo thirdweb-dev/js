@@ -1,4 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
+import { checkRubyVersion } from "./check-ruby-version";
 import type { PackageManager } from "./get-pkg-manager";
 import { getStartOrDev } from "./get-start-or-dev";
 import { tryGitInit } from "./git";
@@ -9,6 +10,7 @@ import { isReactNative } from "./is-react-native";
 import { isWriteable } from "./is-writeable";
 import { makeDir } from "./make-dir";
 import { podInstall } from "./pod-install";
+import { setRubyVersion } from "./set-ruby-version";
 import { downloadAndExtractRepo, hasTemplate } from "./templates";
 import retry from "async-retry";
 import chalk from "chalk";
@@ -45,6 +47,10 @@ export async function createApp({
         )}. Please check that the repository exists and try again.`,
       );
       process.exit(1);
+    }
+
+    if (template.includes("react-native")) {
+      await checkRubyVersion();
     }
   } else if (framework) {
     frameworkPath = `${framework}-${language || "javascript"}-${
@@ -144,7 +150,11 @@ export async function createApp({
 
     reactNative = await isReactNative(template);
     if (reactNative) {
-      await podInstall(root, isOnline);
+      const changedRubyVersion = await setRubyVersion(root);
+
+      if (changedRubyVersion) {
+        await podInstall(root, isOnline);
+      }
     }
   } else if (framework) {
     /**
