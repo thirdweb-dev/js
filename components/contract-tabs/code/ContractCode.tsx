@@ -93,7 +93,7 @@ export const ContractCode: React.FC<ContractCodeProps> = ({
   const evmAddress = useAddress();
   const solanaAddress = useWallet().publicKey?.toBase58();
   const address = evmAddress || solanaAddress;
-  const [environment, setEnvironment] = useState<CodeEnvironment>("react");
+  const [environment, setEnvironment] = useState<CodeEnvironment>("javascript");
 
   const replaceSnippetVars = useCallback(
     (snip: Partial<Record<CodeEnvironment, string>>) =>

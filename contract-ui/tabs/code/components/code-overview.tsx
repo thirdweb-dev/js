@@ -265,7 +265,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
   chain,
   noSidebar = false,
 }) => {
-  const [environment, setEnvironment] = useState<CodeEnvironment>("react");
+  const [environment, setEnvironment] = useState<CodeEnvironment>("javascript");
   const [tab, setTab] = useState("write");
   const { data } = useFeatureContractCodeSnippetQuery(environment);
   const enabledExtensions = useContractEnabledExtensions(abi);

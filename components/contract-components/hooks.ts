@@ -693,11 +693,6 @@ export function useFeatureContractCodeSnippetQuery(language: string) {
     language = "sdk";
   }
 
-  // Do this until we fix unity snippets
-  if (language === "unity") {
-    language = "";
-  }
-
   return useQuery(["feature-code-snippet", language], async () => {
     const res = await fetch(
       `https://raw.githubusercontent.com/thirdweb-dev/docs/main/docs/feature_snippets_${language}.json`,

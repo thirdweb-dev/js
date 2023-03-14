@@ -47,7 +47,7 @@ const DashboardStorage: ThirdwebNextPage = () => {
   const [ipfsHash, setIpfsHash] = useState("");
 
   const [codeEnvironment, setCodeEnvironment] =
-    useState<CodeEnvironment>("react");
+    useState<CodeEnvironment>("javascript");
 
   const isValidIPFSHash = ipfsHash.startsWith("ipfs://");
 
