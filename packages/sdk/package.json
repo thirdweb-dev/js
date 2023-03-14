@@ -156,6 +156,7 @@
   "dependencies": {
     "@thirdweb-dev/chains": "*",
     "@thirdweb-dev/contracts-js": "*",
+    "@thirdweb-dev/generated-abis": "*",
     "@thirdweb-dev/storage": "*",
     "bn.js": "^5.2.1",
     "bs58": "^5.0.0",
