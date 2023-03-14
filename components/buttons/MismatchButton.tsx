@@ -12,6 +12,7 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
+  useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import { AiOutlineWarning } from "@react-icons/all-files/ai/AiOutlineWarning";
@@ -188,6 +189,7 @@ const MismatchNotice: React.FC<{
   const [network, switchNetwork] = useNetworkWithPatchedSwitching();
   const actuallyCanAttemptSwitch = !!switchNetwork;
   const walletConnectedNetworkInfo = useConfiguredChain(connectedChainId || -1);
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   const chain = useConfiguredChain(desiredChainId || -1);
 
@@ -199,11 +201,15 @@ const MismatchNotice: React.FC<{
   }, [chain, actuallyCanAttemptSwitch, desiredChainId, onClose, switchNetwork]);
 
   const shortenedName = useMemo(() => {
+    const limit = isMobile ? 10 : 19;
+
     if (!chain?.name) {
       return undefined;
     }
-    return chain.name.length > 19 ? chain.name.slice(0, 19) : undefined;
-  }, [chain?.name]);
+    return chain.name.length > limit
+      ? `${chain.name.slice(0, limit)}...`
+      : undefined;
+  }, [chain?.name, isMobile]);
 
   return (
     <Flex direction="column" gap={4}>
@@ -237,10 +243,7 @@ const MismatchNotice: React.FC<{
         textTransform="capitalize"
         noOfLines={1}
       >
-        Switch wallet{" "}
-        {chain
-          ? `to ${shortenedName ? `${shortenedName}...` : chain.name}`
-          : ""}
+        Switch wallet {chain ? `to ${shortenedName || chain.name}` : ""}
       </Button>
 
       {!actuallyCanAttemptSwitch && (
