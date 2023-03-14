@@ -10,7 +10,6 @@ import { iconSize, media, spacing } from "../../../design-system";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { IconFC } from "../icons/types";
 import styled from "@emotion/styled";
-import { blue } from "@radix-ui/colors";
 
 export const ConnectingScreen: React.FC<{
   onBack: () => void;
@@ -28,7 +27,7 @@ export const ConnectingScreen: React.FC<{
       <Spacer y="lg" />
       <TitleContainer>
         <ModalTitle>Connecting your wallet</ModalTitle>
-        <Spinner size="md" color={blue.blue10} />
+        <Spinner size="md" color="link" />
       </TitleContainer>
       <Spacer y="md" />
       <Desc>

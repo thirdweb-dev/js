@@ -143,7 +143,7 @@ export const ConnectedWalletDetails: React.FC<{
       >
         <ChainIcon chain={chain || unknownChain} size={iconSize.lg} active />
       </div>
-      {chain?.name || unknownChain?.name || "Unknown Chain"}
+      {chain?.name || unknownChain?.name || "Wrong Network"}
       <StyledGearIcon
         style={{
           flexShrink: 0,

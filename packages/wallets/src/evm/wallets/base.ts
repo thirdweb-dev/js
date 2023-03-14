@@ -96,6 +96,12 @@ export abstract class AbstractBrowserWallet<
       const address = await connector.getAddress();
       connector.setupListeners();
       await saveToStorage();
+
+      // ensure that connector is connected to the correct chain
+      if (connectOptions?.chainId) {
+        await connector.switchChain(connectOptions?.chainId);
+      }
+
       return address;
     } else {
       const address = await connector.connect(connectOptions);
