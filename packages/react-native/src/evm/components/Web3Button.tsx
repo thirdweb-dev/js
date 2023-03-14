@@ -14,7 +14,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import type { SmartContract } from "@thirdweb-dev/sdk";
 import type { CallOverrides, ContractInterface } from "ethers";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import React from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import invariant from "tiny-invariant";
@@ -119,6 +119,23 @@ export const Web3Button = <TAction extends ActionFn>({
       onSettled: () => queryClient.invalidateQueries(),
     },
   );
+
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    if (actionMutation.isLoading) {
+      console.log("isLoading");
+      timeout = setTimeout(() => {
+        actionMutation.reset();
+        if (onError) {
+          onError(new Error("Operation timed out"));
+        }
+      }, 15000);
+    }
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [actionMutation, actionMutation.isLoading, onError, queryClient]);
 
   if (!address) {
     return <ConnectWallet theme={theme} />;
