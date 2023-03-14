@@ -1,7 +1,7 @@
 import { Modal } from "../../components/Modal";
 import { Spinner } from "../../components/Spinner";
 import { Button } from "../../components/buttons";
-import { iconSize, Theme } from "../../design-system";
+import { iconSize } from "../../design-system";
 import { isMobile } from "../../evm/utils/isMobile";
 import { useInstalledWallets } from "../hooks/useInstalledWallets";
 import { WalletMeta } from "../types";
@@ -17,7 +17,6 @@ import { ConnectToDeviceWallet } from "./screens/DeviceWallet/DeviceWalletSetup"
 import { MetamaskConnecting } from "./screens/Metamask/MetamaskConnecting";
 import { MetamaskGetStarted } from "./screens/Metamask/MetamaskGetStarted";
 import { ScanMetamask } from "./screens/Metamask/MetamaskScan";
-import { useTheme } from "@emotion/react";
 import {
   SupportedWallet,
   useConnect,
@@ -135,8 +134,6 @@ export const ConnectWalletFlow: React.FC<{
 
   const handleBack = () => setShowScreen("walletList");
 
-  const theme = useTheme() as Theme;
-
   return (
     <Modal
       style={{
@@ -158,7 +155,7 @@ export const ConnectWalletFlow: React.FC<{
         >
           {connectionStatus === "connecting" ||
           connectionStatus === "unknown" ? (
-            <Spinner size="sm" color={theme.text.inverted} />
+            <Spinner size="sm" color="inverted" />
           ) : (
             btnTitle
           )}

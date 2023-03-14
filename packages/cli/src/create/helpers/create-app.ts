@@ -10,6 +10,7 @@ import { isReactNative } from "./is-react-native";
 import { isWriteable } from "./is-writeable";
 import { makeDir } from "./make-dir";
 import { podInstall } from "./pod-install";
+import { setRubyVersion } from "./set-ruby-version";
 import { downloadAndExtractRepo, hasTemplate } from "./templates";
 import retry from "async-retry";
 import chalk from "chalk";
@@ -149,7 +150,11 @@ export async function createApp({
 
     reactNative = await isReactNative(template);
     if (reactNative) {
-      await podInstall(root, isOnline);
+      const changedRubyVersion = await setRubyVersion(root);
+
+      if (changedRubyVersion) {
+        await podInstall(root, isOnline);
+      }
     }
   } else if (framework) {
     /**

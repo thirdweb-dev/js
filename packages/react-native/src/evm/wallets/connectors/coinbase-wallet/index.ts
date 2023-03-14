@@ -4,6 +4,7 @@ import type {
   WalletMobileSDKProviderOptions,
 } from "@coinbase/wallet-mobile-sdk/build/WalletMobileSDKEVMProvider";
 import type { ConfigurationParams } from "@coinbase/wallet-mobile-sdk/src/CoinbaseWalletSDK.types";
+import { getChainRPC } from "@thirdweb-dev/chains";
 import {
   UserRejectedRequestError,
   ChainNotConfiguredError,
@@ -226,7 +227,7 @@ export class CoinbaseWalletConnector extends Connector<
                 chainId: id,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpcUrls: [chain.rpc[0] ?? ""],
+                rpcUrls: [getChainRPC(chain)],
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],
