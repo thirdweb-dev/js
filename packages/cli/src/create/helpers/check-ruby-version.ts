@@ -2,7 +2,7 @@
 import { runCommand } from "./run-command";
 import chalk from "chalk";
 
-export const MIN_SUPPORTED_RUBY_VERSION = "2.6";
+export const SUPPORTED_RUBY_VERSION = "2.7.5";
 
 /**
  * Checks if the current ruby version is supported by the project.
@@ -18,16 +18,20 @@ export function checkRubyVersion(): Promise<void> {
       await runCommand("ruby", ["-v"], false, (dataBfr) => {
         const data = String(dataBfr);
         const version = data.split(" ")[1];
-        if (version < MIN_SUPPORTED_RUBY_VERSION) {
+        if (!version.includes(SUPPORTED_RUBY_VERSION)) {
+          console.log();
           console.error(
             `Your current ruby version: ${chalk.red(
               `"${version}"`,
             )}, is not supported by this project.`,
           );
           console.error(
-            `Please, set your ruby version to a minimum of ${chalk.green(
-              `"${MIN_SUPPORTED_RUBY_VERSION}"`,
+            `Please, set your ruby version to ${chalk.green(
+              `"${SUPPORTED_RUBY_VERSION}"`,
             )} and try again.`,
+          );
+          console.error(
+            `For more information, please visit the React Native documentation: https://reactnative.dev/docs/environment-setup#ruby`,
           );
           console.log();
           process.exit(1);
