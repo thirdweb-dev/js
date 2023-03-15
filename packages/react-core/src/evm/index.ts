@@ -35,6 +35,7 @@ export { shouldNeverPersistQuery } from "../core/query-utils/query-key";
 export type { RequiredParam } from "../core/query-utils/required-param";
 export type {
   SupportedWallet,
+  SupportedWalletInstance,
   ExtraCoreWalletOptions,
 } from "../core/types/wallet";
 
