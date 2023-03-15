@@ -33,6 +33,7 @@ export class WagmiAdapter<
 
   async connect(args?: ConnectParams<TConnectParams>): Promise<string> {
     const chainId = args?.chainId;
+    this.setupListeners();
     const result = await this.wagmiConnector.connect({ chainId });
     return result.account;
   }
