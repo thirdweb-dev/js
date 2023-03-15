@@ -395,9 +395,7 @@ export function useActiveClaimConditionForWallet(
         normalizedPrize || activeGeneralClaimCondition.price;
 
       const maxClaimableWithOverride =
-        // have to transform this the same way that claim conditions do it in SDK
-        convertToReadableQuantity(maxClaimable, currencyMetadata.decimals) ||
-        activeGeneralClaimCondition.maxClaimablePerWallet;
+        maxClaimable || activeGeneralClaimCondition.maxClaimablePerWallet;
 
       const currencyValueWithOverride = await fetchCurrencyValue(
         sdk.getProvider(),
