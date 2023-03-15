@@ -40,7 +40,7 @@ import {
 } from "@thirdweb-dev/generated-abis";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { EVMWallet } from "@thirdweb-dev/wallets";
-import { Contract, ContractInterface, ethers, Signer } from "ethers";
+import { BaseContract, Contract, ContractInterface, ethers, Signer } from "ethers";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -420,7 +420,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     address: TContractAddress,
   ): Promise<
     TContractAddress extends ContractAddress
-      ? SmartContract<ContractAbi>
+      ? SmartContract<BaseContract>
       : SmartContract
   >;
   /**
