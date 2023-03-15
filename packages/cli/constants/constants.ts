@@ -10,7 +10,7 @@ export const CREATE_MESSAGES = {
 } as const;
 
 export const GENERATE_MESSAGES = {
-  contractAddress: "What's the address of your smart contract?",
+  deployerAddress: "What's the deployer address of your smart contracts?",
   chain: "Which chain is your smart contract deployed to?",
 };
 

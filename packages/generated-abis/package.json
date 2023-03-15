@@ -11,8 +11,5 @@
   "sideEffects": false,
   "scripts": {
     "build": "preconstruct build"
-  },
-  "dependencies": {
-    "abitype": "^0.7.1"
   }
 }
