@@ -88,7 +88,6 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
     if (!this.#walletConnectConnector) {
       return;
     }
-    this.#removeListeners();
     this.#walletConnectConnector.on("connect", this.#onConnect);
     this.#walletConnectConnector.on("disconnect", this.#onDisconnect);
     this.#walletConnectConnector.on("change", this.#onChange);

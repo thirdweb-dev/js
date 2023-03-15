@@ -8,7 +8,6 @@ import {
 } from "../../../lib/wagmi-core";
 import type WalletConnectProvider from "./walletconnect-legacy-provider/index";
 import { Chain, getChainRPC } from "@thirdweb-dev/chains";
-import WalletConnect from "@walletconnect/legacy-client";
 import { IWalletConnectSession } from "@walletconnect/legacy-types";
 import { utils, providers } from "ethers";
 
@@ -73,6 +72,8 @@ export class WalletConnectV1Connector extends Connector<
         chainId: targetChainId,
         create: true,
       });
+
+      this.setupListeners();
 
       // Defer message to the next tick to ensure wallet connect data (provided by `.enable()`) is available
       setTimeout(() => this.emit("message", { type: "connecting" }), 0);
@@ -167,8 +168,6 @@ export class WalletConnectV1Connector extends Connector<
         rpc: { ...rpc, ...this.options?.rpc },
         session: session ? (session as IWalletConnectSession) : undefined,
       });
-
-      this.setupListeners();
     }
 
     return this.#provider;
@@ -288,15 +287,13 @@ export class WalletConnectV1Connector extends Connector<
     if (!this.#provider) {
       return;
     }
-    this.#removeListeners();
-
     this.#provider.on("accountsChanged", this.onAccountsChanged);
     this.#provider.on("chainChanged", this.onChainChanged);
     this.#provider.on("disconnect", this.onDisconnect);
     this.#provider.on("message", this.onMessage);
     this.#provider.on("switchChain", this.onSwitchChain);
-    this.#provider.connector.on("display_uri", this.onDisplayUri);
-    this.#provider.connector.on("call_request_sent", this.onRequestSent);
+    this.#provider.on("display_uri", this.onDisplayUri);
+    this.#provider.on("call_request_sent", this.onRequestSent);
   }
 
   #removeListeners() {
@@ -309,8 +306,8 @@ export class WalletConnectV1Connector extends Connector<
     this.#provider.removeListener("disconnect", this.onDisconnect);
     this.#provider.removeListener("message", this.onMessage);
     this.#provider.removeListener("switchChain", this.onSwitchChain);
-    (this.#provider.connector as WalletConnect).off("display_uri");
-    (this.#provider.connector as WalletConnect).off("call_request_sent");
+    this.#provider.removeListener("display_uri", this.onDisplayUri);
+    this.#provider.removeListener("call_request_sent", this.onRequestSent);
   }
 
   protected onSwitchChain = () => {
@@ -329,7 +326,6 @@ export class WalletConnectV1Connector extends Connector<
 
   protected onRequestSent = (error: any, payload: { params: string[] }) => {
     if (error) {
-      console.log("wcV1.onRequestSent", error);
       this.emit("message", { data: error, type: "request" });
     }
     this.emit("message", { data: payload.params[0], type: "request" });

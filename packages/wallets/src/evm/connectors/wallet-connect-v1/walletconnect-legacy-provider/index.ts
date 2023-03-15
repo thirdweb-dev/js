@@ -120,6 +120,20 @@ class WalletConnectProvider implements IEthereumProvider {
       this.http = this.setHttpProvider(chainId);
       this.events.emit("chainChanged", chainId);
     });
+    this.connector.on(
+      "display_uri",
+      (error: any, payload: { params: string[] }) => {
+        console.log("legacy.onDisplayUri", error, payload);
+        this.events.emit("display_uri", error, payload);
+      },
+    );
+    this.connector.on(
+      "call_request_sent",
+      (error: any, payload: { params: string[] }) => {
+        console.log("legacy.call_request_sent", error, payload);
+        this.events.emit("call_request_sent", error, payload);
+      },
+    );
     this.signer.on("disconnect", () => {
       this.events.emit("disconnect");
     });
