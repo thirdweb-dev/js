@@ -9,6 +9,9 @@
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
   "sideEffects": false,
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "build": "preconstruct build"
   }
