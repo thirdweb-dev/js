@@ -33,14 +33,16 @@ import type {
 import { UserWallet } from "./wallet/user-wallet";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
-import {
-  ContractAbi,
-  ContractAddress,
-  GENERATED_ABI,
-} from "@thirdweb-dev/generated-abis";
+import { ContractAddress, GENERATED_ABI } from "@thirdweb-dev/generated-abis";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { EVMWallet } from "@thirdweb-dev/wallets";
-import { BaseContract, Contract, ContractInterface, ethers, Signer } from "ethers";
+import {
+  BaseContract,
+  Contract,
+  ContractInterface,
+  ethers,
+  Signer,
+} from "ethers";
 
 /**
  * The main entry point for the thirdweb SDK
