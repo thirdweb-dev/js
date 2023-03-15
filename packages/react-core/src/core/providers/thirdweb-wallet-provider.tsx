@@ -1,5 +1,5 @@
 import { DAppMetaData } from "../types/dAppMeta";
-import { SupportedWallet } from "../types/wallet";
+import { SupportedWallet, SupportedWalletInstance } from "../types/wallet";
 import { timeoutPromise } from "../utils";
 import { ThirdwebThemeContext } from "./theme-context";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
@@ -18,19 +18,33 @@ import {
 let coordinatorStorage: AsyncStorage;
 
 type NonNullable<T> = T extends null | undefined ? never : T;
-type WalletConnectParams<W extends SupportedWallet> = NonNullable<
-  Parameters<InstanceType<W>["connect"]>[0]
->;
+type WalletConnectParams<I extends SupportedWalletInstance> = Parameters<
+  I["connect"]
+>[0];
 
 type ConnectionStatus = "unknown" | "connected" | "disconnected" | "connecting";
+
+type ConnectFnArgs<I extends SupportedWalletInstance> =
+  // if second argument is optional
+  undefined extends WalletConnectParams<I>
+    ?
+        | [wallet: SupportedWallet<I>]
+        | [
+            wallet: SupportedWallet<I>,
+            connectParams: NonNullable<WalletConnectParams<I>>,
+          ]
+    : // if second argument is required
+      [
+        wallet: SupportedWallet<I>,
+        connectParams: NonNullable<WalletConnectParams<I>>,
+      ];
 
 type ThirdwebWalletContextData = {
   wallets: SupportedWallet[];
   signer?: Signer;
   activeWallet?: InstanceType<SupportedWallet>;
-  connect: <W extends SupportedWallet>(
-    wallet: W,
-    connectParams: WalletConnectParams<W>,
+  connect: <I extends SupportedWalletInstance>(
+    ...args: ConnectFnArgs<I>
   ) => Promise<void>;
   disconnect: () => Promise<void>;
   connectionStatus: ConnectionStatus;
@@ -205,13 +219,12 @@ export function ThirdwebWalletProvider(
   ]);
 
   const connectWallet = useCallback(
-    async <W extends SupportedWallet>(
-      Wallet: W,
-      connectParams: Parameters<InstanceType<W>["connect"]>[0],
-    ) => {
+    async <I extends SupportedWalletInstance>(...args: ConnectFnArgs<I>) => {
+      const [Wallet, connectParams] = args;
+
       const _connectedParams = {
         chainId: chainToConnect?.chainId,
-        ...connectParams,
+        ...(connectParams || {}),
       };
 
       const wallet = createWalletInstance(Wallet);
