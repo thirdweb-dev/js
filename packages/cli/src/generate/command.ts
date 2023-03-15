@@ -76,24 +76,11 @@ export async function generate(options: GenerateOptions) {
   filePaths.forEach((filePath) => {
     const file = fs.readFileSync(filePath, "utf-8");
     const abiRegex = /GENERATED_ABI = \{.*\}/s;
-    const matches = file.match(abiRegex);
-    if (!matches) {
-      throw new Error("Failed to save downloaded ABIs.");
-    }
-    const abis = JSON.parse(matches[0].replace(`GENERATED_ABI = `, ``));
-
     const contractAbis = metadata.reduce((acc, contract) => {
       acc[contract.address] = contract.metadata.abi;
       return acc;
     }, {} as Record<string, any>);
-    const updatedAbis = JSON.stringify(
-      {
-        ...abis,
-        ...contractAbis,
-      },
-      null,
-      2,
-    );
+    const updatedAbis = JSON.stringify(contractAbis, null, 2);
     const updatedFile = file.replace(
       abiRegex,
       `GENERATED_ABI = ${updatedAbis}`,
