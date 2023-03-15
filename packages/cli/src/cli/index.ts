@@ -411,6 +411,7 @@ const main = async () => {
     .description(
       "Generate types for your smart contract to strongly type the thirdweb SDK",
     )
+    .option("-p, --path <project-path>", "path to project", ".")
     .option("-a, --address <address>", "address of the deployed contract")
     .option("-c, --chain <chain>", "chain of the deployed contract")
     .action(async (options) => {
