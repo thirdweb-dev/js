@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { QRCode } from "../../../components/QRCode";
 import { Spacer } from "../../../components/Spacer";
 import {
@@ -11,14 +12,13 @@ import { Theme } from "../../../design-system/index";
 import { AppleStoreIcon } from "../icons/AppleStoreIcon";
 import { ChromeIcon } from "../icons/ChromeIcon";
 import { GooglePlayStoreIcon } from "../icons/GooglePlayStoreIcon";
-import { IconFC } from "../icons/types";
 import styled from "@emotion/styled";
 import { useState } from "react";
 
 export const GetStartedScreen: React.FC<{
   onBack: () => void;
   walletName: string;
-  WalletIcon: IconFC;
+  walletIconURL: string;
   chromeExtensionLink: string;
   googlePlayStoreLink: string;
   appleStoreLink: string;
@@ -29,8 +29,6 @@ export const GetStartedScreen: React.FC<{
 
   const isScanScreen =
     showScreen === "android-scan" || showScreen === "ios-scan";
-
-  const { WalletIcon } = props;
 
   return (
     <>
@@ -59,7 +57,7 @@ export const GetStartedScreen: React.FC<{
           url={props.googlePlayStoreLink}
           platform="Android"
           walletName={props.walletName}
-          WalletIcon={WalletIcon}
+          walletIconURL={props.walletIconURL}
         />
       )}
 
@@ -69,7 +67,7 @@ export const GetStartedScreen: React.FC<{
           url={props.appleStoreLink}
           platform="iOS"
           walletName={props.walletName}
-          WalletIcon={WalletIcon}
+          walletIconURL={props.walletIconURL}
         />
       )}
 
@@ -77,7 +75,13 @@ export const GetStartedScreen: React.FC<{
         <>
           <Spacer y="lg" />
 
-          <WalletIcon size={iconSize.xl} />
+          <img
+            src={props.walletIconURL}
+            width={iconSize.xl}
+            height={iconSize.xl}
+            alt=""
+          />
+
           <Spacer y="md" />
 
           <ModalTitle>Get started with {props.walletName}</ModalTitle>
@@ -147,10 +151,8 @@ const ScanScreen: React.FC<{
   platform: string;
   walletName: string;
   platformIcon: React.ReactNode;
-  WalletIcon: IconFC;
+  walletIconURL: string;
 }> = (props) => {
-  const { WalletIcon } = props;
-
   return (
     <div
       style={{
@@ -162,7 +164,14 @@ const ScanScreen: React.FC<{
     >
       <QRCode
         qrCodeUri={props.url}
-        QRIcon={<WalletIcon size={iconSize.lg} />}
+        QRIcon={
+          <img
+            src={props.walletIconURL}
+            width={iconSize.lg}
+            height={iconSize.lg}
+            alt=""
+          />
+        }
       />
       <Spacer y="xl" />
 

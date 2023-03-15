@@ -15,6 +15,11 @@ export class CoinbaseWallet extends AbstractBrowserWallet<{
 }> {
   connector?: TWConnector;
   coinbaseConnector?: CoinbaseWalletConnector;
+  static meta = {
+    iconURL:
+      "https://gateway.ipfscdn.io/ipfs/QmcJBHopbwfJcLqJpX2xEufSS84aLbF7bHavYhaXUcrLaH/coinbase.svg",
+    name: "Coinbase Wallet",
+  };
 
   static id = "coinbaseWallet" as const;
   public get walletName() {

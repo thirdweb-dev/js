@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
 import {
@@ -8,21 +9,24 @@ import {
 } from "../../../components/modalElements";
 import { iconSize, media, spacing } from "../../../design-system";
 import { isMobile } from "../../../evm/utils/isMobile";
-import { IconFC } from "../icons/types";
 import styled from "@emotion/styled";
 
 export const ConnectingScreen: React.FC<{
   onBack: () => void;
-  WalletIcon: IconFC;
+  walletIconURL: string;
   walletName: string;
   supportLink: string;
 }> = (props) => {
-  const { WalletIcon } = props;
   return (
     <>
       <BackButton onClick={props.onBack} />
       <IconContainer>
-        <WalletIcon size={iconSize.xl} />
+        <img
+          src={props.walletIconURL}
+          width={iconSize.xl}
+          height={iconSize.xl}
+          alt=""
+        />
       </IconContainer>
       <Spacer y="lg" />
       <TitleContainer>

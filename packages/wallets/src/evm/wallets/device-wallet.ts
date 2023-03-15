@@ -29,6 +29,12 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
   static id = "deviceWallet" as const;
   options: WalletOptions<DeviceWalletOptions>;
 
+  static meta = {
+    name: "Device Wallet",
+    iconURL:
+      "https://gateway.ipfscdn.io/ipfs/QmcNddbYBuQKiBFnPcxYegjrX6S6z9K1vBNzbBBUJMn2ox/device-wallet.svg",
+  };
+
   public get walletName() {
     return "Device Wallet" as const;
   }

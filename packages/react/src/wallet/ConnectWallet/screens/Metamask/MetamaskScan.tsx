@@ -1,5 +1,4 @@
 import { MetamaskWallet } from "../../../wallets";
-import { MetamaskIcon } from "../../icons/MetamaskIcon";
 import { ScanScreen } from "../ScanScreen";
 import {
   useCreateWalletInstance,
@@ -41,7 +40,7 @@ export const ScanMetamask: React.FC<{
       onGetStarted={props.onGetStarted}
       qrCodeUri={qrCodeUri}
       walletName="Metamask"
-      WalletIcon={MetamaskIcon}
+      walletIconURL={MetamaskWallet.meta.iconURL}
     />
   );
 };

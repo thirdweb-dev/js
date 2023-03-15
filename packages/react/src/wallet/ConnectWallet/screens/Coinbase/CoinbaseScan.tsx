@@ -1,5 +1,4 @@
 import { CoinbaseWallet } from "../../../wallets";
-import { CoinbaseWalletIcon } from "../../icons/CoinbaseWalletIcon";
 import { ScanScreen } from "../ScanScreen";
 import {
   useCreateWalletInstance,
@@ -43,7 +42,7 @@ export const ScanCoinbase: React.FC<{
       onGetStarted={props.onGetStarted}
       qrCodeUri={qrCodeUri}
       walletName="Coinbase"
-      WalletIcon={CoinbaseWalletIcon}
+      walletIconURL={CoinbaseWallet.meta.iconURL}
     />
   );
 };

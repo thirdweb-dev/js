@@ -18,20 +18,14 @@ import { shortenString } from "../../evm/utils/addresses";
 import { isMobile } from "../../evm/utils/isMobile";
 import { DeviceWallet } from "../wallets";
 import { NetworkSelector } from "./NetworkSelector";
-import { CoinbaseWalletIcon } from "./icons/CoinbaseWalletIcon";
-import { DeviceWalletIcon } from "./icons/DeviceWalletIcon";
 import { ExitIcon } from "./icons/ExitIcon";
 import { GenericWalletIcon } from "./icons/GenericWalletIcon";
-import { MetamaskIcon } from "./icons/MetamaskIcon";
-import { WalletConnectIcon } from "./icons/WalletConnectIcon";
-import { IconFC } from "./icons/types";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import { defaultChains } from "@thirdweb-dev/chains";
 import {
-  SupportedWallet,
   useAddress,
   useBalance,
   useChainId,
@@ -40,14 +34,6 @@ import {
   useWallet,
 } from "@thirdweb-dev/react-core";
 import { useMemo, useState } from "react";
-
-const walletIcons: Record<SupportedWallet["id"], IconFC> = {
-  metamask: MetamaskIcon,
-  deviceWallet: DeviceWalletIcon,
-  coinbaseWallet: CoinbaseWalletIcon,
-  walletConnect: WalletConnectIcon,
-  walletConnectV1: WalletConnectIcon,
-};
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -74,9 +60,7 @@ export const ConnectedWalletDetails: React.FC<{
     }
   }, [activeChainId, chain]);
 
-  const WalletIcon = activeWallet
-    ? walletIcons[activeWallet.walletId as SupportedWallet["id"]]
-    : null;
+  const activeWalletIconURL = activeWallet?.getMeta().iconURL || "";
 
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
   const [open, setOpen] = useState(false);
@@ -112,7 +96,12 @@ export const ConnectedWalletDetails: React.FC<{
         <WalletAddress>{shortenString(address || "")}</WalletAddress>
       </ColFlex>
 
-      {WalletIcon && <WalletIcon size={iconSize.lg} />}
+      <img
+        width={iconSize.lg}
+        height={iconSize.lg}
+        src={activeWalletIconURL}
+        alt=""
+      />
     </WalletInfoButton>
   );
 
@@ -156,7 +145,12 @@ export const ConnectedWalletDetails: React.FC<{
           gap: spacing.md,
         }}
       >
-        {WalletIcon && <WalletIcon size={iconSize.xl} />}
+        <img
+          width={iconSize.xl}
+          height={iconSize.xl}
+          src={activeWalletIconURL}
+          alt=""
+        />
 
         <ColFlex>
           <div

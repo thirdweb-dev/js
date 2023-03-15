@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Spacer } from "../../../../components/Spacer";
 import { Spinner } from "../../../../components/Spinner";
 import { Button } from "../../../../components/buttons";
@@ -13,7 +14,6 @@ import {
 import { iconSize, media, spacing } from "../../../../design-system";
 import { useDeviceWalletStorage } from "../../../hooks/useDeviceWalletStorage";
 import { DeviceWallet } from "../../../wallets";
-import { DeviceWalletIcon } from "../../icons/DeviceWalletIcon";
 import styled from "@emotion/styled";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { useConnect } from "@thirdweb-dev/react-core";
@@ -45,7 +45,12 @@ export const ConnectToDeviceWallet: React.FC<{ onBack: () => void }> = (
     <>
       <BackButton onClick={props.onBack} />
       <IconContainer>
-        <DeviceWalletIcon size={iconSize.xl} />
+        <img
+          src={DeviceWallet.meta.iconURL}
+          width={iconSize.xl}
+          height={iconSize.xl}
+          alt=""
+        />
       </IconContainer>
       <Spacer y="md" />
       <ModalTitle>Device Wallet</ModalTitle>
