@@ -1,4 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
+import { checkRubyVersion } from "./check-ruby-version";
 import type { PackageManager } from "./get-pkg-manager";
 import { getStartOrDev } from "./get-start-or-dev";
 import { tryGitInit } from "./git";
@@ -45,6 +46,10 @@ export async function createApp({
         )}. Please check that the repository exists and try again.`,
       );
       process.exit(1);
+    }
+
+    if (template.includes("react-native") && !template.includes("expo")) {
+      await checkRubyVersion();
     }
   } else if (framework) {
     frameworkPath = `${framework}-${language || "javascript"}-${
@@ -143,7 +148,8 @@ export async function createApp({
     console.log();
 
     reactNative = await isReactNative(template);
-    if (reactNative) {
+    // no need to run pod install if the template is expo
+    if (reactNative && !template.includes("expo")) {
       await podInstall(root, isOnline);
     }
   } else if (framework) {

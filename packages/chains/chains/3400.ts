@@ -25,7 +25,6 @@ export default {
     {
       "name": "Paribu Net Explorer",
       "url": "https://explorer.paribu.network",
-      "icon": "explorer",
       "standard": "EIP3091"
     }
   ],

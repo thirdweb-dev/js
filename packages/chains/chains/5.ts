@@ -10,9 +10,10 @@ export default {
     "https://rpc.goerli.mudit.blog/"
   ],
   "faucets": [
-    "https://faucet.goerli.mudit.blog",
+    "https://faucet.paradigm.xyz/",
+    "http://fauceth.komputing.org?chain=5&address=${ADDRESS}",
     "https://goerli-faucet.slock.it?address=${ADDRESS}",
-    "http://fauceth.komputing.org?chain=5&address=${ADDRESS}"
+    "https://faucet.goerli.mudit.blog"
   ],
   "nativeCurrency": {
     "name": "Goerli Ether",

@@ -25,7 +25,6 @@ export default {
     {
       "name": "phoenixplorer",
       "url": "https://phoenixplorer.com",
-      "icon": "phoenixplorer",
       "standard": "EIP3091"
     }
   ],

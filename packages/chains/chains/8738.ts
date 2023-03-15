@@ -20,7 +20,6 @@ export default {
     {
       "name": "alphscan",
       "url": "https://explorer.alph.network",
-      "icon": "alphscan",
       "standard": "EIP3091"
     }
   ],

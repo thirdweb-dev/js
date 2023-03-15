@@ -1,15 +1,14 @@
+import { Popover } from "../../../components/Popover";
 import { Spinner } from "../../../components/Spinner";
-import { ToolTip } from "../../../components/Tooltip";
 import { Button } from "../../../components/buttons";
 import { darkTheme, lightTheme } from "../../../design-system";
 import { ConnectWallet } from "../../../wallet/ConnectWallet/ConnectWallet";
-import { useCanSwitchNetwork } from "../../../wallet/hooks/useCanSwitchNetwork";
+import { useWalletRequiresConfirmation } from "../../../wallet/hooks/useCanSwitchNetwork";
 import { ThemeProvider } from "@emotion/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   ThirdwebThemeContext,
   useAddress,
-  useChainId,
   useContract,
   useNetworkMismatch,
   useSDKChainId,
@@ -18,7 +17,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import type { SmartContract } from "@thirdweb-dev/sdk";
 import type { CallOverrides, ContractInterface } from "ethers";
-import { PropsWithChildren, useContext } from "react";
+import { PropsWithChildren, useContext, useState } from "react";
 import invariant from "tiny-invariant";
 
 type ActionFn = (contract: SmartContract) => any;
@@ -78,30 +77,25 @@ export const Web3Button = <TAction extends ActionFn>({
   theme,
 }: PropsWithChildren<Web3ButtonProps<TAction>>) => {
   const address = useAddress();
-  const walletChainId = useChainId();
   const sdkChainId = useSDKChainId();
   const switchChain = useSwitchChain();
   const hasMismatch = useNetworkMismatch();
-  const needToSwitchChain =
-    sdkChainId && walletChainId && sdkChainId !== walletChainId;
   const connectionStatus = useConnectionStatus();
 
   const queryClient = useQueryClient();
-  const canSwitchNetwork = useCanSwitchNetwork();
+  const requiresConfirmation = useWalletRequiresConfirmation();
 
   const { contract } = useContract(contractAddress, contractAbi || "custom");
   const thirdwebTheme = useContext(ThirdwebThemeContext);
   const themeToUse = theme || thirdwebTheme || "dark";
 
+  const [confirmStatus, setConfirmStatus] = useState<"idle" | "waiting">(
+    "idle",
+  );
+
   const actionMutation = useMutation(
     async () => {
       invariant(contract, "contract is not ready yet");
-
-      // if need to switch the chain to perform the action
-      if (needToSwitchChain) {
-        await switchChain(sdkChainId);
-        return "__NETWORK_SWITCHED__";
-      }
 
       if (onSubmit) {
         onSubmit();
@@ -113,9 +107,6 @@ export const Web3Button = <TAction extends ActionFn>({
     },
     {
       onSuccess: (res) => {
-        if (res === "__NETWORK_SWITCHED__") {
-          return;
-        }
         if (onSuccess) {
           onSuccess(res);
         }
@@ -133,57 +124,106 @@ export const Web3Button = <TAction extends ActionFn>({
     return <ConnectWallet theme={theme} />;
   }
 
-  let content = children;
-  let buttonDisabled = !!isDisabled;
-  let buttonLoading = false;
-  let showTooltip = false;
+  // let onClick = () => actionMutation.mutate();
 
-  // if button is disabled, show original action
-  if (!buttonDisabled) {
-    if (hasMismatch) {
-      if (!canSwitchNetwork) {
-        showTooltip = true;
-        content = "Network Mismatch";
-        buttonDisabled = true;
-      } else {
-        content = "Switch Network";
+  const btnStyle = {
+    minWidth: "150px",
+    minHeight: "43px",
+  };
+
+  let button: React.ReactNode = null;
+
+  const handleSwitchChain = async () => {
+    if (sdkChainId) {
+      setConfirmStatus("waiting");
+      try {
+        await switchChain(sdkChainId);
+        setConfirmStatus("idle");
+      } catch (e) {
+        console.error(e);
+        setConfirmStatus("idle");
       }
-    } else if (
-      actionMutation.isLoading ||
-      !contract ||
-      connectionStatus === "connecting" ||
-      connectionStatus === "unknown"
-    ) {
-      content = (
-        <Spinner size="sm" color={themeToUse === "dark" ? "black" : "white"} />
+    }
+  };
+
+  // Switch Network Button
+  if (hasMismatch && !isDisabled) {
+    const _button = (
+      <Button
+        variant="inverted"
+        type={type}
+        className={className}
+        onClick={handleSwitchChain}
+        style={btnStyle}
+      >
+        {confirmStatus === "waiting" ? (
+          <Spinner size="sm" color={"inverted"} />
+        ) : (
+          "Switch Network"
+        )}
+      </Button>
+    );
+
+    if (requiresConfirmation) {
+      button = (
+        <Popover
+          content={<span>Confirm in Wallet</span>}
+          open={confirmStatus === "waiting"}
+          onOpenChange={(isOpen) => {
+            if (!isOpen) {
+              setConfirmStatus("idle");
+            }
+          }}
+        >
+          {_button}
+        </Popover>
       );
-      buttonLoading = true;
+    } else {
+      button = _button;
     }
   }
 
-  const btn = (
-    <Button
-      variant="inverted"
-      type={type}
-      className={className}
-      onClick={() => actionMutation.mutate()}
-      disabled={buttonDisabled || buttonLoading}
-      style={{
-        minWidth: "120px",
-        minHeight: "43px",
-      }}
-    >
-      {content}
-    </Button>
-  );
+  // Disabled Loading Spinner Button
+  else if (
+    !isDisabled &&
+    (actionMutation.isLoading ||
+      !contract ||
+      connectionStatus === "connecting" ||
+      connectionStatus === "unknown")
+  ) {
+    button = (
+      <Button
+        variant="inverted"
+        type={type}
+        className={className}
+        disabled
+        onClick={handleSwitchChain}
+        style={btnStyle}
+      >
+        <Spinner size="md" color={"inverted"} />
+      </Button>
+    );
+  }
+
+  // action button
+  else {
+    button = (
+      <Button
+        variant="inverted"
+        type={type}
+        className={className}
+        onClick={() => actionMutation.mutate()}
+        disabled={isDisabled}
+        style={btnStyle}
+      >
+        {children}
+      </Button>
+    );
+  }
 
   return (
     <ThemeProvider theme={themeToUse === "dark" ? darkTheme : lightTheme}>
-      {showTooltip ? (
-        <ToolTip tip="Change Network from Wallet App">{btn}</ToolTip>
-      ) : (
-        btn
-      )}
+      {button}
     </ThemeProvider>
   );
 };

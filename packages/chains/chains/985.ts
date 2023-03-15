@@ -28,7 +28,7 @@ export default {
     {
       "name": "Memo Mainnet Explorer",
       "url": "https://scan.metamemo.one:8080",
-      "icon": "memoscan",
+      "icon": "memo",
       "standard": "EIP3091"
     }
   ],
