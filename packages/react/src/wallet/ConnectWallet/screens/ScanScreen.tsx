@@ -1,3 +1,4 @@
+import { Img } from "../../../components/Img";
 import { QRCode } from "../../../components/QRCode";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
@@ -36,11 +37,10 @@ export const ScanScreen: React.FC<{
         <QRCode
           qrCodeUri={props.qrCodeUri}
           QRIcon={
-            <img
+            <Img
               width={iconSize.lg}
               height={iconSize.lg}
               src={props.walletIconURL}
-              alt=""
             />
           }
         />

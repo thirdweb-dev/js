@@ -30,7 +30,7 @@ export const ChainIcon: React.FC<{
             e.currentTarget.src = defaultChainIcon;
           }
         }}
-        alt={`C`}
+        alt=""
         width={props.size}
         height={props.size}
       />

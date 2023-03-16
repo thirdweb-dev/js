@@ -32,7 +32,7 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
   static meta = {
     name: "Device Wallet",
     iconURL:
-      "https://gateway.ipfscdn.io/ipfs/QmcNddbYBuQKiBFnPcxYegjrX6S6z9K1vBNzbBBUJMn2ox/device-wallet.svg",
+      "ipfs://QmcNddbYBuQKiBFnPcxYegjrX6S6z9K1vBNzbBBUJMn2ox/device-wallet.svg",
   };
 
   public get walletName() {

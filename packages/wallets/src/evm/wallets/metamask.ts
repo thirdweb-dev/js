@@ -23,7 +23,7 @@ export class MetaMask extends AbstractBrowserWallet {
   static meta = {
     name: "Metamask",
     iconURL:
-      "https://gateway.ipfscdn.io/ipfs/QmZZHcw7zcXursywnLDAyY6Hfxzqop5GKgwoq8NB9jjrkN/metamask.svg",
+      "ipfs://QmZZHcw7zcXursywnLDAyY6Hfxzqop5GKgwoq8NB9jjrkN/metamask.svg",
   };
 
   static id = "metamask" as const;

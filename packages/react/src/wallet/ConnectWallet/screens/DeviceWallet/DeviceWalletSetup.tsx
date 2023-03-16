@@ -1,3 +1,4 @@
+import { Img } from "../../../../components/Img";
 import { Spacer } from "../../../../components/Spacer";
 import { Spinner } from "../../../../components/Spinner";
 import { Button } from "../../../../components/buttons";
@@ -44,11 +45,10 @@ export const ConnectToDeviceWallet: React.FC<{ onBack: () => void }> = (
     <>
       <BackButton onClick={props.onBack} />
       <IconContainer>
-        <img
+        <Img
           src={DeviceWallet.meta.iconURL}
           width={iconSize.xl}
           height={iconSize.xl}
-          alt=""
         />
       </IconContainer>
       <Spacer y="md" />

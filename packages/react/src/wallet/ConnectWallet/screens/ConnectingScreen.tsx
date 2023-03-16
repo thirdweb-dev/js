@@ -1,3 +1,4 @@
+import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
 import {
@@ -20,11 +21,10 @@ export const ConnectingScreen: React.FC<{
     <>
       <BackButton onClick={props.onBack} />
       <IconContainer>
-        <img
+        <Img
           src={props.walletIconURL}
           width={iconSize.xl}
           height={iconSize.xl}
-          alt=""
         />
       </IconContainer>
       <Spacer y="lg" />

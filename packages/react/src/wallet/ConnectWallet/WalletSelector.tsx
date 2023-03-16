@@ -1,3 +1,4 @@
+import { Img } from "../../components/Img";
 import { Spacer } from "../../components/Spacer";
 import { ModalTitle } from "../../components/modalElements";
 import {
@@ -35,13 +36,11 @@ export const WalletSelector: React.FC<{ walletsMeta: WalletMeta[] }> = (
                   walletMeta.onClick();
                 }}
               >
-                <img
+                <Img
                   src={walletMeta.iconURL}
                   width={iconSize.lg}
                   height={iconSize.lg}
-                  alt=""
                   loading="eager"
-                  decoding="async"
                 />
                 <WalletName>{walletMeta.name}</WalletName>
                 {walletMeta.installed && (

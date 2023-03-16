@@ -1,5 +1,6 @@
 import { ChainIcon } from "../../components/ChainIcon";
 import { CopyIcon } from "../../components/CopyIcon";
+import { Img } from "../../components/Img";
 import { Modal } from "../../components/Modal";
 import { Skeleton } from "../../components/Skeleton";
 import { Spacer } from "../../components/Spacer";
@@ -95,12 +96,7 @@ export const ConnectedWalletDetails: React.FC<{
         <WalletAddress>{shortenString(address || "")}</WalletAddress>
       </ColFlex>
 
-      <img
-        width={iconSize.lg}
-        height={iconSize.lg}
-        src={activeWalletIconURL}
-        alt=""
-      />
+      <Img width={iconSize.lg} height={iconSize.lg} src={activeWalletIconURL} />
     </WalletInfoButton>
   );
 
@@ -144,7 +140,7 @@ export const ConnectedWalletDetails: React.FC<{
           gap: spacing.md,
         }}
       >
-        <img
+        <Img
           width={iconSize.xl}
           height={iconSize.xl}
           src={activeWalletIconURL}
