@@ -11,6 +11,12 @@ import {
 } from "@thirdweb-dev/react-core";
 import { ComponentProps } from "react";
 
+const DEFAULT_WALLETS = [MetamaskWallet, CoinbaseWallet, DeviceWallet] as [
+  typeof MetamaskWallet,
+  typeof CoinbaseWallet,
+  typeof DeviceWallet,
+];
+
 interface ThirdwebProviderProps
   extends Omit<
     ComponentProps<typeof ThirdwebProviderCore>,
@@ -53,15 +59,17 @@ interface ThirdwebProviderProps
  * ```
  *
  */
-export const ThirdwebProvider: React.FC<ThirdwebProviderProps> = (props) => {
+export const ThirdwebProvider: React.FC<ThirdwebProviderProps> = ({
+  thirdwebApiKey = DEFAULT_API_KEY,
+  supportedWallets = DEFAULT_WALLETS,
+  ...restProps
+}) => {
   return (
     <ThirdwebProviderCore
-      {...props}
       createWalletStorage={createAsyncLocalStorage}
-      thirdwebApiKey={props.thirdwebApiKey || DEFAULT_API_KEY}
-      supportedWallets={
-        props.supportedWallets || [MetamaskWallet, CoinbaseWallet, DeviceWallet]
-      }
+      thirdwebApiKey={thirdwebApiKey}
+      supportedWallets={supportedWallets}
+      {...restProps}
     />
   );
 };
