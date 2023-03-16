@@ -1,14 +1,14 @@
 import ora from "ora";
-import { Logger } from "tslog";
 
-export const logger = new Logger({
-  minLevel: "info",
-  displayFilePath: "hidden",
-  displayFunctionName: false,
-  displayLoggerName: false,
-  displayDateTime: false,
-  displayLogLevel: false,
-});
+// create a copy of console
+export const logger = {
+  // noop debug for now
+  debug: () => {},
+  log: console.log,
+  info: console.info,
+  warn: console.warn,
+  error: console.error,
+};
 
 export function spinner(text: string) {
   return ora(`${text}\n`).start();
