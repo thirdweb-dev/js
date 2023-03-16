@@ -1,4 +1,3 @@
-import { resolveIpfsUri, resolveMimeType } from "../utils/ipfs";
 import { shouldRenderAudioTag, shouldRenderVideoTag } from "../utils/media";
 import { mergeRefs } from "../utils/react";
 import {
@@ -8,6 +7,7 @@ import {
   CarbonPlayFilledAlt,
 } from "./Icons";
 import { useQuery } from "@tanstack/react-query";
+import { resolveIpfsUri, resolveMimeType } from "@thirdweb-dev/react-core";
 import React, {
   ReactNode,
   useEffect,
