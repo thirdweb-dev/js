@@ -186,15 +186,17 @@ export function ThirdwebWalletProvider(
         return;
       }
 
-      const Wallet = lastConnectedWallet
-        ? props.supportedWallets.find((W) => {
-            return W.name.toLowerCase() === lastConnectedWallet.toLowerCase();
-          })
-        : props.supportedWallets.find((W) => {
-            return W.name
-              .toLowerCase()
-              .includes(lastConnectedWallet.toLowerCase());
-          });
+      // find exact match
+      let Wallet = props.supportedWallets.find((W) => {
+        return W.name.toLowerCase() === lastConnectedWallet.toLowerCase();
+      });
+      if (!Wallet) {
+        Wallet = props.supportedWallets.find((W) => {
+          return W.name
+            .toLowerCase()
+            .includes(lastConnectedWallet.toLowerCase());
+        });
+      }
 
       if (Wallet && Wallet.id !== "deviceWallet") {
         const wallet = createWalletInstance(Wallet);
