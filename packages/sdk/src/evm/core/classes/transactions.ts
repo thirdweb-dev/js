@@ -224,6 +224,19 @@ export class Transaction<TResult = TransactionResult> {
   }
 
   /**
+   * Multiply the gas limit by a factor
+   */
+  async multiplyGasLimit(factor: number) {
+    if (!this.overrides.gasLimit) {
+      this.overrides.gasLimit = await this.estimateGasLimit();
+    }
+
+    this.overrides.gasLimit = BigNumber.from(this.overrides.gasLimit).mul(
+      BigNumber.from(Math.floor(factor)),
+    );
+  }
+
+  /**
    * Get the signed transaction
    */
   async sign(): Promise<string> {
