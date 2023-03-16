@@ -68,6 +68,12 @@ export async function generate(options: GenerateOptions) {
 
   // Store the ABIs in the the SDKs ABI cache files
   const packagePath = `${projectPath}/node_modules/@thirdweb-dev/generated-abis/dist`;
+  if (!fs.existsSync(packagePath)) {
+    throw new Error(
+      `Could not find files at ${projectPath}/node_modules/@thirdweb-dev/generated-abis`,
+    );
+  }
+
   const filePaths = [
     `${packagePath}/thirdweb-dev-generated-abis.cjs.dev.js`,
     `${packagePath}/thirdweb-dev-generated-abis.cjs.prod.js`,
@@ -76,6 +82,10 @@ export async function generate(options: GenerateOptions) {
   ];
 
   filePaths.forEach((filePath) => {
+    if (!fs.existsSync(filePath)) {
+      return;
+    }
+
     const file = fs.readFileSync(filePath, "utf-8");
     const abiRegex = /GENERATED_ABI = \{.*\}/s;
     const contractAbis = metadata.reduce((acc, contract) => {
