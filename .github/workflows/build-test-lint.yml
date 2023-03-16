@@ -58,6 +58,10 @@ jobs:
           node-version: 16
           check-latest: true
 
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7
+
       - uses: actions/cache@v3
         timeout-minutes: 5
         id: restore-build
@@ -78,6 +82,10 @@ jobs:
         with:
           node-version: 16
           check-latest: true
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7
 
       - uses: actions/cache@v3
         timeout-minutes: 5
@@ -104,6 +112,10 @@ jobs:
         with:
           node-version: 16
           check-latest: true
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7
 
       - uses: actions/cache@v3
         timeout-minutes: 5
