@@ -11,8 +11,6 @@ export const changes = [
       ".": "./src/index.ts",
       "./evm": "./src/evm/index.ts",
       "./solana": "./src/solana/index.ts",
-      "./evm/connectors/magic": "./src/evm/connectors/magic.ts",
-      "./evm/connectors/gnosis-safe": "./src/evm/connectors/gnosis-safe.ts",
     },
   },
   // react-core
