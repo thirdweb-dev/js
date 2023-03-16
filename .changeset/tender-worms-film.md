@@ -2,6 +2,7 @@
 "@thirdweb-dev/sdk": patch
 ---
 
+<br/>
 ### New Functions
 
 <details>
