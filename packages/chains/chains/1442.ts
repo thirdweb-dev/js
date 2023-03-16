@@ -14,8 +14,8 @@ export default {
   },
   "infoURL": "https://polygon.technology/solutions/polygon-zkevm/",
   "shortName": "testnet-zkEVM-mango",
-  "chainId": 1422,
-  "networkId": 1422,
+  "chainId": 1442,
+  "networkId": 1442,
   "explorers": [
     {
       "name": "Polygon zkEVM explorer",

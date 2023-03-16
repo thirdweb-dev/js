@@ -1,9 +1,13 @@
 import { Ecosystem, GenericAuthWallet } from "../../core";
-import { SUPPORTED_CHAIN_ID, supportedChains } from "../constants/chains";
 import { EVMWallet } from "../interfaces";
 import type { Signer } from "ethers";
 import { providers, Contract, utils } from "ethers";
 import EventEmitter from "eventemitter3";
+
+// TODO improve this
+function chainIdToThirdwebRpc(chainId: number) {
+  return `https://${chainId}.rpc.thirdweb.com`;
+}
 
 export type WalletData = {
   address?: string;
@@ -25,18 +29,13 @@ const EIP1271_ABI = [
 ];
 const EIP1271_MAGICVALUE = "0x1626ba7e";
 
-export const checkContractWalletSignature = async (
+export async function checkContractWalletSignature(
   message: string,
   signature: string,
   address: string,
   chainId: number,
-): Promise<boolean> => {
-  const rpcUrl = supportedChains[chainId as SUPPORTED_CHAIN_ID]?.rpc[0];
-  if (!rpcUrl) {
-    return false;
-  }
-
-  const provider = new providers.JsonRpcProvider(rpcUrl);
+): Promise<boolean> {
+  const provider = new providers.JsonRpcProvider(chainIdToThirdwebRpc(chainId));
   const walletContract = new Contract(address, EIP1271_ABI, provider);
   const _hashMessage = utils.hashMessage(message);
   try {
@@ -45,14 +44,14 @@ export const checkContractWalletSignature = async (
   } catch {
     return false;
   }
-};
+}
 
 export abstract class AbstractWallet
   extends EventEmitter<WalletEvents>
   implements GenericAuthWallet, EVMWallet
 {
   public type: Ecosystem = "evm";
-  protected signer: Signer | undefined;
+  protected signerPromise?: Promise<Signer>;
 
   public abstract getSigner(): Promise<Signer>;
 
@@ -117,16 +116,16 @@ export abstract class AbstractWallet
   }
 
   public async getCachedSigner(): Promise<Signer> {
-    if (!!this.signer) {
-      return this.signer;
+    // if we already have a signer promise, return that
+    if (this.signerPromise) {
+      return this.signerPromise;
     }
 
-    this.signer = await this.getSigner();
-
-    if (!this.signer) {
+    this.signerPromise = this.getSigner().catch(() => {
+      this.signerPromise = undefined;
       throw new Error("Unable to get a signer!");
-    }
+    });
 
-    return this.signer;
+    return this.signerPromise;
   }
 }

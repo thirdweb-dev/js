@@ -1,19 +1,19 @@
 import { resolveAddress } from "../common/ens";
 import { getCompositePluginABI } from "../common/plugin";
 import { SmartContract } from "../contracts/smart-contract";
-import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
 import { NetworkInput } from "../core/types";
 import { AddressOrEns } from "../schema";
 import { AbiSchema } from "../schema/contracts/custom";
 import { SDKOptions } from "../schema/sdk-options";
+import { getSignerAndProvider } from "./getSignerAndProvider";
 import {
   cacheContract,
   getCachedContract,
   getCachedStorage,
   inContractCache,
 } from "./utils/cache";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ContractInterface } from "ethers";
+import type { ThirdwebStorage } from "@thirdweb-dev/storage";
+import type { ContractInterface } from "ethers";
 
 export type GetContractFromAbiParams = {
   address: AddressOrEns;
