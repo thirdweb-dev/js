@@ -33,7 +33,7 @@ jobs:
       - name: Install
         uses: ./.github/composite-actions/install
 
-      - run: yarn build
+      - run: pnpm build
 
         # We use week in the turbo cache key to keep the cache from infinitely growing
       - id: get-week
@@ -65,7 +65,7 @@ jobs:
           path: ./*
           key: ${{ github.sha }}-${{ github.run_number }}
 
-      - run: yarn lint
+      - run: pnpm lint
 
   test:
     timeout-minutes: 15
@@ -86,7 +86,7 @@ jobs:
           path: ./*
           key: ${{ github.sha }}-${{ github.run_number }}
 
-      - run: yarn test
+      - run: pnpm test
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
@@ -116,6 +116,6 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run e2e tests
-        run: yarn e2e
+        run: pnpm e2e
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"

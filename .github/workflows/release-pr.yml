@@ -67,7 +67,7 @@ jobs:
         uses: ./.github/composite-actions/install
 
       - name: Build
-        run: yarn build
+        run: pnpm build
 
       - name: Configure npm
         run: |
@@ -78,8 +78,8 @@ jobs:
       - name: Deploy pre-release
         id: changesets
         run: |
-          yarn changeset version --snapshot dev
+          pnpm changeset version --snapshot dev
           node ./scripts/pre-release.mjs
-          yarn changeset publish --tag dev --no-git-tag
+          pnpm changeset publish --tag dev --no-git-tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
