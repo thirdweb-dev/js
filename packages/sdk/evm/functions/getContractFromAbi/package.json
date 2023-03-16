@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-sdk-evm-functions-getContractFromAbi.cjs.js",
-  "module": "dist/thirdweb-dev-sdk-evm-functions-getContractFromAbi.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-sdk-evm-functions-getContractFromAbi.esm.js": "./dist/thirdweb-dev-sdk-evm-functions-getContractFromAbi.browser.esm.js"
-  }
-}

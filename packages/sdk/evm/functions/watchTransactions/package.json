@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-sdk-evm-functions-watchTransactions.cjs.js",
-  "module": "dist/thirdweb-dev-sdk-evm-functions-watchTransactions.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-sdk-evm-functions-watchTransactions.esm.js": "./dist/thirdweb-dev-sdk-evm-functions-watchTransactions.browser.esm.js"
-  }
-}
