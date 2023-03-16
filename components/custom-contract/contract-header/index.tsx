@@ -1,6 +1,6 @@
 import { ContractMetadata } from "./contract-metadata";
 import { Box, Container, Flex } from "@chakra-ui/react";
-import { AddToDashboardToggleButton } from "contract-ui/components/add-to-dashboard";
+import { PrimaryDashboardButton } from "contract-ui/components/primary-dashboard-button";
 
 interface ContractHeaderProps {
   contractAddress: string;
@@ -19,7 +19,7 @@ export const ContractHeader: React.FC<ContractHeaderProps> = ({
           gap={4}
         >
           <ContractMetadata contractAddress={contractAddress} />
-          <AddToDashboardToggleButton contractAddress={contractAddress} />
+          <PrimaryDashboardButton contractAddress={contractAddress} />
         </Flex>
       </Container>
     </Box>

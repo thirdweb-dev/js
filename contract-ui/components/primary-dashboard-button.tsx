@@ -1,3 +1,4 @@
+import { IntegrateContractButton } from "./integrate-contract-button";
 import { useEVMContractInfo } from "@3rdweb-sdk/react/hooks/useActiveChainId";
 import { useAddContractMutation } from "@3rdweb-sdk/react/hooks/useRegistry";
 import {
@@ -19,7 +20,7 @@ type AddToDashboardCardProps = {
   contractAddress?: string;
 };
 
-export const AddToDashboardToggleButton: React.FC<AddToDashboardCardProps> = ({
+export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
   contractAddress,
 }) => {
   const chain = useEVMContractInfo()?.chain;
@@ -94,7 +95,9 @@ export const AddToDashboardToggleButton: React.FC<AddToDashboardCardProps> = ({
     return null;
   }
 
-  return isAlreadyOnDashboard ? null : (
+  return isAlreadyOnDashboard ? (
+    <IntegrateContractButton>Integrate Contract</IntegrateContractButton>
+  ) : (
     <Button
       variant="solid"
       bg="bgBlack"

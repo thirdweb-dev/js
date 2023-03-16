@@ -110,6 +110,12 @@ export function useContractRouteConfig(
       isDefault: true,
     },
     {
+      title: "Integrations",
+      path: "code",
+      component: LazyContractCodePage,
+      isDefault: true,
+    },
+    {
       title: "Explorer",
       path: "explorer",
       component: LazyContractExplorerPage,
@@ -235,12 +241,6 @@ export function useContractRouteConfig(
               "EnglishAuctions",
             ],
           }),
-    },
-    {
-      title: "Code",
-      path: "code",
-      component: LazyContractCodePage,
-      isDefault: true,
     },
     {
       title: "Settings",
