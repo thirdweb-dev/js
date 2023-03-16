@@ -8,12 +8,16 @@ export type GetChainIdParams = {
   sdkOptions?: SDKOptions;
 };
 
+// weakmap because if we GC the provider somewhere else we don't need to hold onto the promise anymore
 const CHAIN_ID_CACHE = new WeakMap<providers.Provider, Promise<number>>();
 
 /**
- * gets the chainId of a given network + sdk options input and caches it for future calls
+ * A function that returns the chainId for a given network input + sdk options combination.
+ * This function will cache the promise for the chainId so that it can be reused.
+ * You can call this function multiple times with the same params and it will only make one request to the provider.
  *
- * @internal
+ * @returns the ChainId
+ * @interal
  */
 export async function getChainId(params: GetChainIdParams) {
   const [, provider] = getSignerAndProvider(params.network, params.sdkOptions);
