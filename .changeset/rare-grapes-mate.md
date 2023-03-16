@@ -10,8 +10,9 @@
 <summary>
 <code>useWatchTransactions()</code> - watch for transactions on the blockchain (real-time)
 </summary>
+<br />
 
-Listen to all transactions on USD Coin (USDC) contract address.
+**Example:** Listen to all transactions on USD Coin (USDC) contract address.
 
 ```jsx
 import { useWatchTransactions } from "@thirdweb-dev/react";
@@ -42,8 +43,7 @@ const MyComponent = () => {
 ```
 
 > **Note**
-> This hook is available in `@thirdweb-dev/react`, `@thirdweb-dev/react-native` and `@thirdweb-dev/react-core` packages.
 >
-> The examples below are from the `@thirdweb-dev/react` package, but the usage is the same in `@thirdweb-dev/react-native` and `@thirdweb-dev/react-core`.
+> This hook is available in `@thirdweb-dev/react`, `@thirdweb-dev/react-native` and `@thirdweb-dev/react-core` packages, the usage is the same. (The only difference is the import path.)
 
 </details>

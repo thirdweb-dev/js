@@ -8,8 +8,9 @@
 <summary>
 <code>getBlockNumber()</code> - get the latest block number for a given chain
 </summary>
+<br />
 
-Get the latest block number for Ethereum.
+**Example:** Get the latest block number for Ethereum.
 
 ```js
 import { getBlockNumber } from "@thirdweb-dev/sdk";
@@ -27,8 +28,9 @@ console.log("Block number", blockNumber);
 <summary>
 <code>getBlock()</code> - get a block by number or hash
 </summary>
+<br />
 
-Get the latest block for Ethereum.
+**Example:** Get the latest block for Ethereum.
 
 ```js
 import { getBlock } from "@thirdweb-dev/sdk";
@@ -47,8 +49,9 @@ console.log("Block", block);
 <summary>
 <code>getBlockWithTransactions()</code> - get a block (with parsed transactions) by block number or hash
 </summary>
+<br />
 
-Get the latest block for Ethereum.
+**Example:** Get the latest block for Ethereum.
 
 ```js
 import { getBlockWithTransactions } from "@thirdweb-dev/sdk";
@@ -68,8 +71,9 @@ console.log("Transactions", blockWithTransactions.transactions);
 <summary>
 <code>watchBlockNumber()</code> - watch for new blocks (real-time)
 </summary>
+<br />
 
-Watch for new blocks on Ethereum.
+**Example:** Watch for new blocks on Ethereum.
 
 ```js
 import { watchBlockNumber } from "@thirdweb-dev/sdk";
@@ -91,8 +95,9 @@ unsubscribe();
 <summary>
 <code>watchBlock()</code> - watch for new blocks (real-time)
 </summary>
+<br />
 
-Watch for new blocks on Ethereum.
+**Example:** Watch for new blocks on Ethereum.
 
 ```js
 import { watchBlock } from "@thirdweb-dev/sdk";
@@ -114,8 +119,9 @@ unsubscribe();
 <summary>
 <code>watchBlockWithTransactions()</code> - watch for new blocks (real-time)
 </summary>
+<br />
 
-Watch for new blocks on Ethereum.
+**Example:** Watch for new blocks on Ethereum.
 
 ```js
 import { watchBlockWithTransactions } from "@thirdweb-dev/sdk";
@@ -138,8 +144,9 @@ unsubscribe();
 <summary>
 <code>watchTransactions()</code> - watch for transactions for a given address (real-time)
 </summary>
+<br />
 
-Watch for transactions on USD Coin (USDC) contract address.
+**Example:** Watch for transactions on USD Coin (USDC) contract address.
 
 ```js
 import { watchTransactions } from "@thirdweb-dev/sdk";
