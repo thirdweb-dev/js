@@ -108,6 +108,7 @@ export class WalletConnectConnector extends Connector<
       }
 
       const provider = await this.getProvider();
+      this.setupListeners();
 
       const isChainsStale = await this.#isChainsStale();
 
@@ -315,8 +316,6 @@ export class WalletConnectConnector extends Connector<
           this.chains.map((chain) => [chain.chainId, chain.rpc[0]]),
         ),
       });
-
-      this.setupListeners();
     }
   }
 

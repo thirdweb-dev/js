@@ -2,14 +2,12 @@ import { AsyncStorage } from "../../../core/AsyncStorage";
 import {
   SwitchChainError,
   UserRejectedRequestError,
-  ChainNotConfiguredError,
   normalizeChainId,
   Connector,
   ProviderRpcError,
 } from "../../../lib/wagmi-core";
 import type WalletConnectProvider from "./walletconnect-legacy-provider/index";
-import { Chain } from "@thirdweb-dev/chains";
-import WalletConnect from "@walletconnect/legacy-client";
+import { Chain, getChainRPC } from "@thirdweb-dev/chains";
 import { IWalletConnectSession } from "@walletconnect/legacy-types";
 import { utils, providers } from "ethers";
 
@@ -20,7 +18,7 @@ import { utils, providers } from "ethers";
  * - Rainbow (rainbow.me)
  * - Trust Wallet (trustwallet.com)
  */
-const switchChainAllowedRegex = /(imtoken|metamask|rainbow|trust wallet)/i;
+// const switchChainAllowedRegex = /(imtoken|metamask|rainbow|trust wallet)/i;
 
 const LAST_USED_CHAIN_ID = "last-used-chain-id";
 const LAST_SESSION = "last-session";
@@ -75,6 +73,8 @@ export class WalletConnectV1Connector extends Connector<
         create: true,
       });
 
+      this.setupListeners();
+
       // Defer message to the next tick to ensure wallet connect data (provided by `.enable()`) is available
       setTimeout(() => this.emit("message", { type: "connecting" }), 0);
 
@@ -86,18 +86,15 @@ export class WalletConnectV1Connector extends Connector<
       // Not all WalletConnect options support programmatic chain switching
       // Only enable for wallet options that do
       this.walletName = provider.connector?.peerMeta?.name ?? "";
-      if (switchChainAllowedRegex.test(this.walletName)) {
-        this.switchChain = this.#switchChain;
 
-        // switch to target chainId
-        if (chainId) {
-          try {
-            await this.switchChain(chainId);
-            id = chainId;
-            unsupported = this.isChainUnsupported(id);
-          } catch (e) {
-            console.error("could not switch chain", e);
-          }
+      // switch to target chainId
+      if (chainId) {
+        try {
+          await this.switchChain(chainId);
+          id = chainId;
+          unsupported = this.isChainUnsupported(id);
+        } catch (e) {
+          console.error(`could not switch to desired chain id: ${chainId} `, e);
         }
       }
 
@@ -171,8 +168,6 @@ export class WalletConnectV1Connector extends Connector<
         rpc: { ...rpc, ...this.options?.rpc },
         session: session ? (session as IWalletConnectSession) : undefined,
       });
-
-      this.setupListeners();
     }
 
     return this.#provider;
@@ -198,7 +193,7 @@ export class WalletConnectV1Connector extends Connector<
     }
   }
 
-  async #switchChain(chainId: number) {
+  async switchChain(chainId: number) {
     const provider = await this.getProvider();
     const chainIdHex = utils.hexValue(chainId);
 
@@ -251,32 +246,29 @@ export class WalletConnectV1Connector extends Connector<
           `Chain ${chainId} is not added in the list of supported chains`,
         );
       }
+      console.log({ chain });
 
       // if chain is not configured in the wallet
       if (/Unrecognized chain ID/i.test(message)) {
         // configure it
-        try {
-          this.emit("message", { type: "add_chain" });
-          await provider.request({
-            method: "wallet_addEthereumChain",
-            params: [
-              {
-                chainId: chainIdHex,
-                chainName: chain.name,
-                nativeCurrency: chain.nativeCurrency,
-                rpcUrls: [chain.rpc[0] ?? ""],
-                blockExplorerUrls: this.getBlockExplorerUrls(chain),
-              },
-            ],
-          });
+        this.emit("message", { type: "add_chain" });
+        const blockExplorerUrls = this.getBlockExplorerUrls(chain);
+        const rpc = getChainRPC(chain);
 
-          return chain;
-        } catch (e) {
-          throw new ChainNotConfiguredError({
-            chainId,
-            connectorId: this.id,
-          });
-        }
+        await provider.request({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: chainIdHex,
+              chainName: chain.name,
+              nativeCurrency: chain.nativeCurrency,
+              rpcUrls: [rpc],
+              blockExplorerUrls,
+            },
+          ],
+        });
+
+        return chain;
       } else {
         throw new SwitchChainError(error);
       }
@@ -295,15 +287,13 @@ export class WalletConnectV1Connector extends Connector<
     if (!this.#provider) {
       return;
     }
-    this.#removeListeners();
-
     this.#provider.on("accountsChanged", this.onAccountsChanged);
     this.#provider.on("chainChanged", this.onChainChanged);
     this.#provider.on("disconnect", this.onDisconnect);
     this.#provider.on("message", this.onMessage);
     this.#provider.on("switchChain", this.onSwitchChain);
-    this.#provider.connector.on("display_uri", this.onDisplayUri);
-    this.#provider.connector.on("call_request_sent", this.onRequestSent);
+    this.#provider.on("display_uri", this.onDisplayUri);
+    this.#provider.on("call_request_sent", this.onRequestSent);
   }
 
   #removeListeners() {
@@ -316,8 +306,8 @@ export class WalletConnectV1Connector extends Connector<
     this.#provider.removeListener("disconnect", this.onDisconnect);
     this.#provider.removeListener("message", this.onMessage);
     this.#provider.removeListener("switchChain", this.onSwitchChain);
-    (this.#provider.connector as WalletConnect).off("display_uri");
-    (this.#provider.connector as WalletConnect).off("call_request_sent");
+    this.#provider.removeListener("display_uri", this.onDisplayUri);
+    this.#provider.removeListener("call_request_sent", this.onRequestSent);
   }
 
   protected onSwitchChain = () => {
@@ -336,7 +326,6 @@ export class WalletConnectV1Connector extends Connector<
 
   protected onRequestSent = (error: any, payload: { params: string[] }) => {
     if (error) {
-      console.log("wcV1.onRequestSent", error);
       this.emit("message", { data: error, type: "request" });
     }
     this.emit("message", { data: payload.params[0], type: "request" });

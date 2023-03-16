@@ -25,7 +25,7 @@ export const ScanMetamask: React.FC<{
     >;
 
     metamask.connectWithQrCode({
-      chainId: twWalletContext.chainIdToConnect || 1,
+      chainId: twWalletContext.chainToConnect?.chainId,
       onQrCodeUri(uri) {
         setQrCodeUri(uri);
       },

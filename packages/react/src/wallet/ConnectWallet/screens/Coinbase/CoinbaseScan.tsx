@@ -30,7 +30,7 @@ export const ScanCoinbase: React.FC<{
 
     coinbaseWallet
       .connect({
-        chainId: twWalletContext.chainIdToConnect || 1,
+        chainId: twWalletContext.chainToConnect?.chainId,
       })
       .then(() => {
         twWalletContext.handleWalletConnect(coinbaseWallet);
