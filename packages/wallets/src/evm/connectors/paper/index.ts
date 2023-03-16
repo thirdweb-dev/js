@@ -9,7 +9,6 @@ import {
   PaperEmbeddedWalletSdk,
   UserStatus,
 } from "@paperxyz/embedded-wallet-service-sdk";
-import { Chain } from "@thirdweb-dev/chains";
 import type { providers, Signer } from "ethers";
 
 export const PaperChainMap: Record<number, PChain> = {
@@ -135,8 +134,7 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
 
   async setupListeners() {}
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  updateChains(chains: Chain[]): void {
+  updateChains(): void {
     // no op
   }
 }
