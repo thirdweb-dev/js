@@ -934,6 +934,8 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
           </FormControl>
 
           <TransactionButton
+            upsellTestnet
+            onChainSelect={onChainSelect}
             flexShrink={0}
             type="submit"
             isLoading={deploy.isLoading}

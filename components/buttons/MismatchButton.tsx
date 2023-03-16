@@ -33,7 +33,7 @@ import {
 import { BigNumber } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useConfiguredChain } from "hooks/chains/configureChains";
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { VscDebugDisconnect } from "react-icons/vsc";
 import { Button, Card, Heading, Text } from "tw-components";
 
@@ -49,6 +49,8 @@ export const MismatchButton = React.forwardRef<
       loadingText,
       type,
       ecosystem = "evm",
+      upsellTestnet = false,
+      onChainSelect,
       ...props
     },
     ref,
@@ -66,7 +68,10 @@ export const MismatchButton = React.forwardRef<
     const chainId = useChainId();
     const chainInfo = useConfiguredChain(chainId || -1);
 
-    const networkLabel = chainInfo ? chainInfo.name : `chain-id-${chainId}`;
+    const hasFaucet =
+      chainInfo &&
+      (chainInfo.chainId === ChainId.Localhost ||
+        (chainInfo.faucets && chainInfo.faucets.length > 0));
 
     if (!address && ecosystem === "evm") {
       return (
@@ -115,17 +120,11 @@ export const MismatchButton = React.forwardRef<
             type={networksMismatch || shouldShowEitherFaucet ? "button" : type}
             loadingText={loadingText}
             onClick={(e) => {
-              if (shouldShowEVMFaucet) {
+              if (shouldShowEitherFaucet) {
                 trackEvent({
                   category: "no-funds",
                   action: "popover",
-                  label: networkLabel,
-                });
-              } else if (shouldShowSolanaFaucet) {
-                trackEvent({
-                  category: "no-funds",
-                  action: "popover",
-                  label: solNetwork,
+                  label: ecosystem,
                 });
               }
               if (networksMismatch || shouldShowEitherFaucet) {
@@ -156,6 +155,15 @@ export const MismatchButton = React.forwardRef<
                 initialFocusRef={initialFocusRef}
                 onClose={onClose}
               />
+            ) : !hasFaucet &&
+              upsellTestnet &&
+              ecosystem === "evm" &&
+              onChainSelect ? (
+              <UpsellTestnetNotice
+                initialFocusRef={initialFocusRef}
+                onClose={onClose}
+                onChainSelect={onChainSelect}
+              />
             ) : (
               <NoFundsNotice
                 symbol={
@@ -164,11 +172,6 @@ export const MismatchButton = React.forwardRef<
                     : chainInfo?.nativeCurrency.symbol || ""
                 }
                 ecosystem={ecosystem}
-                label={
-                  ecosystem === "solana"
-                    ? solNetwork || "unknown_sol_network"
-                    : networkLabel
-                }
               />
             )}
           </PopoverBody>
@@ -259,15 +262,10 @@ const MismatchNotice: React.FC<{
 
 interface NoFundsNoticeProps {
   symbol: string;
-  label: string;
   ecosystem: "solana" | "evm" | "either";
 }
 
-const NoFundsNotice: React.FC<NoFundsNoticeProps> = ({
-  symbol,
-  label,
-  ecosystem,
-}) => {
+const NoFundsNotice: React.FC<NoFundsNoticeProps> = ({ symbol, ecosystem }) => {
   const trackEvent = useTrack();
 
   const balanceQuery = useBalance();
@@ -284,25 +282,19 @@ const NoFundsNotice: React.FC<NoFundsNoticeProps> = ({
     if (ecosystem === "solana") {
       window.open("/faucet/solana", "_blank");
     } else if (sdk && hasFaucet) {
+      trackEvent({
+        category: "no-funds",
+        action: "click",
+        label: "request-funds",
+      });
       if (chainInfo.chainId === ChainId.Localhost) {
         await sdk.wallet.requestFunds(10);
         await balanceQuery.refetch();
-        trackEvent({
-          category: "no-funds",
-          action: "click",
-          label: "localhost",
-        });
       } else if (
         chainInfo &&
         chainInfo.faucets &&
         chainInfo.faucets.length > 0
       ) {
-        trackEvent({
-          category: "no-funds",
-          action: "click",
-          label,
-          faucet: chainInfo.faucets[0],
-        });
         const faucet = chainInfo.faucets[0];
         window.open(faucet, "_blank");
       }
@@ -328,6 +320,92 @@ const NoFundsNotice: React.FC<NoFundsNoticeProps> = ({
         <Button size="sm" colorScheme="orange" onClick={requestFunds}>
           Get {symbol} from faucet
         </Button>
+      )}
+    </Flex>
+  );
+};
+
+const UpsellTestnetNotice: React.FC<{
+  initialFocusRef: React.RefObject<HTMLButtonElement>;
+  onClose: () => void;
+  onChainSelect: (chainId: number) => void;
+}> = ({ initialFocusRef, onClose, onChainSelect }) => {
+  const trackEvent = useTrack();
+  const connectedChainId = useChainId();
+  const [network, switchNetwork] = useNetworkWithPatchedSwitching();
+  const actuallyCanAttemptSwitch = !!switchNetwork;
+
+  const chain = useConfiguredChain(connectedChainId || -1);
+
+  useEffect(() => {
+    trackEvent({
+      category: "no-funds",
+      action: "popover",
+      label: "switch-to-testnet",
+    });
+  }, [trackEvent]);
+
+  const onSwitchWallet = useCallback(async () => {
+    trackEvent({
+      category: "no-funds",
+      action: "click",
+      label: "switch-to-testnet",
+    });
+    if (actuallyCanAttemptSwitch && chain) {
+      await switchNetwork(80001);
+    }
+    onChainSelect(80001);
+    onClose();
+  }, [
+    chain,
+    actuallyCanAttemptSwitch,
+    onClose,
+    switchNetwork,
+    onChainSelect,
+    trackEvent,
+  ]);
+
+  return (
+    <Flex direction="column" gap={4}>
+      <Heading size="label.lg">
+        <Flex gap={2} align="center">
+          <Icon boxSize={6} as={AiOutlineWarning} />
+          <span>No funds to deploy</span>
+        </Flex>
+      </Heading>
+
+      <Text>
+        You&apos;re trying to deploy to the{" "}
+        <Box as="strong" textTransform="capitalize">
+          {chain?.name}
+        </Box>{" "}
+        network but no funds have been detected.
+      </Text>
+      <Text>
+        You can either get funds on this network or switch to a testnet like
+        Mumbai to test your contract.
+      </Text>
+
+      <Button
+        ref={actuallyCanAttemptSwitch ? initialFocusRef : undefined}
+        leftIcon={<Icon as={VscDebugDisconnect} />}
+        size="sm"
+        onClick={onSwitchWallet}
+        isLoading={network.loading}
+        isDisabled={!actuallyCanAttemptSwitch}
+        colorScheme="orange"
+        textTransform="capitalize"
+        noOfLines={1}
+      >
+        Switch wallet to Mumbai
+      </Button>
+
+      {!actuallyCanAttemptSwitch && (
+        <Text size="body.sm" fontStyle="italic">
+          Your connected wallet does not support programmatic switching.
+          <br />
+          Please manually switch the network in your wallet.
+        </Text>
       )}
     </Flex>
   );

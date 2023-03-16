@@ -100,6 +100,8 @@ const registerConnector = (_connector: string) => {
 export interface EcosystemButtonprops extends ButtonProps {
   ecosystem?: "evm" | "solana" | "either";
   shrinkMobile?: boolean;
+  upsellTestnet?: boolean;
+  onChainSelect?: (chainId: number) => void;
 }
 
 export function useNetworkWithPatchedSwitching() {
