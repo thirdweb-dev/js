@@ -31,6 +31,7 @@ export class Transaction<TResult = TransactionResult> {
   private storage: ThirdwebStorage;
   private gaslessOptions?: SDKOptionsOutput["gasless"];
   private parse?: ParseTransactionReceipt<TResult>;
+  private gasMultiple?: number;
 
   static fromContractWrapper<
     TContract extends ethers.BaseContract,
@@ -217,13 +218,6 @@ export class Transaction<TResult = TransactionResult> {
   }
 
   /**
-   * Encode the function data for this transaction
-   */
-  encode(): string {
-    return this.contract.interface.encodeFunctionData(this.method, this.args);
-  }
-
-  /**
    * Multiply the gas limit by a factor
    *
    * @example
@@ -232,14 +226,22 @@ export class Transaction<TResult = TransactionResult> {
    * await tx.multiplyGasLimit(1.2)
    * ```
    */
-  async multiplyGasLimit(factor: number) {
-    if (!this.overrides.gasLimit) {
-      this.overrides.gasLimit = await this.estimateGasLimit();
+  multiplyGasLimit(factor: number) {
+    if (BigNumber.isBigNumber(this.overrides.gasLimit)) {
+      this.overrides.gasLimit = BigNumber.from(
+        Math.floor(BigNumber.from(this.overrides.gasLimit).toNumber() * factor),
+      );
+      return;
     }
 
-    this.overrides.gasLimit = BigNumber.from(
-      Math.floor(BigNumber.from(this.overrides.gasLimit).toNumber() * factor),
-    );
+    this.gasMultiple = factor;
+  }
+
+  /**
+   * Encode the function data for this transaction
+   */
+  encode(): string {
+    return this.contract.interface.encodeFunctionData(this.method, this.args);
   }
 
   /**
@@ -290,10 +292,18 @@ export class Transaction<TResult = TransactionResult> {
     }
 
     try {
-      return await this.contract.estimateGas[this.method](
+      const gasEstimate = await this.contract.estimateGas[this.method](
         ...this.args,
         this.overrides,
       );
+
+      if (this.gasMultiple) {
+        return BigNumber.from(
+          Math.floor(BigNumber.from(gasEstimate).toNumber() * this.gasMultiple),
+        );
+      }
+
+      return gasEstimate;
     } catch (err: any) {
       // If gas estimation fails, we'll call static to get a better error message
       await this.simulate();
