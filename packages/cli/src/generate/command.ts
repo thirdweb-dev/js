@@ -71,6 +71,8 @@ export async function generate(options: GenerateOptions) {
   const filePaths = [
     `${packagePath}/thirdweb-dev-generated-abis.cjs.dev.js`,
     `${packagePath}/thirdweb-dev-generated-abis.cjs.prod.js`,
+    `${packagePath}/thirdweb-dev-generated-abis.browser.esm.js`,
+    `${packagePath}/thirdweb-dev-generated-abis.esm.js`,
   ];
 
   filePaths.forEach((filePath) => {
