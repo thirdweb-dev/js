@@ -55,6 +55,8 @@ const COMMANDS = {
   install: {
     javascript: "npm install @thirdweb-dev/sdk ethers@5",
     react: "npm install @thirdweb-dev/react @thirdweb-dev/sdk ethers@5",
+    "react-native": `// Please, follow the installation steps in our guide: 
+// https://portal.thirdweb.com/react-native`,
     web3button: "",
     python: "pip install thirdweb-sdk",
     go: "go get github.com/thirdweb-dev/go-sdk/thirdweb",
@@ -70,6 +72,20 @@ const sdk = new ThirdwebSDK({{chainName}});
 const contract = await sdk.getContract("{{contract_address}}");`,
     react: `import {{chainName}} from "@thirdweb-dev/chains";
 import { ThirdwebProvider, useContract } from "@thirdweb-dev/react";
+
+function App() {
+  return (
+    <ThirdwebProvider activeChain={{chainName}}>
+      <Component />
+    </ThirdwebProvider>
+  )
+}
+
+function Component() {
+  const { contract, isLoading } = useContract("{{contract_address}}");
+}`,
+    "react-native": `import {{chainName}} from "@thirdweb-dev/chains";
+import { ThirdwebProvider, useContract } from "@thirdweb-dev/react-native";
 
 function App() {
   return (
@@ -107,12 +123,33 @@ export default function Component() {
   const { contract } = useContract("{{contract_address}}");
   const { data, isLoading } = useContractRead(contract, "{{function}}", {{args}})
 }`,
+    "react-native": `import { useContract, useContractRead } from "@thirdweb-dev/react-native";
+
+export default function Component() {
+  const { contract } = useContract("{{contract_address}}");
+  const { data, isLoading } = useContractRead(contract, "{{function}}", {{args}})
+}`,
     python: `data = contract.call("{{function}}", {{args}})`,
     go: `data, err := contract.Call("{{function}}", {{args}})`,
   },
   write: {
     javascript: `const data = await contract.call("{{function}}", {{args}})`,
     react: `import { useContract, useContractWrite } from "@thirdweb-dev/react";
+
+export default function Component() {
+  const { contract } = useContract("{{contract_address}}");
+  const { mutateAsync: {{function}}, isLoading } = useContractWrite(contract, "{{function}}")
+
+  const call = async () => {
+    try {
+      const data = await {{function}}([ {{args}} ]);
+      console.info("contract call successs", data);
+    } catch (err) {
+      console.error("contract call failure", err);
+    }
+  }
+}`,
+    "react-native": `import { useContract, useContractWrite } from "@thirdweb-dev/react-native";
 
 export default function Component() {
   const { contract } = useContract("{{contract_address}}");
@@ -152,6 +189,17 @@ const allEvents = await contract.events.getAllEvents();
 // Or set up a listener for all events
 const listener = await contract.events.listenToAllEvents();`,
     react: `import { useContract, useContractEvents } from "@thirdweb-dev/react";
+
+export default function Component() {
+  const { contract } = useContract("{{contract_address}}");
+  // You can get a specific event
+  const { data: event } = useContractEvents(contract, "{{function}}")
+  // All events
+  const { data: allEvents } = useContractEvents(contract)
+  // By default, you set up a listener for all events, but you can disable it
+  const { data: eventWithoutListener } = useContractEvents(contract, undefined, { subscribe: false })
+}`,
+    "react-native": `import { useContract, useContractEvents } from "@thirdweb-dev/react-native";
 
 export default function Component() {
   const { contract } = useContract("{{contract_address}}");

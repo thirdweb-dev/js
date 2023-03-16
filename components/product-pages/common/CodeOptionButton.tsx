@@ -18,6 +18,10 @@ export const LOGO_OPTIONS = {
     icon: SiReact,
     fill: "#61dafb",
   },
+  "react-native": {
+    icon: SiReact,
+    fill: "#61dafb",
+  },
   python: {
     icon: SiPython,
     fill: "#3e7aac",

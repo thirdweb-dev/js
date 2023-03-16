@@ -693,6 +693,10 @@ export function useFeatureContractCodeSnippetQuery(language: string) {
     language = "sdk";
   }
 
+  if (language === "react-native") {
+    language = "react";
+  }
+
   return useQuery(["feature-code-snippet", language], async () => {
     const res = await fetch(
       `https://raw.githubusercontent.com/thirdweb-dev/docs/main/docs/feature_snippets_${language}.json`,

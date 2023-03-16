@@ -54,6 +54,8 @@ const INSTALL_COMMANDS = {
     typescript: "npm install @thirdweb-dev/sdk ethers@5",
     javascript: "npm install @thirdweb-dev/sdk ethers@5",
     react: "npm install @thirdweb-dev/sdk @thirdweb-dev/react ethers@5",
+    "react-native":
+      "npm install 'ethers@5' node-libs-browser react-native-crypto react-native-randombytes react-native-get-random-values react-native-svg react-native-mmkv@2.5.1 @react-native-async-storage/async-storage @thirdweb-dev/react-native @thirdweb-dev/react-native-compat",
     python: "pip install thirdweb-sdk",
     go: "go get github.com/thirdweb-dev/go-sdk/thirdweb",
     unity: ``,
@@ -63,6 +65,7 @@ const INSTALL_COMMANDS = {
     javascript: "npm install @thirdweb-dev/sdk",
     react:
       "npm install @thirdweb-dev/sdk @thirdweb-dev/react @solana/wallet-adapter-wallets @solana/wallet-adapter-react",
+    "react-native": "",
     python: "pip install thirdweb-sdk",
     go: "go get github.com/thirdweb-dev/go-sdk/thirdweb",
     unity: ``,
@@ -166,7 +169,7 @@ export const ContractCode: React.FC<ContractCodeProps> = ({
     <Stack spacing={4}>
       <Card>
         <Stack spacing={3}>
-          {environment === "react" ? (
+          {environment.includes("react") ? (
             <>
               <Heading size="title.sm">Create a new Project</Heading>
               <Text>

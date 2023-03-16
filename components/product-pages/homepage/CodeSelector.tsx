@@ -34,6 +34,20 @@ export default function App() {
     <ThirdwebNftMedia key={nft.metadata.id.toString()} metadata={nft.metadata} />
   ));
 }`,
+  "react-native": `import { useContract, useNFTs } from "@thirdweb-dev/react-native";
+
+export default function App() {
+  // Connect to your smart contract
+  const { contract } = useContract("0xe68904F3018fF980b6b64D06d7f7fBCeFF4cB06c");
+
+  // Get all NFTs
+  const nfts = useNFTs(contract);
+
+  // Render NFTs
+  return (nfts.data || []).map((nft) => (
+    <Image key={nft.metadata.id.toString()} source={{uri: nft.metadata.image}} />
+  ));
+}`,
   python: `from thirdweb import ThirdwebSDK
 from pprint import pprint
 
@@ -103,6 +117,7 @@ export default function App() {
   const address = await sdk.auth.verify(payload);
  }
 }`,
+  "react-native": "",
   python: `from thirdweb import ThirdwebSDK
 
 sdk = ThirdwebSDK("goerli")
@@ -169,7 +184,11 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
               language={key as CodeOptions}
               textTransform="capitalize"
             >
-              {key === "javascript" ? "JavaScript" : key}
+              {key === "javascript"
+                ? "JavaScript"
+                : key === "react-native"
+                ? "React Native"
+                : key}
             </CodeOptionButton>
           ) : null,
         )}
@@ -193,7 +212,7 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
           pb={{ base: 12, md: 6 }}
           code={actualSnippets[activeLanguage]}
           language={
-            activeLanguage === "react"
+            activeLanguage === "react" || activeLanguage === "react-native"
               ? "jsx"
               : activeLanguage === "unity"
               ? "cpp"
