@@ -65,7 +65,7 @@ const WrappedThirdwebSDKProvider = <
   activeChain,
   signer,
   children,
-  thirdwebApiKey = DEFAULT_API_KEY,
+  thirdwebApiKey,
   infuraApiKey,
   alchemyApiKey,
 }: React.PropsWithChildren<
@@ -218,7 +218,7 @@ export const ThirdwebSDKProvider = <
   // @ts-expect-error - different subtype of Chain[] but this works fine
   supportedChains = defaultChains,
   activeChain,
-  thirdwebApiKey,
+  thirdwebApiKey = DEFAULT_API_KEY,
   alchemyApiKey,
   infuraApiKey,
   ...restProps
