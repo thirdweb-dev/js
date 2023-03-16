@@ -41,7 +41,7 @@ import { DASHBOARD_THIRDWEB_API_KEY } from "constants/rpc";
 import { constants } from "ethers";
 import { useConfiguredChain } from "hooks/chains/configureChains";
 import { useMemo, useState } from "react";
-import { Button, Card, Heading, Link, Text } from "tw-components";
+import { Button, Card, Heading, Link, Text, TrackedLink } from "tw-components";
 
 interface CodeOverviewProps {
   abi?: Abi;
@@ -55,8 +55,7 @@ const COMMANDS = {
   install: {
     javascript: "npm install @thirdweb-dev/sdk ethers@5",
     react: "npm install @thirdweb-dev/react @thirdweb-dev/sdk ethers@5",
-    "react-native": `// Please, follow the installation steps in our guide: 
-// https://portal.thirdweb.com/react-native`,
+    "react-native": "React Native",
     web3button: "",
     python: "pip install thirdweb-sdk",
     go: "go get github.com/thirdweb-dev/go-sdk/thirdweb",
@@ -389,14 +388,34 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
             />
           </Flex>
           <Flex flexDir="column" gap={2}>
-            <Text>Install the latest version of the SDK:</Text>
-            <CodeSegment
-              hideTabs
-              isInstallCommand
-              environment={environment}
-              setEnvironment={setEnvironment}
-              snippet={COMMANDS.install}
-            />
+            {environment === "react-native" || environment === "unity" ? (
+              <Text>
+                Install the latest version of the SDK.{" "}
+                <TrackedLink
+                  color={"primary.500"}
+                  href={`https://portal.thirdweb.com/${environment}`}
+                  isExternal
+                  category="code-tab"
+                  label={environment}
+                >
+                  Learn how in the{" "}
+                  {environment === "react-native" ? "React Native" : "Unity"}{" "}
+                  documentation
+                </TrackedLink>
+                .
+              </Text>
+            ) : (
+              <>
+                <Text>Install the latest version of the SDK:</Text>
+                <CodeSegment
+                  hideTabs
+                  isInstallCommand
+                  environment={environment}
+                  setEnvironment={setEnvironment}
+                  snippet={COMMANDS.install}
+                />
+              </>
+            )}
           </Flex>
           <Flex flexDir="column" gap={2}>
             <Text>Initialize the SDK and contract on your project:</Text>
