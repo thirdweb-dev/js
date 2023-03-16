@@ -5,7 +5,7 @@ import {
 } from "../../evm/providers/thirdweb-sdk-provider";
 import { DAppMetaData } from "../types/dAppMeta";
 import { SupportedWallet } from "../types/wallet";
-import { updateChainRPCs } from "../utils";
+import { updateChainRPCs } from "../utils/updateChainRpcs";
 import { ThirdwebThemeContext } from "./theme-context";
 import {
   ThirdwebWalletProvider,
