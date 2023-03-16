@@ -9,7 +9,8 @@ export default {
   },
   "rpc": [
     "https://core-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.coredao.org/"
+    "https://rpc.coredao.org/",
+    "https://rpc-core.icecreamswap.com"
   ],
   "faucets": [],
   "nativeCurrency": {

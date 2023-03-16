@@ -13,15 +13,13 @@ import {
   getContractTypeForRemoteName,
 } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
+import { getSignerAndProvider } from "../functions/getSignerAndProvider";
 import { Abi, AbiSchema, AddressOrEns, SDKOptions } from "../schema";
 import { ContractWithMetadata, CurrencyValue } from "../types";
 import { ContractDeployer } from "./classes";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { MultichainRegistry } from "./classes/multichain-registry";
-import {
-  RPCConnectionHandler,
-  getSignerAndProvider,
-} from "./classes/rpc-connection-handler";
+import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
 import type {
   ChainOrRpcUrl,
   ContractForPrebuiltContractType,
@@ -36,12 +34,11 @@ import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdweb
 import { ContractAddress, GENERATED_ABI } from "@thirdweb-dev/generated-abis";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { EVMWallet } from "@thirdweb-dev/wallets";
+import type { ContractInterface, Signer, BaseContract } from "ethers";
 import {
-  BaseContract,
-  Contract,
-  ContractInterface,
-  ethers,
-  Signer,
+  Contract as EthersContract,
+  Wallet as EthersWallet,
+  utils as ethersUtils,
 } from "ethers";
 
 /**
@@ -146,7 +143,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     storage?: ThirdwebStorage,
   ): ThirdwebSDK {
     const provider = getChainProvider(network, options);
-    const signer = new ethers.Wallet(privateKey, provider);
+    const signer = new EthersWallet(privateKey, provider);
     return new ThirdwebSDK(signer, options, storage);
   }
 
@@ -561,13 +558,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     contractAddress: AddressOrEns,
   ): Promise<ContractType> {
     try {
-      const contract = new Contract(
+      const contract = new EthersContract(
         await resolveAddress(contractAddress),
         IThirdwebContractABI,
         // !provider only! - signer can break things here!
         this.getProvider(),
       );
-      const remoteContractType = ethers.utils
+      const remoteContractType = ethersUtils
         .toUtf8String(await contract.contractType())
         // eslint-disable-next-line no-control-regex
         .replace(/\x00/g, "");

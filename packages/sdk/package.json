@@ -31,6 +31,13 @@
       },
       "default": "./solana/dist/thirdweb-dev-sdk-solana.cjs.js"
     },
+    "./evm/functions": {
+      "module": {
+        "browser": "./evm/functions/dist/thirdweb-dev-sdk-evm-functions.browser.esm.js",
+        "default": "./evm/functions/dist/thirdweb-dev-sdk-evm-functions.esm.js"
+      },
+      "default": "./evm/functions/dist/thirdweb-dev-sdk-evm-functions.cjs.js"
+    },
     "./solana/server": {
       "module": {
         "browser": "./solana/server/dist/thirdweb-dev-sdk-solana-server.browser.esm.js",
@@ -50,6 +57,7 @@
     "entrypoints": [
       "index.ts",
       "evm/index.ts",
+      "evm/functions/index.ts",
       "solana/index.ts",
       "solana/server/index.ts"
     ],
