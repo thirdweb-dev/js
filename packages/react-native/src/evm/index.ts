@@ -2,7 +2,6 @@ export { CoinbaseWallet } from "./wallets/wallets/coinbase-wallet";
 export {
   MetaMaskWallet,
   RainbowWallet,
-  WalletConnectV1Wallet,
   TrustWallet,
 } from "./wallets/wallets/all";
 

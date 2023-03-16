@@ -118,56 +118,6 @@ export class RainbowWallet
   }
 }
 
-// Wallet Connect V1 ----------------------------------------
-
-export class WalletConnectV1Wallet
-  extends WalletConnectV1Core
-  implements IWalletWithMetadata
-{
-  constructor(options: WC1Options) {
-    const storage = createAsyncLocalStorage("walletConnect");
-    super({
-      ...options,
-      walletId: "walletConnectV1",
-      walletStorage: storage,
-      qrcode: false,
-      dappMetadata: {
-        url: options.clientMeta?.url || DEFAULT_URL_METADATA,
-        name: options.clientMeta?.name || DEFAULT_NAME_METADATA,
-        logoUrl: options.clientMeta?.icons?.[0],
-        description: options.clientMeta?.description,
-      },
-    });
-    this.on("open_wallet", this._onWCOpenWallet);
-
-    this.on("disconnect", () => {
-      this.removeAllListeners();
-    });
-  }
-
-  getMetadata() {
-    return walletsMetadata.walletConnectV1 as WalletMeta;
-  }
-
-  _onWCOpenWallet(uri?: string) {
-    console.log("openWallet", uri);
-
-    const meta = this.getMetadata();
-
-    if (uri) {
-      const fullUrl = formatDisplayUri(uri, meta);
-
-      console.log("fullUrl", fullUrl);
-
-      Linking.openURL(fullUrl);
-    } else {
-      const fullUrl = formatDisplayUri("", meta);
-
-      Linking.openURL(fullUrl);
-    }
-  }
-}
-
 // Trust ----------------------------------------
 
 type WC2Options = Omit<

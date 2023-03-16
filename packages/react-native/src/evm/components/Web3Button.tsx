@@ -11,6 +11,7 @@ import {
   useSDKChainId,
   useSwitchChain,
   useConnectionStatus,
+  useWallet,
 } from "@thirdweb-dev/react-core";
 import type { SmartContract } from "@thirdweb-dev/sdk";
 import type { CallOverrides, ContractInterface } from "ethers";
@@ -72,6 +73,7 @@ export const Web3Button = <TAction extends ActionFn>({
   theme,
 }: PropsWithChildren<Web3ButtonProps<TAction>>) => {
   const address = useAddress();
+  const activeWallet = useWallet();
   const walletChainId = useChainId();
   const sdkChainId = useSDKChainId();
   const switchChain = useSwitchChain();
@@ -121,9 +123,14 @@ export const Web3Button = <TAction extends ActionFn>({
   );
 
   useEffect(() => {
+    if (!activeWallet && actionMutation.isLoading) {
+      actionMutation.reset();
+    }
+  }, [actionMutation, activeWallet]);
+
+  useEffect(() => {
     let timeout: ReturnType<typeof setTimeout> | undefined;
     if (actionMutation.isLoading) {
-      console.log("isLoading");
       timeout = setTimeout(() => {
         actionMutation.reset();
         if (onError) {

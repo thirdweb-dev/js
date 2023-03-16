@@ -43,17 +43,6 @@ export const walletsMetadata = {
       universal: "",
     },
   },
-  walletConnectV1: {
-    id: "walletConnect",
-    name: "Wallet Connect",
-    versions: ["1"],
-    image_url:
-      "https://gateway.ipfscdn.io/ipfs/QmNTBa8FsezG7gNuHqVC7hSu2xDWR2juf4Jm3QSTh7Jk6y/wc-logo.png",
-    mobile: {
-      native: "wc:",
-      universal: "wc:",
-    },
-  },
   device: {
     id: "device",
     name: "Device Wallet",
