@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { Spacer } from "../../../../components/Spacer";
 import { Spinner } from "../../../../components/Spinner";
 import { Button } from "../../../../components/buttons";

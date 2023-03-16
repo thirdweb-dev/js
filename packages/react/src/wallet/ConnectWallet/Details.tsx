@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { ChainIcon } from "../../components/ChainIcon";
 import { CopyIcon } from "../../components/CopyIcon";
 import { Modal } from "../../components/Modal";

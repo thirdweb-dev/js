@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { QRCode } from "../../../components/QRCode";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";

@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { Spacer } from "../../components/Spacer";
 import { ModalTitle } from "../../components/modalElements";
 import {
