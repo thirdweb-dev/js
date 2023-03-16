@@ -18,24 +18,23 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
-import {
+import type {
   CommonContractSchemaInput,
   ContractEvent,
   ContractForPrebuiltContractType,
   ContractType,
   EventQueryOptions,
   PrebuiltContractType,
+  SmartContract,
   SUPPORTED_CHAIN_ID,
   ThirdwebSDK,
   ValidContractInstance,
 } from "@thirdweb-dev/sdk";
-import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/smart-contract";
-import { CallOverrides, ContractInterface } from "ethers";
+import type { CallOverrides, ContractInterface } from "ethers";
 import { useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";
 
 // contract type
-
 async function fetchContractType(
   contractAddress: RequiredParam<ContractAddress>,
   sdk: RequiredParam<ThirdwebSDK>,

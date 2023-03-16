@@ -160,18 +160,19 @@ const NetworkList: React.FC<{
             <NetworkButton
               data-active={activeChainId === chain.chainId}
               onClick={async () => {
-                setErrorConfirming(false);
                 if (requiresConfirmation) {
+                  setErrorConfirming(false);
                   setConfirmingChainId(chain.chainId);
-                  try {
-                    await switchChain(chain.chainId);
-                    props.closeModal();
-                  } catch (e: any) {
-                    setErrorConfirming(true);
-                    console.error(e);
-                  }
-                } else {
+                }
+
+                try {
+                  await switchChain(chain.chainId);
                   props.closeModal();
+                } catch (e: any) {
+                  if (requiresConfirmation) {
+                    setErrorConfirming(true);
+                  }
+                  console.error(e);
                 }
               }}
             >
@@ -224,6 +225,7 @@ const NetworkList: React.FC<{
 const TabButton = styled(Tabs.Trigger)<{ theme?: Theme }>`
   all: unset;
   font-size: ${fontSize.md};
+  font-weight: 500;
   color: ${(p) => p.theme.text.secondary};
   cursor: pointer;
   padding: ${spacing.sm} ${spacing.md};
@@ -285,7 +287,7 @@ const NetworkButton = styled.button<{ theme?: Theme }>`
 const NetworkShortName = styled.span<{ theme?: Theme }>`
   color: ${(p) => p.theme.text.secondary};
   display: inline-block;
-  font-size: ${fontSize.md};
+  font-size: ${fontSize.sm};
   font-weight: 500;
 `;
 

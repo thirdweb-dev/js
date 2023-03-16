@@ -9,8 +9,6 @@ export {
 export { ConnectWallet } from "./components/ConnectWallet";
 export { Web3Button } from "./components/Web3Button";
 
-export { ChainId } from "@thirdweb-dev/sdk";
-
 // providers
 // export * from "./providers/full";
 export * from "./providers/thirdweb-provider";

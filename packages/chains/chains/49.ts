@@ -25,7 +25,6 @@ export default {
     {
       "name": "etmp",
       "url": "https://pioneer.etmscan.network",
-      "icon": "etmpscan",
       "standard": "EIP3091"
     }
   ],

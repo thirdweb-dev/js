@@ -8,11 +8,15 @@ import {
 } from "../wallets/wallets/all";
 import { CoinbaseWallet } from "../wallets/wallets/coinbase-wallet";
 import {
-  SupportedWallet as SupportedWalletCore,
   ThirdwebProviderCore,
   ThirdwebProviderCoreProps,
 } from "@thirdweb-dev/react-core";
-import React, { PropsWithChildren, useMemo } from "react";
+import React, { PropsWithChildren } from "react";
+
+const DEFAULT_WALLETS = [MetaMaskWallet, CoinbaseWallet] as [
+  typeof MetaMaskWallet,
+  typeof CoinbaseWallet,
+];
 
 export type ImplementedWallet =
   | typeof MetaMaskWallet
@@ -63,31 +67,21 @@ export type ThirdwebProviderProps = PropsWithChildren<
  * };
  *
  */
-export function ThirdwebProvider({
+export const ThirdwebProvider: React.FC<ThirdwebProviderProps> = ({
   children,
-  createWalletStorage,
+  createWalletStorage = createAsyncLocalStorage,
   thirdwebApiKey = DEFAULT_API_KEY,
-  supportedWallets,
-  ...props
-}: ThirdwebProviderProps) {
-  const supportedWalletsRN = useMemo(() => {
-    const wallets = supportedWallets?.length
-      ? supportedWallets
-      : [MetaMaskWallet, CoinbaseWallet];
-
-    return wallets as SupportedWalletCore[];
-  }, [supportedWallets]);
-
+  supportedWallets = DEFAULT_WALLETS,
+  ...restProps
+}) => {
   return (
     <ThirdwebProviderCore
-      {...props}
       thirdwebApiKey={thirdwebApiKey}
-      supportedWallets={supportedWalletsRN}
-      createWalletStorage={
-        createWalletStorage ? createWalletStorage : createAsyncLocalStorage
-      }
+      supportedWallets={supportedWallets}
+      createWalletStorage={createWalletStorage}
+      {...restProps}
     >
       {children}
     </ThirdwebProviderCore>
   );
-}
+};

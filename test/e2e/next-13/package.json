@@ -1,5 +1,5 @@
 {
-  "name": "e2e-next-12",
+  "name": "e2e-next-13",
   "version": "0.1.2",
   "private": true,
   "scripts": {
@@ -11,14 +11,14 @@
     "@thirdweb-dev/react": "*",
     "@thirdweb-dev/sdk": "*",
     "ethers": "^5.7.2",
-    "next": "^12.2.0",
+    "next": "^13.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.27.1",
     "eslint": "^8.21.0",
-    "eslint-config-next": "12.3.1"
+    "eslint-config-next": "^13.2.4"
   },
   "repository": "https://github.com/thirdweb-dev/js/tree/main/test/e2e/next-12"
 }

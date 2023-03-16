@@ -43,8 +43,8 @@ export default {
       "standard": "none"
     },
     {
-      "name": "Filmine",
-      "url": "https://explorer.filmine.io",
+      "name": "Dev.storage",
+      "url": "https://dev.storage",
       "standard": "none"
     },
     {

@@ -27,14 +27,12 @@ export {
   useActiveChain,
 } from "./hooks/wallet";
 
-// re-exports
-export { ChainId } from "@thirdweb-dev/sdk";
-
 // Utilities and Others
 export { shouldNeverPersistQuery } from "../core/query-utils/query-key";
 export type { RequiredParam } from "../core/query-utils/required-param";
 export type {
   SupportedWallet,
+  SupportedWalletInstance,
   ExtraCoreWalletOptions,
 } from "../core/types/wallet";
 
@@ -248,3 +246,7 @@ export type {
   ClaimTokenParams,
 } from "./types";
 export { getErcs, getErc1155, getErc721, getErc20 } from "./types";
+
+// transaction hooks
+export { useWatchTransactions } from "./hooks/useTransactions";
+export type { UseWatchTransactionsParams } from "./hooks/useTransactions";

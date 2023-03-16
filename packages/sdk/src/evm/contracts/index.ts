@@ -1,14 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { getPrebuiltInfo } from "../common/legacy";
 import { fetchAbiFromAddress } from "../common/metadata-resolver";
-import { getCompositePluginABI, joinABIs } from "../common/plugin";
+import { getCompositePluginABI } from "../common/plugin";
 import { ALL_ROLES } from "../common/role";
-import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
 import type {
   ContractType,
   NetworkInput,
   PrebuiltContractType,
 } from "../core/types";
+import { getSignerAndProvider } from "../functions/getSignerAndProvider";
 import {
   Address,
   DropErc1155ContractSchema,

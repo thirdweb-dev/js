@@ -9,7 +9,6 @@ export { ThirdwebProvider } from "./providers/thirdweb-provider";
 // wallet/hooks
 export { useDeviceWalletStorage } from "../wallet/hooks/useDeviceWalletStorage";
 export { useInstalledWallets } from "../wallet/hooks/useInstalledWallets";
-export { useCanSwitchNetwork } from "../wallet/hooks/useCanSwitchNetwork";
 
 // react-core
 export * from "@thirdweb-dev/react-core";
