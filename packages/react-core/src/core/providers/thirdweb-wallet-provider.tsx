@@ -2,7 +2,7 @@ import { DAppMetaData } from "../types/dAppMeta";
 import { SupportedWallet, SupportedWalletInstance } from "../types/wallet";
 import { timeoutPromise } from "../utils";
 import { ThirdwebThemeContext } from "./theme-context";
-import { Chain, defaultChains } from "@thirdweb-dev/chains";
+import { Chain } from "@thirdweb-dev/chains";
 import { AsyncStorage, CreateAsyncStorage } from "@thirdweb-dev/wallets";
 import { Signer } from "ethers";
 import {
@@ -93,7 +93,7 @@ export function ThirdwebWalletProvider(
 
   const createWalletInstance = useCallback(
     (Wallet: SupportedWallet) => {
-      const walletChains = props.chains || defaultChains;
+      const walletChains = props.chains;
 
       let walletOptions = {
         chains: walletChains,
@@ -104,7 +104,7 @@ export function ThirdwebWalletProvider(
       return new Wallet({
         ...walletOptions,
         // TODO: remove this - it's only being used in device wallet
-        chain: props.activeChain || props.chains[0] || defaultChains[0],
+        chain: props.activeChain || props.chains[0],
         coordinatorStorage,
         theme: theme || "dark",
       });

@@ -1,6 +1,6 @@
 import { Chain, MinimalChain } from "./types";
 
-type ChainRPCOptions = {
+export type ChainRPCOptions = {
   thirdwebApiKey?: string;
   alchemyApiKey?: string;
   infuraApiKey?: string;
