@@ -112,8 +112,9 @@ export async function generate(options: GenerateOptions) {
   }
 
   const postinstall = packageJson.scripts?.postinstall
-    ? packageJson.scripts.postinstall + ` && npx thirdweb generate`
-    : `npx thirdweb generate`;
+    ? packageJson.scripts.postinstall +
+      ` && npx thirdweb generate --skip-update-check`
+    : `npx thirdweb generate --skip-update-check`;
 
   fs.writeFileSync(
     packageJsonPath,

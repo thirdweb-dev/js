@@ -409,7 +409,7 @@ const main = async () => {
   program
     .command("generate")
     .description(
-      "Generate types for your smart contract to strongly type the thirdweb SDK",
+      "Preload ABIs and generate types for your smart contract to strongly type the thirdweb SDK",
     )
     .option("-p, --path <project-path>", "path to project", ".")
     .option(
