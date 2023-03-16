@@ -1,4 +1,3 @@
-import { DEFAULT_API_KEY } from "../../core/constants/rpc";
 import {
   QueryClientProviderProps,
   QueryClientProviderWithDefault,
@@ -218,7 +217,7 @@ export const ThirdwebSDKProvider = <
   // @ts-expect-error - different subtype of Chain[] but this works fine
   supportedChains = defaultChains,
   activeChain,
-  thirdwebApiKey = DEFAULT_API_KEY,
+  thirdwebApiKey,
   alchemyApiKey,
   infuraApiKey,
   ...restProps

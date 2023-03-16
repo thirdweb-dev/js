@@ -4,6 +4,7 @@ import {
   DeviceWallet,
   MetamaskWallet,
 } from "../../wallet/wallets";
+import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
   SupportedWallet,
   ThirdwebProviderCore,
@@ -57,6 +58,7 @@ export const ThirdwebProvider: React.FC<ThirdwebProviderProps> = (props) => {
     <ThirdwebProviderCore
       {...props}
       createWalletStorage={createAsyncLocalStorage}
+      thirdwebApiKey={props.thirdwebApiKey || DEFAULT_API_KEY}
       supportedWallets={
         props.supportedWallets || [MetamaskWallet, CoinbaseWallet, DeviceWallet]
       }
