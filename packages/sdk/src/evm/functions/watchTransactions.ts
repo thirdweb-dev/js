@@ -1,4 +1,5 @@
-import { SharedBlockParams, watchBlockWithTransactions } from "./watchBlock";
+import type { SharedBlockParams } from "./getBlock";
+import { watchBlockWithTransactions } from "./watchBlock";
 import type { BlockWithTransactions } from "@ethersproject/abstract-provider";
 import type { Transaction } from "ethers";
 

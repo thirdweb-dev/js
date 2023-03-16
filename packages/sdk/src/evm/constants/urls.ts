@@ -1,79 +1,17 @@
 import { DEFAULT_API_KEY } from "../../core/constants/urls";
-import { ChainOrRpcUrl, NetworkInput } from "../core";
+import type { ChainOrRpcUrl, NetworkInput } from "../core/types";
 import { isProvider, isSigner } from "../functions/getSignerAndProvider";
 import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
-import {
-  ChainInfo,
-  SDKOptions,
-  SDKOptionsOutput,
-  SDKOptionsSchema,
-} from "../schema";
-import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
-import { getChainRPC, Chain } from "@thirdweb-dev/chains";
-import type { ethers } from "ethers";
+import type { ChainInfo, SDKOptions, SDKOptionsOutput } from "../schema";
+import { SDKOptionsSchema } from "../schema";
+import { getChainRPC } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import { providers } from "ethers";
 
 /**
  * @internal
  */
-export const DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/";
-
-export type ChainNames =
-  | "mainnet"
-  // common alias for `mainnet`
-  | "ethereum"
-  | "goerli"
-  | "polygon"
-  // common alias for `polygon`
-  | "matic"
-  | "mumbai"
-  | "fantom"
-  | "fantom-testnet"
-  | "avalanche"
-  | "avalanche-testnet"
-  // actual name
-  | "avalanche-fuji"
-  | "optimism"
-  | "optimism-goerli"
-  | "arbitrum"
-  | "arbitrum-goerli"
-  | "binance"
-  | "binance-testnet"
-  // local nodes
-  | "hardhat"
-  | "localhost";
-/**
- * @internal
- */
-
-export const CHAIN_NAME_TO_ID: Record<ChainNames, SUPPORTED_CHAIN_ID> = {
-  "avalanche-fuji": ChainId.AvalancheFujiTestnet,
-  "avalanche-testnet": ChainId.AvalancheFujiTestnet,
-  "fantom-testnet": ChainId.FantomTestnet,
-  ethereum: ChainId.Mainnet,
-  matic: ChainId.Polygon,
-  mumbai: ChainId.Mumbai,
-  goerli: ChainId.Goerli,
-  polygon: ChainId.Polygon,
-  mainnet: ChainId.Mainnet,
-  optimism: ChainId.Optimism,
-  "optimism-goerli": ChainId.OptimismGoerli,
-  arbitrum: ChainId.Arbitrum,
-  "arbitrum-goerli": ChainId.ArbitrumGoerli,
-  fantom: ChainId.Fantom,
-  avalanche: ChainId.Avalanche,
-  binance: ChainId.BinanceSmartChainMainnet,
-  "binance-testnet": ChainId.BinanceSmartChainTestnet,
-  hardhat: ChainId.Hardhat,
-  localhost: ChainId.Localhost,
-};
-
-export const CHAIN_ID_TO_NAME = Object.fromEntries(
-  Object.entries(CHAIN_NAME_TO_ID).map(([name, id]) => [id, name]),
-) as Record<ChainId, ChainNames>;
-
-export function buildDefaultMap(sdkOptions: SDKOptions = {}) {
-  const options = SDKOptionsSchema.parse(sdkOptions);
+function buildDefaultMap(options: SDKOptionsOutput) {
   return options.supportedChains.reduce((previousValue, currentValue) => {
     previousValue[currentValue.chainId] = currentValue;
     return previousValue;
@@ -88,7 +26,7 @@ export function buildDefaultMap(sdkOptions: SDKOptions = {}) {
 export function getChainProvider(
   network: ChainOrRpcUrl,
   sdkOptions: SDKOptions,
-): ethers.providers.Provider {
+): providers.Provider {
   // If we have an RPC URL, use that for the provider
   if (typeof network === "string" && isRpcUrl(network)) {
     return getProviderFromRpcUrl(network);
@@ -182,7 +120,7 @@ export function isChainConfig(network: NetworkInput): network is Chain {
  *
  * @internal
  */
-export function isRpcUrl(url: string): boolean {
+function isRpcUrl(url: string): boolean {
   const match = url.match(/^(ws|http)s?:/i);
   if (match) {
     switch (match[1].toLowerCase()) {

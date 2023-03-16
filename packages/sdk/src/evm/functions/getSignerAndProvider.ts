@@ -31,7 +31,7 @@ export function isProvider(value: any): value is providers.Provider {
  */
 export function getSignerAndProvider(
   network: NetworkInput,
-  options: SDKOptions,
+  options?: SDKOptions,
 ): [Signer | undefined, providers.Provider] {
   let signer: Signer | undefined;
   let provider: providers.Provider | undefined;
