@@ -128,22 +128,6 @@ export const Web3Button = <TAction extends ActionFn>({
     }
   }, [actionMutation, activeWallet]);
 
-  useEffect(() => {
-    let timeout: ReturnType<typeof setTimeout> | undefined;
-    if (actionMutation.isLoading) {
-      timeout = setTimeout(() => {
-        actionMutation.reset();
-        if (onError) {
-          onError(new Error("Operation timed out"));
-        }
-      }, 15000);
-    }
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [actionMutation, actionMutation.isLoading, onError, queryClient]);
-
   if (!address) {
     return <ConnectWallet theme={theme} />;
   }
