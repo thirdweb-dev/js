@@ -1,3 +1,5 @@
+export { resolveIpfsUri, resolveMimeType } from "../core/utils/ipfs";
+
 export { ThirdwebThemeContext } from "../core/providers/theme-context";
 export { ThirdwebProviderCore } from "../core/providers/thirdweb-provider";
 export type { ThirdwebProviderCoreProps } from "../core/providers/thirdweb-provider";
@@ -246,3 +248,7 @@ export type {
   ClaimTokenParams,
 } from "./types";
 export { getErcs, getErc1155, getErc721, getErc20 } from "./types";
+
+// transaction hooks
+export { useWatchTransactions } from "./hooks/useTransactions";
+export type { UseWatchTransactionsParams } from "./hooks/useTransactions";

@@ -2,7 +2,6 @@ import { resolveAddress } from "../common/ens";
 import { PREBUILT_CONTRACTS_MAP } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
 import { ContractPublisher } from "../core/classes/contract-publisher";
-import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
 import {
   ContractForPrebuiltContractType,
   NetworkInput,
@@ -11,6 +10,7 @@ import {
 import { AddressOrEns } from "../schema";
 import { SDKOptions } from "../schema/sdk-options";
 import { getContractFromAbi } from "./getContractFromAbi";
+import { getSignerAndProvider } from "./getSignerAndProvider";
 import {
   cacheContract,
   getCachedContract,
@@ -18,8 +18,8 @@ import {
   inContractCache,
 } from "./utils/cache";
 import { resolveContractType } from "./utils/contract";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ContractInterface } from "ethers";
+import type { ThirdwebStorage } from "@thirdweb-dev/storage";
+import type { ContractInterface } from "ethers";
 
 export type GetContractParams<TContractType extends PrebuiltContractType> = {
   address: AddressOrEns;

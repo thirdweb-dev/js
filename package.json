@@ -36,8 +36,8 @@
   "dependencies": {
     "@changesets/changelog-github": "^0.4.6",
     "@changesets/cli": "^2.24.3",
-    "@manypkg/cli": "^0.19.1",
-    "@manypkg/get-packages": "^1.1.3",
+    "@manypkg/cli": "^0.20.0",
+    "@manypkg/get-packages": "^2.1.0",
     "@trivago/prettier-plugin-sort-imports": "^4.0.0",
     "eslint": "^8.21.0",
     "mocha": "^10.2.0",

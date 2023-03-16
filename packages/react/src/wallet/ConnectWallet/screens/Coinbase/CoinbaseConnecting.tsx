@@ -1,4 +1,4 @@
-import { CoinbaseWalletIcon } from "../../icons/CoinbaseWalletIcon";
+import { CoinbaseWallet } from "../../../wallets";
 import { ConnectingScreen } from "../ConnectingScreen";
 
 export const CoinbaseWalletSetup: React.FC<{ onBack: () => void }> = (
@@ -8,7 +8,7 @@ export const CoinbaseWalletSetup: React.FC<{ onBack: () => void }> = (
     <ConnectingScreen
       onBack={props.onBack}
       walletName="Coinbase"
-      WalletIcon={CoinbaseWalletIcon}
+      walletIconURL={CoinbaseWallet.meta.iconURL}
       supportLink="https://help.coinbase.com/en/wallet/other-topics/troubleshooting-and-tips"
     />
   );
