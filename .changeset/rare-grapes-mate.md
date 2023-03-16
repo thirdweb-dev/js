@@ -11,8 +11,6 @@
 <code>useWatchTransactions()</code> - watch for transactions on the blockchain (real-time)
 </summary>
 
-**Example**
-
 Listen to all transactions on USD Coin (USDC) contract address.
 
 ```jsx
@@ -43,8 +41,7 @@ const MyComponent = () => {
 };
 ```
 
-> 💡 Note
->
+> **Note**
 > This hook is available in `@thirdweb-dev/react`, `@thirdweb-dev/react-native` and `@thirdweb-dev/react-core` packages.
 >
 > The examples below are from the `@thirdweb-dev/react` package, but the usage is the same in `@thirdweb-dev/react-native` and `@thirdweb-dev/react-core`.

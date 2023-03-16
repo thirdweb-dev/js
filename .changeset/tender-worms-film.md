@@ -9,8 +9,6 @@
 <code>getBlockNumber()</code> - get the latest block number for a given chain
 </summary>
 
-**Example**
-
 Get the latest block number for Ethereum.
 
 ```js
@@ -29,8 +27,6 @@ console.log("Block number", blockNumber);
 <summary>
 <code>getBlock()</code> - get a block by number or hash
 </summary>
-
-**Example**
 
 Get the latest block for Ethereum.
 
@@ -52,8 +48,6 @@ console.log("Block", block);
 <code>getBlockWithTransactions()</code> - get a block (with parsed transactions) by block number or hash
 </summary>
 
-**Example**
-
 Get the latest block for Ethereum.
 
 ```js
@@ -74,8 +68,6 @@ console.log("Transactions", blockWithTransactions.transactions);
 <summary>
 <code>watchBlockNumber()</code> - watch for new blocks (real-time)
 </summary>
-
-**Example**
 
 Watch for new blocks on Ethereum.
 
@@ -100,8 +92,6 @@ unsubscribe();
 <code>watchBlock()</code> - watch for new blocks (real-time)
 </summary>
 
-**Example**
-
 Watch for new blocks on Ethereum.
 
 ```js
@@ -124,8 +114,6 @@ unsubscribe();
 <summary>
 <code>watchBlockWithTransactions()</code> - watch for new blocks (real-time)
 </summary>
-
-**Example**
 
 Watch for new blocks on Ethereum.
 
@@ -150,8 +138,6 @@ unsubscribe();
 <summary>
 <code>watchTransactions()</code> - watch for transactions for a given address (real-time)
 </summary>
-
-**Example**
 
 Watch for transactions on USD Coin (USDC) contract address.
 
