@@ -32,4 +32,5 @@ export type SupportedWallet<
 > = {
   id: string;
   new (options: WalletOptions): X;
+  meta: (typeof AbstractBrowserWallet)["meta"];
 };

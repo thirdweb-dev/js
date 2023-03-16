@@ -115,11 +115,11 @@ export const radius = {
 };
 
 export const iconSize = {
-  xs: "12px",
-  sm: "16px",
-  md: "24px",
-  lg: "32px",
-  xl: "48px",
+  xs: "12",
+  sm: "16",
+  md: "24",
+  lg: "32",
+  xl: "48",
 };
 
 // desktop first style media query

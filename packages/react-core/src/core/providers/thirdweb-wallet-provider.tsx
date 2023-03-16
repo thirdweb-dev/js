@@ -1,6 +1,6 @@
 import { DAppMetaData } from "../types/dAppMeta";
 import { SupportedWallet, SupportedWalletInstance } from "../types/wallet";
-import { timeoutPromise } from "../utils";
+import { timeoutPromise } from "../utils/timeoutPromise";
 import { ThirdwebThemeContext } from "./theme-context";
 import { Chain } from "@thirdweb-dev/chains";
 import { AsyncStorage, CreateAsyncStorage } from "@thirdweb-dev/wallets";
