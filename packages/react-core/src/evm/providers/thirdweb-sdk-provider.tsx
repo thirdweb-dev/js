@@ -1,3 +1,4 @@
+import { DEFAULT_API_KEY } from "../../core/constants/rpc";
 import {
   QueryClientProviderProps,
   QueryClientProviderWithDefault,
@@ -64,7 +65,7 @@ const WrappedThirdwebSDKProvider = <
   activeChain,
   signer,
   children,
-  thirdwebApiKey,
+  thirdwebApiKey = DEFAULT_API_KEY,
   infuraApiKey,
   alchemyApiKey,
 }: React.PropsWithChildren<
