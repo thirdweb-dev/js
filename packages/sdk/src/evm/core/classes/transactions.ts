@@ -218,7 +218,7 @@ export class Transaction<TResult = TransactionResult> {
   }
 
   /**
-   * Set a multiple to use on the gas limit
+   * Set a multiple to multiply the gas limit by
    *
    * @example
    * ```js
