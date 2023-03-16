@@ -121,6 +121,7 @@
     "detect-browser": "^5.3.0",
     "mime": "^3.0.0",
     "react-qr-code": "^2.0.11",
+    "three": "^0.150.1",
     "tiny-invariant": "^1.2.0"
   },
   "peerDependencies": {
