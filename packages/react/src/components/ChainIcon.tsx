@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { Theme } from "../design-system";
 import styled from "@emotion/styled";
 import { Chain } from "@thirdweb-dev/chains";
@@ -31,7 +30,7 @@ export const ChainIcon: React.FC<{
             e.currentTarget.src = defaultChainIcon;
           }
         }}
-        alt={`C`}
+        alt=""
         width={props.size}
         height={props.size}
       />
