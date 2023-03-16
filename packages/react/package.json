@@ -103,7 +103,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
-    "@google/model-viewer": "^3.0.2",
+    "@google/model-viewer": "^2.1.1",
     "@radix-ui/colors": "^0.1.8",
     "@radix-ui/react-dialog": "^1.0.2",
     "@radix-ui/react-dropdown-menu": "^2.0.2",
@@ -121,7 +121,6 @@
     "detect-browser": "^5.3.0",
     "mime": "^3.0.0",
     "react-qr-code": "^2.0.11",
-    "three": "^0.150.1",
     "tiny-invariant": "^1.2.0"
   },
   "peerDependencies": {
