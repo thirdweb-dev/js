@@ -5,11 +5,12 @@ import { BsTerminal } from "react-icons/bs";
 import { LinkButton, LinkButtonProps } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
-interface IntegrateContractButtonProps extends Omit<LinkButtonProps, "href"> {}
+interface BuildAppsButtonProps extends Omit<LinkButtonProps, "href"> {}
 
-export const IntegrateContractButton: ComponentWithChildren<
-  IntegrateContractButtonProps
-> = ({ children, ...restButtonProps }) => {
+export const BuildAppsButton: ComponentWithChildren<BuildAppsButtonProps> = ({
+  children,
+  ...restButtonProps
+}) => {
   const { query } = useRouter();
   const path = useMemo(() => {
     const [network, address] = query.paths as string[];

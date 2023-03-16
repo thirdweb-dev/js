@@ -1,4 +1,4 @@
-import { IntegrateContractButton } from "./integrate-contract-button";
+import { BuildAppsButton } from "./build-apps-button";
 import { useEVMContractInfo } from "@3rdweb-sdk/react/hooks/useActiveChainId";
 import { useAddContractMutation } from "@3rdweb-sdk/react/hooks/useRegistry";
 import {
@@ -96,7 +96,7 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
   }
 
   return isAlreadyOnDashboard ? (
-    <IntegrateContractButton>Integrate Contract</IntegrateContractButton>
+    <BuildAppsButton>Build apps</BuildAppsButton>
   ) : (
     <Button
       variant="solid"

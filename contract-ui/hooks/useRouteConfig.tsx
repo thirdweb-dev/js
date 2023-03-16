@@ -110,7 +110,7 @@ export function useContractRouteConfig(
       isDefault: true,
     },
     {
-      title: "Integrations",
+      title: "Build",
       path: "code",
       component: LazyContractCodePage,
       isDefault: true,
