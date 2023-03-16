@@ -13,10 +13,9 @@ import {
   Ethereum,
 } from "../../../lib/wagmi-core";
 import { getInjectedName } from "../../utils/getInjectedName";
-import { Chain, getChainRPC } from "@thirdweb-dev/chains";
+import { Chain } from "@thirdweb-dev/chains";
 import type { Address } from "abitype";
-import { providers } from "ethers";
-import { utils } from "ethers";
+import { utils, providers } from "ethers";
 
 export type InjectedConnectorOptions = {
   /** Name of connector */
@@ -360,7 +359,7 @@ export class InjectedConnector extends Connector<
                 chainId: chainIdHex,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpcUrls: [getChainRPC(chain)],
+                rpcUrls: chain.rpc as string[],
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],

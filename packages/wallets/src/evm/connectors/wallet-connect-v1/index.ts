@@ -7,7 +7,7 @@ import {
   ProviderRpcError,
 } from "../../../lib/wagmi-core";
 import type WalletConnectProvider from "./walletconnect-legacy-provider/index";
-import { Chain, getChainRPC } from "@thirdweb-dev/chains";
+import { Chain } from "@thirdweb-dev/chains";
 import { IWalletConnectSession } from "@walletconnect/legacy-types";
 import { utils, providers } from "ethers";
 
@@ -253,7 +253,6 @@ export class WalletConnectV1Connector extends Connector<
         // configure it
         this.emit("message", { type: "add_chain" });
         const blockExplorerUrls = this.getBlockExplorerUrls(chain);
-        const rpc = getChainRPC(chain);
 
         await provider.request({
           method: "wallet_addEthereumChain",
@@ -262,7 +261,7 @@ export class WalletConnectV1Connector extends Connector<
               chainId: chainIdHex,
               chainName: chain.name,
               nativeCurrency: chain.nativeCurrency,
-              rpcUrls: [rpc],
+              rpcUrls: chain.rpc,
               blockExplorerUrls,
             },
           ],

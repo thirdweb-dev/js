@@ -12,8 +12,7 @@ import type {
   CoinbaseWalletSDK,
 } from "@coinbase/wallet-sdk";
 import type { CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/CoinbaseWalletSDK";
-import { Chain, getChainRPC } from "@thirdweb-dev/chains";
-import type { Address } from "abitype";
+import { Chain } from "@thirdweb-dev/chains";
 import { providers } from "ethers";
 import { getAddress, hexValue } from "ethers/lib/utils.js";
 
@@ -112,7 +111,7 @@ export class CoinbaseWalletConnector extends Connector<
 
   async getAccount() {
     const provider = await this.getProvider();
-    const accounts = await provider.request<Address[]>({
+    const accounts = await provider.request<string[]>({
       method: "eth_accounts",
     });
 
@@ -232,7 +231,7 @@ export class CoinbaseWalletConnector extends Connector<
                 chainId: id,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpcUrls: [getChainRPC(chain)],
+                rpcUrls: chain.rpc,
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],

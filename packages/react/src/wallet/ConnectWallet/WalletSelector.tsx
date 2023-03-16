@@ -1,6 +1,13 @@
+import { Img } from "../../components/Img";
 import { Spacer } from "../../components/Spacer";
 import { ModalTitle } from "../../components/modalElements";
-import { fontSize, radius, spacing, Theme } from "../../design-system";
+import {
+  fontSize,
+  iconSize,
+  radius,
+  spacing,
+  Theme,
+} from "../../design-system";
 import { WalletMeta } from "../types";
 import styled from "@emotion/styled";
 
@@ -29,7 +36,12 @@ export const WalletSelector: React.FC<{ walletsMeta: WalletMeta[] }> = (
                   walletMeta.onClick();
                 }}
               >
-                {walletMeta.icon}
+                <Img
+                  src={walletMeta.iconURL}
+                  width={iconSize.lg}
+                  height={iconSize.lg}
+                  loading="eager"
+                />
                 <WalletName>{walletMeta.name}</WalletName>
                 {walletMeta.installed && (
                   <InstallBadge> Installed </InstallBadge>

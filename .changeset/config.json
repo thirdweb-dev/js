@@ -9,7 +9,7 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["e2e-cra-5", "e2e-next-12", "e2e-vite-3"],
+  "ignore": ["e2e-cra-5", "e2e-next-13", "e2e-vite-3"],
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "updateInternalDependents": "always",
     "onlyUpdatePeerDependentsWhenOutOfRange": true

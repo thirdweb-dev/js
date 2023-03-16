@@ -16,7 +16,7 @@ import {
   TransactionOptionsWithContractWrapper,
 } from "../../types/transactions";
 import { GaslessTransaction, TransactionResult } from "../types";
-import { ConnectionInfo } from "@ethersproject/web";
+import type { ConnectionInfo } from "@ethersproject/web";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, CallOverrides, ethers } from "ethers";
 import invariant from "tiny-invariant";

@@ -10,7 +10,8 @@ export default {
   "rpc": [
     "https://filecoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.node.glif.io/",
-    "https://rpc.ankr.com/filecoin"
+    "https://rpc.ankr.com/filecoin",
+    "https://filecoin-mainnet.chainstacklabs.com/rpc/v1"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -40,8 +41,8 @@ export default {
       "standard": "EIP3091"
     },
     {
-      "name": "Filmine",
-      "url": "https://explorer.filmine.io",
+      "name": "Dev.storage",
+      "url": "https://dev.storage",
       "standard": "none"
     },
     {
