@@ -4,6 +4,7 @@
 "@thirdweb-dev/react-native": patch
 ---
 
+<br />
 ### New Hooks
 
 <details>
