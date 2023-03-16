@@ -227,14 +227,15 @@ export class Transaction<TResult = TransactionResult> {
    * ```
    */
   setGasLimitMultiple(factor: number) {
+    // If gasLimit override is set, we can just set it synchronously
     if (BigNumber.isBigNumber(this.overrides.gasLimit)) {
       this.overrides.gasLimit = BigNumber.from(
         Math.floor(BigNumber.from(this.overrides.gasLimit).toNumber() * factor),
       );
-      return;
+    } else {
+      // Otherwise, set a gas multiple to use later
+      this.gasMultiple = factor;
     }
-
-    this.gasMultiple = factor;
   }
 
   /**
