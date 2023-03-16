@@ -272,7 +272,7 @@
     "eip1193-provider": "^1.0.1",
     "ethers-aws-kms-signer": "^1.3.2",
     "eventemitter3": "^5.0.0",
-    "magic-sdk": "^10.1.0",
+    "magic-sdk": "^13.6.0",
     "tweetnacl": "^1.0.3"
   },
   "resolutions": {
