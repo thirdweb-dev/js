@@ -16,7 +16,6 @@ import {
   ClaimConditionInput,
   SnapshotEntryWithProof,
   fetchCurrencyValue,
-  convertToReadableQuantity,
   fetchCurrencyMetadata,
 } from "@thirdweb-dev/sdk";
 import { BigNumberish, constants, utils } from "ethers";
