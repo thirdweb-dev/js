@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-sdk-evm-functions-getSignerAndProvider.cjs.js",
+  "module": "dist/thirdweb-dev-sdk-evm-functions-getSignerAndProvider.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-sdk-evm-functions-getSignerAndProvider.esm.js": "./dist/thirdweb-dev-sdk-evm-functions-getSignerAndProvider.browser.esm.js"
+  }
+}

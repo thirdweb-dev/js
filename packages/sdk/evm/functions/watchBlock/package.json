@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-sdk-evm-functions-watchBlock.cjs.js",
+  "module": "dist/thirdweb-dev-sdk-evm-functions-watchBlock.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-sdk-evm-functions-watchBlock.esm.js": "./dist/thirdweb-dev-sdk-evm-functions-watchBlock.browser.esm.js"
+  }
+}

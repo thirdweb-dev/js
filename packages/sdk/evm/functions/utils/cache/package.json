@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-sdk-evm-functions-utils-cache.cjs.js",
+  "module": "dist/thirdweb-dev-sdk-evm-functions-utils-cache.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-sdk-evm-functions-utils-cache.esm.js": "./dist/thirdweb-dev-sdk-evm-functions-utils-cache.browser.esm.js"
+  }
+}

@@ -1,5 +1,6 @@
 import { DEFAULT_API_KEY } from "../../core/constants/urls";
 import { ChainOrRpcUrl, NetworkInput } from "../core";
+import { isProvider, isSigner } from "../functions/getSignerAndProvider";
 import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
 import {
   ChainInfo,
@@ -9,7 +10,8 @@ import {
 } from "../schema";
 import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
 import { getChainRPC, Chain } from "@thirdweb-dev/chains";
-import { ethers, providers } from "ethers";
+import type { ethers } from "ethers";
+import { providers } from "ethers";
 
 /**
  * @internal
@@ -167,8 +169,8 @@ export function isChainConfig(network: NetworkInput): network is Chain {
   return (
     typeof network !== "string" &&
     typeof network !== "number" &&
-    !ethers.Signer.isSigner(network) &&
-    !ethers.providers.Provider.isProvider(network)
+    !isSigner(network) &&
+    !isProvider(network)
   );
 }
 
@@ -247,5 +249,5 @@ export function getProviderFromRpcUrl(rpcUrl: string, chainId?: number) {
   }
 
   // Always fallback to the default provider if no other option worked
-  return ethers.getDefaultProvider(rpcUrl);
+  return providers.getDefaultProvider(rpcUrl);
 }

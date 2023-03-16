@@ -53,6 +53,8 @@ export class StaticJsonRpcBatchProvider extends providers.StaticJsonRpcProvider 
       provider: this,
     });
 
+    console.log("*** sendCurrentBatch() request_:", request_);
+
     return utils.fetchJson(this.connection, JSON.stringify(request_)).then(
       (result) => {
         this.emit("debug", {
