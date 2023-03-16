@@ -218,15 +218,15 @@ export class Transaction<TResult = TransactionResult> {
   }
 
   /**
-   * Multiply the gas limit by a factor
+   * Set a multiple to use on the gas limit
    *
    * @example
    * ```js
-   * // Multiple by a factor of 1.2 (increase by 20%)
-   * await tx.multiplyGasLimit(1.2)
+   * // Set the gas limit multiple to 1.2 (increase by 20%)
+   * tx.setGasLimitMultiple(1.2)
    * ```
    */
-  multiplyGasLimit(factor: number) {
+  setGasLimitMultiple(factor: number) {
     if (BigNumber.isBigNumber(this.overrides.gasLimit)) {
       this.overrides.gasLimit = BigNumber.from(
         Math.floor(BigNumber.from(this.overrides.gasLimit).toNumber() * factor),
