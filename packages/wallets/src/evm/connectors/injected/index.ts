@@ -15,8 +15,7 @@ import {
 import { getInjectedName } from "../../utils/getInjectedName";
 import { Chain, getChainRPC } from "@thirdweb-dev/chains";
 import type { Address } from "abitype";
-import { providers } from "ethers";
-import { utils } from "ethers";
+import { utils, providers } from "ethers";
 
 export type InjectedConnectorOptions = {
   /** Name of connector */

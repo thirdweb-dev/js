@@ -34,6 +34,11 @@ export default {
       "name": "Filscout - Calibration",
       "url": "https://calibration.filscout.com/en",
       "standard": "none"
+    },
+    {
+      "name": "Filfox - Calibration",
+      "url": "https://calibration.filfox.info",
+      "standard": "none"
     }
   ],
   "testnet": true,
