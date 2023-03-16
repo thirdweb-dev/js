@@ -3342,13 +3342,12 @@
   dependencies:
     semver "^7.3.7"
 
-"@google/model-viewer@^2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@google/model-viewer/-/model-viewer-2.1.1.tgz#37c51143740c07c592d5cccbc8cfaa8be8b7ef82"
-  integrity sha512-5umyLoD5vMxlSVQwtmUXeNCNWs9dzmWykGm1qrHe/pCYrj/1lyJIgJRw+IxoMNodGqtcHEtfDhdNjRDM9yo/TA==
+"@google/model-viewer@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@google/model-viewer/-/model-viewer-3.0.2.tgz#3423887c3fc1fae942ed877d2e1f5d901afa727d"
+  integrity sha512-kPeb90f6+KCnqQz2NjARmrRjiFLsXuVhfLhyFbb3U7dUzQyB4k0OYIwlF49hb9CPSXq8oH/fn7KOggVBJ/YGpg==
   dependencies:
     lit "^2.2.3"
-    three "^0.146.0"
 
 "@graphql-typed-document-node/core@^3.1.0":
   version "3.1.2"
@@ -23700,11 +23699,6 @@ thread-stream@^0.15.1:
   integrity sha512-UkEhKIg2pD+fjkHQKyJO3yoIvAP3N6RlNFt2dUhcS1FGvCD1cQa1M/PGknCLFIyZdtJOWQjejp7bdNqmN7zwdA==
   dependencies:
     real-require "^0.1.0"
-
-three@^0.146.0:
-  version "0.146.0"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.146.0.tgz#fd80f0d128ab4bb821a02191ae241e4e6326f17a"
-  integrity sha512-1lvNfLezN6OJ9NaFAhfX4sm5e9YCzHtaRgZ1+B4C+Hv6TibRMsuBAM5/wVKzxjpYIlMymvgsHEFrrigEfXnb2A==
 
 throat@^5.0.0:
   version "5.0.0"
