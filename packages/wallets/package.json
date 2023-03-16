@@ -243,7 +243,7 @@
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.256.0",
     "@paperxyz/embedded-wallet-service-sdk": "^0.0.19",
-    "@walletconnect/ethereum-provider": "^2.4.6",
+    "@walletconnect/ethereum-provider": "~2.4.6",
     "@walletconnect/jsonrpc-http-connection": "^1.0.0",
     "@walletconnect/jsonrpc-provider": "^1.0.3",
     "@walletconnect/jsonrpc-types": "^1.0.1",
@@ -259,7 +259,7 @@
     "tweetnacl": "^1.0.3"
   },
   "resolutions": {
-    "@walletconnect/ethereum-provider": "^2.4.6"
+    "@walletconnect/ethereum-provider": "~2.4.6"
   },
   "peerDependencies": {
     "@coinbase/wallet-sdk": "^3.6.3",
