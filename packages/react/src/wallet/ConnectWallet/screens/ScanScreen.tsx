@@ -1,3 +1,4 @@
+import { Img } from "../../../components/Img";
 import { QRCode } from "../../../components/QRCode";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
@@ -8,7 +9,6 @@ import {
 } from "../../../components/modalElements";
 import { fontSize, iconSize, spacing } from "../../../design-system";
 import { Theme } from "../../../design-system/index";
-import { IconFC } from "../icons/types";
 import styled from "@emotion/styled";
 
 export const ScanScreen: React.FC<{
@@ -16,9 +16,8 @@ export const ScanScreen: React.FC<{
   onGetStarted: () => void;
   qrCodeUri?: string;
   walletName: string;
-  WalletIcon: IconFC;
+  walletIconURL: string;
 }> = (props) => {
-  const { WalletIcon } = props;
   return (
     <>
       <BackButton
@@ -37,7 +36,13 @@ export const ScanScreen: React.FC<{
       >
         <QRCode
           qrCodeUri={props.qrCodeUri}
-          QRIcon={<WalletIcon size={iconSize.lg} />}
+          QRIcon={
+            <Img
+              width={iconSize.lg}
+              height={iconSize.lg}
+              src={props.walletIconURL}
+            />
+          }
         />
 
         <Spacer y="xl" />
