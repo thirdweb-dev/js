@@ -225,14 +225,20 @@ export class Transaction<TResult = TransactionResult> {
 
   /**
    * Multiply the gas limit by a factor
+   *
+   * @example
+   * ```js
+   * // Multiple by a factor of 1.2 (increase by 20%)
+   * await tx.multiplyGasLimit(1.2)
+   * ```
    */
   async multiplyGasLimit(factor: number) {
     if (!this.overrides.gasLimit) {
       this.overrides.gasLimit = await this.estimateGasLimit();
     }
 
-    this.overrides.gasLimit = BigNumber.from(this.overrides.gasLimit).mul(
-      BigNumber.from(Math.floor(factor)),
+    this.overrides.gasLimit = BigNumber.from(
+      Math.floor(BigNumber.from(this.overrides.gasLimit).toNumber() * factor),
     );
   }
 
