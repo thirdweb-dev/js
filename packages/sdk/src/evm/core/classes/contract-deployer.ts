@@ -946,12 +946,14 @@ export class ContractDeployer extends RPCConnectionHandler {
     switch (contractType) {
       case MarketplaceInitializer.contractType:
       case MultiwrapInitializer.contractType:
-        const nativeTokenWrapperAddress = getNativeTokenByChainId(
-          ChainId.Hardhat,
-        ).wrapped.address;
+        const nativeTokenWrapperAddress =
+          getNativeTokenByChainId(chainId)?.wrapped?.address ||
+          ethers.constants.AddressZero;
         return [nativeTokenWrapperAddress];
       case PackInitializer.contractType:
-        const addr = getNativeTokenByChainId(chainId).wrapped.address;
+        const addr =
+          getNativeTokenByChainId(chainId).wrapped.address ||
+          ethers.constants.AddressZero;
         return [addr, ethers.constants.AddressZero];
       default:
         return [];

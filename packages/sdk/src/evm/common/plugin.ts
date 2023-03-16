@@ -9,6 +9,7 @@ import { fetchContractMetadataFromAddress } from "./metadata-resolver";
 import { unique } from "./utils";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
+import { Interface } from "ethers/lib/utils.js";
 
 /**
  * @internal
@@ -69,6 +70,18 @@ export async function getCompositePluginABI(
   } catch (err) {}
 
   return pluginABIs.length > 0 ? joinABIs([abi, ...pluginABIs]) : abi;
+}
+
+export function isRouterContract(abi: Abi) {
+  const isPluginRouter: boolean = isFeatureEnabled(
+    AbiSchema.parse(abi),
+    "PluginRouter",
+  );
+  const isExtensionRouter: boolean = isFeatureEnabled(
+    AbiSchema.parse(abi),
+    "ExtensionRouter",
+  );
+  return isExtensionRouter || isPluginRouter;
 }
 
 /**
