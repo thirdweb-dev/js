@@ -91,7 +91,7 @@ export default async function handler(req: NextRequest) {
 
   const iconUrl = chain.icon?.url.replace(
     "ipfs://",
-    "https://gateway.ipfscdn.io/ipfs/",
+    "https://ipfs.thirdwebcdn.com/ipfs/",
   );
 
   const [inter400, inter500, inter700] = await Promise.all([

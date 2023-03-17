@@ -11,7 +11,7 @@ interface NetworkMetadata {
   iconSizes?: readonly number[];
 }
 
-const defaultIcon = `https://gateway.ipfscdn.io/ipfs/QmNTemZCjCGyN8x9vFQFyAHVeZc9QZu4nCiSANNaZX5Buq/unknown-logo.png`;
+const defaultIcon = `https://ipfs.thirdwebcdn.com/ipfs/QmNTemZCjCGyN8x9vFQFyAHVeZc9QZu4nCiSANNaZX5Buq/unknown-logo.png`;
 
 export function useWeb3() {
   const configuredChainsRecord = useConfiguredChainsRecord();
