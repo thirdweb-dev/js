@@ -12,19 +12,19 @@ async function script() {
   console.log("\x1b[34m%s\x1b[0m", "Creating Symlinks");
   await execute([
     "cd packages/react",
-    "pnpm link",
+    "yarn link",
     "cd ../react-core",
-    "pnpm link",
+    "yarn link",
     "cd ../wallets",
-    "pnpm link",
+    "yarn link",
     "cd ../..",
   ]);
 
   // use react-core and wallets link in react package
   await execute([
     "cd packages/react",
-    "pnpm link @thirdweb-dev/react-core",
-    "pnpm link @thirdweb-dev/wallets",
+    "yarn link @thirdweb-dev/react-core",
+    "yarn link @thirdweb-dev/wallets",
     "cd ../..",
   ]);
 
@@ -36,8 +36,8 @@ async function script() {
     "\x1b[33m%s\x1b[0m",
     "Run Below Commands to use Hotlinked pacakges in your project:\n",
   );
-  console.log("\x1b[33m%s\x1b[0m", "pnpm link @thirdweb-dev/react");
-  console.log("\x1b[33m%s\x1b[0m", "pnpm --force");
+  console.log("\x1b[33m%s\x1b[0m", "yarn link @thirdweb-dev/react");
+  console.log("\x1b[33m%s\x1b[0m", "yarn --force");
   console.log("\n");
 
   console.log(
@@ -76,7 +76,7 @@ const nextConfig = {
   // how to revert
   console.log(
     "\x1b[35m%s\x1b[0m",
-    "Run `pnpm hotlink-revert` to revert hot-linking\n",
+    "Run `yarn hotlink-revert` to revert hot-linking\n",
   );
 
   // clear cache notice

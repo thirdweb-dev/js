@@ -31,7 +31,7 @@ export interface ThirdwebSDKProviderProps<
   TChains extends Chain[] = typeof defaultChains,
 > extends QueryClientProviderProps {
   // the chains that we want to configure - optional, defaults to defaultChains
-  supportedChains: Readonly<TChains>;
+  supportedChains?: Readonly<TChains>;
   // a possible signer - optional, defaults to undefined
   signer?: Signer;
 

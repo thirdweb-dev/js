@@ -12,11 +12,11 @@ async function script() {
   console.log("\x1b[34m%s\x1b[0m", "Removing Symlinks");
   await execute([
     "cd packages/react",
-    "pnpm unlink",
+    "yarn unlink",
     "cd ../react-core",
-    "pnpm unlink",
+    "yarn unlink",
     "cd ../wallets",
-    "pnpm unlink",
+    "yarn unlink",
     "cd ../..",
   ]);
 

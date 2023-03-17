@@ -4,33 +4,21 @@
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
-  "main": "dist/thirdweb-dev-react.cjs.js",
-  "types": "dist/thirdweb-dev-react.cjs.d.ts",
+  "main": "./src/index.ts",
+  "types": "",
   "module": "dist/thirdweb-dev-react.esm.js",
   "browser": {
     "./dist/thirdweb-dev-react.esm.js": "./dist/thirdweb-dev-react.browser.esm.js"
   },
   "exports": {
     ".": {
-      "module": {
-        "browser": "./dist/thirdweb-dev-react.browser.esm.js",
-        "default": "./dist/thirdweb-dev-react.esm.js"
-      },
-      "default": "./dist/thirdweb-dev-react.cjs.js"
+      "module": "./src/index.ts"
     },
     "./evm": {
-      "module": {
-        "browser": "./evm/dist/thirdweb-dev-react-evm.browser.esm.js",
-        "default": "./evm/dist/thirdweb-dev-react-evm.esm.js"
-      },
-      "default": "./evm/dist/thirdweb-dev-react-evm.cjs.js"
+      "module": "./src/evm/index.ts"
     },
     "./solana": {
-      "module": {
-        "browser": "./solana/dist/thirdweb-dev-react-solana.browser.esm.js",
-        "default": "./solana/dist/thirdweb-dev-react-solana.esm.js"
-      },
-      "default": "./solana/dist/thirdweb-dev-react-solana.cjs.js"
+      "module": "./src/solana/index.ts"
     },
     "./package.json": "./package.json"
   },
@@ -154,5 +142,19 @@
     "@solana/web3.js": {
       "optional": true
     }
-  }
+  },
+  "_main": "./src/index.ts",
+  "_exports": {
+    ".": {
+      "module": "./src/index.ts"
+    },
+    "./evm": {
+      "module": "./src/evm/index.ts"
+    },
+    "./solana": {
+      "module": "./src/solana/index.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "_types": ""
 }
