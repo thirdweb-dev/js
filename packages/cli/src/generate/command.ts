@@ -52,17 +52,29 @@ export async function generate(options: GenerateOptions) {
 
   // Attempt to download the ABI for the contract
   const storage = new ThirdwebStorage();
-  const metadata = await Promise.all(
+  const metadata: {
+    address: string;
+    metadata: Awaited<ReturnType<typeof fetchContractMetadataFromAddress>>;
+  }[] = [];
+  await Promise.all(
     contracts.map(async (contract) => {
       const provider = getChainProvider(contract.chainId, {}); // Handles caching providers by chain for us
-      return {
-        address: contract.address,
-        metadata: await fetchContractMetadataFromAddress(
+      let contractMetadata;
+      try {
+        contractMetadata = await fetchContractMetadataFromAddress(
           contract.address,
           provider,
           storage,
-        ),
-      };
+        );
+      } catch {
+        // If metadata for a contract fails, just go onto the next one
+        return;
+      }
+
+      metadata.push({
+        address: contract.address,
+        metadata: contractMetadata,
+      });
     }),
   );
 
@@ -75,9 +87,7 @@ export async function generate(options: GenerateOptions) {
   }
 
   const filePaths = [
-    `${packagePath}/thirdweb-dev-generated-abis.cjs.dev.js`,
-    `${packagePath}/thirdweb-dev-generated-abis.cjs.prod.js`,
-    `${packagePath}/thirdweb-dev-generated-abis.browser.esm.js`,
+    `${packagePath}/thirdweb-dev-generated-abis.cjs.js`,
     `${packagePath}/thirdweb-dev-generated-abis.esm.js`,
   ];
 
