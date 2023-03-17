@@ -23,7 +23,7 @@ We use [Turborepo](https://turborepo.org/docs/getting-started) to manage the mon
 You can see a quick outline of each of the projects within this repo below, each living within the [/packages](/packages) directory:
 
 | Package                        | Description                                                          | Latest Version                                                                                                                                                                   |
-|--------------------------------|----------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------------------------ | -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [/sdk](./packages/sdk)         | Best in class web3 SDK for Browser, Node and Mobile apps             | <a href="https://www.npmjs.com/package/@thirdweb-dev/sdk"><img src="https://img.shields.io/npm/v/@thirdweb-dev/sdk?color=red&label=npm&logo=npm" alt="npm version"/></a>         |
 | [/react](./packages/react)     | Ultimate collection of React hooks for your web3 apps                | <a href="https://www.npmjs.com/package/@thirdweb-dev/react"><img src="https://img.shields.io/npm/v/@thirdweb-dev/react?color=red&label=npm&logo=npm" alt="npm version"/></a>     |
 | [/auth](./packages/auth)       | Best in class wallet authentication for Node backends                | <a href="https://www.npmjs.com/package/@thirdweb-dev/auth"><img src="https://img.shields.io/npm/v/@thirdweb-dev/auth?color=red&label=npm&logo=npm" alt="npm version"/></a>       |
@@ -35,7 +35,7 @@ You can see a quick outline of each of the projects within this repo below, each
 
 Let's explore how you can set up the repo on your local machine and start contributing!
 
-This section requires some existing knowledge of [Git](https://git-scm.com/), [Node.js](https://nodejs.org/en/) and [Yarn](https://yarnpkg.com/).
+This section requires some existing knowledge of [Git](https://git-scm.com/), [Node.js](https://nodejs.org/en/) and [pnpm](https://pnpm.io/).
 
 <br/>
 
@@ -57,7 +57,7 @@ To begin:
 
 4. Install the dependencies:
    ```
-   yarn
+   pnpm install
    ```
 
 Now you have got the repo on your local machine, and you're ready to start making your changes!
@@ -69,7 +69,7 @@ We use [yalc](https://github.com/wclr/yalc) to test changes locally.
 Install the yalc CLI globally:
 
 ```bash
-yarn global add yalc
+pnpm add yalc -g
 ```
 
 First, create a test project where you can experiment with your changes:
@@ -91,10 +91,10 @@ yalc add @thirdweb-dev/sdk # Link the sdk package
 From the monorepo, run the following command to publish your local changes to the test project:
 
 ```bash
-yarn push
+pnpm push
 ```
 
-Now, each time you make a change to the monorepo, you can run `yarn push` to publish your changes to the test project.
+Now, each time you make a change to the monorepo, you can run `pnpm push` to publish your changes to the test project.
 
 In your test project, you need to:
 
@@ -110,7 +110,7 @@ Once you're satisfied with your changes, you are ready to submit them for review
 1. Use [changeset](https://github.com/changesets/changesets) to generate a changeset file:
 
 ```
-yarn changeset
+pnpm changeset
 ```
 
 We follow [semantic versioning](https://semver.org/) for generating versioned releases of our packages (i.e. version = `MAJOR.MINOR.PATCH`)

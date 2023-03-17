@@ -1,11 +1,12 @@
-import { iconSize } from "../design-system";
-import { keyframes } from "@emotion/react";
+import { iconSize, Theme } from "../design-system";
+import { keyframes, useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 
 export const Spinner: React.FC<{
-  color: string;
+  color: keyof Theme["icon"];
   size: keyof typeof iconSize;
 }> = (props) => {
+  const theme = useTheme() as Theme;
   return (
     <Svg
       style={{
@@ -19,7 +20,7 @@ export const Spinner: React.FC<{
         cy="25"
         r="20"
         fill="none"
-        stroke={props.color || "white"}
+        stroke={theme.icon[props.color || "primary"]}
         strokeWidth="4"
       />
     </Svg>

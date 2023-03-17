@@ -26,7 +26,6 @@ export default {
     {
       "name": "explorer",
       "url": "https://explorer.idchain.one",
-      "icon": "etherscan",
       "standard": "EIP3091"
     }
   ],

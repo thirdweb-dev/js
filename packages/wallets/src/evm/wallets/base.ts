@@ -15,6 +15,11 @@ export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   dappMetadata: DAppMetaData;
 } & TOpts;
 
+export type WalletMeta = {
+  name: string;
+  iconURL: string;
+};
+
 export abstract class AbstractBrowserWallet<
   TAdditionalOpts extends Record<string, any> = {},
   TConnectParams extends Record<string, any> = {},
@@ -24,6 +29,10 @@ export abstract class AbstractBrowserWallet<
   protected walletStorage;
   protected chains;
   protected options: WalletOptions<TAdditionalOpts>;
+  static meta: WalletMeta;
+  getMeta() {
+    return (this.constructor as typeof AbstractBrowserWallet).meta;
+  }
 
   constructor(walletId: string, options: WalletOptions<TAdditionalOpts>) {
     super();
@@ -96,6 +105,12 @@ export abstract class AbstractBrowserWallet<
       const address = await connector.getAddress();
       connector.setupListeners();
       await saveToStorage();
+
+      // ensure that connector is connected to the correct chain
+      if (connectOptions?.chainId) {
+        await connector.switchChain(connectOptions?.chainId);
+      }
+
       return address;
     } else {
       const address = await connector.connect(connectOptions);

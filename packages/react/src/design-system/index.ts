@@ -21,12 +21,15 @@ export const darkTheme = {
     neutral: mauveDark.mauve12,
     inverted: mauveDark.mauve1,
     secondary: mauveDark.mauve9,
+    danger: tomato.tomato9,
   },
   icon: {
     secondary: mauveDark.mauve11,
     primary: mauveDark.mauve12,
+    inverted: mauveDark.mauve1,
     danger: tomato.tomato9,
     success: green.green7,
+    link: blue.blue9,
   },
   link: {
     primary: blue.blue9,
@@ -61,12 +64,15 @@ export const lightTheme: typeof darkTheme = {
     neutral: mauve.mauve12,
     inverted: mauve.mauve1,
     secondary: mauve.mauve10,
+    danger: tomato.tomato9,
   },
   icon: {
     secondary: mauve.mauve10,
     primary: mauve.mauve12,
+    inverted: mauve.mauve1,
     danger: tomato.tomato9,
     success: green.green9,
+    link: blue.blue11,
   },
   link: {
     primary: blue.blue11,
@@ -109,10 +115,11 @@ export const radius = {
 };
 
 export const iconSize = {
-  sm: "16px",
-  md: "24px",
-  lg: "32px",
-  xl: "48px",
+  xs: "12",
+  sm: "16",
+  md: "24",
+  lg: "32",
+  xl: "48",
 };
 
 // desktop first style media query

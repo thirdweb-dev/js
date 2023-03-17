@@ -25,19 +25,21 @@
     "@walletconnect/react-native-compat": "^2.3.3",
     "base-64": "^1.0.0",
     "big-integer": "^1.6.51",
-    "events": "3.3.0",
     "react-native-get-random-values": "^1.8.0"
   },
   "peerDependencies": {
-    "ethers": ">=5.5.1",
-    "react": ">=18.0.0",
+    "ethers": "^5.5.1",
+    "react": "^18.0.0",
     "react-native": ">=0.70.0"
   },
   "devDependencies": {
+    "@thirdweb-dev/tsconfig": "workspace:*",
+    "@types/node": "^18.0.0",
     "babel-plugin-module-resolver": "^5.0.0",
+    "eslint-config-thirdweb": "workspace:*",
     "ethers": "^5.7.2",
     "react": "^18.2.0",
     "react-native": "^0.71.0",
-    "wagmi": "^0.11.0"
+    "typescript": "^4.7.4"
   }
 }

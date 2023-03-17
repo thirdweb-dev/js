@@ -1,15 +1,10 @@
 import { Modal } from "../../components/Modal";
 import { Spinner } from "../../components/Spinner";
 import { Button } from "../../components/buttons";
-import { iconSize, Theme } from "../../design-system";
 import { isMobile } from "../../evm/utils/isMobile";
 import { useInstalledWallets } from "../hooks/useInstalledWallets";
 import { WalletMeta } from "../types";
 import { WalletSelector } from "./WalletSelector";
-import { CoinbaseWalletIcon } from "./icons/CoinbaseWalletIcon";
-import { DeviceWalletIcon } from "./icons/DeviceWalletIcon";
-import { MetamaskIcon } from "./icons/MetamaskIcon";
-import { WalletConnectIcon } from "./icons/WalletConnectIcon";
 import { CoinbaseWalletSetup } from "./screens/Coinbase/CoinbaseConnecting";
 import { CoinbaseGetStarted } from "./screens/Coinbase/CoinbaseGetStarted";
 import { ScanCoinbase } from "./screens/Coinbase/CoinbaseScan";
@@ -17,23 +12,12 @@ import { ConnectToDeviceWallet } from "./screens/DeviceWallet/DeviceWalletSetup"
 import { MetamaskConnecting } from "./screens/Metamask/MetamaskConnecting";
 import { MetamaskGetStarted } from "./screens/Metamask/MetamaskGetStarted";
 import { ScanMetamask } from "./screens/Metamask/MetamaskScan";
-import { useTheme } from "@emotion/react";
 import {
-  SupportedWallet,
   useConnect,
   useConnectionStatus,
   useWallets,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
-
-const walletIcons: Record<SupportedWallet["id"], JSX.Element> = {
-  metamask: <MetamaskIcon size={iconSize.lg} />,
-  deviceWallet: <DeviceWalletIcon size={iconSize.lg} />,
-  coinbaseWallet: <CoinbaseWalletIcon size={iconSize.lg} />,
-  walletConnect: <WalletConnectIcon size={iconSize.lg} />,
-  walletConnectV1: <WalletConnectIcon size={iconSize.lg} />,
-  // coinbaseWalletMobile: <></>,
-};
 
 type Screen =
   | "deviceWallet/connect"
@@ -44,15 +28,6 @@ type Screen =
   | "metamask/scan"
   | "metamask/get-started"
   | "coinbase/get-started";
-
-const walletNames: Record<SupportedWallet["id"], string> = {
-  metamask: "Metamask",
-  deviceWallet: "Device Wallet",
-  coinbaseWallet: "Coinbase Wallet",
-  walletConnect: "Wallet Connect V2",
-  walletConnectV1: "Wallet Connect V1",
-  // coinbaseWalletMobile: "",
-};
 
 export const ConnectWalletFlow: React.FC<{
   btnClass?: string;
@@ -76,8 +51,8 @@ export const ConnectWalletFlow: React.FC<{
 
   const walletsMeta: WalletMeta[] = wallets.map((wallet) => ({
     id: wallet.id,
-    name: walletNames[wallet.id],
-    icon: walletIcons[wallet.id],
+    name: wallet.meta.name,
+    iconURL: wallet.meta.iconURL,
     installed: installedWallets[wallet.id],
     onClick: async () => {
       // Device Wallet
@@ -135,8 +110,6 @@ export const ConnectWalletFlow: React.FC<{
 
   const handleBack = () => setShowScreen("walletList");
 
-  const theme = useTheme() as Theme;
-
   return (
     <Modal
       style={{
@@ -158,7 +131,7 @@ export const ConnectWalletFlow: React.FC<{
         >
           {connectionStatus === "connecting" ||
           connectionStatus === "unknown" ? (
-            <Spinner size="sm" color={theme.text.inverted} />
+            <Spinner size="sm" color="inverted" />
           ) : (
             btnTitle
           )}

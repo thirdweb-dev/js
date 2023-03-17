@@ -14,28 +14,29 @@ import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useAddress, useChainId } from "../wallet";
 import {
   useMutation,
+  UseMutationResult,
   useQuery,
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
-import {
+import type {
+  Abi,
   CommonContractSchemaInput,
   ContractEvent,
   ContractForPrebuiltContractType,
   ContractType,
   EventQueryOptions,
   PrebuiltContractType,
+  SmartContract,
   SUPPORTED_CHAIN_ID,
   ThirdwebSDK,
   ValidContractInstance,
 } from "@thirdweb-dev/sdk";
-import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/smart-contract";
-import { CallOverrides, ContractInterface } from "ethers";
+import type { CallOverrides, ContractInterface, providers } from "ethers";
 import { useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";
 
 // contract type
-
 async function fetchContractType(
   contractAddress: RequiredParam<ContractAddress>,
   sdk: RequiredParam<ThirdwebSDK>,
@@ -84,12 +85,19 @@ export const contractType = {
 
 // end contract type
 
-// contract compiler metadata
+type FetchCompilerMetadataReturnType = {
+  name: string;
+  metadata: Record<string, any>;
+  abi: Abi;
+  info: Record<string, any>;
+  licenses: string[];
+};
 
+// contract compiler metadata
 function fetchCompilerMetadata(
   contractAddress: RequiredParam<ContractAddress>,
   sdk: RequiredParam<ThirdwebSDK>,
-) {
+): Promise<FetchCompilerMetadataReturnType> | null {
   if (!contractAddress || !sdk) {
     return null;
   }
@@ -103,7 +111,7 @@ function fetchCompilerMetadata(
 
 export function useCompilerMetadata(
   contractAddress: RequiredParam<ContractAddress>,
-) {
+): UseQueryResult<FetchCompilerMetadataReturnType | null> {
   const sdk = useSDK();
 
   return useQueryWithNetwork(
@@ -339,7 +347,21 @@ export function useContractMetadata<TContract extends ValidContractInstance>(
  */
 export function useContractMetadataUpdate(
   contract: RequiredParam<ValidContractInstance>,
-) {
+): UseMutationResult<
+  {
+    receipt: providers.TransactionReceipt;
+    data: () => Promise<any>;
+  },
+  unknown,
+  {
+    name: string;
+    description?: string | undefined;
+    image?: any;
+    external_link?: string | undefined;
+    app_uri?: string | undefined;
+  },
+  unknown
+> {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();

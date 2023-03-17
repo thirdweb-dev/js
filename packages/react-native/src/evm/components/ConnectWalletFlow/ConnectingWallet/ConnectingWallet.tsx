@@ -3,7 +3,7 @@ import { WalletMeta } from "../../../types/wallets";
 import Text from "../../base/Text";
 import { ModalFooter } from "../../base/modal/ModalFooter";
 import { ConnectWalletHeader } from "./ConnectingWalletHeader";
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { ActivityIndicator, Linking, StyleSheet, View } from "react-native";
 
 export type ConnectingWalletProps = {

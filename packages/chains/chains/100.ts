@@ -35,7 +35,6 @@ export default {
     {
       "name": "gnosisscan",
       "url": "https://gnosisscan.io",
-      "icon": "gnosisscan",
       "standard": "EIP3091"
     },
     {

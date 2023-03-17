@@ -6,7 +6,7 @@ import { TWModal } from "../base/modal/TWModal";
 import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
 import { useConnect, useWallets } from "@thirdweb-dev/react-core";
-import React, { useState } from "react";
+import { useState } from "react";
 import { StyleSheet } from "react-native";
 import invariant from "tiny-invariant";
 
