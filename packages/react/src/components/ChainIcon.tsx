@@ -1,9 +1,11 @@
 import { Theme } from "../design-system";
 import styled from "@emotion/styled";
 import { Chain } from "@thirdweb-dev/chains";
+import { resolveIpfsUri } from "@thirdweb-dev/react-core";
 
-const defaultChainIcon =
-  "https://ipfs.thirdwebcdn.com/ipfs/QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png";
+const defaultChainIcon = resolveIpfsUri(
+  "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
+);
 
 export const ChainIcon: React.FC<{
   chain?: Chain;
@@ -11,9 +13,7 @@ export const ChainIcon: React.FC<{
   active?: boolean;
 }> = (props) => {
   const url = props.chain?.icon?.url;
-  const src = url
-    ? `https://ipfs.thirdwebcdn.com/pfs/${url.replace("ipfs://", "")}`
-    : defaultChainIcon;
+  const src = url ? resolveIpfsUri(url) : defaultChainIcon;
 
   return (
     <div
@@ -26,7 +26,7 @@ export const ChainIcon: React.FC<{
       <img
         src={src || defaultChainIcon}
         onError={(e) => {
-          if (e.currentTarget.src !== defaultChainIcon) {
+          if (defaultChainIcon && e.currentTarget.src !== defaultChainIcon) {
             e.currentTarget.src = defaultChainIcon;
           }
         }}

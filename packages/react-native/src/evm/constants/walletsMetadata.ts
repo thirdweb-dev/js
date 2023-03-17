@@ -37,7 +37,7 @@ export const walletsMetadata = {
     name: "Coinbase Wallet",
     versions: ["custom"],
     image_url:
-      "https://ipfs.thirdwebcdn.com/ipfs/QmRz8mF7sW7sXJ4oLhWhYDcouwB2zGzvdfJCtVmdkTUWma/18060234.png",
+      "ipfs://QmRz8mF7sW7sXJ4oLhWhYDcouwB2zGzvdfJCtVmdkTUWma/18060234.png",
     mobile: {
       native: "",
       universal: "",

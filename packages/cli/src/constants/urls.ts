@@ -1,7 +1,7 @@
 /**
  * @internal
  */
-export const DEFAULT_IPFS_GATEWAY = "https://ipfs.thirdwebcdn.com/";
+export const DEFAULT_IPFS_GATEWAY = "https://ipfs.thirdwebcdn.com/ipfs/";
 
 /**
  * @internal

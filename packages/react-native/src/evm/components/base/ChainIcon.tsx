@@ -1,9 +1,11 @@
 import { ActiveDot } from "./ActiveDot";
+import { resolveIpfsUri } from "@thirdweb-dev/react-core";
 import React from "react";
 import { Image, StyleSheet, View } from "react-native";
 
-const defaultChainIcon =
-  "https://ipfs.thirdwebcdn.com/ipfs/QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png";
+const defaultChainIcon = resolveIpfsUri(
+  "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
+);
 
 export type ChainIconProps = {
   chainIconUrl?: string;
@@ -12,9 +14,7 @@ export type ChainIconProps = {
 };
 
 export const ChainIcon = ({ chainIconUrl, size, active }: ChainIconProps) => {
-  const src = chainIconUrl
-    ? `https://ipfs.thirdwebcdn.com/ipfs/${chainIconUrl.replace("ipfs://", "")}`
-    : defaultChainIcon;
+  const src = chainIconUrl ? resolveIpfsUri(chainIconUrl) : defaultChainIcon;
 
   return (
     <View style={styles.container}>

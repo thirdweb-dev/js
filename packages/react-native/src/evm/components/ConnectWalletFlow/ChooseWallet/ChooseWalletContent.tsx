@@ -1,6 +1,7 @@
 import { WalletMeta } from "../../../types/wallets";
 import BaseButton from "../../base/BaseButton";
 import Text from "../../base/Text";
+import { resolveIpfsUri } from "@thirdweb-dev/react-core";
 import React from "react";
 import { StyleSheet, View, FlatList, Image } from "react-native";
 
@@ -30,7 +31,7 @@ export const ChooseWalletContent = ({
               <Image
                 alt="wallet logo"
                 style={styles.walletImage}
-                source={{ uri: item.image_url }}
+                source={{ uri: resolveIpfsUri(item.image_url) }}
               />
               <Text variant="bodyLarge">{item.name}</Text>
             </BaseButton>
