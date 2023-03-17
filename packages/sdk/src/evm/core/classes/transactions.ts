@@ -4,6 +4,7 @@ import {
   fetchContractMetadataFromAddress,
   fetchSourceFilesFromMetadata,
 } from "../../common/metadata-resolver";
+import { isRouterContract } from "../../common/plugin";
 import { defaultGaslessSendFunction } from "../../common/transactions";
 import { isBrowser } from "../../common/utils";
 import { ChainId } from "../../constants/chains";
@@ -19,6 +20,7 @@ import { GaslessTransaction, TransactionResult } from "../types";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { CallOverrides, ethers } from "ethers";
 import { BigNumber, utils, Contract } from "ethers";
+import { FormatTypes } from "ethers/lib/utils.js";
 import type { ConnectionInfo } from "ethers/lib/utils.js";
 import invariant from "tiny-invariant";
 
@@ -351,6 +353,17 @@ export class Transaction<TResult = TransactionResult> {
     // First, if no gasLimit is passed, call estimate gas ourselves
     if (!overrides.gasLimit) {
       overrides.gasLimit = await this.estimateGasLimit();
+      try {
+        // for dynamic contracts, add 30% to the gas limit to account for multiple delegate calls
+        const abi = JSON.parse(
+          this.contract.interface.format(FormatTypes.json) as string,
+        );
+        if (isRouterContract(abi)) {
+          overrides.gasLimit = overrides.gasLimit.mul(130).div(100);
+        }
+      } catch (err) {
+        // ignore
+      }
     }
 
     // Now there should be no gas estimate errors
