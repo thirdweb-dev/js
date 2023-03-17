@@ -4,8 +4,14 @@ import {
   fetchExtendedReleaseMetadata,
   fetchPreDeployMetadata,
 } from "../../common";
+import {
+  commonFactory,
+  deployImplementationWithSigner,
+  getDeploymentInfo,
+} from "../../common/any-evm-deploy";
 import { getDeployArguments } from "../../common/deploy";
 import { resolveAddress } from "../../common/ens";
+import { CloneFactory } from "../../common/infra-data";
 import {
   ChainId,
   EventType,
@@ -51,6 +57,7 @@ import {
   NetworkInput,
   PrebuiltContractType,
 } from "../types";
+import { ContractWrapper } from "./contract-wrapper";
 import { ContractFactory } from "./factory";
 import { ContractRegistry } from "./registry";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
@@ -524,18 +531,37 @@ export class ContractDeployer extends RPCConnectionHandler {
       );
     } else {
       // implementation does NOT exist on chain, deploy the implementation first, then deploy a proxy
-      implementationAddress = await this.deployContractFromUri(
+      const deploymentInfo = await getDeploymentInfo(
         publishedContract.metadataUri,
-        this.getConstructorParamsForImplementation(contractType, activeChainId),
-        {
-          forceDirectDeploy: true,
-        },
+        activeChainId,
+        this.storage,
       );
-      const resolvedImplementationAddress = await resolveAddress(
-        implementationAddress,
+      // deploy implementation
+      (
+        await this.getSigner()?.sendTransaction({
+          to: commonFactory,
+          data: deploymentInfo.deployData,
+        })
+      )?.wait();
+
+      // deploy proxy
+      const cloneFactory = new ContractFactory(
+        CloneFactory.txInfo.predictedAddress,
+        this.getSignerOrProvider(),
+        this.storage,
+        this.options,
+      );
+      const encodedInitializer = Contract.getInterface(
+        deployMeta.compilerMetadata.abi,
+      ).encodeFunctionData("initialize", constructorParams);
+      cloneFactory.call(
+        "deployProxyByImplementation",
+        deploymentInfo.predictedAddress,
+        encodedInitializer,
+        "",
       );
       return this.deployProxy(
-        resolvedImplementationAddress,
+        deploymentInfo.predictedAddress,
         deployMeta.compilerMetadata.abi,
         "initialize",
         constructorParams,
