@@ -46,6 +46,5 @@ export type { TokenDrop } from "./contracts/prebuilt-implementations/token-drop"
 export type { Vote } from "./contracts/prebuilt-implementations/vote";
 export type { SmartContract } from "./contracts/smart-contract";
 
-// Explicitly export all functions and types that we want from /functions
-export * from "./functions/getContract";
-export * from "./functions/getContractFromAbi";
+// re-export from functions entry point
+export * from "./functions";

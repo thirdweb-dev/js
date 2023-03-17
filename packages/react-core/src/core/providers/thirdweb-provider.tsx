@@ -5,6 +5,7 @@ import {
 } from "../../evm/providers/thirdweb-sdk-provider";
 import { DAppMetaData } from "../types/dAppMeta";
 import { SupportedWallet } from "../types/wallet";
+import { updateChainRPCs } from "../utils/updateChainRpcs";
 import { ThirdwebThemeContext } from "./theme-context";
 import {
   ThirdwebWalletProvider,
@@ -114,8 +115,22 @@ export const ThirdwebProviderCore = <
 >(
   props: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>,
 ) => {
-  const supportedChains =
+  const _supportedChains =
     props.supportedChains || (defaultChains as any as TChains);
+
+  const keys = useMemo(
+    () => ({
+      thirdwebApiKey: props.thirdwebApiKey,
+      alchemyApiKey: props.alchemyApiKey,
+      infuraApiKey: props.infuraApiKey,
+    }),
+    [props.thirdwebApiKey, props.alchemyApiKey, props.infuraApiKey],
+  );
+
+  const supportedChains = useMemo(
+    () => _supportedChains.map((chain) => updateChainRPCs(chain, keys)),
+    [_supportedChains, keys],
+  );
 
   const dAppMeta = props.dAppMeta || defaultdAppMeta;
 
@@ -129,8 +144,10 @@ export const ThirdwebProviderCore = <
       return supportedChains.find((chain) => chain.slug === props.activeChain);
     }
 
-    return props.activeChain;
-  }, [props.activeChain, supportedChains]);
+    return props.activeChain
+      ? updateChainRPCs(props.activeChain, keys)
+      : undefined;
+  }, [props.activeChain, supportedChains, keys]);
 
   return (
     <ThirdwebThemeContext.Provider value={props.theme}>

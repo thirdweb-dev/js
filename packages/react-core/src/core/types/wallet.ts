@@ -27,7 +27,10 @@ export type SupportedWalletInstance = InstanceType<
   connector?: TWConnector;
 };
 
-export type SupportedWallet = {
+export type SupportedWallet<
+  X extends SupportedWalletInstance = SupportedWalletInstance,
+> = {
   id: string;
-  new (options: WalletOptions): SupportedWalletInstance;
+  new (options: WalletOptions): X;
+  meta: (typeof AbstractBrowserWallet)["meta"];
 };

@@ -26,13 +26,14 @@ import { AwsKmsSigner, AwsKmsSignerCredentials } from "ethers-aws-kms-signer";
  * ```
  */
 export class AwsKmsWallet extends AbstractWallet {
+  #signer?: AwsKmsSigner;
   constructor(options: AwsKmsSignerCredentials) {
     super();
-    this.signer = this.updateSigner(new AwsKmsSigner(options));
+    this.#signer = new AwsKmsSigner(options);
   }
 
   async getSigner(): Promise<ethers.Signer> {
-    return this.signer as ethers.Signer;
+    return this.#signer as ethers.Signer;
   }
 
   // Add _signTypedData method onto the signer for now so we don't need to reimplement

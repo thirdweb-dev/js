@@ -1,5 +1,5 @@
-import type { Address } from "../wagmi-core";
 import { Chain, Ethereum, Goerli } from "@thirdweb-dev/chains";
+import type { Address } from "abitype";
 import { default as EventEmitter } from "eventemitter3";
 
 export type ConnectorData<Provider = any> = {

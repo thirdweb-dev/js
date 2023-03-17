@@ -1,6 +1,6 @@
-/* eslint-disable @next/next/no-img-element */
 import { ChainIcon } from "../../components/ChainIcon";
 import { CopyIcon } from "../../components/CopyIcon";
+import { Img } from "../../components/Img";
 import { Modal } from "../../components/Modal";
 import { Skeleton } from "../../components/Skeleton";
 import { Spacer } from "../../components/Spacer";
@@ -16,23 +16,16 @@ import {
 } from "../../design-system";
 import { shortenString } from "../../evm/utils/addresses";
 import { isMobile } from "../../evm/utils/isMobile";
-import { useCanSwitchNetwork } from "../hooks/useCanSwitchNetwork";
 import { DeviceWallet } from "../wallets";
 import { NetworkSelector } from "./NetworkSelector";
-import { CoinbaseWalletIcon } from "./icons/CoinbaseWalletIcon";
-import { DeviceWalletIcon } from "./icons/DeviceWalletIcon";
 import { ExitIcon } from "./icons/ExitIcon";
 import { GenericWalletIcon } from "./icons/GenericWalletIcon";
-import { MetamaskIcon } from "./icons/MetamaskIcon";
-import { WalletConnectIcon } from "./icons/WalletConnectIcon";
-import { IconFC } from "./icons/types";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { GearIcon } from "@radix-ui/react-icons";
+import { ChevronRightIcon } from "@radix-ui/react-icons";
 import { defaultChains } from "@thirdweb-dev/chains";
 import {
-  SupportedWallet,
   useAddress,
   useBalance,
   useChainId,
@@ -41,14 +34,6 @@ import {
   useWallet,
 } from "@thirdweb-dev/react-core";
 import { useMemo, useState } from "react";
-
-const walletIcons: Record<SupportedWallet["id"], IconFC> = {
-  metamask: MetamaskIcon,
-  deviceWallet: DeviceWalletIcon,
-  coinbaseWallet: CoinbaseWalletIcon,
-  walletConnect: WalletConnectIcon,
-  walletConnectV1: WalletConnectIcon,
-};
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -75,19 +60,10 @@ export const ConnectedWalletDetails: React.FC<{
     }
   }, [activeChainId, chain]);
 
-  const WalletIcon = activeWallet
-    ? walletIcons[activeWallet.walletId as SupportedWallet["id"]]
-    : null;
+  const activeWalletIconURL = activeWallet?.getMeta().iconURL || "";
 
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
   const [open, setOpen] = useState(false);
-
-  // can not switch network if
-  // * no wallet is connected
-  // * only one supported network and connected to that network
-  // * wallet is walletConnectV1, walletConnectV2, or deviceWallet
-  // * wallet is non-injected metamask
-  const disableNetworkSwitching = !useCanSwitchNetwork();
 
   const handleDeviceWalletExport = async () => {
     const deviceWallet = activeWallet as InstanceType<typeof DeviceWallet>;
@@ -120,7 +96,7 @@ export const ConnectedWalletDetails: React.FC<{
         <WalletAddress>{shortenString(address || "")}</WalletAddress>
       </ColFlex>
 
-      {WalletIcon && <WalletIcon size={iconSize.lg} />}
+      <Img width={iconSize.lg} height={iconSize.lg} src={activeWalletIconURL} />
     </WalletInfoButton>
   );
 
@@ -128,7 +104,6 @@ export const ConnectedWalletDetails: React.FC<{
     <MenuButton
       id="current-network"
       type="button"
-      disabled={disableNetworkSwitching}
       onClick={() => {
         setOpen(false);
         setShowNetworkSelector(true);
@@ -144,7 +119,7 @@ export const ConnectedWalletDetails: React.FC<{
         <ChainIcon chain={chain || unknownChain} size={iconSize.lg} active />
       </div>
       {chain?.name || unknownChain?.name || "Wrong Network"}
-      <StyledGearIcon
+      <StyledChevronRightIcon
         style={{
           flexShrink: 0,
           marginLeft: "auto",
@@ -165,7 +140,12 @@ export const ConnectedWalletDetails: React.FC<{
           gap: spacing.md,
         }}
       >
-        {WalletIcon && <WalletIcon size={iconSize.xl} />}
+        <Img
+          width={iconSize.xl}
+          height={iconSize.xl}
+          src={activeWalletIconURL}
+          alt=""
+        />
 
         <ColFlex>
           <div
@@ -223,15 +203,9 @@ export const ConnectedWalletDetails: React.FC<{
 
       {/* Network Switcher */}
       <div>
-        <PrimaryLabel htmlFor="current-network">Current Network</PrimaryLabel>
+        <DropdownLabel htmlFor="current-network">Current Network</DropdownLabel>
         <Spacer y="sm" />
-        {!disableNetworkSwitching ? (
-          networkSwitcherButton
-        ) : (
-          <ToolTip tip="Switch Network from Wallet App" sideOffset={10}>
-            {networkSwitcherButton}
-          </ToolTip>
-        )}
+        {networkSwitcherButton}
       </div>
 
       <Spacer y="md" />
@@ -300,7 +274,7 @@ const DropDownContent = styled(DropdownMenu.Content)<{ theme?: Theme }>`
   box-shadow: ${shadow.lg};
   animation: ${slideUpAndFade} 400ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
-  border: 1px solid ${(props) => props.theme.bg.highlighted};
+  border: 1px solid ${(props) => props.theme.bg.elevated};
   background-color: ${(props) => props.theme.bg.base};
   z-index: 1000000;
 `;
@@ -308,8 +282,8 @@ const DropDownContent = styled(DropdownMenu.Content)<{ theme?: Theme }>`
 const WalletInfoButton = styled.button<{ theme?: Theme }>`
   all: unset;
   background: ${(props) => props.theme.bg.base};
-  border: 1px solid ${(props) => props.theme.bg.highlighted};
-  padding: ${spacing.xs} ${spacing.md};
+  border: 1px solid ${(props) => props.theme.bg.elevated};
+  padding: ${spacing.sm} ${spacing.md};
   border-radius: ${radius.lg};
   cursor: pointer;
   display: flex;
@@ -357,9 +331,9 @@ const AccountBalance = styled.span<{ theme?: Theme }>`
   font-weight: 500;
 `;
 
-const PrimaryLabel = styled.label<{ theme?: Theme }>`
+const DropdownLabel = styled.label<{ theme?: Theme }>`
   font-size: ${fontSize.sm};
-  color: ${(props) => props.theme.text.neutral};
+  color: ${(props) => props.theme.text.secondary};
   font-weight: 500;
 `;
 
@@ -396,7 +370,9 @@ export const DropdownMenuItem = styled(DropdownMenu.Item)<{ theme?: Theme }>`
   outline: none;
 `;
 
-export const StyledGearIcon = styled(GearIcon)<{ theme?: Theme }>`
+export const StyledChevronRightIcon = styled(ChevronRightIcon)<{
+  theme?: Theme;
+}>`
   color: ${(props) => props.theme.text.secondary};
 `;
 
@@ -404,7 +380,7 @@ const DisconnectIconButton = styled(IconButton)<{ theme?: Theme }>`
   margin-right: -${spacing.xxs};
   margin-left: auto;
   padding: ${spacing.xxs};
-  color: ${(props) => props.theme.icon.danger};
+  color: ${(props) => props.theme.icon.secondary};
   &:hover {
     color: ${(props) => props.theme.icon.danger};
     background: ${(props) => props.theme.bg.danger};

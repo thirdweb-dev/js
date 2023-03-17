@@ -1,6 +1,6 @@
 import { AsyncStorage } from "../../core";
 import { thirdwebChains } from "../constants/chains";
-import { TWConnector } from "../interfaces/tw-connector";
+import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 import { Chain } from "@thirdweb-dev/chains";
@@ -28,6 +28,12 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
   #walletImpl?: DeviceWalletImpl;
   static id = "deviceWallet" as const;
   options: WalletOptions<DeviceWalletOptions>;
+
+  static meta = {
+    name: "Device Wallet",
+    iconURL:
+      "ipfs://QmcNddbYBuQKiBFnPcxYegjrX6S6z9K1vBNzbBBUJMn2ox/device-wallet.svg",
+  };
 
   public get walletName() {
     return "Device Wallet" as const;
@@ -88,6 +94,11 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
 
   static getDataStorageKey() {
     return STORAGE_KEY_DATA;
+  }
+
+  // enforcing that connectOptions is required and not optional
+  connect(connectOptions: ConnectParams<DeviceWalletConnectionArgs>) {
+    return super.connect(connectOptions);
   }
 }
 
