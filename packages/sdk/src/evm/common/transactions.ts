@@ -2,7 +2,7 @@ import {
   CONTRACT_ADDRESSES,
   getContractAddressByChainId,
 } from "../constants/addresses";
-import { Transaction } from "../core/classes/transactions";
+import { DeployTransaction, Transaction } from "../core/classes/transactions";
 import {
   ForwardRequestMessage,
   GaslessTransaction,
@@ -25,11 +25,14 @@ import invariant from "tiny-invariant";
 
 export function buildTransactionFunction<
   TArgs extends any[],
-  TResult = TransactionResult,
->(fn: (...args: TArgs) => Promise<Transaction<TResult>>) {
-  async function executeFn(...args: TArgs): Promise<TResult> {
+  TTransaction extends Transaction<TResult> | DeployTransaction,
+  TResult extends any,
+>(fn: (...args: TArgs) => Promise<TTransaction>) {
+  async function executeFn(
+    ...args: TArgs
+  ): Promise<TTransaction extends Transaction ? TResult : string> {
     const tx = await fn(...args);
-    return tx.execute();
+    return tx.execute() as TTransaction extends Transaction ? TResult : string;
   }
 
   executeFn.prepare = fn;
