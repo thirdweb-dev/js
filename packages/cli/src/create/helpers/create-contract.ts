@@ -169,7 +169,10 @@ export async function createContractProject({
 
       // Add in a new contracts file with specific base contract
       if (baseContract && baseContract.length > 0) {
-        const baseContractText = readBaseContract(baseContract);
+        const baseContractText = readBaseContract(baseContract).replace(
+          "contract Contract",
+          `contract ${contractName.replace(".sol", "")}`,
+        );
 
         // Set the filename of the new file and delete the dummy Contract.sol file
         let contractFile = "";
