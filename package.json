@@ -6,6 +6,9 @@
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "MIT",
   "private": true,
+  "engines": {
+    "node": ">=16.7.0"
+  },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "test": "turbo run test test:evm test:solana --filter=./packages/*",
