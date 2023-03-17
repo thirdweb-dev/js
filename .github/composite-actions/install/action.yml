@@ -4,15 +4,18 @@ description: "Sets up Node.js and runs install"
 runs:
   using: composite
   steps:
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 7
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: 16
         registry-url: "https://registry.npmjs.org"
-        cache: "yarn"
+        cache: "pnpm"
 
     - name: Install dependencies
       shell: bash
-      run: yarn
+      run: pnpm install
       env:
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"

@@ -10,7 +10,7 @@ import { NetworkButton } from "./NetworkButton";
 import { WalletDetailsModalHeader } from "./WalletDetailsModalHeader";
 import { useWallet, useBalance, useDisconnect } from "@thirdweb-dev/react-core";
 import { useActiveChain } from "@thirdweb-dev/react-core/evm";
-import React, { useState } from "react";
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 export type ConnectWalletDetailsProps = {

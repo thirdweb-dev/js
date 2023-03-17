@@ -4,6 +4,7 @@ import {
   fetchContractMetadataFromAddress,
   fetchSourceFilesFromMetadata,
 } from "../../common/metadata-resolver";
+import { isRouterContract } from "../../common/plugin";
 import { defaultGaslessSendFunction } from "../../common/transactions";
 import { isBrowser } from "../../common/utils";
 import { ChainId } from "../../constants/chains";
@@ -18,17 +19,27 @@ import {
   TransactionOptionsWithContractWrapper,
 } from "../../types/transactions";
 import { GaslessTransaction, TransactionResult } from "../types";
-import type { ConnectionInfo } from "@ethersproject/web";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, CallOverrides, ContractFactory, ethers } from "ethers";
-import { concat, getContractAddress, hexlify } from "ethers/lib/utils.js";
+import {
+  BaseContract,
+  CallOverrides,
+  Contract,
+  ContractFactory,
+  ContractTransaction,
+  providers,
+  Signer,
+  utils,
+} from "ethers";
+import { BigNumber } from "ethers";
+import { FormatTypes } from "ethers/lib/utils.js";
+import type { ConnectionInfo } from "ethers/lib/utils.js";
 import invariant from "tiny-invariant";
 
 abstract class TransactionContext {
   protected args: any[];
   protected overrides: CallOverrides;
-  protected provider: ethers.providers.Provider;
-  protected signer: ethers.Signer;
+  protected provider: providers.Provider;
+  protected signer: Signer;
   protected storage: ThirdwebStorage;
   protected gasMultiple?: number;
 
@@ -160,7 +171,7 @@ abstract class TransactionContext {
     const gasCost = gasLimit.mul(gasPrice);
 
     return {
-      ether: ethers.utils.formatEther(gasCost),
+      ether: utils.formatEther(gasCost),
       wei: gasCost,
     };
   }
@@ -170,7 +181,7 @@ abstract class TransactionContext {
    */
   public async getGasPrice(): Promise<BigNumber> {
     const gasPrice = await this.provider.getGasPrice();
-    const maxGasPrice = ethers.utils.parseUnits("300", "gwei"); // 300 gwei
+    const maxGasPrice = utils.parseUnits("300", "gwei"); // 300 gwei
     const extraTip = gasPrice.div(100).mul(10); // + 10%
     const txGasPrice = gasPrice.add(extraTip);
 
@@ -205,7 +216,7 @@ abstract class TransactionContext {
       const baseBlockFee =
         block && block.baseFeePerGas
           ? block.baseFeePerGas
-          : ethers.utils.parseUnits("1", "gwei");
+          : utils.parseUnits("1", "gwei");
       let defaultPriorityFee: BigNumber;
       if (chainId === ChainId.Mumbai || chainId === ChainId.Polygon) {
         // for polygon, get fee data from gas station
@@ -239,8 +250,8 @@ abstract class TransactionContext {
   ): BigNumber {
     const extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 10%
     const txGasPrice = defaultPriorityFeePerGas.add(extraTip);
-    const maxGasPrice = ethers.utils.parseUnits("300", "gwei"); // no more than 300 gwei
-    const minGasPrice = ethers.utils.parseUnits("2.5", "gwei"); // no less than 2.5 gwei
+    const maxGasPrice = utils.parseUnits("300", "gwei"); // no more than 300 gwei
+    const minGasPrice = utils.parseUnits("2.5", "gwei"); // no less than 2.5 gwei
 
     if (txGasPrice.gt(maxGasPrice)) {
       return maxGasPrice;
@@ -257,12 +268,12 @@ export class Transaction<
   TResult = TransactionResult,
 > extends TransactionContext {
   private method: string;
-  private contract: ethers.Contract;
+  private contract: Contract;
   private gaslessOptions?: SDKOptionsOutput["gasless"];
   private parse?: ParseTransactionReceipt<TResult>;
 
   static fromContractWrapper<
-    TContract extends ethers.BaseContract,
+    TContract extends BaseContract,
     TResult = TransactionResult,
   >(
     options: TransactionOptionsWithContractWrapper<TContract, TResult>,
@@ -306,7 +317,7 @@ export class Transaction<
       }
     }
 
-    const contract = new ethers.Contract(
+    const contract = new Contract(
       options.contractAddress,
       contractAbi,
       options.provider,
@@ -440,7 +451,7 @@ export class Transaction<
   /**
    * Send the transaction without waiting for it to be mined.
    */
-  async send(): Promise<ethers.ContractTransaction> {
+  async send(): Promise<ContractTransaction> {
     if (!this.contract.functions[this.method]) {
       throw this.functionError();
     }
@@ -459,6 +470,17 @@ export class Transaction<
     // First, if no gasLimit is passed, call estimate gas ourselves
     if (!overrides.gasLimit) {
       overrides.gasLimit = await this.estimateGasLimit();
+      try {
+        // for dynamic contracts, add 30% to the gas limit to account for multiple delegate calls
+        const abi = JSON.parse(
+          this.contract.interface.format(FormatTypes.json) as string,
+        );
+        if (isRouterContract(abi)) {
+          overrides.gasLimit = overrides.gasLimit.mul(130).div(100);
+        }
+      } catch (err) {
+        // ignore
+      }
     }
 
     // Now there should be no gas estimate errors
@@ -513,7 +535,7 @@ export class Transaction<
   /**
    * Execute the transaction with gasless
    */
-  private async sendGasless(): Promise<ethers.ContractTransaction> {
+  private async sendGasless(): Promise<ContractTransaction> {
     invariant(
       this.gaslessOptions &&
         ("openzeppelin" in this.gaslessOptions ||
@@ -530,7 +552,7 @@ export class Transaction<
     ) {
       const from = await this.getSignerAddress();
       args[0] = args[0].map((tx: any) =>
-        ethers.utils.solidityPack(["bytes", "address"], [tx, from]),
+        utils.solidityPack(["bytes", "address"], [tx, from]),
       );
     }
 
@@ -628,7 +650,7 @@ export class Transaction<
    * Create a nicely formatted error message with tx metadata and solidity stack trace
    */
   private async transactionError(error: any) {
-    const provider = this.provider as ethers.providers.Provider & {
+    const provider = this.provider as providers.Provider & {
       connection?: ConnectionInfo;
     };
 
@@ -711,8 +733,8 @@ export class DeployTransaction extends TransactionContext {
   }
 
   encode(): string {
-    return hexlify(
-      concat([
+    return utils.hexlify(
+      utils.concat([
         this.factory.bytecode,
         this.factory.interface.encodeDeploy(this.args),
       ]),
@@ -739,7 +761,7 @@ export class DeployTransaction extends TransactionContext {
     }
   }
 
-  async send(): Promise<ethers.ContractTransaction> {
+  async send(): Promise<ContractTransaction> {
     try {
       const signedTx = await this.sign();
       return this.provider.sendTransaction(signedTx);
@@ -762,10 +784,10 @@ export class DeployTransaction extends TransactionContext {
       throw await this.deployError(err);
     }
 
-    return getContractAddress({ from: tx.from, nonce: tx.nonce });
+    return utils.getContractAddress({ from: tx.from, nonce: tx.nonce });
   }
 
-  private async populateTransaction(): Promise<ethers.providers.TransactionRequest> {
+  private async populateTransaction(): Promise<providers.TransactionRequest> {
     const gasOverrides = await this.getGasOverrides();
     const overrides: CallOverrides = { ...gasOverrides, ...this.overrides };
 
@@ -781,7 +803,7 @@ export class DeployTransaction extends TransactionContext {
    * Create a nicely formatted error message with tx metadata and solidity stack trace
    */
   private async deployError(error: any) {
-    const provider = this.provider as ethers.providers.Provider & {
+    const provider = this.provider as providers.Provider & {
       connection?: ConnectionInfo;
     };
 

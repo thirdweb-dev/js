@@ -7,7 +7,6 @@ import {
   ForwardRequestMessage,
   GaslessTransaction,
   PermitRequestMessage,
-  TransactionResult,
 } from "../core/types";
 import { SDKOptionsOutput } from "../schema/sdk-options";
 import {
