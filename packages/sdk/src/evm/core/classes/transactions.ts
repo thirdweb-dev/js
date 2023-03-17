@@ -30,6 +30,7 @@ abstract class TransactionContext {
   protected provider: ethers.providers.Provider;
   protected signer: ethers.Signer;
   protected storage: ThirdwebStorage;
+  protected gasMultiple?: number;
 
   constructor(options: TransactionContextOptions) {
     this.args = options.args;
@@ -128,6 +129,27 @@ abstract class TransactionContext {
   }
 
   public abstract estimateGasLimit(): Promise<BigNumber>;
+
+  /**
+   * Set a multiple to multiply the gas limit by
+   *
+   * @example
+   * ```js
+   * // Set the gas limit multiple to 1.2 (increase by 20%)
+   * tx.setGasLimitMultiple(1.2)
+   * ```
+   */
+  public setGasLimitMultiple(factor: number) {
+    // If gasLimit override is set, we can just set it synchronously
+    if (BigNumber.isBigNumber(this.overrides.gasLimit)) {
+      this.overrides.gasLimit = BigNumber.from(
+        Math.floor(BigNumber.from(this.overrides.gasLimit).toNumber() * factor),
+      );
+    } else {
+      // Otherwise, set a gas multiple to use later
+      this.gasMultiple = factor;
+    }
+  }
 
   /**
    * Estimate the total gas cost of this transaction (in both ether and wei)
@@ -230,7 +252,7 @@ export class Transaction<
   private method: string;
   private contract: ethers.Contract;
   private gaslessOptions?: SDKOptionsOutput["gasless"];
-  protected parse?: ParseTransactionReceipt<TResult>;
+  private parse?: ParseTransactionReceipt<TResult>;
 
   static fromContractWrapper<
     TContract extends ethers.BaseContract,
@@ -387,10 +409,18 @@ export class Transaction<
     }
 
     try {
-      return await this.contract.estimateGas[this.method](
+      const gasEstimate = await this.contract.estimateGas[this.method](
         ...this.args,
         this.overrides,
       );
+
+      if (this.gasMultiple) {
+        return BigNumber.from(
+          Math.floor(BigNumber.from(gasEstimate).toNumber() * this.gasMultiple),
+        );
+      }
+
+      return gasEstimate;
     } catch (err: any) {
       // If gas estimation fails, we'll call static to get a better error message
       await this.simulate();
