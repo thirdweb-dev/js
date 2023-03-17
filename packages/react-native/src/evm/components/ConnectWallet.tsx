@@ -2,7 +2,7 @@ import { ThemeProvider, ThemeProviderProps } from "../styles/ThemeProvider";
 import { ConnectWalletDetails } from "./ConnectWalletDetails/ConnectWalletDetails";
 import { ConnectWalletFlow } from "./ConnectWalletFlow/ConnectWalletFlow";
 import { useAddress } from "@thirdweb-dev/react-core";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Animated } from "react-native";
 
 export type ConnectWalletProps = {

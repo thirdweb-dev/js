@@ -1,7 +1,7 @@
 import { Icon } from "../../../assets/icon";
 import { useAppTheme } from "../../../styles/hooks";
 import Text from "../../base/Text";
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { Image, StyleSheet, View } from "react-native";
 
 interface ConnectWalletHeaderProps {

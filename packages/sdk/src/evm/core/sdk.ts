@@ -31,9 +31,10 @@ import type {
 import { UserWallet } from "./wallet/user-wallet";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
+import { ContractAddress, GENERATED_ABI } from "@thirdweb-dev/generated-abis";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { EVMWallet } from "@thirdweb-dev/wallets";
-import type { ContractInterface, Signer } from "ethers";
+import type { ContractInterface, Signer, BaseContract } from "ethers";
 import {
   Contract as EthersContract,
   Wallet as EthersWallet,
@@ -412,7 +413,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * const contract = await sdk.getContract("{{contract_address}}");
    * ```
    */
-  public async getContract(address: AddressOrEns): Promise<SmartContract>;
+  public async getContract<
+    TContractAddress extends AddressOrEns | ContractAddress,
+  >(
+    address: TContractAddress,
+  ): Promise<
+    TContractAddress extends ContractAddress
+      ? SmartContract<BaseContract>
+      : SmartContract
+  >;
   /**
    * Get an instance of a Custom ThirdwebContract
    * @param address - the address of the deployed contract
@@ -458,6 +467,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     if (this.contractCache.has(resolvedAddress)) {
       // we know this will be there since we check the has above
       return this.contractCache.get(resolvedAddress) as ValidContractInstance;
+    }
+
+    if (resolvedAddress in GENERATED_ABI) {
+      return await this.getContractFromAbi(
+        resolvedAddress,
+        (GENERATED_ABI as any)[resolvedAddress],
+      );
     }
 
     let newContract: ValidContractInstance;

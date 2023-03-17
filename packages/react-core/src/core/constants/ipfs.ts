@@ -1,4 +1,4 @@
-export const DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/";
+export const DEFAULT_IPFS_GATEWAY = "https://ipfs.thirdwebcdn.com/ipfs/";
 
 export interface IPFSResolverOptions {
   gatewayUrl: string;

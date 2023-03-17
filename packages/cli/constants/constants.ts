@@ -9,6 +9,10 @@ export const CREATE_MESSAGES = {
   extensions: "What extensions do you want to add to your contract?",
 } as const;
 
+export const GENERATE_MESSAGES = {
+  deployerAddress: "What is your deployer wallet address?",
+};
+
 export const ERROR_MESSAGES = {
   noConfiguration:
     "No contract project configuration file found in current directory",
