@@ -824,6 +824,7 @@ importers:
       typescript: ^4.7.4
     dependencies:
       '@aws-sdk/client-secrets-manager': 3.292.0
+      '@coinbase/wallet-sdk': 3.6.4_@babel+core@7.21.3
       '@paperxyz/embedded-wallet-service-sdk': 0.0.19
       '@walletconnect/ethereum-provider': 2.4.10_lsrif6druz2ewkeehxnmxyajqe
       '@walletconnect/jsonrpc-http-connection': 1.0.6
@@ -840,7 +841,6 @@ importers:
       eventemitter3: 5.0.0
       tweetnacl: 1.0.3
     devDependencies:
-      '@coinbase/wallet-sdk': 3.6.4_@babel+core@7.21.3
       '@noble/ed25519': 1.7.3
       '@preconstruct/cli': 2.3.0
       '@safe-global/safe-core-sdk': 3.3.2

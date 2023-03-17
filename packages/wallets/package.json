@@ -242,6 +242,7 @@
   "sideEffects": false,
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.256.0",
+    "@coinbase/wallet-sdk": "^3.6.3",
     "@paperxyz/embedded-wallet-service-sdk": "^0.0.19",
     "@walletconnect/ethereum-provider": "~2.4.6",
     "@walletconnect/jsonrpc-http-connection": "^1.0.0",
@@ -262,7 +263,6 @@
     "@walletconnect/ethereum-provider": "~2.4.6"
   },
   "peerDependencies": {
-    "@coinbase/wallet-sdk": "^3.6.3",
     "@noble/ed25519": "^1.7.1",
     "@safe-global/safe-core-sdk": "^3.3.2",
     "@safe-global/safe-ethers-adapters": "^0.1.0-alpha.16",
@@ -275,12 +275,6 @@
   },
   "peerDependenciesMeta": {
     "@thirdweb-dev/chains": {
-      "optional": true
-    },
-    "@aws-sdk/client-secrets-manager": {
-      "optional": true
-    },
-    "@coinbase/wallet-sdk": {
       "optional": true
     },
     "@noble/ed25519": {
@@ -312,7 +306,6 @@
     }
   },
   "devDependencies": {
-    "@coinbase/wallet-sdk": "^3.6.3",
     "@noble/ed25519": "^1.7.1",
     "@preconstruct/cli": "^2.2.1",
     "@safe-global/safe-core-sdk": "^3.3.2",
