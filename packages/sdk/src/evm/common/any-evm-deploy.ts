@@ -1,4 +1,3 @@
-// import { BigNumber } from "ethers";
 import { getNativeTokenByChainId } from "../constants";
 import { InfraContractType } from "../core/types";
 import { PreDeployMetadataFetched } from "../schema";
@@ -10,20 +9,20 @@ import {
   CloneFactory,
   EOAForwarder,
   Forwarder,
-  INFRA_CONTRACTS_MAP,
+  // INFRA_CONTRACTS_MAP,
   NativeTokenWrapper,
 } from "./infra-data";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BytesLike, ethers } from "ethers";
-import type { Signer, providers } from "ethers";
-import { ethers as hardhatEthers } from "hardhat";
+import { utils, constants } from "ethers";
+// @yash you can *never* use hardhat ethers anywhere outside of tests
+// import { ethers as hardhatEthers } from "hardhat";
 
-type InfraTxInfo = {
-  predictedAddress: string;
-  tx: string;
-  from: string;
-  deployData: string;
-};
+// type InfraTxInfo = {
+//   predictedAddress: string;
+//   tx: string;
+//   from: string;
+//   deployData: string;
+// };
 
 const customSigInfo = {
   v: 27,
@@ -32,41 +31,41 @@ const customSigInfo = {
 };
 export const commonFactory = "0x4e59b44847b379578588920cA78FbF26c0B4956C";
 
-export async function deployCommonFactory(signer: Signer) {
-  let factoryCode = await hardhatEthers.provider.getCode(commonFactory);
-  // deploy community factory if not already deployed
-  if (factoryCode == "0x") {
-    console.log("zero code");
-    // send balance
-    let refundTx = {
-      to: "3fab184622dc19b6109349b94811493bf2a45362",
-      value: hardhatEthers.utils.parseEther("0.01"), // TODO: estimate gas/value
-    };
-    await signer.sendTransaction(refundTx);
+// export async function deployCommonFactory(signer: Signer) {
+//   let factoryCode = await hardhatEthers.provider.getCode(commonFactory);
+//   // deploy community factory if not already deployed
+//   if (factoryCode == "0x") {
+//     console.log("zero code");
+//     // send balance
+//     let refundTx = {
+//       to: "3fab184622dc19b6109349b94811493bf2a45362",
+//       value: hardhatEthers.utils.parseEther("0.01"), // TODO: estimate gas/value
+//     };
+//     await signer.sendTransaction(refundTx);
 
-    // deploy
-    try {
-      const tx = await hardhatEthers.provider.sendTransaction(
-        "0xf8a58085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf31ba02222222222222222222222222222222222222222222222222222222222222222a02222222222222222222222222222222222222222222222222222222222222222",
-      );
-    } catch (err) {
-      console.log("Couldn't deploy factory");
-      console.log(err);
-      process.exit(1);
-    }
+//     // deploy
+//     try {
+//       const tx = await hardhatEthers.provider.sendTransaction(
+//         "0xf8a58085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf31ba02222222222222222222222222222222222222222222222222222222222222222a02222222222222222222222222222222222222222222222222222222222222222",
+//       );
+//     } catch (err) {
+//       console.log("Couldn't deploy factory");
+//       console.log(err);
+//       process.exit(1);
+//     }
 
-    // check
-    factoryCode = await hardhatEthers.provider.getCode(commonFactory);
-    console.log("deployed code: ", factoryCode);
-  }
-}
+//     // check
+//     factoryCode = await hardhatEthers.provider.getCode(commonFactory);
+//     console.log("deployed code: ", factoryCode);
+//   }
+// }
 
 export async function constructKeylessTx(bytecode: string, args: string) {
-  const bytecodeHash = hardhatEthers.utils.id(bytecode);
+  const bytecodeHash = utils.id(bytecode);
   const salt = `tw.${bytecodeHash}`;
-  const saltHash = hardhatEthers.utils.id(salt);
+  const saltHash = utils.id(salt);
 
-  const data = hardhatEthers.utils.solidityPack(
+  const data = utils.solidityPack(
     ["bytes32", "bytes", "bytes"],
     [saltHash, bytecode, args],
   );
@@ -79,18 +78,15 @@ export async function constructKeylessTx(bytecode: string, args: string) {
     nonce: 0,
     data: data,
   };
-  const customSignature = ethers.utils.joinSignature(customSigInfo);
-  const serializedTestTx = ethers.utils.serializeTransaction(tx);
+  const customSignature = utils.joinSignature(customSigInfo);
+  const serializedTestTx = utils.serializeTransaction(tx);
 
-  const addr = ethers.utils.recoverAddress(
-    ethers.utils.arrayify(ethers.utils.keccak256(serializedTestTx)),
+  const addr = utils.recoverAddress(
+    utils.arrayify(utils.keccak256(serializedTestTx)),
     customSignature,
   );
 
-  const signedSerializedTx = ethers.utils.serializeTransaction(
-    tx,
-    customSigInfo,
-  );
+  const signedSerializedTx = utils.serializeTransaction(tx, customSigInfo);
 
   return {
     addr,
@@ -99,93 +95,87 @@ export async function constructKeylessTx(bytecode: string, args: string) {
 }
 
 export async function computeDeploymentAddress(bytecode: string, args: string) {
-  const bytecodeHash = hardhatEthers.utils.id(bytecode);
+  const bytecodeHash = utils.id(bytecode);
   const salt = `tw.${bytecodeHash}`;
-  const saltHash = hardhatEthers.utils.id(salt);
+  const saltHash = utils.id(salt);
 
-  const deployData = hardhatEthers.utils.solidityPack(
+  const deployData = utils.solidityPack(
     ["bytes32", "bytes", "bytes"],
     [saltHash, bytecode, args],
   );
 
-  const initBytecode = hardhatEthers.utils.solidityPack(
-    ["bytes", "bytes"],
-    [bytecode, args],
-  );
-  const deployInfoPacked = hardhatEthers.utils.solidityPack(
+  const initBytecode = utils.solidityPack(["bytes", "bytes"], [bytecode, args]);
+  const deployInfoPacked = utils.solidityPack(
     ["bytes1", "address", "bytes32", "bytes32"],
     [
       "0xff",
       commonFactory,
       saltHash,
-      hardhatEthers.utils.solidityKeccak256(["bytes"], [initBytecode]),
+      utils.solidityKeccak256(["bytes"], [initBytecode]),
     ],
   );
-  const addr = hardhatEthers.utils.solidityKeccak256(
-    ["bytes"],
-    [deployInfoPacked],
-  );
+  const addr = utils.solidityKeccak256(["bytes"], [deployInfoPacked]);
 
   return { predictedAddress: `0x${addr.slice(26)}`, deployData };
 }
 
-async function deployInfraKeyless(
-  signer: Signer,
-  provider: providers.Provider,
-  contractTypes?: InfraContractType[],
-) {
-  // if (!contractTypes) {
-  //   contractTypes = Object.keys(INFRA_CONTRACTS_MAP);
-  // }
-  // create2 factory
-  await deployCommonFactory(signer);
+// async function deployInfraKeyless(
+//   signer: Signer,
+//   provider: providers.Provider,
+//   contractTypes?: InfraContractType[],
+// ) {
+//   // if (!contractTypes) {
+//   //   contractTypes = Object.keys(INFRA_CONTRACTS_MAP);
+//   // }
+//   // create2 factory
+//   await deployCommonFactory(signer);
 
-  for (let contractType of contractTypes as InfraContractType[]) {
-    const txInfo = INFRA_CONTRACTS_MAP[contractType].txInfo;
+//   for (let contractType of contractTypes as InfraContractType[]) {
+//     const txInfo = INFRA_CONTRACTS_MAP[contractType].txInfo;
 
-    const code = await hardhatEthers.provider.getCode(txInfo.predictedAddress);
-    if (code === "0x") {
-      let fundAddr = {
-        to: txInfo.from,
-        value: hardhatEthers.utils.parseEther("1"),
-      };
-      await signer.sendTransaction(fundAddr);
+//     const code = await hardhatEthers.provider.getCode(txInfo.predictedAddress);
+//     if (code === "0x") {
+//       let fundAddr = {
+//         to: txInfo.from,
+//         value: hardhatEthers.utils.parseEther("1"),
+//       };
+//       await signer.sendTransaction(fundAddr);
 
-      await (await provider.sendTransaction(txInfo.tx)).wait();
-    }
-  }
-}
+//       await (await provider.sendTransaction(txInfo.tx)).wait();
+//     }
+//   }
+// }
 
-async function deployInfraWithSigner(
-  signer: Signer,
-  contractTypes?: InfraContractType[],
-) {
-  // if (!contractTypes) {
-  //   contractTypes = Object.keys(INFRA_CONTRACTS_MAP);
-  // }
-  // create2 factory
-  await deployCommonFactory(signer);
+// async function deployInfraWithSigner(
+//   signer: Signer,
+//   contractTypes?: InfraContractType[],
+// ) {
+//   // if (!contractTypes) {
+//   //   contractTypes = Object.keys(INFRA_CONTRACTS_MAP);
+//   // }
+//   // create2 factory
+//   await deployCommonFactory(signer);
 
-  for (let contractType of contractTypes as InfraContractType[]) {
-    const txInfo = INFRA_CONTRACTS_MAP[contractType].txInfo;
+//   for (let contractType of contractTypes as InfraContractType[]) {
+//     const txInfo = INFRA_CONTRACTS_MAP[contractType].txInfo;
 
-    const code = await hardhatEthers.provider.getCode(txInfo.predictedAddress);
-    if (code === "0x") {
-      // get init bytecode
-      const deployData = txInfo.deployData;
+//     const code = await hardhatEthers.provider.getCode(txInfo.predictedAddress);
+//     if (code === "0x") {
+//       // get init bytecode
+//       const deployData = txInfo.deployData;
 
-      const tx = {
-        from: signer.getAddress(),
-        to: commonFactory,
-        value: 0,
-        nonce: await signer.getTransactionCount("latest"),
-        data: deployData,
-      };
+//       const tx = {
+//         from: signer.getAddress(),
+//         to: commonFactory,
+//         value: 0,
+//         nonce: await signer.getTransactionCount("latest"),
+//         data: deployData,
+//       };
 
-      await (await signer.sendTransaction(tx)).wait();
-    }
-  }
-}
+//       await (await signer.sendTransaction(tx)).wait();
+//     }
+//   }
+// }
 
 export async function getDeploymentInfo(
   metadataUri: string,
@@ -236,7 +226,7 @@ function encodeConstructorParamsForImplementation(
       let nativeTokenWrapperAddress =
         getNativeTokenByChainId(chainId).wrapped.address;
 
-      if (nativeTokenWrapperAddress === ethers.constants.AddressZero) {
+      if (nativeTokenWrapperAddress === constants.AddressZero) {
         nativeTokenWrapperAddress = NativeTokenWrapper.txInfo.predictedAddress;
         contractTypes.push(NativeTokenWrapper.contractType);
       }
@@ -249,7 +239,7 @@ function encodeConstructorParamsForImplementation(
       return "";
     }
   });
-  const encodedArgs = ethers.utils.defaultAbiCoder.encode(
+  const encodedArgs = utils.defaultAbiCoder.encode(
     constructorParamTypes,
     constructorParamValues,
   );
