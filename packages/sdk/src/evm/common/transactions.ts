@@ -7,6 +7,7 @@ import {
   ForwardRequestMessage,
   GaslessTransaction,
   PermitRequestMessage,
+  TransactionResult,
 } from "../core/types";
 import { SDKOptionsOutput } from "../schema/sdk-options";
 import {
@@ -22,16 +23,25 @@ import fetch from "cross-fetch";
 import { BigNumber, BytesLike, ethers } from "ethers";
 import invariant from "tiny-invariant";
 
+export function buildDeployTransactionFunction<TArgs extends any[]>(
+  fn: (...args: TArgs) => Promise<DeployTransaction>,
+) {
+  async function executeFn(...args: TArgs): Promise<string> {
+    const tx = await fn(...args);
+    return tx.execute();
+  }
+
+  executeFn.prepare = fn;
+  return executeFn;
+}
+
 export function buildTransactionFunction<
   TArgs extends any[],
-  TTransaction extends Transaction<TResult> | DeployTransaction,
-  TResult extends any,
->(fn: (...args: TArgs) => Promise<TTransaction>) {
-  async function executeFn(
-    ...args: TArgs
-  ): Promise<TTransaction extends Transaction ? TResult : string> {
+  TResult = TransactionResult,
+>(fn: (...args: TArgs) => Promise<Transaction<TResult>>) {
+  async function executeFn(...args: TArgs): Promise<TResult> {
     const tx = await fn(...args);
-    return tx.execute() as TTransaction extends Transaction ? TResult : string;
+    return tx.execute();
   }
 
   executeFn.prepare = fn;

@@ -7,6 +7,7 @@ import { UpdateableNetwork } from "../interfaces/contract";
 import { NetworkInput, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20 } from "./erc-20";
+import { Transaction } from "./transactions";
 import type { DropERC20, TokenERC20 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
@@ -224,12 +225,11 @@ export class StandardErc20<
    * await contract.setAllowance(spenderAddress, amount);
    * ```
    */
-  public async setAllowance(
-    spender: AddressOrEns,
-    amount: Amount,
-  ): Promise<TransactionResult> {
-    return this.erc20.setAllowance(spender, amount);
-  }
+  setAllowance = buildTransactionFunction(
+    async (spender: AddressOrEns, amount: Amount): Promise<Transaction> => {
+      return this.erc20.setAllowance.prepare(spender, amount);
+    },
+  );
 
   /**
    * Transfer Tokens To Many Wallets
@@ -253,7 +253,7 @@ export class StandardErc20<
    * await contract.transferBatch(data);
    * ```
    */
-  public async transferBatch(args: TokenMintInput[]) {
-    return this.erc20.transferBatch(args);
-  }
+  transferBatch = buildTransactionFunction(async (args: TokenMintInput[]) => {
+    return this.erc20.transferBatch.prepare(args);
+  });
 }

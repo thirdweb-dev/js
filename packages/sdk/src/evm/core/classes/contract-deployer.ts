@@ -6,7 +6,10 @@ import {
 } from "../../common";
 import { getDeployArguments } from "../../common/deploy";
 import { resolveAddress } from "../../common/ens";
-import { buildTransactionFunction } from "../../common/transactions";
+import {
+  buildDeployTransactionFunction,
+  buildTransactionFunction,
+} from "../../common/transactions";
 import {
   EventType,
   getContractAddressByChainId,
@@ -125,7 +128,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param metadata - the contract metadata
    * @returns the address of the deployed contract
    */
-  deployNFTCollection = buildTransactionFunction(
+  deployNFTCollection = buildDeployTransactionFunction(
     async (metadata: NFTContractDeployMetadata): Promise<DeployTransaction> => {
       return await this.deployBuiltInContract.prepare(
         NFTCollectionInitializer.contractType,
@@ -149,7 +152,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param metadata - the contract metadata
    * @returns the address of the deployed contract
    */
-  deployNFTDrop = buildTransactionFunction(
+  deployNFTDrop = buildDeployTransactionFunction(
     async (metadata: NFTContractDeployMetadata): Promise<DeployTransaction> => {
       return await this.deployBuiltInContract.prepare(
         NFTDropInitializer.contractType,
@@ -173,7 +176,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param metadata - the contract metadata
    * @returns the address of the deployed contract
    */
-  deploySignatureDrop = buildTransactionFunction(
+  deploySignatureDrop = buildDeployTransactionFunction(
     async (metadata: NFTContractDeployMetadata): Promise<DeployTransaction> => {
       return await this.deployBuiltInContract.prepare(
         SignatureDropInitializer.contractType,
@@ -197,7 +200,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @returns the address of the deployed contract
    * @beta
    */
-  deployMultiwrap = buildTransactionFunction(
+  deployMultiwrap = buildDeployTransactionFunction(
     async (
       metadata: MultiwrapContractDeployMetadata,
     ): Promise<DeployTransaction> => {
@@ -223,7 +226,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param metadata - the contract metadata
    * @returns the address of the deployed contract
    */
-  deployEdition = buildTransactionFunction(
+  deployEdition = buildDeployTransactionFunction(
     async (metadata: NFTContractDeployMetadata): Promise<DeployTransaction> => {
       return await this.deployBuiltInContract.prepare(
         EditionInitializer.contractType,
@@ -247,7 +250,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param metadata - the contract metadata
    * @returns the address of the deployed contract
    */
-  deployEditionDrop = buildTransactionFunction(
+  deployEditionDrop = buildDeployTransactionFunction(
     async (metadata: NFTContractDeployMetadata): Promise<DeployTransaction> => {
       return await this.deployBuiltInContract.prepare(
         EditionDropInitializer.contractType,
@@ -271,7 +274,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param metadata - the contract metadata
    * @returns the address of the deployed contract
    */
-  deployToken = buildTransactionFunction(
+  deployToken = buildDeployTransactionFunction(
     async (
       metadata: TokenContractDeployMetadata,
     ): Promise<DeployTransaction> => {
@@ -297,7 +300,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param metadata - the contract metadata
    * @returns the address of the deployed contract
    */
-  deployTokenDrop = buildTransactionFunction(
+  deployTokenDrop = buildDeployTransactionFunction(
     async (
       metadata: TokenContractDeployMetadata,
     ): Promise<DeployTransaction> => {
@@ -323,7 +326,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param metadata - the contract metadata
    * @returns the address of the deployed contract
    */
-  deployMarketplace = buildTransactionFunction(
+  deployMarketplace = buildDeployTransactionFunction(
     async (
       metadata: MarketplaceContractDeployMetadata,
     ): Promise<DeployTransaction> => {
@@ -349,7 +352,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param metadata - the contract metadata
    * @returns the address of the deployed contract
    */
-  deployMarketplaceV3 = buildTransactionFunction(
+  deployMarketplaceV3 = buildDeployTransactionFunction(
     async (
       metadata: MarketplaceV3ContractDeployMetadata,
     ): Promise<DeployTransaction> => {
@@ -375,7 +378,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param metadata - the contract metadata
    * @returns the address of the deployed contract
    */
-  deployPack = buildTransactionFunction(
+  deployPack = buildDeployTransactionFunction(
     async (metadata: NFTContractDeployMetadata): Promise<DeployTransaction> => {
       return await this.deployBuiltInContract.prepare(
         PackInitializer.contractType,
@@ -409,7 +412,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param metadata - the contract metadata
    * @returns the address of the deployed contract
    */
-  deploySplit = buildTransactionFunction(
+  deploySplit = buildDeployTransactionFunction(
     async (
       metadata: SplitContractDeployMetadata,
     ): Promise<DeployTransaction> => {
@@ -436,7 +439,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param metadata - the contract metadata
    * @returns the address of the deployed contract
    */
-  deployVote = buildTransactionFunction(
+  deployVote = buildDeployTransactionFunction(
     async (
       metadata: VoteContractDeployMetadata,
     ): Promise<DeployTransaction> => {
@@ -456,7 +459,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param version
    * @returns a promise of the address of the newly deployed contract
    */
-  deployBuiltInContract = buildTransactionFunction(
+  deployBuiltInContract = buildDeployTransactionFunction(
     async <TContractType extends PrebuiltContractType>(
       contractType: TContractType,
       contractMetadata: z.input<
@@ -583,7 +586,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param contractName the name of the contract to deploy
    * @param constructorParams the constructor params to pass to the contract
    */
-  deployReleasedContract = buildTransactionFunction(
+  deployReleasedContract = buildDeployTransactionFunction(
     async (
       publisherAddress: AddressOrEns,
       contractName: string,
@@ -655,7 +658,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param initializerFunction
    * @param initializerArgs
    */
-  deployProxy = buildTransactionFunction(
+  deployProxy = buildDeployTransactionFunction(
     async (
       implementationAddress: AddressOrEns,
       implementationAbi: ContractInterface,
@@ -768,7 +771,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param constructorParamValues
    * @param options
    */
-  deployContractFromUri = buildTransactionFunction(
+  deployContractFromUri = buildDeployTransactionFunction(
     async (
       publishMetadataUri: string,
       constructorParamValues: any[],
@@ -876,7 +879,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param bytecode
    * @param constructorParams
    */
-  deployContractWithAbi = buildTransactionFunction(
+  deployContractWithAbi = buildDeployTransactionFunction(
     async (
       abi: ContractInterface,
       bytecode: BytesLike | { object: string },
