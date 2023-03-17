@@ -4,6 +4,7 @@ import {
   fetchContractMetadataFromAddress,
   fetchSourceFilesFromMetadata,
 } from "../../common/metadata-resolver";
+import { isRouterContract } from "../../common/plugin";
 import { defaultGaslessSendFunction } from "../../common/transactions";
 import { isBrowser } from "../../common/utils";
 import { ChainId } from "../../constants/chains";
@@ -16,9 +17,11 @@ import {
   TransactionOptionsWithContractWrapper,
 } from "../../types/transactions";
 import { GaslessTransaction, TransactionResult } from "../types";
-import { ConnectionInfo } from "@ethersproject/web";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, CallOverrides, ethers } from "ethers";
+import type { CallOverrides, ethers } from "ethers";
+import { BigNumber, utils, Contract } from "ethers";
+import { FormatTypes } from "ethers/lib/utils.js";
+import type { ConnectionInfo } from "ethers/lib/utils.js";
 import invariant from "tiny-invariant";
 
 export class Transaction<TResult = TransactionResult> {
@@ -31,6 +34,7 @@ export class Transaction<TResult = TransactionResult> {
   private storage: ThirdwebStorage;
   private gaslessOptions?: SDKOptionsOutput["gasless"];
   private parse?: ParseTransactionReceipt<TResult>;
+  private gasMultiple?: number;
 
   static fromContractWrapper<
     TContract extends ethers.BaseContract,
@@ -77,7 +81,7 @@ export class Transaction<TResult = TransactionResult> {
       }
     }
 
-    const contract = new ethers.Contract(
+    const contract = new Contract(
       options.contractAddress,
       contractAbi,
       options.provider,
@@ -217,6 +221,27 @@ export class Transaction<TResult = TransactionResult> {
   }
 
   /**
+   * Set a multiple to multiply the gas limit by
+   *
+   * @example
+   * ```js
+   * // Set the gas limit multiple to 1.2 (increase by 20%)
+   * tx.setGasLimitMultiple(1.2)
+   * ```
+   */
+  setGasLimitMultiple(factor: number) {
+    // If gasLimit override is set, we can just set it synchronously
+    if (BigNumber.isBigNumber(this.overrides.gasLimit)) {
+      this.overrides.gasLimit = BigNumber.from(
+        Math.floor(BigNumber.from(this.overrides.gasLimit).toNumber() * factor),
+      );
+    } else {
+      // Otherwise, set a gas multiple to use later
+      this.gasMultiple = factor;
+    }
+  }
+
+  /**
    * Encode the function data for this transaction
    */
   encode(): string {
@@ -271,10 +296,18 @@ export class Transaction<TResult = TransactionResult> {
     }
 
     try {
-      return await this.contract.estimateGas[this.method](
+      const gasEstimate = await this.contract.estimateGas[this.method](
         ...this.args,
         this.overrides,
       );
+
+      if (this.gasMultiple) {
+        return BigNumber.from(
+          Math.floor(BigNumber.from(gasEstimate).toNumber() * this.gasMultiple),
+        );
+      }
+
+      return gasEstimate;
     } catch (err: any) {
       // If gas estimation fails, we'll call static to get a better error message
       await this.simulate();
@@ -293,7 +326,7 @@ export class Transaction<TResult = TransactionResult> {
     const gasCost = gasLimit.mul(gasPrice);
 
     return {
-      ether: ethers.utils.formatEther(gasCost),
+      ether: utils.formatEther(gasCost),
       wei: gasCost,
     };
   }
@@ -320,6 +353,17 @@ export class Transaction<TResult = TransactionResult> {
     // First, if no gasLimit is passed, call estimate gas ourselves
     if (!overrides.gasLimit) {
       overrides.gasLimit = await this.estimateGasLimit();
+      try {
+        // for dynamic contracts, add 30% to the gas limit to account for multiple delegate calls
+        const abi = JSON.parse(
+          this.contract.interface.format(FormatTypes.json) as string,
+        );
+        if (isRouterContract(abi)) {
+          overrides.gasLimit = overrides.gasLimit.mul(130).div(100);
+        }
+      } catch (err) {
+        // ignore
+      }
     }
 
     // Now there should be no gas estimate errors
@@ -399,7 +443,7 @@ export class Transaction<TResult = TransactionResult> {
     ) {
       const from = await this.getSignerAddress();
       args[0] = args[0].map((tx: any) =>
-        ethers.utils.solidityPack(["bytes", "address"], [tx, from]),
+        utils.solidityPack(["bytes", "address"], [tx, from]),
       );
     }
 
@@ -504,7 +548,7 @@ export class Transaction<TResult = TransactionResult> {
       const baseBlockFee =
         block && block.baseFeePerGas
           ? block.baseFeePerGas
-          : ethers.utils.parseUnits("1", "gwei");
+          : utils.parseUnits("1", "gwei");
       let defaultPriorityFee: BigNumber;
       if (chainId === ChainId.Mumbai || chainId === ChainId.Polygon) {
         // for polygon, get fee data from gas station
@@ -538,8 +582,8 @@ export class Transaction<TResult = TransactionResult> {
   ): BigNumber {
     const extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 10%
     const txGasPrice = defaultPriorityFeePerGas.add(extraTip);
-    const maxGasPrice = ethers.utils.parseUnits("300", "gwei"); // no more than 300 gwei
-    const minGasPrice = ethers.utils.parseUnits("2.5", "gwei"); // no less than 2.5 gwei
+    const maxGasPrice = utils.parseUnits("300", "gwei"); // no more than 300 gwei
+    const minGasPrice = utils.parseUnits("2.5", "gwei"); // no less than 2.5 gwei
 
     if (txGasPrice.gt(maxGasPrice)) {
       return maxGasPrice;
@@ -556,7 +600,7 @@ export class Transaction<TResult = TransactionResult> {
    */
   public async getGasPrice(): Promise<BigNumber> {
     const gasPrice = await this.provider.getGasPrice();
-    const maxGasPrice = ethers.utils.parseUnits("300", "gwei"); // 300 gwei
+    const maxGasPrice = utils.parseUnits("300", "gwei"); // 300 gwei
     const extraTip = gasPrice.div(100).mul(10); // + 10%
     const txGasPrice = gasPrice.add(extraTip);
 

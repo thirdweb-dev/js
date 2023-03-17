@@ -288,7 +288,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
       )
     ) {
       return new MarketplaceV3DirectListings(
-        this.contractWrapper as unknown as ContractWrapper<DirectListingsLogic>,
+        this.contractWrapper,
         this.storage,
       );
     }
@@ -303,8 +303,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
       )
     ) {
       return new MarketplaceV3EnglishAuctions(
-        this
-          .contractWrapper as unknown as ContractWrapper<EnglishAuctionsLogic>,
+        this.contractWrapper,
         this.storage,
       );
     }
@@ -313,10 +312,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
 
   private detectOffers() {
     if (detectContractFeature<OffersLogic>(this.contractWrapper, "Offers")) {
-      return new MarketplaceV3Offers(
-        this.contractWrapper as unknown as ContractWrapper<OffersLogic>,
-        this.storage,
-      );
+      return new MarketplaceV3Offers(this.contractWrapper, this.storage);
     }
     return undefined;
   }

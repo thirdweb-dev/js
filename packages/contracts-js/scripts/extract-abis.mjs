@@ -10,7 +10,6 @@ import { basename, join, resolve } from "path";
 
 const main = () => {
   const libFolder = resolve(
-    "../..",
     "node_modules",
     "@thirdweb-dev/contracts/abi",
   );

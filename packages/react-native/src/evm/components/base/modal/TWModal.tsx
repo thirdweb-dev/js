@@ -1,5 +1,5 @@
 import { useAppTheme } from "../../../styles/hooks";
-import React, { PropsWithChildren } from "react";
+import { PropsWithChildren } from "react";
 import { StyleSheet, View, Dimensions } from "react-native";
 import Modal, { ModalProps } from "react-native-modal";
 

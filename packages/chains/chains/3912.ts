@@ -35,7 +35,6 @@ export default {
     {
       "name": "DRAC_Network Scan",
       "url": "https://www.dracscan.io",
-      "icon": "DRAC",
       "standard": "EIP3091"
     }
   ],

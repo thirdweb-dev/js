@@ -9,7 +9,7 @@ export type MetamaskWalletOptions = WalletOptions<{
 }>;
 
 type ConnectWithQrCodeArgs = {
-  chainId: number;
+  chainId?: number;
   onQrCodeUri: (uri: string) => void;
   onConnected: (accountAddress: string) => void;
 };
@@ -19,6 +19,12 @@ export class MetaMask extends AbstractBrowserWallet {
   connectorStorage: AsyncStorage;
   isInjected?: boolean;
   walletConnectConnector?: WalletConnectV1ConnectorType;
+
+  static meta = {
+    name: "Metamask",
+    iconURL:
+      "ipfs://QmZZHcw7zcXursywnLDAyY6Hfxzqop5GKgwoq8NB9jjrkN/metamask.svg",
+  };
 
   static id = "metamask" as const;
 

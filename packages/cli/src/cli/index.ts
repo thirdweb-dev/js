@@ -6,6 +6,7 @@ import { info, logger, spinner } from "../core/helpers/logger";
 import { CacheEntry } from "../core/types/cache";
 import { twCreate } from "../create/command";
 import { deploy } from "../deploy";
+import { generate } from "../generate/command";
 import { findPackageInstallation } from "../helpers/detect-local-packages";
 import { install } from "../install/command";
 import { upload } from "../storage/command";
@@ -403,6 +404,20 @@ const main = async () => {
     .option("-a, --all", "run detection on all contracts")
     .action(async (options) => {
       await detectExtensions(options);
+    });
+
+  program
+    .command("generate")
+    .description(
+      "Preload ABIs and generate types for your smart contract to strongly type the thirdweb SDK",
+    )
+    .option("-p, --path <project-path>", "path to project", ".")
+    .option(
+      "-d, --deployer <deployer-address>",
+      "address of the contract deployer",
+    )
+    .action(async (options) => {
+      await generate(options);
     });
 
   await program.parseAsync();

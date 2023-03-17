@@ -27,7 +27,6 @@ export default {
     {
       "name": "Paribu Net Testnet Explorer",
       "url": "https://testnet.paribuscan.com",
-      "icon": "explorer",
       "standard": "EIP3091"
     }
   ],

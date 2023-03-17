@@ -1,8 +1,8 @@
 import { DAppMetaData } from "../types/dAppMeta";
-import { SupportedWallet } from "../types/wallet";
-import { timeoutPromise } from "../utils";
+import { SupportedWallet, SupportedWalletInstance } from "../types/wallet";
+import { timeoutPromise } from "../utils/timeoutPromise";
 import { ThirdwebThemeContext } from "./theme-context";
-import { Chain, defaultChains } from "@thirdweb-dev/chains";
+import { Chain } from "@thirdweb-dev/chains";
 import { AsyncStorage, CreateAsyncStorage } from "@thirdweb-dev/wallets";
 import { Signer } from "ethers";
 import {
@@ -18,19 +18,33 @@ import {
 let coordinatorStorage: AsyncStorage;
 
 type NonNullable<T> = T extends null | undefined ? never : T;
-type WalletConnectParams<W extends SupportedWallet> = NonNullable<
-  Parameters<InstanceType<W>["connect"]>[0]
->;
+type WalletConnectParams<I extends SupportedWalletInstance> = Parameters<
+  I["connect"]
+>[0];
 
 type ConnectionStatus = "unknown" | "connected" | "disconnected" | "connecting";
+
+type ConnectFnArgs<I extends SupportedWalletInstance> =
+  // if second argument is optional
+  undefined extends WalletConnectParams<I>
+    ?
+        | [wallet: SupportedWallet<I>]
+        | [
+            wallet: SupportedWallet<I>,
+            connectParams: NonNullable<WalletConnectParams<I>>,
+          ]
+    : // if second argument is required
+      [
+        wallet: SupportedWallet<I>,
+        connectParams: NonNullable<WalletConnectParams<I>>,
+      ];
 
 type ThirdwebWalletContextData = {
   wallets: SupportedWallet[];
   signer?: Signer;
   activeWallet?: InstanceType<SupportedWallet>;
-  connect: <W extends SupportedWallet>(
-    wallet: W,
-    connectParams: WalletConnectParams<W>,
+  connect: <I extends SupportedWalletInstance>(
+    ...args: ConnectFnArgs<I>
   ) => Promise<void>;
   disconnect: () => Promise<void>;
   connectionStatus: ConnectionStatus;
@@ -40,8 +54,8 @@ type ThirdwebWalletContextData = {
   ) => InstanceType<SupportedWallet>;
   createWalletStorage: CreateAsyncStorage;
   switchChain: (chain: number) => Promise<void>;
-  activeChainId?: number;
-  chainIdToConnect?: number;
+  chainToConnect?: Chain;
+  activeChain?: Chain;
   handleWalletConnect: (walletId: InstanceType<SupportedWallet>) => void;
 };
 
@@ -51,16 +65,16 @@ const ThirdwebWalletContext = createContext<
 
 export function ThirdwebWalletProvider(
   props: PropsWithChildren<{
-    activeChain: Chain;
+    activeChain?: Chain;
     supportedWallets: SupportedWallet[];
     shouldAutoConnect?: boolean;
     createWalletStorage: CreateAsyncStorage;
     dAppMeta: DAppMetaData;
     chains: Chain[];
+    autoSwitch?: boolean;
   }>,
 ) {
   const [signer, setSigner] = useState<Signer | undefined>(undefined);
-  const [activeChainId, setActiveChainId] = useState<number | undefined>();
   const [connectionStatus, setConnectionStatus] =
     useState<ConnectionStatus>("unknown");
 
@@ -72,14 +86,14 @@ export function ThirdwebWalletProvider(
     coordinatorStorage = props.createWalletStorage("coordinatorStorage");
   }
 
-  // connect to this chain when wallet is connected
-  const chainIdToConnect = props.activeChain.chainId;
+  // if autoSwitch is enabled - enforce connection to activeChain
+  const chainToConnect = props.autoSwitch ? props.activeChain : undefined;
 
   const theme = useContext(ThirdwebThemeContext);
 
   const createWalletInstance = useCallback(
     (Wallet: SupportedWallet) => {
-      const walletChains = props.chains || defaultChains;
+      const walletChains = props.chains;
 
       let walletOptions = {
         chains: walletChains,
@@ -89,7 +103,8 @@ export function ThirdwebWalletProvider(
 
       return new Wallet({
         ...walletOptions,
-        chain: props.activeChain,
+        // TODO: remove this - it's only being used in device wallet
+        chain: props.activeChain || props.chains[0],
         coordinatorStorage,
         theme: theme || "dark",
       });
@@ -113,9 +128,7 @@ export function ThirdwebWalletProvider(
   const handleWalletConnect = useCallback(
     async (wallet: InstanceType<SupportedWallet>) => {
       const _signer = await wallet.getSigner();
-      const _chainId = await _signer.getChainId();
       setSigner(_signer);
-      setActiveChainId(_chainId);
       setActiveWallet(wallet);
       setConnectionStatus("connected");
     },
@@ -130,9 +143,7 @@ export function ThirdwebWalletProvider(
 
       await activeWallet.switchChain(chainId);
       const _signer = await activeWallet.getSigner();
-      const _chainId = await _signer.getChainId();
 
-      setActiveChainId(_chainId);
       setSigner(_signer);
     },
     [activeWallet],
@@ -170,13 +181,22 @@ export function ThirdwebWalletProvider(
         "lastConnectedWallet",
       );
 
-      const Wallet = lastConnectedWallet
-        ? props.supportedWallets.find((W) => {
-            return W.name
-              .toLowerCase()
-              .includes(lastConnectedWallet?.toLowerCase() || "");
-          })
-        : undefined;
+      if (!lastConnectedWallet) {
+        setConnectionStatus("disconnected");
+        return;
+      }
+
+      // find exact match
+      let Wallet = props.supportedWallets.find((W) => {
+        return W.name.toLowerCase() === lastConnectedWallet.toLowerCase();
+      });
+      if (!Wallet) {
+        Wallet = props.supportedWallets.find((W) => {
+          return W.name
+            .toLowerCase()
+            .includes(lastConnectedWallet.toLowerCase());
+        });
+      }
 
       if (Wallet && Wallet.id !== "deviceWallet") {
         const wallet = createWalletInstance(Wallet);
@@ -185,7 +205,7 @@ export function ThirdwebWalletProvider(
           // give up auto connect if it takes more than 3 seconds
           // this is to handle the edge case when trying to auto-connect to wallet that does not exist anymore (extension is uninstalled)
           await timeoutPromise(
-            3000,
+            10000,
             wallet.autoConnect(),
             `AutoConnect timeout`,
           );
@@ -208,13 +228,12 @@ export function ThirdwebWalletProvider(
   ]);
 
   const connectWallet = useCallback(
-    async <W extends SupportedWallet>(
-      Wallet: W,
-      connectParams: Parameters<InstanceType<W>["connect"]>[0],
-    ) => {
+    async <I extends SupportedWalletInstance>(...args: ConnectFnArgs<I>) => {
+      const [Wallet, connectParams] = args;
+
       const _connectedParams = {
-        chainId: chainIdToConnect,
-        ...connectParams,
+        chainId: chainToConnect?.chainId,
+        ...(connectParams || {}),
       };
 
       const wallet = createWalletInstance(Wallet);
@@ -228,13 +247,12 @@ export function ThirdwebWalletProvider(
         throw e;
       }
     },
-    [createWalletInstance, handleWalletConnect, chainIdToConnect],
+    [createWalletInstance, handleWalletConnect, chainToConnect],
   );
 
   const onWalletDisconnect = useCallback(() => {
     setConnectionStatus("disconnected");
     setSigner(undefined);
-    setActiveChainId(undefined);
     setActiveWallet(undefined);
   }, []);
 
@@ -257,9 +275,7 @@ export function ThirdwebWalletProvider(
 
     const update = async () => {
       const _signer = await activeWallet.getSigner();
-      const _chainId = await _signer.getChainId();
       setSigner(_signer);
-      setActiveChainId(_chainId);
     };
 
     activeWallet.addListener("change", () => {
@@ -289,9 +305,9 @@ export function ThirdwebWalletProvider(
         createWalletInstance: createWalletInstance,
         createWalletStorage: props.createWalletStorage,
         switchChain,
-        activeChainId,
         handleWalletConnect,
-        chainIdToConnect,
+        activeChain: props.activeChain,
+        chainToConnect,
       }}
     >
       {props.children}

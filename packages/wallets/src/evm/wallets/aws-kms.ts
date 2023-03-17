@@ -1,9 +1,6 @@
 import { AbstractWallet } from "./abstract";
-import {
-  TypedDataDomain,
-  TypedDataField,
-} from "@ethersproject/abstract-signer";
-import { ethers } from "ethers";
+import type { Signer, TypedDataDomain, TypedDataField } from "ethers";
+import { utils } from "ethers";
 import { AwsKmsSigner, AwsKmsSignerCredentials } from "ethers-aws-kms-signer";
 
 /**
@@ -26,13 +23,14 @@ import { AwsKmsSigner, AwsKmsSignerCredentials } from "ethers-aws-kms-signer";
  * ```
  */
 export class AwsKmsWallet extends AbstractWallet {
+  #signer?: AwsKmsSigner;
   constructor(options: AwsKmsSignerCredentials) {
     super();
-    this.signer = this.updateSigner(new AwsKmsSigner(options));
+    this.#signer = new AwsKmsSigner(options);
   }
 
-  async getSigner(): Promise<ethers.Signer> {
-    return this.signer as ethers.Signer;
+  async getSigner(): Promise<Signer> {
+    return this.#signer as Signer;
   }
 
   // Add _signTypedData method onto the signer for now so we don't need to reimplement
@@ -43,7 +41,7 @@ export class AwsKmsWallet extends AbstractWallet {
       types: Record<string, Array<TypedDataField>>,
       value: Record<string, any>,
     ) {
-      const hash = ethers.utils._TypedDataEncoder.hash(domain, types, value);
+      const hash = utils._TypedDataEncoder.hash(domain, types, value);
       return signer._signDigest(hash);
     };
 

@@ -1,10 +1,10 @@
-import { MetamaskIcon } from "../../icons/MetamaskIcon";
+import { MetamaskWallet } from "../../../wallets";
 import { GetStartedScreen } from "../GetStartedScreen";
 
 export const MetamaskGetStarted: React.FC<{ onBack: () => void }> = (props) => {
   return (
     <GetStartedScreen
-      WalletIcon={MetamaskIcon}
+      walletIconURL={MetamaskWallet.meta.iconURL}
       walletName="Metamask"
       chromeExtensionLink="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"
       googlePlayStoreLink="https://play.google.com/store/apps/details?id=io.metamask"
