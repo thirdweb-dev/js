@@ -182,6 +182,13 @@ abstract class TransactionContext {
   }
 
   /**
+   * Get the address of the transaction signer
+   */
+  protected async getSignerAddress() {
+    return this.signer.getAddress();
+  }
+
+  /**
    * Get gas overrides for the transaction
    */
   protected async getGasOverrides() {
@@ -482,7 +489,6 @@ export class Transaction<
    * Send the transaction and wait for it to be mined
    */
   async execute(): Promise<TResult> {
-    // TODO: Add submitted and completed events
     const tx = await this.send();
 
     let receipt;
@@ -502,13 +508,6 @@ export class Transaction<
     }
 
     return { receipt } as TransactionResult as TResult;
-  }
-
-  /**
-   * Get the address of the transaction signer
-   */
-  private async getSignerAddress() {
-    return this.signer.getAddress();
   }
 
   /**
@@ -731,22 +730,37 @@ export class DeployTransaction extends TransactionContext {
   }
 
   async estimateGasLimit(): Promise<BigNumber> {
-    // No need to do simulation here, since there can't be revert errors
-    const populatedTx = await this.populateTransaction();
-    return this.signer.estimateGas(populatedTx);
-
-    // TODO: Use nicer error formatting
+    try {
+      const populatedTx = await this.populateTransaction();
+      return this.signer.estimateGas(populatedTx);
+    } catch (err) {
+      // No need to do simulation here, since there can't be revert errors
+      throw this.deployError(err);
+    }
   }
 
   async send(): Promise<ethers.ContractTransaction> {
-    const signedTx = await this.sign();
-    // TODO: Add error handling
-    return this.provider.sendTransaction(signedTx);
+    try {
+      const signedTx = await this.sign();
+      return this.provider.sendTransaction(signedTx);
+    } catch (err) {
+      throw this.deployError(err);
+    }
   }
 
   async execute(): Promise<string> {
     const tx = await this.send();
-    await tx.wait();
+
+    try {
+      await tx.wait();
+    } catch (err) {
+      // If tx.wait() fails, it just gives us a generic "transaction failed"
+      // error. So instead, we need to call static to get an informative error message
+      await this.simulate();
+
+      // If transaction simulation (static call) doesn't throw, then throw with the message that we have
+      throw await this.deployError(err);
+    }
 
     return getContractAddress({ from: tx.from, nonce: tx.nonce });
   }
@@ -761,5 +775,55 @@ export class DeployTransaction extends TransactionContext {
     }
 
     return this.factory.getDeployTransaction(...this.args, overrides);
+  }
+
+  /**
+   * Create a nicely formatted error message with tx metadata and solidity stack trace
+   */
+  private async deployError(error: any) {
+    const provider = this.provider as ethers.providers.Provider & {
+      connection?: ConnectionInfo;
+    };
+
+    // Get metadata for transaction to populate into error
+    const network = await provider.getNetwork();
+    const from = await (this.overrides.from || this.getSignerAddress());
+    const data = this.encode();
+    const value = BigNumber.from(this.overrides.value || 0);
+    const rpcUrl = provider.connection?.url;
+
+    const methodArgs = this.args.map((arg) => {
+      if (JSON.stringify(arg).length <= 80) {
+        return JSON.stringify(arg);
+      }
+      return JSON.stringify(arg, undefined, 2);
+    });
+    const joinedArgs =
+      methodArgs.join(", ").length <= 80
+        ? methodArgs.join(", ")
+        : "\n" +
+          methodArgs
+            .map((arg) => "  " + arg.split("\n").join("\n  "))
+            .join(",\n") +
+          "\n";
+    const method = `deployContract(${joinedArgs})`;
+    const hash =
+      error.transactionHash ||
+      error.transaction?.hash ||
+      error.receipt?.transactionHash;
+
+    // Parse the revert reason from the error
+    const reason = parseRevertReason(error);
+
+    return new TransactionError({
+      reason,
+      from,
+      method,
+      data,
+      network,
+      rpcUrl,
+      value,
+      hash,
+    });
   }
 }
