@@ -1,11 +1,7 @@
 import { ThirdwebAuthConfig } from "../../evm/contexts/thirdweb-auth";
-import {
-  ThirdwebSDKProvider,
-  ThirdwebSDKProviderProps,
-} from "../../evm/providers/thirdweb-sdk-provider";
+import { ThirdwebSDKProvider } from "../../evm/providers/thirdweb-sdk-provider";
 import { DAppMetaData } from "../types/dAppMeta";
 import { SupportedWallet } from "../types/wallet";
-import { updateChainRPCs } from "../utils/updateChainRpcs";
 import { ThirdwebThemeContext } from "./theme-context";
 import {
   ThirdwebWalletProvider,
@@ -17,7 +13,8 @@ import type { SDKOptions } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { CreateAsyncStorage } from "@thirdweb-dev/wallets";
 import React, { useMemo } from "react";
-import { useUpdateChainsWithApiKeys } from "../hooks/chain-hooks";
+import { useUpdateChainsWithApiKeys } from "../../evm/hooks/chain-hooks";
+import { ThirdwebSDKProviderProps } from "../../evm/providers/types";
 
 /**
  * The possible props for the ThirdwebProvider.
@@ -118,27 +115,26 @@ export const ThirdwebProviderCore = <
 ) => {
   const supportedChains_ =
     props.supportedChains || (defaultChains as any as TChains);
-  const activeChainObj = useMemo(() => {
-    if (typeof props.activeChain === "number") {
-      return supportedChains_.find(
-        (chain) => chain.chainId === props.activeChain,
-      );
-    }
-    if (typeof props.activeChain === "string") {
-      return supportedChains_.find((chain) => chain.slug === props.activeChain);
-    }
-
-    return props.activeChain;
-  }, [props.activeChain]);
 
   const [_supportedChains, _activeChain] = useUpdateChainsWithApiKeys(
     // @ts-expect-error - different subtype of Chain[] but this works fine
     supportedChains_,
-    activeChainObj,
+    props.activeChain,
     props.thirdwebApiKey,
     props.alchemyApiKey,
     props.infuraApiKey,
   );
+
+  const activeChainObj = useMemo(() => {
+    if (typeof _activeChain === "number") {
+      return supportedChains_.find((chain) => chain.chainId === _activeChain);
+    }
+    if (typeof _activeChain === "string") {
+      return supportedChains_.find((chain) => chain.slug === _activeChain);
+    }
+
+    return _activeChain;
+  }, [_activeChain, supportedChains_]);
 
   const dAppMeta = props.dAppMeta || defaultdAppMeta;
   return (

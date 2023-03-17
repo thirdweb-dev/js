@@ -1,25 +1,14 @@
 import { DEFAULT_API_KEY } from "../../core/constants/rpc";
-import {
-  QueryClientProviderProps,
-  QueryClientProviderWithDefault,
-} from "../../core/providers/query-client";
-import {
-  ThirdwebAuthConfig,
-  ThirdwebAuthProvider,
-} from "../contexts/thirdweb-auth";
+import { QueryClientProviderWithDefault } from "../../core/providers/query-client";
+import { ThirdwebAuthProvider } from "../contexts/thirdweb-auth";
 import { ThirdwebConfigProvider } from "../contexts/thirdweb-config";
 import { ThirdwebConnectedWalletProvider } from "../contexts/thirdweb-wallet";
 import { Chain, defaultChains, getChainRPC } from "@thirdweb-dev/chains";
-import {
-  SDKOptions,
-  SDKOptionsOutput,
-  ThirdwebSDK,
-} from "@thirdweb-dev/sdk/evm";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import type { Signer } from "ethers";
+import { SDKOptionsOutput, ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 import { createContext, useContext, useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";
-import { useUpdateChainsWithApiKeys } from "../../core/hooks/chain-hooks";
+import { useUpdateChainsWithApiKeys } from "../hooks/chain-hooks";
+import { ThirdwebSDKProviderProps } from "./types";
 
 interface TWSDKContext {
   sdk?: ThirdwebSDK;
@@ -27,30 +16,6 @@ interface TWSDKContext {
 }
 
 const ThirdwebSDKContext = createContext<TWSDKContext>({});
-
-export interface ThirdwebSDKProviderProps<
-  TChains extends Chain[] = typeof defaultChains,
-> extends QueryClientProviderProps {
-  // the chains that we want to configure - optional, defaults to defaultChains
-  supportedChains?: Readonly<TChains>;
-  // a possible signer - optional, defaults to undefined
-  signer?: Signer;
-
-  // additional SDK options (forwarded to the SDK initializer)
-  sdkOptions?: Omit<SDKOptions, "chains">;
-  // storage
-  storageInterface?: ThirdwebStorage;
-  // if u want to use auth, pass this
-  authConfig?: ThirdwebAuthConfig;
-
-  // the network to use - optional, defaults to undefined
-  activeChain?: TChains[number]["chainId"] | TChains[number]["slug"] | Chain;
-
-  // api keys that can be passed
-  thirdwebApiKey?: string;
-  alchemyApiKey?: string;
-  infuraApiKey?: string;
-}
 
 /**
  *
@@ -257,8 +222,6 @@ export const ThirdwebSDKProvider = <
     );
   }, [_supportedChains, _activeChain]);
 
-  console.log("activeChain.rpc", { _activeChain });
-  console.log("supportedChains", { mergedChains });
   return (
     <ThirdwebConfigProvider
       value={{
