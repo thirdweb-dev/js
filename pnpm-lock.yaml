@@ -794,7 +794,7 @@ importers:
       '@aws-sdk/client-secrets-manager': ^3.256.0
       '@coinbase/wallet-sdk': ^3.6.3
       '@noble/ed25519': ^1.7.1
-      '@paperxyz/embedded-wallet-service-sdk': ^0.0.19
+      '@paperxyz/embedded-wallet-service-sdk': ^0.0.21
       '@preconstruct/cli': ^2.2.1
       '@safe-global/safe-core-sdk': ^3.3.2
       '@safe-global/safe-ethers-adapters': ^0.1.0-alpha.16
@@ -825,7 +825,7 @@ importers:
     dependencies:
       '@aws-sdk/client-secrets-manager': 3.292.0
       '@coinbase/wallet-sdk': 3.6.4_@babel+core@7.21.3
-      '@paperxyz/embedded-wallet-service-sdk': 0.0.19
+      '@paperxyz/embedded-wallet-service-sdk': 0.0.21
       '@walletconnect/ethereum-provider': 2.4.10_lsrif6druz2ewkeehxnmxyajqe
       '@walletconnect/jsonrpc-http-connection': 1.0.6
       '@walletconnect/jsonrpc-provider': 1.0.9
@@ -6343,8 +6343,8 @@ packages:
     resolution: {integrity: sha512-003xWiCuvePbLaPHT+CRuaV4GlyCAVm6XYSbBZDHoWZGn1mNkVKFaDbGJjjxmEFvizUwlCoM6O18FCBMMky2zQ==}
     dev: true
 
-  /@paperxyz/embedded-wallet-service-sdk/0.0.19:
-    resolution: {integrity: sha512-g4AzeQFUajhYADYlEUsSC4mEWbqYVapJYsA2slLZU7NX3wuAXo4XvuvAC90TGLNhG0/ZzKAlN+CK9v9EINNj2Q==}
+  /@paperxyz/embedded-wallet-service-sdk/0.0.21:
+    resolution: {integrity: sha512-3yeXErBAK/9GN+1zdBFC7l4O3z3N8rjEqfav6UNhDWX+ifclz87p2j8UrHIokf/wmQGdYi6NUMg42TRFUYW5jw==}
     dependencies:
       '@ethersproject/abstract-signer': 5.7.0
       '@ethersproject/bytes': 5.7.0
