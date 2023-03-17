@@ -68,7 +68,7 @@ export const CustomContractSchema = {
 const AbiTypeBaseSchema = z
   .object({
     type: z.string(),
-    name: z.string(),
+    name: z.string().optional(),
   })
   .catchall(z.any());
 
