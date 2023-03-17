@@ -4,21 +4,33 @@
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react-core",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
-  "main": "./src/index.ts",
-  "types": "",
+  "main": "dist/thirdweb-dev-react-core.cjs.js",
+  "types": "dist/thirdweb-dev-react-core.cjs.d.ts",
   "module": "dist/thirdweb-dev-react-core.esm.js",
   "browser": {
     "./dist/thirdweb-dev-react-core.esm.js": "./dist/thirdweb-dev-react-core.browser.esm.js"
   },
   "exports": {
     ".": {
-      "module": "./src/index.ts"
+      "module": {
+        "browser": "./dist/thirdweb-dev-react-core.browser.esm.js",
+        "default": "./dist/thirdweb-dev-react-core.esm.js"
+      },
+      "default": "./dist/thirdweb-dev-react-core.cjs.js"
     },
     "./evm": {
-      "module": "./src/evm/index.ts"
+      "module": {
+        "browser": "./evm/dist/thirdweb-dev-react-core-evm.browser.esm.js",
+        "default": "./evm/dist/thirdweb-dev-react-core-evm.esm.js"
+      },
+      "default": "./evm/dist/thirdweb-dev-react-core-evm.cjs.js"
     },
     "./solana": {
-      "module": "./src/solana/index.ts"
+      "module": {
+        "browser": "./solana/dist/thirdweb-dev-react-core-solana.browser.esm.js",
+        "default": "./solana/dist/thirdweb-dev-react-core-solana.esm.js"
+      },
+      "default": "./solana/dist/thirdweb-dev-react-core-solana.cjs.js"
     },
     "./package.json": "./package.json"
   },
@@ -109,19 +121,5 @@
     "@solana/wallet-adapter-react": {
       "optional": true
     }
-  },
-  "_main": "./src/index.ts",
-  "_exports": {
-    ".": {
-      "module": "./src/index.ts"
-    },
-    "./evm": {
-      "module": "./src/evm/index.ts"
-    },
-    "./solana": {
-      "module": "./src/solana/index.ts"
-    },
-    "./package.json": "./package.json"
-  },
-  "_types": ""
+  }
 }
