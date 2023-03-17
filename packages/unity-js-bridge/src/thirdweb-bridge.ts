@@ -7,7 +7,6 @@ import type { AbstractBrowserWallet } from "@thirdweb-dev/wallets/evm/wallets/ba
 import { CoinbaseWallet } from "@thirdweb-dev/wallets/evm/wallets/coinbase-wallet";
 import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
-import { MagicAuthWallet } from "@thirdweb-dev/wallets/evm/wallets/magic-auth";
 import { MetaMask } from "@thirdweb-dev/wallets/evm/wallets/metamask";
 import { WalletConnect } from "@thirdweb-dev/wallets/evm/wallets/wallet-connect";
 import { BigNumber } from "ethers";
@@ -44,10 +43,9 @@ const WALLETS = [
   InjectedWallet,
   WalletConnect,
   CoinbaseWallet,
-  MagicAuthWallet,
 ] as const;
 
-type PossibleWallet = typeof WALLETS[number]["id"];
+type PossibleWallet = (typeof WALLETS)[number]["id"];
 
 type FundWalletInput = FundWalletOptions & {
   appId: string;

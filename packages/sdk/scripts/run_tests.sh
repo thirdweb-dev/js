@@ -5,7 +5,7 @@ set -e
 sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
 export PATH="/home/runner/.local/share/solana/install/active_release/bin:$PATH"
 solana --version
-yarn run node:solana:start &
+pnpm run node:solana:start &
 attempts=0
 while ! curl 127.0.0.1:8899  &> /dev/null
 do
@@ -17,5 +17,5 @@ do
 	sleep 1
 	attempts=$((attempts+1))
 done
-yarn run test:solana:all
-yarn run node:solana:stop
+pnpm run test:solana:all
+pnpm run node:solana:stop

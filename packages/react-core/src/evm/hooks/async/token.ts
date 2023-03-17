@@ -16,8 +16,13 @@ import {
   invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  UseMutationResult,
+  useQueryClient,
+} from "@tanstack/react-query";
 import invariant from "tiny-invariant";
+import type { providers } from "ethers";
 
 /** **********************/
 /**     READ  HOOKS     **/
@@ -159,7 +164,20 @@ export function useTokenDecimals(contract: RequiredParam<TokenContract>) {
  * @twfeature ERC20Mintable
  * @beta
  */
-export function useMintToken(contract: RequiredParam<TokenContract>) {
+export function useMintToken(
+  contract: RequiredParam<TokenContract>,
+): UseMutationResult<
+  Omit<
+    {
+      receipt: providers.TransactionReceipt;
+      data: () => Promise<unknown>;
+    },
+    "data"
+  >,
+  unknown,
+  TokenParams,
+  unknown
+> {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();

@@ -1,9 +1,9 @@
 import { EventType } from "../../constants";
 import { ContractEvent, EventQueryOptions } from "../../types";
 import { ContractWrapper } from "./contract-wrapper";
-import { EventFragment } from "@ethersproject/abi";
-import { BaseContract, Event, providers } from "ethers";
+import type { BaseContract, Event, providers } from "ethers";
 import type { EventEmitter } from "eventemitter3";
+import type { EventFragment } from "ethers/lib/utils.js";
 
 /**
  * Listen to Contract events in real time

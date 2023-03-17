@@ -2,7 +2,6 @@ import { WalletMeta } from "../../../types/wallets";
 import BaseButton from "../../base/BaseButton";
 import Text from "../../base/Text";
 import { resolveIpfsUri } from "@thirdweb-dev/react-core";
-import React from "react";
 import { StyleSheet, View, FlatList, Image } from "react-native";
 
 interface InitialExplorerContentProps {

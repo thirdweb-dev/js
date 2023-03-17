@@ -17,8 +17,14 @@ import {
   invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
+  useMutation,
+  UseMutationResult,
+  useQueryClient,
+  UseQueryResult,
+} from "@tanstack/react-query";
+import type {
+  NFT,
   NFTMetadataInput,
   QueryAllParams,
   UploadProgressEvent,
@@ -27,6 +33,7 @@ import { NFTDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/p
 import { SignatureDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/signature-drop";
 import { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/smart-contract";
 import invariant from "tiny-invariant";
+import type { providers } from "ethers";
 
 /** **********************/
 /**       READ HOOKS    **/
@@ -49,7 +56,7 @@ import invariant from "tiny-invariant";
 export function useUnclaimedNFTs(
   contract: RequiredParam<NFTDrop>,
   queryParams?: QueryAllParams,
-) {
+): UseQueryResult<NFT[]> {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.nft.drop.getAllUnclaimed(contractAddress, queryParams),
@@ -307,7 +314,7 @@ export function useClaimNFT<TContract extends DropContract>(
 export function useLazyMint<TContract extends DropContract>(
   contract: RequiredParam<TContract>,
   onProgress?: (progress: UploadProgressEvent) => void,
-) {
+): UseMutationResult<any, unknown, any, unknown> {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
@@ -458,7 +465,18 @@ export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
  */
 export function useRevealLazyMint<TContract extends RevealableContract>(
   contract: RequiredParam<TContract>,
-) {
+): UseMutationResult<
+  Omit<
+    {
+      receipt: providers.TransactionReceipt;
+      data: () => Promise<unknown>;
+    },
+    "data"
+  >,
+  unknown,
+  RevealLazyMintInput,
+  unknown
+> {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();

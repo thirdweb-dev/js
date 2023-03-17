@@ -1,7 +1,6 @@
 import { Theme } from "../../styles/theme";
 import { shortenString } from "../../utils/addresses";
 import Text from "./Text";
-import React from "react";
 
 export const Address = ({
   address,
