@@ -3,8 +3,8 @@
   "version": "0.1.2",
   "private": true,
   "dependencies": {
-    "@thirdweb-dev/react": "*",
-    "@thirdweb-dev/sdk": "*",
+    "@thirdweb-dev/react": "workspace:*",
+    "@thirdweb-dev/sdk": "workspace:*",
     "ethers": "^5.7.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

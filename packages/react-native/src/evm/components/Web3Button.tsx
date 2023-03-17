@@ -16,7 +16,6 @@ import {
 import type { SmartContract } from "@thirdweb-dev/sdk";
 import type { CallOverrides, ContractInterface } from "ethers";
 import { PropsWithChildren, useEffect } from "react";
-import React from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import invariant from "tiny-invariant";
 

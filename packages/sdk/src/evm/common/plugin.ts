@@ -71,6 +71,18 @@ export async function getCompositePluginABI(
   return pluginABIs.length > 0 ? joinABIs([abi, ...pluginABIs]) : abi;
 }
 
+export function isRouterContract(abi: Abi) {
+  const isPluginRouter: boolean = isFeatureEnabled(
+    AbiSchema.parse(abi),
+    "PluginRouter",
+  );
+  const isExtensionRouter: boolean = isFeatureEnabled(
+    AbiSchema.parse(abi),
+    "ExtensionRouter",
+  );
+  return isExtensionRouter || isPluginRouter;
+}
+
 /**
  * @internal
  */
