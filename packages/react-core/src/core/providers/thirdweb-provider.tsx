@@ -17,6 +17,7 @@ import type { SDKOptions } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { CreateAsyncStorage } from "@thirdweb-dev/wallets";
 import React, { useMemo } from "react";
+import { useUpdateChainsWithApiKeys } from "../hooks/chain-hooks";
 
 /**
  * The possible props for the ThirdwebProvider.
@@ -115,44 +116,35 @@ export const ThirdwebProviderCore = <
 >(
   props: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>,
 ) => {
-  const _supportedChains =
+  const supportedChains_ =
     props.supportedChains || (defaultChains as any as TChains);
-
-  const keys = useMemo(
-    () => ({
-      thirdwebApiKey: props.thirdwebApiKey,
-      alchemyApiKey: props.alchemyApiKey,
-      infuraApiKey: props.infuraApiKey,
-    }),
-    [props.thirdwebApiKey, props.alchemyApiKey, props.infuraApiKey],
-  );
-
-  const supportedChains = useMemo(
-    () => _supportedChains.map((chain) => updateChainRPCs(chain, keys)),
-    [_supportedChains, keys],
-  );
-
-  const dAppMeta = props.dAppMeta || defaultdAppMeta;
-
   const activeChainObj = useMemo(() => {
     if (typeof props.activeChain === "number") {
-      return supportedChains.find(
+      return supportedChains_.find(
         (chain) => chain.chainId === props.activeChain,
       );
     }
     if (typeof props.activeChain === "string") {
-      return supportedChains.find((chain) => chain.slug === props.activeChain);
+      return supportedChains_.find((chain) => chain.slug === props.activeChain);
     }
 
-    return props.activeChain
-      ? updateChainRPCs(props.activeChain, keys)
-      : undefined;
-  }, [props.activeChain, supportedChains, keys]);
+    return props.activeChain;
+  }, [props.activeChain]);
 
+  const [_supportedChains, _activeChain] = useUpdateChainsWithApiKeys(
+    // @ts-expect-error - different subtype of Chain[] but this works fine
+    supportedChains_,
+    activeChainObj,
+    props.thirdwebApiKey,
+    props.alchemyApiKey,
+    props.infuraApiKey,
+  );
+
+  const dAppMeta = props.dAppMeta || defaultdAppMeta;
   return (
     <ThirdwebThemeContext.Provider value={props.theme}>
       <ThirdwebWalletProvider
-        chains={supportedChains}
+        chains={_supportedChains}
         supportedWallets={props.supportedWallets}
         shouldAutoConnect={props.autoConnect}
         createWalletStorage={props.createWalletStorage}
@@ -163,7 +155,7 @@ export const ThirdwebProviderCore = <
         <ThirdwebSDKProviderWrapper
           queryClient={props.queryClient}
           sdkOptions={props.sdkOptions}
-          supportedChains={supportedChains}
+          supportedChains={_supportedChains}
           activeChain={activeChainObj}
           storageInterface={props.storageInterface}
           authConfig={props.authConfig}

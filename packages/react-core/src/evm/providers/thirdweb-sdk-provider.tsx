@@ -19,7 +19,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { Signer } from "ethers";
 import { createContext, useContext, useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";
-import { updateChainRPCs } from "../../core/utils/updateChainRpcs";
+import { useUpdateChainsWithApiKeys } from "../../core/hooks/chain-hooks";
 
 interface TWSDKContext {
   sdk?: ThirdwebSDK;
@@ -225,32 +225,17 @@ export const ThirdwebSDKProvider = <
   infuraApiKey,
   ...restProps
 }: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
-  const _supportedChains = supportedChains || (defaultChains as any as TChains);
-
-  const keys = useMemo(
-    () => ({
-      thirdwebApiKey: thirdwebApiKey,
-      alchemyApiKey: alchemyApiKey,
-      infuraApiKey: infuraApiKey,
-    }),
-    [thirdwebApiKey, alchemyApiKey, infuraApiKey],
+  const supportedChains_ = useMemo(() => {
+    return supportedChains || (defaultChains as any as TChains);
+  }, [supportedChains]);
+  const [_supportedChains, _activeChain] = useUpdateChainsWithApiKeys(
+    // @ts-expect-error - different subtype of Chain[] but this works fine
+    supportedChains_,
+    activeChain,
+    thirdwebApiKey,
+    alchemyApiKey,
+    infuraApiKey,
   );
-
-  const supportedChainsWithApiKey = useMemo(() => {
-    return _supportedChains.map((chain) => updateChainRPCs(chain, keys));
-  }, []);
-
-  const _activeChain = useMemo(() => {
-    if (
-      !activeChain ||
-      typeof activeChain === "string" ||
-      typeof activeChain === "number"
-    ) {
-      return activeChain;
-    }
-
-    return updateChainRPCs(activeChain, keys);
-  }, []);
 
   const mergedChains = useMemo(() => {
     if (
@@ -258,13 +243,11 @@ export const ThirdwebSDKProvider = <
       typeof _activeChain === "string" ||
       typeof _activeChain === "number"
     ) {
-      return supportedChainsWithApiKey as Readonly<Chain[]>;
+      return _supportedChains as Readonly<Chain[]>;
     }
 
     const _mergedChains = [
-      ...supportedChainsWithApiKey.filter(
-        (c) => c.chainId !== _activeChain.chainId,
-      ),
+      ..._supportedChains.filter((c) => c.chainId !== _activeChain.chainId),
       _activeChain,
     ] as Readonly<Chain[]>;
     // return a _mergedChains uniqued by chainId key
@@ -272,8 +255,10 @@ export const ThirdwebSDKProvider = <
       (chain, index, self) =>
         index === self.findIndex((c) => c.chainId === chain.chainId),
     );
-  }, [supportedChainsWithApiKey, _activeChain]);
+  }, [_supportedChains, _activeChain]);
 
+  console.log("activeChain.rpc", { _activeChain });
+  console.log("supportedChains", { mergedChains });
   return (
     <ThirdwebConfigProvider
       value={{
@@ -288,7 +273,6 @@ export const ThirdwebSDKProvider = <
           <ThirdwebAuthProvider value={authConfig}>
             <WrappedThirdwebSDKProvider
               signer={signer}
-              // @ts-expect-error - different subtype of Chain[] but this works fine
               supportedChains={mergedChains}
               thirdwebApiKey={thirdwebApiKey}
               alchemyApiKey={alchemyApiKey}
