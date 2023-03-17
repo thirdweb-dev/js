@@ -9,7 +9,6 @@ import { fetchContractMetadataFromAddress } from "./metadata-resolver";
 import { unique } from "./utils";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
-import { Interface } from "ethers/lib/utils.js";
 
 /**
  * @internal

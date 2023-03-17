@@ -21,19 +21,19 @@ packages.forEach((pkg) => {
   const peerDependencies = packageJson.peerDependencies || {};
 
   Object.entries(dependencies).forEach(([dep, version]) => {
-    if (dep in packageVersions && version === "*") {
+    if (dep in packageVersions && version === "workspace:*") {
       packageJson.dependencies[dep] = `^${packageVersions[dep].version}`;
     }
   });
 
   Object.entries(devDependencies).forEach(([dep, version]) => {
-    if (dep in packageVersions && version === "*") {
+    if (dep in packageVersions && version === "workspace:*") {
       packageJson.devDependencies[dep] = `^${packageVersions[dep].version}`;
     }
   });
 
   Object.entries(peerDependencies).forEach(([dep, version]) => {
-    if (dep in packageVersions && version === "*") {
+    if (dep in packageVersions && version === "workspace:*") {
       packageJson.peerDependencies[dep] = `^${packageVersions[dep].version}`;
     }
   });

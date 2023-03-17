@@ -7,7 +7,6 @@ import {
 import { getDeployArguments } from "../../common/deploy";
 import { resolveAddress } from "../../common/ens";
 import {
-  ChainId,
   EventType,
   getContractAddressByChainId,
   getNativeTokenByChainId,
