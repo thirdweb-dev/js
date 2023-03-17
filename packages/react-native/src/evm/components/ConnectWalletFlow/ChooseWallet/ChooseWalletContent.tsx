@@ -1,7 +1,6 @@
 import { WalletMeta } from "../../../types/wallets";
 import BaseButton from "../../base/BaseButton";
 import Text from "../../base/Text";
-import React from "react";
 import { StyleSheet, View, FlatList, Image } from "react-native";
 
 interface InitialExplorerContentProps {

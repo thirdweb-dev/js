@@ -3,7 +3,11 @@ import { getUser } from "./helpers/user";
 import loginHandler from "./routes/login";
 import logoutHandler from "./routes/logout";
 import userHandler from "./routes/user";
-import { ThirdwebAuthConfig, ThirdwebAuthContext } from "./types";
+import {
+  ThirdwebAuthConfig,
+  ThirdwebAuthContext,
+  ThirdwebAuthUser,
+} from "./types";
 import cookieParser from "cookie-parser";
 import express, { Request, Response } from "express";
 
@@ -17,10 +21,21 @@ const asyncHandler =
     return Promise.resolve(fnReturn).catch(next);
   };
 
+type ThirdwebAuthReturnType<
+  TData extends Json = Json,
+  TSession extends Json = Json,
+> = {
+  authRouter: express.Router;
+  authMiddleware: express.RequestHandler;
+  getUser: (req: Request) => Promise<ThirdwebAuthUser<TData, TSession> | null>;
+};
+
 export function ThirdwebAuth<
   TData extends Json = Json,
   TSession extends Json = Json,
->(cfg: ThirdwebAuthConfig<TData, TSession>) {
+>(
+  cfg: ThirdwebAuthConfig<TData, TSession>,
+): ThirdwebAuthReturnType<TData, TSession> {
   const ctx = {
     ...cfg,
     auth: new ThirdwebAuthSDK(cfg.wallet, cfg.domain),

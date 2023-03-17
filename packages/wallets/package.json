@@ -92,13 +92,6 @@
       },
       "default": "./solana/wallets/signer/dist/thirdweb-dev-wallets-solana-wallets-signer.cjs.js"
     },
-    "./evm/wallets/magic-auth": {
-      "module": {
-        "browser": "./evm/wallets/magic-auth/dist/thirdweb-dev-wallets-evm-wallets-magic-auth.browser.esm.js",
-        "default": "./evm/wallets/magic-auth/dist/thirdweb-dev-wallets-evm-wallets-magic-auth.esm.js"
-      },
-      "default": "./evm/wallets/magic-auth/dist/thirdweb-dev-wallets-evm-wallets-magic-auth.cjs.js"
-    },
     "./solana/wallets/keypair": {
       "module": {
         "browser": "./solana/wallets/keypair/dist/thirdweb-dev-wallets-solana-wallets-keypair.browser.esm.js",
@@ -133,13 +126,6 @@
         "default": "./evm/wallets/device-wallet/dist/thirdweb-dev-wallets-evm-wallets-device-wallet.esm.js"
       },
       "default": "./evm/wallets/device-wallet/dist/thirdweb-dev-wallets-evm-wallets-device-wallet.cjs.js"
-    },
-    "./evm/connectors/magic": {
-      "module": {
-        "browser": "./evm/connectors/magic/dist/thirdweb-dev-wallets-evm-connectors-magic.browser.esm.js",
-        "default": "./evm/connectors/magic/dist/thirdweb-dev-wallets-evm-connectors-magic.esm.js"
-      },
-      "default": "./evm/connectors/magic/dist/thirdweb-dev-wallets-evm-connectors-magic.cjs.js"
     },
     "./evm/connectors/paper": {
       "module": {
@@ -256,8 +242,6 @@
   "sideEffects": false,
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.256.0",
-    "@magic-ext/connect": "^3.1.0",
-    "@magic-ext/oauth": "^4.1.0",
     "@paperxyz/embedded-wallet-service-sdk": "^0.0.19",
     "@walletconnect/ethereum-provider": "~2.4.6",
     "@walletconnect/jsonrpc-http-connection": "^1.0.0",
@@ -272,7 +256,6 @@
     "eip1193-provider": "^1.0.1",
     "ethers-aws-kms-signer": "^1.3.2",
     "eventemitter3": "^5.0.0",
-    "magic-sdk": "^10.1.0",
     "tweetnacl": "^1.0.3"
   },
   "resolutions": {
@@ -280,13 +263,12 @@
   },
   "peerDependencies": {
     "@coinbase/wallet-sdk": "^3.6.3",
-    "@magic-sdk/provider": "^10.1.0",
     "@noble/ed25519": "^1.7.1",
     "@safe-global/safe-core-sdk": "^3.3.2",
     "@safe-global/safe-ethers-adapters": "^0.1.0-alpha.16",
     "@safe-global/safe-ethers-lib": "^1.9.2",
     "@solana/web3.js": "^1.73.0",
-    "@thirdweb-dev/chains": "*",
+    "@thirdweb-dev/chains": "workspace:*",
     "@wagmi/core": ">=0.9.x",
     "bs58": "^5.0.0",
     "ethers": "^5.7.2"
@@ -299,9 +281,6 @@
       "optional": true
     },
     "@coinbase/wallet-sdk": {
-      "optional": true
-    },
-    "@magic-sdk/provider": {
       "optional": true
     },
     "@noble/ed25519": {
@@ -322,9 +301,6 @@
     "ethers": {
       "optional": true
     },
-    "magic-sdk": {
-      "optional": true
-    },
     "@safe-global/safe-core-sdk": {
       "optional": true
     },
@@ -337,19 +313,20 @@
   },
   "devDependencies": {
     "@coinbase/wallet-sdk": "^3.6.3",
-    "@magic-sdk/provider": "^10.1.0",
     "@noble/ed25519": "^1.7.1",
     "@preconstruct/cli": "^2.2.1",
     "@safe-global/safe-core-sdk": "^3.3.2",
     "@safe-global/safe-ethers-adapters": "^0.1.0-alpha.16",
     "@safe-global/safe-ethers-lib": "^1.9.2",
     "@solana/web3.js": "^1.62.0",
-    "@thirdweb-dev/chains": "*",
+    "@thirdweb-dev/chains": "workspace:*",
     "@wagmi/core": "^0.9.6",
     "abitype": "^0.2.5",
     "bs58": "^5.0.0",
     "ethers": "^5.7.2",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "eslint-config-thirdweb": "workspace:*",
+    "@thirdweb-dev/tsconfig": "workspace:*"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
