@@ -36,7 +36,6 @@ import { IpfsUploader } from "./uploaders/ipfs-uploader";
  *   // We define a mapping of schemes to gateway URLs
  *   "ipfs://": [
  *     "https://ipfs.thirdwebcdn.com/ipfs/",
- *     "https://gateway.ipfscdn.io/ipfs/",
  *     "https://cloudflare-ipfs.com/ipfs/",
  *     "https://ipfs.io/ipfs/",
  *   ],
