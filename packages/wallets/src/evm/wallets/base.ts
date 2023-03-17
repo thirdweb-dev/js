@@ -85,6 +85,11 @@ export abstract class AbstractBrowserWallet<
     this.#subscribeToEvents(connector);
 
     const saveToStorage = async () => {
+      // if explicitly set to false, do not save the params
+      if (connectOptions?.saveParams === false) {
+        return;
+      }
+
       try {
         await this.walletStorage.setItem(
           "lastConnectedParams",

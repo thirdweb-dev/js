@@ -8,6 +8,7 @@ import type {
   WalletConnectV1Options,
   WalletOptions,
   CoinbaseWalletOptions as CoinbaseWalletOptionsCore,
+  PaperWalletOptions as PaperWalletOptionsCore,
 } from "@thirdweb-dev/wallets";
 import {
   CoinbaseWallet as CoinbaseWalletCore,
@@ -15,6 +16,7 @@ import {
   MetaMask as MetamaskWalletCore,
   WalletConnect as WalletConnectCore,
   WalletConnectV1 as WalletConnectV1Core,
+  PaperWallet as PaperWalletCore,
 } from "@thirdweb-dev/wallets";
 
 const walletStorages = {
@@ -130,6 +132,26 @@ export class CoinbaseWallet extends CoinbaseWalletCore {
     super({
       ...options,
       walletStorage: walletStorages.walletConnect,
+      dappMetadata: {
+        ...options.dappMetadata,
+        isDarkMode: options.theme === "dark",
+      },
+    });
+  }
+}
+
+type PaperWalletOptions = Omit<
+  PaperWalletOptionsCore,
+  "walletStorage" | "clientId"
+> &
+  ExtraCoreWalletOptions;
+export class PaperWallet extends PaperWalletCore {
+  constructor(options: PaperWalletOptions) {
+    super({
+      ...options,
+      walletStorage: walletStorages.walletConnect,
+      // TODO: remove this, it's just for testing and will only work on localhost
+      clientId: "62db6ab5-3165-4aac-b7a5-b52bb39e8d69",
       dappMetadata: {
         ...options.dappMetadata,
         isDarkMode: options.theme === "dark",
