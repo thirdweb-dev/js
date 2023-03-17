@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 import { Chain } from "@thirdweb-dev/chains";
 
 const defaultChainIcon =
-  "https://gateway.ipfscdn.io/ipfs/QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png";
+  "https://ipfs.thirdwebcdn.com/ipfs/QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png";
 
 export const ChainIcon: React.FC<{
   chain?: Chain;
@@ -12,7 +12,7 @@ export const ChainIcon: React.FC<{
 }> = (props) => {
   const url = props.chain?.icon?.url;
   const src = url
-    ? `https://gateway.ipfscdn.io/ipfs/${url.replace("ipfs://", "")}`
+    ? `https://ipfs.thirdwebcdn.com/pfs/${url.replace("ipfs://", "")}`
     : defaultChainIcon;
 
   return (

@@ -3,7 +3,7 @@ import React from "react";
 import { Image, StyleSheet, View } from "react-native";
 
 const defaultChainIcon =
-  "https://gateway.ipfscdn.io/ipfs/QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png";
+  "https://ipfs.thirdwebcdn.com/ipfs/QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png";
 
 export type ChainIconProps = {
   chainIconUrl?: string;
@@ -13,7 +13,7 @@ export type ChainIconProps = {
 
 export const ChainIcon = ({ chainIconUrl, size, active }: ChainIconProps) => {
   const src = chainIconUrl
-    ? `https://gateway.ipfscdn.io/ipfs/${chainIconUrl.replace("ipfs://", "")}`
+    ? `https://ipfs.thirdwebcdn.com/ipfs/${chainIconUrl.replace("ipfs://", "")}`
     : defaultChainIcon;
 
   return (
