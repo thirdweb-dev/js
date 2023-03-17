@@ -137,24 +137,24 @@ const majorReleaseNames = majorReleases.map((release) => release.name);
 
 if (!majorReleaseNames.length) {
   console.log();
-  console.log("No major releases found");
+  console.log("✅ No major releases found");
   console.log();
 }
 
 for (const majorReleaseName of majorReleaseNames) {
   let changesetName;
 
-  console.log("Checking:", majorReleaseName);
+  console.log("⌛️ Checking:", majorReleaseName);
   try {
     changesetName = await findMajorChangesetForPackage(majorReleaseName);
-    console.log(`Changeset causing major version: ${changesetName}`);
+    console.log(`✅ Changeset causing major version: ${changesetName}`);
     console.log();
     const changeset = loadChangeset(changesetName);
     console.log(changeset.summary);
     console.log();
   } catch (err) {
     console.error(
-      "failed to find major bump changeset for " + majorReleaseName,
+      "❌ failed to find major bump changeset for " + majorReleaseName,
     );
   }
   console.log();
