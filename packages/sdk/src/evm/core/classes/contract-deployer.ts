@@ -66,7 +66,6 @@ import {
   ContractInterface,
   ethers,
 } from "ethers";
-import { getContractAddress } from "ethers/lib/utils.js";
 import { EventEmitter } from "eventemitter3";
 import invariant from "tiny-invariant";
 import { z } from "zod";

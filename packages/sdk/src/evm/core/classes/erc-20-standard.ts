@@ -4,7 +4,7 @@ import { TokenMintInput } from "../../schema/tokens/token";
 import { Amount, Currency, CurrencyValue } from "../../types/currency";
 import { BaseERC20, BaseSignatureMintERC20 } from "../../types/eips";
 import { UpdateableNetwork } from "../interfaces/contract";
-import { NetworkInput, TransactionResult } from "../types";
+import { NetworkInput } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20 } from "./erc-20";
 import { Transaction } from "./transactions";
