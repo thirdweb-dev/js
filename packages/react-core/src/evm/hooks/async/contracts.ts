@@ -19,13 +19,14 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
-import type {
+import {
   Abi,
   CommonContractSchemaInput,
   ContractEvent,
   ContractForPrebuiltContractType,
   ContractType,
   EventQueryOptions,
+  getCachedAbiForContract,
   PrebuiltContractType,
   SmartContract,
   SUPPORTED_CHAIN_ID,
@@ -234,12 +235,19 @@ export function useContract(
       // if we don't have a contractType or ABI then we will have to resolve it regardless
       // we also handle it being "custom" just in case...
       if (!contractTypeOrABI || contractTypeOrABI === "custom") {
+        // First check local ABI cache
+        const cachedAbi = getCachedAbiForContract(contractAddress);
+        if (cachedAbi) {
+          return sdk.getContract(contractAddress, cachedAbi);
+        }
+
         // we just resolve here (sdk does this internally anyway)
         const resolvedContractType = await queryClient.fetchQuery(
           contractType.cacheKey(contractAddress, activeChainId),
           () => contractType.fetchQuery(contractAddress, sdk),
           { cacheTime: Infinity, staleTime: Infinity },
         );
+
         let abi: ContractInterface | undefined;
         if (resolvedContractType === "custom") {
           abi = (
@@ -250,6 +258,7 @@ export function useContract(
             )
           )?.abi;
         }
+
         invariant(resolvedContractType, "failed to resolve contract type");
         // just let the sdk handle the rest
         // if we have resolved an ABI for a custom contract, use that otherwise use contract type
