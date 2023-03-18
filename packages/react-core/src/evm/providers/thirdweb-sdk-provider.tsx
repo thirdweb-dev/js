@@ -190,37 +190,40 @@ export const ThirdwebSDKProvider = <
   infuraApiKey,
   ...restProps
 }: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
-  const supportedChains_ = useMemo(() => {
+  const supportedChainsNonNull = useMemo(() => {
     return supportedChains || (defaultChains as any as TChains);
   }, [supportedChains]);
-  const [_supportedChains, _activeChain] = useUpdateChainsWithApiKeys(
-    // @ts-expect-error - different subtype of Chain[] but this works fine
-    supportedChains_,
-    activeChain,
-    thirdwebApiKey,
-    alchemyApiKey,
-    infuraApiKey,
-  );
+  const [supportedChainsWithKey, activeChainWithKey] =
+    useUpdateChainsWithApiKeys(
+      // @ts-expect-error - different subtype of Chain[] but this works fine
+      supportedChainsNonNull,
+      activeChain,
+      thirdwebApiKey,
+      alchemyApiKey,
+      infuraApiKey,
+    );
 
   const mergedChains = useMemo(() => {
     if (
-      !_activeChain ||
-      typeof _activeChain === "string" ||
-      typeof _activeChain === "number"
+      !activeChainWithKey ||
+      typeof activeChainWithKey === "string" ||
+      typeof activeChainWithKey === "number"
     ) {
-      return _supportedChains as Readonly<Chain[]>;
+      return supportedChainsWithKey as Readonly<Chain[]>;
     }
 
     const _mergedChains = [
-      ..._supportedChains.filter((c) => c.chainId !== _activeChain.chainId),
-      _activeChain,
+      ...supportedChainsWithKey.filter(
+        (c) => c.chainId !== activeChainWithKey.chainId,
+      ),
+      activeChainWithKey,
     ] as Readonly<Chain[]>;
     // return a _mergedChains uniqued by chainId key
     return _mergedChains.filter(
       (chain, index, self) =>
         index === self.findIndex((c) => c.chainId === chain.chainId),
     );
-  }, [_supportedChains, _activeChain]);
+  }, [supportedChainsWithKey, activeChainWithKey]);
 
   return (
     <ThirdwebConfigProvider
@@ -240,7 +243,7 @@ export const ThirdwebSDKProvider = <
               thirdwebApiKey={thirdwebApiKey}
               alchemyApiKey={alchemyApiKey}
               infuraApiKey={infuraApiKey}
-              activeChain={_activeChain}
+              activeChain={activeChainWithKey}
               {...restProps}
             >
               {children}
