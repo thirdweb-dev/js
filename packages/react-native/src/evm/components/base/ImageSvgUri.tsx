@@ -11,7 +11,7 @@ const ImageSvgUri = ({
   width: number;
   height: number;
 }) => {
-  const isSvg = imageUrl.endsWith(".svg");
+  const isSvg = imageUrl.toLowerCase().endsWith(".svg");
   const resolvedImageUrl = resolveIpfsUri(imageUrl) || "";
 
   if (isSvg) {

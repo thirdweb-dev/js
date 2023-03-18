@@ -118,6 +118,7 @@ type WC2Options = Omit<
 
 export class TrustWallet extends WalletConnectCore {
   static meta = {
+    id: "trust",
     name: "Trust Wallet",
     iconURL:
       "https://registry.walletconnect.org/v2/logo/md/0528ee7e-16d1-4089-21e3-bbfb41933100",
