@@ -16,7 +16,7 @@ export const ChooseWalletContent = ({
   return (
     <View style={styles.explorerContainer}>
       <FlatList
-        keyExtractor={(item) => item.name}
+        keyExtractor={(item) => item.meta.name}
         data={wallets}
         renderItem={({ item, index }) => {
           const marginBottom = index === wallets.length - 1 ? "none" : "xxs";
