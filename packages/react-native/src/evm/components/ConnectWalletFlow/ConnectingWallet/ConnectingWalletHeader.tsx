@@ -1,6 +1,6 @@
 import { Icon } from "../../../assets/icon";
-import ImageSvgUri from "../../../components/base/ImageSvgUri";
 import { useAppTheme } from "../../../styles/hooks";
+import ImageSvgUri from "../../base/ImageSvgUri";
 import Text from "../../base/Text";
 import { ReactNode } from "react";
 import { StyleSheet, View } from "react-native";

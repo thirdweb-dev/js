@@ -6,10 +6,12 @@ const ImageSvgUri = ({
   imageUrl,
   width,
   height,
+  imageAlt = "",
 }: {
   imageUrl: string;
   width: number;
   height: number;
+  imageAlt?: string;
 }) => {
   const isSvg = imageUrl.toLowerCase().endsWith(".svg");
   const resolvedImageUrl = resolveIpfsUri(imageUrl) || "";
@@ -19,6 +21,7 @@ const ImageSvgUri = ({
   } else {
     return (
       <Image
+        alt={imageAlt}
         source={{ uri: resolvedImageUrl }}
         style={[{ width: width, height: height }]}
       />

@@ -1,5 +1,5 @@
-import ImageSvgUri from "../../../components/base/ImageSvgUri";
 import BaseButton from "../../base/BaseButton";
+import ImageSvgUri from "../../base/ImageSvgUri";
 import Text from "../../base/Text";
 import { SupportedWallet } from "@thirdweb-dev/react-core";
 import { StyleSheet, View, FlatList } from "react-native";
