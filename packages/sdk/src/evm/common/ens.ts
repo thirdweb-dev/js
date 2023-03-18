@@ -48,7 +48,7 @@ export async function resolveEns(
     ENS_CACHE.delete(ens);
     // then call ourselves again to refresh the cache, but don't block on the result
     if (depth === 0) {
-      resolveEns(ens);
+      resolveEns(ens, depth + 1);
     }
   }
   return resolvedPromise.address;
