@@ -9,7 +9,6 @@ import {
   InterfaceId_IERC1155,
   InterfaceId_IERC721,
 } from "../constants/contract";
-import { NotFoundError } from "./error";
 import type {
   IERC1155Metadata,
   IERC165,
