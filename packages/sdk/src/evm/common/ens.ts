@@ -12,7 +12,10 @@ let provider: providers.Provider | undefined;
 
 const ENS_CACHE = new Map<string, Promise<CachedEns>>();
 
-export async function resolveEns(ens: string): Promise<string | null> {
+export async function resolveEns(
+  ens: string,
+  depth = 0,
+): Promise<string | null> {
   if (!provider) {
     // if we don't already have a provider then get one
     provider = getSignerAndProvider("ethereum")[1];
@@ -40,11 +43,13 @@ export async function resolveEns(ens: string): Promise<string | null> {
   }
 
   const resolvedPromise = await ensPromise;
-  if (resolvedPromise.expirationTime > new Date()) {
+  if (resolvedPromise.expirationTime < new Date()) {
     // delete the cache if it's expired
     ENS_CACHE.delete(ens);
     // then call ourselves again to refresh the cache, but don't block on the result
-    resolveEns(ens);
+    if (depth === 0) {
+      resolveEns(ens);
+    }
   }
   return resolvedPromise.address;
 }
