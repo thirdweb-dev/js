@@ -117,7 +117,7 @@ export const ThirdwebProviderCore = <
     return props.supportedChains || (defaultChains as any as TChains);
   }, [props.supportedChains]);
 
-  const [supportedChainsWithKey, activeChainWithKey] =
+  const [supportedChainsWithKey, activeChainIdOrObjWithKey] =
     useUpdateChainsWithApiKeys(
       // @ts-expect-error - different subtype of Chain[] but this works fine
       supportedChainsNonNull,
@@ -127,20 +127,20 @@ export const ThirdwebProviderCore = <
       props.infuraApiKey,
     );
 
-  const activeChainObj = useMemo(() => {
-    if (typeof activeChainWithKey === "number") {
+  const activeChainWithKey = useMemo(() => {
+    if (typeof activeChainIdOrObjWithKey === "number") {
       return supportedChainsWithKey.find(
-        (chain) => chain.chainId === activeChainWithKey,
+        (chain) => chain.chainId === activeChainIdOrObjWithKey,
       );
     }
-    if (typeof activeChainWithKey === "string") {
+    if (typeof activeChainIdOrObjWithKey === "string") {
       return supportedChainsWithKey.find(
-        (chain) => chain.slug === activeChainWithKey,
+        (chain) => chain.slug === activeChainIdOrObjWithKey,
       );
     }
 
-    return activeChainWithKey;
-  }, [activeChainWithKey, supportedChainsWithKey]);
+    return activeChainIdOrObjWithKey;
+  }, [activeChainIdOrObjWithKey, supportedChainsWithKey]);
 
   const dAppMeta = props.dAppMeta || defaultdAppMeta;
   return (
@@ -151,14 +151,14 @@ export const ThirdwebProviderCore = <
         shouldAutoConnect={props.autoConnect}
         createWalletStorage={props.createWalletStorage}
         dAppMeta={dAppMeta}
-        activeChain={activeChainObj}
+        activeChain={activeChainWithKey}
         autoSwitch={props.autoSwitch}
       >
         <ThirdwebSDKProviderWrapper
           queryClient={props.queryClient}
           sdkOptions={props.sdkOptions}
           supportedChains={supportedChainsWithKey}
-          activeChain={activeChainObj}
+          activeChain={activeChainWithKey}
           storageInterface={props.storageInterface}
           authConfig={props.authConfig}
           thirdwebApiKey={props.thirdwebApiKey}

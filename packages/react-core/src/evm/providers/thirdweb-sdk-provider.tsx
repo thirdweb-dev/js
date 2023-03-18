@@ -193,7 +193,7 @@ export const ThirdwebSDKProvider = <
   const supportedChainsNonNull = useMemo(() => {
     return supportedChains || (defaultChains as any as TChains);
   }, [supportedChains]);
-  const [supportedChainsWithKey, activeChainWithKey] =
+  const [supportedChainsWithKey, activeChainIdOrObjWithKey] =
     useUpdateChainsWithApiKeys(
       // @ts-expect-error - different subtype of Chain[] but this works fine
       supportedChainsNonNull,
@@ -205,25 +205,25 @@ export const ThirdwebSDKProvider = <
 
   const mergedChains = useMemo(() => {
     if (
-      !activeChainWithKey ||
-      typeof activeChainWithKey === "string" ||
-      typeof activeChainWithKey === "number"
+      !activeChainIdOrObjWithKey ||
+      typeof activeChainIdOrObjWithKey === "string" ||
+      typeof activeChainIdOrObjWithKey === "number"
     ) {
       return supportedChainsWithKey as Readonly<Chain[]>;
     }
 
     const _mergedChains = [
       ...supportedChainsWithKey.filter(
-        (c) => c.chainId !== activeChainWithKey.chainId,
+        (c) => c.chainId !== activeChainIdOrObjWithKey.chainId,
       ),
-      activeChainWithKey,
+      activeChainIdOrObjWithKey,
     ] as Readonly<Chain[]>;
     // return a _mergedChains uniqued by chainId key
     return _mergedChains.filter(
       (chain, index, self) =>
         index === self.findIndex((c) => c.chainId === chain.chainId),
     );
-  }, [supportedChainsWithKey, activeChainWithKey]);
+  }, [supportedChainsWithKey, activeChainIdOrObjWithKey]);
 
   return (
     <ThirdwebConfigProvider
@@ -243,7 +243,7 @@ export const ThirdwebSDKProvider = <
               thirdwebApiKey={thirdwebApiKey}
               alchemyApiKey={alchemyApiKey}
               infuraApiKey={infuraApiKey}
-              activeChain={activeChainWithKey}
+              activeChain={activeChainIdOrObjWithKey}
               {...restProps}
             >
               {children}
