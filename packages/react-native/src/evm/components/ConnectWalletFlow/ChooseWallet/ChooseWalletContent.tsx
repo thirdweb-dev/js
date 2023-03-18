@@ -1,12 +1,12 @@
-import { WalletMeta } from "../../../types/wallets";
+import ImageSvgUri from "../../../components/base/ImageSvgUri";
 import BaseButton from "../../base/BaseButton";
 import Text from "../../base/Text";
-import { resolveIpfsUri } from "@thirdweb-dev/react-core";
-import { StyleSheet, View, FlatList, Image } from "react-native";
+import { SupportedWallet } from "@thirdweb-dev/react-core";
+import { StyleSheet, View, FlatList } from "react-native";
 
 interface InitialExplorerContentProps {
-  wallets: WalletMeta[];
-  onChooseWallet: (wallet: WalletMeta) => void;
+  wallets: SupportedWallet[];
+  onChooseWallet: (wallet: SupportedWallet) => void;
 }
 
 export const ChooseWalletContent = ({
@@ -27,12 +27,14 @@ export const ChooseWalletContent = ({
               backgroundColor="backgroundHighlight"
               onPress={() => onChooseWallet(item)}
             >
-              <Image
-                alt="wallet logo"
-                style={styles.walletImage}
-                source={{ uri: resolveIpfsUri(item.image_url) }}
-              />
-              <Text variant="bodyLarge">{item.name}</Text>
+              <View style={styles.imageView}>
+                <ImageSvgUri
+                  imageUrl={item.meta.iconURL}
+                  width={32}
+                  height={32}
+                />
+              </View>
+              <Text variant="bodyLarge">{item.meta.name}</Text>
             </BaseButton>
           );
         }}
@@ -51,9 +53,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 12,
   },
-  walletImage: {
-    width: 32,
-    height: 32,
+  imageView: {
     marginRight: 16,
   },
   explorerContainer: {

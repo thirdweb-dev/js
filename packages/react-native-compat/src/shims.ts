@@ -1,7 +1,5 @@
-// needs to be first imported module
 import "@ethersproject/shims";
 import "@walletconnect/react-native-compat";
-import "react-native-get-random-values";
 
 if (typeof BigInt === "undefined") {
   global.BigInt = require("big-integer");

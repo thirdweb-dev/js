@@ -4,7 +4,6 @@ import DisconnectIcon from "./disconnect";
 import DownArrowIcon from "./down-arrow";
 import RightArrowIcon from "./right-arrow";
 import { IconStyleProp } from "./types";
-import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
 export type IconProps = {
