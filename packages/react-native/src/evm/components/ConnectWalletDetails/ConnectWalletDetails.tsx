@@ -1,4 +1,3 @@
-import { IWalletWithMetadata } from "../../types/wallets";
 import { NetworkSelectorModal } from "../NetworkSelector/NetworkSelectorModal";
 import { Address } from "../base/Address";
 import BaseButton from "../base/BaseButton";
@@ -94,13 +93,7 @@ export const ConnectWalletDetails = ({
           </Text>
           <Address variant="bodySmallSecondary" address={address} />
         </View>
-        <WalletIcon
-          size={32}
-          iconUri={
-            (activeWallet as unknown as IWalletWithMetadata).getMetadata()
-              .image_url || ""
-          }
-        />
+        <WalletIcon size={32} iconUri={activeWallet?.getMeta().iconURL || ""} />
       </BaseButton>
     </>
   );
