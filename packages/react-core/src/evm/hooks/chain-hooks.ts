@@ -18,11 +18,11 @@ export function useUpdateChainsWithApiKeys(
     [thirdwebApiKey, alchemyApiKey, infuraApiKey],
   );
 
-  const _supportedChains = useMemo(() => {
+  const supportedChainsWithKey = useMemo(() => {
     return supportedChains.map((chain) => updateChainRPCs(chain, keys));
   }, [supportedChains, keys]);
 
-  const _activeChain = useMemo(() => {
+  const activeChainIdOrObjWithKey = useMemo(() => {
     if (
       !activeChain ||
       typeof activeChain === "string" ||
@@ -34,5 +34,5 @@ export function useUpdateChainsWithApiKeys(
     return updateChainRPCs(activeChain, keys);
   }, [activeChain, keys]);
 
-  return [_supportedChains, _activeChain] as const;
+  return [supportedChainsWithKey, activeChainIdOrObjWithKey] as const;
 }
