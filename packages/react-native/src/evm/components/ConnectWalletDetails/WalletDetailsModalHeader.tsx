@@ -5,7 +5,6 @@ import { Address } from "../base/Address";
 import Text from "../base/Text";
 import { WalletIcon } from "../base/WalletIcon";
 import { useWallet, useBalance } from "@thirdweb-dev/react-core";
-import React from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 interface WalletDetailsModalHeaderProps {

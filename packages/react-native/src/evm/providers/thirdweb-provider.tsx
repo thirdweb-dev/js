@@ -10,7 +10,7 @@ import {
   ThirdwebProviderCore,
   ThirdwebProviderCoreProps,
 } from "@thirdweb-dev/react-core";
-import React, { PropsWithChildren } from "react";
+import { PropsWithChildren } from "react";
 
 const DEFAULT_WALLETS = [MetaMaskWallet, CoinbaseWallet] as [
   typeof MetaMaskWallet,

@@ -1,6 +1,5 @@
 import { ModalHeaderTextClose } from "../base/modal/ModalHeaderTextClose";
 import { TWModal, TWModalProps } from "../base/modal/TWModal";
-import React from "react";
 
 export type NetworkSelectorModalProps = {
   onClose: () => void;

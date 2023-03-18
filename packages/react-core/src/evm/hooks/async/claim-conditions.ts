@@ -9,7 +9,12 @@ import {
   invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  UseMutationResult,
+  useQueryClient,
+  UseQueryResult,
+} from "@tanstack/react-query";
 import {
   ClaimCondition,
   ClaimConditionFetchOptions,
@@ -18,7 +23,8 @@ import {
   fetchCurrencyValue,
   fetchCurrencyMetadata,
 } from "@thirdweb-dev/sdk";
-import { BigNumberish, constants, utils } from "ethers";
+import type { BigNumberish, providers } from "ethers";
+import { constants, utils } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -65,7 +71,7 @@ export function useActiveClaimCondition(
   contract: RequiredParam<DropContract>,
   tokenId?: BigNumberish,
   options?: ClaimConditionFetchOptions,
-) {
+): UseQueryResult<ClaimCondition | undefined> {
   const contractAddress = contract?.getAddress();
   const { erc1155, erc721, erc20 } = getErcs(contract);
 
@@ -183,7 +189,7 @@ export function useClaimConditions(
   contract: RequiredParam<DropContract>,
   tokenId?: BigNumberish,
   options?: ClaimConditionFetchOptions,
-) {
+): UseQueryResult<ClaimCondition[]> {
   const contractAddress = contract?.getAddress();
   const { erc1155, erc721, erc20 } = getErcs(contract);
 
@@ -307,7 +313,7 @@ export function useActiveClaimConditionForWallet(
   contract: RequiredParam<DropContract>,
   walletAddress: RequiredParam<WalletAddress>,
   tokenId?: BigNumberish,
-) {
+): UseQueryResult<ClaimCondition | null> {
   const sdk = useSDK();
   const contractAddress = contract?.getAddress();
   const { erc1155, erc721, erc20 } = getErcs(contract);
@@ -461,7 +467,12 @@ export function useActiveClaimConditionForWallet(
 export function useSetClaimConditions(
   contract: RequiredParam<DropContract>,
   tokenId?: BigNumberish,
-) {
+): UseMutationResult<
+  { receipt: providers.TransactionReceipt },
+  unknown,
+  SetClaimConditionsParams,
+  unknown
+> {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();

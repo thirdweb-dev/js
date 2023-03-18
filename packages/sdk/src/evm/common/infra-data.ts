@@ -1,5 +1,4 @@
 import InfraData from "./InfraData.json";
-import { ethers } from "ethers";
 
 type InfraTxInfo = {
   predictedAddress: string;
