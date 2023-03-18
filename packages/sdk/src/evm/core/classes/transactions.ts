@@ -359,10 +359,10 @@ export class Transaction<TResult = TransactionResult> {
           this.contract.interface.format(FormatTypes.json) as string,
         );
         if (isRouterContract(abi)) {
-          overrides.gasLimit = overrides.gasLimit.mul(130).div(100);
+          overrides.gasLimit = overrides.gasLimit.mul(110).div(100);
         }
       } catch (err) {
-        // ignore
+        console.warn("Error raising gas limit", err);
       }
     }
 
