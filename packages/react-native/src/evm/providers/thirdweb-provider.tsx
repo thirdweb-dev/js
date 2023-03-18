@@ -1,6 +1,7 @@
 import { createAsyncLocalStorage } from "../../core/AsyncStorage";
 import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
+  DeviceWallet,
   MetaMaskWallet,
   RainbowWallet,
   TrustWallet,
@@ -21,7 +22,8 @@ export type ImplementedWallet =
   | typeof MetaMaskWallet
   | typeof RainbowWallet
   | typeof CoinbaseWallet
-  | typeof TrustWallet;
+  | typeof TrustWallet
+  | typeof DeviceWallet;
 
 export type ThirdwebProviderProps = PropsWithChildren<
   {
