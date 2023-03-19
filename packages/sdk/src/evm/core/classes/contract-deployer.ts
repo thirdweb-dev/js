@@ -811,6 +811,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         // 2. deploy infra
         await deployInfraWithSigner(
           this.getSigner() as Signer,
+          this.getProvider(),
           deploymentInfo.infraContractsToDeploy,
         );
 
