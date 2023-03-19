@@ -21,7 +21,6 @@ import {
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 import type { Signer, providers } from "ethers";
-import { ethers as hardhatEthers } from "hardhat";
 
 export const customSigInfo = {
   v: 27,
@@ -38,21 +37,24 @@ export const commonFactory = "0x4e59b44847b379578588920cA78FbF26c0B4956C";
  * This factory is used for deploying all thirdweb infra and implementation contracts.
  * This allows deployments at predictable addresses on all chains.
  */
-export async function deployCommonFactory(signer: Signer) {
-  let factoryCode = await hardhatEthers.provider.getCode(commonFactory);
+export async function deployCommonFactory(
+  signer: Signer,
+  provider: providers.Provider,
+) {
+  let factoryCode = await provider.getCode(commonFactory);
   // deploy community factory if not already deployed
   if (factoryCode == "0x") {
     console.log("zero code");
     // send balance
     let refundTx = {
       to: "3fab184622dc19b6109349b94811493bf2a45362",
-      value: hardhatEthers.utils.parseEther("0.01"), // TODO: estimate gas/value
+      value: ethers.utils.parseEther("0.01"), // TODO: estimate gas/value
     };
     await signer.sendTransaction(refundTx);
 
     // deploy
     try {
-      const tx = await hardhatEthers.provider.sendTransaction(
+      const tx = await provider.sendTransaction(
         "0xf8a58085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf31ba02222222222222222222222222222222222222222222222222222222222222222a02222222222222222222222222222222222222222222222222222222222222222",
       );
     } catch (err) {
@@ -69,9 +71,9 @@ export async function deployCommonFactory(signer: Signer) {
  * @param bytecode: Creation bytecode of the contract to deploy
  */
 export function getSaltHash(bytecode: string) {
-  const bytecodeHash = hardhatEthers.utils.id(bytecode);
+  const bytecodeHash = ethers.utils.id(bytecode);
   const salt = `tw.${bytecodeHash}`;
-  const saltHash = hardhatEthers.utils.id(salt);
+  const saltHash = ethers.utils.id(salt);
 
   return saltHash;
 }
@@ -90,7 +92,7 @@ export function getInitBytecodeWithSalt(
   encodedArgs: string,
 ): DeployDataWithSigner {
   const saltHash = getSaltHash(bytecode);
-  const deployData = hardhatEthers.utils.solidityPack(
+  const deployData = ethers.utils.solidityPack(
     ["bytes32", "bytes", "bytes"],
     [saltHash, bytecode, encodedArgs],
   );
@@ -113,24 +115,24 @@ export function computeDeploymentAddress(
   const saltHash = getSaltHash(bytecode);
 
   // 1. create init bytecode hash with contract's bytecode and encoded args
-  const initBytecode = hardhatEthers.utils.solidityPack(
+  const initBytecode = ethers.utils.solidityPack(
     ["bytes", "bytes"],
     [bytecode, encodedArgs],
   );
 
   // 2. abi-encode pack the deployer address, salt, and bytecode hash
-  const deployInfoPacked = hardhatEthers.utils.solidityPack(
+  const deployInfoPacked = ethers.utils.solidityPack(
     ["bytes1", "address", "bytes32", "bytes32"],
     [
       "0xff",
       commonFactory,
       saltHash,
-      hardhatEthers.utils.solidityKeccak256(["bytes"], [initBytecode]),
+      ethers.utils.solidityKeccak256(["bytes"], [initBytecode]),
     ],
   );
 
   // 3. hash the packed deploy info
-  const hashedDeployInfo = hardhatEthers.utils.solidityKeccak256(
+  const hashedDeployInfo = ethers.utils.solidityKeccak256(
     ["bytes"],
     [deployInfoPacked],
   );
@@ -157,7 +159,7 @@ export function constructKeylessDeployTx(
 
   // 2. This packed data is required by the common CREATE2 factory.
   // The factory will unpack salt and bytecode, to be passed as params to create2 opcode
-  const data = hardhatEthers.utils.solidityPack(
+  const data = ethers.utils.solidityPack(
     ["bytes32", "bytes", "bytes"],
     [saltHash, bytecode, encodedArgs],
   );
@@ -217,19 +219,19 @@ export async function deployInfraKeyless(
   // }
 
   // create2 factory
-  await deployCommonFactory(signer);
+  await deployCommonFactory(signer, provider);
 
   for (let contractType of contractTypes as InfraContractType[]) {
     const txInfo = INFRA_CONTRACTS_MAP[contractType].txInfo;
 
     // Check if the infra contract is already deployed
-    const code = await hardhatEthers.provider.getCode(txInfo.predictedAddress);
+    const code = await provider.getCode(txInfo.predictedAddress);
 
     if (code === "0x") {
       // If contract doesn't exist, then fund the derived signer (derived from custom signature)
       let fundAddr = {
         to: txInfo.from,
-        value: hardhatEthers.utils.parseEther("1"),
+        value: ethers.utils.parseEther("1"),
       };
       await signer.sendTransaction(fundAddr);
 
@@ -250,6 +252,7 @@ export async function deployInfraKeyless(
  */
 export async function deployInfraWithSigner(
   signer: Signer,
+  provider: providers.Provider,
   contractTypes?: InfraContractType[],
 ) {
   // if (!contractTypes) {
@@ -257,13 +260,13 @@ export async function deployInfraWithSigner(
   // }
 
   // create2 factory
-  await deployCommonFactory(signer);
+  await deployCommonFactory(signer, provider);
 
   for (let contractType of contractTypes as InfraContractType[]) {
     const txInfo = INFRA_CONTRACTS_MAP[contractType].txInfo;
 
     // Check if the infra contract is already deployed
-    const code = await hardhatEthers.provider.getCode(txInfo.predictedAddress);
+    const code = await provider.getCode(txInfo.predictedAddress);
 
     if (code === "0x") {
       // get init bytecode
