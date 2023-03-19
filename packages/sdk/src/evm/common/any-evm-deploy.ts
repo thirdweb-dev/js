@@ -391,7 +391,7 @@ function encodeConstructorParamsForImplementation(
   );
   const constructorParamTypes = constructorParams.map((p) => p.type);
   const constructorParamValues = constructorParams.map(async (p) => {
-    if (p.name.includes("nativeTokenWrapper")) {
+    if (p.name && p.name.includes("nativeTokenWrapper")) {
       let nativeTokenWrapperAddress =
         getNativeTokenByChainId(chainId).wrapped.address;
 
@@ -401,7 +401,7 @@ function encodeConstructorParamsForImplementation(
       }
 
       return nativeTokenWrapperAddress;
-    } else if (p.name.includes("trustedForwarder")) {
+    } else if (p.name && p.name.includes("trustedForwarder")) {
       infraContracts.push(EOAForwarder.contractType);
       return EOAForwarder.txInfo.predictedAddress;
     } else {
