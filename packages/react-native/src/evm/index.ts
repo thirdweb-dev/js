@@ -3,6 +3,7 @@ export {
   MetaMaskWallet,
   RainbowWallet,
   TrustWallet,
+  DeviceWallet,
 } from "./wallets/wallets/all";
 
 export { ConnectWallet } from "./components/ConnectWallet";
