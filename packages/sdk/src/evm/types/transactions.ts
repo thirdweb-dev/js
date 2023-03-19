@@ -3,6 +3,8 @@ import { TransactionResult } from "../core/types";
 import { SDKOptionsOutput } from "../schema/sdk-options";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
+import EventEmitter from "eventemitter3";
+import { DeployEvents } from "./deploy";
 
 export type ParseTransactionReceipt<TResult = TransactionResult> =
   | ((receipt: ethers.providers.TransactionReceipt) => TResult)
@@ -53,4 +55,6 @@ export type TransactionOptionsWithContractInfo<TResult = TransactionResult> =
 
 export type DeployTransactionOptions = TransactionContextOptions & {
   factory: ethers.ContractFactory;
+  // TODO: Remove once we make the breaking change of removing deploy listeners
+  events?: EventEmitter<DeployEvents>;
 };

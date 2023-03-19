@@ -896,6 +896,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         signer,
         factory,
         storage: this.storage,
+        events: this.events,
       });
     },
   );

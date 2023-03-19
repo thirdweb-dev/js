@@ -95,6 +95,8 @@ describe("Events", async () => {
     // eslint-disable-next-line no-unused-expressions
     const txAddress: string[] = [];
     sdk.deployer.addDeployListener((event) => {
+      console.log("Received event!");
+      console.log(event);
       if (event.status === "completed") {
         txAddress.push(event.contractAddress || "");
       }

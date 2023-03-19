@@ -34,6 +34,8 @@ import { BigNumber } from "ethers";
 import { FormatTypes } from "ethers/lib/utils.js";
 import type { ConnectionInfo } from "ethers/lib/utils.js";
 import invariant from "tiny-invariant";
+import EventEmitter from "eventemitter3";
+import { DeployEvents } from "../../types";
 
 abstract class TransactionContext {
   protected args: any[];
@@ -726,10 +728,12 @@ export class Transaction<
 
 export class DeployTransaction extends TransactionContext {
   factory: ContractFactory;
+  events: EventEmitter<DeployEvents> | undefined;
 
   constructor(options: DeployTransactionOptions) {
     super(options);
     this.factory = options.factory;
+    this.events = options.events;
   }
 
   encode(): string {
@@ -770,9 +774,8 @@ export class DeployTransaction extends TransactionContext {
   async send(): Promise<ContractTransaction> {
     try {
       const populatedTx = await this.populateTransaction();
-      return this.signer.sendTransaction(populatedTx);
+      return await this.signer.sendTransaction(populatedTx);
     } catch (err) {
-      console.log(err);
       throw await this.deployError(err);
     }
   }
@@ -791,7 +794,21 @@ export class DeployTransaction extends TransactionContext {
       throw await this.deployError(err);
     }
 
-    return utils.getContractAddress({ from: tx.from, nonce: tx.nonce });
+    const contractAddress = utils.getContractAddress({
+      from: tx.from,
+      nonce: tx.nonce,
+    });
+
+    // TODO: Remove when we delete events from deploy
+    if (this.events) {
+      this.events.emit("contractDeployed", {
+        status: "completed",
+        contractAddress,
+        transactionHash: tx.hash,
+      });
+    }
+
+    return contractAddress;
   }
 
   private async populateTransaction(): Promise<providers.TransactionRequest> {
