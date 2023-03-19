@@ -444,7 +444,7 @@ export class Transaction<
       await this.simulate();
 
       // If transaction simulation (static call) doesn't throw, then throw a generic error
-      throw this.transactionError(err);
+      throw await this.transactionError(err);
     }
   }
 
@@ -753,20 +753,27 @@ export class DeployTransaction extends TransactionContext {
 
   async estimateGasLimit(): Promise<BigNumber> {
     try {
-      const populatedTx = await this.populateTransaction();
+      const gasOverrides = await this.getGasOverrides();
+      const overrides: CallOverrides = { ...gasOverrides, ...this.overrides };
+      const populatedTx = this.factory.getDeployTransaction(
+        ...this.args,
+        overrides,
+      );
+
       return this.signer.estimateGas(populatedTx);
     } catch (err) {
       // No need to do simulation here, since there can't be revert errors
-      throw this.deployError(err);
+      throw await this.deployError(err);
     }
   }
 
   async send(): Promise<ContractTransaction> {
     try {
-      const signedTx = await this.sign();
-      return this.provider.sendTransaction(signedTx);
+      const populatedTx = await this.populateTransaction();
+      return this.signer.sendTransaction(populatedTx);
     } catch (err) {
-      throw this.deployError(err);
+      console.log(err);
+      throw await this.deployError(err);
     }
   }
 

@@ -788,6 +788,7 @@ export class ContractDeployer extends RPCConnectionHandler {
           extendedMetadata.isDeployableViaFactory) &&
         !forceDirectDeploy
       ) {
+        console.log("Deploying directly...");
         const chainId = (await this.getProvider().getNetwork()).chainId;
         invariant(
           extendedMetadata.factoryDeploymentData.implementationAddresses,
