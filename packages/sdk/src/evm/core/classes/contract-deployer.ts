@@ -795,44 +795,44 @@ export class ContractDeployer extends RPCConnectionHandler {
               .implementationInitializerFunction,
             paramValues,
           );
-        } else {
-          // any evm deployment flow -- with signer
-
-          // 1. get deployment info for any evm
-          const deploymentInfo = await getDeploymentInfo(
-            publishMetadataUri,
-            chainId,
-            this.storage,
-          );
-
-          implementationAddress = deploymentInfo.predictedAddress;
-
-          // 2. deploy infra
-          await deployInfraWithSigner(
-            this.getSigner() as Signer,
-            deploymentInfo.infraContractsToDeploy,
-          );
-
-          // 3. deploy implementation contract
-          await deployImplementationWithSigner(
-            this.getSigner() as Signer,
-            deploymentInfo.signerDeployData.initBytecodeWithSalt,
-          );
-
-          const resolvedImplementationAddress = await resolveAddress(
-            implementationAddress,
-          );
-
-          // 4. deploy proxy with TWStatelessFactory (Clone factory) and return address
-          return await this.deployViaFactory(
-            CloneFactory.txInfo.predictedAddress,
-            resolvedImplementationAddress,
-            compilerMetadata.abi,
-            extendedMetadata.factoryDeploymentData
-              .implementationInitializerFunction,
-            paramValues,
-          );
         }
+      } else {
+        // any evm deployment flow -- with signer
+
+        // 1. get deployment info for any evm
+        const deploymentInfo = await getDeploymentInfo(
+          publishMetadataUri,
+          chainId,
+          this.storage,
+        );
+
+        implementationAddress = deploymentInfo.predictedAddress;
+
+        // 2. deploy infra
+        await deployInfraWithSigner(
+          this.getSigner() as Signer,
+          deploymentInfo.infraContractsToDeploy,
+        );
+
+        // 3. deploy implementation contract
+        await deployImplementationWithSigner(
+          this.getSigner() as Signer,
+          deploymentInfo.signerDeployData.initBytecodeWithSalt,
+        );
+
+        const resolvedImplementationAddress = await resolveAddress(
+          implementationAddress,
+        );
+
+        // 4. deploy proxy with TWStatelessFactory (Clone factory) and return address
+        return await this.deployViaFactory(
+          CloneFactory.txInfo.predictedAddress,
+          resolvedImplementationAddress,
+          compilerMetadata.abi,
+          extendedMetadata.factoryDeploymentData
+            .implementationInitializerFunction,
+          paramValues,
+        );
       }
     }
 
