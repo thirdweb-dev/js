@@ -1,11 +1,7 @@
 import { ThirdwebAuthConfig } from "../../evm/contexts/thirdweb-auth";
-import {
-  ThirdwebSDKProvider,
-  ThirdwebSDKProviderProps,
-} from "../../evm/providers/thirdweb-sdk-provider";
+import { ThirdwebSDKProvider } from "../../evm/providers/thirdweb-sdk-provider";
 import { DAppMetaData } from "../types/dAppMeta";
 import { SupportedWallet } from "../types/wallet";
-import { updateChainRPCs } from "../utils/updateChainRpcs";
 import { ThirdwebThemeContext } from "./theme-context";
 import {
   ThirdwebWalletProvider,
@@ -17,6 +13,8 @@ import type { SDKOptions } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { CreateAsyncStorage } from "@thirdweb-dev/wallets";
 import React, { useMemo } from "react";
+import { useUpdateChainsWithApiKeys } from "../../evm/hooks/chain-hooks";
+import { ThirdwebSDKProviderProps } from "../../evm/providers/types";
 
 /**
  * The possible props for the ThirdwebProvider.
@@ -115,56 +113,52 @@ export const ThirdwebProviderCore = <
 >(
   props: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>,
 ) => {
-  const _supportedChains =
-    props.supportedChains || (defaultChains as any as TChains);
+  const supportedChainsNonNull = useMemo(() => {
+    return props.supportedChains || (defaultChains as any as TChains);
+  }, [props.supportedChains]);
 
-  const keys = useMemo(
-    () => ({
-      thirdwebApiKey: props.thirdwebApiKey,
-      alchemyApiKey: props.alchemyApiKey,
-      infuraApiKey: props.infuraApiKey,
-    }),
-    [props.thirdwebApiKey, props.alchemyApiKey, props.infuraApiKey],
-  );
+  const [supportedChainsWithKey, activeChainIdOrObjWithKey] =
+    useUpdateChainsWithApiKeys(
+      // @ts-expect-error - different subtype of Chain[] but this works fine
+      supportedChainsNonNull,
+      props.activeChain,
+      props.thirdwebApiKey,
+      props.alchemyApiKey,
+      props.infuraApiKey,
+    );
 
-  const supportedChains = useMemo(
-    () => _supportedChains.map((chain) => updateChainRPCs(chain, keys)),
-    [_supportedChains, keys],
-  );
-
-  const dAppMeta = props.dAppMeta || defaultdAppMeta;
-
-  const activeChainObj = useMemo(() => {
-    if (typeof props.activeChain === "number") {
-      return supportedChains.find(
-        (chain) => chain.chainId === props.activeChain,
+  const activeChainWithKey = useMemo(() => {
+    if (typeof activeChainIdOrObjWithKey === "number") {
+      return supportedChainsWithKey.find(
+        (chain) => chain.chainId === activeChainIdOrObjWithKey,
       );
     }
-    if (typeof props.activeChain === "string") {
-      return supportedChains.find((chain) => chain.slug === props.activeChain);
+    if (typeof activeChainIdOrObjWithKey === "string") {
+      return supportedChainsWithKey.find(
+        (chain) => chain.slug === activeChainIdOrObjWithKey,
+      );
     }
 
-    return props.activeChain
-      ? updateChainRPCs(props.activeChain, keys)
-      : undefined;
-  }, [props.activeChain, supportedChains, keys]);
+    return activeChainIdOrObjWithKey;
+  }, [activeChainIdOrObjWithKey, supportedChainsWithKey]);
 
+  const dAppMeta = props.dAppMeta || defaultdAppMeta;
   return (
     <ThirdwebThemeContext.Provider value={props.theme}>
       <ThirdwebWalletProvider
-        chains={supportedChains}
+        chains={supportedChainsWithKey}
         supportedWallets={props.supportedWallets}
         shouldAutoConnect={props.autoConnect}
         createWalletStorage={props.createWalletStorage}
         dAppMeta={dAppMeta}
-        activeChain={activeChainObj}
+        activeChain={activeChainWithKey}
         autoSwitch={props.autoSwitch}
       >
         <ThirdwebSDKProviderWrapper
           queryClient={props.queryClient}
           sdkOptions={props.sdkOptions}
-          supportedChains={supportedChains}
-          activeChain={activeChainObj}
+          supportedChains={supportedChainsWithKey}
+          activeChain={activeChainWithKey}
           storageInterface={props.storageInterface}
           authConfig={props.authConfig}
           thirdwebApiKey={props.thirdwebApiKey}
