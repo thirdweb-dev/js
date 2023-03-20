@@ -1,6 +1,5 @@
 import { Icon } from "../../assets/icon";
 import { useAppTheme } from "../../styles/hooks";
-import { IWalletWithMetadata } from "../../types/wallets";
 import { Address } from "../base/Address";
 import Text from "../base/Text";
 import { WalletIcon } from "../base/WalletIcon";
@@ -25,13 +24,7 @@ export const WalletDetailsModalHeader = ({
   return (
     <>
       <View style={styles.header}>
-        <WalletIcon
-          size={40}
-          iconUri={
-            (activeWallet as unknown as IWalletWithMetadata).getMetadata()
-              .image_url || ""
-          }
-        />
+        <WalletIcon size={40} iconUri={activeWallet?.getMeta().iconURL || ""} />
         <View style={styles.walletInfo}>
           <Address address={address} />
           <Text variant="bodySmallSecondary">

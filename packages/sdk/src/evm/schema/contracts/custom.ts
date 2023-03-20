@@ -68,7 +68,7 @@ export const CustomContractSchema = {
 const AbiTypeBaseSchema = z
   .object({
     type: z.string(),
-    name: z.string(),
+    name: z.string().optional().default(""),
   })
   .catchall(z.any());
 
@@ -274,7 +274,7 @@ export type PreDeployMetadataFetched = z.infer<
   typeof PreDeployMetadataFetchedSchema
 >;
 
-export type ContractParam = z.infer<typeof AbiTypeSchema>;
+export type ContractParam = z.input<typeof AbiTypeSchema>;
 export type PublishedContract = z.infer<typeof PublishedContractSchema>;
 export type PublishedContractFetched = {
   name: string;
@@ -283,16 +283,16 @@ export type PublishedContractFetched = {
 };
 export type AbiFunction = {
   name: string;
-  inputs: z.infer<typeof AbiTypeSchema>[];
-  outputs: z.infer<typeof AbiTypeSchema>[];
+  inputs: z.input<typeof AbiTypeSchema>[];
+  outputs: z.input<typeof AbiTypeSchema>[];
   signature: string;
   stateMutability: string;
   comment: string;
 };
 export type AbiEvent = {
   name: string;
-  inputs: z.infer<typeof AbiTypeSchema>[];
-  outputs: z.infer<typeof AbiTypeSchema>[];
+  inputs: z.input<typeof AbiTypeSchema>[];
+  outputs: z.input<typeof AbiTypeSchema>[];
   comment: string;
 };
 export type ContractSource = {

@@ -217,7 +217,7 @@ export {
   useSDK,
   useSDKChainId,
 } from "./providers/thirdweb-sdk-provider";
-export type { ThirdwebSDKProviderProps } from "./providers/thirdweb-sdk-provider";
+export type { ThirdwebSDKProviderProps } from "./providers/types";
 
 // types
 export type {
