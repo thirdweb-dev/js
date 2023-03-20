@@ -75,7 +75,7 @@ export const ChainsLanding: ThirdwebNextPage = (
     return fuse.search(deferredSearchTerm).map((e) => e.item);
   }, [chainsWithDashboardStatus, deferredSearchTerm, fuse]);
 
-  const title = "Chainlist | RPCs, Block Explorers, Faucets | thirdweb";
+  const title = "Chainlist | RPCs, Block Explorers, Faucets";
   const description =
     "A list of EVM networks with RPCs, smart contracts, block explorers & faucets. Deploy smart contracts to all EVM chains with thirdweb.";
 

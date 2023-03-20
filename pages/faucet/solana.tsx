@@ -16,10 +16,10 @@ const SolanaFaucet: ThirdwebNextPage = () => {
   return (
     <>
       <NextSeo
-        title="Solana (SOL) Faucet | thirdweb"
+        title="Solana (SOL) Faucet"
         description="Get Solana (SOL) devnet tokens for free—using thirdweb's fast and reliable Solana Faucet for blockchain developers to build web3 apps."
         openGraph={{
-          title: "Solana (SOL) Faucet | thirdweb",
+          title: "Solana (SOL) Faucet",
           url: `https://thirdweb.com/faucet/solana`,
         }}
       />

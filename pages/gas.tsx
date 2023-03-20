@@ -20,7 +20,7 @@ const GasPage: ThirdwebNextPage = () => {
         title="Blockchain Gas Estimator"
         description="Estimate the cost of gas fees when deploying contracts or performing common use cases to the blockchain on thirdweb."
         openGraph={{
-          title: "Blockchain Gas Estimator | thirdweb",
+          title: "Blockchain Gas Estimator",
           url: `https://thirdweb.com/gas`,
         }}
       />

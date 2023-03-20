@@ -57,7 +57,10 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
           </Heading>
         ) : (
           <Skeleton isLoaded={isLoaded}>
-            <Heading size="title.md">{data?.name ? data?.name : ""}</Heading>
+            {/* contract name is the primary h1 */}
+            <Heading size="title.md" as="h1">
+              {data?.name ? data?.name : ""}
+            </Heading>
           </Skeleton>
         )}
         {isError ? (
