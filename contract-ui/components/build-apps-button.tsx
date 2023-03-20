@@ -11,12 +11,16 @@ export const BuildAppsButton: ComponentWithChildren<BuildAppsButtonProps> = ({
   children,
   ...restButtonProps
 }) => {
-  const { query } = useRouter();
+  const { query, asPath } = useRouter();
   const path = useMemo(() => {
     const [network, address] = query.paths as string[];
 
     return `/${network}/${address}/code`;
   }, [query.paths]);
+
+  if (asPath.includes("code")) {
+    return null;
+  }
 
   return (
     <LinkButton
