@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "fix": "next lint --fix",
+    "format": "prettier --write .",
     "gen:theme-typings": "chakra-cli tokens theme/index.ts",
     "postinstall": "yarn gen:theme-typings",
     "find:unused": "next-unused",

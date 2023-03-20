@@ -27,7 +27,7 @@ import { FiCopy } from "react-icons/fi";
 require("prismjs/components/prism-solidity");
 // end add solidity support
 
-interface CodeBlockProps extends Omit<CodeProps, "size"> {
+export interface CodeBlockProps extends Omit<CodeProps, "size"> {
   code: string;
   language: Language | "solidity";
   canCopy?: boolean;

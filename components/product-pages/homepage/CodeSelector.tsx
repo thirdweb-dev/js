@@ -7,7 +7,7 @@ import { AiOutlineCode } from "react-icons/ai";
 import { CgFileDocument } from "react-icons/cg";
 import { Card, CodeBlock, LinkButton, LinkButtonProps } from "tw-components";
 
-const landingSnippets = {
+export const landingSnippets = {
   javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
 // initialize the SDK
