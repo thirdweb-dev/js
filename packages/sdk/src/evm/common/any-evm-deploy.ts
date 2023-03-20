@@ -43,8 +43,7 @@ export async function deployCommonFactory(
 ) {
   let factoryCode = await provider.getCode(commonFactory);
   // deploy community factory if not already deployed
-  if (factoryCode == "0x") {
-    console.log("zero code");
+  if (factoryCode === "0x") {
     // send balance
     let refundTx = {
       to: "3fab184622dc19b6109349b94811493bf2a45362",
@@ -54,7 +53,7 @@ export async function deployCommonFactory(
 
     // deploy
     try {
-      const tx = await provider.sendTransaction(
+      await provider.sendTransaction(
         "0xf8a58085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf31ba02222222222222222222222222222222222222222222222222222222222222222a02222222222222222222222222222222222222222222222222222222222222222",
       );
     } catch (err) {
@@ -298,8 +297,14 @@ export async function deployInfraWithSigner(
 export async function deployImplementationKeyless(
   provider: providers.Provider,
   keylessTxn: string,
+  predictedAddress: string,
 ) {
-  await (await provider.sendTransaction(keylessTxn)).wait();
+  // Check if the implementation contract is already deployed
+  const code = await provider.getCode(predictedAddress);
+
+  if (code === "0x") {
+    await (await provider.sendTransaction(keylessTxn)).wait();
+  }
 }
 
 /**
@@ -314,16 +319,22 @@ export async function deployImplementationKeyless(
 export async function deployImplementationWithSigner(
   signer: Signer,
   initBytecodeWithSalt: string,
+  predictedAddress: string,
 ) {
-  const tx = {
-    from: signer.getAddress(),
-    to: commonFactory,
-    value: 0,
-    nonce: await signer.getTransactionCount("latest"),
-    data: initBytecodeWithSalt,
-  };
+  // Check if the implementation contract is already deployed
+  const code = await signer.provider?.getCode(predictedAddress);
 
-  await (await signer.sendTransaction(tx)).wait();
+  if (code === "0x") {
+    const tx = {
+      from: signer.getAddress(),
+      to: commonFactory,
+      value: 0,
+      nonce: await signer.getTransactionCount("latest"),
+      data: initBytecodeWithSalt,
+    };
+
+    await (await signer.sendTransaction(tx)).wait();
+  }
 }
 
 /**

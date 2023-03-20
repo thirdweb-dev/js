@@ -819,6 +819,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         await deployImplementationWithSigner(
           this.getSigner() as Signer,
           deploymentInfo.signerDeployData.initBytecodeWithSalt,
+          deploymentInfo.predictedAddress,
         );
 
         const resolvedImplementationAddress = await resolveAddress(
