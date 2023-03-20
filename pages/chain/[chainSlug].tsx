@@ -65,6 +65,10 @@ type ChainStats = {
   blockNumber: number;
 };
 
+function lastElementOfArray<T>(arr: T[]): T {
+  return arr[arr.length - 1];
+}
+
 function useChainStats(
   chain: Chain,
   placeholderData: ChainStats = { latency: 0, blockNumber: 0 },
@@ -274,7 +278,7 @@ const ChainPage: ThirdwebNextPage = ({
                 href={chain.infoURL}
               >
                 <Heading maxW="full" noOfLines={1} size="label.lg">
-                  {chain.infoURL.split("//").at(-1)}
+                  {lastElementOfArray(chain.infoURL.split("//"))}
                 </Heading>
               </TrackedLink>
             </ChainSectionElement>
