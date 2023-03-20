@@ -220,6 +220,7 @@ export async function deployInfraKeyless(
   // create2 factory
   await deployCommonFactory(signer, provider);
 
+  const feeData = await provider.getFeeData();
   for (let contractType of contractTypes as InfraContractType[]) {
     const txInfo = INFRA_CONTRACTS_MAP[contractType].txInfo;
 
@@ -228,14 +229,48 @@ export async function deployInfraKeyless(
 
     if (code === "0x") {
       // If contract doesn't exist, then fund the derived signer (derived from custom signature)
+
+      const gasRequired = await signer.estimateGas({
+        to: commonFactory,
+        data: txInfo.deployData,
+      });
+
+      // ===
+      const tx = {
+        gasPrice: 100 * 10 ** 9, // TODO: dynamic gas estimation
+        gasLimit: 5000000, // TODO: dynamic gas estimation
+        to: commonFactory,
+        value: 0,
+        nonce: 0,
+        data: txInfo.deployData,
+      };
+
+      const customSignature = ethers.utils.joinSignature(customSigInfo);
+
+      const serializedTx = ethers.utils.serializeTransaction(tx);
+
+      const addr = ethers.utils.recoverAddress(
+        ethers.utils.arrayify(ethers.utils.keccak256(serializedTx)),
+        customSignature,
+      );
+
+      const signedSerializedTx = ethers.utils.serializeTransaction(
+        tx,
+        customSigInfo,
+      );
+      // ===
+
       let fundAddr = {
-        to: txInfo.from,
-        value: ethers.utils.parseEther("1"),
+        to: addr,
+        value: gasRequired
+          .mul(feeData.maxFeePerGas || 1)
+          .mul(105)
+          .div(100),
       };
       await signer.sendTransaction(fundAddr);
 
       // Send the serialzed txn (evm will find out signer and target from this txn string)
-      await (await provider.sendTransaction(txInfo.tx)).wait();
+      await (await provider.sendTransaction(signedSerializedTx)).wait();
     }
   }
 }
