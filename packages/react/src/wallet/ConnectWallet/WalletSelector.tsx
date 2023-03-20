@@ -1,5 +1,6 @@
 import { Img } from "../../components/Img";
 import { Spacer } from "../../components/Spacer";
+import { Spinner } from "../../components/Spinner";
 import { ModalTitle } from "../../components/modalElements";
 import {
   fontSize,
@@ -10,10 +11,12 @@ import {
 } from "../../design-system";
 import { WalletMeta } from "../types";
 import styled from "@emotion/styled";
+import { useState } from "react";
 
 export const WalletSelector: React.FC<{ walletsMeta: WalletMeta[] }> = (
   props,
 ) => {
+  const [connectingIndex, setConnectingIndex] = useState(-1);
   return (
     <>
       <ModalTitle
@@ -27,12 +30,13 @@ export const WalletSelector: React.FC<{ walletsMeta: WalletMeta[] }> = (
       <Spacer y="xl" />
 
       <WalletList>
-        {props.walletsMeta.map((walletMeta) => {
+        {props.walletsMeta.map((walletMeta, i) => {
           return (
             <li key={walletMeta.id}>
               <WalletButton
                 type="button"
                 onClick={() => {
+                  setConnectingIndex(i);
                   walletMeta.onClick();
                 }}
               >
@@ -43,6 +47,7 @@ export const WalletSelector: React.FC<{ walletsMeta: WalletMeta[] }> = (
                   loading="eager"
                 />
                 <WalletName>{walletMeta.name}</WalletName>
+                {connectingIndex === i && <Spinner size="sm" color="primary" />}
                 {walletMeta.installed && (
                   <InstallBadge> Installed </InstallBadge>
                 )}

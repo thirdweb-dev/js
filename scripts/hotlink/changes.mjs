@@ -39,11 +39,9 @@ export const changes = [
       "./evm/wallets/injected": "./src/evm/wallets/injected.ts",
       "./evm/wallets/metamask": "./src/evm/wallets/metamask.ts",
       "./solana/wallets/signer": "./src/solana/wallets/signer.ts",
-      "./evm/wallets/magic-auth": "./src/evm/wallets/magic-auth.ts",
       "./solana/wallets/keypair": "./src/solana/wallets/keypair.ts",
       "./evm/wallets/private-key": "./src/evm/wallets/private-key.ts",
       "./evm/wallets/device-wallet": "./src/evm/wallets/device-wallet.ts",
-      "./evm/connectors/magic": "./src/evm/connectors/magic/index.ts",
       "./evm/wallets/wallet-connect":
         "./src/evm/connectors/wallet-connect/index.ts",
       "./solana/wallets/private-key": "./src/solana/wallets/private-key.ts",

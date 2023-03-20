@@ -98,7 +98,8 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
 
   // enforcing that connectOptions is required and not optional
   connect(connectOptions: ConnectParams<DeviceWalletConnectionArgs>) {
-    return super.connect(connectOptions);
+    // do not save params because it contains the password
+    return super.connect({ ...connectOptions, saveParams: false });
   }
 }
 

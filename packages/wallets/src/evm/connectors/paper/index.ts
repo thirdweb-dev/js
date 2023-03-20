@@ -1,4 +1,5 @@
-import { ConnectParams, TWConnector } from "../../interfaces/tw-connector";
+import { normalizeChainId } from "../../../lib/wagmi-core";
+import { TWConnector } from "../../interfaces/tw-connector";
 import {
   PaperWalletConnectionArgs,
   PaperWalletConnectorOptions,
@@ -9,7 +10,9 @@ import {
   PaperEmbeddedWalletSdk,
   UserStatus,
 } from "@paperxyz/embedded-wallet-service-sdk";
+import { Chain } from "@thirdweb-dev/chains";
 import type { providers, Signer } from "ethers";
+import { utils } from "ethers";
 
 export const PaperChainMap: Record<number, PChain> = {
   1: "Ethereum",
@@ -26,6 +29,8 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
   private user: InitializedUser | null = null;
   private paper?: PaperEmbeddedWalletSdk;
   private options: PaperWalletConnectorOptions;
+
+  #signer?: Signer;
 
   constructor(options: PaperWalletConnectorOptions) {
     super();
@@ -45,11 +50,7 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
     }
   }
 
-  async connect(args?: ConnectParams<PaperWalletConnectionArgs>) {
-    const email = args?.email;
-    if (!email) {
-      throw new Error("No Email provided");
-    }
+  async connect() {
     this.initPaperSDK();
     if (!this.paper) {
       throw new Error("Paper SDK not initialized");
@@ -57,9 +58,7 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
     let user = await this.paper.getUser();
     switch (user.status) {
       case UserStatus.LOGGED_OUT: {
-        const authResult = await this.paper.auth.loginWithPaperEmailOtp({
-          email,
-        });
+        const authResult = await this.paper.auth.loginWithPaperModal();
         this.user = authResult.user;
         break;
       }
@@ -71,10 +70,13 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
     if (!this.user) {
       throw new Error("Error connecting User");
     }
+
+    this.setupListeners();
     return this.getAddress();
   }
 
   async disconnect(): Promise<void> {
+    // await this.paper?.auth.logout();
     this.user = null;
   }
 
@@ -101,12 +103,20 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
   }
 
   public async getSigner(): Promise<Signer> {
-    const signer = this.user?.wallet.getEthersJsSigner({
+    if (this.#signer) {
+      return this.#signer;
+    }
+
+    const signer = await this.user?.wallet.getEthersJsSigner({
       rpcEndpoint: this.options.chain.rpc[0],
     });
+
     if (!signer) {
       throw new Error("Signer not found");
     }
+
+    this.#signer = signer;
+
     return signer;
   }
 
@@ -115,26 +125,69 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
   }
 
   async switchChain(chainId: number): Promise<void> {
+    // check if chainId is supported or not
     const chainName = PaperChainMap[chainId];
     if (!chainName) {
       throw new Error("Chain not supported");
     }
-    // TODO this needs to update the signer, and emit events
-    // this.user?.wallet.setChain({ chain: chainName });
-    // throw for now
-    throw new Error("Chain switch not supported");
-  }
 
-  private getUser() {
-    if (!this.user) {
-      throw new Error("User not found");
+    const chain = this.options.chains.find((c) => c.chainId === chainId);
+    if (!chain) {
+      throw new Error("Chain not configured");
     }
-    return this.user;
+
+    // update chain in wallet
+    await this.user?.wallet.setChain({ chain: chainName });
+
+    // update signer
+    this.#signer = await this.user?.wallet.getEthersJsSigner({
+      rpcEndpoint: chain.rpc[0],
+    });
+
+    this.emit("change", { chain: { id: chainId, unsupported: false } });
   }
 
-  async setupListeners() {}
+  // private getUser() {
+  //   if (!this.user) {
+  //     throw new Error("User not found");
+  //   }
+  //   return this.user;
+  // }
 
-  updateChains(): void {
-    // no op
+  async setupListeners() {
+    const provider = await this.getProvider();
+    if (provider.on) {
+      provider.on("accountsChanged", this.onAccountsChanged);
+      provider.on("chainChanged", this.onChainChanged);
+      provider.on("disconnect", this.onDisconnect);
+    }
   }
+
+  updateChains(chains: Chain[]) {
+    this.options.chains = chains;
+  }
+
+  protected onAccountsChanged = async (accounts: string[]) => {
+    if (accounts.length === 0) {
+      await this.onDisconnect();
+    } else {
+      this.emit("change", {
+        account: utils.getAddress(accounts[0] as string),
+      });
+    }
+  };
+
+  protected isChainUnsupported(chainId: number) {
+    return PaperChainMap[chainId] === undefined;
+  }
+
+  protected onChainChanged = (chainId: number | string) => {
+    const id = normalizeChainId(chainId);
+    const unsupported = this.isChainUnsupported(id);
+    this.emit("change", { chain: { id, unsupported } });
+  };
+
+  protected onDisconnect = async () => {
+    this.emit("disconnect");
+  };
 }
