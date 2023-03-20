@@ -175,8 +175,8 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
           name: phase?.metadata?.name || `Phase ${idx + 1}`,
         },
       }))
-      .filter((phase) => phase.maxClaimableSupply !== "0");
-  }, [claimsConditionQuery.data]);
+      .filter((phase) => isMultiPhase || phase.maxClaimableSupply !== "0");
+  }, [claimsConditionQuery.data, isMultiPhase]);
 
   const isFetchingData =
     claimsConditionQuery.isFetching || setClaimsConditionQuery.isLoading;
