@@ -237,8 +237,8 @@ export async function deployInfraKeyless(
 
       // ===
       const tx = {
-        gasPrice: 100 * 10 ** 9, // TODO: dynamic gas estimation
-        gasLimit: 5000000, // TODO: dynamic gas estimation
+        gasPrice: feeData.maxFeePerGas?.toNumber(),
+        gasLimit: gasRequired.toNumber(),
         to: commonFactory,
         value: 0,
         nonce: 0,
