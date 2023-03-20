@@ -490,7 +490,7 @@ importers:
   packages/react-native:
     specifiers:
       '@babel/core': ^7.19.3
-      '@coinbase/wallet-mobile-sdk': ^1.0.4
+      '@coinbase/wallet-mobile-sdk': ^1.0.5
       '@react-native-async-storage/async-storage': '*'
       '@react-native-community/eslint-config': ^3.0.2
       '@shopify/restyle': ^2.4.1
@@ -516,10 +516,12 @@ importers:
       eslint-plugin-prettier: ^4.2.1
       ethers: ^5.7.2
       expo: ^47.0.0
+      expo-secure-store: ~12.0.0
       jest: ^29.4.3
       prettier: ^2.7.1
       react: ^18.2.0
       react-native: ^0.71.0
+      react-native-device-info: ^10.4.0
       react-native-mmkv: 2.5.1
       react-native-modal: ^13.0.1
       react-native-svg: ^13.8.0
@@ -535,6 +537,8 @@ importers:
       '@thirdweb-dev/storage': link:../storage
       '@thirdweb-dev/wallets': link:../wallets
       abitype: 0.2.5_typescript@4.9.5
+      expo-secure-store: 12.0.0_expo@47.0.13
+      react-native-device-info: 10.4.0_react-native@0.71.4
       react-native-mmkv: 2.5.1_asg77qyzeoxodznpkubmbgme7u
       react-native-modal: 13.0.1_asg77qyzeoxodznpkubmbgme7u
       react-native-svg: 13.8.0_asg77qyzeoxodznpkubmbgme7u
@@ -11742,7 +11746,7 @@ packages:
   /axios/0.25.0_debug@4.3.4:
     resolution: {integrity: sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==}
     dependencies:
-      follow-redirects: 1.15.2_debug@4.3.4
+      follow-redirects: 1.15.2
     transitivePeerDependencies:
       - debug
     dev: true
@@ -16026,6 +16030,14 @@ packages:
     dependencies:
       compare-versions: 3.6.0
       invariant: 2.2.4
+
+  /expo-secure-store/12.0.0_expo@47.0.13:
+    resolution: {integrity: sha512-Rz5lYr2NxrnFvIPwuWcseUSbdUjFxNZG0oVulqM9puuK7t5lDG3/SAy+J22ELBhaltuci2VVO6hCdFwRoRiG/Q==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 47.0.13_@babel+core@7.21.3
+    dev: false
 
   /expo/47.0.13_@babel+core@7.21.3:
     resolution: {integrity: sha512-9VjjGdViCJ9NfWbUE7brkwFBDvKuA35V345vMtHFYNKoGJjXib36yitmawreMDQFv0kMTqTnzc7T2191Pod7Ng==}
@@ -23618,6 +23630,14 @@ packages:
       - '@babel/preset-env'
       - supports-color
 
+  /react-native-device-info/10.4.0_react-native@0.71.4:
+    resolution: {integrity: sha512-Z37e0HtpBvfkPRgv4xN7lXpvmJyzjwCXSFTXEkw6m2UgnnIsWlOD02Avu4hJXBlIMMazaW3ZLKal3o9h3AYvCw==}
+    peerDependencies:
+      react-native: '*'
+    dependencies:
+      react-native: 0.71.4_klxfafkpjmb2537xfoky62a7f4
+    dev: false
+
   /react-native-get-random-values/1.8.0_react-native@0.71.4:
     resolution: {integrity: sha512-H/zghhun0T+UIJLmig3+ZuBCvF66rdbiWUfRSNS6kv5oDSpa1ZiVyvRWtuPesQpT8dXj+Bv7WJRQOUP+5TB1sA==}
     peerDependencies:
@@ -24993,7 +25013,7 @@ packages:
     dependencies:
       command-exists: 1.2.9
       commander: 3.0.2
-      follow-redirects: 1.15.2_debug@4.3.4
+      follow-redirects: 1.15.2
       fs-extra: 0.30.0
       js-sha3: 0.8.0
       memorystream: 0.3.1

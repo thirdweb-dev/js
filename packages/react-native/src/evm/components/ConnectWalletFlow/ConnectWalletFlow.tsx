@@ -10,6 +10,8 @@ import {
 import { useState } from "react";
 import { StyleSheet } from "react-native";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
+import DeviceInfo from "react-native-device-info";
+import { DeviceWallet } from "../../wallets/wallets/all";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -32,10 +34,25 @@ export const ConnectWalletFlow = () => {
   const onChooseWallet = async (wallet: SupportedWallet) => {
     setActiveWallet(() => wallet);
 
-    await connect(wallet, {}).catch((error) => {
-      console.log("error", error);
-      onBackPress();
-    });
+    if (wallet.name === DeviceWallet.name) {
+      // Let the UI update before calling connect. This is a costly operation
+      setTimeout(() => {
+        DeviceInfo.getUniqueId().then((uniqueId: string) => {
+          console.log("uniqueId", uniqueId);
+          connect(wallet, { password: uniqueId }).catch((error) => {
+            console.log("error", error);
+            onBackPress();
+          });
+        });
+
+        console.log("after connect");
+      }, 0);
+    } else {
+      connect(wallet, {}).catch((error) => {
+        console.log("error", error);
+        onBackPress();
+      });
+    }
   };
 
   const onBackPress = () => {
@@ -47,6 +64,13 @@ export const ConnectWalletFlow = () => {
       <TWModal isVisible={modalVisible}>
         {activeWallet ? (
           <ConnectingWallet
+            content={
+              activeWallet.name === DeviceWallet.name ? (
+                <Text variant="bodySmallSecondary" mt="md">
+                  Creating, encrypting and securing your device wallet.
+                </Text>
+              ) : undefined
+            }
             wallet={activeWallet}
             onClose={onClose}
             onBackPress={onBackPress}

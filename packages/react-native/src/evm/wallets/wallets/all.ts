@@ -14,6 +14,7 @@ import {
   WalletConnectV1 as WalletConnectV1Core,
 } from "@thirdweb-dev/wallets";
 import { Linking } from "react-native";
+import { AsyncWalletStorage, DeviceWalletImpl } from "./device-wallet";
 
 // Metamask ----------------------------------------
 type WC1Options = Omit<
@@ -177,6 +178,9 @@ export class DeviceWallet extends DeviceWalletCore {
       storage: deviceWalletStorage,
       storageType: "asyncStore",
       walletStorage: deviceWalletStorage,
+      wallet: new DeviceWalletImpl({
+        storage: new AsyncWalletStorage(),
+      }),
     });
   }
 

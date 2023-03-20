@@ -10,6 +10,7 @@ export type DeviceWalletOptions = {
   chain: Chain;
   storageType?: "asyncStore" | "credentialStore";
   storage: AsyncStorage;
+  wallet?: AbstractDeviceWallet;
 };
 
 export type DeviceWalletConnectionArgs = {
@@ -25,7 +26,7 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
   DeviceWalletConnectionArgs
 > {
   connector?: TWConnector;
-  #walletImpl?: DeviceWalletImpl;
+  #walletImpl?: AbstractDeviceWallet;
   static id = "deviceWallet" as const;
   options: WalletOptions<DeviceWalletOptions>;
 
@@ -45,6 +46,7 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
       shouldAutoConnect: false, // TODO figure the autoconnect flow
     });
     this.options = options;
+    this.#walletImpl = this.initializeWallet(options.wallet);
   }
 
   protected async getConnector(): Promise<TWConnector> {
@@ -53,31 +55,34 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
       const { DeviceWalletConnector } = await import(
         "../connectors/device-wallet"
       );
-      let wallet: DeviceWalletImpl;
-      switch (this.options.storageType) {
-        case "asyncStore":
-          wallet = await DeviceWalletImpl.fromAsyncStorage(
-            this.options.storage,
-          );
-          break;
-        case "credentialStore":
-          wallet = await DeviceWalletImpl.fromCredentialStore();
-          break;
-        default:
-          // default to local storage
-          wallet = await DeviceWalletImpl.fromAsyncStorage(
-            this.options.storage,
-          );
+      const wallet = this.#walletImpl;
+      if (!wallet) {
+        throw new Error("Wallet not initialized");
       }
       this.connector = new DeviceWalletConnector({
         chain: this.options.chain,
         wallet,
         chains: this.options.chains || thirdwebChains,
       });
-
-      this.#walletImpl = wallet;
     }
     return this.connector;
+  }
+
+  initializeWallet(wallet?: AbstractDeviceWallet) {
+    if (wallet) {
+      return wallet;
+    }
+    switch (this.options.storageType) {
+      case "asyncStore":
+        return DeviceWalletImpl.fromAsyncStorage(this.options.storage);
+        break;
+      case "credentialStore":
+        return DeviceWalletImpl.fromCredentialStore();
+        break;
+      default:
+        // default to local storage
+        return DeviceWalletImpl.fromAsyncStorage(this.options.storage);
+    }
   }
 
   getWalletData() {
@@ -102,21 +107,9 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
   }
 }
 
-export class DeviceWalletImpl extends AbstractWallet {
-  static async fromAsyncStorage(storage: AsyncStorage) {
-    return new DeviceWalletImpl({
-      storage: new AsyncWalletStorage(storage),
-    });
-  }
-
-  static async fromCredentialStore() {
-    return new DeviceWalletImpl({
-      storage: new CredentialsStorage(navigator.credentials),
-    });
-  }
-
-  private options: DeviceWalletImplOptions;
-  #wallet?: ethers.Wallet;
+export abstract class AbstractDeviceWallet extends AbstractWallet {
+  protected wallet?: ethers.Wallet;
+  protected options: DeviceWalletImplOptions;
 
   constructor(options: DeviceWalletImplOptions) {
     super();
@@ -126,10 +119,10 @@ export class DeviceWalletImpl extends AbstractWallet {
   async getSigner(
     provider?: ethers.providers.Provider,
   ): Promise<ethers.Signer> {
-    if (!this.#wallet) {
+    if (!this.wallet) {
       throw new Error("Wallet not initialized");
     }
-    let wallet = this.#wallet;
+    let wallet = this.wallet;
     if (provider) {
       wallet = wallet.connect(provider);
     }
@@ -144,9 +137,39 @@ export class DeviceWalletImpl extends AbstractWallet {
     return data.address;
   }
 
+  getWalletData() {
+    return this.options.storage.getWalletData();
+  }
+
+  abstract generateNewWallet(): Promise<string>;
+
+  abstract loadSavedWallet(password: string): Promise<string>;
+
+  abstract save(password: string): Promise<void>;
+
+  abstract export(password: string): Promise<string>;
+}
+
+export class DeviceWalletImpl extends AbstractDeviceWallet {
+  static fromAsyncStorage(storage: AsyncStorage) {
+    return new DeviceWalletImpl({
+      storage: new AsyncWalletStorage(storage),
+    });
+  }
+
+  static fromCredentialStore() {
+    return new DeviceWalletImpl({
+      storage: new CredentialsStorage(navigator.credentials),
+    });
+  }
+
+  constructor(options: DeviceWalletImplOptions) {
+    super(options);
+  }
+
   async generateNewWallet(): Promise<string> {
     const wallet = ethers.Wallet.createRandom();
-    this.#wallet = wallet;
+    this.wallet = wallet;
     return wallet.address;
   }
 
@@ -159,7 +182,7 @@ export class DeviceWalletImpl extends AbstractWallet {
       data.encryptedData,
       password,
     );
-    this.#wallet = wallet;
+    this.wallet = wallet;
     return wallet.address;
   }
 
@@ -181,10 +204,6 @@ export class DeviceWalletImpl extends AbstractWallet {
   async export(password: string): Promise<string> {
     const wallet = (await this.getSigner()) as ethers.Wallet;
     return wallet.encrypt(password);
-  }
-
-  getWalletData() {
-    return this.options.storage.getWalletData();
   }
 }
 

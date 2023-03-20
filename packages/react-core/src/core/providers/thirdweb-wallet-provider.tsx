@@ -238,14 +238,16 @@ export function ThirdwebWalletProvider(
 
       const wallet = createWalletInstance(Wallet);
       setConnectionStatus("connecting");
-      try {
-        await wallet.connect(_connectedParams);
-        handleWalletConnect(wallet);
-      } catch (e: any) {
-        console.error(e);
-        setConnectionStatus("disconnected");
-        throw e;
-      }
+      wallet
+        .connect(_connectedParams)
+        .then(() => {
+          handleWalletConnect(wallet);
+        })
+        .catch((err) => {
+          console.error(err);
+          setConnectionStatus("disconnected");
+          throw err;
+        });
     },
     [createWalletInstance, handleWalletConnect, chainToConnect],
   );

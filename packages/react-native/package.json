@@ -24,7 +24,7 @@
     "android"
   ],
   "dependencies": {
-    "@coinbase/wallet-mobile-sdk": "^1.0.4",
+    "@coinbase/wallet-mobile-sdk": "^1.0.5",
     "@shopify/restyle": "^2.4.1",
     "@tanstack/react-query": "^4.0.10",
     "@thirdweb-dev/chains": "workspace:*",
@@ -33,6 +33,8 @@
     "@thirdweb-dev/storage": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",
     "abitype": "^0.2.5",
+    "expo-secure-store": "~12.0.0",
+    "react-native-device-info": "^10.4.0",
     "react-native-mmkv": "2.5.1",
     "react-native-modal": "^13.0.1",
     "react-native-svg": "^13.8.0",

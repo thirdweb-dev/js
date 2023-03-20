@@ -1,6 +1,7 @@
 import { normalizeChainId } from "../../../lib/wagmi-core";
 import { ConnectParams, TWConnector } from "../../interfaces/tw-connector";
 import type {
+  AbstractDeviceWallet,
   DeviceWalletConnectionArgs,
   DeviceWalletImpl,
 } from "../../wallets/device-wallet";
@@ -10,7 +11,7 @@ import { providers } from "ethers";
 
 export type DeviceWalletConnectorOptions = {
   chain: Chain;
-  wallet: DeviceWalletImpl;
+  wallet: AbstractDeviceWallet;
   chains: Chain[];
 };
 
