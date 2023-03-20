@@ -19,14 +19,14 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
-import {
+import { getCachedAbiForContract } from "@thirdweb-dev/sdk";
+import type {
   Abi,
   CommonContractSchemaInput,
   ContractEvent,
   ContractForPrebuiltContractType,
   ContractType,
   EventQueryOptions,
-  getCachedAbiForContract,
   PrebuiltContractType,
   SmartContract,
   SUPPORTED_CHAIN_ID,
