@@ -21,11 +21,12 @@ export type { WalletOptions } from "./wallets/base";
 export { AbstractBrowserWallet } from "./wallets/base";
 export * from "./wallets/coinbase-wallet";
 export * from "./wallets/device-wallet";
-export * from "./wallets/ethers";
 export * from "./wallets/injected";
 export * from "./wallets/metamask";
-export * from "./wallets/private-key";
 export * from "./wallets/wallet-connect";
 export * from "./wallets/wallet-connect-v1";
 
 export type { Chain } from "@thirdweb-dev/chains";
+
+// export the window ethereum util
+export { assertWindowEthereum } from "./utils/assertWindowEthereum";

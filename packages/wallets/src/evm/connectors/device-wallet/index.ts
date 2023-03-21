@@ -5,7 +5,7 @@ import type {
   DeviceWalletConnectionArgs,
   DeviceWalletImpl,
 } from "../../wallets/device-wallet";
-import { Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import type { Signer } from "ethers";
 import { providers } from "ethers";
 
@@ -19,7 +19,6 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
   readonly id: string = "device_wallet";
   readonly name: string = "Device Wallet";
   options: DeviceWalletConnectorOptions;
-  // chainId: number;
   #wallet: DeviceWalletImpl;
 
   #provider?: providers.Provider;
@@ -30,22 +29,20 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
   constructor(options: DeviceWalletConnectorOptions) {
     super();
     this.options = options;
-    // this.chainId = options.chain.chainId;
     this.#wallet = options.wallet;
   }
 
   async connect(args: ConnectParams<DeviceWalletConnectionArgs>) {
-    // if (args.chainId) {
-    //   this.chainId = args.chainId;
-    // }
     await this.initializeDeviceWallet(args.password);
+    if (args.chainId) {
+      this.switchChain(args.chainId);
+    }
     const signer = await this.getSigner();
     const address = await signer.getAddress();
     return address;
   }
 
   async initializeDeviceWallet(password: string) {
-    // TODO this should be a UI flow prior to calling connect instead
     const savedAddr = await this.#wallet.getSavedWalletAddress();
     if (!savedAddr) {
       await this.#wallet.generateNewWallet();
@@ -77,10 +74,6 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
     }
   }
 
-  // async getChainId() {
-  //   return this.chainId;
-  // }
-
   async getProvider() {
     if (!this.#provider) {
       this.#provider = new providers.JsonRpcBatchProvider(
@@ -109,7 +102,6 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
     }
 
     this.#provider = new providers.JsonRpcBatchProvider(chain.rpc[0]);
-
     this.#signer = await this.#wallet.getSigner(this.#provider);
     this.onChainChanged(chainId);
   }

@@ -190,6 +190,7 @@ export function ThirdwebWalletProvider(
       let Wallet = props.supportedWallets.find((W) => {
         return W.name.toLowerCase() === lastConnectedWallet.toLowerCase();
       });
+
       if (!Wallet) {
         Wallet = props.supportedWallets.find((W) => {
           return W.name
@@ -198,24 +199,25 @@ export function ThirdwebWalletProvider(
         });
       }
 
-      if (Wallet && Wallet.id !== "deviceWallet") {
-        const wallet = createWalletInstance(Wallet);
-        try {
-          setConnectionStatus("connecting");
-          // give up auto connect if it takes more than 3 seconds
-          // this is to handle the edge case when trying to auto-connect to wallet that does not exist anymore (extension is uninstalled)
-          await timeoutPromise(
-            10000,
-            wallet.autoConnect(),
-            `AutoConnect timeout`,
-          );
-          handleWalletConnect(wallet);
-        } catch (e) {
-          setConnectionStatus("disconnected");
-          throw e;
-        }
-      } else {
+      if (!Wallet) {
         setConnectionStatus("disconnected");
+        return;
+      }
+
+      const wallet = createWalletInstance(Wallet);
+      try {
+        setConnectionStatus("connecting");
+        // give up auto connect if it takes more than 10 seconds
+        // this is to handle the edge case when trying to auto-connect to wallet that does not exist anymore (extension is uninstalled)
+        await timeoutPromise(
+          10000,
+          wallet.autoConnect(),
+          `AutoConnect timeout`,
+        );
+        handleWalletConnect(wallet);
+      } catch (e) {
+        setConnectionStatus("disconnected");
+        throw e;
       }
     })();
   }, [

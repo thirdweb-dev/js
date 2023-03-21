@@ -27,7 +27,7 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { PackVRF } from "../../core/classes/pack-vrf";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { Abi, Address, AddressOrEns } from "../../schema";
+import { Abi, AbiInput, AbiSchema, Address, AddressOrEns } from "../../schema";
 import { PackContractSchema } from "../../schema/contracts/packs";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
@@ -117,7 +117,7 @@ export class Pack extends StandardErc1155<PackContract> {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: Abi,
+    abi: AbiInput,
     chainId: number,
     contractWrapper = new ContractWrapper<PackContract>(
       network,
@@ -137,7 +137,7 @@ export class Pack extends StandardErc1155<PackContract> {
     ),
   ) {
     super(contractWrapper, storage, chainId);
-    this.abi = abi;
+    this.abi = AbiSchema.parse(abi || []);
     this.erc1155 = new Erc1155(this.contractWrapper, this.storage, chainId);
     this.metadata = new ContractMetadata(
       this.contractWrapper,

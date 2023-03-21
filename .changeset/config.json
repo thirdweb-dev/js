@@ -1,6 +1,11 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@2.1.1/schema.json",
-  "changelog": ["@changesets/changelog-github", { "repo": "thirdweb-dev/js" }],
+  "changelog": [
+    "@changesets/changelog-github",
+    {
+      "repo": "thirdweb-dev/js"
+    }
+  ],
   "commit": false,
   "fixed": [
     ["@thirdweb-dev/react-core", "@thirdweb-dev/react"],
@@ -16,7 +21,6 @@
     "onlyUpdatePeerDependentsWhenOutOfRange": true
   },
   "snapshot": {
-    "useCalculatedVersion": true,
     "prereleaseTemplate": "{tag}-{datetime}-{commit}"
   }
 }

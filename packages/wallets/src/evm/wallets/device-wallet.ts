@@ -1,15 +1,15 @@
-import { AsyncStorage } from "../../core";
+import { AsyncStorage, createAsyncLocalStorage } from "../../core";
 import { thirdwebChains } from "../constants/chains";
 import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
-import { Chain } from "@thirdweb-dev/chains";
+import { Chain, Ethereum } from "@thirdweb-dev/chains";
 import { ethers } from "ethers";
 
 export type DeviceWalletOptions = {
-  chain: Chain;
+  chain?: Chain;
   storageType?: "asyncStore" | "credentialStore";
-  storage: AsyncStorage;
+  storage?: AsyncStorage;
   wallet?: AbstractDeviceWallet;
 };
 
@@ -60,7 +60,7 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
         throw new Error("Wallet not initialized");
       }
       this.connector = new DeviceWalletConnector({
-        chain: this.options.chain,
+        chain: this.options.chain || Ethereum,
         wallet,
         chains: this.options.chains || thirdwebChains,
       });
@@ -74,14 +74,18 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
     }
     switch (this.options.storageType) {
       case "asyncStore":
-        return DeviceWalletImpl.fromAsyncStorage(this.options.storage);
+        return DeviceWalletImpl.fromAsyncStorage(
+          this.options.storage || createAsyncLocalStorage("deviceWallet"),
+        );
         break;
       case "credentialStore":
         return DeviceWalletImpl.fromCredentialStore();
         break;
       default:
         // default to local storage
-        return DeviceWalletImpl.fromAsyncStorage(this.options.storage);
+        return DeviceWalletImpl.fromAsyncStorage(
+          this.options.storage || createAsyncLocalStorage("deviceWallet"),
+        );
     }
   }
 
@@ -103,7 +107,8 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
 
   // enforcing that connectOptions is required and not optional
   connect(connectOptions: ConnectParams<DeviceWalletConnectionArgs>) {
-    return super.connect(connectOptions);
+    // do not save params because it contains the password
+    return super.connect({ ...connectOptions, saveParams: false });
   }
 }
 

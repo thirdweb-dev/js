@@ -1,14 +1,14 @@
-import {
-  PaperWalletConnectionArgs,
-  PaperWalletOptions,
-} from "../connectors/paper/types";
 import { TWConnector } from "../interfaces/tw-connector";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
-import { Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
+import { SafeConnectionArgs, SafeOptions } from "../connectors/safe/types";
+
+// re-export the connection args for convenience
+export type { SafeConnectionArgs } from "../connectors/safe/types";
 
 export class SafeWallet extends AbstractBrowserWallet<
-  PaperWalletOptions,
-  PaperWalletConnectionArgs
+  SafeOptions,
+  SafeConnectionArgs
 > {
   connector?: TWConnector;
 
@@ -17,7 +17,7 @@ export class SafeWallet extends AbstractBrowserWallet<
     return "Safe Wallet" as const;
   }
 
-  constructor(options: WalletOptions<PaperWalletOptions>) {
+  constructor(options: WalletOptions<SafeOptions>) {
     super(SafeWallet.id, {
       ...options,
       shouldAutoConnect: false, // TODO figure the autoconnect flow
