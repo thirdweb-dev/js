@@ -19,7 +19,7 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import type { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { Address, AddressOrEns } from "../../schema";
-import { Abi } from "../../schema/contracts/custom";
+import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { TokenErc721ContractSchema } from "../../schema/contracts/token-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import type { TokenERC721 } from "@thirdweb-dev/contracts-js";
@@ -109,7 +109,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: Abi,
+    abi: AbiInput,
     chainId: number,
     contractWrapper = new ContractWrapper<TokenERC721>(
       network,
@@ -120,7 +120,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
   ) {
     super(contractWrapper, storage, chainId);
 
-    this.abi = abi;
+    this.abi = AbiSchema.parse(abi || []);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       TokenErc721ContractSchema,
