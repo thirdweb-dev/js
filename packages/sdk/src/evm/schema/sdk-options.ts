@@ -10,9 +10,9 @@ export const SDKOptionsSchema = z
   .object({
     // @ts-expect-error - zod doesn't know anything about readonly
     supportedChains: z.array(ChainInfoInputSchema).default(defaultChains),
-    thirdwebApiKey: z.string().optional().default(DEFAULT_API_KEY),
-    alchemyApiKey: z.string().optional().optional(),
-    infuraApiKey: z.string().optional().optional(),
+    thirdwebApiKey: z.string().default(DEFAULT_API_KEY),
+    alchemyApiKey: z.string().optional(),
+    infuraApiKey: z.string().optional(),
     readonlySettings: z
       .object({
         rpcUrl: z.string().url(),
