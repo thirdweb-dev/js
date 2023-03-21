@@ -27,12 +27,10 @@ type ConnectionStatus = "unknown" | "connected" | "disconnected" | "connecting";
 type ConnectFnArgs<I extends SupportedWalletInstance> =
   // if second argument is optional
   undefined extends WalletConnectParams<I>
-    ?
-        | [wallet: SupportedWallet<I>]
-        | [
-            wallet: SupportedWallet<I>,
-            connectParams: NonNullable<WalletConnectParams<I>>,
-          ]
+    ? [
+        wallet: SupportedWallet<I>,
+        connectParams?: NonNullable<WalletConnectParams<I>>,
+      ]
     : // if second argument is required
       [
         wallet: SupportedWallet<I>,
