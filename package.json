@@ -35,7 +35,7 @@
     "@solana/web3.js": "1.67.2",
     "@tanstack/query-async-storage-persister": "^4.19.1",
     "@tanstack/query-sync-storage-persister": "^4.19.1",
-    "@tanstack/react-query": "^4.19.1",
+    "@tanstack/react-query": "^4.28.0",
     "@tanstack/react-query-persist-client": "^4.19.1",
     "@tanstack/react-table": "8.7.9",
     "@thirdweb-dev/auth": "3.0.8-nightly-20230310185406-71532e5a",
