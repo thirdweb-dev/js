@@ -29,12 +29,8 @@ export class DeviceWalletImpl extends AbstractDeviceWallet {
   }
 
   async generateNewWallet(): Promise<string> {
-    const now = Date.now();
-    console.log("generating new wallet", now);
     const random = utils.randomBytes(32);
-    // const wallet = ethers.Wallet.createRandom();
     const wallet = new ethers.Wallet(random);
-    console.log("finish generating new wallet", Date.now() - now);
     this.wallet = wallet;
     return wallet.address;
   }
@@ -45,16 +41,8 @@ export class DeviceWalletImpl extends AbstractDeviceWallet {
     if (!data) {
       throw new Error("No saved wallet");
     }
-    const now = Date.now();
-    console.log("decrypting wallet", now);
-    const wallet = new ethers.Wallet(data.encryptedData);
-    // const wallet = await ethers.Wallet.fromEncryptedJson(
-    //   data.encryptedData,
-    //   password,
-    // );
-    console.log("finish decrypting wallet", Date.now() - now);
-    this.wallet = wallet;
-    return wallet.address;
+    this.wallet = new ethers.Wallet(data.encryptedData);
+    return this.wallet.address;
   }
 
   async save(password: string): Promise<void> {
