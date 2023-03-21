@@ -4,7 +4,7 @@ import type {
   DeviceWalletConnectionArgs,
   DeviceWalletImpl,
 } from "../../wallets/device-wallet";
-import { Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import type { Signer } from "ethers";
 import { providers } from "ethers";
 

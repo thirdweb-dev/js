@@ -1,1 +1,1 @@
-export { Connector } from "./Connector";
+export { Connector, type ConnectorData } from "./Connector";

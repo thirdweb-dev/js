@@ -1,5 +1,5 @@
 import { Connector } from "../../lib/wagmi-core";
-import { Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import type { Signer, providers } from "ethers";
 import EventEmitter from "eventemitter3";
 
