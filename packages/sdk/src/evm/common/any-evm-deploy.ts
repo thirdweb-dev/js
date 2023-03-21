@@ -291,7 +291,7 @@ export async function deployInfraWithSigner(
       txns.push({
         predictedAddress: txInfo.predictedAddress,
         to: commonFactory,
-        data: txInfo.deployData,
+        data: deployData,
       });
 
       // Send the deploy transaction to common factory with a signer
