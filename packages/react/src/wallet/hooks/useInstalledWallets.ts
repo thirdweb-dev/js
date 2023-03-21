@@ -1,19 +1,19 @@
 import { useDeviceWalletStorage } from "./useDeviceWalletStorage";
 import { SupportedWallet } from "@thirdweb-dev/react-core";
+import { assertWindowEthereum } from "@thirdweb-dev/wallets";
 
 export function useInstalledWallets() {
   const deviceWalletStorage = useDeviceWalletStorage();
 
-  const isMetamaskInstalled =
-    typeof window !== "undefined" ? window.ethereum?.isMetaMask : false;
+  let isMetamaskInstalled = false;
+  let isCoinbaseWalletInstalled = false;
 
-  const isCoinbaseWalletInstalled =
-    typeof window !== "undefined"
-      ? window.ethereum?.isCoinbaseWallet ||
-        (window.ethereum as any)?.providers?.some(
-          (p: any) => p.isCoinbaseWallet,
-        )
-      : false;
+  if (assertWindowEthereum(globalThis.window)) {
+    isMetamaskInstalled = globalThis.window.ethereum?.isMetaMask;
+    isCoinbaseWalletInstalled =
+      globalThis.window.ethereum.providers?.some((p) => p.isCoinbaseWallet) ||
+      false;
+  }
 
   const installedWallets: Record<SupportedWallet["id"], boolean> = {
     metamask: !!isMetamaskInstalled,

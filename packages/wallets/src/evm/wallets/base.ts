@@ -1,17 +1,17 @@
-import { AsyncStorage } from "../../core/AsyncStorage";
+import { AsyncStorage, createAsyncLocalStorage } from "../../core/AsyncStorage";
 import type { DAppMetaData } from "../../core/types/dAppMeta";
 import { thirdwebChains } from "../constants/chains";
 import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
-import { Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 
 export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   chains?: Chain[];
   // default: true
   shouldAutoConnect?: boolean;
   walletId?: string;
-  coordinatorStorage: AsyncStorage;
-  walletStorage: AsyncStorage;
+  coordinatorStorage?: AsyncStorage;
+  walletStorage?: AsyncStorage;
   dappMetadata: DAppMetaData;
 } & TOpts;
 
@@ -39,8 +39,10 @@ export abstract class AbstractBrowserWallet<
     this.walletId = walletId;
     this.options = options;
     this.chains = options.chains || thirdwebChains;
-    this.coordinatorStorage = options.coordinatorStorage;
-    this.walletStorage = options.walletStorage;
+    this.coordinatorStorage =
+      options.coordinatorStorage || createAsyncLocalStorage("coordinator");
+    this.walletStorage =
+      options.walletStorage || createAsyncLocalStorage(this.walletId);
   }
 
   protected abstract getConnector(): Promise<TWConnector<TConnectParams>>;

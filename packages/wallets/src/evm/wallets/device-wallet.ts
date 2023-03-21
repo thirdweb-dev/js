@@ -3,7 +3,7 @@ import { thirdwebChains } from "../constants/chains";
 import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
-import { Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import { ethers } from "ethers";
 
 export type DeviceWalletOptions = {

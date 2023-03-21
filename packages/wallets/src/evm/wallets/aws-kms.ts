@@ -1,7 +1,6 @@
 import { AbstractWallet } from "./abstract";
-import type { Signer, TypedDataDomain, TypedDataField } from "ethers";
-import { utils } from "ethers";
-import { AwsKmsSigner, AwsKmsSignerCredentials } from "ethers-aws-kms-signer";
+import type { Signer } from "ethers";
+import type { AwsKmsSignerCredentials } from "ethers-aws-kms-signer";
 
 /**
  * Create a wallet instance using a private key stored in AWS KMS.
@@ -23,28 +22,26 @@ import { AwsKmsSigner, AwsKmsSignerCredentials } from "ethers-aws-kms-signer";
  * ```
  */
 export class AwsKmsWallet extends AbstractWallet {
-  #signer?: AwsKmsSigner;
+  #signer?: Promise<Signer>;
+  #options: AwsKmsSignerCredentials;
   constructor(options: AwsKmsSignerCredentials) {
     super();
-    this.#signer = new AwsKmsSigner(options);
+    this.#options = options;
   }
 
   async getSigner(): Promise<Signer> {
-    return this.#signer as Signer;
-  }
-
-  // Add _signTypedData method onto the signer for now so we don't need to reimplement
-  // The entire AWS KMS signer repository and maintain it ourselves.
-  private updateSigner(signer: AwsKmsSigner): AwsKmsSigner {
-    (signer as any)._signTypedData = async function (
-      domain: TypedDataDomain,
-      types: Record<string, Array<TypedDataField>>,
-      value: Record<string, any>,
-    ) {
-      const hash = utils._TypedDataEncoder.hash(domain, types, value);
-      return signer._signDigest(hash);
-    };
-
-    return signer;
+    if (!this.#signer) {
+      this.#signer = new Promise(async (resolve, reject) => {
+        try {
+          const { AwsKmsSigner } = await import("ethers-aws-kms-signer");
+          resolve(new AwsKmsSigner(this.#options));
+        } catch (err) {
+          // remove the cached promise so we can try again
+          this.#signer = undefined;
+          reject(err);
+        }
+      });
+    }
+    return this.#signer;
   }
 }

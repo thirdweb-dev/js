@@ -4,7 +4,7 @@ import {
 } from "../connectors/paper/types";
 import { TWConnector } from "../interfaces/tw-connector";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
-import { Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 
 export type PaperWalletOptions = WalletOptions<PaperWalletAdditionalOptions>;
 

@@ -4,13 +4,13 @@ import {
   PaperWalletConnectionArgs,
   PaperWalletConnectorOptions,
 } from "./types";
-import {
+import type {
   Chain as PChain,
   InitializedUser,
   PaperEmbeddedWalletSdk,
-  UserStatus,
 } from "@paperxyz/embedded-wallet-service-sdk";
-import { Chain } from "@thirdweb-dev/chains";
+import { UserStatus } from "@paperxyz/embedded-wallet-service-sdk";
+import type { Chain } from "@thirdweb-dev/chains";
 import type { providers, Signer } from "ethers";
 import { utils } from "ethers";
 
@@ -27,7 +27,7 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
   ready: boolean = true;
 
   private user: InitializedUser | null = null;
-  private paper?: PaperEmbeddedWalletSdk;
+  #paper?: Promise<PaperEmbeddedWalletSdk>;
   private options: PaperWalletConnectorOptions;
 
   #signer?: Signer;
@@ -37,28 +37,42 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
     this.options = options;
   }
 
-  private initPaperSDK() {
-    if (!this.paper) {
-      const chainName = PaperChainMap[this.options.chain.chainId];
-      if (!chainName) {
-        throw new Error("Unsupported chain id: " + this.options.chain.chainId);
-      }
-      this.paper = new PaperEmbeddedWalletSdk({
-        clientId: this.options.clientId,
-        chain: chainName,
+  private getPaperSDK(): Promise<PaperEmbeddedWalletSdk> {
+    if (!this.#paper) {
+      this.#paper = new Promise(async (resolve, reject) => {
+        try {
+          const chainName = PaperChainMap[this.options.chain.chainId];
+          if (!chainName) {
+            throw new Error(
+              "Unsupported chain id: " + this.options.chain.chainId,
+            );
+          }
+          const { PaperEmbeddedWalletSdk } = await import(
+            "@paperxyz/embedded-wallet-service-sdk"
+          );
+          resolve(
+            new PaperEmbeddedWalletSdk({
+              clientId: this.options.clientId,
+              chain: chainName,
+            }),
+          );
+        } catch (err) {
+          reject(err);
+        }
       });
     }
+    return this.#paper;
   }
 
   async connect() {
-    this.initPaperSDK();
-    if (!this.paper) {
+    const paperSDK = await this.getPaperSDK();
+    if (!paperSDK) {
       throw new Error("Paper SDK not initialized");
     }
-    let user = await this.paper.getUser();
+    let user = await paperSDK.getUser();
     switch (user.status) {
       case UserStatus.LOGGED_OUT: {
-        const authResult = await this.paper.auth.loginWithPaperModal();
+        const authResult = await paperSDK.auth.loginWithPaperModal();
         this.user = authResult.user;
         break;
       }
