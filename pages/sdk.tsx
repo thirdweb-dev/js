@@ -10,6 +10,7 @@ import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
+import { Link } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
 const SDK_GUIDES = [
@@ -94,7 +95,7 @@ const Web3SDK: ThirdwebNextPage = () => {
             </Flex>
           </ProductCard>
           <ProductCard
-            title="Accelerate time-to-market"
+            title="Go-to-market faster"
             icon={require("/public/assets/product-pages/sdk/hero-icon-2.png")}
           >
             Utilities for common use cases so that you do not have to reinvent
@@ -127,18 +128,66 @@ const Web3SDK: ThirdwebNextPage = () => {
           py={{ base: 12, md: 24 }}
         >
           <ProductLearnMoreCard
-            title="Frontend applications"
+            title="Web3 SDK"
             category={TRACKING_CATEGORY}
-            description="Build the frontend of your apps and games using our SDKs. This is best suited for when you need users to connect their wallets to interact with contracts."
+            description={
+              <>
+                Interact with your contracts from your app in the programming
+                language that you’re familiar with our{" "}
+                <Link color="blue.500" href="https://portal.thirdweb.com/react">
+                  React
+                </Link>
+                ,{" "}
+                <Link
+                  color="blue.500"
+                  href="https://portal.thirdweb.com/react-native"
+                >
+                  ReactNative
+                </Link>
+                ,{" "}
+                <Link
+                  color="blue.500"
+                  href="https://portal.thirdweb.com/python"
+                >
+                  Python
+                </Link>
+                ,{" "}
+                <Link
+                  color="blue.500"
+                  href="https://portal.thirdweb.com/typescript"
+                >
+                  TypeScript
+                </Link>
+                ,{" "}
+                <Link color="blue.500" href="https://portal.thirdweb.com/go">
+                  Go
+                </Link>{" "}
+                SDKs.
+              </>
+            }
             icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
-            href="https://portal.thirdweb.com/sdk/set-up-the-sdk/frontend"
+            href="https://portal.thirdweb.com/"
           />
           <ProductLearnMoreCard
-            title="Backend applications"
+            title="UI Components SDK"
             category={TRACKING_CATEGORY}
-            description="Build the backend of your apps and games using our SDKs. Backend apps are best suited for when you need to perform actions from your wallet or simply need to read data."
-            icon={require("/public/assets/product-pages/dashboard/hero-icon-1.png")}
-            href="https://portal.thirdweb.com/sdk/set-up-the-sdk/backend"
+            description="Plug-and-play UI Components for common web3 use cases, e.g. Connect Wallet button, Web3 button, NFT renderer, and IPFS renderer."
+            icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
+            href="https://thirdweb.com/ui-components"
+          />
+          <ProductLearnMoreCard
+            title="Game Engine SDK"
+            category={TRACKING_CATEGORY}
+            description="Unity SDK includes all supported platforms: Native (Windows, Mac, Linux), Mobile (iOS, Android), Console (PS, Xbox), Browser (WebGL). Unreal SDK coming soon."
+            icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
+            href="https://portal.thirdweb.com/gamingkit"
+          />
+          <ProductLearnMoreCard
+            title="Mobile SDK"
+            category={TRACKING_CATEGORY}
+            description="Integrate web3 into mobile apps with our React Native SDK. Comes with hooks and UI components that let you easily build native apps for iOS and Android."
+            icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
+            href="https://portal.thirdweb.com/react-native"
           />
         </SimpleGrid>
       </ProductSection>
