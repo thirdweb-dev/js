@@ -152,7 +152,6 @@ export function ThirdwebWalletProvider(
   const autoConnectTriggered = useRef(false);
 
   // Auto Connect
-  // TODO - Can't do auto connect for Device Wallet right now
   useEffect(() => {
     if (autoConnectTriggered.current) {
       return;

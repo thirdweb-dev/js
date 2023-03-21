@@ -104,12 +104,6 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
   static getDataStorageKey() {
     return STORAGE_KEY_DATA;
   }
-
-  // enforcing that connectOptions is required and not optional
-  connect(connectOptions: ConnectParams<DeviceWalletConnectionArgs>) {
-    // do not save params because it contains the password
-    return super.connect({ ...connectOptions, saveParams: false });
-  }
 }
 
 export abstract class AbstractDeviceWallet extends AbstractWallet {
@@ -212,27 +206,27 @@ export class DeviceWalletImpl extends AbstractDeviceWallet {
   }
 }
 
-type WalletData = {
+export type DeviceWalletData = {
   address: string;
   encryptedData: string;
 };
 
-interface IWalletStore {
-  getWalletData(): Promise<WalletData | null>;
-  storeWalletData(data: WalletData): Promise<void>;
+export interface IDeviceWalletStore {
+  getWalletData(): Promise<DeviceWalletData | null>;
+  storeWalletData(data: DeviceWalletData): Promise<void>;
 }
 
-type DeviceWalletImplOptions = {
-  storage: IWalletStore;
+export type DeviceWalletImplOptions = {
+  storage: IDeviceWalletStore;
 };
 
-class AsyncWalletStorage implements IWalletStore {
+class AsyncWalletStorage implements IDeviceWalletStore {
   private storage: AsyncStorage;
 
   constructor(storage: AsyncStorage) {
     this.storage = storage;
   }
-  async getWalletData(): Promise<WalletData | null> {
+  async getWalletData(): Promise<DeviceWalletData | null> {
     const [address, encryptedData] = await Promise.all([
       this.storage.getItem(STORAGE_KEY_ADDR),
       this.storage.getItem(STORAGE_KEY_DATA),
@@ -247,7 +241,7 @@ class AsyncWalletStorage implements IWalletStore {
     };
   }
 
-  async storeWalletData(data: WalletData): Promise<void> {
+  async storeWalletData(data: DeviceWalletData): Promise<void> {
     await Promise.all([
       this.storage.setItem(STORAGE_KEY_ADDR, data.address),
       this.storage.setItem(STORAGE_KEY_DATA, data.encryptedData),
@@ -255,12 +249,12 @@ class AsyncWalletStorage implements IWalletStore {
   }
 }
 
-class CredentialsStorage implements IWalletStore {
+class CredentialsStorage implements IDeviceWalletStore {
   private container: CredentialsContainer;
   constructor(container: CredentialsContainer) {
     this.container = container;
   }
-  async getWalletData(): Promise<WalletData | null> {
+  async getWalletData(): Promise<DeviceWalletData | null> {
     const credential = await this.container.get({
       password: true,
       unmediated: true,
@@ -274,7 +268,7 @@ class CredentialsStorage implements IWalletStore {
     return null;
   }
 
-  async storeWalletData(data: WalletData): Promise<void> {
+  async storeWalletData(data: DeviceWalletData): Promise<void> {
     if ("PasswordCredential" in window) {
       let credentialData = {
         id: data.address,

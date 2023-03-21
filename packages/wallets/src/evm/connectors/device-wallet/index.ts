@@ -43,13 +43,13 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
   }
 
   async initializeDeviceWallet(password: string) {
-    const savedAddr = await this.#wallet.getSavedWalletAddress();
-    if (!savedAddr) {
-      await this.#wallet.generateNewWallet();
-      await this.#wallet.save(password);
-    } else {
-      await this.#wallet.loadSavedWallet(password);
-    }
+    // const savedAddr = await this.#wallet.getSavedWalletAddress();
+    // if (!savedAddr) {
+    await this.#wallet.generateNewWallet();
+    await this.#wallet.save(password);
+    // } else {
+    //   await this.#wallet.loadSavedWallet(password);
+    // }
   }
 
   async disconnect() {
