@@ -99,6 +99,10 @@ export const AbiSchema = z.array(AbiObjectSchema);
 // if we want to statically type this for external usage it has to *awlways* be the output type
 export type Abi = z.output<typeof AbiSchema>;
 
+// input type is only used internally
+/**
+ * @internal
+ */
 export type AbiInput = z.input<typeof AbiSchema>;
 
 /**

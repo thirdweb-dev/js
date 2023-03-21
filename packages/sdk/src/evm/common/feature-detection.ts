@@ -11,6 +11,7 @@ import {
   Abi,
   AbiEvent,
   AbiFunction,
+  AbiInput,
   AbiSchema,
   AbiTypeSchema,
   FullPublishMetadata,
@@ -31,10 +32,7 @@ import { z } from "zod";
  * @param abi
  * @param feature
  */
-function matchesAbiInterface(
-  abi: z.input<typeof AbiSchema>,
-  feature: Feature,
-): boolean {
+function matchesAbiInterface(abi: AbiInput, feature: Feature): boolean {
   // returns true if all the functions in `interfaceToMatch` are found in `contract` (removing any duplicates)
   return hasMatchingAbi(abi, feature.abis);
 }
@@ -47,7 +45,7 @@ function matchesAbiInterface(
  */
 export function matchesPrebuiltAbi<T extends BaseContract>(
   contractWrapper: ContractWrapper<BaseContract>,
-  abi: z.input<typeof AbiSchema>,
+  abi: AbiInput,
 ): contractWrapper is ContractWrapper<T> {
   return hasMatchingAbi(AbiSchema.parse(contractWrapper.abi || []), [abi]);
 }
@@ -59,8 +57,8 @@ export function matchesPrebuiltAbi<T extends BaseContract>(
  * @returns
  */
 export function hasMatchingAbi(
-  contractAbi: z.input<typeof AbiSchema>,
-  featureAbis: readonly z.input<typeof AbiSchema>[],
+  contractAbi: AbiInput,
+  featureAbis: readonly AbiInput[],
 ) {
   const contractFn = extractFunctionsFromAbi(contractAbi);
   const interfaceFn = featureAbis.flatMap((i: any) =>
@@ -145,9 +143,7 @@ function extractCommentFromMetadata(
  * @returns
  * @internal
  */
-export function extractConstructorParamsFromAbi(
-  abi: z.input<typeof AbiSchema>,
-) {
+export function extractConstructorParamsFromAbi(abi: AbiInput) {
   const parsedAbi = AbiSchema.parse(abi || []);
   for (const input of parsedAbi) {
     if (input.type === "constructor") {
@@ -165,7 +161,7 @@ export function extractConstructorParamsFromAbi(
  * @internal
  */
 export function extractFunctionParamsFromAbi(
-  abi: z.input<typeof AbiSchema>,
+  abi: AbiInput,
   functionName: string,
 ) {
   const parsedAbi = AbiSchema.parse(abi || []);
@@ -183,7 +179,7 @@ export function extractFunctionParamsFromAbi(
  * @param metadata
  */
 export function extractFunctionsFromAbi(
-  abi: z.input<typeof AbiSchema>,
+  abi: AbiInput,
   metadata?: Record<string, any>,
 ): AbiFunction[] {
   const parsedAbi = AbiSchema.parse(abi || []);
@@ -217,7 +213,7 @@ export function extractFunctionsFromAbi(
  * @param metadata
  */
 export function extractEventsFromAbi(
-  abi: z.input<typeof AbiSchema>,
+  abi: AbiInput,
   metadata?: Record<string, any>,
 ): AbiEvent[] {
   const parsedAbi = AbiSchema.parse(abi || []);
@@ -543,7 +539,7 @@ export function getAllDetectedFeatureNames(abi: Abi): string[] {
  * @param featureName
  */
 export function isFeatureEnabled(
-  abi: z.input<typeof AbiSchema>,
+  abi: AbiInput,
   featureName: FeatureName,
 ): boolean {
   const parsedAbi = AbiSchema.parse(abi || []);
