@@ -35,7 +35,7 @@ export const DashboardRPC: ThirdwebNextPage = () => {
           <Text>
             This list show all your configured chains and all the RPC endpoints
             that thirdweb supports.{" "}
-            <Link href="/chains" color="blue.500">
+            <Link href="/chainlist" color="blue.500">
               See all supported chains
             </Link>
             .

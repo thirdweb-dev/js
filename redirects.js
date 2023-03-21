@@ -81,6 +81,11 @@ function redirects() {
       destination: "/thirdweb.eth/:path*",
       permanent: true,
     },
+    {
+      source: "/chains",
+      destination: "/chainlist",
+      permanent: true,
+    },
   ];
 }
 

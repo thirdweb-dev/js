@@ -271,7 +271,7 @@ const AppFooter: React.FC = () => {
         Gas Estimator
       </TrackedLink>
       <TrackedLink
-        href="/chains"
+        href="/chainlist"
         bg="transparent"
         category="footer"
         display={{ base: "none", md: "flex" }}
