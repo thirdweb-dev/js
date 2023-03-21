@@ -135,6 +135,10 @@ export const MismatchButton = React.forwardRef<
               }
             }}
             ref={ref}
+            isLoading={
+              (ecosystem === "evm" && evmBalance.isLoading) ||
+              (ecosystem === "solana" && solBalance.isLoading)
+            }
             isDisabled={isDisabled}
           >
             {children}
