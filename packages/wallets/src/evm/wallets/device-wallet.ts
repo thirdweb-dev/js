@@ -1,15 +1,15 @@
-import { AsyncStorage } from "../../core";
+import { AsyncStorage, createAsyncLocalStorage } from "../../core";
 import { thirdwebChains } from "../constants/chains";
 import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
-import type { Chain } from "@thirdweb-dev/chains";
+import { Chain, Ethereum } from "@thirdweb-dev/chains";
 import { ethers } from "ethers";
 
 export type DeviceWalletOptions = {
-  chain: Chain;
+  chain?: Chain;
   storageType?: "asyncStore" | "credentialStore";
-  storage: AsyncStorage;
+  storage?: AsyncStorage;
 };
 
 export type DeviceWalletConnectionArgs = {
@@ -57,7 +57,7 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
       switch (this.options.storageType) {
         case "asyncStore":
           wallet = await DeviceWalletImpl.fromAsyncStorage(
-            this.options.storage,
+            this.options.storage || createAsyncLocalStorage("deviceWallet"),
           );
           break;
         case "credentialStore":
@@ -66,11 +66,11 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
         default:
           // default to local storage
           wallet = await DeviceWalletImpl.fromAsyncStorage(
-            this.options.storage,
+            this.options.storage || createAsyncLocalStorage("deviceWallet"),
           );
       }
       this.connector = new DeviceWalletConnector({
-        chain: this.options.chain,
+        chain: this.options.chain || Ethereum,
         wallet,
         chains: this.options.chains || thirdwebChains,
       });

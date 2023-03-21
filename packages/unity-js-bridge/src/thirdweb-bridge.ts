@@ -9,9 +9,10 @@ import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
 import { MetaMask } from "@thirdweb-dev/wallets/evm/wallets/metamask";
 import { WalletConnect } from "@thirdweb-dev/wallets/evm/wallets/wallet-connect";
+import { DeviceBrowserWallet } from "@thirdweb-dev/wallets/evm/wallets/device-wallet";
 import { BigNumber } from "ethers";
 import type { ContractInterface, Signer } from "ethers";
-import { AsyncStorage } from "@thirdweb-dev/wallets";
+import { DAppMetaData } from "@thirdweb-dev/wallets";
 
 declare global {
   interface Window {
@@ -45,6 +46,7 @@ const WALLETS = [
   InjectedWallet,
   WalletConnect,
   CoinbaseWallet,
+  DeviceBrowserWallet,
 ] as const;
 
 type PossibleWallet = (typeof WALLETS)[number]["id"];
@@ -52,40 +54,6 @@ type PossibleWallet = (typeof WALLETS)[number]["id"];
 type FundWalletInput = FundWalletOptions & {
   appId: string;
 };
-
-const PREFIX = "__TW__";
-
-export class WebGLLocalStorage implements AsyncStorage {
-  name: string;
-
-  constructor(name: string) {
-    this.name = name;
-  }
-
-  getItem(key: string) {
-    return new Promise<string | null>((res) => {
-      res(window.localStorage.getItem(`${PREFIX}/${this.name}/${key}`));
-    });
-  }
-
-  setItem(key: string, value: string) {
-    return new Promise<void>((res, rej) => {
-      try {
-        window.localStorage.setItem(`${PREFIX}/${this.name}/${key}`, value);
-        res();
-      } catch (e) {
-        rej(e);
-      }
-    });
-  }
-
-  removeItem(key: string) {
-    return new Promise<void>((res) => {
-      window.localStorage.removeItem(`${PREFIX}/${this.name}/${key}`);
-      res();
-    });
-  }
-}
 
 interface TWBridge {
   initialize: (chain: ChainIdOrName, options: string) => void;
@@ -104,7 +72,6 @@ interface TWBridge {
 }
 
 const w = window;
-const coordinatorStorage = new WebGLLocalStorage("coordinator");
 
 class ThirdwebBridge implements TWBridge {
   private walletMap: Map<string, AbstractBrowserWallet> = new Map();
@@ -150,55 +117,39 @@ class ThirdwebBridge implements TWBridge {
     this.activeSDK = new ThirdwebSDK(chain, sdkOptions, storage);
     for (let possibleWallet of WALLETS) {
       let walletInstance: AbstractBrowserWallet;
+      const dappMetadata: DAppMetaData = {
+        name: sdkOptions.wallet?.appName || "thirdweb powered game",
+        url: sdkOptions.wallet?.appUrl || "https://thirdweb.com",
+        description: sdkOptions.wallet?.appDescription || "",
+        logoUrl: sdkOptions.wallet?.appIcons?.[0] || "",
+        ...sdkOptions.wallet?.extras,
+      };
       switch (possibleWallet.id) {
         case "injected":
           walletInstance = new InjectedWallet({
-            dappMetadata: {
-              name: sdkOptions.wallet?.appName || "thirdweb powered dApp",
-              url: sdkOptions.wallet?.appUrl || "",
-            },
-            walletStorage: new WebGLLocalStorage(possibleWallet.id),
-            coordinatorStorage: coordinatorStorage,
-            connectorStorage: new WebGLLocalStorage(
-              possibleWallet.id + "_connector",
-            ),
+            dappMetadata,
           });
           break;
         case "metamask":
           walletInstance = new MetaMask({
-            dappMetadata: {
-              name: sdkOptions.wallet?.appName || "thirdweb powered dApp",
-              url: sdkOptions.wallet?.appUrl || "",
-              logoUrl: sdkOptions.wallet?.appLogoUrl || "",
-            },
-            walletStorage: new WebGLLocalStorage(possibleWallet.id),
-            coordinatorStorage: coordinatorStorage,
-            connectorStorage: new WebGLLocalStorage(
-              possibleWallet.id + "_connector",
-            ),
+            dappMetadata,
           });
           break;
         case "walletConnect":
           walletInstance = new WalletConnect({
-            dappMetadata: {
-              name: sdkOptions.wallet?.appName || "thirdweb powered dApp",
-              url: sdkOptions.wallet?.appUrl || "",
-            },
-            walletStorage: new WebGLLocalStorage(possibleWallet.id),
-            coordinatorStorage: coordinatorStorage,
+            dappMetadata,
             projectId: TW_WC_PROJECT_ID,
           });
           break;
         case "coinbaseWallet":
           walletInstance = new CoinbaseWallet({
-            dappMetadata: {
-              name: sdkOptions.wallet?.appName || "thirdweb powered dApp",
-              url: sdkOptions.wallet?.appUrl || "",
-            },
-            walletStorage: new WebGLLocalStorage(possibleWallet.id),
-            coordinatorStorage: coordinatorStorage,
+            dappMetadata,
           });
           break;
+        case "deviceWallet":
+          walletInstance = new DeviceBrowserWallet({
+            dappMetadata,
+          });
       }
       if (walletInstance) {
         walletInstance.on("connect", async () =>
@@ -217,6 +168,7 @@ class ThirdwebBridge implements TWBridge {
   public async connect(
     wallet: PossibleWallet = "injected",
     chainId?: number | undefined,
+    password?: string,
   ) {
     if (!this.activeSDK) {
       throw new Error("SDK not initialized");
@@ -226,7 +178,12 @@ class ThirdwebBridge implements TWBridge {
     }
     const walletInstance = this.walletMap.get(wallet);
     if (walletInstance) {
-      await walletInstance.connect({ chainId });
+      if (walletInstance.walletId === "deviceWallet" && password) {
+        const deviceWallet = walletInstance as DeviceBrowserWallet;
+        await deviceWallet.connect({ chainId, password });
+      } else {
+        await walletInstance.connect({ chainId });
+      }
       this.activeWallet = walletInstance;
       this.updateSDKSigner(await walletInstance.getSigner());
       return await this.activeSDK.wallet.getAddress();
@@ -296,9 +253,17 @@ class ThirdwebBridge implements TWBridge {
       if (!this.auth) {
         throw new Error("You need to connect a wallet to use auth!");
       }
-
-      const result = await this.auth.login({ domain: parsedArgs[0] });
-      return JSON.stringify({ result: result });
+      let prop = undefined;
+      if (firstArg.length > 1) {
+        prop = firstArg[1];
+      }
+      if (prop === "login" && routeArgs.length === 1) {
+        const result = await this.auth.login({ domain: parsedArgs[0] });
+        return JSON.stringify({ result: result });
+      } else if (prop === "verify" && routeArgs.length === 1) {
+        const result = await this.auth.verify(parsedArgs[0]);
+        return JSON.stringify({ result: result });
+      }
     }
 
     // contract call
