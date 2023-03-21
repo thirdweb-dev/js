@@ -1,6 +1,6 @@
 import { AsyncStorage, createAsyncLocalStorage } from "../../core";
 import { thirdwebChains } from "../constants/chains";
-import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
+import { TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 import { Chain, Ethereum } from "@thirdweb-dev/chains";
