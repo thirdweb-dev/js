@@ -1,4 +1,4 @@
-import { useClaimsConditionFormContext } from "..";
+import { useClaimConditionsFormContext } from "..";
 import { CustomFormControl } from "../common";
 import { Box, Flex, Icon, Select } from "@chakra-ui/react";
 import React from "react";
@@ -23,7 +23,7 @@ export const ClaimerSelection = () => {
     setOpenSnapshotIndex: setOpenIndex,
     isAdmin,
     isColumn,
-  } = useClaimsConditionFormContext();
+  } = useClaimConditionsFormContext();
 
   const handleClaimerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const val = e.currentTarget.value as "any" | "specific" | "overrides";

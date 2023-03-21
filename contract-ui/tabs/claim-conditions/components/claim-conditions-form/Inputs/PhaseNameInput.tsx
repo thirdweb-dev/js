@@ -1,5 +1,5 @@
 import { CustomFormControl } from "../common";
-import { useClaimsConditionFormContext } from "../index";
+import { useClaimConditionsFormContext } from "../index";
 import { Input } from "@chakra-ui/react";
 import React from "react";
 import { Heading } from "tw-components";
@@ -9,7 +9,7 @@ import { Heading } from "tw-components";
  */
 export const PhaseNameInput: React.FC = () => {
   const { phaseIndex, formDisabled, isClaimPhaseV1, form, field } =
-    useClaimsConditionFormContext();
+    useClaimConditionsFormContext();
   const inputPlaceholder = `Phase ${phaseIndex + 1}`;
   const inputValue = field.metadata?.name;
 
@@ -24,7 +24,6 @@ export const PhaseNameInput: React.FC = () => {
       helperText="This does not affect how your claim phase functions and is for organizational purposes only."
     >
       <Input
-        w="auto"
         isDisabled={formDisabled}
         type="text"
         value={inputValue}

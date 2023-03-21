@@ -1,5 +1,5 @@
 import { CustomFormControl } from "../common";
-import { useClaimsConditionFormContext } from "../index";
+import { useClaimConditionsFormContext } from "../index";
 import { Input } from "@chakra-ui/react";
 import React from "react";
 import { toDateTimeLocal } from "utils/date-utils";
@@ -9,7 +9,7 @@ import { toDateTimeLocal } from "utils/date-utils";
  */
 export const PhaseStartTimeInput: React.FC = () => {
   const { form, phaseIndex, field, formDisabled } =
-    useClaimsConditionFormContext();
+    useClaimConditionsFormContext();
   return (
     <CustomFormControl
       label="When will this phase start?"

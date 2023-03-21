@@ -1,4 +1,4 @@
-import { useClaimsConditionFormContext } from "..";
+import { useClaimConditionsFormContext } from "..";
 import { QuantityInputWithUnlimited } from "../../quantity-input-with-unlimited";
 import { CustomFormControl } from "../common";
 
@@ -7,7 +7,7 @@ import { CustomFormControl } from "../common";
  */
 export const MaxClaimableSupplyInput: React.FC = () => {
   const { isErc20, form, formDisabled, phaseIndex, tokenDecimals, field } =
-    useClaimsConditionFormContext();
+    useClaimConditionsFormContext();
   return (
     <CustomFormControl
       label={`How many ${

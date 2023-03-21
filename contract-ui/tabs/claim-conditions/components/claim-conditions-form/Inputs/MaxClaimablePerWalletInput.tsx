@@ -1,6 +1,6 @@
 import { QuantityInputWithUnlimited } from "../../quantity-input-with-unlimited";
 import { CustomFormControl } from "../common";
-import { useClaimsConditionFormContext } from "../index";
+import { useClaimConditionsFormContext } from "../index";
 import React from "react";
 
 /**
@@ -16,7 +16,7 @@ export const MaxClaimablePerWalletInput: React.FC = () => {
     field,
     dropType,
     phaseIndex,
-  } = useClaimsConditionFormContext();
+  } = useClaimConditionsFormContext();
 
   return (
     <CustomFormControl

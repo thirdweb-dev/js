@@ -1,4 +1,4 @@
-import { useClaimsConditionFormContext } from ".";
+import { useClaimConditionsFormContext } from ".";
 import { Flex, FormControl } from "@chakra-ui/react";
 import React from "react";
 import { FieldError } from "react-hook-form";
@@ -42,7 +42,7 @@ export const CustomFormControl: React.FC<CustomFormControlProps> = (props) => {
 export const CustomFormGroup: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { isColumn } = useClaimsConditionFormContext();
+  const { isColumn } = useClaimConditionsFormContext();
   return (
     <Flex
       direction={{

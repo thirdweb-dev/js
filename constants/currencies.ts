@@ -1,6 +1,4 @@
 import { ChainId, NATIVE_TOKENS } from "@thirdweb-dev/sdk/evm";
-import { constants } from "ethers";
-import { OtherAddressZero } from "utils/zeroAddress";
 
 export interface CurrencyMetadata {
   address: string;
@@ -9,16 +7,6 @@ export interface CurrencyMetadata {
 }
 
 const Ethereum: CurrencyMetadata[] = [
-  {
-    address: constants.AddressZero,
-    name: "Ethereum",
-    symbol: "ETH",
-  },
-  {
-    address: OtherAddressZero,
-    name: "Ethereum",
-    symbol: "ETH",
-  },
   {
     address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
     name: "Tether USD",
@@ -48,16 +36,6 @@ const Ethereum: CurrencyMetadata[] = [
 
 const Goerli: CurrencyMetadata[] = [
   {
-    address: constants.AddressZero,
-    name: "Ethereum",
-    symbol: "ETH",
-  },
-  {
-    address: OtherAddressZero,
-    name: "Ethereum",
-    symbol: "ETH",
-  },
-  {
     address: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
     name: "Wrapped Ether",
     symbol: "WETH",
@@ -67,24 +45,9 @@ const Goerli: CurrencyMetadata[] = [
     name: "USD Coin",
     symbol: "USDC",
   },
-  // {
-  //   address: "0x3b00ef435fa4fcff5c209a37d1f3dcff37c705ad",
-  //   name: "Tether USD",
-  //   symbol: "USDT",
-  // },
 ];
 
 const Polygon: CurrencyMetadata[] = [
-  {
-    address: constants.AddressZero,
-    name: "Polygon",
-    symbol: "MATIC",
-  },
-  {
-    address: OtherAddressZero,
-    name: "Polygon",
-    symbol: "MATIC",
-  },
   {
     address: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
     name: "USD Coin",
@@ -109,16 +72,6 @@ const Polygon: CurrencyMetadata[] = [
 
 const Mumbai: CurrencyMetadata[] = [
   {
-    address: constants.AddressZero,
-    name: "Polygon",
-    symbol: "MATIC",
-  },
-  {
-    address: OtherAddressZero,
-    name: "Polygon",
-    symbol: "MATIC",
-  },
-  {
     name: "Wrapped Ether",
     address: "0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa",
     symbol: "WETH",
@@ -141,16 +94,6 @@ const Mumbai: CurrencyMetadata[] = [
 ];
 
 const Fantom: CurrencyMetadata[] = [
-  {
-    address: constants.AddressZero,
-    name: "Fantom",
-    symbol: "FTM",
-  },
-  {
-    address: OtherAddressZero,
-    name: "Fantom",
-    symbol: "FTM",
-  },
   {
     name: "Wrapped Ether",
     address: "0x74b23882a30290451A17c44f4F05243b6b58C76d",
@@ -175,16 +118,6 @@ const Fantom: CurrencyMetadata[] = [
 
 const FantomTestnet: CurrencyMetadata[] = [
   {
-    address: constants.AddressZero,
-    name: "Fantom",
-    symbol: "FTM",
-  },
-  {
-    address: OtherAddressZero,
-    name: "Fantom",
-    symbol: "FTM",
-  },
-  {
     name: "Wrapped Fantom",
     address: "0xf1277d1Ed8AD466beddF92ef448A132661956621",
     symbol: "WFTM",
@@ -192,16 +125,6 @@ const FantomTestnet: CurrencyMetadata[] = [
 ];
 
 const Avalanche: CurrencyMetadata[] = [
-  {
-    address: constants.AddressZero,
-    name: "Avalanche",
-    symbol: "AVAX",
-  },
-  {
-    address: OtherAddressZero,
-    name: "Avalanche",
-    symbol: "AVAX",
-  },
   {
     address: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
     name: "Wrapped AVAX",
@@ -231,16 +154,6 @@ const Avalanche: CurrencyMetadata[] = [
 
 const AvalancheFujiTestnet: CurrencyMetadata[] = [
   {
-    address: constants.AddressZero,
-    name: "Avalanche",
-    symbol: "AVAX",
-  },
-  {
-    address: OtherAddressZero,
-    name: "Avalanche",
-    symbol: "AVAX",
-  },
-  {
     address: "0xd00ae08403B9bbb9124bB305C09058E32C39A48c",
     name: "Wrapped AVAX",
     symbol: "WAVAX",
@@ -248,16 +161,6 @@ const AvalancheFujiTestnet: CurrencyMetadata[] = [
 ];
 
 const Optimism: CurrencyMetadata[] = [
-  {
-    address: constants.AddressZero,
-    name: "Ethereum",
-    symbol: "ETH",
-  },
-  {
-    address: OtherAddressZero,
-    name: "Ethereum",
-    symbol: "ETH",
-  },
   {
     address: "0x4200000000000000000000000000000000000006",
     name: "Wrapped Ether",
@@ -267,16 +170,6 @@ const Optimism: CurrencyMetadata[] = [
 
 const OptimismTestnet: CurrencyMetadata[] = [
   {
-    address: constants.AddressZero,
-    name: "Ethereum",
-    symbol: "ETH",
-  },
-  {
-    address: OtherAddressZero,
-    name: "Ethereum",
-    symbol: "ETH",
-  },
-  {
     address: "0xbC6F6b680bc61e30dB47721c6D1c5cde19C1300d",
     name: "Wrapped Ether",
     symbol: "WETH",
@@ -284,16 +177,6 @@ const OptimismTestnet: CurrencyMetadata[] = [
 ];
 
 const Arbitrum: CurrencyMetadata[] = [
-  {
-    address: constants.AddressZero,
-    name: "Ethereum",
-    symbol: "ETH",
-  },
-  {
-    address: OtherAddressZero,
-    name: "Ethereum",
-    symbol: "ETH",
-  },
   {
     address: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
     name: "Wrapped Ether",
@@ -303,16 +186,6 @@ const Arbitrum: CurrencyMetadata[] = [
 
 const ArbitrumTestnet: CurrencyMetadata[] = [
   {
-    address: constants.AddressZero,
-    name: "Ethereum",
-    symbol: "ETH",
-  },
-  {
-    address: OtherAddressZero,
-    name: "Ethereum",
-    symbol: "ETH",
-  },
-  {
     address: "0xEBbc3452Cc911591e4F18f3b36727Df45d6bd1f9",
     name: "Wrapped Ether",
     symbol: "WETH",
@@ -320,16 +193,6 @@ const ArbitrumTestnet: CurrencyMetadata[] = [
 ];
 
 const BinanceMainnet: CurrencyMetadata[] = [
-  {
-    address: constants.AddressZero,
-    name: NATIVE_TOKENS[ChainId.BinanceSmartChainMainnet].name,
-    symbol: NATIVE_TOKENS[ChainId.BinanceSmartChainMainnet].symbol,
-  },
-  {
-    address: OtherAddressZero,
-    name: NATIVE_TOKENS[ChainId.BinanceSmartChainMainnet].name,
-    symbol: NATIVE_TOKENS[ChainId.BinanceSmartChainMainnet].symbol,
-  },
   {
     ...NATIVE_TOKENS[ChainId.BinanceSmartChainMainnet].wrapped,
   },
@@ -341,16 +204,6 @@ const BinanceMainnet: CurrencyMetadata[] = [
 ];
 
 const BinanceTestnet: CurrencyMetadata[] = [
-  {
-    address: constants.AddressZero,
-    name: NATIVE_TOKENS[ChainId.BinanceSmartChainTestnet].name,
-    symbol: NATIVE_TOKENS[ChainId.BinanceSmartChainTestnet].symbol,
-  },
-  {
-    address: OtherAddressZero,
-    name: NATIVE_TOKENS[ChainId.BinanceSmartChainTestnet].name,
-    symbol: NATIVE_TOKENS[ChainId.BinanceSmartChainTestnet].symbol,
-  },
   {
     ...NATIVE_TOKENS[ChainId.BinanceSmartChainTestnet].wrapped,
   },

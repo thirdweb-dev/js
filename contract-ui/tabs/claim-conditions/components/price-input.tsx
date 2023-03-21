@@ -14,13 +14,14 @@ export const PriceInput: React.FC<PriceInputProps> = ({
   ...restInputProps
 }) => {
   return (
-    <InputGroup {...restInputProps}>
+    <InputGroup>
       <Input
         step={0.000000000000000001}
         type="number"
         isDisabled={isDisabled}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        {...restInputProps}
       />
     </InputGroup>
   );

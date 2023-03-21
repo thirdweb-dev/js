@@ -1,5 +1,5 @@
 import { CustomFormControl } from "../common";
-import { useClaimsConditionFormContext } from "../index";
+import { useClaimConditionsFormContext } from "../index";
 import { BigNumberInput } from "components/shared/BigNumberInput";
 import React from "react";
 
@@ -8,7 +8,7 @@ import React from "react";
  */
 export const WaitingTimeInput: React.FC = () => {
   const { formDisabled, form, phaseIndex, field } =
-    useClaimsConditionFormContext();
+    useClaimConditionsFormContext();
 
   return (
     <CustomFormControl

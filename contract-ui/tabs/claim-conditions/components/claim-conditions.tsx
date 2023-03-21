@@ -1,14 +1,11 @@
 import { ClaimConditionsForm } from "./claim-conditions-form/index";
-import { ResetClaimEligibility } from "./reset-claim-eligibility";
-import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
-import { Divider, Flex, Stack } from "@chakra-ui/react";
+import { Flex, Stack } from "@chakra-ui/react";
 import { DropContract, TokenContract } from "@thirdweb-dev/react";
-import { ValidContractInstance } from "@thirdweb-dev/sdk/evm";
 import { detectFeatures } from "components/contract-components/utils";
 import { UpdateNotice } from "core-ui/update-notice/update-notice";
 import { hasNewClaimConditions } from "lib/claimcondition-utils";
 import React, { useMemo } from "react";
-import { Card, Heading, Text } from "tw-components";
+import { Heading, Text } from "tw-components";
 
 export interface ClaimConditionsProps {
   contract?: DropContract;
@@ -29,15 +26,10 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
 
   return (
     <Stack spacing={8}>
-      <Card p={0} position="relative">
-        <Flex pt={{ base: 6, md: 10 }} direction="column" gap={8}>
+      <Flex p={0} position="relative">
+        <Flex pt={{ base: 6, md: 6 }} direction="column" gap={8} w="full">
           {/* Info */}
-          <Flex
-            px={isColumn ? 6 : { base: 6, md: 10 }}
-            as="section"
-            direction="column"
-            gap={4}
-          >
+          <Flex as="section" direction="column" gap={4}>
             <Flex direction="column">
               <Heading size="title.md">Set Claim Conditions</Heading>
               <Text size="body.md" fontStyle="italic" mt={2}>
@@ -60,8 +52,6 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
             )}
           </Flex>
 
-          <Divider />
-
           {/* Set Claim Conditions */}
           {contract && (
             <ClaimConditionsForm
@@ -71,19 +61,7 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
             />
           )}
         </Flex>
-      </Card>
-
-      {/* Reset Claim Eligibility */}
-      <AdminOnly contract={contract as ValidContractInstance}>
-        {contract && (
-          <ResetClaimEligibility
-            isErc20={contractInfo.isErc20}
-            contract={contract}
-            isColumn={isColumn}
-            tokenId={tokenId}
-          />
-        )}
-      </AdminOnly>
+      </Flex>
     </Stack>
   );
 };

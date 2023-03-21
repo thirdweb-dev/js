@@ -1,9 +1,10 @@
 import { Box, Icon, Tooltip } from "@chakra-ui/react";
 import { BsQuestionCircle } from "react-icons/bs";
 
-export const ToolTipBox: React.FC<{ content: React.ReactNode }> = ({
-  content,
-}) => {
+export const ToolTipBox: React.FC<{
+  content: React.ReactNode;
+  iconColor?: string;
+}> = ({ content, iconColor = "accent.600" }) => {
   return (
     <Tooltip
       placement="top-start"
@@ -15,7 +16,7 @@ export const ToolTipBox: React.FC<{ content: React.ReactNode }> = ({
       label={content}
     >
       <Box>
-        <Icon ml={2} mr={1} as={BsQuestionCircle} color="accent.600" />
+        <Icon ml={2} mr={1} as={BsQuestionCircle} color={iconColor} />
       </Box>
     </Tooltip>
   );

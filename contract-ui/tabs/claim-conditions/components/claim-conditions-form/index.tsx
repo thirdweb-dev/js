@@ -1,6 +1,6 @@
+import { ResetClaimEligibility } from "../reset-claim-eligibility";
 import { ClaimPriceInput } from "./Inputs/ClaimPriceInput";
 import { ClaimerSelection } from "./Inputs/ClaimerSelection";
-import { CurrencySelection } from "./Inputs/CurrencySelection";
 import { MaxClaimablePerWalletInput } from "./Inputs/MaxClaimablePerWalletInput";
 import { MaxClaimableSupplyInput } from "./Inputs/MaxClaimableSupplyInput";
 import { PhaseNameInput } from "./Inputs/PhaseNameInput";
@@ -15,7 +15,6 @@ import {
   AlertIcon,
   AlertTitle,
   Box,
-  Divider,
   Flex,
   Icon,
   IconButton,
@@ -100,11 +99,11 @@ export const ClaimsConditionFormContext = React.createContext<
   ClaimsConditionFormContextData | undefined
 >(undefined);
 
-export function useClaimsConditionFormContext() {
+export function useClaimConditionsFormContext() {
   const data = React.useContext(ClaimsConditionFormContext);
   invariant(
     data,
-    "useClaimsConditionFormContext must be used within a ClaimsConditionFormContext.Provider",
+    "useClaimConditionsFormContext must be used within a ClaimsConditionFormContext.Provider",
   );
   return data;
 }
@@ -267,11 +266,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
       )}
 
       <Flex onSubmit={handleFormSubmit} direction="column" as="form" gap={10}>
-        <Flex
-          direction={"column"}
-          gap={8}
-          px={isColumn ? 6 : { base: 6, md: 10 }}
-        >
+        <Flex direction={"column"} gap={6}>
           {controlledFields.map((field, index) => {
             const dropType: DropType = field.snapshot
               ? isClaimPhaseV1
@@ -334,22 +329,17 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                     isColumn,
                   }}
                 >
-                  <Card position="relative">
+                  <Card position="relative" p={8}>
                     <Flex direction="column" gap={8}>
-                      <Flex align="flex-start" justify="space-between">
-                        {/* Phase Name Input / Form Title */}
-                        {isMultiPhase ? (
-                          <PhaseNameInput />
-                        ) : (
-                          <Heading size="label.lg">Claim Conditions</Heading>
-                        )}
-
-                        {/* Delete Phase */}
+                      <Flex
+                        align="flex-start"
+                        justify="space-between"
+                        position="absolute"
+                        top="8px"
+                        right="8px"
+                      >
                         <AdminOnly contract={contract as ValidContractInstance}>
                           <IconButton
-                            position="absolute"
-                            top="8px"
-                            right="8px"
                             size="sm"
                             variant="ghost"
                             aria-label="Delete Claim Phase"
@@ -367,13 +357,14 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                       </Flex>
 
                       <CustomFormGroup>
+                        {/* Phase Name Input / Form Title */}
+                        {isMultiPhase ? <PhaseNameInput /> : null}
                         <PhaseStartTimeInput />
-                        <MaxClaimableSupplyInput />
                       </CustomFormGroup>
 
                       <CustomFormGroup>
+                        <MaxClaimableSupplyInput />
                         <ClaimPriceInput />
-                        <CurrencySelection />
                       </CustomFormGroup>
 
                       <ClaimerSelection />
@@ -414,60 +405,69 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
             </Alert>
           )}
 
-          {/* Add Claim Phase */}
-          <AdminOnly contract={contract as ValidContractInstance}>
-            {isMultiPhase ? (
-              <Button
-                colorScheme={phases?.length > 0 ? "primary" : "purple"}
-                variant={phases?.length > 0 ? "outline" : "solid"}
-                borderRadius="md"
-                leftIcon={<Icon as={FiPlus} />}
-                onClick={addPhase}
-                isDisabled={setClaimsConditionQuery.isLoading}
-              >
-                Add {phases?.length > 0 ? "Additional " : "Initial "}
-                Claim Phase
-              </Button>
-            ) : (
-              phases?.length === 0 && (
-                <Button
-                  colorScheme="purple"
-                  variant="solid"
-                  borderRadius="md"
-                  leftIcon={<Icon as={FiPlus} />}
-                  onClick={addPhase}
-                  isDisabled={setClaimsConditionQuery.isLoading}
-                >
-                  Add Claim Condition
-                </Button>
-              )
-            )}
-          </AdminOnly>
-        </Flex>
+          <Flex
+            justifyContent="space-between"
+            flexDir={{ base: "column", md: isColumn ? "column" : "row" }}
+            gap={2}
+          >
+            <Flex gap={2}>
+              <AdminOnly contract={contract as ValidContractInstance}>
+                {isMultiPhase ? (
+                  <Button
+                    size="sm"
+                    colorScheme={phases?.length > 0 ? "primary" : "purple"}
+                    variant={phases?.length > 0 ? "outline" : "solid"}
+                    borderRadius="md"
+                    leftIcon={<Icon as={FiPlus} />}
+                    onClick={addPhase}
+                    isDisabled={setClaimsConditionQuery.isLoading}
+                  >
+                    Add Phase
+                  </Button>
+                ) : (
+                  phases?.length === 0 && (
+                    <Button
+                      size="sm"
+                      colorScheme="purple"
+                      variant="solid"
+                      borderRadius="md"
+                      leftIcon={<Icon as={FiPlus} />}
+                      onClick={addPhase}
+                      isDisabled={setClaimsConditionQuery.isLoading}
+                    >
+                      Add Claim Condition
+                    </Button>
+                  )
+                )}
+              </AdminOnly>
+              <ResetClaimEligibility
+                isErc20={isErc20}
+                contract={contract}
+                isColumn={isColumn}
+                tokenId={tokenId}
+              />
+            </Flex>
 
-        {/* Save Claim Phases */}
-        <AdminOnly
-          contract={contract as ValidContractInstance}
-          fallback={<Box pb={5} />}
-        >
-          <>
-            <Divider />
-            <TransactionButton
-              colorScheme="primary"
-              transactionCount={1}
-              isDisabled={claimsConditionQuery.isLoading}
-              type="submit"
-              isLoading={setClaimsConditionQuery.isLoading}
-              loadingText="Saving..."
-              size="md"
-              borderRadius="xl"
-              borderTopLeftRadius="0"
-              borderTopRightRadius="0"
-            >
-              Save Claim Phases
-            </TransactionButton>
-          </>
-        </AdminOnly>
+            <Flex>
+              <AdminOnly
+                contract={contract as ValidContractInstance}
+                fallback={<Box pb={5} />}
+              >
+                <TransactionButton
+                  colorScheme="primary"
+                  transactionCount={1}
+                  isDisabled={claimsConditionQuery.isLoading}
+                  type="submit"
+                  isLoading={setClaimsConditionQuery.isLoading}
+                  loadingText="Saving..."
+                  size="md"
+                >
+                  Save Phases
+                </TransactionButton>
+              </AdminOnly>
+            </Flex>
+          </Flex>
+        </Flex>
       </Flex>
     </>
   );
