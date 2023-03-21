@@ -1,8 +1,54 @@
 import { ethers, utils } from "ethers";
-import { AbstractDeviceWallet } from "@thirdweb-dev/wallets";
+import {
+  AbstractDeviceWallet,
+  DeviceWalletData,
+  IDeviceWalletStore,
+  DeviceWalletImplOptions,
+  DeviceBrowserWallet as DeviceWalletCore,
+} from "@thirdweb-dev/wallets";
+import { ExtraCoreWalletOptions } from "@thirdweb-dev/react-core";
+import type {
+  WalletOptions,
+  DeviceWalletOptions as DeviceWalletCoreOptions,
+} from "@thirdweb-dev/wallets";
 import * as SecureStore from "expo-secure-store";
+import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
 
-export class DeviceWalletImpl extends AbstractDeviceWallet {
+// Device Wallet ----------------------------------------
+
+const deviceWalletStorage = createAsyncLocalStorage("deviceWallet");
+
+type DeviceWalletOptions = Omit<
+  WalletOptions<DeviceWalletCoreOptions>,
+  "storage" | "storageType" | "walletStorage"
+> &
+  ExtraCoreWalletOptions;
+
+export class DeviceWallet extends DeviceWalletCore {
+  constructor(options: DeviceWalletOptions) {
+    super({
+      ...options,
+      storage: deviceWalletStorage,
+      storageType: "asyncStore",
+      walletStorage: deviceWalletStorage,
+      wallet: new DeviceWalletImpl({
+        storage: new AsyncWalletStorage(),
+      }),
+    });
+  }
+
+  static getStoredData() {
+    const key = DeviceWalletCore.getDataStorageKey();
+    return deviceWalletStorage.getItem(key);
+  }
+
+  static getStoredAddress() {
+    const key = DeviceWalletCore.getAddressStorageKey();
+    return deviceWalletStorage.getItem(key);
+  }
+}
+
+class DeviceWalletImpl extends AbstractDeviceWallet {
   constructor(options: DeviceWalletImplOptions) {
     super(options);
   }
@@ -30,13 +76,11 @@ export class DeviceWalletImpl extends AbstractDeviceWallet {
 
   async generateNewWallet(): Promise<string> {
     const random = utils.randomBytes(32);
-    const wallet = new ethers.Wallet(random);
-    this.wallet = wallet;
-    return wallet.address;
+    this.wallet = new ethers.Wallet(random);
+    return this.wallet.address;
   }
 
-  async loadSavedWallet(password: string): Promise<string> {
-    console.log("password", password);
+  async loadSavedWallet(): Promise<string> {
     const data = await this.options.storage.getWalletData();
     if (!data) {
       throw new Error("No saved wallet");
@@ -45,28 +89,22 @@ export class DeviceWalletImpl extends AbstractDeviceWallet {
     return this.wallet.address;
   }
 
-  async save(password: string): Promise<void> {
-    console.log("password", password);
+  async save(): Promise<void> {
     const wallet = (await this.getSigner()) as ethers.Wallet;
-    // reduce the scrypt cost to make it faster
-    // const options = {
-    //   scrypt: {
-    //     N: 1 << 32,
-    //   },
-    // };
-    // const now = Date.now();
-    // console.log("encrypting wallet", now);
-    // const encryptedData = await wallet.encrypt(password, options);
-    // console.log("finish encrypting wallet", Date.now() - now);
     await this.options.storage.storeWalletData({
       address: wallet.address,
       encryptedData: wallet.privateKey,
     });
   }
 
-  async export(password: string): Promise<string> {
-    const wallet = (await this.getSigner()) as ethers.Wallet;
-    return wallet.encrypt(password);
+  async export(): Promise<string> {
+    const wallet = await this.options.storage.getWalletData();
+    return JSON.stringify(
+      wallet || {
+        address: "",
+        encryptedData: "",
+      },
+    );
   }
 
   getWalletData() {
@@ -74,25 +112,11 @@ export class DeviceWalletImpl extends AbstractDeviceWallet {
   }
 }
 
-type WalletData = {
-  address: string;
-  encryptedData: string;
-};
-
-interface IWalletStore {
-  getWalletData(): Promise<WalletData | null>;
-  storeWalletData(data: WalletData): Promise<void>;
-}
-
-type DeviceWalletImplOptions = {
-  storage: IWalletStore;
-};
-
 // no need for prefixing here - AsyncStorage is already namespaced
 const STORAGE_KEY_DATA = "data";
 const STORAGE_KEY_ADDR = "address";
-export class AsyncWalletStorage implements IWalletStore {
-  async getWalletData(): Promise<WalletData | null> {
+class AsyncWalletStorage implements IDeviceWalletStore {
+  async getWalletData(): Promise<DeviceWalletData | null> {
     const [address, encryptedData] = await Promise.all([
       SecureStore.getItemAsync(STORAGE_KEY_ADDR),
       SecureStore.getItemAsync(STORAGE_KEY_DATA),
@@ -107,7 +131,7 @@ export class AsyncWalletStorage implements IWalletStore {
     };
   }
 
-  async storeWalletData(data: WalletData): Promise<void> {
+  async storeWalletData(data: DeviceWalletData): Promise<void> {
     await Promise.all([
       SecureStore.setItemAsync(STORAGE_KEY_ADDR, data.address),
       SecureStore.setItemAsync(STORAGE_KEY_DATA, data.encryptedData),

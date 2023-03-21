@@ -1,12 +1,12 @@
 import { createAsyncLocalStorage } from "../../core/AsyncStorage";
 import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
-  DeviceWallet,
   MetaMaskWallet,
   RainbowWallet,
   TrustWallet,
 } from "../wallets/wallets/all";
 import { CoinbaseWallet } from "../wallets/wallets/coinbase-wallet";
+import { DeviceWallet } from "../wallets/wallets/device-wallet";
 import {
   ThirdwebProviderCore,
   ThirdwebProviderCoreProps,

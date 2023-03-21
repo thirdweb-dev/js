@@ -16,7 +16,6 @@ export const NetworkButton = ({
 }: NetworkButtonProps) => {
   return (
     <BaseButton
-      mt="md"
       p="md"
       backgroundColor="background"
       style={styles.networkContainer}
