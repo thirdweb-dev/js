@@ -81,6 +81,7 @@ const SDKCard: ComponentWithChildren<SDKCardProps> = ({
         />
         {links.map(({ text, href }) => (
           <Link
+            key={href}
             mt={4}
             href={href}
             color="blue.500"
@@ -153,7 +154,8 @@ const Base: ThirdwebNextPage = () => {
             alignItems="center"
             maxW="3xl"
             mx="auto"
-            py={24}
+            pt={24}
+            pb={12}
             px={{ base: 4, md: 8 }}
           >
             <Heading
@@ -229,6 +231,7 @@ const Base: ThirdwebNextPage = () => {
                     },
                   ].map(({ title, href }) => (
                     <Link
+                      key={title}
                       p={1}
                       rounded="lg"
                       background="linear-gradient(-45deg, #A854F3, #EEB2F9, #A854F3)"
@@ -270,14 +273,15 @@ const Base: ThirdwebNextPage = () => {
           </Flex>
           <Flex
             flexDir="column"
+            alignItems="center"
             maxW="3xl"
             mx="auto"
-            py={12}
             px={{ base: 4, md: 8 }}
           >
             <Heading
               as="h3"
               maxW="xl"
+              textAlign="center"
               size="title.xl"
               letterSpacing="-0.02em"
               background="linear-gradient(0deg, #A854F3 69.94%, #EEB2F9 93.45%)"
@@ -286,12 +290,11 @@ const Base: ThirdwebNextPage = () => {
               Built with thirdweb in 2 days.
             </Heading>
             <Heading
-              mt={12}
+              mt={4}
               as="h3"
               maxW="md"
-              alignSelf="flex-end"
+              textAlign="center"
               size="title.xl"
-              textAlign="right"
               letterSpacing="-0.02em"
             >
               stats, only 48 hours after launch...
@@ -302,6 +305,7 @@ const Base: ThirdwebNextPage = () => {
                 { title: "1 Million+", label: "Base contract transactions" },
               ].map(({ title, label }) => (
                 <Card
+                  key={title}
                   as={GridItem}
                   bg="#0F0F0F"
                   border="0"
@@ -337,7 +341,7 @@ const Base: ThirdwebNextPage = () => {
             alignItems="center"
             maxW="5xl"
             mx="auto"
-            py={24}
+            py={12}
             px={{ base: 4, md: 8 }}
           >
             <Heading
