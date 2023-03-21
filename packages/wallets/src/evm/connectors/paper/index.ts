@@ -37,7 +37,7 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
     this.options = options;
   }
 
-  private initPaperSDK(): Promise<PaperEmbeddedWalletSdk> {
+  private getPaperSDK(): Promise<PaperEmbeddedWalletSdk> {
     if (!this.#paper) {
       this.#paper = new Promise(async (resolve, reject) => {
         try {
@@ -65,7 +65,7 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
   }
 
   async connect() {
-    const paperSDK = await this.initPaperSDK();
+    const paperSDK = await this.getPaperSDK();
     if (!paperSDK) {
       throw new Error("Paper SDK not initialized");
     }
