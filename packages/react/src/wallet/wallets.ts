@@ -34,8 +34,8 @@ export class MetamaskWallet extends MetamaskWalletCore {
     super({
       ...options,
     });
-    if (assertWindowEthereum(window)) {
-      this.isInjected = !!window.ethereum?.isMetaMask;
+    if (assertWindowEthereum(globalThis.window)) {
+      this.isInjected = !!globalThis.window.ethereum?.isMetaMask;
     } else {
       this.isInjected = false;
     }

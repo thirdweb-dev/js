@@ -1,6 +1,6 @@
 import { CoinbaseWallet } from "@thirdweb-dev/wallets/evm/wallets/coinbase-wallet";
 import { useCallback } from "react";
-import { useConnect } from "../../../core/hooks/wallet-hooks";
+import { useConnect } from "@thirdweb-dev/react-core";
 
 export function useCoinbaseWallet() {
   const connect = useConnect();

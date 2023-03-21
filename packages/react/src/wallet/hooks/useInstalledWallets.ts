@@ -8,10 +8,11 @@ export function useInstalledWallets() {
   let isMetamaskInstalled = false;
   let isCoinbaseWalletInstalled = false;
 
-  if (assertWindowEthereum(window)) {
-    isMetamaskInstalled = window.ethereum?.isMetaMask;
+  if (assertWindowEthereum(globalThis.window)) {
+    isMetamaskInstalled = globalThis.window.ethereum?.isMetaMask;
     isCoinbaseWalletInstalled =
-      window.ethereum.providers?.some((p) => p.isCoinbaseWallet) || false;
+      globalThis.window.ethereum.providers?.some((p) => p.isCoinbaseWallet) ||
+      false;
   }
 
   const installedWallets: Record<SupportedWallet["id"], boolean> = {

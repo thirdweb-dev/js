@@ -69,12 +69,12 @@ export class MetaMaskConnector extends InjectedConnector {
         if (typeof window === "undefined") {
           return;
         }
-        if (assertWindowEthereum(window)) {
-          if (window.ethereum?.providers) {
-            return window.ethereum.providers.find(getReady);
+        if (assertWindowEthereum(globalThis.window)) {
+          if (globalThis.window.ethereum?.providers) {
+            return globalThis.window.ethereum.providers.find(getReady);
           }
 
-          return getReady(window.ethereum);
+          return getReady(globalThis.window.ethereum);
         }
       },
     };

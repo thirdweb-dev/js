@@ -252,10 +252,3 @@ export { getErcs, getErc1155, getErc721, getErc20 } from "./types";
 // transaction hooks
 export { useWatchTransactions } from "./hooks/useTransactions";
 export type { UseWatchTransactionsParams } from "./hooks/useTransactions";
-
-// export wallet connection hooks
-export { useMetamask } from "./hooks/wallets/useMetamask";
-export { useWalletConnect } from "./hooks/wallets/useWalletConnect";
-export { useCoinbaseWallet } from "./hooks/wallets/useCoinbaseWallet";
-export { useSafe, useGnosis } from "./hooks/wallets/useSafe";
-export { useMagic } from "./hooks/wallets/useMagic";

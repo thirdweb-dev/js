@@ -1,6 +1,6 @@
+import { useConnect } from "@thirdweb-dev/react-core";
 import { WalletConnectV1 } from "@thirdweb-dev/wallets/evm/wallets/wallet-connect-v1";
 import { useCallback } from "react";
-import { useConnect } from "../../../core/hooks/wallet-hooks";
 
 export function useWalletConnect() {
   const connect = useConnect();
