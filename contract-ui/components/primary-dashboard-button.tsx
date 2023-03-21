@@ -99,6 +99,7 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
     <BuildAppsButton>Build apps</BuildAppsButton>
   ) : (
     <Button
+      minW="inherit"
       variant="solid"
       bg="bgBlack"
       color="bgWhite"

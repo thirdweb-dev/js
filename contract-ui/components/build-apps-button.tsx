@@ -24,6 +24,7 @@ export const BuildAppsButton: ComponentWithChildren<BuildAppsButtonProps> = ({
 
   return (
     <LinkButton
+      minW="inherit"
       variant="solid"
       bg="bgBlack"
       color="bgWhite"
