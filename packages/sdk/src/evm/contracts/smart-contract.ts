@@ -38,7 +38,11 @@ import { Erc1155 } from "../core/classes/erc-1155";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { UpdateableNetwork } from "../core/interfaces/contract";
 import { Address } from "../schema";
-import { CustomContractSchema } from "../schema/contracts/custom";
+import {
+  AbiInput,
+  AbiSchema,
+  CustomContractSchema,
+} from "../schema/contracts/custom";
 import { SDKOptions } from "../schema/sdk-options";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
 import type {
@@ -292,7 +296,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   constructor(
     network: NetworkInput,
     address: string,
-    abi: ContractInterface,
+    abi: AbiInput,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
     chainId: number,
@@ -306,7 +310,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     this._chainId = chainId;
     this.storage = storage;
     this.contractWrapper = contractWrapper;
-    this.abi = abi;
+    this.abi = AbiSchema.parse(abi || []);
 
     this.events = new ContractEvents(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
