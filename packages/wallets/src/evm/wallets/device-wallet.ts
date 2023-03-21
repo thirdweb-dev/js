@@ -3,7 +3,7 @@ import { thirdwebChains } from "../constants/chains";
 import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
-import { Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import { ethers } from "ethers";
 
 export type DeviceWalletOptions = {
@@ -98,7 +98,8 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
 
   // enforcing that connectOptions is required and not optional
   connect(connectOptions: ConnectParams<DeviceWalletConnectionArgs>) {
-    return super.connect(connectOptions);
+    // do not save params because it contains the password
+    return super.connect({ ...connectOptions, saveParams: false });
   }
 }
 

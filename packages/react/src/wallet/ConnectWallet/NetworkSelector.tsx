@@ -22,14 +22,14 @@ import {
   useSupportedChains,
   useSwitchChain,
 } from "@thirdweb-dev/react-core";
-import React, { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 export const NetworkSelector: React.FC<{
   open: boolean;
   setOpen: (show: boolean) => void;
 }> = (props) => {
   const chains = useSupportedChains();
-  const [searchTerm, setSearchTerm] = React.useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { testnets, mainnets, all } = useMemo(() => {
     const searchTermLower = searchTerm.toLowerCase();
@@ -136,32 +136,26 @@ const NetworkList: React.FC<{
 }> = (props) => {
   const switchChain = useSwitchChain();
   const activeChainId = useChainId();
-  const [confirmingChainId, setConfirmingChainId] = React.useState<
-    number | undefined
-  >();
-  const [errorConfirming, setErrorConfirming] = React.useState(false);
+  const [confirmingChainId, setConfirmingChainId] = useState(-1);
+  const [errorSwitchingChainId, setErrorSwitchingChainId] = useState(-1);
   const requiresConfirmation = useWalletRequiresConfirmation();
 
   return (
     <NetworkListUl>
       {props.chains.map((chain) => {
-        const showConfirmMessage = confirmingChainId === chain.chainId;
-        const chainName = (
-          <span>
-            {chain.name}{" "}
-            <NetworkShortName>
-              ({chain.shortName.toUpperCase()})
-            </NetworkShortName>
-          </span>
-        );
+        const confirming = confirmingChainId === chain.chainId;
+        const switchingFailed = errorSwitchingChainId === chain.chainId;
+
+        const chainName = <span>{chain.name} </span>;
 
         return (
           <li key={chain.chainId}>
             <NetworkButton
               data-active={activeChainId === chain.chainId}
               onClick={async () => {
+                setErrorSwitchingChainId(-1);
+
                 if (requiresConfirmation) {
-                  setErrorConfirming(false);
                   setConfirmingChainId(chain.chainId);
                 }
 
@@ -169,10 +163,12 @@ const NetworkList: React.FC<{
                   await switchChain(chain.chainId);
                   props.closeModal();
                 } catch (e: any) {
-                  if (requiresConfirmation) {
-                    setErrorConfirming(true);
-                  }
+                  setErrorSwitchingChainId(chain.chainId);
                   console.error(e);
+                } finally {
+                  if (requiresConfirmation) {
+                    setConfirmingChainId(-1);
+                  }
                 }
               }}
             >
@@ -182,9 +178,7 @@ const NetworkList: React.FC<{
                 active={activeChainId === chain.chainId}
               />
 
-              {!showConfirmMessage && chainName}
-
-              {showConfirmMessage && (
+              {confirming || switchingFailed ? (
                 <div
                   style={{
                     display: "flex",
@@ -199,20 +193,22 @@ const NetworkList: React.FC<{
                       gap: spacing.xs,
                     }}
                   >
-                    {!errorConfirming && (
+                    {confirming && (
                       <>
                         <ConfirmMessage>Confirm in Wallet</ConfirmMessage>
                         <Spinner size="sm" color="link" />
                       </>
                     )}
 
-                    {errorConfirming && (
+                    {switchingFailed && (
                       <ErrorMessage>
                         Error: Could not Switch Network
                       </ErrorMessage>
                     )}
                   </div>
                 </div>
+              ) : (
+                chainName
               )}
             </NetworkButton>
           </li>
@@ -282,13 +278,6 @@ const NetworkButton = styled.button<{ theme?: Theme }>`
   ${media.mobile} {
     font-size: ${fontSize.sm};
   }
-`;
-
-const NetworkShortName = styled.span<{ theme?: Theme }>`
-  color: ${(p) => p.theme.text.secondary};
-  display: inline-block;
-  font-size: ${fontSize.sm};
-  font-weight: 500;
 `;
 
 const StyledMagnifyingGlassIcon = styled(MagnifyingGlassIcon)<{

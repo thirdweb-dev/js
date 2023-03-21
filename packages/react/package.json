@@ -32,6 +32,20 @@
       },
       "default": "./solana/dist/thirdweb-dev-react-solana.cjs.js"
     },
+    "./evm/connectors/magic": {
+      "module": {
+        "browser": "./evm/connectors/magic/dist/thirdweb-dev-react-evm-connectors-magic.browser.esm.js",
+        "default": "./evm/connectors/magic/dist/thirdweb-dev-react-evm-connectors-magic.esm.js"
+      },
+      "default": "./evm/connectors/magic/dist/thirdweb-dev-react-evm-connectors-magic.cjs.js"
+    },
+    "./evm/connectors/gnosis": {
+      "module": {
+        "browser": "./evm/connectors/gnosis/dist/thirdweb-dev-react-evm-connectors-gnosis.browser.esm.js",
+        "default": "./evm/connectors/gnosis/dist/thirdweb-dev-react-evm-connectors-gnosis.esm.js"
+      },
+      "default": "./evm/connectors/gnosis/dist/thirdweb-dev-react-evm-connectors-gnosis.cjs.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -43,7 +57,8 @@
     "entrypoints": [
       "index.ts",
       "solana/index.ts",
-      "evm/index.ts"
+      "evm/index.ts",
+      "evm/connectors/**/index.ts"
     ],
     "exports": {
       "envConditions": [

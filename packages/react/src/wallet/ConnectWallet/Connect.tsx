@@ -100,15 +100,23 @@ export const ConnectWalletFlow: React.FC<{
         }
       }
 
-      // Wallet Connect v1, and v2
+      // others ( they handle their own connection flow)
       else {
-        connect(wallet, {});
-        setOpen(false);
+        try {
+          await connect(wallet, {});
+        } catch (e) {
+          console.error(e);
+        } finally {
+          setOpen(false);
+        }
       }
     },
   }));
 
   const handleBack = () => setShowScreen("walletList");
+
+  const isLoading =
+    connectionStatus === "connecting" || connectionStatus === "unknown";
 
   return (
     <Modal
@@ -119,6 +127,7 @@ export const ConnectWalletFlow: React.FC<{
       setOpen={setOpen}
       trigger={
         <Button
+          disabled={isLoading}
           className={props.btnClass}
           variant="inverted"
           type="button"
@@ -129,12 +138,7 @@ export const ConnectWalletFlow: React.FC<{
             connectionStatus === "connecting" ? "Connecting" : btnTitle
           }
         >
-          {connectionStatus === "connecting" ||
-          connectionStatus === "unknown" ? (
-            <Spinner size="sm" color="inverted" />
-          ) : (
-            btnTitle
-          )}
+          {isLoading ? <Spinner size="sm" color="inverted" /> : btnTitle}
         </Button>
       }
     >
