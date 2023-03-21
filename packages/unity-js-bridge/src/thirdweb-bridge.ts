@@ -11,6 +11,7 @@ import { MetaMask } from "@thirdweb-dev/wallets/evm/wallets/metamask";
 import { WalletConnect } from "@thirdweb-dev/wallets/evm/wallets/wallet-connect";
 import { BigNumber } from "ethers";
 import type { ContractInterface, Signer } from "ethers";
+import { AsyncStorage } from "@thirdweb-dev/wallets";
 
 declare global {
   interface Window {
@@ -20,6 +21,7 @@ declare global {
 
 const API_KEY =
   "339d65590ba0fa79e4c8be0af33d64eda709e13652acb02c6be63f5a1fbef9c3";
+const TW_WC_PROJECT_ID = "145769e410f16970a79ff77b2d89a1e0";
 const SEPARATOR = "/";
 const SUB_SEPARATOR = "#";
 
@@ -51,6 +53,40 @@ type FundWalletInput = FundWalletOptions & {
   appId: string;
 };
 
+const PREFIX = "__TW__";
+
+export class WebGLLocalStorage implements AsyncStorage {
+  name: string;
+
+  constructor(name: string) {
+    this.name = name;
+  }
+
+  getItem(key: string) {
+    return new Promise<string | null>((res) => {
+      res(window.localStorage.getItem(`${PREFIX}/${this.name}/${key}`));
+    });
+  }
+
+  setItem(key: string, value: string) {
+    return new Promise<void>((res, rej) => {
+      try {
+        window.localStorage.setItem(`${PREFIX}/${this.name}/${key}`, value);
+        res();
+      } catch (e) {
+        rej(e);
+      }
+    });
+  }
+
+  removeItem(key: string) {
+    return new Promise<void>((res) => {
+      window.localStorage.removeItem(`${PREFIX}/${this.name}/${key}`);
+      res();
+    });
+  }
+}
+
 interface TWBridge {
   initialize: (chain: ChainIdOrName, options: string) => void;
   connect: (wallet: PossibleWallet, chainId?: number) => Promise<string>;
@@ -68,6 +104,7 @@ interface TWBridge {
 }
 
 const w = window;
+const coordinatorStorage = new WebGLLocalStorage("coordinator");
 
 class ThirdwebBridge implements TWBridge {
   private walletMap: Map<string, AbstractBrowserWallet> = new Map();
@@ -111,20 +148,69 @@ class ThirdwebBridge implements TWBridge {
         : new ThirdwebStorage();
     sdkOptions.thirdwebApiKey = sdkOptions.thirdwebApiKey || API_KEY;
     this.activeSDK = new ThirdwebSDK(chain, sdkOptions, storage);
-    for (let wallet of WALLETS) {
-      const walletInstance = new wallet({
-        appName: sdkOptions.wallet?.appName || "thirdweb powered dApp",
-        ...sdkOptions.wallet?.extras,
-      });
-      walletInstance.on("connect", async () =>
-        this.updateSDKSigner(await walletInstance.getSigner()),
-      );
-      walletInstance.on("change", async () =>
-        this.updateSDKSigner(await walletInstance.getSigner()),
-      );
-      walletInstance.on("disconnect", () => this.updateSDKSigner());
+    for (let possibleWallet of WALLETS) {
+      let walletInstance: AbstractBrowserWallet;
+      switch (possibleWallet.id) {
+        case "injected":
+          walletInstance = new InjectedWallet({
+            dappMetadata: {
+              name: sdkOptions.wallet?.appName || "thirdweb powered dApp",
+              url: sdkOptions.wallet?.appUrl || "",
+            },
+            walletStorage: new WebGLLocalStorage(possibleWallet.id),
+            coordinatorStorage: coordinatorStorage,
+            connectorStorage: new WebGLLocalStorage(
+              possibleWallet.id + "_connector",
+            ),
+          });
+          break;
+        case "metamask":
+          walletInstance = new MetaMask({
+            dappMetadata: {
+              name: sdkOptions.wallet?.appName || "thirdweb powered dApp",
+              url: sdkOptions.wallet?.appUrl || "",
+              logoUrl: sdkOptions.wallet?.appLogoUrl || "",
+            },
+            walletStorage: new WebGLLocalStorage(possibleWallet.id),
+            coordinatorStorage: coordinatorStorage,
+            connectorStorage: new WebGLLocalStorage(
+              possibleWallet.id + "_connector",
+            ),
+          });
+          break;
+        case "walletConnect":
+          walletInstance = new WalletConnect({
+            dappMetadata: {
+              name: sdkOptions.wallet?.appName || "thirdweb powered dApp",
+              url: sdkOptions.wallet?.appUrl || "",
+            },
+            walletStorage: new WebGLLocalStorage(possibleWallet.id),
+            coordinatorStorage: coordinatorStorage,
+            projectId: TW_WC_PROJECT_ID,
+          });
+          break;
+        case "coinbaseWallet":
+          walletInstance = new CoinbaseWallet({
+            dappMetadata: {
+              name: sdkOptions.wallet?.appName || "thirdweb powered dApp",
+              url: sdkOptions.wallet?.appUrl || "",
+            },
+            walletStorage: new WebGLLocalStorage(possibleWallet.id),
+            coordinatorStorage: coordinatorStorage,
+          });
+          break;
+      }
+      if (walletInstance) {
+        walletInstance.on("connect", async () =>
+          this.updateSDKSigner(await walletInstance.getSigner()),
+        );
+        walletInstance.on("change", async () =>
+          this.updateSDKSigner(await walletInstance.getSigner()),
+        );
+        walletInstance.on("disconnect", () => this.updateSDKSigner());
 
-      this.walletMap.set(wallet.id, walletInstance);
+        this.walletMap.set(possibleWallet.id, walletInstance);
+      }
     }
   }
 
