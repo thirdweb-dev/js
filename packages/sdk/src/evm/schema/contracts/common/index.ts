@@ -85,7 +85,7 @@ export const CommonTrustedForwarderSchema = z.object({
  * @internal
  */
 export const CommonSymbolSchema = z.object({
-  symbol: z.string().optional().default(""),
+  symbol: z.string().default(""),
 });
 
 export * from "./claim-conditions";
