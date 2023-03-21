@@ -118,7 +118,10 @@ export const SettingsMetadata = <
                   accept={{ "image/*": [] }}
                   value={useImageFileOrUrl(watch("image"))}
                   setValue={(file) =>
-                    setValue("image", file, { shouldTouch: true })
+                    setValue("image", file, {
+                      shouldTouch: true,
+                      shouldDirty: true,
+                    })
                   }
                   border="1px solid"
                   borderColor="gray.200"
