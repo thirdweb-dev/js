@@ -13,8 +13,7 @@ export type { ConnectParams, TWConnector } from "./interfaces/tw-connector";
 export { WagmiAdapter } from "./interfaces/tw-connector";
 export type { WalletData, WalletEvents } from "./wallets/abstract";
 export { AbstractWallet } from "./wallets/abstract";
-export * from "./wallets/aws-kms";
-export * from "./wallets/aws-secrets-manager";
+
 export * from "./wallets/paper-wallet";
 // just the types
 export type { WalletOptions } from "./wallets/base";
