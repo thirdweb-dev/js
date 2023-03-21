@@ -8,8 +8,11 @@ import {
   WalletOptions,
   CoinbaseWalletOptions as CoinbaseWalletOptionsCore,
   PaperWalletOptions as PaperWalletOptionsCore,
+  SafeWalletOptions as SafeWalletOptionsCore,
   assertWindowEthereum,
   createAsyncLocalStorage,
+  ConnectParams,
+  DeviceWalletConnectionArgs,
 } from "@thirdweb-dev/wallets";
 import {
   CoinbaseWallet as CoinbaseWalletCore,
@@ -18,6 +21,7 @@ import {
   WalletConnect as WalletConnectCore,
   WalletConnectV1 as WalletConnectV1Core,
   PaperWallet as PaperWalletCore,
+  SafeWallet as SafeWalletCore,
 } from "@thirdweb-dev/wallets";
 
 // Metamask ----------------------------------------
@@ -112,6 +116,17 @@ export class DeviceWallet extends DeviceWalletCore {
     const key = DeviceWalletCore.getAddressStorageKey();
     return deviceWalletStorage.getItem(key);
   }
+
+  async autoConnect(): Promise<string | undefined> {
+    // ignore autoConnect
+    return;
+  }
+
+  // enforcing that connectOptions is required and not optional
+  connect(connectOptions: ConnectParams<DeviceWalletConnectionArgs>) {
+    // do not save params because it contains the password
+    return super.connect({ ...connectOptions, saveParams: false });
+  }
 }
 
 // Coinbase Wallet ----------------------------------------
@@ -143,6 +158,21 @@ export class PaperWallet extends PaperWalletCore {
 
       // TODO: remove this, it's just for testing and will only work on localhost
       clientId: "62db6ab5-3165-4aac-b7a5-b52bb39e8d69",
+      dappMetadata: {
+        ...options.dappMetadata,
+        isDarkMode: options.theme === "dark",
+      },
+    });
+  }
+}
+
+type SafeWalletOptions = Omit<SafeWalletOptionsCore, "walletStorage"> &
+  ExtraCoreWalletOptions;
+
+export class SafeWallet extends SafeWalletCore {
+  constructor(options: SafeWalletOptions) {
+    super({
+      ...options,
       dappMetadata: {
         ...options.dappMetadata,
         isDarkMode: options.theme === "dark",

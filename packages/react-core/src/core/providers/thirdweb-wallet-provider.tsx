@@ -101,7 +101,6 @@ export function ThirdwebWalletProvider(
 
       return new Wallet({
         ...walletOptions,
-        // TODO: remove this - it's only being used in device wallet
         chain: props.activeChain || props.chains[0],
         coordinatorStorage,
         theme: theme || "dark",
@@ -150,7 +149,6 @@ export function ThirdwebWalletProvider(
   const autoConnectTriggered = useRef(false);
 
   // Auto Connect
-  // TODO - Can't do auto connect for Device Wallet right now
   useEffect(() => {
     if (autoConnectTriggered.current) {
       return;

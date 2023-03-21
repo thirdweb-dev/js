@@ -48,9 +48,9 @@ export const Input = styled.input<{
   /* when browser auto-fills the input  */
   &:-webkit-autofill {
     -webkit-text-fill-color: ${(p) => p.theme.text.neutral};
-    -webkit-box-shadow: 0 0 0px 1000px ${(p) => p.theme.bg.base} inset;
-    box-shadow: 0 0 0px 1000px ${(p) => p.theme.bg.base} inset;
-    transition: background-color 5000s ease-in-out 0s;
+    -webkit-box-shadow: 0 0 0px 1000px ${(p) => p.theme.bg.elevated} inset;
+    box-shadow: 0 0 0px 1000px ${(p) => p.theme.bg.elevated} inset;
+    /* transition: background-color 5000s ease-in-out 0s; */
   }
 
   &:focus {
