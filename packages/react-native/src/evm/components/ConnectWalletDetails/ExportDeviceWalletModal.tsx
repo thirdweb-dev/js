@@ -6,6 +6,9 @@ import BaseButton from "../base/BaseButton";
 import Box from "../base/Box";
 import { useWallet } from "@thirdweb-dev/react-core";
 import { DeviceWallet } from "../../wallets/wallets/device-wallet";
+import { ModalHeaderTextClose } from "../base/modal/ModalHeaderTextClose";
+import KeyIcon from "../../assets/key";
+import { useAppTheme } from "../../styles/hooks";
 
 export type ExportDeviceWalletModalProps = {
   isVisible: boolean;
@@ -18,12 +21,12 @@ export const ExportDeviceWalletModal = ({
 }: ExportDeviceWalletModalProps) => {
   const [privateKey, setPrivateKey] = useState<string | undefined>();
 
+  const theme = useAppTheme();
+
   const activeWallet = useWallet();
 
   const onContinuePress = () => {
-    if (privateKey) {
-      onCloseInternal();
-    } else {
+    if (!privateKey) {
       (activeWallet as DeviceWallet).getWalletData().then((data) => {
         setPrivateKey(data?.encryptedData);
       });
@@ -41,48 +44,43 @@ export const ExportDeviceWalletModal = ({
         flexDirection="column"
         backgroundColor="background"
         borderRadius="md"
-        p="md"
+        p="lg"
       >
-        <Box>
-          <Text variant="header">Reveal Secret Private Key</Text>
-          <Text variant="subHeader" mt="sm" textAlign="center">
-            The private key gives full access to your wallet, funds and
-            accounts.
-          </Text>
-          <Text variant="bodySmall" mt="sm" textAlign="center">
-            You are responsible for keeping it safe.
-          </Text>
-        </Box>
+        <ModalHeaderTextClose headerText={""} onClose={onCloseInternal} />
+        <Text variant="header" textAlign="center">
+          Revealing private key
+        </Text>
+        <Text variant="subHeader" mt="md" textAlign="center">
+          This private key gives full access to your wallet, funds and accounts.
+        </Text>
+        <Text variant="bodySmall" mt="xl" textAlign="center" color="warning">
+          Please ensure you are keeping your private key safe.
+        </Text>
         <BaseButton
           backgroundColor="background"
           borderColor="border"
+          mt="lg"
           style={styles.pkButton}
         >
-          <Text variant="bodySmall" textAlign="center">
-            {privateKey || "Make sure no one is looking at your screen"}
+          <KeyIcon size={22} color={theme.colors.iconPrimary} />
+          <Text variant="bodySmallSecondary" textAlign="center" mt={"md"}>
+            {privateKey ||
+              "Your private key will show here. Make sure no one is looking at your screen."}
           </Text>
         </BaseButton>
         <Box
           flexDirection="row"
-          justifyContent="space-between"
+          justifyContent="center"
           paddingHorizontal="md"
-          mt="md"
+          mt="lg"
         >
-          <BaseButton
-            backgroundColor="background"
-            borderColor="border"
-            style={styles.modalButton}
-            onPress={onCloseInternal}
-          >
-            <Text variant="bodySmall">Close</Text>
-          </BaseButton>
           <BaseButton
             backgroundColor="background"
             borderColor="border"
             style={styles.modalButton}
             onPress={onContinuePress}
           >
-            <Text variant="bodySmall">Next</Text>
+            <Text variant="bodySmall">Reveal Key</Text>
           </BaseButton>
         </Box>
       </Box>
@@ -105,14 +103,13 @@ const styles = StyleSheet.create({
   },
   pkButton: {
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "column",
     alignContent: "center",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "center",
     borderRadius: 12,
     borderWidth: 0.5,
     paddingHorizontal: 10,
-    marginTop: 10,
     paddingVertical: 12,
   },
 });
