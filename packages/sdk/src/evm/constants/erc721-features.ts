@@ -27,13 +27,13 @@ export const FEATURE_NFT_BURNABLE = {
 } as const;
 
 export const FEATURE_NFT_REVEALABLE = {
-  name: "ERC721Revealable",
+  name: "ERC721DelayedReveal",
   namespace: "nft.drop.revealer",
   docLinks: {
     sdk: "sdk.delayedreveal",
     contracts: "DelayedReveal",
   },
-  abis: [Erc721Abi, ILazyMintAbi, DelayedRevealAbi],
+  abis: [Erc721Abi, DelayedRevealAbi],
   features: {},
 } as const;
 
@@ -49,29 +49,29 @@ export const FEATURE_NFT_TIERED_DROP = {
 } as const;
 
 export const FEATURE_NFT_CLAIM_CONDITIONS_V1 = {
-  name: "ERC721ClaimConditionsV1",
+  name: "ERC721DropSinglePhaseV1",
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
     contracts: "DropSinglePhase_V1",
   },
-  abis: [Erc721Abi, ILazyMintAbi, IDropSinglePhaseV1],
+  abis: [Erc721Abi, IDropSinglePhaseV1],
   features: {},
 } as const;
 
 export const FEATURE_NFT_CLAIM_CONDITIONS_V2 = {
-  name: "ERC721ClaimConditionsV2",
+  name: "ERC721DropSinglePhase",
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
     contracts: "DropSinglePhase",
   },
-  abis: [Erc721Abi, ILazyMintAbi, IDropSinglePhase],
+  abis: [Erc721Abi, IDropSinglePhase],
   features: {},
 } as const;
 
 export const FEATURE_NFT_CLAIM_PHASES_V1 = {
-  name: "ERC721ClaimPhasesV1",
+  name: "ERC721Drop",
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
@@ -82,29 +82,29 @@ export const FEATURE_NFT_CLAIM_PHASES_V1 = {
 } as const;
 
 export const FEATURE_NFT_CLAIM_PHASES_V2 = {
-  name: "ERC721ClaimPhasesV2",
+  name: "ERC721Drop",
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
     contracts: "Drop",
   },
-  abis: [Erc721Abi, ILazyMintAbi, IDrop],
+  abis: [Erc721Abi, IDrop],
   features: {},
 } as const;
 
 export const FEATURE_NFT_CLAIM_CUSTOM = {
-  name: "ERC721ClaimCustom",
+  name: "ERC721Claimable",
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
     contracts: "IClaimableERC721",
   },
-  abis: [Erc721Abi, ILazyMintAbi, IClaimableERC721],
+  abis: [Erc721Abi, IClaimableERC721],
   features: {},
 } as const;
 
 export const FEATURE_NFT_LAZY_MINTABLE = {
-  name: "ERC721LazyMintable",
+  name: "ERC721LazyMint",
   namespace: "nft.drop",
   docLinks: {
     sdk: "sdk.erc721lazymintable",
@@ -122,7 +122,7 @@ export const FEATURE_NFT_LAZY_MINTABLE = {
 } as const;
 
 export const FEATURE_NFT_BATCH_MINTABLE = {
-  name: "ERC721BatchMintable",
+  name: "BatchMintable",
   namespace: "nft.mint.batch",
   docLinks: {
     sdk: "sdk.erc721batchmintable",

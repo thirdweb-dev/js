@@ -10,7 +10,7 @@ import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.json";
 import ISignatureMintERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC20.json";
 
 export const FEATURE_TOKEN_CLAIM_CONDITIONS_V1 = {
-  name: "ERC20ClaimConditionsV1",
+  name: "DropSinglePhaseV1",
   namespace: "token.drop.claim",
   docLinks: {
     sdk: "sdk.erc20dclaimable",
@@ -21,7 +21,7 @@ export const FEATURE_TOKEN_CLAIM_CONDITIONS_V1 = {
 } as const;
 
 export const FEATURE_TOKEN_CLAIM_CONDITIONS_V2 = {
-  name: "ERC20ClaimConditionsV2",
+  name: "DropSinglePhase",
   namespace: "token.drop.claim",
   docLinks: {
     sdk: "sdk.erc20dclaimable",
@@ -32,7 +32,7 @@ export const FEATURE_TOKEN_CLAIM_CONDITIONS_V2 = {
 } as const;
 
 export const FEATURE_TOKEN_CLAIM_PHASES_V2 = {
-  name: "ERC20ClaimPhasesV2",
+  name: "ERC20Drop",
   namespace: "token.drop.claim",
   docLinks: {
     sdk: "sdk.erc20dclaimable",
@@ -43,7 +43,7 @@ export const FEATURE_TOKEN_CLAIM_PHASES_V2 = {
 } as const;
 
 export const FEATURE_TOKEN_CLAIM_PHASES_V1 = {
-  name: "ERC20ClaimPhasesV1",
+  name: "ERC20Drop",
   namespace: "token.drop.claim",
   docLinks: {
     sdk: "sdk.erc20dclaimable",
@@ -76,7 +76,7 @@ export const FEATURE_TOKEN_SIGNATURE_MINTABLE = {
 } as const;
 
 export const FEATURE_TOKEN_BATCH_MINTABLE = {
-  name: "ERC20BatchMintable",
+  name: "ERC20Multicall",
   namespace: "token.mint.batch",
   docLinks: {
     sdk: "sdk.erc20batchmintable",

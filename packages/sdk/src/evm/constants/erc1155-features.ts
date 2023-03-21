@@ -1,7 +1,7 @@
 import IBurnableERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IBurnableERC1155.json";
 import IClaimableERC1155 from "@thirdweb-dev/contracts-js/dist/abis/IClaimableERC1155.json";
 import DelayedRevealAbi from "@thirdweb-dev/contracts-js/dist/abis/IDelayedReveal.json";
-import IDropMultiPhase1155 from "@thirdweb-dev/contracts-js/dist/abis/IDrop1155.json";
+import IDrop1155 from "@thirdweb-dev/contracts-js/dist/abis/IDrop1155.json";
 import DropERC1155_V2Abi from "@thirdweb-dev/contracts-js/dist/abis/IDropERC1155_V2.json";
 import IDropSinglePhase1155 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase1155.json";
 import IDropSinglePhase1155_V1 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase1155_V1.json";
@@ -11,6 +11,7 @@ import ILazyMintAbi from "@thirdweb-dev/contracts-js/dist/abis/ILazyMint.json";
 import IMintableERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableERC1155.json";
 import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.json";
 import ISignatureMintERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC1155.json";
+
 
 export const FEATURE_EDITION_BURNABLE = {
   name: "ERC1155Burnable",
@@ -24,40 +25,40 @@ export const FEATURE_EDITION_BURNABLE = {
 } as const;
 
 export const FEATURE_EDITION_CLAIM_CONDITIONS_V1 = {
-  name: "ERC1155ClaimConditionsV1",
+  name: "ERC1155DropSinglePhaseV1",
   namespace: "edition.drop.claim",
   docLinks: {
     sdk: "sdk.erc1155claimable",
     contracts: "DropSinglePhase1155",
   },
-  abis: [Erc1155Abi, ILazyMintAbi, IDropSinglePhase1155_V1],
+  abis: [Erc1155Abi, IDropSinglePhase1155_V1],
   features: {},
 } as const;
 
 export const FEATURE_EDITION_CLAIM_CONDITIONS_V2 = {
-  name: "ERC1155ClaimConditionsV2",
+  name: "ERC1155DropSinglePhase",
   namespace: "edition.drop.claim",
   docLinks: {
     sdk: "sdk.erc1155claimable",
     contracts: "DropSinglePhase1155",
   },
-  abis: [Erc1155Abi, ILazyMintAbi, IDropSinglePhase1155],
+  abis: [Erc1155Abi, IDropSinglePhase1155],
   features: {},
 } as const;
 
 export const FEATURE_EDITION_CLAIM_PHASES_V2 = {
-  name: "ERC1155ClaimPhasesV2",
+  name: "ERC1155DropMultiPhaseV2",
   namespace: "edition.drop.claim",
   docLinks: {
     sdk: "sdk.erc1155claimable",
     contracts: "Drop1155",
   },
-  abis: [Erc1155Abi, ILazyMintAbi, IDropMultiPhase1155],
+  abis: [Erc1155Abi, IDrop1155],
   features: {},
 } as const;
 
 export const FEATURE_EDITION_CLAIM_PHASES_V1 = {
-  name: "ERC1155ClaimPhasesV1",
+  name: "ERC1155DropV1",
   namespace: "edition.drop.claim",
   docLinks: {
     sdk: "sdk.erc1155claimable",
@@ -68,24 +69,24 @@ export const FEATURE_EDITION_CLAIM_PHASES_V1 = {
 } as const;
 
 export const FEATURE_EDITION_CLAIM_CUSTOM = {
-  name: "ERC1155ClaimCustom",
+  name: "ERC1155Claimable",
   namespace: "edition.drop.claim",
   docLinks: {
     sdk: "sdk.erc1155claimable",
     contracts: "IClaimableERC1155",
   },
-  abis: [Erc1155Abi, ILazyMintAbi, IClaimableERC1155],
+  abis: [Erc1155Abi, IClaimableERC1155],
   features: {},
 } as const;
 
 export const FEATURE_EDITION_REVEALABLE = {
-  name: "ERC1155Revealable",
+  name: "ERC1155DelayedReveal",
   namespace: "edition.drop.revealer",
   docLinks: {
     sdk: "sdk.drop.delayedreveal",
     contracts: "DelayedReveal",
   },
-  abis: [Erc1155Abi, ILazyMintAbi, DelayedRevealAbi],
+  abis: [Erc1155Abi, DelayedRevealAbi],
   features: {},
 } as const;
 
