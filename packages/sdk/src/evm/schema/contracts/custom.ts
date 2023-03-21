@@ -290,16 +290,16 @@ export type PublishedContractFetched = {
 };
 export type AbiFunction = {
   name: string;
-  inputs: z.input<typeof AbiTypeSchema>[];
-  outputs: z.input<typeof AbiTypeSchema>[];
+  inputs: z.output<typeof AbiTypeSchema>[];
+  outputs: z.output<typeof AbiTypeSchema>[];
   signature: string;
   stateMutability: string;
   comment: string;
 };
 export type AbiEvent = {
   name: string;
-  inputs: z.input<typeof AbiTypeSchema>[];
-  outputs: z.input<typeof AbiTypeSchema>[];
+  inputs: z.output<typeof AbiTypeSchema>[];
+  outputs: z.output<typeof AbiTypeSchema>[];
   comment: string;
 };
 export type ContractSource = {
