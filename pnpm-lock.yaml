@@ -243,7 +243,7 @@ importers:
       '@ethersproject/abi': ^5.7.0
       '@ethersproject/providers': ^5.7.2
       '@preconstruct/cli': ^2.2.1
-      '@thirdweb-dev/contracts': 3.4.6-0
+      '@thirdweb-dev/contracts': 3.4.6-1
       '@thirdweb-dev/tsconfig': workspace:*
       '@typechain/ethers-v5': 10.0.0
       eslint-config-thirdweb: workspace:*
@@ -251,7 +251,7 @@ importers:
       typechain: ^8.1.0
       typescript: ^4.7.4
     dependencies:
-      '@thirdweb-dev/contracts': 3.4.6-0
+      '@thirdweb-dev/contracts': 3.4.6-1
     devDependencies:
       '@babel/preset-env': 7.20.2_@babel+core@7.21.3
       '@babel/preset-typescript': 7.21.0_@babel+core@7.21.3
@@ -8991,8 +8991,8 @@ packages:
       use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
 
-  /@thirdweb-dev/contracts/3.4.6-0:
-    resolution: {integrity: sha512-JFdGizSgWX9Hij+4/Q91Grp33d4AOhu5Z2NwvfNCfdIWPU8hq/w09BNGd2XCJdXYVFZ+VGzShrlP9/i1Vy0PlQ==}
+  /@thirdweb-dev/contracts/3.4.6-1:
+    resolution: {integrity: sha512-v6tDS0+sTdlRJinep8nYRJlbsO7hbmIIUzEzBIYuFOxSlw/xuEO6xAfgNB8k3oc3n0NerDop2LQOfTxSVLBK6Q==}
     dev: false
 
   /@tootallnate/once/1.1.2:

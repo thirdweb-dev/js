@@ -6,7 +6,7 @@ import {
 } from "../../common";
 import {
   deployImplementationWithSigner,
-  deployInfraKeyless,
+  deployInfraWithSigner,
   getDeploymentInfo,
 } from "../../common/any-evm-deploy";
 import { getDeployArguments } from "../../common/deploy";
@@ -809,7 +809,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         implementationAddress = deploymentInfo.predictedAddress;
 
         // 2. deploy infra
-        await deployInfraKeyless(
+        await deployInfraWithSigner(
           this.getSigner() as Signer,
           this.getProvider(),
           deploymentInfo.infraContractsToDeploy,
