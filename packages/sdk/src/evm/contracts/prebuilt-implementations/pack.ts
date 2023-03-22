@@ -284,14 +284,18 @@ export class Pack extends StandardErc1155<PackContract> {
             this.contractWrapper.getProvider(),
             reward.assetContract,
           );
-          const rewardAmount = ethers.utils.formatUnits(
-            reward.totalAmount,
+          const quantityPerReward = ethers.utils.formatUnits(
+            amount,
+            tokenMetadata.decimals,
+          );
+          const totalRewards = ethers.utils.formatUnits(
+            BigNumber.from(reward.totalAmount).div(amount),
             tokenMetadata.decimals,
           );
           erc20Rewards.push({
             contractAddress: reward.assetContract,
-            quantityPerReward: amount.toString(),
-            totalRewards: BigNumber.from(rewardAmount).div(amount).toString(),
+            quantityPerReward,
+            totalRewards,
           });
           break;
         }
