@@ -12,6 +12,7 @@ import {
   useWallet,
 } from "@thirdweb-dev/react-core";
 import { SafeSupportedChainsSet } from "@thirdweb-dev/wallets";
+import { utils } from "ethers";
 import { useState } from "react";
 import { Button } from "../../../../components/buttons";
 import { ErrorMessage, Label } from "../../../../components/formElements";
@@ -36,6 +37,15 @@ import { useWalletRequiresConfirmation } from "../../../hooks/useCanSwitchNetwor
 import { SafeWallet } from "../../../wallets";
 import { Steps } from "./Steps";
 
+export const gnosisAddressPrefixToChainId = {
+  eth: 1,
+  matic: 137,
+  avax: 43114,
+  bnb: 56,
+  oeth: 10,
+  gor: 5,
+} as const;
+
 export const SafeForm: React.FC<{
   onBack: () => void;
 }> = (props) => {
@@ -53,22 +63,22 @@ export const SafeForm: React.FC<{
 
   const connectionStatus = useConnectionStatus();
   const requiresConfirmation = useWalletRequiresConfirmation();
-  const _supportedChains = useSupportedChains();
+  const chains = useSupportedChains();
 
   // put supported chains first
-  const supportedChains = _supportedChains.sort((a, b) => {
-    if (SafeSupportedChainsSet.has(a.chainId)) {
-      return -1;
-    }
-    if (SafeSupportedChainsSet.has(b.chainId)) {
-      return 1;
-    }
-    return 0;
-  });
+  const supportedChains = chains.filter((c) =>
+    SafeSupportedChainsSet.has(c.chainId),
+  );
 
   const selectedSafeChain = supportedChains.find(
     (c) => c.chainId === safeChainId,
   );
+
+  const testnets = supportedChains.filter((c) => c.testnet);
+  const mainnets = supportedChains.filter((c) => !c.testnet);
+
+  // if there are more than one mainnet and testnet, group them
+  const useOptGroup = mainnets.length > 0 && testnets.length > 0;
 
   const handleSubmit = async () => {
     if (!selectedSafeChain || !activeWallet || !activeChain) {
@@ -89,6 +99,9 @@ export const SafeForm: React.FC<{
   };
 
   const mismatch = safeChainId !== -1 && connectedChainId !== safeChainId;
+
+  const isValidAddress = utils.isAddress(safeAddress);
+  const disableNetworkSelection = supportedChains.length === 1;
 
   return (
     <>
@@ -134,10 +147,28 @@ export const SafeForm: React.FC<{
         <FormField
           name="safeAddress"
           id="safeAddress"
+          errorMessage={
+            safeAddress && !isValidAddress ? "Invalid Safe Address" : undefined
+          }
           autocomplete="on"
           onChange={(value) => {
             setSafeConnectError(false);
-            setSafeAddress(value);
+            if (value.length > 4) {
+              const prefix = value.split(":")[0];
+
+              if (prefix && prefix in gnosisAddressPrefixToChainId) {
+                setSafeChainId(
+                  gnosisAddressPrefixToChainId[
+                    prefix as keyof typeof gnosisAddressPrefixToChainId
+                  ],
+                );
+                setSafeAddress(value.slice(prefix.length + 1));
+              } else {
+                setSafeAddress(value);
+              }
+            } else {
+              setSafeAddress(value);
+            }
           }}
           label="Safe Address"
           type="text"
@@ -157,10 +188,12 @@ export const SafeForm: React.FC<{
           }}
         >
           <NetworkSelect
+            data-error={supportedChains.length === 0}
             required
             name="safeNetwork"
             id="safeNetwork"
             value={safeChainId}
+            disabled={disableNetworkSelection}
             placeholder="Select Network your safe is deployed to"
             onChange={(e) => {
               setSafeConnectError(false);
@@ -168,23 +201,45 @@ export const SafeForm: React.FC<{
               setSafeChainId(Number(e.target.value));
             }}
           >
-            <option value="" hidden>
-              Select network your safe is deployed on
-            </option>
-            {supportedChains.map((chain) => {
-              const isSupported = SafeSupportedChainsSet.has(chain.chainId);
-              return (
-                <option
-                  value={chain.chainId}
-                  disabled={!isSupported}
-                  key={chain.chainId}
-                >
-                  {chain.name}
-                </option>
-              );
-            })}
+            {!disableNetworkSelection && (
+              <option value="" hidden>
+                Select network your safe is deployed on
+              </option>
+            )}
+
+            {useOptGroup ? (
+              <>
+                <optgroup label="Mainnets">
+                  {mainnets.map((chain) => {
+                    return (
+                      <option value={chain.chainId} key={chain.chainId}>
+                        {chain.name}
+                      </option>
+                    );
+                  })}
+                </optgroup>
+
+                <optgroup label="Testnets">
+                  {testnets.map((chain) => {
+                    return (
+                      <option value={chain.chainId} key={chain.chainId}>
+                        {chain.name}
+                      </option>
+                    );
+                  })}
+                </optgroup>
+              </>
+            ) : (
+              supportedChains.map((chain) => {
+                return (
+                  <option value={chain.chainId} key={chain.chainId}>
+                    {chain.name}
+                  </option>
+                );
+              })
+            )}
           </NetworkSelect>
-          {
+          {!disableNetworkSelection && (
             <ChevronDownIcon
               width={iconSize.sm}
               height={iconSize.sm}
@@ -196,8 +251,18 @@ export const SafeForm: React.FC<{
                 pointerEvents: "none",
               }}
             />
-          }
+          )}
         </div>
+
+        {supportedChains.length === 0 && (
+          <>
+            <Spacer y="sm" />
+            <ErrorMessage>
+              {" "}
+              Can not use Safe: No Safe supported chains are configured in App
+            </ErrorMessage>
+          </>
+        )}
 
         <Spacer y="sm" />
 
@@ -321,6 +386,14 @@ const NetworkSelect = styled.select<{ theme?: Theme }>`
 
   &:invalid {
     color: ${(p) => p.theme.text.secondary};
+  }
+  &[data-error="true"] {
+    box-shadow: 0 0 0 1.5px ${(p) => p.theme.input.errorRing};
+  }
+
+  &[disabled] {
+    opacity: 1;
+    cursor: not-allowed;
   }
 `;
 

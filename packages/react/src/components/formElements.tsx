@@ -63,6 +63,10 @@ export const Input = styled.input<{
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
+  &[data-error="true"] {
+    box-shadow: 0 0 0 2px ${(p) => p.theme.input.errorRing};
+  }
 `;
 
 // for rendering a input and a button side by side
