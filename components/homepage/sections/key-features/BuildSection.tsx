@@ -20,7 +20,7 @@ export const BuildSection: React.FC = () => {
       title="Build"
       titleGradient="linear-gradient(70deg, #805AA8, #BAA2D4)"
       headline="Accelerate your web3 development."
-      description="Leverage our easy-to-use SDKs, developer tools, and integrations with best-in-class partner providers."
+      description="Leverage our smart SDKs and developer tools to easily build web3 apps and games across platforms."
     >
       <SimpleGrid columns={{ md: 9 }} gap={6}>
         <LinkBox
@@ -268,7 +268,10 @@ export const BuildSection: React.FC = () => {
                 color="whiteAlpha.700"
                 textAlign={{ base: "center", md: "left" }}
               >
-                Supports Javascript. Python. Go. Unity. C#.
+                Javascrip. React. React Native. Python. Go. Unity. C#.
+                <br />
+                Platform support includes native, mobile, console, browser, and
+                VR.
               </Text>
             </Flex>
             <Flex align="center" justify="center" py={6}>
