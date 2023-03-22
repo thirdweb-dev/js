@@ -20,6 +20,7 @@ import {
 import { useEffect, useState } from "react";
 import { SelectpersonalWallet } from "./screens/Safe/SelectPersonalWallet";
 import { SafeForm } from "./screens/Safe/SafeForm";
+import { GetStartedWithWallets } from "./screens/GetStartedWithWallets";
 
 type Screen =
   | "deviceWallet/connect"
@@ -31,7 +32,8 @@ type Screen =
   | "metamask/get-started"
   | "coinbase/get-started"
   | "safe/select-wallet"
-  | "safe/form";
+  | "safe/form"
+  | "wallets/get-started";
 
 export const ConnectWalletFlow: React.FC<{
   btnClass?: string;
@@ -166,7 +168,7 @@ export const ConnectWalletFlow: React.FC<{
   return (
     <Modal
       style={{
-        maxWidth: "500px",
+        maxWidth: "450px",
       }}
       open={hideModal ? false : open}
       setOpen={setOpen}
@@ -188,7 +190,12 @@ export const ConnectWalletFlow: React.FC<{
       }
     >
       {showScreen === "walletList" && (
-        <WalletSelector walletsMeta={walletsMeta} />
+        <WalletSelector
+          walletsMeta={walletsMeta}
+          onGetStarted={() => {
+            setShowScreen("wallets/get-started");
+          }}
+        />
       )}
 
       {showScreen === "metamask/get-started" && (
@@ -250,6 +257,10 @@ export const ConnectWalletFlow: React.FC<{
       )}
 
       {showScreen === "safe/form" && <SafeForm onBack={handleBack} />}
+
+      {showScreen === "wallets/get-started" && (
+        <GetStartedWithWallets onBack={handleBack} />
+      )}
     </Modal>
   );
 };

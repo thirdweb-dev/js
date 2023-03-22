@@ -119,12 +119,11 @@ export const SafeForm: React.FC<{
       <Spacer y="md" />
 
       <Desc>
-        You can find your safe address through your{" "}
+        You can find your safe address in{" "}
         <HelperLink
           target="_blank"
           href="https://app.safe.global/home"
           style={{
-            fontSize: "inherit",
             display: "inline",
           }}
         >

@@ -247,6 +247,7 @@ const NetworkListUl = styled.ul<{ theme?: Theme }>`
   padding-right: 10px;
   padding-bottom: ${spacing.lg};
   width: calc(100% + 16px);
+  box-sizing: border-box;
   -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
   mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
   ${(p) =>
