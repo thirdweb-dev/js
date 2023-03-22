@@ -22,6 +22,10 @@ const CHAIN_ID_TO_GNOSIS_SERVER_URL = {
 
 const __IS_SERVER__ = typeof window === "undefined";
 
+export const SafeSupportedChainsSet = new Set(
+  Object.keys(CHAIN_ID_TO_GNOSIS_SERVER_URL).map(Number),
+);
+
 export class SafeConnector extends TWConnector<SafeConnectionArgs> {
   static supportedChains = Object.keys(CHAIN_ID_TO_GNOSIS_SERVER_URL);
   public supportedChains = SafeConnector.supportedChains;
@@ -44,7 +48,6 @@ export class SafeConnector extends TWConnector<SafeConnectionArgs> {
 
   async connect(args: ConnectParams<SafeConnectionArgs>) {
     if (!(args.chain.chainId in CHAIN_ID_TO_GNOSIS_SERVER_URL)) {
-      // chain not supported by Safe
       throw new Error("Chain not supported by Safe");
     }
     this.safeSigner = await this.createSafeSigner(args);
@@ -53,7 +56,8 @@ export class SafeConnector extends TWConnector<SafeConnectionArgs> {
   }
 
   private async createSafeSigner(params: SafeConnectionArgs) {
-    const signer = await params.personalWallet.getCachedSigner();
+    const signer = await params.personalWallet.getSigner();
+    console.log("cached signer is", signer);
     const safeAddress = params.safeAddress;
     const safeChainId = params.chain
       .chainId as keyof typeof CHAIN_ID_TO_GNOSIS_SERVER_URL;

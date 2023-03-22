@@ -15,6 +15,6 @@ export function useWalletRequiresConfirmation() {
       activeWallet.walletId === "walletConnectV2" ||
       (activeWallet.walletId === "metamask" && !installedWallets.metamask) ||
       (activeWallet.walletId === "coinbaseWallet" &&
-        !installedWallets.coinbase))
+        !installedWallets.coinbaseWallet))
   );
 }

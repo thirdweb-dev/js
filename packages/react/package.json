@@ -114,7 +114,8 @@
     "react-dom": "^18.2.0",
     "typescript": "^4.7.4",
     "eslint-config-thirdweb": "workspace:*",
-    "@thirdweb-dev/tsconfig": "workspace:*"
+    "@thirdweb-dev/tsconfig": "workspace:*",
+    "stream": "npm:stream-browserify@^3.0.0"
   },
   "dependencies": {
     "@emotion/react": "^11.10.0",

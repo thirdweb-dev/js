@@ -9,10 +9,12 @@ import { useEffect, useState } from "react";
 export const ScanCoinbase: React.FC<{
   onBack: () => void;
   onGetStarted: () => void;
+  onConnected: () => void;
 }> = (props) => {
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>(undefined);
   const twWalletContext = useThirdwebWallet();
+  const { onConnected } = props;
 
   useEffect(() => {
     if (!twWalletContext) {
@@ -33,8 +35,9 @@ export const ScanCoinbase: React.FC<{
       })
       .then(() => {
         twWalletContext.handleWalletConnect(coinbaseWallet);
+        onConnected();
       });
-  }, [createInstance, twWalletContext]);
+  }, [createInstance, twWalletContext, onConnected]);
 
   return (
     <ScanScreen

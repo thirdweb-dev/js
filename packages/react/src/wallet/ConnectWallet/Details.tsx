@@ -104,6 +104,7 @@ export const ConnectedWalletDetails: React.FC<{
     <MenuButton
       id="current-network"
       type="button"
+      disabled={activeWallet?.walletId === "Safe"}
       onClick={() => {
         setOpen(false);
         setShowNetworkSelector(true);

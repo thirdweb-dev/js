@@ -1,6 +1,6 @@
 import { AsyncStorage, createAsyncLocalStorage } from "../../core";
 import { thirdwebChains } from "../constants/chains";
-import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
+import { TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 import { Chain, Ethereum } from "@thirdweb-dev/chains";
@@ -94,12 +94,6 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
 
   static getDataStorageKey() {
     return STORAGE_KEY_DATA;
-  }
-
-  // enforcing that connectOptions is required and not optional
-  connect(connectOptions: ConnectParams<DeviceWalletConnectionArgs>) {
-    // do not save params because it contains the password
-    return super.connect({ ...connectOptions, saveParams: false });
   }
 }
 
