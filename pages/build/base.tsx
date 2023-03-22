@@ -203,7 +203,7 @@ const Base: ThirdwebNextPage = () => {
                   my={8}
                   px={6}
                   h={14}
-                  href="https://catattacknft.vercel.app"
+                  href="https://catattack.thirdweb.com"
                   bg="white"
                   _hover={{ bg: "whiteAlpha.800" }}
                 >
