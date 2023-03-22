@@ -12,7 +12,7 @@ import {
   Theme,
 } from "../../design-system";
 import { scrollbar } from "../../design-system/styles";
-import { useWalletRequiresConfirmation } from "../hooks/useCanSwitchNetwork";
+import { useIsNonLocalWallet } from "../hooks/useCanSwitchNetwork";
 import styled from "@emotion/styled";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import * as Tabs from "@radix-ui/react-tabs";
@@ -138,7 +138,7 @@ const NetworkList: React.FC<{
   const activeChainId = useChainId();
   const [confirmingChainId, setConfirmingChainId] = useState(-1);
   const [errorSwitchingChainId, setErrorSwitchingChainId] = useState(-1);
-  const requiresConfirmation = useWalletRequiresConfirmation();
+  const requiresConfirmation = useIsNonLocalWallet();
 
   return (
     <NetworkListUl>

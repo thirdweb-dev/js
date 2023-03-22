@@ -33,7 +33,7 @@ import {
   Theme,
   fontSize,
 } from "../../../../design-system";
-import { useWalletRequiresConfirmation } from "../../../hooks/useCanSwitchNetwork";
+import { useIsNonLocalWallet } from "../../../hooks/useCanSwitchNetwork";
 import { SafeWallet } from "../../../wallets";
 import { Steps } from "./Steps";
 
@@ -62,7 +62,7 @@ export const SafeForm: React.FC<{
   const [switchingNetwork, setSwitchingNetwork] = useState(false);
 
   const connectionStatus = useConnectionStatus();
-  const requiresConfirmation = useWalletRequiresConfirmation();
+  const requiresConfirmation = useIsNonLocalWallet();
   const chains = useSupportedChains();
 
   // put supported chains first
