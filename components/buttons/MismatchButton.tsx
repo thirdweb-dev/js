@@ -116,6 +116,10 @@ export const MismatchButton = React.forwardRef<
       >
         <PopoverTrigger>
           <Button
+            isLoading={
+              (ecosystem === "evm" && evmBalance.isLoading) ||
+              (ecosystem === "solana" && solBalance.isLoading)
+            }
             {...props}
             type={networksMismatch || shouldShowEitherFaucet ? "button" : type}
             loadingText={loadingText}
@@ -135,10 +139,6 @@ export const MismatchButton = React.forwardRef<
               }
             }}
             ref={ref}
-            isLoading={
-              (ecosystem === "evm" && evmBalance.isLoading) ||
-              (ecosystem === "solana" && solBalance.isLoading)
-            }
             isDisabled={isDisabled}
           >
             {children}
