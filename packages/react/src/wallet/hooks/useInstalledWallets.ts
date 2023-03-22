@@ -18,7 +18,7 @@ export function useInstalledWallets() {
   const installedWallets = {
     metamask: !!isMetamaskInstalled,
     coinbaseWallet: !!isCoinbaseWalletInstalled,
-    deviceWallet: !!deviceWalletStorage,
+    deviceWallet: !!deviceWalletStorage?.data,
   };
 
   return installedWallets;
