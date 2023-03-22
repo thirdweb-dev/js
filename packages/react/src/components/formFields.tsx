@@ -58,7 +58,10 @@ export const FormField: React.FC<{
   type: "text" | "password";
   onChange: (value: string) => void;
   label: string;
+  placeholder?: string;
+  errorMessage?: string;
 }> = (props) => {
+  console.log({ errorMessage: props.errorMessage });
   return (
     <div>
       <Label htmlFor={props.id}>{props.label}</Label>
@@ -73,7 +76,16 @@ export const FormField: React.FC<{
         onChange={(e) => props.onChange(e.target.value)}
         value={props.value}
         type={props.type}
+        data-error={!!props.errorMessage}
+        placeholder={props.placeholder}
       />
+
+      {props.errorMessage && (
+        <>
+          <Spacer y="xs" />
+          <ErrorMessage>{props.errorMessage}</ErrorMessage>
+        </>
+      )}
     </div>
   );
 };

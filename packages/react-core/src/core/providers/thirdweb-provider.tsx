@@ -11,7 +11,10 @@ import { QueryClient } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import type { SDKOptions } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
-import type { CreateAsyncStorage } from "@thirdweb-dev/wallets";
+import {
+  createAsyncLocalStorage,
+  CreateAsyncStorage,
+} from "@thirdweb-dev/wallets";
 import React, { useMemo } from "react";
 import { useUpdateChainsWithApiKeys } from "../../evm/hooks/chain-hooks";
 import { ThirdwebSDKProviderProps } from "../../evm/providers/types";
@@ -93,7 +96,7 @@ export interface ThirdwebProviderCoreProps<
 
   theme?: "light" | "dark";
 
-  createWalletStorage: CreateAsyncStorage;
+  createWalletStorage?: CreateAsyncStorage;
 
   /**
    * Whether or not to automatically switch to wallet's network to active chain
@@ -110,9 +113,10 @@ const defaultdAppMeta: DAppMetaData = {
 
 export const ThirdwebProviderCore = <
   TChains extends Chain[] = typeof defaultChains,
->(
-  props: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>,
-) => {
+>({
+  createWalletStorage = createAsyncLocalStorage,
+  ...props
+}: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>) => {
   const supportedChainsNonNull = useMemo(() => {
     return props.supportedChains || (defaultChains as any as TChains);
   }, [props.supportedChains]);
@@ -149,7 +153,7 @@ export const ThirdwebProviderCore = <
         chains={supportedChainsWithKey}
         supportedWallets={props.supportedWallets}
         shouldAutoConnect={props.autoConnect}
-        createWalletStorage={props.createWalletStorage}
+        createWalletStorage={createWalletStorage}
         dAppMeta={dAppMeta}
         activeChain={activeChainWithKey}
         autoSwitch={props.autoSwitch}

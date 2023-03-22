@@ -19,9 +19,10 @@ import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { useConnect } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 
-export const ConnectToDeviceWallet: React.FC<{ onBack: () => void }> = (
-  props,
-) => {
+export const ConnectToDeviceWallet: React.FC<{
+  onBack: () => void;
+  onConnected: () => void;
+}> = (props) => {
   const deviceStorage = useDeviceWalletStorage();
 
   if (!deviceStorage) {
@@ -64,29 +65,34 @@ export const ConnectToDeviceWallet: React.FC<{ onBack: () => void }> = (
       <Spacer y="xl" />
 
       {!isDeviceWalletSaved ? (
-        <CreateDeviceWallet />
+        <CreateDeviceWallet onConnected={props.onConnected} />
       ) : (
-        <ReconnectDeviceWallet />
+        <ReconnectDeviceWallet onConnected={props.onConnected} />
       )}
     </>
   );
 };
 
 // for creating a new device wallet
-export const CreateDeviceWallet = () => {
+export const CreateDeviceWallet: React.FC<{ onConnected: () => void }> = (
+  props,
+) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const connect = useConnect();
   const passwordMismatch = confirmPassword && password !== confirmPassword;
 
-  const handleConnect = () => {
+  const handleConnect = async () => {
     if (passwordMismatch) {
       return;
     }
-    connect(DeviceWallet, {
+
+    await connect(DeviceWallet, {
       password,
     });
+
+    props.onConnected();
   };
 
   return (
@@ -143,7 +149,9 @@ export const CreateDeviceWallet = () => {
 };
 
 // for connecting to an existing device wallet
-export const ReconnectDeviceWallet = () => {
+export const ReconnectDeviceWallet: React.FC<{ onConnected: () => void }> = (
+  props,
+) => {
   const deviceStorage = useDeviceWalletStorage();
   const [address, setAddress] = useState("Fetching...");
   const [password, setPassword] = useState("");
@@ -162,6 +170,7 @@ export const ReconnectDeviceWallet = () => {
       await connect(DeviceWallet, {
         password,
       });
+      props.onConnected();
     } catch (e) {
       setIsWrongPassword(true);
     }

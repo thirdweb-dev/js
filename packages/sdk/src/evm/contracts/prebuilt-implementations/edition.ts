@@ -20,7 +20,7 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { Address, AddressOrEns } from "../../schema";
-import { Abi } from "../../schema/contracts/custom";
+import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { TokenErc1155ContractSchema } from "../../schema/contracts/token-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";
 import { EditionMetadataOrUri } from "../../schema/tokens/edition";
@@ -105,7 +105,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: Abi,
+    abi: AbiInput,
     chainId: number,
     contractWrapper = new ContractWrapper<TokenERC1155>(
       network,
@@ -115,7 +115,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
     ),
   ) {
     super(contractWrapper, storage, chainId);
-    this.abi = abi;
+    this.abi = AbiSchema.parse(abi || []);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       TokenErc1155ContractSchema,

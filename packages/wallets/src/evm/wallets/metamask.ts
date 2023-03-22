@@ -1,10 +1,10 @@
-import { AsyncStorage } from "../../core/AsyncStorage";
+import { AsyncStorage, createAsyncLocalStorage } from "../../core/AsyncStorage";
 import type { WalletConnectV1Connector as WalletConnectV1ConnectorType } from "../connectors/wallet-connect-v1";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 
 export type MetamaskWalletOptions = WalletOptions<{
-  connectorStorage: AsyncStorage;
+  connectorStorage?: AsyncStorage;
   isInjected?: boolean;
 }>;
 
@@ -34,19 +34,19 @@ export class MetaMask extends AbstractBrowserWallet {
 
   constructor(options: MetamaskWalletOptions) {
     super(MetaMask.id, options);
-    this.connectorStorage = options.connectorStorage;
+    this.connectorStorage =
+      options.connectorStorage || createAsyncLocalStorage("connector");
     this.isInjected = options.isInjected || false;
   }
 
   protected async getConnector(): Promise<TWConnector> {
     if (!this.connector) {
-      // import the connector dynamically
-      const { MetaMaskConnector } = await import("../connectors/metamask");
-
       // if metamask is injected, use the injected connector
       // otherwise, use the wallet connect connector for using the metamask app on mobile via QR code scan
 
       if (this.isInjected) {
+        // import the connector dynamically
+        const { MetaMaskConnector } = await import("../connectors/metamask");
         const metamaskConnector = new MetaMaskConnector({
           chains: this.chains,
           connectorStorage: this.connectorStorage,

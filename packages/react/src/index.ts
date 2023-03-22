@@ -7,4 +7,6 @@ export {
   DeviceWallet,
   WalletConnect,
   WalletConnectV1,
+  PaperWallet,
+  SafeWallet,
 } from "./wallet/wallets";

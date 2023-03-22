@@ -22,7 +22,7 @@ import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { PaperCheckout } from "../../integrations/thirdweb-checkout";
 import { Address, AddressOrEns } from "../../schema";
-import { Abi } from "../../schema/contracts/custom";
+import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { DropErc1155ContractSchema } from "../../schema/contracts/drop-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";
 import { PrebuiltEditionDrop } from "../../types/eips";
@@ -124,7 +124,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: Abi,
+    abi: AbiInput,
     chainId: number,
     contractWrapper = new ContractWrapper<PrebuiltEditionDrop>(
       network,
@@ -134,7 +134,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
     ),
   ) {
     super(contractWrapper, storage, chainId);
-    this.abi = abi;
+    this.abi = AbiSchema.parse(abi);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       DropErc1155ContractSchema,

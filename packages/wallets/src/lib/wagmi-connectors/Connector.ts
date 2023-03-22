@@ -1,9 +1,9 @@
-import { Chain, Ethereum, Goerli } from "@thirdweb-dev/chains";
-import type { Address } from "abitype";
+import { Chain, defaultChains } from "@thirdweb-dev/chains";
+
 import { default as EventEmitter } from "eventemitter3";
 
 export type ConnectorData<Provider = any> = {
-  account?: Address;
+  account?: string;
   chain?: { id: number; unsupported: boolean };
   provider?: Provider;
 };
@@ -33,7 +33,7 @@ export abstract class Connector<
   abstract readonly ready: boolean;
 
   constructor({
-    chains = [Ethereum, Goerli],
+    chains = defaultChains,
     options,
   }: {
     chains?: Chain[];
@@ -48,20 +48,14 @@ export abstract class Connector<
     chainId?: number;
   }): Promise<Required<ConnectorData>>;
   abstract disconnect(): Promise<void>;
-  abstract getAccount(): Promise<Address>;
+  abstract getAccount(): Promise<string>;
   abstract getChainId(): Promise<number>;
   abstract getProvider(config?: { chainId?: number }): Promise<Provider>;
   abstract getSigner(config?: { chainId?: number }): Promise<Signer>;
   abstract isAuthorized(): Promise<boolean>;
   switchChain?(chainId: number): Promise<Chain>;
-  watchAsset?(asset: {
-    address: string;
-    decimals?: number;
-    image?: string;
-    symbol: string;
-  }): Promise<boolean>;
 
-  protected abstract onAccountsChanged(accounts: Address[]): void;
+  protected abstract onAccountsChanged(accounts: string[]): void;
   protected abstract onChainChanged(chain: number | string): void;
   protected abstract onDisconnect(error: Error): void;
 
