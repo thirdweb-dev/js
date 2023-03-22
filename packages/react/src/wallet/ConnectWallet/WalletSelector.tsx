@@ -34,9 +34,20 @@ export const WalletSelector: React.FC<{ walletsMeta: WalletMeta[] }> = (
 export const WalletSelection: React.FC<{ walletsMeta: WalletMeta[] }> = (
   props,
 ) => {
+  // show the installed wallets first
+  const sortedWalletsMeta = props.walletsMeta.sort((a, b) => {
+    if (a.installed && !b.installed) {
+      return -1;
+    }
+    if (!a.installed && b.installed) {
+      return 1;
+    }
+    return 0;
+  });
+
   return (
     <WalletList>
-      {props.walletsMeta.map((walletMeta) => {
+      {sortedWalletsMeta.map((walletMeta) => {
         return (
           <li key={walletMeta.id}>
             <WalletButton
