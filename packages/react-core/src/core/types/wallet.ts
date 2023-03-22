@@ -14,7 +14,7 @@ export type ExtraCoreWalletOptions = {
 };
 
 export type WalletOptions = {
-  chains?: Chain[];
+  chains: Chain[];
   shouldAutoConnect?: boolean;
   walletId?: string;
   coordinatorStorage: AsyncStorage;

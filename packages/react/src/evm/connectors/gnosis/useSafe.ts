@@ -1,4 +1,4 @@
-import type { SafeConnectionArgs } from "@thirdweb-dev/wallets/evm/wallets/safe";
+import type { SafeConnectionArgs } from "@thirdweb-dev/wallets";
 import { useCallback } from "react";
 import { useConnect } from "@thirdweb-dev/react-core";
 
@@ -6,9 +6,7 @@ export function useSafe() {
   const connect = useConnect();
   return useCallback(
     async (connectProps: SafeConnectionArgs) => {
-      const { SafeWallet } = await import(
-        "@thirdweb-dev/wallets/evm/wallets/safe"
-      );
+      const { SafeWallet } = await import("../../../wallet/wallets");
       const safeWallet = await connect(SafeWallet, connectProps);
       return safeWallet;
     },

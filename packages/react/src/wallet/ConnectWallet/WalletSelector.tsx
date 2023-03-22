@@ -1,6 +1,5 @@
 import { Img } from "../../components/Img";
 import { Spacer } from "../../components/Spacer";
-import { Spinner } from "../../components/Spinner";
 import { ModalTitle } from "../../components/modalElements";
 import {
   fontSize,
@@ -11,12 +10,10 @@ import {
 } from "../../design-system";
 import { WalletMeta } from "../types";
 import styled from "@emotion/styled";
-import { useState } from "react";
 
 export const WalletSelector: React.FC<{ walletsMeta: WalletMeta[] }> = (
   props,
 ) => {
-  const [connectingIndex, setConnectingIndex] = useState(-1);
   return (
     <>
       <ModalTitle
@@ -29,34 +26,38 @@ export const WalletSelector: React.FC<{ walletsMeta: WalletMeta[] }> = (
 
       <Spacer y="xl" />
 
-      <WalletList>
-        {props.walletsMeta.map((walletMeta, i) => {
-          return (
-            <li key={walletMeta.id}>
-              <WalletButton
-                type="button"
-                onClick={() => {
-                  setConnectingIndex(i);
-                  walletMeta.onClick();
-                }}
-              >
-                <Img
-                  src={walletMeta.iconURL}
-                  width={iconSize.lg}
-                  height={iconSize.lg}
-                  loading="eager"
-                />
-                <WalletName>{walletMeta.name}</WalletName>
-                {connectingIndex === i && <Spinner size="sm" color="primary" />}
-                {walletMeta.installed && (
-                  <InstallBadge> Installed </InstallBadge>
-                )}
-              </WalletButton>
-            </li>
-          );
-        })}
-      </WalletList>
+      <WalletSelection walletsMeta={props.walletsMeta} />
     </>
+  );
+};
+
+export const WalletSelection: React.FC<{ walletsMeta: WalletMeta[] }> = (
+  props,
+) => {
+  return (
+    <WalletList>
+      {props.walletsMeta.map((walletMeta) => {
+        return (
+          <li key={walletMeta.id}>
+            <WalletButton
+              type="button"
+              onClick={() => {
+                walletMeta.onClick();
+              }}
+            >
+              <Img
+                src={walletMeta.iconURL}
+                width={iconSize.lg}
+                height={iconSize.lg}
+                loading="eager"
+              />
+              <WalletName>{walletMeta.name}</WalletName>
+              {walletMeta.installed && <InstallBadge> Installed </InstallBadge>}
+            </WalletButton>
+          </li>
+        );
+      })}
+    </WalletList>
   );
 };
 
