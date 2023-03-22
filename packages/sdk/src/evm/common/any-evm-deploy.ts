@@ -277,6 +277,8 @@ export async function deployInfraWithSigner(
     // Check if the infra contract is already deployed
     const code = await provider.getCode(txInfo.predictedAddress);
 
+    console.log("contract types, code ", contractType, code.length);
+
     if (code === "0x") {
       // get init bytecode
       const deployData = txInfo.deployData;
@@ -302,7 +304,7 @@ export async function deployInfraWithSigner(
   if (txns.length > 0) {
     const deployer = new ethers.ContractFactory(DeployerAbi, deployerBytecode)
       .connect(signer)
-      .deploy(txns);
+      .deploy(txns, { gasLimit: 5000000 });
     await (await deployer).deployed();
   }
 }
@@ -394,8 +396,8 @@ export async function getDeploymentInfo(
 
   // 5. Add TWStatelessFactory and Forwarder to the list of infra contracts --
   // these must be deployed regardless of constructor params of implementation contract
-  infraContracts.push(CloneFactory.contractType);
   infraContracts.push(Forwarder.contractType);
+  infraContracts.push(CloneFactory.contractType);
 
   return {
     signerDeployData,
