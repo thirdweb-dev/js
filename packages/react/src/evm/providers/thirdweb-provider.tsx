@@ -1,4 +1,3 @@
-import { createAsyncLocalStorage } from "../../core/WalletStorage";
 import {
   CoinbaseWallet,
   DeviceWallet,
@@ -66,7 +65,6 @@ export const ThirdwebProvider: React.FC<ThirdwebProviderProps> = ({
 }) => {
   return (
     <ThirdwebProviderCore
-      createWalletStorage={createAsyncLocalStorage}
       thirdwebApiKey={thirdwebApiKey}
       supportedWallets={supportedWallets}
       {...restProps}

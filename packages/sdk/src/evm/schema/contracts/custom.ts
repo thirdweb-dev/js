@@ -68,7 +68,7 @@ export const CustomContractSchema = {
 const AbiTypeBaseSchema = z
   .object({
     type: z.string(),
-    name: z.string().optional().default(""),
+    name: z.string().default(""),
   })
   .catchall(z.any());
 
@@ -96,7 +96,14 @@ export const AbiObjectSchema = z
  * @internal
  */
 export const AbiSchema = z.array(AbiObjectSchema);
-export type Abi = z.input<typeof AbiSchema>;
+// if we want to statically type this for external usage it has to *awlways* be the output type
+export type Abi = z.output<typeof AbiSchema>;
+
+// input type is only used internally
+/**
+ * @internal
+ */
+export type AbiInput = z.input<typeof AbiSchema>;
 
 /**
  * @internal
@@ -283,16 +290,16 @@ export type PublishedContractFetched = {
 };
 export type AbiFunction = {
   name: string;
-  inputs: z.input<typeof AbiTypeSchema>[];
-  outputs: z.input<typeof AbiTypeSchema>[];
+  inputs: z.output<typeof AbiTypeSchema>[];
+  outputs: z.output<typeof AbiTypeSchema>[];
   signature: string;
   stateMutability: string;
   comment: string;
 };
 export type AbiEvent = {
   name: string;
-  inputs: z.input<typeof AbiTypeSchema>[];
-  outputs: z.input<typeof AbiTypeSchema>[];
+  inputs: z.output<typeof AbiTypeSchema>[];
+  outputs: z.output<typeof AbiTypeSchema>[];
   comment: string;
 };
 export type ContractSource = {

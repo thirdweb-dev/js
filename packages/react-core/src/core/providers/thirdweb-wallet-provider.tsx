@@ -27,12 +27,10 @@ type ConnectionStatus = "unknown" | "connected" | "disconnected" | "connecting";
 type ConnectFnArgs<I extends SupportedWalletInstance> =
   // if second argument is optional
   undefined extends WalletConnectParams<I>
-    ?
-        | [wallet: SupportedWallet<I>]
-        | [
-            wallet: SupportedWallet<I>,
-            connectParams: NonNullable<WalletConnectParams<I>>,
-          ]
+    ? [
+        wallet: SupportedWallet<I>,
+        connectParams?: NonNullable<WalletConnectParams<I>>,
+      ]
     : // if second argument is required
       [
         wallet: SupportedWallet<I>,
@@ -103,7 +101,6 @@ export function ThirdwebWalletProvider(
 
       return new Wallet({
         ...walletOptions,
-        // TODO: remove this - it's only being used in device wallet
         chain: props.activeChain || props.chains[0],
         coordinatorStorage,
         theme: theme || "dark",
@@ -152,7 +149,6 @@ export function ThirdwebWalletProvider(
   const autoConnectTriggered = useRef(false);
 
   // Auto Connect
-  // TODO - Can't do auto connect for Device Wallet right now
   useEffect(() => {
     if (autoConnectTriggered.current) {
       return;
@@ -190,6 +186,7 @@ export function ThirdwebWalletProvider(
       let Wallet = props.supportedWallets.find((W) => {
         return W.name.toLowerCase() === lastConnectedWallet.toLowerCase();
       });
+
       if (!Wallet) {
         Wallet = props.supportedWallets.find((W) => {
           return W.name
@@ -198,24 +195,25 @@ export function ThirdwebWalletProvider(
         });
       }
 
-      if (Wallet && Wallet.id !== "deviceWallet") {
-        const wallet = createWalletInstance(Wallet);
-        try {
-          setConnectionStatus("connecting");
-          // give up auto connect if it takes more than 3 seconds
-          // this is to handle the edge case when trying to auto-connect to wallet that does not exist anymore (extension is uninstalled)
-          await timeoutPromise(
-            10000,
-            wallet.autoConnect(),
-            `AutoConnect timeout`,
-          );
-          handleWalletConnect(wallet);
-        } catch (e) {
-          setConnectionStatus("disconnected");
-          throw e;
-        }
-      } else {
+      if (!Wallet) {
         setConnectionStatus("disconnected");
+        return;
+      }
+
+      const wallet = createWalletInstance(Wallet);
+      try {
+        setConnectionStatus("connecting");
+        // give up auto connect if it takes more than 10 seconds
+        // this is to handle the edge case when trying to auto-connect to wallet that does not exist anymore (extension is uninstalled)
+        await timeoutPromise(
+          10000,
+          wallet.autoConnect(),
+          `AutoConnect timeout`,
+        );
+        handleWalletConnect(wallet);
+      } catch (e) {
+        setConnectionStatus("disconnected");
+        throw e;
       }
     })();
   }, [
