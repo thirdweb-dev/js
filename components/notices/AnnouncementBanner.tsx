@@ -5,7 +5,7 @@ import { Heading, TrackedLink } from "tw-components";
 
 export const AnnouncementBanner = () => {
   const [hasDismissedAnnouncement, setHasDismissedAnnouncement] =
-    useLocalStorage("dismissed-commercekit-announcement", false, true);
+    useLocalStorage("dismissed-gaming-kit-update-announcement", false, true);
 
   if (hasDismissedAnnouncement) {
     return null;
@@ -16,7 +16,7 @@ export const AnnouncementBanner = () => {
       position="sticky"
       zIndex="10"
       py={3}
-      bgImage="linear-gradient(147.15deg, #9BC055 30.17%, #7629E7 100.01%)"
+      bgImage="linear-gradient(145.96deg, rgba(205, 0, 238, 1) 5.07%, #1652F0 100%)"
     >
       <Flex
         w="full"
@@ -27,9 +27,9 @@ export const AnnouncementBanner = () => {
       >
         <Box display={{ base: "none", md: "block" }} />
         <TrackedLink
-          href="/solutions/commerce"
+          href="/solutions/gaming"
           category="announcement"
-          label="commercekit"
+          label="gamingkit-update"
         >
           <Container maxW="container.page" display="flex" px={0}>
             <Flex
@@ -46,8 +46,8 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                Announcing CommerceKit, an all-in-one framework to build web3
-                commerce apps.
+                <strong>GamingKit Update:</strong> Unity SDK cross-platform
+                support now available.
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>

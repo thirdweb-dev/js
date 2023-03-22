@@ -1,6 +1,7 @@
 import { ChakraNextImage } from "../../components/Image";
 import { HomepageTopNav } from "../../components/product-pages/common/Topnav";
 import {
+  AspectRatio,
   Box,
   DarkMode,
   Flex,
@@ -26,6 +27,7 @@ import {
   Link,
   LinkButton,
   Text,
+  TrackedLink,
 } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 import { ThirdwebNextPage } from "utils/types";
@@ -36,6 +38,8 @@ type SDKCardProps = {
   links: { text: string; href: string }[];
   code: CodeBlockProps;
 };
+
+const TRACKING_CATEGORY = "build_base";
 
 const SDKCard: ComponentWithChildren<SDKCardProps> = ({
   title,
@@ -173,103 +177,7 @@ const Base: ThirdwebNextPage = () => {
               </Box>{" "}
               brings your web3 ideas to production in record time.
             </Heading>
-            <Card
-              p={0}
-              w="full"
-              mt={14}
-              bg="#0F0F0F"
-              border="0"
-              overflow="hidden"
-            >
-              <Flex flexDir="column" alignItems="center" p={12}>
-                <Heading
-                  size="title.2xl"
-                  background="linear-gradient(0deg, #A854F3 69.94%, #EEB2F9 93.45%)"
-                  bgClip="text"
-                  textAlign="center"
-                  letterSpacing="-0.02em"
-                >
-                  CatAttack
-                </Heading>
-                <Heading
-                  size="title.lg"
-                  mt={4}
-                  textAlign="center"
-                  letterSpacing="-0.02em"
-                >
-                  The first game built on Base.
-                </Heading>
-                <LinkButton
-                  my={8}
-                  px={6}
-                  h={14}
-                  href="https://catattack.thirdweb.com"
-                  bg="white"
-                  _hover={{ bg: "whiteAlpha.800" }}
-                >
-                  <Heading as="span" size="title.md" color="black">
-                    Play the game
-                  </Heading>
-                </LinkButton>
-                <Heading
-                  my={4}
-                  size="title.sm"
-                  fontSize="16px"
-                  color="whiteAlpha.600"
-                >
-                  Clone the code
-                </Heading>
-                <SimpleGrid columns={{ sm: 2 }} gap={4}>
-                  {[
-                    {
-                      title: "Web",
-                      href: "https://github.com/thirdweb-example/catattacknft",
-                    },
-                    {
-                      title: "Mobile",
-                      href: "https://github.com/thirdweb-example/catattacknft-react-native",
-                    },
-                  ].map(({ title, href }) => (
-                    <Link
-                      key={title}
-                      p={1}
-                      rounded="lg"
-                      background="linear-gradient(-45deg, #A854F3, #EEB2F9, #A854F3)"
-                      backgroundSize="200% 200%"
-                      href={href}
-                      transitionProperty="background-position, transform"
-                      transitionDuration="slower"
-                      isExternal
-                      _hover={{
-                        backgroundPosition: "bottom right",
-                      }}
-                      _active={{
-                        transform: "scale(0.95)",
-                      }}
-                    >
-                      <Flex
-                        p={4}
-                        rounded="lg"
-                        bg="backgroundDark"
-                        alignItems="center"
-                        justifyContent="center"
-                      >
-                        <SiGithub />
-                        <Text ml={2} color="white" size="label.lg">
-                          {title}
-                        </Text>
-                      </Flex>
-                    </Link>
-                  ))}
-                </SimpleGrid>
-              </Flex>
-              <Image
-                width="862"
-                height="238"
-                src="/assets/build/base/cats.png"
-                alt=""
-              />
-            </Card>
+            <CatAttackCard trackingCategory={TRACKING_CATEGORY} />
           </Flex>
           <Flex
             flexDir="column"
@@ -664,3 +572,124 @@ const Base: ThirdwebNextPage = () => {
 Base.pageId = PageId.BuildBaseLanding;
 
 export default Base;
+
+export type CatAttackCardProps = {
+  hideGithub?: boolean;
+  trackingCategory: string;
+};
+
+export const CatAttackCard: React.FC<CatAttackCardProps> = ({
+  hideGithub,
+  trackingCategory,
+}) => {
+  return (
+    <Card p={0} w="full" mt={14} bg="#0F0F0F" border="0" overflow="hidden">
+      <Flex flexDir="column" alignItems="center" p={12}>
+        <AspectRatio ratio={400 / 320} w="200px">
+          <ChakraNextImage
+            src={require("/public/assets/solutions-pages/gaming/catattack.png")}
+            alt="Cat Attack"
+          />
+        </AspectRatio>
+        <Heading
+          size="title.2xl"
+          background="linear-gradient(0deg, #A854F3 69.94%, #EEB2F9 93.45%)"
+          bgClip="text"
+          textAlign="center"
+          letterSpacing="-0.02em"
+        >
+          CatAttack
+        </Heading>
+        <Heading
+          size="title.lg"
+          mt={4}
+          textAlign="center"
+          letterSpacing="-0.02em"
+        >
+          The first game built on Base.
+        </Heading>
+        <TrackedLink
+          as={LinkButton}
+          category={trackingCategory}
+          my={8}
+          px={6}
+          h={14}
+          href="https://catattack.thirdweb.com"
+          bg="white"
+          label="play_cat_attack"
+          _hover={{ bg: "whiteAlpha.800" }}
+          isExternal
+        >
+          <Heading as="span" size="title.md" color="black">
+            Play the game
+          </Heading>
+        </TrackedLink>
+        {!hideGithub && (
+          <>
+            <Heading
+              my={4}
+              size="title.sm"
+              fontSize="16px"
+              color="whiteAlpha.600"
+            >
+              Clone the code
+            </Heading>
+            <SimpleGrid columns={{ sm: 2 }} gap={4}>
+              {[
+                {
+                  title: "Web",
+                  href: "https://github.com/thirdweb-example/catattacknft",
+                  trackingLabel: "clone_cat_attack_web",
+                },
+                {
+                  title: "Mobile",
+                  href: "https://github.com/thirdweb-example/catattacknft-react-native",
+                  trackingLabel: "clone_cat_attack_mobile",
+                },
+              ].map(({ title, href, trackingLabel }) => (
+                <TrackedLink
+                  category={trackingCategory}
+                  label={trackingLabel}
+                  key={title}
+                  p={1}
+                  rounded="lg"
+                  background="linear-gradient(-45deg, #A854F3, #EEB2F9, #A854F3)"
+                  backgroundSize="200% 200%"
+                  href={href}
+                  transitionProperty="background-position, transform"
+                  transitionDuration="slower"
+                  isExternal
+                  _hover={{
+                    backgroundPosition: "bottom right",
+                  }}
+                  _active={{
+                    transform: "scale(0.95)",
+                  }}
+                >
+                  <Flex
+                    p={4}
+                    rounded="lg"
+                    bg="backgroundDark"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <SiGithub />
+                    <Text ml={2} color="white" size="label.lg">
+                      {title}
+                    </Text>
+                  </Flex>
+                </TrackedLink>
+              ))}
+            </SimpleGrid>
+          </>
+        )}
+      </Flex>
+      <Image
+        width="862"
+        height="238"
+        src="/assets/build/base/cats.png"
+        alt=""
+      />
+    </Card>
+  );
+};
