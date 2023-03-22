@@ -1,20 +1,16 @@
 import { AsyncStorage } from "../../../core/AsyncStorage";
 import {
   ConnectorNotFoundError,
-  Ethereum,
-  InjectedConnectorOptions,
   ResourceUnavailableError,
   RpcError,
   UserRejectedRequestError,
-} from "../../../lib/wagmi-core";
-import { InjectedConnector } from "../injected";
-import { Chain } from "@thirdweb-dev/chains";
-import type { Address } from "abitype";
-import { utils } from "ethers";
+} from "../../../lib/wagmi-core/errors";
+import { InjectedConnector, InjectedConnectorOptions } from "../injected";
+import type { Chain } from "@thirdweb-dev/chains";
 
-function isWindowEthereum(w: Window): w is Window & { ethereum: Ethereum } {
-  return "ethereum" in window;
-}
+import { utils } from "ethers";
+import { Ethereum } from "../injected/types";
+import { assertWindowEthereum } from "../../utils/assertWindowEthereum";
 
 export type MetaMaskConnectorOptions = Pick<
   InjectedConnectorOptions,
@@ -73,12 +69,12 @@ export class MetaMaskConnector extends InjectedConnector {
         if (typeof window === "undefined") {
           return;
         }
-        if (isWindowEthereum(window)) {
-          if (window.ethereum?.providers) {
-            return window.ethereum.providers.find(getReady);
+        if (assertWindowEthereum(globalThis.window)) {
+          if (globalThis.window.ethereum?.providers) {
+            return globalThis.window.ethereum.providers.find(getReady);
           }
 
-          return getReady(window.ethereum);
+          return getReady(globalThis.window.ethereum);
         }
       },
     };
@@ -115,7 +111,7 @@ export class MetaMaskConnector extends InjectedConnector {
 
       // Attempt to show wallet select prompt with `wallet_requestPermissions` when
       // `shimDisconnect` is active and account is in disconnected state (flag in storage)
-      let account: Address | null = null;
+      let account: string | null = null;
       if (
         this.#UNSTABLE_shimOnConnectSelectAccount &&
         this.options?.shimDisconnect &&

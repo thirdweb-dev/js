@@ -26,32 +26,38 @@ export const WalletSelector: React.FC<{ walletsMeta: WalletMeta[] }> = (
 
       <Spacer y="xl" />
 
-      <WalletList>
-        {props.walletsMeta.map((walletMeta) => {
-          return (
-            <li key={walletMeta.id}>
-              <WalletButton
-                type="button"
-                onClick={() => {
-                  walletMeta.onClick();
-                }}
-              >
-                <Img
-                  src={walletMeta.iconURL}
-                  width={iconSize.lg}
-                  height={iconSize.lg}
-                  loading="eager"
-                />
-                <WalletName>{walletMeta.name}</WalletName>
-                {walletMeta.installed && (
-                  <InstallBadge> Installed </InstallBadge>
-                )}
-              </WalletButton>
-            </li>
-          );
-        })}
-      </WalletList>
+      <WalletSelection walletsMeta={props.walletsMeta} />
     </>
+  );
+};
+
+export const WalletSelection: React.FC<{ walletsMeta: WalletMeta[] }> = (
+  props,
+) => {
+  return (
+    <WalletList>
+      {props.walletsMeta.map((walletMeta) => {
+        return (
+          <li key={walletMeta.id}>
+            <WalletButton
+              type="button"
+              onClick={() => {
+                walletMeta.onClick();
+              }}
+            >
+              <Img
+                src={walletMeta.iconURL}
+                width={iconSize.lg}
+                height={iconSize.lg}
+                loading="eager"
+              />
+              <WalletName>{walletMeta.name}</WalletName>
+              {walletMeta.installed && <InstallBadge> Installed </InstallBadge>}
+            </WalletButton>
+          </li>
+        );
+      })}
+    </WalletList>
   );
 };
 

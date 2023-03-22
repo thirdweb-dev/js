@@ -1,15 +1,15 @@
-import { Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 
-export type PaperWalletOptions = {
+export type PaperWalletAdditionalOptions = {
   clientId: string;
   chain: Pick<Chain, "chainId" | "rpc">;
+  chains: Chain[];
 };
 
 export interface PaperWalletConnectorOptions {
   clientId: string;
   chain: Pick<Chain, "chainId" | "rpc">;
+  chains: Chain[];
 }
 
-export interface PaperWalletConnectionArgs {
-  email: string;
-}
+export interface PaperWalletConnectionArgs {}

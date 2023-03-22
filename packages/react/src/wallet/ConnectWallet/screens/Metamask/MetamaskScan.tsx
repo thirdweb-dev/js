@@ -9,11 +9,12 @@ import { useEffect, useState } from "react";
 export const ScanMetamask: React.FC<{
   onBack: () => void;
   onGetStarted: () => void;
+  onConnected: () => void;
 }> = (props) => {
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const twWalletContext = useThirdwebWallet();
-
+  const { onConnected } = props;
   useEffect(() => {
     if (!twWalletContext) {
       return;
@@ -30,9 +31,10 @@ export const ScanMetamask: React.FC<{
       },
       onConnected() {
         twWalletContext.handleWalletConnect(metamask);
+        onConnected();
       },
     });
-  }, [createInstance, twWalletContext]);
+  }, [createInstance, twWalletContext, onConnected]);
 
   return (
     <ScanScreen
