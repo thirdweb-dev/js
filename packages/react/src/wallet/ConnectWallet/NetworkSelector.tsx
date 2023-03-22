@@ -98,7 +98,7 @@ export const NetworkSelector: React.FC<{
             position: "relative",
           }}
         >
-          <StyledMagnifyingGlassIcon />
+          <StyledMagnifyingGlassIcon width={iconSize.md} height={iconSize.md} />
           <SearchInput
             style={{
               boxShadow: "none",
@@ -283,8 +283,6 @@ const NetworkButton = styled.button<{ theme?: Theme }>`
 const StyledMagnifyingGlassIcon = styled(MagnifyingGlassIcon)<{
   theme?: Theme;
 }>`
-  width: ${iconSize.md};
-  height: ${iconSize.md};
   color: ${(p) => p.theme.text.secondary};
   position: absolute;
   left: 18px;
