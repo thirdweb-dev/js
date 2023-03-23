@@ -1,7 +1,7 @@
 import { ensureTWPrefix } from "../../../core/query-utils/query-key";
 import { useThirdwebAuthContext } from "../../contexts/thirdweb-auth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { LoginOptions } from "@thirdweb-dev/auth";
+import type { LoginOptions } from "@thirdweb-dev/auth";
 import invariant from "tiny-invariant";
 
 export interface LoginConfig {

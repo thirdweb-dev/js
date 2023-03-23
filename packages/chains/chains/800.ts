@@ -1,6 +1,6 @@
 export default {
   "name": "Lucid Blockchain",
-  "chain": "Lucid Blockchain",
+  "chain": "Lucid",
   "icon": {
     "url": "ipfs://bafybeigxiyyxll4vst5cjjh732mr6zhsnligxubaldyiul2xdvvi6ibktu",
     "width": 800,

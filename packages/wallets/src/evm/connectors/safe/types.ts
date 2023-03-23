@@ -1,4 +1,3 @@
-// import type { AbstractWallet } from "../../wallets/abstract";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { AbstractBrowserWallet } from "../../wallets/base";
 
