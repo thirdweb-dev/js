@@ -171,29 +171,19 @@ export function ThirdwebWalletProvider(
     }
 
     autoConnectTriggered.current = true;
-
     (async () => {
-      const lastConnectedWallet = await coordinatorStorage.getItem(
+      const lastConnectedWalletId = await coordinatorStorage.getItem(
         "lastConnectedWallet",
       );
 
-      if (!lastConnectedWallet) {
+      if (!lastConnectedWalletId) {
         setConnectionStatus("disconnected");
         return;
       }
 
-      // find exact match
-      let Wallet = props.supportedWallets.find((W) => {
-        return W.name.toLowerCase() === lastConnectedWallet.toLowerCase();
-      });
-
-      if (!Wallet) {
-        Wallet = props.supportedWallets.find((W) => {
-          return W.name
-            .toLowerCase()
-            .includes(lastConnectedWallet.toLowerCase());
-        });
-      }
+      let Wallet = props.supportedWallets.find(
+        (W) => W.id === lastConnectedWalletId,
+      );
 
       if (!Wallet) {
         setConnectionStatus("disconnected");
