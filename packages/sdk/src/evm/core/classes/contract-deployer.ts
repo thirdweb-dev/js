@@ -749,12 +749,10 @@ export class ContractDeployer extends RPCConnectionHandler {
         initializerParamTypes,
         constructorParamValues,
       );
-      // invariant(
-      //   extendedMetadata.factoryDeploymentData.implementationAddresses,
-      //   "implementationAddresses is required",
-      // );
+
       let implementationAddress = extendedMetadata.factoryDeploymentData
         .implementationAddresses[chainId] as AddressOrEns;
+
       if (implementationAddress) {
         const resolvedImplementationAddress = await resolveAddress(
           implementationAddress,
@@ -804,6 +802,7 @@ export class ContractDeployer extends RPCConnectionHandler {
           publishMetadataUri,
           chainId,
           this.storage,
+          this.getProvider(),
         );
 
         implementationAddress = deploymentInfo.predictedAddress;

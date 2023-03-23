@@ -225,7 +225,5 @@ describe("Tiered Drop Contract", async () => {
     nfts = await contract.erc721.tieredDrop.getMetadataInTier("tier1");
     expect(nfts.length).to.equal(2);
     expect(nfts[0].name).to.equal("NFT #1");
-
-    await deployTieredDrop();
   });
 });

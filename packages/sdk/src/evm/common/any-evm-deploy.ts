@@ -3,6 +3,7 @@ import { getNativeTokenByChainId } from "../constants";
 import { InfraContractType } from "../core/types";
 import { PreDeployMetadataFetched } from "../schema";
 import {
+  DeployDataKeyless,
   DeployDataWithSigner,
   DeploymentInfo,
 } from "../types/any-evm/deploy-data";
@@ -181,6 +182,78 @@ export function computeDeploymentAddress(
 /**
  * @internal
  *
+ * Constructs a serialized transaction string (hex) using a custom signature.
+ * This method doesn't require a signer/private-key. The signer is derived from txn data and custom signature.
+ *
+ * @param bytecode: Creation bytecode of the contract to deploy
+ * @param encodedArgs: Abi-encoded constructor params
+ */
+export async function constructKeylessDeployTx(
+  bytecode: string,
+  encodedArgs: string,
+  provider: providers.Provider,
+): Promise<DeployDataKeyless> {
+  // 1. Generate salt-hash using the bytecode
+  const saltHash = getSaltHash(bytecode);
+
+  // 2. This packed data is required by the common CREATE2 factory.
+  // The factory will unpack salt and bytecode, to be passed as params to create2 opcode
+  const data = ethers.utils.solidityPack(
+    ["bytes32", "bytes", "bytes"],
+    [saltHash, bytecode, encodedArgs],
+  );
+
+  // 3. estimate gas
+  let gasRequired: BigNumber;
+  try {
+    gasRequired = await provider.estimateGas({
+      to: commonFactory,
+      data: data,
+    });
+  } catch (e) {
+    gasRequired = BigNumber.from(6_000_000);
+  }
+
+  // 3. Create txn object
+  const tx = {
+    gasPrice: 100 * 10 ** 9, // TODO: find a reasonable value
+    gasLimit: gasRequired.toNumber(),
+    to: commonFactory,
+    value: 0,
+    nonce: 0,
+    data: data,
+  };
+
+  // 4. Create signature by joining r & s values of custom signature above
+  const customSignature = ethers.utils.joinSignature(customSigInfo);
+
+  // 5. Create serialized txn string
+  const serializedTx = ethers.utils.serializeTransaction(tx);
+
+  // 6. Determine signer address from custom signature + txn
+  const addr = ethers.utils.recoverAddress(
+    ethers.utils.arrayify(ethers.utils.keccak256(serializedTx)),
+    customSignature,
+  );
+
+  // 7. Create the signed serialized txn string.
+  // To be sent directly to the chain using a provider.
+  const signedSerializedTx = ethers.utils.serializeTransaction(
+    tx,
+    customSigInfo,
+  );
+
+  return {
+    keylessSigner: addr,
+    keylessTxnString: signedSerializedTx,
+    gasPrice: tx.gasPrice,
+    gasLimit: tx.gasLimit,
+  };
+}
+
+/**
+ * @internal
+ *
  * Deploy Infra contracts with a keyless flow.
  * The serialized txn data and addresses are precomputed for infra contracts.
  *
@@ -213,68 +286,28 @@ export async function deployInfraKeyless(
 
     if (code === "0x") {
       // If contract doesn't exist, then fund the derived signer (derived from custom signature)
-
-      const gasRequired = await signer.estimateGas({
-        to: commonFactory,
-        data: txInfo.deployData,
-      });
-
-      // ===
-      const tx = {
-        gasPrice: feeData.maxFeePerGas?.toNumber(),
-        gasLimit: gasRequired.toNumber(),
-        to: commonFactory,
-        value: 0,
-        nonce: 0,
-        data: txInfo.deployData,
-      };
-
-      const customSignature = ethers.utils.joinSignature(customSigInfo);
-
-      const serializedTx = ethers.utils.serializeTransaction(tx);
-
-      const addr = ethers.utils.recoverAddress(
-        ethers.utils.arrayify(ethers.utils.keccak256(serializedTx)),
-        customSignature,
-      );
-
-      const signedSerializedTx = ethers.utils.serializeTransaction(
-        tx,
-        customSigInfo,
-      );
-      // ===
-
       let fundAddr = {
-        deployer: addr,
-        value: gasRequired
-          .mul(feeData.maxFeePerGas || 1)
-          .mul(105)
-          .div(100),
+        deployer: txInfo.keylessData.keylessSigner,
+        value: txInfo.keylessData.gasLimit * txInfo.keylessData.gasPrice,
       };
-      // await signer.sendTransaction(fundAddr);
+
       totalValueToSplit = totalValueToSplit.add(fundAddr.value);
       deployers.push(fundAddr);
 
       txns.push({
         predictedAddress: txInfo.predictedAddress,
-        txn: signedSerializedTx,
+        txn: txInfo.keylessData.keylessTxnString,
       });
-
-      // Send the serialzed txn (evm will find out signer and target from this txn string)
-      // await (await provider.sendTransaction(signedSerializedTx)).wait();
     }
   }
 
   // send funds to deployer wallets
-  // for (const txn of deployers) {
-  //   await signer.sendTransaction(txn);
-  // }
   const splitDeployer = new ethers.ContractFactory([], splitBytecode)
     .connect(signer)
     .deploy(deployers, { value: totalValueToSplit });
   await (await splitDeployer).deployed();
 
-  // send deployment txns
+  // Send the serialzed txns (evm will find out signer and target from this txn string)
   for (const txn of txns) {
     await (await provider.sendTransaction(txn.txn)).wait();
   }
@@ -308,44 +341,26 @@ export async function deployInfraWithSigner(
     // Check if the infra contract is already deployed
     const code = await provider.getCode(txInfo.predictedAddress);
 
-    console.log("contract types, code ", contractType, code.length);
-
     if (code === "0x") {
       // get init bytecode
-      const deployData = txInfo.deployData;
+      const deployData = txInfo.signerDeployData.initBytecodeWithSalt;
 
-      // const tx = {
-      //   from: signer.getAddress(),
-      //   to: commonFactory,
-      //   value: 0,
-      //   nonce: await signer.getTransactionCount("latest"),
-      //   data: deployData,
-      // };
       txns.push({
         predictedAddress: txInfo.predictedAddress,
         to: commonFactory,
         data: deployData,
       });
-
-      // Send the deploy transaction to common factory with a signer
-      // await (await signer.sendTransaction(tx)).wait();
     }
   }
 
+  // Call/deploy the throaway-deployer only if there are any contracts to deploy
   if (txns.length > 0) {
-    console.log(txns.map((tx) => tx.predictedAddress));
-
+    // Using the deployer contract, send the deploy transactions to common factory with a signer
     const deployer = new ethers.ContractFactory(deployerAbi, deployerBytecode)
       .connect(signer)
-      .deploy(txns, { gasLimit: 5000000 });
+      .deploy(txns);
     await (await deployer).deployed();
   }
-
-  console.log("forwarder check:");
-  const code = await provider.getCode(
-    "0xd04f98c88ce1054c90022ee34d566b9237a1203c",
-  );
-  console.log("code: ", code.length);
 }
 
 /**
@@ -414,6 +429,7 @@ export async function getDeploymentInfo(
   metadataUri: string,
   activeChainId: number,
   storage: ThirdwebStorage,
+  provider: providers.Provider,
 ): Promise<DeploymentInfo> {
   const compilerMetadata = await fetchPreDeployMetadata(metadataUri, storage);
 
@@ -427,7 +443,14 @@ export async function getDeploymentInfo(
     encodedArgs,
   );
 
-  // 3. Get init-bytecode packed with salt -- to be used if deploying with a signer
+  // 3. Construct keyless txn
+  const keylessData = await constructKeylessDeployTx(
+    compilerMetadata.bytecode,
+    encodedArgs,
+    provider,
+  );
+
+  // 4. Get init-bytecode packed with salt -- to be used if deploying with a signer
   const signerDeployData = getInitBytecodeWithSalt(
     compilerMetadata.bytecode,
     encodedArgs,
@@ -439,6 +462,7 @@ export async function getDeploymentInfo(
   infraContracts.push(CloneFactory.contractType);
 
   return {
+    keylessData,
     signerDeployData,
     predictedAddress: predictedAddress,
     infraContractsToDeploy: infraContracts,
@@ -459,8 +483,9 @@ function encodeConstructorParamsForImplementation(
   const constructorParams = extractConstructorParamsFromAbi(
     compilerMetadata.abi,
   );
+
   const constructorParamTypes = constructorParams.map((p) => p.type);
-  const constructorParamValues = constructorParams.map(async (p) => {
+  const constructorParamValues = constructorParams.map((p) => {
     if (p.name && p.name.includes("nativeTokenWrapper")) {
       let nativeTokenWrapperAddress =
         getNativeTokenByChainId(chainId).wrapped.address;
@@ -478,9 +503,11 @@ function encodeConstructorParamsForImplementation(
       return "";
     }
   });
+
   const encodedArgs = ethers.utils.defaultAbiCoder.encode(
     constructorParamTypes,
     constructorParamValues,
   );
+
   return { encodedArgs, infraContracts };
 }
