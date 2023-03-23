@@ -378,7 +378,6 @@ const Minting: ThirdwebNextPage = () => {
         bg="linear-gradient(93.96deg, rgba(25, 26, 27, 0.8) 17.14%, rgba(24, 67, 78, 0.8) 36.78%, rgba(108, 47, 115, 0.8) 61%, rgba(25, 26, 27, 0.8) 79.98%)"
         opacity="0.8"
       />
-      {/* <NewsletterSection /> */}
     </ProductPage>
   );
 };

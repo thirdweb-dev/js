@@ -1,3 +1,5 @@
+import { GetStartedSection } from "../../homepage/sections/GetStartedSection";
+import { NewsletterSection } from "../../homepage/sections/NewsletterSection";
 import { Box, DarkMode, Flex } from "@chakra-ui/react";
 import { HomepageFooter } from "components/footer/Footer";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
@@ -35,6 +37,8 @@ export const ProductPage: React.FC<PropsWithChildren<IProductPage>> = ({
         <Box mt="-80px" overflowX="hidden">
           {children}
         </Box>
+        <GetStartedSection />
+        <NewsletterSection />
         <HomepageFooter />
       </Flex>
     </DarkMode>

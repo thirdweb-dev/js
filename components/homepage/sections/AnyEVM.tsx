@@ -48,7 +48,7 @@ export const AnyEVMSection = () => {
           alt=""
           w="1500px"
           maxW="250vw"
-          src="/assets/landingpage/any-evm.webp"
+          src="/assets/landingpage/any-evm.png"
           justifySelf="flex-end"
         />
       </Box>

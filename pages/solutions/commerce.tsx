@@ -9,7 +9,7 @@ import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
 import { SolutionsTextImage } from "components/product-pages/common/SolutionsTextImage";
 import { PageId } from "page-id";
-import { Heading, Text, TrackedLink } from "tw-components";
+import { Heading, Link, Text, TrackedLink } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "commerce_kit";
@@ -250,7 +250,7 @@ const Commerce: ThirdwebNextPage = () => {
         guides={SHOPIFY_GUIDES}
       />
       <ProductSection>
-        <Flex gap={8} py={12} px={{ md: 12 }}>
+        <Flex flexDir="column" gap={8} py={12} px={{ md: 12 }}>
           <Text size="body.xl" as="blockquote" align="center">
             <i>
               &quot;On platforms like Shopify, thirdweb has made building web3
@@ -259,7 +259,15 @@ const Commerce: ThirdwebNextPage = () => {
               more on what merchants/users want and find valuable.&quot;
             </i>
             <br />
-            <br />- <b>Zain</b>, Lazer Technologies.
+            <br />- <b>Zain</b>,{" "}
+            <Link
+              color="blue.500"
+              href="https://www.lazertechnologies.com/blog/how-to-create-a-token-gated-experience-on-shopify-using-thirdweb"
+              isExternal
+            >
+              Lazer Technologies
+            </Link>
+            .
           </Text>
         </Flex>
       </ProductSection>
@@ -268,7 +276,6 @@ const Commerce: ThirdwebNextPage = () => {
         bg="linear-gradient(93.96deg, rgba(25, 26, 27, 0.8) 17.14%, rgba(24, 67, 78, 0.8) 36.78%, rgba(108, 47, 115, 0.8) 61%, rgba(25, 26, 27, 0.8) 79.98%)"
         opacity="0.8"
       />
-      <NewsletterSection />
     </ProductPage>
   );
 };

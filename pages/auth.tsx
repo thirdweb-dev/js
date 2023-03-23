@@ -190,8 +190,6 @@ const Authentication: ThirdwebNextPage = () => {
         solution="Auth"
         guides={GUIDES}
       />
-
-      <NewsletterSection />
     </ProductPage>
   );
 };
