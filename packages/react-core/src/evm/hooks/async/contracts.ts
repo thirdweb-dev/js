@@ -14,28 +14,30 @@ import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useAddress, useChainId } from "../wallet";
 import {
   useMutation,
+  UseMutationResult,
   useQuery,
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
-import {
+import { getCachedAbiForContract } from "@thirdweb-dev/sdk";
+import type {
+  Abi,
   CommonContractSchemaInput,
   ContractEvent,
   ContractForPrebuiltContractType,
   ContractType,
   EventQueryOptions,
   PrebuiltContractType,
+  SmartContract,
   SUPPORTED_CHAIN_ID,
   ThirdwebSDK,
   ValidContractInstance,
 } from "@thirdweb-dev/sdk";
-import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/smart-contract";
-import { CallOverrides, ContractInterface } from "ethers";
+import type { CallOverrides, ContractInterface, providers } from "ethers";
 import { useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";
 
 // contract type
-
 async function fetchContractType(
   contractAddress: RequiredParam<ContractAddress>,
   sdk: RequiredParam<ThirdwebSDK>,
@@ -84,12 +86,19 @@ export const contractType = {
 
 // end contract type
 
-// contract compiler metadata
+type FetchCompilerMetadataReturnType = {
+  name: string;
+  metadata: Record<string, any>;
+  abi: Abi;
+  info: Record<string, any>;
+  licenses: string[];
+};
 
+// contract compiler metadata
 function fetchCompilerMetadata(
   contractAddress: RequiredParam<ContractAddress>,
   sdk: RequiredParam<ThirdwebSDK>,
-) {
+): Promise<FetchCompilerMetadataReturnType> | null {
   if (!contractAddress || !sdk) {
     return null;
   }
@@ -103,7 +112,7 @@ function fetchCompilerMetadata(
 
 export function useCompilerMetadata(
   contractAddress: RequiredParam<ContractAddress>,
-) {
+): UseQueryResult<FetchCompilerMetadataReturnType | null> {
   const sdk = useSDK();
 
   return useQueryWithNetwork(
@@ -226,12 +235,19 @@ export function useContract(
       // if we don't have a contractType or ABI then we will have to resolve it regardless
       // we also handle it being "custom" just in case...
       if (!contractTypeOrABI || contractTypeOrABI === "custom") {
+        // First check local ABI cache
+        const cachedAbi = getCachedAbiForContract(contractAddress);
+        if (cachedAbi) {
+          return sdk.getContract(contractAddress, cachedAbi);
+        }
+
         // we just resolve here (sdk does this internally anyway)
         const resolvedContractType = await queryClient.fetchQuery(
           contractType.cacheKey(contractAddress, activeChainId),
           () => contractType.fetchQuery(contractAddress, sdk),
           { cacheTime: Infinity, staleTime: Infinity },
         );
+
         let abi: ContractInterface | undefined;
         if (resolvedContractType === "custom") {
           abi = (
@@ -242,6 +258,7 @@ export function useContract(
             )
           )?.abi;
         }
+
         invariant(resolvedContractType, "failed to resolve contract type");
         // just let the sdk handle the rest
         // if we have resolved an ABI for a custom contract, use that otherwise use contract type
@@ -339,7 +356,21 @@ export function useContractMetadata<TContract extends ValidContractInstance>(
  */
 export function useContractMetadataUpdate(
   contract: RequiredParam<ValidContractInstance>,
-) {
+): UseMutationResult<
+  {
+    receipt: providers.TransactionReceipt;
+    data: () => Promise<any>;
+  },
+  unknown,
+  {
+    name: string;
+    description?: string | undefined;
+    image?: any;
+    external_link?: string | undefined;
+    app_uri?: string | undefined;
+  },
+  unknown
+> {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();

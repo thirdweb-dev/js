@@ -17,7 +17,11 @@ import {
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useAddress } from "../wallet";
 import { useContractEvents } from "./contracts";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  UseMutationResult,
+  useQueryClient,
+} from "@tanstack/react-query";
 import type {
   AuctionListing,
   DirectListing,
@@ -30,7 +34,8 @@ import type {
 import { ListingType } from "@thirdweb-dev/sdk";
 import { DirectListingInputParams } from "@thirdweb-dev/sdk/dist/declarations/src/evm/schema/marketplacev3/direct-listings";
 import { EnglishAuctionInputParams } from "@thirdweb-dev/sdk/dist/declarations/src/evm/schema/marketplacev3/english-auctions";
-import { BigNumber, BigNumberish } from "ethers";
+import type { BigNumberish, providers } from "ethers";
+import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
 
 /** **********************/
@@ -874,7 +879,20 @@ export function useCreateAuctionListing<
  * @returns a mutation object that can be used to cancel a listing
  * @beta
  */
-export function useCancelListing(contract: RequiredParam<Marketplace>) {
+export function useCancelListing(
+  contract: RequiredParam<Marketplace>,
+): UseMutationResult<
+  Omit<
+    {
+      receipt: providers.TransactionReceipt;
+      data: () => Promise<unknown>;
+    },
+    "data"
+  >,
+  unknown,
+  Pick<AuctionListing | DirectListing, "type" | "id">,
+  unknown
+> {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();

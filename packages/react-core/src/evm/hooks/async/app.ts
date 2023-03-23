@@ -8,9 +8,14 @@ import {
   invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  UseMutationResult,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
+import type { providers } from "ethers";
 
 /**
  * Get App URI
@@ -72,7 +77,22 @@ export function useAppURI<TContract extends ValidContractInstance>(
  * @twfeature AppUR
  * @beta
  */
-export function useSetAppURI(contract: RequiredParam<ValidContractInstance>) {
+export function useSetAppURI(
+  contract: RequiredParam<ValidContractInstance>,
+): UseMutationResult<
+  Omit<
+    {
+      receipt: providers.TransactionReceipt;
+      data: () => Promise<unknown>;
+    },
+    "data"
+  >,
+  unknown,
+  {
+    uri: string;
+  },
+  unknown
+> {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();
   const activeChainId = useSDKChainId();

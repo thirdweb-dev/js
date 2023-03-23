@@ -1,7 +1,13 @@
 import type { CONTRACTS_MAP, PREBUILT_CONTRACTS_MAP } from "../contracts";
 import type { SmartContract } from "../contracts/smart-contract";
 import type { Chain, ChainSlug, ChainId } from "@thirdweb-dev/chains";
-import { BigNumber, BytesLike, CallOverrides, Signer, providers } from "ethers";
+import type {
+  BigNumber,
+  BytesLike,
+  CallOverrides,
+  Signer,
+  providers,
+} from "ethers";
 
 // --- utility types extracted from from ts-toolbelt --- //
 

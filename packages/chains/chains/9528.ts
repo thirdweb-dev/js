@@ -21,7 +21,6 @@ export default {
     {
       "name": "QEasyWeb3 Explorer",
       "url": "https://www.qeasyweb3.com",
-      "icon": "qetscan",
       "standard": "EIP3091"
     }
   ],

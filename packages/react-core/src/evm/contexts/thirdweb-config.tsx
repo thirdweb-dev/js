@@ -1,8 +1,8 @@
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
-import React, { PropsWithChildren, createContext, useContext } from "react";
+import React, { createContext, PropsWithChildren, useContext } from "react";
 
 interface ThirdwebConfigContext {
-  chains: Readonly<Chain[]>;
+  chains: Chain[];
   thirdwebApiKey?: string;
   alchemyApiKey?: string;
   infuraApiKey?: string;

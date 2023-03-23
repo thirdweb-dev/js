@@ -9,12 +9,18 @@ import {
   invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  UseMutationResult,
+  useQueryClient,
+  UseQueryResult,
+} from "@tanstack/react-query";
 import type {
   CustomContractMetadata,
   ValidContractInstance,
 } from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
+import type { providers } from "ethers";
 
 // primary sales
 
@@ -85,7 +91,14 @@ export function usePrimarySaleRecipient(
  */
 export function useUpdatePrimarySaleRecipient(
   contract: RequiredParam<ValidContractInstance>,
-) {
+): UseMutationResult<
+  {
+    receipt: providers.TransactionReceipt;
+  },
+  unknown,
+  string,
+  unknown
+> {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();
   const activeChainId = useSDKChainId();
@@ -318,7 +331,10 @@ export function useUpdatePlatformFees(
  * @returns a {@link CustomContractMetadata} object containing the metadata
  * @beta
  */
-export function useMetadata(contract: RequiredParam<ValidContractInstance>) {
+export function useMetadata(
+  contract: RequiredParam<ValidContractInstance>,
+  // TODO figure out UseQueryResult type better
+): UseQueryResult {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.extensions.metadata.get(contractAddress),
@@ -370,7 +386,8 @@ export function useMetadata(contract: RequiredParam<ValidContractInstance>) {
  */
 export function useUpdateMetadata(
   contract: RequiredParam<ValidContractInstance>,
-) {
+  // TODO figure out UseMutationResult type better
+): UseMutationResult<any, any, any> {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();
   const activeChainId = useSDKChainId();

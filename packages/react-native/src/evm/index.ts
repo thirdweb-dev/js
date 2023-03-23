@@ -1,11 +1,16 @@
-// providers
-export * from "./providers/full";
+export { CoinbaseWallet } from "./wallets/wallets/coinbase-wallet";
+export {
+  MetaMaskWallet,
+  RainbowWallet,
+  TrustWallet,
+} from "./wallets/wallets/all";
 
-// require to be inside `<ThirdwebProvider />`
-export * from "./hooks/wagmi-required/useAccount";
-export * from "./hooks/wagmi-required/useNetwork";
-export * from "./hooks/connectors/useWalletConnect";
-export * from "./hooks/wagmi-required/useDisconnect";
+export { ConnectWallet } from "./components/ConnectWallet";
+export { Web3Button } from "./components/Web3Button";
+
+// providers
+// export * from "./providers/full";
+export * from "./providers/thirdweb-provider";
 
 // re-export everything from react-core
 export * from "@thirdweb-dev/react-core/evm";

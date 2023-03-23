@@ -10,13 +10,17 @@
   "license": "Apache-2.0",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/contracts-js",
   "dependencies": {
-    "@thirdweb-dev/contracts": "3.4.1"
+    "@thirdweb-dev/contracts": "3.4.4"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.18.10",
     "@babel/preset-typescript": "^7.18.6",
+    "@ethersproject/abi": "^5.7.0",
+    "@ethersproject/providers": "^5.7.2",
     "@preconstruct/cli": "^2.2.1",
+    "@thirdweb-dev/tsconfig": "workspace:*",
     "@typechain/ethers-v5": "10.0.0",
+    "eslint-config-thirdweb": "workspace:*",
     "ethers": "^5.7.2",
     "typechain": "^8.1.0",
     "typescript": "^4.7.4"
@@ -37,9 +41,9 @@
   "sideEffects": false,
   "scripts": {
     "clean": "rm -rf dist/",
-    "typechain": "rm -rf ./src && typechain --target ethers-v5 --out-dir src '../../node_modules/@thirdweb-dev/contracts/abi/*.json'",
+    "typechain": "rm -rf ./src && typechain --target ethers-v5 --out-dir src './node_modules/@thirdweb-dev/contracts/abi/*.json'",
     "extract-abi": "node ./scripts/extract-abis.mjs",
-    "build": "yarn typechain && tsc && yarn preconstruct build && yarn extract-abi",
+    "build": "pnpm typechain && tsc && pnpm preconstruct build && pnpm extract-abi",
     "push": "yalc push"
   }
 }

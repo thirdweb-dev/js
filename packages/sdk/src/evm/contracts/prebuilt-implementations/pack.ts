@@ -27,7 +27,7 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { PackVRF } from "../../core/classes/pack-vrf";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { Abi, Address, AddressOrEns } from "../../schema";
+import { Abi, AbiInput, AbiSchema, Address, AddressOrEns } from "../../schema";
 import { PackContractSchema } from "../../schema/contracts/packs";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
@@ -117,7 +117,7 @@ export class Pack extends StandardErc1155<PackContract> {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: Abi,
+    abi: AbiInput,
     chainId: number,
     contractWrapper = new ContractWrapper<PackContract>(
       network,
@@ -137,7 +137,7 @@ export class Pack extends StandardErc1155<PackContract> {
     ),
   ) {
     super(contractWrapper, storage, chainId);
-    this.abi = abi;
+    this.abi = AbiSchema.parse(abi || []);
     this.erc1155 = new Erc1155(this.contractWrapper, this.storage, chainId);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
@@ -284,14 +284,18 @@ export class Pack extends StandardErc1155<PackContract> {
             this.contractWrapper.getProvider(),
             reward.assetContract,
           );
-          const rewardAmount = ethers.utils.formatUnits(
-            reward.totalAmount,
+          const quantityPerReward = ethers.utils.formatUnits(
+            amount,
+            tokenMetadata.decimals,
+          );
+          const totalRewards = ethers.utils.formatUnits(
+            BigNumber.from(reward.totalAmount).div(amount),
             tokenMetadata.decimals,
           );
           erc20Rewards.push({
             contractAddress: reward.assetContract,
-            quantityPerReward: amount.toString(),
-            totalRewards: BigNumber.from(rewardAmount).div(amount).toString(),
+            quantityPerReward,
+            totalRewards,
           });
           break;
         }
@@ -577,6 +581,7 @@ export class Pack extends StandardErc1155<PackContract> {
     async (
       tokenId: BigNumberish,
       amount: BigNumberish = 1,
+      gasLimit = 500000,
     ): Promise<Transaction<Promise<PackRewards>>> => {
       if (this._vrf) {
         throw new Error(
@@ -590,7 +595,7 @@ export class Pack extends StandardErc1155<PackContract> {
         args: [tokenId, amount],
         overrides: {
           // Higher gas limit for opening packs
-          gasLimit: 500000,
+          gasLimit,
         },
         parse: async (receipt) => {
           const event = this.contractWrapper.parseLogs<PackOpenedEvent>(

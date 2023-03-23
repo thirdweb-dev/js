@@ -1,19 +1,18 @@
+import { Connector } from "../../../lib/wagmi-connectors";
+import {
+  UserRejectedRequestError,
+  ChainNotConfiguredError,
+  AddChainError,
+  SwitchChainError,
+  normalizeChainId,
+  ProviderRpcError,
+} from "../../../lib/wagmi-core";
 import type {
   CoinbaseWalletProvider,
   CoinbaseWalletSDK,
 } from "@coinbase/wallet-sdk";
 import type { CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/CoinbaseWalletSDK";
-import {
-  AddChainError,
-  Chain,
-  ChainNotConfiguredError,
-  Connector,
-  normalizeChainId,
-  ProviderRpcError,
-  SwitchChainError,
-  UserRejectedRequestError,
-} from "@wagmi/core";
-import type { Address } from "abitype";
+import type { Chain } from "@thirdweb-dev/chains";
 import { providers } from "ethers";
 import { getAddress, hexValue } from "ethers/lib/utils.js";
 
@@ -55,9 +54,8 @@ export class CoinbaseWalletConnector extends Connector<
   async connect({ chainId }: { chainId?: number } = {}) {
     try {
       const provider = await this.getProvider();
-      provider.on("accountsChanged", this.onAccountsChanged);
-      provider.on("chainChanged", this.onChainChanged);
-      provider.on("disconnect", this.onDisconnect);
+
+      this.setupListeners();
 
       this.emit("message", { type: "connecting" });
 
@@ -67,9 +65,16 @@ export class CoinbaseWalletConnector extends Connector<
       let id = await this.getChainId();
       let unsupported = this.isChainUnsupported(id);
       if (chainId && id !== chainId) {
-        const chain = await this.switchChain(chainId);
-        id = chain.id;
-        unsupported = this.isChainUnsupported(id);
+        try {
+          const chain = await this.switchChain(chainId);
+          id = chain.chainId;
+          unsupported = this.isChainUnsupported(id);
+        } catch (e) {
+          console.error(
+            `Connected but failed to switch to desired chain ${chainId}`,
+            e,
+          );
+        }
       }
 
       return {
@@ -106,9 +111,13 @@ export class CoinbaseWalletConnector extends Connector<
 
   async getAccount() {
     const provider = await this.getProvider();
-    const accounts = await provider.request<Address[]>({
+    const accounts = await provider.request<string[]>({
       method: "eth_accounts",
     });
+
+    if (accounts.length === 0) {
+      throw new Error("No accounts found");
+    }
     // return checksum address
     return getAddress(accounts[0] as string);
   }
@@ -154,12 +163,11 @@ export class CoinbaseWalletConnector extends Connector<
       const chain =
         this.chains.find((chain_) =>
           this.options.chainId
-            ? chain_.id === this.options.chainId
-            : chain_.id === walletExtensionChainId,
+            ? chain_.chainId === this.options.chainId
+            : chain_.chainId === walletExtensionChainId,
         ) || this.chains[0];
-      const chainId = this.options.chainId || chain?.id;
-      const jsonRpcUrl =
-        this.options.jsonRpcUrl || chain?.rpcUrls.default.http[0];
+      const chainId = this.options.chainId || chain?.chainId;
+      const jsonRpcUrl = this.options.jsonRpcUrl || chain?.rpc[0];
 
       this.#provider = this.#client.makeWeb3Provider(jsonRpcUrl, chainId);
     }
@@ -196,16 +204,19 @@ export class CoinbaseWalletConnector extends Connector<
         params: [{ chainId: id }],
       });
       return (
-        this.chains.find((x) => x.id === chainId) ?? {
-          id: chainId,
+        this.chains.find((x) => x.chainId === chainId) ?? {
+          chainId: chainId,
           name: `Chain ${id}`,
-          network: `${id}`,
+          slug: `${id}`,
           nativeCurrency: { name: "Ether", decimals: 18, symbol: "ETH" },
-          rpcUrls: { default: { http: [""] }, public: { http: [""] } },
+          rpc: [""],
+          testnet: false,
+          chain: "ethereum",
+          shortName: "eth",
         }
       );
     } catch (error) {
-      const chain = this.chains.find((x) => x.id === chainId);
+      const chain = this.chains.find((x) => x.chainId === chainId);
       if (!chain) {
         throw new ChainNotConfiguredError({ chainId, connectorId: this.id });
       }
@@ -220,10 +231,7 @@ export class CoinbaseWalletConnector extends Connector<
                 chainId: id,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpcUrls: [
-                  chain.rpcUrls.public?.http[0] ??
-                    chain.rpcUrls.default.http[0],
-                ],
+                rpcUrls: chain.rpc,
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],
@@ -242,32 +250,6 @@ export class CoinbaseWalletConnector extends Connector<
       }
       throw new SwitchChainError(error);
     }
-  }
-
-  async watchAsset({
-    address,
-    decimals = 18,
-    image,
-    symbol,
-  }: {
-    address: string;
-    decimals?: number;
-    image?: string;
-    symbol: string;
-  }) {
-    const provider = await this.getProvider();
-    return provider.request<boolean>({
-      method: "wallet_watchAsset",
-      params: {
-        type: "ERC20",
-        options: {
-          address,
-          decimals,
-          image,
-          symbol,
-        },
-      },
-    });
   }
 
   protected onAccountsChanged = (accounts: string[]) => {
@@ -290,5 +272,21 @@ export class CoinbaseWalletConnector extends Connector<
 
   #isUserRejectedRequestError(error: unknown) {
     return /(user rejected)/i.test((error as Error).message);
+  }
+
+  async setupListeners() {
+    const provider = await this.getProvider();
+
+    provider.on("accountsChanged", this.onAccountsChanged);
+    provider.on("chainChanged", this.onChainChanged);
+    provider.on("disconnect", this.onDisconnect);
+  }
+
+  async getQrCode() {
+    await this.getProvider();
+    if (!this.#client) {
+      throw new Error("Coinbase Wallet SDK not initialized");
+    }
+    return this.#client.getQrUrl();
   }
 }

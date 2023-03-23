@@ -9,7 +9,7 @@ import TruffleDetector from "../core/detection/truffle";
 import ViteDetector from "../core/detection/vite";
 import YarnDetector from "../core/detection/yarn";
 import { runCommand } from "../create/helpers/run-command";
-import fs, { readFileSync } from "fs";
+import fs from "fs";
 
 export async function install(projectPath = ".", options: any) {
   const supportedContractFrameworks = [
@@ -61,17 +61,20 @@ export async function install(projectPath = ".", options: any) {
   supportedContractFrameworks.forEach((detector) => {
     console.log(`Detected ${detector.projectType} project`);
 
-    if (!thirdwebDepsToUpdate.has(`@thirdweb-dev/contracts`))
+    if (!thirdwebDepsToUpdate.has(`@thirdweb-dev/contracts`)) {
       thirdwebDepsToInstall.add(`@thirdweb-dev/contracts`);
+    }
   });
 
   supportedAppFrameworks.forEach((detector) => {
     console.log(`Detected ${detector.projectType} project`);
 
-    if (!thirdwebDepsToUpdate.has(`@thirdweb-dev/react`))
+    if (!thirdwebDepsToUpdate.has(`@thirdweb-dev/react`)) {
       thirdwebDepsToInstall.add(`@thirdweb-dev/react`);
-    if (!thirdwebDepsToUpdate.has(`@thirdweb-dev/sdk`))
+    }
+    if (!thirdwebDepsToUpdate.has(`@thirdweb-dev/sdk`)) {
       thirdwebDepsToInstall.add(`@thirdweb-dev/sdk`);
+    }
     if (!hasEthers) {
       otherDeps.add("ethers@5");
     }

@@ -43,7 +43,7 @@ export async function getPolygonGasPriorityFee(
   try {
     const data = await (await fetch(gasStationUrl)).json();
     // take the standard speed here, SDK options will define the extra tip
-    const priorityFee = data["standard"]["maxPriorityFee"];
+    const priorityFee = data["fast"]["maxPriorityFee"];
     if (priorityFee > 0) {
       const fixedFee = parseFloat(priorityFee).toFixed(9);
       return ethers.utils.parseUnits(fixedFee, "gwei");

@@ -19,7 +19,7 @@ import { MarketplaceV3Offers } from "../../core/classes/marketplacev3-offers";
 import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput } from "../../core/types";
-import { Abi } from "../../schema/contracts/custom";
+import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
 import { Address } from "../../schema/shared";
@@ -205,7 +205,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: Abi,
+    abi: AbiInput,
     chainId: number,
     contractWrapper = new ContractWrapper<MarketplaceV3Contract>(
       network,
@@ -215,7 +215,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
     ),
   ) {
     this._chainId = chainId;
-    this.abi = abi;
+    this.abi = AbiSchema.parse(abi || []);
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this.metadata = new ContractMetadata(
@@ -288,7 +288,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
       )
     ) {
       return new MarketplaceV3DirectListings(
-        this.contractWrapper as unknown as ContractWrapper<DirectListingsLogic>,
+        this.contractWrapper,
         this.storage,
       );
     }
@@ -303,8 +303,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
       )
     ) {
       return new MarketplaceV3EnglishAuctions(
-        this
-          .contractWrapper as unknown as ContractWrapper<EnglishAuctionsLogic>,
+        this.contractWrapper,
         this.storage,
       );
     }
@@ -313,10 +312,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
 
   private detectOffers() {
     if (detectContractFeature<OffersLogic>(this.contractWrapper, "Offers")) {
-      return new MarketplaceV3Offers(
-        this.contractWrapper as unknown as ContractWrapper<OffersLogic>,
-        this.storage,
-      );
+      return new MarketplaceV3Offers(this.contractWrapper, this.storage);
     }
     return undefined;
   }
