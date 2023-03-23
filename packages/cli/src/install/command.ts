@@ -48,11 +48,17 @@ export async function install(projectPath = ".", options: any) {
     throw new Error("No supported project detected");
   }
 
-  const thirdwebDepsToUpdate = new Set<string>(
-    Object.keys(packageJson.dependencies).filter((dep) =>
+  const thirdwebDepsToUpdate = new Set<string>([
+    ...Object.keys(packageJson.dependencies).filter((dep) =>
       dep.startsWith("@thirdweb-dev/"),
     ),
-  );
+    ...Object.keys(packageJson.devDependencies).filter((dep) =>
+      dep.startsWith("@thirdweb-dev/"),
+    ),
+    ...Object.keys(packageJson.peerDependencies).filter((dep) =>
+      dep.startsWith("@thirdweb-dev/"),
+    ),
+  ]);
 
   const thirdwebDepsToInstall = new Set<string>();
 
@@ -81,24 +87,36 @@ export async function install(projectPath = ".", options: any) {
   });
 
   try {
-    console.log(
-      `Updating dependencies: "${[...thirdwebDepsToUpdate].join('", "')}"`,
-    );
-    console.log(
-      `Installing dependencies: "${[...thirdwebDepsToInstall].join('", "')}"`,
-    );
+    if (thirdwebDepsToUpdate.size !== 0) {
+      console.log(
+        `Updating dependencies: "${[...thirdwebDepsToUpdate].join('", "')}"`,
+      );
+    }
+    if (thirdwebDepsToInstall.size !== 0) {
+      console.log(
+        `Installing dependencies: "${[...thirdwebDepsToInstall].join('", "')}"`,
+      );
+    }
 
     const dependenciesToAdd = [
-      ...[...thirdwebDepsToUpdate, ...thirdwebDepsToInstall].map(
-        (dep) => `${dep}${version}`,
-      ),
+      ...[...thirdwebDepsToInstall].map((dep) => `${dep}${version}`),
       ...otherDeps,
     ];
 
+    const dependenciesToUpdate = [...thirdwebDepsToUpdate].map(
+      (dep) => `${dep}${version}`,
+    );
+
     if (hasYarn) {
-      await runCommand("yarn add", dependenciesToAdd);
+      if (dependenciesToAdd.length !== 0)
+        await runCommand("yarn add", dependenciesToAdd);
+      if (dependenciesToUpdate.length !== 0)
+        await runCommand("yarn upgrade", dependenciesToUpdate);
     } else if (hasNPM) {
-      await runCommand("npm install", dependenciesToAdd);
+      if (dependenciesToAdd.length !== 0)
+        await runCommand("npm install", dependenciesToAdd);
+      if (dependenciesToUpdate.length !== 0)
+        await runCommand("npm update", dependenciesToUpdate);
     }
   } catch (err) {
     console.error("Can't install within project");
