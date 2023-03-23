@@ -4,10 +4,6 @@ import {
 } from "../../core/providers/query-client";
 import { RequiredParam } from "../../core/query-utils/required-param";
 import { ComponentWithChildren } from "../../core/types/component";
-import {
-  ThirdwebAuthConfig,
-  ThirdwebAuthProvider,
-} from "../contexts/thirdweb-auth";
 import type { WalletContextState } from "@solana/wallet-adapter-react";
 import { Network, ThirdwebSDK } from "@thirdweb-dev/sdk/solana";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
@@ -16,7 +12,6 @@ import invariant from "tiny-invariant";
 interface ThirdwebSDKProviderProps extends QueryClientProviderProps {
   network: RequiredParam<Network>;
   wallet?: WalletContextState;
-  authConfig?: ThirdwebAuthConfig;
 }
 
 /**
@@ -38,7 +33,7 @@ interface ThirdwebSDKProviderProps extends QueryClientProviderProps {
  */
 export const ThirdwebSDKProvider: ComponentWithChildren<
   ThirdwebSDKProviderProps
-> = ({ children, network, queryClient, wallet, authConfig }) => {
+> = ({ children, network, queryClient, wallet }) => {
   const [sdk, setSDK] = useState<ThirdwebSDK | null>(null);
 
   useEffect(() => {
@@ -78,21 +73,11 @@ export const ThirdwebSDKProvider: ComponentWithChildren<
     [sdk, network],
   );
 
-  const authConfigValue = useMemo(() => {
-    if (!authConfig) {
-      return undefined;
-    }
-
-    return { ...authConfig, sdk: sdk || undefined };
-  }, [authConfig, sdk]);
-
   return (
     <QueryClientProviderWithDefault queryClient={queryClient}>
-      <ThirdwebAuthProvider value={authConfigValue}>
-        <ThirdwebSDKContext.Provider value={ctxValue}>
-          {children}
-        </ThirdwebSDKContext.Provider>
-      </ThirdwebAuthProvider>
+      <ThirdwebSDKContext.Provider value={ctxValue}>
+        {children}
+      </ThirdwebSDKContext.Provider>
     </QueryClientProviderWithDefault>
   );
 };

@@ -1,9 +1,9 @@
 import { AsyncStorage, createAsyncLocalStorage } from "../../core/AsyncStorage";
 import type { DAppMetaData } from "../../core/types/dAppMeta";
-import { thirdwebChains } from "../constants/chains";
+
 import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
-import type { Chain } from "@thirdweb-dev/chains";
+import { Chain, defaultChains } from "@thirdweb-dev/chains";
 
 export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   chains?: Chain[];
@@ -38,7 +38,7 @@ export abstract class AbstractBrowserWallet<
     super();
     this.walletId = walletId;
     this.options = options;
-    this.chains = options.chains || thirdwebChains;
+    this.chains = options.chains || defaultChains;
     this.coordinatorStorage =
       options.coordinatorStorage || createAsyncLocalStorage("coordinator");
     this.walletStorage =

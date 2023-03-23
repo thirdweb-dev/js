@@ -1,6 +1,5 @@
 import { DEFAULT_API_KEY } from "../../core/constants/rpc";
 import { QueryClientProviderWithDefault } from "../../core/providers/query-client";
-import { ThirdwebAuthProvider } from "../contexts/thirdweb-auth";
 import { ThirdwebConfigProvider } from "../contexts/thirdweb-config";
 import { ThirdwebConnectedWalletProvider } from "../contexts/thirdweb-wallet";
 import { Chain, defaultChains, getChainRPC } from "@thirdweb-dev/chains";
@@ -182,7 +181,6 @@ export const ThirdwebSDKProvider = <
   signer,
   children,
   queryClient,
-  authConfig,
   supportedChains,
   activeChain,
   thirdwebApiKey = DEFAULT_API_KEY,
@@ -236,19 +234,17 @@ export const ThirdwebSDKProvider = <
     >
       <ThirdwebConnectedWalletProvider signer={signer}>
         <QueryClientProviderWithDefault queryClient={queryClient}>
-          <ThirdwebAuthProvider value={authConfig}>
-            <WrappedThirdwebSDKProvider
-              signer={signer}
-              supportedChains={mergedChains}
-              thirdwebApiKey={thirdwebApiKey}
-              alchemyApiKey={alchemyApiKey}
-              infuraApiKey={infuraApiKey}
-              activeChain={activeChainIdOrObjWithKey}
-              {...restProps}
-            >
-              {children}
-            </WrappedThirdwebSDKProvider>
-          </ThirdwebAuthProvider>
+          <WrappedThirdwebSDKProvider
+            signer={signer}
+            supportedChains={mergedChains}
+            thirdwebApiKey={thirdwebApiKey}
+            alchemyApiKey={alchemyApiKey}
+            infuraApiKey={infuraApiKey}
+            activeChain={activeChainIdOrObjWithKey}
+            {...restProps}
+          >
+            {children}
+          </WrappedThirdwebSDKProvider>
         </QueryClientProviderWithDefault>
       </ThirdwebConnectedWalletProvider>
     </ThirdwebConfigProvider>
