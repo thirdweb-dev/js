@@ -9,7 +9,7 @@ import TruffleDetector from "../core/detection/truffle";
 import ViteDetector from "../core/detection/vite";
 import YarnDetector from "../core/detection/yarn";
 import { runCommand } from "../create/helpers/run-command";
-import fs from "fs";
+import fs, { readFileSync } from "fs";
 
 export async function install(projectPath = ".", options: any) {
   const supportedContractFrameworks = [
@@ -29,7 +29,9 @@ export async function install(projectPath = ".", options: any) {
   const hasYarn = new YarnDetector().matches(".");
   const hasNPM = new NPMDetector().matches(".");
 
-  const packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"));
+  const packageJson = JSON.parse(
+    fs.readFileSync(projectPath + "/package.json", "utf8"),
+  );
   const hasEthers =
     !!packageJson.dependencies?.ethers || !!packageJson.devDependencies?.ethers;
 
@@ -46,29 +48,54 @@ export async function install(projectPath = ".", options: any) {
     throw new Error("No supported project detected");
   }
 
-  const dependenciesToAdd = new Set<string>();
+  const thirdwebDepsToUpdate = new Set<string>(
+    Object.keys(packageJson.dependencies).filter((dep) =>
+      dep.startsWith("@thirdweb-dev/"),
+    ),
+  );
+
+  const thirdwebDepsToInstall = new Set<string>();
+
+  const otherDeps = new Set<string>();
 
   supportedContractFrameworks.forEach((detector) => {
     console.log(`Detected ${detector.projectType} project`);
 
-    dependenciesToAdd.add(`@thirdweb-dev/contracts${version}`);
+    if (!thirdwebDepsToUpdate.has(`@thirdweb-dev/contracts`))
+      thirdwebDepsToInstall.add(`@thirdweb-dev/contracts`);
   });
 
   supportedAppFrameworks.forEach((detector) => {
     console.log(`Detected ${detector.projectType} project`);
 
-    dependenciesToAdd.add(`@thirdweb-dev/react${version}`);
-    dependenciesToAdd.add(`@thirdweb-dev/sdk${version}`);
+    if (!thirdwebDepsToUpdate.has(`@thirdweb-dev/react`))
+      thirdwebDepsToInstall.add(`@thirdweb-dev/react`);
+    if (!thirdwebDepsToUpdate.has(`@thirdweb-dev/sdk`))
+      thirdwebDepsToInstall.add(`@thirdweb-dev/sdk`);
     if (!hasEthers) {
-      dependenciesToAdd.add("ethers@5");
+      otherDeps.add("ethers@5");
     }
   });
 
   try {
+    console.log(
+      `Updating dependencies: "${[...thirdwebDepsToUpdate].join('", "')}"`,
+    );
+    console.log(
+      `Installing dependencies: "${[...thirdwebDepsToInstall].join('", "')}"`,
+    );
+
+    const dependenciesToAdd = [
+      ...[...thirdwebDepsToUpdate, ...thirdwebDepsToInstall].map(
+        (dep) => `${dep}${version}`,
+      ),
+      ...otherDeps,
+    ];
+
     if (hasYarn) {
-      await runCommand("yarn add", [...dependenciesToAdd]);
+      await runCommand("yarn add", dependenciesToAdd);
     } else if (hasNPM) {
-      await runCommand("npm install", [...dependenciesToAdd]);
+      await runCommand("npm install", dependenciesToAdd);
     }
   } catch (err) {
     console.error("Can't install within project");
