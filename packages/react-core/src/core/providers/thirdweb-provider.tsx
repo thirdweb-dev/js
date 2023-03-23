@@ -1,4 +1,7 @@
-import { ThirdwebAuthConfig } from "../../evm/contexts/thirdweb-auth";
+import {
+  ThirdwebAuthConfig,
+  ThirdwebAuthProvider,
+} from "../../evm/contexts/thirdweb-auth";
 import { ThirdwebSDKProvider } from "../../evm/providers/thirdweb-sdk-provider";
 import { DAppMetaData } from "../types/dAppMeta";
 import { SupportedWallet } from "../types/wallet";
@@ -147,6 +150,7 @@ export const ThirdwebProviderCore = <
   }, [activeChainIdOrObjWithKey, supportedChainsWithKey]);
 
   const dAppMeta = props.dAppMeta || defaultdAppMeta;
+
   return (
     <ThirdwebThemeContext.Provider value={props.theme}>
       <ThirdwebWalletProvider
@@ -169,7 +173,9 @@ export const ThirdwebProviderCore = <
           alchemyApiKey={props.alchemyApiKey}
           infuraApiKey={props.infuraApiKey}
         >
-          {props.children}
+          <ThirdwebAuthProvider value={props.authConfig}>
+            {props.children}
+          </ThirdwebAuthProvider>
         </ThirdwebSDKProviderWrapper>
       </ThirdwebWalletProvider>
     </ThirdwebThemeContext.Provider>

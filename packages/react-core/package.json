@@ -66,7 +66,6 @@
   },
   "sideEffects:": false,
   "devDependencies": {
-    "@thirdweb-dev/auth": "workspace:*",
     "@babel/core": "^7.19.3",
     "@babel/preset-env": "^7.18.10",
     "@babel/preset-react": "^7.18.6",
@@ -93,7 +92,8 @@
     "react": "^18.2.0",
     "typescript": "^4.7.4",
     "eslint-config-thirdweb": "workspace:*",
-    "@thirdweb-dev/tsconfig": "workspace:*"
+    "@thirdweb-dev/tsconfig": "workspace:*",
+    "@thirdweb-dev/auth": "workspace:*"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.0.10",
@@ -105,7 +105,6 @@
     "tiny-invariant": "^1.2.0"
   },
   "peerDependencies": {
-    "@thirdweb-dev/auth": "workspace:*",
     "@solana/wallet-adapter-react": "^0.15.19",
     "@solana/web3.js": "^1.62.0",
     "ethers": ">=5.5.1",
@@ -120,9 +119,6 @@
       "optional": true
     },
     "@solana/wallet-adapter-react": {
-      "optional": true
-    },
-    "@thirdweb-dev/auth": {
       "optional": true
     }
   }
