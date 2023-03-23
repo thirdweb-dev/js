@@ -12,7 +12,6 @@ import {
 } from "pages/api/moralis/balances";
 import invariant from "tiny-invariant";
 import { parseErrorToMessage } from "utils/errorParser";
-import { isAddressZero } from "utils/zeroAddress";
 
 export function useSplitData(contract?: Split) {
   return useQueryWithNetwork(
@@ -62,7 +61,7 @@ export function useSplitDistributeFunds(contract?: Split) {
       const distributions = (balances.data || [])
         .filter((token) => token.display_balance !== "0.0")
         .map(async (currency) => {
-          if (isAddressZero(currency.token_address)) {
+          if (currency.name === "Native Token") {
             await contract
               .distribute()
               .then(() => {
