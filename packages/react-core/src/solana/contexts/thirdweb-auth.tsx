@@ -1,5 +1,4 @@
 import { ThirdwebAuth } from "@thirdweb-dev/auth";
-import { SignerWallet } from "@thirdweb-dev/auth/solana";
 import React, {
   PropsWithChildren,
   createContext,
@@ -7,6 +6,7 @@ import React, {
   useMemo,
 } from "react";
 import { useSDK } from "../providers/base";
+import { SignerWallet } from "@thirdweb-dev/wallets/solana/wallets/signer";
 
 /**
  * The configuration to use the react SDK with an [auth](https://portal.thirdweb.com/auth) server.
