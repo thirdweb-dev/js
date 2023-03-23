@@ -14,6 +14,10 @@ export const darkTheme = {
     invertedFocused: mauveDark.mauve7,
     danger: tomato.tomato12,
   },
+  border: {
+    base: mauveDark.mauve3,
+    elevated: mauveDark.mauve4,
+  },
   badge: {
     secondary: mauveDark.mauve6,
   },
@@ -33,6 +37,7 @@ export const darkTheme = {
   },
   link: {
     primary: blue.blue9,
+    primaryHover: mauveDark.mauve12,
   },
   input: {
     bg: mauveDark.mauve3,
@@ -50,12 +55,16 @@ export const lightTheme: typeof darkTheme = {
   bg: {
     base: mauve.mauve1,
     baseHover: mauve.mauve2,
-    elevated: mauve.mauve4,
-    elevatedHover: mauve.mauve5,
-    highlighted: mauve.mauve6,
+    elevated: mauve.mauve3,
+    elevatedHover: mauve.mauve4,
+    highlighted: mauve.mauve5,
     inverted: mauve.mauve12,
     invertedFocused: mauve.mauve7,
     danger: tomato.tomato4,
+  },
+  border: {
+    base: mauve.mauve6,
+    elevated: mauve.mauve7,
   },
   badge: {
     secondary: mauve.mauve1,
@@ -76,12 +85,13 @@ export const lightTheme: typeof darkTheme = {
   },
   link: {
     primary: blue.blue11,
+    primaryHover: mauve.mauve12,
   },
   input: {
     bg: mauve.mauve3,
     bgHover: mauveDark.mauve5,
     outline: mauve.mauve7,
-    focusRing: blue.blue10,
+    focusRing: blue.blue11,
     errorRing: tomato.tomato10,
   },
 };

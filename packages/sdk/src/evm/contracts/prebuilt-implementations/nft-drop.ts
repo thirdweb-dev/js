@@ -26,7 +26,7 @@ import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { PaperCheckout } from "../../integrations/thirdweb-checkout";
 import { Address, AddressOrEns } from "../../schema";
-import { Abi } from "../../schema/contracts/custom";
+import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import { PrebuiltNFTDrop } from "../../types/eips";
@@ -161,7 +161,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: Abi,
+    abi: AbiInput,
     chainId: number,
     contractWrapper = new ContractWrapper<PrebuiltNFTDrop>(
       network,
@@ -171,7 +171,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
     ),
   ) {
     super(contractWrapper, storage, chainId);
-    this.abi = abi;
+    this.abi = AbiSchema.parse(abi || []);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       DropErc721ContractSchema,

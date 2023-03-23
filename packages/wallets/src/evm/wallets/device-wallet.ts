@@ -1,15 +1,14 @@
-import { AsyncStorage } from "../../core";
-import { thirdwebChains } from "../constants/chains";
-import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
+import { AsyncStorage, createAsyncLocalStorage } from "../../core";
+import { TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
-import { Chain } from "@thirdweb-dev/chains";
+import { Chain, defaultChains, Ethereum } from "@thirdweb-dev/chains";
 import { ethers } from "ethers";
 
 export type DeviceWalletOptions = {
-  chain: Chain;
+  chain?: Chain;
   storageType?: "asyncStore" | "credentialStore";
-  storage: AsyncStorage;
+  storage?: AsyncStorage;
 };
 
 export type DeviceWalletConnectionArgs = {
@@ -26,8 +25,9 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
 > {
   connector?: TWConnector;
   #walletImpl?: DeviceWalletImpl;
-  static id = "deviceWallet" as const;
   options: WalletOptions<DeviceWalletOptions>;
+
+  static id = "deviceWallet";
 
   static meta = {
     name: "Device Wallet",
@@ -57,7 +57,7 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
       switch (this.options.storageType) {
         case "asyncStore":
           wallet = await DeviceWalletImpl.fromAsyncStorage(
-            this.options.storage,
+            this.options.storage || createAsyncLocalStorage("deviceWallet"),
           );
           break;
         case "credentialStore":
@@ -66,13 +66,13 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
         default:
           // default to local storage
           wallet = await DeviceWalletImpl.fromAsyncStorage(
-            this.options.storage,
+            this.options.storage || createAsyncLocalStorage("deviceWallet"),
           );
       }
       this.connector = new DeviceWalletConnector({
-        chain: this.options.chain,
+        chain: this.options.chain || Ethereum,
         wallet,
-        chains: this.options.chains || thirdwebChains,
+        chains: this.options.chains || defaultChains,
       });
 
       this.#walletImpl = wallet;
@@ -94,11 +94,6 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
 
   static getDataStorageKey() {
     return STORAGE_KEY_DATA;
-  }
-
-  // enforcing that connectOptions is required and not optional
-  connect(connectOptions: ConnectParams<DeviceWalletConnectionArgs>) {
-    return super.connect(connectOptions);
   }
 }
 

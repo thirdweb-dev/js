@@ -1,22 +1,11 @@
 import { DEFAULT_API_KEY } from "../../core/constants/rpc";
-import {
-  QueryClientProviderProps,
-  QueryClientProviderWithDefault,
-} from "../../core/providers/query-client";
-import {
-  ThirdwebAuthConfig,
-  ThirdwebAuthProvider,
-} from "../contexts/thirdweb-auth";
+import { QueryClientProviderWithDefault } from "../../core/providers/query-client";
 import { ThirdwebConfigProvider } from "../contexts/thirdweb-config";
 import { ThirdwebConnectedWalletProvider } from "../contexts/thirdweb-wallet";
+import { useUpdateChainsWithApiKeys } from "../hooks/chain-hooks";
+import { ThirdwebSDKProviderProps } from "./types";
 import { Chain, defaultChains, getChainRPC } from "@thirdweb-dev/chains";
-import {
-  SDKOptions,
-  SDKOptionsOutput,
-  ThirdwebSDK,
-} from "@thirdweb-dev/sdk/evm";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import type { Signer } from "ethers";
+import { SDKOptionsOutput, ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 import { createContext, useContext, useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";
 
@@ -27,30 +16,6 @@ interface TWSDKContext {
 
 const ThirdwebSDKContext = createContext<TWSDKContext>({});
 
-export interface ThirdwebSDKProviderProps<
-  TChains extends Chain[] = typeof defaultChains,
-> extends QueryClientProviderProps {
-  // the chains that we want to configure - optional, defaults to defaultChains
-  supportedChains: Readonly<TChains>;
-  // a possible signer - optional, defaults to undefined
-  signer?: Signer;
-
-  // additional SDK options (forwarded to the SDK initializer)
-  sdkOptions?: Omit<SDKOptions, "chains">;
-  // storage
-  storageInterface?: ThirdwebStorage;
-  // if u want to use auth, pass this
-  authConfig?: ThirdwebAuthConfig;
-
-  // the network to use - optional, defaults to undefined
-  activeChain?: TChains[number]["chainId"] | TChains[number]["slug"] | Chain;
-
-  // api keys that can be passed
-  thirdwebApiKey?: string;
-  alchemyApiKey?: string;
-  infuraApiKey?: string;
-}
-
 /**
  *
  * @internal
@@ -60,8 +25,7 @@ const WrappedThirdwebSDKProvider = <
 >({
   sdkOptions = {},
   storageInterface,
-  // @ts-expect-error - different subtype of Chain[] but this works fine
-  supportedChains = defaultChains,
+  supportedChains,
   activeChain,
   signer,
   children,
@@ -69,7 +33,10 @@ const WrappedThirdwebSDKProvider = <
   infuraApiKey,
   alchemyApiKey,
 }: React.PropsWithChildren<
-  Omit<ThirdwebSDKProviderProps<TChains>, "authConfig">
+  { supportedChains: Readonly<TChains> } & Omit<
+    ThirdwebSDKProviderProps<TChains>,
+    "authConfig" | "supportedChains"
+  >
 >) => {
   const activeChainId = useMemo(() => {
     if (!activeChain) {
@@ -214,7 +181,6 @@ export const ThirdwebSDKProvider = <
   signer,
   children,
   queryClient,
-  authConfig,
   supportedChains,
   activeChain,
   thirdwebApiKey = DEFAULT_API_KEY,
@@ -222,25 +188,40 @@ export const ThirdwebSDKProvider = <
   infuraApiKey,
   ...restProps
 }: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
+  const supportedChainsNonNull = useMemo(() => {
+    return supportedChains || (defaultChains as any as TChains);
+  }, [supportedChains]);
+  const [supportedChainsWithKey, activeChainIdOrObjWithKey] =
+    useUpdateChainsWithApiKeys(
+      // @ts-expect-error - different subtype of Chain[] but this works fine
+      supportedChainsNonNull,
+      activeChain,
+      thirdwebApiKey,
+      alchemyApiKey,
+      infuraApiKey,
+    );
+
   const mergedChains = useMemo(() => {
     if (
-      !activeChain ||
-      typeof activeChain === "string" ||
-      typeof activeChain === "number"
+      !activeChainIdOrObjWithKey ||
+      typeof activeChainIdOrObjWithKey === "string" ||
+      typeof activeChainIdOrObjWithKey === "number"
     ) {
-      return supportedChains as Readonly<Chain[]>;
+      return supportedChainsWithKey as Readonly<Chain[]>;
     }
 
     const _mergedChains = [
-      ...supportedChains.filter((c) => c.chainId !== activeChain.chainId),
-      activeChain,
+      ...supportedChainsWithKey.filter(
+        (c) => c.chainId !== activeChainIdOrObjWithKey.chainId,
+      ),
+      activeChainIdOrObjWithKey,
     ] as Readonly<Chain[]>;
     // return a _mergedChains uniqued by chainId key
     return _mergedChains.filter(
       (chain, index, self) =>
         index === self.findIndex((c) => c.chainId === chain.chainId),
     );
-  }, [supportedChains, activeChain]);
+  }, [supportedChainsWithKey, activeChainIdOrObjWithKey]);
 
   return (
     <ThirdwebConfigProvider
@@ -253,20 +234,17 @@ export const ThirdwebSDKProvider = <
     >
       <ThirdwebConnectedWalletProvider signer={signer}>
         <QueryClientProviderWithDefault queryClient={queryClient}>
-          <ThirdwebAuthProvider value={authConfig}>
-            <WrappedThirdwebSDKProvider
-              signer={signer}
-              // @ts-expect-error - different subtype of Chain[] but this works fine
-              supportedChains={mergedChains}
-              thirdwebApiKey={thirdwebApiKey}
-              alchemyApiKey={alchemyApiKey}
-              infuraApiKey={infuraApiKey}
-              activeChain={activeChain}
-              {...restProps}
-            >
-              {children}
-            </WrappedThirdwebSDKProvider>
-          </ThirdwebAuthProvider>
+          <WrappedThirdwebSDKProvider
+            signer={signer}
+            supportedChains={mergedChains}
+            thirdwebApiKey={thirdwebApiKey}
+            alchemyApiKey={alchemyApiKey}
+            infuraApiKey={infuraApiKey}
+            activeChain={activeChainIdOrObjWithKey}
+            {...restProps}
+          >
+            {children}
+          </WrappedThirdwebSDKProvider>
         </QueryClientProviderWithDefault>
       </ThirdwebConnectedWalletProvider>
     </ThirdwebConfigProvider>

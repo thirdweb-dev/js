@@ -52,4 +52,8 @@ export const HelperLink = styled.a<{ theme?: Theme }>`
   ${media.mobile} {
     text-align: center;
   }
+  &:hover {
+    color: ${(p) => p.theme.link.primaryHover};
+    text-decoration: none;
+  }
 `;

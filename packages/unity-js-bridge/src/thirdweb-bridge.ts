@@ -3,8 +3,10 @@ import { ThirdwebAuth } from "@thirdweb-dev/auth";
 import { CoinbasePayIntegration, FundWalletOptions } from "@thirdweb-dev/pay";
 import { ThirdwebSDK, ChainIdOrName } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { DAppMetaData } from "@thirdweb-dev/wallets";
 import type { AbstractBrowserWallet } from "@thirdweb-dev/wallets/evm/wallets/base";
 import { CoinbaseWallet } from "@thirdweb-dev/wallets/evm/wallets/coinbase-wallet";
+import { DeviceBrowserWallet } from "@thirdweb-dev/wallets/evm/wallets/device-wallet";
 import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
 import { MetaMask } from "@thirdweb-dev/wallets/evm/wallets/metamask";
@@ -20,6 +22,7 @@ declare global {
 
 const API_KEY =
   "339d65590ba0fa79e4c8be0af33d64eda709e13652acb02c6be63f5a1fbef9c3";
+const TW_WC_PROJECT_ID = "145769e410f16970a79ff77b2d89a1e0";
 const SEPARATOR = "/";
 const SUB_SEPARATOR = "#";
 
@@ -43,6 +46,7 @@ const WALLETS = [
   InjectedWallet,
   WalletConnect,
   CoinbaseWallet,
+  DeviceBrowserWallet,
 ] as const;
 
 type PossibleWallet = (typeof WALLETS)[number]["id"];
@@ -111,26 +115,63 @@ class ThirdwebBridge implements TWBridge {
         : new ThirdwebStorage();
     sdkOptions.thirdwebApiKey = sdkOptions.thirdwebApiKey || API_KEY;
     this.activeSDK = new ThirdwebSDK(chain, sdkOptions, storage);
-    for (let wallet of WALLETS) {
-      const walletInstance = new wallet({
-        appName: sdkOptions.wallet?.appName || "thirdweb powered dApp",
+    for (let possibleWallet of WALLETS) {
+      let walletInstance: AbstractBrowserWallet;
+      const dappMetadata: DAppMetaData = {
+        name: sdkOptions.wallet?.appName || "thirdweb powered game",
+        url: sdkOptions.wallet?.appUrl || "https://thirdweb.com",
+        description: sdkOptions.wallet?.appDescription || "",
+        logoUrl: sdkOptions.wallet?.appIcons?.[0] || "",
         ...sdkOptions.wallet?.extras,
-      });
-      walletInstance.on("connect", async () =>
-        this.updateSDKSigner(await walletInstance.getSigner()),
-      );
-      walletInstance.on("change", async () =>
-        this.updateSDKSigner(await walletInstance.getSigner()),
-      );
-      walletInstance.on("disconnect", () => this.updateSDKSigner());
+      };
+      switch (possibleWallet.id) {
+        case "injected":
+          walletInstance = new InjectedWallet({
+            dappMetadata,
+          });
+          break;
+        case "metamask":
+          walletInstance = new MetaMask({
+            dappMetadata,
+          });
+          break;
+        case "walletConnect":
+          walletInstance = new WalletConnect({
+            dappMetadata,
+            projectId: TW_WC_PROJECT_ID,
+          });
+          break;
+        case "coinbaseWallet":
+          walletInstance = new CoinbaseWallet({
+            dappMetadata,
+          });
+          break;
+        case "deviceWallet":
+          walletInstance = new DeviceBrowserWallet({
+            dappMetadata,
+          });
+          break;
+        default:
+          throw new Error(`Unknown wallet type: ${possibleWallet.id}`);
+      }
+      if (walletInstance) {
+        walletInstance.on("connect", async () =>
+          this.updateSDKSigner(await walletInstance.getSigner()),
+        );
+        walletInstance.on("change", async () =>
+          this.updateSDKSigner(await walletInstance.getSigner()),
+        );
+        walletInstance.on("disconnect", () => this.updateSDKSigner());
 
-      this.walletMap.set(wallet.id, walletInstance);
+        this.walletMap.set(possibleWallet.id, walletInstance);
+      }
     }
   }
 
   public async connect(
     wallet: PossibleWallet = "injected",
     chainId?: number | undefined,
+    password?: string,
   ) {
     if (!this.activeSDK) {
       throw new Error("SDK not initialized");
@@ -140,7 +181,12 @@ class ThirdwebBridge implements TWBridge {
     }
     const walletInstance = this.walletMap.get(wallet);
     if (walletInstance) {
-      await walletInstance.connect({ chainId });
+      if (walletInstance.walletId === "deviceWallet" && password) {
+        const deviceWallet = walletInstance as DeviceBrowserWallet;
+        await deviceWallet.connect({ chainId, password });
+      } else {
+        await walletInstance.connect({ chainId });
+      }
       this.activeWallet = walletInstance;
       this.updateSDKSigner(await walletInstance.getSigner());
       return await this.activeSDK.wallet.getAddress();
@@ -210,9 +256,17 @@ class ThirdwebBridge implements TWBridge {
       if (!this.auth) {
         throw new Error("You need to connect a wallet to use auth!");
       }
-
-      const result = await this.auth.login({ domain: parsedArgs[0] });
-      return JSON.stringify({ result: result });
+      let prop = undefined;
+      if (firstArg.length > 1) {
+        prop = firstArg[1];
+      }
+      if (prop === "login" && routeArgs.length === 1) {
+        const result = await this.auth.login({ domain: parsedArgs[0] });
+        return JSON.stringify({ result: result });
+      } else if (prop === "verify" && routeArgs.length === 1) {
+        const result = await this.auth.verify(parsedArgs[0]);
+        return JSON.stringify({ result: result });
+      }
     }
 
     // contract call

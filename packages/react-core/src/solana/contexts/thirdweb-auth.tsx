@@ -1,12 +1,4 @@
-import { ThirdwebAuth } from "@thirdweb-dev/auth";
-import { SignerWallet } from "@thirdweb-dev/auth/solana";
-import { ThirdwebSDK } from "@thirdweb-dev/sdk/solana";
-import React, {
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useMemo,
-} from "react";
+import { PropsWithChildren, createContext, useContext, useMemo } from "react";
 
 /**
  * The configuration to use the react SDK with an [auth](https://portal.thirdweb.com/auth) server.
@@ -25,16 +17,9 @@ export interface ThirdwebAuthConfig {
    * This domain should match the domain used on your auth backend.
    */
   domain: string;
-
-  /**
-   * Solana SDK
-   */
-  sdk?: ThirdwebSDK;
 }
 
-interface ThirdwebAuthContext extends ThirdwebAuthConfig {
-  auth?: ThirdwebAuth;
-}
+interface ThirdwebAuthContext extends ThirdwebAuthConfig {}
 
 const ThirdwebAuthContext = createContext<ThirdwebAuthContext | undefined>(
   undefined,
@@ -52,13 +37,7 @@ export const ThirdwebAuthProvider: React.FC<
     const context: ThirdwebAuthContext = {
       ...value,
       authUrl: value.authUrl?.replace(/\/$/, ""),
-      auth: undefined,
     };
-
-    const identity = value.sdk?.wallet.getSigner();
-    if (identity) {
-      context.auth = new ThirdwebAuth(new SignerWallet(identity), value.domain);
-    }
 
     return context;
   }, [value]);

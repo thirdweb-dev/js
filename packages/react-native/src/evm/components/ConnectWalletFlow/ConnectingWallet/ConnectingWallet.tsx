@@ -1,8 +1,8 @@
 import { useAppTheme } from "../../../styles/hooks";
-import { WalletMeta } from "../../../types/wallets";
 import Text from "../../base/Text";
 import { ModalFooter } from "../../base/modal/ModalFooter";
 import { ConnectWalletHeader } from "./ConnectingWalletHeader";
+import { SupportedWallet } from "@thirdweb-dev/react-core";
 import { ReactNode } from "react";
 import { ActivityIndicator, Linking, StyleSheet, View } from "react-native";
 
@@ -12,7 +12,7 @@ export type ConnectingWalletProps = {
   footer?: ReactNode;
   onClose: () => void;
   onBackPress: () => void;
-  wallet: WalletMeta;
+  wallet: SupportedWallet;
 };
 
 export function ConnectingWallet({
@@ -32,21 +32,21 @@ export function ConnectingWallet({
     <View>
       <ConnectWalletHeader
         onBackPress={onBackPress}
-        walletLogoUrl={wallet.image_url}
+        walletLogoUrl={wallet.meta.iconURL}
         subHeaderText={subHeaderText}
         close={onClose}
       />
       <View style={styles.connectingContainer}>
         <ActivityIndicator size="small" color={theme.colors.linkPrimary} />
         <Text variant="bodySmallSecondary" mt="md">
-          Connect your wallet through the {wallet.name} application.
+          Connect your wallet through the {wallet.meta.name} application.
         </Text>
       </View>
       {footer ? (
         footer
       ) : (
         <ModalFooter
-          footer={`Having troubles connecting to ${wallet.name}?`}
+          footer={`Having troubles connecting to ${wallet.meta.name}?`}
           onPress={onFooterPress}
         />
       )}

@@ -241,8 +241,8 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.256.0",
-    "@paperxyz/embedded-wallet-service-sdk": "^0.0.19",
+    "@coinbase/wallet-sdk": "^3.6.3",
+    "@paperxyz/embedded-wallet-service-sdk": "^0.0.21",
     "@walletconnect/ethereum-provider": "~2.4.6",
     "@walletconnect/jsonrpc-http-connection": "^1.0.0",
     "@walletconnect/jsonrpc-provider": "^1.0.3",
@@ -252,35 +252,34 @@
     "@walletconnect/legacy-modal": "^2.0.0-rc.0",
     "@walletconnect/legacy-types": "^2.0.0-rc.0",
     "@walletconnect/legacy-utils": "^2.0.0-rc.0",
+    "@thirdweb-dev/chains": "workspace:*",
     "buffer": "^6.0.3",
     "eip1193-provider": "^1.0.1",
-    "ethers-aws-kms-signer": "^1.3.2",
     "eventemitter3": "^5.0.0",
-    "tweetnacl": "^1.0.3"
+    "@safe-global/safe-core-sdk": "^3.3.2",
+    "@safe-global/safe-ethers-adapters": "^0.1.0-alpha.16",
+    "@safe-global/safe-ethers-lib": "^1.9.2"
   },
   "resolutions": {
     "@walletconnect/ethereum-provider": "~2.4.6"
   },
   "peerDependencies": {
-    "@coinbase/wallet-sdk": "^3.6.3",
+    "tweetnacl": "^1.0.3",
+    "@aws-sdk/client-secrets-manager": "^3.256.0",
+    "ethers-aws-kms-signer": "^1.3.2",
     "@noble/ed25519": "^1.7.1",
-    "@safe-global/safe-core-sdk": "^3.3.2",
-    "@safe-global/safe-ethers-adapters": "^0.1.0-alpha.16",
-    "@safe-global/safe-ethers-lib": "^1.9.2",
     "@solana/web3.js": "^1.73.0",
-    "@thirdweb-dev/chains": "workspace:*",
-    "@wagmi/core": ">=0.9.x",
     "bs58": "^5.0.0",
     "ethers": "^5.7.2"
   },
   "peerDependenciesMeta": {
-    "@thirdweb-dev/chains": {
+    "tweetnacl": {
       "optional": true
     },
     "@aws-sdk/client-secrets-manager": {
       "optional": true
     },
-    "@coinbase/wallet-sdk": {
+    "ethers-aws-kms-signer": {
       "optional": true
     },
     "@noble/ed25519": {
@@ -289,44 +288,25 @@
     "@solana/web3.js": {
       "optional": true
     },
-    "@wagmi/core": {
-      "optional": true
-    },
-    "@walletconnect/ethereum-provider": {
-      "optional": true
-    },
     "bs58": {
       "optional": true
     },
     "ethers": {
       "optional": true
-    },
-    "@safe-global/safe-core-sdk": {
-      "optional": true
-    },
-    "safe-global/safe-ethers-adapters": {
-      "optional": true
-    },
-    "@safe-global/safe-ethers-lib": {
-      "optional": true
     }
   },
   "devDependencies": {
-    "@coinbase/wallet-sdk": "^3.6.3",
     "@noble/ed25519": "^1.7.1",
     "@preconstruct/cli": "^2.2.1",
-    "@safe-global/safe-core-sdk": "^3.3.2",
-    "@safe-global/safe-ethers-adapters": "^0.1.0-alpha.16",
-    "@safe-global/safe-ethers-lib": "^1.9.2",
+    "@aws-sdk/client-secrets-manager": "^3.256.0",
+    "ethers-aws-kms-signer": "^1.3.2",
     "@solana/web3.js": "^1.62.0",
-    "@thirdweb-dev/chains": "workspace:*",
-    "@wagmi/core": "^0.9.6",
-    "abitype": "^0.2.5",
+    "@thirdweb-dev/tsconfig": "workspace:*",
     "bs58": "^5.0.0",
+    "eslint-config-thirdweb": "workspace:*",
     "ethers": "^5.7.2",
     "typescript": "^4.7.4",
-    "eslint-config-thirdweb": "workspace:*",
-    "@thirdweb-dev/tsconfig": "workspace:*"
+    "tweetnacl": "^1.0.3"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",

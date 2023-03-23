@@ -112,9 +112,8 @@ export const cacheKeys = {
     ) => createContractCacheKey(contractAddress, ["call", functionName, args]),
 
     app: {
-      get: (
-        contractAddress: RequiredParam<ContractAddress>
-      ) => createContractCacheKey(contractAddress, ["appURI"]),
+      get: (contractAddress: RequiredParam<ContractAddress>) =>
+        createContractCacheKey(contractAddress, ["appURI"]),
     },
 
     events: {

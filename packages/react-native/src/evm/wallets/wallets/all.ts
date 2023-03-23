@@ -1,7 +1,5 @@
 import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
 import { TW_WC_PROJECT_ID } from "../../constants/walletConnect";
-import { walletsMetadata } from "../../constants/walletsMetadata";
-import { IWalletWithMetadata, WalletMeta } from "../../types/wallets";
 import { formatDisplayUri } from "../../utils/uri";
 import { ExtraCoreWalletOptions } from "@thirdweb-dev/react-core";
 import type {
@@ -17,9 +15,6 @@ import {
 } from "@thirdweb-dev/wallets";
 import { Linking } from "react-native";
 
-const DEFAULT_NAME_METADATA = "Dapp powered by Thirdweb";
-const DEFAULT_URL_METADATA = "https://thirdweb.com";
-
 // Metamask ----------------------------------------
 type WC1Options = Omit<
   WalletOptions<WalletConnectV1Options>,
@@ -27,10 +22,19 @@ type WC1Options = Omit<
 > &
   ExtraCoreWalletOptions;
 
-export class MetaMaskWallet
-  extends WalletConnectV1Core
-  implements IWalletWithMetadata
-{
+export class MetaMaskWallet extends WalletConnectV1Core {
+  static id = "metamask" as const;
+  static meta = {
+    id: "metamask",
+    name: "MetaMask",
+    iconURL:
+      "https://registry.walletconnect.org/v2/logo/md/5195e9db-94d8-4579-6f11-ef553be95100",
+    links: {
+      native: "metamask:",
+      universal: "https://metamask.app.link",
+    },
+  };
+
   constructor(options: WC1Options) {
     const storage = createAsyncLocalStorage("metamask");
     super({
@@ -38,34 +42,24 @@ export class MetaMaskWallet
       walletId: "metamask",
       walletStorage: storage,
       qrcode: false,
-      dappMetadata: {
-        url: options.clientMeta?.url || DEFAULT_URL_METADATA,
-        name: options.clientMeta?.name || DEFAULT_NAME_METADATA,
-        logoUrl: options.clientMeta?.icons?.[0],
-        description: options.clientMeta?.description,
-      },
     });
 
     this.on("open_wallet", this._onWCOpenWallet);
 
     this.on("disconnect", () => {
-      this.removeAllListeners();
+      this.removeListener("open_wallet", this._onWCOpenWallet);
     });
   }
 
-  getMetadata() {
-    return walletsMetadata.metamask as WalletMeta;
-  }
-
   _onWCOpenWallet(uri?: string) {
-    const meta = this.getMetadata();
+    const links = MetaMaskWallet.meta.links;
 
     if (uri) {
-      const fullUrl = formatDisplayUri(uri, meta);
+      const fullUrl = formatDisplayUri(uri, links);
 
       Linking.openURL(fullUrl);
     } else {
-      const fullUrl = formatDisplayUri("", meta);
+      const fullUrl = formatDisplayUri("", links);
 
       Linking.openURL(fullUrl);
     }
@@ -74,10 +68,19 @@ export class MetaMaskWallet
 
 // Rainbow ----------------------------------------
 
-export class RainbowWallet
-  extends WalletConnectV1Core
-  implements IWalletWithMetadata
-{
+export class RainbowWallet extends WalletConnectV1Core {
+  static id = "rainbow" as const;
+  static meta = {
+    id: "rainbow",
+    name: "Rainbow",
+    iconURL:
+      "https://registry.walletconnect.org/v2/logo/md/7a33d7f1-3d12-4b5c-f3ee-5cd83cb1b500",
+    links: {
+      native: "rainbow:",
+      universal: "https://rnbwapp.com",
+    },
+  };
+
   constructor(options: WC1Options) {
     const storage = createAsyncLocalStorage("rainbow");
     super({
@@ -85,33 +88,23 @@ export class RainbowWallet
       walletId: "rainbow",
       walletStorage: storage,
       qrcode: false,
-      dappMetadata: {
-        url: options.clientMeta?.url || DEFAULT_URL_METADATA,
-        name: options.clientMeta?.name || DEFAULT_NAME_METADATA,
-        logoUrl: options.clientMeta?.icons?.[0],
-        description: options.clientMeta?.description,
-      },
     });
     this.on("open_wallet", this._onWCOpenWallet);
 
     this.on("disconnect", () => {
-      this.removeAllListeners();
+      this.removeListener("open_wallet", this._onWCOpenWallet);
     });
   }
 
-  getMetadata() {
-    return walletsMetadata.rainbow as WalletMeta;
-  }
-
   _onWCOpenWallet(uri?: string) {
-    const meta = this.getMetadata();
+    const links = RainbowWallet.meta.links;
 
     if (uri) {
-      const fullUrl = formatDisplayUri(uri, meta);
+      const fullUrl = formatDisplayUri(uri, links);
 
       Linking.openURL(fullUrl);
     } else {
-      const fullUrl = formatDisplayUri("", meta);
+      const fullUrl = formatDisplayUri("", links);
 
       Linking.openURL(fullUrl);
     }
@@ -125,10 +118,19 @@ type WC2Options = Omit<
   "projectId" | "qrcode" | "walletStorage"
 >;
 
-export class TrustWallet
-  extends WalletConnectCore
-  implements IWalletWithMetadata
-{
+export class TrustWallet extends WalletConnectCore {
+  static id = "trust" as const;
+  static meta = {
+    id: "trust",
+    name: "Trust Wallet",
+    iconURL:
+      "https://registry.walletconnect.org/v2/logo/md/0528ee7e-16d1-4089-21e3-bbfb41933100",
+    links: {
+      native: "trust:",
+      universal: "https://link.trustwallet.com",
+    },
+  };
+
   constructor(options: WC2Options) {
     const storage = createAsyncLocalStorage("trustwallet");
     super({
@@ -137,31 +139,24 @@ export class TrustWallet
       qrcode: false,
       projectId: TW_WC_PROJECT_ID,
       walletStorage: storage,
-      dappMetadata: {
-        ...options.dappMetadata,
-      },
     });
 
     this.on("open_wallet", this._onWCOpenWallet);
 
     this.on("disconnect", () => {
-      this.removeAllListeners();
+      this.removeListener("open_wallet", this._onWCOpenWallet);
     });
   }
 
-  getMetadata() {
-    return walletsMetadata.trust as WalletMeta;
-  }
-
   _onWCOpenWallet(uri?: string) {
-    const meta = this.getMetadata();
+    const links = TrustWallet.meta.links;
 
     if (uri) {
-      const fullUrl = formatDisplayUri(uri, meta);
+      const fullUrl = formatDisplayUri(uri, links);
 
       Linking.openURL(fullUrl);
     } else {
-      const fullUrl = formatDisplayUri("", meta);
+      const fullUrl = formatDisplayUri("", links);
 
       Linking.openURL(fullUrl);
     }
@@ -179,6 +174,7 @@ type DeviceWalletOptions = Omit<
   ExtraCoreWalletOptions;
 
 export class DeviceWallet extends DeviceWalletCore {
+  static id = "devicewallet" as const;
   constructor(options: DeviceWalletOptions) {
     super({
       ...options,

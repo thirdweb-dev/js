@@ -1,6 +1,3 @@
-import { useSigner } from "../hooks/useSigner";
-import { ThirdwebAuth } from "@thirdweb-dev/auth";
-import { SignerWallet } from "@thirdweb-dev/auth/evm";
 import React, {
   PropsWithChildren,
   createContext,
@@ -27,9 +24,7 @@ export interface ThirdwebAuthConfig {
   domain: string;
 }
 
-interface ThirdwebAuthContext extends ThirdwebAuthConfig {
-  auth?: ThirdwebAuth;
-}
+interface ThirdwebAuthContext extends ThirdwebAuthConfig {}
 
 const ThirdwebAuthContext = createContext<ThirdwebAuthContext | undefined>(
   undefined,
@@ -38,8 +33,6 @@ const ThirdwebAuthContext = createContext<ThirdwebAuthContext | undefined>(
 export const ThirdwebAuthProvider: React.FC<
   PropsWithChildren<{ value?: ThirdwebAuthConfig }>
 > = ({ value, children }) => {
-  const signer = useSigner();
-
   // Remove trailing slash from URL if present
   const authContext = useMemo(() => {
     if (!value) {
@@ -49,15 +42,10 @@ export const ThirdwebAuthProvider: React.FC<
     const context: ThirdwebAuthContext = {
       ...value,
       authUrl: value.authUrl?.replace(/\/$/, ""),
-      auth: undefined,
     };
 
-    if (signer) {
-      context.auth = new ThirdwebAuth(new SignerWallet(signer), value.domain);
-    }
-
     return context;
-  }, [value, signer]);
+  }, [value]);
   return (
     <ThirdwebAuthContext.Provider value={authContext}>
       {children}
