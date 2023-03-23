@@ -112,6 +112,7 @@ const DialogContent = styled.div<{ theme?: Theme }>`
   left: 50%;
   transform: translate(-50%, -50%);
   width: calc(100vw - 40px);
+  box-sizing: border-box;
   overflow-y: auto;
   padding: ${spacing.lg};
   padding-bottom: ${spacing.xl};
@@ -142,6 +143,11 @@ const DialogContent = styled.div<{ theme?: Theme }>`
     border-radius: ${radius.xxl};
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
+  }
+
+  & *::selection {
+    background-color: ${(p) => p.theme.bg.inverted};
+    color: ${(p) => p.theme.text.inverted};
   }
 `;
 

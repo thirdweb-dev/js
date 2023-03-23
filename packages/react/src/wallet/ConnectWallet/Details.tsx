@@ -10,7 +10,6 @@ import {
   fontSize,
   iconSize,
   radius,
-  shadow,
   spacing,
   Theme,
 } from "../../design-system";
@@ -83,7 +82,11 @@ export const ConnectedWalletDetails: React.FC<{
     <WalletInfoButton type="button">
       <ChainIcon chain={chain} size={iconSize.lg} />
 
-      <ColFlex>
+      <ColFlex
+        style={{
+          alignItems: "stretch",
+        }}
+      >
         {!balanceQuery.isLoading ? (
           <WalletBalance>
             {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
@@ -256,26 +259,26 @@ export const ConnectedWalletDetails: React.FC<{
   );
 };
 
-const slideUpAndFade = keyframes`
-    from {
+const dropdownContentFade = keyframes`
+  from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1);
   }
 `;
 
 const DropDownContent = styled(DropdownMenu.Content)<{ theme?: Theme }>`
   width: 360px;
+  box-sizing: border-box;
   max-width: 100%;
   border-radius: ${radius.lg};
   padding: ${spacing.lg};
-  box-shadow: ${shadow.lg};
-  animation: ${slideUpAndFade} 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  animation: ${dropdownContentFade} 400ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
-  border: 1px solid ${(props) => props.theme.bg.elevated};
+  border: 1px solid ${(props) => props.theme.border.base};
   background-color: ${(props) => props.theme.bg.base};
   z-index: 1000000;
 `;
@@ -283,14 +286,13 @@ const DropDownContent = styled(DropdownMenu.Content)<{ theme?: Theme }>`
 const WalletInfoButton = styled.button<{ theme?: Theme }>`
   all: unset;
   background: ${(props) => props.theme.bg.base};
-  border: 1px solid ${(props) => props.theme.bg.elevated};
+  border: 1px solid ${(props) => props.theme.border.base};
   padding: ${spacing.sm} ${spacing.md};
   border-radius: ${radius.lg};
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: ${spacing.md};
-  box-shadow: ${shadow.sm};
   min-width: 200px;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
@@ -342,7 +344,8 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   all: unset;
   padding: ${spacing.sm} ${spacing.md};
   border-radius: ${radius.md};
-  border: 1px solid ${(props) => props.theme.bg.highlighted};
+  background-color: ${(props) => props.theme.bg.baseHover};
+  border: 1px solid ${(props) => props.theme.border.elevated};
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -356,7 +359,8 @@ const MenuButton = styled.button<{ theme?: Theme }>`
 
   &:not([disabled]):hover {
     transition: background 150ms ease;
-    background: ${(props) => props.theme.bg.baseHover};
+    border: 1px solid ${(props) => props.theme.link.primary};
+    box-shadow: 0 0 0 1px ${(props) => props.theme.link.primary};
   }
 
   &[disabled] {

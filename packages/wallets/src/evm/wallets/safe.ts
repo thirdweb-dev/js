@@ -14,7 +14,8 @@ export class SafeWallet extends AbstractBrowserWallet<{}, SafeConnectionArgs> {
 
   static meta = {
     name: "Safe",
-    iconURL: "ipfs://Qma8QRV8cE31j5V2qsS5twWwnHWFhcEaHKCFiDgY9VZy8p/Safe.svg",
+    iconURL:
+      "ipfs://QmbbyxDDmmLQh8DzzeUR6X6B75bESsNUFmbdvS3ZsQ2pN1/SafeToken.svg",
   };
 
   static id = "Safe" as const;
