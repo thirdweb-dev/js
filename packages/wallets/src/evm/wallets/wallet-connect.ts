@@ -15,7 +15,7 @@ export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
 
   connector?: TWConnector;
 
-  static id = "walletConnect" as const;
+  static id = "walletConnect";
 
   static meta = {
     name: "Wallet Connect",

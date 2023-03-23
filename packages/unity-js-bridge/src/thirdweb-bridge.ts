@@ -150,6 +150,9 @@ class ThirdwebBridge implements TWBridge {
           walletInstance = new DeviceBrowserWallet({
             dappMetadata,
           });
+          break;
+        default:
+          throw new Error(`Unknown wallet type: ${possibleWallet.id}`);
       }
       if (walletInstance) {
         walletInstance.on("connect", async () =>
