@@ -9,18 +9,18 @@ import { CoinbaseWalletSetup } from "./screens/Coinbase/CoinbaseConnecting";
 import { CoinbaseGetStarted } from "./screens/Coinbase/CoinbaseGetStarted";
 import { ScanCoinbase } from "./screens/Coinbase/CoinbaseScan";
 import { ConnectToDeviceWallet } from "./screens/DeviceWallet/DeviceWalletSetup";
+import { GetStartedWithWallets } from "./screens/GetStartedWithWallets";
 import { MetamaskConnecting } from "./screens/Metamask/MetamaskConnecting";
 import { MetamaskGetStarted } from "./screens/Metamask/MetamaskGetStarted";
 import { ScanMetamask } from "./screens/Metamask/MetamaskScan";
+import { SafeForm } from "./screens/Safe/SafeForm";
+import { SelectpersonalWallet } from "./screens/Safe/SelectPersonalWallet";
 import {
   useConnect,
   useConnectionStatus,
   useWallets,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
-import { SelectpersonalWallet } from "./screens/Safe/SelectPersonalWallet";
-import { SafeForm } from "./screens/Safe/SafeForm";
-import { GetStartedWithWallets } from "./screens/GetStartedWithWallets";
 
 type Screen =
   | "deviceWallet/connect"

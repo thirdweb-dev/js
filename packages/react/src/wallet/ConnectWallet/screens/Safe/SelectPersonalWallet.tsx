@@ -1,17 +1,17 @@
-import styled from "@emotion/styled";
 import { Img } from "../../../../components/Img";
+import { Spacer } from "../../../../components/Spacer";
 import {
   BackButton,
   ModalTitle,
   HelperLink,
   ModalDescription,
 } from "../../../../components/modalElements";
-import { Spacer } from "../../../../components/Spacer";
 import { iconSize, spacing, media } from "../../../../design-system";
 import { WalletMeta } from "../../../types";
 import { SafeWallet } from "../../../wallets";
 import { WalletSelection } from "../../WalletSelector";
 import { Steps } from "./Steps";
+import styled from "@emotion/styled";
 
 export const SelectpersonalWallet: React.FC<{
   onBack: () => void;

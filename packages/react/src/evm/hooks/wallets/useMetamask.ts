@@ -1,6 +1,6 @@
-import { useCallback } from "react";
-import { useConnect } from "@thirdweb-dev/react-core";
 import { MetamaskWallet } from "../../../wallet/wallets";
+import { useConnect } from "@thirdweb-dev/react-core";
+import { useCallback } from "react";
 
 export function useMetamask() {
   const connect = useConnect();

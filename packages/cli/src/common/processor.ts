@@ -360,9 +360,7 @@ export function getUrl(hashes: string[], command: string) {
   return url;
 }
 
-async function formatToExtensions(
-  contracts: ContractPayload[],
-): Promise<{
+async function formatToExtensions(contracts: ContractPayload[]): Promise<{
   extensions: Extension[];
   extensionDeployArgs: ExtensionDeployArgs[];
 }> {

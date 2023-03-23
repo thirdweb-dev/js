@@ -9,9 +9,9 @@ import {
 } from "../../../components/modalElements";
 import { fontSize, iconSize, radius, spacing } from "../../../design-system";
 import { Theme } from "../../../design-system/index";
+import { Apple, Chrome, GooglePlay } from "../iconURLs";
 import styled from "@emotion/styled";
 import { useState } from "react";
-import { Apple, Chrome, GooglePlay } from "../iconURLs";
 
 export const GetStartedScreen: React.FC<{
   onBack: () => void;

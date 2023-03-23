@@ -108,15 +108,19 @@ export async function install(projectPath = ".", options: any) {
     );
 
     if (hasYarn) {
-      if (dependenciesToAdd.length !== 0)
+      if (dependenciesToAdd.length !== 0) {
         await runCommand("yarn add", dependenciesToAdd);
-      if (dependenciesToUpdate.length !== 0)
+      }
+      if (dependenciesToUpdate.length !== 0) {
         await runCommand("yarn upgrade", dependenciesToUpdate);
+      }
     } else if (hasNPM) {
-      if (dependenciesToAdd.length !== 0)
+      if (dependenciesToAdd.length !== 0) {
         await runCommand("npm install", dependenciesToAdd);
-      if (dependenciesToUpdate.length !== 0)
+      }
+      if (dependenciesToUpdate.length !== 0) {
         await runCommand("npm update", dependenciesToUpdate);
+      }
     }
   } catch (err) {
     console.error("Can't install within project");

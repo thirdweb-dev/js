@@ -1,7 +1,7 @@
+import { SafeConnectionArgs } from "../connectors/safe/types";
 import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 import type { Chain } from "@thirdweb-dev/chains";
-import { SafeConnectionArgs } from "../connectors/safe/types";
 
 export { SafeSupportedChainsSet } from "../connectors/safe";
 

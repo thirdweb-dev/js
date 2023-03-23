@@ -8,11 +8,11 @@ import {
   ModalTitle,
 } from "../../../components/modalElements";
 import { fontSize, iconSize, spacing, Theme } from "../../../design-system";
-import { useState } from "react";
-import { Apple, Chrome, GooglePlay } from "../iconURLs";
 import { MetamaskWallet } from "../../wallets";
+import { Apple, Chrome, GooglePlay } from "../iconURLs";
 import { ButtonLink } from "./GetStartedScreen";
 import styled from "@emotion/styled";
+import { useState } from "react";
 
 const walletName = MetamaskWallet.meta.name;
 const walletIconURL = MetamaskWallet.meta.iconURL;
