@@ -1,3 +1,25 @@
+import { Img } from "../../../../components/Img";
+import { Spacer } from "../../../../components/Spacer";
+import { Spinner } from "../../../../components/Spinner";
+import { Button } from "../../../../components/buttons";
+import { ErrorMessage, Label } from "../../../../components/formElements";
+import { FormField } from "../../../../components/formFields";
+import {
+  BackButton,
+  ModalTitle,
+  ModalDescription,
+  HelperLink,
+} from "../../../../components/modalElements";
+import {
+  iconSize,
+  spacing,
+  media,
+  Theme,
+  fontSize,
+} from "../../../../design-system";
+import { useIsNonLocalWallet } from "../../../hooks/useCanSwitchNetwork";
+import { SafeWallet } from "../../../wallets";
+import { Steps } from "./Steps";
 import styled from "@emotion/styled";
 import {
   ChevronDownIcon,
@@ -14,28 +36,6 @@ import {
 import { SafeSupportedChainsSet } from "@thirdweb-dev/wallets";
 import { utils } from "ethers";
 import { useState } from "react";
-import { Button } from "../../../../components/buttons";
-import { ErrorMessage, Label } from "../../../../components/formElements";
-import { FormField } from "../../../../components/formFields";
-import { Img } from "../../../../components/Img";
-import {
-  BackButton,
-  ModalTitle,
-  ModalDescription,
-  HelperLink,
-} from "../../../../components/modalElements";
-import { Spacer } from "../../../../components/Spacer";
-import { Spinner } from "../../../../components/Spinner";
-import {
-  iconSize,
-  spacing,
-  media,
-  Theme,
-  fontSize,
-} from "../../../../design-system";
-import { useIsNonLocalWallet } from "../../../hooks/useCanSwitchNetwork";
-import { SafeWallet } from "../../../wallets";
-import { Steps } from "./Steps";
 
 export const gnosisAddressPrefixToChainId = {
   eth: 1,

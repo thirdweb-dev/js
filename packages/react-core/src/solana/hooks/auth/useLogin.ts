@@ -1,15 +1,15 @@
 import { ensureTWPrefix } from "../../../core/query-utils/query-key";
 import { useThirdwebAuthContext } from "../../contexts/thirdweb-auth";
+import { useSDK } from "../../providers/base";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type {
   LoginOptions,
   LoginPayload,
   LoginPayloadData,
 } from "@thirdweb-dev/auth";
-import invariant from "tiny-invariant";
 import { GenericAuthWallet } from "@thirdweb-dev/wallets";
-import { useSDK } from "../../providers/base";
 import { SignerWallet } from "@thirdweb-dev/wallets/solana/wallets/signer";
+import invariant from "tiny-invariant";
 
 export interface LoginConfig {
   /**

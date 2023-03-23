@@ -2,7 +2,9 @@ import {
   ThirdwebAuthConfig,
   ThirdwebAuthProvider,
 } from "../../evm/contexts/thirdweb-auth";
+import { useUpdateChainsWithApiKeys } from "../../evm/hooks/chain-hooks";
 import { ThirdwebSDKProvider } from "../../evm/providers/thirdweb-sdk-provider";
+import { ThirdwebSDKProviderProps } from "../../evm/providers/types";
 import { DAppMetaData } from "../types/dAppMeta";
 import { SupportedWallet } from "../types/wallet";
 import { ThirdwebThemeContext } from "./theme-context";
@@ -19,8 +21,6 @@ import {
   CreateAsyncStorage,
 } from "@thirdweb-dev/wallets";
 import React, { useMemo } from "react";
-import { useUpdateChainsWithApiKeys } from "../../evm/hooks/chain-hooks";
-import { ThirdwebSDKProviderProps } from "../../evm/providers/types";
 
 /**
  * The possible props for the ThirdwebProvider.

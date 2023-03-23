@@ -1,5 +1,4 @@
 import { AsyncStorage, createAsyncLocalStorage } from "../../core";
-
 import { TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
 import { AbstractBrowserWallet, WalletOptions } from "./base";

@@ -1,6 +1,6 @@
+import { DeviceWallet } from "../../../wallet/wallets";
 import { useConnect } from "@thirdweb-dev/react-core";
 import { useCallback } from "react";
-import { DeviceWallet } from "../../../wallet/wallets";
 
 export function useDeviceWallet() {
   const connect = useConnect();

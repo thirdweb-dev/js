@@ -2,9 +2,9 @@ import { useAppTheme } from "../../../styles/hooks";
 import Text from "../../base/Text";
 import { ModalFooter } from "../../base/modal/ModalFooter";
 import { ConnectWalletHeader } from "./ConnectingWalletHeader";
+import { SupportedWallet } from "@thirdweb-dev/react-core";
 import { ReactNode } from "react";
 import { ActivityIndicator, Linking, StyleSheet, View } from "react-native";
-import { SupportedWallet } from "@thirdweb-dev/react-core";
 
 export type ConnectingWalletProps = {
   headerText?: ReactNode | string;

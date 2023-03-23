@@ -34,7 +34,6 @@ await wallet.connect();
 - Magic.link
 - Ethers
 
-
 #### Backend Wallets
 
 - Privatekey
