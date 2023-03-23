@@ -1,11 +1,9 @@
-import { ThirdwebAuth } from "@thirdweb-dev/auth";
 import React, {
   PropsWithChildren,
   createContext,
   useContext,
   useMemo,
 } from "react";
-import { useWallet } from "../../core/hooks/wallet-hooks";
 
 /**
  * The configuration to use the react SDK with an [auth](https://portal.thirdweb.com/auth) server.
@@ -26,37 +24,28 @@ export interface ThirdwebAuthConfig {
   domain: string;
 }
 
-interface ThirdwebAuthContext extends ThirdwebAuthConfig {
-  auth?: ThirdwebAuth;
-}
+interface ThirdwebAuthContext extends ThirdwebAuthConfig {}
 
 const ThirdwebAuthContext = createContext<ThirdwebAuthContext | undefined>(
   undefined,
 );
 
 export const ThirdwebAuthProvider: React.FC<
-  PropsWithChildren<ThirdwebAuthConfig>
-> = ({ domain, authUrl, children }) => {
-  const wallet = useWallet();
-
+  PropsWithChildren<{ value?: ThirdwebAuthConfig }>
+> = ({ value, children }) => {
   // Remove trailing slash from URL if present
   const authContext = useMemo(() => {
-    if (!domain) {
+    if (!value) {
       return undefined;
     }
 
     const context: ThirdwebAuthContext = {
-      domain,
-      authUrl: authUrl?.replace(/\/$/, ""),
-      auth: undefined,
+      ...value,
+      authUrl: value.authUrl?.replace(/\/$/, ""),
     };
 
-    if (wallet) {
-      context.auth = new ThirdwebAuth(wallet, domain);
-    }
-
     return context;
-  }, [domain, authUrl, wallet]);
+  }, [value]);
   return (
     <ThirdwebAuthContext.Provider value={authContext}>
       {children}
