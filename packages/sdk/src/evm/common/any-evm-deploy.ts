@@ -277,7 +277,6 @@ export async function deployInfraKeyless(
   const txns = [];
   let totalValueToSplit: BigNumber = BigNumber.from(0);
 
-  const feeData = await provider.getFeeData();
   for (let contractType of contractTypes as InfraContractType[]) {
     const txInfo = INFRA_CONTRACTS_MAP[contractType].txInfo;
 
