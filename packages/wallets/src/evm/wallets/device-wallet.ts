@@ -25,8 +25,9 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
 > {
   connector?: TWConnector;
   #walletImpl?: DeviceWalletImpl;
-  static id = "deviceWallet" as const;
   options: WalletOptions<DeviceWalletOptions>;
+
+  static id = "deviceWallet";
 
   static meta = {
     name: "Device Wallet",
