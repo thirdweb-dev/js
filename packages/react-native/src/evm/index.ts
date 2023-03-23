@@ -13,4 +13,4 @@ export { Web3Button } from "./components/Web3Button";
 export * from "./providers/thirdweb-provider";
 
 // re-export everything from react-core
-export * from "@thirdweb-dev/react-core/evm";
+export * from "@thirdweb-dev/react-core";
