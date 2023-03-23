@@ -4,7 +4,6 @@ import type { SDKOptions } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { Signer } from "ethers";
 import type { ThirdwebAuthConfig } from "../contexts/thirdweb-auth";
-// import { ThirdwebAuthConfig } from "../contexts/thirdweb-auth";
 
 export interface ThirdwebSDKProviderProps<
   TChains extends Chain[] = typeof defaultChains,

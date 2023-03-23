@@ -68,18 +68,18 @@ export type { TransferTokenMutationParams } from "./hooks/token/useTransferToken
 export { useTransferToken } from "./hooks/token/useTransferToken";
 
 // Auth
-// export { useAuth, useLogin, useLogout, useUser } from "./hooks/auth";
-// export type { UserWithData, LoginConfig } from "./hooks/auth";
+export { useLogin, useLogout, useUser } from "./hooks/auth";
+export type { UserWithData, LoginConfig } from "./hooks/auth";
 
 //Wallet
 export { balanceQuery, useBalance } from "./hooks/wallet/useBalance";
 
 //Contexts
-// export type { ThirdwebAuthConfig } from "./contexts/thirdweb-auth";
-// export {
-//   ThirdwebAuthProvider,
-//   useThirdwebAuthContext,
-// } from "./contexts/thirdweb-auth";
+export type { ThirdwebAuthConfig } from "./contexts/thirdweb-auth";
+export {
+  ThirdwebAuthProvider,
+  useThirdwebAuthContext,
+} from "./contexts/thirdweb-auth";
 
 // Utilities and Others
 export { shouldNeverPersistQuery } from "../core/query-utils/query-key";
