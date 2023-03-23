@@ -1148,8 +1148,8 @@ export function useMakeOffer(contract: RequiredParam<Marketplace>) {
 }
 
 /**
- * Accept a specific offer on a direct listing 
- * 
+ * Accept a specific offer on a direct listing
+ *
  * @remarks will accept the latest offer by the given offeror.
  *
  * @example

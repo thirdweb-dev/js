@@ -47,7 +47,7 @@ const WALLETS = [
   MagicAuthWallet,
 ] as const;
 
-type PossibleWallet = typeof WALLETS[number]["id"];
+type PossibleWallet = (typeof WALLETS)[number]["id"];
 
 type FundWalletInput = FundWalletOptions & {
   appId: string;

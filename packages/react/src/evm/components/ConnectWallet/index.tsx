@@ -50,7 +50,7 @@ function getIconForConnector(connector: Connector) {
   if (connector.name.toLocaleLowerCase().includes("metamask")) {
     return <Icon boxSize="1.5em" name="metamask" />;
   }
-  const id = connector.id as typeof SUPPORTED_CONNECTORS[number];
+  const id = connector.id as (typeof SUPPORTED_CONNECTORS)[number];
   switch (id) {
     case "injected":
       return <Icon boxSize="1.5em" name="metamask" />;
@@ -158,7 +158,9 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
   const disconnect = useDisconnect({ reconnectPrevious: false });
 
   const supportedConnectors = connectors.filter((c) =>
-    SUPPORTED_CONNECTORS.includes(c.id as typeof SUPPORTED_CONNECTORS[number]),
+    SUPPORTED_CONNECTORS.includes(
+      c.id as (typeof SUPPORTED_CONNECTORS)[number],
+    ),
   );
 
   const [network, switchNetwork] = useNetwork();

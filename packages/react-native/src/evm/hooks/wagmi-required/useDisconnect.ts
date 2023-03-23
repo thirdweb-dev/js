@@ -1,4 +1,3 @@
-
 import { useCallback } from "react";
 import invariant from "tiny-invariant";
 import { useClient, useDisconnect as useWagmiDisconnect } from "wagmi";
@@ -30,17 +29,17 @@ import { useClient, useDisconnect as useWagmiDisconnect } from "wagmi";
  * @public
  */
 export function useDisconnect() {
-    const wagmiClient = useClient();
-    invariant(
-        wagmiClient,
-        `useDisconnect() can only be used inside <ThirdwebProvider />. If you are using <ThirdwebSDKProvider /> you will have to use your own connection logic.`,
-    );
-    const { disconnect } = useWagmiDisconnect();
+  const wagmiClient = useClient();
+  invariant(
+    wagmiClient,
+    `useDisconnect() can only be used inside <ThirdwebProvider />. If you are using <ThirdwebSDKProvider /> you will have to use your own connection logic.`,
+  );
+  const { disconnect } = useWagmiDisconnect();
 
-    const disconnectInternal = useCallback(() => {
-        disconnect();
-        wagmiClient.queryClient.clear();
-    }, [disconnect, wagmiClient.queryClient]);
+  const disconnectInternal = useCallback(() => {
+    disconnect();
+    wagmiClient.queryClient.clear();
+  }, [disconnect, wagmiClient.queryClient]);
 
-    return disconnectInternal;
+  return disconnectInternal;
 }

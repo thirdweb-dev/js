@@ -19,7 +19,7 @@ import invariant from "tiny-invariant";
 // primary sales
 
 /**
- * Get the primary sale recipient 
+ * Get the primary sale recipient
  *
  * @example
  * ```jsx
@@ -336,7 +336,7 @@ export function useMetadata(contract: RequiredParam<ValidContractInstance>) {
 
 /**
  * Set the metadata of this contract
- * 
+ *
  * @example
  * ```jsx
  * const Component = () => {
@@ -354,9 +354,9 @@ export function useMetadata(contract: RequiredParam<ValidContractInstance>) {
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => updateMetadata({ 
-  *        name: "My Contract", 
-  *        description: "This is my contract" 
+ *       onClick={() => updateMetadata({
+ *        name: "My Contract",
+ *        description: "This is my contract"
  *       })}
  *     >
  *       Update Contract Metadata

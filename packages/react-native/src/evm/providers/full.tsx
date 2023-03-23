@@ -1,3 +1,6 @@
+import { showDeprecationWarning } from "../../core/utils";
+import { TW_WC_PROJECT_ID, WC_RELAY_URL } from "../constants/walletConnect";
+import { transformChainToMinimalWagmiChain } from "../utils/chains";
 import { QueryClient } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import {
@@ -9,23 +12,24 @@ import {
 import type { SDKOptions } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { getDefaultProvider } from "ethers";
-import { transformChainToMinimalWagmiChain } from "../utils/chains";
 import React, { useMemo } from "react";
 import invariant from "tiny-invariant";
-import {
-  Connector, createClient, useSigner, WagmiConfig,
-} from "wagmi";
+import { Connector, createClient, useSigner, WagmiConfig } from "wagmi";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
-import { TW_WC_PROJECT_ID, WC_RELAY_URL } from "../constants/walletConnect";
-import { showDeprecationWarning } from "../../core/utils";
 
 /**
  * @internal
  */
 export type WalletConnectConnectorType =
   | WalletConnectConnector
-  | 'walletConnect'
-  | { name: 'walletConnect'; options: Omit<WalletConnectConnector['options'], 'version' | 'qrcode' | 'metadata'> };
+  | "walletConnect"
+  | {
+      name: "walletConnect";
+      options: Omit<
+        WalletConnectConnector["options"],
+        "version" | "qrcode" | "metadata"
+      >;
+    };
 
 /**
  * @internal
@@ -125,15 +129,15 @@ export interface ThirdwebProviderProps<
 // SDK handles this under the hood for us
 
 const defaultdAppMeta: DAppMetaData = {
-  name: 'thirdweb powered dApp',
-  url: 'https://thirdweb.com',
-  logoUrl: 'https://thirdweb.com/favicon.ico',
-  description: 'thirdweb powered dApp',
+  name: "thirdweb powered dApp",
+  url: "https://thirdweb.com",
+  logoUrl: "https://thirdweb.com/favicon.ico",
+  description: "thirdweb powered dApp",
 };
 
 const defaultWalletConnectors: Required<
-  ThirdwebProviderProps['walletConnectors']
-> = ['walletConnect'];
+  ThirdwebProviderProps["walletConnectors"]
+> = ["walletConnect"];
 
 /**
  *
@@ -184,7 +188,7 @@ export const ThirdwebProvider = <
   if (desiredChainId) {
     showDeprecationWarning("desiredChainId", "activeChain");
   }
-  
+
   const mergedChains = useMemo(() => {
     if (
       !activeChain ||
@@ -215,33 +219,34 @@ export const ThirdwebProvider = <
             }
             // wallet connect
             if (
-              (typeof connector === 'string' &&
-                connector === 'walletConnect') ||
-              (typeof connector === 'object' &&
-                connector.name === 'walletConnect')
+              (typeof connector === "string" &&
+                connector === "walletConnect") ||
+              (typeof connector === "object" &&
+                connector.name === "walletConnect")
             ) {
               const mainnet = wagmiChains.find((chain) => chain.id === 1);
-              invariant(mainnet, 'Mainnet chain not found');
+              invariant(mainnet, "Mainnet chain not found");
               return new WalletConnectConnector({
                 chains: [mainnet],
-                options: typeof connector === "string"
-                ? {
-                  metadata: walletConnectClientMeta,
-                  qrcode: false,
-                  version: '2',
-                  projectId: TW_WC_PROJECT_ID,
-                  relayUrl: WC_RELAY_URL,
-                  logger: 'info',
-                  }
-                : {
-                  metadata: walletConnectClientMeta,
-                  qrcode: false,
-                  version: '2',
-                  projectId: TW_WC_PROJECT_ID,
-                  relayUrl: WC_RELAY_URL,
-                  logger: 'info',
-                  ... connector.options
-                  },
+                options:
+                  typeof connector === "string"
+                    ? {
+                        metadata: walletConnectClientMeta,
+                        qrcode: false,
+                        version: "2",
+                        projectId: TW_WC_PROJECT_ID,
+                        relayUrl: WC_RELAY_URL,
+                        logger: "info",
+                      }
+                    : {
+                        metadata: walletConnectClientMeta,
+                        qrcode: false,
+                        version: "2",
+                        projectId: TW_WC_PROJECT_ID,
+                        relayUrl: WC_RELAY_URL,
+                        logger: "info",
+                        ...connector.options,
+                      },
               });
             }
 
@@ -253,7 +258,14 @@ export const ThirdwebProvider = <
     });
 
     return client;
-  }, [dAppMeta.description, dAppMeta.logoUrl, dAppMeta.name, dAppMeta.url, mergedChains, walletConnectors]);
+  }, [
+    dAppMeta.description,
+    dAppMeta.logoUrl,
+    dAppMeta.name,
+    dAppMeta.url,
+    mergedChains,
+    walletConnectors,
+  ]);
 
   const activeChainId = useMemo(() => {
     if (!activeChain) {
@@ -294,7 +306,7 @@ const ThirdwebSDKProviderWagmiWrapper = <TChains extends Chain[]>({
 }: React.PropsWithChildren<
   Omit<ThirdwebSDKProviderProps<TChains>, "signer" | "provider">
 >) => {
-  const {data} = useSigner();
+  const { data } = useSigner();
   return (
     <ThirdwebSDKProvider signer={data || undefined} {...props}>
       {children}

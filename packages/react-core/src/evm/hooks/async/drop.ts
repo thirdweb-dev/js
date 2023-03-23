@@ -266,7 +266,7 @@ export function useClaimNFT<TContract extends DropContract>(
 
 /**
  * Lazy mint NFTs
- * 
+ *
  * @example
  * ```jsx
  * const Component = () => {
@@ -338,7 +338,7 @@ export function useLazyMint<TContract extends DropContract>(
 
 /**
  * Lazy mint NFTs with delayed reveal
- * 
+ *
  * @example
  * ```jsx
  * const Component = () => {
@@ -419,7 +419,7 @@ export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
 
 /**
  * Reveal a batch of delayed reveal NFTs
- * 
+ *
  * @example
  * ```jsx
  * const Component = () => {
