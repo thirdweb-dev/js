@@ -1,6 +1,5 @@
 import type {
   AbstractBrowserWallet,
-  AsyncStorage,
   Chain,
   DAppMetaData,
   TWConnector,
@@ -17,7 +16,6 @@ export type WalletOptions = {
   chains: Chain[];
   shouldAutoConnect?: boolean;
   walletId?: string;
-  coordinatorStorage: AsyncStorage;
   dappMetadata: DAppMetaData;
 } & ExtraCoreWalletOptions;
 
