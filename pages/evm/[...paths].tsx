@@ -68,9 +68,10 @@ const EVMContractPage: ThirdwebNextPage = () => {
   const updateConfiguredChains = useUpdateConfiguredChains();
 
   useEffect(() => {
-    // if server resolved the chain
+    // if server resolved the chain, or we resolved it on client
     if (chain) {
-      // but it is not configured
+      setChainNotFound(false);
+      // if it is not configured on client
       if (!(chainSlug in configuredChainSlugRecord)) {
         // auto configure it
         updateConfiguredChains.add([
@@ -81,7 +82,7 @@ const EVMContractPage: ThirdwebNextPage = () => {
         ]);
       }
 
-      // it is configured
+      // it is configured on client
       else {
         // if server resolved it and user has it configured. user may have updated it on client
         // currently user can only update RPC - so check if it is updated or not
