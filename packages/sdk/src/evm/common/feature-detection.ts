@@ -182,7 +182,7 @@ export function extractFunctionsFromAbi(
     const promise = out ? `: Promise<${out}>` : `: Promise<TransactionResult>`;
     const signature = `contract.call("${f.name}"${fargs})${promise}`;
     parsed.push({
-      /// @ts-ignore we know AbiTypeBaseSchema.name is not going to be undefined since we're doing `.default("")`
+      // @ts-ignore we know AbiTypeBaseSchema.name is not going to be undefined since we're doing `.default("")`
       inputs: f.inputs || [],
       // @ts-ignore we know the AbiTypeBaseSchema.name is not going to be undefined since we're doing `.default("")`
       outputs: f.outputs || [],
