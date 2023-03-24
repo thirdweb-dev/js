@@ -70,7 +70,7 @@ export const ConnectWalletDetails = ({
         </View>
         <NetworkButton
           chainIconUrl={chain?.icon?.url || ""}
-          chainName={chain?.name || ""}
+          chainName={chain?.name || "Unknown Network"}
           onPress={onChangeNetworkPress}
         />
       </TWModal>
