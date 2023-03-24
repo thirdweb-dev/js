@@ -3,7 +3,7 @@ import { ContractAddress } from "../types";
 import { cacheKeys } from "../utils/cache-keys";
 import { useSupportedChains } from "./useSupportedChains";
 import { useQuery } from "@tanstack/react-query";
-import { Chain } from "@thirdweb-dev/chains";
+import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { useMemo } from "react";
 
 /**
@@ -117,11 +117,19 @@ export function useChainId(): number | undefined {
  * @public
  */
 export function useActiveChain(): Chain | undefined {
-  const chainId = useThirdwebConnectedWalletContext().chainId;
+  const chainId = useChainId();
 
   const chains = useSupportedChains();
 
-  return useMemo(() => {
+  const chain = useMemo(() => {
     return chains.find((_chain) => _chain.chainId === chainId);
   }, [chainId, chains]);
+
+  const unknownChain = useMemo(() => {
+    if (!chain) {
+      return defaultChains.find((c) => c.chainId === chainId);
+    }
+  }, [chainId, chain]);
+
+  return chain || unknownChain;
 }
