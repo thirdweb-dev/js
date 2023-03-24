@@ -100,7 +100,6 @@ export class Pack extends StandardErc1155<PackContract> {
    */
   public interceptor: ContractInterceptor<PackContract>;
 
-  public erc1155: Erc1155<PackContract>;
   public owner: ContractOwner<PackContract>;
 
   private _vrf?: PackVRF;
@@ -138,7 +137,6 @@ export class Pack extends StandardErc1155<PackContract> {
   ) {
     super(contractWrapper, storage, chainId);
     this.abi = AbiSchema.parse(abi || []);
-    this.erc1155 = new Erc1155(this.contractWrapper, this.storage, chainId);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       PackContractSchema,

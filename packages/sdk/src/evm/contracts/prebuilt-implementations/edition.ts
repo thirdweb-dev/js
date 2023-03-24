@@ -97,7 +97,6 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    */
   public signature: Erc1155SignatureMintable;
   public interceptor: ContractInterceptor<TokenERC1155>;
-  public erc1155: Erc1155<TokenERC1155>;
   public owner: ContractOwner<TokenERC1155>;
 
   constructor(
@@ -139,7 +138,6 @@ export class Edition extends StandardErc1155<TokenERC1155> {
       this.storage,
       this.roles,
     );
-    this.erc1155 = new Erc1155(this.contractWrapper, this.storage, chainId);
     this.owner = new ContractOwner(this.contractWrapper);
   }
 

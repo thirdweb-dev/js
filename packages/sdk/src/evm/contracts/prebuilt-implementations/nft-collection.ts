@@ -102,7 +102,6 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * @internal
    */
   public interceptor: ContractInterceptor<TokenERC721>;
-  public erc721: Erc721<TokenERC721>;
 
   constructor(
     network: NetworkInput,
@@ -143,7 +142,6 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.erc721 = new Erc721(this.contractWrapper, this.storage, chainId);
     this.signature = new Erc721WithQuantitySignatureMintable(
       this.contractWrapper,
       this.storage,

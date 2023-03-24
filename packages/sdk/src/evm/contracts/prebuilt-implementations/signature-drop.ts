@@ -56,7 +56,6 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
   public abi: Abi;
-  public erc721: Erc721<SignatureDropContract>;
   public owner: ContractOwner<SignatureDropContract>;
   public encoder: ContractEncoder<SignatureDropContract>;
   public estimator: GasCostEstimator<SignatureDropContract>;
@@ -205,7 +204,6 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.erc721 = new Erc721(this.contractWrapper, this.storage, chainId);
     this.claimConditions = new DropClaimConditions(
       this.contractWrapper,
       this.metadata,

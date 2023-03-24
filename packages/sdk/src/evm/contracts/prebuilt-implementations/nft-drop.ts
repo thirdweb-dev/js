@@ -153,7 +153,6 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    */
   public checkout: PaperCheckout<PrebuiltNFTDrop>;
 
-  public erc721: Erc721<PrebuiltNFTDrop>;
   public owner: ContractOwner<PrebuiltNFTDrop>;
 
   constructor(
@@ -194,7 +193,6 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
-    this.erc721 = new Erc721(this.contractWrapper, this.storage, chainId);
     this.revealer = new DelayedReveal(
       this.contractWrapper,
       this.storage,

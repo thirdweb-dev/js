@@ -116,7 +116,6 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
 
   public history: DropErc1155History;
   public interceptor: ContractInterceptor<PrebuiltEditionDrop>;
-  public erc1155: Erc1155<PrebuiltEditionDrop>;
   public owner: ContractOwner<PrebuiltEditionDrop>;
 
   constructor(
@@ -162,7 +161,6 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.erc1155 = new Erc1155(this.contractWrapper, this.storage, chainId);
     this.checkout = new PaperCheckout(this.contractWrapper);
     this.owner = new ContractOwner(this.contractWrapper);
   }
