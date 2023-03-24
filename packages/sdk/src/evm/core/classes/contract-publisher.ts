@@ -1,9 +1,11 @@
 import {
   extractConstructorParams,
   extractFunctions,
+  fetchContractMetadata,
   fetchContractMetadataFromAddress,
   fetchExtendedReleaseMetadata,
   fetchPreDeployMetadata,
+  fetchRawPredeployMetadata,
   fetchSourceFilesFromMetadata,
   isIncrementalVersion,
   resolveContractUriFromAddress,
@@ -358,7 +360,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       invariant(signer, "A signer is required");
       const publisher = await signer.getAddress();
 
-      const predeployMetadata = await fetchPreDeployMetadata(
+      const predeployMetadata = await fetchRawPredeployMetadata(
         predeployUri,
         this.storage,
       );
@@ -370,10 +372,14 @@ export class ContractPublisher extends RPCConnectionHandler {
 
         for (const [network, implementation] of implementationsAddresses) {
           if (implementation !== "") {
+            const compilerMetadata = await fetchContractMetadata(
+              predeployMetadata.metadataUri,
+              this.storage,
+            );
             try {
               const composite = await getCompositePluginABI(
                 implementation,
-                predeployMetadata.abi,
+                compilerMetadata.abi,
                 getChainProvider(parseInt(network), {}), // pass empty object for options instead of this.options
                 {}, // pass empty object for options instead of this.options
                 this.storage,

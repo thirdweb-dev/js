@@ -57,7 +57,7 @@ const mockUploadContractMetadata = async (
 
   // mock raw-metadata
   const rawMeta = {
-    name: "name",
+    name: contractName,
     metadataUri: ipfsHash,
     bytecodeUri: bytecodeUri,
   };
