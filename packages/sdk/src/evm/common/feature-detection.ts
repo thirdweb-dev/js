@@ -101,19 +101,6 @@ export async function extractConstructorParams(
 
 /**
  * @internal
- * @param predeployMetadataUri
- * @param storage
- */
-export async function extractFunctions(
-  predeployMetadataUri: string,
-  storage: ThirdwebStorage,
-): Promise<AbiFunction[]> {
-  const metadata = await fetchPreDeployMetadata(predeployMetadataUri, storage);
-  return extractFunctionsFromAbi(metadata.abi, metadata.metadata);
-}
-
-/**
- * @internal
  * @param name
  * @param metadata
  * @param type
@@ -182,8 +169,7 @@ export function extractFunctionsFromAbi(
   abi: AbiInput,
   metadata?: Record<string, any>,
 ): AbiFunction[] {
-  const parsedAbi = AbiSchema.parse(abi || []);
-  const functions = parsedAbi.filter((el) => el.type === "function");
+  const functions = (abi || []).filter((el) => el.type === "function");
 
   const parsed: AbiFunction[] = [];
   for (const f of functions) {
@@ -196,7 +182,9 @@ export function extractFunctionsFromAbi(
     const promise = out ? `: Promise<${out}>` : `: Promise<TransactionResult>`;
     const signature = `contract.call("${f.name}"${fargs})${promise}`;
     parsed.push({
+      /// @ts-ignore we know AbiTypeBaseSchema.name is not going to be undefined since we're doing `.default("")`
       inputs: f.inputs || [],
+      // @ts-ignore we know the AbiTypeBaseSchema.name is not going to be undefined since we're doing `.default("")`
       outputs: f.outputs || [],
       name: f.name || "unknown",
       signature,
