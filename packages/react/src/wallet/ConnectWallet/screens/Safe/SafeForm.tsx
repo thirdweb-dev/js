@@ -48,6 +48,7 @@ export const gnosisAddressPrefixToChainId = {
 
 export const SafeForm: React.FC<{
   onBack: () => void;
+  onConnect: () => void;
 }> = (props) => {
   const activeWallet = useWallet();
   const connect = useConnect();
@@ -92,6 +93,7 @@ export const SafeForm: React.FC<{
         personalWallet: activeWallet,
         safeAddress,
       });
+      props.onConnect();
     } catch (e) {
       console.error(e);
       setSafeConnectError(true);
