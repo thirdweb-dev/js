@@ -7,8 +7,8 @@ import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
   SupportedWallet,
   ThirdwebProviderCore,
+  ThirdwebProviderCoreProps,
 } from "@thirdweb-dev/react-core";
-import { ComponentProps } from "react";
 
 const DEFAULT_WALLETS = [MetamaskWallet, CoinbaseWallet, DeviceWallet] as [
   typeof MetamaskWallet,
@@ -18,7 +18,7 @@ const DEFAULT_WALLETS = [MetamaskWallet, CoinbaseWallet, DeviceWallet] as [
 
 interface ThirdwebProviderProps
   extends Omit<
-    ComponentProps<typeof ThirdwebProviderCore>,
+    ThirdwebProviderCoreProps,
     "createWalletStorage" | "supportedWallets"
   > {
   /**

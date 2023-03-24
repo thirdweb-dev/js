@@ -36,7 +36,7 @@ export interface ThirdwebProviderCoreProps<
   /**
    * Chains to support. If not provided, will default to the chains supported by the SDK.
    */
-  supportedChains?: Chain[];
+  supportedChains?: TChains;
 
   /**
    * The {@link SDKOptions | Thirdweb SDK Options} to pass to the thirdweb SDK
