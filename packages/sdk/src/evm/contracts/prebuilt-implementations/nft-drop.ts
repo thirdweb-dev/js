@@ -19,7 +19,6 @@ import { ContractPrimarySale } from "../../core/classes/contract-sales";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { DelayedReveal } from "../../core/classes/delayed-reveal";
 import { DropClaimConditions } from "../../core/classes/drop-claim-conditions";
-import { Erc721 } from "../../core/classes/erc-721";
 import { StandardErc721 } from "../../core/classes/erc-721-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";

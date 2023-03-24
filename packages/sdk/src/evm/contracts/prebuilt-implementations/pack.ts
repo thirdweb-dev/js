@@ -21,7 +21,6 @@ import { ContractOwner } from "../../core/classes/contract-owner";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
-import { Erc1155 } from "../../core/classes/erc-1155";
 import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { PackVRF } from "../../core/classes/pack-vrf";

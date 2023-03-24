@@ -15,7 +15,6 @@ import { ContractPrimarySale } from "../../core/classes/contract-sales";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { DropErc1155ClaimConditions } from "../../core/classes/drop-erc1155-claim-conditions";
 import { DropErc1155History } from "../../core/classes/drop-erc1155-history";
-import { Erc1155 } from "../../core/classes/erc-1155";
 import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
