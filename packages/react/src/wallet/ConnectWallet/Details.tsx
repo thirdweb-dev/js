@@ -33,6 +33,7 @@ import {
   useWallet,
 } from "@thirdweb-dev/react-core";
 import { useMemo, useState } from "react";
+import { fadeInAnimation } from "../../components/FadeIn";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -82,18 +83,14 @@ export const ConnectedWalletDetails: React.FC<{
     <WalletInfoButton type="button">
       <ChainIcon chain={chain} size={iconSize.lg} />
 
-      <ColFlex
-        style={{
-          alignItems: "stretch",
-        }}
-      >
+      <ColFlex>
         {!balanceQuery.isLoading ? (
           <WalletBalance>
             {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
             {balanceQuery.data?.symbol}
           </WalletBalance>
         ) : (
-          <Skeleton height={fontSize.md} />
+          <Skeleton height={fontSize.sm} width="82px" />
         )}
         <Spacer y="xxs" />
         <WalletAddress>{shortenString(address || "")}</WalletAddress>
@@ -297,6 +294,7 @@ const WalletInfoButton = styled.button<{ theme?: Theme }>`
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   line-height: 1;
+  animation: ${fadeInAnimation} 300ms ease;
 
   &:hover {
     transition: background 250ms ease;

@@ -14,7 +14,8 @@ import {
 } from "../../evm/providers/wallet-ui-states-provider";
 import { Button } from "../../components/buttons";
 import { Spinner } from "../../components/Spinner";
-import { FadeIn } from "../../components/FadeIn";
+import styled from "@emotion/styled";
+import { fadeInAnimation } from "../../components/FadeIn";
 
 type ConnectWalletProps = {
   className?: string;
@@ -53,30 +54,32 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
           : lightTheme
       }
     >
-      <FadeIn>
-        {!activeWallet || isConnectingToSafe ? (
-          <Button
-            disabled={isLoading}
-            className={props.className}
-            variant="inverted"
-            type="button"
-            style={{
-              minWidth: "140px",
-            }}
-            aria-label={
-              connectionStatus === "connecting" ? "Connecting" : btnTitle
-            }
-            onClick={() => {
-              setModalTheme(theme);
-              setIsWalletModalOpen(true);
-            }}
-          >
-            {isLoading ? <Spinner size="sm" color="inverted" /> : btnTitle}
-          </Button>
-        ) : (
-          <ConnectedWalletDetails dropdownPosition={props.dropdownPosition} />
-        )}
-      </FadeIn>
+      {!activeWallet || isConnectingToSafe ? (
+        <AnimatedButton
+          disabled={isLoading}
+          className={props.className}
+          variant="inverted"
+          type="button"
+          style={{
+            minWidth: "140px",
+          }}
+          aria-label={
+            connectionStatus === "connecting" ? "Connecting" : btnTitle
+          }
+          onClick={() => {
+            setModalTheme(theme);
+            setIsWalletModalOpen(true);
+          }}
+        >
+          {isLoading ? <Spinner size="sm" color="inverted" /> : btnTitle}
+        </AnimatedButton>
+      ) : (
+        <ConnectedWalletDetails dropdownPosition={props.dropdownPosition} />
+      )}
     </ThemeProvider>
   );
 };
+
+const AnimatedButton = styled(Button)`
+  animation: ${fadeInAnimation} 300ms ease;
+`;
