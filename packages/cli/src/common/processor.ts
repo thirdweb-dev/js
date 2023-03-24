@@ -1,20 +1,33 @@
+import {
+  EXTENSION_REGISTRY_ADDRESS,
+  ROUTER_CONTRACTS,
+  PreDeployedRouter,
+  TWRouterParams,
+  RouterParams,
+} from "../constants/router-contracts";
 import { cliVersion, THIRDWEB_URL } from "../constants/urls";
 import build from "../core/builder/build";
 import detect from "../core/detection/detect";
 import { execute } from "../core/helpers/exec";
 import { error, info, logger, spinner } from "../core/helpers/logger";
-import { createContractsPrompt, createRouterPrompt } from "../core/helpers/selector";
+import {
+  createContractsPrompt,
+  createRouterPrompt,
+} from "../core/helpers/selector";
 import { ContractPayload } from "../core/interfaces/ContractPayload";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import {
+  Extension,
+  ExtensionFunction,
+  ExtensionMetadata,
+  ExtensionDeployArgs,
+} from "../core/interfaces/Extension";
 import { detectFeatures } from "@thirdweb-dev/sdk";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import chalk from "chalk";
-import { readFileSync, writeFileSync } from "fs";
 import { ethers } from "ethers";
+import { readFileSync, writeFileSync } from "fs";
 import ora from "ora";
 import path from "path";
-
-import { Extension, ExtensionFunction, ExtensionMetadata, ExtensionDeployArgs } from "../core/interfaces/Extension";
-import { EXTENSION_REGISTRY_ADDRESS, ROUTER_CONTRACTS, PreDeployedRouter, TWRouterParams, RouterParams } from "../constants/router-contracts";
 
 export async function processProject(
   options: any,
@@ -99,16 +112,18 @@ export async function processProject(
     process.exit(1);
   }
 
-  let selectedRouter: PreDeployedRouter = { name: "", metadataUri: "", bytecodeUri: ""};
-  if(options.dynamic) {
-
-    const choices = Object.keys(ROUTER_CONTRACTS).map((key) => { return { title: key, value: key } });
+  let selectedRouter: PreDeployedRouter = {
+    name: "",
+    metadataUri: "",
+    bytecodeUri: "",
+  };
+  if (options.dynamic) {
+    const choices = Object.keys(ROUTER_CONTRACTS).map((key) => {
+      return { title: key, value: key };
+    });
 
     let routerType: string = "";
-    const res = await createRouterPrompt(
-      choices,
-      "Choose a router to deploy",
-    );
+    const res = await createRouterPrompt(choices, "Choose a router to deploy");
     if (typeof res.routerType === "string") {
       routerType = res.routerType.trim();
     }
@@ -116,17 +131,13 @@ export async function processProject(
     selectedRouter = ROUTER_CONTRACTS[routerType];
   }
 
-  if(options.dynamic && !selectedRouter) {
-    error(
-      `No router selected. Please select a router contract to deploy.`,
-    );
+  if (options.dynamic && !selectedRouter) {
+    error(`No router selected. Please select a router contract to deploy.`);
     process.exit(1);
   }
 
   if (options.dynamic && !selectedRouter.name) {
-    error(
-      `No router selected. Please select a router contract to deploy.`,
-    );
+    error(`No router selected. Please select a router contract to deploy.`);
     process.exit(1);
   }
 
@@ -185,7 +196,9 @@ export async function processProject(
       });
       const prompt = createContractsPrompt(
         choices,
-        options.dynamic ? "Choose which extensions to add to your contract" : `Choose which contract(s) to ${command}`,
+        options.dynamic
+          ? "Choose which extensions to add to your contract"
+          : `Choose which contract(s) to ${command}`,
       );
       const selection: Record<string, ContractPayload> = await prompt.run();
       selectedContracts = Object.keys(selection).map((key) => selection[key]);
@@ -207,27 +220,32 @@ export async function processProject(
   const soliditySDKPackage = "@thirdweb-dev/contracts";
   let usesSoliditySDK = false;
 
-  if(selectedRouter.name === "thirdweb-router") {
+  if (selectedRouter.name === "thirdweb-router") {
     const deployArgs: TWRouterParams = {
       extensionRegistry: EXTENSION_REGISTRY_ADDRESS,
       extensionNames: selectedContracts.map((c) => c.name),
-    }
+    };
 
     const outputDeployArgs = JSON.stringify(deployArgs, undefined, 2);
     writeFileSync("./deployArgs.json", outputDeployArgs, "utf-8");
-    info("Deployment parameters written to deployArgs.json in your project directory");
+    info(
+      "Deployment parameters written to deployArgs.json in your project directory",
+    );
   } else {
-    const deployArgs: RouterParams = await formatToExtensions(selectedContracts);
-  
+    const deployArgs: RouterParams = await formatToExtensions(
+      selectedContracts,
+    );
+
     const outputDeployArgs = JSON.stringify(deployArgs, undefined, 2);
     writeFileSync("./deployArgs.json", outputDeployArgs, "utf-8");
-    info("Deployment parameters written to deployArgs.json in your project directory");
+    info(
+      "Deployment parameters written to deployArgs.json in your project directory",
+    );
   }
 
   const loader = spinner("Uploading contract data...");
 
   try {
-
     // Upload contract sources.
     for (let i = 0; i < selectedContracts.length; i++) {
       const contract = selectedContracts[i];
@@ -268,8 +286,7 @@ export async function processProject(
     const bytecodeURIs = await storage.uploadBatch(bytecodes);
 
     let combinedContents = [];
-    if(options.dynamic) {
-
+    if (options.dynamic) {
       const analytics = {
         command,
         contract_name: selectedRouter.name,
@@ -284,10 +301,8 @@ export async function processProject(
         metadataUri: selectedRouter.metadataUri,
         bytecodeUri: selectedRouter.bytecodeUri,
         analytics,
-      })
-
+      });
     } else {
-    
       combinedContents = selectedContracts.map((c, i) => {
         // attach analytics blob to metadata
         const analytics = {
@@ -306,7 +321,6 @@ export async function processProject(
         };
       });
     }
-
 
     let combinedURIs: string[] = [];
     if (combinedContents.length === 1) {
@@ -346,26 +360,26 @@ export function getUrl(hashes: string[], command: string) {
   return url;
 }
 
-
-async function formatToExtensions(contracts: ContractPayload[]): Promise<{extensions: Extension[], extensionDeployArgs: ExtensionDeployArgs[]}> {
-
+async function formatToExtensions(contracts: ContractPayload[]): Promise<{
+  extensions: Extension[];
+  extensionDeployArgs: ExtensionDeployArgs[];
+}> {
   const storage = new ThirdwebStorage();
   const extensions: Extension[] = [];
   const extensionDeployArgs: ExtensionDeployArgs[] = [];
 
-  for(const contract of contracts) {
-
+  for (const contract of contracts) {
     // Prepare extension metadata.
-		let metadata: ExtensionMetadata = {
-			name: contract.name,
-			metadataURI: await getMetadataURIForExtension(contract, storage),
-			implementation: ethers.constants.AddressZero
-		}
+    let metadata: ExtensionMetadata = {
+      name: contract.name,
+      metadataURI: await getMetadataURIForExtension(contract, storage),
+      implementation: ethers.constants.AddressZero,
+    };
 
     // Get extension ABI.
-		const abi: Parameters<typeof detectFeatures>[0] = JSON.parse(
-			contract.metadata,
-		)["output"]["abi"];
+    const abi: Parameters<typeof detectFeatures>[0] = JSON.parse(
+      contract.metadata,
+    )["output"]["abi"];
 
     // Format ABI as `ExtensionFunction[]`.
     const extensionInterface = new ethers.utils.Interface(abi);
@@ -374,28 +388,31 @@ async function formatToExtensions(contracts: ContractPayload[]): Promise<{extens
     const fragments = extensionInterface.functions;
     for (const fnSignature of Object.keys(fragments)) {
       functions.push({
-            functionSelector: extensionInterface.getSighash(fragments[fnSignature]),
-            functionSignature: fnSignature
-        });
+        functionSelector: extensionInterface.getSighash(fragments[fnSignature]),
+        functionSignature: fnSignature,
+      });
     }
 
-		extensions.push({
+    extensions.push({
       metadata,
-			functions
+      functions,
     });
     extensionDeployArgs.push({
       name: contract.name,
       amount: 0,
       salt: ethers.utils.keccak256(ethers.utils.toUtf8Bytes(contract.name)),
-      bytecode: contract.bytecode
-    })
-	}
+      bytecode: contract.bytecode,
+    });
+  }
 
   return { extensions, extensionDeployArgs };
 }
 
-async function getMetadataURIForExtension(contract: ContractPayload, storage: ThirdwebStorage): Promise<string> {
-	return await storage.upload(JSON.parse(JSON.stringify(contract.metadata)), {
-		uploadWithoutDirectory: true,
-	});
+async function getMetadataURIForExtension(
+  contract: ContractPayload,
+  storage: ThirdwebStorage,
+): Promise<string> {
+  return await storage.upload(JSON.parse(JSON.stringify(contract.metadata)), {
+    uploadWithoutDirectory: true,
+  });
 }

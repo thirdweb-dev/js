@@ -5,12 +5,11 @@ import {
   RpcError,
   UserRejectedRequestError,
 } from "../../../lib/wagmi-core/errors";
-import { InjectedConnector, InjectedConnectorOptions } from "../injected";
-import type { Chain } from "@thirdweb-dev/chains";
-
-import { utils } from "ethers";
-import { Ethereum } from "../injected/types";
 import { assertWindowEthereum } from "../../utils/assertWindowEthereum";
+import { InjectedConnector, InjectedConnectorOptions } from "../injected";
+import { Ethereum } from "../injected/types";
+import type { Chain } from "@thirdweb-dev/chains";
+import { utils } from "ethers";
 
 export type MetaMaskConnectorOptions = Pick<
   InjectedConnectorOptions,

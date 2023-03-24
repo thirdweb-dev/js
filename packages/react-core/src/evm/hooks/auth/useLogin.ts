@@ -1,3 +1,4 @@
+import { useWallet } from "../../../core/hooks/wallet-hooks";
 import { useThirdwebAuthContext } from "../../contexts/thirdweb-auth";
 import { cacheKeys } from "../../utils/cache-keys";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -6,9 +7,8 @@ import type {
   LoginPayload,
   LoginPayloadData,
 } from "@thirdweb-dev/auth";
-import invariant from "tiny-invariant";
-import { useWallet } from "../../../core/hooks/wallet-hooks";
 import { GenericAuthWallet } from "@thirdweb-dev/wallets";
+import invariant from "tiny-invariant";
 
 /**
  * Hook to securely login to a backend with the connected wallet. The backend

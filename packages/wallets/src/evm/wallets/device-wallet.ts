@@ -1,5 +1,4 @@
 import { AsyncStorage, createAsyncLocalStorage } from "../../core";
-
 import { TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
@@ -26,8 +25,9 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
 > {
   connector?: TWConnector;
   #walletImpl?: DeviceWalletImpl;
-  static id = "deviceWallet" as const;
   options: WalletOptions<DeviceWalletOptions>;
+
+  static id = "deviceWallet";
 
   static meta = {
     name: "Device Wallet",

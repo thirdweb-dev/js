@@ -1,6 +1,6 @@
-import { useMemo } from "react";
 import { updateChainRPCs } from "../../core/utils/updateChainRpcs";
 import { ThirdwebSDKProviderProps } from "../providers/types";
+import { useMemo } from "react";
 
 export function useUpdateChainsWithApiKeys(
   supportedChains: NonNullable<ThirdwebSDKProviderProps["supportedChains"]>,

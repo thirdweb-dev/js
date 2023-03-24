@@ -32,8 +32,8 @@ import type {
 import { NFTDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/nft-drop";
 import { SignatureDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/signature-drop";
 import { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/smart-contract";
-import invariant from "tiny-invariant";
 import type { providers } from "ethers";
+import invariant from "tiny-invariant";
 
 /** **********************/
 /**       READ HOOKS    **/

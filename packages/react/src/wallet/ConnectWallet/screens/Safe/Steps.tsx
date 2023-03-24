@@ -1,5 +1,5 @@
-import styled from "@emotion/styled";
 import { media, spacing, Theme } from "../../../../design-system";
+import styled from "@emotion/styled";
 
 export function Steps({ step }: { step: 1 | 2 }) {
   return (
