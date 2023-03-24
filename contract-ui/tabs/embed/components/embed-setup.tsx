@@ -10,19 +10,13 @@ import {
   useClipboard,
 } from "@chakra-ui/react";
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
-import {
-  Chain,
-  configureChain,
-  getChainRPC,
-  minimizeChain,
-} from "@thirdweb-dev/chains";
+import { Chain, configureChain, minimizeChain } from "@thirdweb-dev/chains";
 import { DropContract } from "@thirdweb-dev/react";
 import {
   DASHBOARD_THIRDWEB_API_KEY,
   EMBED_THIRDWEB_API_KEY,
 } from "constants/rpc";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useAllChainsData } from "hooks/chains/allChains";
 import { useConfiguredChainsRecord } from "hooks/chains/configureChains";
 import { replaceIpfsUrl } from "lib/sdk";
 import { useEffect, useMemo } from "react";
@@ -162,42 +156,33 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   const trackEvent = useTrack();
 
   const chainId = useDashboardEVMChainId();
-  const { chainIdToChainRecord } = useAllChainsData();
   const configuredChains = useConfiguredChainsRecord();
 
-  const configuredChain =
-    configuredChains[chainId as keyof typeof configuredChains];
-  const allChain =
-    chainIdToChainRecord[chainId as keyof typeof chainIdToChainRecord];
-
   const chain = useMemo(() => {
-    if (configuredChain) {
-      const rpc = configuredChain.rpc[0];
-
-      if (rpc.includes(DASHBOARD_THIRDWEB_API_KEY)) {
-        return configureChain(configuredChain, {
-          rpc: rpc.replace(DASHBOARD_THIRDWEB_API_KEY, EMBED_THIRDWEB_API_KEY),
-        });
-      }
-
-      // eslint-disable-next-line no-template-curly-in-string
-      if (rpc.includes("${THIRDWEB_API_KEY}")) {
-        return configureChain(configuredChain, {
-          // eslint-disable-next-line no-template-curly-in-string
-          rpc: rpc.replace("${THIRDWEB_API_KEY}", EMBED_THIRDWEB_API_KEY),
-        });
-      }
-
-      return configuredChain;
+    if (!chainId) {
+      return undefined;
     }
-    if (allChain) {
-      const rpc = getChainRPC(allChain, {
-        thirdwebApiKey: EMBED_THIRDWEB_API_KEY,
+
+    const configuredChain = configuredChains[chainId];
+
+    const rpc = configuredChain.rpc[0];
+
+    if (rpc.includes(DASHBOARD_THIRDWEB_API_KEY)) {
+      return configureChain(configuredChain, {
+        rpc: rpc.replace(DASHBOARD_THIRDWEB_API_KEY, EMBED_THIRDWEB_API_KEY),
       });
-      return configureChain(allChain, { rpc });
     }
-    return undefined;
-  }, [configuredChain, allChain]);
+
+    // eslint-disable-next-line no-template-curly-in-string
+    if (rpc.includes("${THIRDWEB_API_KEY}")) {
+      return configureChain(configuredChain, {
+        // eslint-disable-next-line no-template-curly-in-string
+        rpc: rpc.replace("${THIRDWEB_API_KEY}", EMBED_THIRDWEB_API_KEY),
+      });
+    }
+
+    return configuredChain;
+  }, [chainId, configuredChains]);
 
   const { register, watch } = useForm<{
     rpcUrl: string;

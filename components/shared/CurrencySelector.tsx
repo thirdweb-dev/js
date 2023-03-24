@@ -2,7 +2,7 @@ import { Flex, Input, Select, SelectProps } from "@chakra-ui/react";
 import { useSDKChainId } from "@thirdweb-dev/react";
 import { CURRENCIES, CurrencyMetadata } from "constants/currencies";
 import { constants, utils } from "ethers";
-import { useAllChainsData } from "hooks/chains/allChains";
+import { useConfiguredChainsRecord } from "hooks/chains/configureChains";
 import React, { useMemo, useState } from "react";
 import { Button } from "tw-components";
 import { OtherAddressZero } from "utils/zeroAddress";
@@ -20,11 +20,11 @@ export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
   hideDefaultCurrencies,
   ...props
 }) => {
-  const chainId = useSDKChainId() as number;
-  const { chainIdToChainRecord } = useAllChainsData();
+  const chainId = useSDKChainId();
+  const configuredChainsRecord = useConfiguredChainsRecord();
+  const chain = chainId ? configuredChainsRecord[chainId] : undefined;
 
-  const chain = chainIdToChainRecord[chainId];
-  const helperCurrencies = CURRENCIES[chainId] || [];
+  const helperCurrencies = chainId ? CURRENCIES[chainId] || [] : [];
 
   const [isAddingCurrency, setIsAddingCurrency] = useState(false);
   const [editCustomCurrency, setEditCustomCurrency] = useState("");
@@ -51,8 +51,8 @@ export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
     [
       {
         address: OtherAddressZero.toLowerCase(),
-        name: chain.nativeCurrency.name,
-        symbol: chain.nativeCurrency.symbol,
+        name: chain?.nativeCurrency.name || "Native Token",
+        symbol: chain?.nativeCurrency.symbol || "",
       },
       ...(hideDefaultCurrencies ? [] : helperCurrencies),
     ] || [];

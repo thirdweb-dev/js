@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useAddress, useContract } from "@thirdweb-dev/react";
 import { BigNumber, ethers } from "ethers";
-import { useAllChainsData } from "hooks/chains/allChains";
+import { useConfiguredChainsRecord } from "hooks/chains/configureChains";
 import { useMemo } from "react";
 import { Card, Heading, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
@@ -29,11 +29,9 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
 }) => {
   const address = useAddress();
   const contractQuery = useContract(contractAddress, "split");
-  const { chainIdToChainRecord } = useAllChainsData();
+  const configuredChainsRecord = useConfiguredChainsRecord();
   const chainId = useDashboardEVMChainId();
-
-  const chain =
-    chainIdToChainRecord[chainId as keyof typeof chainIdToChainRecord];
+  const chain = chainId ? configuredChainsRecord[chainId] : undefined;
 
   const splitQuery = useSplitData(contractQuery.contract);
   const balanceQuery = useSplitBalances(contractAddress);
@@ -96,7 +94,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
                   <Card as={Stat} key={balance.token_address} maxWidth="2xs">
                     <StatLabel as={Heading} size="label.lg">
                       {balance.name === "Native Token"
-                        ? chain.nativeCurrency.symbol
+                        ? chain?.nativeCurrency.symbol || "Native Token"
                         : balance.symbol ||
                           shortenIfAddress(balance.token_address)}
                     </StatLabel>
