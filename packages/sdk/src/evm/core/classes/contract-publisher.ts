@@ -1,5 +1,6 @@
 import {
   extractConstructorParams,
+  extractFunctions,
   fetchContractMetadataFromAddress,
   fetchExtendedReleaseMetadata,
   fetchPreDeployMetadata,
@@ -12,6 +13,7 @@ import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import { getContractPublisherAddress } from "../../constants";
 import {
+  AbiFunction,
   AddressOrEns,
   ContractParam,
   ContractSource,
@@ -77,6 +79,16 @@ export class ContractPublisher extends RPCConnectionHandler {
     metadataUri: string,
   ): Promise<ContractParam[]> {
     return extractConstructorParams(metadataUri, this.storage);
+  }
+
+  /**
+   * @internal
+   * @param predeployMetadataUri
+   */
+  public async extractFunctions(
+    predeployMetadataUri: string,
+  ): Promise<AbiFunction[]> {
+    return extractFunctions(predeployMetadataUri, this.storage);
   }
 
   /**

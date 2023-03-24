@@ -101,6 +101,19 @@ export async function extractConstructorParams(
 
 /**
  * @internal
+ * @param predeployMetadataUri
+ * @param storage
+ */
+export async function extractFunctions(
+  predeployMetadataUri: string,
+  storage: ThirdwebStorage,
+): Promise<AbiFunction[]> {
+  const metadata = await fetchPreDeployMetadata(predeployMetadataUri, storage);
+  return extractFunctionsFromAbi(metadata.abi, metadata.metadata);
+}
+
+/**
+ * @internal
  * @param name
  * @param metadata
  * @param type
