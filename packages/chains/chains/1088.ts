@@ -31,6 +31,12 @@ export default {
       }
     ]
   },
+  "icon": {
+    "url": "ipfs://QmbWKNucbMtrMPPkHG5ZmVmvNUo8CzqHHcrpk1C2BVQsEG/2022_H-Brand_Stacked_WhiteGreen.svg",
+    "format": "svg",
+    "height": 512,
+    "width": 512
+  },
   "testnet": false,
   "slug": "metis-andromeda"
 } as const;

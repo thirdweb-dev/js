@@ -23,6 +23,12 @@ export default {
   "shortName": "team",
   "chainId": 88888888,
   "networkId": 88888888,
+  "icon": {
+    "url": "ipfs://QmcnA15BLE9uvznbugXKjqquizZs1eLPeEEkc92DSmvhmt",
+    "width": 248,
+    "height": 248,
+    "format": "png"
+  },
   "explorers": [
     {
       "icon": "team",

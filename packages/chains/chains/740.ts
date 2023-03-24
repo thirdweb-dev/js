@@ -18,7 +18,7 @@ export default {
   "explorers": [
     {
       "name": "Canto Tesnet Explorer (Neobase)",
-      "url": "http://testnet-explorer.canto.neobase.one",
+      "url": "https://testnet-explorer.canto.neobase.one",
       "standard": "none"
     }
   ],
