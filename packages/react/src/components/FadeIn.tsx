@@ -1,7 +1,7 @@
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 
-const fadeIn = keyframes`
+export const fadeInAnimation = keyframes`
   from {
     opacity: 0;
   }
@@ -11,5 +11,5 @@ const fadeIn = keyframes`
 `;
 
 export const FadeIn = styled.div`
-  animation: ${fadeIn} 0.15s ease-in;
+  animation: ${fadeInAnimation} 0.15s ease-in;
 `;

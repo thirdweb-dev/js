@@ -9,6 +9,7 @@ import { IconButton } from "../../components/buttons";
 import {
   fontSize,
   iconSize,
+  media,
   radius,
   spacing,
   Theme,
@@ -30,9 +31,14 @@ import {
   useChainId,
   useDisconnect,
   useSupportedChains,
+  useThirdwebWallet,
   useWallet,
 } from "@thirdweb-dev/react-core";
 import { useMemo, useState } from "react";
+import { fadeInAnimation } from "../../components/FadeIn";
+import { SafeWallet } from "../wallets";
+import { Flex } from "../../components/basic";
+import { FundsIcon } from "./icons/FundsIcon";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -48,6 +54,7 @@ export const ConnectedWalletDetails: React.FC<{
   const address = useAddress();
   const balanceQuery = useBalance();
   const activeWallet = useWallet();
+  const walletContext = useThirdwebWallet();
 
   const chain = useMemo(() => {
     return chains.find((_chain) => _chain.chainId === activeChainId);
@@ -78,22 +85,23 @@ export const ConnectedWalletDetails: React.FC<{
     );
   };
 
+  const personalWallet =
+    activeWallet?.walletId === "Safe"
+      ? (activeWallet as SafeWallet).getPersonalWallet()
+      : undefined;
+
   const trigger = (
     <WalletInfoButton type="button">
       <ChainIcon chain={chain} size={iconSize.lg} />
 
-      <ColFlex
-        style={{
-          alignItems: "stretch",
-        }}
-      >
+      <ColFlex>
         {!balanceQuery.isLoading ? (
           <WalletBalance>
             {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
             {balanceQuery.data?.symbol}
           </WalletBalance>
         ) : (
-          <Skeleton height={fontSize.md} />
+          <Skeleton height={fontSize.sm} width="82px" />
         )}
         <Spacer y="xxs" />
         <WalletAddress>{shortenString(address || "")}</WalletAddress>
@@ -124,11 +132,43 @@ export const ConnectedWalletDetails: React.FC<{
       </div>
       {chain?.name || unknownChain?.name || "Wrong Network"}
       <StyledChevronRightIcon
+        width={iconSize.sm}
+        height={iconSize.sm}
         style={{
           flexShrink: 0,
           marginLeft: "auto",
-          width: "20px",
-          height: "20px",
+        }}
+      />
+    </MenuButton>
+  );
+
+  const switchToPersonalWallet = personalWallet && (
+    <MenuButton
+      type="button"
+      onClick={() => {
+        walletContext?.handleWalletConnect(personalWallet);
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          position: "relative",
+        }}
+      >
+        <Img
+          src={personalWallet.getMeta().iconURL}
+          width={iconSize.lg}
+          height={iconSize.lg}
+        />
+      </div>
+      {personalWallet.getMeta().name}
+      <StyledChevronRightIcon
+        width={iconSize.sm}
+        height={iconSize.sm}
+        style={{
+          flexShrink: 0,
+          marginLeft: "auto",
         }}
       />
     </MenuButton>
@@ -137,13 +177,7 @@ export const ConnectedWalletDetails: React.FC<{
   const content = (
     <div>
       {/* Balance and Account Address */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: spacing.md,
-        }}
-      >
+      <Flex gap="md">
         <Img
           width={iconSize.xl}
           height={iconSize.xl}
@@ -151,59 +185,63 @@ export const ConnectedWalletDetails: React.FC<{
           alt=""
         />
 
-        <ColFlex>
-          <div
-            style={{
-              display: "flex",
-              gap: spacing.xs,
-            }}
-          >
-            <AccountAddress> {shortenString(address || "")}</AccountAddress>
-            <IconButton variant="secondary">
-              <CopyIcon text={address || ""} />
-            </IconButton>
-          </div>
+        <div
+          style={{
+            flexGrow: 1,
+          }}
+        >
+          {/* row 1 */}
+          <Flex gap="xs" alignItems="center">
+            <div
+              style={{
+                display: "flex",
+                gap: spacing.xs,
+                alignItems: "center",
+              }}
+            >
+              <AccountAddress> {shortenString(address || "")}</AccountAddress>
+              <IconButton
+                variant="secondary"
+                style={{
+                  padding: "3px",
+                }}
+              >
+                <CopyIcon
+                  text={address || ""}
+                  tip="Copy Address"
+                  side="bottom"
+                />
+              </IconButton>
+            </div>
+
+            <ToolTip
+              tip="Disconnect Wallet"
+              side="bottom"
+              align={"end"}
+              sideOffset={10}
+            >
+              <DisconnectIconButton
+                type="button"
+                variant="secondary"
+                onClick={() => {
+                  disconnect();
+                }}
+              >
+                <ExitIcon size={iconSize.md} />
+              </DisconnectIconButton>
+            </ToolTip>
+          </Flex>
+
+          {/* row 2 */}
           <AccountBalance>
             {" "}
             {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
             {balanceQuery.data?.symbol}{" "}
           </AccountBalance>
-        </ColFlex>
+        </div>
+      </Flex>
 
-        <ToolTip tip="Disconnect Wallet">
-          <DisconnectIconButton
-            type="button"
-            variant="secondary"
-            onClick={() => {
-              disconnect();
-            }}
-          >
-            <ExitIcon size={iconSize.md} />
-          </DisconnectIconButton>
-        </ToolTip>
-      </div>
-
-      {activeWallet?.walletId === "deviceWallet" ? (
-        <>
-          <Spacer y="md" />
-
-          <MenuButton
-            onClick={handleDeviceWalletExport}
-            style={{
-              fontSize: fontSize.sm,
-            }}
-          >
-            <GenericWalletIconContainer>
-              <GenericWalletIcon size={iconSize.sm} />
-            </GenericWalletIconContainer>
-            Export Device Wallet{" "}
-          </MenuButton>
-
-          <Spacer y="xl" />
-        </>
-      ) : (
-        <Spacer y="xl" />
-      )}
+      <Spacer y="lg" />
 
       {/* Network Switcher */}
       <div>
@@ -212,7 +250,59 @@ export const ConnectedWalletDetails: React.FC<{
         {networkSwitcherButton}
       </div>
 
-      <Spacer y="md" />
+      {/* Switch to Personal Wallet for Safe */}
+      {personalWallet && (
+        <div>
+          <Spacer y="lg" />
+          <DropdownLabel htmlFor="current-network">
+            Personal Wallet
+          </DropdownLabel>
+          <Spacer y="sm" />
+          <ToolTip tip="Switch To Personal Wallet">
+            {switchToPersonalWallet}
+          </ToolTip>
+        </div>
+      )}
+
+      {/* Request Testnet funds */}
+      {chain?.faucets && chain.faucets.length > 0 && (
+        <div>
+          <Spacer y="lg" />
+          <MenuLink
+            href={chain.faucets[0]}
+            target="_blank"
+            as="a"
+            style={{
+              textDecoration: "none",
+              color: "inherit",
+              fontSize: fontSize.sm,
+            }}
+          >
+            <SecondaryIconContainer>
+              <FundsIcon size={iconSize.sm} />
+            </SecondaryIconContainer>
+            Request Testnet Funds
+          </MenuLink>
+        </div>
+      )}
+
+      {/* Export Device Wallet */}
+      {activeWallet?.walletId === "deviceWallet" && (
+        <>
+          <Spacer y="sm" />
+          <MenuButton
+            onClick={handleDeviceWalletExport}
+            style={{
+              fontSize: fontSize.sm,
+            }}
+          >
+            <SecondaryIconContainer>
+              <GenericWalletIcon size={iconSize.sm} />
+            </SecondaryIconContainer>
+            Export Device Wallet{" "}
+          </MenuButton>
+        </>
+      )}
     </div>
   );
 
@@ -271,7 +361,7 @@ const dropdownContentFade = keyframes`
 `;
 
 const DropDownContent = styled(DropdownMenu.Content)<{ theme?: Theme }>`
-  width: 360px;
+  width: 340px;
   box-sizing: border-box;
   max-width: 100%;
   border-radius: ${radius.lg};
@@ -293,10 +383,19 @@ const WalletInfoButton = styled.button<{ theme?: Theme }>`
   display: flex;
   align-items: center;
   gap: ${spacing.md};
-  min-width: 200px;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   line-height: 1;
+  animation: ${fadeInAnimation} 300ms ease;
+
+  ${media.mobile} {
+    gap: ${spacing.sm};
+    padding: ${spacing.xs} ${spacing.sm};
+    img {
+      width: ${iconSize.md}px;
+      height: ${iconSize.md}px;
+    }
+  }
 
   &:hover {
     transition: background 250ms ease;
@@ -342,9 +441,9 @@ const DropdownLabel = styled.label<{ theme?: Theme }>`
 
 const MenuButton = styled.button<{ theme?: Theme }>`
   all: unset;
-  padding: ${spacing.sm} ${spacing.md};
+  padding: ${spacing.sm} ${spacing.sm};
   border-radius: ${radius.md};
-  background-color: ${(props) => props.theme.bg.baseHover};
+  background-color: ${(props) => props.theme.bg.base};
   border: 1px solid ${(props) => props.theme.border.elevated};
   box-sizing: border-box;
   display: flex;
@@ -358,7 +457,7 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   -webkit-tap-highlight-color: transparent;
 
   &:not([disabled]):hover {
-    transition: background 150ms ease;
+    transition: box-shadow 250ms ease, border-color 250ms ease;
     border: 1px solid ${(props) => props.theme.link.primary};
     box-shadow: 0 0 0 1px ${(props) => props.theme.link.primary};
   }
@@ -370,6 +469,8 @@ const MenuButton = styled.button<{ theme?: Theme }>`
     }
   }
 `;
+
+const MenuLink = MenuButton.withComponent("a");
 
 export const DropdownMenuItem = styled(DropdownMenu.Item)<{ theme?: Theme }>`
   outline: none;
@@ -384,15 +485,14 @@ export const StyledChevronRightIcon = styled(ChevronRightIcon)<{
 const DisconnectIconButton = styled(IconButton)<{ theme?: Theme }>`
   margin-right: -${spacing.xxs};
   margin-left: auto;
-  padding: ${spacing.xxs};
   color: ${(props) => props.theme.icon.secondary};
   &:hover {
     color: ${(props) => props.theme.icon.danger};
-    background: ${(props) => props.theme.bg.danger};
+    background: none;
   }
 `;
 
-const GenericWalletIconContainer = styled.div<{ theme?: Theme }>`
+const SecondaryIconContainer = styled.div<{ theme?: Theme }>`
   display: flex;
   align-items: center;
   justify-content: center;
