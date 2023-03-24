@@ -7,12 +7,13 @@ import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
   SupportedWallet,
   ThirdwebProviderCore,
+  ThirdwebProviderCoreProps,
 } from "@thirdweb-dev/react-core";
-import { ComponentProps } from "react";
 import { WalletUIStatesProvider } from "./wallet-ui-states-provider";
 import { ConnectModal } from "../../wallet/ConnectWallet/Connect";
 import { ThemeProvider } from "@emotion/react";
 import { darkTheme, lightTheme } from "../../design-system";
+import { PropsWithChildren } from "react";
 
 const DEFAULT_WALLETS = [MetamaskWallet, CoinbaseWallet, DeviceWallet] as [
   typeof MetamaskWallet,
@@ -21,10 +22,10 @@ const DEFAULT_WALLETS = [MetamaskWallet, CoinbaseWallet, DeviceWallet] as [
 ];
 
 interface ThirdwebProviderProps
-  extends Omit<
-    ComponentProps<typeof ThirdwebProviderCore>,
+  extends PropsWithChildren<Omit<
+    ThirdwebProviderCoreProps,
     "createWalletStorage" | "supportedWallets"
-  > {
+  >> {
   /**
    * Wallets that will be supported by the dApp
    * @defaultValue [MetaMaskWallet, CoinbaseWallet, DeviceWallet]
