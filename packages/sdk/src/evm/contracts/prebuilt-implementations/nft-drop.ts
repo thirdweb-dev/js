@@ -19,7 +19,6 @@ import { ContractPrimarySale } from "../../core/classes/contract-sales";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { DelayedReveal } from "../../core/classes/delayed-reveal";
 import { DropClaimConditions } from "../../core/classes/drop-claim-conditions";
-import { Erc721 } from "../../core/classes/erc-721";
 import { StandardErc721 } from "../../core/classes/erc-721-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
@@ -153,7 +152,6 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    */
   public checkout: PaperCheckout<PrebuiltNFTDrop>;
 
-  public erc721: Erc721<PrebuiltNFTDrop>;
   public owner: ContractOwner<PrebuiltNFTDrop>;
 
   constructor(
@@ -194,7 +192,6 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
-    this.erc721 = new Erc721(this.contractWrapper, this.storage, chainId);
     this.revealer = new DelayedReveal(
       this.contractWrapper,
       this.storage,

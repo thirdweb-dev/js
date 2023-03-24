@@ -19,7 +19,6 @@ import { ContractPrimarySale } from "../../core/classes/contract-sales";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { DelayedReveal } from "../../core/classes/delayed-reveal";
 import { DropClaimConditions } from "../../core/classes/drop-claim-conditions";
-import { Erc721 } from "../../core/classes/erc-721";
 import { StandardErc721 } from "../../core/classes/erc-721-standard";
 import { Erc721WithQuantitySignatureMintable } from "../../core/classes/erc-721-with-quantity-signature-mintable";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
@@ -56,7 +55,6 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
   public abi: Abi;
-  public erc721: Erc721<SignatureDropContract>;
   public owner: ContractOwner<SignatureDropContract>;
   public encoder: ContractEncoder<SignatureDropContract>;
   public estimator: GasCostEstimator<SignatureDropContract>;
@@ -205,7 +203,6 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.erc721 = new Erc721(this.contractWrapper, this.storage, chainId);
     this.claimConditions = new DropClaimConditions(
       this.contractWrapper,
       this.metadata,
