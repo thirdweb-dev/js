@@ -20,6 +20,7 @@ export const ChainIcon: React.FC<{
       style={{
         position: "relative",
         display: "flex",
+        flexShrink: 0,
         alignItems: "center",
       }}
     >

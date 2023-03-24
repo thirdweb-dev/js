@@ -9,6 +9,7 @@ import { IconButton } from "../../components/buttons";
 import {
   fontSize,
   iconSize,
+  media,
   radius,
   spacing,
   Theme,
@@ -382,11 +383,19 @@ const WalletInfoButton = styled.button<{ theme?: Theme }>`
   display: flex;
   align-items: center;
   gap: ${spacing.md};
-  min-width: 200px;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   line-height: 1;
   animation: ${fadeInAnimation} 300ms ease;
+
+  ${media.mobile} {
+    gap: ${spacing.sm};
+    padding: ${spacing.xs} ${spacing.sm};
+    img {
+      width: ${iconSize.md}px;
+      height: ${iconSize.md}px;
+    }
+  }
 
   &:hover {
     transition: background 250ms ease;
