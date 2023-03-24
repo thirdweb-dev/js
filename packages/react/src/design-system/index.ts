@@ -46,6 +46,10 @@ export const darkTheme = {
     focusRing: blue.blue9,
     errorRing: tomato.tomato9,
   },
+  tooltip: {
+    bg: "black",
+    text: "white",
+  },
 };
 
 export const lightTheme: typeof darkTheme = {
@@ -93,6 +97,10 @@ export const lightTheme: typeof darkTheme = {
     outline: mauve.mauve7,
     focusRing: blue.blue11,
     errorRing: tomato.tomato10,
+  },
+  tooltip: {
+    bg: "black",
+    text: "white",
   },
 };
 
