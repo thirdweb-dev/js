@@ -46,12 +46,12 @@ export const GetStarted: React.FC<GetStartedProps> = ({
         gap={4}
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <Text size="label.xl" color="white" textAlign="left">
+        <Text size="label.xl" textAlign="left">
           {title}
         </Text>
         {isComplete && (
           <Flex alignItems="center">
-            <Heading size="subtitle.xs" color="white" mr="2">
+            <Heading size="subtitle.xs" mr="2">
               {isOpen ? "Collapse" : "Expand"}
             </Heading>
             <Box
@@ -67,14 +67,14 @@ export const GetStarted: React.FC<GetStartedProps> = ({
         <>
           <Text mt={4}>{description}</Text>
           <Progress value={percentage} mt={8} mb={2} rounded="full" />
-          <Text size="body.sm" mt={2} color="whiteAlpha.500">
+          <Text size="body.sm" mt={2} color="gray.700">
             {lastStepCompleted + 1}/{steps.length} Tasks Completed
           </Text>
           {steps.map(({ children, ...step }, index) => {
             return (
               <Flex
                 flexDir={{ base: "column", md: "row" }}
-                opacity={index === lastStepCompleted + 1 ? 1 : 0.5}
+                opacity={index === lastStepCompleted + 1 ? 1 : 0.6}
                 key={index}
                 mt={8}
                 gap={4}
@@ -88,22 +88,20 @@ export const GetStarted: React.FC<GetStartedProps> = ({
                   alignItems="center"
                   justifyContent="center"
                   border="1px solid"
-                  borderColor={step.completed ? "white" : "whiteAlpha.500"}
+                  borderColor={step.completed ? "gray.500" : "gray.700"}
                 >
                   {step.completed ? (
                     <FiCheck />
                   ) : (
-                    <Text size="label.sm" color="white">
-                      {index + 1}
-                    </Text>
+                    <Text size="label.sm">{index + 1}</Text>
                   )}
                 </Flex>
                 <Flex flexDir="column" w="full">
-                  <Text color="white">{step.title}</Text>
+                  <Text>{step.title}</Text>
                   {index === lastStepCompleted + 1 && (
                     <>
                       {step.description && (
-                        <Text my={2} size="body.sm" color="whiteAlpha.500">
+                        <Text my={2} size="body.sm" color="gray.700">
                           {step.description}
                         </Text>
                       )}
