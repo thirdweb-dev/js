@@ -245,14 +245,14 @@ export function ThirdwebWalletProvider(
   }, []);
 
   const disconnectWallet = useCallback(async () => {
-    // get the connected wallet
+    // if disconnect is called before the wallet is connected
     if (!activeWallet) {
-      return Promise.resolve();
+      onWalletDisconnect();
+      return;
     }
 
-    return activeWallet.disconnect().then(() => {
-      onWalletDisconnect();
-    });
+    await activeWallet.disconnect();
+    onWalletDisconnect();
   }, [activeWallet, onWalletDisconnect]);
 
   // when wallet's network or account is changed using the extension, update UI

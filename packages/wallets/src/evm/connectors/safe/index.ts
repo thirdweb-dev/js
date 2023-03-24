@@ -3,6 +3,7 @@ import { AbstractWallet } from "../../wallets/abstract";
 import type { SafeConnectionArgs } from "./types";
 import { ethers } from "ethers";
 import type { Signer } from "ethers";
+import { AbstractBrowserWallet } from "../../wallets/base";
 
 // excerpt from https://docs.gnosis-safe.io/backend/available-services
 const CHAIN_ID_TO_GNOSIS_SERVER_URL = {
@@ -36,6 +37,7 @@ export class SafeConnector extends TWConnector<SafeConnectionArgs> {
   public previousConnector?: AbstractWallet;
   // private options: SafeOptions;
   private safeSigner?: Signer;
+  personalWallet?: AbstractBrowserWallet;
 
   constructor() {
     super();
@@ -56,8 +58,8 @@ export class SafeConnector extends TWConnector<SafeConnectionArgs> {
   }
 
   private async createSafeSigner(params: SafeConnectionArgs) {
+    this.personalWallet = params.personalWallet;
     const signer = await params.personalWallet.getSigner();
-    console.log("cached signer is", signer);
     const safeAddress = params.safeAddress;
     const safeChainId = params.chain
       .chainId as keyof typeof CHAIN_ID_TO_GNOSIS_SERVER_URL;

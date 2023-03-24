@@ -9,6 +9,11 @@ import {
   ThirdwebProviderCore,
   ThirdwebProviderCoreProps,
 } from "@thirdweb-dev/react-core";
+import { WalletUIStatesProvider } from "./wallet-ui-states-provider";
+import { ConnectModal } from "../../wallet/ConnectWallet/Connect";
+import { ThemeProvider } from "@emotion/react";
+import { darkTheme, lightTheme } from "../../design-system";
+import { PropsWithChildren } from "react";
 
 const DEFAULT_WALLETS = [MetamaskWallet, CoinbaseWallet, DeviceWallet] as [
   typeof MetamaskWallet,
@@ -17,10 +22,10 @@ const DEFAULT_WALLETS = [MetamaskWallet, CoinbaseWallet, DeviceWallet] as [
 ];
 
 interface ThirdwebProviderProps
-  extends Omit<
+  extends PropsWithChildren<Omit<
     ThirdwebProviderCoreProps,
     "createWalletStorage" | "supportedWallets"
-  > {
+  >> {
   /**
    * Wallets that will be supported by the dApp
    * @defaultValue [MetaMaskWallet, CoinbaseWallet, DeviceWallet]
@@ -61,13 +66,23 @@ interface ThirdwebProviderProps
 export const ThirdwebProvider: React.FC<ThirdwebProviderProps> = ({
   thirdwebApiKey = DEFAULT_API_KEY,
   supportedWallets = DEFAULT_WALLETS,
+  theme,
+  children,
   ...restProps
 }) => {
   return (
-    <ThirdwebProviderCore
-      thirdwebApiKey={thirdwebApiKey}
-      supportedWallets={supportedWallets}
-      {...restProps}
-    />
+    <WalletUIStatesProvider theme={theme}>
+      <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
+        <ThirdwebProviderCore
+          theme={theme}
+          thirdwebApiKey={thirdwebApiKey}
+          supportedWallets={supportedWallets}
+          {...restProps}
+        >
+          {children}
+          <ConnectModal />
+        </ThirdwebProviderCore>
+      </ThemeProvider>
+    </WalletUIStatesProvider>
   );
 };
