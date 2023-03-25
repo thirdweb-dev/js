@@ -128,14 +128,13 @@ export function ThirdwebWalletProvider(
   const handleWalletConnect = useCallback(
     async (wallet: InstanceType<SupportedWallet>, params?: ConnectParams<Record<string, any>>) => {
       const connectParams = params || walletParams;
-
-      await coordinatorStorage.setItem(
-        "lastConnectedParams",
-        JSON.stringify(connectParams),
-      );
+      const lastConnectedWallet = {
+        walletId: wallet.walletId,
+        connectParams
+      }
       await coordinatorStorage.setItem(
         "lastConnectedWallet",
-        wallet.walletId,
+        JSON.stringify(lastConnectedWallet),
       );
 
       const _signer = await wallet.getSigner();
@@ -186,13 +185,24 @@ export function ThirdwebWalletProvider(
 
     autoConnectTriggered.current = true;
     (async () => {
-      const lastConnectedWalletId = await coordinatorStorage.getItem(
+      const lastConnectedWallet = await coordinatorStorage.getItem(
         "lastConnectedWallet",
       );
 
-      if (!lastConnectedWalletId) {
+      if (!lastConnectedWallet) {
         setConnectionStatus("disconnected");
         return;
+      }
+  
+      let parsedParams: ConnectParams<Record<string, any>> | undefined;
+      let lastConnectedWalletId: string | undefined;
+  
+      try {
+        const parsedWallet = JSON.parse(lastConnectedWallet as string);
+        parsedParams = parsedWallet.connectParams;
+        lastConnectedWalletId = parsedWallet.walletId;
+      } catch {
+        parsedParams = undefined;
       }
 
       let Wallet = props.supportedWallets.find(
@@ -202,18 +212,6 @@ export function ThirdwebWalletProvider(
       if (!Wallet) {
         setConnectionStatus("disconnected");
         return;
-      }
-
-      const lastConnectionParams = await coordinatorStorage.getItem(
-        "lastConnectedParams",
-      );
-  
-      let parsedParams: ConnectParams<Record<string, any>> | undefined;
-  
-      try {
-        parsedParams = JSON.parse(lastConnectionParams as string);
-      } catch {
-        parsedParams = undefined;
       }
 
       const wallet = createWalletInstance(Wallet);
@@ -265,12 +263,7 @@ export function ThirdwebWalletProvider(
   );
 
   const onWalletDisconnect = useCallback(async () => {
-    const lastConnectedWallet = await coordinatorStorage.getItem(
-      "lastConnectedWallet",
-    );
-    if (lastConnectedWallet === activeWallet?.walletId) {
-      await coordinatorStorage.removeItem("lastConnectedWallet");
-    }
+    await coordinatorStorage.removeItem("lastConnectedWallet");
     setConnectionStatus("disconnected");
     setSigner(undefined);
     setActiveWallet(undefined);

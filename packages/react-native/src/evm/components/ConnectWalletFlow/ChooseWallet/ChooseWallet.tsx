@@ -16,7 +16,7 @@ export type ChooseWalletProps = {
 
 export function ChooseWallet({
   headerText = "Choose your Wallet",
-  subHeaderText = "Select the wallet that you want to connect to Thirdweb",
+  subHeaderText,
   wallets,
   footer,
   onChooseWallet,
