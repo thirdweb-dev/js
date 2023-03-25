@@ -205,6 +205,11 @@ export function ThirdwebWalletProvider(
         parsedParams = undefined;
       }
 
+      if (!lastConnectedWalletId) {
+        setConnectionStatus("disconnected");
+        return;
+      }
+
       let Wallet = props.supportedWallets.find(
         (W) => W.id === lastConnectedWalletId,
       );
