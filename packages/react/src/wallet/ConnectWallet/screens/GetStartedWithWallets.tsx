@@ -146,7 +146,7 @@ export const GetStartedWithWallets: React.FC<{
             </ButtonLink>
             <Spacer y="xs" />
 
-            {/* Apple Store  */}
+            {/* App Store  */}
             <ButtonLink
               as="button"
               target="_blank"
@@ -159,7 +159,7 @@ export const GetStartedWithWallets: React.FC<{
               }}
             >
               <Img src={Apple} width={iconSize.lg} height={iconSize.lg} />
-              <span>Download on Apple Store</span>
+              <span>Download on App Store</span>
             </ButtonLink>
           </div>
 
