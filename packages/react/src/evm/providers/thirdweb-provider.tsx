@@ -22,10 +22,9 @@ const DEFAULT_WALLETS = [MetamaskWallet, CoinbaseWallet, DeviceWallet] as [
 ];
 
 interface ThirdwebProviderProps
-  extends PropsWithChildren<Omit<
-    ThirdwebProviderCoreProps,
-    "createWalletStorage" | "supportedWallets"
-  >> {
+  extends PropsWithChildren<
+    Omit<ThirdwebProviderCoreProps, "createWalletStorage" | "supportedWallets">
+  > {
   /**
    * Wallets that will be supported by the dApp
    * @defaultValue [MetaMaskWallet, CoinbaseWallet, DeviceWallet]
