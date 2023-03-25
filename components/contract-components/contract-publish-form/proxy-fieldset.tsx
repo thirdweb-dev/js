@@ -56,9 +56,16 @@ export const ProxyFieldset: React.FC<ProxyFieldsetProps> = ({
                 </FormLabel>
                 <Input
                   placeholder="0x..."
-                  {...form.register(
+                  value={form.watch(
                     `factoryDeploymentData.implementationAddresses.${chainId}`,
+                    "",
                   )}
+                  onChange={(e) =>
+                    form.setValue(
+                      `factoryDeploymentData.implementationAddresses.${chainId}`,
+                      e.target.value,
+                    )
+                  }
                 />
                 <DeployFormDrawer
                   contractId={contractId}
