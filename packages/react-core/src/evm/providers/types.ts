@@ -1,17 +1,16 @@
 import type { QueryClientProviderProps } from "../../core/providers/query-client";
 import type { ThirdwebAuthConfig } from "../contexts/thirdweb-auth";
-import type { Chain, defaultChains } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import type { SDKOptions } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { Signer } from "ethers";
 
-export interface ThirdwebSDKProviderProps<
-  TChains extends Chain[] = typeof defaultChains,
-> extends QueryClientProviderProps {
+export interface ThirdwebSDKProviderProps<TChains extends Chain[]>
+  extends QueryClientProviderProps {
   /**
    * Chains to support. If not provided, will default to the chains supported by the SDK.
    */
-  supportedChains?: Readonly<TChains>;
+  supportedChains?: TChains;
   // a possible signer - optional, defaults to undefined
   signer?: Signer;
 

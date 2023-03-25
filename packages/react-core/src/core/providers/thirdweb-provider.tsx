@@ -19,9 +19,8 @@ import React, { useMemo } from "react";
 /**
  * The possible props for the ThirdwebProvider.
  */
-export interface ThirdwebProviderCoreProps<
-  TChains extends Chain[] = typeof defaultChains,
-> extends ThirdwebSDKProviderProps<TChains> {
+export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
+  extends ThirdwebSDKProviderProps<TChains> {
   /**
    * An array of wallets that the dApp supports
    * If not provided, will default to Metamask (injected), Coinbase wallet and Device wallet
@@ -71,9 +70,7 @@ const defaultdAppMeta: DAppMetaData = {
   url: "https://thirdweb.com",
 };
 
-export const ThirdwebProviderCore = <
-  TChains extends Chain[] = typeof defaultChains,
->({
+export const ThirdwebProviderCore = <TChains extends Chain[]>({
   createWalletStorage = createAsyncLocalStorage,
   ...props
 }: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>) => {
@@ -83,9 +80,8 @@ export const ThirdwebProviderCore = <
 
   const [supportedChainsWithKey, activeChainIdOrObjWithKey] =
     useUpdateChainsWithApiKeys(
-      // @ts-expect-error - different subtype of Chain[] but this works fine
       supportedChainsNonNull,
-      props.activeChain,
+      props.activeChain || supportedChainsNonNull[0],
       props.thirdwebApiKey,
       props.alchemyApiKey,
       props.infuraApiKey,
