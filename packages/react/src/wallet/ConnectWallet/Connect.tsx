@@ -142,7 +142,12 @@ export const ConnectModal = () => {
             onConnectError();
           }
         } else {
-          setShowScreen("coinbase/scan");
+          if (isMobile()) {
+            // coinbase will redirect to download page for coinbase wallet apps
+            connect(wallet, {});
+          } else {
+            setShowScreen("coinbase/scan");
+          }
         }
       }
 

@@ -1,27 +1,27 @@
 export default {
-  "name": "Dos Fuji Subnet",
+  "name": "DOS Tesnet",
   "chain": "DOS",
   "rpc": [
-    "https://dos-fuji-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://test.doschain.com/jsonrpc"
+    "https://dos-tesnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://test.doschain.com"
   ],
   "faucets": [],
   "nativeCurrency": {
-    "name": "Dos Native Token",
+    "name": "DOS",
     "symbol": "DOS",
     "decimals": 18
   },
   "infoURL": "http://doschain.io/",
-  "shortName": "TDOS",
-  "chainId": 1311,
-  "networkId": 1311,
+  "shortName": "dost",
+  "chainId": 3939,
+  "networkId": 3939,
   "explorers": [
     {
-      "name": "dos-testnet",
+      "name": "DOScan-Test",
       "url": "https://test.doscan.io",
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
-  "slug": "dos-fuji-subnet"
+  "slug": "dos-tesnet"
 } as const;
