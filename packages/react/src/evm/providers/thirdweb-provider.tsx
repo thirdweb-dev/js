@@ -90,10 +90,3 @@ export const ThirdwebProvider = <
   );
 };
 
-// export const App = () => {
-//   return (
-//     <ThirdwebProvider activeChain=>
-//       <div></div>
-//     </ThirdwebProvider>
-//   );
-// };
