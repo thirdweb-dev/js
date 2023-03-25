@@ -13,6 +13,7 @@ import { Apple, Chrome, GooglePlay } from "../iconURLs";
 import { ButtonLink } from "./GetStartedScreen";
 import styled from "@emotion/styled";
 import { useState } from "react";
+import { isMobile } from "../../../evm/utils/isMobile";
 
 const walletName = MetamaskWallet.meta.name;
 const walletIconURL = MetamaskWallet.meta.iconURL;
@@ -133,7 +134,11 @@ export const GetStartedWithWallets: React.FC<{
               as="button"
               target="_blank"
               onClick={() => {
-                setShowScreen("android-scan");
+                if (isMobile()) {
+                  window.open(googlePlayStoreLink, "_blank");
+                } else {
+                  setShowScreen("android-scan");
+                }
               }}
             >
               <Img src={GooglePlay} width={iconSize.lg} height={iconSize.lg} />
@@ -146,7 +151,11 @@ export const GetStartedWithWallets: React.FC<{
               as="button"
               target="_blank"
               onClick={() => {
-                setShowScreen("ios-scan");
+                if (isMobile()) {
+                  window.open(appleStoreLink, "_blank");
+                } else {
+                  setShowScreen("ios-scan");
+                }
               }}
             >
               <Img src={Apple} width={iconSize.lg} height={iconSize.lg} />
