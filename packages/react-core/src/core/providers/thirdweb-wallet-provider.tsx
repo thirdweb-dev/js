@@ -16,6 +16,7 @@ import {
   useState,
 } from "react";
 
+const LAST_CONNECTED_WALLET_STORAGE_KEY = "lastConnectedWallet";
 let coordinatorStorage: AsyncStorage;
 
 type NonNullable<T> = T extends null | undefined ? never : T;
@@ -133,7 +134,7 @@ export function ThirdwebWalletProvider(
         connectParams
       }
       await coordinatorStorage.setItem(
-        "lastConnectedWallet",
+        LAST_CONNECTED_WALLET_STORAGE_KEY,
         JSON.stringify(lastConnectedWallet),
       );
 
@@ -142,8 +143,29 @@ export function ThirdwebWalletProvider(
       setActiveWallet(wallet);
       setConnectionStatus("connected");
     },
-    [],
+    [walletParams],
   );
+
+  const storeLastActiveChainId = useCallback(async (chainId: number) => {
+    const lastConnectedWallet = await coordinatorStorage.getItem(
+      LAST_CONNECTED_WALLET_STORAGE_KEY,
+    );
+
+    if (!lastConnectedWallet) {
+      return;
+    }
+
+    try {
+      const parsedWallet = JSON.parse(lastConnectedWallet as string);
+      parsedWallet.connectParams.chainId = chainId;
+      await coordinatorStorage.setItem(
+        LAST_CONNECTED_WALLET_STORAGE_KEY,
+        JSON.stringify(parsedWallet),
+      );
+    } catch(error) {
+      console.error(error);
+    }
+  },[]);
 
   const switchChain = useCallback(
     async (chainId: number) => {
@@ -153,10 +175,11 @@ export function ThirdwebWalletProvider(
 
       await activeWallet.switchChain(chainId);
       const _signer = await activeWallet.getSigner();
+      await storeLastActiveChainId(chainId);
 
       setSigner(_signer);
     },
-    [activeWallet],
+    [activeWallet, storeLastActiveChainId],
   );
 
   const autoConnectTriggered = useRef(false);
@@ -186,7 +209,7 @@ export function ThirdwebWalletProvider(
     autoConnectTriggered.current = true;
     (async () => {
       const lastConnectedWallet = await coordinatorStorage.getItem(
-        "lastConnectedWallet",
+        LAST_CONNECTED_WALLET_STORAGE_KEY,
       );
 
       if (!lastConnectedWallet) {
@@ -268,7 +291,7 @@ export function ThirdwebWalletProvider(
   );
 
   const onWalletDisconnect = useCallback(async () => {
-    await coordinatorStorage.removeItem("lastConnectedWallet");
+    await coordinatorStorage.removeItem(LAST_CONNECTED_WALLET_STORAGE_KEY);
     setConnectionStatus("disconnected");
     setSigner(undefined);
     setActiveWallet(undefined);
