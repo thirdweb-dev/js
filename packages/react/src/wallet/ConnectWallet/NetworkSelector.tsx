@@ -183,7 +183,7 @@ const NetworkList: React.FC<{
                   style={{
                     display: "flex",
                     flexDirection: "column",
-                    gap: spacing.xs,
+                    gap: spacing.xxs,
                   }}
                 >
                   {chainName}
