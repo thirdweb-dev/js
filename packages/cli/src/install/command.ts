@@ -10,6 +10,10 @@ import ViteDetector from "../core/detection/vite";
 import YarnDetector from "../core/detection/yarn";
 import { runCommand } from "../create/helpers/run-command";
 import fs from "fs";
+import ora from "ora";
+import { info } from "../core/helpers/logger";
+
+const EXCLUDED_DEPENDENCIES = ["@thirdweb-dev/chain-icons"];
 
 export async function install(projectPath = ".", options: any) {
   const supportedContractFrameworks = [
@@ -29,11 +33,21 @@ export async function install(projectPath = ".", options: any) {
   const hasYarn = new YarnDetector().matches(".");
   const hasNPM = new NPMDetector().matches(".");
 
-  const packageJson = JSON.parse(
-    fs.readFileSync(projectPath + "/package.json", "utf8"),
-  );
+  let packageJson;
+  try {
+    packageJson = JSON.parse(
+      fs.readFileSync(projectPath + "/package.json", "utf8"),
+    );
+  } catch (e) {
+    console.error(
+      "No package.json file found. Please run this command in the root of your project.",
+    );
+    return;
+  }
+
   const hasEthers =
-    !!packageJson.dependencies?.ethers || !!packageJson.devDependencies?.ethers;
+    !!packageJson?.dependencies?.ethers ||
+    !!packageJson?.devDependencies?.ethers;
 
   const version = options.dev
     ? "@dev"
@@ -49,13 +63,13 @@ export async function install(projectPath = ".", options: any) {
   }
 
   const thirdwebDepsToUpdate = new Set<string>([
-    ...Object.keys(packageJson.dependencies).filter((dep) =>
+    ...Object.keys(packageJson.dependencies || {}).filter((dep) =>
       dep.startsWith("@thirdweb-dev/"),
     ),
-    ...Object.keys(packageJson.devDependencies).filter((dep) =>
+    ...Object.keys(packageJson.devDependencies || {}).filter((dep) =>
       dep.startsWith("@thirdweb-dev/"),
     ),
-    ...Object.keys(packageJson.peerDependencies).filter((dep) =>
+    ...Object.keys(packageJson.peerDependencies || {}).filter((dep) =>
       dep.startsWith("@thirdweb-dev/"),
     ),
   ]);
@@ -64,16 +78,19 @@ export async function install(projectPath = ".", options: any) {
 
   const otherDeps = new Set<string>();
 
-  supportedContractFrameworks.forEach((detector) => {
-    console.log(`Detected ${detector.projectType} project`);
+  // only expect one contract framework to be detected
+  const contractFramework = supportedContractFrameworks[0];
+  // only expect one app framework to be detected
+  const appFramerwork = supportedAppFrameworks[0];
+
+  if (contractFramework) {
+    info(`Detected project: "${contractFramework.projectType}"`);
 
     if (!thirdwebDepsToUpdate.has(`@thirdweb-dev/contracts`)) {
       thirdwebDepsToInstall.add(`@thirdweb-dev/contracts`);
     }
-  });
-
-  supportedAppFrameworks.forEach((detector) => {
-    console.log(`Detected ${detector.projectType} project`);
+  } else if (appFramerwork) {
+    info(`Detected project: "${appFramerwork.projectType}"`);
 
     if (!thirdwebDepsToUpdate.has(`@thirdweb-dev/react`)) {
       thirdwebDepsToInstall.add(`@thirdweb-dev/react`);
@@ -84,18 +101,27 @@ export async function install(projectPath = ".", options: any) {
     if (!hasEthers) {
       otherDeps.add("ethers@5");
     }
+  }
+
+  // remove exluded dependencies
+  EXCLUDED_DEPENDENCIES.forEach((excludedDep) => {
+    thirdwebDepsToUpdate.delete(excludedDep);
+    thirdwebDepsToInstall.delete(excludedDep);
   });
 
+  let installer;
+  let updater;
+
   try {
-    if (thirdwebDepsToUpdate.size !== 0) {
-      console.log(
-        `Updating dependencies: "${[...thirdwebDepsToUpdate].join('", "')}"`,
-      );
-    }
     if (thirdwebDepsToInstall.size !== 0) {
-      console.log(
-        `Installing dependencies: "${[...thirdwebDepsToInstall].join('", "')}"`,
-      );
+      installer = ora(
+        `Installing: "${[...thirdwebDepsToInstall].join('", "')}"`,
+      ).start();
+    }
+    if (thirdwebDepsToUpdate.size !== 0) {
+      updater = ora(
+        `Updating: "${[...thirdwebDepsToUpdate].join('", "')}"`,
+      ).start();
     }
 
     const dependenciesToAdd = [
@@ -109,17 +135,21 @@ export async function install(projectPath = ".", options: any) {
 
     if (hasYarn) {
       if (dependenciesToAdd.length !== 0) {
-        await runCommand("yarn add", dependenciesToAdd);
+        await runCommand("yarn", ["add", ...dependenciesToAdd]);
+        installer?.succeed(`Installed: "${dependenciesToAdd.join('", "')}"`);
       }
       if (dependenciesToUpdate.length !== 0) {
-        await runCommand("yarn upgrade", dependenciesToUpdate);
+        await runCommand("yarn", ["upgrade", ...dependenciesToUpdate]);
+        updater?.succeed(`Updated: "${dependenciesToUpdate.join('", "')}"`);
       }
     } else if (hasNPM) {
       if (dependenciesToAdd.length !== 0) {
-        await runCommand("npm install", dependenciesToAdd);
+        await runCommand("npm", ["install", ...dependenciesToAdd]);
+        installer?.succeed(`Installed: "${dependenciesToAdd.join('", "')}"`);
       }
       if (dependenciesToUpdate.length !== 0) {
-        await runCommand("npm update", dependenciesToUpdate);
+        await runCommand("npm", ["update", ...dependenciesToUpdate]);
+        updater?.succeed(`Updated: "${dependenciesToUpdate.join('", "')}"`);
       }
     }
   } catch (err) {
