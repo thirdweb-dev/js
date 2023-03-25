@@ -50,21 +50,21 @@ export const ConnectedWalletDetails: React.FC<{
 }> = (props) => {
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
-  const activeChainId = useChainId();
+  const walletChainId = useChainId();
   const address = useAddress();
   const balanceQuery = useBalance();
   const activeWallet = useWallet();
   const walletContext = useThirdwebWallet();
 
   const chain = useMemo(() => {
-    return chains.find((_chain) => _chain.chainId === activeChainId);
-  }, [activeChainId, chains]);
+    return chains.find((_chain) => _chain.chainId === walletChainId);
+  }, [walletChainId, chains]);
 
   const unknownChain = useMemo(() => {
     if (!chain) {
-      return defaultChains.find((c) => c.chainId === activeChainId);
+      return defaultChains.find((c) => c.chainId === walletChainId);
     }
-  }, [activeChainId, chain]);
+  }, [walletChainId, chain]);
 
   const activeWalletIconURL = activeWallet?.getMeta().iconURL || "";
 
@@ -130,7 +130,7 @@ export const ConnectedWalletDetails: React.FC<{
       >
         <ChainIcon chain={chain || unknownChain} size={iconSize.lg} active />
       </div>
-      {chain?.name || unknownChain?.name || "Wrong Network"}
+      {chain?.name || unknownChain?.name || `Unknown chain #${walletChainId}`}
       <StyledChevronRightIcon
         width={iconSize.sm}
         height={iconSize.sm}
