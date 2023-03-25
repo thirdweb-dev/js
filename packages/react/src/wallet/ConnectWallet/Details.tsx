@@ -34,11 +34,12 @@ import {
   useThirdwebWallet,
   useWallet,
 } from "@thirdweb-dev/react-core";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { fadeInAnimation } from "../../components/FadeIn";
 import { SafeWallet } from "../wallets";
 import { Flex } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
+import { utils } from "ethers";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -55,6 +56,12 @@ export const ConnectedWalletDetails: React.FC<{
   const balanceQuery = useBalance();
   const activeWallet = useWallet();
   const walletContext = useThirdwebWallet();
+  const [personalWalletBalance, setPersonalWalletBalance] = useState<
+    string | undefined
+  >(undefined);
+  const [personalWalletAddress, setPersonalWalletAddress] = useState<
+    string | undefined
+  >(undefined);
 
   const chain = useMemo(() => {
     return chains.find((_chain) => _chain.chainId === walletChainId);
@@ -89,6 +96,24 @@ export const ConnectedWalletDetails: React.FC<{
     activeWallet?.walletId === "Safe"
       ? (activeWallet as SafeWallet).getPersonalWallet()
       : undefined;
+
+  // get personal wallet address and balance
+  useEffect(() => {
+    if (!personalWallet) {
+      setPersonalWalletAddress(undefined);
+      setPersonalWalletBalance(undefined);
+      return;
+    }
+    personalWallet.getAddress().then((_address) => {
+      setPersonalWalletAddress(_address);
+    });
+
+    personalWallet.getSigner().then((signer) => {
+      signer.getBalance().then((balance) => {
+        setPersonalWalletBalance(utils.formatEther(balance));
+      });
+    });
+  }, [personalWallet]);
 
   const trigger = (
     <WalletInfoButton type="button">
@@ -162,7 +187,22 @@ export const ConnectedWalletDetails: React.FC<{
           height={iconSize.lg}
         />
       </div>
-      {personalWallet.getMeta().name}
+
+      <ColFlex>
+        {personalWalletBalance ? (
+          <WalletBalance>
+            {String(personalWalletBalance).slice(0, 5)}{" "}
+            {balanceQuery.data?.symbol}
+          </WalletBalance>
+        ) : (
+          <Skeleton height={fontSize.sm} width="82px" />
+        )}
+        <Spacer y="xxs" />
+        <WalletAddress>
+          {shortenString(personalWalletAddress || "")}
+        </WalletAddress>
+      </ColFlex>
+
       <StyledChevronRightIcon
         width={iconSize.sm}
         height={iconSize.sm}
@@ -452,7 +492,7 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   cursor: pointer;
   font-size: ${fontSize.md};
   font-weight: 500;
-  color: ${(props) => props.theme.text.neutral};
+  color: ${(props) => props.theme.text.neutral} !important;
   gap: ${spacing.sm};
   -webkit-tap-highlight-color: transparent;
 
