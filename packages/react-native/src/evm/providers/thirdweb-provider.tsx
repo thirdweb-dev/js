@@ -11,6 +11,7 @@ import {
   ThirdwebProviderCoreProps,
 } from "@thirdweb-dev/react-core";
 import { PropsWithChildren } from "react";
+import type { Chain, defaultChains } from "@thirdweb-dev/chains";
 
 const DEFAULT_WALLETS = [MetaMaskWallet, CoinbaseWallet] as [
   typeof MetaMaskWallet,
@@ -23,28 +24,23 @@ export type ImplementedWallet =
   | typeof CoinbaseWallet
   | typeof TrustWallet;
 
-export type ThirdwebProviderProps = PropsWithChildren<
-  {
-    /**
-     * Wallets that will be supported by the dApp
-     * @defaultValue [MetaMaskWallet, CoinbaseWalletMobile]
-     *
-     * @example
-     * ```jsx
-     * import { MetamaskWallet, CoinbaseWallet, DeviceWallet } from "@thirdweb-dev/react-native";
-     *
-     * <ThirdwebProvider
-     *  supportedWallets={[MetaMaskWallet, CoinbaseWallet, DeviceWallet]}
-     * />
-     * ```
-     */
-    supportedWallets?: ImplementedWallet[];
-    createWalletStorage?: ThirdwebProviderCoreProps["createWalletStorage"];
-  } & Omit<
-    ThirdwebProviderCoreProps,
-    "supportedWallets" | "createWalletStorage"
-  >
->;
+interface ThirdwebProviderProps<TChains extends Chain[]>
+  extends Omit<ThirdwebProviderCoreProps<TChains>, "supportedWallets"> {
+  /**
+   * Wallets that will be supported by the dApp
+   * @defaultValue [MetaMaskWallet, CoinbaseWallet, DeviceWallet]
+   *
+   * @example
+   * ```jsx
+   * import { MetamaskWallet, CoinbaseWallet, DeviceWallet } from "@thirdweb-dev/react";
+   *
+   * <ThirdwebProvider
+   *  supportedWallets={[MetaMaskWallet, CoinbaseWallet, DeviceWallet]}
+   * />
+   * ```
+   */
+  supportedWallets?: ImplementedWallet[];
+}
 
 /**
  *
@@ -65,13 +61,15 @@ export type ThirdwebProviderProps = PropsWithChildren<
  * };
  *
  */
-export const ThirdwebProvider: React.FC<ThirdwebProviderProps> = ({
+export const ThirdwebProvider = <
+  TChains extends Chain[] = typeof defaultChains,
+>({
   children,
   createWalletStorage = createAsyncLocalStorage,
   thirdwebApiKey = DEFAULT_API_KEY,
   supportedWallets = DEFAULT_WALLETS,
   ...restProps
-}) => {
+}: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
   return (
     <ThirdwebProviderCore
       thirdwebApiKey={thirdwebApiKey}

@@ -20,9 +20,7 @@ const ThirdwebSDKContext = createContext<TWSDKContext>({});
  *
  * @internal
  */
-const WrappedThirdwebSDKProvider = <
-  TChains extends Chain[] = typeof defaultChains,
->({
+const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
   sdkOptions = {},
   storageInterface,
   supportedChains,
@@ -175,9 +173,7 @@ const WrappedThirdwebSDKProvider = <
  *
  * @public
  */
-export const ThirdwebSDKProvider = <
-  TChains extends Chain[] = typeof defaultChains,
->({
+export const ThirdwebSDKProvider = <TChains extends Chain[]>({
   signer,
   children,
   queryClient,
@@ -193,9 +189,8 @@ export const ThirdwebSDKProvider = <
   }, [supportedChains]);
   const [supportedChainsWithKey, activeChainIdOrObjWithKey] =
     useUpdateChainsWithApiKeys(
-      // @ts-expect-error - different subtype of Chain[] but this works fine
       supportedChainsNonNull,
-      activeChain,
+      activeChain || supportedChainsNonNull[0],
       thirdwebApiKey,
       alchemyApiKey,
       infuraApiKey,

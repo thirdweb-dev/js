@@ -1,10 +1,16 @@
 import { updateChainRPCs } from "../../core/utils/updateChainRpcs";
-import { ThirdwebSDKProviderProps } from "../providers/types";
 import { useMemo } from "react";
+import type { Chain } from "@thirdweb-dev/chains";
 
-export function useUpdateChainsWithApiKeys(
-  supportedChains: NonNullable<ThirdwebSDKProviderProps["supportedChains"]>,
-  activeChain: ThirdwebSDKProviderProps["activeChain"],
+export function useUpdateChainsWithApiKeys<
+  TChains extends Chain[],
+  TActiveChain extends
+    | Chain
+    | TChains[number]["chainId"]
+    | TChains[number]["slug"],
+>(
+  supportedChains: NonNullable<TChains>,
+  activeChain: TActiveChain,
   thirdwebApiKey?: string,
   alchemyApiKey?: string,
   infuraApiKey?: string,
