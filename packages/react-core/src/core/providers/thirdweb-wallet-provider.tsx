@@ -163,7 +163,7 @@ export function ThirdwebWalletProvider(
         JSON.stringify(parsedWallet),
       );
     } catch(error) {
-      console.error(error);
+      console.error(`Error saving the last active chain: ${error}`);
     }
   },[]);
 
@@ -224,7 +224,8 @@ export function ThirdwebWalletProvider(
         const parsedWallet = JSON.parse(lastConnectedWallet as string);
         parsedParams = parsedWallet.connectParams;
         lastConnectedWalletId = parsedWallet.walletId;
-      } catch {
+      } catch(error) {
+        console.error(`Error parsing the last connected wallet: ${error}`);
         parsedParams = undefined;
       }
 
@@ -282,7 +283,7 @@ export function ThirdwebWalletProvider(
         await wallet.connect(_connectedParams);
         handleWalletConnect(wallet, _connectedParams);
       } catch (e: any) {
-        console.error(e);
+        console.error(`Error connecting to the wallet: ${Wallet.id}. Error: ${e}`);
         setConnectionStatus("disconnected");
         throw e;
       }
