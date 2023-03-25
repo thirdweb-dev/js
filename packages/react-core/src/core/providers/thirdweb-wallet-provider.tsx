@@ -226,7 +226,6 @@ export function ThirdwebWalletProvider(
         lastConnectedWalletId = parsedWallet.walletId;
       } catch(error) {
         console.error(`Error parsing the last connected wallet: ${error}`);
-        parsedParams = undefined;
       }
 
       if (!lastConnectedWalletId) {
