@@ -15,7 +15,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import type { SmartContract } from "@thirdweb-dev/sdk";
 import type { CallOverrides, ContractInterface } from "ethers";
-import { PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import invariant from "tiny-invariant";
 
@@ -71,29 +71,33 @@ export const Web3Button = <TAction extends ActionFn>({
   action,
   theme,
 }: PropsWithChildren<Web3ButtonProps<TAction>>) => {
-  const address = useAddress();
+  // const address = useAddress();
   const activeWallet = useWallet();
-  const walletChainId = useChainId();
+  // const walletChainId = useChainId();
+  // const sdkChainId = useSDKChainId();
+  // const switchChain = useSwitchChain();
+  // const hasMismatch = useNetworkMismatch();
+  // const needToSwitchChain =
+  //   sdkChainId && walletChainId && sdkChainId !== walletChainId;
+  // const connectionStatus = useConnectionStatus();
+
+  const address = useAddress();
   const sdkChainId = useSDKChainId();
   const switchChain = useSwitchChain();
   const hasMismatch = useNetworkMismatch();
-  const needToSwitchChain =
-    sdkChainId && walletChainId && sdkChainId !== walletChainId;
   const connectionStatus = useConnectionStatus();
 
   const queryClient = useQueryClient();
 
   const { contract } = useContract(contractAddress, contractAbi || "custom");
 
+  const [confirmStatus, setConfirmStatus] = useState<"idle" | "waiting">(
+    "idle",
+  );
+
   const actionMutation = useMutation(
     async () => {
       invariant(contract, "contract is not ready yet");
-
-      // if need to switch the chain to perform the action
-      if (needToSwitchChain) {
-        await switchChain(sdkChainId);
-        return "__NETWORK_SWITCHED__";
-      }
 
       if (onSubmit) {
         onSubmit();
@@ -105,9 +109,6 @@ export const Web3Button = <TAction extends ActionFn>({
     },
     {
       onSuccess: (res) => {
-        if (res === "__NETWORK_SWITCHED__") {
-          return;
-        }
         if (onSuccess) {
           onSuccess(res);
         }
