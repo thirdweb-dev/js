@@ -70,7 +70,7 @@ function formatContractCall(
       | {
           [x: string]: any;
           type: string;
-          name: string;
+          name?: string;
         }[]
       | undefined;
   }[],

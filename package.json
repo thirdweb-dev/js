@@ -17,7 +17,6 @@
     "build:analyze": "ANALYZE=true yarn build"
   },
   "dependencies": {
-    "@chakra-ui/next-js": "^2.0.1",
     "@chakra-ui/react": "^2.4.3",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
@@ -34,17 +33,14 @@
     "@solana/wallet-adapter-wallets": "^0.19.11",
     "@solana/web3.js": "1.67.2",
     "@tanstack/query-async-storage-persister": "^4.19.1",
-    "@tanstack/query-sync-storage-persister": "^4.19.1",
     "@tanstack/react-query": "^4.28.0",
     "@tanstack/react-query-persist-client": "^4.19.1",
     "@tanstack/react-table": "8.7.9",
-    "@thirdweb-dev/auth": "3.0.8-nightly-20230310185406-71532e5a",
     "@thirdweb-dev/chain-icons": "^1.0.5",
-    "@thirdweb-dev/chains": "0.1.7-nightly-20230310185406-71532e5a",
-    "@thirdweb-dev/react": "3.10.4-nightly-20230310185406-71532e5a",
-    "@thirdweb-dev/sdk": "3.10.4-nightly-20230310185406-71532e5a",
-    "@thirdweb-dev/storage": "1.1.1-nightly-20230310185406-71532e5a",
-    "@types/cookie": "^0.5.1",
+    "@thirdweb-dev/chains": "^0.1.7-nightly-20230325015605-92936b7f",
+    "@thirdweb-dev/react": "^3.11.0-nightly-20230325015605-92936b7f",
+    "@thirdweb-dev/sdk": "^3.10.4-nightly-20230325015605-92936b7f",
+    "@thirdweb-dev/storage": "^1.1.1-nightly-20230325015605-92936b7f",
     "@vercel/og": "^0.4.0",
     "bn.js": "^5.2.1",
     "classnames": "^2.3.2",
@@ -61,7 +57,6 @@
     "next": "^13.1.6",
     "next-plausible": "^3.6.5",
     "next-seo": "^5.15.0",
-    "nprogress": "^0.2.0",
     "papaparse": "^5.3.1",
     "posthog-js": "^1.38.0",
     "prism-react-renderer": "^1.3.1",
@@ -118,6 +113,7 @@
     "@tanstack/react-query": "^4.19.1",
     "zod": "^3.19.1"
   },
+  "peerDependencies": {},
   "next-unused": {
     "alias": {},
     "include": [

@@ -4,9 +4,13 @@ import {
   useEVMContractInfo,
 } from "@3rdweb-sdk/react/hooks/useActiveChainId";
 import { useQueryClient } from "@tanstack/react-query";
-import { ThirdwebProvider, WalletConnector } from "@thirdweb-dev/react";
-import { GnosisSafeConnector } from "@thirdweb-dev/react/evm/connectors/gnosis-safe";
-import { MagicConnector } from "@thirdweb-dev/react/evm/connectors/magic";
+import {
+  CoinbaseWallet,
+  MetamaskWallet,
+  SafeWallet,
+  ThirdwebProvider,
+  WalletConnectV1,
+} from "@thirdweb-dev/react";
 import { DASHBOARD_THIRDWEB_API_KEY } from "constants/rpc";
 import { useConfiguredChains } from "hooks/chains/configureChains";
 import { useNativeColorMode } from "hooks/useNativeColorMode";
@@ -27,42 +31,6 @@ export const DashboardThirdwebProvider: ComponentWithChildren<
   const configuredChains = useConfiguredChains();
   const contractInfo = useEVMContractInfo();
   const chain = contractInfo?.chain;
-
-  const rpcUrls = useMemo(() => {
-    const record: Record<number, string> = {};
-    for (const _chain of configuredChains) {
-      record[_chain.chainId] = getDashboardChainRpc(_chain);
-    }
-    return record;
-  }, [configuredChains]);
-
-  const walletConnectors = useMemo(() => {
-    let wc: WalletConnector[] = [
-      "metamask",
-      "walletConnect",
-      "walletLink",
-      new GnosisSafeConnector({}),
-    ];
-    if (process.env.NEXT_PUBLIC_MAGIC_KEY) {
-      wc = wc.concat(
-        new MagicConnector({
-          options: {
-            apiKey: process.env.NEXT_PUBLIC_MAGIC_KEY,
-            rpcUrls,
-            network: chain
-              ? {
-                  rpcUrl: getDashboardChainRpc(chain),
-                  chainId: chain.chainId,
-                }
-              : undefined,
-            doNotAutoConnect: true,
-          },
-        }),
-      );
-    }
-    return wc;
-  }, [chain, rpcUrls]);
-
   const readonlySettings = useMemo(() => {
     if (!chain) {
       return undefined;
@@ -93,8 +61,13 @@ export const DashboardThirdwebProvider: ComponentWithChildren<
         readonlySettings,
       }}
       thirdwebApiKey={DASHBOARD_THIRDWEB_API_KEY}
+      supportedWallets={[
+        MetamaskWallet,
+        CoinbaseWallet,
+        WalletConnectV1,
+        SafeWallet,
+      ]}
       storageInterface={StorageSingleton}
-      walletConnectors={walletConnectors}
     >
       <SolanaProvider>{children}</SolanaProvider>
     </ThirdwebProvider>

@@ -1,5 +1,5 @@
 import chakraTheme from "../theme";
-import { ChakraProvider, theme } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import { Global, css } from "@emotion/react";
 import type { DehydratedState } from "@tanstack/react-query";
 import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
@@ -177,53 +177,23 @@ const ConsoleApp = memo(function ConsoleApp({
     >
       <Global
         styles={css`
-            #walletconnect-wrapper {
-              color: #000;
-            }
-            .walletconnect-search__input::placeholder {
-              color: inherit;
-              opacity: 0.7;
-            }
-            ${fontSizeCssVars}
-
-            .emoji {
-              height: 1em;
-              width: 1em;
-              margin: 0 .05em 0 .1em;
-              vertical-align: -0.1em;
-              display: inline;
+          #walletconnect-wrapper {
+            color: #000;
           }
+          .walletconnect-search__input::placeholder {
+            color: inherit;
+            opacity: 0.7;
+          }
+          ${fontSizeCssVars}
 
-            #nprogress {
-              pointer-events: none;
-            }
-
-            #nprogress .bar {
-              background: ${theme.colors.purple[500]};
-
-              position: fixed;
-              z-index: 1031;
-              top: 0;
-              left: 0;
-
-              width: 100%;
-              height: 2px;
-            }
-
-            /* Fancy blur effect */
-            #nprogress .peg {
-              display: block;
-              position: absolute;
-              right: 0px;
-              width: 100px;
-              height: 100%;
-              box-shadow: 0 0 10px ${theme.colors.purple[500]}, 0 0 5px ${theme.colors.purple[500]};
-              opacity: 1.0;
-
-              -webkit-transform: rotate(3deg) translate(0px, -4px);
-                  -ms-transform: rotate(3deg) translate(0px, -4px);
-                      transform: rotate(3deg) translate(0px, -4px);
-          `}
+          .emoji {
+            height: 1em;
+            width: 1em;
+            margin: 0 0.05em 0 0.1em;
+            vertical-align: -0.1em;
+            display: inline;
+          }
+        `}
       />
       <DefaultSeo
         defaultTitle="thirdweb: The complete web3 development framework"

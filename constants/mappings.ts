@@ -1,6 +1,5 @@
 import {
   CONTRACTS_MAP,
-  ChainId,
   ContractType,
   FullPublishMetadata,
   Role,
@@ -412,13 +411,13 @@ export const ROLE_DESCRIPTION_MAP: Record<Role | string, string> = {
 // gnosis mappings
 export const GNOSIS_TO_CHAIN_ID = {
   // supported mainnets
-  eth: ChainId.Mainnet,
-  matic: ChainId.Polygon,
-  avax: ChainId.Avalanche,
-  bnb: ChainId.BinanceSmartChainMainnet,
-  oeth: ChainId.Optimism,
+  eth: 1,
+  matic: 137,
+  avax: 43114,
+  bnb: 56,
+  oeth: 10,
   // supported testnets
-  gor: ChainId.Goerli,
+  gor: 5,
 } as const;
 
 export const CHAIN_ID_TO_GNOSIS = Object.entries(GNOSIS_TO_CHAIN_ID).reduce(

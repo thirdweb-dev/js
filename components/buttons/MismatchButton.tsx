@@ -1,7 +1,6 @@
 import {
   ConnectWallet,
-  EcosystemButtonprops,
-  useNetworkWithPatchedSwitching,
+  ConnectWalletProps,
 } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   Box,
@@ -16,15 +15,18 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { AiOutlineWarning } from "@react-icons/all-files/ai/AiOutlineWarning";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useWallet as useWalletSol } from "@solana/wallet-adapter-react";
 import {
   ChainId,
   useAddress,
   useBalance,
   useChainId,
+  useConnectionStatus,
   useNetworkMismatch,
   useSDK,
   useSDKChainId,
+  useSwitchChain,
+  useWallet,
 } from "@thirdweb-dev/react";
 import {
   useBalance as useSolBalance,
@@ -39,7 +41,7 @@ import { Button, Card, Heading, Text } from "tw-components";
 
 export const MismatchButton = React.forwardRef<
   HTMLButtonElement,
-  EcosystemButtonprops
+  ConnectWalletProps
 >(
   (
     {
@@ -56,7 +58,7 @@ export const MismatchButton = React.forwardRef<
     ref,
   ) => {
     const address = useAddress();
-    const { publicKey } = useWallet();
+    const { publicKey } = useWalletSol();
     const evmBalance = useBalance();
     const solBalance = useSolBalance();
     const solNetwork = useSolanaSDK()?.network;
@@ -193,8 +195,11 @@ const MismatchNotice: React.FC<{
 }> = ({ initialFocusRef, onClose }) => {
   const connectedChainId = useChainId();
   const desiredChainId = useSDKChainId();
-  const [network, switchNetwork] = useNetworkWithPatchedSwitching();
-  const actuallyCanAttemptSwitch = !!switchNetwork;
+  const switchNetwork = useSwitchChain();
+  const connectionStatus = useConnectionStatus();
+  const activeChain = useWallet();
+  const actuallyCanAttemptSwitch =
+    activeChain && activeChain.walletId !== "Safe";
   const walletConnectedNetworkInfo = useConfiguredChain(connectedChainId || -1);
   const isMobile = useBreakpointValue({ base: true, md: false });
 
@@ -244,7 +249,9 @@ const MismatchNotice: React.FC<{
         leftIcon={<Icon as={VscDebugDisconnect} />}
         size="sm"
         onClick={onSwitchWallet}
-        isLoading={network.loading}
+        isLoading={
+          connectionStatus === "connecting" || connectionStatus === "unknown"
+        }
         isDisabled={!actuallyCanAttemptSwitch}
         colorScheme="orange"
         textTransform="capitalize"
@@ -336,7 +343,7 @@ const UpsellTestnetNotice: React.FC<{
 }> = ({ initialFocusRef, onClose, onChainSelect }) => {
   const trackEvent = useTrack();
   const connectedChainId = useChainId();
-  const [network, switchNetwork] = useNetworkWithPatchedSwitching();
+  const switchNetwork = useSwitchChain();
   const actuallyCanAttemptSwitch = !!switchNetwork;
 
   const chain = useConfiguredChain(connectedChainId || -1);
@@ -395,7 +402,7 @@ const UpsellTestnetNotice: React.FC<{
         leftIcon={<Icon as={VscDebugDisconnect} />}
         size="sm"
         onClick={onSwitchWallet}
-        isLoading={network.loading}
+        // isLoading={network.loading}
         isDisabled={!actuallyCanAttemptSwitch}
         colorScheme="orange"
         textTransform="capitalize"

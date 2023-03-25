@@ -1,6 +1,8 @@
 import { Skeleton, Stack, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
 import {
   DropContract,
+  EditionDrop,
+  TokenDrop,
   useClaimedNFTSupply,
   useUnclaimedNFTSupply,
 } from "@thirdweb-dev/react";
@@ -8,7 +10,7 @@ import { BigNumber } from "ethers";
 import { Card } from "tw-components";
 
 interface SupplyCardsProps {
-  contract: DropContract;
+  contract: Exclude<DropContract, EditionDrop | TokenDrop>;
 }
 
 export const SupplyCards: React.FC<SupplyCardsProps> = ({ contract }) => {

@@ -5,7 +5,6 @@ import {
   Flex,
   SimpleGrid,
 } from "@chakra-ui/react";
-import { NewsletterSection } from "components/homepage/sections/NewsletterSection";
 import { SDKSection } from "components/homepage/sections/SDKSection";
 import { GameShowcase } from "components/product-pages/common/GameShowcase";
 import { GuidesShowcase } from "components/product-pages/common/GuideShowcase";

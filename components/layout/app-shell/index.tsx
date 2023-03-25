@@ -3,6 +3,7 @@ import { Container, Flex, Grid, GridItem, Icon } from "@chakra-ui/react";
 import { Ethereum, Solana } from "@thirdweb-dev/chain-icons";
 import { CmdKSearch } from "components/cmd-k-search";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
+import { ConfigureNetworkButton } from "components/contract-components/shared/configure-network-button";
 import { Logo } from "components/logo";
 import { SIDEBAR_TUNNEL_ID } from "core-ui/sidebar/tunnel";
 import { useRouter } from "next/router";
@@ -83,7 +84,7 @@ const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
       <Container
         maxW="100%"
         display="flex"
-        py={2}
+        py={3}
         as="header"
         alignItems="center"
       >
@@ -93,7 +94,15 @@ const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
           </Link>
           <CmdKSearch />
         </Flex>
-        <Flex align="center" gap={2} marginLeft="auto">
+        <Flex
+          align="center"
+          gap={3}
+          marginLeft="auto"
+          minH={{
+            base: "auto",
+            md: "60px",
+          }}
+        >
           <Button
             as={TrackedLink}
             variant="link"
@@ -161,6 +170,12 @@ const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
           </Button>
 
           <ColorModeToggle />
+
+          <ConfigureNetworkButton
+            bg="none"
+            label="configure-networks"
+            iconOnly
+          ></ConfigureNetworkButton>
           <ConnectWallet
             ml={{ base: 0, md: 2 }}
             colorScheme="blue"

@@ -88,7 +88,7 @@ const Dashboard: ThirdwebNextPage = () => {
             icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
           >
             Share contract management access with your team members. Control
-            team access to contracts with permissions. Gnosis Safe is supported.
+            team access to contracts with permissions. Safe is supported.
           </ProductCard>
         </SimpleGrid>
         <ProductSection py={{ base: 12, lg: 24 }}>

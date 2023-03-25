@@ -77,6 +77,7 @@ const moduleExports = {
   reactStrictMode: true,
   experimental: {
     scrollRestoration: true,
+    esmExternals: "loose",
   },
   compiler: {
     emotion: true,

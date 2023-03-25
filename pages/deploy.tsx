@@ -14,7 +14,7 @@ const TRACKING_CATEGORY = "deploy";
 
 const GUIDES = [
   {
-    title: "Deploy Smart Contracts From A Gnosis Safe",
+    title: "Deploy Smart Contracts From A Safe",
     image:
       "https://blog.thirdweb.com/content/images/size/w1000/2022/11/This-is-the-one--20-.png",
     link: "https://blog.thirdweb.com/guides/how-to-deploy-smart-contract-using-gnosis-safe/",

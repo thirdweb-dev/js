@@ -5,7 +5,6 @@ import {
   useProgramMetadata,
   useTokenBalance,
 } from "@thirdweb-dev/react/solana";
-import type { TokenMetadata } from "@thirdweb-dev/sdk";
 import type { CurrencyValue } from "@thirdweb-dev/sdk/evm";
 import type { Token } from "@thirdweb-dev/sdk/solana";
 import { TokenMintFormLayout } from "contract-ui/tabs/tokens/components/mint-form";
@@ -71,7 +70,7 @@ export const TokenMintForm: React.FC<{ program: Token }> = ({ program }) => {
     <TokenMintFormLayout
       ecosystem="solana"
       mintQuery={mint}
-      decimals={(decimals.data as TokenMetadata)?.decimals}
+      decimals={decimals.data?.decimals as number | undefined}
       address={wallet?.publicKey?.toBase58()}
     />
   );
@@ -100,15 +99,15 @@ const toDashboardSupply = (
   query: ReturnType<typeof useProgramMetadata>,
   ownedTokensQuery?: ReturnType<typeof useTokenBalance>,
 ): CurrencyValue | undefined => {
-  const data = query.data as TokenMetadata;
+  const data = query.data;
   if (!data) {
     return undefined;
   }
   return {
     name: data.name?.toString() || "",
-    symbol: data?.symbol || "",
+    symbol: (data?.symbol as string | undefined) || "",
     value: BigNumber.from(0),
-    decimals: data?.decimals || 0,
+    decimals: (data?.decimals as number | undefined) || 0,
     displayValue: ownedTokensQuery?.data
       ? ownedTokensQuery?.data?.displayValue
       : // eslint-disable-next-line line-comment-position
