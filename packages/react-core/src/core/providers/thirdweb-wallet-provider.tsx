@@ -169,14 +169,10 @@ export function ThirdwebWalletProvider(
     try {
       const parsedWallet = JSON.parse(lastConnectedWallet as string);
       parsedWallet.connectParams.chainId = chainId;
-      try {
-        await coordinatorStorage.setItem(
-          LAST_CONNECTED_WALLET_STORAGE_KEY,
-          JSON.stringify(parsedWallet),
-        );
-      } catch (e) {
-        console.error(e);
-      }
+      await coordinatorStorage.setItem(
+        LAST_CONNECTED_WALLET_STORAGE_KEY,
+        JSON.stringify(parsedWallet),
+      );
     } catch (error) {
       console.error(error);
     }
