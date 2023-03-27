@@ -19,6 +19,11 @@ export { useCoinbaseWallet } from "./hooks/wallets/useCoinbaseWallet";
 export { useDeviceWallet } from "./hooks/wallets/useDeviceWallet";
 
 export {
+  usePaperWalletUserEmail,
+  usePaperWallet,
+} from "./hooks/wallets/usePaper";
+
+export {
   useWalletConnect,
   useWalletConnectV1,
 } from "./hooks/wallets/useWalletConnect";

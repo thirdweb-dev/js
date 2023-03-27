@@ -204,4 +204,8 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
   protected onDisconnect = async () => {
     this.emit("disconnect");
   };
+
+  getEmail() {
+    return this.user?.authDetails.email;
+  }
 }
