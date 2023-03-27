@@ -82,8 +82,6 @@ export function ThirdwebWalletProvider(
     WalletInstance | undefined
   >();
 
-  console.log("active wallet in core:", activeWallet);
-
   if (!coordinatorStorage) {
     coordinatorStorage = props.createWalletStorage("coordinatorStorage");
   }
