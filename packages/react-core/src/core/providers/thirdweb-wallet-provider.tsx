@@ -174,7 +174,7 @@ export function ThirdwebWalletProvider(
         JSON.stringify(parsedWallet),
       );
     } catch (error) {
-      console.error(error);
+      console.error(`Error saving the last active chain: ${error}`);
     }
   }, []);
 
@@ -235,8 +235,8 @@ export function ThirdwebWalletProvider(
         const parsedWallet = JSON.parse(lastConnectedWalletInfo as string);
         parsedParams = parsedWallet.connectParams;
         lastConnectedWalletId = parsedWallet.walletId;
-      } catch {
-        parsedParams = undefined;
+      } catch (error) {
+        console.error(`Error parsing the last connected wallet: ${error}`);
       }
 
       if (!lastConnectedWalletId) {

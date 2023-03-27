@@ -15,10 +15,17 @@ export default {
   "shortName": "dost",
   "chainId": 3939,
   "networkId": 3939,
+  "icon": {
+    "url": "ipfs://QmV2Nowzo81F6pi2qFcHePA4MwmmdMKBMUzBJUrxcymxx4",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "explorers": [
     {
       "name": "DOScan-Test",
       "url": "https://test.doscan.io",
+      "icon": "doschain",
       "standard": "EIP3091"
     }
   ],
