@@ -29,10 +29,5 @@ export default {
       url: "https://zkevm.polygonscan.com/",
       standard: "",
     },
-    {
-      name: "Polygon zkEVM explorer",
-      url: "https://explorer.public.zkevm-test.net",
-      standard: "EIP3091",
-    },
   ],
 };
