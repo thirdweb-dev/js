@@ -61,7 +61,6 @@ export const FormField: React.FC<{
   placeholder?: string;
   errorMessage?: string;
 }> = (props) => {
-  console.log({ errorMessage: props.errorMessage });
   return (
     <div>
       <Label htmlFor={props.id}>{props.label}</Label>

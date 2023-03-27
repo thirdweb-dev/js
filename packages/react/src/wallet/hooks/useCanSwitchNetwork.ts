@@ -3,9 +3,9 @@ import { useWallet } from "@thirdweb-dev/react-core";
 
 /**
  *
- * @returns `true` if the the a confirmation is required to switch networks in the active wallet
+ * @returns `true` if the wallet app is on a different device and user has connected via a QR code
  */
-export function useWalletRequiresConfirmation() {
+export function useIsNonLocalWallet() {
   const activeWallet = useWallet();
   const installedWallets = useInstalledWallets();
 

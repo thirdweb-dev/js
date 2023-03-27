@@ -17,7 +17,7 @@ const CHAIN_ID_CACHE = new WeakMap<providers.Provider, Promise<number>>();
  * You can call this function multiple times with the same params and it will only make one request to the provider.
  *
  * @returns the ChainId
- * @interal
+ * @internal
  */
 export async function getChainId(params: GetChainIdParams) {
   const [, provider] = getSignerAndProvider(params.network, params.sdkOptions);

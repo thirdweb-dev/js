@@ -11,11 +11,11 @@ import {
   SwitchChainError,
   UserRejectedRequestError,
 } from "../../../lib/wagmi-core";
+import { assertWindowEthereum } from "../../utils/assertWindowEthereum";
 import { getInjectedName } from "../../utils/getInjectedName";
+import { Ethereum } from "./types";
 import type { Chain } from "@thirdweb-dev/chains";
 import { utils, providers } from "ethers";
-import { Ethereum } from "./types";
-import { assertWindowEthereum } from "../../utils/assertWindowEthereum";
 
 export type InjectedConnectorOptions = {
   /** Name of connector */

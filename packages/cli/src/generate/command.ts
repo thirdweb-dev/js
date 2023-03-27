@@ -82,7 +82,7 @@ export async function generate(options: GenerateOptions) {
   const packagePath = `${projectPath}/node_modules/@thirdweb-dev/generated-abis/dist`;
   if (!fs.existsSync(packagePath)) {
     throw new Error(
-      `Could not find files at ${projectPath}/node_modules/@thirdweb-dev/generated-abis`,
+      `Unable to cache ABIs. Please ensure that you're using the latest @thirdweb-dev/sdk package`,
     );
   }
 

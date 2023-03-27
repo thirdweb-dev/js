@@ -1,6 +1,4 @@
 import { Modal } from "../../components/Modal";
-import { Spinner } from "../../components/Spinner";
-import { Button } from "../../components/buttons";
 import { isMobile } from "../../evm/utils/isMobile";
 import { useInstalledWallets } from "../hooks/useInstalledWallets";
 import { WalletMeta } from "../types";
@@ -15,65 +13,73 @@ import { ScanMetamask } from "./screens/Metamask/MetamaskScan";
 import {
   useConnect,
   useConnectionStatus,
+  useDisconnect,
   useWallets,
 } from "@thirdweb-dev/react-core";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { SelectpersonalWallet } from "./screens/Safe/SelectPersonalWallet";
 import { SafeForm } from "./screens/Safe/SafeForm";
+import { GetStartedWithWallets } from "./screens/GetStartedWithWallets";
+import {
+  useIsConnectingToSafe,
+  useIsWalletModalOpen,
+  useModalTheme,
+  useScreen,
+  useSetIsConnectingToSafe,
+  useSetIsWalletModalOpen,
+  useSetScreen,
+} from "../../evm/providers/wallet-ui-states-provider";
+import { ifWaiting } from "../../evm/utils/ifWaiting";
+import { ThemeProvider } from "@emotion/react";
+import { darkTheme, lightTheme } from "../../design-system";
 
-type Screen =
-  | "deviceWallet/connect"
-  | "metamask/connecting"
-  | "walletList"
-  | "coinbase/connecting"
-  | "coinbase/scan"
-  | "metamask/scan"
-  | "metamask/get-started"
-  | "coinbase/get-started"
-  | "safe/select-wallet"
-  | "safe/form";
-
-export const ConnectWalletFlow: React.FC<{
-  btnClass?: string;
-  btnTitle?: string;
-  isConnectingToSafe: boolean;
-  setIsConnectingToSafe: (value: boolean) => void;
-}> = (props) => {
+export const ConnectModal = () => {
+  const modalTheme = useModalTheme();
+  const isConnectingToSafe = useIsConnectingToSafe();
+  const showScreen = useScreen();
+  const setShowScreen = useSetScreen();
+  const setIsConnectingToSafe = useSetIsConnectingToSafe();
+  const isWalletModalOpen = useIsWalletModalOpen();
+  const setIsWalletModalOpen = useSetIsWalletModalOpen();
   const connectionStatus = useConnectionStatus();
-  const [showScreen, setShowScreen] = useState<Screen>("walletList");
-  const btnTitle = props.btnTitle || "Connect Wallet";
+  const disconnect = useDisconnect();
 
   const connect = useConnect();
   const wallets = useWallets();
   const installedWallets = useInstalledWallets();
-  const [open, setOpen] = useState(false);
+
+  // to hide the modal temporarily when showing the third party Modal to avoid z-index issues
   const [hideModal, setHideModal] = useState(false);
 
-  const { setIsConnectingToSafe } = props;
+  const closeModalAndReset = useCallback(() => {
+    setShowScreen("walletList");
+    setIsConnectingToSafe(false);
+    setIsWalletModalOpen(false);
+  }, [setIsConnectingToSafe, setIsWalletModalOpen, setShowScreen]);
 
-  // when the dialog is closed, reset the showUI, and isConnectingToSafe
-  useEffect(() => {
-    if (!open) {
-      setShowScreen("walletList");
-      setIsConnectingToSafe(false);
-    }
-  }, [open, setIsConnectingToSafe]);
-
-  const onConnect = () => {
-    if (props.isConnectingToSafe) {
+  const onConnect = useCallback(() => {
+    if (isConnectingToSafe) {
       setShowScreen("safe/form");
     } else {
-      setOpen(false);
+      closeModalAndReset();
     }
-  };
+  }, [closeModalAndReset, isConnectingToSafe, setShowScreen]);
 
-  const onConnectError = () => {
-    if (props.isConnectingToSafe) {
+  const onConnectError = useCallback(() => {
+    if (isConnectingToSafe) {
       setShowScreen("safe/select-wallet");
     } else {
       setShowScreen("walletList");
     }
-  };
+  }, [isConnectingToSafe, setShowScreen]);
+
+  const handleBack = useCallback(() => {
+    if (isConnectingToSafe) {
+      setShowScreen("safe/select-wallet");
+    } else {
+      setShowScreen("walletList");
+    }
+  }, [isConnectingToSafe, setShowScreen]);
 
   const walletsMeta: WalletMeta[] = wallets.map((wallet) => ({
     id: wallet.id,
@@ -86,15 +92,20 @@ export const ConnectWalletFlow: React.FC<{
       // Device Wallet
       if (wallet.id === "deviceWallet") {
         setShowScreen("deviceWallet/connect");
-        // TODO handle onConnect, onConnectError on component
       }
 
       // Metamask
       else if (wallet.id === "metamask") {
         if (installedWallets.metamask) {
           try {
-            setShowScreen("metamask/connecting");
-            await connect(wallet, {});
+            await ifWaiting({
+              for: connect(wallet, {}),
+              moreThan: 100,
+              do: () => {
+                setShowScreen("metamask/connecting");
+              },
+            });
+
             onConnect();
           } catch (e) {
             onConnectError();
@@ -119,20 +130,30 @@ export const ConnectWalletFlow: React.FC<{
       else if (wallet.id === "coinbaseWallet") {
         if (installedWallets.coinbaseWallet) {
           try {
-            setShowScreen("coinbase/connecting");
-            await connect(wallet, {});
+            await ifWaiting({
+              for: connect(wallet, {}),
+              moreThan: 100,
+              do: () => {
+                setShowScreen("coinbase/connecting");
+              },
+            });
             onConnect();
           } catch (e) {
             onConnectError();
           }
         } else {
-          setShowScreen("coinbase/scan");
+          if (isMobile()) {
+            // coinbase will redirect to download page for coinbase wallet apps
+            connect(wallet, {});
+          } else {
+            setShowScreen("coinbase/scan");
+          }
         }
       }
 
       // Safe
       else if (wallet.id === "Safe") {
-        props.setIsConnectingToSafe(true);
+        setIsConnectingToSafe(true);
         setShowScreen("safe/select-wallet");
       }
 
@@ -152,104 +173,112 @@ export const ConnectWalletFlow: React.FC<{
     },
   }));
 
-  const handleBack = () => {
-    if (props.isConnectingToSafe) {
-      setShowScreen("safe/select-wallet");
-    } else {
-      setShowScreen("walletList");
-    }
-  };
-
-  const isLoading =
-    connectionStatus === "connecting" || connectionStatus === "unknown";
-
   return (
-    <Modal
-      style={{
-        maxWidth: "500px",
-      }}
-      open={hideModal ? false : open}
-      setOpen={setOpen}
-      trigger={
-        <Button
-          disabled={isLoading}
-          className={props.btnClass}
-          variant="inverted"
-          type="button"
-          style={{
-            minWidth: "140px",
-          }}
-          aria-label={
-            connectionStatus === "connecting" ? "Connecting" : btnTitle
-          }
-        >
-          {isLoading ? <Spinner size="sm" color="inverted" /> : btnTitle}
-        </Button>
+    <ThemeProvider
+      theme={
+        typeof modalTheme === "object"
+          ? modalTheme
+          : modalTheme === "light"
+          ? lightTheme
+          : darkTheme
       }
     >
-      {showScreen === "walletList" && (
-        <WalletSelector walletsMeta={walletsMeta} />
-      )}
+      <Modal
+        style={{
+          maxWidth: "450px",
+        }}
+        open={hideModal ? false : isWalletModalOpen}
+        setOpen={(value) => {
+          setIsWalletModalOpen(value);
+          if (!value) {
+            closeModalAndReset();
+            console.log({ connectionStatus });
+            if (connectionStatus === "connecting") {
+              disconnect();
+            }
+          }
+        }}
+      >
+        {showScreen === "walletList" && (
+          <WalletSelector
+            walletsMeta={walletsMeta}
+            onGetStarted={() => {
+              setShowScreen("wallets/get-started");
+            }}
+          />
+        )}
 
-      {showScreen === "metamask/get-started" && (
-        <MetamaskGetStarted
-          onBack={() => {
-            setShowScreen("metamask/scan");
-          }}
-        />
-      )}
+        {showScreen === "metamask/get-started" && (
+          <MetamaskGetStarted
+            onBack={() => {
+              setShowScreen("metamask/scan");
+            }}
+          />
+        )}
 
-      {showScreen === "coinbase/get-started" && (
-        <CoinbaseGetStarted
-          onBack={() => {
-            setShowScreen("coinbase/scan");
-          }}
-        />
-      )}
+        {showScreen === "coinbase/get-started" && (
+          <CoinbaseGetStarted
+            onBack={() => {
+              setShowScreen("coinbase/scan");
+            }}
+          />
+        )}
 
-      {showScreen === "metamask/connecting" && (
-        <MetamaskConnecting onBack={handleBack} />
-      )}
+        {showScreen === "metamask/connecting" && (
+          <MetamaskConnecting onBack={handleBack} />
+        )}
 
-      {showScreen === "deviceWallet/connect" && (
-        <ConnectToDeviceWallet onBack={handleBack} onConnected={onConnect} />
-      )}
+        {showScreen === "deviceWallet/connect" && (
+          <ConnectToDeviceWallet onBack={handleBack} onConnected={onConnect} />
+        )}
 
-      {showScreen === "metamask/scan" && (
-        <ScanMetamask
-          onBack={handleBack}
-          onConnected={onConnect}
-          onGetStarted={() => {
-            setShowScreen("metamask/get-started");
-          }}
-        />
-      )}
+        {showScreen === "metamask/scan" && (
+          <ScanMetamask
+            onBack={handleBack}
+            onConnected={onConnect}
+            onGetStarted={() => {
+              setShowScreen("metamask/get-started");
+            }}
+          />
+        )}
 
-      {showScreen === "coinbase/scan" && (
-        <ScanCoinbase
-          onBack={handleBack}
-          onConnected={onConnect}
-          onGetStarted={() => {
-            setShowScreen("coinbase/get-started");
-          }}
-        />
-      )}
+        {showScreen === "coinbase/scan" && (
+          <ScanCoinbase
+            onBack={handleBack}
+            onConnected={onConnect}
+            onGetStarted={() => {
+              setShowScreen("coinbase/get-started");
+            }}
+          />
+        )}
 
-      {showScreen === "coinbase/connecting" && (
-        <CoinbaseWalletSetup onBack={handleBack} />
-      )}
+        {showScreen === "coinbase/connecting" && (
+          <CoinbaseWalletSetup onBack={handleBack} />
+        )}
 
-      {showScreen === "safe/select-wallet" && (
-        <SelectpersonalWallet
-          onBack={() => {
-            props.setIsConnectingToSafe(false);
-            setShowScreen("walletList");
-          }}
-          walletsMeta={walletsMeta}
-        />
-      )}
+        {showScreen === "safe/select-wallet" && (
+          <SelectpersonalWallet
+            onBack={() => {
+              setIsConnectingToSafe(false);
+              setShowScreen("walletList");
+            }}
+            walletsMeta={walletsMeta}
+          />
+        )}
 
-      {showScreen === "safe/form" && <SafeForm onBack={handleBack} />}
-    </Modal>
+        {showScreen === "safe/form" && (
+          <SafeForm
+            onBack={handleBack}
+            onConnect={() => {
+              closeModalAndReset();
+            }}
+          />
+        )}
+
+        {showScreen === "wallets/get-started" && (
+          <GetStartedWithWallets onBack={handleBack} />
+        )}
+      </Modal>
+    </ThemeProvider>
   );
 };

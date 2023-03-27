@@ -1,5 +1,4 @@
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
-
 import { default as EventEmitter } from "eventemitter3";
 
 export type ConnectorData<Provider = any> = {

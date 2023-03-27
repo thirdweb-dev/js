@@ -1,9 +1,9 @@
 import { ModalFooter } from "../../base/modal/ModalFooter";
 import { ModalHeaderTextClose } from "../../base/modal/ModalHeaderTextClose";
 import { ChooseWalletContent } from "./ChooseWalletContent";
+import { SupportedWallet } from "@thirdweb-dev/react-core";
 import { ReactNode } from "react";
 import { View } from "react-native";
-import { SupportedWallet } from "@thirdweb-dev/react-core";
 
 export type ChooseWalletProps = {
   headerText?: ReactNode | string;
@@ -16,7 +16,7 @@ export type ChooseWalletProps = {
 
 export function ChooseWallet({
   headerText = "Choose your Wallet",
-  subHeaderText = "Select the wallet that you want to connect to Thirdweb",
+  subHeaderText,
   wallets,
   footer,
   onChooseWallet,

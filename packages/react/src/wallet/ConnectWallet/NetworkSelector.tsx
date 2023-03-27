@@ -12,7 +12,7 @@ import {
   Theme,
 } from "../../design-system";
 import { scrollbar } from "../../design-system/styles";
-import { useWalletRequiresConfirmation } from "../hooks/useCanSwitchNetwork";
+import { useIsNonLocalWallet } from "../hooks/useCanSwitchNetwork";
 import styled from "@emotion/styled";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import * as Tabs from "@radix-ui/react-tabs";
@@ -98,7 +98,7 @@ export const NetworkSelector: React.FC<{
             position: "relative",
           }}
         >
-          <StyledMagnifyingGlassIcon />
+          <StyledMagnifyingGlassIcon width={iconSize.md} height={iconSize.md} />
           <SearchInput
             style={{
               boxShadow: "none",
@@ -138,7 +138,7 @@ const NetworkList: React.FC<{
   const activeChainId = useChainId();
   const [confirmingChainId, setConfirmingChainId] = useState(-1);
   const [errorSwitchingChainId, setErrorSwitchingChainId] = useState(-1);
-  const requiresConfirmation = useWalletRequiresConfirmation();
+  const requiresConfirmation = useIsNonLocalWallet();
 
   return (
     <NetworkListUl>
@@ -183,7 +183,7 @@ const NetworkList: React.FC<{
                   style={{
                     display: "flex",
                     flexDirection: "column",
-                    gap: spacing.xs,
+                    gap: spacing.xxs,
                   }}
                 >
                   {chainName}
@@ -247,6 +247,7 @@ const NetworkListUl = styled.ul<{ theme?: Theme }>`
   padding-right: 10px;
   padding-bottom: ${spacing.lg};
   width: calc(100% + 16px);
+  box-sizing: border-box;
   -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
   mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
   ${(p) =>
@@ -283,8 +284,6 @@ const NetworkButton = styled.button<{ theme?: Theme }>`
 const StyledMagnifyingGlassIcon = styled(MagnifyingGlassIcon)<{
   theme?: Theme;
 }>`
-  width: ${iconSize.md};
-  height: ${iconSize.md};
   color: ${(p) => p.theme.text.secondary};
   position: absolute;
   left: 18px;

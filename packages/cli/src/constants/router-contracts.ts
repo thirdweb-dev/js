@@ -16,10 +16,11 @@ export interface TWRouterParams {
   extensionNames: string[];
 }
 
-export const EXTENSION_REGISTRY_ADDRESS: string = "0x0000000000000000000000000000000000000000";
+export const EXTENSION_REGISTRY_ADDRESS: string =
+  "0x0000000000000000000000000000000000000000";
 
 export const ROUTER_CONTRACTS: Record<string, PreDeployedRouter> = {
-  "upgradeable": {
+  upgradeable: {
     name: "RouterUpgradeableFactory",
     metadataUri: "ipfs://QmdqXhoJg9RfDDURHxtHKDprh3VvyWEwZWVtQvnvXMannF",
     bytecodeUri: "ipfs://QmS63fhpjFFSzGXhM9deRSVaqWvEHEN9gcDkwNjiLr5oiV/1",
@@ -33,5 +34,5 @@ export const ROUTER_CONTRACTS: Record<string, PreDeployedRouter> = {
     name: "TWRouterFactory",
     metadataUri: "ipfs://QmbrV9NUBZAXqoSHpdTzxsZjtubdqumgt6WTMLV8RW3tkV",
     bytecodeUri: "ipfs://QmYjMfB1uhnnsdz6qmmc3bBAv8jmnniCkjXpDU6jGN8H5s/1",
-  }
-}
+  },
+};

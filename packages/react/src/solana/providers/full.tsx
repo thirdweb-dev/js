@@ -5,10 +5,7 @@ import {
   useWallet,
   WalletProvider,
 } from "@solana/wallet-adapter-react";
-import {
-  ThirdwebSDKProvider,
-  ThirdwebAuthConfig,
-} from "@thirdweb-dev/react-core/solana";
+import { ThirdwebSDKProvider } from "@thirdweb-dev/react-core/solana";
 import { getUrlForNetwork, Network } from "@thirdweb-dev/sdk/solana";
 import { PropsWithChildren } from "react";
 
@@ -16,7 +13,6 @@ interface ThirdwebProviderProps {
   network: Network;
   wallets?: WalletAdapter[];
   autoConnect?: boolean;
-  authConfig?: ThirdwebAuthConfig;
 }
 
 const DEFAULT_WALLETS = [new PhantomWalletAdapter()];
@@ -39,18 +35,12 @@ const DEFAULT_WALLETS = [new PhantomWalletAdapter()];
  */
 export const ThirdwebProvider: React.FC<
   PropsWithChildren<ThirdwebProviderProps>
-> = ({
-  network,
-  wallets = DEFAULT_WALLETS,
-  autoConnect = true,
-  authConfig,
-  children,
-}) => {
+> = ({ network, wallets = DEFAULT_WALLETS, autoConnect = true, children }) => {
   const clusterUrl = getUrlForNetwork(network);
   return (
     <ConnectionProvider endpoint={clusterUrl}>
       <WalletProvider wallets={wallets} autoConnect={autoConnect}>
-        <ThirdwebWrapperProvider network={network} authConfig={authConfig}>
+        <ThirdwebWrapperProvider network={network}>
           {children}
         </ThirdwebWrapperProvider>
       </WalletProvider>
@@ -62,15 +52,11 @@ export const ThirdwebProvider: React.FC<
  * @internal
  */
 export const ThirdwebWrapperProvider: React.FC<
-  PropsWithChildren<{ network?: Network; authConfig?: ThirdwebAuthConfig }>
-> = ({ network, authConfig, children }) => {
+  PropsWithChildren<{ network?: Network }>
+> = ({ network, children }) => {
   const wallet = useWallet();
   return (
-    <ThirdwebSDKProvider
-      network={network}
-      wallet={wallet}
-      authConfig={authConfig}
-    >
+    <ThirdwebSDKProvider network={network} wallet={wallet}>
       {children}
     </ThirdwebSDKProvider>
   );

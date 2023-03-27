@@ -7,13 +7,19 @@ export const ToolTip: React.FC<{
   children: React.ReactNode;
   tip: React.ReactNode;
   sideOffset?: number;
+  align?: "start" | "center" | "end";
+  side?: "top" | "right" | "bottom" | "left";
 }> = (props) => {
   return (
-    <RadixTooltip.Provider>
+    <RadixTooltip.Provider delayDuration={200}>
       <RadixTooltip.Root>
         <RadixTooltip.Trigger asChild>{props.children}</RadixTooltip.Trigger>
         <RadixTooltip.Portal>
-          <TooltipContent sideOffset={props.sideOffset || 6}>
+          <TooltipContent
+            sideOffset={props.sideOffset || 6}
+            align={props.align}
+            side={props.side}
+          >
             {props.tip}
             <TooltipArrow />
           </TooltipContent>
@@ -35,8 +41,8 @@ to {
 `;
 
 const TooltipContent = styled(RadixTooltip.Content)<{ theme?: Theme }>`
-  background: ${(p) => p.theme.bg.inverted};
-  color: ${(p) => p.theme.text.inverted};
+  background: ${(p) => p.theme.tooltip.bg};
+  color: ${(p) => p.theme.tooltip.text};
   border-radius: ${radius.sm};
   line-height: 1;
   padding: ${spacing.sm} ${spacing.md};
@@ -49,5 +55,5 @@ const TooltipContent = styled(RadixTooltip.Content)<{ theme?: Theme }>`
 `;
 
 const TooltipArrow = styled(RadixTooltip.Arrow)<{ theme?: Theme }>`
-  fill: ${(p) => p.theme.bg.inverted};
+  fill: ${(p) => p.theme.tooltip.bg};
 `;

@@ -1,14 +1,13 @@
 import { DEFAULT_API_KEY } from "../../core/constants/rpc";
 import { QueryClientProviderWithDefault } from "../../core/providers/query-client";
-import { ThirdwebAuthProvider } from "../contexts/thirdweb-auth";
 import { ThirdwebConfigProvider } from "../contexts/thirdweb-config";
 import { ThirdwebConnectedWalletProvider } from "../contexts/thirdweb-wallet";
+import { useUpdateChainsWithApiKeys } from "../hooks/chain-hooks";
+import { ThirdwebSDKProviderProps } from "./types";
 import { Chain, defaultChains, getChainRPC } from "@thirdweb-dev/chains";
 import { SDKOptionsOutput, ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 import { createContext, useContext, useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";
-import { useUpdateChainsWithApiKeys } from "../hooks/chain-hooks";
-import { ThirdwebSDKProviderProps } from "./types";
 
 interface TWSDKContext {
   sdk?: ThirdwebSDK;
@@ -21,9 +20,7 @@ const ThirdwebSDKContext = createContext<TWSDKContext>({});
  *
  * @internal
  */
-const WrappedThirdwebSDKProvider = <
-  TChains extends Chain[] = typeof defaultChains,
->({
+const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
   sdkOptions = {},
   storageInterface,
   supportedChains,
@@ -176,13 +173,10 @@ const WrappedThirdwebSDKProvider = <
  *
  * @public
  */
-export const ThirdwebSDKProvider = <
-  TChains extends Chain[] = typeof defaultChains,
->({
+export const ThirdwebSDKProvider = <TChains extends Chain[]>({
   signer,
   children,
   queryClient,
-  authConfig,
   supportedChains,
   activeChain,
   thirdwebApiKey = DEFAULT_API_KEY,
@@ -195,9 +189,8 @@ export const ThirdwebSDKProvider = <
   }, [supportedChains]);
   const [supportedChainsWithKey, activeChainIdOrObjWithKey] =
     useUpdateChainsWithApiKeys(
-      // @ts-expect-error - different subtype of Chain[] but this works fine
       supportedChainsNonNull,
-      activeChain,
+      activeChain || supportedChainsNonNull[0],
       thirdwebApiKey,
       alchemyApiKey,
       infuraApiKey,
@@ -236,19 +229,17 @@ export const ThirdwebSDKProvider = <
     >
       <ThirdwebConnectedWalletProvider signer={signer}>
         <QueryClientProviderWithDefault queryClient={queryClient}>
-          <ThirdwebAuthProvider value={authConfig}>
-            <WrappedThirdwebSDKProvider
-              signer={signer}
-              supportedChains={mergedChains}
-              thirdwebApiKey={thirdwebApiKey}
-              alchemyApiKey={alchemyApiKey}
-              infuraApiKey={infuraApiKey}
-              activeChain={activeChainIdOrObjWithKey}
-              {...restProps}
-            >
-              {children}
-            </WrappedThirdwebSDKProvider>
-          </ThirdwebAuthProvider>
+          <WrappedThirdwebSDKProvider
+            signer={signer}
+            supportedChains={mergedChains}
+            thirdwebApiKey={thirdwebApiKey}
+            alchemyApiKey={alchemyApiKey}
+            infuraApiKey={infuraApiKey}
+            activeChain={activeChainIdOrObjWithKey}
+            {...restProps}
+          >
+            {children}
+          </WrappedThirdwebSDKProvider>
         </QueryClientProviderWithDefault>
       </ThirdwebConnectedWalletProvider>
     </ThirdwebConfigProvider>
