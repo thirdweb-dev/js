@@ -18,9 +18,9 @@ export type WalletOptions = {
 
 export type WalletInstance = InstanceType<typeof AbstractBrowserWallet>;
 
-export type WalletClass<INS extends WalletInstance = WalletInstance> = {
+export type WalletClass<I extends WalletInstance = WalletInstance> = {
   id: string;
-  new (options: WalletOptions): INS;
+  new (options: WalletOptions): I;
   meta: (typeof AbstractBrowserWallet)["meta"];
 };
 
