@@ -3,7 +3,11 @@ import { SupportedWallet, SupportedWalletInstance } from "../types/wallet";
 import { timeoutPromise } from "../utils/timeoutPromise";
 import { ThirdwebThemeContext } from "./theme-context";
 import { Chain } from "@thirdweb-dev/chains";
-import { AsyncStorage, ConnectParams, CreateAsyncStorage } from "@thirdweb-dev/wallets";
+import {
+  AsyncStorage,
+  ConnectParams,
+  CreateAsyncStorage,
+} from "@thirdweb-dev/wallets";
 import { Signer } from "ethers";
 import {
   createContext,
@@ -56,7 +60,10 @@ type ThirdwebWalletContextData = {
   switchChain: (chain: number) => Promise<void>;
   chainToConnect?: Chain;
   activeChain?: Chain;
-  handleWalletConnect: (walletId: InstanceType<SupportedWallet>, params?: ConnectParams<Record<string, any>>) => void;
+  handleWalletConnect: (
+    walletId: InstanceType<SupportedWallet>,
+    params?: ConnectParams<Record<string, any>>,
+  ) => void;
 };
 
 const ThirdwebWalletContext = createContext<
@@ -103,14 +110,14 @@ export function ThirdwebWalletProvider(
       ...walletOptions,
       chain: props.activeChain || props.chains[0],
       theme: theme || "dark",
-    }
+    };
   }, [
     props.chains,
     props.shouldAutoConnect,
     props.dAppMeta,
     props.activeChain,
-    theme
-  ])
+    theme,
+  ]);
 
   const createWalletInstance = useCallback(
     (Wallet: SupportedWallet) => {
@@ -127,16 +134,23 @@ export function ThirdwebWalletProvider(
   }, [activeWallet, props.chains]);
 
   const handleWalletConnect = useCallback(
-    async (wallet: InstanceType<SupportedWallet>, params?: ConnectParams<Record<string, any>>) => {
+    async (
+      wallet: InstanceType<SupportedWallet>,
+      params?: ConnectParams<Record<string, any>>,
+    ) => {
       const connectParams = params || walletParams;
       const lastConnectedWallet = {
         walletId: wallet.walletId,
-        connectParams
+        connectParams,
+      };
+      try {
+        await coordinatorStorage.setItem(
+          LAST_CONNECTED_WALLET_STORAGE_KEY,
+          JSON.stringify(lastConnectedWallet),
+        );
+      } catch (e) {
+        console.error(e);
       }
-      await coordinatorStorage.setItem(
-        LAST_CONNECTED_WALLET_STORAGE_KEY,
-        JSON.stringify(lastConnectedWallet),
-      );
 
       const _signer = await wallet.getSigner();
       setSigner(_signer);
@@ -162,10 +176,10 @@ export function ThirdwebWalletProvider(
         LAST_CONNECTED_WALLET_STORAGE_KEY,
         JSON.stringify(parsedWallet),
       );
-    } catch(error) {
+    } catch (error) {
       console.error(`Error saving the last active chain: ${error}`);
     }
-  },[]);
+  }, []);
 
   const switchChain = useCallback(
     async (chainId: number) => {
@@ -216,15 +230,15 @@ export function ThirdwebWalletProvider(
         setConnectionStatus("disconnected");
         return;
       }
-  
+
       let parsedParams: ConnectParams<Record<string, any>> | undefined;
       let lastConnectedWalletId: string | undefined;
-  
+
       try {
         const parsedWallet = JSON.parse(lastConnectedWallet as string);
         parsedParams = parsedWallet.connectParams;
         lastConnectedWalletId = parsedWallet.walletId;
-      } catch(error) {
+      } catch (error) {
         console.error(`Error parsing the last connected wallet: ${error}`);
       }
 
