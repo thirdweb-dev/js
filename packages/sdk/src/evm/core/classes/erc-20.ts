@@ -390,7 +390,7 @@ export class Erc20<
 
   /**
    * Construct a mint transaction without executing it
-   * @remakrs This is useful for estimating the gas cost of a mint transaction, overriding transaction options and having fine grained control over the transaction execution.
+   * @remarks This is useful for estimating the gas cost of a mint transaction, overriding transaction options and having fine grained control over the transaction execution.
    * @param receiver - Address you want to send the token to
    * @param amount - The amount of tokens you want to mint
    *
