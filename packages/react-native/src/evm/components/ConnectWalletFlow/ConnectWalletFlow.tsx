@@ -3,19 +3,13 @@ import Text from "../base/Text";
 import { TWModal } from "../base/modal/TWModal";
 import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
-import {
-  SupportedWallet,
-  useConnect,
-  useWallets,
-} from "@thirdweb-dev/react-core";
+import { Wallet, useConnect, useWallets } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { StyleSheet } from "react-native";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [activeWallet, setActiveWallet] = useState<
-    SupportedWallet | undefined
-  >();
+  const [activeWallet, setActiveWallet] = useState<Wallet | undefined>();
 
   const connect = useConnect();
   const supportedWallets = useWallets();
@@ -29,7 +23,7 @@ export const ConnectWalletFlow = () => {
     setActiveWallet(undefined);
   };
 
-  const onChooseWallet = async (wallet: SupportedWallet) => {
+  const onChooseWallet = async (wallet: Wallet) => {
     setActiveWallet(() => wallet);
 
     await connect(wallet, {}).catch((error) => {

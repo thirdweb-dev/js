@@ -1,3 +1,5 @@
+export { useSafe } from "./connectors/gnosis";
+
 export { ConnectWallet } from "../wallet/ConnectWallet/ConnectWallet";
 
 // UI components

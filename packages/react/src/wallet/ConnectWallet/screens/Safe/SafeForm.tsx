@@ -18,7 +18,6 @@ import {
   fontSize,
 } from "../../../../design-system";
 import { useIsNonLocalWallet } from "../../../hooks/useCanSwitchNetwork";
-import { SafeWallet } from "../../../wallets";
 import { Steps } from "./Steps";
 import styled from "@emotion/styled";
 import {
@@ -32,10 +31,12 @@ import {
   useConnectionStatus,
   useSupportedChains,
   useWallet,
+  Wallet,
 } from "@thirdweb-dev/react-core";
 import { SafeSupportedChainsSet } from "@thirdweb-dev/wallets";
 import { utils } from "ethers";
 import { useState } from "react";
+import { useSupportedWallet } from "../useSupportedWallet";
 
 export const gnosisAddressPrefixToChainId = {
   eth: 1,
@@ -50,6 +51,7 @@ export const SafeForm: React.FC<{
   onBack: () => void;
   onConnect: () => void;
 }> = (props) => {
+  const safeWalletObj = useSupportedWallet("Safe") as Wallet;
   const activeWallet = useWallet();
   const connect = useConnect();
   const activeChain = useActiveChain();
@@ -88,7 +90,7 @@ export const SafeForm: React.FC<{
     setSafeConnectError(false);
 
     try {
-      await connect(SafeWallet, {
+      await connect(safeWalletObj, {
         chain: selectedSafeChain,
         personalWallet: activeWallet,
         safeAddress,
@@ -110,7 +112,7 @@ export const SafeForm: React.FC<{
       <BackButton onClick={props.onBack} />
       <IconContainer>
         <Img
-          src={SafeWallet.meta.iconURL}
+          src={safeWalletObj.meta.iconURL}
           width={iconSize.xl}
           height={iconSize.xl}
         />

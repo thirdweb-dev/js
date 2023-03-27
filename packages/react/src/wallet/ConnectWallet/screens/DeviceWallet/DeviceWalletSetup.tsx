@@ -13,17 +13,19 @@ import {
 } from "../../../../components/modalElements";
 import { iconSize, media, spacing } from "../../../../design-system";
 import { useDeviceWalletStorage } from "../../../hooks/useDeviceWalletStorage";
-import { DeviceWallet } from "../../../wallets";
 import styled from "@emotion/styled";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { useConnect } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
+import { useSupportedWallet } from "../useSupportedWallet";
+import { Wallet } from "@thirdweb-dev/react-core";
 
 export const ConnectToDeviceWallet: React.FC<{
   onBack: () => void;
   onConnected: () => void;
 }> = (props) => {
   const deviceStorage = useDeviceWalletStorage();
+  const coinbaseWalletObj = useSupportedWallet("deviceWallet") as Wallet;
 
   if (!deviceStorage) {
     return (
@@ -47,13 +49,13 @@ export const ConnectToDeviceWallet: React.FC<{
       <BackButton onClick={props.onBack} />
       <IconContainer>
         <Img
-          src={DeviceWallet.meta.iconURL}
+          src={coinbaseWalletObj.meta.iconURL}
           width={iconSize.xl}
           height={iconSize.xl}
         />
       </IconContainer>
       <Spacer y="md" />
-      <ModalTitle>Device Wallet</ModalTitle>
+      <ModalTitle>{coinbaseWalletObj.meta.name}</ModalTitle>
 
       {description && (
         <>
@@ -74,21 +76,22 @@ export const ConnectToDeviceWallet: React.FC<{
 };
 
 // for creating a new device wallet
-export const CreateDeviceWallet: React.FC<{ onConnected: () => void }> = (
-  props,
-) => {
+export const CreateDeviceWallet: React.FC<{
+  onConnected: () => void;
+}> = (props) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const connect = useConnect();
   const passwordMismatch = confirmPassword && password !== confirmPassword;
+  const coinbaseWalletObj = useSupportedWallet("deviceWallet") as Wallet;
 
   const handleConnect = async () => {
     if (passwordMismatch) {
       return;
     }
 
-    await connect(DeviceWallet, {
+    await connect(coinbaseWalletObj, {
       password,
     });
 
@@ -149,15 +152,16 @@ export const CreateDeviceWallet: React.FC<{ onConnected: () => void }> = (
 };
 
 // for connecting to an existing device wallet
-export const ReconnectDeviceWallet: React.FC<{ onConnected: () => void }> = (
-  props,
-) => {
+export const ReconnectDeviceWallet: React.FC<{
+  onConnected: () => void;
+}> = (props) => {
   const deviceStorage = useDeviceWalletStorage();
   const [address, setAddress] = useState("Fetching...");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const connect = useConnect();
   const [isWrongPassword, setIsWrongPassword] = useState(false);
+  const coinbaseWalletObj = useSupportedWallet("deviceWallet") as Wallet;
 
   useEffect(() => {
     if (deviceStorage?.address) {
@@ -167,7 +171,7 @@ export const ReconnectDeviceWallet: React.FC<{ onConnected: () => void }> = (
 
   const handleReconnect = async () => {
     try {
-      await connect(DeviceWallet, {
+      await connect(coinbaseWalletObj, {
         password,
       });
       props.onConnected();

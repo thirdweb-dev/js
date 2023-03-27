@@ -9,6 +9,10 @@ import type {
   WalletOptions,
 } from "@thirdweb-dev/wallets";
 import {
+  WalletOptions as WalletOptionsRC,
+  Wallet,
+} from "@thirdweb-dev/react-core";
+import {
   DeviceBrowserWallet as DeviceWalletCore,
   WalletConnect as WalletConnectCore,
   WalletConnectV1 as WalletConnectV1Core,
@@ -66,6 +70,14 @@ export class MetaMaskWallet extends WalletConnectV1Core {
   }
 }
 
+export const metamaskWallet = () => {
+  return {
+    id: MetaMaskWallet.id,
+    meta: MetaMaskWallet.meta,
+    create: (options: WalletOptionsRC) => new MetaMaskWallet(options),
+  } satisfies Wallet;
+};
+
 // Rainbow ----------------------------------------
 
 export class RainbowWallet extends WalletConnectV1Core {
@@ -110,6 +122,14 @@ export class RainbowWallet extends WalletConnectV1Core {
     }
   }
 }
+
+export const rainbowWallet = () => {
+  return {
+    id: RainbowWallet.id,
+    meta: RainbowWallet.meta,
+    create: (options: WalletOptionsRC) => new RainbowWallet(options),
+  } satisfies Wallet;
+};
 
 // Trust ----------------------------------------
 
@@ -163,6 +183,14 @@ export class TrustWallet extends WalletConnectCore {
   }
 }
 
+export const trustWallet = () => {
+  return {
+    id: TrustWallet.id,
+    meta: TrustWallet.meta,
+    create: (options: WalletOptionsRC) => new TrustWallet(options),
+  } satisfies Wallet;
+};
+
 // Device Wallet ----------------------------------------
 
 const deviceWalletStorage = createAsyncLocalStorage("deviceWallet");
@@ -194,3 +222,11 @@ export class DeviceWallet extends DeviceWalletCore {
     return deviceWalletStorage.getItem(key);
   }
 }
+
+export const deviceWallet = () => {
+  return {
+    id: DeviceWallet.id,
+    meta: DeviceWallet.meta,
+    create: (options: WalletOptionsRC) => new DeviceWallet(options),
+  } satisfies Wallet;
+};
