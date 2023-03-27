@@ -5,6 +5,7 @@ import Text from "./base/Text";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   useAddress,
+  useChainId,
   useContract,
   useNetworkMismatch,
   useSDKChainId,
@@ -14,7 +15,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import type { SmartContract } from "@thirdweb-dev/sdk";
 import type { CallOverrides, ContractInterface } from "ethers";
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import invariant from "tiny-invariant";
 
@@ -64,30 +65,35 @@ export const Web3Button = <TAction extends ActionFn>({
   onSuccess,
   onError,
   onSubmit,
-  isDisabled = false,
+  isDisabled,
   contractAbi,
   children,
   action,
   theme,
 }: PropsWithChildren<Web3ButtonProps<TAction>>) => {
-  const activeWallet = useWallet();
   const address = useAddress();
+  const activeWallet = useWallet();
+  const walletChainId = useChainId();
   const sdkChainId = useSDKChainId();
   const switchChain = useSwitchChain();
   const hasMismatch = useNetworkMismatch();
+  const needToSwitchChain =
+    sdkChainId && walletChainId && sdkChainId !== walletChainId;
   const connectionStatus = useConnectionStatus();
 
   const queryClient = useQueryClient();
 
   const { contract } = useContract(contractAddress, contractAbi || "custom");
 
-  const [confirmStatus, setConfirmStatus] = useState<"idle" | "waiting">(
-    "idle",
-  );
-
   const actionMutation = useMutation(
     async () => {
       invariant(contract, "contract is not ready yet");
+
+      // if need to switch the chain to perform the action
+      if (needToSwitchChain) {
+        await switchChain(sdkChainId);
+        return "__NETWORK_SWITCHED__";
+      }
 
       if (onSubmit) {
         onSubmit();
@@ -99,6 +105,9 @@ export const Web3Button = <TAction extends ActionFn>({
     },
     {
       onSuccess: (res) => {
+        if (res === "__NETWORK_SWITCHED__") {
+          return;
+        }
         if (onSuccess) {
           onSuccess(res);
         }
@@ -122,89 +131,42 @@ export const Web3Button = <TAction extends ActionFn>({
     return <ConnectWallet theme={theme} />;
   }
 
-  const handleSwitchChain = async () => {
-    if (sdkChainId) {
-      setConfirmStatus("waiting");
-      try {
-        await switchChain(sdkChainId);
-        setConfirmStatus("idle");
-      } catch (e) {
-        console.error(`Web3Button. Error switching chains: ${e}`);
-        setConfirmStatus("idle");
-      }
-    }
-  };
+  let content = children;
+  let buttonDisabled = !!isDisabled;
+  let buttonLoading = false;
 
-  let button: React.ReactNode = null;
-  // Switch Network Button
-  if (hasMismatch && !isDisabled) {
-    button = (
-      <BaseButton
-        backgroundColor="white"
-        onPress={handleSwitchChain}
-        style={styles.actionButton}
-      >
-        {confirmStatus === "waiting" ? (
-          <ActivityIndicator size="small" color={"black"} />
-        ) : (
-          <Text variant="bodyLarge" color="black">
-            Switch Network
-          </Text>
-        )}
-      </BaseButton>
-    );
-  }
-
-  // Disabled Loading Spinner Button
-  else if (
-    !isDisabled &&
-    (actionMutation.isLoading ||
-      !contract ||
+  // if button is disabled, show original action
+  if (!buttonDisabled) {
+    if (hasMismatch) {
+      content = "Switch Network";
+    } else if (
+      actionMutation.isLoading ||
       connectionStatus === "connecting" ||
-      connectionStatus === "unknown")
-  ) {
-    button = (
-      <BaseButton
-        backgroundColor="white"
-        onPress={handleSwitchChain}
-        style={styles.actionButton}
-      >
-        {confirmStatus === "waiting" ? (
-          <ActivityIndicator size="small" color={"black"} />
-        ) : (
-          <Text variant="bodyLarge" color="black">
-            Switch Network
-          </Text>
-        )}
-      </BaseButton>
-    );
+      connectionStatus === "unknown"
+    ) {
+      content = <ActivityIndicator size="small" color={"black"} />;
+      buttonLoading = true;
+    }
   }
 
-  // action button
-  else {
-    button = (
+  return (
+    <ThemeProvider theme={theme}>
       <BaseButton
         backgroundColor="white"
         onPress={() => {
           actionMutation.mutate();
         }}
         style={styles.actionButton}
-        disabled={isDisabled}
+        disabled={buttonDisabled || buttonLoading}
       >
-        {typeof children === "string" ? (
+        {typeof content === "string" ? (
           <Text variant="bodyLarge" color="black">
-            {children}
+            {content}
           </Text>
         ) : (
-          children
+          content
         )}
       </BaseButton>
-    );
-  }
-
-  return (
-    <ThemeProvider theme={theme}>
-      {button}
     </ThemeProvider>
   );
 };
