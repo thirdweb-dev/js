@@ -141,7 +141,6 @@ export const Web3Button = <TAction extends ActionFn>({
       content = "Switch Network";
     } else if (
       actionMutation.isLoading ||
-      !contract ||
       connectionStatus === "connecting" ||
       connectionStatus === "unknown"
     ) {
