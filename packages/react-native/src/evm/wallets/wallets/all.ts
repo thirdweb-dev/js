@@ -8,14 +8,10 @@ import type {
   WalletOptions,
 } from "@thirdweb-dev/wallets";
 import {
-<<<<<<< HEAD
   WalletOptions as WalletOptionsRC,
   Wallet,
 } from "@thirdweb-dev/react-core";
 import {
-  DeviceBrowserWallet as DeviceWalletCore,
-=======
->>>>>>> main
   WalletConnect as WalletConnectCore,
   WalletConnectV1 as WalletConnectV1Core,
 } from "@thirdweb-dev/wallets";
