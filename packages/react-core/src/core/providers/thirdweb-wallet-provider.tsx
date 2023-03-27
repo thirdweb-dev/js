@@ -281,10 +281,9 @@ export function ThirdwebWalletProvider(
       try {
         await wallet.connect(_connectedParams);
         handleWalletConnect(wallet, _connectedParams);
-      } catch (e: any) {
-        console.error(`Error connecting to the wallet: ${Wallet.id}. Error: ${e}`);
+      } catch (error: any) {
         setConnectionStatus("disconnected");
-        throw e;
+        throw error;
       }
     },
     [createWalletInstance, handleWalletConnect, chainToConnect],
