@@ -8,7 +8,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import { PropsWithChildren } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
-import { metamaskWallet } from "evm/wallets/wallets/all";
+import { metamaskWallet } from "../wallets/wallets/all";
 
 const DEFAULT_WALLETS = [metamaskWallet(), coinbaseWallet()];
 

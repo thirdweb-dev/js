@@ -3,17 +3,19 @@ import { TW_WC_PROJECT_ID } from "../../constants/walletConnect";
 import { formatDisplayUri } from "../../utils/uri";
 import { ExtraCoreWalletOptions } from "@thirdweb-dev/react-core";
 import type {
-  DeviceWalletOptions as DeviceWalletCoreOptions,
   WalletConnectOptions,
   WalletConnectV1Options,
   WalletOptions,
 } from "@thirdweb-dev/wallets";
 import {
+<<<<<<< HEAD
   WalletOptions as WalletOptionsRC,
   Wallet,
 } from "@thirdweb-dev/react-core";
 import {
   DeviceBrowserWallet as DeviceWalletCore,
+=======
+>>>>>>> main
   WalletConnect as WalletConnectCore,
   WalletConnectV1 as WalletConnectV1Core,
 } from "@thirdweb-dev/wallets";
@@ -188,45 +190,5 @@ export const trustWallet = () => {
     id: TrustWallet.id,
     meta: TrustWallet.meta,
     create: (options: WalletOptionsRC) => new TrustWallet(options),
-  } satisfies Wallet;
-};
-
-// Device Wallet ----------------------------------------
-
-const deviceWalletStorage = createAsyncLocalStorage("deviceWallet");
-
-type DeviceWalletOptions = Omit<
-  WalletOptions<DeviceWalletCoreOptions>,
-  "storage" | "storageType" | "walletStorage"
-> &
-  ExtraCoreWalletOptions;
-
-export class DeviceWallet extends DeviceWalletCore {
-  static id = "devicewallet" as const;
-  constructor(options: DeviceWalletOptions) {
-    super({
-      ...options,
-      storage: deviceWalletStorage,
-      storageType: "asyncStore",
-      walletStorage: deviceWalletStorage,
-    });
-  }
-
-  static getStoredData() {
-    const key = DeviceWalletCore.getDataStorageKey();
-    return deviceWalletStorage.getItem(key);
-  }
-
-  static getStoredAddress() {
-    const key = DeviceWalletCore.getAddressStorageKey();
-    return deviceWalletStorage.getItem(key);
-  }
-}
-
-export const deviceWallet = () => {
-  return {
-    id: DeviceWallet.id,
-    meta: DeviceWallet.meta,
-    create: (options: WalletOptionsRC) => new DeviceWallet(options),
   } satisfies Wallet;
 };
