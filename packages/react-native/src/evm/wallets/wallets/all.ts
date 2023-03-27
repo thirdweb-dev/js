@@ -3,13 +3,11 @@ import { TW_WC_PROJECT_ID } from "../../constants/walletConnect";
 import { formatDisplayUri } from "../../utils/uri";
 import { ExtraCoreWalletOptions } from "@thirdweb-dev/react-core";
 import type {
-  DeviceWalletOptions as DeviceWalletCoreOptions,
   WalletConnectOptions,
   WalletConnectV1Options,
   WalletOptions,
 } from "@thirdweb-dev/wallets";
 import {
-  DeviceBrowserWallet as DeviceWalletCore,
   WalletConnect as WalletConnectCore,
   WalletConnectV1 as WalletConnectV1Core,
 } from "@thirdweb-dev/wallets";
@@ -163,34 +161,3 @@ export class TrustWallet extends WalletConnectCore {
   }
 }
 
-// Device Wallet ----------------------------------------
-
-const deviceWalletStorage = createAsyncLocalStorage("deviceWallet");
-
-type DeviceWalletOptions = Omit<
-  WalletOptions<DeviceWalletCoreOptions>,
-  "storage" | "storageType" | "walletStorage"
-> &
-  ExtraCoreWalletOptions;
-
-export class DeviceWallet extends DeviceWalletCore {
-  static id = "devicewallet" as const;
-  constructor(options: DeviceWalletOptions) {
-    super({
-      ...options,
-      storage: deviceWalletStorage,
-      storageType: "asyncStore",
-      walletStorage: deviceWalletStorage,
-    });
-  }
-
-  static getStoredData() {
-    const key = DeviceWalletCore.getDataStorageKey();
-    return deviceWalletStorage.getItem(key);
-  }
-
-  static getStoredAddress() {
-    const key = DeviceWalletCore.getAddressStorageKey();
-    return deviceWalletStorage.getItem(key);
-  }
-}
