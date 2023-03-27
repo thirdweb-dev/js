@@ -19,7 +19,7 @@ export default {
       16
     ]
   },
-  "testnet": true,
+  "testnet": false,
   "rpc": [
     "https://polygon-zkevm-beta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://zkevm-rpc.com"
@@ -34,11 +34,6 @@ export default {
       "name": "Polygon zkEVM",
       "url": "https://zkevm.polygonscan.com/",
       "standard": ""
-    },
-    {
-      "name": "Polygon zkEVM explorer",
-      "url": "https://explorer.public.zkevm-test.net",
-      "standard": "EIP3091"
     }
   ],
   "slug": "polygon-zkevm-beta"
