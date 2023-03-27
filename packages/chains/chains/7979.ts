@@ -15,10 +15,17 @@ export default {
   "shortName": "dos",
   "chainId": 7979,
   "networkId": 7979,
+  "icon": {
+    "url": "ipfs://QmV2Nowzo81F6pi2qFcHePA4MwmmdMKBMUzBJUrxcymxx4",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "explorers": [
     {
       "name": "DOScan",
       "url": "https://doscan.io",
+      "icon": "doschain",
       "standard": "EIP3091"
     }
   ],
