@@ -290,7 +290,7 @@ export function ThirdwebWalletProvider(
         await wallet.connect(_connectedParams);
         handleWalletConnect(wallet, _connectedParams);
       } catch (e: any) {
-        console.error(e);
+        console.error(`Error connecting to wallet: ${e}`);
         setConnectionStatus("disconnected");
         throw e;
       }
