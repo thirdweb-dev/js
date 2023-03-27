@@ -2,6 +2,7 @@ import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
 import { TWModal } from "../base/modal/TWModal";
 import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
+import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
 import {
   SupportedWallet,
   useConnect,
@@ -9,7 +10,6 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { StyleSheet } from "react-native";
-import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
 import { DeviceWallet } from "../../wallets/wallets/device-wallet";
 
 export const ConnectWalletFlow = () => {

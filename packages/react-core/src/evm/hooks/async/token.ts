@@ -21,8 +21,8 @@ import {
   UseMutationResult,
   useQueryClient,
 } from "@tanstack/react-query";
-import invariant from "tiny-invariant";
 import type { providers } from "ethers";
+import invariant from "tiny-invariant";
 
 /** **********************/
 /**     READ  HOOKS     **/

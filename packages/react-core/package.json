@@ -92,11 +92,11 @@
     "react": "^18.2.0",
     "typescript": "^4.7.4",
     "eslint-config-thirdweb": "workspace:*",
-    "@thirdweb-dev/tsconfig": "workspace:*"
+    "@thirdweb-dev/tsconfig": "workspace:*",
+    "@thirdweb-dev/auth": "workspace:*"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.0.10",
-    "@thirdweb-dev/auth": "workspace:*",
     "@thirdweb-dev/chains": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",
     "@thirdweb-dev/storage": "workspace:*",

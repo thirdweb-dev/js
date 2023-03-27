@@ -111,7 +111,7 @@ git clone https://github.com/thirdweb-dev/js.git
 2. From the project root run
 
 ```bash
-pnpm && pnpm build
+pnpm i && pnpm build
 ```
 
 3. From inside `js/packages/cli` Run the `build:watch` command to compile any changes in real time

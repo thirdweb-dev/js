@@ -14,8 +14,8 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ValidContractInstance } from "@thirdweb-dev/sdk";
-import invariant from "tiny-invariant";
 import type { providers } from "ethers";
+import invariant from "tiny-invariant";
 
 /**
  * Get App URI

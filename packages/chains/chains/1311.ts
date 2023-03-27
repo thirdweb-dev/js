@@ -12,7 +12,7 @@ export default {
     "decimals": 18
   },
   "infoURL": "http://doschain.io/",
-  "shortName": "DOS",
+  "shortName": "TDOS",
   "chainId": 1311,
   "networkId": 1311,
   "explorers": [

@@ -94,7 +94,6 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
     return this.#signer;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async switchChain(chainId: number): Promise<void> {
     const chain = this.options.chains.find((c) => c.chainId === chainId);
     if (!chain) {

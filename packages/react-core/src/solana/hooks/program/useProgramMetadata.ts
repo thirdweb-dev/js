@@ -2,8 +2,8 @@ import { createSOLProgramQueryKey } from "../../../core/query-utils/query-key";
 import { RequiredParam } from "../../../core/query-utils/required-param";
 import { UseProgramResult } from "./useProgram";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import invariant from "tiny-invariant";
 import { NFTMetadata } from "@thirdweb-dev/sdk";
+import invariant from "tiny-invariant";
 
 export function programMetadataQuery(
   program: RequiredParam<UseProgramResult["program"]>,

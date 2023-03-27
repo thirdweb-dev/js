@@ -1,13 +1,13 @@
 import { LoginPayload, ThirdwebAuth, VerifyOptions } from "../core";
-import { SignerWallet } from "../evm";
 import { ThirdwebProviderConfig } from "./types";
+import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { ethers } from "ethers";
 import { Awaitable, Session } from "next-auth/core/types";
 import { JWT } from "next-auth/jwt/types";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export function ThirdwebAuthProvider(cfg: ThirdwebProviderConfig) {
-  const wallet = new SignerWallet(ethers.Wallet.createRandom());
+  const wallet = new EthersWallet(ethers.Wallet.createRandom());
   const auth = new ThirdwebAuth(wallet, cfg.domain);
 
   return CredentialsProvider({

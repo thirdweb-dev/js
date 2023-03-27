@@ -1,17 +1,17 @@
-import styled from "@emotion/styled";
 import { Img } from "../../../../components/Img";
+import { Spacer } from "../../../../components/Spacer";
 import {
   BackButton,
   ModalTitle,
   HelperLink,
   ModalDescription,
 } from "../../../../components/modalElements";
-import { Spacer } from "../../../../components/Spacer";
 import { iconSize, spacing, media } from "../../../../design-system";
 import { WalletMeta } from "../../../types";
 import { SafeWallet } from "../../../wallets";
 import { WalletSelection } from "../../WalletSelector";
 import { Steps } from "./Steps";
+import styled from "@emotion/styled";
 
 export const SelectpersonalWallet: React.FC<{
   onBack: () => void;
@@ -31,14 +31,12 @@ export const SelectpersonalWallet: React.FC<{
         />
       </IconContainer>
       <Spacer y="lg" />
-      <ModalTitle>Connecting your Safe</ModalTitle>
-      <Spacer y="md" />
+      <ModalTitle>Choose your Wallet</ModalTitle>
+      <Spacer y="sm" />
 
-      <Desc>
-        Select and connect the wallet that{`'`}s attached to your Safe.
-      </Desc>
+      <Desc>Select a personal wallet to connect to your Safe</Desc>
 
-      <Spacer y="lg" />
+      <Spacer y="xl" />
       <Steps step={1} />
       <Spacer y="lg" />
 
@@ -47,7 +45,7 @@ export const SelectpersonalWallet: React.FC<{
       <Spacer y="xl" />
       <HelperLink
         target="_blank"
-        href="https://safe.global/"
+        href="https://docs.safe.global/learn/what-is-a-smart-contract-account"
         style={{
           textAlign: "center",
         }}

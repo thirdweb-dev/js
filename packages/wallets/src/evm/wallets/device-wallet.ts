@@ -1,9 +1,8 @@
 import { AsyncStorage, createAsyncLocalStorage } from "../../core";
-import { thirdwebChains } from "../constants/chains";
 import { TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
-import { Chain, Ethereum } from "@thirdweb-dev/chains";
+import { Chain, defaultChains, Ethereum } from "@thirdweb-dev/chains";
 import { ethers } from "ethers";
 
 export type DeviceWalletOptions = {
@@ -27,8 +26,9 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
 > {
   connector?: TWConnector;
   #walletImpl?: AbstractDeviceWallet;
-  static id = "deviceWallet" as const;
   options: WalletOptions<DeviceWalletOptions>;
+
+  static id = "deviceWallet";
 
   static meta = {
     name: "Device Wallet",
@@ -62,7 +62,7 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
       this.connector = new DeviceWalletConnector({
         chain: this.options.chain || Ethereum,
         wallet,
-        chains: this.options.chains || thirdwebChains,
+        chains: this.options.chains || defaultChains,
       });
     }
     return this.connector;

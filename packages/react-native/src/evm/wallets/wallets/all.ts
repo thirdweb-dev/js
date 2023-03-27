@@ -21,6 +21,7 @@ type WC1Options = Omit<
   ExtraCoreWalletOptions;
 
 export class MetaMaskWallet extends WalletConnectV1Core {
+  static id = "metamask" as const;
   static meta = {
     id: "metamask",
     name: "MetaMask",
@@ -66,6 +67,7 @@ export class MetaMaskWallet extends WalletConnectV1Core {
 // Rainbow ----------------------------------------
 
 export class RainbowWallet extends WalletConnectV1Core {
+  static id = "rainbow" as const;
   static meta = {
     id: "rainbow",
     name: "Rainbow",
@@ -115,6 +117,7 @@ type WC2Options = Omit<
 >;
 
 export class TrustWallet extends WalletConnectCore {
+  static id = "trust" as const;
   static meta = {
     id: "trust",
     name: "Trust Wallet",
