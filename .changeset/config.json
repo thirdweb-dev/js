@@ -21,6 +21,6 @@
     "onlyUpdatePeerDependentsWhenOutOfRange": true
   },
   "snapshot": {
-    "prereleaseTemplate": "{tag}-{datetime}-{commit}"
+    "prereleaseTemplate": "{tag}-{commit}-{datetime}"
   }
 }
