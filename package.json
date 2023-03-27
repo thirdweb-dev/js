@@ -20,7 +20,7 @@
     "@chakra-ui/react": "^2.5.4",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
-    "@hookform/resolvers": "^2.8.0",
+    "@hookform/resolvers": "^3.0.0",
     "@metaplex-foundation/js": "^0.18.0",
     "@n8tb1t/use-scroll-position": "^2.0.3",
     "@project-serum/anchor": "^0.26.0",
