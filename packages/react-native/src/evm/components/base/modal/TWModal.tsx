@@ -16,7 +16,7 @@ export function TWModal({ children, isVisible, ...props }: TWModalProps) {
   const theme = useAppTheme();
 
   return (
-    <Modal useNativeDriver isVisible={isVisible} {...props}>
+    <Modal useNativeDriver hideModalContentWhileAnimating={true} isVisible={isVisible} {...props}>
       <View
         style={[styles.modal, { backgroundColor: theme.colors.background }]}
       >

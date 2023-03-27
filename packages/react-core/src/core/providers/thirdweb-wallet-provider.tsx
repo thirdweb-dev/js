@@ -102,10 +102,7 @@ export function ThirdwebWalletProvider(
     return {
       ...walletOptions,
       chain: props.activeChain || props.chains[0],
-      dappMetadata: {
-        ...walletOptions.dappMetadata,
-        isDarkMode: theme === "dark",
-      },
+      theme: theme || "dark",
     };
   }, [
     props.chains,
