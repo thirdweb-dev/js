@@ -12,12 +12,6 @@ import { metamaskWallet } from "evm/wallets/wallets/all";
 
 const DEFAULT_WALLETS = [metamaskWallet(), coinbaseWallet()];
 
-// export type ImplementedWallet =
-//   | typeof MetaMaskWallet
-//   | typeof RainbowWallet
-//   | typeof CoinbaseWallet
-//   | typeof TrustWallet;
-
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<ThirdwebProviderCoreProps<TChains>, "supportedWallets"> {
   /**
