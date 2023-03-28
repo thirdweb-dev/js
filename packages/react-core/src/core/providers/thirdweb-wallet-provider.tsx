@@ -56,7 +56,6 @@ type ThirdwebWalletContextData = {
     wallet: WalletInstance,
     params?: ConnectParams<Record<string, any>>,
   ) => void;
-  supportedWallets: Wallet[];
 };
 
 const ThirdwebWalletContext = createContext<
@@ -357,7 +356,6 @@ export function ThirdwebWalletProvider(
         handleWalletConnect,
         activeChain: props.activeChain,
         chainToConnect,
-        supportedWallets: props.supportedWallets,
       }}
     >
       {props.children}
