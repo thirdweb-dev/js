@@ -14,10 +14,7 @@ import {
   WalletOptions as WalletOptionsRC,
 } from "@thirdweb-dev/react-core";
 
-type CoinbaseWalletOptions = Omit<
-  WalletOptions<CoinbaseWalletConnectorOptions>,
-  "callbackURL" | "walletStorage"
->;
+type CoinbaseWalletOptions = Omit<WalletOptions<CoinbaseWalletConnectorOptions>,"walletStorage">;
 
 export class CoinbaseWallet extends AbstractBrowserWallet<CoinbaseWalletConnectorOptions> {
   static meta = {
@@ -39,7 +36,6 @@ export class CoinbaseWallet extends AbstractBrowserWallet<CoinbaseWalletConnecto
   constructor(options: CoinbaseWalletOptions) {
     super(CoinbaseWallet.id, {
       ...options,
-      callbackURL: new URL("https://thirdweb.com"),
       walletStorage: new noopStorage(),
       walletId: "coinbase",
     });
@@ -69,10 +65,11 @@ export class CoinbaseWallet extends AbstractBrowserWallet<CoinbaseWalletConnecto
   }
 }
 
-export const coinbaseWallet = () => {
+export const coinbaseWallet = (config?: {callbackURL?: URL}) => {
+  const callbackURLNonNull = config?.callbackURL || new URL("https://thirdweb.com/wsegue");
   return {
     id: CoinbaseWallet.id,
     meta: CoinbaseWallet.meta,
-    create: (options: WalletOptionsRC) => new CoinbaseWallet(options),
+    create: (options: WalletOptionsRC) => new CoinbaseWallet({...options, callbackURL: callbackURLNonNull}),
   } satisfies Wallet;
 };
