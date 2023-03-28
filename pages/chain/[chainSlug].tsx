@@ -144,6 +144,10 @@ const ChainPage: ThirdwebNextPage = ({
         return;
       }
       hasAddedNetwork.current = true;
+      // can't add chain without RPC
+      if (chain.rpc.length === 0) {
+        return;
+      }
       updateConfiguredNetworks.add([chain]);
       trackEvent({
         category: CHAIN_CATEGORY,
