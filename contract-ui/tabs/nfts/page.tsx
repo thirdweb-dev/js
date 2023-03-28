@@ -71,7 +71,7 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
           <Box>
             <LinkButton
               isExternal
-              href="https://portal.thirdweb.com/contractkit/interfaces/erc721supply"
+              href="https://portal.thirdweb.com/solidity/extensions/erc721supply"
               colorScheme="purple"
             >
               Learn more

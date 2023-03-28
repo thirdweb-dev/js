@@ -186,7 +186,7 @@ const Commerce: ThirdwebNextPage = () => {
                   isExternal
                   color="white"
                   fontWeight="medium"
-                  href={"https://portal.thirdweb.com/contractkit"}
+                  href={"https://portal.thirdweb.com/solidity"}
                   label="use-case-contractkit"
                 >
                   ContractKit

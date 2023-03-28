@@ -43,7 +43,7 @@ export const slides: Slide[] = [
         Build your own contracts with{" "}
         <TrackedLink
           color="blue.500"
-          href="https://portal.thirdweb.com/contractkit"
+          href="https://portal.thirdweb.com/solidity"
           category={TRACK_CATEGORY}
           label="build-contractkit"
           isExternal

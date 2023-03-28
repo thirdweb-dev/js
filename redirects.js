@@ -53,7 +53,7 @@ function redirects() {
     },
     {
       source: "/extensions",
-      destination: "/contractkit",
+      destination: "/solidity/extensions",
       permanent: false,
     },
     //  old (deprecated) routes
@@ -85,6 +85,11 @@ function redirects() {
       source: "/chains",
       destination: "/chainlist",
       permanent: true,
+    },
+    {
+      source: "/contractkit",
+      destination: "/solidity",
+      permanent: false,
     },
   ];
 }

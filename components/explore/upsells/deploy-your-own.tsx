@@ -54,7 +54,7 @@ export const DeployUpsellCard: React.FC = () => {
               _light={{ color: "blue.500", _hover: { color: "blue.500" } }}
               _dark={{ color: "blue.400", _hover: { color: "blue.500" } }}
               size="sm"
-              href="https://portal.thirdweb.com/contractkit"
+              href="https://portal.thirdweb.com/solidity"
               isExternal
               variant="link"
             >

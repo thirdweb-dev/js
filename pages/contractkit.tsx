@@ -59,7 +59,7 @@ const ContractExtensions: ThirdwebNextPage = () => {
         title="Build your own contract easily"
         description="Build your own contracts easily using ContractKit. Base contracts that can be configured with extensions to meet your specific use case."
         buttonText="Get started"
-        buttonLink="https://portal.thirdweb.com/contractkit"
+        buttonLink="https://portal.thirdweb.com/solidity"
         image={require("public/assets/product-pages/extensions/hero.png")}
         gradient="linear-gradient(147.15deg, #410AB6 30.17%, #D45CFF 100.01%)"
       >
@@ -131,14 +131,14 @@ const ContractExtensions: ThirdwebNextPage = () => {
             category={TRACKING_CATEGORY}
             description="Fully featured base contracts, including ERC721, ERC1155 & ERC20. This provides capability to mint NFTs to sell on a marketplace, signature-based minting, batch lazy mint NFTs, delayed reveal and claim conditions to define how your NFTs can be claimed."
             icon={require("/public/assets/product-pages/dashboard/hero-icon-1.png")}
-            href="https://portal.thirdweb.com/contractkit/base-contracts"
+            href="https://portal.thirdweb.com/solidity/base-contracts"
           />
           <ProductLearnMoreCard
             title="Extensions"
             category={TRACKING_CATEGORY}
             description="Each extension that you implement in your smart contract unlocks corresponding functionality for you to utilize in the SDK."
             icon={require("/public/assets/product-pages/deploy/hero-icon-2.png")}
-            href="https://portal.thirdweb.com/contractkit/extensions"
+            href="https://portal.thirdweb.com/solidity/extensions"
           />
         </SimpleGrid>
       </ProductSection>
