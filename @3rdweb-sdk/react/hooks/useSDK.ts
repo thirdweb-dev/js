@@ -1,4 +1,3 @@
-import { contractKeys, networkKeys } from "../cache-keys";
 import { useQuery } from "@tanstack/react-query";
 import {
   Arbitrum,
@@ -34,7 +33,7 @@ export function useContractList(
   walletAddress?: string,
 ) {
   return useQuery(
-    [...networkKeys.chain(chainId), ...contractKeys.list(walletAddress)],
+    ["dashboard-registry", walletAddress, "contract-list", { chainId }],
     async () => {
       if (!walletAddress) {
         return;
@@ -52,11 +51,7 @@ export function useContractList(
 export function useMultiChainRegContractList(walletAddress?: string) {
   const configuredChains = useConfiguredChains();
   return useQuery(
-    [
-      ...networkKeys.multiChainRegistry,
-      walletAddress,
-      { chainIds: configuredChains.map((c) => c.chainId) },
-    ],
+    ["dashboard-registry", walletAddress, "multichain-contract-list"],
     async () => {
       if (!walletAddress) {
         return [];
@@ -321,6 +316,7 @@ export function useAllContractList(walletAddress: string | undefined) {
 
     if (multiChainQuery.data) {
       multiChainQuery.data.forEach((net) => {
+        (net as any)._isMultiChain = true;
         // if network is configured, we can determine if it is a testnet or not
         if (net.chainId in configuredChainsRecord) {
           const netInfo = configuredChainsRecord[net.chainId];

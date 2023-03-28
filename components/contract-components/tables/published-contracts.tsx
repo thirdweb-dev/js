@@ -44,6 +44,22 @@ export const PublishedContracts: React.FC<PublishedContractsProps> = ({
           align="top"
           gap={4}
           direction={{ base: "column", md: "row" }}
+          pos="sticky"
+          top={{ base: "56px", md: 0 }}
+          py={{ base: 4, md: 8 }}
+          zIndex="docked"
+          backdropFilter="blur(4px)"
+          _after={{
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: -1,
+            opacity: 0.8,
+            bg: "linear-gradient(180deg, var(--chakra-colors-backgroundBody) 50%, transparent 100%)",
+          }}
         >
           <Flex gap={2} direction="column">
             <Heading size="title.md">Published contracts</Heading>

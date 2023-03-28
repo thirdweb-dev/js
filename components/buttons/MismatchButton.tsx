@@ -74,7 +74,7 @@ export const MismatchButton = React.forwardRef<
       chainInfo &&
       (chainInfo.chainId === ChainId.Localhost ||
         (chainInfo.faucets && chainInfo.faucets.length > 0));
-
+    const eventRef = useRef<React.MouseEvent<HTMLButtonElement, MouseEvent>>();
     if (!address && ecosystem === "evm") {
       return (
         <ConnectWallet
@@ -126,6 +126,7 @@ export const MismatchButton = React.forwardRef<
             type={networksMismatch || shouldShowEitherFaucet ? "button" : type}
             loadingText={loadingText}
             onClick={(e) => {
+              e.stopPropagation();
               if (shouldShowEitherFaucet) {
                 trackEvent({
                   category: "no-funds",
@@ -134,6 +135,7 @@ export const MismatchButton = React.forwardRef<
                 });
               }
               if (networksMismatch || shouldShowEitherFaucet) {
+                eventRef.current = e;
                 return undefined;
               }
               if (onClick) {
@@ -159,7 +161,17 @@ export const MismatchButton = React.forwardRef<
             {networksMismatch ? (
               <MismatchNotice
                 initialFocusRef={initialFocusRef}
-                onClose={onClose}
+                onClose={(hasSwitched) => {
+                  onClose();
+                  if (hasSwitched && onClick) {
+                    // wait for the network switch to be finished - 100ms should be fine?
+                    setTimeout(() => {
+                      if (eventRef.current) {
+                        onClick(eventRef.current);
+                      }
+                    }, 100);
+                  }
+                }}
               />
             ) : !hasFaucet &&
               upsellTestnet &&
@@ -191,7 +203,7 @@ MismatchButton.displayName = "MismatchButton";
 
 const MismatchNotice: React.FC<{
   initialFocusRef: React.RefObject<HTMLButtonElement>;
-  onClose: () => void;
+  onClose: (hasSwitched: boolean) => void;
 }> = ({ initialFocusRef, onClose }) => {
   const connectedChainId = useChainId();
   const desiredChainId = useSDKChainId();
@@ -207,9 +219,14 @@ const MismatchNotice: React.FC<{
 
   const onSwitchWallet = useCallback(async () => {
     if (actuallyCanAttemptSwitch && desiredChainId && chain) {
-      await switchNetwork(desiredChainId);
+      try {
+        await switchNetwork(desiredChainId);
+        onClose(true);
+      } catch (e) {
+        //  failed to switch network
+        onClose(false);
+      }
     }
-    onClose();
   }, [chain, actuallyCanAttemptSwitch, desiredChainId, onClose, switchNetwork]);
 
   const shortenedName = useMemo(() => {

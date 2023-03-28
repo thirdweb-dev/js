@@ -1,40 +1,52 @@
-import { contractKeys, networkKeys } from "../cache-keys";
-import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAddress, useSDK, useSigner } from "@thirdweb-dev/react";
 import {
   addContractToMultiChainRegistry,
   getGaslessPolygonSDK,
 } from "components/contract-components/utils";
+import { useAllChainsData } from "hooks/chains/allChains";
+import { getDashboardChainRpc } from "lib/rpc";
+import { getEVMThirdwebSDK } from "lib/sdk";
 import invariant from "tiny-invariant";
 
 type RemoveContractParams = {
   contractAddress: string;
+  chainId: number;
+  registry: "old" | "new";
 };
 
-export function useRemoveContractMutation(
-  chainId: number,
-  registry: "old" | "new" | "none",
-) {
-  const sdk = useSDK();
+export function useRemoveContractMutation() {
   const walletAddress = useAddress();
   const signer = useSigner();
+  const { chainIdToChainRecord } = useAllChainsData();
 
-  return useMutationWithInvalidate(
+  const queryClient = useQueryClient();
+
+  return useMutation(
     async (data: RemoveContractParams) => {
-      if (registry === "none") {
-        throw new Error(`Contract is already removed`);
-      }
-
       invariant(
         walletAddress,
         "cannot add a contract without a wallet address",
       );
-      invariant(sdk, "sdk not provided");
+      invariant(chainIdToChainRecord, "chains not initialzed yet");
+      invariant(signer, "no wallet connected");
 
-      const { contractAddress } = data;
+      const { contractAddress, chainId, registry } = data;
 
       // remove from old registry
       if (registry === "old") {
+        const chain = chainIdToChainRecord[chainId];
+        if (!chain) {
+          throw new Error("chain not found");
+        }
+
+        const sdk = getEVMThirdwebSDK(
+          chainId,
+          getDashboardChainRpc(chain),
+          undefined,
+          signer,
+        );
+
         const oldRegistry = await sdk?.deployer.getRegistry();
         return await oldRegistry?.removeContract(contractAddress);
       }
@@ -44,16 +56,13 @@ export function useRemoveContractMutation(
         const gaslessPolygonSDK = getGaslessPolygonSDK(signer);
         return await gaslessPolygonSDK.multiChainRegistry?.removeContract({
           address: contractAddress,
-          chainId,
+          chainId: data.chainId,
         });
       }
     },
     {
-      onSuccess: (_data, _variables, _options, invalidate) => {
-        return invalidate([
-          networkKeys.multiChainRegistry,
-          contractKeys.list(walletAddress),
-        ]);
+      onSettled: () => {
+        return queryClient.invalidateQueries(["dashboard-registry"]);
       },
     },
   );
@@ -69,7 +78,9 @@ export function useAddContractMutation() {
   const walletAddress = useAddress();
   const signer = useSigner();
 
-  return useMutationWithInvalidate(
+  const queryClient = useQueryClient();
+
+  return useMutation(
     async (data: AddContractParams) => {
       invariant(walletAddress, "cannot add a contract without an address");
       invariant(sdk, "sdk not provided");
@@ -84,8 +95,8 @@ export function useAddContractMutation() {
       );
     },
     {
-      onSuccess: (_data, _variables, _options, invalidate) => {
-        return invalidate([networkKeys.multiChainRegistry]);
+      onSettled: () => {
+        return queryClient.invalidateQueries(["dashboard-registry"]);
       },
     },
   );

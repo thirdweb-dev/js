@@ -9,10 +9,9 @@ import {
 import { ConfigureNetworkButton } from "../shared/configure-network-button";
 import { Divider, Flex, FormControl } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
-import { ContractType, SUPPORTED_CHAIN_IDS } from "@thirdweb-dev/sdk/evm";
+import { SUPPORTED_CHAIN_IDS } from "@thirdweb-dev/sdk/evm";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelect";
-import { DisabledChainsMap } from "constants/mappings";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
 import { verifyContract } from "contract-ui/tabs/sources/page";
@@ -338,21 +337,12 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
         <Flex gap={4} direction={{ base: "column", md: "row" }}>
           <FormControl>
             <SupportedNetworkSelect
-              disabledChainIds={DisabledChainsMap[
-                "custom" as ContractType
-              ].concat(disabledChains || [])}
               isDisabled={
                 isImplementationDeploy ||
                 deploy.isLoading ||
                 !compilerMetadata.isSuccess
               }
-              value={
-                !DisabledChainsMap["custom" as ContractType].find(
-                  (chain) => chain === selectedChain,
-                )
-                  ? selectedChain
-                  : -1
-              }
+              value={selectedChain}
               onChange={(e) => onChainSelect(parseInt(e.currentTarget.value))}
             />
           </FormControl>

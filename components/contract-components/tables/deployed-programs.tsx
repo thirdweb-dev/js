@@ -1,9 +1,7 @@
 import { useAllProgramsList } from "@3rdweb-sdk/react";
 import { Flex } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { ChakraNextImage } from "components/Image";
 import { TWTable } from "components/shared/TWTable";
-import { FeatureIconMap } from "constants/mappings";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { FiPlus } from "react-icons/fi";
@@ -29,21 +27,14 @@ const columns = [
   columnHelper.accessor("programType", {
     header: "Program Type",
     cell: (info) => (
-      <Flex align="center" gap={2}>
-        <ChakraNextImage
-          src={FeatureIconMap[info?.getValue() as keyof typeof FeatureIconMap]}
-          alt={info?.getValue()?.toString()}
-          boxSize={8}
-        />
-        <Text size="label.md" textTransform="capitalize">
-          {info
-            ?.getValue()
-            ?.toString()
-            ?.split("-")
-            ?.join(" ")
-            ?.replace("nft", "NFT")}
-        </Text>
-      </Flex>
+      <Text size="label.md" textTransform="capitalize">
+        {info
+          ?.getValue()
+          ?.toString()
+          ?.split("-")
+          ?.join(" ")
+          ?.replace("nft", "NFT")}
+      </Text>
     ),
   }),
   columnHelper.accessor("programAddress", {

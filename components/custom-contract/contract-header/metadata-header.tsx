@@ -1,5 +1,6 @@
-import { Flex, Image, Skeleton } from "@chakra-ui/react";
-import { StaticImageData } from "next/image";
+import { Center, Flex, Image, Skeleton } from "@chakra-ui/react";
+import { Chain } from "@thirdweb-dev/chains";
+import { ChainIcon } from "components/icons/ChainIcon";
 import { Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
@@ -7,13 +8,14 @@ interface MetadataHeaderProps {
   isLoaded: boolean;
   isError?: boolean;
   address?: string;
-  contractTypeImage?: StaticImageData;
+
   data?: {
     name?: string | number | null;
     description?: string | null;
     image?: string | null;
   };
   ecosystem?: "solana" | "evm";
+  chain?: Chain;
 }
 
 export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
@@ -22,7 +24,9 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
   address,
   data,
   ecosystem,
+  chain,
 }) => {
+  const cleanedChainName = chain?.name?.replace("Mainnet", "").trim();
   return (
     <Flex align={{ base: "flex-start", md: "center" }} gap={4}>
       {(data?.image || !isLoaded) && !isError ? (
@@ -31,7 +35,7 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
           flexShrink={0}
           borderRadius="lg"
           overflow="hidden"
-          boxSize={{ base: 16, md: 24 }}
+          boxSize={{ base: 16, md: 36 }}
           position="relative"
         >
           {data?.image ? (
@@ -56,12 +60,52 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
             Detected
           </Heading>
         ) : (
-          <Skeleton isLoaded={isLoaded}>
-            {/* contract name is the primary h1 */}
-            <Heading size="title.md" as="h1">
-              {data?.name ? data?.name : ""}
-            </Heading>
-          </Skeleton>
+          <Flex
+            gap={4}
+            align="center"
+            justify={{ base: "space-between", md: "flex-start" }}
+            w="full"
+          >
+            <Skeleton isLoaded={isLoaded}>
+              {/* contract name is the primary h1 */}
+              <Heading size="title.md" as="h1">
+                {data?.name ? data?.name : ""}
+              </Heading>
+            </Skeleton>
+            {chain && (
+              <Flex
+                borderRadius="full"
+                bg="backgroundCardHighlight"
+                align="center"
+                border="1px solid"
+                borderColor="borderColor"
+                overflow="hidden"
+                flexShrink={0}
+                p={1}
+              >
+                {chain.icon?.url && (
+                  <Center
+                    boxSize={5}
+                    mr={{ base: 0, md: -0.5 }}
+                    borderRadius="full"
+                  >
+                    <ChainIcon ipfsSrc={chain.icon.url} size={24} />
+                  </Center>
+                )}
+                <Heading
+                  display={{
+                    base: chain.icon?.url ? "none" : "initial",
+                    md: "initial",
+                  }}
+                  size="label.sm"
+                  px={2.5}
+                  as="label"
+                >
+                  {cleanedChainName}
+                </Heading>
+              </Flex>
+            )}
+          </Flex>
         )}
         {isError ? (
           <Text maxW="lg" size="body.sm" noOfLines={3}>

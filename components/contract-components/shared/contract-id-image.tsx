@@ -6,7 +6,6 @@ import { ContractId } from "../types";
 import { Image, Skeleton } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import { ChakraNextImage, ChakraNextImageProps } from "components/Image";
-import { FeatureIconMap } from "constants/mappings";
 import { replaceIpfsUrl } from "lib/sdk";
 import { StaticImageData } from "next/image";
 
@@ -33,10 +32,8 @@ export const ContractIdImage: React.FC<ContractIdImageProps> = ({
     fullPublishMetadata.data?.latestPublishedContractMetadata?.publishedMetadata
       .logo;
 
-  let img = publishMetadata.data?.image;
-  if (typeof img === "string" && img in FeatureIconMap) {
-    img = FeatureIconMap[img as keyof typeof FeatureIconMap];
-  }
+  const img = publishMetadata.data?.image;
+
   const isStaticImage = img && typeof img !== "string";
 
   return (

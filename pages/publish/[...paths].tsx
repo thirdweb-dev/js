@@ -40,15 +40,11 @@ const PublishPage: ThirdwebNextPage = (props: PublishPageProps) => {
 PublishPage.pageId = PageId.DeployedProgram;
 
 PublishPage.getLayout = (page, props: PublishPageProps) => {
-  return (
-    <AppLayout layout={undefined} dehydratedState={props.dehydratedState}>
-      {page}
-    </AppLayout>
-  );
+  return <AppLayout dehydratedState={props.dehydratedState}>{page}</AppLayout>;
 };
 
 PublishPage.fallback = (
-  <AppLayout layout={undefined}>
+  <AppLayout>
     <Flex h="100%" justifyContent="center" alignItems="center">
       <Spinner size="xl" />
     </Flex>

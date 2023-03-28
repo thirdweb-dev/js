@@ -40,7 +40,7 @@ export const ContractProgramSidebar: React.FC<ContractSidebarProps> = ({
     <SideBarTunnel>
       <>
         <Box
-          zIndex="sticky"
+          zIndex="banner"
           position="sticky"
           top={0}
           p={{ base: 0, md: 8 }}

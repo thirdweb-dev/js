@@ -3,14 +3,17 @@ import { ShowMoreButton } from "./show-more-button";
 import {
   useAllContractList,
   useContractMetadataWithAddress,
-  useWeb3,
 } from "@3rdweb-sdk/react";
+import { useRemoveContractMutation } from "@3rdweb-sdk/react/hooks/useRegistry";
 import {
   Box,
   ButtonGroup,
   Center,
   Flex,
   Icon,
+  Menu,
+  MenuButton,
+  MenuList,
   Skeleton,
   Spinner,
   Table,
@@ -30,17 +33,23 @@ import {
   PrebuiltContractType,
   SchemaForPrebuiltContractType,
 } from "@thirdweb-dev/sdk/evm";
-import { ChakraNextImage } from "components/Image";
-import { usePublishedContractsFromDeploy } from "components/contract-components/hooks";
+import { MismatchButton } from "components/buttons/MismatchButton";
 import { GettingStartedBox } from "components/getting-started/box";
 import { GettingStartedCard } from "components/getting-started/card";
 import { ChainIcon } from "components/icons/ChainIcon";
-import { CONTRACT_TYPE_NAME_MAP, FeatureIconMap } from "constants/mappings";
+import { CustomSDKContext } from "contexts/custom-sdk-context";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { useChainSlug } from "hooks/chains/chainSlug";
-import { useConfiguredChains } from "hooks/chains/configureChains";
+import { useConfiguredChainsRecord } from "hooks/chains/configureChains";
 import { useRouter } from "next/router";
-import React, { useMemo, useState } from "react";
-import { FiArrowRight, FiFilePlus, FiPlus } from "react-icons/fi";
+import React, { memo, useMemo, useState } from "react";
+import {
+  FiArrowRight,
+  FiFilePlus,
+  FiMoreVertical,
+  FiPlus,
+  FiX,
+} from "react-icons/fi";
 import { Column, Row, useTable } from "react-table";
 import {
   Badge,
@@ -49,7 +58,9 @@ import {
   CodeBlock,
   Heading,
   LinkButton,
+  MenuItem,
   Text,
+  TrackedIconButton,
 } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { ComponentWithChildren } from "types/component-with-children";
@@ -93,6 +104,22 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
             align="top"
             gap={4}
             direction={{ base: "column", md: "row" }}
+            pos="sticky"
+            top={{ base: "56px", md: 0 }}
+            py={{ base: 4, md: 8 }}
+            zIndex="docked"
+            backdropFilter="blur(4px)"
+            _after={{
+              content: '""',
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: -1,
+              opacity: 0.8,
+              bg: "linear-gradient(180deg, var(--chakra-colors-backgroundBody) 50%, transparent 100%)",
+            }}
           >
             <Flex gap={2} direction="column">
               <Heading size="title.md">Your contracts</Heading>
@@ -212,6 +239,68 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
   );
 };
 
+type RemoveFromDashboardButtonProps = {
+  chainId: number;
+  contractAddress: string;
+  registry: "old" | "new";
+};
+
+const RemoveFromDashboardButton: React.FC<RemoveFromDashboardButtonProps> = ({
+  chainId,
+  contractAddress,
+  registry,
+}) => {
+  const mutation = useRemoveContractMutation();
+
+  if (registry === "old") {
+    return (
+      <CustomSDKContext desiredChainId={chainId}>
+        <MismatchButton
+          borderWidth={0}
+          onClick={(e) => {
+            e.stopPropagation();
+            mutation.mutate({ chainId, contractAddress, registry });
+          }}
+          isDisabled={mutation.isLoading}
+        >
+          <Flex align="center" gap={2} w="full">
+            {mutation.isLoading ? (
+              <Spinner size="sm" />
+            ) : (
+              <Icon as={FiX} color="red.500" />
+            )}
+            <Heading as="span" size="label.md">
+              Remove from dashboard
+            </Heading>
+          </Flex>
+        </MismatchButton>
+      </CustomSDKContext>
+    );
+  }
+  return (
+    <MenuItem
+      borderWidth={0}
+      onClick={(e) => {
+        e.stopPropagation();
+        mutation.mutate({ chainId, contractAddress, registry });
+      }}
+      isDisabled={mutation.isLoading}
+      closeOnSelect={false}
+    >
+      <Flex align="center" gap={2} w="full">
+        {mutation.isLoading ? (
+          <Spinner size="sm" />
+        ) : (
+          <Icon as={FiX} color="red.500" />
+        )}
+        <Heading as="span" size="label.md">
+          Remove from dashboard
+        </Heading>
+      </Flex>
+    </MenuItem>
+  );
+};
+
 interface ContractTableProps {
   combinedList: {
     chainId: ChainId;
@@ -228,8 +317,8 @@ export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
   children,
   isFetching,
 }) => {
-  const { getNetworkMetadata } = useWeb3();
-  const configuredChains = useConfiguredChains();
+  const { chainIdToChainRecord } = useAllChainsData();
+  const configuredChains = useConfiguredChainsRecord();
 
   const columns: Column<(typeof combinedList)[number]>[] = useMemo(
     () => [
@@ -241,20 +330,29 @@ export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
         },
       },
       {
-        Header: "Contract Type",
-        accessor: (row) => row.contractType,
-        Cell: (cell: any) => <AsyncContractTypeCell cell={cell.row.original} />,
+        Header: "Extensions",
+        accessor: (row) => row.extensions,
+        Cell: (cell: any) => <AsyncExtensionCell cell={cell.row.original} />,
       },
       {
         Header: "Network",
         accessor: (row) => row.chainId,
         Cell: (cell: any) => {
-          const data = getNetworkMetadata(cell.row.original.chainId);
+          const data =
+            configuredChains[cell.row.original.chainId] ||
+            chainIdToChainRecord[cell.row.original.chainId];
+          const cleanedChainName =
+            data?.name?.replace("Mainnet", "").trim() ||
+            `Unknown Network (#${cell.row.original.chainId})`;
           return (
             <Flex align="center" gap={2}>
-              <ChainIcon size={24} ipfsSrc={data.icon} sizes={data.iconSizes} />
-              <Text size="label.md">{data.chainName}</Text>
-              {data.isTestnet !== "unknown" && data.isTestnet && (
+              <ChainIcon
+                size={24}
+                ipfsSrc={data?.icon?.url}
+                sizes={data?.icon?.sizes}
+              />
+              <Text size="label.md">{cleanedChainName}</Text>
+              {data?.testnet && (
                 <Badge colorScheme="gray" textTransform="capitalize">
                   Testnet
                 </Badge>
@@ -268,6 +366,36 @@ export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
         accessor: (row) => row.address,
         Cell: (cell: any) => {
           return <AddressCopyButton address={cell.row.original.address} />;
+        },
+      },
+      {
+        id: "actions",
+        Cell: (cell: any) => {
+          return (
+            <Menu isLazy>
+              <MenuButton
+                as={TrackedIconButton}
+                variant="gost"
+                icon={<FiMoreVertical />}
+                onClick={(e) => e.stopPropagation()}
+              />
+              <MenuList
+                onClick={(e) => e.stopPropagation()}
+                borderWidth={1}
+                borderColor="borderColor"
+                borderRadius="lg"
+                overflow="hidden"
+              >
+                <RemoveFromDashboardButton
+                  contractAddress={cell.cell.row.original.address}
+                  chainId={cell.cell.row.original.chainId}
+                  registry={
+                    cell.cell.row.original._isMultiChain ? "new" : "old"
+                  }
+                />
+              </MenuList>
+            </Menu>
+          );
         },
       },
     ],
@@ -340,9 +468,7 @@ export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
   );
 };
 
-const ContractTableRow: React.FC<{ row: Row<ContractWithMetadata> }> = ({
-  row,
-}) => {
+const ContractTableRow = memo(({ row }: { row: Row<ContractWithMetadata> }) => {
   const chainSlug = useChainSlug(row.original.chainId);
   const router = useRouter();
 
@@ -373,9 +499,11 @@ const ContractTableRow: React.FC<{ row: Row<ContractWithMetadata> }> = ({
       })}
     </Tr>
   );
-};
+});
 
-interface AsyncContractTypeCellProps {
+ContractTableRow.displayName = "ContractTableRow";
+
+interface AsyncExtensionCellProps {
   cell: {
     address: string;
     chainId: number;
@@ -383,79 +511,94 @@ interface AsyncContractTypeCellProps {
     metadata: () => Promise<
       z.infer<SchemaForPrebuiltContractType<PrebuiltContractType>["output"]>
     >;
+    extensions: () => Promise<string[]>;
   };
 }
 
-const AsyncContractTypeCell: React.FC<AsyncContractTypeCellProps> = ({
-  cell,
-}) => {
-  const contractTypeQuery = useQuery({
-    queryKey: ["contract-type", cell.chainId, cell.address],
-    queryFn: () => (cell.contractType ? cell.contractType() : ""),
-    enabled: !!cell.contractType,
+function getImportantExtension(extensions: string[]) {
+  const importantExtensions = ["ERC20", "ERC721", "ERC1155"];
+  const lowerCaseExtensions = extensions.map((ext) => ext.toLowerCase());
+  const importantExtension = importantExtensions.find((ext) =>
+    lowerCaseExtensions.includes(ext.toLowerCase()),
+  );
+  if (!importantExtension) {
+    return null;
+  }
+  // how many extensions are there that start with the important extension
+  const importantExtensionCount = lowerCaseExtensions.filter((ext) =>
+    ext.startsWith(importantExtension.toLowerCase() || ""),
+  ).length;
+  return { ext: importantExtension, count: importantExtensionCount - 1 };
+}
+
+const AsyncExtensionCell = memo(({ cell }: AsyncExtensionCellProps) => {
+  const contractExtensionsQuery = useQuery({
+    queryKey: [
+      "contract-extension-type",
+      { chainId: cell.chainId, address: cell.address },
+    ],
+    queryFn: () => {
+      return Promise.all([
+        cell.extensions ? cell.extensions().catch(() => []) : [],
+        cell.contractType
+          ? cell.contractType().catch(() => "custom")
+          : "custom",
+      ]);
+    },
+    enabled: !!cell.extensions || !!cell.contractType,
     refetchOnWindowFocus: false,
     // contract type of a contract does not change - so safe to set high staleTime ( currently set to 1 hour )
     staleTime: 1000 * 60 * 60,
   });
 
-  const contractType = contractTypeQuery.data;
-  const isPrebuiltContract = contractType && contractType !== "custom";
-  const publishedContractsFromDeploy = usePublishedContractsFromDeploy(
-    isPrebuiltContract ? undefined : cell.address || undefined,
-    cell.chainId,
-  );
+  const [importantExtension, contractType] = useMemo(() => {
+    const [extensions, cType] = contractExtensionsQuery.data || [[], ""];
+    const imp = getImportantExtension(extensions);
+    return [imp, cType];
+  }, [contractExtensionsQuery.data]);
 
-  const imgSrc = contractType
-    ? FeatureIconMap[contractType as ContractType]
-    : "";
+  let tag: JSX.Element;
 
-  const contractName = contractType
-    ? CONTRACT_TYPE_NAME_MAP[contractType as ContractType]
-    : "";
-
-  const Custom = CONTRACT_TYPE_NAME_MAP["custom"];
-
-  if (isPrebuiltContract) {
-    return (
-      <Flex align="center" gap={2}>
-        <ChakraNextImage boxSize={8} src={imgSrc} alt={contractName} />
-        <Text size="label.md">{contractName} </Text>
+  if (importantExtension) {
+    tag = (
+      <Flex gap={2} align="center">
+        <Text size="label.md" as="h4">
+          {importantExtension.ext}
+        </Text>
+        {importantExtension.count > 0 ? (
+          <Badge
+            lineHeight={1}
+            size="label.sm"
+            variant="outline"
+            colorScheme="blue"
+          >
+            +{importantExtension.count}
+          </Badge>
+        ) : null}
       </Flex>
     );
-  }
-
-  const actualPublishedContract = publishedContractsFromDeploy.data
-    ? publishedContractsFromDeploy.data[0]
-    : null;
-
-  if (!publishedContractsFromDeploy.isLoading && !actualPublishedContract) {
-    return (
-      <Flex align="center" gap={2}>
-        {imgSrc ? (
-          <ChakraNextImage boxSize={8} src={imgSrc} alt={Custom} />
-        ) : (
-          <Box boxSize={8} />
-        )}
-        <Text size="label.md">{Custom}</Text>
-      </Flex>
+  } else if (contractType !== "custom") {
+    tag = (
+      <Text textTransform="capitalize" size="label.md" as="h4">
+        {contractType}
+      </Text>
+    );
+  } else {
+    tag = (
+      <Text fontStyle="italic" size="label.md" as="h4">
+        No Extensions
+      </Text>
     );
   }
 
   return (
-    <Flex align="center" gap={2}>
-      <Skeleton isLoaded={!publishedContractsFromDeploy.isLoading && !!imgSrc}>
-        {imgSrc ? (
-          <ChakraNextImage boxSize={8} src={imgSrc} alt={Custom} />
-        ) : (
-          <Box boxSize={8} />
-        )}
-      </Skeleton>
-      <Skeleton isLoaded={!publishedContractsFromDeploy.isLoading}>
-        <Text size="label.md">{actualPublishedContract?.name || Custom}</Text>
-      </Skeleton>
-    </Flex>
+    <Skeleton isLoaded={!contractExtensionsQuery.isInitialLoading}>
+      {tag}
+    </Skeleton>
   );
-};
+});
+
+AsyncExtensionCell.displayName = "AsyncExtensionCell";
 
 interface AsyncContractNameCellProps {
   cell: {
@@ -468,9 +611,7 @@ interface AsyncContractNameCellProps {
   };
 }
 
-const AsyncContractNameCell: React.FC<AsyncContractNameCellProps> = ({
-  cell,
-}) => {
+const AsyncContractNameCell = memo(({ cell }: AsyncContractNameCellProps) => {
   const chainSlug = useChainSlug(cell.chainId);
   const metadataQuery = useContractMetadataWithAddress(
     cell.address,
@@ -492,4 +633,6 @@ const AsyncContractNameCell: React.FC<AsyncContractNameCellProps> = ({
       </ChakraNextLink>
     </Skeleton>
   );
-};
+});
+
+AsyncContractNameCell.displayName = "AsyncContractNameCell";

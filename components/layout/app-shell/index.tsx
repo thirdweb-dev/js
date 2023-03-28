@@ -1,5 +1,12 @@
 import { ConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import { Container, Flex, Grid, GridItem, Icon } from "@chakra-ui/react";
+import {
+  ButtonGroup,
+  Container,
+  Flex,
+  Grid,
+  GridItem,
+  Icon,
+} from "@chakra-ui/react";
 import { Ethereum, Solana } from "@thirdweb-dev/chain-icons";
 import { CmdKSearch } from "components/cmd-k-search";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
@@ -191,55 +198,71 @@ const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
         alignItems="center"
         overflowX={{ base: "auto", md: "hidden" }}
       >
-        <Flex gap={{ base: 0, md: 2 }}>
+        <ButtonGroup size="sm" variant="ghost" spacing={{ base: 0.5, md: 2 }}>
           <LinkButton
             href="/dashboard"
-            size="sm"
-            variant={pathname === "/dashboard" ? "solid" : "ghost"}
+            isActive={pathname === "/dashboard"}
+            _active={{
+              bg: "bgBlack",
+              color: "bgWhite",
+            }}
+            rounded="lg"
           >
             Home
           </LinkButton>
           <LinkButton
             leftIcon={<Icon as={Ethereum} />}
             href="/dashboard/contracts"
-            size="sm"
-            variant={
+            isActive={
               pathname.startsWith("/dashboard/contracts") ||
               route === "/[networkOrAddress]/[...catchAll]"
-                ? "solid"
-                : "ghost"
             }
+            _active={{
+              bg: "bgBlack",
+              color: "bgWhite",
+            }}
+            rounded="lg"
           >
             Contracts
           </LinkButton>
           <LinkButton
             leftIcon={<Icon as={Solana} />}
             href="/dashboard/programs"
-            size="sm"
-            variant={
+            isActive={
               pathname === "/dashboard/programs" ||
               route === "/[networkOrAddress]/[...catchAll]"
-                ? "solid"
-                : "ghost"
             }
+            _active={{
+              bg: "bgBlack",
+              color: "bgWhite",
+            }}
+            rounded="lg"
           >
             Programs
           </LinkButton>
           <LinkButton
             href="/dashboard/storage"
-            size="sm"
-            variant={pathname === "/dashboard/storage" ? "solid" : "ghost"}
+            isActive={pathname === "/dashboard/storage"}
+            _active={{
+              bg: "bgBlack",
+              color: "bgWhite",
+            }}
+            rounded="lg"
           >
             Storage
           </LinkButton>
           <LinkButton
             href="/dashboard/rpc"
-            size="sm"
-            variant={pathname === "/dashboard/rpc" ? "solid" : "ghost"}
+            isActive={pathname === "/dashboard/rpc"}
+            _active={{
+              bg: "bgBlack",
+              color: "bgWhite",
+            }}
+            rounded="lg"
           >
             RPC
           </LinkButton>
-        </Flex>
+        </ButtonGroup>
       </Container>
     </GridItem>
   );

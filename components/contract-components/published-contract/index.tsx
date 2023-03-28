@@ -402,7 +402,8 @@ Deploy it in one click`,
                         hasImplementationAddresses ? (
                           <AddressesModal
                             chainAddressRecord={implementationAddresses}
-                            title="Implementations"
+                            buttonTitle="Implementations"
+                            modalTitle="Implementation Addresses"
                           />
                         ) : null}
                         {factoryAddresses &&
@@ -411,7 +412,8 @@ Deploy it in one click`,
                           ?.isDeployableViaFactory ? (
                           <AddressesModal
                             chainAddressRecord={factoryAddresses}
-                            title="Factories"
+                            buttonTitle="Factories"
+                            modalTitle="Factory Addresses"
                           />
                         ) : null}
                       </Flex>

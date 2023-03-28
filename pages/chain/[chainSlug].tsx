@@ -2,6 +2,7 @@ import {
   Box,
   Center,
   Container,
+  DarkMode,
   Divider,
   Flex,
   GridItem,
@@ -15,6 +16,7 @@ import {
 import { QueryClient, dehydrate, useQuery } from "@tanstack/react-query";
 import { Chain } from "@thirdweb-dev/chains";
 import { useAddress } from "@thirdweb-dev/react";
+import color from "color";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { AppLayout } from "components/app-layouts/app";
 import { ContractCard } from "components/explore/contract-card";
@@ -27,11 +29,13 @@ import {
   useUpdateConfiguredChains,
 } from "hooks/chains/configureChains";
 import { getDashboardChainRpc } from "lib/rpc";
+import { StorageSingleton } from "lib/sdk";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { NextSeo } from "next-seo";
+import Vibrant from "node-vibrant";
 import { PageId } from "page-id";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   FiAlertCircle,
   FiCheckCircle,
@@ -43,7 +47,6 @@ import {
   Button,
   Card,
   Heading,
-  Link,
   LinkButton,
   Text,
   TrackedCopyButton,
@@ -56,6 +59,7 @@ import { ThirdwebNextPage } from "utils/types";
 type EVMContractProps = {
   chain: Chain;
   category: ExploreCategory | null;
+  gradientColors: [string, string] | null;
 };
 
 const CHAIN_CATEGORY = "chain_page";
@@ -107,6 +111,7 @@ function useChainStats(
 const ChainPage: ThirdwebNextPage = ({
   chain,
   category,
+  gradientColors,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const configuredChainRecord = useConfiguredChainsRecord();
   const updateConfiguredNetworks = useUpdateConfiguredChains();
@@ -117,36 +122,61 @@ const ChainPage: ThirdwebNextPage = ({
       !configuredChainRecord[chain.chainId].isAutoConfigured
     );
   }, [chain.chainId, configuredChainRecord]);
-
   const rpcStats = useChainStats(chain);
 
   const address = useAddress();
 
   const toast = useToast();
 
-  const title = `${chain.name} (${chain.nativeCurrency.symbol}) | RPC, Smart Contracts, Blockchain SDKs`;
-  const description = `Deploy smart contracts to ${
-    chain.name
-  } and build dApps with thirdweb's SDKs. Discover ${
+  const sanitizedChainName = chain.name.replace("Mainnet", "").trim();
+
+  const title = `${sanitizedChainName} (${chain.nativeCurrency.symbol}) | RPC, Smart Contracts, Blockchain SDKs`;
+  const description = `Deploy smart contracts to ${sanitizedChainName} and build dApps with thirdweb's SDKs. Discover ${
     chain.nativeCurrency.symbol
   } RPCs, ${chain.faucets?.length ? "faucets," : "dApps"} & explorers.`;
 
-  const addNetwork = () => {
-    updateConfiguredNetworks.add([chain]);
-    trackEvent({
-      category: CHAIN_CATEGORY,
-      chain,
-      action: "add_chain",
-      label: chain.slug,
-    });
+  const hasAddedNetwork = useRef(false);
 
-    toast({
-      title: "Chain added",
-      description: `You can now use ${chain.name} on thirdweb`,
-      status: "success",
-      duration: 3000,
-    });
-  };
+  const addNetwork = useCallback(
+    (isAutoAdd = false) => {
+      // only do this once!
+      if (hasAddedNetwork.current) {
+        return;
+      }
+      hasAddedNetwork.current = true;
+      updateConfiguredNetworks.add([chain]);
+      trackEvent({
+        category: CHAIN_CATEGORY,
+        chain,
+        action: "add_chain",
+        label: chain.slug,
+        auto_added: isAutoAdd,
+      });
+
+      if (!isAutoAdd) {
+        toast({
+          title: "Chain added",
+          description: `You can now use ${sanitizedChainName} on thirdweb`,
+          status: "success",
+          duration: 3000,
+        });
+      }
+    },
+    [updateConfiguredNetworks, chain, trackEvent, toast, sanitizedChainName],
+  );
+
+  useEffect(() => {
+    if (!isConfigured) {
+      addNetwork(true);
+    }
+  }, [addNetwork, isConfigured]);
+
+  const gradient = useMemo(() => {
+    if (!gradientColors?.length) {
+      return "#000";
+    }
+    return `linear-gradient(180deg, ${gradientColors[0]} 0%, ${gradientColors[1]} 100%)`;
+  }, [gradientColors]);
 
   return (
     <>
@@ -161,106 +191,130 @@ const ChainPage: ThirdwebNextPage = ({
               url: `${getAbsoluteUrl()}/api/og/chain/${chain.chainId}`,
               width: 1200,
               height: 630,
-              alt: `${chain.name} (${chain.nativeCurrency.symbol}) on thirdweb`,
+              alt: `${sanitizedChainName} (${chain.nativeCurrency.symbol}) on thirdweb`,
             },
           ],
         }}
       />
       <Box
         w="full"
-        _light={{
-          bg: "linear-gradient(180deg, rgba(0,0,0,.1) 0%, rgba(0,0,0,.4) 100%)",
-        }}
-        _dark={{
-          bg: "linear-gradient(180deg, rgba(0,0,0,.0) 0%, rgba(0,0,0,.5) 100%)",
-        }}
-        pb={{ base: 12, md: 20 }}
+        py={{ base: 12, md: 20 }}
         mb={{ base: 2, md: 6 }}
         mt={-8}
         boxShadow="lg"
+        position="relative"
+        _before={{
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          bg: gradient,
+        }}
+        _after={{
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+
+          bg: "linear-gradient(180deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.25))",
+        }}
       >
-        <Container
-          maxW="container.page"
-          as={Flex}
-          flexDirection="column"
-          gap={6}
-        >
-          <Flex pt={{ base: 4, md: 12 }}>
-            <Link href="/chains" _hover={{ textDecor: "none" }} role="group">
-              <Text size="label.md" _hover={{ color: "blue.500" }}>
-                {"<-"} All Chains
-              </Text>
-            </Link>
-          </Flex>
-          <Flex
-            justify="space-between"
-            as="header"
-            gap={4}
-            flexDirection={{ base: "column", md: "row" }}
+        <DarkMode>
+          <Container
+            zIndex={2}
+            position="relative"
+            maxW="container.page"
+            as={Flex}
+            flexDirection="column"
+            gap={6}
           >
             <Flex
-              gap={6}
+              justify="space-between"
+              as="header"
+              gap={4}
               align="center"
-              flexGrow={1}
-              flexDir={{ base: "column", md: "row" }}
+              flexDirection={{ base: "column", md: "row" }}
             >
-              <Center boxSize={20} overflow="hidden">
-                <ChainIcon ipfsSrc={chain.icon?.url} size={80} />
-              </Center>
               <Flex
-                direction="column"
-                gap={3}
-                alignItems={{ base: "center", md: "flex-start" }}
+                gap={6}
+                align="center"
+                flexGrow={1}
+                flexDir={{ base: "column", md: "row" }}
               >
-                <Heading size="title.lg" as="h1">
-                  {chain.name} {chain.chain.length > 10 && <br />}
-                  <Box
-                    as="span"
-                    opacity={0.6}
-                    fontWeight={400}
-                    fontSize="0.8em"
+                {chain.icon && (
+                  <Center
+                    boxSize={20}
+                    overflow="hidden"
+                    bg="linear-gradient(180deg, rgba(255,255,255, 0.8), rgba(255,255,255, 1), rgba(255,255,255, 0.8))"
+                    border={`2px solid ${
+                      gradientColors ? gradientColors[0] : "#fff"
+                    }`}
+                    borderRadius="full"
+                    p={3}
                   >
-                    ({chain.nativeCurrency.symbol})
-                  </Box>
-                </Heading>
-
-                <ClientOnly ssr={null}>
-                  {isConfigured ? (
-                    <LinkButton
-                      as={TrackedLink}
-                      {...{
-                        category: CHAIN_CATEGORY,
-                      }}
-                      background="bgBlack"
-                      color="bgWhite"
-                      _hover={{
-                        opacity: 0.8,
-                      }}
-                      href="/explore"
+                    <ChainIcon ipfsSrc={chain.icon?.url} size={128} />
+                  </Center>
+                )}
+                <Flex
+                  direction="column"
+                  gap={3}
+                  alignItems={{ base: "center", md: "flex-start" }}
+                >
+                  <Heading size="title.lg" as="h1">
+                    {sanitizedChainName}{" "}
+                    {sanitizedChainName.length > 10 && <br />}
+                    <Box
+                      as="span"
+                      opacity={0.6}
+                      fontWeight={400}
+                      fontSize="0.8em"
                     >
-                      Deploy to {chain.name}
-                    </LinkButton>
-                  ) : (
-                    <Button
-                      background="bgBlack"
-                      color="bgWhite"
-                      _hover={{
-                        opacity: 0.8,
-                      }}
-                      leftIcon={
-                        <Icon w={5} h={5} color="inherit" as={IoIosAdd} />
-                      }
-                      onClick={addNetwork}
-                    >
-                      Add chain
-                    </Button>
-                  )}
-                </ClientOnly>
+                      ({chain.nativeCurrency.symbol})
+                    </Box>
+                  </Heading>
+                </Flex>
               </Flex>
+              <ClientOnly ssr={null}>
+                {isConfigured ? (
+                  <LinkButton
+                    as={TrackedLink}
+                    {...{
+                      category: CHAIN_CATEGORY,
+                    }}
+                    background="bgBlack"
+                    color="bgWhite"
+                    _hover={{
+                      opacity: 0.8,
+                    }}
+                    href="/explore"
+                  >
+                    Deploy to {chain.name}
+                  </LinkButton>
+                ) : (
+                  <Button
+                    background="bgBlack"
+                    color="bgWhite"
+                    _hover={{
+                      opacity: 0.8,
+                    }}
+                    leftIcon={
+                      <Icon w={5} h={5} color="inherit" as={IoIosAdd} />
+                    }
+                    onClick={() => addNetwork()}
+                  >
+                    Add chain
+                  </Button>
+                )}
+              </ClientOnly>
             </Flex>
-          </Flex>
-        </Container>
+          </Container>
+        </DarkMode>
       </Box>
+
       <Container
         maxW="container.page"
         py={6}
@@ -268,6 +322,50 @@ const ChainPage: ThirdwebNextPage = ({
         flexDirection="column"
         gap={10}
       >
+        {category && (
+          <>
+            <ChainSectionElement
+              colSpan={12}
+              label="Popular Contracts"
+              moreElem={
+                <TrackedLink
+                  category={CHAIN_CATEGORY}
+                  href="/explore"
+                  color="blue.500"
+                  label="explore_more"
+                >
+                  Explore more {"->"}
+                </TrackedLink>
+              }
+            >
+              <SimpleGrid columns={{ base: 6, md: 12 }} gap={6} mt={2}>
+                {category.contracts.map((publishedContractId, idx) => {
+                  const [publisher, contractId] =
+                    publishedContractId.split("/");
+                  return (
+                    <GridItem
+                      key={contractId}
+                      colSpan={{ base: 6, md: 4 }}
+                      onClick={!isConfigured ? () => addNetwork() : undefined}
+                      display="grid"
+                    >
+                      <ContractCard
+                        key={publishedContractId}
+                        publisher={publisher}
+                        contractId={contractId}
+                        tracking={{
+                          source: `chain_${chain.slug}`,
+                          itemIndex: `${idx}`,
+                        }}
+                      />
+                    </GridItem>
+                  );
+                })}
+              </SimpleGrid>
+            </ChainSectionElement>
+            <Divider />
+          </>
+        )}
         <SimpleGrid as="section" columns={{ base: 6, md: 12 }} rowGap={12}>
           {chain.infoURL && (
             <ChainSectionElement colSpan={6} label="Info">
@@ -447,37 +545,6 @@ const ChainPage: ThirdwebNextPage = ({
         ) : null}
         <Divider />
         <CodeOverview onlyInstall chain={chain} noSidebar />
-        {category && (
-          <>
-            <Divider />
-            <ChainSectionElement colSpan={12} label="Popular Contracts">
-              <SimpleGrid columns={{ base: 6, md: 12 }} gap={6} mt={2}>
-                {category.contracts.map((publishedContractId, idx) => {
-                  const [publisher, contractId] =
-                    publishedContractId.split("/");
-                  return (
-                    <GridItem
-                      key={contractId}
-                      colSpan={{ base: 6, md: 4 }}
-                      onClick={!isConfigured ? addNetwork : undefined}
-                      display="grid"
-                    >
-                      <ContractCard
-                        key={publishedContractId}
-                        publisher={publisher}
-                        contractId={contractId}
-                        tracking={{
-                          source: `chain_${chain.slug}`,
-                          itemIndex: `${idx}`,
-                        }}
-                      />
-                    </GridItem>
-                  );
-                })}
-              </SimpleGrid>
-            </ChainSectionElement>
-          </>
-        )}
       </Container>
     </>
   );
@@ -486,6 +553,7 @@ const ChainPage: ThirdwebNextPage = ({
 interface ChainSectionElementProps extends Pick<GridItemProps, "colSpan"> {
   label: string;
   status?: "good" | "bad" | "neutral";
+  moreElem?: JSX.Element;
 }
 
 const statusIcons = {
@@ -504,26 +572,30 @@ const ChainSectionElement: ComponentWithChildren<ChainSectionElementProps> = ({
   colSpan,
   label,
   status,
+  moreElem,
   children,
 }) => {
   return (
     <GridItem colSpan={colSpan} as={Flex} flexDir="column" gap={2}>
-      <Flex gap={1} align="center">
-        <Heading as="h3" size="label.lg" opacity={0.6} fontWeight={400}>
-          {label}
-        </Heading>
-        {status && (
-          <Icon
-            boxSize={3.5}
-            as={statusIcons[status]}
-            _light={{
-              color: `${statusColors[status]}.600`,
-            }}
-            _dark={{
-              color: `${statusColors[status]}.400`,
-            }}
-          />
-        )}
+      <Flex align="center" gap={4} justify="space-between">
+        <Flex gap={1} align="center">
+          <Heading as="h3" size="label.lg" opacity={0.6} fontWeight={400}>
+            {label}
+          </Heading>
+          {status && (
+            <Icon
+              boxSize={3.5}
+              as={statusIcons[status]}
+              _light={{
+                color: `${statusColors[status]}.600`,
+              }}
+              _dark={{
+                color: `${statusColors[status]}.400`,
+              }}
+            />
+          )}
+        </Flex>
+        {moreElem}
       </Flex>
 
       {children}
@@ -595,6 +667,12 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
       notFound: true,
     };
   }
+  let gradientColors = null;
+  try {
+    gradientColors = await getGradientColorStops(chain);
+  } catch (e) {
+    // ignore
+  }
 
   const chainRpc = getDashboardChainRpc(chain);
   // overwrite with the dashboard chain RPC (add the api key)
@@ -614,6 +692,7 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
     props: {
       chain,
       category,
+      gradientColors,
       dehydratedState: dehydrate(queryClient),
     },
   };
@@ -625,3 +704,42 @@ export const getStaticPaths: GetStaticPaths = () => {
     paths: [],
   };
 };
+
+async function getGradientColorStops(
+  chain: Chain,
+): Promise<[string, string] | null> {
+  if (!chain.icon) {
+    return null;
+  }
+  const chainIconUrl = StorageSingleton.resolveScheme(chain.icon.url);
+  const data = await fetch(chainIconUrl);
+  const arrayBuffer = await data.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+
+  const palette = await new Vibrant(buffer).getPalette();
+  const colorStops = Object.values(palette)
+    .map((color_) => {
+      return color_?.hex;
+    })
+    .filter(Boolean) as string[];
+  if (colorStops.length === 0) {
+    return null;
+  }
+  const firstAndLast = [colorStops[0], colorStops[colorStops.length - 1]] as [
+    string,
+    string,
+  ];
+
+  const firstColorRGB = color(firstAndLast[0]).rgb().array();
+  // if all rgb values are *close* to the same count it as grayscale
+  if (firstColorRGB.every((rgb) => Math.abs(rgb - firstColorRGB[0]) < 10)) {
+    return null;
+  }
+  const lastColorRGB = color(firstAndLast[1]).rgb().array();
+  // if all rgb values are *close* to the same count it as grayscale
+  if (lastColorRGB.every((rgb) => Math.abs(rgb - lastColorRGB[0]) < 10)) {
+    return null;
+  }
+
+  return firstAndLast;
+}

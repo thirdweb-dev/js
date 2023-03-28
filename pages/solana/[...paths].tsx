@@ -43,7 +43,6 @@ const SolanaProgramPage: ThirdwebNextPage = (props: SolanaProgramProps) => {
       <ProgramMetadata
         address={programAddress}
         metadataQuery={programMetadataQuery}
-        programQuery={programQuery}
       />
       <ContractProgramSidebar
         address={programAddress}

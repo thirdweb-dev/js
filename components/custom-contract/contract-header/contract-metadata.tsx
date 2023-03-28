@@ -1,18 +1,19 @@
 import { MetadataHeader } from "./metadata-header";
-import { useContract, useContractMetadata } from "@thirdweb-dev/react";
+import { Chain } from "@thirdweb-dev/chains";
+import type { useContractMetadata } from "@thirdweb-dev/react";
 import { useEffect, useState } from "react";
 
 interface ContractMetadataProps {
   contractAddress: string;
+  metadataQuery: ReturnType<typeof useContractMetadata>;
+  chain: Chain | null;
 }
 
 export const ContractMetadata: React.FC<ContractMetadataProps> = ({
+  metadataQuery,
+  chain,
   contractAddress,
 }) => {
-  const { contract } = useContract(contractAddress);
-
-  const metadataQuery = useContractMetadata(contract);
-
   const [wasError, setWasError] = useState(false);
   useEffect(() => {
     if (metadataQuery.isError) {
@@ -27,6 +28,7 @@ export const ContractMetadata: React.FC<ContractMetadataProps> = ({
       isError={metadataQuery.isError || wasError}
       isLoaded={metadataQuery.isSuccess}
       data={metadataQuery.data}
+      chain={chain || undefined}
       address={contractAddress}
     />
   );

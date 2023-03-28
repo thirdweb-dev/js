@@ -64,7 +64,7 @@ const COMMANDS = {
 // and drag it into your project`,
   },
   setup: {
-    javascript: `import {{chainName}} from "@thirdweb-dev/chains";
+    javascript: `import { {{chainName}} } from "@thirdweb-dev/chains";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 
 const sdk = new ThirdwebSDK({{chainName}});
@@ -390,7 +390,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
           <Flex flexDir="column" gap={2}>
             {environment === "react-native" || environment === "unity" ? (
               <Text>
-                Install the latest version of the SDK.{" "}
+                Install the latest version of the SDK. <br />
                 <TrackedLink
                   color={"primary.500"}
                   href={`https://portal.thirdweb.com/${environment}`}

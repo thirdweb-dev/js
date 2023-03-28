@@ -1,14 +1,12 @@
 import { Select, SelectProps, forwardRef } from "@chakra-ui/react";
 import { defaultChains } from "@thirdweb-dev/chains";
-import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
-import { deprecatedChains } from "constants/mappings";
 import { StoredChain } from "contexts/configured-chains";
 import { useConfiguredChains } from "hooks/chains/configureChains";
 import { useMemo } from "react";
 
 export interface SupportedNetworkSelectProps
   extends Omit<SelectProps, "children"> {
-  disabledChainIds?: ChainId[];
+  disabledChainIds?: number[];
   disabledChainIdText?: string;
 }
 
@@ -78,7 +76,7 @@ const isDefaultChain = (chainId: number) =>
   defaultChains.some((c) => c.chainId === chainId);
 
 const NetworkOptGroup: React.FC<{
-  disabledChainIds?: ChainId[];
+  disabledChainIds?: number[];
   chains: StoredChain[];
   disabledChainIdText: string;
   label: string;
@@ -87,9 +85,6 @@ const NetworkOptGroup: React.FC<{
     <optgroup label={label}>
       {chains.map((network) => {
         const isDisabledChain = disabledChainIds?.includes(network.chainId);
-        const isDeprecaredChain = deprecatedChains.includes(
-          network.chainId as SUPPORTED_CHAIN_ID,
-        );
 
         // disable the option it if it is either in the list of disabled chains
         // or if the list of disabled chains is given and chain is not a default chain ( custom chain )
@@ -99,11 +94,7 @@ const NetworkOptGroup: React.FC<{
             disabledChainIds.length > 0 &&
             !isDefaultChain(network.chainId));
 
-        const tag = isDeprecaredChain
-          ? " - Deprecated"
-          : disableOption
-          ? ` - ${disabledChainIdText}`
-          : "";
+        const tag = disableOption ? ` - ${disabledChainIdText}` : "";
 
         return (
           <option

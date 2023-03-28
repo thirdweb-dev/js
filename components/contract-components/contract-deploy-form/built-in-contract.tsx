@@ -38,7 +38,7 @@ import { RecipientForm } from "components/deployment/splits/recipients";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelect";
 import { FileInput } from "components/shared/FileInput";
-import { BuiltinContractMap, DisabledChainsMap } from "constants/mappings";
+import { BuiltinContractMap } from "constants/mappings";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { verifyContract } from "contract-ui/tabs/sources/page";
 import { constants, utils } from "ethers";
@@ -920,16 +920,8 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
           <FormControl>
             <SupportedNetworkSelect
               isDisabled={deploy.isLoading || !publishMetadata.isSuccess}
-              value={
-                !DisabledChainsMap[contractType as ContractType]?.find(
-                  (chain) => chain === selectedChain,
-                )
-                  ? selectedChain
-                  : -1
-              }
+              value={selectedChain}
               onChange={(e) => onChainSelect(parseInt(e.currentTarget.value))}
-              disabledChainIds={DisabledChainsMap[contractType as ContractType]}
-              disabledChainIdText="Coming Soon"
             />
           </FormControl>
 
