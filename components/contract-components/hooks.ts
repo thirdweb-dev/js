@@ -342,17 +342,35 @@ export function usePublishedContractInfo(contract: PublishedContract) {
   );
 }
 export function usePublishedContractFunctions(contract: PublishedContract) {
+  const publishedContractInfo = usePublishedContractInfo(contract);
+  const compositeAbi =
+    publishedContractInfo.data?.publishedMetadata.compositeAbi;
+
   const { data: meta } = useContractPublishMetadataFromURI(
     contract.metadataUri,
   );
+
+  if (compositeAbi) {
+    return extractFunctionsFromAbi(compositeAbi);
+  }
+
   return meta
     ? extractFunctionsFromAbi(meta.abi as Abi, meta?.compilerMetadata)
     : undefined;
 }
 export function usePublishedContractEvents(contract: PublishedContract) {
+  const publishedContractInfo = usePublishedContractInfo(contract);
+  const compositeAbi =
+    publishedContractInfo.data?.publishedMetadata.compositeAbi;
+
   const { data: meta } = useContractPublishMetadataFromURI(
     contract.metadataUri,
   );
+
+  if (compositeAbi) {
+    return extractEventsFromAbi(compositeAbi);
+  }
+
   return meta
     ? extractEventsFromAbi(meta.abi as Abi, meta?.compilerMetadata)
     : undefined;
