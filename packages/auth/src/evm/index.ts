@@ -27,3 +27,5 @@ export async function verifyLogin(
     return { address: undefined, error: err.message };
   }
 }
+
+export { PrivateKeyWallet } from "@thirdweb-dev/wallets/evm/wallets/private-key";
