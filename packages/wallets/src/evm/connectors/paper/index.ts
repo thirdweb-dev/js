@@ -205,7 +205,11 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
     this.emit("disconnect");
   };
 
-  getEmail() {
-    return this.user?.authDetails.email;
+  async getEmail() {
+    await this.getProvider();
+    if (!this.user) {
+      throw new Error("No user found, Paper Wallet is not connected");
+    }
+    return this.user.authDetails.email;
   }
 }
