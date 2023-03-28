@@ -520,7 +520,12 @@ export function useContractRead(
     () => {
       requiredParamInvariant(contract, "contract must be defined");
       requiredParamInvariant(functionName, "function name must be provided");
-      return contract.call(functionName, ...args);
+      return (
+        contract.call as (
+          functionName: string,
+          ...args: unknown[] | [...unknown[], CallOverrides]
+        ) => Promise<any>
+      )(functionName, ...args);
     },
     {
       enabled: !!contract && !!functionName,
@@ -559,9 +564,19 @@ export function useContractWrite(
       requiredParamInvariant(contract, "contract must be defined");
       requiredParamInvariant(functionName, "function name must be provided");
       if (!callParams?.length) {
-        return contract.call(functionName);
+        return (
+          contract.call as (
+            functionName: string,
+            ...args: unknown[] | [...unknown[], CallOverrides]
+          ) => Promise<any>
+        )(functionName);
       }
-      return contract.call(functionName, ...callParams);
+      return (
+        contract.call as (
+          functionName: string,
+          ...args: unknown[] | [...unknown[], CallOverrides]
+        ) => Promise<any>
+      )(functionName, ...callParams);
     },
     {
       onSettled: () =>

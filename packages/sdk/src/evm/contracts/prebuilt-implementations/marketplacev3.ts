@@ -269,9 +269,17 @@ export class MarketplaceV3 implements UpdateableNetwork {
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
+  public async call<
+    TMethod extends keyof MarketplaceV3Contract["functions"] = keyof MarketplaceV3Contract["functions"],
+  >(
+    functionName: string & TMethod,
+    ...args:
+      | (any[] & Parameters<MarketplaceV3Contract["functions"][TMethod]>)[]
+      | [
+          ...(any[] &
+            Parameters<MarketplaceV3Contract["functions"][TMethod]>)[],
+          CallOverrides,
+        ]
   ): Promise<any> {
     return this.contractWrapper.call(functionName, ...args);
   }
