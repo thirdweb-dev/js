@@ -64,7 +64,7 @@ const COMMANDS = {
 // and drag it into your project`,
   },
   setup: {
-    javascript: `import { {{chainName}} } from "@thirdweb-dev/chains";
+    javascript: `import {{chainName}} from "@thirdweb-dev/chains";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 
 const sdk = new ThirdwebSDK({{chainName}});
@@ -269,7 +269,9 @@ function formatSnippet(
         'import {{chainName}} from "@thirdweb-dev/chains";',
         preSupportedSlugs.includes(chainName as string)
           ? ""
-          : 'import {{chainName}} from "@thirdweb-dev/chains";',
+          : `import ${
+              env === "javascript" ? "{ {{chainName}} }" : "{{chainName}}"
+            } from "@thirdweb-dev/chains";`,
       )
       ?.replace(
         /{{chainName}}/gm,
