@@ -127,7 +127,7 @@ export class WalletConnectConnector extends Connector<
         await provider.connect({
           pairingTopic,
           chains: [targetChainId],
-          optionalChains,
+          optionalChains: optionalChains.length > 0 ? optionalChains : [targetChainId],
         });
 
         this.#setRequestedChainsIds(this.chains.map(({ chainId }) => chainId));
@@ -296,6 +296,7 @@ export class WalletConnectConnector extends Connector<
     const [defaultChain, ...optionalChains] = this.chains.map(
       ({ chainId }) => chainId,
     );
+
     if (defaultChain) {
       // EthereumProvider populates & deduplicates required methods and events internally
       this.#provider = await EthereumProvider.init({
