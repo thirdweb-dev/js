@@ -86,6 +86,12 @@ function redirects() {
       destination: "/chainlist",
       permanent: true,
     },
+    // polygon zkevm beta to non-beta
+    {
+      source: "/polygon-zkevm-beta",
+      destination: "/polygon-zkevm",
+      permanent: false,
+    },
   ];
 }
 
