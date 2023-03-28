@@ -410,9 +410,16 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
+  public async call<
+    TMethod extends keyof PrebuiltEditionDrop["functions"] = keyof PrebuiltEditionDrop["functions"],
+  >(
+    functionName: string & TMethod,
+    ...args:
+      | (any[] & Parameters<PrebuiltEditionDrop["functions"][TMethod]>)[]
+      | [
+          ...(any[] & Parameters<PrebuiltEditionDrop["functions"][TMethod]>)[],
+          CallOverrides,
+        ]
   ): Promise<any> {
     return this.contractWrapper.call(functionName, ...args);
   }

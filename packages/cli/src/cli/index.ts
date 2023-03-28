@@ -184,13 +184,9 @@ const main = async () => {
                   [],
                   { stdio: "inherit", shell: true, env: clonedEnvironment },
                 );
-                shell.on("close", (code) => {
-                  if (code === 0) {
-                    resolve("");
-                  } else {
-                    reject();
-                  }
-                });
+                shell.on("close", (code) =>
+                  code === 0 ? resolve("") : reject(),
+                );
               });
 
               process.exit(0);
