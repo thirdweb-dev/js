@@ -15,7 +15,6 @@ import { ContractPrimarySale } from "../../core/classes/contract-sales";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { DropErc1155ClaimConditions } from "../../core/classes/drop-erc1155-claim-conditions";
 import { DropErc1155History } from "../../core/classes/drop-erc1155-history";
-import { Erc1155 } from "../../core/classes/erc-1155";
 import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
@@ -116,7 +115,6 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
 
   public history: DropErc1155History;
   public interceptor: ContractInterceptor<PrebuiltEditionDrop>;
-  public erc1155: Erc1155<PrebuiltEditionDrop>;
   public owner: ContractOwner<PrebuiltEditionDrop>;
 
   constructor(
@@ -162,7 +160,6 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.erc1155 = new Erc1155(this.contractWrapper, this.storage, chainId);
     this.checkout = new PaperCheckout(this.contractWrapper);
     this.owner = new ContractOwner(this.contractWrapper);
   }
@@ -413,9 +410,16 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
+  public async call<
+    TMethod extends keyof PrebuiltEditionDrop["functions"] = keyof PrebuiltEditionDrop["functions"],
+  >(
+    functionName: string & TMethod,
+    ...args:
+      | (any[] & Parameters<PrebuiltEditionDrop["functions"][TMethod]>)[]
+      | [
+          ...(any[] & Parameters<PrebuiltEditionDrop["functions"][TMethod]>)[],
+          CallOverrides,
+        ]
   ): Promise<any> {
     return this.contractWrapper.call(functionName, ...args);
   }

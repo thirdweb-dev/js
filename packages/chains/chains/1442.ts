@@ -23,6 +23,20 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/polygon/512.png",
+    "height": 512,
+    "width": 512,
+    "format": "png",
+    "sizes": [
+      16,
+      32,
+      64,
+      128,
+      256,
+      512
+    ]
+  },
   "testnet": true,
   "slug": "polygon-zkevm-testnet"
 } as const;

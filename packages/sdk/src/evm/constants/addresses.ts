@@ -297,7 +297,7 @@ export function getApprovedImplementation(
  */
 export function getContractAddressByChainId(
   chainId: SUPPORTED_CHAIN_ID | ChainId.Hardhat,
-  contractName: keyof typeof CONTRACT_ADDRESSES[SUPPORTED_CHAIN_ID],
+  contractName: keyof (typeof CONTRACT_ADDRESSES)[SUPPORTED_CHAIN_ID],
 ): string | undefined {
   // for testing only
   if (chainId === ChainId.Hardhat || chainId === ChainId.Localhost) {

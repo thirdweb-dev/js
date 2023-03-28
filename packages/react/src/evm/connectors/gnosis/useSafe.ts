@@ -1,6 +1,6 @@
+import { useConnect } from "@thirdweb-dev/react-core";
 import type { SafeConnectionArgs } from "@thirdweb-dev/wallets";
 import { useCallback } from "react";
-import { useConnect } from "@thirdweb-dev/react-core";
 
 export function useSafe() {
   const connect = useConnect();

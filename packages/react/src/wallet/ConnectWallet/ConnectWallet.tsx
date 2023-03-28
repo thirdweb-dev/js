@@ -1,13 +1,25 @@
-import { darkTheme, lightTheme, Theme } from "../../design-system";
-import { ConnectWalletFlow } from "./Connect";
+import { darkTheme, lightTheme } from "../../design-system";
 import { ConnectedWalletDetails, DropDownPosition } from "./Details";
 import { ThemeProvider } from "@emotion/react";
-import { ThirdwebThemeContext, useWallet } from "@thirdweb-dev/react-core";
-import { useContext, useState } from "react";
+import {
+  ThirdwebThemeContext,
+  useConnectionStatus,
+  useWallet,
+} from "@thirdweb-dev/react-core";
+import { useContext } from "react";
+import {
+  useIsConnectingToSafe,
+  useSetIsWalletModalOpen,
+  useSetModalTheme,
+} from "../../evm/providers/wallet-ui-states-provider";
+import { Button } from "../../components/buttons";
+import { Spinner } from "../../components/Spinner";
+import styled from "@emotion/styled";
+import { fadeInAnimation } from "../../components/FadeIn";
 
 type ConnectWalletProps = {
   className?: string;
-  theme?: "dark" | "light" | Theme;
+  theme?: "dark" | "light";
   btnTitle?: string;
   dropdownPosition?: DropDownPosition;
 };
@@ -19,9 +31,19 @@ type ConnectWalletProps = {
  */
 export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   const activeWallet = useWallet();
-  const themeFromCore = useContext(ThirdwebThemeContext);
-  const theme = props.theme || themeFromCore || "dark";
-  const [isConnectingToSafe, setIsConnectingToSafe] = useState(false);
+  const themeFromProvider = useContext(ThirdwebThemeContext);
+  const theme = props.theme || themeFromProvider || "dark";
+  const isConnectingToSafe = useIsConnectingToSafe();
+  const connectionStatus = useConnectionStatus();
+
+  const isLoading =
+    connectionStatus === "connecting" || connectionStatus === "unknown";
+
+  const btnTitle = props.btnTitle || "Connect Wallet";
+  const setIsWalletModalOpen = useSetIsWalletModalOpen();
+
+  const setModalTheme = useSetModalTheme();
+
   return (
     <ThemeProvider
       theme={
@@ -32,17 +54,32 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
           : lightTheme
       }
     >
-      {!activeWallet ||
-      (isConnectingToSafe && activeWallet.walletId !== "Safe") ? (
-        <ConnectWalletFlow
-          btnClass={props.className}
-          btnTitle={props.btnTitle}
-          isConnectingToSafe={isConnectingToSafe}
-          setIsConnectingToSafe={setIsConnectingToSafe}
-        />
+      {!activeWallet || isConnectingToSafe ? (
+        <AnimatedButton
+          disabled={isLoading}
+          className={props.className}
+          variant="inverted"
+          type="button"
+          style={{
+            minWidth: "140px",
+          }}
+          aria-label={
+            connectionStatus === "connecting" ? "Connecting" : btnTitle
+          }
+          onClick={() => {
+            setModalTheme(theme);
+            setIsWalletModalOpen(true);
+          }}
+        >
+          {isLoading ? <Spinner size="sm" color="inverted" /> : btnTitle}
+        </AnimatedButton>
       ) : (
         <ConnectedWalletDetails dropdownPosition={props.dropdownPosition} />
       )}
     </ThemeProvider>
   );
 };
+
+const AnimatedButton = styled(Button)`
+  animation: ${fadeInAnimation} 300ms ease;
+`;

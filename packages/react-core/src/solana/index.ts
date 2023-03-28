@@ -68,7 +68,7 @@ export type { TransferTokenMutationParams } from "./hooks/token/useTransferToken
 export { useTransferToken } from "./hooks/token/useTransferToken";
 
 // Auth
-export { useAuth, useLogin, useLogout, useUser } from "./hooks/auth";
+export { useLogin, useLogout, useUser } from "./hooks/auth";
 export type { UserWithData, LoginConfig } from "./hooks/auth";
 
 //Wallet

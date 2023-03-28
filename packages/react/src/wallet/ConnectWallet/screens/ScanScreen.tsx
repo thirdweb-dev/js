@@ -47,7 +47,7 @@ export const ScanScreen: React.FC<{
 
         <Spacer y="xl" />
 
-        <ModalTitle>Scan with {props.walletName} Wallet</ModalTitle>
+        <ModalTitle>Scan with {props.walletName} wallet</ModalTitle>
         <Spacer y="md" />
 
         <ModalDescription>
@@ -81,4 +81,7 @@ const LinkButton = styled.button<{ theme?: Theme }>`
   color: ${(p) => p.theme.link.primary};
   font-size: ${fontSize.sm};
   cursor: pointer;
+  &:hover {
+    color: ${(p) => p.theme.link.primaryHover};
+  }
 `;

@@ -53,7 +53,7 @@ export const HelperLink = styled.a<{ theme?: Theme }>`
     text-align: center;
   }
   &:hover {
-    color: ${(p) => p.theme.link.primary};
+    color: ${(p) => p.theme.link.primaryHover};
     text-decoration: none;
   }
 `;

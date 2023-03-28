@@ -21,7 +21,7 @@ export class MetaMask extends AbstractBrowserWallet {
   walletConnectConnector?: WalletConnectV1ConnectorType;
 
   static meta = {
-    name: "Metamask",
+    name: "MetaMask",
     iconURL:
       "ipfs://QmZZHcw7zcXursywnLDAyY6Hfxzqop5GKgwoq8NB9jjrkN/metamask.svg",
   };

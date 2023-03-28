@@ -1,3 +1,25 @@
+import { Img } from "../../../../components/Img";
+import { Spacer } from "../../../../components/Spacer";
+import { Spinner } from "../../../../components/Spinner";
+import { Button } from "../../../../components/buttons";
+import { ErrorMessage, Label } from "../../../../components/formElements";
+import { FormField } from "../../../../components/formFields";
+import {
+  BackButton,
+  ModalTitle,
+  ModalDescription,
+  HelperLink,
+} from "../../../../components/modalElements";
+import {
+  iconSize,
+  spacing,
+  media,
+  Theme,
+  fontSize,
+} from "../../../../design-system";
+import { useIsNonLocalWallet } from "../../../hooks/useCanSwitchNetwork";
+import { SafeWallet } from "../../../wallets";
+import { Steps } from "./Steps";
 import styled from "@emotion/styled";
 import {
   ChevronDownIcon,
@@ -14,28 +36,6 @@ import {
 import { SafeSupportedChainsSet } from "@thirdweb-dev/wallets";
 import { utils } from "ethers";
 import { useState } from "react";
-import { Button } from "../../../../components/buttons";
-import { ErrorMessage, Label } from "../../../../components/formElements";
-import { FormField } from "../../../../components/formFields";
-import { Img } from "../../../../components/Img";
-import {
-  BackButton,
-  ModalTitle,
-  ModalDescription,
-  HelperLink,
-} from "../../../../components/modalElements";
-import { Spacer } from "../../../../components/Spacer";
-import { Spinner } from "../../../../components/Spinner";
-import {
-  iconSize,
-  spacing,
-  media,
-  Theme,
-  fontSize,
-} from "../../../../design-system";
-import { useWalletRequiresConfirmation } from "../../../hooks/useCanSwitchNetwork";
-import { SafeWallet } from "../../../wallets";
-import { Steps } from "./Steps";
 
 export const gnosisAddressPrefixToChainId = {
   eth: 1,
@@ -48,6 +48,7 @@ export const gnosisAddressPrefixToChainId = {
 
 export const SafeForm: React.FC<{
   onBack: () => void;
+  onConnect: () => void;
 }> = (props) => {
   const activeWallet = useWallet();
   const connect = useConnect();
@@ -62,7 +63,7 @@ export const SafeForm: React.FC<{
   const [switchingNetwork, setSwitchingNetwork] = useState(false);
 
   const connectionStatus = useConnectionStatus();
-  const requiresConfirmation = useWalletRequiresConfirmation();
+  const requiresConfirmation = useIsNonLocalWallet();
   const chains = useSupportedChains();
 
   // put supported chains first
@@ -92,6 +93,7 @@ export const SafeForm: React.FC<{
         personalWallet: activeWallet,
         safeAddress,
       });
+      props.onConnect();
     } catch (e) {
       console.error(e);
       setSafeConnectError(true);
@@ -119,12 +121,11 @@ export const SafeForm: React.FC<{
       <Spacer y="md" />
 
       <Desc>
-        You can find your safe address through your{" "}
+        You can find your safe address in{" "}
         <HelperLink
           target="_blank"
           href="https://app.safe.global/home"
           style={{
-            fontSize: "inherit",
             display: "inline",
           }}
         >

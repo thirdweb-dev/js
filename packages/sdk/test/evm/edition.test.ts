@@ -1,4 +1,4 @@
-import { Edition } from "../../src/evm";
+import { Edition, ThirdwebSDK } from "../../src/evm";
 import { expectError, sdk, signers, storage } from "./before-setup";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";

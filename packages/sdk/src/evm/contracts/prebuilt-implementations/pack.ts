@@ -21,7 +21,6 @@ import { ContractOwner } from "../../core/classes/contract-owner";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
-import { Erc1155 } from "../../core/classes/erc-1155";
 import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { PackVRF } from "../../core/classes/pack-vrf";
@@ -100,7 +99,6 @@ export class Pack extends StandardErc1155<PackContract> {
    */
   public interceptor: ContractInterceptor<PackContract>;
 
-  public erc1155: Erc1155<PackContract>;
   public owner: ContractOwner<PackContract>;
 
   private _vrf?: PackVRF;
@@ -138,7 +136,6 @@ export class Pack extends StandardErc1155<PackContract> {
   ) {
     super(contractWrapper, storage, chainId);
     this.abi = AbiSchema.parse(abi || []);
-    this.erc1155 = new Erc1155(this.contractWrapper, this.storage, chainId);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       PackContractSchema,
@@ -284,14 +281,18 @@ export class Pack extends StandardErc1155<PackContract> {
             this.contractWrapper.getProvider(),
             reward.assetContract,
           );
-          const rewardAmount = ethers.utils.formatUnits(
-            reward.totalAmount,
+          const quantityPerReward = ethers.utils.formatUnits(
+            amount,
+            tokenMetadata.decimals,
+          );
+          const totalRewards = ethers.utils.formatUnits(
+            BigNumber.from(reward.totalAmount).div(amount),
             tokenMetadata.decimals,
           );
           erc20Rewards.push({
             contractAddress: reward.assetContract,
-            quantityPerReward: amount.toString(),
-            totalRewards: BigNumber.from(rewardAmount).div(amount).toString(),
+            quantityPerReward,
+            totalRewards,
           });
           break;
         }
@@ -781,9 +782,16 @@ export class Pack extends StandardErc1155<PackContract> {
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
+  public async call<
+    TMethod extends keyof PackContract["functions"] = keyof PackContract["functions"],
+  >(
+    functionName: string & TMethod,
+    ...args:
+      | (any[] & Parameters<PackContract["functions"][TMethod]>)[]
+      | [
+          ...(any[] & Parameters<PackContract["functions"][TMethod]>)[],
+          CallOverrides,
+        ]
   ): Promise<any> {
     return this.contractWrapper.call(functionName, ...args);
   }

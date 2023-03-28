@@ -2,8 +2,8 @@ export default {
   "name": "ethereum Fair",
   "chainId": 513100,
   "networkId": 513100,
-  "shortName": "etf",
-  "chain": "ETF",
+  "shortName": "ethf",
+  "chain": "ETHF",
   "nativeCurrency": {
     "name": "EthereumFair",
     "symbol": "ETHF",
@@ -17,7 +17,7 @@ export default {
   "explorers": [
     {
       "name": "etherfair",
-      "url": "https://explorer.etherfair.org",
+      "url": "https://www.oklink.com/ethf",
       "standard": "EIP3091"
     }
   ],

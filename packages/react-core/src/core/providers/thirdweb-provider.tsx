@@ -1,5 +1,7 @@
-import { ThirdwebAuthConfig } from "../../evm/contexts/thirdweb-auth";
+import { ThirdwebAuthProvider } from "../../evm/contexts/thirdweb-auth";
+import { useUpdateChainsWithApiKeys } from "../../evm/hooks/chain-hooks";
 import { ThirdwebSDKProvider } from "../../evm/providers/thirdweb-sdk-provider";
+import { ThirdwebSDKProviderProps } from "../../evm/providers/types";
 import { DAppMetaData } from "../types/dAppMeta";
 import { SupportedWallet } from "../types/wallet";
 import { ThirdwebThemeContext } from "./theme-context";
@@ -7,40 +9,18 @@ import {
   ThirdwebWalletProvider,
   useThirdwebWallet,
 } from "./thirdweb-wallet-provider";
-import { QueryClient } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
-import type { SDKOptions } from "@thirdweb-dev/sdk";
-import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   createAsyncLocalStorage,
   CreateAsyncStorage,
 } from "@thirdweb-dev/wallets";
 import React, { useMemo } from "react";
-import { useUpdateChainsWithApiKeys } from "../../evm/hooks/chain-hooks";
-import { ThirdwebSDKProviderProps } from "../../evm/providers/types";
 
 /**
  * The possible props for the ThirdwebProvider.
  */
-export interface ThirdwebProviderCoreProps<
-  TChains extends Chain[] = typeof defaultChains,
-> {
-  /**
-   * The network to use for the SDK.
-   */
-  activeChain?: TChains[number]["chainId"] | TChains[number]["slug"] | Chain;
-
-  /**
-   * Chains to support. If not provided, will default to the chains supported by the SDK.
-   */
-  supportedChains?: TChains;
-
-  /**
-   * The {@link SDKOptions | Thirdweb SDK Options} to pass to the thirdweb SDK
-   * comes with sensible defaults
-   */
-  sdkOptions?: SDKOptions;
-
+export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
+  extends ThirdwebSDKProviderProps<TChains> {
   /**
    * An array of wallets that the dApp supports
    * If not provided, will default to Metamask (injected), Coinbase wallet and Device wallet
@@ -69,30 +49,9 @@ export interface ThirdwebProviderCoreProps<
   dAppMeta?: DAppMetaData;
 
   /**
-   * The configuration used for thirdweb auth usage. Enables users to login
-   * to backends with their wallet.
-   */
-  authConfig?: ThirdwebAuthConfig;
-
-  /**
-   * The storage interface to use with the sdk.
-   */
-  storageInterface?: ThirdwebStorage;
-
-  /**
-   * The react-query client to use. (Defaults to a default client.)
-   */
-  queryClient?: QueryClient;
-
-  /**
    * Whether or not to attempt auto-connect to a wallet.
    */
   autoConnect?: boolean;
-
-  // api keys that can be passed
-  thirdwebApiKey?: string;
-  alchemyApiKey?: string;
-  infuraApiKey?: string;
 
   theme?: "light" | "dark";
 
@@ -111,9 +70,7 @@ const defaultdAppMeta: DAppMetaData = {
   url: "https://thirdweb.com",
 };
 
-export const ThirdwebProviderCore = <
-  TChains extends Chain[] = typeof defaultChains,
->({
+export const ThirdwebProviderCore = <TChains extends Chain[]>({
   createWalletStorage = createAsyncLocalStorage,
   ...props
 }: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>) => {
@@ -123,9 +80,8 @@ export const ThirdwebProviderCore = <
 
   const [supportedChainsWithKey, activeChainIdOrObjWithKey] =
     useUpdateChainsWithApiKeys(
-      // @ts-expect-error - different subtype of Chain[] but this works fine
       supportedChainsNonNull,
-      props.activeChain,
+      props.activeChain || supportedChainsNonNull[0],
       props.thirdwebApiKey,
       props.alchemyApiKey,
       props.infuraApiKey,
@@ -147,6 +103,7 @@ export const ThirdwebProviderCore = <
   }, [activeChainIdOrObjWithKey, supportedChainsWithKey]);
 
   const dAppMeta = props.dAppMeta || defaultdAppMeta;
+
   return (
     <ThirdwebThemeContext.Provider value={props.theme}>
       <ThirdwebWalletProvider
@@ -169,7 +126,9 @@ export const ThirdwebProviderCore = <
           alchemyApiKey={props.alchemyApiKey}
           infuraApiKey={props.infuraApiKey}
         >
-          {props.children}
+          <ThirdwebAuthProvider value={props.authConfig}>
+            {props.children}
+          </ThirdwebAuthProvider>
         </ThirdwebSDKProviderWrapper>
       </ThirdwebWalletProvider>
     </ThirdwebThemeContext.Provider>

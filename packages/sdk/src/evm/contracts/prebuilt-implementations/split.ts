@@ -419,9 +419,13 @@ export class Split implements UpdateableNetwork {
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
+  public async call<
+    TMethod extends keyof SplitContract["functions"] = keyof SplitContract["functions"],
+  >(
+    functionName: string & TMethod,
+    ...args:
+      | (any[] & Parameters<SplitContract["functions"][TMethod]>)[]
+      | [...unknown[], CallOverrides]
   ): Promise<any> {
     return this.contractWrapper.call(functionName, ...args);
   }

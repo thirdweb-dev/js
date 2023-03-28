@@ -14,7 +14,7 @@ export const NetworkSelectorModal = ({
     <TWModal isVisible={isVisible} {...props}>
       <ModalHeaderTextClose
         headerText={"Select Network"}
-        subHeaderText={"Choose a new network to connect to Thirdweb"}
+        subHeaderText={"Choose a new network to connect to thirdweb"}
         onClose={onClose}
       />
     </TWModal>

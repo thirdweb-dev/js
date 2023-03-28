@@ -41,7 +41,7 @@ export const ScanMetamask: React.FC<{
       onBack={props.onBack}
       onGetStarted={props.onGetStarted}
       qrCodeUri={qrCodeUri}
-      walletName="Metamask"
+      walletName={MetamaskWallet.meta.name}
       walletIconURL={MetamaskWallet.meta.iconURL}
     />
   );

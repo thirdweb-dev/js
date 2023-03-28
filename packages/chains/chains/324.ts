@@ -3,7 +3,7 @@ export default {
   "chain": "ETH",
   "rpc": [
     "https://zksync-era.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://zksync2-mainnet.zksync.io"
+    "https://mainnet.era.zksync.io"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -16,7 +16,7 @@ export default {
   "chainId": 324,
   "networkId": 324,
   "icon": {
-    "url": "ipfs://Qma6H9xd8Ydah1bAFnmDuau1jeMh5NjGEL8tpdnjLbJ7m2",
+    "url": "ipfs://QmRkhUD6J3B9WhT4hEWLrcFVTrBhx3CQgNC783aJsrwxSN",
     "width": 512,
     "height": 512,
     "format": "svg"
@@ -34,7 +34,7 @@ export default {
     "chain": "eip155-1",
     "bridges": [
       {
-        "url": "https://portal.zksync.io/bridge"
+        "url": "https://bridge.zksync.io/"
       }
     ]
   },
