@@ -510,10 +510,9 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   >(
     functionName: string & TMethod,
     ...args:
-      | (any[] & Parameters<SignatureDropContract["functions"][TMethod]>)[]
+      | (any[] & Parameters<SignatureDropContract["functions"][TMethod]>)
       | [
-          ...(any[] &
-            Parameters<SignatureDropContract["functions"][TMethod]>)[],
+          ...(any[] & Parameters<SignatureDropContract["functions"][TMethod]>),
           CallOverrides,
         ]
   ): Promise<any> {

@@ -40,6 +40,7 @@ import {
   Wallet as EthersWallet,
   utils as ethersUtils,
 } from "ethers";
+import { BaseContractForAddress } from "../types/contract";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -419,8 +420,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     address: TContractAddress,
   ): Promise<
     TContractAddress extends ContractAddress
-      ? SmartContract<BaseContract>
-      : SmartContract
+      ? SmartContract<BaseContractForAddress<TContractAddress>>
+      : SmartContract<BaseContract>
   >;
   /**
    * Get an instance of a Custom ThirdwebContract

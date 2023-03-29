@@ -629,6 +629,7 @@ importers:
       '@types/uuid': ^9.0.0
       '@typescript-eslint/eslint-plugin': ^5.33.0
       '@typescript-eslint/parser': ^5.33.0
+      abitype: ^0.2.5
       bn.js: ^5.2.1
       bs58: ^5.0.0
       buffer: ^6.0.3
@@ -662,6 +663,7 @@ importers:
       '@thirdweb-dev/contracts-js': link:../contracts-js
       '@thirdweb-dev/generated-abis': link:../generated-abis
       '@thirdweb-dev/storage': link:../storage
+      abitype: 0.2.5_wnc3eutrhvkpx2b7oumqzgx5he
       bn.js: 5.2.1
       bs58: 5.0.0
       buffer: 6.0.3
@@ -10664,6 +10666,20 @@ packages:
         optional: true
     dependencies:
       typescript: 4.9.5
+    dev: false
+
+  /abitype/0.2.5_wnc3eutrhvkpx2b7oumqzgx5he:
+    resolution: {integrity: sha512-t1iiokWYpkrziu4WL2Gb6YdGvaP9ZKs7WnA39TI8TsW2E99GVRgDPW/xOKhzoCdyxOYt550CNYEFluCwGaFHaA==}
+    engines: {pnpm: '>=7'}
+    peerDependencies:
+      typescript: '>=4.7.4'
+      zod: '>=3.19.1'
+    peerDependenciesMeta:
+      zod:
+        optional: true
+    dependencies:
+      typescript: 4.9.5
+      zod: 3.21.4
     dev: false
 
   /abort-controller/3.0.0:

@@ -315,9 +315,9 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
   >(
     functionName: string & TMethod,
     ...args:
-      | (any[] & Parameters<PrebuiltTokenDrop["functions"][TMethod]>)[]
+      | (any[] & Parameters<PrebuiltTokenDrop["functions"][TMethod]>)
       | [
-          ...(any[] & Parameters<PrebuiltTokenDrop["functions"][TMethod]>)[],
+          ...(any[] & Parameters<PrebuiltTokenDrop["functions"][TMethod]>),
           CallOverrides,
         ]
   ): Promise<any> {

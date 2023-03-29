@@ -59,6 +59,7 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides, ContractInterface } from "ethers";
+import { BaseContractInterface } from "../types/contract";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -86,8 +87,9 @@ import { BaseContract, CallOverrides, ContractInterface } from "ethers";
  *
  * @beta
  */
-export class SmartContract<TContract extends BaseContract = BaseContract>
-  implements UpdateableNetwork
+export class SmartContract<
+  TContract extends BaseContractInterface = BaseContract,
+> implements UpdateableNetwork
 {
   private contractWrapper;
   private storage;
@@ -375,10 +377,17 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
    * @param functionName - the name of the function to call
    * @param args - the arguments of the function
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
-  ): Promise<any> {
+  public async call<
+    TMethod extends keyof TContract["functions"] = keyof TContract["functions"],
+  >(
+    functionName: string & TMethod,
+    ...args:
+      | (any[] & Parameters<TContract["functions"][TMethod]>)
+      | [
+          ...(any[] & Parameters<TContract["functions"][TMethod]>),
+          CallOverrides,
+        ]
+  ): Promise<ReturnType<TContract["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, ...args);
   }
 

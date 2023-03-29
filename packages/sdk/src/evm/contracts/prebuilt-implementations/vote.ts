@@ -509,9 +509,9 @@ export class Vote implements UpdateableNetwork {
   >(
     functionName: string & TMethod,
     ...args:
-      | (any[] & Parameters<VoteERC20["functions"][TMethod]>)[]
+      | (any[] & Parameters<VoteERC20["functions"][TMethod]>)
       | [
-          ...(any[] & Parameters<VoteERC20["functions"][TMethod]>)[],
+          ...(any[] & Parameters<VoteERC20["functions"][TMethod]>),
           CallOverrides,
         ]
   ): Promise<any> {

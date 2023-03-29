@@ -110,6 +110,24 @@ export async function generate(options: GenerateOptions) {
     fs.writeFileSync(filePath, updatedFile);
   });
 
+  // Update cache for ABI types
+  {
+    const typeFilePath = `${packagePath}/declarations/src/index.d.ts`;
+    if (!fs.existsSync(typeFilePath)) {
+      return;
+    }
+
+    const file = fs.readFileSync(typeFilePath, "utf-8");
+    const abiRegex = /GENERATED_ABI: \{.*\}/s;
+    const contractAbis = metadata.reduce((acc, contract) => {
+      acc[contract.address] = contract.metadata.abi;
+      return acc;
+    }, {} as Record<string, any>);
+    const updatedAbis = JSON.stringify(contractAbis, null, 2);
+    const updatedFile = file.replace(abiRegex, `GENERATED_ABI: ${updatedAbis}`);
+    fs.writeFileSync(typeFilePath, updatedFile);
+  }
+
   // Add generate command to postinstall
   const packageJsonPath = `${projectPath}/package.json`;
   if (!fs.existsSync(packageJsonPath)) {
