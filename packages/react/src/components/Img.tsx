@@ -15,6 +15,10 @@ export const Img: React.FC<{
       alt={props.alt || ""}
       loading={props.loading}
       decoding="async"
+      style={{
+        height: props.height + "px",
+        width: props.width + "px",
+      }}
     />
   );
 };

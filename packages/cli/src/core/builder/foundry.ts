@@ -25,7 +25,6 @@ export class FoundryBuilder extends BaseBuilder {
       process.exit(1);
     }
 
-    await execute("forge clean", options.projectPath);
     await execute("forge build --extra-output metadata", options.projectPath);
 
     // get the current config first

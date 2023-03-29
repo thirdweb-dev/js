@@ -5,10 +5,9 @@
 export default {
   chainId: 1442,
   icon: {
-    url: "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/polygon/512.png",
-    height: 512,
-    width: 512,
+    url: "ipfs://QmNmJZkQgx9RcFLS3rvxQTVYcPfyAFPr667keHTUxB9PDv",
+    width: 122,
+    height: 135,
     format: "png",
-    sizes: [512, 256, 128, 64, 32, 16],
   },
 };

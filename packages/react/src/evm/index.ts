@@ -1,3 +1,5 @@
+export { useSafe } from "./connectors/gnosis";
+
 export { ConnectWallet } from "../wallet/ConnectWallet/ConnectWallet";
 
 // UI components
@@ -15,6 +17,11 @@ export { useIsNonLocalWallet as useWalletRequiresConfirmation } from "../wallet/
 export { useMetamask } from "./hooks/wallets/useMetamask";
 export { useCoinbaseWallet } from "./hooks/wallets/useCoinbaseWallet";
 export { useDeviceWallet } from "./hooks/wallets/useDeviceWallet";
+
+export {
+  usePaperWalletUserEmail,
+  usePaperWallet,
+} from "./hooks/wallets/usePaper";
 
 export {
   useWalletConnect,
