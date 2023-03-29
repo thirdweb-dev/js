@@ -32,15 +32,15 @@ export async function detectExtensions(options: any) {
   const projectType = await detect(projectPath, options);
 
   let compiledResult;
-  const compileLoader = spinner("Compiling project...");
+  // const compileLoader = spinner("Compiling project...");
   try {
-    compiledResult = await build(projectPath, projectType);
+    compiledResult = await build(projectPath, projectType, options);
   } catch (e) {
-    compileLoader.fail("Compilation failed");
+    // compileLoader.fail("Compilation failed");
     logger.error(e);
     process.exit(1);
   }
-  compileLoader.succeed("Compilation successful");
+  // compileLoader.succeed("Compilation successful");
 
   let selectedContracts: ContractPayload[] = [];
   if (compiledResult.contracts.length === 1) {
