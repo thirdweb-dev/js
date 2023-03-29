@@ -6,7 +6,6 @@ export type { ThirdwebProviderCoreProps } from "../core/providers/thirdweb-provi
 
 // constants
 export { __DEV__ } from "../core/constants/runtime";
-export { TW_WC_PROJECT_ID } from "../core/constants/wc";
 
 // wallet hooks
 export {
