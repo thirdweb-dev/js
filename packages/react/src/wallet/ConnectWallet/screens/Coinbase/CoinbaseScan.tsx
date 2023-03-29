@@ -1,10 +1,12 @@
-import { CoinbaseWallet } from "../../../wallets";
 import { ScanScreen } from "../ScanScreen";
+import type { CoinbaseWallet } from "@thirdweb-dev/wallets";
 import {
   useCreateWalletInstance,
   useThirdwebWallet,
+  Wallet,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
+import { useSupportedWallet } from "../useSupportedWallet";
 
 export const ScanCoinbase: React.FC<{
   onBack: () => void;
@@ -15,37 +17,40 @@ export const ScanCoinbase: React.FC<{
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>(undefined);
   const twWalletContext = useThirdwebWallet();
   const { onConnected } = props;
+  const coinbaseWalletObj = useSupportedWallet("coinbaseWallet") as Wallet;
 
   useEffect(() => {
     if (!twWalletContext) {
       return;
     }
 
-    const coinbaseWallet = createInstance(CoinbaseWallet) as InstanceType<
-      typeof CoinbaseWallet
-    >;
+    (async () => {
+      const wallet = createInstance(coinbaseWalletObj) as InstanceType<
+        typeof CoinbaseWallet
+      >;
 
-    coinbaseWallet.getQrCode().then((uri) => {
-      setQrCodeUri(uri || undefined);
-    });
-
-    coinbaseWallet
-      .connect({
-        chainId: twWalletContext.chainToConnect?.chainId,
-      })
-      .then(() => {
-        twWalletContext.handleWalletConnect(coinbaseWallet);
-        onConnected();
+      wallet.getQrCode().then((uri) => {
+        setQrCodeUri(uri || undefined);
       });
-  }, [createInstance, twWalletContext, onConnected]);
+
+      wallet
+        .connect({
+          chainId: twWalletContext.chainToConnect?.chainId,
+        })
+        .then(() => {
+          twWalletContext.handleWalletConnect(wallet);
+          onConnected();
+        });
+    })();
+  }, [createInstance, twWalletContext, onConnected, coinbaseWalletObj]);
 
   return (
     <ScanScreen
       onBack={props.onBack}
       onGetStarted={props.onGetStarted}
       qrCodeUri={qrCodeUri}
-      walletName="Coinbase"
-      walletIconURL={CoinbaseWallet.meta.iconURL}
+      walletName={coinbaseWalletObj.meta.name}
+      walletIconURL={coinbaseWalletObj.meta.iconURL}
     />
   );
 };
