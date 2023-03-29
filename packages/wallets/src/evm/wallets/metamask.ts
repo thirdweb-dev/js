@@ -1,11 +1,11 @@
 import { AsyncStorage, createAsyncLocalStorage } from "../../core/AsyncStorage";
 import type { WalletConnectV1Connector as WalletConnectV1ConnectorType } from "../connectors/wallet-connect-v1";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
+import { assertWindowEthereum } from "../utils/assertWindowEthereum";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 
 export type MetamaskWalletOptions = WalletOptions<{
   connectorStorage?: AsyncStorage;
-  isInjected?: boolean;
 }>;
 
 type ConnectWithQrCodeArgs = {
@@ -17,8 +17,8 @@ type ConnectWithQrCodeArgs = {
 export class MetaMask extends AbstractBrowserWallet {
   connector?: TWConnector;
   connectorStorage: AsyncStorage;
-  isInjected?: boolean;
   walletConnectConnector?: WalletConnectV1ConnectorType;
+  isInjected: boolean;
 
   static meta = {
     name: "MetaMask",
@@ -36,7 +36,12 @@ export class MetaMask extends AbstractBrowserWallet {
     super(MetaMask.id, options);
     this.connectorStorage =
       options.connectorStorage || createAsyncLocalStorage("connector");
-    this.isInjected = options.isInjected || false;
+
+    if (assertWindowEthereum(globalThis.window)) {
+      this.isInjected = !!globalThis.window.ethereum?.isMetaMask;
+    } else {
+      this.isInjected = false;
+    }
   }
 
   protected async getConnector(): Promise<TWConnector> {
