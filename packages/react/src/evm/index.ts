@@ -10,7 +10,6 @@ export { ThirdwebProvider } from "./providers/thirdweb-provider";
 
 // wallet/hooks
 export { useInstalledWallets } from "../wallet/hooks/useInstalledWallets";
-export { useIsNonLocalWallet as useWalletRequiresConfirmation } from "../wallet/hooks/useCanSwitchNetwork";
 
 // wallet connection hooks
 export { useMetamask } from "./hooks/wallets/useMetamask";
