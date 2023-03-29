@@ -16,10 +16,8 @@ import {
 } from "../../design-system";
 import { shortenString } from "../../evm/utils/addresses";
 import { isMobile } from "../../evm/utils/isMobile";
-import { DeviceWallet } from "../wallets/deviceWallet";
 import { NetworkSelector } from "./NetworkSelector";
 import { ExitIcon } from "./icons/ExitIcon";
-import { GenericWalletIcon } from "./icons/GenericWalletIcon";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
@@ -77,20 +75,6 @@ export const ConnectedWalletDetails: React.FC<{
 
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
   const [open, setOpen] = useState(false);
-
-  const handleDeviceWalletExport = async () => {
-    const deviceWallet = activeWallet as InstanceType<typeof DeviceWallet>;
-    const walletData = await deviceWallet.getWalletData();
-    if (!walletData) {
-      throw new Error("No wallet data found");
-    }
-
-    downloadAsFile(
-      JSON.parse(walletData.encryptedData),
-      "wallet.json",
-      "application/json",
-    );
-  };
 
   const personalWallet =
     activeWallet?.walletId === "Safe"
@@ -325,24 +309,6 @@ export const ConnectedWalletDetails: React.FC<{
           </MenuLink>
         </div>
       )}
-
-      {/* Export Device Wallet */}
-      {activeWallet?.walletId === "deviceWallet" && (
-        <>
-          <Spacer y="sm" />
-          <MenuButton
-            onClick={handleDeviceWalletExport}
-            style={{
-              fontSize: fontSize.sm,
-            }}
-          >
-            <SecondaryIconContainer>
-              <GenericWalletIcon size={iconSize.sm} />
-            </SecondaryIconContainer>
-            Export Device Wallet{" "}
-          </MenuButton>
-        </>
-      )}
     </div>
   );
 
@@ -538,20 +504,3 @@ const SecondaryIconContainer = styled.div<{ theme?: Theme }>`
   justify-content: center;
   color: ${(props) => props.theme.icon.secondary};
 `;
-
-// utils
-
-function downloadAsFile(data: any, fileName: string, fileType: string) {
-  const blob = new Blob([JSON.stringify(data, null, 2)], {
-    type: fileType,
-  });
-
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = fileName;
-  document.body.appendChild(a);
-  a.style.display = "none";
-  a.click();
-  URL.revokeObjectURL(a.href);
-}

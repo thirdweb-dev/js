@@ -1,18 +1,11 @@
 import type { WalletOptions, Wallet } from "@thirdweb-dev/react-core";
-import { assertWindowEthereum, MetaMask } from "@thirdweb-dev/wallets";
+import { MetaMaskWallet } from "@thirdweb-dev/wallets";
 
 export const metamaskWallet = () => {
-  let isInjected = false;
-  if (assertWindowEthereum(globalThis.window)) {
-    isInjected = !!globalThis.window.ethereum?.isMetaMask;
-  } else {
-    isInjected = false;
-  }
-
   return {
-    id: MetaMask.id,
-    meta: MetaMask.meta,
+    id: MetaMaskWallet.id,
+    meta: MetaMaskWallet.meta,
     create: (options: WalletOptions) =>
-      new MetaMask({ ...options, isInjected }),
+      new MetaMaskWallet({ ...options, qrcode: false }),
   } satisfies Wallet;
 };

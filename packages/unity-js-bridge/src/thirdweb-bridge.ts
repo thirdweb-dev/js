@@ -9,7 +9,7 @@ import { CoinbaseWallet } from "@thirdweb-dev/wallets/evm/wallets/coinbase-walle
 import { DeviceBrowserWallet } from "@thirdweb-dev/wallets/evm/wallets/device-wallet";
 import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
-import { MetaMask } from "@thirdweb-dev/wallets/evm/wallets/metamask";
+import { MetaMaskWallet } from "@thirdweb-dev/wallets/evm/wallets/metamask";
 import { WalletConnect } from "@thirdweb-dev/wallets/evm/wallets/wallet-connect";
 import { BigNumber } from "ethers";
 import type { ContractInterface, Signer } from "ethers";
@@ -42,7 +42,7 @@ const bigNumberReplacer = (_key: string, value: any) => {
 };
 
 const WALLETS = [
-  MetaMask,
+  MetaMaskWallet,
   InjectedWallet,
   WalletConnect,
   CoinbaseWallet,
@@ -131,7 +131,7 @@ class ThirdwebBridge implements TWBridge {
           });
           break;
         case "metamask":
-          walletInstance = new MetaMask({
+          walletInstance = new MetaMaskWallet({
             dappMetadata,
           });
           break;

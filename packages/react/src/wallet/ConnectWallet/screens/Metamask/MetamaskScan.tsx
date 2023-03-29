@@ -6,7 +6,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 
-import type { MetaMask } from "@thirdweb-dev/wallets";
+import type { MetaMaskWallet } from "@thirdweb-dev/wallets";
 import { useSupportedWallet } from "../useSupportedWallet";
 
 export const ScanMetamask: React.FC<{
@@ -25,7 +25,7 @@ export const ScanMetamask: React.FC<{
       return;
     }
 
-    const metamask = createInstance(metamaskWallet) as MetaMask;
+    const metamask = createInstance(metamaskWallet) as MetaMaskWallet;
 
     metamask.connectWithQrCode({
       chainId: twWalletContext.chainToConnect?.chainId,

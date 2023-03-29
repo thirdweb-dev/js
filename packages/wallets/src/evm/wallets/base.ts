@@ -64,7 +64,10 @@ export abstract class AbstractBrowserWallet<
     return address;
   }
 
-  async #connect(isAutoConnect: boolean, connectOptions?: ConnectParams<TConnectParams>) {
+  async #connect(
+    isAutoConnect: boolean,
+    connectOptions?: ConnectParams<TConnectParams>,
+  ) {
     const connector = await this.getConnector();
 
     this.#subscribeToEvents(connector);
