@@ -274,7 +274,7 @@ export class ContractWrapper<
    */
   public async call(
     functionName: string,
-    args: unknown[],
+    args: unknown[] = [],
     overrides?: CallOverrides,
   ): Promise<any> {
     // parse last arg as tx options if present
