@@ -5,11 +5,11 @@ import {
 } from "@3rdweb-sdk/react/hooks/useActiveChainId";
 import { useQueryClient } from "@tanstack/react-query";
 import {
-  CoinbaseWallet,
-  MetamaskWallet,
-  SafeWallet,
   ThirdwebProvider,
-  WalletConnectV1,
+  coinbaseWallet,
+  metamaskWallet,
+  safeWallet,
+  walletConnectV1,
 } from "@thirdweb-dev/react";
 import { DASHBOARD_THIRDWEB_API_KEY } from "constants/rpc";
 import { useConfiguredChains } from "hooks/chains/configureChains";
@@ -62,10 +62,10 @@ export const DashboardThirdwebProvider: ComponentWithChildren<
       }}
       thirdwebApiKey={DASHBOARD_THIRDWEB_API_KEY}
       supportedWallets={[
-        MetamaskWallet,
-        CoinbaseWallet,
-        WalletConnectV1,
-        SafeWallet,
+        metamaskWallet(),
+        coinbaseWallet(),
+        walletConnectV1(),
+        safeWallet(),
       ]}
       storageInterface={StorageSingleton}
     >

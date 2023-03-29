@@ -382,6 +382,6 @@ const Minting: ThirdwebNextPage = () => {
   );
 };
 
-Minting.pageId = PageId.SolutionsCommerce;
+Minting.pageId = PageId.SolutionsMinting;
 
 export default Minting;
