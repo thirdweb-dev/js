@@ -21,14 +21,14 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
   > {
   /**
    * Wallets that will be supported by the dApp
-   * @defaultValue [MetaMaskWallet, CoinbaseWallet, DeviceWallet]
+   * @defaultValue [metamaskWallet(), coinbaseWallet(), walletConnectV1()]
    *
    * @example
    * ```jsx
-   * import { MetamaskWallet, CoinbaseWallet, DeviceWallet } from "@thirdweb-dev/react";
+   * import { metamaskWallet, coinbaseWallet, walletConnectV1 } from "@thirdweb-dev/react";
    *
    * <ThirdwebProvider
-   *  supportedWallets={[MetaMaskWallet, CoinbaseWallet, DeviceWallet]}
+   *  supportedWallets={[metamaskWallet(), coinbaseWallet(), walletConnectV1()]}
    * />
    * ```
    */
