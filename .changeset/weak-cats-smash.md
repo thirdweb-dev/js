@@ -2,4 +2,4 @@
 "thirdweb": patch
 ---
 
-[ReactNativeCLI] Improve template setup
+[ReactNativeCLI] Improve React Native's template setup
