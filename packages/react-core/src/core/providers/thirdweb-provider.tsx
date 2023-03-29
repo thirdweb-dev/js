@@ -2,7 +2,6 @@ import { ThirdwebAuthProvider } from "../../evm/contexts/thirdweb-auth";
 import { useUpdateChainsWithApiKeys } from "../../evm/hooks/chain-hooks";
 import { ThirdwebSDKProvider } from "../../evm/providers/thirdweb-sdk-provider";
 import { ThirdwebSDKProviderProps } from "../../evm/providers/types";
-import { DAppMetaData } from "../types/dAppMeta";
 import { Wallet } from "../types/wallet";
 import { ThirdwebThemeContext } from "./theme-context";
 import {
@@ -13,6 +12,7 @@ import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import {
   createAsyncLocalStorage,
   CreateAsyncStorage,
+  DAppMetaData,
 } from "@thirdweb-dev/wallets";
 import React, { useMemo } from "react";
 
@@ -63,13 +63,6 @@ export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
   autoSwitch?: boolean;
 }
 
-// SDK handles this under the hood for us
-
-const defaultdAppMeta: DAppMetaData = {
-  name: "thirdweb powered dApp",
-  url: "https://thirdweb.com",
-};
-
 export const ThirdwebProviderCore = <TChains extends Chain[]>({
   createWalletStorage = createAsyncLocalStorage,
   ...props
@@ -102,7 +95,7 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
     return activeChainIdOrObjWithKey;
   }, [activeChainIdOrObjWithKey, supportedChainsWithKey]);
 
-  const dAppMeta = props.dAppMeta || defaultdAppMeta;
+  const dAppMeta = props.dAppMeta;
 
   return (
     <ThirdwebThemeContext.Provider value={props.theme}>

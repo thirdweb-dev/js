@@ -11,9 +11,8 @@ export type ExtraCoreWalletOptions = {
 
 export type WalletOptions = {
   chains: Chain[];
-  shouldAutoConnect?: boolean;
   walletId?: string;
-  dappMetadata: DAppMetaData;
+  dappMetadata?: DAppMetaData;
 } & ExtraCoreWalletOptions;
 
 export type WalletInstance = InstanceType<typeof AbstractBrowserWallet>;

@@ -33,12 +33,16 @@ export class CoinbaseWallet extends AbstractBrowserWallet<CoinbaseWalletConnecto
     return "Coinbase Wallet" as const;
   }
 
+  callbackURL: URL;
+
   constructor(options: CoinbaseWalletOptions) {
     super(CoinbaseWallet.id, {
       ...options,
       walletStorage: new noopStorage(),
       walletId: "coinbase",
     });
+
+    this.callbackURL = options.callbackURL;
   }
 
   protected async getConnector(): Promise<TWConnector> {
@@ -52,6 +56,7 @@ export class CoinbaseWallet extends AbstractBrowserWallet<CoinbaseWalletConnecto
         chains: this.chains,
         options: {
           ...this.options,
+          callbackURL: this.callbackURL
         },
       });
 

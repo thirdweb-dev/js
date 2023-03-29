@@ -68,7 +68,7 @@ export function ThirdwebWalletProvider(
     supportedWallets: Wallet[];
     shouldAutoConnect?: boolean;
     createWalletStorage: CreateAsyncStorage;
-    dAppMeta: DAppMetaData;
+    dAppMeta?: DAppMetaData;
     chains: Chain[];
     autoSwitch?: boolean;
   }>,
@@ -94,7 +94,6 @@ export function ThirdwebWalletProvider(
     const walletChains = props.chains;
     const walletOptions = {
       chains: walletChains,
-      shouldAutoConnect: props.shouldAutoConnect,
       dappMetadata: props.dAppMeta,
     };
 
@@ -105,7 +104,6 @@ export function ThirdwebWalletProvider(
     };
   }, [
     props.chains,
-    props.shouldAutoConnect,
     props.dAppMeta,
     props.activeChain,
     theme,
