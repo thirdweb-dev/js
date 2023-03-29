@@ -35,7 +35,7 @@ export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
     super(options?.walletId || WalletConnect.id, options);
 
     this.projectId = options?.projectId || TW_WC_PROJECT_ID;
-    this.qrcode = options?.qrcode || true;
+    this.qrcode = options?.qrcode === false ? false : true;
   }
 
   protected async getConnector(): Promise<TWConnector> {
