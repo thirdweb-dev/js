@@ -5,6 +5,7 @@ export const metamaskWallet = () => {
   return {
     id: MetaMaskWallet.id,
     meta: MetaMaskWallet.meta,
-    create: (options: WalletOptions) => new MetaMaskWallet({ ...options }),
+    create: (options: WalletOptions) =>
+      new MetaMaskWallet({ ...options, qrcode: false }),
   } satisfies Wallet;
 };
