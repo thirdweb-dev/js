@@ -2,7 +2,7 @@ import { SmartContract, Token } from "../../src/evm";
 import { sdk, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { TokenERC20__factory } from "@thirdweb-dev/contracts-js";
-import { getContract, getContractFromAbi } from "@thirdweb-dev/sdk";
+import { getContract, getContractFromAbi } from "../../src";
 import { expect } from "chai";
 
 describe("Functions", async () => {
@@ -22,7 +22,7 @@ describe("Functions", async () => {
       abi: TokenERC20__factory.abi,
       network: adminWallet,
     });
-    const balance = await contract.call("balanceOf", adminWallet.address);
+    const balance = await contract.call("balanceOf", [adminWallet.address]);
     expect(balance.toString()).to.equal("0");
   });
 

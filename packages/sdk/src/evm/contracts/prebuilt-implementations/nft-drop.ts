@@ -615,7 +615,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
     functionName: string & TMethod,
     // @ts-expect-error We intentionally set [] as default so args isn't required for functions with no params, but it is otherwise
     args: Parameters<PrebuiltNFTDrop["functions"][TMethod]> = [],
-    overrides: CallOverrides,
+    overrides?: CallOverrides,
   ): Promise<any> {
     return this.contractWrapper.call(functionName, args, overrides);
   }

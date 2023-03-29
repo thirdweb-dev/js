@@ -510,7 +510,7 @@ export class Vote implements UpdateableNetwork {
     functionName: string & TMethod,
     // @ts-expect-error We intentionally set [] as default so args isn't required for functions with no params, but it is otherwise
     args: Parameters<VoteERC20["functions"][TMethod]> = [],
-    overrides: CallOverrides,
+    overrides?: CallOverrides,
   ): Promise<any> {
     return this.contractWrapper.call(functionName, args, overrides);
   }

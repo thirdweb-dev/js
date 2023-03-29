@@ -316,7 +316,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
     functionName: string & TMethod,
     // @ts-expect-error We intentionally set [] as default so args isn't required for functions with no params, but it is otherwise
     args: Parameters<PrebuiltTokenDrop["functions"][TMethod]> = [],
-    overrides: CallOverrides,
+    overrides?: CallOverrides,
   ): Promise<any> {
     return this.contractWrapper.call(functionName, args, overrides);
   }

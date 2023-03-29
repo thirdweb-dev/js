@@ -788,7 +788,7 @@ export class Pack extends StandardErc1155<PackContract> {
     functionName: string & TMethod,
     // @ts-expect-error We intentionally set [] as default so args isn't required for functions with no params, but it is otherwise
     args: any[] & Parameters<PackContract["functions"][TMethod]> = [],
-    overrides: CallOverrides,
+    overrides?: CallOverrides,
   ): Promise<any> {
     return this.contractWrapper.call(functionName, args, overrides);
   }
