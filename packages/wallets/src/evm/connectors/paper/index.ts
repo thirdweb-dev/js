@@ -124,6 +124,17 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
       return this.#signer;
     }
 
+    if (!this.user) {
+      const paperSDK = await this.getPaperSDK();
+      let user = await paperSDK.getUser();
+      switch (user.status) {
+        case UserStatus.LOGGED_IN_WALLET_INITIALIZED: {
+          this.user = user;
+          break;
+        }
+      }
+    }
+
     const signer = await this.user?.wallet.getEthersJsSigner({
       rpcEndpoint: this.options.chain.rpc[0],
     });
