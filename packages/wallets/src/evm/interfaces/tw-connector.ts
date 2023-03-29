@@ -20,6 +20,7 @@ export abstract class TWConnector<
 export type ConnectParams<TOpts extends Record<string, any> = {}> = {
   chainId?: number;
   saveParams?: boolean;
+  isAutoConnect?: boolean;
 } & TOpts;
 
 export class WagmiAdapter<
