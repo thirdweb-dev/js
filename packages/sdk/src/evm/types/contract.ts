@@ -58,7 +58,7 @@ export type ExtractFunctionOutputsType<
   TFunctionName extends TAbiFunctionNames<TAbi>,
 > = ExtractArrayElement<
   // @ts-expect-error
-  AbiParametersToPrimitiveTypes<ExtractFunctionOutputs<TFunctionName>>
+  AbiParametersToPrimitiveTypes<ExtractFunctionOutputs<TAbi, TFunctionName>>
 >;
 
 export type ExtractFunctionType<
@@ -66,7 +66,7 @@ export type ExtractFunctionType<
   TFunctionName extends TAbiFunctionNames<TAbi>,
 > = (
   // @ts-expect-error
-  ...args: ExtractFunctionInputsType<TFunctionName>
+  ...args: ExtractFunctionInputsType<TAbi, TFunctionName>
 ) => ExtractFunctionOutputsType<TAbi, TFunctionName>;
 
 export type ContractFunctionsFromAbi<TAbi extends Abi> = {
