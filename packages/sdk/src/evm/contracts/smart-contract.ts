@@ -381,14 +381,10 @@ export class SmartContract<
     TMethod extends keyof TContract["functions"] = keyof TContract["functions"],
   >(
     functionName: string & TMethod,
-    ...args:
-      | (any[] & Parameters<TContract["functions"][TMethod]>)
-      | [
-          ...(any[] & Parameters<TContract["functions"][TMethod]>),
-          CallOverrides,
-        ]
+    args: any[] & Parameters<TContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
   ): Promise<ReturnType<TContract["functions"][TMethod]>> {
-    return this.contractWrapper.call(functionName, ...args);
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 
   /** ********************

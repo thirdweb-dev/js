@@ -786,14 +786,10 @@ export class Pack extends StandardErc1155<PackContract> {
     TMethod extends keyof PackContract["functions"] = keyof PackContract["functions"],
   >(
     functionName: string & TMethod,
-    ...args:
-      | (any[] & Parameters<PackContract["functions"][TMethod]>)
-      | [
-          ...(any[] & Parameters<PackContract["functions"][TMethod]>),
-          CallOverrides,
-        ]
+    args: any[] & Parameters<PackContract["functions"][TMethod]>,
+    overrides: CallOverrides,
   ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 
   private detectVrf() {

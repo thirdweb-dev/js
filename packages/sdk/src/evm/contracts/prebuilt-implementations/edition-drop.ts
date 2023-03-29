@@ -414,13 +414,9 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
     TMethod extends keyof PrebuiltEditionDrop["functions"] = keyof PrebuiltEditionDrop["functions"],
   >(
     functionName: string & TMethod,
-    ...args:
-      | (any[] & Parameters<PrebuiltEditionDrop["functions"][TMethod]>)
-      | [
-          ...(any[] & Parameters<PrebuiltEditionDrop["functions"][TMethod]>),
-          CallOverrides,
-        ]
+    args: any[] & Parameters<PrebuiltEditionDrop["functions"][TMethod]>,
+    overrides?: CallOverrides,
   ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 }

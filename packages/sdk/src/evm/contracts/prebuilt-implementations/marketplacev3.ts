@@ -273,14 +273,10 @@ export class MarketplaceV3 implements UpdateableNetwork {
     TMethod extends keyof MarketplaceV3Contract["functions"] = keyof MarketplaceV3Contract["functions"],
   >(
     functionName: string & TMethod,
-    ...args:
-      | (any[] & Parameters<MarketplaceV3Contract["functions"][TMethod]>)
-      | [
-          ...(any[] & Parameters<MarketplaceV3Contract["functions"][TMethod]>),
-          CallOverrides,
-        ]
+    args: any[] & Parameters<MarketplaceV3Contract["functions"][TMethod]>,
+    overrides: CallOverrides,
   ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 
   /** ********************
