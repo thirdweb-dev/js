@@ -381,7 +381,8 @@ export class SmartContract<
     TMethod extends keyof TContract["functions"] = keyof TContract["functions"],
   >(
     functionName: string & TMethod,
-    args?: Parameters<TContract["functions"][TMethod]>,
+    // @ts-expect-error We intentionally set [] as default so args isn't required for functions with no params, but it is otherwise
+    args: Parameters<TContract["functions"][TMethod]> = [],
     overrides?: CallOverrides,
   ): Promise<ReturnType<TContract["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, args, overrides);

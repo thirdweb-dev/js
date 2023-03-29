@@ -273,7 +273,8 @@ export class MarketplaceV3 implements UpdateableNetwork {
     TMethod extends keyof MarketplaceV3Contract["functions"] = keyof MarketplaceV3Contract["functions"],
   >(
     functionName: string & TMethod,
-    args: any[] & Parameters<MarketplaceV3Contract["functions"][TMethod]>,
+    // @ts-expect-error We intentionally set [] as default so args isn't required for functions with no params, but it is otherwise
+    args: Parameters<MarketplaceV3Contract["functions"][TMethod]> = [],
     overrides: CallOverrides,
   ): Promise<any> {
     return this.contractWrapper.call(functionName, args, overrides);

@@ -423,7 +423,8 @@ export class Split implements UpdateableNetwork {
     TMethod extends keyof SplitContract["functions"] = keyof SplitContract["functions"],
   >(
     functionName: string & TMethod,
-    args: any[] & Parameters<SplitContract["functions"][TMethod]>,
+    // @ts-expect-error We intentionally set [] as default so args isn't required for functions with no params, but it is otherwise
+    args: Parameters<SplitContract["functions"][TMethod]> = [],
     overrides: CallOverrides,
   ): Promise<any> {
     return this.contractWrapper.call(functionName, args, overrides);

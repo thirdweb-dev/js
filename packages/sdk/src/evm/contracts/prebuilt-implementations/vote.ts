@@ -508,7 +508,8 @@ export class Vote implements UpdateableNetwork {
     TMethod extends keyof VoteERC20["functions"] = keyof VoteERC20["functions"],
   >(
     functionName: string & TMethod,
-    args: any[] & Parameters<VoteERC20["functions"][TMethod]>,
+    // @ts-expect-error We intentionally set [] as default so args isn't required for functions with no params, but it is otherwise
+    args: Parameters<VoteERC20["functions"][TMethod]> = [],
     overrides: CallOverrides,
   ): Promise<any> {
     return this.contractWrapper.call(functionName, args, overrides);

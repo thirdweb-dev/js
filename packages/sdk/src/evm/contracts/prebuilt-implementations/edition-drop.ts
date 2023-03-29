@@ -414,7 +414,8 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
     TMethod extends keyof PrebuiltEditionDrop["functions"] = keyof PrebuiltEditionDrop["functions"],
   >(
     functionName: string & TMethod,
-    args: any[] & Parameters<PrebuiltEditionDrop["functions"][TMethod]>,
+    // @ts-expect-error We intentionally set [] as default so args isn't required for functions with no params, but it is otherwise
+    args: Parameters<PrebuiltEditionDrop["functions"][TMethod]> = [],
     overrides?: CallOverrides,
   ): Promise<any> {
     return this.contractWrapper.call(functionName, args, overrides);
