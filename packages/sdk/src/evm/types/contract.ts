@@ -78,9 +78,7 @@ export type ContractFunctionsFromAbi<TAbi extends Abi> = {
 
 // @ts-expect-error
 export interface BaseContractInterface<
-  TFunctions extends { [name: string]: Function } = {
-    [name: string]: ContractFunction;
-  },
+  TFunctions extends { [name: string]: Function },
 > extends BaseContract {
   readonly functions: TFunctions;
 }
