@@ -16,7 +16,7 @@ import {
 } from "../../design-system";
 import { shortenString } from "../../evm/utils/addresses";
 import { isMobile } from "../../evm/utils/isMobile";
-import { DeviceWallet } from "../wallets";
+import { DeviceWallet } from "../wallets/deviceWallet";
 import { NetworkSelector } from "./NetworkSelector";
 import { ExitIcon } from "./icons/ExitIcon";
 import { GenericWalletIcon } from "./icons/GenericWalletIcon";
@@ -36,7 +36,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useEffect, useMemo, useState } from "react";
 import { fadeInAnimation } from "../../components/FadeIn";
-import { SafeWallet } from "../wallets";
+import type { SafeWallet } from "@thirdweb-dev/wallets";
 import { Flex } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
 import { utils } from "ethers";
