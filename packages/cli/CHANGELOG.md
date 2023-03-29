@@ -1,5 +1,43 @@
 # thirdweb
 
+## 0.10.4
+
+### Patch Changes
+
+- [#757](https://github.com/thirdweb-dev/js/pull/757) [`9ea43969`](https://github.com/thirdweb-dev/js/commit/9ea439692da94f84297bf6a9d04487a1cb74796d) Thanks [@iketw](https://github.com/iketw)! - switch to `thirdwebcdn.com` for default IPFS gateway
+
+- [#794](https://github.com/thirdweb-dev/js/pull/794) [`a6fce0f6`](https://github.com/thirdweb-dev/js/commit/a6fce0f691ffeb2b7ec1355b1c55fa7e58700406) Thanks [@shift4id](https://github.com/shift4id)! - Improved install command
+
+- [#702](https://github.com/thirdweb-dev/js/pull/702) [`33d1cc7f`](https://github.com/thirdweb-dev/js/commit/33d1cc7f92cd982e9e55130472c0006bb999f682) Thanks [@jnsdls](https://github.com/jnsdls)! - enable `browser` export
+
+- [#677](https://github.com/thirdweb-dev/js/pull/677) [`b3eb309c`](https://github.com/thirdweb-dev/js/commit/b3eb309c1ef884f5639b0ecf28795671a1a4dcb6) Thanks [@shift4id](https://github.com/shift4id)! - Add `npx thirdweb install` command
+
+- [#765](https://github.com/thirdweb-dev/js/pull/765) [`92d19070`](https://github.com/thirdweb-dev/js/commit/92d190709b8d516690eca26c97f3e84809121b60) Thanks [@adam-maj](https://github.com/adam-maj)! - Use correct cache and handle download errors
+
+- [#721](https://github.com/thirdweb-dev/js/pull/721) [`1baed0b1`](https://github.com/thirdweb-dev/js/commit/1baed0b1d83b4c92dac44430af5436d04727d92f) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for thirdweb generate
+
+- [#804](https://github.com/thirdweb-dev/js/pull/804) [`a9618d9b`](https://github.com/thirdweb-dev/js/commit/a9618d9bca0e6bfcbb21eda85424f0fff9799fe1) Thanks [@jnsdls](https://github.com/jnsdls)! - improve compatibility and information provided in `install` command
+
+- [#739](https://github.com/thirdweb-dev/js/pull/739) [`4d5fdda9`](https://github.com/thirdweb-dev/js/commit/4d5fdda907af0451507d5e2812ec91fbd513a11c) Thanks [@jnsdls](https://github.com/jnsdls)! - Drop support for node 14
+
+- [#820](https://github.com/thirdweb-dev/js/pull/820) [`08507611`](https://github.com/thirdweb-dev/js/commit/085076117b18a615aa2b1b8f086d434cab3a4e4e) Thanks [@adam-maj](https://github.com/adam-maj)! - Add magical types for thirdweb generate
+
+- [#763](https://github.com/thirdweb-dev/js/pull/763) [`43d8a65e`](https://github.com/thirdweb-dev/js/commit/43d8a65e1dcb306ee7d8fd5fd33b82f7ce6275a9) Thanks [@iketw](https://github.com/iketw)! - [CreateApp] Add expo as an option to creating a React Native app
+
+- [#751](https://github.com/thirdweb-dev/js/pull/751) [`efff9cfd`](https://github.com/thirdweb-dev/js/commit/efff9cfda09499cc471d375d33b1e0b2317708ec) Thanks [@jnsdls](https://github.com/jnsdls)! - remove `tslog` in favor of a basic logger
+
+- [#768](https://github.com/thirdweb-dev/js/pull/768) [`923b9ead`](https://github.com/thirdweb-dev/js/commit/923b9ead3d34397685cfb422fdc3a46ab6741e5e) Thanks [@adam-maj](https://github.com/adam-maj)! - thirdweb create renames contract
+
+- [#767](https://github.com/thirdweb-dev/js/pull/767) [`9fa628f8`](https://github.com/thirdweb-dev/js/commit/9fa628f89492633e4f7ea2b7c542e1587ea17a86) Thanks [@adam-maj](https://github.com/adam-maj)! - Make generate work with useContract
+
+- [#716](https://github.com/thirdweb-dev/js/pull/716) [`17a03e94`](https://github.com/thirdweb-dev/js/commit/17a03e94d274f8c2948bd62f0317068494dc8e1c) Thanks [@iketw](https://github.com/iketw)! - [ReactNativeCLI] Improve React Native's template setup
+
+- [#806](https://github.com/thirdweb-dev/js/pull/806) [`6ea5eea1`](https://github.com/thirdweb-dev/js/commit/6ea5eea1d888a2fce5fada5f62fd9edc72aea500) Thanks [@shift4id](https://github.com/shift4id)! - Improve build times for foundry and hardhat
+
+- Updated dependencies [[`6e9b9dba`](https://github.com/thirdweb-dev/js/commit/6e9b9dba1dfb9e828e6927f441e7223baa5bcc76), [`a6fce0f6`](https://github.com/thirdweb-dev/js/commit/a6fce0f691ffeb2b7ec1355b1c55fa7e58700406), [`9ea43969`](https://github.com/thirdweb-dev/js/commit/9ea439692da94f84297bf6a9d04487a1cb74796d), [`2ec28021`](https://github.com/thirdweb-dev/js/commit/2ec2802119a3c375a1adaed1263ae1eae1384865), [`805896c7`](https://github.com/thirdweb-dev/js/commit/805896c78d5ecbbe1866408fbb73d060f7404146), [`b56511e2`](https://github.com/thirdweb-dev/js/commit/b56511e22d5eb2adf306d5675f1e52ff97a64f3a), [`8ef5a6f2`](https://github.com/thirdweb-dev/js/commit/8ef5a6f21735e6ac235937f6c34495a74c9da364), [`4cbbad98`](https://github.com/thirdweb-dev/js/commit/4cbbad98b303d872c09efedbece179445c7adc9c), [`5f0493d0`](https://github.com/thirdweb-dev/js/commit/5f0493d0fb291b4072cc433412883d352588c397), [`71532e5a`](https://github.com/thirdweb-dev/js/commit/71532e5a9fb5b116ba342465ef82e795ca8cc011), [`33d1cc7f`](https://github.com/thirdweb-dev/js/commit/33d1cc7f92cd982e9e55130472c0006bb999f682), [`de7b6196`](https://github.com/thirdweb-dev/js/commit/de7b6196766d709deeac148a24dd8dd38b3e924a), [`1baed0b1`](https://github.com/thirdweb-dev/js/commit/1baed0b1d83b4c92dac44430af5436d04727d92f), [`52d37f01`](https://github.com/thirdweb-dev/js/commit/52d37f01873c649b36c7d77df6c525a666245132), [`485abd06`](https://github.com/thirdweb-dev/js/commit/485abd06aa972a4f43f71b98f9666f113b932fb3), [`682f1c67`](https://github.com/thirdweb-dev/js/commit/682f1c673f4b02acab3986031942dbd3d67a87fa), [`d8c1c943`](https://github.com/thirdweb-dev/js/commit/d8c1c9433e8dc48a70a1c93a0c1467c12ad79701), [`08507611`](https://github.com/thirdweb-dev/js/commit/085076117b18a615aa2b1b8f086d434cab3a4e4e), [`8463a176`](https://github.com/thirdweb-dev/js/commit/8463a1761ff4741b55a72e6994a29f7dd50b54e1), [`e47ceafe`](https://github.com/thirdweb-dev/js/commit/e47ceafeae950c22860ca4c7dffba7d573e04a94), [`208d97e6`](https://github.com/thirdweb-dev/js/commit/208d97e6a892942171c056768876b3e33399d275), [`5c7c0923`](https://github.com/thirdweb-dev/js/commit/5c7c0923e45b3f0ee27c83a9c4c691ce9bbb8539), [`ba9f593b`](https://github.com/thirdweb-dev/js/commit/ba9f593be8e10289040b466bdcf98ff251f412a3), [`9fa628f8`](https://github.com/thirdweb-dev/js/commit/9fa628f89492633e4f7ea2b7c542e1587ea17a86), [`abf609a4`](https://github.com/thirdweb-dev/js/commit/abf609a40114a509fe07a04bfb0793dc44c9e39d)]:
+  - @thirdweb-dev/sdk@3.10.4
+  - @thirdweb-dev/storage@1.1.1
+
 ## 0.10.3
 
 ### Patch Changes
