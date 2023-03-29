@@ -359,8 +359,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
     TMethod extends keyof TokenERC721["functions"] = keyof TokenERC721["functions"],
   >(
     functionName: string & TMethod,
-    // @ts-expect-error We intentionally set [] as default so args isn't required for functions with no params, but it is otherwise
-    args: Parameters<TokenERC721["functions"][TMethod]> = [],
+    args?: Parameters<TokenERC721["functions"][TMethod]>,
     overrides?: CallOverrides,
   ): Promise<any> {
     return this.contractWrapper.call(functionName, args, overrides);

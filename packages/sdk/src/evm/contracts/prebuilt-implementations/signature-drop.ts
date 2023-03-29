@@ -509,8 +509,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     TMethod extends keyof SignatureDropContract["functions"] = keyof SignatureDropContract["functions"],
   >(
     functionName: string & TMethod,
-    // @ts-expect-error We intentionally set [] as default so args isn't required for functions with no params, but it is otherwise
-    args: Parameters<SignatureDropContract["functions"][TMethod]> = [],
+    args?: Parameters<SignatureDropContract["functions"][TMethod]>,
     overrides?: CallOverrides,
   ): Promise<any> {
     return this.contractWrapper.call(functionName, args, overrides);

@@ -416,8 +416,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
     TMethod extends keyof TokenERC1155["functions"] = keyof TokenERC1155["functions"],
   >(
     functionName: string & TMethod,
-    // @ts-expect-error We intentionally set [] as default so args isn't required for functions with no params, but it is otherwise
-    args: Parameters<TokenERC1155["functions"][TMethod]> = [],
+    args?: Parameters<TokenERC1155["functions"][TMethod]>,
     overrides?: CallOverrides,
   ): Promise<any> {
     return this.contractWrapper.call(functionName, args, overrides);

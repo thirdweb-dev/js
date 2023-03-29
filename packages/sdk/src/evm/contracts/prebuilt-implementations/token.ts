@@ -323,8 +323,7 @@ export class Token extends StandardErc20<TokenERC20> {
     TMethod extends keyof TokenERC20["functions"] = keyof TokenERC20["functions"],
   >(
     functionName: string & TMethod,
-    // @ts-expect-error We intentionally set [] as default so args isn't required for functions with no params, but it is otherwise
-    args: Parameters<TokenERC20["functions"][TMethod]> = [],
+    args?: Parameters<TokenERC20["functions"][TMethod]>,
     overrides?: CallOverrides,
   ): Promise<any> {
     return this.contractWrapper.call(functionName, args, overrides);
