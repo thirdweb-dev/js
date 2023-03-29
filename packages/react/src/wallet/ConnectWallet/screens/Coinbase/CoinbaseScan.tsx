@@ -29,7 +29,7 @@ export const ScanCoinbase: React.FC<{
         typeof CoinbaseWallet
       >;
 
-      wallet.getQrCode().then((uri) => {
+      wallet.getQrUrl().then((uri) => {
         setQrCodeUri(uri || undefined);
       });
 
