@@ -268,7 +268,7 @@ export const BuildSection: React.FC = () => {
                 color="whiteAlpha.700"
                 textAlign={{ base: "center", md: "left" }}
               >
-                Javascrip. React. React Native. Python. Go. Unity. C#.
+                JavaScript. React. React Native. Python. Go. Unity. C#.
                 <br />
                 Platform support includes native, mobile, console, browser, and
                 VR.
