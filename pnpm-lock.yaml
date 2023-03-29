@@ -663,6 +663,7 @@ importers:
       '@thirdweb-dev/contracts-js': link:../contracts-js
       '@thirdweb-dev/generated-abis': link:../generated-abis
       '@thirdweb-dev/storage': link:../storage
+      abitype: 0.2.5_wnc3eutrhvkpx2b7oumqzgx5he
       bn.js: 5.2.1
       bs58: 5.0.0
       buffer: 6.0.3
@@ -702,7 +703,6 @@ importers:
       '@types/uuid': 9.0.1
       '@typescript-eslint/eslint-plugin': 5.55.0_342y7v4tc7ytrrysmit6jo4wri
       '@typescript-eslint/parser': 5.55.0_vgl77cfdswitgr47lm5swmv43m
-      abitype: 0.2.5_wnc3eutrhvkpx2b7oumqzgx5he
       chai: 4.3.7
       deep-equal-in-any-order: 1.1.20
       eslint: 8.36.0
@@ -10675,7 +10675,7 @@ packages:
     dependencies:
       typescript: 4.9.5
       zod: 3.21.4
-    dev: true
+    dev: false
 
   /abort-controller/3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
@@ -27569,6 +27569,7 @@ packages:
 
   /zod/3.21.4:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
+    dev: false
 
   github.com/Bundlr-Network/avsc/a730cc8018b79e114b6a3381bbb57760a24c6cef:
     resolution: {tarball: https://codeload.github.com/Bundlr-Network/avsc/tar.gz/a730cc8018b79e114b6a3381bbb57760a24c6cef}
