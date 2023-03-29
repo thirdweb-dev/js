@@ -8,11 +8,9 @@ if (typeof window !== "undefined") {
   window.Buffer = Buffer;
 }
 
-export type CoinbaseWalletOptions = WalletOptions<{ theme?: "light" | "dark" }>;
+export type CoinbaseWalletOptions = WalletOptions<{}>;
 
-export class CoinbaseWallet extends AbstractBrowserWallet<{
-  theme?: "light" | "dark";
-}> {
+export class CoinbaseWallet extends AbstractBrowserWallet {
   connector?: TWConnector;
   coinbaseConnector?: CoinbaseWalletConnector;
   static meta = {
@@ -42,7 +40,7 @@ export class CoinbaseWallet extends AbstractBrowserWallet<{
         options: {
           appName: this.options.dappMetadata.name,
           reloadOnDisconnect: false,
-          darkMode: this.options.theme === "dark",
+          darkMode: this.options.dappMetadata.isDarkMode,
           headlessMode: true,
         },
       });

@@ -3,7 +3,7 @@ import { useUpdateChainsWithApiKeys } from "../../evm/hooks/chain-hooks";
 import { ThirdwebSDKProvider } from "../../evm/providers/thirdweb-sdk-provider";
 import { ThirdwebSDKProviderProps } from "../../evm/providers/types";
 import { DAppMetaData } from "../types/dAppMeta";
-import { SupportedWallet } from "../types/wallet";
+import { Wallet } from "../types/wallet";
 import { ThirdwebThemeContext } from "./theme-context";
 import {
   ThirdwebWalletProvider,
@@ -40,7 +40,7 @@ export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
    * };
    * ```
    */
-  supportedWallets: SupportedWallet[];
+  supportedWallets: Wallet[];
 
   /**
    * Metadata to pass to wallet connect and walletlink wallet connect. (Used to show *which* dApp is being connected to in mobile wallets that support it)
