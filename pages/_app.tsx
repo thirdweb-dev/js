@@ -117,7 +117,8 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
     const path = router.asPath
       .replace("/evm/", "/")
       .replace("/solana/", "/")
-      .replace("/chain/", "/");
+      .replace("/chain/", "/")
+      .replace("/publish/", "/");
     return `${base}${path}`;
   }, [router.asPath]);
 
@@ -227,7 +228,7 @@ const ConsoleApp = memo(function ConsoleApp({
           site: "@thirdweb",
           cardType: "summary_large_image",
         }}
-        canonical={seoCanonical}
+        canonical={isFallback ? undefined : seoCanonical}
       />
 
       <ChakraProvider theme={chakraThemeWithFonts}>
