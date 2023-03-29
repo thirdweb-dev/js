@@ -1,17 +1,84 @@
 import { ContractAddress, GENERATED_ABI } from "@thirdweb-dev/generated-abis";
-import { ExtractAbiFunctionNames, ExtractAbiFunctions, Abi } from "abitype";
-import type { BaseContract, ContractFunction } from "ethers";
+import {
+  ExtractAbiFunctionNames,
+  Abi,
+  AbiParametersToPrimitiveTypes,
+  ExtractAbiFunction,
+} from "abitype";
+import type { BaseContract, BigNumberish, ContractFunction } from "ethers";
+
+declare module "abitype" {
+  export interface Config {
+    AddressType: string;
+    BytesType: {
+      inputs: string;
+      outputs: string;
+    };
+    BigIntType: BigNumberish;
+    IntType: BigNumberish;
+  }
+}
 
 type ExtractAbiForContract<TAddress extends ContractAddress> =
   (typeof GENERATED_ABI)[TAddress];
 
-type ContractFunctionsFromAbi<TAbi extends Abi> = Record<
-  ExtractAbiFunctionNames<TAbi>,
-  ExtractAbiFunctions<TAbi>
+type TAbiFunctionNames<TAbi extends Abi> = ExtractAbiFunctionNames<TAbi>;
+
+type ExtractFunction<
+  TAbi extends Abi,
+  TFunctionName extends TAbiFunctionNames<TAbi>,
+> = ExtractAbiFunction<TAbi, TFunctionName>;
+
+type ExtractFunctionInputs<
+  TAbi extends Abi,
+  TFunctionName extends TAbiFunctionNames<TAbi>,
+> = ExtractFunction<TAbi, TFunctionName>["inputs"];
+
+type ExtractFunctionOutputs<
+  TAbi extends Abi,
+  TFunctionName extends TAbiFunctionNames<TAbi>,
+> = ExtractFunction<TAbi, TFunctionName>["outputs"];
+
+type ExtractFunctionInputsType<
+  TAbi extends Abi,
+  TFunctionName extends TAbiFunctionNames<TAbi>,
+> = AbiParametersToPrimitiveTypes<ExtractFunctionInputs<TAbi, TFunctionName>>;
+
+type ExtractArrayElement<TArray extends Array<any>> = TArray extends [
+  infer TElement,
+  ...infer TRest,
+]
+  ? TRest extends []
+    ? TElement
+    : TArray
+  : never;
+
+type ExtractFunctionOutputsType<
+  TAbi extends Abi,
+  TFunctionName extends TAbiFunctionNames<TAbi>,
+> = ExtractArrayElement<
+  // @ts-expect-error
+  AbiParametersToPrimitiveTypes<ExtractFunctionOutputs<TFunctionName>>
 >;
 
+type ExtractFunctionType<
+  TAbi extends Abi,
+  TFunctionName extends TAbiFunctionNames<TAbi>,
+> = (
+  // @ts-expect-error
+  ...args: ExtractFunctionInputsType<TFunctionName>
+) => ExtractFunctionOutputsType<TAbi, TFunctionName>;
+
+type ContractFunctionsFromAbi<TAbi extends Abi> = {
+  [TFunctionName in TAbiFunctionNames<TAbi>]: ExtractFunctionType<
+    TAbi,
+    TFunctionName
+  >;
+};
+
+// @ts-expect-error
 export interface BaseContractInterface<
-  TFunctions extends { [name: string]: ContractFunction } = {
+  TFunctions extends { [name: string]: Function } = {
     [name: string]: ContractFunction;
   },
 > extends BaseContract {

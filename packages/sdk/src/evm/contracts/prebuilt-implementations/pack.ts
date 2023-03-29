@@ -787,9 +787,9 @@ export class Pack extends StandardErc1155<PackContract> {
   >(
     functionName: string & TMethod,
     ...args:
-      | (any[] & Parameters<PackContract["functions"][TMethod]>)[]
+      | (any[] & Parameters<PackContract["functions"][TMethod]>)
       | [
-          ...(any[] & Parameters<PackContract["functions"][TMethod]>)[],
+          ...(any[] & Parameters<PackContract["functions"][TMethod]>),
           CallOverrides,
         ]
   ): Promise<any> {

@@ -382,12 +382,12 @@ export class SmartContract<
   >(
     functionName: string & TMethod,
     ...args:
-      | (any[] & Parameters<TContract["functions"][TMethod]>)[]
+      | (any[] & Parameters<TContract["functions"][TMethod]>)
       | [
-          ...(any[] & Parameters<TContract["functions"][TMethod]>)[],
+          ...(any[] & Parameters<TContract["functions"][TMethod]>),
           CallOverrides,
         ]
-  ): Promise<any> {
+  ): Promise<ReturnType<TContract["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, ...args);
   }
 
