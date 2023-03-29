@@ -42,7 +42,6 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
   constructor(options: WalletOptions<DeviceWalletOptions>) {
     super(DeviceBrowserWallet.id, {
       ...options,
-      shouldAutoConnect: false, // TODO figure the autoconnect flow
     });
     this.options = options;
   }

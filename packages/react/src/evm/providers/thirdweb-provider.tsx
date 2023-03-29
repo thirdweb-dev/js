@@ -74,7 +74,7 @@ export const ThirdwebProvider = <
           supportedWallets={
             supportedWallets || [
               metamaskWallet(),
-              coinbaseWallet(),
+              coinbaseWallet({headlessMode: true}),
               walletConnectV1(),
             ]
           }

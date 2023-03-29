@@ -66,10 +66,10 @@ export class MetaMask extends AbstractBrowserWallet {
           storage: this.connectorStorage,
           options: {
             clientMeta: {
-              name: this.options.dappMetadata.name,
-              description: this.options.dappMetadata.description || "",
-              url: this.options.dappMetadata.url,
-              icons: [],
+              name: this.dappMetadata.name,
+              description: this.dappMetadata.description || "",
+              url: this.dappMetadata.url,
+              icons: [this.dappMetadata.logoUrl || ""],
             },
             qrcode: false,
           },
