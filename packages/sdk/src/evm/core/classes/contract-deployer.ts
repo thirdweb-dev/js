@@ -9,6 +9,7 @@ import {
   deployInfraWithSigner,
   getDeploymentInfo,
 } from "../../common/any-evm-deploy";
+import { deployCreate2Factory } from "../../common/any-evm-utils";
 import { getDeployArguments } from "../../common/deploy";
 import { resolveAddress } from "../../common/ens";
 import { CloneFactory } from "../../common/infra-data";
@@ -762,7 +763,6 @@ export class ContractDeployer extends RPCConnectionHandler {
           extendedMetadata.isDeployableViaFactory) &&
         !forceDirectDeploy
       ) {
-        console.log("Deploying directly...");
         const chainId = (await this.getProvider().getNetwork()).chainId;
 
         invariant(
@@ -826,38 +826,54 @@ export class ContractDeployer extends RPCConnectionHandler {
           }
         } else {
           // any evm deployment flow -- with signer
+          // 0. Deploy CREATE2 factory (if not already exists)
+          console.log("one");
+          console.log("deploying create2 factory");
+          const create2Factory = await deployCreate2Factory(
+            this.getSigner() as Signer,
+          );
 
           // 1. get deployment info for any evm
+          console.log("two");
           const deploymentInfo = await getDeploymentInfo(
             publishMetadataUri,
             chainId,
             this.storage,
             this.getProvider(),
+            create2Factory,
           );
 
           implementationAddress = deploymentInfo.predictedAddress;
 
+          console.log("three");
           // 2. deploy infra
-          await deployInfraWithSigner(
+          const cloneFactory = await deployInfraWithSigner(
             this.getSigner() as Signer,
             this.getProvider(),
+            create2Factory,
             deploymentInfo.infraContractsToDeploy,
           );
 
+          console.log(
+            "four, implementation address: ",
+            deploymentInfo.predictedAddress,
+          );
           // 3. deploy implementation contract
           await deployImplementationWithSigner(
             this.getSigner() as Signer,
             deploymentInfo.signerDeployData.initBytecodeWithSalt,
             deploymentInfo.predictedAddress,
+            create2Factory,
           );
 
           const resolvedImplementationAddress = await resolveAddress(
             implementationAddress,
           );
 
+          console.log("five");
           // 4. deploy proxy with TWStatelessFactory (Clone factory) and return address
           return (await this.deployViaFactory.prepare(
-            CloneFactory.txInfo.predictedAddress,
+            cloneFactory,
             resolvedImplementationAddress,
             compilerMetadata.abi,
             extendedMetadata.factoryDeploymentData

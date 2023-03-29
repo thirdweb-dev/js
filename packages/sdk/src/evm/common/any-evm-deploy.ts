@@ -7,6 +7,7 @@ import {
   DeployDataWithSigner,
   DeploymentInfo,
 } from "../types/any-evm/deploy-data";
+import { getCreate2Factory } from "./any-evm-utils";
 import {
   extractConstructorParamsFromAbi,
   fetchPreDeployMetadata,
@@ -146,9 +147,10 @@ export function getInitBytecodeWithSalt(
  * @param bytecode: Creation bytecode of the contract to deploy
  * @param encodedArgs: Abi-encoded constructor params
  */
-export function computeDeploymentAddress(
+export async function computeDeploymentAddress(
   bytecode: string,
   encodedArgs: string,
+  create2FactoryAddress: string,
 ) {
   const saltHash = getSaltHash(bytecode);
 
@@ -163,7 +165,7 @@ export function computeDeploymentAddress(
     ["bytes1", "address", "bytes32", "bytes32"],
     [
       "0xff",
-      commonFactory,
+      create2FactoryAddress,
       saltHash,
       ethers.utils.solidityKeccak256(["bytes"], [initBytecode]),
     ],
@@ -324,29 +326,39 @@ export async function deployInfraKeyless(
 export async function deployInfraWithSigner(
   signer: Signer,
   provider: providers.Provider,
+  create2FactoryAddress: string,
   contractTypes?: InfraContractType[],
-) {
+): Promise<string> {
   // if (!contractTypes) {
   //   contractTypes = Object.keys(INFRA_CONTRACTS_MAP);
   // }
 
-  // create2 factory
-  await deployCommonFactory(signer, provider);
   const txns = [];
+  let cloneFactory = "";
 
   for (let contractType of contractTypes as InfraContractType[]) {
     const txInfo = INFRA_CONTRACTS_MAP[contractType].txInfo;
 
     // Check if the infra contract is already deployed
-    const code = await provider.getCode(txInfo.predictedAddress);
+    const computedAddress = await computeDeploymentAddress(
+      txInfo.bytecode,
+      txInfo.encodedArgs,
+      create2FactoryAddress,
+    );
+    const code = await provider.getCode(computedAddress);
 
+    console.log("computed address: ", computedAddress);
+    if (contractType === "cloneFactory") {
+      cloneFactory = computedAddress;
+    }
     if (code === "0x") {
+      console.log("here");
       // get init bytecode
       const deployData = txInfo.signerDeployData.initBytecodeWithSalt;
 
       txns.push({
-        predictedAddress: txInfo.predictedAddress,
-        to: commonFactory,
+        predictedAddress: computedAddress,
+        to: create2FactoryAddress,
         data: deployData,
       });
     }
@@ -360,6 +372,8 @@ export async function deployInfraWithSigner(
       .deploy(txns);
     await (await deployer).deployed();
   }
+
+  return cloneFactory;
 }
 
 /**
@@ -397,6 +411,7 @@ export async function deployImplementationWithSigner(
   signer: Signer,
   initBytecodeWithSalt: string,
   predictedAddress: string,
+  create2FactoryAddress: string,
 ) {
   // Check if the implementation contract is already deployed
   const code = await signer.provider?.getCode(predictedAddress);
@@ -404,7 +419,7 @@ export async function deployImplementationWithSigner(
   if (code === "0x") {
     const tx = {
       from: signer.getAddress(),
-      to: commonFactory,
+      to: create2FactoryAddress,
       value: 0,
       nonce: await signer.getTransactionCount("latest"),
       data: initBytecodeWithSalt,
@@ -429,6 +444,7 @@ export async function getDeploymentInfo(
   activeChainId: number,
   storage: ThirdwebStorage,
   provider: providers.Provider,
+  create2FactoryAddress: string,
 ): Promise<DeploymentInfo> {
   const compilerMetadata = await fetchPreDeployMetadata(metadataUri, storage);
 
@@ -437,9 +453,10 @@ export async function getDeploymentInfo(
     encodeConstructorParamsForImplementation(compilerMetadata, activeChainId);
 
   // 2. Compute the CREATE2 address
-  const predictedAddress = computeDeploymentAddress(
+  const predictedAddress = await computeDeploymentAddress(
     compilerMetadata.bytecode,
     encodedArgs,
+    create2FactoryAddress,
   );
 
   // 3. Construct keyless txn
