@@ -5,7 +5,13 @@ import { assertWindowEthereum } from "../utils/assertWindowEthereum";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 
 type MetamaskAdditionalOptions = {
+  /**
+   * Storage interface to store whether metamask is connected or disconnected.
+   */
   connectorStorage?: AsyncStorage;
+  /**
+   * Whether to display the Wallet Connect QR code Modal for connecting to MetaMask on mobile if MetaMask is not injected.
+   */
   qrcode?: boolean;
 };
 
@@ -17,7 +23,7 @@ type ConnectWithQrCodeArgs = {
   onConnected: (accountAddress: string) => void;
 };
 
-export class MetaMask extends AbstractBrowserWallet<MetamaskAdditionalOptions> {
+export class MetaMaskWallet extends AbstractBrowserWallet<MetamaskAdditionalOptions> {
   connector?: TWConnector;
   connectorStorage: AsyncStorage;
   walletConnectConnector?: WalletConnectV1ConnectorType;
@@ -36,7 +42,7 @@ export class MetaMask extends AbstractBrowserWallet<MetamaskAdditionalOptions> {
   }
 
   constructor(options: MetamaskWalletOptions) {
-    super(MetaMask.id, options);
+    super(MetaMaskWallet.id, options);
     this.connectorStorage =
       options.connectorStorage || createAsyncLocalStorage("connector");
 

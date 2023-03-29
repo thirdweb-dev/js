@@ -1,10 +1,10 @@
 import type { WalletOptions, Wallet } from "@thirdweb-dev/react-core";
-import { MetaMask } from "@thirdweb-dev/wallets";
+import { MetaMaskWallet } from "@thirdweb-dev/wallets";
 
 export const metamaskWallet = () => {
   return {
-    id: MetaMask.id,
-    meta: MetaMask.meta,
-    create: (options: WalletOptions) => new MetaMask({ ...options }),
+    id: MetaMaskWallet.id,
+    meta: MetaMaskWallet.meta,
+    create: (options: WalletOptions) => new MetaMaskWallet({ ...options }),
   } satisfies Wallet;
 };
