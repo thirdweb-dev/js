@@ -1,11 +1,6 @@
-import {
-  CoinbaseWallet,
-  DeviceWallet,
-  MetamaskWallet,
-} from "../../wallet/wallets";
 import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
-  SupportedWallet,
+  Wallet,
   ThirdwebProviderCore,
   ThirdwebProviderCoreProps,
 } from "@thirdweb-dev/react-core";
@@ -15,12 +10,9 @@ import { ThemeProvider } from "@emotion/react";
 import { darkTheme, lightTheme } from "../../design-system";
 import { PropsWithChildren } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
-
-const DEFAULT_WALLETS = [MetamaskWallet, CoinbaseWallet, DeviceWallet] as [
-  typeof MetamaskWallet,
-  typeof CoinbaseWallet,
-  typeof DeviceWallet,
-];
+import { coinbaseWallet } from "../../wallet/wallets/coinbaseWallet";
+import { metamaskWallet } from "../../wallet/wallets/metamaskWallet";
+import { walletConnectV1 } from "../../wallet/wallets/walletConnectV1";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
@@ -29,18 +21,18 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
   > {
   /**
    * Wallets that will be supported by the dApp
-   * @defaultValue [MetaMaskWallet, CoinbaseWallet, DeviceWallet]
+   * @defaultValue [metamaskWallet(), coinbaseWallet(), walletConnectV1()]
    *
    * @example
    * ```jsx
-   * import { MetamaskWallet, CoinbaseWallet, DeviceWallet } from "@thirdweb-dev/react";
+   * import { metamaskWallet, coinbaseWallet, walletConnectV1 } from "@thirdweb-dev/react";
    *
    * <ThirdwebProvider
-   *  supportedWallets={[MetaMaskWallet, CoinbaseWallet, DeviceWallet]}
+   *  supportedWallets={[metamaskWallet(), coinbaseWallet(), walletConnectV1()]}
    * />
    * ```
    */
-  supportedWallets?: SupportedWallet[];
+  supportedWallets?: Wallet[];
 }
 
 /**
@@ -68,7 +60,7 @@ export const ThirdwebProvider = <
   TChains extends Chain[] = typeof defaultChains,
 >({
   thirdwebApiKey = DEFAULT_API_KEY,
-  supportedWallets = DEFAULT_WALLETS,
+  supportedWallets,
   theme,
   children,
   ...restProps
@@ -79,7 +71,13 @@ export const ThirdwebProvider = <
         <ThirdwebProviderCore
           theme={theme}
           thirdwebApiKey={thirdwebApiKey}
-          supportedWallets={supportedWallets}
+          supportedWallets={
+            supportedWallets || [
+              metamaskWallet(),
+              coinbaseWallet(),
+              walletConnectV1(),
+            ]
+          }
           {...restProps}
         >
           {children}
@@ -89,4 +87,3 @@ export const ThirdwebProvider = <
     </WalletUIStatesProvider>
   );
 };
-

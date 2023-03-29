@@ -8,3 +8,71 @@
 ---
 
 [Wallets, RN, React, ReactCore] New Wallets SDK implementation
+
+#### Breaking changes:
+
+### React and React Native
+1. Replaced `walletConnectors` with `supportedWallets` in the ThirdwebProvider.
+
+```diff
+  import { coinbaseWallet, metamaskWallet, ThirdwebProvider } from "@thirdweb-dev/react";
+
+  const App = () => {
+  - return <ThirdwebProvider walletConnectors={["metamask", "coinbaseWallet"]}>{...}</ThirdwebProvider>
+  + return <ThirdwebProvider supportedWallets={[metamaskWallet(), coinbaseWallet()]}>{...}</ThirdwebProvider>
+  }
+```
+
+2. `magicLinkConnector` not yet implemented in this version
+
+3. Removed `desiredChainId`, use `activeChain` instead
+
+4. `DAppMetaData` type now requires the `url` field to be passed in
+
+5. Removed `chainRpc` prop from the ThirdwebProvider. You can pass custom rpcs in the Chain object through the `activeChain` and `supportedChains` props.
+
+6. Replaced the `useNetwork` hook for `useChain` and `useSwitchChain`
+
+7. Updated `ConnectWallet` button in React:
+  - Removed `accentColor` and `colorMode`
+  - Added a `theme` prop with `dark` and `light` values
+
+8. Updated the `Web3Button` button in React:
+  - Removed `accentColor` and `colorMode`
+  - Added a `theme` prop with `dark` and `light` values
+
+### Patch Changes
+
+- You can now pass a `theme` prop to the ThirdwebProvider. Values are `light` and `dark`
+
+```
+  import { ThirdwebProvider } from "@thirdweb-dev/react";
+
+  const App = () => {
+  return <ThirdwebProvider theme='light'>{...}</ThirdwebProvider>
+  }
+```
+
+- New wallet hooks added
+    - useWallet()
+    - useConenct()
+    - useConnectionStatus()
+    - useSwitchChain()
+
+- Removed `wagmi` dependency from the `react-native-compat` package and updated shims
+
+- New `ConnectWallet` and `Web3Button` components in React Native
+
+- New wallets package with support for the most common wallets. MetaMask, Coinbase, WalletConnect V1 and V2 and PaperWallet
+
+- Added `autoSwitch` prop to the ThirdwebProvider to control whether or not to automatically switch to wallet's network to active chain
+
+```
+  import { ThirdwebProvider } from "@thirdweb-dev/react";
+
+  const App = () => {
+  return <ThirdwebProvider autoSwitch>{...}</ThirdwebProvider>
+  }
+```
+
+

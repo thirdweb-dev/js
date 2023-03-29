@@ -415,9 +415,9 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
   >(
     functionName: string & TMethod,
     ...args:
-      | (any[] & Parameters<PrebuiltEditionDrop["functions"][TMethod]>)[]
+      | (any[] & Parameters<PrebuiltEditionDrop["functions"][TMethod]>)
       | [
-          ...(any[] & Parameters<PrebuiltEditionDrop["functions"][TMethod]>)[],
+          ...(any[] & Parameters<PrebuiltEditionDrop["functions"][TMethod]>),
           CallOverrides,
         ]
   ): Promise<any> {

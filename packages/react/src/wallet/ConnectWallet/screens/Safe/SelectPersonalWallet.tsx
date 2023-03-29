@@ -8,15 +8,17 @@ import {
 } from "../../../../components/modalElements";
 import { iconSize, spacing, media } from "../../../../design-system";
 import { WalletMeta } from "../../../types";
-import { SafeWallet } from "../../../wallets";
 import { WalletSelection } from "../../WalletSelector";
 import { Steps } from "./Steps";
 import styled from "@emotion/styled";
+import { useSupportedWallet } from "../useSupportedWallet";
+import { Wallet } from "@thirdweb-dev/react-core";
 
 export const SelectpersonalWallet: React.FC<{
   onBack: () => void;
   walletsMeta: WalletMeta[];
 }> = (props) => {
+  const safeWalletObj = useSupportedWallet("Safe") as Wallet;
   // remove gnosis safe from the list of wallets
   const walletsMeta = props.walletsMeta.filter((w) => w.id !== "Safe");
 
@@ -25,7 +27,7 @@ export const SelectpersonalWallet: React.FC<{
       <BackButton onClick={props.onBack} />
       <IconContainer>
         <Img
-          src={SafeWallet.meta.iconURL}
+          src={safeWalletObj.meta.iconURL}
           width={iconSize.xl}
           height={iconSize.xl}
         />

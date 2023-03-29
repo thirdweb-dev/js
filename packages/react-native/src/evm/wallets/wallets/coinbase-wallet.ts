@@ -9,11 +9,12 @@ import {
   WagmiAdapter,
   WalletOptions,
 } from "@thirdweb-dev/wallets";
+import {
+  Wallet,
+  WalletOptions as WalletOptionsRC,
+} from "@thirdweb-dev/react-core";
 
-type CoinbaseWalletOptions = Omit<
-  WalletOptions<CoinbaseWalletConnectorOptions>,
-  "callbackURL" | "walletStorage"
->;
+type CoinbaseWalletOptions = Omit<WalletOptions<CoinbaseWalletConnectorOptions>,"walletStorage">;
 
 export class CoinbaseWallet extends AbstractBrowserWallet<CoinbaseWalletConnectorOptions> {
   static meta = {
@@ -32,13 +33,16 @@ export class CoinbaseWallet extends AbstractBrowserWallet<CoinbaseWalletConnecto
     return "Coinbase Wallet" as const;
   }
 
+  callbackURL: URL;
+
   constructor(options: CoinbaseWalletOptions) {
     super(CoinbaseWallet.id, {
       ...options,
-      callbackURL: new URL("https://thirdweb.com"),
       walletStorage: new noopStorage(),
       walletId: "coinbase",
     });
+
+    this.callbackURL = options.callbackURL;
   }
 
   protected async getConnector(): Promise<TWConnector> {
@@ -52,6 +56,7 @@ export class CoinbaseWallet extends AbstractBrowserWallet<CoinbaseWalletConnecto
         chains: this.chains,
         options: {
           ...this.options,
+          callbackURL: this.callbackURL
         },
       });
 
@@ -64,3 +69,12 @@ export class CoinbaseWallet extends AbstractBrowserWallet<CoinbaseWalletConnecto
     return this.connector;
   }
 }
+
+export const coinbaseWallet = (config?: {callbackURL?: URL}) => {
+  const callbackURLNonNull = config?.callbackURL || new URL("https://thirdweb.com/wsegue");
+  return {
+    id: CoinbaseWallet.id,
+    meta: CoinbaseWallet.meta,
+    create: (options: WalletOptionsRC) => new CoinbaseWallet({...options, callbackURL: callbackURLNonNull}),
+  } satisfies Wallet;
+};

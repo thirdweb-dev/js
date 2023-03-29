@@ -1,12 +1,21 @@
 import { AsyncStorage, createAsyncLocalStorage } from "../../core/AsyncStorage";
 import type { WalletConnectV1Connector as WalletConnectV1ConnectorType } from "../connectors/wallet-connect-v1";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
+import { assertWindowEthereum } from "../utils/assertWindowEthereum";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 
-export type MetamaskWalletOptions = WalletOptions<{
+type MetamaskAdditionalOptions = {
+  /**
+   * Storage interface to store whether metamask is connected or disconnected.
+   */
   connectorStorage?: AsyncStorage;
-  isInjected?: boolean;
-}>;
+  /**
+   * Whether to display the Wallet Connect QR code Modal for connecting to MetaMask on mobile if MetaMask is not injected.
+   */
+  qrcode?: boolean;
+};
+
+export type MetamaskWalletOptions = WalletOptions<MetamaskAdditionalOptions>;
 
 type ConnectWithQrCodeArgs = {
   chainId?: number;
@@ -14,11 +23,11 @@ type ConnectWithQrCodeArgs = {
   onConnected: (accountAddress: string) => void;
 };
 
-export class MetaMask extends AbstractBrowserWallet {
+export class MetaMaskWallet extends AbstractBrowserWallet<MetamaskAdditionalOptions> {
   connector?: TWConnector;
   connectorStorage: AsyncStorage;
-  isInjected?: boolean;
   walletConnectConnector?: WalletConnectV1ConnectorType;
+  isInjected: boolean;
 
   static meta = {
     name: "MetaMask",
@@ -33,10 +42,15 @@ export class MetaMask extends AbstractBrowserWallet {
   }
 
   constructor(options: MetamaskWalletOptions) {
-    super(MetaMask.id, options);
+    super(MetaMaskWallet.id, options);
     this.connectorStorage =
       options.connectorStorage || createAsyncLocalStorage("connector");
-    this.isInjected = options.isInjected || false;
+
+    if (assertWindowEthereum(globalThis.window)) {
+      this.isInjected = !!globalThis.window.ethereum?.isMetaMask;
+    } else {
+      this.isInjected = false;
+    }
   }
 
   protected async getConnector(): Promise<TWConnector> {
@@ -66,12 +80,12 @@ export class MetaMask extends AbstractBrowserWallet {
           storage: this.connectorStorage,
           options: {
             clientMeta: {
-              name: this.options.dappMetadata.name,
-              description: this.options.dappMetadata.description || "",
-              url: this.options.dappMetadata.url,
-              icons: [],
+              name: this.dappMetadata.name,
+              description: this.dappMetadata.description || "",
+              url: this.dappMetadata.url,
+              icons: [this.dappMetadata.logoUrl || ""],
             },
-            qrcode: false,
+            qrcode: this.options?.qrcode,
           },
         });
 

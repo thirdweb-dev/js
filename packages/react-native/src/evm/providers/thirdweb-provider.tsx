@@ -1,28 +1,16 @@
 import { createAsyncLocalStorage } from "../../core/AsyncStorage";
 import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
-  MetaMaskWallet,
-  RainbowWallet,
-  TrustWallet,
-} from "../wallets/wallets/all";
-import { CoinbaseWallet } from "../wallets/wallets/coinbase-wallet";
-import {
   ThirdwebProviderCore,
   ThirdwebProviderCoreProps,
+  Wallet,
 } from "@thirdweb-dev/react-core";
 import { PropsWithChildren } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
+import { metamaskWallet } from "../wallets/wallets/metamask-wallet";
+import { rainbowWallet } from "../wallets/wallets/rainbow-wallet";
 
-const DEFAULT_WALLETS = [MetaMaskWallet, CoinbaseWallet] as [
-  typeof MetaMaskWallet,
-  typeof CoinbaseWallet,
-];
-
-export type ImplementedWallet =
-  | typeof MetaMaskWallet
-  | typeof RainbowWallet
-  | typeof CoinbaseWallet
-  | typeof TrustWallet;
+const DEFAULT_WALLETS = [metamaskWallet(), rainbowWallet()];
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<ThirdwebProviderCoreProps<TChains>, "supportedWallets"> {
@@ -39,7 +27,7 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
    * />
    * ```
    */
-  supportedWallets?: ImplementedWallet[];
+  supportedWallets?: Wallet[];
 }
 
 /**

@@ -242,7 +242,11 @@
   "sideEffects": false,
   "dependencies": {
     "@coinbase/wallet-sdk": "^3.6.3",
-    "@paperxyz/embedded-wallet-service-sdk": "^0.0.21",
+    "@paperxyz/embedded-wallet-service-sdk": "^0.0.26",
+    "@safe-global/safe-core-sdk": "^3.3.2",
+    "@safe-global/safe-ethers-adapters": "^0.1.0-alpha.16",
+    "@safe-global/safe-ethers-lib": "^1.9.2",
+    "@thirdweb-dev/chains": "workspace:*",
     "@walletconnect/ethereum-provider": "~2.4.6",
     "@walletconnect/jsonrpc-http-connection": "^1.0.0",
     "@walletconnect/jsonrpc-provider": "^1.0.3",
@@ -252,25 +256,21 @@
     "@walletconnect/legacy-modal": "^2.0.0-rc.0",
     "@walletconnect/legacy-types": "^2.0.0-rc.0",
     "@walletconnect/legacy-utils": "^2.0.0-rc.0",
-    "@thirdweb-dev/chains": "workspace:*",
     "buffer": "^6.0.3",
     "eip1193-provider": "^1.0.1",
-    "eventemitter3": "^5.0.0",
-    "@safe-global/safe-core-sdk": "^3.3.2",
-    "@safe-global/safe-ethers-adapters": "^0.1.0-alpha.16",
-    "@safe-global/safe-ethers-lib": "^1.9.2"
+    "eventemitter3": "^5.0.0"
   },
   "resolutions": {
     "@walletconnect/ethereum-provider": "~2.4.6"
   },
   "peerDependencies": {
-    "tweetnacl": "^1.0.3",
     "@aws-sdk/client-secrets-manager": "^3.256.0",
-    "ethers-aws-kms-signer": "^1.3.2",
     "@noble/ed25519": "^1.7.1",
     "@solana/web3.js": "^1.73.0",
     "bs58": "^5.0.0",
-    "ethers": "^5.7.2"
+    "ethers": "^5.7.2",
+    "ethers-aws-kms-signer": "^1.3.2",
+    "tweetnacl": "^1.0.3"
   },
   "peerDependenciesMeta": {
     "tweetnacl": {
@@ -296,17 +296,17 @@
     }
   },
   "devDependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.256.0",
     "@noble/ed25519": "^1.7.1",
     "@preconstruct/cli": "^2.2.1",
-    "@aws-sdk/client-secrets-manager": "^3.256.0",
-    "ethers-aws-kms-signer": "^1.3.2",
     "@solana/web3.js": "^1.62.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "bs58": "^5.0.0",
     "eslint-config-thirdweb": "workspace:*",
     "ethers": "^5.7.2",
-    "typescript": "^4.7.4",
-    "tweetnacl": "^1.0.3"
+    "ethers-aws-kms-signer": "^1.3.2",
+    "tweetnacl": "^1.0.3",
+    "typescript": "^4.7.4"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",

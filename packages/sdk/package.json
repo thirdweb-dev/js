@@ -170,6 +170,7 @@
     "@thirdweb-dev/contracts-js": "workspace:*",
     "@thirdweb-dev/generated-abis": "workspace:*",
     "@thirdweb-dev/storage": "workspace:*",
+    "abitype": "^0.2.5",
     "bn.js": "^5.2.1",
     "bs58": "^5.0.0",
     "buffer": "^6.0.3",

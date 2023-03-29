@@ -417,9 +417,9 @@ export class Edition extends StandardErc1155<TokenERC1155> {
   >(
     functionName: string & TMethod,
     ...args:
-      | (any[] & Parameters<TokenERC1155["functions"][TMethod]>)[]
+      | (any[] & Parameters<TokenERC1155["functions"][TMethod]>)
       | [
-          ...(any[] & Parameters<TokenERC1155["functions"][TMethod]>)[],
+          ...(any[] & Parameters<TokenERC1155["functions"][TMethod]>),
           CallOverrides,
         ]
   ): Promise<any> {
