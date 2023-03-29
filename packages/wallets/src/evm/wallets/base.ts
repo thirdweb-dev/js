@@ -131,6 +131,7 @@ export abstract class AbstractBrowserWallet<
     const connector = await this.getConnector();
     if (connector) {
       await connector.disconnect();
+      this.emit("disconnect");
       connector.removeAllListeners();
     }
   }
