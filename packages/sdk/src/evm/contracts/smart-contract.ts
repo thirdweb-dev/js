@@ -58,7 +58,12 @@ import type {
   OffersLogic,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BaseContract, CallOverrides, ContractInterface } from "ethers";
+import {
+  BaseContract,
+  CallOverrides,
+  ContractFunction,
+  ContractInterface,
+} from "ethers";
 import { BaseContractInterface } from "../types/contract";
 
 /**
