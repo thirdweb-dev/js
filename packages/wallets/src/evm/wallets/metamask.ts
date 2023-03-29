@@ -32,11 +32,11 @@ export class MetaMask extends AbstractBrowserWallet {
     return "MetaMask" as const;
   }
 
-  constructor(options: MetamaskWalletOptions) {
+  constructor(options?: MetamaskWalletOptions) {
     super(MetaMask.id, options);
     this.connectorStorage =
-      options.connectorStorage || createAsyncLocalStorage("connector");
-    this.isInjected = options.isInjected || false;
+      options?.connectorStorage || createAsyncLocalStorage("connector");
+    this.isInjected = options?.isInjected || false;
   }
 
   protected async getConnector(): Promise<TWConnector> {

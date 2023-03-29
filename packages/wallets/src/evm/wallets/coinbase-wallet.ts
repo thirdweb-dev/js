@@ -8,7 +8,7 @@ if (typeof window !== "undefined") {
   window.Buffer = Buffer;
 }
 
-export type CoinbaseWalletOptions = WalletOptions<{headlessMode?: boolean}>;
+export type CoinbaseWalletOptions = WalletOptions<{ headlessMode?: boolean }>;
 
 export class CoinbaseWallet extends AbstractBrowserWallet {
   connector?: TWConnector;
@@ -56,11 +56,11 @@ export class CoinbaseWallet extends AbstractBrowserWallet {
     return this.connector;
   }
 
-  async getQrCode() {
+  async getQrUrl() {
     await this.getConnector();
     if (!this.coinbaseConnector) {
       throw new Error("Coinbase connector not initialized");
     }
-    return this.coinbaseConnector.getQrCode();
+    return this.coinbaseConnector.getQrUrl();
   }
 }
