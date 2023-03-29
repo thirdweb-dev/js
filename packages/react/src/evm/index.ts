@@ -9,14 +9,11 @@ export * from "./components/Web3Button";
 export { ThirdwebProvider } from "./providers/thirdweb-provider";
 
 // wallet/hooks
-export { useDeviceWalletStorage } from "../wallet/hooks/useDeviceWalletStorage";
 export { useInstalledWallets } from "../wallet/hooks/useInstalledWallets";
-export { useIsNonLocalWallet as useWalletRequiresConfirmation } from "../wallet/hooks/useCanSwitchNetwork";
 
 // wallet connection hooks
 export { useMetamask } from "./hooks/wallets/useMetamask";
 export { useCoinbaseWallet } from "./hooks/wallets/useCoinbaseWallet";
-export { useDeviceWallet } from "./hooks/wallets/useDeviceWallet";
 
 export {
   usePaperWalletUserEmail,

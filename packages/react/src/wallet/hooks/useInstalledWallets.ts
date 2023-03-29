@@ -1,9 +1,6 @@
-import { useDeviceWalletStorage } from "./useDeviceWalletStorage";
 import { assertWindowEthereum } from "@thirdweb-dev/wallets";
 
 export function useInstalledWallets() {
-  const deviceWalletStorage = useDeviceWalletStorage();
-
   let isMetamaskInstalled = false;
   let isCoinbaseWalletInstalled = false;
 
@@ -18,7 +15,6 @@ export function useInstalledWallets() {
   const installedWallets = {
     metamask: !!isMetamaskInstalled,
     coinbaseWallet: !!isCoinbaseWalletInstalled,
-    deviceWallet: !!deviceWalletStorage?.data,
   };
 
   return installedWallets;

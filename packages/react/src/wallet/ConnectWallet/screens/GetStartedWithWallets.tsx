@@ -8,15 +8,15 @@ import {
   ModalTitle,
 } from "../../../components/modalElements";
 import { fontSize, iconSize, spacing, Theme } from "../../../design-system";
-import { MetaMask } from "@thirdweb-dev/wallets";
+import { MetaMaskWallet } from "@thirdweb-dev/wallets";
 import { Apple, Chrome, GooglePlay } from "../iconURLs";
 import { ButtonLink } from "./GetStartedScreen";
 import styled from "@emotion/styled";
 import { useState } from "react";
 import { isMobile } from "../../../evm/utils/isMobile";
 
-const walletName = MetaMask.meta.name;
-const walletIconURL = MetaMask.meta.iconURL;
+const walletName = MetaMaskWallet.meta.name;
+const walletIconURL = MetaMaskWallet.meta.iconURL;
 const chromeExtensionLink =
   "https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn";
 const googlePlayStoreLink =
