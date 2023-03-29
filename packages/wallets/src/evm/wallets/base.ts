@@ -37,7 +37,8 @@ export abstract class AbstractBrowserWallet<
     this.options = options;
     this.chains = options?.chains || defaultChains;
     this.dappMetadata = options?.dappMetadata || DEFAULT_DAPP_META;
-    this.walletStorage = options?.walletStorage || createAsyncLocalStorage(this.walletId);
+    this.walletStorage =
+      options?.walletStorage || createAsyncLocalStorage(this.walletId);
   }
 
   protected abstract getConnector(): Promise<TWConnector<TConnectParams>>;
@@ -82,6 +83,11 @@ export abstract class AbstractBrowserWallet<
       if (connectOptions?.chainId) {
         await connector.switchChain(connectOptions?.chainId);
       }
+
+      this.emit("connect", {
+        address,
+        chainId: await this.getChainId(),
+      });
 
       return address;
     } else if (!isAutoConnect) {
