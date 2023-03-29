@@ -19,32 +19,32 @@ declare module "abitype" {
   }
 }
 
-type ExtractAbiForContract<TAddress extends ContractAddress> =
+export type ExtractAbiForContract<TAddress extends ContractAddress> =
   (typeof GENERATED_ABI)[TAddress];
 
-type TAbiFunctionNames<TAbi extends Abi> = ExtractAbiFunctionNames<TAbi>;
+export type TAbiFunctionNames<TAbi extends Abi> = ExtractAbiFunctionNames<TAbi>;
 
-type ExtractFunction<
+export type ExtractFunction<
   TAbi extends Abi,
   TFunctionName extends TAbiFunctionNames<TAbi>,
 > = ExtractAbiFunction<TAbi, TFunctionName>;
 
-type ExtractFunctionInputs<
+export type ExtractFunctionInputs<
   TAbi extends Abi,
   TFunctionName extends TAbiFunctionNames<TAbi>,
 > = ExtractFunction<TAbi, TFunctionName>["inputs"];
 
-type ExtractFunctionOutputs<
+export type ExtractFunctionOutputs<
   TAbi extends Abi,
   TFunctionName extends TAbiFunctionNames<TAbi>,
 > = ExtractFunction<TAbi, TFunctionName>["outputs"];
 
-type ExtractFunctionInputsType<
+export type ExtractFunctionInputsType<
   TAbi extends Abi,
   TFunctionName extends TAbiFunctionNames<TAbi>,
 > = AbiParametersToPrimitiveTypes<ExtractFunctionInputs<TAbi, TFunctionName>>;
 
-type ExtractArrayElement<TArray extends Array<any>> = TArray extends [
+export type ExtractArrayElement<TArray extends Array<any>> = TArray extends [
   infer TElement,
   ...infer TRest,
 ]
@@ -53,7 +53,7 @@ type ExtractArrayElement<TArray extends Array<any>> = TArray extends [
     : TArray
   : never;
 
-type ExtractFunctionOutputsType<
+export type ExtractFunctionOutputsType<
   TAbi extends Abi,
   TFunctionName extends TAbiFunctionNames<TAbi>,
 > = ExtractArrayElement<
@@ -61,7 +61,7 @@ type ExtractFunctionOutputsType<
   AbiParametersToPrimitiveTypes<ExtractFunctionOutputs<TFunctionName>>
 >;
 
-type ExtractFunctionType<
+export type ExtractFunctionType<
   TAbi extends Abi,
   TFunctionName extends TAbiFunctionNames<TAbi>,
 > = (
@@ -69,7 +69,7 @@ type ExtractFunctionType<
   ...args: ExtractFunctionInputsType<TFunctionName>
 ) => ExtractFunctionOutputsType<TAbi, TFunctionName>;
 
-type ContractFunctionsFromAbi<TAbi extends Abi> = {
+export type ContractFunctionsFromAbi<TAbi extends Abi> = {
   [TFunctionName in TAbiFunctionNames<TAbi>]: ExtractFunctionType<
     TAbi,
     TFunctionName
