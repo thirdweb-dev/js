@@ -256,7 +256,7 @@ export function ThirdwebWalletProvider(
         // this is to handle the edge case when trying to auto-connect to wallet that does not exist anymore (extension is uninstalled)
         await timeoutPromise(
           10000,
-          wallet.connect(parsedParams),
+          wallet.autoConnect(parsedParams),
           `AutoConnect timeout`,
         );
         handleWalletConnect(wallet, parsedParams);

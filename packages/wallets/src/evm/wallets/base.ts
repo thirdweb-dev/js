@@ -43,11 +43,28 @@ export abstract class AbstractBrowserWallet<
   protected abstract getConnector(): Promise<TWConnector<TConnectParams>>;
 
   /**
+   * tries to auto connect to the wallet
+   */
+  async autoConnect(
+    connectOptions?: ConnectParams<TConnectParams>,
+  ): Promise<string | undefined> {
+    return this.#connect(true, connectOptions);
+  }
+
+  /**
    * connect to the wallet
    */
   async connect(
     connectOptions?: ConnectParams<TConnectParams>,
   ): Promise<string> {
+    const address = await this.#connect(false, connectOptions);
+    if (!address) {
+      throw new Error("Failed to connect to the wallet.");
+    }
+    return address;
+  }
+
+  async #connect(isAutoConnect: boolean, connectOptions?: ConnectParams<TConnectParams>) {
     const connector = await this.getConnector();
 
     this.#subscribeToEvents(connector);
@@ -64,7 +81,7 @@ export abstract class AbstractBrowserWallet<
       }
 
       return address;
-    } else {
+    } else if (!isAutoConnect) {
       const address = await connector.connect(connectOptions);
       return address;
     }
