@@ -5,6 +5,7 @@ import {
 import { TWConnector } from "../interfaces/tw-connector";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 import type { Chain } from "@thirdweb-dev/chains";
+import type { PaperWalletConnector } from "../connectors/paper";
 
 export type PaperWalletOptions = WalletOptions<PaperWalletAdditionalOptions>;
 
@@ -47,5 +48,10 @@ export class PaperWallet extends AbstractBrowserWallet<
 
   async updateChains(chains: Chain[]) {
     this.options.chains = chains;
+  }
+
+  async getEmail() {
+    const connector = (await this.getConnector()) as PaperWalletConnector;
+    return connector.getEmail();
   }
 }

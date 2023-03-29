@@ -1,4 +1,4 @@
-import { DeviceWallet } from "../wallets";
+import { DeviceWallet } from "../wallets/deviceWallet";
 import { useEffect, useState } from "react";
 
 type DeviceWalletStorage = {

@@ -1,7 +1,7 @@
 import { ModalFooter } from "../../base/modal/ModalFooter";
 import { ModalHeaderTextClose } from "../../base/modal/ModalHeaderTextClose";
 import { ChooseWalletContent } from "./ChooseWalletContent";
-import { SupportedWallet } from "@thirdweb-dev/react-core";
+import type { Wallet } from "@thirdweb-dev/react-core";
 import { ReactNode } from "react";
 import { View } from "react-native";
 
@@ -9,9 +9,9 @@ export type ChooseWalletProps = {
   headerText?: ReactNode | string;
   subHeaderText?: ReactNode | string;
   footer?: ReactNode;
-  onChooseWallet: (wallet: SupportedWallet) => void;
+  onChooseWallet: (wallet: Wallet) => void;
   onClose: () => void;
-  wallets: SupportedWallet[];
+  wallets: Wallet[];
 };
 
 export function ChooseWallet({
