@@ -56,8 +56,12 @@ export abstract class AbstractBrowserWallet<
    */
   async connect(
     connectOptions?: ConnectParams<TConnectParams>,
-  ): Promise<string | undefined> {
-    return this.#connect(false, connectOptions);
+  ): Promise<string> {
+    const address = await this.#connect(false, connectOptions);
+    if (!address) {
+      throw new Error("Failed to connect to the wallet.");
+    }
+    return address;
   }
 
   async #connect(isAutoConnect: boolean, connectOptions?: ConnectParams<TConnectParams>) {
