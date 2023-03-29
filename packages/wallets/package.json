@@ -242,7 +242,7 @@
   "sideEffects": false,
   "dependencies": {
     "@coinbase/wallet-sdk": "^3.6.3",
-    "@paperxyz/embedded-wallet-service-sdk": "^0.0.25",
+    "@paperxyz/embedded-wallet-service-sdk": "^0.0.26",
     "@safe-global/safe-core-sdk": "^3.3.2",
     "@safe-global/safe-ethers-adapters": "^0.1.0-alpha.16",
     "@safe-global/safe-ethers-lib": "^1.9.2",
