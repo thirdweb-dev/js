@@ -4,9 +4,12 @@ import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { assertWindowEthereum } from "../utils/assertWindowEthereum";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 
-export type MetamaskWalletOptions = WalletOptions<{
+type MetamaskAdditionalOptions = {
   connectorStorage?: AsyncStorage;
-}>;
+  qrcode?: boolean;
+};
+
+export type MetamaskWalletOptions = WalletOptions<MetamaskAdditionalOptions>;
 
 type ConnectWithQrCodeArgs = {
   chainId?: number;
@@ -14,7 +17,7 @@ type ConnectWithQrCodeArgs = {
   onConnected: (accountAddress: string) => void;
 };
 
-export class MetaMask extends AbstractBrowserWallet {
+export class MetaMask extends AbstractBrowserWallet<MetamaskAdditionalOptions> {
   connector?: TWConnector;
   connectorStorage: AsyncStorage;
   walletConnectConnector?: WalletConnectV1ConnectorType;
@@ -76,7 +79,7 @@ export class MetaMask extends AbstractBrowserWallet {
               url: this.options.dappMetadata.url,
               icons: [],
             },
-            qrcode: false,
+            qrcode: this.options?.qrcode,
           },
         });
 
