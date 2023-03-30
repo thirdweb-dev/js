@@ -179,7 +179,7 @@ export const ConnectModal = () => {
     >
       <Modal
         style={{
-          maxWidth: "450px",
+          maxWidth: "480px",
         }}
         open={hideModal ? false : isWalletModalOpen}
         setOpen={(value) => {
