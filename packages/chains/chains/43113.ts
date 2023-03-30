@@ -21,6 +21,7 @@ export default {
     "https://api.avax-test.network/ext/bc/C/rpc"
   ],
   "faucets": [
+    "https://faucet.avax.network/",
     "https://faucet.avax-test.network/"
   ],
   "nativeCurrency": {

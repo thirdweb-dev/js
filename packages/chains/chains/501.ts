@@ -1,14 +1,17 @@
 export default {
   "name": "Columbus Test Network",
   "chain": "CAM",
-  "rpc": [],
+  "rpc": [
+    "https://columbus-test-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://columbus.camino.network/ext/bc/C/rpc"
+  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Camino",
     "symbol": "CAM",
     "decimals": 18
   },
-  "infoURL": "https://camino.foundation/",
+  "infoURL": "https://camino.network/",
   "shortName": "Columbus",
   "chainId": 501,
   "networkId": 1001,

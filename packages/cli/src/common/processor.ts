@@ -97,7 +97,7 @@ export async function processProject(
   let compiledResult: { contracts: ContractPayload[] };
   const compileLoader = spinner("Compiling project...");
   try {
-    compiledResult = await build(projectPath, projectType);
+    compiledResult = await build(projectPath, projectType, options);
   } catch (e) {
     compileLoader.fail("Compilation failed");
     logger.error(e);

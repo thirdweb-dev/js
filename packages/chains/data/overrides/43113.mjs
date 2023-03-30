@@ -11,4 +11,5 @@ export default {
     sizes: [16, 32, 64, 128, 256, 512],
   },
   rpc: ["https://avalanche-fuji.infura.io/v3/${INFURA_API_KEY}"],
+  faucets: ["https://faucet.avax.network/"],
 };
