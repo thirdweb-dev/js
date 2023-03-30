@@ -1,5 +1,14 @@
 # thirdweb
 
+## 0.10.5
+
+### Patch Changes
+
+- [#836](https://github.com/thirdweb-dev/js/pull/836) [`db648ed2`](https://github.com/thirdweb-dev/js/commit/db648ed22dba672c64e7893865f9ad8b72189dea) Thanks [@shift4id](https://github.com/shift4id)! - Added the --clean flag to build, publish, and deploy
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.10.5
+
 ## 0.10.4
 
 ### Patch Changes
