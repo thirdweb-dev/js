@@ -2,7 +2,7 @@
 "@thirdweb-dev/react-core": minor
 ---
 
-Usage of the `useContractRead` and `useContractWrite` hooks has also changed:
+Usage of the `useContractRead` and `useContractWrite` hooks has changed:
 
 ```js
 const owner = "0x...";
