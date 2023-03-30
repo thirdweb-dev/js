@@ -21,8 +21,7 @@ describe("Tiered Drop Contract", async () => {
     const tieredDrop = await sdk.getContract(address);
 
     const walletAddress = await sdk.wallet.getAddress();
-    await tieredDrop.call(
-      "initialize",
+    await tieredDrop.call("initialize", [
       walletAddress, // defaultAdmin
       "Tiered Drop #1", // name
       "TD", // symbol
@@ -31,7 +30,7 @@ describe("Tiered Drop Contract", async () => {
       walletAddress, // saleRecipient
       walletAddress, // royaltyRecipient
       0, // royaltyBps
-    );
+    ]);
 
     return tieredDrop;
   }

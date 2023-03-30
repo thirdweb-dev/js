@@ -512,20 +512,22 @@ export function useContractEvents(
 export function useContractRead(
   contract: RequiredParam<ValidContractInstance>,
   functionName: RequiredParam<string>,
-  ...args: unknown[] | [...unknown[], CallOverrides]
+  args?: unknown[],
+  overrides?: CallOverrides,
 ) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
-    cacheKeys.contract.call(contractAddress, functionName, args),
+    cacheKeys.contract.call(contractAddress, functionName, args, overrides),
     () => {
       requiredParamInvariant(contract, "contract must be defined");
       requiredParamInvariant(functionName, "function name must be provided");
       return (
         contract.call as (
           functionName: string,
-          ...args: unknown[] | [...unknown[], CallOverrides]
+          args?: unknown[],
+          overrides?: CallOverrides,
         ) => Promise<any>
-      )(functionName, ...args);
+      )(functionName, args, overrides);
     },
     {
       enabled: !!contract && !!functionName,
@@ -560,23 +562,17 @@ export function useContractWrite(
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (callParams?: unknown[] | [...unknown[], CallOverrides]) => {
+    async (args?: unknown[], overrides?: CallOverrides) => {
       requiredParamInvariant(contract, "contract must be defined");
       requiredParamInvariant(functionName, "function name must be provided");
-      if (!callParams?.length) {
-        return (
-          contract.call as (
-            functionName: string,
-            ...args: unknown[] | [...unknown[], CallOverrides]
-          ) => Promise<any>
-        )(functionName);
-      }
+
       return (
         contract.call as (
           functionName: string,
-          ...args: unknown[] | [...unknown[], CallOverrides]
+          args?: unknown[],
+          overrides?: CallOverrides,
         ) => Promise<any>
-      )(functionName, ...callParams);
+      )(functionName, args, overrides);
     },
     {
       onSettled: () =>

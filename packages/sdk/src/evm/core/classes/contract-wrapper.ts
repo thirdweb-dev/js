@@ -274,20 +274,13 @@ export class ContractWrapper<
    */
   public async call(
     functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
+    args: unknown[] = [],
+    overrides?: CallOverrides,
   ): Promise<any> {
     // parse last arg as tx options if present
-    let txOptions: CallOverrides | undefined;
-    try {
-      if (args.length > 0 && typeof args[args.length - 1] === "object") {
-        const last = args[args.length - 1];
-        txOptions = await CallOverrideSchema.parseAsync(last);
-        // if call overrides found, remove it from args array
-        args = args.slice(0, args.length - 1);
-      }
-    } catch (e) {
-      // no-op
-    }
+    let txOptions: CallOverrides | undefined = overrides
+      ? await CallOverrideSchema.parseAsync(overrides)
+      : undefined;
 
     const functions = extractFunctionsFromAbi(AbiSchema.parse(this.abi)).filter(
       (f) => f.name === functionName,

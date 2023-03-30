@@ -107,7 +107,7 @@ describe("Custom Contracts", async () => {
     const owner = await c.call("owner");
     expect(owner).to.eq(adminWallet.address);
 
-    const tx = await c.call("setOwner", samWallet.address);
+    const tx = await c.call("setOwner", [samWallet.address]);
     expect(tx.receipt).to.not.eq(undefined);
     const owner2 = await c.call("owner");
     expect(owner2).to.eq(samWallet.address);
@@ -123,7 +123,7 @@ describe("Custom Contracts", async () => {
     invariant(c, "Contract undefined");
 
     try {
-      await c.call("setOwner", samWallet.address, {
+      await c.call("setOwner", [samWallet.address], {
         value: ethers.utils.parseEther("0.1"),
       });
     } catch (e) {
@@ -131,14 +131,17 @@ describe("Custom Contracts", async () => {
     }
 
     try {
-      await c.call("setOwner", samWallet.address, {
-        somObj: "foo",
-      });
+      await c.call("setOwner", [
+        samWallet.address,
+        {
+          somObj: "foo",
+        },
+      ]);
     } catch (e) {
       expectError(e, "requires 1 arguments, but 2 were provided");
     }
 
-    const tx = await c.call("setOwner", samWallet.address, {
+    const tx = await c.call("setOwner", [samWallet.address], {
       gasLimit: 300_000,
     });
     expect(tx.receipt).to.not.eq(undefined);
