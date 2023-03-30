@@ -87,7 +87,6 @@ export class HardhatBuilder extends BaseBuilder {
             !info.evm ||
             !info.evm.bytecode ||
             !info.evm.bytecode.object ||
-            !info.metadata ||
             !info.abi
           ) {
             logger.debug("Skipping", contractPath, "(no bytecode or metadata)");
@@ -96,10 +95,11 @@ export class HardhatBuilder extends BaseBuilder {
 
           const bytecode = info.evm.bytecode.object;
           const deployedBytecode = info.evm.deployedBytecode.object;
-          const { metadata, abi } = info;
+          const abi = info.abi;
+          const metadata = info.metadata || JSON.stringify("{}");
 
           const meta = JSON.parse(metadata);
-          const sources = Object.keys(meta.sources)
+          const sources = Object.keys(meta.sources || {})
             .map((path) => {
               const directPath = join(options.projectPath, path);
               if (existsSync(directPath)) {
