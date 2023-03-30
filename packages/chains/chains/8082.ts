@@ -27,7 +27,7 @@ export default {
     {
       "name": "Shardeum Scan",
       "url": "https://explorer-sphinx.shardeum.org",
-      "standard": "none"
+      "standard": "EIP3091"
     }
   ],
   "redFlags": [

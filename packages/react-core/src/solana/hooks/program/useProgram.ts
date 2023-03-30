@@ -39,13 +39,14 @@ export function programQuery<TProgramType extends ProgramType>(
   return {
     queryKey: neverPersist(
       createSOLQueryKeyWithNetwork(
-        ["program-instance", address] as const,
+        ["program-instance", { address, type }] as const,
         network || null,
       ),
     ),
     queryFn: (async () => {
       requiredParamInvariant(sdk, "sdk is required");
       requiredParamInvariant(address, "Address is required");
+
       // if the type is not passed in explicitly then we'll try to resolve it
       if (!type) {
         // why do we call `fetchQuery` here instead of calling the sdk directly?

@@ -1,5 +1,5 @@
 ---
-"@thirdweb-dev/sdk": minor
+"@thirdweb-dev/sdk": patch
 ---
 
 The signature of all `contract.call` methods has been updated to the following structure:
