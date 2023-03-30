@@ -1,5 +1,5 @@
 ---
-"@thirdweb-dev/react-core": minor
+"@thirdweb-dev/react-core": patch
 ---
 
 Usage of the `useContractRead` and `useContractWrite` hooks has changed:
