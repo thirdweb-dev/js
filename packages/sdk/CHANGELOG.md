@@ -1,5 +1,228 @@
 # @thirdweb-dev/sdk
 
+## 3.10.4
+
+### Patch Changes
+
+- [#703](https://github.com/thirdweb-dev/js/pull/703) [`6e9b9dba`](https://github.com/thirdweb-dev/js/commit/6e9b9dba1dfb9e828e6927f441e7223baa5bcc76) Thanks [@adam-maj](https://github.com/adam-maj)! - Add .prepare() to all other functions
+
+- [#794](https://github.com/thirdweb-dev/js/pull/794) [`a6fce0f6`](https://github.com/thirdweb-dev/js/commit/a6fce0f691ffeb2b7ec1355b1c55fa7e58700406) Thanks [@shift4id](https://github.com/shift4id)! - Minor copy changes
+
+- [#705](https://github.com/thirdweb-dev/js/pull/705) [`2ec28021`](https://github.com/thirdweb-dev/js/commit/2ec2802119a3c375a1adaed1263ae1eae1384865) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Remove hardcoded gasLimit on marketplace/pack
+
+- [#830](https://github.com/thirdweb-dev/js/pull/830) [`805896c7`](https://github.com/thirdweb-dev/js/commit/805896c78d5ecbbe1866408fbb73d060f7404146) Thanks [@adam-maj](https://github.com/adam-maj)! - Make metadata optional on signature input
+
+- [#796](https://github.com/thirdweb-dev/js/pull/796) [`b56511e2`](https://github.com/thirdweb-dev/js/commit/b56511e22d5eb2adf306d5675f1e52ff97a64f3a) Thanks [@iketw](https://github.com/iketw)! - [SDK] avoid recursively parsing the abi
+
+- [#753](https://github.com/thirdweb-dev/js/pull/753) [`8ef5a6f2`](https://github.com/thirdweb-dev/js/commit/8ef5a6f21735e6ac235937f6c34495a74c9da364) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow interacting with marketplace v3 extensions from getContract()
+
+- [#758](https://github.com/thirdweb-dev/js/pull/758) [`4cbbad98`](https://github.com/thirdweb-dev/js/commit/4cbbad98b303d872c09efedbece179445c7adc9c) Thanks [@adam-maj](https://github.com/adam-maj)! - Add .prepare support for transaction deployments
+
+- [#681](https://github.com/thirdweb-dev/js/pull/681) [`5f0493d0`](https://github.com/thirdweb-dev/js/commit/5f0493d0fb291b4072cc433412883d352588c397) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for ENS
+
+- [#701](https://github.com/thirdweb-dev/js/pull/701) [`71532e5a`](https://github.com/thirdweb-dev/js/commit/71532e5a9fb5b116ba342465ef82e795ca8cc011) Thanks [@kumaryash90](https://github.com/kumaryash90)! - contracts v3.4.4
+
+- [#702](https://github.com/thirdweb-dev/js/pull/702) [`33d1cc7f`](https://github.com/thirdweb-dev/js/commit/33d1cc7f92cd982e9e55130472c0006bb999f682) Thanks [@jnsdls](https://github.com/jnsdls)! - enable `browser` export
+
+- [#797](https://github.com/thirdweb-dev/js/pull/797) [`de7b6196`](https://github.com/thirdweb-dev/js/commit/de7b6196766d709deeac148a24dd8dd38b3e924a) Thanks [@iketw](https://github.com/iketw)! - [SDK] Remove duplicate creation in derived class
+
+- [#721](https://github.com/thirdweb-dev/js/pull/721) [`1baed0b1`](https://github.com/thirdweb-dev/js/commit/1baed0b1d83b4c92dac44430af5436d04727d92f) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for thirdweb generate
+
+- [#761](https://github.com/thirdweb-dev/js/pull/761) [`52d37f01`](https://github.com/thirdweb-dev/js/commit/52d37f01873c649b36c7d77df6c525a666245132) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix ABI parser for inputs with no names
+
+- [#790](https://github.com/thirdweb-dev/js/pull/790) [`485abd06`](https://github.com/thirdweb-dev/js/commit/485abd06aa972a4f43f71b98f9666f113b932fb3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix getPackContents for ERC20 rewards
+
+- [#819](https://github.com/thirdweb-dev/js/pull/819) [`682f1c67`](https://github.com/thirdweb-dev/js/commit/682f1c673f4b02acab3986031942dbd3d67a87fa) Thanks [@adam-maj](https://github.com/adam-maj)! - Update contract.call to have function types
+
+- [#782](https://github.com/thirdweb-dev/js/pull/782) [`d8c1c943`](https://github.com/thirdweb-dev/js/commit/d8c1c9433e8dc48a70a1c93a0c1467c12ad79701) Thanks [@jnsdls](https://github.com/jnsdls)! - parse ABIs correctly (knowing function names can be empty strings)
+
+- [#820](https://github.com/thirdweb-dev/js/pull/820) [`08507611`](https://github.com/thirdweb-dev/js/commit/085076117b18a615aa2b1b8f086d434cab3a4e4e) Thanks [@adam-maj](https://github.com/adam-maj)! - Add magical types for thirdweb generate
+
+- [#773](https://github.com/thirdweb-dev/js/pull/773) [`8463a176`](https://github.com/thirdweb-dev/js/commit/8463a1761ff4741b55a72e6994a29f7dd50b54e1) Thanks [@adam-maj](https://github.com/adam-maj)! - Fix ENS cache infinite recursion
+
+- [#832](https://github.com/thirdweb-dev/js/pull/832) [`e47ceafe`](https://github.com/thirdweb-dev/js/commit/e47ceafeae950c22860ca4c7dffba7d573e04a94) Thanks [@MananTank](https://github.com/MananTank)! - - Fix `wallet.addListener` "connect", "disconnect" event emit issue
+
+  - update the paper sdk
+
+- [#704](https://github.com/thirdweb-dev/js/pull/704) [`208d97e6`](https://github.com/thirdweb-dev/js/commit/208d97e6a892942171c056768876b3e33399d275) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Export currency utils
+
+- [#770](https://github.com/thirdweb-dev/js/pull/770) [`5c7c0923`](https://github.com/thirdweb-dev/js/commit/5c7c0923e45b3f0ee27c83a9c4c691ce9bbb8539) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix failed metadata fetch breaking marketplace get all listings calls
+
+- [#735](https://github.com/thirdweb-dev/js/pull/735) [`ba9f593b`](https://github.com/thirdweb-dev/js/commit/ba9f593be8e10289040b466bdcf98ff251f412a3) Thanks [@jnsdls](https://github.com/jnsdls)! - <br/>
+
+  ### New Functions
+
+  <details>
+  <summary>
+  <code>getBlockNumber()</code> - get the latest block number for a given chain
+  </summary>
+  <br />
+
+  **Example:** Get the latest block number for Ethereum.
+
+  ```js
+  import { getBlockNumber } from "@thirdweb-dev/sdk";
+
+  const blockNumber = await getBlockNumber({
+    network: "ethereum",
+  });
+
+  console.log("Block number", blockNumber);
+  ```
+
+  </details>
+
+  <details>
+  <summary>
+  <code>getBlock()</code> - get a block by number or hash
+  </summary>
+  <br />
+
+  **Example:** Get the latest block for Ethereum.
+
+  ```js
+  import { getBlock } from "@thirdweb-dev/sdk";
+
+  const block = await getBlock({
+    network: "ethereum",
+    block: "latest",
+  });
+
+  console.log("Block", block);
+  ```
+
+  </details>
+
+  <details>
+  <summary>
+  <code>getBlockWithTransactions()</code> - get a block (with parsed transactions) by block number or hash
+  </summary>
+  <br />
+
+  **Example:** Get the latest block for Ethereum.
+
+  ```js
+  import { getBlockWithTransactions } from "@thirdweb-dev/sdk";
+
+  const blockWithTransactions = await getBlockWithTransactions({
+    network: "ethereum",
+    block: "latest",
+  });
+
+  console.log("Block", blockWithTransactions);
+  console.log("Transactions", blockWithTransactions.transactions);
+  ```
+
+  </details>
+
+  <details>
+  <summary>
+  <code>watchBlockNumber()</code> - watch for new blocks (real-time)
+  </summary>
+  <br />
+
+  **Example:** Watch for new blocks on Ethereum.
+
+  ```js
+  import { watchBlockNumber } from "@thirdweb-dev/sdk";
+
+  const unsubscribe = watchBlockNumber({
+    network: "ethereum",
+    onBlockNumber: (blockNumber) => {
+      console.log("New block number", blockNumber);
+    },
+  });
+
+  // Later unsubscribe from watching for new blocks
+  unsubscribe();
+  ```
+
+  </details>
+
+  <details>
+  <summary>
+  <code>watchBlock()</code> - watch for new blocks (real-time)
+  </summary>
+  <br />
+
+  **Example:** Watch for new blocks on Ethereum.
+
+  ```js
+  import { watchBlock } from "@thirdweb-dev/sdk";
+
+  const unsubscribe = watchBlock({
+    network: "ethereum",
+    onBlock: (block) => {
+      console.log("New block", block);
+    },
+  });
+
+  // Later unsubscribe from watching for new blocks
+  unsubscribe();
+  ```
+
+  </details>
+
+  <details>
+  <summary>
+  <code>watchBlockWithTransactions()</code> - watch for new blocks (real-time)
+  </summary>
+  <br />
+
+  **Example:** Watch for new blocks on Ethereum.
+
+  ```js
+  import { watchBlockWithTransactions } from "@thirdweb-dev/sdk";
+
+  const unsubscribe = watchBlockWithTransactions({
+    network: "ethereum",
+    onBlock: (blockWithTransactions) => {
+      console.log("New block", blockWithTransactions);
+      console.log("Transactions", blockWithTransactions.transactions);
+    },
+  });
+
+  // Later unsubscribe from watching for new blocks
+  unsubscribe();
+  ```
+
+  </details>
+
+  <details>
+  <summary>
+  <code>watchTransactions()</code> - watch for transactions for a given address (real-time)
+  </summary>
+  <br />
+
+  **Example:** Watch for transactions on USD Coin (USDC) contract address.
+
+  ```js
+  import { watchTransactions } from "@thirdweb-dev/sdk";
+
+  const unsubscribe = watchTransactions({
+    network: "ethereum",
+    contractAddress: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+    onTransactions: (transactions) => {
+      console.log("New transactions", transactions);
+    },
+  });
+
+  // Later unsubscribe from watching for new transactions
+  unsubscribe();
+  ```
+
+  </details>
+
+- [#767](https://github.com/thirdweb-dev/js/pull/767) [`9fa628f8`](https://github.com/thirdweb-dev/js/commit/9fa628f89492633e4f7ea2b7c542e1587ea17a86) Thanks [@adam-maj](https://github.com/adam-maj)! - Make generate work with useContract
+
+- [#737](https://github.com/thirdweb-dev/js/pull/737) [`abf609a4`](https://github.com/thirdweb-dev/js/commit/abf609a40114a509fe07a04bfb0793dc44c9e39d) Thanks [@adam-maj](https://github.com/adam-maj)! - Add multiply gas limit on Transaction class
+
+- Updated dependencies [[`d01b135d`](https://github.com/thirdweb-dev/js/commit/d01b135d26efe6cebd84110b1a8eacee5c1b98db), [`9ea43969`](https://github.com/thirdweb-dev/js/commit/9ea439692da94f84297bf6a9d04487a1cb74796d), [`e3161e59`](https://github.com/thirdweb-dev/js/commit/e3161e5986e1831c6dae517889b6a6ba181ccd36), [`71532e5a`](https://github.com/thirdweb-dev/js/commit/71532e5a9fb5b116ba342465ef82e795ca8cc011), [`33d1cc7f`](https://github.com/thirdweb-dev/js/commit/33d1cc7f92cd982e9e55130472c0006bb999f682), [`6b145d4b`](https://github.com/thirdweb-dev/js/commit/6b145d4b36d2706f8a2dcad4b8f680c41606a556), [`e2ec70c4`](https://github.com/thirdweb-dev/js/commit/e2ec70c49264737fbd2afb1cacabded82262bc6c), [`1baed0b1`](https://github.com/thirdweb-dev/js/commit/1baed0b1d83b4c92dac44430af5436d04727d92f), [`2221f97d`](https://github.com/thirdweb-dev/js/commit/2221f97ddc997d864db3a5f00e82862ece574922), [`5c7c0923`](https://github.com/thirdweb-dev/js/commit/5c7c0923e45b3f0ee27c83a9c4c691ce9bbb8539), [`92d19070`](https://github.com/thirdweb-dev/js/commit/92d190709b8d516690eca26c97f3e84809121b60), [`9a4a542c`](https://github.com/thirdweb-dev/js/commit/9a4a542ce9650605d48745a40126ca6b52a16722), [`b2d0ffb0`](https://github.com/thirdweb-dev/js/commit/b2d0ffb049208de9f9212eae7059212aed74fec4)]:
+  - @thirdweb-dev/chains@0.1.7
+  - @thirdweb-dev/storage@1.1.1
+  - @thirdweb-dev/contracts-js@1.3.2
+  - @thirdweb-dev/generated-abis@0.0.1
+
 ## 3.10.3
 
 ### Patch Changes
