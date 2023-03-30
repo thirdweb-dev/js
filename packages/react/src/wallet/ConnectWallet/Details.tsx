@@ -387,7 +387,7 @@ const WalletInfoButton = styled.button<{ theme?: Theme }>`
   padding: ${spacing.sm} ${spacing.sm};
   border-radius: ${radius.lg};
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: ${spacing.md};
   box-sizing: border-box;
