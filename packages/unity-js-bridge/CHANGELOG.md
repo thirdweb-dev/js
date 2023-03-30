@@ -1,5 +1,14 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.2.19
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.10.5
+  - @thirdweb-dev/wallets@0.2.10
+  - @thirdweb-dev/auth@3.0.9
+
 ## 0.2.18
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @thirdweb-dev/chains
 
+## 0.1.8
+
+### Patch Changes
+
+- [#839](https://github.com/thirdweb-dev/js/pull/839) [`9b303829`](https://github.com/thirdweb-dev/js/commit/9b3038291d1c9f4eb243718a6070e3dac829a354) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains (add telos icon & avalanche fuji faucet)
+
 ## 0.1.7
 
 ### Patch Changes
