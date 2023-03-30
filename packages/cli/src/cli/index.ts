@@ -251,6 +251,7 @@ const main = async () => {
   program
     .command("build")
     .description("Compile contract and detect thirdweb contract extensions")
+    .option("--clean", "clear the cache before building")
     .option("-p, --path <project-path>", "path to project", ".")
     .option("-d, --debug", "show debug logs")
     .option("-a, --all", "run detection on all contracts")
@@ -262,6 +263,7 @@ const main = async () => {
     .command("deploy")
     .description("Deploy your (or team) contracts securely to blockchains")
     .option("-p, --path <project-path>", "path to project", ".")
+    .option("--clean", "clear the cache before building")
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
@@ -310,6 +312,7 @@ const main = async () => {
       "-cn, --contract-name [name]",
       "Filter for contracts that contain this contract name",
     )
+    .option("--clean", "clear the cache before building")
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
@@ -340,6 +343,7 @@ const main = async () => {
       "-cn, --contract-name [name]",
       "Filter for contracts that contain this contract name",
     )
+    .option("--clean", "clear the cache before building")
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
