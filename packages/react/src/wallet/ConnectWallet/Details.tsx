@@ -112,7 +112,7 @@ export const ConnectedWalletDetails: React.FC<{
         ) : (
           <Skeleton height={fontSize.sm} width="82px" />
         )}
-        <Spacer y="xxs" />
+        <Spacer y="xs" />
         <WalletAddress>{shortenString(address || "")}</WalletAddress>
       </ColFlex>
 
@@ -367,7 +367,7 @@ const dropdownContentFade = keyframes`
 `;
 
 const DropDownContent = styled(DropdownMenu.Content)<{ theme?: Theme }>`
-  width: 340px;
+  width: 360px;
   box-sizing: border-box;
   max-width: 100%;
   border-radius: ${radius.lg};
@@ -377,13 +377,14 @@ const DropDownContent = styled(DropdownMenu.Content)<{ theme?: Theme }>`
   border: 1px solid ${(props) => props.theme.border.base};
   background-color: ${(props) => props.theme.bg.base};
   z-index: 1000000;
+  line-height: 1;
 `;
 
 const WalletInfoButton = styled.button<{ theme?: Theme }>`
   all: unset;
   background: ${(props) => props.theme.bg.base};
   border: 1px solid ${(props) => props.theme.border.base};
-  padding: ${spacing.sm} ${spacing.md};
+  padding: ${spacing.sm} ${spacing.sm};
   border-radius: ${radius.lg};
   cursor: pointer;
   display: flex;
@@ -461,6 +462,7 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   color: ${(props) => props.theme.text.neutral} !important;
   gap: ${spacing.sm};
   -webkit-tap-highlight-color: transparent;
+  line-height: 1.3;
 
   &:not([disabled]):hover {
     transition: box-shadow 250ms ease, border-color 250ms ease;
