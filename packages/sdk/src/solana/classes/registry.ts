@@ -40,6 +40,7 @@ export class Registry {
       const candyMachine = await this.metaplex
         .candyMachinesV2()
         .findByAddress({ address: new PublicKey(address) });
+
       if (candyMachine) {
         return "nft-drop";
       }
