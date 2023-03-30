@@ -30,6 +30,7 @@ export default {
   "explorers": [
     {
       "name": "meerscan",
+      "icon": "meer",
       "url": "https://evm.meerscan.com",
       "standard": "none"
     }
