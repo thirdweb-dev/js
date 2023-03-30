@@ -22,6 +22,12 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmdkgQDtDedsNNth3ZVgWfwRZPCePLA13MtLvV4CEYSuTR/TLOS.png",
+    "format": "png",
+    "width": 228,
+    "height": 228
+  },
   "testnet": false,
   "slug": "telos-evm"
 } as const;
