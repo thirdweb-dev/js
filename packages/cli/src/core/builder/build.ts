@@ -9,6 +9,7 @@ import { TruffleBuilder } from "./truffle";
 export default async function build(
   path: string,
   projectType: ProjectType,
+  options: { clean: boolean },
 ): Promise<{
   contracts: ContractPayload[];
 }> {
@@ -38,5 +39,6 @@ export default async function build(
   return await builder.compile({
     name: "",
     projectPath: path,
+    clean: options.clean,
   });
 }

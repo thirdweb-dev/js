@@ -1,5 +1,11 @@
 # @thirdweb-dev/tsconfig
 
+## 0.1.6
+
+### Patch Changes
+
+- [#771](https://github.com/thirdweb-dev/js/pull/771) [`e3161e59`](https://github.com/thirdweb-dev/js/commit/e3161e5986e1831c6dae517889b6a6ba181ccd36) Thanks [@iketw](https://github.com/iketw)! - [ReactNativeSDK] Use wallet metadata from the wallet class
+
 ## 0.1.5
 
 ### Patch Changes

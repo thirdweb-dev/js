@@ -1,6 +1,7 @@
 import { ContractPayload } from "./ContractPayload";
 
 export type CompileOptions = {
+  clean: boolean;
   projectPath: string;
   name: string;
 };

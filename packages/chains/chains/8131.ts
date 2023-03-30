@@ -21,6 +21,7 @@ export default {
   "explorers": [
     {
       "name": "meerscan testnet",
+      "icon": "meer",
       "url": "https://testnet.qng.meerscan.io",
       "standard": "none"
     }

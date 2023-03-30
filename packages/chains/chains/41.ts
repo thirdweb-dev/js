@@ -18,5 +18,11 @@ export default {
   "chainId": 41,
   "networkId": 41,
   "testnet": true,
+  "icon": {
+    "url": "ipfs://QmdkgQDtDedsNNth3ZVgWfwRZPCePLA13MtLvV4CEYSuTR/TLOS.png",
+    "format": "png",
+    "width": 228,
+    "height": 228
+  },
   "slug": "telos-evm-testnet"
 } as const;
