@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Europa SKALE Chain",
   "chain": "europa",
@@ -43,4 +44,4 @@ export default {
   },
   "testnet": false,
   "slug": "europa-skale-chain"
-} as const;
+} as const satisfies Chain;

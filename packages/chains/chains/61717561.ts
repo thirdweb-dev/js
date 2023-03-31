@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Aquachain",
   "chain": "AQUA",
@@ -21,4 +22,4 @@ export default {
   "slip44": 61717561,
   "testnet": false,
   "slug": "aquachain"
-} as const;
+} as const satisfies Chain;

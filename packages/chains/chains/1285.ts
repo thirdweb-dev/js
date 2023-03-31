@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Moonriver",
   "chain": "MOON",
@@ -25,4 +26,4 @@ export default {
   ],
   "testnet": false,
   "slug": "moonriver"
-} as const;
+} as const satisfies Chain;

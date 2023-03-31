@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Htmlcoin Mainnet",
   "chain": "mainnet",
@@ -28,10 +29,15 @@ export default {
     {
       "name": "htmlcoin",
       "url": "https://explorer.htmlcoin.com",
-      "icon": "htmlcoin",
+      "icon": {
+        "url": "ipfs://QmR1oDRSadPerfyWMhKHNP268vPKvpczt5zPawgFSZisz2",
+        "width": 1000,
+        "height": 1000,
+        "format": "png"
+      },
       "standard": "none"
     }
   ],
   "testnet": false,
   "slug": "htmlcoin"
-} as const;
+} as const satisfies Chain;

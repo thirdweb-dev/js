@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Syscoin Rollux Testnet",
   "chain": "SYS",
@@ -25,4 +26,4 @@ export default {
   ],
   "testnet": true,
   "slug": "syscoin-rollux-testnet"
-} as const;
+} as const satisfies Chain;

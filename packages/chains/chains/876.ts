@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Bandai Namco Research Verse Mainnet",
   "chain": "Bandai Namco Research Verse",
@@ -34,4 +35,4 @@ export default {
   },
   "testnet": false,
   "slug": "bandai-namco-research-verse"
-} as const;
+} as const satisfies Chain;

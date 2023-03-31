@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Super Smart Chain Mainnet",
   "chain": "SCS",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": false,
   "slug": "super-smart-chain"
-} as const;
+} as const satisfies Chain;

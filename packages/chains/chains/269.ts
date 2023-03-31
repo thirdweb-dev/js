@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "High Performance Blockchain",
   "chain": "HPB",
@@ -28,4 +29,4 @@ export default {
   ],
   "testnet": false,
   "slug": "high-performance-blockchain"
-} as const;
+} as const satisfies Chain;

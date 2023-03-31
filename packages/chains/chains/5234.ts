@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Humanode Mainnet",
   "chain": "HMND",
@@ -18,4 +19,4 @@ export default {
   "explorers": [],
   "testnet": false,
   "slug": "humanode"
-} as const;
+} as const satisfies Chain;

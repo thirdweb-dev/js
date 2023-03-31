@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "AirDAO Testnet",
   "chain": "ambnet-test",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": true,
   "slug": "airdao-testnet"
-} as const;
+} as const satisfies Chain;

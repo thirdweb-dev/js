@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Tres Testnet",
   "chain": "TresLeches",
@@ -27,10 +28,15 @@ export default {
     {
       "name": "treslechesexplorer",
       "url": "https://explorer-test.tresleches.finance",
-      "icon": "treslechesexplorer",
+      "icon": {
+        "url": "ipfs://QmS33ypsZ1Hx5LMMACaJaxePy9QNYMwu4D12niobExLK74",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "tres-testnet"
-} as const;
+} as const satisfies Chain;

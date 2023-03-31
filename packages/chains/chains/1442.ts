@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Polygon zkEVM Testnet",
   "title": "Polygon zkEVM Testnet",
@@ -31,4 +32,4 @@ export default {
   },
   "testnet": true,
   "slug": "polygon-zkevm-testnet"
-} as const;
+} as const satisfies Chain;

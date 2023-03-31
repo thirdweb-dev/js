@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Ubiq Network Testnet",
   "chain": "UBQ",
@@ -14,4 +15,4 @@ export default {
   "networkId": 2,
   "testnet": true,
   "slug": "ubiq-network-testnet"
-} as const;
+} as const satisfies Chain;

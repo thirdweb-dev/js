@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "PepChain Churchill",
   "chain": "PEP",
@@ -17,4 +18,4 @@ export default {
   "networkId": 13371337,
   "testnet": false,
   "slug": "pepchain-churchill"
-} as const;
+} as const satisfies Chain;

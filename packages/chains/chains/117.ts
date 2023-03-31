@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Uptick Mainnet",
   "chain": "Uptick",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "Uptick Explorer",
       "url": "https://evm-explorer.uptick.network",
-      "icon": "uptick",
+      "icon": {
+        "url": "ipfs://QmRGJ6PqYHDTWuUQ6xfnK8S82NzRXiMjTnSGat9qtLuaLP",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      },
       "standard": "none"
     }
   ],
   "testnet": false,
   "slug": "uptick"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Scolcoin WeiChain Testnet",
   "chain": "SCOLWEI-testnet",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": true,
   "slug": "scolcoin-weichain-testnet"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "HUMAN Protocol",
   "title": "HUMAN Protocol",
@@ -22,10 +23,15 @@ export default {
     {
       "name": "Blockscout",
       "url": "https://wan-red-ain.explorer.mainnet.skalenodes.com",
-      "icon": "human",
+      "icon": {
+        "url": "ipfs://QmT5KKrpNt6duU8QfwaYw3xf4ifTBPtjahpWsMi3gsFmcS",
+        "width": 440,
+        "height": 600,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "human-protocol"
-} as const;
+} as const satisfies Chain;

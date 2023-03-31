@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Haic",
   "chain": "Haic",
@@ -17,4 +18,4 @@ export default {
   "networkId": 803,
   "testnet": false,
   "slug": "haic"
-} as const;
+} as const satisfies Chain;

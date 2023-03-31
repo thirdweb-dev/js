@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "CamelArk Mainnet",
   "chainId": 20001,
@@ -30,4 +31,4 @@ export default {
   "infoURL": "https://www.camelark.com",
   "testnet": false,
   "slug": "camelark"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "zkSync Era Mainnet",
   "chain": "ETH",
@@ -25,7 +26,12 @@ export default {
     {
       "name": "zkSync Era Block Explorer",
       "url": "https://explorer.zksync.io",
-      "icon": "zksync-era",
+      "icon": {
+        "url": "ipfs://QmRkhUD6J3B9WhT4hEWLrcFVTrBhx3CQgNC783aJsrwxSN",
+        "width": 512,
+        "height": 512,
+        "format": "svg"
+      },
       "standard": "EIP3091"
     }
   ],
@@ -40,4 +46,4 @@ export default {
   },
   "testnet": false,
   "slug": "zksync-era"
-} as const;
+} as const satisfies Chain;

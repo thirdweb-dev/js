@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "BON Network",
   "chain": "BON",
@@ -25,4 +26,4 @@ export default {
   ],
   "testnet": false,
   "slug": "bon-network"
-} as const;
+} as const satisfies Chain;

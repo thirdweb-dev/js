@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Jellie",
   "title": "Twala Testnet Jellie",
@@ -28,9 +29,14 @@ export default {
       "name": "Jellie Blockchain Explorer",
       "url": "https://jellie.twala.io",
       "standard": "EIP3091",
-      "icon": "twala"
+      "icon": {
+        "url": "ipfs://QmTXJVhVKvVC7DQEnGKXvydvwpvVaUEBJrMHvsCr4nr1sK",
+        "width": 1326,
+        "height": 1265,
+        "format": "png"
+      }
     }
   ],
   "testnet": true,
   "slug": "jellie"
-} as const;
+} as const satisfies Chain;

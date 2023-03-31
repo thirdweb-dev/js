@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Proxy Network Testnet",
   "chain": "Proxy Network",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": true,
   "slug": "proxy-network-testnet"
-} as const;
+} as const satisfies Chain;

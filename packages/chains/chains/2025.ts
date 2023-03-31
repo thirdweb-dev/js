@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Rangers Protocol Mainnet",
   "chain": "Rangers",
@@ -31,4 +32,4 @@ export default {
   ],
   "testnet": false,
   "slug": "rangers-protocol"
-} as const;
+} as const satisfies Chain;

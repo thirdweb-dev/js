@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Telos EVM Mainnet",
   "chain": "TLOS",
@@ -30,4 +31,4 @@ export default {
   },
   "testnet": false,
   "slug": "telos-evm"
-} as const;
+} as const satisfies Chain;

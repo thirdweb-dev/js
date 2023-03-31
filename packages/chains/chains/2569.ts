@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "TechPay Mainnet",
   "chain": "TPC",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "tpcscan",
       "url": "https://tpcscan.com",
-      "icon": "techpay",
+      "icon": {
+        "url": "ipfs://QmQyTyJUnhD1dca35Vyj96pm3v3Xyw8xbG9m8HXHw3k2zR",
+        "width": 578,
+        "height": 701,
+        "format": "svg"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "techpay"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Flana Mixnet",
   "chain": "MEER",
@@ -21,4 +22,4 @@ export default {
   "status": "incubating",
   "testnet": false,
   "slug": "flana-mixnet"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Fastex Chain testnet",
   "chain": "FTN",
@@ -33,4 +34,4 @@ export default {
   ],
   "testnet": true,
   "slug": "fastex-chain-testnet"
-} as const;
+} as const satisfies Chain;

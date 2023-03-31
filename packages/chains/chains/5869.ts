@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Wegochain Rubidium Mainnet",
   "chain": "RBD",
@@ -25,4 +26,4 @@ export default {
   ],
   "testnet": false,
   "slug": "wegochain-rubidium"
-} as const;
+} as const satisfies Chain;

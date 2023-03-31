@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Autobahn Network",
   "chain": "TXL",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "autobahn explorer",
       "url": "https://explorer.autobahn.network",
-      "icon": "autobahn",
+      "icon": {
+        "url": "ipfs://QmZP19pbqTco4vaP9siduLWP8pdYArFK3onfR55tvjr12s",
+        "width": 489,
+        "height": 489,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "autobahn-network"
-} as const;
+} as const satisfies Chain;

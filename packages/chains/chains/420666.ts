@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Kekchain (kektest)",
   "chain": "kek",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "blockscout",
       "url": "https://testnet-explorer.kekchain.com",
-      "icon": "kek",
+      "icon": {
+        "url": "ipfs://QmNzwHAmaaQyuvKudrzGkrTT2GMshcmCmJ9FH8gG2mNJtM",
+        "width": 401,
+        "height": 401,
+        "format": "svg"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "kekchain-kektest"
-} as const;
+} as const satisfies Chain;

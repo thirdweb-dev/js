@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "DOS Chain",
   "chain": "DOS",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "DOScan",
       "url": "https://doscan.io",
-      "icon": "doschain",
+      "icon": {
+        "url": "ipfs://QmV2Nowzo81F6pi2qFcHePA4MwmmdMKBMUzBJUrxcymxx4",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "dos-chain"
-} as const;
+} as const satisfies Chain;

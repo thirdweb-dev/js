@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Kintsugi",
   "title": "Kintsugi merge testnet",
@@ -28,4 +29,4 @@ export default {
   ],
   "testnet": true,
   "slug": "kintsugi"
-} as const;
+} as const satisfies Chain;

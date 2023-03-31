@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "OM Platform Mainnet",
   "chain": "omplatform",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": false,
   "slug": "om-platform"
-} as const;
+} as const satisfies Chain;

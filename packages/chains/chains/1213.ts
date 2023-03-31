@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Popcateum Mainnet",
   "chain": "POPCATEUM",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": false,
   "slug": "popcateum"
-} as const;
+} as const satisfies Chain;

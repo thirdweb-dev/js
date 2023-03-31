@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Vision - Vpioneer Test Chain",
   "chain": "Vision-Vpioneer",
@@ -20,4 +21,4 @@ export default {
   "slip44": 60,
   "testnet": true,
   "slug": "vision-vpioneer-test-chain"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Mizana Privnet",
   "chain": "MEER",
@@ -21,4 +22,4 @@ export default {
   "status": "incubating",
   "testnet": false,
   "slug": "mizana-privnet"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "WEMIX3.0 Mainnet",
   "chain": "WEMIX",
@@ -25,4 +26,4 @@ export default {
   ],
   "testnet": false,
   "slug": "wemix3-0"
-} as const;
+} as const satisfies Chain;

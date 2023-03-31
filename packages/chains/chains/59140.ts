@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Linea Testnet",
   "title": "Linea Testnet",
@@ -38,10 +39,15 @@ export default {
       "name": "Linea Testnet Explorer",
       "url": "https://explorer.goerli.linea.build",
       "standard": "EIP3091",
-      "icon": "linea"
+      "icon": {
+        "url": "ipfs://QmP6rcphqMTeByPxomeYeR5XRPZaFpwGbZxHkGQKyao4Le",
+        "width": 115,
+        "height": 115,
+        "format": "svg"
+      }
     }
   ],
   "status": "active",
   "testnet": true,
   "slug": "linea-testnet"
-} as const;
+} as const satisfies Chain;

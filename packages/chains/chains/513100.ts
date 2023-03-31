@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "ethereum Fair",
   "chainId": 513100,
@@ -24,4 +25,4 @@ export default {
   "infoURL": "https://etherfair.org",
   "testnet": false,
   "slug": "ethereum-fair"
-} as const;
+} as const satisfies Chain;

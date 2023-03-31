@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Hertz Network Mainnet",
   "chain": "HTZ",
@@ -33,10 +34,15 @@ export default {
     {
       "name": "Hertz Scan",
       "url": "https://hertzscan.com",
-      "icon": "hertz-network",
+      "icon": {
+        "url": "ipfs://Qmf3GYbPXmTDpSP6t7Ug2j5HjEwrY5oGhBDP7d4TQHvGnG",
+        "width": 162,
+        "height": 129,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "hertz-network"
-} as const;
+} as const satisfies Chain;

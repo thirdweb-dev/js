@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "PublicMint Mainnet",
   "title": "Public Mint Mainnet",
@@ -26,4 +27,4 @@ export default {
   ],
   "testnet": false,
   "slug": "publicmint"
-} as const;
+} as const satisfies Chain;

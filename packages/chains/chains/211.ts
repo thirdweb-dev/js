@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Freight Trust Network",
   "chain": "EDI",
@@ -20,4 +21,4 @@ export default {
   "networkId": 0,
   "testnet": false,
   "slug": "freight-trust-network"
-} as const;
+} as const satisfies Chain;

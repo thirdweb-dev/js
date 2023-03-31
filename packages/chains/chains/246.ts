@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Energy Web Chain",
   "chain": "Energy Web Chain",
@@ -29,4 +30,4 @@ export default {
   ],
   "testnet": false,
   "slug": "energy-web-chain"
-} as const;
+} as const satisfies Chain;

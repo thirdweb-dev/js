@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "BROChain Mainnet",
   "chain": "BRO",
@@ -27,4 +28,4 @@ export default {
   ],
   "testnet": false,
   "slug": "brochain"
-} as const;
+} as const satisfies Chain;

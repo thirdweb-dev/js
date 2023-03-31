@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Amana Testnet",
   "chain": "MEER",
@@ -21,4 +22,4 @@ export default {
   "status": "incubating",
   "testnet": true,
   "slug": "amana-testnet"
-} as const;
+} as const satisfies Chain;

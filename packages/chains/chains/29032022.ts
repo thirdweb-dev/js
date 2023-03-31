@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Flachain Mainnet",
   "chain": "FLX",
@@ -38,4 +39,4 @@ export default {
   ],
   "testnet": false,
   "slug": "flachain"
-} as const;
+} as const satisfies Chain;
