@@ -7,7 +7,6 @@ import {
   DeployDataWithSigner,
   DeploymentInfo,
 } from "../types/any-evm/deploy-data";
-import { getCreate2Factory } from "./any-evm-utils";
 import {
   extractConstructorParamsFromAbi,
   fetchPreDeployMetadata,

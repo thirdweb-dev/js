@@ -12,7 +12,6 @@ import {
 import { deployCreate2Factory } from "../../common/any-evm-utils";
 import { getDeployArguments } from "../../common/deploy";
 import { resolveAddress } from "../../common/ens";
-import { CloneFactory } from "../../common/infra-data";
 import {
   buildDeployTransactionFunction,
   buildTransactionFunction,
