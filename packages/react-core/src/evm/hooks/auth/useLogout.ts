@@ -2,6 +2,7 @@ import { useThirdwebAuthContext } from "../../contexts/thirdweb-auth";
 import { cacheKeys } from "../../utils/cache-keys";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import invariant from "tiny-invariant";
+import { coordinatorStorage } from "../../../core/providers/thirdweb-wallet-provider";
 
 /**
  * Hook to logout the connected wallet from the backend.
@@ -29,6 +30,7 @@ export function useLogout() {
       await fetch(`${authConfig.authUrl}/logout`, {
         method: "POST",
       });
+      coordinatorStorage.removeItem("cookie");
 
       queryClient.invalidateQueries(cacheKeys.auth.user());
     },

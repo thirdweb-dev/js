@@ -3,6 +3,7 @@ import { cacheKeys } from "../../utils/cache-keys";
 import { useQuery } from "@tanstack/react-query";
 import type { Json, User } from "@thirdweb-dev/auth";
 import invariant from "tiny-invariant";
+import { coordinatorStorage } from "../../../core/providers/thirdweb-wallet-provider";
 
 export interface UserWithData<
   TData extends Json = Json,
@@ -36,9 +37,20 @@ export function useUser<
         "Please specify an authUrl in the authConfig.",
       );
 
+      console.log("fetchUser");
+      const token = await coordinatorStorage.getItem("cookie")
+
+      console.log("token", token);
+
+      if (!token) {
+          return null;
+      }
       // We include credentials so we can getUser even if API is on different URL
       const res = await fetch(`${authConfig.authUrl}/user`, {
         credentials: "include",
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       return (await res.json()) as UserWithData<TData, TContext>;

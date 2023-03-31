@@ -9,6 +9,7 @@ import type {
 } from "@thirdweb-dev/auth";
 import { GenericAuthWallet } from "@thirdweb-dev/wallets";
 import invariant from "tiny-invariant";
+import { coordinatorStorage } from "../../../core/providers/thirdweb-wallet-provider";
 
 /**
  * Hook to securely login to a backend with the connected wallet. The backend
@@ -58,6 +59,12 @@ export function useLogin() {
         }
 
         throw new Error(`Login request failed with status code ${res.status}`);
+      } else {
+        const { token } = await res.json();
+
+        console.log("setting token token", token)
+
+        coordinatorStorage.setItem("token", token)
       }
 
       queryClient.invalidateQueries(cacheKeys.auth.user());
