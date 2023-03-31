@@ -57,7 +57,7 @@ export abstract class AbstractBrowserWallet<
   }
 
   /**
-   * connect to the walletf
+   * connect to the wallet
    */
   async connect(
     connectOptions?: ConnectParams<TConnectParams>,
