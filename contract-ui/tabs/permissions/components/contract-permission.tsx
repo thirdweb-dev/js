@@ -1,4 +1,5 @@
 import { PermissionEditor } from "./permissions-editor";
+import { useIsAdmin } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import { Flex, Icon, Select, Spinner, Stack } from "@chakra-ui/react";
 import {
   ContractWithRoles,
@@ -37,12 +38,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
     !roleMembers.includes(constants.AddressZero) ||
     (role !== "transfer" && role !== "lister" && role !== "asset");
 
-  const walletAddress = useAddress();
-  const isAdmin = useIsAddressRole(
-    contract as ContractWithRoles,
-    "admin",
-    walletAddress,
-  );
+  const isAdmin = useIsAdmin(contract as ValidContractInstance);
 
   return (
     <Card position="relative">

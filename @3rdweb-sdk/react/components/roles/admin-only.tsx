@@ -1,8 +1,7 @@
 import {
-  ContractWithRoles,
-  useAddress,
-  useIsAddressRole,
-} from "@thirdweb-dev/react";
+  useIsAdmin,
+  useIsAdminOrSelf,
+} from "@3rdweb-sdk/react/hooks/useContractRoles";
 import { ValidContractInstance } from "@thirdweb-dev/sdk/evm";
 import { ComponentWithChildren } from "types/component-with-children";
 
@@ -16,12 +15,7 @@ export const AdminOnly: ComponentWithChildren<AdminOnlyProps> = ({
   contract,
   fallback,
 }) => {
-  const address = useAddress();
-  const isAdmin = useIsAddressRole(
-    contract as ContractWithRoles,
-    "admin",
-    address,
-  );
+  const isAdmin = useIsAdmin(contract);
   if (!isAdmin) {
     return fallback ?? null;
   }
@@ -41,13 +35,7 @@ export const AdminOrSelfOnly: ComponentWithChildren<AdminOrSelfOnlyProps> = ({
   fallback,
   contract,
 }) => {
-  const address = useAddress();
-  const isAdmin = useIsAddressRole(
-    contract as ContractWithRoles,
-    "admin",
-    address,
-  );
-  const isAdminOrSelf = isAdmin || self === address;
+  const isAdminOrSelf = useIsAdminOrSelf(contract, self);
 
   if (!isAdminOrSelf) {
     return fallback ?? null;
