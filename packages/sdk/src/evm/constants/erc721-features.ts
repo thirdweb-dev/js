@@ -98,7 +98,7 @@ export const FEATURE_NFT_CLAIM_CUSTOM = {
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
-    contracts: "erc721claimable",
+    contracts: "erc721claimcustom",
   },
   abis: [Erc721Abi, ILazyMintAbi, IClaimableERC721],
   features: {},
