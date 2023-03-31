@@ -1,5 +1,11 @@
 # @thirdweb-dev/chains
 
+## 0.1.10
+
+### Patch Changes
+
+- [#848](https://github.com/thirdweb-dev/js/pull/848) [`1137a20d`](https://github.com/thirdweb-dev/js/commit/1137a20de44603d35e71eae2f2b6fec79febec00) Thanks [@jnsdls](https://github.com/jnsdls)! - more complete types for chains and better generation
+
 ## 0.1.9
 
 ### Patch Changes
