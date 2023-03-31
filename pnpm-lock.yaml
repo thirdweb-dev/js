@@ -127,7 +127,6 @@ importers:
       '@babel/runtime': ^7.19.0
       '@preconstruct/cli': ^2.2.1
       '@thirdweb-dev/tsconfig': workspace:*
-      axios: ^0.27.2
       deepmerge: ^4.3.0
       eslint-config-thirdweb: workspace:*
       jest: ^29.4.3
@@ -140,7 +139,6 @@ importers:
       '@babel/runtime': 7.21.0
       '@preconstruct/cli': 2.3.0
       '@thirdweb-dev/tsconfig': link:../tw-tsconfig
-      axios: 0.27.2
       deepmerge: 4.3.0
       eslint-config-thirdweb: link:../eslint-config-thirdweb
       jest: 29.5.0
@@ -11346,6 +11344,7 @@ packages:
       form-data: 4.0.0
     transitivePeerDependencies:
       - debug
+    dev: false
 
   /axios/0.27.2_debug@4.3.4:
     resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}

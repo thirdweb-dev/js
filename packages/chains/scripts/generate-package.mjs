@@ -1,5 +1,4 @@
 // @ts-check
-import axios from "axios";
 import merge from "deepmerge";
 import fs from "fs";
 import path from "path";
@@ -40,7 +39,7 @@ for (const file of overridesFiles) {
 // chains from remote src
 
 /** @type {Chain[]} */
-let chains = (await axios.get(chainsJsonUrl)).data;
+let chains = await (await fetch(chainsJsonUrl)).json();
 // immediately filter out localhost
 chains = chains.filter((c) => c.chainId !== 1337);
 
