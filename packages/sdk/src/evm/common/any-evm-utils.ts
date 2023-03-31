@@ -35,8 +35,12 @@ export async function isEIP155Enforced(
       "0xf8a58085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffafffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf31ba02222222222222222222222222222222222222222222222222222222222222222a02222222222222222222222222222222222222222222222222222222222222222",
     );
   } catch (e: any) {
-    console.log("fncy error: ", e);
-    if (e.data.message.toString().toLowerCase().includes("eip-155")) {
+    console.log("error checking eip155: ", e);
+    if (
+      e.data?.message?.toString().toLowerCase().includes("eip-155") ||
+      e.message?.toString().toLowerCase().includes("eip-155") ||
+      e.toString().toLowerCase().includes("eip-155")
+    ) {
       return true;
     }
     return false;
@@ -125,7 +129,7 @@ export async function deployCreate2Factory(signer: Signer): Promise<string> {
 
     // deploy
     try {
-      console.log("deploying create two factory");
+      console.log("deploying create-2 factory");
       await signer.provider.sendTransaction(deploymentInfo.transaction);
     } catch (err) {
       throw new Error(`Couldn't deploy CREATE2 factory: ${err}`);

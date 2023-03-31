@@ -827,14 +827,13 @@ export class ContractDeployer extends RPCConnectionHandler {
         } else {
           // any evm deployment flow -- with signer
           // 0. Deploy CREATE2 factory (if not already exists)
-          console.log("one");
           console.log("deploying create2 factory");
           const create2Factory = await deployCreate2Factory(
             this.getSigner() as Signer,
           );
 
           // 1. get deployment info for any evm
-          console.log("two");
+          console.log("getting deployment info");
           const deploymentInfo = await getDeploymentInfo(
             publishMetadataUri,
             chainId,
@@ -845,7 +844,7 @@ export class ContractDeployer extends RPCConnectionHandler {
 
           implementationAddress = deploymentInfo.predictedAddress;
 
-          console.log("three");
+          console.log("deploying infra");
           // 2. deploy infra
           const cloneFactory = await deployInfraWithSigner(
             this.getSigner() as Signer,
@@ -855,7 +854,7 @@ export class ContractDeployer extends RPCConnectionHandler {
           );
 
           console.log(
-            "four, implementation address: ",
+            "deploying implementation at address: ",
             deploymentInfo.predictedAddress,
           );
           // 3. deploy implementation contract
@@ -870,7 +869,7 @@ export class ContractDeployer extends RPCConnectionHandler {
             implementationAddress,
           );
 
-          console.log("five");
+          console.log("deploying proxy");
           // 4. deploy proxy with TWStatelessFactory (Clone factory) and return address
           return (await this.deployViaFactory.prepare(
             cloneFactory,

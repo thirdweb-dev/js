@@ -352,7 +352,6 @@ export async function deployInfraWithSigner(
       cloneFactory = computedAddress;
     }
     if (code === "0x") {
-      console.log("here");
       // get init bytecode
       const deployData = txInfo.signerDeployData.initBytecodeWithSalt;
 
