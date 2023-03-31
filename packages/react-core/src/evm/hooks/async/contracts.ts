@@ -19,7 +19,7 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { Edition, getCachedAbiForContract } from "@thirdweb-dev/sdk";
+import { getCachedAbiForContract } from "@thirdweb-dev/sdk";
 import type {
   Abi,
   CommonContractSchemaInput,
