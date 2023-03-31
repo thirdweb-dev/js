@@ -1,4 +1,8 @@
-import { useIsLister } from "@3rdweb-sdk/react/hooks/useContractRoles";
+import {
+  ContractWithRoles,
+  useAddress,
+  useIsAddressRole,
+} from "@thirdweb-dev/react";
 import { ValidContractInstance } from "@thirdweb-dev/sdk/evm";
 import { ComponentWithChildren } from "types/component-with-children";
 
@@ -10,8 +14,13 @@ export const ListerOnly: ComponentWithChildren<IListerOnlyProps> = ({
   children,
   contract,
 }) => {
-  const isMinter = useIsLister(contract);
-  if (!isMinter) {
+  const address = useAddress();
+  const isLister = useIsAddressRole(
+    contract as ContractWithRoles,
+    "minter",
+    address,
+  );
+  if (!isLister) {
     return null;
   }
   return <>{children}</>;

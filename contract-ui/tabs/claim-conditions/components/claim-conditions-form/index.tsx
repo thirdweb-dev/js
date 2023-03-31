@@ -8,7 +8,6 @@ import { PhaseStartTimeInput } from "./Inputs/PhaseStartTimeInput";
 import { WaitingTimeInput } from "./Inputs/WaitingTimeInput";
 import { CustomFormGroup } from "./common";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
-import { useIsAdmin } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import {
   Alert,
   AlertDescription,
@@ -21,9 +20,12 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import {
+  ContractWithRoles,
   DropContract,
   TokenContract,
+  useAddress,
   useClaimConditions,
+  useIsAddressRole,
   useSetClaimConditions,
   useTokenDecimals,
 } from "@thirdweb-dev/react";
@@ -130,7 +132,12 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
 
   const trackEvent = useTrack();
   const [resetFlag, setResetFlag] = useState(false);
-  const isAdmin = useIsAdmin(contract);
+  const walletAddress = useAddress();
+  const isAdmin = useIsAddressRole(
+    contract as ContractWithRoles,
+    "admin",
+    walletAddress,
+  );
   const [openSnapshotIndex, setOpenSnapshotIndex] = useState(-1);
   const setClaimsConditionQuery = useSetClaimConditions(contract, tokenId);
 
