@@ -1,5 +1,16 @@
 # @thirdweb-dev/react-core
 
+## 3.11.3
+
+### Patch Changes
+
+- [#848](https://github.com/thirdweb-dev/js/pull/848) [`1137a20d`](https://github.com/thirdweb-dev/js/commit/1137a20de44603d35e71eae2f2b6fec79febec00) Thanks [@jnsdls](https://github.com/jnsdls)! - bugfix: `useContractWrite` now accepts overrides again.
+
+- Updated dependencies [[`1137a20d`](https://github.com/thirdweb-dev/js/commit/1137a20de44603d35e71eae2f2b6fec79febec00)]:
+  - @thirdweb-dev/chains@0.1.10
+  - @thirdweb-dev/sdk@3.10.7
+  - @thirdweb-dev/wallets@0.2.12
+
 ## 3.11.2
 
 ### Patch Changes
