@@ -19,7 +19,7 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getCachedAbiForContract } from "@thirdweb-dev/sdk";
+import { Edition, getCachedAbiForContract } from "@thirdweb-dev/sdk";
 import type {
   Abi,
   CommonContractSchemaInput,
@@ -509,9 +509,12 @@ export function useContractEvents(
  *
  * @beta
  */
-export function useContractRead(
-  contract: RequiredParam<ValidContractInstance>,
-  functionName: RequiredParam<string>,
+export function useContractRead<
+  TContractInstance extends ValidContractInstance,
+  TFunctionName extends Parameters<TContractInstance["call"]>[0],
+>(
+  contract: RequiredParam<TContractInstance>,
+  functionName: RequiredParam<TFunctionName | (string & {})>,
   args?: unknown[],
   overrides?: CallOverrides,
 ) {
@@ -553,16 +556,25 @@ export function useContractRead(
  *
  * @beta
  */
-export function useContractWrite(
-  contract: RequiredParam<ValidContractInstance>,
-  functionName: RequiredParam<string>,
+export function useContractWrite<
+  TContractInstance extends ValidContractInstance,
+  TFunctionName extends Parameters<TContractInstance["call"]>[0],
+>(
+  contract: RequiredParam<TContractInstance>,
+  functionName: RequiredParam<TFunctionName | (string & {})>,
 ) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (args?: unknown[], overrides?: CallOverrides) => {
+    async ({
+      args,
+      overrides,
+    }: {
+      args?: unknown[];
+      overrides?: CallOverrides;
+    }) => {
       requiredParamInvariant(contract, "contract must be defined");
       requiredParamInvariant(functionName, "function name must be provided");
 
