@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Arbitrum on xDai",
   "chain": "AOX",
@@ -28,4 +29,4 @@ export default {
   },
   "testnet": false,
   "slug": "arbitrum-on-xdai"
-} as const;
+} as const satisfies Chain;

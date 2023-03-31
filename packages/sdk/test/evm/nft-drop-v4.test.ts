@@ -246,10 +246,10 @@ describe.skip("NFT Drop Contract (v4)", async () => {
       },
     ]);
     await dropContract.claimConditions.set([{}]);
-    const task = await dropContract.getClaimTransaction(adminWallet.address, 1);
-    expect((await task.estimateGasLimit()).toNumber()).gt(0);
-    const tx = await task.submit();
-    await tx.wait();
+    const tx = await dropContract.getClaimTransaction(adminWallet.address, 1);
+    expect((await tx.estimateGasLimit()).toNumber()).gt(0);
+    const sentTx = await tx.send();
+    await sentTx.wait();
     const nft = await dropContract.get(0);
     expect(nft.owner).to.eq(adminWallet.address);
   });

@@ -1,11 +1,14 @@
 import { NFT } from "../../../core/schema/nft";
+import { resolveAddress } from "../../common/ens";
 import { uploadOrExtractURIs } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_BATCH_MINTABLE } from "../../constants/erc1155-features";
-import { EditionMetadataOrUri } from "../../schema";
+import { AddressOrEns, EditionMetadataOrUri } from "../../schema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc1155 } from "./erc-1155";
+import { Transaction } from "./transactions";
 import type { IMintableERC1155, IMulticall } from "@thirdweb-dev/contracts-js";
 import { TokensMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TokenERC1155";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -70,36 +73,50 @@ export class Erc1155BatchMintable implements DetectableFeature {
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```
    */
-  public async to(
-    to: string,
-    metadataWithSupply: EditionMetadataOrUri[],
-  ): Promise<TransactionResultWithId<NFT>[]> {
-    const metadatas = metadataWithSupply.map((a) => a.metadata);
-    const supplies = metadataWithSupply.map((a) => a.supply);
-    const uris = await uploadOrExtractURIs(metadatas, this.storage);
-    const encoded = uris.map((uri, index) =>
-      this.contractWrapper.readContract.interface.encodeFunctionData("mintTo", [
-        to,
-        ethers.constants.MaxUint256,
-        uri,
-        supplies[index],
-      ]),
-    );
-    const receipt = await this.contractWrapper.multiCall(encoded);
-    const events = this.contractWrapper.parseLogs<TokensMintedEvent>(
-      "TokensMinted",
-      receipt.logs,
-    );
-    if (events.length === 0 || events.length < metadatas.length) {
-      throw new Error("TokenMinted event not found, minting failed");
-    }
-    return events.map((e) => {
-      const id = e.args.tokenIdMinted;
-      return {
-        id,
-        receipt,
-        data: () => this.erc1155.get(id),
-      };
-    });
-  }
+  to = buildTransactionFunction(
+    async (
+      to: AddressOrEns,
+      metadataWithSupply: EditionMetadataOrUri[],
+    ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
+      const metadatas = metadataWithSupply.map((a) => a.metadata);
+      const supplies = metadataWithSupply.map((a) => a.supply);
+      const uris = await uploadOrExtractURIs(metadatas, this.storage);
+      const resolvedAddress = await resolveAddress(to);
+      const encoded = await Promise.all(
+        uris.map(async (uri, index) =>
+          this.contractWrapper.readContract.interface.encodeFunctionData(
+            "mintTo",
+            [
+              resolvedAddress,
+              ethers.constants.MaxUint256,
+              uri,
+              supplies[index],
+            ],
+          ),
+        ),
+      );
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "multicall",
+        args: [encoded],
+        parse: (receipt) => {
+          const events = this.contractWrapper.parseLogs<TokensMintedEvent>(
+            "TokensMinted",
+            receipt.logs,
+          );
+          if (events.length === 0 || events.length < metadatas.length) {
+            throw new Error("TokenMinted event not found, minting failed");
+          }
+          return events.map((e) => {
+            const id = e.args.tokenIdMinted;
+            return {
+              id,
+              receipt,
+              data: () => this.erc1155.get(id),
+            };
+          });
+        },
+      });
+    },
+  );
 }

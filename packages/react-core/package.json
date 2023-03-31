@@ -1,23 +1,35 @@
 {
   "name": "@thirdweb-dev/react-core",
-  "version": "3.9.5",
+  "version": "3.11.3",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react-core",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
   "main": "dist/thirdweb-dev-react-core.cjs.js",
   "types": "dist/thirdweb-dev-react-core.cjs.d.ts",
   "module": "dist/thirdweb-dev-react-core.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-react-core.esm.js": "./dist/thirdweb-dev-react-core.browser.esm.js"
+  },
   "exports": {
     ".": {
-      "module": "./dist/thirdweb-dev-react-core.esm.js",
+      "module": {
+        "browser": "./dist/thirdweb-dev-react-core.browser.esm.js",
+        "default": "./dist/thirdweb-dev-react-core.esm.js"
+      },
       "default": "./dist/thirdweb-dev-react-core.cjs.js"
     },
     "./evm": {
-      "module": "./evm/dist/thirdweb-dev-react-core-evm.esm.js",
+      "module": {
+        "browser": "./evm/dist/thirdweb-dev-react-core-evm.browser.esm.js",
+        "default": "./evm/dist/thirdweb-dev-react-core-evm.esm.js"
+      },
       "default": "./evm/dist/thirdweb-dev-react-core-evm.cjs.js"
     },
     "./solana": {
-      "module": "./solana/dist/thirdweb-dev-react-core-solana.esm.js",
+      "module": {
+        "browser": "./solana/dist/thirdweb-dev-react-core-solana.browser.esm.js",
+        "default": "./solana/dist/thirdweb-dev-react-core-solana.esm.js"
+      },
       "default": "./solana/dist/thirdweb-dev-react-core-solana.cjs.js"
     },
     "./package.json": "./package.json"
@@ -33,7 +45,11 @@
       "solana/index.ts",
       "evm/index.ts"
     ],
-    "exports": true
+    "exports": {
+      "envConditions": [
+        "browser"
+      ]
+    }
   },
   "private": false,
   "scripts": {
@@ -41,7 +57,7 @@
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
-    "generate-docs": "yarn generate-docs:evm && yarn generate-docs:solana && yarn generate-snippets",
+    "generate-docs": "pnpm generate-docs:evm && pnpm generate-docs:solana && pnpm generate-snippets",
     "generate-docs:evm": "api-extractor run --local --config ./config/api-extractor-evm.json && api-documenter markdown -i ./temp -o ./docs/evm && rm -rf ./temp-evm && mv ./temp ./temp-evm",
     "generate-docs:solana": "api-extractor run --local --config ./config/api-extractor-solana.json && api-documenter markdown -i ./temp -o ./docs/solana && rm -rf ./temp-solana && mv ./temp ./temp-solana",
     "generate-snippets": "node ./scripts/generate-snippets-evm.mjs && node ./scripts/generate-snippets-solana.mjs && node ./scripts/generate-feature-snippets-evm.mjs",
@@ -59,8 +75,9 @@
     "@microsoft/api-extractor": "^7.29.2",
     "@microsoft/tsdoc": "^0.14.1",
     "@preconstruct/cli": "^2.2.1",
+    "@solana/wallet-adapter-react": "^0.15.19",
     "@solana/web3.js": "^1.62.0",
-    "@thirdweb-dev/sdk": "*",
+    "@types/mime": "3.0.0",
     "@types/react": "^18.0.5",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
@@ -73,18 +90,23 @@
     "ethers": "^5.7.2",
     "prettier": "^2.7.1",
     "react": "^18.2.0",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "eslint-config-thirdweb": "workspace:*",
+    "@thirdweb-dev/tsconfig": "workspace:*",
+    "@thirdweb-dev/auth": "workspace:*"
   },
   "dependencies": {
-    "@thirdweb-dev/chains": "*",
     "@tanstack/react-query": "^4.0.10",
-    "tiny-invariant": "^1.2.0",
-    "@thirdweb-dev/auth": "*"
+    "@thirdweb-dev/chains": "workspace:*",
+    "@thirdweb-dev/wallets": "workspace:*",
+    "@thirdweb-dev/storage": "workspace:*",
+    "@thirdweb-dev/sdk": "workspace:*",
+    "mime": "3.0.0",
+    "tiny-invariant": "^1.2.0"
   },
   "peerDependencies": {
     "@solana/wallet-adapter-react": "^0.15.19",
     "@solana/web3.js": "^1.62.0",
-    "@thirdweb-dev/sdk": "*",
     "ethers": ">=5.5.1",
     "react": ">=18.0.0"
   },

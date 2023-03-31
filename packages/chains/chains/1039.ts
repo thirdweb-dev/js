@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Bronos Mainnet",
   "chain": "Bronos",
@@ -23,9 +24,14 @@ export default {
       "name": "Bronos Explorer",
       "url": "https://broscan.bronos.org",
       "standard": "none",
-      "icon": "bronos"
+      "icon": {
+        "url": "ipfs://bafybeifkgtmhnq4sxu6jn22i7ass7aih6ubodr77k6ygtu4tjbvpmkw2ga",
+        "width": 500,
+        "height": 500,
+        "format": "png"
+      }
     }
   ],
   "testnet": false,
   "slug": "bronos"
-} as const;
+} as const satisfies Chain;

@@ -1,6 +1,7 @@
-import { detectContractFeature } from "../../common";
+import { detectContractFeature, hasFunction } from "../../common";
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { uploadOrExtractURIs } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_SIGNATURE_MINTABLE_V2 } from "../../constants/erc721-features";
 import {
   MintRequest721,
@@ -14,15 +15,17 @@ import {
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
 import type {
   ISignatureMintERC721,
   ITokenERC721,
+  Multicall,
   SignatureMintERC721,
   TokenERC721,
 } from "@thirdweb-dev/contracts-js";
 import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/SignatureDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -62,51 +65,73 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    * @param signedPayload - the previously generated payload and signature with {@link Erc721WithQuantitySignatureMintable.generate}
    * @twfeature ERC721SignatureMint
    */
-  public async mint(
-    signedPayload: SignedPayload721WithQuantitySignature,
-  ): Promise<TransactionResultWithId> {
-    const mintRequest = signedPayload.payload;
-    const signature = signedPayload.signature;
+  mint = buildTransactionFunction(
+    async (
+      signedPayload: SignedPayload721WithQuantitySignature,
+    ): Promise<Transaction<TransactionResultWithId>> => {
+      const mintRequest = signedPayload.payload;
+      const signature = signedPayload.signature;
 
-    const isLegacyNFTContract = await this.isLegacyNFTContract();
+      const overrides = await this.contractWrapper.getCallOverrides();
+      const parse = (receipt: ethers.providers.TransactionReceipt) => {
+        const t =
+          this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
+            "TokensMintedWithSignature",
+            receipt.logs,
+          );
+        if (t.length === 0) {
+          throw new Error("No MintWithSignature event found");
+        }
+        const id = t[0].args.tokenIdMinted;
+        return {
+          id,
+          receipt,
+        };
+      };
 
-    let message;
-    let price;
-    if (isLegacyNFTContract) {
-      message = await this.mapLegacyPayloadToContractStruct(mintRequest);
-      price = message.price;
-    } else {
-      message = await this.mapPayloadToContractStruct(mintRequest);
-      price = message.pricePerToken.mul(message.quantity);
-    }
+      if (await this.isLegacyNFTContract()) {
+        const message = await this.mapLegacyPayloadToContractStruct(
+          mintRequest,
+        );
+        const price = message.price;
 
-    const overrides = await this.contractWrapper.getCallOverrides();
+        // TODO: Transaction Sequence Pattern
+        await setErc20Allowance(
+          this.contractWrapper,
+          price,
+          mintRequest.currencyAddress,
+          overrides,
+        );
 
-    await setErc20Allowance(
-      this.contractWrapper,
-      price,
-      mintRequest.currencyAddress,
-      overrides,
-    );
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper,
+          method: "mintWithSignature",
+          args: [message, signature],
+          overrides,
+          parse,
+        });
+      } else {
+        const message = await this.mapPayloadToContractStruct(mintRequest);
+        const price = message.pricePerToken.mul(message.quantity);
 
-    const receipt = await this.contractWrapper.sendTransaction(
-      "mintWithSignature",
-      [message, signature],
-      overrides,
-    );
-    const t = this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
-      "TokensMintedWithSignature",
-      receipt.logs,
-    );
-    if (t.length === 0) {
-      throw new Error("No MintWithSignature event found");
-    }
-    const id = t[0].args.tokenIdMinted;
-    return {
-      id,
-      receipt,
-    };
-  }
+        // TODO: Transaction Sequence Pattern
+        await setErc20Allowance(
+          this.contractWrapper,
+          price,
+          mintRequest.currencyAddress,
+          overrides,
+        );
+
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper,
+          method: "mintWithSignature",
+          args: [message, signature],
+          overrides,
+          parse,
+        });
+      }
+    },
+  );
 
   /**
    * Mint any number of dynamically generated NFT at once
@@ -114,64 +139,77 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    * @param signedPayloads - the array of signed payloads to mint
    * @twfeature ERC721SignatureMint
    */
-  public async mintBatch(
-    signedPayloads: SignedPayload721WithQuantitySignature[],
-  ): Promise<TransactionResultWithId[]> {
-    const isLegacyNFTContract = await this.isLegacyNFTContract();
+  mintBatch = buildTransactionFunction(
+    async (
+      signedPayloads: SignedPayload721WithQuantitySignature[],
+    ): Promise<Transaction<TransactionResultWithId[]>> => {
+      const isLegacyNFTContract = await this.isLegacyNFTContract();
 
-    const contractPayloads = await Promise.all(
-      signedPayloads.map(async (s) => {
-        let message;
+      const contractPayloads = await Promise.all(
+        signedPayloads.map(async (s) => {
+          let message;
 
-        if (isLegacyNFTContract) {
-          message = await this.mapLegacyPayloadToContractStruct(s.payload);
-        } else {
-          message = await this.mapPayloadToContractStruct(s.payload);
-        }
+          if (isLegacyNFTContract) {
+            message = await this.mapLegacyPayloadToContractStruct(s.payload);
+          } else {
+            message = await this.mapPayloadToContractStruct(s.payload);
+          }
 
-        const signature = s.signature;
-        const price = s.payload.price;
-        if (BigNumber.from(price).gt(0)) {
-          throw new Error(
-            "Can only batch free mints. For mints with a price, use regular mint()",
-          );
-        }
-        return {
-          message,
-          signature,
-        };
-      }),
-    );
-    const encoded = contractPayloads.map((p) => {
-      if (isLegacyNFTContract) {
-        const contract = this.contractWrapper.readContract as TokenERC721;
-        return contract.interface.encodeFunctionData("mintWithSignature", [
-          p.message as ITokenERC721.MintRequestStructOutput,
-          p.signature,
-        ]);
-      } else {
-        const contract = this.contractWrapper
-          .readContract as SignatureMintERC721;
-        return contract.interface.encodeFunctionData("mintWithSignature", [
-          p.message as ISignatureMintERC721.MintRequestStructOutput,
-          p.signature,
-        ]);
-      }
-    });
-    const receipt = await this.contractWrapper.multiCall(encoded);
-    const events =
-      this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
-        "TokensMintedWithSignature",
-        receipt.logs,
+          const signature = s.signature;
+          const price = s.payload.price;
+          if (BigNumber.from(price).gt(0)) {
+            throw new Error(
+              "Can only batch free mints. For mints with a price, use regular mint()",
+            );
+          }
+          return {
+            message,
+            signature,
+          };
+        }),
       );
-    if (events.length === 0) {
-      throw new Error("No MintWithSignature event found");
-    }
-    return events.map((log) => ({
-      id: log.args.tokenIdMinted,
-      receipt,
-    }));
-  }
+      const encoded = contractPayloads.map((p) => {
+        if (isLegacyNFTContract) {
+          const contract = this.contractWrapper.readContract as TokenERC721;
+          return contract.interface.encodeFunctionData("mintWithSignature", [
+            p.message as ITokenERC721.MintRequestStructOutput,
+            p.signature,
+          ]);
+        } else {
+          const contract = this.contractWrapper
+            .readContract as SignatureMintERC721;
+          return contract.interface.encodeFunctionData("mintWithSignature", [
+            p.message as ISignatureMintERC721.MintRequestStructOutput,
+            p.signature,
+          ]);
+        }
+      });
+
+      if (hasFunction<Multicall>("multicall", this.contractWrapper)) {
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper,
+          method: "multicall",
+          args: [encoded],
+          parse: (receipt) => {
+            const events =
+              this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
+                "TokensMintedWithSignature",
+                receipt.logs,
+              );
+            if (events.length === 0) {
+              throw new Error("No MintWithSignature event found");
+            }
+            return events.map((log) => ({
+              id: log.args.tokenIdMinted,
+              receipt,
+            }));
+          },
+        });
+      } else {
+        throw new Error("Multicall not available on this contract!");
+      }
+    },
+  );
 
   /**
    * Verify that a payload is correctly signed
@@ -285,8 +323,8 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   ): Promise<SignedPayload721WithQuantitySignature[]> {
     const isLegacyNFTContract = await this.isLegacyNFTContract();
 
-    const parsedRequests = payloadsToSign.map((m) =>
-      Signature721WithQuantityInput.parse(m),
+    const parsedRequests = await Promise.all(
+      payloadsToSign.map((m) => Signature721WithQuantityInput.parseAsync(m)),
     );
 
     const metadatas = parsedRequests.map((r) => r.metadata);
@@ -299,7 +337,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
     return await Promise.all(
       parsedRequests.map(async (m, i) => {
         const uri = uris[i];
-        const finalPayload = Signature721WithQuantityOutput.parse({
+        const finalPayload = await Signature721WithQuantityOutput.parseAsync({
           ...m,
           uri,
         });

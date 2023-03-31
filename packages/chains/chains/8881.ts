@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Quartz by Unique",
   "icon": {
@@ -34,4 +35,4 @@ export default {
   ],
   "testnet": false,
   "slug": "quartz-by-unique"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "SeedCoin-Network",
   "chain": "SeedCoin-Network",
@@ -23,4 +24,4 @@ export default {
   "networkId": 37,
   "testnet": false,
   "slug": "seedcoin-network"
-} as const;
+} as const satisfies Chain;

@@ -4,6 +4,7 @@ import {
   FEATURE_ENGLISH_AUCTIONS,
   FEATURE_OFFERS,
 } from "../../constants/thirdweb-features";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -15,11 +16,13 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { MarketplaceV3DirectListings } from "../../core/classes/marketplacev3-direct-listings";
 import { MarketplaceV3EnglishAuctions } from "../../core/classes/marketplacev3-english-auction";
 import { MarketplaceV3Offers } from "../../core/classes/marketplacev3-offers";
+import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput } from "../../core/types";
-import { Abi } from "../../schema/contracts/custom";
 import { MarketplaceV3ContractSchema } from "../../schema/contracts/marketplacev3";
+import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
+import { Address } from "../../schema/shared";
 import type {
   MarketplaceV3 as MarketplaceV3Contract,
   DirectListingsLogic,
@@ -60,9 +63,11 @@ export class MarketplaceV3 implements UpdateableNetwork {
     MarketplaceV3Contract,
     typeof MarketplaceV3ContractSchema
   >;
+
+  public app: ContractAppURI<MarketplaceV3Contract>;
   public roles: ContractRoles<
-    IPermissions,
-    typeof MarketplaceV3.contractRoles[number]
+    MarketplaceV3Contract,
+    (typeof MarketplaceV3.contractRoles)[number]
   >;
   /**
    * @internal
@@ -202,7 +207,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: Abi,
+    abi: AbiInput,
     chainId: number,
     contractWrapper = new ContractWrapper<MarketplaceV3Contract>(
       network,
@@ -212,7 +217,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
     ),
   ) {
     this._chainId = chainId;
-    this.abi = abi;
+    this.abi = AbiSchema.parse(abi || []);
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this.metadata = new ContractMetadata(
@@ -220,8 +225,14 @@ export class MarketplaceV3 implements UpdateableNetwork {
       MarketplaceV3ContractSchema,
       this.storage,
     );
+
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
     this.roles = new ContractRoles(
-      this.contractWrapper as unknown as ContractWrapper<IPermissions>,
+      this.contractWrapper as unknown as ContractWrapper<MarketplaceV3Contract>,
       MarketplaceV3.contractRoles,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
@@ -237,18 +248,39 @@ export class MarketplaceV3 implements UpdateableNetwork {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
   }
 
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
+  public async prepare<
+    TMethod extends keyof MarketplaceV3Contract["functions"] = keyof MarketplaceV3Contract["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<MarketplaceV3Contract["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
+  }
+
+  /**
+   * @internal
+   */
+  public async call<
+    TMethod extends keyof MarketplaceV3Contract["functions"] = keyof MarketplaceV3Contract["functions"],
+  >(
+    functionName: string & TMethod,
+    args?: Parameters<MarketplaceV3Contract["functions"][TMethod]>,
+    overrides?: CallOverrides,
   ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 
   /** ********************
@@ -263,7 +295,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
       )
     ) {
       return new MarketplaceV3DirectListings(
-        this.contractWrapper as unknown as ContractWrapper<DirectListingsLogic>,
+        this.contractWrapper,
         this.storage,
       );
     }
@@ -278,8 +310,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
       )
     ) {
       return new MarketplaceV3EnglishAuctions(
-        this
-          .contractWrapper as unknown as ContractWrapper<EnglishAuctionsLogic>,
+        this.contractWrapper,
         this.storage,
       );
     }
@@ -288,10 +319,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
 
   private detectOffers() {
     if (detectContractFeature<OffersLogic>(this.contractWrapper, "Offers")) {
-      return new MarketplaceV3Offers(
-        this.contractWrapper as unknown as ContractWrapper<OffersLogic>,
-        this.storage,
-      );
+      return new MarketplaceV3Offers(this.contractWrapper, this.storage);
     }
     return undefined;
   }

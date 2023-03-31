@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Aurora Betanet",
   "chain": "NEAR",
@@ -14,4 +15,4 @@ export default {
   "networkId": 1313161556,
   "testnet": false,
   "slug": "aurora-betanet"
-} as const;
+} as const satisfies Chain;

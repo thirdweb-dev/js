@@ -1,5 +1,7 @@
 import { NFT } from "../../../core/schema/nft";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_CLAIM_CONDITIONS_V2 } from "../../constants/erc721-features";
+import { AddressOrEns } from "../../schema";
 import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ClaimOptions } from "../../types";
 import { BaseClaimConditionERC721 } from "../../types/eips";
@@ -9,6 +11,7 @@ import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { DropClaimConditions } from "./drop-claim-conditions";
 import { Erc721 } from "./erc-721";
+import { Transaction } from "./transactions";
 import { TokensClaimedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Drop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish } from "ethers";
@@ -36,7 +39,7 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
    * const claimConditions = [
    *   {
    *     startTime: presaleStartTime, // start the presale now
-   *     maxQuantity: 2, // limit how many mints for this presale
+   *     maxClaimableSupply: 2, // limit how many mints for this presale
    *     price: 0.01, // presale price
    *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
    *   },
@@ -95,31 +98,37 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
    * @param options
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
-  public async to(
-    destinationAddress: string,
-    quantity: BigNumberish,
-    options?: ClaimOptions,
-  ): Promise<TransactionResultWithId<NFT>[]> {
-    const task = await this.conditions.getClaimTransaction(
-      destinationAddress,
-      quantity,
-      options,
-    );
-    const { receipt } = await task.execute();
-    const event = this.contractWrapper.parseLogs<TokensClaimedEvent>(
-      "TokensClaimed",
-      receipt?.logs,
-    );
-    const startingIndex: BigNumber = event[0].args.startTokenId;
-    const endingIndex = startingIndex.add(quantity);
-    const results: TransactionResultWithId<NFT>[] = [];
-    for (let id = startingIndex; id.lt(endingIndex); id = id.add(1)) {
-      results.push({
-        id,
-        receipt,
-        data: () => this.erc721.get(id),
+  to = buildTransactionFunction(
+    async (
+      destinationAddress: AddressOrEns,
+      quantity: BigNumberish,
+      options?: ClaimOptions,
+    ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
+      // TODO: Transaction Sequence Pattern
+      const tx = (await this.conditions.getClaimTransaction(
+        destinationAddress,
+        quantity,
+        options,
+      )) as any as Transaction<TransactionResultWithId<NFT>[]>;
+      tx.setParse((receipt) => {
+        const event = this.contractWrapper.parseLogs<TokensClaimedEvent>(
+          "TokensClaimed",
+          receipt?.logs,
+        );
+        const startingIndex: BigNumber = event[0].args.startTokenId;
+        const endingIndex = startingIndex.add(quantity);
+        const results: TransactionResultWithId<NFT>[] = [];
+        for (let id = startingIndex; id.lt(endingIndex); id = id.add(1)) {
+          results.push({
+            id,
+            receipt,
+            data: () => this.erc721.get(id),
+          });
+        }
+        return results;
       });
-    }
-    return results;
-  }
+
+      return tx;
+    },
+  );
 }

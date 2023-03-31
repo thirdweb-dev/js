@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-sdk-evm-functions.cjs.js",
+  "module": "dist/thirdweb-dev-sdk-evm-functions.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-sdk-evm-functions.esm.js": "./dist/thirdweb-dev-sdk-evm-functions.browser.esm.js"
+  }
+}

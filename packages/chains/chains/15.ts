@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Diode Prenet",
   "chain": "DIODE",
@@ -18,4 +19,4 @@ export default {
   "networkId": 15,
   "testnet": false,
   "slug": "diode-prenet"
-} as const;
+} as const satisfies Chain;

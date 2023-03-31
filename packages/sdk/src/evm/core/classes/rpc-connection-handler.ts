@@ -1,11 +1,14 @@
-import { getChainProvider, getReadOnlyProvider } from "../../constants/urls";
+import {
+  getSignerAndProvider,
+  isSigner,
+} from "../../functions/getSignerAndProvider";
 import {
   SDKOptions,
   SDKOptionsOutput,
   SDKOptionsSchema,
 } from "../../schema/sdk-options";
 import { NetworkInput } from "../types";
-import { ethers, Signer, providers } from "ethers";
+import type { Signer, providers } from "ethers";
 import EventEmitter from "eventemitter3";
 
 /**
@@ -46,7 +49,7 @@ export class RPCConnectionHandler extends EventEmitter {
    * @returns whether or not a signer is set, `true` if there is no signer so the class is in "read only" mode
    */
   public isReadOnly(): boolean {
-    return !Signer.isSigner(this.signer);
+    return !isSigner(this.signer);
   }
 
   /**
@@ -72,52 +75,4 @@ export class RPCConnectionHandler extends EventEmitter {
   public getSignerOrProvider(): Signer | providers.Provider {
     return this.getSigner() || this.getProvider();
   }
-}
-
-/**
- * @internal
- */
-export function getSignerAndProvider(
-  network: NetworkInput,
-  options: SDKOptions,
-): [Signer | undefined, providers.Provider] {
-  let signer: Signer | undefined;
-  let provider: providers.Provider | undefined;
-
-  if (Signer.isSigner(network)) {
-    signer = network;
-    if (network.provider) {
-      provider = network.provider;
-    }
-  }
-
-  if (options?.readonlySettings) {
-    provider = getReadOnlyProvider(
-      options.readonlySettings.rpcUrl,
-      options.readonlySettings.chainId,
-    );
-  }
-
-  if (!provider) {
-    if (providers.Provider.isProvider(network)) {
-      provider = network;
-    } else if (!Signer.isSigner(network)) {
-      if (typeof network === "string" || typeof network === "number") {
-        provider = getChainProvider(network, options);
-      } else {
-        // no a signer, not a provider, not a string? try with default provider
-        provider = ethers.getDefaultProvider(network);
-      }
-    }
-  }
-
-  if (!provider) {
-    // we should really never hit this case!
-    provider = ethers.getDefaultProvider();
-    console.error(
-      "No provider found, using default provider on default chain!",
-    );
-  }
-
-  return [signer, provider];
 }

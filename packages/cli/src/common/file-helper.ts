@@ -21,7 +21,7 @@ export function findFiles(
     }
     const stat = statSync(filename);
 
-    // brownie has a "depdendencies" directory *inside* the build directory, if we detect that we should skip it
+    // brownie has a "dependencies" directory *inside* the build directory, if we detect that we should skip it
     if (stat.isDirectory() && basename(filename) === "dependencies") {
       logger.debug('skipping "dependencies" directory');
       continue;

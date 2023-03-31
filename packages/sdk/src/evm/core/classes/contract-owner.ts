@@ -1,7 +1,10 @@
+import { resolveAddress } from "../../common/ens";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_OWNER } from "../../constants/thirdweb-features";
+import { AddressOrEns } from "../../schema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
 import type { Ownable } from "@thirdweb-dev/contracts-js";
 
 /**
@@ -19,8 +22,14 @@ export class ContractOwner<TContract extends Ownable>
   }
 
   /**
-   * Return the current owner of the contract
+   * Get the current owner of the contract
+   * @example
+   * ```javascript
+   * await contract.owner.get();
+   * console.log("Owner address: ", ownerAddress);
+   * ```
    * @returns the owner address
+   * @twfeature Ownable
    */
   public async get(): Promise<string> {
     return this.contractWrapper.readContract.owner();
@@ -34,14 +43,20 @@ export class ContractOwner<TContract extends Ownable>
    *
    * @example
    * ```javascript
-   * await contract.owner.set("0x1234567890123456789012345678901234567890");
+   * const newOwnerAddress = "{{wallet_address}}";
+   * await contract.owner.set(newOwnerAddress);
    * ```
+   * @twfeature Ownable
    */
-  public async set(address: string): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("setOwner", [
-        address,
-      ]),
-    };
-  }
+  set = buildTransactionFunction(
+    async (address: AddressOrEns): Promise<Transaction> => {
+      const resolvedAddress = await resolveAddress(address);
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper as ContractWrapper<Ownable>,
+        method: "setOwner",
+        args: [resolvedAddress],
+      });
+    },
+  );
 }

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Metacodechain",
   "chain": "metacode",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": false,
   "slug": "metacodechain"
-} as const;
+} as const satisfies Chain;

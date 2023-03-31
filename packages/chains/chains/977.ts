@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Nepal Blockchain Network",
   "chain": "YETI",
@@ -20,4 +21,4 @@ export default {
   "networkId": 977,
   "testnet": false,
   "slug": "nepal-blockchain-network"
-} as const;
+} as const satisfies Chain;

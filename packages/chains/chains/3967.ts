@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "DYNO Testnet",
   "chain": "DYNO",
@@ -26,4 +27,4 @@ export default {
   ],
   "testnet": true,
   "slug": "dyno-testnet"
-} as const;
+} as const satisfies Chain;

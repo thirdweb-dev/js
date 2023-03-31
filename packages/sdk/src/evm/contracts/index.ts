@@ -1,15 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { getPrebuiltInfo } from "../common/legacy";
 import { fetchAbiFromAddress } from "../common/metadata-resolver";
-import { getCompositePluginABI, joinABIs } from "../common/plugin";
+import { getCompositePluginABI } from "../common/plugin";
 import { ALL_ROLES } from "../common/role";
-import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
 import type {
   ContractType,
   NetworkInput,
   PrebuiltContractType,
 } from "../core/types";
+import { getSignerAndProvider } from "../functions/getSignerAndProvider";
 import {
+  Address,
   DropErc1155ContractSchema,
   DropErc721ContractSchema,
   MarketplaceContractSchema,
@@ -21,11 +21,7 @@ import {
   TokenErc721ContractSchema,
   VoteContractSchema,
 } from "../schema";
-import {
-  Abi,
-  AbiSchema,
-  CustomContractSchema,
-} from "../schema/contracts/custom";
+import { Abi, AbiSchema } from "../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -33,7 +29,7 @@ import { ethers } from "ethers";
 
 type InitalizeParams = [
   network: NetworkInput,
-  address: string,
+  address: Address,
   storage: ThirdwebStorage,
   options?: SDKOptions,
 ];
@@ -63,7 +59,7 @@ export const EditionDropInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -109,7 +105,7 @@ export const EditionInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -149,7 +145,7 @@ export const MarketplaceInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -166,7 +162,7 @@ export const MarketplaceInitializer = {
 };
 
 export const MarketplaceV3Initializer = {
-  name: "MarketplaceRouter" as const,
+  name: "MarketplaceV3" as const,
   contractType: "marketplace-v3" as const,
   schema: MarketplaceContractSchema,
   roles: ["admin", "lister", "asset"] as const,
@@ -190,7 +186,7 @@ export const MarketplaceV3Initializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -205,7 +201,7 @@ export const MarketplaceV3Initializer = {
     ).default;
     return await getCompositePluginABI(
       address,
-      localAbi,
+      AbiSchema.parse(localAbi || []),
       provider,
       {},
       storage,
@@ -238,7 +234,7 @@ export const MultiwrapInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -278,7 +274,7 @@ export const NFTCollectionInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -318,7 +314,7 @@ export const NFTDropInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -365,7 +361,7 @@ export const PackInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ): Promise<Abi> => {
@@ -374,8 +370,10 @@ export const PackInitializer = {
       return abi;
     }
     // Deprecated - only needed for backwards compatibility with non-published contracts - should remove in v4
-    return (await import("@thirdweb-dev/contracts-js/dist/abis/Pack.json"))
-      .default;
+    return AbiSchema.parse(
+      (await import("@thirdweb-dev/contracts-js/dist/abis/Pack.json"))
+        .default || [],
+    );
   },
 };
 
@@ -405,7 +403,7 @@ export const SignatureDropInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -455,7 +453,7 @@ export const SplitInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -495,7 +493,7 @@ export const TokenDropInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -538,7 +536,7 @@ export const TokenInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -579,7 +577,7 @@ export const VoteInitializer = {
     );
   },
   getAbi: async (
-    address: string,
+    address: Address,
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
@@ -594,7 +592,7 @@ export const VoteInitializer = {
 };
 
 async function getContractInfo(
-  address: string,
+  address: Address,
   provider: ethers.providers.Provider,
 ) {
   try {
@@ -622,6 +620,28 @@ export const PREBUILT_CONTRACTS_MAP = {
   [TokenDropInitializer.contractType]: TokenDropInitializer,
   [TokenInitializer.contractType]: TokenInitializer,
   [VoteInitializer.contractType]: VoteInitializer,
+} as const;
+
+export const PREBUILT_CONTRACTS_APPURI_MAP = {
+  [EditionDropInitializer.contractType]:
+    "ipfs://QmNm3wRzpKYWo1SRtJfgfxtvudp5p2nXD6EttcsQJHwTmk",
+  [EditionInitializer.contractType]: "",
+  [MarketplaceInitializer.contractType]:
+    "ipfs://QmbAgC8YwY36n8H2kuvSWsRisxDZ15QZw3xGZyk9aDvcv7/marketplace.html",
+  [MarketplaceV3Initializer.contractType]:
+    "ipfs://QmbAgC8YwY36n8H2kuvSWsRisxDZ15QZw3xGZyk9aDvcv7/marketplace-v3.html",
+  [MultiwrapInitializer.contractType]: "",
+  [NFTCollectionInitializer.contractType]: "",
+  [NFTDropInitializer.contractType]:
+    "ipfs://QmZptmVipc6SGFbKAyXcxGgohzTwYRXZ9LauRX5ite1xDK",
+  [PackInitializer.contractType]: "",
+  [SignatureDropInitializer.contractType]:
+    "ipfs://QmZptmVipc6SGFbKAyXcxGgohzTwYRXZ9LauRX5ite1xDK",
+  [SplitInitializer.contractType]: "",
+  [TokenDropInitializer.contractType]:
+    "ipfs://QmbAgC8YwY36n8H2kuvSWsRisxDZ15QZw3xGZyk9aDvcv7/erc20.html",
+  [TokenInitializer.contractType]: "",
+  [VoteInitializer.contractType]: "",
 } as const;
 
 const SmartContract = {

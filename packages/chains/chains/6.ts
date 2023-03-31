@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Ethereum Classic Testnet Kotti",
   "chain": "ETC",
@@ -17,4 +18,4 @@ export default {
   "networkId": 6,
   "testnet": true,
   "slug": "ethereum-classic-testnet-kotti"
-} as const;
+} as const satisfies Chain;

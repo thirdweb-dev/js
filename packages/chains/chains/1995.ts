@@ -1,9 +1,11 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "edeXa Testnet",
   "chain": "edeXa TestNetwork",
   "rpc": [
     "https://edexa-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.edexa.com/rpc"
+    "https://testnet.edexa.com/rpc",
+    "https://io-dataseed1.testnet.edexa.io-market.com/rpc"
   ],
   "faucets": [
     "https://faucet.edexa.com/"
@@ -32,4 +34,4 @@ export default {
   ],
   "testnet": true,
   "slug": "edexa-testnet"
-} as const;
+} as const satisfies Chain;

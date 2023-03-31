@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "eCredits Mainnet",
   "chain": "ECS",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "eCredits MainNet Explorer",
       "url": "https://explorer.ecredits.com",
-      "icon": "ecredits",
+      "icon": {
+        "url": "ipfs://QmU9H9JE1KtLh2Fxrd8EWTMjKGJBpgRWKUeEx7u6ic4kBY",
+        "width": 32,
+        "height": 32,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "ecredits"
-} as const;
+} as const satisfies Chain;

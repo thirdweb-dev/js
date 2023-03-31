@@ -1,6 +1,8 @@
+import { hasFunction } from "../../common";
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { getPrebuiltInfo } from "../../common/legacy";
 import { uploadOrExtractURIs } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_SIGNATURE_MINTABLE } from "../../constants/erc1155-features";
 import type { NFTCollectionInitializer } from "../../contracts";
 import {
@@ -18,7 +20,12 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractRoles } from "./contract-roles";
 import { ContractWrapper } from "./contract-wrapper";
-import type { ITokenERC1155, TokenERC1155 } from "@thirdweb-dev/contracts-js";
+import { Transaction } from "./transactions";
+import type {
+  ITokenERC1155,
+  Multicall,
+  TokenERC1155,
+} from "@thirdweb-dev/contracts-js";
 import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ITokenERC1155";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, ethers } from "ethers";
@@ -36,7 +43,10 @@ export class Erc1155SignatureMintable implements DetectableFeature {
   >;
   private storage: ThirdwebStorage;
   private roles:
-    | ContractRoles<TokenERC1155, typeof NFTCollectionInitializer.roles[number]>
+    | ContractRoles<
+        TokenERC1155,
+        (typeof NFTCollectionInitializer.roles)[number]
+      >
     | undefined;
 
   constructor(
@@ -44,7 +54,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
     storage: ThirdwebStorage,
     roles?: ContractRoles<
       TokenERC1155,
-      typeof NFTCollectionInitializer.roles[number]
+      (typeof NFTCollectionInitializer.roles)[number]
     >,
   ) {
     this.contractWrapper = contractWrapper;
@@ -68,37 +78,44 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * @param signedPayload - the previously generated payload and signature with {@link Erc1155SignatureMintable.generate}
    * @twfeature ERC1155SignatureMintable
    */
-  public async mint(
-    signedPayload: SignedPayload1155,
-  ): Promise<TransactionResultWithId> {
-    const mintRequest = signedPayload.payload;
-    const signature = signedPayload.signature;
-    const message = await this.mapPayloadToContractStruct(mintRequest);
-    const overrides = await this.contractWrapper.getCallOverrides();
-    await setErc20Allowance(
-      this.contractWrapper,
-      message.pricePerToken.mul(message.quantity),
-      mintRequest.currencyAddress,
-      overrides,
-    );
-    const receipt = await this.contractWrapper.sendTransaction(
-      "mintWithSignature",
-      [message, signature],
-      overrides,
-    );
-    const t = this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
-      "TokensMintedWithSignature",
-      receipt.logs,
-    );
-    if (t.length === 0) {
-      throw new Error("No MintWithSignature event found");
-    }
-    const id = t[0].args.tokenIdMinted;
-    return {
-      id,
-      receipt,
-    };
-  }
+  mint = buildTransactionFunction(
+    async (
+      signedPayload: SignedPayload1155,
+    ): Promise<Transaction<TransactionResultWithId>> => {
+      const mintRequest = signedPayload.payload;
+      const signature = signedPayload.signature;
+      const message = await this.mapPayloadToContractStruct(mintRequest);
+      const overrides = await this.contractWrapper.getCallOverrides();
+      // TODO: Transaction Sequence Pattern
+      await setErc20Allowance(
+        this.contractWrapper,
+        message.pricePerToken.mul(message.quantity),
+        mintRequest.currencyAddress,
+        overrides,
+      );
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "mintWithSignature",
+        args: [message, signature],
+        overrides,
+        parse: (receipt) => {
+          const t =
+            this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
+              "TokensMintedWithSignature",
+              receipt.logs,
+            );
+          if (t.length === 0) {
+            throw new Error("No MintWithSignature event found");
+          }
+          const id = t[0].args.tokenIdMinted;
+          return {
+            id,
+            receipt,
+          };
+        },
+      });
+    },
+  );
 
   /**
    * Mint any number of dynamically generated NFT at once
@@ -116,45 +133,58 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * @param signedPayloads - the array of signed payloads to mint
    * @twfeature ERC1155SignatureMintable
    */
-  public async mintBatch(
-    signedPayloads: SignedPayload1155[],
-  ): Promise<TransactionResultWithId[]> {
-    const contractPayloads = await Promise.all(
-      signedPayloads.map(async (s) => {
-        const message = await this.mapPayloadToContractStruct(s.payload);
-        const signature = s.signature;
-        const price = s.payload.price;
-        if (BigNumber.from(price).gt(0)) {
-          throw new Error(
-            "Can only batch free mints. For mints with a price, use regular mint()",
-          );
-        }
-        return {
-          message,
-          signature,
-        };
-      }),
-    );
-    const encoded = contractPayloads.map((p) => {
-      return this.contractWrapper.readContract.interface.encodeFunctionData(
-        "mintWithSignature",
-        [p.message, p.signature],
+  mintBatch = buildTransactionFunction(
+    async (
+      signedPayloads: SignedPayload1155[],
+    ): Promise<Transaction<TransactionResultWithId[]>> => {
+      const contractPayloads = await Promise.all(
+        signedPayloads.map(async (s) => {
+          const message = await this.mapPayloadToContractStruct(s.payload);
+          const signature = s.signature;
+          const price = s.payload.price;
+          if (BigNumber.from(price).gt(0)) {
+            throw new Error(
+              "Can only batch free mints. For mints with a price, use regular mint()",
+            );
+          }
+          return {
+            message,
+            signature,
+          };
+        }),
       );
-    });
-    const receipt = await this.contractWrapper.multiCall(encoded);
-    const events =
-      this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
-        "TokensMintedWithSignature",
-        receipt.logs,
-      );
-    if (events.length === 0) {
-      throw new Error("No MintWithSignature event found");
-    }
-    return events.map((log) => ({
-      id: log.args.tokenIdMinted,
-      receipt,
-    }));
-  }
+      const encoded = contractPayloads.map((p) => {
+        return this.contractWrapper.readContract.interface.encodeFunctionData(
+          "mintWithSignature",
+          [p.message, p.signature],
+        );
+      });
+
+      if (hasFunction<Multicall>("multicall", this.contractWrapper)) {
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper,
+          method: "multicall",
+          args: [encoded],
+          parse: (receipt) => {
+            const events =
+              this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
+                "TokensMintedWithSignature",
+                receipt.logs,
+              );
+            if (events.length === 0) {
+              throw new Error("No MintWithSignature event found");
+            }
+            return events.map((log) => ({
+              id: log.args.tokenIdMinted,
+              receipt,
+            }));
+          },
+        });
+      } else {
+        throw new Error("Multicall not supported on this contract!");
+      }
+    },
+  );
 
   /**
    * Verify that a payload is correctly signed
@@ -322,7 +352,11 @@ export class Erc1155SignatureMintable implements DetectableFeature {
     );
 
     const parsedRequests: FilledSignaturePayload1155WithTokenId[] =
-      payloadsToSign.map((m) => Signature1155PayloadInputWithTokenId.parse(m));
+      await Promise.all(
+        payloadsToSign.map((m) =>
+          Signature1155PayloadInputWithTokenId.parseAsync(m),
+        ),
+      );
 
     const metadatas = parsedRequests.map((r) => r.metadata);
     const uris = await uploadOrExtractURIs(metadatas, this.storage);
@@ -340,7 +374,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
     return await Promise.all(
       parsedRequests.map(async (m, i) => {
         const uri = uris[i];
-        const finalPayload = Signature1155PayloadOutput.parse({
+        const finalPayload = await Signature1155PayloadOutput.parseAsync({
           ...m,
           uri,
         });

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Metaplayerone Mainnet",
   "chain": "METAD",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "Metad Scan",
       "url": "https://scan.metaplayer.one",
-      "icon": "metad",
+      "icon": {
+        "url": "ipfs://QmZyxS9BfRGYWWDtvrV6qtthCYV4TwdjLoH2sF6MkiTYFf",
+        "width": 1280,
+        "height": 1280,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "metaplayerone"
-} as const;
+} as const satisfies Chain;

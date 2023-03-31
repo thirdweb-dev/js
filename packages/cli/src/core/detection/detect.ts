@@ -5,7 +5,7 @@ import { Detector } from "./detector";
 import FoundryDetector from "./foundry";
 import HardhatDetector from "./hardhat";
 import TruffleDetector from "./truffle";
-import fs, { existsSync } from "fs";
+import { existsSync, readdirSync } from "fs";
 import inquirer from "inquirer";
 import { parse } from "path";
 
@@ -19,7 +19,7 @@ export default async function detect(
     new HardhatDetector(),
     new FoundryDetector(),
     new TruffleDetector(),
-    // new BrownieDetector(), TODO brownie does not support outputing metadata yet
+    // new BrownieDetector(), TODO brownie does not support outputting metadata yet
   ];
 
   const possibleProjectTypes = detectors
@@ -84,12 +84,11 @@ function hasContracts(path: any) {
         return false;
       }
 
-      const files = fs.readdirSync(dirPath);
+      const files = readdirSync(dirPath);
       const contracts = files.filter((filePath) => {
         const { ext } = parse(filePath);
         return ext === ".sol";
       });
-
       return contracts.length > 0;
     }).length > 0
   );

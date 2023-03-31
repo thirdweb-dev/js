@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "QEasyWeb3 Testnet",
   "chain": "QET",
@@ -21,10 +22,9 @@ export default {
     {
       "name": "QEasyWeb3 Explorer",
       "url": "https://www.qeasyweb3.com",
-      "icon": "qetscan",
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "qeasyweb3-testnet"
-} as const;
+} as const satisfies Chain;

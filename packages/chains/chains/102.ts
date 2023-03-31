@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Web3Games Testnet",
   "chain": "Web3Games",
@@ -25,4 +26,4 @@ export default {
   "networkId": 102,
   "testnet": true,
   "slug": "web3games-testnet"
-} as const;
+} as const satisfies Chain;

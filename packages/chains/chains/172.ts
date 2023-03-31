@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Latam-Blockchain Resil Testnet",
   "chain": "Resil",
@@ -20,4 +21,4 @@ export default {
   "networkId": 172,
   "testnet": true,
   "slug": "latam-blockchain-resil-testnet"
-} as const;
+} as const satisfies Chain;

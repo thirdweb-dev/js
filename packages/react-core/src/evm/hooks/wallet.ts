@@ -1,7 +1,9 @@
 import { useThirdwebConnectedWalletContext } from "../contexts/thirdweb-wallet";
 import { ContractAddress } from "../types";
 import { cacheKeys } from "../utils/cache-keys";
+import { useSupportedChains } from "./useSupportedChains";
 import { useQuery } from "@tanstack/react-query";
+import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { useMemo } from "react";
 
 /**
@@ -92,4 +94,42 @@ export function useAddress(): string | undefined {
  */
 export function useChainId(): number | undefined {
   return useThirdwebConnectedWalletContext().chainId;
+}
+
+/**
+ * Hook for accessing the active Chain the current wallet is connected to
+ *
+ * ```javascript
+ * import { useActiveChain } from "@thirdweb-dev/react-core"
+ * ```
+ *
+ * @example
+ * You can get the chain of the connected wallet by using the hook as follows:
+ * ```javascript
+ * import { useActiveChain } from "@thirdweb-dev/react-core"
+ *
+ * const App = () => {
+ *   const chain = useActiveChain()
+ *
+ *   return <div>{chain.chainId}</div>
+ * }
+ * ```
+ * @public
+ */
+export function useActiveChain(): Chain | undefined {
+  const chainId = useChainId();
+
+  const chains = useSupportedChains();
+
+  const chain = useMemo(() => {
+    return chains.find((_chain) => _chain.chainId === chainId);
+  }, [chainId, chains]);
+
+  const unknownChain = useMemo(() => {
+    if (!chain) {
+      return defaultChains.find((c) => c.chainId === chainId);
+    }
+  }, [chainId, chain]);
+
+  return chain || unknownChain;
 }

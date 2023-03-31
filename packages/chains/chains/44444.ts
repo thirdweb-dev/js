@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Frenchain",
   "chain": "fren",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "blockscout",
       "url": "https://frenscan.io",
-      "icon": "fren",
+      "icon": {
+        "url": "ipfs://QmQk41bYX6WpYyUAdRgomZekxP5mbvZXhfxLEEqtatyJv4",
+        "width": 128,
+        "height": 128,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "frenchain"
-} as const;
+} as const satisfies Chain;

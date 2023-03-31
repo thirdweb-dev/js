@@ -28,7 +28,7 @@ export async function createSnapshot(
   storage: ThirdwebStorage,
   snapshotFormatVersion: SnapshotFormatVersion,
 ): Promise<SnapshotInfo> {
-  const input = SnapshotInputSchema.parse(snapshotInput);
+  const input = await SnapshotInputSchema.parseAsync(snapshotInput);
   const addresses = input.map((i) => i.address);
   const hasDuplicates = new Set(addresses).size < addresses.length;
   if (hasDuplicates) {

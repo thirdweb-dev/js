@@ -1,11 +1,12 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "TMY Chain",
   "chain": "TMY",
   "icon": {
-    "url": "ipfs://QmdwQDr6vmBtXmK2TmknkEuZNoaDqTasFdZdu3DRw8b2wt",
-    "width": 1000,
-    "height": 1628,
-    "format": "png"
+    "url": "ipfs://QmXQu3ib9gTo23mdVgMqmrExga6SmAzDQTTctpVBNtfDu9",
+    "width": 1024,
+    "height": 1023,
+    "format": "svg"
   },
   "rpc": [
     "https://tmy-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
@@ -25,4 +26,4 @@ export default {
   "networkId": 8768,
   "testnet": false,
   "slug": "tmy-chain"
-} as const;
+} as const satisfies Chain;

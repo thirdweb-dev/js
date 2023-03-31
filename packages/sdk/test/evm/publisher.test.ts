@@ -47,7 +47,7 @@ export const uploadContractMetadata = async (
 
 describe("Publishing", async () => {
   let simpleContractUri: string;
-  let contructorParamsContractUri: string;
+  let constructorParamsContractUri: string;
   let adminWallet: SignerWithAddress;
   let samWallet: SignerWithAddress;
   let bobWallet: SignerWithAddress;
@@ -59,7 +59,7 @@ describe("Publishing", async () => {
     simpleContractUri =
       "ipfs://QmNPcYsXDAZvQZXCG73WSjdiwffZkNkoJYwrDDtcgM142A/0";
     // if we change the test data - await uploadContractMetadata("Greeter", storage);
-    contructorParamsContractUri =
+    constructorParamsContractUri =
       "ipfs://QmT5Dx3xigHr6BPG8scxbX7JaAucHRD9UPXc6FCtgcNn5e/0";
   });
 
@@ -227,7 +227,7 @@ describe("Publishing", async () => {
   it("should publish constructor params contract", async () => {
     sdk.updateSignerOrProvider(bobWallet);
     const publisher = sdk.getPublisher();
-    const tx = await publisher.publish(contructorParamsContractUri, {
+    const tx = await publisher.publish(constructorParamsContractUri, {
       version: "0.0.1",
     });
     const contract = await tx.data();
@@ -371,7 +371,7 @@ describe("Publishing", async () => {
     expect(meta.name).to.eq("Hello");
   });
 
-  it("ERC721Dropable multiphase feature detection", async () => {
+  it("ERC721Droppable multiphase feature detection", async () => {
     const ipfsUri = "ipfs://Qmbu57WNPmmGuNZEiEAVi9yeXxGK2GkJRBbRMaPxs9KS5b";
     const addr = await sdk.deployer.deployContractFromUri(ipfsUri, []);
     const c = await sdk.getContract(addr);
@@ -462,9 +462,9 @@ describe("Publishing", async () => {
     const nftsAfter = await c.erc1155.getAll();
     expect(nftsAfter.length).to.equal(2);
     expect(nftsAfter[0].metadata.name).to.equal("cool nft 1");
-    expect(nftsAfter[0].supply).to.equal(1);
+    expect(nftsAfter[0].supply).to.equal("1");
     expect(nftsAfter[1].metadata.name).to.equal("cool nft 2");
-    expect(nftsAfter[1].supply).to.equal(0);
+    expect(nftsAfter[1].supply).to.equal("0");
   });
 
   it("ERC1155Signature mint feature detection", async () => {
@@ -507,11 +507,13 @@ describe("Publishing", async () => {
     const uri = await c.call("contractUri");
     expect(uri).to.eq(ethers.utils.hexZeroPad("0x1234", 32));
 
-    const tx = await c.call("updateStruct", {
-      aNumber: 123,
-      aString: ethers.utils.hexZeroPad("0x1234", 32),
-      anArray: [adminWallet.address, samWallet.address],
-    });
+    const tx = await c.call("updateStruct", [
+      {
+        aNumber: 123,
+        aString: ethers.utils.hexZeroPad("0x1234", 32),
+        anArray: [adminWallet.address, samWallet.address],
+      },
+    ]);
     expect(tx).to.not.eq(undefined);
   });
 

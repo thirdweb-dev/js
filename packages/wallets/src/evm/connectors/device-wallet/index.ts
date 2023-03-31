@@ -1,52 +1,47 @@
+import { normalizeChainId } from "../../../lib/wagmi-core";
 import { ConnectParams, TWConnector } from "../../interfaces/tw-connector";
 import type {
   DeviceWalletConnectionArgs,
   DeviceWalletImpl,
 } from "../../wallets/device-wallet";
 import type { Chain } from "@thirdweb-dev/chains";
-import { ethers } from "ethers";
+import type { Signer } from "ethers";
+import { providers } from "ethers";
 
 export type DeviceWalletConnectorOptions = {
-  chain:
-    | {
-        chainId: number;
-        rpc: string[];
-      }
-    | Chain;
+  chain: Chain;
   wallet: DeviceWalletImpl;
+  chains: Chain[];
 };
 
 export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArgs> {
   readonly id: string = "device_wallet";
   readonly name: string = "Device Wallet";
   options: DeviceWalletConnectorOptions;
-  chainId: number;
   #wallet: DeviceWalletImpl;
 
-  #provider?: ethers.providers.Provider;
-  #signer?: ethers.Signer;
+  #provider?: providers.Provider;
+  #signer?: Signer;
 
   protected shimDisconnectKey = "deviceWallet.shimDisconnect";
 
   constructor(options: DeviceWalletConnectorOptions) {
     super();
     this.options = options;
-    this.chainId = options.chain.chainId;
     this.#wallet = options.wallet;
   }
 
   async connect(args: ConnectParams<DeviceWalletConnectionArgs>) {
-    if (args.chainId) {
-      this.chainId = args.chainId;
-    }
     await this.initializeDeviceWallet(args.password);
+    if (args.chainId) {
+      this.switchChain(args.chainId);
+    }
     const signer = await this.getSigner();
     const address = await signer.getAddress();
     return address;
   }
 
   async initializeDeviceWallet(password: string) {
-    // TODO this should be a UI flow prior to calling connect instead
     const savedAddr = await this.#wallet.getSavedWalletAddress();
     if (!savedAddr) {
       await this.#wallet.generateNewWallet();
@@ -78,13 +73,9 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
     }
   }
 
-  async getChainId() {
-    return this.chainId;
-  }
-
   async getProvider() {
     if (!this.#provider) {
-      this.#provider = new ethers.providers.JsonRpcBatchProvider(
+      this.#provider = new providers.JsonRpcBatchProvider(
         this.options.chain.rpc[0],
       );
     }
@@ -102,9 +93,26 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
     return this.#signer;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async switchChain(chainId: number): Promise<void> {
-    // TODO
-    throw new Error("Not supported");
+    const chain = this.options.chains.find((c) => c.chainId === chainId);
+    if (!chain) {
+      throw new Error("Chain not found");
+    }
+
+    this.#provider = new providers.JsonRpcBatchProvider(chain.rpc[0]);
+    this.#signer = await this.#wallet.getSigner(this.#provider);
+    this.onChainChanged(chainId);
+  }
+
+  protected onChainChanged = (chainId: number | string) => {
+    const id = normalizeChainId(chainId);
+    const unsupported = !this.options.chains.find((c) => c.chainId === id);
+    this.emit("change", { chain: { id, unsupported } });
+  };
+
+  async setupListeners() {}
+
+  updateChains(chains: Chain[]): void {
+    this.options.chains = chains;
   }
 }

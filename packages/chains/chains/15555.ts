@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Trust EVM Testnet",
   "chain": "Trust EVM Testnet",
@@ -26,4 +27,4 @@ export default {
   ],
   "testnet": true,
   "slug": "trust-evm-testnet"
-} as const;
+} as const satisfies Chain;

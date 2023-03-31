@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "BOSagora Mainnet",
   "chain": "ETH",
@@ -26,10 +27,15 @@ export default {
     {
       "name": "BOASCAN",
       "url": "https://boascan.io",
-      "icon": "agora",
+      "icon": {
+        "url": "ipfs://QmW3CT4SHmso5dRJdsjR8GL1qmt79HkdAebCn2uNaWXFYh",
+        "width": 256,
+        "height": 257,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "bosagora"
-} as const;
+} as const satisfies Chain;

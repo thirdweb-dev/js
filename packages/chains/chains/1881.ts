@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Gitshock Cartenz Testnet",
   "chain": "Gitshock Cartenz",
@@ -38,4 +39,4 @@ export default {
   ],
   "testnet": true,
   "slug": "gitshock-cartenz-testnet"
-} as const;
+} as const satisfies Chain;

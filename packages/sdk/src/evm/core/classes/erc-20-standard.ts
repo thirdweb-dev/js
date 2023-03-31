@@ -1,10 +1,13 @@
+import { buildTransactionFunction } from "../../common/transactions";
+import { Address, AddressOrEns } from "../../schema";
 import { TokenMintInput } from "../../schema/tokens/token";
 import { Amount, Currency, CurrencyValue } from "../../types/currency";
 import { BaseERC20, BaseSignatureMintERC20 } from "../../types/eips";
 import { UpdateableNetwork } from "../interfaces/contract";
-import { NetworkInput, TransactionResult } from "../types";
+import { NetworkInput } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20 } from "./erc-20";
+import { Transaction } from "./transactions";
 import type { DropERC20, TokenERC20 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
@@ -55,7 +58,7 @@ export class StandardErc20<
   /**
    * @internal
    */
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
   }
 
@@ -106,12 +109,12 @@ export class StandardErc20<
    *
    * @returns The balance of a specific wallet.
    */
-  public async balanceOf(address: string): Promise<CurrencyValue> {
+  public async balanceOf(address: AddressOrEns): Promise<CurrencyValue> {
     return this.erc20.balanceOf(address);
   }
 
   /**
-   * The total supply for this Token
+   * The total supply for this token
    * @remarks Get how much supply has been minted
    * @example
    * ```javascript
@@ -136,7 +139,7 @@ export class StandardErc20<
    *
    * @returns The allowance of one wallet over anothers funds.
    */
-  public async allowance(spender: string): Promise<CurrencyValue> {
+  public async allowance(spender: AddressOrEns): Promise<CurrencyValue> {
     return await this.erc20.allowance(spender);
   }
 
@@ -157,8 +160,8 @@ export class StandardErc20<
    * @returns The allowance of one wallet over anothers funds.
    */
   public async allowanceOf(
-    owner: string,
-    spender: string,
+    owner: AddressOrEns,
+    spender: AddressOrEns,
   ): Promise<CurrencyValue> {
     return await this.erc20.allowanceOf(owner, spender);
   }
@@ -181,12 +184,11 @@ export class StandardErc20<
    * await contract.transfer(toAddress, amount);
    * ```
    */
-  public async transfer(
-    to: string,
-    amount: Amount,
-  ): Promise<TransactionResult> {
-    return this.erc20.transfer(to, amount);
-  }
+  transfer = buildTransactionFunction(
+    async (to: AddressOrEns, amount: Amount) => {
+      return this.erc20.transfer.prepare(to, amount);
+    },
+  );
 
   /**
    * Transfer Tokens From Address
@@ -205,13 +207,11 @@ export class StandardErc20<
    * await contract.transferFrom(fromAddress, toAddress, amount);
    * ```
    */
-  public async transferFrom(
-    from: string,
-    to: string,
-    amount: Amount,
-  ): Promise<TransactionResult> {
-    return this.erc20.transferFrom(from, to, amount);
-  }
+  transferFrom = buildTransactionFunction(
+    async (from: AddressOrEns, to: AddressOrEns, amount: Amount) => {
+      return this.erc20.transferFrom.prepare(from, to, amount);
+    },
+  );
 
   /**
    * Allows the specified `spender` wallet to transfer the given `amount` of tokens to another wallet
@@ -225,12 +225,11 @@ export class StandardErc20<
    * await contract.setAllowance(spenderAddress, amount);
    * ```
    */
-  public async setAllowance(
-    spender: string,
-    amount: Amount,
-  ): Promise<TransactionResult> {
-    return this.erc20.setAllowance(spender, amount);
-  }
+  setAllowance = buildTransactionFunction(
+    async (spender: AddressOrEns, amount: Amount): Promise<Transaction> => {
+      return this.erc20.setAllowance.prepare(spender, amount);
+    },
+  );
 
   /**
    * Transfer Tokens To Many Wallets
@@ -254,7 +253,7 @@ export class StandardErc20<
    * await contract.transferBatch(data);
    * ```
    */
-  public async transferBatch(args: TokenMintInput[]) {
-    return this.erc20.transferBatch(args);
-  }
+  transferBatch = buildTransactionFunction(async (args: TokenMintInput[]) => {
+    return this.erc20.transferBatch.prepare(args);
+  });
 }

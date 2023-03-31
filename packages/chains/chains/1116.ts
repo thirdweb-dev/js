@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Core Blockchain Mainnet",
   "chain": "Core",
@@ -9,7 +10,8 @@ export default {
   },
   "rpc": [
     "https://core-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.coredao.org/"
+    "https://rpc.coredao.org/",
+    "https://rpc-core.icecreamswap.com"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -25,10 +27,15 @@ export default {
     {
       "name": "Core Scan",
       "url": "https://scan.coredao.org",
-      "icon": "core",
+      "icon": {
+        "url": "ipfs://QmeTQaBCkpbsxNNWTpoNrMsnwnAEf1wYTcn7CiiZGfUXD2",
+        "width": 200,
+        "height": 217,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "core-blockchain"
-} as const;
+} as const satisfies Chain;

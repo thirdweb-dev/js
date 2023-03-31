@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Lycan Chain",
   "chain": "LYC",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": false,
   "slug": "lycan-chain"
-} as const;
+} as const satisfies Chain;

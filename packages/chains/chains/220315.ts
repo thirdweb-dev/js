@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Mas Mainnet",
   "chain": "MAS",
@@ -33,10 +34,9 @@ export default {
     {
       "name": "explorer masnet",
       "url": "https://explorer.masnet.ai",
-      "icon": "explorer",
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "mas"
-} as const;
+} as const satisfies Chain;

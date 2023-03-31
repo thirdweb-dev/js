@@ -1,7 +1,7 @@
 import { useThirdwebAuthContext } from "../../contexts/thirdweb-auth";
 import { cacheKeys } from "../../utils/cache-keys";
 import { useQuery } from "@tanstack/react-query";
-import { Json, User } from "@thirdweb-dev/auth";
+import type { Json, User } from "@thirdweb-dev/auth";
 import invariant from "tiny-invariant";
 
 export interface UserWithData<

@@ -1,7 +1,8 @@
 import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
-import { TransactionTask } from "../../core/classes/TransactionTask";
+import { buildTransactionFunction } from "../../common/transactions";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -14,16 +15,13 @@ import { ContractPrimarySale } from "../../core/classes/contract-sales";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { DropErc1155ClaimConditions } from "../../core/classes/drop-erc1155-claim-conditions";
 import { DropErc1155History } from "../../core/classes/drop-erc1155-history";
-import { Erc1155 } from "../../core/classes/erc-1155";
 import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
-import {
-  NetworkInput,
-  TransactionResult,
-  TransactionResultWithId,
-} from "../../core/types";
+import { Transaction } from "../../core/classes/transactions";
+import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { PaperCheckout } from "../../integrations/thirdweb-checkout";
-import { Abi } from "../../schema/contracts/custom";
+import { Address, AddressOrEns } from "../../schema";
+import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { DropErc1155ContractSchema } from "../../schema/contracts/drop-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";
 import { PrebuiltEditionDrop } from "../../types/eips";
@@ -57,9 +55,10 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
     PrebuiltEditionDrop,
     typeof DropErc1155ContractSchema
   >;
+  public app: ContractAppURI<PrebuiltEditionDrop>;
   public roles: ContractRoles<
     PrebuiltEditionDrop,
-    typeof EditionDrop.contractRoles[number]
+    (typeof EditionDrop.contractRoles)[number]
   >;
   /**
    * Configure royalties
@@ -92,7 +91,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * const claimConditions = [
    *   {
    *     startTime: presaleStartTime, // start the presale now
-   *     maxQuantity: 2, // limit how many mints for this presale
+   *     maxClaimableSupply: 2, // limit how many mints for this presale
    *     price: 0.01, // presale price
    *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
    *   },
@@ -116,7 +115,6 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
 
   public history: DropErc1155History;
   public interceptor: ContractInterceptor<PrebuiltEditionDrop>;
-  public erc1155: Erc1155<PrebuiltEditionDrop>;
   public owner: ContractOwner<PrebuiltEditionDrop>;
 
   constructor(
@@ -124,7 +122,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: Abi,
+    abi: AbiInput,
     chainId: number,
     contractWrapper = new ContractWrapper<PrebuiltEditionDrop>(
       network,
@@ -134,10 +132,15 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
     ),
   ) {
     super(contractWrapper, storage, chainId);
-    this.abi = abi;
+    this.abi = AbiSchema.parse(abi);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       DropErc1155ContractSchema,
+      this.storage,
+    );
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
       this.storage,
     );
     this.roles = new ContractRoles(
@@ -157,7 +160,6 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.erc1155 = new Erc1155(this.contractWrapper, this.storage, chainId);
     this.checkout = new PaperCheckout(this.contractWrapper);
     this.owner = new ContractOwner(this.contractWrapper);
   }
@@ -169,7 +171,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
   }
 
@@ -180,7 +182,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
   // TODO getAllClaimerAddresses() - should be done via an indexer
 
   /**
-   * Get All Minted NFTs
+   * Get all NFTs
    *
    * @remarks Get all the data associated with every NFT in this contract.
    *
@@ -198,7 +200,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
   }
 
   /**
-   * Get Owned NFTs
+   * Get all NFTs owned by a specific wallet
    *
    * @remarks Get all the data associated with the NFTs owned by a specific wallet.
    *
@@ -211,7 +213,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    *
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async getOwned(walletAddress?: string): Promise<NFT[]> {
+  public async getOwned(walletAddress?: AddressOrEns): Promise<NFT[]> {
     return this.erc1155.getOwned(walletAddress);
   }
 
@@ -265,14 +267,16 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * @param metadatas - The metadata to include in the batch.
    * @param options - optional upload progress callback
    */
-  public async createBatch(
-    metadatas: NFTMetadataOrUri[],
-    options?: {
-      onProgress: (event: UploadProgressEvent) => void;
+  createBatch = buildTransactionFunction(
+    async (
+      metadatas: NFTMetadataOrUri[],
+      options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+      },
+    ): Promise<Transaction<TransactionResultWithId<NFTMetadata>[]>> => {
+      return this.erc1155.lazyMint.prepare(metadatas, options);
     },
-  ): Promise<TransactionResultWithId<NFTMetadata>[]> {
-    return this.erc1155.lazyMint(metadatas, options);
-  }
+  );
 
   /**
    * Construct a claim transaction without executing it.
@@ -282,13 +286,15 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * @param quantity - Quantity of the tokens you want to claim
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    * @param claimData - Optional claim verification data (e.g. price, allowlist proof, etc...)
+   *
+   * @deprecated Use `contract.erc1155.claim.prepare(...args)` instead
    */
   public async getClaimTransaction(
-    destinationAddress: string,
+    destinationAddress: AddressOrEns,
     tokenId: BigNumberish,
     quantity: BigNumberish,
     checkERC20Allowance = true, // TODO split up allowance checks
-  ): Promise<TransactionTask> {
+  ): Promise<Transaction> {
     return this.erc1155.getClaimTransaction(
       destinationAddress,
       tokenId,
@@ -320,16 +326,23 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    *
    * @returns - Receipt for the transaction
    */
-  public async claimTo(
-    destinationAddress: string,
-    tokenId: BigNumberish,
-    quantity: BigNumberish,
-    checkERC20Allowance = true,
-  ): Promise<TransactionResult> {
-    return this.erc1155.claimTo(destinationAddress, tokenId, quantity, {
-      checkERC20Allowance,
-    });
-  }
+  claimTo = buildTransactionFunction(
+    async (
+      destinationAddress: AddressOrEns,
+      tokenId: BigNumberish,
+      quantity: BigNumberish,
+      checkERC20Allowance = true,
+    ) => {
+      return this.erc1155.claimTo.prepare(
+        destinationAddress,
+        tokenId,
+        quantity,
+        {
+          checkERC20Allowance,
+        },
+      );
+    },
+  );
 
   /**
    * Claim a token to the connected wallet
@@ -343,14 +356,21 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    *
    * @returns - Receipt for the transaction
    */
-  public async claim(
-    tokenId: BigNumberish,
-    quantity: BigNumberish,
-    checkERC20Allowance = true,
-  ): Promise<TransactionResult> {
-    const address = await this.contractWrapper.getSignerAddress();
-    return this.claimTo(address, tokenId, quantity, checkERC20Allowance);
-  }
+  claim = buildTransactionFunction(
+    async (
+      tokenId: BigNumberish,
+      quantity: BigNumberish,
+      checkERC20Allowance = true,
+    ) => {
+      const address = await this.contractWrapper.getSignerAddress();
+      return this.claimTo.prepare(
+        address,
+        tokenId,
+        quantity,
+        checkERC20Allowance,
+      );
+    },
+  );
 
   /**
    * Burn a specified amount of a NFT
@@ -363,20 +383,40 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * const result = await contract.burnTokens(tokenId, amount);
    * ```
    */
-  public async burnTokens(
-    tokenId: BigNumberish,
-    amount: BigNumberish,
-  ): Promise<TransactionResult> {
-    return this.erc1155.burn(tokenId, amount);
+  burnTokens = buildTransactionFunction(
+    async (tokenId: BigNumberish, amount: BigNumberish) => {
+      return this.erc1155.burn.prepare(tokenId, amount);
+    },
+  );
+
+  /**
+   * @internal
+   */
+  public async prepare<
+    TMethod extends keyof PrebuiltEditionDrop["functions"] = keyof PrebuiltEditionDrop["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<PrebuiltEditionDrop["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
   }
 
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
+  public async call<
+    TMethod extends keyof PrebuiltEditionDrop["functions"] = keyof PrebuiltEditionDrop["functions"],
+  >(
+    functionName: string & TMethod,
+    args?: Parameters<PrebuiltEditionDrop["functions"][TMethod]>,
+    overrides?: CallOverrides,
   ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 }

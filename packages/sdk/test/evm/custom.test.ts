@@ -40,6 +40,7 @@ describe.skip("Custom Contracts", async () => {
     // if we update the test data - await uploadContractMetadata("Greeter", storage);
 
     // only create this once by default (hits IPFS!)
+    // TODO use mock storage instead
     customContractAddress = await realSDK.deployer.deployContractFromUri(
       simpleContractUri,
       [],
@@ -106,7 +107,7 @@ describe.skip("Custom Contracts", async () => {
     const owner = await c.call("owner");
     expect(owner).to.eq(adminWallet.address);
 
-    const tx = await c.call("setOwner", samWallet.address);
+    const tx = await c.call("setOwner", [samWallet.address]);
     expect(tx.receipt).to.not.eq(undefined);
     const owner2 = await c.call("owner");
     expect(owner2).to.eq(samWallet.address);
@@ -122,7 +123,7 @@ describe.skip("Custom Contracts", async () => {
     invariant(c, "Contract undefined");
 
     try {
-      await c.call("setOwner", samWallet.address, {
+      await c.call("setOwner", [samWallet.address], {
         value: ethers.utils.parseEther("0.1"),
       });
     } catch (e) {
@@ -130,14 +131,17 @@ describe.skip("Custom Contracts", async () => {
     }
 
     try {
-      await c.call("setOwner", samWallet.address, {
-        somObj: "foo",
-      });
+      await c.call("setOwner", [
+        samWallet.address,
+        {
+          somObj: "foo",
+        },
+      ]);
     } catch (e) {
       expectError(e, "requires 1 arguments, but 2 were provided");
     }
 
-    const tx = await c.call("setOwner", samWallet.address, {
+    const tx = await c.call("setOwner", [samWallet.address], {
       gasLimit: 300_000,
     });
     expect(tx.receipt).to.not.eq(undefined);
@@ -233,7 +237,11 @@ describe.skip("Custom Contracts", async () => {
   });
 
   it("should not detect feature if missing from ABI", async () => {
-    const c = await sdk.getContractFromAbi("", VoteERC20__factory.abi);
+    const address = await sdk.deployer.deployVote({
+      name: "My Vote",
+      voting_token_address: adminWallet.address,
+    });
+    const c = await sdk.getContractFromAbi(address, VoteERC20__factory.abi);
     invariant(c, "Contract undefined");
     invariant(c.metadata, "Metadata undefined");
     try {
@@ -296,6 +304,32 @@ describe.skip("Custom Contracts", async () => {
     const nfts = await c.erc721.getAll();
     expect(nfts.length).to.eq(1);
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
+  });
+
+  it("should transfer erc721", async () => {
+    sdk.updateSignerOrProvider(adminWallet);
+    const address = await sdk.deployer.deployNFTCollection({
+      name: "NFT",
+      primary_sale_recipient: adminWallet.address,
+    });
+    const c = await sdk.getContract(address);
+
+    await c.erc721.mintTo(adminWallet.address, {
+      name: "Custom NFT",
+    });
+    let initialBalance = await c.erc721.balanceOf(samWallet.address);
+    await c.erc721.transfer(samWallet.address, 0);
+    let balance = await c.erc721.balanceOf(samWallet.address);
+    expect(balance.toString()).to.eq(initialBalance.add(1).toString());
+
+    await c.erc721.mintTo(adminWallet.address, {
+      name: "Custom NFT",
+    });
+    initialBalance = await c.erc721.balanceOf(samWallet.address);
+    const tx = await c.erc721.transfer.prepare(samWallet.address, 1);
+    await tx.execute();
+    balance = await c.erc721.balanceOf(samWallet.address);
+    expect(balance.toString()).to.eq(initialBalance.add(1).toString());
   });
 
   it("should detect feature: erc721 burnable", async () => {

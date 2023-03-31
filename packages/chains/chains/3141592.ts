@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Filecoin - Butterfly testnet",
   "chain": "FIL",
@@ -25,4 +26,4 @@ export default {
   "explorers": [],
   "testnet": true,
   "slug": "filecoin-butterfly-testnet"
-} as const;
+} as const satisfies Chain;

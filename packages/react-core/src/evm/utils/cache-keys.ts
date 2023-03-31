@@ -7,7 +7,7 @@ import type {
   QueryAllParams,
   SUPPORTED_CHAIN_ID,
 } from "@thirdweb-dev/sdk";
-import { BigNumberish, constants } from "ethers";
+import { BigNumberish, CallOverrides, constants } from "ethers";
 
 const TW_CACHE_KEY_PREFIX = "tw-cache";
 
@@ -108,8 +108,20 @@ export const cacheKeys = {
     call: (
       contractAddress: RequiredParam<ContractAddress>,
       functionName: RequiredParam<string>,
-      args: unknown[],
-    ) => createContractCacheKey(contractAddress, ["call", functionName, args]),
+      args?: unknown[],
+      overrides?: CallOverrides,
+    ) =>
+      createContractCacheKey(contractAddress, [
+        "call",
+        functionName,
+        args,
+        overrides,
+      ]),
+
+    app: {
+      get: (contractAddress: RequiredParam<ContractAddress>) =>
+        createContractCacheKey(contractAddress, ["appURI"]),
+    },
 
     events: {
       getEvents: (

@@ -1,5 +1,7 @@
 import { NFT, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
+import { buildTransactionFunction } from "../../common/transactions";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -10,16 +12,13 @@ import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../../core/classes/contract-sales";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
-import { Erc721 } from "../../core/classes/erc-721";
 import { StandardErc721 } from "../../core/classes/erc-721-standard";
 import { Erc721WithQuantitySignatureMintable } from "../../core/classes/erc-721-with-quantity-signature-mintable";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
-import type {
-  NetworkInput,
-  TransactionResult,
-  TransactionResultWithId,
-} from "../../core/types";
-import { Abi } from "../../schema/contracts/custom";
+import { Transaction } from "../../core/classes/transactions";
+import type { NetworkInput, TransactionResultWithId } from "../../core/types";
+import { Address, AddressOrEns } from "../../schema";
+import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { TokenErc721ContractSchema } from "../../schema/contracts/token-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import type { TokenERC721 } from "@thirdweb-dev/contracts-js";
@@ -48,9 +47,11 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
     TokenERC721,
     typeof TokenErc721ContractSchema
   >;
+
+  public app: ContractAppURI<TokenERC721>;
   public roles: ContractRoles<
     TokenERC721,
-    typeof NFTCollection.contractRoles[number]
+    (typeof NFTCollection.contractRoles)[number]
   >;
   public encoder: ContractEncoder<TokenERC721>;
   public estimator: GasCostEstimator<TokenERC721>;
@@ -100,14 +101,13 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * @internal
    */
   public interceptor: ContractInterceptor<TokenERC721>;
-  public erc721: Erc721<TokenERC721>;
 
   constructor(
     network: NetworkInput,
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: Abi,
+    abi: AbiInput,
     chainId: number,
     contractWrapper = new ContractWrapper<TokenERC721>(
       network,
@@ -118,10 +118,16 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
   ) {
     super(contractWrapper, storage, chainId);
 
-    this.abi = abi;
+    this.abi = AbiSchema.parse(abi || []);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       TokenErc721ContractSchema,
+      this.storage,
+    );
+
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
       this.storage,
     );
     this.roles = new ContractRoles(
@@ -135,7 +141,6 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.erc721 = new Erc721(this.contractWrapper, this.storage, chainId);
     this.signature = new Erc721WithQuantitySignatureMintable(
       this.contractWrapper,
       this.storage,
@@ -150,7 +155,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
   }
 
@@ -193,11 +198,13 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
    */
-  public async mint(
-    metadata: NFTMetadataOrUri,
-  ): Promise<TransactionResultWithId<NFT>> {
-    return this.erc721.mint(metadata);
-  }
+  mint = buildTransactionFunction(
+    async (
+      metadata: NFTMetadataOrUri,
+    ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
+      return this.erc721.mint.prepare(metadata);
+    },
+  );
 
   /**
    * Mint a unique NFT
@@ -222,23 +229,27 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
    */
-  public async mintTo(
-    walletAddress: string,
-    metadata: NFTMetadataOrUri,
-  ): Promise<TransactionResultWithId<NFT>> {
-    return this.erc721.mintTo(walletAddress, metadata);
-  }
+  mintTo = buildTransactionFunction(
+    async (
+      walletAddress: AddressOrEns,
+      metadata: NFTMetadataOrUri,
+    ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
+      return this.erc721.mintTo.prepare(walletAddress, metadata);
+    },
+  );
 
   /**
    * Construct a mint transaction without executing it.
    * This is useful for estimating the gas cost of a mint transaction, overriding transaction options and having fine grained control over the transaction execution.
    * @param receiver - Address you want to send the token to
    * @param metadata - The metadata of the NFT you want to mint
+   *
+   * @deprecated Use `contract.mint.prepare(...args)` instead
    */
   public async getMintTransaction(
-    receiver: string,
+    receiver: AddressOrEns,
     metadata: NFTMetadataOrUri,
-  ) {
+  ): Promise<Transaction> {
     return this.erc721.getMintTransaction(receiver, metadata);
   }
 
@@ -266,11 +277,13 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```
    */
-  public async mintBatch(
-    metadata: NFTMetadataOrUri[],
-  ): Promise<TransactionResultWithId<NFT>[]> {
-    return this.erc721.mintBatch(metadata);
-  }
+  mintBatch = buildTransactionFunction(
+    async (
+      metadata: NFTMetadataOrUri[],
+    ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
+      return this.erc721.mintBatch.prepare(metadata);
+    },
+  );
 
   /**
    * Mint Many unique NFTs
@@ -299,12 +312,14 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```
    */
-  public async mintBatchTo(
-    walletAddress: string,
-    metadata: NFTMetadataOrUri[],
-  ): Promise<TransactionResultWithId<NFT>[]> {
-    return this.erc721.mintBatchTo(walletAddress, metadata);
-  }
+  mintBatchTo = buildTransactionFunction(
+    async (
+      walletAddress: AddressOrEns,
+      metadata: NFTMetadataOrUri[],
+    ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
+      return this.erc721.mintBatchTo.prepare(walletAddress, metadata);
+    },
+  );
 
   /**
    * Burn a single NFT
@@ -315,17 +330,38 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * const result = await contract.burnToken(tokenId);
    * ```
    */
-  public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
-    return this.erc721.burn(tokenId);
+  burn = buildTransactionFunction((tokenId: BigNumberish) => {
+    return this.erc721.burn.prepare(tokenId);
+  });
+
+  /**
+   * @internal
+   */
+  public async prepare<
+    TMethod extends keyof TokenERC721["functions"] = keyof TokenERC721["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<TokenERC721["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
   }
 
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
+  public async call<
+    TMethod extends keyof TokenERC721["functions"] = keyof TokenERC721["functions"],
+  >(
+    functionName: string & TMethod,
+    args?: Parameters<TokenERC721["functions"][TMethod]>,
+    overrides?: CallOverrides,
   ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 }

@@ -4,10 +4,12 @@ import {
   hasFunction,
   fetchContractMetadataFromAddress,
 } from "../../common";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_METADATA } from "../../constants/thirdweb-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
 import type {
   IContractMetadata,
   IERC20Metadata,
@@ -61,22 +63,25 @@ export class ContractMetadata<
   /**
    * @internal
    */
-  public parseOutputMetadata(metadata: any): z.output<TSchema["output"]> {
-    return this.schema.output.parse(metadata);
+  public parseOutputMetadata(
+    metadata: any,
+  ): Promise<z.output<TSchema["output"]>> {
+    return this.schema.output.parseAsync(metadata);
   }
 
   /**
    * @internal
    */
-  public parseInputMetadata(metadata: any): z.input<TSchema["input"]> {
-    return this.schema.input.parse(metadata);
+  public parseInputMetadata(metadata: any): Promise<z.input<TSchema["input"]>> {
+    return this.schema.input.parseAsync(metadata);
   }
   /**
-   * Get the metadata of a contract
+   * Get the metadata of this contract
    * @remarks Get the metadata of a contract
    * @example
    * ```javascript
    * const metadata = await contract.metadata.get();
+   * console.log(metadata);
    * ```
    * @public
    * @returns the metadata of the given contract
@@ -102,14 +107,28 @@ export class ContractMetadata<
         } catch (err) {
           // no-op
         }
-        const publishedMetadata = await fetchContractMetadataFromAddress(
-          this.contractWrapper.readContract.address,
-          this.contractWrapper.getProvider(),
-          this.storage,
-        );
+
+        let contractSymbol: string | undefined;
+        try {
+          if (hasFunction<IERC20Metadata>("symbol", this.contractWrapper)) {
+            contractSymbol = await this.contractWrapper.readContract.symbol();
+          }
+        } catch (err) {
+          // no-op
+        }
+
+        let publishedMetadata;
+        try {
+          publishedMetadata = await fetchContractMetadataFromAddress(
+            this.contractWrapper.readContract.address,
+            this.contractWrapper.getProvider(),
+            this.storage,
+          );
+        } catch (err) {}
         data = {
-          name: contractName || publishedMetadata.name,
-          description: publishedMetadata.info.title,
+          name: contractName || publishedMetadata?.name,
+          symbol: contractSymbol,
+          description: publishedMetadata?.info.title,
         };
       } catch (e) {
         throw new Error("Could not fetch contract metadata");
@@ -118,33 +137,43 @@ export class ContractMetadata<
 
     return this.parseOutputMetadata(data);
   }
+
   /**
-   * Set the metadata of a contract
+   * Set the metadata of this contract
    * @remarks OVERWRITE the metadata of a contract
    * @example
    * ```javascript
    * await contract.metadata.set({
-   *  name: "My Contract",
-   *  description: "My contract description"
+   *   name: "My Contract",
+   *   description: "My contract description"
    * })
    * ```
    * @public
    * @param metadata - the metadata to set
    * @twfeature ContractMetadata
    */
-  public async set(metadata: z.input<TSchema["input"]>) {
-    const uri = await this._parseAndUploadMetadata(metadata);
+  set = buildTransactionFunction(
+    async (metadata: z.input<TSchema["input"]>) => {
+      const uri = await this._parseAndUploadMetadata(metadata);
 
-    const wrapper = this.contractWrapper;
-    if (this.supportsContractMetadata(wrapper)) {
-      const receipt = await wrapper.sendTransaction("setContractURI", [uri]);
-      return { receipt, data: this.get } as TransactionResult<
-        z.output<TSchema["output"]>
-      >;
-    } else {
-      throw new ExtensionNotImplementedError(FEATURE_METADATA);
-    }
-  }
+      const wrapper = this.contractWrapper;
+      if (this.supportsContractMetadata(wrapper)) {
+        return Transaction.fromContractWrapper({
+          contractWrapper: this
+            .contractWrapper as unknown as ContractWrapper<IContractMetadata>,
+          method: "setContractURI",
+          args: [uri],
+          parse: (receipt) => {
+            return { receipt, data: this.get } as TransactionResult<
+              z.output<TSchema["output"]>
+            >;
+          },
+        });
+      } else {
+        throw new ExtensionNotImplementedError(FEATURE_METADATA);
+      }
+    },
+  );
 
   /**
    * Update the metadata of a contract
@@ -152,20 +181,21 @@ export class ContractMetadata<
    * @example
    * ```javascript
    * await contract.metadata.update({
-   *   name: "My Contract",
-   *   description: "My contract description"
+   *   description: "My new contract description"
    * })
    * ```
    * @public
    * @param metadata - the metadata to update
    * @twfeature ContractMetadata
    * */
-  public async update(metadata: Partial<z.input<TSchema["input"]>>) {
-    return await this.set({
-      ...(await this.get()),
-      ...metadata,
-    });
-  }
+  update = buildTransactionFunction(
+    async (metadata: Partial<z.input<TSchema["input"]>>) => {
+      return await this.set.prepare({
+        ...(await this.get()),
+        ...metadata,
+      });
+    },
+  );
 
   /**
    *
@@ -174,7 +204,7 @@ export class ContractMetadata<
    * @returns
    */
   public async _parseAndUploadMetadata(metadata: z.input<TSchema["input"]>) {
-    const parsedMetadata = this.parseInputMetadata(metadata);
+    const parsedMetadata = await this.parseInputMetadata(metadata);
     return this.storage.upload(parsedMetadata);
   }
 

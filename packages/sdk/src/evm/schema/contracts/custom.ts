@@ -1,7 +1,7 @@
 import { FileOrBufferOrStringSchema } from "../../../core/schema/shared";
 import { toSemver } from "../../common";
 import {
-  AddressSchema,
+  AddressOrEnsSchema,
   BigNumberishSchema,
   BigNumberTransformSchema,
 } from "../shared";
@@ -68,7 +68,7 @@ export const CustomContractSchema = {
 const AbiTypeBaseSchema = z
   .object({
     type: z.string(),
-    name: z.string(),
+    name: z.string().default(""),
   })
   .catchall(z.any());
 
@@ -96,7 +96,14 @@ export const AbiObjectSchema = z
  * @internal
  */
 export const AbiSchema = z.array(AbiObjectSchema);
-export type Abi = z.input<typeof AbiSchema>;
+// if we want to statically type this for external usage it has to *awlways* be the output type
+export type Abi = z.output<typeof AbiSchema>;
+
+// input type is only used internally
+/**
+ * @internal
+ */
+export type AbiInput = z.input<typeof AbiSchema>;
 
 /**
  * @internal
@@ -188,7 +195,7 @@ export type ExtraPublishMetadata = z.input<
 export const FullPublishMetadataSchemaInput = PreDeployMetadata.merge(
   ExtraPublishMetadataSchemaInput,
 ).extend({
-  publisher: AddressSchema.optional(),
+  publisher: AddressOrEnsSchema.optional(),
 });
 /**
  * @internal
@@ -196,7 +203,7 @@ export const FullPublishMetadataSchemaInput = PreDeployMetadata.merge(
 export const FullPublishMetadataSchemaOutput = PreDeployMetadata.merge(
   ExtraPublishMetadataSchemaOutput,
 ).extend({
-  publisher: AddressSchema.optional(),
+  publisher: AddressOrEnsSchema.optional(),
 });
 export type FullPublishMetadata = z.infer<
   typeof FullPublishMetadataSchemaOutput
@@ -274,7 +281,7 @@ export type PreDeployMetadataFetched = z.infer<
   typeof PreDeployMetadataFetchedSchema
 >;
 
-export type ContractParam = z.infer<typeof AbiTypeSchema>;
+export type ContractParam = z.input<typeof AbiTypeSchema>;
 export type PublishedContract = z.infer<typeof PublishedContractSchema>;
 export type PublishedContractFetched = {
   name: string;
@@ -283,16 +290,16 @@ export type PublishedContractFetched = {
 };
 export type AbiFunction = {
   name: string;
-  inputs: z.infer<typeof AbiTypeSchema>[];
-  outputs: z.infer<typeof AbiTypeSchema>[];
+  inputs: z.output<typeof AbiTypeSchema>[];
+  outputs: z.output<typeof AbiTypeSchema>[];
   signature: string;
   stateMutability: string;
   comment: string;
 };
 export type AbiEvent = {
   name: string;
-  inputs: z.infer<typeof AbiTypeSchema>[];
-  outputs: z.infer<typeof AbiTypeSchema>[];
+  inputs: z.output<typeof AbiTypeSchema>[];
+  outputs: z.output<typeof AbiTypeSchema>[];
   comment: string;
 };
 export type ContractSource = {

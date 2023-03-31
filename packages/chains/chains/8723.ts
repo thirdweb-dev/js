@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "TOOL Global Mainnet",
   "chain": "OLO",
@@ -25,4 +26,4 @@ export default {
   ],
   "testnet": false,
   "slug": "tool-global"
-} as const;
+} as const satisfies Chain;

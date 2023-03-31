@@ -1,6 +1,6 @@
 import { Chain, MinimalChain } from "./types";
 
-type ChainRPCOptions = {
+export type ChainRPCOptions = {
   thirdwebApiKey?: string;
   alchemyApiKey?: string;
   infuraApiKey?: string;
@@ -11,6 +11,14 @@ const defaultOptions = {
   mode: "http",
 } as const;
 
+/**
+ * Construct the list of RPC URLs given a specific chain config. Format any RPC URLs
+ * with necessary API keys.
+ *
+ * @param chain - The chain config to assemble RPC URLs from
+ * @param options - Options to configure the RPC URLs
+ * @returns The list of RPC URLs for the chain
+ */
 export function getChainRPCs(
   chain: Pick<Chain, "rpc" | "chainId">,
   options?: ChainRPCOptions,
@@ -75,6 +83,15 @@ export function getChainRPCs(
   return orderedRPCs;
 }
 
+/**
+ * Get the highest priority RPC URL for a specific chain
+ *
+ * @param chain - The chain config to get the RPC URL for
+ * @param options - Options to configure the RPC URL
+ * @returns The RPC URL for the chain
+ *
+ * @internal
+ */
 export function getChainRPC(
   chain: Pick<Chain, "rpc" | "chainId">,
   options?: ChainRPCOptions,

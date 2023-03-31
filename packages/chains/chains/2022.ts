@@ -1,20 +1,29 @@
+import type { Chain } from "../src/types";
 export default {
-  "name": "Beresheet Testnet",
+  "name": "Beresheet BereEVM Testnet",
   "chain": "EDG",
   "rpc": [
-    "https://beresheet-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://beresheet1.edgewa.re"
+    "https://beresheet-bereevm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://beresheet-evm.jelliedowl.net",
+    "wss://beresheet.jelliedowl.net"
   ],
   "faucets": [],
   "nativeCurrency": {
-    "name": "Testnet Edge",
+    "name": "Testnet EDG",
     "symbol": "tEDG",
     "decimals": 18
   },
-  "infoURL": "http://edgewa.re",
+  "infoURL": "https://edgeware.io/build",
   "shortName": "edgt",
   "chainId": 2022,
   "networkId": 2022,
+  "explorers": [
+    {
+      "name": "Edgscan by Bharathcoorg",
+      "url": "https://testnet.edgscan.live",
+      "standard": "EIP3091"
+    }
+  ],
   "testnet": true,
-  "slug": "beresheet-testnet"
-} as const;
+  "slug": "beresheet-bereevm-testnet"
+} as const satisfies Chain;

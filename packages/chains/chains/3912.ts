@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "DRAC Network",
   "chain": "DRAC",
@@ -35,10 +36,9 @@ export default {
     {
       "name": "DRAC_Network Scan",
       "url": "https://www.dracscan.io",
-      "icon": "DRAC",
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "drac-network"
-} as const;
+} as const satisfies Chain;

@@ -6,10 +6,13 @@ import {
   hasERC20Allowance,
   normalizePriceValue,
 } from "../../common/currency";
+import { resolveAddress } from "../../common/ens";
 import { isTokenApprovedForTransfer } from "../../common/marketplace";
 import { uploadOrExtractURI } from "../../common/nft";
 import { getRoleHash } from "../../common/role";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_PACK_VRF } from "../../constants/thirdweb-features";
+import { ContractAppURI } from "../../core";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -18,12 +21,12 @@ import { ContractOwner } from "../../core/classes/contract-owner";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
-import { Erc1155 } from "../../core/classes/erc-1155";
 import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { PackVRF } from "../../core/classes/pack-vrf";
+import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { Abi } from "../../schema";
+import { Abi, AbiInput, AbiSchema, Address, AddressOrEns } from "../../schema";
 import { PackContractSchema } from "../../schema/contracts/packs";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
@@ -65,7 +68,11 @@ export class Pack extends StandardErc1155<PackContract> {
 
   public abi: Abi;
   public metadata: ContractMetadata<PackContract, typeof PackContractSchema>;
-  public roles: ContractRoles<PackContract, typeof Pack.contractRoles[number]>;
+  public app: ContractAppURI<PackContract>;
+  public roles: ContractRoles<
+    PackContract,
+    (typeof Pack.contractRoles)[number]
+  >;
   public encoder: ContractEncoder<PackContract>;
   public events: ContractEvents<PackContract>;
   public estimator: GasCostEstimator<PackContract>;
@@ -92,7 +99,6 @@ export class Pack extends StandardErc1155<PackContract> {
    */
   public interceptor: ContractInterceptor<PackContract>;
 
-  public erc1155: Erc1155<PackContract>;
   public owner: ContractOwner<PackContract>;
 
   private _vrf?: PackVRF;
@@ -109,7 +115,7 @@ export class Pack extends StandardErc1155<PackContract> {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: Abi,
+    abi: AbiInput,
     chainId: number,
     contractWrapper = new ContractWrapper<PackContract>(
       network,
@@ -129,11 +135,15 @@ export class Pack extends StandardErc1155<PackContract> {
     ),
   ) {
     super(contractWrapper, storage, chainId);
-    this.abi = abi;
-    this.erc1155 = new Erc1155(this.contractWrapper, this.storage, chainId);
+    this.abi = AbiSchema.parse(abi || []);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       PackContractSchema,
+      this.storage,
+    );
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
       this.storage,
     );
     this.roles = new ContractRoles(this.contractWrapper, Pack.contractRoles);
@@ -154,7 +164,7 @@ export class Pack extends StandardErc1155<PackContract> {
     this._vrf?.onNetworkUpdated(network);
   }
 
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
   }
 
@@ -212,7 +222,7 @@ export class Pack extends StandardErc1155<PackContract> {
    *
    * @returns The pack metadata for all the owned packs in the contract.
    */
-  public async getOwned(walletAddress?: string): Promise<NFT[]> {
+  public async getOwned(walletAddress?: AddressOrEns): Promise<NFT[]> {
     return this.erc1155.getOwned(walletAddress);
   }
 
@@ -271,14 +281,18 @@ export class Pack extends StandardErc1155<PackContract> {
             this.contractWrapper.getProvider(),
             reward.assetContract,
           );
-          const rewardAmount = ethers.utils.formatUnits(
-            reward.totalAmount,
+          const quantityPerReward = ethers.utils.formatUnits(
+            amount,
+            tokenMetadata.decimals,
+          );
+          const totalRewards = ethers.utils.formatUnits(
+            BigNumber.from(reward.totalAmount).div(amount),
             tokenMetadata.decimals,
           );
           erc20Rewards.push({
             contractAddress: reward.assetContract,
-            quantityPerReward: amount.toString(),
-            totalRewards: BigNumber.from(rewardAmount).div(amount).toString(),
+            quantityPerReward,
+            totalRewards,
           });
           break;
         }
@@ -361,10 +375,12 @@ export class Pack extends StandardErc1155<PackContract> {
    * const tx = await contract.create(pack);
    * ```
    */
-  public async create(metadataWithRewards: PackMetadataInput) {
-    const signerAddress = await this.contractWrapper.getSignerAddress();
-    return this.createTo(signerAddress, metadataWithRewards);
-  }
+  create = buildTransactionFunction(
+    async (metadataWithRewards: PackMetadataInput) => {
+      const signerAddress = await this.contractWrapper.getSignerAddress();
+      return this.createTo.prepare(signerAddress, metadataWithRewards);
+    },
+  );
 
   /**
    * Add Pack Contents
@@ -406,36 +422,39 @@ export class Pack extends StandardErc1155<PackContract> {
    * const tx = await contract.addPackContents(packId, packContents);
    * ```
    */
-  public async addPackContents(
-    packId: BigNumberish,
-    packContents: PackRewards,
-  ) {
-    const signerAddress = await this.contractWrapper.getSignerAddress();
-    const parsedContents = PackRewardsOutputSchema.parse(packContents);
-    const { contents, numOfRewardUnits } = await this.toPackContentArgs(
-      parsedContents,
-    );
+  addPackContents = buildTransactionFunction(
+    async (packId: BigNumberish, packContents: PackRewards) => {
+      const signerAddress = await this.contractWrapper.getSignerAddress();
+      const parsedContents = await PackRewardsOutputSchema.parseAsync(
+        packContents,
+      );
+      const { contents, numOfRewardUnits } = await this.toPackContentArgs(
+        parsedContents,
+      );
 
-    const receipt = await this.contractWrapper.sendTransaction(
-      "addPackContents",
-      [packId, contents, numOfRewardUnits, signerAddress],
-    );
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "addPackContents",
+        args: [packId, contents, numOfRewardUnits, signerAddress],
+        parse: (receipt) => {
+          const event = this.contractWrapper.parseLogs<PackUpdatedEvent>(
+            "PackUpdated",
+            receipt?.logs,
+          );
+          if (event.length === 0) {
+            throw new Error("PackUpdated event not found");
+          }
+          const id = event[0].args.packId;
 
-    const event = this.contractWrapper.parseLogs<PackUpdatedEvent>(
-      "PackUpdated",
-      receipt?.logs,
-    );
-    if (event.length === 0) {
-      throw new Error("PackUpdated event not found");
-    }
-    const id = event[0].args.packId;
-
-    return {
-      id: id,
-      receipt,
-      data: () => this.erc1155.get(id),
-    };
-  }
+          return {
+            id: id,
+            receipt,
+            data: () => this.erc1155.get(id),
+          };
+        },
+      });
+    },
+  );
 
   /**
    * Create Pack To Wallet
@@ -485,50 +504,59 @@ export class Pack extends StandardErc1155<PackContract> {
    * const tx = await contract.createTo("0x...", pack);
    * ```
    */
-  public async createTo(
-    to: string,
-    metadataWithRewards: PackMetadataInput,
-  ): Promise<TransactionResultWithId<NFT>> {
-    const uri = await uploadOrExtractURI(
-      metadataWithRewards.packMetadata,
-      this.storage,
-    );
+  createTo = buildTransactionFunction(
+    async (
+      to: AddressOrEns,
+      metadataWithRewards: PackMetadataInput,
+    ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
+      const uri = await uploadOrExtractURI(
+        metadataWithRewards.packMetadata,
+        this.storage,
+      );
 
-    const parsedMetadata = PackMetadataInputSchema.parse(metadataWithRewards);
-    const { erc20Rewards, erc721Rewards, erc1155Rewards } = parsedMetadata;
-    const rewardsData: PackRewardsOutput = {
-      erc20Rewards,
-      erc721Rewards,
-      erc1155Rewards,
-    };
-    const { contents, numOfRewardUnits } = await this.toPackContentArgs(
-      rewardsData,
-    );
+      const parsedMetadata = await PackMetadataInputSchema.parseAsync(
+        metadataWithRewards,
+      );
+      const { erc20Rewards, erc721Rewards, erc1155Rewards } = parsedMetadata;
+      const rewardsData: PackRewardsOutput = {
+        erc20Rewards,
+        erc721Rewards,
+        erc1155Rewards,
+      };
+      const { contents, numOfRewardUnits } = await this.toPackContentArgs(
+        rewardsData,
+      );
 
-    const receipt = await this.contractWrapper.sendTransaction("createPack", [
-      contents,
-      numOfRewardUnits,
-      uri,
-      parsedMetadata.openStartTime,
-      parsedMetadata.rewardsPerPack,
-      to,
-    ]);
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "createPack",
+        args: [
+          contents,
+          numOfRewardUnits,
+          uri,
+          parsedMetadata.openStartTime,
+          parsedMetadata.rewardsPerPack,
+          await resolveAddress(to),
+        ],
+        parse: (receipt) => {
+          const event = this.contractWrapper.parseLogs<PackCreatedEvent>(
+            "PackCreated",
+            receipt?.logs,
+          );
+          if (event.length === 0) {
+            throw new Error("PackCreated event not found");
+          }
+          const packId = event[0].args.packId;
 
-    const event = this.contractWrapper.parseLogs<PackCreatedEvent>(
-      "PackCreated",
-      receipt?.logs,
-    );
-    if (event.length === 0) {
-      throw new Error("PackCreated event not found");
-    }
-    const packId = event[0].args.packId;
-
-    return {
-      id: packId,
-      receipt,
-      data: () => this.erc1155.get(packId),
-    };
-  }
+          return {
+            id: packId,
+            receipt,
+            data: () => this.erc1155.get(packId),
+          };
+        },
+      });
+    },
+  );
 
   /**
    * Open Pack
@@ -546,75 +574,82 @@ export class Pack extends StandardErc1155<PackContract> {
    * const tx = await contract.open(tokenId, amount);
    * ```
    */
-  public async open(
-    tokenId: BigNumberish,
-    amount: BigNumberish = 1,
-  ): Promise<PackRewards> {
-    if (this._vrf) {
-      throw new Error(
-        "This contract is using Chainlink VRF, use `contract.vrf.open()` or `contract.vrf.openAndClaim()` instead",
-      );
-    }
-    const receipt = await this.contractWrapper.sendTransaction(
-      "openPack",
-      [tokenId, amount],
-      {
-        // Higher gas limit for opening packs
-        gasLimit: 500000,
-      },
-    );
-    const event = this.contractWrapper.parseLogs<PackOpenedEvent>(
-      "PackOpened",
-      receipt?.logs,
-    );
-    if (event.length === 0) {
-      throw new Error("PackOpened event not found");
-    }
-    const rewards = event[0].args.rewardUnitsDistributed;
-
-    const erc20Rewards: PackRewards["erc20Rewards"] = [];
-    const erc721Rewards: PackRewards["erc721Rewards"] = [];
-    const erc1155Rewards: PackRewards["erc1155Rewards"] = [];
-
-    for (const reward of rewards) {
-      switch (reward.tokenType) {
-        case 0: {
-          const tokenMetadata = await fetchCurrencyMetadata(
-            this.contractWrapper.getProvider(),
-            reward.assetContract,
-          );
-          erc20Rewards.push({
-            contractAddress: reward.assetContract,
-            quantityPerReward: ethers.utils
-              .formatUnits(reward.totalAmount, tokenMetadata.decimals)
-              .toString(),
-          });
-          break;
-        }
-        case 1: {
-          erc721Rewards.push({
-            contractAddress: reward.assetContract,
-            tokenId: reward.tokenId.toString(),
-          });
-          break;
-        }
-        case 2: {
-          erc1155Rewards.push({
-            contractAddress: reward.assetContract,
-            tokenId: reward.tokenId.toString(),
-            quantityPerReward: reward.totalAmount.toString(),
-          });
-          break;
-        }
+  open = buildTransactionFunction(
+    async (
+      tokenId: BigNumberish,
+      amount: BigNumberish = 1,
+      gasLimit = 500000,
+    ): Promise<Transaction<Promise<PackRewards>>> => {
+      if (this._vrf) {
+        throw new Error(
+          "This contract is using Chainlink VRF, use `contract.vrf.open()` or `contract.vrf.openAndClaim()` instead",
+        );
       }
-    }
 
-    return {
-      erc20Rewards,
-      erc721Rewards,
-      erc1155Rewards,
-    };
-  }
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "openPack",
+        args: [tokenId, amount],
+        overrides: {
+          // Higher gas limit for opening packs
+          gasLimit,
+        },
+        parse: async (receipt) => {
+          const event = this.contractWrapper.parseLogs<PackOpenedEvent>(
+            "PackOpened",
+            receipt?.logs,
+          );
+          if (event.length === 0) {
+            throw new Error("PackOpened event not found");
+          }
+          const rewards = event[0].args.rewardUnitsDistributed;
+
+          const erc20Rewards: PackRewards["erc20Rewards"] = [];
+          const erc721Rewards: PackRewards["erc721Rewards"] = [];
+          const erc1155Rewards: PackRewards["erc1155Rewards"] = [];
+
+          for (const reward of rewards) {
+            switch (reward.tokenType) {
+              case 0: {
+                const tokenMetadata = await fetchCurrencyMetadata(
+                  this.contractWrapper.getProvider(),
+                  reward.assetContract,
+                );
+                erc20Rewards.push({
+                  contractAddress: reward.assetContract,
+                  quantityPerReward: ethers.utils
+                    .formatUnits(reward.totalAmount, tokenMetadata.decimals)
+                    .toString(),
+                });
+                break;
+              }
+              case 1: {
+                erc721Rewards.push({
+                  contractAddress: reward.assetContract,
+                  tokenId: reward.tokenId.toString(),
+                });
+                break;
+              }
+              case 2: {
+                erc1155Rewards.push({
+                  contractAddress: reward.assetContract,
+                  tokenId: reward.tokenId.toString(),
+                  quantityPerReward: reward.totalAmount.toString(),
+                });
+                break;
+              }
+            }
+          }
+
+          return {
+            erc20Rewards,
+            erc721Rewards,
+            erc1155Rewards,
+          };
+        },
+      });
+    },
+  );
 
   /** *****************************
    * PRIVATE FUNCTIONS
@@ -729,11 +764,32 @@ export class Pack extends StandardErc1155<PackContract> {
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
+  public async prepare<
+    TMethod extends keyof PackContract["functions"] = keyof PackContract["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<PackContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
+  }
+
+  /**
+   * @internal
+   */
+  public async call<
+    TMethod extends keyof PackContract["functions"] = keyof PackContract["functions"],
+  >(
+    functionName: string & TMethod,
+    args?: any[] & Parameters<PackContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
   ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 
   private detectVrf() {

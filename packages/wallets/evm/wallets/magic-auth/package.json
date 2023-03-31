@@ -1,4 +1,7 @@
 {
   "main": "dist/thirdweb-dev-wallets-evm-wallets-magic-auth.cjs.js",
-  "module": "dist/thirdweb-dev-wallets-evm-wallets-magic-auth.esm.js"
+  "module": "dist/thirdweb-dev-wallets-evm-wallets-magic-auth.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-wallets-evm-wallets-magic-auth.esm.js": "./dist/thirdweb-dev-wallets-evm-wallets-magic-auth.browser.esm.js"
+  }
 }

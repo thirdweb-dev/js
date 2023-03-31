@@ -1,5 +1,5 @@
 import { BasisPointsSchema } from "../../../core/schema/shared";
-import { BigNumberSchema } from "../shared";
+import { AddressOrEnsSchema, BigNumberSchema } from "../shared";
 import { BaseSignaturePayloadInput } from "./common";
 import { constants } from "ethers";
 import { z } from "zod";
@@ -9,7 +9,7 @@ import { z } from "zod";
  */
 export const TieredDropPayloadSchema = BaseSignaturePayloadInput.extend({
   tierPriority: z.array(z.string()),
-  royaltyRecipient: z.string().default(constants.AddressZero),
+  royaltyRecipient: AddressOrEnsSchema.default(constants.AddressZero),
   royaltyBps: BasisPointsSchema.default(0),
   quantity: BigNumberSchema.default(1),
 });

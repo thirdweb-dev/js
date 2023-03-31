@@ -1,25 +1,28 @@
-import { useNetwork } from "../../hooks/wagmi-required/useNetwork";
-import { ConnectWallet } from "../ConnectWallet";
-import { Button } from "../shared/Button";
-import { ThemeProvider, ThemeProviderProps } from "../shared/ThemeProvider";
-import { FiWifi } from "@react-icons/all-files/fi/FiWifi";
-import { useMutation } from "@tanstack/react-query";
+import { Popover } from "../../../components/Popover";
+import { Spinner } from "../../../components/Spinner";
+import { Button } from "../../../components/buttons";
+import { darkTheme, lightTheme } from "../../../design-system";
+import { ConnectWallet } from "../../../wallet/ConnectWallet/ConnectWallet";
+import { useIsNonLocalWallet } from "../../../wallet/hooks/useCanSwitchNetwork";
+import { ThemeProvider } from "@emotion/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  useSDKChainId,
+  ThirdwebThemeContext,
+  useAddress,
   useContract,
   useNetworkMismatch,
-  useAddress,
-  useChainId,
-} from "@thirdweb-dev/react-core/evm";
+  useSDKChainId,
+  useSwitchChain,
+  useConnectionStatus,
+} from "@thirdweb-dev/react-core";
 import type { SmartContract } from "@thirdweb-dev/sdk";
 import type { CallOverrides, ContractInterface } from "ethers";
-import { PropsWithChildren, useMemo } from "react";
+import { PropsWithChildren, useContext, useState } from "react";
 import invariant from "tiny-invariant";
 
 type ActionFn = (contract: SmartContract) => any;
 
-interface Web3ButtonProps<TActionFn extends ActionFn>
-  extends ThemeProviderProps {
+interface Web3ButtonProps<TActionFn extends ActionFn> {
   className?: string;
   contractAddress: `0x${string}` | `${string}.eth` | string;
   contractAbi?: ContractInterface;
@@ -29,12 +32,14 @@ interface Web3ButtonProps<TActionFn extends ActionFn>
   onSuccess?: (result: Awaited<ReturnType<TActionFn>>) => void;
   // called with any error that might happen
   onError?: (error: Error) => void;
-  // called when the function is called
+  // called before the `action` function is called
   onSubmit?: () => void;
   // disabled state
   isDisabled?: boolean;
   // the fn to execute
   action: TActionFn;
+  type?: "button" | "submit" | "reset";
+  theme?: "dark" | "light";
 }
 
 /**
@@ -68,50 +73,40 @@ export const Web3Button = <TAction extends ActionFn>({
   children,
   action,
   className,
-  ...themeProps
+  type,
+  theme,
 }: PropsWithChildren<Web3ButtonProps<TAction>>) => {
   const address = useAddress();
-  const walletChainId = useChainId();
   const sdkChainId = useSDKChainId();
-  const [, switchNetwork] = useNetwork();
-
+  const switchChain = useSwitchChain();
   const hasMismatch = useNetworkMismatch();
+  const connectionStatus = useConnectionStatus();
 
-  const switchToChainId = useMemo(() => {
-    if (sdkChainId && walletChainId && sdkChainId !== walletChainId) {
-      return sdkChainId;
-    }
-    return null;
-  }, [sdkChainId, walletChainId]);
+  const queryClient = useQueryClient();
+  const requiresConfirmation = useIsNonLocalWallet();
 
   const { contract } = useContract(contractAddress, contractAbi || "custom");
+  const thirdwebTheme = useContext(ThirdwebThemeContext);
+  const themeToUse = theme || thirdwebTheme || "dark";
 
-  // TODO move all of this logic to react-core, it's pure logic
-  const mutation = useMutation(
+  const [confirmStatus, setConfirmStatus] = useState<"idle" | "waiting">(
+    "idle",
+  );
+
+  const actionMutation = useMutation(
     async () => {
-      if (switchToChainId) {
-        if (switchNetwork) {
-          await switchNetwork(switchToChainId);
-          return "__NETWORK_SWITCHED__";
-        } else {
-          throw new Error(
-            "need to switch chain but connected wallet does not support switching",
-          );
-        }
-      }
       invariant(contract, "contract is not ready yet");
 
       if (onSubmit) {
         onSubmit();
       }
 
-      return await action(contract);
+      // Wait for the promise to resolve, so errors get caught by onError
+      const result = await action(contract);
+      return result;
     },
     {
       onSuccess: (res) => {
-        if (res === "__NETWORK_SWITCHED__") {
-          return;
-        }
         if (onSuccess) {
           onSuccess(res);
         }
@@ -121,36 +116,114 @@ export const Web3Button = <TAction extends ActionFn>({
           onError(err as Error);
         }
       },
-      // TODO bring back invalidation
-      // onSettled: () =>
-      //   queryClient.invalidateQueries(
-      //     createCacheKeyWithNetwork(
-      //       createContractCacheKey(contractAddress),
-      //       sdkChainId,
-      //     ),
-      //   ),
+      onSettled: () => queryClient.invalidateQueries(),
     },
   );
+
   if (!address) {
-    return <ConnectWallet className={className} {...themeProps} />;
+    return <ConnectWallet theme={theme} />;
   }
 
-  const willSwitchNetwork = hasMismatch && !!switchNetwork;
+  // let onClick = () => actionMutation.mutate();
+
+  const btnStyle = {
+    minWidth: "150px",
+    minHeight: "43px",
+  };
+
+  let button: React.ReactNode = null;
+
+  const handleSwitchChain = async () => {
+    if (sdkChainId) {
+      setConfirmStatus("waiting");
+      try {
+        await switchChain(sdkChainId);
+        setConfirmStatus("idle");
+      } catch (e) {
+        console.error(e);
+        setConfirmStatus("idle");
+      }
+    }
+  };
+
+  // Switch Network Button
+  if (hasMismatch && !isDisabled) {
+    const _button = (
+      <Button
+        variant="inverted"
+        type={type}
+        className={className}
+        onClick={handleSwitchChain}
+        style={btnStyle}
+      >
+        {confirmStatus === "waiting" ? (
+          <Spinner size="sm" color={"inverted"} />
+        ) : (
+          "Switch Network"
+        )}
+      </Button>
+    );
+
+    if (requiresConfirmation) {
+      button = (
+        <Popover
+          content={<span>Confirm in Wallet</span>}
+          open={confirmStatus === "waiting"}
+          onOpenChange={(isOpen) => {
+            if (!isOpen) {
+              setConfirmStatus("idle");
+            }
+          }}
+        >
+          {_button}
+        </Popover>
+      );
+    } else {
+      button = _button;
+    }
+  }
+
+  // Disabled Loading Spinner Button
+  else if (
+    !isDisabled &&
+    (actionMutation.isLoading ||
+      !contract ||
+      connectionStatus === "connecting" ||
+      connectionStatus === "unknown")
+  ) {
+    button = (
+      <Button
+        variant="inverted"
+        type={type}
+        className={className}
+        disabled
+        onClick={handleSwitchChain}
+        style={btnStyle}
+      >
+        <Spinner size="md" color={"inverted"} />
+      </Button>
+    );
+  }
+
+  // action button
+  else {
+    button = (
+      <Button
+        variant="inverted"
+        type={type}
+        className={className}
+        onClick={() => actionMutation.mutate()}
+        disabled={isDisabled}
+        style={btnStyle}
+      >
+        {children}
+      </Button>
+    );
+  }
 
   return (
-    <ThemeProvider {...themeProps}>
-      <Button
-        className={className}
-        style={{ height: "50px", minWidth: "200px", width: "100%" }}
-        isLoading={mutation.isLoading || !contract}
-        onClick={() => mutation.mutate()}
-        isDisabled={willSwitchNetwork ? false : isDisabled}
-        leftElement={
-          willSwitchNetwork ? <FiWifi width="1em" height="1em" /> : undefined
-        }
-      >
-        {willSwitchNetwork ? "Switch Network" : children}
-      </Button>
+    <ThemeProvider theme={themeToUse === "dark" ? darkTheme : lightTheme}>
+      {button}
     </ThemeProvider>
   );
 };

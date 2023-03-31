@@ -1,6 +1,10 @@
 import { AmountSchema } from "../../../core/schema/shared";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants";
-import { AddressSchema, BigNumberishSchema, EndDateSchema } from "../shared";
+import {
+  AddressOrEnsSchema,
+  BigNumberishSchema,
+  EndDateSchema,
+} from "../shared";
 import { z } from "zod";
 
 /**
@@ -10,7 +14,7 @@ export const OfferInputParamsSchema = z.object({
   /**
    * The address of the asset being sought.
    */
-  assetContractAddress: AddressSchema,
+  assetContractAddress: AddressOrEnsSchema,
 
   /**
    * The ID of the token.
@@ -27,7 +31,7 @@ export const OfferInputParamsSchema = z.object({
   /**
    * The address of the currency offered for the NFTs.
    */
-  currencyContractAddress: AddressSchema.default(NATIVE_TOKEN_ADDRESS),
+  currencyContractAddress: AddressOrEnsSchema.default(NATIVE_TOKEN_ADDRESS),
 
   /**
    * The total offer amount for the NFTs.

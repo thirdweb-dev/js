@@ -20,6 +20,7 @@ env:
 
 jobs:
   build:
+    timeout-minutes: 15
     name: Build
     runs-on: ubuntu-latest-16
 
@@ -32,7 +33,7 @@ jobs:
       - name: Install
         uses: ./.github/composite-actions/install
 
-      - run: yarn build
+      - run: pnpm build
 
         # We use week in the turbo cache key to keep the cache from infinitely growing
       - id: get-week
@@ -46,6 +47,7 @@ jobs:
           key: ${{ github.sha }}-${{ github.run_number }}
 
   lint:
+    timeout-minutes: 15
     name: Lint Packages
     runs-on: ubuntu-latest
     needs: build
@@ -56,6 +58,10 @@ jobs:
           node-version: 16
           check-latest: true
 
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - uses: actions/cache@v3
         timeout-minutes: 5
         id: restore-build
@@ -63,9 +69,10 @@ jobs:
           path: ./*
           key: ${{ github.sha }}-${{ github.run_number }}
 
-      - run: yarn lint
+      - run: pnpm lint
 
   test:
+    timeout-minutes: 15
     name: Unit Tests
     runs-on: ubuntu-latest-16
     needs: build
@@ -76,6 +83,10 @@ jobs:
           node-version: 16
           check-latest: true
 
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - uses: actions/cache@v3
         timeout-minutes: 5
         id: restore-build
@@ -83,7 +94,7 @@ jobs:
           path: ./*
           key: ${{ github.sha }}-${{ github.run_number }}
 
-      - run: yarn test
+      - run: pnpm test
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
@@ -91,6 +102,7 @@ jobs:
           files: ./packages/sdk/coverage/evm/lcov.info,./packages/sdk/coverage/solana/lcov.info,
 
   e2e:
+    timeout-minutes: 15
     name: E2E Tests
     runs-on: ubuntu-latest-16
     needs: build
@@ -100,6 +112,10 @@ jobs:
         with:
           node-version: 16
           check-latest: true
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
 
       - uses: actions/cache@v3
         timeout-minutes: 5
@@ -112,6 +128,6 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run e2e tests
-        run: yarn e2e
+        run: pnpm e2e
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"

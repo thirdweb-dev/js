@@ -12,7 +12,9 @@ export class HardhatBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
     contracts: ContractPayload[];
   }> {
-    await execute("npx hardhat clean", options.projectPath);
+    if (options.clean) {
+      await execute("npx hardhat clean", options.projectPath);
+    }
     await execute("npx hardhat compile", options.projectPath);
     //we get our very own extractor script from the dir that we're in during execution
     // this is `./dist/cli` (for all purposes of the CLI)
@@ -97,8 +99,7 @@ export class HardhatBuilder extends BaseBuilder {
 
           const bytecode = info.evm.bytecode.object;
           const deployedBytecode = info.evm.deployedBytecode.object;
-          const metadata = info.metadata;
-          const abi = info.abi;
+          const { metadata, abi } = info;
 
           const meta = JSON.parse(metadata);
           const sources = Object.keys(meta.sources)

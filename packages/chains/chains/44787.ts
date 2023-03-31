@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Celo Alfajores Testnet",
   "chainId": 44787,
@@ -28,4 +29,4 @@ export default {
   ],
   "testnet": true,
   "slug": "celo-alfajores-testnet"
-} as const;
+} as const satisfies Chain;

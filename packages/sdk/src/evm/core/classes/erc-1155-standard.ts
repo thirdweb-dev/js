@@ -1,8 +1,10 @@
 import { NFT } from "../../../core/schema/nft";
+import { buildTransactionFunction } from "../../common/transactions";
+import { Address, AddressOrEns } from "../../schema";
 import { AirdropInput } from "../../types/airdrop/airdrop";
 import { BaseERC1155, BaseSignatureMintERC1155 } from "../../types/eips";
 import { UpdateableNetwork } from "../interfaces/contract";
-import { NetworkInput, TransactionResult } from "../types";
+import { NetworkInput } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc1155 } from "./erc-1155";
 import type { DropERC1155, TokenERC1155 } from "@thirdweb-dev/contracts-js";
@@ -52,14 +54,14 @@ export class StandardErc1155<
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
   }
 
   ////// Standard ERC1155 functions //////
 
   /**
-   * Get a single NFT Metadata
+   * Get a single NFT
    *
    * @example
    * ```javascript
@@ -95,7 +97,7 @@ export class StandardErc1155<
    * ```
    */
   public async balanceOf(
-    address: string,
+    address: AddressOrEns,
     tokenId: BigNumberish,
   ): Promise<BigNumber> {
     return this.erc1155.balanceOf(address, tokenId);
@@ -113,12 +115,15 @@ export class StandardErc1155<
    * @param address - the wallet address
    * @param operator - the operator address
    */
-  public async isApproved(address: string, operator: string): Promise<boolean> {
+  public async isApproved(
+    address: AddressOrEns,
+    operator: AddressOrEns,
+  ): Promise<boolean> {
     return this.erc1155.isApproved(address, operator);
   }
 
   /**
-   * Transfer a single NFT
+   * Transfer an NFT
    *
    * @remarks Transfer an NFT from the connected wallet to another wallet.
    *
@@ -131,14 +136,16 @@ export class StandardErc1155<
    * await contract.transfer(toAddress, tokenId, amount);
    * ```
    */
-  public async transfer(
-    to: string,
-    tokenId: BigNumberish,
-    amount: BigNumberish,
-    data: BytesLike = [0],
-  ): Promise<TransactionResult> {
-    return this.erc1155.transfer(to, tokenId, amount, data);
-  }
+  transfer = buildTransactionFunction(
+    async (
+      to: AddressOrEns,
+      tokenId: BigNumberish,
+      amount: BigNumberish,
+      data: BytesLike = [0],
+    ) => {
+      return this.erc1155.transfer.prepare(to, tokenId, amount, data);
+    },
+  );
 
   /**
    * Approve or remove operator as an operator for the caller. Operators can call transferFrom or safeTransferFrom for any token owned by the caller.
@@ -147,12 +154,11 @@ export class StandardErc1155<
    *
    * @internal
    */
-  public async setApprovalForAll(
-    operator: string,
-    approved: boolean,
-  ): Promise<TransactionResult> {
-    return this.erc1155.setApprovalForAll(operator, approved);
-  }
+  setApprovalForAll = buildTransactionFunction(
+    async (operator: AddressOrEns, approved: boolean) => {
+      return this.erc1155.setApprovalForAll.prepare(operator, approved);
+    },
+  );
 
   /**
    * Airdrop multiple NFTs
@@ -184,11 +190,13 @@ export class StandardErc1155<
    * await contract.airdrop(tokenId, addresses);
    * ```
    */
-  public async airdrop(
-    tokenId: BigNumberish,
-    addresses: AirdropInput,
-    data: BytesLike = [0],
-  ): Promise<TransactionResult> {
-    return this.erc1155.airdrop(tokenId, addresses, data);
-  }
+  airdrop = buildTransactionFunction(
+    async (
+      tokenId: BigNumberish,
+      addresses: AirdropInput,
+      data: BytesLike = [0],
+    ) => {
+      return this.erc1155.airdrop.prepare(tokenId, addresses, data);
+    },
+  );
 }

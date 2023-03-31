@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Opulent-X BETA",
   "chainId": 41500,
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": false,
   "slug": "opulent-x-beta"
-} as const;
+} as const satisfies Chain;

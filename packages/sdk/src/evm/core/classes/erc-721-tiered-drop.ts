@@ -277,8 +277,10 @@ export class Erc721TieredDrop implements DetectableFeature {
   public async generateBatch(
     payloadsToSign: TieredDropPayloadInput[],
   ): Promise<TieredDropPayloadWithSignature[]> {
-    const parsedPayloads = payloadsToSign.map((payload) =>
-      TieredDropPayloadSchema.parse(payload),
+    const parsedPayloads = await Promise.all(
+      payloadsToSign.map((payload) =>
+        TieredDropPayloadSchema.parseAsync(payload),
+      ),
     );
     const chainId = await this.contractWrapper.getChainID();
     const signer = this.contractWrapper.getSigner();

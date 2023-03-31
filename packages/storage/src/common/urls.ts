@@ -6,7 +6,7 @@ import { GatewayUrls } from "../types";
 export const DEFAULT_GATEWAY_URLS: GatewayUrls = {
   // Note: Gateway URLs should have trailing slashes (we clean this on user input)
   "ipfs://": [
-    "https://gateway.ipfscdn.io/ipfs/",
+    "https://ipfs.thirdwebcdn.com/ipfs/",
     "https://cloudflare-ipfs.com/ipfs/",
     "https://ipfs.io/ipfs/",
   ],
@@ -21,6 +21,21 @@ export const TW_IPFS_SERVER_URL = "https://upload.nftlabs.co";
  * @internal
  */
 export const PINATA_IPFS_URL = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
+
+/**
+ * @internal
+ */
+export function parseGatewayUrls(
+  gatewayUrls?: GatewayUrls | string[],
+): GatewayUrls {
+  if (Array.isArray(gatewayUrls)) {
+    return {
+      "ipfs://": gatewayUrls,
+    };
+  }
+
+  return gatewayUrls || {};
+}
 
 /**
  * @internal

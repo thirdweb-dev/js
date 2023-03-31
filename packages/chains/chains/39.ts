@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Unicorn Ultra Testnet",
   "chain": "u2u",
@@ -25,7 +26,12 @@ export default {
   },
   "explorers": [
     {
-      "icon": "u2u",
+      "icon": {
+        "url": "ipfs://QmcW64RgqQVHnNbVFyfaMNKt7dJvFqEbfEHZmeyeK8dpEa",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      },
       "name": "U2U Explorer",
       "url": "https://testnet.uniultra.xyz",
       "standard": "EIP3091"
@@ -33,4 +39,4 @@ export default {
   ],
   "testnet": true,
   "slug": "unicorn-ultra-testnet"
-} as const;
+} as const satisfies Chain;

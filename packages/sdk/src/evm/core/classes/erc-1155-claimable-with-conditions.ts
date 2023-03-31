@@ -1,9 +1,10 @@
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_CLAIM_CONDITIONS_V2 } from "../../constants/erc1155-features";
+import { AddressOrEns } from "../../schema";
 import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
 import { BaseClaimConditionERC1155 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { TransactionResult } from "../types";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { DropErc1155ClaimConditions } from "./drop-erc1155-claim-conditions";
@@ -67,18 +68,19 @@ export class Erc1155ClaimableWithConditions implements DetectableFeature {
    *
    * @returns - Receipt for the transaction
    */
-  public async to(
-    destinationAddress: string,
-    tokenId: BigNumberish,
-    quantity: BigNumberish,
-    options?: ClaimOptions,
-  ): Promise<TransactionResult> {
-    const tx = await this.conditions.getClaimTransaction(
-      destinationAddress,
-      tokenId,
-      quantity,
-      options,
-    );
-    return await tx.execute();
-  }
+  to = buildTransactionFunction(
+    async (
+      destinationAddress: AddressOrEns,
+      tokenId: BigNumberish,
+      quantity: BigNumberish,
+      options?: ClaimOptions,
+    ) => {
+      return await this.conditions.getClaimTransaction(
+        destinationAddress,
+        tokenId,
+        quantity,
+        options,
+      );
+    },
+  );
 }

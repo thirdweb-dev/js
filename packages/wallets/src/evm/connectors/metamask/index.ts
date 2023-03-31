@@ -1,20 +1,15 @@
-import { getConnectorStorage } from "../../utils/storage";
-import { InjectedConnector } from "../injected";
+import { AsyncStorage } from "../../../core/AsyncStorage";
 import {
-  Chain,
   ConnectorNotFoundError,
-  Ethereum,
-  InjectedConnectorOptions,
   ResourceUnavailableError,
   RpcError,
   UserRejectedRequestError,
-} from "@wagmi/core";
-import type { Address } from "abitype";
-import { getAddress } from "ethers/lib/utils.js";
-
-function isWindoWethereum(w: Window): w is Window & { ethereum: Ethereum } {
-  return "ethereum" in window;
-}
+} from "../../../lib/wagmi-core/errors";
+import { assertWindowEthereum } from "../../utils/assertWindowEthereum";
+import { InjectedConnector, InjectedConnectorOptions } from "../injected";
+import { Ethereum } from "../injected/types";
+import type { Chain } from "@thirdweb-dev/chains";
+import { utils } from "ethers";
 
 export type MetaMaskConnectorOptions = Pick<
   InjectedConnectorOptions,
@@ -26,19 +21,18 @@ export type MetaMaskConnectorOptions = Pick<
   UNSTABLE_shimOnConnectSelectAccount?: boolean;
 };
 
+type MetamaskConnectorConstructorArg = {
+  chains?: Chain[];
+  connectorStorage: AsyncStorage;
+  options?: MetaMaskConnectorOptions;
+};
+
 export class MetaMaskConnector extends InjectedConnector {
   readonly id = "metaMask";
-
   #UNSTABLE_shimOnConnectSelectAccount: MetaMaskConnectorOptions["UNSTABLE_shimOnConnectSelectAccount"];
 
-  constructor({
-    chains,
-    options: options_,
-  }: {
-    chains?: Chain[];
-    options?: MetaMaskConnectorOptions;
-  } = {}) {
-    const options = {
+  constructor(arg: MetamaskConnectorConstructorArg) {
+    const defaultOptions = {
       name: "MetaMask",
       shimDisconnect: true,
       shimChainChangedDisconnect: true,
@@ -74,44 +68,53 @@ export class MetaMaskConnector extends InjectedConnector {
         if (typeof window === "undefined") {
           return;
         }
-        if (isWindoWethereum(window)) {
-          if (window.ethereum?.providers) {
-            return window.ethereum.providers.find(getReady);
+        if (assertWindowEthereum(globalThis.window)) {
+          if (globalThis.window.ethereum?.providers) {
+            return globalThis.window.ethereum.providers.find(getReady);
           }
 
-          return getReady(window.ethereum);
+          return getReady(globalThis.window.ethereum);
         }
       },
-      ...options_,
     };
-    super({ chains, options });
+
+    const options = {
+      ...defaultOptions,
+      ...arg.options,
+    };
+
+    super({
+      chains: arg.chains,
+      options,
+      connectorStorage: arg.connectorStorage,
+    });
 
     this.#UNSTABLE_shimOnConnectSelectAccount =
       options.UNSTABLE_shimOnConnectSelectAccount;
   }
 
-  async connect({ chainId }: { chainId?: number } = {}) {
+  /**
+   * Connect to injected MetaMask provider
+   */
+  async connect(options: { chainId?: number } = {}) {
     try {
       const provider = await this.getProvider();
       if (!provider) {
         throw new ConnectorNotFoundError();
       }
 
-      if (provider.on) {
-        provider.on("accountsChanged", this.onAccountsChanged);
-        provider.on("chainChanged", this.onChainChanged);
-        provider.on("disconnect", this.onDisconnect);
-      }
+      this.setupListeners();
 
+      // emit "connecting" event
       this.emit("message", { type: "connecting" });
 
       // Attempt to show wallet select prompt with `wallet_requestPermissions` when
       // `shimDisconnect` is active and account is in disconnected state (flag in storage)
-      let account: Address | null = null;
+      let account: string | null = null;
       if (
         this.#UNSTABLE_shimOnConnectSelectAccount &&
         this.options?.shimDisconnect &&
-        !(await getConnectorStorage().getItem(this.shimDisconnectKey))
+        !Boolean(this.connectorStorage.getItem(this.shimDisconnectKey))
       ) {
         account = await this.getAccount().catch(() => null);
         const isConnected = !!account;
@@ -132,27 +135,45 @@ export class MetaMaskConnector extends InjectedConnector {
         }
       }
 
+      // if account is not already set, request accounts and use the first account
       if (!account) {
         const accounts = await provider.request({
           method: "eth_requestAccounts",
         });
-        account = getAddress(accounts[0] as string);
+        account = utils.getAddress(accounts[0] as string);
       }
 
-      // Switch to chain if provided
-      let id = await this.getChainId();
-      let unsupported = this.isChainUnsupported(id);
-      if (chainId && id !== chainId) {
-        const chain = await this.switchChain(chainId);
-        id = chain.id;
-        unsupported = this.isChainUnsupported(id);
+      // get currently connected chainId
+      let connectedChainId = await this.getChainId();
+      // check if connected chain is unsupported
+      let isUnsupported = this.isChainUnsupported(connectedChainId);
+
+      // if chainId is given, but does not match the currently connected chainId, switch to the given chainId
+      if (options.chainId && connectedChainId !== options.chainId) {
+        try {
+          await this.switchChain(options.chainId);
+          // recalculate the chainId and isUnsupported
+          connectedChainId = options.chainId;
+          isUnsupported = this.isChainUnsupported(options.chainId);
+        } catch (e) {
+          console.error(`Could not switch to chain id : ${options.chainId}`, e);
+        }
       }
 
+      // if shimDisconnect is enabled
       if (this.options?.shimDisconnect) {
-        await getConnectorStorage().setItem(this.shimDisconnectKey, true);
+        // add shimDisconnectKey in storage - this signals that connector is "connected"
+        await this.connectorStorage.setItem(this.shimDisconnectKey, "true");
       }
 
-      return { account, chain: { id, unsupported }, provider };
+      const connectionInfo = {
+        chain: { id: connectedChainId, unsupported: isUnsupported },
+        provider: provider,
+        account,
+      };
+
+      this.emit("connect", connectionInfo);
+      return connectionInfo;
     } catch (error) {
       if (this.isUserRejectedRequestError(error)) {
         throw new UserRejectedRequestError(error);

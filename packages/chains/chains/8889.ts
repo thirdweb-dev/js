@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Vyvo Smart Chain",
   "chain": "VSC",
@@ -17,4 +18,4 @@ export default {
   "networkId": 8889,
   "testnet": false,
   "slug": "vyvo-smart-chain"
-} as const;
+} as const satisfies Chain;

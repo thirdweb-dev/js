@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Gnosis",
   "chain": "GNO",
@@ -35,16 +36,20 @@ export default {
     {
       "name": "gnosisscan",
       "url": "https://gnosisscan.io",
-      "icon": "gnosisscan",
       "standard": "EIP3091"
     },
     {
       "name": "blockscout",
       "url": "https://blockscout.com/xdai/mainnet",
-      "icon": "blockscout",
+      "icon": {
+        "url": "ipfs://bafybeifu5tpui7dk5cjoo54kde7pmuthvnl7sdykobuarsxgu7t2izurnq",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "gnosis"
-} as const;
+} as const satisfies Chain;

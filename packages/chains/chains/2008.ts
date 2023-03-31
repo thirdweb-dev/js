@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "CloudWalk Testnet",
   "chain": "CloudWalk Testnet",
@@ -21,4 +22,4 @@ export default {
   ],
   "testnet": true,
   "slug": "cloudwalk-testnet"
-} as const;
+} as const satisfies Chain;

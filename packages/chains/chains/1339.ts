@@ -1,10 +1,11 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Elysium Mainnet",
   "title": "An L1, carbon-neutral, tree-planting, metaverse dedicated blockchain created by VulcanForged",
   "chain": "Elysium",
   "rpc": [
     "https://elysium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://elysium-rpc.vulcanforged.com"
+    "https://rpc.elysiumchain.tech/"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -25,4 +26,4 @@ export default {
   ],
   "testnet": false,
   "slug": "elysium"
-} as const;
+} as const satisfies Chain;

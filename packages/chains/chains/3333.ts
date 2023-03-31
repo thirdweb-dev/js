@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Web3Q Testnet",
   "chain": "Web3Q",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": true,
   "slug": "web3q-testnet"
-} as const;
+} as const satisfies Chain;

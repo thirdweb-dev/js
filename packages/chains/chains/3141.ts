@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Filecoin - Hyperspace testnet",
   "chain": "FIL",
@@ -10,6 +11,7 @@ export default {
   "rpc": [
     "https://filecoin-hyperspace-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.hyperspace.node.glif.io/rpc/v1",
+    "https://rpc.ankr.com/filecoin_testnet",
     "https://filecoin-hyperspace.chainstacklabs.com/rpc/v1"
   ],
   "faucets": [
@@ -42,8 +44,8 @@ export default {
       "standard": "none"
     },
     {
-      "name": "Filmine",
-      "url": "https://explorer.filmine.io",
+      "name": "Dev.storage",
+      "url": "https://dev.storage",
       "standard": "none"
     },
     {
@@ -54,4 +56,4 @@ export default {
   ],
   "testnet": true,
   "slug": "filecoin-hyperspace-testnet"
-} as const;
+} as const satisfies Chain;

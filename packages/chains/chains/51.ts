@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "XDC Apothem Network",
   "chain": "XDC",
@@ -28,16 +29,26 @@ export default {
     {
       "name": "xdcscan",
       "url": "https://apothem.xinfinscan.com",
-      "icon": "blocksscan",
+      "icon": {
+        "url": "ipfs://QmPzVFs16GwaD8LAcGFLCNXzEK8BHFKNXeM3nmBpnq9xy3",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      },
       "standard": "EIP3091"
     },
     {
       "name": "blocksscan",
       "url": "https://apothem.blocksscan.io",
-      "icon": "blocksscan",
+      "icon": {
+        "url": "ipfs://QmPzVFs16GwaD8LAcGFLCNXzEK8BHFKNXeM3nmBpnq9xy3",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "xdc-apothem-network"
-} as const;
+} as const satisfies Chain;

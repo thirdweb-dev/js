@@ -9,20 +9,27 @@ import {
   invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  UseMutationResult,
+  useQueryClient,
+  UseQueryResult,
+} from "@tanstack/react-query";
 import type {
   CustomContractMetadata,
   ValidContractInstance,
 } from "@thirdweb-dev/sdk";
+import type { providers } from "ethers";
 import invariant from "tiny-invariant";
 
 // primary sales
 
 /**
+ * Get the primary sale recipient
  *
  * @example
  * ```jsx
- * const { data: recipient, isLoading, error } = usePrimarySalesRecipient(SmartContract);
+ * const { data: primarySaleRecipient, isLoading, error } = usePrimarySalesRecipient(contract);
  * ```
  *
  * Use this to get the primary sales recipient of your {@link SmartContract}
@@ -50,16 +57,17 @@ export function usePrimarySaleRecipient(
 }
 
 /**
- * Use this to update the primary sales recipient of your {@link SmartContract}
+ * Set the primary sale recipient
  *
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: updatePrimarySalesRecipient,
  *     isLoading,
  *     error,
- *   } = useUpdatePrimarySaleRecipient(SmartContract);
+ *   } = useUpdatePrimarySaleRecipient(contract);
  *
  *   if (error) {
  *     console.error("failed to update recipient", error);
@@ -68,7 +76,7 @@ export function usePrimarySaleRecipient(
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => updatePrimarySalesRecipient({ newRecipient: "0x123" })}
+ *       onClick={() => updatePrimarySalesRecipient({ newRecipient: "{{wallet_address}}" })}
  *     >
  *       Update Recipient
  *     </button>
@@ -83,7 +91,14 @@ export function usePrimarySaleRecipient(
  */
 export function useUpdatePrimarySaleRecipient(
   contract: RequiredParam<ValidContractInstance>,
-) {
+): UseMutationResult<
+  {
+    receipt: providers.TransactionReceipt;
+  },
+  unknown,
+  string,
+  unknown
+> {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();
   const activeChainId = useSDKChainId();
@@ -107,16 +122,16 @@ export function useUpdatePrimarySaleRecipient(
   );
 }
 
-// end prinary sales
+// end primary sales
 
 // royalties
 
 /**
- * Use this to get the royalty settings of your {@link SmartContract}
+ * Get the royalty recipient and fee
  *
  * @example
  * ```jsx
- * const { data: settings, isLoading, error } = useRoyaltySettings(SmartContract);
+ * const { data: settings, isLoading, error } = useRoyaltySettings(contract);
  * ```
  *
  * @param contract - an instance of a {@link SmartContract}
@@ -143,16 +158,17 @@ export function useRoyaltySettings(
 }
 
 /**
- * Use this to update the royalty settings of your {@link SmartContract}
+ * Set the royalty recipient and fee
  *
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: updateRoyaltySettings,
  *     isLoading,
  *     error,
- *   } = useUpdateRoyaltySettings(SmartContract);
+ *   } = useUpdateRoyaltySettings(contract);
  *
  *   if (error) {
  *     console.error("failed to update royalty settings", error);
@@ -161,7 +177,7 @@ export function useRoyaltySettings(
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => updateRoyaltySettings({ updatePayload: { fee_recipient: "0x123", seller_fee_basis_points: 5_00 } })}
+ *       onClick={() => updateRoyaltySettings({ updatePayload: { fee_recipient: "{{wallet_address}}", seller_fee_basis_points: 5_00 } })}
  *     >
  *       Update Royalty Settings
  *     </button>
@@ -208,11 +224,11 @@ export function useUpdateRoyaltySettings(
 // platformFees
 
 /**
- * Use this to get the platform fees settings of your {@link SmartContract}
+ * Get the platform fee recipient and basis points
  *
  * @example
  * ```jsx
- * const { data: platformFees, isLoading, error } = usePlatformFees(SmartContract);
+ * const { data: platformFees, isLoading, error } = usePlatformFees(contract);
  * ```
  *
  * @param contract - an instance of a {@link SmartContract}
@@ -239,16 +255,17 @@ export function usePlatformFees(
 }
 
 /**
- * Use this to update the platform fees settings of your {@link SmartContract}
+ * Set the platform fee recipient and basis points
  *
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: updatePlatformFees,
  *     isLoading,
  *     error,
- *   } = useUpdatePlatformFees(SmartContract);
+ *   } = useUpdatePlatformFees(contract);
  *
  *   if (error) {
  *     console.error("failed to update platform fees", error);
@@ -257,7 +274,7 @@ export function usePlatformFees(
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => updatePlatformFees({ updatePayload: { fee_recipient: "0x123", platform_fee_basis_points: 5_00 } })}
+ *       onClick={() => updatePlatformFees({ updatePayload: { fee_recipient: "{{wallet_address}}", platform_fee_basis_points: 5_00 } })}
  *     >
  *       Update Platform fees
  *     </button>
@@ -303,19 +320,21 @@ export function useUpdatePlatformFees(
 // metadata
 
 /**
- * Use this to get the metadata of your {@link SmartContract}
+ * Get the metadata of this contract
  *
  * @example
  * ```jsx
- * const { data: metadata, isLoading, error } = useMetadata(SmartContract);
+ * const { data: metadata, isLoading, error } = useMetadata(contract);
  * ```
  *
  * @param contract - an instance of a {@link SmartContract}
  * @returns a {@link CustomContractMetadata} object containing the metadata
- * @twfeature ContractMetadata
  * @beta
  */
-export function useMetadata(contract: RequiredParam<ValidContractInstance>) {
+export function useMetadata(
+  contract: RequiredParam<ValidContractInstance>,
+  // TODO figure out UseQueryResult type better
+): UseQueryResult {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.extensions.metadata.get(contractAddress),
@@ -332,15 +351,17 @@ export function useMetadata(contract: RequiredParam<ValidContractInstance>) {
 }
 
 /**
- * Use this to update the metadata of your {@link SmartContract}
+ * Set the metadata of this contract
+ *
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: updateMetadata,
  *     isLoading,
  *     error,
- *   } = useUpdateMetadata(SmartContract);
+ *   } = useUpdateMetadata(contract);
  *
  *   if (error) {
  *     console.error("failed to update metadata", error);
@@ -349,21 +370,24 @@ export function useMetadata(contract: RequiredParam<ValidContractInstance>) {
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => updateMetadata({ updatePayload: { name: "My Contract", description: "This is my contract" } })}
+ *       onClick={() => updateMetadata({
+ *        name: "My Contract",
+ *        description: "This is my contract"
+ *       })}
  *     >
- *       Update Metadata
+ *       Update Contract Metadata
  *     </button>
  *   );
  * };
  * ```
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to update the metadata
- * @twfeature ContractMetadata
  * @beta
  */
 export function useUpdateMetadata(
   contract: RequiredParam<ValidContractInstance>,
-) {
+  // TODO figure out UseMutationResult type better
+): UseMutationResult<any, any, any> {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();
   const activeChainId = useSDKChainId();

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Imversed Mainnet",
   "chain": "Imversed",
@@ -26,16 +27,26 @@ export default {
     {
       "name": "Imversed EVM explorer (Blockscout)",
       "url": "https://txe.imversed.network",
-      "icon": "imversed",
+      "icon": {
+        "url": "ipfs://QmYwvmJZ1bgTdiZUKXk4SifTpTj286CkZjMCshUyJuBFH1",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      },
       "standard": "EIP3091"
     },
     {
       "name": "Imversed Cosmos Explorer (Big Dipper)",
       "url": "https://tex-c.imversed.com",
-      "icon": "imversed",
+      "icon": {
+        "url": "ipfs://QmYwvmJZ1bgTdiZUKXk4SifTpTj286CkZjMCshUyJuBFH1",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      },
       "standard": "none"
     }
   ],
   "testnet": false,
   "slug": "imversed"
-} as const;
+} as const satisfies Chain;

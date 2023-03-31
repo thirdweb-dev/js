@@ -1,21 +1,26 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@2.1.1/schema.json",
-  "changelog": ["@changesets/changelog-github", { "repo": "thirdweb-dev/js" }],
+  "changelog": [
+    "@changesets/changelog-github",
+    {
+      "repo": "thirdweb-dev/js"
+    }
+  ],
   "commit": false,
   "fixed": [
-    ["@thirdweb-dev/sdk", "@thirdweb-dev/react-core", "@thirdweb-dev/react"]
+    ["@thirdweb-dev/react-core", "@thirdweb-dev/react"],
+    ["@thirdweb-dev/react-native-compat", "@thirdweb-dev/react-native"]
   ],
   "linked": [],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["e2e-cra-5", "e2e-next-12", "e2e-vite-3"],
+  "ignore": ["e2e-cra-5", "e2e-next-13", "e2e-vite-3"],
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "updateInternalDependents": "always",
     "onlyUpdatePeerDependentsWhenOutOfRange": true
   },
   "snapshot": {
-    "useCalculatedVersion": true,
-    "prereleaseTemplate": "{tag}-{commit}"
+    "prereleaseTemplate": "{tag}-{commit}-{datetime}"
   }
 }

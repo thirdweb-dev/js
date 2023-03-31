@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Metal Tahoe C-Chain",
   "chain": "Metal",
@@ -25,4 +26,4 @@ export default {
   ],
   "testnet": false,
   "slug": "metal-tahoe-c-chain"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Decentralized Web Mainnet",
   "shortName": "dwu",
@@ -17,4 +18,4 @@ export default {
   },
   "testnet": false,
   "slug": "decentralized-web"
-} as const;
+} as const satisfies Chain;

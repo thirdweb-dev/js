@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Double-A Chain Testnet",
   "chain": "AAC",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": true,
   "slug": "double-a-chain-testnet"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Venidium Testnet",
   "chain": "XVM",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": true,
   "slug": "venidium-testnet"
-} as const;
+} as const satisfies Chain;

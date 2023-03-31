@@ -61,7 +61,7 @@ export interface Proposal {
   state: ProposalState;
 
   /**
-   * All votes that have been casted on the proposal.
+   * All votes that have been cast on the proposal.
    */
   votes: ProposalVote[];
 

@@ -16,7 +16,12 @@ import {
   invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  UseMutationResult,
+  useQueryClient,
+} from "@tanstack/react-query";
+import type { providers } from "ethers";
 import invariant from "tiny-invariant";
 
 /** **********************/
@@ -24,16 +29,15 @@ import invariant from "tiny-invariant";
 /** **********************/
 
 /**
- * Use this to get a the total supply of your {@link Erc20} contract.
+ * Get the total supply for this token
  *
  * @example
  * ```javascript
- * const { contract } = useContract(<ContractAddress>);
  * const { data: totalSupply, isLoading, error } = useTokenSupply(contract);
  * ```
  *
  * @param contract - an instance of a {@link TokenContract}
- * @returns a response object that incudes the total minted supply
+ * @returns a response object that includes the total minted supply
  * @twfeature ERC20
  * @beta
  */
@@ -56,12 +60,11 @@ export function useTokenSupply(contract: RequiredParam<TokenContract>) {
 }
 
 /**
- * Use this to get the balance of your {@link Erc20} contract for a given address.
+ * Get token balance for a specific wallet
  *
  * @example
  * ```javascript
- * const { contract } = useContract(<ContractAddress>);
- * const { data: balance, isLoading, error } = useTokenBalance(contract);
+ * const { data: balance, isLoading, error } = useTokenBalance(contract, "{{wallet_address}}");
  * ```
  *
  * @param contract - an instance of a {@link TokenContract}
@@ -93,11 +96,10 @@ export function useTokenBalance(
 }
 
 /**
- * Use this to get the decimals of your {@link Erc20} contract for a given address.
+ * Get token decimals
  *
  * @example
  * ```javascript
- * const { contract } = useContract(<ContractAddress>);
  * const { data: decimals, isLoading, error } = useTokenDecimals(contract);
  * ```
  *
@@ -130,12 +132,12 @@ export function useTokenDecimals(contract: RequiredParam<TokenContract>) {
 /** **********************/
 
 /**
- * Use this to mint new tokens on your {@link Erc20} contract
+ * Mint tokens
  *
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract(<ContractAddress>);
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: mintTokens,
  *     isLoading,
@@ -149,7 +151,7 @@ export function useTokenDecimals(contract: RequiredParam<TokenContract>) {
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => mintTokens({ to: "0x...", amount: 1000 })}
+ *       onClick={() => mintTokens({ to: "{{wallet_address}}", amount: 1000 })}
  *     >
  *       Mint!
  *     </button>
@@ -162,7 +164,20 @@ export function useTokenDecimals(contract: RequiredParam<TokenContract>) {
  * @twfeature ERC20Mintable
  * @beta
  */
-export function useMintToken(contract: RequiredParam<TokenContract>) {
+export function useMintToken(
+  contract: RequiredParam<TokenContract>,
+): UseMutationResult<
+  Omit<
+    {
+      receipt: providers.TransactionReceipt;
+      data: () => Promise<unknown>;
+    },
+    "data"
+  >,
+  unknown,
+  TokenParams,
+  unknown
+> {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
@@ -189,12 +204,12 @@ export function useMintToken(contract: RequiredParam<TokenContract>) {
 }
 
 /**
- * Use this to claim tokens on your {@link Erc20}
+ * Claim tokens to a specific wallet
  *
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract(<ContractAddress>);
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: claimTokens,
  *     isLoading,
@@ -208,7 +223,7 @@ export function useMintToken(contract: RequiredParam<TokenContract>) {
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => claimTokens({ to: "0x...", amount: 100 })}
+ *       onClick={() => claimTokens({ to: "{{wallet_address}}", amount: 100 })}
  *     >
  *       Claim Tokens!
  *     </button>
@@ -217,8 +232,8 @@ export function useMintToken(contract: RequiredParam<TokenContract>) {
  * ```
  *
  * @param contract - an instance of a {@link TokenContract}
- * @returns a mutation object that can be used to tokens to the wallet specificed in the params
- * @twfeature ERC20ClaimableWithConditions
+ * @returns a mutation object that can be used to tokens to the wallet specified in the params
+ * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1
  * @beta
  */
 export function useClaimToken(contract: RequiredParam<TokenContract>) {
@@ -250,12 +265,12 @@ export function useClaimToken(contract: RequiredParam<TokenContract>) {
 }
 
 /**
- * Use this to transfer tokens on your {@link Erc20} contract
+ * Transfer tokens to a specific wallet
  *
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract(<ContractAddress>);
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: transferTokens,
  *     isLoading,
@@ -269,7 +284,7 @@ export function useClaimToken(contract: RequiredParam<TokenContract>) {
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => transferTokens({ to: "0x...", amount: 1000 })}
+ *       onClick={() => transferTokens({ to: "{{wallet_address}}", amount: 1000 })}
  *     >
  *       Transfer
  *     </button>
@@ -309,12 +324,12 @@ export function useTransferToken(contract: RequiredParam<TokenContract>) {
 }
 
 /**
- * Use this to transfer batch tokens on your {@link Erc20} contract
+ * Airdrop tokens to a list of wallets
  *
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract(<ContractAddress>);
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: transferBatchTokens,
  *     isLoading,
@@ -328,9 +343,9 @@ export function useTransferToken(contract: RequiredParam<TokenContract>) {
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => transferBatchTokens([{ to: "0x...", amount: 1000 }, { to: "0x...", amount: 2000 }])}
+ *       onClick={() => transferBatchTokens([{ to: "{{wallet_address}}", amount: 1000 }, { to: "{{wallet_address}}", amount: 2000 }])}
  *     >
- *       Transfer Batch
+ *       Airdrop
  *     </button>
  *   );
  * };
@@ -375,12 +390,12 @@ export function useTransferBatchToken(contract: RequiredParam<TokenContract>) {
 }
 
 /**
- * Use this to burn tokens on your {@link Erc20} contract
+ * Burn tokens
  *
  * @example
  * ```jsx
  * const Component = () => {
- *   const { contract } = useContract(<ContractAddress>);
+ *   const { contract } = useContract("{{contract_address}}");
  *   const {
  *     mutate: burnTokens,
  *     isLoading,

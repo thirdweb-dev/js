@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Bitgert Mainnet",
   "chain": "Brise",
@@ -28,10 +29,15 @@ export default {
     {
       "name": "Brise Scan",
       "url": "https://brisescan.com",
-      "icon": "brise",
+      "icon": {
+        "url": "ipfs://QmY3vKe1rG9AyHSGH1ouP3ER3EVUZRtRrFbFZEfEpMSd4V",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "bitgert"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "BOMB Chain Testnet",
   "chain": "BOMB",
@@ -26,11 +27,16 @@ export default {
   "explorers": [
     {
       "name": "bombscan-testnet",
-      "icon": "bomb",
+      "icon": {
+        "url": "ipfs://Qmc44uSjfdNHdcxPTgZAL8eZ8TLe4UmSHibcvKQFyGJxTB",
+        "width": 1024,
+        "height": 1024,
+        "format": "png"
+      },
       "url": "https://explorer.bombchain-testnet.ankr.com",
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "bomb-chain-testnet"
-} as const;
+} as const satisfies Chain;

@@ -2,7 +2,7 @@ import { TransactionResult } from "../types/common";
 import {
   NFTDropConditionsInput,
   NFTDropConditions,
-  NFTDropUpdateableConditionsInputSchema,
+  NFTDropUpdatableConditionsInputSchema,
 } from "../types/programs/nft-drop";
 import { toCurrencyValue } from "../utils/token";
 import {
@@ -150,7 +150,9 @@ export class ClaimConditions {
    * ```
    */
   async set(metadata: NFTDropConditionsInput): Promise<TransactionResult> {
-    const parsed = NFTDropUpdateableConditionsInputSchema.parse(metadata);
+    const parsed = await NFTDropUpdatableConditionsInputSchema.parseAsync(
+      metadata,
+    );
 
     // recipients
     let wallet: PublicKey | undefined = parsed.primarySaleRecipient
@@ -200,7 +202,7 @@ export class ClaimConditions {
       ...(wallet && { wallet }),
       ...(tokenMint
         ? { tokenMint }
-        : // if passing currencyAddress explcitly as null we need to honor that!
+        : // if passing currencyAddress explicitly as null we need to honor that!
         parsed.currencyAddress === null
         ? { tokenMint: null }
         : {}),

@@ -16,6 +16,7 @@ import type {
   Token,
   Multiwrap,
   Pack,
+  AddressOrEns,
 } from "@thirdweb-dev/sdk";
 import type { Edition } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/edition";
 import type { EditionDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/edition-drop";
@@ -55,13 +56,13 @@ export type Chain = {
  * A wallet address.
  * @beta
  */
-export type WalletAddress = string;
+export type WalletAddress = AddressOrEns;
 
 /**
  * A contract address.
  * @beta
  */
-export type ContractAddress = string;
+export type ContractAddress = AddressOrEns;
 
 /**
  * The parameters to pass to the mint and transfer functions.
@@ -88,7 +89,7 @@ export type TokenBurnParams = {
  * The possible NFT contract types.
  * @example
  * ```javascript
- * const { contract } = useContract(<ContractAddress>);
+ * const { contract } = useContract("{{contract_address}}");
  * ```
  * @beta
  */
@@ -103,7 +104,7 @@ export type NFTContract =
  * The possible Token contract types.
  * @example
  * ```javascript
- * const { contract } = useContract(<ContractAddress>);
+ * const { contract } = useContract("{{contract_address}}");
  * ```
  * @beta
  */

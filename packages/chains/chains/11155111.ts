@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Sepolia",
   "title": "Ethereum Testnet Sepolia",
@@ -5,6 +6,7 @@ export default {
   "rpc": [
     "https://sepolia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.sepolia.org",
+    "https://rpc2.sepolia.org",
     "https://rpc-sepolia.rockx.com"
   ],
   "faucets": [
@@ -33,4 +35,4 @@ export default {
   ],
   "testnet": true,
   "slug": "sepolia"
-} as const;
+} as const satisfies Chain;

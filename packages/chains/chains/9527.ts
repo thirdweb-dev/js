@@ -1,10 +1,11 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Rangers Protocol Testnet Robin",
   "chain": "Rangers",
   "icon": {
-    "url": "ipfs://QmfHG3xbg4iiopagww93Gu7tmvCpPwZdiwsUjd3Dt5mRwT",
-    "width": 835,
-    "height": 835,
+    "url": "ipfs://QmXR5e5SDABWfQn6XT9uMsVYAo5Bv7vUv4jVs8DFqatZWG",
+    "width": 2000,
+    "height": 2000,
     "format": "png"
   },
   "rpc": [
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": true,
   "slug": "rangers-protocol-testnet-robin"
-} as const;
+} as const satisfies Chain;
