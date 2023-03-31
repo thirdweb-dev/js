@@ -55,7 +55,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 16
           check-latest: true
 
       - uses: pnpm/action-setup@v2
@@ -80,7 +80,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 16
           check-latest: true
 
       - uses: pnpm/action-setup@v2
@@ -110,7 +110,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 16
           check-latest: true
 
       - uses: pnpm/action-setup@v2

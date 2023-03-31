@@ -1,4 +1,5 @@
 // @ts-check
+import axios from "axios";
 import merge from "deepmerge";
 import fs from "fs";
 import path from "path";
@@ -39,7 +40,7 @@ for (const file of overridesFiles) {
 // chains from remote src
 
 /** @type {Chain[]} */
-let chains = await (await fetch(chainsJsonUrl)).json();
+let chains = (await axios.get(chainsJsonUrl)).data;
 // immediately filter out localhost
 chains = chains.filter((c) => c.chainId !== 1337);
 
@@ -89,11 +90,9 @@ async function downloadIcon(icon) {
   if (iconMetaMap.has(icon)) {
     return iconMetaMap.get(icon);
   }
-  const res = await fetch(`${iconRoute}/${icon}.json`);
-  if (res.status == 200) {
-    const result = await res.json();
-
-    const iconMeta = result[0];
+  const result = await axios.get(`${iconRoute}/${icon}.json`);
+  if (result.status == 200) {
+    const iconMeta = result.data[0];
 
     iconMetaMap.set(icon, iconMeta);
     return iconMeta;
