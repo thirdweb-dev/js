@@ -55,7 +55,7 @@ export const ConnectWalletFlow = () => {
         {activeWallet ? (
           <ConnectingWallet
             content={
-              activeWallet.name === DeviceWallet.name ? (
+              activeWallet.id === DeviceWallet.id ? (
                 <Text variant="bodySmallSecondary" mt="md">
                   Creating, encrypting and securing your device wallet.
                 </Text>
