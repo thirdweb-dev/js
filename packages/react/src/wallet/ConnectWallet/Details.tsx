@@ -46,6 +46,7 @@ export type DropDownPosition = {
 
 export const ConnectedWalletDetails: React.FC<{
   dropdownPosition?: DropDownPosition;
+  onDisconnect: () => void;
 }> = (props) => {
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
@@ -249,6 +250,7 @@ export const ConnectedWalletDetails: React.FC<{
                 variant="secondary"
                 onClick={() => {
                   disconnect();
+                  props.onDisconnect();
                 }}
               >
                 <ExitIcon size={iconSize.md} />
