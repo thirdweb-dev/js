@@ -37,7 +37,11 @@ export function useLogin() {
 
       // we need to generate this auth payload
 
-      const payload = await doLogin(wallet, options);
+      const payload = await doLogin(wallet, {
+        ...authConfig,
+        ...(options || {}),
+      });
+
       const res = await fetch(`${authConfig.authUrl}/login`, {
         method: "POST",
         headers: {

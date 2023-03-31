@@ -692,10 +692,13 @@ export class Marketplace implements UpdateableNetwork {
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
+  public async call<
+    TMethod extends keyof MarketplaceContract["functions"] = keyof MarketplaceContract["functions"],
+  >(
+    functionName: string & TMethod,
+    args?: Parameters<MarketplaceContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
   ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 }

@@ -504,10 +504,13 @@ export class Vote implements UpdateableNetwork {
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
+  public async call<
+    TMethod extends keyof VoteERC20["functions"] = keyof VoteERC20["functions"],
+  >(
+    functionName: string & TMethod,
+    args?: Parameters<VoteERC20["functions"][TMethod]>,
+    overrides?: CallOverrides,
   ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 }

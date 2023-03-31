@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Bitkub Chain",
   "chain": "BKC",
@@ -27,7 +28,12 @@ export default {
       "name": "Bitkub Chain Explorer",
       "url": "https://bkcscan.com",
       "standard": "none",
-      "icon": "bkc"
+      "icon": {
+        "url": "ipfs://QmYFYwyquipwc9gURQGcEd4iAq7pq15chQrJ3zJJe9HuFT",
+        "width": 1000,
+        "height": 1000,
+        "format": "png"
+      }
     }
   ],
   "redFlags": [
@@ -35,4 +41,4 @@ export default {
   ],
   "testnet": false,
   "slug": "bitkub-chain"
-} as const;
+} as const satisfies Chain;

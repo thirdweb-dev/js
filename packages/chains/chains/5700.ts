@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Syscoin Tanenbaum Testnet",
   "chain": "SYS",
@@ -27,4 +28,4 @@ export default {
   ],
   "testnet": true,
   "slug": "syscoin-tanenbaum-testnet"
-} as const;
+} as const satisfies Chain;

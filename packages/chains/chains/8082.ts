@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Shardeum Sphinx 1.X",
   "chain": "Shardeum",
@@ -27,7 +28,7 @@ export default {
     {
       "name": "Shardeum Scan",
       "url": "https://explorer-sphinx.shardeum.org",
-      "standard": "none"
+      "standard": "EIP3091"
     }
   ],
   "redFlags": [
@@ -35,4 +36,4 @@ export default {
   ],
   "testnet": false,
   "slug": "shardeum-sphinx-1-x"
-} as const;
+} as const satisfies Chain;

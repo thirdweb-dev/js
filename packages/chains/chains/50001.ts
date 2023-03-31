@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Liveplex OracleEVM",
   "chain": "Liveplex OracleEVM Network",
@@ -18,4 +19,4 @@ export default {
   "explorers": [],
   "testnet": false,
   "slug": "liveplex-oracleevm"
-} as const;
+} as const satisfies Chain;

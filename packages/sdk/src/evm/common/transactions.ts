@@ -2,7 +2,7 @@ import {
   CONTRACT_ADDRESSES,
   getContractAddressByChainId,
 } from "../constants/addresses";
-import { Transaction } from "../core/classes/transactions";
+import { DeployTransaction, Transaction } from "../core/classes/transactions";
 import {
   ForwardRequestMessage,
   GaslessTransaction,
@@ -22,6 +22,18 @@ import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
 import fetch from "cross-fetch";
 import { BigNumber, BytesLike, ethers } from "ethers";
 import invariant from "tiny-invariant";
+
+export function buildDeployTransactionFunction<TArgs extends any[]>(
+  fn: (...args: TArgs) => Promise<DeployTransaction>,
+) {
+  async function executeFn(...args: TArgs): Promise<string> {
+    const tx = await fn(...args);
+    return tx.execute();
+  }
+
+  executeFn.prepare = fn;
+  return executeFn;
+}
 
 export function buildTransactionFunction<
   TArgs extends any[],

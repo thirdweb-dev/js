@@ -31,13 +31,12 @@ export const Modal: React.FC<{
         <Dialog.Trigger asChild>{props.trigger}</Dialog.Trigger>
       )}
 
-      {/* Overlay */}
-      <Dialog.Overlay asChild>
-        <Overlay />
-      </Dialog.Overlay>
-
       {/* Dialog */}
       <Dialog.Portal>
+        {/* Overlay */}
+        <Dialog.Overlay asChild>
+          <Overlay />
+        </Dialog.Overlay>
         <Dialog.Content asChild>
           <DialogContent style={props.style}>
             {props.title && <DialogTitle> {props.title}</DialogTitle>}
@@ -118,6 +117,7 @@ const DialogContent = styled.div<{ theme?: Theme }>`
   padding-bottom: ${spacing.xl};
   animation: ${modalAnimationDesktop} 200ms ease;
   box-shadow: ${shadow.lg};
+  line-height: 1;
 
   &:focus {
     outline: none;

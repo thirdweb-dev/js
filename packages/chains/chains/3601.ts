@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "PandoProject Mainnet",
   "chain": "PandoProject",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": false,
   "slug": "pandoproject"
-} as const;
+} as const satisfies Chain;

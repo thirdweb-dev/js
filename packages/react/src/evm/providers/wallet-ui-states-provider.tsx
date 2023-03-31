@@ -3,7 +3,6 @@ import { useState, createContext, useContext } from "react";
 type BoolSetter = (value: boolean) => void;
 type ThemeSetter = (value: "light" | "dark") => void;
 type Screen =
-  | "deviceWallet/connect"
   | "metamask/connecting"
   | "walletList"
   | "coinbase/connecting"

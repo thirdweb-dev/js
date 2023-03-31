@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Athereum",
   "chain": "ATH",
@@ -19,4 +20,4 @@ export default {
   "networkId": 43110,
   "testnet": false,
   "slug": "athereum"
-} as const;
+} as const satisfies Chain;

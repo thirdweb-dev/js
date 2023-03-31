@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Excelon Mainnet",
   "chain": "XLON",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": false,
   "slug": "excelon"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Aerochain Testnet",
   "chain": "Aerochain",
@@ -26,4 +27,4 @@ export default {
   ],
   "testnet": true,
   "slug": "aerochain-testnet"
-} as const;
+} as const satisfies Chain;

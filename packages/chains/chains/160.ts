@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Armonia Eva Chain Mainnet",
   "chain": "Eva",
@@ -18,4 +19,4 @@ export default {
   "status": "incubating",
   "testnet": false,
   "slug": "armonia-eva-chain"
-} as const;
+} as const satisfies Chain;

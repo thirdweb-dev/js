@@ -5,6 +5,7 @@ import {
 import { TWConnector } from "../interfaces/tw-connector";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 import type { Chain } from "@thirdweb-dev/chains";
+import type { PaperWalletConnector } from "../connectors/paper";
 
 export type PaperWalletOptions = WalletOptions<PaperWalletAdditionalOptions>;
 
@@ -26,26 +27,37 @@ export class PaperWallet extends AbstractBrowserWallet<
     return "Paper Wallet" as const;
   }
 
+  clientId: PaperWalletAdditionalOptions["clientId"];
+  chain: PaperWalletAdditionalOptions["chain"];
+
   constructor(options: PaperWalletOptions) {
     super(PaperWallet.id, {
       ...options,
-      shouldAutoConnect: false, // TODO figure the autoconnect flow
     });
+
+    this.clientId = options.clientId;
+    this.chain = options.chain;
+    this.chains = options.chains;
   }
 
   protected async getConnector(): Promise<TWConnector> {
     if (!this.connector) {
       const { PaperWalletConnector } = await import("../connectors/paper");
       this.connector = new PaperWalletConnector({
-        clientId: this.options.clientId,
-        chain: this.options.chain,
-        chains: this.options.chains,
+        clientId: this.clientId,
+        chain: this.chain,
+        chains: this.chains,
       });
     }
     return this.connector;
   }
 
   async updateChains(chains: Chain[]) {
-    this.options.chains = chains;
+    this.chains = chains;
+  }
+
+  async getEmail() {
+    const connector = (await this.getConnector()) as PaperWalletConnector;
+    return connector.getEmail();
   }
 }

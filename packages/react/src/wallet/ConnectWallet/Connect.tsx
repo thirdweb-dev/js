@@ -6,7 +6,6 @@ import { WalletSelector } from "./WalletSelector";
 import { CoinbaseWalletSetup } from "./screens/Coinbase/CoinbaseConnecting";
 import { CoinbaseGetStarted } from "./screens/Coinbase/CoinbaseGetStarted";
 import { ScanCoinbase } from "./screens/Coinbase/CoinbaseScan";
-import { ConnectToDeviceWallet } from "./screens/DeviceWallet/DeviceWalletSetup";
 import { MetamaskConnecting } from "./screens/Metamask/MetamaskConnecting";
 import { MetamaskGetStarted } from "./screens/Metamask/MetamaskGetStarted";
 import { ScanMetamask } from "./screens/Metamask/MetamaskScan";
@@ -89,13 +88,8 @@ export const ConnectModal = () => {
       wallet.id in installedWallets &&
       installedWallets[wallet.id as keyof typeof installedWallets],
     onClick: async () => {
-      // Device Wallet
-      if (wallet.id === "deviceWallet") {
-        setShowScreen("deviceWallet/connect");
-      }
-
       // Metamask
-      else if (wallet.id === "metamask") {
+      if (wallet.id === "metamask") {
         if (installedWallets.metamask) {
           try {
             await ifWaiting({
@@ -185,7 +179,7 @@ export const ConnectModal = () => {
     >
       <Modal
         style={{
-          maxWidth: "450px",
+          maxWidth: "480px",
         }}
         open={hideModal ? false : isWalletModalOpen}
         setOpen={(value) => {
@@ -226,10 +220,6 @@ export const ConnectModal = () => {
 
         {showScreen === "metamask/connecting" && (
           <MetamaskConnecting onBack={handleBack} />
-        )}
-
-        {showScreen === "deviceWallet/connect" && (
-          <ConnectToDeviceWallet onBack={handleBack} onConnected={onConnect} />
         )}
 
         {showScreen === "metamask/scan" && (

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "PrimusChain mainnet",
   "chain": "PC",
@@ -17,4 +18,4 @@ export default {
   "networkId": 78,
   "testnet": false,
   "slug": "primuschain"
-} as const;
+} as const satisfies Chain;

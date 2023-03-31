@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Acala Mandala Testnet",
   "chain": "mACA",
@@ -14,4 +15,4 @@ export default {
   "networkId": 595,
   "testnet": true,
   "slug": "acala-mandala-testnet"
-} as const;
+} as const satisfies Chain;

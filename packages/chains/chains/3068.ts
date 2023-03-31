@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Bifrost Mainnet",
   "title": "The Bifrost Mainnet network",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": false,
   "slug": "bifrost"
-} as const;
+} as const satisfies Chain;

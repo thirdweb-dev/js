@@ -319,10 +319,13 @@ export class Token extends StandardErc20<TokenERC20> {
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
+  public async call<
+    TMethod extends keyof TokenERC20["functions"] = keyof TokenERC20["functions"],
+  >(
+    functionName: string & TMethod,
+    args?: Parameters<TokenERC20["functions"][TMethod]>,
+    overrides?: CallOverrides,
   ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 }

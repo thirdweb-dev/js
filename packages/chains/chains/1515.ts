@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Beagle Messaging Chain",
   "chain": "BMC",
@@ -26,4 +27,4 @@ export default {
   ],
   "testnet": false,
   "slug": "beagle-messaging-chain"
-} as const;
+} as const satisfies Chain;

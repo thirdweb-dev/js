@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "MintMe.com Coin",
   "chain": "MINTME",
@@ -17,4 +18,4 @@ export default {
   "networkId": 37480,
   "testnet": false,
   "slug": "mintme-com-coin"
-} as const;
+} as const satisfies Chain;

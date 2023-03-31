@@ -5,7 +5,6 @@ import {
   PaperWalletConnectorOptions,
 } from "./types";
 import type {
-  Chain as PChain,
   InitializedUser,
   PaperEmbeddedWalletSdk,
 } from "@paperxyz/embedded-wallet-service-sdk";
@@ -14,12 +13,12 @@ import type { Chain } from "@thirdweb-dev/chains";
 import type { providers, Signer } from "ethers";
 import { utils } from "ethers";
 
-export const PaperChainMap: Record<number, PChain> = {
+export const PaperChainMap = {
   1: "Ethereum",
   5: "Goerli",
   137: "Polygon",
   80001: "Mumbai",
-};
+} as const;
 
 export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs> {
   readonly id: string = "paper-wallet";
@@ -41,15 +40,19 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
     if (!this.#paper) {
       this.#paper = new Promise(async (resolve, reject) => {
         try {
-          const chainName = PaperChainMap[this.options.chain.chainId];
-          if (!chainName) {
+          if (!(this.options.chain.chainId in PaperChainMap)) {
             throw new Error(
               "Unsupported chain id: " + this.options.chain.chainId,
             );
           }
+
           const { PaperEmbeddedWalletSdk } = await import(
             "@paperxyz/embedded-wallet-service-sdk"
           );
+          const chainName =
+            PaperChainMap[
+              this.options.chain.chainId as keyof typeof PaperChainMap
+            ];
           resolve(
             new PaperEmbeddedWalletSdk({
               clientId: this.options.clientId,
@@ -121,6 +124,17 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
       return this.#signer;
     }
 
+    if (!this.user) {
+      const paperSDK = await this.getPaperSDK();
+      let user = await paperSDK.getUser();
+      switch (user.status) {
+        case UserStatus.LOGGED_IN_WALLET_INITIALIZED: {
+          this.user = user;
+          break;
+        }
+      }
+    }
+
     const signer = await this.user?.wallet.getEthersJsSigner({
       rpcEndpoint: this.options.chain.rpc[0],
     });
@@ -140,10 +154,11 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
 
   async switchChain(chainId: number): Promise<void> {
     // check if chainId is supported or not
-    const chainName = PaperChainMap[chainId];
-    if (!chainName) {
+    if (!(chainId in PaperChainMap)) {
       throw new Error("Chain not supported");
     }
+
+    const chainName = PaperChainMap[chainId as keyof typeof PaperChainMap];
 
     const chain = this.options.chains.find((c) => c.chainId === chainId);
     if (!chain) {
@@ -192,7 +207,7 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
   };
 
   protected isChainUnsupported(chainId: number) {
-    return PaperChainMap[chainId] === undefined;
+    return !(chainId in PaperChainMap);
   }
 
   protected onChainChanged = (chainId: number | string) => {
@@ -204,4 +219,12 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
   protected onDisconnect = async () => {
     this.emit("disconnect");
   };
+
+  async getEmail() {
+    await this.getProvider();
+    if (!this.user) {
+      throw new Error("No user found, Paper Wallet is not connected");
+    }
+    return this.user.authDetails.email;
+  }
 }

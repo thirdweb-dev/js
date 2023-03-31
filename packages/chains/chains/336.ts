@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Shiden",
   "chain": "SDN",
@@ -31,9 +32,14 @@ export default {
       "name": "subscan",
       "url": "https://shiden.subscan.io",
       "standard": "none",
-      "icon": "subscan"
+      "icon": {
+        "url": "ipfs://Qma2GfW5nQHuA7nGqdEfwaXPL63G9oTwRTQKaGTfjNtM2W",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      }
     }
   ],
   "testnet": false,
   "slug": "shiden"
-} as const;
+} as const satisfies Chain;

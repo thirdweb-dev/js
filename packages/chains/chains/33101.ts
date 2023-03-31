@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Zilliqa EVM Testnet",
   "chain": "ZIL",
@@ -26,4 +27,4 @@ export default {
   ],
   "testnet": true,
   "slug": "zilliqa-evm-testnet"
-} as const;
+} as const satisfies Chain;

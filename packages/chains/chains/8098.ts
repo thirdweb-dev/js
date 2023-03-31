@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "StreamuX Blockchain",
   "chain": "StreamuX",
@@ -17,4 +18,4 @@ export default {
   "networkId": 8098,
   "testnet": false,
   "slug": "streamux-blockchain"
-} as const;
+} as const satisfies Chain;

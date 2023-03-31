@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Optimism Bedrock (Goerli Alpha Testnet)",
   "chain": "ETH",
@@ -26,4 +27,4 @@ export default {
   ],
   "testnet": true,
   "slug": "optimism-bedrock-goerli-alpha-testnet"
-} as const;
+} as const satisfies Chain;

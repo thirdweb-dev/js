@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Telos EVM Mainnet",
   "chain": "TLOS",
@@ -22,6 +23,12 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmdkgQDtDedsNNth3ZVgWfwRZPCePLA13MtLvV4CEYSuTR/TLOS.png",
+    "format": "png",
+    "width": 228,
+    "height": 228
+  },
   "testnet": false,
   "slug": "telos-evm"
-} as const;
+} as const satisfies Chain;

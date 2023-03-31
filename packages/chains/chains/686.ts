@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Karura Network",
   "chain": "KAR",
@@ -15,4 +16,4 @@ export default {
   "slip44": 686,
   "testnet": false,
   "slug": "karura-network"
-} as const;
+} as const satisfies Chain;

@@ -16,10 +16,8 @@ import {
 } from "../../design-system";
 import { shortenString } from "../../evm/utils/addresses";
 import { isMobile } from "../../evm/utils/isMobile";
-import { DeviceWallet } from "../wallets";
 import { NetworkSelector } from "./NetworkSelector";
 import { ExitIcon } from "./icons/ExitIcon";
-import { GenericWalletIcon } from "./icons/GenericWalletIcon";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
@@ -36,7 +34,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useEffect, useMemo, useState } from "react";
 import { fadeInAnimation } from "../../components/FadeIn";
-import { SafeWallet } from "../wallets";
+import type { SafeWallet } from "@thirdweb-dev/wallets";
 import { Flex } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
 import { utils } from "ethers";
@@ -78,20 +76,6 @@ export const ConnectedWalletDetails: React.FC<{
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const handleDeviceWalletExport = async () => {
-    const deviceWallet = activeWallet as InstanceType<typeof DeviceWallet>;
-    const walletData = await deviceWallet.getWalletData();
-    if (!walletData) {
-      throw new Error("No wallet data found");
-    }
-
-    downloadAsFile(
-      JSON.parse(walletData.encryptedData),
-      "wallet.json",
-      "application/json",
-    );
-  };
-
   const personalWallet =
     activeWallet?.walletId === "Safe"
       ? (activeWallet as SafeWallet).getPersonalWallet()
@@ -128,7 +112,7 @@ export const ConnectedWalletDetails: React.FC<{
         ) : (
           <Skeleton height={fontSize.sm} width="82px" />
         )}
-        <Spacer y="xxs" />
+        <Spacer y="xs" />
         <WalletAddress>{shortenString(address || "")}</WalletAddress>
       </ColFlex>
 
@@ -325,24 +309,6 @@ export const ConnectedWalletDetails: React.FC<{
           </MenuLink>
         </div>
       )}
-
-      {/* Export Device Wallet */}
-      {activeWallet?.walletId === "deviceWallet" && (
-        <>
-          <Spacer y="sm" />
-          <MenuButton
-            onClick={handleDeviceWalletExport}
-            style={{
-              fontSize: fontSize.sm,
-            }}
-          >
-            <SecondaryIconContainer>
-              <GenericWalletIcon size={iconSize.sm} />
-            </SecondaryIconContainer>
-            Export Device Wallet{" "}
-          </MenuButton>
-        </>
-      )}
     </div>
   );
 
@@ -401,7 +367,7 @@ const dropdownContentFade = keyframes`
 `;
 
 const DropDownContent = styled(DropdownMenu.Content)<{ theme?: Theme }>`
-  width: 340px;
+  width: 360px;
   box-sizing: border-box;
   max-width: 100%;
   border-radius: ${radius.lg};
@@ -411,16 +377,17 @@ const DropDownContent = styled(DropdownMenu.Content)<{ theme?: Theme }>`
   border: 1px solid ${(props) => props.theme.border.base};
   background-color: ${(props) => props.theme.bg.base};
   z-index: 1000000;
+  line-height: 1;
 `;
 
 const WalletInfoButton = styled.button<{ theme?: Theme }>`
   all: unset;
   background: ${(props) => props.theme.bg.base};
   border: 1px solid ${(props) => props.theme.border.base};
-  padding: ${spacing.sm} ${spacing.md};
+  padding: ${spacing.sm} ${spacing.sm};
   border-radius: ${radius.lg};
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: ${spacing.md};
   box-sizing: border-box;
@@ -495,6 +462,7 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   color: ${(props) => props.theme.text.neutral} !important;
   gap: ${spacing.sm};
   -webkit-tap-highlight-color: transparent;
+  line-height: 1.3;
 
   &:not([disabled]):hover {
     transition: box-shadow 250ms ease, border-color 250ms ease;
@@ -538,20 +506,3 @@ const SecondaryIconContainer = styled.div<{ theme?: Theme }>`
   justify-content: center;
   color: ${(props) => props.theme.icon.secondary};
 `;
-
-// utils
-
-function downloadAsFile(data: any, fileName: string, fileType: string) {
-  const blob = new Blob([JSON.stringify(data, null, 2)], {
-    type: fileType,
-  });
-
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = fileName;
-  document.body.appendChild(a);
-  a.style.display = "none";
-  a.click();
-  URL.revokeObjectURL(a.href);
-}

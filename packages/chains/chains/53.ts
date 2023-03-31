@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "CoinEx Smart Chain Testnet",
   "chain": "CSC",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": true,
   "slug": "coinex-smart-chain-testnet"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Excoincial Chain Volta-Testnet",
   "chain": "TEXL",
@@ -27,10 +28,15 @@ export default {
     {
       "name": "exlscan",
       "url": "https://testnet-explorer.exlscan.com",
-      "icon": "exl",
+      "icon": {
+        "url": "ipfs://QmeooM7QicT1YbgY93XPd5p7JsCjYhN3qjWt68X57g6bVC",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "excoincial-chain-volta-testnet"
-} as const;
+} as const satisfies Chain;

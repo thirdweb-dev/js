@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Etho Protocol",
   "chain": "ETHO",
@@ -25,4 +26,4 @@ export default {
   ],
   "testnet": false,
   "slug": "etho-protocol"
-} as const;
+} as const satisfies Chain;

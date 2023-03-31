@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Ekta",
   "chain": "EKTA",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "ektascan",
       "url": "https://ektascan.io",
-      "icon": "ekta",
+      "icon": {
+        "url": "ipfs://QmfMd564KUPK8eKZDwGCT71ZC2jMnUZqP6LCtLpup3rHH1",
+        "width": 2100,
+        "height": 2100,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "ekta"
-} as const;
+} as const satisfies Chain;

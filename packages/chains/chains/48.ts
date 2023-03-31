@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Ennothem Mainnet Proterozoic",
   "chain": "ETMP",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "etmpscan",
       "url": "https://etmscan.network",
-      "icon": "etmp",
+      "icon": {
+        "url": "ipfs://QmT7DTqT1V2y42pRpt3sj9ifijfmbtkHN7D2vTfAUAS622",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "ennothem-proterozoic"
-} as const;
+} as const satisfies Chain;

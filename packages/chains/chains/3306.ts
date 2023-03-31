@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Debounce Subnet Testnet",
   "chain": "Debounce Network",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": true,
   "slug": "debounce-subnet-testnet"
-} as const;
+} as const satisfies Chain;

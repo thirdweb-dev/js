@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Chiliz Scoville Testnet",
   "chain": "CHZ",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": true,
   "slug": "chiliz-scoville-testnet"
-} as const;
+} as const satisfies Chain;

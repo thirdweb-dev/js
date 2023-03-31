@@ -428,10 +428,13 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
+  public async call<
+    TMethod extends keyof MultiwrapContract["functions"] = keyof MultiwrapContract["functions"],
+  >(
+    functionName: string & TMethod,
+    args?: Parameters<MultiwrapContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
   ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 }

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Lightstreams Testnet",
   "chain": "PHT",
@@ -19,4 +20,4 @@ export default {
   "networkId": 162,
   "testnet": true,
   "slug": "lightstreams-testnet"
-} as const;
+} as const satisfies Chain;

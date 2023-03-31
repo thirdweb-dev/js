@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Iora Chain",
   "chain": "IORA",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": false,
   "slug": "iora-chain"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Exosama Network",
   "chain": "EXN",
@@ -27,10 +28,15 @@ export default {
     {
       "name": "blockscout",
       "url": "https://explorer.exosama.com",
-      "icon": "blockscout",
+      "icon": {
+        "url": "ipfs://bafybeifu5tpui7dk5cjoo54kde7pmuthvnl7sdykobuarsxgu7t2izurnq",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "exosama-network"
-} as const;
+} as const satisfies Chain;

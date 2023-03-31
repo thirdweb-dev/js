@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "CIC Chain Testnet",
   "chain": "CICT",
@@ -27,10 +28,15 @@ export default {
     {
       "name": "CICscan",
       "url": "https://testnet.cicscan.com",
-      "icon": "cicchain",
+      "icon": {
+        "url": "ipfs://QmNekc5gpyrQkeDQcmfJLBrP5fa6GMarB13iy6aHVdQJDU",
+        "width": 1024,
+        "height": 768,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "cic-chain-testnet"
-} as const;
+} as const satisfies Chain;

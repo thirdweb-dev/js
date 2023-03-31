@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Polygon zkEVM Testnet",
   "title": "Polygon zkEVM Testnet",
@@ -23,6 +24,12 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmNmJZkQgx9RcFLS3rvxQTVYcPfyAFPr667keHTUxB9PDv",
+    "width": 122,
+    "height": 135,
+    "format": "png"
+  },
   "testnet": true,
   "slug": "polygon-zkevm-testnet"
-} as const;
+} as const satisfies Chain;

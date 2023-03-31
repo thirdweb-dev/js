@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "EraSwap Mainnet",
   "chain": "ESN",
@@ -24,4 +25,4 @@ export default {
   "networkId": 5197,
   "testnet": false,
   "slug": "eraswap"
-} as const;
+} as const satisfies Chain;

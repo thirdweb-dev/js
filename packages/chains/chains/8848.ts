@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "MARO Blockchain Mainnet",
   "chain": "MARO Blockchain",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": false,
   "slug": "maro-blockchain"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "ADIL Devnet",
   "chain": "ADIL",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": false,
   "slug": "adil-devnet"
-} as const;
+} as const satisfies Chain;

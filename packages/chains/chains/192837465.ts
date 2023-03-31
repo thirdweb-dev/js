@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Gather Mainnet Network",
   "chain": "GTH",
@@ -30,4 +31,4 @@ export default {
   },
   "testnet": false,
   "slug": "gather-network"
-} as const;
+} as const satisfies Chain;

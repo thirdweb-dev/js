@@ -1,12 +1,12 @@
 import BaseButton from "../../base/BaseButton";
 import ImageSvgUri from "../../base/ImageSvgUri";
 import Text from "../../base/Text";
-import { SupportedWallet } from "@thirdweb-dev/react-core";
+import type { Wallet } from "@thirdweb-dev/react-core";
 import { StyleSheet, View, FlatList } from "react-native";
 
 interface InitialExplorerContentProps {
-  wallets: SupportedWallet[];
-  onChooseWallet: (wallet: SupportedWallet) => void;
+  wallets: Wallet[];
+  onChooseWallet: (wallet: Wallet) => void;
 }
 
 export const ChooseWalletContent = ({
@@ -16,7 +16,7 @@ export const ChooseWalletContent = ({
   return (
     <View style={styles.explorerContainer}>
       <FlatList
-        keyExtractor={(item) => item.name}
+        keyExtractor={(item) => item.meta.name}
         data={wallets}
         renderItem={({ item, index }) => {
           const marginBottom = index === wallets.length - 1 ? "none" : "xxs";

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "MainnetZ Mainnet",
   "chain": "NetZ",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": false,
   "slug": "z-mainnet"
-} as const;
+} as const satisfies Chain;

@@ -1,6 +1,13 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "T.E.A.M Blockchain",
   "chain": "TEAM",
+  "icon": {
+    "url": "ipfs://QmcnA15BLE9uvznbugXKjqquizZs1eLPeEEkc92DSmvhmt",
+    "width": 248,
+    "height": 248,
+    "format": "png"
+  },
   "rpc": [
     "https://t-e-a-m-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.teamblockchain.team"
@@ -23,15 +30,8 @@ export default {
   "shortName": "team",
   "chainId": 88888888,
   "networkId": 88888888,
-  "icon": {
-    "url": "ipfs://QmcnA15BLE9uvznbugXKjqquizZs1eLPeEEkc92DSmvhmt",
-    "width": 248,
-    "height": 248,
-    "format": "png"
-  },
   "explorers": [
     {
-      "icon": "team",
       "name": "teamscan",
       "url": "https://teamblockchain.team",
       "standard": "EIP3091"
@@ -39,4 +39,4 @@ export default {
   ],
   "testnet": false,
   "slug": "t-e-a-m-blockchain"
-} as const;
+} as const satisfies Chain;

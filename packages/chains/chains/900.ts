@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Garizon Testnet Stage0",
   "chain": "GAR",
@@ -27,10 +28,15 @@ export default {
     {
       "name": "explorer",
       "url": "https://explorer-testnet.garizon.com",
-      "icon": "garizon",
+      "icon": {
+        "url": "ipfs://QmW3WRyuLZ95K8hvV2QN6rP5yWY98sSzWyVUxD2eUjXGrc",
+        "width": 1024,
+        "height": 613,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "garizon-testnet-stage0"
-} as const;
+} as const satisfies Chain;

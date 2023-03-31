@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Bitindi Mainnet",
   "chain": "BNI",
@@ -9,6 +10,7 @@ export default {
   },
   "rpc": [
     "https://bitindi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    " https://rpc-mainnet.bitindi.org",
     "https://mainnet-rpc.bitindi.org"
   ],
   "faucets": [
@@ -32,4 +34,4 @@ export default {
   ],
   "testnet": false,
   "slug": "bitindi"
-} as const;
+} as const satisfies Chain;
