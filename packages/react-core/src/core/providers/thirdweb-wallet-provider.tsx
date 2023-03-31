@@ -1,6 +1,5 @@
 import { DAppMetaData } from "../types/dAppMeta";
 import type { Wallet, WalletInstance } from "../types/wallet";
-import { timeoutPromise } from "../utils/timeoutPromise";
 import { ThirdwebThemeContext } from "./theme-context";
 import { Chain } from "@thirdweb-dev/chains";
 import {
@@ -102,12 +101,7 @@ export function ThirdwebWalletProvider(
       chain: props.activeChain || props.chains[0],
       theme: theme || "dark",
     };
-  }, [
-    props.chains,
-    props.dAppMeta,
-    props.activeChain,
-    theme,
-  ]);
+  }, [props.chains, props.dAppMeta, props.activeChain, theme]);
 
   const createWalletInstance = useCallback(
     <I extends WalletInstance>(wallet: Wallet<I>): I => {
@@ -250,15 +244,10 @@ export function ThirdwebWalletProvider(
       const wallet = createWalletInstance(lastConnectedWallet);
       try {
         setConnectionStatus("connecting");
-        // give up auto connect if it takes more than 10 seconds
-        // this is to handle the edge case when trying to auto-connect to wallet that does not exist anymore (extension is uninstalled)
-        await timeoutPromise(
-          10000,
-          wallet.autoConnect(parsedParams),
-          `AutoConnect timeout`,
-        );
+        await wallet.autoConnect(parsedParams);
         handleWalletConnect(wallet, parsedParams);
       } catch (e) {
+        coordinatorStorage.removeItem(LAST_CONNECTED_WALLET_STORAGE_KEY);
         setConnectionStatus("disconnected");
         throw e;
       }
