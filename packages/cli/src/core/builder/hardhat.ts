@@ -97,6 +97,9 @@ export class HardhatBuilder extends BaseBuilder {
           const deployedBytecode = info.evm.deployedBytecode
             ? info.evm.deployedBytecode.object
             : bytecode;
+          console.log(deployedBytecode);
+          console.log("deployed bytecode ^");
+
           const abi = info.abi;
           const metadata = info.metadata || JSON.stringify("{}");
 
