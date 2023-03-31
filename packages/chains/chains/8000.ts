@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Teleport",
   "chain": "Teleport",
@@ -26,15 +27,25 @@ export default {
       "name": "Teleport EVM Explorer (Blockscout)",
       "url": "https://evm-explorer.teleport.network",
       "standard": "none",
-      "icon": "teleport"
+      "icon": {
+        "url": "ipfs://QmdP1sLnsmW9dwnfb1GxAXU1nHDzCvWBQNumvMXpdbCSuz",
+        "width": 390,
+        "height": 390,
+        "format": "svg"
+      }
     },
     {
       "name": "Teleport Cosmos Explorer (Big Dipper)",
       "url": "https://explorer.teleport.network",
       "standard": "none",
-      "icon": "teleport"
+      "icon": {
+        "url": "ipfs://QmdP1sLnsmW9dwnfb1GxAXU1nHDzCvWBQNumvMXpdbCSuz",
+        "width": 390,
+        "height": 390,
+        "format": "svg"
+      }
     }
   ],
   "testnet": false,
   "slug": "teleport"
-} as const;
+} as const satisfies Chain;

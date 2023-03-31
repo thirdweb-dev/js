@@ -18,6 +18,9 @@ export const ScanScreen: React.FC<{
   walletName: string;
   walletIconURL: string;
 }> = (props) => {
+  const walletName = props.walletName.toLowerCase().includes("wallet")
+    ? props.walletName
+    : `${props.walletName} wallet`;
   return (
     <>
       <BackButton
@@ -47,12 +50,12 @@ export const ScanScreen: React.FC<{
 
         <Spacer y="xl" />
 
-        <ModalTitle>Scan with {props.walletName} wallet</ModalTitle>
+        <ModalTitle>Scan with {walletName} </ModalTitle>
         <Spacer y="md" />
 
         <ModalDescription>
           Scan this QR code with your phone <br />
-          camera or {props.walletName} wallet to connect
+          camera or {walletName} to connect
         </ModalDescription>
 
         <Spacer y="md" />
@@ -69,7 +72,7 @@ export const ScanScreen: React.FC<{
         <Spacer y="xl" />
 
         <LinkButton onClick={props.onGetStarted}>
-          {`Don't`} have {props.walletName} Wallet?
+          {`Don't`} have {walletName}?
         </LinkButton>
       </div>
     </>

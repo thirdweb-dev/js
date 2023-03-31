@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "IoTeX Network Testnet",
   "chain": "iotex.io",
@@ -26,4 +27,4 @@ export default {
   ],
   "testnet": true,
   "slug": "iotex-network-testnet"
-} as const;
+} as const satisfies Chain;

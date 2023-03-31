@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Eluvio Content Fabric",
   "chain": "Eluvio",
@@ -34,4 +35,4 @@ export default {
   ],
   "testnet": false,
   "slug": "eluvio-content-fabric"
-} as const;
+} as const satisfies Chain;

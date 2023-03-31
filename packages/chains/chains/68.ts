@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "SoterOne Mainnet",
   "chain": "SOTER",
@@ -17,4 +18,4 @@ export default {
   "networkId": 68,
   "testnet": false,
   "slug": "soterone"
-} as const;
+} as const satisfies Chain;

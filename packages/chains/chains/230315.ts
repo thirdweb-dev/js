@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "HashKey Chain Testnet",
   "chain": "HashKey",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": true,
   "slug": "hashkey-chain-testnet"
-} as const;
+} as const satisfies Chain;

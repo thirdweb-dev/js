@@ -508,13 +508,9 @@ export class Vote implements UpdateableNetwork {
     TMethod extends keyof VoteERC20["functions"] = keyof VoteERC20["functions"],
   >(
     functionName: string & TMethod,
-    ...args:
-      | (any[] & Parameters<VoteERC20["functions"][TMethod]>)[]
-      | [
-          ...(any[] & Parameters<VoteERC20["functions"][TMethod]>)[],
-          CallOverrides,
-        ]
+    args?: Parameters<VoteERC20["functions"][TMethod]>,
+    overrides?: CallOverrides,
   ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 }

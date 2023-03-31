@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Rangers Protocol Testnet Robin",
   "chain": "Rangers",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": true,
   "slug": "rangers-protocol-testnet-robin"
-} as const;
+} as const satisfies Chain;

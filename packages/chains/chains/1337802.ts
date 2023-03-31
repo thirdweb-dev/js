@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Kiln",
   "chain": "ETH",
@@ -29,10 +30,15 @@ export default {
     {
       "name": "Kiln Explorer",
       "url": "https://explorer.kiln.themerge.dev",
-      "icon": "ethereum",
+      "icon": {
+        "url": "ipfs://QmdwQDr6vmBtXmK2TmknkEuZNoaDqTasFdZdu3DRw8b2wt",
+        "width": 1000,
+        "height": 1628,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "kiln"
-} as const;
+} as const satisfies Chain;

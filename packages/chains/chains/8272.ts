@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Blockton Blockchain",
   "chain": "Blockton Blockchain",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": false,
   "slug": "blockton-blockchain"
-} as const;
+} as const satisfies Chain;

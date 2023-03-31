@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "3.10.3",
+  "version": "3.10.7",
   "description": "The main thirdweb SDK.",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/sdk",
   "license": "Apache-2.0",
@@ -170,6 +170,7 @@
     "@thirdweb-dev/contracts-js": "workspace:*",
     "@thirdweb-dev/generated-abis": "workspace:*",
     "@thirdweb-dev/storage": "workspace:*",
+    "abitype": "^0.2.5",
     "bn.js": "^5.2.1",
     "bs58": "^5.0.0",
     "buffer": "^6.0.3",

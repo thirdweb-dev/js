@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Ultron Mainnet",
   "chain": "Ultron",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "Ultron Explorer",
       "url": "https://ulxscan.com",
-      "icon": "ultron",
+      "icon": {
+        "url": "ipfs://QmS4W4kY7XYBA4f52vuuytXh3YaTcNBXF14V9tEY6SNqhz",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      },
       "standard": "none"
     }
   ],
   "testnet": false,
   "slug": "ultron"
-} as const;
+} as const satisfies Chain;

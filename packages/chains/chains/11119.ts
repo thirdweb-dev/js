@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "HashBit Mainnet",
   "chain": "HBIT",
@@ -27,4 +28,4 @@ export default {
   ],
   "testnet": false,
   "slug": "hashbit"
-} as const;
+} as const satisfies Chain;

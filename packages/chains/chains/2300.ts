@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "BOMB Chain",
   "chain": "BOMB",
@@ -24,11 +25,16 @@ export default {
   "explorers": [
     {
       "name": "bombscan",
-      "icon": "bomb",
+      "icon": {
+        "url": "ipfs://Qmc44uSjfdNHdcxPTgZAL8eZ8TLe4UmSHibcvKQFyGJxTB",
+        "width": 1024,
+        "height": 1024,
+        "format": "png"
+      },
       "url": "https://bombscan.com",
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "bomb-chain"
-} as const;
+} as const satisfies Chain;

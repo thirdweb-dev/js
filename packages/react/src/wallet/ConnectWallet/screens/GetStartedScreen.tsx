@@ -140,7 +140,7 @@ export const GetStartedScreen: React.FC<{
               width: "100%",
             }}
           >
-            I{`'`}ve finished setting up my {props.walletName} mobile wallet
+            I{`'`}ve finished setting up my {props.walletName} on mobile
           </HelperLink>
         </>
       )}

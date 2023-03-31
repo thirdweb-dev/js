@@ -117,6 +117,7 @@ const DialogContent = styled.div<{ theme?: Theme }>`
   padding-bottom: ${spacing.xl};
   animation: ${modalAnimationDesktop} 200ms ease;
   box-shadow: ${shadow.lg};
+  line-height: 1;
 
   &:focus {
     outline: none;

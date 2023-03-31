@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Setheum",
   "chain": "Setheum",
@@ -14,4 +15,4 @@ export default {
   "networkId": 258,
   "testnet": false,
   "slug": "setheum"
-} as const;
+} as const satisfies Chain;

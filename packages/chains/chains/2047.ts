@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Stratos Testnet",
   "chain": "STOS",
@@ -29,4 +30,4 @@ export default {
   ],
   "testnet": true,
   "slug": "stratos-testnet"
-} as const;
+} as const satisfies Chain;

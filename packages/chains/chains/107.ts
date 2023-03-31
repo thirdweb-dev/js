@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Nebula Testnet",
   "chain": "NTN",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": true,
   "slug": "nebula-testnet"
-} as const;
+} as const satisfies Chain;

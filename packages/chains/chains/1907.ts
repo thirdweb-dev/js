@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Bitcichain Mainnet",
   "chain": "BITCI",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": false,
   "slug": "bitcichain"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "OriginTrail Parachain",
   "chain": "OTP",
@@ -18,4 +19,4 @@ export default {
   "networkId": 2043,
   "testnet": false,
   "slug": "origintrail-parachain"
-} as const;
+} as const satisfies Chain;

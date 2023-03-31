@@ -65,6 +65,7 @@ export const Signature721PayloadInput = BaseSignaturePayloadInput.extend({
  * @internal
  */
 export const Signature721PayloadOutput = Signature721PayloadInput.extend({
+  metadata: NFTInputOrUriSchema.default(""),
   uri: z.string(),
   royaltyBps: BigNumberSchema,
   mintStartTime: BigNumberSchema,

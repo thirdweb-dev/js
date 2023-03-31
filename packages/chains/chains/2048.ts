@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Stratos Mainnet",
   "chain": "STOS",
@@ -15,4 +16,4 @@ export default {
   "status": "incubating",
   "testnet": false,
   "slug": "stratos"
-} as const;
+} as const satisfies Chain;

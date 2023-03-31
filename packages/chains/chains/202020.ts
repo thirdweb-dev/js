@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Decimal Smart Chain Testnet",
   "chain": "tDSC",
@@ -33,10 +34,15 @@ export default {
     {
       "name": "DSC Explorer Testnet",
       "url": "https://testnet.explorer.decimalchain.com",
-      "icon": "dsc",
+      "icon": {
+        "url": "ipfs://QmSgzwKnJJjys3Uq2aVVdwJ3NffLj3CXMVCph9uByTBegc",
+        "width": 256,
+        "height": 256,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "decimal-smart-chain-testnet"
-} as const;
+} as const satisfies Chain;

@@ -24,10 +24,9 @@ export class SafeWallet extends AbstractBrowserWallet<{}, SafeConnectionArgs> {
     return "Safe Wallet" as const;
   }
 
-  constructor(options: SafeWalletOptions) {
+  constructor(options?: SafeWalletOptions) {
     super(SafeWallet.id, {
       ...options,
-      shouldAutoConnect: false, // TODO figure the autoconnect flow
     });
   }
 

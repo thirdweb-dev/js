@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Horizen Yuma Testnet",
   "shortName": "Yuma",
@@ -36,10 +37,15 @@ export default {
     {
       "name": "Yuma Testnet Block Explorer",
       "url": "https://yuma-explorer.horizen.io",
-      "icon": "eon",
+      "icon": {
+        "url": "ipfs://QmSFMBk3rMyu45Sy9KQHjgArFj4HdywANNYrSosLMUdcti",
+        "width": 1213,
+        "height": 1213,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "horizen-yuma-testnet"
-} as const;
+} as const satisfies Chain;

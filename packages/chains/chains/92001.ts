@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Lambda Testnet",
   "chain": "Lambda",
@@ -28,9 +29,14 @@ export default {
       "name": "Lambda EVM Explorer",
       "url": "https://explorer.lambda.top",
       "standard": "EIP3091",
-      "icon": "lambda"
+      "icon": {
+        "url": "ipfs://QmWsoME6LCghQTpGYf7EnUojaDdYo7kfkWVjE6VvNtkjwy",
+        "width": 500,
+        "height": 500,
+        "format": "png"
+      }
     }
   ],
   "testnet": true,
   "slug": "lambda-testnet"
-} as const;
+} as const satisfies Chain;

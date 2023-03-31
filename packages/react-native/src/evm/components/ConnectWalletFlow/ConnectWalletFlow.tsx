@@ -3,22 +3,28 @@ import Text from "../base/Text";
 import { TWModal } from "../base/modal/TWModal";
 import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
-import {
-  SupportedWallet,
-  useConnect,
-  useWallets,
-} from "@thirdweb-dev/react-core";
-import { useState } from "react";
-import { StyleSheet } from "react-native";
+import { Wallet, useConnect, useWallets } from "@thirdweb-dev/react-core";
+import { useEffect, useState } from "react";
+import { Linking, StyleSheet } from "react-native";
+import { handleResponse } from "@coinbase/wallet-mobile-sdk";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [activeWallet, setActiveWallet] = useState<
-    SupportedWallet | undefined
-  >();
+  const [activeWallet, setActiveWallet] = useState<Wallet | undefined>();
 
   const connect = useConnect();
   const supportedWallets = useWallets();
+
+  useEffect(() => {
+    if (activeWallet && activeWallet.meta.name.toLowerCase().includes("coinbase")) {
+      const sub = Linking.addEventListener("url", ({ url }) => {
+        if (url) {
+          handleResponse(new URL(url));
+        }
+      });
+      return () => sub?.remove();
+    }
+  }, [activeWallet]);
 
   const onConnectPress = () => {
     setModalVisible(true);
@@ -29,7 +35,7 @@ export const ConnectWalletFlow = () => {
     setActiveWallet(undefined);
   };
 
-  const onChooseWallet = async (wallet: SupportedWallet) => {
+  const onChooseWallet = async (wallet: Wallet) => {
     setActiveWallet(() => wallet);
 
     await connect(wallet, {}).catch((error) => {

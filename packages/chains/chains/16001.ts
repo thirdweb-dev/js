@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "MetaDot Testnet",
   "chain": "MTTTest",
@@ -19,4 +20,4 @@ export default {
   "networkId": 16001,
   "testnet": true,
   "slug": "metadot-testnet"
-} as const;
+} as const satisfies Chain;

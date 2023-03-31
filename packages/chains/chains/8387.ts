@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Dracones Financial Services",
   "title": "The Dracones Mainnet",
@@ -25,4 +26,4 @@ export default {
   "explorers": [],
   "testnet": false,
   "slug": "dracones-financial-services"
-} as const;
+} as const satisfies Chain;

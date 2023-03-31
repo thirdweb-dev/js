@@ -416,13 +416,9 @@ export class Edition extends StandardErc1155<TokenERC1155> {
     TMethod extends keyof TokenERC1155["functions"] = keyof TokenERC1155["functions"],
   >(
     functionName: string & TMethod,
-    ...args:
-      | (any[] & Parameters<TokenERC1155["functions"][TMethod]>)[]
-      | [
-          ...(any[] & Parameters<TokenERC1155["functions"][TMethod]>)[],
-          CallOverrides,
-        ]
+    args?: Parameters<TokenERC1155["functions"][TMethod]>,
+    overrides?: CallOverrides,
   ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 }

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Filecoin - Wallaby testnet",
   "chain": "FIL",
@@ -27,4 +28,4 @@ export default {
   "explorers": [],
   "testnet": true,
   "slug": "filecoin-wallaby-testnet"
-} as const;
+} as const satisfies Chain;

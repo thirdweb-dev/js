@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "MDGL Testnet",
   "chain": "MDGL",
@@ -17,4 +18,4 @@ export default {
   "networkId": 8029,
   "testnet": true,
   "slug": "mdgl-testnet"
-} as const;
+} as const satisfies Chain;

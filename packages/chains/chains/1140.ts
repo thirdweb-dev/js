@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "MathChain Testnet",
   "chain": "MATH",
@@ -19,4 +20,4 @@ export default {
   "networkId": 1140,
   "testnet": true,
   "slug": "mathchain-testnet"
-} as const;
+} as const satisfies Chain;

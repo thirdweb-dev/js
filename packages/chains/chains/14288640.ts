@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Anduschain Mainnet",
   "chain": "anduschain",
@@ -20,10 +21,15 @@ export default {
     {
       "name": "anduschain explorer",
       "url": "https://explorer.anduschain.io",
-      "icon": "daon",
+      "icon": {
+        "url": "ipfs://bafkreiapaxokh2p4j7hg43ug2inomixiwrdhni4kpqazvqifssnez7efze",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      },
       "standard": "none"
     }
   ],
   "testnet": false,
   "slug": "anduschain"
-} as const;
+} as const satisfies Chain;

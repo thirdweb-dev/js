@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Songbird Canary-Network",
   "chain": "SGB",
@@ -33,4 +34,4 @@ export default {
   ],
   "testnet": false,
   "slug": "songbird-canary-network"
-} as const;
+} as const satisfies Chain;

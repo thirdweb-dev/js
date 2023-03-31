@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Floripa",
   "title": "Wireshape Testnet Floripa",
@@ -25,4 +26,4 @@ export default {
   ],
   "testnet": true,
   "slug": "floripa"
-} as const;
+} as const satisfies Chain;

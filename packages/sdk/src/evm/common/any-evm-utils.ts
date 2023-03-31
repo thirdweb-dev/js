@@ -39,6 +39,7 @@ export async function isEIP155Enforced(
     if (e.data.message.toString().toLowerCase().includes("eip-155")) {
       return true;
     }
+    return false;
   }
   return false;
 }

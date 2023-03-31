@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Posichain Mainnet Shard 0",
   "chain": "PSC",
@@ -27,4 +28,4 @@ export default {
   ],
   "testnet": false,
   "slug": "posichain-shard-0"
-} as const;
+} as const satisfies Chain;
