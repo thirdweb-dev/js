@@ -131,7 +131,6 @@ export const ConfiguredNetworkList: React.FC<ConfiguredNetworkListProps> = (
                 name={network.name}
                 key={network.slug}
                 img={network.icon?.url}
-                iconSizes={network.icon?.sizes}
               />
             ))}
           </Box>
@@ -158,7 +157,6 @@ export const ConfiguredNetworkList: React.FC<ConfiguredNetworkListProps> = (
                   name={network.name}
                   key={network.slug}
                   img={network.icon?.url}
-                  iconSizes={network.icon?.sizes}
                 />
               ))}
             </Box>

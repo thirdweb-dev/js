@@ -8,7 +8,6 @@ const fallbackIcon = replaceIpfsUrl(
 type ChainIconProps = {
   ipfsSrc?: string;
   size: number;
-  sizes?: readonly number[];
 };
 
 export const ChainIcon = forwardRef<ChainIconProps, typeof Image>(

@@ -151,7 +151,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
       (abiFunction?.stateMutability === "view" ||
         abiFunction?.stateMutability === "pure")
     ) {
-      mutate([]);
+      mutate({ args: [] });
     }
   }, [mutate, abiFunction?.stateMutability, form]);
 
@@ -179,7 +179,13 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
           id={formId}
           onSubmit={form.handleSubmit((d) => {
             if (d.params) {
-              mutate(formatContractCall(d.params, utils.parseEther(d.value)));
+              const formatted = formatContractCall(d.params);
+              mutate({
+                args: formatted,
+                overrides: d.value
+                  ? { value: utils.parseEther(d.value) }
+                  : undefined,
+              });
             }
           })}
         >

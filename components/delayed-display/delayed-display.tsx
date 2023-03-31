@@ -12,7 +12,7 @@ export const DelayedDisplay: ComponentWithChildren<DelayedDisplayProps> = ({
   const displayContent = useDelayedDisplay(delay);
 
   if (!displayContent) {
-    return <> null </>;
+    return null;
   }
 
   return <>{children}</>;

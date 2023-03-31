@@ -346,11 +346,7 @@ export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
             `Unknown Network (#${cell.row.original.chainId})`;
           return (
             <Flex align="center" gap={2}>
-              <ChainIcon
-                size={24}
-                ipfsSrc={data?.icon?.url}
-                sizes={data?.icon?.sizes}
-              />
+              <ChainIcon size={24} ipfsSrc={data?.icon?.url} />
               <Text size="label.md">{cleanedChainName}</Text>
               {data?.testnet && (
                 <Badge colorScheme="gray" textTransform="capitalize">
