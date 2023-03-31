@@ -107,7 +107,7 @@ export const FEATURE_ROYALTY = {
   namespace: "royalty",
   docLinks: {
     sdk: "sdk.contractroyalty",
-    contracts: "Royalty",
+    contracts: "royalty",
   },
   abis: [IThirdwebRoyaltyAbi],
   features: {},
@@ -118,7 +118,7 @@ export const FEATURE_PRIMARY_SALE = {
   namespace: "sales",
   docLinks: {
     sdk: "sdk.contractprimarysale",
-    contracts: "PrimarySale",
+    contracts: "primarysale",
   },
   abis: [IThirdwebPrimarySaleAbi],
   features: {},
@@ -129,7 +129,7 @@ export const FEATURE_PLATFORM_FEE = {
   namespace: "platformFee",
   docLinks: {
     sdk: "sdk.platformfee",
-    contracts: "PlatformFee",
+    contracts: "platformfee",
   },
   abis: [IThirdwebPlatformFeeAbi],
   features: {},
@@ -140,7 +140,7 @@ export const FEATURE_PERMISSIONS_ENUMERABLE = {
   namespace: "roles",
   docLinks: {
     sdk: "sdk.contractroles",
-    contracts: "PermissionsEnumerable",
+    contracts: "permissionsenumerable",
   },
   abis: [IPermissionsEnumerableAbi],
   features: {},
@@ -151,7 +151,7 @@ export const FEATURE_PERMISSIONS = {
   namespace: "roles",
   docLinks: {
     sdk: "sdk.contractroles",
-    contracts: "Permissions",
+    contracts: "permissions",
   },
   abis: [IPermissionsAbi],
   features: {
@@ -164,7 +164,7 @@ export const FEATURE_METADATA = {
   namespace: "metadata",
   docLinks: {
     sdk: "sdk.contractmetadata",
-    contracts: "ContractMetadata",
+    contracts: "contractmetadata",
   },
   abis: [IContractMetadataAbi],
   features: {},
@@ -175,7 +175,8 @@ export const FEATURE_APPURI = {
   namespace: "appURI",
   docLinks: {
     sdk: "sdk.appURI",
-    contracts: "AppURI",
+    // TODO
+    contracts: "",
   },
   abis: [IAppURI],
   features: {},
@@ -186,7 +187,7 @@ export const FEATURE_OWNER = {
   namespace: "owner",
   docLinks: {
     sdk: "sdk.owner",
-    contracts: "Ownable",
+    contracts: "ownable",
   },
   abis: [IOwnableAbi],
   features: {},
@@ -209,7 +210,8 @@ export const FEATURE_PACK_VRF = {
   namespace: "pack.vrf",
   docLinks: {
     sdk: "sdk.packvrf",
-    contracts: "IPackVRFDirect",
+    // TODO add the correct name for this once it's added to portal
+    contracts: "",
   },
   abis: [IPackVRFAbi],
   features: {},
@@ -220,7 +222,8 @@ export const FEATURE_PLUGIN_ROUTER = {
   namespace: "plugin.router",
   docLinks: {
     sdk: "sdk.pluginrouter",
-    contracts: "IRouter",
+    // TODO add the correct name for this once it's added to portal
+    contracts: "",
   },
   abis: [getAllPluginsAbi],
   features: {},
@@ -231,6 +234,7 @@ export const FEATURE_EXTENSION_ROUTER = {
   namespace: "extension.router",
   docLinks: {
     sdk: "",
+    // TODO add the correct name for this once it's added to portal
     contracts: "",
   },
   abis: [getAllExtensionsAbi],
