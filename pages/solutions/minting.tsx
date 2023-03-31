@@ -6,6 +6,7 @@ import { ProductLearnMoreCard } from "components/product-pages/common/ProductLea
 import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
 import { YoutubeEmbed } from "components/video-embed/YoutubeEmbed";
+import { replaceIpfsUrl } from "lib/sdk";
 import { PageId } from "page-id";
 import { FiArrowRight } from "react-icons/fi";
 import {
@@ -32,38 +33,50 @@ const exploreNFTContracts: NFTContractInfo[] = [
     name: "Multiwrap",
     description:
       "Bundle multiple ERC721/ERC1155/ERC20 tokens into a single ERC721.",
-    img: "https://ipfs.thirdwebcdn.com/ipfs/QmQm3UytP51wWMMwmDYdDHH4vCdokPqt52bUtBQoLsx5qy/edition.png",
+    img: replaceIpfsUrl(
+      "ipfs://QmQm3UytP51wWMMwmDYdDHH4vCdokPqt52bUtBQoLsx5qy/edition.png",
+    ),
     link: "/thirdweb.eth/Multiwrap",
   },
   {
     name: "ERC4907",
     description: "Rental NFT, ERC-721 User And Expires Extension.",
-    img: "https://ipfs.thirdwebcdn.com/ipfs/QmaKC631DSxDtjDcveAFVuGpSwM84icnXSGQgqrLpw3Lkh/yellow%E2%80%94360x360.png",
+    img: replaceIpfsUrl(
+      "ipfs://QmaKC631DSxDtjDcveAFVuGpSwM84icnXSGQgqrLpw3Lkh/yellow%E2%80%94360x360.png",
+    ),
     link: "/doubledev.eth/ERC4907",
   },
   {
     name: "NFT Collection",
     description: "Create collection of unique NFTs.",
-    img: "https://ipfs.thirdwebcdn.com/ipfs/QmWARxASHf4UcWkwxTUDJxAXVDUG5STu5yBePJg35GzqjZ/nft-collection.png",
+    img: replaceIpfsUrl(
+      "ipfs://QmWARxASHf4UcWkwxTUDJxAXVDUG5STu5yBePJg35GzqjZ/nft-collection.png",
+    ),
     link: "/thirdweb.eth/TokenERC721",
   },
   {
     name: "Edition",
     description: "Create editions of ERC1155 tokens.",
-    img: "https://ipfs.thirdwebcdn.com/ipfs/QmQm3UytP51wWMMwmDYdDHH4vCdokPqt52bUtBQoLsx5qy/edition.png",
+    img: replaceIpfsUrl(
+      "ipfs://QmQm3UytP51wWMMwmDYdDHH4vCdokPqt52bUtBQoLsx5qy/edition.png",
+    ),
     link: "/thirdweb.eth/TokenERC1155",
   },
   {
     name: "ERC721CommunityStream",
     description: "Equally distribute any token to community of NFT holders.",
-    img: "https://ipfs.thirdwebcdn.com/ipfs/QmbGjq5DY6gW1T7W7j3HEgYSAB2g4TnpzrNADTuniDXsqU/0.png",
+    img: replaceIpfsUrl(
+      "ipfs://QmbGjq5DY6gW1T7W7j3HEgYSAB2g4TnpzrNADTuniDXsqU/0.png",
+    ),
     link: "/flairsdk.eth/ERC721CommunityStream",
   },
   {
     name: "Pack",
     description:
       "Pack multiple tokens into ERC1155 NFTs that act as randomized loot boxes.",
-    img: "https://ipfs.thirdwebcdn.com/ipfs/QmaLYhDh2oKxSjAS6iA434z8fvY43oAEug2AHHEMYMBU3K/pack.png",
+    img: replaceIpfsUrl(
+      "ipfs://QmaLYhDh2oKxSjAS6iA434z8fvY43oAEug2AHHEMYMBU3K/pack.png",
+    ),
     link: "/thirdweb.eth/Pack",
   },
 ];
