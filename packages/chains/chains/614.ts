@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Graphlinq Blockchain Mainnet",
   "chain": "GLQ Blockchain",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": false,
   "slug": "graphlinq-blockchain"
-} as const;
+} as const satisfies Chain;

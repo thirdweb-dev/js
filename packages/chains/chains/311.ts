@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Omax Mainnet",
   "chain": "OMAX Chain",
@@ -27,10 +28,15 @@ export default {
     {
       "name": "Omax Chain Explorer",
       "url": "https://omaxray.com",
-      "icon": "omaxray",
+      "icon": {
+        "url": "ipfs://Qmd7omPxrehSuxHHPMYd5Nr7nfrtjKdRJQEhDLfTb87w8G",
+        "width": 500,
+        "height": 500,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "omax"
-} as const;
+} as const satisfies Chain;

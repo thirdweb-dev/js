@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Ethersocial Network",
   "chain": "ESN",
@@ -18,4 +19,4 @@ export default {
   "slip44": 31102,
   "testnet": false,
   "slug": "ethersocial-network"
-} as const;
+} as const satisfies Chain;

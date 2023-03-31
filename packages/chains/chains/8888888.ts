@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Quarix",
   "chain": "Quarix",
@@ -22,4 +23,4 @@ export default {
   "explorers": [],
   "testnet": false,
   "slug": "quarix"
-} as const;
+} as const satisfies Chain;

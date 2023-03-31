@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Exzo Network Mainnet",
   "chain": "EXZO",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": false,
   "slug": "exzo-network"
-} as const;
+} as const satisfies Chain;

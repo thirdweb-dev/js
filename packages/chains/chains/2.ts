@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Expanse Network",
   "chain": "EXP",
@@ -18,4 +19,4 @@ export default {
   "slip44": 40,
   "testnet": false,
   "slug": "expanse-network"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Genesis Coin",
   "chain": "Genesis",
@@ -18,4 +19,4 @@ export default {
   "networkId": 9100,
   "testnet": false,
   "slug": "genesis-coin"
-} as const;
+} as const satisfies Chain;

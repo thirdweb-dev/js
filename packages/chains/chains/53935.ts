@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "DFK Chain",
   "chain": "DFK",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "ethernal",
       "url": "https://explorer.dfkchain.com",
-      "icon": "ethereum",
+      "icon": {
+        "url": "ipfs://QmdwQDr6vmBtXmK2TmknkEuZNoaDqTasFdZdu3DRw8b2wt",
+        "width": 1000,
+        "height": 1628,
+        "format": "png"
+      },
       "standard": "none"
     }
   ],
   "testnet": false,
   "slug": "dfk-chain"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "F(x)Core Mainnet Network",
   "chain": "Fxcore",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": false,
   "slug": "f-x-core-network"
-} as const;
+} as const satisfies Chain;

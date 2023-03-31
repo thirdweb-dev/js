@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Metis Andromeda Mainnet",
   "chain": "ETH",
@@ -39,4 +40,4 @@ export default {
   },
   "testnet": false,
   "slug": "metis-andromeda"
-} as const;
+} as const satisfies Chain;

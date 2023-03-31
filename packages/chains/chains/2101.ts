@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Ecoball Testnet Espuma",
   "chain": "ECO",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": true,
   "slug": "ecoball-testnet-espuma"
-} as const;
+} as const satisfies Chain;

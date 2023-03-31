@@ -1,13 +1,15 @@
+type Icon = {
+  url: string;
+  width: number;
+  height: number;
+  format: string;
+};
+
 export type Chain = {
   name: string;
+  title?: string;
   chain: string;
-  icon?: {
-    url: string;
-    width: number;
-    height: number;
-    format: string;
-    sizes?: readonly number[];
-  };
+  icon?: Icon;
   rpc: readonly string[];
   features?: Readonly<Array<{ name: string }>>;
   faucets?: readonly string[];
@@ -27,6 +29,7 @@ export type Chain = {
     Array<{
       name: string;
       url: string;
+      icon?: Icon;
       standard: string;
     }>
   >;
@@ -34,6 +37,12 @@ export type Chain = {
   slug: string;
   slip44?: number;
   status?: string;
+  redFlags?: readonly string[];
+  parent?: {
+    chain: string;
+    type: string;
+    bridges?: Readonly<Array<{ url: string }>>;
+  };
 };
 
 // MinimalChain is a subset of Chain with only the fields that are required / non-optional

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Sepolia",
   "title": "Ethereum Testnet Sepolia",
@@ -34,4 +35,4 @@ export default {
   ],
   "testnet": true,
   "slug": "sepolia"
-} as const;
+} as const satisfies Chain;

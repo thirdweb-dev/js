@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Nexi Mainnet",
   "chain": "Nexi",
@@ -33,4 +34,4 @@ export default {
   ],
   "testnet": false,
   "slug": "nexi"
-} as const;
+} as const satisfies Chain;

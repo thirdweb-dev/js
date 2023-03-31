@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "BlockChain Station Testnet",
   "chain": "BCS",
@@ -27,4 +28,4 @@ export default {
   ],
   "testnet": true,
   "slug": "blockchain-station-testnet"
-} as const;
+} as const satisfies Chain;

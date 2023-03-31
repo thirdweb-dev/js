@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "REI Chain Testnet",
   "chain": "REI",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": true,
   "slug": "rei-chain-testnet"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "BitTorrent Chain Testnet",
   "chain": "BTTC",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": true,
   "slug": "bittorrent-chain-testnet"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Harmony Testnet Shard 1",
   "chain": "Harmony",
@@ -17,4 +18,4 @@ export default {
   "networkId": 1666700001,
   "testnet": true,
   "slug": "harmony-testnet-shard-1"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "BeOne Chain Testnet",
   "chain": "BOC",
@@ -29,10 +30,15 @@ export default {
     {
       "name": "BeOne Chain Testnet",
       "url": "https://testnet.beonescan.com",
-      "icon": "beonechain",
+      "icon": {
+        "url": "ipfs://QmbVLQnaMDu86bPyKgCvTGhFBeYwjr15hQnrCcsp1EkAGL",
+        "width": 500,
+        "height": 500,
+        "format": "png"
+      },
       "standard": "none"
     }
   ],
   "testnet": true,
   "slug": "beone-chain-testnet"
-} as const;
+} as const satisfies Chain;

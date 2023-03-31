@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Ennothem Testnet Pioneer",
   "chain": "ETMP",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": true,
   "slug": "ennothem-testnet-pioneer"
-} as const;
+} as const satisfies Chain;

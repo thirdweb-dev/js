@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Altcoinchain",
   "chain": "mainnet",
@@ -26,10 +27,15 @@ export default {
     {
       "name": "expedition",
       "url": "http://expedition.altcoinchain.org",
-      "icon": "altcoinchain",
+      "icon": {
+        "url": "ipfs://QmYwHmGC9CRVcKo1LSesqxU31SDj9vk2iQxcFjQArzhix4",
+        "width": 720,
+        "height": 720,
+        "format": "png"
+      },
       "standard": "none"
     }
   ],
   "testnet": false,
   "slug": "altcoinchain"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Lucid Blockchain",
   "chain": "Lucid",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": false,
   "slug": "lucid-blockchain"
-} as const;
+} as const satisfies Chain;

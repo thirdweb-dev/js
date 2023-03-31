@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Metis Goerli Testnet",
   "chain": "ETH",
@@ -41,4 +42,4 @@ export default {
   },
   "testnet": true,
   "slug": "metis-goerli-testnet"
-} as const;
+} as const satisfies Chain;

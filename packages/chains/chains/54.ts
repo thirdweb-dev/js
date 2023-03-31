@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Openpiece Mainnet",
   "chain": "OPENPIECE",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": false,
   "slug": "openpiece"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Fibonacci Mainnet",
   "chain": "FIBO",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": false,
   "slug": "fibonacci"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "BlackFort Exchange Network Testnet",
   "chain": "TBXN",
@@ -33,10 +34,15 @@ export default {
     {
       "name": "blockscout",
       "url": "https://testnet-explorer.blackfort.network",
-      "icon": "blockscout",
+      "icon": {
+        "url": "ipfs://bafybeifu5tpui7dk5cjoo54kde7pmuthvnl7sdykobuarsxgu7t2izurnq",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "blackfort-exchange-network-testnet"
-} as const;
+} as const satisfies Chain;

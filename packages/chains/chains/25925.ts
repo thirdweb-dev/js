@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Bitkub Chain Testnet",
   "chain": "BKC",
@@ -29,9 +30,14 @@ export default {
       "name": "bkcscan-testnet",
       "url": "https://testnet.bkcscan.com",
       "standard": "none",
-      "icon": "bkc"
+      "icon": {
+        "url": "ipfs://QmYFYwyquipwc9gURQGcEd4iAq7pq15chQrJ3zJJe9HuFT",
+        "width": 1000,
+        "height": 1000,
+        "format": "png"
+      }
     }
   ],
   "testnet": true,
   "slug": "bitkub-chain-testnet"
-} as const;
+} as const satisfies Chain;

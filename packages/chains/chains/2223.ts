@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "VChain Mainnet",
   "chain": "VChain",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": false,
   "slug": "vchain"
-} as const;
+} as const satisfies Chain;

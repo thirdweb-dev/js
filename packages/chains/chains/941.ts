@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "PulseChain Testnet v2b",
   "shortName": "t2bpls",
@@ -20,4 +21,4 @@ export default {
   },
   "testnet": true,
   "slug": "pulsechain-testnet-v2b"
-} as const;
+} as const satisfies Chain;

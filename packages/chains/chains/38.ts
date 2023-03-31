@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Valorbit",
   "chain": "VAL",
@@ -18,4 +19,4 @@ export default {
   "slip44": 538,
   "testnet": false,
   "slug": "valorbit"
-} as const;
+} as const satisfies Chain;

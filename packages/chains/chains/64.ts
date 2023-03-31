@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Ellaism",
   "chain": "ELLA",
@@ -18,4 +19,4 @@ export default {
   "slip44": 163,
   "testnet": false,
   "slug": "ellaism"
-} as const;
+} as const satisfies Chain;

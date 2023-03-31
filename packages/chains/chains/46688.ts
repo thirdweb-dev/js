@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Fusion Testnet",
   "chain": "FSN",
@@ -35,10 +36,15 @@ export default {
     {
       "name": "fsnscan",
       "url": "https://testnet.fsnscan.com",
-      "icon": "fsnscan",
+      "icon": {
+        "url": "ipfs://QmSAFx34SKNi7a139agX12f68oBMo2Ktt9c8yD8aFa14gd",
+        "width": 48,
+        "height": 51,
+        "format": "svg"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "fusion-testnet"
-} as const;
+} as const satisfies Chain;

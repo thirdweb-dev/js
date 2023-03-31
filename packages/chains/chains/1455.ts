@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Ctex Scan Blockchain",
   "chain": "Ctex Scan Blockchain",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": false,
   "slug": "ctex-scan-blockchain"
-} as const;
+} as const satisfies Chain;

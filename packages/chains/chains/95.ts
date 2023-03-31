@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "CryptoKylin Testnet",
   "chain": "EOS",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": true,
   "slug": "cryptokylin-testnet"
-} as const;
+} as const satisfies Chain;

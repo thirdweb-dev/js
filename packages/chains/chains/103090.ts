@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Crystaleum",
   "chain": "crystal",
@@ -26,10 +27,15 @@ export default {
     {
       "name": "blockscout",
       "url": "https://scan.crystaleum.org",
-      "icon": "crystal",
+      "icon": {
+        "url": "ipfs://Qmbry1Uc6HnXmqFNXW5dFJ7To8EezCCjNr4TqqvAyzXS4h",
+        "width": 150,
+        "height": 150,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "crystaleum"
-} as const;
+} as const satisfies Chain;

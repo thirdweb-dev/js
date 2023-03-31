@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "zkSync Era Testnet",
   "chain": "ETH",
@@ -27,7 +28,12 @@ export default {
     {
       "name": "zkSync Era Block Explorer",
       "url": "https://goerli.explorer.zksync.io",
-      "icon": "zksync-era",
+      "icon": {
+        "url": "ipfs://QmRkhUD6J3B9WhT4hEWLrcFVTrBhx3CQgNC783aJsrwxSN",
+        "width": 512,
+        "height": 512,
+        "format": "svg"
+      },
       "standard": "EIP3091"
     }
   ],
@@ -42,4 +48,4 @@ export default {
   },
   "testnet": true,
   "slug": "zksync-era-testnet"
-} as const;
+} as const satisfies Chain;

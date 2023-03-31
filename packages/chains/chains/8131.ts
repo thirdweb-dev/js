@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Qitmeer Network Testnet",
   "chain": "MEER",
@@ -21,11 +22,16 @@ export default {
   "explorers": [
     {
       "name": "meerscan testnet",
-      "icon": "meer",
+      "icon": {
+        "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      },
       "url": "https://testnet.qng.meerscan.io",
       "standard": "none"
     }
   ],
   "testnet": true,
   "slug": "qitmeer-network-testnet"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Scroll",
   "chain": "ETH",
@@ -20,4 +21,4 @@ export default {
   },
   "testnet": false,
   "slug": "scroll"
-} as const;
+} as const satisfies Chain;

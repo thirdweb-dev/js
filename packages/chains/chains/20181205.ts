@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "quarkblockchain",
   "chain": "QKI",
@@ -18,4 +19,4 @@ export default {
   "networkId": 20181205,
   "testnet": false,
   "slug": "quarkblockchain"
-} as const;
+} as const satisfies Chain;

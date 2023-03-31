@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "EnterChain Mainnet",
   "chain": "ENTER",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "Enter Explorer - Expenter",
       "url": "https://explorer.entercoin.net",
-      "icon": "enter",
+      "icon": {
+        "url": "ipfs://Qmb2UYVc1MjLPi8vhszWRxqBJYoYkWQVxDJRSmtrgk6j2E",
+        "width": 64,
+        "height": 64,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "enterchain"
-} as const;
+} as const satisfies Chain;

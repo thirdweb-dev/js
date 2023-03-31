@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Telos EVM Testnet",
   "chain": "TLOS",
@@ -25,4 +26,4 @@ export default {
     "height": 228
   },
   "slug": "telos-evm-testnet"
-} as const;
+} as const satisfies Chain;
