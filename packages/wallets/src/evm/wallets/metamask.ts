@@ -25,7 +25,6 @@ type ConnectWithQrCodeArgs = {
 
 export class MetaMaskWallet extends AbstractBrowserWallet<MetamaskAdditionalOptions> {
   connector?: TWConnector;
-  connectorStorage: AsyncStorage;
   walletConnectConnector?: WalletConnectV1ConnectorType;
   isInjected: boolean;
 
@@ -43,8 +42,6 @@ export class MetaMaskWallet extends AbstractBrowserWallet<MetamaskAdditionalOpti
 
   constructor(options: MetamaskWalletOptions) {
     super(MetaMaskWallet.id, options);
-    this.connectorStorage =
-      options.connectorStorage || createAsyncLocalStorage("connector");
 
     if (assertWindowEthereum(globalThis.window)) {
       this.isInjected = !!globalThis.window.ethereum?.isMetaMask;
@@ -63,7 +60,7 @@ export class MetaMaskWallet extends AbstractBrowserWallet<MetamaskAdditionalOpti
         const { MetaMaskConnector } = await import("../connectors/metamask");
         const metamaskConnector = new MetaMaskConnector({
           chains: this.chains,
-          connectorStorage: this.connectorStorage,
+          connectorStorage: this.walletStorage,
           options: {
             shimDisconnect: true,
           },
@@ -77,7 +74,7 @@ export class MetaMaskWallet extends AbstractBrowserWallet<MetamaskAdditionalOpti
 
         const walletConnectConnector = new WalletConnectV1Connector({
           chains: this.chains,
-          storage: this.connectorStorage,
+          storage: this.walletStorage,
           options: {
             clientMeta: {
               name: this.dappMetadata.name,
