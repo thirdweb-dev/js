@@ -18,6 +18,7 @@ import {
   ConnectWallet as ConnectWalletNew,
   useConnectionStatus,
 } from "@thirdweb-dev/react";
+import { ChakraNextImage } from "components/Image";
 import { useEffect } from "react";
 import { FiCheck, FiChevronDown, FiCopy } from "react-icons/fi";
 import { Button, ButtonProps, MenuItem, Text } from "tw-components";
@@ -117,45 +118,69 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
         </MenuButton>
 
         <MenuList>
-          {solWallet.wallets.map((sWallet) => {
-            return (
-              <MenuItem
-                key={sWallet.adapter.name}
-                py={3}
-                icon={
-                  <Image
-                    boxSize={4}
-                    borderRadius="md"
-                    src={sWallet.adapter.icon}
-                    placeholder="empty"
-                    alt=""
-                  />
-                }
-                w="100%"
-                onClick={async () => {
-                  solWallet.select(sWallet.adapter.name);
-                  try {
-                    await solWallet.connect();
-                  } catch (e) {
-                    if (e instanceof WalletNotSelectedError) {
-                      // seems safe to ignore?
-                    } else {
-                      console.error(
-                        "failed to connect to solana wallet",
-                        e,
-                        sWallet,
-                      );
-                    }
+          {solWallet.wallets.length === 0 ? (
+            <MenuItem
+              py={3}
+              icon={
+                <ChakraNextImage
+                  boxSize={4}
+                  borderRadius="md"
+                  src={require("public/assets/dashboard/phantom.png")}
+                  placeholder="empty"
+                  alt=""
+                />
+              }
+              w="100%"
+              onClick={() => {
+                window.open("https://phantom.app/", "_blank");
+              }}
+            >
+              <Flex as="span" align="center" justify="space-between">
+                <span>Phantom</span>
+                <Icon as={Solana} />
+              </Flex>
+            </MenuItem>
+          ) : (
+            solWallet.wallets.map((sWallet) => {
+              return (
+                <MenuItem
+                  key={sWallet.adapter.name}
+                  py={3}
+                  icon={
+                    <Image
+                      boxSize={4}
+                      borderRadius="md"
+                      src={sWallet.adapter.icon}
+                      placeholder="empty"
+                      alt=""
+                    />
                   }
-                }}
-              >
-                <Flex as="span" align="center" justify="space-between">
-                  <span>{sWallet.adapter.name}</span>
-                  <Icon as={Solana} />
-                </Flex>
-              </MenuItem>
-            );
-          })}
+                  w="100%"
+                  onClick={async () => {
+                    solWallet.select(sWallet.adapter.name);
+                    try {
+                      await solWallet.connect();
+                    } catch (e) {
+                      if (e instanceof WalletNotSelectedError) {
+                        // seems safe to ignore?
+                      } else {
+                        console.error(
+                          "failed to connect to solana wallet",
+                          e,
+                          sWallet,
+                        );
+                      }
+                    }
+                  }}
+                >
+                  <Flex as="span" align="center" justify="space-between">
+                    <span>{sWallet.adapter.name}</span>
+                    <Icon as={Solana} />
+                  </Flex>
+                </MenuItem>
+              );
+            })
+          )}
         </MenuList>
       </Menu>
     </>
