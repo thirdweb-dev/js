@@ -1,8 +1,11 @@
 // @ts-check
-import axios from "axios";
 import merge from "deepmerge";
 import fs from "fs";
 import path from "path";
+import fetch from "cross-fetch";
+import { checkRpcs, isInvalidChainIdError } from "./utils/checkRpcs.mjs";
+import { findSlug } from "./utils/computeSlug.mjs";
+import { downloadIcon } from "./utils/download-icon.mjs";
 
 /** @typedef {import("../src/types").Chain} Chain */
 
@@ -18,10 +21,9 @@ const combineMerge = (target, source) => {
 };
 
 const chainsDir = "./chains";
+const badRPCsFile = "./bad-rpcs.md";
 
 const chainsJsonUrl = "https://chainid.network/chains.json";
-const iconRoute =
-  "https://raw.githubusercontent.com/ethereum-lists/chains/master/_data/icons";
 
 /** @type {Record<number, Partial<Chain>>} */
 let overrides = {};
@@ -40,7 +42,7 @@ for (const file of overridesFiles) {
 // chains from remote src
 
 /** @type {Chain[]} */
-let chains = (await axios.get(chainsJsonUrl)).data;
+let chains = await (await fetch(chainsJsonUrl)).json();
 // immediately filter out localhost
 chains = chains.filter((c) => c.chainId !== 1337);
 
@@ -82,144 +84,200 @@ const imports = [];
 const exports = [];
 const exportNames = [];
 
-const takenSlugs = {};
-
-const iconMetaMap = new Map();
-
-async function downloadIcon(icon) {
-  if (iconMetaMap.has(icon)) {
-    return iconMetaMap.get(icon);
-  }
-  const result = await axios.get(`${iconRoute}/${icon}.json`);
-  if (result.status == 200) {
-    const iconMeta = result.data[0];
-
-    iconMetaMap.set(icon, iconMeta);
-    return iconMeta;
-  }
-  throw new Error(`Could not download icon for ${icon}`);
-}
-
-function findSlug(chain) {
-  let slug = chain.name
-    .toLowerCase()
-    .replace("mainnet", "")
-    .trim()
-    // replace all non alpha numeric characters with a dash
-    .replace(/[^a-z0-9]/g, "-")
-    .replaceAll(" - ", " ")
-    .replaceAll(" ", "-");
-
-  if (takenSlugs[slug]) {
-    slug = `${slug}-${chain.shortName}`;
-  }
-  slug = slug.replaceAll("---", "-").replaceAll("--", "-");
-
-  if (slug.endsWith("-")) {
-    slug = slug.slice(0, -1);
-  }
-  // special cases for things that we already had in rpc.thirdweb.com
-  if (slug === "fantom-opera") {
-    slug = "fantom";
-  }
-  if (slug === "avalanche-c-chain") {
-    slug = "avalanche";
-  }
-  if (slug === "avalanche-fuji-testnet") {
-    slug = "avalanche-fuji";
-  }
-  if (slug === "optimism-goerli-testnet") {
-    slug = "optimism-goerli";
-  }
-  if (slug === "arbitrum-one") {
-    slug = "arbitrum";
-  }
-  if (slug === "binance-smart-chain") {
-    slug = "binance";
-  }
-  if (slug === "binance-smart-chain-testnet") {
-    slug = "binance-testnet";
-  }
-  if (slug === "base-goerli-testnet") {
-    slug = "base-goerli";
-  }
-  // end special cases
-
-  takenSlugs[slug] = true;
-  return slug;
-}
-
 const chainDir = `${chainsDir}`;
 // clean out the chains directory
 fs.rmdirSync(chainDir, { recursive: true });
 // make sure the chain directory exists
 fs.mkdirSync(chainDir, { recursive: true });
 
-for (const chain of chains) {
-  try {
-    if ("icon" in chain) {
-      if (typeof chain.icon === "string") {
-        const iconMeta = await downloadIcon(chain.icon);
-        if (iconMeta) {
-          chain.icon = iconMeta;
-        }
-      }
-    }
-    if ("explorers" in chain && Array.isArray(chain.explorers)) {
-      for (const explorer of chain.explorers) {
-        if ("icon" in explorer) {
-          if (typeof explorer.icon === "string") {
-            const iconMeta = await downloadIcon(explorer.icon);
-            if (iconMeta) {
-              explorer.icon = iconMeta;
-            }
+// clear out the bad rpcs file
+fs.writeFileSync(badRPCsFile, `# Bad RPCs\n\n`);
+
+let mismatchedChainIdErrors = [];
+let fetchErrors = [];
+
+const CHUNK_SIZE = 100;
+
+let totalProcessed = 0;
+
+console.log("Processing chains, total chains:", chains.length);
+
+while (chains.length > 0) {
+  const chunkedChains = chains.splice(0, Math.min(CHUNK_SIZE, chains.length));
+
+  await Promise.all(
+    chunkedChains.map(async (chain) => {
+      let badRpcsInChain = [];
+      const promises = [
+        // chain icon
+        Promise.resolve(),
+        // chain explorers (may have icons)
+        Promise.all(chain.explorers || []),
+        // rpcs
+        checkRpcs(chain, (rpcUrl, error) => {
+          if (isInvalidChainIdError(error)) {
+            mismatchedChainIdErrors.push({ chain, rpcUrl, error });
+          } else {
+            fetchErrors.push({ chain, rpcUrl, error });
           }
-        }
+        }),
+      ];
+      if ("icon" in chain && typeof chain.icon === "string") {
+        promises[0] = downloadIcon(chain.icon);
       }
-    }
-  } catch (err) {
-    console.log(err.message);
-  }
+      if ("explorers" in chain && Array.isArray(chain.explorers)) {
+        promises[1] = Promise.all(
+          chain.explorers.map((explorer) => {
+            if ("icon" in explorer && typeof explorer.icon === "string") {
+              return downloadIcon(explorer.icon)
+                .then((iconMeta) => {
+                  if (iconMeta) {
+                    explorer.icon = iconMeta;
+                  }
+                  return explorer;
+                })
+                .catch(() => {
+                  return explorer;
+                });
+            }
+            return explorer;
+          }),
+        );
+      }
+      const [icon, explorers, rpcs] = await Promise.all(promises);
 
-  // figure out a slug for the chain
-
-  const slug = findSlug(chain);
-  chain.slug = slug;
-  // if the chain has RPCs that we can use then prepend our RPC to the list
-  const chainHasHttpRpc = chain.rpc.some((rpc) => rpc.startsWith("http"));
-  // if the chain has RPCs that we can use then prepend our RPC to the list
-  // we're exlcuding localhost because we don't want to use our RPC for localhost
-  if (chainHasHttpRpc && chain.chainId !== 1337) {
-    chain.rpc = [
-      `https://${slug}.rpc.thirdweb.com/${"${THIRDWEB_API_KEY}"}`,
-      ...chain.rpc,
-    ];
-  }
-  // unique rpcs
-  chain.rpc = [...new Set(chain.rpc)];
-
-  fs.writeFileSync(
-    `${chainDir}/${chain.chainId}.ts`,
-    `import type { Chain } from "../src/types";
+      if (icon) {
+        // @ts-ignore
+        chain.icon = icon;
+      }
+      if (explorers && explorers.length > 0) {
+        chain.explorers = explorers;
+      }
+      if (rpcs) {
+        chain.rpc = rpcs;
+      }
+      const slug = findSlug(chain);
+      chain.slug = slug;
+      // if the chain has RPCs that we can use then prepend our RPC to the list
+      const chainHasHttpRpc = chain.rpc.some((rpc) => rpc.startsWith("http"));
+      // if the chain has RPCs that we can use then prepend our RPC to the list
+      // we're exlcuding localhost because we don't want to use our RPC for localhost
+      if (chainHasHttpRpc && chain.chainId !== 1337) {
+        chain.rpc = [
+          `https://${slug}.rpc.thirdweb.com/${"${THIRDWEB_API_KEY}"}`,
+          ...chain.rpc,
+        ];
+      }
+      // unique rpcs
+      chain.rpc = [...new Set(chain.rpc)];
+      fs.writeFileSync(
+        `${chainDir}/${chain.chainId}.ts`,
+        `import type { Chain } from "../src/types";
 export default ${JSON.stringify(chain, null, 2)} as const satisfies Chain;`,
+      );
+
+      let exportName = slug
+        .split("-")
+        .map((s) => s[0].toUpperCase() + s.slice(1))
+        .join("");
+
+      // if chainName starts with a number, prepend an underscore
+      if (exportName.match(/^[0-9]/)) {
+        exportName = `_${exportName}`;
+      }
+
+      imports.push(
+        `import c${chain.chainId} from "../chains/${chain.chainId}";`,
+      );
+
+      exports.push(`export const ${exportName} = c${chain.chainId};`);
+
+      exportNames.push(exportName);
+    }),
   );
-
-  let exportName = slug
-    .split("-")
-    .map((s) => s[0].toUpperCase() + s.slice(1))
-    .join("");
-
-  // if chainName starts with a number, prepend an underscore
-  if (exportName.match(/^[0-9]/)) {
-    exportName = `_${exportName}`;
-  }
-
-  imports.push(`import c${chain.chainId} from "../chains/${chain.chainId}";`);
-
-  exports.push(`export const ${exportName} = c${chain.chainId};`);
-
-  exportNames.push(exportName);
+  totalProcessed += chunkedChains.length;
+  console.log(
+    "Chains processed: ",
+    totalProcessed,
+    "Remaining: ",
+    chains.length,
+  );
 }
+
+// write out the bad rpcs file
+// mismatch chain id errors are more important than fetch errors
+// sort the errors
+mismatchedChainIdErrors = mismatchedChainIdErrors.sort((a, b) => {
+  if (a.chain.chainId < b.chain.chainId) {
+    return -1;
+  }
+  if (a.chain.chainId > b.chain.chainId) {
+    return 1;
+  }
+  return 0;
+});
+const hasWrittenChainIdHeader = {};
+// write the mismatched chain id errors to the file
+if (mismatchedChainIdErrors.length > 0) {
+  fs.appendFileSync(
+    badRPCsFile,
+    `## Mismatched Chain IDs\n
+**Why is this bad?**
+If the chain ID is mismatched then the RPC is not actually connected to the chain. This means that the RPC is not actually serving the chain and is not a valid RPC for the chain.\n\n`,
+  );
+}
+mismatchedChainIdErrors.forEach(({ chain, rpcUrl, error }) => {
+  if (!hasWrittenChainIdHeader[chain.chainId]) {
+    fs.appendFileSync(badRPCsFile, `### ${chain.name} (${chain.chainId})\n\n`);
+    hasWrittenChainIdHeader[chain.chainId] = true;
+  }
+  fs.appendFileSync(
+    badRPCsFile,
+    `<details>
+  <summary>\`${rpcUrl}\`</summary>
+  \`\`\`js
+  ${error}
+  \`\`\`
+</details>
+    \n\n`,
+  );
+});
+
+fetchErrors = fetchErrors.sort((a, b) => {
+  if (a.chain.chainId < b.chain.chainId) {
+    return -1;
+  }
+  if (a.chain.chainId > b.chain.chainId) {
+    return 1;
+  }
+  return 0;
+});
+
+if (fetchErrors.length > 0) {
+  fs.appendFileSync(
+    badRPCsFile,
+    `## Fetch Errors\n
+**Why is this bad?**
+If the RPC is not responding then it is not useful.\n\n`,
+  );
+}
+const hasWrittenFetchHeader = {};
+fetchErrors.forEach(({ chain, rpcUrl, error }) => {
+  if (!hasWrittenFetchHeader[chain.chainId]) {
+    fs.appendFileSync(badRPCsFile, `### ${chain.name} (${chain.chainId})\n\n`);
+    hasWrittenFetchHeader[chain.chainId] = true;
+  }
+  fs.appendFileSync(
+    badRPCsFile,
+    `<details>
+  <summary>\`${rpcUrl}\`</summary>
+  \`\`\`js
+  ${error}
+  \`\`\`
+</details>
+    \n\n`,
+  );
+});
 
 fs.writeFileSync(
   `./src/index.ts`,
@@ -271,3 +329,5 @@ export function getChainBySlug<TSlug extends ChainSlug>(
 export type ChainSlug = keyof typeof chainIdsBySlug;
 export type ChainId = keyof typeof chainsById;`,
 );
+
+process.exit(0);

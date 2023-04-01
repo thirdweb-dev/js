@@ -11,9 +11,7 @@ export default {
   "rpc": [
     "https://songbird-canary-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://songbird-api.flare.network/ext/C/rpc",
-    "https://sgb.ftso.com.au/ext/bc/C/rpc",
-    "https://sgb.lightft.so/rpc",
-    "https://sgb-rpc.ftso.eu"
+    "https://sgb.ftso.com.au/ext/bc/C/rpc"
   ],
   "faucets": [],
   "nativeCurrency": {

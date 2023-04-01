@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Posichain Devnet Shard 0",
   "chain": "PSC",
-  "rpc": [
-    "https://posichain-devnet-shard-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.s0.d.posichain.org"
-  ],
+  "rpc": [],
   "faucets": [
     "https://faucet.posichain.org/"
   ],

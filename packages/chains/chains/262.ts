@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "SUR Blockchain Network",
   "chain": "SUR",
-  "rpc": [
-    "https://sur-blockchain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://sur.nilin.org"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Suren",

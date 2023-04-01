@@ -8,10 +8,7 @@ export default {
     "height": 1280,
     "format": "png"
   },
-  "rpc": [
-    "https://zetachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.mainnet.zetachain.com/evm"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Zeta",

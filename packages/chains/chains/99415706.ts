@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Joys Digital TestNet",
   "chain": "TOYS",
-  "rpc": [
-    "https://joys-digital-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://toys.joys.cash/"
-  ],
+  "rpc": [],
   "faucets": [
     "https://faucet.joys.digital/"
   ],

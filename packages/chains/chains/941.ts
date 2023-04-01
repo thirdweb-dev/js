@@ -8,8 +8,7 @@ export default {
   "infoURL": "https://pulsechain.com/",
   "rpc": [
     "https://pulsechain-testnet-v2b.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.v2b.testnet.pulsechain.com/",
-    "wss://rpc.v2b.testnet.pulsechain.com/"
+    "https://rpc.v2b.testnet.pulsechain.com/"
   ],
   "faucets": [
     "https://faucet.v2b.testnet.pulsechain.com/"

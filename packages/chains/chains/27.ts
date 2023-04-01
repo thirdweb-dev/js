@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "ShibaChain",
   "chain": "SHIB",
-  "rpc": [
-    "https://shibachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.shibachain.net"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "SHIBA INU COIN",

@@ -2,11 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Smart Bitcoin Cash Testnet",
   "chain": "smartBCHTest",
-  "rpc": [
-    "https://smart-bitcoin-cash-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-testnet.smartbch.org",
-    "https://smartbch.devops.cash/testnet"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Bitcoin Cash Test Token",

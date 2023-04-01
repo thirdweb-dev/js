@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "PepChain Churchill",
   "chain": "PEP",
-  "rpc": [
-    "https://pepchain-churchill.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://churchill-rpc.pepchain.io"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "PepChain Churchill Ether",

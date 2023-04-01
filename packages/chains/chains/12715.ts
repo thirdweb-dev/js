@@ -3,10 +3,7 @@ export default {
   "name": "Rikeza Network Testnet",
   "title": "Rikeza Network Testnet",
   "chain": "Rikeza",
-  "rpc": [
-    "https://rikeza-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.rikscan.com"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Rikeza",

@@ -10,8 +10,7 @@ export default {
   },
   "rpc": [
     "https://europa-skale-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.skalenodes.com/v1/elated-tan-skat",
-    "wss://mainnet.skalenodes.com/v1/elated-tan-skat"
+    "https://mainnet.skalenodes.com/v1/elated-tan-skat"
   ],
   "faucets": [
     "https://ruby.exchange/faucet.html",

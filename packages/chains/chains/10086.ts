@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "SJATSH",
   "chain": "ETH",
-  "rpc": [
-    "https://sjatsh.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "http://geth.free.idcfengye.com"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",

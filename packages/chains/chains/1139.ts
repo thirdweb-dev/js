@@ -2,11 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "MathChain",
   "chain": "MATH",
-  "rpc": [
-    "https://mathchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mathchain-asia.maiziqianbao.net/rpc",
-    "https://mathchain-us.maiziqianbao.net/rpc"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "MathChain",

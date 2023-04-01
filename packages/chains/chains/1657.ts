@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Btachain",
   "chain": "btachain",
-  "rpc": [
-    "https://btachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://dataseed1.btachain.com/"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Bitcoin Asset",

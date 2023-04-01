@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "HashKey Chain Testnet",
   "chain": "HashKey",
-  "rpc": [
-    "https://hashkey-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.hashkeychain/rpc"
-  ],
+  "rpc": [],
   "faucets": [
     "https://testnet.hashkeychain/faucet"
   ],

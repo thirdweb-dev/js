@@ -8,10 +8,7 @@ export default {
     "height": 512,
     "format": "png"
   },
-  "rpc": [
-    "https://nebula-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.rpc.novanetwork.io:9070"
-  ],
+  "rpc": [],
   "faucets": [
     "https://faucet.novanetwork.io"
   ],

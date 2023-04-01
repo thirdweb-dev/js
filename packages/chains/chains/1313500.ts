@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Xerom",
   "chain": "XERO",
-  "rpc": [
-    "https://xerom.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.xerom.org"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Xerom Ether",

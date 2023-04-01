@@ -2,13 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Dehvo",
   "chain": "Dehvo",
-  "rpc": [
-    "https://dehvo.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://connect.dehvo.com",
-    "https://rpc.dehvo.com",
-    "https://rpc1.dehvo.com",
-    "https://rpc2.dehvo.com"
-  ],
+  "rpc": [],
   "faucets": [
     "https://buy.dehvo.com"
   ],

@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Zeeth Chain",
   "chain": "ZeethChain",
-  "rpc": [
-    "https://zeeth-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.zeeth.io"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Zeeth Token",

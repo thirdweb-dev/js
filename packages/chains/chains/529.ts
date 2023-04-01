@@ -8,10 +8,7 @@ export default {
     "height": 512,
     "format": "png"
   },
-  "rpc": [
-    "https://firechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.rpc1.thefirechain.com"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Firechain",

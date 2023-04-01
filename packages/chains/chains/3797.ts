@@ -10,7 +10,6 @@ export default {
   },
   "rpc": [
     "https://alveychain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.alveychain.com/rpc",
     "https://rpc2.alvey.io/rpc"
   ],
   "faucets": [],

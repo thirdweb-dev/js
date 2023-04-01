@@ -11,8 +11,7 @@ export default {
   "rpc": [
     "https://nexi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.chain.nexi.technology/",
-    "https://chain.nexilix.com",
-    "https://chain.nexi.evmnode.online"
+    "https://chain.nexilix.com"
   ],
   "faucets": [],
   "nativeCurrency": {

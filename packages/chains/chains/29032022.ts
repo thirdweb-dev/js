@@ -8,10 +8,7 @@ export default {
     "height": 256,
     "format": "png"
   },
-  "rpc": [
-    "https://flachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://flachain.flaexchange.top/"
-  ],
+  "rpc": [],
   "features": [
     {
       "name": "EIP155"

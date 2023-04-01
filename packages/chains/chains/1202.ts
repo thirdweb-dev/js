@@ -2,11 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "World Trade Technical Chain Mainnet",
   "chain": "WTT",
-  "rpc": [
-    "https://world-trade-technical-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.cadaut.com",
-    "wss://rpc.cadaut.com/ws"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "World Trade Token",

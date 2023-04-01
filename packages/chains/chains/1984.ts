@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Eurus Testnet",
   "chain": "EUN",
-  "rpc": [
-    "https://eurus-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.eurus.network"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Eurus",

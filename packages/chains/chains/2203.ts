@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Bitcoin EVM",
   "chain": "Bitcoin EVM",
-  "rpc": [
-    "https://bitcoin-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://connect.bitcoinevm.com"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Bitcoin",

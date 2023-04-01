@@ -4,7 +4,6 @@ export default {
   "chain": "BSC",
   "rpc": [
     "https://binance.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "wss://bsc-ws-node.nariox.org",
     "https://bsc.publicnode.com",
     "https://bsc-dataseed4.ninicoin.io",
     "https://bsc-dataseed3.ninicoin.io",

@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "EZChain C-Chain Mainnet",
   "chain": "EZC",
-  "rpc": [
-    "https://ezchain-c-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.ezchain.com/ext/bc/C/rpc"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "EZChain",

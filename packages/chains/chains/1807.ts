@@ -8,10 +8,7 @@ export default {
     "height": 251,
     "format": "svg"
   },
-  "rpc": [
-    "https://rabbit-analog-testnet-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rabbit.analog-rpc.com"
-  ],
+  "rpc": [],
   "faucets": [
     "https://analogfaucet.com"
   ],

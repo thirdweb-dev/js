@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Molereum Network",
   "chain": "ETH",
-  "rpc": [
-    "https://molereum-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://molereum.jdubedition.com"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Molereum Ether",

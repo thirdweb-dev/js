@@ -8,10 +8,7 @@ export default {
     "height": 800,
     "format": "png"
   },
-  "rpc": [
-    "https://piece-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc0.piecenetwork.com"
-  ],
+  "rpc": [],
   "faucets": [
     "https://piecenetwork.com/faucet"
   ],

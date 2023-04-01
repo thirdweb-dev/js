@@ -5,8 +5,7 @@ export default {
   "chain": "ALTR",
   "rpc": [
     "https://atelier.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://1971.network/atlr",
-    "wss://1971.network/atlr"
+    "https://1971.network/atlr"
   ],
   "faucets": [],
   "nativeCurrency": {

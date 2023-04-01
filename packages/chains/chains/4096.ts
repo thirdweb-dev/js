@@ -10,8 +10,7 @@ export default {
   },
   "rpc": [
     "https://bitindi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-testnet.bitindi.org",
-    "https://testnet-rpc.bitindi.org"
+    "https://rpc-testnet.bitindi.org"
   ],
   "faucets": [
     "https://faucet.bitindi.org"

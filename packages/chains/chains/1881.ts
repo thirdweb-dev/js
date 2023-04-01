@@ -8,10 +8,7 @@ export default {
     "height": 512,
     "format": "png"
   },
-  "rpc": [
-    "https://gitshock-cartenz-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.cartenz.works"
-  ],
+  "rpc": [],
   "features": [
     {
       "name": "EIP155"

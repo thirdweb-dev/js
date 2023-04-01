@@ -8,10 +8,7 @@ export default {
     "height": 400,
     "format": "png"
   },
-  "rpc": [
-    "https://excoincial-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.exlscan.com"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Exlcoin",

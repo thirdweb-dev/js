@@ -2,11 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "IPOS Network",
   "chain": "IPOS",
-  "rpc": [
-    "https://ipos-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.iposlab.com",
-    "https://rpc2.iposlab.com"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "IPOS Network Ether",

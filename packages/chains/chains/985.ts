@@ -4,8 +4,7 @@ export default {
   "chain": "MEMO",
   "rpc": [
     "https://memo-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://chain.metamemo.one:8501",
-    "wss://chain.metamemo.one:16801"
+    "https://chain.metamemo.one:8501"
   ],
   "faucets": [
     "https://faucet.metamemo.one/"

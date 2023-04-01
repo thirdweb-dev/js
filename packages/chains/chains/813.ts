@@ -8,8 +8,7 @@ export default {
     "https://evm-dataseed2.meerscan.io",
     "https://evm-dataseed3.meerscan.io",
     "https://evm-dataseed.meerscan.com",
-    "https://evm-dataseed1.meerscan.com",
-    "https://evm-dataseed2.meerscan.com"
+    "https://evm-dataseed1.meerscan.com"
   ],
   "faucets": [],
   "nativeCurrency": {

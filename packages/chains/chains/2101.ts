@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Ecoball Testnet Espuma",
   "chain": "ECO",
-  "rpc": [
-    "https://ecoball-testnet-espuma.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.ecoball.org/espuma/"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Espuma Coin",

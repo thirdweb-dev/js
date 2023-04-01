@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Dos Fuji Subnet",
   "chain": "DOS",
-  "rpc": [
-    "https://dos-fuji-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://test.doschain.com/jsonrpc"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Dos Native Token",

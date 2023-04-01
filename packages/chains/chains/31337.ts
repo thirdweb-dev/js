@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "GoChain Testnet",
   "chain": "GO",
-  "rpc": [
-    "https://gochain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.gochain.io"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "GoChain Coin",

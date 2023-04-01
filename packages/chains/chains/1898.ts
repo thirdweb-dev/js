@@ -2,11 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "BON Network",
   "chain": "BON",
-  "rpc": [
-    "https://bon-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "http://rpc.boyanet.org:8545",
-    "ws://rpc.boyanet.org:8546"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "BOYACoin",

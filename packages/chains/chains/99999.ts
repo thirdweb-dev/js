@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "UB Smart Chain",
   "chain": "USC",
-  "rpc": [
-    "https://ub-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.uschain.network"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "UBC",

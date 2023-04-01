@@ -4,8 +4,7 @@ export default {
   "chain": "PixieChain",
   "rpc": [
     "https://pixie-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://http-testnet.chain.pixie.xyz",
-    "wss://ws-testnet.chain.pixie.xyz"
+    "https://http-testnet.chain.pixie.xyz"
   ],
   "faucets": [
     "https://chain.pixie.xyz/faucet"

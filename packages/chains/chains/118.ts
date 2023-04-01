@@ -8,10 +8,7 @@ export default {
     "height": 288,
     "format": "png"
   },
-  "rpc": [
-    "https://arcology-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.arcology.network/rpc"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Arcology Coin",

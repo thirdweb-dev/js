@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "DAX CHAIN",
   "chain": "DAX",
-  "rpc": [
-    "https://dax-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.prodax.io"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Prodax",

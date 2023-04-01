@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Oort Mainnet",
   "chain": "Oort Mainnet",
-  "rpc": [
-    "https://oort.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.oortech.com"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Oort",

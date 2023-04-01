@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Singularity ZERO Testnet",
   "chain": "ZERO",
-  "rpc": [
-    "https://singularity-zero-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://betaenv.singularity.gold:18545"
-  ],
+  "rpc": [],
   "faucets": [
     "https://nft.singularity.gold"
   ],

@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Orlando Chain",
   "chain": "ORL",
-  "rpc": [
-    "https://orlando-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-testnet.orlchain.com"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Orlando",

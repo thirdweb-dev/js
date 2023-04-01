@@ -19,8 +19,7 @@ export default {
   },
   "rpc": [
     "https://jellie.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://jellie-rpc.twala.io/",
-    "wss://jellie-rpc-wss.twala.io/"
+    "https://jellie-rpc.twala.io/"
   ],
   "faucets": [],
   "infoURL": "https://twala.io/",

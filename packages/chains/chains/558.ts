@@ -2,13 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Tao Network",
   "chain": "TAO",
-  "rpc": [
-    "https://tao-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.testnet.tao.network",
-    "http://rpc.testnet.tao.network:8545",
-    "https://rpc.tao.network",
-    "wss://rpc.tao.network"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Tao",

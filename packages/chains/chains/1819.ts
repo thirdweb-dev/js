@@ -8,17 +8,7 @@ export default {
     "height": 250,
     "format": "png"
   },
-  "rpc": [
-    "https://cube-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://http-testnet.cube.network",
-    "wss://ws-testnet.cube.network",
-    "https://http-testnet-sg.cube.network",
-    "wss://ws-testnet-sg.cube.network",
-    "https://http-testnet-jp.cube.network",
-    "wss://ws-testnet-jp.cube.network",
-    "https://http-testnet-us.cube.network",
-    "wss://ws-testnet-us.cube.network"
-  ],
+  "rpc": [],
   "faucets": [
     "https://faucet.cube.network"
   ],

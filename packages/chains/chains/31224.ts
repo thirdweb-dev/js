@@ -8,10 +8,7 @@ export default {
     "height": 830,
     "format": "png"
   },
-  "rpc": [
-    "https://cloudtx-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.cloudtx.finance"
-  ],
+  "rpc": [],
   "faucets": [
     "https://faucet.cloudtx.finance"
   ],

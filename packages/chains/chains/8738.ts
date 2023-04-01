@@ -4,8 +4,7 @@ export default {
   "chain": "ALPH",
   "rpc": [
     "https://alph-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.alph.network",
-    "wss://rpc.alph.network"
+    "https://rpc.alph.network"
   ],
   "faucets": [],
   "nativeCurrency": {

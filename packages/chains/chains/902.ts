@@ -8,10 +8,7 @@ export default {
     "height": 613,
     "format": "png"
   },
-  "rpc": [
-    "https://garizon-testnet-stage2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://s2-testnet.garizon.net/rpc"
-  ],
+  "rpc": [],
   "faucets": [
     "https://faucet-testnet.garizon.com"
   ],

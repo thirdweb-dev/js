@@ -8,10 +8,7 @@ export default {
     "height": 1494,
     "format": "png"
   },
-  "rpc": [
-    "https://fibonacci.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://node1.fibo-api.asia"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "FIBONACCI UTILITY TOKEN",

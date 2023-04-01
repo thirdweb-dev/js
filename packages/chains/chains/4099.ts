@@ -8,11 +8,7 @@ export default {
     "height": 72,
     "format": "png"
   },
-  "rpc": [
-    "https://bitindi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    " https://rpc-mainnet.bitindi.org",
-    "https://mainnet-rpc.bitindi.org"
-  ],
+  "rpc": [],
   "faucets": [
     "https://faucet.bitindi.org"
   ],

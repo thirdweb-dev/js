@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Teleport",
   "chain": "Teleport",
-  "rpc": [
-    "https://teleport.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://evm-rpc.teleport.network"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Tele",

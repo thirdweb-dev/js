@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Ambros Chain Mainnet",
   "chain": "ambroschain",
-  "rpc": [
-    "https://ambros-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.ambros.network"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "AMBROS",

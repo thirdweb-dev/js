@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Web3Q Mainnet",
   "chain": "Web3Q",
-  "rpc": [
-    "https://web3q.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.web3q.io:8545"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Web3Q",

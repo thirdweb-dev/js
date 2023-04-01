@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "DYNO Testnet",
   "chain": "DYNO",
-  "rpc": [
-    "https://dyno-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://tapi.dynoprotocol.com"
-  ],
+  "rpc": [],
   "faucets": [
     "https://faucet.dynoscan.io"
   ],

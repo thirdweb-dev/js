@@ -5,9 +5,7 @@ export default {
   "rpc": [
     "https://smart-bitcoin-cash.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://smartbch.greyh.at",
-    "https://rpc-mainnet.smartbch.org",
-    "https://smartbch.fountainhead.cash/mainnet",
-    "https://smartbch.devops.cash/mainnet"
+    "https://smartbch.fountainhead.cash/mainnet"
   ],
   "faucets": [],
   "nativeCurrency": {

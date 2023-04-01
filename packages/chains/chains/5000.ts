@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Mantle",
   "chain": "ETH",
-  "rpc": [
-    "https://mantle.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.mantle.xyz"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "BitDAO",

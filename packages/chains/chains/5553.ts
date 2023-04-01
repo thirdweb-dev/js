@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Nahmii Testnet",
   "chain": "Nahmii",
-  "rpc": [
-    "https://nahmii-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://l2.testnet.nahmii.io"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",

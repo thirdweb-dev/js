@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Genesis L1 testnet",
   "chain": "genesis",
-  "rpc": [
-    "https://genesis-l1-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testrpc.genesisl1.org"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "L1 testcoin",

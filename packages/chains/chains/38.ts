@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Valorbit",
   "chain": "VAL",
-  "rpc": [
-    "https://valorbit.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.valorbit.com/v2"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Valorbit",

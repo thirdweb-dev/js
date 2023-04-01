@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Atheios",
   "chain": "ATH",
-  "rpc": [
-    "https://atheios.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://wallet.atheios.com:8797"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Atheios Ether",

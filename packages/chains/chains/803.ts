@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Haic",
   "chain": "Haic",
-  "rpc": [
-    "https://haic.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://orig.haichain.io/"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Haicoin",

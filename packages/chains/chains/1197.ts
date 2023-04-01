@@ -8,10 +8,7 @@ export default {
     "height": 250,
     "format": "png"
   },
-  "rpc": [
-    "https://iora-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://dataseed.iorachain.com"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Iora",

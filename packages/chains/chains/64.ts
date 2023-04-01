@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Ellaism",
   "chain": "ELLA",
-  "rpc": [
-    "https://ellaism.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://jsonrpc.ellaism.org"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Ellaism Ether",

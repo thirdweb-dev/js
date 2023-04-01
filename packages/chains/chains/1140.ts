@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "MathChain Testnet",
   "chain": "MATH",
-  "rpc": [
-    "https://mathchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://galois-hk.maiziqianbao.net/rpc"
-  ],
+  "rpc": [],
   "faucets": [
     "https://scan.boka.network/#/Galois/faucet"
   ],

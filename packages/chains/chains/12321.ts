@@ -8,10 +8,7 @@ export default {
     "height": 512,
     "format": "svg"
   },
-  "rpc": [
-    "https://blg-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.blgchain.com"
-  ],
+  "rpc": [],
   "faucets": [
     "https://faucet.blgchain.com"
   ],

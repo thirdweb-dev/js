@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Htmlcoin Mainnet",
   "chain": "mainnet",
-  "rpc": [
-    "https://htmlcoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://janus.htmlcoin.com/api/"
-  ],
+  "rpc": [],
   "faucets": [
     "https://gruvin.me/htmlcoin"
   ],

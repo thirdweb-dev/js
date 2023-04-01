@@ -8,10 +8,7 @@ export default {
     "height": 2048,
     "format": "png"
   },
-  "rpc": [
-    "https://tlchain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-rpc.tlxscan.com/"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "TLChain Network",

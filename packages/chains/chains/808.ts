@@ -8,10 +8,7 @@ export default {
     "height": 200,
     "format": "png"
   },
-  "rpc": [
-    "https://portal-fantasy-chain-test.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/portal-fantasy/testnet/rpc"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Portal Fantasy Token",

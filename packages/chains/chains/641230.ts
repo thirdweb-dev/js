@@ -10,8 +10,7 @@ export default {
   },
   "rpc": [
     "https://bear-network-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://brnkc-mainnet.bearnetwork.net",
-    "https://brnkc-mainnet1.bearnetwork.net"
+    "https://brnkc-mainnet.bearnetwork.net"
   ],
   "faucets": [],
   "nativeCurrency": {

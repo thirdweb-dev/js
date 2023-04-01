@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Teleport Testnet",
   "chain": "Teleport",
-  "rpc": [
-    "https://teleport-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://evm-rpc.testnet.teleport.network"
-  ],
+  "rpc": [],
   "faucets": [
     "https://chain-docs.teleport.network/testnet/faucet.html"
   ],

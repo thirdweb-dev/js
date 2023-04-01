@@ -2,11 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Freight Trust Network",
   "chain": "EDI",
-  "rpc": [
-    "https://freight-trust-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "http://13.57.207.168:3435",
-    "https://app.freighttrust.net/ftn/${API_KEY}"
-  ],
+  "rpc": [],
   "faucets": [
     "http://faucet.freight.sh"
   ],

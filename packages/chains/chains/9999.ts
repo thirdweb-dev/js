@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "myOwn Testnet",
   "chain": "myOwn",
-  "rpc": [
-    "https://myown-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://geth.dev.bccloud.net"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "MYN",

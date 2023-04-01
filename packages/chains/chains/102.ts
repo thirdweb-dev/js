@@ -8,12 +8,7 @@ export default {
     "height": 192,
     "format": "png"
   },
-  "rpc": [
-    "https://web3games-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc-0.web3games.org/evm",
-    "https://testnet-rpc-1.web3games.org/evm",
-    "https://testnet-rpc-2.web3games.org/evm"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Web3Games",

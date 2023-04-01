@@ -4,8 +4,7 @@ export default {
   "chain": "Imversed",
   "rpc": [
     "https://imversed.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://jsonrpc.imversed.network",
-    "https://ws-jsonrpc.imversed.network"
+    "https://jsonrpc.imversed.network"
   ],
   "faucets": [],
   "nativeCurrency": {

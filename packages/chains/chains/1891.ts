@@ -10,8 +10,7 @@ export default {
   },
   "rpc": [
     "https://lightlink-pegasus-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://replicator-01.pegasus.lightlink.io/rpc/v1",
-    "https://replicator-02.pegasus.lightlink.io/rpc/v1"
+    "https://replicator-01.pegasus.lightlink.io/rpc/v1"
   ],
   "features": [
     {

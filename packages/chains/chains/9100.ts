@@ -2,11 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Genesis Coin",
   "chain": "Genesis",
-  "rpc": [
-    "https://genesis-coin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://genesis-gn.com",
-    "wss://genesis-gn.com"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "GN Coin",

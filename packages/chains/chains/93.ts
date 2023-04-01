@@ -8,10 +8,7 @@ export default {
     "height": 613,
     "format": "png"
   },
-  "rpc": [
-    "https://garizon-stage3.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://s3.garizon.net/rpc"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Garizon",

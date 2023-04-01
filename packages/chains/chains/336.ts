@@ -5,11 +5,9 @@ export default {
   "rpc": [
     "https://shiden.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://shiden.api.onfinality.io/public",
-    "https://shiden-rpc.dwellir.com",
     "https://shiden.public.blastapi.io",
     "wss://shiden.api.onfinality.io/public-ws",
-    "wss://shiden.public.blastapi.io",
-    "wss://shiden-rpc.dwellir.com"
+    "wss://shiden.public.blastapi.io"
   ],
   "faucets": [],
   "nativeCurrency": {

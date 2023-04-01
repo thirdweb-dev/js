@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Akroma",
   "chain": "AKA",
-  "rpc": [
-    "https://akroma.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://remote.akroma.io"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Akroma Ether",

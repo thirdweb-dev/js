@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Pirl",
   "chain": "PIRL",
-  "rpc": [
-    "https://pirl.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://wallrpc.pirl.io"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Pirl Ether",

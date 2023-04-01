@@ -2,11 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "KLYNTAR",
   "chain": "KLY",
-  "rpc": [
-    "https://klyntar.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://evm.klyntar.org/kly_evm_rpc",
-    "https://evm.klyntarscan.org/kly_evm_rpc"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "KLYNTAR",

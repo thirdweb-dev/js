@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Haymo Testnet",
   "chain": "tHYM",
-  "rpc": [
-    "https://haymo-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet1.haymo.network"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "HAYMO",

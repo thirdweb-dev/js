@@ -5,8 +5,7 @@ export default {
   "rpc": [
     "https://kcc.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.kcc.network",
-    "https://kcc.mytokenpocket.vip",
-    "https://public-rpc.blockpi.io/http/kcc"
+    "https://kcc.mytokenpocket.vip"
   ],
   "faucets": [
     "https://faucet.kcc.io/",

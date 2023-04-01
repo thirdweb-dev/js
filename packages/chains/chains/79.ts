@@ -4,7 +4,6 @@ export default {
   "chain": "Zenith",
   "rpc": [
     "https://zenith.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://dataserver-us-1.zenithchain.co/",
     "https://dataserver-asia-3.zenithchain.co/",
     "https://dataserver-asia-4.zenithchain.co/",
     "https://dataserver-asia-2.zenithchain.co/",

@@ -2,11 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Nepal Blockchain Network",
   "chain": "YETI",
-  "rpc": [
-    "https://nepal-blockchain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.nepalblockchain.dev",
-    "https://api.nepalblockchain.network"
-  ],
+  "rpc": [],
   "faucets": [
     "https://faucet.nepalblockchain.network"
   ],

@@ -13,11 +13,9 @@ export default {
     "https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://polygon-mainnet.infura.io/v3/${INFURA_API_KEY}",
     "https://polygon-rpc.com/",
-    "https://rpc-mainnet.matic.network",
     "https://matic-mainnet.chainstacklabs.com",
     "https://rpc-mainnet.maticvigil.com",
     "https://rpc-mainnet.matic.quiknode.pro",
-    "https://matic-mainnet-full-rpc.bwarelabs.com",
     "https://polygon-bor.publicnode.com"
   ],
   "faucets": [],

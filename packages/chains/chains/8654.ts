@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Toki Network",
   "chain": "TOKI",
-  "rpc": [
-    "https://toki-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.buildwithtoki.com/v0/rpc"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Toki",

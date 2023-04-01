@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Musicoin",
   "chain": "MUSIC",
-  "rpc": [
-    "https://musicoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mewapi.musicoin.tw"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Musicoin",

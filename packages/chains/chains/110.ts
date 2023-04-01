@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Proton Testnet",
   "chain": "XPR",
-  "rpc": [
-    "https://proton-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://protontestnet.greymass.com/"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Proton",

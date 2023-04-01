@@ -10,10 +10,7 @@ export default {
     "symbol": "OXYN",
     "decimals": 18
   },
-  "rpc": [
-    "https://opulent-x-beta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://connect.opulent-x.com"
-  ],
+  "rpc": [],
   "faucets": [],
   "infoURL": "https://beta.opulent-x.com",
   "explorers": [

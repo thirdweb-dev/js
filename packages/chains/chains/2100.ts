@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Ecoball Mainnet",
   "chain": "ECO",
-  "rpc": [
-    "https://ecoball.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.ecoball.org/ecoball/"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Ecoball Coin",

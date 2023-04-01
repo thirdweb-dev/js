@@ -11,10 +11,7 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "rpc": [
-    "https://arbitrum-rinkeby.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rinkeby.arbitrum.io/rpc"
-  ],
+  "rpc": [],
   "faucets": [
     "http://fauceth.komputing.org?chain=421611&address=${ADDRESS}"
   ],

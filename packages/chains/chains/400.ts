@@ -8,10 +8,7 @@ export default {
     "height": 541,
     "format": "png"
   },
-  "rpc": [
-    "https://hyperonchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.hyperonchain.com"
-  ],
+  "rpc": [],
   "faucets": [
     "https://faucet.hyperonchain.com"
   ],

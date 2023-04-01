@@ -2,12 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Lucky Network",
   "chain": "LN",
-  "rpc": [
-    "https://lucky-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.luckynetwork.org",
-    "wss://ws.lnscan.org",
-    "https://rpc.lnscan.org"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Lucky",

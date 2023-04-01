@@ -8,10 +8,7 @@ export default {
     "height": 237,
     "format": "png"
   },
-  "rpc": [
-    "https://oychain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.mainnet.oychain.io"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "OYchain Token",

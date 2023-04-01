@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Astar",
   "chain": "ASTR",
-  "rpc": [
-    "https://astar.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.astar.network:8545"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Astar",

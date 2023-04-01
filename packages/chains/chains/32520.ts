@@ -4,10 +4,7 @@ export default {
   "chain": "Brise",
   "rpc": [
     "https://bitgert.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.icecreamswap.com",
-    "https://mainnet-rpc.brisescan.com",
-    "https://chainrpc.com",
-    "https://serverrpc.com"
+    "https://rpc.icecreamswap.com"
   ],
   "faucets": [],
   "nativeCurrency": {

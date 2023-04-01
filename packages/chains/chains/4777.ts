@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "BlackFort Exchange Network Testnet",
   "chain": "TBXN",
-  "rpc": [
-    "https://blackfort-exchange-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.blackfort.network/rpc"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "BlackFort Testnet Token",

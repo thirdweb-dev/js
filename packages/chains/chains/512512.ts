@@ -4,8 +4,7 @@ export default {
   "chain": "CMP",
   "rpc": [
     "https://cmp-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://galaxy.block.caduceus.foundation",
-    "wss://galaxy.block.caduceus.foundation"
+    "https://galaxy.block.caduceus.foundation"
   ],
   "faucets": [
     "https://dev.caduceus.foundation/testNetwork"

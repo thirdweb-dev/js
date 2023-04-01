@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Lightstreams Mainnet",
   "chain": "PHT",
-  "rpc": [
-    "https://lightstreams.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://node.mainnet.lightstreams.io"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Lightstreams PHT",

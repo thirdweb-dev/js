@@ -3,11 +3,7 @@ export default {
   "name": "Ropsten",
   "title": "Ethereum Testnet Ropsten",
   "chain": "ETH",
-  "rpc": [
-    "https://ropsten.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://ropsten.infura.io/v3/${INFURA_API_KEY}",
-    "wss://ropsten.infura.io/ws/v3/${INFURA_API_KEY}"
-  ],
+  "rpc": [],
   "faucets": [
     "http://fauceth.komputing.org?chain=3&address=${ADDRESS}",
     "https://faucet.ropsten.be?${ADDRESS}"

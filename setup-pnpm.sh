@@ -21,6 +21,23 @@ else
     # if it is, just confirm that to the user
     echo "✅ \"pnpm\" is already installed"
 fi
+# check if pnpm is on the latest version
+if [ "$(pnpm -v)" != "8.1.0" ]
+then
+    echo "⌛️ \"pnpm\" is not on the latest version, updating it now..."
+    # if not, update it using corepack if that is available
+    if command -v corepack &> /dev/null
+    then
+        corepack enable
+         corepack prepare pnpm@8.1.0 --activate
+    else
+        # if not, update it using npm
+        npm install -g pnpm
+    fi
+else
+    # if it is, just confirm that to the user
+    echo "✅ \"pnpm\" is on the latest version"
+fi
 
 # check if there is still a leftover yarn.lock file
 if [ -f "yarn.lock" ]

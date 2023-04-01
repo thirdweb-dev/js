@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Teslafunds",
   "chain": "TSF",
-  "rpc": [
-    "https://teslafunds.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://tsfapi.europool.me"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Teslafunds Ether",

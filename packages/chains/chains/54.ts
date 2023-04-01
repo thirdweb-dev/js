@@ -8,10 +8,7 @@ export default {
     "height": 250,
     "format": "png"
   },
-  "rpc": [
-    "https://openpiece.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.openpiece.io"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Belly",

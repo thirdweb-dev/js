@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Scroll Pre-Alpha Testnet",
   "chain": "ETH",
-  "rpc": [
-    "https://scroll-pre-alpha-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://prealpha-rpc.scroll.io/l2"
-  ],
+  "rpc": [],
   "faucets": [
     "https://prealpha.scroll.io/faucet"
   ],

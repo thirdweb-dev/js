@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Auxilium Network Mainnet",
   "chain": "AUX",
-  "rpc": [
-    "https://auxilium-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.auxilium.global"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Auxilium coin",

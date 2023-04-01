@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Gather Devnet Network",
   "chain": "GTH",
-  "rpc": [
-    "https://gather-devnet-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://devnet.gather.network"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Gather",

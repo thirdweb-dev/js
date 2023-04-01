@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "IOLite",
   "chain": "ILT",
-  "rpc": [
-    "https://iolite.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://net.iolite.io"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "IOLite Ether",

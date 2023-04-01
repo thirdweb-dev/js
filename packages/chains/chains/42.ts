@@ -3,14 +3,7 @@ export default {
   "name": "Kovan",
   "title": "Ethereum Testnet Kovan",
   "chain": "ETH",
-  "rpc": [
-    "https://kovan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://kovan.poa.network",
-    "http://kovan.poa.network:8545",
-    "https://kovan.infura.io/v3/${INFURA_API_KEY}",
-    "wss://kovan.infura.io/ws/v3/${INFURA_API_KEY}",
-    "ws://kovan.poa.network:8546"
-  ],
+  "rpc": [],
   "faucets": [
     "http://fauceth.komputing.org?chain=42&address=${ADDRESS}",
     "https://faucet.kovan.network",

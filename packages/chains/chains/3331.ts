@@ -8,10 +8,7 @@ export default {
     "height": 1050,
     "format": "png"
   },
-  "rpc": [
-    "https://zcore-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-testnet.zcore.cash"
-  ],
+  "rpc": [],
   "faucets": [
     "https://faucet.zcore.cash"
   ],

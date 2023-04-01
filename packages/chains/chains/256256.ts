@@ -4,8 +4,7 @@ export default {
   "chain": "CMP",
   "rpc": [
     "https://cmp.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.block.caduceus.foundation",
-    "wss://mainnet.block.caduceus.foundation"
+    "https://mainnet.block.caduceus.foundation"
   ],
   "faucets": [],
   "nativeCurrency": {

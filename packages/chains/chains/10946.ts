@@ -11,7 +11,6 @@ export default {
   "rpc": [
     "https://quadrans-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.quadrans.io",
-    "https://rpcna.quadrans.io",
     "https://rpceu.quadrans.io"
   ],
   "faucets": [],

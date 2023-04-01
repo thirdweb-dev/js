@@ -9,10 +9,7 @@ export default {
     "height": 300,
     "format": "png"
   },
-  "rpc": [
-    "https://ganache.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://127.0.0.1:7545"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Ganache Test Ether",

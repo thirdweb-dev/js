@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Decimal Smart Chain Mainnet",
   "chain": "DSC",
-  "rpc": [
-    "https://decimal-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://node.decimalchain.com/web3"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Decimal",

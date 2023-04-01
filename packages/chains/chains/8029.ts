@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "MDGL Testnet",
   "chain": "MDGL",
-  "rpc": [
-    "https://mdgl-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.mdgl.io"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "MDGL Token",

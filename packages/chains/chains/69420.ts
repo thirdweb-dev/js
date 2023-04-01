@@ -3,10 +3,7 @@ export default {
   "name": "Condrieu",
   "title": "Ethereum Verkle Testnet Condrieu",
   "chain": "ETH",
-  "rpc": [
-    "https://condrieu.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.condrieu.ethdevops.io:8545"
-  ],
+  "rpc": [],
   "faucets": [
     "https://faucet.condrieu.ethdevops.io"
   ],

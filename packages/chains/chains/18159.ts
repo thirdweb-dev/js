@@ -11,10 +11,7 @@ export default {
   },
   "rpc": [
     "https://proof-of-memes.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-rpc.memescan.io",
-    "https://mainnet-rpc2.memescan.io",
-    "https://mainnet-rpc3.memescan.io",
-    "https://mainnet-rpc4.memescan.io"
+    "https://mainnet-rpc.memescan.io"
   ],
   "faucets": [],
   "nativeCurrency": {

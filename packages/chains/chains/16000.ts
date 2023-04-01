@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "MetaDot Mainnet",
   "chain": "MTT",
-  "rpc": [
-    "https://metadot.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.metadot.network"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "MetaDot Token",

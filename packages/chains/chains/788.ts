@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Aerochain Testnet",
   "chain": "Aerochain",
-  "rpc": [
-    "https://aerochain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.aerochain.id/"
-  ],
+  "rpc": [],
   "faucets": [
     "https://faucet.aerochain.id/"
   ],

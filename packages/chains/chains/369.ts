@@ -6,11 +6,7 @@ export default {
   "chainId": 369,
   "networkId": 369,
   "infoURL": "https://pulsechain.com/",
-  "rpc": [
-    "https://pulsechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.mainnet.pulsechain.com/",
-    "wss://rpc.mainnet.pulsechain.com/"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Pulse",

@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "TOOL Global Testnet",
   "chain": "OLO",
-  "rpc": [
-    "https://tool-global-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-web3.wolot.io"
-  ],
+  "rpc": [],
   "faucets": [
     "https://testnet-explorer.wolot.io"
   ],

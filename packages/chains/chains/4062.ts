@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Nahmii 3 Testnet",
   "chain": "Nahmii",
-  "rpc": [
-    "https://nahmii-3-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://ngeth.testnet.n3.nahmii.io"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Goerli Ether",

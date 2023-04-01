@@ -8,10 +8,7 @@ export default {
     "height": 128,
     "format": "png"
   },
-  "rpc": [
-    "https://exzo-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.exzo.technology"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Exzo",

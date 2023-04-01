@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Theta Amber Testnet",
   "chain": "Theta",
-  "rpc": [
-    "https://theta-amber-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://eth-rpc-api-amber.thetatoken.org/rpc"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Theta Fuel",

@@ -2,12 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "POA Network Sokol",
   "chain": "POA",
-  "rpc": [
-    "https://poa-network-sokol.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://sokol.poa.network",
-    "wss://sokol.poa.network/wss",
-    "ws://sokol.poa.network:8546"
-  ],
+  "rpc": [],
   "faucets": [
     "https://faucet.poa.network"
   ],

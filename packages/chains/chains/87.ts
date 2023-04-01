@@ -10,8 +10,6 @@ export default {
   },
   "rpc": [
     "https://nova-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://connect.novanetwork.io",
-    "https://0x57.redjackstudio.com",
     "https://rpc.novanetwork.io:9070"
   ],
   "faucets": [],

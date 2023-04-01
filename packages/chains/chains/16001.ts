@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "MetaDot Testnet",
   "chain": "MTTTest",
-  "rpc": [
-    "https://metadot-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.metadot.network"
-  ],
+  "rpc": [],
   "faucets": [
     "https://faucet.metadot.network/"
   ],

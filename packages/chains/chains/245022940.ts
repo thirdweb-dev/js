@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Neon EVM TestNet",
   "chain": "Solana",
-  "rpc": [
-    "https://neon-evm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.neonevm.org"
-  ],
+  "rpc": [],
   "faucets": [],
   "icon": {
     "url": "ipfs://Qmcxevb3v8PEvnvfYgcG3bCBuPhe5YAdsHeaufDChSSR3Q",

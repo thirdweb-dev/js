@@ -4,8 +4,7 @@ export default {
   "chain": "QKI",
   "rpc": [
     "https://quarkblockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://hz.rpc.qkiscan.cn",
-    "https://jp.rpc.qkiscan.io"
+    "https://hz.rpc.qkiscan.cn"
   ],
   "faucets": [],
   "nativeCurrency": {

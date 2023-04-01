@@ -2,10 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "DxChain Testnet",
   "chain": "DxChain",
-  "rpc": [
-    "https://dxchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-http.dxchain.com"
-  ],
+  "rpc": [],
   "faucets": [
     "https://faucet.dxscan.io"
   ],
