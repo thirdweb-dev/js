@@ -15,7 +15,11 @@ export async function checkRpcs(chain, onBadRpc) {
       }
 
       try {
-        await validateChainId(rpc, chain.chainId, { timeout: 5000 });
+        await retry(
+          () => validateChainId(rpc, chain.chainId, { timeout: 5000 }),
+          5,
+          1000,
+        );
         return originalRpc;
       } catch (e) {
         if (onBadRpc) {
@@ -164,4 +168,33 @@ export async function validateChainId(
   if (!isChainIdEqual(returnData.result, chainId)) {
     throw new InvalidChainIdError(returnData.result, chainId);
   }
+}
+
+// a function to retry a promise-returning function
+//
+// @param {Function} fn - the function to retry
+// @param {number} retriesLeft - number of retries left
+// @param {number} interval - number of ms to wait between each retry
+// @param {Function} backoff - a function to determine the interval between retries
+// @returns {Promise} - a promise that resolves when no errors are thrown, and rejects after too many attempts
+export function retry(fn, retriesLeft = 5, interval = 1000, backoff) {
+  return new Promise((resolve, reject) => {
+    fn()
+      .then(resolve)
+      .catch((error) => {
+        setTimeout(
+          () => {
+            if (retriesLeft === 1) {
+              // reject('maximum retries exceeded');
+              reject(error);
+              return;
+            }
+
+            // Passing on "reject" is the important part
+            retry(fn, retriesLeft - 1, interval, backoff).then(resolve, reject);
+          },
+          backoff ? backoff(interval, retriesLeft) : interval,
+        );
+      });
+  });
 }

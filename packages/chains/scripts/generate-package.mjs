@@ -96,7 +96,7 @@ fs.writeFileSync(badRPCsFile, `# Bad RPCs\n\n`);
 let mismatchedChainIdErrors = [];
 let fetchErrors = [];
 
-const CHUNK_SIZE = 100;
+const CHUNK_SIZE = 250;
 
 let totalProcessed = 0;
 
@@ -231,7 +231,10 @@ If the chain ID is mismatched then the RPC is not actually connected to the chai
 }
 mismatchedChainIdErrors.forEach(({ chain, rpcUrl, error }) => {
   if (!hasWrittenChainIdHeader[chain.chainId]) {
-    fs.appendFileSync(badRPCsFile, `### ${chain.name} (${chain.chainId})\n\n`);
+    fs.appendFileSync(
+      badRPCsFile,
+      `\n#### ${chain.name} (${chain.chainId})\n\n`,
+    );
     hasWrittenChainIdHeader[chain.chainId] = true;
   }
   fs.appendFileSync(
@@ -243,7 +246,7 @@ mismatchedChainIdErrors.forEach(({ chain, rpcUrl, error }) => {
   ${error}
   \`\`\`
 </details>
-    \n\n`,
+\n\n`,
   );
 });
 
@@ -268,19 +271,21 @@ If the RPC is not responding then it is not useful.\n\n`,
 const hasWrittenFetchHeader = {};
 fetchErrors.forEach(({ chain, rpcUrl, error }) => {
   if (!hasWrittenFetchHeader[chain.chainId]) {
-    fs.appendFileSync(badRPCsFile, `### ${chain.name} (${chain.chainId})\n\n`);
+    fs.appendFileSync(
+      badRPCsFile,
+      `\n#### ${chain.name} (${chain.chainId})\n\n`,
+    );
     hasWrittenFetchHeader[chain.chainId] = true;
   }
   fs.appendFileSync(
     badRPCsFile,
     `<details>
-  <summary>\`${rpcUrl}\`</summary>
+  <summary>${rpcUrl}</summary>
 
   \`\`\`js
   ${error}
   \`\`\`
-</details>
-    \n\n`,
+</details>\n\n`,
   );
 });
 
