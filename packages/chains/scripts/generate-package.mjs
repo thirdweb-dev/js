@@ -113,17 +113,16 @@ while (chains.length > 0) {
         // chain explorers (may have icons)
         Promise.all(chain.explorers || []),
         // rpcs
-        checkRpcs(chain, (rpcUrl, error) => {
-          if (chain.chainId === 1337) {
-            // localhost errors are expected
-            return;
-          }
-          if (isInvalidChainIdError(error)) {
-            mismatchedChainIdErrors.push({ chain, rpcUrl, error });
-          } else {
-            fetchErrors.push({ chain, rpcUrl, error });
-          }
-        }),
+        // if the chain is localhost, we don't need to check the rpcs
+        chain.chainId === 1337
+          ? chain.rpc
+          : checkRpcs(chain, (rpcUrl, error) => {
+              if (isInvalidChainIdError(error)) {
+                mismatchedChainIdErrors.push({ chain, rpcUrl, error });
+              } else {
+                fetchErrors.push({ chain, rpcUrl, error });
+              }
+            }),
       ];
       if ("icon" in chain && typeof chain.icon === "string") {
         promises[0] = downloadIcon(chain.icon);
@@ -154,6 +153,7 @@ while (chains.length > 0) {
         chain.icon = icon;
       }
       if (explorers && explorers.length > 0) {
+        // @ts-ignore
         chain.explorers = explorers;
       }
       if (rpcs) {
@@ -209,12 +209,18 @@ export default ${JSON.stringify(chain, null, 2)} as const satisfies Chain;`,
 
 // write out the bad rpcs file
 // mismatch chain id errors are more important than fetch errors
-// sort the errors
+// sort the errors first by chain id then by rpc url within the chain id
 mismatchedChainIdErrors = mismatchedChainIdErrors.sort((a, b) => {
   if (a.chain.chainId < b.chain.chainId) {
     return -1;
   }
   if (a.chain.chainId > b.chain.chainId) {
+    return 1;
+  }
+  if (a.rpcUrl < b.rpcUrl) {
+    return -1;
+  }
+  if (a.rpcUrl > b.rpcUrl) {
     return 1;
   }
   return 0;
@@ -255,6 +261,12 @@ fetchErrors = fetchErrors.sort((a, b) => {
     return -1;
   }
   if (a.chain.chainId > b.chain.chainId) {
+    return 1;
+  }
+  if (a.rpcUrl < b.rpcUrl) {
+    return -1;
+  }
+  if (a.rpcUrl > b.rpcUrl) {
     return 1;
   }
   return 0;

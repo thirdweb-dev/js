@@ -4,7 +4,6 @@ export default {
   "chain": "XDC",
   "rpc": [
     "https://xinfin-xdc-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://erpc.xinfin.network",
     "https://rpc.xinfin.network"
   ],
   "faucets": [],

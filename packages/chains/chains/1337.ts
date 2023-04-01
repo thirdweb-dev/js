@@ -2,7 +2,9 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Localhost",
   "chain": "ETH",
-  "rpc": [],
+  "rpc": [
+    "http://localhost:8545"
+  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
