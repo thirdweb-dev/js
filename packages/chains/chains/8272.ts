@@ -8,10 +8,7 @@ export default {
     "height": 800,
     "format": "png"
   },
-  "rpc": [
-    "https://blockton-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.blocktonscan.com/"
-  ],
+  "rpc": [],
   "faucets": [
     "https://faucet.blocktonscan.com/"
   ],

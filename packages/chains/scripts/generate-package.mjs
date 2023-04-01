@@ -80,9 +80,9 @@ chains = chains
     };
   });
 
-const imports = [];
-const exports = [];
-const exportNames = [];
+let imports = [];
+let exports = [];
+let exportNames = [];
 
 const chainDir = `${chainsDir}`;
 // clean out the chains directory
@@ -206,6 +206,10 @@ export default ${JSON.stringify(chain, null, 2)} as const satisfies Chain;`,
     chains.length,
   );
 }
+// sort imports and exports
+imports = imports.sort();
+exports = exports.sort();
+exportNames = exportNames.sort();
 
 // write out the bad rpcs file
 // mismatch chain id errors are more important than fetch errors
@@ -313,11 +317,11 @@ export const defaultChains = [Ethereum, Goerli, Polygon, Mumbai, Arbitrum, Arbit
 export const allChains = [${exportNames.join(", ")}];
 
 const chainsById = {
-  ${exportNames.map((n) => `[${n}.chainId]: ${n}`).join(",\n")}
+  ${exportNames.map((n) => `[${n}.chainId]: ${n}`).join(", ")}
 } as const;
 
 const chainIdsBySlug = {
-  ${exportNames.map((n) => `[${n}.slug]: ${n}.chainId`).join(",\n")}
+  ${exportNames.map((n) => `[${n}.slug]: ${n}.chainId`).join(", ")}
 } as const;
 
 function isValidChainId(chainId: number): chainId is ChainId {
@@ -352,4 +356,5 @@ export type ChainSlug = keyof typeof chainIdsBySlug;
 export type ChainId = keyof typeof chainsById;`,
 );
 
+// force the process to exit, we're done
 process.exit(0);

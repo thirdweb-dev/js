@@ -162,7 +162,7 @@ If the RPC is not responding then it is not useful.
   <summary>https://rpc.shibachain.net</summary>
 
   ```js
-  Error: Request failed with status code 429
+  FetchError: invalid json response body at http://survey-smiles.com/ reason: Unexpected token < in JSON at position 0
   ```
 </details>
 
@@ -255,14 +255,6 @@ If the RPC is not responding then it is not useful.
 
 
 #### XinFin XDC Network (50)
-
-<details>
-  <summary>https://erpc.xinfin.network</summary>
-
-  ```js
-  Error: Request failed with status code 502
-  ```
-</details>
 
 <details>
   <summary>https://rpc1.xinfin.network</summary>
@@ -603,19 +595,19 @@ If the RPC is not responding then it is not useful.
 {
   "server_version": "d0860c4e",
   "chain_id": "71ee83bcf52142d61019d95f9cc5427ba6a0d7ff8accd9e2088ae2abeaf3d3dd",
-  "head_block_num": 188109830,
-  "last_irreversible_block_num": 188109494,
-  "last_irreversible_block_id": "0b3652b646c05f83d45547f1a2dc72f89c7935bfd39b62aab121a0fe31b6754c",
-  "head_block_id": "0b365406dde90453ffcf0b2d3b4c8c806761f353a26a3f207f99456250e5dbff",
-  "head_block_time": "2023-04-01T07:13:11.500",
-  "head_block_producer": "eosarabianet",
+  "head_block_num": 188113125,
+  "last_irreversible_block_num": 188112794,
+  "last_irreversible_block_id": "0b365f9ae6badbbdf9c3f97cb547bd45dfd0f396941bac4ca46e7af3fe04be41",
+  "head_block_id": "0b3660e536cace0b7f7c8dc32e9ea80145ca20fea02ca255737912fa527ee219",
+  "head_block_time": "2023-04-01T07:40:39.000",
+  "head_block_producer": "eosrio",
   "virtual_block_cpu_limit": 200000000,
   "virtual_block_net_limit": 1048576000,
   "block_cpu_limit": 200000,
   "block_net_limit": 1048576,
   "server_version_string": "v2.0.4",
-  "fork_db_head_block_num": 188109830,
-  "fork_db_head_block_id": "0b365406dde90453ffcf0b2d3b4c8c806761f353a26a3f207f99456250e5dbff",
+  "fork_db_head_block_num": 188113125,
+  "fork_db_head_block_id": "0b3660e536cace0b7f7c8dc32e9ea80145ca20fea02ca255737912fa527ee219",
   "server_full_version_string": "v2.0.4-d0860c4ecf59b1535ef39c6ac7cae606fdb6a3ff-dirty"
 }
   ```
@@ -758,7 +750,7 @@ If the RPC is not responding then it is not useful.
   <summary>https://rpc-mainnet.matic.network</summary>
 
   ```js
-  RequestTimeoutError: Request timed out after 5000ms
+  Error: Request failed with status code 404
   ```
 </details>
 
@@ -823,7 +815,7 @@ If the RPC is not responding then it is not useful.
   <summary>https://node.mainnet.lightstreams.io</summary>
 
   ```js
-  RequestTimeoutError: Request timed out after 5000ms
+  Error: Request failed with status code 502
   ```
 </details>
 
@@ -1569,7 +1561,7 @@ If the RPC is not responding then it is not useful.
   <summary>wss://rpc.cadaut.com/ws</summary>
 
   ```js
-  Error: read ECONNRESET
+  Error: Client network socket disconnected before secure TLS connection was established
   ```
 </details>
 
@@ -2217,13 +2209,24 @@ If the RPC is not responding then it is not useful.
 </details>
 
 
+#### Blockton Blockchain (8272)
+
+<details>
+  <summary>https://rpc.blocktonscan.com/</summary>
+
+  ```js
+  Error: Request failed with status code 502
+  ```
+</details>
+
+
 #### KorthoTest (8285)
 
 <details>
   <summary>https://www.krotho-test.net</summary>
 
   ```js
-  FetchError: request to https://www.krotho-test.net/ failed, reason: read ECONNRESET
+  FetchError: request to https://www.krotho-test.net/ failed, reason: Client network socket disconnected before secure TLS connection was established
   ```
 </details>
 
@@ -2724,7 +2727,7 @@ If the RPC is not responding then it is not useful.
   <summary>http://testnet.cybertrust.space:48501</summary>
 
   ```js
-  FetchError: request to http://testnet.cybertrust.space:48501/ failed, reason: connect ECONNREFUSED 174.138.29.134:48501
+  RequestTimeoutError: Request timed out after 5000ms
   ```
 </details>
 
@@ -3069,7 +3072,7 @@ If the RPC is not responding then it is not useful.
   <summary>https://host-76-74-29-34.contentfabric.io/eth/</summary>
 
   ```js
-  RequestTimeoutError: Request timed out after 5000ms
+  FetchError: request to https://host-76-74-29-34.contentfabric.io/eth/ failed, reason: connect ENETUNREACH 76.74.29.34:443
   ```
 </details>
 
