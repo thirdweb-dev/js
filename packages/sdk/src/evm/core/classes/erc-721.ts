@@ -45,7 +45,7 @@ import type {
   ISignatureMintERC721,
   Multiwrap,
   SignatureDrop,
-  TieredDropLogic,
+  TieredDrop,
   TokenERC721,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -930,7 +930,7 @@ export class Erc721<
 
   private detectErc721TieredDrop(): Erc721TieredDrop | undefined {
     if (
-      detectContractFeature<TieredDropLogic>(
+      detectContractFeature<TieredDrop>(
         this.contractWrapper,
         "ERC721TieredDrop",
       )

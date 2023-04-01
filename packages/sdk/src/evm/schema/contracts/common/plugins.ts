@@ -5,16 +5,7 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const PluginMetadataInput = z.object({
-  name: z.string(),
-  metadataURI: z.string(),
-  implementation: AddressOrEnsSchema,
-});
-
-/**
- * @internal
- */
-export const PluginFunctionInput = z.object({
+export const PluginMapInput = z.object({
   functionSelector: BytesLikeSchema,
   functionSignature: z.string(),
   pluginAddress: AddressOrEnsSchema,
