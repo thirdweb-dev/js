@@ -254,6 +254,16 @@ export const mochaHooks = {
     );
     await tx.wait();
 
+    // setup tiered-drop and add implementation to factory
+    const tieredDropEntrypointAddress = await setupTieredDrop();
+    const factoryTx = await thirdwebFactoryDeployer.addImplementation(
+      marketplaceEntrypointAddress,
+    );
+    await factoryTx.wait();
+
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
+    process.env.tieredDropImplementationAddress = tieredDropEntrypointAddress;
+
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     process.env.registryAddress = thirdwebRegistryAddress;
     // eslint-disable-next-line turbo/no-undeclared-env-vars
@@ -426,13 +436,15 @@ async function setupTieredDrop(): Promise<string> {
     [[...pluginsPermissions]],
   );
 
+  console.log("Deploying tiered drop...");
   // Tiered Drop
   const tieredDropAddress = await deployContractAndUploadMetadata(
     TieredDrop__factory.abi,
     TieredDrop__factory.bytecode,
     signer,
-    [pluginMapAddress],
+    [],
   );
+  console.log("Succesfully deployed teired drop...");
 
   return tieredDropAddress;
 }
