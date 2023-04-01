@@ -11,8 +11,7 @@ export default {
   "rpc": [
     "https://xt-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://datarpc1.xsc.pub",
-    "https://datarpc2.xsc.pub",
-    "https://datarpc3.xsc.pub"
+    "https://datarpc2.xsc.pub"
   ],
   "faucets": [
     "https://xsc.pub/faucet"

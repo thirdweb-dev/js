@@ -8,7 +8,8 @@ If the chain ID is mismatched then the RPC is not actually connected to the chai
 ### Genesis L1 testnet (26)
 
 <details>
-  <summary>`https://testrpc.genesisl1.org`</summary>
+  <summary>https://testrpc.genesisl1.org</summary>
+  
   ```js
   InvalidChainIdError: Invalid chainId: 29 (expected: 26)
   ```
@@ -18,7 +19,8 @@ If the chain ID is mismatched then the RPC is not actually connected to the chai
 ### Dehvo (113)
 
 <details>
-  <summary>`https://rpc.dehvo.com`</summary>
+  <summary>https://rpc1.dehvo.com</summary>
+  
   ```js
   InvalidChainIdError: Invalid chainId: 1928 (expected: 113)
   ```
@@ -26,7 +28,8 @@ If the chain ID is mismatched then the RPC is not actually connected to the chai
     
 
 <details>
-  <summary>`https://connect.dehvo.com`</summary>
+  <summary>https://connect.dehvo.com</summary>
+  
   ```js
   InvalidChainIdError: Invalid chainId: 1928 (expected: 113)
   ```
@@ -34,7 +37,8 @@ If the chain ID is mismatched then the RPC is not actually connected to the chai
     
 
 <details>
-  <summary>`https://rpc1.dehvo.com`</summary>
+  <summary>https://rpc2.dehvo.com</summary>
+  
   ```js
   InvalidChainIdError: Invalid chainId: 1928 (expected: 113)
   ```
@@ -42,7 +46,8 @@ If the chain ID is mismatched then the RPC is not actually connected to the chai
     
 
 <details>
-  <summary>`https://rpc2.dehvo.com`</summary>
+  <summary>https://rpc.dehvo.com</summary>
+  
   ```js
   InvalidChainIdError: Invalid chainId: 1928 (expected: 113)
   ```
@@ -52,19 +57,10 @@ If the chain ID is mismatched then the RPC is not actually connected to the chai
 ### SiriusNet V2 (217)
 
 <details>
-  <summary>`https://rpc2.siriusnet.io`</summary>
+  <summary>https://rpc2.siriusnet.io</summary>
+  
   ```js
   InvalidChainIdError: Invalid chainId: 10103 (expected: 217)
-  ```
-</details>
-    
-
-### Localhost (1337)
-
-<details>
-  <summary>`http://localhost:8545`</summary>
-  ```js
-  InvalidChainIdError: Invalid chainId: 31337 (expected: 1337)
   ```
 </details>
     
@@ -78,6 +74,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://api.mycryptoapi.com/eth`</summary>
+
   ```js
   Error: Request failed with status code 403
   ```
@@ -87,17 +84,19 @@ If the RPC is not responding then it is not useful.
 ### Ropsten (3)
 
 <details>
-  <summary>`https://ropsten.infura.io/v3/${INFURA_API_KEY}`</summary>
+  <summary>`wss://ropsten.infura.io/ws/v3/${INFURA_API_KEY}`</summary>
+
   ```js
-  Error: Request failed with status code 410
+  Error: Unexpected server response: 410
   ```
 </details>
     
 
 <details>
-  <summary>`wss://ropsten.infura.io/ws/v3/${INFURA_API_KEY}`</summary>
+  <summary>`https://ropsten.infura.io/v3/${INFURA_API_KEY}`</summary>
+
   ```js
-  Error: Unexpected server response: 410
+  Error: Request failed with status code 410
   ```
 </details>
     
@@ -105,17 +104,19 @@ If the RPC is not responding then it is not useful.
 ### Rinkeby (4)
 
 <details>
-  <summary>`wss://rinkeby.infura.io/ws/v3/${INFURA_API_KEY}`</summary>
+  <summary>`https://rinkeby.infura.io/v3/${INFURA_API_KEY}`</summary>
+
   ```js
-  Error: Unexpected server response: 410
+  Error: Request failed with status code 410
   ```
 </details>
     
 
 <details>
-  <summary>`https://rinkeby.infura.io/v3/${INFURA_API_KEY}`</summary>
+  <summary>`wss://rinkeby.infura.io/ws/v3/${INFURA_API_KEY}`</summary>
+
   ```js
-  Error: Request failed with status code 410
+  Error: Unexpected server response: 410
   ```
 </details>
     
@@ -124,6 +125,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://goerli.infura.io/v3/${INFURA_API_KEY}`</summary>
+
   ```js
   Error: Unexpected server response: 404
   ```
@@ -134,6 +136,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.thaifi.com`</summary>
+
   ```js
   Error: Request failed with status code 523
   ```
@@ -144,6 +147,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://sgb.lightft.so/rpc`</summary>
+
   ```js
   FetchError: request to https://sgb.lightft.so/rpc failed, reason: getaddrinfo ENOTFOUND sgb.lightft.so
   ```
@@ -152,6 +156,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://sgb-rpc.ftso.eu`</summary>
+
   ```js
   FetchError: invalid json response body at https://songbird-api.flare.network/ext/C/rpc reason: Unexpected end of JSON input
   ```
@@ -162,6 +167,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.shibachain.net`</summary>
+
   ```js
   Error: Request failed with status code 429
   ```
@@ -172,6 +178,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rinkeby.boba.network/`</summary>
+
   ```js
   FetchError: request to https://rinkeby.boba.network/ failed, reason: getaddrinfo ENOTFOUND rinkeby.boba.network
   ```
@@ -182,6 +189,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://test2.goodata.io`</summary>
+
   ```js
   FetchError: request to https://test2.goodata.io/ failed, reason: getaddrinfo ENOTFOUND test2.goodata.io
   ```
@@ -192,6 +200,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.goodata.io`</summary>
+
   ```js
   FetchError: request to https://rpc.goodata.io/ failed, reason: getaddrinfo ENOTFOUND rpc.goodata.io
   ```
@@ -202,6 +211,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.valorbit.com/v2`</summary>
+
   ```js
   FetchError: request to https://rpc.valorbit.com/v2 failed, reason: getaddrinfo ENOTFOUND rpc.valorbit.com
   ```
@@ -212,6 +222,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://kovan.poa.network`</summary>
+
   ```js
   FetchError: request to https://kovan.poa.network/ failed, reason: getaddrinfo ENOTFOUND kovan.poa.network
   ```
@@ -220,6 +231,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`http://kovan.poa.network:8545`</summary>
+
   ```js
   FetchError: request to http://kovan.poa.network:8545/ failed, reason: getaddrinfo ENOTFOUND kovan.poa.network
   ```
@@ -228,6 +240,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`ws://kovan.poa.network:8546`</summary>
+
   ```js
   Error: getaddrinfo ENOTFOUND kovan.poa.network
   ```
@@ -236,6 +249,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://kovan.infura.io/v3/${INFURA_API_KEY}`</summary>
+
   ```js
   Error: Request failed with status code 410
   ```
@@ -244,6 +258,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://kovan.infura.io/ws/v3/${INFURA_API_KEY}`</summary>
+
   ```js
   Error: Unexpected server response: 410
   ```
@@ -253,15 +268,8 @@ If the RPC is not responding then it is not useful.
 ### XinFin XDC Network (50)
 
 <details>
-  <summary>`https://erpc.xinfin.network`</summary>
-  ```js
-  Error: Request failed with status code 502
-  ```
-</details>
-    
-
-<details>
   <summary>`https://rpc1.xinfin.network`</summary>
+
   ```js
   Error: Request failed with status code 502
   ```
@@ -272,6 +280,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://mainnet.openpiece.io`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -282,6 +291,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://bsc-ws-node.nariox.org`</summary>
+
   ```js
   Error: Unexpected server response: 503
   ```
@@ -292,6 +302,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://jsonrpc.ellaism.org`</summary>
+
   ```js
   FetchError: request to https://jsonrpc.ellaism.org/ failed, reason: getaddrinfo ENOTFOUND jsonrpc.ellaism.org
   ```
@@ -302,6 +313,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`http://test-rpc.dbmbp.com`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -312,6 +324,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.soter.one`</summary>
+
   ```js
   FetchError: request to https://rpc.soter.one/ failed, reason: getaddrinfo ENOTFOUND rpc.soter.one
   ```
@@ -322,6 +335,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://kovan.optimism.io/`</summary>
+
   ```js
   FetchError: request to https://kovan.optimism.io/ failed, reason: getaddrinfo ENOTFOUND kovan.optimism.io
   ```
@@ -331,15 +345,8 @@ If the RPC is not responding then it is not useful.
 ### Hoo Smart Chain (70)
 
 <details>
-  <summary>`wss://ws-mainnet2.hoosmartchain.com`</summary>
-  ```js
-  Error: Unexpected server response: 503
-  ```
-</details>
-    
-
-<details>
   <summary>`https://http-mainnet2.hoosmartchain.com`</summary>
+
   ```js
   Error: Request failed with status code 503
   ```
@@ -347,7 +354,17 @@ If the RPC is not responding then it is not useful.
     
 
 <details>
+  <summary>`wss://ws-mainnet2.hoosmartchain.com`</summary>
+
+  ```js
+  Error: Unexpected server response: 503
+  ```
+</details>
+    
+
+<details>
   <summary>`wss://ws-mainnet.hoosmartchain.com`</summary>
+
   ```js
   Error: Unexpected server response: 503
   ```
@@ -358,6 +375,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet-http.dxchain.com`</summary>
+
   ```js
   FetchError: request to https://testnet-http.dxchain.com/ failed, reason: getaddrinfo ENOTFOUND testnet-http.dxchain.com
   ```
@@ -368,6 +386,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://node.decimalchain.com/web3`</summary>
+
   ```js
   Error: Request failed with status code 405
   ```
@@ -378,6 +397,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc2.mix-blockchain.org:8647`</summary>
+
   ```js
   FetchError: request to https://rpc2.mix-blockchain.org:8647/ failed, reason: connect ECONNREFUSED 74.207.240.177:8647
   ```
@@ -388,6 +408,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://sokol.poa.network`</summary>
+
   ```js
   FetchError: request to https://sokol.poa.network/ failed, reason: getaddrinfo ENOTFOUND sokol.poa.network
   ```
@@ -396,6 +417,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://sokol.poa.network/wss`</summary>
+
   ```js
   Error: getaddrinfo ENOTFOUND sokol.poa.network
   ```
@@ -404,6 +426,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`ws://sokol.poa.network:8546`</summary>
+
   ```js
   Error: getaddrinfo ENOTFOUND sokol.poa.network
   ```
@@ -414,6 +437,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://dataserver-us-1.zenithchain.co/`</summary>
+
   ```js
   Error: Request failed with status code 502
   ```
@@ -424,6 +448,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.genechain.io`</summary>
+
   ```js
   FetchError: request to https://rpc.genechain.io/ failed, reason: getaddrinfo ENOTFOUND rpc.genechain.io
   ```
@@ -434,6 +459,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet.gatenode.cc`</summary>
+
   ```js
   FetchError: request to https://testnet.gatenode.cc/ failed, reason: Hostname/IP does not match certificate's altnames: Host: testnet.gatenode.cc. is not in the cert's altnames: DNS:hokkaido.moodlejapan.org, DNS:showcase.moodlejapan.org
   ```
@@ -444,6 +470,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://0x57.redjackstudio.com`</summary>
+
   ```js
   FetchError: request to https://0x57.redjackstudio.com/ failed, reason: unable to verify the first certificate
   ```
@@ -452,6 +479,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://connect.novanetwork.io`</summary>
+
   ```js
   FetchError: request to https://connect.novanetwork.io/ failed, reason: unable to verify the first certificate
   ```
@@ -462,6 +490,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://s0.garizon.net/rpc`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -472,6 +501,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://s1.garizon.net/rpc`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -482,6 +512,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://s2.garizon.net/rpc`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -492,6 +523,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://s3.garizon.net/rpc`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -502,6 +534,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://core.poa.network`</summary>
+
   ```js
   Error: Request failed with status code 403
   ```
@@ -512,6 +545,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://api.einc.io/jsonrpc/mainnet`</summary>
+
   ```js
   FetchError: request to https://api.einc.io/jsonrpc/mainnet failed, reason: getaddrinfo ENOTFOUND api.einc.io
   ```
@@ -522,6 +556,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet-rpc-0.web3games.org/evm`</summary>
+
   ```js
   Error: Request failed with status code 521
   ```
@@ -530,6 +565,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet-rpc-1.web3games.org/evm`</summary>
+
   ```js
   Error: Request failed with status code 404
   ```
@@ -538,6 +574,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet-rpc-2.web3games.org/evm`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -548,6 +585,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://klc.live/`</summary>
+
   ```js
   FetchError: request to https://klc.live/ failed, reason: getaddrinfo ENOTFOUND klc.live
   ```
@@ -558,6 +596,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet.rpc.novanetwork.io:9070`</summary>
+
   ```js
   FetchError: request to https://testnet.rpc.novanetwork.io:9070/ failed, reason: connect ECONNREFUSED 74.208.29.238:9070
   ```
@@ -568,24 +607,25 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://protontestnet.greymass.com/`</summary>
+
   ```js
   Error: Invalid response
 {
   "server_version": "d0860c4e",
   "chain_id": "71ee83bcf52142d61019d95f9cc5427ba6a0d7ff8accd9e2088ae2abeaf3d3dd",
-  "head_block_num": 188104560,
-  "last_irreversible_block_num": 188104228,
-  "last_irreversible_block_id": "0b363e2498b440a724ef6b58931241105d13ef3077ee162dbaf5a7d7c7359be3",
-  "head_block_id": "0b363f7019a5fa21bfa80ea7302932120056de87554d5007244748bfe4c3f314",
-  "head_block_time": "2023-04-01T06:29:15.500",
-  "head_block_producer": "eosrio",
+  "head_block_num": 188105746,
+  "last_irreversible_block_num": 188105416,
+  "last_irreversible_block_id": "0b3642c847c7c6b0197176838f697a59032d0286adcf17e06bca6465423b4722",
+  "head_block_id": "0b3644124d365b056dc892feb25e1a70ce13ad17efdb0283dafa950a0dd83fbc",
+  "head_block_time": "2023-04-01T06:39:08.500",
+  "head_block_producer": "brotonbp",
   "virtual_block_cpu_limit": 200000000,
   "virtual_block_net_limit": 1048576000,
   "block_cpu_limit": 200000,
   "block_net_limit": 1048576,
   "server_version_string": "v2.0.4",
-  "fork_db_head_block_num": 188104560,
-  "fork_db_head_block_id": "0b363f7019a5fa21bfa80ea7302932120056de87554d5007244748bfe4c3f314",
+  "fork_db_head_block_num": 188105746,
+  "fork_db_head_block_id": "0b3644124d365b056dc892feb25e1a70ce13ad17efdb0283dafa950a0dd83fbc",
   "server_full_version_string": "v2.0.4-d0860c4ecf59b1535ef39c6ac7cae606fdb6a3ff-dirty"
 }
   ```
@@ -596,6 +636,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet.arcology.network/rpc`</summary>
+
   ```js
   FetchError: request to https://testnet.arcology.network/rpc failed, reason: unable to verify the first certificate
   ```
@@ -606,6 +647,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rcl-dataseed4.rclsidechain.com`</summary>
+
   ```js
   Error: Request failed with status code 526
   ```
@@ -614,6 +656,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://rcl-dataseed4.rclsidechain.com/v1/`</summary>
+
   ```js
   Error: Unexpected server response: 526
   ```
@@ -622,6 +665,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rcl-dataseed1.rclsidechain.com`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -630,6 +674,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rcl-dataseed2.rclsidechain.com`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -638,6 +683,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rcl-dataseed3.rclsidechain.com`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -646,6 +692,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://rcl-dataseed1.rclsidechain.com/v1/`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -654,6 +701,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://rcl-dataseed2.rclsidechain.com/v1/`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -662,6 +710,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://rcl-dataseed3.rclsidechain.com/v1/`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -672,6 +721,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://decentralized-web.tech/dw_rpc.php`</summary>
+
   ```js
   FetchError: request to https://decentralized-web.tech/dw_rpc.php failed, reason: certificate has expired
   ```
@@ -682,6 +732,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.testnet.oychain.io`</summary>
+
   ```js
   FetchError: request to https://rpc.testnet.oychain.io/ failed, reason: getaddrinfo ENOTFOUND rpc.testnet.oychain.io
   ```
@@ -692,6 +743,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.mainnet.oychain.io`</summary>
+
   ```js
   FetchError: request to https://rpc.mainnet.oychain.io/ failed, reason: getaddrinfo ENOTFOUND rpc.mainnet.oychain.io
   ```
@@ -702,6 +754,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet-rpc.alyxchain.com`</summary>
+
   ```js
   Error: Request failed with status code 502
   ```
@@ -711,7 +764,8 @@ If the RPC is not responding then it is not useful.
 ### Polygon Mainnet (137)
 
 <details>
-  <summary>`https://rpc-mainnet.matic.network`</summary>
+  <summary>`https://matic-mainnet-full-rpc.bwarelabs.com`</summary>
+
   ```js
   Error: Request failed with status code 404
   ```
@@ -719,9 +773,10 @@ If the RPC is not responding then it is not useful.
     
 
 <details>
-  <summary>`https://matic-mainnet-full-rpc.bwarelabs.com`</summary>
+  <summary>`https://rpc-mainnet.matic.network`</summary>
+
   ```js
-  Error: Request failed with status code 404
+  Error: Request failed with status code 503
   ```
 </details>
     
@@ -730,6 +785,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet.openpiece.io`</summary>
+
   ```js
   Error: Request failed with status code 521
   ```
@@ -740,6 +796,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.prodax.io`</summary>
+
   ```js
   FetchError: request to https://rpc.prodax.io/ failed, reason: getaddrinfo ENOTFOUND rpc.prodax.io
   ```
@@ -750,6 +807,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://evascan.io/api/eth-rpc/`</summary>
+
   ```js
   Error: Invalid response
 {
@@ -765,6 +823,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet.evascan.io/api/eth-rpc/`</summary>
+
   ```js
   Error: Invalid response
 {
@@ -780,6 +839,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://node.mainnet.lightstreams.io`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -790,6 +850,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://http-testnet.hoosmartchain.com`</summary>
+
   ```js
   Error: Request failed with status code 503
   ```
@@ -800,6 +861,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.latam-blockchain.com`</summary>
+
   ```js
   FetchError: request to https://rpc.latam-blockchain.com/ failed, reason: connect ECONNREFUSED 142.111.206.61:443
   ```
@@ -808,6 +870,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://ws.latam-blockchain.com`</summary>
+
   ```js
   Error: connect ECONNREFUSED 142.111.206.61:443
   ```
@@ -818,6 +881,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://arbitrum.xdaichain.com/`</summary>
+
   ```js
   FetchError: request to https://arbitrum.xdaichain.com/ failed, reason: getaddrinfo ENOTFOUND arbitrum.xdaichain.com
   ```
@@ -828,6 +892,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://app.freighttrust.net/ftn/${API_KEY}`</summary>
+
   ```js
   FetchError: request to https://app.freighttrust.net/ftn/$%7BAPI_KEY%7D failed, reason: getaddrinfo ENOTFOUND app.freighttrust.net
   ```
@@ -836,6 +901,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`http://13.57.207.168:3435`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -846,6 +912,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://http-testnet.hecochain.com`</summary>
+
   ```js
   Error: Request failed with status code 502
   ```
@@ -854,6 +921,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://ws-testnet.hecochain.com`</summary>
+
   ```js
   Error: Unexpected server response: 502
   ```
@@ -864,6 +932,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://sur.nilin.org`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -874,6 +943,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://optimism.gnosischain.com`</summary>
+
   ```js
   FetchError: request to https://optimism.gnosischain.com/ failed, reason: getaddrinfo ENOTFOUND optimism.gnosischain.com
   ```
@@ -882,6 +952,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://optimism.gnosischain.com/wss`</summary>
+
   ```js
   Error: getaddrinfo ENOTFOUND optimism.gnosischain.com
   ```
@@ -892,6 +963,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://public-rpc.blockpi.io/http/kcc`</summary>
+
   ```js
   FetchError: request to https://public-rpc.blockpi.io/http/kcc failed, reason: connect ECONNREFUSED 139.99.8.21:443
   ```
@@ -902,6 +974,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://mainnet.web3q.io:8545`</summary>
+
   ```js
   FetchError: request to https://mainnet.web3q.io:8545/ failed, reason: getaddrinfo ENOTFOUND mainnet.web3q.io
   ```
@@ -912,6 +985,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://shiden-rpc.dwellir.com`</summary>
+
   ```js
   Error: Invalid response
 {
@@ -928,6 +1002,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://shiden-rpc.dwellir.com`</summary>
+
   ```js
   Error: Invalid response
 {
@@ -946,6 +1021,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://eth-rpc-api-sapphire.thetatoken.org/rpc`</summary>
+
   ```js
   FetchError: request to https://eth-rpc-api-sapphire.thetatoken.org/rpc failed, reason: getaddrinfo ENOTFOUND eth-rpc-api-sapphire.thetatoken.org
   ```
@@ -956,6 +1032,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://eth-rpc-api-amber.thetatoken.org/rpc`</summary>
+
   ```js
   FetchError: request to https://eth-rpc-api-amber.thetatoken.org/rpc failed, reason: getaddrinfo ENOTFOUND eth-rpc-api-amber.thetatoken.org
   ```
@@ -965,17 +1042,19 @@ If the RPC is not responding then it is not useful.
 ### PulseChain Mainnet (369)
 
 <details>
-  <summary>`https://rpc.mainnet.pulsechain.com/`</summary>
+  <summary>`wss://rpc.mainnet.pulsechain.com/`</summary>
+
   ```js
-  FetchError: request to https://rpc.mainnet.pulsechain.com/ failed, reason: getaddrinfo ENOTFOUND rpc.mainnet.pulsechain.com
+  Error: getaddrinfo ENOTFOUND rpc.mainnet.pulsechain.com
   ```
 </details>
     
 
 <details>
-  <summary>`wss://rpc.mainnet.pulsechain.com/`</summary>
+  <summary>`https://rpc.mainnet.pulsechain.com/`</summary>
+
   ```js
-  Error: getaddrinfo ENOTFOUND rpc.mainnet.pulsechain.com
+  FetchError: request to https://rpc.mainnet.pulsechain.com/ failed, reason: getaddrinfo ENOTFOUND rpc.mainnet.pulsechain.com
   ```
 </details>
     
@@ -984,6 +1063,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc-testnet.theconsta.com`</summary>
+
   ```js
   Error: Request failed with status code 502
   ```
@@ -994,6 +1074,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc-bitfalls1.lisinski.online`</summary>
+
   ```js
   FetchError: request to https://rpc-bitfalls1.lisinski.online/ failed, reason: getaddrinfo ENOTFOUND rpc-bitfalls1.lisinski.online
   ```
@@ -1004,6 +1085,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet-rpc.hyperonchain.com`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1014,8 +1096,20 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.zeeth.io`</summary>
+
   ```js
   FetchError: request to https://rpc.zeeth.io/ failed, reason: getaddrinfo ENOTFOUND rpc.zeeth.io
+  ```
+</details>
+    
+
+### XT Smart Chain Mainnet (520)
+
+<details>
+  <summary>`https://datarpc3.xsc.pub`</summary>
+
+  ```js
+  FetchError: request to https://datarpc3.xsc.pub/ failed, reason: getaddrinfo ENOTFOUND datarpc3.xsc.pub
   ```
 </details>
     
@@ -1024,6 +1118,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://mainnet.rpc1.thefirechain.com`</summary>
+
   ```js
   FetchError: invalid json response body at https://mainnet.rpc1.thefirechain.com/ reason: Unexpected token < in JSON at position 0
   ```
@@ -1034,6 +1129,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://candle-rpc.com/`</summary>
+
   ```js
   FetchError: request to https://candle-rpc.com/ failed, reason: connect ECONNREFUSED 35.225.63.183:443
   ```
@@ -1044,6 +1140,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.testnet.tao.network`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1052,6 +1149,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`http://rpc.testnet.tao.network:8545`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1060,6 +1158,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.tao.network`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1068,6 +1167,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://rpc.tao.network`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1078,6 +1178,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.astar.network:8545`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1088,6 +1189,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://ws-testnet.chain.pixie.xyz`</summary>
+
   ```js
   Error: getaddrinfo ENOTFOUND ws-testnet.chain.pixie.xyz
   ```
@@ -1098,6 +1200,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://avastar.cc/ext/bc/C/rpc`</summary>
+
   ```js
   FetchError: request to https://avastar.cc/ext/bc/C/rpc failed, reason: Hostname/IP does not match certificate's altnames: Host: avastar.cc. is not in the cert's altnames: DNS:my.silverrapid.com
   ```
@@ -1108,6 +1211,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc-mainnet.bcsdev.io`</summary>
+
   ```js
   FetchError: request to https://rpc-mainnet.bcsdev.io/ failed, reason: getaddrinfo ENOTFOUND rpc-mainnet.bcsdev.io
   ```
@@ -1116,6 +1220,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://rpc-ws-mainnet.bcsdev.io`</summary>
+
   ```js
   Error: getaddrinfo ENOTFOUND rpc-ws-mainnet.bcsdev.io
   ```
@@ -1126,6 +1231,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc-testnet.bcsdev.io`</summary>
+
   ```js
   FetchError: request to https://rpc-testnet.bcsdev.io/ failed, reason: getaddrinfo ENOTFOUND rpc-testnet.bcsdev.io
   ```
@@ -1134,6 +1240,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://rpc-ws-testnet.bcsdev.io`</summary>
+
   ```js
   Error: getaddrinfo ENOTFOUND rpc-ws-testnet.bcsdev.io
   ```
@@ -1144,6 +1251,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.lycanchain.com/`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1154,6 +1262,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.qom.one`</summary>
+
   ```js
   FetchError: request to https://rpc.qom.one/ failed, reason: getaddrinfo ENOTFOUND rpc.qom.one
   ```
@@ -1164,6 +1273,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://node.cheapeth.org/rpc`</summary>
+
   ```js
   FetchError: request to https://node.cheapeth.org/rpc failed, reason: connect ECONNREFUSED 144.126.216.39:443
   ```
@@ -1174,6 +1284,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet-rpc.aerochain.id/`</summary>
+
   ```js
   FetchError: request to https://testnet-rpc.aerochain.id/ failed, reason: getaddrinfo ENOTFOUND testnet-rpc.aerochain.id
   ```
@@ -1184,6 +1295,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://orig.haichain.io/`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1194,6 +1306,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://subnets.avax.network/portal-fantasy/testnet/rpc`</summary>
+
   ```js
   Error: Request failed with status code 405
   ```
@@ -1204,6 +1317,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://evm-dataseed2.meerscan.com`</summary>
+
   ```js
   FetchError: request to https://evm-dataseed2.meerscan.com/ failed, reason: connect ECONNREFUSED 180.188.198.41:443
   ```
@@ -1214,6 +1328,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.dev.zeeth.io`</summary>
+
   ```js
   FetchError: request to https://rpc.dev.zeeth.io/ failed, reason: getaddrinfo ENOTFOUND rpc.dev.zeeth.io
   ```
@@ -1224,6 +1339,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://api.ambros.network`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1234,6 +1350,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://s1-testnet.garizon.net/rpc`</summary>
+
   ```js
   Error: Request failed with status code 502
   ```
@@ -1244,6 +1361,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://s2-testnet.garizon.net/rpc`</summary>
+
   ```js
   Error: Request failed with status code 502
   ```
@@ -1254,6 +1372,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://s3-testnet.garizon.net/rpc`</summary>
+
   ```js
   Error: Request failed with status code 502
   ```
@@ -1264,6 +1383,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rinia.rpc1.thefirechain.com`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1274,6 +1394,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.v2.testnet.pulsechain.com/`</summary>
+
   ```js
   FetchError: request to https://rpc.v2.testnet.pulsechain.com/ failed, reason: getaddrinfo ENOTFOUND rpc.v2.testnet.pulsechain.com
   ```
@@ -1282,6 +1403,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://rpc.v2.testnet.pulsechain.com/`</summary>
+
   ```js
   Error: getaddrinfo ENOTFOUND rpc.v2.testnet.pulsechain.com
   ```
@@ -1292,6 +1414,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://rpc.v2b.testnet.pulsechain.com/`</summary>
+
   ```js
   Error: Unexpected server response: 200
   ```
@@ -1302,6 +1425,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://rpc.v3.testnet.pulsechain.com/`</summary>
+
   ```js
   Error: Unexpected server response: 200
   ```
@@ -1312,6 +1436,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.oortech.com`</summary>
+
   ```js
   FetchError: request to https://rpc.oortech.com/ failed, reason: getaddrinfo ENOTFOUND rpc.oortech.com
   ```
@@ -1322,6 +1447,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://api.nepalblockchain.dev`</summary>
+
   ```js
   FetchError: request to https://api.nepalblockchain.dev/ failed, reason: getaddrinfo ENOTFOUND api.nepalblockchain.dev
   ```
@@ -1330,6 +1456,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://api.nepalblockchain.network`</summary>
+
   ```js
   FetchError: invalid json response body at https://api.nepalblockchain.network/ reason: Unexpected token C in JSON at position 0
   ```
@@ -1340,6 +1467,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://chain.metamemo.one:16801`</summary>
+
   ```js
   Error: connect ECONNREFUSED 183.240.196.215:16801
   ```
@@ -1350,6 +1478,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.luckynetwork.org`</summary>
+
   ```js
   FetchError: request to https://rpc.luckynetwork.org/ failed, reason: getaddrinfo ENOTFOUND rpc.luckynetwork.org
   ```
@@ -1358,6 +1487,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://ws.lnscan.org`</summary>
+
   ```js
   Error: getaddrinfo ENOTFOUND ws.lnscan.org
   ```
@@ -1366,6 +1496,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.lnscan.org`</summary>
+
   ```js
   FetchError: request to https://rpc.lnscan.org/ failed, reason: getaddrinfo ENOTFOUND rpc.lnscan.org
   ```
@@ -1376,6 +1507,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://mainnet.eurus.network/`</summary>
+
   ```js
   FetchError: request to https://mainnet.eurus.network/ failed, reason: getaddrinfo ENOTFOUND mainnet.eurus.network
   ```
@@ -1386,6 +1518,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testrpc.bittorrentchain.io/`</summary>
+
   ```js
   FetchError: request to https://testrpc.bittorrentchain.io/ failed, reason: getaddrinfo ENOTFOUND testrpc.bittorrentchain.io
   ```
@@ -1396,6 +1529,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`http://128.199.94.183:8041`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1406,6 +1540,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://mathchain-asia.maiziqianbao.net/rpc`</summary>
+
   ```js
   FetchError: request to https://mathchain-asia.maiziqianbao.net/rpc failed, reason: getaddrinfo ENOTFOUND mathchain-asia.maiziqianbao.net
   ```
@@ -1414,6 +1549,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://mathchain-us.maiziqianbao.net/rpc`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1424,6 +1560,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://galois-hk.maiziqianbao.net/rpc`</summary>
+
   ```js
   Error: Request failed with status code 502
   ```
@@ -1434,6 +1571,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://s2.tl.web.tr:4041`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1444,8 +1582,9 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://dataseed.iorachain.com`</summary>
+
   ```js
-  FetchError: invalid json response body at http://ww38.dataseed.iorachain.com/ reason: Unexpected token < in JSON at position 0
+  FetchError: invalid json response body at http://ww25.dataseed.iorachain.com/?subid1=20230401-1739-13f5-94e1-b0affb05b269 reason: Unexpected token < in JSON at position 0
   ```
 </details>
     
@@ -1454,6 +1593,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://seed5.evanesco.org:8547`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1463,17 +1603,19 @@ If the RPC is not responding then it is not useful.
 ### World Trade Technical Chain Mainnet (1202)
 
 <details>
-  <summary>`https://rpc.cadaut.com`</summary>
+  <summary>`wss://rpc.cadaut.com/ws`</summary>
+
   ```js
-  FetchError: request to https://rpc.cadaut.com/ failed, reason: read ECONNRESET
+  Error: Client network socket disconnected before secure TLS connection was established
   ```
 </details>
     
 
 <details>
-  <summary>`wss://rpc.cadaut.com/ws`</summary>
+  <summary>`https://rpc.cadaut.com`</summary>
+
   ```js
-  Error: read ECONNRESET
+  FetchError: request to https://rpc.cadaut.com/ failed, reason: Client network socket disconnected before secure TLS connection was established
   ```
 </details>
     
@@ -1482,6 +1624,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://mainnet.exzo.technology`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1492,6 +1635,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.api.moonrock.moonbeam.network`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1500,6 +1644,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://wss.api.moonrock.moonbeam.network`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1510,6 +1655,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://test.doschain.com/jsonrpc`</summary>
+
   ```js
   Error: Request failed with status code 404
   ```
@@ -1520,6 +1666,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://beagle.chat/eth`</summary>
+
   ```js
   Error: Request failed with status code 404
   ```
@@ -1530,6 +1677,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://send.catechain.com`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1540,6 +1688,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://wallet.atheios.com:8797`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1550,6 +1699,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://dataseed1.btachain.com/`</summary>
+
   ```js
   Error: Request failed with status code 521
   ```
@@ -1560,6 +1710,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.ludan.org/`</summary>
+
   ```js
   Error: Request failed with status code 503
   ```
@@ -1570,6 +1721,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rabbit.analog-rpc.com`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1579,7 +1731,26 @@ If the RPC is not responding then it is not useful.
 ### Cube Chain Testnet (1819)
 
 <details>
+  <summary>`wss://ws-testnet-us.cube.network`</summary>
+
+  ```js
+  Error: Unexpected server response: 200
+  ```
+</details>
+    
+
+<details>
+  <summary>`wss://ws-testnet.cube.network`</summary>
+
+  ```js
+  Error: Unexpected server response: 200
+  ```
+</details>
+    
+
+<details>
   <summary>`https://http-testnet-sg.cube.network`</summary>
+
   ```js
   FetchError: invalid json response body at https://http-testnet-sg.cube.network/ reason: Unexpected end of JSON input
   ```
@@ -1587,23 +1758,8 @@ If the RPC is not responding then it is not useful.
     
 
 <details>
-  <summary>`https://http-testnet.cube.network`</summary>
-  ```js
-  FetchError: invalid json response body at https://http-testnet.cube.network/ reason: Unexpected end of JSON input
-  ```
-</details>
-    
-
-<details>
-  <summary>`wss://ws-testnet.cube.network`</summary>
-  ```js
-  Error: Unexpected server response: 200
-  ```
-</details>
-    
-
-<details>
   <summary>`https://http-testnet-jp.cube.network`</summary>
+
   ```js
   FetchError: invalid json response body at https://http-testnet-jp.cube.network/ reason: Unexpected end of JSON input
   ```
@@ -1611,7 +1767,17 @@ If the RPC is not responding then it is not useful.
     
 
 <details>
+  <summary>`https://http-testnet.cube.network`</summary>
+
+  ```js
+  FetchError: invalid json response body at https://http-testnet.cube.network/ reason: Unexpected end of JSON input
+  ```
+</details>
+    
+
+<details>
   <summary>`https://http-testnet-us.cube.network`</summary>
+
   ```js
   FetchError: invalid json response body at https://http-testnet-us.cube.network/ reason: Unexpected end of JSON input
   ```
@@ -1619,15 +1785,8 @@ If the RPC is not responding then it is not useful.
     
 
 <details>
-  <summary>`wss://ws-testnet-us.cube.network`</summary>
-  ```js
-  Error: Unexpected server response: 200
-  ```
-</details>
-    
-
-<details>
   <summary>`wss://ws-testnet-jp.cube.network`</summary>
+
   ```js
   Error: Unexpected server response: 200
   ```
@@ -1636,6 +1795,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://ws-testnet-sg.cube.network`</summary>
+
   ```js
   Error: Unexpected server response: 200
   ```
@@ -1646,6 +1806,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://tsfapi.europool.me`</summary>
+
   ```js
   FetchError: request to https://tsfapi.europool.me/ failed, reason: certificate has expired
   ```
@@ -1656,6 +1817,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.cartenz.works`</summary>
+
   ```js
   FetchError: request to https://rpc.cartenz.works/ failed, reason: getaddrinfo ENOTFOUND rpc.cartenz.works
   ```
@@ -1666,6 +1828,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://replicator-02.pegasus.lightlink.io/rpc/v1`</summary>
+
   ```js
   FetchError: request to https://replicator-02.pegasus.lightlink.io/rpc/v1 failed, reason: getaddrinfo ENOTFOUND replicator-02.pegasus.lightlink.io
   ```
@@ -1676,6 +1839,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`http://rpc.boyanet.org:8545`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1684,6 +1848,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`ws://rpc.boyanet.org:8546`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1694,6 +1859,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://1971.network/atlr`</summary>
+
   ```js
   Error: Unexpected server response: 200
   ```
@@ -1704,6 +1870,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet.eurus.network`</summary>
+
   ```js
   FetchError: request to https://testnet.eurus.network/ failed, reason: getaddrinfo ENOTFOUND testnet.eurus.network
   ```
@@ -1714,6 +1881,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.qkacoin.org`</summary>
+
   ```js
   FetchError: request to https://rpc.qkacoin.org/ failed, reason: certificate has expired
   ```
@@ -1724,6 +1892,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://api.ecoball.org/ecoball/`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1734,6 +1903,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://api.ecoball.org/espuma/`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1744,6 +1914,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://connect.bitcoinevm.com`</summary>
+
   ```js
   Error: Request failed with status code 503
   ```
@@ -1754,6 +1925,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://bc.vcex.xyz`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1764,6 +1936,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://api.ezchain.com/ext/bc/C/rpc`</summary>
+
   ```js
   FetchError: request to https://api.ezchain.com/ext/bc/C/rpc failed, reason: Hostname/IP does not match certificate's altnames: Host: api.ezchain.com. is not in the cert's altnames: DNS:undeveloped.com, DNS:undeveloped.es, DNS:undeveloped.cn, DNS:undeveloped.uk, DNS:undeveloped.eu, DNS:undeveloped.us, DNS:undeveloped.nl, DNS:undeveloped.be, DNS:undeveloped.co.uk, DNS:undeveloped.domains, DNS:dan.com, DNS:www.dan.com, DNS:undeveloped.fr, DNS:undeveloped.nu
   ```
@@ -1774,6 +1947,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet-api.ezchain.com/ext/bc/C/rpc`</summary>
+
   ```js
   FetchError: request to https://testnet-api.ezchain.com/ext/bc/C/rpc failed, reason: Hostname/IP does not match certificate's altnames: Host: testnet-api.ezchain.com. is not in the cert's altnames: DNS:undeveloped.com, DNS:undeveloped.es, DNS:undeveloped.cn, DNS:undeveloped.uk, DNS:undeveloped.eu, DNS:undeveloped.us, DNS:undeveloped.nl, DNS:undeveloped.be, DNS:undeveloped.co.uk, DNS:undeveloped.domains, DNS:dan.com, DNS:www.dan.com, DNS:undeveloped.fr, DNS:undeveloped.nu
   ```
@@ -1784,6 +1958,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc-testnet.orlchain.com`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1794,6 +1969,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc-testnet.zcore.cash`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1804,6 +1980,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://j.blockcoach.com:8503`</summary>
+
   ```js
   FetchError: request to https://j.blockcoach.com:8503/ failed, reason: unable to verify the first certificate
   ```
@@ -1814,6 +1991,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc1.bittexscan.info`</summary>
+
   ```js
   FetchError: request to https://rpc1.bittexscan.info/ failed, reason: getaddrinfo ENOTFOUND rpc1.bittexscan.info
   ```
@@ -1822,6 +2000,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc2.bittexscan.info`</summary>
+
   ```js
   FetchError: request to https://rpc2.bittexscan.info/ failed, reason: getaddrinfo ENOTFOUND rpc2.bittexscan.info
   ```
@@ -1832,6 +2011,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.alveychain.com/rpc`</summary>
+
   ```js
   FetchError: request to https://rpc.alveychain.com/rpc failed, reason: getaddrinfo ENOTFOUND rpc.alveychain.com
   ```
@@ -1842,6 +2022,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://api.dynoprotocol.com`</summary>
+
   ```js
   FetchError: request to https://api.dynoprotocol.com/ failed, reason: connect ECONNREFUSED 66.228.60.122:443
   ```
@@ -1852,6 +2033,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://tapi.dynoprotocol.com`</summary>
+
   ```js
   FetchError: request to https://tapi.dynoprotocol.com/ failed, reason: Hostname/IP does not match certificate's altnames: Host: tapi.dynoprotocol.com. is not in the cert's altnames: DNS:moddepot.net, DNS:www.moddepot.net
   ```
@@ -1862,6 +2044,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://wss.testnet.bobaopera.boba.network`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1872,6 +2055,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://ngeth.testnet.n3.nahmii.io`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1882,6 +2066,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet-rpc.bitindi.org`</summary>
+
   ```js
   FetchError: request to https://testnet-rpc.bitindi.org/ failed, reason: getaddrinfo ENOTFOUND testnet-rpc.bitindi.org
   ```
@@ -1892,6 +2077,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>` https://rpc-mainnet.bitindi.org`</summary>
+
   ```js
   Error: Invalid RPC URL:  https://rpc-mainnet.bitindi.org
   ```
@@ -1900,6 +2086,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://mainnet-rpc.bitindi.org`</summary>
+
   ```js
   FetchError: request to https://mainnet-rpc.bitindi.org/ failed, reason: getaddrinfo ENOTFOUND mainnet-rpc.bitindi.org
   ```
@@ -1910,6 +2097,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://chain.nexi.evmnode.online`</summary>
+
   ```js
   FetchError: request to https://chain.nexi.evmnode.online/ failed, reason: unable to verify the first certificate
   ```
@@ -1920,6 +2108,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://janus.htmlcoin.com/api/`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1930,6 +2119,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet.blackfort.network/rpc`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -1940,6 +2130,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.mantle.xyz`</summary>
+
   ```js
   Error: Request failed with status code 404
   ```
@@ -1950,6 +2141,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://mainnet-rpc.tlxscan.com/`</summary>
+
   ```js
   Error: Request failed with status code 502
   ```
@@ -1960,6 +2152,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://network.uzmigames.com.br/`</summary>
+
   ```js
   FetchError: request to https://network.uzmigames.com.br/ failed, reason: self signed certificate in certificate chain
   ```
@@ -1970,6 +2163,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://l2.testnet.nahmii.io`</summary>
+
   ```js
   Error: Request failed with status code 401
   ```
@@ -1980,6 +2174,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://127.0.0.1:7545`</summary>
+
   ```js
   FetchError: request to https://127.0.0.1:7545/ failed, reason: connect ECONNREFUSED 127.0.0.1:7545
   ```
@@ -1990,6 +2185,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://ws-mainnet.chain.pixie.xyz`</summary>
+
   ```js
   Error: getaddrinfo ENOTFOUND ws-mainnet.chain.pixie.xyz
   ```
@@ -2000,6 +2196,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://api.mainnet.zetachain.com/evm`</summary>
+
   ```js
   FetchError: request to https://api.mainnet.zetachain.com/evm failed, reason: getaddrinfo ENOTFOUND api.mainnet.zetachain.com
   ```
@@ -2010,6 +2207,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://evm.klyntar.org/kly_evm_rpc`</summary>
+
   ```js
   FetchError: request to https://evm.klyntar.org/kly_evm_rpc failed, reason: getaddrinfo ENOTFOUND evm.klyntar.org
   ```
@@ -2018,6 +2216,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://evm.klyntarscan.org/kly_evm_rpc`</summary>
+
   ```js
   FetchError: request to https://evm.klyntarscan.org/kly_evm_rpc failed, reason: getaddrinfo ENOTFOUND evm.klyntarscan.org
   ```
@@ -2027,17 +2226,19 @@ If the RPC is not responding then it is not useful.
 ### Hazlor Testnet (7878)
 
 <details>
-  <summary>`wss://hatlas.rpc.hazlor.com:8546`</summary>
+  <summary>`https://hatlas.rpc.hazlor.com:8545`</summary>
+
   ```js
-  Error: getaddrinfo ENOTFOUND hatlas.rpc.hazlor.com
+  FetchError: request to https://hatlas.rpc.hazlor.com:8545/ failed, reason: getaddrinfo ENOTFOUND hatlas.rpc.hazlor.com
   ```
 </details>
     
 
 <details>
-  <summary>`https://hatlas.rpc.hazlor.com:8545`</summary>
+  <summary>`wss://hatlas.rpc.hazlor.com:8546`</summary>
+
   ```js
-  FetchError: request to https://hatlas.rpc.hazlor.com:8545/ failed, reason: getaddrinfo ENOTFOUND hatlas.rpc.hazlor.com
+  Error: getaddrinfo ENOTFOUND hatlas.rpc.hazlor.com
   ```
 </details>
     
@@ -2046,6 +2247,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://evm-rpc.teleport.network`</summary>
+
   ```js
   FetchError: request to https://evm-rpc.teleport.network/ failed, reason: getaddrinfo ENOTFOUND evm-rpc.teleport.network
   ```
@@ -2056,6 +2258,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://evm-rpc.testnet.teleport.network`</summary>
+
   ```js
   FetchError: request to https://evm-rpc.testnet.teleport.network/ failed, reason: getaddrinfo ENOTFOUND evm-rpc.testnet.teleport.network
   ```
@@ -2066,6 +2269,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet.mdgl.io`</summary>
+
   ```js
   FetchError: request to https://testnet.mdgl.io/ failed, reason: getaddrinfo ENOTFOUND testnet.mdgl.io
   ```
@@ -2076,6 +2280,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://u0ma6t6heb:KDNwOsRDGcyM2Oeui1p431Bteb4rvcWkuPgQNHwB4FM@u0xy4x6x82-u0e2mg517m-rpc.us0-aws.kaleido.io/`</summary>
+
   ```js
   Error: Request failed with status code 404
   ```
@@ -2086,6 +2291,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://www.krotho-test.net`</summary>
+
   ```js
   FetchError: request to https://www.krotho-test.net/ failed, reason: Client network socket disconnected before secure TLS connection was established
   ```
@@ -2096,8 +2302,9 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://mainnet.buildwithtoki.com/v0/rpc`</summary>
+
   ```js
-  Error: Request failed with status code 502
+  Error: Request failed with status code 404
   ```
 </details>
     
@@ -2106,6 +2313,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet-web3.wolot.io`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -2116,6 +2324,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://rpc.alph.network`</summary>
+
   ```js
   Error: Unexpected server response: 200
   ```
@@ -2126,6 +2335,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://mainnet.berylbit.io`</summary>
+
   ```js
   Error: Request failed with status code 502
   ```
@@ -2136,6 +2346,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://genesis-gn.com`</summary>
+
   ```js
   FetchError: request to https://genesis-gn.com/ failed, reason: getaddrinfo ENOTFOUND genesis-gn.com
   ```
@@ -2144,6 +2355,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://genesis-gn.com`</summary>
+
   ```js
   Error: getaddrinfo ENOTFOUND genesis-gn.com
   ```
@@ -2154,6 +2366,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://geth.dev.bccloud.net`</summary>
+
   ```js
   FetchError: request to https://geth.dev.bccloud.net/ failed, reason: getaddrinfo ENOTFOUND geth.dev.bccloud.net
   ```
@@ -2164,6 +2377,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc-mainnet.smartbch.org`</summary>
+
   ```js
   FetchError: request to https://rpc-mainnet.smartbch.org/ failed, reason: getaddrinfo ENOTFOUND rpc-mainnet.smartbch.org
   ```
@@ -2172,6 +2386,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://smartbch.devops.cash/mainnet`</summary>
+
   ```js
   FetchError: request to https://smartbch.devops.cash/mainnet failed, reason: getaddrinfo ENOTFOUND smartbch.devops.cash
   ```
@@ -2182,6 +2397,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://smartbch.devops.cash/testnet`</summary>
+
   ```js
   FetchError: request to https://smartbch.devops.cash/testnet failed, reason: getaddrinfo ENOTFOUND smartbch.devops.cash
   ```
@@ -2190,6 +2406,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc-testnet.smartbch.org`</summary>
+
   ```js
   FetchError: request to https://rpc-testnet.smartbch.org/ failed, reason: unable to verify the first certificate
   ```
@@ -2200,6 +2417,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`http://geth.free.idcfengye.com`</summary>
+
   ```js
   Error: Request failed with status code 404
   ```
@@ -2210,6 +2428,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://node.0xtchain.com`</summary>
+
   ```js
   FetchError: request to https://node.0xtchain.com/ failed, reason: self signed certificate
   ```
@@ -2220,6 +2439,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpcna.quadrans.io`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -2230,6 +2450,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://betaenv.singularity.gold:18545`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -2240,6 +2461,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://node1.fibo-api.asia`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -2250,6 +2472,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.blgchain.com`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -2260,6 +2483,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet-rpc.rikscan.com`</summary>
+
   ```js
   Error: Request failed with status code 502
   ```
@@ -2270,6 +2494,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://mainnet.metadot.network`</summary>
+
   ```js
   FetchError: request to https://mainnet.metadot.network/ failed, reason: getaddrinfo ENOTFOUND mainnet.metadot.network
   ```
@@ -2280,6 +2505,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet.metadot.network`</summary>
+
   ```js
   FetchError: request to https://testnet.metadot.network/ failed, reason: getaddrinfo ENOTFOUND testnet.metadot.network
   ```
@@ -2290,6 +2516,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.fod.games/`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -2300,6 +2527,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://mainnet-rpc2.memescan.io`</summary>
+
   ```js
   FetchError: request to https://mainnet-rpc2.memescan.io/ failed, reason: getaddrinfo ENOTFOUND mainnet-rpc2.memescan.io
   ```
@@ -2308,6 +2536,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://mainnet-rpc3.memescan.io`</summary>
+
   ```js
   FetchError: request to https://mainnet-rpc3.memescan.io/ failed, reason: getaddrinfo ENOTFOUND mainnet-rpc3.memescan.io
   ```
@@ -2316,6 +2545,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://mainnet-rpc4.memescan.io`</summary>
+
   ```js
   FetchError: request to https://mainnet-rpc4.memescan.io/ failed, reason: getaddrinfo ENOTFOUND mainnet-rpc4.memescan.io
   ```
@@ -2326,6 +2556,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://alpha-1-replica-0.bedrock-goerli.optimism.io`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -2334,6 +2565,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://alpha-1-replica-1.bedrock-goerli.optimism.io`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -2342,6 +2574,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://alpha-1-replica-2.bedrock-goerli.optimism.io`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -2350,6 +2583,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://alpha-1-replica-2.bedrock-goerli.optimism.io`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -2360,6 +2594,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet-rpc0.piecenetwork.com`</summary>
+
   ```js
   FetchError: invalid json response body at http://testnet-rpc0.piecenetwork.com/ reason: Unexpected token < in JSON at position 0
   ```
@@ -2370,6 +2605,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://api.esn.gonspool.com`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -2380,6 +2616,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet-rpc.cloudtx.finance`</summary>
+
   ```js
   Error: Request failed with status code 502
   ```
@@ -2390,6 +2627,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet-rpc.gochain.io`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -2400,6 +2638,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://wallaby.node.glif.io/rpc/v1`</summary>
+
   ```js
   Error: Request failed with status code 404
   ```
@@ -2409,15 +2648,8 @@ If the RPC is not responding then it is not useful.
 ### Bitgert Mainnet (32520)
 
 <details>
-  <summary>`https://mainnet-rpc.brisescan.com`</summary>
-  ```js
-  Error: Request failed with status code 403
-  ```
-</details>
-    
-
-<details>
   <summary>`https://serverrpc.com`</summary>
+
   ```js
   Error: Request failed with status code 403
   ```
@@ -2426,6 +2658,16 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://chainrpc.com`</summary>
+
+  ```js
+  Error: Request failed with status code 403
+  ```
+</details>
+    
+
+<details>
+  <summary>`https://mainnet-rpc.brisescan.com`</summary>
+
   ```js
   Error: Request failed with status code 403
   ```
@@ -2436,6 +2678,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://connect.opulent-x.com`</summary>
+
   ```js
   FetchError: request to https://connect.opulent-x.com/ failed, reason: getaddrinfo ENOTFOUND connect.opulent-x.com
   ```
@@ -2446,6 +2689,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://ava.network:21015/ext/evm/rpc`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -2456,6 +2700,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.oracle.liveplex.io`</summary>
+
   ```js
   Error: Invalid response
 {
@@ -2475,6 +2720,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://test.thinkiumrpc.net/`</summary>
+
   ```js
   Error: Request failed with status code 400
   ```
@@ -2485,6 +2731,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://ukrpc.doken.dev`</summary>
+
   ```js
   Error: Request failed with status code 502
   ```
@@ -2493,6 +2740,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://nyrpc.doken.dev`</summary>
+
   ```js
   Error: Request failed with status code 502
   ```
@@ -2503,6 +2751,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.condrieu.ethdevops.io:8545`</summary>
+
   ```js
   FetchError: request to https://rpc.condrieu.ethdevops.io:8545/ failed, reason: getaddrinfo ENOTFOUND rpc.condrieu.ethdevops.io
   ```
@@ -2513,6 +2762,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://proxy.thinkiumrpc.net/`</summary>
+
   ```js
   Error: Request failed with status code 400
   ```
@@ -2523,6 +2773,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://godwoken-testnet-web3-rpc.ckbapp.dev`</summary>
+
   ```js
   FetchError: request to https://godwoken-testnet-web3-rpc.ckbapp.dev/ failed, reason: getaddrinfo ENOTFOUND godwoken-testnet-web3-rpc.ckbapp.dev
   ```
@@ -2531,6 +2782,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`ws://godwoken-testnet-web3-rpc.ckbapp.dev/ws`</summary>
+
   ```js
   Error: getaddrinfo ENOTFOUND godwoken-testnet-web3-rpc.ckbapp.dev
   ```
@@ -2541,6 +2793,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://matic-testnet-archive-rpc.bwarelabs.com`</summary>
+
   ```js
   FetchError: request to https://matic-testnet-archive-rpc.bwarelabs.com/ failed, reason: getaddrinfo ENOTFOUND matic-testnet-archive-rpc.bwarelabs.com
   ```
@@ -2551,6 +2804,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`http://testnet.cybertrust.space:48501`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -2561,6 +2815,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.beverlyhills.ethdevops.io:8545`</summary>
+
   ```js
   FetchError: request to https://rpc.beverlyhills.ethdevops.io:8545/ failed, reason: getaddrinfo ENOTFOUND rpc.beverlyhills.ethdevops.io
   ```
@@ -2571,6 +2826,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet.rpc.uschain.network`</summary>
+
   ```js
   FetchError: request to https://testnet.rpc.uschain.network/ failed, reason: connect ECONNREFUSED 47.243.141.247:443
   ```
@@ -2581,6 +2837,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.uschain.network`</summary>
+
   ```js
   FetchError: request to https://rpc.uschain.network/ failed, reason: certificate has expired
   ```
@@ -2591,6 +2848,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`http://jrpc.mainnet.quarkchain.io:38391`</summary>
+
   ```js
   Error: Request failed with status code 404
   ```
@@ -2601,6 +2859,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://evm.cryptocurrencydevs.org`</summary>
+
   ```js
   FetchError: request to https://evm.cryptocurrencydevs.org/ failed, reason: getaddrinfo ENOTFOUND evm.cryptocurrencydevs.org
   ```
@@ -2609,6 +2868,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.crystaleum.org`</summary>
+
   ```js
   Error: Request failed with status code 503
   ```
@@ -2619,6 +2879,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`http://rpc.brochain.org/mainnet`</summary>
+
   ```js
   Error: Request failed with status code 503
   ```
@@ -2627,14 +2888,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`http://rpc.brochain.org`</summary>
-  ```js
-  Error: Request failed with status code 503
-  ```
-</details>
-    
 
-<details>
-  <summary>`https://rpc.brochain.org`</summary>
   ```js
   Error: Request failed with status code 503
   ```
@@ -2643,6 +2897,16 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.brochain.org/mainnet`</summary>
+
+  ```js
+  Error: Request failed with status code 503
+  ```
+</details>
+    
+
+<details>
+  <summary>`https://rpc.brochain.org`</summary>
+
   ```js
   Error: Request failed with status code 503
   ```
@@ -2653,6 +2917,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`http://jrpc.devnet.quarkchain.io:38391`</summary>
+
   ```js
   Error: Request failed with status code 404
   ```
@@ -2663,6 +2928,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.node1.etnd.pro/`</summary>
+
   ```js
   Error: Request failed with status code 403
   ```
@@ -2673,6 +2939,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet.condor.systems/rpc`</summary>
+
   ```js
   FetchError: request to https://testnet.condor.systems/rpc failed, reason: getaddrinfo ENOTFOUND testnet.condor.systems
   ```
@@ -2683,6 +2950,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://remote.akroma.io`</summary>
+
   ```js
   FetchError: request to https://remote.akroma.io/ failed, reason: getaddrinfo ENOTFOUND remote.akroma.io
   ```
@@ -2693,6 +2961,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://chain-rpc.mythicalgames.com`</summary>
+
   ```js
   FetchError: request to https://chain-rpc.mythicalgames.com/ failed, reason: getaddrinfo ENOTFOUND chain-rpc.mythicalgames.com
   ```
@@ -2703,6 +2972,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet-val.decimalchain.com/web3`</summary>
+
   ```js
   Error: Request failed with status code 405
   ```
@@ -2713,8 +2983,9 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://jellie-rpc-wss.twala.io/`</summary>
+
   ```js
-  Error: Unexpected server response: 302
+  Error: Unexpected server response: 403
   ```
 </details>
     
@@ -2723,6 +2994,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet.hashkeychain/rpc`</summary>
+
   ```js
   FetchError: request to https://testnet.hashkeychain/rpc failed, reason: getaddrinfo ENOTFOUND testnet.hashkeychain
   ```
@@ -2733,6 +3005,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet1.haymo.network`</summary>
+
   ```js
   FetchError: invalid json response body at https://testnet1.haymo.network/ reason: Unexpected token < in JSON at position 0
   ```
@@ -2743,6 +3016,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://mainnet.block.caduceus.foundation`</summary>
+
   ```js
   Error: Unexpected server response: 405
   ```
@@ -2753,6 +3027,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://socialsmartchain.digitalnext.business`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -2763,6 +3038,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://sparta-rpc.polis.tech`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -2773,6 +3049,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rinkeby.arbitrum.io/rpc`</summary>
+
   ```js
   FetchError: request to https://rinkeby.arbitrum.io/rpc failed, reason: getaddrinfo ENOTFOUND rinkeby.arbitrum.io
   ```
@@ -2783,6 +3060,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://abritrum-goerli.infura.io/v3/${INFURA_API_KEY}`</summary>
+
   ```js
   FetchError: request to https://abritrum-goerli.infura.io/v3/84842078b09946638c03157f83405213 failed, reason: getaddrinfo ENOTFOUND abritrum-goerli.infura.io
   ```
@@ -2793,6 +3071,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://galaxy.block.caduceus.foundation`</summary>
+
   ```js
   Error: Unexpected server response: 405
   ```
@@ -2803,6 +3082,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://prealpha-rpc.scroll.io/l2`</summary>
+
   ```js
   FetchError: request to https://prealpha-rpc.scroll.io/l2 failed, reason: getaddrinfo ENOTFOUND prealpha-rpc.scroll.io
   ```
@@ -2813,6 +3093,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://brnkc-mainnet1.bearnetwork.net`</summary>
+
   ```js
   Error: Request failed with status code 404
   ```
@@ -2823,6 +3104,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://chain.deptofgood.com`</summary>
+
   ```js
   Error: Request failed with status code 403
   ```
@@ -2833,6 +3115,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://api.s0.d.posichain.org`</summary>
+
   ```js
   FetchError: request to https://api.s0.d.posichain.org/ failed, reason: getaddrinfo ENOTFOUND api.s0.d.posichain.org
   ```
@@ -2843,6 +3126,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://api.s1.d.posichain.org`</summary>
+
   ```js
   FetchError: request to https://api.s1.d.posichain.org/ failed, reason: getaddrinfo ENOTFOUND api.s1.d.posichain.org
   ```
@@ -2853,6 +3137,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://host-76-74-28-226.contentfabric.io/eth/`</summary>
+
   ```js
   Error: Request failed with status code 404
   ```
@@ -2861,14 +3146,16 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://host-76-74-29-34.contentfabric.io/eth/`</summary>
+
   ```js
-  FetchError: request to https://host-76-74-29-34.contentfabric.io/eth/ failed, reason: connect ENETUNREACH 76.74.29.34:443
+  RequestTimeoutError: Request timed out after 5000ms
   ```
 </details>
     
 
 <details>
   <summary>`https://host-60-240-133-202.contentfabric.io/eth/`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -2879,6 +3166,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.xerom.org`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -2889,6 +3177,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.kintsugi.themerge.dev`</summary>
+
   ```js
   FetchError: request to https://rpc.kintsugi.themerge.dev/ failed, reason: getaddrinfo ENOTFOUND rpc.kintsugi.themerge.dev
   ```
@@ -2899,6 +3188,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.kiln.themerge.dev`</summary>
+
   ```js
   FetchError: request to https://rpc.kiln.themerge.dev/ failed, reason: getaddrinfo ENOTFOUND rpc.kiln.themerge.dev
   ```
@@ -2909,6 +3199,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://ws-jsonrpc.imversed.network`</summary>
+
   ```js
   Error: Request failed with status code 400
   ```
@@ -2919,6 +3210,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://ws-jsonrpc-test.imversed.network`</summary>
+
   ```js
   Error: Request failed with status code 400
   ```
@@ -2929,6 +3221,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://mewapi.musicoin.tw`</summary>
+
   ```js
   FetchError: request to https://mewapi.musicoin.tw/ failed, reason: certificate has expired
   ```
@@ -2939,6 +3232,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://churchill-rpc.pepchain.io`</summary>
+
   ```js
   FetchError: request to https://churchill-rpc.pepchain.io/ failed, reason: getaddrinfo ENOTFOUND churchill-rpc.pepchain.io
   ```
@@ -2949,18 +3243,9 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://net.iolite.io`</summary>
+
   ```js
   FetchError: request to https://net.iolite.io/ failed, reason: getaddrinfo ENOTFOUND net.iolite.io
-  ```
-</details>
-    
-
-### quarkblockchain (20181205)
-
-<details>
-  <summary>`https://jp.rpc.qkiscan.io`</summary>
-  ```js
-  RequestTimeoutError: Request timed out after 5000ms
   ```
 </details>
     
@@ -2969,6 +3254,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet-rpc.exlscan.com`</summary>
+
   ```js
   FetchError: request to https://testnet-rpc.exlscan.com/ failed, reason: certificate has expired
   ```
@@ -2979,6 +3265,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.exlscan.com`</summary>
+
   ```js
   Error: Request failed with status code 502
   ```
@@ -2989,6 +3276,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.auxilium.global`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -2999,6 +3287,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://flachain.flaexchange.top/`</summary>
+
   ```js
   Error: Request failed with status code 502
   ```
@@ -3009,6 +3298,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://tx.aquacha.in/api`</summary>
+
   ```js
   Error: Request failed with status code 502
   ```
@@ -3019,6 +3309,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://toys.joys.cash/`</summary>
+
   ```js
   FetchError: request to https://toys.joys.cash/ failed, reason: getaddrinfo ENOTFOUND toys.joys.cash
   ```
@@ -3029,6 +3320,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://mainnet.neonevm.org`</summary>
+
   ```js
   FetchError: request to https://mainnet.neonevm.org/ failed, reason: getaddrinfo ENOTFOUND mainnet.neonevm.org
   ```
@@ -3039,6 +3331,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://testnet.neonevm.org`</summary>
+
   ```js
   FetchError: request to https://testnet.neonevm.org/ failed, reason: getaddrinfo ENOTFOUND testnet.neonevm.org
   ```
@@ -3049,6 +3342,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://devnet.gather.network`</summary>
+
   ```js
   Error: Request failed with status code 503
   ```
@@ -3059,6 +3353,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc.iposlab.com`</summary>
+
   ```js
   FetchError: request to https://rpc.iposlab.com/ failed, reason: write EPROTO 8489238848:error:14094438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:../deps/openssl/openssl/ssl/record/rec_layer_s3.c:1546:SSL alert number 80
 
@@ -3068,6 +3363,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://rpc2.iposlab.com`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -3078,6 +3374,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://mainnet-proxy.skalenodes.com/v1/ws/green-giddy-denebola`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -3088,6 +3385,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://api.s1.ps.hmny.io`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -3096,6 +3394,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://api.s1.ps.hmny.io`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -3106,6 +3405,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://23.92.21.121:8545`</summary>
+
   ```js
   FetchError: request to https://23.92.21.121:8545/ failed, reason: connect ECONNREFUSED 23.92.21.121:8545
   ```
@@ -3116,6 +3416,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`wss://mainnet.skalenodes.com/v1/elated-tan-skat`</summary>
+
   ```js
   Error: Unexpected server response: 200
   ```
@@ -3126,6 +3427,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://wallrpc.pirl.io`</summary>
+
   ```js
   RequestTimeoutError: Request timed out after 5000ms
   ```
@@ -3136,6 +3438,7 @@ If the RPC is not responding then it is not useful.
 
 <details>
   <summary>`https://molereum.jdubedition.com`</summary>
+
   ```js
   FetchError: request to https://molereum.jdubedition.com/ failed, reason: getaddrinfo ENOTFOUND molereum.jdubedition.com
   ```

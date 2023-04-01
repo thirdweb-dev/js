@@ -6,7 +6,7 @@
       "dependsOn": ["^build"]
     },
     "@thirdweb-dev/chains#build": {
-      "outputs": ["dist/**", "chains/**"],
+      "outputs": ["dist/**", "chains/**", "bad-rpcs.md"],
       "dependsOn": ["^build"],
       "inputs": [
         "package.json",

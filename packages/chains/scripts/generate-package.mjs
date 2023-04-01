@@ -107,7 +107,6 @@ while (chains.length > 0) {
 
   await Promise.all(
     chunkedChains.map(async (chain) => {
-      let badRpcsInChain = [];
       const promises = [
         // chain icon
         Promise.resolve(),
@@ -115,6 +114,10 @@ while (chains.length > 0) {
         Promise.all(chain.explorers || []),
         // rpcs
         checkRpcs(chain, (rpcUrl, error) => {
+          if (chain.chainId === 1337) {
+            // localhost errors are expected
+            return;
+          }
           if (isInvalidChainIdError(error)) {
             mismatchedChainIdErrors.push({ chain, rpcUrl, error });
           } else {
@@ -234,7 +237,8 @@ mismatchedChainIdErrors.forEach(({ chain, rpcUrl, error }) => {
   fs.appendFileSync(
     badRPCsFile,
     `<details>
-  <summary>\`${rpcUrl}\`</summary>
+  <summary>${rpcUrl}</summary>
+  
   \`\`\`js
   ${error}
   \`\`\`
@@ -271,6 +275,7 @@ fetchErrors.forEach(({ chain, rpcUrl, error }) => {
     badRPCsFile,
     `<details>
   <summary>\`${rpcUrl}\`</summary>
+
   \`\`\`js
   ${error}
   \`\`\`
