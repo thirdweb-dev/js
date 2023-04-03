@@ -12,7 +12,7 @@ then
     if command -v corepack &> /dev/null
     then
         corepack enable
-        corepack prepare pnpm@7.29.3 --activate
+        corepack prepare pnpm@8.1.0 --activate
     else
         # if not, install it using npm
         npm install -g pnpm

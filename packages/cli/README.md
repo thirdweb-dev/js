@@ -77,7 +77,7 @@ npm i -g @thirdweb-dev/cli
 
 ---
 
-## Supported projects
+## Supported Projects
 
 To publish, you need to be in a directory that contains a project which the CLI is compatible
 with. The projects we support so far:
@@ -89,7 +89,7 @@ with. The projects we support so far:
 
 ---
 
-## Running the examples
+## Running the Examples
 
 Clone the repo and run this command after installing the CLI tool:
 

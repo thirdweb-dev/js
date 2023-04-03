@@ -10,8 +10,8 @@ export const Button = styled.button<{
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: ${radius.sm};
-  padding: ${spacing.sm} ${spacing.md};
+  border-radius: ${radius.md};
+  padding: ${spacing.sm} ${spacing.sm};
   font-size: ${fontSize.md};
   font-weight: 500;
   box-sizing: border-box;
