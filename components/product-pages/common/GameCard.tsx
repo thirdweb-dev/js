@@ -1,4 +1,4 @@
-import { Box, Center, Flex } from "@chakra-ui/react";
+import { Box, Center, Flex, useBreakpointValue } from "@chakra-ui/react";
 import { SiGithub } from "@react-icons/all-files/si/SiGithub";
 import { useTrack } from "hooks/analytics/useTrack";
 import NextImage, { StaticImageData } from "next/image";
@@ -11,7 +11,6 @@ import {
   Text,
   TrackedIconButton,
 } from "tw-components";
-import { isMobile } from "utils/isMobile";
 
 export type Game = {
   id: string;
@@ -33,6 +32,7 @@ export const GameCard: React.FC<GameCardProps> = ({
   game,
   setSelectedGame,
 }) => {
+  const isMobile = useBreakpointValue({ base: true, md: false });
   const track = useTrack();
   return (
     <Card
@@ -49,7 +49,7 @@ export const GameCard: React.FC<GameCardProps> = ({
       role="group"
       cursor="pointer"
       onClick={() => {
-        if (isMobile()) {
+        if (isMobile) {
           window.open(game.href, "_blank");
         } else {
           setSelectedGame(game.href);

@@ -6,17 +6,20 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Divider,
   Flex,
   GridItem,
   Image,
   List,
   ListItem,
+  Select,
   SimpleGrid,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { Chain } from "@thirdweb-dev/chains";
 import { useAddress } from "@thirdweb-dev/react";
@@ -319,6 +322,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
   const { data } = useFeatureContractCodeSnippetQuery(environment);
   const enabledExtensions = useContractEnabledExtensions(abi);
   const address = useAddress();
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   const filteredData = useMemo(() => {
     if (!data) {
@@ -380,15 +384,17 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
               Getting Started {chain ? `with ${chain.name}` : null}
             </Heading>
           </Flex>
-          <Flex flexDir="column" gap={2}>
-            <Text>Choose a language:</Text>
-            <CodeSegment
-              onlyTabs
-              environment={environment}
-              setEnvironment={setEnvironment}
-              snippet={COMMANDS.install}
-            />
-          </Flex>
+          {(noSidebar || isMobile) && (
+            <Flex flexDir="column" gap={2}>
+              <Text>Choose a language:</Text>
+              <CodeSegment
+                onlyTabs
+                environment={environment}
+                setEnvironment={setEnvironment}
+                snippet={COMMANDS.install}
+              />
+            </Flex>
+          )}
           <Flex flexDir="column" gap={2}>
             {environment === "react-native" || environment === "unity" ? (
               <Text>
@@ -713,14 +719,29 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
           </>
         ) : null}
       </GridItem>
-      {noSidebar ? null : (
+      {noSidebar || isMobile ? null : (
         <GridItem
           as={Flex}
           colSpan={{ base: 12, md: 3 }}
           flexDir="column"
           gap={3}
-          mt={12}
         >
+          <Flex flexDir="column" gap={2}>
+            <Text>Choose a language:</Text>
+            <Select
+              onChange={(e) =>
+                setEnvironment(e.target.value as CodeEnvironment)
+              }
+            >
+              <option value="javascript">JavaScript</option>
+              <option value="react">React</option>
+              <option value="react-native">React Native</option>
+              <option value="python">Python</option>
+              <option value="go">Go</option>
+              <option value="unity">Unity</option>
+            </Select>
+          </Flex>
+          <Divider my={2} />
           <Link href="#getting-started">
             <Text size="body.md">Getting Started</Text>
           </Link>
