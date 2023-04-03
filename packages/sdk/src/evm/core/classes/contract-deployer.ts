@@ -857,6 +857,8 @@ export class ContractDeployer extends RPCConnectionHandler {
           // any evm deployment flow -- with signer
           // 0. Cache Infra contracts data
           await this.computeAndCacheInfraContractsData();
+          console.log("computed and cached infra");
+          console.log(this.infraContractsInfoCache);
 
           // 1. Deploy CREATE2 factory (if not already exists)
           console.log("deploying create2 factory");
@@ -1148,7 +1150,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         ).encodedArgs;
         const address = await computeDeploymentAddress(
           metadata.compilerMetadata.bytecode,
-          [],
+          encodedArgs,
           await this.computeCreate2FactoryAddress(),
         );
 
@@ -1163,7 +1165,7 @@ export class ContractDeployer extends RPCConnectionHandler {
             [contract.contractType]: {
               predictedAddress: address,
               bytecode: metadata.compilerMetadata.bytecode,
-              encodedArgs: [],
+              encodedArgs: encodedArgs,
             },
           };
         }
@@ -1322,7 +1324,7 @@ export class ContractDeployer extends RPCConnectionHandler {
 
       if (code === "0x") {
         // get init bytecode
-        const deployData = getInitBytecodeWithSalt(
+        const initBytecodeWithSalt = getInitBytecodeWithSalt(
           infraContract.bytecode,
           infraContract.encodedArgs,
         );
@@ -1330,7 +1332,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         txns.push({
           predictedAddress: infraContract.predictedAddress,
           to: create2Factory,
-          data: deployData.initBytecodeWithSalt,
+          data: initBytecodeWithSalt,
         });
       }
     }

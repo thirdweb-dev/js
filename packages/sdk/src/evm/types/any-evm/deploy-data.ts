@@ -1,16 +1,5 @@
 import { InfraContractType } from "../../core";
 
-export type DeployDataKeyless = {
-  keylessSigner: string;
-  keylessTxnString: string;
-  gasPrice: number;
-  gasLimit: number;
-};
-
-export type DeployDataWithSigner = {
-  initBytecodeWithSalt: string;
-};
-
 export type PrecomputedDeploymentData = {
   predictedAddress: string;
   bytecode: string;

@@ -1,7 +1,6 @@
 import invariant from "tiny-invariant";
 import { ethers, providers, Signer } from "ethers";
 import {
-  DeployDataWithSigner,
   KeylessDeploymentInfo,
   KeylessTransaction,
 } from "../types/any-evm/deploy-data";
@@ -211,18 +210,15 @@ export function getSaltHash(bytecode: string) {
  * @param bytecode: Creation bytecode of the contract to deploy
  * @param encodedArgs: Abi-encoded constructor params
  */
-export function getInitBytecodeWithSalt(
-  bytecode: string,
-  encodedArgs: any,
-): DeployDataWithSigner {
+export function getInitBytecodeWithSalt(bytecode: string, encodedArgs: any) {
   const saltHash = getSaltHash(bytecode);
 
-  const deployData = ethers.utils.solidityPack(
+  const initBytecodeWithSalt = ethers.utils.solidityPack(
     ["bytes32", "bytes", "bytes"],
     [saltHash, bytecode, encodedArgs],
   );
 
-  return { initBytecodeWithSalt: deployData };
+  return initBytecodeWithSalt;
 }
 
 /**
@@ -289,7 +285,7 @@ export async function deployContractDeterministic(
     : "0x";
 
   if (code === "0x") {
-    const deployData = getInitBytecodeWithSalt(bytecode, encodedArgs);
+    const initBytecodeWithSalt = getInitBytecodeWithSalt(bytecode, encodedArgs);
     const from = await signer.getAddress();
     const nonce = await signer.getTransactionCount("latest");
     const tx = {
@@ -297,7 +293,7 @@ export async function deployContractDeterministic(
       to: create2FactoryAddress,
       value: 0,
       nonce: nonce,
-      data: deployData.initBytecodeWithSalt,
+      data: initBytecodeWithSalt,
     };
 
     await (await signer.sendTransaction(tx)).wait();
