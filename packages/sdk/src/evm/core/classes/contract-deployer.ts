@@ -5,11 +5,18 @@ import {
   fetchPreDeployMetadata,
 } from "../../common";
 import {
-  deployImplementationWithSigner,
-  deployInfraWithSigner,
-  getDeploymentInfo,
+  computeDeploymentAddress,
+  constructKeylessDeployTx,
+  deployContractDeterministic,
+  deployerAbi,
+  deployerBytecode,
+  getInitBytecodeWithSalt,
 } from "../../common/any-evm-deploy";
-import { deployCreate2Factory } from "../../common/any-evm-utils";
+import {
+  deployCreate2Factory,
+  getCreate2FactoryDeploymentInfo,
+  isEIP155Enforced,
+} from "../../common/any-evm-utils";
 import { getDeployArguments } from "../../common/deploy";
 import { resolveAddress } from "../../common/ens";
 import {
@@ -39,7 +46,12 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../../contracts";
-import { Address, AddressOrEns, SDKOptions } from "../../schema";
+import {
+  Address,
+  AddressOrEns,
+  PreDeployMetadataFetched,
+  SDKOptions,
+} from "../../schema";
 import {
   DeployEvent,
   DeployEvents,
@@ -57,6 +69,7 @@ import { ThirdwebSDK } from "../sdk";
 import {
   ContractType,
   DeploySchemaForPrebuiltContractType,
+  InfraContractType,
   NetworkInput,
   PrebuiltContractType,
 } from "../types";
@@ -71,11 +84,23 @@ import {
   Contract,
   ContractInterface,
   ethers,
+  providers,
   Signer,
 } from "ethers";
 import { EventEmitter } from "eventemitter3";
 import invariant from "tiny-invariant";
 import { z } from "zod";
+import {
+  DeploymentInfo,
+  PrecomputedDeploymentData,
+} from "../../types/any-evm/deploy-data";
+import {
+  CloneFactory,
+  EOAForwarder,
+  Forwarder,
+  INFRA_CONTRACTS_MAP,
+  NativeTokenWrapper,
+} from "../../common/infra-data";
 
 const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
 
@@ -97,6 +122,13 @@ export class ContractDeployer extends RPCConnectionHandler {
   private storage: ThirdwebStorage;
   private events: EventEmitter<DeployEvents>;
   private deployMetadataCache: Record<string, any> = {};
+  private infraContractURICache: Record<string, string> = {};
+  private infraContractAddressCache: Record<number, Record<string, string>> =
+    {};
+  private infraContractsInfoCache: Record<
+    number,
+    Record<string, PrecomputedDeploymentData>
+  > = {};
   private transactionListener = (event: any) => {
     if (event.status === "submitted") {
       this.events.emit("contractDeployed", {
@@ -825,30 +857,29 @@ export class ContractDeployer extends RPCConnectionHandler {
           }
         } else {
           // any evm deployment flow -- with signer
+          // -1. Cache Infra contracts data
+          await this.computeAndCacheInfraContractsData();
+
           // 0. Deploy CREATE2 factory (if not already exists)
           console.log("deploying create2 factory");
           const create2Factory = await deployCreate2Factory(
             this.getSigner() as Signer,
           );
+          this.infraContractAddressCache[chainId]["create2Factory"] =
+            create2Factory;
 
           // 1. get deployment info for any evm
           console.log("getting deployment info");
-          const deploymentInfo = await getDeploymentInfo(
+          const deploymentInfo = await this.getDeploymentInfo(
             publishMetadataUri,
             chainId,
-            this.storage,
-            this.getProvider(),
-            create2Factory,
           );
 
           implementationAddress = deploymentInfo.predictedAddress;
 
           console.log("deploying infra");
           // 2. deploy infra
-          const cloneFactory = await deployInfraWithSigner(
-            this.getSigner() as Signer,
-            this.getProvider(),
-            create2Factory,
+          await this.deployInfraWithSigner(
             deploymentInfo.infraContractsToDeploy,
           );
 
@@ -857,11 +888,11 @@ export class ContractDeployer extends RPCConnectionHandler {
             deploymentInfo.predictedAddress,
           );
           // 3. deploy implementation contract
-          await deployImplementationWithSigner(
+          await deployContractDeterministic(
             this.getSigner() as Signer,
             deploymentInfo.signerDeployData.initBytecodeWithSalt,
-            deploymentInfo.predictedAddress,
             create2Factory,
+            deploymentInfo.predictedAddress,
           );
 
           const resolvedImplementationAddress = await resolveAddress(
@@ -871,7 +902,8 @@ export class ContractDeployer extends RPCConnectionHandler {
           console.log("deploying proxy");
           // 4. deploy proxy with TWStatelessFactory (Clone factory) and return address
           return (await this.deployViaFactory.prepare(
-            cloneFactory,
+            this.infraContractsInfoCache[chainId][CloneFactory.contractType]
+              .predictedAddress,
             resolvedImplementationAddress,
             compilerMetadata.abi,
             extendedMetadata.factoryDeploymentData
@@ -1062,5 +1094,398 @@ export class ContractDeployer extends RPCConnectionHandler {
       }
       return constructorParamValues[index];
     });
+  }
+
+  private async computeAndCacheInfraContractsData() {
+    const chainId = (await this.getProvider().getNetwork()).chainId;
+
+    for (const [key, value] of Object.entries(INFRA_CONTRACTS_MAP)) {
+      if (
+        this.infraContractsInfoCache[chainId] &&
+        this.infraContractsInfoCache[chainId][value.contractType]
+      ) {
+        continue;
+      }
+
+      if (value.contractType === NativeTokenWrapper.contractType) {
+        const address = await this.computeNativeTokenAddress();
+
+        this.infraContractsInfoCache[chainId] = {
+          ...this.infraContractsInfoCache[chainId],
+          nativeTokenWrapper: {
+            keylessData: {
+              keylessSigner: "",
+              keylessTxnString: "",
+              gasPrice: 0,
+              gasLimit: 0,
+            },
+            signerDeployData: {
+              initBytecodeWithSalt: "",
+            },
+            predictedAddress: address,
+            bytecode: "",
+            encodedArgs: "",
+          },
+        };
+
+        continue;
+      }
+
+      let uri = "";
+      if (this.infraContractURICache[value.contractType]) {
+        uri = this.deployMetadataCache[value.contractType];
+      } else {
+        // fetch the publish URI from the ContractPublisher contract
+        const publishedContract = await new ThirdwebSDK("polygon")
+          .getPublisher()
+          .getVersion(THIRDWEB_DEPLOYER, value.name);
+        if (!publishedContract) {
+          throw new Error(
+            `No published contract found for ${value.name} at version by '${THIRDWEB_DEPLOYER}'`,
+          );
+        }
+        uri = publishedContract?.metadataUri;
+      }
+
+      const metadata = await this.fetchAndCacheDeployMetadata(uri);
+      const encodedArgs = (
+        await this.encodeConstructorParamsForImplementation(
+          metadata.compilerMetadata,
+          chainId,
+        )
+      ).encodedArgs;
+      const address = await computeDeploymentAddress(
+        metadata.compilerMetadata.bytecode,
+        encodedArgs,
+        await this.computeCreate2FactoryAddress(),
+      );
+
+      this.infraContractsInfoCache[chainId][value.contractType] = {
+        keylessData: {
+          keylessSigner: "",
+          keylessTxnString: "",
+          gasPrice: 0,
+          gasLimit: 0,
+        },
+        signerDeployData: {
+          initBytecodeWithSalt: "",
+        },
+        predictedAddress: address,
+        bytecode: metadata.compilerMetadata.bytecode,
+        encodedArgs: encodedArgs,
+      };
+    }
+  }
+
+  async computeEOAForwarderAddress() {
+    const chainId = (await this.getProvider().getNetwork()).chainId;
+    if (
+      this.infraContractAddressCache[chainId] &&
+      this.infraContractAddressCache[chainId]["eoaForwrder"]
+    ) {
+      return this.infraContractAddressCache[chainId]["eoaForwrder"];
+    }
+
+    let uri = "";
+    if (this.infraContractURICache["eoaForwarder"]) {
+      uri = this.deployMetadataCache["eoaForwarder"];
+    } else {
+      // fetch the publish URI from the ContractPublisher contract
+      const publishedContract = await new ThirdwebSDK("polygon")
+        .getPublisher()
+        .getVersion(THIRDWEB_DEPLOYER, "ForwarderEOAOnly");
+      if (!publishedContract) {
+        throw new Error(
+          `No published contract found for ForwarderEOAOnly at version by '${THIRDWEB_DEPLOYER}'`,
+        );
+      }
+      uri = publishedContract?.metadataUri;
+    }
+
+    const metadata = await this.fetchAndCacheDeployMetadata(uri);
+    const address = await computeDeploymentAddress(
+      metadata.compilerMetadata.bytecode,
+      [],
+      await this.computeCreate2FactoryAddress(),
+    );
+    this.infraContractAddressCache[chainId] = {
+      ...this.infraContractAddressCache[chainId],
+      eoaForwrder: address,
+    };
+
+    return this.infraContractAddressCache[chainId]["eoaForwrder"];
+  }
+
+  async computeForwarderAddress() {
+    const chainId = (await this.getProvider().getNetwork()).chainId;
+    if (
+      this.infraContractAddressCache[chainId] &&
+      this.infraContractAddressCache[chainId]["forwarder"]
+    ) {
+      return this.infraContractAddressCache[chainId]["forwarder"];
+    }
+
+    let uri = "";
+    if (this.infraContractURICache["forwarder"]) {
+      uri = this.deployMetadataCache["forwarder"];
+    } else {
+      // fetch the publish URI from the ContractPublisher contract
+      const publishedContract = await new ThirdwebSDK("polygon")
+        .getPublisher()
+        .getVersion(THIRDWEB_DEPLOYER, "Forwarder");
+      if (!publishedContract) {
+        throw new Error(
+          `No published contract found for Forwarder at version by '${THIRDWEB_DEPLOYER}'`,
+        );
+      }
+      uri = publishedContract?.metadataUri;
+    }
+
+    const metadata = await this.fetchAndCacheDeployMetadata(uri);
+    this.infraContractAddressCache[chainId]["forwarder"] =
+      await computeDeploymentAddress(
+        metadata.compilerMetadata.bytecode,
+        [],
+        await this.computeCreate2FactoryAddress(),
+      );
+
+    return this.infraContractAddressCache[chainId]["forwarder"];
+  }
+
+  async computeCloneFactoryAddress() {
+    const chainId = (await this.getProvider().getNetwork()).chainId;
+    if (
+      this.infraContractAddressCache[chainId] &&
+      this.infraContractAddressCache[chainId]["cloneFactory"]
+    ) {
+      return this.infraContractAddressCache[chainId]["cloneFactory"];
+    }
+
+    let uri = "";
+    if (this.infraContractURICache["cloneFactory"]) {
+      uri = this.deployMetadataCache["cloneFactory"];
+    } else {
+      // fetch the publish URI from the ContractPublisher contract
+      const publishedContract = await new ThirdwebSDK("polygon")
+        .getPublisher()
+        .getVersion(THIRDWEB_DEPLOYER, "TWCloneFactory");
+      if (!publishedContract) {
+        throw new Error(
+          `No published contract found for TWCloneFactory at version by '${THIRDWEB_DEPLOYER}'`,
+        );
+      }
+      uri = publishedContract?.metadataUri;
+    }
+
+    const metadata = await this.fetchAndCacheDeployMetadata(uri);
+    this.infraContractAddressCache[chainId]["cloneFactory"] =
+      await computeDeploymentAddress(
+        metadata.compilerMetadata.bytecode,
+        [],
+        await this.computeCreate2FactoryAddress(),
+      );
+
+    return this.infraContractAddressCache[chainId]["cloneFactory"];
+  }
+
+  async computeNativeTokenAddress() {
+    const chainId = (await this.getProvider().getNetwork()).chainId;
+    if (
+      this.infraContractAddressCache[chainId] &&
+      this.infraContractAddressCache[chainId]["nativeTokenWrapper"]
+    ) {
+      return this.infraContractAddressCache[chainId]["nativeTokenWrapper"];
+    }
+
+    const address = await computeDeploymentAddress(
+      NativeTokenWrapper.txInfo.bytecode, // TODO add WETH9 bytecode
+      [],
+      await this.computeCreate2FactoryAddress(),
+    );
+    this.infraContractAddressCache[chainId] = {
+      ...this.infraContractAddressCache[chainId],
+      nativeTokenWrapper: address,
+    };
+
+    return this.infraContractAddressCache[chainId]["nativeTokenWrapper"];
+  }
+
+  private async computeCreate2FactoryAddress() {
+    const chainId = (await this.getProvider().getNetwork()).chainId;
+
+    if (
+      !this.infraContractAddressCache[chainId] ||
+      !this.infraContractAddressCache[chainId]["create2Factory"]
+    ) {
+      const enforceEip155 = await isEIP155Enforced(this.getProvider());
+
+      const tempChainId = enforceEip155 ? chainId : 0;
+      const deploymentInfo = getCreate2FactoryDeploymentInfo(tempChainId);
+
+      this.infraContractAddressCache[chainId] = {
+        ...this.infraContractAddressCache[chainId],
+        create2Factory: deploymentInfo.deployment,
+      };
+    }
+
+    return this.infraContractAddressCache[chainId]["create2Factory"];
+  }
+
+  /**
+   * @internal
+   *
+   * Returns txn data for keyless deploys as well as signer deploys.
+   * Also provides a list of infra contracts to deploy.
+   *
+   * @param metadataUri
+   * @param activeChainId
+   * @param storage
+   */
+  async getDeploymentInfo(
+    metadataUri: string,
+    activeChainId?: number,
+  ): Promise<DeploymentInfo> {
+    const compilerMetadata = await fetchPreDeployMetadata(
+      metadataUri,
+      this.storage,
+    );
+    const chainId = activeChainId
+      ? activeChainId
+      : (await this.getProvider().getNetwork()).chainId;
+
+    // 1.  Get abi-encoded args and list of infra contracts required based on constructor params
+    const { encodedArgs, infraContracts } =
+      await this.encodeConstructorParamsForImplementation(
+        compilerMetadata,
+        chainId,
+      );
+
+    // 2. Compute the CREATE2 address
+    const predictedAddress = await computeDeploymentAddress(
+      compilerMetadata.bytecode,
+      encodedArgs,
+      await this.computeCreate2FactoryAddress(),
+    );
+
+    // 3. Construct keyless txn
+    const keylessData = await constructKeylessDeployTx(
+      compilerMetadata.bytecode,
+      encodedArgs,
+      this.getProvider(),
+    );
+
+    // 4. Get init-bytecode packed with salt -- to be used if deploying with a signer
+    const signerDeployData = getInitBytecodeWithSalt(
+      compilerMetadata.bytecode,
+      encodedArgs,
+    );
+
+    // 5. Add TWStatelessFactory and Forwarder to the list of infra contracts --
+    // these must be deployed regardless of constructor params of implementation contract
+    infraContracts.push(CloneFactory.contractType);
+
+    return {
+      keylessData,
+      signerDeployData,
+      predictedAddress: predictedAddress,
+      infraContractsToDeploy: infraContracts,
+    };
+  }
+
+  /**
+   * @internal
+   *
+   * Determine constructor params required by an implementation contract.
+   * Return abi-encoded params.
+   */
+  async encodeConstructorParamsForImplementation(
+    compilerMetadata: PreDeployMetadataFetched,
+    chainId: number,
+  ) {
+    const infraContracts: InfraContractType[] = [];
+    const constructorParams = extractConstructorParamsFromAbi(
+      compilerMetadata.abi,
+    );
+
+    const constructorParamTypes = constructorParams.map((p) => p.type);
+    const constructorParamValues = await Promise.all(
+      constructorParams.map(async (p) => {
+        if (p.name && p.name.includes("nativeTokenWrapper")) {
+          let nativeTokenWrapperAddress =
+            getNativeTokenByChainId(chainId).wrapped.address;
+
+          if (nativeTokenWrapperAddress === ethers.constants.AddressZero) {
+            nativeTokenWrapperAddress = await this.computeNativeTokenAddress();
+            infraContracts.push(NativeTokenWrapper.contractType);
+          }
+
+          return nativeTokenWrapperAddress;
+        } else if (p.name && p.name.includes("trustedForwarder")) {
+          if (
+            compilerMetadata.analytics?.contract_name &&
+            compilerMetadata.analytics.contract_name === "Pack"
+          ) {
+            infraContracts.push(EOAForwarder.contractType);
+            const eoaForwarderAddress = await this.computeEOAForwarderAddress();
+            return eoaForwarderAddress;
+          }
+          infraContracts.push(Forwarder.contractType);
+          const forwarderAddress = await this.computeForwarderAddress();
+          return forwarderAddress;
+        } else {
+          return "";
+        }
+      }),
+    );
+
+    const encodedArgs = ethers.utils.defaultAbiCoder.encode(
+      constructorParamTypes,
+      constructorParamValues,
+    );
+    return { encodedArgs, infraContracts };
+  }
+
+  /**
+   * @internal
+   *
+   * Deploy Infra contracts with a signer.
+   * The serialized txn data and addresses are precomputed for infra contracts.
+   *
+   * @param signer: Signer of infra deployment txns
+   * @param contractTypes: List of infra contracts to deploy
+   */
+  async deployInfraWithSigner(contractTypes: InfraContractType[]) {
+    const txns = [];
+    const chainId = (await this.getProvider().getNetwork()).chainId;
+
+    for (let contractType of contractTypes as InfraContractType[]) {
+      const infraContract = this.infraContractsInfoCache[chainId][contractType];
+      const code = await this.getProvider().getCode(
+        infraContract.predictedAddress,
+      );
+
+      if (code === "0x") {
+        // get init bytecode
+        const deployData = getInitBytecodeWithSalt(
+          infraContract.bytecode,
+          infraContract.encodedArgs,
+        );
+        const create2Factory = await this.computeCreate2FactoryAddress();
+        txns.push({
+          predictedAddress: infraContract.predictedAddress,
+          to: create2Factory,
+          data: deployData.initBytecodeWithSalt,
+        });
+      }
+    }
+
+    // Call/deploy the throaway-deployer only if there are any contracts to deploy
+    if (txns.length > 0) {
+      // Using the deployer contract, send the deploy transactions to common factory with a signer
+      const deployer = new ethers.ContractFactory(deployerAbi, deployerBytecode)
+        .connect(this.getSigner() as Signer)
+        .deploy(txns);
+      await (await deployer).deployed();
+    }
   }
 }

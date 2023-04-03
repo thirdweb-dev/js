@@ -37,9 +37,9 @@ export async function isEIP155Enforced(
   } catch (e: any) {
     console.log("error checking eip155: ", e);
     if (
-      e.data?.message?.toString().toLowerCase().includes("eip-155") ||
+      e.toString().toLowerCase().includes("eip-155") ||
       e.message?.toString().toLowerCase().includes("eip-155") ||
-      e.toString().toLowerCase().includes("eip-155")
+      e.data?.message?.toString().toLowerCase().includes("eip-155")
     ) {
       return true;
     }
@@ -73,7 +73,7 @@ export function getKeylessTxn(
   };
 }
 
-function getCreate2FactoryDeploymentInfo(
+export function getCreate2FactoryDeploymentInfo(
   chainId: number,
 ): KeylessDeploymentInfo {
   const signature = ethers.utils.joinSignature(SIGNATURE);

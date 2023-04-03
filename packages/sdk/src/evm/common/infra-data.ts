@@ -2,7 +2,7 @@ import { PrecomputedDeploymentData } from "../types/any-evm/deploy-data";
 import InfraData from "./InfraData.json";
 
 export const CloneFactory = {
-  name: "TWStatelessFactory" as const,
+  name: "TWCloneFactory" as const,
   contractType: "cloneFactory" as const,
   txInfo: InfraData["cloneFactory"] as PrecomputedDeploymentData,
 };
@@ -29,8 +29,8 @@ export const EOAForwarder = {
  * @internal
  */
 export const INFRA_CONTRACTS_MAP = {
-  [CloneFactory.contractType]: CloneFactory,
   [NativeTokenWrapper.contractType]: NativeTokenWrapper,
   [Forwarder.contractType]: Forwarder,
   [EOAForwarder.contractType]: EOAForwarder,
+  [CloneFactory.contractType]: CloneFactory,
 } as const;
