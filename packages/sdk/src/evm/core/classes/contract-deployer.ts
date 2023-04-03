@@ -6,7 +6,6 @@ import {
 } from "../../common";
 import {
   computeDeploymentAddress,
-  constructKeylessDeployTx,
   deployContractDeterministic,
   deployerAbi,
   deployerBytecode,
@@ -890,7 +889,8 @@ export class ContractDeployer extends RPCConnectionHandler {
           // 3. deploy implementation contract
           await deployContractDeterministic(
             this.getSigner() as Signer,
-            deploymentInfo.signerDeployData.initBytecodeWithSalt,
+            deploymentInfo.bytecode,
+            deploymentInfo.encodedArgs,
             create2Factory,
             deploymentInfo.predictedAddress,
           );
@@ -1113,15 +1113,6 @@ export class ContractDeployer extends RPCConnectionHandler {
         this.infraContractsInfoCache[chainId] = {
           ...this.infraContractsInfoCache[chainId],
           nativeTokenWrapper: {
-            keylessData: {
-              keylessSigner: "",
-              keylessTxnString: "",
-              gasPrice: 0,
-              gasLimit: 0,
-            },
-            signerDeployData: {
-              initBytecodeWithSalt: "",
-            },
             predictedAddress: address,
             bytecode: "",
             encodedArgs: "",
@@ -1161,15 +1152,6 @@ export class ContractDeployer extends RPCConnectionHandler {
       );
 
       this.infraContractsInfoCache[chainId][value.contractType] = {
-        keylessData: {
-          keylessSigner: "",
-          keylessTxnString: "",
-          gasPrice: 0,
-          gasLimit: 0,
-        },
-        signerDeployData: {
-          initBytecodeWithSalt: "",
-        },
         predictedAddress: address,
         bytecode: metadata.compilerMetadata.bytecode,
         encodedArgs: encodedArgs,
@@ -1367,13 +1349,6 @@ export class ContractDeployer extends RPCConnectionHandler {
       await this.computeCreate2FactoryAddress(),
     );
 
-    // 3. Construct keyless txn
-    const keylessData = await constructKeylessDeployTx(
-      compilerMetadata.bytecode,
-      encodedArgs,
-      this.getProvider(),
-    );
-
     // 4. Get init-bytecode packed with salt -- to be used if deploying with a signer
     const signerDeployData = getInitBytecodeWithSalt(
       compilerMetadata.bytecode,
@@ -1385,8 +1360,8 @@ export class ContractDeployer extends RPCConnectionHandler {
     infraContracts.push(CloneFactory.contractType);
 
     return {
-      keylessData,
-      signerDeployData,
+      bytecode: compilerMetadata.bytecode,
+      encodedArgs: encodedArgs,
       predictedAddress: predictedAddress,
       infraContractsToDeploy: infraContracts,
     };

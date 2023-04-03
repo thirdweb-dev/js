@@ -12,16 +12,14 @@ export type DeployDataWithSigner = {
 };
 
 export type PrecomputedDeploymentData = {
-  keylessData: DeployDataKeyless;
-  signerDeployData: DeployDataWithSigner;
   predictedAddress: string;
   bytecode: string;
   encodedArgs: any;
 };
 
 export type DeploymentInfo = {
-  keylessData: DeployDataKeyless;
-  signerDeployData: DeployDataWithSigner;
+  bytecode: string;
+  encodedArgs: any;
   predictedAddress: string;
   infraContractsToDeploy: InfraContractType[];
 };
