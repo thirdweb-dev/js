@@ -22,7 +22,7 @@ const ContractsDeployPage: ThirdwebNextPage = () => {
         <Flex gap={2} direction="column">
           <Heading size="title.md">Deploy Contract</Heading>
           <Text fontStyle="italic" maxW="container.md">
-            Welcome to the new thirdweb contract deployment flow.
+            Welcome to the thirdweb contract deployment flow.
             <br />
             <Link
               color="blue.500"

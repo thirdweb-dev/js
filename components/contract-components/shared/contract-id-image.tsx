@@ -32,7 +32,11 @@ export const ContractIdImage: React.FC<ContractIdImageProps> = ({
     fullPublishMetadata.data?.latestPublishedContractMetadata?.publishedMetadata
       .logo;
 
-  const img = publishMetadata.data?.image;
+  const img =
+    publishMetadata.data?.image !== "custom"
+      ? publishMetadata.data?.image ||
+        require("/public/assets/tw-icons/general.png")
+      : require("/public/assets/tw-icons/general.png");
 
   const isStaticImage = img && typeof img !== "string";
 
