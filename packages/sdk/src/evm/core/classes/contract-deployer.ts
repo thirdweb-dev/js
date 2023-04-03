@@ -4,7 +4,7 @@ import {
   fetchExtendedReleaseMetadata,
   fetchPreDeployMetadata,
 } from "../../common";
-import { bytecode as WETHBytecode, abi as WETHAbi } from "../../common/WETH9";
+import { bytecode as WETHBytecode } from "../../common/WETH9";
 import {
   computeDeploymentAddress,
   deployContractDeterministic,
@@ -67,7 +67,6 @@ import {
 } from "../../types";
 import { ThirdwebSDK } from "../sdk";
 import {
-  ContractType,
   DeploySchemaForPrebuiltContractType,
   InfraContractType,
   NetworkInput,
@@ -84,7 +83,6 @@ import {
   Contract,
   ContractInterface,
   ethers,
-  providers,
   Signer,
 } from "ethers";
 import { EventEmitter } from "eventemitter3";
@@ -1097,7 +1095,7 @@ export class ContractDeployer extends RPCConnectionHandler {
   private async computeAndCacheInfraContractsData() {
     const chainId = (await this.getProvider().getNetwork()).chainId;
 
-    for (const [key, value] of Object.entries(INFRA_CONTRACTS_MAP)) {
+    for (const value of Object.values(INFRA_CONTRACTS_MAP)) {
       this.computeAddressInfra(value.contractType, chainId);
     }
   }
