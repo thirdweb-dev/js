@@ -4,13 +4,14 @@ import {
   fetchExtendedReleaseMetadata,
   fetchPreDeployMetadata,
 } from "../../common";
+import { bytecode as WETHBytecode, abi as WETHAbi } from "../../common/WETH9";
 import {
   computeDeploymentAddress,
   deployContractDeterministic,
   deployerAbi,
   deployerBytecode,
   getInitBytecodeWithSalt,
-} from "../../common/any-evm-deploy";
+} from "../../common/any-evm-utils";
 import {
   deployCreate2Factory,
   getCreate2FactoryDeploymentInfo,
@@ -1031,27 +1032,6 @@ export class ContractDeployer extends RPCConnectionHandler {
     return publishedContract;
   }
 
-  private getConstructorParamsForImplementation(
-    contractType: ContractType,
-    chainId: number,
-  ) {
-    switch (contractType) {
-      case MarketplaceInitializer.contractType:
-      case MultiwrapInitializer.contractType:
-        const nativeTokenWrapperAddress =
-          getNativeTokenByChainId(chainId)?.wrapped?.address ||
-          ethers.constants.AddressZero;
-        return [nativeTokenWrapperAddress];
-      case PackInitializer.contractType:
-        const addr =
-          getNativeTokenByChainId(chainId).wrapped.address ||
-          ethers.constants.AddressZero;
-        return [addr, ethers.constants.AddressZero];
-      default:
-        return [];
-    }
-  }
-
   private hasLocalFactory() {
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     return process.env.factoryAddress !== undefined;
@@ -1280,7 +1260,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     }
 
     const address = await computeDeploymentAddress(
-      NativeTokenWrapper.txInfo.bytecode, // TODO add WETH9 bytecode
+      WETHBytecode,
       [],
       await this.computeCreate2FactoryAddress(),
     );
