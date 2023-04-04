@@ -1,5 +1,13 @@
 # thirdweb
 
+## 0.10.8
+
+### Patch Changes
+
+- [#857](https://github.com/thirdweb-dev/js/pull/857) [`3a0e904f`](https://github.com/thirdweb-dev/js/commit/3a0e904fc2bae5134ba3bf65ba666c3360e4fced) Thanks [@adam-maj](https://github.com/adam-maj)! - Add skip intro flag to generate command and fix ABI cache regex
+
+- [#860](https://github.com/thirdweb-dev/js/pull/860) [`058e4357`](https://github.com/thirdweb-dev/js/commit/058e4357c783911a6cab6b38c6eebbb3277dfe93) Thanks [@iketw](https://github.com/iketw)! - [CLI] Only checks ruby version and attempts to run pod install if the platform is macOS
+
 ## 0.10.7
 
 ### Patch Changes
