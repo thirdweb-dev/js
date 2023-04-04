@@ -9,11 +9,9 @@ import {
   SimpleGrid,
   Skeleton,
 } from "@chakra-ui/react";
-import { PREBUILT_CONTRACTS_MAP } from "@thirdweb-dev/sdk/evm";
 import { DeployFormDrawer } from "components/contract-components/contract-deploy-form/drawer";
 import { useAllVersions, useEns } from "components/contract-components/hooks";
 import { PublishedContract } from "components/contract-components/published-contract";
-import { THIRDWEB_DEPLOYER_ADDRESS } from "constants/addresses";
 import { useTrack } from "hooks/analytics/useTrack";
 import { replaceIpfsUrl } from "lib/sdk";
 import { useRouter } from "next/router";
@@ -49,17 +47,11 @@ export const PublishWithVersionPage: React.FC<PublishWithVersionPageProps> = ({
     );
   }, [allVersions?.data, version]);
 
-  // If this contract is published by us and is a prebuilt contract we know about, open the custom deploy form
-  const prebuiltContractName =
-    publishedContract?.publisher === THIRDWEB_DEPLOYER_ADDRESS
-      ? Object.values(PREBUILT_CONTRACTS_MAP).find(
-          (value) => value.name === contractName,
-        )?.contractType
-      : undefined;
+  const deployContractId = publishedContract?.metadataUri.replace(
+    "ipfs://",
+    "",
+  );
 
-  const deployContractId =
-    prebuiltContractName ||
-    publishedContract?.metadataUri.replace("ipfs://", "");
   return (
     <Flex direction="column" gap={{ base: 6, md: 10 }}>
       <SimpleGrid
@@ -155,10 +147,7 @@ export const PublishWithVersionPage: React.FC<PublishWithVersionPageProps> = ({
               ))}
             </Select>
             {deployContractId && (
-              <DeployFormDrawer
-                contractId={deployContractId}
-                contractVersion={version}
-              />
+              <DeployFormDrawer contractId={deployContractId} />
             )}
           </Flex>
         </GridItem>

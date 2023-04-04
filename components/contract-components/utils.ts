@@ -1,21 +1,13 @@
-import { ContractId } from "./types";
 import { Polygon } from "@thirdweb-dev/chains";
 import { FeatureName } from "@thirdweb-dev/sdk/dist/declarations/src/evm/constants/contract-features";
 import {
   Abi,
-  PREBUILT_CONTRACTS_MAP,
   ValidContractInstance,
   isFeatureEnabled,
 } from "@thirdweb-dev/sdk/evm";
 import { Signer } from "ethers";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getEVMThirdwebSDK } from "lib/sdk";
-
-export function isContractIdBuiltInContract(
-  contractId: ContractId,
-): contractId is keyof typeof PREBUILT_CONTRACTS_MAP {
-  return contractId in PREBUILT_CONTRACTS_MAP;
-}
 
 export function detectFeatures<TContract extends ValidContractInstance | null>(
   contract: ValidContractInstance | null | undefined,

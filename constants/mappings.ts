@@ -31,9 +31,7 @@ export interface BuiltinContractDetails {
   icon: StaticImageData;
   comingSoon?: boolean;
   contractType: ContractType;
-  sourceUrl: string;
   erc?: "ERC721" | "ERC20" | "ERC1155" | "ERC721A";
-  audit?: string;
   roles?: readonly Role[];
   ecosytem: "evm" | "solana";
   metadata: Omit<FullPublishMetadata, "logo"> & { logo: StaticImageData };
@@ -62,7 +60,6 @@ function buildContractForContractMap(
       version: "2.0.0",
       bytecodeUri: "",
       metadataUri: "",
-      audit: details.audit,
       publisher: "deployer.thirdweb.eth",
     },
   };
@@ -74,42 +71,28 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       title: "NFT Drop",
       description: "One NFT, one owner",
       erc: "ERC721",
-      audit: "ipfs://QmNgNaLwzgMxcx9r6qDvJmTFam6xxUxX7Vp8E99oRt7i74",
-      sourceUrl:
-        "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/drop/DropERC721.sol",
       ecosytem: "evm",
     }),
     "signature-drop": buildContractForContractMap("signature-drop", {
       title: "Signature Drop",
       description: "ERC721A NFTs that other people can claim",
       erc: "ERC721A",
-      audit: "ipfs://QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
-      sourceUrl:
-        "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/signature-drop/SignatureDrop.sol",
       ecosytem: "evm",
     }),
     marketplace: buildContractForContractMap("marketplace", {
       title: "Marketplace",
       description: "Marketplace for ERC721/ERC1155 NFTs",
-      audit: "ipfs://QmNgNaLwzgMxcx9r6qDvJmTFam6xxUxX7Vp8E99oRt7i74",
-      sourceUrl:
-        "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/marketplace/Marketplace.sol",
       ecosytem: "evm",
     }),
     "marketplace-v3": buildContractForContractMap("marketplace-v3", {
       title: "Marketplace",
       description: "Marketplace for ERC721/ERC1155 NFTs",
-      audit: "",
-      sourceUrl: "",
       ecosytem: "evm",
     }),
     "edition-drop": buildContractForContractMap("edition-drop", {
       title: "Edition Drop",
       description: "One NFT, multiple owners",
       erc: "ERC1155",
-      audit: "ipfs://QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
-      sourceUrl:
-        "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/drop/DropERC1155.sol",
       ecosytem: "evm",
     }),
     multiwrap: buildContractForContractMap("multiwrap", {
@@ -117,61 +100,40 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       description:
         "Bundle multiple ERC721/ERC1155/ERC20 tokens into a single ERC721",
       erc: "ERC721",
-      audit: "ipfs://QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
-      sourceUrl:
-        "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/multiwrap/Multiwrap.sol",
       ecosytem: "evm",
     }),
     token: buildContractForContractMap("token", {
       title: "Token",
       description: "ERC20 token",
       erc: "ERC20",
-      audit: "ipfs://QmaMiezCMfmo5zWmwNc2WXLex11BuRZJ9p9ZhWj638Tdws",
-      sourceUrl:
-        "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/token/TokenERC20.sol",
       ecosytem: "evm",
     }),
     edition: buildContractForContractMap("edition", {
       title: "Edition",
       description: "ERC1155 mintable NFTs",
       erc: "ERC1155",
-      audit: "ipfs://QmaMiezCMfmo5zWmwNc2WXLex11BuRZJ9p9ZhWj638Tdws",
-      sourceUrl:
-        "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/token/TokenERC1155.sol",
       ecosytem: "evm",
     }),
     "token-drop": buildContractForContractMap("token-drop", {
       title: "Token Drop",
       description: "ERC20 token that you can sell for other tokens",
       erc: "ERC20",
-      audit: "ipfs://QmfKqeUfUgNwFn5B1fUAxzikj89mneZEETKrF7JfaJg5St",
-      sourceUrl:
-        "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/drop/DropERC20.sol",
       ecosytem: "evm",
     }),
     split: buildContractForContractMap("split", {
       title: "Split",
       description: "Fee splitting for your primary sales and royalties",
-      audit: "ipfs://QmaMiezCMfmo5zWmwNc2WXLex11BuRZJ9p9ZhWj638Tdws",
-      sourceUrl:
-        "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/Split.sol",
       ecosytem: "evm",
     }),
     "nft-collection": buildContractForContractMap("nft-collection", {
       title: "NFT Collection",
       description: "ERC721 mintable NFTs",
       erc: "ERC721",
-      audit: "ipfs://QmaMiezCMfmo5zWmwNc2WXLex11BuRZJ9p9ZhWj638Tdws",
-      sourceUrl:
-        "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/token/TokenERC721.sol",
       ecosytem: "evm",
     }),
     vote: buildContractForContractMap("vote", {
       title: "Vote",
       description: "On-chain ERC20-based voting",
-      audit: "ipfs://QmaMiezCMfmo5zWmwNc2WXLex11BuRZJ9p9ZhWj638Tdws",
-      sourceUrl:
-        "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/vote/VoteERC20.sol",
       ecosytem: "evm",
     }),
     pack: buildContractForContractMap("pack", {
@@ -179,15 +141,11 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       description:
         "Bundle ERC721/ERC1155/ERC20 into a single token, with lootbox mechanics",
       erc: "ERC1155",
-      audit: "ipfs://QmfKqeUfUgNwFn5B1fUAxzikj89mneZEETKrF7JfaJg5St",
-      sourceUrl:
-        "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/pack/Pack.sol",
       ecosytem: "evm",
     }),
     custom: buildContractForContractMap("custom", {
       title: "NOT IMPLEMENTED",
       description: "NOT IMPLEMENTED",
-      sourceUrl: "NOT IMPLEMENTED",
       ecosytem: "evm",
     }),
   };
@@ -207,7 +165,6 @@ export const PREBUILT_SOLANA_CONTRACTS_MAP: Record<
     icon: FeatureIconMap["nft-collection"],
     contractType: "nft-collection",
     roles: [],
-    sourceUrl: "",
     ecosytem: "solana",
     metadata: {
       name: "NFT Collection",
@@ -226,7 +183,6 @@ export const PREBUILT_SOLANA_CONTRACTS_MAP: Record<
     icon: FeatureIconMap["nft-drop"],
     contractType: "nft-drop",
     roles: [],
-    sourceUrl: "",
     ecosytem: "solana",
     metadata: {
       name: "NFT Drop",
@@ -245,7 +201,6 @@ export const PREBUILT_SOLANA_CONTRACTS_MAP: Record<
     icon: FeatureIconMap["token"],
     contractType: "token",
     roles: [],
-    sourceUrl: "",
     ecosytem: "solana",
     metadata: {
       name: "Token",

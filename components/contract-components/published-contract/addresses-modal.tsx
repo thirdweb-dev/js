@@ -43,7 +43,7 @@ export const AddressesModal: React.FC<AddressesModalProps> = ({
           header={{
             children: (
               <Heading as="h3" size="title.sm">
-                {modalTitle} Addresses
+                {modalTitle}
               </Heading>
             ),
           }}

@@ -9,7 +9,6 @@ import { Button, Drawer } from "tw-components";
 interface DeployFormDrawerProps {
   contractId: ContractId;
   chainId?: number;
-  contractVersion?: string;
   onSuccessCallback?: (contractAddress: string) => void;
   onDrawerVisibilityChanged?: (isVisible: boolean) => void;
   isImplementationDeploy?: true;
@@ -19,7 +18,6 @@ interface DeployFormDrawerProps {
 export const DeployFormDrawer: React.FC<DeployFormDrawerProps> = ({
   contractId,
   chainId,
-  contractVersion = "latest",
   onSuccessCallback,
   onDrawerVisibilityChanged,
   isImplementationDeploy,
@@ -78,7 +76,6 @@ export const DeployFormDrawer: React.FC<DeployFormDrawerProps> = ({
             isImplementationDeploy={isImplementationDeploy}
             contractId={contractId}
             chainId={chainId}
-            contractVersion={contractVersion}
             onSuccessCallback={
               onSuccessCallback
                 ? (address) => {

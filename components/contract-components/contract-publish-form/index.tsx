@@ -18,9 +18,9 @@ import { useAddress } from "@thirdweb-dev/react";
 import {
   CONTRACT_ADDRESSES,
   ExtraPublishMetadata,
-  SUPPORTED_CHAIN_IDS,
 } from "@thirdweb-dev/sdk/evm";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useConfiguredChains } from "hooks/chains/configureChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -35,6 +35,8 @@ interface ContractPublishFormProps {
 export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   contractId,
 }) => {
+  const configuredChains = useConfiguredChains();
+  const configuredChainsIds = configuredChains.map((c) => c.chainId);
   const [contractSelection, setContractSelection] = useState<
     "standard" | "proxy" | "factory"
   >("standard");
@@ -109,13 +111,14 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
             ?.latestPublishedContractMetadata?.publishedMetadata
             ?.factoryDeploymentData || {
             factoryAddresses: Object.fromEntries(
-              SUPPORTED_CHAIN_IDS.map((id) => [
+              configuredChainsIds.map((id) => [
                 id,
-                CONTRACT_ADDRESSES[id].twFactory,
+                CONTRACT_ADDRESSES[id as keyof typeof CONTRACT_ADDRESSES]
+                  .twFactory,
               ]),
             ),
             implementationAddresses: Object.fromEntries(
-              SUPPORTED_CHAIN_IDS.map((id) => [id, ""]),
+              configuredChainsIds.map((id) => [id, ""]),
             ),
             implementationInitializerFunction: "initialize",
           },

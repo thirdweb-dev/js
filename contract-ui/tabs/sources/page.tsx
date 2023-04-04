@@ -1,6 +1,5 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { useQueryWithNetwork } from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
-import { usePrebuiltSource } from "@3rdweb-sdk/react/hooks/usePrebuiltSource";
 import {
   Divider,
   Flex,
@@ -212,36 +211,31 @@ export const CustomContractSourcesPage: React.FC<
   const router = useRouter();
   const forceVerifyButton = router.query.verify === "true";
 
-  const { data: prebuiltSource } = usePrebuiltSource(contractAddress);
   const { contract } = useContract(contractAddress);
 
   const abi = useMemo(() => contract?.abi as Abi, [contract]);
 
   // clean up the source filenames and filter out libraries
   const sources = useMemo(() => {
+    if (!contractSourcesQuery.data) {
+      return [];
+    }
     return contractSourcesQuery.data
-      ? contractSourcesQuery.data
-          .map((source) => {
-            return {
-              ...source,
-              filename: source.filename.split("/").pop(),
-            };
-          })
-          .slice()
-          .reverse()
-      : prebuiltSource
-      ? [prebuiltSource]
-      : [];
-  }, [contractSourcesQuery.data, prebuiltSource]);
+      .map((source) => {
+        return {
+          ...source,
+          filename: source.filename.split("/").pop(),
+        };
+      })
+      .slice()
+      .reverse();
+  }, [contractSourcesQuery.data]);
 
   if (!contractAddress) {
     return <div>No contract address provided</div>;
   }
 
-  if (
-    (!contractSourcesQuery || contractSourcesQuery?.isLoading) &&
-    !prebuiltSource
-  ) {
+  if (!contractSourcesQuery || contractSourcesQuery?.isLoading) {
     return (
       <Flex direction="row" align="center" gap={2}>
         <Spinner color="purple.500" size="xs" />
@@ -268,7 +262,7 @@ export const CustomContractSourcesPage: React.FC<
 
           {isDefaultChain && (
             <>
-              {!prebuiltSource || forceVerifyButton ? (
+              {forceVerifyButton ? (
                 <Button variant="solid" colorScheme="purple" onClick={onOpen}>
                   Verify on {blockExplorerName}
                 </Button>

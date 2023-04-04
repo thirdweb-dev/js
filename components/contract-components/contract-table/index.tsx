@@ -1,5 +1,4 @@
 import { ContractCellContext, ContractId } from "../types";
-import { ContractDeployActionCell } from "./cells/deploy-action";
 import { ContractDescriptionCell } from "./cells/description";
 import { ContractImageCell } from "./cells/image";
 import { ContractNameCell } from "./cells/name";
@@ -52,17 +51,6 @@ export const DeployableContractTable: ComponentWithChildren<
         },
       ];
     }
-
-    cols = [
-      ...cols,
-      {
-        id: "deploy-action",
-        accessor: (row) => row.contractId,
-        Cell: (cell: any) => (
-          <ContractDeployActionCell cell={cell} context={context} />
-        ),
-      },
-    ];
 
     return cols;
     // this is to avoid re-rendering of the table when the contractIds array changes (it will always be a string array, so we can just join it and compare the string output)

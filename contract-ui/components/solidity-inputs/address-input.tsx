@@ -83,6 +83,13 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
     [ensQuery?.data?.ensName, hasError, localInput],
   );
 
+  useEffect(() => {
+    // Check if the default value has changed and update localInput
+    if (inputNameWatch !== localInput) {
+      setLocalInput(inputNameWatch);
+    }
+  }, [inputNameWatch, localInput]);
+
   return (
     <>
       <Input
