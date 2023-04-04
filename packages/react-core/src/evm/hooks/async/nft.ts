@@ -271,7 +271,7 @@ export function useOwnedNFTs<TContract extends NFTContract>(
 export function useNFTBalance(
   contract: RequiredParam<NFTContract>,
   ownerWalletAddress: RequiredParam<WalletAddress>,
-  tokenId: RequiredParam<BigNumberish>,
+  tokenId?: RequiredParam<BigNumberish>,
 ) {
   const contractAddress = contract?.getAddress();
   const { erc721, erc1155 } = getErcs(contract);
