@@ -11,7 +11,7 @@ const MarqueeGroup: ComponentWithChildren<{
 }> = ({ ariaHidden, children, animationDirection = "normal" }) => {
   return (
     <Flex
-      flexDir="column"
+      flexDir="row"
       gap={gap}
       overflow="hidden"
       flexShrink={0}
