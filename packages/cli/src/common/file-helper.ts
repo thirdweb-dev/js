@@ -63,7 +63,7 @@ export function findMatches(
     }
 
     if (stat.isDirectory()) {
-      findFiles(filename, filter, results);
+      findMatches(filename, filter, results);
     } else {
       const fileContents = readFileSync(filename, "utf-8");
       const matches = fileContents.match(filter);

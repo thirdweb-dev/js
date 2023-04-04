@@ -43,7 +43,6 @@
     "detect-package-manager": "^2.0.1",
     "enquirer": "^2.3.6",
     "ethers": "^5.7.2",
-    "find-in-files": "^0.5.0",
     "got": "11.8.5",
     "inquirer": "^8.2.3",
     "open": "^8.4.0",

@@ -3,22 +3,16 @@ import {
   DeployedContract,
   fetchContractMetadataFromAddress,
   getChainProvider,
-  ThirdwebSDK,
 } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { spinner, info } from "../core/helpers/logger";
 import { allChains } from "@thirdweb-dev/chains";
-import { find } from "find-in-files";
 import fs from "fs";
 import prompts from "prompts";
 import { findMatches } from "../common/file-helper";
-
-type GenerateOptions = {
-  path: string;
-  deployer?: string;
-};
-
-const CHAIN_OPTIONS = allChains.map((chain) => ({ title: chain.slug }));
+import ora from "ora";
+import { GenerateOptions, ThirdwebConfig } from "./types";
+import { CHAIN_OPTIONS, getContractsForAddresses } from "./utils";
 
 export async function generate(options: GenerateOptions) {
   let projectPath: string = options.path?.replace(/\/$/, "") || ".";
@@ -30,11 +24,43 @@ export async function generate(options: GenerateOptions) {
 
   // We check if there's a thirdweb.json config file present
   if (fs.existsSync(`${projectPath}/thirdweb.json`)) {
-    const thirdwebConfig = JSON.parse(
+    // Read the current thirdweb config file
+    const thirdwebConfig: ThirdwebConfig = JSON.parse(
       fs.readFileSync(`${projectPath}/thirdweb.json`, "utf-8"),
     );
 
-    contracts = thirdwebConfig.contracts as DeployedContract[];
+    // Check if there are any addresses in the project that aren't yet in the config
+    const configAddresses = thirdwebConfig.contracts.map((contract) =>
+      contract.address.toLowerCase(),
+    );
+    const newAddresses = addresses.filter(
+      (address) => !configAddresses.includes(address.toLowerCase()),
+    );
+
+    // Initialize contracts to the contracts in thirdweb.json file
+    contracts = [...thirdwebConfig.contracts];
+
+    // If we have new contracts that aren't yet stored in config
+    // get full contract objects
+    if (newAddresses.length) {
+      const chainIds = thirdwebConfig.chainIds;
+      await getContractsForAddresses(newAddresses, chainIds, contracts);
+
+      if (contracts.length > thirdwebConfig.contracts.length) {
+        fs.writeFileSync(
+          `${projectPath}/thirdweb.json`,
+          JSON.stringify({ contracts, chainIds }, undefined, 2),
+        );
+
+        const numberOfNewContracts =
+          contracts.length - thirdwebConfig.contracts.length;
+        info(
+          `Updated thirdweb.json configuration with ${numberOfNewContracts} new smart contract${
+            numberOfNewContracts === 1 ? "" : "s"
+          } detected in your project.`,
+        );
+      }
+    }
   } else {
     // If there is no configuration file present, we need to generate one...
 
@@ -51,47 +77,27 @@ export async function generate(options: GenerateOptions) {
     );
 
     // Then we check for the chainId of each address
-    addresses.map(async (address) => {
-      // Check which chainIds of the provided chains have a contract at this address
-      let chainIdsWithContract: number[] = [];
+    await getContractsForAddresses(addresses, chainIds, contracts);
 
-      await Promise.all(
-        chainIds.map(async (chainId) => {
-          // Handles cacheing of provider by chain
-          const provider = getChainProvider(chainId, {});
-
-          try {
-            const code = await provider.getCode(address);
-
-            if (!code || code === "0x") {
-              return;
-            }
-
-            chainIdsWithContract.push(chainId);
-          } catch {
-            return;
-          }
-        }),
-      );
-
-      // If no chainId has this contract, we assume it's an EOA and move on
-      if (!chainIdsWithContract.length) {
-        return;
-      }
-
-      // If only one chain has this contract address, add it to our contracts list
-      if (chainIdsWithContract.length) {
-      }
-    });
-
+    // Create a thirdweb.json file with the specific contracts and chain ids
     fs.writeFileSync(
       `${projectPath}/thirdweb.json`,
       JSON.stringify({ contracts, chainIds }, undefined, 2),
     );
+
+    info(
+      `Created a thirdweb.json file with configuration for ${
+        contracts.length
+      } smart contract${
+        contracts.length === 1 ? "" : "s"
+      } detected in your project.\n\n    - Smart contracts configured in this file will have their ABIs predownloaded at build time, significantly improving SDK performance at runtime.\n\n    - You can also update this configuration manually, or run thirdweb generate again after making changes to your project.\n`,
+    );
   }
 
-  /*
   // Attempt to download the ABI for each contract
+  const abiSpinner = spinner(
+    `Downloading ABIs for smart contracts configured in 'thirdweb.json'`,
+  );
   const storage = new ThirdwebStorage();
   const metadata: {
     address: string;
@@ -170,6 +176,12 @@ export async function generate(options: GenerateOptions) {
     fs.writeFileSync(typeFilePath, updatedFile);
   }
 
+  abiSpinner.succeed(
+    `Downloaded and cached ABIs for ${contracts.length} smart contract${
+      contracts.length === 1 ? "" : "s"
+    }`,
+  );
+
   // Add generate command to postinstall
   const packageJsonPath = `${projectPath}/package.json`;
   if (!fs.existsSync(packageJsonPath)) {
@@ -200,5 +212,8 @@ export async function generate(options: GenerateOptions) {
       2,
     ),
   );
-  */
+
+  ora(
+    "The 'npx thirdweb generate' command has been added to the postinstall command of your package.json file.\n\n    This step is necessary to gain the performance boost that 'thirdweb generate' provides in your production environment.\n",
+  ).info();
 }
