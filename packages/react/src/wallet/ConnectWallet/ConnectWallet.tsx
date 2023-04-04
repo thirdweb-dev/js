@@ -38,6 +38,8 @@ type ConnectWalletProps = {
   };
 };
 
+const TW_CONNECT_WALLET = "tw-connect-wallet";
+
 /**
  * A component that allows the user to connect their wallet.
  *
@@ -98,7 +100,12 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
 
       {/* Sign In Button */}
       {requiresSignIn && (
-        <Button variant="inverted" onClick={signIn}>
+        <Button
+          variant="inverted"
+          onClick={signIn}
+          data-theme={theme}
+          className={`${TW_CONNECT_WALLET}--sign-in`}
+        >
           <Flex
             alignItems="center"
             gap="sm"
@@ -120,7 +127,9 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
           // connect wallet button
           <AnimatedButton
             disabled={isLoading}
-            className={props.className}
+            className={`${props.className || ""} ${TW_CONNECT_WALLET}`}
+            data-theme={theme}
+            data-is-loading={isLoading}
             variant="inverted"
             type="button"
             style={{

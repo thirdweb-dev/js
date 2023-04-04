@@ -11,6 +11,7 @@ export const ChainIcon: React.FC<{
   chain?: Chain;
   size: string;
   active?: boolean;
+  className?: string;
 }> = (props) => {
   const url = props.chain?.icon?.url;
   const src = url ? resolveIpfsUri(url) : defaultChainIcon;
@@ -34,6 +35,7 @@ export const ChainIcon: React.FC<{
         alt=""
         width={props.size}
         height={props.size}
+        className={props.className}
       />
       {props.active && <ActiveDot />}
     </div>

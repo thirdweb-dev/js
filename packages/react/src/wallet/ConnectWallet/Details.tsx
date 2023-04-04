@@ -44,6 +44,8 @@ export type DropDownPosition = {
   align: "start" | "center" | "end";
 };
 
+const TW_CONNECTED_WALLET = "tw-connected-wallet";
+
 export const ConnectedWalletDetails: React.FC<{
   dropdownPosition?: DropDownPosition;
   onDisconnect: () => void;
@@ -101,12 +103,16 @@ export const ConnectedWalletDetails: React.FC<{
   }, [personalWallet]);
 
   const trigger = (
-    <WalletInfoButton type="button">
-      <ChainIcon chain={chain} size={iconSize.lg} />
+    <WalletInfoButton type="button" className={TW_CONNECTED_WALLET}>
+      <ChainIcon
+        chain={chain}
+        size={iconSize.lg}
+        className={`${TW_CONNECTED_WALLET}__network-icon`}
+      />
 
       <ColFlex>
         {!balanceQuery.isLoading ? (
-          <WalletBalance>
+          <WalletBalance className={`${TW_CONNECTED_WALLET}__balance`}>
             {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
             {balanceQuery.data?.symbol}
           </WalletBalance>
@@ -114,10 +120,17 @@ export const ConnectedWalletDetails: React.FC<{
           <Skeleton height={fontSize.sm} width="82px" />
         )}
         <Spacer y="xs" />
-        <WalletAddress>{shortenString(address || "")}</WalletAddress>
+        <WalletAddress className={`${TW_CONNECTED_WALLET}__address`}>
+          {shortenString(address || "")}
+        </WalletAddress>
       </ColFlex>
 
-      <Img width={iconSize.lg} height={iconSize.lg} src={activeWalletIconURL} />
+      <Img
+        width={iconSize.lg}
+        height={iconSize.lg}
+        src={activeWalletIconURL}
+        className={`${TW_CONNECTED_WALLET}__wallet-icon`}
+      />
     </WalletInfoButton>
   );
 
