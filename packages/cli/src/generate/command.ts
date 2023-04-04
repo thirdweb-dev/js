@@ -6,51 +6,92 @@ import {
   ThirdwebSDK,
 } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { spinner, info } from "../core/helpers/logger";
+import { allChains } from "@thirdweb-dev/chains";
+import { find } from "find-in-files";
 import fs from "fs";
 import prompts from "prompts";
+import { findMatches } from "../common/file-helper";
 
 type GenerateOptions = {
   path: string;
   deployer?: string;
 };
 
+const CHAIN_OPTIONS = allChains.map((chain) => ({ title: chain.slug }));
+
 export async function generate(options: GenerateOptions) {
   let projectPath: string = options.path?.replace(/\/$/, "") || ".";
-
   let contracts: DeployedContract[] = [];
+
+  // Find all addresses in this project
+  let addresses: string[] = [];
+  findMatches(projectPath, /(0x[a-fA-F0-9]{40})/g, addresses);
+
+  // We check if there's a thirdweb.json config file present
   if (fs.existsSync(`${projectPath}/thirdweb.json`)) {
-    // First we check if there's a thirdweb.json config file present
     const thirdwebConfig = JSON.parse(
       fs.readFileSync(`${projectPath}/thirdweb.json`, "utf-8"),
     );
+
     contracts = thirdwebConfig.contracts as DeployedContract[];
   } else {
-    // Otherwise, we get contracts by deployer address (and generate a thirdweb.json)
-    let deployerAddress: string;
-    if (options.deployer) {
-      deployerAddress = options.deployer;
-    } else {
-      const res = await prompts({
-        type: "text",
-        name: "deployer",
-        message: GENERATE_MESSAGES.deployerAddress,
-      });
+    // If there is no configuration file present, we need to generate one...
 
-      deployerAddress = res.deployer.trim();
-    }
+    // First we ask the user what chains are used in their project
+    const res = await prompts({
+      type: "autocompleteMultiselect",
+      name: "chains",
+      message: GENERATE_MESSAGES.chains,
+      choices: CHAIN_OPTIONS,
+    });
 
-    const sdk = new ThirdwebSDK("polygon");
-    contracts = await sdk.multiChainRegistry.getContractAddresses(
-      deployerAddress,
+    const chainIds: number[] = res.chains.map(
+      (index: number) => allChains[index].chainId,
     );
+
+    // Then we check for the chainId of each address
+    addresses.map(async (address) => {
+      // Check which chainIds of the provided chains have a contract at this address
+      let chainIdsWithContract: number[] = [];
+
+      await Promise.all(
+        chainIds.map(async (chainId) => {
+          // Handles cacheing of provider by chain
+          const provider = getChainProvider(chainId, {});
+
+          try {
+            const code = await provider.getCode(address);
+
+            if (!code || code === "0x") {
+              return;
+            }
+
+            chainIdsWithContract.push(chainId);
+          } catch {
+            return;
+          }
+        }),
+      );
+
+      // If no chainId has this contract, we assume it's an EOA and move on
+      if (!chainIdsWithContract.length) {
+        return;
+      }
+
+      // If only one chain has this contract address, add it to our contracts list
+      if (chainIdsWithContract.length) {
+      }
+    });
 
     fs.writeFileSync(
       `${projectPath}/thirdweb.json`,
-      JSON.stringify({ contracts }, undefined, 2),
+      JSON.stringify({ contracts, chainIds }, undefined, 2),
     );
   }
 
-  // Attempt to download the ABI for the contract
+  /*
+  // Attempt to download the ABI for each contract
   const storage = new ThirdwebStorage();
   const metadata: {
     address: string;
@@ -159,4 +200,5 @@ export async function generate(options: GenerateOptions) {
       2,
     ),
   );
+  */
 }
