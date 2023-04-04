@@ -23,21 +23,8 @@ import {
   useMutation,
   UseMutationResult,
   useQueryClient,
-  UseQueryResult,
 } from "@tanstack/react-query";
-import {
-  Erc1155,
-  QueryAllParams,
-  NFT,
-  NFTCollection,
-  NFTDrop,
-  SignatureDrop,
-  Edition,
-  EditionDrop,
-  Pack,
-  Multiwrap,
-  SmartContract,
-} from "@thirdweb-dev/sdk";
+import { Erc1155, QueryAllParams, NFT } from "@thirdweb-dev/sdk";
 import { BigNumber, BigNumberish, providers } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -266,51 +253,6 @@ export function useOwnedNFTs<TContract extends NFTContract>(
     },
   );
 }
-
-/**
- * Get NFT balance of a specific wallet
- *
- * @example
- * ```javascript
- * const { data: ownerBalance, isLoading, error } = useNFTBalance(contract, "{{wallet_address}}");
- * ```
- *
- * @param contract - an instance of a {@link NFTContract}
- * @param ownerWalletAddress - the wallet address to check the balance of
- * @returns a response object that includes the total balance of the owner
- * @twfeature ERC721
- * @beta
- */
-export function useNFTBalance(
-  contract: RequiredParam<
-    NFTCollection | NFTDrop | SignatureDrop | SmartContract | null
-  >,
-  ownerWalletAddress: RequiredParam<WalletAddress>,
-): UseQueryResult<BigNumber, unknown>;
-
-/**
- * Get NFT balance of a specific wallet
- *
- * @example
- * ```javascript
- * const tokenId = 0;
- * const { data: ownerBalance, isLoading, error } = useNFTBalance(contract, "{{wallet_address}}", tokenId);
- * ```
- *
- * @param contract - an instance of a {@link NFTContract}
- * @param ownerWalletAddress - the wallet address to check the balance of
- * @param tokenId - required for ERC1155, the tokenId to look up
- * @returns a response object that includes the total balance of the owner
- * @twfeature ERC1155
- * @beta
- */
-export function useNFTBalance(
-  contract: RequiredParam<
-    Edition | EditionDrop | Pack | Multiwrap | SmartContract | null
-  >,
-  ownerWalletAddress: RequiredParam<WalletAddress>,
-  tokenId: RequiredParam<BigNumberish>,
-): UseQueryResult<BigNumber, unknown>;
 
 /**
  * Get NFT balance of a specific wallet
