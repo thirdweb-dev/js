@@ -62,6 +62,24 @@ export async function createApp({
     }
   }
 
+  const isReactNative =
+    template?.includes("react-native") || framework === "react-native";
+  function isReactNativeCLI() {
+    return (
+      isReactNative &&
+      (language === "typescript" || (template && !template.includes("expo")))
+    );
+  }
+
+  function isMacOS() {
+    return process.platform === "darwin";
+  }
+
+  if (isReactNativeCLI() && isMacOS()) {
+    // fail early if the user doesn't have the right version of Ruby installed on macOS
+    await checkRubyVersion();
+  }
+
   const root = path.resolve(appPath);
 
   if (!(await isWriteable(path.dirname(root)))) {
@@ -96,20 +114,6 @@ export async function createApp({
       err !== null &&
       typeof (err as { message?: unknown }).message === "string"
     );
-  }
-
-  const isReactNative =
-    template?.includes("react-native") || framework === "react-native";
-  function isReactNativeCLI() {
-    return (
-      isReactNative &&
-      (language === "typescript" || (template && !template.includes("expo")))
-    );
-  }
-
-  if (isReactNativeCLI()) {
-    // fail early if the user doesn't have the right version of Ruby installed
-    await checkRubyVersion();
   }
 
   if (template) {
@@ -199,7 +203,7 @@ export async function createApp({
     console.log();
   }
 
-  if (isReactNativeCLI()) {
+  if (isReactNativeCLI() && isMacOS()) {
     await podInstall(root, isOnline);
   }
 
