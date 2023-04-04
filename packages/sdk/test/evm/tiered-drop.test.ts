@@ -11,6 +11,9 @@ describe("Tiered Drop Contract", async () => {
   let claimerWallet: SignerWithAddress;
 
   async function deployTieredDrop() {
+    const mockPublisher = process.env.contractPublisherAddress;
+    process.env.contractPublisherAddress =
+      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
     const walletAddress = await sdk.wallet.getAddress();
 
     // This needs to match the published contract for the currently used ABI
@@ -33,6 +36,7 @@ describe("Tiered Drop Contract", async () => {
       },
     );
 
+    process.env.contractPublisherAddress = mockPublisher;
     const tieredDrop = await sdk.getContract(address);
 
     // await tieredDrop.call(
