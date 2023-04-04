@@ -36,6 +36,7 @@ import {
   EditionDrop,
   Pack,
   Multiwrap,
+  SmartContract,
 } from "@thirdweb-dev/sdk";
 import { BigNumber, BigNumberish, providers } from "ethers";
 import invariant from "tiny-invariant";
@@ -281,7 +282,9 @@ export function useOwnedNFTs<TContract extends NFTContract>(
  * @beta
  */
 export function useNFTBalance(
-  contract: RequiredParam<NFTCollection | NFTDrop | SignatureDrop>,
+  contract: RequiredParam<
+    NFTCollection | NFTDrop | SignatureDrop | SmartContract | null
+  >,
   ownerWalletAddress: RequiredParam<WalletAddress>,
 ): UseQueryResult<BigNumber, unknown>;
 
@@ -302,7 +305,9 @@ export function useNFTBalance(
  * @beta
  */
 export function useNFTBalance(
-  contract: RequiredParam<Edition | EditionDrop | Pack | Multiwrap>,
+  contract: RequiredParam<
+    Edition | EditionDrop | Pack | Multiwrap | SmartContract | null
+  >,
   ownerWalletAddress: RequiredParam<WalletAddress>,
   tokenId: RequiredParam<BigNumberish>,
 ): UseQueryResult<BigNumber, unknown>;
