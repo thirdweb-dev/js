@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "LoopNetwork Mainnet",
   "chain": "LoopNetwork",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": false,
   "slug": "loopnetwork"
-} as const;
+} as const satisfies Chain;

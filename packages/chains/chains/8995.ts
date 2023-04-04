@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "bloxberg",
   "chain": "bloxberg",
@@ -19,4 +20,4 @@ export default {
   "networkId": 8995,
   "testnet": false,
   "slug": "bloxberg"
-} as const;
+} as const satisfies Chain;

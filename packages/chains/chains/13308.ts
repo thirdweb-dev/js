@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Credit Smartchain Mainnet",
   "chain": "CREDIT",
@@ -33,10 +34,15 @@ export default {
     {
       "name": "CSC Scan",
       "url": "https://explorer.cscscan.io",
-      "icon": "credit",
+      "icon": {
+        "url": "ipfs://bafkreifbso3gd4wu5wxl27xyurxctmuae2jyuy37guqtzx23nga6ba4ag4",
+        "width": 1000,
+        "height": 1628,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "credit-smartchain"
-} as const;
+} as const satisfies Chain;

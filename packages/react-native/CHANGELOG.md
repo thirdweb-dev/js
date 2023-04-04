@@ -1,5 +1,45 @@
 # @thirdweb-dev/react-native
 
+## 0.2.4
+
+### Patch Changes
+
+- Updated dependencies [[`c5c2d947`](https://github.com/thirdweb-dev/js/commit/c5c2d9478acd4d4a4e6ce814716bdf1b6e51eafc), [`2dd192a5`](https://github.com/thirdweb-dev/js/commit/2dd192a5676f1b6d3c310ec796bf331252098d48)]:
+  - @thirdweb-dev/react-core@3.11.4
+  - @thirdweb-dev/wallets@0.2.13
+  - @thirdweb-dev/sdk@3.10.7
+
+## 0.2.3
+
+### Patch Changes
+
+- Updated dependencies [[`1137a20d`](https://github.com/thirdweb-dev/js/commit/1137a20de44603d35e71eae2f2b6fec79febec00), [`1137a20d`](https://github.com/thirdweb-dev/js/commit/1137a20de44603d35e71eae2f2b6fec79febec00)]:
+  - @thirdweb-dev/chains@0.1.10
+  - @thirdweb-dev/react-core@3.11.3
+  - @thirdweb-dev/sdk@3.10.7
+  - @thirdweb-dev/wallets@0.2.12
+
+## 0.2.2
+
+### Patch Changes
+
+- Updated dependencies [[`b7fcae6e`](https://github.com/thirdweb-dev/js/commit/b7fcae6e40dade7a239b1a6afb1cd996c8f89910), [`b7fcae6e`](https://github.com/thirdweb-dev/js/commit/b7fcae6e40dade7a239b1a6afb1cd996c8f89910), [`1f2df55b`](https://github.com/thirdweb-dev/js/commit/1f2df55b673fefb0106778dca7a13406cfbcfc90), [`839fce1f`](https://github.com/thirdweb-dev/js/commit/839fce1f6f2747d6102033b26c292294e908f75d), [`839fce1f`](https://github.com/thirdweb-dev/js/commit/839fce1f6f2747d6102033b26c292294e908f75d), [`839fce1f`](https://github.com/thirdweb-dev/js/commit/839fce1f6f2747d6102033b26c292294e908f75d)]:
+  - @thirdweb-dev/react-core@3.11.2
+  - @thirdweb-dev/sdk@3.10.6
+  - @thirdweb-dev/chains@0.1.9
+  - @thirdweb-dev/storage@1.1.2
+  - @thirdweb-dev/wallets@0.2.11
+
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [[`e2581f21`](https://github.com/thirdweb-dev/js/commit/e2581f211e4419105d6169d84a60a4d69759eda9), [`9b303829`](https://github.com/thirdweb-dev/js/commit/9b3038291d1c9f4eb243718a6070e3dac829a354)]:
+  - @thirdweb-dev/react-core@3.11.1
+  - @thirdweb-dev/chains@0.1.8
+  - @thirdweb-dev/sdk@3.10.5
+  - @thirdweb-dev/wallets@0.2.10
+
 ## 0.2.0
 
 ### Minor Changes

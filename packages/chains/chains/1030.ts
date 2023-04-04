@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Conflux eSpace",
   "chain": "Conflux",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": false,
   "slug": "conflux-espace"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Cronos Testnet",
   "chain": "CRO",
@@ -26,4 +27,4 @@ export default {
   ],
   "testnet": true,
   "slug": "cronos-testnet"
-} as const;
+} as const satisfies Chain;

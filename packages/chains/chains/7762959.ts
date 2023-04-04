@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Musicoin",
   "chain": "MUSIC",
@@ -18,4 +19,4 @@ export default {
   "slip44": 184,
   "testnet": false,
   "slug": "musicoin"
-} as const;
+} as const satisfies Chain;

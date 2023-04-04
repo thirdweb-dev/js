@@ -1,5 +1,90 @@
 # @thirdweb-dev/react-core
 
+## 3.11.4
+
+### Patch Changes
+
+- [#851](https://github.com/thirdweb-dev/js/pull/851) [`c5c2d947`](https://github.com/thirdweb-dev/js/commit/c5c2d9478acd4d4a4e6ce814716bdf1b6e51eafc) Thanks [@MananTank](https://github.com/MananTank)! - Fix wallet autoconnect issues
+
+  ### Fixes
+
+  - infinite loading spinner on connect wallet button when wallet is locked or connection to app is closed
+  - network switch popup on page load when wallet is connected to different network than it was previously connected
+  - removed autoconnect timeout - don't need it anymore
+
+- [#855](https://github.com/thirdweb-dev/js/pull/855) [`2dd192a5`](https://github.com/thirdweb-dev/js/commit/2dd192a5676f1b6d3c310ec796bf331252098d48) Thanks [@MananTank](https://github.com/MananTank)! - Add auth in Connect Wallet button
+
+- Updated dependencies [[`c5c2d947`](https://github.com/thirdweb-dev/js/commit/c5c2d9478acd4d4a4e6ce814716bdf1b6e51eafc), [`2dd192a5`](https://github.com/thirdweb-dev/js/commit/2dd192a5676f1b6d3c310ec796bf331252098d48)]:
+  - @thirdweb-dev/wallets@0.2.13
+  - @thirdweb-dev/sdk@3.10.7
+
+## 3.11.3
+
+### Patch Changes
+
+- [#848](https://github.com/thirdweb-dev/js/pull/848) [`1137a20d`](https://github.com/thirdweb-dev/js/commit/1137a20de44603d35e71eae2f2b6fec79febec00) Thanks [@jnsdls](https://github.com/jnsdls)! - bugfix: `useContractWrite` now accepts overrides again.
+
+- Updated dependencies [[`1137a20d`](https://github.com/thirdweb-dev/js/commit/1137a20de44603d35e71eae2f2b6fec79febec00)]:
+  - @thirdweb-dev/chains@0.1.10
+  - @thirdweb-dev/sdk@3.10.7
+  - @thirdweb-dev/wallets@0.2.12
+
+## 3.11.2
+
+### Patch Changes
+
+- [#834](https://github.com/thirdweb-dev/js/pull/834) [`b7fcae6e`](https://github.com/thirdweb-dev/js/commit/b7fcae6e40dade7a239b1a6afb1cd996c8f89910) Thanks [@adam-maj](https://github.com/adam-maj)! - Usage of the `useContractRead` and `useContractWrite` hooks has changed:
+
+  ```js
+  const owner = "0x...";
+  const operator = "0x...";
+  const overrides = { gasLimit: "10000", gasPrice: "10000" };
+
+  // Old usage
+  const { data } = useContractRead(
+    contract,
+    "approve",
+    owner,
+    operator,
+    overrides,
+  );
+
+  const { mutateAsync } = useContractWrite(contract, "approve");
+  mutateAsync(owner, operator, overrides);
+
+  // New usage
+  const { data } = useContractRead(
+    contract,
+    "approve",
+    [owner, operator],
+    overrides,
+  );
+
+  const { mutateAsync } = useContractWrite(contract, "approve");
+  mutateAsync([owner, operator], overrides);
+  ```
+
+- [#841](https://github.com/thirdweb-dev/js/pull/841) [`1f2df55b`](https://github.com/thirdweb-dev/js/commit/1f2df55b673fefb0106778dca7a13406cfbcfc90) Thanks [@MananTank](https://github.com/MananTank)! - add useNetwork() hook back
+
+- [#843](https://github.com/thirdweb-dev/js/pull/843) [`839fce1f`](https://github.com/thirdweb-dev/js/commit/839fce1f6f2747d6102033b26c292294e908f75d) Thanks [@jnsdls](https://github.com/jnsdls)! - fix solana program query key resolution
+
+- Updated dependencies [[`b7fcae6e`](https://github.com/thirdweb-dev/js/commit/b7fcae6e40dade7a239b1a6afb1cd996c8f89910), [`839fce1f`](https://github.com/thirdweb-dev/js/commit/839fce1f6f2747d6102033b26c292294e908f75d), [`839fce1f`](https://github.com/thirdweb-dev/js/commit/839fce1f6f2747d6102033b26c292294e908f75d)]:
+  - @thirdweb-dev/sdk@3.10.6
+  - @thirdweb-dev/chains@0.1.9
+  - @thirdweb-dev/storage@1.1.2
+  - @thirdweb-dev/wallets@0.2.11
+
+## 3.11.1
+
+### Patch Changes
+
+- [#837](https://github.com/thirdweb-dev/js/pull/837) [`e2581f21`](https://github.com/thirdweb-dev/js/commit/e2581f211e4419105d6169d84a60a4d69759eda9) Thanks [@lucoadam](https://github.com/lucoadam)! - Fixes auth logout by invalidating cookie by storing updated cookie credential
+
+- Updated dependencies [[`9b303829`](https://github.com/thirdweb-dev/js/commit/9b3038291d1c9f4eb243718a6070e3dac829a354)]:
+  - @thirdweb-dev/chains@0.1.8
+  - @thirdweb-dev/sdk@3.10.5
+  - @thirdweb-dev/wallets@0.2.10
+
 ## 3.11.0
 
 ### Minor Changes

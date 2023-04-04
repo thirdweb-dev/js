@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Uzmi Network Mainnet",
   "chain": "UZMI",
@@ -17,4 +18,4 @@ export default {
   "networkId": 5315,
   "testnet": false,
   "slug": "uzmi-network"
-} as const;
+} as const satisfies Chain;

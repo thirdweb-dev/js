@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Siberium Network",
   "chain": "SBR",
@@ -26,16 +27,26 @@ export default {
     {
       "name": "Siberium Mainnet Explorer - blockscout - 1",
       "url": "https://explorer.main.siberium.net",
-      "icon": "siberium",
+      "icon": {
+        "url": "ipfs://QmVDeoGo2TZPDWiaNDdPCnH2tz2BCQ7viw8ugdDWnU5LFq",
+        "width": 1920,
+        "height": 1920,
+        "format": "svg"
+      },
       "standard": "EIP3091"
     },
     {
       "name": "Siberium Mainnet Explorer - blockscout - 2",
       "url": "https://explorer.main.siberium.net.ru",
-      "icon": "siberium",
+      "icon": {
+        "url": "ipfs://QmVDeoGo2TZPDWiaNDdPCnH2tz2BCQ7viw8ugdDWnU5LFq",
+        "width": 1920,
+        "height": 1920,
+        "format": "svg"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "siberium-network"
-} as const;
+} as const satisfies Chain;

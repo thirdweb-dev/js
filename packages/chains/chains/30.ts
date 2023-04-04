@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "RSK Mainnet",
   "chain": "RSK",
@@ -28,4 +29,4 @@ export default {
   ],
   "testnet": false,
   "slug": "rsk"
-} as const;
+} as const satisfies Chain;

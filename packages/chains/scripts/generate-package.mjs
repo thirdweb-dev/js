@@ -82,9 +82,23 @@ const imports = [];
 const exports = [];
 const exportNames = [];
 
-const chainToIcon = {};
-
 const takenSlugs = {};
+
+const iconMetaMap = new Map();
+
+async function downloadIcon(icon) {
+  if (iconMetaMap.has(icon)) {
+    return iconMetaMap.get(icon);
+  }
+  const result = await axios.get(`${iconRoute}/${icon}.json`);
+  if (result.status == 200) {
+    const iconMeta = result.data[0];
+
+    iconMetaMap.set(icon, iconMeta);
+    return iconMeta;
+  }
+  throw new Error(`Could not download icon for ${icon}`);
+}
 
 function findSlug(chain) {
   let slug = chain.name
@@ -145,17 +159,22 @@ for (const chain of chains) {
   try {
     if ("icon" in chain) {
       if (typeof chain.icon === "string") {
-        const response = await axios.get(`${iconRoute}/${chain.icon}.json`);
-        if (response.status == 200) {
-          const iconMeta = response.data[0];
+        const iconMeta = await downloadIcon(chain.icon);
+        if (iconMeta) {
           chain.icon = iconMeta;
-          if (!chainToIcon[chain.chain]) {
-            chainToIcon[chain.chain] = iconMeta;
+        }
+      }
+    }
+    if ("explorers" in chain && Array.isArray(chain.explorers)) {
+      for (const explorer of chain.explorers) {
+        if ("icon" in explorer) {
+          if (typeof explorer.icon === "string") {
+            const iconMeta = await downloadIcon(explorer.icon);
+            if (iconMeta) {
+              explorer.icon = iconMeta;
+            }
           }
         }
-      } else {
-        // just pass it through
-        chainToIcon[chain.chain] = chain.icon;
       }
     }
   } catch (err) {
@@ -181,7 +200,8 @@ for (const chain of chains) {
 
   fs.writeFileSync(
     `${chainDir}/${chain.chainId}.ts`,
-    `export default ${JSON.stringify(chain, null, 2)} as const;`,
+    `import type { Chain } from "../src/types";
+export default ${JSON.stringify(chain, null, 2)} as const satisfies Chain;`,
   );
 
   let exportName = slug
@@ -196,9 +216,7 @@ for (const chain of chains) {
 
   imports.push(`import c${chain.chainId} from "../chains/${chain.chainId}";`);
 
-  exports.push(
-    `export const ${exportName} = c${chain.chainId} satisfies Chain;`,
-  );
+  exports.push(`export const ${exportName} = c${chain.chainId};`);
 
   exportNames.push(exportName);
 }
@@ -214,22 +232,42 @@ export * from "./utils";
 export const defaultChains = [Ethereum, Goerli, Polygon, Mumbai, Arbitrum, ArbitrumGoerli, Optimism, OptimismGoerli, Binance, BinanceTestnet, Fantom, FantomTestnet, Avalanche, AvalancheFuji, Localhost];
 export const allChains = [${exportNames.join(", ")}];
 
-export function getChainByChainId(chainId: number): Chain {
-  const chain = allChains.find(chain => chain.chainId === chainId);
-  if (!chain) {
-    throw new Error(\`Chain with chainId "\${chainId}" not found\`);
-  }
-  return chain;
+const chainsById = {
+  ${exportNames.map((n) => `[${n}.chainId]: ${n}`).join(",\n")}
+} as const;
+
+const chainIdsBySlug = {
+  ${exportNames.map((n) => `[${n}.slug]: ${n}.chainId`).join(",\n")}
+} as const;
+
+function isValidChainId(chainId: number): chainId is ChainId {
+  return chainId in chainsById;
 }
 
-export function getChainBySlug(slug: string): Chain {
-  const chain = allChains.find(chain => chain.slug === slug);
-  if (!chain) {
-    throw new Error(\`Chain with slug "\${slug}" not found\`);
-  }
-  return chain;
+function isValidChainSlug(slug: string): slug is ChainSlug {
+  return slug in chainIdsBySlug;
 }
 
-export type ChainSlug = typeof allChains[number]["slug"];
-export type ChainId = typeof allChains[number]["chainId"];`,
+export function getChainByChainId<TChainId extends ChainId>(
+  chainId: TChainId | (number & {}),
+) {
+  if (isValidChainId(chainId)) {
+    return chainsById[chainId] as (typeof chainsById)[TChainId];
+  }
+  throw new Error(\`Chain with chainId "\${chainId}" not found\`);
+}
+
+export function getChainBySlug<TSlug extends ChainSlug>(
+  slug: TSlug | (string & {}),
+) {
+  if (isValidChainSlug(slug)) {
+    return chainsById[chainIdsBySlug[slug]] as (typeof chainsById)[
+      (typeof chainIdsBySlug)[TSlug]
+      ];
+  }
+  throw new Error(\`Chain with slug "\${slug}" not found\`);
+}
+
+export type ChainSlug = keyof typeof chainIdsBySlug;
+export type ChainId = keyof typeof chainsById;`,
 );

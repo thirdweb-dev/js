@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "RaptorChain",
   "chain": "RPTR",
@@ -30,10 +31,15 @@ export default {
     {
       "name": "RaptorChain Explorer",
       "url": "https://explorer.raptorchain.io",
-      "icon": "raptorchain_explorer",
+      "icon": {
+        "url": "ipfs://QmQuvmiN6vM6Rqzqe1pMzDf8iZXqTtSeqCgGe5k5AyksDU",
+        "width": 200,
+        "height": 200,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "raptorchain"
-} as const;
+} as const satisfies Chain;

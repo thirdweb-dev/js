@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Base Goerli Testnet",
   "chain": "ETH",
@@ -37,4 +38,4 @@ export default {
     "format": "png"
   },
   "slug": "base-goerli"
-} as const;
+} as const satisfies Chain;

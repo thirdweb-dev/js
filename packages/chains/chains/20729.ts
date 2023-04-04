@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Callisto Testnet",
   "chain": "CLO",
@@ -19,4 +20,4 @@ export default {
   "networkId": 79,
   "testnet": true,
   "slug": "callisto-testnet"
-} as const;
+} as const satisfies Chain;

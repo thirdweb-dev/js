@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "muNode Testnet",
   "chain": "munode",
@@ -14,4 +15,4 @@ export default {
   "networkId": 956,
   "testnet": true,
   "slug": "munode-testnet"
-} as const;
+} as const satisfies Chain;

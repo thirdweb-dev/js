@@ -1,5 +1,40 @@
 # @thirdweb-dev/wallets
 
+## 0.2.13
+
+### Patch Changes
+
+- [#851](https://github.com/thirdweb-dev/js/pull/851) [`c5c2d947`](https://github.com/thirdweb-dev/js/commit/c5c2d9478acd4d4a4e6ce814716bdf1b6e51eafc) Thanks [@MananTank](https://github.com/MananTank)! - Fix wallet autoconnect issues
+
+  ### Fixes
+
+  - infinite loading spinner on connect wallet button when wallet is locked or connection to app is closed
+  - network switch popup on page load when wallet is connected to different network than it was previously connected
+  - removed autoconnect timeout - don't need it anymore
+
+- [#855](https://github.com/thirdweb-dev/js/pull/855) [`2dd192a5`](https://github.com/thirdweb-dev/js/commit/2dd192a5676f1b6d3c310ec796bf331252098d48) Thanks [@MananTank](https://github.com/MananTank)! - Add auth in Connect Wallet button
+
+## 0.2.12
+
+### Patch Changes
+
+- Updated dependencies [[`1137a20d`](https://github.com/thirdweb-dev/js/commit/1137a20de44603d35e71eae2f2b6fec79febec00)]:
+  - @thirdweb-dev/chains@0.1.10
+
+## 0.2.11
+
+### Patch Changes
+
+- Updated dependencies [[`839fce1f`](https://github.com/thirdweb-dev/js/commit/839fce1f6f2747d6102033b26c292294e908f75d)]:
+  - @thirdweb-dev/chains@0.1.9
+
+## 0.2.10
+
+### Patch Changes
+
+- Updated dependencies [[`9b303829`](https://github.com/thirdweb-dev/js/commit/9b3038291d1c9f4eb243718a6070e3dac829a354)]:
+  - @thirdweb-dev/chains@0.1.8
+
 ## 0.2.9
 
 ### Patch Changes

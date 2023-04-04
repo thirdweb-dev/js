@@ -1,5 +1,23 @@
 # @thirdweb-dev/chains
 
+## 0.1.10
+
+### Patch Changes
+
+- [#848](https://github.com/thirdweb-dev/js/pull/848) [`1137a20d`](https://github.com/thirdweb-dev/js/commit/1137a20de44603d35e71eae2f2b6fec79febec00) Thanks [@jnsdls](https://github.com/jnsdls)! - more complete types for chains and better generation
+
+## 0.1.9
+
+### Patch Changes
+
+- [#843](https://github.com/thirdweb-dev/js/pull/843) [`839fce1f`](https://github.com/thirdweb-dev/js/commit/839fce1f6f2747d6102033b26c292294e908f75d) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
+## 0.1.8
+
+### Patch Changes
+
+- [#839](https://github.com/thirdweb-dev/js/pull/839) [`9b303829`](https://github.com/thirdweb-dev/js/commit/9b3038291d1c9f4eb243718a6070e3dac829a354) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains (add telos icon & avalanche fuji faucet)
+
 ## 0.1.7
 
 ### Patch Changes

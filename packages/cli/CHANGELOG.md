@@ -1,5 +1,37 @@
 # thirdweb
 
+## 0.10.8
+
+### Patch Changes
+
+- [#857](https://github.com/thirdweb-dev/js/pull/857) [`3a0e904f`](https://github.com/thirdweb-dev/js/commit/3a0e904fc2bae5134ba3bf65ba666c3360e4fced) Thanks [@adam-maj](https://github.com/adam-maj)! - Add skip intro flag to generate command and fix ABI cache regex
+
+- [#860](https://github.com/thirdweb-dev/js/pull/860) [`058e4357`](https://github.com/thirdweb-dev/js/commit/058e4357c783911a6cab6b38c6eebbb3277dfe93) Thanks [@iketw](https://github.com/iketw)! - [CLI] Only checks ruby version and attempts to run pod install if the platform is macOS
+
+## 0.10.7
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.10.7
+
+## 0.10.6
+
+### Patch Changes
+
+- Updated dependencies [[`b7fcae6e`](https://github.com/thirdweb-dev/js/commit/b7fcae6e40dade7a239b1a6afb1cd996c8f89910), [`839fce1f`](https://github.com/thirdweb-dev/js/commit/839fce1f6f2747d6102033b26c292294e908f75d)]:
+  - @thirdweb-dev/sdk@3.10.6
+  - @thirdweb-dev/storage@1.1.2
+
+## 0.10.5
+
+### Patch Changes
+
+- [#836](https://github.com/thirdweb-dev/js/pull/836) [`db648ed2`](https://github.com/thirdweb-dev/js/commit/db648ed22dba672c64e7893865f9ad8b72189dea) Thanks [@shift4id](https://github.com/shift4id)! - Added the --clean flag to build, publish, and deploy
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.10.5
+
 ## 0.10.4
 
 ### Patch Changes

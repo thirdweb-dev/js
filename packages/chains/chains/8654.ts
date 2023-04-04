@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Toki Network",
   "chain": "TOKI",
@@ -24,4 +25,4 @@ export default {
   "explorers": [],
   "testnet": false,
   "slug": "toki-network"
-} as const;
+} as const satisfies Chain;

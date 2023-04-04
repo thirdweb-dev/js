@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Filecoin - Calibration testnet",
   "chain": "FIL",
@@ -43,4 +44,4 @@ export default {
   ],
   "testnet": true,
   "slug": "filecoin-calibration-testnet"
-} as const;
+} as const satisfies Chain;

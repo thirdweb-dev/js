@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "MultiVAC Mainnet",
   "chain": "MultiVAC",
@@ -31,4 +32,4 @@ export default {
   ],
   "testnet": false,
   "slug": "multivac"
-} as const;
+} as const satisfies Chain;

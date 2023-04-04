@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Kava EVM Testnet",
   "chain": "KAVA",
@@ -29,9 +30,14 @@ export default {
       "name": "Kava Testnet Explorer",
       "url": "https://explorer.testnet.kava.io",
       "standard": "EIP3091",
-      "icon": "kava"
+      "icon": {
+        "url": "ipfs://QmdpRTk6oL1HRW9xC6cAc4Rnf9gs6zgdAcr4Z3HcLztusm",
+        "width": 1186,
+        "height": 360,
+        "format": "svg"
+      }
     }
   ],
   "testnet": true,
   "slug": "kava-evm-testnet"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Taycan Testnet",
   "chain": "Taycan",
@@ -28,15 +29,25 @@ export default {
       "name": "Taycan Explorer(Blockscout)",
       "url": "https://evmscan-test.hupayx.io",
       "standard": "none",
-      "icon": "shuffle"
+      "icon": {
+        "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
+        "width": 1000,
+        "height": 1206,
+        "format": "png"
+      }
     },
     {
       "name": "Taycan Cosmos Explorer",
       "url": "https://cosmoscan-test.hupayx.io",
       "standard": "none",
-      "icon": "shuffle"
+      "icon": {
+        "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
+        "width": 1000,
+        "height": 1206,
+        "format": "png"
+      }
     }
   ],
   "testnet": true,
   "slug": "taycan-testnet"
-} as const;
+} as const satisfies Chain;

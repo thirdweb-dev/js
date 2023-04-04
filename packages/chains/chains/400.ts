@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "HyperonChain TestNet",
   "chain": "HPN",
@@ -27,10 +28,15 @@ export default {
     {
       "name": "blockscout",
       "url": "https://testnet.hyperonchain.com",
-      "icon": "hyperonchain",
+      "icon": {
+        "url": "ipfs://QmWxhyxXTEsWH98v7M3ck4ZL1qQoUaHG4HgtgxzD2KJQ5m",
+        "width": 540,
+        "height": 541,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "hyperonchain-testnet"
-} as const;
+} as const satisfies Chain;

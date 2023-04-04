@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Vention Smart Chain Mainnet",
   "chain": "VSC",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": false,
   "slug": "vention-smart-chain"
-} as const;
+} as const satisfies Chain;

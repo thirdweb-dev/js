@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Binance Smart Chain Testnet",
   "chain": "BSC",
@@ -33,16 +34,8 @@ export default {
     "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/binance-coin/512.png",
     "height": 512,
     "width": 512,
-    "format": "png",
-    "sizes": [
-      512,
-      256,
-      128,
-      64,
-      32,
-      16
-    ]
+    "format": "png"
   },
   "testnet": true,
   "slug": "binance-testnet"
-} as const;
+} as const satisfies Chain;

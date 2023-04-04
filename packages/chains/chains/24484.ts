@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Webchain",
   "chain": "WEB",
@@ -15,4 +16,4 @@ export default {
   "slip44": 227,
   "testnet": false,
   "slug": "webchain"
-} as const;
+} as const satisfies Chain;

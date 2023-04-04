@@ -17,6 +17,7 @@ export {
   useSwitchChain,
   useWallets,
 } from "../core/hooks/wallet-hooks";
+export { useNetwork } from "../core/hooks/useNetwork";
 export { useThirdwebWallet } from "../core/providers/thirdweb-wallet-provider";
 
 // connected wallet hooks

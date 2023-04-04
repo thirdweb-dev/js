@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "EtherLite Chain",
   "chain": "ETL",
@@ -25,4 +26,4 @@ export default {
   },
   "testnet": false,
   "slug": "etherlite-chain"
-} as const;
+} as const satisfies Chain;

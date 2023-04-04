@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "SX Network Testnet",
   "chain": "SX",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": true,
   "slug": "sx-network-testnet"
-} as const;
+} as const satisfies Chain;

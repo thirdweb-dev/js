@@ -12,6 +12,9 @@ export class HardhatBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
     contracts: ContractPayload[];
   }> {
+    if (options.clean) {
+      await execute("npx hardhat clean", options.projectPath);
+    }
     await execute("npx hardhat compile", options.projectPath);
     //we get our very own extractor script from the dir that we're in during execution
     // this is `./dist/cli` (for all purposes of the CLI)

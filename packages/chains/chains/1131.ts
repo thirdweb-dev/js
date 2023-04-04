@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "DeFiChain EVM Network Testnet",
   "chain": "defichain-evm-testnet",
@@ -22,4 +23,4 @@ export default {
   "explorers": [],
   "testnet": true,
   "slug": "defichain-evm-network-testnet"
-} as const;
+} as const satisfies Chain;

@@ -7,7 +7,7 @@ import { ChevronLeftIcon } from "@radix-ui/react-icons";
 
 export const ModalTitle = styled(Title)<{ theme?: Theme }>`
   margin: 0;
-  font-weight: 500;
+  font-weight: 600;
   font-size: ${fontSize.lg};
   color: ${(p) => p.theme.text.neutral};
   ${media.mobile} {

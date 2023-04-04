@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "HOO Smart Chain Testnet",
   "chain": "ETH",
@@ -19,4 +20,4 @@ export default {
   "networkId": 170,
   "testnet": true,
   "slug": "hoo-smart-chain-testnet"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Proof Of Memes",
   "title": "Proof Of Memes Mainnet",
@@ -34,4 +35,4 @@ export default {
   ],
   "testnet": false,
   "slug": "proof-of-memes"
-} as const;
+} as const satisfies Chain;

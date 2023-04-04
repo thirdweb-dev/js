@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "SiriusNet V2",
   "chain": "SIN2",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": false,
   "slug": "siriusnet-v2"
-} as const;
+} as const satisfies Chain;

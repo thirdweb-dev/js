@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "OneLedger Testnet Frankenstein",
   "chain": "OLT",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": true,
   "slug": "oneledger-testnet-frankenstein"
-} as const;
+} as const satisfies Chain;

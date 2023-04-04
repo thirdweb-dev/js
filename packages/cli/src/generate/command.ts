@@ -97,7 +97,7 @@ export async function generate(options: GenerateOptions) {
     }
 
     const file = fs.readFileSync(filePath, "utf-8");
-    const abiRegex = /GENERATED_ABI = \{.*\}/s;
+    const abiRegex = /GENERATED_ABI = \{.*\};\n\n/s;
     const contractAbis = metadata.reduce((acc, contract) => {
       acc[contract.address] = contract.metadata.abi;
       return acc;
@@ -105,8 +105,9 @@ export async function generate(options: GenerateOptions) {
     const updatedAbis = JSON.stringify(contractAbis, null, 2);
     const updatedFile = file.replace(
       abiRegex,
-      `GENERATED_ABI = ${updatedAbis}`,
+      `GENERATED_ABI = ${updatedAbis};\n\n`,
     );
+
     fs.writeFileSync(filePath, updatedFile);
   });
 
@@ -141,8 +142,8 @@ export async function generate(options: GenerateOptions) {
 
   const postinstall = packageJson.scripts?.postinstall
     ? packageJson.scripts.postinstall +
-      ` && npx thirdweb generate --skip-update-check`
-    : `npx thirdweb generate --skip-update-check`;
+      ` && export THIRDWEB_CLI_SKIP_INTRO=true && npx thirdweb generate --skip-update-check`
+    : `export THIRDWEB_CLI_SKIP_INTRO=true && npx thirdweb generate --skip-update-check`;
 
   fs.writeFileSync(
     packageJsonPath,

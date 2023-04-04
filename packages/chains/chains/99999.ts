@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "UB Smart Chain",
   "chain": "USC",
@@ -17,4 +18,4 @@ export default {
   "networkId": 99999,
   "testnet": false,
   "slug": "ub-smart-chain"
-} as const;
+} as const satisfies Chain;

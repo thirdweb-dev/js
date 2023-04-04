@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Bear Network Chain Mainnet",
   "chain": "BRNKC",
@@ -31,4 +32,4 @@ export default {
   ],
   "testnet": false,
   "slug": "bear-network-chain"
-} as const;
+} as const satisfies Chain;

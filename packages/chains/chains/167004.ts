@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Taiko (Alpha-2 Testnet)",
   "chain": "ETH",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": true,
   "slug": "taiko-alpha-2-testnet"
-} as const;
+} as const satisfies Chain;

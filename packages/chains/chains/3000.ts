@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "CENNZnet Rata",
   "chain": "CENNZnet",
@@ -22,4 +23,4 @@ export default {
   },
   "testnet": false,
   "slug": "cennznet-rata"
-} as const;
+} as const satisfies Chain;

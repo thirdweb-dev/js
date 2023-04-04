@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "TOP Mainnet EVM",
   "chain": "TOP",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": false,
   "slug": "top-evm"
-} as const;
+} as const satisfies Chain;

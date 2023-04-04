@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "QuarkChain Mainnet Root",
   "chain": "QuarkChain",
@@ -17,4 +18,4 @@ export default {
   "networkId": 100000,
   "testnet": false,
   "slug": "quarkchain-root"
-} as const;
+} as const satisfies Chain;

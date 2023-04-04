@@ -509,23 +509,28 @@ export function useContractEvents(
  *
  * @beta
  */
-export function useContractRead(
-  contract: RequiredParam<ValidContractInstance>,
-  functionName: RequiredParam<string>,
-  ...args: unknown[] | [...unknown[], CallOverrides]
+export function useContractRead<
+  TContractInstance extends ValidContractInstance,
+  TFunctionName extends Parameters<TContractInstance["call"]>[0],
+>(
+  contract: RequiredParam<TContractInstance>,
+  functionName: RequiredParam<TFunctionName | (string & {})>,
+  args?: unknown[],
+  overrides?: CallOverrides,
 ) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
-    cacheKeys.contract.call(contractAddress, functionName, args),
+    cacheKeys.contract.call(contractAddress, functionName, args, overrides),
     () => {
       requiredParamInvariant(contract, "contract must be defined");
       requiredParamInvariant(functionName, "function name must be provided");
       return (
         contract.call as (
           functionName: string,
-          ...args: unknown[] | [...unknown[], CallOverrides]
+          args?: unknown[],
+          overrides?: CallOverrides,
         ) => Promise<any>
-      )(functionName, ...args);
+      )(functionName, args, overrides);
     },
     {
       enabled: !!contract && !!functionName,
@@ -551,32 +556,35 @@ export function useContractRead(
  *
  * @beta
  */
-export function useContractWrite(
-  contract: RequiredParam<ValidContractInstance>,
-  functionName: RequiredParam<string>,
+export function useContractWrite<
+  TContractInstance extends ValidContractInstance,
+  TFunctionName extends Parameters<TContractInstance["call"]>[0],
+>(
+  contract: RequiredParam<TContractInstance>,
+  functionName: RequiredParam<TFunctionName | (string & {})>,
 ) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (callParams?: unknown[] | [...unknown[], CallOverrides]) => {
+    async ({
+      args,
+      overrides,
+    }: {
+      args?: unknown[];
+      overrides?: CallOverrides;
+    }) => {
       requiredParamInvariant(contract, "contract must be defined");
       requiredParamInvariant(functionName, "function name must be provided");
-      if (!callParams?.length) {
-        return (
-          contract.call as (
-            functionName: string,
-            ...args: unknown[] | [...unknown[], CallOverrides]
-          ) => Promise<any>
-        )(functionName);
-      }
+
       return (
         contract.call as (
           functionName: string,
-          ...args: unknown[] | [...unknown[], CallOverrides]
+          args?: unknown[],
+          overrides?: CallOverrides,
         ) => Promise<any>
-      )(functionName, ...callParams);
+      )(functionName, args, overrides);
     },
     {
       onSettled: () =>

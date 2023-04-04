@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "GateChain Testnet",
   "chainId": 85,
@@ -26,4 +27,4 @@ export default {
   "infoURL": "https://www.gatechain.io",
   "testnet": true,
   "slug": "gatechain-testnet"
-} as const;
+} as const satisfies Chain;

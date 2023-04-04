@@ -60,7 +60,7 @@ jobs:
 
       - uses: pnpm/action-setup@v2
         with:
-          version: 7
+          version: 8
 
       - uses: actions/cache@v3
         timeout-minutes: 5
@@ -85,7 +85,7 @@ jobs:
 
       - uses: pnpm/action-setup@v2
         with:
-          version: 7
+          version: 8
 
       - uses: actions/cache@v3
         timeout-minutes: 5
@@ -115,7 +115,7 @@ jobs:
 
       - uses: pnpm/action-setup@v2
         with:
-          version: 7
+          version: 8
 
       - uses: actions/cache@v3
         timeout-minutes: 5

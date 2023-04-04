@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Step Network",
   "title": "Step Main Network",
@@ -26,7 +27,12 @@ export default {
     {
       "name": "StepScan",
       "url": "https://stepscan.io",
-      "icon": "step",
+      "icon": {
+        "url": "ipfs://QmVp9jyb3UFW71867yVtymmiRw7dPY4BTnsp3hEjr9tn8L",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
@@ -41,4 +47,4 @@ export default {
   },
   "testnet": false,
   "slug": "step-network"
-} as const;
+} as const satisfies Chain;

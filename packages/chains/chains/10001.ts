@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Smart Bitcoin Cash Testnet",
   "chain": "smartBCHTest",
@@ -18,4 +19,4 @@ export default {
   "networkId": 10001,
   "testnet": true,
   "slug": "smart-bitcoin-cash-testnet"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "IPOS Network",
   "chain": "IPOS",
@@ -18,4 +19,4 @@ export default {
   "networkId": 1122334455,
   "testnet": false,
   "slug": "ipos-network"
-} as const;
+} as const satisfies Chain;

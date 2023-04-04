@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Paribu Net Mainnet",
   "chain": "PRB",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": false,
   "slug": "paribu-net"
-} as const;
+} as const satisfies Chain;

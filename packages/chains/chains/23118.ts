@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Opside Testnet",
   "chain": "Opside",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": true,
   "slug": "opside-testnet"
-} as const;
+} as const satisfies Chain;

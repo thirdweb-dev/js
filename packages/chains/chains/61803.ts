@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Etica Mainnet",
   "chain": "Etica Protocol (ETI/EGAZ)",
@@ -38,4 +39,4 @@ export default {
   ],
   "testnet": false,
   "slug": "etica"
-} as const;
+} as const satisfies Chain;

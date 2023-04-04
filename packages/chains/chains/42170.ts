@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Arbitrum Nova",
   "chainId": 42170,
@@ -18,7 +19,12 @@ export default {
     {
       "name": "Arbitrum Nova Chain Explorer",
       "url": "https://nova-explorer.arbitrum.io",
-      "icon": "blockscout",
+      "icon": {
+        "url": "ipfs://bafybeifu5tpui7dk5cjoo54kde7pmuthvnl7sdykobuarsxgu7t2izurnq",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
@@ -34,4 +40,4 @@ export default {
   },
   "testnet": false,
   "slug": "arbitrum-nova"
-} as const;
+} as const satisfies Chain;
