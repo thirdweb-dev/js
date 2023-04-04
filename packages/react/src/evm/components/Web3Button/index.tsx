@@ -121,7 +121,7 @@ export const Web3Button = <TAction extends ActionFn>({
   );
 
   if (!address) {
-    return <ConnectWallet theme={theme} />;
+    return <ConnectWallet theme={theme} className={className} />;
   }
 
   // let onClick = () => actionMutation.mutate();
