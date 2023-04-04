@@ -76,7 +76,7 @@
     "zod": "^3.19.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.15.5",
+    "@babel/core": "^7.21.4",
     "@chakra-ui/cli": "^2.0.0",
     "@next/bundle-analyzer": "^13.0.6",
     "@trivago/prettier-plugin-sort-imports": "^4.0.0",
