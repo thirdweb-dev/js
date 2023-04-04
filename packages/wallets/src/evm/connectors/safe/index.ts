@@ -3,7 +3,7 @@ import { AbstractWallet } from "../../wallets/abstract";
 import type { SafeConnectionArgs } from "./types";
 import { ethers } from "ethers";
 import type { Signer } from "ethers";
-import { AbstractBrowserWallet } from "../../wallets/base";
+import { AbstractClientWallet } from "../../wallets/base";
 
 // excerpt from https://docs.gnosis-safe.io/backend/available-services
 const CHAIN_ID_TO_GNOSIS_SERVER_URL = {
@@ -37,7 +37,7 @@ export class SafeConnector extends TWConnector<SafeConnectionArgs> {
   public previousConnector?: AbstractWallet;
   // private options: SafeOptions;
   private safeSigner?: Signer;
-  personalWallet?: AbstractBrowserWallet;
+  personalWallet?: AbstractClientWallet;
 
   constructor() {
     super();

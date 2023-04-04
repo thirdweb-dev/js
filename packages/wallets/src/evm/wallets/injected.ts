@@ -1,8 +1,8 @@
 import { AsyncStorage, createAsyncLocalStorage } from "../../core/AsyncStorage";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
-import { AbstractBrowserWallet, WalletOptions } from "./base";
+import { AbstractClientWallet, WalletOptions } from "./base";
 
-export class InjectedWallet extends AbstractBrowserWallet {
+export class InjectedWallet extends AbstractClientWallet {
   connector?: TWConnector;
   connectorStorage: AsyncStorage;
 
@@ -11,10 +11,10 @@ export class InjectedWallet extends AbstractBrowserWallet {
     return "Injected Wallet";
   }
 
-  constructor(options: WalletOptions<{ connectorStorage?: AsyncStorage }>) {
+  constructor(options?: WalletOptions<{ connectorStorage?: AsyncStorage }>) {
     super(InjectedWallet.id, options);
     this.connectorStorage =
-      options.connectorStorage || createAsyncLocalStorage("connector");
+      options?.connectorStorage || createAsyncLocalStorage("connector");
   }
 
   protected async getConnector(): Promise<TWConnector> {

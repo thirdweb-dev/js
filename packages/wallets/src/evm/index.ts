@@ -21,7 +21,7 @@ export type {
 export * from "./wallets/paper-wallet";
 // just the types
 export type { WalletOptions } from "./wallets/base";
-export { AbstractBrowserWallet } from "./wallets/base";
+export { AbstractClientWallet } from "./wallets/base";
 export * from "./wallets/coinbase-wallet";
 export * from "./wallets/device-wallet";
 export * from "./wallets/injected";

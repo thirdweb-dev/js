@@ -1,8 +1,8 @@
-import { AsyncStorage, createAsyncLocalStorage } from "../../core/AsyncStorage";
+import { AsyncStorage } from "../../core/AsyncStorage";
 import type { WalletConnectV1Connector as WalletConnectV1ConnectorType } from "../connectors/wallet-connect-v1";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { assertWindowEthereum } from "../utils/assertWindowEthereum";
-import { AbstractBrowserWallet, WalletOptions } from "./base";
+import { AbstractClientWallet, WalletOptions } from "./base";
 
 type MetamaskAdditionalOptions = {
   /**
@@ -23,7 +23,7 @@ type ConnectWithQrCodeArgs = {
   onConnected: (accountAddress: string) => void;
 };
 
-export class MetaMaskWallet extends AbstractBrowserWallet<MetamaskAdditionalOptions> {
+export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptions> {
   connector?: TWConnector;
   walletConnectConnector?: WalletConnectV1ConnectorType;
   isInjected: boolean;

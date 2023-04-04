@@ -3,13 +3,13 @@ import {
   PaperWalletAdditionalOptions,
 } from "../connectors/paper/types";
 import { TWConnector } from "../interfaces/tw-connector";
-import { AbstractBrowserWallet, WalletOptions } from "./base";
+import { AbstractClientWallet, WalletOptions } from "./base";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { PaperWalletConnector } from "../connectors/paper";
 
 export type PaperWalletOptions = WalletOptions<PaperWalletAdditionalOptions>;
 
-export class PaperWallet extends AbstractBrowserWallet<
+export class PaperWallet extends AbstractClientWallet<
   PaperWalletAdditionalOptions,
   PaperWalletConnectionArgs
 > {
