@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Hika Network Testnet",
   "title": "Hika Network Testnet",
@@ -31,4 +32,4 @@ export default {
   ],
   "testnet": true,
   "slug": "hika-network-testnet"
-} as const;
+} as const satisfies Chain;

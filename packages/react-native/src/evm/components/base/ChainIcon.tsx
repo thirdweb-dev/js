@@ -1,9 +1,9 @@
 import { ActiveDot } from "./ActiveDot";
-import React from "react";
-import { Image, StyleSheet, View } from "react-native";
+import ImageSvgUri from "./ImageSvgUri";
+import { StyleSheet, View } from "react-native";
 
 const defaultChainIcon =
-  "https://gateway.ipfscdn.io/ipfs/QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png";
+  "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png";
 
 export type ChainIconProps = {
   chainIconUrl?: string;
@@ -12,17 +12,11 @@ export type ChainIconProps = {
 };
 
 export const ChainIcon = ({ chainIconUrl, size, active }: ChainIconProps) => {
-  const src = chainIconUrl
-    ? `https://gateway.ipfscdn.io/ipfs/${chainIconUrl.replace("ipfs://", "")}`
-    : defaultChainIcon;
+  const src = chainIconUrl || defaultChainIcon;
 
   return (
     <View style={styles.container}>
-      <Image
-        alt="chain icon"
-        style={{ width: size, height: size }}
-        source={{ uri: src }}
-      />
+      <ImageSvgUri width={size} height={size} imageUrl={src} />
       {active ? <ActiveDot /> : null}
     </View>
   );

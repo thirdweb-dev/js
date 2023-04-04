@@ -7,7 +7,7 @@ import {
   ProviderRpcError,
 } from "../../../lib/wagmi-core";
 import type WalletConnectProvider from "./walletconnect-legacy-provider/index";
-import { Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import { IWalletConnectSession } from "@walletconnect/legacy-types";
 import { utils, providers } from "ethers";
 

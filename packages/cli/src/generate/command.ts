@@ -52,17 +52,29 @@ export async function generate(options: GenerateOptions) {
 
   // Attempt to download the ABI for the contract
   const storage = new ThirdwebStorage();
-  const metadata = await Promise.all(
+  const metadata: {
+    address: string;
+    metadata: Awaited<ReturnType<typeof fetchContractMetadataFromAddress>>;
+  }[] = [];
+  await Promise.all(
     contracts.map(async (contract) => {
       const provider = getChainProvider(contract.chainId, {}); // Handles caching providers by chain for us
-      return {
-        address: contract.address,
-        metadata: await fetchContractMetadataFromAddress(
+      let contractMetadata;
+      try {
+        contractMetadata = await fetchContractMetadataFromAddress(
           contract.address,
           provider,
           storage,
-        ),
-      };
+        );
+      } catch {
+        // If metadata for a contract fails, just go onto the next one
+        return;
+      }
+
+      metadata.push({
+        address: contract.address,
+        metadata: contractMetadata,
+      });
     }),
   );
 
@@ -70,14 +82,12 @@ export async function generate(options: GenerateOptions) {
   const packagePath = `${projectPath}/node_modules/@thirdweb-dev/generated-abis/dist`;
   if (!fs.existsSync(packagePath)) {
     throw new Error(
-      `Could not find files at ${projectPath}/node_modules/@thirdweb-dev/generated-abis`,
+      `Unable to cache ABIs. Please ensure that you're using the latest @thirdweb-dev/sdk package`,
     );
   }
 
   const filePaths = [
-    `${packagePath}/thirdweb-dev-generated-abis.cjs.dev.js`,
-    `${packagePath}/thirdweb-dev-generated-abis.cjs.prod.js`,
-    `${packagePath}/thirdweb-dev-generated-abis.browser.esm.js`,
+    `${packagePath}/thirdweb-dev-generated-abis.cjs.js`,
     `${packagePath}/thirdweb-dev-generated-abis.esm.js`,
   ];
 
@@ -87,7 +97,7 @@ export async function generate(options: GenerateOptions) {
     }
 
     const file = fs.readFileSync(filePath, "utf-8");
-    const abiRegex = /GENERATED_ABI = \{.*\}/s;
+    const abiRegex = /GENERATED_ABI = \{.*\};\n\n/s;
     const contractAbis = metadata.reduce((acc, contract) => {
       acc[contract.address] = contract.metadata.abi;
       return acc;
@@ -95,10 +105,29 @@ export async function generate(options: GenerateOptions) {
     const updatedAbis = JSON.stringify(contractAbis, null, 2);
     const updatedFile = file.replace(
       abiRegex,
-      `GENERATED_ABI = ${updatedAbis}`,
+      `GENERATED_ABI = ${updatedAbis};\n\n`,
     );
+
     fs.writeFileSync(filePath, updatedFile);
   });
+
+  // Update cache for ABI types
+  {
+    const typeFilePath = `${packagePath}/declarations/src/index.d.ts`;
+    if (!fs.existsSync(typeFilePath)) {
+      return;
+    }
+
+    const file = fs.readFileSync(typeFilePath, "utf-8");
+    const abiRegex = /GENERATED_ABI: \{.*\}/s;
+    const contractAbis = metadata.reduce((acc, contract) => {
+      acc[contract.address] = contract.metadata.abi;
+      return acc;
+    }, {} as Record<string, any>);
+    const updatedAbis = JSON.stringify(contractAbis, null, 2);
+    const updatedFile = file.replace(abiRegex, `GENERATED_ABI: ${updatedAbis}`);
+    fs.writeFileSync(typeFilePath, updatedFile);
+  }
 
   // Add generate command to postinstall
   const packageJsonPath = `${projectPath}/package.json`;
@@ -113,8 +142,8 @@ export async function generate(options: GenerateOptions) {
 
   const postinstall = packageJson.scripts?.postinstall
     ? packageJson.scripts.postinstall +
-      ` && npx thirdweb generate --skip-update-check`
-    : `npx thirdweb generate --skip-update-check`;
+      ` && export THIRDWEB_CLI_SKIP_INTRO=true && npx thirdweb generate --skip-update-check`
+    : `export THIRDWEB_CLI_SKIP_INTRO=true && npx thirdweb generate --skip-update-check`;
 
   fs.writeFileSync(
     packageJsonPath,

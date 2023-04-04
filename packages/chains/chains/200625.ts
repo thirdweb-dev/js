@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Akroma",
   "chain": "AKA",
@@ -18,4 +19,4 @@ export default {
   "slip44": 200625,
   "testnet": false,
   "slug": "akroma"
-} as const;
+} as const satisfies Chain;

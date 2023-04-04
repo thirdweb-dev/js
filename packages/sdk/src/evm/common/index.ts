@@ -9,3 +9,4 @@ export {
   convertToReadableQuantity,
   fetchSnapshotEntryForAddress,
 } from "./claim-conditions";
+export { getCachedAbiForContract } from "./abi";

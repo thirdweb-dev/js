@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Flare Testnet Coston",
   "chain": "FLR",
@@ -33,4 +34,4 @@ export default {
   ],
   "testnet": true,
   "slug": "flare-testnet-coston"
-} as const;
+} as const satisfies Chain;

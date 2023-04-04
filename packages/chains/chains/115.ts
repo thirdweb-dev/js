@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "DeBank Testnet",
   "chain": "DeBank",
@@ -21,4 +22,4 @@ export default {
   "explorers": [],
   "testnet": true,
   "slug": "debank-testnet"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "OHO Mainnet",
   "chain": "OHO",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "ohoscan",
       "url": "https://ohoscan.com",
-      "icon": "ohoscan",
+      "icon": {
+        "url": "ipfs://QmZt75xixnEtFzqHTrJa8kJkV4cTXmUZqeMeHM8BcvomQc",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "oho"
-} as const;
+} as const satisfies Chain;

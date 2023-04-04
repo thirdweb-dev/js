@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Mumbai",
   "title": "Polygon Testnet Mumbai",
@@ -6,15 +7,7 @@ export default {
     "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/polygon/512.png",
     "height": 512,
     "width": 512,
-    "format": "png",
-    "sizes": [
-      512,
-      256,
-      128,
-      64,
-      32,
-      16
-    ]
+    "format": "png"
   },
   "rpc": [
     "https://mumbai.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
@@ -45,4 +38,4 @@ export default {
   ],
   "testnet": true,
   "slug": "mumbai"
-} as const;
+} as const satisfies Chain;

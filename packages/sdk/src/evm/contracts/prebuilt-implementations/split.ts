@@ -13,7 +13,7 @@ import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput } from "../../core/types";
 import { Address, AddressOrEns } from "../../schema";
-import { Abi } from "../../schema/contracts/custom";
+import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { SplitsContractSchema } from "../../schema/contracts/splits";
 import { SDKOptions } from "../../schema/sdk-options";
 import { SplitRecipient } from "../../types/SplitRecipient";
@@ -72,7 +72,7 @@ export class Split implements UpdateableNetwork {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: Abi,
+    abi: AbiInput,
     chainId: number,
     contractWrapper = new ContractWrapper<SplitContract>(
       network,
@@ -82,7 +82,7 @@ export class Split implements UpdateableNetwork {
     ),
   ) {
     this._chainId = chainId;
-    this.abi = abi;
+    this.abi = AbiSchema.parse(abi || []);
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this.metadata = new ContractMetadata(
@@ -419,10 +419,13 @@ export class Split implements UpdateableNetwork {
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
+  public async call<
+    TMethod extends keyof SplitContract["functions"] = keyof SplitContract["functions"],
+  >(
+    functionName: string & TMethod,
+    args?: Parameters<SplitContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
   ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 }

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Darwinia Pangoro Testnet",
   "chain": "pangoro",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": true,
   "slug": "darwinia-pangoro-testnet"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Rinia Testnet",
   "chain": "FIRE",
@@ -27,4 +28,4 @@ export default {
   "status": "incubating",
   "testnet": true,
   "slug": "rinia-testnet"
-} as const;
+} as const satisfies Chain;

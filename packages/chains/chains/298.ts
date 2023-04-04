@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Hedera Localnet",
   "chain": "Hedera",
@@ -20,7 +21,7 @@ export default {
   "nativeCurrency": {
     "name": "hbar",
     "symbol": "HBAR",
-    "decimals": 8
+    "decimals": 18
   },
   "infoURL": "https://hedera.com",
   "shortName": "hedera-localnet",
@@ -30,4 +31,4 @@ export default {
   "explorers": [],
   "testnet": false,
   "slug": "hedera-localnet"
-} as const;
+} as const satisfies Chain;

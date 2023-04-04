@@ -12,7 +12,7 @@ import type {
   CoinbaseWalletSDK,
 } from "@coinbase/wallet-sdk";
 import type { CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/CoinbaseWalletSDK";
-import { Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import { providers } from "ethers";
 import { getAddress, hexValue } from "ethers/lib/utils.js";
 
@@ -252,32 +252,6 @@ export class CoinbaseWalletConnector extends Connector<
     }
   }
 
-  async watchAsset({
-    address,
-    decimals = 18,
-    image,
-    symbol,
-  }: {
-    address: string;
-    decimals?: number;
-    image?: string;
-    symbol: string;
-  }) {
-    const provider = await this.getProvider();
-    return provider.request<boolean>({
-      method: "wallet_watchAsset",
-      params: {
-        type: "ERC20",
-        options: {
-          address,
-          decimals,
-          image,
-          symbol,
-        },
-      },
-    });
-  }
-
   protected onAccountsChanged = (accounts: string[]) => {
     if (accounts.length === 0) {
       this.emit("disconnect");
@@ -308,7 +282,7 @@ export class CoinbaseWalletConnector extends Connector<
     provider.on("disconnect", this.onDisconnect);
   }
 
-  async getQrCode() {
+  async getQrUrl() {
     await this.getProvider();
     if (!this.#client) {
       throw new Error("Coinbase Wallet SDK not initialized");

@@ -9,9 +9,7 @@ import {
 } from "../../../components/modalElements";
 import { fontSize, iconSize, radius, spacing } from "../../../design-system";
 import { Theme } from "../../../design-system/index";
-import { AppleStoreIcon } from "../icons/AppleStoreIcon";
-import { ChromeIcon } from "../icons/ChromeIcon";
-import { GooglePlayStoreIcon } from "../icons/GooglePlayStoreIcon";
+import { Apple, Chrome, GooglePlay } from "../iconURLs";
 import styled from "@emotion/styled";
 import { useState } from "react";
 
@@ -53,7 +51,9 @@ export const GetStartedScreen: React.FC<{
 
       {showScreen === "android-scan" && (
         <ScanScreen
-          platformIcon={<GooglePlayStoreIcon size={iconSize.md} />}
+          platformIcon={
+            <Img src={GooglePlay} width={iconSize.md} height={iconSize.md} />
+          }
           url={props.googlePlayStoreLink}
           platform="Android"
           walletName={props.walletName}
@@ -63,7 +63,9 @@ export const GetStartedScreen: React.FC<{
 
       {showScreen === "ios-scan" && (
         <ScanScreen
-          platformIcon={<AppleStoreIcon size={iconSize.md} />}
+          platformIcon={
+            <Img width={iconSize.md} height={iconSize.md} src={Apple} />
+          }
           url={props.appleStoreLink}
           platform="iOS"
           walletName={props.walletName}
@@ -82,19 +84,19 @@ export const GetStartedScreen: React.FC<{
             alt=""
           />
 
-          <Spacer y="md" />
+          <Spacer y="lg" />
 
           <ModalTitle>Get started with {props.walletName}</ModalTitle>
-          <Spacer y="md" />
+          <Spacer y="sm" />
 
           <ModalDescription>
-            Download your preferred option and then refresh this page.
+            Download your preferred option and refresh this page
           </ModalDescription>
           <Spacer y="xl" />
 
           {/* Chrome Extension  */}
           <ButtonLink target="_blank" href={props.chromeExtensionLink}>
-            <ChromeIcon size={iconSize.lg} />
+            <Img width={iconSize.lg} height={iconSize.lg} src={Chrome} />
             <span>Download Chrome Extension</span>
           </ButtonLink>
           <Spacer y="xs" />
@@ -107,12 +109,12 @@ export const GetStartedScreen: React.FC<{
               setShowScreen("android-scan");
             }}
           >
-            <GooglePlayStoreIcon size={iconSize.lg} />
-            <span>Download for Android</span>
+            <Img width={iconSize.lg} height={iconSize.lg} src={GooglePlay} />
+            <span>Download on Google Play</span>
           </ButtonLink>
           <Spacer y="xs" />
 
-          {/* Apple Store  */}
+          {/* App Store  */}
           <ButtonLink
             as="button"
             target="_blank"
@@ -120,8 +122,8 @@ export const GetStartedScreen: React.FC<{
               setShowScreen("ios-scan");
             }}
           >
-            <AppleStoreIcon size={iconSize.lg} />
-            <span>Download for iOS</span>
+            <Img width={iconSize.lg} height={iconSize.lg} src={Apple} />
+            <span>Download on App Store</span>
           </ButtonLink>
         </>
       )}
@@ -138,7 +140,7 @@ export const GetStartedScreen: React.FC<{
               width: "100%",
             }}
           >
-            I{`'`}ve finished setting up my {props.walletName} mobile wallet
+            I{`'`}ve finished setting up my {props.walletName} on mobile
           </HelperLink>
         </>
       )}
@@ -200,7 +202,7 @@ const ScanScreen: React.FC<{
   );
 };
 
-const ButtonLink = styled.a<{ theme?: Theme }>`
+export const ButtonLink = styled.a<{ theme?: Theme }>`
   all: unset;
   text-decoration: none;
   padding: ${spacing.sm} ${spacing.md};
@@ -216,5 +218,7 @@ const ButtonLink = styled.a<{ theme?: Theme }>`
   transition: 100ms ease;
   &:hover {
     background: ${(p) => p.theme.bg.highlighted};
+    text-decoration: none;
+    color: ${(p) => p.theme.text.neutral};
   }
 `;

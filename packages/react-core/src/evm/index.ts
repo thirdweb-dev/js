@@ -6,7 +6,6 @@ export type { ThirdwebProviderCoreProps } from "../core/providers/thirdweb-provi
 
 // constants
 export { __DEV__ } from "../core/constants/runtime";
-export { TW_WC_PROJECT_ID } from "../core/constants/wc";
 
 // wallet hooks
 export {
@@ -18,6 +17,7 @@ export {
   useSwitchChain,
   useWallets,
 } from "../core/hooks/wallet-hooks";
+export { useNetwork } from "../core/hooks/useNetwork";
 export { useThirdwebWallet } from "../core/providers/thirdweb-wallet-provider";
 
 // connected wallet hooks
@@ -33,9 +33,11 @@ export {
 export { shouldNeverPersistQuery } from "../core/query-utils/query-key";
 export type { RequiredParam } from "../core/query-utils/required-param";
 export type {
-  SupportedWallet,
-  SupportedWalletInstance,
+  Wallet,
+  WalletClass,
+  WalletInstance,
   ExtraCoreWalletOptions,
+  WalletOptions,
 } from "../core/types/wallet";
 
 // auth
@@ -185,7 +187,7 @@ export {
 // thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)
 
 // auth hooks
-export { useLogin, useLogout, useUser, useAuth } from "./hooks/auth";
+export { useLogin, useLogout, useUser } from "./hooks/auth";
 export type { UserWithData } from "./hooks/auth";
 
 // contract hooks
@@ -217,7 +219,7 @@ export {
   useSDK,
   useSDKChainId,
 } from "./providers/thirdweb-sdk-provider";
-export type { ThirdwebSDKProviderProps } from "./providers/thirdweb-sdk-provider";
+export type { ThirdwebSDKProviderProps } from "./providers/types";
 
 // types
 export type {

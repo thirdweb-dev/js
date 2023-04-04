@@ -4,37 +4,278 @@ import {
   fetchContractMetadataFromAddress,
   fetchSourceFilesFromMetadata,
 } from "../../common/metadata-resolver";
+import { isRouterContract } from "../../common/plugin";
 import { defaultGaslessSendFunction } from "../../common/transactions";
 import { isBrowser } from "../../common/utils";
 import { ChainId } from "../../constants/chains";
 import { ContractSource } from "../../schema/contracts/custom";
 import { SDKOptionsOutput } from "../../schema/sdk-options";
 import {
+  DeployTransactionOptions,
   ParseTransactionReceipt,
+  TransactionContextOptions,
   TransactionOptionsWithContract,
   TransactionOptionsWithContractInfo,
   TransactionOptionsWithContractWrapper,
 } from "../../types/transactions";
 import { GaslessTransaction, TransactionResult } from "../types";
-import type { ConnectionInfo } from "@ethersproject/web";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, CallOverrides, ethers } from "ethers";
+import {
+  BaseContract,
+  CallOverrides,
+  Contract,
+  ContractFactory,
+  ContractTransaction,
+  providers,
+  Signer,
+  utils,
+} from "ethers";
+import { BigNumber } from "ethers";
+import { FormatTypes } from "ethers/lib/utils.js";
+import type { ConnectionInfo } from "ethers/lib/utils.js";
 import invariant from "tiny-invariant";
+import EventEmitter from "eventemitter3";
+import { DeployEvents } from "../../types";
 
-export class Transaction<TResult = TransactionResult> {
-  private contract: ethers.Contract;
+abstract class TransactionContext {
+  protected args: any[];
+  protected overrides: CallOverrides;
+  protected provider: providers.Provider;
+  protected signer: Signer;
+  protected storage: ThirdwebStorage;
+  protected gasMultiple?: number;
+
+  constructor(options: TransactionContextOptions) {
+    this.args = options.args;
+    this.overrides = options.overrides || {};
+    this.provider = options.provider;
+    this.signer = options.signer;
+    this.storage = options.storage || new ThirdwebStorage();
+
+    // Connect provider to signer if it isn't already connected
+    if (!this.signer.provider) {
+      this.signer = this.signer.connect(this.provider);
+    }
+  }
+
+  getArgs() {
+    return this.args;
+  }
+
+  getOverrides() {
+    return this.overrides;
+  }
+
+  getValue() {
+    return this.overrides.value || 0;
+  }
+
+  setArgs(args: any[]): TransactionContext {
+    this.args = args;
+    return this;
+  }
+
+  setOverrides(overrides: CallOverrides): TransactionContext {
+    this.overrides = overrides;
+    return this;
+  }
+
+  updateOverrides(overrides: CallOverrides): TransactionContext {
+    this.overrides = { ...this.overrides, ...overrides };
+    return this;
+  }
+
+  setValue(value: CallOverrides["value"]): TransactionContext {
+    this.updateOverrides({ value });
+    return this;
+  }
+
+  setGasLimit(gasLimit: CallOverrides["gasLimit"]): TransactionContext {
+    this.updateOverrides({ gasLimit });
+    return this;
+  }
+
+  setGasPrice(gasPrice: CallOverrides["gasPrice"]): TransactionContext {
+    this.updateOverrides({ gasPrice });
+    return this;
+  }
+
+  setNonce(nonce: CallOverrides["nonce"]): TransactionContext {
+    this.updateOverrides({ nonce });
+    return this;
+  }
+
+  setMaxFeePerGas(
+    maxFeePerGas: CallOverrides["maxFeePerGas"],
+  ): TransactionContext {
+    this.updateOverrides({ maxFeePerGas });
+    return this;
+  }
+
+  setMaxPriorityFeePerGas(
+    maxPriorityFeePerGas: CallOverrides["maxPriorityFeePerGas"],
+  ): TransactionContext {
+    this.updateOverrides({ maxPriorityFeePerGas });
+    return this;
+  }
+
+  setType(type: CallOverrides["type"]): TransactionContext {
+    this.updateOverrides({ type });
+    return this;
+  }
+
+  setAccessList(accessList: CallOverrides["accessList"]): TransactionContext {
+    this.updateOverrides({ accessList });
+    return this;
+  }
+
+  setCustomData(customData: CallOverrides["customData"]): TransactionContext {
+    this.updateOverrides({ customData });
+    return this;
+  }
+
+  setCcipReadEnabled(
+    ccipReadEnabled: CallOverrides["ccipReadEnabled"],
+  ): TransactionContext {
+    this.updateOverrides({ ccipReadEnabled });
+    return this;
+  }
+
+  public abstract estimateGasLimit(): Promise<BigNumber>;
+
+  /**
+   * Set a multiple to multiply the gas limit by
+   *
+   * @example
+   * ```js
+   * // Set the gas limit multiple to 1.2 (increase by 20%)
+   * tx.setGasLimitMultiple(1.2)
+   * ```
+   */
+  public setGasLimitMultiple(factor: number) {
+    // If gasLimit override is set, we can just set it synchronously
+    if (BigNumber.isBigNumber(this.overrides.gasLimit)) {
+      this.overrides.gasLimit = BigNumber.from(
+        Math.floor(BigNumber.from(this.overrides.gasLimit).toNumber() * factor),
+      );
+    } else {
+      // Otherwise, set a gas multiple to use later
+      this.gasMultiple = factor;
+    }
+  }
+
+  /**
+   * Estimate the total gas cost of this transaction (in both ether and wei)
+   */
+  public async estimateGasCost() {
+    const gasLimit = await this.estimateGasLimit();
+    const gasPrice = await this.getGasPrice();
+    const gasCost = gasLimit.mul(gasPrice);
+
+    return {
+      ether: utils.formatEther(gasCost),
+      wei: gasCost,
+    };
+  }
+
+  /**
+   * Calculates the gas price for transactions (adding a 10% tip buffer)
+   */
+  public async getGasPrice(): Promise<BigNumber> {
+    const gasPrice = await this.provider.getGasPrice();
+    const maxGasPrice = utils.parseUnits("300", "gwei"); // 300 gwei
+    const extraTip = gasPrice.div(100).mul(10); // + 10%
+    const txGasPrice = gasPrice.add(extraTip);
+
+    if (txGasPrice.gt(maxGasPrice)) {
+      return maxGasPrice;
+    }
+
+    return txGasPrice;
+  }
+
+  /**
+   * Get the address of the transaction signer
+   */
+  protected async getSignerAddress() {
+    return this.signer.getAddress();
+  }
+
+  /**
+   * Get gas overrides for the transaction
+   */
+  protected async getGasOverrides() {
+    // If we're running in the browser, let users configure gas price in their wallet UI
+    if (isBrowser()) {
+      return {};
+    }
+
+    const feeData = await this.provider.getFeeData();
+    const supports1559 = feeData.maxFeePerGas && feeData.maxPriorityFeePerGas;
+    if (supports1559) {
+      const chainId = (await this.provider.getNetwork()).chainId;
+      const block = await this.provider.getBlock("latest");
+      const baseBlockFee =
+        block && block.baseFeePerGas
+          ? block.baseFeePerGas
+          : utils.parseUnits("1", "gwei");
+      let defaultPriorityFee: BigNumber;
+      if (chainId === ChainId.Mumbai || chainId === ChainId.Polygon) {
+        // for polygon, get fee data from gas station
+        defaultPriorityFee = await getPolygonGasPriorityFee(chainId);
+      } else {
+        // otherwise get it from ethers
+        defaultPriorityFee = BigNumber.from(feeData.maxPriorityFeePerGas);
+      }
+      // then add additional fee based on user preferences
+      const maxPriorityFeePerGas =
+        this.getPreferredPriorityFee(defaultPriorityFee);
+      // See: https://eips.ethereum.org/EIPS/eip-1559 for formula
+      const baseMaxFeePerGas = baseBlockFee.mul(2);
+      const maxFeePerGas = baseMaxFeePerGas.add(maxPriorityFeePerGas);
+      return {
+        maxFeePerGas,
+        maxPriorityFeePerGas,
+      };
+    } else {
+      return {
+        gasPrice: await this.getGasPrice(),
+      };
+    }
+  }
+
+  /**
+   * Calculates the priority fee per gas according (adding a 10% buffer)
+   */
+  private getPreferredPriorityFee(
+    defaultPriorityFeePerGas: BigNumber,
+  ): BigNumber {
+    const extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 10%
+    const txGasPrice = defaultPriorityFeePerGas.add(extraTip);
+    const maxGasPrice = utils.parseUnits("300", "gwei"); // no more than 300 gwei
+    const minGasPrice = utils.parseUnits("2.5", "gwei"); // no less than 2.5 gwei
+
+    if (txGasPrice.gt(maxGasPrice)) {
+      return maxGasPrice;
+    }
+    if (txGasPrice.lt(minGasPrice)) {
+      return minGasPrice;
+    }
+
+    return txGasPrice;
+  }
+}
+
+export class Transaction<
+  TResult = TransactionResult,
+> extends TransactionContext {
   private method: string;
-  private args: any[];
-  private overrides: CallOverrides;
-  private provider: ethers.providers.Provider;
-  private signer: ethers.Signer;
-  private storage: ThirdwebStorage;
+  private contract: Contract;
   private gaslessOptions?: SDKOptionsOutput["gasless"];
   private parse?: ParseTransactionReceipt<TResult>;
-  private gasMultiple?: number;
 
   static fromContractWrapper<
-    TContract extends ethers.BaseContract,
+    TContract extends BaseContract,
     TResult = TransactionResult,
   >(
     options: TransactionOptionsWithContractWrapper<TContract, TResult>,
@@ -78,7 +319,7 @@ export class Transaction<TResult = TransactionResult> {
       }
     }
 
-    const contract = new ethers.Contract(
+    const contract = new Contract(
       options.contractAddress,
       contractAbi,
       options.provider,
@@ -94,18 +335,17 @@ export class Transaction<TResult = TransactionResult> {
   }
 
   constructor(options: TransactionOptionsWithContract<TResult>) {
+    super({
+      args: options.args,
+      overrides: options.overrides,
+      provider: options.provider,
+      signer: options.signer,
+      storage: options.storage,
+    });
+
     this.method = options.method;
-    this.args = options.args;
-    this.overrides = options.overrides || {};
-    this.provider = options.provider;
-    this.signer = options.signer;
     this.gaslessOptions = options.gasless;
     this.parse = options.parse as ParseTransactionReceipt<TResult> | undefined;
-
-    // Connect provider to signer if it isn't already connected
-    if (!this.signer.provider) {
-      this.signer = this.signer.connect(this.provider);
-    }
 
     // Always connect the signer to the contract
     this.contract = options.contract.connect(this.signer);
@@ -118,91 +358,8 @@ export class Transaction<TResult = TransactionResult> {
     return this.method;
   }
 
-  getArgs() {
-    return this.args;
-  }
-
-  getOverrides() {
-    return this.overrides;
-  }
-
-  getValue() {
-    return this.overrides.value || 0;
-  }
-
   getGaslessOptions() {
     return this.gaslessOptions;
-  }
-
-  setArgs(args: any[]): Transaction<TResult> {
-    this.args = args;
-    return this;
-  }
-
-  setOverrides(overrides: CallOverrides): Transaction<TResult> {
-    this.overrides = overrides;
-    return this;
-  }
-
-  updateOverrides(overrides: CallOverrides): Transaction<TResult> {
-    this.overrides = { ...this.overrides, ...overrides };
-    return this;
-  }
-
-  setValue(value: CallOverrides["value"]): Transaction<TResult> {
-    this.updateOverrides({ value });
-    return this;
-  }
-
-  setGasLimit(gasLimit: CallOverrides["gasLimit"]): Transaction<TResult> {
-    this.updateOverrides({ gasLimit });
-    return this;
-  }
-
-  setGasPrice(gasPrice: CallOverrides["gasPrice"]): Transaction<TResult> {
-    this.updateOverrides({ gasPrice });
-    return this;
-  }
-
-  setNonce(nonce: CallOverrides["nonce"]): Transaction<TResult> {
-    this.updateOverrides({ nonce });
-    return this;
-  }
-
-  setMaxFeePerGas(
-    maxFeePerGas: CallOverrides["maxFeePerGas"],
-  ): Transaction<TResult> {
-    this.updateOverrides({ maxFeePerGas });
-    return this;
-  }
-
-  setMaxPriorityFeePerGas(
-    maxPriorityFeePerGas: CallOverrides["maxPriorityFeePerGas"],
-  ): Transaction<TResult> {
-    this.updateOverrides({ maxPriorityFeePerGas });
-    return this;
-  }
-
-  setType(type: CallOverrides["type"]): Transaction<TResult> {
-    this.updateOverrides({ type });
-    return this;
-  }
-
-  setAccessList(accessList: CallOverrides["accessList"]): Transaction<TResult> {
-    this.updateOverrides({ accessList });
-    return this;
-  }
-
-  setCustomData(customData: CallOverrides["customData"]): Transaction<TResult> {
-    this.updateOverrides({ customData });
-    return this;
-  }
-
-  setCcipReadEnabled(
-    ccipReadEnabled: CallOverrides["ccipReadEnabled"],
-  ): Transaction<TResult> {
-    this.updateOverrides({ ccipReadEnabled });
-    return this;
   }
 
   setGaslessOptions(
@@ -215,27 +372,6 @@ export class Transaction<TResult = TransactionResult> {
   setParse(parse: ParseTransactionReceipt<TResult>): Transaction<TResult> {
     this.parse = parse;
     return this;
-  }
-
-  /**
-   * Set a multiple to multiply the gas limit by
-   *
-   * @example
-   * ```js
-   * // Set the gas limit multiple to 1.2 (increase by 20%)
-   * tx.setGasLimitMultiple(1.2)
-   * ```
-   */
-  setGasLimitMultiple(factor: number) {
-    // If gasLimit override is set, we can just set it synchronously
-    if (BigNumber.isBigNumber(this.overrides.gasLimit)) {
-      this.overrides.gasLimit = BigNumber.from(
-        Math.floor(BigNumber.from(this.overrides.gasLimit).toNumber() * factor),
-      );
-    } else {
-      // Otherwise, set a gas multiple to use later
-      this.gasMultiple = factor;
-    }
   }
 
   /**
@@ -310,28 +446,14 @@ export class Transaction<TResult = TransactionResult> {
       await this.simulate();
 
       // If transaction simulation (static call) doesn't throw, then throw a generic error
-      throw this.transactionError(err);
+      throw await this.transactionError(err);
     }
-  }
-
-  /**
-   * Estimate the total gas cost of this transaction (in both ether and wei)
-   */
-  async estimateGasCost() {
-    const gasLimit = await this.estimateGasLimit();
-    const gasPrice = await this.getGasPrice();
-    const gasCost = gasLimit.mul(gasPrice);
-
-    return {
-      ether: ethers.utils.formatEther(gasCost),
-      wei: gasCost,
-    };
   }
 
   /**
    * Send the transaction without waiting for it to be mined.
    */
-  async send(): Promise<ethers.ContractTransaction> {
+  async send(): Promise<ContractTransaction> {
     if (!this.contract.functions[this.method]) {
       throw this.functionError();
     }
@@ -350,6 +472,17 @@ export class Transaction<TResult = TransactionResult> {
     // First, if no gasLimit is passed, call estimate gas ourselves
     if (!overrides.gasLimit) {
       overrides.gasLimit = await this.estimateGasLimit();
+      try {
+        // for dynamic contracts, add 30% to the gas limit to account for multiple delegate calls
+        const abi = JSON.parse(
+          this.contract.interface.format(FormatTypes.json) as string,
+        );
+        if (isRouterContract(abi)) {
+          overrides.gasLimit = overrides.gasLimit.mul(110).div(100);
+        }
+      } catch (err) {
+        console.warn("Error raising gas limit", err);
+      }
     }
 
     // Now there should be no gas estimate errors
@@ -380,7 +513,6 @@ export class Transaction<TResult = TransactionResult> {
    * Send the transaction and wait for it to be mined
    */
   async execute(): Promise<TResult> {
-    // TODO: Add submitted and completed events
     const tx = await this.send();
 
     let receipt;
@@ -403,16 +535,9 @@ export class Transaction<TResult = TransactionResult> {
   }
 
   /**
-   * Get the address of the transaction signer
-   */
-  private async getSignerAddress() {
-    return this.signer.getAddress();
-  }
-
-  /**
    * Execute the transaction with gasless
    */
-  private async sendGasless(): Promise<ethers.ContractTransaction> {
+  private async sendGasless(): Promise<ContractTransaction> {
     invariant(
       this.gaslessOptions &&
         ("openzeppelin" in this.gaslessOptions ||
@@ -429,7 +554,7 @@ export class Transaction<TResult = TransactionResult> {
     ) {
       const from = await this.getSignerAddress();
       args[0] = args[0].map((tx: any) =>
-        ethers.utils.solidityPack(["bytes", "address"], [tx, from]),
+        utils.solidityPack(["bytes", "address"], [tx, from]),
       );
     }
 
@@ -517,86 +642,6 @@ export class Transaction<TResult = TransactionResult> {
     return sentTx;
   }
 
-  /**
-   * Get gas overrides for the transaction
-   */
-  private async getGasOverrides() {
-    // If we're running in the browser, let users configure gas price in their wallet UI
-    if (isBrowser()) {
-      return {};
-    }
-
-    const feeData = await this.provider.getFeeData();
-    const supports1559 = feeData.maxFeePerGas && feeData.maxPriorityFeePerGas;
-    if (supports1559) {
-      const chainId = (await this.provider.getNetwork()).chainId;
-      const block = await this.provider.getBlock("latest");
-      const baseBlockFee =
-        block && block.baseFeePerGas
-          ? block.baseFeePerGas
-          : ethers.utils.parseUnits("1", "gwei");
-      let defaultPriorityFee: BigNumber;
-      if (chainId === ChainId.Mumbai || chainId === ChainId.Polygon) {
-        // for polygon, get fee data from gas station
-        defaultPriorityFee = await getPolygonGasPriorityFee(chainId);
-      } else {
-        // otherwise get it from ethers
-        defaultPriorityFee = BigNumber.from(feeData.maxPriorityFeePerGas);
-      }
-      // then add additional fee based on user preferences
-      const maxPriorityFeePerGas =
-        this.getPreferredPriorityFee(defaultPriorityFee);
-      // See: https://eips.ethereum.org/EIPS/eip-1559 for formula
-      const baseMaxFeePerGas = baseBlockFee.mul(2);
-      const maxFeePerGas = baseMaxFeePerGas.add(maxPriorityFeePerGas);
-      return {
-        maxFeePerGas,
-        maxPriorityFeePerGas,
-      };
-    } else {
-      return {
-        gasPrice: await this.getGasPrice(),
-      };
-    }
-  }
-
-  /**
-   * Calculates the priority fee per gas according (adding a 10% buffer)
-   */
-  private getPreferredPriorityFee(
-    defaultPriorityFeePerGas: BigNumber,
-  ): BigNumber {
-    const extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 10%
-    const txGasPrice = defaultPriorityFeePerGas.add(extraTip);
-    const maxGasPrice = ethers.utils.parseUnits("300", "gwei"); // no more than 300 gwei
-    const minGasPrice = ethers.utils.parseUnits("2.5", "gwei"); // no less than 2.5 gwei
-
-    if (txGasPrice.gt(maxGasPrice)) {
-      return maxGasPrice;
-    }
-    if (txGasPrice.lt(minGasPrice)) {
-      return minGasPrice;
-    }
-
-    return txGasPrice;
-  }
-
-  /**
-   * Calculates the gas price for transactions (adding a 10% tip buffer)
-   */
-  public async getGasPrice(): Promise<BigNumber> {
-    const gasPrice = await this.provider.getGasPrice();
-    const maxGasPrice = ethers.utils.parseUnits("300", "gwei"); // 300 gwei
-    const extraTip = gasPrice.div(100).mul(10); // + 10%
-    const txGasPrice = gasPrice.add(extraTip);
-
-    if (txGasPrice.gt(maxGasPrice)) {
-      return maxGasPrice;
-    }
-
-    return txGasPrice;
-  }
-
   private functionError() {
     return new Error(
       `Contract "${this.contract.address}" does not have function "${this.method}"`,
@@ -607,7 +652,7 @@ export class Transaction<TResult = TransactionResult> {
    * Create a nicely formatted error message with tx metadata and solidity stack trace
    */
   private async transactionError(error: any) {
-    const provider = this.provider as ethers.providers.Provider & {
+    const provider = this.provider as providers.Provider & {
       connection?: ConnectionInfo;
     };
 
@@ -677,6 +722,154 @@ export class Transaction<TResult = TransactionResult> {
       hash,
       contractName,
       sources,
+    });
+  }
+}
+
+export class DeployTransaction extends TransactionContext {
+  factory: ContractFactory;
+  events: EventEmitter<DeployEvents> | undefined;
+
+  constructor(options: DeployTransactionOptions) {
+    super(options);
+    this.factory = options.factory;
+    this.events = options.events;
+  }
+
+  encode(): string {
+    return utils.hexlify(
+      utils.concat([
+        this.factory.bytecode,
+        this.factory.interface.encodeDeploy(this.args),
+      ]),
+    );
+  }
+
+  async sign(): Promise<string> {
+    const populatedTx = await this.populateTransaction();
+    return this.signer.signTransaction(populatedTx);
+  }
+
+  async simulate() {
+    const populatedTx = await this.populateTransaction();
+    this.signer.call(populatedTx);
+  }
+
+  async estimateGasLimit(): Promise<BigNumber> {
+    try {
+      const gasOverrides = await this.getGasOverrides();
+      const overrides: CallOverrides = { ...gasOverrides, ...this.overrides };
+      const populatedTx = this.factory.getDeployTransaction(
+        ...this.args,
+        overrides,
+      );
+
+      return this.signer.estimateGas(populatedTx);
+    } catch (err) {
+      // No need to do simulation here, since there can't be revert errors
+      throw await this.deployError(err);
+    }
+  }
+
+  async send(): Promise<ContractTransaction> {
+    try {
+      const populatedTx = await this.populateTransaction();
+      return await this.signer.sendTransaction(populatedTx);
+    } catch (err) {
+      throw await this.deployError(err);
+    }
+  }
+
+  async execute(): Promise<string> {
+    const tx = await this.send();
+
+    try {
+      await tx.wait();
+    } catch (err) {
+      // If tx.wait() fails, it just gives us a generic "transaction failed"
+      // error. So instead, we need to call static to get an informative error message
+      await this.simulate();
+
+      // If transaction simulation (static call) doesn't throw, then throw with the message that we have
+      throw await this.deployError(err);
+    }
+
+    const contractAddress = utils.getContractAddress({
+      from: tx.from,
+      nonce: tx.nonce,
+    });
+
+    // TODO: Remove when we delete events from deploy
+    if (this.events) {
+      this.events.emit("contractDeployed", {
+        status: "completed",
+        contractAddress,
+        transactionHash: tx.hash,
+      });
+    }
+
+    return contractAddress;
+  }
+
+  private async populateTransaction(): Promise<providers.TransactionRequest> {
+    const gasOverrides = await this.getGasOverrides();
+    const overrides: CallOverrides = { ...gasOverrides, ...this.overrides };
+
+    // First, if no gasLimit is passed, call estimate gas ourselves
+    if (!overrides.gasLimit) {
+      overrides.gasLimit = await this.estimateGasLimit();
+    }
+
+    return this.factory.getDeployTransaction(...this.args, overrides);
+  }
+
+  /**
+   * Create a nicely formatted error message with tx metadata and solidity stack trace
+   */
+  private async deployError(error: any) {
+    const provider = this.provider as providers.Provider & {
+      connection?: ConnectionInfo;
+    };
+
+    // Get metadata for transaction to populate into error
+    const network = await provider.getNetwork();
+    const from = await (this.overrides.from || this.getSignerAddress());
+    const data = this.encode();
+    const value = BigNumber.from(this.overrides.value || 0);
+    const rpcUrl = provider.connection?.url;
+
+    const methodArgs = this.args.map((arg) => {
+      if (JSON.stringify(arg).length <= 80) {
+        return JSON.stringify(arg);
+      }
+      return JSON.stringify(arg, undefined, 2);
+    });
+    const joinedArgs =
+      methodArgs.join(", ").length <= 80
+        ? methodArgs.join(", ")
+        : "\n" +
+          methodArgs
+            .map((arg) => "  " + arg.split("\n").join("\n  "))
+            .join(",\n") +
+          "\n";
+    const method = `deployContract(${joinedArgs})`;
+    const hash =
+      error.transactionHash ||
+      error.transaction?.hash ||
+      error.receipt?.transactionHash;
+
+    // Parse the revert reason from the error
+    const reason = parseRevertReason(error);
+
+    return new TransactionError({
+      reason,
+      from,
+      method,
+      data,
+      network,
+      rpcUrl,
+      value,
+      hash,
     });
   }
 }

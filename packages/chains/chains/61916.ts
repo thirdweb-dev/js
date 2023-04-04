@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "DoKEN Super Chain Mainnet",
   "chain": "DoKEN Super Chain",
@@ -27,10 +28,15 @@ export default {
     {
       "name": "DSC Scan",
       "url": "https://explore.doken.dev",
-      "icon": "doken",
+      "icon": {
+        "url": "ipfs://bafkreifms4eio6v56oyeemnnu5luq3sc44hptan225lr45itgzu3u372iu",
+        "width": 200,
+        "height": 200,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "doken-super-chain"
-} as const;
+} as const satisfies Chain;

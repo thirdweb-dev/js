@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/chains",
-  "version": "0.1.6",
+  "version": "0.1.10",
   "main": "dist/thirdweb-dev-chains.cjs.js",
   "module": "dist/thirdweb-dev-chains.esm.js",
   "browser": {
@@ -23,7 +23,15 @@
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
   "devDependencies": {
-    "axios": "^0.27.2",
+    "@babel/core": "^7.19.3",
+    "@babel/preset-env": "^7.18.10",
+    "@babel/preset-typescript": "^7.18.6",
+    "@babel/runtime": "^7.19.0",
+    "@preconstruct/cli": "^2.2.1",
+    "@thirdweb-dev/tsconfig": "workspace:*",
+    "axios": "^1.3.4",
+    "deepmerge": "^4.3.0",
+    "eslint-config-thirdweb": "workspace:*",
     "jest": "^29.4.3",
     "plop": "^3.1.2",
     "typescript": "^4.7.4"

@@ -31,13 +31,12 @@ export const Modal: React.FC<{
         <Dialog.Trigger asChild>{props.trigger}</Dialog.Trigger>
       )}
 
-      {/* Overlay */}
-      <Dialog.Overlay asChild>
-        <Overlay />
-      </Dialog.Overlay>
-
       {/* Dialog */}
       <Dialog.Portal>
+        {/* Overlay */}
+        <Dialog.Overlay asChild>
+          <Overlay />
+        </Dialog.Overlay>
         <Dialog.Content asChild>
           <DialogContent style={props.style}>
             {props.title && <DialogTitle> {props.title}</DialogTitle>}
@@ -112,11 +111,13 @@ const DialogContent = styled.div<{ theme?: Theme }>`
   left: 50%;
   transform: translate(-50%, -50%);
   width: calc(100vw - 40px);
+  box-sizing: border-box;
   overflow-y: auto;
   padding: ${spacing.lg};
   padding-bottom: ${spacing.xl};
   animation: ${modalAnimationDesktop} 200ms ease;
   box-shadow: ${shadow.lg};
+  line-height: 1;
 
   &:focus {
     outline: none;
@@ -142,6 +143,11 @@ const DialogContent = styled.div<{ theme?: Theme }>`
     border-radius: ${radius.xxl};
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
+  }
+
+  & *::selection {
+    background-color: ${(p) => p.theme.bg.inverted};
+    color: ${(p) => p.theme.text.inverted};
   }
 `;
 

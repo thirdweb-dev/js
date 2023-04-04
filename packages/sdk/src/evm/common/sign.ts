@@ -1,6 +1,5 @@
-// couldn't find this in barbones ethers export, but "type" should mean it does not increase bundle size either way
-import type { TypedDataField } from "@ethersproject/abstract-signer";
-import { ethers, Signer, providers } from "ethers";
+import type { Signer, providers, TypedDataField } from "ethers";
+import { utils } from "ethers";
 
 /**
  * @internal
@@ -42,11 +41,7 @@ export async function signTypedDataInternal(
     throw new Error("missing provider");
   }
 
-  const payload = ethers.utils._TypedDataEncoder.getPayload(
-    domain,
-    types,
-    message,
-  );
+  const payload = utils._TypedDataEncoder.getPayload(domain, types, message);
 
   let signature = "";
   const signerAddress = (await signer.getAddress()).toLowerCase();
@@ -87,8 +82,6 @@ export async function signTypedDataInternal(
   // fix ledger live where signature result in v = 0, 1. ethers magically fix it in split/join.
   return {
     payload,
-    signature: ethers.utils.joinSignature(
-      ethers.utils.splitSignature(signature),
-    ),
+    signature: utils.joinSignature(utils.splitSignature(signature)),
   };
 }

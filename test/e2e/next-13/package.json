@@ -8,17 +8,18 @@
     "e2e": "npx playwright test"
   },
   "dependencies": {
-    "@thirdweb-dev/react": "*",
-    "@thirdweb-dev/sdk": "*",
+    "@thirdweb-dev/react": "workspace:*",
+    "@thirdweb-dev/sdk": "workspace:*",
     "ethers": "^5.7.2",
     "next": "^13.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.27.1",
+    "@playwright/test": "1.31.2",
     "eslint": "^8.21.0",
-    "eslint-config-next": "^13.2.4"
+    "eslint-config-next": "^13.2.4",
+    "typescript": "^4.7.4"
   },
   "repository": "https://github.com/thirdweb-dev/js/tree/main/test/e2e/next-12"
 }

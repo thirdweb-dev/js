@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Haymo Testnet",
   "chain": "tHYM",
@@ -17,4 +18,4 @@ export default {
   "networkId": 234666,
   "testnet": true,
   "slug": "haymo-testnet"
-} as const;
+} as const satisfies Chain;

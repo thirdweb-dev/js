@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Fantom Testnet",
   "chain": "FTM",
@@ -21,24 +22,21 @@ export default {
     "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/fantom/512.png",
     "height": 512,
     "width": 512,
-    "format": "png",
-    "sizes": [
-      512,
-      256,
-      128,
-      64,
-      32,
-      16
-    ]
+    "format": "png"
   },
   "explorers": [
     {
       "name": "ftmscan",
       "url": "https://testnet.ftmscan.com",
-      "icon": "ftmscan",
+      "icon": {
+        "url": "ipfs://QmRqbK449Fo9sJ3xMpkPbg6uV1weQj4yVV1xNMP9cdPmjf",
+        "width": 73,
+        "height": 73,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "fantom-testnet"
-} as const;
+} as const satisfies Chain;

@@ -3,6 +3,7 @@ import { AbstractWallet } from "../../wallets/abstract";
 import type { SafeConnectionArgs } from "./types";
 import { ethers } from "ethers";
 import type { Signer } from "ethers";
+import { AbstractBrowserWallet } from "../../wallets/base";
 
 // excerpt from https://docs.gnosis-safe.io/backend/available-services
 const CHAIN_ID_TO_GNOSIS_SERVER_URL = {
@@ -22,6 +23,10 @@ const CHAIN_ID_TO_GNOSIS_SERVER_URL = {
 
 const __IS_SERVER__ = typeof window === "undefined";
 
+export const SafeSupportedChainsSet = new Set(
+  Object.keys(CHAIN_ID_TO_GNOSIS_SERVER_URL).map(Number),
+);
+
 export class SafeConnector extends TWConnector<SafeConnectionArgs> {
   static supportedChains = Object.keys(CHAIN_ID_TO_GNOSIS_SERVER_URL);
   public supportedChains = SafeConnector.supportedChains;
@@ -32,6 +37,7 @@ export class SafeConnector extends TWConnector<SafeConnectionArgs> {
   public previousConnector?: AbstractWallet;
   // private options: SafeOptions;
   private safeSigner?: Signer;
+  personalWallet?: AbstractBrowserWallet;
 
   constructor() {
     super();
@@ -44,7 +50,6 @@ export class SafeConnector extends TWConnector<SafeConnectionArgs> {
 
   async connect(args: ConnectParams<SafeConnectionArgs>) {
     if (!(args.chain.chainId in CHAIN_ID_TO_GNOSIS_SERVER_URL)) {
-      // chain not supported by Safe
       throw new Error("Chain not supported by Safe");
     }
     this.safeSigner = await this.createSafeSigner(args);
@@ -53,7 +58,8 @@ export class SafeConnector extends TWConnector<SafeConnectionArgs> {
   }
 
   private async createSafeSigner(params: SafeConnectionArgs) {
-    const signer = await params.personalWallet.getCachedSigner();
+    this.personalWallet = params.personalWallet;
+    const signer = await params.personalWallet.getSigner();
     const safeAddress = params.safeAddress;
     const safeChainId = params.chain
       .chainId as keyof typeof CHAIN_ID_TO_GNOSIS_SERVER_URL;

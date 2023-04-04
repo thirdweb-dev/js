@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Kortho Mainnet",
   "chain": "Kortho Chain",
@@ -17,4 +18,4 @@ export default {
   "networkId": 2559,
   "testnet": false,
   "slug": "kortho"
-} as const;
+} as const satisfies Chain;

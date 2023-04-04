@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "QuarkChain Devnet Shard 1",
   "chain": "QuarkChain",
@@ -29,4 +30,4 @@ export default {
   ],
   "testnet": false,
   "slug": "quarkchain-devnet-shard-1"
-} as const;
+} as const satisfies Chain;

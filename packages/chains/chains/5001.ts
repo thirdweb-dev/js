@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Mantle Testnet",
   "chain": "ETH",
@@ -26,4 +27,4 @@ export default {
   ],
   "testnet": true,
   "slug": "mantle-testnet"
-} as const;
+} as const satisfies Chain;

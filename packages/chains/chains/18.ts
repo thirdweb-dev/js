@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "ThunderCore Testnet",
   "chain": "TST",
@@ -26,4 +27,4 @@ export default {
   ],
   "testnet": true,
   "slug": "thundercore-testnet"
-} as const;
+} as const satisfies Chain;

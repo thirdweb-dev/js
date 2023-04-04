@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Zyx Mainnet",
   "chain": "ZYX",
@@ -29,4 +30,4 @@ export default {
   ],
   "testnet": false,
   "slug": "zyx"
-} as const;
+} as const satisfies Chain;

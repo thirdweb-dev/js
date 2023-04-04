@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "CENNZnet Nikau",
   "chain": "CENNZnet",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": false,
   "slug": "cennznet-nikau"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Catecoin Chain Mainnet",
   "chain": "Catechain",
@@ -17,4 +18,4 @@ export default {
   "networkId": 1618,
   "testnet": false,
   "slug": "catecoin-chain"
-} as const;
+} as const satisfies Chain;

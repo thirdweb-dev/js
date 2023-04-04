@@ -3,9 +3,10 @@ import type { WalletConnectConnector } from "../connectors/wallet-connect";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
+import { TW_WC_PROJECT_ID } from "../constants/wc";
 
 export type WalletConnectOptions = {
-  projectId: string;
+  projectId?: string;
   qrcode?: boolean;
 };
 
@@ -15,7 +16,7 @@ export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
 
   connector?: TWConnector;
 
-  static id = "walletConnect" as const;
+  static id = "walletConnect";
 
   static meta = {
     name: "Wallet Connect",
@@ -27,8 +28,14 @@ export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
     return "WalletConnect" as const;
   }
 
-  constructor(options: WalletOptions<WalletConnectOptions>) {
-    super(options.walletId || WalletConnect.id, options);
+  projectId: NonNullable<WalletConnectOptions["projectId"]>;
+  qrcode: WalletConnectOptions["qrcode"];
+
+  constructor(options?: WalletOptions<WalletConnectOptions>) {
+    super(options?.walletId || WalletConnect.id, options);
+
+    this.projectId = options?.projectId || TW_WC_PROJECT_ID;
+    this.qrcode = options?.qrcode === false ? false : true;
   }
 
   protected async getConnector(): Promise<TWConnector> {
@@ -40,9 +47,9 @@ export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
       this.#walletConnectConnector = new WalletConnectConnector({
         chains: this.chains,
         options: {
-          qrcode: this.options.qrcode,
-          projectId: this.options.projectId,
-          dappMetadata: this.options.dappMetadata,
+          qrcode: this.qrcode,
+          projectId: this.projectId,
+          dappMetadata: this.dappMetadata,
           storage: this.walletStorage,
         },
       });

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Dos Fuji Subnet",
   "chain": "DOS",
@@ -12,7 +13,7 @@ export default {
     "decimals": 18
   },
   "infoURL": "http://doschain.io/",
-  "shortName": "DOS",
+  "shortName": "TDOS",
   "chainId": 1311,
   "networkId": 1311,
   "explorers": [
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": true,
   "slug": "dos-fuji-subnet"
-} as const;
+} as const satisfies Chain;

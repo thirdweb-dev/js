@@ -144,7 +144,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   /**
    * Get all valid direct listings
    *
-   * @remark A valid listing is where the listing is active, and the creator still owns & has approved Marketplace to transfer the listed NFTs.
+   * @remarks A valid listing is where the listing is active, and the creator still owns & has approved Marketplace to transfer the listed NFTs.
    *
    * @example
    * ```javascript

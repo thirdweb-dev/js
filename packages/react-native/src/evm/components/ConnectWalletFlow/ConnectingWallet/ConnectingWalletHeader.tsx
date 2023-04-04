@@ -1,8 +1,9 @@
 import { Icon } from "../../../assets/icon";
 import { useAppTheme } from "../../../styles/hooks";
+import ImageSvgUri from "../../base/ImageSvgUri";
 import Text from "../../base/Text";
-import React, { ReactNode } from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { ReactNode } from "react";
+import { StyleSheet, View } from "react-native";
 
 interface ConnectWalletHeaderProps {
   close: () => void;
@@ -27,11 +28,7 @@ export const ConnectWalletHeader = ({
           onPress={onBackPress}
           color={theme.colors.iconPrimary}
         />
-        <Image
-          alt="wallet logo"
-          style={styles.walletLogo}
-          source={{ uri: walletLogoUrl }}
-        />
+        <ImageSvgUri width={56} height={56} imageUrl={walletLogoUrl} />
         <Icon
           type="close"
           size={14}
@@ -61,9 +58,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     marginTop: 24,
-  },
-  walletLogo: {
-    width: 56,
-    height: 56,
   },
 });

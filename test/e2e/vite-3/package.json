@@ -8,14 +8,14 @@
     "e2e": "npx playwright test"
   },
   "dependencies": {
-    "@thirdweb-dev/react": "*",
-    "@thirdweb-dev/sdk": "*",
+    "@thirdweb-dev/react": "workspace:*",
+    "@thirdweb-dev/sdk": "workspace:*",
     "ethers": "^5.7.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.27.1",
+    "@playwright/test": "1.31.2",
     "@vitejs/plugin-react": "^2",
     "serve": "^14.0.1",
     "vite": "^3"

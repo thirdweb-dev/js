@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Mixin Virtual Machine",
   "chain": "MVM",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "mvmscan",
       "url": "https://scan.mvm.dev",
-      "icon": "mvm",
+      "icon": {
+        "url": "ipfs://QmeuDgSprukzfV7fi9XYHYcfmT4aZZZU7idgShtRS8Vf6V",
+        "width": 471,
+        "height": 512,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "mixin-virtual-machine"
-} as const;
+} as const satisfies Chain;

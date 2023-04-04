@@ -9,17 +9,15 @@ import { IconButton } from "../../components/buttons";
 import {
   fontSize,
   iconSize,
+  media,
   radius,
-  shadow,
   spacing,
   Theme,
 } from "../../design-system";
 import { shortenString } from "../../evm/utils/addresses";
 import { isMobile } from "../../evm/utils/isMobile";
-import { DeviceWallet } from "../wallets";
 import { NetworkSelector } from "./NetworkSelector";
 import { ExitIcon } from "./icons/ExitIcon";
-import { GenericWalletIcon } from "./icons/GenericWalletIcon";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
@@ -31,9 +29,15 @@ import {
   useChainId,
   useDisconnect,
   useSupportedChains,
+  useThirdwebWallet,
   useWallet,
 } from "@thirdweb-dev/react-core";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { fadeInAnimation } from "../../components/FadeIn";
+import type { SafeWallet } from "@thirdweb-dev/wallets";
+import { Flex } from "../../components/basic";
+import { FundsIcon } from "./icons/FundsIcon";
+import { utils } from "ethers";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -42,42 +46,59 @@ export type DropDownPosition = {
 
 export const ConnectedWalletDetails: React.FC<{
   dropdownPosition?: DropDownPosition;
+  onDisconnect: () => void;
 }> = (props) => {
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
-  const activeChainId = useChainId();
+  const walletChainId = useChainId();
   const address = useAddress();
   const balanceQuery = useBalance();
   const activeWallet = useWallet();
+  const walletContext = useThirdwebWallet();
+  const [personalWalletBalance, setPersonalWalletBalance] = useState<
+    string | undefined
+  >(undefined);
+  const [personalWalletAddress, setPersonalWalletAddress] = useState<
+    string | undefined
+  >(undefined);
 
   const chain = useMemo(() => {
-    return chains.find((_chain) => _chain.chainId === activeChainId);
-  }, [activeChainId, chains]);
+    return chains.find((_chain) => _chain.chainId === walletChainId);
+  }, [walletChainId, chains]);
 
   const unknownChain = useMemo(() => {
     if (!chain) {
-      return defaultChains.find((c) => c.chainId === activeChainId);
+      return defaultChains.find((c) => c.chainId === walletChainId);
     }
-  }, [activeChainId, chain]);
+  }, [walletChainId, chain]);
 
   const activeWalletIconURL = activeWallet?.getMeta().iconURL || "";
 
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const handleDeviceWalletExport = async () => {
-    const deviceWallet = activeWallet as InstanceType<typeof DeviceWallet>;
-    const walletData = await deviceWallet.getWalletData();
-    if (!walletData) {
-      throw new Error("No wallet data found");
-    }
+  const personalWallet =
+    activeWallet?.walletId === "Safe"
+      ? (activeWallet as SafeWallet).getPersonalWallet()
+      : undefined;
 
-    downloadAsFile(
-      JSON.parse(walletData.encryptedData),
-      "wallet.json",
-      "application/json",
-    );
-  };
+  // get personal wallet address and balance
+  useEffect(() => {
+    if (!personalWallet) {
+      setPersonalWalletAddress(undefined);
+      setPersonalWalletBalance(undefined);
+      return;
+    }
+    personalWallet.getAddress().then((_address) => {
+      setPersonalWalletAddress(_address);
+    });
+
+    personalWallet.getSigner().then((signer) => {
+      signer.getBalance().then((balance) => {
+        setPersonalWalletBalance(utils.formatEther(balance));
+      });
+    });
+  }, [personalWallet]);
 
   const trigger = (
     <WalletInfoButton type="button">
@@ -90,9 +111,9 @@ export const ConnectedWalletDetails: React.FC<{
             {balanceQuery.data?.symbol}
           </WalletBalance>
         ) : (
-          <Skeleton height={fontSize.md} />
+          <Skeleton height={fontSize.sm} width="82px" />
         )}
-        <Spacer y="xxs" />
+        <Spacer y="xs" />
         <WalletAddress>{shortenString(address || "")}</WalletAddress>
       </ColFlex>
 
@@ -104,6 +125,7 @@ export const ConnectedWalletDetails: React.FC<{
     <MenuButton
       id="current-network"
       type="button"
+      disabled={activeWallet?.walletId === "Safe"}
       onClick={() => {
         setOpen(false);
         setShowNetworkSelector(true);
@@ -118,13 +140,60 @@ export const ConnectedWalletDetails: React.FC<{
       >
         <ChainIcon chain={chain || unknownChain} size={iconSize.lg} active />
       </div>
-      {chain?.name || unknownChain?.name || "Wrong Network"}
+      {chain?.name || unknownChain?.name || `Unknown chain #${walletChainId}`}
       <StyledChevronRightIcon
+        width={iconSize.sm}
+        height={iconSize.sm}
         style={{
           flexShrink: 0,
           marginLeft: "auto",
-          width: "20px",
-          height: "20px",
+        }}
+      />
+    </MenuButton>
+  );
+
+  const switchToPersonalWallet = personalWallet && (
+    <MenuButton
+      type="button"
+      onClick={() => {
+        walletContext?.handleWalletConnect(personalWallet);
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          position: "relative",
+        }}
+      >
+        <Img
+          src={personalWallet.getMeta().iconURL}
+          width={iconSize.lg}
+          height={iconSize.lg}
+        />
+      </div>
+
+      <ColFlex>
+        {personalWalletBalance ? (
+          <WalletBalance>
+            {String(personalWalletBalance).slice(0, 5)}{" "}
+            {balanceQuery.data?.symbol}
+          </WalletBalance>
+        ) : (
+          <Skeleton height={fontSize.sm} width="82px" />
+        )}
+        <Spacer y="xxs" />
+        <WalletAddress>
+          {shortenString(personalWalletAddress || "")}
+        </WalletAddress>
+      </ColFlex>
+
+      <StyledChevronRightIcon
+        width={iconSize.sm}
+        height={iconSize.sm}
+        style={{
+          flexShrink: 0,
+          marginLeft: "auto",
         }}
       />
     </MenuButton>
@@ -133,13 +202,7 @@ export const ConnectedWalletDetails: React.FC<{
   const content = (
     <div>
       {/* Balance and Account Address */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: spacing.md,
-        }}
-      >
+      <Flex gap="md">
         <Img
           width={iconSize.xl}
           height={iconSize.xl}
@@ -147,59 +210,64 @@ export const ConnectedWalletDetails: React.FC<{
           alt=""
         />
 
-        <ColFlex>
-          <div
-            style={{
-              display: "flex",
-              gap: spacing.xs,
-            }}
-          >
-            <AccountAddress> {shortenString(address || "")}</AccountAddress>
-            <IconButton variant="secondary">
-              <CopyIcon text={address || ""} />
-            </IconButton>
-          </div>
+        <div
+          style={{
+            flexGrow: 1,
+          }}
+        >
+          {/* row 1 */}
+          <Flex gap="xs" alignItems="center">
+            <div
+              style={{
+                display: "flex",
+                gap: spacing.xs,
+                alignItems: "center",
+              }}
+            >
+              <AccountAddress> {shortenString(address || "")}</AccountAddress>
+              <IconButton
+                variant="secondary"
+                style={{
+                  padding: "3px",
+                }}
+              >
+                <CopyIcon
+                  text={address || ""}
+                  tip="Copy Address"
+                  side="bottom"
+                />
+              </IconButton>
+            </div>
+
+            <ToolTip
+              tip="Disconnect Wallet"
+              side="bottom"
+              align={"end"}
+              sideOffset={10}
+            >
+              <DisconnectIconButton
+                type="button"
+                variant="secondary"
+                onClick={() => {
+                  disconnect();
+                  props.onDisconnect();
+                }}
+              >
+                <ExitIcon size={iconSize.md} />
+              </DisconnectIconButton>
+            </ToolTip>
+          </Flex>
+
+          {/* row 2 */}
           <AccountBalance>
             {" "}
             {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
             {balanceQuery.data?.symbol}{" "}
           </AccountBalance>
-        </ColFlex>
+        </div>
+      </Flex>
 
-        <ToolTip tip="Disconnect Wallet">
-          <DisconnectIconButton
-            type="button"
-            variant="secondary"
-            onClick={() => {
-              disconnect();
-            }}
-          >
-            <ExitIcon size={iconSize.md} />
-          </DisconnectIconButton>
-        </ToolTip>
-      </div>
-
-      {activeWallet?.walletId === "deviceWallet" ? (
-        <>
-          <Spacer y="md" />
-
-          <MenuButton
-            onClick={handleDeviceWalletExport}
-            style={{
-              fontSize: fontSize.sm,
-            }}
-          >
-            <GenericWalletIconContainer>
-              <GenericWalletIcon size={iconSize.sm} />
-            </GenericWalletIconContainer>
-            Export Device Wallet{" "}
-          </MenuButton>
-
-          <Spacer y="xl" />
-        </>
-      ) : (
-        <Spacer y="xl" />
-      )}
+      <Spacer y="lg" />
 
       {/* Network Switcher */}
       <div>
@@ -208,7 +276,41 @@ export const ConnectedWalletDetails: React.FC<{
         {networkSwitcherButton}
       </div>
 
-      <Spacer y="md" />
+      {/* Switch to Personal Wallet for Safe */}
+      {personalWallet && (
+        <div>
+          <Spacer y="lg" />
+          <DropdownLabel htmlFor="current-network">
+            Personal Wallet
+          </DropdownLabel>
+          <Spacer y="sm" />
+          <ToolTip tip="Switch To Personal Wallet">
+            {switchToPersonalWallet}
+          </ToolTip>
+        </div>
+      )}
+
+      {/* Request Testnet funds */}
+      {chain?.faucets && chain.faucets.length > 0 && (
+        <div>
+          <Spacer y="lg" />
+          <MenuLink
+            href={chain.faucets[0]}
+            target="_blank"
+            as="a"
+            style={{
+              textDecoration: "none",
+              color: "inherit",
+              fontSize: fontSize.sm,
+            }}
+          >
+            <SecondaryIconContainer>
+              <FundsIcon size={iconSize.sm} />
+            </SecondaryIconContainer>
+            Request Testnet Funds
+          </MenuLink>
+        </div>
+      )}
     </div>
   );
 
@@ -255,45 +357,54 @@ export const ConnectedWalletDetails: React.FC<{
   );
 };
 
-const slideUpAndFade = keyframes`
-    from {
+const dropdownContentFade = keyframes`
+  from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1);
   }
 `;
 
 const DropDownContent = styled(DropdownMenu.Content)<{ theme?: Theme }>`
   width: 360px;
+  box-sizing: border-box;
   max-width: 100%;
   border-radius: ${radius.lg};
   padding: ${spacing.lg};
-  box-shadow: ${shadow.lg};
-  animation: ${slideUpAndFade} 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  animation: ${dropdownContentFade} 400ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
-  border: 1px solid ${(props) => props.theme.bg.elevated};
+  border: 1px solid ${(props) => props.theme.border.base};
   background-color: ${(props) => props.theme.bg.base};
   z-index: 1000000;
+  line-height: 1;
 `;
 
 const WalletInfoButton = styled.button<{ theme?: Theme }>`
   all: unset;
   background: ${(props) => props.theme.bg.base};
-  border: 1px solid ${(props) => props.theme.bg.elevated};
-  padding: ${spacing.sm} ${spacing.md};
+  border: 1px solid ${(props) => props.theme.border.base};
+  padding: ${spacing.sm} ${spacing.sm};
   border-radius: ${radius.lg};
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: ${spacing.md};
-  box-shadow: ${shadow.sm};
-  min-width: 200px;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   line-height: 1;
+  animation: ${fadeInAnimation} 300ms ease;
+
+  ${media.mobile} {
+    gap: ${spacing.sm};
+    padding: ${spacing.xs} ${spacing.sm};
+    img {
+      width: ${iconSize.md}px;
+      height: ${iconSize.md}px;
+    }
+  }
 
   &:hover {
     transition: background 250ms ease;
@@ -339,9 +450,10 @@ const DropdownLabel = styled.label<{ theme?: Theme }>`
 
 const MenuButton = styled.button<{ theme?: Theme }>`
   all: unset;
-  padding: ${spacing.sm} ${spacing.md};
+  padding: ${spacing.sm} ${spacing.sm};
   border-radius: ${radius.md};
-  border: 1px solid ${(props) => props.theme.bg.highlighted};
+  background-color: ${(props) => props.theme.bg.base};
+  border: 1px solid ${(props) => props.theme.border.elevated};
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -349,13 +461,15 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   cursor: pointer;
   font-size: ${fontSize.md};
   font-weight: 500;
-  color: ${(props) => props.theme.text.neutral};
+  color: ${(props) => props.theme.text.neutral} !important;
   gap: ${spacing.sm};
   -webkit-tap-highlight-color: transparent;
+  line-height: 1.3;
 
   &:not([disabled]):hover {
-    transition: background 150ms ease;
-    background: ${(props) => props.theme.bg.baseHover};
+    transition: box-shadow 250ms ease, border-color 250ms ease;
+    border: 1px solid ${(props) => props.theme.link.primary};
+    box-shadow: 0 0 0 1px ${(props) => props.theme.link.primary};
   }
 
   &[disabled] {
@@ -365,6 +479,8 @@ const MenuButton = styled.button<{ theme?: Theme }>`
     }
   }
 `;
+
+const MenuLink = MenuButton.withComponent("a");
 
 export const DropdownMenuItem = styled(DropdownMenu.Item)<{ theme?: Theme }>`
   outline: none;
@@ -379,34 +495,16 @@ export const StyledChevronRightIcon = styled(ChevronRightIcon)<{
 const DisconnectIconButton = styled(IconButton)<{ theme?: Theme }>`
   margin-right: -${spacing.xxs};
   margin-left: auto;
-  padding: ${spacing.xxs};
   color: ${(props) => props.theme.icon.secondary};
   &:hover {
     color: ${(props) => props.theme.icon.danger};
-    background: ${(props) => props.theme.bg.danger};
+    background: none;
   }
 `;
 
-const GenericWalletIconContainer = styled.div<{ theme?: Theme }>`
+const SecondaryIconContainer = styled.div<{ theme?: Theme }>`
   display: flex;
   align-items: center;
   justify-content: center;
   color: ${(props) => props.theme.icon.secondary};
 `;
-
-// utils
-
-function downloadAsFile(data: any, fileName: string, fileType: string) {
-  const blob = new Blob([JSON.stringify(data, null, 2)], {
-    type: fileType,
-  });
-
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = fileName;
-  document.body.appendChild(a);
-  a.style.display = "none";
-  a.click();
-  URL.revokeObjectURL(a.href);
-}

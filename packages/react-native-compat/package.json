@@ -1,7 +1,7 @@
 {
   "name": "@thirdweb-dev/react-native-compat",
   "description": "Shims for Thirdweb in React Native Projects",
-  "version": "0.1.0",
+  "version": "0.2.4",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react-native-compat",
   "license": "Apache-2.0",
@@ -33,9 +33,13 @@
     "react-native": ">=0.70.0"
   },
   "devDependencies": {
+    "@thirdweb-dev/tsconfig": "workspace:*",
+    "@types/node": "^18.0.0",
     "babel-plugin-module-resolver": "^5.0.0",
+    "eslint-config-thirdweb": "workspace:*",
     "ethers": "^5.7.2",
     "react": "^18.2.0",
-    "react-native": "^0.71.0"
+    "react-native": "^0.71.0",
+    "typescript": "^4.7.4"
   }
 }

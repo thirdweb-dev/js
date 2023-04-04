@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Redlight Chain Mainnet",
   "chain": "REDLC",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": false,
   "slug": "redlight-chain"
-} as const;
+} as const satisfies Chain;

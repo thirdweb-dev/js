@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "ELA-DID-Sidechain Testnet",
   "chain": "ETH",
@@ -14,4 +15,4 @@ export default {
   "networkId": 23,
   "testnet": true,
   "slug": "ela-did-sidechain-testnet"
-} as const;
+} as const satisfies Chain;

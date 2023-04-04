@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Smart Host Teknoloji TESTNET",
   "chain": "SHT",
@@ -33,10 +34,15 @@ export default {
     {
       "name": "Smart Host Teknoloji TESTNET Explorer",
       "url": "https://s2.tl.web.tr:4000",
-      "icon": "smarthost",
+      "icon": {
+        "url": "ipfs://QmTrLGHyQ1Le25Q7EgNSF5Qq8D2SocKvroDkLqurdBuSQQ",
+        "width": 1655,
+        "height": 1029,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "smart-host-teknoloji-testnet"
-} as const;
+} as const satisfies Chain;

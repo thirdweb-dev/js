@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Aurora Mainnet",
   "chain": "NEAR",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": false,
   "slug": "aurora"
-} as const;
+} as const satisfies Chain;

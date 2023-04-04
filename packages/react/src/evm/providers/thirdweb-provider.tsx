@@ -1,41 +1,38 @@
-import { createAsyncLocalStorage } from "../../core/WalletStorage";
-import {
-  CoinbaseWallet,
-  DeviceWallet,
-  MetamaskWallet,
-} from "../../wallet/wallets";
 import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
-  SupportedWallet,
+  Wallet,
   ThirdwebProviderCore,
+  ThirdwebProviderCoreProps,
 } from "@thirdweb-dev/react-core";
-import { ComponentProps } from "react";
+import { WalletUIStatesProvider } from "./wallet-ui-states-provider";
+import { ConnectModal } from "../../wallet/ConnectWallet/Connect";
+import { ThemeProvider } from "@emotion/react";
+import { darkTheme, lightTheme } from "../../design-system";
+import { PropsWithChildren } from "react";
+import type { Chain, defaultChains } from "@thirdweb-dev/chains";
+import { coinbaseWallet } from "../../wallet/wallets/coinbaseWallet";
+import { metamaskWallet } from "../../wallet/wallets/metamaskWallet";
+import { walletConnectV1 } from "../../wallet/wallets/walletConnectV1";
 
-const DEFAULT_WALLETS = [MetamaskWallet, CoinbaseWallet, DeviceWallet] as [
-  typeof MetamaskWallet,
-  typeof CoinbaseWallet,
-  typeof DeviceWallet,
-];
-
-interface ThirdwebProviderProps
+interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
-    ComponentProps<typeof ThirdwebProviderCore>,
+    ThirdwebProviderCoreProps<TChains>,
     "createWalletStorage" | "supportedWallets"
   > {
   /**
    * Wallets that will be supported by the dApp
-   * @defaultValue [MetaMaskWallet, CoinbaseWallet, DeviceWallet]
+   * @defaultValue [metamaskWallet(), coinbaseWallet(), walletConnectV1()]
    *
    * @example
    * ```jsx
-   * import { MetamaskWallet, CoinbaseWallet, DeviceWallet } from "@thirdweb-dev/react";
+   * import { metamaskWallet, coinbaseWallet, walletConnectV1 } from "@thirdweb-dev/react";
    *
    * <ThirdwebProvider
-   *  supportedWallets={[MetaMaskWallet, CoinbaseWallet, DeviceWallet]}
+   *  supportedWallets={[metamaskWallet(), coinbaseWallet(), walletConnectV1()]}
    * />
    * ```
    */
-  supportedWallets?: SupportedWallet[];
+  supportedWallets?: Wallet[];
 }
 
 /**
@@ -59,17 +56,34 @@ interface ThirdwebProviderProps
  * ```
  *
  */
-export const ThirdwebProvider: React.FC<ThirdwebProviderProps> = ({
+export const ThirdwebProvider = <
+  TChains extends Chain[] = typeof defaultChains,
+>({
   thirdwebApiKey = DEFAULT_API_KEY,
-  supportedWallets = DEFAULT_WALLETS,
+  supportedWallets,
+  theme,
+  children,
   ...restProps
-}) => {
+}: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
   return (
-    <ThirdwebProviderCore
-      createWalletStorage={createAsyncLocalStorage}
-      thirdwebApiKey={thirdwebApiKey}
-      supportedWallets={supportedWallets}
-      {...restProps}
-    />
+    <WalletUIStatesProvider theme={theme}>
+      <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
+        <ThirdwebProviderCore
+          theme={theme}
+          thirdwebApiKey={thirdwebApiKey}
+          supportedWallets={
+            supportedWallets || [
+              metamaskWallet(),
+              coinbaseWallet(),
+              walletConnectV1(),
+            ]
+          }
+          {...restProps}
+        >
+          {children}
+          <ConnectModal />
+        </ThirdwebProviderCore>
+      </ThemeProvider>
+    </WalletUIStatesProvider>
   );
 };

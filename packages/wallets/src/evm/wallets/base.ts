@@ -1,18 +1,15 @@
-import { AsyncStorage } from "../../core/AsyncStorage";
+import { AsyncStorage, createAsyncLocalStorage } from "../../core/AsyncStorage";
 import type { DAppMetaData } from "../../core/types/dAppMeta";
-import { thirdwebChains } from "../constants/chains";
 import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
-import { Chain } from "@thirdweb-dev/chains";
+import { Chain, defaultChains } from "@thirdweb-dev/chains";
+import { DEFAULT_DAPP_META } from "../constants/dappMeta";
 
 export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   chains?: Chain[];
-  // default: true
-  shouldAutoConnect?: boolean;
   walletId?: string;
-  coordinatorStorage: AsyncStorage;
-  walletStorage: AsyncStorage;
-  dappMetadata: DAppMetaData;
+  walletStorage?: AsyncStorage;
+  dappMetadata?: DAppMetaData;
 } & TOpts;
 
 export type WalletMeta = {
@@ -25,53 +22,38 @@ export abstract class AbstractBrowserWallet<
   TConnectParams extends Record<string, any> = {},
 > extends AbstractWallet {
   walletId: string;
-  protected coordinatorStorage;
   protected walletStorage;
   protected chains;
-  protected options: WalletOptions<TAdditionalOpts>;
+  protected dappMetadata: DAppMetaData;
+  protected options?: WalletOptions<TAdditionalOpts>;
   static meta: WalletMeta;
   getMeta() {
     return (this.constructor as typeof AbstractBrowserWallet).meta;
   }
 
-  constructor(walletId: string, options: WalletOptions<TAdditionalOpts>) {
+  constructor(walletId: string, options?: WalletOptions<TAdditionalOpts>) {
     super();
     this.walletId = walletId;
     this.options = options;
-    this.chains = options.chains || thirdwebChains;
-    this.coordinatorStorage = options.coordinatorStorage;
-    this.walletStorage = options.walletStorage;
+    this.chains = options?.chains || defaultChains;
+    this.dappMetadata = options?.dappMetadata || DEFAULT_DAPP_META;
+    this.walletStorage =
+      options?.walletStorage || createAsyncLocalStorage(this.walletId);
   }
 
   protected abstract getConnector(): Promise<TWConnector<TConnectParams>>;
 
   /**
-   * connect to the wallet if the last connected wallet is this wallet and not already connected
+   * tries to auto connect to the wallet
    */
-  async autoConnect() {
-    const lastConnectedWalletName = await this.coordinatorStorage.getItem(
-      "lastConnectedWallet",
-    );
-
-    // return if the last connected wallet is not this wallet
-    if (lastConnectedWalletName !== this.walletId) {
-      return;
-    }
-
-    const lastConnectionParams = await this.walletStorage.getItem(
-      "lastConnectedParams",
-    );
-
-    let parsedParams: ConnectParams<TConnectParams> | undefined;
-
-    try {
-      parsedParams = JSON.parse(lastConnectionParams as string);
-    } catch {
-      parsedParams = undefined;
-    }
-
-    // connect and return the account address
-    return await this.connect(parsedParams);
+  async autoConnect(
+    connectOptions?: ConnectParams<TConnectParams>,
+  ): Promise<string | undefined> {
+    // remove chainId when autoconnecting to prevent switch-network popup on page load
+    const options = connectOptions
+      ? { ...connectOptions, chainId: undefined }
+      : undefined;
+    return this.#connect(true, options);
   }
 
   /**
@@ -80,70 +62,60 @@ export abstract class AbstractBrowserWallet<
   async connect(
     connectOptions?: ConnectParams<TConnectParams>,
   ): Promise<string> {
+    const address = await this.#connect(false, connectOptions);
+    if (!address) {
+      throw new Error("Failed to connect to the wallet.");
+    }
+    return address;
+  }
+
+  async #connect(
+    isAutoConnect: boolean,
+    connectOptions?: ConnectParams<TConnectParams>,
+  ) {
     const connector = await this.getConnector();
 
     this.#subscribeToEvents(connector);
 
-    const saveToStorage = async () => {
-      try {
-        await this.walletStorage.setItem(
-          "lastConnectedParams",
-          JSON.stringify(connectOptions),
-        );
-        await this.coordinatorStorage.setItem(
-          "lastConnectedWallet",
-          this.walletId,
-        );
-      } catch (e) {
-        console.error(e);
-      }
-    };
-
     const isConnected = await connector.isConnected();
 
+    // if already connected, return the address and setup listeners
     if (isConnected) {
       const address = await connector.getAddress();
       connector.setupListeners();
-      await saveToStorage();
 
       // ensure that connector is connected to the correct chain
       if (connectOptions?.chainId) {
         await connector.switchChain(connectOptions?.chainId);
       }
 
-      return address;
-    } else {
-      const address = await connector.connect(connectOptions);
-      await saveToStorage();
+      this.emit("connect", {
+        address,
+        chainId: await this.getChainId(),
+      });
+
       return address;
     }
+
+    if (isAutoConnect) {
+      throw new Error("Failed to auto connect to the wallet.");
+    }
+
+    const address = await connector.connect(connectOptions);
+    return address;
   }
 
   async #subscribeToEvents(connector: TWConnector) {
     // subscribe to connector for events
     connector.on("connect", (data) => {
-      this.coordinatorStorage.setItem("lastConnectedWallet", this.walletId);
       this.emit("connect", {
         address: data.account,
         chainId: data.chain?.id,
       });
-
-      if (data.chain?.id) {
-        this.walletStorage.setItem(
-          "lastConnectedChain",
-          String(data.chain?.id),
-        );
-      }
     });
 
     connector.on("change", (data) => {
       this.emit("change", { address: data.account, chainId: data.chain?.id });
-      if (data.chain?.id) {
-        this.walletStorage.setItem(
-          "lastConnectedChain",
-          String(data.chain?.id),
-        );
-      }
     });
 
     connector.on("message", (data) => {
@@ -151,7 +123,6 @@ export abstract class AbstractBrowserWallet<
     });
 
     connector.on("disconnect", async () => {
-      await this.onDisconnect();
       this.emit("disconnect");
     });
     connector.on("error", (error) => this.emit("error", error));
@@ -165,21 +136,12 @@ export abstract class AbstractBrowserWallet<
     return await connector.getSigner();
   }
 
-  protected async onDisconnect() {
-    const lastConnectedWallet = await this.coordinatorStorage.getItem(
-      "lastConnectedWallet",
-    );
-    if (lastConnectedWallet === this.walletId) {
-      await this.coordinatorStorage.removeItem("lastConnectedWallet");
-    }
-  }
-
   public async disconnect() {
     const connector = await this.getConnector();
     if (connector) {
       await connector.disconnect();
+      this.emit("disconnect");
       connector.removeAllListeners();
-      await this.onDisconnect();
     }
   }
 

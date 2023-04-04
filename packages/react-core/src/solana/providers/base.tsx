@@ -78,17 +78,9 @@ export const ThirdwebSDKProvider: ComponentWithChildren<
     [sdk, network],
   );
 
-  const authConfigValue = useMemo(() => {
-    if (!authConfig) {
-      return undefined;
-    }
-
-    return { ...authConfig, sdk: sdk || undefined };
-  }, [authConfig, sdk]);
-
   return (
     <QueryClientProviderWithDefault queryClient={queryClient}>
-      <ThirdwebAuthProvider value={authConfigValue}>
+      <ThirdwebAuthProvider value={authConfig}>
         <ThirdwebSDKContext.Provider value={ctxValue}>
           {children}
         </ThirdwebSDKContext.Provider>

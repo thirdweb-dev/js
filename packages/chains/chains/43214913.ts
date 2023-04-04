@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "maistestsubnet",
   "chain": "MAI",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": true,
   "slug": "maistestsubnet"
-} as const;
+} as const satisfies Chain;
