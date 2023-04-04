@@ -90,7 +90,7 @@ export async function generate(options: GenerateOptions) {
         contracts.length
       } contract${
         contracts.length === 1 ? "" : "s"
-      } detected in your project.\n- You can also update this configuration manually by editing the file.\n`,
+      } detected in your project.\n\n - You can also update this configuration manually by editing the file.\n`,
     );
   }
 
