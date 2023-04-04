@@ -1024,21 +1024,21 @@ export class ContractDeployer extends RPCConnectionHandler {
     return data;
   }
 
-  private async fetchAndCacheURI(contractType: string): Promise<string> {
-    if (this.infraContractURICache[contractType]) {
-      return this.infraContractURICache[contractType];
+  private async fetchAndCacheURI(contractName: string): Promise<string> {
+    if (this.infraContractURICache[contractName]) {
+      return this.infraContractURICache[contractName];
     } else {
       // fetch the publish URI from the ContractPublisher contract
       const publishedContract = await new ThirdwebSDK("polygon")
         .getPublisher()
-        .getVersion(THIRDWEB_DEPLOYER, contractType);
+        .getVersion(THIRDWEB_DEPLOYER, contractName);
       if (!publishedContract) {
         throw new Error(
-          `No published contract found for ${contractType} at version by '${THIRDWEB_DEPLOYER}'`,
+          `No published contract found for ${contractName} at version by '${THIRDWEB_DEPLOYER}'`,
         );
       }
       const uri = publishedContract?.metadataUri;
-      this.infraContractURICache[contractType] = uri;
+      this.infraContractURICache[contractName] = uri;
       return uri;
     }
   }
@@ -1119,7 +1119,7 @@ export class ContractDeployer extends RPCConnectionHandler {
 
       return address;
     } else {
-      let uri = await this.fetchAndCacheURI(contract.contractType);
+      let uri = await this.fetchAndCacheURI(contract.name);
 
       const metadata = await this.fetchAndCacheDeployMetadata(uri);
       const encodedArgs = (
@@ -1268,18 +1268,23 @@ export class ContractDeployer extends RPCConnectionHandler {
         contractType,
         chainId,
       );
-      const uri = await this.fetchAndCacheURI(contractType);
+      const uri = await this.fetchAndCacheURI(
+        INFRA_CONTRACTS_MAP[contractType].name,
+      );
       const infraContractMetadata = await this.fetchAndCacheDeployMetadata(uri);
       const code = await this.getProvider().getCode(infraContractAddress);
 
       if (code === "0x") {
-        // get init bytecode
-        const initBytecodeWithSalt = getInitBytecodeWithSalt(
-          infraContractMetadata.compilerMetadata.bytecode,
+        const encodedArgs = (
           await this.encodeConstructorParamsForImplementation(
             infraContractMetadata.compilerMetadata,
             chainId,
-          ),
+          )
+        ).encodedArgs;
+        // get init bytecode
+        const initBytecodeWithSalt = getInitBytecodeWithSalt(
+          infraContractMetadata.compilerMetadata.bytecode,
+          encodedArgs,
         );
         const create2Factory = await this.computeCreate2FactoryAddress();
         txns.push({
