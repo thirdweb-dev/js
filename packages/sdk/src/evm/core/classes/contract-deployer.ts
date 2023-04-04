@@ -88,10 +88,7 @@ import {
 import { EventEmitter } from "eventemitter3";
 import invariant from "tiny-invariant";
 import { z } from "zod";
-import {
-  DeploymentInfo,
-  PrecomputedDeploymentData,
-} from "../../types/any-evm/deploy-data";
+import { DeploymentInfo } from "../../types/any-evm/deploy-data";
 import {
   CloneFactory,
   EOAForwarder,
