@@ -22,6 +22,8 @@ import invariant from "tiny-invariant";
 
 type ActionFn = (contract: SmartContract) => any;
 
+const TW_WEB3BUTTON = "tw-web3button";
+
 interface Web3ButtonProps<TActionFn extends ActionFn> {
   className?: string;
   contractAddress: `0x${string}` | `${string}.eth` | string;
@@ -124,7 +126,7 @@ export const Web3Button = <TAction extends ActionFn>({
     return (
       <ConnectWallet
         theme={theme}
-        className={`${className || ""} tw-web3button--connect-wallet`}
+        className={`${className || ""} ${TW_WEB3BUTTON}--connect-wallet`}
       />
     );
   }
@@ -157,7 +159,7 @@ export const Web3Button = <TAction extends ActionFn>({
       <Button
         variant="inverted"
         type={type}
-        className={`${className || ""} tw-web3button--switch-network`}
+        className={`${className || ""} ${TW_WEB3BUTTON}--switch-network`}
         onClick={handleSwitchChain}
         style={btnStyle}
         data-is-loading={confirmStatus === "waiting"}
@@ -202,7 +204,7 @@ export const Web3Button = <TAction extends ActionFn>({
       <Button
         variant="inverted"
         type={type}
-        className={`${className || ""} tw-web3button`}
+        className={`${className || ""} ${TW_WEB3BUTTON}`}
         disabled
         style={btnStyle}
         data-is-loading
@@ -219,7 +221,7 @@ export const Web3Button = <TAction extends ActionFn>({
       <Button
         variant="inverted"
         type={type}
-        className={`${className || ""} tw-web3button`}
+        className={`${className || ""} ${TW_WEB3BUTTON}`}
         onClick={() => actionMutation.mutate()}
         disabled={isDisabled}
         style={btnStyle}
