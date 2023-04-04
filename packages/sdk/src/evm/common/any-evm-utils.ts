@@ -520,6 +520,17 @@ export async function deployInfraWithSigner(
       storage,
       create2Factory,
     );
+
+    if (contractType === NativeTokenWrapper.contractType) {
+      const initCode = getInitBytecodeWithSalt(WETHBytecode, []);
+      txns.push({
+        predictedAddress: infraContractAddress,
+        to: create2Factory,
+        data: initCode,
+      });
+      continue;
+    }
+
     const uri = await fetchURI(INFRA_CONTRACTS_MAP[contractType].name);
     const infraContractMetadata = await fetchPreDeployMetadata(uri, storage);
     const code = await provider.getCode(infraContractAddress);
