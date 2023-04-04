@@ -74,7 +74,7 @@ export const SDKs: FooterLinkInfo[] = [
   {
     label: "contracts",
     name: "Contracts",
-    link: "https://portal.thirdweb.com/contracts",
+    link: "https://portal.thirdweb.com/solidity",
   },
 ];
 

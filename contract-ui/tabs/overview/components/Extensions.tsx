@@ -28,7 +28,7 @@ const Extensions: React.FC<ExtensionsProps> = ({ abi }) => {
                 />
                 <Text size="label.md">
                   <TrackedLink
-                    href={`https://portal.thirdweb.com/contracts/${extension.docLinks.contracts}`}
+                    href={`https://portal.thirdweb.com/solidity/extensions/${extension.docLinks.contracts}`}
                     isExternal
                     category="extension"
                     label={extension.name}
