@@ -23,9 +23,11 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { getNativeTokenByChainId } from "../constants";
 import { PreDeployMetadataFetched } from "../schema";
 
+//
 // =============================
 // ======== CONSTANTS ==========
 // =============================
+//
 
 const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
 
@@ -70,9 +72,11 @@ export const DEPLOYER_ABI = [
   },
 ];
 
+//
 // ==================================
 // ======== View Functions ==========
 // ==================================
+//
 
 /**
  * Check if a contract exists at the given address
@@ -478,6 +482,7 @@ export async function getDeploymentInfo(
   // 3. Add TWStatelessFactory and Forwarder to the list of infra contracts --
   // these must be deployed regardless of constructor params of implementation contract
   infraContracts.push(CloneFactory.contractType);
+  infraContracts.push(Forwarder.contractType);
 
   return {
     bytecode: compilerMetadata.bytecode,
@@ -544,6 +549,7 @@ export async function deployInfraWithSigner(
 
   // Call/deploy the throaway-deployer only if there are any contracts to deploy
   if (txns.length > 0) {
+    txns.forEach((tx) => console.log("deploying at: ", tx.predictedAddress));
     // Using the deployer contract, send the deploy transactions to common factory with a signer
     const deployer = new ethers.ContractFactory(DEPLOYER_ABI, DEPLOYER_BYTECODE)
       .connect(signer)

@@ -18,8 +18,11 @@ import {
   PrebuiltContractType,
   DeploySchemaForPrebuiltContractType,
 } from "../core";
-import { BigNumber, Signer } from "ethers";
+import { BigNumber, providers, Signer } from "ethers";
 import { z } from "zod";
+import { ChainId, SUPPORTED_CHAIN_IDS } from "../constants";
+import { computeForwarderAddress } from "./any-evm-utils";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 /**
  *
@@ -39,10 +42,26 @@ export async function getDeployArguments<
 ): Promise<any[]> {
   const chainId = await signer.getChainId();
   const signerAddress = await signer.getAddress();
-  let trustedForwarders =
-    contractType === PackInitializer.contractType
-      ? []
-      : getDefaultTrustedForwarders(chainId);
+  const chainEnum = SUPPORTED_CHAIN_IDS.find((c) => c === chainId);
+  let trustedForwarders;
+  if (
+    !chainEnum ||
+    chainEnum === ChainId.Hardhat ||
+    chainEnum === ChainId.Localhost
+  ) {
+    const storage = new ThirdwebStorage();
+    const forwarder = await computeForwarderAddress(
+      signer.provider as providers.Provider,
+      storage,
+    );
+    trustedForwarders = [forwarder];
+  } else {
+    trustedForwarders =
+      contractType === PackInitializer.contractType
+        ? []
+        : getDefaultTrustedForwarders(chainId);
+  }
+
   // override default forwarders if custom ones are passed in
   if (metadata.trusted_forwarders && metadata.trusted_forwarders.length > 0) {
     trustedForwarders = metadata.trusted_forwarders;
