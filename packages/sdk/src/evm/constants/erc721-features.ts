@@ -55,7 +55,7 @@ export const FEATURE_NFT_CLAIM_CONDITIONS_V1 = {
     sdk: "sdk.erc721claimable",
     contracts: "DropSinglePhase_V1",
   },
-  abis: [Erc721Abi, ILazyMintAbi, IDropSinglePhaseV1],
+  abis: [Erc721Abi, IDropSinglePhaseV1],
   features: {},
 } as const;
 
@@ -66,7 +66,7 @@ export const FEATURE_NFT_CLAIM_CONDITIONS_V2 = {
     sdk: "sdk.erc721claimable",
     contracts: "DropSinglePhase",
   },
-  abis: [Erc721Abi, ILazyMintAbi, IDropSinglePhase],
+  abis: [Erc721Abi, IDropSinglePhase],
   features: {},
 } as const;
 
@@ -88,7 +88,7 @@ export const FEATURE_NFT_CLAIM_PHASES_V2 = {
     sdk: "sdk.erc721claimable",
     contracts: "Drop",
   },
-  abis: [Erc721Abi, ILazyMintAbi, IDrop],
+  abis: [Erc721Abi, IDrop],
   features: {},
 } as const;
 
@@ -99,7 +99,7 @@ export const FEATURE_NFT_CLAIM_CUSTOM = {
     sdk: "sdk.erc721claimable",
     contracts: "IClaimableERC721",
   },
-  abis: [Erc721Abi, ILazyMintAbi, IClaimableERC721],
+  abis: [Erc721Abi, IClaimableERC721],
   features: {},
 } as const;
 

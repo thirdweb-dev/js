@@ -30,7 +30,7 @@ export const FEATURE_EDITION_CLAIM_CONDITIONS_V1 = {
     sdk: "sdk.erc1155claimable",
     contracts: "DropSinglePhase1155",
   },
-  abis: [Erc1155Abi, ILazyMintAbi, IDropSinglePhase1155_V1],
+  abis: [Erc1155Abi, IDropSinglePhase1155_V1],
   features: {},
 } as const;
 
@@ -41,7 +41,7 @@ export const FEATURE_EDITION_CLAIM_CONDITIONS_V2 = {
     sdk: "sdk.erc1155claimable",
     contracts: "DropSinglePhase1155",
   },
-  abis: [Erc1155Abi, ILazyMintAbi, IDropSinglePhase1155],
+  abis: [Erc1155Abi, IDropSinglePhase1155],
   features: {},
 } as const;
 
@@ -52,7 +52,7 @@ export const FEATURE_EDITION_CLAIM_PHASES_V2 = {
     sdk: "sdk.erc1155claimable",
     contracts: "Drop1155",
   },
-  abis: [Erc1155Abi, ILazyMintAbi, IDropMultiPhase1155],
+  abis: [Erc1155Abi, IDropMultiPhase1155],
   features: {},
 } as const;
 
@@ -74,7 +74,7 @@ export const FEATURE_EDITION_CLAIM_CUSTOM = {
     sdk: "sdk.erc1155claimable",
     contracts: "IClaimableERC1155",
   },
-  abis: [Erc1155Abi, ILazyMintAbi, IClaimableERC1155],
+  abis: [Erc1155Abi, IClaimableERC1155],
   features: {},
 } as const;
 
