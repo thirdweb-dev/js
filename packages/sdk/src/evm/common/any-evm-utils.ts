@@ -522,12 +522,16 @@ export async function deployInfraWithSigner(
     );
 
     if (contractType === NativeTokenWrapper.contractType) {
-      const initCode = getInitBytecodeWithSalt(WETHBytecode, []);
-      txns.push({
-        predictedAddress: infraContractAddress,
-        to: create2Factory,
-        data: initCode,
-      });
+      const code = await provider.getCode(infraContractAddress);
+      if (code === "0x") {
+        const initCode = getInitBytecodeWithSalt(WETHBytecode, []);
+
+        txns.push({
+          predictedAddress: infraContractAddress,
+          to: create2Factory,
+          data: initCode,
+        });
+      }
       continue;
     }
 
