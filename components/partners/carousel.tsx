@@ -1,18 +1,17 @@
 import { PartnerLogo } from "./partner-logo";
 import styles from "./partner-logo.module.css";
-import { Box, LayoutProps } from "@chakra-ui/react";
-import React from "react";
+import { Box, Flex, LayoutProps } from "@chakra-ui/react";
+import { ComponentWithChildren } from "types/component-with-children";
 
 const gap = { base: "40px", lg: "60px" };
 
-const MarqueeGroup: React.FC<{
+const MarqueeGroup: ComponentWithChildren<{
   ariaHidden: boolean;
   animationDirection?: "normal" | "reverse";
-  children: React.ReactNode;
 }> = ({ ariaHidden, children, animationDirection = "normal" }) => {
   return (
-    <Box
-      display="flex"
+    <Flex
+      flexDir="column"
       gap={gap}
       overflow="hidden"
       flexShrink={0}
@@ -23,12 +22,11 @@ const MarqueeGroup: React.FC<{
       }}
     >
       {children}
-    </Box>
+    </Flex>
   );
 };
 
-const Marquee: React.FC<{
-  children: React.ReactNode;
+const Marquee: ComponentWithChildren<{
   animationDirection?: "normal" | "reverse";
   display?: LayoutProps["display"];
 }> = ({ children, display, animationDirection }) => {

@@ -27,6 +27,7 @@ import {
   TrackedLink,
   TrackedLinkProps,
 } from "tw-components";
+import { shortenString } from "utils/usedapp-external";
 
 interface ContractTransaction {
   transactionHash: ContractEvent["transaction"]["transactionHash"];
@@ -78,16 +79,16 @@ export const LatestEvents: React.FC<LatestEventsProps> = ({
             bg="blackAlpha.50"
             _dark={{ bg: "whiteAlpha.50" }}
           >
-            <Heading gridColumn="span 4" size="label.md">
+            <Heading gridColumn="span 3" size="label.md">
               Transaction Hash
             </Heading>
-            <Heading gridColumn="span 5" size="label.md">
+            <Heading gridColumn="span 6" size="label.md">
               Events
             </Heading>
           </SimpleGrid>
 
           <List overflow="auto">
-            {allEvents.length === 0 && (
+            {allEvents.length === 0 ? (
               <Center py={4}>
                 <Flex align="center" gap={2}>
                   {autoUpdate && <Spinner size="sm" speed="0.69s" />}
@@ -96,7 +97,7 @@ export const LatestEvents: React.FC<LatestEventsProps> = ({
                   </Text>
                 </Flex>
               </Center>
-            )}
+            ) : null}
             <AnimatePresence initial={false}>
               {allEvents?.slice(0, 3).map((e) => (
                 <EventsFeedItem key={e.transactionHash} transaction={e} />
@@ -171,7 +172,7 @@ export const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
               bg="transparent"
               boxShadow="none"
               label={
-                <Card py={2} px={4}>
+                <Card py={2} px={4} bgColor="backgroundHighlight">
                   <Text size="label.sm">
                     Copy transaction hash to clipboard
                   </Text>
@@ -197,17 +198,15 @@ export const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
               </Button>
             </Tooltip>
             <Text fontFamily="mono" noOfLines={1}>
-              {transaction.transactionHash.slice(0, 32)}...
+              {shortenString(transaction.transactionHash)}
             </Text>
           </Stack>
         </Box>
 
-        <Box gridColumn="span 1" />
-
         <ButtonGroup
           size="sm"
           variant="outline"
-          gridColumn="span 5"
+          gridColumn="span 6"
           flexWrap="wrap"
           gap={2}
           spacing={0}

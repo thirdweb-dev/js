@@ -216,7 +216,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                       bg="transparent"
                       boxShadow="none"
                       label={
-                        <Card py={2} px={4}>
+                        <Card py={2} px={4} bgColor="backgroundHighlight">
                           <Text size="label.sm">Open in gateway</Text>
                         </Card>
                       }
@@ -242,7 +242,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                       bg="transparent"
                       boxShadow="none"
                       label={
-                        <Card py={2} px={4}>
+                        <Card py={2} px={4} bgColor="backgroundHighlight">
                           <Text size="label.sm">Remove file</Text>
                         </Card>
                       }
@@ -286,7 +286,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                     bg="transparent"
                     boxShadow="none"
                     label={
-                      <Card py={2} px={4}>
+                      <Card py={2} px={4} bgColor="backgroundHighlight">
                         <Text size="label.sm">Copy IPFS hash</Text>
                       </Card>
                     }

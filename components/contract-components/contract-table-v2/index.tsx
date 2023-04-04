@@ -143,7 +143,7 @@ export const PublishedContractTable: ComponentWithChildren<
                 bg="transparent"
                 boxShadow="none"
                 label={
-                  <Card py={2} px={4}>
+                  <Card py={2} px={4} bgColor="backgroundHighlight">
                     <Text size="label.sm">Audited Contract</Text>
                   </Card>
                 }

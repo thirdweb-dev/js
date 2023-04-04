@@ -81,7 +81,9 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
                 borderColor="borderColor"
                 overflow="hidden"
                 flexShrink={0}
-                p={1}
+                py={{ base: 1.5, md: 1 }}
+                px={{ base: 1.5, md: 2 }}
+                gap={3}
               >
                 {chain.icon?.url && (
                   <Center
@@ -98,7 +100,6 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
                     md: "initial",
                   }}
                   size="label.sm"
-                  px={2.5}
                   as="label"
                 >
                   {cleanedChainName}

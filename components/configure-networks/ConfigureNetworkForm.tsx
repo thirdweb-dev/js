@@ -269,7 +269,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
       {/* Network Name for Custom Network */}
       {variant !== "search" && (
         <FormControl isRequired isInvalid={!!networkNameErrorMessage}>
-          <FormLabel>Network Name</FormLabel>
+          <FormLabel>Network name</FormLabel>
           <Input
             autoComplete="off"
             placeholder="e.g. My Network"
@@ -332,7 +332,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
           {/* Testnet / Mainnet */}
           <FormControl>
             <FormLabel display="flex">
-              Network Type
+              Network type
               <ToolTipBox
                 content={
                   <>

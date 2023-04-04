@@ -228,6 +228,11 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
                     uris: contractId,
                     release_id: `${ensNameOrAddress}/${publishMetadata.data?.name}`,
                     version: data.version,
+                    type: data.isDeployableViaProxy
+                      ? "proxy"
+                      : data.isDeployableViaFactory
+                      ? "factory"
+                      : "standard",
                     is_proxy: data.isDeployableViaProxy,
                     is_factory: data.isDeployableViaFactory,
                   });

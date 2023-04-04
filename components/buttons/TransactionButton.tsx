@@ -130,7 +130,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
             w="auto"
             label={
               <ColorModeComp>
-                <Card w="auto" py={2}>
+                <Card w="auto" py={2} bgColor="backgroundHighlight">
                   <Text>
                     This action will trigger {transactionCount}{" "}
                     {transactionCount > 1 ? "transactions" : "transaction"}.

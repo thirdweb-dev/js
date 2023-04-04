@@ -62,7 +62,7 @@ export const AddressCopyButton: React.FC<AddressCopyButtonProps> = ({
       bg="transparent"
       boxShadow="none"
       label={
-        <Card py={2} px={4}>
+        <Card py={2} px={4} bgColor="backgroundHighlight">
           <Text size="label.sm">
             Copy {tokenId ? "Token ID" : "address"} to clipboard
           </Text>

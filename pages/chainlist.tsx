@@ -215,7 +215,7 @@ const SearchResult: React.FC<{
                 bg="transparent"
                 boxShadow="none"
                 label={
-                  <Card py={2} px={4}>
+                  <Card py={2} px={4} bgColor="backgroundHighlight">
                     <Text size="label.sm">Added to dashboard</Text>
                   </Card>
                 }

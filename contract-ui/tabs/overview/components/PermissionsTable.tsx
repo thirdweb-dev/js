@@ -26,6 +26,7 @@ import {
   TrackedLink,
   TrackedLinkProps,
 } from "tw-components";
+import { shortenIfAddress } from "utils/usedapp-external";
 
 interface PermissionsTableProps {
   contract: SmartContract;
@@ -176,7 +177,7 @@ export const PermissionsItem: React.FC<PermissionsItemProps> = ({ data }) => {
               bg="transparent"
               boxShadow="none"
               label={
-                <Card py={2} px={4}>
+                <Card py={2} px={4} bgColor="backgroundHighlight">
                   <Text size="label.sm">Copy address to clipboard</Text>
                 </Card>
               }
@@ -200,7 +201,7 @@ export const PermissionsItem: React.FC<PermissionsItemProps> = ({ data }) => {
               </Button>
             </Tooltip>
             <Text fontFamily="mono" noOfLines={1}>
-              {data.member.slice(0, 8)}&hellip;
+              {shortenIfAddress(data.member)}
             </Text>
           </Stack>
         </Box>

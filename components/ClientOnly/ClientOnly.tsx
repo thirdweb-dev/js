@@ -1,17 +1,17 @@
 /* eslint-disable react/forbid-dom-props */
 import styles from "./ClientOnly.module.css";
 import { ReactNode, useEffect, useState } from "react";
+import { ComponentWithChildren } from "types/component-with-children";
 
 interface ClientOnlyProps {
   /**
    * Use this to server render a skeleton or loading state
    */
   ssr: ReactNode;
-  children: ReactNode;
   fadeInDuration?: number;
 }
 
-export const ClientOnly: React.FC<ClientOnlyProps> = ({
+export const ClientOnly: ComponentWithChildren<ClientOnlyProps> = ({
   children,
   fadeInDuration,
   ssr,

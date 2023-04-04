@@ -253,7 +253,7 @@ export const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
                 bg="transparent"
                 boxShadow="none"
                 label={
-                  <Card py={2} px={4}>
+                  <Card py={2} px={4} bgColor="backgroundHighlight">
                     <Text size="label.sm">
                       Copy transaction hash to clipboard
                     </Text>
@@ -407,7 +407,7 @@ const TransactionData: React.FC<TransactionDataProps> = ({
             bg="transparent"
             boxShadow="none"
             label={
-              <Card py={2} px={4}>
+              <Card py={2} px={4} bgColor="backgroundHighlight">
                 <Text size="label.sm">{description}</Text>
               </Card>
             }

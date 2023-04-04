@@ -126,7 +126,12 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                             boxShadow="none"
                             shouldWrapChildren
                             label={
-                              <Card as={Flex} flexDir="column" gap={2}>
+                              <Card
+                                as={Flex}
+                                flexDir="column"
+                                gap={2}
+                                bgColor="backgroundHighlight"
+                              >
                                 <Text>
                                   {paramTemplateValues[0].helperText} Click to
                                   apply.

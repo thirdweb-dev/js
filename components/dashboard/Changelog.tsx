@@ -50,7 +50,9 @@ export const Changelog: React.FC<ChangelogProps> = ({ changelog }) => {
               href={`${item.url}?utm_source=thirdweb&utm_campaign=changelog`}
               role="group"
             >
-              <Text color="inherit">{item.title}</Text>
+              <Text color="inherit" noOfLines={2}>
+                {item.title}
+              </Text>
             </Link>
             <Text color="faded" size="body.sm">
               {formatDistance(new Date(item.published_at), Date.now(), {

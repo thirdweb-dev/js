@@ -1,18 +1,9 @@
-import {
-  Divider,
-  Flex,
-  GridItem,
-  Input,
-  Link,
-  SimpleGrid,
-  Tooltip,
-} from "@chakra-ui/react";
+import { Divider, Flex, GridItem, SimpleGrid, Tooltip } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
 import { CodeEnvironment } from "components/contract-tabs/code/types";
 import { RelevantDataSection } from "components/dashboard/RelevantDataSection";
 import { IpfsUploadDropzone } from "components/ipfs-upload/dropzone";
-import { replaceIpfsUrl } from "lib/sdk";
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { useState } from "react";
@@ -44,12 +35,8 @@ const videos = [
 ];
 
 const DashboardStorage: ThirdwebNextPage = () => {
-  const [ipfsHash, setIpfsHash] = useState("");
-
   const [codeEnvironment, setCodeEnvironment] =
     useState<CodeEnvironment>("javascript");
-
-  const isValidIPFSHash = ipfsHash.startsWith("ipfs://");
 
   const title = "IPFS Upload & Pinning Service | Pin Files to IPFS for Free";
   const description =
@@ -83,40 +70,42 @@ const DashboardStorage: ThirdwebNextPage = () => {
             <Heading size="title.md" as="h2">
               Gateway
             </Heading>
-            <Text>
-              Using our gateway, you can easily access files and folders stored
-              on IPFS:
-            </Text>
-            <Card p={0} borderRadius="md" border="none">
-              <Input
-                variant="outline"
-                value={ipfsHash}
-                onChange={(e) => setIpfsHash(e.target.value)}
-                borderColor="borderColor"
-                placeholder="ipfs://"
-              />
-            </Card>
-            <Text>
-              Gateway URL:{" "}
-              <Link
-                cursor={!isValidIPFSHash ? "default" : "pointer"}
-                href={isValidIPFSHash ? replaceIpfsUrl(ipfsHash) : undefined}
-                isExternal
-                _light={{
-                  color: "blue.600",
-                }}
-                _dark={{
-                  color: "blue.400",
-                }}
-                _hover={
-                  !isValidIPFSHash ? { textDecoration: "none" } : undefined
-                }
+            <Text>Use our public IPFS gateway in your applications:</Text>
+            <Card
+              as={Flex}
+              w="full"
+              alignItems="center"
+              py={2}
+              justifyContent="space-between"
+            >
+              <Text
+                fontFamily="mono"
+                overflow={{ base: "scroll", md: "inherit" }}
               >
-                {isValidIPFSHash
-                  ? replaceIpfsUrl(ipfsHash)
-                  : "https://ipfs.thirdwebcdn.com/ipfs/[cid]"}
-              </Link>
-            </Text>
+                https://ipfs.thirdwebcdn.com/ipfs/
+              </Text>
+              <Flex>
+                <Tooltip
+                  p={0}
+                  label={
+                    <Card py={2} px={4} bgColor="backgroundHighlight">
+                      <Text>Copy code</Text>
+                    </Card>
+                  }
+                  bgColor="backgroundCardHighlight"
+                  borderRadius="xl"
+                  placement="top"
+                  shouldWrapChildren
+                >
+                  <TrackedCopyButton
+                    value="https://ipfs.thirdwebcdn.com/ipfs/"
+                    category="storage"
+                    label="copy-cli-file-upload"
+                    aria-label="Copy code"
+                  />
+                </Tooltip>
+              </Flex>
+            </Card>
           </Flex>
           <Flex flexDir="column" w="full" gap={4}>
             <Heading size="title.md" as="h2">
@@ -144,9 +133,9 @@ const DashboardStorage: ThirdwebNextPage = () => {
                   <Tooltip
                     p={0}
                     label={
-                      <Flex p={2}>
+                      <Card py={2} px={4} bgColor="backgroundHighlight">
                         <Text>Copy code</Text>
-                      </Flex>
+                      </Card>
                     }
                     bgColor="backgroundCardHighlight"
                     borderRadius="xl"
@@ -154,9 +143,9 @@ const DashboardStorage: ThirdwebNextPage = () => {
                     shouldWrapChildren
                   >
                     <TrackedCopyButton
-                      value="npx thirdweb upload ./path/to/file.jpg"
+                      value="npx thirdweb upload ./path/to/file-or-folder"
                       category="storage"
-                      label="copy-cli-file-upload"
+                      label="copy-gateway-url"
                       aria-label="Copy code"
                     />
                   </Tooltip>

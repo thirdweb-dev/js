@@ -1,9 +1,15 @@
 import { NetworkConfigFormData } from "../ConfigureNetworkForm";
 import { ToolTipBox } from "./ToolTipBox";
-import { Code, FormControl, Input } from "@chakra-ui/react";
+import { FormControl, Input } from "@chakra-ui/react";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { UseFormReturn } from "react-hook-form";
-import { FormErrorMessage, FormLabel, Heading, Text } from "tw-components";
+import {
+  CodeBlock,
+  FormErrorMessage,
+  FormLabel,
+  Heading,
+  Text,
+} from "tw-components";
 
 export const NetworkIDInput: React.FC<{
   form: UseFormReturn<NetworkConfigFormData, any>;
@@ -31,7 +37,12 @@ export const NetworkIDInput: React.FC<{
               <Heading fontSize="14px" mb={3}>
                 Example
               </Heading>
-              <Code fontSize="14px">{`thirdweb.com/<network-id>/<contract-address>`}</Code>
+              <CodeBlock
+                fontSize="14px"
+                code="thirdweb.com/<network-id>/<contract-address>"
+                language="bash"
+                canCopy={false}
+              />
             </>
           }
         />

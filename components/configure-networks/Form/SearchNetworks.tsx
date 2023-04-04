@@ -109,7 +109,7 @@ export const SearchNetworks: React.FC<SearchNetworksProps> = (props) => {
         isRequired
         ref={searchContainerRef}
       >
-        <FormLabel>Network Name</FormLabel>
+        <FormLabel>Network name</FormLabel>
 
         <InputGroup position="relative">
           <Input
@@ -124,7 +124,7 @@ export const SearchNetworks: React.FC<SearchNetworksProps> = (props) => {
             bg={props.isSearchOpen ? "backgroundHighlight" : "inputBg"}
             type="text"
             autoComplete="off"
-            placeholder="Search by Name or Chain ID"
+            placeholder="Search by name or chain ID"
             aria-label="Search Network"
             value={searchTerm}
             outline="none"

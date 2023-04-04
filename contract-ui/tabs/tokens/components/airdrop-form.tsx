@@ -143,6 +143,10 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
                   </Flex>
                 </Flex>
               </Stack>
+              <Text>
+                You can airdrop to a maximum of 250 addresses at a time. If you
+                have more, please do it in multiple transactions.
+              </Text>
               <TransactionButton
                 transactionCount={1}
                 isLoading={airdrop.isLoading}
