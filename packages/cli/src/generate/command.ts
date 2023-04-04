@@ -49,15 +49,15 @@ export async function generate(options: GenerateOptions) {
       if (contracts.length > thirdwebConfig.contracts.length) {
         fs.writeFileSync(
           `${projectPath}/thirdweb.json`,
-          JSON.stringify({ contracts, chainIds }, undefined, 2),
+          JSON.stringify({ chainIds, contracts }, undefined, 2),
         );
 
         const numberOfNewContracts =
           contracts.length - thirdwebConfig.contracts.length;
         info(
-          `Updated thirdweb.json configuration with ${numberOfNewContracts} new smart contract${
+          `Updated thirdweb.json with ${numberOfNewContracts} new contract${
             numberOfNewContracts === 1 ? "" : "s"
-          } detected in your project.`,
+          }`,
         );
       }
     }
@@ -82,21 +82,21 @@ export async function generate(options: GenerateOptions) {
     // Create a thirdweb.json file with the specific contracts and chain ids
     fs.writeFileSync(
       `${projectPath}/thirdweb.json`,
-      JSON.stringify({ contracts, chainIds }, undefined, 2),
+      JSON.stringify({ chainIds, contracts }, undefined, 2),
     );
 
     info(
       `Created a thirdweb.json file with configuration for ${
         contracts.length
-      } smart contract${
+      } contract${
         contracts.length === 1 ? "" : "s"
-      } detected in your project.\n\n    - Smart contracts configured in this file will have their ABIs predownloaded at build time, significantly improving SDK performance at runtime.\n\n    - You can also update this configuration manually, or run thirdweb generate again after making changes to your project.\n`,
+      } detected in your project.\n- You can also update this configuration manually by editing the file.\n`,
     );
   }
 
   // Attempt to download the ABI for each contract
   const abiSpinner = spinner(
-    `Downloading ABIs for smart contracts configured in 'thirdweb.json'`,
+    `Downloading ABIs for contracts configured in 'thirdweb.json'`,
   );
   const storage = new ThirdwebStorage();
   const metadata: {
@@ -214,6 +214,6 @@ export async function generate(options: GenerateOptions) {
   );
 
   ora(
-    "The 'npx thirdweb generate' command has been added to the postinstall command of your package.json file.\n\n    This step is necessary to gain the performance boost that 'thirdweb generate' provides in your production environment.\n",
+    "Added 'npx thirdweb generate' to postinstall in package.json.\n\n - This is necessary to use 'thirdweb generate' in production.\n",
   ).info();
 }
