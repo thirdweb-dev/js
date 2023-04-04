@@ -148,6 +148,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
         ) : (
           <ConnectedWalletDetails
             dropdownPosition={props.dropdownPosition}
+            theme={theme}
             onDisconnect={() => {
               if (authConfig?.authUrl) {
                 logout();

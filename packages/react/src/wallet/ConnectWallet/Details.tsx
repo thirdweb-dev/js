@@ -49,6 +49,7 @@ const TW_CONNECTED_WALLET = "tw-connected-wallet";
 export const ConnectedWalletDetails: React.FC<{
   dropdownPosition?: DropDownPosition;
   onDisconnect: () => void;
+  theme: "dark" | "light";
 }> = (props) => {
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
@@ -103,7 +104,11 @@ export const ConnectedWalletDetails: React.FC<{
   }, [personalWallet]);
 
   const trigger = (
-    <WalletInfoButton type="button" className={TW_CONNECTED_WALLET}>
+    <WalletInfoButton
+      type="button"
+      className={TW_CONNECTED_WALLET}
+      data-theme={props.theme}
+    >
       <ChainIcon
         chain={chain}
         size={iconSize.lg}
