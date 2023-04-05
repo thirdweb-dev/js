@@ -54,7 +54,7 @@ export const FEATURE_NFT_CLAIM_CONDITIONS_V1 = {
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
-    contracts: "IDropSinglePhase_V1",
+    contracts: "erc721claimconditions",
   },
   abis: [Erc721Abi, IDropSinglePhaseV1],
   features: {},
@@ -65,7 +65,7 @@ export const FEATURE_NFT_CLAIM_CONDITIONS_V2 = {
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
-    contracts: "IDropSinglePhase",
+    contracts: "erc721claimconditions",
   },
   abis: [Erc721Abi, IDropSinglePhase],
   features: {},
@@ -76,7 +76,7 @@ export const FEATURE_NFT_CLAIM_PHASES_V1 = {
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
-    contracts: "DropERC721_V3",
+    contracts: "erc721claimphases",
   },
   abis: [DropERC721_V3Abi],
   features: {},
@@ -87,7 +87,7 @@ export const FEATURE_NFT_CLAIM_PHASES_V2 = {
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
-    contracts: "IDrop",
+    contracts: "erc721claimphases",
   },
   abis: [Erc721Abi, IDrop],
   features: {},
@@ -98,7 +98,7 @@ export const FEATURE_NFT_CLAIM_CUSTOM = {
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
-    contracts: "IClaimableERC721",
+    contracts: "erc721claimcustom",
   },
   abis: [Erc721Abi, IClaimableERC721],
   features: {},
@@ -109,7 +109,7 @@ export const FEATURE_NFT_LAZY_MINTABLE = {
   namespace: "nft.drop",
   docLinks: {
     sdk: "sdk.erc721lazymintable",
-    contracts: "ILazyMint",
+    contracts: "lazymint",
   },
   abis: [Erc721Abi, ILazyMintAbi],
   features: {
