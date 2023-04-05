@@ -825,9 +825,7 @@ export class ContractDeployer extends RPCConnectionHandler {
           // any evm deployment flow -- with signer
 
           // 1. Deploy CREATE2 factory (if not already exists)
-          const create2Factory = await deployCreate2Factory(
-            this.getSigner() as Signer,
-          );
+          const create2Factory = await deployCreate2Factory(signer);
 
           // 2. get deployment info for any evm
           const deploymentInfo = await getDeploymentInfo(
@@ -841,7 +839,7 @@ export class ContractDeployer extends RPCConnectionHandler {
 
           // 3. deploy infra
           await deployInfraWithSigner(
-            this.getSigner() as Signer,
+            signer,
             this.getProvider(),
             this.storage,
             create2Factory,
@@ -850,7 +848,7 @@ export class ContractDeployer extends RPCConnectionHandler {
 
           // 4. deploy implementation contract
           await deployContractDeterministic(
-            this.getSigner() as Signer,
+            signer,
             deploymentInfo.bytecode,
             deploymentInfo.encodedArgs,
             create2Factory,
