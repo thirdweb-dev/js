@@ -382,10 +382,9 @@ export async function deployCreate2Factory(signer: Signer): Promise<string> {
   }
 
   const enforceEip155 = await isEIP155Enforced(signer.provider);
-  const chainId = enforceEip155
-    ? (await signer.provider.getNetwork()).chainId
-    : 0;
-  console.debug(`ChainId ${chainId} enforces EIP155: ${enforceEip155}`);
+  const networkId = (await signer.provider.getNetwork()).chainId;
+  const chainId = enforceEip155 ? networkId : 0;
+  console.debug(`ChainId ${networkId} enforces EIP155: ${enforceEip155}`);
   const deploymentInfo = getCreate2FactoryDeploymentInfo(chainId);
 
   const factoryExists = await isContractDeployed(
@@ -409,7 +408,9 @@ export async function deployCreate2Factory(signer: Signer): Promise<string> {
 
     // deploy
     try {
-      console.debug("deploying create-2 factory");
+      console.debug(
+        `deploying CREATE2 factory at: ${deploymentInfo.deployment}`,
+      );
       await signer.provider.sendTransaction(deploymentInfo.transaction);
     } catch (err) {
       throw new Error(`Couldn't deploy CREATE2 factory: ${err}`);
@@ -444,6 +445,9 @@ export async function deployContractDeterministic(
     : "0x";
 
   if (code === "0x") {
+    console.debug(
+      `deploying contract via create2 factory at: ${predictedAddress}`,
+    );
     const initBytecodeWithSalt = getInitBytecodeWithSalt(bytecode, encodedArgs);
 
     let tx: ethers.PopulatedTransaction = {
@@ -589,7 +593,7 @@ export async function deployInfraWithSigner(
   // Call/deploy the throaway-deployer only if there are any contracts to deploy
   if (txns.length > 0) {
     txns.forEach((tx) =>
-      console.debug("deploying infra contract at: ", tx.predictedAddress),
+      console.debug(`deploying infra contract at: ${tx.predictedAddress}`),
     );
     // Using the deployer contract, send the deploy transactions to common factory with a signer
     const deployer = new ethers.ContractFactory(DEPLOYER_ABI, DEPLOYER_BYTECODE)
