@@ -137,6 +137,14 @@ export async function isEIP155Enforced(
 export async function getCreate2Factory(
   provider: providers.Provider,
 ): Promise<string> {
+  const commonFactoryExists = await isContractDeployed(
+    COMMON_FACTORY,
+    provider,
+  );
+  if (commonFactoryExists) {
+    return COMMON_FACTORY;
+  }
+
   const enforceEip155 = await isEIP155Enforced(provider);
   const chainId = enforceEip155 ? (await provider.getNetwork()).chainId : 0;
   const deploymentInfo = getCreate2FactoryDeploymentInfo(chainId);
@@ -362,6 +370,13 @@ export function getKeylessTxn(
  */
 export async function deployCreate2Factory(signer: Signer): Promise<string> {
   invariant(signer.provider, "No provider");
+  const commonFactoryExists = await isContractDeployed(
+    COMMON_FACTORY,
+    signer.provider,
+  );
+  if (commonFactoryExists) {
+    return COMMON_FACTORY;
+  }
 
   const enforceEip155 = await isEIP155Enforced(signer.provider);
   console.log("is eip155 enforced: ", enforceEip155);
