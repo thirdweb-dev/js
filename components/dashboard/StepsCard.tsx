@@ -11,13 +11,13 @@ type Step = {
   children: React.ReactNode;
 };
 
-interface GetStartedProps {
+interface StepsCardProps {
   title: string;
-  description: string;
+  description?: string;
   steps: Step[];
 }
 
-export const GetStarted: React.FC<GetStartedProps> = ({
+export const StepsCard: React.FC<StepsCardProps> = ({
   title,
   description,
   steps,
@@ -28,6 +28,10 @@ export const GetStarted: React.FC<GetStartedProps> = ({
   const percentage = ((lastStepCompleted + 1) / steps.length) * 100;
   const isComplete = useMemo(() => firstIncomplete === -1, [firstIncomplete]);
   const [isOpen, setIsOpen] = useState(true);
+
+  if (steps.length === 0 || isComplete) {
+    return null;
+  }
 
   return (
     <DelayedDisplay delay={500}>
@@ -106,10 +110,10 @@ export const GetStarted: React.FC<GetStartedProps> = ({
           gap={0}
           direction="column"
         >
-          <Text mt={4}>{description}</Text>
+          {description && <Text mt={4}>{description}</Text>}
           <Progress value={percentage} mt={8} mb={2} rounded="full" size="sm" />
           <Text size="body.sm" color="gray.700">
-            {lastStepCompleted + 1}/{steps.length} Tasks Completed
+            {lastStepCompleted + 1}/{steps.length} tasks completed
           </Text>
           {steps.map(({ children, ...step }, index) => {
             return (

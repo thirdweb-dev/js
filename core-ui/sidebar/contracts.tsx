@@ -1,4 +1,3 @@
-import { ComponentWithChildren } from "../../types/component-with-children";
 import { SIDEBAR_WIDTH, SideBarTunnel } from "./tunnel";
 import {
   Box,
@@ -11,6 +10,7 @@ import {
 import { useRouter } from "next/router";
 import { FiMenu } from "react-icons/fi";
 import { Heading, Link, Text } from "tw-components";
+import { ComponentWithChildren } from "types/component-with-children";
 
 type ContractsSidebarProps = {
   activePage: "deployed" | "published";

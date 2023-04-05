@@ -1,8 +1,4 @@
 import {
-  ListingStats,
-  ListingStatsV3,
-} from "../../listings/components/listing-stats";
-import {
   AspectRatio,
   Flex,
   GridItem,
@@ -19,7 +15,6 @@ import {
   useEnglishAuctionsCount,
   useListings,
   useListingsCount,
-  useTotalCirculatingSupply,
 } from "@thirdweb-dev/react";
 import {
   AuctionListing,
@@ -30,6 +25,10 @@ import {
   Marketplace,
   MarketplaceV3,
 } from "@thirdweb-dev/sdk";
+import {
+  ListingStats,
+  ListingStatsV3,
+} from "contract-ui/tabs/listings/components/listing-stats";
 import { useTabHref } from "contract-ui/utils";
 import { BigNumber } from "ethers";
 import { useMemo } from "react";

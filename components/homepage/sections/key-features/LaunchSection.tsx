@@ -1,4 +1,3 @@
-import { Aurora } from "../../Aurora";
 import { GradientText } from "./GradientText";
 import { KeyFeatureLayout } from "./KeyFeatureLayout";
 import {
@@ -9,6 +8,7 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import { ChakraNextImage as Image } from "components/Image";
+import { Aurora } from "components/homepage/Aurora";
 import { Heading, Text } from "tw-components";
 
 const TRACKING_CATEGORY = "launch_section";

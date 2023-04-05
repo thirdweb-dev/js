@@ -1,6 +1,6 @@
-import { MetadataHeader } from "../../components/custom-contract/contract-header/metadata-header";
 import { Box, Container, Flex } from "@chakra-ui/react";
 import type { useProgramMetadata } from "@thirdweb-dev/react/solana";
+import { MetadataHeader } from "components/custom-contract/contract-header/metadata-header";
 
 interface ProgramMetadataProps {
   address: string;

@@ -1,7 +1,7 @@
-import { GetStartedSection } from "../../homepage/sections/GetStartedSection";
-import { NewsletterSection } from "../../homepage/sections/NewsletterSection";
 import { Box, DarkMode, Flex } from "@chakra-ui/react";
 import { HomepageFooter } from "components/footer/Footer";
+import { GetStartedSection } from "components/homepage/sections/GetStartedSection";
+import { NewsletterSection } from "components/homepage/sections/NewsletterSection";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { NextSeo, NextSeoProps } from "next-seo";
 import React, { PropsWithChildren } from "react";

@@ -1,4 +1,3 @@
-import Extensions from "../../../contract-ui/tabs/overview/components/Extensions";
 import {
   useContractEnabledExtensions,
   useContractPublishMetadataFromURI,
@@ -31,6 +30,7 @@ import {
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
 import { replaceDeployerAddress } from "components/explore/publisher";
 import { ShareButton } from "components/share-buttom";
+import { Extensions } from "contract-ui/tabs/overview/components/Extensions";
 import { format } from "date-fns";
 import { correctAndUniqueLicenses } from "lib/licenses";
 import { StorageSingleton, replaceIpfsUrl } from "lib/sdk";

@@ -1,7 +1,7 @@
-import { useContractPrePublishMetadata } from "../../hooks";
-import { DeployableContractContractCellProps } from "../../types";
 import { Skeleton } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
+import { useContractPrePublishMetadata } from "components/contract-components/hooks";
+import { DeployableContractContractCellProps } from "components/contract-components/types";
 import { Text } from "tw-components";
 
 export const ContractDescriptionCell: React.FC<

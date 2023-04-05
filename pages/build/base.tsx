@@ -1,5 +1,3 @@
-import { ChakraNextImage } from "../../components/Image";
-import { HomepageTopNav } from "../../components/product-pages/common/Topnav";
 import {
   AspectRatio,
   Box,
@@ -13,6 +11,8 @@ import {
 } from "@chakra-ui/react";
 import { SiGithub } from "@react-icons/all-files/si/SiGithub";
 import { HomepageFooter } from "components/footer/Footer";
+import { ChakraNextImage } from "components/Image";
+import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { landingSnippets } from "components/product-pages/homepage/CodeSelector";
 import { YoutubeEmbed } from "components/video-embed/YoutubeEmbed";
 import Image from "next/image";

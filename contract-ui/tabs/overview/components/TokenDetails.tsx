@@ -1,6 +1,6 @@
-import { TokenSupply } from "../../tokens/components/supply";
 import { Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
+import { TokenSupply } from "contract-ui/tabs/tokens/components/supply";
 import { Heading } from "tw-components";
 
 interface TokenDetailsProps {
