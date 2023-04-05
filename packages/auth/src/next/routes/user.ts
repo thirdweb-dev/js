@@ -7,9 +7,6 @@ export default async function handler(
   res: NextApiResponse,
   ctx: ThirdwebAuthContext,
 ) {
-
-  console.log("user handler() called");
-
   if (req.method !== "GET") {
     return res.status(400).json({
       error: "Invalid method. Only GET supported.",

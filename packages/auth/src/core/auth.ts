@@ -32,9 +32,6 @@ export class ThirdwebAuth {
   }
 
   public async login(options?: LoginOptions): Promise<LoginPayload> {
-
-    console.log("auth.login called");
-
     const parsedOptions = LoginOptionsSchema.parse(options);
 
     let chainId: string | undefined = parsedOptions?.chainId;
@@ -76,9 +73,6 @@ export class ThirdwebAuth {
     payload: LoginPayload,
     options?: VerifyOptions,
   ): Promise<string> {
-
-    console.log("auth.verify called");
-
     const parsedOptions = VerifyOptionsSchema.parse(options);
 
     if (payload.payload.type !== this.wallet.type) {

@@ -8,18 +8,11 @@ export default async function handler(
   res: NextApiResponse,
   ctx: ThirdwebAuthContext,
 ) {
-
-  console.log("login.ts handler() called");
-
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  console.log("parsedPayload", typeof req.body);
-
   const parsedPayload = LoginPayloadBodySchema.safeParse(req.body);
-
-  console.log("parsedPayload", parsedPayload);
 
   // Get signed login payload from the frontend
   if (!parsedPayload.success) {
