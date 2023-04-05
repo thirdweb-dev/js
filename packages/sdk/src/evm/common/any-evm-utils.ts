@@ -88,7 +88,7 @@ export const DEPLOYER_ABI = [
 export async function isContractDeployed(
   address: string,
   provider: providers.Provider,
-) {
+): Promise<boolean> {
   const code = await provider.getCode(address);
 
   return code !== "0x";
@@ -159,7 +159,7 @@ export async function getCreate2Factory(
  * @internal
  * @param bytecode: Creation bytecode of the contract to deploy
  */
-export function getSaltHash(bytecode: string) {
+export function getSaltHash(bytecode: string): string {
   const bytecodeHash = ethers.utils.id(bytecode);
   const salt = `tw.${bytecodeHash}`;
   const saltHash = ethers.utils.id(salt);
@@ -176,7 +176,10 @@ export function getSaltHash(bytecode: string) {
  * @param bytecode: Creation bytecode of the contract to deploy
  * @param encodedArgs: Abi-encoded constructor params
  */
-export function getInitBytecodeWithSalt(bytecode: string, encodedArgs: any) {
+export function getInitBytecodeWithSalt(
+  bytecode: string,
+  encodedArgs: any,
+): string {
   const saltHash = getSaltHash(bytecode);
 
   const initBytecodeWithSalt = ethers.utils.solidityPack(
@@ -200,7 +203,7 @@ export function computeDeploymentAddress(
   bytecode: string,
   encodedArgs: any,
   create2FactoryAddress: string,
-) {
+): string {
   const saltHash = getSaltHash(bytecode);
 
   // 1. create init bytecode hash with contract's bytecode and encoded args
@@ -241,7 +244,7 @@ export async function computeEOAForwarderAddress(
   provider: providers.Provider,
   storage: ThirdwebStorage,
   create2Factory?: string,
-) {
+): Promise<string> {
   if (!create2Factory) {
     create2Factory = await getCreate2Factory(provider);
   }
@@ -264,7 +267,7 @@ export async function computeForwarderAddress(
   provider: providers.Provider,
   storage: ThirdwebStorage,
   create2Factory?: string,
-) {
+): Promise<string> {
   if (!create2Factory) {
     create2Factory = await getCreate2Factory(provider);
   }
@@ -287,7 +290,7 @@ export async function computeCloneFactoryAddress(
   provider: providers.Provider,
   storage: ThirdwebStorage,
   create2Factory?: string,
-) {
+): Promise<string> {
   if (!create2Factory) {
     create2Factory = await getCreate2Factory(provider);
   }
@@ -310,7 +313,7 @@ export async function computeNativeTokenAddress(
   provider: providers.Provider,
   storage: ThirdwebStorage,
   create2Factory?: string,
-) {
+): Promise<string> {
   if (!create2Factory) {
     create2Factory = await getCreate2Factory(provider);
   }
