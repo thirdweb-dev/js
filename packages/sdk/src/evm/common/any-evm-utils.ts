@@ -1,5 +1,5 @@
 import invariant from "tiny-invariant";
-import { BigNumber, ethers, providers, Signer } from "ethers";
+import { BigNumber, BytesLike, ethers, providers, Signer } from "ethers";
 import { bytecode as WETHBytecode } from "./WETH9";
 import {
   DeploymentInfo,
@@ -178,7 +178,7 @@ export function getSaltHash(bytecode: string): string {
  */
 export function getInitBytecodeWithSalt(
   bytecode: string,
-  encodedArgs: any,
+  encodedArgs: BytesLike,
 ): string {
   const saltHash = getSaltHash(bytecode);
 
@@ -201,7 +201,7 @@ export function getInitBytecodeWithSalt(
  */
 export function computeDeploymentAddress(
   bytecode: string,
-  encodedArgs: any,
+  encodedArgs: BytesLike,
   create2FactoryAddress: string,
 ): string {
   const saltHash = getSaltHash(bytecode);
@@ -433,7 +433,7 @@ export async function deployCreate2Factory(signer: Signer): Promise<string> {
 export async function deployContractDeterministic(
   signer: Signer,
   bytecode: string,
-  encodedArgs: any,
+  encodedArgs: BytesLike,
   create2FactoryAddress: string,
   predictedAddress?: string,
 ) {
