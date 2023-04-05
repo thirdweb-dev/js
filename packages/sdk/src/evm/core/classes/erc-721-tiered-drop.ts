@@ -17,7 +17,7 @@ import {
 } from "../../schema/contracts/tiered-drop";
 import { UploadProgressEvent } from "../../types/events";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { TransactionResult, TransactionResultWithId } from "../types";
+import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc721 } from "./erc-721";
 import type { TieredDrop, ISignatureAction } from "@thirdweb-dev/contracts-js";
