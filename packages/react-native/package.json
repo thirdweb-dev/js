@@ -33,6 +33,7 @@
     "@thirdweb-dev/storage": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",
     "abitype": "^0.2.5",
+    "expo-secure-store": "^12.1.1",
     "react-native-mmkv": "2.5.1",
     "react-native-modal": "^13.0.1",
     "react-native-svg": "^13.8.0",
@@ -43,6 +44,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
+    "@babel/preset-env": "^7.1.6",
     "@react-native-async-storage/async-storage": "*",
     "@react-native-community/eslint-config": "^3.0.2",
     "@thirdweb-dev/tsconfig": "workspace:*",

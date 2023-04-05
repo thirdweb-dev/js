@@ -9,6 +9,7 @@ import { PropsWithChildren } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { metamaskWallet } from "../wallets/wallets/metamask-wallet";
 import { rainbowWallet } from "../wallets/wallets/rainbow-wallet";
+import { SecureStorage } from "../../core/SecureStorage";
 
 const DEFAULT_WALLETS = [metamaskWallet(), rainbowWallet()];
 
@@ -56,12 +57,14 @@ export const ThirdwebProvider = <
   createWalletStorage = createAsyncLocalStorage,
   thirdwebApiKey = DEFAULT_API_KEY,
   supportedWallets = DEFAULT_WALLETS,
+  authConfig,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
   return (
     <ThirdwebProviderCore
       thirdwebApiKey={thirdwebApiKey}
       supportedWallets={supportedWallets}
+      authConfig={authConfig ? (authConfig.secureStorage ? authConfig : {...authConfig, secureStorage: new SecureStorage('auth')}) : undefined}
       createWalletStorage={createWalletStorage}
       {...restProps}
     >

@@ -1,8 +1,8 @@
+import { AUTH_TOKEN_STORAGE_KEY } from "../../../core/constants/auth";
 import { useThirdwebAuthContext } from "../../contexts/thirdweb-auth";
 import { cacheKeys } from "../../utils/cache-keys";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import invariant from "tiny-invariant";
-import { coordinatorStorage } from "../../../core/providers/thirdweb-wallet-provider";
 
 /**
  * Hook to logout the connected wallet from the backend.
@@ -27,11 +27,11 @@ export function useLogout() {
         "Please specify an authUrl in the authConfig.",
       );
 
-      await fetch(`${authConfig.authUrl}/logout`, {
+      await fetch(`${authConfig.domain}${authConfig.authUrl}/logout`, {
         method: "POST",
         credentials: "include",
       });
-      coordinatorStorage.removeItem("cookie");
+      authConfig.secureStorage?.removeItem(AUTH_TOKEN_STORAGE_KEY);
 
       queryClient.invalidateQueries(cacheKeys.auth.user());
     },

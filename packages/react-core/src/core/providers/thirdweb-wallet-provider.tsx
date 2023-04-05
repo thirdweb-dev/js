@@ -20,7 +20,7 @@ import {
 } from "react";
 
 const LAST_CONNECTED_WALLET_STORAGE_KEY = "lastConnectedWallet";
-export let coordinatorStorage: AsyncStorage;
+let coordinatorStorage: AsyncStorage;
 
 type NonNullable<T> = T extends null | undefined ? never : T;
 type WalletConnectParams<I extends WalletInstance> = Parameters<
