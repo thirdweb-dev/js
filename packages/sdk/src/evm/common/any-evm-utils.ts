@@ -437,6 +437,7 @@ export async function deployContractDeterministic(
   encodedArgs: BytesLike,
   create2FactoryAddress: string,
   predictedAddress?: string,
+  gasLimit: number = 7000000,
 ) {
   // Check if the implementation contract is already deployed
   const code = predictedAddress
@@ -456,7 +457,7 @@ export async function deployContractDeterministic(
       await signer.estimateGas(tx);
     } catch (e) {
       console.log("error estimating gas while deploying prebuilt: ", e);
-      tx.gasLimit = BigNumber.from(7000000);
+      tx.gasLimit = BigNumber.from(gasLimit);
     }
 
     await (await signer.sendTransaction(tx)).wait();
