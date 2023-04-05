@@ -67,7 +67,6 @@ import {
   Contract,
   ContractInterface,
   ethers,
-  Signer,
 } from "ethers";
 import { EventEmitter } from "eventemitter3";
 import invariant from "tiny-invariant";
