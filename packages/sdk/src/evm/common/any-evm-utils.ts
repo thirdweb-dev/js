@@ -114,7 +114,6 @@ export async function isEIP155Enforced(
       "0xf8a58085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffafffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf31ba02222222222222222222222222222222222222222222222222222222222222222a02222222222222222222222222222222222222222222222222222222222222222",
     );
   } catch (e: any) {
-    console.log("error checking eip155: ", e);
     if (
       e.toString().toLowerCase().includes("eip-155") ||
       e.message?.toString().toLowerCase().includes("eip-155") ||
@@ -383,12 +382,12 @@ export async function deployCreate2Factory(signer: Signer): Promise<string> {
   }
 
   const enforceEip155 = await isEIP155Enforced(signer.provider);
-  console.log("is eip155 enforced: ", enforceEip155);
   const chainId = enforceEip155
     ? (await signer.provider.getNetwork()).chainId
     : 0;
+  console.debug(`ChainId ${chainId} enforces EIP155: ${enforceEip155}`);
   const deploymentInfo = getCreate2FactoryDeploymentInfo(chainId);
-  console.log("deployment info: ", deploymentInfo);
+
   const factoryExists = await isContractDeployed(
     deploymentInfo.deployment,
     signer.provider,
@@ -410,7 +409,7 @@ export async function deployCreate2Factory(signer: Signer): Promise<string> {
 
     // deploy
     try {
-      console.log("deploying create-2 factory");
+      console.debug("deploying create-2 factory");
       await signer.provider.sendTransaction(deploymentInfo.transaction);
     } catch (err) {
       throw new Error(`Couldn't deploy CREATE2 factory: ${err}`);
@@ -451,12 +450,11 @@ export async function deployContractDeterministic(
       to: create2FactoryAddress,
       data: initBytecodeWithSalt,
     };
-    console.log("populated txn is: ", tx);
 
     try {
       await signer.estimateGas(tx);
     } catch (e) {
-      console.log("error estimating gas while deploying prebuilt: ", e);
+      console.debug("error estimating gas while deploying prebuilt: ", e);
       tx.gasLimit = BigNumber.from(gasLimit);
     }
 
@@ -590,7 +588,9 @@ export async function deployInfraWithSigner(
 
   // Call/deploy the throaway-deployer only if there are any contracts to deploy
   if (txns.length > 0) {
-    txns.forEach((tx) => console.log("deploying at: ", tx.predictedAddress));
+    txns.forEach((tx) =>
+      console.debug("deploying infra contract at: ", tx.predictedAddress),
+    );
     // Using the deployer contract, send the deploy transactions to common factory with a signer
     const deployer = new ethers.ContractFactory(DEPLOYER_ABI, DEPLOYER_BYTECODE)
       .connect(signer)

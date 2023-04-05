@@ -4,33 +4,40 @@ import { signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect, assert } from "chai";
 
-describe("Tiered Drop Contract", async () => {
+describe("Any EVM Keyless Deploy", async () => {
   let contract: SmartContract;
   let sdk: ThirdwebSDK;
   let adminWallet: SignerWithAddress;
   let claimerWallet: SignerWithAddress;
 
   async function deployTieredDrop() {
+    const mockPublisher = process.env.contractPublisherAddress;
+    process.env.contractPublisherAddress =
+      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+    const walletAddress = await sdk.wallet.getAddress();
+
     // This needs to match the published contract for the currently used ABI
     const publishUri =
       "ipfs://QmXu9ezFNgXBX1juLZ7kwdf5KpTD1x9GPHnk14QB2NpUvK/0";
-    const address = await sdk.deployer.deployContractFromUri(publishUri, [], {
-      forceDirectDeploy: true,
-    });
+    const address = await sdk.deployer.deployContractFromUri(
+      publishUri,
+      [
+        walletAddress, // defaultAdmin
+        "Tiered Drop #1", // name
+        "TD", // symbol
+        "ipfs://QmUj5kNz7Xe5AEhV2YvHiCKfMSL5YZpD4E18QLLYEsGBcd/0", // contractUri
+        [], // trustedForwarders
+        walletAddress, // saleRecipient
+        walletAddress, // royaltyRecipient
+        0, // royaltyBps
+      ],
+      {
+        forceDirectDeploy: false,
+      },
+    );
 
+    process.env.contractPublisherAddress = mockPublisher;
     const tieredDrop = await sdk.getContract(address);
-
-    const walletAddress = await sdk.wallet.getAddress();
-    await tieredDrop.call("initialize", [
-      walletAddress, // defaultAdmin
-      "Tiered Drop #1", // name
-      "TD", // symbol
-      "ipfs://QmUj5kNz7Xe5AEhV2YvHiCKfMSL5YZpD4E18QLLYEsGBcd/0", // contractUri
-      [], // trustedForwarders
-      walletAddress, // saleRecipient
-      walletAddress, // royaltyRecipient
-      0, // royaltyBps
-    ]);
 
     return tieredDrop;
   }

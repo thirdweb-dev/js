@@ -93,7 +93,6 @@ export class ContractDeployer extends RPCConnectionHandler {
   private storage: ThirdwebStorage;
   private events: EventEmitter<DeployEvents>;
   private deployMetadataCache: Record<string, any> = {};
-  private infraContractURICache: Record<string, string> = {};
 
   private transactionListener = (event: any) => {
     if (event.status === "submitted") {
@@ -826,13 +825,11 @@ export class ContractDeployer extends RPCConnectionHandler {
           // any evm deployment flow -- with signer
 
           // 1. Deploy CREATE2 factory (if not already exists)
-          console.log("deploying create2 factory");
           const create2Factory = await deployCreate2Factory(
             this.getSigner() as Signer,
           );
 
           // 2. get deployment info for any evm
-          console.log("getting deployment info");
           const deploymentInfo = await getDeploymentInfo(
             publishMetadataUri,
             this.storage,
@@ -842,7 +839,6 @@ export class ContractDeployer extends RPCConnectionHandler {
 
           implementationAddress = deploymentInfo.predictedAddress;
 
-          console.log("deploying infra");
           // 3. deploy infra
           await deployInfraWithSigner(
             this.getSigner() as Signer,
@@ -852,10 +848,6 @@ export class ContractDeployer extends RPCConnectionHandler {
             deploymentInfo.infraContractsToDeploy,
           );
 
-          console.log(
-            "deploying implementation at address: ",
-            deploymentInfo.predictedAddress,
-          );
           // 4. deploy implementation contract
           await deployContractDeterministic(
             this.getSigner() as Signer,
@@ -869,7 +861,6 @@ export class ContractDeployer extends RPCConnectionHandler {
             implementationAddress,
           );
 
-          console.log("deploying proxy");
           // 5. deploy proxy with TWStatelessFactory (Clone factory) and return address
           const cloneFactory = await computeCloneFactoryAddress(
             this.getProvider(),
