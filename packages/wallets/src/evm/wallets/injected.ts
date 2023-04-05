@@ -11,10 +11,10 @@ export class InjectedWallet extends AbstractClientWallet {
     return "Injected Wallet";
   }
 
-  constructor(options?: WalletOptions<{ connectorStorage?: AsyncStorage }>) {
+  constructor(options?: WalletOptions) {
     super(InjectedWallet.id, options);
     this.connectorStorage =
-      options?.connectorStorage || createAsyncLocalStorage("connector");
+      options?.walletStorage || createAsyncLocalStorage("connector");
   }
 
   protected async getConnector(): Promise<TWConnector> {

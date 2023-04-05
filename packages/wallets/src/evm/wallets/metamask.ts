@@ -1,14 +1,9 @@
-import { AsyncStorage } from "../../core/AsyncStorage";
 import type { WalletConnectV1Connector as WalletConnectV1ConnectorType } from "../connectors/wallet-connect-v1";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { assertWindowEthereum } from "../utils/assertWindowEthereum";
 import { AbstractClientWallet, WalletOptions } from "./base";
 
 type MetamaskAdditionalOptions = {
-  /**
-   * Storage interface to store whether metamask is connected or disconnected.
-   */
-  connectorStorage?: AsyncStorage;
   /**
    * Whether to display the Wallet Connect QR code Modal for connecting to MetaMask on mobile if MetaMask is not injected.
    */
