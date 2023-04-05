@@ -11,7 +11,7 @@ export const CREATE_MESSAGES = {
 } as const;
 
 export const GENERATE_MESSAGES = {
-  deployerAddress: "What is your deployer wallet address?",
+  chains: "What chains are you using in your project?",
 };
 
 export const ERROR_MESSAGES = {
