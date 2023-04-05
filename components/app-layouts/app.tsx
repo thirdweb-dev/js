@@ -3,7 +3,7 @@ import {
   DashboardThirdwebProviderProps,
 } from "./providers";
 import { EVMContractInfoProvider } from "@3rdweb-sdk/react";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useWallet as useSolanaWallet } from "@solana/wallet-adapter-react";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { DehydratedState, Hydrate, QueryClient } from "@tanstack/react-query";
 import {
@@ -15,6 +15,7 @@ import {
   useAddress,
   useBalance,
   useChainId,
+  useWallet,
 } from "@thirdweb-dev/react";
 import { useSDK } from "@thirdweb-dev/react/solana";
 import { DeployModalProvider } from "components/contract-components/contract-deploy-form/deploy-context-modal";
@@ -139,12 +140,30 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
   );
 };
 
+const walletIdToPHName: Record<string, string> = {
+  metamask: "metamask",
+  walletConnectV1: "WalletConnect",
+  walletConnectV2: "WalletConnect",
+  "paper-wallet": "Paper Wallet",
+  coinbaseWallet: "Coinbase Wallet",
+  injected: "Injected",
+};
+
 const PHIdentifier: React.FC = () => {
-  const publicKey = useWallet().publicKey;
+  const publicKey = useSolanaWallet().publicKey;
   const address = useAddress();
   const chainId = useChainId();
   const balance = useBalance();
   const solSDKNetwork = useSDK()?.network;
+  const wallet = useWallet();
+
+  useEffect(() => {
+    if (wallet) {
+      const connector = walletIdToPHName[wallet.walletId] || wallet.walletId;
+      posthog.register({ connector });
+      posthog.capture("wallet_connected", { connector });
+    }
+  }, [wallet]);
 
   useEffect(() => {
     if (address) {
