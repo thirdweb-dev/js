@@ -111,11 +111,18 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
             ?.latestPublishedContractMetadata?.publishedMetadata
             ?.factoryDeploymentData || {
             factoryAddresses: Object.fromEntries(
-              configuredChainsIds.map((id) => [
-                id,
-                CONTRACT_ADDRESSES[id as keyof typeof CONTRACT_ADDRESSES]
-                  .twFactory,
-              ]),
+              configuredChainsIds
+                .map((id) =>
+                  id in CONTRACT_ADDRESSES
+                    ? [
+                        id,
+                        CONTRACT_ADDRESSES[
+                          id as keyof typeof CONTRACT_ADDRESSES
+                        ].twFactory,
+                      ]
+                    : null,
+                )
+                .filter(Boolean) as [number, string][],
             ),
             implementationAddresses: Object.fromEntries(
               configuredChainsIds.map((id) => [id, ""]),
