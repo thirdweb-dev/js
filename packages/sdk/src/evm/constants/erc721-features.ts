@@ -54,7 +54,7 @@ export const FEATURE_NFT_CLAIM_CONDITIONS_V1 = {
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
-    contracts: "erc721claimconditions",
+    contracts: "IDropSinglePhase_V1",
   },
   abis: [Erc721Abi, IDropSinglePhaseV1],
   features: {},
@@ -65,7 +65,7 @@ export const FEATURE_NFT_CLAIM_CONDITIONS_V2 = {
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
-    contracts: "erc721claimconditions",
+    contracts: "IDropSinglePhase",
   },
   abis: [Erc721Abi, IDropSinglePhase],
   features: {},
@@ -76,7 +76,7 @@ export const FEATURE_NFT_CLAIM_PHASES_V1 = {
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
-    contracts: "erc721claimphases",
+    contracts: "DropERC721_V3",
   },
   abis: [DropERC721_V3Abi],
   features: {},
@@ -87,7 +87,7 @@ export const FEATURE_NFT_CLAIM_PHASES_V2 = {
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
-    contracts: "erc721claimphases",
+    contracts: "IDrop",
   },
   abis: [Erc721Abi, IDrop],
   features: {},
@@ -98,7 +98,7 @@ export const FEATURE_NFT_CLAIM_CUSTOM = {
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
-    contracts: "erc721claimcustom",
+    contracts: "IClaimableERC721",
   },
   abis: [Erc721Abi, IClaimableERC721],
   features: {},
@@ -109,16 +109,11 @@ export const FEATURE_NFT_LAZY_MINTABLE = {
   namespace: "nft.drop",
   docLinks: {
     sdk: "sdk.erc721lazymintable",
-    contracts: "lazymint",
+    contracts: "ILazyMint",
   },
   abis: [Erc721Abi, ILazyMintAbi],
   features: {
     [FEATURE_NFT_REVEALABLE.name]: FEATURE_NFT_REVEALABLE,
-    [FEATURE_NFT_CLAIM_CUSTOM.name]: FEATURE_NFT_CLAIM_CUSTOM,
-    [FEATURE_NFT_CLAIM_CONDITIONS_V1.name]: FEATURE_NFT_CLAIM_CONDITIONS_V1,
-    [FEATURE_NFT_CLAIM_CONDITIONS_V2.name]: FEATURE_NFT_CLAIM_CONDITIONS_V2,
-    [FEATURE_NFT_CLAIM_PHASES_V1.name]: FEATURE_NFT_CLAIM_PHASES_V1,
-    [FEATURE_NFT_CLAIM_PHASES_V2.name]: FEATURE_NFT_CLAIM_PHASES_V2,
   },
 } as const;
 
@@ -208,5 +203,10 @@ export const FEATURE_NFT = {
     [FEATURE_NFT_SIGNATURE_MINTABLE_V1.name]: FEATURE_NFT_SIGNATURE_MINTABLE_V1,
     [FEATURE_NFT_SIGNATURE_MINTABLE_V2.name]: FEATURE_NFT_SIGNATURE_MINTABLE_V2,
     [FEATURE_NFT_TIERED_DROP.name]: FEATURE_NFT_TIERED_DROP,
+    [FEATURE_NFT_CLAIM_CUSTOM.name]: FEATURE_NFT_CLAIM_CUSTOM,
+    [FEATURE_NFT_CLAIM_CONDITIONS_V1.name]: FEATURE_NFT_CLAIM_CONDITIONS_V1,
+    [FEATURE_NFT_CLAIM_CONDITIONS_V2.name]: FEATURE_NFT_CLAIM_CONDITIONS_V2,
+    [FEATURE_NFT_CLAIM_PHASES_V1.name]: FEATURE_NFT_CLAIM_PHASES_V1,
+    [FEATURE_NFT_CLAIM_PHASES_V2.name]: FEATURE_NFT_CLAIM_PHASES_V2,
   },
 } as const;

@@ -5,10 +5,10 @@ export default {
   "shortName": "Camelark",
   "chain": "ETHW",
   "icon": {
-    "url": "ipfs://QmbXDcCWHh8jExE1tAUkUKzXyTb8srpC75ogZq1QYkMMRW",
+    "url": "ipfs://QmeJerrsURFNt2LL7DE7TxeunjrQXiuezdfHyqmsbwX3MZ",
     "width": 128,
     "height": 128,
-    "format": "svg"
+    "format": "png"
   },
   "networkId": 20001,
   "nativeCurrency": {
