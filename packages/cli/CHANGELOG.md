@@ -1,5 +1,15 @@
 # thirdweb
 
+## 0.10.9
+
+### Patch Changes
+
+- [#867](https://github.com/thirdweb-dev/js/pull/867) [`3bb846ad`](https://github.com/thirdweb-dev/js/commit/3bb846adf0484e8b7dc7dfeba9f9c0ee26f4ef35) Thanks [@adam-maj](https://github.com/adam-maj)! - Generate auto detects smart contracts in project
+
+- Updated dependencies [[`1547d76c`](https://github.com/thirdweb-dev/js/commit/1547d76cce52265076c347599014f578c1de6152), [`1b8f812f`](https://github.com/thirdweb-dev/js/commit/1b8f812fb8c910d91fb7535d6446a0b6fc6b2310), [`235eb046`](https://github.com/thirdweb-dev/js/commit/235eb0460ae0638f63acf82957bcfea41b9e955d)]:
+  - @thirdweb-dev/sdk@3.10.8
+  - @thirdweb-dev/chains@0.1.11
+
 ## 0.10.8
 
 ### Patch Changes

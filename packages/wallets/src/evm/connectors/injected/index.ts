@@ -79,8 +79,8 @@ export class InjectedConnector extends Connector<
       shimDisconnect: true,
       shimChainChangedDisconnect: true,
       getProvider: () => {
-        if (assertWindowEthereum(window)) {
-          return window.ethereum;
+        if (assertWindowEthereum(globalThis.window)) {
+          return globalThis.window.ethereum;
         }
       },
     };

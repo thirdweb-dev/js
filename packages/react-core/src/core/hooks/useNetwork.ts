@@ -61,12 +61,12 @@ export function useNetwork(): [NetworkMetadata, SwitchNetwork | undefined] {
   const supportedChains = useSupportedChains();
   const wallet = useWallet();
 
-  const isMetamaskInstalled = assertWindowEthereum(window)
-    ? window.ethereum.isMetaMask
+  const isMetamaskInstalled = assertWindowEthereum(globalThis.window)
+    ? globalThis.window.ethereum.isMetaMask
     : false;
 
-  const isCoinbaseInstalled = assertWindowEthereum(window)
-    ? window.ethereum.isCoinbaseWallet
+  const isCoinbaseInstalled = assertWindowEthereum(globalThis.window)
+    ? globalThis.window.ethereum.isCoinbaseWallet
     : false;
 
   // switch not supported if connected to a mobile wallet
