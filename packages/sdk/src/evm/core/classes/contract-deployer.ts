@@ -521,6 +521,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         parsedMetadata,
         contractURI,
         signer,
+        this.storage,
       );
 
       // fetch the publish URI from the ContractPublisher contract

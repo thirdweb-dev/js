@@ -39,17 +39,13 @@ export async function getDeployArguments<
   metadata: z.input<DeploySchemaForPrebuiltContractType<TContractType>>,
   contractURI: string,
   signer: Signer,
+  storage: ThirdwebStorage,
 ): Promise<any[]> {
   const chainId = await signer.getChainId();
   const signerAddress = await signer.getAddress();
   const chainEnum = SUPPORTED_CHAIN_IDS.find((c) => c === chainId);
   let trustedForwarders;
-  if (
-    !chainEnum ||
-    chainEnum === ChainId.Hardhat ||
-    chainEnum === ChainId.Localhost
-  ) {
-    const storage = new ThirdwebStorage();
+  if (!chainEnum) {
     const forwarder = await computeForwarderAddress(
       signer.provider as providers.Provider,
       storage,
