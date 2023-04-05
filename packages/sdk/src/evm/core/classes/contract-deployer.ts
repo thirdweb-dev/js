@@ -4,17 +4,20 @@ import {
   fetchExtendedReleaseMetadata,
   fetchPreDeployMetadata,
 } from "../../common";
+import {
+  computeCloneFactoryAddress,
+  deployContractDeterministic,
+  deployInfraWithSigner,
+  getDeploymentInfo,
+} from "../../common/any-evm-utils";
+import { deployCreate2Factory } from "../../common/any-evm-utils";
 import { getDeployArguments } from "../../common/deploy";
 import { resolveAddress } from "../../common/ens";
 import {
   buildDeployTransactionFunction,
   buildTransactionFunction,
 } from "../../common/transactions";
-import {
-  EventType,
-  getContractAddressByChainId,
-  getNativeTokenByChainId,
-} from "../../constants";
+import { EventType, getContractAddressByChainId } from "../../constants";
 import {
   EditionDropInitializer,
   EditionInitializer,
@@ -49,7 +52,6 @@ import {
 } from "../../types";
 import { ThirdwebSDK } from "../sdk";
 import {
-  ContractType,
   DeploySchemaForPrebuiltContractType,
   NetworkInput,
   PrebuiltContractType,
@@ -90,6 +92,7 @@ export class ContractDeployer extends RPCConnectionHandler {
   private storage: ThirdwebStorage;
   private events: EventEmitter<DeployEvents>;
   private deployMetadataCache: Record<string, any> = {};
+
   private transactionListener = (event: any) => {
     if (event.status === "submitted") {
       this.events.emit("contractDeployed", {
@@ -516,52 +519,20 @@ export class ContractDeployer extends RPCConnectionHandler {
         parsedMetadata,
         contractURI,
         signer,
+        this.storage,
       );
 
-      const activeChainId = (await this.getProvider().getNetwork()).chainId;
       // fetch the publish URI from the ContractPublisher contract
       const publishedContract = await this.fetchPublishedContractFromPolygon(
         THIRDWEB_DEPLOYER,
         contractName,
         version,
       );
-      // fetch the deploy metadata from the publish URI
-      const deployMeta = await this.fetchAndCacheDeployMetadata(
-        publishedContract.metadataUri,
-      );
-      let implementationAddress = deployMeta.extendedMetadata
-        ?.factoryDeploymentData?.implementationAddresses?.[
-        activeChainId
-      ] as AddressOrEns;
 
-      if (implementationAddress) {
-        // implementation exists on the current chain, continue with normal flow
-        return this.deployContractFromUri.prepare(
-          publishedContract.metadataUri,
-          constructorParams,
-        );
-      } else {
-        // implementation does NOT exist on chain, deploy the implementation first, then deploy a proxy
-        implementationAddress = await this.deployContractFromUri(
-          publishedContract.metadataUri,
-          this.getConstructorParamsForImplementation(
-            contractType,
-            activeChainId,
-          ),
-          {
-            forceDirectDeploy: true,
-          },
-        );
-        const resolvedImplementationAddress = await resolveAddress(
-          implementationAddress,
-        );
-        return this.deployProxy.prepare(
-          resolvedImplementationAddress,
-          deployMeta.compilerMetadata.abi,
-          "initialize",
-          constructorParams,
-        );
-      }
+      return this.deployContractFromUri.prepare(
+        publishedContract.metadataUri,
+        constructorParams,
+      );
     },
   );
 
@@ -788,22 +759,8 @@ export class ContractDeployer extends RPCConnectionHandler {
           extendedMetadata.isDeployableViaFactory) &&
         !forceDirectDeploy
       ) {
-        console.log("Deploying directly...");
         const chainId = (await this.getProvider().getNetwork()).chainId;
-        invariant(
-          extendedMetadata.factoryDeploymentData.implementationAddresses,
-          "implementationAddresses is required",
-        );
-        const implementationAddress = extendedMetadata.factoryDeploymentData
-          .implementationAddresses[chainId] as AddressOrEns;
-        const resolvedImplementationAddress = await resolveAddress(
-          implementationAddress,
-        );
 
-        invariant(
-          resolvedImplementationAddress,
-          `implementationAddress not found for chainId '${chainId}'`,
-        );
         invariant(
           extendedMetadata.factoryDeploymentData
             .implementationInitializerFunction,
@@ -819,36 +776,102 @@ export class ContractDeployer extends RPCConnectionHandler {
           constructorParamValues,
         );
 
-        if (extendedMetadata.isDeployableViaFactory) {
-          // deploy via a factory (prioritise factory)
-          invariant(
-            extendedMetadata.factoryDeploymentData.factoryAddresses,
-            "isDeployableViaFactory is true so factoryAddresses is required",
+        let implementationAddress = extendedMetadata.factoryDeploymentData
+          .implementationAddresses[chainId] as AddressOrEns;
+
+        if (implementationAddress) {
+          const resolvedImplementationAddress = await resolveAddress(
+            implementationAddress,
           );
-          const factoryAddress = extendedMetadata.factoryDeploymentData
-            .factoryAddresses[chainId] as AddressOrEns;
+
           invariant(
-            factoryAddress,
-            `isDeployableViaFactory is true and factoryAddress not found for chainId '${chainId}'`,
+            resolvedImplementationAddress,
+            `implementationAddress not found for chainId '${chainId}'`,
           );
-          const resolvedFactoryAddress = await resolveAddress(factoryAddress);
+
+          if (extendedMetadata.isDeployableViaFactory) {
+            // deploy via a factory (prioritise factory)
+            invariant(
+              extendedMetadata.factoryDeploymentData.factoryAddresses,
+              "isDeployableViaFactory is true so factoryAddresses is required",
+            );
+            const factoryAddress = extendedMetadata.factoryDeploymentData
+              .factoryAddresses[chainId] as AddressOrEns;
+            invariant(
+              factoryAddress,
+              `isDeployableViaFactory is true and factoryAddress not found for chainId '${chainId}'`,
+            );
+            const resolvedFactoryAddress = await resolveAddress(factoryAddress);
+            return (await this.deployViaFactory.prepare(
+              resolvedFactoryAddress,
+              resolvedImplementationAddress,
+              compilerMetadata.abi,
+              extendedMetadata.factoryDeploymentData
+                .implementationInitializerFunction,
+              paramValues,
+            )) as unknown as DeployTransaction;
+          } else if (extendedMetadata.isDeployableViaProxy) {
+            // deploy a proxy directly
+            return await this.deployProxy.prepare(
+              resolvedImplementationAddress,
+              compilerMetadata.abi,
+              extendedMetadata.factoryDeploymentData
+                .implementationInitializerFunction,
+              paramValues,
+            );
+          }
+        } else {
+          // any evm deployment flow -- with signer
+
+          // 1. Deploy CREATE2 factory (if not already exists)
+          const create2Factory = await deployCreate2Factory(signer);
+
+          // 2. get deployment info for any evm
+          const deploymentInfo = await getDeploymentInfo(
+            publishMetadataUri,
+            this.storage,
+            this.getProvider(),
+            create2Factory,
+          );
+
+          implementationAddress = deploymentInfo.predictedAddress;
+
+          // 3. deploy infra
+          await deployInfraWithSigner(
+            signer,
+            this.getProvider(),
+            this.storage,
+            create2Factory,
+            deploymentInfo.infraContractsToDeploy,
+          );
+
+          // 4. deploy implementation contract
+          await deployContractDeterministic(
+            signer,
+            deploymentInfo.bytecode,
+            deploymentInfo.encodedArgs,
+            create2Factory,
+            deploymentInfo.predictedAddress,
+          );
+
+          const resolvedImplementationAddress = await resolveAddress(
+            implementationAddress,
+          );
+
+          // 5. deploy proxy with TWStatelessFactory (Clone factory) and return address
+          const cloneFactory = await computeCloneFactoryAddress(
+            this.getProvider(),
+            this.storage,
+            create2Factory,
+          );
           return (await this.deployViaFactory.prepare(
-            resolvedFactoryAddress,
+            cloneFactory,
             resolvedImplementationAddress,
             compilerMetadata.abi,
             extendedMetadata.factoryDeploymentData
               .implementationInitializerFunction,
             paramValues,
           )) as unknown as DeployTransaction;
-        } else if (extendedMetadata.isDeployableViaProxy) {
-          // deploy a proxy directly
-          return await this.deployProxy.prepare(
-            resolvedImplementationAddress,
-            compilerMetadata.abi,
-            extendedMetadata.factoryDeploymentData
-              .implementationInitializerFunction,
-            paramValues,
-          );
         }
       }
 
@@ -968,27 +991,6 @@ export class ContractDeployer extends RPCConnectionHandler {
       );
     }
     return publishedContract;
-  }
-
-  private getConstructorParamsForImplementation(
-    contractType: ContractType,
-    chainId: number,
-  ) {
-    switch (contractType) {
-      case MarketplaceInitializer.contractType:
-      case MultiwrapInitializer.contractType:
-        const nativeTokenWrapperAddress =
-          getNativeTokenByChainId(chainId)?.wrapped?.address ||
-          ethers.constants.AddressZero;
-        return [nativeTokenWrapperAddress];
-      case PackInitializer.contractType:
-        const addr =
-          getNativeTokenByChainId(chainId).wrapped.address ||
-          ethers.constants.AddressZero;
-        return [addr, ethers.constants.AddressZero];
-      default:
-        return [];
-    }
   }
 
   private hasLocalFactory() {
