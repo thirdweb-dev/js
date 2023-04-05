@@ -1,5 +1,13 @@
 # @thirdweb-dev/sdk
 
+## 3.10.9
+
+### Patch Changes
+
+- [#864](https://github.com/thirdweb-dev/js/pull/864) [`b3d57949`](https://github.com/thirdweb-dev/js/commit/b3d57949bd047831fda7e600b4872200340903b5) Thanks [@ciaranightingale](https://github.com/ciaranightingale)! - Remove necessity for LazyMint to detect any of the claim extensions
+
+- [#869](https://github.com/thirdweb-dev/js/pull/869) [`602d8cbc`](https://github.com/thirdweb-dev/js/commit/602d8cbcfaa7c1e117c01f842f89508f7333fcfe) Thanks [@adam-maj](https://github.com/adam-maj)! - Add .prepare() syntax to tiered-drop
+
 ## 3.10.8
 
 ### Patch Changes
