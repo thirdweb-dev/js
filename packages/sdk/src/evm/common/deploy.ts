@@ -20,7 +20,7 @@ import {
 } from "../core";
 import { BigNumber, providers, Signer } from "ethers";
 import { z } from "zod";
-import { ChainId, SUPPORTED_CHAIN_IDS } from "../constants";
+import { SUPPORTED_CHAIN_IDS } from "../constants";
 import { computeForwarderAddress } from "./any-evm-utils";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 

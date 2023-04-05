@@ -1,5 +1,5 @@
 import invariant from "tiny-invariant";
-import { ethers, providers, Signer } from "ethers";
+import { BigNumber, ethers, providers, Signer } from "ethers";
 import { bytecode as WETHBytecode } from "./WETH9";
 import {
   DeploymentInfo,
@@ -441,15 +441,19 @@ export async function deployContractDeterministic(
 
   if (code === "0x") {
     const initBytecodeWithSalt = getInitBytecodeWithSalt(bytecode, encodedArgs);
-    const from = await signer.getAddress();
-    const nonce = await signer.getTransactionCount("latest");
-    const tx = {
-      from: from,
+
+    let tx: ethers.PopulatedTransaction = {
       to: create2FactoryAddress,
-      value: 0,
-      nonce: nonce,
       data: initBytecodeWithSalt,
     };
+    console.log("populated txn is: ", tx);
+
+    try {
+      await signer.estimateGas(tx);
+    } catch (e) {
+      console.log("error estimating gas while deploying prebuilt: ", e);
+      tx.gasLimit = BigNumber.from(7000000);
+    }
 
     await (await signer.sendTransaction(tx)).wait();
   }
