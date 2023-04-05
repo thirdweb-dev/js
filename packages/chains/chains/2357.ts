@@ -17,10 +17,22 @@ export default {
   ],
   "faucets": [],
   "infoURL": "https://wemixkanvas.io",
+  "icon": {
+    "url": "ipfs://QmVcVxsHsVg5BMii3EJ1MUSnLBZkQicpjmXjSmW66bCEUF",
+    "width": 320,
+    "height": 320,
+    "format": "svg"
+  },
   "explorers": [
     {
       "name": "blockscout",
       "url": "https://blockscout.aqua.wemixkanvas.io",
+      "icon": {
+        "url": "ipfs://QmVcVxsHsVg5BMii3EJ1MUSnLBZkQicpjmXjSmW66bCEUF",
+        "width": 320,
+        "height": 320,
+        "format": "svg"
+      },
       "standard": "EIP3091"
     }
   ],
