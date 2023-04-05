@@ -1,5 +1,14 @@
 # @thirdweb-dev/wallets
 
+## 0.2.14
+
+### Patch Changes
+
+- [#870](https://github.com/thirdweb-dev/js/pull/870) [`235eb046`](https://github.com/thirdweb-dev/js/commit/235eb0460ae0638f63acf82957bcfea41b9e955d) Thanks [@jnsdls](https://github.com/jnsdls)! - fix crash during SSR when "window" is undefined
+
+- Updated dependencies [[`235eb046`](https://github.com/thirdweb-dev/js/commit/235eb0460ae0638f63acf82957bcfea41b9e955d)]:
+  - @thirdweb-dev/chains@0.1.11
+
 ## 0.2.13
 
 ### Patch Changes
