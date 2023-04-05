@@ -135,7 +135,7 @@ export async function isEIP155Enforced(
  * @internal
  * @param provider
  */
-export async function getCreate2Factory(
+export async function getCreate2FactoryAddress(
   provider: providers.Provider,
 ): Promise<string> {
   const commonFactoryExists = await isContractDeployed(
@@ -247,7 +247,7 @@ export async function computeEOAForwarderAddress(
   create2Factory?: string,
 ): Promise<string> {
   if (!create2Factory) {
-    create2Factory = await getCreate2Factory(provider);
+    create2Factory = await getCreate2FactoryAddress(provider);
   }
   return await computeAddressInfra(
     EOAForwarder.contractType,
@@ -270,7 +270,7 @@ export async function computeForwarderAddress(
   create2Factory?: string,
 ): Promise<string> {
   if (!create2Factory) {
-    create2Factory = await getCreate2Factory(provider);
+    create2Factory = await getCreate2FactoryAddress(provider);
   }
   return await computeAddressInfra(
     Forwarder.contractType,
@@ -293,7 +293,7 @@ export async function computeCloneFactoryAddress(
   create2Factory?: string,
 ): Promise<string> {
   if (!create2Factory) {
-    create2Factory = await getCreate2Factory(provider);
+    create2Factory = await getCreate2FactoryAddress(provider);
   }
   return await computeAddressInfra(
     CloneFactory.contractType,
@@ -316,7 +316,7 @@ export async function computeNativeTokenAddress(
   create2Factory?: string,
 ): Promise<string> {
   if (!create2Factory) {
-    create2Factory = await getCreate2Factory(provider);
+    create2Factory = await getCreate2FactoryAddress(provider);
   }
   return await computeAddressInfra(
     NativeTokenWrapper.contractType,
@@ -484,7 +484,7 @@ export async function getDeploymentInfo(
 ): Promise<DeploymentInfo> {
   const compilerMetadata = await fetchPreDeployMetadata(metadataUri, storage);
   if (!create2Factory) {
-    create2Factory = await getCreate2Factory(provider);
+    create2Factory = await getCreate2FactoryAddress(provider);
   }
 
   // 1.  Get abi-encoded args and list of infra contracts required based on constructor params
@@ -559,7 +559,9 @@ export async function deployInfraWithSigner(
       continue;
     }
 
-    const uri = await fetchURI(INFRA_CONTRACTS_MAP[contractType].name);
+    const uri = await fetchPublishedContractURI(
+      INFRA_CONTRACTS_MAP[contractType].name,
+    );
     const infraContractMetadata = await fetchPreDeployMetadata(uri, storage);
     const code = await provider.getCode(infraContractAddress);
 
@@ -634,7 +636,9 @@ export function getCreate2FactoryDeploymentInfo(
   };
 }
 
-async function fetchURI(contractName: string): Promise<string> {
+async function fetchPublishedContractURI(
+  contractName: string,
+): Promise<string> {
   // fetch the publish URI from the ContractPublisher contract
   const publishedContract = await new ThirdwebSDK("polygon")
     .getPublisher()
@@ -660,7 +664,7 @@ async function computeAddressInfra(
 
     return address;
   } else {
-    let uri = await fetchURI(contract.name);
+    let uri = await fetchPublishedContractURI(contract.name);
 
     const metadata = await fetchPreDeployMetadata(uri, storage);
     const encodedArgs = (
