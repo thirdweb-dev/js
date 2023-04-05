@@ -56,7 +56,7 @@ export const FEATURE_NFT_CLAIM_CONDITIONS_V1 = {
     sdk: "sdk.erc721claimable",
     contracts: "erc721claimconditions",
   },
-  abis: [Erc721Abi, ILazyMintAbi, IDropSinglePhaseV1],
+  abis: [Erc721Abi, IDropSinglePhaseV1],
   features: {},
 } as const;
 
@@ -67,7 +67,7 @@ export const FEATURE_NFT_CLAIM_CONDITIONS_V2 = {
     sdk: "sdk.erc721claimable",
     contracts: "erc721claimconditions",
   },
-  abis: [Erc721Abi, ILazyMintAbi, IDropSinglePhase],
+  abis: [Erc721Abi, IDropSinglePhase],
   features: {},
 } as const;
 
@@ -89,7 +89,7 @@ export const FEATURE_NFT_CLAIM_PHASES_V2 = {
     sdk: "sdk.erc721claimable",
     contracts: "erc721claimphases",
   },
-  abis: [Erc721Abi, ILazyMintAbi, IDrop],
+  abis: [Erc721Abi, IDrop],
   features: {},
 } as const;
 
@@ -100,7 +100,7 @@ export const FEATURE_NFT_CLAIM_CUSTOM = {
     sdk: "sdk.erc721claimable",
     contracts: "erc721claimcustom",
   },
-  abis: [Erc721Abi, ILazyMintAbi, IClaimableERC721],
+  abis: [Erc721Abi, IClaimableERC721],
   features: {},
 } as const;
 
@@ -114,11 +114,6 @@ export const FEATURE_NFT_LAZY_MINTABLE = {
   abis: [Erc721Abi, ILazyMintAbi],
   features: {
     [FEATURE_NFT_REVEALABLE.name]: FEATURE_NFT_REVEALABLE,
-    [FEATURE_NFT_CLAIM_CUSTOM.name]: FEATURE_NFT_CLAIM_CUSTOM,
-    [FEATURE_NFT_CLAIM_CONDITIONS_V1.name]: FEATURE_NFT_CLAIM_CONDITIONS_V1,
-    [FEATURE_NFT_CLAIM_CONDITIONS_V2.name]: FEATURE_NFT_CLAIM_CONDITIONS_V2,
-    [FEATURE_NFT_CLAIM_PHASES_V1.name]: FEATURE_NFT_CLAIM_PHASES_V1,
-    [FEATURE_NFT_CLAIM_PHASES_V2.name]: FEATURE_NFT_CLAIM_PHASES_V2,
   },
 } as const;
 
@@ -208,5 +203,10 @@ export const FEATURE_NFT = {
     [FEATURE_NFT_SIGNATURE_MINTABLE_V1.name]: FEATURE_NFT_SIGNATURE_MINTABLE_V1,
     [FEATURE_NFT_SIGNATURE_MINTABLE_V2.name]: FEATURE_NFT_SIGNATURE_MINTABLE_V2,
     [FEATURE_NFT_TIERED_DROP.name]: FEATURE_NFT_TIERED_DROP,
+    [FEATURE_NFT_CLAIM_CUSTOM.name]: FEATURE_NFT_CLAIM_CUSTOM,
+    [FEATURE_NFT_CLAIM_CONDITIONS_V1.name]: FEATURE_NFT_CLAIM_CONDITIONS_V1,
+    [FEATURE_NFT_CLAIM_CONDITIONS_V2.name]: FEATURE_NFT_CLAIM_CONDITIONS_V2,
+    [FEATURE_NFT_CLAIM_PHASES_V1.name]: FEATURE_NFT_CLAIM_PHASES_V1,
+    [FEATURE_NFT_CLAIM_PHASES_V2.name]: FEATURE_NFT_CLAIM_PHASES_V2,
   },
 } as const;
