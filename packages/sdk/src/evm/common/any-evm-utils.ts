@@ -22,6 +22,7 @@ import {
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { getNativeTokenByChainId } from "../constants";
 import { PreDeployMetadataFetched } from "../schema";
+import { toWei } from "./currency";
 
 //
 // =============================
@@ -398,12 +399,12 @@ export async function deployCreate2Factory(signer: Signer): Promise<string> {
     // send balance to the keyless signer
     if (
       (await signer.provider.getBalance(deploymentInfo.signer)).lt(
-        ethers.utils.parseEther("0.01"),
+        toWei("0.01"),
       )
     ) {
       await signer.sendTransaction({
         to: deploymentInfo.signer,
-        value: ethers.utils.parseEther("0.01"),
+        value: toWei("0.01"),
       });
     }
 
