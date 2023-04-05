@@ -20,7 +20,7 @@ export const FEATURE_NFT_BURNABLE = {
   namespace: "nft.burn",
   docLinks: {
     sdk: "sdk.erc721burnable",
-    contracts: "IBurnableERC721",
+    contracts: "erc721burnable",
   },
   abis: [Erc721Abi, IBurnableERC721Abi],
   features: {},
@@ -31,7 +31,7 @@ export const FEATURE_NFT_REVEALABLE = {
   namespace: "nft.drop.revealer",
   docLinks: {
     sdk: "sdk.delayedreveal",
-    contracts: "DelayedReveal",
+    contracts: "erc721revealable",
   },
   abis: [Erc721Abi, ILazyMintAbi, DelayedRevealAbi],
   features: {},
@@ -42,7 +42,8 @@ export const FEATURE_NFT_TIERED_DROP = {
   namespace: "nft.tieredDrop",
   docLinks: {
     sdk: "sdk.erc721tiereddrop",
-    contracts: "TieredDrop",
+    //TODO
+    contracts: "",
   },
   abis: [Erc721Abi, TieredDropAbi],
   features: {},
@@ -53,7 +54,7 @@ export const FEATURE_NFT_CLAIM_CONDITIONS_V1 = {
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
-    contracts: "DropSinglePhase_V1",
+    contracts: "erc721claimconditions",
   },
   abis: [Erc721Abi, IDropSinglePhaseV1],
   features: {},
@@ -64,7 +65,7 @@ export const FEATURE_NFT_CLAIM_CONDITIONS_V2 = {
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
-    contracts: "DropSinglePhase",
+    contracts: "erc721claimconditions",
   },
   abis: [Erc721Abi, IDropSinglePhase],
   features: {},
@@ -75,7 +76,7 @@ export const FEATURE_NFT_CLAIM_PHASES_V1 = {
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
-    contracts: "Drop",
+    contracts: "erc721claimphases",
   },
   abis: [DropERC721_V3Abi],
   features: {},
@@ -86,7 +87,7 @@ export const FEATURE_NFT_CLAIM_PHASES_V2 = {
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
-    contracts: "Drop",
+    contracts: "erc721claimphases",
   },
   abis: [Erc721Abi, IDrop],
   features: {},
@@ -97,7 +98,7 @@ export const FEATURE_NFT_CLAIM_CUSTOM = {
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
-    contracts: "IClaimableERC721",
+    contracts: "erc721claimcustom",
   },
   abis: [Erc721Abi, IClaimableERC721],
   features: {},
@@ -108,7 +109,7 @@ export const FEATURE_NFT_LAZY_MINTABLE = {
   namespace: "nft.drop",
   docLinks: {
     sdk: "sdk.erc721lazymintable",
-    contracts: "LazyMint",
+    contracts: "lazymint",
   },
   abis: [Erc721Abi, ILazyMintAbi],
   features: {
@@ -126,7 +127,7 @@ export const FEATURE_NFT_BATCH_MINTABLE = {
   namespace: "nft.mint.batch",
   docLinks: {
     sdk: "sdk.erc721batchmintable",
-    contracts: "IMulticall",
+    contracts: "erc721batchmintable",
   },
   abis: [Erc721Abi, IMintableERC721Abi, MulticallAbi],
   features: {},
@@ -137,7 +138,7 @@ export const FEATURE_NFT_MINTABLE = {
   namespace: "nft.mint",
   docLinks: {
     sdk: "sdk.erc721mintable",
-    contracts: "IMintableERC721",
+    contracts: "erc721mintable",
   },
   abis: [Erc721Abi, IMintableERC721Abi],
   features: {
@@ -150,7 +151,7 @@ export const FEATURE_NFT_SIGNATURE_MINTABLE_V2 = {
   namespace: "nft.signature",
   docLinks: {
     sdk: "sdk.erc721signaturemint",
-    contracts: "ISignatureMintERC721",
+    contracts: "erc721signaturemint",
   },
   abis: [Erc721Abi, SignatureMintERC721Abi],
   features: {},
@@ -161,7 +162,7 @@ export const FEATURE_NFT_SIGNATURE_MINTABLE_V1 = {
   namespace: "nft.signature",
   docLinks: {
     sdk: "sdk.erc721signaturemint",
-    contracts: "ISignatureMintERC721",
+    contracts: "erc721signaturemint",
   },
   abis: [SignatureMintERC721_V1Abi],
   features: {},
@@ -172,7 +173,7 @@ export const FEATURE_NFT_ENUMERABLE = {
   namespace: "nft.query.owned",
   docLinks: {
     sdk: "sdk.erc721enumerable",
-    contracts: "IERC721Enumerable",
+    contracts: "erc721enumerable",
   },
   abis: [Erc721Abi, Erc721EnumerableAbi],
   features: {},
@@ -183,7 +184,7 @@ export const FEATURE_NFT_SUPPLY = {
   namespace: "nft.query",
   docLinks: {
     sdk: "sdk.erc721supply",
-    contracts: "IERC721Supply",
+    contracts: "erc721supply",
   },
   abis: [Erc721Abi, Erc721SupplyAbi],
   features: {
@@ -196,7 +197,7 @@ export const FEATURE_NFT = {
   namespace: "nft",
   docLinks: {
     sdk: "sdk.erc721",
-    contracts: "IERC721",
+    contracts: "erc721",
   },
   abis: [Erc721Abi],
   features: {

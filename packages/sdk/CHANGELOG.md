@@ -1,5 +1,16 @@
 # @thirdweb-dev/sdk
 
+## 3.10.8
+
+### Patch Changes
+
+- [#861](https://github.com/thirdweb-dev/js/pull/861) [`1547d76c`](https://github.com/thirdweb-dev/js/commit/1547d76cce52265076c347599014f578c1de6152) Thanks [@adam-maj](https://github.com/adam-maj)! - Add option to pass timestamps for dates
+
+- [#863](https://github.com/thirdweb-dev/js/pull/863) [`1b8f812f`](https://github.com/thirdweb-dev/js/commit/1b8f812fb8c910d91fb7535d6446a0b6fc6b2310) Thanks [@ciaranightingale](https://github.com/ciaranightingale)! - Update Solidity SDK detected extension portal links
+
+- Updated dependencies [[`235eb046`](https://github.com/thirdweb-dev/js/commit/235eb0460ae0638f63acf82957bcfea41b9e955d)]:
+  - @thirdweb-dev/chains@0.1.11
+
 ## 3.10.7
 
 ### Patch Changes
