@@ -655,7 +655,7 @@ async function fetchPublishedContractURI(
   return publishedContract?.metadataUri;
 }
 
-async function computeAddressInfra(
+export async function computeAddressInfra(
   contractType: InfraContractType,
   provider: providers.Provider,
   storage: ThirdwebStorage,

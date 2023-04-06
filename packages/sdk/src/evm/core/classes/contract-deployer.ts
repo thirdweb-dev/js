@@ -5,10 +5,13 @@ import {
   fetchPreDeployMetadata,
 } from "../../common";
 import {
+  computeAddressInfra,
   computeCloneFactoryAddress,
   deployContractDeterministic,
   deployInfraWithSigner,
+  getCreate2FactoryAddress,
   getDeploymentInfo,
+  isContractDeployed,
 } from "../../common/any-evm-utils";
 import { deployCreate2Factory } from "../../common/any-evm-utils";
 import { getDeployArguments } from "../../common/deploy";
@@ -71,6 +74,7 @@ import {
 import { EventEmitter } from "eventemitter3";
 import invariant from "tiny-invariant";
 import { z } from "zod";
+import { DeploymentTransaction } from "../../types/any-evm/deploy-data";
 
 const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
 
@@ -923,6 +927,99 @@ export class ContractDeployer extends RPCConnectionHandler {
       });
     },
   );
+
+  /**
+   * @internal
+   * @param publishMetadataUri
+   * @param constructorParamValues
+   * @param options
+   */
+  async getTransactions(
+    publishMetadataUri: string,
+    options?: DeployOptions,
+  ): Promise<DeploymentTransaction[]> {
+    let transactions: DeploymentTransaction[] = [];
+    const provider = this.getProvider();
+    invariant(provider, "A provider is required");
+
+    const { extendedMetadata } = await this.fetchAndCacheDeployMetadata(
+      publishMetadataUri,
+    );
+    const forceDirectDeploy = options?.forceDirectDeploy || false;
+    if (
+      extendedMetadata &&
+      extendedMetadata.factoryDeploymentData &&
+      (extendedMetadata.isDeployableViaProxy ||
+        extendedMetadata.isDeployableViaFactory) &&
+      !forceDirectDeploy
+    ) {
+      const chainId = (await this.getProvider().getNetwork()).chainId;
+
+      let implementationAddress = extendedMetadata.factoryDeploymentData
+        .implementationAddresses[chainId] as AddressOrEns;
+
+      if (!implementationAddress) {
+        const create2FactoryAddress = await getCreate2FactoryAddress(
+          this.getProvider(),
+        );
+
+        transactions.push({
+          contractType: "create2Factory",
+          addresses: [create2FactoryAddress],
+        });
+
+        const deploymentInfo = await getDeploymentInfo(
+          publishMetadataUri,
+          this.storage,
+          this.getProvider(),
+          create2FactoryAddress,
+        );
+
+        implementationAddress = deploymentInfo.predictedAddress;
+        transactions.push({
+          contractType: "implementation",
+          addresses: [implementationAddress],
+        });
+
+        const infraAddresses = await Promise.all(
+          deploymentInfo.infraContractsToDeploy.map((contract) => {
+            return computeAddressInfra(
+              contract,
+              this.getProvider(),
+              this.storage,
+              create2FactoryAddress,
+            );
+          }),
+        );
+        transactions.push({
+          contractType: "infra",
+          addresses: [...infraAddresses],
+        });
+
+        transactions = await Promise.all(
+          transactions.filter(async (tx) => {
+            const addresses = await Promise.all(
+              tx.addresses.filter(async (address) => {
+                return !(await isContractDeployed(address, provider));
+              }),
+            );
+
+            return addresses.length > 0;
+          }),
+        );
+      }
+      transactions.push({
+        contractType: "proxy",
+        addresses: [],
+      });
+    } else {
+      transactions.push({
+        contractType: "custom",
+        addresses: [],
+      });
+    }
+    return transactions;
+  }
 
   /**
    * Listen to all deploy transactions from this deployer

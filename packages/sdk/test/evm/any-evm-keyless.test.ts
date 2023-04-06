@@ -19,6 +19,11 @@ describe("Any EVM Keyless Deploy", async () => {
     // This needs to match the published contract for the currently used ABI
     const publishUri =
       "ipfs://QmXu9ezFNgXBX1juLZ7kwdf5KpTD1x9GPHnk14QB2NpUvK/0";
+    console.log(
+      "transactions: ",
+      await sdk.deployer.getTransactions(publishUri),
+    );
+
     const address = await sdk.deployer.deployContractFromUri(
       publishUri,
       [
