@@ -50,6 +50,7 @@ export const ConnectedWalletDetails: React.FC<{
   dropdownPosition?: DropDownPosition;
   onDisconnect: () => void;
   theme: "dark" | "light";
+  style?: React.CSSProperties;
 }> = (props) => {
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
@@ -108,6 +109,7 @@ export const ConnectedWalletDetails: React.FC<{
       type="button"
       className={TW_CONNECTED_WALLET}
       data-theme={props.theme}
+      style={props.style}
     >
       <ChainIcon
         chain={chain}
