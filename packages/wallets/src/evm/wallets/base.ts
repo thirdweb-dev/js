@@ -17,7 +17,7 @@ export type WalletMeta = {
   iconURL: string;
 };
 
-export abstract class AbstractBrowserWallet<
+export abstract class AbstractClientWallet<
   TAdditionalOpts extends Record<string, any> = {},
   TConnectParams extends Record<string, any> = {},
 > extends AbstractWallet {
@@ -28,7 +28,7 @@ export abstract class AbstractBrowserWallet<
   protected options?: WalletOptions<TAdditionalOpts>;
   static meta: WalletMeta;
   getMeta() {
-    return (this.constructor as typeof AbstractBrowserWallet).meta;
+    return (this.constructor as typeof AbstractClientWallet).meta;
   }
 
   constructor(walletId: string, options?: WalletOptions<TAdditionalOpts>) {

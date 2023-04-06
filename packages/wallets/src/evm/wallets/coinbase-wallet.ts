@@ -1,6 +1,6 @@
 import type { CoinbaseWalletConnector } from "../connectors/coinbase-wallet";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
-import { AbstractBrowserWallet, WalletOptions } from "./base";
+import { AbstractClientWallet, WalletOptions } from "./base";
 import { Buffer } from "buffer";
 
 if (typeof window !== "undefined") {
@@ -10,7 +10,7 @@ if (typeof window !== "undefined") {
 
 export type CoinbaseWalletOptions = WalletOptions<{ headlessMode?: boolean }>;
 
-export class CoinbaseWallet extends AbstractBrowserWallet {
+export class CoinbaseWallet extends AbstractClientWallet {
   connector?: TWConnector;
   coinbaseConnector?: CoinbaseWalletConnector;
   static meta = {
