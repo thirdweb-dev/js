@@ -539,6 +539,7 @@ describe("Publishing", async () => {
       defaultProvider,
     )) as string;
 
+    console.log("implementations: ", implementations["marketplace-v3"]);
     const pub = await mockSdk.getPublisher();
     const tx = await pub.publish(ipfsHash.concat("rawMeta"), {
       version: "0.0.1",
@@ -555,6 +556,7 @@ describe("Publishing", async () => {
       },
     });
     const contract = await tx.data();
+    console.log(contract);
     expect(contract.id).to.eq("MarketplaceV3");
 
     const fullMetadata = await pub.fetchFullPublishMetadata(
@@ -565,77 +567,5 @@ describe("Publishing", async () => {
       compositeAbi != undefined &&
         compositeAbi.length > MarketplaceV3__factory.abi.length,
     );
-    // console.log(fullMetadata.compositeAbi);
   });
-
-  // it("Composite Abi for Plugin Router", async () => {
-  //   const targetAbi = [
-  //     {
-  //       type: "function",
-  //       name: "getAllPlugins",
-  //       inputs: [],
-  //       outputs: [
-  //         {
-  //           type: "tuple[]",
-  //           name: "registered",
-  //           components: [
-  //             {
-  //               type: "bytes4",
-  //               name: "functionSelector",
-  //               internalType: "bytes4",
-  //             },
-  //             {
-  //               type: "string",
-  //               name: "functionSignature",
-  //               internalType: "string",
-  //             },
-  //             {
-  //               type: "address",
-  //               name: "pluginAddress",
-  //               internalType: "address",
-  //             },
-  //           ],
-  //           internalType: "struct IPluginMap.Plugin[]",
-  //         },
-  //       ],
-  //       stateMutability: "view",
-  //     },
-  //   ];
-  //   const realSDK = new ThirdwebSDK(adminWallet);
-  //   const pub = await realSDK.getPublisher();
-
-  //   const fullMetadata = await pub.fetchFullPublishMetadata(
-  //     "ipfs://QmWXjEPpa9M3ZBZBGW2WfzM69ZCzGbBCrtbvECTRTsbR8g/0",
-  //   );
-  //   const compositeAbi = fullMetadata.compositeAbi;
-  //   expect(
-  //     compositeAbi != undefined &&
-  //       compositeAbi.length > MarketplaceRouter__factory.abi.length,
-  //   );
-  //   console.log(fullMetadata.compositeAbi);
-  //   console.log(fullMetadata.compositeAbi?.length);
-
-  //   if (fullMetadata.factoryDeploymentData?.implementationAddresses) {
-  //     const implementationsAddresses = Object.entries(
-  //       fullMetadata.factoryDeploymentData.implementationAddresses,
-  //     );
-
-  //     for (const [network, implementation] of implementationsAddresses) {
-  //       if (implementation !== "") {
-  //         console.log("implementation: ", implementation);
-  //         const compositeAbi = await getCompositePluginABI(
-  //           implementation,
-  //           targetAbi,
-  //           getChainProvider(parseInt(network), {}),
-  //           {},
-  //           realSDK.storage,
-  //         );
-  //         console.log("composite abi: ", compositeAbi);
-
-  //         fullMetadata.compositeAbi = AbiSchema.parse(compositeAbi);
-  //         break;
-  //       }
-  //     }
-  //   }
-  // });
 });
