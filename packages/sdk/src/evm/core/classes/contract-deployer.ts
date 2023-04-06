@@ -870,7 +870,9 @@ export class ContractDeployer extends RPCConnectionHandler {
             this.storage,
             create2Factory,
           );
-          return (await this.deployViaFactory.prepare(
+
+          options?.notifier?.("deploying", "proxy");
+          const proxyDeployTransaction = (await this.deployViaFactory.prepare(
             cloneFactory,
             resolvedImplementationAddress,
             compilerMetadata.abi,
@@ -878,6 +880,8 @@ export class ContractDeployer extends RPCConnectionHandler {
               .implementationInitializerFunction,
             paramValues,
           )) as unknown as DeployTransaction;
+          options?.notifier?.("deployed", "proxy");
+          return proxyDeployTransaction;
         }
       }
 
