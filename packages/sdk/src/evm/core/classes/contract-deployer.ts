@@ -929,11 +929,11 @@ export class ContractDeployer extends RPCConnectionHandler {
   );
 
   /**
-   * @internal
+   * @public
    * @param publishMetadataUri
    * @param options
    */
-  async getTransactionsForDeploy(
+  public async getTransactionsForDeploy(
     publishMetadataUri: string,
     options?: DeployOptions,
   ): Promise<DeploymentTransaction[]> {
