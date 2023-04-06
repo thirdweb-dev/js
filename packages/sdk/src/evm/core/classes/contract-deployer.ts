@@ -931,10 +931,9 @@ export class ContractDeployer extends RPCConnectionHandler {
   /**
    * @internal
    * @param publishMetadataUri
-   * @param constructorParamValues
    * @param options
    */
-  async getTransactions(
+  async getTransactionsForDeploy(
     publishMetadataUri: string,
     options?: DeployOptions,
   ): Promise<DeploymentTransaction[]> {
