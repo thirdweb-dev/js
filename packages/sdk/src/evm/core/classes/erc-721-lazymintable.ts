@@ -7,20 +7,13 @@ import {
   FEATURE_NFT_REVEALABLE,
 } from "../../constants/erc721-features";
 import { UploadProgressEvent } from "../../types";
-import {
-  BaseClaimConditionERC721,
-  BaseDelayedRevealERC721,
-  BaseDropERC721,
-} from "../../types/eips";
+import { BaseDelayedRevealERC721, BaseDropERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { DelayedReveal } from "./delayed-reveal";
 import { Erc721 } from "./erc-721";
-import { Erc721Claimable } from "./erc-721-claimable";
-import { Erc721ClaimableWithConditions } from "./erc-721-claimable-with-conditions";
 import { Transaction } from "./transactions";
-import type { IClaimableERC721 } from "@thirdweb-dev/contracts-js";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -70,18 +63,6 @@ export class Erc721LazyMintable implements DetectableFeature {
    */
   public revealer: DelayedReveal<BaseDelayedRevealERC721> | undefined;
 
-  /**
-   * Claim tokens and configure claim conditions
-   * @remarks Let users claim NFTs. Define who can claim NFTs in the collection, when and how many.
-   * @example
-   * ```javascript
-   * const quantity = 10;
-   * await contract.erc721.claim(quantity);
-   * ```
-   */
-  public claimWithConditions: Erc721ClaimableWithConditions | undefined;
-  public claim: Erc721Claimable | undefined;
-
   private contractWrapper: ContractWrapper<BaseDropERC721>;
   private erc721: Erc721;
   private storage: ThirdwebStorage;
@@ -96,8 +77,6 @@ export class Erc721LazyMintable implements DetectableFeature {
 
     this.storage = storage;
     this.revealer = this.detectErc721Revealable();
-    this.claimWithConditions = this.detectErc721ClaimableWithConditions();
-    this.claim = this.detectErc721Claimable();
   }
 
   /**
@@ -191,48 +170,6 @@ export class Erc721LazyMintable implements DetectableFeature {
         FEATURE_NFT_REVEALABLE.name,
         () => this.erc721.nextTokenIdToMint(),
       );
-    }
-    return undefined;
-  }
-
-  private detectErc721ClaimableWithConditions():
-    | Erc721ClaimableWithConditions
-    | undefined {
-    if (
-      detectContractFeature<BaseClaimConditionERC721>(
-        this.contractWrapper,
-        "ERC721ClaimConditionsV1",
-      ) ||
-      detectContractFeature<BaseClaimConditionERC721>(
-        this.contractWrapper,
-        "ERC721ClaimConditionsV2",
-      ) ||
-      detectContractFeature<BaseClaimConditionERC721>(
-        this.contractWrapper,
-        "ERC721ClaimPhasesV1",
-      ) ||
-      detectContractFeature<BaseClaimConditionERC721>(
-        this.contractWrapper,
-        "ERC721ClaimPhasesV2",
-      )
-    ) {
-      return new Erc721ClaimableWithConditions(
-        this.erc721,
-        this.contractWrapper,
-        this.storage,
-      );
-    }
-    return undefined;
-  }
-
-  private detectErc721Claimable(): Erc721Claimable | undefined {
-    if (
-      detectContractFeature<IClaimableERC721>(
-        this.contractWrapper,
-        "ERC721ClaimCustom",
-      )
-    ) {
-      return new Erc721Claimable(this.erc721, this.contractWrapper);
     }
     return undefined;
   }

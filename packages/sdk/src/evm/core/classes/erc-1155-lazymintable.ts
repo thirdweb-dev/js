@@ -7,24 +7,15 @@ import {
   FEATURE_EDITION_LAZY_MINTABLE_V2,
   FEATURE_EDITION_REVEALABLE,
 } from "../../constants/erc1155-features";
-import {
-  BaseClaimConditionERC1155,
-  BaseDelayedRevealERC1155,
-  BaseDropERC1155,
-} from "../../types/eips";
+import { BaseDelayedRevealERC1155, BaseDropERC1155 } from "../../types/eips";
 import { UploadProgressEvent } from "../../types/events";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { DelayedReveal } from "./delayed-reveal";
 import { Erc1155 } from "./erc-1155";
-import { ERC1155Claimable } from "./erc-1155-claimable";
-import { Erc1155ClaimableWithConditions } from "./erc-1155-claimable-with-conditions";
 import { Transaction } from "./transactions";
-import type {
-  DropERC1155_V2,
-  IClaimableERC1155,
-} from "@thirdweb-dev/contracts-js";
+import type { DropERC1155_V2 } from "@thirdweb-dev/contracts-js";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -65,19 +56,6 @@ export class Erc1155LazyMintable implements DetectableFeature {
    */
   public revealer: DelayedReveal<BaseDelayedRevealERC1155> | undefined;
 
-  /**
-   * Claim tokens and configure claim conditions
-   * @remarks Let users claim NFTs. Define who can claim NFTs in the collection, when and how many.
-   * @example
-   * ```javascript
-   * const quantity = 10;
-   * const tokenId = 0;
-   * await contract.erc1155.claimTo("0x...", 0, quantity);
-   * ```
-   */
-  public claimWithConditions: Erc1155ClaimableWithConditions | undefined;
-  public claim: ERC1155Claimable | undefined;
-
   private contractWrapper: ContractWrapper<BaseDropERC1155>;
   private erc1155: Erc1155;
   private storage: ThirdwebStorage;
@@ -91,8 +69,6 @@ export class Erc1155LazyMintable implements DetectableFeature {
     this.contractWrapper = contractWrapper;
 
     this.storage = storage;
-    this.claim = this.detectErc1155Claimable();
-    this.claimWithConditions = this.detectErc1155ClaimableWithConditions();
     this.revealer = this.detectErc1155Revealable();
   }
 
@@ -200,47 +176,6 @@ export class Erc1155LazyMintable implements DetectableFeature {
   /** ******************************
    * PRIVATE FUNCTIONS
    *******************************/
-
-  private detectErc1155Claimable(): ERC1155Claimable | undefined {
-    if (
-      detectContractFeature<IClaimableERC1155>(
-        this.contractWrapper,
-        "ERC1155ClaimCustom",
-      )
-    ) {
-      return new ERC1155Claimable(this.contractWrapper);
-    }
-    return undefined;
-  }
-
-  private detectErc1155ClaimableWithConditions():
-    | Erc1155ClaimableWithConditions
-    | undefined {
-    if (
-      detectContractFeature<BaseClaimConditionERC1155>(
-        this.contractWrapper,
-        "ERC1155ClaimConditionsV1",
-      ) ||
-      detectContractFeature<BaseClaimConditionERC1155>(
-        this.contractWrapper,
-        "ERC1155ClaimConditionsV2",
-      ) ||
-      detectContractFeature<BaseClaimConditionERC1155>(
-        this.contractWrapper,
-        "ERC1155ClaimPhasesV1",
-      ) ||
-      detectContractFeature<BaseClaimConditionERC1155>(
-        this.contractWrapper,
-        "ERC1155ClaimPhasesV2",
-      )
-    ) {
-      return new Erc1155ClaimableWithConditions(
-        this.contractWrapper,
-        this.storage,
-      );
-    }
-    return undefined;
-  }
 
   private detectErc1155Revealable():
     | DelayedReveal<BaseDelayedRevealERC1155>

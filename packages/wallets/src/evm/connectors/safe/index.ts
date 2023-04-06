@@ -4,6 +4,12 @@ import type { SafeConnectionArgs } from "./types";
 import { ethers } from "ethers";
 import type { Signer } from "ethers";
 import { AbstractClientWallet } from "../../wallets/base";
+import {
+  SafeService,
+  SafeEthersSigner,
+} from "@safe-global/safe-ethers-adapters";
+import safeCoreSdk from "@safe-global/safe-core-sdk";
+import safeEthersLib from "@safe-global/safe-ethers-lib";
 
 // excerpt from https://docs.gnosis-safe.io/backend/available-services
 const CHAIN_ID_TO_GNOSIS_SERVER_URL = {
@@ -88,23 +94,17 @@ export class SafeConnector extends TWConnector<SafeConnectionArgs> {
       throw new Error("Chain not supported");
     }
 
-    const [safeEthersAdapters, safeCoreSdk, safeEthersLib] = await Promise.all([
-      import("@safe-global/safe-ethers-adapters"),
-      import("@safe-global/safe-core-sdk"),
-      import("@safe-global/safe-ethers-lib"),
-    ]);
-
-    const ethAdapter = new safeEthersLib.default({
+    const ethAdapter = new safeEthersLib({
       ethers,
       signerOrProvider: signer,
     });
 
-    const safe = await safeCoreSdk.default.create({
+    const safe = await safeCoreSdk.create({
       ethAdapter: ethAdapter as any,
       safeAddress,
     });
-    const service = new safeEthersAdapters.SafeService(serverUrl);
-    const safeSigner = new safeEthersAdapters.SafeEthersSigner(
+    const service = new SafeService(serverUrl);
+    const safeSigner = new SafeEthersSigner(
       safe as any,
       service,
       signer.provider,

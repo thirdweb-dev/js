@@ -6,6 +6,7 @@ export const Img: React.FC<{
   src: string;
   alt?: string;
   loading?: "eager" | "lazy";
+  className?: string;
 }> = (props) => {
   return (
     <img
@@ -19,6 +20,7 @@ export const Img: React.FC<{
         height: props.height + "px",
         width: props.width + "px",
       }}
+      className={props.className}
     />
   );
 };
