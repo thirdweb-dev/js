@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Camino C-Chain",
   "chain": "CAM",
@@ -8,7 +9,7 @@ export default {
     "symbol": "CAM",
     "decimals": 18
   },
-  "infoURL": "https://camino.foundation/",
+  "infoURL": "https://camino.network/",
   "shortName": "Camino",
   "chainId": 500,
   "networkId": 1000,
@@ -27,4 +28,4 @@ export default {
   ],
   "testnet": false,
   "slug": "camino-c-chain"
-} as const;
+} as const satisfies Chain;

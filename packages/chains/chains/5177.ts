@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "TLChain Network Mainnet",
   "chain": "TLC",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": false,
   "slug": "tlchain-network"
-} as const;
+} as const satisfies Chain;

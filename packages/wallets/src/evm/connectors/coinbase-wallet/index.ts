@@ -12,8 +12,7 @@ import type {
   CoinbaseWalletSDK,
 } from "@coinbase/wallet-sdk";
 import type { CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/CoinbaseWalletSDK";
-import { Chain } from "@thirdweb-dev/chains";
-import type { Address } from "abitype";
+import type { Chain } from "@thirdweb-dev/chains";
 import { providers } from "ethers";
 import { getAddress, hexValue } from "ethers/lib/utils.js";
 
@@ -112,7 +111,7 @@ export class CoinbaseWalletConnector extends Connector<
 
   async getAccount() {
     const provider = await this.getProvider();
-    const accounts = await provider.request<Address[]>({
+    const accounts = await provider.request<string[]>({
       method: "eth_accounts",
     });
 
@@ -232,7 +231,7 @@ export class CoinbaseWalletConnector extends Connector<
                 chainId: id,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpcUrls: chain.rpc[0],
+                rpcUrls: chain.rpc,
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],
@@ -251,32 +250,6 @@ export class CoinbaseWalletConnector extends Connector<
       }
       throw new SwitchChainError(error);
     }
-  }
-
-  async watchAsset({
-    address,
-    decimals = 18,
-    image,
-    symbol,
-  }: {
-    address: string;
-    decimals?: number;
-    image?: string;
-    symbol: string;
-  }) {
-    const provider = await this.getProvider();
-    return provider.request<boolean>({
-      method: "wallet_watchAsset",
-      params: {
-        type: "ERC20",
-        options: {
-          address,
-          decimals,
-          image,
-          symbol,
-        },
-      },
-    });
   }
 
   protected onAccountsChanged = (accounts: string[]) => {
@@ -309,7 +282,7 @@ export class CoinbaseWalletConnector extends Connector<
     provider.on("disconnect", this.onDisconnect);
   }
 
-  async getQrCode() {
+  async getQrUrl() {
     await this.getProvider();
     if (!this.#client) {
       throw new Error("Coinbase Wallet SDK not initialized");

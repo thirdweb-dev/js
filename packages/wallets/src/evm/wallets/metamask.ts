@@ -1,24 +1,39 @@
-import { AsyncStorage } from "../../core/AsyncStorage";
+import { AsyncStorage, createAsyncLocalStorage } from "../../core/AsyncStorage";
 import type { WalletConnectV1Connector as WalletConnectV1ConnectorType } from "../connectors/wallet-connect-v1";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
+import { assertWindowEthereum } from "../utils/assertWindowEthereum";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 
-export type MetamaskWalletOptions = WalletOptions<{
-  connectorStorage: AsyncStorage;
-  isInjected?: boolean;
-}>;
+type MetamaskAdditionalOptions = {
+  /**
+   * Storage interface to store whether metamask is connected or disconnected.
+   */
+  connectorStorage?: AsyncStorage;
+  /**
+   * Whether to display the Wallet Connect QR code Modal for connecting to MetaMask on mobile if MetaMask is not injected.
+   */
+  qrcode?: boolean;
+};
+
+export type MetamaskWalletOptions = WalletOptions<MetamaskAdditionalOptions>;
 
 type ConnectWithQrCodeArgs = {
-  chainId: number;
+  chainId?: number;
   onQrCodeUri: (uri: string) => void;
   onConnected: (accountAddress: string) => void;
 };
 
-export class MetaMask extends AbstractBrowserWallet {
+export class MetaMaskWallet extends AbstractBrowserWallet<MetamaskAdditionalOptions> {
   connector?: TWConnector;
   connectorStorage: AsyncStorage;
-  isInjected?: boolean;
   walletConnectConnector?: WalletConnectV1ConnectorType;
+  isInjected: boolean;
+
+  static meta = {
+    name: "MetaMask",
+    iconURL:
+      "ipfs://QmZZHcw7zcXursywnLDAyY6Hfxzqop5GKgwoq8NB9jjrkN/metamask.svg",
+  };
 
   static id = "metamask" as const;
 
@@ -27,20 +42,25 @@ export class MetaMask extends AbstractBrowserWallet {
   }
 
   constructor(options: MetamaskWalletOptions) {
-    super(MetaMask.id, options);
-    this.connectorStorage = options.connectorStorage;
-    this.isInjected = options.isInjected || false;
+    super(MetaMaskWallet.id, options);
+    this.connectorStorage =
+      options.connectorStorage || createAsyncLocalStorage("connector");
+
+    if (assertWindowEthereum(globalThis.window)) {
+      this.isInjected = !!globalThis.window.ethereum?.isMetaMask;
+    } else {
+      this.isInjected = false;
+    }
   }
 
   protected async getConnector(): Promise<TWConnector> {
     if (!this.connector) {
-      // import the connector dynamically
-      const { MetaMaskConnector } = await import("../connectors/metamask");
-
       // if metamask is injected, use the injected connector
       // otherwise, use the wallet connect connector for using the metamask app on mobile via QR code scan
 
       if (this.isInjected) {
+        // import the connector dynamically
+        const { MetaMaskConnector } = await import("../connectors/metamask");
         const metamaskConnector = new MetaMaskConnector({
           chains: this.chains,
           connectorStorage: this.connectorStorage,
@@ -60,12 +80,12 @@ export class MetaMask extends AbstractBrowserWallet {
           storage: this.connectorStorage,
           options: {
             clientMeta: {
-              name: this.options.dappMetadata.name,
-              description: this.options.dappMetadata.description || "",
-              url: this.options.dappMetadata.url,
-              icons: [],
+              name: this.dappMetadata.name,
+              description: this.dappMetadata.description || "",
+              url: this.dappMetadata.url,
+              icons: [this.dappMetadata.logoUrl || ""],
             },
-            qrcode: false,
+            qrcode: this.options?.qrcode,
           },
         });
 

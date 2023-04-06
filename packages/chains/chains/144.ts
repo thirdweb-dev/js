@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "PHI Network v2",
   "chain": "PHI",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "Phiscan",
       "url": "https://phiscan.com",
-      "icon": "phi",
+      "icon": {
+        "url": "ipfs://bafkreid6pm3mic7izp3a6zlfwhhe7etd276bjfsq2xash6a4s2vmcdf65a",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      },
       "standard": "none"
     }
   ],
   "testnet": false,
   "slug": "phi-network-v2"
-} as const;
+} as const satisfies Chain;

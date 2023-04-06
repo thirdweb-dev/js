@@ -1,51 +1,57 @@
-import { DEFAULT_API_KEY } from "../../core/constants/urls";
+import { getSignerAndProvider } from "../functions/getSignerAndProvider";
 import { Address, AddressOrEns, AddressOrEnsSchema } from "../schema";
-import { providers } from "ethers";
+import type { providers } from "ethers";
 
 type CachedEns = {
   address: string | null;
   expirationTime: Date;
 };
 
-const ENS_CACHE = new Map<string, CachedEns>();
-
 // TODO: Respect SDK RPC configuration and don't pull straight from ethers
-const provider = new providers.JsonRpcProvider(
-  `https://ethereum.rpc.thirdweb.com/${DEFAULT_API_KEY}`,
-);
+let provider: providers.Provider | undefined;
 
-async function refreshCache(ens: string): Promise<string | null> {
-  const address = await provider.resolveName(ens);
+const ENS_CACHE = new Map<string, Promise<CachedEns>>();
 
-  if (!address) {
-    // If they don't have an ENS, only cache for 30s
-    ENS_CACHE.set(ens, {
-      address: null,
-      expirationTime: new Date(Date.now() + 1000 * 30),
+export async function resolveEns(
+  ens: string,
+  depth = 0,
+): Promise<string | null> {
+  if (!provider) {
+    // if we don't already have a provider then get one
+    provider = getSignerAndProvider("ethereum")[1];
+  }
+  let ensPromise: Promise<CachedEns>;
+
+  if (ENS_CACHE.has(ens)) {
+    ensPromise = ENS_CACHE.get(ens) as Promise<CachedEns>;
+  } else {
+    ensPromise = provider.resolveName(ens).then((address) => {
+      // If they don't have an ENS, only cache for 30s
+      if (!address) {
+        return {
+          address: null,
+          expirationTime: new Date(Date.now() + 1000 * 30),
+        };
+      }
+
+      // Cache ENS for 1 hour
+      return {
+        address,
+        expirationTime: new Date(Date.now() + 1000 * 60 * 5),
+      };
     });
-    return null;
   }
 
-  // Cache ENS for 1 hour
-  ENS_CACHE.set(ens, {
-    address,
-    expirationTime: new Date(Date.now() + 1000 * 60 * 5),
-  });
-  return address;
-}
-
-export async function resolveEns(ens: string): Promise<string | null> {
-  const cachedEns = ENS_CACHE.get(ens);
-  if (!!cachedEns && !!cachedEns.address) {
-    // Trigger refresh if cache is expired, but don't block on it (SWR)
-    if (cachedEns.expirationTime > new Date()) {
-      refreshCache(ens);
+  const resolvedPromise = await ensPromise;
+  if (resolvedPromise.expirationTime < new Date()) {
+    // delete the cache if it's expired
+    ENS_CACHE.delete(ens);
+    // then call ourselves again to refresh the cache, but don't block on the result
+    if (depth === 0) {
+      resolveEns(ens, depth + 1);
     }
-
-    return cachedEns.address;
   }
-
-  return refreshCache(ens);
+  return resolvedPromise.address;
 }
 
 export async function resolveAddress(

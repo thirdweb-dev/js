@@ -1,9 +1,7 @@
-import { SupportedWallet } from "@thirdweb-dev/react-core";
-
 export type WalletMeta = {
-  id: SupportedWallet["id"];
+  id: string;
   name: string;
-  icon: JSX.Element;
+  iconURL: string;
   installed: boolean;
   onClick: () => Promise<void>;
 };

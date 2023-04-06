@@ -1,7 +1,14 @@
+import { INFRA_CONTRACTS_MAP } from "../common/infra-data";
 import type { CONTRACTS_MAP, PREBUILT_CONTRACTS_MAP } from "../contracts";
 import type { SmartContract } from "../contracts/smart-contract";
 import type { Chain, ChainSlug, ChainId } from "@thirdweb-dev/chains";
-import { BigNumber, BytesLike, CallOverrides, Signer, providers } from "ethers";
+import type {
+  BigNumber,
+  BytesLike,
+  CallOverrides,
+  Signer,
+  providers,
+} from "ethers";
 
 // --- utility types extracted from from ts-toolbelt --- //
 
@@ -27,6 +34,9 @@ export type ContractsMap = typeof CONTRACTS_MAP;
 
 export type PrebuiltContractType = keyof PrebuiltContractsMap;
 export type ContractType = keyof ContractsMap;
+
+export type InfraContractsMap = typeof INFRA_CONTRACTS_MAP;
+export type InfraContractType = keyof InfraContractsMap;
 
 export type ValidContractInstance =
   | Awaited<ReturnType<ContractsMap[keyof PrebuiltContractsMap]["initialize"]>>

@@ -42,9 +42,14 @@ export const AddressOrEnsSchema = z.union([AddressSchema, EnsSchema], {
   invalid_type_error: "Provided value was not a valid address or ENS name",
 });
 
-export const RawDateSchema = z.date().transform((i) => {
-  return BigNumber.from(Math.floor(i.getTime() / 1000));
-});
+export const RawDateSchema = z.union([
+  z.date().transform((i) => {
+    return BigNumber.from(Math.floor(i.getTime() / 1000));
+  }),
+  z.number().transform((i) => {
+    return BigNumber.from(i);
+  }),
+]);
 
 /**
  * Default to now

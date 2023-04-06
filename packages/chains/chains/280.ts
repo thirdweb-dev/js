@@ -1,9 +1,10 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "zkSync Era Testnet",
   "chain": "ETH",
   "rpc": [
     "https://zksync-era-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://zksync2-testnet.zksync.dev"
+    "https://testnet.era.zksync.dev"
   ],
   "faucets": [
     "https://goerli.portal.zksync.io/faucet"
@@ -18,7 +19,7 @@ export default {
   "chainId": 280,
   "networkId": 280,
   "icon": {
-    "url": "ipfs://Qma6H9xd8Ydah1bAFnmDuau1jeMh5NjGEL8tpdnjLbJ7m2",
+    "url": "ipfs://QmRkhUD6J3B9WhT4hEWLrcFVTrBhx3CQgNC783aJsrwxSN",
     "width": 512,
     "height": 512,
     "format": "svg"
@@ -27,7 +28,12 @@ export default {
     {
       "name": "zkSync Era Block Explorer",
       "url": "https://goerli.explorer.zksync.io",
-      "icon": "zksync-era",
+      "icon": {
+        "url": "ipfs://QmRkhUD6J3B9WhT4hEWLrcFVTrBhx3CQgNC783aJsrwxSN",
+        "width": 512,
+        "height": 512,
+        "format": "svg"
+      },
       "standard": "EIP3091"
     }
   ],
@@ -42,4 +48,4 @@ export default {
   },
   "testnet": true,
   "slug": "zksync-era-testnet"
-} as const;
+} as const satisfies Chain;

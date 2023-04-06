@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Energy Web Volta Testnet",
   "chain": "Volta",
@@ -20,4 +21,4 @@ export default {
   "networkId": 73799,
   "testnet": true,
   "slug": "energy-web-volta-testnet"
-} as const;
+} as const satisfies Chain;

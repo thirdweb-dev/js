@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Giant Mammoth Mainnet",
   "title": "Giant Mammoth Chain",
@@ -27,9 +28,14 @@ export default {
       "name": "gmmtscan",
       "url": "https://scan.gmmtchain.io",
       "standard": "EIP3091",
-      "icon": "gmmt"
+      "icon": {
+        "url": "ipfs://QmVth4aPeskDTFqRifUugJx6gyEHCmx2PFbMWUtsCSQFkF",
+        "width": 468,
+        "height": 518,
+        "format": "png"
+      }
     }
   ],
   "testnet": false,
   "slug": "giant-mammoth"
-} as const;
+} as const satisfies Chain;

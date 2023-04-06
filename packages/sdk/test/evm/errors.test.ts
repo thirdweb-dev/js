@@ -37,17 +37,19 @@ describe("Error Handling", async () => {
 
     const marketplace = await sdk.getContract(marketplaceAddress);
     try {
-      await marketplace.call("createListing", {
-        assetContract: collectionAddress,
-        tokenId: 0,
-        startTime: 1000000000000,
-        secondsUntilEndTime: 10000000000000,
-        quantityToList: 1,
-        currencyToAccept: "0x0000000000000000000000000000000000000000",
-        reservePricePerToken: 0,
-        buyoutPricePerToken: 0,
-        listingType: 0,
-      });
+      await marketplace.call("createListing", [
+        {
+          assetContract: collectionAddress,
+          tokenId: 0,
+          startTime: 1000000000000,
+          secondsUntilEndTime: 10000000000000,
+          quantityToList: 1,
+          currencyToAccept: "0x0000000000000000000000000000000000000000",
+          reservePricePerToken: 0,
+          buyoutPricePerToken: 0,
+          listingType: 0,
+        },
+      ]);
       expect.fail();
     } catch (err) {
       // In this case, call static should go through before sendTransaction
@@ -75,17 +77,19 @@ describe("Error Handling", async () => {
     try {
       await marketplace.call(
         "createListing",
-        {
-          assetContract: collectionAddress,
-          tokenId: 0,
-          startTime: 1000000000000,
-          secondsUntilEndTime: 10000000000000,
-          quantityToList: 1,
-          currencyToAccept: "0x0000000000000000000000000000000000000000",
-          reservePricePerToken: 0,
-          buyoutPricePerToken: 0,
-          listingType: 0,
-        },
+        [
+          {
+            assetContract: collectionAddress,
+            tokenId: 0,
+            startTime: 1000000000000,
+            secondsUntilEndTime: 10000000000000,
+            quantityToList: 1,
+            currencyToAccept: "0x0000000000000000000000000000000000000000",
+            reservePricePerToken: 0,
+            buyoutPricePerToken: 0,
+            listingType: 0,
+          },
+        ],
         {
           gasLimit: 800000,
         },

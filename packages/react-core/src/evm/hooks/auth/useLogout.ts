@@ -28,6 +28,7 @@ export function useLogout() {
 
       await fetch(`${authConfig.authUrl}/logout`, {
         method: "POST",
+        credentials: "include",
       });
 
       queryClient.invalidateQueries(cacheKeys.auth.user());

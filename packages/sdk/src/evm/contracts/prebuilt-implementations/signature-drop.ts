@@ -19,7 +19,6 @@ import { ContractPrimarySale } from "../../core/classes/contract-sales";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { DelayedReveal } from "../../core/classes/delayed-reveal";
 import { DropClaimConditions } from "../../core/classes/drop-claim-conditions";
-import { Erc721 } from "../../core/classes/erc-721";
 import { StandardErc721 } from "../../core/classes/erc-721-standard";
 import { Erc721WithQuantitySignatureMintable } from "../../core/classes/erc-721-with-quantity-signature-mintable";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
@@ -27,7 +26,7 @@ import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { PaperCheckout } from "../../integrations/thirdweb-checkout";
 import { Address, AddressOrEns } from "../../schema";
-import { Abi } from "../../schema/contracts/custom";
+import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
@@ -56,7 +55,6 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
   public abi: Abi;
-  public erc721: Erc721<SignatureDropContract>;
   public owner: ContractOwner<SignatureDropContract>;
   public encoder: ContractEncoder<SignatureDropContract>;
   public estimator: GasCostEstimator<SignatureDropContract>;
@@ -172,7 +170,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: Abi,
+    abi: AbiInput,
     chainId: number,
     contractWrapper = new ContractWrapper<SignatureDropContract>(
       network,
@@ -182,7 +180,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     ),
   ) {
     super(contractWrapper, storage, chainId);
-    this.abi = abi;
+    this.abi = AbiSchema.parse(abi || []);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       DropErc721ContractSchema,
@@ -205,7 +203,6 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.erc721 = new Erc721(this.contractWrapper, this.storage, chainId);
     this.claimConditions = new DropClaimConditions(
       this.contractWrapper,
       this.metadata,
@@ -508,10 +505,13 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
+  public async call<
+    TMethod extends keyof SignatureDropContract["functions"] = keyof SignatureDropContract["functions"],
+  >(
+    functionName: string & TMethod,
+    args?: Parameters<SignatureDropContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
   ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 }

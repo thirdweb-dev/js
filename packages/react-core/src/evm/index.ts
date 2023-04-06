@@ -1,10 +1,11 @@
+export { resolveIpfsUri, resolveMimeType } from "../core/utils/ipfs";
+
 export { ThirdwebThemeContext } from "../core/providers/theme-context";
 export { ThirdwebProviderCore } from "../core/providers/thirdweb-provider";
 export type { ThirdwebProviderCoreProps } from "../core/providers/thirdweb-provider";
 
 // constants
 export { __DEV__ } from "../core/constants/runtime";
-export { TW_WC_PROJECT_ID } from "../core/constants/wc";
 
 // wallet hooks
 export {
@@ -16,6 +17,7 @@ export {
   useSwitchChain,
   useWallets,
 } from "../core/hooks/wallet-hooks";
+export { useNetwork } from "../core/hooks/useNetwork";
 export { useThirdwebWallet } from "../core/providers/thirdweb-wallet-provider";
 
 // connected wallet hooks
@@ -27,15 +29,15 @@ export {
   useActiveChain,
 } from "./hooks/wallet";
 
-// re-exports
-export { ChainId } from "@thirdweb-dev/sdk";
-
 // Utilities and Others
 export { shouldNeverPersistQuery } from "../core/query-utils/query-key";
 export type { RequiredParam } from "../core/query-utils/required-param";
 export type {
-  SupportedWallet,
+  Wallet,
+  WalletClass,
+  WalletInstance,
   ExtraCoreWalletOptions,
+  WalletOptions,
 } from "../core/types/wallet";
 
 // auth
@@ -185,7 +187,7 @@ export {
 // thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)
 
 // auth hooks
-export { useLogin, useLogout, useUser, useAuth } from "./hooks/auth";
+export { useLogin, useLogout, useUser } from "./hooks/auth";
 export type { UserWithData } from "./hooks/auth";
 
 // contract hooks
@@ -217,7 +219,7 @@ export {
   useSDK,
   useSDKChainId,
 } from "./providers/thirdweb-sdk-provider";
-export type { ThirdwebSDKProviderProps } from "./providers/thirdweb-sdk-provider";
+export type { ThirdwebSDKProviderProps } from "./providers/types";
 
 // types
 export type {
@@ -248,3 +250,7 @@ export type {
   ClaimTokenParams,
 } from "./types";
 export { getErcs, getErc1155, getErc721, getErc20 } from "./types";
+
+// transaction hooks
+export { useWatchTransactions } from "./hooks/useTransactions";
+export type { UseWatchTransactionsParams } from "./hooks/useTransactions";

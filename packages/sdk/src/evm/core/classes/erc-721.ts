@@ -25,7 +25,11 @@ import {
 } from "../../constants/erc721-features";
 import { Address, AddressOrEns } from "../../schema";
 import { ClaimOptions, UploadProgressEvent } from "../../types";
-import { BaseDropERC721, BaseERC721 } from "../../types/eips";
+import {
+  BaseClaimConditionERC721,
+  BaseDropERC721,
+  BaseERC721,
+} from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { NetworkInput, TransactionResultWithId } from "../types";
@@ -40,6 +44,7 @@ import { Transaction } from "./transactions";
 import type {
   DropERC721,
   IBurnableERC721,
+  IClaimableERC721,
   IERC721Supply,
   IMintableERC721,
   ISignatureMintERC721,
@@ -50,6 +55,8 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
+import { Erc721Claimable } from "./erc-721-claimable";
+import { Erc721ClaimableWithConditions } from "./erc-721-claimable-with-conditions";
 
 /**
  * Standard ERC721 NFT functions
@@ -77,6 +84,8 @@ export class Erc721<
   private lazyMintable: Erc721LazyMintable | undefined;
   private tieredDropable: Erc721TieredDrop | undefined;
   private signatureMintable: Erc721WithQuantitySignatureMintable | undefined;
+  private claimWithConditions: Erc721ClaimableWithConditions | undefined;
+  private claimCustom: Erc721Claimable | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: ThirdwebStorage;
 
@@ -98,6 +107,8 @@ export class Erc721<
     this.lazyMintable = this.detectErc721LazyMintable();
     this.tieredDropable = this.detectErc721TieredDrop();
     this.signatureMintable = this.detectErc721SignatureMintable();
+    this.claimWithConditions = this.detectErc721ClaimableWithConditions();
+    this.claimCustom = this.detectErc721Claimable();
     this._chainId = chainId;
   }
 
@@ -654,8 +665,8 @@ export class Erc721<
       quantity: BigNumberish,
       options?: ClaimOptions,
     ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
-      const claimWithConditions = this.lazyMintable?.claimWithConditions;
-      const claim = this.lazyMintable?.claim;
+      const claimWithConditions = this.claimWithConditions;
+      const claim = this.claimCustom;
       if (claimWithConditions) {
         return claimWithConditions.to.prepare(
           destinationAddress,
@@ -685,8 +696,8 @@ export class Erc721<
     quantity: BigNumberish,
     options?: ClaimOptions,
   ): Promise<Transaction> {
-    const claimWithConditions = this.lazyMintable?.claimWithConditions;
-    const claim = this.lazyMintable?.claim;
+    const claimWithConditions = this.claimWithConditions;
+    const claim = this.claimCustom;
     if (claimWithConditions) {
       return claimWithConditions.conditions.getClaimTransaction(
         destinationAddress,
@@ -770,7 +781,7 @@ export class Erc721<
    */
   get claimConditions() {
     return assertEnabled(
-      this.lazyMintable?.claimWithConditions,
+      this.claimWithConditions,
       FEATURE_NFT_CLAIM_CONDITIONS_V2,
     ).conditions;
   }
@@ -957,6 +968,48 @@ export class Erc721<
         this.contractWrapper,
         this.storage,
       );
+    }
+    return undefined;
+  }
+
+  private detectErc721ClaimableWithConditions():
+    | Erc721ClaimableWithConditions
+    | undefined {
+    if (
+      detectContractFeature<BaseClaimConditionERC721>(
+        this.contractWrapper,
+        "ERC721ClaimConditionsV1",
+      ) ||
+      detectContractFeature<BaseClaimConditionERC721>(
+        this.contractWrapper,
+        "ERC721ClaimConditionsV2",
+      ) ||
+      detectContractFeature<BaseClaimConditionERC721>(
+        this.contractWrapper,
+        "ERC721ClaimPhasesV1",
+      ) ||
+      detectContractFeature<BaseClaimConditionERC721>(
+        this.contractWrapper,
+        "ERC721ClaimPhasesV2",
+      )
+    ) {
+      return new Erc721ClaimableWithConditions(
+        this,
+        this.contractWrapper,
+        this.storage,
+      );
+    }
+    return undefined;
+  }
+
+  private detectErc721Claimable(): Erc721Claimable | undefined {
+    if (
+      detectContractFeature<IClaimableERC721>(
+        this.contractWrapper,
+        "ERC721ClaimCustom",
+      )
+    ) {
+      return new Erc721Claimable(this, this.contractWrapper);
     }
     return undefined;
   }

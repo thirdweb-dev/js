@@ -1,4 +1,3 @@
-import { IWalletWithMetadata } from "../../types/wallets";
 import { NetworkSelectorModal } from "../NetworkSelector/NetworkSelectorModal";
 import { Address } from "../base/Address";
 import BaseButton from "../base/BaseButton";
@@ -10,7 +9,7 @@ import { NetworkButton } from "./NetworkButton";
 import { WalletDetailsModalHeader } from "./WalletDetailsModalHeader";
 import { useWallet, useBalance, useDisconnect } from "@thirdweb-dev/react-core";
 import { useActiveChain } from "@thirdweb-dev/react-core/evm";
-import React, { useState } from "react";
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 export type ConnectWalletDetailsProps = {
@@ -71,7 +70,7 @@ export const ConnectWalletDetails = ({
         </View>
         <NetworkButton
           chainIconUrl={chain?.icon?.url || ""}
-          chainName={chain?.name || ""}
+          chainName={chain?.name || "Unknown Network"}
           onPress={onChangeNetworkPress}
         />
       </TWModal>
@@ -94,13 +93,7 @@ export const ConnectWalletDetails = ({
           </Text>
           <Address variant="bodySmallSecondary" address={address} />
         </View>
-        <WalletIcon
-          size={32}
-          iconUri={
-            (activeWallet as unknown as IWalletWithMetadata).getMetadata()
-              .image_url || ""
-          }
-        />
+        <WalletIcon size={32} iconUri={activeWallet?.getMeta().iconURL || ""} />
       </BaseButton>
     </>
   );

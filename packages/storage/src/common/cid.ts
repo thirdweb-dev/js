@@ -69,6 +69,10 @@ export async function getCID(
 export async function isUploaded(cid: string) {
   const res = await fetch(`${DEFAULT_GATEWAY_URLS["ipfs://"][0]}${cid}`, {
     method: "HEAD",
+    headers: {
+      // tell the gateway to skip fetching from origin in order to fail fast on 404s and just re-upload in those cases
+      "x-skip-origin": "true",
+    },
   });
   return res.ok;
 }

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Opal testnet by Unique",
   "icon": {
@@ -35,4 +36,4 @@ export default {
   ],
   "testnet": true,
   "slug": "opal-testnet-by-unique"
-} as const;
+} as const satisfies Chain;

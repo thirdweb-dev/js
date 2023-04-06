@@ -126,21 +126,18 @@ describe("Marketplace V3", async () => {
     ]);
     tokenAddress = customTokenContract.getAddress();
 
-    await marketplaceContract.call(
-      "grantRole",
+    await marketplaceContract.call("grantRole", [
       ethers.utils.solidityKeccak256(["string"], ["LISTER_ROLE"]),
       adminWallet.address,
-    );
-    await marketplaceContract.call(
-      "grantRole",
+    ]);
+    await marketplaceContract.call("grantRole", [
       ethers.utils.solidityKeccak256(["string"], ["ASSET_ROLE"]),
       dummyBundleContract.getAddress(),
-    );
-    await marketplaceContract.call(
-      "grantRole",
+    ]);
+    await marketplaceContract.call("grantRole", [
       ethers.utils.solidityKeccak256(["string"], ["ASSET_ROLE"]),
       dummyNftContract.getAddress(),
-    );
+    ]);
   });
 
   const createDirectListing = async (

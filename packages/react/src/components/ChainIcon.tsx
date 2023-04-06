@@ -1,39 +1,41 @@
-/* eslint-disable @next/next/no-img-element */
 import { Theme } from "../design-system";
 import styled from "@emotion/styled";
 import { Chain } from "@thirdweb-dev/chains";
+import { resolveIpfsUri } from "@thirdweb-dev/react-core";
 
-const defaultChainIcon =
-  "https://gateway.ipfscdn.io/ipfs/QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png";
+const defaultChainIcon = resolveIpfsUri(
+  "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
+);
 
 export const ChainIcon: React.FC<{
   chain?: Chain;
   size: string;
   active?: boolean;
+  className?: string;
 }> = (props) => {
   const url = props.chain?.icon?.url;
-  const src = url
-    ? `https://gateway.ipfscdn.io/ipfs/${url.replace("ipfs://", "")}`
-    : defaultChainIcon;
+  const src = url ? resolveIpfsUri(url) : defaultChainIcon;
 
   return (
     <div
       style={{
         position: "relative",
         display: "flex",
+        flexShrink: 0,
         alignItems: "center",
       }}
     >
       <img
         src={src || defaultChainIcon}
         onError={(e) => {
-          if (e.currentTarget.src !== defaultChainIcon) {
+          if (defaultChainIcon && e.currentTarget.src !== defaultChainIcon) {
             e.currentTarget.src = defaultChainIcon;
           }
         }}
-        alt={`C`}
+        alt=""
         width={props.size}
         height={props.size}
+        className={props.className}
       />
       {props.active && <ActiveDot />}
     </div>

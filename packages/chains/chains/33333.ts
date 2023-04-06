@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Aves Mainnet",
   "chain": "AVS",
@@ -33,10 +34,15 @@ export default {
     {
       "name": "avescan",
       "url": "https://avescan.io",
-      "icon": "avescan",
+      "icon": {
+        "url": "ipfs://QmeKQVv2QneHaaggw2NfpZ7DGMdjVhPywTdse5RzCs4oGn",
+        "width": 232,
+        "height": 232,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "aves"
-} as const;
+} as const satisfies Chain;

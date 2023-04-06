@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Nahmii Mainnet",
   "chain": "Nahmii",
@@ -25,7 +26,12 @@ export default {
     {
       "name": "Nahmii mainnet explorer",
       "url": "https://explorer.nahmii.io",
-      "icon": "nahmii",
+      "icon": {
+        "url": "ipfs://QmZhKXgoGpzvthr2eh8ZNgT75YvMtEBegdELAaMPPzf5QT",
+        "width": 384,
+        "height": 384,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
@@ -40,4 +46,4 @@ export default {
   },
   "testnet": false,
   "slug": "nahmii"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Mammoth Mainnet",
   "title": "Mammoth Chain",
@@ -31,9 +32,14 @@ export default {
       "name": "mmtscan",
       "url": "https://mmtscan.io",
       "standard": "EIP3091",
-      "icon": "mmt"
+      "icon": {
+        "url": "ipfs://QmaF5gi2CbDKsJ2UchNkjBqmWjv8JEDP3vePBmxeUHiaK4",
+        "width": 250,
+        "height": 250,
+        "format": "png"
+      }
     }
   ],
   "testnet": false,
   "slug": "mammoth"
-} as const;
+} as const satisfies Chain;

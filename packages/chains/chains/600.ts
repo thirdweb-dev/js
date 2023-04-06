@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Meshnyan testnet",
   "chain": "MeshTestChain",
@@ -14,4 +15,4 @@ export default {
   "networkId": 600,
   "testnet": true,
   "slug": "meshnyan-testnet"
-} as const;
+} as const satisfies Chain;

@@ -1,14 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { getPrebuiltInfo } from "../common/legacy";
 import { fetchAbiFromAddress } from "../common/metadata-resolver";
-import { getCompositePluginABI, joinABIs } from "../common/plugin";
+import { getCompositePluginABI } from "../common/plugin";
 import { ALL_ROLES } from "../common/role";
-import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
 import type {
   ContractType,
   NetworkInput,
   PrebuiltContractType,
 } from "../core/types";
+import { getSignerAndProvider } from "../functions/getSignerAndProvider";
 import {
   Address,
   DropErc1155ContractSchema,
@@ -22,7 +21,7 @@ import {
   TokenErc721ContractSchema,
   VoteContractSchema,
 } from "../schema";
-import { Abi } from "../schema/contracts/custom";
+import { Abi, AbiSchema } from "../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -202,7 +201,7 @@ export const MarketplaceV3Initializer = {
     ).default;
     return await getCompositePluginABI(
       address,
-      localAbi,
+      AbiSchema.parse(localAbi || []),
       provider,
       {},
       storage,
@@ -371,8 +370,10 @@ export const PackInitializer = {
       return abi;
     }
     // Deprecated - only needed for backwards compatibility with non-published contracts - should remove in v4
-    return (await import("@thirdweb-dev/contracts-js/dist/abis/Pack.json"))
-      .default;
+    return AbiSchema.parse(
+      (await import("@thirdweb-dev/contracts-js/dist/abis/Pack.json"))
+        .default || [],
+    );
   },
 };
 

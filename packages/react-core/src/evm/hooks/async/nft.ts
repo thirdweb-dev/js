@@ -19,9 +19,13 @@ import {
   invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  UseMutationResult,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { Erc1155, QueryAllParams, NFT } from "@thirdweb-dev/sdk";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, providers } from "ethers";
 import invariant from "tiny-invariant";
 
 /** **********************/
@@ -177,7 +181,7 @@ export function useTotalCount<TContract extends NFTContract>(
  */
 export function useTotalCirculatingSupply(
   contract: RequiredParam<NFTContract>,
-  tokenId: RequiredParam<BigNumberish>,
+  tokenId?: RequiredParam<BigNumberish>,
 ) {
   const contractAddress = contract?.getAddress();
   const { erc721, erc1155 } = getErcs(contract);
@@ -271,7 +275,7 @@ export function useOwnedNFTs<TContract extends NFTContract>(
 export function useNFTBalance(
   contract: RequiredParam<NFTContract>,
   ownerWalletAddress: RequiredParam<WalletAddress>,
-  tokenId: RequiredParam<BigNumberish>,
+  tokenId?: RequiredParam<BigNumberish>,
 ) {
   const contractAddress = contract?.getAddress();
   const { erc721, erc1155 } = getErcs(contract);
@@ -485,7 +489,18 @@ export function useMintNFTSupply(contract: Erc1155) {
  */
 export function useTransferNFT<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
-) {
+): UseMutationResult<
+  Omit<
+    {
+      receipt: providers.TransactionReceipt;
+      data: () => Promise<unknown>;
+    },
+    "data"
+  >,
+  unknown,
+  TransferNFTParams,
+  unknown
+> {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();

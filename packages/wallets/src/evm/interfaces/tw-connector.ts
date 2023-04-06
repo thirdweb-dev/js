@@ -1,5 +1,5 @@
 import { Connector } from "../../lib/wagmi-core";
-import { Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import type { Signer, providers } from "ethers";
 import EventEmitter from "eventemitter3";
 
@@ -19,6 +19,7 @@ export abstract class TWConnector<
 
 export type ConnectParams<TOpts extends Record<string, any> = {}> = {
   chainId?: number;
+  saveParams?: boolean;
 } & TOpts;
 
 export class WagmiAdapter<
@@ -33,7 +34,7 @@ export class WagmiAdapter<
 
   async connect(args?: ConnectParams<TConnectParams>): Promise<string> {
     const chainId = args?.chainId;
-    this.setupListeners();
+    this.setupTWConnectorListeners();
     const result = await this.wagmiConnector.connect({ chainId });
     return result.account;
   }
@@ -64,7 +65,7 @@ export class WagmiAdapter<
     await this.wagmiConnector.switchChain(chainId);
   }
 
-  async setupListeners() {
+  setupTWConnectorListeners() {
     this.wagmiConnector.addListener("connect", (data) => {
       this.emit("connect", data);
     });
@@ -76,6 +77,10 @@ export class WagmiAdapter<
     this.wagmiConnector.addListener("disconnect", () => {
       this.emit("disconnect");
     });
+  }
+
+  async setupListeners() {
+    this.setupTWConnectorListeners();
 
     await this.wagmiConnector.setupListeners();
   }

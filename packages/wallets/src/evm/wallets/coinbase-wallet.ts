@@ -8,21 +8,27 @@ if (typeof window !== "undefined") {
   window.Buffer = Buffer;
 }
 
-export type CoinbaseWalletOptions = WalletOptions<{ theme?: "light" | "dark" }>;
+export type CoinbaseWalletOptions = WalletOptions<{ headlessMode?: boolean }>;
 
-export class CoinbaseWallet extends AbstractBrowserWallet<{
-  theme?: "light" | "dark";
-}> {
+export class CoinbaseWallet extends AbstractBrowserWallet {
   connector?: TWConnector;
   coinbaseConnector?: CoinbaseWalletConnector;
+  static meta = {
+    iconURL:
+      "ipfs://QmcJBHopbwfJcLqJpX2xEufSS84aLbF7bHavYhaXUcrLaH/coinbase.svg",
+    name: "Coinbase Wallet",
+  };
 
   static id = "coinbaseWallet" as const;
   public get walletName() {
     return "Coinbase Wallet" as const;
   }
 
-  constructor(options: CoinbaseWalletOptions) {
+  headlessMode: boolean;
+
+  constructor(options?: CoinbaseWalletOptions) {
     super(CoinbaseWallet.id, options);
+    this.headlessMode = options?.headlessMode || false;
   }
 
   protected async getConnector(): Promise<TWConnector> {
@@ -35,10 +41,10 @@ export class CoinbaseWallet extends AbstractBrowserWallet<{
       const cbConnector = new CoinbaseWalletConnector({
         chains: this.chains,
         options: {
-          appName: this.options.dappMetadata.name,
+          appName: this.dappMetadata.name,
           reloadOnDisconnect: false,
-          darkMode: this.options.theme === "dark",
-          headlessMode: true,
+          darkMode: this.dappMetadata.isDarkMode,
+          headlessMode: this.headlessMode,
         },
       });
 
@@ -50,11 +56,11 @@ export class CoinbaseWallet extends AbstractBrowserWallet<{
     return this.connector;
   }
 
-  async getQrCode() {
+  async getQrUrl() {
     await this.getConnector();
     if (!this.coinbaseConnector) {
       throw new Error("Coinbase connector not initialized");
     }
-    return this.coinbaseConnector.getQrCode();
+    return this.coinbaseConnector.getQrUrl();
   }
 }

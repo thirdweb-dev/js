@@ -15,7 +15,7 @@ import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { VoteType } from "../../enums";
-import { Abi, Address, AddressOrEns } from "../../schema";
+import { Abi, AbiInput, AbiSchema, Address, AddressOrEns } from "../../schema";
 import { VoteContractSchema } from "../../schema/contracts/vote";
 import { SDKOptions } from "../../schema/sdk-options";
 import { CurrencyValue } from "../../types/currency";
@@ -76,7 +76,7 @@ export class Vote implements UpdateableNetwork {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: Abi,
+    abi: AbiInput,
     chainId: number,
     contractWrapper = new ContractWrapper<VoteERC20>(
       network,
@@ -86,7 +86,7 @@ export class Vote implements UpdateableNetwork {
     ),
   ) {
     this._chainId = chainId;
-    this.abi = abi;
+    this.abi = AbiSchema.parse(abi || []);
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this.metadata = new ContractMetadata(
@@ -504,10 +504,13 @@ export class Vote implements UpdateableNetwork {
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
+  public async call<
+    TMethod extends keyof VoteERC20["functions"] = keyof VoteERC20["functions"],
+  >(
+    functionName: string & TMethod,
+    args?: Parameters<VoteERC20["functions"][TMethod]>,
+    overrides?: CallOverrides,
   ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 }

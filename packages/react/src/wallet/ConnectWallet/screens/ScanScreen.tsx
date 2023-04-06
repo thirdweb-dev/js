@@ -1,3 +1,4 @@
+import { Img } from "../../../components/Img";
 import { QRCode } from "../../../components/QRCode";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
@@ -8,18 +9,18 @@ import {
 } from "../../../components/modalElements";
 import { fontSize, iconSize, spacing } from "../../../design-system";
 import { Theme } from "../../../design-system/index";
-import { IconFC } from "../icons/types";
 import styled from "@emotion/styled";
-import { blue } from "@radix-ui/colors";
 
 export const ScanScreen: React.FC<{
   onBack: () => void;
   onGetStarted: () => void;
   qrCodeUri?: string;
   walletName: string;
-  WalletIcon: IconFC;
+  walletIconURL: string;
 }> = (props) => {
-  const { WalletIcon } = props;
+  const walletName = props.walletName.toLowerCase().includes("wallet")
+    ? props.walletName
+    : `${props.walletName} wallet`;
   return (
     <>
       <BackButton
@@ -38,17 +39,23 @@ export const ScanScreen: React.FC<{
       >
         <QRCode
           qrCodeUri={props.qrCodeUri}
-          QRIcon={<WalletIcon size={iconSize.lg} />}
+          QRIcon={
+            <Img
+              width={iconSize.lg}
+              height={iconSize.lg}
+              src={props.walletIconURL}
+            />
+          }
         />
 
         <Spacer y="xl" />
 
-        <ModalTitle>Scan with {props.walletName} Wallet</ModalTitle>
+        <ModalTitle>Scan with {walletName} </ModalTitle>
         <Spacer y="md" />
 
         <ModalDescription>
           Scan this QR code with your phone <br />
-          camera or {props.walletName} wallet to connect
+          camera or {walletName} to connect
         </ModalDescription>
 
         <Spacer y="md" />
@@ -59,13 +66,13 @@ export const ScanScreen: React.FC<{
             justifyContent: "center",
           }}
         >
-          <Spinner size="md" color={blue.blue10} />
+          <Spinner size="md" color="link" />
         </div>
 
         <Spacer y="xl" />
 
         <LinkButton onClick={props.onGetStarted}>
-          {`Don't`} have {props.walletName} Wallet?
+          {`Don't`} have {walletName}?
         </LinkButton>
       </div>
     </>
@@ -77,4 +84,7 @@ const LinkButton = styled.button<{ theme?: Theme }>`
   color: ${(p) => p.theme.link.primary};
   font-size: ${fontSize.sm};
   cursor: pointer;
+  &:hover {
+    color: ${(p) => p.theme.link.primaryHover};
+  }
 `;

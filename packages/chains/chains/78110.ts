@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Firenze test network",
   "chain": "ETH",
@@ -17,4 +18,4 @@ export default {
   "networkId": 78110,
   "testnet": true,
   "slug": "firenze-test-network"
-} as const;
+} as const satisfies Chain;

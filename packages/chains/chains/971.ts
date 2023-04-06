@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Oort Huygens",
   "chain": "Huygens",
@@ -20,4 +21,4 @@ export default {
   },
   "testnet": false,
   "slug": "oort-huygens"
-} as const;
+} as const satisfies Chain;

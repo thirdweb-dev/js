@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Phoenix Mainnet",
   "chain": "Phoenix",
@@ -25,10 +26,9 @@ export default {
     {
       "name": "phoenixplorer",
       "url": "https://phoenixplorer.com",
-      "icon": "phoenixplorer",
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "phoenix"
-} as const;
+} as const satisfies Chain;

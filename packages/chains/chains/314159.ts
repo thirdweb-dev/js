@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Filecoin - Calibration testnet",
   "chain": "FIL",
@@ -34,8 +35,13 @@ export default {
       "name": "Filscout - Calibration",
       "url": "https://calibration.filscout.com/en",
       "standard": "none"
+    },
+    {
+      "name": "Filfox - Calibration",
+      "url": "https://calibration.filfox.info",
+      "standard": "none"
     }
   ],
   "testnet": true,
   "slug": "filecoin-calibration-testnet"
-} as const;
+} as const satisfies Chain;

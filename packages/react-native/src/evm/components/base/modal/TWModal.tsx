@@ -1,5 +1,5 @@
 import { useAppTheme } from "../../../styles/hooks";
-import React, { PropsWithChildren } from "react";
+import { PropsWithChildren } from "react";
 import { StyleSheet, View, Dimensions } from "react-native";
 import Modal, { ModalProps } from "react-native-modal";
 
@@ -16,7 +16,7 @@ export function TWModal({ children, isVisible, ...props }: TWModalProps) {
   const theme = useAppTheme();
 
   return (
-    <Modal useNativeDriver isVisible={isVisible} {...props}>
+    <Modal useNativeDriver hideModalContentWhileAnimating={true} isVisible={isVisible} {...props}>
       <View
         style={[styles.modal, { backgroundColor: theme.colors.background }]}
       >

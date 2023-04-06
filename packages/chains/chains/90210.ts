@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Beverly Hills",
   "title": "Ethereum multi-client Verkle Testnet Beverly Hills",
@@ -28,4 +29,4 @@ export default {
   ],
   "testnet": true,
   "slug": "beverly-hills"
-} as const;
+} as const satisfies Chain;

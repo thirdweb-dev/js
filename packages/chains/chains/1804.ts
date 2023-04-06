@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Kerleano",
   "title": "Proof of Carbon Reduction testnet",
@@ -29,4 +30,4 @@ export default {
   ],
   "testnet": true,
   "slug": "kerleano"
-} as const;
+} as const satisfies Chain;

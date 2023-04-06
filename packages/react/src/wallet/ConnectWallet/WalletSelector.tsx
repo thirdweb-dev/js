@@ -1,12 +1,20 @@
+import { Img } from "../../components/Img";
 import { Spacer } from "../../components/Spacer";
-import { ModalTitle } from "../../components/modalElements";
-import { fontSize, radius, spacing, Theme } from "../../design-system";
+import { HelperLink, ModalTitle } from "../../components/modalElements";
+import {
+  fontSize,
+  iconSize,
+  radius,
+  spacing,
+  Theme,
+} from "../../design-system";
 import { WalletMeta } from "../types";
 import styled from "@emotion/styled";
 
-export const WalletSelector: React.FC<{ walletsMeta: WalletMeta[] }> = (
-  props,
-) => {
+export const WalletSelector: React.FC<{
+  walletsMeta: WalletMeta[];
+  onGetStarted: () => void;
+}> = (props) => {
   return (
     <>
       <ModalTitle
@@ -19,27 +27,63 @@ export const WalletSelector: React.FC<{ walletsMeta: WalletMeta[] }> = (
 
       <Spacer y="xl" />
 
-      <WalletList>
-        {props.walletsMeta.map((walletMeta) => {
-          return (
-            <li key={walletMeta.id}>
-              <WalletButton
-                type="button"
-                onClick={() => {
-                  walletMeta.onClick();
-                }}
-              >
-                {walletMeta.icon}
-                <WalletName>{walletMeta.name}</WalletName>
-                {walletMeta.installed && (
-                  <InstallBadge> Installed </InstallBadge>
-                )}
-              </WalletButton>
-            </li>
-          );
-        })}
-      </WalletList>
+      <WalletSelection walletsMeta={props.walletsMeta} />
+
+      <Spacer y="xl" />
+
+      <HelperLink
+        as="button"
+        onClick={props.onGetStarted}
+        style={{
+          display: "block",
+          width: "100%",
+          textAlign: "center",
+        }}
+      >
+        Need help getting started?
+      </HelperLink>
     </>
+  );
+};
+
+export const WalletSelection: React.FC<{ walletsMeta: WalletMeta[] }> = (
+  props,
+) => {
+  // show the installed wallets first
+  const sortedWalletsMeta = props.walletsMeta.sort((a, b) => {
+    if (a.installed && !b.installed) {
+      return -1;
+    }
+    if (!a.installed && b.installed) {
+      return 1;
+    }
+    return 0;
+  });
+
+  return (
+    <WalletList>
+      {sortedWalletsMeta.map((walletMeta) => {
+        return (
+          <li key={walletMeta.id}>
+            <WalletButton
+              type="button"
+              onClick={() => {
+                walletMeta.onClick();
+              }}
+            >
+              <Img
+                src={walletMeta.iconURL}
+                width={iconSize.lg}
+                height={iconSize.lg}
+                loading="eager"
+              />
+              <WalletName>{walletMeta.name}</WalletName>
+              {walletMeta.installed && <InstallBadge> Installed </InstallBadge>}
+            </WalletButton>
+          </li>
+        );
+      })}
+    </WalletList>
   );
 };
 

@@ -1,6 +1,5 @@
 import { ModalHeaderTextClose } from "../base/modal/ModalHeaderTextClose";
 import { TWModal, TWModalProps } from "../base/modal/TWModal";
-import React from "react";
 
 export type NetworkSelectorModalProps = {
   onClose: () => void;
@@ -15,7 +14,7 @@ export const NetworkSelectorModal = ({
     <TWModal isVisible={isVisible} {...props}>
       <ModalHeaderTextClose
         headerText={"Select Network"}
-        subHeaderText={"Choose a new network to connect to Thirdweb"}
+        subHeaderText={"Choose a new network to connect to thirdweb"}
         onClose={onClose}
       />
     </TWModal>

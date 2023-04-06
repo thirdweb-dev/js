@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Godwoken Testnet v1",
   "chain": "GWT",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": true,
   "slug": "godwoken-testnet-v1"
-} as const;
+} as const satisfies Chain;

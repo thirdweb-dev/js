@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Ganache",
   "title": "Ganache GUI Ethereum Testnet",
@@ -25,4 +26,4 @@ export default {
   "explorers": [],
   "testnet": true,
   "slug": "ganache"
-} as const;
+} as const satisfies Chain;

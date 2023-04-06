@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Theta Amber Testnet",
   "chain": "Theta",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": true,
   "slug": "theta-amber-testnet"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Plian Testnet Subchain 1",
   "chain": "Plian",
@@ -28,4 +29,4 @@ export default {
   },
   "testnet": true,
   "slug": "plian-testnet-subchain-1"
-} as const;
+} as const satisfies Chain;

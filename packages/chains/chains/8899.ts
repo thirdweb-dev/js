@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "JIBCHAIN L1",
   "chain": "JBC",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": false,
   "slug": "jibchain-l1"
-} as const;
+} as const satisfies Chain;

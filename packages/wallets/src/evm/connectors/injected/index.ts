@@ -10,13 +10,12 @@ import {
   RpcError,
   SwitchChainError,
   UserRejectedRequestError,
-  Ethereum,
 } from "../../../lib/wagmi-core";
+import { assertWindowEthereum } from "../../utils/assertWindowEthereum";
 import { getInjectedName } from "../../utils/getInjectedName";
-import { Chain } from "@thirdweb-dev/chains";
-import type { Address } from "abitype";
-import { providers } from "ethers";
-import { utils } from "ethers";
+import { Ethereum } from "./types";
+import type { Chain } from "@thirdweb-dev/chains";
+import { utils, providers } from "ethers";
 
 export type InjectedConnectorOptions = {
   /** Name of connector */
@@ -79,10 +78,11 @@ export class InjectedConnector extends Connector<
     const defaultOptions = {
       shimDisconnect: true,
       shimChainChangedDisconnect: true,
-      getProvider: () =>
-        typeof window !== "undefined"
-          ? (window.ethereum as Ethereum)
-          : undefined,
+      getProvider: () => {
+        if (assertWindowEthereum(globalThis.window)) {
+          return globalThis.window.ethereum;
+        }
+      },
     };
 
     const options = {
@@ -360,7 +360,7 @@ export class InjectedConnector extends Connector<
                 chainId: chainIdHex,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpcUrls: [chain.rpc[0] || ""],
+                rpcUrls: chain.rpc as string[],
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],
@@ -382,35 +382,6 @@ export class InjectedConnector extends Connector<
       }
       throw new SwitchChainError(error);
     }
-  }
-
-  async watchAsset({
-    address,
-    decimals = 18,
-    image,
-    symbol,
-  }: {
-    address: Address;
-    decimals?: number;
-    image?: string;
-    symbol: string;
-  }) {
-    const provider = await this.getProvider();
-    if (!provider) {
-      throw new ConnectorNotFoundError();
-    }
-    return provider.request({
-      method: "wallet_watchAsset",
-      params: {
-        type: "ERC20",
-        options: {
-          address,
-          decimals,
-          image,
-          symbol,
-        },
-      },
-    });
   }
 
   async setupListeners() {

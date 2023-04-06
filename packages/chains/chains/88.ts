@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "TomoChain",
   "chain": "TOMO",
@@ -18,4 +19,4 @@ export default {
   "slip44": 889,
   "testnet": false,
   "slug": "tomochain"
-} as const;
+} as const satisfies Chain;

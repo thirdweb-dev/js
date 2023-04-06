@@ -14,6 +14,10 @@ export const darkTheme = {
     invertedFocused: mauveDark.mauve7,
     danger: tomato.tomato12,
   },
+  border: {
+    base: mauveDark.mauve3,
+    elevated: mauveDark.mauve4,
+  },
   badge: {
     secondary: mauveDark.mauve6,
   },
@@ -21,15 +25,19 @@ export const darkTheme = {
     neutral: mauveDark.mauve12,
     inverted: mauveDark.mauve1,
     secondary: mauveDark.mauve9,
+    danger: tomato.tomato9,
   },
   icon: {
     secondary: mauveDark.mauve11,
     primary: mauveDark.mauve12,
+    inverted: mauveDark.mauve1,
     danger: tomato.tomato9,
     success: green.green7,
+    link: blue.blue9,
   },
   link: {
     primary: blue.blue9,
+    primaryHover: mauveDark.mauve12,
   },
   input: {
     bg: mauveDark.mauve3,
@@ -37,6 +45,10 @@ export const darkTheme = {
     outline: mauveDark.mauve5,
     focusRing: blue.blue9,
     errorRing: tomato.tomato9,
+  },
+  tooltip: {
+    bg: "black",
+    text: "white",
   },
 };
 
@@ -47,12 +59,16 @@ export const lightTheme: typeof darkTheme = {
   bg: {
     base: mauve.mauve1,
     baseHover: mauve.mauve2,
-    elevated: mauve.mauve4,
-    elevatedHover: mauve.mauve5,
-    highlighted: mauve.mauve6,
+    elevated: mauve.mauve3,
+    elevatedHover: mauve.mauve4,
+    highlighted: mauve.mauve5,
     inverted: mauve.mauve12,
     invertedFocused: mauve.mauve7,
     danger: tomato.tomato4,
+  },
+  border: {
+    base: mauve.mauve6,
+    elevated: mauve.mauve7,
   },
   badge: {
     secondary: mauve.mauve1,
@@ -61,22 +77,30 @@ export const lightTheme: typeof darkTheme = {
     neutral: mauve.mauve12,
     inverted: mauve.mauve1,
     secondary: mauve.mauve10,
+    danger: tomato.tomato9,
   },
   icon: {
     secondary: mauve.mauve10,
     primary: mauve.mauve12,
+    inverted: mauve.mauve1,
     danger: tomato.tomato9,
     success: green.green9,
+    link: blue.blue11,
   },
   link: {
     primary: blue.blue11,
+    primaryHover: mauve.mauve12,
   },
   input: {
     bg: mauve.mauve3,
     bgHover: mauveDark.mauve5,
     outline: mauve.mauve7,
-    focusRing: blue.blue10,
+    focusRing: blue.blue11,
     errorRing: tomato.tomato10,
+  },
+  tooltip: {
+    bg: "black",
+    text: "white",
   },
 };
 
@@ -109,10 +133,11 @@ export const radius = {
 };
 
 export const iconSize = {
-  sm: "16px",
-  md: "24px",
-  lg: "32px",
-  xl: "48px",
+  xs: "12",
+  sm: "16",
+  md: "24",
+  lg: "32",
+  xl: "48",
 };
 
 // desktop first style media query

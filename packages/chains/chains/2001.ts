@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Milkomeda C1 Mainnet",
   "chain": "milkAda",
@@ -31,4 +32,4 @@ export default {
   ],
   "testnet": false,
   "slug": "milkomeda-c1"
-} as const;
+} as const satisfies Chain;

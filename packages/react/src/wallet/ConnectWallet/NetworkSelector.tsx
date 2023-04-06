@@ -1,6 +1,7 @@
 import { ChainIcon } from "../../components/ChainIcon";
 import { Modal } from "../../components/Modal";
 import { Spacer } from "../../components/Spacer";
+import { Spinner } from "../../components/Spinner";
 import { Input } from "../../components/formElements";
 import {
   fontSize,
@@ -11,6 +12,7 @@ import {
   Theme,
 } from "../../design-system";
 import { scrollbar } from "../../design-system/styles";
+import { useIsNonLocalWallet } from "../hooks/useCanSwitchNetwork";
 import styled from "@emotion/styled";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import * as Tabs from "@radix-ui/react-tabs";
@@ -20,14 +22,14 @@ import {
   useSupportedChains,
   useSwitchChain,
 } from "@thirdweb-dev/react-core";
-import React, { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 export const NetworkSelector: React.FC<{
   open: boolean;
   setOpen: (show: boolean) => void;
 }> = (props) => {
   const chains = useSupportedChains();
-  const [searchTerm, setSearchTerm] = React.useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { testnets, mainnets, all } = useMemo(() => {
     const searchTermLower = searchTerm.toLowerCase();
@@ -96,7 +98,7 @@ export const NetworkSelector: React.FC<{
             position: "relative",
           }}
         >
-          <StyledMagnifyingGlassIcon />
+          <StyledMagnifyingGlassIcon width={iconSize.md} height={iconSize.md} />
           <SearchInput
             style={{
               boxShadow: "none",
@@ -113,15 +115,15 @@ export const NetworkSelector: React.FC<{
         <Spacer y="lg" />
 
         <Tabs.Content className="TabsContent" value="all">
-          <NetworkList chains={all} onNetworkSelect={closeModal} />
+          <NetworkList chains={all} closeModal={closeModal} />
         </Tabs.Content>
 
         <Tabs.Content className="TabsContent" value="mainnet">
-          <NetworkList chains={mainnets} onNetworkSelect={closeModal} />
+          <NetworkList chains={mainnets} closeModal={closeModal} />
         </Tabs.Content>
 
         <Tabs.Content className="TabsContent" value="testnet">
-          <NetworkList chains={testnets} onNetworkSelect={closeModal} />
+          <NetworkList chains={testnets} closeModal={closeModal} />
         </Tabs.Content>
       </Tabs.Root>
     </Modal>
@@ -130,35 +132,88 @@ export const NetworkSelector: React.FC<{
 
 const NetworkList: React.FC<{
   chains: Chain[];
-  onNetworkSelect: () => void;
+  closeModal: () => void;
 }> = (props) => {
   const switchChain = useSwitchChain();
   const activeChainId = useChainId();
+  const [confirmingChainId, setConfirmingChainId] = useState(-1);
+  const [errorSwitchingChainId, setErrorSwitchingChainId] = useState(-1);
+  const requiresConfirmation = useIsNonLocalWallet();
+
   return (
     <NetworkListUl>
-      {props.chains.map((chain) => (
-        <li key={chain.chainId}>
-          <NetworkButton
-            data-active={activeChainId === chain.chainId}
-            onClick={() => {
-              switchChain(chain.chainId);
-              props.onNetworkSelect();
-            }}
-          >
-            <ChainIcon
-              chain={chain}
-              size={iconSize.lg}
-              active={activeChainId === chain.chainId}
-            />
-            <span>
-              {chain.name}{" "}
-              <NetworkShortName>
-                ({chain.shortName.toUpperCase()})
-              </NetworkShortName>
-            </span>
-          </NetworkButton>
-        </li>
-      ))}
+      {props.chains.map((chain) => {
+        const confirming = confirmingChainId === chain.chainId;
+        const switchingFailed = errorSwitchingChainId === chain.chainId;
+
+        const chainName = <span>{chain.name} </span>;
+
+        return (
+          <li key={chain.chainId}>
+            <NetworkButton
+              data-active={activeChainId === chain.chainId}
+              onClick={async () => {
+                setErrorSwitchingChainId(-1);
+
+                if (requiresConfirmation) {
+                  setConfirmingChainId(chain.chainId);
+                }
+
+                try {
+                  await switchChain(chain.chainId);
+                  props.closeModal();
+                } catch (e: any) {
+                  setErrorSwitchingChainId(chain.chainId);
+                  console.error(e);
+                } finally {
+                  if (requiresConfirmation) {
+                    setConfirmingChainId(-1);
+                  }
+                }
+              }}
+            >
+              <ChainIcon
+                chain={chain}
+                size={iconSize.lg}
+                active={activeChainId === chain.chainId}
+              />
+
+              {confirming || switchingFailed ? (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: spacing.xs,
+                  }}
+                >
+                  {chainName}
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: spacing.xs,
+                    }}
+                  >
+                    {confirming && (
+                      <>
+                        <ConfirmMessage>Confirm in Wallet</ConfirmMessage>
+                        <Spinner size="sm" color="link" />
+                      </>
+                    )}
+
+                    {switchingFailed && (
+                      <ErrorMessage>
+                        Error: Could not Switch Network
+                      </ErrorMessage>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                chainName
+              )}
+            </NetworkButton>
+          </li>
+        );
+      })}
     </NetworkListUl>
   );
 };
@@ -166,6 +221,7 @@ const NetworkList: React.FC<{
 const TabButton = styled(Tabs.Trigger)<{ theme?: Theme }>`
   all: unset;
   font-size: ${fontSize.md};
+  font-weight: 500;
   color: ${(p) => p.theme.text.secondary};
   cursor: pointer;
   padding: ${spacing.sm} ${spacing.md};
@@ -191,6 +247,7 @@ const NetworkListUl = styled.ul<{ theme?: Theme }>`
   padding-right: 10px;
   padding-bottom: ${spacing.lg};
   width: calc(100% + 16px);
+  box-sizing: border-box;
   -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
   mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
   ${(p) =>
@@ -224,18 +281,9 @@ const NetworkButton = styled.button<{ theme?: Theme }>`
   }
 `;
 
-const NetworkShortName = styled.span<{ theme?: Theme }>`
-  color: ${(p) => p.theme.text.secondary};
-  display: inline-block;
-  font-size: ${fontSize.md};
-  font-weight: 500;
-`;
-
 const StyledMagnifyingGlassIcon = styled(MagnifyingGlassIcon)<{
   theme?: Theme;
 }>`
-  width: ${iconSize.md};
-  height: ${iconSize.md};
   color: ${(p) => p.theme.text.secondary};
   position: absolute;
   left: 18px;
@@ -243,4 +291,14 @@ const StyledMagnifyingGlassIcon = styled(MagnifyingGlassIcon)<{
 
 const SearchInput = styled(Input)<{ theme?: Theme }>`
   padding: ${spacing.sm} ${spacing.md} ${spacing.sm} 60px;
+`;
+
+const ConfirmMessage = styled.div<{ theme?: Theme }>`
+  font-size: ${fontSize.sm};
+  color: ${(p) => p.theme.link.primary};
+`;
+
+const ErrorMessage = styled.div<{ theme?: Theme }>`
+  font-size: ${fontSize.sm};
+  color: ${(p) => p.theme.text.danger};
 `;

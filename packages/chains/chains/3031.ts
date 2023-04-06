@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Orlando Chain",
   "chain": "ORL",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "Orlando (ORL) Explorer",
       "url": "https://orlscan.com",
-      "icon": "orl",
+      "icon": {
+        "url": "ipfs://QmNsuuBBTHErnuFDcdyzaY8CKoVJtobsLJx2WQjaPjcp7g",
+        "width": 512,
+        "height": 528,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "orlando-chain"
-} as const;
+} as const satisfies Chain;

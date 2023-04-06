@@ -1,12 +1,13 @@
-import { WalletMeta } from "../types/wallets";
-
-export function formatDisplayUri(uri: string, walletMeta: WalletMeta) {
+export function formatDisplayUri(
+  uri: string,
+  links: { universal: string; native: string },
+) {
   const encodedUri: string = encodeURIComponent(uri);
-  return walletMeta.mobile.universal
-    ? `${walletMeta.mobile.universal}/wc?uri=${encodedUri}`
-    : walletMeta.mobile.native
-    ? `${walletMeta.mobile.native}${
-        walletMeta.mobile.native.endsWith(":") ? "//" : "/"
+  return links.universal
+    ? `${links.universal}/wc?uri=${encodedUri}`
+    : links.native
+    ? `${links.native}${
+        links.native.endsWith(":") ? "//" : "/"
       }wc?uri=${encodedUri}`
-    : `wc://${encodedUri}`;
+    : `${uri}`;
 }

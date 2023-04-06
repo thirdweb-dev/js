@@ -1,5 +1,5 @@
 import { ThirdwebAuth } from "../src/core";
-import { SignerWallet } from "../src/evm";
+import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { expect } from "chai";
 import { Wallet } from "ethers";
 
@@ -14,9 +14,9 @@ describe("Wallet Authentication", async () => {
       Wallet.createRandom(),
     ];
 
-    adminWallet = new SignerWallet(adminSigner);
-    signerWallet = new SignerWallet(signerSigner);
-    attackerWallet = new SignerWallet(attackerSigner);
+    adminWallet = new EthersWallet(adminSigner);
+    signerWallet = new EthersWallet(signerSigner);
+    attackerWallet = new EthersWallet(attackerSigner);
 
     auth = new ThirdwebAuth(signerWallet, "thirdweb.com");
   });

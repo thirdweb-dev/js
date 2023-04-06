@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Arbitrum One",
   "chainId": 42161,
@@ -42,16 +43,8 @@ export default {
     "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/arbitrum/512.png",
     "height": 512,
     "width": 512,
-    "format": "png",
-    "sizes": [
-      512,
-      256,
-      128,
-      64,
-      32,
-      16
-    ]
+    "format": "png"
   },
   "testnet": false,
   "slug": "arbitrum"
-} as const;
+} as const satisfies Chain;

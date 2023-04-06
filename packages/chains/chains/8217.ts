@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Klaytn Mainnet Cypress",
   "chain": "KLAY",
@@ -39,4 +40,4 @@ export default {
   },
   "testnet": false,
   "slug": "klaytn-cypress"
-} as const;
+} as const satisfies Chain;

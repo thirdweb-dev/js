@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Condrieu",
   "title": "Ethereum Verkle Testnet Condrieu",
@@ -27,4 +28,4 @@ export default {
   ],
   "testnet": true,
   "slug": "condrieu"
-} as const;
+} as const satisfies Chain;

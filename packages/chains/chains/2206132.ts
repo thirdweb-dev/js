@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "PlatON Dev Testnet2",
   "chain": "PlatON",
@@ -33,4 +34,4 @@ export default {
   ],
   "testnet": true,
   "slug": "platon-dev-testnet2"
-} as const;
+} as const satisfies Chain;

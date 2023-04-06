@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Mythical Chain",
   "chain": "MYTH",
@@ -33,10 +34,15 @@ export default {
     {
       "name": "Mythical Chain Explorer",
       "url": "https://explorer.mythicalgames.com",
-      "icon": "mythical",
+      "icon": {
+        "url": "ipfs://bafkreihru6cccfblrjz5bv36znq2l3h67u6xj5ivtc4bj5l6gzofbgtnb4",
+        "width": 350,
+        "height": 350,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "mythical-chain"
-} as const;
+} as const satisfies Chain;

@@ -1,5 +1,13 @@
 # @thirdweb-dev/contracts-js
 
+## 1.3.2
+
+### Patch Changes
+
+- [#701](https://github.com/thirdweb-dev/js/pull/701) [`71532e5a`](https://github.com/thirdweb-dev/js/commit/71532e5a9fb5b116ba342465ef82e795ca8cc011) Thanks [@kumaryash90](https://github.com/kumaryash90)! - contracts v3.4.4
+
+- [#702](https://github.com/thirdweb-dev/js/pull/702) [`33d1cc7f`](https://github.com/thirdweb-dev/js/commit/33d1cc7f92cd982e9e55130472c0006bb999f682) Thanks [@jnsdls](https://github.com/jnsdls)! - enable `browser` export
+
 ## 1.3.1
 
 ### Patch Changes

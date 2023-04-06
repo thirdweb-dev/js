@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Weelink Testnet",
   "chain": "WLK",
@@ -26,4 +27,4 @@ export default {
   ],
   "testnet": true,
   "slug": "weelink-testnet"
-} as const;
+} as const satisfies Chain;

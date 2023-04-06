@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Web3Games Devnet",
   "chain": "Web3Games",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": false,
   "slug": "web3games-devnet"
-} as const;
+} as const satisfies Chain;

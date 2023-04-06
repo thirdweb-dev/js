@@ -11,11 +11,11 @@ import {
   useSDKChainId,
   useSwitchChain,
   useConnectionStatus,
+  useWallet,
 } from "@thirdweb-dev/react-core";
 import type { SmartContract } from "@thirdweb-dev/sdk";
 import type { CallOverrides, ContractInterface } from "ethers";
-import { PropsWithChildren } from "react";
-import React from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import invariant from "tiny-invariant";
 
@@ -72,6 +72,7 @@ export const Web3Button = <TAction extends ActionFn>({
   theme,
 }: PropsWithChildren<Web3ButtonProps<TAction>>) => {
   const address = useAddress();
+  const activeWallet = useWallet();
   const walletChainId = useChainId();
   const sdkChainId = useSDKChainId();
   const switchChain = useSwitchChain();
@@ -119,6 +120,12 @@ export const Web3Button = <TAction extends ActionFn>({
       onSettled: () => queryClient.invalidateQueries(),
     },
   );
+
+  useEffect(() => {
+    if (!activeWallet && actionMutation.isLoading) {
+      actionMutation.reset();
+    }
+  }, [actionMutation, activeWallet]);
 
   if (!address) {
     return <ConnectWallet theme={theme} />;

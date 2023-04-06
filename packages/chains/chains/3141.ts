@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Filecoin - Hyperspace testnet",
   "chain": "FIL",
@@ -43,8 +44,8 @@ export default {
       "standard": "none"
     },
     {
-      "name": "Filmine",
-      "url": "https://explorer.filmine.io",
+      "name": "Dev.storage",
+      "url": "https://dev.storage",
       "standard": "none"
     },
     {
@@ -55,4 +56,4 @@ export default {
   ],
   "testnet": true,
   "slug": "filecoin-hyperspace-testnet"
-} as const;
+} as const satisfies Chain;

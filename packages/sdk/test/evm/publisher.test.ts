@@ -513,11 +513,13 @@ describe("Publishing", async () => {
     const uri = await c.call("contractUri");
     expect(uri).to.eq(ethers.utils.hexZeroPad("0x1234", 32));
 
-    const tx = await c.call("updateStruct", {
-      aNumber: 123,
-      aString: ethers.utils.hexZeroPad("0x1234", 32),
-      anArray: [adminWallet.address, samWallet.address],
-    });
+    const tx = await c.call("updateStruct", [
+      {
+        aNumber: 123,
+        aString: ethers.utils.hexZeroPad("0x1234", 32),
+        anArray: [adminWallet.address, samWallet.address],
+      },
+    ]);
     expect(tx).to.not.eq(undefined);
   });
 

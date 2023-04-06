@@ -1,33 +1,30 @@
 import type {
   AbstractBrowserWallet,
-  AsyncStorage,
   Chain,
   DAppMetaData,
-  TWConnector,
 } from "@thirdweb-dev/wallets";
 
 // these are extra options provided by the react-core package
 export type ExtraCoreWalletOptions = {
-  theme?: "light" | "dark";
-  // for device wallet
   chain: Chain;
 };
 
 export type WalletOptions = {
-  chains?: Chain[];
-  shouldAutoConnect?: boolean;
+  chains: Chain[];
   walletId?: string;
-  coordinatorStorage: AsyncStorage;
-  dappMetadata: DAppMetaData;
+  dappMetadata?: DAppMetaData;
 } & ExtraCoreWalletOptions;
 
-export type SupportedWalletInstance = InstanceType<
-  typeof AbstractBrowserWallet
-> & {
-  connector?: TWConnector;
+export type WalletInstance = InstanceType<typeof AbstractBrowserWallet>;
+
+export type WalletClass<I extends WalletInstance = WalletInstance> = {
+  id: string;
+  new (options: WalletOptions): I;
+  meta: (typeof AbstractBrowserWallet)["meta"];
 };
 
-export type SupportedWallet = {
+export type Wallet<I extends WalletInstance = WalletInstance> = {
   id: string;
-  new (options: WalletOptions): SupportedWalletInstance;
+  meta: (typeof AbstractBrowserWallet)["meta"];
+  create: (options: WalletOptions) => I;
 };

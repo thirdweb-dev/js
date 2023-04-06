@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Dithereum Testnet",
   "chain": "DTH",
@@ -25,4 +26,4 @@ export default {
   "networkId": 34,
   "testnet": true,
   "slug": "dithereum-testnet"
-} as const;
+} as const satisfies Chain;

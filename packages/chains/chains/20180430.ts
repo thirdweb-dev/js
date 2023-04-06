@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "SmartMesh Mainnet",
   "chain": "Spectrum",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": false,
   "slug": "smartmesh"
-} as const;
+} as const satisfies Chain;
