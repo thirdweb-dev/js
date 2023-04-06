@@ -46,7 +46,7 @@ export function useUser<
         }} : {})
       }
 
-      const res = await fetch(`${authConfig.domain}${authConfig.authUrl}/user`, params as RequestInit);
+      const res = await fetch(`${authConfig.authUrl}/user`, params as RequestInit);
 
       return (await res.json()) as UserWithData<TData, TContext>;
     },

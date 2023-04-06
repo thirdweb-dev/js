@@ -27,7 +27,7 @@ export function useLogout() {
         "Please specify an authUrl in the authConfig.",
       );
 
-      await fetch(`${authConfig.domain}${authConfig.authUrl}/logout`, {
+      await fetch(`${authConfig.authUrl}/logout`, {
         method: "POST",
         credentials: "include",
       });

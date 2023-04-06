@@ -43,7 +43,7 @@ export function useLogin() {
         ...(options || {}),
       });
 
-      const res = await fetch(`${authConfig.domain}${authConfig.authUrl}/login`, {
+      const res = await fetch(`${authConfig.authUrl}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
