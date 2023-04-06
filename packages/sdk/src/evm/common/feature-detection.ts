@@ -26,6 +26,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import bs58 from "bs58";
 import { BaseContract, BigNumber, ethers } from "ethers";
 import { z } from "zod";
+import { isAddress } from "ethers/lib/utils";
 
 /**
  * @internal
@@ -316,7 +317,13 @@ export async function resolveContractUriFromAddress(
   address: string,
   provider: ethers.providers.Provider,
 ): Promise<string | undefined> {
-  const bytecode = await provider.getCode(address);
+  let bytecode;
+  try {
+    bytecode = await provider.getCode(address);
+  } catch (e) {
+    throw new Error(`Failed to get bytecode for address ${address}: ${e}`);
+  }
+
   if (bytecode === "0x") {
     const chain = await provider.getNetwork();
     throw new Error(
@@ -345,8 +352,11 @@ export async function resolveContractUriFromAddress(
         "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
       ),
     );
-    const implementationAddress = ethers.utils.hexStripZeros(proxyStorage);
-    if (implementationAddress !== "0x") {
+    const implementationAddress = `0x${proxyStorage.slice(-40)}`;
+    if (
+      isAddress(implementationAddress) &&
+      implementationAddress !== ethers.constants.AddressZero
+    ) {
       return await resolveContractUriFromAddress(
         implementationAddress,
         provider,
