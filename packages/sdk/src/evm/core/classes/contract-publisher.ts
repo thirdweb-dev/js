@@ -370,13 +370,13 @@ export class ContractPublisher extends RPCConnectionHandler {
           extraMetadata.factoryDeploymentData.implementationAddresses,
         );
 
-        for (const [network, implementation] of implementationsAddresses) {
-          if (implementation !== "") {
-            const compilerMetadata = await fetchContractMetadata(
-              predeployMetadata.metadataUri,
-              this.storage,
-            );
-            try {
+        try {
+          for (const [network, implementation] of implementationsAddresses) {
+            if (implementation !== "") {
+              const compilerMetadata = await fetchContractMetadata(
+                predeployMetadata.metadataUri,
+                this.storage,
+              );
               const composite = await getCompositePluginABI(
                 implementation,
                 compilerMetadata.abi,
@@ -385,10 +385,10 @@ export class ContractPublisher extends RPCConnectionHandler {
                 this.storage,
               );
               extraMetadata.compositeAbi = AbiSchema.parse(composite);
-            } catch {}
-            break;
+              break;
+            }
           }
-        }
+        } catch {}
       }
 
       // ensure version is incremental
