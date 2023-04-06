@@ -38,6 +38,9 @@ describe("Any EVM Keyless Deploy", async () => {
       ],
       {
         forceDirectDeploy: false,
+        notifier(status, contractType) {
+          console.log(status, contractType);
+        },
       },
     );
 
