@@ -63,7 +63,7 @@ Deploying published contracts give deployers access to automatic SDKs to integra
 npx thirdweb@latest detect
 ```
 
-As you're developing your contracts, you may want to implement [Extensions](https://portal.thirdweb.com/contractkit) to unlock functionality on the SDKs (ie. nft minting with automatic upload to IPFS) and the dashboard (ie. generated UI to manage permissions). This command will show what extensions were detected on your contract, unlocking the corresponding functionality on the SDKs and dashboard.
+As you're developing your contracts, you may want to implement [Extensions](https://portal.thirdweb.com/solidity/extensions) to unlock functionality on the SDKs (ie. nft minting with automatic upload to IPFS) and the dashboard (ie. generated UI to manage permissions). This command will show what extensions were detected on your contract, unlocking the corresponding functionality on the SDKs and dashboard.
 
 ---
 

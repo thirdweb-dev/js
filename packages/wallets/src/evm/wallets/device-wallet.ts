@@ -1,7 +1,7 @@
 import { AsyncStorage, createAsyncLocalStorage } from "../../core";
 import { TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
-import { AbstractBrowserWallet, WalletOptions } from "./base";
+import { AbstractClientWallet, WalletOptions } from "./base";
 import { Chain, defaultChains, Ethereum } from "@thirdweb-dev/chains";
 import { ethers } from "ethers";
 
@@ -19,7 +19,7 @@ export type DeviceWalletConnectionArgs = {
 const STORAGE_KEY_DATA = "data";
 const STORAGE_KEY_ADDR = "address";
 
-export class DeviceBrowserWallet extends AbstractBrowserWallet<
+export class DeviceBrowserWallet extends AbstractClientWallet<
   DeviceWalletOptions,
   DeviceWalletConnectionArgs
 > {

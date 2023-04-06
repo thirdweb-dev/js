@@ -4,7 +4,7 @@ import { CoinbasePayIntegration, FundWalletOptions } from "@thirdweb-dev/pay";
 import { ThirdwebSDK, ChainIdOrName } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { DAppMetaData } from "@thirdweb-dev/wallets";
-import type { AbstractBrowserWallet } from "@thirdweb-dev/wallets/evm/wallets/base";
+import type { AbstractClientWallet } from "@thirdweb-dev/wallets/evm/wallets/base";
 import { CoinbaseWallet } from "@thirdweb-dev/wallets/evm/wallets/coinbase-wallet";
 import { DeviceBrowserWallet } from "@thirdweb-dev/wallets/evm/wallets/device-wallet";
 import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
@@ -74,8 +74,8 @@ interface TWBridge {
 const w = window;
 
 class ThirdwebBridge implements TWBridge {
-  private walletMap: Map<string, AbstractBrowserWallet> = new Map();
-  private activeWallet: AbstractBrowserWallet | undefined;
+  private walletMap: Map<string, AbstractClientWallet> = new Map();
+  private activeWallet: AbstractClientWallet | undefined;
   private initializedChain: ChainIdOrName | undefined;
   private activeSDK: ThirdwebSDK | undefined;
   private auth: ThirdwebAuth | undefined;
@@ -116,7 +116,7 @@ class ThirdwebBridge implements TWBridge {
     sdkOptions.thirdwebApiKey = sdkOptions.thirdwebApiKey || API_KEY;
     this.activeSDK = new ThirdwebSDK(chain, sdkOptions, storage);
     for (let possibleWallet of WALLETS) {
-      let walletInstance: AbstractBrowserWallet;
+      let walletInstance: AbstractClientWallet;
       const dappMetadata: DAppMetaData = {
         name: sdkOptions.wallet?.appName || "thirdweb powered game",
         url: sdkOptions.wallet?.appUrl || "https://thirdweb.com",

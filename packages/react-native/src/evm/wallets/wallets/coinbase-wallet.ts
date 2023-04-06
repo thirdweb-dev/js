@@ -4,7 +4,7 @@ import type {
   CoinbaseWalletConnectorOptions,
 } from "../connectors/coinbase-wallet";
 import {
-  AbstractBrowserWallet,
+  AbstractClientWallet,
   TWConnector,
   WagmiAdapter,
   WalletOptions,
@@ -16,7 +16,7 @@ import {
 
 type CoinbaseWalletOptions = Omit<WalletOptions<CoinbaseWalletConnectorOptions>,"walletStorage">;
 
-export class CoinbaseWallet extends AbstractBrowserWallet<CoinbaseWalletConnectorOptions> {
+export class CoinbaseWallet extends AbstractClientWallet<CoinbaseWalletConnectorOptions> {
   static meta = {
     id: "coinbase",
     name: "Coinbase Wallet",

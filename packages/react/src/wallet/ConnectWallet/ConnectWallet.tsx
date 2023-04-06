@@ -36,6 +36,7 @@ type ConnectWalletProps = {
     loginOptions?: LoginOptions;
     loginOptional?: boolean;
   };
+  style?: React.CSSProperties;
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -105,6 +106,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
           onClick={signIn}
           data-theme={theme}
           className={`${TW_CONNECT_WALLET}--sign-in`}
+          style={props.style}
         >
           <Flex
             alignItems="center"
@@ -134,6 +136,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
             type="button"
             style={{
               minWidth: "140px",
+              ...props.style,
             }}
             aria-label={
               connectionStatus === "connecting" ? "Connecting" : btnTitle
@@ -149,6 +152,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
           <ConnectedWalletDetails
             dropdownPosition={props.dropdownPosition}
             theme={theme}
+            style={props.style}
             onDisconnect={() => {
               if (authConfig?.authUrl) {
                 logout();

@@ -1,8 +1,8 @@
-import type { AbstractBrowserWallet } from "../../wallets/base";
+import type { AbstractClientWallet } from "../../wallets/base";
 import type { Chain } from "@thirdweb-dev/chains";
 
 export interface SafeConnectionArgs {
   safeAddress: string;
-  personalWallet: AbstractBrowserWallet;
+  personalWallet: AbstractClientWallet;
   chain: Pick<Chain, "chainId" | "rpc">;
 }
