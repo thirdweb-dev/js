@@ -427,11 +427,11 @@ export function useContractEvents(
     () =>
       createCacheKeyWithNetwork(
         eventName
-          ? cacheKeys.contract.events.getAllEvents(contractAddress)
-          : cacheKeys.contract.events.getEvents(
+          ? cacheKeys.contract.events.getEvents(
               contractAddress,
               eventName as string,
-            ),
+            )
+          : cacheKeys.contract.events.getAllEvents(contractAddress),
         activeChainId,
       ),
     [activeChainId, contractAddress, eventName],
