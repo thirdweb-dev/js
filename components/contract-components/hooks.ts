@@ -481,7 +481,10 @@ export function useCustomContractDeployMutation(
           data.deployParams._contractURI = await uploadContractMetadata({
             ...data.contractMetadata,
             ...(hasRoyalty && {
-              seller_fee_basis_points: data.deployParams._royaltyBps,
+              seller_fee_basis_points:
+                typeof data.deployParams._royaltyBps === "string"
+                  ? parseInt(data.deployParams._royaltyBps, 10)
+                  : data.deployParams?._royaltyBps || 0,
             }),
             ...(hasRoyalty && {
               fee_recipient: data.deployParams._royaltyRecipient,
