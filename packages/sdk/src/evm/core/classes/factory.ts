@@ -121,6 +121,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         metadata,
         contractURI,
         signer,
+        this.storage,
       );
 
       const encodedFunc = Contract.getInterface(ABI).encodeFunctionData(

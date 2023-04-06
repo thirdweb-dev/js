@@ -19,7 +19,7 @@ export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
   static id = "walletConnect";
 
   static meta = {
-    name: "Wallet Connect",
+    name: "WalletConnect",
     iconURL:
       "ipfs://QmX58KPRaTC9JYZ7KriuBzeoEaV2P9eZcA3qbFnTHZazKw/wallet-connect.svg",
   };
