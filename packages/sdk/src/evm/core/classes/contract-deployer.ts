@@ -995,17 +995,25 @@ export class ContractDeployer extends RPCConnectionHandler {
           addresses: [...infraAddresses],
         });
 
-        transactions = await Promise.all(
-          transactions.filter(async (tx) => {
-            const addresses = await Promise.all(
-              tx.addresses.filter(async (address) => {
-                return !(await isContractDeployed(address, provider));
-              }),
-            );
-
-            return addresses.length > 0;
-          }),
-        );
+        transactions = (
+          await Promise.all(
+            transactions.map(async (tx) => {
+              const addresses = (
+                await Promise.all(
+                  tx.addresses.map(async (address) => {
+                    const isDeployed = await isContractDeployed(
+                      address,
+                      provider,
+                    );
+                    console.log(isDeployed);
+                    return isDeployed ? null : address;
+                  }),
+                )
+              ).filter(Boolean);
+              return addresses.length > 0 ? tx : null;
+            }),
+          )
+        ).filter(Boolean) as DeploymentTransaction[];
       }
       transactions.push({
         contractType: "proxy",
