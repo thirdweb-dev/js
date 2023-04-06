@@ -42,6 +42,7 @@ interface Web3ButtonProps<TActionFn extends ActionFn> {
   action: TActionFn;
   type?: "button" | "submit" | "reset";
   theme?: "dark" | "light";
+  style?: React.CSSProperties;
 }
 
 /**
@@ -77,6 +78,7 @@ export const Web3Button = <TAction extends ActionFn>({
   className,
   type,
   theme,
+  style,
 }: PropsWithChildren<Web3ButtonProps<TAction>>) => {
   const address = useAddress();
   const sdkChainId = useSDKChainId();
@@ -125,6 +127,7 @@ export const Web3Button = <TAction extends ActionFn>({
   if (!address) {
     return (
       <ConnectWallet
+        style={style}
         theme={theme}
         className={`${className || ""} ${TW_WEB3BUTTON}--connect-wallet`}
       />
@@ -161,7 +164,7 @@ export const Web3Button = <TAction extends ActionFn>({
         type={type}
         className={`${className || ""} ${TW_WEB3BUTTON}--switch-network`}
         onClick={handleSwitchChain}
-        style={btnStyle}
+        style={{ ...btnStyle, ...style }}
         data-is-loading={confirmStatus === "waiting"}
         data-theme={theme}
       >
@@ -206,7 +209,7 @@ export const Web3Button = <TAction extends ActionFn>({
         type={type}
         className={`${className || ""} ${TW_WEB3BUTTON}`}
         disabled
-        style={btnStyle}
+        style={{ ...btnStyle, ...style }}
         data-is-loading
         data-theme={theme}
       >
@@ -224,7 +227,7 @@ export const Web3Button = <TAction extends ActionFn>({
         className={`${className || ""} ${TW_WEB3BUTTON}`}
         onClick={() => actionMutation.mutate()}
         disabled={isDisabled}
-        style={btnStyle}
+        style={{ ...btnStyle, ...style }}
         data-is-loading="false"
         data-theme={theme}
       >
