@@ -127,8 +127,13 @@ describe("Any EVM Keyless Deploy", async () => {
 
     expect(pluginsAddresses.length).to.equal(3);
 
-    pluginsAddresses.forEach((address) => {
+    pluginsAddresses.forEach(async (address) => {
       expect(address).to.not.equal(ethers.constants.AddressZero);
+
+      const code = await adminWallet.provider?.getCode(address as string);
+
+      console.log("code length: ", code?.length);
+      expect(code?.length).to.be.greaterThan(2);
     });
   });
 });
