@@ -76,14 +76,25 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
   const supportedChains = useSupportedChains();
   const chains = props.chains || supportedChains;
 
+  const _recentChains = props.recentChains;
+
+  // remove recent chains from popular chains
+  const cleanedPopularChains = !_recentChains
+    ? props.popularChains
+    : props.popularChains?.filter((chain) => {
+        return !_recentChains.some(
+          (recentChain) => recentChain.chainId === chain.chainId,
+        );
+      });
+
   // fuse instances
   const fuseAllChains = useMemo(() => {
     return new Fuse(chains, fuseConfig);
   }, [chains]);
 
   const fusePopularChains = useMemo(() => {
-    return new Fuse(props.popularChains || [], fuseConfig);
-  }, [props.popularChains]);
+    return new Fuse(cleanedPopularChains || [], fuseConfig);
+  }, [cleanedPopularChains]);
 
   const fuseRecentChains = useMemo(() => {
     return new Fuse(props.recentChains || [], fuseConfig);
@@ -99,10 +110,10 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
 
   const popularChains = useMemo(() => {
     if (deferredSearchTerm === "") {
-      return props.popularChains || [];
+      return cleanedPopularChains || [];
     }
     return fusePopularChains.search(deferredSearchTerm).map((r) => r.item);
-  }, [fusePopularChains, deferredSearchTerm, props.popularChains]);
+  }, [fusePopularChains, deferredSearchTerm, cleanedPopularChains]);
 
   const recentChains = useMemo(() => {
     if (deferredSearchTerm === "") {
@@ -308,7 +319,7 @@ const NetworkTab = (props: {
   return (
     <ScrollContainer
       style={{
-        height: "350px",
+        height: "330px",
       }}
     >
       {recentChains.length > 0 && (
@@ -524,7 +535,7 @@ const NetworkButton = styled.button<{ theme?: Theme }>`
   transition: background 0.2s ease;
   background: ${(p) => p.theme.bg.elevated};
   color: ${(p) => p.theme.text.neutral};
-  font-weight: 500;
+  font-weight: 600;
   font-size: ${fontSize.md};
   &:hover {
     background: ${(p) => p.theme.bg.highlighted};
