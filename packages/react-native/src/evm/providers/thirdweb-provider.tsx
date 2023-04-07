@@ -10,6 +10,7 @@ import type { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { metamaskWallet } from "../wallets/wallets/metamask-wallet";
 import { rainbowWallet } from "../wallets/wallets/rainbow-wallet";
 import { SecureStorage } from "../../core/SecureStorage";
+import { useCoinbaseWalletListener } from "../wallets/hooks/useCoinbaseWalletListener";
 
 const DEFAULT_WALLETS = [metamaskWallet(), rainbowWallet()];
 
@@ -60,6 +61,8 @@ export const ThirdwebProvider = <
   authConfig,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
+  useCoinbaseWalletListener();
+
   return (
     <ThirdwebProviderCore
       thirdwebApiKey={thirdwebApiKey}
