@@ -767,8 +767,27 @@ export async function getPluginsAndMapTransactions(
       mapInput.push(...pluginData);
     } else {
       encodedArgs = ethers.utils.defaultAbiCoder.encode(
-        ["(bytes4,string,address)[]"],
-        mapInput,
+        [
+          ethers.utils.ParamType.from({
+            type: "tuple[]",
+            name: "_pluginsToAdd",
+            components: [
+              {
+                name: "functionSelector",
+                type: "bytes4",
+              },
+              {
+                name: "functionSignature",
+                type: "string",
+              },
+              {
+                name: "pluginAddress",
+                type: "address",
+              },
+            ],
+          }),
+        ],
+        [mapInput],
       );
 
       address = computeDeploymentAddress(
