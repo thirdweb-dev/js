@@ -4,6 +4,7 @@ import {
   ThirdwebProviderCore,
   ThirdwebProviderCoreProps,
   Wallet,
+  useWallet,
 } from "@thirdweb-dev/react-core";
 import { PropsWithChildren } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
@@ -60,14 +61,28 @@ export const ThirdwebProvider = <
   authConfig,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
+
   return (
-    <ThirdwebProviderCore
+    <ThirdwebActiveWalletProvider
       thirdwebApiKey={thirdwebApiKey}
       supportedWallets={supportedWallets}
       authConfig={authConfig ? (authConfig.secureStorage ? authConfig : {...authConfig, secureStorage: new SecureStorage('auth')}) : undefined}
       createWalletStorage={createWalletStorage}
       {...restProps}
     >
+      {children}
+    </ThirdwebActiveWalletProvider>
+  );
+};
+
+const ThirdwebActiveWalletProvider = <TChains extends Chain[]>({
+  children,
+  ...props
+}: React.PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
+  const activeWallet = useWallet();
+
+  return (
+    <ThirdwebProviderCore {...props}>
       {children}
     </ThirdwebProviderCore>
   );

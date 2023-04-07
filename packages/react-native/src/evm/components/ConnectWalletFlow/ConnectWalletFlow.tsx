@@ -15,22 +15,6 @@ export const ConnectWalletFlow = () => {
   const connect = useConnect();
   const supportedWallets = useWallets();
 
-  useEffect(() => {
-    if (activeWallet && activeWallet.meta.name.toLowerCase().includes("coinbase")) {
-      console.log("activeWallet.useEffect", activeWallet);
-      const sub = Linking.addEventListener("url", ({ url }) => {
-        console.log("onUrl", url);
-        console.log("URL", new URL(url).toString())
-        // @ts-ignore
-        handleResponse(url);
-      });
-      return () => {
-        console.log("remove sub")
-        sub?.remove();
-      }
-    }
-  }, [activeWallet]);
-
   const onConnectPress = () => {
     setModalVisible(true);
   };
