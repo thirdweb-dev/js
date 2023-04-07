@@ -725,7 +725,9 @@ export function createTransactionBatches(
       batch.push(tx);
     }
   });
-  if (batch.length > 0) transactionBatches.push(batch);
+  if (batch.length > 0) {
+    transactionBatches.push(batch);
+  }
 
   return transactionBatches;
 }
