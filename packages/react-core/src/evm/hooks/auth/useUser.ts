@@ -3,6 +3,7 @@ import { cacheKeys } from "../../utils/cache-keys";
 import { useQuery } from "@tanstack/react-query";
 import type { Json, User } from "@thirdweb-dev/auth";
 import invariant from "tiny-invariant";
+import { AUTH_TOKEN_STORAGE_KEY } from "../../../core/constants/auth";
 
 export interface UserWithData<
   TData extends Json = Json,
@@ -36,10 +37,16 @@ export function useUser<
         "Please specify an authUrl in the authConfig.",
       );
 
+      const token = await authConfig.secureStorage?.getItem(AUTH_TOKEN_STORAGE_KEY);
       // We include credentials so we can getUser even if API is on different URL
-      const res = await fetch(`${authConfig.authUrl}/user`, {
+      const params = {
         credentials: "include",
-      });
+        ...(token ? { headers: {
+          'Authorization': `Bearer ${token}`
+        }} : {})
+      }
+
+      const res = await fetch(`${authConfig.authUrl}/user`, params as RequestInit);
 
       return (await res.json()) as UserWithData<TData, TContext>;
     },

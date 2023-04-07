@@ -45,7 +45,7 @@ export {
   ThirdwebAuthProvider,
   useThirdwebAuthContext,
 } from "./contexts/thirdweb-auth";
-export type { ThirdwebAuthConfig } from "./contexts/thirdweb-auth";
+export type { ThirdwebAuthConfig, ISecureStorage } from "./contexts/thirdweb-auth";
 
 // config
 export {

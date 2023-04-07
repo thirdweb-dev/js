@@ -9,6 +9,7 @@ import type {
 } from "@thirdweb-dev/auth";
 import { GenericAuthWallet } from "@thirdweb-dev/wallets";
 import invariant from "tiny-invariant";
+import { AUTH_TOKEN_STORAGE_KEY } from "../../../core/constants/auth";
 
 /**
  * Hook to securely login to a backend with the connected wallet. The backend
@@ -60,7 +61,12 @@ export function useLogin() {
         throw new Error(`Login request failed with status code ${res.status}`);
       }
 
+      const { token } = await res.json();
+      await authConfig.secureStorage?.setItem(AUTH_TOKEN_STORAGE_KEY, token)
+
       queryClient.invalidateQueries(cacheKeys.auth.user());
+
+      return token;
     },
   });
 
@@ -69,9 +75,6 @@ export function useLogin() {
     isLoading: login.isLoading,
   };
 }
-
-// login function extracted directly from auth
-const isBrowser = () => typeof window !== "undefined";
 
 async function doLogin(
   wallet: GenericAuthWallet,
@@ -99,7 +102,7 @@ async function doLogin(
       options?.statement ||
       "Please ensure that the domain above matches the URL of the current website.",
     version: options?.version || "1",
-    uri: options?.uri || (isBrowser() ? window.location.origin : undefined),
+    uri: options?.uri,
     chain_id: chainId,
     nonce: options?.nonce || nonce,
     issued_at: new Date().toISOString(),

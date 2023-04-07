@@ -1,5 +1,11 @@
 # @thirdweb-dev/contracts-js
 
+## 1.3.3
+
+### Patch Changes
+
+- [#756](https://github.com/thirdweb-dev/js/pull/756) [`b75bcef5`](https://github.com/thirdweb-dev/js/commit/b75bcef55bfdedc260b5b62bb4aff10a7d5c47b6) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Any EVM deploy flow with Create2 factory
+
 ## 1.3.2
 
 ### Patch Changes

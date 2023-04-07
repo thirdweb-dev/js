@@ -1,5 +1,14 @@
 # thirdweb
 
+## 0.10.11
+
+### Patch Changes
+
+- [#877](https://github.com/thirdweb-dev/js/pull/877) [`cef16471`](https://github.com/thirdweb-dev/js/commit/cef16471f4493d7c2c1897a81ffebf84a743716e) Thanks [@iketw](https://github.com/iketw)! - [CLI] Update min ruby version supported to 2.7.6 for React Native templates
+
+- Updated dependencies [[`ac8fa0b3`](https://github.com/thirdweb-dev/js/commit/ac8fa0b34545a2bc0b489a0551d476a9f560e851), [`b75bcef5`](https://github.com/thirdweb-dev/js/commit/b75bcef55bfdedc260b5b62bb4aff10a7d5c47b6), [`c9027fce`](https://github.com/thirdweb-dev/js/commit/c9027fced0fffbf757bf0080bc4a49f5464df647)]:
+  - @thirdweb-dev/sdk@3.10.10
+
 ## 0.10.10
 
 ### Patch Changes
