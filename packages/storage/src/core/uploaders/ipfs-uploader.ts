@@ -44,8 +44,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
 
   async uploadBatch(
     data: FileOrBufferOrString[],
-    options?: IpfsUploadBatchOptions,
-    gatewayIndex: number = 0,
+    options?: IpfsUploadBatchOptions
   ): Promise<string[]> {
     if (options?.uploadWithoutDirectory && data.length > 1) {
       throw new Error(
