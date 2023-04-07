@@ -1,5 +1,18 @@
 # @thirdweb-dev/sdk
 
+## 3.10.10
+
+### Patch Changes
+
+- [#882](https://github.com/thirdweb-dev/js/pull/882) [`ac8fa0b3`](https://github.com/thirdweb-dev/js/commit/ac8fa0b34545a2bc0b489a0551d476a9f560e851) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix resolving proxy implementation addreses with leading 0s
+
+- [#756](https://github.com/thirdweb-dev/js/pull/756) [`b75bcef5`](https://github.com/thirdweb-dev/js/commit/b75bcef55bfdedc260b5b62bb4aff10a7d5c47b6) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Any EVM deploy flow with Create2 factory
+
+- [#878](https://github.com/thirdweb-dev/js/pull/878) [`c9027fce`](https://github.com/thirdweb-dev/js/commit/c9027fced0fffbf757bf0080bc4a49f5464df647) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Util function for any-evm deployment status
+
+- Updated dependencies [[`b75bcef5`](https://github.com/thirdweb-dev/js/commit/b75bcef55bfdedc260b5b62bb4aff10a7d5c47b6)]:
+  - @thirdweb-dev/contracts-js@1.3.3
+
 ## 3.10.9
 
 ### Patch Changes
