@@ -28,8 +28,6 @@ import { toWei } from "./currency";
 import { DeployOptions } from "../types";
 import { generatePluginFunctions, getPluginNames } from "./plugin";
 import { Plugin } from "../types/plugins";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { getAllPluginsAbi } from "../constants/thirdweb-features";
 
 //
 // =============================
@@ -648,6 +646,81 @@ export async function deployInfraWithSigner(
 
     options?.notifier?.("deployed", "infra");
   }
+}
+
+export async function deployPluginsAndMap(
+  signer: Signer,
+  transactions: PrecomputedTransactions[],
+  options?: DeployOptions,
+) {
+  let transactionBatches: any[] = [];
+  let sum = 0;
+  let batch: PrecomputedTransactions[] = [];
+  transactions.forEach((tx) => {
+    const gas = estimateGasForDeploy(tx.data);
+    if (sum + gas > 8_000_000) {
+      if (batch.length === 0) {
+        transactionBatches.push([tx]);
+      } else {
+        transactionBatches.push(batch);
+        sum = gas;
+        batch = [tx];
+      }
+    } else {
+      sum += gas;
+      batch.push(tx);
+    }
+  });
+
+  // Call/deploy the throaway-deployer only if there are any contracts to deploy
+  if (transactionBatches.length > 0) {
+    options?.notifier?.("deploying", "plugin");
+    // Using the deployer contract, send the deploy transactions to common factory with a signer
+    const deployer = new ethers.ContractFactory(DEPLOYER_ABI, DEPLOYER_BYTECODE)
+      .connect(signer)
+      .deploy(transactions);
+    await (await deployer).deployed();
+
+    options?.notifier?.("deployed", "plugin");
+  }
+
+  options?.notifier?.("deploying", "plugin");
+  const deployTxns = await Promise.all(
+    transactionBatches.map((txBatch) => {
+      // Using the deployer contract, send the deploy transactions to common factory with a signer
+      const deployer = new ethers.ContractFactory(
+        DEPLOYER_ABI,
+        DEPLOYER_BYTECODE,
+      )
+        .connect(signer)
+        .deploy(txBatch);
+
+      return deployer;
+    }),
+  );
+
+  await Promise.all(
+    deployTxns.map((tx) => {
+      return tx.deployed();
+    }),
+  );
+  options?.notifier?.("deployed", "plugin");
+}
+
+function estimateGasForDeploy(initCode: string) {
+  let gasLimit =
+    ethers.utils
+      .arrayify(initCode)
+      .map((x) => (x === 0 ? 4 : 16))
+      .reduce((sum, x) => sum + x) +
+    (200 * initCode.length) / 2 +
+    6 * Math.ceil(initCode.length / 64) +
+    32000 +
+    21000;
+
+  gasLimit = Math.floor((gasLimit * 64) / 63);
+
+  return gasLimit;
 }
 
 /**

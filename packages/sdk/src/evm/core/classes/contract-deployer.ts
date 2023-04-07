@@ -9,6 +9,7 @@ import {
   computeCloneFactoryAddress,
   deployContractDeterministic,
   deployInfraWithSigner,
+  deployPluginsAndMap,
   getCreate2FactoryAddress,
   getDeploymentInfo,
   isContractDeployed,
@@ -849,6 +850,18 @@ export class ContractDeployer extends RPCConnectionHandler {
             deploymentInfo.infraContractsToDeploy,
             options,
           );
+
+          if (
+            deploymentInfo.pluginTransactions &&
+            deploymentInfo.pluginTransactions.length > 0
+          ) {
+            console.log("plugin txns ?: ", deploymentInfo.pluginTransactions);
+            await deployPluginsAndMap(
+              signer,
+              deploymentInfo.pluginTransactions,
+              options,
+            );
+          }
 
           // 4. deploy implementation contract
           await deployContractDeterministic(
