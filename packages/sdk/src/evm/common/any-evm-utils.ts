@@ -653,12 +653,60 @@ export async function deployPluginsAndMap(
   transactions: PrecomputedTransactions[],
   options?: DeployOptions,
 ) {
+  let transactionBatches = createTransactionBatches(transactions);
+  if (transactionBatches.length === 0) {
+    return;
+  }
+
+  const deployTxns = await Promise.all(
+    transactionBatches.map((txBatch) => {
+      options?.notifier?.("deploying", "plugin");
+      // Using the deployer contract, send the deploy transactions to common factory with a signer
+      const deployer = new ethers.ContractFactory(
+        DEPLOYER_ABI,
+        DEPLOYER_BYTECODE,
+      )
+        .connect(signer)
+        .deploy(txBatch);
+
+      return deployer;
+    }),
+  );
+
+  await Promise.all(
+    deployTxns.map((tx) => {
+      options?.notifier?.("deployed", "plugin");
+      return tx.deployed();
+    }),
+  );
+}
+
+function estimateGasForDeploy(initCode: string) {
+  let gasLimit =
+    ethers.utils
+      .arrayify(initCode)
+      .map((x) => (x === 0 ? 4 : 16))
+      .reduce((sum, x) => sum + x) +
+    (200 * initCode.length) / 2 +
+    6 * Math.ceil(initCode.length / 64) +
+    32000 +
+    21000;
+
+  gasLimit = Math.floor((gasLimit * 64) / 63);
+
+  return gasLimit;
+}
+
+export function createTransactionBatches(
+  transactions: PrecomputedTransactions[],
+): any[] {
   transactions = transactions.filter((tx) => {
     return tx.data.length > 0 && tx.to !== "";
   });
   if (transactions.length === 0) {
-    return;
+    return [];
   }
+
   let transactionBatches: any[] = [];
   let sum = 0;
   let batch: PrecomputedTransactions[] = [];
@@ -677,56 +725,9 @@ export async function deployPluginsAndMap(
       batch.push(tx);
     }
   });
+  if (batch.length > 0) transactionBatches.push(batch);
 
-  // Call/deploy the throaway-deployer only if there are any contracts to deploy
-  if (transactionBatches.length > 0) {
-    options?.notifier?.("deploying", "plugin");
-    // Using the deployer contract, send the deploy transactions to common factory with a signer
-    const deployer = new ethers.ContractFactory(DEPLOYER_ABI, DEPLOYER_BYTECODE)
-      .connect(signer)
-      .deploy(transactions);
-    await (await deployer).deployed();
-
-    options?.notifier?.("deployed", "plugin");
-  }
-
-  options?.notifier?.("deploying", "plugin");
-  const deployTxns = await Promise.all(
-    transactionBatches.map((txBatch) => {
-      // Using the deployer contract, send the deploy transactions to common factory with a signer
-      const deployer = new ethers.ContractFactory(
-        DEPLOYER_ABI,
-        DEPLOYER_BYTECODE,
-      )
-        .connect(signer)
-        .deploy(txBatch);
-
-      return deployer;
-    }),
-  );
-
-  await Promise.all(
-    deployTxns.map((tx) => {
-      return tx.deployed();
-    }),
-  );
-  options?.notifier?.("deployed", "plugin");
-}
-
-function estimateGasForDeploy(initCode: string) {
-  let gasLimit =
-    ethers.utils
-      .arrayify(initCode)
-      .map((x) => (x === 0 ? 4 : 16))
-      .reduce((sum, x) => sum + x) +
-    (200 * initCode.length) / 2 +
-    6 * Math.ceil(initCode.length / 64) +
-    32000 +
-    21000;
-
-  gasLimit = Math.floor((gasLimit * 64) / 63);
-
-  return gasLimit;
+  return transactionBatches;
 }
 
 /**

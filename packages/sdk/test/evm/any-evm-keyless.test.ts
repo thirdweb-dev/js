@@ -103,21 +103,25 @@ describe("Any EVM Keyless Deploy", async () => {
   });
 
   // it("correct count of logs and transactions", async () => {
-  //   notificationCounter = 0;
-  //   transactionCount = 0;
-  //   contract = await deployTieredDrop();
-  //   expect(notificationCounter).to.equal(8);
-  //   expect(transactionCount).to.equal(4);
+  // notificationCounter = 0;
+  // transactionCount = 0;
+  // contract = await deployTieredDrop();
+  // expect(notificationCounter).to.equal(8);
+  // expect(transactionCount).to.equal(4);
 
-  //   notificationCounter = 0;
-  //   transactionCount = 0;
-  //   contract = await deployTieredDrop();
-  //   expect(notificationCounter).to.equal(2);
-  //   expect(transactionCount).to.equal(1);
+  // notificationCounter = 0;
+  // transactionCount = 0;
+  // contract = await deployTieredDrop();
+  // expect(notificationCounter).to.equal(2);
+  // expect(transactionCount).to.equal(1);
   // });
 
   it("deploy marketplacev3", async () => {
+    notificationCounter = 0;
+    transactionCount = 0;
     const marketplace = await deployMarketplaceV3();
+    expect(notificationCounter).to.equal(2 * transactionCount);
+
     let plugins = await marketplace.call("getAllPlugins");
     // console.log("plugins: ", plugins);
     // console.log("plugins ^");
@@ -137,7 +141,10 @@ describe("Any EVM Keyless Deploy", async () => {
     });
 
     // deploy again
+    notificationCounter = 0;
+    transactionCount = 0;
     const marketplace2 = await deployMarketplaceV3();
+    expect(notificationCounter).to.equal(2 * transactionCount);
     plugins = await marketplace2.call("getAllPlugins");
     console.log("plugins: ", plugins);
     console.log("plugins ^");

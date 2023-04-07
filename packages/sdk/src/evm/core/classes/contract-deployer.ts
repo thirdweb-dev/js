@@ -7,6 +7,7 @@ import {
 import {
   computeAddressInfra,
   computeCloneFactoryAddress,
+  createTransactionBatches,
   deployContractDeterministic,
   deployInfraWithSigner,
   deployPluginsAndMap,
@@ -75,7 +76,10 @@ import {
 import { EventEmitter } from "eventemitter3";
 import invariant from "tiny-invariant";
 import { z } from "zod";
-import { DeploymentTransaction } from "../../types/any-evm/deploy-data";
+import {
+  DeploymentTransaction,
+  PrecomputedTransactions,
+} from "../../types/any-evm/deploy-data";
 
 const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
 
@@ -992,6 +996,26 @@ export class ContractDeployer extends RPCConnectionHandler {
           this.getProvider(),
           create2FactoryAddress,
         );
+
+        // plugin count
+        if (
+          deploymentInfo.pluginTransactions &&
+          deploymentInfo.pluginTransactions.length > 0
+        ) {
+          const transactionBatches = createTransactionBatches(
+            deploymentInfo.pluginTransactions,
+          );
+
+          transactionBatches.forEach((batch) => {
+            const addresses = batch.map(
+              (tx: PrecomputedTransactions) => tx.predictedAddress,
+            );
+            transactions.push({
+              contractType: "plugin",
+              addresses: [addresses],
+            });
+          });
+        }
 
         implementationAddress = deploymentInfo.predictedAddress;
         transactions.push({
