@@ -370,6 +370,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       {showNetworkSelector && (
         <NetworkSelector
+          theme={props.theme}
           chains={chains}
           {...props.networkSelector}
           onClose={() => setShowNetworkSelector(false)}
