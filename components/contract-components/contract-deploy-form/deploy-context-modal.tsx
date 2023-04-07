@@ -146,10 +146,12 @@ const DeployModalStep: React.FC<DeployModalStepProps> = ({
   );
 };
 
-export const stepDeploy: DeployModalStep = {
+export const getStepDeploy = (transactionsNumber: number): DeployModalStep => ({
   title: "Deploying contract",
-  description: "Your wallet will prompt you to sign the transaction.",
-};
+  description: `Your wallet will prompt you to sign ${
+    transactionsNumber === 1 ? "the" : transactionsNumber || 1
+  } transaction${transactionsNumber > 1 ? "s" : ""}.`,
+});
 
 export const stepCustomChainDeploy: DeployModalStep = {
   title: "Deploying contract",

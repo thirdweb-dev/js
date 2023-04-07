@@ -1,6 +1,6 @@
 import {
+  getStepDeploy,
   stepAddToRegistry,
-  stepDeploy,
   useDeployContextModal,
 } from "./contract-deploy-form/deploy-context-modal";
 import { uploadContractMetadata } from "./contract-deploy-form/deploy-form-utils";
@@ -24,6 +24,7 @@ import {
   useSigner,
 } from "@thirdweb-dev/react";
 import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/declarations/src/evm/constants/contract-features";
+import { DeploymentTransaction } from "@thirdweb-dev/sdk/dist/declarations/src/evm/types/any-evm/deploy-data";
 import {
   Abi,
   ContractInfoSchema,
@@ -462,6 +463,7 @@ export function useCustomContractDeployMutation(
   const chainId = useChainId();
   const signer = useSigner();
   const deployContext = useDeployContextModal();
+  const { data: transactions } = useTransactionsForDeploy(ipfsHash);
 
   return useMutation(
     async (data: ContractDeployMutationParams) => {
@@ -469,6 +471,8 @@ export function useCustomContractDeployMutation(
         sdk && "getPublisher" in sdk,
         "sdk is not ready or does not support publishing",
       );
+
+      const stepDeploy = getStepDeploy(transactions?.length || 1);
 
       // open the modal with the appropriate steps
       deployContext.open(
@@ -569,6 +573,28 @@ export function useCustomContractDeployMutation(
       },
     },
   );
+}
+
+export function useTransactionsForDeploy(publishMetadataOrUri: string) {
+  const sdk = useSDK();
+  const chainId = useChainId();
+
+  const queryResult = useQuery<DeploymentTransaction[]>(
+    ["transactions-for-deploy", publishMetadataOrUri, chainId],
+    async () => {
+      invariant(sdk, "sdk not provided");
+      return await sdk.deployer.getTransactionsForDeploy(
+        publishMetadataOrUri.startsWith("ipfs://")
+          ? publishMetadataOrUri
+          : `ipfs://${publishMetadataOrUri}`,
+      );
+    },
+    {
+      enabled: !!publishMetadataOrUri && !!sdk,
+    },
+  );
+
+  return queryResult;
 }
 
 export async function fetchPublishedContracts(

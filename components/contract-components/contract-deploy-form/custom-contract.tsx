@@ -5,6 +5,7 @@ import {
   useCustomContractDeployMutation,
   useEns,
   useFunctionParamsFromABI,
+  useTransactionsForDeploy,
 } from "../hooks";
 import { ConfigureNetworkButton } from "../shared/configure-network-button";
 import { ContractMetadataFieldset } from "./contract-metadata-fieldset";
@@ -59,6 +60,8 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
   onSuccessCallback,
   walletAddress,
 }) => {
+  const { data: transactions } = useTransactionsForDeploy(ipfsHash);
+
   const configuredChains = useConfiguredChains();
   const configuredChainsIds = configuredChains.map((c) => c.chainId);
 
@@ -430,7 +433,13 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
               !!disabledChainIds?.find((chain) => chain === selectedChain)
             }
             colorScheme="blue"
-            transactionCount={form.watch("addToDashboard") ? 2 : 1}
+            transactionCount={
+              form.watch("addToDashboard")
+                ? transactions?.length
+                  ? transactions.length + 1
+                  : 2
+                : transactions?.length || 1
+            }
           >
             Deploy Now
           </TransactionButton>
