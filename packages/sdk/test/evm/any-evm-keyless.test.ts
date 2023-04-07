@@ -118,12 +118,32 @@ describe("Any EVM Keyless Deploy", async () => {
 
   it("deploy marketplacev3", async () => {
     const marketplace = await deployMarketplaceV3();
-    const plugins = await marketplace.call("getAllPlugins");
+    let plugins = await marketplace.call("getAllPlugins");
+    // console.log("plugins: ", plugins);
+    // console.log("plugins ^");
+
+    let allPlugins = plugins.map((item: any) => item.pluginAddress);
+    let pluginsAddresses = Array.from(new Set(allPlugins));
+
+    expect(pluginsAddresses.length).to.equal(3);
+
+    pluginsAddresses.forEach(async (address) => {
+      expect(address).to.not.equal(ethers.constants.AddressZero);
+
+      const code = await adminWallet.provider?.getCode(address as string);
+
+      // console.log("code length: ", code?.length);
+      expect(code?.length).to.be.greaterThan(2);
+    });
+
+    // deploy again
+    const marketplace2 = await deployMarketplaceV3();
+    plugins = await marketplace2.call("getAllPlugins");
     console.log("plugins: ", plugins);
     console.log("plugins ^");
 
-    const allPlugins = plugins.map((item: any) => item.pluginAddress);
-    const pluginsAddresses = Array.from(new Set(allPlugins));
+    allPlugins = plugins.map((item: any) => item.pluginAddress);
+    pluginsAddresses = Array.from(new Set(allPlugins));
 
     expect(pluginsAddresses.length).to.equal(3);
 

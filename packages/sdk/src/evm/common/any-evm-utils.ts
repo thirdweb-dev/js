@@ -653,6 +653,12 @@ export async function deployPluginsAndMap(
   transactions: PrecomputedTransactions[],
   options?: DeployOptions,
 ) {
+  transactions = transactions.filter((tx) => {
+    return tx.data.length > 0 && tx.to !== "";
+  });
+  if (transactions.length === 0) {
+    return;
+  }
   let transactionBatches: any[] = [];
   let sum = 0;
   let batch: PrecomputedTransactions[] = [];
@@ -820,6 +826,13 @@ export async function getPluginsAndMapTransactions(
         predictedAddress: address,
         to: create2Factory,
         data: initBytecodeWithSalt,
+        name: name,
+      });
+    } else {
+      txns.push({
+        predictedAddress: address,
+        to: "",
+        data: "",
         name: name,
       });
     }

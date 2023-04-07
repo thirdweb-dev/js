@@ -855,7 +855,7 @@ export class ContractDeployer extends RPCConnectionHandler {
             deploymentInfo.pluginTransactions &&
             deploymentInfo.pluginTransactions.length > 0
           ) {
-            console.log("plugin txns ?: ", deploymentInfo.pluginTransactions);
+            // console.log("plugin txns ?: ", deploymentInfo.pluginTransactions);
             await deployPluginsAndMap(
               signer,
               deploymentInfo.pluginTransactions,
