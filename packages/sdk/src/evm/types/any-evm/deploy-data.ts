@@ -23,3 +23,15 @@ export type KeylessDeploymentInfo = {
   transaction: string;
   deployment: string;
 };
+
+export type DeployedContractType =
+  | "proxy"
+  | "infra"
+  | "implementation"
+  | "create2Factory"
+  | "custom";
+
+export type DeploymentTransaction = {
+  contractType: DeployedContractType;
+  addresses: string[];
+};
