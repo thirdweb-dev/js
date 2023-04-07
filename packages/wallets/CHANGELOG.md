@@ -1,5 +1,18 @@
 # @thirdweb-dev/wallets
 
+## 0.2.15
+
+### Patch Changes
+
+- [#868](https://github.com/thirdweb-dev/js/pull/868) [`b616dca7`](https://github.com/thirdweb-dev/js/commit/b616dca7eb861cd1d2adba3f3d1fe9c3b50f259e) Thanks [@iketw](https://github.com/iketw)! - - Updates base wallet classes names
+
+  - Makes InjectedWallet params optional
+  - Removes connector storage constructor param from Injected and MetaMask wallets
+
+- [#872](https://github.com/thirdweb-dev/js/pull/872) [`2545a440`](https://github.com/thirdweb-dev/js/commit/2545a440dc272690cacbc23023f7b0a68f390c6e) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Rename Wallet Connect to WalletConnect
+
+- [#859](https://github.com/thirdweb-dev/js/pull/859) [`229a4741`](https://github.com/thirdweb-dev/js/commit/229a47413e422952ad946b8c09af32cc1fcdc7f0) Thanks [@MananTank](https://github.com/MananTank)! - Fix Error when connecting to Safe in Vite
+
 ## 0.2.14
 
 ### Patch Changes

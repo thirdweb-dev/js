@@ -23,6 +23,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { getNativeTokenByChainId } from "../constants";
 import { PreDeployMetadataFetched } from "../schema";
 import { toWei } from "./currency";
+import { DeployOptions } from "../types";
 
 //
 // =============================
@@ -371,7 +372,10 @@ export function getKeylessTxn(
  * @public
  * @param signer
  */
-export async function deployCreate2Factory(signer: Signer): Promise<string> {
+export async function deployCreate2Factory(
+  signer: Signer,
+  options?: DeployOptions,
+): Promise<string> {
   invariant(signer.provider, "No provider");
   const commonFactoryExists = await isContractDeployed(
     COMMON_FACTORY,
@@ -411,7 +415,10 @@ export async function deployCreate2Factory(signer: Signer): Promise<string> {
       console.debug(
         `deploying CREATE2 factory at: ${deploymentInfo.deployment}`,
       );
+
+      options?.notifier?.("deploying", "create2Factory");
       await signer.provider.sendTransaction(deploymentInfo.transaction);
+      options?.notifier?.("deployed", "create2Factory");
     } catch (err) {
       throw new Error(`Couldn't deploy CREATE2 factory: ${err}`);
     }
@@ -436,6 +443,7 @@ export async function deployContractDeterministic(
   bytecode: string,
   encodedArgs: BytesLike,
   create2FactoryAddress: string,
+  options?: DeployOptions,
   predictedAddress?: string,
   gasLimit: number = 7000000,
 ) {
@@ -461,8 +469,9 @@ export async function deployContractDeterministic(
       console.debug("error estimating gas while deploying prebuilt: ", e);
       tx.gasLimit = BigNumber.from(gasLimit);
     }
-
+    options?.notifier?.("deploying", "implementation");
     await (await signer.sendTransaction(tx)).wait();
+    options?.notifier?.("deployed", "implementation");
   }
 }
 
@@ -536,6 +545,7 @@ export async function deployInfraWithSigner(
   storage: ThirdwebStorage,
   create2Factory: string,
   contractTypes: InfraContractType[],
+  options?: DeployOptions,
 ) {
   const txns = [];
 
@@ -595,11 +605,14 @@ export async function deployInfraWithSigner(
     txns.forEach((tx) =>
       console.debug(`deploying infra contract at: ${tx.predictedAddress}`),
     );
+    options?.notifier?.("deploying", "infra");
     // Using the deployer contract, send the deploy transactions to common factory with a signer
     const deployer = new ethers.ContractFactory(DEPLOYER_ABI, DEPLOYER_BYTECODE)
       .connect(signer)
       .deploy(txns);
     await (await deployer).deployed();
+
+    options?.notifier?.("deployed", "infra");
   }
 }
 
@@ -655,7 +668,7 @@ async function fetchPublishedContractURI(
   return publishedContract?.metadataUri;
 }
 
-async function computeAddressInfra(
+export async function computeAddressInfra(
   contractType: InfraContractType,
   provider: providers.Provider,
   storage: ThirdwebStorage,
