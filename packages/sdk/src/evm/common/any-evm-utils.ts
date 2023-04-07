@@ -707,10 +707,17 @@ export function createTransactionBatches(
     return [];
   }
 
+  const transactionsWithoutNames = transactions.map((tx) => {
+    return {
+      predictedAddress: tx.predictedAddress,
+      to: tx.to,
+      data: tx.data,
+    };
+  });
   let transactionBatches: any[] = [];
   let sum = 0;
   let batch: PrecomputedTransactions[] = [];
-  transactions.forEach((tx) => {
+  transactionsWithoutNames.forEach((tx) => {
     const gas = estimateGasForDeploy(tx.data);
     if (sum + gas > 8_000_000) {
       if (batch.length === 0) {

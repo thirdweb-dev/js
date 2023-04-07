@@ -1012,7 +1012,7 @@ export class ContractDeployer extends RPCConnectionHandler {
             );
             transactions.push({
               contractType: "plugin",
-              addresses: [addresses],
+              addresses: addresses,
             });
           });
         }

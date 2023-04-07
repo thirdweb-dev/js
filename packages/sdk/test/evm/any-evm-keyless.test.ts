@@ -67,8 +67,8 @@ describe("Any EVM Keyless Deploy", async () => {
     //   "transactions: ",
     //   await sdk.deployer.getTransactionsForDeploy(publishUri),
     // );
-    // transactionCount = (await sdk.deployer.getTransactionsForDeploy(publishUri))
-    //   .length;
+    transactionCount = (await sdk.deployer.getTransactionsForDeploy(publishUri))
+      .length;
 
     const address = await sdk.deployer.deployContractFromUri(
       publishUri,
@@ -81,9 +81,9 @@ describe("Any EVM Keyless Deploy", async () => {
       ],
       {
         forceDirectDeploy: false,
-        // notifier(status, contractType) {
-        //   notificationCounter += 1;
-        // },
+        notifier(status, contractType) {
+          notificationCounter += 1;
+        },
       },
     );
 
@@ -123,8 +123,9 @@ describe("Any EVM Keyless Deploy", async () => {
     expect(notificationCounter).to.equal(2 * transactionCount);
 
     let plugins = await marketplace.call("getAllPlugins");
-    // console.log("plugins: ", plugins);
-    // console.log("plugins ^");
+    console.log("plugins: ", plugins);
+    console.log("plugins ^");
+    console.log("transaction count: ", transactionCount);
 
     let allPlugins = plugins.map((item: any) => item.pluginAddress);
     let pluginsAddresses = Array.from(new Set(allPlugins));
@@ -148,6 +149,7 @@ describe("Any EVM Keyless Deploy", async () => {
     plugins = await marketplace2.call("getAllPlugins");
     console.log("plugins: ", plugins);
     console.log("plugins ^");
+    console.log("transaction count: ", transactionCount);
 
     allPlugins = plugins.map((item: any) => item.pluginAddress);
     pluginsAddresses = Array.from(new Set(allPlugins));
