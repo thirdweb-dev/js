@@ -32,10 +32,7 @@ export const PINATA_IPFS_URL = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 /**
  * @internal
  */
-export const IPFS_UPLOAD_GATEWAYS = [
-  TW_IPFS_SERVER_V2_URL,
-  PINATA_IPFS_URL
-]
+export const IPFS_UPLOAD_GATEWAYS = [TW_IPFS_SERVER_V2_URL, PINATA_IPFS_URL];
 
 /**
  * @internal

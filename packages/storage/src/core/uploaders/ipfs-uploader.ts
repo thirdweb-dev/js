@@ -1,4 +1,9 @@
-import {getCIDForUpload, IPFS_UPLOAD_GATEWAYS, isUploaded, PINATA_IPFS_URL} from "../../common";
+import {
+  getCIDForUpload,
+  IPFS_UPLOAD_GATEWAYS,
+  isUploaded,
+  PINATA_IPFS_URL,
+} from "../../common";
 import { TW_IPFS_SERVER_URL } from "../../common/urls";
 import {
   isBrowser,
@@ -44,7 +49,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
 
   async uploadBatch(
     data: FileOrBufferOrString[],
-    options?: IpfsUploadBatchOptions
+    options?: IpfsUploadBatchOptions,
   ): Promise<string[]> {
     if (options?.uploadWithoutDirectory && data.length > 1) {
       throw new Error(
@@ -106,12 +111,20 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         return this.uploadBatchNode(form, fileNames, ipfsUploadUrl, options);
       }
     } catch (e) {
-      console.warn('Retrying IPFS upload -', e);
-      return this.uploadBatchAndRetryIfNeeded(form, fileNames, options, gatewayIndex + 1);
+      console.warn("Retrying IPFS upload -", e);
+      return this.uploadBatchAndRetryIfNeeded(
+        form,
+        fileNames,
+        options,
+        gatewayIndex + 1,
+      );
     }
   }
 
-  private addPinataSpecificFormData(form: FormData, options?: IpfsUploadBatchOptions) {
+  private addPinataSpecificFormData(
+    form: FormData,
+    options?: IpfsUploadBatchOptions,
+  ) {
     const metadata = {
       name: `Storage SDK`,
       keyvalues: { ...options?.metadata },
@@ -243,7 +256,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     const uploadToken =
       ipfsUploadUrl === PINATA_IPFS_URL
         ? await this.getUploadToken()
-        : undefined
+        : undefined;
 
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
