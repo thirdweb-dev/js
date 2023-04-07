@@ -681,75 +681,14 @@ export async function deployPluginsAndMap(
   );
 }
 
-function estimateGasForDeploy(initCode: string) {
-  let gasLimit =
-    ethers.utils
-      .arrayify(initCode)
-      .map((x) => (x === 0 ? 4 : 16))
-      .reduce((sum, x) => sum + x) +
-    (200 * initCode.length) / 2 +
-    6 * Math.ceil(initCode.length / 64) +
-    32000 +
-    21000;
-
-  gasLimit = Math.floor((gasLimit * 64) / 63);
-
-  return gasLimit;
-}
-
-export function createTransactionBatches(
-  transactions: PrecomputedTransactions[],
-): any[] {
-  transactions = transactions.filter((tx) => {
-    return tx.data.length > 0 && tx.to !== "";
-  });
-  if (transactions.length === 0) {
-    return [];
-  }
-
-  const transactionsWithoutNames = transactions.map((tx) => {
-    return {
-      predictedAddress: tx.predictedAddress,
-      to: tx.to,
-      data: tx.data,
-    };
-  });
-  let transactionBatches: any[] = [];
-  let sum = 0;
-  let batch: PrecomputedTransactions[] = [];
-  transactionsWithoutNames.forEach((tx) => {
-    const gas = estimateGasForDeploy(tx.data);
-    if (sum + gas > 8_000_000) {
-      if (batch.length === 0) {
-        transactionBatches.push([tx]);
-      } else {
-        transactionBatches.push(batch);
-        sum = gas;
-        batch = [tx];
-      }
-    } else {
-      sum += gas;
-      batch.push(tx);
-    }
-  });
-  if (batch.length > 0) {
-    transactionBatches.push(batch);
-  }
-
-  return transactionBatches;
-}
-
 /**
- * Deploy Infra contracts with a signer.
- * The serialized txn data and addresses are precomputed for infra contracts.
  *
  * @internal
  *
- * @param signer: Signer of infra deployment txns
+ * @param routerMetadataUri
  * @param provider
  * @param storage
  * @param create2Factory
- * @param contractTypes: List of infra contracts to deploy
  */
 export async function getPluginsAndMapTransactions(
   routerMetadataUri: string,
@@ -847,21 +786,6 @@ export async function getPluginsAndMapTransactions(
       });
     }
   }
-
-  // Call/deploy the throaway-deployer only if there are any contracts to deploy
-  // if (txns.length > 0) {
-  //   txns.forEach((tx) =>
-  //     console.debug(`deploying plugin contract at: ${tx.predictedAddress}`),
-  //   );
-  //   options?.notifier?.("deploying", "plugin");
-  //   // Using the deployer contract, send the deploy transactions to common factory with a signer
-  //   const deployer = new ethers.ContractFactory(DEPLOYER_ABI, DEPLOYER_BYTECODE)
-  //     .connect(signer)
-  //     .deploy(txns);
-  //   await (await deployer).deployed();
-
-  //   options?.notifier?.("deployed", "plugin");
-  // }
 
   return { txns, infraContracts };
 }
@@ -1050,4 +974,62 @@ async function encodeConstructorParamsForImplementation(
     constructorParamValues,
   );
   return { encodedArgs, infraContracts };
+}
+
+function estimateGasForDeploy(initCode: string) {
+  let gasLimit =
+    ethers.utils
+      .arrayify(initCode)
+      .map((x) => (x === 0 ? 4 : 16))
+      .reduce((sum, x) => sum + x) +
+    (200 * initCode.length) / 2 +
+    6 * Math.ceil(initCode.length / 64) +
+    32000 +
+    21000;
+
+  gasLimit = Math.floor((gasLimit * 64) / 63);
+
+  return gasLimit;
+}
+
+export function createTransactionBatches(
+  transactions: PrecomputedTransactions[],
+): any[] {
+  transactions = transactions.filter((tx) => {
+    return tx.data.length > 0 && tx.to !== "";
+  });
+  if (transactions.length === 0) {
+    return [];
+  }
+
+  const transactionsWithoutNames = transactions.map((tx) => {
+    return {
+      predictedAddress: tx.predictedAddress,
+      to: tx.to,
+      data: tx.data,
+    };
+  });
+  let transactionBatches: any[] = [];
+  let sum = 0;
+  let batch: PrecomputedTransactions[] = [];
+  transactionsWithoutNames.forEach((tx) => {
+    const gas = estimateGasForDeploy(tx.data);
+    if (sum + gas > 8_000_000) {
+      if (batch.length === 0) {
+        transactionBatches.push([tx]);
+      } else {
+        transactionBatches.push(batch);
+        sum = gas;
+        batch = [tx];
+      }
+    } else {
+      sum += gas;
+      batch.push(tx);
+    }
+  });
+  if (batch.length > 0) {
+    transactionBatches.push(batch);
+  }
+
+  return transactionBatches;
 }
