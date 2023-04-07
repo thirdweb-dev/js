@@ -5,7 +5,7 @@ import { Heading, TrackedLink } from "tw-components";
 
 export const AnnouncementBanner = () => {
   const [hasDismissedAnnouncement, setHasDismissedAnnouncement] =
-    useLocalStorage("dismissed-gaming-kit-update-announcement", false, true);
+    useLocalStorage("dismissed-learn-announcement", false, true);
 
   if (hasDismissedAnnouncement) {
     return null;
@@ -27,9 +27,9 @@ export const AnnouncementBanner = () => {
       >
         <Box display={{ base: "none", md: "block" }} />
         <TrackedLink
-          href="/solutions/gaming"
+          href="/learn"
           category="announcement"
-          label="gamingkit-update"
+          label="learn-announcement"
         >
           <Container maxW="container.page" display="flex" px={0}>
             <Flex
@@ -46,8 +46,8 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                <strong>GamingKit Update:</strong> Unity SDK cross-platform
-                support now available.
+                <strong>thirdweb Learn:</strong> Join the waitlist now and break
+                into web3!
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>

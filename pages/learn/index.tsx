@@ -155,7 +155,7 @@ const Learn: ThirdwebNextPage = () => {
                 icon={require("/public/assets/product-pages/dashboard/hero-icon-1.png")}
               >
                 For both front and back-end engineers to learn how to build
-                secure and scalable dApps using the Thirdweb SDK and relevant
+                secure and scalable dApps using the thirdweb SDK and relevant
                 programming languages.
               </ProductCard>
               <ProductCard
