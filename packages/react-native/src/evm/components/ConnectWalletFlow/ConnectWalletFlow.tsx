@@ -17,12 +17,17 @@ export const ConnectWalletFlow = () => {
 
   useEffect(() => {
     if (activeWallet && activeWallet.meta.name.toLowerCase().includes("coinbase")) {
+      console.log("activeWallet.useEffect", activeWallet);
       const sub = Linking.addEventListener("url", ({ url }) => {
-        if (url) {
-          handleResponse(new URL(url));
-        }
+        console.log("onUrl", url);
+        console.log("URL", new URL(url).toString())
+        // @ts-ignore
+        handleResponse(url);
       });
-      return () => sub?.remove();
+      return () => {
+        console.log("remove sub")
+        sub?.remove();
+      }
     }
   }, [activeWallet]);
 

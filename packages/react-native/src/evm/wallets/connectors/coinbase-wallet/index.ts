@@ -58,10 +58,12 @@ export class CoinbaseWalletConnector extends Connector<
       },
     });
 
+    console.log("hostURL", options.hostURL);
+    console.log("hostPackageName", options.hostPackageName);
     configure({
       callbackURL: options.callbackURL,
-      hostURL: options.hostURL,
-      hostPackageName: options.hostPackageName,
+      hostURL: options.hostURL || new URL('https://wallet.coinbase.com/wsegue'),
+      hostPackageName: options.hostPackageName || 'org.toshi',
     });
   }
 
@@ -71,10 +73,12 @@ export class CoinbaseWalletConnector extends Connector<
 
       this.emit("message", { type: "connecting" });
 
+      console.log("requestAccounts")
       const account = (await provider.request({
         method: "eth_requestAccounts",
         params: [],
       })) as Address;
+      console.log("requestAccounts.response", account);
       // Switch to chain if provided
       let id = await this.getChainId();
       let unsupported = this.isChainUnsupported(id);
