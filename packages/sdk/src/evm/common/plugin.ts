@@ -4,11 +4,16 @@ import {
 } from "../constants/thirdweb-features";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Abi, AbiSchema, Address, SDKOptions } from "../schema";
-import { isFeatureEnabled } from "./feature-detection";
+import {
+  fetchExtendedReleaseMetadata,
+  isFeatureEnabled,
+} from "./feature-detection";
 import { fetchContractMetadataFromAddress } from "./metadata-resolver";
 import { unique } from "./utils";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
+import { Plugin } from "../types/plugins";
+import { getChainProvider } from "../constants";
 
 /**
  * @internal
@@ -105,6 +110,61 @@ async function getPluginABI(
   ).map((metadata) => metadata.abi);
 }
 
+export async function getPluginNames(
+  publishedMetadataUri: string,
+  storage: ThirdwebStorage,
+): Promise<string[]> {
+  const extendedMetadata = await fetchExtendedReleaseMetadata(
+    publishedMetadataUri,
+    storage,
+  );
+
+  let contractNames: string[] = [];
+
+  if (extendedMetadata.factoryDeploymentData?.implementationAddresses) {
+    const implementationsAddresses = Object.entries(
+      extendedMetadata.factoryDeploymentData.implementationAddresses,
+    );
+
+    try {
+      for (const [network, implementation] of implementationsAddresses) {
+        if (implementation !== "") {
+          const provider = getChainProvider(parseInt(network), {});
+          const contract = new ContractWrapper(
+            provider,
+            implementation,
+            getAllPluginsAbi,
+            {},
+          );
+
+          const pluginMap = await contract.call("getAllPlugins");
+
+          // get extension addresses
+          const allPlugins = pluginMap.map(
+            (item: Plugin) => item.pluginAddress,
+          );
+          const pluginAddresses = Array.from(new Set(allPlugins));
+
+          contractNames = (
+            await Promise.all(
+              pluginAddresses.map(async (address) => {
+                const metadata = fetchContractMetadataFromAddress(
+                  address as string,
+                  provider,
+                  storage,
+                );
+                return metadata;
+              }),
+            )
+          ).map((metadata) => metadata.name);
+          break;
+        }
+      }
+    } catch {}
+  }
+  return contractNames;
+}
+
 /**
  * @internal
  */
@@ -123,3 +183,36 @@ export function joinABIs(abis: Abi[]): Abi {
 
   return AbiSchema.parse(finalABIs);
 }
+
+const getFunctionSignature = (fnInputs: any): string => {
+  return (
+    "(" +
+    fnInputs
+      .map((i: any) => {
+        return i.type === "tuple" ? getFunctionSignature(i.components) : i.type;
+      })
+      .join(",") +
+    ")"
+  );
+};
+
+export const generatePluginFunctions = (
+  pluginAddress: string,
+  pluginAbi: Abi,
+): Plugin[] => {
+  const pluginInterface = new ethers.utils.Interface(pluginAbi);
+  const pluginFunctions: Plugin[] = [];
+  // TODO - filter out common functions like _msgSender(), contractType(), etc.
+  for (const fnFragment of Object.values(pluginInterface.functions)) {
+    const fn = pluginInterface.getFunction(fnFragment.name);
+    if (fn.name.includes("_")) {
+      continue;
+    }
+    pluginFunctions.push({
+      functionSelector: pluginInterface.getSighash(fn),
+      functionSignature: fn.name + getFunctionSignature(fn.inputs),
+      pluginAddress: pluginAddress,
+    });
+  }
+  return pluginFunctions;
+};
