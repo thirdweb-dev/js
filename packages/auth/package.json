@@ -60,7 +60,8 @@
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/ && rm -rf node_modules/",
-    "test": "mocha --config './test/.mocharc.json' --timeout 30000 --parallel './test/**/*.test.ts'"
+    "test": "mocha --config './test/.mocharc.json' --timeout 30000 --parallel './test/**/*.test.ts'",
+    "push": "yalc push"
   },
   "preconstruct": {
     "entrypoints": [

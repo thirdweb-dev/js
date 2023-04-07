@@ -49,9 +49,7 @@ export class ThirdwebAuth {
       address: await this.wallet.getAddress(),
       statement: parsedOptions?.statement,
       version: parsedOptions?.version,
-      uri:
-        parsedOptions?.uri ||
-        (isBrowser() ? window.location.origin : undefined),
+      uri: parsedOptions?.uri,
       chain_id: chainId,
       nonce: parsedOptions?.nonce,
       expiration_time:
