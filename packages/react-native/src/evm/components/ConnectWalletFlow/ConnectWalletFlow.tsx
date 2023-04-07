@@ -4,9 +4,8 @@ import { TWModal } from "../base/modal/TWModal";
 import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
 import { Wallet, useConnect, useWallets } from "@thirdweb-dev/react-core";
-import { useEffect, useState } from "react";
-import { Linking, StyleSheet } from "react-native";
-import { handleResponse } from "@coinbase/wallet-mobile-sdk";
+import { useState } from "react";
+import { StyleSheet } from "react-native";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);

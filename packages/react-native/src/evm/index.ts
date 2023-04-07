@@ -3,6 +3,11 @@ export { metamaskWallet } from "./wallets/wallets/metamask-wallet";
 export { rainbowWallet } from "./wallets/wallets/rainbow-wallet";
 export { trustWallet } from "./wallets/wallets/trust-wallet";
 
+export { useCoinbaseWallet } from "./wallets/hooks/useCoinbaseWallet";
+export { useMetaMaskWallet } from "./wallets/hooks/useMetaMaskWallet";
+export { useRainbowWallet } from "./wallets/hooks/useRainbowWallet";
+export { useTrustWallet } from "./wallets/hooks/useTrustWallet";
+
 export { ConnectWallet } from "./components/ConnectWallet";
 export { Web3Button } from "./components/Web3Button";
 
