@@ -17,7 +17,7 @@ import {
   UploadOptions,
 } from "../types";
 import { StorageDownloader } from "./downloaders/storage-downloader";
-import {IpfsUploader} from "../../dist/declarations/src";
+import { IpfsUploader } from "./uploaders/ipfs-uploader";
 
 /**
  * Upload and download files from decentralized storage systems.
