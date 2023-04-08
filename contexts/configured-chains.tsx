@@ -1,140 +1,261 @@
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
-import React, {
-  createContext,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useAllChainsData } from "hooks/chains/allChains";
+import React, { createContext, useCallback, useEffect, useState } from "react";
 
 // extra information on top of Chain interface
 // all keys added here must be optional
 export interface StoredChain extends Chain {
-  /**
-   * true if the chain is added by user using the "custom" option
-   */
-  isCustom?: true;
-
-  /**
-   * true if the chain is auto configured and not explicitly configured by user
-   */
-  isAutoConfigured?: true;
+  isModified?: boolean;
+  isCustom?: boolean;
 }
 
-type UpdateConfiguredChains = {
-  add: (newConfiguredNetworks: StoredChain[]) => void;
-  remove: (index: number) => void;
-  update: (index: number, chain: StoredChain) => void;
-};
+const MODIFIED_CHAINS_KEY = "tw-modified-chains";
+const RECENTLY_USED_CHAIN_IDS_KEY = "tw-recently-used-chains";
 
-export const ConfiguredChainsContext = createContext<StoredChain[] | undefined>(
+export const SupportedChainsContext = createContext<StoredChain[] | undefined>(
   undefined,
 );
 
-export const UpdateConfiguredChainsContext = createContext<
-  UpdateConfiguredChains | undefined
+export const ModifiedChainsContext = createContext<StoredChain[] | undefined>(
+  undefined,
+);
+
+export const RecentlyUsedChainIdsContext = createContext<number[] | undefined>(
+  undefined,
+);
+
+export const AddRecentlyUsedChainIdsContext = createContext<
+  ((chainId: number) => void) | undefined
 >(undefined);
 
-// util to unique chains by chainId
-export function uniqueChains(chains: StoredChain[]): StoredChain[] {
-  const chainsRecord: Record<number, StoredChain> = {};
-  chains.forEach((chain) => {
-    chainsRecord[chain.chainId] = chain;
-  });
-  return Object.values(chainsRecord);
-}
+export const ModifyChainContext = createContext<
+  ((chain: Chain) => void) | undefined
+>(undefined);
+
+export const SupportedChainsReadyContext = createContext(false);
+
+export const isNetworkConfigModalOpenCtx = createContext(false);
+
+export const SetIsNetworkConfigModalOpenCtx = createContext<
+  ((value: boolean) => void) | undefined
+>(undefined);
+
+export const EditChainContext = createContext<Chain | undefined>(undefined);
+
+export const SetEditChainContext = createContext<
+  ((chain: Chain | undefined) => void) | undefined
+>(undefined);
 
 /**
  * if no networks are configured by the user, return the defaultChains
  */
-export function ConfiguredChainsProvider(props: { children: React.ReactNode }) {
-  const [configuredNetworks, _setConfiguredNetworks] =
+export function SupportedChainsProvider(props: { children: React.ReactNode }) {
+  const [supportedChains, setSupportedChains] =
     useState<StoredChain[]>(defaultChains);
+  const [modifiedChains, setModifiedChains] = useState<StoredChain[]>([]);
+  const [isSupportedChainsReady, setIsSupportedChainsReady] = useState(false);
+  const [recentlyUsedChainIds, setRecentlyUsedChainIds] = useState<number[]>(
+    [],
+  );
+  const [isNetworkConfigModalOpen, setIsNetworkConfigModalOpen] =
+    useState(false);
+  const [editChain, setEditChain] = useState<Chain | undefined>(undefined);
 
-  // this proxies the setstate function to also update the localstorage under the hood
-  const setConfiguredNetworks: React.Dispatch<
-    React.SetStateAction<StoredChain[]>
-  > = useCallback((updater) => {
-    _setConfiguredNetworks((prev) => {
-      if (typeof updater === "function") {
-        const newConfiguredNetworks = uniqueChains(updater(prev));
-        configuredChainsStorage.set(newConfiguredNetworks);
-        return newConfiguredNetworks;
-      } else {
-        const newChains = uniqueChains(updater);
-        configuredChainsStorage.set(newChains);
-        return newChains;
+  const addRecentlyUsedChainId = useCallback(
+    (chainId: number) => {
+      const newRecentlyUsedChains = recentlyUsedChainIds.filter(
+        (c) => c !== chainId,
+      );
+
+      // add to the front of the array
+      newRecentlyUsedChains.unshift(chainId);
+
+      // only keep the first 5
+      newRecentlyUsedChains.splice(5);
+      setRecentlyUsedChainIds(newRecentlyUsedChains);
+
+      try {
+        localStorage.setItem(
+          RECENTLY_USED_CHAIN_IDS_KEY,
+          JSON.stringify(newRecentlyUsedChains),
+        );
+      } catch (e) {
+        localStorage.clear();
+        localStorage.setItem(
+          RECENTLY_USED_CHAIN_IDS_KEY,
+          JSON.stringify(newRecentlyUsedChains),
+        );
       }
-    });
-  }, []);
+    },
+    [recentlyUsedChainIds],
+  );
 
-  // set the configured networks initially
-  // has to happen in useEffect because otherwise we mismatch with server state potentially
+  const { allChains, chainIdToIndexRecord, chainIdToChainRecord } =
+    useAllChainsData();
+
+  // get recently used chains from stroage
   useEffect(() => {
-    // todo - use indexedDb instead of localStorage
-    const listFromCookies = uniqueChains(configuredChainsStorage.get());
-    if (listFromCookies.length > 0) {
-      _setConfiguredNetworks(listFromCookies);
+    if (!isSupportedChainsReady) {
+      return;
     }
-  }, []);
+    const _recentlyUsedChainsStr = localStorage.getItem(
+      RECENTLY_USED_CHAIN_IDS_KEY,
+    );
+    if (!_recentlyUsedChainsStr) {
+      return;
+    }
 
-  const updator: UpdateConfiguredChains = useMemo(() => {
-    return {
-      add(newNetworks: StoredChain[]) {
-        setConfiguredNetworks((prev) => [...prev, ...newNetworks]);
-      },
-      remove(index: number) {
-        setConfiguredNetworks((prev) => {
-          const newConfiguredNetworks = [...prev];
-          newConfiguredNetworks.splice(index, 1);
-          return newConfiguredNetworks;
-        });
-      },
-      update(index: number, newNetwork: StoredChain) {
-        setConfiguredNetworks((prev) => {
-          const newConfiguredNetworks = [...prev];
-          newConfiguredNetworks[index] = newNetwork;
-          return newConfiguredNetworks;
-        });
-      },
-    };
-  }, [setConfiguredNetworks]);
+    try {
+      const _recentlyUsedChainIds = JSON.parse(
+        _recentlyUsedChainsStr,
+      ) as number[];
+
+      setRecentlyUsedChainIds(_recentlyUsedChainIds);
+    } catch (e) {
+      localStorage.removeItem(RECENTLY_USED_CHAIN_IDS_KEY);
+    }
+  }, [chainIdToChainRecord, isSupportedChainsReady]);
+
+  const applyOverrides = useCallback(
+    (target: StoredChain[], overrides: StoredChain[]) => {
+      const result = [...target];
+
+      overrides.forEach((modifiedChain) => {
+        // if this chain is already in the supported chains, update it
+        if (modifiedChain.chainId in chainIdToIndexRecord) {
+          const i = chainIdToIndexRecord[modifiedChain.chainId];
+          if (!result[i]) {
+            throw new Error("invalid attempt to overide");
+          }
+          result[i] = { ...modifiedChain, isModified: true };
+        } else {
+          // append the modified chain to the end of the supported chains
+          result.push({ ...modifiedChain, isCustom: true });
+        }
+      });
+
+      return result;
+    },
+    [chainIdToIndexRecord],
+  );
+
+  const applyModificationsToSupportedChains = useCallback(
+    (newModifiedChains: Chain[]) => {
+      setSupportedChains((_supportedChains) => {
+        return applyOverrides(_supportedChains, newModifiedChains);
+      });
+    },
+    [applyOverrides],
+  );
+
+  // create supported chains and modified chains on mount
+  useEffect(() => {
+    if (allChains.length === 0) {
+      return;
+    }
+
+    if (isSupportedChainsReady) {
+      return;
+    }
+
+    const _modifiedChains = chainStorage.get(MODIFIED_CHAINS_KEY);
+
+    if (_modifiedChains.length === 0) {
+      setSupportedChains(allChains);
+      setIsSupportedChainsReady(true);
+      return;
+    }
+
+    const newSupportedChains = applyOverrides(allChains, _modifiedChains);
+    setSupportedChains(newSupportedChains);
+    setModifiedChains(_modifiedChains);
+    setIsSupportedChainsReady(true);
+  }, [
+    allChains,
+    chainIdToIndexRecord,
+    isSupportedChainsReady,
+    applyModificationsToSupportedChains,
+    applyOverrides,
+    supportedChains,
+  ]);
+  const modifyChain = useCallback(
+    (chain: Chain) => {
+      // if this chain is already in the modified chains, update it
+      const i = modifiedChains.findIndex((c) => c.chainId === chain.chainId);
+      if (i !== -1) {
+        const newModifiedChains = [...modifiedChains];
+        newModifiedChains[i] = chain as StoredChain;
+        setModifiedChains(newModifiedChains);
+        applyModificationsToSupportedChains(newModifiedChains);
+        chainStorage.set(MODIFIED_CHAINS_KEY, newModifiedChains);
+      }
+      // else add it to the modified chains
+      else {
+        const newModifiedChains = [...modifiedChains, chain as StoredChain];
+        setModifiedChains(newModifiedChains);
+        applyModificationsToSupportedChains(newModifiedChains);
+        chainStorage.set(MODIFIED_CHAINS_KEY, newModifiedChains);
+      }
+    },
+    [applyModificationsToSupportedChains, modifiedChains],
+  );
 
   return (
-    <ConfiguredChainsContext.Provider value={configuredNetworks}>
-      <UpdateConfiguredChainsContext.Provider value={updator}>
-        {props.children}
-      </UpdateConfiguredChainsContext.Provider>
-    </ConfiguredChainsContext.Provider>
+    <SupportedChainsContext.Provider value={supportedChains}>
+      <SupportedChainsReadyContext.Provider value={isSupportedChainsReady}>
+        <ModifiedChainsContext.Provider value={modifiedChains}>
+          <ModifyChainContext.Provider value={modifyChain}>
+            <RecentlyUsedChainIdsContext.Provider value={recentlyUsedChainIds}>
+              <AddRecentlyUsedChainIdsContext.Provider
+                value={addRecentlyUsedChainId}
+              >
+                <EditChainContext.Provider value={editChain}>
+                  <SetEditChainContext.Provider value={setEditChain}>
+                    <isNetworkConfigModalOpenCtx.Provider
+                      value={isNetworkConfigModalOpen}
+                    >
+                      <SetIsNetworkConfigModalOpenCtx.Provider
+                        value={setIsNetworkConfigModalOpen}
+                      >
+                        {props.children}
+                      </SetIsNetworkConfigModalOpenCtx.Provider>
+                    </isNetworkConfigModalOpenCtx.Provider>
+                  </SetEditChainContext.Provider>
+                </EditChainContext.Provider>
+              </AddRecentlyUsedChainIdsContext.Provider>
+            </RecentlyUsedChainIdsContext.Provider>
+          </ModifyChainContext.Provider>
+        </ModifiedChainsContext.Provider>
+      </SupportedChainsReadyContext.Provider>
+    </SupportedChainsContext.Provider>
   );
 }
 
 // storage  --------------------------------------------
-// currently using localStorage, but will move to indexedDb shortly
 
-const configuredChainsStorage = {
-  key: "configured-chains",
-  get(): StoredChain[] {
+// todo: move from local storage to indexedDB
+const chainStorage = {
+  get(key: string): Chain[] {
     try {
-      const networkListStr = localStorage.getItem(configuredChainsStorage.key);
+      const networkListStr = localStorage.getItem(key);
       return networkListStr ? JSON.parse(networkListStr) : [];
     } catch (e) {
       // if parsing error, clear dirty storage
-      localStorage.removeItem(configuredChainsStorage.key);
+      localStorage.removeItem(key);
     }
 
     return [];
   },
 
-  set(networkList: StoredChain[]) {
+  set(key: string, networkList: Chain[]) {
     const value = JSON.stringify(networkList);
     try {
-      localStorage.setItem(configuredChainsStorage.key, value);
+      localStorage.setItem(key, value);
     } catch (e) {
       // if storage limit exceed
       // clear entire local storage and then try again
       localStorage.clear();
-      localStorage.setItem(configuredChainsStorage.key, value);
+      localStorage.setItem(key, value);
     }
   },
 };

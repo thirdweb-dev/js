@@ -42,7 +42,7 @@ import {
 } from "components/contract-tabs/code/types";
 import { DASHBOARD_THIRDWEB_API_KEY } from "constants/rpc";
 import { constants } from "ethers";
-import { useConfiguredChain } from "hooks/chains/configureChains";
+import { useSupportedChain } from "hooks/chains/configureChains";
 import { useMemo, useState } from "react";
 import { Button, Card, Heading, Link, Text, TrackedLink } from "tw-components";
 
@@ -62,8 +62,8 @@ const COMMANDS = {
     web3button: "",
     python: "pip install thirdweb-sdk",
     go: "go get github.com/thirdweb-dev/go-sdk/thirdweb",
-    unity: `// Download the .unitypackage from the latest release: 
-// https://github.com/thirdweb-dev/unity-sdk/releases 
+    unity: `// Download the .unitypackage from the latest release:
+// https://github.com/thirdweb-dev/unity-sdk/releases
 // and drag it into your project`,
   },
   setup: {
@@ -111,7 +111,7 @@ sdk, err := thirdweb.NewThirdwebSDK("{{chainNameOrRpc}}")
 contract, err := sdk.GetContract("{{contract_address}}")
 `,
     unity: `using Thirdweb;
-    
+
 private void Start() {
     ThirdwebSDK SDK = new ThirdwebSDK("{{chainNameOrRpc}}");
     Contract myContract = SDK.GetContract("{{contract_address}}");
@@ -336,7 +336,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
   }, [filteredData]);
 
   const chainId = useDashboardEVMChainId();
-  const chainInfo = useConfiguredChain(chainId || -1);
+  const chainInfo = useSupportedChain(chainId || -1);
   const chainName = chain?.slug || chainInfo?.slug;
   const rpc = chain?.rpc[0] || chainInfo?.rpc[0];
 

@@ -17,7 +17,7 @@ import {
   EMBED_THIRDWEB_API_KEY,
 } from "constants/rpc";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useConfiguredChainsRecord } from "hooks/chains/configureChains";
+import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { replaceIpfsUrl } from "lib/sdk";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -156,7 +156,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   const trackEvent = useTrack();
 
   const chainId = useDashboardEVMChainId();
-  const configuredChains = useConfiguredChainsRecord();
+  const configuredChains = useSupportedChainsRecord();
 
   const chain = useMemo(() => {
     if (!chainId) {

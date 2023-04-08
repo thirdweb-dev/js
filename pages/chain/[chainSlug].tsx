@@ -11,7 +11,6 @@ import {
   LinkBox,
   LinkOverlay,
   SimpleGrid,
-  useToast,
 } from "@chakra-ui/react";
 import { QueryClient, dehydrate, useQuery } from "@tanstack/react-query";
 import { Chain } from "@thirdweb-dev/chains";
@@ -23,11 +22,6 @@ import { ContractCard } from "components/explore/contract-card";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { CodeOverview } from "contract-ui/tabs/code/components/code-overview";
 import { ExploreCategory, prefetchCategory } from "data/explore";
-import { useTrack } from "hooks/analytics/useTrack";
-import {
-  useConfiguredChainsRecord,
-  useUpdateConfiguredChains,
-} from "hooks/chains/configureChains";
 import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton } from "lib/sdk";
 import { getAbsoluteUrl } from "lib/vercel-utils";
@@ -35,16 +29,14 @@ import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { NextSeo } from "next-seo";
 import Vibrant from "node-vibrant";
 import { PageId } from "page-id";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useMemo } from "react";
 import {
   FiAlertCircle,
   FiCheckCircle,
   FiExternalLink,
   FiXCircle,
 } from "react-icons/fi";
-import { IoIosAdd } from "react-icons/io";
 import {
-  Button,
   Card,
   Heading,
   LinkButton,
@@ -113,20 +105,9 @@ const ChainPage: ThirdwebNextPage = ({
   category,
   gradientColors,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const configuredChainRecord = useConfiguredChainsRecord();
-  const updateConfiguredNetworks = useUpdateConfiguredChains();
-  const trackEvent = useTrack();
-  const isConfigured = useMemo(() => {
-    return (
-      chain.chainId in configuredChainRecord &&
-      !configuredChainRecord[chain.chainId].isAutoConfigured
-    );
-  }, [chain.chainId, configuredChainRecord]);
   const rpcStats = useChainStats(chain);
 
   const address = useAddress();
-
-  const toast = useToast();
 
   const sanitizedChainName = chain.name.replace("Mainnet", "").trim();
 
@@ -134,46 +115,6 @@ const ChainPage: ThirdwebNextPage = ({
   const description = `Deploy smart contracts to ${sanitizedChainName} and build dApps with thirdweb's SDKs. Discover ${
     chain.nativeCurrency.symbol
   } RPCs, ${chain.faucets?.length ? "faucets," : "dApps"} & explorers.`;
-
-  const hasAddedNetwork = useRef(false);
-
-  const addNetwork = useCallback(
-    (isAutoAdd = false) => {
-      // only do this once!
-      if (hasAddedNetwork.current) {
-        return;
-      }
-      hasAddedNetwork.current = true;
-      // can't add chain without RPC
-      if (chain.rpc.length === 0) {
-        return;
-      }
-      updateConfiguredNetworks.add([chain]);
-      trackEvent({
-        category: CHAIN_CATEGORY,
-        chain,
-        action: "add_chain",
-        label: chain.slug,
-        auto_added: isAutoAdd,
-      });
-
-      if (!isAutoAdd) {
-        toast({
-          title: "Chain added",
-          description: `You can now use ${sanitizedChainName} on thirdweb`,
-          status: "success",
-          duration: 3000,
-        });
-      }
-    },
-    [updateConfiguredNetworks, chain, trackEvent, toast, sanitizedChainName],
-  );
-
-  useEffect(() => {
-    if (!isConfigured) {
-      addNetwork(true);
-    }
-  }, [addNetwork, isConfigured]);
 
   const gradient = useMemo(() => {
     if (!gradientColors?.length) {
@@ -283,36 +224,20 @@ const ChainPage: ThirdwebNextPage = ({
                 </Flex>
               </Flex>
               <ClientOnly ssr={null}>
-                {isConfigured ? (
-                  <LinkButton
-                    as={TrackedLink}
-                    {...{
-                      category: CHAIN_CATEGORY,
-                    }}
-                    background="bgBlack"
-                    color="bgWhite"
-                    _hover={{
-                      opacity: 0.8,
-                    }}
-                    href="/explore"
-                  >
-                    Deploy to {chain.name}
-                  </LinkButton>
-                ) : (
-                  <Button
-                    background="bgBlack"
-                    color="bgWhite"
-                    _hover={{
-                      opacity: 0.8,
-                    }}
-                    leftIcon={
-                      <Icon w={5} h={5} color="inherit" as={IoIosAdd} />
-                    }
-                    onClick={() => addNetwork()}
-                  >
-                    Add chain
-                  </Button>
-                )}
+                <LinkButton
+                  as={TrackedLink}
+                  {...{
+                    category: CHAIN_CATEGORY,
+                  }}
+                  background="bgBlack"
+                  color="bgWhite"
+                  _hover={{
+                    opacity: 0.8,
+                  }}
+                  href="/explore"
+                >
+                  Deploy to {chain.name}
+                </LinkButton>
               </ClientOnly>
             </Flex>
           </Container>
@@ -350,7 +275,6 @@ const ChainPage: ThirdwebNextPage = ({
                     <GridItem
                       key={contractId}
                       colSpan={{ base: 6, md: 4 }}
-                      onClick={!isConfigured ? () => addNetwork() : undefined}
                       display="grid"
                     >
                       <ContractCard

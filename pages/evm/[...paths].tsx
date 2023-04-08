@@ -21,14 +21,14 @@ import { ensQuery } from "components/contract-components/hooks";
 import { ImportContract } from "components/contract-components/import-contract";
 import { ContractMetadata } from "components/custom-contract/contract-header/contract-metadata";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
+import { SupportedChainsReadyContext } from "contexts/configured-chains";
 import { PrimaryDashboardButton } from "contract-ui/components/primary-dashboard-button";
 import { useContractRouteConfig } from "contract-ui/hooks/useRouteConfig";
 import { ConditionsNotSet } from "contract-ui/tabs/claim-conditions/components/conditions-not-set";
 import { ContractProgramSidebar } from "core-ui/sidebar/detail-page";
 import {
-  useConfiguredChainSlugRecord,
-  useConfiguredChainsRecord,
-  useUpdateConfiguredChains,
+  useSupportedChainsRecord,
+  useSupportedChainsSlugRecord,
 } from "hooks/chains/configureChains";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { getDashboardChainRpc } from "lib/rpc";
@@ -38,7 +38,7 @@ import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { ContractOG } from "og-lib/url-utils";
 import { PageId } from "page-id";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { getAllChainRecords } from "utils/allChainsRecords";
 import { ThirdwebNextPage } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
@@ -58,58 +58,54 @@ type EVMContractProps = {
 const EVMContractPage: ThirdwebNextPage = () => {
   // show optimistic UI first - assume chain is conifgured until proven otherwise
   const [chainNotFound, setChainNotFound] = useState(false);
+  const isSupportedChainsReady = useContext(SupportedChainsReadyContext);
 
   // contractInfo is never undefined on this page
   const { chain, chainSlug, contractAddress } =
     useEVMContractInfo() as EVMContractInfo;
 
   const setContractInfo = useSetEVMContractInfo();
-  const configuredChainSlugRecord = useConfiguredChainSlugRecord();
-  const configuredChainsRecord = useConfiguredChainsRecord();
-  const updateConfiguredChains = useUpdateConfiguredChains();
+  const supportedChainsSlugRecord = useSupportedChainsSlugRecord();
+  const configuredChainsRecord = useSupportedChainsRecord();
 
   useEffect(() => {
+    if (!isSupportedChainsReady) {
+      return;
+    }
+
     // if server resolved the chain, or we resolved it on client
     if (chain) {
       setChainNotFound(false);
-      // if it is not configured on client
-      if (!(chainSlug in configuredChainSlugRecord)) {
-        // auto configure it
-        updateConfiguredChains.add([
-          {
-            ...chain,
-            isAutoConfigured: true,
-          },
-        ]);
+
+      // if server resolved it and user has it configured. user may have updated it on client
+      // currently user can only update RPC - so check if it is updated or not
+      // if updated, update the contractInfo.chain
+
+      const configuredChain = supportedChainsSlugRecord[chainSlug];
+      if (
+        getDashboardChainRpc(configuredChain) !== getDashboardChainRpc(chain)
+      ) {
+        setContractInfo({
+          chainSlug,
+          contractAddress,
+          chain: configuredChain,
+        });
       }
 
-      // it is configured on client
-      else {
-        // if server resolved it and user has it configured. user may have updated it on client
-        // currently user can only update RPC - so check if it is updated or not
-        // if updated, update the contractInfo.chain
+      // TODO: replace the above with this logic:
 
-        const configuredChain = configuredChainSlugRecord[chainSlug];
-        if (
-          getDashboardChainRpc(configuredChain) !== getDashboardChainRpc(chain)
-        ) {
-          setContractInfo({
-            chainSlug,
-            contractAddress,
-            chain: configuredChain,
-          });
-        }
-      }
+      // if this chain is one of modified chains
+      // override it with chain object on client to ensure it has the user overrides
     }
 
     // if server could not resolve the chain using allChains
     else {
       // if it is configured on client storage, use that
-      if (chainSlug in configuredChainSlugRecord) {
+      if (chainSlug in supportedChainsSlugRecord) {
         setContractInfo({
           chainSlug,
           contractAddress,
-          chain: configuredChainSlugRecord[chainSlug],
+          chain: supportedChainsSlugRecord[chainSlug],
         });
       } else if (chainSlug in configuredChainsRecord) {
         // this is for thirdweb internal tools
@@ -142,11 +138,11 @@ const EVMContractPage: ThirdwebNextPage = () => {
   }, [
     chain,
     chainSlug,
-    configuredChainSlugRecord,
+    supportedChainsSlugRecord,
     configuredChainsRecord,
     contractAddress,
     setContractInfo,
-    updateConfiguredChains,
+    isSupportedChainsReady,
   ]);
 
   const isSlugNumber = !isNaN(Number(chainSlug));
@@ -173,7 +169,7 @@ const EVMContractPage: ThirdwebNextPage = () => {
     // when this changes we need to reset the import state
   }, [chainSlug, contractAddress]);
 
-  const showImportContract = useMemo(() => {
+  const showImportContract: boolean = useMemo(() => {
     // if we manually imported it don't show the import contract
     if (manuallyImported) {
       return false;
@@ -275,6 +271,15 @@ const EVMContractPage: ThirdwebNextPage = () => {
       />
     );
   }
+
+  if (!isSupportedChainsReady) {
+    return (
+      <Flex h="100%" justifyContent="center" alignItems="center">
+        <Spinner size="xl" />
+      </Flex>
+    );
+  }
+
   return (
     <Flex
       direction="column"

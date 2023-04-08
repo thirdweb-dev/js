@@ -12,7 +12,7 @@ import {
   walletConnectV1,
 } from "@thirdweb-dev/react";
 import { DASHBOARD_THIRDWEB_API_KEY } from "constants/rpc";
-import { useConfiguredChains } from "hooks/chains/configureChains";
+import { useSupportedChains } from "hooks/chains/configureChains";
 import { useNativeColorMode } from "hooks/useNativeColorMode";
 import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton } from "lib/sdk";
@@ -28,7 +28,7 @@ export const DashboardThirdwebProvider: ComponentWithChildren<
 > = ({ children }) => {
   useNativeColorMode();
   const queryClient = useQueryClient();
-  const configuredChains = useConfiguredChains();
+  const supportedChains = useSupportedChains();
   const contractInfo = useEVMContractInfo();
   const chain = contractInfo?.chain;
   const readonlySettings = useMemo(() => {
@@ -55,7 +55,7 @@ export const DashboardThirdwebProvider: ComponentWithChildren<
         url: "https://thirdweb.com",
       }}
       activeChain={chain?.chainId}
-      supportedChains={configuredChains}
+      supportedChains={supportedChains}
       sdkOptions={{
         gasSettings: { maxPriceInGwei: 650 },
         readonlySettings,

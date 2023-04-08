@@ -16,14 +16,13 @@ import {
   Polygon,
 } from "@thirdweb-dev/chains";
 import { ChainId, ContractWithMetadata } from "@thirdweb-dev/sdk/evm";
-import { useAutoConfigureChains } from "hooks/chains/allChains";
 import {
-  useConfiguredChains,
-  useConfiguredChainsRecord,
+  useSupportedChains,
+  useSupportedChainsRecord,
 } from "hooks/chains/configureChains";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getEVMThirdwebSDK, getSOLThirdwebSDK } from "lib/sdk";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import invariant from "tiny-invariant";
 import { DashboardSolanaNetwork } from "utils/solanaUtils";
 
@@ -49,7 +48,7 @@ export function useContractList(
 }
 
 export function useMultiChainRegContractList(walletAddress?: string) {
-  const configuredChains = useConfiguredChains();
+  const configuredChains = useSupportedChains();
   return useQuery(
     ["dashboard-registry", walletAddress, "multichain-contract-list"],
     async () => {
@@ -289,26 +288,7 @@ export function useAllContractList(walletAddress: string | undefined) {
   const testnetQuery = useTestnetsContractList(walletAddress);
   const multiChainQuery = useMultiChainRegContractList(walletAddress);
 
-  const configuredChainsRecord = useConfiguredChainsRecord();
-  const autoConfigureChains = useAutoConfigureChains();
-
-  useEffect(() => {
-    if (!multiChainQuery.data) {
-      return;
-    }
-
-    // create a set of unconfigured chains
-    const unconfiguredChainsSet: Set<number> = new Set();
-    multiChainQuery.data.forEach((contract) => {
-      if (!configuredChainsRecord[contract.chainId]) {
-        unconfiguredChainsSet.add(contract.chainId);
-      }
-    });
-
-    // auto configure them all if possible
-    autoConfigureChains(unconfiguredChainsSet);
-  }, [autoConfigureChains, multiChainQuery.data, configuredChainsRecord]);
-
+  const configuredChainsRecord = useSupportedChainsRecord();
   const allList = useMemo(() => {
     const mainnets: ContractWithMetadata[] = [];
     const testnets: ContractWithMetadata[] = [];

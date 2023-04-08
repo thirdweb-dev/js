@@ -3,8 +3,8 @@ import { ThirdwebSDKProvider, useSigner } from "@thirdweb-dev/react";
 import type { SDKOptions } from "@thirdweb-dev/sdk/evm";
 import { DASHBOARD_THIRDWEB_API_KEY } from "constants/rpc";
 import {
-  useConfiguredChain,
-  useConfiguredChains,
+  useSupportedChain,
+  useSupportedChains,
 } from "hooks/chains/configureChains";
 import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton } from "lib/sdk";
@@ -16,8 +16,8 @@ export const CustomSDKContext: ComponentWithChildren<{
 }> = ({ desiredChainId, options, children }) => {
   const signer = useSigner();
   const queryClient = useQueryClient();
-  const networkInfo = useConfiguredChain(desiredChainId || -1);
-  const configuredChains = useConfiguredChains();
+  const networkInfo = useSupportedChain(desiredChainId || -1);
+  const configuredChains = useSupportedChains();
 
   return (
     <ThirdwebSDKProvider

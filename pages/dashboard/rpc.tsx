@@ -11,7 +11,7 @@ import {
 import { AppLayout } from "components/app-layouts/app";
 import { ConfigureNetworkButton } from "components/contract-components/shared/configure-network-button";
 import { ChainIcon } from "components/icons/ChainIcon";
-import { useConfiguredChains } from "hooks/chains/configureChains";
+import { useSupportedChains } from "hooks/chains/configureChains";
 import { PageId } from "page-id";
 import { Card, Heading, Link, Text, TrackedCopyButton } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
@@ -19,7 +19,7 @@ import { ThirdwebNextPage } from "utils/types";
 const TRACKING_CATEGORY = "rpc";
 
 export const DashboardRPC: ThirdwebNextPage = () => {
-  const configuredChains = useConfiguredChains();
+  const configuredChains = useSupportedChains();
 
   return (
     <Flex flexDir="column" gap={8} mt={{ base: 2, md: 6 }}>

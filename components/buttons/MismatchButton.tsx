@@ -18,7 +18,6 @@ import { AiOutlineWarning } from "@react-icons/all-files/ai/AiOutlineWarning";
 import { useWallet as useWalletSol } from "@solana/wallet-adapter-react";
 import {
   ChainId,
-  useAddress,
   useBalance,
   useChainId,
   useConnectionStatus,
@@ -34,7 +33,7 @@ import {
 } from "@thirdweb-dev/react/solana";
 import { BigNumber } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useConfiguredChain } from "hooks/chains/configureChains";
+import { useSupportedChain } from "hooks/chains/configureChains";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { VscDebugDisconnect } from "react-icons/vsc";
 import { Button, Card, Heading, Text } from "tw-components";
@@ -57,7 +56,7 @@ export const MismatchButton = React.forwardRef<
     },
     ref,
   ) => {
-    const address = useAddress();
+    const wallet = useWallet();
     const { publicKey } = useWalletSol();
     const evmBalance = useBalance();
     const solBalance = useSolBalance();
@@ -68,14 +67,14 @@ export const MismatchButton = React.forwardRef<
     const trackEvent = useTrack();
 
     const chainId = useChainId();
-    const chainInfo = useConfiguredChain(chainId || -1);
+    const chainInfo = useSupportedChain(chainId || -1);
 
     const hasFaucet =
       chainInfo &&
       (chainInfo.chainId === ChainId.Localhost ||
         (chainInfo.faucets && chainInfo.faucets.length > 0));
     const eventRef = useRef<React.MouseEvent<HTMLButtonElement, MouseEvent>>();
-    if (!address && ecosystem === "evm") {
+    if (!wallet && ecosystem === "evm") {
       return (
         <ConnectWallet
           borderRadius="md"
@@ -212,10 +211,10 @@ const MismatchNotice: React.FC<{
   const activeChain = useWallet();
   const actuallyCanAttemptSwitch =
     activeChain && activeChain.walletId !== "Safe";
-  const walletConnectedNetworkInfo = useConfiguredChain(connectedChainId || -1);
+  const walletConnectedNetworkInfo = useSupportedChain(connectedChainId || -1);
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  const chain = useConfiguredChain(desiredChainId || -1);
+  const chain = useSupportedChain(desiredChainId || -1);
 
   const onSwitchWallet = useCallback(async () => {
     if (actuallyCanAttemptSwitch && desiredChainId && chain) {
@@ -299,7 +298,7 @@ const NoFundsNotice: React.FC<NoFundsNoticeProps> = ({ symbol, ecosystem }) => {
   const balanceQuery = useBalance();
   const sdk = useSDK();
   const chainId = useChainId();
-  const chainInfo = useConfiguredChain(chainId || -1);
+  const chainInfo = useSupportedChain(chainId || -1);
 
   const hasFaucet =
     chainInfo &&
@@ -363,7 +362,7 @@ const UpsellTestnetNotice: React.FC<{
   const switchNetwork = useSwitchChain();
   const actuallyCanAttemptSwitch = !!switchNetwork;
 
-  const chain = useConfiguredChain(connectedChainId || -1);
+  const chain = useSupportedChain(connectedChainId || -1);
 
   useEffect(() => {
     trackEvent({

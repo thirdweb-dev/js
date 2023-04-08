@@ -2,7 +2,7 @@ import { ContractId } from "../types";
 import CustomContractForm from "./custom-contract";
 import { useAddress, useChainId } from "@thirdweb-dev/react";
 import { CustomSDKContext } from "contexts/custom-sdk-context";
-import { useConfiguredChainsRecord } from "hooks/chains/configureChains";
+import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useEffect, useState } from "react";
 
 interface ContractDeployFormProps {
@@ -20,7 +20,7 @@ export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
 }) => {
   const walletAddress = useAddress();
   const connectedChainId = useChainId();
-  const configuredNetworksRecord = useConfiguredChainsRecord();
+  const configuredNetworksRecord = useSupportedChainsRecord();
   const [selectedChain, setSelectedChain] = useState<number | undefined>(
     chainIdProp
       ? chainIdProp

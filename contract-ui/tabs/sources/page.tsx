@@ -19,7 +19,7 @@ import { useContract } from "@thirdweb-dev/react";
 import { Abi } from "@thirdweb-dev/sdk";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
 import { useContractSources } from "contract-ui/hooks/useContractSources";
-import { useConfiguredChain } from "hooks/chains/configureChains";
+import { useSupportedChain } from "hooks/chains/configureChains";
 import { useRouter } from "next/router";
 import { VerificationStatus, blockExplorerMap } from "pages/api/verify";
 import { useMemo } from "react";
@@ -108,7 +108,7 @@ const VerifyContractModal: React.FC<ConnectorModalProps> = ({
     verificationStatus?.result === VerificationStatus.SUCCESS;
   const chainId = useDashboardEVMChainId();
 
-  const chainInfo = useConfiguredChain(chainId || -1);
+  const chainInfo = useSupportedChain(chainId || -1);
 
   const blockExplorerName =
     getBlockExplorerName(chainId) ||

@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useAddress, useContract } from "@thirdweb-dev/react";
 import { BigNumber, ethers } from "ethers";
-import { useConfiguredChainsRecord } from "hooks/chains/configureChains";
+import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useMemo } from "react";
 import { Card, Heading, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
@@ -29,7 +29,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
 }) => {
   const address = useAddress();
   const contractQuery = useContract(contractAddress, "split");
-  const configuredChainsRecord = useConfiguredChainsRecord();
+  const configuredChainsRecord = useSupportedChainsRecord();
   const chainId = useDashboardEVMChainId();
   const chain = chainId ? configuredChainsRecord[chainId] : undefined;
 

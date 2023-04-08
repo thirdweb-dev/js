@@ -28,7 +28,7 @@ import { fetchEns } from "components/contract-components/hooks";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
-import { useConfiguredChains } from "hooks/chains/configureChains";
+import { useSupportedChains } from "hooks/chains/configureChains";
 import { useDebounce } from "hooks/common/useDebounce";
 import { isPossibleEVMAddress } from "lib/address-utils";
 import { getDashboardChainRpc } from "lib/rpc";
@@ -283,7 +283,7 @@ function contractTypesenseSearchQuery(
 
 function useContractSearch(searchQuery: string) {
   const queryClient = useQueryClient();
-  const configureChains = useConfiguredChains();
+  const configureChains = useSupportedChains();
   const trackEvent = useTrack();
   return useQueries({
     queries: configureChains.map((chain) => {

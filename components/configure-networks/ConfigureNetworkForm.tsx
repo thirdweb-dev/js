@@ -3,7 +3,6 @@ import { IconUpload } from "./Form/IconUpload";
 import { NetworkIDInput } from "./Form/NetworkIdInput";
 import { RemoveButton } from "./Form/RemoveButton";
 import { RpcInput } from "./Form/RpcInput";
-import { SearchNetworks } from "./Form/SearchNetworks";
 import { ToolTipBox } from "./Form/ToolTipBox";
 import {
   Flex,
@@ -14,15 +13,11 @@ import {
   SimpleGrid,
   Stack,
 } from "@chakra-ui/react";
-import { Chain } from "@thirdweb-dev/chains";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { StoredChain } from "contexts/configured-chains";
-import {
-  useConfiguredChainsNameRecord,
-  useConfiguredChainsRecord,
-} from "hooks/chains/configureChains";
+import { useSupportedChainsNameRecord } from "hooks/chains/configureChains";
 import { getDashboardChainRpc } from "lib/rpc";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button, FormErrorMessage, FormLabel, Text } from "tw-components";
 
@@ -63,18 +58,14 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
   prefillSlug,
   prefillChainId,
   variant,
-  onCustomClick,
-  prefillName,
-  onEdit,
 }) => {
   const [selectedChain, setSelectedChain] = useState<StoredChain | undefined>();
   const [isSearchOpen, setIsSearchOpen] = useState(variant === "search");
-  const configuredChainNameRecord = useConfiguredChainsNameRecord();
-  const configuredChainsRecord = useConfiguredChainsRecord();
+  const configuredChainNameRecord = useSupportedChainsNameRecord();
 
   const form = useForm<NetworkConfigFormData>({
     values: {
-      name: editingChain?.name || prefillName || "",
+      name: editingChain?.name || "",
       rpcUrl: editingChain ? getDashboardChainRpc(editingChain) : "" || "",
       chainId: editingChain?.chainId
         ? `${editingChain?.chainId}`
@@ -91,11 +82,12 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
   // setup prefills
   useEffect(() => {
     if (prefillSlug) {
-      form.setValue("slug", prefillSlug, { shouldDirty: true });
-    } else if (prefillName) {
-      form.setValue("slug", nameToSlug(prefillName));
+      form.setValue("slug", prefillSlug, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
     }
-  }, [prefillSlug, prefillName, form]);
+  }, [prefillSlug, form]);
 
   const { ref } = form.register("name", {
     required: true,
@@ -112,11 +104,6 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
 
         // valid if chain is not found
         if (!chain) {
-          return true;
-        }
-
-        // valid if chain found, but is autoconfigured
-        if (chain.isAutoConfigured) {
           return true;
         }
 
@@ -204,46 +191,8 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
   const networkNameErrorMessage =
     form.formState.errors.name &&
     (form.formState.errors.name.type === "alreadyAdded"
-      ? "Network already added"
+      ? "Network already exists"
       : "Network name is required");
-
-  const handleNetworkSelection = useCallback(
-    (network: Chain) => {
-      form.clearErrors();
-
-      // if network is already added, call onEdit()
-      const isAlreadyAdded =
-        network.chainId in configuredChainsRecord &&
-        !configuredChainsRecord[network.chainId].isAutoConfigured;
-
-      if (isAlreadyAdded && onEdit) {
-        // don't pass the network, pass the configured chain to prevent overriding it's config
-        onEdit(configuredChainsRecord[network.chainId]);
-        return;
-      }
-
-      form.setValue("name", network.name);
-      form.setValue("rpcUrl", getDashboardChainRpc(network));
-      form.setValue("chainId", `${network.chainId}`);
-      form.setValue("currencySymbol", network.nativeCurrency.symbol);
-      form.setValue("isCustom", false);
-      form.setValue("type", network.testnet ? "testnet" : "mainnet");
-      form.setValue("icon", network.icon?.url || "");
-      form.setValue("slug", network.slug);
-      setSelectedChain(network);
-    },
-    [configuredChainsRecord, form, onEdit],
-  );
-
-  const handleNameChange = useCallback(
-    (value: string) => {
-      form.setValue("name", value, {
-        shouldValidate: true,
-        shouldDirty: true,
-      });
-    },
-    [form],
-  );
 
   return (
     <form
@@ -253,19 +202,6 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
         return handleSubmit(e);
       }}
     >
-      {variant === "search" && onCustomClick && (
-        <SearchNetworks
-          onChange={handleNameChange}
-          value={form.watch("name")}
-          errorMessage={networkNameErrorMessage}
-          inputRef={ref}
-          isSearchOpen={isSearchOpen}
-          setIsSearchOpen={setIsSearchOpen}
-          onCustomClick={onCustomClick}
-          onNetworkSelection={handleNetworkSelection}
-        />
-      )}
-
       {/* Network Name for Custom Network */}
       {variant !== "search" && (
         <FormControl isRequired isInvalid={!!networkNameErrorMessage}>
@@ -287,7 +223,9 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
 
               if (variant === "custom") {
                 if (!form.formState.dirtyFields.slug) {
-                  form.setValue("slug", nameToSlug(value));
+                  form.setValue("slug", nameToSlug(value), {
+                    shouldValidate: true,
+                  });
                 }
               }
             }}

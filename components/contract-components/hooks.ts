@@ -41,7 +41,7 @@ import {
 } from "@thirdweb-dev/sdk/evm";
 import { SnippetApiResponse } from "components/contract-tabs/code/types";
 import { utils } from "ethers";
-import { useConfiguredChain } from "hooks/chains/configureChains";
+import { useSupportedChain } from "hooks/chains/configureChains";
 import { replaceTemplateValues } from "lib/deployment/template-values";
 import { isEnsName } from "lib/ens";
 import { getDashboardChainRpc } from "lib/rpc";
@@ -267,7 +267,7 @@ export function usePublishedContractsFromDeploy(
 ) {
   const activeChainId = useSDKChainId();
   const cId = chainId || activeChainId;
-  const chainInfo = useConfiguredChain(cId || -1);
+  const chainInfo = useSupportedChain(cId || -1);
 
   return useQuery(
     (networkKeys.chain(cId) as readonly unknown[]).concat([

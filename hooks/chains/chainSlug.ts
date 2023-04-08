@@ -1,4 +1,4 @@
-import { useConfiguredChainsRecord } from "./configureChains";
+import { useSupportedChainsRecord } from "./configureChains";
 import {
   DashboardSolanaNetwork,
   SupportedSolanaNetworkToUrlMap,
@@ -9,7 +9,7 @@ import {
  * @returns the slug for the given evm or solana chainId
  */
 export function useChainSlug(chainId: string | number) {
-  const configuredChainsRecord = useConfiguredChainsRecord();
+  const configuredChainsRecord = useSupportedChainsRecord();
 
   // Solana
   if (chainId in SupportedSolanaNetworkToUrlMap) {

@@ -6,6 +6,7 @@ import React, { createContext, useEffect, useState } from "react";
 type AllChainsData = {
   allChains: Chain[];
   chainIdToChainRecord: Record<number, Chain>;
+  chainIdToIndexRecord: Record<number, number>;
   slugToChainRecord: Record<string, Chain>;
 };
 
@@ -22,6 +23,7 @@ export function AllChainsProvider(props: { children: React.ReactNode }) {
   const [allChainsData, setAllChainsData] = useState<AllChainsData>({
     allChains: [],
     chainIdToChainRecord: {},
+    chainIdToIndexRecord: {},
     slugToChainRecord: {},
   });
 
@@ -33,16 +35,20 @@ export function AllChainsProvider(props: { children: React.ReactNode }) {
     function updateState(_allChains: Chain[]) {
       const _slugToChainRecord: Record<string, Chain> = {};
       const _chainIdToChainRecord: Record<number, Chain> = {};
+      const _chainIdToIndexRecord: Record<number, number> = {};
 
-      for (const chain of _allChains) {
+      for (let i = 0; i < _allChains.length; i++) {
+        const chain = _allChains[i];
         _slugToChainRecord[chain.slug] = chain;
         _chainIdToChainRecord[chain.chainId] = chain;
+        _chainIdToIndexRecord[chain.chainId] = i;
       }
 
       setAllChainsData({
         allChains: _allChains,
         chainIdToChainRecord: _chainIdToChainRecord,
         slugToChainRecord: _slugToChainRecord,
+        chainIdToIndexRecord: _chainIdToIndexRecord,
       });
     }
 

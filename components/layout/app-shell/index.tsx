@@ -10,7 +10,6 @@ import {
 import { Ethereum, Solana } from "@thirdweb-dev/chain-icons";
 import { CmdKSearch } from "components/cmd-k-search";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
-import { ConfigureNetworkButton } from "components/contract-components/shared/configure-network-button";
 import { Logo } from "components/logo";
 import { SIDEBAR_TUNNEL_ID } from "core-ui/sidebar/tunnel";
 import { useRouter } from "next/router";
@@ -178,11 +177,6 @@ const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
 
           <ColorModeToggle />
 
-          <ConfigureNetworkButton
-            bg="none"
-            label="configure-networks"
-            iconOnly
-          ></ConfigureNetworkButton>
           <ConnectWallet
             ml={{ base: 0, md: 2 }}
             colorScheme="blue"

@@ -40,7 +40,7 @@ import { ChainIcon } from "components/icons/ChainIcon";
 import { CustomSDKContext } from "contexts/custom-sdk-context";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useChainSlug } from "hooks/chains/chainSlug";
-import { useConfiguredChainsRecord } from "hooks/chains/configureChains";
+import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useRouter } from "next/router";
 import React, { memo, useMemo, useState } from "react";
 import {
@@ -318,7 +318,7 @@ export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
   isFetching,
 }) => {
   const { chainIdToChainRecord } = useAllChainsData();
-  const configuredChains = useConfiguredChainsRecord();
+  const configuredChains = useSupportedChainsRecord();
 
   const columns: Column<(typeof combinedList)[number]>[] = useMemo(
     () => [

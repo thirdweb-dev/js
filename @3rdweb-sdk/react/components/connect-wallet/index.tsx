@@ -14,11 +14,18 @@ import {
   useWallet as useSolWallet,
 } from "@solana/wallet-adapter-react";
 import Solana from "@thirdweb-dev/chain-icons/dist/solana";
+import { defaultChains } from "@thirdweb-dev/chains";
 import {
   ConnectWallet as ConnectWalletNew,
   useConnectionStatus,
 } from "@thirdweb-dev/react";
 import { ChakraNextImage } from "components/Image";
+import { CustomChainRenderer } from "components/selects/CustomChainRenderer";
+import {
+  useAddRecentlyUsedChainId,
+  useRecentlyUsedChains,
+} from "hooks/chains/recentlyUsedChains";
+import { useSetIsNetworkConfigModalOpen } from "hooks/networkConfigModal";
 import { useEffect } from "react";
 import { FiCheck, FiChevronDown, FiCopy } from "react-icons/fi";
 import { Button, ButtonProps, MenuItem, Text } from "tw-components";
@@ -36,6 +43,9 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
   ...buttonProps
 }) => {
   const { colorMode } = useColorMode();
+  const recentChains = useRecentlyUsedChains();
+  const addRecentlyUsedChainId = useAddRecentlyUsedChainId();
+  const setIsNetworkConfigModalOpen = useSetIsNetworkConfigModalOpen();
 
   const solWallet = useSolWallet();
   const {
@@ -99,7 +109,22 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
   // TOOO: set theme
 
   if (ecosystem === "evm" || ecosystem === "either") {
-    return <ConnectWalletNew theme={colorMode} />;
+    return (
+      <ConnectWalletNew
+        theme={colorMode}
+        networkSelector={{
+          popularChains: defaultChains,
+          recentChains,
+          onSwitch(chain) {
+            addRecentlyUsedChainId(chain.chainId);
+          },
+          onCustomClick() {
+            setIsNetworkConfigModalOpen(true);
+          },
+          renderChain: CustomChainRenderer,
+        }}
+      />
+    );
   }
 
   return (

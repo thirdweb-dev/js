@@ -18,12 +18,18 @@ import {
   useWallet,
 } from "@thirdweb-dev/react";
 import { useSDK } from "@thirdweb-dev/react/solana";
+import { ConfigureNetworkModal } from "components/configure-networks/ConfigureNetworkModal";
 import { DeployModalProvider } from "components/contract-components/contract-deploy-form/deploy-context-modal";
 import { AppShell, AppShellProps } from "components/layout/app-shell";
 import { PrivacyNotice } from "components/notices/PrivacyNotice";
 import { AllChainsProvider } from "contexts/all-chains";
-import { ConfiguredChainsProvider } from "contexts/configured-chains";
+import { SupportedChainsProvider } from "contexts/configured-chains";
 import { ErrorProvider } from "contexts/error-handler";
+import { useAddRecentlyUsedChainId } from "hooks/chains/recentlyUsedChains";
+import {
+  useIsNetworkConfigModalOpen,
+  useSetIsNetworkConfigModalOpen,
+} from "hooks/networkConfigModal";
 import { del, get, set } from "idb-keyval";
 import { useRouter } from "next/router";
 import posthog from "posthog-js";
@@ -108,6 +114,7 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
   );
 
   const router = useRouter();
+
   return (
     <PersistQueryClientProvider
       client={queryClient}
@@ -123,15 +130,16 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
         <ErrorProvider>
           <DeployModalProvider>
             <AllChainsProvider>
-              <ConfiguredChainsProvider>
+              <SupportedChainsProvider>
                 <EVMContractInfoProvider value={props.contractInfo}>
                   <DashboardThirdwebProvider>
                     <PHIdentifier />
                     {router.pathname !== "/dashboard" && <PrivacyNotice />}
                     <AppShell {...props} />
+                    <ConfigModal />
                   </DashboardThirdwebProvider>
                 </EVMContractInfoProvider>
-              </ConfiguredChainsProvider>
+              </SupportedChainsProvider>
             </AllChainsProvider>
           </DeployModalProvider>
         </ErrorProvider>
@@ -139,6 +147,25 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
     </PersistQueryClientProvider>
   );
 };
+
+function ConfigModal() {
+  const isNetworkConfigModalOpen = useIsNetworkConfigModalOpen();
+  const setIsNetworkConfigModalOpen = useSetIsNetworkConfigModalOpen();
+  const addRecentlyUsedChains = useAddRecentlyUsedChainId();
+
+  if (!isNetworkConfigModalOpen) {
+    return null;
+  }
+
+  return (
+    <ConfigureNetworkModal
+      onNetworkAdded={(_chain) => {
+        addRecentlyUsedChains(_chain.chainId);
+      }}
+      onClose={() => setIsNetworkConfigModalOpen(false)}
+    />
+  );
+}
 
 const walletIdToPHName: Record<string, string> = {
   metamask: "metamask",

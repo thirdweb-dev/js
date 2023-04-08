@@ -18,7 +18,7 @@ import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { AppLayout } from "components/app-layouts/app";
 import { ChainIcon } from "components/icons/ChainIcon";
 import Fuse from "fuse.js";
-import { useConfiguredChainsRecord } from "hooks/chains/configureChains";
+import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
@@ -38,7 +38,7 @@ const TRACKING_CATEGORY = "chains";
 export const ChainsLanding: ThirdwebNextPage = (
   props: InferGetStaticPropsType<typeof getStaticProps>,
 ) => {
-  const configuredChainsRecord = useConfiguredChainsRecord();
+  const configuredChainsRecord = useSupportedChainsRecord();
 
   const chainsWithDashboardStatus: MinimalRPCChainWithDashboardStatus[] =
     useMemo(() => {

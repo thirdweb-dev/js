@@ -20,7 +20,7 @@ import {
   ExtraPublishMetadata,
 } from "@thirdweb-dev/sdk/evm";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useConfiguredChains } from "hooks/chains/configureChains";
+import { useSupportedChains } from "hooks/chains/configureChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -35,7 +35,7 @@ interface ContractPublishFormProps {
 export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   contractId,
 }) => {
-  const configuredChains = useConfiguredChains();
+  const configuredChains = useSupportedChains();
   const configuredChainsIds = configuredChains.map((c) => c.chainId);
   const [contractSelection, setContractSelection] = useState<
     "standard" | "proxy" | "factory"

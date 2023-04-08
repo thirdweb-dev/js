@@ -114,6 +114,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
           variant={variant}
           {...restButtonProps}
           overflow="hidden"
+          boxSizing="border-box"
           pl={
             isLoading || !isConnected
               ? undefined

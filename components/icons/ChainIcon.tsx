@@ -13,7 +13,6 @@ type ChainIconProps = {
 export const ChainIcon = forwardRef<ChainIconProps, typeof Image>(
   (props, ref) => {
     const src = props.ipfsSrc ? replaceIpfsUrl(props.ipfsSrc) : fallbackIcon;
-
     const size = `${props.size}px`;
 
     // TODO - use sizes to create srcset

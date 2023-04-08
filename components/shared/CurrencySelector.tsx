@@ -2,7 +2,7 @@ import { Flex, Input, Select, SelectProps } from "@chakra-ui/react";
 import { useSDKChainId } from "@thirdweb-dev/react";
 import { CURRENCIES, CurrencyMetadata } from "constants/currencies";
 import { constants, utils } from "ethers";
-import { useConfiguredChainsRecord } from "hooks/chains/configureChains";
+import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import React, { useMemo, useState } from "react";
 import { Button } from "tw-components";
 import { OtherAddressZero } from "utils/zeroAddress";
@@ -21,7 +21,7 @@ export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
   ...props
 }) => {
   const chainId = useSDKChainId();
-  const configuredChainsRecord = useConfiguredChainsRecord();
+  const configuredChainsRecord = useSupportedChainsRecord();
   const chain = chainId ? configuredChainsRecord[chainId] : undefined;
 
   const helperCurrencies = chainId ? CURRENCIES[chainId] || [] : [];
