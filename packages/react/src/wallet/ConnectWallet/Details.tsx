@@ -16,7 +16,7 @@ import {
 } from "../../design-system";
 import { shortenString } from "../../evm/utils/addresses";
 import { isMobile } from "../../evm/utils/isMobile";
-import { NetworkSelector } from "./NetworkSelector";
+import { NetworkSelector, NetworkSelectorProps } from "./NetworkSelector";
 import { ExitIcon } from "./icons/ExitIcon";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
@@ -51,6 +51,7 @@ export const ConnectedWalletDetails: React.FC<{
   onDisconnect: () => void;
   theme: "dark" | "light";
   style?: React.CSSProperties;
+  networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
 }> = (props) => {
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
@@ -369,8 +370,10 @@ export const ConnectedWalletDetails: React.FC<{
 
       {showNetworkSelector && (
         <NetworkSelector
-          open={showNetworkSelector}
-          setOpen={setShowNetworkSelector}
+          theme={props.theme}
+          chains={chains}
+          {...props.networkSelector}
+          onClose={() => setShowNetworkSelector(false)}
         />
       )}
     </>
