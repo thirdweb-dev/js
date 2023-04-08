@@ -78,7 +78,7 @@ import invariant from "tiny-invariant";
 import { z } from "zod";
 import {
   DeploymentTransaction,
-  PrecomputedTransactions,
+  PrecomputedDeploymentTransaction,
 } from "../../types/any-evm/deploy-data";
 
 const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
@@ -859,7 +859,6 @@ export class ContractDeployer extends RPCConnectionHandler {
             deploymentInfo.pluginTransactions &&
             deploymentInfo.pluginTransactions.length > 0
           ) {
-            // console.log("plugin txns ?: ", deploymentInfo.pluginTransactions);
             await deployPluginsAndMap(
               signer,
               deploymentInfo.pluginTransactions,
@@ -1008,7 +1007,7 @@ export class ContractDeployer extends RPCConnectionHandler {
 
           transactionBatches.forEach((batch) => {
             const addresses = batch.map(
-              (tx: PrecomputedTransactions) => tx.predictedAddress,
+              (tx: PrecomputedDeploymentTransaction) => tx.predictedAddress,
             );
             transactions.push({
               contractType: "plugin",

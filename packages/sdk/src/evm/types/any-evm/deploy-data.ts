@@ -5,12 +5,10 @@ export type PrecomputedDeploymentData = {
   bytecode: string;
   encodedArgs: any;
 };
-
-export type PrecomputedTransactions = {
+export type PrecomputedDeploymentTransaction = {
   predictedAddress: string;
   to: string;
   data: string;
-  name?: string;
 };
 
 export type DeploymentInfo = {
@@ -18,7 +16,7 @@ export type DeploymentInfo = {
   encodedArgs: any;
   predictedAddress: string;
   infraContractsToDeploy: InfraContractType[];
-  pluginTransactions?: PrecomputedTransactions[];
+  pluginTransactions?: PrecomputedDeploymentTransaction[];
 };
 
 export type KeylessTransaction = {

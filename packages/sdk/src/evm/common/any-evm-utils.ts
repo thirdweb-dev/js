@@ -5,7 +5,7 @@ import {
   DeploymentInfo,
   KeylessDeploymentInfo,
   KeylessTransaction,
-  PrecomputedTransactions,
+  PrecomputedDeploymentTransaction,
 } from "../types/any-evm/deploy-data";
 import {
   CloneFactory,
@@ -499,7 +499,7 @@ export async function getDeploymentInfo(
 ): Promise<DeploymentInfo> {
   const compilerMetadata = await fetchPreDeployMetadata(metadataUri, storage);
   let finalInfraContracts: InfraContractType[] = [];
-  let pluginTransactions: PrecomputedTransactions[] = [];
+  let pluginTransactions: PrecomputedDeploymentTransaction[] = [];
   let customParams: any[] = [];
 
   if (!create2Factory) {
@@ -511,18 +511,61 @@ export async function getDeploymentInfo(
     "PluginRouter",
   );
   if (isPluginRouter) {
-    const { txns, infraContracts } = await getPluginsAndMapTransactions(
-      metadataUri,
-      provider,
-      storage,
-      create2Factory,
+    const pluginNames = await getPluginNames(metadataUri, storage);
+    const pluginUris = await Promise.all(
+      pluginNames.map((name) => {
+        return fetchPublishedContractURI(name);
+      }),
+    );
+    const pluginMetadata = await Promise.all(
+      pluginUris.map((uri) => {
+        return fetchPreDeployMetadata(uri, storage);
+      }),
+    );
+    const deploymentParams = await Promise.all(
+      pluginMetadata.map((metadata) => {
+        return constructDeploymentParamsForDeployer(
+          metadata,
+          provider,
+          storage,
+          create2Factory as string,
+        );
+      }),
+    );
+    pluginTransactions = deploymentParams.map((param) => param.transaction);
+    deploymentParams.forEach((param) =>
+      finalInfraContracts.push(...param.infraContracts),
     );
 
-    finalInfraContracts.push(...infraContracts);
-    pluginTransactions.push(...txns);
-    customParams.push(
-      txns.find((tx) => tx.name === "PluginMap")?.predictedAddress,
+    // create constructor param input for PluginMap
+    const mapInput: Plugin[] = [];
+    pluginMetadata.forEach((metadata, index) => {
+      const input = generatePluginFunctions(
+        pluginTransactions[index].predictedAddress,
+        metadata.abi,
+      );
+      mapInput.push(...input);
+    });
+
+    // get PluginMap deployment transaction
+    const pluginMapUri = await fetchPublishedContractURI("PluginMap");
+    const pluginMapMetadata = await fetchPreDeployMetadata(
+      pluginMapUri,
+      storage,
     );
+
+    const pluginMapTransaction = await constructDeploymentParamsForDeployer(
+      pluginMapMetadata,
+      provider,
+      storage,
+      create2Factory as string,
+      [mapInput],
+    );
+
+    // address of PluginMap is input for MarketplaceV3's constructor
+    customParams.push(pluginMapTransaction.transaction.predictedAddress);
+
+    pluginTransactions.push(pluginMapTransaction.transaction);
   }
   // 1.  Get abi-encoded args and list of infra contracts required based on constructor params
   const { encodedArgs, infraContracts } =
@@ -650,7 +693,7 @@ export async function deployInfraWithSigner(
 
 export async function deployPluginsAndMap(
   signer: Signer,
-  transactions: PrecomputedTransactions[],
+  transactions: PrecomputedDeploymentTransaction[],
   options?: DeployOptions,
 ) {
   let transactionBatches = createTransactionBatches(transactions);
@@ -679,115 +722,6 @@ export async function deployPluginsAndMap(
       return tx.deployed();
     }),
   );
-}
-
-/**
- *
- * @internal
- *
- * @param routerMetadataUri
- * @param provider
- * @param storage
- * @param create2Factory
- */
-export async function getPluginsAndMapTransactions(
-  routerMetadataUri: string,
-  provider: providers.Provider,
-  storage: ThirdwebStorage,
-  create2Factory: string,
-) {
-  const txns = [];
-  const mapInput: Plugin[] = [];
-  let infraContracts: InfraContractType[] = [];
-
-  const contractNames = await getPluginNames(routerMetadataUri, storage);
-  contractNames.push("PluginMap");
-
-  for (let name of contractNames) {
-    let uri = await fetchPublishedContractURI(name);
-    const metadata = await fetchPreDeployMetadata(uri, storage);
-
-    let address;
-    let encodedArgs: BytesLike = [];
-    if (name !== "PluginMap") {
-      address = await computeAddressForPlugin(
-        name,
-        provider,
-        storage,
-        create2Factory,
-        metadata,
-      );
-
-      const pluginData = generatePluginFunctions(address, metadata.abi);
-      mapInput.push(...pluginData);
-    } else {
-      encodedArgs = ethers.utils.defaultAbiCoder.encode(
-        [
-          ethers.utils.ParamType.from({
-            type: "tuple[]",
-            name: "_pluginsToAdd",
-            components: [
-              {
-                name: "functionSelector",
-                type: "bytes4",
-              },
-              {
-                name: "functionSignature",
-                type: "string",
-              },
-              {
-                name: "pluginAddress",
-                type: "address",
-              },
-            ],
-          }),
-        ],
-        [mapInput],
-      );
-
-      address = computeDeploymentAddress(
-        metadata.bytecode,
-        encodedArgs,
-        create2Factory,
-      );
-    }
-
-    const code = await provider.getCode(address);
-    if (code === "0x") {
-      if (encodedArgs.length === 0) {
-        const encoded = await encodeConstructorParamsForImplementation(
-          metadata,
-          provider,
-          storage,
-          create2Factory,
-        );
-        encodedArgs = encoded.encodedArgs;
-        infraContracts.push(...encoded.infraContracts);
-      }
-
-      // get init bytecode
-      const initBytecodeWithSalt = getInitBytecodeWithSalt(
-        metadata.bytecode,
-        encodedArgs,
-      );
-
-      txns.push({
-        predictedAddress: address,
-        to: create2Factory,
-        data: initBytecodeWithSalt,
-        name: name,
-      });
-    } else {
-      txns.push({
-        predictedAddress: address,
-        to: "",
-        data: "",
-        name: name,
-      });
-    }
-  }
-
-  return { txns, infraContracts };
 }
 
 //
@@ -876,33 +810,43 @@ export async function computeAddressInfra(
   }
 }
 
-export async function computeAddressForPlugin(
-  contractName: string,
+export async function constructDeploymentParamsForDeployer(
+  compilerMetadata: PreDeployMetadataFetched,
   provider: providers.Provider,
   storage: ThirdwebStorage,
   create2Factory: string,
-  metadata?: PreDeployMetadataFetched,
-): Promise<string> {
-  if (!metadata) {
-    let uri = await fetchPublishedContractURI(contractName);
-    metadata = await fetchPreDeployMetadata(uri, storage);
-  }
-
-  const encodedArgs = (
-    await encodeConstructorParamsForImplementation(
-      metadata,
-      provider,
-      storage,
-      create2Factory,
-    )
-  ).encodedArgs;
+  constructorParamValues?: any[],
+): Promise<{
+  transaction: PrecomputedDeploymentTransaction;
+  infraContracts: InfraContractType[];
+}> {
+  const encoded = await encodeConstructorParamsForImplementation(
+    compilerMetadata,
+    provider,
+    storage,
+    create2Factory,
+    constructorParamValues,
+  );
   const address = computeDeploymentAddress(
-    metadata.bytecode,
-    encodedArgs,
+    compilerMetadata.bytecode,
+    encoded.encodedArgs,
     create2Factory,
   );
 
-  return address;
+  // get init bytecode
+  const initBytecodeWithSalt = getInitBytecodeWithSalt(
+    compilerMetadata.bytecode,
+    encoded.encodedArgs,
+  );
+
+  return {
+    transaction: {
+      predictedAddress: address,
+      to: create2Factory,
+      data: initBytecodeWithSalt,
+    },
+    infraContracts: encoded.infraContracts,
+  };
 }
 
 /**
@@ -924,7 +868,13 @@ async function encodeConstructorParamsForImplementation(
     compilerMetadata.abi,
   );
 
-  const constructorParamTypes = constructorParams.map((p) => p.type);
+  let constructorParamTypes = constructorParams.map((p) => {
+    if (p.type === "tuple[]") {
+      return ethers.utils.ParamType.from(p);
+    } else {
+      return p.type;
+    }
+  });
   const constructorParamValues = customParams
     ? customParams
     : await Promise.all(
@@ -993,7 +943,8 @@ function estimateGasForDeploy(initCode: string) {
 }
 
 export function createTransactionBatches(
-  transactions: PrecomputedTransactions[],
+  transactions: PrecomputedDeploymentTransaction[],
+  upperGasLimit: number = 8_000_000, // TODO: document the estimation
 ): any[] {
   transactions = transactions.filter((tx) => {
     return tx.data.length > 0 && tx.to !== "";
@@ -1002,19 +953,12 @@ export function createTransactionBatches(
     return [];
   }
 
-  const transactionsWithoutNames = transactions.map((tx) => {
-    return {
-      predictedAddress: tx.predictedAddress,
-      to: tx.to,
-      data: tx.data,
-    };
-  });
   let transactionBatches: any[] = [];
   let sum = 0;
-  let batch: PrecomputedTransactions[] = [];
-  transactionsWithoutNames.forEach((tx) => {
+  let batch: PrecomputedDeploymentTransaction[] = [];
+  transactions.forEach((tx) => {
     const gas = estimateGasForDeploy(tx.data);
-    if (sum + gas > 8_000_000) {
+    if (sum + gas > upperGasLimit) {
       if (batch.length === 0) {
         transactionBatches.push([tx]);
       } else {
