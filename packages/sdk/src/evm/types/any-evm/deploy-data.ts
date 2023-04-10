@@ -20,6 +20,7 @@ export type PrecomputedDeploymentTransaction = {
 //   pluginTransactions?: PrecomputedDeploymentTransaction[];
 // };
 export type DeploymentInfo = {
+  name?: string;
   type: DeployedContractType;
   transaction: PrecomputedDeploymentTransaction;
 };
