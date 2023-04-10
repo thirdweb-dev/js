@@ -21,7 +21,10 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 import { Plugin } from "../types/plugins";
 import { getChainProvider } from "../constants";
-import { fetchPublishedContractURI } from "./any-evm-utils";
+import {
+  fetchAndCacheDeployMetadata,
+  fetchPublishedContractURI,
+} from "./any-evm-utils";
 
 /**
  * @internal
@@ -124,10 +127,8 @@ export async function getMetadataForPlugins(
 ): Promise<PreDeployMetadataFetched[]> {
   let pluginMetadata: PreDeployMetadataFetched[] = [];
 
-  const compilerMetadata = await fetchPreDeployMetadata(
-    publishedMetadataUri,
-    storage,
-  );
+  const { compilerMetadata, extendedMetadata } =
+    await fetchAndCacheDeployMetadata(publishedMetadataUri, storage);
   // check if contract is plugin-pattern
   const isPluginRouter: boolean = isFeatureEnabled(
     AbiSchema.parse(compilerMetadata.abi),
@@ -135,12 +136,10 @@ export async function getMetadataForPlugins(
   );
 
   if (isPluginRouter) {
-    const extendedMetadata = await fetchExtendedReleaseMetadata(
-      publishedMetadataUri,
-      storage,
-    );
-
-    if (extendedMetadata.factoryDeploymentData?.implementationAddresses) {
+    if (
+      extendedMetadata &&
+      extendedMetadata.factoryDeploymentData?.implementationAddresses
+    ) {
       const implementationsAddresses = Object.entries(
         extendedMetadata.factoryDeploymentData.implementationAddresses,
       );
@@ -185,11 +184,13 @@ export async function getMetadataForPlugins(
               return fetchPublishedContractURI(name);
             }),
           );
-          pluginMetadata = await Promise.all(
-            pluginUris.map((uri) => {
-              return fetchPreDeployMetadata(uri, storage);
-            }),
-          );
+          pluginMetadata = (
+            await Promise.all(
+              pluginUris.map(async (uri) => {
+                return fetchAndCacheDeployMetadata(uri, storage);
+              }),
+            )
+          ).map((fetchedMetadata) => fetchedMetadata.compilerMetadata);
         }
       } catch {}
     }

@@ -19,11 +19,12 @@ import {
 import { toWei } from "./currency";
 import {
   extractConstructorParamsFromAbi,
+  fetchExtendedReleaseMetadata,
   fetchPreDeployMetadata,
 } from "./feature-detection";
 import { generatePluginFunctions, getMetadataForPlugins } from "./plugin";
 import { Plugin } from "../types/plugins";
-import { DeployOptions } from "../types";
+import { DeployMetadata, DeployOptions } from "../types";
 
 //
 // =============================
@@ -76,7 +77,9 @@ export const DEPLOYER_ABI = [
   },
 ];
 
+// Caches
 let deploymentPresets: Record<string, DeploymentPreset> = {};
+const deployMetadataCache: Record<string, any> = {};
 
 //
 // ==================================
@@ -497,7 +500,10 @@ export async function getDeploymentInfo(
 
   const customParams: ConstructorParamMap = {};
   const finalDeploymentInfo: DeploymentPreset[] = [];
-  const compilerMetadata = await fetchPreDeployMetadata(metadataUri, storage);
+  const { compilerMetadata } = await fetchAndCacheDeployMetadata(
+    metadataUri,
+    storage,
+  );
   const pluginMetadata = await getMetadataForPlugins(metadataUri, storage);
 
   // if pluginMetadata is not empty, then it's a plugin-pattern router contract
@@ -840,6 +846,34 @@ export async function fetchPublishedContractURI(
     );
   }
   return publishedContract?.metadataUri;
+}
+
+export async function fetchAndCacheDeployMetadata(
+  publishMetadataUri: string,
+  storage: ThirdwebStorage,
+): Promise<DeployMetadata> {
+  if (deployMetadataCache[publishMetadataUri]) {
+    return deployMetadataCache[publishMetadataUri];
+  }
+  const compilerMetadata = await fetchPreDeployMetadata(
+    publishMetadataUri,
+    storage,
+  );
+  let extendedMetadata;
+  try {
+    extendedMetadata = await fetchExtendedReleaseMetadata(
+      publishMetadataUri,
+      storage,
+    );
+  } catch (e) {
+    // not a factory deployment, ignore
+  }
+  const data = {
+    compilerMetadata,
+    extendedMetadata,
+  };
+  deployMetadataCache[publishMetadataUri] = data;
+  return data;
 }
 
 function estimateGasForDeploy(initCode: string) {

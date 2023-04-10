@@ -1,13 +1,12 @@
 import {
   extractConstructorParamsFromAbi,
   extractFunctionParamsFromAbi,
-  fetchExtendedReleaseMetadata,
-  fetchPreDeployMetadata,
 } from "../../common";
 import {
   computeCloneFactoryAddress,
   createTransactionBatches,
   deployWithThrowawayDeployer,
+  fetchAndCacheDeployMetadata,
   getCreate2FactoryAddress,
   getDeploymentInfo,
   isContractDeployed,
@@ -97,7 +96,6 @@ export class ContractDeployer extends RPCConnectionHandler {
   private _registry: Promise<ContractRegistry | undefined> | undefined;
   private storage: ThirdwebStorage;
   private events: EventEmitter<DeployEvents>;
-  private deployMetadataCache: Record<string, any> = {};
 
   private transactionListener = (event: any) => {
     if (event.status === "submitted") {
@@ -756,7 +754,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       const signer = this.getSigner();
       invariant(signer, "A signer is required");
       const { compilerMetadata, extendedMetadata } =
-        await this.fetchAndCacheDeployMetadata(publishMetadataUri);
+        await fetchAndCacheDeployMetadata(publishMetadataUri, this.storage);
       const forceDirectDeploy = options?.forceDirectDeploy || false;
       if (
         extendedMetadata &&
@@ -941,8 +939,9 @@ export class ContractDeployer extends RPCConnectionHandler {
     const provider = this.getProvider();
     invariant(provider, "A provider is required");
 
-    const { extendedMetadata } = await this.fetchAndCacheDeployMetadata(
+    const { extendedMetadata } = await fetchAndCacheDeployMetadata(
       publishMetadataUri,
+      this.storage,
     );
     const forceDirectDeploy = options?.forceDirectDeploy || false;
     if (
@@ -1046,33 +1045,6 @@ export class ContractDeployer extends RPCConnectionHandler {
   }
 
   // PRIVATE METHODS
-
-  private async fetchAndCacheDeployMetadata(
-    publishMetadataUri: string,
-  ): Promise<DeployMetadata> {
-    if (this.deployMetadataCache[publishMetadataUri]) {
-      return this.deployMetadataCache[publishMetadataUri];
-    }
-    const compilerMetadata = await fetchPreDeployMetadata(
-      publishMetadataUri,
-      this.storage,
-    );
-    let extendedMetadata;
-    try {
-      extendedMetadata = await fetchExtendedReleaseMetadata(
-        publishMetadataUri,
-        this.storage,
-      );
-    } catch (e) {
-      // not a factory deployment, ignore
-    }
-    const data = {
-      compilerMetadata,
-      extendedMetadata,
-    };
-    this.deployMetadataCache[publishMetadataUri] = data;
-    return data;
-  }
 
   private async fetchPublishedContractFromPolygon(
     publisherAddress: AddressOrEns,
