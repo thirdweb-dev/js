@@ -1,6 +1,7 @@
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BytesLike, ethers, providers, Signer } from "ethers";
 import invariant from "tiny-invariant";
+import { bytecode as WETHBytecode } from "./WETH9";
 import { getNativeTokenByChainId } from "../constants";
 import { ThirdwebSDK } from "../core";
 import { AbiSchema, PreDeployMetadataFetched } from "../schema";
@@ -11,7 +12,6 @@ import {
   PrecomputedDeploymentTransaction,
 } from "../types/any-evm/deploy-data";
 import {
-  ConstructorParam,
   ConstructorParamMap,
   ContractOptions,
   DeploymentPreset,
@@ -629,6 +629,24 @@ export async function computeDeploymentInfo(
     return deploymentPresets[contractName];
   }
 
+  // Different treatment for WETH contract
+  if (contractName === "WETH9") {
+    const address = computeDeploymentAddress(WETHBytecode, [], create2Factory);
+    const code = await provider.getCode(address);
+    if (code === "0x") {
+      const initBytecodeWithSalt = getInitBytecodeWithSalt(WETHBytecode, []);
+      return {
+        name: contractName,
+        type: contractType,
+        transaction: {
+          predictedAddress: address,
+          to: create2Factory,
+          data: initBytecodeWithSalt,
+        },
+      };
+    }
+  }
+
   if (!metadata) {
     invariant(contractName, "require contract name");
     const uri = await fetchPublishedContractURI(contractName);
@@ -679,7 +697,7 @@ async function encodeConstructorParamsForImplementation(
   provider: providers.Provider,
   storage: ThirdwebStorage,
   create2Factory: string,
-  constructorParamMap?: Record<string, ConstructorParam>,
+  constructorParamMap?: ConstructorParamMap,
 ): Promise<BytesLike> {
   const constructorParams = extractConstructorParamsFromAbi(
     compilerMetadata.abi,
@@ -706,11 +724,45 @@ async function encodeConstructorParamsForImplementation(
           getNativeTokenByChainId(chainId).wrapped.address;
 
         if (nativeTokenWrapperAddress === ethers.constants.AddressZero) {
-          // TODO write code for native token wrapper deployment transaction
+          const deploymentInfo = await computeDeploymentInfo(
+            "infra",
+            provider,
+            storage,
+            create2Factory,
+            {
+              contractName: "WETH9",
+            },
+          );
+          if (!deploymentPresets["WETH9"]) {
+            deploymentPresets["WETH9"] = deploymentInfo;
+          }
+
+          nativeTokenWrapperAddress =
+            deploymentInfo.transaction.predictedAddress;
         }
 
         return nativeTokenWrapperAddress;
       } else if (p.name && p.name.includes("trustedForwarder")) {
+        if (
+          compilerMetadata.analytics?.contract_name &&
+          compilerMetadata.analytics.contract_name === "Pack"
+        ) {
+          // EOAForwarder for Pack
+          const deploymentInfo = await computeDeploymentInfo(
+            "infra",
+            provider,
+            storage,
+            create2Factory,
+            {
+              contractName: "ForwarderEOAOnly",
+            },
+          );
+          if (!deploymentPresets["ForwarderEOAOnly"]) {
+            deploymentPresets["ForwarderEOAOnly"] = deploymentInfo;
+          }
+          return deploymentInfo.transaction.predictedAddress;
+        }
+
         const deploymentInfo = await computeDeploymentInfo(
           "infra",
           provider,
@@ -725,9 +777,8 @@ async function encodeConstructorParamsForImplementation(
         }
 
         return deploymentInfo.transaction.predictedAddress;
-        // TODO EOAForwarder
       } else {
-        return "";
+        throw new Error("Can't resolve constructor arguments");
       }
     }),
   );

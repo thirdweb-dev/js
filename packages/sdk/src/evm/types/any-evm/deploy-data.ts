@@ -46,6 +46,7 @@ export type ConstructorParam = {
   value: any | any[];
 };
 
+// Map a param-name to its type/value
 export type ConstructorParamMap = Record<string, ConstructorParam>;
 
 export type ContractOptions = {
