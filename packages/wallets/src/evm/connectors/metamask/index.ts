@@ -184,4 +184,12 @@ export class MetaMaskConnector extends InjectedConnector {
       throw error;
     }
   }
+
+  async switchAccount() {
+    const provider = await this.getProvider();
+    await provider.request({
+      method: "wallet_requestPermissions",
+      params: [{ eth_accounts: {} }],
+    });
+  }
 }

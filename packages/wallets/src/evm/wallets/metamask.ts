@@ -2,6 +2,7 @@ import type { WalletConnectV1Connector as WalletConnectV1ConnectorType } from ".
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { assertWindowEthereum } from "../utils/assertWindowEthereum";
 import { AbstractClientWallet, WalletOptions } from "./base";
+import type { MetaMaskConnector as MetamaskConnectorType } from "../connectors/metamask";
 
 type MetamaskAdditionalOptions = {
   /**
@@ -21,6 +22,7 @@ type ConnectWithQrCodeArgs = {
 export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptions> {
   connector?: TWConnector;
   walletConnectConnector?: WalletConnectV1ConnectorType;
+  metamaskConnector?: MetamaskConnectorType;
   isInjected: boolean;
 
   static meta = {
@@ -60,6 +62,8 @@ export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptio
             shimDisconnect: true,
           },
         });
+
+        this.metamaskConnector = metamaskConnector;
 
         this.connector = new WagmiAdapter(metamaskConnector);
       } else {
@@ -130,5 +134,13 @@ export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptio
 
     // trigger connect flow
     this.connect({ chainId: options.chainId }).then(options.onConnected);
+  }
+
+  async switchAccount() {
+    if (!this.metamaskConnector) {
+      throw new Error("Can not switch Account");
+    }
+
+    await this.metamaskConnector.switchAccount();
   }
 }
