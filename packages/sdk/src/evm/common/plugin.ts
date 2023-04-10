@@ -10,11 +10,7 @@ import {
   PreDeployMetadataFetched,
   SDKOptions,
 } from "../schema";
-import {
-  fetchExtendedReleaseMetadata,
-  fetchPreDeployMetadata,
-  isFeatureEnabled,
-} from "./feature-detection";
+import { isFeatureEnabled } from "./feature-detection";
 import { fetchContractMetadataFromAddress } from "./metadata-resolver";
 import { unique } from "./utils";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -23,7 +19,7 @@ import { Plugin } from "../types/plugins";
 import { getChainProvider } from "../constants";
 import {
   fetchAndCacheDeployMetadata,
-  fetchPublishedContractURI,
+  fetchAndCachePublishedContractURI,
 } from "./any-evm-utils";
 
 /**
@@ -181,7 +177,7 @@ export async function getMetadataForPlugins(
 
           const pluginUris = await Promise.all(
             pluginNames.map((name) => {
-              return fetchPublishedContractURI(name);
+              return fetchAndCachePublishedContractURI(name);
             }),
           );
           pluginMetadata = (

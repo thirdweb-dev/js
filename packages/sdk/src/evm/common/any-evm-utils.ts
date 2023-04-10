@@ -80,6 +80,7 @@ export const DEPLOYER_ABI = [
 // Caches
 let deploymentPresets: Record<string, DeploymentPreset> = {};
 const deployMetadataCache: Record<string, any> = {};
+const uriCache: Record<string, string> = {};
 
 //
 // ==================================
@@ -656,8 +657,9 @@ export async function computeDeploymentInfo(
 
   if (!metadata) {
     invariant(contractName, "Require contract name");
-    const uri = await fetchPublishedContractURI(contractName);
-    metadata = await fetchPreDeployMetadata(uri, storage);
+    const uri = await fetchAndCachePublishedContractURI(contractName);
+    metadata = (await fetchAndCacheDeployMetadata(uri, storage))
+      .compilerMetadata;
   }
 
   const encodedArgs = await encodeConstructorParamsForImplementation(
@@ -833,9 +835,12 @@ export function getCreate2FactoryDeploymentInfo(
   };
 }
 
-export async function fetchPublishedContractURI(
+export async function fetchAndCachePublishedContractURI(
   contractName: string,
 ): Promise<string> {
+  if (uriCache[contractName]) {
+    return uriCache[contractName];
+  }
   // fetch the publish URI from the ContractPublisher contract
   const publishedContract = await new ThirdwebSDK("polygon")
     .getPublisher()
@@ -845,7 +850,10 @@ export async function fetchPublishedContractURI(
       `No published contract found for ${contractName} at version by '${THIRDWEB_DEPLOYER}'`,
     );
   }
-  return publishedContract?.metadataUri;
+  const uri = publishedContract.metadataUri;
+  uriCache[contractName] = uri;
+
+  return uri;
 }
 
 export async function fetchAndCacheDeployMetadata(

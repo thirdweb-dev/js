@@ -41,7 +41,6 @@ import { Address, AddressOrEns, SDKOptions } from "../../schema";
 import {
   DeployEvent,
   DeployEvents,
-  DeployMetadata,
   DeployOptions,
   MarketplaceContractDeployMetadata,
   MarketplaceV3ContractDeployMetadata,
