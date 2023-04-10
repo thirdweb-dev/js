@@ -270,7 +270,7 @@ describe("Marketplace Contract", async () => {
       >[0] = [];
       for (let i = 0; i < 5; i++) {
         listings.push({
-          assetContractAddress: dummyNftContract.getAddress(),
+          assetContractAddress: dummyBundleContract.getAddress(),
           buyoutPricePerToken: 0.1,
           currencyContractAddress: tokenAddress,
           startTimestamp: new Date(),
