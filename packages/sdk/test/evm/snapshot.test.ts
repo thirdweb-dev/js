@@ -193,7 +193,7 @@ describe("Snapshots", async () => {
       sdk.getProvider(),
       storage,
       SnapshotFormatVersion.V1,
-      50000
+      3
     );
     const merkleRoot = result.merkleRoot;
     const snapshotUri = result.snapshotUri;
