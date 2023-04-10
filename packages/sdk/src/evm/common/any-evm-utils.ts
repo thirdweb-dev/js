@@ -623,7 +623,7 @@ export async function computeDeploymentInfo(
 ): Promise<DeploymentPreset> {
   let contractName = contractOptions && contractOptions.contractName;
   let metadata = contractOptions && contractOptions.metadata;
-  invariant(contractName || metadata, "require contract name or metadata");
+  invariant(contractName || metadata, "Require contract name or metadata");
 
   if (contractName && deploymentPresets[contractName]) {
     return deploymentPresets[contractName];
@@ -649,7 +649,7 @@ export async function computeDeploymentInfo(
   }
 
   if (!metadata) {
-    invariant(contractName, "require contract name");
+    invariant(contractName, "Require contract name");
     const uri = await fetchPublishedContractURI(contractName);
     metadata = await fetchPreDeployMetadata(uri, storage);
   }
@@ -715,7 +715,12 @@ async function encodeConstructorParamsForImplementation(
     constructorParams.map(async (p) => {
       if (constructorParamMap && constructorParamMap[p.name]) {
         if (constructorParamMap[p.name].type) {
-          invariant(constructorParamMap[p.name].type === p.type);
+          invariant(
+            constructorParamMap[p.name].type === p.type,
+            `Provided type ${
+              constructorParamMap[p.name].type
+            } doesn't match the actual type ${p.type} from Abi`,
+          );
         }
         return constructorParamMap[p.name].value;
       }
