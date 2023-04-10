@@ -56,6 +56,7 @@ export type NetworkSelectorProps = {
 };
 
 const fuseConfig = {
+  threshold: 0.4,
   keys: [
     {
       name: "name",
