@@ -14,7 +14,7 @@ import {
   useRecentlyUsedChains,
 } from "hooks/chains/recentlyUsedChains";
 import { useSetIsNetworkConfigModalOpen } from "hooks/networkConfigModal";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import { Button } from "tw-components";
 
@@ -41,6 +41,23 @@ export const NetworkSelectorButton: React.FC<{
     }
   }, [supportedChains, disabledChainIds]);
   const chain = useActiveChain();
+  const prevChain = useRef(chain);
+  const { onSwitchChain } = props;
+
+  // handle switch network done from wallet app/extension
+  useEffect(() => {
+    if (!chain) {
+      return;
+    }
+    if (prevChain.current?.chainId !== chain.chainId) {
+      if (onSwitchChain) {
+        onSwitchChain(chain);
+      }
+      addRecentlyUsedChains(chain.chainId);
+      prevChain.current = chain;
+    }
+  }, [chain, onSwitchChain, addRecentlyUsedChains]);
+
   const wallet = useWallet();
 
   return (
