@@ -525,16 +525,16 @@ describe("Marketplace V3", async () => {
       >[0] = [];
       for (let i = 0; i < 5; i++) {
         listings.push({
-          assetContractAddress: dummyNftContract.getAddress(),
-          tokenId: 0,
+          assetContractAddress: dummyBundleContract.getAddress(),
+          tokenId: "1",
           quantity: 1,
-          currencyContractAddress: tokenAddress,
+          currencyContractAddress: NATIVE_TOKEN_ADDRESS,
           minimumBidAmount: 0.1,
           buyoutBidAmount: 1,
           timeBufferInSeconds: 100,
           bidBufferBps: 100,
           startTimestamp: new Date(),
-          endTimestamp: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+          endTimestamp: new Date(Date.now() + 24 * 60 * 60 * 1000),
         });
       }
 
