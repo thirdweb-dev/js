@@ -491,9 +491,10 @@ export async function getDeploymentInfo(
   provider: providers.Provider,
   create2Factory?: string,
 ): Promise<DeploymentPreset[]> {
-  if (!create2Factory) {
-    create2Factory = await getCreate2FactoryAddress(provider);
-  }
+  const create2FactoryAddress = create2Factory
+    ? create2Factory
+    : await getCreate2FactoryAddress(provider);
+
   const customParams: ConstructorParamMap = {};
   const finalDeploymentInfo: DeploymentPreset[] = [];
   const compilerMetadata = await fetchPreDeployMetadata(metadataUri, storage);
@@ -508,7 +509,7 @@ export async function getDeploymentInfo(
           "plugin",
           provider,
           storage,
-          create2Factory as string,
+          create2FactoryAddress,
           { metadata: metadata },
         );
         return info;
@@ -530,7 +531,7 @@ export async function getDeploymentInfo(
       "plugin",
       provider,
       storage,
-      create2Factory,
+      create2FactoryAddress,
       {
         contractName: "PluginMap",
         constructorParams: { _pluginsToAdd: { value: mapInput } },
@@ -549,7 +550,7 @@ export async function getDeploymentInfo(
     "implementation",
     provider,
     storage,
-    create2Factory,
+    create2FactoryAddress,
     {
       metadata: compilerMetadata,
       constructorParams: customParams,
@@ -561,7 +562,7 @@ export async function getDeploymentInfo(
     "infra",
     provider,
     storage,
-    create2Factory,
+    create2FactoryAddress,
     { contractName: "TWCloneFactory" },
   );
 
@@ -855,7 +856,7 @@ function estimateGasForDeploy(initCode: string) {
 export function createTransactionBatches(
   transactions: PrecomputedDeploymentTransaction[],
   upperGasLimit: number = GAS_LIMIT_FOR_DEPLOYER,
-): any[] {
+): PrecomputedDeploymentTransaction[][] {
   transactions = transactions.filter((tx) => {
     return tx.data.length > 0;
   });
@@ -863,7 +864,7 @@ export function createTransactionBatches(
     return [];
   }
 
-  let transactionBatches: any[] = [];
+  let transactionBatches: PrecomputedDeploymentTransaction[][] = [];
   let sum = 0;
   let batch: PrecomputedDeploymentTransaction[] = [];
   transactions.forEach((tx) => {
