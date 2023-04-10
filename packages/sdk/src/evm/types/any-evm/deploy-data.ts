@@ -1,10 +1,5 @@
 import { PreDeployMetadataFetched } from "../../schema";
 
-export type PrecomputedDeploymentData = {
-  predictedAddress: string;
-  bytecode: string;
-  encodedArgs: any;
-};
 export type PrecomputedDeploymentTransaction = {
   predictedAddress: string;
   to: string;

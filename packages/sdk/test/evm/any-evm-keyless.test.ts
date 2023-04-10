@@ -22,10 +22,6 @@ describe("Any EVM Keyless Deploy", async () => {
     // This needs to match the published contract for the currently used ABI
     const publishUri =
       "ipfs://QmXu9ezFNgXBX1juLZ7kwdf5KpTD1x9GPHnk14QB2NpUvK/0";
-    console.log(
-      "transactions: ",
-      await sdk.deployer.getTransactionsForDeploy(publishUri),
-    );
     transactionCount = (await sdk.deployer.getTransactionsForDeploy(publishUri))
       .length;
 
@@ -63,10 +59,6 @@ describe("Any EVM Keyless Deploy", async () => {
 
     // This needs to match the published contract for the currently used ABI
     const publishUri = "ipfs://QmP2QPzc81zg5rqhU9u7cDeSyD4aZH8RdVF8Nuh6rCCgxV";
-    // console.log(
-    //   "transactions: ",
-    //   await sdk.deployer.getTransactionsForDeploy(publishUri),
-    // );
     transactionCount = (await sdk.deployer.getTransactionsForDeploy(publishUri))
       .length;
 
@@ -120,16 +112,11 @@ describe("Any EVM Keyless Deploy", async () => {
     notificationCounter = 0;
     transactionCount = 0;
     const marketplace = await deployMarketplaceV3();
-    console.log("notif: ", notificationCounter);
-    console.log("tx: ", transactionCount);
+
     expect(notificationCounter).to.lessThanOrEqual(6);
     expect(transactionCount).to.greaterThanOrEqual(3);
 
     let plugins = await marketplace.call("getAllPlugins");
-    console.log("plugins: ", plugins);
-    console.log("plugins ^");
-    console.log("transaction count: ", transactionCount);
-
     let allPlugins = plugins.map((item: any) => item.pluginAddress);
     let pluginsAddresses = Array.from(new Set(allPlugins));
 
@@ -137,10 +124,7 @@ describe("Any EVM Keyless Deploy", async () => {
 
     pluginsAddresses.forEach(async (address) => {
       expect(address).to.not.equal(ethers.constants.AddressZero);
-
       const code = await adminWallet.provider?.getCode(address as string);
-
-      console.log("code length: ", code?.length);
       expect(code?.length).to.be.greaterThan(2);
     });
 
@@ -150,11 +134,8 @@ describe("Any EVM Keyless Deploy", async () => {
     const marketplace2 = await deployMarketplaceV3();
     expect(notificationCounter).to.equal(2);
     expect(transactionCount).to.equal(1);
-    plugins = await marketplace2.call("getAllPlugins");
-    console.log("plugins: ", plugins);
-    console.log("plugins ^");
-    console.log("transaction count: ", transactionCount);
 
+    plugins = await marketplace2.call("getAllPlugins");
     allPlugins = plugins.map((item: any) => item.pluginAddress);
     pluginsAddresses = Array.from(new Set(allPlugins));
 
@@ -162,10 +143,7 @@ describe("Any EVM Keyless Deploy", async () => {
 
     pluginsAddresses.forEach(async (address) => {
       expect(address).to.not.equal(ethers.constants.AddressZero);
-
       const code = await adminWallet.provider?.getCode(address as string);
-
-      console.log("code length: ", code?.length);
       expect(code?.length).to.be.greaterThan(2);
     });
   });
