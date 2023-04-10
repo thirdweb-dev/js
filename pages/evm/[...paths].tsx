@@ -324,7 +324,7 @@ EVMContractPage.pageId = PageId.DeployedContract;
 EVMContractPage.getLayout = (page, props: EVMContractProps) => {
   const displayName = `${
     props.contractMetadata?.name ||
-    shortenIfAddress(props.contractInfo.contractAddress) ||
+    shortenIfAddress(props.contractInfo?.contractAddress) ||
     "Contract"
   }${
     props.contractMetadata?.symbol ? ` (${props.contractMetadata.symbol})` : ""

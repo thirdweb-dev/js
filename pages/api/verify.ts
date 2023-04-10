@@ -1,4 +1,10 @@
-import { Chain, Polygon, Sepolia, allChains } from "@thirdweb-dev/chains";
+import {
+  BaseGoerli,
+  Chain,
+  Polygon,
+  Sepolia,
+  allChains,
+} from "@thirdweb-dev/chains";
 import {
   Abi,
   ChainId,
@@ -57,6 +63,7 @@ export const apiMap: Record<number, string> = {
   80001: "https://api-testnet.polygonscan.com/api",
   1313161554: "https://api.aurorascan.dev/api",
   1313161555: "https://api-testnet.aurorascan.dev/api",
+  [BaseGoerli.chainId]: "https://api-goerli.basescan.org/api",
 };
 
 export const blockExplorerMap: Record<number, { name: string; url: string }> = {
@@ -75,7 +82,7 @@ export const blockExplorerMap: Record<number, { name: string; url: string }> = {
   56: { name: "Bscscan", url: "https://bscscan.com/" },
   420: {
     name: "Optimism Goerli Etherscan",
-    url: "https://goerli-optimistic.etherscan.io/",
+    url: "https://goerli-optimism.etherscan.io/",
   },
   97: { name: "Bscscan Testnet", url: "https://testnet.bscscan.com/" },
   137: { name: "Polygonscan", url: "https://polygonscan.com/" },
@@ -91,6 +98,10 @@ export const blockExplorerMap: Record<number, { name: string; url: string }> = {
   80001: {
     name: "Mumbai Polygonscan",
     url: "https://mumbai.polygonscan.com/",
+  },
+  [BaseGoerli.chainId]: {
+    name: "Base Goerli Basescan",
+    url: "https://goerli.basescan.org/",
   },
 };
 
@@ -110,6 +121,8 @@ export const apiKeyMap: Record<number, string> = {
   [ChainId.OptimismGoerli]: process.env.OPTIMISMSCAN_KEY as string,
   [ChainId.BinanceSmartChainMainnet]: process.env.BSCSCAN_KEY as string,
   [ChainId.BinanceSmartChainTestnet]: process.env.BSCSCAN_KEY as string,
+  // no api key needed for base
+  [BaseGoerli.chainId]: "" as string,
 };
 
 const chhainIdToChain: Record<number, Chain> = allChains.reduce(

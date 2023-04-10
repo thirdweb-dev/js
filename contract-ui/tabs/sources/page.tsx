@@ -63,6 +63,23 @@ function useVerifyCall(shouldFetch: boolean, contractAddress = "") {
   );
 }
 
+function useIsVerifiedOnEtherscan(contractAddress = "") {
+  const chainId = useDashboardEVMChainId();
+  return useQueryWithNetwork(
+    ["etherscan-fetch", contractAddress, chainId],
+    async () => {
+      const response = await fetch(
+        `/api/etherscan-fetch?contractAddress=${contractAddress}&chainId=${chainId}`,
+      );
+      // if the contract is verified, we'll get a 200 response
+      return response.status === 200;
+    },
+    {
+      enabled: !!contractAddress && !!chainId,
+    },
+  );
+}
+
 function useCheckVerificationStatus(guid?: string) {
   const chainId = useDashboardEVMChainId();
   return useQueryWithNetwork(
@@ -205,11 +222,8 @@ export const CustomContractSourcesPage: React.FC<
   const { isOpen, onOpen, onClose } = useDisclosure();
   const contractSourcesQuery = useContractSources(contractAddress);
   const chainId = useDashboardEVMChainId();
-  const defaultChainsRecord = useDefaultChainsRecord();
-  const isDefaultChain = chainId && chainId in defaultChainsRecord;
-
-  const router = useRouter();
-  const forceVerifyButton = router.query.verify === "true";
+  const { data: isVerifiedOnEtherscan, isLoading: isVerifiedLoading } =
+    useIsVerifiedOnEtherscan(contractAddress);
 
   const { contract } = useContract(contractAddress);
 
@@ -260,13 +274,9 @@ export const CustomContractSourcesPage: React.FC<
             Sources
           </Heading>
 
-          {isDefaultChain && (
+          {blockExplorerUrl && (
             <>
-              {forceVerifyButton ? (
-                <Button variant="solid" colorScheme="purple" onClick={onOpen}>
-                  Verify on {blockExplorerName}
-                </Button>
-              ) : blockExplorerUrl ? (
+              {isVerifiedOnEtherscan ? (
                 <LinkButton
                   variant="ghost"
                   colorScheme="green"
@@ -278,7 +288,16 @@ export const CustomContractSourcesPage: React.FC<
                 >
                   Verified on {blockExplorerName}
                 </LinkButton>
-              ) : null}
+              ) : (
+                <Button
+                  variant="solid"
+                  colorScheme="purple"
+                  onClick={onOpen}
+                  isLoading={isVerifiedLoading}
+                >
+                  Verify on {blockExplorerName}
+                </Button>
+              )}
             </>
           )}
         </Flex>
