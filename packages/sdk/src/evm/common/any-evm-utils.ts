@@ -630,18 +630,19 @@ export async function computeDeploymentInfo(
   if (contractName === "WETH9") {
     const address = computeDeploymentAddress(WETHBytecode, [], create2Factory);
     const code = await provider.getCode(address);
+    let initBytecodeWithSalt = "";
     if (code === "0x") {
-      const initBytecodeWithSalt = getInitBytecodeWithSalt(WETHBytecode, []);
-      return {
-        name: contractName,
-        type: contractType,
-        transaction: {
-          predictedAddress: address,
-          to: create2Factory,
-          data: initBytecodeWithSalt,
-        },
-      };
+      initBytecodeWithSalt = getInitBytecodeWithSalt(WETHBytecode, []);
     }
+    return {
+      name: contractName,
+      type: contractType,
+      transaction: {
+        predictedAddress: address,
+        to: create2Factory,
+        data: initBytecodeWithSalt,
+      },
+    };
   }
 
   if (!metadata) {
