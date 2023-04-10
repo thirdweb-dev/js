@@ -1,12 +1,12 @@
-import { createSnapshot, SnapshotEntryInput } from "../../src";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { BigNumber, ethers } from "ethers";
+import { MerkleTree } from "merkletreejs";
+import { SnapshotEntryInput, createSnapshot } from "../../src";
 import {
   ShardedMerkleTree,
   SnapshotFormatVersion,
 } from "../../src/evm/common/sharded-merkle-tree";
 import { sdk, signers, storage } from "./before-setup";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { BigNumber, ethers } from "ethers";
-import { MerkleTree } from "merkletreejs";
 
 const chai = require("chai");
 const deepEqualInAnyOrder = require("deep-equal-in-any-order");
@@ -181,5 +181,24 @@ describe("Snapshots", async () => {
     assert.fail(
       "should not reach this point, exception should have been thrown",
     );
+  });
+
+  it('should create a valid snapshot with chunking', async () => {
+    const input = members.map((address) => ({
+      address,
+    }));
+    const result = await createSnapshot(
+      input,
+      0,
+      sdk.getProvider(),
+      storage,
+      SnapshotFormatVersion.V1,
+      50000
+    );
+    const merkleRoot = result.merkleRoot;
+    const snapshotUri = result.snapshotUri;
+
+    expect(merkleRoot).to.exist.and.to.be.a('string');
+    expect(snapshotUri).to.exist.and.to.be.a('string');
   });
 });
