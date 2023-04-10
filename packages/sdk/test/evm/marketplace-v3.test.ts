@@ -266,6 +266,7 @@ describe("Marketplace V3", async () => {
 
       const receipts =
         await marketplaceContract.directListings.createListingsBatch(listings);
+      assert.equal(receipts.length, 5);
       for (const receipt of receipts) {
         assert.isDefined(receipt.id);
       }
@@ -540,6 +541,7 @@ describe("Marketplace V3", async () => {
 
       const receipts =
         await marketplaceContract.englishAuctions.createAuctionsBatch(listings);
+      assert.equal(receipts.length, 5);
       for (const receipt of receipts) {
         assert.isDefined(receipt.id);
       }
