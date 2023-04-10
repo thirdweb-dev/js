@@ -239,6 +239,57 @@ describe("Marketplace Contract", async () => {
       assert.isDefined(listingId);
     });
 
+    it("should batch list direct listings", async () => {
+      const listings: Parameters<
+        typeof marketplaceContract.direct.createListingsBatch
+      >[0] = [];
+      for (let i = 0; i < 5; i++) {
+        listings.push({
+          assetContractAddress: dummyNftContract.getAddress(),
+          buyoutPricePerToken: 0.1,
+          currencyContractAddress: "0x0000000000000000000000000000000000000000",
+          startTimestamp: new Date(0), // start date can be in the past
+          listingDurationInSeconds: 60 * 60 * 24,
+          tokenId: 0,
+          quantity: 1,
+        });
+      }
+
+      const receipts = await marketplaceContract.direct.createListingsBatch(
+        listings,
+      );
+      assert.equal(receipts.length, 5);
+      for (const receipt of receipts) {
+        assert.isDefined(receipt.id);
+      }
+    });
+
+    it("should batch list auction listings", async () => {
+      const listings: Parameters<
+        typeof marketplaceContract.auction.createListingsBatch
+      >[0] = [];
+      for (let i = 0; i < 5; i++) {
+        listings.push({
+          assetContractAddress: dummyBundleContract.getAddress(),
+          buyoutPricePerToken: 0.1,
+          currencyContractAddress: tokenAddress,
+          startTimestamp: new Date(),
+          listingDurationInSeconds: 60 * 60 * 24,
+          tokenId: 0,
+          quantity: 1,
+          reservePricePerToken: 0.05,
+        });
+      }
+
+      const receipts = await marketplaceContract.auction.createListingsBatch(
+        listings,
+      );
+      assert.equal(receipts.length, 5);
+      for (const receipt of receipts) {
+        assert.isDefined(receipt.id);
+      }
+    });
+
     it("should list auction listings with 1155s", async () => {
       const listingId = await createAuctionListing(
         dummyNftContract.getAddress(),
