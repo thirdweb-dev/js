@@ -1,4 +1,3 @@
-import { InfraContractType } from "../../core";
 import { PreDeployMetadataFetched } from "../../schema";
 
 export type PrecomputedDeploymentData = {
@@ -12,14 +11,7 @@ export type PrecomputedDeploymentTransaction = {
   data: string;
 };
 
-// export type DeploymentInfo = {
-//   bytecode: string;
-//   encodedArgs: any;
-//   predictedAddress: string;
-//   infraContractsToDeploy: InfraContractType[];
-//   pluginTransactions?: PrecomputedDeploymentTransaction[];
-// };
-export type DeploymentInfo = {
+export type DeploymentPreset = {
   name?: string;
   type: DeployedContractType;
   transaction: PrecomputedDeploymentTransaction;
@@ -45,7 +37,7 @@ export type DeployedContractType =
   | "custom";
 
 export type DeploymentTransaction = {
-  contractType: DeployedContractType;
+  contractType: DeployedContractType | string;
   addresses: string[];
 };
 

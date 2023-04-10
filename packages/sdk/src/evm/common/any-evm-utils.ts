@@ -14,7 +14,7 @@ import {
   ConstructorParam,
   ConstructorParamMap,
   ContractOptions,
-  DeploymentInfo,
+  DeploymentPreset,
 } from "../types/any-evm/deploy-data";
 import { toWei } from "./currency";
 import {
@@ -75,7 +75,7 @@ export const DEPLOYER_ABI = [
   },
 ];
 
-const newDeploymentInfo: Record<string, DeploymentInfo> = {};
+let deploymentPresets: Record<string, DeploymentPreset> = {};
 
 //
 // ==================================
@@ -468,9 +468,7 @@ export async function deployContractDeterministic(
       console.debug("error estimating gas while deploying prebuilt: ", e);
       tx.gasLimit = BigNumber.from(gasLimit);
     }
-    options?.notifier?.("deploying", "implementation");
     await (await signer.sendTransaction(tx)).wait();
-    options?.notifier?.("deployed", "implementation");
   }
 }
 
@@ -491,12 +489,12 @@ export async function getDeploymentInfo(
   storage: ThirdwebStorage,
   provider: providers.Provider,
   create2Factory?: string,
-): Promise<DeploymentInfo[]> {
+): Promise<DeploymentPreset[]> {
   if (!create2Factory) {
     create2Factory = await getCreate2FactoryAddress(provider);
   }
   const customParams: ConstructorParamMap = {};
-  const finalDeploymentInfo: DeploymentInfo[] = [];
+  const finalDeploymentInfo: DeploymentPreset[] = [];
   const compilerMetadata = await fetchPreDeployMetadata(metadataUri, storage);
   const isPluginRouter: boolean = isFeatureEnabled(
     AbiSchema.parse(compilerMetadata.abi),
@@ -578,13 +576,15 @@ export async function getDeploymentInfo(
   );
 
   finalDeploymentInfo.push(factoryInfo);
-  finalDeploymentInfo.push(...Object.values(newDeploymentInfo));
+  finalDeploymentInfo.push(...Object.values(deploymentPresets));
   finalDeploymentInfo.push(implementationDeployInfo);
+
+  deploymentPresets = {};
 
   return finalDeploymentInfo;
 }
 
-export async function deployInfra(
+export async function deployWithThrowawayDeployer(
   signer: Signer,
   transactions: PrecomputedDeploymentTransaction[],
   options?: DeployOptions,
@@ -594,9 +594,9 @@ export async function deployInfra(
     return;
   }
 
+  options?.notifier?.("deploying", "presets");
   const deployTxns = await Promise.all(
     transactionBatches.map((txBatch) => {
-      // options?.notifier?.("deploying", "plugin");
       // Using the deployer contract, send the deploy transactions to common factory with a signer
       const deployer = new ethers.ContractFactory(
         DEPLOYER_ABI,
@@ -611,10 +611,10 @@ export async function deployInfra(
 
   await Promise.all(
     deployTxns.map((tx) => {
-      // options?.notifier?.("deployed", "plugin");
       return tx.deployed();
     }),
   );
+  options?.notifier?.("deployed", "presets");
 }
 
 //
@@ -629,13 +629,13 @@ export async function computeDeploymentInfo(
   storage: ThirdwebStorage,
   create2Factory: string,
   contractOptions?: ContractOptions,
-): Promise<DeploymentInfo> {
+): Promise<DeploymentPreset> {
   let contractName = contractOptions && contractOptions.contractName;
   let metadata = contractOptions && contractOptions.metadata;
   invariant(contractName || metadata, "require contract name or metadata");
 
-  if (contractName && newDeploymentInfo[contractName]) {
-    return newDeploymentInfo[contractName];
+  if (contractName && deploymentPresets[contractName]) {
+    return deploymentPresets[contractName];
   }
 
   if (!metadata) {
@@ -729,8 +729,8 @@ async function encodeConstructorParamsForImplementation(
             contractName: "Forwarder",
           },
         );
-        if (!newDeploymentInfo["Forwarder"]) {
-          newDeploymentInfo["Forwarder"] = deploymentInfo;
+        if (!deploymentPresets["Forwarder"]) {
+          deploymentPresets["Forwarder"] = deploymentInfo;
         }
 
         return deploymentInfo.transaction.predictedAddress;

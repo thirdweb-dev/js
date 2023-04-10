@@ -6,7 +6,8 @@ import {
 } from "../../common";
 import {
   computeCloneFactoryAddress,
-  deployInfra,
+  createTransactionBatches,
+  deployWithThrowawayDeployer,
   getCreate2FactoryAddress,
   getDeploymentInfo,
   isContractDeployed,
@@ -847,7 +848,11 @@ export class ContractDeployer extends RPCConnectionHandler {
           const transactionsToSend = deploymentInfo.map((i) => {
             return i.transaction;
           });
-          await deployInfra(signer, transactionsToSend, options);
+          await deployWithThrowawayDeployer(
+            signer,
+            transactionsToSend,
+            options,
+          );
 
           const resolvedImplementationAddress = await resolveAddress(
             implementationAddress,
@@ -969,66 +974,41 @@ export class ContractDeployer extends RPCConnectionHandler {
           create2FactoryAddress,
         );
 
-        // // plugin count
-        // if (
-        //   deploymentInfo.pluginTransactions &&
-        //   deploymentInfo.pluginTransactions.length > 0
-        // ) {
-        //   const transactionBatches = createTransactionBatches(
-        //     deploymentInfo.pluginTransactions,
-        //   );
+        const transactionsToSend = deploymentInfo.map((i) => {
+          return i.transaction;
+        });
+        const transactionBatches = createTransactionBatches(transactionsToSend);
 
-        //   transactionBatches.forEach((batch) => {
-        //     const addresses = batch.map(
-        //       (tx: PrecomputedDeploymentTransaction) => tx.predictedAddress,
-        //     );
-        //     transactions.push({
-        //       contractType: "plugin",
-        //       addresses: addresses,
-        //     });
-        //   });
-        // }
-
-        // implementationAddress = deploymentInfo.predictedAddress;
-        // transactions.push({
-        //   contractType: "implementation",
-        //   addresses: [implementationAddress],
-        // });
-
-        // const infraAddresses = await Promise.all(
-        //   deploymentInfo.infraContractsToDeploy.map((contract) => {
-        //     return computeAddressInfra(
-        //       contract,
-        //       this.getProvider(),
-        //       this.storage,
-        //       create2FactoryAddress,
-        //     );
-        //   }),
-        // );
-        // transactions.push({
-        //   contractType: "infra",
-        //   addresses: [...infraAddresses],
-        // });
-
-        transactions = (
-          await Promise.all(
-            transactions.map(async (tx) => {
-              const addresses = (
-                await Promise.all(
-                  tx.addresses.map(async (address) => {
-                    const isDeployed = await isContractDeployed(
-                      address,
-                      provider,
-                    );
-                    return isDeployed ? null : address;
-                  }),
-                )
-              ).filter(Boolean);
-              return addresses.length > 0 ? tx : null;
-            }),
-          )
-        ).filter(Boolean) as DeploymentTransaction[];
+        transactionBatches.forEach((batch) => {
+          const addresses = batch.map(
+            (tx: PrecomputedDeploymentTransaction) => tx.predictedAddress,
+          );
+          transactions.push({
+            contractType: "preset",
+            addresses: addresses,
+          });
+        });
       }
+
+      transactions = (
+        await Promise.all(
+          transactions.map(async (tx) => {
+            const addresses = (
+              await Promise.all(
+                tx.addresses.map(async (address) => {
+                  const isDeployed = await isContractDeployed(
+                    address,
+                    provider,
+                  );
+                  return isDeployed ? null : address;
+                }),
+              )
+            ).filter(Boolean);
+            return addresses.length > 0 ? tx : null;
+          }),
+        )
+      ).filter(Boolean) as DeploymentTransaction[];
+
       transactions.push({
         contractType: "proxy",
         addresses: [],
