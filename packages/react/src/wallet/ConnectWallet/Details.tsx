@@ -319,6 +319,7 @@ export const ConnectedWalletDetails: React.FC<{
             type="button"
             onClick={() => {
               (activeWallet as MetaMaskWallet).switchAccount();
+              setOpen(false);
             }}
           >
             <ShuffleIcon width={iconSize.sm} height={iconSize.sm} />
