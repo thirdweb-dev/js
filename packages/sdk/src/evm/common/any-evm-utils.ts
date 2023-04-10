@@ -22,7 +22,7 @@ import {
   fetchPreDeployMetadata,
   isFeatureEnabled,
 } from "./feature-detection";
-import { generatePluginFunctions, getPluginNames } from "./plugin";
+import { generatePluginFunctions, getMetadataForPlugins } from "./plugin";
 import { Plugin } from "../types/plugins";
 import { DeployOptions } from "../types";
 
@@ -501,25 +501,16 @@ export async function getDeploymentInfo(
     "PluginRouter",
   );
   if (isPluginRouter) {
-    const pluginNames = await getPluginNames(metadataUri, storage);
-    const pluginUris = await Promise.all(
-      pluginNames.map((name) => {
-        return fetchPublishedContractURI(name);
-      }),
-    );
-    const pluginMetadata = await Promise.all(
-      pluginUris.map((uri) => {
-        return fetchPreDeployMetadata(uri, storage);
-      }),
-    );
+    const pluginMetadata = await getMetadataForPlugins(metadataUri, storage);
+
     const pluginDeploymentInfo = await Promise.all(
-      pluginMetadata.map(async (metadata, index) => {
+      pluginMetadata.map(async (metadata) => {
         const info = await computeDeploymentInfo(
           "plugin",
           provider,
           storage,
           create2Factory as string,
-          { contractName: pluginNames[index], metadata: metadata },
+          { metadata: metadata },
         );
         return info;
       }),
@@ -779,7 +770,7 @@ export function getCreate2FactoryDeploymentInfo(
   };
 }
 
-async function fetchPublishedContractURI(
+export async function fetchPublishedContractURI(
   contractName: string,
 ): Promise<string> {
   // fetch the publish URI from the ContractPublisher contract

@@ -3,9 +3,16 @@ import {
   getAllPluginsAbi,
 } from "../constants/thirdweb-features";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { Abi, AbiSchema, Address, SDKOptions } from "../schema";
+import {
+  Abi,
+  AbiSchema,
+  Address,
+  PreDeployMetadataFetched,
+  SDKOptions,
+} from "../schema";
 import {
   fetchExtendedReleaseMetadata,
+  fetchPreDeployMetadata,
   isFeatureEnabled,
 } from "./feature-detection";
 import { fetchContractMetadataFromAddress } from "./metadata-resolver";
@@ -14,6 +21,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 import { Plugin } from "../types/plugins";
 import { getChainProvider } from "../constants";
+import { fetchPublishedContractURI } from "./any-evm-utils";
 
 /**
  * @internal
@@ -110,16 +118,16 @@ async function getPluginABI(
   ).map((metadata) => metadata.abi);
 }
 
-export async function getPluginNames(
+export async function getMetadataForPlugins(
   publishedMetadataUri: string,
   storage: ThirdwebStorage,
-): Promise<string[]> {
+): Promise<PreDeployMetadataFetched[]> {
   const extendedMetadata = await fetchExtendedReleaseMetadata(
     publishedMetadataUri,
     storage,
   );
 
-  let contractNames: string[] = [];
+  let pluginMetadata: PreDeployMetadataFetched[] = [];
 
   if (extendedMetadata.factoryDeploymentData?.implementationAddresses) {
     const implementationsAddresses = Object.entries(
@@ -145,7 +153,7 @@ export async function getPluginNames(
           );
           const pluginAddresses = Array.from(new Set(allPlugins));
 
-          contractNames = (
+          const pluginNames = (
             await Promise.all(
               pluginAddresses.map(async (address) => {
                 const metadata = fetchContractMetadataFromAddress(
@@ -157,12 +165,24 @@ export async function getPluginNames(
               }),
             )
           ).map((metadata) => metadata.name);
+
+          const pluginUris = await Promise.all(
+            pluginNames.map((name) => {
+              return fetchPublishedContractURI(name);
+            }),
+          );
+          pluginMetadata = await Promise.all(
+            pluginUris.map((uri) => {
+              return fetchPreDeployMetadata(uri, storage);
+            }),
+          );
+
           break;
         }
       }
     } catch {}
   }
-  return contractNames;
+  return pluginMetadata;
 }
 
 /**
