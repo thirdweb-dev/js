@@ -215,7 +215,7 @@ export function joinABIs(abis: Abi[]): Abi {
   return AbiSchema.parse(finalABIs);
 }
 
-const getFunctionSignature = (fnInputs: any): string => {
+export function getFunctionSignature(fnInputs: any): string {
   return (
     "(" +
     fnInputs
@@ -225,12 +225,12 @@ const getFunctionSignature = (fnInputs: any): string => {
       .join(",") +
     ")"
   );
-};
+}
 
-export const generatePluginFunctions = (
+export function generatePluginFunctions(
   pluginAddress: string,
   pluginAbi: Abi,
-): Plugin[] => {
+): Plugin[] {
   const pluginInterface = new ethers.utils.Interface(pluginAbi);
   const pluginFunctions: Plugin[] = [];
   // TODO - filter out common functions like _msgSender(), contractType(), etc.
@@ -246,4 +246,4 @@ export const generatePluginFunctions = (
     });
   }
   return pluginFunctions;
-};
+}
