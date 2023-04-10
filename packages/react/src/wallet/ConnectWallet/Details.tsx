@@ -21,7 +21,7 @@ import { ExitIcon } from "./icons/ExitIcon";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { ChevronRightIcon } from "@radix-ui/react-icons";
+import { ChevronRightIcon, ShuffleIcon } from "@radix-ui/react-icons";
 import { defaultChains } from "@thirdweb-dev/chains";
 import {
   useAddress,
@@ -34,7 +34,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useEffect, useMemo, useState } from "react";
 import { fadeInAnimation } from "../../components/FadeIn";
-import type { SafeWallet } from "@thirdweb-dev/wallets";
+import type { MetaMaskWallet, SafeWallet } from "@thirdweb-dev/wallets";
 import { Flex } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
 import { utils } from "ethers";
@@ -311,10 +311,27 @@ export const ConnectedWalletDetails: React.FC<{
         </div>
       )}
 
+      {/* Switch Account for Metamask */}
+      {activeWallet?.walletId === "metamask" && (
+        <div>
+          <Spacer y="md" />
+          <MenuButton
+            type="button"
+            onClick={() => {
+              (activeWallet as MetaMaskWallet).switchAccount();
+              setOpen(false);
+            }}
+          >
+            <ShuffleIcon width={iconSize.sm} height={iconSize.sm} />
+            Switch Account
+          </MenuButton>
+        </div>
+      )}
+
       {/* Request Testnet funds */}
       {chain?.faucets && chain.faucets.length > 0 && (
         <div>
-          <Spacer y="lg" />
+          <Spacer y="md" />
           <MenuLink
             href={chain.faucets[0]}
             target="_blank"
