@@ -146,9 +146,10 @@ export async function getMetadataForPlugins(
       );
 
       try {
-        const entry = implementationsAddresses.find((item) => item[1] !== "");
-        const network = entry?.[0];
-        const implementation = entry?.[1];
+        const entry = implementationsAddresses.find(
+          ([network, implementation]) => implementation !== "",
+        );
+        const [network, implementation] = entry ? entry : [];
         if (network && implementation) {
           const provider = getChainProvider(parseInt(network), {});
           const contract = new ContractWrapper(
