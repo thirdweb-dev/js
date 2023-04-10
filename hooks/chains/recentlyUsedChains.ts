@@ -17,14 +17,14 @@ export function useRecentlyUsedChains() {
     if (!recentlyUsedChainIds || !isSupportedChainsReady) {
       return [];
     }
-    return recentlyUsedChainIds.map((chainId) => {
-      return supportedChainsRecord[chainId];
-    });
+    return recentlyUsedChainIds.map(
+      (chainId) => supportedChainsRecord[chainId],
+    );
   }, [supportedChainsRecord, recentlyUsedChainIds, isSupportedChainsReady]);
 
   invariant(
     recentlyUsedChainIds,
-    "useRecentlyUsedChains must be used within ModifyChainContext",
+    "useRecentlyUsedChains must be used within RecentlyUsedChainIdsContext",
   );
 
   return recentlyUsedChains;
@@ -34,7 +34,7 @@ export function useAddRecentlyUsedChainId() {
   const context = useContext(AddRecentlyUsedChainIdsContext);
   invariant(
     context,
-    "useRecentlyUsedChains must be used within ModifyChainContext",
+    "useAddRecentlyUsedChainId must be used within AddRecentlyUsedChainIdsContext",
   );
   return context;
 }

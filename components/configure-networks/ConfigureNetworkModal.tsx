@@ -7,6 +7,7 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import { StoredChain } from "contexts/configured-chains";
+import { useSetEditChain } from "hooks/networkConfigModal";
 
 export interface AddNetworkModalProps {
   onClose: () => void;
@@ -16,8 +17,14 @@ export interface AddNetworkModalProps {
 export const ConfigureNetworkModal: React.FC<AddNetworkModalProps> = (
   props,
 ) => {
+  const setEditChain = useSetEditChain();
+  const onModalClose = () => {
+    props.onClose();
+    setEditChain(undefined);
+  };
+
   return (
-    <Modal isOpen={true} onClose={props.onClose} isCentered>
+    <Modal isOpen={true} onClose={onModalClose} isCentered>
       <ModalOverlay />
       <ModalContent
         borderRadius="xl"
@@ -36,9 +43,9 @@ export const ConfigureNetworkModal: React.FC<AddNetworkModalProps> = (
           <ConfigureNetworks
             onNetworkAdded={(chain) => {
               props.onNetworkAdded?.(chain);
-              props.onClose();
+              onModalClose();
             }}
-            onNetworkConfigured={props.onClose}
+            onNetworkConfigured={onModalClose}
           />
         </ModalBody>
       </ModalContent>

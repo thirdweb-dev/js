@@ -198,7 +198,7 @@ const EVMContractPage: ThirdwebNextPage = () => {
 
   if (chainNotFound) {
     return (
-      <HomepageSection>
+      <HomepageSection maxW="container.md" mx="auto">
         <Box mb={8} mt={8}>
           <Alert borderRadius="md" background="backgroundHighlight">
             <AlertIcon />

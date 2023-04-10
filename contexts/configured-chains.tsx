@@ -12,36 +12,63 @@ export interface StoredChain extends Chain {
 const MODIFIED_CHAINS_KEY = "tw-modified-chains";
 const RECENTLY_USED_CHAIN_IDS_KEY = "tw-recently-used-chains";
 
+/**
+ * holds the "supported chains" array
+ * intially it is set to the defaultChains, then it is updated to the "allChains" with "modified chains" overrides
+ */
 export const SupportedChainsContext = createContext<StoredChain[] | undefined>(
   undefined,
 );
 
+/**
+ * holds the "modified chains" array
+ */
 export const ModifiedChainsContext = createContext<StoredChain[] | undefined>(
   undefined,
 );
 
+/**
+ * holds the "recently used chain ids" array
+ */
 export const RecentlyUsedChainIdsContext = createContext<number[] | undefined>(
   undefined,
 );
 
+/**
+ * holds the function that takes a chainId and adds it to the "recently used chains" and handles its storage
+ */
 export const AddRecentlyUsedChainIdsContext = createContext<
   ((chainId: number) => void) | undefined
 >(undefined);
 
+/**
+ * holds the function that takes the "modified chain" object
+ * and handles the logic of updating the "supported chains" and "modified chains" and "recently used chains"
+ */
 export const ModifyChainContext = createContext<
   ((chain: Chain) => void) | undefined
 >(undefined);
 
+/**
+ * flag indicating if the supported chains is having the final value or not
+ * app starts with the defaultChains as supported chains
+ * then allChains is dynamically imported or fetched from indexedDB, user modified chains are fetched from localStorage
+ * and then the final supported chains is calculated by overriding the modifiedChains on allChains
+ */
 export const SupportedChainsReadyContext = createContext(false);
 
+/**
+ * Flag indicating if the "Network Config" Modal is open or not
+ */
 export const isNetworkConfigModalOpenCtx = createContext(false);
-
 export const SetIsNetworkConfigModalOpenCtx = createContext<
   ((value: boolean) => void) | undefined
 >(undefined);
 
+/**
+ * Chain object to be edited in the "Network Config" Modal
+ */
 export const EditChainContext = createContext<Chain | undefined>(undefined);
-
 export const SetEditChainContext = createContext<
   ((chain: Chain | undefined) => void) | undefined
 >(undefined);
@@ -49,7 +76,7 @@ export const SetEditChainContext = createContext<
 /**
  * if no networks are configured by the user, return the defaultChains
  */
-export function SupportedChainsProvider(props: { children: React.ReactNode }) {
+export function ChainsProvider(props: { children: React.ReactNode }) {
   const [supportedChains, setSupportedChains] =
     useState<StoredChain[]>(defaultChains);
   const [modifiedChains, setModifiedChains] = useState<StoredChain[]>([]);
@@ -178,24 +205,23 @@ export function SupportedChainsProvider(props: { children: React.ReactNode }) {
     applyOverrides,
     supportedChains,
   ]);
+
   const modifyChain = useCallback(
     (chain: Chain) => {
-      // if this chain is already in the modified chains, update it
       const i = modifiedChains.findIndex((c) => c.chainId === chain.chainId);
+      let newModifiedChains: StoredChain[];
       if (i !== -1) {
-        const newModifiedChains = [...modifiedChains];
+        // if this chain is already in the modified chains, update it
+        newModifiedChains = [...modifiedChains];
         newModifiedChains[i] = chain as StoredChain;
-        setModifiedChains(newModifiedChains);
-        applyModificationsToSupportedChains(newModifiedChains);
-        chainStorage.set(MODIFIED_CHAINS_KEY, newModifiedChains);
+      } else {
+        // else add it to the modified chains
+        newModifiedChains = [...modifiedChains, chain as StoredChain];
       }
-      // else add it to the modified chains
-      else {
-        const newModifiedChains = [...modifiedChains, chain as StoredChain];
-        setModifiedChains(newModifiedChains);
-        applyModificationsToSupportedChains(newModifiedChains);
-        chainStorage.set(MODIFIED_CHAINS_KEY, newModifiedChains);
-      }
+
+      setModifiedChains(newModifiedChains);
+      applyModificationsToSupportedChains(newModifiedChains);
+      chainStorage.set(MODIFIED_CHAINS_KEY, newModifiedChains);
     },
     [applyModificationsToSupportedChains, modifiedChains],
   );
@@ -233,7 +259,6 @@ export function SupportedChainsProvider(props: { children: React.ReactNode }) {
 
 // storage  --------------------------------------------
 
-// todo: move from local storage to indexedDB
 const chainStorage = {
   get(key: string): Chain[] {
     try {

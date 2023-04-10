@@ -23,7 +23,7 @@ import { DeployModalProvider } from "components/contract-components/contract-dep
 import { AppShell, AppShellProps } from "components/layout/app-shell";
 import { PrivacyNotice } from "components/notices/PrivacyNotice";
 import { AllChainsProvider } from "contexts/all-chains";
-import { SupportedChainsProvider } from "contexts/configured-chains";
+import { ChainsProvider } from "contexts/configured-chains";
 import { ErrorProvider } from "contexts/error-handler";
 import { useAddRecentlyUsedChainId } from "hooks/chains/recentlyUsedChains";
 import {
@@ -130,7 +130,7 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
         <ErrorProvider>
           <DeployModalProvider>
             <AllChainsProvider>
-              <SupportedChainsProvider>
+              <ChainsProvider>
                 <EVMContractInfoProvider value={props.contractInfo}>
                   <DashboardThirdwebProvider>
                     <PHIdentifier />
@@ -139,7 +139,7 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
                     <ConfigModal />
                   </DashboardThirdwebProvider>
                 </EVMContractInfoProvider>
-              </SupportedChainsProvider>
+              </ChainsProvider>
             </AllChainsProvider>
           </DeployModalProvider>
         </ErrorProvider>

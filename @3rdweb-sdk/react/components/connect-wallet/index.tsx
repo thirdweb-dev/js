@@ -106,8 +106,6 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
     );
   }
 
-  // TOOO: set theme
-
   if (ecosystem === "evm" || ecosystem === "either") {
     return (
       <ConnectWalletNew

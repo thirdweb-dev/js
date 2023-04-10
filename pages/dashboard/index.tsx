@@ -7,7 +7,7 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useAddress } from "@thirdweb-dev/react";
+import { useAddress, useConnectionStatus } from "@thirdweb-dev/react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { FTUX } from "components/FTUX/FTUX";
 import { ChakraNextImage } from "components/Image";
@@ -15,7 +15,6 @@ import { AppLayout } from "components/app-layouts/app";
 import { Changelog, ChangelogItem } from "components/dashboard/Changelog";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { PageId } from "page-id";
-import { useEffect, useState } from "react";
 import { Card, Heading, Text, TrackedLink } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
@@ -64,15 +63,9 @@ const Dashboard: ThirdwebNextPage = (
   const { colorMode } = useColorMode();
   const address = useAddress();
   const { publicKey } = useWallet();
-
-  /** put the component is loading state for sometime to avoid layout shift */
-  const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 200);
-  }, []);
-
+  const connectionStatus = useConnectionStatus();
+  const isLoading =
+    connectionStatus === "unknown" || connectionStatus === "connecting";
   return (
     <SimpleGrid columns={{ base: 1, lg: 4 }} gap={16} mt={{ base: 2, md: 10 }}>
       <GridItem colSpan={{ lg: 3 }}>
@@ -150,7 +143,7 @@ const Dashboard: ThirdwebNextPage = (
                 </SimpleGrid>
               )}
 
-              {!address && !publicKey && <FTUX />}
+              {connectionStatus === "disconnected" && !publicKey && <FTUX />}
             </>
           )}
         </ClientOnly>

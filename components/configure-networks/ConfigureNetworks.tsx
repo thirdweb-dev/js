@@ -3,7 +3,7 @@ import { Box, useToast } from "@chakra-ui/react";
 import { StoredChain } from "contexts/configured-chains";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useModifyChain } from "hooks/chains/useModifyChain";
-import { useEditChain, useSetEditChain } from "hooks/networkConfigModal";
+import { useEditChain } from "hooks/networkConfigModal";
 import { Heading } from "tw-components";
 
 function useChainConfigTrack() {
@@ -28,7 +28,6 @@ export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
   const trackChainConfig = useChainConfigTrack();
   const modifyChain = useModifyChain();
   const editChain = useEditChain();
-  const setEditChain = useSetEditChain();
 
   const toast = useToast();
 
@@ -49,7 +48,6 @@ export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
     modifyChain(chain);
     trackChainConfig("update", chain);
     successToast("Network Updated Successfully");
-    setEditChain(undefined);
   };
 
   const handleAdd = (chain: StoredChain) => {

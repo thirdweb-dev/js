@@ -14,7 +14,7 @@ export function useSupportedChains() {
 
   invariant(
     chains,
-    "useSupportedChains must be used within a ConfiguredNetworksProvider",
+    "useSupportedChains must be used within a SupportedChainsContext",
   );
   return chains;
 }
