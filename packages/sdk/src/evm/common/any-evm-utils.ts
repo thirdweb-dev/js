@@ -4,7 +4,7 @@ import invariant from "tiny-invariant";
 import { bytecode as WETHBytecode } from "./WETH9";
 import { getNativeTokenByChainId } from "../constants";
 import { ThirdwebSDK } from "../core";
-import { AbiSchema, PreDeployMetadataFetched } from "../schema";
+import { PreDeployMetadataFetched } from "../schema";
 import {
   DeployedContractType,
   KeylessDeploymentInfo,
@@ -20,7 +20,6 @@ import { toWei } from "./currency";
 import {
   extractConstructorParamsFromAbi,
   fetchPreDeployMetadata,
-  isFeatureEnabled,
 } from "./feature-detection";
 import { generatePluginFunctions, getMetadataForPlugins } from "./plugin";
 import { Plugin } from "../types/plugins";
@@ -496,13 +495,11 @@ export async function getDeploymentInfo(
   const customParams: ConstructorParamMap = {};
   const finalDeploymentInfo: DeploymentPreset[] = [];
   const compilerMetadata = await fetchPreDeployMetadata(metadataUri, storage);
-  const isPluginRouter: boolean = isFeatureEnabled(
-    AbiSchema.parse(compilerMetadata.abi),
-    "PluginRouter",
-  );
-  if (isPluginRouter) {
-    const pluginMetadata = await getMetadataForPlugins(metadataUri, storage);
+  const pluginMetadata = await getMetadataForPlugins(metadataUri, storage);
 
+  // if pluginMetadata is not empty, then it's a plugin-pattern router contract
+  if (pluginMetadata.length > 0) {
+    // get deployment info for all plugins
     const pluginDeploymentInfo = await Promise.all(
       pluginMetadata.map(async (metadata) => {
         const info = await computeDeploymentInfo(

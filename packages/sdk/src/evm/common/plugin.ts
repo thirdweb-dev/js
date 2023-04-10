@@ -122,21 +122,34 @@ export async function getMetadataForPlugins(
   publishedMetadataUri: string,
   storage: ThirdwebStorage,
 ): Promise<PreDeployMetadataFetched[]> {
-  const extendedMetadata = await fetchExtendedReleaseMetadata(
+  let pluginMetadata: PreDeployMetadataFetched[] = [];
+
+  const compilerMetadata = await fetchPreDeployMetadata(
     publishedMetadataUri,
     storage,
   );
+  // check if contract is plugin-pattern
+  const isPluginRouter: boolean = isFeatureEnabled(
+    AbiSchema.parse(compilerMetadata.abi),
+    "PluginRouter",
+  );
 
-  let pluginMetadata: PreDeployMetadataFetched[] = [];
-
-  if (extendedMetadata.factoryDeploymentData?.implementationAddresses) {
-    const implementationsAddresses = Object.entries(
-      extendedMetadata.factoryDeploymentData.implementationAddresses,
+  if (isPluginRouter) {
+    const extendedMetadata = await fetchExtendedReleaseMetadata(
+      publishedMetadataUri,
+      storage,
     );
 
-    try {
-      for (const [network, implementation] of implementationsAddresses) {
-        if (implementation !== "") {
+    if (extendedMetadata.factoryDeploymentData?.implementationAddresses) {
+      const implementationsAddresses = Object.entries(
+        extendedMetadata.factoryDeploymentData.implementationAddresses,
+      );
+
+      try {
+        const entry = implementationsAddresses.find((item) => item[1] !== "");
+        const network = entry?.[0];
+        const implementation = entry?.[1];
+        if (network && implementation) {
           const provider = getChainProvider(parseInt(network), {});
           const contract = new ContractWrapper(
             provider,
@@ -176,11 +189,9 @@ export async function getMetadataForPlugins(
               return fetchPreDeployMetadata(uri, storage);
             }),
           );
-
-          break;
         }
-      }
-    } catch {}
+      } catch {}
+    }
   }
   return pluginMetadata;
 }
