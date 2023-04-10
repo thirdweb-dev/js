@@ -115,6 +115,9 @@ export async function generate(options: GenerateOptions) {
         );
       } catch {
         // If metadata for a contract fails, just go onto the next one
+        info(
+          `Unable to download ABI for contract ${contract.address}, skipping.`,
+        );
         return;
       }
 
@@ -128,9 +131,10 @@ export async function generate(options: GenerateOptions) {
   // Store the ABIs in the the SDKs ABI cache files
   const packagePath = `${projectPath}/node_modules/@thirdweb-dev/generated-abis/dist`;
   if (!fs.existsSync(packagePath)) {
-    throw new Error(
-      `Unable to cache ABIs. Please ensure that you're using the latest @thirdweb-dev/sdk package`,
+    console.log(
+      `Unable to cache ABIs. Please ensure that you have the latest @thirdweb-dev/sdk package installed.`,
     );
+    process.exit(1);
   }
 
   const filePaths = [
