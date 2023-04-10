@@ -147,7 +147,7 @@ export async function getMetadataForPlugins(
 
       try {
         const entry = implementationsAddresses.find(
-          ([network, implementation]) => implementation !== "",
+          ([, implementation]) => implementation !== "",
         );
         const [network, implementation] = entry ? entry : [];
         if (network && implementation) {
