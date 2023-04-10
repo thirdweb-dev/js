@@ -1,4 +1,5 @@
 import { InfraContractType } from "../../core";
+import { PreDeployMetadataFetched } from "../../schema";
 
 export type PrecomputedDeploymentData = {
   predictedAddress: string;
@@ -11,12 +12,16 @@ export type PrecomputedDeploymentTransaction = {
   data: string;
 };
 
+// export type DeploymentInfo = {
+//   bytecode: string;
+//   encodedArgs: any;
+//   predictedAddress: string;
+//   infraContractsToDeploy: InfraContractType[];
+//   pluginTransactions?: PrecomputedDeploymentTransaction[];
+// };
 export type DeploymentInfo = {
-  bytecode: string;
-  encodedArgs: any;
-  predictedAddress: string;
-  infraContractsToDeploy: InfraContractType[];
-  pluginTransactions?: PrecomputedDeploymentTransaction[];
+  type: DeployedContractType;
+  transaction: PrecomputedDeploymentTransaction;
 };
 
 export type KeylessTransaction = {
@@ -41,4 +46,17 @@ export type DeployedContractType =
 export type DeploymentTransaction = {
   contractType: DeployedContractType;
   addresses: string[];
+};
+
+export type ConstructorParam = {
+  type?: string;
+  value: any | any[];
+};
+
+export type ConstructorParamMap = Record<string, ConstructorParam>;
+
+export type ContractOptions = {
+  contractName?: string;
+  metadata?: PreDeployMetadataFetched;
+  constructorParams?: ConstructorParamMap;
 };

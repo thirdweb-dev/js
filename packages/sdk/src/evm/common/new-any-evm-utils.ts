@@ -1,33 +1,30 @@
-import invariant from "tiny-invariant";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BytesLike, ethers, providers, Signer } from "ethers";
-import { bytecode as WETHBytecode } from "./WETH9";
+import invariant from "tiny-invariant";
+import { getNativeTokenByChainId } from "../constants";
+import { ThirdwebSDK } from "../core";
+import { AbiSchema, PreDeployMetadataFetched } from "../schema";
 import {
-  DeploymentInfo,
+  DeployedContractType,
   KeylessDeploymentInfo,
   KeylessTransaction,
   PrecomputedDeploymentTransaction,
 } from "../types/any-evm/deploy-data";
 import {
-  CloneFactory,
-  EOAForwarder,
-  Forwarder,
-  INFRA_CONTRACTS_MAP,
-  NativeTokenWrapper,
-} from "./infra-data";
-import { ThirdwebSDK } from "../core/sdk";
-import { InfraContractType } from "../core";
+  ConstructorParam,
+  ConstructorParamMap,
+  ContractOptions,
+  DeploymentInfo,
+} from "../types/any-evm/deploy-data";
+import { toWei } from "./currency";
 import {
   extractConstructorParamsFromAbi,
   fetchPreDeployMetadata,
   isFeatureEnabled,
 } from "./feature-detection";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { getNativeTokenByChainId } from "../constants";
-import { AbiSchema, PreDeployMetadataFetched } from "../schema";
-import { toWei } from "./currency";
-import { DeployOptions } from "../types";
 import { generatePluginFunctions, getPluginNames } from "./plugin";
 import { Plugin } from "../types/plugins";
+import { DeployOptions } from "../types";
 
 //
 // =============================
@@ -77,6 +74,8 @@ export const DEPLOYER_ABI = [
     type: "constructor",
   },
 ];
+
+const newDeploymentInfo: Record<string, DeploymentInfo> = {};
 
 //
 // ==================================
@@ -236,98 +235,6 @@ export function computeDeploymentAddress(
 
   // 4. return last 20 bytes (40 characters) of the hash -- this is the predicted address
   return `0x${hashedDeployInfo.slice(26)}`;
-}
-
-/**
- *
- * @internal
- * @param provider
- * @param storage
- * @param create2Factory
- */
-export async function computeEOAForwarderAddress(
-  provider: providers.Provider,
-  storage: ThirdwebStorage,
-  create2Factory?: string,
-): Promise<string> {
-  if (!create2Factory) {
-    create2Factory = await getCreate2FactoryAddress(provider);
-  }
-  return await computeAddressInfra(
-    EOAForwarder.contractType,
-    provider,
-    storage,
-    create2Factory,
-  );
-}
-
-/**
- *
- * @internal
- * @param provider
- * @param storage
- * @param create2Factory
- */
-export async function computeForwarderAddress(
-  provider: providers.Provider,
-  storage: ThirdwebStorage,
-  create2Factory?: string,
-): Promise<string> {
-  if (!create2Factory) {
-    create2Factory = await getCreate2FactoryAddress(provider);
-  }
-  return await computeAddressInfra(
-    Forwarder.contractType,
-    provider,
-    storage,
-    create2Factory,
-  );
-}
-
-/**
- *
- * @internal
- * @param provider
- * @param storage
- * @param create2Factory
- */
-export async function computeCloneFactoryAddress(
-  provider: providers.Provider,
-  storage: ThirdwebStorage,
-  create2Factory?: string,
-): Promise<string> {
-  if (!create2Factory) {
-    create2Factory = await getCreate2FactoryAddress(provider);
-  }
-  return await computeAddressInfra(
-    CloneFactory.contractType,
-    provider,
-    storage,
-    create2Factory,
-  );
-}
-
-/**
- *
- * @internal
- * @param provider
- * @param storage
- * @param create2Factory
- */
-export async function computeNativeTokenAddress(
-  provider: providers.Provider,
-  storage: ThirdwebStorage,
-  create2Factory?: string,
-): Promise<string> {
-  if (!create2Factory) {
-    create2Factory = await getCreate2FactoryAddress(provider);
-  }
-  return await computeAddressInfra(
-    NativeTokenWrapper.contractType,
-    provider,
-    storage,
-    create2Factory,
-  );
 }
 
 //
@@ -496,16 +403,13 @@ export async function getDeploymentInfo(
   storage: ThirdwebStorage,
   provider: providers.Provider,
   create2Factory?: string,
-): Promise<DeploymentInfo> {
-  const compilerMetadata = await fetchPreDeployMetadata(metadataUri, storage);
-  let finalInfraContracts: InfraContractType[] = [];
-  let pluginTransactions: PrecomputedDeploymentTransaction[] = [];
-  let customParams: any[] = [];
-
+): Promise<DeploymentInfo[]> {
   if (!create2Factory) {
     create2Factory = await getCreate2FactoryAddress(provider);
   }
-
+  const customParams: ConstructorParamMap = {};
+  const finalDeploymentInfo: DeploymentInfo[] = [];
+  const compilerMetadata = await fetchPreDeployMetadata(metadataUri, storage);
   const isPluginRouter: boolean = isFeatureEnabled(
     AbiSchema.parse(compilerMetadata.abi),
     "PluginRouter",
@@ -522,205 +426,81 @@ export async function getDeploymentInfo(
         return fetchPreDeployMetadata(uri, storage);
       }),
     );
-    const deploymentParams = await Promise.all(
-      pluginMetadata.map((metadata) => {
-        return constructDeploymentParamsForDeployer(
-          metadata,
+    const pluginDeploymentInfo = await Promise.all(
+      pluginMetadata.map(async (metadata) => {
+        const info = await computeDeploymentInfo(
+          "plugin",
           provider,
           storage,
           create2Factory as string,
+          { metadata: metadata },
         );
+        return info;
       }),
-    );
-    pluginTransactions = deploymentParams.map((param) => param.transaction);
-    deploymentParams.forEach((param) =>
-      finalInfraContracts.push(...param.infraContracts),
     );
 
     // create constructor param input for PluginMap
     const mapInput: Plugin[] = [];
     pluginMetadata.forEach((metadata, index) => {
       const input = generatePluginFunctions(
-        pluginTransactions[index].predictedAddress,
+        pluginDeploymentInfo[index].transaction.predictedAddress,
         metadata.abi,
       );
       mapInput.push(...input);
     });
 
     // get PluginMap deployment transaction
-    const pluginMapUri = await fetchPublishedContractURI("PluginMap");
-    const pluginMapMetadata = await fetchPreDeployMetadata(
-      pluginMapUri,
-      storage,
-    );
-
-    const pluginMapTransaction = await constructDeploymentParamsForDeployer(
-      pluginMapMetadata,
+    const pluginMapTransaction = await computeDeploymentInfo(
+      "plugin",
       provider,
       storage,
-      create2Factory as string,
-      [mapInput],
+      create2Factory,
+      {
+        contractName: "PluginMap",
+        constructorParams: { _pluginsToAdd: { value: mapInput } },
+      },
     );
 
     // address of PluginMap is input for MarketplaceV3's constructor
-    customParams.push(pluginMapTransaction.transaction.predictedAddress);
+    customParams["_pluginMap"] = {
+      value: pluginMapTransaction.transaction.predictedAddress,
+    };
 
-    pluginTransactions.push(pluginMapTransaction.transaction);
-  }
-  // 1.  Get abi-encoded args and list of infra contracts required based on constructor params
-  const { encodedArgs, infraContracts } =
-    await encodeConstructorParamsForImplementation(
-      compilerMetadata,
-      provider,
-      storage,
-      create2Factory,
-      customParams,
+    const filteredPluginInfo = Object.values(pluginDeploymentInfo).filter(
+      (info) => {
+        info.transaction.data.length > 0;
+      },
     );
+    finalDeploymentInfo.push(...filteredPluginInfo);
+    if (pluginMapTransaction.transaction.data.length > 0) {
+      finalDeploymentInfo.push(pluginMapTransaction);
+    }
+  }
 
-  // 2. Compute the CREATE2 address
-  const predictedAddress = computeDeploymentAddress(
-    compilerMetadata.bytecode,
-    encodedArgs,
+  const implementationDeployInfo = await computeDeploymentInfo(
+    "implementation",
+    provider,
+    storage,
     create2Factory,
+    {
+      metadata: compilerMetadata,
+      constructorParams: customParams,
+    },
   );
 
-  // 3. Add TWStatelessFactory and Forwarder to the list of infra contracts --
-  // these must be deployed regardless of constructor params of implementation contract
-  infraContracts.push(CloneFactory.contractType);
-  infraContracts.push(Forwarder.contractType);
-
-  finalInfraContracts.push(...infraContracts);
-  finalInfraContracts = Array.from(new Set(finalInfraContracts));
-
-  return {
-    bytecode: compilerMetadata.bytecode,
-    encodedArgs: encodedArgs,
-    predictedAddress: predictedAddress,
-    infraContractsToDeploy: finalInfraContracts,
-    pluginTransactions: pluginTransactions,
-  };
-}
-
-/**
- * Deploy Infra contracts with a signer.
- * The serialized txn data and addresses are precomputed for infra contracts.
- *
- * @internal
- *
- * @param signer: Signer of infra deployment txns
- * @param provider
- * @param storage
- * @param create2Factory
- * @param contractTypes: List of infra contracts to deploy
- */
-export async function deployInfraWithSigner(
-  signer: Signer,
-  provider: providers.Provider,
-  storage: ThirdwebStorage,
-  create2Factory: string,
-  contractTypes: InfraContractType[],
-  options?: DeployOptions,
-) {
-  const txns = [];
-
-  for (let contractType of contractTypes as InfraContractType[]) {
-    const infraContractAddress = await computeAddressInfra(
-      contractType,
-      provider,
-      storage,
-      create2Factory,
-    );
-
-    if (contractType === NativeTokenWrapper.contractType) {
-      const code = await provider.getCode(infraContractAddress);
-      if (code === "0x") {
-        const initCode = getInitBytecodeWithSalt(WETHBytecode, []);
-
-        txns.push({
-          predictedAddress: infraContractAddress,
-          to: create2Factory,
-          data: initCode,
-        });
-      }
-      continue;
-    }
-
-    const uri = await fetchPublishedContractURI(
-      INFRA_CONTRACTS_MAP[contractType].name,
-    );
-    const infraContractMetadata = await fetchPreDeployMetadata(uri, storage);
-    const code = await provider.getCode(infraContractAddress);
-
-    if (code === "0x") {
-      const encodedArgs = (
-        await encodeConstructorParamsForImplementation(
-          infraContractMetadata,
-          provider,
-          storage,
-          create2Factory,
-        )
-      ).encodedArgs;
-      // get init bytecode
-      const initBytecodeWithSalt = getInitBytecodeWithSalt(
-        infraContractMetadata.bytecode,
-        encodedArgs,
-      );
-
-      txns.push({
-        predictedAddress: infraContractAddress,
-        to: create2Factory,
-        data: initBytecodeWithSalt,
-      });
-    }
-  }
-
-  // Call/deploy the throaway-deployer only if there are any contracts to deploy
-  if (txns.length > 0) {
-    txns.forEach((tx) =>
-      console.debug(`deploying infra contract at: ${tx.predictedAddress}`),
-    );
-    options?.notifier?.("deploying", "infra");
-    // Using the deployer contract, send the deploy transactions to common factory with a signer
-    const deployer = new ethers.ContractFactory(DEPLOYER_ABI, DEPLOYER_BYTECODE)
-      .connect(signer)
-      .deploy(txns);
-    await (await deployer).deployed();
-
-    options?.notifier?.("deployed", "infra");
-  }
-}
-
-export async function deployPluginsAndMap(
-  signer: Signer,
-  transactions: PrecomputedDeploymentTransaction[],
-  options?: DeployOptions,
-) {
-  let transactionBatches = createTransactionBatches(transactions);
-  if (transactionBatches.length === 0) {
-    return;
-  }
-
-  const deployTxns = await Promise.all(
-    transactionBatches.map((txBatch) => {
-      options?.notifier?.("deploying", "plugin");
-      // Using the deployer contract, send the deploy transactions to common factory with a signer
-      const deployer = new ethers.ContractFactory(
-        DEPLOYER_ABI,
-        DEPLOYER_BYTECODE,
-      )
-        .connect(signer)
-        .deploy(txBatch);
-
-      return deployer;
-    }),
+  const filteredDeploymentInfo = Object.values(newDeploymentInfo).filter(
+    (info) => {
+      info.transaction.data.length > 0;
+    },
   );
 
-  await Promise.all(
-    deployTxns.map((tx) => {
-      options?.notifier?.("deployed", "plugin");
-      return tx.deployed();
-    }),
-  );
+  finalDeploymentInfo.push(...filteredDeploymentInfo);
+
+  if (implementationDeployInfo.transaction.data.length > 0) {
+    finalDeploymentInfo.push(implementationDeployInfo);
+  }
+
+  return finalDeploymentInfo;
 }
 
 //
@@ -728,6 +508,130 @@ export async function deployPluginsAndMap(
 // ======== Other helper functions ==============
 // ==============================================
 //
+
+export async function computeDeploymentInfo(
+  contractType: DeployedContractType,
+  provider: providers.Provider,
+  storage: ThirdwebStorage,
+  create2Factory: string,
+  contractOptions?: ContractOptions,
+): Promise<DeploymentInfo> {
+  let contractName = contractOptions && contractOptions.contractName;
+  let metadata = contractOptions && contractOptions.metadata;
+  invariant(contractName || metadata, "require contract name or metadata");
+
+  if (contractName && newDeploymentInfo[contractName]) {
+    return newDeploymentInfo[contractName];
+  }
+
+  if (!metadata) {
+    invariant(contractName, "require contract name");
+    const uri = await fetchPublishedContractURI(contractName);
+    metadata = await fetchPreDeployMetadata(uri, storage);
+  }
+
+  const encodedArgs = await encodeConstructorParamsForImplementation(
+    metadata,
+    provider,
+    storage,
+    create2Factory,
+    contractOptions?.constructorParams,
+  );
+  const address = computeDeploymentAddress(
+    metadata.bytecode,
+    encodedArgs,
+    create2Factory,
+  );
+  const code = await provider.getCode(address);
+
+  let initBytecodeWithSalt = "";
+  if (code !== "0x") {
+    initBytecodeWithSalt = getInitBytecodeWithSalt(
+      metadata.bytecode,
+      encodedArgs,
+    );
+  }
+
+  return {
+    type: contractType,
+    transaction: {
+      predictedAddress: address,
+      to: create2Factory,
+      data: initBytecodeWithSalt,
+    },
+  };
+}
+
+/**
+ * @internal
+ *
+ * Determine constructor params required by an implementation contract.
+ * Return abi-encoded params.
+ */
+async function encodeConstructorParamsForImplementation(
+  compilerMetadata: PreDeployMetadataFetched,
+  provider: providers.Provider,
+  storage: ThirdwebStorage,
+  create2Factory: string,
+  constructorParamMap?: Record<string, ConstructorParam>,
+): Promise<BytesLike> {
+  const constructorParams = extractConstructorParamsFromAbi(
+    compilerMetadata.abi,
+  );
+  let constructorParamTypes = constructorParams.map((p) => {
+    if (p.type === "tuple[]") {
+      return ethers.utils.ParamType.from(p);
+    } else {
+      return p.type;
+    }
+  });
+
+  const constructorParamValues = await Promise.all(
+    constructorParams.map(async (p) => {
+      if (constructorParamMap && constructorParamMap[p.name]) {
+        if (constructorParamMap[p.name].type) {
+          invariant(constructorParamMap[p.name].type === p.type);
+        }
+        return constructorParamMap[p.name].value;
+      }
+      if (p.name && p.name.includes("nativeTokenWrapper")) {
+        const chainId = (await provider.getNetwork()).chainId;
+        let nativeTokenWrapperAddress =
+          getNativeTokenByChainId(chainId).wrapped.address;
+
+        if (nativeTokenWrapperAddress === ethers.constants.AddressZero) {
+          // TODO write code for native token wrapper deployment transaction
+        }
+
+        return nativeTokenWrapperAddress;
+      } else if (p.name && p.name.includes("trustedForwarder")) {
+        const deploymentInfo = await computeDeploymentInfo(
+          "infra",
+          provider,
+          storage,
+          create2Factory,
+          {
+            contractName: "Forwarder",
+          },
+        );
+        if (!newDeploymentInfo["Forwarder"]) {
+          newDeploymentInfo["Forwarder"] = deploymentInfo;
+        }
+
+        return deploymentInfo.transaction.predictedAddress;
+        // TODO EOAForwarder
+      } else {
+        return "";
+      }
+    }),
+  );
+
+  const encodedArgs = ethers.utils.defaultAbiCoder.encode(
+    constructorParamTypes,
+    constructorParamValues,
+  );
+  return encodedArgs;
+}
 
 /**
  *
@@ -773,156 +677,6 @@ async function fetchPublishedContractURI(
     );
   }
   return publishedContract?.metadataUri;
-}
-
-export async function computeAddressInfra(
-  contractType: InfraContractType,
-  provider: providers.Provider,
-  storage: ThirdwebStorage,
-  create2Factory: string,
-): Promise<string> {
-  const contract = INFRA_CONTRACTS_MAP[contractType];
-
-  if (contract.contractType === NativeTokenWrapper.contractType) {
-    const address = computeDeploymentAddress(WETHBytecode, [], create2Factory);
-
-    return address;
-  } else {
-    let uri = await fetchPublishedContractURI(contract.name);
-
-    const metadata = await fetchPreDeployMetadata(uri, storage);
-    const encodedArgs = (
-      await encodeConstructorParamsForImplementation(
-        metadata,
-        provider,
-        storage,
-        create2Factory,
-      )
-    ).encodedArgs;
-    const address = computeDeploymentAddress(
-      metadata.bytecode,
-      encodedArgs,
-      create2Factory,
-    );
-
-    return address;
-  }
-}
-
-export async function constructDeploymentParamsForDeployer(
-  compilerMetadata: PreDeployMetadataFetched,
-  provider: providers.Provider,
-  storage: ThirdwebStorage,
-  create2Factory: string,
-  constructorParamValues?: any[],
-): Promise<{
-  transaction: PrecomputedDeploymentTransaction;
-  infraContracts: InfraContractType[];
-}> {
-  const encoded = await encodeConstructorParamsForImplementation(
-    compilerMetadata,
-    provider,
-    storage,
-    create2Factory,
-    constructorParamValues,
-  );
-  const address = computeDeploymentAddress(
-    compilerMetadata.bytecode,
-    encoded.encodedArgs,
-    create2Factory,
-  );
-
-  // get init bytecode
-  const initBytecodeWithSalt = getInitBytecodeWithSalt(
-    compilerMetadata.bytecode,
-    encoded.encodedArgs,
-  );
-
-  return {
-    transaction: {
-      predictedAddress: address,
-      to: create2Factory,
-      data: initBytecodeWithSalt,
-    },
-    infraContracts: encoded.infraContracts,
-  };
-}
-
-/**
- * @internal
- *
- * Determine constructor params required by an implementation contract.
- * Return abi-encoded params.
- */
-async function encodeConstructorParamsForImplementation(
-  compilerMetadata: PreDeployMetadataFetched,
-  provider: providers.Provider,
-  storage: ThirdwebStorage,
-  create2Factory: string,
-  customParams?: any[],
-) {
-  const chainId = (await provider.getNetwork()).chainId;
-  const infraContracts: InfraContractType[] = [];
-  const constructorParams = extractConstructorParamsFromAbi(
-    compilerMetadata.abi,
-  );
-
-  let constructorParamTypes = constructorParams.map((p) => {
-    if (p.type === "tuple[]") {
-      return ethers.utils.ParamType.from(p);
-    } else {
-      return p.type;
-    }
-  });
-  const constructorParamValues = customParams
-    ? customParams
-    : await Promise.all(
-        constructorParams.map(async (p) => {
-          if (p.name && p.name.includes("nativeTokenWrapper")) {
-            let nativeTokenWrapperAddress =
-              getNativeTokenByChainId(chainId).wrapped.address;
-
-            if (nativeTokenWrapperAddress === ethers.constants.AddressZero) {
-              nativeTokenWrapperAddress = await computeNativeTokenAddress(
-                provider,
-                storage,
-                create2Factory,
-              );
-              infraContracts.push(NativeTokenWrapper.contractType);
-            }
-
-            return nativeTokenWrapperAddress;
-          } else if (p.name && p.name.includes("trustedForwarder")) {
-            if (
-              compilerMetadata.analytics?.contract_name &&
-              compilerMetadata.analytics.contract_name === "Pack"
-            ) {
-              infraContracts.push(EOAForwarder.contractType);
-              const eoaForwarderAddress = await computeEOAForwarderAddress(
-                provider,
-                storage,
-                create2Factory,
-              );
-              return eoaForwarderAddress;
-            }
-            infraContracts.push(Forwarder.contractType);
-            const forwarderAddress = await computeForwarderAddress(
-              provider,
-              storage,
-              create2Factory,
-            );
-            return forwarderAddress;
-          } else {
-            return "";
-          }
-        }),
-      );
-
-  const encodedArgs = ethers.utils.defaultAbiCoder.encode(
-    constructorParamTypes,
-    constructorParamValues,
-  );
-  return { encodedArgs, infraContracts };
 }
 
 function estimateGasForDeploy(initCode: string) {
