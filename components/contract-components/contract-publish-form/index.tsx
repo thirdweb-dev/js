@@ -14,13 +14,13 @@ import { LandingFieldset } from "./landing-fieldset";
 import { ProxyFieldset } from "./proxy-fieldset";
 import { ConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { Box, Divider, Flex, Icon, IconButton } from "@chakra-ui/react";
+import { defaultChains } from "@thirdweb-dev/chains";
 import { useAddress } from "@thirdweb-dev/react";
 import {
   CONTRACT_ADDRESSES,
   ExtraPublishMetadata,
 } from "@thirdweb-dev/sdk/evm";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useSupportedChains } from "hooks/chains/configureChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -35,7 +35,7 @@ interface ContractPublishFormProps {
 export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   contractId,
 }) => {
-  const configuredChains = useSupportedChains();
+  const configuredChains = defaultChains;
   const configuredChainsIds = configuredChains.map((c) => c.chainId);
   const [contractSelection, setContractSelection] = useState<
     "standard" | "proxy" | "factory"

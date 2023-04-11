@@ -1,7 +1,7 @@
 import { DeployFormDrawer } from "../contract-deploy-form/drawer";
 import { Flex, FormControl, Input } from "@chakra-ui/react";
+import { defaultChains } from "@thirdweb-dev/chains";
 import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
-import { useSupportedChains } from "hooks/chains/configureChains";
 import { Dispatch, SetStateAction, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { FormLabel, Heading, Link, Text } from "tw-components";
@@ -16,7 +16,7 @@ export const ProxyFieldset: React.FC<ProxyFieldsetProps> = ({
   contractId,
 }) => {
   const form = useFormContext();
-  const configuredChains = useSupportedChains();
+  const configuredChains = defaultChains;
 
   const { mainnets, testnets } = useMemo(() => {
     return {

@@ -20,7 +20,7 @@ export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = ({
   form,
 }) => {
   return (
-    <Accordion allowToggle>
+    <Accordion allowToggle defaultIndex={[0]}>
       <AccordionItem borderColor="borderColor" borderBottom="none">
         <AccordionButton px={0}>
           <Heading size="subtitle.md" flex="1" textAlign="left">
