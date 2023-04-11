@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 
 // for rendering a conventional button
 export const Button = styled.button<{
-  variant: "inverted" | "secondary";
+  variant: "inverted" | "secondary" | "link";
   theme?: Theme;
 }>`
   all: unset;
@@ -37,6 +37,8 @@ export const Button = styled.button<{
         return p.theme.bg.inverted;
       case "secondary":
         return p.theme.bg.elevated;
+      case "link":
+        return "transparent";
     }
   }};
   color: ${(p) => {
@@ -45,6 +47,8 @@ export const Button = styled.button<{
         return p.theme.text.inverted;
       case "secondary":
         return p.theme.text.neutral;
+      case "link":
+        return p.theme.link.primary;
     }
   }};
   cursor: pointer;

@@ -26,6 +26,7 @@ import { LockIcon } from "./icons/LockIcon";
 import { Flex } from "../../components/basic";
 import { shortenAddress } from "../../evm/utils/addresses";
 import { SignatureModal } from "./SignatureModal";
+import { NetworkSelectorProps } from "./NetworkSelector";
 
 type ConnectWalletProps = {
   className?: string;
@@ -37,6 +38,7 @@ type ConnectWalletProps = {
     loginOptional?: boolean;
   };
   style?: React.CSSProperties;
+  networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -83,15 +85,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   };
 
   return (
-    <ThemeProvider
-      theme={
-        typeof theme === "object"
-          ? theme
-          : theme === "dark"
-          ? darkTheme
-          : lightTheme
-      }
-    >
+    <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
       {showSignatureModal && (
         <SignatureModal
           open={showSignatureModal}
@@ -150,6 +144,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
           </AnimatedButton>
         ) : (
           <ConnectedWalletDetails
+            networkSelector={props.networkSelector}
             dropdownPosition={props.dropdownPosition}
             theme={theme}
             style={props.style}
