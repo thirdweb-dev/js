@@ -1,4 +1,3 @@
-import redirects from "../../redirects";
 import { useMainnetsContractList } from "@3rdweb-sdk/react";
 import { Box, Flex, Spinner } from "@chakra-ui/react";
 import { DehydratedState, QueryClient, dehydrate } from "@tanstack/react-query";
@@ -191,11 +190,6 @@ const UserPage: ThirdwebNextPage = (props: UserPageProps) => {
     </>
   );
 };
-
-// const AppLayout = dynamic(
-//   async () => (await import("components/app-layouts/app")).AppLayout,
-// );
-
 UserPage.getLayout = function getLayout(page, props) {
   return (
     <AppLayout {...props} noSEOOverride>
@@ -216,11 +210,6 @@ UserPage.fallback = (
 UserPage.pageId = PageId.Profile;
 
 export default UserPage;
-
-const possibleRedirects = redirects().filter(
-  (r) => r.source.split("/").length === 2,
-);
-
 export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
   const queryClient = new QueryClient();
 
@@ -231,34 +220,11 @@ export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
 
   const profileAddress = getSingleQueryValue(ctx.params, "profileAddress");
 
-  const foundRedirect = possibleRedirects.find(
-    (r) => r.source.split("/")[1] === profileAddress,
-  );
-
-  if (foundRedirect) {
-    return {
-      redirect: {
-        destination: foundRedirect.destination,
-        permanent: foundRedirect.permanent,
-      },
-    };
-  }
-
   if (!profileAddress) {
     return {
       redirect: {
         destination: "/explore",
         permanent: false,
-      },
-    };
-  }
-
-  // handle deployer.thirdweb.eth urls
-  if (profileAddress === "deployer.thirdweb.eth") {
-    return {
-      redirect: {
-        destination: "/thirdweb.eth",
-        permanent: true,
       },
     };
   }
