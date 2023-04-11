@@ -491,6 +491,7 @@ export async function deployContractDeterministicRaw(
 export async function deployContractDeterministic(
   signer: Signer,
   transaction: PrecomputedDeploymentTransaction,
+  options?: DeployOptions,
   gasLimit: number = 7000000,
 ) {
   // Check if the implementation contract is already deployed
@@ -512,7 +513,9 @@ export async function deployContractDeterministic(
       console.debug("error estimating gas while deploying prebuilt: ", e);
       tx.gasLimit = BigNumber.from(gasLimit);
     }
+    options?.notifier?.("deploying", "preset");
     await (await signer.sendTransaction(tx)).wait();
+    options?.notifier?.("deployed", "preset");
   }
 }
 

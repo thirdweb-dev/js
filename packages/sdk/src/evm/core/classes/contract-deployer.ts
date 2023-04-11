@@ -7,7 +7,6 @@ import {
   createTransactionBatches,
   deployContractDeterministic,
   deployWithThrowawayDeployer,
-  estimateGasForDeploy,
   fetchAndCacheDeployMetadata,
   getCreate2FactoryAddress,
   getDeploymentInfo,
@@ -870,7 +869,7 @@ export class ContractDeployer extends RPCConnectionHandler {
           // send each transaction directly to Create2 factory
           await Promise.all(
             transactionsforDirectDeploy.map((tx) => {
-              return deployContractDeterministic(signer, tx);
+              return deployContractDeterministic(signer, tx, options);
             }),
           );
 

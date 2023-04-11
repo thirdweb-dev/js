@@ -1,6 +1,6 @@
 import { NATIVE_TOKEN_ADDRESS, ThirdwebSDK } from "../../src/evm";
 import { SmartContract } from "../../src/evm/contracts/smart-contract";
-import { signers } from "./before-setup";
+import { jsonProvider, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect, assert } from "chai";
 import { ethers } from "ethers";
@@ -90,16 +90,17 @@ describe("Any EVM Keyless Deploy", async () => {
     sdk = new ThirdwebSDK(adminWallet);
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
+    await jsonProvider.send("hardhat_reset", []);
   });
 
   it("correct count of logs and transactions", async () => {
     notificationCounter = 0;
     transactionCount = 0;
     contract = await deployTieredDrop();
-    expect(notificationCounter).to.lessThanOrEqual(6);
-    expect(transactionCount).to.lessThanOrEqual(4);
+    expect(notificationCounter).to.equal(8);
+    expect(transactionCount).to.equal(4);
 
     notificationCounter = 0;
     transactionCount = 0;
@@ -112,9 +113,8 @@ describe("Any EVM Keyless Deploy", async () => {
     notificationCounter = 0;
     transactionCount = 0;
     const marketplace = await deployMarketplaceV3();
-
-    expect(notificationCounter).to.lessThanOrEqual(6);
-    expect(transactionCount).to.greaterThanOrEqual(3);
+    expect(notificationCounter).to.greaterThanOrEqual(12);
+    expect(transactionCount).to.greaterThanOrEqual(6);
 
     let plugins = await marketplace.call("getAllPlugins");
     let allPlugins = plugins.map((item: any) => item.pluginAddress);
