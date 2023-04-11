@@ -328,6 +328,7 @@ import c1701 from "../chains/1701";
 import c1707 from "../chains/1707";
 import c1708 from "../chains/1708";
 import c1718 from "../chains/1718";
+import c1773 from "../chains/1773";
 import c1804 from "../chains/1804";
 import c1807 from "../chains/1807";
 import c1818 from "../chains/1818";
@@ -467,6 +468,7 @@ import c7070 from "../chains/7070";
 import c7331 from "../chains/7331";
 import c7341 from "../chains/7341";
 import c7575 from "../chains/7575";
+import c7576 from "../chains/7576";
 import c7668 from "../chains/7668";
 import c7672 from "../chains/7672";
 import c7700 from "../chains/7700";
@@ -727,6 +729,7 @@ import c420666 from "../chains/420666";
 import c421611 from "../chains/421611";
 import c421613 from "../chains/421613";
 import c424242 from "../chains/424242";
+import c431140 from "../chains/431140";
 import c432201 from "../chains/432201";
 import c432204 from "../chains/432204";
 import c444900 from "../chains/444900";
@@ -757,6 +760,7 @@ import c1337803 from "../chains/1337803";
 import c2099156 from "../chains/2099156";
 import c2206132 from "../chains/2206132";
 import c3141592 from "../chains/3141592";
+import c5167003 from "../chains/5167003";
 import c5555555 from "../chains/5555555";
 import c5555558 from "../chains/5555558";
 import c7225878 from "../chains/7225878";
@@ -1160,6 +1164,7 @@ export const AnytypeEvmChain = c1701;
 export const Tbsi = c1707;
 export const TbsiTestnet = c1708;
 export const PaletteChain = c1718;
+export const Partychain = c1773;
 export const Kerleano = c1804;
 export const RabbitAnalogTestnetChain = c1807;
 export const CubeChain = c1818;
@@ -1299,6 +1304,7 @@ export const Planq = c7070;
 export const Klyntar = c7331;
 export const Shyft = c7341;
 export const AdilTestnet = c7575;
+export const Adil = c7576;
 export const TheRootNetwork = c7668;
 export const TheRootNetworkPorciniTestnet = c7672;
 export const Canto = c7700;
@@ -1314,7 +1320,7 @@ export const ShardeumLiberty2X = c8081;
 export const ShardeumSphinx1X = c8082;
 export const StreamuxBlockchain = c8098;
 export const QitmeerNetworkTestnet = c8131;
-export const QitmeerNetworkMixnext = c8132;
+export const QitmeerNetworkMixnet = c8132;
 export const QitmeerNetworkPrivnet = c8133;
 export const Amana = c8134;
 export const Flana = c8135;
@@ -1559,6 +1565,7 @@ export const KekchainKektest = c420666;
 export const ArbitrumRinkeby = c421611;
 export const ArbitrumGoerli = c421613;
 export const FastexChainTestnet = c424242;
+export const MarkrGo = c431140;
 export const DexalotSubnetTestnet = c432201;
 export const DexalotSubnet = c432204;
 export const WeelinkTestnet = c444900;
@@ -1589,6 +1596,7 @@ export const Zhejiang = c1337803;
 export const PlianMain = c2099156;
 export const PlatonDevTestnet2 = c2206132;
 export const FilecoinButterflyTestnet = c3141592;
+export const MxcWannseeZkevmTestnet = c5167003;
 export const Imversed = c5555555;
 export const ImversedTestnet = c5555558;
 export const Saakuru = c7225878;
@@ -1663,7 +1671,7 @@ export const Localhost = c1337;
 export * from "./types";
 export * from "./utils";
 export const defaultChains = [Ethereum, Goerli, Polygon, Mumbai, Arbitrum, ArbitrumGoerli, Optimism, OptimismGoerli, Binance, BinanceTestnet, Fantom, FantomTestnet, Avalanche, AvalancheFuji, Localhost];
-export const allChains = [Ethereum, ExpanseNetwork, Ropsten, Rinkeby, Goerli, EthereumClassicTestnetKotti, Thaichain, Ubiq, UbiqNetworkTestnet, Optimism, Metadium, MetadiumTestnet, DiodeTestnetStaging, Flare, DiodePrenet, FlareTestnetCoston, Thaichain20Thaifi, ThundercoreTestnet, SongbirdCanaryNetwork, ElastosSmartChain, ElastosSmartChainTestnet, ElaDidSidechain, ElaDidSidechainTestnet, Kardiachain, CronosBeta, GenesisL1Testnet, Shibachain, BobaNetworkRinkebyTestnet, GenesisL1, Rsk, RskTestnet, GooddataTestnet, Gooddata, DithereumTestnet, TbwgChain, Dxchain, SeedcoinNetwork, Valorbit, UnicornUltraTestnet, TelosEvm, TelosEvmTestnet, Kovan, DarwiniaPangolinTestnet, DarwiniaCrabNetwork, DarwiniaPangoroTestnet, DarwiniaNetwork, AcriaIntellichain, EnnothemProterozoic, EnnothemTestnetPioneer, XinfinXdcNetwork, XdcApothemNetwork, CoinexSmartChain, CoinexSmartChainTestnet, Openpiece, Zyx, Binance, Syscoin, Ontology, Eos, Gochain, EthereumClassic, EthereumClassicTestnetMorden, EthereumClassicTestnetMordor, Ellaism, OkexchainTestnet, Okxchain, DbchainTestnet, Soterone, OptimismKovan, HooSmartChain, ConfluxEspaceTestnet, DxchainTestnet, Fncy, Idchain, DecimalSmartChain, Mix, PoaNetworkSokol, Primuschain, Zenith, Genechain, ZenithTestnetVilnius, Meter, MeterTestnet, GatechainTestnet, Gatechain, NovaNetwork, Tomochain, TomochainTestnet, GarizonStage0, GarizonStage1, GarizonStage2, GarizonStage3, CryptokylinTestnet, BitkubChain, BinanceTestnet, PoaNetworkCore, Gnosis, Etherinc, Web3gamesTestnet, KaibaLightningChainTestnet, Web3gamesDevnet, VelasEvm, NebulaTestnet, Thundercore, ProtonTestnet, EtherliteChain, Dehvo, FlareTestnetCoston2, DebankTestnet, Debank, Uptick, ArcologyTestnet, Enuls, EnulsTestnet, Realchain, Fuse, FuseSparknet, DecentralizedWeb, OychainTestnet, Oychain, Factory127, HuobiEcoChain, IexecSidechain, AlyxChainTestnet, Polygon, DefiOracleMeta, Woopchain, OpenpieceTestnet, DaxChain, PhiNetworkV2, ArmoniaEvaChain, ArmoniaEvaChainTestnet, LightstreamsTestnet, Lightstreams, AtoshiTestnet, AiozNetwork, HooSmartChainTestnet, LatamBlockchainResilTestnet, AmeChain, Seele, Bmc, BmcTestnet, CryptoEmergency, OkbchainTestnet, Okbchain, NeutrinosTestnet, BittorrentChain, ArbitrumOnXdai, MoacTestnet, FreightTrustNetwork, MapMakalu, SiriusnetV2, Lachain, LachainTestnet, EnergyWebChain, Oasys, Fantom, HuobiEcoChainTestnet, Setheum, SurBlockchainNetwork, HighPerformanceBlockchain, ZksyncEraTestnet, BobaNetwork, Hedera, HederaTestnet, HederaPreviewnet, HederaLocalnet, OptimismOnGnosis, Bobaopera, Omax, Filecoin, Kcc, KccTestnet, ZksyncEra, Web3q, DfkChainTest, Shiden, CronosTestnet, Theta, ThetaSapphireTestnet, ThetaAmberTestnet, ThetaTestnet, Pulsechain, ConstaTestnet, Lisinski, HyperonchainTestnet, SxNetwork, LaTestnet, OptimismGoerli, ZeethChain, FrenchainTestnet, Rupaya, CaminoCChain, ColumbusTestNetwork, DoubleAChain, DoubleAChainTestnet, GearZeroNetwork, XtSmartChain, Firechain, FXCoreNetwork, Candle, Vela1Chain, TaoNetwork, DogechainTestnet, Astar, AcalaMandalaTestnet, KaruraNetworkTestnet, AcalaNetworkTestnet, MetisGoerliTestnet, MeshnyanTestnet, GraphlinqBlockchain, SxNetworkTestnet, EnduranceSmartChain, PixieChainTestnet, KaruraNetwork, StarSocialTestnet, BlockchainStation, BlockchainStationTestnet, LycanChain, VentionSmartChainTestnet, Ql1, OpenchainTestnet, Cheapeth, AcalaNetwork, AerochainTestnet, LucidBlockchain, Haic, PortalFantasyChainTest, Qitmeer, BeoneChain, Callisto, Taraxa, TaraxaTestnet, ZeethChainDev, FantasiaChain, BandaiNamcoResearchVerse, DexitNetwork, AmbrosChain, Wanchain, GarizonTestnetStage0, GarizonTestnetStage1, GarizonTestnetStage2, GarizonTestnetStage3, PortalFantasyChain, DecentraboneLayer1Testnet, RiniaTestnet, PulsechainTestnet, PulsechainTestnetV2b, PulsechainTestnetV3, MunodeTestnet, Oort, OortHuygens, OortAscraeus, NepalBlockchainNetwork, TopEvm, MemoSmartChain, Top, LuckyNetwork, WanchainTestnet, Gton, KlaytnTestnetBaobab, TEkta, NewtonTestnet, Eurus, EvriceNetwork, Newton, Sakura, CloverTestnet, ClvParachain, BittorrentChainTestnet, ConfluxEspace, ProxyNetworkTestnet, BronosTestnet, Bronos, ShimmerevmTestnet, MetisAndromeda, Moac, PolygonZkevm, Wemix30, Wemix30Testnet, CoreBlockchainTestnet, CoreBlockchain, Dogcoin, DefichainEvmNetwork, DefichainEvmNetworkTestnet, AmstarTestnet, Mathchain, MathchainTestnet, SmartHostTeknolojiTestnet, IoraChain, EvanescoTestnet, WorldTradeTechnicalChain, Popcateum, Enterchain, ExzoNetwork, UltronTestnet, Ultron, StepNetwork, OmPlatform, CicChainTestnet, Halo, Moonbeam, Moonriver, MoonbaseAlpha, Moonrock, Bobabeam, BobabaseTestnet, DosFujiSubnet, Alyx, Aitd, AitdTestnet, ElysiumTestnet, Elysium, CicChain, Amstar, RikezaNetwork, PolygonZkevmTestnet, CtexScanBlockchain, Sherpax, SherpaxTestnet, BeagleMessagingChain, CatecoinChain, Atheios, Btachain, HorizenYumaTestnet, Ludan, AnytypeEvmChain, Tbsi, TbsiTestnet, PaletteChain, Kerleano, RabbitAnalogTestnetChain, CubeChain, CubeChainTestnet, Teslafunds, GitshockCartenzTestnet, LightlinkPhoenix, LightlinkPegasusTestnet, BonNetwork, Bitcichain, BitcichainTestnet, OnusChainTestnet, DChain, DexillaTestnet, Eleanor, SuperSmartChainTestnet, SuperSmartChain, Atelier, OnusChain, EurusTestnet, Ethergem, Ekta, EdexaTestnet, Dogechain, MilkomedaC1, MilkomedaA1, CloudwalkTestnet, Cloudwalk, ZMainnet, PublicmintDevnet, PublicmintTestnet, Publicmint, EdgewareEdgeevm, BeresheetBereevmTestnet, TaycanTestnet, RangersProtocol, OrigintrailParachain, StratosTestnet, Stratos, Quokkacoin, Ecoball, EcoballTestnetEspuma, ExosamaNetwork, Metaplayerone, DefiOracleMetaTestnet, Bosagora, Findora, FindoraTestnet, FindoraForge, BitcoinEvm, Evanesco, KavaEvmTestnet, KavaEvm, Vchain, BombChain, Arevia, Altcoinchain, WemixKanvasSepolia, BombChainTestnet, TcgVerse, Xodex, Kortho, Techpay, Pocrnet, RedlightChain, EzchainCChain, EzchainCChainTestnet, BobaNetworkGoerliTestnet, Bityuan, CennznetRata, CennznetNikau, OrlandoChain, Bifrost, FilecoinHyperspaceTestnet, DebounceSubnetTestnet, ZcoreTestnet, Web3qTestnet, Web3qGalileo, ParibuNet, ParibuNetTestnet, JfinChain, Pandoproject, PandoprojectTestnet, Metacodechain, Bittex, EmpireNetwork, Crossbell, Alveychain, DracNetwork, DosTesnet, Dyno, DynoTestnet, Yuanchain, FantomTestnet, BobaoperaTestnet, Nahmii3, Nahmii3Testnet, BitindiTestnet, Bitindi, AiozNetworkTestnet, TipboxcoinTestnet, PhiNetworkV1, Nexi, BobafujiTestnet, Htmlcoin, IotexNetwork, IotexNetworkTestnet, BlackfortExchangeNetworkTestnet, VenidiumTestnet, Venidium, BlackfortExchangeNetwork, Mantle, MantleTestnet, TlchainNetwork, Eraswap, Humanode, UzmiNetwork, Nahmii, NahmiiTestnet, ChainVerse, SyscoinTanenbaumTestnet, HikaNetworkTestnet, Ganache, OntologyTestnet, WegochainRubidium, TresTestnet, Tres, ScolcoinWeichainTestnet, PixieChain, GoldSmartChain, TombChain, Polysmartchain, Zetachain, ZetachainAthensTestnet, EllaTheHeart, Planq, Klyntar, Shyft, AdilTestnet, TheRootNetwork, TheRootNetworkPorciniTestnet, Canto, CantoTesnet, RiseOfTheWarbotsTestnet, HazlorTestnet, DosChain, Teleport, TeleportTestnet, MdglTestnet, ShardeumLiberty1X, ShardeumLiberty2X, ShardeumSphinx1X, StreamuxBlockchain, QitmeerNetworkTestnet, QitmeerNetworkMixnext, QitmeerNetworkPrivnet, Amana, Flana, Mizana, BeoneChainTestnet, KlaytnCypress, BlocktonBlockchain, Korthotest, DraconesFinancialServices, Base, TokiNetwork, TokiTestnet, ToolGlobal, ToolGlobalTestnet, AlphNetwork, TmyChain, MaroBlockchain, Unique, QuartzByUnique, OpalTestnetByUnique, SapphireByUnique, Xanachain, VyvoSmartChain, Mammoth, JibchainL1, GiantMammoth, Bloxberg, EvmosTestnet, Evmos, Berylbit, GenesisCoin, DogcoinTestnet, RangersProtocolTestnetRobin, Qeasyweb3Testnet, OortDev, BobaBnbTestnet, ZTestnet, MyownTestnet, SmartBitcoinCash, SmartBitcoinCashTestnet, GonChain, Sjatsh, BlockchainGenesis, ChiadoTestnet, _0xtade, Numbers, NumbersTestnet, Cryptocoinpay, QuadransBlockchain, QuadransBlockchainTestnet, Astra, Wagmi, AstraTestnet, Hashbit, HaqqNetwork, ShyftTestnet, SardisTestnet, SanrChain, SingularityZeroTestnet, SingularityZero, Fibonacci, BlgTestnet, StepTestnet, RikezaNetworkTestnet, Sps, CreditSmartchain, Phoenix, Susono, SpsTestnet, Loopnetwork, TrustEvmTestnet, Metadot, MetadotTestnet, Airdao, IvarChainTestnet, FrontierOfDreamsTestnet, ProofOfMemes, HomeVerse, BtcixNetwork, Camelark, CallistoTestnet, P12Chain, CennznetAzalea, Omchain, Taycan, AirdaoTestnet, Map, OpsideTestnet, OasisSapphire, OasisSapphireTestnet, Webchain, MintmeComCoin, HammerChain, BitkubChainTestnet, HertzNetwork, Oasischain, OptimismBedrockGoerliAlphaTestnet, PieceTestnet, EthersocialNetwork, Cloudtx, CloudtxTestnet, GochainTestnet, FilecoinWallabyTestnet, Bitgert, Fusion, ZilliqaEvmTestnet, Aves, J2oTaro, Q, QTestnet, Energi, Oho, OpulentXBeta, Pegglecoin, Arbitrum, ArbitrumNova, Celo, OasisEmeraldTestnet, OasisEmerald, Athereum, AvalancheFuji, Avalanche, BobaAvax, Frenchain, CeloAlfajoresTestnet, AutobahnNetwork, FusionTestnet, ReiNetwork, Floripa, BifrostTestnet, EnergiTestnet, LiveplexOracleevm, GtonTestnet, Sardis, DfkChain, HaqqChainTestnet, ReiChain, ReiChainTestnet, BobaBnb, SyscoinRolluxTestnet, LineaTestnet, ThinkiumTestnetChain0, ThinkiumTestnetChain1, ThinkiumTestnetChain2, ThinkiumTestnetChain103, Etica, DokenSuperChain, CeloBaklavaTestnet, Multivac, Ecredits, EcreditsTestnet, Scolcoin, Condrieu, ThinkiumChain0, ThinkiumChain1, ThinkiumChain2, ThinkiumChain103, PolyjuiceTestnet, GodwokenTestnetV1, Godwoken, EnergyWebVoltaTestnet, MixinVirtualMachine, Resincoin, VentionSmartChain, FirenzeTestNetwork, GoldSmartChainTestnet, Mumbai, AmanaTestnet, AmanaMixnet, AmanaPrivnet, FlanaTestnet, FlanaMixnet, FlanaPrivnet, MizanaTestnet, MizanaMixnet, MizanaPrivnet, BaseGoerli, Cybertrust, ChilizScovilleTestnet, IvarChain, BeverlyHills, LambdaTestnet, UbSmartChainTestnet, UbSmartChain, QuarkchainRoot, QuarkchainShard0, QuarkchainShard1, QuarkchainShard2, QuarkchainShard3, QuarkchainShard4, QuarkchainShard5, QuarkchainShard6, QuarkchainShard7, Vechain, VechainTestnet, SoverunTestnet, Crystaleum, Brochain, QuarkchainDevnetRoot, QuarkchainDevnetShard0, QuarkchainDevnetShard1, QuarkchainDevnetShard2, QuarkchainDevnetShard3, QuarkchainDevnetShard4, QuarkchainDevnetShard5, QuarkchainDevnetShard6, QuarkchainDevnetShard7, SiberiumNetwork, AdilDevnet, EtndChainS, TaikoAlpha2Testnet, CondorTestNetwork, MilkomedaC1Testnet, MilkomedaA1Testnet, Akroma, Alaya, AlayaDevTestnet, MythicalChain, DecimalSmartChainTestnet, Jellie, Platon, Mas, TafEcoChain, HashkeyChainTestnet, HaymoTestnet, ArtisSigma1, ArtisTestnetTau1, SaakuruTestnet, Cmp, GearZeroNetworkTestnet, SocialSmartChain, FilecoinCalibrationTestnet, OoneChainTestnet, PolisTestnet, Polis, HapchainTestnet, MetalCChain, MetalTahoeCChain, Tipboxcoin, Kekchain, KekchainKektest, ArbitrumRinkeby, ArbitrumGoerli, FastexChainTestnet, DexalotSubnetTestnet, DexalotSubnet, WeelinkTestnet, Openchain, CmpTestnet, EthereumFair, Scroll, ScrollAlphaTestnet, ScrollPreAlphaTestnet, BeanecoSmartchain, BearNetworkChain, VisionVpioneerTestChain, BearNetworkChainTestnet, Octaspace, _4goodnetwork, Vision, PosichainShard0, PosichainTestnetShard0, PosichainDevnetShard0, PosichainDevnetShard1, FncyTestnet, EluvioContentFabric, EthoProtocol, Xerom, Kintsugi, Kiln, Zhejiang, PlianMain, PlatonDevTestnet2, FilecoinButterflyTestnet, Imversed, ImversedTestnet, Saakuru, Openvessel, Ql1Testnet, Musicoin, PlianSubchain1, Hapchain, QuarixTestnet, Quarix, PlianTestnetSubchain1, Soverun, Sepolia, PepchainChurchill, Anduschain, PlianTestnetMain, Iolite, Smartmesh, Quarkblockchain, Excelon, ExcoincialChainVoltaTestnet, ExcoincialChain, AuxiliumNetwork, Flachain, FilecoinLocalTestnet, JoysDigital, Maistestsubnet, Aquachain, AutonityBakerlooThamesTestnet, AutonityPiccadillyThamesTestnet, TEAMBlockchain, JoysDigitalTestnet, GatherNetwork, NeonEvmDevnet, NeonEvm, NeonEvmTestnet, Oneledger, CalypsoNftHubSkaleTestnet, GatherTestnetNetwork, GatherDevnetNetwork, NebulaStaging, IposNetwork, Cyberdecknet, HumanProtocol, Aurora, AuroraTestnet, AuroraBetanet, Raptorchain, Nebula, CalypsoNftHubSkale, HarmonyShard0, HarmonyShard1, HarmonyShard2, HarmonyShard3, HarmonyTestnetShard0, HarmonyTestnetShard1, HarmonyTestnetShard2, HarmonyTestnetShard3, HarmonyDevnetShard0, Datahopper, EuropaSkaleChain, Pirl, OneledgerTestnetFrankenstein, PalmTestnet, Palm, Ntity, HaradevTestnet, Zeniq, Pdc, MolereumNetwork, Localhost];
+export const allChains = [Ethereum, ExpanseNetwork, Ropsten, Rinkeby, Goerli, EthereumClassicTestnetKotti, Thaichain, Ubiq, UbiqNetworkTestnet, Optimism, Metadium, MetadiumTestnet, DiodeTestnetStaging, Flare, DiodePrenet, FlareTestnetCoston, Thaichain20Thaifi, ThundercoreTestnet, SongbirdCanaryNetwork, ElastosSmartChain, ElastosSmartChainTestnet, ElaDidSidechain, ElaDidSidechainTestnet, Kardiachain, CronosBeta, GenesisL1Testnet, Shibachain, BobaNetworkRinkebyTestnet, GenesisL1, Rsk, RskTestnet, GooddataTestnet, Gooddata, DithereumTestnet, TbwgChain, Dxchain, SeedcoinNetwork, Valorbit, UnicornUltraTestnet, TelosEvm, TelosEvmTestnet, Kovan, DarwiniaPangolinTestnet, DarwiniaCrabNetwork, DarwiniaPangoroTestnet, DarwiniaNetwork, AcriaIntellichain, EnnothemProterozoic, EnnothemTestnetPioneer, XinfinXdcNetwork, XdcApothemNetwork, CoinexSmartChain, CoinexSmartChainTestnet, Openpiece, Zyx, Binance, Syscoin, Ontology, Eos, Gochain, EthereumClassic, EthereumClassicTestnetMorden, EthereumClassicTestnetMordor, Ellaism, OkexchainTestnet, Okxchain, DbchainTestnet, Soterone, OptimismKovan, HooSmartChain, ConfluxEspaceTestnet, DxchainTestnet, Fncy, Idchain, DecimalSmartChain, Mix, PoaNetworkSokol, Primuschain, Zenith, Genechain, ZenithTestnetVilnius, Meter, MeterTestnet, GatechainTestnet, Gatechain, NovaNetwork, Tomochain, TomochainTestnet, GarizonStage0, GarizonStage1, GarizonStage2, GarizonStage3, CryptokylinTestnet, BitkubChain, BinanceTestnet, PoaNetworkCore, Gnosis, Etherinc, Web3gamesTestnet, KaibaLightningChainTestnet, Web3gamesDevnet, VelasEvm, NebulaTestnet, Thundercore, ProtonTestnet, EtherliteChain, Dehvo, FlareTestnetCoston2, DebankTestnet, Debank, Uptick, ArcologyTestnet, Enuls, EnulsTestnet, Realchain, Fuse, FuseSparknet, DecentralizedWeb, OychainTestnet, Oychain, Factory127, HuobiEcoChain, IexecSidechain, AlyxChainTestnet, Polygon, DefiOracleMeta, Woopchain, OpenpieceTestnet, DaxChain, PhiNetworkV2, ArmoniaEvaChain, ArmoniaEvaChainTestnet, LightstreamsTestnet, Lightstreams, AtoshiTestnet, AiozNetwork, HooSmartChainTestnet, LatamBlockchainResilTestnet, AmeChain, Seele, Bmc, BmcTestnet, CryptoEmergency, OkbchainTestnet, Okbchain, NeutrinosTestnet, BittorrentChain, ArbitrumOnXdai, MoacTestnet, FreightTrustNetwork, MapMakalu, SiriusnetV2, Lachain, LachainTestnet, EnergyWebChain, Oasys, Fantom, HuobiEcoChainTestnet, Setheum, SurBlockchainNetwork, HighPerformanceBlockchain, ZksyncEraTestnet, BobaNetwork, Hedera, HederaTestnet, HederaPreviewnet, HederaLocalnet, OptimismOnGnosis, Bobaopera, Omax, Filecoin, Kcc, KccTestnet, ZksyncEra, Web3q, DfkChainTest, Shiden, CronosTestnet, Theta, ThetaSapphireTestnet, ThetaAmberTestnet, ThetaTestnet, Pulsechain, ConstaTestnet, Lisinski, HyperonchainTestnet, SxNetwork, LaTestnet, OptimismGoerli, ZeethChain, FrenchainTestnet, Rupaya, CaminoCChain, ColumbusTestNetwork, DoubleAChain, DoubleAChainTestnet, GearZeroNetwork, XtSmartChain, Firechain, FXCoreNetwork, Candle, Vela1Chain, TaoNetwork, DogechainTestnet, Astar, AcalaMandalaTestnet, KaruraNetworkTestnet, AcalaNetworkTestnet, MetisGoerliTestnet, MeshnyanTestnet, GraphlinqBlockchain, SxNetworkTestnet, EnduranceSmartChain, PixieChainTestnet, KaruraNetwork, StarSocialTestnet, BlockchainStation, BlockchainStationTestnet, LycanChain, VentionSmartChainTestnet, Ql1, OpenchainTestnet, Cheapeth, AcalaNetwork, AerochainTestnet, LucidBlockchain, Haic, PortalFantasyChainTest, Qitmeer, BeoneChain, Callisto, Taraxa, TaraxaTestnet, ZeethChainDev, FantasiaChain, BandaiNamcoResearchVerse, DexitNetwork, AmbrosChain, Wanchain, GarizonTestnetStage0, GarizonTestnetStage1, GarizonTestnetStage2, GarizonTestnetStage3, PortalFantasyChain, DecentraboneLayer1Testnet, RiniaTestnet, PulsechainTestnet, PulsechainTestnetV2b, PulsechainTestnetV3, MunodeTestnet, Oort, OortHuygens, OortAscraeus, NepalBlockchainNetwork, TopEvm, MemoSmartChain, Top, LuckyNetwork, WanchainTestnet, Gton, KlaytnTestnetBaobab, TEkta, NewtonTestnet, Eurus, EvriceNetwork, Newton, Sakura, CloverTestnet, ClvParachain, BittorrentChainTestnet, ConfluxEspace, ProxyNetworkTestnet, BronosTestnet, Bronos, ShimmerevmTestnet, MetisAndromeda, Moac, PolygonZkevm, Wemix30, Wemix30Testnet, CoreBlockchainTestnet, CoreBlockchain, Dogcoin, DefichainEvmNetwork, DefichainEvmNetworkTestnet, AmstarTestnet, Mathchain, MathchainTestnet, SmartHostTeknolojiTestnet, IoraChain, EvanescoTestnet, WorldTradeTechnicalChain, Popcateum, Enterchain, ExzoNetwork, UltronTestnet, Ultron, StepNetwork, OmPlatform, CicChainTestnet, Halo, Moonbeam, Moonriver, MoonbaseAlpha, Moonrock, Bobabeam, BobabaseTestnet, DosFujiSubnet, Alyx, Aitd, AitdTestnet, ElysiumTestnet, Elysium, CicChain, Amstar, RikezaNetwork, PolygonZkevmTestnet, CtexScanBlockchain, Sherpax, SherpaxTestnet, BeagleMessagingChain, CatecoinChain, Atheios, Btachain, HorizenYumaTestnet, Ludan, AnytypeEvmChain, Tbsi, TbsiTestnet, PaletteChain, Partychain, Kerleano, RabbitAnalogTestnetChain, CubeChain, CubeChainTestnet, Teslafunds, GitshockCartenzTestnet, LightlinkPhoenix, LightlinkPegasusTestnet, BonNetwork, Bitcichain, BitcichainTestnet, OnusChainTestnet, DChain, DexillaTestnet, Eleanor, SuperSmartChainTestnet, SuperSmartChain, Atelier, OnusChain, EurusTestnet, Ethergem, Ekta, EdexaTestnet, Dogechain, MilkomedaC1, MilkomedaA1, CloudwalkTestnet, Cloudwalk, ZMainnet, PublicmintDevnet, PublicmintTestnet, Publicmint, EdgewareEdgeevm, BeresheetBereevmTestnet, TaycanTestnet, RangersProtocol, OrigintrailParachain, StratosTestnet, Stratos, Quokkacoin, Ecoball, EcoballTestnetEspuma, ExosamaNetwork, Metaplayerone, DefiOracleMetaTestnet, Bosagora, Findora, FindoraTestnet, FindoraForge, BitcoinEvm, Evanesco, KavaEvmTestnet, KavaEvm, Vchain, BombChain, Arevia, Altcoinchain, WemixKanvasSepolia, BombChainTestnet, TcgVerse, Xodex, Kortho, Techpay, Pocrnet, RedlightChain, EzchainCChain, EzchainCChainTestnet, BobaNetworkGoerliTestnet, Bityuan, CennznetRata, CennznetNikau, OrlandoChain, Bifrost, FilecoinHyperspaceTestnet, DebounceSubnetTestnet, ZcoreTestnet, Web3qTestnet, Web3qGalileo, ParibuNet, ParibuNetTestnet, JfinChain, Pandoproject, PandoprojectTestnet, Metacodechain, Bittex, EmpireNetwork, Crossbell, Alveychain, DracNetwork, DosTesnet, Dyno, DynoTestnet, Yuanchain, FantomTestnet, BobaoperaTestnet, Nahmii3, Nahmii3Testnet, BitindiTestnet, Bitindi, AiozNetworkTestnet, TipboxcoinTestnet, PhiNetworkV1, Nexi, BobafujiTestnet, Htmlcoin, IotexNetwork, IotexNetworkTestnet, BlackfortExchangeNetworkTestnet, VenidiumTestnet, Venidium, BlackfortExchangeNetwork, Mantle, MantleTestnet, TlchainNetwork, Eraswap, Humanode, UzmiNetwork, Nahmii, NahmiiTestnet, ChainVerse, SyscoinTanenbaumTestnet, HikaNetworkTestnet, Ganache, OntologyTestnet, WegochainRubidium, TresTestnet, Tres, ScolcoinWeichainTestnet, PixieChain, GoldSmartChain, TombChain, Polysmartchain, Zetachain, ZetachainAthensTestnet, EllaTheHeart, Planq, Klyntar, Shyft, AdilTestnet, Adil, TheRootNetwork, TheRootNetworkPorciniTestnet, Canto, CantoTesnet, RiseOfTheWarbotsTestnet, HazlorTestnet, DosChain, Teleport, TeleportTestnet, MdglTestnet, ShardeumLiberty1X, ShardeumLiberty2X, ShardeumSphinx1X, StreamuxBlockchain, QitmeerNetworkTestnet, QitmeerNetworkMixnet, QitmeerNetworkPrivnet, Amana, Flana, Mizana, BeoneChainTestnet, KlaytnCypress, BlocktonBlockchain, Korthotest, DraconesFinancialServices, Base, TokiNetwork, TokiTestnet, ToolGlobal, ToolGlobalTestnet, AlphNetwork, TmyChain, MaroBlockchain, Unique, QuartzByUnique, OpalTestnetByUnique, SapphireByUnique, Xanachain, VyvoSmartChain, Mammoth, JibchainL1, GiantMammoth, Bloxberg, EvmosTestnet, Evmos, Berylbit, GenesisCoin, DogcoinTestnet, RangersProtocolTestnetRobin, Qeasyweb3Testnet, OortDev, BobaBnbTestnet, ZTestnet, MyownTestnet, SmartBitcoinCash, SmartBitcoinCashTestnet, GonChain, Sjatsh, BlockchainGenesis, ChiadoTestnet, _0xtade, Numbers, NumbersTestnet, Cryptocoinpay, QuadransBlockchain, QuadransBlockchainTestnet, Astra, Wagmi, AstraTestnet, Hashbit, HaqqNetwork, ShyftTestnet, SardisTestnet, SanrChain, SingularityZeroTestnet, SingularityZero, Fibonacci, BlgTestnet, StepTestnet, RikezaNetworkTestnet, Sps, CreditSmartchain, Phoenix, Susono, SpsTestnet, Loopnetwork, TrustEvmTestnet, Metadot, MetadotTestnet, Airdao, IvarChainTestnet, FrontierOfDreamsTestnet, ProofOfMemes, HomeVerse, BtcixNetwork, Camelark, CallistoTestnet, P12Chain, CennznetAzalea, Omchain, Taycan, AirdaoTestnet, Map, OpsideTestnet, OasisSapphire, OasisSapphireTestnet, Webchain, MintmeComCoin, HammerChain, BitkubChainTestnet, HertzNetwork, Oasischain, OptimismBedrockGoerliAlphaTestnet, PieceTestnet, EthersocialNetwork, Cloudtx, CloudtxTestnet, GochainTestnet, FilecoinWallabyTestnet, Bitgert, Fusion, ZilliqaEvmTestnet, Aves, J2oTaro, Q, QTestnet, Energi, Oho, OpulentXBeta, Pegglecoin, Arbitrum, ArbitrumNova, Celo, OasisEmeraldTestnet, OasisEmerald, Athereum, AvalancheFuji, Avalanche, BobaAvax, Frenchain, CeloAlfajoresTestnet, AutobahnNetwork, FusionTestnet, ReiNetwork, Floripa, BifrostTestnet, EnergiTestnet, LiveplexOracleevm, GtonTestnet, Sardis, DfkChain, HaqqChainTestnet, ReiChain, ReiChainTestnet, BobaBnb, SyscoinRolluxTestnet, LineaTestnet, ThinkiumTestnetChain0, ThinkiumTestnetChain1, ThinkiumTestnetChain2, ThinkiumTestnetChain103, Etica, DokenSuperChain, CeloBaklavaTestnet, Multivac, Ecredits, EcreditsTestnet, Scolcoin, Condrieu, ThinkiumChain0, ThinkiumChain1, ThinkiumChain2, ThinkiumChain103, PolyjuiceTestnet, GodwokenTestnetV1, Godwoken, EnergyWebVoltaTestnet, MixinVirtualMachine, Resincoin, VentionSmartChain, FirenzeTestNetwork, GoldSmartChainTestnet, Mumbai, AmanaTestnet, AmanaMixnet, AmanaPrivnet, FlanaTestnet, FlanaMixnet, FlanaPrivnet, MizanaTestnet, MizanaMixnet, MizanaPrivnet, BaseGoerli, Cybertrust, ChilizScovilleTestnet, IvarChain, BeverlyHills, LambdaTestnet, UbSmartChainTestnet, UbSmartChain, QuarkchainRoot, QuarkchainShard0, QuarkchainShard1, QuarkchainShard2, QuarkchainShard3, QuarkchainShard4, QuarkchainShard5, QuarkchainShard6, QuarkchainShard7, Vechain, VechainTestnet, SoverunTestnet, Crystaleum, Brochain, QuarkchainDevnetRoot, QuarkchainDevnetShard0, QuarkchainDevnetShard1, QuarkchainDevnetShard2, QuarkchainDevnetShard3, QuarkchainDevnetShard4, QuarkchainDevnetShard5, QuarkchainDevnetShard6, QuarkchainDevnetShard7, SiberiumNetwork, AdilDevnet, EtndChainS, TaikoAlpha2Testnet, CondorTestNetwork, MilkomedaC1Testnet, MilkomedaA1Testnet, Akroma, Alaya, AlayaDevTestnet, MythicalChain, DecimalSmartChainTestnet, Jellie, Platon, Mas, TafEcoChain, HashkeyChainTestnet, HaymoTestnet, ArtisSigma1, ArtisTestnetTau1, SaakuruTestnet, Cmp, GearZeroNetworkTestnet, SocialSmartChain, FilecoinCalibrationTestnet, OoneChainTestnet, PolisTestnet, Polis, HapchainTestnet, MetalCChain, MetalTahoeCChain, Tipboxcoin, Kekchain, KekchainKektest, ArbitrumRinkeby, ArbitrumGoerli, FastexChainTestnet, MarkrGo, DexalotSubnetTestnet, DexalotSubnet, WeelinkTestnet, Openchain, CmpTestnet, EthereumFair, Scroll, ScrollAlphaTestnet, ScrollPreAlphaTestnet, BeanecoSmartchain, BearNetworkChain, VisionVpioneerTestChain, BearNetworkChainTestnet, Octaspace, _4goodnetwork, Vision, PosichainShard0, PosichainTestnetShard0, PosichainDevnetShard0, PosichainDevnetShard1, FncyTestnet, EluvioContentFabric, EthoProtocol, Xerom, Kintsugi, Kiln, Zhejiang, PlianMain, PlatonDevTestnet2, FilecoinButterflyTestnet, MxcWannseeZkevmTestnet, Imversed, ImversedTestnet, Saakuru, Openvessel, Ql1Testnet, Musicoin, PlianSubchain1, Hapchain, QuarixTestnet, Quarix, PlianTestnetSubchain1, Soverun, Sepolia, PepchainChurchill, Anduschain, PlianTestnetMain, Iolite, Smartmesh, Quarkblockchain, Excelon, ExcoincialChainVoltaTestnet, ExcoincialChain, AuxiliumNetwork, Flachain, FilecoinLocalTestnet, JoysDigital, Maistestsubnet, Aquachain, AutonityBakerlooThamesTestnet, AutonityPiccadillyThamesTestnet, TEAMBlockchain, JoysDigitalTestnet, GatherNetwork, NeonEvmDevnet, NeonEvm, NeonEvmTestnet, Oneledger, CalypsoNftHubSkaleTestnet, GatherTestnetNetwork, GatherDevnetNetwork, NebulaStaging, IposNetwork, Cyberdecknet, HumanProtocol, Aurora, AuroraTestnet, AuroraBetanet, Raptorchain, Nebula, CalypsoNftHubSkale, HarmonyShard0, HarmonyShard1, HarmonyShard2, HarmonyShard3, HarmonyTestnetShard0, HarmonyTestnetShard1, HarmonyTestnetShard2, HarmonyTestnetShard3, HarmonyDevnetShard0, Datahopper, EuropaSkaleChain, Pirl, OneledgerTestnetFrankenstein, PalmTestnet, Palm, Ntity, HaradevTestnet, Zeniq, Pdc, MolereumNetwork, Localhost];
 
 const chainsById = {
   [Ethereum.chainId]: Ethereum,
@@ -1996,6 +2004,7 @@ const chainsById = {
 [Tbsi.chainId]: Tbsi,
 [TbsiTestnet.chainId]: TbsiTestnet,
 [PaletteChain.chainId]: PaletteChain,
+[Partychain.chainId]: Partychain,
 [Kerleano.chainId]: Kerleano,
 [RabbitAnalogTestnetChain.chainId]: RabbitAnalogTestnetChain,
 [CubeChain.chainId]: CubeChain,
@@ -2135,6 +2144,7 @@ const chainsById = {
 [Klyntar.chainId]: Klyntar,
 [Shyft.chainId]: Shyft,
 [AdilTestnet.chainId]: AdilTestnet,
+[Adil.chainId]: Adil,
 [TheRootNetwork.chainId]: TheRootNetwork,
 [TheRootNetworkPorciniTestnet.chainId]: TheRootNetworkPorciniTestnet,
 [Canto.chainId]: Canto,
@@ -2150,7 +2160,7 @@ const chainsById = {
 [ShardeumSphinx1X.chainId]: ShardeumSphinx1X,
 [StreamuxBlockchain.chainId]: StreamuxBlockchain,
 [QitmeerNetworkTestnet.chainId]: QitmeerNetworkTestnet,
-[QitmeerNetworkMixnext.chainId]: QitmeerNetworkMixnext,
+[QitmeerNetworkMixnet.chainId]: QitmeerNetworkMixnet,
 [QitmeerNetworkPrivnet.chainId]: QitmeerNetworkPrivnet,
 [Amana.chainId]: Amana,
 [Flana.chainId]: Flana,
@@ -2395,6 +2405,7 @@ const chainsById = {
 [ArbitrumRinkeby.chainId]: ArbitrumRinkeby,
 [ArbitrumGoerli.chainId]: ArbitrumGoerli,
 [FastexChainTestnet.chainId]: FastexChainTestnet,
+[MarkrGo.chainId]: MarkrGo,
 [DexalotSubnetTestnet.chainId]: DexalotSubnetTestnet,
 [DexalotSubnet.chainId]: DexalotSubnet,
 [WeelinkTestnet.chainId]: WeelinkTestnet,
@@ -2425,6 +2436,7 @@ const chainsById = {
 [PlianMain.chainId]: PlianMain,
 [PlatonDevTestnet2.chainId]: PlatonDevTestnet2,
 [FilecoinButterflyTestnet.chainId]: FilecoinButterflyTestnet,
+[MxcWannseeZkevmTestnet.chainId]: MxcWannseeZkevmTestnet,
 [Imversed.chainId]: Imversed,
 [ImversedTestnet.chainId]: ImversedTestnet,
 [Saakuru.chainId]: Saakuru,
@@ -2829,6 +2841,7 @@ const chainIdsBySlug = {
 [Tbsi.slug]: Tbsi.chainId,
 [TbsiTestnet.slug]: TbsiTestnet.chainId,
 [PaletteChain.slug]: PaletteChain.chainId,
+[Partychain.slug]: Partychain.chainId,
 [Kerleano.slug]: Kerleano.chainId,
 [RabbitAnalogTestnetChain.slug]: RabbitAnalogTestnetChain.chainId,
 [CubeChain.slug]: CubeChain.chainId,
@@ -2968,6 +2981,7 @@ const chainIdsBySlug = {
 [Klyntar.slug]: Klyntar.chainId,
 [Shyft.slug]: Shyft.chainId,
 [AdilTestnet.slug]: AdilTestnet.chainId,
+[Adil.slug]: Adil.chainId,
 [TheRootNetwork.slug]: TheRootNetwork.chainId,
 [TheRootNetworkPorciniTestnet.slug]: TheRootNetworkPorciniTestnet.chainId,
 [Canto.slug]: Canto.chainId,
@@ -2983,7 +2997,7 @@ const chainIdsBySlug = {
 [ShardeumSphinx1X.slug]: ShardeumSphinx1X.chainId,
 [StreamuxBlockchain.slug]: StreamuxBlockchain.chainId,
 [QitmeerNetworkTestnet.slug]: QitmeerNetworkTestnet.chainId,
-[QitmeerNetworkMixnext.slug]: QitmeerNetworkMixnext.chainId,
+[QitmeerNetworkMixnet.slug]: QitmeerNetworkMixnet.chainId,
 [QitmeerNetworkPrivnet.slug]: QitmeerNetworkPrivnet.chainId,
 [Amana.slug]: Amana.chainId,
 [Flana.slug]: Flana.chainId,
@@ -3228,6 +3242,7 @@ const chainIdsBySlug = {
 [ArbitrumRinkeby.slug]: ArbitrumRinkeby.chainId,
 [ArbitrumGoerli.slug]: ArbitrumGoerli.chainId,
 [FastexChainTestnet.slug]: FastexChainTestnet.chainId,
+[MarkrGo.slug]: MarkrGo.chainId,
 [DexalotSubnetTestnet.slug]: DexalotSubnetTestnet.chainId,
 [DexalotSubnet.slug]: DexalotSubnet.chainId,
 [WeelinkTestnet.slug]: WeelinkTestnet.chainId,
@@ -3258,6 +3273,7 @@ const chainIdsBySlug = {
 [PlianMain.slug]: PlianMain.chainId,
 [PlatonDevTestnet2.slug]: PlatonDevTestnet2.chainId,
 [FilecoinButterflyTestnet.slug]: FilecoinButterflyTestnet.chainId,
+[MxcWannseeZkevmTestnet.slug]: MxcWannseeZkevmTestnet.chainId,
 [Imversed.slug]: Imversed.chainId,
 [ImversedTestnet.slug]: ImversedTestnet.chainId,
 [Saakuru.slug]: Saakuru.chainId,

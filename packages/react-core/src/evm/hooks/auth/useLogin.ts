@@ -17,6 +17,8 @@ import { AUTH_TOKEN_STORAGE_KEY } from "../../../core/constants/auth";
  *
  * @returns - A function to invoke to login with the connected wallet, and an isLoading state.
  *
+ * @see {@link https://portal.thirdweb.com/react/react.uselogin?utm_source=sdk | Documentation}
+ *
  * @beta
  */
 export function useLogin() {
@@ -62,7 +64,7 @@ export function useLogin() {
       }
 
       const { token } = await res.json();
-      await authConfig.secureStorage?.setItem(AUTH_TOKEN_STORAGE_KEY, token)
+      await authConfig.secureStorage?.setItem(AUTH_TOKEN_STORAGE_KEY, token);
 
       queryClient.invalidateQueries(cacheKeys.auth.user());
 
