@@ -5,7 +5,9 @@ import {
 import {
   computeCloneFactoryAddress,
   createTransactionBatches,
+  deployContractDeterministic,
   deployWithThrowawayDeployer,
+  estimateGasForDeploy,
   fetchAndCacheDeployMetadata,
   getCreate2FactoryAddress,
   getDeploymentInfo,
@@ -842,13 +844,34 @@ export class ContractDeployer extends RPCConnectionHandler {
           )?.transaction.predictedAddress as string;
 
           // 3. deploy infra + plugins + implementation using a throwaway Deployer contract
-          const transactionsToSend = deploymentInfo.map((i) => {
-            return i.transaction;
-          });
+
+          // filter out already deployed contracts (data is empty)
+          const transactionsToSend = deploymentInfo.filter(
+            (i) => i.transaction.data && i.transaction.data.length > 0,
+          );
+          const transactionsforDirectDeploy = transactionsToSend
+            .filter((i) => {
+              return i.type !== "infra";
+            })
+            .map((i) => i.transaction);
+          const transactionsForThrowawayDeployer = transactionsToSend
+            .filter((i) => {
+              return i.type === "infra";
+            })
+            .map((i) => i.transaction);
+
+          // deploy via throwaway deployer, multiple infra contracts in one transaction
           await deployWithThrowawayDeployer(
             signer,
-            transactionsToSend,
+            transactionsForThrowawayDeployer,
             options,
+          );
+
+          // send each transaction directly to Create2 factory
+          await Promise.all(
+            transactionsforDirectDeploy.map((tx) => {
+              return deployContractDeterministic(signer, tx);
+            }),
           );
 
           const resolvedImplementationAddress = await resolveAddress(
@@ -972,17 +995,36 @@ export class ContractDeployer extends RPCConnectionHandler {
           create2FactoryAddress,
         );
 
-        const transactionsToSend = deploymentInfo.map((i) => {
-          return i.transaction;
-        });
-        const transactionBatches = createTransactionBatches(transactionsToSend);
+        const transactionsToSend = deploymentInfo.filter(
+          (i) => i.transaction.data && i.transaction.data.length > 0,
+        );
 
+        const transactionsforDirectDeploy = transactionsToSend
+          .filter((i) => {
+            return i.type !== "infra";
+          })
+          .map((i) => i.transaction);
+        transactionsforDirectDeploy.forEach((tx) => {
+          transactions.push({
+            contractType: "preset",
+            addresses: [tx.predictedAddress],
+          });
+        });
+
+        const transactionsForThrowawayDeployer = transactionsToSend
+          .filter((i) => {
+            return i.type === "infra";
+          })
+          .map((i) => i.transaction);
+        const transactionBatches = createTransactionBatches(
+          transactionsForThrowawayDeployer,
+        );
         transactionBatches.forEach((batch) => {
           const addresses = batch.map(
             (tx: PrecomputedDeploymentTransaction) => tx.predictedAddress,
           );
           transactions.push({
-            contractType: "preset",
+            contractType: "infra",
             addresses: addresses,
           });
         });
