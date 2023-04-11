@@ -65,6 +65,7 @@ export type SetClaimConditionsParams = {
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
  * @returns a response object with the currently active claim condition
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
+ * @see {@link https://portal.thirdweb.com/react/react.useactiveclaimcondition?utm_source=sdk | Documentation}
  * @beta
  */
 export function useActiveClaimCondition(
@@ -120,6 +121,7 @@ export function useActiveClaimCondition(
  * @param claimConditionId - optional the claim condition id to get the proofs for
  * @returns a response object with the snapshot for the provided address
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
+ * @see {@link https://portal.thirdweb.com/react/react.useclaimerproofs?utm_source=sdk | Documentation}
  * @beta
  */
 export function useClaimerProofs(
@@ -183,6 +185,7 @@ export function useClaimerProofs(
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
  * @returns a response object with the list of claim conditions
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
+ * @see {@link https://portal.thirdweb.com/react/react.useclaimconditions?utm_source=sdk | Documentation}
  * @beta
  */
 export function useClaimConditions(
@@ -237,6 +240,7 @@ export function useClaimConditions(
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
  * @returns a response object with the reasons for the claim ineligibility
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
+ * @see {@link https://portal.thirdweb.com/react/react.useclaimineligibilityreasons?utm_source=sdk | Documentation}
  * @beta
  */
 export function useClaimIneligibilityReasons(
@@ -306,7 +310,7 @@ export function useClaimIneligibilityReasons(
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
  * @returns the active claim conditon for the wallet address or null if there is no active claim condition
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
- *
+ * @see {@link https://portal.thirdweb.com/react/react.useactiveclaimconditionforwallet?utm_source=sdk | Documentation}
  * @beta
  */
 export function useActiveClaimConditionForWallet(
@@ -462,6 +466,7 @@ export function useActiveClaimConditionForWallet(
  * @param contract - an instance of a {@link DropContract}
  * @returns a mutation object that can be used to set claim conditions
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
+ * @see {@link https://portal.thirdweb.com/react/react.usesetclaimconditions?utm_source=sdk | Documentation}
  * @beta
  */
 export function useSetClaimConditions(

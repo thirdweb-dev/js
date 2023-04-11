@@ -17,6 +17,8 @@ export interface UserWithData<
  *
  * @returns - The currently logged in user or null if not logged in, as well as a loading state.
  *
+ * @see {@link https://portal.thirdweb.com/react/react.useuser?utm_source=sdk | Documentation}
+ *
  * @beta
  */
 export function useUser<
@@ -37,16 +39,25 @@ export function useUser<
         "Please specify an authUrl in the authConfig.",
       );
 
-      const token = await authConfig.secureStorage?.getItem(AUTH_TOKEN_STORAGE_KEY);
+      const token = await authConfig.secureStorage?.getItem(
+        AUTH_TOKEN_STORAGE_KEY,
+      );
       // We include credentials so we can getUser even if API is on different URL
       const params = {
         credentials: "include",
-        ...(token ? { headers: {
-          'Authorization': `Bearer ${token}`
-        }} : {})
-      }
+        ...(token
+          ? {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          : {}),
+      };
 
-      const res = await fetch(`${authConfig.authUrl}/user`, params as RequestInit);
+      const res = await fetch(
+        `${authConfig.authUrl}/user`,
+        params as RequestInit,
+      );
 
       return (await res.json()) as UserWithData<TData, TContext>;
     },

@@ -36,6 +36,7 @@ import invariant from "tiny-invariant";
  * @param contract - an instance of a {@link SmartContract}
  * @returns the wallet address of the primary sales recipient
  * @twfeature PrimarySale
+ * @see {@link https://portal.thirdweb.com/react/react.useprimarysalerecipient?utm_source=sdk | Documentation}
  * @beta
  */
 export function usePrimarySaleRecipient(
@@ -87,6 +88,7 @@ export function usePrimarySaleRecipient(
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to update the primary sales recipient
  * @twfeature PrimarySale
+ * @see {@link https://portal.thirdweb.com/react/react.useupdateprimarysalerecipient?utm_source=sdk | Documentation}
  * @beta
  */
 export function useUpdatePrimarySaleRecipient(
@@ -137,6 +139,7 @@ export function useUpdatePrimarySaleRecipient(
  * @param contract - an instance of a {@link SmartContract}
  * @returns an object containing recipient address and the royalty basis points
  * @twfeature Royalty
+ * @see {@link https://portal.thirdweb.com/react/react.useroyaltysettings?utm_source=sdk | Documentation}
  * @beta
  */
 export function useRoyaltySettings(
@@ -188,6 +191,7 @@ export function useRoyaltySettings(
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to update the royalty settings
  * @twfeature Royalty
+ * @see {@link https://portal.thirdweb.com/react/react.useupdateroyaltysettings?utm_source=sdk | Documentation}
  * @beta
  */
 export function useUpdateRoyaltySettings(
@@ -234,6 +238,7 @@ export function useUpdateRoyaltySettings(
  * @param contract - an instance of a {@link SmartContract}
  * @returns an object containing the platform fee basis points and the fee recipient address
  * @twfeature PlatformFee
+ * @see {@link https://portal.thirdweb.com/react/react.useplatformfees?utm_source=sdk | Documentation}
  * @beta
  */
 export function usePlatformFees(
@@ -284,6 +289,7 @@ export function usePlatformFees(
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to update the platform fees settings
  * @twfeature PlatformFee
+ * @see {@link https://portal.thirdweb.com/react/react.useupdateplatformfees?utm_source=sdk | Documentation}
  * @beta
  */
 export function useUpdatePlatformFees(
@@ -329,6 +335,7 @@ export function useUpdatePlatformFees(
  *
  * @param contract - an instance of a {@link SmartContract}
  * @returns a {@link CustomContractMetadata} object containing the metadata
+ * @see {@link https://portal.thirdweb.com/react/react.usemetadata?utm_source=sdk | Documentation}
  * @beta
  */
 export function useMetadata(
@@ -382,6 +389,7 @@ export function useMetadata(
  * ```
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to update the metadata
+ * @see {@link https://portal.thirdweb.com/react/react.useupdatemetadata?utm_source=sdk | Documentation}
  * @beta
  */
 export function useUpdateMetadata(
