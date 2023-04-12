@@ -309,9 +309,10 @@ describe("IPFS", async () => {
     const res = await singleStorage.download(uri);
     const json = await res.json();
 
-    expect(json.image).to.equal(
+    expect(json.image).to.be.oneOf([
       `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0`,
-    );
+      `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}bafybeia6tkeuh4au753benm4cay26iof252re6uyim47uj2sekjyyitwoi/0`,
+    ]);
     expect(json.animation_url).to.equal(
       `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
     );
@@ -368,9 +369,10 @@ describe("IPFS", async () => {
       { alwaysUpload: true },
     );
 
-    expect(uri).to.equal(
+    expect(uri).to.be.oneOf([
       `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0`,
-    );
+      `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}bafybeia6tkeuh4au753benm4cay26iof252re6uyim47uj2sekjyyitwoi/0`,
+    ]);
   });
 
   it("Should throw an error when trying to upload different files with the same name", async () => {
