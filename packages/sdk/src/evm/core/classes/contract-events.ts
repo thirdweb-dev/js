@@ -208,12 +208,82 @@ export class ContractEvents<TContract extends BaseContract> {
       order: "desc",
     },
   ): Promise<ContractEvent<TEvent>[]> {
-    const events = await this.contractWrapper.readContract.queryFilter(
-      {},
-      filters.fromBlock,
-      filters.toBlock,
-    );
+    const fromBlock = filters.fromBlock as number;
+    const toBlock =
+      filters.toBlock === "latest"
+        ? await this.contractWrapper.getProvider().getBlockNumber()
+        : (filters.toBlock as number);
 
+    let events: Event[] = [];
+    try {
+      // First we try to get the entire block range like before
+      events = await this.queryChunk(fromBlock, toBlock);
+    } catch {
+      // Otherwise, we need to do chunking with retries
+      const totalBlocks = fromBlock - toBlock + 1;
+
+      // First try to figure out what chunk size we should use by finding max chunk size
+      // That doesn't throw an error (or just go down to minimum size)
+      let chunkSize = 10000;
+      const minimumChunkSize = 1250;
+      while (chunkSize > minimumChunkSize) {
+        try {
+          await this.queryChunk(fromBlock, fromBlock + chunkSize);
+          break;
+        } catch {
+          chunkSize /= 2;
+        }
+      }
+
+      // Start getting events in chunks
+      const chunks = [];
+      for (let i = 0; i < Math.ceil(totalBlocks / chunkSize); i++) {
+        const chunkStart = fromBlock + i * chunkSize;
+        const chunkEnd = Math.min(chunkStart + chunkSize - 1, toBlock);
+        const maxRetries = 3;
+
+        chunks.push(
+          // For each chunk, try to query the chunk with exponential backoff
+          new Promise<{ start: number; end: number; chunk: Event[] }>(
+            async (resolve, reject) => {
+              let backoffTime = 2000;
+
+              // If fetching chunk initially fails, try to query with exponential backoff
+              for (let i = 0; i < maxRetries; i++) {
+                try {
+                  const chunk = await this.queryChunk(chunkStart, chunkEnd);
+                  return resolve({
+                    start: chunkStart,
+                    end: chunkEnd,
+                    chunk,
+                  });
+                } catch (err) {
+                  backoffTime *= 2;
+                }
+              }
+
+              reject(
+                `Failed to fetch events from block ${chunkStart} to block ${chunkEnd}`,
+              );
+            },
+          ),
+        );
+      }
+
+      // Wait for all chunks to be resolved
+      const results = await Promise.allSettled(chunks);
+
+      // Populate all succesfully fetched chunks, and log any errors
+      for (const result of results) {
+        if (result.status === "fulfilled") {
+          events.push(...result.value.chunk);
+        } else {
+          console.warn(result.reason);
+        }
+      }
+    }
+
+    // Sort events in specified order
     const orderedEvents = events.sort((a, b) => {
       return filters.order === "desc"
         ? b.blockNumber - a.blockNumber
@@ -372,5 +442,20 @@ export class ContractEvents<TContract extends BaseContract> {
       data: results as TEvent,
       transaction,
     };
+  }
+
+  private async queryChunk(from: number, to: number) {
+    try {
+      const events = await this.contractWrapper.readContract.queryFilter(
+        {},
+        from,
+        to,
+      );
+      return events;
+    } catch (err: any) {
+      throw new Error(
+        `Error querying chunk from block ${from} to block ${to}: ${err.message}`,
+      );
+    }
   }
 }
