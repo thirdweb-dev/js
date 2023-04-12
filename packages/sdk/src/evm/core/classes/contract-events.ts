@@ -258,9 +258,7 @@ export class ContractEvents<TContract extends BaseContract> {
                     chunk,
                   });
                 } catch (err) {
-                  await new Promise((resolve) =>
-                    setTimeout(resolve, backoffTime),
-                  );
+                  await new Promise((res) => setTimeout(res, backoffTime));
                   backoffTime *= 2;
                 }
               }
