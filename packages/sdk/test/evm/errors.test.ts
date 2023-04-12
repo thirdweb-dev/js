@@ -16,10 +16,7 @@ describe("Error Handling", async () => {
       });
       expect.fail();
     } catch (err) {
-      expectError(
-        err,
-        "You have insufficient funds in your account to execute this transaction.",
-      );
+      expectError(err, "sender doesn't have enough funds to send tx");
     }
   });
 
