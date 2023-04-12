@@ -249,7 +249,7 @@ export class ContractEvents<TContract extends BaseContract> {
               let backoffTime = 2000;
 
               // If fetching chunk initially fails, try to query with exponential backoff
-              for (let i = 0; i < maxRetries; i++) {
+              for (let j = 0; j < maxRetries; j++) {
                 try {
                   const chunk = await this.queryChunk(chunkStart, chunkEnd);
                   return resolve({
@@ -258,6 +258,9 @@ export class ContractEvents<TContract extends BaseContract> {
                     chunk,
                   });
                 } catch (err) {
+                  await new Promise((resolve) =>
+                    setTimeout(resolve, backoffTime),
+                  );
                   backoffTime *= 2;
                 }
               }
