@@ -9,11 +9,11 @@ export default {
   "faucets": [],
   "nativeCurrency": {
     "name": "Bitcoin",
-    "symbol": "eBTC",
+    "symbol": "BTC",
     "decimals": 18
   },
   "infoURL": "https://bitcoinevm.com",
-  "shortName": "eBTC",
+  "shortName": "BTC",
   "chainId": 2203,
   "networkId": 2203,
   "icon": {
