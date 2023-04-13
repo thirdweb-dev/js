@@ -30,8 +30,8 @@ const content = {
   build: {
     title: "Build your own",
     description:
-      "Get started with ContractKit to create custom contracts specific to your use case.",
-    href: "/contractkit",
+      "Get started with the Solidity SDK to create custom contracts specific to your use case.",
+    href: "/solidity-sdk",
   },
   deploy: {
     title: "Deploy from source",

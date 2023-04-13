@@ -25,7 +25,7 @@ const GUIDES = [
     link: "https://blog.thirdweb.com/guides/create-a-generative-art-nft-collection-using-solidity-javascript/",
   },
   {
-    title: "Build a Blockchain Game using ContractKit",
+    title: "Build a Blockchain Game using the Solidity SDK",
     image:
       "https://blog.thirdweb.com/content/images/size/w2000/2022/10/Group-625858--1-.png",
     link: "https://blog.thirdweb.com/guides/build-a-blockchain-game-using-contractkit/",
@@ -38,15 +38,15 @@ const ContractExtensions: ThirdwebNextPage = () => {
   return (
     <ProductPage
       seo={{
-        title: "ContractKit",
+        title: "Solidity SDK",
         description: "Build your own contract easily",
         openGraph: {
           images: [
             {
-              url: `${getAbsoluteUrl()}/assets/og-image/contractkit.png`,
+              url: `${getAbsoluteUrl()}/assets/og-image/solidity-sdk.png`,
               width: 2334,
               height: 1260,
-              alt: "thirdweb ContractKit",
+              alt: "thirdweb Solidity SDK",
             },
           ],
         },
@@ -55,9 +55,9 @@ const ContractExtensions: ThirdwebNextPage = () => {
       {/* hero section */}
       <Hero
         trackingCategory={TRACKING_CATEGORY}
-        name="ContractKit"
+        name="Solidity SDK"
         title="Build your own contract easily"
-        description="Build your own contracts easily using ContractKit. Base contracts that can be configured with extensions to meet your specific use case."
+        description="Build your own contracts easily using the Solidity SDK. Base contracts that can be configured with extensions to meet your specific use case."
         buttonText="Get started"
         buttonLink="https://portal.thirdweb.com/solidity"
         image={require("public/assets/product-pages/extensions/hero.png")}
@@ -109,7 +109,7 @@ const ContractExtensions: ThirdwebNextPage = () => {
             maxWidth={680}
             videoId="G3IHeKhVtpQ"
             aspectRatio={16 / 9}
-            title="Introducing ContractKit: The Web3 Tool for Base Contracts, Basic Contracts, and Extensions"
+            title="Introducing the Solidity SDK: The Web3 Tool for Base Contracts, Basic Contracts, and Extensions"
           />
         </Flex>
       </ProductSection>
@@ -147,8 +147,8 @@ const ContractExtensions: ThirdwebNextPage = () => {
       <GuidesShowcase
         title="Learn how to build"
         category={TRACKING_CATEGORY}
-        description="Check out our guides to learn how to build with ContractKit"
-        solution="ContractKit"
+        description="Check out our guides to learn how to build with the Solidity SDK"
+        solution="Solidity SDK"
         guides={GUIDES}
       />
     </ProductPage>

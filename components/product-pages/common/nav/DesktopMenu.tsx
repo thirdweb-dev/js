@@ -114,10 +114,10 @@ export const PRODUCTS: NavCardProps[] = [
     icon: require("public/assets/product-icons/publish.png"),
   },
   {
-    name: "ContractKit",
+    name: "Solidity SDK",
     label: "contractkit",
     description: "Build your own contract easily",
-    link: "/contractkit",
+    link: "/solidity-sdk",
     icon: require("public/assets/product-icons/extensions.png"),
   },
   {

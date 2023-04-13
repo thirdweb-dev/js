@@ -258,13 +258,13 @@ const Minting: ThirdwebNextPage = () => {
             category={TRACKING_CATEGORY}
             description={
               <>
-                Build your own NFT and Marketplace contracts with{" "}
+                Build your own NFT and Marketplace contracts with the{" "}
                 <Link
                   color="white"
                   href="https://portal.thirdweb.com/solidity"
                   isExternal
                 >
-                  ContractKit
+                  Solidity SDK
                 </Link>{" "}
                 or discover and deploy in 1-click via{" "}
                 <Link

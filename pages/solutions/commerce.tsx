@@ -133,7 +133,7 @@ const Commerce: ThirdwebNextPage = () => {
           <ProductLearnMoreCard
             title="Build"
             category={TRACKING_CATEGORY}
-            description="Prebuilt contracts or build your own with ContractKit to
+            description="Prebuilt contracts or build your own with the Solidity SDK to
                 distribute NFTs through your commerce app."
             icon={require("/public/assets/product-pages/dashboard/hero-icon-1.png")}
             href="/explore/commerce"
@@ -189,7 +189,7 @@ const Commerce: ThirdwebNextPage = () => {
                   href={"https://portal.thirdweb.com/solidity"}
                   label="use-case-contractkit"
                 >
-                  ContractKit
+                  Solidity SDK
                 </TrackedLink>
                 . Reward your customers at different stages of their journey,
                 from initial free “drops” to claiming rewards at checkout.

@@ -58,7 +58,7 @@ export const DeployUpsellCard: React.FC = () => {
               isExternal
               variant="link"
             >
-              Learn more about ContractKit
+              Learn more about the Solidity SDK
             </LinkButton>
           </Flex>
 

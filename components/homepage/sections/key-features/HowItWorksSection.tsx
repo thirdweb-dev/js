@@ -11,9 +11,9 @@ const data: { title: string; icons: Item[] }[] = [
     title: "DEV TOOLS",
     icons: [
       {
-        icon: require("/public/assets/landingpage/howitworks-contractkit.png"),
-        title: "ContractKit",
-        href: "/contractkit",
+        icon: require("/public/assets/landingpage/howitworks-solidity-sdk.png"),
+        title: "Solidity SDK",
+        href: "/solidity-sdk",
       },
       {
         icon: require("/public/assets/landingpage/howitworks-explore.png"),

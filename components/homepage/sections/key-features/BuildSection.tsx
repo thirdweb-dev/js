@@ -68,13 +68,13 @@ export const BuildSection: React.FC = () => {
               Create your own contracts with our{" "}
               <GradientText
                 as={LinkOverlay}
-                href="/contractkit"
+                href="/solidity-sdk"
                 category={TRACKING_CATEGORY}
                 label="contractkit"
                 stopOne="#805AA8"
                 stopTwo="#BAA2D4"
               >
-                ContractKit
+                Solidity SDK
               </GradientText>
             </Heading>
             <Image
@@ -82,7 +82,7 @@ export const BuildSection: React.FC = () => {
               pl={14}
               w="full"
               mt="auto"
-              src={require("/public/assets/landingpage/build-contractkit.png")}
+              src={require("/public/assets/landingpage/build-solidity-sdk.png")}
               alt=""
             />
           </Flex>

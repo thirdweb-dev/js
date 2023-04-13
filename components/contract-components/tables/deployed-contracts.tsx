@@ -187,8 +187,8 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
                     title="Build your own"
                     description={
                       <>
-                        Get started with <b>ContractKit</b> to create custom
-                        contracts specific to your use case.
+                        Get started with the <b>Solidity SDK</b> to create
+                        custom contracts specific to your use case.
                       </>
                     }
                     icon={require("public/assets/product-icons/extensions.png")}

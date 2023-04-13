@@ -40,7 +40,7 @@ export const slides: Slide[] = [
     graphic: Titles,
     content: (
       <Text size="body.lg">
-        Build your own contracts with{" "}
+        Build your own contracts with the{" "}
         <TrackedLink
           color="blue.500"
           href="https://portal.thirdweb.com/solidity"
@@ -48,7 +48,7 @@ export const slides: Slide[] = [
           label="build-contractkit"
           isExternal
         >
-          ContractKit
+          Solidity SDK
         </TrackedLink>
         .
         <br />
