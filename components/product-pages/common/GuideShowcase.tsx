@@ -1,8 +1,6 @@
 import { GuideCard } from "./GuideCard";
 import { ProductSection } from "./ProductSection";
-import { Flex, Icon, LightMode, SimpleGrid, Switch } from "@chakra-ui/react";
-import { AnimatePresence } from "framer-motion";
-import { useMemo, useState } from "react";
+import { Flex, Icon, SimpleGrid } from "@chakra-ui/react";
 import { FiArrowRight } from "react-icons/fi";
 import { Heading, TrackedLink, TrackedLinkProps } from "tw-components";
 
@@ -18,7 +16,7 @@ interface GuidesShowcaseProps {
   solution?: string;
   category: TrackedLinkProps["category"];
   guides: BlogPost[];
-  caseStudies?: BlogPost[];
+  caseStudies?: true;
 }
 
 export const GuidesShowcase: React.FC<GuidesShowcaseProps> = ({
@@ -29,15 +27,6 @@ export const GuidesShowcase: React.FC<GuidesShowcaseProps> = ({
   caseStudies,
   category,
 }) => {
-  const [mode, setMode] = useState<"guides" | "case-studies">("guides");
-
-  const renderData = useMemo(() => {
-    if (mode === "case-studies" && caseStudies) {
-      return caseStudies;
-    }
-    return guides;
-  }, [caseStudies, guides, mode]);
-
   return (
     <ProductSection>
       <Flex flexDir="column" py={16} align="center" gap={{ base: 6, lg: 8 }}>
@@ -55,50 +44,27 @@ export const GuidesShowcase: React.FC<GuidesShowcaseProps> = ({
           {description}
         </Heading>
         <Flex direction="column" gap={3}>
-          {caseStudies?.length ? (
-            <Flex align="center" ml="auto" gap={2}>
-              <Heading size="label.md" as="label">
-                Guides
-              </Heading>
-              <LightMode>
-                <Switch
-                  isChecked={mode === "case-studies"}
-                  onChange={() => {
-                    setMode((prevMode) =>
-                      prevMode === "case-studies" ? "guides" : "case-studies",
-                    );
-                  }}
-                  colorScheme="purple"
-                />
-              </LightMode>
-              <Heading size="label.md" as="label">
-                Case Studies
-              </Heading>
-            </Flex>
-          ) : null}
-          <AnimatePresence initial>
-            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
-              {renderData.map(({ title: guideTitle, image, link }, idx) => (
-                <GuideCard
-                  category={category}
-                  label="guide"
-                  trackingProps={{
-                    guide: guideTitle.replaceAll(" ", "_").toLowerCase(),
-                  }}
-                  index={idx}
-                  key={guideTitle}
-                  image={image}
-                  title={guideTitle}
-                  link={link}
-                />
-              ))}
-            </SimpleGrid>
-          </AnimatePresence>
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
+            {guides.map(({ title: guideTitle, image, link }, idx) => (
+              <GuideCard
+                category={category}
+                label="guide"
+                trackingProps={{
+                  guide: guideTitle.replaceAll(" ", "_").toLowerCase(),
+                }}
+                index={idx}
+                key={guideTitle}
+                image={image}
+                title={guideTitle}
+                link={link}
+              />
+            ))}
+          </SimpleGrid>
         </Flex>
         {solution && (
           <TrackedLink
             href={`https://blog.thirdweb.com/tag/${
-              mode === "case-studies" ? "case-study" : solution.toLowerCase()
+              caseStudies ? "case-study" : solution.toLowerCase()
             }/`}
             category={category}
             label="see-all-guides"
@@ -113,7 +79,7 @@ export const GuidesShowcase: React.FC<GuidesShowcaseProps> = ({
                 position="relative"
               >
                 See all of our {solution.replace("-", " ")}{" "}
-                {mode === "case-studies" ? "case studies" : "guides"}
+                {caseStudies ? "case studies" : "guides"}
               </Heading>
               <Icon as={FiArrowRight} />
             </Flex>

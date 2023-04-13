@@ -44,10 +44,10 @@ const GAMING_GUIDES = [
 
 const GAMING_CASE_STUDIES = [
   {
-    title: "Evolved Camels Builds Immersive Web3 Gaming Experiences",
+    title: "Pixels Builds an On-Chain Ecosystem for its Open-World Web3 Game",
     image:
-      "https://blog.thirdweb.com/content/images/size/w2000/2022/12/Chicago-Bulls.png",
-    link: "https://blog.thirdweb.com/evolved-camels-builds-immersive-web3-gaming-experiences-for-their-community/",
+      "https://blog.thirdweb.com/content/images/size/w2000/2023/04/Pixels-Builds-an-Onchain-Ecosystem-for-its-Web3-Game-thirdweb-Case-Study.png",
+    link: "https://blog.thirdweb.com/case-studies/pixels-builds-an-onchain-ecosystem-for-its-web3-game/",
   },
   {
     title: "Fractal, Web3 Gaming Platform and Marketplace for Blockchain Games",
@@ -299,7 +299,15 @@ const Gaming: ThirdwebNextPage = () => {
         description="Check out our guides and case studies to start building games with thirdweb"
         solution="Gaming"
         guides={GAMING_GUIDES}
-        caseStudies={GAMING_CASE_STUDIES}
+      />
+
+      <GuidesShowcase
+        title="The best web3 games are built using thirdweb"
+        category={TRACKING_CATEGORY}
+        description="Learn from case studies on how other web3 games built their games using GamingKit."
+        solution="Gaming"
+        guides={GAMING_CASE_STUDIES}
+        caseStudies
       />
 
       <Box
