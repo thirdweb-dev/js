@@ -207,8 +207,8 @@ describe("IPFS", async () => {
 
     expect(uri).to.be.oneOf(
       [
-        "ipfs://QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0", // used by Piñata
-        "ipfs://bafybeigx7doz7z2ihuzuoa7uzuxpxipacmpdmrrin4u5da3xmduiqcovzu/0" // used by web3.storage
+        "ipfs://QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0",
+        "ipfs://bafybeigx7doz7z2ihuzuoa7uzuxpxipacmpdmrrin4u5da3xmduiqcovzu/0"
       ]
     );
   });
@@ -226,8 +226,8 @@ describe("IPFS", async () => {
     );
 
     expect(uri).to.be.oneOf([
-      "ipfs://QmdnBEP9UFcRfbuAyXFefNccNbuKWTscHrpWZatvqz9VcV", // used by Piñata
-      "ipfs://bafkreigvoqkfon3bjwyoqg2bfv3tbdnh3oig42bkk7q7fxaqp73zl6dwdq" // used by web3.storage
+      "ipfs://QmdnBEP9UFcRfbuAyXFefNccNbuKWTscHrpWZatvqz9VcV",
+      "ipfs://bafkreigvoqkfon3bjwyoqg2bfv3tbdnh3oig42bkk7q7fxaqp73zl6dwdq"
     ]);
 
     const json = await storage.downloadJSON(uri);
@@ -449,12 +449,12 @@ describe("IPFS", async () => {
     );
 
     expect(uris[0]).to.be.oneOf([
-      "ipfs://QmTtEY2WSTDpzYSXw2G3xsYw3eMs8YephvrfVYd8qia9F9/0", // using Pinata
-      "ipfs://bafybeibvqqvjjdxmhnzru7y7b35smpveu7j75hfgfgsssosy7mzkhrvhjq/0" // using web3.storage
+      "ipfs://QmTtEY2WSTDpzYSXw2G3xsYw3eMs8YephvrfVYd8qia9F9/0", //
+      "ipfs://bafybeibvqqvjjdxmhnzru7y7b35smpveu7j75hfgfgsssosy7mzkhrvhjq/0"
     ]);
     expect(uris[1]).to.be.oneOf([
-      "ipfs://QmTtEY2WSTDpzYSXw2G3xsYw3eMs8YephvrfVYd8qia9F9/1", // using Pinata
-      "ipfs://bafybeibvqqvjjdxmhnzru7y7b35smpveu7j75hfgfgsssosy7mzkhrvhjq/1" // using web3.storage
+      "ipfs://QmTtEY2WSTDpzYSXw2G3xsYw3eMs8YephvrfVYd8qia9F9/1", //
+      "ipfs://bafybeibvqqvjjdxmhnzru7y7b35smpveu7j75hfgfgsssosy7mzkhrvhjq/1"
     ]);
   });
 
