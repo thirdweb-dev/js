@@ -5,7 +5,7 @@ import {
   getChainProvider,
 } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { spinner, info } from "../core/helpers/logger";
+import { info } from "../core/helpers/logger";
 import { allChains } from "@thirdweb-dev/chains";
 import fs from "fs";
 import prompts from "prompts";
@@ -95,9 +95,7 @@ export async function generate(options: GenerateOptions) {
   }
 
   // Attempt to download the ABI for each contract
-  const abiSpinner = spinner(
-    `Downloading ABIs for contracts configured in 'thirdweb.json'`,
-  );
+  ora(`Downloading ABIs for contracts configured in 'thirdweb.json'`).info();
   const storage = new ThirdwebStorage();
   const metadata: {
     address: string;
@@ -115,6 +113,9 @@ export async function generate(options: GenerateOptions) {
         );
       } catch {
         // If metadata for a contract fails, just go onto the next one
+        ora(
+          `Unable to download ABI for contract ${contract.address}, skipping.`,
+        ).warn();
         return;
       }
 
@@ -128,9 +129,10 @@ export async function generate(options: GenerateOptions) {
   // Store the ABIs in the the SDKs ABI cache files
   const packagePath = `${projectPath}/node_modules/@thirdweb-dev/generated-abis/dist`;
   if (!fs.existsSync(packagePath)) {
-    throw new Error(
-      `Unable to cache ABIs. Please ensure that you're using the latest @thirdweb-dev/sdk package`,
-    );
+    ora(
+      `Unable to cache ABIs. Please ensure that you have the latest @thirdweb-dev/sdk package installed.`,
+    ).fail();
+    process.exit(1);
   }
 
   const filePaths = [
@@ -176,11 +178,11 @@ export async function generate(options: GenerateOptions) {
     fs.writeFileSync(typeFilePath, updatedFile);
   }
 
-  abiSpinner.succeed(
-    `Downloaded and cached ABIs for ${contracts.length} smart contract${
-      contracts.length === 1 ? "" : "s"
+  ora(
+    `Downloaded and cached ABIs for ${metadata.length} smart contract${
+      metadata.length === 1 ? "" : "s"
     }`,
-  );
+  ).succeed();
 
   // Add generate command to postinstall
   const packageJsonPath = `${projectPath}/package.json`;
