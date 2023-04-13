@@ -1,6 +1,8 @@
 import { AsyncStorage } from "./AsyncStorage";
-import fs from "fs/promises";
+import fsModule from "fs";
 import path from "path";
+
+const fs = fsModule.promises;
 
 export class AsyncJsonFileStorage implements AsyncStorage {
   filePath: string;

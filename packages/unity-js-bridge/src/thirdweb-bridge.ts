@@ -6,7 +6,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { DAppMetaData } from "@thirdweb-dev/wallets";
 import type { AbstractClientWallet } from "@thirdweb-dev/wallets/evm/wallets/base";
 import { CoinbaseWallet } from "@thirdweb-dev/wallets/evm/wallets/coinbase-wallet";
-import { DeviceBrowserWallet } from "@thirdweb-dev/wallets/evm/wallets/device-wallet";
+import { DeviceWallet } from "@thirdweb-dev/wallets/evm/wallets/device-wallet";
 import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
 import { MetaMaskWallet } from "@thirdweb-dev/wallets/evm/wallets/metamask";
@@ -46,7 +46,7 @@ const WALLETS = [
   InjectedWallet,
   WalletConnect,
   CoinbaseWallet,
-  DeviceBrowserWallet,
+  DeviceWallet,
 ] as const;
 
 type PossibleWallet = (typeof WALLETS)[number]["id"];
@@ -147,7 +147,7 @@ class ThirdwebBridge implements TWBridge {
           });
           break;
         case "deviceWallet":
-          walletInstance = new DeviceBrowserWallet({
+          walletInstance = new DeviceWallet({
             dappMetadata,
           });
           break;
@@ -182,8 +182,8 @@ class ThirdwebBridge implements TWBridge {
     const walletInstance = this.walletMap.get(wallet);
     if (walletInstance) {
       if (walletInstance.walletId === "deviceWallet" && password) {
-        const deviceWallet = walletInstance as DeviceBrowserWallet;
-        await deviceWallet.connect({ chainId, password });
+        const deviceWallet = walletInstance as DeviceWallet;
+        await deviceWallet.connect({ chainId });
       } else {
         await walletInstance.connect({ chainId });
       }
