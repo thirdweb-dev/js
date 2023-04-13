@@ -60,8 +60,8 @@ export class CoinbaseWalletConnector extends Connector<
 
     configure({
       callbackURL: options.callbackURL,
-      hostURL: options.hostURL,
-      hostPackageName: options.hostPackageName,
+      hostURL: options.hostURL || new URL("https://wallet.coinbase.com/wsegue"),
+      hostPackageName: options.hostPackageName || "org.toshi",
     });
   }
 

@@ -67,9 +67,34 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
   createWalletStorage = createAsyncLocalStorage,
   ...props
 }: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>) => {
+  const { activeChain } = props;
+
   const supportedChainsNonNull = useMemo(() => {
-    return props.supportedChains || (defaultChains as any as TChains);
-  }, [props.supportedChains]);
+    const isActiveChainObject =
+      typeof activeChain === "object" && activeChain !== null;
+
+    if (!isActiveChainObject) {
+      return props.supportedChains || defaultChains;
+    }
+
+    if (!props.supportedChains) {
+      return [...defaultChains, activeChain];
+    }
+
+    const isActiveChainInSupportedChains = props.supportedChains.find(
+      (c) => c.chainId === activeChain.chainId,
+    );
+
+    // if activeChain is not in supportedChains - add it
+    if (!isActiveChainInSupportedChains) {
+      return [...props.supportedChains, activeChain];
+    }
+
+    // if active chain is in supportedChains - replace it with object in activeChain
+    return props.supportedChains.map((c) =>
+      c.chainId === activeChain.chainId ? activeChain : c,
+    );
+  }, [props.supportedChains, activeChain]);
 
   const [supportedChainsWithKey, activeChainIdOrObjWithKey] =
     useUpdateChainsWithApiKeys(
