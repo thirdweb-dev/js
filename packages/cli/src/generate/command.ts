@@ -5,7 +5,7 @@ import {
   getChainProvider,
 } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { spinner, info } from "../core/helpers/logger";
+import { info } from "../core/helpers/logger";
 import { allChains } from "@thirdweb-dev/chains";
 import fs from "fs";
 import prompts from "prompts";
