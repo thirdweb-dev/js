@@ -11,10 +11,7 @@ export const NATIVE_TOKEN_ADDRESS =
 /**
  * @public
  */
-export const NATIVE_TOKENS: Record<
-  SUPPORTED_CHAIN_ID | ChainId.Hardhat,
-  NativeToken
-> = {
+export const NATIVE_TOKENS: Record<number, NativeToken> = {
   [ChainId.Mainnet]: {
     name: "Ether",
     symbol: "ETH",
@@ -157,16 +154,6 @@ export const NATIVE_TOKENS: Record<
       symbol: "WBNB",
     },
   },
-  [ChainId.BaseGoerli]: {
-    name: "Base Goerli Testnet",
-    symbol: "ETH",
-    decimals: 18,
-    wrapped: {
-      address: "0x4200000000000000000000000000000000000006",
-      name: "Wrapped Ether",
-      symbol: "WETH",
-    },
-  },
   [ChainId.Hardhat]: {
     name: "Ether",
     symbol: "ETH",
@@ -183,6 +170,17 @@ export const NATIVE_TOKENS: Record<
     decimals: 18,
     wrapped: {
       address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
+  // eslint-disable-next-line no-useless-computed-key
+  [84531]: {
+    name: "Base Goerli Testnet",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x4200000000000000000000000000000000000006",
       name: "Wrapped Ether",
       symbol: "WETH",
     },
