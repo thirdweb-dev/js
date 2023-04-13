@@ -208,10 +208,16 @@ export class ContractEvents<TContract extends BaseContract> {
       order: "desc",
     },
   ): Promise<ContractEvent<TEvent>[]> {
-    const events = await this.contractWrapper.readContract.queryFilter(
-      {},
+    // If filters.fromBlock or filters.toBlock is negative, get latest - fromBlock
+    const [fromBlock, toBlock] = await this.getBlockRange(
       filters.fromBlock,
       filters.toBlock,
+    );
+
+    const events = await this.contractWrapper.readContract.queryFilter(
+      {},
+      fromBlock,
+      toBlock,
     );
 
     const orderedEvents = events.sort((a, b) => {
@@ -276,10 +282,14 @@ export class ContractEvents<TContract extends BaseContract> {
       ...args,
     );
 
-    const events = await this.contractWrapper.readContract.queryFilter(
-      filter,
+    const [fromBlock, toBlock] = await this.getBlockRange(
       options.fromBlock,
       options.toBlock,
+    );
+    const events = await this.contractWrapper.readContract.queryFilter(
+      filter,
+      fromBlock,
+      toBlock,
     );
 
     const orderedEvents = events.sort((a, b) => {
@@ -372,5 +382,23 @@ export class ContractEvents<TContract extends BaseContract> {
       data: results as TEvent,
       transaction,
     };
+  }
+
+  private async getBlockRange(
+    fromBlock?: string | number,
+    toBlock?: string | number,
+  ) {
+    const blockNumber = await this.contractWrapper
+      .getProvider()
+      .getBlockNumber();
+    const from =
+      typeof fromBlock === "number" && fromBlock < 0
+        ? blockNumber + fromBlock
+        : fromBlock;
+    const to =
+      typeof toBlock === "number" && toBlock < 0
+        ? blockNumber + toBlock
+        : toBlock;
+    return [from, to];
   }
 }
