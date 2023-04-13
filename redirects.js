@@ -56,13 +56,6 @@ function redirects() {
       destination: "/contractkit",
       permanent: false,
     },
-    //  old (deprecated) routes
-    {
-      source:
-        "/:network/(edition|nft-collection|token|pack|nft-drop|signature-drop|edition-drop|token-drop|marketplace|split|vote)/:address",
-      destination: "/:network/:address",
-      permanent: false,
-    },
     // prebuilt contract deploys
     {
       source: "/contracts/new/:slug*",
