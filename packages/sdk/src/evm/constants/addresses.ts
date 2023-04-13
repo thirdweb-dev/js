@@ -148,6 +148,14 @@ export const CONTRACT_ADDRESSES: Record<
     twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
     twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
   },
+  [ChainId.BaseGoerli]: {
+    openzeppelinForwarder: "",
+    openzeppelinForwarderEOA: "",
+    biconomyForwarder: "",
+    twBYOCRegistry: constants.AddressZero,
+    twFactory: "",
+    twRegistry: "",
+  },
   [ChainId.Hardhat]: {
     openzeppelinForwarder: constants.AddressZero,
     openzeppelinForwarderEOA: constants.AddressZero,
@@ -255,6 +263,12 @@ export const APPROVED_IMPLEMENTATIONS: Record<
     "signature-drop": "0xE1eE43D23f247b6A9aF81fcE2766E76709482728",
   },
   [ChainId.BinanceSmartChainTestnet]: {
+    "nft-drop": "",
+    "edition-drop": "",
+    "token-drop": "",
+    "signature-drop": "", // TODO
+  },
+  [ChainId.BaseGoerli]: {
     "nft-drop": "",
     "edition-drop": "",
     "token-drop": "",

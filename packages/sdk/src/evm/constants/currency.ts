@@ -157,6 +157,16 @@ export const NATIVE_TOKENS: Record<
       symbol: "WBNB",
     },
   },
+  [ChainId.BaseGoerli]: {
+    name: "Base Goerli Testnet",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x4200000000000000000000000000000000000006",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
   [ChainId.Hardhat]: {
     name: "Ether",
     symbol: "ETH",
