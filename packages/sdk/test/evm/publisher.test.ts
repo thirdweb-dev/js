@@ -539,7 +539,6 @@ describe("Publishing", async () => {
       defaultProvider,
     )) as string;
 
-    console.log("implementations: ", implementations["marketplace-v3"]);
     const pub = await mockSdk.getPublisher();
     const tx = await pub.publish(ipfsHash.concat("rawMeta"), {
       version: "0.0.1",
@@ -556,7 +555,6 @@ describe("Publishing", async () => {
       },
     });
     const contract = await tx.data();
-    console.log(contract);
     expect(contract.id).to.eq("MarketplaceV3");
 
     const fullMetadata = await pub.fetchFullPublishMetadata(

@@ -365,30 +365,34 @@ export class ContractPublisher extends RPCConnectionHandler {
         this.storage,
       );
 
+      // For a dynamic contract Router, try to fetch plugin/extension metadata
+      // from the implementation addresses, if any
       if (extraMetadata.factoryDeploymentData?.implementationAddresses) {
         const implementationsAddresses = Object.entries(
           extraMetadata.factoryDeploymentData.implementationAddresses,
         );
 
-        try {
-          for (const [network, implementation] of implementationsAddresses) {
-            if (implementation !== "") {
-              const compilerMetadata = await fetchContractMetadata(
-                predeployMetadata.metadataUri,
-                this.storage,
-              );
-              const composite = await getCompositePluginABI(
-                implementation,
-                compilerMetadata.abi,
-                getChainProvider(parseInt(network), {}), // pass empty object for options instead of this.options
-                {}, // pass empty object for options instead of this.options
-                this.storage,
-              );
-              extraMetadata.compositeAbi = AbiSchema.parse(composite);
-              break;
-            }
-          }
-        } catch {}
+        const entry = implementationsAddresses.find(
+          ([, implementation]) => implementation !== "",
+        );
+        const [network, implementation] = entry ? entry : [];
+
+        if (network && implementation) {
+          try {
+            const compilerMetadata = await fetchContractMetadata(
+              predeployMetadata.metadataUri,
+              this.storage,
+            );
+            const composite = await getCompositePluginABI(
+              implementation,
+              compilerMetadata.abi,
+              getChainProvider(parseInt(network), {}), // pass empty object for options instead of this.options
+              {}, // pass empty object for options instead of this.options
+              this.storage,
+            );
+            extraMetadata.compositeAbi = AbiSchema.parse(composite);
+          } catch {}
+        }
       }
 
       // ensure version is incremental
