@@ -37,7 +37,7 @@ const PublishPage: ThirdwebNextPage = (props: PublishPageProps) => {
   );
 };
 
-PublishPage.pageId = PageId.DeployedProgram;
+PublishPage.pageId = PageId.PublishedContract;
 
 PublishPage.getLayout = (page, props: PublishPageProps) => {
   return <AppLayout dehydratedState={props.dehydratedState}>{page}</AppLayout>;
