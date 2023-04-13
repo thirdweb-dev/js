@@ -32,6 +32,7 @@ import type {
   IEnglishAuctions,
   EnglishAuctionsLogic,
   IMulticall,
+  MarketplaceV3,
 } from "@thirdweb-dev/contracts-js";
 import { NewAuctionEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IEnglishAuctions";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -393,6 +394,49 @@ export class MarketplaceV3EnglishAuctions<
             id: event.args.auctionId,
             receipt,
           };
+        },
+      });
+    },
+  );
+
+  /**
+   * Create a batch of new auctions
+   *
+   * @remarks Create a batch of new auctions on the marketplace
+   *
+   * @example
+   * ```javascript
+   * const auctions = [...];
+   * const tx = await contract.englishAuctions.createAuctionsBatch(auctions);
+   * ```
+   */
+  createAuctionsBatch = buildTransactionFunction(
+    async (
+      listings: EnglishAuctionInputParams[],
+    ): Promise<Transaction<TransactionResultWithId[]>> => {
+      const data = await Promise.all(
+        listings.map(async (listing) => {
+          const tx = await this.createAuction.prepare(listing);
+          return tx.encode();
+        }),
+      );
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this
+          .contractWrapper as unknown as ContractWrapper<MarketplaceV3>,
+        method: "multicall",
+        args: [data],
+        parse: (receipt) => {
+          const events = this.contractWrapper.parseLogs<NewAuctionEvent>(
+            "NewAuction",
+            receipt?.logs,
+          );
+          return events.map((event) => {
+            return {
+              id: event.args.auctionId,
+              receipt,
+            };
+          });
         },
       });
     },

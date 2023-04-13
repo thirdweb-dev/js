@@ -1,14 +1,10 @@
-import { AsyncStorage, createAsyncLocalStorage } from "../../core/AsyncStorage";
 import type { WalletConnectV1Connector as WalletConnectV1ConnectorType } from "../connectors/wallet-connect-v1";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { assertWindowEthereum } from "../utils/assertWindowEthereum";
-import { AbstractBrowserWallet, WalletOptions } from "./base";
+import { AbstractClientWallet, WalletOptions } from "./base";
+import type { MetaMaskConnector as MetamaskConnectorType } from "../connectors/metamask";
 
 type MetamaskAdditionalOptions = {
-  /**
-   * Storage interface to store whether metamask is connected or disconnected.
-   */
-  connectorStorage?: AsyncStorage;
   /**
    * Whether to display the Wallet Connect QR code Modal for connecting to MetaMask on mobile if MetaMask is not injected.
    */
@@ -23,10 +19,10 @@ type ConnectWithQrCodeArgs = {
   onConnected: (accountAddress: string) => void;
 };
 
-export class MetaMaskWallet extends AbstractBrowserWallet<MetamaskAdditionalOptions> {
+export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptions> {
   connector?: TWConnector;
-  connectorStorage: AsyncStorage;
   walletConnectConnector?: WalletConnectV1ConnectorType;
+  metamaskConnector?: MetamaskConnectorType;
   isInjected: boolean;
 
   static meta = {
@@ -43,8 +39,6 @@ export class MetaMaskWallet extends AbstractBrowserWallet<MetamaskAdditionalOpti
 
   constructor(options: MetamaskWalletOptions) {
     super(MetaMaskWallet.id, options);
-    this.connectorStorage =
-      options.connectorStorage || createAsyncLocalStorage("connector");
 
     if (assertWindowEthereum(globalThis.window)) {
       this.isInjected = !!globalThis.window.ethereum?.isMetaMask;
@@ -63,11 +57,13 @@ export class MetaMaskWallet extends AbstractBrowserWallet<MetamaskAdditionalOpti
         const { MetaMaskConnector } = await import("../connectors/metamask");
         const metamaskConnector = new MetaMaskConnector({
           chains: this.chains,
-          connectorStorage: this.connectorStorage,
+          connectorStorage: this.walletStorage,
           options: {
             shimDisconnect: true,
           },
         });
+
+        this.metamaskConnector = metamaskConnector;
 
         this.connector = new WagmiAdapter(metamaskConnector);
       } else {
@@ -77,7 +73,7 @@ export class MetaMaskWallet extends AbstractBrowserWallet<MetamaskAdditionalOpti
 
         const walletConnectConnector = new WalletConnectV1Connector({
           chains: this.chains,
-          storage: this.connectorStorage,
+          storage: this.walletStorage,
           options: {
             clientMeta: {
               name: this.dappMetadata.name,
@@ -138,5 +134,13 @@ export class MetaMaskWallet extends AbstractBrowserWallet<MetamaskAdditionalOpti
 
     // trigger connect flow
     this.connect({ chainId: options.chainId }).then(options.onConnected);
+  }
+
+  async switchAccount() {
+    if (!this.metamaskConnector) {
+      throw new Error("Can not switch Account");
+    }
+
+    await this.metamaskConnector.switchAccount();
   }
 }

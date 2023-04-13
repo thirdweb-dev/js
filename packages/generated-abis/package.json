@@ -25,5 +25,8 @@
   "sideEffects": false,
   "files": [
     "dist/"
-  ]
+  ],
+  "scripts": {
+    "push": "yalc push"
+  }
 }

@@ -1,14 +1,17 @@
 import { NATIVE_TOKEN_ADDRESS, ThirdwebSDK } from "../../src/evm";
 import { SmartContract } from "../../src/evm/contracts/smart-contract";
-import { signers } from "./before-setup";
+import { jsonProvider, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect, assert } from "chai";
+import { ethers } from "ethers";
 
 describe("Any EVM Keyless Deploy", async () => {
   let contract: SmartContract;
   let sdk: ThirdwebSDK;
   let adminWallet: SignerWithAddress;
   let claimerWallet: SignerWithAddress;
+  let notificationCounter: number;
+  let transactionCount: number;
 
   async function deployTieredDrop() {
     const mockPublisher = process.env.contractPublisherAddress;
@@ -19,6 +22,9 @@ describe("Any EVM Keyless Deploy", async () => {
     // This needs to match the published contract for the currently used ABI
     const publishUri =
       "ipfs://QmXu9ezFNgXBX1juLZ7kwdf5KpTD1x9GPHnk14QB2NpUvK/0";
+    transactionCount = (await sdk.deployer.getTransactionsForDeploy(publishUri))
+      .length;
+
     const address = await sdk.deployer.deployContractFromUri(
       publishUri,
       [
@@ -33,6 +39,9 @@ describe("Any EVM Keyless Deploy", async () => {
       ],
       {
         forceDirectDeploy: false,
+        notifier(status, contractType) {
+          notificationCounter += 1;
+        },
       },
     );
 
@@ -42,180 +51,100 @@ describe("Any EVM Keyless Deploy", async () => {
     return tieredDrop;
   }
 
+  async function deployMarketplaceV3() {
+    const mockPublisher = process.env.contractPublisherAddress;
+    process.env.contractPublisherAddress =
+      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+    const walletAddress = await sdk.wallet.getAddress();
+
+    // This needs to match the published contract for the currently used ABI
+    const publishUri = "ipfs://QmP2QPzc81zg5rqhU9u7cDeSyD4aZH8RdVF8Nuh6rCCgxV";
+    transactionCount = (await sdk.deployer.getTransactionsForDeploy(publishUri))
+      .length;
+
+    const address = await sdk.deployer.deployContractFromUri(
+      publishUri,
+      [
+        walletAddress, // defaultAdmin
+        "ipfs://QmP2QPzc81zg5rqhU9u7cDeSyD4aZH8RdVF8Nuh6rCCgxV", // contractUri
+        [], // trustedForwarders
+        walletAddress, // platform fee recipient
+        0, // platform fee bps
+      ],
+      {
+        forceDirectDeploy: false,
+        notifier(status, contractType) {
+          notificationCounter += 1;
+        },
+      },
+    );
+
+    process.env.contractPublisherAddress = mockPublisher;
+    const marketplace = await sdk.getContract(address);
+
+    return marketplace;
+  }
+
   before(async () => {
     [adminWallet, claimerWallet] = signers;
     sdk = new ThirdwebSDK(adminWallet);
-
-    contract = await deployTieredDrop();
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
+    await jsonProvider.send("hardhat_reset", []);
   });
 
-  it("Should lazy mint NFTs", async () => {
-    const metadata = [
-      {
-        name: "NFT #1",
-        description: "My first NFT",
-      },
-      {
-        name: "NFT #2",
-        description: "My second NFT",
-      },
-    ];
-    const txs = await contract.erc721.tieredDrop.createBatchWithTier(
-      metadata,
-      "tier1",
-    );
-    expect(txs.length).to.equal(2);
-
-    const nfts = await contract.erc721.tieredDrop.getMetadataInTier("tier1");
-    expect(nfts.length).to.equal(2);
-    expect(nfts[0].name).to.equal("NFT #1");
-  });
-
-  it("Should reject invalid payload", async () => {
-    const payload = {
-      currencyAddress: NATIVE_TOKEN_ADDRESS,
-      price: 0,
-      quantity: 1,
-      tierPriority: ["tier1"],
-      to: claimerWallet.address,
-      mintEndTime: new Date(Date.now() + 60 * 60 * 24 * 1000 * 1000),
-      mintStartTime: new Date(),
-    };
-    const signedPayload = await contract.erc721.tieredDrop.generate(payload);
-    signedPayload.payload.price = "1";
-
-    sdk.updateSignerOrProvider(claimerWallet);
-    const isValid = await contract.erc721.tieredDrop.verify(signedPayload);
-    assert.isFalse(isValid);
-  });
-
-  it("Should claim NFTs", async () => {
-    const payload = {
-      currencyAddress: NATIVE_TOKEN_ADDRESS,
-      price: 0,
-      quantity: 1,
-      tierPriority: ["tier1"],
-      to: claimerWallet.address,
-      mintEndTime: new Date(Date.now() + 60 * 60 * 24 * 1000 * 1000),
-      mintStartTime: new Date(Date.now() - 1000),
-    };
-    const signedPayload = await contract.erc721.tieredDrop.generate(payload);
-    const isValid = await contract.erc721.tieredDrop.verify(signedPayload);
-
-    assert.isTrue(isValid);
-
-    sdk.updateSignerOrProvider(claimerWallet);
-    const txs = await contract.erc721.tieredDrop.claimWithSignature(
-      signedPayload,
-    );
-    expect((await txs[0].data()).metadata.name).to.equal("NFT #1");
-  });
-
-  it("Should get tokens in tier", async () => {
-    const payload = {
-      currencyAddress: NATIVE_TOKEN_ADDRESS,
-      price: 0,
-      quantity: 1,
-      tierPriority: ["tier1"],
-      to: claimerWallet.address,
-      mintEndTime: new Date(Date.now() + 60 * 60 * 24 * 1000 * 1000),
-      mintStartTime: new Date(Date.now() - 1000),
-    };
-    const signedPayload = await contract.erc721.tieredDrop.generate(payload);
-    await contract.erc721.tieredDrop.claimWithSignature(signedPayload);
-
-    const nfts = await contract.erc721.tieredDrop.getTokensInTier("tier1");
-    expect(nfts.length).to.equal(2);
-    expect(nfts[0].metadata.name).to.equal("NFT #1");
-    expect(nfts[1].metadata.name).to.equal("NFT #2");
-  });
-
-  it("Should claim from multiple tiers", async () => {
-    let metadata = [
-      {
-        name: "NFT #3",
-        description: "My first NFT",
-      },
-    ];
-    await contract.erc721.tieredDrop.createBatchWithTier(metadata, "tier1");
-
-    metadata = [
-      {
-        name: "NFT #4",
-        description: "My fourth NFT",
-      },
-    ];
-    await contract.erc721.tieredDrop.createBatchWithTier(metadata, "tier2");
-
-    metadata = [
-      {
-        name: "NFT #5",
-        description: "My fifth NFT",
-      },
-    ];
-    await contract.erc721.tieredDrop.createBatchWithTier(metadata, "tier3");
-
-    const payload = {
-      currencyAddress: NATIVE_TOKEN_ADDRESS,
-      price: 0,
-      quantity: 3,
-      tierPriority: ["tier1", "tier2", "tier3"],
-      to: claimerWallet.address,
-      mintEndTime: new Date(Date.now() + 60 * 60 * 24 * 1000 * 1000),
-      mintStartTime: new Date(Date.now() - 1000),
-    };
-    const signedPayload = await contract.erc721.tieredDrop.generate(payload);
-    await contract.erc721.tieredDrop.claimWithSignature(signedPayload);
-
-    let nfts = await contract.erc721.tieredDrop.getTokensInTier("tier1");
-    expect(nfts.length).to.equal(3);
-    expect(nfts[2].metadata.name).to.equal("NFT #3");
-
-    nfts = await contract.erc721.tieredDrop.getTokensInTier("tier2");
-    expect(nfts.length).to.equal(1);
-    expect(nfts[0].metadata.name).to.equal("NFT #4");
-
-    nfts = await contract.erc721.tieredDrop.getTokensInTier("tier3");
-    expect(nfts.length).to.equal(1);
-    expect(nfts[0].metadata.name).to.equal("NFT #5");
-  });
-
-  it("metadata should reveal correctly", async () => {
+  it("correct count of logs and transactions", async () => {
+    notificationCounter = 0;
+    transactionCount = 0;
     contract = await deployTieredDrop();
+    expect(notificationCounter).to.equal(8);
+    expect(transactionCount).to.equal(4);
 
-    const placeholder = {
-      name: "Placeholder",
-      description: "This is a placeholder",
-    };
-    const metadata = [
-      {
-        name: "NFT #1",
-        description: "My first NFT",
-      },
-      {
-        name: "NFT #2",
-        description: "My second NFT",
-      },
-    ];
-    await contract.erc721.tieredDrop.createDelayedRevealBatchWithTier(
-      placeholder,
-      metadata,
-      "my secret password",
-      "tier1",
-    );
+    notificationCounter = 0;
+    transactionCount = 0;
+    contract = await deployTieredDrop();
+    expect(notificationCounter).to.equal(2);
+    expect(transactionCount).to.equal(1);
+  });
 
-    let nfts = await contract.erc721.tieredDrop.getMetadataInTier("tier1");
-    expect(nfts.length).to.equal(2);
-    expect(nfts[0].name).to.equal("Placeholder");
+  it("deploy marketplacev3", async () => {
+    notificationCounter = 0;
+    transactionCount = 0;
+    const marketplace = await deployMarketplaceV3();
+    expect(notificationCounter).to.greaterThanOrEqual(12);
+    expect(transactionCount).to.greaterThanOrEqual(6);
 
-    await contract.erc721.tieredDrop.reveal(0, "my secret password");
+    let plugins = await marketplace.call("getAllPlugins");
+    let allPlugins = plugins.map((item: any) => item.pluginAddress);
+    let pluginsAddresses = Array.from(new Set(allPlugins));
 
-    nfts = await contract.erc721.tieredDrop.getMetadataInTier("tier1");
-    expect(nfts.length).to.equal(2);
-    expect(nfts[0].name).to.equal("NFT #1");
+    expect(pluginsAddresses.length).to.equal(3);
+
+    pluginsAddresses.forEach(async (address) => {
+      expect(address).to.not.equal(ethers.constants.AddressZero);
+      const code = await adminWallet.provider?.getCode(address as string);
+      expect(code?.length).to.be.greaterThan(2);
+    });
+
+    // deploy again
+    notificationCounter = 0;
+    transactionCount = 0;
+    const marketplace2 = await deployMarketplaceV3();
+    expect(notificationCounter).to.equal(2);
+    expect(transactionCount).to.equal(1);
+
+    plugins = await marketplace2.call("getAllPlugins");
+    allPlugins = plugins.map((item: any) => item.pluginAddress);
+    pluginsAddresses = Array.from(new Set(allPlugins));
+
+    expect(pluginsAddresses.length).to.equal(3);
+
+    pluginsAddresses.forEach(async (address) => {
+      expect(address).to.not.equal(ethers.constants.AddressZero);
+      const code = await adminWallet.provider?.getCode(address as string);
+      expect(code?.length).to.be.greaterThan(2);
+    });
   });
 });

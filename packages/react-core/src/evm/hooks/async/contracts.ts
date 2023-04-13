@@ -160,6 +160,7 @@ export type UseContractResult<
  *
  * @param contractAddress - the address of the deployed contract
  * @returns a response object that includes the contract once it is resolved
+ * @see {@link https://portal.thirdweb.com/react/react.usecontract?utm_source=sdk | Documentation}
  * @public
  */
 export function useContract(
@@ -177,6 +178,7 @@ export function useContract(
  * @param contractAddress - the address of the deployed contract
  * @param _contractType - the type of the contract
  * @returns a response object that includes the contract once it is resolved
+ * @see {@link https://portal.thirdweb.com/react/react.usecontract?utm_source=sdk | Documentation}
  * @public
  */
 export function useContract<TContractType extends ContractType>(
@@ -199,6 +201,7 @@ export function useContract<TContractType extends ContractType>(
  * @param contractAddress - the address of the deployed contract
  * @param _abi - the ABI of the contract to use
  * @returns a response object that includes the contract once it is resolved
+ * @see {@link https://portal.thirdweb.com/react/react.usecontract?utm_source=sdk | Documentation}
  * @public
  */
 
@@ -409,6 +412,7 @@ export function useContractMetadataUpdate(
  * @param eventName - the name of the event to query for (omit this or pass `undefined` to query for all events)
  * @param options - options includes the filters ({@link QueryAllEvents}) for the query as well as if you want to subscribe to real-time updates (default: true)
  * @returns a response object that includes the contract events
+ * @see {@link https://portal.thirdweb.com/react/react.usecontractevents?utm_source=sdk | Documentation}
  * @beta
  */
 export function useContractEvents(
@@ -427,11 +431,11 @@ export function useContractEvents(
     () =>
       createCacheKeyWithNetwork(
         eventName
-          ? cacheKeys.contract.events.getAllEvents(contractAddress)
-          : cacheKeys.contract.events.getEvents(
+          ? cacheKeys.contract.events.getEvents(
               contractAddress,
               eventName as string,
-            ),
+            )
+          : cacheKeys.contract.events.getAllEvents(contractAddress),
         activeChainId,
       ),
     [activeChainId, contractAddress, eventName],
@@ -506,7 +510,7 @@ export function useContractEvents(
  * @param functionName - the name of the function to call
  * @param args - The arguments to pass to the function (if any), with optional call arguments as the last parameter
  * @returns a response object that includes the data returned by the function call
- *
+ * @see {@link https://portal.thirdweb.com/react/react.usecontractread?utm_source=sdk | Documentation}
  * @beta
  */
 export function useContractRead<
@@ -553,7 +557,7 @@ export function useContractRead<
  * @param contract - the contract instance of the contract to call a function on
  * @param functionName - the name of the function to call
  * @returns a response object that includes the write function to call
- *
+ * @see {@link https://portal.thirdweb.com/react/react.usecontractwrite?utm_source=sdk | Documentation}
  * @beta
  */
 export function useContractWrite<

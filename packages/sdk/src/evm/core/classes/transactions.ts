@@ -492,19 +492,6 @@ export class Transaction<
         overrides,
       );
     } catch (err) {
-      // First, check if the error is an insufficient balance error
-      const from = await (overrides.from || this.getSignerAddress());
-      const value = await (overrides.value ? overrides.value : 0);
-      const balance = await this.provider.getBalance(from);
-
-      if (balance.eq(0) || (value && balance.lt(value))) {
-        throw await this.transactionError(
-          new Error(
-            "You have insufficient funds in your account to execute this transaction.",
-          ),
-        );
-      }
-
       throw await this.transactionError(err);
     }
   }

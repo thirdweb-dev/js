@@ -1,5 +1,5 @@
 import type {
-  AbstractBrowserWallet,
+  AbstractClientWallet,
   Chain,
   DAppMetaData,
 } from "@thirdweb-dev/wallets";
@@ -15,16 +15,16 @@ export type WalletOptions = {
   dappMetadata?: DAppMetaData;
 } & ExtraCoreWalletOptions;
 
-export type WalletInstance = InstanceType<typeof AbstractBrowserWallet>;
+export type WalletInstance = InstanceType<typeof AbstractClientWallet>;
 
 export type WalletClass<I extends WalletInstance = WalletInstance> = {
   id: string;
   new (options: WalletOptions): I;
-  meta: (typeof AbstractBrowserWallet)["meta"];
+  meta: (typeof AbstractClientWallet)["meta"];
 };
 
 export type Wallet<I extends WalletInstance = WalletInstance> = {
   id: string;
-  meta: (typeof AbstractBrowserWallet)["meta"];
+  meta: (typeof AbstractClientWallet)["meta"];
   create: (options: WalletOptions) => I;
 };
