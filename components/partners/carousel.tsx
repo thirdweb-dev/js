@@ -66,7 +66,8 @@ export const PartnerCarousel: React.FC = () => {
         <PartnerLogo partner="shopify" />
         <PartnerLogo partner="paradigm" />
         <PartnerLogo partner="unlock" />
-        <PartnerLogo partner="minted" />
+        <PartnerLogo partner="animoca" />
+        <PartnerLogo partner="pixels" />
         <PartnerLogo partner="nyfw" />
         <PartnerLogo partner="gala_games" />
         <PartnerLogo partner="mirror" />
@@ -88,7 +89,8 @@ export const PartnerCarousel: React.FC = () => {
         animationDirection="reverse"
         display={{ base: "flex", lg: "none" }}
       >
-        <PartnerLogo partner="minted" />
+        <PartnerLogo partner="animoca" />
+        <PartnerLogo partner="pixels" />
         <PartnerLogo partner="nyfw" />
         <PartnerLogo partner="gala_games" />
         <PartnerLogo partner="mirror" />

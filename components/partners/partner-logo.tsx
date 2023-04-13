@@ -25,10 +25,6 @@ const PARTNER_LOGO_MAP = {
     img: require("./logos/unlock.png"),
     filter: undefined,
   },
-  minted: {
-    img: require("./logos/minted.png"),
-    filter: "brightness(0) invert(1)",
-  },
   nyfw: {
     img: require("./logos/nyfw.png"),
     filter: "brightness(0) invert(1)",
@@ -48,6 +44,14 @@ const PARTNER_LOGO_MAP = {
   layer3: {
     img: require("./logos/layer3.png"),
     filter: undefined,
+  },
+  animoca: {
+    img: require("./logos/animoca.png"),
+    filter: "brightness(0) invert(1)",
+  },
+  pixels: {
+    img: require("./logos/pixels.png"),
+    filter: "brightness(0) invert(1)",
   },
 } as const;
 
