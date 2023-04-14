@@ -107,7 +107,7 @@ const Minting: ThirdwebNextPage = () => {
     <ProductPage
       seo={{
         title: "Minting | Solutions",
-        description: "Build and mint NFTs at scale easily",
+        description: "Launch and mint NFTs at scale",
         // @TODO
         // openGraph: {
         //   images: [
@@ -123,19 +123,18 @@ const Minting: ThirdwebNextPage = () => {
     >
       <Hero
         name="Minting"
-        title="Build and mint NFTs at scale easily"
-        description={
-          <>
-            An all-in-one toolkit to build and mint NFTs. <br />
-            Create powerful NFT experiences.
-          </>
-        }
+        title="Launch and mint NFTs at scale"
+        description="Minting allows creators and developers to launch a wide range of NFT content and distribution strategies in a configurable, secure and scalable way."
         trackingCategory={TRACKING_CATEGORY}
         buttonText="Get started"
         type="Solutions"
         buttonLink="https://portal.thirdweb.com/pre-built-contracts/choosing-the-right-pre-built-contract"
         gradient="linear-gradient(145.96deg, rgb(142 14 255) 5.07%, #16bdf0 100%)"
         image={require("public/assets/solutions-pages/minting/hero.png")}
+        secondaryButton={{
+          text: "Request demo",
+          link: "https://thirdweb.typeform.com/tw-solutions",
+        }}
       >
         <SimpleGrid
           justifyContent="flex-start"
@@ -144,82 +143,70 @@ const Minting: ThirdwebNextPage = () => {
           gap={{ base: 12, md: 6 }}
         >
           <ProductCard
-            title="Owned by you"
+            title="Flexible"
             icon={require("/public/assets/product-pages/extensions/hero-icon-1.png")}
           >
-            Apps and contracts built with our tools are completely owned by you.
-            No other parties have control over your apps and contracts.
+            <Box as="span">
+              Choose different NFT types including 1-of-1 collections, editions,
+              loot boxes, on-demand/dynamic and specialized NFT&apos;s available
+              in thirdweb&apos;s on-chain smart contract registry (
+              <TrackedLink
+                href="/explore"
+                category={TRACKING_CATEGORY}
+                label="explore"
+                color="primary.500"
+              >
+                Explore
+              </TrackedLink>
+              ). Deploy to{" "}
+              <TrackedLink
+                href="https://blog.thirdweb.com/any-contract-any-evm-chain/"
+                isExternal
+                category={TRACKING_CATEGORY}
+                label="700_public_blockchains"
+                color="primary.500"
+              >
+                700+ public blockchains
+              </TrackedLink>{" "}
+              or to your own private blockchain.
+            </Box>
           </ProductCard>
           <ProductCard
-            title="Minting for all use cases"
-            icon={require("/public/assets/product-pages/extensions/hero-icon-3.png")}
-          >
-            <span>
-              We support all types of configurable minting mechanics for{" "}
-              <Link
-                color="white"
-                href="https://portal.thirdweb.com/pre-built-contracts/choosing-the-right-pre-built-contract"
-                isExternal
-              >
-                EVM Contracts
-              </Link>{" "}
-              and{" "}
-              <Link
-                color="white"
-                href="https://portal.thirdweb.com/pre-built-contracts/solana/nft-drop"
-                isExternal
-              >
-                Solana programs
-              </Link>
-              , including:{" "}
-              <Link
-                color="white"
-                href="https://portal.thirdweb.com/pre-built-contracts/signature-drop"
-                isExternal
-              >
-                signature-based minting
-              </Link>
-              ,{" "}
-              <Link
-                color="white"
-                href="https://portal.thirdweb.com/pre-built-contracts/nft-drop"
-                isExternal
-              >
-                releasing a collection of unique NFTs
-              </Link>
-              ,{" "}
-              <Link
-                color="white"
-                href="https://portal.thirdweb.com/pre-built-contracts/multiwrap"
-                isExternal
-              >
-                wrap tokens into new wrapped NFT
-              </Link>
-              ,{" "}
-              <Link
-                color="white"
-                href="https://portal.thirdweb.com/pre-built-contracts/pack"
-                isExternal
-              >
-                randomized lootbox
-              </Link>
-              {},{" "}
-              <Link
-                color="white"
-                href="https://portal.thirdweb.com/pre-built-contracts/choosing-the-right-pre-built-contract"
-                isExternal
-              >
-                and more
-              </Link>
-              .
-            </span>
-          </ProductCard>
-          <ProductCard
-            title="Unlock powerful tooling"
+            title="Frictionless purchases"
             icon={require("/public/assets/product-pages/extensions/hero-icon-2.png")}
           >
-            Get auto-generated SDKs and dashboards to build apps on top of your
-            NFT contracts and easily manage them.
+            <Box as="span">
+              Our powerful{" "}
+              <TrackedLink
+                href="https://portal.thirdweb.com/wallet"
+                isExternal
+                category={TRACKING_CATEGORY}
+                label="wallet_sdk"
+                color="primary.500"
+              >
+                wallet SDK
+              </TrackedLink>{" "}
+              allows users to create wallets with nothing more than an email,
+              checkout using a credit card or pay from their{" "}
+              <TrackedLink
+                href="https://portal.thirdweb.com/unity/wallet/FundWallet"
+                isExternal
+                category={TRACKING_CATEGORY}
+                label="coinbase_account"
+                color="primary.500"
+              >
+                Coinbase account
+              </TrackedLink>
+              .
+            </Box>
+          </ProductCard>
+          <ProductCard
+            title="Owned by you"
+            icon={require("/public/assets/product-pages/extensions/hero-icon-3.png")}
+          >
+            Non-custodial ownership model. Apps and contracts built with our
+            tools are completely owned by you. No other parties have control
+            over your apps and contracts.
           </ProductCard>
         </SimpleGrid>
       </Hero>
@@ -258,25 +245,19 @@ const Minting: ThirdwebNextPage = () => {
             category={TRACKING_CATEGORY}
             description={
               <>
-                Build your own NFT and Marketplace contracts with the{" "}
-                <Link
-                  color="white"
-                  href="https://portal.thirdweb.com/solidity"
+                A broad set of options for{" "}
+                <TrackedLink
+                  href="https://portal.thirdweb.com/typescript/extensions"
                   isExternal
+                  category={TRACKING_CATEGORY}
+                  label="distributing_nfts"
+                  color="primary.500"
                 >
-                  Solidity SDK
-                </Link>{" "}
-                or discover and deploy in 1-click via{" "}
-                <Link
-                  color="white"
-                  href="https://thirdweb.com/explore"
-                  isExternal
-                >
-                  Explore
-                </Link>
-                {". "}
-                Use our powerful SDKs to easily integrate NFT checkout into your
-                app for easy fiat-on ramp.
+                  distributing NFTs
+                </TrackedLink>{" "}
+                including claimable drops, private/public sales, airdrops, open
+                editions, delayed reveals as well as free/gasless mints using a
+                Gasless Relayer.
               </>
             }
             icon={require("/public/assets/product-pages/dashboard/hero-icon-1.png")}
@@ -285,14 +266,42 @@ const Minting: ThirdwebNextPage = () => {
           <ProductLearnMoreCard
             title="Launch"
             category={TRACKING_CATEGORY}
-            description="Deploy your NFT & Marketplace contracts on-chain with a simple contract deployment workflow designed for team collaboration"
+            description={
+              <>
+                Integrate minting into applications using a variety of web3 API
+                configurations including as an{" "}
+                <TrackedLink
+                  href="https://portal.thirdweb.com/"
+                  isExternal
+                  category={TRACKING_CATEGORY}
+                  label="embedded_sdk"
+                  color="primary.500"
+                >
+                  embedded SDK
+                </TrackedLink>
+                , self-hosted via a web3 REST API or as a managed service.
+              </>
+            }
             icon={require("/public/assets/product-pages/dashboard/hero-icon-2.png")}
             href="https://portal.thirdweb.com/deploy"
           />
           <ProductLearnMoreCard
             title="Manage"
             category={TRACKING_CATEGORY}
-            description="All your on-chain analytics in one place. Monitor, configure, and interact with your NFT contracts directly from a user interface."
+            description={
+              <>
+                Analytics via a{" "}
+                <TrackedLink
+                  href="/dashboard"
+                  category={TRACKING_CATEGORY}
+                  label="dashboard"
+                  color="primary.500"
+                >
+                  Dashboard
+                </TrackedLink>{" "}
+                and API for balances, gas spent, transactions and owners.
+              </>
+            }
             icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
             href="https://portal.thirdweb.com/dashboard"
           />
