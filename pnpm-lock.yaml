@@ -1222,6 +1222,9 @@ importers:
       cross-fetch:
         specifier: ^3.1.5
         version: 3.1.5
+      crypto-js:
+        specifier: ^4.1.1
+        version: 4.1.1
       eip1193-provider:
         specifier: ^1.0.1
         version: 1.0.1
@@ -1244,6 +1247,9 @@ importers:
       '@thirdweb-dev/tsconfig':
         specifier: workspace:*
         version: link:../tw-tsconfig
+      '@types/crypto-js':
+        specifier: ^4.1.1
+        version: 4.1.1
       bs58:
         specifier: ^5.0.0
         version: 5.0.0
@@ -9898,6 +9904,10 @@ packages:
       '@types/node': 18.15.3
     dev: true
 
+  /@types/crypto-js@4.1.1:
+    resolution: {integrity: sha512-BG7fQKZ689HIoc5h+6D2Dgq1fABRa0RbBWKBd9SP/MVRVXROflpm5fhwyATX5duFmbStzyzyycPB8qUYKDH3NA==}
+    dev: true
+
   /@types/debug@4.1.7:
     resolution: {integrity: sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==}
     dependencies:
@@ -13647,7 +13657,6 @@ packages:
 
   /crypto-js@4.1.1:
     resolution: {integrity: sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw==}
-    dev: true
 
   /crypto-random-string@1.0.0:
     resolution: {integrity: sha512-GsVpkFPlycH7/fRR7Dhcmnoii54gV1nz7y4CWyeFS14N+JVBBhY+r8amRHE4BwSYal7BPTDp8isvAlCxyFt3Hg==}
