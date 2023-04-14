@@ -19,7 +19,7 @@ export type WalletData = {
 
 export type DeviceWalletConnectionArgs = {};
 
-const STORAGE_KEY_WALLET_DATA = "walletData";
+const STORAGE_KEY_WALLET_DATA = "deviceWalletData";
 
 export class DeviceWallet extends AbstractClientWallet<
   DeviceWalletOptions,
@@ -271,7 +271,10 @@ export class DeviceWallet extends AbstractClientWallet<
    * @param password - password for encrypting the wallet data
    */
   async export(options: ExportOptions): Promise<string> {
-    const wallet = (await this.getSigner()) as Wallet;
+    const wallet = this.#ethersWallet;
+    if (!wallet) {
+      throw new Error("Wallet is not initialized");
+    }
 
     if (options.strategy === "encryptedJson") {
       return wallet.encrypt(options.password, {
@@ -286,6 +289,12 @@ export class DeviceWallet extends AbstractClientWallet<
     }
 
     if (options.strategy === "mnemonic") {
+      if (!wallet.mnemonic) {
+        throw new Error(
+          "mnemonic can not be computed if wallet is created from a private key",
+        );
+      }
+
       return getEncryptor(options.encryption)(wallet.mnemonic.phrase);
     }
 
@@ -341,11 +350,11 @@ type EncryptOptions =
 type ImportOptions =
   | {
       privateKey: string;
-      encryption?: DecryptOptions;
+      encryption: DecryptOptions;
     }
   | {
       mnemonic: string;
-      encryption?: DecryptOptions;
+      encryption: DecryptOptions;
     }
   | {
       encryptedJson: string;
@@ -361,24 +370,24 @@ type LoadOptions =
   | {
       strategy: "privateKey";
       storage?: AsyncStorage;
-      encryption?: DecryptOptions;
+      encryption: DecryptOptions;
     }
   | {
       strategy: "mnemonic";
       storage?: AsyncStorage;
-      encryption?: DecryptOptions;
+      encryption: DecryptOptions;
     };
 
 type SaveOptions =
   | { strategy: "encryptedJson"; password: string; storage?: AsyncStorage }
   | {
       strategy: "privateKey";
-      encryption?: EncryptOptions;
+      encryption: EncryptOptions;
       storage?: AsyncStorage;
     }
   | {
       strategy: "mnemonic";
-      encryption?: EncryptOptions;
+      encryption: EncryptOptions;
       storage?: AsyncStorage;
     };
 
@@ -386,11 +395,11 @@ type ExportOptions =
   | { strategy: "encryptedJson"; password: string }
   | {
       strategy: "privateKey";
-      encryption?: EncryptOptions;
+      encryption: EncryptOptions;
     }
   | {
       strategy: "mnemonic";
-      encryption?: EncryptOptions;
+      encryption: EncryptOptions;
     };
 
 async function defaultEncrypt(message: string, password: string) {
