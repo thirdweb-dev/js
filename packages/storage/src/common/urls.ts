@@ -21,7 +21,7 @@ export const TW_IPFS_SERVER_URL = "https://upload.nftlabs.co";
 /**
  * @internal
  */
-export const TW_IPFS_SERVER_V2_URL = `https://storage-server-babv.zeet-nftlabs.zeet.app/upload`; // TODO: Use correct URL for production
+export const TW_IPFS_SERVER_V2_URL = `https://api.thirdweb.com/ipfs/upload`;
 
 /**
  * @internal
