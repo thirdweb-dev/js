@@ -1256,5 +1256,19 @@ describe("Marketplace Contract", async () => {
         "should not have found the listing because it is invalid",
       );
     });
+
+    it("should treat burned tokens listings as invalid", async () => {
+      await sdk.updateSignerOrProvider(adminWallet);
+      await dummyNftContract.burn("0");
+
+      const allListings = await marketplaceContract.getActiveListings();
+      const found = allListings.find(
+        (l) => l.id.toString() === directListingId.toString(),
+      );
+      assert.isUndefined(
+        found,
+        "should not have found the listing because it is invalid",
+      );
+    });
   });
 });
