@@ -183,6 +183,13 @@
       },
       "default": "./evm/wallets/aws-secrets-manager/dist/thirdweb-dev-wallets-evm-wallets-aws-secrets-manager.cjs.js"
     },
+    "./evm/wallets/device-walllet-node": {
+      "module": {
+        "browser": "./evm/wallets/device-walllet-node/dist/thirdweb-dev-wallets-evm-wallets-device-walllet-node.browser.esm.js",
+        "default": "./evm/wallets/device-walllet-node/dist/thirdweb-dev-wallets-evm-wallets-device-walllet-node.esm.js"
+      },
+      "default": "./evm/wallets/device-walllet-node/dist/thirdweb-dev-wallets-evm-wallets-device-walllet-node.cjs.js"
+    },
     "./evm/connectors/device-wallet": {
       "module": {
         "browser": "./evm/connectors/device-wallet/dist/thirdweb-dev-wallets-evm-connectors-device-wallet.browser.esm.js",

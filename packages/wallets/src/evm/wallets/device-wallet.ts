@@ -42,22 +42,6 @@ export class DeviceWallet extends AbstractClientWallet<
     return "Device Wallet" as const;
   }
 
-  /**
-   * sets `AsyncJsonFileStorage` as the default storage for usage in the node environment
-   * @returns
-   */
-  static async node(
-    options?: WalletOptions<DeviceWalletOptions> & { storageJsonFile?: string },
-  ) {
-    const { AsyncJsonFileStorage } = await import(
-      "../../core/AsyncJsonFileStorage"
-    );
-    const storage = new AsyncJsonFileStorage(
-      options?.storageJsonFile || "./wallet.json",
-    );
-    return new DeviceWallet({ storage, ...options });
-  }
-
   constructor(options?: WalletOptions<DeviceWalletOptions>) {
     super(DeviceWallet.id, options);
     this.options = options || {};
