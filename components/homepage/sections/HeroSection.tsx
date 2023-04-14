@@ -58,8 +58,7 @@ export const HeroSection = () => {
             maxW="500px"
           >
             Leverage our powerful SDKs, CLI and robust dashboard to streamline
-            your web3 app development. <br />
-            <br /> Who said making a web3 app was supposed to be hard?
+            your web3 app development.
           </Heading>
 
           <LightMode>
