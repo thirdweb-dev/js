@@ -80,11 +80,10 @@ export class DeviceWallet extends AbstractClientWallet<
   }
 
   /**
-   * create device wallet from the given "encryptedJson" or "privateKey" or "mnemonic"
-   * @param options
+   * create device wallet from an "encryptedJson", "privateKey" or "mnemonic"
    * @returns
    */
-  async load(options: LoadOptions) {
+  async import(options: LoadOptions) {
     if (this.#ethersWallet) {
       throw new Error("wallet is already initialized");
     }
@@ -159,7 +158,7 @@ export class DeviceWallet extends AbstractClientWallet<
     }
 
     if (options.strategy === "encryptedJson") {
-      return this.load({
+      return this.import({
         encryptedJson: walletData.data,
         password: options.password,
       });
@@ -179,14 +178,14 @@ export class DeviceWallet extends AbstractClientWallet<
     }
 
     if (options.strategy === "privateKey") {
-      return this.load({
+      return this.import({
         privateKey: walletData.data,
         encryption: options.encryption,
       });
     }
 
     if (options.strategy === "mnemonic") {
-      return this.load({
+      return this.import({
         mnemonic: walletData.data,
         encryption: options.encryption,
       });
@@ -409,7 +408,6 @@ async function defaultDecrypt(message: string, password: string) {
  *  - return the encryption.decrypt function if given, else return the default decrypt function
  * if encryption object is not provided
  * - return a noop function
- * @param encryption
  * @returns
  */
 function getDecryptor(encryption: DecryptOptions | undefined) {
@@ -425,7 +423,6 @@ function getDecryptor(encryption: DecryptOptions | undefined) {
  *  - return the encryption.encrypt function if given, else return the default encrypt function
  * if encryption object is not provided
  * - return a noop function
- * @param encryption
  * @returns
  */
 function getEncryptor(encryption: EncryptOptions | undefined) {
