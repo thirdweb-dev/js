@@ -83,7 +83,7 @@ export class DeviceWallet extends AbstractClientWallet<
    * create device wallet from an "encryptedJson", "privateKey" or "mnemonic"
    * @returns
    */
-  async import(options: LoadOptions) {
+  async import(options: ImportOptions) {
     if (this.#ethersWallet) {
       throw new Error("wallet is already initialized");
     }
@@ -139,7 +139,7 @@ export class DeviceWallet extends AbstractClientWallet<
    * initialize the wallet from saved data on storage
    * @param password - password used for encrypting the wallet
    */
-  async load(options: LoadFromStorageOptions) {
+  async load(options: LoadOptions) {
     if (this.#ethersWallet) {
       throw new Error("wallet is already initialized");
     }
@@ -338,7 +338,7 @@ type EncryptOptions =
     }
   | false;
 
-type LoadOptions =
+type ImportOptions =
   | {
       privateKey: string;
       encryption?: DecryptOptions;
@@ -352,7 +352,7 @@ type LoadOptions =
       password: string;
     };
 
-type LoadFromStorageOptions =
+type LoadOptions =
   | {
       strategy: "encryptedJson";
       password: string;
