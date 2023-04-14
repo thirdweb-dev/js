@@ -35,6 +35,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { fadeInAnimation } from "../../components/FadeIn";
 import type {
+  AbstractClientWallet,
   DeviceWallet,
   MetaMaskWallet,
   SafeWallet,
@@ -89,7 +90,9 @@ export const ConnectedWalletDetails: React.FC<{
 
   const personalWallet =
     activeWallet?.walletId === "Safe"
-      ? (activeWallet as SafeWallet).getPersonalWallet()
+      ? ((
+          activeWallet as SafeWallet
+        ).getPersonalWallet() as AbstractClientWallet) // assumes using a client wallet
       : undefined;
 
   // get personal wallet address and balance
