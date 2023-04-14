@@ -407,13 +407,13 @@ type ExportOptions =
     };
 
 async function defaultEncrypt(message: string, password: string) {
-  const { AES } = await import("crypto-js");
-  return AES.encrypt(message, password).toString();
+  const cryptoJS = await import("crypto-js");
+  return cryptoJS.AES.encrypt(message, password).toString();
 }
 
 async function defaultDecrypt(message: string, password: string) {
-  const { AES, enc } = await import("crypto-js");
-  return AES.decrypt(message, password).toString(enc.Utf8);
+  const cryptoJS = await import("crypto-js");
+  return cryptoJS.AES.decrypt(message, password).toString(cryptoJS.enc.Utf8);
 }
 
 /**
