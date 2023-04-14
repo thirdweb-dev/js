@@ -6,7 +6,7 @@ export default {
   "faucets": [],
   "nativeCurrency": {
     "name": "Flana Mixnet",
-    "symbol": "MEER-m",
+    "symbol": "MEER-M",
     "decimals": 18
   },
   "infoURL": "https://github.com/Qitmeer",

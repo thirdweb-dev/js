@@ -1,16 +1,15 @@
-import { InfraContractType } from "../../core";
+import { PreDeployMetadataFetched } from "../../schema";
 
-export type PrecomputedDeploymentData = {
+export type PrecomputedDeploymentTransaction = {
   predictedAddress: string;
-  bytecode: string;
-  encodedArgs: any;
+  to: string;
+  data: string;
 };
 
-export type DeploymentInfo = {
-  bytecode: string;
-  encodedArgs: any;
-  predictedAddress: string;
-  infraContractsToDeploy: InfraContractType[];
+export type DeploymentPreset = {
+  name?: string;
+  type: DeployedContractType;
+  transaction: PrecomputedDeploymentTransaction;
 };
 
 export type KeylessTransaction = {
@@ -29,9 +28,24 @@ export type DeployedContractType =
   | "infra"
   | "implementation"
   | "create2Factory"
+  | "plugin"
   | "custom";
 
 export type DeploymentTransaction = {
-  contractType: DeployedContractType;
+  contractType: DeployedContractType | string;
   addresses: string[];
+};
+
+export type ConstructorParam = {
+  type?: string;
+  value: any | any[];
+};
+
+// Map a param-name to its type/value
+export type ConstructorParamMap = Record<string, ConstructorParam>;
+
+export type ContractOptions = {
+  contractName?: string;
+  metadata?: PreDeployMetadataFetched;
+  constructorParams?: ConstructorParamMap;
 };

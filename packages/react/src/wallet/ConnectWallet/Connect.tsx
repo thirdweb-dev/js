@@ -186,7 +186,6 @@ export const ConnectModal = () => {
           setIsWalletModalOpen(value);
           if (!value) {
             closeModalAndReset();
-            console.log({ connectionStatus });
             if (connectionStatus === "connecting") {
               disconnect();
             }

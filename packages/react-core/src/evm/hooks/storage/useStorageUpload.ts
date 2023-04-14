@@ -35,6 +35,7 @@ interface StorageUploadOptions<T extends UploadOptions> {
  *   )
  * }
  * ```
+ * @see {@link https://portal.thirdweb.com/react/react.usestorageupload?utm_source=sdk | Documentation}
  */
 export function useStorageUpload<
   T extends UploadOptions = IpfsUploadBatchOptions,

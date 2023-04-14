@@ -412,10 +412,6 @@ const main = async () => {
       "Preload ABIs and generate types for your smart contract to strongly type the thirdweb SDK",
     )
     .option("-p, --path <project-path>", "path to project", ".")
-    .option(
-      "-d, --deployer <deployer-address>",
-      "address of the contract deployer",
-    )
     .action(async (options) => {
       await generate(options);
     });
