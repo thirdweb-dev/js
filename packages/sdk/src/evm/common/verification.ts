@@ -11,6 +11,7 @@ import { Abi } from "../schema";
 import { ethers, utils } from "ethers";
 import { getChainProvider } from "../constants";
 import { EtherscanResult } from "../types/verification";
+import fetch from "cross-fetch";
 
 //
 // ==================================
@@ -22,7 +23,7 @@ export async function isVerifiedOnEtherscan(
   contractAddress: string,
   api: string,
   apiKey: string,
-) {
+): Promise<boolean> {
   const endpoint = `${api}?module=contract&action=getsourcecode&address=${contractAddress}&apikey=${apiKey}"`;
 
   try {
@@ -37,9 +38,9 @@ export async function isVerifiedOnEtherscan(
     const data = await result.json();
     const etherscanResult = data.result[0] as EtherscanResult;
     if (etherscanResult.ABI === "Contract source code not verified") {
-      // return status
+      return false;
     }
-    return etherscanResult;
+    return true;
   } catch (e) {
     throw new Error(
       `Error checking verification for contract ${contractAddress}: ${e}`,
@@ -138,14 +139,13 @@ export async function verify(
     });
 
     const data = await result.json();
-    // if (data.status === RequestStatus.OK) {
-    //   return res.status(200).json({ guid: data.result });
-    // } else {
-    //   return res.status(200).json({ error: data.result });
-    // }
+    if (data.status === "1") {
+      return { guid: data.result };
+    } else {
+      return { error: data.result };
+    }
   } catch (e) {
     console.error(e);
-    // return res.status(400).json({ error: (e as any).toString() });
   }
 }
 
@@ -168,7 +168,7 @@ export async function checkVerificationStatus(
       return data.result;
     }
   } catch (e) {
-    // return res.status(400).json({ error: e });
+    console.error(e);
   }
 }
 
