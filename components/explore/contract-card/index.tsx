@@ -56,7 +56,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
 
   return !publishedContractResult.isLoading &&
     !publishedContractResult.data?.id ? null : (
-    <LinkBox as="article" h="full">
+    <LinkBox as="article">
       <Card
         h="full"
         p={4}
