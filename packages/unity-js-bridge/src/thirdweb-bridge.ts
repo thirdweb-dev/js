@@ -181,12 +181,33 @@ class ThirdwebBridge implements TWBridge {
     }
     const walletInstance = this.walletMap.get(wallet);
     if (walletInstance) {
-      if (walletInstance.walletId === "deviceWallet" && password) {
+      // device wallet needs to be generated or loaded before connecting
+      if (walletInstance.walletId === "deviceWallet") {
         const deviceWallet = walletInstance as DeviceWallet;
-        await deviceWallet.connect({ chainId });
-      } else {
-        await walletInstance.connect({ chainId });
+
+        // if password is provided, we can load and save
+        if (password) {
+          if (await deviceWallet.isSaved()) {
+            await deviceWallet.loadFromStorage({
+              strategy: "encryptedJson",
+              password,
+            });
+          } else {
+            await deviceWallet.generate();
+            await deviceWallet.save({
+              strategy: "encryptedJson",
+              password,
+            });
+          }
+        }
+
+        // if no password is provided, we can only generate
+        else {
+          await deviceWallet.generate();
+        }
       }
+
+      await walletInstance.connect({ chainId });
       this.activeWallet = walletInstance;
       this.updateSDKSigner(await walletInstance.getSigner());
       return await this.activeSDK.wallet.getAddress();
