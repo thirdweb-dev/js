@@ -83,7 +83,7 @@ export class DeviceWallet extends AbstractClientWallet<
    * create device wallet from an "encryptedJson", "privateKey" or "mnemonic"
    * @returns
    */
-  async import(options: ImportOptions) {
+  async import(options: ImportOptions): Promise<string> {
     if (this.#ethersWallet) {
       throw new Error("wallet is already initialized");
     }
@@ -133,13 +133,15 @@ export class DeviceWallet extends AbstractClientWallet<
       this.#ethersWallet = Wallet.fromMnemonic(mnemonic);
       return this.#ethersWallet.address;
     }
+
+    throw new Error("invalid import strategy");
   }
 
   /**
    * initialize the wallet from saved data on storage
    * @param password - password used for encrypting the wallet
    */
-  async load(options: LoadOptions) {
+  async load(options: LoadOptions): Promise<string> {
     if (this.#ethersWallet) {
       throw new Error("wallet is already initialized");
     }
@@ -190,6 +192,8 @@ export class DeviceWallet extends AbstractClientWallet<
         encryption: options.encryption,
       });
     }
+
+    throw new Error("invalid import strategy");
   }
 
   /**
