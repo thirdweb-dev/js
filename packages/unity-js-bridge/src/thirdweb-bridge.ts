@@ -188,7 +188,7 @@ class ThirdwebBridge implements TWBridge {
         // if password is provided, we can load and save
         if (password) {
           if (await deviceWallet.isSaved()) {
-            await deviceWallet.loadFromStorage({
+            await deviceWallet.load({
               strategy: "encryptedJson",
               password,
             });

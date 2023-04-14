@@ -139,7 +139,7 @@ export class DeviceWallet extends AbstractClientWallet<
    * initialize the wallet from saved data on storage
    * @param password - password used for encrypting the wallet
    */
-  async loadFromStorage(options: LoadFromStorageOptions) {
+  async load(options: LoadFromStorageOptions) {
     if (this.#ethersWallet) {
       throw new Error("wallet is already initialized");
     }
