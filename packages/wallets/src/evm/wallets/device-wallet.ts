@@ -193,7 +193,7 @@ export class DeviceWallet extends AbstractClientWallet<
       });
     }
 
-    throw new Error("invalid import strategy");
+    throw new Error("invalid load strategy");
   }
 
   /**
