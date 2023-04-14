@@ -44,11 +44,11 @@ export class AccountAPI extends BaseAccountAPI {
       if (this.params.accountAbi) {
         this.accountContract = await this.sdk.getContract(
           await this.getAccountAddress(),
-          this.params.accountAbi
+          this.params.accountAbi,
         );
       } else {
         this.accountContract = await this.sdk.getContract(
-          await this.getAccountAddress()
+          await this.getAccountAddress(),
         );
       }
     }
@@ -58,7 +58,7 @@ export class AccountAPI extends BaseAccountAPI {
   async getAccountInitCode(): Promise<string> {
     const factory = await this.getFactoryContract();
     console.log("AccountAPI - Creating account via factory");
-    // TODO: here the createAccount expects owner + salt as arguments, but could be different
+    // TODO (sw): here the createAccount expects owner + salt as arguments, but could be different
     const localSigner = await this.params.localSigner.getAddress();
 
     const tx = factory.prepare("createAccount", [
@@ -87,11 +87,11 @@ export class AccountAPI extends BaseAccountAPI {
     if (this.params.factoryAbi) {
       this.factoryContract = await this.sdk.getContract(
         this.params.factoryAddress,
-        this.params.factoryAbi
+        this.params.factoryAbi,
       );
     } else {
       this.factoryContract = await this.sdk.getContract(
-        this.params.factoryAddress
+        this.params.factoryAddress,
       );
     }
     return this.factoryContract;
@@ -106,24 +106,18 @@ export class AccountAPI extends BaseAccountAPI {
     if (await this.checkAccountPhantom()) {
       return BigNumber.from(0);
     }
-
-    // NOTE: returning hardcoded expected value leads to script failure in `sendUserOpToBundler` in `sendTransaction`
-    // return BigNumber.from(1);
-
-    // NOTE: this code leads to failure in `resolveProperties` in `getPreVerificationGas`.
     const accountContract = await this._getAccountContract();
     const nonce = await accountContract.call("nonce");
-    console.log("AccountAPI - nonce: ", nonce);
     return nonce;
   }
 
   async encodeExecute(
     target: string,
     value: BigNumberish,
-    data: string
+    data: string,
   ): Promise<string> {
     const accountContract = await this._getAccountContract();
-    // TODO here execute target + value + data as arguments, but could be different depending on the ABI
+    // TODO (sw) here execute target + value + data as arguments, but could be different depending on the ABI
     return accountContract.prepare("execute", [target, value, data]).encode();
   }
 

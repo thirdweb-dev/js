@@ -33,7 +33,6 @@ import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import { ContractAddress, GENERATED_ABI } from "@thirdweb-dev/generated-abis";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import type { EVMWallet } from "@thirdweb-dev/wallets";
 import type { ContractInterface, Signer, BaseContract } from "ethers";
 import {
   Contract as EthersContract,
@@ -67,7 +66,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @beta
    */
   static async fromWallet(
-    wallet: EVMWallet,
+    wallet: {
+      getSigner: () => Promise<Signer>;
+    },
     network: ChainOrRpcUrl,
     options: SDKOptions = {},
     storage?: ThirdwebStorage,
