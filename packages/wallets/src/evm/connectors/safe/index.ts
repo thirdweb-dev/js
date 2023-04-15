@@ -1,15 +1,14 @@
 import { ConnectParams, TWConnector } from "../../interfaces/tw-connector";
-import { AbstractWallet } from "../../wallets/abstract";
 import type { SafeConnectionArgs } from "./types";
 import { ethers } from "ethers";
 import type { Signer } from "ethers";
-import { AbstractClientWallet } from "../../wallets/base";
 import {
   SafeService,
   SafeEthersSigner,
 } from "@safe-global/safe-ethers-adapters";
 import safeCoreSdk from "@safe-global/safe-core-sdk";
 import safeEthersLib from "@safe-global/safe-ethers-lib";
+import { EVMWallet } from "../../interfaces";
 
 // excerpt from https://docs.gnosis-safe.io/backend/available-services
 const CHAIN_ID_TO_GNOSIS_SERVER_URL = {
@@ -40,10 +39,10 @@ export class SafeConnector extends TWConnector<SafeConnectionArgs> {
   ready = !__IS_SERVER__;
   name = "Safe Wallet";
   // config
-  public previousConnector?: AbstractWallet;
+  public previousConnector?: EVMWallet;
   // private options: SafeOptions;
   private safeSigner?: Signer;
-  personalWallet?: AbstractClientWallet;
+  personalWallet?: EVMWallet;
 
   constructor() {
     super();
