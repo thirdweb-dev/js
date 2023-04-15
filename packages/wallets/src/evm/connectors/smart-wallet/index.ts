@@ -1,4 +1,3 @@
-import { Provider } from "@ethersproject/providers";
 import { Chain } from "@thirdweb-dev/chains";
 import { ConnectParams, TWConnector } from "../../interfaces/tw-connector";
 import { ERC4337EthersProvider } from "./lib/erc4337-provider";
@@ -10,6 +9,7 @@ import TWAccount from "./artifacts/TWAccount.json";
 import { ENTRYPOINT_ADDRESS } from "./lib/constants";
 import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
+import { providers } from "ethers";
 
 export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs> {
   private config: SmartWalletConfig;
@@ -52,7 +52,7 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
     return await this.getAddress();
   }
 
-  getProvider(): Promise<Provider> {
+  getProvider(): Promise<providers.Provider> {
     if (!this.aaProvider) {
       throw new Error("Local Signer not connected");
     }

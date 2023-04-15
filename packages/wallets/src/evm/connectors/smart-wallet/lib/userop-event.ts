@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-parameter-properties */
-import { BigNumberish, Event } from "ethers";
-import { TransactionReceipt } from "@ethersproject/providers";
+import { BigNumberish, Event, providers } from "ethers";
 import { EntryPoint } from "@account-abstraction/contracts";
 import { defaultAbiCoder } from "ethers/lib/utils";
 
@@ -15,7 +14,7 @@ export class UserOperationEventListener {
   boundLisener: (this: any, ...param: any) => void;
 
   constructor(
-    readonly resolve: (t: TransactionReceipt) => void,
+    readonly resolve: (t: providers.TransactionReceipt) => void,
     readonly reject: (reason?: any) => void,
     readonly entryPoint: EntryPoint,
     readonly sender: string,
@@ -78,7 +77,9 @@ export class UserOperationEventListener {
     this.resolved = true;
   }
 
-  async extractFailureReason(receipt: TransactionReceipt): Promise<void> {
+  async extractFailureReason(
+    receipt: providers.TransactionReceipt,
+  ): Promise<void> {
     receipt.status = 0;
     const revertReasonEvents = await this.entryPoint.queryFilter(
       this.entryPoint.filters.UserOperationRevertReason(

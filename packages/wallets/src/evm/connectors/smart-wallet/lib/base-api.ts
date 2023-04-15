@@ -1,5 +1,4 @@
-import { ethers, BigNumber, BigNumberish } from "ethers";
-import { Provider } from "@ethersproject/providers";
+import { ethers, BigNumber, BigNumberish, providers } from "ethers";
 import {
   EntryPoint,
   EntryPoint__factory,
@@ -20,7 +19,7 @@ import {
 import { TransactionDetailsForUserOp } from "./transaction-details";
 
 export interface BaseApiParams {
-  provider: Provider;
+  provider: providers.Provider;
   entryPointAddress: string;
   accountAddress?: string;
   overheads?: Partial<GasOverheads>;
@@ -51,7 +50,7 @@ export abstract class BaseAccountAPI {
   // entryPoint connected to "zero" address. allowed to make static calls (e.g. to getSenderAddress)
   private readonly entryPointView: EntryPoint;
 
-  provider: Provider;
+  provider: providers.Provider;
   overheads?: Partial<GasOverheads>;
   entryPointAddress: string;
   accountAddress?: string;

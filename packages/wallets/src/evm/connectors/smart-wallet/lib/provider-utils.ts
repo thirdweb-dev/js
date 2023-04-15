@@ -1,11 +1,8 @@
-import { JsonRpcProvider } from "@ethersproject/providers";
-
 import { EntryPoint__factory } from "@account-abstraction/contracts";
-import { Signer } from "@ethersproject/abstract-signer";
 import { HttpRpcClient, PaymasterAPI } from "@account-abstraction/sdk";
 import { ChainOrRpcUrl, getChainProvider } from "@thirdweb-dev/sdk";
 import { AccountAPI } from "./account";
-import { ContractInterface } from "ethers";
+import { ContractInterface, Signer, providers } from "ethers";
 import { ERC4337EthersProvider } from "./erc4337-provider";
 
 export interface ProviderConfig {
@@ -63,7 +60,10 @@ export interface ProviderConfig {
 export async function create4337Provider(
   config: ProviderConfig,
 ): Promise<ERC4337EthersProvider> {
-  const rpcProvider = getChainProvider(config.chain, {}) as JsonRpcProvider;
+  const rpcProvider = getChainProvider(
+    config.chain,
+    {},
+  ) as providers.JsonRpcProvider;
   const entryPoint = EntryPoint__factory.connect(
     config.entryPointAddress,
     rpcProvider,

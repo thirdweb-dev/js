@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-parameter-properties */
 import { BigNumber, ethers, Signer } from "ethers";
-import { Network } from "@ethersproject/networks";
 import { hexValue, resolveProperties } from "ethers/lib/utils";
 
 import {
@@ -173,7 +172,7 @@ export class ERC4337EthersProvider extends ethers.providers.BaseProvider {
     };
   }
 
-  async detectNetwork(): Promise<Network> {
+  async detectNetwork(): Promise<any> {
     return (this.originalProvider as any).detectNetwork();
   }
 }

@@ -1,8 +1,4 @@
-import {
-  Provider,
-  TransactionRequest,
-  TransactionResponse,
-} from "@ethersproject/providers";
+import { providers } from "ethers";
 
 import { Bytes, Signer } from "ethers";
 import { UserOperationStruct } from "@account-abstraction/contracts";
@@ -39,9 +35,11 @@ export class ERC4337EthersSigner extends Signer {
 
   // This one is called by Contract. It signs the request and passes in to Provider to be sent.
   async sendTransaction(
-    transaction: Deferrable<TransactionRequest>,
-  ): Promise<TransactionResponse> {
-    const tx: TransactionRequest = await this.populateTransaction(transaction);
+    transaction: Deferrable<providers.TransactionRequest>,
+  ): Promise<providers.TransactionResponse> {
+    const tx: providers.TransactionRequest = await this.populateTransaction(
+      transaction,
+    );
     await this.verifyAllNecessaryFields(tx);
 
     const userOperation = await this.smartAccountAPI.createSignedUserOp({
@@ -89,7 +87,7 @@ export class ERC4337EthersSigner extends Signer {
   }
 
   async verifyAllNecessaryFields(
-    transactionRequest: TransactionRequest,
+    transactionRequest: providers.TransactionRequest,
   ): Promise<void> {
     if (!transactionRequest.to) {
       throw new Error("Missing call target");
@@ -101,7 +99,7 @@ export class ERC4337EthersSigner extends Signer {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  connect(provider: Provider): Signer {
+  connect(provider: providers.Provider): Signer {
     throw new Error("changing providers is not supported");
   }
 
@@ -118,7 +116,7 @@ export class ERC4337EthersSigner extends Signer {
 
   async signTransaction(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    transaction: Deferrable<TransactionRequest>,
+    transaction: Deferrable<providers.TransactionRequest>,
   ): Promise<string> {
     throw new Error("not implemented");
   }
