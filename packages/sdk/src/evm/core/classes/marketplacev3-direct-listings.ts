@@ -172,33 +172,15 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
     let batches = await getAllInBatches(
       start,
       end,
-      this.contractWrapper.readContract.getAllListings, // TODO: revert to previous setup
+      this.contractWrapper.readContract.getAllValidListings,
     );
     rawListings = batches.flat();
 
     const filteredListings = await this.applyFilter(rawListings, filter);
-    const mappedListings = await Promise.all(
+
+    return await Promise.all(
       filteredListings.map((listing) => this.mapListing(listing)),
     );
-
-    const validListings = (
-      await Promise.all(
-        mappedListings.map(async (listing) => {
-          const isValid = (await this.isStillValidListing(listing)).valid;
-          return isValid ? listing : null;
-        }),
-      )
-    ).filter(Boolean) as DirectListingV3[];
-
-    const now = BigNumber.from(Math.floor(Date.now() / 1000));
-
-    return validListings.filter((l) => {
-      return (
-        BigNumber.from(l.endTimeInSeconds).gt(now) &&
-        BigNumber.from(l.startTimeInSeconds).lte(now) &&
-        l.status === Status.Created
-      );
-    });
   }
 
   /**

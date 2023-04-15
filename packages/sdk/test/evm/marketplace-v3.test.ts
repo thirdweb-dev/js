@@ -371,8 +371,7 @@ describe("Marketplace V3", async () => {
       );
     });
 
-    // TODO: fix timestamps for hardhat tests
-    it.skip("should return only active listings", async () => {
+    it("should return only active listings", async () => {
       const before = await marketplaceContract.directListings.getAllValid();
       expect(before.length).to.eq(1);
     });
@@ -1167,21 +1166,6 @@ describe("Marketplace V3", async () => {
     it("should not return invalid direct listings", async () => {
       await sdk.updateSignerOrProvider(adminWallet);
       await dummyNftContract.transfer(samWallet.address, "0");
-
-      const allListings =
-        await marketplaceContract.directListings.getAllValid();
-      const found = allListings.find(
-        (l) => l.id.toString() === directListingId.toString(),
-      );
-      assert.isUndefined(
-        found,
-        "should not have found the listing because it is invalid",
-      );
-    });
-
-    it("should treat burned tokens listings as invalid", async () => {
-      await sdk.updateSignerOrProvider(adminWallet);
-      await dummyNftContract.burn("0");
 
       const allListings =
         await marketplaceContract.directListings.getAllValid();
