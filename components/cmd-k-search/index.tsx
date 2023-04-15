@@ -33,6 +33,7 @@ import { useDebounce } from "hooks/common/useDebounce";
 import { isPossibleEVMAddress } from "lib/address-utils";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getEVMThirdwebSDK } from "lib/sdk";
+import { SearchMode, getSearchQuery } from "lib/search";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { FiArrowRight, FiSearch, FiX } from "react-icons/fi";
@@ -165,46 +166,6 @@ function onChainContractSearchQuery(
 const typesenseApiKey =
   process.env.NEXT_PUBLIC_TYPESENSE_CONTRACT_API_KEY || "";
 
-const getSearchQuery = ({
-  query,
-  walletAddress = "",
-  searchMode = "all",
-  page = 1,
-  perPage = 10,
-}: {
-  query: string;
-  walletAddress?: string;
-  searchMode: SearchMode;
-  page?: number;
-  perPage?: number;
-}) => {
-  const baseUrl = new URL(
-    "https://search.thirdweb.com/collections/contracts/documents/search",
-  );
-  baseUrl.searchParams.set("q", query);
-  baseUrl.searchParams.set(
-    "query_by",
-    "name,symbol,contract_address,deployer_address",
-  );
-  baseUrl.searchParams.set("query_by_weights", "3,3,2,1");
-  baseUrl.searchParams.set("page", page.toString());
-  baseUrl.searchParams.set("per_page", perPage.toString());
-  baseUrl.searchParams.set("exhaustive_search", "true");
-  baseUrl.searchParams.set(
-    "sort_by",
-    `testnet:asc${
-      walletAddress ? `,_eval(deployer_address:${walletAddress}):desc` : ""
-    }`,
-  );
-
-  if (searchMode === "mainnet") {
-    baseUrl.searchParams.set("filter_by", "testnet:false");
-  } else if (searchMode === "testnet") {
-    baseUrl.searchParams.set("filter_by", "testnet:true");
-  }
-  return baseUrl.toString();
-};
-
 function contractTypesenseSearchQuery(
   searchQuery: string,
   walletAddress = "",
@@ -296,8 +257,6 @@ function useContractSearch(searchQuery: string) {
     }),
   });
 }
-
-type SearchMode = "all" | "mainnet" | "testnet";
 
 export const CmdKSearch: React.FC = () => {
   const [open, setOpen] = useState(false);
