@@ -1,4 +1,7 @@
 export type Palette = {
+  buttonActiveBackground: string;
+  buttonActiveText: string;
+
   background: string;
   backgroundHighlight: string;
 
@@ -23,6 +26,9 @@ export const paletteBase = {
 };
 
 export const paletteLight: Palette = {
+  buttonActiveBackground: "white",
+  buttonActiveText: "black",
+
   background: "#F7F7F9",
   backgroundHighlight: "#FFFFFF",
 
@@ -40,6 +46,9 @@ export const paletteLight: Palette = {
 };
 
 export const paletteDark: Palette = {
+  buttonActiveBackground: "white",
+  buttonActiveText: "black",
+
   background: "#131417",
   backgroundHighlight: "#232429",
 

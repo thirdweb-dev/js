@@ -1,3 +1,6 @@
+export { darkTheme } from "./styles/theme";
+export type { Theme } from "./styles/theme";
+
 export { coinbaseWallet } from "./wallets/wallets/coinbase-wallet";
 export { metamaskWallet } from "./wallets/wallets/metamask-wallet";
 export { rainbowWallet } from "./wallets/wallets/rainbow-wallet";

@@ -145,7 +145,7 @@ export const Web3Button = <TAction extends ActionFn>({
       connectionStatus === "connecting" ||
       connectionStatus === "unknown"
     ) {
-      content = <ActivityIndicator size="small" color={"black"} />;
+      content = <ActivityIndicator size="small" color="buttonActiveText" />;
       buttonLoading = true;
     }
   }
@@ -153,7 +153,7 @@ export const Web3Button = <TAction extends ActionFn>({
   return (
     <ThemeProvider theme={theme}>
       <BaseButton
-        backgroundColor="white"
+        backgroundColor="buttonActiveBackground"
         onPress={() => {
           actionMutation.mutate();
         }}
@@ -161,7 +161,7 @@ export const Web3Button = <TAction extends ActionFn>({
         disabled={buttonDisabled || buttonLoading}
       >
         {typeof content === "string" ? (
-          <Text variant="bodyLarge" color="black">
+          <Text variant="bodyLarge" color="buttonActiveText">
             {content}
           </Text>
         ) : (
