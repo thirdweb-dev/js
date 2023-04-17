@@ -22,12 +22,13 @@ import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { ChevronRightIcon, ShuffleIcon } from "@radix-ui/react-icons";
-import { defaultChains } from "@thirdweb-dev/chains";
+import { defaultChains, Localhost } from "@thirdweb-dev/chains";
 import {
   useAddress,
   useBalance,
   useChainId,
   useDisconnect,
+  useSDK,
   useSupportedChains,
   useThirdwebWallet,
   useWallet,
@@ -87,6 +88,8 @@ export const ConnectedWalletDetails: React.FC<{
 
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
   const [open, setOpen] = useState(false);
+
+  const sdk = useSDK();
 
   const personalWallet =
     activeWallet?.walletId === "Safe"
@@ -351,13 +354,22 @@ export const ConnectedWalletDetails: React.FC<{
       )}
 
       {/* Request Testnet funds */}
-      {chain?.faucets && chain.faucets.length > 0 && (
+      {((chain?.faucets && chain.faucets.length > 0) ||
+        chain?.chainId === Localhost.chainId) && (
         <div>
           <Spacer y="md" />
           <MenuLink
-            href={chain.faucets[0]}
+            href={chain?.faucets ? chain.faucets[0] : "#"}
             target="_blank"
             as="a"
+            onClick={async (e) => {
+              if (chain.chainId === Localhost.chainId) {
+                e.preventDefault();
+                setOpen(false);
+                await sdk?.wallet.requestFunds(10);
+                await balanceQuery.refetch();
+              }
+            }}
             style={{
               textDecoration: "none",
               color: "inherit",
