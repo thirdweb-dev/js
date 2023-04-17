@@ -56,11 +56,11 @@ export const ConnectWalletFlow = () => {
       </TWModal>
 
       <BaseButton
-        backgroundColor="buttonActiveBackground"
+        backgroundColor="buttonBackgroundColor"
         onPress={onConnectPress}
         style={styles.connectWalletButton}
       >
-        <Text variant="bodyLarge" color="buttonActiveBackground">
+        <Text variant="bodyLarge" color="buttonTextColor">
           Connect Wallet
         </Text>
       </BaseButton>
