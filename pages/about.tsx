@@ -17,10 +17,6 @@ const employees = [
     name: "Adam Majmudar",
     twitter: "MajmudarAdam",
   },
-  // {
-  //   name: "Andrew Begafria",
-  //   twitter: "",
-  // },
   {
     name: "Anshu Tukol",
     twitter: "AnshuTukol",
@@ -106,10 +102,6 @@ const employees = [
     twitter: "theyoungpatrice",
   },
   {
-    name: "Pengcheng Chen",
-    twitter: "blockchainian",
-  },
-  {
     name: "Rahul Menon",
     twitter: "rahulphenomenon",
   },
@@ -124,10 +116,6 @@ const employees = [
   {
     name: "Sian Morton",
     twitter: "Sian_Morton",
-  },
-  {
-    name: "Siddharth Adusumelli",
-    twitter: "shift4id",
   },
   {
     name: "Yan Giet",
@@ -193,7 +181,7 @@ const About: ThirdwebNextPage = () => {
 
             <Flex
               pt={24}
-              mb={{ base: 24, md: -24 }}
+              mb={{ base: 24, lg: -24 }}
               flexDir="column"
               gap={{ base: 6, md: 8 }}
               align={{ base: "initial", md: "start" }}

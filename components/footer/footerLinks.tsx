@@ -29,6 +29,11 @@ export const RESOURCES: FooterLinkInfo[] = [
     link: "/about",
   },
   {
+    name: "Upcoming Events",
+    label: "events",
+    link: "/events",
+  },
+  {
     link: "https://thirdweb.typeform.com/to/ZV3gUhiP",
     name: "Partner with us",
     label: "sales-form",
