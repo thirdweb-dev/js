@@ -163,7 +163,13 @@ export async function getCreate2FactoryAddress(
 
   const enforceEip155 = await isEIP155Enforced(provider);
   const chainId = enforceEip155 ? (await provider.getNetwork()).chainId : 0;
-  const deploymentInfo = getCreate2FactoryDeploymentInfo(chainId);
+  const gasPrice = (await provider.getFeeData()).gasPrice;
+  const deploymentInfo =
+    gasPrice &&
+    (gasPrice.gt(ethers.utils.parseUnits("500", "gwei")) ||
+      gasPrice.lt(ethers.utils.parseUnits("0.002", "gwei")))
+      ? getCreate2FactoryDeploymentInfo(chainId, gasPrice.toNumber())
+      : getCreate2FactoryDeploymentInfo(chainId);
 
   return deploymentInfo.deployment;
 }
@@ -400,7 +406,13 @@ export async function deployCreate2Factory(
   const networkId = (await signer.provider.getNetwork()).chainId;
   const chainId = enforceEip155 ? networkId : 0;
   console.debug(`ChainId ${networkId} enforces EIP155: ${enforceEip155}`);
-  const deploymentInfo = getCreate2FactoryDeploymentInfo(chainId);
+  const gasPrice = (await signer.provider.getFeeData()).gasPrice;
+  const deploymentInfo =
+    gasPrice &&
+    (gasPrice.gt(ethers.utils.parseUnits("500", "gwei")) ||
+      gasPrice.lt(ethers.utils.parseUnits("0.002", "gwei")))
+      ? getCreate2FactoryDeploymentInfo(chainId, gasPrice.toNumber())
+      : getCreate2FactoryDeploymentInfo(chainId);
 
   const factoryExists = await isContractDeployed(
     deploymentInfo.deployment,
@@ -863,11 +875,12 @@ async function encodeConstructorParamsForImplementation(
  */
 export function getCreate2FactoryDeploymentInfo(
   chainId: number,
+  gasPrice?: number,
 ): KeylessDeploymentInfo {
   const signature = ethers.utils.joinSignature(SIGNATURE);
   const deploymentTransaction = getKeylessTxn(
     {
-      gasPrice: 100 * 10 ** 9,
+      gasPrice: gasPrice ? gasPrice : 100 * 10 ** 9,
       gasLimit: 100000,
       nonce: 0,
       data: CREATE2_FACTORY_BYTECODE,
