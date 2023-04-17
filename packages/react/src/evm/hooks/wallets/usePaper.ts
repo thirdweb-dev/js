@@ -6,11 +6,12 @@ import {
   UseQueryResult,
   useQueryClient,
 } from "@tanstack/react-query";
+import type { PaperSupportedChainId } from "@thirdweb-dev/wallets/evm/connectors/paper";
 
 export function usePaperWallet() {
   const connect = useConnect();
   return useCallback(
-    async (options: { chainId?: number; clientId: string }) => {
+    async (options: { chainId?: PaperSupportedChainId; clientId: string }) => {
       const { paperWallet } = await import(
         "../../../wallet/wallets/paperWallet"
       );
