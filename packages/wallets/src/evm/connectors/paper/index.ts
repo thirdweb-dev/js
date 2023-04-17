@@ -18,7 +18,10 @@ export const PaperChainMap = {
   5: "Goerli",
   137: "Polygon",
   80001: "Mumbai",
+  43114: "Avalanche",
 } as const;
+
+export type PaperSupportedChainId = keyof typeof PaperChainMap;
 
 export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs> {
   readonly id: string = "paper-wallet";

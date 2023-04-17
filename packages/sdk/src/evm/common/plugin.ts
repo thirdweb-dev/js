@@ -3,12 +3,24 @@ import {
   getAllPluginsAbi,
 } from "../constants/thirdweb-features";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { Abi, AbiSchema, Address, SDKOptions } from "../schema";
+import {
+  Abi,
+  AbiSchema,
+  Address,
+  PreDeployMetadataFetched,
+  SDKOptions,
+} from "../schema";
 import { isFeatureEnabled } from "./feature-detection";
 import { fetchContractMetadataFromAddress } from "./metadata-resolver";
 import { unique } from "./utils";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
+import { Plugin } from "../types/plugins";
+import { getChainProvider } from "../constants";
+import {
+  fetchAndCacheDeployMetadata,
+  fetchAndCachePublishedContractURI,
+} from "./any-evm-utils";
 
 /**
  * @internal
@@ -105,6 +117,83 @@ async function getPluginABI(
   ).map((metadata) => metadata.abi);
 }
 
+export async function getMetadataForPlugins(
+  publishedMetadataUri: string,
+  storage: ThirdwebStorage,
+): Promise<PreDeployMetadataFetched[]> {
+  let pluginMetadata: PreDeployMetadataFetched[] = [];
+
+  const { compilerMetadata, extendedMetadata } =
+    await fetchAndCacheDeployMetadata(publishedMetadataUri, storage);
+  // check if contract is plugin-pattern
+  const isPluginRouter: boolean = isFeatureEnabled(
+    AbiSchema.parse(compilerMetadata.abi),
+    "PluginRouter",
+  );
+
+  if (isPluginRouter) {
+    if (
+      extendedMetadata &&
+      extendedMetadata.factoryDeploymentData?.implementationAddresses
+    ) {
+      const implementationsAddresses = Object.entries(
+        extendedMetadata.factoryDeploymentData.implementationAddresses,
+      );
+
+      try {
+        const entry = implementationsAddresses.find(
+          ([, implementation]) => implementation !== "",
+        );
+        const [network, implementation] = entry ? entry : [];
+        if (network && implementation) {
+          const provider = getChainProvider(parseInt(network), {});
+          const contract = new ContractWrapper(
+            provider,
+            implementation,
+            getAllPluginsAbi,
+            {},
+          );
+
+          const pluginMap = await contract.call("getAllPlugins");
+
+          // get extension addresses
+          const allPlugins = pluginMap.map(
+            (item: Plugin) => item.pluginAddress,
+          );
+          const pluginAddresses = Array.from(new Set(allPlugins));
+
+          const pluginNames = (
+            await Promise.all(
+              pluginAddresses.map(async (address) => {
+                const metadata = fetchContractMetadataFromAddress(
+                  address as string,
+                  provider,
+                  storage,
+                );
+                return metadata;
+              }),
+            )
+          ).map((metadata) => metadata.name);
+
+          const pluginUris = await Promise.all(
+            pluginNames.map((name) => {
+              return fetchAndCachePublishedContractURI(name);
+            }),
+          );
+          pluginMetadata = (
+            await Promise.all(
+              pluginUris.map(async (uri) => {
+                return fetchAndCacheDeployMetadata(uri, storage);
+              }),
+            )
+          ).map((fetchedMetadata) => fetchedMetadata.compilerMetadata);
+        }
+      } catch {}
+    }
+  }
+  return pluginMetadata;
+}
+
 /**
  * @internal
  */
@@ -122,4 +211,37 @@ export function joinABIs(abis: Abi[]): Abi {
   const finalABIs = filteredABIs.filter((item) => item.type !== "constructor");
 
   return AbiSchema.parse(finalABIs);
+}
+
+export function getFunctionSignature(fnInputs: any): string {
+  return (
+    "(" +
+    fnInputs
+      .map((i: any) => {
+        return i.type === "tuple" ? getFunctionSignature(i.components) : i.type;
+      })
+      .join(",") +
+    ")"
+  );
+}
+
+export function generatePluginFunctions(
+  pluginAddress: string,
+  pluginAbi: Abi,
+): Plugin[] {
+  const pluginInterface = new ethers.utils.Interface(pluginAbi);
+  const pluginFunctions: Plugin[] = [];
+  // TODO - filter out common functions like _msgSender(), contractType(), etc.
+  for (const fnFragment of Object.values(pluginInterface.functions)) {
+    const fn = pluginInterface.getFunction(fnFragment.name);
+    if (fn.name.includes("_")) {
+      continue;
+    }
+    pluginFunctions.push({
+      functionSelector: pluginInterface.getSighash(fn),
+      functionSignature: fn.name + getFunctionSignature(fn.inputs),
+      pluginAddress: pluginAddress,
+    });
+  }
+  return pluginFunctions;
 }

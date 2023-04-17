@@ -10,6 +10,8 @@ import invariant from "tiny-invariant";
  *
  * @returns - A function to invoke to logout.
  *
+ * @see {@link https://portal.thirdweb.com/react/react.uselogout?utm_source=sdk | Documentation}
+ *
  * @beta
  */
 export function useLogout() {

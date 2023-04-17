@@ -31,6 +31,7 @@ import {
 import { ifWaiting } from "../../evm/utils/ifWaiting";
 import { ThemeProvider } from "@emotion/react";
 import { darkTheme, lightTheme } from "../../design-system";
+import { ConnectToDeviceWallet } from "./screens/DeviceWallet/DeviceWalletSetup";
 
 export const ConnectModal = () => {
   const modalTheme = useModalTheme();
@@ -151,6 +152,11 @@ export const ConnectModal = () => {
         setShowScreen("safe/select-wallet");
       }
 
+      // Device Wallet
+      else if (wallet.id === "deviceWallet") {
+        setShowScreen("deviceWallet/connect");
+      }
+
       // others ( they handle their own connection flow)
       else {
         try {
@@ -186,7 +192,6 @@ export const ConnectModal = () => {
           setIsWalletModalOpen(value);
           if (!value) {
             closeModalAndReset();
-            console.log({ connectionStatus });
             if (connectionStatus === "connecting") {
               disconnect();
             }
@@ -267,6 +272,10 @@ export const ConnectModal = () => {
 
         {showScreen === "wallets/get-started" && (
           <GetStartedWithWallets onBack={handleBack} />
+        )}
+
+        {showScreen === "deviceWallet/connect" && (
+          <ConnectToDeviceWallet onBack={handleBack} onConnected={onConnect} />
         )}
       </Modal>
     </ThemeProvider>
