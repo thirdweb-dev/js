@@ -129,8 +129,11 @@ export async function isEIP155Enforced(
     if (
       errorMsg.includes("eip-155") ||
       errorJson.includes("eip-155") ||
+      // Some chains have non-standard errors for EIP-155
       errorMsg.includes("protected") ||
-      errorJson.includes("protected")
+      errorJson.includes("protected") ||
+      (errorMsg.includes("account") && errorMsg.includes("not found")) ||
+      (errorJson.includes("account") && errorJson.includes("not found"))
     ) {
       return true;
     }
