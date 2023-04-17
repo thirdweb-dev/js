@@ -22,22 +22,29 @@ import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { ChevronRightIcon, ShuffleIcon } from "@radix-ui/react-icons";
-import { defaultChains } from "@thirdweb-dev/chains";
+import { defaultChains, Localhost } from "@thirdweb-dev/chains";
 import {
   useAddress,
   useBalance,
   useChainId,
   useDisconnect,
+  useSDK,
   useSupportedChains,
   useThirdwebWallet,
   useWallet,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useMemo, useState } from "react";
 import { fadeInAnimation } from "../../components/FadeIn";
-import type { MetaMaskWallet, SafeWallet } from "@thirdweb-dev/wallets";
+import type {
+  AbstractClientWallet,
+  DeviceWallet,
+  MetaMaskWallet,
+  SafeWallet,
+} from "@thirdweb-dev/wallets";
 import { Flex } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
 import { utils } from "ethers";
+import { GenericWalletIcon } from "./icons/GenericWalletIcon";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -82,9 +89,13 @@ export const ConnectedWalletDetails: React.FC<{
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
   const [open, setOpen] = useState(false);
 
+  const sdk = useSDK();
+
   const personalWallet =
     activeWallet?.walletId === "Safe"
-      ? (activeWallet as SafeWallet).getPersonalWallet()
+      ? ((
+          activeWallet as SafeWallet
+        ).getPersonalWallet() as AbstractClientWallet) // assumes using a client wallet
       : undefined;
 
   // get personal wallet address and balance
@@ -104,6 +115,20 @@ export const ConnectedWalletDetails: React.FC<{
       });
     });
   }, [personalWallet]);
+
+  const handleDeviceWalletExport = async () => {
+    const deviceWallet = activeWallet as DeviceWallet;
+    const walletData = await deviceWallet.getSavedData();
+    if (!walletData) {
+      throw new Error("No wallet data found");
+    }
+
+    downloadAsFile(
+      JSON.parse(walletData.data),
+      "wallet.json",
+      "application/json",
+    );
+  };
 
   const trigger = (
     <WalletInfoButton
@@ -329,13 +354,22 @@ export const ConnectedWalletDetails: React.FC<{
       )}
 
       {/* Request Testnet funds */}
-      {chain?.faucets && chain.faucets.length > 0 && (
+      {((chain?.faucets && chain.faucets.length > 0) ||
+        chain?.chainId === Localhost.chainId) && (
         <div>
           <Spacer y="md" />
           <MenuLink
-            href={chain.faucets[0]}
+            href={chain?.faucets ? chain.faucets[0] : "#"}
             target="_blank"
             as="a"
+            onClick={async (e) => {
+              if (chain.chainId === Localhost.chainId) {
+                e.preventDefault();
+                setOpen(false);
+                await sdk?.wallet.requestFunds(10);
+                await balanceQuery.refetch();
+              }
+            }}
             style={{
               textDecoration: "none",
               color: "inherit",
@@ -348,6 +382,24 @@ export const ConnectedWalletDetails: React.FC<{
             Request Testnet Funds
           </MenuLink>
         </div>
+      )}
+
+      {/* Export Device Wallet */}
+      {activeWallet?.walletId === "deviceWallet" && (
+        <>
+          <Spacer y="sm" />
+          <MenuButton
+            onClick={handleDeviceWalletExport}
+            style={{
+              fontSize: fontSize.sm,
+            }}
+          >
+            <SecondaryIconContainer>
+              <GenericWalletIcon size={iconSize.sm} />
+            </SecondaryIconContainer>
+            Export Device Wallet{" "}
+          </MenuButton>
+        </>
       )}
     </div>
   );
@@ -548,3 +600,18 @@ const SecondaryIconContainer = styled.div<{ theme?: Theme }>`
   justify-content: center;
   color: ${(props) => props.theme.icon.secondary};
 `;
+
+function downloadAsFile(data: any, fileName: string, fileType: string) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], {
+    type: fileType,
+  });
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.style.display = "none";
+  a.click();
+  URL.revokeObjectURL(a.href);
+}

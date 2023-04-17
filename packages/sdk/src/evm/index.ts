@@ -27,6 +27,8 @@ export * from "./common";
 export * from "./constants";
 export * from "./contracts";
 
+export { StaticJsonRpcBatchProvider } from "./lib/static-batch-rpc";
+
 // export integration things
 export * from "./integrations/thirdweb-checkout";
 
