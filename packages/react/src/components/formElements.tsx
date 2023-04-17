@@ -67,6 +67,10 @@ export const Input = styled.input<{
   &[data-error="true"] {
     box-shadow: 0 0 0 2px ${(p) => p.theme.input.errorRing};
   }
+
+  &[disabled] {
+    cursor: not-allowed;
+  }
 `;
 
 // for rendering a input and a button side by side
@@ -95,4 +99,10 @@ export const ErrorMessage = styled.p<{ theme?: Theme }>`
   font-size: ${fontSize.xs};
   display: block;
   color: ${(p) => p.theme.input.errorRing};
+`;
+
+export const FormFooter = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: ${spacing.md};
 `;
