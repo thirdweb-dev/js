@@ -12,6 +12,7 @@ import { useAddress } from "@thirdweb-dev/react";
 import { NFT, NFTMetadata, TransactionResult } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useMemo } from "react";
 import { BsEyeFill } from "react-icons/bs";
 import { Button, Card, Heading, Text } from "tw-components";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
@@ -57,10 +58,50 @@ export const Unboxed: React.FC<UnboxedProps> = ({
   const nft = reward?.metadata as unknown as Metadata;
   const rarity = nft?.attributes[0]?.value;
   const walletAddress = useAddress();
-  const image = nft?.image?.replaceAll(/ /g, "%20");
-  const text = `Proud to be a bear market builder. 💪%0A%0AI just claimed a free ${nft?.name} from @thirdweb%0A%0AClaim yours at: https://thirdweb.com/bear-market-airdrop
-  `;
-  const twitterUrl = `https://twitter.com/intent/tweet?text=${text}`;
+
+  const twitterIntentUrl = useMemo(() => {
+    const textVariations = [
+      `Proud to be a bear market builder. 💪
+    
+I just claimed a free ${nft?.name} from @thirdweb
+
+Claim yours at:`,
+      `I'm a bear market builder and just got a free ${nft?.name} from @thirdweb!
+    
+Join the party at:`,
+      `Thrilled to be a bear market builder and claim my free ${nft?.name} from @thirdweb!
+    
+Get yours now on:`,
+      `Guess what? As a bear market builder, I got a free ${nft?.name} from @thirdweb!
+    
+You can get one too at:`,
+      `I'm a bear market builder, excited to announce I've claimed my free ${nft?.name} from @thirdweb!
+    
+Now it's your turn at:`,
+      `Being a bear market builder pays off! Now, I'm a proud owner of a free ${nft?.name} from @thirdweb!
+    
+Find out how you can get yours at:`,
+      `It's true - bear market builders like me get free ${nft?.name}s from @thirdweb! 🎉
+    
+Claim yours today at:`,
+      `Bear market builder grind pays off. Just got a free ${nft?.name} from @thirdweb!
+    
+Secure yours at:`,
+      `Feeling lucky to be a bear market builder and claim a free ${nft?.name} from @thirdweb! 🎁
+    
+Don't miss out, go to:`,
+      `Bear market builders rejoice! I just scored a free ${nft?.name} from @thirdweb! 🌟
+    
+You can claim one too at:`,
+    ];
+
+    const url = new URL("https://twitter.com/intent/tweet");
+    const randomTextIndex = Math.floor(Math.random() * textVariations.length);
+    url.searchParams.append("text", textVariations[randomTextIndex]);
+    url.searchParams.append("url", "https://thirdweb.com/bear-market-airdrop");
+    return url.href;
+  }, [nft?.name]);
+
   const { colorMode } = useColorMode();
   const trackEvent = useTrack();
 
@@ -131,7 +172,7 @@ export const Unboxed: React.FC<UnboxedProps> = ({
               lg: 40,
             }}
           >
-            you’ve unpacked
+            you&apos;ve unpacked
           </Heading>
         </Flex>
       </Box>
@@ -261,7 +302,7 @@ export const Unboxed: React.FC<UnboxedProps> = ({
         <Box textAlign="center">
           <Button
             as="a"
-            href={twitterUrl}
+            href={twitterIntentUrl}
             target="_blank"
             outline="1px solid #9D2889"
             cursor="pointer"
