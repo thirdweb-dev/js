@@ -6,9 +6,13 @@ export const ERROR_SUBSTRINGS = [
   "chain_id mismatch",
   "recovered sender mismatch",
   "transaction hash mismatch",
+  "chainid no support",
 ];
 
-export const ERROR_SUBSTRINGS_COMPOSITE = [["account", "not found"]];
+export const ERROR_SUBSTRINGS_COMPOSITE = [
+  ["account", "not found"],
+  ["wrong", "chainid"],
+];
 
 export function matchError(error: string): boolean {
   const errorIndex = ERROR_SUBSTRINGS.findIndex((substring) =>
