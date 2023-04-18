@@ -1,6 +1,7 @@
 import { ClaimAirdrop } from "./ClaimAirdrop";
 import { ContractsDeployed } from "./ContractsDeployed";
 import { OpenPack } from "./OpenPack";
+import { OutOfPacks } from "./OutOfPacks";
 import { Supply } from "./Supply";
 import { Unboxed } from "./Unboxed";
 import { Box, Flex, SimpleGrid, Spinner, useToast } from "@chakra-ui/react";
@@ -86,6 +87,8 @@ export const Hero: React.FC<HeroProps> = () => {
     pack,
     0,
   );
+
+  const outOfPacks = BigNumber.from(supply || 0).toNumber() === 0;
 
   useEffect(() => {
     const updateInterval = setInterval(() => {
@@ -402,52 +405,58 @@ export const Hero: React.FC<HeroProps> = () => {
             </Box>
           )}
           <>
-            {!unboxed && supply && (
-              <Supply supply={BigNumber.from(supply || 0).toString()} />
-            )}
-            {!address ? (
-              <Box
-                mx={{
-                  base: "auto",
-                  lg: 0,
-                }}
-              >
-                <ConnectWallet />
-              </Box>
-            ) : IS_GASLESS_DISABLED && chainId !== 137 ? (
-              <Button
-                bg="bgBlack!important"
-                color="bgWhite!important"
-                _hover={{
-                  opacity: 0.8,
-                }}
-                onClick={() => {
-                  switchChain(137).catch((e) => {
-                    console.error(e);
-                  });
-                }}
-              >
-                Switch to Polygon
-              </Button>
-            ) : hasPack ? (
-              <OpenPack openPack={openPack} unboxing={unboxing} />
+            {outOfPacks ? (
+              <OutOfPacks handleEmailSubmit={handleEmailSubmit} />
             ) : (
-              <ClaimAirdrop
-                canClaim={canClaim}
-                isClaiming={claiming}
-                claim={claim}
-                handleEmailSubmit={handleEmailSubmit}
-              />
+              <>
+                {!unboxed && supply && (
+                  <Supply supply={BigNumber.from(supply || 0).toString()} />
+                )}
+                {!address ? (
+                  <Box
+                    mx={{
+                      base: "auto",
+                      lg: 0,
+                    }}
+                  >
+                    <ConnectWallet />
+                  </Box>
+                ) : IS_GASLESS_DISABLED && chainId !== 137 ? (
+                  <Button
+                    bg="bgBlack!important"
+                    color="bgWhite!important"
+                    _hover={{
+                      opacity: 0.8,
+                    }}
+                    onClick={() => {
+                      switchChain(137).catch((e) => {
+                        console.error(e);
+                      });
+                    }}
+                  >
+                    Switch to Polygon
+                  </Button>
+                ) : hasPack ? (
+                  <OpenPack openPack={openPack} unboxing={unboxing} />
+                ) : (
+                  <ClaimAirdrop
+                    canClaim={canClaim}
+                    isClaiming={claiming}
+                    claim={claim}
+                    handleEmailSubmit={handleEmailSubmit}
+                  />
+                )}
+                {IS_GASLESS_DISABLED && (
+                  <Text>
+                    Due to extremely high demand claiming and opening packs is
+                    currently <strong>not gasless</strong>. You can still claim
+                    and open your pack, but you will need to pay gas fees while
+                    we work on a solution.
+                  </Text>
+                )}
+              </>
             )}
           </>
-          {IS_GASLESS_DISABLED && (
-            <Text>
-              Due to extremely high demand claiming and opening packs is
-              currently <strong>not gasless</strong>. You can still claim and
-              open your pack, but you will need to pay gas fees while we work on
-              a solution.
-            </Text>
-          )}
         </Flex>
       ) : (
         <Unboxed
