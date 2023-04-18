@@ -4,6 +4,8 @@ export const ERROR_SUBSTRINGS = [
   "invalid chain id for signer",
   "chain id none",
   "chain_id mismatch",
+  "recovered sender mismatch",
+  "transaction hash mismatch",
 ];
 
 export const ERROR_SUBSTRINGS_COMPOSITE = [["account", "not found"]];

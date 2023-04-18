@@ -25,11 +25,7 @@ import {
 import { generatePluginFunctions, getMetadataForPlugins } from "./plugin";
 import { Plugin } from "../types/plugins";
 import { DeployMetadata, DeployOptions } from "../types";
-import {
-  ERROR_SUBSTRINGS,
-  ERROR_SUBSTRINGS_COMPOSITE,
-  matchError,
-} from "./any-evm-constants";
+import { matchError } from "./any-evm-constants";
 
 //
 // =============================
