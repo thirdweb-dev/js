@@ -14,6 +14,7 @@ interface ClaimAirdropProps {
 type Inputs = {
   email: string;
 };
+
 export const ClaimAirdrop: React.FC<ClaimAirdropProps> = ({
   canClaim,
   claim,
@@ -85,9 +86,13 @@ export const ClaimAirdrop: React.FC<ClaimAirdropProps> = ({
         </Flex>
       )}
       {canClaim && (
-        <Text>
-          Ensure your email is correct as it will be used to send you rewards.
-        </Text>
+        <>
+          <Text>
+            Ensure your email is correct as it will be used to send you rewards.
+            We&apos;ll also subscribe you to our newsletter for the latest
+            updates.
+          </Text>
+        </>
       )}
     </Flex>
   );

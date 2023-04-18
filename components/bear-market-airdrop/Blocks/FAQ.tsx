@@ -202,10 +202,6 @@ export const FAQ: React.FC = () => {
                 These ‘tokens’ are ERC721 NFTs, and some of which can be
                 ‘redeemed’ for the prizes listed above.
               </Text>
-              <Text>
-                The airdrop is fully gasless, and only requires you to sign a
-                transaction.
-              </Text>
             </Flex>
           </AccordionPanel>
         </AccordionItem>

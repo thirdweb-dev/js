@@ -26,7 +26,7 @@ import { BigNumber } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { getSearchQuery } from "lib/search";
 import { useCallback, useEffect, useState } from "react";
-import { Button, Heading, Text } from "tw-components";
+import { Button, Heading } from "tw-components";
 
 type HeroProps = {
   desiredChain: Chain;
@@ -117,6 +117,44 @@ export const Hero: React.FC<HeroProps> = () => {
         return;
       }
       try {
+        const beeHivRes = await fetch("/api/email-signup", {
+          method: "POST",
+          body: JSON.stringify({ email }),
+        });
+        if (!fromClaim) {
+          trackEvent({
+            category: BEAR_MARKET_TRACKING_CATEGORY,
+            action: "submit_email",
+            label: "success",
+            walletAddress: address,
+            email,
+          });
+          if (beeHivRes.status === 200) {
+            toast({
+              title: "Email submitted!",
+              position: "top",
+              variant: "left-accent",
+              status: "success",
+              containerStyle: {
+                bg: "black",
+                rounded: "lg",
+              },
+            });
+          } else {
+            toast({
+              title: "Error submitting email",
+              position: "top",
+              variant: "left-accent",
+              status: "error",
+              containerStyle: {
+                bg: "black",
+                rounded: "lg",
+              },
+            });
+          }
+
+          return;
+        }
         const res = await fetch("/api/bear-market-airdrop/airtable", {
           method: "POST",
           headers: {
@@ -445,14 +483,6 @@ export const Hero: React.FC<HeroProps> = () => {
                     claim={claim}
                     handleEmailSubmit={handleEmailSubmit}
                   />
-                )}
-                {IS_GASLESS_DISABLED && (
-                  <Text>
-                    Due to extremely high demand claiming and opening packs is
-                    currently <strong>not gasless</strong>. You can still claim
-                    and open your pack, but you will need to pay gas fees while
-                    we work on a solution.
-                  </Text>
                 )}
               </>
             )}
