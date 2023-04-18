@@ -2,10 +2,7 @@ import { paletteDark, paletteLight } from "./colors";
 import { textVariants } from "./textVariants";
 import { createTheme } from "@shopify/restyle";
 
-export const darkTheme = createTheme({
-  colors: {
-    ...paletteDark,
-  },
+export const baseTheme = {
   spacing: {
     none: 0,
     xxs: 6,
@@ -37,13 +34,53 @@ export const darkTheme = createTheme({
     xl: 48,
   },
   textVariants,
+};
+
+const darkTheme_ = createTheme({
+  ...baseTheme,
+  colors: {
+    ...paletteDark,
+  },
 });
 
-export const lightTheme: Theme = {
-  ...darkTheme,
+const lightTheme_: Theme = {
+  ...baseTheme,
   colors: {
     ...paletteLight,
   },
 };
 
-export type Theme = typeof darkTheme;
+export type Theme = typeof darkTheme_;
+
+export type ButtonTheme = {
+  buttonBackgroundColor?: string;
+  buttonTextColor?: string;
+};
+
+export const darkTheme = ({
+  buttonBackgroundColor = paletteDark.buttonBackgroundColor,
+  buttonTextColor = paletteDark.buttonTextColor,
+}: ButtonTheme = {}) => {
+  return {
+    ...darkTheme_,
+    colors: {
+      ...darkTheme_.colors,
+      buttonBackgroundColor,
+      buttonTextColor,
+    },
+  };
+};
+
+export const lightTheme = ({
+  buttonBackgroundColor = paletteLight.buttonBackgroundColor,
+  buttonTextColor = paletteLight.buttonTextColor,
+}: ButtonTheme = {}) => {
+  return {
+    ...lightTheme_,
+    colors: {
+      ...lightTheme_.colors,
+      buttonBackgroundColor,
+      buttonTextColor,
+    },
+  };
+};

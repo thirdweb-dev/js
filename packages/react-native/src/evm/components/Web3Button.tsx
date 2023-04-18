@@ -1,4 +1,4 @@
-import { ThemeProvider } from "../styles/ThemeProvider";
+import { ThemeProvider, ThemeProviderProps } from "../styles/ThemeProvider";
 import { ConnectWallet } from "./ConnectWallet";
 import BaseButton from "./base/BaseButton";
 import Text from "./base/Text";
@@ -36,7 +36,7 @@ interface Web3ButtonProps<TActionFn extends ActionFn> {
   isDisabled?: boolean;
   // the fn to execute
   action: TActionFn;
-  theme?: "dark" | "light";
+  theme?: ThemeProviderProps["theme"];
 }
 
 /**
@@ -145,7 +145,7 @@ export const Web3Button = <TAction extends ActionFn>({
       connectionStatus === "connecting" ||
       connectionStatus === "unknown"
     ) {
-      content = <ActivityIndicator size="small" color={"black"} />;
+      content = <ActivityIndicator size="small" color="buttonTextColor" />;
       buttonLoading = true;
     }
   }
@@ -153,7 +153,7 @@ export const Web3Button = <TAction extends ActionFn>({
   return (
     <ThemeProvider theme={theme}>
       <BaseButton
-        backgroundColor="white"
+        backgroundColor="buttonBackgroundColor"
         onPress={() => {
           actionMutation.mutate();
         }}
@@ -161,7 +161,7 @@ export const Web3Button = <TAction extends ActionFn>({
         disabled={buttonDisabled || buttonLoading}
       >
         {typeof content === "string" ? (
-          <Text variant="bodyLarge" color="black">
+          <Text variant="bodyLarge" color="buttonTextColor">
             {content}
           </Text>
         ) : (
