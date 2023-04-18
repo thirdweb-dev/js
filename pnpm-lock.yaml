@@ -1172,8 +1172,8 @@ importers:
         specifier: ^3.6.3
         version: 3.6.4(@babel/core@7.21.3)
       '@paperxyz/embedded-wallet-service-sdk':
-        specifier: ^0.0.26
-        version: 0.0.26
+        specifier: ^0.1.0
+        version: 0.1.0
       '@safe-global/safe-core-sdk':
         specifier: ^3.3.2
         version: 3.3.2
@@ -6959,8 +6959,8 @@ packages:
     resolution: {integrity: sha512-003xWiCuvePbLaPHT+CRuaV4GlyCAVm6XYSbBZDHoWZGn1mNkVKFaDbGJjjxmEFvizUwlCoM6O18FCBMMky2zQ==}
     dev: true
 
-  /@paperxyz/embedded-wallet-service-sdk@0.0.26:
-    resolution: {integrity: sha512-2Io6opbzAuwdpflP4N3uTRHk454nx0O5inlnOj9FqpChSF06h1xSVlSA/6lRCrJRxhOuO6uNhrkntItRRPIw7Q==}
+  /@paperxyz/embedded-wallet-service-sdk@0.1.0:
+    resolution: {integrity: sha512-AWo/fNYx3bhP2jkScZ8T3vElKsTiXMeTTx5FT5RmcJVfeDArAPh2nEvnFA+16J4c2zHq+GRATxe+MmB/XWh8SQ==}
     dependencies:
       '@ethersproject/abstract-signer': 5.7.0
       '@ethersproject/bytes': 5.7.0
