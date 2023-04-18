@@ -115,12 +115,7 @@ export const ClaimAirdrop: React.FC<ClaimAirdropProps> = ({
           </FormControl>
           {!canClaim && (
             <Flex gap={2}>
-              <Text
-                fontSize="14px"
-                fontWeight="semibold"
-                mt={2}
-                color="initial"
-              >
+              <Text fontSize="14px" fontWeight="semibold" mt={2}>
                 Subscribe to thirdweb&apos;s newsletter for the latest updates.
               </Text>
               <ChakraNextImage

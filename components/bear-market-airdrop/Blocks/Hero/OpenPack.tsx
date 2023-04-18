@@ -57,7 +57,7 @@ export const OpenPack: React.FC<OpenPackProps> = ({ openPack, unboxing }) => {
             lg: 0,
           }}
         >
-          <Text fontWeight="bold" fontSize="19px" color="initial" mt={6}>
+          <Text fontWeight="bold" fontSize="19px" mt={6}>
             You own 1 pack
           </Text>
           <ChakraNextImage

@@ -63,7 +63,7 @@ const ListItem: React.FC<ListItemProps> = ({ contract }) => {
                 {chain?.name}
               </Text>
             </Flex>
-            <Text fontSize="16px" color="initial">
+            <Text fontSize="16px">
               <Text fontFamily="monospace">{shortenString(address, true)}</Text>
             </Text>
           </Flex>

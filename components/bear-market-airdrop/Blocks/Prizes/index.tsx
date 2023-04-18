@@ -9,7 +9,7 @@ export const PrizesDisplay: React.FC = () => {
       flexDirection="column"
       maxW={{
         base: "full",
-        lg: "container.page",
+        md: "container.lg",
       }}
       mt={24}
     >
