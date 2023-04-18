@@ -14,7 +14,7 @@ export default async function handler(
   const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
 
   const base = new Airtable({ apiKey: AIRTABLE_TOKEN }).base(
-    "app47E4b88aZF8us3",
+    process.env.AIRTABLE_PAGE_ID as string,
   );
 
   if (req.method !== "POST") {
