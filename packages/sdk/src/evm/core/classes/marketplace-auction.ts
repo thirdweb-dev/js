@@ -277,6 +277,48 @@ export class MarketplaceAuction {
   );
 
   /**
+   * Create a batch of new auctions
+   *
+   * @remarks Create a batch of new auctions on the marketplace
+   *
+   * @example
+   * ```javascript
+   * const auctions = [...];
+   * const tx = await contract.auction.createListingsBatch(auctions);
+   * ```
+   */
+  createListingsBatch = buildTransactionFunction(
+    async (
+      listings: NewAuctionListing[],
+    ): Promise<Transaction<TransactionResultWithId[]>> => {
+      const data = await Promise.all(
+        listings.map(async (listing) => {
+          const tx = await this.createListing.prepare(listing);
+          return tx.encode();
+        }),
+      );
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "multicall",
+        args: [data],
+        parse: (receipt) => {
+          const events = this.contractWrapper.parseLogs<ListingAddedEvent>(
+            "ListingAdded",
+            receipt?.logs,
+          );
+          return events.map((event) => {
+            return {
+              id: event.args.listingId,
+              receipt,
+            };
+          });
+        },
+      });
+    },
+  );
+
+  /**
    * Buyout Auction
    *
    * @remarks Buy a specific direct listing from the marketplace.

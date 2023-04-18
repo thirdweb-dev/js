@@ -1,17 +1,14 @@
 import { normalizeChainId } from "../../../lib/wagmi-core";
 import { ConnectParams, TWConnector } from "../../interfaces/tw-connector";
-import type {
-  AbstractDeviceWallet,
-  DeviceWalletConnectionArgs,
-  DeviceWalletImpl,
-} from "../../wallets/device-wallet";
+import type { DeviceWalletConnectionArgs } from "../../wallets/device-wallet";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { Signer } from "ethers";
 import { providers } from "ethers";
+import type { Wallet } from "ethers";
 
 export type DeviceWalletConnectorOptions = {
   chain: Chain;
-  wallet: AbstractDeviceWallet;
+  ethersWallet: Wallet;
   chains: Chain[];
 };
 
@@ -19,7 +16,6 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
   readonly id: string = "device_wallet";
   readonly name: string = "Device Wallet";
   options: DeviceWalletConnectorOptions;
-  #wallet: DeviceWalletImpl;
 
   #provider?: providers.Provider;
   #signer?: Signer;
@@ -29,27 +25,15 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
   constructor(options: DeviceWalletConnectorOptions) {
     super();
     this.options = options;
-    this.#wallet = options.wallet;
   }
 
   async connect(args: ConnectParams<DeviceWalletConnectionArgs>) {
-    await this.initializeDeviceWallet(args.password);
     if (args.chainId) {
       this.switchChain(args.chainId);
     }
     const signer = await this.getSigner();
     const address = await signer.getAddress();
     return address;
-  }
-
-  async initializeDeviceWallet(password: string) {
-    const savedAddr = await this.#wallet.getSavedWalletAddress();
-    if (!savedAddr) {
-      await this.#wallet.generateNewWallet();
-      await this.#wallet.save(password);
-    } else {
-      await this.#wallet.loadSavedWallet(password);
-    }
   }
 
   async disconnect() {
@@ -84,12 +68,12 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
   }
 
   async getSigner() {
-    if (!this.#wallet) {
-      throw new Error("No wallet found");
-    }
     if (!this.#signer) {
       const provider = await this.getProvider();
-      this.#signer = await this.#wallet.getSigner(provider);
+      this.#signer = getSignerFromEthersWallet(
+        this.options.ethersWallet,
+        provider,
+      );
     }
     return this.#signer;
   }
@@ -101,7 +85,10 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
     }
 
     this.#provider = new providers.JsonRpcBatchProvider(chain.rpc[0]);
-    this.#signer = await this.#wallet.getSigner(this.#provider);
+    this.#signer = getSignerFromEthersWallet(
+      this.options.ethersWallet,
+      this.#provider,
+    );
     this.onChainChanged(chainId);
   }
 
@@ -116,4 +103,14 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
   updateChains(chains: Chain[]): void {
     this.options.chains = chains;
   }
+}
+
+function getSignerFromEthersWallet(
+  ethersWallet: Wallet,
+  provider?: providers.Provider,
+) {
+  if (provider) {
+    return ethersWallet.connect(provider);
+  }
+  return ethersWallet;
 }

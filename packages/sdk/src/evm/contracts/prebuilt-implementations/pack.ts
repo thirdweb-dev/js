@@ -125,6 +125,7 @@ export class Pack extends StandardErc1155<PackContract> {
         ? {
             ...options,
             gasless: {
+              ...options.gasless,
               openzeppelin: {
                 ...options.gasless.openzeppelin,
                 useEOAForwarder: true,

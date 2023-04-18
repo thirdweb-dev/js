@@ -38,6 +38,7 @@ import type {
   IERC721,
   IDirectListings,
   DirectListingsLogic,
+  MarketplaceV3,
 } from "@thirdweb-dev/contracts-js";
 import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
 import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
@@ -398,6 +399,49 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
             id: event[0].args.listingId,
             receipt,
           };
+        },
+      });
+    },
+  );
+
+  /**
+   * Create a batch of new listings
+   *
+   * @remarks Create a batch of new listings on the marketplace
+   *
+   * @example
+   * ```javascript
+   * const listings = [...];
+   * const tx = await contract.directListings.createListingsBatch(listings);
+   * ```
+   */
+  createListingsBatch = buildTransactionFunction(
+    async (
+      listings: DirectListingInputParams[],
+    ): Promise<Transaction<TransactionResultWithId[]>> => {
+      const data = await Promise.all(
+        listings.map(async (listing) => {
+          const tx = await this.createListing.prepare(listing);
+          return tx.encode();
+        }),
+      );
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this
+          .contractWrapper as unknown as ContractWrapper<MarketplaceV3>,
+        method: "multicall",
+        args: [data],
+        parse: (receipt) => {
+          const events = this.contractWrapper.parseLogs<NewListingEvent>(
+            "NewListing",
+            receipt?.logs,
+          );
+          return events.map((event) => {
+            return {
+              id: event.args.listingId,
+              receipt,
+            };
+          });
         },
       });
     },
@@ -864,9 +908,15 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
         ERC721Abi,
         provider,
       ) as IERC721;
+
+      // Handle reverts in case of non-existent tokens
+      let owner;
+      try {
+        owner = await asset.ownerOf(listing.tokenId);
+      } catch (e) {}
       const valid =
-        (await asset.ownerOf(listing.tokenId)).toLowerCase() ===
-        listing.creatorAddress.toLowerCase();
+        owner?.toLowerCase() === listing.creatorAddress.toLowerCase();
+
       return {
         valid,
         error: valid

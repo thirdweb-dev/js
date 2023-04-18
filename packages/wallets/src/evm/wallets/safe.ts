@@ -1,7 +1,7 @@
 import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
-import { AbstractBrowserWallet, WalletOptions } from "./base";
+import { AbstractClientWallet, WalletOptions } from "./base";
 import type { Chain } from "@thirdweb-dev/chains";
-import { SafeConnectionArgs } from "../connectors/safe/types";
+import type { SafeConnectionArgs } from "../connectors/safe/types";
 import type { SafeConnector as SafeConnectorType } from "../connectors/safe";
 
 export { SafeSupportedChainsSet } from "../connectors/safe";
@@ -10,7 +10,7 @@ export { SafeSupportedChainsSet } from "../connectors/safe";
 export type { SafeConnectionArgs } from "../connectors/safe/types";
 
 export type SafeWalletOptions = WalletOptions<{}>;
-export class SafeWallet extends AbstractBrowserWallet<{}, SafeConnectionArgs> {
+export class SafeWallet extends AbstractClientWallet<{}, SafeConnectionArgs> {
   connector?: SafeConnectorType;
 
   static meta = {

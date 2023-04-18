@@ -1,5 +1,37 @@
 # @thirdweb-dev/sdk
 
+## 3.10.10
+
+### Patch Changes
+
+- [#882](https://github.com/thirdweb-dev/js/pull/882) [`ac8fa0b3`](https://github.com/thirdweb-dev/js/commit/ac8fa0b34545a2bc0b489a0551d476a9f560e851) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix resolving proxy implementation addreses with leading 0s
+
+- [#756](https://github.com/thirdweb-dev/js/pull/756) [`b75bcef5`](https://github.com/thirdweb-dev/js/commit/b75bcef55bfdedc260b5b62bb4aff10a7d5c47b6) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Any EVM deploy flow with Create2 factory
+
+- [#878](https://github.com/thirdweb-dev/js/pull/878) [`c9027fce`](https://github.com/thirdweb-dev/js/commit/c9027fced0fffbf757bf0080bc4a49f5464df647) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Util function for any-evm deployment status
+
+- Updated dependencies [[`b75bcef5`](https://github.com/thirdweb-dev/js/commit/b75bcef55bfdedc260b5b62bb4aff10a7d5c47b6)]:
+  - @thirdweb-dev/contracts-js@1.3.3
+
+## 3.10.9
+
+### Patch Changes
+
+- [#864](https://github.com/thirdweb-dev/js/pull/864) [`b3d57949`](https://github.com/thirdweb-dev/js/commit/b3d57949bd047831fda7e600b4872200340903b5) Thanks [@ciaranightingale](https://github.com/ciaranightingale)! - Remove necessity for LazyMint to detect any of the claim extensions
+
+- [#869](https://github.com/thirdweb-dev/js/pull/869) [`602d8cbc`](https://github.com/thirdweb-dev/js/commit/602d8cbcfaa7c1e117c01f842f89508f7333fcfe) Thanks [@adam-maj](https://github.com/adam-maj)! - Add .prepare() syntax to tiered-drop
+
+## 3.10.8
+
+### Patch Changes
+
+- [#861](https://github.com/thirdweb-dev/js/pull/861) [`1547d76c`](https://github.com/thirdweb-dev/js/commit/1547d76cce52265076c347599014f578c1de6152) Thanks [@adam-maj](https://github.com/adam-maj)! - Add option to pass timestamps for dates
+
+- [#863](https://github.com/thirdweb-dev/js/pull/863) [`1b8f812f`](https://github.com/thirdweb-dev/js/commit/1b8f812fb8c910d91fb7535d6446a0b6fc6b2310) Thanks [@ciaranightingale](https://github.com/ciaranightingale)! - Update Solidity SDK detected extension portal links
+
+- Updated dependencies [[`235eb046`](https://github.com/thirdweb-dev/js/commit/235eb0460ae0638f63acf82957bcfea41b9e955d)]:
+  - @thirdweb-dev/chains@0.1.11
+
 ## 3.10.7
 
 ### Patch Changes

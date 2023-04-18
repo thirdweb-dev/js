@@ -22,6 +22,8 @@ import invariant from "tiny-invariant";
 
 type ActionFn = (contract: SmartContract) => any;
 
+const TW_WEB3BUTTON = "tw-web3button";
+
 interface Web3ButtonProps<TActionFn extends ActionFn> {
   className?: string;
   contractAddress: `0x${string}` | `${string}.eth` | string;
@@ -40,6 +42,7 @@ interface Web3ButtonProps<TActionFn extends ActionFn> {
   action: TActionFn;
   type?: "button" | "submit" | "reset";
   theme?: "dark" | "light";
+  style?: React.CSSProperties;
 }
 
 /**
@@ -75,6 +78,7 @@ export const Web3Button = <TAction extends ActionFn>({
   className,
   type,
   theme,
+  style,
 }: PropsWithChildren<Web3ButtonProps<TAction>>) => {
   const address = useAddress();
   const sdkChainId = useSDKChainId();
@@ -121,7 +125,13 @@ export const Web3Button = <TAction extends ActionFn>({
   );
 
   if (!address) {
-    return <ConnectWallet theme={theme} />;
+    return (
+      <ConnectWallet
+        style={style}
+        theme={theme}
+        className={`${className || ""} ${TW_WEB3BUTTON}--connect-wallet`}
+      />
+    );
   }
 
   // let onClick = () => actionMutation.mutate();
@@ -152,9 +162,11 @@ export const Web3Button = <TAction extends ActionFn>({
       <Button
         variant="inverted"
         type={type}
-        className={className}
+        className={`${className || ""} ${TW_WEB3BUTTON}--switch-network`}
         onClick={handleSwitchChain}
-        style={btnStyle}
+        style={{ ...btnStyle, ...style }}
+        data-is-loading={confirmStatus === "waiting"}
+        data-theme={theme}
       >
         {confirmStatus === "waiting" ? (
           <Spinner size="sm" color={"inverted"} />
@@ -195,10 +207,11 @@ export const Web3Button = <TAction extends ActionFn>({
       <Button
         variant="inverted"
         type={type}
-        className={className}
+        className={`${className || ""} ${TW_WEB3BUTTON}`}
         disabled
-        onClick={handleSwitchChain}
-        style={btnStyle}
+        style={{ ...btnStyle, ...style }}
+        data-is-loading
+        data-theme={theme}
       >
         <Spinner size="md" color={"inverted"} />
       </Button>
@@ -211,10 +224,12 @@ export const Web3Button = <TAction extends ActionFn>({
       <Button
         variant="inverted"
         type={type}
-        className={className}
+        className={`${className || ""} ${TW_WEB3BUTTON}`}
         onClick={() => actionMutation.mutate()}
         disabled={isDisabled}
-        style={btnStyle}
+        style={{ ...btnStyle, ...style }}
+        data-is-loading="false"
+        data-theme={theme}
       >
         {children}
       </Button>

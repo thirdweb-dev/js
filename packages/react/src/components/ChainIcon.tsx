@@ -11,6 +11,8 @@ export const ChainIcon: React.FC<{
   chain?: Chain;
   size: string;
   active?: boolean;
+  className?: string;
+  loading?: "lazy" | "eager";
 }> = (props) => {
   const url = props.chain?.icon?.url;
   const src = url ? resolveIpfsUri(url) : defaultChainIcon;
@@ -34,6 +36,13 @@ export const ChainIcon: React.FC<{
         alt=""
         width={props.size}
         height={props.size}
+        className={props.className}
+        loading={props.loading}
+        style={{
+          objectFit: "contain",
+          width: props.size + "px",
+          height: props.size + "px",
+        }}
       />
       {props.active && <ActiveDot />}
     </div>

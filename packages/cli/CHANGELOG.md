@@ -1,5 +1,39 @@
 # thirdweb
 
+## 0.10.11
+
+### Patch Changes
+
+- [#877](https://github.com/thirdweb-dev/js/pull/877) [`cef16471`](https://github.com/thirdweb-dev/js/commit/cef16471f4493d7c2c1897a81ffebf84a743716e) Thanks [@iketw](https://github.com/iketw)! - [CLI] Update min ruby version supported to 2.7.6 for React Native templates
+
+- Updated dependencies [[`ac8fa0b3`](https://github.com/thirdweb-dev/js/commit/ac8fa0b34545a2bc0b489a0551d476a9f560e851), [`b75bcef5`](https://github.com/thirdweb-dev/js/commit/b75bcef55bfdedc260b5b62bb4aff10a7d5c47b6), [`c9027fce`](https://github.com/thirdweb-dev/js/commit/c9027fced0fffbf757bf0080bc4a49f5464df647)]:
+  - @thirdweb-dev/sdk@3.10.10
+
+## 0.10.10
+
+### Patch Changes
+
+- Updated dependencies [[`b3d57949`](https://github.com/thirdweb-dev/js/commit/b3d57949bd047831fda7e600b4872200340903b5), [`602d8cbc`](https://github.com/thirdweb-dev/js/commit/602d8cbcfaa7c1e117c01f842f89508f7333fcfe)]:
+  - @thirdweb-dev/sdk@3.10.9
+
+## 0.10.9
+
+### Patch Changes
+
+- [#867](https://github.com/thirdweb-dev/js/pull/867) [`3bb846ad`](https://github.com/thirdweb-dev/js/commit/3bb846adf0484e8b7dc7dfeba9f9c0ee26f4ef35) Thanks [@adam-maj](https://github.com/adam-maj)! - Generate auto detects smart contracts in project
+
+- Updated dependencies [[`1547d76c`](https://github.com/thirdweb-dev/js/commit/1547d76cce52265076c347599014f578c1de6152), [`1b8f812f`](https://github.com/thirdweb-dev/js/commit/1b8f812fb8c910d91fb7535d6446a0b6fc6b2310), [`235eb046`](https://github.com/thirdweb-dev/js/commit/235eb0460ae0638f63acf82957bcfea41b9e955d)]:
+  - @thirdweb-dev/sdk@3.10.8
+  - @thirdweb-dev/chains@0.1.11
+
+## 0.10.8
+
+### Patch Changes
+
+- [#857](https://github.com/thirdweb-dev/js/pull/857) [`3a0e904f`](https://github.com/thirdweb-dev/js/commit/3a0e904fc2bae5134ba3bf65ba666c3360e4fced) Thanks [@adam-maj](https://github.com/adam-maj)! - Add skip intro flag to generate command and fix ABI cache regex
+
+- [#860](https://github.com/thirdweb-dev/js/pull/860) [`058e4357`](https://github.com/thirdweb-dev/js/commit/058e4357c783911a6cab6b38c6eebbb3277dfe93) Thanks [@iketw](https://github.com/iketw)! - [CLI] Only checks ruby version and attempts to run pod install if the platform is macOS
+
 ## 0.10.7
 
 ### Patch Changes

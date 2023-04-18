@@ -17,7 +17,7 @@ export type WalletMeta = {
   iconURL: string;
 };
 
-export abstract class AbstractBrowserWallet<
+export abstract class AbstractClientWallet<
   TAdditionalOpts extends Record<string, any> = {},
   TConnectParams extends Record<string, any> = {},
 > extends AbstractWallet {
@@ -28,7 +28,7 @@ export abstract class AbstractBrowserWallet<
   protected options?: WalletOptions<TAdditionalOpts>;
   static meta: WalletMeta;
   getMeta() {
-    return (this.constructor as typeof AbstractBrowserWallet).meta;
+    return (this.constructor as typeof AbstractClientWallet).meta;
   }
 
   constructor(walletId: string, options?: WalletOptions<TAdditionalOpts>) {
@@ -49,7 +49,11 @@ export abstract class AbstractBrowserWallet<
   async autoConnect(
     connectOptions?: ConnectParams<TConnectParams>,
   ): Promise<string | undefined> {
-    return this.#connect(true, connectOptions);
+    // remove chainId when autoconnecting to prevent switch-network popup on page load
+    const options = connectOptions
+      ? { ...connectOptions, chainId: undefined }
+      : undefined;
+    return this.#connect(true, options);
   }
 
   /**
@@ -75,6 +79,7 @@ export abstract class AbstractBrowserWallet<
 
     const isConnected = await connector.isConnected();
 
+    // if already connected, return the address and setup listeners
     if (isConnected) {
       const address = await connector.getAddress();
       connector.setupListeners();
@@ -90,10 +95,14 @@ export abstract class AbstractBrowserWallet<
       });
 
       return address;
-    } else if (!isAutoConnect) {
-      const address = await connector.connect(connectOptions);
-      return address;
     }
+
+    if (isAutoConnect) {
+      throw new Error("Failed to auto connect to the wallet.");
+    }
+
+    const address = await connector.connect(connectOptions);
+    return address;
   }
 
   async #subscribeToEvents(connector: TWConnector) {

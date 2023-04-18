@@ -2,13 +2,13 @@ import type { ConnectorData } from "../../lib/wagmi-core";
 import type { WalletConnectV1Connector } from "../connectors/wallet-connect-v1";
 import type WalletConnectProvider from "../connectors/wallet-connect-v1/walletconnect-legacy-provider";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
-import { AbstractBrowserWallet, WalletOptions } from "./base";
+import { AbstractClientWallet, WalletOptions } from "./base";
 
 export type WalletConnectV1Options = {
   qrcode?: boolean;
 } & Omit<ConstructorParameters<typeof WalletConnectProvider>[0], "clientMeta">;
 
-export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Options> {
+export class WalletConnectV1 extends AbstractClientWallet<WalletConnectV1Options> {
   #walletConnectConnector?: WalletConnectV1Connector;
   #provider?: WalletConnectProvider;
 
@@ -17,7 +17,7 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
   static id = "walletConnectV1";
 
   static meta = {
-    name: "Wallet Connect",
+    name: "WalletConnect",
     iconURL:
       "ipfs://QmX58KPRaTC9JYZ7KriuBzeoEaV2P9eZcA3qbFnTHZazKw/wallet-connect.svg",
   };

@@ -1,5 +1,55 @@
 # @thirdweb-dev/react
 
+## 3.11.7
+
+### Patch Changes
+
+- [#859](https://github.com/thirdweb-dev/js/pull/859) [`229a4741`](https://github.com/thirdweb-dev/js/commit/229a47413e422952ad946b8c09af32cc1fcdc7f0) Thanks [@MananTank](https://github.com/MananTank)! - Fix Error when connecting to Safe in Vite
+
+- [#879](https://github.com/thirdweb-dev/js/pull/879) [`59434aac`](https://github.com/thirdweb-dev/js/commit/59434aac4f1ca6d16a212c5379cf29fd346baf26) Thanks [@MananTank](https://github.com/MananTank)! - [react] add style prop on ConnectWallet and Web3Button
+
+- Updated dependencies [[`ac8fa0b3`](https://github.com/thirdweb-dev/js/commit/ac8fa0b34545a2bc0b489a0551d476a9f560e851), [`b616dca7`](https://github.com/thirdweb-dev/js/commit/b616dca7eb861cd1d2adba3f3d1fe9c3b50f259e), [`2545a440`](https://github.com/thirdweb-dev/js/commit/2545a440dc272690cacbc23023f7b0a68f390c6e), [`b75bcef5`](https://github.com/thirdweb-dev/js/commit/b75bcef55bfdedc260b5b62bb4aff10a7d5c47b6), [`229a4741`](https://github.com/thirdweb-dev/js/commit/229a47413e422952ad946b8c09af32cc1fcdc7f0), [`c9027fce`](https://github.com/thirdweb-dev/js/commit/c9027fced0fffbf757bf0080bc4a49f5464df647), [`0db0cc75`](https://github.com/thirdweb-dev/js/commit/0db0cc756436dba8f9df0cf8678b87c009acc283)]:
+  - @thirdweb-dev/sdk@3.10.10
+  - @thirdweb-dev/wallets@0.2.15
+  - @thirdweb-dev/react-core@3.11.7
+
+## 3.11.6
+
+### Patch Changes
+
+- Updated dependencies [[`b3d57949`](https://github.com/thirdweb-dev/js/commit/b3d57949bd047831fda7e600b4872200340903b5), [`602d8cbc`](https://github.com/thirdweb-dev/js/commit/602d8cbcfaa7c1e117c01f842f89508f7333fcfe)]:
+  - @thirdweb-dev/sdk@3.10.9
+  - @thirdweb-dev/react-core@3.11.6
+
+## 3.11.5
+
+### Patch Changes
+
+- Updated dependencies [[`1547d76c`](https://github.com/thirdweb-dev/js/commit/1547d76cce52265076c347599014f578c1de6152), [`235eb046`](https://github.com/thirdweb-dev/js/commit/235eb0460ae0638f63acf82957bcfea41b9e955d), [`b5648aee`](https://github.com/thirdweb-dev/js/commit/b5648aee83b299d07a8eed7773bd32bcceef9657), [`1b8f812f`](https://github.com/thirdweb-dev/js/commit/1b8f812fb8c910d91fb7535d6446a0b6fc6b2310), [`235eb046`](https://github.com/thirdweb-dev/js/commit/235eb0460ae0638f63acf82957bcfea41b9e955d)]:
+  - @thirdweb-dev/sdk@3.10.8
+  - @thirdweb-dev/react-core@3.11.5
+  - @thirdweb-dev/wallets@0.2.14
+  - @thirdweb-dev/chains@0.1.11
+
+## 3.11.4
+
+### Patch Changes
+
+- [#851](https://github.com/thirdweb-dev/js/pull/851) [`c5c2d947`](https://github.com/thirdweb-dev/js/commit/c5c2d9478acd4d4a4e6ce814716bdf1b6e51eafc) Thanks [@MananTank](https://github.com/MananTank)! - Fix wallet autoconnect issues
+
+  ### Fixes
+
+  - infinite loading spinner on connect wallet button when wallet is locked or connection to app is closed
+  - network switch popup on page load when wallet is connected to different network than it was previously connected
+  - removed autoconnect timeout - don't need it anymore
+
+- [#855](https://github.com/thirdweb-dev/js/pull/855) [`2dd192a5`](https://github.com/thirdweb-dev/js/commit/2dd192a5676f1b6d3c310ec796bf331252098d48) Thanks [@MananTank](https://github.com/MananTank)! - Add auth in Connect Wallet button
+
+- Updated dependencies [[`c5c2d947`](https://github.com/thirdweb-dev/js/commit/c5c2d9478acd4d4a4e6ce814716bdf1b6e51eafc), [`2dd192a5`](https://github.com/thirdweb-dev/js/commit/2dd192a5676f1b6d3c310ec796bf331252098d48)]:
+  - @thirdweb-dev/react-core@3.11.4
+  - @thirdweb-dev/wallets@0.2.13
+  - @thirdweb-dev/sdk@3.10.7
+
 ## 3.11.3
 
 ### Patch Changes

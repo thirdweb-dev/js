@@ -1,5 +1,41 @@
 # @thirdweb-dev/wallets
 
+## 0.2.15
+
+### Patch Changes
+
+- [#868](https://github.com/thirdweb-dev/js/pull/868) [`b616dca7`](https://github.com/thirdweb-dev/js/commit/b616dca7eb861cd1d2adba3f3d1fe9c3b50f259e) Thanks [@iketw](https://github.com/iketw)! - - Updates base wallet classes names
+
+  - Makes InjectedWallet params optional
+  - Removes connector storage constructor param from Injected and MetaMask wallets
+
+- [#872](https://github.com/thirdweb-dev/js/pull/872) [`2545a440`](https://github.com/thirdweb-dev/js/commit/2545a440dc272690cacbc23023f7b0a68f390c6e) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Rename Wallet Connect to WalletConnect
+
+- [#859](https://github.com/thirdweb-dev/js/pull/859) [`229a4741`](https://github.com/thirdweb-dev/js/commit/229a47413e422952ad946b8c09af32cc1fcdc7f0) Thanks [@MananTank](https://github.com/MananTank)! - Fix Error when connecting to Safe in Vite
+
+## 0.2.14
+
+### Patch Changes
+
+- [#870](https://github.com/thirdweb-dev/js/pull/870) [`235eb046`](https://github.com/thirdweb-dev/js/commit/235eb0460ae0638f63acf82957bcfea41b9e955d) Thanks [@jnsdls](https://github.com/jnsdls)! - fix crash during SSR when "window" is undefined
+
+- Updated dependencies [[`235eb046`](https://github.com/thirdweb-dev/js/commit/235eb0460ae0638f63acf82957bcfea41b9e955d)]:
+  - @thirdweb-dev/chains@0.1.11
+
+## 0.2.13
+
+### Patch Changes
+
+- [#851](https://github.com/thirdweb-dev/js/pull/851) [`c5c2d947`](https://github.com/thirdweb-dev/js/commit/c5c2d9478acd4d4a4e6ce814716bdf1b6e51eafc) Thanks [@MananTank](https://github.com/MananTank)! - Fix wallet autoconnect issues
+
+  ### Fixes
+
+  - infinite loading spinner on connect wallet button when wallet is locked or connection to app is closed
+  - network switch popup on page load when wallet is connected to different network than it was previously connected
+  - removed autoconnect timeout - don't need it anymore
+
+- [#855](https://github.com/thirdweb-dev/js/pull/855) [`2dd192a5`](https://github.com/thirdweb-dev/js/commit/2dd192a5676f1b6d3c310ec796bf331252098d48) Thanks [@MananTank](https://github.com/MananTank)! - Add auth in Connect Wallet button
+
 ## 0.2.12
 
 ### Patch Changes

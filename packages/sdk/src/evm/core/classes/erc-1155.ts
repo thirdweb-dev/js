@@ -28,6 +28,7 @@ import { EditionMetadataOrUri } from "../../schema/tokens/edition";
 import { ClaimOptions, UploadProgressEvent } from "../../types";
 import { AirdropInput } from "../../types/airdrop/airdrop";
 import {
+  BaseClaimConditionERC1155,
   BaseDropERC1155,
   BaseERC1155,
   BaseSignatureMintERC1155,
@@ -45,12 +46,15 @@ import { Transaction } from "./transactions";
 import type {
   DropERC1155,
   IBurnableERC1155,
+  IClaimableERC1155,
   IERC1155Enumerable,
   IMintableERC1155,
   TokenERC1155,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
+import { ERC1155Claimable } from "./erc-1155-claimable";
+import { Erc1155ClaimableWithConditions } from "./erc-1155-claimable-with-conditions";
 
 /**
  * Standard ERC1155 NFT functions
@@ -74,6 +78,8 @@ export class Erc1155<
   private burnable: Erc1155Burnable | undefined;
   private lazyMintable: Erc1155LazyMintable | undefined;
   private signatureMintable: Erc1155SignatureMintable | undefined;
+  private claimWithConditions: Erc1155ClaimableWithConditions | undefined;
+  private claimCustom: ERC1155Claimable | undefined;
 
   protected contractWrapper: ContractWrapper<T>;
   protected storage: ThirdwebStorage;
@@ -95,6 +101,8 @@ export class Erc1155<
     this.burnable = this.detectErc1155Burnable();
     this.lazyMintable = this.detectErc1155LazyMintable();
     this.signatureMintable = this.detectErc1155SignatureMintable();
+    this.claimCustom = this.detectErc1155Claimable();
+    this.claimWithConditions = this.detectErc1155ClaimableWithConditions();
     this._chainId = chainId;
   }
 
@@ -853,8 +861,8 @@ export class Erc1155<
     quantity: BigNumberish,
     options?: ClaimOptions,
   ): Promise<Transaction> {
-    const claimWithConditions = this.lazyMintable?.claimWithConditions;
-    const claim = this.lazyMintable?.claim;
+    const claimWithConditions = this.claimWithConditions;
+    const claim = this.claimCustom;
     if (claimWithConditions) {
       return claimWithConditions.conditions.getClaimTransaction(
         destinationAddress,
@@ -940,8 +948,8 @@ export class Erc1155<
       quantity: BigNumberish,
       options?: ClaimOptions,
     ) => {
-      const claimWithConditions = this.lazyMintable?.claimWithConditions;
-      const claim = this.lazyMintable?.claim;
+      const claimWithConditions = this.claimWithConditions;
+      const claim = this.claimCustom;
       if (claimWithConditions) {
         return claimWithConditions.to.prepare(
           destinationAddress,
@@ -982,7 +990,7 @@ export class Erc1155<
    */
   get claimConditions() {
     return assertEnabled(
-      this.lazyMintable?.claimWithConditions,
+      this.claimWithConditions,
       FEATURE_EDITION_CLAIM_CONDITIONS_V2,
     ).conditions;
   }
@@ -1129,6 +1137,47 @@ export class Erc1155<
       )
     ) {
       return new Erc1155SignatureMintable(this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  private detectErc1155Claimable(): ERC1155Claimable | undefined {
+    if (
+      detectContractFeature<IClaimableERC1155>(
+        this.contractWrapper,
+        "ERC1155ClaimCustom",
+      )
+    ) {
+      return new ERC1155Claimable(this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectErc1155ClaimableWithConditions():
+    | Erc1155ClaimableWithConditions
+    | undefined {
+    if (
+      detectContractFeature<BaseClaimConditionERC1155>(
+        this.contractWrapper,
+        "ERC1155ClaimConditionsV1",
+      ) ||
+      detectContractFeature<BaseClaimConditionERC1155>(
+        this.contractWrapper,
+        "ERC1155ClaimConditionsV2",
+      ) ||
+      detectContractFeature<BaseClaimConditionERC1155>(
+        this.contractWrapper,
+        "ERC1155ClaimPhasesV1",
+      ) ||
+      detectContractFeature<BaseClaimConditionERC1155>(
+        this.contractWrapper,
+        "ERC1155ClaimPhasesV2",
+      )
+    ) {
+      return new Erc1155ClaimableWithConditions(
+        this.contractWrapper,
+        this.storage,
+      );
     }
     return undefined;
   }

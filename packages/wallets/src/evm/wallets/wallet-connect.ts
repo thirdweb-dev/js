@@ -1,7 +1,7 @@
 import type { ConnectorData } from "../../lib/wagmi-core";
 import type { WalletConnectConnector } from "../connectors/wallet-connect";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
-import { AbstractBrowserWallet, WalletOptions } from "./base";
+import { AbstractClientWallet, WalletOptions } from "./base";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { TW_WC_PROJECT_ID } from "../constants/wc";
 
@@ -10,7 +10,7 @@ export type WalletConnectOptions = {
   qrcode?: boolean;
 };
 
-export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
+export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
   #walletConnectConnector?: WalletConnectConnector;
   #provider?: WalletConnectProvider;
 
@@ -19,7 +19,7 @@ export class WalletConnect extends AbstractBrowserWallet<WalletConnectOptions> {
   static id = "walletConnect";
 
   static meta = {
-    name: "Wallet Connect",
+    name: "WalletConnect",
     iconURL:
       "ipfs://QmX58KPRaTC9JYZ7KriuBzeoEaV2P9eZcA3qbFnTHZazKw/wallet-connect.svg",
   };

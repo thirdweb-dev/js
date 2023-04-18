@@ -1,6 +1,8 @@
 export { useSafe } from "./connectors/gnosis";
 
 export { ConnectWallet } from "../wallet/ConnectWallet/ConnectWallet";
+export { NetworkSelector } from "../wallet/ConnectWallet/NetworkSelector";
+export type { NetworkSelectorProps } from "../wallet/ConnectWallet/NetworkSelector";
 
 // UI components
 export * from "./components/MediaRenderer";
