@@ -121,7 +121,7 @@ export const ConnectedWalletDetails: React.FC<{
   const trigger = (
     <WalletInfoButton
       type="button"
-      className={`TW_CONNECTED_WALLET ${props.className || ""}`}
+      className={`${TW_CONNECTED_WALLET} ${props.className || ""}`}
       data-theme={props.theme}
       style={props.style}
     >
