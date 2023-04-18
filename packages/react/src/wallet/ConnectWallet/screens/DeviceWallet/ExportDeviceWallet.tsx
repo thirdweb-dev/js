@@ -86,6 +86,17 @@ export const ExportDeviceWallet: React.FC<{
 
         <Spacer y="lg" />
 
+        {/* Hidden Account Address as Username */}
+        <input
+          type="text"
+          name="username"
+          autoComplete="off"
+          value={walletData?.address || ""}
+          disabled
+          style={{ display: "none" }}
+        />
+
+        {/* password */}
         <FormFieldWithIconButton
           required
           name="current-password"

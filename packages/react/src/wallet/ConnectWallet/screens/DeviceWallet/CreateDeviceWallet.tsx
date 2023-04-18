@@ -13,7 +13,7 @@ import {
   InfoCircledIcon,
 } from "@radix-ui/react-icons";
 import { useThirdwebWallet } from "@thirdweb-dev/react-core";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDeviceWalletInfo } from "./useDeviceWalletInfo";
 import { ImportDeviceWalet } from "./ImportDeviceWallet";
 import styled from "@emotion/styled";
@@ -35,6 +35,19 @@ export const CreateDeviceWallet: React.FC<{
   const thirdwebWalletContext = useThirdwebWallet();
   const [showImportScreen, setShowImportScreen] = useState(false);
 
+  const [generatedAddress, setGeneratedAddress] = useState<string | null>(null);
+  const isGenerated = useRef(false);
+
+  useEffect(() => {
+    if (!deviceWallet || showImportScreen) {
+      return;
+    }
+    isGenerated.current = true;
+    deviceWallet.generate().then((_address) => {
+      setGeneratedAddress(_address);
+    });
+  }, [deviceWallet, showImportScreen]);
+
   if (showImportScreen) {
     return (
       <ImportDeviceWalet
@@ -51,7 +64,6 @@ export const CreateDeviceWallet: React.FC<{
       throw new Error("Invalid state");
     }
 
-    await deviceWallet.generate();
     deviceWallet.connect();
 
     await deviceWallet.save({
@@ -97,6 +109,16 @@ export const CreateDeviceWallet: React.FC<{
           handleConnect();
         }}
       >
+        {/* Hidden Account Address as Username */}
+        <input
+          type="text"
+          name="username"
+          autoComplete="off"
+          value={generatedAddress || ""}
+          disabled
+          style={{ display: "none" }}
+        />
+
         {/* Password */}
         <FormFieldWithIconButton
           name="password"
@@ -119,8 +141,8 @@ export const CreateDeviceWallet: React.FC<{
         <FormFieldWithIconButton
           name="confirm-password"
           required
-          autocomplete="current-password"
-          id="current-password"
+          autocomplete="new-password"
+          id="confirm-password"
           onChange={(value) => setConfirmPassword(value)}
           right={{
             icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
