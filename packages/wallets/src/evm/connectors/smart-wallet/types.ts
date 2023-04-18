@@ -4,10 +4,12 @@ import { WalletOptions } from "../../wallets/base";
 
 // re-export the connection args for convenience
 export type SmartWalletConfig = {
-  apiKey: string;
-  gasless: boolean;
   chain: ChainOrRpcUrl;
   factoryAddress: string;
+  gasless?: boolean;
+  apiKey?: string;
+  bundlerUrl?: string;
+  paymasterUrl?: string;
   factoryAbi?: string;
   accountAbi?: string;
   entryPointAddress?: string;

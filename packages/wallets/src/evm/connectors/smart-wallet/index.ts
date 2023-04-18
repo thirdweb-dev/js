@@ -22,10 +22,16 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
 
   async initialize(personalWallet: EVMWallet, accountId?: string) {
     const config = this.config;
-    // TODO (sw) use our own endpoint, but allow passing in a custom one
-    const bundlerUrl = `https://node.stackup.sh/v1/rpc/${config.apiKey}`;
-    const paymasterUrl = `https://app.stackup.sh/api/v2/paymaster/payg/${config.apiKey}`;
+    const chain =
+      typeof config.chain === "string"
+        ? config.chain
+        : (config.chain as Chain).slug;
+    const bundlerUrl =
+      this.config.bundlerUrl || `https://${chain}.bundler.thirdweb.com`;
+    const paymasterUrl =
+      this.config.paymasterUrl || `https://${chain}.bundler.thirdweb.com`;
     const entryPointAddress = config.entryPointAddress || ENTRYPOINT_ADDRESS;
+    const gasless = config.gasless !== undefined ? config.gasless : true; // gasless true by default
     const localSigner = await personalWallet.getSigner();
     const providerConfig: ProviderConfig = {
       chain: config.chain,
@@ -33,7 +39,7 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
       accountId: accountId ? accountId : await localSigner.getAddress(),
       entryPointAddress,
       bundlerUrl,
-      paymasterAPI: config.gasless
+      paymasterAPI: gasless
         ? getVerifyingPaymaster(paymasterUrl, entryPointAddress)
         : undefined,
       factoryAddress: config.factoryAddress,
