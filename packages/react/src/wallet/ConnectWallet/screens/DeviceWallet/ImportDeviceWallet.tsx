@@ -30,6 +30,7 @@ export const ImportDeviceWalet: React.FC<{
   const [password, setPassword] = useState("");
   const [isWrongPassword, setIsWrongPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [importedAddress, setImportedAddress] = useState<string | undefined>();
 
   const thirdwebWalletContext = useThirdwebWallet();
 
@@ -93,52 +94,72 @@ export const ImportDeviceWalet: React.FC<{
         accept="application/json"
         onUpload={(file) => {
           const reader = new FileReader();
-          reader.onload = (event) =>
+          reader.onload = (event) => {
             setJsonString(event.target?.result as string);
+            const obj = JSON.parse(event.target?.result as string);
+            setImportedAddress(obj.address);
+          };
           reader.readAsText(file, "utf-8");
         }}
       />
 
       <Spacer y="lg" />
 
-      {/* Password */}
-      {jsonString && (
-        <>
-          <FormFieldWithIconButton
-            required
-            name="current-password"
-            autocomplete="current-password"
-            id="current-password"
-            onChange={(value) => {
-              setPassword(value);
-              setIsWrongPassword(false);
-            }}
-            right={{
-              onClick: () => setShowPassword(!showPassword),
-              icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
-            }}
-            label="Password"
-            type={showPassword ? "text" : "password"}
-            value={password}
-            error={isWrongPassword ? "Wrong Password" : ""}
-          />
-          <Spacer y="xl" />
-        </>
-      )}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleImport();
+        }}
+      >
+        {/* Password */}
+        {jsonString && (
+          <>
+            {/* Hidden Account Address as Username */}
+            <input
+              type="text"
+              name="username"
+              autoComplete="off"
+              value={importedAddress || ""}
+              disabled
+              style={{ display: "none" }}
+            />
 
-      <FormFooter>
-        <Button
-          variant="inverted"
-          disabled={!jsonString}
-          style={{
-            minWidth: "110px",
-            opacity: jsonString ? 1 : 0.5,
-          }}
-          onClick={handleImport}
-        >
-          Import
-        </Button>
-      </FormFooter>
+            <FormFieldWithIconButton
+              required
+              name="current-password"
+              autocomplete="current-password"
+              id="current-password"
+              onChange={(value) => {
+                setPassword(value);
+                setIsWrongPassword(false);
+              }}
+              right={{
+                onClick: () => setShowPassword(!showPassword),
+                icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
+              }}
+              label="Password"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              error={isWrongPassword ? "Wrong Password" : ""}
+            />
+            <Spacer y="xl" />
+          </>
+        )}
+
+        <FormFooter>
+          <Button
+            variant="inverted"
+            type="submit"
+            disabled={!jsonString}
+            style={{
+              minWidth: "110px",
+              opacity: jsonString ? 1 : 0.5,
+            }}
+          >
+            Import
+          </Button>
+        </FormFooter>
+      </form>
     </>
   );
 };
