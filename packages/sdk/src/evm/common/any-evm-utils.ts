@@ -102,7 +102,7 @@ export async function isContractDeployed(
 ): Promise<boolean> {
   const code = await provider.getCode(address);
 
-  return code !== "0x";
+  return code !== "0x" && code !== "0x0";
 }
 
 /**
@@ -465,11 +465,12 @@ export async function deployContractDeterministicRaw(
   gasLimit: number = 7000000,
 ) {
   // Check if the implementation contract is already deployed
-  const code = predictedAddress
-    ? await signer.provider?.getCode(predictedAddress)
-    : "0x";
+  invariant(signer.provider, "Provider required");
+  const contractDeployed = predictedAddress
+    ? await isContractDeployed(predictedAddress, signer.provider)
+    : false;
 
-  if (code === "0x") {
+  if (!contractDeployed) {
     console.debug(
       `deploying contract via create2 factory at: ${predictedAddress}`,
     );
@@ -508,9 +509,13 @@ export async function deployContractDeterministic(
   gasLimit: number = 7000000,
 ) {
   // Check if the implementation contract is already deployed
-  const code = await signer.provider?.getCode(transaction.predictedAddress);
+  invariant(signer.provider, "Provider required");
+  const contractDeployed = await isContractDeployed(
+    transaction.predictedAddress,
+    signer.provider,
+  );
 
-  if (code === "0x") {
+  if (!contractDeployed) {
     console.debug(
       `deploying contract via create2 factory at: ${transaction.predictedAddress}`,
     );
@@ -694,9 +699,10 @@ export async function computeDeploymentInfo(
   // Different treatment for WETH contract
   if (contractName === "WETH9") {
     const address = computeDeploymentAddress(WETHBytecode, [], create2Factory);
-    const code = await provider.getCode(address);
+    const contractDeployed = await isContractDeployed(address, provider);
     let initBytecodeWithSalt = "";
-    if (code === "0x") {
+
+    if (!contractDeployed) {
       initBytecodeWithSalt = getInitBytecodeWithSalt(WETHBytecode, []);
     }
     return {
@@ -729,10 +735,10 @@ export async function computeDeploymentInfo(
     encodedArgs,
     create2Factory,
   );
-  const code = await provider.getCode(address);
+  const contractDeployed = await isContractDeployed(address, provider);
 
   let initBytecodeWithSalt = "";
-  if (code === "0x") {
+  if (!contractDeployed) {
     initBytecodeWithSalt = getInitBytecodeWithSalt(
       metadata.bytecode,
       encodedArgs,
