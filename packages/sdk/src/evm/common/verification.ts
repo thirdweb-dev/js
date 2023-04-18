@@ -2,8 +2,14 @@ import invariant from "tiny-invariant";
 import { ThirdwebSDK } from "../core";
 import { allChains } from "@thirdweb-dev/chains";
 import {
+  computeDeploymentInfo,
+  encodeConstructorParamsForImplementation,
   extractConstructorParamsFromAbi,
+  fetchAndCacheDeployMetadata,
+  fetchAndCachePublishedContractURI,
   fetchSourceFilesFromMetadata,
+  getCreate2FactoryAddress,
+  isContractDeployed,
   resolveContractUriFromAddress,
 } from ".";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -48,12 +54,59 @@ export async function isVerifiedOnEtherscan(
   }
 }
 
+export async function verifyThirdwebPrebuiltImplementation(
+  contractName: string,
+  chainId: number,
+  api: string,
+  apiKey: string,
+  storage: ThirdwebStorage,
+) {
+  const publishUri = await fetchAndCachePublishedContractURI(contractName);
+  const metadata = await fetchAndCacheDeployMetadata(publishUri, storage);
+  const provider = getChainProvider(chainId, {});
+  const create2Factory = await getCreate2FactoryAddress(provider);
+  invariant(create2Factory, "Thirdweb stack not found");
+
+  const implementation = await computeDeploymentInfo(
+    "implementation",
+    provider,
+    storage,
+    create2Factory,
+    { contractName: contractName },
+  );
+
+  const isDeployed = await isContractDeployed(
+    implementation.transaction.predictedAddress,
+    provider,
+  );
+  invariant(isDeployed, "Contract not deployed yet");
+
+  const encodedArgs = await encodeConstructorParamsForImplementation(
+    metadata.compilerMetadata,
+    provider,
+    storage,
+    create2Factory,
+  );
+
+  await verify(
+    implementation.transaction.predictedAddress,
+    chainId,
+    api,
+    apiKey,
+    storage,
+    encodedArgs.toString().replace("0x", ""),
+  );
+
+  return implementation.transaction.predictedAddress;
+}
+
 export async function verify(
   contractAddress: string,
   chainId: number,
   api: string,
   apiKey: string,
   storage: ThirdwebStorage,
+  encodedConstructorArgs?: string,
 ) {
   try {
     const rpcUrl = allChains.find((chain) => chain.chainId === chainId)?.rpc[0];
@@ -109,15 +162,17 @@ export async function verify(
     const targets = Object.keys(compilationTarget);
     const contractPath = targets[0];
 
-    const encodedConstructorArgs = await fetchConstructorParams(
-      api,
-      apiKey,
-      contractAddress,
-      chainId,
-      compilerMetadata.abi,
-      sdk.getProvider(),
-      storage,
-    );
+    const encodedArgs = encodedConstructorArgs
+      ? encodedConstructorArgs
+      : await fetchConstructorParams(
+          api,
+          apiKey,
+          contractAddress,
+          chainId,
+          compilerMetadata.abi,
+          sdk.getProvider(),
+          storage,
+        );
 
     const requestBody: Record<string, string> = {
       apikey: apiKey,
@@ -128,7 +183,7 @@ export async function verify(
       codeformat: "solidity-standard-json-input",
       contractname: `${contractPath}:${compilerMetadata.name}`,
       compilerversion: `v${compilerVersion}`,
-      constructorArguements: encodedConstructorArgs,
+      constructorArguements: encodedArgs,
     };
 
     const parameters = new URLSearchParams({ ...requestBody });
@@ -308,14 +363,14 @@ async function fetchDeployBytecodeFromPublishedContractMetadata(
   provider: ethers.providers.Provider,
   storage: ThirdwebStorage,
 ): Promise<string | undefined> {
-  const compialierMetaUri = await resolveContractUriFromAddress(
+  const compilerMetaUri = await resolveContractUriFromAddress(
     contractAddress,
     provider,
   );
-  if (compialierMetaUri) {
+  if (compilerMetaUri) {
     const pubmeta = await new ThirdwebSDK(getChainProvider(chainId, {}))
       .getPublisher()
-      .resolvePublishMetadataFromCompilerMetadata(compialierMetaUri);
+      .resolvePublishMetadataFromCompilerMetadata(compilerMetaUri);
     return pubmeta.length > 0
       ? await (await storage.download(pubmeta[0].bytecodeUri)).text()
       : undefined;

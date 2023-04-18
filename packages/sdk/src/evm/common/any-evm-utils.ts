@@ -743,7 +743,7 @@ export async function computeDeploymentInfo(
  * Determine constructor params required by an implementation contract.
  * Return abi-encoded params.
  */
-async function encodeConstructorParamsForImplementation(
+export async function encodeConstructorParamsForImplementation(
   compilerMetadata: PreDeployMetadataFetched,
   provider: providers.Provider,
   storage: ThirdwebStorage,
