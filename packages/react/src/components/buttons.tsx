@@ -1,9 +1,9 @@
-import { fontSize, radius, shadow, spacing, Theme } from "../design-system";
+import { fontSize, radius, spacing, Theme } from "../design-system";
 import styled from "@emotion/styled";
 
 // for rendering a conventional button
 export const Button = styled.button<{
-  variant: "inverted" | "secondary" | "link";
+  variant: "inverted" | "secondary" | "link" | "danger";
   theme?: Theme;
 }>`
   all: unset;
@@ -27,9 +27,20 @@ export const Button = styled.button<{
             return p.theme.bg.invertedFocused;
           case "secondary":
             return p.theme.bg.highlighted;
+          case "danger":
+            return p.theme.text.danger;
         }
       }};
   }
+
+  box-shadow: ${(p) => {
+    switch (p.variant) {
+      case "danger":
+        return `0 0 0 2px ${p.theme.text.danger}`;
+      default:
+        return "none";
+    }
+  }};
 
   background: ${(p) => {
     switch (p.variant) {
@@ -39,6 +50,8 @@ export const Button = styled.button<{
         return p.theme.bg.elevated;
       case "link":
         return "transparent";
+      case "danger":
+        return "none";
     }
   }};
   color: ${(p) => {
@@ -49,10 +62,11 @@ export const Button = styled.button<{
         return p.theme.text.neutral;
       case "link":
         return p.theme.link.primary;
+      case "danger":
+        return p.theme.text.danger;
     }
   }};
   cursor: pointer;
-  box-shadow: ${shadow.sm};
 
   /* pressed effect */
   &:active {

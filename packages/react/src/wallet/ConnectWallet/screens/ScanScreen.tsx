@@ -50,7 +50,13 @@ export const ScanScreen: React.FC<{
 
         <Spacer y="xl" />
 
-        <ModalTitle>Scan with {walletName} </ModalTitle>
+        <ModalTitle
+          style={{
+            textAlign: "center",
+          }}
+        >
+          Scan with {walletName}{" "}
+        </ModalTitle>
         <Spacer y="md" />
 
         <ModalDescription>
