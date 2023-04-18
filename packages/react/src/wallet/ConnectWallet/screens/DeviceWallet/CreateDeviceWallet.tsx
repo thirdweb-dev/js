@@ -6,14 +6,21 @@ import {
   ModalDescription,
   ModalTitle,
 } from "../../../../components/modalElements";
-import { Theme, fontSize } from "../../../../design-system";
-import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
+import { Theme, fontSize, iconSize } from "../../../../design-system";
+import {
+  EyeClosedIcon,
+  EyeOpenIcon,
+  InfoCircledIcon,
+} from "@radix-ui/react-icons";
 import { useThirdwebWallet } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { useDeviceWalletInfo } from "./useDeviceWalletInfo";
 import { ImportDeviceWalet } from "./ImportDeviceWallet";
 import styled from "@emotion/styled";
 import { DeviceWalletModalHeader } from "./common";
+import { Flex } from "../../../../components/basic";
+import { ToolTip } from "../../../../components/Tooltip";
+import { isMobile } from "../../../../evm/utils/isMobile";
 
 export const CreateDeviceWallet: React.FC<{
   onConnected: () => void;
@@ -23,6 +30,7 @@ export const CreateDeviceWallet: React.FC<{
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const passwordMismatch = confirmPassword && password !== confirmPassword;
+
   const { deviceWallet } = useDeviceWalletInfo();
   const thirdwebWalletContext = useThirdwebWallet();
   const [showImportScreen, setShowImportScreen] = useState(false);
@@ -59,14 +67,25 @@ export const CreateDeviceWallet: React.FC<{
     <>
       <DeviceWalletModalHeader onBack={props.onBack} />
 
-      <ModalTitle>Choose a password</ModalTitle>
+      <Flex alignItems="center" gap="xs">
+        <ModalTitle>Choose a password</ModalTitle>
+        {!isMobile() && (
+          <ToolTip
+            tip="The application can authorize any transactions on behalf of the wallet
+          without any approvals. We recommend only connecting to trusted
+          applications."
+          >
+            <InfoCircledIconSecondary
+              width={iconSize.md}
+              height={iconSize.md}
+            />
+          </ToolTip>
+        )}
+      </Flex>
+
       <Spacer y="sm" />
 
-      <ModalDescription
-        style={{
-          fontSize: fontSize.sm,
-        }}
-      >
+      <ModalDescription sm>
         Enter a password and we{`'`}ll create a wallet for you. You{`'`}ll be
         able to access and export this wallet with the same password.
       </ModalDescription>
@@ -165,4 +184,8 @@ const TextDivider = styled.div<{ theme?: Theme }>`
   span {
     margin: 0 1rem;
   }
+`;
+
+const InfoCircledIconSecondary = styled(InfoCircledIcon)<{ theme?: Theme }>`
+  color: ${(p) => p.theme.text.secondary};
 `;

@@ -1,6 +1,4 @@
-// implemnet a drag and drop component using hooks
-
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { UploadIcon } from "@radix-ui/react-icons";
 import { Theme, fontSize, iconSize, radius, spacing } from "../design-system";
 import styled from "@emotion/styled";
@@ -13,30 +11,23 @@ export const DragNDrop: React.FC<{
   accept: string;
   onUpload: (file: File) => void;
 }> = (props) => {
-  const [dragging, setDragging] = useState(false);
   const [error, setError] = useState(false);
-  const dragCounter = useRef(0);
   const [uploaded, setUploaded] = useState<File | undefined>();
+  const [isDragging, setIsDragging] = useState(false);
 
   const dragIn: React.DragEventHandler<HTMLDivElement> = (e) => {
     setError(false);
     setUploaded(undefined);
+    setIsDragging(true);
+
     e.preventDefault();
     e.stopPropagation();
-    dragCounter.current++;
-    if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
-      setDragging(true);
-    }
   };
 
   const dragOut: React.DragEventHandler<HTMLDivElement> = (e) => {
+    setIsDragging(false);
     e.preventDefault();
     e.stopPropagation();
-    dragCounter.current--;
-    if (dragCounter.current > 0) {
-      return;
-    }
-    setDragging(false);
   };
 
   const handleFileUpload = (file: File) => {
@@ -49,14 +40,13 @@ export const DragNDrop: React.FC<{
   };
 
   const drop: React.DragEventHandler<HTMLDivElement> = (e) => {
+    setIsDragging(false);
     e.preventDefault();
     e.stopPropagation();
-    setDragging(false);
 
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       handleFileUpload(e.dataTransfer.files[0]);
       e.dataTransfer.clearData();
-      dragCounter.current = 0;
     }
   };
 
@@ -69,6 +59,7 @@ export const DragNDrop: React.FC<{
       onDragEnter={dragIn}
       onDragLeave={dragOut}
       onDragOver={(e) => {
+        setIsDragging(true);
         e.preventDefault();
         e.stopPropagation();
       }}
@@ -87,8 +78,6 @@ export const DragNDrop: React.FC<{
           accept={props.accept}
           multiple={false}
           style={{
-            outline: "1px solid red",
-            opacity: 0,
             display: "none",
           }}
           onChange={(e) => {
@@ -98,11 +87,11 @@ export const DragNDrop: React.FC<{
           }}
         />
 
-        <DropContainer data-is-dragging={dragging} data-error={error}>
+        <DropContainer data-error={error} data-is-dragging={isDragging}>
           {!uploaded ? (
             <>
               {" "}
-              <UploadIconStyled width={iconSize.xl} height={iconSize.xl} />
+              <UploadIconSecondary width={iconSize.xl} height={iconSize.xl} />
               <Spacer y="md" />
               <Message>{message}</Message>
               <Spacer y="md" />
@@ -112,7 +101,7 @@ export const DragNDrop: React.FC<{
                   Please upload a {props.extension} file{" "}
                 </ErrorMessage>
               ) : (
-                <Extension> {props.extension} </Extension>
+                <ExtensionText> {props.extension} </ExtensionText>
               )}
             </>
           ) : (
@@ -128,8 +117,9 @@ export const DragNDrop: React.FC<{
   );
 };
 
-const UploadIconStyled = styled(UploadIcon)<{ theme?: Theme }>`
+const UploadIconSecondary = styled(UploadIcon)<{ theme?: Theme }>`
   color: ${(props) => props.theme.text.secondary};
+  transition: transform 200ms ease, color 200ms ease;
 `;
 
 const DropContainer = styled.div<{ theme?: Theme }>`
@@ -140,12 +130,15 @@ const DropContainer = styled.div<{ theme?: Theme }>`
   align-items: center;
   flex-direction: column;
   cursor: pointer;
-  &:hover {
-    border-color: ${(p) => p.theme.link.primary};
-  }
+  transition: border-color 200ms ease;
 
+  &:hover,
   &[data-is-dragging="true"] {
-    color: ${(p) => p.theme.link.primary};
+    border-color: ${(p) => p.theme.link.primary};
+    svg {
+      color: ${(p) => p.theme.link.primary};
+      transform: translateY(-8px);
+    }
   }
 
   &[data-error="true"] {
@@ -159,7 +152,7 @@ const ErrorMessage = styled.p<{ theme?: Theme }>`
   margin: 0;
 `;
 
-const Extension = styled.span<{ theme?: Theme }>`
+const ExtensionText = styled.span<{ theme?: Theme }>`
   color: ${(p) => p.theme.text.secondary};
   font-size: ${fontSize.sm};
 `;

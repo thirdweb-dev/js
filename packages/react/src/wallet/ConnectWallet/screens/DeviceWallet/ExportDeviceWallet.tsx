@@ -52,15 +52,17 @@ export const ExportDeviceWallet: React.FC<{
   return (
     <>
       <DeviceWalletModalHeader onBack={props.onBack} />
-      <ModalTitle>Export Wallet</ModalTitle>
+      <ModalTitle
+        style={{
+          textAlign: "left",
+        }}
+      >
+        Export Wallet
+      </ModalTitle>
 
       <Spacer y="md" />
 
-      <ModalDescription
-        style={{
-          fontSize: fontSize.sm,
-        }}
-      >
+      <ModalDescription sm>
         This will download a JSON file containing your wallet information onto
         your device encrypted with the password.
       </ModalDescription>

@@ -9,7 +9,7 @@ import { Theme, fontSize, iconSize } from "../../../../design-system";
 import {
   EyeClosedIcon,
   EyeOpenIcon,
-  ExclamationTriangleIcon,
+  InfoCircledIcon,
 } from "@radix-ui/react-icons";
 import { useThirdwebWallet } from "@thirdweb-dev/react-core";
 import { useState } from "react";
@@ -19,6 +19,7 @@ import { FormFooter } from "../../../../components/formElements";
 import styled from "@emotion/styled";
 import { Flex } from "../../../../components/basic";
 import { DeviceWalletModalHeader } from "./common";
+import { isMobile } from "../../../../evm/utils/isMobile";
 
 export const ImportDeviceWalet: React.FC<{
   onConnected: () => void;
@@ -59,22 +60,26 @@ export const ImportDeviceWalet: React.FC<{
   return (
     <>
       <DeviceWalletModalHeader onBack={props.onBack} />
-      <ModalTitle>Import JSON Wallet</ModalTitle>
+      <ModalTitle
+        style={{
+          textAlign: "left",
+        }}
+      >
+        Import JSON Wallet
+      </ModalTitle>
       <Spacer y="md" />
 
       <Flex alignItems="center" gap="sm">
-        <WarningIcon
-          width={iconSize.sm}
-          height={iconSize.sm}
-          style={{
-            flexShrink: 0,
-          }}
-        />
-        <ModalDescription
-          style={{
-            fontSize: fontSize.sm,
-          }}
-        >
+        {!isMobile() && (
+          <WarningIcon
+            width={iconSize.md}
+            height={iconSize.md}
+            style={{
+              flexShrink: 0,
+            }}
+          />
+        )}
+        <ModalDescription sm>
           The application can authorize any transactions on behalf of the wallet
           without any approvals. We recommend only connecting to trusted
           applications.
@@ -138,6 +143,6 @@ export const ImportDeviceWalet: React.FC<{
   );
 };
 
-const WarningIcon = styled(ExclamationTriangleIcon)<{ theme?: Theme }>`
+const WarningIcon = styled(InfoCircledIcon)<{ theme?: Theme }>`
   color: ${(p) => p.theme.icon.danger};
 `;

@@ -1,4 +1,4 @@
-import { fontSize, radius, shadow, spacing, Theme } from "../design-system";
+import { fontSize, radius, spacing, Theme } from "../design-system";
 import styled from "@emotion/styled";
 
 // for rendering a conventional button
@@ -28,7 +28,7 @@ export const Button = styled.button<{
           case "secondary":
             return p.theme.bg.highlighted;
           case "danger":
-            return p.theme.input.errorRing;
+            return p.theme.text.danger;
         }
       }};
   }
@@ -36,9 +36,9 @@ export const Button = styled.button<{
   box-shadow: ${(p) => {
     switch (p.variant) {
       case "danger":
-        return `0 0 0 2px ${p.theme.input.errorRing}`;
+        return `0 0 0 2px ${p.theme.text.danger}`;
       default:
-        return shadow.sm;
+        return "none";
     }
   }};
 
@@ -63,7 +63,7 @@ export const Button = styled.button<{
       case "link":
         return p.theme.link.primary;
       case "danger":
-        return p.theme.input.errorRing;
+        return p.theme.text.danger;
     }
   }};
   cursor: pointer;

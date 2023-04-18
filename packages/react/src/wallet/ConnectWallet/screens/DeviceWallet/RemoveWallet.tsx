@@ -40,7 +40,11 @@ export const RemoveWallet: React.FC<{
   return (
     <>
       <DeviceWalletModalHeader onBack={props.onBack} />
-      <ModalTitle>
+      <ModalTitle
+        style={{
+          textAlign: "left",
+        }}
+      >
         Remove Wallet {shortenAddress(props.address || "")}
       </ModalTitle>
 

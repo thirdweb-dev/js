@@ -20,6 +20,8 @@ export const Input = styled.input<{
   border: none;
   border-radius: 6px;
   color: ${(p) => p.theme.text.neutral};
+  -webkit-appearance: none;
+  appearance: none;
   background: ${(p) => {
     switch (p.variant) {
       case "secondary":

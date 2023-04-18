@@ -52,6 +52,8 @@ const TooltipContent = styled(RadixTooltip.Content)<{ theme?: Theme }>`
   will-change: transform, opacity;
   animation: ${slideUpAndFade} 200ms cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 999999999999999;
+  max-width: 300px;
+  line-height: 1.5;
 `;
 
 const TooltipArrow = styled(RadixTooltip.Arrow)<{ theme?: Theme }>`

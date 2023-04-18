@@ -81,7 +81,13 @@ export const ReconnectDeviceWallet: React.FC<{
   return (
     <>
       <DeviceWalletModalHeader onBack={props.onBack} />
-      <ModalTitle>Device Wallet</ModalTitle>
+      <ModalTitle
+        style={{
+          textAlign: "left",
+        }}
+      >
+        Device Wallet
+      </ModalTitle>
       <Spacer y="xs" />
       <ModalDescription>
         Connect to saved wallet on your device

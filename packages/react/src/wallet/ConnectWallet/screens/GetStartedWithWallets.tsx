@@ -61,7 +61,7 @@ export const GetStartedWithWallets: React.FC<{
             <Img src={GooglePlay} width={iconSize.md} height={iconSize.md} />
           }
           url={googlePlayStoreLink}
-          platform="Android"
+          platform="Google Play"
           walletName={walletName}
           walletIconURL={walletIconURL}
         />
@@ -73,7 +73,7 @@ export const GetStartedWithWallets: React.FC<{
             <Img src={Apple} width={iconSize.md} height={iconSize.md} />
           }
           url={appleStoreLink}
-          platform="iOS"
+          platform="App Store"
           walletName={walletName}
           walletIconURL={walletIconURL}
         />
