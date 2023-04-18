@@ -22,6 +22,12 @@ export interface ProviderConfig {
    * the entry point to use
    */
   entryPointAddress: string;
+
+  /**
+   * API key for thirdweb bundler
+   */
+  apiKey?: string;
+
   /**
    * url to the bundler
    */
@@ -60,10 +66,9 @@ export interface ProviderConfig {
 export async function create4337Provider(
   config: ProviderConfig,
 ): Promise<ERC4337EthersProvider> {
-  const rpcProvider = getChainProvider(
-    config.chain,
-    {},
-  ) as providers.JsonRpcProvider;
+  const rpcProvider = getChainProvider(config.chain, {
+    thirdwebApiKey: config.apiKey,
+  }) as providers.JsonRpcProvider;
   const entryPoint = EntryPoint__factory.connect(
     config.entryPointAddress,
     rpcProvider,

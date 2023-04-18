@@ -11,6 +11,9 @@ import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
 import { providers } from "ethers";
 
+const DEFAULT_API_KEY =
+  "4f20f63d3ce0ec88eca639a291effef1559289d5614d77040d783048a4b3f316";
+
 export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs> {
   private config: SmartWalletConfig;
   private aaProvider: ERC4337EthersProvider | undefined;
@@ -26,6 +29,7 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
       typeof config.chain === "string"
         ? config.chain
         : (config.chain as Chain).slug;
+    // TODO (sw) API key
     const bundlerUrl =
       this.config.bundlerUrl || `https://${chain}.bundler.thirdweb.com`;
     const paymasterUrl =
@@ -45,6 +49,7 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
       factoryAddress: config.factoryAddress,
       factoryAbi: config.factoryAbi || TWAccountFactory.abi,
       accountAbi: config.accountAbi || TWAccount.abi,
+      apiKey: config.apiKey || DEFAULT_API_KEY,
     };
     this.aaProvider = await create4337Provider(providerConfig);
   }
@@ -88,6 +93,7 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
   }
 
   disconnect(): Promise<void> {
+    // TODO (sw) disconnect
     throw new Error("Method not implemented.");
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
