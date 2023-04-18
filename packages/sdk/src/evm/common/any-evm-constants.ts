@@ -1,3 +1,5 @@
+import { CustomChain } from "../types/any-evm/chains";
+
 export const ERROR_SUBSTRINGS = [
   "eip-155",
   "protected",
@@ -13,6 +15,17 @@ export const ERROR_SUBSTRINGS_COMPOSITE = [
   ["account", "not found"],
   ["wrong", "chainid"],
 ];
+
+export const CUSTOM_GAS_FOR_CHAIN: Record<number, CustomChain> = {
+  [5001]: {
+    name: "Mantle Testnet",
+    gasPrice: 1,
+  },
+  [71402]: {
+    name: "Godwoken Mainnet",
+    gasPrice: 40_000 * 10 ** 9,
+  },
+};
 
 export function matchError(error: string): boolean {
   const errorIndex = ERROR_SUBSTRINGS.findIndex((substring) =>

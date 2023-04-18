@@ -207,7 +207,7 @@ export function getNativeTokenByChainId(chainId: ChainId): NativeToken {
     };
   }
   return (
-    NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID] || {
+    NATIVE_TOKENS[chainId as number] || {
       name: "Ether",
       symbol: "ETH",
       decimals: 18,

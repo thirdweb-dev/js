@@ -25,7 +25,7 @@ import {
 import { generatePluginFunctions, getMetadataForPlugins } from "./plugin";
 import { Plugin } from "../types/plugins";
 import { DeployMetadata, DeployOptions } from "../types";
-import { matchError } from "./any-evm-constants";
+import { CUSTOM_GAS_FOR_CHAIN, matchError } from "./any-evm-constants";
 
 //
 // =============================
@@ -156,13 +156,7 @@ export async function getCreate2FactoryAddress(
 
   const enforceEip155 = await isEIP155Enforced(provider);
   const chainId = enforceEip155 ? (await provider.getNetwork()).chainId : 0;
-  const gasPrice = (await provider.getFeeData()).gasPrice;
-  const deploymentInfo =
-    gasPrice &&
-    (gasPrice.gt(ethers.utils.parseUnits("500", "gwei")) ||
-      gasPrice.lt(ethers.utils.parseUnits("0.002", "gwei")))
-      ? getCreate2FactoryDeploymentInfo(chainId, gasPrice.toNumber())
-      : getCreate2FactoryDeploymentInfo(chainId);
+  const deploymentInfo = getCreate2FactoryDeploymentInfo(chainId);
 
   return deploymentInfo.deployment;
 }
@@ -399,13 +393,7 @@ export async function deployCreate2Factory(
   const networkId = (await signer.provider.getNetwork()).chainId;
   const chainId = enforceEip155 ? networkId : 0;
   console.debug(`ChainId ${networkId} enforces EIP155: ${enforceEip155}`);
-  const gasPrice = (await signer.provider.getFeeData()).gasPrice;
-  const deploymentInfo =
-    gasPrice &&
-    (gasPrice.gt(ethers.utils.parseUnits("500", "gwei")) ||
-      gasPrice.lt(ethers.utils.parseUnits("0.002", "gwei")))
-      ? getCreate2FactoryDeploymentInfo(chainId, gasPrice.toNumber())
-      : getCreate2FactoryDeploymentInfo(chainId);
+  const deploymentInfo = getCreate2FactoryDeploymentInfo(chainId);
 
   const factoryExists = await isContractDeployed(
     deploymentInfo.deployment,
@@ -870,6 +858,10 @@ export function getCreate2FactoryDeploymentInfo(
   chainId: number,
   gasPrice?: number,
 ): KeylessDeploymentInfo {
+  if (CUSTOM_GAS_FOR_CHAIN[chainId]) {
+    gasPrice = CUSTOM_GAS_FOR_CHAIN[chainId].gasPrice;
+  }
+
   const signature = ethers.utils.joinSignature(SIGNATURE);
   const deploymentTransaction = getKeylessTxn(
     {
