@@ -1,5 +1,5 @@
 import { NativeToken } from "../types/currency";
-import { ChainId, getSupportedChains, SUPPORTED_CHAIN_ID } from "./chains";
+import { ChainId, getSupportedChains } from "./chains";
 import { ethers } from "ethers";
 
 /**

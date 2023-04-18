@@ -17,10 +17,12 @@ export const ERROR_SUBSTRINGS_COMPOSITE = [
 ];
 
 export const CUSTOM_GAS_FOR_CHAIN: Record<number, CustomChain> = {
+  // eslint-disable-next-line no-useless-computed-key
   [5001]: {
     name: "Mantle Testnet",
     gasPrice: 1,
   },
+  // eslint-disable-next-line no-useless-computed-key
   [71402]: {
     name: "Godwoken Mainnet",
     gasPrice: 40_000 * 10 ** 9,
