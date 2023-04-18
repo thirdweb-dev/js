@@ -15,6 +15,6 @@ export type SmartWalletConfig = {
 
 export type SmartWalletConnectionArgs = {
   personalWallet: EVMWallet;
-  accountId: string;
+  accountId?: string;
 };
 export type SmartWalletOptions = WalletOptions<{}>;

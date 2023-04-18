@@ -20,16 +20,17 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
     this.config = config;
   }
 
-  async initialize(personalWallet: EVMWallet, accountId: string) {
+  async initialize(personalWallet: EVMWallet, accountId?: string) {
     const config = this.config;
     // TODO (sw) use our own endpoint, but allow passing in a custom one
     const bundlerUrl = `https://node.stackup.sh/v1/rpc/${config.apiKey}`;
     const paymasterUrl = `https://app.stackup.sh/api/v2/paymaster/payg/${config.apiKey}`;
     const entryPointAddress = config.entryPointAddress || ENTRYPOINT_ADDRESS;
+    const localSigner = await personalWallet.getSigner();
     const providerConfig: ProviderConfig = {
       chain: config.chain,
-      localSigner: await personalWallet.getSigner(),
-      accountId,
+      localSigner,
+      accountId: accountId ? accountId : await localSigner.getAddress(),
       entryPointAddress,
       bundlerUrl,
       paymasterAPI: config.gasless
