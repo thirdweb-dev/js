@@ -155,8 +155,14 @@ export async function getCreate2FactoryAddress(
   }
 
   const enforceEip155 = await isEIP155Enforced(provider);
-  const chainId = enforceEip155 ? (await provider.getNetwork()).chainId : 0;
-  const deploymentInfo = getCreate2FactoryDeploymentInfo(chainId);
+  const networkId = (await provider.getNetwork()).chainId;
+  const chainId = enforceEip155 ? networkId : 0;
+  const deploymentInfo = CUSTOM_GAS_FOR_CHAIN[networkId]
+    ? getCreate2FactoryDeploymentInfo(
+        chainId,
+        CUSTOM_GAS_FOR_CHAIN[networkId].gasPrice,
+      )
+    : getCreate2FactoryDeploymentInfo(chainId);
 
   return deploymentInfo.deployment;
 }
@@ -393,7 +399,12 @@ export async function deployCreate2Factory(
   const networkId = (await signer.provider.getNetwork()).chainId;
   const chainId = enforceEip155 ? networkId : 0;
   console.debug(`ChainId ${networkId} enforces EIP155: ${enforceEip155}`);
-  const deploymentInfo = getCreate2FactoryDeploymentInfo(chainId);
+  const deploymentInfo = CUSTOM_GAS_FOR_CHAIN[networkId]
+    ? getCreate2FactoryDeploymentInfo(
+        chainId,
+        CUSTOM_GAS_FOR_CHAIN[networkId].gasPrice,
+      )
+    : getCreate2FactoryDeploymentInfo(chainId);
 
   const factoryExists = await isContractDeployed(
     deploymentInfo.deployment,
