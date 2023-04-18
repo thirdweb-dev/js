@@ -8,9 +8,11 @@ import { Chain } from "@thirdweb-dev/chains";
 import {
   ConnectWallet,
   useAddress,
+  useChainId,
   useContract,
   useOwnedNFTs,
   useSDK,
+  useSwitchChain,
   useTotalCirculatingSupply,
 } from "@thirdweb-dev/react";
 import {
@@ -22,7 +24,7 @@ import { ChakraNextImage } from "components/Image";
 import { useTrack } from "hooks/analytics/useTrack";
 import { getSearchQuery } from "lib/search";
 import { useCallback, useEffect, useState } from "react";
-import { Heading } from "tw-components";
+import { Button, Heading, Text } from "tw-components";
 
 type HeroProps = {
   desiredChain: Chain;
@@ -43,8 +45,11 @@ const AIRDROP_ADDRESS = "0xEC287fA0A7FDec3C02982267787A78Db01952B01";
 const merkleURI = "ipfs://QmSfGFUaVUx4M7ZMuSSbqeTLXb9CsSQfWPFauHE7j9r4NZ/0";
 export const BEAR_MARKET_TRACKING_CATEGORY = "bear-market-airdrop";
 
+const IS_GASLESS_DISABLED = true;
+
 export const Hero: React.FC<HeroProps> = () => {
   const address = useAddress();
+  const chainId = useChainId();
   const toast = useToast();
   const sdk = useSDK();
   const trackEvent = useTrack();
@@ -190,12 +195,14 @@ export const Hero: React.FC<HeroProps> = () => {
     },
     [address, canClaim, toast, trackEvent],
   );
+  const switchChain = useSwitchChain();
 
   const claim = useCallback(
     async (email: string) => {
       if (!canClaim || !airdrop || !address || !snapshot || !email) {
         return;
       }
+
       setClaiming(true);
       try {
         await airdrop.call("claim", [
@@ -391,6 +398,21 @@ export const Hero: React.FC<HeroProps> = () => {
               >
                 <ConnectWallet />
               </Box>
+            ) : IS_GASLESS_DISABLED && chainId !== 137 ? (
+              <Button
+                bg="bgBlack!important"
+                color="bgWhite!important"
+                _hover={{
+                  opacity: 0.8,
+                }}
+                onClick={() => {
+                  switchChain(137).catch((e) => {
+                    console.error(e);
+                  });
+                }}
+              >
+                Switch to Polygon
+              </Button>
             ) : hasPack ? (
               <OpenPack openPack={openPack} unboxing={unboxing} />
             ) : (
@@ -402,6 +424,14 @@ export const Hero: React.FC<HeroProps> = () => {
               />
             )}
           </>
+          {IS_GASLESS_DISABLED && (
+            <Text>
+              Due to extremely high demand claiming and opening packs is
+              currently <strong>not gasless</strong>. You can still claim and
+              open your pack, but you will need to pay gas fees while we work on
+              a solution.
+            </Text>
+          )}
         </Flex>
       ) : (
         <Unboxed

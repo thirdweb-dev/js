@@ -21,7 +21,6 @@ interface ClaimAirdropProps {
 type Inputs = {
   email: string;
 };
-
 export const ClaimAirdrop: React.FC<ClaimAirdropProps> = ({
   canClaim,
   claim,
@@ -43,7 +42,6 @@ export const ClaimAirdrop: React.FC<ClaimAirdropProps> = ({
   };
 
   const { colorMode } = useColorMode();
-
   return (
     <Flex direction="column" gap={4} justifyContent="center">
       {canClaim ? (

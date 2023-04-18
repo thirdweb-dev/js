@@ -84,22 +84,24 @@ interface BearMarketBuilderSDKProps {
 export const BearMarketBuilderSDK: React.FC<BearMarketBuilderSDKProps> = ({
   children,
 }) => {
-  const forwarderAddress = "0xEbc1977d1aC2fe1F6DAaF584E2957F7c436fcdEF";
+  // TODO bring back gasless later
+  // const forwarderAddress = "0xEbc1977d1aC2fe1F6DAaF584E2957F7c436fcdEF";
 
   return (
     <CustomSDKContext
       desiredChainId={desiredChain.chainId}
-      options={{
-        gasless: {
-          openzeppelin: {
-            relayerUrl:
-              "https://api.defender.openzeppelin.com/autotasks/b1b8a5d1-bdb4-414b-afd3-4411a1da5b05/runs/webhook/7d6a1834-dd33-4b7b-8af4-b6b4719a0b97/Szsk8cMMDDshUDEHyMPQ3x",
-            relayerForwarderAddress: forwarderAddress,
-            useEOAForwarder: false,
-          },
-          experimentalChainlessSupport: true,
-        },
-      }}
+      // TODO bring back gasless later
+      // options={{
+      //   gasless: {
+      //     openzeppelin: {
+      //       relayerUrl:
+      //         "https://api.defender.openzeppelin.com/autotasks/b1b8a5d1-bdb4-414b-afd3-4411a1da5b05/runs/webhook/7d6a1834-dd33-4b7b-8af4-b6b4719a0b97/Szsk8cMMDDshUDEHyMPQ3x",
+      //       relayerForwarderAddress: forwarderAddress,
+      //       useEOAForwarder: false,
+      //     },
+      //     experimentalChainlessSupport: true,
+      //   },
+      // }}
     >
       {children}
     </CustomSDKContext>
