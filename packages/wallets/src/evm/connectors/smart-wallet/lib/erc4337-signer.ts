@@ -2,10 +2,11 @@ import { providers } from "ethers";
 
 import { Bytes, Signer } from "ethers";
 import { UserOperationStruct } from "@account-abstraction/contracts";
-import { ClientConfig, HttpRpcClient } from "@account-abstraction/sdk";
+import { ClientConfig } from "@account-abstraction/sdk";
 import { BaseAccountAPI } from "./base-api";
 import { ERC4337EthersProvider } from "./erc4337-provider";
 import { defineReadOnly, Deferrable } from "ethers/lib/utils";
+import { HttpRpcClient } from "./http-rpc-client";
 
 export class ERC4337EthersSigner extends Signer {
   config: ClientConfig;

@@ -6,8 +6,8 @@ import { WalletOptions } from "../../wallets/base";
 export type SmartWalletConfig = {
   chain: ChainOrRpcUrl;
   factoryAddress: string;
-  gasless?: boolean;
-  apiKey?: string;
+  apiKey: string;
+  gasless: boolean;
   bundlerUrl?: string;
   paymasterUrl?: string;
   factoryAbi?: string;

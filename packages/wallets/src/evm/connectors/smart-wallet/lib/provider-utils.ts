@@ -1,9 +1,10 @@
 import { EntryPoint__factory } from "@account-abstraction/contracts";
-import { HttpRpcClient, PaymasterAPI } from "@account-abstraction/sdk";
+import { PaymasterAPI } from "@account-abstraction/sdk";
 import { ChainOrRpcUrl, getChainProvider } from "@thirdweb-dev/sdk";
 import { AccountAPI } from "./account";
 import { ContractInterface, Signer, providers } from "ethers";
 import { ERC4337EthersProvider } from "./erc4337-provider";
+import { HttpRpcClient } from "./http-rpc-client";
 
 export interface ProviderConfig {
   /**
@@ -26,7 +27,7 @@ export interface ProviderConfig {
   /**
    * API key for thirdweb bundler
    */
-  apiKey?: string;
+  apiKey: string;
 
   /**
    * url to the bundler
@@ -90,6 +91,7 @@ export async function create4337Provider(
     config.bundlerUrl,
     config.entryPointAddress,
     chainId,
+    config.apiKey,
   );
   return await new ERC4337EthersProvider(
     chainId,

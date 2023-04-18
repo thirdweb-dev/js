@@ -7,10 +7,11 @@ import {
   UserOperationStruct,
 } from "@account-abstraction/contracts";
 import { getUserOpHash } from "@account-abstraction/utils";
-import { ClientConfig, HttpRpcClient } from "@account-abstraction/sdk";
+import { ClientConfig } from "@account-abstraction/sdk";
 import { UserOperationEventListener } from "./userop-event";
 import { BaseAccountAPI } from "./base-api";
 import { ERC4337EthersSigner } from "./erc4337-signer";
+import { HttpRpcClient } from "./http-rpc-client";
 
 export class ERC4337EthersProvider extends ethers.providers.BaseProvider {
   initializedBlockNumber!: number;

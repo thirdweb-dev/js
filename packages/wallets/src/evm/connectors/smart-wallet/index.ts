@@ -29,13 +29,11 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
       typeof config.chain === "string"
         ? config.chain
         : (config.chain as Chain).slug;
-    // TODO (sw) API key
     const bundlerUrl =
       this.config.bundlerUrl || `https://${chain}.bundler.thirdweb.com`;
     const paymasterUrl =
       this.config.paymasterUrl || `https://${chain}.bundler.thirdweb.com`;
     const entryPointAddress = config.entryPointAddress || ENTRYPOINT_ADDRESS;
-    const gasless = config.gasless !== undefined ? config.gasless : true; // gasless true by default
     const localSigner = await personalWallet.getSigner();
     const providerConfig: ProviderConfig = {
       chain: config.chain,
@@ -43,8 +41,12 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
       accountId: accountId ? accountId : await localSigner.getAddress(),
       entryPointAddress,
       bundlerUrl,
-      paymasterAPI: gasless
-        ? getVerifyingPaymaster(paymasterUrl, entryPointAddress)
+      paymasterAPI: this.config.gasless
+        ? getVerifyingPaymaster(
+            paymasterUrl,
+            entryPointAddress,
+            this.config.apiKey,
+          )
         : undefined,
       factoryAddress: config.factoryAddress,
       factoryAbi: config.factoryAbi || TWAccountFactory.abi,

@@ -11,10 +11,12 @@ const DUMMY_PAYMASTER_AND_DATA =
 class VerifyingPaymasterAPI extends PaymasterAPI {
   private paymasterUrl: string;
   private entryPoint: string;
-  constructor(paymasterUrl: string, entryPoint: string) {
+  private apiKey: string;
+  constructor(paymasterUrl: string, entryPoint: string, apiKey: string) {
     super();
     this.paymasterUrl = paymasterUrl;
     this.entryPoint = entryPoint;
+    this.apiKey = apiKey;
   }
 
   async getPaymasterAndData(
@@ -50,22 +52,27 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "x-api-key": this.apiKey,
         },
         body: JSON.stringify({
           jsonrpc: "2.0",
           id: 1,
           method: "pm_sponsorUserOperation",
-          params: [await toJSON(op), this.entryPoint],
+          params: [await toJSON(op), { entryPoint: this.entryPoint }],
         }),
       });
       const res = await response.json();
       if (res.result) {
-        return res.result.toString();
+        const result = (res.result as any).paymasterAndData || res.result;
+        return result.toString();
       } else {
-        throw new Error(`PM - error in response: ${res.error.message}`);
+        console.log("PM - error", JSON.stringify(res));
+        throw new Error(
+          `Paymaster returned no result from: ${this.paymasterUrl}`,
+        );
       }
     } catch (e) {
-      console.log("PM - error", (e as any).response?.error || e);
+      console.log("PM - error", (e as any).result?.error || e);
       throw e;
     }
   }
@@ -74,4 +81,5 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
 export const getVerifyingPaymaster = (
   paymasterUrl: string,
   entryPoint: string,
-) => new VerifyingPaymasterAPI(paymasterUrl, entryPoint);
+  apiKey: string,
+) => new VerifyingPaymasterAPI(paymasterUrl, entryPoint, apiKey);
