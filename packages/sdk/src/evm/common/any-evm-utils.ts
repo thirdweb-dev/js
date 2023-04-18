@@ -414,14 +414,15 @@ export async function deployCreate2Factory(
   // deploy community factory if not already deployed
   if (!factoryExists) {
     // send balance to the keyless signer
+    const valueToSend = CUSTOM_GAS_FOR_CHAIN[networkId]
+      ? BigNumber.from(CUSTOM_GAS_FOR_CHAIN[networkId].gasPrice).mul(100000)
+      : toWei("0.01");
     if (
-      (await signer.provider.getBalance(deploymentInfo.signer)).lt(
-        toWei("0.01"),
-      )
+      (await signer.provider.getBalance(deploymentInfo.signer)).lt(valueToSend)
     ) {
       await signer.sendTransaction({
         to: deploymentInfo.signer,
-        value: toWei("0.01"),
+        value: valueToSend,
       });
     }
 
@@ -875,10 +876,6 @@ export function getCreate2FactoryDeploymentInfo(
   chainId: number,
   gasPrice?: number,
 ): KeylessDeploymentInfo {
-  if (CUSTOM_GAS_FOR_CHAIN[chainId]) {
-    gasPrice = CUSTOM_GAS_FOR_CHAIN[chainId].gasPrice;
-  }
-
   const signature = ethers.utils.joinSignature(SIGNATURE);
   const deploymentTransaction = getKeylessTxn(
     {
