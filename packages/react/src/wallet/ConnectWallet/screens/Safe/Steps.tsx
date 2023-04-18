@@ -1,4 +1,4 @@
-import { media, spacing, Theme } from "../../../../design-system";
+import { spacing, Theme } from "../../../../design-system";
 import styled from "@emotion/styled";
 
 export function Steps({ step }: { step: 1 | 2 }) {
@@ -16,10 +16,6 @@ const StepContainer = styled.div`
   align-items: center;
   width: 130px;
   padding: ${spacing.xs};
-
-  ${media.mobile} {
-    margin: 0 auto;
-  }
 `;
 
 const Circle = styled.div<{ theme?: Theme }>`

@@ -590,9 +590,15 @@ export class MarketplaceDirect {
         ERC721Abi,
         provider,
       ) as IERC721;
+
+      // Handle reverts in case of non-existent tokens
+      let owner;
+      try {
+        owner = await asset.ownerOf(listing.tokenId);
+      } catch (e) {}
       const valid =
-        (await asset.ownerOf(listing.tokenId)).toLowerCase() ===
-        listing.sellerAddress.toLowerCase();
+        owner?.toLowerCase() === listing.sellerAddress.toLowerCase();
+
       return {
         valid,
         error: valid

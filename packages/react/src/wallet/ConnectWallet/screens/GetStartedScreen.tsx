@@ -7,7 +7,7 @@ import {
   ModalDescription,
   ModalTitle,
 } from "../../../components/modalElements";
-import { fontSize, iconSize, radius, spacing } from "../../../design-system";
+import { iconSize, radius, spacing } from "../../../design-system";
 import { Theme } from "../../../design-system/index";
 import { Apple, Chrome, GooglePlay } from "../iconURLs";
 import styled from "@emotion/styled";
@@ -55,7 +55,7 @@ export const GetStartedScreen: React.FC<{
             <Img src={GooglePlay} width={iconSize.md} height={iconSize.md} />
           }
           url={props.googlePlayStoreLink}
-          platform="Android"
+          platform="Google Play"
           walletName={props.walletName}
           walletIconURL={props.walletIconURL}
         />
@@ -67,7 +67,7 @@ export const GetStartedScreen: React.FC<{
             <Img width={iconSize.md} height={iconSize.md} src={Apple} />
           }
           url={props.appleStoreLink}
-          platform="iOS"
+          platform="App Store"
           walletName={props.walletName}
           walletIconURL={props.walletIconURL}
         />
@@ -184,12 +184,8 @@ const ScanScreen: React.FC<{
         }}
       >
         {props.platformIcon}
-        <ModalTitle
-          style={{
-            fontSize: fontSize.xl,
-          }}
-        >
-          Install {props.walletName} for {props.platform}
+        <ModalTitle>
+          Install {props.walletName} on {props.platform}
         </ModalTitle>
       </div>
 
