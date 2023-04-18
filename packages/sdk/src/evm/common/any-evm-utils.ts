@@ -25,6 +25,11 @@ import {
 import { generatePluginFunctions, getMetadataForPlugins } from "./plugin";
 import { Plugin } from "../types/plugins";
 import { DeployMetadata, DeployOptions } from "../types";
+import {
+  ERROR_SUBSTRINGS,
+  ERROR_SUBSTRINGS_COMPOSITE,
+  matchError,
+} from "./any-evm-constants";
 
 //
 // =============================
@@ -126,15 +131,7 @@ export async function isEIP155Enforced(
     const errorMsg = e.toString().toLowerCase();
     const errorJson = JSON.stringify(e).toLowerCase();
 
-    if (
-      errorMsg.includes("eip-155") ||
-      errorJson.includes("eip-155") ||
-      // Some chains have non-standard errors for EIP-155
-      errorMsg.includes("protected") ||
-      errorJson.includes("protected") ||
-      (errorMsg.includes("account") && errorMsg.includes("not found")) ||
-      (errorJson.includes("account") && errorJson.includes("not found"))
-    ) {
+    if (matchError(errorMsg) || matchError(errorJson)) {
       return true;
     }
     return false;
