@@ -22,7 +22,7 @@ const data: { title: string; icons: Item[] }[] = [
       },
       {
         icon: require("/public/assets/landingpage/howitworks-sdk.png"),
-        title: "SDK",
+        title: "SDKs",
         href: "/sdk",
       },
       {
@@ -56,7 +56,7 @@ const data: { title: string; icons: Item[] }[] = [
       },
       {
         icon: require("/public/assets/landingpage/howitworks-gasless.png"),
-        title: "Gasless Relayer",
+        title: "Gasless",
       },
       {
         icon: require("/public/assets/landingpage/howitworks-fiat.png"),
@@ -64,12 +64,12 @@ const data: { title: string; icons: Item[] }[] = [
       },
       {
         icon: require("/public/assets/landingpage/howitworks-storage.png"),
-        title: "Storage",
+        title: "Decentralized Storage",
         href: "/storage",
       },
       {
         icon: require("/public/assets/landingpage/howitworks-rpc.png"),
-        title: "RPC",
+        title: "RPC Edge",
       },
       {
         icon: require("/public/assets/landingpage/howitworks-wallet.png"),
