@@ -5,7 +5,7 @@ import {
   ModalDescription,
   ModalTitle,
 } from "../../../../components/modalElements";
-import { Theme, fontSize, iconSize } from "../../../../design-system";
+import { Theme, iconSize } from "../../../../design-system";
 import {
   EyeClosedIcon,
   EyeOpenIcon,
