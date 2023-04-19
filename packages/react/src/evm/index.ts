@@ -27,5 +27,7 @@ export {
   useWalletConnectV1,
 } from "./hooks/wallets/useWalletConnect";
 
+export { useAuth } from "./hooks/auth/useAuth";
+
 // react-core
 export * from "@thirdweb-dev/react-core";

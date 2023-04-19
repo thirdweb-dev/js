@@ -45,7 +45,10 @@ export {
   ThirdwebAuthProvider,
   useThirdwebAuthContext,
 } from "./contexts/thirdweb-auth";
-export type { ThirdwebAuthConfig, ISecureStorage } from "./contexts/thirdweb-auth";
+export type {
+  ThirdwebAuthConfig,
+  ISecureStorage,
+} from "./contexts/thirdweb-auth";
 
 // config
 export {
@@ -187,7 +190,7 @@ export {
 // thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)
 
 // auth hooks
-export { useLogin, useLogout, useUser } from "./hooks/auth";
+export { useLogin, useLogout, useUser, doLogin } from "./hooks/auth";
 export type { UserWithData } from "./hooks/auth";
 
 // contract hooks
