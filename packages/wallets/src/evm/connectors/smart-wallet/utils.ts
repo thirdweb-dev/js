@@ -6,6 +6,9 @@ import {
 import { ethers } from "ethers";
 import { EVMWallet } from "../../interfaces";
 
+// TODO: need `accountId` on this object, but don't have it yet
+export type AssociatedAccount = { account: string; accountAdmin: string };
+
 export async function getAssociatedAccounts(
   personalWallet: EVMWallet,
   factoryAddress: string,
@@ -21,7 +24,7 @@ export async function getAssociatedAccounts(
       accountAdmin: await personalSigner.getAddress(),
     },
   });
-  return accounts.map((a) => a.data);
+  return accounts.map((a) => a.data) as AssociatedAccount[];
 }
 
 export async function isAccountIdAvailable(

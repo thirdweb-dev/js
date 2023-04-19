@@ -39,6 +39,7 @@ import type {
   AbstractClientWallet,
   MetaMaskWallet,
   SafeWallet,
+  SmartWallet,
 } from "@thirdweb-dev/wallets";
 import { Flex } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
@@ -93,12 +94,15 @@ export const ConnectedWalletDetails: React.FC<{
 
   const sdk = useSDK();
 
-  const personalWallet =
-    activeWallet?.walletId === "Safe"
-      ? ((
-          activeWallet as SafeWallet
-        ).getPersonalWallet() as AbstractClientWallet) // assumes using a client wallet
-      : undefined;
+  const isWrapperWallet =
+    activeWallet?.walletId === "Safe" ||
+    activeWallet?.walletId === "SmartWallet";
+
+  const personalWallet = isWrapperWallet
+    ? ((
+        activeWallet as SafeWallet | SmartWallet
+      ).getPersonalWallet() as AbstractClientWallet) // assumes using a client wallet
+    : undefined;
 
   // get personal wallet address and balance
   useEffect(() => {
@@ -159,7 +163,7 @@ export const ConnectedWalletDetails: React.FC<{
     <MenuButton
       id="current-network"
       type="button"
-      disabled={activeWallet?.walletId === "Safe"}
+      disabled={isWrapperWallet}
       onClick={() => {
         setOpen(false);
         setShowNetworkSelector(true);

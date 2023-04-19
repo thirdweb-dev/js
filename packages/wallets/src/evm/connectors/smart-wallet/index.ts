@@ -12,6 +12,7 @@ import { providers } from "ethers";
 export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs> {
   private config: SmartWalletConfig;
   private aaProvider: ERC4337EthersProvider | undefined;
+  personalWallet?: EVMWallet;
 
   constructor(config: SmartWalletConfig) {
     super();
@@ -48,6 +49,7 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
       accountAbi: config.accountAbi,
       thirdwebApiKey: config.thirdwebApiKey,
     };
+    this.personalWallet = personalWallet;
     this.aaProvider = await create4337Provider(providerConfig);
   }
 
@@ -89,9 +91,9 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
     }
   }
 
-  disconnect(): Promise<void> {
-    // TODO (sw) disconnect
-    throw new Error("Method not implemented.");
+  async disconnect(): Promise<void> {
+    this.personalWallet = undefined;
+    this.aaProvider = undefined;
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   switchChain(chainId: number): Promise<void> {
@@ -102,9 +104,6 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateChains(chains: Chain[]): void {
-    throw new Error("Method not implemented.");
+    // throw new Error("Method not implemented.");
   }
 }
-
-export * from "./types";
-export * from "./utils";

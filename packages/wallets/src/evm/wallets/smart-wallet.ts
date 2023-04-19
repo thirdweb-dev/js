@@ -1,9 +1,10 @@
 import { AbstractClientWallet, WalletOptions } from "./base";
-import { TWConnector } from "../interfaces/tw-connector";
-import {
+import type { TWConnector } from "../interfaces/tw-connector";
+import type {
   SmartWalletConfig,
   SmartWalletConnectionArgs,
 } from "../connectors/smart-wallet/types";
+import type { SmartWalletConnector as SmartWalletConnectorType } from "../connectors/smart-wallet";
 
 // export types and utils for convenience
 export * from "../connectors/smart-wallet/types";
@@ -13,12 +14,12 @@ export class SmartWallet extends AbstractClientWallet<
   SmartWalletConfig,
   SmartWalletConnectionArgs
 > {
-  connector?: TWConnector;
+  connector?: SmartWalletConnectorType;
 
   static meta = {
     name: "SmartWallet",
     iconURL:
-      "ipfs://QmcNddbYBuQKiBFnPcxYegjrX6S6z9K1vBNzbBBUJMn2ox/device-wallet.svg", // TODO (sw) icon
+      "ipfs://QmPSPvHvYWh9BfvLLPDHjVoCuJTd2hSMSgF3N6JCrjuX4v/SmartWallet.svg",
   };
 
   static id = "SmartWallet" as const;
@@ -42,5 +43,9 @@ export class SmartWallet extends AbstractClientWallet<
       );
     }
     return this.connector;
+  }
+
+  getPersonalWallet() {
+    return this.connector?.personalWallet;
   }
 }
