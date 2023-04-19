@@ -11,10 +11,10 @@ import {
   useAddress,
   useChainId,
   useContract,
+  useContractRead,
   useOwnedNFTs,
   useSDK,
   useSwitchChain,
-  useTotalCirculatingSupply,
 } from "@thirdweb-dev/react";
 import {
   SnapshotEntryWithProof,
@@ -43,10 +43,11 @@ const typesenseApiKey =
   process.env.NEXT_PUBLIC_TYPESENSE_CONTRACT_API_KEY || "";
 const EDITION_ADDRESS = "0x3C29F6B19bcbeB85d26460bB2f7Bd4cd065cE28E";
 const PACK_ADDRESS = "0x24c1636c3d5506a6bD86Da188de16253B8064494";
-const AIRDROP_ADDRESS = "0xEC287fA0A7FDec3C02982267787A78Db01952B01";
+const AIRDROP_ADDRESS = "0xaD7D915a27FDCB1Ca8aE5Cf24B0a291ABD741D5a";
 const merkleURI = "ipfs://QmSfGFUaVUx4M7ZMuSSbqeTLXb9CsSQfWPFauHE7j9r4NZ/0";
 export const BEAR_MARKET_TRACKING_CATEGORY = "bear-market-airdrop";
 
+// For gasless
 const IS_GASLESS_DISABLED = true;
 
 export const Hero: React.FC<HeroProps> = () => {
@@ -83,9 +84,10 @@ export const Hero: React.FC<HeroProps> = () => {
     refetch: refetchPack,
   } = useOwnedNFTs(pack, address);
 
-  const { data: supply, refetch: refetchSupply } = useTotalCirculatingSupply(
-    pack,
-    0,
+  const { data: supply, refetch: refetchSupply } = useContractRead(
+    airdrop,
+    "availableAmount",
+    [0],
   );
 
   const outOfPacks = BigNumber.from(supply || 0).toNumber() === 0;
