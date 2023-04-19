@@ -20,7 +20,7 @@ export const FormFieldWithIconButton: React.FC<{
   return (
     <div>
       <Label htmlFor={props.id}>{props.label}</Label>
-      <Spacer y="xs" />
+      <Spacer y="sm" />
 
       <InputContainer data-error={!!props.error}>
         <Input
@@ -60,11 +60,12 @@ export const FormField: React.FC<{
   label: string;
   placeholder?: string;
   errorMessage?: string;
+  disabled?: boolean;
 }> = (props) => {
   return (
     <div>
       <Label htmlFor={props.id}>{props.label}</Label>
-      <Spacer y="xs" />
+      <Spacer y="sm" />
 
       <Input
         variant="outline"
@@ -77,6 +78,7 @@ export const FormField: React.FC<{
         type={props.type}
         data-error={!!props.errorMessage}
         placeholder={props.placeholder}
+        disabled={props.disabled}
       />
 
       {props.errorMessage && (

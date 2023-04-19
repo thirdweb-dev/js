@@ -33,7 +33,7 @@ export const ConnectingScreen: React.FC<{
         <Spinner size="md" color="link" />
       </TitleContainer>
       <Spacer y="md" />
-      <Desc>
+      <Desc centerOnMobile>
         Connect your wallet through the {props.walletName}{" "}
         {isMobile() ? "application" : "pop-up"}
       </Desc>

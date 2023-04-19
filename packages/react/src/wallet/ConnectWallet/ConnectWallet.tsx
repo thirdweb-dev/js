@@ -99,7 +99,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
           variant="inverted"
           onClick={signIn}
           data-theme={theme}
-          className={`${TW_CONNECT_WALLET}--sign-in`}
+          className={`${TW_CONNECT_WALLET}--sign-in ${props.className || ""}}`}
           style={props.style}
         >
           <Flex
@@ -146,6 +146,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
           <ConnectedWalletDetails
             networkSelector={props.networkSelector}
             dropdownPosition={props.dropdownPosition}
+            className={props.className}
             theme={theme}
             style={props.style}
             onDisconnect={() => {

@@ -10,13 +10,7 @@ import {
   ModalDescription,
   HelperLink,
 } from "../../../../components/modalElements";
-import {
-  iconSize,
-  spacing,
-  media,
-  Theme,
-  fontSize,
-} from "../../../../design-system";
+import { iconSize, spacing, Theme, fontSize } from "../../../../design-system";
 import { useIsNonLocalWallet } from "../../../hooks/useCanSwitchNetwork";
 import { Steps } from "./Steps";
 import styled from "@emotion/styled";
@@ -110,19 +104,18 @@ export const SafeForm: React.FC<{
   return (
     <>
       <BackButton onClick={props.onBack} />
-      <IconContainer>
-        <Img
-          src={safeWalletObj.meta.iconURL}
-          width={iconSize.xl}
-          height={iconSize.xl}
-        />
-      </IconContainer>
+      <Spacer y="md" />
+      <Img
+        src={safeWalletObj.meta.iconURL}
+        width={iconSize.xl}
+        height={iconSize.xl}
+      />
       <Spacer y="lg" />
 
       <ModalTitle>Enter your Safe Address & Network </ModalTitle>
       <Spacer y="md" />
 
-      <Desc>
+      <ModalDescription>
         You can find your safe address in{" "}
         <HelperLink
           target="_blank"
@@ -133,7 +126,7 @@ export const SafeForm: React.FC<{
         >
           Safe Dashboard
         </HelperLink>
-      </Desc>
+      </ModalDescription>
 
       <Spacer y="lg" />
       <Steps step={2} />
@@ -397,20 +390,5 @@ const NetworkSelect = styled.select<{ theme?: Theme }>`
   &[disabled] {
     opacity: 1;
     cursor: not-allowed;
-  }
-`;
-
-const IconContainer = styled.div`
-  display: flex;
-  margin-top: ${spacing.lg};
-  ${media.mobile} {
-    justify-content: center;
-    margin-top: 0;
-  }
-`;
-
-const Desc = styled(ModalDescription)`
-  ${media.mobile} {
-    padding: 0 ${spacing.lg};
   }
 `;

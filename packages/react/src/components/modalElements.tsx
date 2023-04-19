@@ -5,24 +5,32 @@ import styled from "@emotion/styled";
 import { Title } from "@radix-ui/react-dialog";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 
-export const ModalTitle = styled(Title)<{ theme?: Theme }>`
+export const ModalTitle = styled(Title)<{
+  theme?: Theme;
+  centerOnMobile?: boolean;
+}>`
   margin: 0;
   font-weight: 600;
   font-size: ${fontSize.lg};
   color: ${(p) => p.theme.text.neutral};
+  text-align: left;
   ${media.mobile} {
-    text-align: center;
+    text-align: ${(p) => (p.centerOnMobile ? "center" : "left")};
   }
 `;
 
-export const ModalDescription = styled.p<{ theme?: Theme }>`
+export const ModalDescription = styled.p<{
+  theme?: Theme;
+  centerOnMobile?: boolean;
+  sm?: boolean;
+}>`
   all: unset;
   display: block;
-  font-size: ${fontSize.md};
+  font-size: ${(p) => (p.sm ? fontSize.sm : fontSize.md)};
   color: ${(p) => p.theme.text.secondary};
   line-height: 1.5;
   ${media.mobile} {
-    text-align: center;
+    text-align: ${(p) => (p.centerOnMobile ? "center" : "left")};
   }
 `;
 

@@ -6,7 +6,7 @@ import {
   HelperLink,
   ModalDescription,
 } from "../../../../components/modalElements";
-import { iconSize, spacing, media } from "../../../../design-system";
+import { iconSize, spacing } from "../../../../design-system";
 import { WalletMeta } from "../../../types";
 import { WalletSelection } from "../../WalletSelector";
 import { Steps } from "./Steps";
@@ -35,7 +35,9 @@ export const SelectpersonalWallet: React.FC<{
       <ModalTitle>Choose your Wallet</ModalTitle>
       <Spacer y="sm" />
 
-      <Desc>Select a personal wallet to connect to your Safe</Desc>
+      <ModalDescription>
+        Select a personal wallet to connect to your Safe
+      </ModalDescription>
 
       <Spacer y="xl" />
       <Steps step={1} />
@@ -58,16 +60,5 @@ export const SelectpersonalWallet: React.FC<{
 };
 
 const IconContainer = styled.div`
-  display: flex;
   margin-top: ${spacing.lg};
-  ${media.mobile} {
-    justify-content: center;
-    margin-top: 0;
-  }
-`;
-
-const Desc = styled(ModalDescription)`
-  ${media.mobile} {
-    padding: 0 ${spacing.lg};
-  }
 `;

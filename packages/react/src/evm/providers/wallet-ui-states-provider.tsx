@@ -13,7 +13,8 @@ type Screen =
   | "safe/select-wallet"
   | "safe/form"
   | "wallets/get-started"
-  | "deviceWallet/connect";
+  | "deviceWallet/connect"
+  | "deviceWallet/export";
 
 const SafeConnection = createContext(false);
 const SetSafeConnection = createContext<BoolSetter | undefined>(undefined);
