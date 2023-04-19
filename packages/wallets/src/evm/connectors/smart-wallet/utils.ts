@@ -21,10 +21,6 @@ export async function getAssociatedAccounts(
       accountAdmin: await personalSigner.getAddress(),
     },
   });
-  console.log(
-    `Found ${accounts.length} accounts for personalWallet`,
-    accounts.map((a) => a.data),
-  );
   return accounts.map((a) => a.data);
 }
 
