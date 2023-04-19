@@ -1,5 +1,15 @@
 # thirdweb
 
+## 0.10.12
+
+### Patch Changes
+
+- [#894](https://github.com/thirdweb-dev/js/pull/894) [`72db2dc3`](https://github.com/thirdweb-dev/js/commit/72db2dc3e1c63e82ba4d73b6bd5ad4b2f8bbd559) Thanks [@adam-maj](https://github.com/adam-maj)! - Add more clear error messages to thirdweb generate
+
+- Updated dependencies [[`abe88599`](https://github.com/thirdweb-dev/js/commit/abe88599b634699aa3b876fe344bfddc6c1a92d4), [`4acb2b55`](https://github.com/thirdweb-dev/js/commit/4acb2b5561118dde5c7372400d4d754b879aef2e), [`ea04edf4`](https://github.com/thirdweb-dev/js/commit/ea04edf47867617ff74f0aca1471a40b8d9c9f7c), [`77224646`](https://github.com/thirdweb-dev/js/commit/77224646d542db3171394d744b455497cd057633), [`c9ee9b32`](https://github.com/thirdweb-dev/js/commit/c9ee9b32f0a275f7c03d50243f23a7332f148ae5), [`00f4355f`](https://github.com/thirdweb-dev/js/commit/00f4355f1aa8843bb534b173e4d8e0a19dd18b47), [`a6610f12`](https://github.com/thirdweb-dev/js/commit/a6610f1211e9359885b948bf69a66d834707ec07), [`29146e00`](https://github.com/thirdweb-dev/js/commit/29146e009db655304f5753904ae7f8569c12f4ca), [`77224646`](https://github.com/thirdweb-dev/js/commit/77224646d542db3171394d744b455497cd057633), [`bfdd8493`](https://github.com/thirdweb-dev/js/commit/bfdd84939d7cf9c6635b83c971bcc8967b52538c)]:
+  - @thirdweb-dev/sdk@3.10.11
+  - @thirdweb-dev/chains@0.1.12
+
 ## 0.10.11
 
 ### Patch Changes
