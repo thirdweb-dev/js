@@ -3,15 +3,9 @@ import { StyleSheet, View } from "react-native";
 import { ConnectWalletHeader } from "./ConnectingWallet/ConnectingWalletHeader";
 import Text from "../base/Text";
 import { ModalFooter } from "../base/modal/ModalFooter";
-import * as DocumentPicker from "expo-document-picker";
-import * as FileSystem from "expo-file-system";
 import { DeviceWallet } from "../../wallets/wallets/device-wallet";
-import {
-  Wallet,
-  useCreateWalletInstance,
-  useSupportedWallet,
-  useThirdwebWallet,
-} from "@thirdweb-dev/react-core";
+import { DeviceWalletImportModal } from "./DeviceWalletImportModal";
+import { useState } from "react";
 
 export type DeviceWalletFlowProps = {
   onClose: () => void;
@@ -24,44 +18,18 @@ export function DeviceWalletFlow({
   onBackPress,
   onConnectPress,
 }: DeviceWalletFlowProps) {
-  const createWalletInstance = useCreateWalletInstance();
-  const deviceWalletCreator = useSupportedWallet(DeviceWallet.id) as Wallet;
-  const twWalletContext = useThirdwebWallet();
+  const [isImportModalVisible, setIsImportModalVisible] = useState(false);
 
   const onImportPress = async () => {
-    const result = await DocumentPicker.getDocumentAsync({
-      copyToCacheDirectory: true,
-      type: "application/json",
-    });
+    setIsImportModalVisible(true);
+  };
 
-    if (result.type === "success") {
-      const json = await FileSystem.readAsStringAsync(result.uri, {
-        encoding: FileSystem.EncodingType.UTF8,
-      });
-
-      console.log("json", json);
-
-      const deviceWallet = createWalletInstance(
-        deviceWalletCreator,
-      ) as DeviceWallet;
-
-      try {
-        deviceWallet.import({
-          encryptedJson: json,
-          password: "asdf",
-        });
-      } catch (error) {
-        console.log(error);
-        return;
-      }
-
-      deviceWallet.connect();
-      twWalletContext?.handleWalletConnect(deviceWallet);
-    }
+  const onImportModalClose = () => {
+    setIsImportModalVisible(false);
   };
 
   return (
-    <View>
+    <>
       <ConnectWalletHeader
         onBackPress={onBackPress}
         walletLogoUrl={DeviceWallet.meta.iconURL}
@@ -83,7 +51,12 @@ export function DeviceWalletFlow({
         </Text>
         <ModalFooter footer={"Import a JSON wallet"} onPress={onImportPress} />
       </View>
-    </View>
+
+      <DeviceWalletImportModal
+        isVisible={isImportModalVisible}
+        onClose={onImportModalClose}
+      />
+    </>
   );
 }
 

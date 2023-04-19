@@ -55,6 +55,7 @@ export const ConnectWalletDetails = ({
 
   const onBackdropPress = () => {
     setIsDetailsModalVisible(false);
+    setIsExportModalVisible(false);
   };
 
   const onExportDeviceWalletPress = () => {
@@ -71,6 +72,10 @@ export const ConnectWalletDetails = ({
         isVisible={isDetailsModalVisible}
         onBackdropPress={onBackdropPress}
       >
+        <ExportDeviceWalletModal
+          isVisible={isExportModalVisible}
+          onClose={onExportModalClose}
+        />
         <WalletDetailsModalHeader
           address={address}
           onDisconnectPress={onDisconnectPress}
@@ -92,6 +97,7 @@ export const ConnectWalletDetails = ({
             <BaseButton
               backgroundColor="background"
               borderColor="border"
+              mb="sm"
               style={styles.exportWallet}
               onPress={onExportDeviceWalletPress}
             >
@@ -124,11 +130,6 @@ export const ConnectWalletDetails = ({
         </View>
         <WalletIcon size={32} iconUri={activeWallet?.getMeta().iconURL || ""} />
       </BaseButton>
-
-      <ExportDeviceWalletModal
-        isVisible={isExportModalVisible}
-        onClose={onExportModalClose}
-      />
     </>
   );
 };

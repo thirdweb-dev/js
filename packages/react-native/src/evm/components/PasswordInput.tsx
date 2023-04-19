@@ -3,6 +3,7 @@ import Box from "./base/Box";
 import { useState } from "react";
 import EyeClosed from "../assets/eye-closed";
 import { useTheme } from "@shopify/restyle";
+import EyeOpened from "../assets/eye-opened";
 
 export const PasswordInput = ({
   onChangeText,
@@ -26,7 +27,7 @@ export const PasswordInput = ({
       pr="xs"
     >
       <TextInput
-        style={styles.textInput}
+        style={{ ...styles.textInput, color: theme.colors.textPrimary }}
         secureTextEntry={!showPassword}
         textContentType="none"
         returnKeyType={"done"}
@@ -39,7 +40,7 @@ export const PasswordInput = ({
         {showPassword ? (
           <EyeClosed size={18} color={theme.colors.iconSecondary} />
         ) : (
-          <EyeClosed size={18} color={theme.colors.iconSecondary} />
+          <EyeOpened size={18} color={theme.colors.iconSecondary} />
         )}
       </TouchableOpacity>
     </Box>
@@ -50,6 +51,7 @@ const styles = StyleSheet.create({
   textInput: {
     textAlign: "left",
     flex: 1,
-    color: "#FFFFFF",
+    height: 40,
+    paddingLeft: 5,
   },
 });

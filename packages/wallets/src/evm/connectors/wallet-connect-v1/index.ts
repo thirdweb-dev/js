@@ -246,7 +246,6 @@ export class WalletConnectV1Connector extends Connector<
           `Chain ${chainId} is not added in the list of supported chains`,
         );
       }
-      console.log({ chain });
 
       // if chain is not configured in the wallet
       if (/Unrecognized chain ID/i.test(message)) {

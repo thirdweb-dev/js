@@ -1,5 +1,10 @@
 import Text from "../base/Text";
-import { StyleSheet } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Share,
+  StyleSheet,
+} from "react-native";
 import Modal from "react-native-modal";
 import { useState } from "react";
 import BaseButton from "../base/BaseButton";
@@ -20,6 +25,7 @@ export const ExportDeviceWalletModal = ({
   onClose,
 }: ExportDeviceWalletModalProps) => {
   const [password, setPassword] = useState<string | undefined>();
+  const [error, setError] = useState<string | undefined>();
 
   const activeWallet = useWallet();
   const address = useAddress();
@@ -29,39 +35,76 @@ export const ExportDeviceWalletModal = ({
       return;
     }
 
+    setError(undefined);
+
     const data = await (activeWallet as DeviceWallet).export({
       strategy: "encryptedJson",
       password: password,
     });
 
-    // Requests permissions for external directory
-    const permissions =
-      await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+    const fileName = "wallet.json";
+    if (Platform.OS === "android") {
+      // Requests permissions for external directory
+      const permissions =
+        await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
 
-    if (permissions.granted) {
-      // Gets SAF URI from response
-      const uri = permissions.directoryUri;
+      if (permissions.granted) {
+        // Gets SAF URI from response
+        const uri = permissions.directoryUri;
 
-      // Create file in external directory. If file already exists, it will be renamed.
-      const fileURI = await FileSystem.StorageAccessFramework.createFileAsync(
-        uri,
-        "wallet.json",
-        "application/json",
-      );
+        let fileURI;
+        try {
+          // Create file in external directory. If file already exists, it will be renamed.
+          fileURI = await FileSystem.StorageAccessFramework.createFileAsync(
+            uri,
+            fileName,
+            "application/json",
+          );
+        } catch (e) {
+          console.log("Error creating the file", e);
+          setError("Error creating the file. Please try again.");
+          return;
+        }
 
-      await FileSystem.StorageAccessFramework.writeAsStringAsync(
-        fileURI,
-        data,
-        {
+        try {
+          await FileSystem.StorageAccessFramework.writeAsStringAsync(
+            fileURI,
+            data,
+            {
+              encoding: FileSystem.EncodingType.UTF8,
+            },
+          );
+        } catch (e) {
+          console.log("Error writing the file", e);
+          setError("Error writing the file. Please try again.");
+        }
+      }
+
+      onCloseInternal();
+    } else {
+      let filePath;
+      try {
+        filePath = `${FileSystem.documentDirectory}${fileName}`;
+        await FileSystem.writeAsStringAsync(filePath, data, {
           encoding: FileSystem.EncodingType.UTF8,
-        },
-      );
+        });
+      } catch (e) {
+        console.log("Error writing the file", e);
+        setError("Error writing the file. Please try again.");
+      }
+
+      if (!filePath) {
+        return;
+      }
+
+      await Share.share({ title: "Wallet JSON", url: filePath });
 
       onCloseInternal();
     }
   };
 
   const onCloseInternal = () => {
+    setError(undefined);
     setPassword(undefined);
     onClose();
   };
@@ -72,46 +115,51 @@ export const ExportDeviceWalletModal = ({
 
   return (
     <Modal isVisible={isVisible} backdropOpacity={0.7}>
-      <Box
-        flexDirection="column"
-        backgroundColor="background"
-        borderRadius="md"
-        p="lg"
-      >
-        <ModalHeaderTextClose headerText={""} onClose={onCloseInternal} />
-        <Text variant="header" textAlign="center">
-          Export your Wallet
-        </Text>
-        <Text variant="subHeader" mt="md" textAlign="center">
-          {
-            "Enter a password to export your wallet. It will be used for encrypting and for re-importing this wallet."
-          }
-        </Text>
-        <Text variant="bodySmall" textAlign="left" mt="lg" mb="xxs">
-          Wallet Address
-        </Text>
-        <Text variant="subHeader">{address}</Text>
-        <Text variant="bodySmall" textAlign="left" mt="lg" mb="xxs">
-          Password
-        </Text>
-        <PasswordInput onChangeText={onChangeText} />
+      <KeyboardAvoidingView behavior="padding">
         <Box
-          flexDirection="row"
-          justifyContent="center"
-          paddingHorizontal="md"
-          mt="lg"
+          flexDirection="column"
+          backgroundColor="background"
+          borderRadius="md"
+          p="lg"
         >
-          <BaseButton
-            backgroundColor="white"
-            style={styles.modalButton}
-            onPress={onContinuePress}
+          <ModalHeaderTextClose headerText={""} onClose={onCloseInternal} />
+          <Text variant="header" textAlign="center">
+            Export your Wallet
+          </Text>
+          <Text variant="subHeader" mt="md" textAlign="center">
+            {
+              "This will download a JSON file containing your wallet information onto your device encrypted with the password."
+            }
+          </Text>
+          <Text variant="bodySmall" textAlign="left" mt="lg" mb="xxs">
+            Wallet Address
+          </Text>
+          <Text variant="bodySmallSecondary">{address}</Text>
+          <Text variant="bodySmall" textAlign="left" mt="lg" mb="xxs">
+            Password
+          </Text>
+          <PasswordInput onChangeText={onChangeText} />
+          <Text variant="bodySmall" color="red" mt="xs" textAlign="left">
+            {error}
+          </Text>
+          <Box
+            flexDirection="row"
+            justifyContent="center"
+            paddingHorizontal="md"
+            mt="lg"
           >
-            <Text variant="bodySmall" color="black">
-              Export
-            </Text>
-          </BaseButton>
+            <BaseButton
+              backgroundColor="white"
+              style={styles.modalButton}
+              onPress={onContinuePress}
+            >
+              <Text variant="bodySmall" color="black">
+                Export
+              </Text>
+            </BaseButton>
+          </Box>
         </Box>
-      </Box>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };

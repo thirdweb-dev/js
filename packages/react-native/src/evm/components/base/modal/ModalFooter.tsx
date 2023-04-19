@@ -18,6 +18,7 @@ export const ModalFooter = ({
 const styles = StyleSheet.create({
   footer: {
     marginTop: 24,
+    marginBottom: 14,
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
