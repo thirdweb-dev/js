@@ -57,7 +57,6 @@ export class ERC4337EthersSigner extends Signer {
     try {
       await this.httpRpcClient.sendUserOpToBundler(userOperation);
     } catch (error: any) {
-      console.error("sendUserOpToBundler failed", error);
       throw this.unwrapError(error);
     }
     // TODO: handle errors - transaction that is "rejected" by bundler is _not likely_ to ever resolve its "wait()"
@@ -65,25 +64,35 @@ export class ERC4337EthersSigner extends Signer {
   }
 
   unwrapError(errorIn: any): Error {
-    if (errorIn.body !== null) {
-      const errorBody = JSON.parse(errorIn.body);
-      let paymasterInfo: string = "";
-      let failedOpMessage: string | undefined = errorBody?.error?.message;
-      if (failedOpMessage?.includes("FailedOp") === true) {
-        // TODO: better error extraction methods will be needed
-        const matched = failedOpMessage.match(/FailedOp\((.*)\)/);
-        if (matched !== null) {
-          const split = matched[1].split(",");
-          paymasterInfo = `(paymaster address: ${split[1]})`;
-          failedOpMessage = split[2];
-        }
+    try {
+      if (errorIn.error) {
+        const error = new Error(
+          `The bundler has failed to include UserOperation in a batch: ${errorIn.error}`,
+        );
+        error.stack = errorIn.stack;
+        return error;
       }
-      const error = new Error(
-        `The bundler has failed to include UserOperation in a batch: ${failedOpMessage} ${paymasterInfo})`,
-      );
-      error.stack = errorIn.stack;
-      return error;
-    }
+      if (errorIn.body && typeof errorIn.body === "object") {
+        const errorBody = JSON.parse(errorIn.body);
+        let paymasterInfo: string = "";
+        let failedOpMessage: string | undefined =
+          errorBody?.error?.message || errorBody?.error?.data;
+        if (failedOpMessage?.includes("FailedOp") === true) {
+          // TODO: better error extraction methods will be needed
+          const matched = failedOpMessage.match(/FailedOp\((.*)\)/);
+          if (matched) {
+            const split = matched[1].split(",");
+            paymasterInfo = `(paymaster address: ${split[1]})`;
+            failedOpMessage = split[2];
+          }
+        }
+        const error = new Error(
+          `The bundler has failed to include UserOperation in a batch: ${failedOpMessage} ${paymasterInfo}`,
+        );
+        error.stack = errorIn.stack;
+        return error;
+      }
+    } catch (error: any) {}
     return errorIn;
   }
 
