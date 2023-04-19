@@ -2,7 +2,7 @@ import { Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { EmailInput } from "components/bear-market-airdrop/Email/EmailInput";
 import { useForm } from "react-hook-form";
-import { Text } from "tw-components";
+import { Heading, Text } from "tw-components";
 
 interface ClaimAirdropProps {
   canClaim: boolean;
@@ -13,6 +13,16 @@ interface ClaimAirdropProps {
 
 type Inputs = {
   email: string;
+};
+
+const IS_CLAIMING_DISABLED = true;
+
+const BackSoon = () => {
+  return (
+    <Heading size="title.xs" mb="2" color="red.300">
+      Something went wrong! Check back soon to claim your pack!
+    </Heading>
+  );
 };
 
 export const ClaimAirdrop: React.FC<ClaimAirdropProps> = ({
@@ -70,10 +80,11 @@ export const ClaimAirdrop: React.FC<ClaimAirdropProps> = ({
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
         register={register}
-        isDisabled={isClaiming}
+        isDisabled={isClaiming || IS_CLAIMING_DISABLED}
         isLoading={isClaiming}
         buttonText={canClaim ? "Claim" : "Subscribe"}
       />
+      {IS_CLAIMING_DISABLED && <BackSoon />}
       {!canClaim && (
         <Flex gap={2}>
           <Text fontSize="14px" fontWeight="semibold" mt={2}>
