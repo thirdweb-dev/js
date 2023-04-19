@@ -6,10 +6,9 @@ import {
   HelperLink,
   ModalDescription,
 } from "../../../../components/modalElements";
-import { iconSize, spacing } from "../../../../design-system";
+import { iconSize } from "../../../../design-system";
 import { WalletMeta } from "../../../types";
 import { WalletSelection } from "../../WalletSelector";
-import styled from "@emotion/styled";
 import { useSupportedWallet } from "../useSupportedWallet";
 import { Wallet } from "@thirdweb-dev/react-core";
 import { Steps } from "../Safe/Steps";
