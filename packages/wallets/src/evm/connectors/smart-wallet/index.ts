@@ -4,15 +4,10 @@ import { ERC4337EthersProvider } from "./lib/erc4337-provider";
 import { getVerifyingPaymaster } from "./lib/paymaster";
 import { create4337Provider, ProviderConfig } from "./lib/provider-utils";
 import { SmartWalletConfig, SmartWalletConnectionArgs } from "./types";
-import TWAccountFactory from "./artifacts/TWAccountFactory.json";
-import TWAccount from "./artifacts/TWAccount.json";
 import { ENTRYPOINT_ADDRESS } from "./lib/constants";
 import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
 import { providers } from "ethers";
-
-const DEFAULT_API_KEY =
-  "4f20f63d3ce0ec88eca639a291effef1559289d5614d77040d783048a4b3f316";
 
 export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs> {
   private config: SmartWalletConfig;
@@ -45,13 +40,13 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
         ? getVerifyingPaymaster(
             paymasterUrl,
             entryPointAddress,
-            this.config.apiKey,
+            this.config.thirdwebApiKey,
           )
         : undefined,
       factoryAddress: config.factoryAddress,
-      factoryAbi: config.factoryAbi || TWAccountFactory.abi,
-      accountAbi: config.accountAbi || TWAccount.abi,
-      apiKey: config.apiKey || DEFAULT_API_KEY,
+      factoryAbi: config.factoryAbi,
+      accountAbi: config.accountAbi,
+      thirdwebApiKey: config.thirdwebApiKey,
     };
     this.aaProvider = await create4337Provider(providerConfig);
   }

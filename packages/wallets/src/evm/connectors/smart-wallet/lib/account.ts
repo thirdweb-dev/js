@@ -4,6 +4,7 @@ import { Signer, BigNumberish, BigNumber, ContractInterface } from "ethers";
 import { arrayify, hexConcat } from "ethers/lib/utils";
 import { getEncodedAccountId } from "../utils";
 import { BaseAccountAPI } from "./base-api";
+import { MINIMAL_ACCOUNT_ABI } from "./constants";
 
 export interface AccountApiParams extends Omit<BaseApiParams, "provider"> {
   chain: ChainOrRpcUrl;
@@ -44,6 +45,7 @@ export class AccountAPI extends BaseAccountAPI {
       } else {
         this.accountContract = await this.sdk.getContract(
           await this.getAccountAddress(),
+          MINIMAL_ACCOUNT_ABI,
         );
       }
     }

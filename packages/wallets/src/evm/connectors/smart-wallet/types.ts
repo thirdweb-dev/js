@@ -5,7 +5,7 @@ import { WalletOptions } from "../../wallets/base";
 export type SmartWalletConfig = {
   chain: ChainOrRpcUrl;
   factoryAddress: string;
-  apiKey: string;
+  thirdwebApiKey: string;
   gasless: boolean;
   bundlerUrl?: string;
   paymasterUrl?: string;
