@@ -1,4 +1,8 @@
-import { parseGatewayUrls, prepareGatewayUrls } from "../common";
+import {
+  DEFAULT_API_KEY,
+  parseGatewayUrls,
+  prepareGatewayUrls,
+} from "../common";
 import {
   extractObjectFiles,
   isFileOrBuffer,
@@ -51,6 +55,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
   private uploader: IStorageUploader<T>;
   private downloader: IStorageDownloader;
   public gatewayUrls: GatewayUrls;
+  private thirdwebApiKey: string;
 
   constructor(options?: ThirdwebStorageOptions<T>) {
     this.uploader = options?.uploader || new IpfsUploader();
@@ -58,6 +63,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
     this.gatewayUrls = prepareGatewayUrls(
       parseGatewayUrls(options?.gatewayUrls),
     );
+    this.thirdwebApiKey = options?.thirdwebApiKey || DEFAULT_API_KEY;
   }
 
   /**

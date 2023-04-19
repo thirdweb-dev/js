@@ -1,4 +1,5 @@
 import {
+  DEFAULT_API_KEY,
   getCIDForUpload,
   IPFS_UPLOAD_GATEWAYS,
   isUploaded,
@@ -42,9 +43,11 @@ import FormData from "form-data";
  */
 export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   public uploadWithGatewayUrl: boolean;
+  private thirdwebApiKey: string;
 
   constructor(options?: IpfsUploaderOptions) {
     this.uploadWithGatewayUrl = options?.uploadWithGatewayUrl || false;
+    this.thirdwebApiKey = options?.thirdwebApiKey || DEFAULT_API_KEY;
   }
 
   async uploadBatch(
@@ -142,12 +145,43 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   }
 
   /**
-   * Fetches a one-time-use upload token that can used to upload
-   * a file to storage.
+   * Gets headers to be used in the request to upload to IPFS, depending on the service being used.
    *
-   * @returns - The one time use token that can be passed to the Pinata API.
+   * @param ipfsUploadUrl
+   * @private
    */
-  private async getUploadToken(): Promise<string> {
+  private async getUploadAuthorizationHeaders(
+    ipfsUploadUrl: string,
+  ): Promise<Record<string, string>> {
+    if (ipfsUploadUrl === PINATA_IPFS_URL) {
+      return this.getPinataUploadAuthorizationHeaders();
+    } else {
+      return this.getThirdwebUploadAuthorizationHeaders();
+    }
+    throw new Error(
+      `Unrecognized IPFS header url: ${ipfsUploadUrl}. Please let us know you ran into this error.`,
+    );
+  }
+
+  /**
+   * Builds the headers to be used in the request to thirdweb to upload to IPFS.
+   * @private
+   */
+  private async getThirdwebUploadAuthorizationHeaders() {
+    return {
+      "x-api-key": this.thirdwebApiKey,
+    };
+  }
+
+  /**
+   * For Pinata, fetches a one-time-use upload token that can used to upload
+   * a file to storage and returns the header to be used in the request.
+   *
+   * @returns - The one time use token header that can be passed to the Pinata API.
+   */
+  private async getPinataUploadAuthorizationHeaders(): Promise<{
+    Authorization: string;
+  }> {
     const res = await fetch(`${TW_IPFS_SERVER_URL}/grant`, {
       method: "GET",
       headers: {
@@ -162,7 +196,9 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       throw new Error(`Failed to get upload token`);
     }
     const body = await res.text();
-    return body;
+    return {
+      Authorization: `Bearer ${body}`,
+    };
   }
 
   private buildFormData(
@@ -252,11 +288,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     ipfsUploadUrl: string,
     options?: IpfsUploadBatchOptions,
   ): Promise<string[]> {
-    // Pinata is the only service that needs a token for uploads (for now)
-    const uploadToken =
-      ipfsUploadUrl === PINATA_IPFS_URL
-        ? await this.getUploadToken()
-        : undefined;
+    const authHeaders = await this.getUploadAuthorizationHeaders(ipfsUploadUrl);
 
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -355,9 +387,9 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
 
       xhr.open("POST", ipfsUploadUrl);
 
-      if (uploadToken) {
-        xhr.setRequestHeader("Authorization", `Bearer ${uploadToken}`);
-      }
+      Object.keys(authHeaders).forEach((key) => {
+        xhr.setRequestHeader(key, authHeaders[key]);
+      });
 
       xhr.send(form as any);
     });
@@ -369,7 +401,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     ipfsUploadUrl: string,
     options?: IpfsUploadBatchOptions,
   ) {
-    const token = await this.getUploadToken();
+    const authHeaders = await this.getUploadAuthorizationHeaders(ipfsUploadUrl);
 
     if (options?.onProgress) {
       console.warn("The onProgress option is only supported in the browser");
@@ -377,7 +409,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     const res = await fetch(ipfsUploadUrl, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
+        ...authHeaders,
         ...form.getHeaders(),
       },
       body: form.getBuffer(),

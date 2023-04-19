@@ -7,9 +7,9 @@ export function createStorage(
 ): ThirdwebStorage {
   if (storage) {
     return storage;
-  } else if (options?.gatewayUrls) {
-    return new ThirdwebStorage({ gatewayUrls: options.gatewayUrls });
-  } else {
-    return new ThirdwebStorage();
   }
+  return new ThirdwebStorage({
+    gatewayUrls: options?.gatewayUrls,
+    thirdwebApiKey: options?.thirdwebApiKey,
+  })
 }

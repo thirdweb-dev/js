@@ -46,6 +46,11 @@ export type IpfsUploaderOptions = {
    * Whether or not to replace any URLs with schemes with resolved URLs before upload
    */
   uploadWithGatewayUrl?: boolean;
+
+  /**
+   * Whether or not to replace any URLs with schemes with resolved URLs before upload
+   */
+  thirdwebApiKey?: string;
 };
 
 /**
@@ -82,4 +87,8 @@ export type IpfsUploadBatchOptions = {
    * Optionally, always reupload even if the file already exists
    */
   alwaysUpload?: boolean;
+  /**
+   * Specify an API key to use for uploads
+   */
+  thirdwebApiKey?: string;
 };
