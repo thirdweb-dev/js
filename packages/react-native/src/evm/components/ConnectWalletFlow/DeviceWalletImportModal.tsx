@@ -1,5 +1,9 @@
 import Text from "../base/Text";
-import { KeyboardAvoidingView, StyleSheet } from "react-native";
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  StyleSheet,
+} from "react-native";
 import Modal from "react-native-modal";
 import { useState } from "react";
 import BaseButton from "../base/BaseButton";
@@ -28,6 +32,7 @@ export const DeviceWalletImportModal = ({
   const [password, setPassword] = useState<string | undefined>();
   const [jsonFile, setJsonFile] = useState<string | undefined>();
   const [error, setError] = useState<string | undefined>();
+  const [isImporting, setIsImporting] = useState<boolean>(false);
   const createWalletInstance = useCreateWalletInstance();
   const deviceWalletCreator = useSupportedWallet(DeviceWallet.id) as Wallet;
   const twWalletContext = useThirdwebWallet();
@@ -39,6 +44,8 @@ export const DeviceWalletImportModal = ({
       return;
     }
 
+    setIsImporting(true);
+
     let json;
     try {
       json = await FileSystem.readAsStringAsync(jsonFile, {
@@ -46,6 +53,7 @@ export const DeviceWalletImportModal = ({
       });
     } catch (err) {
       setError("Error reading the file. Please try again.");
+      setIsImporting(false);
       return;
     }
 
@@ -61,6 +69,7 @@ export const DeviceWalletImportModal = ({
     } catch (err) {
       console.error("Error importing the wallet", err);
       setError("Invalid password");
+      setIsImporting(false);
       return;
     }
 
@@ -71,6 +80,7 @@ export const DeviceWalletImportModal = ({
     await deviceWallet.connect();
     twWalletContext?.handleWalletConnect(deviceWallet);
 
+    setIsImporting(false);
     onCloseInternal();
   };
 
@@ -149,9 +159,13 @@ export const DeviceWalletImportModal = ({
               style={styles.modalButton}
               onPress={onImportPress}
             >
-              <Text variant="bodySmall" color="black">
-                Import
-              </Text>
+              {isImporting ? (
+                <ActivityIndicator size="small" color="buttonTextColor" />
+              ) : (
+                <Text variant="bodySmall" color="black">
+                  Import
+                </Text>
+              )}
             </BaseButton>
           </Box>
         </Box>

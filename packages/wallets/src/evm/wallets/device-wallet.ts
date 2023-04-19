@@ -45,7 +45,10 @@ export class DeviceWallet extends AbstractClientWallet<
   constructor(options?: WalletOptions<DeviceWalletOptions>) {
     super(DeviceWallet.id, options);
     this.options = options || {};
-    this.#storage = options?.storage || createAsyncLocalStorage("deviceWallet");
+    this.#storage =
+      options?.storage ||
+      options?.walletStorage ||
+      createAsyncLocalStorage("deviceWallet");
   }
 
   protected async getConnector(): Promise<TWConnector> {

@@ -49,13 +49,14 @@ class SecureStorage implements AsyncStorage {
 }
 
 export const deviceWallet = () => {
+  const secureStorage = new SecureStorage();
   return {
     id: DeviceWallet.id,
     meta: DeviceWallet.meta,
     create: (options: WalletOptions) =>
       new DeviceWallet({
         ...options,
-        walletStorage: new SecureStorage(),
-      }),
+        walletStorage: secureStorage,
+      }) as DeviceWalletCore,
   } satisfies Wallet;
 };

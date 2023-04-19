@@ -1,5 +1,6 @@
 import Text from "../base/Text";
 import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   Share,
@@ -26,15 +27,18 @@ export const ExportDeviceWalletModal = ({
 }: ExportDeviceWalletModalProps) => {
   const [password, setPassword] = useState<string | undefined>();
   const [error, setError] = useState<string | undefined>();
+  const [isExporting, setIsExporting] = useState<boolean>(false);
 
   const activeWallet = useWallet();
   const address = useAddress();
 
   const onContinuePress = async () => {
     if (!password) {
+      setError("Please enter a password");
       return;
     }
 
+    setIsExporting(true);
     setError(undefined);
 
     const data = await (activeWallet as DeviceWallet).export({
@@ -63,6 +67,7 @@ export const ExportDeviceWalletModal = ({
         } catch (e) {
           console.error("Error creating the file", e);
           setError("Error creating the file. Please try again.");
+          setIsExporting(false);
           return;
         }
 
@@ -77,6 +82,8 @@ export const ExportDeviceWalletModal = ({
         } catch (e) {
           console.error("Error writing the file", e);
           setError("Error writing the file. Please try again.");
+          setIsExporting(false);
+          return;
         }
       }
 
@@ -94,6 +101,7 @@ export const ExportDeviceWalletModal = ({
       }
 
       if (!filePath) {
+        setIsExporting(false);
         return;
       }
 
@@ -101,6 +109,8 @@ export const ExportDeviceWalletModal = ({
 
       onCloseInternal();
     }
+
+    setIsExporting(false);
   };
 
   const onCloseInternal = () => {
@@ -110,6 +120,10 @@ export const ExportDeviceWalletModal = ({
   };
 
   const onChangeText = (text: string) => {
+    if (error) {
+      setError(undefined);
+    }
+
     setPassword(text);
   };
 
@@ -153,9 +167,13 @@ export const ExportDeviceWalletModal = ({
               style={styles.modalButton}
               onPress={onContinuePress}
             >
-              <Text variant="bodySmall" color="black">
-                Export
-              </Text>
+              {isExporting ? (
+                <ActivityIndicator size="small" color="buttonTextColor" />
+              ) : (
+                <Text variant="bodySmall" color="black">
+                  Export
+                </Text>
+              )}
             </BaseButton>
           </Box>
         </Box>
