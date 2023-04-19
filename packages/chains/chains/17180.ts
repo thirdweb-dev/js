@@ -1,10 +1,10 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Palette Chain Mainnet",
+  "name": "Palette Chain Testnet",
   "chain": "PLT",
   "rpc": [
-    "https://palette-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://palette-rpc.com:22000"
+    "https://palette-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://palette-opennet.com:22000"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -14,9 +14,9 @@ export default {
   },
   "features": [],
   "infoURL": "https://hashpalette.com/",
-  "shortName": "PCM",
-  "chainId": 1718,
-  "networkId": 1718,
+  "shortName": "PCT",
+  "chainId": 17180,
+  "networkId": 17180,
   "icon": {
     "url": "ipfs://QmPCEGZD1p1keTT2YfPp725azx1r9Ci41hejeUuGL2whFA",
     "width": 800,
@@ -26,7 +26,7 @@ export default {
   "explorers": [
     {
       "name": "Palettescan",
-      "url": "https://palettescan.com",
+      "url": "https://testnet.palettescan.com",
       "icon": {
         "url": "ipfs://QmPCEGZD1p1keTT2YfPp725azx1r9Ci41hejeUuGL2whFA",
         "width": 800,
@@ -36,6 +36,6 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "palette-chain"
+  "testnet": true,
+  "slug": "palette-chain-testnet"
 } as const satisfies Chain;

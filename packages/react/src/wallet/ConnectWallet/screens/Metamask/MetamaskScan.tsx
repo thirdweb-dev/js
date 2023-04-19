@@ -1,13 +1,13 @@
 import { ScanScreen } from "../ScanScreen";
 import {
   useCreateWalletInstance,
+  useSupportedWallet,
   useThirdwebWallet,
   Wallet,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 
 import type { MetaMaskWallet } from "@thirdweb-dev/wallets";
-import { useSupportedWallet } from "../useSupportedWallet";
 
 export const ScanMetamask: React.FC<{
   onBack: () => void;

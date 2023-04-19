@@ -6,9 +6,9 @@ export class DeviceWalletNode extends DeviceWallet {
   constructor(
     options?: WalletOptions<DeviceWalletOptions> & { storageJsonFile?: string },
   ) {
-    const storage = new AsyncJsonFileStorage(
+    const walletStorage = new AsyncJsonFileStorage(
       options?.storageJsonFile || "./wallet.json",
     );
-    super({ storage, ...options });
+    super({ walletStorage, ...options });
   }
 }

@@ -4,11 +4,11 @@ import Modal from "react-native-modal";
 import { useState } from "react";
 import BaseButton from "../base/BaseButton";
 import Box from "../base/Box";
-import { useWallet } from "@thirdweb-dev/react-core";
-import { DeviceWallet } from "../../wallets/wallets/device-wallet";
 import { ModalHeaderTextClose } from "../base/modal/ModalHeaderTextClose";
-import KeyIcon from "../../assets/key";
-import { useAppTheme } from "../../styles/hooks";
+import { useAddress, useWallet } from "@thirdweb-dev/react-core";
+import { PasswordInput } from "../PasswordInput";
+import * as FileSystem from "expo-file-system";
+import { DeviceWallet } from "../../wallets/wallets/device-wallet";
 
 export type ExportDeviceWalletModalProps = {
   isVisible: boolean;
@@ -19,23 +19,55 @@ export const ExportDeviceWalletModal = ({
   isVisible,
   onClose,
 }: ExportDeviceWalletModalProps) => {
-  const [privateKey, setPrivateKey] = useState<string | undefined>();
-
-  const theme = useAppTheme();
+  const [password, setPassword] = useState<string | undefined>();
 
   const activeWallet = useWallet();
+  const address = useAddress();
 
-  const onContinuePress = () => {
-    if (!privateKey) {
-      (activeWallet as DeviceWallet).getWalletData().then((data) => {
-        setPrivateKey(data?.encryptedData);
-      });
+  const onContinuePress = async () => {
+    if (!password) {
+      return;
+    }
+
+    const data = await (activeWallet as DeviceWallet).export({
+      strategy: "encryptedJson",
+      password: password,
+    });
+
+    // Requests permissions for external directory
+    const permissions =
+      await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+
+    if (permissions.granted) {
+      // Gets SAF URI from response
+      const uri = permissions.directoryUri;
+
+      // Create file in external directory. If file already exists, it will be renamed.
+      const fileURI = await FileSystem.StorageAccessFramework.createFileAsync(
+        uri,
+        "wallet.json",
+        "application/json",
+      );
+
+      await FileSystem.StorageAccessFramework.writeAsStringAsync(
+        fileURI,
+        data,
+        {
+          encoding: FileSystem.EncodingType.UTF8,
+        },
+      );
+
+      onCloseInternal();
     }
   };
 
   const onCloseInternal = () => {
-    setPrivateKey(undefined);
+    setPassword(undefined);
     onClose();
+  };
+
+  const onChangeText = (text: string) => {
+    setPassword(text);
   };
 
   return (
@@ -48,26 +80,21 @@ export const ExportDeviceWalletModal = ({
       >
         <ModalHeaderTextClose headerText={""} onClose={onCloseInternal} />
         <Text variant="header" textAlign="center">
-          Revealing private key
+          Export your Wallet
         </Text>
         <Text variant="subHeader" mt="md" textAlign="center">
-          This private key gives full access to your wallet, funds and accounts.
+          {
+            "Enter a password to export your wallet. It will be used for encrypting and for re-importing this wallet."
+          }
         </Text>
-        <Text variant="bodySmall" mt="xl" textAlign="center" color="warning">
-          Please ensure you are keeping your private key safe.
+        <Text variant="bodySmall" textAlign="left" mt="lg" mb="xxs">
+          Wallet Address
         </Text>
-        <BaseButton
-          backgroundColor="background"
-          borderColor="border"
-          mt="lg"
-          style={styles.pkButton}
-        >
-          <KeyIcon size={22} color={theme.colors.iconPrimary} />
-          <Text variant="bodySmallSecondary" textAlign="center" mt={"md"}>
-            {privateKey ||
-              "Your private key will show here. Make sure no one is looking at your screen."}
-          </Text>
-        </BaseButton>
+        <Text variant="subHeader">{address}</Text>
+        <Text variant="bodySmall" textAlign="left" mt="lg" mb="xxs">
+          Password
+        </Text>
+        <PasswordInput onChangeText={onChangeText} />
         <Box
           flexDirection="row"
           justifyContent="center"
@@ -75,12 +102,13 @@ export const ExportDeviceWalletModal = ({
           mt="lg"
         >
           <BaseButton
-            backgroundColor="background"
-            borderColor="border"
+            backgroundColor="white"
             style={styles.modalButton}
             onPress={onContinuePress}
           >
-            <Text variant="bodySmall">Reveal Key</Text>
+            <Text variant="bodySmall" color="black">
+              Export
+            </Text>
           </BaseButton>
         </Box>
       </Box>

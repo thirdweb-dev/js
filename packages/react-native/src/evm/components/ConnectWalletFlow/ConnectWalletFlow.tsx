@@ -3,14 +3,16 @@ import Text from "../base/Text";
 import { TWModal } from "../base/modal/TWModal";
 import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
-import { DeviceWallet } from "../../wallets/wallets/device-wallet";
 import { Wallet, useConnect, useWallets } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { StyleSheet } from "react-native";
+import { DeviceWalletFlow } from "./DeviceWalletFlow";
+import { DeviceWallet } from "../../wallets/wallets/device-wallet";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [activeWallet, setActiveWallet] = useState<Wallet | undefined>();
+  const [isConnecting, setIsConnecting] = useState(false);
 
   const connect = useConnect();
   const supportedWallets = useWallets();
@@ -24,35 +26,59 @@ export const ConnectWalletFlow = () => {
     setActiveWallet(undefined);
   };
 
-  const onChooseWallet = async (wallet: Wallet) => {
-    setActiveWallet(() => wallet);
-
+  const connectActiveWallet = async (wallet: Wallet) => {
+    setIsConnecting(true);
     connect(wallet, {}).catch((error) => {
       console.log("error", error);
       onBackPress();
     });
   };
 
+  const onChooseWallet = (wallet: Wallet) => {
+    setActiveWallet(() => wallet);
+
+    if (wallet.id !== DeviceWallet.id) {
+      connectActiveWallet(wallet);
+    }
+  };
+
   const onBackPress = () => {
     setActiveWallet(undefined);
   };
+
+  function getComponentForWallet(activeWalletP: Wallet) {
+    switch (activeWalletP.id) {
+      case DeviceWallet.id:
+        return (
+          <DeviceWalletFlow
+            onClose={onClose}
+            onBackPress={onBackPress}
+            onConnectPress={() => connectActiveWallet(activeWalletP)}
+          />
+        );
+    }
+  }
 
   return (
     <>
       <TWModal isVisible={modalVisible}>
         {activeWallet ? (
-          <ConnectingWallet
-            content={
-              activeWallet.id === DeviceWallet.id ? (
-                <Text variant="bodySmallSecondary" mt="md">
-                  Creating, encrypting and securing your device wallet.
-                </Text>
-              ) : undefined
-            }
-            wallet={activeWallet}
-            onClose={onClose}
-            onBackPress={onBackPress}
-          />
+          isConnecting ? (
+            <ConnectingWallet
+              content={
+                activeWallet.id === DeviceWallet.id ? (
+                  <Text variant="bodySmallSecondary" mt="md">
+                    Creating, encrypting and securing your device wallet.
+                  </Text>
+                ) : undefined
+              }
+              wallet={activeWallet}
+              onClose={onClose}
+              onBackPress={onBackPress}
+            />
+          ) : (
+            getComponentForWallet(activeWallet)
+          )
         ) : (
           <ChooseWallet
             wallets={supportedWallets}

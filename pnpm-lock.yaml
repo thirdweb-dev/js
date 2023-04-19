@@ -735,6 +735,12 @@ importers:
       abitype:
         specifier: ^0.2.5
         version: 0.2.5(typescript@4.9.5)
+      expo-document-picker:
+        specifier: ^11.2.2
+        version: 11.2.2(expo@47.0.13)
+      expo-file-system:
+        specifier: ^15.2.2
+        version: 15.2.2(expo@47.0.13)
       expo-secure-store:
         specifier: ^12.1.1
         version: 12.1.1(expo@47.0.13)
@@ -18006,6 +18012,14 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
+  /expo-document-picker@11.2.2(expo@47.0.13):
+    resolution: {integrity: sha512-EeonRKxkK9E20LEAh93IvlwFjNkUCJKnhBEama9PmIDYWW7RyANZ8eP9C2PupThTDbivzRDNp7Ec7dIeyDAWjw==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 47.0.13(@babel/core@7.21.3)
+    dev: false
+
   /expo-error-recovery@4.0.1(expo@47.0.13):
     resolution: {integrity: sha512-wceptnRX+N3qCSVTNbIchUFu3GmY30onRH5L66OF8HMLpAIQfrZMLxJfz7SAMJTcr3jxsJ11vSa2l2RaPKgHsQ==}
     requiresBuild: true
@@ -18022,6 +18036,15 @@ packages:
     dependencies:
       expo: 47.0.13(@babel/core@7.21.3)
       uuid: 3.4.0
+
+  /expo-file-system@15.2.2(expo@47.0.13):
+    resolution: {integrity: sha512-LFkOLcWwlmnjkURxZ3/0ukS35OswX8iuQknLHRHeyk8mUA8fpRPPelD/a1lS+yclqfqavMJmTXVKM1Nsq5XVMA==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 47.0.13(@babel/core@7.21.3)
+      uuid: 3.4.0
+    dev: false
 
   /expo-font@11.0.1(expo@47.0.13):
     resolution: {integrity: sha512-LGAIluWZfru0J0n87dzb6pwAB6TVMTEiLcsd/ktozzbn4DlN7SeQy40+ruU6bvAKCOGrnRneYbKSIOGkrd7oNg==}

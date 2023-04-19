@@ -16,10 +16,10 @@ import styled from "@emotion/styled";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import {
   useCreateWalletInstance,
+  useSupportedWallet,
   useThirdwebWallet,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
-import { useSupportedWallet } from "../useSupportedWallet";
 import { Wallet } from "@thirdweb-dev/react-core";
 import type { DeviceWallet } from "@thirdweb-dev/wallets";
 import { WalletData } from "@thirdweb-dev/wallets/src/evm/wallets/device-wallet";

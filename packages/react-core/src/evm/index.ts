@@ -45,7 +45,10 @@ export {
   ThirdwebAuthProvider,
   useThirdwebAuthContext,
 } from "./contexts/thirdweb-auth";
-export type { ThirdwebAuthConfig, ISecureStorage } from "./contexts/thirdweb-auth";
+export type {
+  ThirdwebAuthConfig,
+  ISecureStorage,
+} from "./contexts/thirdweb-auth";
 
 // config
 export {
@@ -211,6 +214,7 @@ export { useNetworkMismatch } from "./hooks/useNetworkMismatch";
 export { useReadonlySDK } from "./hooks/useReadonlySDK";
 export { useSigner } from "./hooks/useSigner";
 export { useSupportedChains } from "./hooks/useSupportedChains";
+export { useSupportedWallet } from "./hooks/useSupportedWallet";
 export { useAppURI, useSetAppURI } from "./hooks/async/app";
 
 // sdk provider

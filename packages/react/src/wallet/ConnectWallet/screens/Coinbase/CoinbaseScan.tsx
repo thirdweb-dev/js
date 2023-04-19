@@ -2,11 +2,11 @@ import { ScanScreen } from "../ScanScreen";
 import type { CoinbaseWallet } from "@thirdweb-dev/wallets";
 import {
   useCreateWalletInstance,
+  useSupportedWallet,
   useThirdwebWallet,
   Wallet,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
-import { useSupportedWallet } from "../useSupportedWallet";
 
 export const ScanCoinbase: React.FC<{
   onBack: () => void;
