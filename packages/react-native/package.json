@@ -24,7 +24,7 @@
     "android"
   ],
   "dependencies": {
-    "@coinbase/wallet-mobile-sdk": "^1.0.5",
+    "@coinbase/wallet-mobile-sdk": "^1.0.4",
     "@shopify/restyle": "^2.4.1",
     "@tanstack/react-query": "^4.0.10",
     "@thirdweb-dev/chains": "workspace:*",

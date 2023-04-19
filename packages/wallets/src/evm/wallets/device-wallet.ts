@@ -6,6 +6,8 @@ import { Wallet, utils } from "ethers";
 
 export type DeviceWalletOptions = {
   chain?: Chain;
+  storageType?: "asyncStore" | "credentialStore";
+  storage?: AsyncStorage;
 };
 
 export type WalletData = {
@@ -26,6 +28,7 @@ export class DeviceWallet extends AbstractClientWallet<
   connector?: TWConnector;
   options: WalletOptions<DeviceWalletOptions>;
   ethersWallet?: Wallet;
+  #storage: AsyncStorage;
 
   static id = "deviceWallet";
 
@@ -42,6 +45,7 @@ export class DeviceWallet extends AbstractClientWallet<
   constructor(options?: WalletOptions<DeviceWalletOptions>) {
     super(DeviceWallet.id, options);
     this.options = options || {};
+    this.#storage = options?.storage || createAsyncLocalStorage("deviceWallet");
   }
 
   protected async getConnector(): Promise<TWConnector> {
@@ -263,7 +267,7 @@ export class DeviceWallet extends AbstractClientWallet<
    * deletes the saved wallet data from storage
    */
   async deleteSaved() {
-    await this.walletStorage.removeItem(STORAGE_KEY_WALLET_DATA);
+    await this.#storage.removeItem(STORAGE_KEY_WALLET_DATA);
   }
 
   /**
@@ -305,7 +309,7 @@ export class DeviceWallet extends AbstractClientWallet<
    * Get the saved wallet data from storage
    */
   async getSavedData(storage?: AsyncStorage): Promise<WalletData | null> {
-    const _storage = storage || this.walletStorage;
+    const _storage = storage || this.#storage;
 
     const savedDataStr = await _storage.getItem(STORAGE_KEY_WALLET_DATA);
     if (!savedDataStr) {
@@ -328,7 +332,7 @@ export class DeviceWallet extends AbstractClientWallet<
    * store the wallet data to storage
    */
   async #saveData(data: WalletData, storage?: AsyncStorage) {
-    const _storage = storage || this.walletStorage;
+    const _storage = storage || this.#storage;
     await _storage.setItem(STORAGE_KEY_WALLET_DATA, JSON.stringify(data));
   }
 }

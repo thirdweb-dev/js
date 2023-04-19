@@ -709,7 +709,7 @@ importers:
   packages/react-native:
     dependencies:
       '@coinbase/wallet-mobile-sdk':
-        specifier: ^1.0.5
+        specifier: ^1.0.4
         version: 1.0.5(@babel/core@7.21.3)(expo@47.0.13)(react-native@0.71.4)(react@18.2.0)
       '@shopify/restyle':
         specifier: ^2.4.1
