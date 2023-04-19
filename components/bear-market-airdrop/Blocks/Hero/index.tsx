@@ -445,48 +445,44 @@ export const Hero: React.FC<HeroProps> = () => {
             </Box>
           )}
           <>
-            {outOfPacks ? (
+            {!unboxed && supply && (
+              <Supply supply={BigNumber.from(supply || 0).toString()} />
+            )}
+            {!address ? (
+              <Box
+                mx={{
+                  base: "auto",
+                  lg: 0,
+                }}
+              >
+                <ConnectWallet />
+              </Box>
+            ) : IS_GASLESS_DISABLED && chainId !== 137 ? (
+              <Button
+                bg="bgBlack!important"
+                color="bgWhite!important"
+                _hover={{
+                  opacity: 0.8,
+                }}
+                onClick={() => {
+                  switchChain(137).catch((e) => {
+                    console.error(e);
+                  });
+                }}
+              >
+                Switch to Polygon
+              </Button>
+            ) : hasPack ? (
+              <OpenPack openPack={openPack} unboxing={unboxing} />
+            ) : outOfPacks ? (
               <OutOfPacks handleEmailSubmit={handleEmailSubmit} />
             ) : (
-              <>
-                {!unboxed && supply && (
-                  <Supply supply={BigNumber.from(supply || 0).toString()} />
-                )}
-                {!address ? (
-                  <Box
-                    mx={{
-                      base: "auto",
-                      lg: 0,
-                    }}
-                  >
-                    <ConnectWallet />
-                  </Box>
-                ) : IS_GASLESS_DISABLED && chainId !== 137 ? (
-                  <Button
-                    bg="bgBlack!important"
-                    color="bgWhite!important"
-                    _hover={{
-                      opacity: 0.8,
-                    }}
-                    onClick={() => {
-                      switchChain(137).catch((e) => {
-                        console.error(e);
-                      });
-                    }}
-                  >
-                    Switch to Polygon
-                  </Button>
-                ) : hasPack ? (
-                  <OpenPack openPack={openPack} unboxing={unboxing} />
-                ) : (
-                  <ClaimAirdrop
-                    canClaim={canClaim}
-                    isClaiming={claiming}
-                    claim={claim}
-                    handleEmailSubmit={handleEmailSubmit}
-                  />
-                )}
-              </>
+              <ClaimAirdrop
+                canClaim={canClaim}
+                isClaiming={claiming}
+                claim={claim}
+                handleEmailSubmit={handleEmailSubmit}
+              />
             )}
           </>
         </Flex>

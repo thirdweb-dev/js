@@ -15,7 +15,7 @@ type Inputs = {
   email: string;
 };
 
-const IS_CLAIMING_DISABLED = false;
+const IS_CLAIMING_DISABLED = true;
 
 const BackSoon = () => {
   return (
