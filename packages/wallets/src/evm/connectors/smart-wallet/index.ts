@@ -18,7 +18,7 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
     this.config = config;
   }
 
-  async initialize(personalWallet: EVMWallet, accountId?: string) {
+  async initialize(personalWallet: EVMWallet, accountId: string) {
     const config = this.config;
     const chain =
       typeof config.chain === "string"
@@ -33,7 +33,7 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
     const providerConfig: ProviderConfig = {
       chain: config.chain,
       localSigner,
-      accountId: accountId ? accountId : await localSigner.getAddress(),
+      accountId,
       entryPointAddress,
       bundlerUrl,
       paymasterAPI: this.config.gasless
