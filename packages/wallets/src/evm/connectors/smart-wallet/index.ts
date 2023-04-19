@@ -100,7 +100,7 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   switchChain(chainId: number): Promise<void> {
-    throw new Error("Method not implemented.");
+    throw new Error("Not supported.");
   }
   setupListeners(): Promise<void> {
     throw new Error("Method not implemented.");
@@ -110,3 +110,6 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
     throw new Error("Method not implemented.");
   }
 }
+
+export * from "./types";
+export * from "./utils";

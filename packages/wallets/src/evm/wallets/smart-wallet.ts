@@ -5,6 +5,10 @@ import {
   SmartWalletConnectionArgs,
 } from "../connectors/smart-wallet/types";
 
+// export types and utils for convenience
+export * from "../connectors/smart-wallet/types";
+export * from "../connectors/smart-wallet/utils";
+
 export class SmartWallet extends AbstractClientWallet<
   SmartWalletConfig,
   SmartWalletConnectionArgs

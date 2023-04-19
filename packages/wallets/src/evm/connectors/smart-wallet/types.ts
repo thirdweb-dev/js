@@ -2,7 +2,6 @@ import { ChainOrRpcUrl } from "@thirdweb-dev/sdk";
 import { EVMWallet } from "../../interfaces";
 import { WalletOptions } from "../../wallets/base";
 
-// re-export the connection args for convenience
 export type SmartWalletConfig = {
   chain: ChainOrRpcUrl;
   factoryAddress: string;

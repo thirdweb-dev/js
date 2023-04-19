@@ -1,13 +1,8 @@
 import { BaseApiParams } from "@account-abstraction/sdk/dist/src/BaseAccountAPI";
 import { ChainOrRpcUrl, SmartContract, ThirdwebSDK } from "@thirdweb-dev/sdk";
-import {
-  Signer,
-  BigNumberish,
-  BigNumber,
-  ContractInterface,
-  ethers,
-} from "ethers";
+import { Signer, BigNumberish, BigNumber, ContractInterface } from "ethers";
 import { arrayify, hexConcat } from "ethers/lib/utils";
+import { getEncodedAccountId } from "../utils";
 import { BaseAccountAPI } from "./base-api";
 
 export interface AccountApiParams extends Omit<BaseApiParams, "provider"> {
@@ -63,7 +58,7 @@ export class AccountAPI extends BaseAccountAPI {
 
     const tx = factory.prepare("createAccount", [
       localSigner,
-      this.getAccountId(),
+      getEncodedAccountId(this.params.accountId),
     ]);
     try {
       console.log("Cost to create account: ", await tx.estimateGasCost());
@@ -72,12 +67,6 @@ export class AccountAPI extends BaseAccountAPI {
     }
 
     return hexConcat([factory.getAddress(), tx.encode()]);
-  }
-
-  getAccountId() {
-    const hash = ethers.utils.id(this.params.accountId);
-    const salt = "0x" + hash.substring(2, 66);
-    return salt;
   }
 
   async getFactoryContract() {
@@ -99,7 +88,9 @@ export class AccountAPI extends BaseAccountAPI {
 
   async getCounterFactualAddress(): Promise<string> {
     const factory = await this.getFactoryContract();
-    return factory.call("getAddress", [this.getAccountId()]);
+    return factory.call("getAddress", [
+      getEncodedAccountId(this.params.accountId),
+    ]);
   }
 
   async getNonce(): Promise<BigNumber> {
