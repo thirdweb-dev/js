@@ -5,7 +5,7 @@ import { Heading, TrackedLink } from "tw-components";
 
 export const AnnouncementBanner = () => {
   const [hasDismissedAnnouncement, setHasDismissedAnnouncement] =
-    useLocalStorage("dismissed-learn-announcement", false, true);
+    useLocalStorage("dismissed-bear-market-airdrop", false, true);
 
   if (hasDismissedAnnouncement) {
     return null;
@@ -27,9 +27,9 @@ export const AnnouncementBanner = () => {
       >
         <Box display={{ base: "none", md: "block" }} />
         <TrackedLink
-          href="https://discord.gg/thirdweb"
+          href="/bear-market-airdrop"
           category="announcement"
-          label="learn-announcement"
+          label="bear-market-airdrop"
         >
           <Container maxW="container.page" display="flex" px={0}>
             <Flex
@@ -46,8 +46,8 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                <strong>thirdweb Community:</strong> Join our community to stay
-                updated!
+                <strong>Bear Market Builders Airdrop:</strong> Deployed a
+                contract in the past 18 months? Claim a free NFT pack!
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>
