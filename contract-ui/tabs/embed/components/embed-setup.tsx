@@ -36,7 +36,7 @@ interface EmbedSetupProps {
   ercOrMarketplace: string;
 }
 
-const IPFS_URI = "ipfs://QmNPU5CuaZWAaQ4vLiyhyWD86S6C2Jugwzjta5MBogomuJ";
+const IPFS_URI = "ipfs://QmfK9mw9eQKE9vCbtZht9kygpkNWffdwibsJPnCo7MBN4M";
 
 interface IframeSrcOptions {
   chain: string;
