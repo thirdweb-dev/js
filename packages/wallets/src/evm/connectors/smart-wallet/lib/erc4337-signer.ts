@@ -57,7 +57,7 @@ export class ERC4337EthersSigner extends Signer {
     try {
       await this.httpRpcClient.sendUserOpToBundler(userOperation);
     } catch (error: any) {
-      // console.error('sendUserOpToBundler failed', error)
+      console.error("sendUserOpToBundler failed", error);
       throw this.unwrapError(error);
     }
     // TODO: handle errors - transaction that is "rejected" by bundler is _not likely_ to ever resolve its "wait()"

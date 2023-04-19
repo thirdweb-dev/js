@@ -44,7 +44,10 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
     const op = await ethers.utils.resolveProperties(pmOp);
 
     // console.log("PM - op", op);
-    op.preVerificationGas = calcPreVerificationGas(op);
+    const preVerificationGas = calcPreVerificationGas(op);
+    op.preVerificationGas = preVerificationGas;
+    // TODO refactor this code out instead of modifying the passed-in userOp in place
+    userOp.preVerificationGas = preVerificationGas;
 
     // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.
     try {

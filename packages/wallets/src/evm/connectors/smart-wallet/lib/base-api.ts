@@ -297,20 +297,32 @@ export abstract class BaseAccountAPI {
     let paymasterAndData: string | undefined;
     if (this.paymasterAPI) {
       // fill (partial) preVerificationGas (all except the cost of the generated paymasterAndData)
-      const userOpForPm = {
-        ...partialUserOp,
-        preVerificationGas: await this.getPreVerificationGas(partialUserOp),
-      };
       paymasterAndData = await this.paymasterAPI.getPaymasterAndData(
-        userOpForPm,
+        partialUserOp,
       );
+      if (paymasterAndData === "0x") {
+        paymasterAndData = undefined;
+      }
     }
-    partialUserOp.paymasterAndData = paymasterAndData ?? "0x";
-    return {
-      ...partialUserOp,
-      preVerificationGas: this.getPreVerificationGas(partialUserOp),
-      signature: "",
-    };
+    if (paymasterAndData) {
+      partialUserOp.paymasterAndData = paymasterAndData;
+      return {
+        ...partialUserOp,
+        signature: "",
+      };
+    } else {
+      const modifiedOp = {
+        ...partialUserOp,
+        paymasterAndData: "0x",
+      };
+      modifiedOp.preVerificationGas = await this.getPreVerificationGas(
+        modifiedOp,
+      );
+      return {
+        ...modifiedOp,
+        signature: "",
+      };
+    }
   }
 
   /**
