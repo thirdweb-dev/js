@@ -59,7 +59,7 @@ export const DeviceWalletImportModal = ({
         password: password,
       });
     } catch (err) {
-      console.log("Error importing the wallet", err);
+      console.error("Error importing the wallet", err);
       setError("Invalid password");
       return;
     }

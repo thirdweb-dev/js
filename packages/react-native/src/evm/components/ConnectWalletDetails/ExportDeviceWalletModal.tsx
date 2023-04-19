@@ -61,7 +61,7 @@ export const ExportDeviceWalletModal = ({
             "application/json",
           );
         } catch (e) {
-          console.log("Error creating the file", e);
+          console.error("Error creating the file", e);
           setError("Error creating the file. Please try again.");
           return;
         }
@@ -75,7 +75,7 @@ export const ExportDeviceWalletModal = ({
             },
           );
         } catch (e) {
-          console.log("Error writing the file", e);
+          console.error("Error writing the file", e);
           setError("Error writing the file. Please try again.");
         }
       }
@@ -89,7 +89,7 @@ export const ExportDeviceWalletModal = ({
           encoding: FileSystem.EncodingType.UTF8,
         });
       } catch (e) {
-        console.log("Error writing the file", e);
+        console.error("Error writing the file", e);
         setError("Error writing the file. Please try again.");
       }
 

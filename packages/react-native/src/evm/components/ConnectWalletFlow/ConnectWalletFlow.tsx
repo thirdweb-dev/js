@@ -29,7 +29,7 @@ export const ConnectWalletFlow = () => {
   const connectActiveWallet = async (wallet: Wallet) => {
     setIsConnecting(true);
     connect(wallet, {}).catch((error) => {
-      console.log("Error connecting to the wallet", error);
+      console.error("Error connecting to the wallet", error);
       onBackPress();
     });
   };
