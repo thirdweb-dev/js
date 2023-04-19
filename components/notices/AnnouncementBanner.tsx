@@ -27,7 +27,7 @@ export const AnnouncementBanner = () => {
       >
         <Box display={{ base: "none", md: "block" }} />
         <TrackedLink
-          href="/learn"
+          href="https://discord.gg/thirdweb"
           category="announcement"
           label="learn-announcement"
         >
@@ -46,8 +46,8 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                <strong>thirdweb Learn:</strong> Join the waitlist now and break
-                into web3!
+                <strong>thirdweb Community:</strong> Join our community to stay
+                updated!
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>
