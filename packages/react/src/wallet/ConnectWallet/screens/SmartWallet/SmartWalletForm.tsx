@@ -23,6 +23,7 @@ import {
   useConnect,
   useConnectionStatus,
   useWallet,
+  WalletInstance,
 } from "@thirdweb-dev/react-core";
 import { useDeferredValue, useEffect, useState } from "react";
 import { useSupportedWallet } from "../useSupportedWallet";
@@ -312,8 +313,8 @@ export const ConnectToSmartWalletAccount: React.FC<{
   accounts: AssociatedAccount[];
 }> = (props) => {
   const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
-  // const connect = useConnect();
-  // const activeWallet = useWallet() as WalletInstance;
+  const connect = useConnect();
+  const activeWallet = useWallet() as WalletInstance;
   const [showCreateScreen, setShowCreateScreen] = useState(false);
 
   if (showCreateScreen) {
@@ -327,13 +328,13 @@ export const ConnectToSmartWalletAccount: React.FC<{
     );
   }
 
-  // const handleConnect = async (account: AssociatedAccount) => {
-  //   await connect(walletObj, {
-  //     accountId: // don't have it now
-  //     personalWallet: activeWallet,
-  //   });
-  //   props.onConnect();
-  // };
+  const handleConnect = async (account: AssociatedAccount) => {
+    await connect(walletObj, {
+      accountId: account.accountId,
+      personalWallet: activeWallet,
+    });
+    props.onConnect();
+  };
 
   return (
     <>
@@ -356,9 +357,9 @@ export const ConnectToSmartWalletAccount: React.FC<{
           return (
             <AccountButton
               key={account.account}
-              // onClick={() => handleConnect(account)}
+              onClick={() => handleConnect(account)}
             >
-              {shortenAddress(account.account)}
+              {account.accountId}
               <CaretRightIcon width={iconSize.md} height={iconSize.md} />
             </AccountButton>
           );
