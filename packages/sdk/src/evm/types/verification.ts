@@ -13,3 +13,11 @@ export type EtherscanResult = {
   Implementation: string;
   SwarmSource: string;
 };
+
+export const VerificationStatus = {
+  FAILED: "Fail - Unable to verify",
+  SUCCESS: "Pass - Verified",
+  PENDING: "Pending in queue",
+  ALREADY_VERIFIED: "Contract source code already verified",
+  AUTOMATICALLY_VERIFIED: "Already Verified",
+};

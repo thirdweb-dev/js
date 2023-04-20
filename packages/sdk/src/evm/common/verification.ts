@@ -1,6 +1,5 @@
 import invariant from "tiny-invariant";
 import { ThirdwebSDK } from "../core";
-import { allChains } from "@thirdweb-dev/chains";
 import {
   computeDeploymentInfo,
   encodeConstructorParamsForImplementation,
@@ -16,8 +15,13 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Abi } from "../schema";
 import { ethers, utils } from "ethers";
 import { getChainProvider } from "../constants";
-import { EtherscanResult } from "../types/verification";
+import { EtherscanResult, VerificationStatus } from "../types/verification";
 import fetch from "cross-fetch";
+
+const RequestStatus = {
+  OK: "1",
+  NOTOK: "0",
+};
 
 //
 // ==================================
@@ -25,42 +29,14 @@ import fetch from "cross-fetch";
 // ==================================
 //
 
-export async function isVerifiedOnEtherscan(
-  contractAddress: string,
-  api: string,
-  apiKey: string,
-): Promise<boolean> {
-  const endpoint = `${api}?module=contract&action=getsourcecode&address=${contractAddress}&apikey=${apiKey}"`;
-
-  try {
-    const result = await fetch(endpoint, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json;charset=UTF-8",
-      },
-    });
-
-    const data = await result.json();
-    const etherscanResult = data.result[0] as EtherscanResult;
-    if (etherscanResult.ABI === "Contract source code not verified") {
-      return false;
-    }
-    return true;
-  } catch (e) {
-    throw new Error(
-      `Error checking verification for contract ${contractAddress}: ${e}`,
-    );
-  }
-}
-
 export async function verifyThirdwebPrebuiltImplementation(
   contractName: string,
   chainId: number,
   api: string,
   apiKey: string,
   storage: ThirdwebStorage,
-) {
+  encodedConstructorArgs?: string,
+): Promise<string | string[]> {
   const publishUri = await fetchAndCachePublishedContractURI(contractName);
   const metadata = await fetchAndCacheDeployMetadata(publishUri, storage);
   const provider = getChainProvider(chainId, {});
@@ -81,14 +57,20 @@ export async function verifyThirdwebPrebuiltImplementation(
   );
   invariant(isDeployed, "Contract not deployed yet");
 
-  const encodedArgs = await encodeConstructorParamsForImplementation(
-    metadata.compilerMetadata,
-    provider,
-    storage,
-    create2Factory,
+  const encodedArgs = encodedConstructorArgs
+    ? encodedConstructorArgs
+    : await encodeConstructorParamsForImplementation(
+        metadata.compilerMetadata,
+        provider,
+        storage,
+        create2Factory,
+      );
+
+  console.info(
+    `Verifying ${contractName} at address ${implementation.transaction.predictedAddress}`,
   );
 
-  await verify(
+  const guid = await verify(
     implementation.transaction.predictedAddress,
     chainId,
     api,
@@ -97,7 +79,7 @@ export async function verifyThirdwebPrebuiltImplementation(
     encodedArgs.toString().replace("0x", ""),
   );
 
-  return implementation.transaction.predictedAddress;
+  return guid;
 }
 
 export async function verify(
@@ -107,12 +89,9 @@ export async function verify(
   apiKey: string,
   storage: ThirdwebStorage,
   encodedConstructorArgs?: string,
-) {
+): Promise<string | string[]> {
   try {
-    const rpcUrl = allChains.find((chain) => chain.chainId === chainId)?.rpc[0];
-    invariant(rpcUrl, "RPC URL not found");
-
-    const sdk = new ThirdwebSDK(rpcUrl);
+    const sdk = new ThirdwebSDK(chainId);
     const compilerMetadata = await sdk
       .getPublisher()
       .fetchCompilerMetadataFromAddress(contractAddress);
@@ -194,36 +173,13 @@ export async function verify(
     });
 
     const data = await result.json();
-    if (data.status === "1") {
-      return { guid: data.result };
-    } else {
-      return { error: data.result };
-    }
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-export async function checkVerificationStatus(
-  api: string,
-  apiKey: string,
-  guid: string | string[],
-) {
-  const endpoint = `${api}?module=contract&action=checkverifystatus&guid=${guid}&apikey=${apiKey}"`;
-
-  try {
-    const result = await fetch(endpoint, {
-      method: "GET",
-    });
-
-    const data = await result.json();
-    if (data.status === "1") {
+    if (data.status === RequestStatus.OK) {
       return data.result;
     } else {
-      return data.result;
+      throw new Error(`${data.result}`);
     }
-  } catch (e) {
-    console.error(e);
+  } catch (e: any) {
+    throw new Error(e.toString());
   }
 }
 
@@ -232,6 +188,64 @@ export async function checkVerificationStatus(
 // ======== Helper Functions ========
 // ==================================
 //
+
+export async function checkVerificationStatus(
+  api: string,
+  apiKey: string,
+  guid: string | string[],
+) {
+  const endpoint = `${api}?module=contract&action=checkverifystatus&guid=${guid}&apikey=${apiKey}"`;
+  return new Promise((resolve, reject) => {
+    const intervalId = setInterval(async () => {
+      try {
+        const result = await fetch(endpoint, {
+          method: "GET",
+        });
+
+        const data = await result.json();
+
+        if (data?.result !== VerificationStatus.PENDING) {
+          // console.log("success");
+          clearInterval(intervalId);
+          resolve(data);
+        }
+      } catch (e) {
+        console.log("error");
+        clearInterval(intervalId);
+        reject(e);
+      }
+    }, 3000);
+  });
+}
+
+export async function isVerifiedOnEtherscan(
+  contractAddress: string,
+  api: string,
+  apiKey: string,
+): Promise<boolean> {
+  const endpoint = `${api}?module=contract&action=getsourcecode&address=${contractAddress}&apikey=${apiKey}"`;
+
+  try {
+    const result = await fetch(endpoint, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json;charset=UTF-8",
+      },
+    });
+
+    const data = await result.json();
+    const etherscanResult = data.result[0] as EtherscanResult;
+    if (etherscanResult.ABI === "Contract source code not verified") {
+      return false;
+    }
+    return true;
+  } catch (e) {
+    throw new Error(
+      `Error checking verification for contract ${contractAddress}: ${e}`,
+    );
+  }
+}
 
 /**
  * Fetch the deploy transaction from the given contract address and extract the encoded constructor parameters
@@ -368,7 +382,7 @@ async function fetchDeployBytecodeFromPublishedContractMetadata(
     provider,
   );
   if (compilerMetaUri) {
-    const pubmeta = await new ThirdwebSDK(getChainProvider(chainId, {}))
+    const pubmeta = await new ThirdwebSDK(chainId)
       .getPublisher()
       .resolvePublishMetadataFromCompilerMetadata(compilerMetaUri);
     return pubmeta.length > 0
