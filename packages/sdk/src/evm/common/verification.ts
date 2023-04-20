@@ -1,22 +1,17 @@
-import invariant from "tiny-invariant";
 import { ThirdwebSDK } from "../core";
 import {
-  computeDeploymentInfo,
-  encodeConstructorParamsForImplementation,
   extractConstructorParamsFromAbi,
-  fetchAndCacheDeployMetadata,
-  fetchAndCachePublishedContractURI,
   fetchSourceFilesFromMetadata,
-  getCreate2FactoryAddress,
-  isContractDeployed,
+  getEncodedConstructorParamsForThirdwebContract,
+  getThirdwebContractAddress,
   resolveContractUriFromAddress,
 } from ".";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Abi } from "../schema";
 import { ethers, utils } from "ethers";
-import { getChainProvider } from "../constants";
 import { EtherscanResult, VerificationStatus } from "../types/verification";
 import fetch from "cross-fetch";
+import { ConstructorParamMap } from "../types/any-evm/deploy-data";
 
 const RequestStatus = {
   OK: "1",
@@ -35,43 +30,24 @@ export async function verifyThirdwebPrebuiltImplementation(
   explorerAPIUrl: string,
   explorerAPIKey: string,
   storage: ThirdwebStorage,
-  encodedConstructorArgs?: string,
+  constructorArgs?: ConstructorParamMap,
 ): Promise<string | string[]> {
-  const publishUri = await fetchAndCachePublishedContractURI(contractName);
-  const metadata = await fetchAndCacheDeployMetadata(publishUri, storage);
-  const provider = getChainProvider(chainId, {});
-  const create2Factory = await getCreate2FactoryAddress(provider);
-  invariant(create2Factory, "Thirdweb stack not found");
-
-  const implementation = await computeDeploymentInfo(
-    "implementation",
-    provider,
+  const contractAddress = await getThirdwebContractAddress(
+    contractName,
+    chainId,
     storage,
-    create2Factory,
-    { contractName: contractName },
+  );
+  const encodedArgs = await getEncodedConstructorParamsForThirdwebContract(
+    contractName,
+    chainId,
+    storage,
+    constructorArgs,
   );
 
-  const isDeployed = await isContractDeployed(
-    implementation.transaction.predictedAddress,
-    provider,
-  );
-  invariant(isDeployed, "Contract not deployed yet");
-
-  const encodedArgs = encodedConstructorArgs
-    ? encodedConstructorArgs
-    : await encodeConstructorParamsForImplementation(
-        metadata.compilerMetadata,
-        provider,
-        storage,
-        create2Factory,
-      );
-
-  console.info(
-    `Verifying ${contractName} at address ${implementation.transaction.predictedAddress}`,
-  );
+  console.info(`Verifying ${contractName} at address ${contractAddress}`);
 
   const guid = await verify(
-    implementation.transaction.predictedAddress,
+    contractAddress,
     chainId,
     explorerAPIUrl,
     explorerAPIKey,

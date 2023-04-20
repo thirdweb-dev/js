@@ -1,11 +1,15 @@
+import { ethers } from "ethers";
 import {
   checkVerificationStatus,
+  verify,
   verifyThirdwebPrebuiltImplementation,
 } from "../../common";
 import { SDKOptions } from "../../schema";
-import { ContractType, NetworkInput } from "../types";
+import { ConstructorParamMap } from "../../types/any-evm/deploy-data";
+import { NetworkInput } from "../types";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import invariant from "tiny-invariant";
 
 /**
  * Handles verification of new contracts on any EVM
@@ -28,13 +32,13 @@ export class ContractVerifier extends RPCConnectionHandler {
   }
 
   public async verifyThirdwebContract(
-    contractNameOrType: string | ContractType,
+    contractName: string,
     explorerAPIUrl: string,
     explorerAPIKey: string,
   ) {
     const chainId = (await this.getProvider().getNetwork()).chainId;
     const guid = await verifyThirdwebPrebuiltImplementation(
-      contractNameOrType,
+      contractName,
       chainId,
       explorerAPIUrl,
       explorerAPIKey,
@@ -50,5 +54,45 @@ export class ContractVerifier extends RPCConnectionHandler {
     console.info(verificationStatus);
   }
 
-  public async verifyContract() {}
+  public async verifyContract(
+    contractAddress: string,
+    explorerAPIUrl: string,
+    explorerAPIKey: string,
+    constructorArgs?: ConstructorParamMap,
+  ) {
+    const chainId = (await this.getProvider().getNetwork()).chainId;
+
+    let encodedArgs;
+    if (constructorArgs) {
+      const paramTypes = Object.values(constructorArgs).map((arg) => {
+        invariant(arg.type, "Param type is required");
+        return arg.type;
+      });
+      const paramValues = Object.values(constructorArgs).map((arg) => {
+        return arg.value;
+      });
+
+      encodedArgs = ethers.utils.defaultAbiCoder.encode(
+        paramTypes,
+        paramValues,
+      );
+    }
+
+    const guid = await verify(
+      contractAddress,
+      chainId,
+      explorerAPIUrl,
+      explorerAPIKey,
+      this.storage,
+      encodedArgs,
+    );
+
+    console.info("Checking verification status...");
+    const verificationStatus = await checkVerificationStatus(
+      explorerAPIUrl,
+      explorerAPIKey,
+      guid,
+    );
+    console.info(verificationStatus);
+  }
 }

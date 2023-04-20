@@ -2,7 +2,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BytesLike, ethers, providers, Signer } from "ethers";
 import invariant from "tiny-invariant";
 import { bytecode as WETHBytecode } from "./WETH9";
-import { getNativeTokenByChainId } from "../constants";
+import { getChainProvider, getNativeTokenByChainId } from "../constants";
 import { ThirdwebSDK } from "../core";
 import { PreDeployMetadataFetched } from "../schema";
 import {
@@ -328,6 +328,87 @@ export async function computeNativeTokenAddress(
       contractName: "WETH9",
     })
   ).transaction.predictedAddress;
+}
+
+/**
+ *
+ * @public
+ * @param contractName
+ * @param chainId
+ * @param storage
+ */
+export async function getThirdwebContractAddress(
+  contractName: string,
+  chainId: number,
+  storage: ThirdwebStorage,
+): Promise<string> {
+  const provider = getChainProvider(chainId, {});
+  const contractAddress = await predictThirdwebContractAddress(
+    contractName,
+    chainId,
+    storage,
+  );
+  const isDeployed = await isContractDeployed(contractAddress, provider);
+  invariant(isDeployed, "Contract not deployed yet");
+
+  return contractAddress;
+}
+
+/**
+ *
+ * @public
+ * @param contractName
+ * @param chainId
+ * @param storage
+ */
+export async function predictThirdwebContractAddress(
+  contractName: string,
+  chainId: number,
+  storage: ThirdwebStorage,
+): Promise<string> {
+  const provider = getChainProvider(chainId, {});
+  const create2Factory = await getCreate2FactoryAddress(provider);
+  invariant(create2Factory, "Thirdweb stack not found");
+
+  const implementation = await computeDeploymentInfo(
+    "implementation",
+    provider,
+    storage,
+    create2Factory,
+    { contractName: contractName },
+  );
+
+  return implementation.transaction.predictedAddress;
+}
+
+/**
+ *
+ * @internal
+ * @param contractName
+ * @param chainId
+ * @param storage
+ */
+export async function getEncodedConstructorParamsForThirdwebContract(
+  contractName: string,
+  chainId: number,
+  storage: ThirdwebStorage,
+  constructorParamMap?: ConstructorParamMap,
+): Promise<BytesLike> {
+  const provider = getChainProvider(chainId, {});
+  const publishUri = await fetchAndCachePublishedContractURI(contractName);
+  const metadata = await fetchAndCacheDeployMetadata(publishUri, storage);
+  const create2Factory = await getCreate2FactoryAddress(provider);
+  invariant(create2Factory, "Thirdweb stack not found");
+
+  const encodedArgs = await encodeConstructorParamsForImplementation(
+    metadata.compilerMetadata,
+    provider,
+    storage,
+    create2Factory,
+    constructorParamMap,
+  );
+
+  return encodedArgs;
 }
 
 //
