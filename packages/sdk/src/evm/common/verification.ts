@@ -32,8 +32,8 @@ const RequestStatus = {
 export async function verifyThirdwebPrebuiltImplementation(
   contractName: string,
   chainId: number,
-  api: string,
-  apiKey: string,
+  explorerAPIUrl: string,
+  explorerAPIKey: string,
   storage: ThirdwebStorage,
   encodedConstructorArgs?: string,
 ): Promise<string | string[]> {
@@ -73,8 +73,8 @@ export async function verifyThirdwebPrebuiltImplementation(
   const guid = await verify(
     implementation.transaction.predictedAddress,
     chainId,
-    api,
-    apiKey,
+    explorerAPIUrl,
+    explorerAPIKey,
     storage,
     encodedArgs.toString().replace("0x", ""),
   );
@@ -85,8 +85,8 @@ export async function verifyThirdwebPrebuiltImplementation(
 export async function verify(
   contractAddress: string,
   chainId: number,
-  api: string,
-  apiKey: string,
+  explorerAPIUrl: string,
+  explorerAPIKey: string,
   storage: ThirdwebStorage,
   encodedConstructorArgs?: string,
 ): Promise<string | string[]> {
@@ -144,8 +144,8 @@ export async function verify(
     const encodedArgs = encodedConstructorArgs
       ? encodedConstructorArgs
       : await fetchConstructorParams(
-          api,
-          apiKey,
+          explorerAPIUrl,
+          explorerAPIKey,
           contractAddress,
           chainId,
           compilerMetadata.abi,
@@ -154,7 +154,7 @@ export async function verify(
         );
 
     const requestBody: Record<string, string> = {
-      apikey: apiKey,
+      apikey: explorerAPIKey,
       module: "contract",
       action: "verifysourcecode",
       contractaddress: contractAddress,
@@ -166,7 +166,7 @@ export async function verify(
     };
 
     const parameters = new URLSearchParams({ ...requestBody });
-    const result = await fetch(api, {
+    const result = await fetch(explorerAPIUrl, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: parameters.toString(),
@@ -190,11 +190,11 @@ export async function verify(
 //
 
 export async function checkVerificationStatus(
-  api: string,
-  apiKey: string,
+  explorerAPIUrl: string,
+  explorerAPIKey: string,
   guid: string | string[],
 ) {
-  const endpoint = `${api}?module=contract&action=checkverifystatus&guid=${guid}&apikey=${apiKey}"`;
+  const endpoint = `${explorerAPIUrl}?module=contract&action=checkverifystatus&guid=${guid}&apikey=${explorerAPIKey}"`;
   return new Promise((resolve, reject) => {
     const intervalId = setInterval(async () => {
       try {
@@ -205,12 +205,10 @@ export async function checkVerificationStatus(
         const data = await result.json();
 
         if (data?.result !== VerificationStatus.PENDING) {
-          // console.log("success");
           clearInterval(intervalId);
           resolve(data);
         }
       } catch (e) {
-        console.log("error");
         clearInterval(intervalId);
         reject(e);
       }
@@ -220,10 +218,10 @@ export async function checkVerificationStatus(
 
 export async function isVerifiedOnEtherscan(
   contractAddress: string,
-  api: string,
-  apiKey: string,
+  explorerAPIUrl: string,
+  explorerAPIKey: string,
 ): Promise<boolean> {
-  const endpoint = `${api}?module=contract&action=getsourcecode&address=${contractAddress}&apikey=${apiKey}"`;
+  const endpoint = `${explorerAPIUrl}?module=contract&action=getsourcecode&address=${contractAddress}&apikey=${explorerAPIKey}"`;
 
   try {
     const result = await fetch(endpoint, {
@@ -254,8 +252,8 @@ export async function isVerifiedOnEtherscan(
  * @param abi
  */
 async function fetchConstructorParams(
-  api: string,
-  apiKey: string,
+  explorerAPIUrl: string,
+  explorerAPIKey: string,
   contractAddress: string,
   chainId: number,
   abi: Abi,
@@ -267,7 +265,7 @@ async function fetchConstructorParams(
     return "";
   }
   const requestBody = {
-    apiKey: apiKey,
+    apiKey: explorerAPIKey,
     module: "account",
     action: "txlist",
     address: contractAddress,
@@ -276,7 +274,7 @@ async function fetchConstructorParams(
     offset: "1",
   };
   const parameters = new URLSearchParams({ ...requestBody });
-  const result = await fetch(api, {
+  const result = await fetch(explorerAPIUrl, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: parameters.toString(),
@@ -284,7 +282,7 @@ async function fetchConstructorParams(
   const data = await result.json();
   if (
     data &&
-    // data.status === RequestStatus.OK &&
+    data.status === RequestStatus.OK &&
     data.result[0] !== undefined
   ) {
     const contract = new utils.Interface(abi);

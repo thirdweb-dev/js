@@ -29,21 +29,21 @@ export class ContractVerifier extends RPCConnectionHandler {
 
   public async verifyThirdwebContract(
     contractNameOrType: string | ContractType,
-    explorerAPI: string,
+    explorerAPIUrl: string,
     explorerAPIKey: string,
   ) {
     const chainId = (await this.getProvider().getNetwork()).chainId;
     const guid = await verifyThirdwebPrebuiltImplementation(
       contractNameOrType,
       chainId,
-      explorerAPI,
+      explorerAPIUrl,
       explorerAPIKey,
       this.storage,
     );
 
     console.info("Checking verification status...");
     const verificationStatus = await checkVerificationStatus(
-      explorerAPI,
+      explorerAPIUrl,
       explorerAPIKey,
       guid,
     );
