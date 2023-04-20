@@ -17,14 +17,7 @@ export const WalletSelector: React.FC<{
 }> = (props) => {
   return (
     <>
-      <ModalTitle
-        style={{
-          textAlign: "left",
-        }}
-      >
-        Choose your wallet
-      </ModalTitle>
-
+      <ModalTitle>Choose your wallet</ModalTitle>
       <Spacer y="xl" />
 
       <WalletSelection walletsMeta={props.walletsMeta} />

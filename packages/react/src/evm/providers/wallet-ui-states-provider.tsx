@@ -12,7 +12,9 @@ type Screen =
   | "coinbase/get-started"
   | "safe/select-wallet"
   | "safe/form"
-  | "wallets/get-started";
+  | "wallets/get-started"
+  | "deviceWallet/connect"
+  | "deviceWallet/export";
 
 const SafeConnection = createContext(false);
 const SetSafeConnection = createContext<BoolSetter | undefined>(undefined);

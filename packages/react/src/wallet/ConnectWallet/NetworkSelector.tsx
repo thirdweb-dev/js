@@ -35,6 +35,7 @@ import {
 import type { Chain } from "@thirdweb-dev/chains";
 import Fuse from "fuse.js";
 import { Button } from "../../components/buttons";
+import { isMobile } from "../../evm/utils/isMobile";
 
 type RenderChain = React.FC<{
   chain: Chain;
@@ -193,6 +194,7 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
               style={{
                 boxShadow: "none",
               }}
+              tabIndex={isMobile() ? -1 : 0}
               variant="secondary"
               placeholder="Search Network or Chain ID"
               value={searchTerm}
