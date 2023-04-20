@@ -37,7 +37,8 @@ export const WalletDetailsModalHeader = ({
         ) : (
           <Icon
             type="disconnect"
-            size={18}
+            width={18}
+            height={18}
             onPress={onDisconnectPress}
             color={theme.colors.iconHighlight}
           />

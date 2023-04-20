@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import BaseButton from "../../base/BaseButton";
 import ImageSvgUri from "../../base/ImageSvgUri";
 import Text from "../../base/Text";
@@ -6,20 +7,29 @@ import { StyleSheet, View, FlatList } from "react-native";
 
 interface InitialExplorerContentProps {
   wallets: Wallet[];
+  excludeWallets?: Wallet[];
   onChooseWallet: (wallet: Wallet) => void;
 }
 
 export const ChooseWalletContent = ({
   wallets,
+  excludeWallets,
   onChooseWallet,
 }: InitialExplorerContentProps) => {
+  const walletsToDisplay = useMemo(() => {
+    return wallets.filter(
+      (w) => !!!excludeWallets?.find((ew) => ew.id === w.id),
+    );
+  }, [wallets, excludeWallets]);
+
   return (
     <View style={styles.explorerContainer}>
       <FlatList
         keyExtractor={(item) => item.meta.name}
-        data={wallets}
+        data={walletsToDisplay}
         renderItem={({ item, index }) => {
-          const marginBottom = index === wallets.length - 1 ? "none" : "xxs";
+          const marginBottom =
+            index === walletsToDisplay.length - 1 ? "none" : "xxs";
           return (
             <BaseButton
               mb={marginBottom}

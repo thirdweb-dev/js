@@ -18,11 +18,13 @@ export type Palette = {
 
   black: string;
   white: string;
+  red: string;
 };
 
 export const paletteBase = {
   black: "black",
   white: "white",
+  red: "red",
 };
 
 export const paletteLight: Palette = {
