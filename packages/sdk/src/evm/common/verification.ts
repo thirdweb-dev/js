@@ -4,6 +4,7 @@ import {
   fetchSourceFilesFromMetadata,
   getEncodedConstructorParamsForThirdwebContract,
   getThirdwebContractAddress,
+  isContractDeployed,
   resolveContractUriFromAddress,
 } from ".";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -12,6 +13,9 @@ import { ethers, utils } from "ethers";
 import { EtherscanResult, VerificationStatus } from "../types/verification";
 import fetch from "cross-fetch";
 import { ConstructorParamMap } from "../types/any-evm/deploy-data";
+import { getChainProvider } from "../constants";
+import invariant from "tiny-invariant";
+import { DEFAULT_API_KEY } from "../../core/constants/urls";
 
 const RequestStatus = {
   OK: "1",
@@ -194,9 +198,17 @@ export async function checkVerificationStatus(
 
 export async function isVerifiedOnEtherscan(
   contractAddress: string,
+  chainId: number,
   explorerAPIUrl: string,
   explorerAPIKey: string,
 ): Promise<boolean> {
+  const provider = getChainProvider(chainId, {
+    thirdwebApiKey: DEFAULT_API_KEY,
+  });
+  invariant(
+    await isContractDeployed(contractAddress, provider),
+    "Contract not deployed yet.",
+  );
   const endpoint = `${explorerAPIUrl}?module=contract&action=getsourcecode&address=${contractAddress}&apikey=${explorerAPIKey}"`;
 
   try {
@@ -272,7 +284,6 @@ async function fetchConstructorParams(
     // first: attempt to get it from Publish
     try {
       const bytecode = await fetchDeployBytecodeFromPublishedContractMetadata(
-        chainId,
         contractAddress,
         provider,
         storage,
@@ -346,7 +357,6 @@ async function fetchConstructorParams(
  * @returns
  */
 async function fetchDeployBytecodeFromPublishedContractMetadata(
-  chainId: number,
   contractAddress: string,
   provider: ethers.providers.Provider,
   storage: ThirdwebStorage,
@@ -356,7 +366,7 @@ async function fetchDeployBytecodeFromPublishedContractMetadata(
     provider,
   );
   if (compilerMetaUri) {
-    const pubmeta = await new ThirdwebSDK(chainId)
+    const pubmeta = await new ThirdwebSDK("polygon")
       .getPublisher()
       .resolvePublishMetadataFromCompilerMetadata(compilerMetaUri);
     return pubmeta.length > 0

@@ -25,6 +25,7 @@ import {
 import { generatePluginFunctions, getMetadataForPlugins } from "./plugin";
 import { Plugin } from "../types/plugins";
 import { DeployMetadata, DeployOptions } from "../types";
+import { DEFAULT_API_KEY } from "../../core/constants/urls";
 
 //
 // =============================
@@ -342,7 +343,9 @@ export async function getThirdwebContractAddress(
   chainId: number,
   storage: ThirdwebStorage,
 ): Promise<string> {
-  const provider = getChainProvider(chainId, {});
+  const provider = getChainProvider(chainId, {
+    thirdwebApiKey: DEFAULT_API_KEY,
+  });
   const contractAddress = await predictThirdwebContractAddress(
     contractName,
     chainId,
@@ -366,7 +369,9 @@ export async function predictThirdwebContractAddress(
   chainId: number,
   storage: ThirdwebStorage,
 ): Promise<string> {
-  const provider = getChainProvider(chainId, {});
+  const provider = getChainProvider(chainId, {
+    thirdwebApiKey: DEFAULT_API_KEY,
+  });
   const publishUri = await fetchAndCachePublishedContractURI(contractName);
   const create2Factory = await getCreate2FactoryAddress(provider);
   invariant(create2Factory, "Thirdweb stack not found");
@@ -414,7 +419,9 @@ export async function getEncodedConstructorParamsForThirdwebContract(
   storage: ThirdwebStorage,
   constructorParamMap?: ConstructorParamMap,
 ): Promise<BytesLike | undefined> {
-  const provider = getChainProvider(chainId, {});
+  const provider = getChainProvider(chainId, {
+    thirdwebApiKey: DEFAULT_API_KEY,
+  });
   const publishUri = await fetchAndCachePublishedContractURI(contractName);
   const metadata = await fetchAndCacheDeployMetadata(publishUri, storage);
   const create2Factory = await getCreate2FactoryAddress(provider);
