@@ -31,6 +31,30 @@ export class ContractVerifier extends RPCConnectionHandler {
     super.updateSignerOrProvider(network);
   }
 
+  /**
+   * Verifies a Thirdweb contract
+   *
+   * @example
+   * ```javascript
+   *
+   * // Note: If verifying on a network different from the SDK instance's network,
+   * //       update the verifier's chain/network as below:
+   * //
+   * //       sdk.verifier.updateSignerOrProvider(chainId);
+   *
+   * const explorerAPIUrl = "" // e.g. https://api.etherscan.io/api
+   * const explorerAPIKey = "" // Generate API key on the explorer
+   *
+   * await sdk.verifier.verifyThirdwebContract(
+   *   "DropERC721",
+   *   explorerAPIUrl,
+   *   explorerAPIKey,
+   * );
+   * ```
+   * @param contractName
+   * @param explorerAPIUrl
+   * @param explorerAPIKey
+   */
   public async verifyThirdwebContract(
     contractName: string,
     explorerAPIUrl: string,
@@ -56,6 +80,31 @@ export class ContractVerifier extends RPCConnectionHandler {
     console.info(verificationStatus);
   }
 
+  /**
+   * Verifies any contract
+   *
+   * @example
+   * ```javascript
+   *
+   * // Note: If verifying on a network different from the SDK instance's network,
+   * //       update the verifier's chain/network as below:
+   * //
+   * //       sdk.verifier.updateSignerOrProvider(chainId);
+   *
+   * const contractAddress = ""
+   * const explorerAPIUrl = "" // e.g. https://api.etherscan.io/api
+   * const explorerAPIKey = "" // Generate API key on the explorer
+   *
+   * await sdk.verifier.verifyContract(
+   *   contractAddress,
+   *   explorerAPIUrl,
+   *   explorerAPIKey,
+   * );
+   * ```
+   * @param contractAddress
+   * @param explorerAPIUrl
+   * @param explorerAPIKey
+   */
   public async verifyContract(
     contractAddress: string,
     explorerAPIUrl: string,

@@ -28,6 +28,32 @@ const RequestStatus = {
 // ==================================
 //
 
+/**
+ * @public
+ *
+ * Verifies a Thirdweb Prebuilt Contract, e.g. Marketplace, DropERC721, etc
+ *
+ * @example
+ * ```javascript
+ *
+ * const explorerAPIUrl = "" // e.g. https://api.etherscan.io/api
+ * const explorerAPIKey = "" // Generate API key on the explorer
+ * const chainId = 1 // Change according to the network
+ *
+ * await sdk.verifier.verifyThirdwebPrebuiltImplementation(
+ *   "DropERC721",
+ *   chainId,
+ *   explorerAPIUrl,
+ *   explorerAPIKey,
+ *   storage // this could be used from the SDK instance, e.g. sdk.storage
+ * );
+ * ```
+ * @param contractName
+ * @param chainId
+ * @param explorerAPIUrl
+ * @param explorerAPIKey
+ * @param storage
+ */
 export async function verifyThirdwebPrebuiltImplementation(
   contractName: string,
   chainId: number,
@@ -62,6 +88,33 @@ export async function verifyThirdwebPrebuiltImplementation(
   return guid;
 }
 
+/**
+ * @public
+ *
+ * Verifies any contract
+ *
+ * @example
+ * ```javascript
+ *
+ * const contractAddress = ""
+ * const explorerAPIUrl = "" // e.g. https://api.etherscan.io/api
+ * const explorerAPIKey = "" // Generate API key on the explorer
+ * const chainId = 1 // Change according to the network
+ *
+ * await sdk.verifier.verify(
+ *   contractAddress,
+ *   chainId,
+ *   explorerAPIUrl,
+ *   explorerAPIKey,
+ *   storage // this could be used from the SDK instance, e.g. sdk.storage
+ * );
+ * ```
+ * @param contractAddress
+ * @param chainId
+ * @param explorerAPIUrl
+ * @param explorerAPIKey
+ * @param storage
+ */
 export async function verify(
   contractAddress: string,
   chainId: number,
@@ -127,7 +180,6 @@ export async function verify(
           explorerAPIUrl,
           explorerAPIKey,
           contractAddress,
-          chainId,
           compilerMetadata.abi,
           sdk.getProvider(),
           storage,
@@ -169,6 +221,14 @@ export async function verify(
 // ==================================
 //
 
+/**
+ * @internal
+ *
+ * Check status of the contract submitted for verification to the explorer
+ * @param explorerAPIUrl
+ * @param explorerAPIKey
+ * @param guid
+ */
 export async function checkVerificationStatus(
   explorerAPIUrl: string,
   explorerAPIKey: string,
@@ -196,6 +256,15 @@ export async function checkVerificationStatus(
   });
 }
 
+/**
+ * @internal
+ *
+ * Check if the contract is already verified on etherscan
+ * @param contractAddress
+ * @param chainId
+ * @param explorerAPIUrl
+ * @param explorerAPIKey
+ */
 export async function isVerifiedOnEtherscan(
   contractAddress: string,
   chainId: number,
@@ -234,16 +303,20 @@ export async function isVerifiedOnEtherscan(
 }
 
 /**
+ * @internal
+ *
  * Fetch the deploy transaction from the given contract address and extract the encoded constructor parameters
+ * @param explorerAPIUrl
+ * @param explorerAPIKey
  * @param contractAddress
- * @param chainId
  * @param abi
+ * @param provider
+ * @param storage
  */
 async function fetchConstructorParams(
   explorerAPIUrl: string,
   explorerAPIKey: string,
   contractAddress: string,
-  chainId: number,
   abi: Abi,
   provider: ethers.providers.Provider,
   storage: ThirdwebStorage,
@@ -351,9 +424,12 @@ async function fetchConstructorParams(
 }
 
 /**
+ * @internal
+ *
  * Fetches the Publish metadata on the ContractPublisher registry (on polygon) for the given contract address (on any chain)
  * @param contractAddress
  * @param provider
+ * @param storage
  * @returns
  */
 async function fetchDeployBytecodeFromPublishedContractMetadata(
