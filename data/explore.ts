@@ -19,7 +19,7 @@ const POPULAR = {
   description: "A collection of our most deployed contracts.",
   contracts: [
     "thirdweb.eth/DropERC721",
-    "thirdweb.eth/Marketplace",
+    "thirdweb.eth/MarketplaceV3",
     "unlock-protocol.eth/PublicLock",
     "thirdweb.eth/DropERC1155",
     "thirdweb.eth/TokenERC20",
@@ -77,7 +77,7 @@ const MARKETS = {
   displayName: "Marketplaces",
   description: "Quickly spin up your own on-chain marketplace for NFTs.",
   contracts: [
-    "thirdweb.eth/Marketplace",
+    "thirdweb.eth/MarketplaceV3",
     "thirdweb.eth/TokenERC20",
     "thirdweb.eth/Split",
   ],
@@ -149,7 +149,7 @@ const BETA = {
   description:
     "Contracts that are not ready yet, but you can already start deploying on selected testnets.",
   contracts: ["thirdweb.eth/MarketplaceV3"],
-  showInExplore: true,
+  showInExplore: false,
 } as const;
 
 const CATEGORIES = {
