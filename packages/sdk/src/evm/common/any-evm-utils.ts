@@ -367,8 +367,29 @@ export async function predictThirdwebContractAddress(
   storage: ThirdwebStorage,
 ): Promise<string> {
   const provider = getChainProvider(chainId, {});
+  const publishUri = await fetchAndCachePublishedContractURI(contractName);
+  const metadata = await fetchAndCacheDeployMetadata(publishUri, storage);
   const create2Factory = await getCreate2FactoryAddress(provider);
   invariant(create2Factory, "Thirdweb stack not found");
+
+  const pluginMetadata = await getMetadataForPlugins(publishUri, storage);
+
+  // if pluginMetadata is not empty, then it's a plugin-pattern router contract
+  if (pluginMetadata.length > 0) {
+    const deploymentInfo = await getDeploymentInfo(
+      publishUri,
+      storage,
+      provider,
+      create2Factory,
+    );
+
+    const implementation = deploymentInfo.find(
+      (contract) => contract.type === "implementation",
+    )?.transaction.predictedAddress;
+    invariant(implementation, "Error computing address for plugin router");
+
+    return implementation;
+  }
 
   const implementation = await computeDeploymentInfo(
     "implementation",
@@ -393,20 +414,37 @@ export async function getEncodedConstructorParamsForThirdwebContract(
   chainId: number,
   storage: ThirdwebStorage,
   constructorParamMap?: ConstructorParamMap,
-): Promise<BytesLike> {
+): Promise<BytesLike | undefined> {
   const provider = getChainProvider(chainId, {});
   const publishUri = await fetchAndCachePublishedContractURI(contractName);
   const metadata = await fetchAndCacheDeployMetadata(publishUri, storage);
   const create2Factory = await getCreate2FactoryAddress(provider);
   invariant(create2Factory, "Thirdweb stack not found");
 
-  const encodedArgs = await encodeConstructorParamsForImplementation(
-    metadata.compilerMetadata,
-    provider,
-    storage,
-    create2Factory,
-    constructorParamMap,
-  );
+  const pluginMetadata = await getMetadataForPlugins(publishUri, storage);
+
+  let encodedArgs;
+
+  // if pluginMetadata is not empty, then it's a plugin-pattern router contract
+  if (pluginMetadata.length > 0) {
+    const deploymentInfo = await getDeploymentInfo(
+      publishUri,
+      storage,
+      provider,
+      create2Factory,
+    );
+    encodedArgs = deploymentInfo.find(
+      (contract) => contract.type === "implementation",
+    )?.encodedArgs;
+  } else {
+    encodedArgs = await encodeConstructorParamsForImplementation(
+      metadata.compilerMetadata,
+      provider,
+      storage,
+      create2Factory,
+      constructorParamMap,
+    );
+  }
 
   return encodedArgs;
 }
@@ -815,6 +853,7 @@ export async function computeDeploymentInfo(
       to: create2Factory,
       data: initBytecodeWithSalt,
     },
+    encodedArgs,
   };
 }
 

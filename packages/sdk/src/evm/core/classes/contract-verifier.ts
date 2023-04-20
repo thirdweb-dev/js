@@ -35,6 +35,7 @@ export class ContractVerifier extends RPCConnectionHandler {
     contractName: string,
     explorerAPIUrl: string,
     explorerAPIKey: string,
+    constructorArgs?: ConstructorParamMap,
   ) {
     const chainId = (await this.getProvider().getNetwork()).chainId;
     const guid = await verifyThirdwebPrebuiltImplementation(
@@ -43,6 +44,7 @@ export class ContractVerifier extends RPCConnectionHandler {
       explorerAPIUrl,
       explorerAPIKey,
       this.storage,
+      constructorArgs,
     );
 
     console.info("Checking verification status...");

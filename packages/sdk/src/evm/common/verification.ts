@@ -52,7 +52,7 @@ export async function verifyThirdwebPrebuiltImplementation(
     explorerAPIUrl,
     explorerAPIKey,
     storage,
-    encodedArgs.toString().replace("0x", ""),
+    encodedArgs?.toString().replace("0x", ""),
   );
 
   return guid;
