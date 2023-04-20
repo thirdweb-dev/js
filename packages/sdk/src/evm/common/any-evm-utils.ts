@@ -368,7 +368,6 @@ export async function predictThirdwebContractAddress(
 ): Promise<string> {
   const provider = getChainProvider(chainId, {});
   const publishUri = await fetchAndCachePublishedContractURI(contractName);
-  const metadata = await fetchAndCacheDeployMetadata(publishUri, storage);
   const create2Factory = await getCreate2FactoryAddress(provider);
   invariant(create2Factory, "Thirdweb stack not found");
 
