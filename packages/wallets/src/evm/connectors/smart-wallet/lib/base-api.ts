@@ -6,17 +6,14 @@ import {
 } from "@account-abstraction/contracts";
 
 import { resolveProperties } from "ethers/lib/utils";
-import {
-  getUserOpHash,
-  NotPromise,
-  packUserOp,
-} from "@account-abstraction/utils";
+import { NotPromise, packUserOp } from "@account-abstraction/utils";
 import {
   GasOverheads,
   PaymasterAPI,
   calcPreVerificationGas,
 } from "@account-abstraction/sdk";
 import { TransactionDetailsForUserOp } from "./transaction-details";
+import { getUserOpHashV06 } from "./utils";
 
 export interface BaseApiParams {
   provider: providers.Provider;
@@ -201,13 +198,21 @@ export abstract class BaseAccountAPI {
       detailsForUserOp.data,
     );
 
-    const callGasLimit =
-      parseNumber(detailsForUserOp.gasLimit) ??
-      (await this.provider.estimateGas({
-        from: this.entryPointAddress,
-        to: this.getAccountAddress(),
-        data: callData,
-      }));
+    let callGasLimit;
+    const isPhantom = await this.checkAccountPhantom();
+    if (isPhantom) {
+      // when the account is not deployed yet, the estimation will return something like 25k gas (revert cost)
+      // there's no way to know the actual cost, so we just use a fixed value of 500k which should cover most txcosts.
+      callGasLimit = BigNumber.from(500_000);
+    } else {
+      callGasLimit =
+        parseNumber(detailsForUserOp.gasLimit) ??
+        (await this.provider.estimateGas({
+          from: this.entryPointAddress,
+          to: this.getAccountAddress(),
+          data: callData,
+        }));
+    }
 
     return {
       callData,
@@ -221,9 +226,8 @@ export abstract class BaseAccountAPI {
    * @param userOp userOperation, (signature field ignored)
    */
   async getUserOpHash(userOp: UserOperationStruct): Promise<string> {
-    const op = await resolveProperties(userOp);
     const chainId = await this.provider.getNetwork().then((net) => net.chainId);
-    return getUserOpHash(op, this.entryPointAddress, chainId);
+    return getUserOpHashV06(userOp, this.entryPointAddress, chainId);
   }
 
   /**
