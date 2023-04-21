@@ -18,16 +18,17 @@ import {
 } from "../../../../design-system";
 import { CaretRightIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import {
+  getCredentials,
+  saveCredentials,
   useChainId,
-  // WalletInstance,
   useConnect,
   useConnectionStatus,
+  useThirdwebWallet,
   useWallet,
   WalletInstance,
 } from "@thirdweb-dev/react-core";
-import { useDeferredValue, useEffect, useState } from "react";
+import { useDeferredValue, useEffect, useRef, useState } from "react";
 import { useSupportedWallet } from "../useSupportedWallet";
-import { Steps } from "../Safe/Steps";
 import {
   getAssociatedAccounts,
   AssociatedAccount,
@@ -36,41 +37,82 @@ import {
 import { SmartWalletObj } from "../../../wallets/smartWallet";
 import { Flex } from "../../../../components/basic";
 import styled from "@emotion/styled";
+import { useDeviceWalletInfo } from "../DeviceWallet/useDeviceWalletInfo";
 
 export const SmartWalletConnection: React.FC<{
   onBack: () => void;
   onConnect: () => void;
 }> = (props) => {
   const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
-  const activeWallet = useWallet();
   const [accounts, setAccounts] = useState<AssociatedAccount[] | undefined>();
+  const { deviceWallet } = useDeviceWalletInfo();
+  const thirdwebWalletContext = useThirdwebWallet();
+  const deviceWalletGenerated = useRef(false);
 
   useEffect(() => {
-    if (!activeWallet) {
+    if (!deviceWallet) {
       return;
     }
 
     (async () => {
+      if (!deviceWalletGenerated.current) {
+        const creds = await getCredentials();
+
+        // generate a random one if no credentials are found
+        if (!creds) {
+          const address = await deviceWallet.generate();
+
+          const privateKey = await deviceWallet.export({
+            strategy: "privateKey",
+            encryption: false,
+          });
+
+          // save the credentials
+          await saveCredentials({
+            password: privateKey,
+            name: "Wallet",
+            id: address,
+          });
+        } else {
+          // import
+          await deviceWallet.import({
+            privateKey: creds.password,
+            encryption: false,
+          });
+        }
+
+        await deviceWallet.connect();
+        thirdwebWalletContext?.handleWalletConnect(deviceWallet);
+        deviceWalletGenerated.current = true;
+      }
+
       const _accounts = await getAssociatedAccounts(
-        activeWallet,
+        deviceWallet,
         walletObj.factoryAddress,
         walletObj.chain,
       );
       setAccounts(_accounts);
     })();
-  }, [activeWallet, walletObj.chain, walletObj.factoryAddress]);
+  }, [
+    deviceWallet,
+    thirdwebWalletContext,
+    walletObj.chain,
+    walletObj.factoryAddress,
+  ]);
 
   if (!accounts) {
     return (
-      <Flex
-        style={{
-          height: "400px",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Spinner size="lg" color="secondary" />
-      </Flex>
+      <>
+        <Flex
+          style={{
+            height: "350px",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Spinner size="lg" color="secondary" />
+        </Flex>
+      </>
     );
   }
 
@@ -165,9 +207,6 @@ export const SmartWalletCreate: React.FC<{
       <ModalDescription>
         Create your account by choosing a unique username
       </ModalDescription>
-
-      <Spacer y="lg" />
-      <Steps step={2} />
 
       <Spacer y="xl" />
 

@@ -5,6 +5,9 @@ import { Wallet } from "@thirdweb-dev/react-core";
 import type { DeviceWallet } from "@thirdweb-dev/wallets";
 import { WalletData } from "@thirdweb-dev/wallets/src/evm/wallets/device-wallet";
 
+/**
+ * only use this when credential storage is not supported
+ */
 export function useDeviceWalletInfo() {
   const [walletData, setWalletData] = useState<WalletData | null>(null);
   const createWalletInstance = useCreateWalletInstance();

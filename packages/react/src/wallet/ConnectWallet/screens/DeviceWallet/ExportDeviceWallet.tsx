@@ -11,10 +11,14 @@ import styled from "@emotion/styled";
 import { fontSize } from "../../../../design-system";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { FormFieldWithIconButton } from "../../../../components/formFields";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDeviceWalletInfo } from "./useDeviceWalletInfo";
 import { isMobile } from "../../../../evm/utils/isMobile";
 import { shortenAddress } from "../../../../evm/utils/addresses";
+import {
+  getCredentials,
+  isCredentialsSupported,
+} from "@thirdweb-dev/react-core";
 
 export const ExportDeviceWallet: React.FC<{
   onBack: () => void;
@@ -24,8 +28,21 @@ export const ExportDeviceWallet: React.FC<{
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isWrongPassword, setIsWrongPassword] = useState(false);
+  const [address, setAddress] = useState<string | undefined>(undefined);
 
-  const handleDeviceWalletExport = async () => {
+  useEffect(() => {
+    if (isCredentialsSupported) {
+      getCredentials().then((cred) => {
+        if (cred) {
+          setAddress(cred.id);
+        }
+      });
+    } else {
+      setAddress(walletData?.address);
+    }
+  }, [walletData?.address]);
+
+  const exportFromLocalStorage = async () => {
     if (!walletData || !deviceWallet) {
       throw new Error("invalid state");
     }
@@ -34,6 +51,35 @@ export const ExportDeviceWallet: React.FC<{
       await deviceWallet.import({
         encryptedJson: walletData.data,
         password,
+      });
+
+      const json = await deviceWallet.export({
+        strategy: "encryptedJson",
+        password,
+      });
+
+      downloadAsFile(JSON.parse(json), "wallet.json", "application/json");
+      props.onExport();
+    } catch (e) {
+      setIsWrongPassword(true);
+      return;
+    }
+  };
+
+  const exportFromCredentials = async () => {
+    if (!deviceWallet) {
+      throw new Error("invalid state");
+    }
+
+    try {
+      const creds = await getCredentials();
+      if (!creds) {
+        throw new Error("No credentials found");
+      }
+
+      await deviceWallet.import({
+        privateKey: creds?.password,
+        encryption: false,
       });
 
       const json = await deviceWallet.export({
@@ -72,16 +118,19 @@ export const ExportDeviceWallet: React.FC<{
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          handleDeviceWalletExport();
+          if (isCredentialsSupported) {
+            exportFromCredentials();
+          } else {
+            exportFromLocalStorage();
+          }
         }}
       >
         <Label>Wallet Address</Label>
         <Spacer y="sm" />
 
         <SavedWalletAddress>
-          {(isMobile()
-            ? shortenAddress(walletData?.address || "")
-            : walletData?.address) || "Fetching..."}
+          {(isMobile() ? shortenAddress(address || "") : address) ||
+            "Fetching..."}
         </SavedWalletAddress>
 
         <Spacer y="lg" />
@@ -91,13 +140,14 @@ export const ExportDeviceWallet: React.FC<{
           type="text"
           name="username"
           autoComplete="off"
-          value={walletData?.address || ""}
+          value={address || ""}
           disabled
           style={{ display: "none" }}
         />
 
         {/* password */}
         <FormFieldWithIconButton
+          noSave
           required
           name="current-password"
           autocomplete="current-password"

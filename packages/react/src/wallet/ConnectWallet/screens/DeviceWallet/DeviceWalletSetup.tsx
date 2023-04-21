@@ -1,8 +1,10 @@
 import { Spinner } from "../../../../components/Spinner";
 import styled from "@emotion/styled";
 import { useDeviceWalletInfo } from "./useDeviceWalletInfo";
-import { ReconnectDeviceWallet } from "./ReconnectDeviceWallet";
+import { ReconnectDeviceWalletNoCredentials } from "./ReconnectDeviceWallet";
 import { CreateDeviceWallet } from "./CreateDeviceWallet";
+import { UserCredentials, getCredentials } from "@thirdweb-dev/react-core";
+import { useEffect, useState } from "react";
 
 export const ConnectToDeviceWallet: React.FC<{
   onBack: () => void;
@@ -11,7 +13,19 @@ export const ConnectToDeviceWallet: React.FC<{
   const { storageLoading, walletData, refreshSavedData } =
     useDeviceWalletInfo();
 
-  if (storageLoading) {
+  const [savedCreds, setSavedCreds] = useState<
+    UserCredentials | null | undefined
+  >();
+
+  console.log({ walletData, savedCreds });
+
+  useEffect(() => {
+    getCredentials().then((cred) => {
+      setSavedCreds(cred);
+    });
+  }, []);
+
+  if (storageLoading || savedCreds === undefined) {
     return (
       <LoadingSpinnerContainer>
         <Spinner size="lg" color="primary" />
@@ -19,22 +33,23 @@ export const ConnectToDeviceWallet: React.FC<{
     );
   }
 
+  // if credentials supported
+  // if saved creds -
+  // if not saved creds -
+
+  // if (isCredentialsSupported) {
+  //   return <CreateDeviceWalletCredentials {...props} />;
+  // }
+
   return (
     <>
-      {/* <BackButton onClick={props.onBack} />
-      <Spacer y="md" />
-      <IconContainer>
-        <Img src={meta.iconURL} width={iconSize.xl} height={iconSize.xl} />
-      </IconContainer>
-      <Spacer y="sm" /> */}
-
       {!walletData ? (
         <CreateDeviceWallet
           onConnected={props.onConnected}
           onBack={props.onBack}
         />
       ) : (
-        <ReconnectDeviceWallet
+        <ReconnectDeviceWalletNoCredentials
           onConnected={props.onConnected}
           onRemove={() => {
             refreshSavedData();

@@ -126,9 +126,10 @@ export const ImportDeviceWalet: React.FC<{
 
             <FormFieldWithIconButton
               required
-              name="current-password"
-              autocomplete="current-password"
-              id="current-password"
+              noSave={true}
+              name="password"
+              autocomplete="off"
+              id="password"
               onChange={(value) => {
                 setPassword(value);
                 setIsWrongPassword(false);

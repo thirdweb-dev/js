@@ -1,5 +1,4 @@
 import { AsyncStorage } from "./AsyncStorage";
-import { WalletData } from "../evm/wallets/device-wallet";
 
 export class CredentialsStorage implements AsyncStorage {
   async getItem(): Promise<string | null> {
@@ -13,16 +12,13 @@ export class CredentialsStorage implements AsyncStorage {
     return null;
   }
 
-  async setItem(_key: string, value: string): Promise<void> {
-    const { address } = JSON.parse(value) as WalletData;
-
-    const credentialData = {
-      id: address,
-      password: value,
-    };
-
+  async setItem(key: string, value: string): Promise<void> {
     const credential = await navigator.credentials.create({
-      password: credentialData,
+      password: {
+        id: key,
+        name: key,
+        password: value,
+      },
     } as CredentialCreationOptions);
 
     if (!credential) {

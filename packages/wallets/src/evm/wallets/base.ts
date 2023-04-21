@@ -4,6 +4,7 @@ import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { DEFAULT_DAPP_META } from "../constants/dappMeta";
+import { EVMWallet } from "../interfaces";
 
 export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   chains?: Chain[];
@@ -160,5 +161,12 @@ export abstract class AbstractClientWallet<
     this.chains = chains;
     const connector = await this.getConnector();
     connector.updateChains(chains);
+  }
+
+  /**
+   * If the wallet uses a personal wallet under the hood, return it
+   */
+  getPersonalWallet(): EVMWallet | undefined {
+    return undefined;
   }
 }

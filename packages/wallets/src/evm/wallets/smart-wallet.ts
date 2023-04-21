@@ -1,5 +1,5 @@
 import { AbstractClientWallet, WalletOptions } from "./base";
-import type { TWConnector } from "../interfaces/tw-connector";
+import type { ConnectParams, TWConnector } from "../interfaces/tw-connector";
 import type {
   SmartWalletConfig,
   SmartWalletConnectionArgs,
@@ -47,5 +47,9 @@ export class SmartWallet extends AbstractClientWallet<
 
   getPersonalWallet() {
     return this.connector?.personalWallet;
+  }
+
+  autoConnect(params: ConnectParams<SmartWalletConnectionArgs>) {
+    return this.connect(params);
   }
 }

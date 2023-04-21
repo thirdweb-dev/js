@@ -24,7 +24,10 @@ import { RemoveWallet } from "./RemoveWallet";
 import { DeviceWalletModalHeader } from "./common";
 import { isMobile } from "../../../../evm/utils/isMobile";
 
-export const ReconnectDeviceWallet: React.FC<{
+/**
+ * For No-Credential scenario
+ */
+export const ReconnectDeviceWalletNoCredentials: React.FC<{
   onConnected: () => void;
   onRemove: () => void;
   onBack: () => void;

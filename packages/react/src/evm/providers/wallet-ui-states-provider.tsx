@@ -15,8 +15,7 @@ type Screen =
   | "wallets/get-started"
   | "deviceWallet/connect"
   | "deviceWallet/export"
-  | "smartWallet/form"
-  | "smartWallet/select-wallet";
+  | "smartWallet/form";
 
 type WalletWrapper = false | "safe" | "smartWallet";
 
