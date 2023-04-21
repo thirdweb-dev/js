@@ -6,7 +6,6 @@ import { Wallet, utils } from "ethers";
 
 export type DeviceWalletOptions = {
   chain?: Chain;
-  storageType?: "asyncStore" | "credentialStore";
   storage?: AsyncStorage;
 };
 
@@ -68,6 +67,18 @@ export class DeviceWallet extends AbstractClientWallet<
       });
     }
     return this.connector;
+  }
+
+  /**
+   * load saved wallet data from storage or generate a new one and save it
+   */
+  async loadOrCreate(options: LoadOptions) {
+    if (await this.isSaved()) {
+      await this.load(options);
+    } else {
+      await this.generate();
+      await this.save(options);
+    }
   }
 
   /**
@@ -262,8 +273,12 @@ export class DeviceWallet extends AbstractClientWallet<
    * @returns true if wallet data is saved in storage
    */
   async isSaved() {
-    const data = await this.getSavedData();
-    return !!data;
+    try {
+      const data = await this.getSavedData();
+      return !!data;
+    } catch (e) {
+      return false;
+    }
   }
 
   /**

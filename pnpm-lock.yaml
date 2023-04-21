@@ -978,9 +978,6 @@ importers:
       '@thirdweb-dev/tsconfig':
         specifier: workspace:*
         version: link:../tw-tsconfig
-      '@thirdweb-dev/wallets':
-        specifier: workspace:*
-        version: link:../wallets
       '@types/bn.js':
         specifier: ^5.1.1
         version: 5.1.1
@@ -1168,12 +1165,21 @@ importers:
 
   packages/wallets:
     dependencies:
+      '@account-abstraction/contracts':
+        specifier: ^0.5.0
+        version: 0.5.0
+      '@account-abstraction/sdk':
+        specifier: ^0.5.0
+        version: 0.5.0
+      '@account-abstraction/utils':
+        specifier: ^0.5.0
+        version: 0.5.0
       '@coinbase/wallet-sdk':
         specifier: ^3.6.3
         version: 3.6.4
       '@paperxyz/embedded-wallet-service-sdk':
-        specifier: ^0.0.26
-        version: 0.0.26
+        specifier: ^0.1.0
+        version: 0.1.0
       '@safe-global/safe-core-sdk':
         specifier: ^3.3.2
         version: 3.3.2
@@ -1186,6 +1192,9 @@ importers:
       '@thirdweb-dev/chains':
         specifier: workspace:*
         version: link:../chains
+      '@thirdweb-dev/sdk':
+        specifier: workspace:*
+        version: link:../sdk
       '@walletconnect/ethereum-provider':
         specifier: ~2.4.6
         version: 2.4.10(typescript@4.9.5)
@@ -1216,6 +1225,9 @@ importers:
       buffer:
         specifier: ^6.0.3
         version: 6.0.3
+      cross-fetch:
+        specifier: ^3.1.5
+        version: 3.1.5
       crypto-js:
         specifier: ^4.1.1
         version: 4.1.1
@@ -1360,6 +1372,44 @@ importers:
         version: 0.7.0(vite@3.2.5)
 
 packages:
+
+  /@account-abstraction/contracts@0.5.0:
+    resolution: {integrity: sha512-CKyS9Zh5rcYUM+4B6TlaB9+THHzJ+6TY3tWF5QofqvFpqGNvIhF8ddy6wyCmqZw6TB74/yYv7cYD/RarVudfDg==}
+    dev: false
+
+  /@account-abstraction/sdk@0.5.0:
+    resolution: {integrity: sha512-KuEG9UVl2kEhamevFmPJfqY5AQH4fRLnFhfWAdoqwxIZIuSyA8wfyzM9WKnDPSCaiApLvSzckjRwbs4dVoOp2Q==}
+    dependencies:
+      '@account-abstraction/contracts': 0.5.0
+      '@account-abstraction/utils': 0.5.0
+      '@ethersproject/abstract-provider': 5.7.0
+      '@ethersproject/abstract-signer': 5.7.0
+      '@ethersproject/networks': 5.7.1
+      '@ethersproject/properties': 5.7.0
+      '@ethersproject/providers': 5.7.2
+      '@types/debug': 4.1.7
+      debug: 4.3.4(supports-color@8.1.1)
+      ethers: 5.7.2
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+    dev: false
+
+  /@account-abstraction/utils@0.5.0:
+    resolution: {integrity: sha512-dgXguTn5WgFMmr3wQMdLGEoIMDcIJgzAv74YlHeb2D3Nyy1pByPArSb3eLOOcgxCJSJeqTscpO9P57uhNkkC4A==}
+    dependencies:
+      '@account-abstraction/contracts': 0.5.0
+      '@ethersproject/abi': 5.7.0
+      '@ethersproject/providers': 5.7.2
+      '@openzeppelin/contracts': 4.8.3
+      debug: 4.3.4(supports-color@8.1.1)
+      ethers: 5.7.2
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+    dev: false
 
   /@ampproject/remapping@2.2.0:
     resolution: {integrity: sha512-qRmjj8nj9qmLTQXXmaR1cck3UXSRMPrbsLJAasZpF+t3riI71BXed5ebIOYwQntykeZuhjsdweEc9BxH5Jc26w==}
@@ -7887,12 +7937,16 @@ packages:
       mkdirp: 1.0.4
       rimraf: 3.0.2
 
+  /@openzeppelin/contracts@4.8.3:
+    resolution: {integrity: sha512-bQHV8R9Me8IaJoJ2vPG4rXcL7seB7YVuskr4f+f5RyOStSZetwzkWtoqDMl5erkBJy0lDRUnIR2WIkPiC0GJlg==}
+    dev: false
+
   /@panva/hkdf@1.0.4:
     resolution: {integrity: sha512-003xWiCuvePbLaPHT+CRuaV4GlyCAVm6XYSbBZDHoWZGn1mNkVKFaDbGJjjxmEFvizUwlCoM6O18FCBMMky2zQ==}
     dev: true
 
-  /@paperxyz/embedded-wallet-service-sdk@0.0.26:
-    resolution: {integrity: sha512-2Io6opbzAuwdpflP4N3uTRHk454nx0O5inlnOj9FqpChSF06h1xSVlSA/6lRCrJRxhOuO6uNhrkntItRRPIw7Q==}
+  /@paperxyz/embedded-wallet-service-sdk@0.1.0:
+    resolution: {integrity: sha512-AWo/fNYx3bhP2jkScZ8T3vElKsTiXMeTTx5FT5RmcJVfeDArAPh2nEvnFA+16J4c2zHq+GRATxe+MmB/XWh8SQ==}
     dependencies:
       '@ethersproject/abstract-signer': 5.7.0
       '@ethersproject/bytes': 5.7.0
@@ -10947,6 +11001,12 @@ packages:
     resolution: {integrity: sha512-BG7fQKZ689HIoc5h+6D2Dgq1fABRa0RbBWKBd9SP/MVRVXROflpm5fhwyATX5duFmbStzyzyycPB8qUYKDH3NA==}
     dev: true
 
+  /@types/debug@4.1.7:
+    resolution: {integrity: sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==}
+    dependencies:
+      '@types/ms': 0.7.31
+    dev: false
+
   /@types/deep-equal-in-any-order@1.0.1:
     resolution: {integrity: sha512-hUWUUE53WjKfcCncSmWmNXVNNT+0Iz7gYFnov3zdCXrX3Thxp1Cnmfd5LwWOeCVUV5LhpiFgS05vaAG72doo9w==}
     dev: true
@@ -11097,6 +11157,10 @@ packages:
   /@types/mocha@10.0.1:
     resolution: {integrity: sha512-/fvYntiO1GeICvqbQ3doGDIP97vWmvFt83GKguJ6prmQM2iXZfFcq6YE8KteFyRtX2/h5Hf91BYvPodJKFYv5Q==}
     dev: true
+
+  /@types/ms@0.7.31:
+    resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
+    dev: false
 
   /@types/node@11.11.6:
     resolution: {integrity: sha512-Exw4yUWMBXM3X+8oqzJNRqZSwUAaS4+7NdvHqQuFi/d+synz++xmX3QIf+BFqneW8N31R8Ky+sikfZUXq07ggQ==}

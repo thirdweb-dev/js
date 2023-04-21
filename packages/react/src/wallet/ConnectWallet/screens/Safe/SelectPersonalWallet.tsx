@@ -18,8 +18,9 @@ export const SelectpersonalWallet: React.FC<{
   walletsMeta: WalletMeta[];
 }> = (props) => {
   const safeWalletObj = useSupportedWallet("Safe") as Wallet;
-  // remove gnosis safe from the list of wallets
-  const walletsMeta = props.walletsMeta.filter((w) => w.id !== "Safe");
+  const walletsMeta = props.walletsMeta.filter(
+    (w) => w.id !== "SmartWallet" && w.id !== "Safe",
+  );
 
   return (
     <>

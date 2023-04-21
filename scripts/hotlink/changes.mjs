@@ -62,6 +62,7 @@ export const changes = [
       "./evm/connectors/paper": "./src/evm/connectors/paper/index.ts",
       "./evm/wallets/wallet-connect-v1":
         "./src/evm/wallets/wallet-connect-v1.ts",
+      "./evm/wallets/smart-wallet": "./src/evm/wallets/smart-wallet.ts",
     },
   },
 ];

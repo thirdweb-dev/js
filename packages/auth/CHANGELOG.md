@@ -1,5 +1,46 @@
 # @thirdweb-dev/auth
 
+## 3.0.15
+
+### Patch Changes
+
+- [#874](https://github.com/thirdweb-dev/js/pull/874) [`49922de9`](https://github.com/thirdweb-dev/js/commit/49922de9d9c1258e58a3a05e656b229db469b1dd) Thanks [@iketw](https://github.com/iketw)! - [RN] Adds Auth to React Native
+
+  - Adds an optional `secureStorage` to authConfig
+  - Adds `expo-secure-store` to store the JWT token securely in React Native, passing a default value
+  - Stores the token in secure storage to be accessed by subsequent calls
+  - Returns the token in `useLogin` to be used by the user
+
+  How I tested:
+
+  - Tested in Android/iOS/Web
+
+  Usage:
+
+  ```
+  <ThirdwebProvider
+        activeChain="ethereum"
+        supportedWallets={[metamaskWallet(), rainbowWallet()]}
+        authConfig={{
+          domain: https://your-domain.com,
+          authUrl: '/api/auth',
+        }}>
+        <AppInner />
+      </ThirdwebProvider>
+  ```
+
+  ```
+  const { login } = useLogin();
+  const { logout } = useLogout();
+  const { user, isLoggedIn } = useUser();
+  ...
+
+  const token = await login();
+  ```
+
+- Updated dependencies [[`4acb2b55`](https://github.com/thirdweb-dev/js/commit/4acb2b5561118dde5c7372400d4d754b879aef2e), [`82bea3fa`](https://github.com/thirdweb-dev/js/commit/82bea3fa10294eb3c5c7327fb047e3d1b2c62ff9), [`664d1cd0`](https://github.com/thirdweb-dev/js/commit/664d1cd0dd03f32337c2cf532f0ad860e5aa5ea8), [`c2fec930`](https://github.com/thirdweb-dev/js/commit/c2fec930520e2df89532ec0027ead4563c7708cf)]:
+  - @thirdweb-dev/wallets@0.2.16
+
 ## 3.0.14
 
 ### Patch Changes
