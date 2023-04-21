@@ -37,7 +37,6 @@ export class PaperWallet extends AbstractClientWallet<
 
     this.clientId = options.clientId;
     this.chain = options.chain;
-    this.chains = options.chains;
   }
 
   protected async getConnector(): Promise<TWConnector> {

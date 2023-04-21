@@ -27,6 +27,8 @@ export const Button = styled.button<{
             return p.theme.bg.invertedFocused;
           case "secondary":
             return p.theme.bg.highlighted;
+          case "link":
+            return "none";
           case "danger":
             return p.theme.text.danger;
         }
@@ -37,6 +39,8 @@ export const Button = styled.button<{
     switch (p.variant) {
       case "danger":
         return `0 0 0 2px ${p.theme.text.danger}`;
+      case "link":
+        return "none";
       default:
         return "none";
     }

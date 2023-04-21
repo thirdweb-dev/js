@@ -5,6 +5,7 @@ export { paperWallet } from "./wallet/wallets/paperWallet";
 export { safeWallet } from "./wallet/wallets/safeWallet";
 export { walletConnect } from "./wallet/wallets/walletConnect";
 export { walletConnectV1 } from "./wallet/wallets/walletConnectV1";
+export { smartWallet } from "./wallet/wallets/smartWallet";
 
 // at the moment we'll re-export everything from the evm package
 export * from "./evm";

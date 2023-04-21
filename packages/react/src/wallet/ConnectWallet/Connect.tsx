@@ -20,11 +20,11 @@ import { SelectpersonalWallet } from "./screens/Safe/SelectPersonalWallet";
 import { SafeForm } from "./screens/Safe/SafeForm";
 import { GetStartedWithWallets } from "./screens/GetStartedWithWallets";
 import {
-  useIsConnectingToSafe,
+  useIsConnectingToWalletWrapper,
   useIsWalletModalOpen,
   useModalTheme,
   useScreen,
-  useSetIsConnectingToSafe,
+  useSetIsConnectingToWalletWrapper,
   useSetIsWalletModalOpen,
   useSetScreen,
 } from "../../evm/providers/wallet-ui-states-provider";
@@ -32,13 +32,15 @@ import { ifWaiting } from "../../evm/utils/ifWaiting";
 import { ThemeProvider } from "@emotion/react";
 import { darkTheme, lightTheme } from "../../design-system";
 import { ConnectToDeviceWallet } from "./screens/DeviceWallet/DeviceWalletSetup";
+import { SmartWalletSelection } from "./screens/SmartWallet/SmartWalletSection";
+import { SmartWalletConnection } from "./screens/SmartWallet/SmartWalletForm";
 
 export const ConnectModal = () => {
   const modalTheme = useModalTheme();
-  const isConnectingToSafe = useIsConnectingToSafe();
+  const isConnectingToWalletWrapper = useIsConnectingToWalletWrapper();
   const showScreen = useScreen();
   const setShowScreen = useSetScreen();
-  const setIsConnectingToSafe = useSetIsConnectingToSafe();
+  const setIsConnectingToWalletWrapper = useSetIsConnectingToWalletWrapper();
   const isWalletModalOpen = useIsWalletModalOpen();
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
   const connectionStatus = useConnectionStatus();
@@ -53,33 +55,39 @@ export const ConnectModal = () => {
 
   const closeModalAndReset = useCallback(() => {
     setShowScreen("walletList");
-    setIsConnectingToSafe(false);
+    setIsConnectingToWalletWrapper(false);
     setIsWalletModalOpen(false);
-  }, [setIsConnectingToSafe, setIsWalletModalOpen, setShowScreen]);
+  }, [setIsConnectingToWalletWrapper, setIsWalletModalOpen, setShowScreen]);
 
   const onConnect = useCallback(() => {
-    if (isConnectingToSafe) {
+    if (isConnectingToWalletWrapper === "safe") {
       setShowScreen("safe/form");
+    } else if (isConnectingToWalletWrapper === "smartWallet") {
+      setShowScreen("smartWallet/form");
     } else {
       closeModalAndReset();
     }
-  }, [closeModalAndReset, isConnectingToSafe, setShowScreen]);
+  }, [closeModalAndReset, isConnectingToWalletWrapper, setShowScreen]);
 
   const onConnectError = useCallback(() => {
-    if (isConnectingToSafe) {
+    if (isConnectingToWalletWrapper === "safe") {
       setShowScreen("safe/select-wallet");
+    } else if (isConnectingToWalletWrapper === "smartWallet") {
+      setShowScreen("smartWallet/select-wallet");
     } else {
       setShowScreen("walletList");
     }
-  }, [isConnectingToSafe, setShowScreen]);
+  }, [isConnectingToWalletWrapper, setShowScreen]);
 
   const handleBack = useCallback(() => {
-    if (isConnectingToSafe) {
+    if (isConnectingToWalletWrapper === "safe") {
       setShowScreen("safe/select-wallet");
+    } else if (isConnectingToWalletWrapper === "smartWallet") {
+      setShowScreen("smartWallet/select-wallet");
     } else {
       setShowScreen("walletList");
     }
-  }, [isConnectingToSafe, setShowScreen]);
+  }, [isConnectingToWalletWrapper, setShowScreen]);
 
   const walletsMeta: WalletMeta[] = wallets.map((wallet) => ({
     id: wallet.id,
@@ -148,8 +156,14 @@ export const ConnectModal = () => {
 
       // Safe
       else if (wallet.id === "Safe") {
-        setIsConnectingToSafe(true);
+        setIsConnectingToWalletWrapper("safe");
         setShowScreen("safe/select-wallet");
+      }
+
+      // Smart Wallet
+      else if (wallet.id === "SmartWallet") {
+        setIsConnectingToWalletWrapper("smartWallet");
+        setShowScreen("smartWallet/select-wallet");
       }
 
       // Device Wallet
@@ -254,7 +268,7 @@ export const ConnectModal = () => {
         {showScreen === "safe/select-wallet" && (
           <SelectpersonalWallet
             onBack={() => {
-              setIsConnectingToSafe(false);
+              setIsConnectingToWalletWrapper(false);
               setShowScreen("walletList");
             }}
             walletsMeta={walletsMeta}
@@ -276,6 +290,25 @@ export const ConnectModal = () => {
 
         {showScreen === "deviceWallet/connect" && (
           <ConnectToDeviceWallet onBack={handleBack} onConnected={onConnect} />
+        )}
+
+        {showScreen === "smartWallet/select-wallet" && (
+          <SmartWalletSelection
+            onBack={() => {
+              setIsConnectingToWalletWrapper(false);
+              setShowScreen("walletList");
+            }}
+            walletsMeta={walletsMeta}
+          />
+        )}
+
+        {showScreen === "smartWallet/form" && (
+          <SmartWalletConnection
+            onBack={handleBack}
+            onConnect={() => {
+              closeModalAndReset();
+            }}
+          />
         )}
       </Modal>
     </ThemeProvider>

@@ -1,5 +1,35 @@
 # @thirdweb-dev/react
 
+## 3.11.8
+
+### Patch Changes
+
+- [#892](https://github.com/thirdweb-dev/js/pull/892) [`4acb2b55`](https://github.com/thirdweb-dev/js/commit/4acb2b5561118dde5c7372400d4d754b879aef2e) Thanks [@MananTank](https://github.com/MananTank)! - Add Switch Account button for MetaMask
+
+- [#919](https://github.com/thirdweb-dev/js/pull/919) [`81770647`](https://github.com/thirdweb-dev/js/commit/81770647ab2b3b621c663dadd9878ed0ee0da8cb) Thanks [@MananTank](https://github.com/MananTank)! - improved device wallet password input autocomplete
+
+- [#914](https://github.com/thirdweb-dev/js/pull/914) [`ec36df5f`](https://github.com/thirdweb-dev/js/commit/ec36df5f754f35c0c9ee0a3794046f4de46c254d) Thanks [@MananTank](https://github.com/MananTank)! - Add "Request Testnet funds" for LocalHost
+
+- [#895](https://github.com/thirdweb-dev/js/pull/895) [`06cc1df3`](https://github.com/thirdweb-dev/js/commit/06cc1df3b7906584c9e2e69fddc4a2d831c237f9) Thanks [@MananTank](https://github.com/MananTank)! - Fix supportedChains not having the activeChain for wallets
+
+- [#887](https://github.com/thirdweb-dev/js/pull/887) [`430a5f79`](https://github.com/thirdweb-dev/js/commit/430a5f793419173775a434e0b2a21f70223e3813) Thanks [@MananTank](https://github.com/MananTank)! - export Configurable NetworkSelector
+
+- [#918](https://github.com/thirdweb-dev/js/pull/918) [`26644d63`](https://github.com/thirdweb-dev/js/commit/26644d63b5773124d4c6be41be609f27167940af) Thanks [@MananTank](https://github.com/MananTank)! - Fix Connect Wallet Modal width on tablet size viewport
+
+- [#917](https://github.com/thirdweb-dev/js/pull/917) [`09fae984`](https://github.com/thirdweb-dev/js/commit/09fae984e7f954628d717b25e2269b853c0c17fc) Thanks [@MananTank](https://github.com/MananTank)! - Device Wallet and other Connect Wallet UI improvements
+
+- [#920](https://github.com/thirdweb-dev/js/pull/920) [`3010d845`](https://github.com/thirdweb-dev/js/commit/3010d845951735a7ce1aa85cb5959eddcc54bf6c) Thanks [@MananTank](https://github.com/MananTank)! - Improved autocomplete for imported device wallet
+
+- [#910](https://github.com/thirdweb-dev/js/pull/910) [`c2fec930`](https://github.com/thirdweb-dev/js/commit/c2fec930520e2df89532ec0027ead4563c7708cf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow passing any EVMWallet to SafeWallet as personal signer
+
+- [#909](https://github.com/thirdweb-dev/js/pull/909) [`d8b54a6f`](https://github.com/thirdweb-dev/js/commit/d8b54a6f91d5943bd7c0720b0e0bff05c4be89e5) Thanks [@MananTank](https://github.com/MananTank)! - Add back device wallet UI
+
+- Updated dependencies [[`abe88599`](https://github.com/thirdweb-dev/js/commit/abe88599b634699aa3b876fe344bfddc6c1a92d4), [`49922de9`](https://github.com/thirdweb-dev/js/commit/49922de9d9c1258e58a3a05e656b229db469b1dd), [`4acb2b55`](https://github.com/thirdweb-dev/js/commit/4acb2b5561118dde5c7372400d4d754b879aef2e), [`82bea3fa`](https://github.com/thirdweb-dev/js/commit/82bea3fa10294eb3c5c7327fb047e3d1b2c62ff9), [`ea04edf4`](https://github.com/thirdweb-dev/js/commit/ea04edf47867617ff74f0aca1471a40b8d9c9f7c), [`77224646`](https://github.com/thirdweb-dev/js/commit/77224646d542db3171394d744b455497cd057633), [`c9ee9b32`](https://github.com/thirdweb-dev/js/commit/c9ee9b32f0a275f7c03d50243f23a7332f148ae5), [`00f4355f`](https://github.com/thirdweb-dev/js/commit/00f4355f1aa8843bb534b173e4d8e0a19dd18b47), [`a6610f12`](https://github.com/thirdweb-dev/js/commit/a6610f1211e9359885b948bf69a66d834707ec07), [`06cc1df3`](https://github.com/thirdweb-dev/js/commit/06cc1df3b7906584c9e2e69fddc4a2d831c237f9), [`29146e00`](https://github.com/thirdweb-dev/js/commit/29146e009db655304f5753904ae7f8569c12f4ca), [`77224646`](https://github.com/thirdweb-dev/js/commit/77224646d542db3171394d744b455497cd057633), [`430a5f79`](https://github.com/thirdweb-dev/js/commit/430a5f793419173775a434e0b2a21f70223e3813), [`664d1cd0`](https://github.com/thirdweb-dev/js/commit/664d1cd0dd03f32337c2cf532f0ad860e5aa5ea8), [`bfdd8493`](https://github.com/thirdweb-dev/js/commit/bfdd84939d7cf9c6635b83c971bcc8967b52538c), [`c2fec930`](https://github.com/thirdweb-dev/js/commit/c2fec930520e2df89532ec0027ead4563c7708cf), [`477324ec`](https://github.com/thirdweb-dev/js/commit/477324ec85b800dcbc54b709430c77fb63b16537)]:
+  - @thirdweb-dev/sdk@3.10.11
+  - @thirdweb-dev/react-core@3.11.8
+  - @thirdweb-dev/wallets@0.2.16
+  - @thirdweb-dev/chains@0.1.12
+
 ## 3.11.7
 
 ### Patch Changes
