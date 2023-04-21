@@ -1,6 +1,6 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ADIL Mainnet",
+  "name": "Adil Chain V2 Mainnet",
   "chain": "ADIL",
   "icon": {
     "url": "ipfs://QmeHNYUx6n8CjUFSLWNT17oAtDYrUq6r8buyvGCUBXCJw6",
@@ -9,8 +9,8 @@ export default {
     "format": "png"
   },
   "rpc": [
-    "https://adil.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://s2.adilchain-rpc.io"
+    "https://adil-chain-v2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://adilchain-rpc.io"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -25,10 +25,10 @@ export default {
   "explorers": [
     {
       "name": "ADIL Mainnet Explorer",
-      "url": "https://s2.adilchain-scan.io",
+      "url": "https://adilchain-scan.io",
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
-  "slug": "adil"
+  "slug": "adil-chain-v2"
 } as const satisfies Chain;

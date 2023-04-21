@@ -1,7 +1,37 @@
-import { ProjectType } from "../types/ProjectType";
+import { ProjectType, LanguageType, PackageManagerType, AppType, FrameworkType, LibraryType } from "../types/ProjectType";
 
 export interface Detector {
   projectType: ProjectType;
+
+  matches(path: string): boolean;
+}
+
+export interface PackageManagerDetector {
+  packageManagerType: PackageManagerType;
+
+  matches(path: string): boolean;
+}
+
+export interface FrameworkDetector {
+  frameworkType: FrameworkType;
+
+  matches(path: string): boolean;
+}
+
+export interface LibraryDetector {
+  libraryType: LibraryType;
+
+  matches(path: string): boolean;
+}
+
+export interface LanguageDetector {
+  languageType: LanguageType;
+
+  matches(path: string): boolean;
+}
+
+export interface AppTypeDetector {
+  appType: AppType;
 
   matches(path: string): boolean;
 }
