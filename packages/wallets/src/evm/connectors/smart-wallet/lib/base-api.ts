@@ -5,7 +5,11 @@ import {
   UserOperationStruct,
 } from "@account-abstraction/contracts";
 
-import { resolveProperties } from "ethers/lib/utils";
+import {
+  defaultAbiCoder,
+  keccak256,
+  resolveProperties,
+} from "ethers/lib/utils";
 import {
   getUserOpHash,
   NotPromise,
@@ -17,6 +21,7 @@ import {
   calcPreVerificationGas,
 } from "@account-abstraction/sdk";
 import { TransactionDetailsForUserOp } from "./transaction-details";
+import { getUserOpHashV06 } from "./utils";
 
 export interface BaseApiParams {
   provider: providers.Provider;
@@ -221,9 +226,8 @@ export abstract class BaseAccountAPI {
    * @param userOp userOperation, (signature field ignored)
    */
   async getUserOpHash(userOp: UserOperationStruct): Promise<string> {
-    const op = await resolveProperties(userOp);
     const chainId = await this.provider.getNetwork().then((net) => net.chainId);
-    return getUserOpHash(op, this.entryPointAddress, chainId);
+    return getUserOpHashV06(userOp, this.entryPointAddress, chainId);
   }
 
   /**
