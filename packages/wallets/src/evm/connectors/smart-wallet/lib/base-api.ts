@@ -206,13 +206,21 @@ export abstract class BaseAccountAPI {
       detailsForUserOp.data,
     );
 
-    const callGasLimit =
-      parseNumber(detailsForUserOp.gasLimit) ??
-      (await this.provider.estimateGas({
-        from: this.entryPointAddress,
-        to: this.getAccountAddress(),
-        data: callData,
-      }));
+    let callGasLimit;
+    const isPhantom = await this.checkAccountPhantom();
+    if (isPhantom) {
+      // when the account is not deployed yet, the estimation will return something like 25k gas (revert cost)
+      // there's no way to know the actual cost, so we just use a fixed value of 500k which should cover most txcosts.
+      callGasLimit = BigNumber.from(500_000);
+    } else {
+      callGasLimit =
+        parseNumber(detailsForUserOp.gasLimit) ??
+        (await this.provider.estimateGas({
+          from: this.entryPointAddress,
+          to: this.getAccountAddress(),
+          data: callData,
+        }));
+    }
 
     return {
       callData,
