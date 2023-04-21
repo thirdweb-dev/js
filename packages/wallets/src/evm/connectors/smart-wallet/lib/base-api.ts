@@ -5,16 +5,8 @@ import {
   UserOperationStruct,
 } from "@account-abstraction/contracts";
 
-import {
-  defaultAbiCoder,
-  keccak256,
-  resolveProperties,
-} from "ethers/lib/utils";
-import {
-  getUserOpHash,
-  NotPromise,
-  packUserOp,
-} from "@account-abstraction/utils";
+import { resolveProperties } from "ethers/lib/utils";
+import { NotPromise, packUserOp } from "@account-abstraction/utils";
 import {
   GasOverheads,
   PaymasterAPI,
