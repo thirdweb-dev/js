@@ -113,9 +113,10 @@ export async function isContractDeployed(
  * @internal
  * @param provider
  */
-export async function isEIP155Enforced(
-  provider: providers.Provider,
-): Promise<boolean> {
+export async function isEIP155Enforced(chainId: number): Promise<boolean> {
+  const provider = getChainProvider(chainId, {
+    thirdwebApiKey: DEFAULT_API_KEY,
+  });
   try {
     // TODO: Find a better way to check this.
 
@@ -155,8 +156,8 @@ export async function getCreate2FactoryAddress(
     return COMMON_FACTORY;
   }
 
-  const enforceEip155 = await isEIP155Enforced(provider);
   const networkId = (await provider.getNetwork()).chainId;
+  const enforceEip155 = await isEIP155Enforced(networkId);
   const chainId = enforceEip155 ? networkId : 0;
   const deploymentInfo = CUSTOM_GAS_FOR_CHAIN[networkId]
     ? getCreate2FactoryDeploymentInfo(
@@ -520,8 +521,8 @@ export async function deployCreate2Factory(
     return COMMON_FACTORY;
   }
 
-  const enforceEip155 = await isEIP155Enforced(signer.provider);
   const networkId = (await signer.provider.getNetwork()).chainId;
+  const enforceEip155 = await isEIP155Enforced(networkId);
   const chainId = enforceEip155 ? networkId : 0;
   console.debug(`ChainId ${networkId} enforces EIP155: ${enforceEip155}`);
   const deploymentInfo = CUSTOM_GAS_FOR_CHAIN[networkId]
