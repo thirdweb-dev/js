@@ -14,15 +14,15 @@ import {
 } from "@radix-ui/react-icons";
 import { useThirdwebWallet } from "@thirdweb-dev/react-core";
 import { useEffect, useRef, useState } from "react";
-import { useDeviceWalletInfo } from "./useDeviceWalletInfo";
-import { ImportDeviceWalet } from "./ImportDeviceWallet";
+import { useLocalWalletInfo } from "./useLocalWalletInfo";
+import { ImportLocalWallet } from "./ImportLocalWallet";
 import styled from "@emotion/styled";
-import { DeviceWalletModalHeader } from "./common";
+import { LocalWalletModalHeader } from "./common";
 import { Flex } from "../../../../components/basic";
 import { ToolTip } from "../../../../components/Tooltip";
 import { isMobile } from "../../../../evm/utils/isMobile";
 
-export const CreateDeviceWallet: React.FC<{
+export const CreateLocalWallet: React.FC<{
   onConnected: () => void;
   onBack: () => void;
 }> = (props) => {
@@ -31,7 +31,7 @@ export const CreateDeviceWallet: React.FC<{
   const [showPassword, setShowPassword] = useState(false);
   const passwordMismatch = confirmPassword && password !== confirmPassword;
 
-  const { deviceWallet } = useDeviceWalletInfo();
+  const { localWallet } = useLocalWalletInfo();
   const thirdwebWalletContext = useThirdwebWallet();
   const [showImportScreen, setShowImportScreen] = useState(false);
 
@@ -39,18 +39,18 @@ export const CreateDeviceWallet: React.FC<{
   const isGenerated = useRef(false);
 
   useEffect(() => {
-    if (!deviceWallet || showImportScreen) {
+    if (!localWallet || showImportScreen) {
       return;
     }
     isGenerated.current = true;
-    deviceWallet.generate().then((_address) => {
+    localWallet.generate().then((_address) => {
       setGeneratedAddress(_address);
     });
-  }, [deviceWallet, showImportScreen]);
+  }, [localWallet, showImportScreen]);
 
   if (showImportScreen) {
     return (
-      <ImportDeviceWalet
+      <ImportLocalWallet
         onConnected={props.onConnected}
         onBack={() => {
           setShowImportScreen(false);
@@ -60,24 +60,24 @@ export const CreateDeviceWallet: React.FC<{
   }
 
   const handleConnect = async () => {
-    if (passwordMismatch || !deviceWallet || !thirdwebWalletContext) {
+    if (passwordMismatch || !localWallet || !thirdwebWalletContext) {
       throw new Error("Invalid state");
     }
 
-    deviceWallet.connect();
+    localWallet.connect();
 
-    await deviceWallet.save({
+    await localWallet.save({
       strategy: "encryptedJson",
       password,
     });
 
-    thirdwebWalletContext.handleWalletConnect(deviceWallet);
+    thirdwebWalletContext.handleWalletConnect(localWallet);
     props.onConnected();
   };
 
   return (
     <>
-      <DeviceWalletModalHeader onBack={props.onBack} />
+      <LocalWalletModalHeader onBack={props.onBack} />
 
       <Flex alignItems="center" gap="xs">
         <ModalTitle>Choose a password</ModalTitle>

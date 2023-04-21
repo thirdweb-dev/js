@@ -1,10 +1,10 @@
 import { WalletOptions } from "..";
 import { AsyncJsonFileStorage } from "../../core/AsyncJsonFileStorage";
-import { DeviceWallet, DeviceWalletOptions } from "./device-wallet";
+import { LocalWallet, LocalWalletOptions } from "./local-wallet";
 
-export class DeviceWalletNode extends DeviceWallet {
+export class LocalWalletNode extends LocalWallet {
   constructor(
-    options?: WalletOptions<DeviceWalletOptions> & { storageJsonFile?: string },
+    options?: WalletOptions<LocalWalletOptions> & { storageJsonFile?: string },
   ) {
     const storage = new AsyncJsonFileStorage(
       options?.storageJsonFile || "./wallet.json",

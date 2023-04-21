@@ -3,21 +3,21 @@ import { StyleSheet, View } from "react-native";
 import { ConnectWalletHeader } from "./ConnectingWallet/ConnectingWalletHeader";
 import Text from "../base/Text";
 import { ModalFooter } from "../base/modal/ModalFooter";
-import { DeviceWallet } from "../../wallets/wallets/device-wallet";
-import { DeviceWalletImportModal } from "./DeviceWalletImportModal";
+import { LocalWallet } from "../../wallets/wallets/local-wallet";
+import { LocalWalletImportModal } from "./LocalWalletImportModal";
 import { useState } from "react";
 
-export type DeviceWalletFlowProps = {
+export type LocalWalletFlowProps = {
   onClose: () => void;
   onBackPress: () => void;
   onConnectPress: () => void;
 };
 
-export function DeviceWalletFlow({
+export function LocalWalletFlow({
   onClose,
   onBackPress,
   onConnectPress,
-}: DeviceWalletFlowProps) {
+}: LocalWalletFlowProps) {
   const [isImportModalVisible, setIsImportModalVisible] = useState(false);
 
   const onImportPress = async () => {
@@ -32,7 +32,7 @@ export function DeviceWalletFlow({
     <>
       <ConnectWalletHeader
         onBackPress={onBackPress}
-        walletLogoUrl={DeviceWallet.meta.iconURL}
+        walletLogoUrl={LocalWallet.meta.iconURL}
         subHeaderText={""}
         close={onClose}
       />
@@ -52,7 +52,7 @@ export function DeviceWalletFlow({
         <ModalFooter footer={"Import a wallet"} onPress={onImportPress} />
       </View>
 
-      <DeviceWalletImportModal
+      <LocalWalletImportModal
         isVisible={isImportModalVisible}
         onClose={onImportModalClose}
       />

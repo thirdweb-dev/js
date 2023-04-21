@@ -1,5 +1,5 @@
 import {
-  DeviceWallet as DeviceWalletCore,
+  LocalWallet as LocalWalletCore,
   AsyncStorage,
   TWConnector,
 } from "@thirdweb-dev/wallets";
@@ -8,7 +8,7 @@ import type { WalletOptions } from "@thirdweb-dev/wallets";
 import * as SecureStore from "expo-secure-store";
 import { ethers, utils } from "ethers";
 
-export class DeviceWallet extends DeviceWalletCore {
+export class LocalWallet extends LocalWalletCore {
   async generate() {
     if (this.ethersWallet) {
       throw new Error("wallet is already initialized");
@@ -48,15 +48,15 @@ class SecureStorage implements AsyncStorage {
   }
 }
 
-export const deviceWallet = () => {
+export const localWallet = () => {
   const secureStorage = new SecureStorage();
   return {
-    id: DeviceWallet.id,
-    meta: DeviceWallet.meta,
+    id: LocalWallet.id,
+    meta: LocalWallet.meta,
     create: (options: WalletOptions) =>
-      new DeviceWallet({
+      new LocalWallet({
         ...options,
         walletStorage: secureStorage,
-      }) as DeviceWalletCore,
+      }) as LocalWalletCore,
   } satisfies Wallet;
 };

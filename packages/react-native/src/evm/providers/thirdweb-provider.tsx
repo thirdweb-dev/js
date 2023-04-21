@@ -11,7 +11,7 @@ import { metamaskWallet } from "../wallets/wallets/metamask-wallet";
 import { rainbowWallet } from "../wallets/wallets/rainbow-wallet";
 import { SecureStorage } from "../../core/SecureStorage";
 import { useCoinbaseWalletListener } from "../wallets/hooks/useCoinbaseWalletListener";
-import { deviceWallet } from "../wallets/wallets/device-wallet";
+import { localWallet } from "../wallets/wallets/local-wallet";
 
 const DEFAULT_WALLETS = [metamaskWallet(), rainbowWallet()];
 
@@ -69,7 +69,7 @@ export const ThirdwebProvider = <
   useEffect(() => {
     if (guestMode && !removedGuestWalletRef.current) {
       removedGuestWalletRef.current = true;
-      supportedWallets.push(deviceWallet());
+      supportedWallets.push(localWallet());
     }
   }, [guestMode, supportedWallets]);
 

@@ -1,5 +1,5 @@
 import { AsyncStorage } from "./AsyncStorage";
-import { WalletData } from "../evm/wallets/device-wallet";
+import { WalletData } from "../evm/wallets/local-wallet";
 
 export class CredentialsStorage implements AsyncStorage {
   async getItem(): Promise<string | null> {

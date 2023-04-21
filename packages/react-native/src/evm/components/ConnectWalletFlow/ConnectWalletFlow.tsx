@@ -11,11 +11,8 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useMemo, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
-import { DeviceWalletFlow } from "./DeviceWalletFlow";
-import {
-  DeviceWallet,
-  deviceWallet,
-} from "../../wallets/wallets/device-wallet";
+import { LocalWalletFlow } from "./LocalWalletFlow";
+import { LocalWallet, localWallet } from "../../wallets/wallets/local-wallet";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -30,7 +27,7 @@ export const ConnectWalletFlow = () => {
   const wallets = useMemo(() => {
     if (
       guestMode &&
-      supportedWallets[supportedWallets.length - 1].id === DeviceWallet.id &&
+      supportedWallets[supportedWallets.length - 1].id === LocalWallet.id &&
       !removedGuestWalletRef.current
     ) {
       removedGuestWalletRef.current = true;
@@ -58,13 +55,13 @@ export const ConnectWalletFlow = () => {
   };
 
   const onJoinAsGuestPress = () => {
-    connectActiveWallet(deviceWallet());
+    connectActiveWallet(localWallet());
   };
 
   const onChooseWallet = (wallet: Wallet) => {
     setActiveWallet(() => wallet);
 
-    if (wallet.id !== DeviceWallet.id) {
+    if (wallet.id !== LocalWallet.id) {
       connectActiveWallet(wallet);
     }
   };
@@ -76,9 +73,9 @@ export const ConnectWalletFlow = () => {
 
   function getComponentForWallet(activeWalletP: Wallet) {
     switch (activeWalletP.id) {
-      case DeviceWallet.id:
+      case LocalWallet.id:
         return (
-          <DeviceWalletFlow
+          <LocalWalletFlow
             onClose={onClose}
             onBackPress={onBackPress}
             onConnectPress={() => connectActiveWallet(activeWalletP)}
@@ -94,7 +91,7 @@ export const ConnectWalletFlow = () => {
           isConnecting ? (
             <ConnectingWallet
               content={
-                activeWallet.id === DeviceWallet.id ? (
+                activeWallet.id === LocalWallet.id ? (
                   <Text variant="bodySmallSecondary" mt="md">
                     Creating, encrypting and securing your device wallet.
                   </Text>

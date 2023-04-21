@@ -16,25 +16,25 @@ import {
   useThirdwebWallet,
 } from "@thirdweb-dev/react-core";
 import { PasswordInput } from "../PasswordInput";
-import { DeviceWallet } from "../../wallets/wallets/device-wallet";
+import { LocalWallet } from "../../wallets/wallets/local-wallet";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 
-export type DeviceWalletImportModalProps = {
+export type LocalWalletImportModalProps = {
   isVisible: boolean;
   onClose: () => void;
 };
 
-export const DeviceWalletImportModal = ({
+export const LocalWalletImportModal = ({
   isVisible,
   onClose,
-}: DeviceWalletImportModalProps) => {
+}: LocalWalletImportModalProps) => {
   const [password, setPassword] = useState<string | undefined>();
   const [jsonFile, setJsonFile] = useState<string | undefined>();
   const [error, setError] = useState<string | undefined>();
   const [isImporting, setIsImporting] = useState<boolean>(false);
   const createWalletInstance = useCreateWalletInstance();
-  const deviceWalletCreator = useSupportedWallet(DeviceWallet.id) as Wallet;
+  const localWalletCreator = useSupportedWallet(LocalWallet.id) as Wallet;
   const twWalletContext = useThirdwebWallet();
 
   const onImportPress = async () => {
@@ -57,12 +57,12 @@ export const DeviceWalletImportModal = ({
       return;
     }
 
-    const deviceWallet = createWalletInstance(
-      deviceWalletCreator,
-    ) as DeviceWallet;
+    const localWallet = createWalletInstance(
+      localWalletCreator,
+    ) as LocalWallet;
 
     try {
-      await deviceWallet.import({
+      await localWallet.import({
         encryptedJson: json,
         password: password,
       });
@@ -73,12 +73,12 @@ export const DeviceWalletImportModal = ({
       return;
     }
 
-    deviceWallet.save({
+    localWallet.save({
       strategy: "privateKey",
     });
 
-    await deviceWallet.connect();
-    twWalletContext?.handleWalletConnect(deviceWallet);
+    await localWallet.connect();
+    twWalletContext?.handleWalletConnect(localWallet);
 
     setIsImporting(false);
     onCloseInternal();
