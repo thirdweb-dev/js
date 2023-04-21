@@ -1,5 +1,13 @@
 # @thirdweb-dev/chains
 
+## 0.1.12
+
+### Patch Changes
+
+- [#896](https://github.com/thirdweb-dev/js/pull/896) [`a6610f12`](https://github.com/thirdweb-dev/js/commit/a6610f1211e9359885b948bf69a66d834707ec07) Thanks [@atharvadeosthale](https://github.com/atharvadeosthale)! - Added links to portal
+
+- [#903](https://github.com/thirdweb-dev/js/pull/903) [`77224646`](https://github.com/thirdweb-dev/js/commit/77224646d542db3171394d744b455497cd057633) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - new chains
+
 ## 0.1.11
 
 ### Patch Changes
