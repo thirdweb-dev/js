@@ -14,7 +14,7 @@ export default {
   },
   "features": [],
   "infoURL": "https://hashpalette.com/",
-  "shortName": "PaletteChain",
+  "shortName": "PCM",
   "chainId": 1718,
   "networkId": 1718,
   "icon": {

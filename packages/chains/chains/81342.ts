@@ -6,7 +6,7 @@ export default {
   "faucets": [],
   "nativeCurrency": {
     "name": "Amana Mixnet",
-    "symbol": "MEER-m",
+    "symbol": "MEER-M",
     "decimals": 18
   },
   "infoURL": "https://github.com/Qitmeer",
