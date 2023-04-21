@@ -36,7 +36,6 @@ import {
 import { SmartWalletObj } from "../../../wallets/smartWallet";
 import { Flex } from "../../../../components/basic";
 import styled from "@emotion/styled";
-import { shortenAddress } from "../../../../evm/utils/addresses";
 
 export const SmartWalletConnection: React.FC<{
   onBack: () => void;

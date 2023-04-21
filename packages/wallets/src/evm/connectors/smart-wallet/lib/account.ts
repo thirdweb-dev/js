@@ -2,6 +2,10 @@ import { BaseApiParams } from "@account-abstraction/sdk/dist/src/BaseAccountAPI"
 import { ChainOrRpcUrl, SmartContract, ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { Signer, BigNumberish, BigNumber, ContractInterface } from "ethers";
 import { arrayify, hexConcat } from "ethers/lib/utils";
+<<<<<<< HEAD
+=======
+import { getEncodedAccountId } from "../utils";
+>>>>>>> main
 import { BaseAccountAPI } from "./base-api";
 import { MINIMAL_ACCOUNT_ABI } from "./constants";
 
@@ -59,7 +63,11 @@ export class AccountAPI extends BaseAccountAPI {
 
     const tx = factory.prepare("createAccount", [
       localSigner,
+<<<<<<< HEAD
       this.params.accountId,
+=======
+      getEncodedAccountId(this.params.accountId),
+>>>>>>> main
     ]);
     try {
       console.log("Cost to create account: ", await tx.estimateGasCost());
