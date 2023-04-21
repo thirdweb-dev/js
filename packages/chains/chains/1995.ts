@@ -28,7 +28,7 @@ export default {
   "explorers": [
     {
       "name": "edexa-testnet",
-      "url": "https://explorer.edexa.com",
+      "url": "https://explorer.testnet.edexa.com",
       "standard": "EIP3091"
     }
   ],
