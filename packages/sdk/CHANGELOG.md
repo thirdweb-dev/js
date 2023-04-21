@@ -1,5 +1,28 @@
 # @thirdweb-dev/sdk
 
+## 3.10.11
+
+### Patch Changes
+
+- [#898](https://github.com/thirdweb-dev/js/pull/898) [`abe88599`](https://github.com/thirdweb-dev/js/commit/abe88599b634699aa3b876fe344bfddc6c1a92d4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix open packs gaslessly with chain agnostic forwarder
+
+- [#892](https://github.com/thirdweb-dev/js/pull/892) [`4acb2b55`](https://github.com/thirdweb-dev/js/commit/4acb2b5561118dde5c7372400d4d754b879aef2e) Thanks [@MananTank](https://github.com/MananTank)! - Add Switch Account button for MetaMask
+
+- [#911](https://github.com/thirdweb-dev/js/pull/911) [`ea04edf4`](https://github.com/thirdweb-dev/js/commit/ea04edf47867617ff74f0aca1471a40b8d9c9f7c) Thanks [@adam-maj](https://github.com/adam-maj)! - Export json batch rpc
+
+- [#903](https://github.com/thirdweb-dev/js/pull/903) [`77224646`](https://github.com/thirdweb-dev/js/commit/77224646d542db3171394d744b455497cd057633) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better tx error parsing
+
+- [#915](https://github.com/thirdweb-dev/js/pull/915) [`c9ee9b32`](https://github.com/thirdweb-dev/js/commit/c9ee9b32f0a275f7c03d50243f23a7332f148ae5) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix errors for Create2 factory deployments on any EVM
+
+- [#890](https://github.com/thirdweb-dev/js/pull/890) [`00f4355f`](https://github.com/thirdweb-dev/js/commit/00f4355f1aa8843bb534b173e4d8e0a19dd18b47) Thanks [@adam-maj](https://github.com/adam-maj)! - Add ability to batch create listings and auctions
+
+- [#907](https://github.com/thirdweb-dev/js/pull/907) [`29146e00`](https://github.com/thirdweb-dev/js/commit/29146e009db655304f5753904ae7f8569c12f4ca) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix listing validation for marketplace v2 & v3
+
+- [#885](https://github.com/thirdweb-dev/js/pull/885) [`bfdd8493`](https://github.com/thirdweb-dev/js/commit/bfdd84939d7cf9c6635b83c971bcc8967b52538c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Enable MarketplaceV3 deployment on any EVM
+
+- Updated dependencies [[`a6610f12`](https://github.com/thirdweb-dev/js/commit/a6610f1211e9359885b948bf69a66d834707ec07), [`77224646`](https://github.com/thirdweb-dev/js/commit/77224646d542db3171394d744b455497cd057633)]:
+  - @thirdweb-dev/chains@0.1.12
+
 ## 3.10.10
 
 ### Patch Changes

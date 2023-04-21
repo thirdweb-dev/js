@@ -2,6 +2,7 @@ import { NetworkSelectorModal } from "../NetworkSelector/NetworkSelectorModal";
 import { Address } from "../base/Address";
 import BaseButton from "../base/BaseButton";
 import { ChainIcon } from "../base/ChainIcon";
+import PocketWalletIcon from "../../assets/wallet";
 import Text from "../base/Text";
 import { WalletIcon } from "../base/WalletIcon";
 import { TWModal } from "../base/modal/TWModal";
@@ -11,6 +12,7 @@ import { useWallet, useBalance, useDisconnect } from "@thirdweb-dev/react-core";
 import { useActiveChain } from "@thirdweb-dev/react-core/evm";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
+import { ExportDeviceWalletModal } from "./ExportDeviceWalletModal";
 
 export type ConnectWalletDetailsProps = {
   address: string;
@@ -20,6 +22,7 @@ export const ConnectWalletDetails = ({
   address,
 }: ConnectWalletDetailsProps) => {
   const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false);
+  const [isExportModalVisible, setIsExportModalVisible] = useState(false);
   const [isNetworkSelectorModalVisible, setIsNetworkSelectorModalVisible] =
     useState(false);
   const [isDisconnecting, setIsDisconnecting] = useState(false);
@@ -52,6 +55,15 @@ export const ConnectWalletDetails = ({
 
   const onBackdropPress = () => {
     setIsDetailsModalVisible(false);
+    setIsExportModalVisible(false);
+  };
+
+  const onExportDeviceWalletPress = () => {
+    setIsExportModalVisible(true);
+  };
+
+  const onExportModalClose = () => {
+    setIsExportModalVisible(false);
   };
 
   return (
@@ -60,6 +72,10 @@ export const ConnectWalletDetails = ({
         isVisible={isDetailsModalVisible}
         onBackdropPress={onBackdropPress}
       >
+        <ExportDeviceWalletModal
+          isVisible={isExportModalVisible}
+          onClose={onExportModalClose}
+        />
         <WalletDetailsModalHeader
           address={address}
           onDisconnectPress={onDisconnectPress}
@@ -73,6 +89,25 @@ export const ConnectWalletDetails = ({
           chainName={chain?.name || "Unknown Network"}
           onPress={onChangeNetworkPress}
         />
+        {activeWallet?.getMeta().name.toLowerCase().includes("device") ? (
+          <>
+            <View style={styles.currentNetwork}>
+              <Text variant="bodySmallSecondary">Additional Actions</Text>
+            </View>
+            <BaseButton
+              backgroundColor="background"
+              borderColor="border"
+              mb="sm"
+              style={styles.exportWallet}
+              onPress={onExportDeviceWalletPress}
+            >
+              <PocketWalletIcon size={16} />
+              <View style={styles.exportWalletInfo}>
+                <Text variant="bodySmall">Export device wallet</Text>
+              </View>
+            </BaseButton>
+          </>
+        ) : null}
       </TWModal>
 
       <NetworkSelectorModal
@@ -108,6 +143,26 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     marginLeft: 5,
   },
+  exportWalletInfo: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    alignContent: "center",
+    flexDirection: "column",
+    marginLeft: 8,
+  },
+  exportWallet: {
+    display: "flex",
+    flexDirection: "row",
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    borderRadius: 12,
+    borderWidth: 0.5,
+    paddingHorizontal: 10,
+    paddingVertical: 12,
+    minWidth: 200,
+  },
   walletDetails: {
     display: "flex",
     flexDirection: "row",
@@ -126,6 +181,7 @@ const styles = StyleSheet.create({
     alignContent: "flex-start",
     alignItems: "flex-start",
     justifyContent: "flex-start",
-    marginTop: 36,
+    marginTop: 24,
+    marginBottom: 8,
   },
 });

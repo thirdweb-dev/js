@@ -2,9 +2,17 @@ import type { Chain } from "../src/types";
 export default {
   "name": "OEBlock Testnet",
   "chain": "OEBt",
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ],
   "rpc": [
     "https://oeblock-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.oeblock.com/"
+    "https://testnet-rpc.oeblock.com"
   ],
   "faucets": [],
   "nativeCurrency": {

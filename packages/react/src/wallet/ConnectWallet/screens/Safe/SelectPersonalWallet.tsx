@@ -11,16 +11,16 @@ import { WalletMeta } from "../../../types";
 import { WalletSelection } from "../../WalletSelector";
 import { Steps } from "./Steps";
 import styled from "@emotion/styled";
-import { useSupportedWallet } from "../useSupportedWallet";
-import { Wallet } from "@thirdweb-dev/react-core";
+import { Wallet, useSupportedWallet } from "@thirdweb-dev/react-core";
 
 export const SelectpersonalWallet: React.FC<{
   onBack: () => void;
   walletsMeta: WalletMeta[];
 }> = (props) => {
   const safeWalletObj = useSupportedWallet("Safe") as Wallet;
-  // remove gnosis safe from the list of wallets
-  const walletsMeta = props.walletsMeta.filter((w) => w.id !== "Safe");
+  const walletsMeta = props.walletsMeta.filter(
+    (w) => w.id !== "SmartWallet" && w.id !== "Safe",
+  );
 
   return (
     <>
