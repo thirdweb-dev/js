@@ -32,7 +32,6 @@ export class DeviceWallet extends DeviceWalletCore {
       }
     }
 
-    console.log("privatekey", this.ethersWallet?.privateKey);
     return super.getConnector();
   }
 }

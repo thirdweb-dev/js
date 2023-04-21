@@ -11,6 +11,7 @@ import { metamaskWallet } from "../wallets/wallets/metamask-wallet";
 import { rainbowWallet } from "../wallets/wallets/rainbow-wallet";
 import { SecureStorage } from "../../core/SecureStorage";
 import { useCoinbaseWalletListener } from "../wallets/hooks/useCoinbaseWalletListener";
+import { deviceWallet } from "../wallets/wallets/device-wallet";
 
 const DEFAULT_WALLETS = [metamaskWallet(), rainbowWallet()];
 
@@ -59,15 +60,27 @@ export const ThirdwebProvider = <
   thirdwebApiKey = DEFAULT_API_KEY,
   supportedWallets = DEFAULT_WALLETS,
   authConfig,
+  guestMode,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
   useCoinbaseWalletListener();
+
+  if (guestMode) {
+    supportedWallets.push(deviceWallet());
+  }
 
   return (
     <ThirdwebProviderCore
       thirdwebApiKey={thirdwebApiKey}
       supportedWallets={supportedWallets}
-      authConfig={authConfig ? (authConfig.secureStorage ? authConfig : {...authConfig, secureStorage: new SecureStorage('auth')}) : undefined}
+      authConfig={
+        authConfig
+          ? authConfig.secureStorage
+            ? authConfig
+            : { ...authConfig, secureStorage: new SecureStorage("auth") }
+          : undefined
+      }
+      guestMode={guestMode}
       createWalletStorage={createWalletStorage}
       {...restProps}
     >

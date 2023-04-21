@@ -3,19 +3,42 @@ import Text from "../base/Text";
 import { TWModal } from "../base/modal/TWModal";
 import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
-import { Wallet, useConnect, useWallets } from "@thirdweb-dev/react-core";
-import { useState } from "react";
+import {
+  Wallet,
+  useConnect,
+  useThirdwebWallet,
+  useWallets,
+} from "@thirdweb-dev/react-core";
+import { useMemo, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
 import { DeviceWalletFlow } from "./DeviceWalletFlow";
-import { DeviceWallet } from "../../wallets/wallets/device-wallet";
+import {
+  DeviceWallet,
+  deviceWallet,
+} from "../../wallets/wallets/device-wallet";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [activeWallet, setActiveWallet] = useState<Wallet | undefined>();
   const [isConnecting, setIsConnecting] = useState(false);
+  const guestMode = useThirdwebWallet()?.guestMode;
+  const removedGuestWalletRef = useRef(false);
 
   const connect = useConnect();
   const supportedWallets = useWallets();
+
+  const wallets = useMemo(() => {
+    if (
+      guestMode &&
+      supportedWallets[supportedWallets.length - 1].id === DeviceWallet.id &&
+      !removedGuestWalletRef.current
+    ) {
+      removedGuestWalletRef.current = true;
+      return supportedWallets.slice(0, supportedWallets.length - 1);
+    }
+
+    return supportedWallets;
+  }, [guestMode, supportedWallets]);
 
   const onConnectPress = () => {
     setModalVisible(true);
@@ -32,6 +55,10 @@ export const ConnectWalletFlow = () => {
       console.error("Error connecting to the wallet", error);
       onBackPress();
     });
+  };
+
+  const onJoinAsGuestPress = () => {
+    connectActiveWallet(deviceWallet());
   };
 
   const onChooseWallet = (wallet: Wallet) => {
@@ -82,9 +109,9 @@ export const ConnectWalletFlow = () => {
           )
         ) : (
           <ChooseWallet
-            wallets={supportedWallets}
+            wallets={wallets}
             onChooseWallet={onChooseWallet}
-            footer={<></>}
+            onJoinAsGuestPress={onJoinAsGuestPress}
             onClose={onClose}
           />
         )}

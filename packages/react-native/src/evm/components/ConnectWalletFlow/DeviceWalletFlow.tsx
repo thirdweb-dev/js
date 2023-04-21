@@ -43,13 +43,13 @@ export function DeviceWalletFlow({
           style={styles.connectWalletButton}
         >
           <Text variant="bodyLarge" color="black">
-            Create Device Wallet
+            Create new wallet
           </Text>
         </BaseButton>
         <Text variant="subHeader" mt="lg">
           -------- OR --------
         </Text>
-        <ModalFooter footer={"Import a JSON wallet"} onPress={onImportPress} />
+        <ModalFooter footer={"Import a wallet"} onPress={onImportPress} />
       </View>
 
       <DeviceWalletImportModal
