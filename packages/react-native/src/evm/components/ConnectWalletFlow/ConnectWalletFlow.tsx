@@ -20,6 +20,10 @@ export const ConnectWalletFlow = () => {
   const supportedWallets = useWallets();
 
   const onConnectPress = () => {
+    if (supportedWallets.length === 1) {
+      onChooseWallet(supportedWallets[0]);
+    }
+
     setModalVisible(true);
   };
 

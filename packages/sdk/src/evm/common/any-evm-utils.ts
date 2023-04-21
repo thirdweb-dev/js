@@ -2,7 +2,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BytesLike, ethers, providers, Signer } from "ethers";
 import invariant from "tiny-invariant";
 import { bytecode as WETHBytecode } from "./WETH9";
-import { getNativeTokenByChainId } from "../constants";
+import { getChainProvider, getNativeTokenByChainId } from "../constants";
 import { ThirdwebSDK } from "../core";
 import { PreDeployMetadataFetched } from "../schema";
 import {
@@ -25,6 +25,7 @@ import {
 import { generatePluginFunctions, getMetadataForPlugins } from "./plugin";
 import { Plugin } from "../types/plugins";
 import { DeployMetadata, DeployOptions } from "../types";
+import { DEFAULT_API_KEY } from "../../core/constants/urls";
 import { CUSTOM_GAS_FOR_CHAIN, matchError } from "./any-evm-constants";
 
 //
@@ -334,6 +335,130 @@ export async function computeNativeTokenAddress(
       contractName: "WETH9",
     })
   ).transaction.predictedAddress;
+}
+
+/**
+ *
+ * @public
+ * @param contractName
+ * @param chainId
+ * @param storage
+ */
+export async function getThirdwebContractAddress(
+  contractName: string,
+  chainId: number,
+  storage: ThirdwebStorage,
+): Promise<string> {
+  const provider = getChainProvider(chainId, {
+    thirdwebApiKey: DEFAULT_API_KEY,
+  });
+  const contractAddress = await predictThirdwebContractAddress(
+    contractName,
+    chainId,
+    storage,
+  );
+  const isDeployed = await isContractDeployed(contractAddress, provider);
+  invariant(isDeployed, "Contract not deployed yet");
+
+  return contractAddress;
+}
+
+/**
+ *
+ * @public
+ * @param contractName
+ * @param chainId
+ * @param storage
+ */
+export async function predictThirdwebContractAddress(
+  contractName: string,
+  chainId: number,
+  storage: ThirdwebStorage,
+): Promise<string> {
+  const provider = getChainProvider(chainId, {
+    thirdwebApiKey: DEFAULT_API_KEY,
+  });
+  const publishUri = await fetchAndCachePublishedContractURI(contractName);
+  const create2Factory = await getCreate2FactoryAddress(provider);
+  invariant(create2Factory, "Thirdweb stack not found");
+
+  const pluginMetadata = await getMetadataForPlugins(publishUri, storage);
+
+  // if pluginMetadata is not empty, then it's a plugin-pattern router contract
+  if (pluginMetadata.length > 0) {
+    const deploymentInfo = await getDeploymentInfo(
+      publishUri,
+      storage,
+      provider,
+      create2Factory,
+    );
+
+    const implementation = deploymentInfo.find(
+      (contract) => contract.type === "implementation",
+    )?.transaction.predictedAddress;
+    invariant(implementation, "Error computing address for plugin router");
+
+    return implementation;
+  }
+
+  const implementation = await computeDeploymentInfo(
+    "implementation",
+    provider,
+    storage,
+    create2Factory,
+    { contractName: contractName },
+  );
+
+  return implementation.transaction.predictedAddress;
+}
+
+/**
+ *
+ * @internal
+ * @param contractName
+ * @param chainId
+ * @param storage
+ */
+export async function getEncodedConstructorParamsForThirdwebContract(
+  contractName: string,
+  chainId: number,
+  storage: ThirdwebStorage,
+  constructorParamMap?: ConstructorParamMap,
+): Promise<BytesLike | undefined> {
+  const provider = getChainProvider(chainId, {
+    thirdwebApiKey: DEFAULT_API_KEY,
+  });
+  const publishUri = await fetchAndCachePublishedContractURI(contractName);
+  const metadata = await fetchAndCacheDeployMetadata(publishUri, storage);
+  const create2Factory = await getCreate2FactoryAddress(provider);
+  invariant(create2Factory, "Thirdweb stack not found");
+
+  const pluginMetadata = await getMetadataForPlugins(publishUri, storage);
+
+  let encodedArgs;
+
+  // if pluginMetadata is not empty, then it's a plugin-pattern router contract
+  if (pluginMetadata.length > 0) {
+    const deploymentInfo = await getDeploymentInfo(
+      publishUri,
+      storage,
+      provider,
+      create2Factory,
+    );
+    encodedArgs = deploymentInfo.find(
+      (contract) => contract.type === "implementation",
+    )?.encodedArgs;
+  } else {
+    encodedArgs = await encodeConstructorParamsForImplementation(
+      metadata.compilerMetadata,
+      provider,
+      storage,
+      create2Factory,
+      constructorParamMap,
+    );
+  }
+
+  return encodedArgs;
 }
 
 //
@@ -754,6 +879,7 @@ export async function computeDeploymentInfo(
       to: create2Factory,
       data: initBytecodeWithSalt,
     },
+    encodedArgs,
   };
 }
 
@@ -763,7 +889,7 @@ export async function computeDeploymentInfo(
  * Determine constructor params required by an implementation contract.
  * Return abi-encoded params.
  */
-async function encodeConstructorParamsForImplementation(
+export async function encodeConstructorParamsForImplementation(
   compilerMetadata: PreDeployMetadataFetched,
   provider: providers.Provider,
   storage: ThirdwebStorage,
