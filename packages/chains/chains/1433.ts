@@ -3,6 +3,12 @@ export default {
   "name": "Rikeza Network Mainnet",
   "title": "Rikeza Network Mainnet",
   "chain": "Rikeza",
+  "icon": {
+    "url": "ipfs://QmfJ1Qxpzi6CSLeFeWY1Bwe435CpT5za5WfrLUE7vNzZfy",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "rpc": [
     "https://rikeza-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.rikscan.com"
