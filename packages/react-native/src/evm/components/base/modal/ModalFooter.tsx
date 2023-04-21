@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
   footer: {
     marginTop: 24,
     marginBottom: 14,
+    minHeight: 30,
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
