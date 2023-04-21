@@ -20,7 +20,7 @@ export const TW_IPFS_SERVER_URL = "https://upload.nftlabs.co";
 /**
  * @internal
  */
-export const TW_IPFS_SERVER_V2_URL = `https://api.thirdweb.com/ipfs/upload`;
+export const TW_IPFS_SERVER_V2_URL = `https://storage.thirdweb.com/ipfs/upload`;
 
 /**
  * @internal
