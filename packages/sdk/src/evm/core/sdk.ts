@@ -40,6 +40,7 @@ import {
   utils as ethersUtils,
 } from "ethers";
 import { BaseContractForAddress } from "../types/contract";
+import { ContractVerifier } from "./classes/contract-verifier";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -168,6 +169,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   public deployer: ContractDeployer;
   /**
+   * Contract verifier
+   */
+  public verifier: ContractVerifier;
+  /**
    * The registry of deployed contracts
    */
   public multiChainRegistry: MultichainRegistry;
@@ -202,6 +207,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
     this.wallet = new UserWallet(network, options);
     this.deployer = new ContractDeployer(network, options, configuredStorage);
+    this.verifier = new ContractVerifier(network, options, configuredStorage);
     this.multiChainRegistry = new MultichainRegistry(
       network,
       this.storageHandler,
@@ -688,6 +694,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     this.deployer.updateSignerOrProvider(this.getSignerOrProvider());
     this._publisher.updateSignerOrProvider(this.getSignerOrProvider());
     this.multiChainRegistry.updateSigner(this.getSignerOrProvider());
+    this.verifier.updateSignerOrProvider(this.getSignerOrProvider());
     for (const [, contract] of this.contractCache) {
       contract.onNetworkUpdated(this.getSignerOrProvider());
     }

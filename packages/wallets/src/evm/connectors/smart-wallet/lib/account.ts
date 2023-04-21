@@ -97,7 +97,7 @@ export class AccountAPI extends BaseAccountAPI {
       return BigNumber.from(0);
     }
     const accountContract = await this._getAccountContract();
-    const nonce = await accountContract.call("nonce");
+    const nonce = await accountContract.call("getNonce");
     return nonce;
   }
 

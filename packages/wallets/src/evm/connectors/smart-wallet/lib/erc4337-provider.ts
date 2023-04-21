@@ -6,7 +6,6 @@ import {
   EntryPoint,
   UserOperationStruct,
 } from "@account-abstraction/contracts";
-import { getUserOpHash } from "@account-abstraction/utils";
 import { ClientConfig } from "@account-abstraction/sdk";
 import { UserOperationEventListener } from "./userop-event";
 import { BaseAccountAPI } from "./base-api";
@@ -133,11 +132,7 @@ export class ERC4337EthersProvider extends ethers.providers.BaseProvider {
     userOp1: UserOperationStruct,
   ): Promise<ethers.providers.TransactionResponse> {
     const userOp = await resolveProperties(userOp1);
-    const userOpHash = getUserOpHash(
-      userOp,
-      this.config.entryPointAddress,
-      this.chainId,
-    );
+    const userOpHash = await this.smartAccountAPI.getUserOpHash(userOp);
     const waitForUserOp =
       async (): Promise<ethers.providers.TransactionReceipt> =>
         await new Promise((resolve, reject) => {
