@@ -5,7 +5,7 @@ import {
   ThirdwebProviderCoreProps,
   Wallet,
 } from "@thirdweb-dev/react-core";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect, useRef } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { metamaskWallet } from "../wallets/wallets/metamask-wallet";
 import { rainbowWallet } from "../wallets/wallets/rainbow-wallet";
@@ -64,10 +64,14 @@ export const ThirdwebProvider = <
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
   useCoinbaseWalletListener();
+  const removedGuestWalletRef = useRef(false);
 
-  if (guestMode) {
-    supportedWallets.push(deviceWallet());
-  }
+  useEffect(() => {
+    if (guestMode && !removedGuestWalletRef.current) {
+      removedGuestWalletRef.current = true;
+      supportedWallets.push(deviceWallet());
+    }
+  }, [guestMode, supportedWallets]);
 
   return (
     <ThirdwebProviderCore
