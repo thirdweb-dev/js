@@ -3,11 +3,13 @@ import {
   isContractDeployed,
   ThirdwebSDK,
 } from "@thirdweb-dev/sdk";
-import { ethers } from "ethers";
 import { EVMWallet } from "../../interfaces";
 
-// TODO: need `accountId` on this object, but don't have it yet
-export type AssociatedAccount = { account: string; accountAdmin: string };
+export type AssociatedAccount = {
+  account: string;
+  accountAdmin: string;
+  accountId: string;
+};
 
 export async function getAssociatedAccounts(
   personalWallet: EVMWallet,
@@ -34,18 +36,10 @@ export async function isAccountIdAvailable(
 ) {
   const readOnlySDK = new ThirdwebSDK(chain);
   const factoryContract = await readOnlySDK.getContract(factoryAddress);
-  const accountAddress = await factoryContract.call("getAddress", [
-    getEncodedAccountId(accountId),
-  ]);
+  const accountAddress = await factoryContract.call("getAddress", [accountId]);
   const isDeployed = await isContractDeployed(
     accountAddress,
     readOnlySDK.getProvider(),
   );
   return !isDeployed;
-}
-
-export function getEncodedAccountId(accountId: string) {
-  const hash = ethers.utils.id(accountId);
-  const salt = "0x" + hash.substring(2, 66);
-  return salt;
 }
