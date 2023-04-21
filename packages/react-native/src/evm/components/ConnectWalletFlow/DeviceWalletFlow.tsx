@@ -34,7 +34,7 @@ export function DeviceWalletFlow({
         onBackPress={onBackPress}
         walletLogoUrl={DeviceWallet.meta.iconURL}
         subHeaderText={""}
-        close={onClose}
+        onClose={onClose}
       />
       <View style={styles.connectingContainer}>
         <BaseButton

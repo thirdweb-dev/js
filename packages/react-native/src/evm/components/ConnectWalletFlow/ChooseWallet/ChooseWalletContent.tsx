@@ -7,20 +7,20 @@ import { StyleSheet, View, FlatList } from "react-native";
 
 interface InitialExplorerContentProps {
   wallets: Wallet[];
-  excludeWallets?: Wallet[];
+  excludeWalletIds?: string[];
   onChooseWallet: (wallet: Wallet) => void;
 }
 
 export const ChooseWalletContent = ({
   wallets,
-  excludeWallets,
+  excludeWalletIds,
   onChooseWallet,
 }: InitialExplorerContentProps) => {
   const walletsToDisplay = useMemo(() => {
     return wallets.filter(
-      (w) => !!!excludeWallets?.find((ew) => ew.id === w.id),
+      (w) => !!!excludeWalletIds?.find((ewId) => ewId === w.id),
     );
-  }, [wallets, excludeWallets]);
+  }, [wallets, excludeWalletIds]);
 
   return (
     <View style={styles.explorerContainer}>

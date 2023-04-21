@@ -1,5 +1,4 @@
 import { useCallback, useState } from "react";
-import { TWModal, TWModalProps } from "../../base/modal/TWModal";
 import { ConnectWalletHeader } from "../ConnectingWallet/ConnectingWalletHeader";
 import Step1Image from "../../../assets/step-1";
 import Step2Image from "../../../assets/step-2";
@@ -10,10 +9,13 @@ import BaseButton from "../../base/BaseButton";
 import Text from "../../base/Text";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import { ModalFooter } from "../../base/modal/ModalFooter";
+import { SmartWallet } from "@thirdweb-dev/wallets";
+import Box from "../../base/Box";
 
 export type SmartContractModalProps = {
   onClose: () => void;
-} & TWModalProps;
+  onBackPress: () => void;
+};
 
 type Step = "personalWallet" | "createAccount" | "selectAccount";
 const steps: Step[] = ["personalWallet", "createAccount", "selectAccount"];
@@ -41,9 +43,8 @@ function getHeaderText(step: Step) {
 }
 
 export const SmartContractModal = ({
-  isVisible,
   onClose,
-  ...props
+  onBackPress,
 }: SmartContractModalProps) => {
   const [step, setStep] = useState<Step>("personalWallet");
   const [username, setUsername] = useState<string>("");
@@ -68,18 +69,18 @@ export const SmartContractModal = ({
     setStep("selectAccount");
   };
 
-  const onBackPress = () => {
+  const onBackPressInternal = () => {
     if (step === "personalWallet") {
-      onClose();
+      onBackPress();
     } else {
       const index = steps.indexOf(step);
       setStep(steps[index - 1]);
     }
   };
 
-  const onCreateNewAccountPress = () => {
+  const onCreateNewAccountPress = useCallback(() => {
     onClose();
-  };
+  }, [onClose]);
 
   const activeComponent = useCallback(() => {
     switch (step) {
@@ -87,7 +88,7 @@ export const SmartContractModal = ({
         return (
           <ChooseWalletContent
             wallets={supportedWallets}
-            excludeWallets={[]} // todo: add smart wallet
+            excludeWalletIds={[SmartWallet.id]}
             onChooseWallet={onChooseWallet}
           />
         );
@@ -121,26 +122,35 @@ export const SmartContractModal = ({
           />
         );
     }
-  }, [error, isCreatingAccount, onChooseWallet, step, supportedWallets]);
+  }, [
+    error,
+    isCreatingAccount,
+    onChooseWallet,
+    onCreateNewAccountPress,
+    step,
+    supportedWallets,
+  ]);
 
   return (
-    <TWModal isVisible={isVisible} {...props}>
+    <>
       <ConnectWalletHeader
         headerText={getHeaderText(step)[0]}
         subHeaderText={getHeaderText(step)[1]}
         alignHeader="flex-start"
         onClose={onClose}
-        onBackPress={onBackPress}
+        onBackPress={onBackPressInternal}
       />
 
-      {step === "personalWallet" ? (
-        <Step1Image width={180} height={24} color="#2B3036" />
-      ) : (
-        <Step2Image width={180} height={24} color="#2B3036" />
-      )}
+      <Box mt="md">
+        {step === "personalWallet" ? (
+          <Step1Image width={180} height={24} color="#2B3036" />
+        ) : (
+          <Step2Image width={180} height={24} color="#2B3036" />
+        )}
+      </Box>
 
       {activeComponent()}
-    </TWModal>
+    </>
   );
 };
 

@@ -8,6 +8,8 @@ import { useState } from "react";
 import { StyleSheet } from "react-native";
 import { DeviceWalletFlow } from "./DeviceWalletFlow";
 import { DeviceWallet } from "../../wallets/wallets/device-wallet";
+import { SmartWallet } from "@thirdweb-dev/wallets";
+import { SmartContractModal } from "./SmartContractWallet/SmartContractModal";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -37,7 +39,7 @@ export const ConnectWalletFlow = () => {
   const onChooseWallet = (wallet: Wallet) => {
     setActiveWallet(() => wallet);
 
-    if (wallet.id !== DeviceWallet.id) {
+    if (wallet.id !== DeviceWallet.id && wallet.id !== SmartWallet.id) {
       connectActiveWallet(wallet);
     }
   };
@@ -48,6 +50,7 @@ export const ConnectWalletFlow = () => {
   };
 
   function getComponentForWallet(activeWalletP: Wallet) {
+    console.log("activeWalletP", activeWalletP);
     switch (activeWalletP.id) {
       case DeviceWallet.id:
         return (
@@ -55,6 +58,17 @@ export const ConnectWalletFlow = () => {
             onClose={onClose}
             onBackPress={onBackPress}
             onConnectPress={() => connectActiveWallet(activeWalletP)}
+          />
+        );
+      case SmartWallet.id:
+        return (
+          <SmartContractModal
+            onClose={() => {
+              onClose();
+            }}
+            onBackPress={() => {
+              setActiveWallet(undefined);
+            }}
           />
         );
     }
