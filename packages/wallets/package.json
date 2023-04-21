@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/wallets",
-  "version": "0.2.15",
+  "version": "0.2.16",
   "main": "dist/thirdweb-dev-wallets.cjs.js",
   "module": "dist/thirdweb-dev-wallets.esm.js",
   "types": "dist/thirdweb-dev-wallets.cjs.d.ts",
@@ -113,6 +113,13 @@
       },
       "default": "./evm/wallets/paper-wallet/dist/thirdweb-dev-wallets-evm-wallets-paper-wallet.cjs.js"
     },
+    "./evm/wallets/smart-wallet": {
+      "module": {
+        "browser": "./evm/wallets/smart-wallet/dist/thirdweb-dev-wallets-evm-wallets-smart-wallet.browser.esm.js",
+        "default": "./evm/wallets/smart-wallet/dist/thirdweb-dev-wallets-evm-wallets-smart-wallet.esm.js"
+      },
+      "default": "./evm/wallets/smart-wallet/dist/thirdweb-dev-wallets-evm-wallets-smart-wallet.cjs.js"
+    },
     "./evm/connectors/safe": {
       "module": {
         "browser": "./evm/connectors/safe/dist/thirdweb-dev-wallets-evm-connectors-safe.browser.esm.js",
@@ -190,6 +197,13 @@
       },
       "default": "./evm/wallets/device-walllet-node/dist/thirdweb-dev-wallets-evm-wallets-device-walllet-node.cjs.js"
     },
+    "./evm/connectors/smart-wallet": {
+      "module": {
+        "browser": "./evm/connectors/smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-smart-wallet.browser.esm.js",
+        "default": "./evm/connectors/smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-smart-wallet.esm.js"
+      },
+      "default": "./evm/connectors/smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-smart-wallet.cjs.js"
+    },
     "./evm/connectors/device-wallet": {
       "module": {
         "browser": "./evm/connectors/device-wallet/dist/thirdweb-dev-wallets-evm-connectors-device-wallet.browser.esm.js",
@@ -248,12 +262,16 @@
   },
   "sideEffects": false,
   "dependencies": {
+    "@account-abstraction/contracts": "^0.5.0",
+    "@account-abstraction/sdk": "^0.5.0",
+    "@account-abstraction/utils": "^0.5.0",
     "@coinbase/wallet-sdk": "^3.6.3",
-    "@paperxyz/embedded-wallet-service-sdk": "^0.0.26",
+    "@paperxyz/embedded-wallet-service-sdk": "^0.1.0",
     "@safe-global/safe-core-sdk": "^3.3.2",
     "@safe-global/safe-ethers-adapters": "^0.1.0-alpha.16",
     "@safe-global/safe-ethers-lib": "^1.9.2",
     "@thirdweb-dev/chains": "workspace:*",
+    "@thirdweb-dev/sdk": "workspace:*",
     "@walletconnect/ethereum-provider": "~2.4.6",
     "@walletconnect/jsonrpc-http-connection": "^1.0.0",
     "@walletconnect/jsonrpc-provider": "^1.0.3",
@@ -264,6 +282,7 @@
     "@walletconnect/legacy-types": "^2.0.0-rc.0",
     "@walletconnect/legacy-utils": "^2.0.0-rc.0",
     "buffer": "^6.0.3",
+    "cross-fetch": "^3.1.5",
     "crypto-js": "^4.1.1",
     "eip1193-provider": "^1.0.1",
     "eventemitter3": "^5.0.0"

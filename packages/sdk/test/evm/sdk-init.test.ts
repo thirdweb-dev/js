@@ -2,12 +2,21 @@ import { ThirdwebSDK } from "../../src/evm";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Goerli, Fncy } from "@thirdweb-dev/chains";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { expect } from "chai";
-import { ethers } from "ethers";
+import { ethers, Signer } from "ethers";
 import hardhat from "hardhat";
 
 global.fetch = require("cross-fetch");
+
+class EthersWallet {
+  signer: Signer;
+  constructor(signer: Signer) {
+    this.signer = signer;
+  }
+  async getSigner() {
+    return this.signer;
+  }
+}
 
 describe("SDK Initialization", async () => {
   let signer: SignerWithAddress;

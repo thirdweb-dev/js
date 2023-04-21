@@ -14,10 +14,17 @@ type Screen =
   | "safe/form"
   | "wallets/get-started"
   | "deviceWallet/connect"
-  | "deviceWallet/export";
+  | "deviceWallet/export"
+  | "smartWallet/form"
+  | "smartWallet/select-wallet";
 
-const SafeConnection = createContext(false);
-const SetSafeConnection = createContext<BoolSetter | undefined>(undefined);
+type WalletWrapper = false | "safe" | "smartWallet";
+
+const WalletWrapperConnection = createContext<WalletWrapper>(false);
+const SetWalletWrapperConnection = createContext<
+  ((value: WalletWrapper) => void) | undefined
+>(undefined);
+
 const WalletModalOpen = createContext(false);
 const SetWalletModalOpen = createContext<BoolSetter | undefined>(undefined);
 const ScreenContext = createContext<Screen>("walletList");
@@ -30,14 +37,17 @@ const SetModalThemeContext = createContext<ThemeSetter | undefined>(undefined);
 export const WalletUIStatesProvider = (
   props: React.PropsWithChildren<{ theme?: "light" | "dark" }>,
 ) => {
-  const [isConnectingToSafe, setIsConnectingToSafe] = useState(false);
+  const [isConnectingToWalletWrapper, setIsConnectingToWalletWrapper] =
+    useState<WalletWrapper>(false);
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
   const [screen, setScreen] = useState<Screen>("walletList");
   const [modalTheme, setModalTheme] = useState(props.theme || "dark");
 
   return (
-    <SafeConnection.Provider value={isConnectingToSafe}>
-      <SetSafeConnection.Provider value={setIsConnectingToSafe}>
+    <WalletWrapperConnection.Provider value={isConnectingToWalletWrapper}>
+      <SetWalletWrapperConnection.Provider
+        value={setIsConnectingToWalletWrapper}
+      >
         <WalletModalOpen.Provider value={isWalletModalOpen}>
           <SetWalletModalOpen.Provider value={setIsWalletModalOpen}>
             <ScreenContext.Provider value={screen}>
@@ -51,23 +61,25 @@ export const WalletUIStatesProvider = (
             </ScreenContext.Provider>
           </SetWalletModalOpen.Provider>
         </WalletModalOpen.Provider>
-      </SetSafeConnection.Provider>
-    </SafeConnection.Provider>
+      </SetWalletWrapperConnection.Provider>
+    </WalletWrapperConnection.Provider>
   );
 };
 
-export const useIsConnectingToSafe = () => {
-  return useContext(SafeConnection);
+export const useIsConnectingToWalletWrapper = () => {
+  return useContext(WalletWrapperConnection);
 };
 
 export const useIsWalletModalOpen = () => {
   return useContext(WalletModalOpen);
 };
 
-export const useSetIsConnectingToSafe = () => {
-  const context = useContext(SetSafeConnection);
+export const useSetIsConnectingToWalletWrapper = () => {
+  const context = useContext(SetWalletWrapperConnection);
   if (context === undefined) {
-    throw new Error("useSetSafeConnection must be used within a UIProvider");
+    throw new Error(
+      "useSetIsConnectingToWalletWrapper must be used within a UIProvider",
+    );
   }
   return context;
 };

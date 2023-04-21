@@ -1,5 +1,20 @@
 # @thirdweb-dev/wallets
 
+## 0.2.16
+
+### Patch Changes
+
+- [#892](https://github.com/thirdweb-dev/js/pull/892) [`4acb2b55`](https://github.com/thirdweb-dev/js/commit/4acb2b5561118dde5c7372400d4d754b879aef2e) Thanks [@MananTank](https://github.com/MananTank)! - Add Switch Account button for MetaMask
+
+- [#901](https://github.com/thirdweb-dev/js/pull/901) [`82bea3fa`](https://github.com/thirdweb-dev/js/commit/82bea3fa10294eb3c5c7327fb047e3d1b2c62ff9) Thanks [@MananTank](https://github.com/MananTank)! - Device Wallet revamp
+
+- [#908](https://github.com/thirdweb-dev/js/pull/908) [`664d1cd0`](https://github.com/thirdweb-dev/js/commit/664d1cd0dd03f32337c2cf532f0ad860e5aa5ea8) Thanks [@MananTank](https://github.com/MananTank)! - Fix dynamic import error of crypto-js in device wallet
+
+- [#910](https://github.com/thirdweb-dev/js/pull/910) [`c2fec930`](https://github.com/thirdweb-dev/js/commit/c2fec930520e2df89532ec0027ead4563c7708cf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow passing any EVMWallet to SafeWallet as personal signer
+
+- Updated dependencies [[`a6610f12`](https://github.com/thirdweb-dev/js/commit/a6610f1211e9359885b948bf69a66d834707ec07), [`77224646`](https://github.com/thirdweb-dev/js/commit/77224646d542db3171394d744b455497cd057633)]:
+  - @thirdweb-dev/chains@0.1.12
+
 ## 0.2.15
 
 ### Patch Changes
