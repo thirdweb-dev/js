@@ -1,6 +1,6 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Qitmeer Network Mixnet",
+  "name": "Qitmeer Network Mixnext",
   "chain": "MEER",
   "rpc": [],
   "faucets": [],
@@ -21,5 +21,5 @@ export default {
   "networkId": 8132,
   "status": "incubating",
   "testnet": false,
-  "slug": "qitmeer-network-mixnet"
+  "slug": "qitmeer-network-mixnext"
 } as const satisfies Chain;

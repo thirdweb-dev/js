@@ -6,19 +6,19 @@ import {
   HelperLink,
   ModalDescription,
 } from "../../../../components/modalElements";
-import { iconSize, spacing } from "../../../../design-system";
+import { iconSize } from "../../../../design-system";
 import { WalletMeta } from "../../../types";
 import { WalletSelection } from "../../WalletSelector";
-import { Steps } from "./Steps";
-import styled from "@emotion/styled";
 import { useSupportedWallet } from "../useSupportedWallet";
 import { Wallet } from "@thirdweb-dev/react-core";
+import { Steps } from "../Safe/Steps";
 
-export const SelectpersonalWallet: React.FC<{
+export const SmartWalletSelection: React.FC<{
   onBack: () => void;
   walletsMeta: WalletMeta[];
 }> = (props) => {
-  const safeWalletObj = useSupportedWallet("Safe") as Wallet;
+  const walletObj = useSupportedWallet("SmartWallet") as Wallet;
+  // remove gnosis safe from the list of wallets
   const walletsMeta = props.walletsMeta.filter(
     (w) => w.id !== "SmartWallet" && w.id !== "Safe",
   );
@@ -26,19 +26,18 @@ export const SelectpersonalWallet: React.FC<{
   return (
     <>
       <BackButton onClick={props.onBack} />
-      <IconContainer>
-        <Img
-          src={safeWalletObj.meta.iconURL}
-          width={iconSize.xl}
-          height={iconSize.xl}
-        />
-      </IconContainer>
+      <Spacer y="md" />
+      <Img
+        src={walletObj.meta.iconURL}
+        width={iconSize.xl}
+        height={iconSize.xl}
+      />
       <Spacer y="lg" />
-      <ModalTitle>Choose your Wallet</ModalTitle>
+      <ModalTitle>Choose your wallet</ModalTitle>
       <Spacer y="sm" />
 
       <ModalDescription>
-        Select a personal wallet to connect to your Safe
+        Select a personal wallet to connect to smart wallet
       </ModalDescription>
 
       <Spacer y="xl" />
@@ -55,12 +54,8 @@ export const SelectpersonalWallet: React.FC<{
           textAlign: "center",
         }}
       >
-        What is a Safe?
+        What is a Smart Wallet?
       </HelperLink>
     </>
   );
 };
-
-const IconContainer = styled.div`
-  margin-top: ${spacing.lg};
-`;

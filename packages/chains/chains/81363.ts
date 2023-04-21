@@ -6,7 +6,7 @@ export default {
   "faucets": [],
   "nativeCurrency": {
     "name": "Mizana Privnet",
-    "symbol": "MEER-P",
+    "symbol": "MEER-p",
     "decimals": 18
   },
   "infoURL": "https://github.com/Qitmeer",

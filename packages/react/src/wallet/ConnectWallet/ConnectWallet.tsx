@@ -13,7 +13,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useContext, useState } from "react";
 import {
-  useIsConnectingToSafe,
+  useIsConnectingToWalletWrapper,
   useSetIsWalletModalOpen,
   useSetModalTheme,
 } from "../../evm/providers/wallet-ui-states-provider";
@@ -52,7 +52,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   const activeWallet = useWallet();
   const themeFromProvider = useContext(ThirdwebThemeContext);
   const theme = props.theme || themeFromProvider || "dark";
-  const isConnectingToSafe = useIsConnectingToSafe();
+  const isConnectingToWalletWrapper = useIsConnectingToWalletWrapper();
   const connectionStatus = useConnectionStatus();
 
   const isLoading =
@@ -119,7 +119,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
       )}
 
       {!requiresSignIn &&
-        (!activeWallet || isConnectingToSafe ? (
+        (!activeWallet || isConnectingToWalletWrapper ? (
           // connect wallet button
           <AnimatedButton
             disabled={isLoading}
