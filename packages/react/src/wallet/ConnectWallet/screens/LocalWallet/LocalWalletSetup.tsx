@@ -1,15 +1,14 @@
 import { Spinner } from "../../../../components/Spinner";
 import styled from "@emotion/styled";
-import { useDeviceWalletInfo } from "./useDeviceWalletInfo";
-import { ReconnectDeviceWallet } from "./ReconnectDeviceWallet";
-import { CreateDeviceWallet } from "./CreateDeviceWallet";
+import { useLocalWalletInfo } from "./useLocalWalletInfo";
+import { ReconnectLocalWallet } from "./ReconnectLocalWallet";
+import { CreateLocalWallet } from "./CreateLocalWallet";
 
-export const ConnectToDeviceWallet: React.FC<{
+export const ConnectToLocalWallet: React.FC<{
   onBack: () => void;
   onConnected: () => void;
 }> = (props) => {
-  const { storageLoading, walletData, refreshSavedData } =
-    useDeviceWalletInfo();
+  const { storageLoading, walletData, refreshSavedData } = useLocalWalletInfo();
 
   if (storageLoading) {
     return (
@@ -29,12 +28,12 @@ export const ConnectToDeviceWallet: React.FC<{
       <Spacer y="sm" /> */}
 
       {!walletData ? (
-        <CreateDeviceWallet
+        <CreateLocalWallet
           onConnected={props.onConnected}
           onBack={props.onBack}
         />
       ) : (
-        <ReconnectDeviceWallet
+        <ReconnectLocalWallet
           onConnected={props.onConnected}
           onRemove={() => {
             refreshSavedData();

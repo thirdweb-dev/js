@@ -25,7 +25,7 @@ export * from "./wallets/paper-wallet";
 export type { WalletOptions } from "./wallets/base";
 export { AbstractClientWallet } from "./wallets/base";
 export * from "./wallets/coinbase-wallet";
-export * from "./wallets/device-wallet";
+export * from "./wallets/local-wallet";
 export * from "./wallets/injected";
 export * from "./wallets/metamask";
 export * from "./wallets/wallet-connect";

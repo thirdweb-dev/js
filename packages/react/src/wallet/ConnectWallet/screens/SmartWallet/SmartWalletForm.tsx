@@ -22,11 +22,11 @@ import {
   // WalletInstance,
   useConnect,
   useConnectionStatus,
+  useSupportedWallet,
   useWallet,
   WalletInstance,
 } from "@thirdweb-dev/react-core";
 import { useDeferredValue, useEffect, useState } from "react";
-import { useSupportedWallet } from "../useSupportedWallet";
 import { Steps } from "../Safe/Steps";
 import {
   getAssociatedAccounts,

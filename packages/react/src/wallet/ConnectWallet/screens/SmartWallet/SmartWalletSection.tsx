@@ -9,8 +9,7 @@ import {
 import { iconSize } from "../../../../design-system";
 import { WalletMeta } from "../../../types";
 import { WalletSelection } from "../../WalletSelector";
-import { useSupportedWallet } from "../useSupportedWallet";
-import { Wallet } from "@thirdweb-dev/react-core";
+import { Wallet, useSupportedWallet } from "@thirdweb-dev/react-core";
 import { Steps } from "../Safe/Steps";
 
 export const SmartWalletSelection: React.FC<{
