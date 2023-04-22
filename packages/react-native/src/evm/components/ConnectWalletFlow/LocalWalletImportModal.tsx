@@ -57,9 +57,7 @@ export const LocalWalletImportModal = ({
       return;
     }
 
-    const localWallet = createWalletInstance(
-      localWalletCreator,
-    ) as LocalWallet;
+    const localWallet = createWalletInstance(localWalletCreator) as LocalWallet;
 
     try {
       await localWallet.import({

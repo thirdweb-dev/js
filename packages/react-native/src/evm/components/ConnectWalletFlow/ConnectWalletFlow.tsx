@@ -38,7 +38,7 @@ export const ConnectWalletFlow = () => {
   }, [guestMode, supportedWallets]);
 
   const onConnectPress = () => {
-    if (supportedWallets.length === 1) {
+    if (supportedWallets.length === 1 && !guestMode) {
       onChooseWallet(supportedWallets[0]);
     }
 
