@@ -392,7 +392,7 @@ export const ConnectedWalletDetails: React.FC<{
             <SecondaryIconContainer>
               <GenericWalletIcon size={iconSize.sm} />
             </SecondaryIconContainer>
-            Export Local Wallet{" "}
+            Export Wallet{" "}
           </MenuButton>
         </>
       )}

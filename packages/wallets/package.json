@@ -176,6 +176,13 @@
       },
       "default": "./evm/connectors/metamask/dist/thirdweb-dev-wallets-evm-connectors-metamask.cjs.js"
     },
+    "./evm/wallets/local-wallet-node": {
+      "module": {
+        "browser": "./evm/wallets/local-wallet-node/dist/thirdweb-dev-wallets-evm-wallets-local-wallet-node.browser.esm.js",
+        "default": "./evm/wallets/local-wallet-node/dist/thirdweb-dev-wallets-evm-wallets-local-wallet-node.esm.js"
+      },
+      "default": "./evm/wallets/local-wallet-node/dist/thirdweb-dev-wallets-evm-wallets-local-wallet-node.cjs.js"
+    },
     "./evm/wallets/wallet-connect-v1": {
       "module": {
         "browser": "./evm/wallets/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-wallets-wallet-connect-v1.browser.esm.js",

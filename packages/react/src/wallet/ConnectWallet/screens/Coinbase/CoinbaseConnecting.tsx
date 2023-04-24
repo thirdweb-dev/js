@@ -1,6 +1,5 @@
 import { ConnectingScreen } from "../ConnectingScreen";
-import { useSupportedWallet } from "../useSupportedWallet";
-import { Wallet } from "@thirdweb-dev/react-core";
+import { Wallet, useSupportedWallet } from "@thirdweb-dev/react-core";
 
 export const CoinbaseWalletSetup: React.FC<{
   onBack: () => void;

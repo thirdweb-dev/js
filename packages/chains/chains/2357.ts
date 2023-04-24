@@ -1,9 +1,9 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "WEMIX Kanvas Sepolia",
-  "title": "WEMIX Kanvas Testnet Sepolia",
+  "name": "Kroma Sepolia",
+  "title": "Kroma Testnet Sepolia",
   "chainId": 2357,
-  "shortName": "kanvas-aqua",
+  "shortName": "kroma-sepolia",
   "chain": "ETH",
   "networkId": 2357,
   "nativeCurrency": {
@@ -12,13 +12,13 @@ export default {
     "decimals": 18
   },
   "rpc": [
-    "https://wemix-kanvas-sepolia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.aqua.wemixkanvas.io"
+    "https://kroma-sepolia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://api.sepolia.kroma.network"
   ],
   "faucets": [],
-  "infoURL": "https://wemixkanvas.io",
+  "infoURL": "https://kroma.network",
   "icon": {
-    "url": "ipfs://QmVcVxsHsVg5BMii3EJ1MUSnLBZkQicpjmXjSmW66bCEUF",
+    "url": "ipfs://QmcYafk2je5rMqgnFPDZJTaLi6dgFgq96vmX2Li6DX441B",
     "width": 320,
     "height": 320,
     "format": "svg"
@@ -26,9 +26,9 @@ export default {
   "explorers": [
     {
       "name": "blockscout",
-      "url": "https://blockscout.aqua.wemixkanvas.io",
+      "url": "https://blockscout.sepolia.kroma.network",
       "icon": {
-        "url": "ipfs://QmVcVxsHsVg5BMii3EJ1MUSnLBZkQicpjmXjSmW66bCEUF",
+        "url": "ipfs://QmcYafk2je5rMqgnFPDZJTaLi6dgFgq96vmX2Li6DX441B",
         "width": 320,
         "height": 320,
         "format": "svg"
@@ -41,10 +41,10 @@ export default {
     "chain": "eip155-11155111",
     "bridges": [
       {
-        "url": "https://wemixkanvas.io/bridge"
+        "url": "https://kroma.network/bridge"
       }
     ]
   },
   "testnet": true,
-  "slug": "wemix-kanvas-sepolia"
+  "slug": "kroma-sepolia"
 } as const satisfies Chain;

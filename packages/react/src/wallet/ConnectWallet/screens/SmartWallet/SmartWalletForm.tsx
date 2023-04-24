@@ -28,7 +28,7 @@ import {
   WalletInstance,
 } from "@thirdweb-dev/react-core";
 import { useDeferredValue, useEffect, useRef, useState } from "react";
-import { useSupportedWallet } from "../useSupportedWallet";
+import { useSupportedWallet } from "@thirdweb-dev/react-core";
 import {
   getAssociatedAccounts,
   AssociatedAccount,

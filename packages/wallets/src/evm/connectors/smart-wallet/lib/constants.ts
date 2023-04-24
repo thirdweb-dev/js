@@ -1,4 +1,4 @@
-export const ENTRYPOINT_ADDRESS = "0x0576a174d229e3cfa37253523e645a78a0c91b57";
+export const ENTRYPOINT_ADDRESS = "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"; // v0.6
 
 export const MINIMAL_ACCOUNT_ABI = [
   {
@@ -26,7 +26,7 @@ export const MINIMAL_ACCOUNT_ABI = [
   },
   {
     inputs: [],
-    name: "nonce",
+    name: "getNonce",
     outputs: [
       {
         internalType: "uint256",

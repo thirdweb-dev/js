@@ -1,6 +1,8 @@
-import { useCreateWalletInstance } from "@thirdweb-dev/react-core";
+import {
+  useCreateWalletInstance,
+  useSupportedWallet,
+} from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
-import { useSupportedWallet } from "../useSupportedWallet";
 import { Wallet } from "@thirdweb-dev/react-core";
 import type { LocalWallet } from "@thirdweb-dev/wallets";
 import { WalletData } from "@thirdweb-dev/wallets/src/evm/wallets/local-wallet";

@@ -24,13 +24,13 @@ import {
   useConnect,
   useConnectionStatus,
   useSupportedChains,
+  useSupportedWallet,
   useWallet,
   Wallet,
 } from "@thirdweb-dev/react-core";
 import { SafeSupportedChainsSet } from "@thirdweb-dev/wallets";
 import { utils } from "ethers";
 import { useState } from "react";
-import { useSupportedWallet } from "../useSupportedWallet";
 
 export const gnosisAddressPrefixToChainId = {
   eth: 1,

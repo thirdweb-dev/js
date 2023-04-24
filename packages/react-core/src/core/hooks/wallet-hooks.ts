@@ -74,6 +74,23 @@ export function useConnectionStatus() {
 
 /**
  *
+ * @returns if the wallet is currently connecting
+ *
+ */
+export function useIsConnecting() {
+  const context = useThirdwebWallet();
+  invariant(
+    context,
+    "useConnectionStatus() must be used within a <ThirdwebProvider/>",
+  );
+  return (
+    context.connectionStatus === "connecting" ||
+    context.connectionStatus === "unknown"
+  );
+}
+
+/**
+ *
  * @returns a method to create an instance of given wallet class
  */
 export function useCreateWalletInstance() {

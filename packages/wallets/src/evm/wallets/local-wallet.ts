@@ -26,7 +26,7 @@ export class LocalWallet extends AbstractClientWallet<
 > {
   connector?: TWConnector;
   options: WalletOptions<LocalWalletOptions>;
-  #ethersWallet?: Wallet;
+  ethersWallet?: Wallet;
   #storage: AsyncStorage;
 
   static id = "localWallet";
@@ -53,13 +53,13 @@ export class LocalWallet extends AbstractClientWallet<
         "../connectors/local-wallet"
       );
 
-      if (!this.#ethersWallet) {
+      if (!this.ethersWallet) {
         throw new Error("wallet is not initialized");
       }
 
       this.connector = new LocalWalletConnector({
         chain: this.options.chain || Ethereum,
-        ethersWallet: this.#ethersWallet,
+        ethersWallet: this.ethersWallet,
         chains: this.options.chains || defaultChains,
       });
     }
@@ -83,11 +83,11 @@ export class LocalWallet extends AbstractClientWallet<
    * @returns the address of the newly created wallet
    */
   async generate() {
-    if (this.#ethersWallet) {
+    if (this.ethersWallet) {
       throw new Error("wallet is already initialized");
     }
-    this.#ethersWallet = Wallet.createRandom();
-    return this.#ethersWallet.address;
+    this.ethersWallet = Wallet.createRandom();
+    return this.ethersWallet.address;
   }
 
   /**
@@ -95,16 +95,16 @@ export class LocalWallet extends AbstractClientWallet<
    * @returns
    */
   async import(options: ImportOptions): Promise<string> {
-    if (this.#ethersWallet) {
+    if (this.ethersWallet) {
       throw new Error("wallet is already initialized");
     }
 
     if ("encryptedJson" in options) {
-      this.#ethersWallet = await Wallet.fromEncryptedJson(
+      this.ethersWallet = await Wallet.fromEncryptedJson(
         options.encryptedJson,
         options.password,
       );
-      return this.#ethersWallet.address;
+      return this.ethersWallet.address;
     }
 
     if ("privateKey" in options) {
@@ -123,8 +123,8 @@ export class LocalWallet extends AbstractClientWallet<
         throw new Error("invalid password");
       }
 
-      this.#ethersWallet = new Wallet(privateKey);
-      return this.#ethersWallet.address;
+      this.ethersWallet = new Wallet(privateKey);
+      return this.ethersWallet.address;
     }
 
     if ("mnemonic" in options) {
@@ -141,8 +141,8 @@ export class LocalWallet extends AbstractClientWallet<
         throw new Error("invalid password");
       }
 
-      this.#ethersWallet = Wallet.fromMnemonic(mnemonic);
-      return this.#ethersWallet.address;
+      this.ethersWallet = Wallet.fromMnemonic(mnemonic);
+      return this.ethersWallet.address;
     }
 
     throw new Error("invalid import strategy");
@@ -153,7 +153,7 @@ export class LocalWallet extends AbstractClientWallet<
    * @param password - password used for encrypting the wallet
    */
   async load(options: LoadOptions): Promise<string> {
-    if (this.#ethersWallet) {
+    if (this.ethersWallet) {
       throw new Error("wallet is already initialized");
     }
 
@@ -211,7 +211,7 @@ export class LocalWallet extends AbstractClientWallet<
    * Save the wallet data to storage
    */
   async save(options: SaveOptions): Promise<void> {
-    const wallet = this.#ethersWallet;
+    const wallet = this.ethersWallet;
     if (!wallet) {
       throw new Error("Wallet is not initialized");
     }
@@ -290,7 +290,7 @@ export class LocalWallet extends AbstractClientWallet<
    * @param password - password for encrypting the wallet data
    */
   async export(options: ExportOptions): Promise<string> {
-    const wallet = this.#ethersWallet;
+    const wallet = this.ethersWallet;
     if (!wallet) {
       throw new Error("Wallet is not initialized");
     }
