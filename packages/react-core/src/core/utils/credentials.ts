@@ -14,16 +14,9 @@ export type UserCredentials = {
 
 export const isCredentialsSupported = "PasswordCredential" in window;
 
-// save credentials, so that repeated calls to getCredentials() does not prompt the user for account selection multiple times
-let memoizedCred: UserCredentials;
-
 export async function getCredentials(): Promise<UserCredentials | null> {
   if (!isCredentialsSupported) {
     return null;
-  }
-
-  if (memoizedCred) {
-    return memoizedCred;
   }
 
   const cred = (await navigator.credentials.get({
@@ -34,8 +27,6 @@ export async function getCredentials(): Promise<UserCredentials | null> {
   if (!cred) {
     return null;
   }
-
-  memoizedCred = cred;
 
   return {
     name: cred.name,
