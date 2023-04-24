@@ -5,6 +5,8 @@ import type { Chain } from "@thirdweb-dev/chains";
 import type { Signer } from "ethers";
 import { providers } from "ethers";
 import type { Wallet } from "ethers";
+import { getChainProvider } from "@thirdweb-dev/sdk";
+import { DEFAULT_WALLET_RPC_KEY } from "../../constants/keys";
 
 export type LocalWalletConnectorOptions = {
   chain: Chain;
@@ -60,9 +62,9 @@ export class LocalWalletConnector extends TWConnector<LocalWalletConnectionArgs>
 
   async getProvider() {
     if (!this.#provider) {
-      this.#provider = new providers.JsonRpcBatchProvider(
-        this.options.chain.rpc[0],
-      );
+      this.#provider = getChainProvider(this.options.chain, {
+        thirdwebApiKey: DEFAULT_WALLET_RPC_KEY,
+      });
     }
     return this.#provider;
   }
@@ -81,10 +83,14 @@ export class LocalWalletConnector extends TWConnector<LocalWalletConnectionArgs>
   async switchChain(chainId: number): Promise<void> {
     const chain = this.options.chains.find((c) => c.chainId === chainId);
     if (!chain) {
-      throw new Error("Chain not found");
+      throw new Error(
+        `Chain not found for chainId ${chainId}, please add it to the chains property when creating this wallet`,
+      );
     }
 
-    this.#provider = new providers.JsonRpcBatchProvider(chain.rpc[0]);
+    this.#provider = getChainProvider(chain, {
+      thirdwebApiKey: DEFAULT_WALLET_RPC_KEY,
+    });
     this.#signer = getSignerFromEthersWallet(
       this.options.ethersWallet,
       this.#provider,

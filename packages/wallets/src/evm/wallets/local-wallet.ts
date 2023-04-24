@@ -60,10 +60,14 @@ export class LocalWallet extends AbstractClientWallet<
         throw new Error("wallet is not initialized");
       }
 
+      const defaults = this.options.chain
+        ? [...defaultChains, this.options.chain]
+        : defaultChains;
+
       this.connector = new LocalWalletConnector({
         chain: this.options.chain || Ethereum,
         ethersWallet: this.ethersWallet,
-        chains: this.options.chains || defaultChains,
+        chains: this.options.chains || defaults,
       });
     }
     return this.connector;
