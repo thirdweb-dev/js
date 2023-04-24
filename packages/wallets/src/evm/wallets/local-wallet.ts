@@ -4,7 +4,7 @@ import { AbstractClientWallet, WalletOptions } from "./base";
 import { Chain, defaultChains, Ethereum } from "@thirdweb-dev/chains";
 import { Wallet, utils } from "ethers";
 
-export type DeviceWalletOptions = {
+export type LocalWalletOptions = {
   chain?: Chain;
   storage?: AsyncStorage;
 };
@@ -16,48 +16,48 @@ export type WalletData = {
   isEncrypted: boolean;
 };
 
-export type DeviceWalletConnectionArgs = {};
+export type LocalWalletConnectionArgs = {};
 
-const STORAGE_KEY_WALLET_DATA = "deviceWalletData";
+const STORAGE_KEY_WALLET_DATA = "localWalletData";
 
-export class DeviceWallet extends AbstractClientWallet<
-  DeviceWalletOptions,
-  DeviceWalletConnectionArgs
+export class LocalWallet extends AbstractClientWallet<
+  LocalWalletOptions,
+  LocalWalletConnectionArgs
 > {
   connector?: TWConnector;
-  options: WalletOptions<DeviceWalletOptions>;
+  options: WalletOptions<LocalWalletOptions>;
   #ethersWallet?: Wallet;
   #storage: AsyncStorage;
 
-  static id = "deviceWallet";
+  static id = "localWallet";
 
   static meta = {
-    name: "Device Wallet",
+    name: "Local Wallet",
     iconURL:
       "ipfs://QmcNddbYBuQKiBFnPcxYegjrX6S6z9K1vBNzbBBUJMn2ox/device-wallet.svg",
   };
 
   public get walletName() {
-    return "Device Wallet" as const;
+    return "Local Wallet" as const;
   }
 
-  constructor(options?: WalletOptions<DeviceWalletOptions>) {
-    super(DeviceWallet.id, options);
+  constructor(options?: WalletOptions<LocalWalletOptions>) {
+    super(LocalWallet.id, options);
     this.options = options || {};
-    this.#storage = options?.storage || createAsyncLocalStorage("deviceWallet");
+    this.#storage = options?.storage || createAsyncLocalStorage("localWallet");
   }
 
   protected async getConnector(): Promise<TWConnector> {
     if (!this.connector) {
-      const { DeviceWalletConnector } = await import(
-        "../connectors/device-wallet"
+      const { LocalWalletConnector: LocalWalletConnector } = await import(
+        "../connectors/local-wallet"
       );
 
       if (!this.#ethersWallet) {
         throw new Error("wallet is not initialized");
       }
 
-      this.connector = new DeviceWalletConnector({
+      this.connector = new LocalWalletConnector({
         chain: this.options.chain || Ethereum,
         ethersWallet: this.#ethersWallet,
         chains: this.options.chains || defaultChains,
@@ -91,7 +91,7 @@ export class DeviceWallet extends AbstractClientWallet<
   }
 
   /**
-   * create device wallet from an "encryptedJson", "privateKey" or "mnemonic"
+   * create local wallet from an "encryptedJson", "privateKey" or "mnemonic"
    * @returns
    */
   async import(options: ImportOptions): Promise<string> {

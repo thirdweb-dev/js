@@ -1,17 +1,16 @@
 import { Spinner } from "../../../../components/Spinner";
 import styled from "@emotion/styled";
-import { useDeviceWalletInfo } from "./useDeviceWalletInfo";
-import { ReconnectDeviceWalletNoCredentials } from "./ReconnectDeviceWallet";
-import { CreateDeviceWallet } from "./CreateDeviceWallet";
+import { useLocalWalletInfo } from "./useLocalWalletInfo";
+import { ReconnectLocalWalletNoCredentials } from "./ReconnectLocalWallet";
+import { CreateLocalWallet } from "./CreateLocalWallet";
 import { UserCredentials, getCredentials } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 
-export const ConnectToDeviceWallet: React.FC<{
+export const ConnectToLocalWallet: React.FC<{
   onBack: () => void;
   onConnected: () => void;
 }> = (props) => {
-  const { storageLoading, walletData, refreshSavedData } =
-    useDeviceWalletInfo();
+  const { storageLoading, walletData, refreshSavedData } = useLocalWalletInfo();
 
   const [savedCreds, setSavedCreds] = useState<
     UserCredentials | null | undefined
@@ -38,18 +37,18 @@ export const ConnectToDeviceWallet: React.FC<{
   // if not saved creds -
 
   // if (isCredentialsSupported) {
-  //   return <CreateDeviceWalletCredentials {...props} />;
+  //   return <CreateLocalWalletCredentials {...props} />;
   // }
 
   return (
     <>
       {!walletData ? (
-        <CreateDeviceWallet
+        <CreateLocalWallet
           onConnected={props.onConnected}
           onBack={props.onBack}
         />
       ) : (
-        <ReconnectDeviceWalletNoCredentials
+        <ReconnectLocalWalletNoCredentials
           onConnected={props.onConnected}
           onRemove={() => {
             refreshSavedData();

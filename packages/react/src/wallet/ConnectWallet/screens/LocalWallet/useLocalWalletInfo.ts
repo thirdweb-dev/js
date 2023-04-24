@@ -2,38 +2,38 @@ import { useCreateWalletInstance } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import { useSupportedWallet } from "../useSupportedWallet";
 import { Wallet } from "@thirdweb-dev/react-core";
-import type { DeviceWallet } from "@thirdweb-dev/wallets";
-import { WalletData } from "@thirdweb-dev/wallets/src/evm/wallets/device-wallet";
+import type { LocalWallet } from "@thirdweb-dev/wallets";
+import { WalletData } from "@thirdweb-dev/wallets/src/evm/wallets/local-wallet";
 
 /**
  * only use this when credential storage is not supported
  */
-export function useDeviceWalletInfo() {
+export function useLocalWalletInfo() {
   const [walletData, setWalletData] = useState<WalletData | null>(null);
   const createWalletInstance = useCreateWalletInstance();
-  const deviceWalletObj = useSupportedWallet("deviceWallet") as Wallet;
-  const [deviceWallet, setDeviceWallet] = useState<DeviceWallet | null>(null);
+  const localWalletObj = useSupportedWallet("localWallet") as Wallet;
+  const [localWallet, setLocalWallet] = useState<LocalWallet | null>(null);
   const [storageLoading, setStorageLoading] = useState(false);
 
   useEffect(() => {
-    const wallet = createWalletInstance(deviceWalletObj) as DeviceWallet;
-    setDeviceWallet(wallet);
+    const wallet = createWalletInstance(localWalletObj) as LocalWallet;
+    setLocalWallet(wallet);
     wallet.getSavedData().then((data) => {
       setStorageLoading(false);
       setWalletData(data);
     });
-  }, [createWalletInstance, deviceWalletObj]);
+  }, [createWalletInstance, localWalletObj]);
 
   return {
-    deviceWallet,
+    localWallet,
     storageLoading,
     walletData,
-    meta: deviceWalletObj.meta,
+    meta: localWalletObj.meta,
     refreshSavedData() {
-      if (!deviceWallet) {
+      if (!localWallet) {
         return;
       }
-      deviceWallet.getSavedData().then((data) => {
+      localWallet.getSavedData().then((data) => {
         setStorageLoading(false);
         setWalletData(data);
       });

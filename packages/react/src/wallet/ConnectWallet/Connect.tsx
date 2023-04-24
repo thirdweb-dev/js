@@ -31,7 +31,7 @@ import {
 import { ifWaiting } from "../../evm/utils/ifWaiting";
 import { ThemeProvider } from "@emotion/react";
 import { darkTheme, lightTheme } from "../../design-system";
-import { ConnectToDeviceWallet } from "./screens/DeviceWallet/DeviceWalletSetup";
+import { ConnectToLocalWallet } from "./screens/LocalWallet/LocalWalletSetup";
 import { SmartWalletConnection } from "./screens/SmartWallet/SmartWalletForm";
 
 export const ConnectModal = () => {
@@ -161,9 +161,9 @@ export const ConnectModal = () => {
         setShowScreen("smartWallet/form");
       }
 
-      // Device Wallet
-      else if (wallet.id === "deviceWallet") {
-        setShowScreen("deviceWallet/connect");
+      // Local Wallet
+      else if (wallet.id === "localWallet") {
+        setShowScreen("localWallet/connect");
       }
 
       // others ( they handle their own connection flow)
@@ -289,8 +289,8 @@ export const ConnectModal = () => {
           <GetStartedWithWallets onBack={handleBack} />
         )}
 
-        {showScreen === "deviceWallet/connect" && (
-          <ConnectToDeviceWallet onBack={handleBack} onConnected={onConnect} />
+        {showScreen === "localWallet/connect" && (
+          <ConnectToLocalWallet onBack={handleBack} onConnected={onConnect} />
         )}
 
         {showScreen === "smartWallet/form" && (

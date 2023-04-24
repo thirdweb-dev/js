@@ -14,19 +14,19 @@ import {
 import { useThirdwebWallet } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { DragNDrop } from "../../../../components/DragNDrop";
-import { useDeviceWalletInfo } from "./useDeviceWalletInfo";
+import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { FormFooter } from "../../../../components/formElements";
 import styled from "@emotion/styled";
 import { Flex } from "../../../../components/basic";
-import { DeviceWalletModalHeader } from "./common";
+import { LocalWalletModalHeader } from "./common";
 import { isMobile } from "../../../../evm/utils/isMobile";
 
-export const ImportDeviceWalet: React.FC<{
+export const ImportLocalWallet: React.FC<{
   onConnected: () => void;
   onBack: () => void;
 }> = (props) => {
   const [jsonString, setJsonString] = useState<string | undefined>();
-  const { deviceWallet } = useDeviceWalletInfo();
+  const { localWallet } = useLocalWalletInfo();
   const [password, setPassword] = useState("");
   const [isWrongPassword, setIsWrongPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -35,22 +35,22 @@ export const ImportDeviceWalet: React.FC<{
   const thirdwebWalletContext = useThirdwebWallet();
 
   const handleImport = async () => {
-    if (!deviceWallet || !jsonString || !thirdwebWalletContext) {
+    if (!localWallet || !jsonString || !thirdwebWalletContext) {
       throw new Error("Invalid state");
     }
 
     try {
-      await deviceWallet.import({
+      await localWallet.import({
         encryptedJson: jsonString,
         password,
       });
 
-      await deviceWallet.save({
+      await localWallet.save({
         strategy: "encryptedJson",
         password,
       });
 
-      thirdwebWalletContext.handleWalletConnect(deviceWallet);
+      thirdwebWalletContext.handleWalletConnect(localWallet);
       props.onConnected();
     } catch (e) {
       setIsWrongPassword(true);
@@ -60,7 +60,7 @@ export const ImportDeviceWalet: React.FC<{
 
   return (
     <>
-      <DeviceWalletModalHeader onBack={props.onBack} />
+      <LocalWalletModalHeader onBack={props.onBack} />
       <ModalTitle
         style={{
           textAlign: "left",

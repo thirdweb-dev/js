@@ -37,7 +37,7 @@ import {
 import { SmartWalletObj } from "../../../wallets/smartWallet";
 import { Flex } from "../../../../components/basic";
 import styled from "@emotion/styled";
-import { useDeviceWalletInfo } from "../DeviceWallet/useDeviceWalletInfo";
+import { useLocalWalletInfo } from "../LocalWallet/useLocalWalletInfo";
 
 export const SmartWalletConnection: React.FC<{
   onBack: () => void;
@@ -45,24 +45,24 @@ export const SmartWalletConnection: React.FC<{
 }> = (props) => {
   const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
   const [accounts, setAccounts] = useState<AssociatedAccount[] | undefined>();
-  const { deviceWallet } = useDeviceWalletInfo();
+  const { localWallet } = useLocalWalletInfo();
   const thirdwebWalletContext = useThirdwebWallet();
-  const deviceWalletGenerated = useRef(false);
+  const localWalletGenerated = useRef(false);
 
   useEffect(() => {
-    if (!deviceWallet) {
+    if (!localWallet) {
       return;
     }
 
     (async () => {
-      if (!deviceWalletGenerated.current) {
+      if (!localWalletGenerated.current) {
         const creds = await getCredentials();
 
         // generate a random one if no credentials are found
         if (!creds) {
-          const address = await deviceWallet.generate();
+          const address = await localWallet.generate();
 
-          const privateKey = await deviceWallet.export({
+          const privateKey = await localWallet.export({
             strategy: "privateKey",
             encryption: false,
           });
@@ -75,26 +75,26 @@ export const SmartWalletConnection: React.FC<{
           });
         } else {
           // import
-          await deviceWallet.import({
+          await localWallet.import({
             privateKey: creds.password,
             encryption: false,
           });
         }
 
-        await deviceWallet.connect();
-        thirdwebWalletContext?.handleWalletConnect(deviceWallet);
-        deviceWalletGenerated.current = true;
+        await localWallet.connect();
+        thirdwebWalletContext?.handleWalletConnect(localWallet);
+        localWalletGenerated.current = true;
       }
 
       const _accounts = await getAssociatedAccounts(
-        deviceWallet,
+        localWallet,
         walletObj.factoryAddress,
         walletObj.chain,
       );
       setAccounts(_accounts);
     })();
   }, [
-    deviceWallet,
+    localWallet,
     thirdwebWalletContext,
     walletObj.chain,
     walletObj.factoryAddress,

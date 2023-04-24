@@ -15,10 +15,10 @@ import {
 } from "@radix-ui/react-icons";
 import { useThirdwebWallet } from "@thirdweb-dev/react-core";
 import { useEffect, useRef, useState } from "react";
-import { useDeviceWalletInfo } from "./useDeviceWalletInfo";
-import { ImportDeviceWalet } from "./ImportDeviceWallet";
+import { useLocalWalletInfo } from "./useLocalWalletInfo";
+import { ImportLocalWallet } from "./ImportLocalWallet";
 import styled from "@emotion/styled";
-import { DeviceWalletModalHeader } from "./common";
+import { LocalWalletModalHeader } from "./common";
 import { Flex } from "../../../../components/basic";
 import { ToolTip } from "../../../../components/Tooltip";
 import { isMobile } from "../../../../evm/utils/isMobile";
@@ -30,30 +30,29 @@ import { UserCredentials, getCredentials } from "@thirdweb-dev/react-core";
 import { shortenAddress } from "../../../../evm/utils/addresses";
 import { Label } from "../../../../components/formElements";
 import { Spinner } from "../../../../components/Spinner";
-import { ExportDeviceWallet } from "./ExportDeviceWallet";
+import { ExportLocalWallet } from "./ExportLocalWallet";
+import { localWallet } from "../../../..";
 
-type DeviceWalletScreenProps = {
+type LocalWalletScreenProps = {
   onConnected: () => void;
   onBack: () => void;
 };
 
-export const CreateDeviceWallet: React.FC<DeviceWalletScreenProps> = (
-  props,
-) => {
+export const CreateLocalWallet: React.FC<LocalWalletScreenProps> = (props) => {
   if (isCredentialsSupported) {
-    return <CreateDeviceWalletCredentials {...props} />;
+    return <CreateLocalWalletCredentials {...props} />;
   }
-  return <CreateDeviceWalletNoCredentials {...props} />;
+  return <CreateLocalWalletNoCredentials {...props} />;
 };
 
 /**
  *
  * For Browsers that support credential storage
  */
-export const CreateDeviceWalletCredentials: React.FC<
-  DeviceWalletScreenProps
-> = (props) => {
-  const { deviceWallet } = useDeviceWalletInfo();
+export const CreateLocalWalletCredentials: React.FC<LocalWalletScreenProps> = (
+  props,
+) => {
+  const { localWallet } = useLocalWalletInfo();
   const thirdwebWalletContext = useThirdwebWallet();
   const [showImportScreen, setShowImportScreen] = useState(false);
   const [showCreationScreen, setShowCreationScreen] = useState(false);
@@ -70,7 +69,7 @@ export const CreateDeviceWalletCredentials: React.FC<
 
   if (showImportScreen) {
     return (
-      <ImportDeviceWalet
+      <ImportLocalWallet
         onConnected={props.onConnected}
         onBack={() => {
           setShowImportScreen(false);
@@ -81,7 +80,7 @@ export const CreateDeviceWalletCredentials: React.FC<
 
   if (showExport) {
     return (
-      <ExportDeviceWallet
+      <ExportLocalWallet
         onBack={() => {
           setShowExport(false);
         }}
@@ -93,14 +92,14 @@ export const CreateDeviceWalletCredentials: React.FC<
   }
 
   const createNewWallet = async () => {
-    if (!deviceWallet || !thirdwebWalletContext) {
+    if (!localWallet || !thirdwebWalletContext) {
       throw new Error("Invalid state");
     }
 
-    const address = await deviceWallet.generate();
-    deviceWallet.connect();
+    const address = await localWallet.generate();
+    localWallet.connect();
 
-    const privateKey = await deviceWallet.export({
+    const privateKey = await localWallet.export({
       strategy: "privateKey",
       encryption: false,
     });
@@ -111,15 +110,15 @@ export const CreateDeviceWalletCredentials: React.FC<
       password: privateKey,
     });
 
-    thirdwebWalletContext.handleWalletConnect(deviceWallet);
+    thirdwebWalletContext.handleWalletConnect(localWallet);
     props.onConnected();
   };
 
   if (showCreationScreen || savedCreds === null) {
     return (
       <>
-        <DeviceWalletModalHeader onBack={props.onBack} />
-        <ModalTitle>Device Wallet</ModalTitle>
+        <LocalWalletModalHeader onBack={props.onBack} />
+        <ModalTitle>Local Wallet</ModalTitle>
 
         <Spacer y="md" />
 
@@ -202,26 +201,26 @@ export const CreateDeviceWalletCredentials: React.FC<
   }
 
   const connectToSaved = async () => {
-    if (!deviceWallet || !thirdwebWalletContext) {
+    if (!localWallet || !thirdwebWalletContext) {
       throw new Error("Invalid state");
     }
 
-    await deviceWallet.import({
+    await localWallet.import({
       privateKey: savedCreds.password,
       encryption: false,
     });
 
-    await deviceWallet.connect();
-    thirdwebWalletContext.handleWalletConnect(deviceWallet);
+    await localWallet.connect();
+    thirdwebWalletContext.handleWalletConnect(localWallet);
     props.onConnected();
   };
 
   return (
     <>
-      <DeviceWalletModalHeader onBack={props.onBack} />
+      <LocalWalletModalHeader onBack={props.onBack} />
 
       <Flex alignItems="center" gap="xs">
-        <ModalTitle>Device Wallet</ModalTitle>
+        <ModalTitle>Local Wallet</ModalTitle>
         {!isMobile() && (
           <ToolTip
             tip="The application can authorize any transactions on behalf of the wallet
@@ -284,15 +283,15 @@ export const CreateDeviceWalletCredentials: React.FC<
 /**
  * For Browsers that don't support Credential Storage
  */
-export const CreateDeviceWalletNoCredentials: React.FC<
-  DeviceWalletScreenProps
+export const CreateLocalWalletNoCredentials: React.FC<
+  LocalWalletScreenProps
 > = (props) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const passwordMismatch = confirmPassword && password !== confirmPassword;
 
-  const { deviceWallet } = useDeviceWalletInfo();
+  const { localWallet } = useLocalWalletInfo();
   const thirdwebWalletContext = useThirdwebWallet();
   const [showImportScreen, setShowImportScreen] = useState(false);
 
@@ -300,18 +299,18 @@ export const CreateDeviceWalletNoCredentials: React.FC<
   const isGenerated = useRef(false);
 
   useEffect(() => {
-    if (!deviceWallet || showImportScreen) {
+    if (!localWallet || showImportScreen) {
       return;
     }
     isGenerated.current = true;
-    deviceWallet.generate().then((_address) => {
+    localWallet.generate().then((_address) => {
       setGeneratedAddress(_address);
     });
-  }, [deviceWallet, showImportScreen]);
+  }, [localWallet, showImportScreen]);
 
   if (showImportScreen) {
     return (
-      <ImportDeviceWalet
+      <ImportLocalWallet
         onConnected={props.onConnected}
         onBack={() => {
           setShowImportScreen(false);
@@ -321,24 +320,24 @@ export const CreateDeviceWalletNoCredentials: React.FC<
   }
 
   const handleConnect = async () => {
-    if (passwordMismatch || !deviceWallet || !thirdwebWalletContext) {
+    if (passwordMismatch || !localWallet || !thirdwebWalletContext) {
       throw new Error("Invalid state");
     }
 
-    deviceWallet.connect();
+    localWallet.connect();
 
-    await deviceWallet.save({
+    await localWallet.save({
       strategy: "encryptedJson",
       password,
     });
 
-    thirdwebWalletContext.handleWalletConnect(deviceWallet);
+    thirdwebWalletContext.handleWalletConnect(localWallet);
     props.onConnected();
   };
 
   return (
     <>
-      <DeviceWalletModalHeader onBack={props.onBack} />
+      <LocalWalletModalHeader onBack={props.onBack} />
 
       <Flex alignItems="center" gap="xs">
         <ModalTitle>Choose a password</ModalTitle>
@@ -473,11 +472,6 @@ const InfoCircledIconSecondary = styled(InfoCircledIcon)<{ theme?: Theme }>`
   color: ${(p) => p.theme.text.secondary};
 `;
 
-// const InfoCircledIconDanger = styled(InfoCircledIcon)<{ theme?: Theme }>`
-//   color: ${(p) => p.theme.text.danger};
-//   flex-shrink: 0;
-// `;
-
 const AccountButton = styled(Button)<{ theme?: Theme }>`
   &:hover {
     background-color: ${(p) => p.theme.bg.elevatedHover};
@@ -485,9 +479,6 @@ const AccountButton = styled(Button)<{ theme?: Theme }>`
 `;
 
 const WarningContainer = styled.div<{ theme?: Theme }>`
-  /* display: flex; */
-  /* align-items: center; */
-  /* gap: ${spacing.sm}; */
   font-size: ${fontSize.md};
   line-height: 1.5;
   color: ${(p) => p.theme.text.secondary};

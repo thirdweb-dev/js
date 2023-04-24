@@ -7,7 +7,7 @@ import {
   ConnectParams,
   CreateAsyncStorage,
 } from "@thirdweb-dev/wallets";
-import type { DeviceWallet } from "@thirdweb-dev/wallets";
+import type { LocalWallet } from "@thirdweb-dev/wallets";
 import { Signer } from "ethers";
 import {
   createContext,
@@ -254,7 +254,7 @@ export function ThirdwebWalletProvider(
         }
 
         try {
-          await (personalWallet as DeviceWallet).import({
+          await (personalWallet as LocalWallet).import({
             privateKey: creds.password,
             encryption: false,
           });
