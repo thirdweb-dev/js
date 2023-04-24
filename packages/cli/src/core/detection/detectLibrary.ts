@@ -1,20 +1,29 @@
 import { info } from "../helpers/logger";
-import { LibraryType } from "../types/ProjectType";
+import { LibraryType, PackageManagerType } from "../types/ProjectType";
 import { LibraryDetector } from "./detector";
 import inquirer from "inquirer";
-import ReactDetector from "./library/react";
+import ReactDetector from "./libraries/react";
+import ExpressDetector from "./libraries/express";
+import ReactNativeDetector from "./libraries/reactNative";
+import ViteDetector from "./libraries/vite";
+import Web3PyDetector from "./libraries/web3py";
 
 export default async function detect(
   path: string,
   options: any,
+  detectedPackageManager: PackageManagerType,
 ): Promise<LibraryType> {
 
   const libraryDetectors: LibraryDetector[] = [
+    new ExpressDetector(),
     new ReactDetector(),
+    new ReactNativeDetector(),
+    new ViteDetector(),
+    new Web3PyDetector(),
   ];
 
   const possibleLibraries = libraryDetectors
-    .filter((detector) => detector.matches(path))
+    .filter((detector) => detector.matches(path, detectedPackageManager))
     .map((detector) => detector.libraryType);
 
   if (!possibleLibraries.length) {

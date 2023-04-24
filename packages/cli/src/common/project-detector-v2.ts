@@ -1,7 +1,8 @@
 import detectPackageManager from "../core/detection/detectPackageManager";
 import detectFramework from "../core/detection/detectFramework";
 import detectLibrary from "../core/detection/detectLibrary";
-import { logger } from "../core/helpers/logger";
+import detectLanguage from "../core/detection/detectLanguage";
+import { logger, spinner } from "../core/helpers/logger";
 import path from "path";
 
 export async function detectProjectV2(options: any) {
@@ -21,13 +22,19 @@ export async function detectProjectV2(options: any) {
 
   logger.debug("Processing project at path " + projectPath);
 
-  const detectedPackageManager = await detectPackageManager(projectPath, options);
-  const detectedLibrary = await detectLibrary(projectPath, options);
-  // const detectedLanguage = await detectLanguage(projectPath, options);
-  const detectedFramework = await detectFramework(projectPath, options);
+  const log = spinner("Detecting Project...");
 
-  logger.debug("Detected package manager " + detectedPackageManager);
-  logger.debug("Detected library " + detectedLibrary);
-  // logger.debug("Detected language " + detectedLanguage);
-  logger.debug("Detected framework " + detectedFramework);
+  const detectedPackageManager = await detectPackageManager(projectPath, options);
+  const detectedLibrary = await detectLibrary(projectPath, options, detectedPackageManager);
+  const detectedLanguage = await detectLanguage(projectPath, options);
+  const detectedFramework = await detectFramework(projectPath, options, detectedPackageManager);
+
+  log.succeed(
+    "Project Detected",
+  );
+
+  logger.debug("Detected package manager: " + detectedPackageManager);
+  logger.debug("Detected library: " + detectedLibrary);
+  logger.debug("Detected language: " + detectedLanguage);
+  logger.debug("Detected framework: " + detectedFramework);
 }

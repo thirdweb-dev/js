@@ -15,13 +15,13 @@ export interface PackageManagerDetector {
 export interface FrameworkDetector {
   frameworkType: FrameworkType;
 
-  matches(path: string): boolean;
+  matches(path: string, PackageManager?: PackageManagerType): boolean;
 }
 
 export interface LibraryDetector {
   libraryType: LibraryType;
 
-  matches(path: string): boolean;
+  matches(path: string, PackageManager?: PackageManagerType): boolean;
 }
 
 export interface LanguageDetector {

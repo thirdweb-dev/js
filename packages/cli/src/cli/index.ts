@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { detectExtensions } from "../common/feature-detector";
-import { detectProjectV2 } from "../common/package-manager-detector";
+import { detectProjectV2 } from "../common/project-detector-v2";
 import { processProject } from "../common/processor";
 import { cliVersion, pkg } from "../constants/urls";
 import { info, logger, spinner } from "../core/helpers/logger";

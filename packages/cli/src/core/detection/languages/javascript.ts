@@ -9,7 +9,6 @@ export default class JavascriptDetector implements LanguageDetector {
     // Check if some of these files are written in Go.
     const javascriptFileExtensionRegex = /\.js$/;
     const dirFiles = readdirSync(path);
-    console.log("dirFiles", dirFiles);
     return dirFiles.some((file) => file.match(javascriptFileExtensionRegex));
   }
 }

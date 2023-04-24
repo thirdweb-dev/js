@@ -212,6 +212,9 @@ importers:
 
   packages/cli:
     dependencies:
+      '@iarna/toml':
+        specifier: ^2.2.5
+        version: 2.2.5
       '@thirdweb-dev/chains':
         specifier: workspace:*
         version: link:../chains
@@ -242,6 +245,9 @@ importers:
       inquirer:
         specifier: ^8.2.3
         version: 8.2.5
+      js-yaml:
+        specifier: ^4.1.0
+        version: 4.1.0
       open:
         specifier: ^8.4.0
         version: 8.4.2
@@ -288,6 +294,9 @@ importers:
       '@types/jest':
         specifier: ^29.2.1
         version: 29.4.4
+      '@types/js-yaml':
+        specifier: ^4.0.5
+        version: 4.0.5
       '@types/node':
         specifier: ^18.0.0
         version: 18.15.3
@@ -5212,6 +5221,10 @@ packages:
   /@humanwhocodes/object-schema@1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
 
+  /@iarna/toml@2.2.5:
+    resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
+    dev: false
+
   /@istanbuljs/load-nyc-config@1.1.0:
     resolution: {integrity: sha512-VjeHSlIzpv/NyD3N0YuHfXOPDIixcA1q2ZV98wsMqcYlPmv2n3Yb2lYP9XMElnaFVXg5A7YLTeLu6V84uQDjmQ==}
     engines: {node: '>=8'}
@@ -10018,6 +10031,10 @@ packages:
     dependencies:
       expect: 29.5.0
       pretty-format: 29.5.0
+    dev: true
+
+  /@types/js-yaml@4.0.5:
+    resolution: {integrity: sha512-FhpRzf927MNQdRZP0J5DLIdTXhjLYzeUTmLAu69mnVksLH9CJY3IuSeEgbKUki7GQZm0WqDkGzyxju2EZGD2wA==}
     dev: true
 
   /@types/json-schema@7.0.11:

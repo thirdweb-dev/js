@@ -3,24 +3,20 @@ import { existsSync, readFileSync } from "fs";
 import { FrameworkType } from "../../types/ProjectType";
 import { parsePackageJson } from "../../../lib/utils";
 
-export default class CRADetector implements FrameworkDetector {
-  public frameworkType: FrameworkType = "remix";
+export default class HardhatDetector implements FrameworkDetector {
+  public frameworkType: FrameworkType = "hardhat";
 
   public matches(path: string): boolean {
     const packageJson = readFileSync(path + "/package.json");
     const { dependencies, devDependencies } = parsePackageJson(packageJson);
 
-    const additionalFilesToCheck = ["/remix.config.js", "/remix-config.ts"];
+    const additionalFilesToCheck = ["/hardhat.config.js", "/contracts/"];
     const additionalFilesExist = additionalFilesToCheck.some((file) => existsSync(path + file));
-
-    const remixDependencies = Object
-      .keys(dependencies)
-      .concat(Object.keys(devDependencies))
-      .filter(dep => dep.startsWith('@remix-run/'));
 
     return (
       (
-        remixDependencies.length > 0 ||
+        dependencies["hardhat"] || 
+        devDependencies["hardhat"] ||
         additionalFilesExist
       ) ||
       false
