@@ -241,7 +241,7 @@ export function ThirdwebWalletProvider(
       personalWallet: WalletInstance,
       connectParams?: ConnectParams,
     ) {
-      if (personalWallet.walletId === "deviceWallet") {
+      if (personalWallet.walletId === "localWallet") {
         if (!isCredentialsSupported) {
           setConnectionStatus("disconnected");
           return;
