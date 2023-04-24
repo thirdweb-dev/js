@@ -6,7 +6,7 @@ import {
   ModalDescription,
   ModalTitle,
 } from "../../../../components/modalElements";
-import { Theme, fontSize, iconSize, spacing } from "../../../../design-system";
+import { Theme, fontSize, iconSize } from "../../../../design-system";
 import {
   EyeClosedIcon,
   EyeOpenIcon,
@@ -31,7 +31,6 @@ import { shortenAddress } from "../../../../evm/utils/addresses";
 import { Label } from "../../../../components/formElements";
 import { Spinner } from "../../../../components/Spinner";
 import { ExportLocalWallet } from "./ExportLocalWallet";
-import { localWallet } from "../../../..";
 
 type LocalWalletScreenProps = {
   onConnected: () => void;
