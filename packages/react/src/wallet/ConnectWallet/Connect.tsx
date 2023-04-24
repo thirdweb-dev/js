@@ -31,7 +31,7 @@ import {
 import { ifWaiting } from "../../evm/utils/ifWaiting";
 import { ThemeProvider } from "@emotion/react";
 import { darkTheme, lightTheme } from "../../design-system";
-import { ConnectToDeviceWallet } from "./screens/DeviceWallet/DeviceWalletSetup";
+import { ConnectToLocalWallet } from "./screens/LocalWallet/LocalWalletSetup";
 import { SmartWalletSelection } from "./screens/SmartWallet/SmartWalletSection";
 import { SmartWalletConnection } from "./screens/SmartWallet/SmartWalletForm";
 
@@ -91,8 +91,7 @@ export const ConnectModal = () => {
 
   const walletsMeta: WalletMeta[] = wallets.map((wallet) => ({
     id: wallet.id,
-    name: wallet.meta.name,
-    iconURL: wallet.meta.iconURL,
+    meta: wallet.meta,
     installed:
       wallet.id in installedWallets &&
       installedWallets[wallet.id as keyof typeof installedWallets],
@@ -166,8 +165,8 @@ export const ConnectModal = () => {
         setShowScreen("smartWallet/select-wallet");
       }
 
-      // Device Wallet
-      else if (wallet.id === "deviceWallet") {
+      // Local Wallet
+      else if (wallet.id === "localWallet") {
         setShowScreen("deviceWallet/connect");
       }
 
@@ -285,11 +284,14 @@ export const ConnectModal = () => {
         )}
 
         {showScreen === "wallets/get-started" && (
-          <GetStartedWithWallets onBack={handleBack} />
+          <GetStartedWithWallets
+            onBack={handleBack}
+            walletMeta={walletsMeta[0]}
+          />
         )}
 
         {showScreen === "deviceWallet/connect" && (
-          <ConnectToDeviceWallet onBack={handleBack} onConnected={onConnect} />
+          <ConnectToLocalWallet onBack={handleBack} onConnected={onConnect} />
         )}
 
         {showScreen === "smartWallet/select-wallet" && (

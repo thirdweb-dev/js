@@ -12,7 +12,7 @@ import {
 } from "@radix-ui/react-icons";
 import { useThirdwebWallet } from "@thirdweb-dev/react-core";
 import { useState } from "react";
-import { useDeviceWalletInfo } from "./useDeviceWalletInfo";
+import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { FormFooter, Label } from "../../../../components/formElements";
 import styled from "@emotion/styled";
 import { Theme, fontSize, iconSize, spacing } from "../../../../design-system";
@@ -21,15 +21,15 @@ import { ToolTip } from "../../../../components/Tooltip";
 import { Spinner } from "../../../../components/Spinner";
 import { shortenAddress } from "../../../../evm/utils/addresses";
 import { RemoveWallet } from "./RemoveWallet";
-import { DeviceWalletModalHeader } from "./common";
+import { LocalWalletModalHeader } from "./common";
 import { isMobile } from "../../../../evm/utils/isMobile";
 
-export const ReconnectDeviceWallet: React.FC<{
+export const ReconnectLocalWallet: React.FC<{
   onConnected: () => void;
   onRemove: () => void;
   onBack: () => void;
 }> = (props) => {
-  const { walletData, deviceWallet } = useDeviceWalletInfo();
+  const { walletData, localWallet } = useLocalWalletInfo();
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isWrongPassword, setIsWrongPassword] = useState(false);
@@ -38,10 +38,10 @@ export const ReconnectDeviceWallet: React.FC<{
   const [showRemoveConfirmation, setShowRemoveConfirmation] = useState(false);
 
   const handleRemove = async () => {
-    if (!deviceWallet) {
+    if (!localWallet) {
       throw new Error("Invalid state");
     }
-    await deviceWallet?.deleteSaved();
+    await localWallet?.deleteSaved();
     props.onRemove();
   };
 
@@ -58,18 +58,18 @@ export const ReconnectDeviceWallet: React.FC<{
   }
 
   const handleReconnect = async () => {
-    if (!deviceWallet || !thirdwebWalletContext) {
+    if (!localWallet || !thirdwebWalletContext) {
       throw new Error("Invalid state");
     }
     setIsConnecting(true);
     try {
-      await deviceWallet.load({
+      await localWallet.load({
         strategy: "encryptedJson",
         password,
       });
 
-      await deviceWallet.connect();
-      thirdwebWalletContext.handleWalletConnect(deviceWallet);
+      await localWallet.connect();
+      thirdwebWalletContext.handleWalletConnect(localWallet);
 
       props.onConnected();
     } catch (e) {
@@ -80,13 +80,13 @@ export const ReconnectDeviceWallet: React.FC<{
 
   return (
     <>
-      <DeviceWalletModalHeader onBack={props.onBack} />
+      <LocalWalletModalHeader onBack={props.onBack} />
       <ModalTitle
         style={{
           textAlign: "left",
         }}
       >
-        Device Wallet
+        Local Wallet
       </ModalTitle>
       <Spacer y="xs" />
       <ModalDescription>

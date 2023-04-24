@@ -41,7 +41,7 @@ export const changes = [
       "./solana/wallets/signer": "./src/solana/wallets/signer.ts",
       "./solana/wallets/keypair": "./src/solana/wallets/keypair.ts",
       "./evm/wallets/private-key": "./src/evm/wallets/private-key.ts",
-      "./evm/wallets/device-wallet": "./src/evm/wallets/device-wallet.ts",
+      "./evm/wallets/local-wallet": "./src/evm/wallets/local-wallet.ts",
       "./evm/wallets/wallet-connect":
         "./src/evm/connectors/wallet-connect/index.ts",
       "./solana/wallets/private-key": "./src/solana/wallets/private-key.ts",
@@ -50,8 +50,8 @@ export const changes = [
       "./evm/connectors/metamask": "./src/evm/connectors/metamask/index.ts",
       "./evm/wallets/aws-secrets-manager":
         "./src/evm/wallets/aws-secrets-manager.ts",
-      "./evm/connectors/device-wallet":
-        "./src/evm/connectors/device-wallet/index.ts",
+      "./evm/connectors/local-wallet":
+        "./src/evm/connectors/local-wallet/index.ts",
       "./evm/connectors/wallet-connect":
         "./src/evm/connectors/wallet-connect/index.ts",
       "./evm/connectors/coinbase-wallet":

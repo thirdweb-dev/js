@@ -1,6 +1,5 @@
-import { Wallet } from "@thirdweb-dev/react-core";
+import { Wallet, useSupportedWallet } from "@thirdweb-dev/react-core";
 import { GetStartedScreen } from "../GetStartedScreen";
-import { useSupportedWallet } from "../useSupportedWallet";
 
 export const MetamaskGetStarted: React.FC<{
   onBack: () => void;

@@ -1,4 +1,4 @@
-export { deviceWallet } from "./wallet/wallets/deviceWallet";
+export { localWallet } from "./wallet/wallets/localWallet";
 export { coinbaseWallet } from "./wallet/wallets/coinbaseWallet";
 export { metamaskWallet } from "./wallet/wallets/metamaskWallet";
 export { paperWallet } from "./wallet/wallets/paperWallet";

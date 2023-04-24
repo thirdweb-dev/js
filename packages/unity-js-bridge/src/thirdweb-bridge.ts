@@ -6,7 +6,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { DAppMetaData } from "@thirdweb-dev/wallets";
 import type { AbstractClientWallet } from "@thirdweb-dev/wallets/evm/wallets/base";
 import { CoinbaseWallet } from "@thirdweb-dev/wallets/evm/wallets/coinbase-wallet";
-import { DeviceWallet } from "@thirdweb-dev/wallets/evm/wallets/device-wallet";
+import { LocalWallet } from "@thirdweb-dev/wallets/evm/wallets/local-wallet";
 import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
 import { MetaMaskWallet } from "@thirdweb-dev/wallets/evm/wallets/metamask";
@@ -46,7 +46,7 @@ const WALLETS = [
   InjectedWallet,
   WalletConnect,
   CoinbaseWallet,
-  DeviceWallet,
+  LocalWallet,
 ] as const;
 
 type PossibleWallet = (typeof WALLETS)[number]["id"];
@@ -146,8 +146,8 @@ class ThirdwebBridge implements TWBridge {
             dappMetadata,
           });
           break;
-        case "deviceWallet":
-          walletInstance = new DeviceWallet({
+        case "localWallet":
+          walletInstance = new LocalWallet({
             dappMetadata,
           });
           break;
@@ -181,20 +181,20 @@ class ThirdwebBridge implements TWBridge {
     }
     const walletInstance = this.walletMap.get(wallet);
     if (walletInstance) {
-      // device wallet needs to be generated or loaded before connecting
-      if (walletInstance.walletId === "deviceWallet") {
-        const deviceWallet = walletInstance as DeviceWallet;
+      // local wallet needs to be generated or loaded before connecting
+      if (walletInstance.walletId === "localWallet") {
+        const localWallet = walletInstance as LocalWallet;
 
         // if password is provided, we can load and save
         if (password) {
-          if (await deviceWallet.isSaved()) {
-            await deviceWallet.load({
+          if (await localWallet.isSaved()) {
+            await localWallet.load({
               strategy: "encryptedJson",
               password,
             });
           } else {
-            await deviceWallet.generate();
-            await deviceWallet.save({
+            await localWallet.generate();
+            await localWallet.save({
               strategy: "encryptedJson",
               password,
             });
@@ -203,7 +203,7 @@ class ThirdwebBridge implements TWBridge {
 
         // if no password is provided, we can only generate
         else {
-          await deviceWallet.generate();
+          await localWallet.generate();
         }
       }
 

@@ -17,6 +17,12 @@ export class CoinbaseWallet extends AbstractClientWallet {
     iconURL:
       "ipfs://QmcJBHopbwfJcLqJpX2xEufSS84aLbF7bHavYhaXUcrLaH/coinbase.svg",
     name: "Coinbase Wallet",
+    urls: {
+      chrome:
+        "https://chrome.google.com/webstore/detail/coinbase-wallet-extension/hnfanknocfeofbddgcijnmhnfnkdnaad",
+      android: "https://play.google.com/store/apps/details?id=org.toshi",
+      ios: "https://apps.apple.com/us/app/coinbase-wallet-nfts-crypto/id1278383455",
+    },
   };
 
   static id = "coinbaseWallet" as const;

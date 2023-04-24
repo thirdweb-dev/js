@@ -45,7 +45,7 @@ import { Flex } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
 import { utils } from "ethers";
 import { GenericWalletIcon } from "./icons/GenericWalletIcon";
-import { ExportDeviceWallet } from "./screens/DeviceWallet/ExportDeviceWallet";
+import { ExportLocalWallet } from "./screens/LocalWallet/ExportLocalWallet";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -376,8 +376,8 @@ export const ConnectedWalletDetails: React.FC<{
         </div>
       )}
 
-      {/* Export Device Wallet */}
-      {activeWallet?.walletId === "deviceWallet" && (
+      {/* Export Local Wallet */}
+      {activeWallet?.walletId === "localWallet" && (
         <>
           <Spacer y="sm" />
           <MenuButton
@@ -392,7 +392,7 @@ export const ConnectedWalletDetails: React.FC<{
             <SecondaryIconContainer>
               <GenericWalletIcon size={iconSize.sm} />
             </SecondaryIconContainer>
-            Export Device Wallet{" "}
+            Export Wallet{" "}
           </MenuButton>
         </>
       )}
@@ -449,7 +449,7 @@ export const ConnectedWalletDetails: React.FC<{
             maxWidth: "480px",
           }}
         >
-          <ExportDeviceWallet
+          <ExportLocalWallet
             onBack={() => {
               setShowExportModal(false);
             }}

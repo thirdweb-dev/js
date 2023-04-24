@@ -1,4 +1,4 @@
 export type IconStyleProp = {
-  color: string;
+  color?: string;
   size: number;
 };
