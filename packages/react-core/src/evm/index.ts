@@ -16,6 +16,7 @@ export {
   useDisconnect,
   useSwitchChain,
   useWallets,
+  useIsConnecting,
 } from "../core/hooks/wallet-hooks";
 export { useNetwork } from "../core/hooks/useNetwork";
 export { useThirdwebWallet } from "../core/providers/thirdweb-wallet-provider";

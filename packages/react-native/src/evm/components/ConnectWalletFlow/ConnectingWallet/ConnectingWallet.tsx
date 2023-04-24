@@ -7,8 +7,7 @@ import { ReactNode } from "react";
 import { ActivityIndicator, Linking, StyleSheet, View } from "react-native";
 
 export type ConnectingWalletProps = {
-  headerText?: ReactNode | string;
-  subHeaderText?: string;
+  subHeaderText?: ReactNode | string;
   footer?: ReactNode;
   content?: ReactNode;
   onClose: () => void;

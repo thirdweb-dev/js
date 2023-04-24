@@ -1,7 +1,8 @@
+import type { AbstractClientWallet } from "@thirdweb-dev/wallets";
+
 export type WalletMeta = {
   id: string;
-  name: string;
-  iconURL: string;
+  meta: (typeof AbstractClientWallet)["meta"];
   installed: boolean;
   onClick: () => Promise<void>;
 };

@@ -1,33 +1,33 @@
 import { normalizeChainId } from "../../../lib/wagmi-core";
 import { ConnectParams, TWConnector } from "../../interfaces/tw-connector";
-import type { DeviceWalletConnectionArgs } from "../../wallets/device-wallet";
+import type { LocalWalletConnectionArgs as LocalWalletConnectionArgs } from "../../wallets/local-wallet";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { Signer } from "ethers";
 import { providers } from "ethers";
 import type { Wallet } from "ethers";
 
-export type DeviceWalletConnectorOptions = {
+export type LocalWalletConnectorOptions = {
   chain: Chain;
   ethersWallet: Wallet;
   chains: Chain[];
 };
 
-export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArgs> {
-  readonly id: string = "device_wallet";
-  readonly name: string = "Device Wallet";
-  options: DeviceWalletConnectorOptions;
+export class LocalWalletConnector extends TWConnector<LocalWalletConnectionArgs> {
+  readonly id: string = "local_wallet";
+  readonly name: string = "Local Wallet";
+  options: LocalWalletConnectorOptions;
 
   #provider?: providers.Provider;
   #signer?: Signer;
 
-  protected shimDisconnectKey = "deviceWallet.shimDisconnect";
+  protected shimDisconnectKey = "localWallet.shimDisconnect";
 
-  constructor(options: DeviceWalletConnectorOptions) {
+  constructor(options: LocalWalletConnectorOptions) {
     super();
     this.options = options;
   }
 
-  async connect(args: ConnectParams<DeviceWalletConnectionArgs>) {
+  async connect(args: ConnectParams<LocalWalletConnectionArgs>) {
     if (args.chainId) {
       this.switchChain(args.chainId);
     }

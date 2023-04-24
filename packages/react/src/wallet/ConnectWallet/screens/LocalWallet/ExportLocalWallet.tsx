@@ -5,38 +5,38 @@ import {
   ModalTitle,
   ModalDescription,
 } from "../../../../components/modalElements";
-import { DeviceWalletModalHeader } from "./common";
+import { LocalWalletModalHeader } from "./common";
 import { Theme } from "../../../../design-system";
 import styled from "@emotion/styled";
 import { fontSize } from "../../../../design-system";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { FormFieldWithIconButton } from "../../../../components/formFields";
 import { useState } from "react";
-import { useDeviceWalletInfo } from "./useDeviceWalletInfo";
+import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { isMobile } from "../../../../evm/utils/isMobile";
 import { shortenAddress } from "../../../../evm/utils/addresses";
 
-export const ExportDeviceWallet: React.FC<{
+export const ExportLocalWallet: React.FC<{
   onBack: () => void;
   onExport: () => void;
 }> = (props) => {
-  const { deviceWallet, walletData } = useDeviceWalletInfo();
+  const { localWallet, walletData } = useLocalWalletInfo();
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isWrongPassword, setIsWrongPassword] = useState(false);
 
-  const handleDeviceWalletExport = async () => {
-    if (!walletData || !deviceWallet) {
+  const handleLocalWalletExport = async () => {
+    if (!walletData || !localWallet) {
       throw new Error("invalid state");
     }
 
     try {
-      await deviceWallet.import({
+      await localWallet.import({
         encryptedJson: walletData.data,
         password,
       });
 
-      const json = await deviceWallet.export({
+      const json = await localWallet.export({
         strategy: "encryptedJson",
         password,
       });
@@ -51,7 +51,7 @@ export const ExportDeviceWallet: React.FC<{
 
   return (
     <>
-      <DeviceWalletModalHeader onBack={props.onBack} />
+      <LocalWalletModalHeader onBack={props.onBack} />
       <ModalTitle
         style={{
           textAlign: "left",
@@ -72,7 +72,7 @@ export const ExportDeviceWallet: React.FC<{
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          handleDeviceWalletExport();
+          handleLocalWalletExport();
         }}
       >
         <Label>Wallet Address</Label>

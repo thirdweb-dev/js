@@ -5,8 +5,8 @@ export { coinbaseWallet } from "./wallets/wallets/coinbase-wallet";
 export { metamaskWallet } from "./wallets/wallets/metamask-wallet";
 export { rainbowWallet } from "./wallets/wallets/rainbow-wallet";
 export { trustWallet } from "./wallets/wallets/trust-wallet";
-export { deviceWallet } from "./wallets/wallets/device-wallet";
 export { smartWallet } from "./wallets/wallets/smart-wallet";
+export { localWallet } from "./wallets/wallets/local-wallet";
 
 export { useCoinbaseWallet } from "./wallets/hooks/useCoinbaseWallet";
 export { useMetaMaskWallet } from "./wallets/hooks/useMetaMaskWallet";

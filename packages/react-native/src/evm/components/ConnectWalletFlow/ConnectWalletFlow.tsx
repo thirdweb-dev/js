@@ -3,24 +3,44 @@ import Text from "../base/Text";
 import { TWModal } from "../base/modal/TWModal";
 import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
-import { Wallet, useConnect, useWallets } from "@thirdweb-dev/react-core";
-import { useState } from "react";
+import {
+  Wallet,
+  useConnect,
+  useThirdwebWallet,
+  useWallets,
+} from "@thirdweb-dev/react-core";
+import { useMemo, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
-import { DeviceWalletFlow } from "./DeviceWalletFlow";
-import { DeviceWallet } from "../../wallets/wallets/device-wallet";
 import { SmartWallet } from "@thirdweb-dev/wallets";
 import { SmartContractModal } from "./SmartContractWallet/SmartContractModal";
+import { LocalWalletFlow } from "./LocalWalletFlow";
+import { LocalWallet, localWallet } from "../../wallets/wallets/local-wallet";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [activeWallet, setActiveWallet] = useState<Wallet | undefined>();
   const [isConnecting, setIsConnecting] = useState(false);
+  const guestMode = useThirdwebWallet()?.guestMode;
+  const removedGuestWalletRef = useRef(false);
 
   const connect = useConnect();
   const supportedWallets = useWallets();
 
+  const wallets = useMemo(() => {
+    if (
+      guestMode &&
+      supportedWallets[supportedWallets.length - 1].id === LocalWallet.id &&
+      !removedGuestWalletRef.current
+    ) {
+      removedGuestWalletRef.current = true;
+      return supportedWallets.slice(0, supportedWallets.length - 1);
+    }
+
+    return supportedWallets;
+  }, [guestMode, supportedWallets]);
+
   const onConnectPress = () => {
-    if (supportedWallets.length === 1) {
+    if (supportedWallets.length === 1 && !guestMode) {
       onChooseWallet(supportedWallets[0]);
     }
 
@@ -40,10 +60,14 @@ export const ConnectWalletFlow = () => {
     });
   };
 
+  const onJoinAsGuestPress = () => {
+    connectActiveWallet(localWallet());
+  };
+
   const onChooseWallet = (wallet: Wallet) => {
     setActiveWallet(() => wallet);
 
-    if (wallet.id !== DeviceWallet.id && wallet.id !== SmartWallet.id) {
+    if (wallet.id !== LocalWallet.id) {
       connectActiveWallet(wallet);
     }
   };
@@ -54,11 +78,10 @@ export const ConnectWalletFlow = () => {
   };
 
   function getComponentForWallet(activeWalletP: Wallet) {
-    console.log("activeWalletP", activeWalletP);
     switch (activeWalletP.id) {
-      case DeviceWallet.id:
+      case LocalWallet.id:
         return (
-          <DeviceWalletFlow
+          <LocalWalletFlow
             onClose={onClose}
             onBackPress={onBackPress}
             onConnectPress={() => connectActiveWallet(activeWalletP)}
@@ -85,7 +108,7 @@ export const ConnectWalletFlow = () => {
           isConnecting ? (
             <ConnectingWallet
               content={
-                activeWallet.id === DeviceWallet.id ? (
+                activeWallet.id === LocalWallet.id ? (
                   <Text variant="bodySmallSecondary" mt="md">
                     Creating, encrypting and securing your device wallet.
                   </Text>
@@ -100,9 +123,9 @@ export const ConnectWalletFlow = () => {
           )
         ) : (
           <ChooseWallet
-            wallets={supportedWallets}
+            wallets={wallets}
             onChooseWallet={onChooseWallet}
-            footer={<></>}
+            onJoinAsGuestPress={onJoinAsGuestPress}
             onClose={onClose}
           />
         )}

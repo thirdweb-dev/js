@@ -12,7 +12,7 @@ import { useWallet, useBalance, useDisconnect } from "@thirdweb-dev/react-core";
 import { useActiveChain } from "@thirdweb-dev/react-core/evm";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { ExportDeviceWalletModal } from "./ExportDeviceWalletModal";
+import { ExportLocalWalletModal } from "./ExportLocalWalletModal";
 
 export type ConnectWalletDetailsProps = {
   address: string;
@@ -58,7 +58,7 @@ export const ConnectWalletDetails = ({
     setIsExportModalVisible(false);
   };
 
-  const onExportDeviceWalletPress = () => {
+  const onExportLocalWalletPress = () => {
     setIsExportModalVisible(true);
   };
 
@@ -72,7 +72,7 @@ export const ConnectWalletDetails = ({
         isVisible={isDetailsModalVisible}
         onBackdropPress={onBackdropPress}
       >
-        <ExportDeviceWalletModal
+        <ExportLocalWalletModal
           isVisible={isExportModalVisible}
           onClose={onExportModalClose}
         />
@@ -89,7 +89,7 @@ export const ConnectWalletDetails = ({
           chainName={chain?.name || "Unknown Network"}
           onPress={onChangeNetworkPress}
         />
-        {activeWallet?.getMeta().name.toLowerCase().includes("device") ? (
+        {activeWallet?.walletId.toLowerCase().includes("localwallet") ? (
           <>
             <View style={styles.currentNetwork}>
               <Text variant="bodySmallSecondary">Additional Actions</Text>
@@ -99,11 +99,11 @@ export const ConnectWalletDetails = ({
               borderColor="border"
               mb="sm"
               style={styles.exportWallet}
-              onPress={onExportDeviceWalletPress}
+              onPress={onExportLocalWalletPress}
             >
               <PocketWalletIcon size={16} />
               <View style={styles.exportWalletInfo}>
-                <Text variant="bodySmall">Export device wallet</Text>
+                <Text variant="bodySmall">Export wallet</Text>
               </View>
             </BaseButton>
           </>

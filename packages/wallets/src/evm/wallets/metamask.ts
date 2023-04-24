@@ -29,6 +29,12 @@ export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptio
     name: "MetaMask",
     iconURL:
       "ipfs://QmZZHcw7zcXursywnLDAyY6Hfxzqop5GKgwoq8NB9jjrkN/metamask.svg",
+    urls: {
+      chrome:
+        "https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn",
+      android: "https://play.google.com/store/apps/details?id=io.metamask",
+      ios: "https://apps.apple.com/us/app/metamask-blockchain-wallet/id1438144202",
+    },
   };
 
   static id = "metamask" as const;
