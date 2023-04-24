@@ -8,8 +8,8 @@ import {
   HelperLink,
 } from "../../../../components/modalElements";
 import { shortenAddress } from "../../../../evm/utils/addresses";
-import { ExportDeviceWallet } from "./ExportDeviceWallet";
-import { DeviceWalletModalHeader } from "./common";
+import { ExportLocalWallet } from "./ExportLocalWallet";
+import { LocalWalletModalHeader } from "./common";
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { Flex } from "../../../../components/basic";
 import { iconSize } from "../../../../design-system";
@@ -25,7 +25,7 @@ export const RemoveWallet: React.FC<{
 
   if (showExport) {
     return (
-      <ExportDeviceWallet
+      <ExportLocalWallet
         onBack={() => {
           setShowExport(false);
         }}
@@ -39,7 +39,7 @@ export const RemoveWallet: React.FC<{
 
   return (
     <>
-      <DeviceWalletModalHeader onBack={props.onBack} />
+      <LocalWalletModalHeader onBack={props.onBack} />
       <ModalTitle
         style={{
           textAlign: "left",

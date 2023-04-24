@@ -1,88 +1,33 @@
 import { Img } from "../../../components/Img";
-import { QRCode } from "../../../components/QRCode";
 import { Spacer } from "../../../components/Spacer";
 import {
-  BackButton,
   HelperLink,
   ModalDescription,
   ModalTitle,
 } from "../../../components/modalElements";
 import { fontSize, iconSize, spacing, Theme } from "../../../design-system";
-import { MetaMaskWallet } from "@thirdweb-dev/wallets";
-import { Apple, Chrome, GooglePlay } from "../iconURLs";
-import { ButtonLink } from "./GetStartedScreen";
+import { GetStartedScreen } from "./GetStartedScreen";
 import styled from "@emotion/styled";
-import { useState } from "react";
-import { isMobile } from "../../../evm/utils/isMobile";
-
-const walletName = MetaMaskWallet.meta.name;
-const walletIconURL = MetaMaskWallet.meta.iconURL;
-const chromeExtensionLink =
-  "https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn";
-const googlePlayStoreLink =
-  "https://play.google.com/store/apps/details?id=io.metamask";
-const appleStoreLink =
-  "https://apps.apple.com/us/app/metamask-blockchain-wallet/id1438144202";
+import { WalletMeta } from "../../types";
 
 export const GetStartedWithWallets: React.FC<{
   onBack: () => void;
-}> = (props) => {
-  const [showScreen, setShowScreen] = useState<
-    "base" | "android-scan" | "ios-scan"
-  >("base");
-
-  const isScanScreen =
-    showScreen === "android-scan" || showScreen === "ios-scan";
+  walletMeta: WalletMeta;
+}> = ({ walletMeta, onBack }) => {
+  const { meta } = walletMeta;
 
   return (
-    <>
-      <BackButton
-        style={
-          isScanScreen
-            ? {
-                position: "absolute",
-                top: spacing.lg,
-                left: spacing.lg,
-              }
-            : undefined
-        }
-        onClick={() => {
-          if (showScreen === "base") {
-            props.onBack();
-          } else {
-            setShowScreen("base");
-          }
-        }}
-      />
-
-      {showScreen === "android-scan" && (
-        <ScanScreen
-          platformIcon={
-            <Img src={GooglePlay} width={iconSize.md} height={iconSize.md} />
-          }
-          url={googlePlayStoreLink}
-          platform="Google Play"
-          walletName={walletName}
-          walletIconURL={walletIconURL}
-        />
-      )}
-
-      {showScreen === "ios-scan" && (
-        <ScanScreen
-          platformIcon={
-            <Img src={Apple} width={iconSize.md} height={iconSize.md} />
-          }
-          url={appleStoreLink}
-          platform="App Store"
-          walletName={walletName}
-          walletIconURL={walletIconURL}
-        />
-      )}
-
-      {showScreen === "base" && (
+    <GetStartedScreen
+      onBack={() => {
+        onBack();
+      }}
+      walletIconURL={meta.iconURL}
+      walletName={meta.name}
+      appleStoreLink={meta.urls?.ios}
+      googlePlayStoreLink={meta.urls?.android}
+      chromeExtensionLink={meta.urls?.chrome}
+      header={
         <>
-          <Spacer y="lg" />
-
           <ModalTitle> Get started with EVM wallets </ModalTitle>
           <Spacer y="md" />
 
@@ -110,61 +55,18 @@ export const GetStartedWithWallets: React.FC<{
               }}
             >
               <Img
-                src={walletIconURL}
+                src={meta.iconURL}
                 width={iconSize.md}
                 height={iconSize.md}
               />
-              <NeutralText>MetaMask</NeutralText>
+              <NeutralText>{meta.name}</NeutralText>
             </div>
           </div>
-
-          <Spacer y="md" />
-
-          {/* Buttons */}
-          <div>
-            {/* Chrome Extension  */}
-            <ButtonLink target="_blank" href={chromeExtensionLink}>
-              <Img src={Chrome} width={iconSize.lg} height={iconSize.lg} />
-              <span>Download Chrome Extension</span>
-            </ButtonLink>
-            <Spacer y="xs" />
-
-            {/* Google Play store  */}
-            <ButtonLink
-              as="button"
-              target="_blank"
-              onClick={() => {
-                if (isMobile()) {
-                  window.open(googlePlayStoreLink, "_blank");
-                } else {
-                  setShowScreen("android-scan");
-                }
-              }}
-            >
-              <Img src={GooglePlay} width={iconSize.lg} height={iconSize.lg} />
-              <span>Download on Google Play</span>
-            </ButtonLink>
-            <Spacer y="xs" />
-
-            {/* App Store  */}
-            <ButtonLink
-              as="button"
-              target="_blank"
-              onClick={() => {
-                if (isMobile()) {
-                  window.open(appleStoreLink, "_blank");
-                } else {
-                  setShowScreen("ios-scan");
-                }
-              }}
-            >
-              <Img src={Apple} width={iconSize.lg} height={iconSize.lg} />
-              <span>Download on App Store</span>
-            </ButtonLink>
-          </div>
-
+        </>
+      }
+      footer={
+        <>
           <Spacer y="xl" />
-
           <HelperLink
             target="_blank"
             href="https://ethereum.org/en/wallets/find-wallet/"
@@ -173,81 +75,10 @@ export const GetStartedWithWallets: React.FC<{
             }}
           >
             Learn more about wallets
-          </HelperLink>
+          </HelperLink>{" "}
         </>
-      )}
-
-      {isScanScreen && (
-        <>
-          <Spacer y="xl" />
-          <HelperLink
-            as="button"
-            onClick={props.onBack}
-            style={{
-              textAlign: "center",
-              display: "block",
-              width: "100%",
-            }}
-          >
-            I{`'`}ve finished setting up my {walletName} mobile wallet
-          </HelperLink>
-        </>
-      )}
-    </>
-  );
-};
-
-const ScanScreen: React.FC<{
-  url: string;
-  platform: string;
-  walletName: string;
-  platformIcon: React.ReactNode;
-  walletIconURL: string;
-}> = (props) => {
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        textAlign: "center",
-      }}
-    >
-      <QRCode
-        qrCodeUri={props.url}
-        QRIcon={
-          <Img
-            src={props.walletIconURL}
-            width={iconSize.lg}
-            height={iconSize.lg}
-          />
-        }
-      />
-      <Spacer y="xl" />
-
-      <div
-        style={{
-          display: "flex",
-          gap: spacing.sm,
-          alignItems: "center",
-        }}
-      >
-        {props.platformIcon}
-        <ModalTitle
-          style={{
-            fontSize: fontSize.xl,
-          }}
-        >
-          Install {props.walletName} for {props.platform}
-        </ModalTitle>
-      </div>
-
-      <Spacer y="lg" />
-      <ModalDescription>
-        Scan QR with your phone to download <br /> {props.walletName} for{" "}
-        {props.platform}
-      </ModalDescription>
-    </div>
+      }
+    />
   );
 };
 

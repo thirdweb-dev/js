@@ -2,12 +2,12 @@ import { iconSize } from "../../../../design-system";
 import { Img } from "../../../../components/Img";
 import { Spacer } from "../../../../components/Spacer";
 import { BackButton } from "../../../../components/modalElements";
-import { useDeviceWalletInfo } from "./useDeviceWalletInfo";
+import { useLocalWalletInfo } from "./useLocalWalletInfo";
 
-export const DeviceWalletModalHeader: React.FC<{ onBack: () => void }> = (
+export const LocalWalletModalHeader: React.FC<{ onBack: () => void }> = (
   props,
 ) => {
-  const { meta } = useDeviceWalletInfo();
+  const { meta } = useLocalWalletInfo();
 
   return (
     <>
