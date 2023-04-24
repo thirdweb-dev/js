@@ -22,19 +22,22 @@ export const WalletSelector: React.FC<{
 
       <WalletSelection walletsMeta={props.walletsMeta} />
 
-      <Spacer y="xl" />
-
-      <HelperLink
-        as="button"
-        onClick={props.onGetStarted}
-        style={{
-          display: "block",
-          width: "100%",
-          textAlign: "center",
-        }}
-      >
-        Need help getting started?
-      </HelperLink>
+      {props.walletsMeta[0].meta.urls && (
+        <>
+          <Spacer y="xl" />
+          <HelperLink
+            as="button"
+            onClick={props.onGetStarted}
+            style={{
+              display: "block",
+              width: "100%",
+              textAlign: "center",
+            }}
+          >
+            Need help getting started?
+          </HelperLink>
+        </>
+      )}
     </>
   );
 };
@@ -65,12 +68,12 @@ export const WalletSelection: React.FC<{ walletsMeta: WalletMeta[] }> = (
               }}
             >
               <Img
-                src={walletMeta.iconURL}
+                src={walletMeta.meta.iconURL}
                 width={iconSize.lg}
                 height={iconSize.lg}
                 loading="eager"
               />
-              <WalletName>{walletMeta.name}</WalletName>
+              <WalletName>{walletMeta.meta.name}</WalletName>
               {walletMeta.installed && <InstallBadge> Installed </InstallBadge>}
             </WalletButton>
           </li>

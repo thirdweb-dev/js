@@ -91,8 +91,7 @@ export const ConnectModal = () => {
 
   const walletsMeta: WalletMeta[] = wallets.map((wallet) => ({
     id: wallet.id,
-    name: wallet.meta.name,
-    iconURL: wallet.meta.iconURL,
+    meta: wallet.meta,
     installed:
       wallet.id in installedWallets &&
       installedWallets[wallet.id as keyof typeof installedWallets],
@@ -285,7 +284,10 @@ export const ConnectModal = () => {
         )}
 
         {showScreen === "wallets/get-started" && (
-          <GetStartedWithWallets onBack={handleBack} />
+          <GetStartedWithWallets
+            onBack={handleBack}
+            walletMeta={walletsMeta[0]}
+          />
         )}
 
         {showScreen === "deviceWallet/connect" && (
