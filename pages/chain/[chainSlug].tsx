@@ -111,10 +111,10 @@ const ChainPage: ThirdwebNextPage = ({
 
   const sanitizedChainName = chain.name.replace("Mainnet", "").trim();
 
-  const title = `${sanitizedChainName} (${chain.nativeCurrency.symbol}) | RPC, Smart Contracts, Blockchain SDKs`;
-  const description = `Deploy smart contracts to ${sanitizedChainName} and build dApps with thirdweb's SDKs. Discover ${
-    chain.nativeCurrency.symbol
-  } RPCs, ${chain.faucets?.length ? "faucets," : "dApps"} & explorers.`;
+  const title = `${sanitizedChainName}: RPC and Chain Settings`;
+  const description = `Use the best ${sanitizedChainName} RPC and add to your wallet. Discover the chain ID, native token, explorers, and ${
+    chain.testnet && chain.faucets?.length ? "faucet options" : "more"
+  }.`;
 
   const gradient = useMemo(() => {
     if (!gradientColors?.length) {
