@@ -34,7 +34,9 @@ import { darkTheme, lightTheme } from "../../design-system";
 import { LocalWalletSetup } from "./screens/LocalWallet/LocalWalletSetup";
 import { SmartWalletConnection } from "./screens/SmartWallet/SmartWalletForm";
 
-export const ConnectModal = () => {
+export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
+  guestMode,
+}) => {
   const modalTheme = useModalTheme();
   const isConnectingToWalletWrapper = useIsConnectingToWalletWrapper();
   const showScreen = useScreen();
@@ -218,6 +220,10 @@ export const ConnectModal = () => {
             onGetStarted={() => {
               setShowScreen("wallets/get-started");
             }}
+            guestMode={guestMode}
+            onGuestConnect={() => {
+              setShowScreen("localWallet/connect");
+            }}
           />
         )}
 
@@ -267,6 +273,7 @@ export const ConnectModal = () => {
 
         {showScreen === "safe/select-wallet" && (
           <SelectpersonalWallet
+            guestMode={guestMode}
             onBack={() => {
               setIsConnectingToWalletWrapper(false);
               setShowScreen("walletList");

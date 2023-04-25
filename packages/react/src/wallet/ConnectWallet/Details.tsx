@@ -376,7 +376,7 @@ export const ConnectedWalletDetails: React.FC<{
         </div>
       )}
 
-      {/* Export Local Wallet */}
+      {/* Export  Wallet */}
       {activeWallet?.walletId === "localWallet" && (
         <>
           <Spacer y="sm" />

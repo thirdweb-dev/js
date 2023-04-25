@@ -19,12 +19,12 @@ import { Theme, fontSize, spacing } from "../../../../design-system";
 import { Spinner } from "../../../../components/Spinner";
 import { shortenAddress } from "../../../../evm/utils/addresses";
 import { LocalWalletModalHeader } from "./common";
-import { UserCredentials } from "@thirdweb-dev/react-core/dist/declarations/src";
 import { SecondaryText } from "../../../../components/text";
 import { CreateLocalWallet_NoCreds } from "./SetupLocalWallet_NoCredentials";
 import { OverrideConfirmation } from "./overrideConfirmation";
 import { ExportLocalWallet } from "./ExportLocalWallet";
 import { CreateLocalWallet_Creds } from "./SetupLocalWallet_Credentials";
+import { UserCredentials } from "./credentials";
 
 type ReconnectLocalWalletProps = {
   onConnected: () => void;
@@ -67,6 +67,10 @@ export const ReconnectLocalWalletNoCredentials: React.FC<
       <OverrideConfirmation
         onBackup={() => {
           setShowExport(true);
+        }}
+        onSkip={() => {
+          setShowBackupConfirmation(false);
+          setShowCreate(true);
         }}
         onBack={() => {
           setShowBackupConfirmation(false);
@@ -115,7 +119,7 @@ export const ReconnectLocalWalletNoCredentials: React.FC<
           textAlign: "left",
         }}
       >
-        Local Wallet
+        Guest Wallet
       </ModalTitle>
       <Spacer y="xs" />
       <ModalDescription>
@@ -239,6 +243,11 @@ export const ReconnectLocalWalletCredentials: React.FC<
         onBackup={() => {
           setShowExport(true);
         }}
+        onSkip={() => {
+          console.log("skip");
+          setShowCreate(true);
+          setShowBackupConfirmation(false);
+        }}
         onBack={() => {
           setShowBackupConfirmation(false);
         }}
@@ -281,7 +290,7 @@ export const ReconnectLocalWalletCredentials: React.FC<
           textAlign: "left",
         }}
       >
-        Local Wallet
+        Guest Wallet
       </ModalTitle>
       <Spacer y="xs" />
       <ModalDescription>

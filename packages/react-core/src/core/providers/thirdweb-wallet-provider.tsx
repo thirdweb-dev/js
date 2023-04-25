@@ -263,9 +263,15 @@ export function ThirdwebWalletProvider(
           // create a personal wallet instance and auto connect it
           const personalWalletInstance = createWalletInstance(personalWalleObj);
 
-          await personalWalletInstance.autoConnect(
-            personalWalletInfo.connectParams,
-          );
+          try {
+            await personalWalletInstance.autoConnect(
+              personalWalletInfo.connectParams,
+            );
+          } catch (e) {
+            console.error(e);
+            setConnectionStatus("disconnected");
+            return;
+          }
 
           // set the personal wallet instance to the connectParams
           walletInfo.connectParams = {
