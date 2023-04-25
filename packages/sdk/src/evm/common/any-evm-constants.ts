@@ -2,6 +2,7 @@ import { CustomChain } from "../types/any-evm/chains";
 
 export const ERROR_SUBSTRINGS = [
   "eip-155",
+  "eip155",
   "protected",
   "invalid chain id for signer",
   "chain id none",
@@ -16,18 +17,22 @@ export const ERROR_SUBSTRINGS_COMPOSITE = [
   ["wrong", "chainid"],
 ];
 
+/* eslint-disable no-useless-computed-key */
 export const CUSTOM_GAS_FOR_CHAIN: Record<number, CustomChain> = {
-  // eslint-disable-next-line no-useless-computed-key
   [5001]: {
     name: "Mantle Testnet",
     gasPrice: 1,
   },
-  // eslint-disable-next-line no-useless-computed-key
   [71402]: {
     name: "Godwoken Mainnet",
     gasPrice: 40_000 * 10 ** 9,
   },
+  [1351057110]: {
+    name: "Chaos (SKALE Testnet)",
+    gasPrice: 100000,
+  },
 };
+/* eslint-enable no-useless-computed-key */
 
 export function matchError(error: string): boolean {
   const errorIndex = ERROR_SUBSTRINGS.findIndex((substring) =>
