@@ -31,18 +31,6 @@ export const CUSTOM_GAS_FOR_CHAIN: Record<number, CustomChain> = {
     name: "Chaos (SKALE Testnet)",
     gasPrice: 100000,
   },
-  [344106930]: {
-    name: "Calypso NFT Hub (SKALE Testnet)",
-    gasPrice: 100000,
-  },
-  [1564830818]: {
-    name: "Calypso NFT Hub (SKALE)",
-    gasPrice: 100000,
-  },
-  [2046399126]: {
-    name: "Europa SKALE Chain",
-    gasPrice: 100000,
-  },
 };
 /* eslint-enable no-useless-computed-key */
 
