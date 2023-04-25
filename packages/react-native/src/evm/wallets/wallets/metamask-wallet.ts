@@ -1,11 +1,15 @@
-import { WalletOptions, WalletConnectV1Options, WalletConnectV1 } from "@thirdweb-dev/wallets";
+import {
+  WalletOptions,
+  WalletConnectV1Options,
+  WalletConnectV1,
+} from "@thirdweb-dev/wallets";
 import { formatDisplayUri } from "../../utils/uri";
 import { Linking } from "react-native";
 import {
-    WalletOptions as WalletOptionsRC,
-    Wallet,
-    ExtraCoreWalletOptions
-  } from "@thirdweb-dev/react-core";
+  WalletOptions as WalletOptionsRC,
+  Wallet,
+  ExtraCoreWalletOptions,
+} from "@thirdweb-dev/react-core";
 import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
 
 type WC1Options = Omit<
@@ -20,7 +24,7 @@ export class MetaMaskWallet extends WalletConnectV1 {
     id: "metamask",
     name: "MetaMask",
     iconURL:
-      "https://registry.walletconnect.org/v2/logo/md/5195e9db-94d8-4579-6f11-ef553be95100",
+      "ipfs://QmZZHcw7zcXursywnLDAyY6Hfxzqop5GKgwoq8NB9jjrkN/metamask.svg",
     links: {
       native: "metamask:",
       universal: "https://metamask.app.link",

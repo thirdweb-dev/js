@@ -1,15 +1,19 @@
 import { ModalFooter } from "../../base/modal/ModalFooter";
 import { ModalHeaderTextClose } from "../../base/modal/ModalHeaderTextClose";
 import { ChooseWalletContent } from "./ChooseWalletContent";
-import type { Wallet } from "@thirdweb-dev/react-core";
+import {
+  Wallet,
+  useIsConnecting,
+  useThirdwebWallet,
+} from "@thirdweb-dev/react-core";
 import { ReactNode } from "react";
 import { View } from "react-native";
 
 export type ChooseWalletProps = {
   headerText?: ReactNode | string;
   subHeaderText?: ReactNode | string;
-  footer?: ReactNode;
   onChooseWallet: (wallet: Wallet) => void;
+  onJoinAsGuestPress?: () => void;
   onClose: () => void;
   wallets: Wallet[];
 };
@@ -18,10 +22,13 @@ export function ChooseWallet({
   headerText = "Choose your Wallet",
   subHeaderText,
   wallets,
-  footer,
   onChooseWallet,
+  onJoinAsGuestPress,
   onClose,
 }: ChooseWalletProps) {
+  const guestMode = useThirdwebWallet()?.guestMode;
+  const isConnecting = useIsConnecting();
+
   return (
     <View>
       <ModalHeaderTextClose
@@ -30,7 +37,13 @@ export function ChooseWallet({
         subHeaderText={subHeaderText}
       />
       <ChooseWalletContent wallets={wallets} onChooseWallet={onChooseWallet} />
-      {footer ? footer : <ModalFooter footer={"Need help getting started?"} />}
+      {guestMode ? (
+        <ModalFooter
+          footer={"Join as Guest"}
+          isLoading={isConnecting}
+          onPress={onJoinAsGuestPress}
+        />
+      ) : null}
     </View>
   );
 }

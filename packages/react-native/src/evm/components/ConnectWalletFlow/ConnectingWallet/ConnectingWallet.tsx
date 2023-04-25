@@ -7,9 +7,9 @@ import { ReactNode } from "react";
 import { ActivityIndicator, Linking, StyleSheet, View } from "react-native";
 
 export type ConnectingWalletProps = {
-  headerText?: ReactNode | string;
   subHeaderText?: ReactNode | string;
   footer?: ReactNode;
+  content?: ReactNode;
   onClose: () => void;
   onBackPress: () => void;
   wallet: Wallet;
@@ -17,6 +17,7 @@ export type ConnectingWalletProps = {
 
 export function ConnectingWallet({
   subHeaderText,
+  content,
   wallet,
   footer,
   onClose,
@@ -38,9 +39,13 @@ export function ConnectingWallet({
       />
       <View style={styles.connectingContainer}>
         <ActivityIndicator size="small" color={theme.colors.linkPrimary} />
-        <Text variant="bodySmallSecondary" mt="md">
-          Connect your wallet through the {wallet.meta.name} application.
-        </Text>
+        {content ? (
+          content
+        ) : (
+          <Text variant="bodySmallSecondary" mt="md">
+            Connect your wallet through the {wallet.meta.name} application.
+          </Text>
+        )}
       </View>
       {footer ? (
         footer

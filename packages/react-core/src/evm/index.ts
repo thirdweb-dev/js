@@ -16,6 +16,7 @@ export {
   useDisconnect,
   useSwitchChain,
   useWallets,
+  useIsConnecting,
 } from "../core/hooks/wallet-hooks";
 export { useNetwork } from "../core/hooks/useNetwork";
 export { useThirdwebWallet } from "../core/providers/thirdweb-wallet-provider";
@@ -214,6 +215,7 @@ export { useNetworkMismatch } from "./hooks/useNetworkMismatch";
 export { useReadonlySDK } from "./hooks/useReadonlySDK";
 export { useSigner } from "./hooks/useSigner";
 export { useSupportedChains } from "./hooks/useSupportedChains";
+export { useSupportedWallet } from "./hooks/useSupportedWallet";
 export { useAppURI, useSetAppURI } from "./hooks/async/app";
 
 // sdk provider

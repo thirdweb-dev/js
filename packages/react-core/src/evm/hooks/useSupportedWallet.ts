@@ -1,4 +1,4 @@
-import { useThirdwebWallet } from "@thirdweb-dev/react-core";
+import { useThirdwebWallet } from "../../core/providers/thirdweb-wallet-provider";
 
 export function useSupportedWallet(id: string) {
   const context = useThirdwebWallet();

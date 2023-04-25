@@ -106,6 +106,13 @@
       },
       "default": "./evm/wallets/private-key/dist/thirdweb-dev-wallets-evm-wallets-private-key.cjs.js"
     },
+    "./evm/wallets/local-wallet": {
+      "module": {
+        "browser": "./evm/wallets/local-wallet/dist/thirdweb-dev-wallets-evm-wallets-local-wallet.browser.esm.js",
+        "default": "./evm/wallets/local-wallet/dist/thirdweb-dev-wallets-evm-wallets-local-wallet.esm.js"
+      },
+      "default": "./evm/wallets/local-wallet/dist/thirdweb-dev-wallets-evm-wallets-local-wallet.cjs.js"
+    },
     "./evm/wallets/paper-wallet": {
       "module": {
         "browser": "./evm/wallets/paper-wallet/dist/thirdweb-dev-wallets-evm-wallets-paper-wallet.browser.esm.js",
@@ -126,13 +133,6 @@
         "default": "./evm/connectors/safe/dist/thirdweb-dev-wallets-evm-connectors-safe.esm.js"
       },
       "default": "./evm/connectors/safe/dist/thirdweb-dev-wallets-evm-connectors-safe.cjs.js"
-    },
-    "./evm/wallets/device-wallet": {
-      "module": {
-        "browser": "./evm/wallets/device-wallet/dist/thirdweb-dev-wallets-evm-wallets-device-wallet.browser.esm.js",
-        "default": "./evm/wallets/device-wallet/dist/thirdweb-dev-wallets-evm-wallets-device-wallet.esm.js"
-      },
-      "default": "./evm/wallets/device-wallet/dist/thirdweb-dev-wallets-evm-wallets-device-wallet.cjs.js"
     },
     "./evm/connectors/paper": {
       "module": {
@@ -176,6 +176,13 @@
       },
       "default": "./evm/connectors/metamask/dist/thirdweb-dev-wallets-evm-connectors-metamask.cjs.js"
     },
+    "./evm/wallets/local-wallet-node": {
+      "module": {
+        "browser": "./evm/wallets/local-wallet-node/dist/thirdweb-dev-wallets-evm-wallets-local-wallet-node.browser.esm.js",
+        "default": "./evm/wallets/local-wallet-node/dist/thirdweb-dev-wallets-evm-wallets-local-wallet-node.esm.js"
+      },
+      "default": "./evm/wallets/local-wallet-node/dist/thirdweb-dev-wallets-evm-wallets-local-wallet-node.cjs.js"
+    },
     "./evm/wallets/wallet-connect-v1": {
       "module": {
         "browser": "./evm/wallets/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-wallets-wallet-connect-v1.browser.esm.js",
@@ -190,12 +197,12 @@
       },
       "default": "./evm/wallets/aws-secrets-manager/dist/thirdweb-dev-wallets-evm-wallets-aws-secrets-manager.cjs.js"
     },
-    "./evm/wallets/device-walllet-node": {
+    "./evm/connectors/local-wallet": {
       "module": {
-        "browser": "./evm/wallets/device-walllet-node/dist/thirdweb-dev-wallets-evm-wallets-device-walllet-node.browser.esm.js",
-        "default": "./evm/wallets/device-walllet-node/dist/thirdweb-dev-wallets-evm-wallets-device-walllet-node.esm.js"
+        "browser": "./evm/connectors/local-wallet/dist/thirdweb-dev-wallets-evm-connectors-local-wallet.browser.esm.js",
+        "default": "./evm/connectors/local-wallet/dist/thirdweb-dev-wallets-evm-connectors-local-wallet.esm.js"
       },
-      "default": "./evm/wallets/device-walllet-node/dist/thirdweb-dev-wallets-evm-wallets-device-walllet-node.cjs.js"
+      "default": "./evm/connectors/local-wallet/dist/thirdweb-dev-wallets-evm-connectors-local-wallet.cjs.js"
     },
     "./evm/connectors/smart-wallet": {
       "module": {
@@ -203,13 +210,6 @@
         "default": "./evm/connectors/smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-smart-wallet.esm.js"
       },
       "default": "./evm/connectors/smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-smart-wallet.cjs.js"
-    },
-    "./evm/connectors/device-wallet": {
-      "module": {
-        "browser": "./evm/connectors/device-wallet/dist/thirdweb-dev-wallets-evm-connectors-device-wallet.browser.esm.js",
-        "default": "./evm/connectors/device-wallet/dist/thirdweb-dev-wallets-evm-connectors-device-wallet.esm.js"
-      },
-      "default": "./evm/connectors/device-wallet/dist/thirdweb-dev-wallets-evm-connectors-device-wallet.cjs.js"
     },
     "./evm/connectors/wallet-connect": {
       "module": {

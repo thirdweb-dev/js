@@ -4,7 +4,7 @@ import { AbstractClientWallet, WalletOptions } from "./base";
 import { Chain, defaultChains, Ethereum } from "@thirdweb-dev/chains";
 import { Wallet, utils } from "ethers";
 
-export type DeviceWalletOptions = {
+export type LocalWalletOptions = {
   chain?: Chain;
   storage?: AsyncStorage;
 };
@@ -16,50 +16,53 @@ export type WalletData = {
   isEncrypted: boolean;
 };
 
-export type DeviceWalletConnectionArgs = {};
+export type LocalWalletConnectionArgs = {};
 
-const STORAGE_KEY_WALLET_DATA = "deviceWalletData";
+const STORAGE_KEY_WALLET_DATA = "localWalletData";
 
-export class DeviceWallet extends AbstractClientWallet<
-  DeviceWalletOptions,
-  DeviceWalletConnectionArgs
+export class LocalWallet extends AbstractClientWallet<
+  LocalWalletOptions,
+  LocalWalletConnectionArgs
 > {
   connector?: TWConnector;
-  options: WalletOptions<DeviceWalletOptions>;
-  #ethersWallet?: Wallet;
+  options: WalletOptions<LocalWalletOptions>;
+  ethersWallet?: Wallet;
   #storage: AsyncStorage;
 
-  static id = "deviceWallet";
+  static id = "localWallet";
 
   static meta = {
-    name: "Device Wallet",
+    name: "Local Wallet",
     iconURL:
       "ipfs://QmcNddbYBuQKiBFnPcxYegjrX6S6z9K1vBNzbBBUJMn2ox/device-wallet.svg",
   };
 
   public get walletName() {
-    return "Device Wallet" as const;
+    return "Local Wallet" as const;
   }
 
-  constructor(options?: WalletOptions<DeviceWalletOptions>) {
-    super(DeviceWallet.id, options);
+  constructor(options?: WalletOptions<LocalWalletOptions>) {
+    super(LocalWallet.id, options);
     this.options = options || {};
-    this.#storage = options?.storage || createAsyncLocalStorage("deviceWallet");
+    this.#storage =
+      options?.storage ||
+      options?.walletStorage ||
+      createAsyncLocalStorage("localWallet");
   }
 
   protected async getConnector(): Promise<TWConnector> {
     if (!this.connector) {
-      const { DeviceWalletConnector } = await import(
-        "../connectors/device-wallet"
+      const { LocalWalletConnector } = await import(
+        "../connectors/local-wallet"
       );
 
-      if (!this.#ethersWallet) {
+      if (!this.ethersWallet) {
         throw new Error("wallet is not initialized");
       }
 
-      this.connector = new DeviceWalletConnector({
+      this.connector = new LocalWalletConnector({
         chain: this.options.chain || Ethereum,
-        ethersWallet: this.#ethersWallet,
+        ethersWallet: this.ethersWallet,
         chains: this.options.chains || defaultChains,
       });
     }
@@ -83,28 +86,28 @@ export class DeviceWallet extends AbstractClientWallet<
    * @returns the address of the newly created wallet
    */
   async generate() {
-    if (this.#ethersWallet) {
+    if (this.ethersWallet) {
       throw new Error("wallet is already initialized");
     }
-    this.#ethersWallet = Wallet.createRandom();
-    return this.#ethersWallet.address;
+    this.ethersWallet = Wallet.createRandom();
+    return this.ethersWallet.address;
   }
 
   /**
-   * create device wallet from an "encryptedJson", "privateKey" or "mnemonic"
+   * create local wallet from an "encryptedJson", "privateKey" or "mnemonic"
    * @returns
    */
   async import(options: ImportOptions): Promise<string> {
-    if (this.#ethersWallet) {
+    if (this.ethersWallet) {
       throw new Error("wallet is already initialized");
     }
 
     if ("encryptedJson" in options) {
-      this.#ethersWallet = await Wallet.fromEncryptedJson(
+      this.ethersWallet = await Wallet.fromEncryptedJson(
         options.encryptedJson,
         options.password,
       );
-      return this.#ethersWallet.address;
+      return this.ethersWallet.address;
     }
 
     if ("privateKey" in options) {
@@ -123,8 +126,8 @@ export class DeviceWallet extends AbstractClientWallet<
         throw new Error("invalid password");
       }
 
-      this.#ethersWallet = new Wallet(privateKey);
-      return this.#ethersWallet.address;
+      this.ethersWallet = new Wallet(privateKey);
+      return this.ethersWallet.address;
     }
 
     if ("mnemonic" in options) {
@@ -141,8 +144,8 @@ export class DeviceWallet extends AbstractClientWallet<
         throw new Error("invalid password");
       }
 
-      this.#ethersWallet = Wallet.fromMnemonic(mnemonic);
-      return this.#ethersWallet.address;
+      this.ethersWallet = Wallet.fromMnemonic(mnemonic);
+      return this.ethersWallet.address;
     }
 
     throw new Error("invalid import strategy");
@@ -153,7 +156,7 @@ export class DeviceWallet extends AbstractClientWallet<
    * @param password - password used for encrypting the wallet
    */
   async load(options: LoadOptions): Promise<string> {
-    if (this.#ethersWallet) {
+    if (this.ethersWallet) {
       throw new Error("wallet is already initialized");
     }
 
@@ -211,7 +214,7 @@ export class DeviceWallet extends AbstractClientWallet<
    * Save the wallet data to storage
    */
   async save(options: SaveOptions): Promise<void> {
-    const wallet = this.#ethersWallet;
+    const wallet = this.ethersWallet;
     if (!wallet) {
       throw new Error("Wallet is not initialized");
     }
@@ -290,7 +293,7 @@ export class DeviceWallet extends AbstractClientWallet<
    * @param password - password for encrypting the wallet data
    */
   async export(options: ExportOptions): Promise<string> {
-    const wallet = this.#ethersWallet;
+    const wallet = this.ethersWallet;
     if (!wallet) {
       throw new Error("Wallet is not initialized");
     }
@@ -401,7 +404,7 @@ type SaveOptions =
   | { strategy: "encryptedJson"; password: string; storage?: AsyncStorage }
   | {
       strategy: "privateKey";
-      encryption: EncryptOptions;
+      encryption?: EncryptOptions;
       storage?: AsyncStorage;
     }
   | {
@@ -438,7 +441,7 @@ async function defaultDecrypt(message: string, password: string) {
  * - return a noop function
  * @returns
  */
-function getDecryptor(encryption: DecryptOptions | undefined) {
+function getDecryptor(encryption?: DecryptOptions | undefined) {
   const noop = async (msg: string) => msg;
   return encryption
     ? (msg: string) =>
@@ -453,7 +456,7 @@ function getDecryptor(encryption: DecryptOptions | undefined) {
  * - return a noop function
  * @returns
  */
-function getEncryptor(encryption: EncryptOptions | undefined) {
+function getEncryptor(encryption?: EncryptOptions | undefined) {
   const noop = async (msg: string) => msg;
   return encryption
     ? (msg: string) =>

@@ -15,6 +15,11 @@ export type WalletOptions<TOpts extends Record<string, any> = {}> = {
 export type WalletMeta = {
   name: string;
   iconURL: string;
+  urls?: {
+    android?: string;
+    ios?: string;
+    chrome?: string;
+  };
 };
 
 export abstract class AbstractClientWallet<
