@@ -5,21 +5,14 @@ import {
   ModalDescription,
   ModalTitle,
 } from "../../../../components/modalElements";
-import { Theme, iconSize } from "../../../../design-system";
-import {
-  EyeClosedIcon,
-  EyeOpenIcon,
-  InfoCircledIcon,
-} from "@radix-ui/react-icons";
+import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { useThirdwebWallet } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { DragNDrop } from "../../../../components/DragNDrop";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { FormFooter } from "../../../../components/formElements";
-import styled from "@emotion/styled";
-import { Flex } from "../../../../components/basic";
 import { LocalWalletModalHeader } from "./common";
-import { isMobile } from "../../../../evm/utils/isMobile";
+import { isCredentialsSupported, saveCredentials } from "./credentials";
 
 export const ImportLocalWallet: React.FC<{
   onConnected: () => void;
@@ -39,23 +32,38 @@ export const ImportLocalWallet: React.FC<{
       throw new Error("Invalid state");
     }
 
+    let address: string;
+
     try {
-      await localWallet.import({
+      address = await localWallet.import({
         encryptedJson: jsonString,
         password,
       });
-
-      await localWallet.save({
-        strategy: "encryptedJson",
-        password,
-      });
-
-      thirdwebWalletContext.handleWalletConnect(localWallet);
-      props.onConnected();
     } catch (e) {
       setIsWrongPassword(true);
       return;
     }
+
+    if (isCredentialsSupported) {
+      const privateKey = await localWallet.export({
+        strategy: "privateKey",
+        encryption: false,
+      });
+
+      await saveCredentials({
+        id: address,
+        name: "Wallet",
+        password: privateKey,
+      });
+    } else {
+      await localWallet.save({
+        strategy: "encryptedJson",
+        password,
+      });
+    }
+
+    thirdwebWalletContext.handleWalletConnect(localWallet);
+    props.onConnected();
   };
 
   return (
@@ -66,28 +74,17 @@ export const ImportLocalWallet: React.FC<{
           textAlign: "left",
         }}
       >
-        Import JSON Wallet
+        Import Wallet
       </ModalTitle>
       <Spacer y="md" />
 
-      <Flex alignItems="center" gap="sm">
-        {!isMobile() && (
-          <WarningIcon
-            width={iconSize.md}
-            height={iconSize.md}
-            style={{
-              flexShrink: 0,
-            }}
-          />
-        )}
-        <ModalDescription sm>
-          The application can authorize any transactions on behalf of the wallet
-          without any approvals. We recommend only connecting to trusted
-          applications.
-        </ModalDescription>
-      </Flex>
+      <ModalDescription>
+        The application can authorize any transactions on behalf of the wallet
+        without any approvals. We recommend only connecting to trusted
+        applications.
+      </ModalDescription>
 
-      <Spacer y="md" />
+      <Spacer y="lg" />
 
       <DragNDrop
         extension="JSON"
@@ -126,9 +123,10 @@ export const ImportLocalWallet: React.FC<{
 
             <FormFieldWithIconButton
               required
-              name="current-password"
-              autocomplete="current-password"
-              id="current-password"
+              noSave={true}
+              name="password"
+              autocomplete="off"
+              id="password"
               onChange={(value) => {
                 setPassword(value);
                 setIsWrongPassword(false);
@@ -163,7 +161,3 @@ export const ImportLocalWallet: React.FC<{
     </>
   );
 };
-
-const WarningIcon = styled(InfoCircledIcon)<{ theme?: Theme }>`
-  color: ${(p) => p.theme.icon.danger};
-`;

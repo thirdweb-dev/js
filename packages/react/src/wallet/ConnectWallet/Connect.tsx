@@ -15,7 +15,7 @@ import {
   useDisconnect,
   useWallets,
 } from "@thirdweb-dev/react-core";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { SelectpersonalWallet } from "./screens/Safe/SelectPersonalWallet";
 import { SafeForm } from "./screens/Safe/SafeForm";
 import { GetStartedWithWallets } from "./screens/GetStartedWithWallets";
@@ -31,8 +31,7 @@ import {
 import { ifWaiting } from "../../evm/utils/ifWaiting";
 import { ThemeProvider } from "@emotion/react";
 import { darkTheme, lightTheme } from "../../design-system";
-import { ConnectToLocalWallet } from "./screens/LocalWallet/LocalWalletSetup";
-import { SmartWalletSelection } from "./screens/SmartWallet/SmartWalletSection";
+import { LocalWalletSetup } from "./screens/LocalWallet/LocalWalletSetup";
 import { SmartWalletConnection } from "./screens/SmartWallet/SmartWalletForm";
 
 export const ConnectModal = () => {
@@ -72,8 +71,6 @@ export const ConnectModal = () => {
   const onConnectError = useCallback(() => {
     if (isConnectingToWalletWrapper === "safe") {
       setShowScreen("safe/select-wallet");
-    } else if (isConnectingToWalletWrapper === "smartWallet") {
-      setShowScreen("smartWallet/select-wallet");
     } else {
       setShowScreen("walletList");
     }
@@ -82,8 +79,6 @@ export const ConnectModal = () => {
   const handleBack = useCallback(() => {
     if (isConnectingToWalletWrapper === "safe") {
       setShowScreen("safe/select-wallet");
-    } else if (isConnectingToWalletWrapper === "smartWallet") {
-      setShowScreen("smartWallet/select-wallet");
     } else {
       setShowScreen("walletList");
     }
@@ -161,13 +156,13 @@ export const ConnectModal = () => {
 
       // Smart Wallet
       else if (wallet.id === "SmartWallet") {
-        setIsConnectingToWalletWrapper("smartWallet");
-        setShowScreen("smartWallet/select-wallet");
+        // setIsConnectingToWalletWrapper("smartWallet");
+        setShowScreen("smartWallet/form");
       }
 
       // Local Wallet
       else if (wallet.id === "localWallet") {
-        setShowScreen("deviceWallet/connect");
+        setShowScreen("localWallet/connect");
       }
 
       // others ( they handle their own connection flow)
@@ -185,6 +180,12 @@ export const ConnectModal = () => {
       }
     },
   }));
+
+  useEffect(() => {
+    if (showScreen === "walletList" && wallets.length === 1) {
+      walletsMeta[0].onClick();
+    }
+  }, [walletsMeta, showScreen, wallets.length]);
 
   return (
     <ThemeProvider
@@ -290,18 +291,8 @@ export const ConnectModal = () => {
           />
         )}
 
-        {showScreen === "deviceWallet/connect" && (
-          <ConnectToLocalWallet onBack={handleBack} onConnected={onConnect} />
-        )}
-
-        {showScreen === "smartWallet/select-wallet" && (
-          <SmartWalletSelection
-            onBack={() => {
-              setIsConnectingToWalletWrapper(false);
-              setShowScreen("walletList");
-            }}
-            walletsMeta={walletsMeta}
-          />
+        {showScreen === "localWallet/connect" && (
+          <LocalWalletSetup onBack={handleBack} onConnected={onConnect} />
         )}
 
         {showScreen === "smartWallet/form" && (

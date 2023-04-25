@@ -16,6 +16,7 @@ export const FormFieldWithIconButton: React.FC<{
   onChange: (value: string) => void;
   label: string;
   error?: string;
+  noSave?: boolean;
 }> = (props) => {
   return (
     <div>
@@ -31,7 +32,14 @@ export const FormFieldWithIconButton: React.FC<{
           id={props.id}
           onChange={(e) => props.onChange(e.target.value)}
           value={props.value}
-          type={props.type}
+          type={props.noSave ? "text" : props.type}
+          style={
+            props.type === "password" && props.noSave
+              ? ({
+                  WebkitTextSecurity: "disc",
+                } as React.CSSProperties)
+              : undefined
+          }
         />
 
         <InputButton type="button" onClick={props.right.onClick}>

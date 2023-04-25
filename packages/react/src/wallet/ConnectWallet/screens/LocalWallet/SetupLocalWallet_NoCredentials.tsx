@@ -6,23 +6,16 @@ import {
   ModalDescription,
   ModalTitle,
 } from "../../../../components/modalElements";
-import { Theme, fontSize, iconSize } from "../../../../design-system";
-import {
-  EyeClosedIcon,
-  EyeOpenIcon,
-  InfoCircledIcon,
-} from "@radix-ui/react-icons";
+import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { useThirdwebWallet } from "@thirdweb-dev/react-core";
 import { useEffect, useRef, useState } from "react";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { ImportLocalWallet } from "./ImportLocalWallet";
-import styled from "@emotion/styled";
 import { LocalWalletModalHeader } from "./common";
 import { Flex } from "../../../../components/basic";
-import { ToolTip } from "../../../../components/Tooltip";
-import { isMobile } from "../../../../evm/utils/isMobile";
+import { TextDivider } from "../../../../components/TextDivider";
 
-export const CreateLocalWallet: React.FC<{
+export const CreateLocalWallet_NoCreds: React.FC<{
   onConnected: () => void;
   onBack: () => void;
 }> = (props) => {
@@ -36,8 +29,9 @@ export const CreateLocalWallet: React.FC<{
   const [showImportScreen, setShowImportScreen] = useState(false);
 
   const [generatedAddress, setGeneratedAddress] = useState<string | null>(null);
-  const isGenerated = useRef(false);
 
+  // generate random local wallet
+  const isGenerated = useRef(false);
   useEffect(() => {
     if (!localWallet || showImportScreen) {
       return;
@@ -80,27 +74,15 @@ export const CreateLocalWallet: React.FC<{
       <LocalWalletModalHeader onBack={props.onBack} />
 
       <Flex alignItems="center" gap="xs">
-        <ModalTitle>Choose a password</ModalTitle>
-        {!isMobile() && (
-          <ToolTip
-            tip="The application can authorize any transactions on behalf of the wallet
-          without any approvals. We recommend only connecting to trusted
-          applications."
-          >
-            <InfoCircledIconSecondary
-              width={iconSize.md}
-              height={iconSize.md}
-            />
-          </ToolTip>
-        )}
+        <ModalTitle>Create new wallet</ModalTitle>
       </Flex>
 
       <Spacer y="sm" />
-
-      <ModalDescription sm>
-        Enter a password and we{`'`}ll create a wallet for you. You{`'`}ll be
-        able to access and export this wallet with the same password.
+      <ModalDescription>
+        Choose a password for your wallet, you{`'`}ll be able to access and
+        export this wallet with the same password.
       </ModalDescription>
+
       <Spacer y="lg" />
 
       <form
@@ -156,6 +138,7 @@ export const CreateLocalWallet: React.FC<{
 
         <Spacer y="xl" />
 
+        {/* Create */}
         <Button
           variant="inverted"
           type="submit"
@@ -163,7 +146,7 @@ export const CreateLocalWallet: React.FC<{
             width: "100%",
           }}
         >
-          Create Wallet
+          Create new wallet
         </Button>
       </form>
 
@@ -175,6 +158,7 @@ export const CreateLocalWallet: React.FC<{
 
       <Spacer y="lg" />
 
+      {/* Import */}
       <HelperLink
         as="button"
         onClick={() => {
@@ -185,29 +169,8 @@ export const CreateLocalWallet: React.FC<{
           width: "100%",
         }}
       >
-        Import a JSON wallet
+        Import wallet
       </HelperLink>
     </>
   );
 };
-
-const TextDivider = styled.div<{ theme?: Theme }>`
-  display: flex;
-  align-items: center;
-  color: ${(p) => p.theme.text.secondary};
-  font-size: ${fontSize.sm};
-  &::before,
-  &::after {
-    content: "";
-    flex: 1;
-    border-bottom: 1px solid ${(p) => p.theme.bg.highlighted};
-  }
-
-  span {
-    margin: 0 1rem;
-  }
-`;
-
-const InfoCircledIconSecondary = styled(InfoCircledIcon)<{ theme?: Theme }>`
-  color: ${(p) => p.theme.text.secondary};
-`;

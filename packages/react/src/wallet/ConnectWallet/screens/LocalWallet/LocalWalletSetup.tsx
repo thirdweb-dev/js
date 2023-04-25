@@ -1,16 +1,38 @@
 import { Spinner } from "../../../../components/Spinner";
 import styled from "@emotion/styled";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
-import { ReconnectLocalWallet } from "./ReconnectLocalWallet";
-import { CreateLocalWallet } from "./CreateLocalWallet";
+import { useEffect, useState } from "react";
+import { CreateLocalWallet_Creds } from "./SetupLocalWallet_Credentials";
+import { CreateLocalWallet_NoCreds } from "./SetupLocalWallet_NoCredentials";
+import {
+  ReconnectLocalWalletCredentials,
+  ReconnectLocalWalletNoCredentials,
+} from "./ReconnectLocalWallet";
+import {
+  UserCredentials,
+  getCredentials,
+  isCredentialsSupported,
+} from "./credentials";
 
-export const ConnectToLocalWallet: React.FC<{
+export const LocalWalletSetup: React.FC<{
   onBack: () => void;
   onConnected: () => void;
 }> = (props) => {
-  const { storageLoading, walletData, refreshSavedData } = useLocalWalletInfo();
+  const { storageLoading, walletData } = useLocalWalletInfo();
 
-  if (storageLoading) {
+  const [savedCreds, setSavedCreds] = useState<
+    UserCredentials | null | undefined
+  >();
+
+  useEffect(() => {
+    getCredentials().then((cred) => {
+      setSavedCreds(cred);
+    });
+  }, []);
+
+  const isLoading = storageLoading || savedCreds === undefined;
+
+  if (isLoading) {
     return (
       <LoadingSpinnerContainer>
         <Spinner size="lg" color="primary" />
@@ -18,31 +40,35 @@ export const ConnectToLocalWallet: React.FC<{
     );
   }
 
-  return (
-    <>
-      {/* <BackButton onClick={props.onBack} />
-      <Spacer y="md" />
-      <IconContainer>
-        <Img src={meta.iconURL} width={iconSize.xl} height={iconSize.xl} />
-      </IconContainer>
-      <Spacer y="sm" /> */}
+  if (isCredentialsSupported) {
+    if (!savedCreds || savedCreds.name === "void") {
+      return <CreateLocalWallet_Creds {...props} savedCreds={savedCreds} />;
+    }
 
-      {!walletData ? (
-        <CreateLocalWallet
-          onConnected={props.onConnected}
-          onBack={props.onBack}
-        />
-      ) : (
-        <ReconnectLocalWallet
-          onConnected={props.onConnected}
-          onRemove={() => {
-            refreshSavedData();
-          }}
-          onBack={props.onBack}
-        />
-      )}
-    </>
-  );
+    return (
+      <ReconnectLocalWalletCredentials
+        {...props}
+        creds={savedCreds}
+        onCreate={() => {
+          // not gonna work
+          // setSavedCreds(undefined);
+        }}
+      />
+    );
+  }
+
+  // credentials not supported -----
+
+  if (walletData) {
+    return (
+      <ReconnectLocalWalletNoCredentials
+        onConnected={props.onConnected}
+        onBack={props.onBack}
+      />
+    );
+  }
+
+  return <CreateLocalWallet_NoCreds {...props} />;
 };
 
 const LoadingSpinnerContainer = styled.div`

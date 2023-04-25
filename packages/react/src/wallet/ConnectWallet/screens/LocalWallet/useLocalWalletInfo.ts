@@ -7,6 +7,9 @@ import { Wallet } from "@thirdweb-dev/react-core";
 import type { LocalWallet } from "@thirdweb-dev/wallets";
 import { WalletData } from "@thirdweb-dev/wallets/src/evm/wallets/local-wallet";
 
+/**
+ * only use this when credential storage is not supported
+ */
 export function useLocalWalletInfo() {
   const [walletData, setWalletData] = useState<WalletData | null>(null);
   const createWalletInstance = useCreateWalletInstance();

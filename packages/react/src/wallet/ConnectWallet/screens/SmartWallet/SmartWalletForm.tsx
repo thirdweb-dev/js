@@ -18,16 +18,15 @@ import {
 } from "../../../../design-system";
 import { CaretRightIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import {
-  useChainId,
-  // WalletInstance,
+  useActiveChain,
   useConnect,
   useConnectionStatus,
-  useSupportedWallet,
+  useThirdwebWallet,
   useWallet,
   WalletInstance,
 } from "@thirdweb-dev/react-core";
-import { useDeferredValue, useEffect, useState } from "react";
-import { Steps } from "../Safe/Steps";
+import { useDeferredValue, useEffect, useRef, useState } from "react";
+import { useSupportedWallet } from "@thirdweb-dev/react-core";
 import {
   getAssociatedAccounts,
   AssociatedAccount,
@@ -36,48 +35,102 @@ import {
 import { SmartWalletObj } from "../../../wallets/smartWallet";
 import { Flex } from "../../../../components/basic";
 import styled from "@emotion/styled";
+import { useLocalWalletInfo } from "../LocalWallet/useLocalWalletInfo";
+import { getCredentials, saveCredentials } from "../LocalWallet/credentials";
 
 export const SmartWalletConnection: React.FC<{
   onBack: () => void;
   onConnect: () => void;
 }> = (props) => {
   const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
-  const activeWallet = useWallet();
   const [accounts, setAccounts] = useState<AssociatedAccount[] | undefined>();
+  const { localWallet } = useLocalWalletInfo();
+  const thirdwebWalletContext = useThirdwebWallet();
+  const localWalletGenerated = useRef(false);
+  const chain = useActiveChain();
 
+  // initialize the localWallet from credentials or generate a new one
   useEffect(() => {
-    if (!activeWallet) {
+    if (!localWallet) {
+      return;
+    }
+
+    (async () => {
+      if (!localWalletGenerated.current) {
+        const creds = await getCredentials();
+
+        // generate a random one if no credentials are found
+        if (!creds) {
+          const address = await localWallet.generate();
+
+          const privateKey = await localWallet.export({
+            strategy: "privateKey",
+            encryption: false,
+          });
+
+          // save the credentials
+          await saveCredentials({
+            password: privateKey,
+            name: "Wallet",
+            id: address,
+          });
+        }
+
+        // import the private key from the credentials
+        else {
+          await localWallet.import({
+            privateKey: creds.password,
+            encryption: false,
+          });
+        }
+
+        await localWallet.connect();
+        thirdwebWalletContext?.handleWalletConnect(localWallet);
+        localWalletGenerated.current = true;
+      }
+    })();
+  }, [localWallet, thirdwebWalletContext]);
+
+  // get the associated accounts
+  useEffect(() => {
+    if (!localWallet || !chain) {
       return;
     }
 
     (async () => {
       const _accounts = await getAssociatedAccounts(
-        activeWallet,
+        localWallet,
         walletObj.factoryAddress,
-        walletObj.chain,
+        chain,
       );
       setAccounts(_accounts);
     })();
-  }, [activeWallet, walletObj.chain, walletObj.factoryAddress]);
+  }, [localWallet, chain, walletObj.factoryAddress]);
 
+  // loading state
+  // we don't know whether the user has an account or not
   if (!accounts) {
     return (
-      <Flex
-        style={{
-          height: "400px",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Spinner size="lg" color="secondary" />
-      </Flex>
+      <>
+        <Flex
+          style={{
+            height: "350px",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Spinner size="lg" color="secondary" />
+        </Flex>
+      </>
     );
   }
 
+  // no accounts found
   if (accounts.length === 0) {
     return <SmartWalletCreate {...props} />;
   }
 
+  // accounts found
   return <ConnectToSmartWalletAccount {...props} accounts={accounts} />;
 };
 
@@ -88,7 +141,6 @@ export const SmartWalletCreate: React.FC<{
   const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
   const activeWallet = useWallet();
   const connect = useConnect();
-  const chainId = useChainId();
 
   const [userName, setUserName] = useState("");
   const [connectError, setConnectError] = useState(false);
@@ -97,11 +149,15 @@ export const SmartWalletCreate: React.FC<{
   const [isUsernameAvailable, setIsUsernameAvailable] = useState(false);
   const [isValidating, setIsValidating] = useState(false);
   const [switchError, setSwitchError] = useState(false);
-  const [switchingNetwork, setSwitchingNetwork] = useState(false);
 
   const deferredUserName = useDeferredValue(userName);
+  const chain = useActiveChain();
 
   useEffect(() => {
+    if (!chain) {
+      return;
+    }
+
     if (!deferredUserName) {
       setIsUsernameAvailable(false);
       return;
@@ -110,11 +166,14 @@ export const SmartWalletCreate: React.FC<{
     let isStale = false;
 
     async function checkAccountAvailable() {
+      if (!chain) {
+        return;
+      }
       setIsValidating(true);
       const isAvailable = await isAccountIdAvailable(
         deferredUserName,
         walletObj.factoryAddress,
-        walletObj.chain,
+        chain,
       );
       if (isStale) {
         return;
@@ -127,7 +186,7 @@ export const SmartWalletCreate: React.FC<{
     return () => {
       isStale = true;
     };
-  }, [deferredUserName, walletObj.factoryAddress, walletObj.chain]);
+  }, [deferredUserName, walletObj.factoryAddress, chain]);
 
   const handleSubmit = async () => {
     if (!activeWallet) {
@@ -147,8 +206,6 @@ export const SmartWalletCreate: React.FC<{
     }
   };
 
-  const mismatch = chainId !== walletObj.chain.chainId;
-
   return (
     <>
       <BackButton onClick={props.onBack} />
@@ -165,9 +222,6 @@ export const SmartWalletCreate: React.FC<{
       <ModalDescription>
         Create your account by choosing a unique username
       </ModalDescription>
-
-      <Spacer y="lg" />
-      <Steps step={2} />
 
       <Spacer y="xl" />
 
@@ -251,55 +305,21 @@ export const SmartWalletCreate: React.FC<{
         <Spacer y="xl" />
 
         <FormFooter>
-          {mismatch ? (
-            <Button
-              type="button"
-              variant="secondary"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: spacing.sm,
-              }}
-              onClick={async () => {
-                setConnectError(false);
-                setSwitchError(false);
-                setSwitchingNetwork(true);
-
-                if (!activeWallet) {
-                  throw new Error("No active wallet");
-                }
-
-                try {
-                  await activeWallet.switchChain(walletObj.chain.chainId);
-                } catch (e) {
-                  console.error(e);
-                  setSwitchError(true);
-                } finally {
-                  setSwitchingNetwork(false);
-                }
-              }}
-            >
-              {" "}
-              {switchingNetwork ? "Switching" : "Switch Network"}
-              {switchingNetwork && <Spinner size="sm" color="primary" />}
-            </Button>
-          ) : (
-            <Button
-              variant="inverted"
-              type="submit"
-              disabled={isValidating || !isUsernameAvailable}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: spacing.sm,
-              }}
-            >
-              {connectionStatus === "connecting" ? "Connecting" : "Connect"}
-              {connectionStatus === "connecting" && (
-                <Spinner size="sm" color="inverted" />
-              )}
-            </Button>
-          )}
+          <Button
+            variant="inverted"
+            type="submit"
+            disabled={isValidating || !isUsernameAvailable}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: spacing.sm,
+            }}
+          >
+            {connectionStatus === "connecting" ? "Connecting" : "Connect"}
+            {connectionStatus === "connecting" && (
+              <Spinner size="sm" color="inverted" />
+            )}
+          </Button>
         </FormFooter>
       </form>
     </>

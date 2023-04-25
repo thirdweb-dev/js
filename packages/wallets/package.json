@@ -190,6 +190,13 @@
       },
       "default": "./evm/wallets/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-wallets-wallet-connect-v1.cjs.js"
     },
+    "./evm/wallets/local-walllet-node": {
+      "module": {
+        "browser": "./evm/wallets/local-walllet-node/dist/thirdweb-dev-wallets-evm-wallets-local-walllet-node.browser.esm.js",
+        "default": "./evm/wallets/local-walllet-node/dist/thirdweb-dev-wallets-evm-wallets-local-walllet-node.esm.js"
+      },
+      "default": "./evm/wallets/local-walllet-node/dist/thirdweb-dev-wallets-evm-wallets-local-walllet-node.cjs.js"
+    },
     "./evm/wallets/aws-secrets-manager": {
       "module": {
         "browser": "./evm/wallets/aws-secrets-manager/dist/thirdweb-dev-wallets-evm-wallets-aws-secrets-manager.browser.esm.js",
