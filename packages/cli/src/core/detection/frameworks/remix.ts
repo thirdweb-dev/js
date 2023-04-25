@@ -7,7 +7,13 @@ export default class CRADetector implements FrameworkDetector {
   public frameworkType: FrameworkType = "remix";
 
   public matches(path: string): boolean {
-    const packageJson = readFileSync(path + "/package.json");
+    const packageJsonPath = path + "/package.json";
+
+    if (!existsSync(packageJsonPath)) {
+      return false;
+    }
+
+    const packageJson = readFileSync(packageJsonPath);
     const { dependencies, devDependencies } = parsePackageJson(packageJson);
 
     const additionalFilesToCheck = ["/remix.config.js", "/remix-config.ts"];

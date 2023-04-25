@@ -7,19 +7,25 @@ export default class NextDetector implements FrameworkDetector {
   public frameworkType: FrameworkType = "next";
 
   public matches(path: string): boolean {
-    const packageJson = readFileSync(path + "/package.json");
+    const packageJsonPath = path + "/package.json";
+
+    if (!existsSync(packageJsonPath)) {
+      return false;
+    }
+
+    const packageJson = readFileSync(packageJsonPath);
     const { dependencies, devDependencies } = parsePackageJson(packageJson);
 
     const additionalFilesToCheck = ["/next.config.js", "/next-config.ts"];
     const additionalFilesExist = additionalFilesToCheck.some((file) => existsSync(path + file));
 
-    return (
-      (
-        dependencies["next"] || 
-        devDependencies["next"] ||
-        additionalFilesExist
-      ) ||
+    const nextDependencyExists = (
+      dependencies["next"] || 
+      devDependencies["next"] ||
+      additionalFilesExist ||
       false
     );
+
+    return nextDependencyExists;
   }
 }

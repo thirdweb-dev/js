@@ -45,6 +45,40 @@ export const parseCondaYml = (condaYml: string) => {
   }
 };
 
+export const parseGoMod = (goModContent: string) => {
+  const dependencies: { name: string; version: string }[] = [];
+  const lines: string[] = goModContent.split('\n');
+
+  lines.forEach(line => {
+    line = line.trim();
+
+    if (line.startsWith('require (')) {
+      let i = lines.indexOf(line) + 1;
+      while (i < lines.length && lines[i].trim() !== ')') {
+        const dependencyLine = lines[i].trim();
+        const [name, version] = dependencyLine.split(' ');
+        dependencies.push({ name, version });
+        i++;
+      }
+    }
+  });
+  return {
+    dependencies,
+  };
+};
+
+export const fileContainsImport = (file: string, importToCheck: string) => {
+  const lines = file.split('\n');
+
+  lines.forEach(() => {
+    if (lines.includes(importToCheck)) {
+      return true;
+    }
+  })
+
+  return false;
+};
+
 export const getDependenciesForPython = (path: string, packageManager: PackageManagerType) => {
   let dependencies: string[] = [];
   let devDependencies: string[] = [];
@@ -59,14 +93,26 @@ export const getDependenciesForPython = (path: string, packageManager: PackageMa
         devDependencies = parsedPipFile.devDependencies;
         break;
       }
+      const foundRequirementsTxt = existsSync(path + "/requirements.txt");
+      if(!foundRequirementsTxt) {
+        break;
+      }
       const requirementsTxt = readFileSync(path + "/requirements.txt");
       dependencies = parseRequirementsTxt(requirementsTxt).dependencies;
       break;
     case "poetry":
+      const foundPyProjectToml = existsSync(path + "/pyproject.toml");
+      if(!foundPyProjectToml) {
+        break;
+      }
       const pyProjectFile = readFileSync(path + "/pyproject.toml", 'utf-8');
       dependencies = parsePyProjectToml(pyProjectFile).dependencies;
       break;
     case "conda":
+      const foundCondaYml = existsSync(path + "/environment.yml");
+      if(!foundCondaYml) {
+        break;
+      }
       const condaYml = readFileSync(path + "/environment.yml", 'utf-8');
       dependencies = parseCondaYml(condaYml).dependencies;
     default:

@@ -7,19 +7,21 @@ import ExpressDetector from "./libraries/express";
 import ReactNativeDetector from "./libraries/reactNative";
 import ViteDetector from "./libraries/vite";
 import Web3PyDetector from "./libraries/web3py";
+import PlayMakerDetector from "./libraries/playmaker";
 
 export default async function detect(
   path: string,
   options: any,
   detectedPackageManager: PackageManagerType,
 ): Promise<LibraryType> {
-
+  // We could optimize further if we want, by only running the detectors that match the package manager.
   const libraryDetectors: LibraryDetector[] = [
     new ExpressDetector(),
     new ReactDetector(),
     new ReactNativeDetector(),
     new ViteDetector(),
     new Web3PyDetector(),
+    new PlayMakerDetector(),
   ];
 
   const possibleLibraries = libraryDetectors
@@ -36,7 +38,7 @@ export default async function detect(
 
   info(`Detected multiple possible libraries: ${possibleLibraries.map((s) => `"${s}"`).join(", ")}`);
 
-  const question = "We detected multiple possible libraries. Which one do you want to use?";
+  const question = "We detected multiple possible libraries which one do you want to use?";
 
   if (options.ci) {
     return possibleLibraries[0];

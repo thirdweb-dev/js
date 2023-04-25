@@ -7,19 +7,25 @@ export default class ExpoDetector implements FrameworkDetector {
   public frameworkType: FrameworkType = "expo";
 
   public matches(path: string): boolean {
-    const packageJson = readFileSync(path + "/package.json");
+    const packageJsonPath = path + "/package.json";
+
+    if (!existsSync(packageJsonPath)) {
+      return false;
+    }
+
+    const packageJson = readFileSync(packageJsonPath);
     const { dependencies, devDependencies } = parsePackageJson(packageJson);
 
     const additionalFilesToCheck = ["/app.json", "/app.config.js", "/assets"];
     const additionalFilesExist = additionalFilesToCheck.some((file) => existsSync(path + file));
 
-    return (
-      (
-        dependencies["expo"] || 
-        devDependencies["expo"] ||
-        additionalFilesExist
-      ) ||
+    const expoDependencyExists = (
+      dependencies["expo"] ||
+      devDependencies["expo"] ||
+      additionalFilesExist ||
       false
     );
+
+    return expoDependencyExists;
   }
 }

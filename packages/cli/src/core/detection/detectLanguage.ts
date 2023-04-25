@@ -33,7 +33,7 @@ const languageDetectors: LanguageDetector[] = [
 
   info(`Detected multiple possible languages: ${possibleLanguages.map((s) => `"${s}"`).join(", ")}`);
 
-  const question = "We detected multiple possible languages. Which one do you want to use?";
+  const question = "We detected multiple possible languages which one do you want to use?";
 
   if (options.ci) {
     return possibleLanguages[0];

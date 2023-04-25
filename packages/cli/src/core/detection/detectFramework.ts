@@ -18,30 +18,40 @@ import FastAPIDetector from "./frameworks/fastApi";
 import FlaskDetector from "./frameworks/flask";
 import PopulusDetector from "./frameworks/populus";
 import FastifyDetector from "./frameworks/fastify";
+import EchoDetector from "./frameworks/echo";
+import FiberDetector from "./frameworks/fiber";
+import GinDetector from "./frameworks/gin";
+import RevelDetector from "./frameworks/revel";
+import ZenjectDetector from "./frameworks/zenject";
 
 export default async function detect(
   path: string,
   options: any,
   detectedPackageManager: PackageManagerType,
 ): Promise<FrameworkType> {
-
+  // We could optimize further if we want, by only running the detectors that match the package manager.
   const frameworkDetectors: FrameworkDetector[] = [
     new BrownieDetector(),
     new CRADetector(),
     new DjangoDetector(),
+    new EchoDetector(),
     new ExpoDetector(),
     new FastAPIDetector(),
     new FastifyDetector(),
+    new FiberDetector(),
     new FlaskDetector(),
     new FoundryDetector(),
     new GatsbyDetector(),
+    new GinDetector(),
     new HardhatDetector(),
     new NextDetector(),
     new PopulusDetector(),
     new ReactNativeCLIDetector(),
     new RemixDetector(),
+    new RevelDetector(),
     new TruffleDetector(),
     new VueDetector(),
+    new ZenjectDetector(),
   ];
 
   const possibleFrameworks = frameworkDetectors

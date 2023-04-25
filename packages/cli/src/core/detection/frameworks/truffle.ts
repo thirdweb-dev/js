@@ -7,7 +7,13 @@ export default class TruffleDetector implements FrameworkDetector {
   public frameworkType: FrameworkType = "truffle";
 
   public matches(path: string): boolean {
-    const packageJson = readFileSync(path + "/package.json");
+    const packageJsonPath = path + "/package.json";
+
+    if (!existsSync(packageJsonPath)) {
+      return false;
+    }
+
+    const packageJson = readFileSync(packageJsonPath);
     const { dependencies, devDependencies } = parsePackageJson(packageJson);
 
     const additionalFilesToCheck = ["/truffle.config.js", "/truffle.js", "/contracts/"];

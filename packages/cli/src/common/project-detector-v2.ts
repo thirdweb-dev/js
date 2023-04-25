@@ -22,16 +22,10 @@ export async function detectProjectV2(options: any) {
 
   logger.debug("Processing project at path " + projectPath);
 
-  const log = spinner("Detecting Project...");
-
   const detectedPackageManager = await detectPackageManager(projectPath, options);
-  const detectedLibrary = await detectLibrary(projectPath, options, detectedPackageManager);
   const detectedLanguage = await detectLanguage(projectPath, options);
+  const detectedLibrary = await detectLibrary(projectPath, options, detectedPackageManager);
   const detectedFramework = await detectFramework(projectPath, options, detectedPackageManager);
-
-  log.succeed(
-    "Project Detected",
-  );
 
   logger.debug("Detected package manager: " + detectedPackageManager);
   logger.debug("Detected library: " + detectedLibrary);

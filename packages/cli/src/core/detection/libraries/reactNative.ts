@@ -1,5 +1,5 @@
 import { LibraryDetector } from "../detector";
-import { readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { LibraryType } from "../../types/ProjectType";
 import { parsePackageJson } from "../../../lib/utils";
 
@@ -7,13 +7,20 @@ export default class ReactNativeDetector implements LibraryDetector {
   public libraryType: LibraryType = "react-native";
 
   public matches(path: string): boolean {
-    const packageJson = readFileSync(path + "/package.json");
-    const { dependencies, devDependencies } = parsePackageJson(packageJson);
+    const packageJsonPath = path + "/package.json";
 
-    return (
+    if (!existsSync(packageJsonPath)) {
+      return false;
+    }
+
+    const packageJson = readFileSync(packageJsonPath);
+    const { dependencies, devDependencies } = parsePackageJson(packageJson);
+    const reactNativeDependencyExists = (
       dependencies["react-native"] ||
       devDependencies["react-native"] ||
       false
-    )
+    );
+
+    return reactNativeDependencyExists;
   }
 }

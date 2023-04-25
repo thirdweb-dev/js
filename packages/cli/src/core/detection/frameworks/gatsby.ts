@@ -7,18 +7,25 @@ export default class GatsbyDetector implements FrameworkDetector {
   public frameworkType: FrameworkType = "gatsby";
 
   public matches(path: string): boolean {
-    const packageJson = readFileSync(path + "/package.json");
+    const packageJsonPath = path + "/package.json";
+
+    if (!existsSync(packageJsonPath)) {
+      return false;
+    }
+
+    const packageJson = readFileSync(packageJsonPath);
     const { dependencies, devDependencies } = parsePackageJson(packageJson);
 
     const additionalFilesToCheck = ["/gatsby.config.js", "/gatsby-config.ts"];
     const additionalFilesExist = additionalFilesToCheck.some((file) => existsSync(path + file));
 
-    return (
-      (
-        dependencies["gatsby"] ||
-        devDependencies["gatsby"] ||
-        additionalFilesExist
-      ) || false
+    const gatsbyDependencyExists = (
+      dependencies["gatsby"] ||
+      devDependencies["gatsby"] ||
+      additionalFilesExist ||
+      false
     );
+
+    return gatsbyDependencyExists;
   }
 }
