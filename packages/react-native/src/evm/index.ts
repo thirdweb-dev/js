@@ -22,3 +22,5 @@ export * from "./providers/thirdweb-provider";
 
 // re-export everything from react-core
 export * from "@thirdweb-dev/react-core";
+
+export { useWallets } from "./wallets/hooks/useWallets";

@@ -25,11 +25,7 @@ export class LocalWallet extends AbstractClientWallet<
   LocalWalletConnectionArgs
 > {
   connector?: TWConnector;
-<<<<<<< HEAD:packages/wallets/src/evm/wallets/device-wallet.ts
-  options: WalletOptions<DeviceWalletOptions>;
-=======
   options: WalletOptions<LocalWalletOptions>;
->>>>>>> main:packages/wallets/src/evm/wallets/local-wallet.ts
   ethersWallet?: Wallet;
   #storage: AsyncStorage;
 
@@ -51,11 +47,7 @@ export class LocalWallet extends AbstractClientWallet<
     this.#storage =
       options?.storage ||
       options?.walletStorage ||
-<<<<<<< HEAD:packages/wallets/src/evm/wallets/device-wallet.ts
-      createAsyncLocalStorage("deviceWallet");
-=======
       createAsyncLocalStorage("localWallet");
->>>>>>> main:packages/wallets/src/evm/wallets/local-wallet.ts
   }
 
   protected async getConnector(): Promise<TWConnector> {

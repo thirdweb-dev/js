@@ -14,7 +14,7 @@ import { ModalHeaderTextClose } from "../base/modal/ModalHeaderTextClose";
 import { useAddress, useWallet } from "@thirdweb-dev/react-core";
 import { PasswordInput } from "../PasswordInput";
 import * as FileSystem from "expo-file-system";
-import { DeviceWallet } from "../../wallets/wallets/device-wallet";
+import { LocalWallet } from "@thirdweb-dev/wallets";
 
 export type ExportDeviceWalletModalProps = {
   isVisible: boolean;
@@ -41,7 +41,7 @@ export const ExportDeviceWalletModal = ({
     setIsExporting(true);
     setError(undefined);
 
-    const data = await (activeWallet as DeviceWallet).export({
+    const data = await (activeWallet as LocalWallet).export({
       strategy: "encryptedJson",
       password: password,
     });

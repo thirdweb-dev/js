@@ -1,20 +1,29 @@
-import { useCallback, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useState } from "react";
 import { ConnectWalletHeader } from "../ConnectingWallet/ConnectingWalletHeader";
-import Step1Image from "../../../assets/step-1";
-import Step2Image from "../../../assets/step-2";
 import { ChooseWalletContent } from "../ChooseWallet/ChooseWalletContent";
-import { useWallets } from "@thirdweb-dev/react-core";
 import { UsernameInput } from "./UsernameInput";
 import BaseButton from "../../base/BaseButton";
 import Text from "../../base/Text";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import { ModalFooter } from "../../base/modal/ModalFooter";
-import { SmartWallet } from "@thirdweb-dev/wallets";
-import Box from "../../base/Box";
+import {
+  EVMWallet,
+  SmartWallet,
+  isAccountIdAvailable,
+} from "@thirdweb-dev/wallets";
+import { useWallets } from "../../../wallets/hooks/useWallets";
+import {
+  useConnect,
+  useCreateWalletInstance,
+  useSupportedWallet,
+} from "@thirdweb-dev/react-core";
+import { SmartWalletObj } from "../../../wallets/wallets/smart-wallet";
+import { localWallet } from "../../../wallets/wallets/local-wallet";
 
 export type SmartContractModalProps = {
   onClose: () => void;
   onBackPress: () => void;
+  onConnect: () => void;
 };
 
 type Step = "personalWallet" | "createAccount" | "selectAccount";
@@ -29,7 +38,7 @@ function getHeaderText(step: Step) {
       ];
     case "createAccount":
       return [
-        "Creating new smart account",
+        "Enter username",
         "Create your smart account by choosing a unique username.",
       ];
     case "selectAccount":
@@ -45,12 +54,53 @@ function getHeaderText(step: Step) {
 export const SmartContractModal = ({
   onClose,
   onBackPress,
+  onConnect,
 }: SmartContractModalProps) => {
-  const [step, setStep] = useState<Step>("personalWallet");
+  const [step, setStep] = useState<Step>("createAccount");
   const [username, setUsername] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [isCreatingAccount, setIsCreatingAccount] = useState<boolean>(false);
+  const [isUsernameAvailable, setIsUsernameAvailable] = useState<boolean>(true);
+  const createWalletInstance = useCreateWalletInstance();
+  const [personalWallet, setPersonalWallet] = useState<EVMWallet | undefined>();
   const supportedWallets = useWallets();
+  const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
+  const connect = useConnect();
+
+  const deferredUsername = useDeferredValue(username);
+
+  useEffect(() => {
+    setPersonalWallet(createWalletInstance(localWallet()));
+  }, [createWalletInstance]);
+
+  useEffect(() => {
+    if (!deferredUsername) {
+      setIsUsernameAvailable(false);
+      return;
+    }
+
+    let isStale = false;
+
+    async function checkAccountAvailable() {
+      setIsCreatingAccount(true);
+      const isAvailable = await isAccountIdAvailable(
+        deferredUsername,
+        walletObj.factoryAddress,
+        walletObj.chain,
+      );
+      if (isStale) {
+        return;
+      }
+      setError(isAvailable ? "" : "Username is not available");
+      setIsUsernameAvailable(isAvailable);
+      setIsCreatingAccount(false);
+    }
+
+    checkAccountAvailable();
+    return () => {
+      isStale = true;
+    };
+  }, [deferredUsername, walletObj.factoryAddress, walletObj.chain]);
 
   const onChangeText = (text: string) => {
     setUsername(text);
@@ -62,12 +112,33 @@ export const SmartContractModal = ({
     setStep("createAccount");
   }, [username]);
 
-  const onCreatePress = () => {
+  const onCreatePress = useCallback(async () => {
+    if (!isUsernameAvailable || !personalWallet) {
+      return;
+    }
+
     setIsCreatingAccount(true);
     // create account
+    try {
+      await connect(walletObj, {
+        accountId: username,
+        personalWallet: personalWallet,
+      });
+      onConnect();
+    } catch (e) {
+      console.error("Error connecting your smart wallet.", e);
+      setError("Error connecting to wallet, please try again");
+    }
     setIsCreatingAccount(false);
-    setStep("selectAccount");
-  };
+    // setStep("selectAccount");
+  }, [
+    connect,
+    isUsernameAvailable,
+    onConnect,
+    personalWallet,
+    username,
+    walletObj,
+  ]);
 
   const onBackPressInternal = () => {
     if (step === "personalWallet") {
@@ -127,6 +198,7 @@ export const SmartContractModal = ({
     isCreatingAccount,
     onChooseWallet,
     onCreateNewAccountPress,
+    onCreatePress,
     step,
     supportedWallets,
   ]);
@@ -141,13 +213,13 @@ export const SmartContractModal = ({
         onBackPress={onBackPressInternal}
       />
 
-      <Box mt="md">
+      {/* <Box mt="md">
         {step === "personalWallet" ? (
           <Step1Image width={180} height={24} color="#2B3036" />
         ) : (
           <Step2Image width={180} height={24} color="#2B3036" />
         )}
-      </Box>
+      </Box> */}
 
       {activeComponent()}
     </>

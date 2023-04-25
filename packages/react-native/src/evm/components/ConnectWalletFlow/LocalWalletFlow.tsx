@@ -34,7 +34,7 @@ export function LocalWalletFlow({
         onBackPress={onBackPress}
         walletLogoUrl={LocalWallet.meta.iconURL}
         subHeaderText={""}
-        close={onClose}
+        onClose={onClose}
       />
       <View style={styles.connectingContainer}>
         <BaseButton

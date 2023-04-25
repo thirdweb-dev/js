@@ -1,3 +1,5 @@
+import { LocalWallet } from "./wallets/local-wallet";
+
 export { CredentialsStorage } from "../core/CredentialsStorage";
 
 export { Connector } from "../lib/wagmi-connectors";

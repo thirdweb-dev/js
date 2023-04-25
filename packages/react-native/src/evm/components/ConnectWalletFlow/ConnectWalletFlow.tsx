@@ -7,37 +7,23 @@ import {
   Wallet,
   useConnect,
   useThirdwebWallet,
-  useWallets,
 } from "@thirdweb-dev/react-core";
-import { useMemo, useRef, useState } from "react";
+import { useState } from "react";
 import { StyleSheet } from "react-native";
 import { SmartWallet } from "@thirdweb-dev/wallets";
 import { SmartContractModal } from "./SmartContractWallet/SmartContractModal";
 import { LocalWalletFlow } from "./LocalWalletFlow";
 import { LocalWallet, localWallet } from "../../wallets/wallets/local-wallet";
+import { useWallets } from "../../wallets/hooks/useWallets";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [activeWallet, setActiveWallet] = useState<Wallet | undefined>();
   const [isConnecting, setIsConnecting] = useState(false);
   const guestMode = useThirdwebWallet()?.guestMode;
-  const removedGuestWalletRef = useRef(false);
-
-  const connect = useConnect();
   const supportedWallets = useWallets();
 
-  const wallets = useMemo(() => {
-    if (
-      guestMode &&
-      supportedWallets[supportedWallets.length - 1].id === LocalWallet.id &&
-      !removedGuestWalletRef.current
-    ) {
-      removedGuestWalletRef.current = true;
-      return supportedWallets.slice(0, supportedWallets.length - 1);
-    }
-
-    return supportedWallets;
-  }, [guestMode, supportedWallets]);
+  const connect = useConnect();
 
   const onConnectPress = () => {
     if (supportedWallets.length === 1 && !guestMode) {
@@ -67,7 +53,7 @@ export const ConnectWalletFlow = () => {
   const onChooseWallet = (wallet: Wallet) => {
     setActiveWallet(() => wallet);
 
-    if (wallet.id !== LocalWallet.id) {
+    if (wallet.id !== LocalWallet.id && wallet.id !== SmartWallet.id) {
       connectActiveWallet(wallet);
     }
   };
@@ -88,6 +74,7 @@ export const ConnectWalletFlow = () => {
           />
         );
       case SmartWallet.id:
+        console.log("smart wallet modal");
         return (
           <SmartContractModal
             onClose={() => {
@@ -96,11 +83,14 @@ export const ConnectWalletFlow = () => {
             onBackPress={() => {
               setActiveWallet(undefined);
             }}
+            onConnect={onBackPress}
           />
         );
     }
   }
 
+  console.log("isConnecting", isConnecting);
+  console.log("activeWallet", activeWallet);
   return (
     <>
       <TWModal isVisible={modalVisible}>
@@ -123,7 +113,7 @@ export const ConnectWalletFlow = () => {
           )
         ) : (
           <ChooseWallet
-            wallets={wallets}
+            wallets={supportedWallets}
             onChooseWallet={onChooseWallet}
             onJoinAsGuestPress={onJoinAsGuestPress}
             onClose={onClose}
