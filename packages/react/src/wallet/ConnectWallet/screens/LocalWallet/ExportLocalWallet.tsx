@@ -13,12 +13,8 @@ import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { FormFieldWithIconButton } from "../../../../components/formFields";
 import { useEffect, useState } from "react";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
-import { isMobile } from "../../../../evm/utils/isMobile";
 import { shortenAddress } from "../../../../evm/utils/addresses";
-import {
-  getCredentials,
-  isCredentialsSupported,
-} from "@thirdweb-dev/react-core";
+import { isCredentialsSupported, getCredentials } from "./credentials";
 
 export const ExportLocalWallet: React.FC<{
   onBack: () => void;
@@ -108,7 +104,7 @@ export const ExportLocalWallet: React.FC<{
 
       <Spacer y="md" />
 
-      <ModalDescription sm>
+      <ModalDescription>
         This will download a JSON file containing your wallet information onto
         your device encrypted with the password.
       </ModalDescription>
@@ -129,8 +125,7 @@ export const ExportLocalWallet: React.FC<{
         <Spacer y="sm" />
 
         <SavedWalletAddress>
-          {(isMobile() ? shortenAddress(address || "") : address) ||
-            "Fetching..."}
+          {shortenAddress(address || "") || "Loading..."}
         </SavedWalletAddress>
 
         <Spacer y="lg" />

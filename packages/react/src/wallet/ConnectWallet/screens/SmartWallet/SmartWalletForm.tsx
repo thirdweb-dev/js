@@ -18,8 +18,6 @@ import {
 } from "../../../../design-system";
 import { CaretRightIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import {
-  getCredentials,
-  saveCredentials,
   useActiveChain,
   useConnect,
   useConnectionStatus,
@@ -38,6 +36,7 @@ import { SmartWalletObj } from "../../../wallets/smartWallet";
 import { Flex } from "../../../../components/basic";
 import styled from "@emotion/styled";
 import { useLocalWalletInfo } from "../LocalWallet/useLocalWalletInfo";
+import { getCredentials, saveCredentials } from "../LocalWallet/credentials";
 
 export const SmartWalletConnection: React.FC<{
   onBack: () => void;

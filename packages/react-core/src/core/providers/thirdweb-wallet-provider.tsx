@@ -7,7 +7,6 @@ import {
   ConnectParams,
   CreateAsyncStorage,
 } from "@thirdweb-dev/wallets";
-import type { LocalWallet } from "@thirdweb-dev/wallets";
 import { Signer } from "ethers";
 import {
   createContext,
@@ -19,7 +18,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { getCredentials, isCredentialsSupported } from "../utils/credentials";
 
 const LAST_CONNECTED_WALLET_STORAGE_KEY = "lastConnectedWallet";
 
@@ -237,38 +235,6 @@ export function ThirdwebWalletProvider(
 
     autoConnectTriggered.current = true;
 
-    async function autoConnectPersonalWallet(
-      personalWallet: WalletInstance,
-      connectParams?: ConnectParams,
-    ) {
-      if (personalWallet.walletId === "localWallet") {
-        if (!isCredentialsSupported) {
-          setConnectionStatus("disconnected");
-          return;
-        }
-
-        const creds = await getCredentials();
-
-        if (!creds) {
-          setConnectionStatus("disconnected");
-          throw new Error("No credentials");
-          return;
-        }
-
-        try {
-          await (personalWallet as LocalWallet).import({
-            privateKey: creds.password,
-            encryption: false,
-          });
-        } catch (e) {
-          setConnectionStatus("disconnected");
-          return;
-        }
-      }
-
-      await personalWallet.autoConnect(connectParams);
-    }
-
     async function autoconnect() {
       const walletInfo = await getLastConnectedWalletInfo();
 
@@ -296,8 +262,8 @@ export function ThirdwebWalletProvider(
         if (personalWalleObj) {
           // create a personal wallet instance and auto connect it
           const personalWalletInstance = createWalletInstance(personalWalleObj);
-          await autoConnectPersonalWallet(
-            personalWalletInstance,
+
+          await personalWalletInstance.autoConnect(
             personalWalletInfo.connectParams,
           );
 
@@ -318,7 +284,7 @@ export function ThirdwebWalletProvider(
 
       try {
         setConnectionStatus("connecting");
-        await autoConnectPersonalWallet(wallet, walletInfo.connectParams);
+        await wallet.autoConnect(walletInfo.connectParams);
         handleWalletConnect(wallet, walletInfo.connectParams, true);
       } catch (e) {
         lastConnectedWalletStorage.removeItem(
