@@ -68,6 +68,10 @@ export const ReconnectLocalWalletNoCredentials: React.FC<
         onBackup={() => {
           setShowExport(true);
         }}
+        onSkip={() => {
+          setShowBackupConfirmation(false);
+          setShowCreate(true);
+        }}
         onBack={() => {
           setShowBackupConfirmation(false);
         }}
@@ -115,7 +119,7 @@ export const ReconnectLocalWalletNoCredentials: React.FC<
           textAlign: "left",
         }}
       >
-        Local Wallet
+        Guest Wallet
       </ModalTitle>
       <Spacer y="xs" />
       <ModalDescription>
@@ -239,6 +243,11 @@ export const ReconnectLocalWalletCredentials: React.FC<
         onBackup={() => {
           setShowExport(true);
         }}
+        onSkip={() => {
+          console.log("skip");
+          setShowCreate(true);
+          setShowBackupConfirmation(false);
+        }}
         onBack={() => {
           setShowBackupConfirmation(false);
         }}
@@ -281,7 +290,7 @@ export const ReconnectLocalWalletCredentials: React.FC<
           textAlign: "left",
         }}
       >
-        Local Wallet
+        Guest Wallet
       </ModalTitle>
       <Spacer y="xs" />
       <ModalDescription>

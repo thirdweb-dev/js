@@ -73,7 +73,7 @@ export const CreateLocalWallet_Creds: React.FC<{
   return (
     <>
       <LocalWalletModalHeader onBack={props.onBack} />
-      <ModalTitle>Local Wallet</ModalTitle>
+      <ModalTitle>Guest Wallet</ModalTitle>
 
       <Spacer y="md" />
 

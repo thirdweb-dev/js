@@ -13,6 +13,10 @@ import type { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { coinbaseWallet } from "../../wallet/wallets/coinbaseWallet";
 import { metamaskWallet } from "../../wallet/wallets/metamaskWallet";
 import { walletConnectV1 } from "../../wallet/wallets/walletConnectV1";
+import { localWallet } from "../../wallet/wallets/localWallet";
+
+const localWalletObj = localWallet();
+const defaultWallets = [metamaskWallet(), coinbaseWallet(), walletConnectV1()];
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
@@ -65,23 +69,27 @@ export const ThirdwebProvider = <
   children,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
+  const wallets: Wallet[] = supportedWallets || defaultWallets;
+
+  // add local wallet if guest mode is enabled or smart wallet is added
+  if (restProps.guestMode || wallets.find((w) => w.id === "SmartWallet")) {
+    // add only if it's not already added
+    if (!wallets.find((w) => w.id === localWalletObj.id)) {
+      wallets.push(localWalletObj);
+    }
+  }
+
   return (
     <WalletUIStatesProvider theme={theme}>
       <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
         <ThirdwebProviderCore
           theme={theme}
           thirdwebApiKey={thirdwebApiKey}
-          supportedWallets={
-            supportedWallets || [
-              metamaskWallet(),
-              coinbaseWallet(),
-              walletConnectV1(),
-            ]
-          }
+          supportedWallets={wallets}
           {...restProps}
         >
           {children}
-          <ConnectModal />
+          <ConnectModal guestMode={restProps.guestMode} />
         </ThirdwebProviderCore>
       </ThemeProvider>
     </WalletUIStatesProvider>

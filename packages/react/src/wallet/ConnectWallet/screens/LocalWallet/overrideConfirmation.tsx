@@ -8,6 +8,7 @@ import { FormFooter } from "../../../../components/formElements";
 export const OverrideConfirmation: React.FC<{
   onBackup: () => void;
   onBack: () => void;
+  onSkip: () => void;
 }> = (props) => {
   return (
     <>
@@ -25,11 +26,14 @@ export const OverrideConfirmation: React.FC<{
           wallet to your device before creating a new wallet
         </SecondaryText>
 
-        <Spacer y="md" />
+        <Spacer y="xl" />
 
         <FormFooter>
           <Button variant="inverted" onClick={props.onBackup}>
             Backup wallet
+          </Button>
+          <Button variant="danger" onClick={props.onSkip}>
+            Skip
           </Button>
         </FormFooter>
       </div>

@@ -28,7 +28,7 @@ class LocalWalletWeb extends LocalWallet {
 export const localWallet = () => {
   return {
     id: LocalWallet.id,
-    meta: LocalWallet.meta,
+    meta: { ...LocalWallet.meta, name: "Guest Wallet" },
     create: (options: WalletOptions) => new LocalWalletWeb(options),
   } satisfies Wallet;
 };

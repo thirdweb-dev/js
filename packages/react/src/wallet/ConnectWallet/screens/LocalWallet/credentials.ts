@@ -12,7 +12,8 @@ export type UserCredentials = {
   id: string;
 };
 
-export const isCredentialsSupported = "PasswordCredential" in window;
+export const isCredentialsSupported =
+  typeof window !== "undefined" && "PasswordCredential" in window;
 
 export async function getCredentials(): Promise<UserCredentials | null> {
   if (!isCredentialsSupported) {
@@ -49,26 +50,4 @@ export async function saveCredentials(credentials: UserCredentials) {
   }
 
   await navigator.credentials.store(cred);
-}
-
-export async function removeCredentials() {
-  if (!isCredentialsSupported) {
-    throw new Error("Could not save credentials");
-  }
-
-  var cred = await navigator.credentials.create({
-    password: {
-      name: "void",
-      id: "void",
-      // random password to prevent chrome from complaining that password is breached
-      password: Math.random().toString(36),
-    }, // using password credential method
-  } as CredentialCreationOptions);
-
-  if (!cred) {
-    throw new Error("Could not save credentials");
-  }
-
-  await navigator.credentials.store(cred);
-  // await navigator.credentials.preventSilentAccess();
 }
