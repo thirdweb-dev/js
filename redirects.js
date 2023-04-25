@@ -97,6 +97,11 @@ function redirects() {
       destination: "/polygon-zkevm",
       permanent: false,
     },
+    {
+      source: "/contracts",
+      destination: "/explore",
+      permanent: false,
+    },
   ];
 }
 
