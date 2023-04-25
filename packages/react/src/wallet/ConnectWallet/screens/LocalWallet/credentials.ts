@@ -12,7 +12,8 @@ export type UserCredentials = {
   id: string;
 };
 
-export const isCredentialsSupported = "PasswordCredential" in window;
+export const isCredentialsSupported =
+  typeof window !== "undefined" && "PasswordCredential" in window;
 
 export async function getCredentials(): Promise<UserCredentials | null> {
   if (!isCredentialsSupported) {
