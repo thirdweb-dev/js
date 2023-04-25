@@ -11,7 +11,7 @@ import {
 import { useState } from "react";
 import { StyleSheet } from "react-native";
 import { SmartWallet } from "@thirdweb-dev/wallets";
-import { SmartWalletModal } from "./SmartWallet/SmartWalletModal";
+import { SmartWalletFlow } from "./SmartWallet/SmartWalletFlow";
 import { LocalWalletFlow } from "./LocalWalletFlow";
 import { LocalWallet, localWallet } from "../../wallets/wallets/local-wallet";
 import { useWallets } from "../../wallets/hooks/useWallets";
@@ -76,7 +76,7 @@ export const ConnectWalletFlow = () => {
       case SmartWallet.id:
         console.log("smart wallet modal");
         return (
-          <SmartWalletModal
+          <SmartWalletFlow
             onClose={() => {
               onClose();
             }}

@@ -22,7 +22,9 @@ export const NetworkButton = ({
       onPress={onPress}
       borderColor="border"
     >
-      <ChainIcon chainIconUrl={chainIconUrl} size={32} active={false} />
+      {chainIconUrl ? (
+        <ChainIcon chainIconUrl={chainIconUrl} size={32} active={false} />
+      ) : null}
       <Text variant="bodyLarge" style={styles.networkText}>
         {chainName}
       </Text>

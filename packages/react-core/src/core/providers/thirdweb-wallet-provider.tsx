@@ -155,6 +155,7 @@ export function ThirdwebWalletProvider(
 
       // if personal wallet exists, we need to replace the connectParams.personalWallet to a stringifiable version
       const personalWallet = wallet.getPersonalWallet();
+      console.log("personalWallet", personalWallet);
       if (personalWallet) {
         const personalWalletInfo = await getLastConnectedWalletInfo();
         if (personalWalletInfo) {

@@ -32,9 +32,9 @@ export const ConnectWalletHeader = ({
           onPress={onBackPress}
           color={theme.colors.iconPrimary}
         />
-        {!!walletLogoUrl && (
+        {walletLogoUrl ? (
           <ImageSvgUri width={56} height={56} imageUrl={walletLogoUrl} />
-        )}
+        ) : null}
         <Icon
           type="close"
           width={14}
@@ -44,16 +44,16 @@ export const ConnectWalletHeader = ({
         />
       </View>
       <View style={{ ...styles.headerContainer, alignItems: alignHeader }}>
-        {!!headerText && (
+        {headerText ? (
           <Text variant="header" mt="md">
             {headerText}
           </Text>
-        )}
-        {!!subHeaderText && (
+        ) : null}
+        {subHeaderText ? (
           <Text variant="subHeader" mt="md">
             {subHeaderText}
           </Text>
-        )}
+        ) : null}
       </View>
     </>
   );
