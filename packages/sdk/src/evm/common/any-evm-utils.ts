@@ -1019,9 +1019,9 @@ export async function encodeConstructorParamsForImplementation(
         return vrfV2Wrapper;
       } else if (p.name && p.name.includes("trustedForwarder")) {
         if (
-          (compilerMetadata.analytics?.contract_name &&
-            compilerMetadata.analytics.contract_name === "Pack") ||
-          compilerMetadata.analytics.contract_name === "PackVRFDirectRouter"
+          compilerMetadata.analytics?.contract_name &&
+          (compilerMetadata.analytics.contract_name === "Pack" ||
+            compilerMetadata.analytics.contract_name === "PackVRFDirectRouter")
         ) {
           // EOAForwarder for Pack
           const deploymentInfo = await computeDeploymentInfo(
@@ -1050,6 +1050,21 @@ export async function encodeConstructorParamsForImplementation(
         );
         if (!deploymentPresets["Forwarder"]) {
           deploymentPresets["Forwarder"] = deploymentInfo;
+        }
+
+        return deploymentInfo.transaction.predictedAddress;
+      } else if (p.name && p.name.includes("entrypoint")) {
+        const deploymentInfo = await computeDeploymentInfo(
+          "infra",
+          provider,
+          storage,
+          create2Factory,
+          {
+            contractName: "EntryPoint",
+          },
+        );
+        if (!deploymentPresets["EntryPoint"]) {
+          deploymentPresets["EntryPoint"] = deploymentInfo;
         }
 
         return deploymentInfo.transaction.predictedAddress;
