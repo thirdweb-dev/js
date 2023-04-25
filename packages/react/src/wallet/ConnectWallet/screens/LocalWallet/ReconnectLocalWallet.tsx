@@ -19,12 +19,12 @@ import { Theme, fontSize, spacing } from "../../../../design-system";
 import { Spinner } from "../../../../components/Spinner";
 import { shortenAddress } from "../../../../evm/utils/addresses";
 import { LocalWalletModalHeader } from "./common";
-import { UserCredentials } from "@thirdweb-dev/react-core/dist/declarations/src";
 import { SecondaryText } from "../../../../components/text";
 import { CreateLocalWallet_NoCreds } from "./SetupLocalWallet_NoCredentials";
 import { OverrideConfirmation } from "./overrideConfirmation";
 import { ExportLocalWallet } from "./ExportLocalWallet";
 import { CreateLocalWallet_Creds } from "./SetupLocalWallet_Credentials";
+import { UserCredentials } from "./credentials";
 
 type ReconnectLocalWalletProps = {
   onConnected: () => void;

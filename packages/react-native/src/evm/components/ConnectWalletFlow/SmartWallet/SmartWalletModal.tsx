@@ -1,26 +1,33 @@
-import { useCallback, useDeferredValue, useEffect, useState } from "react";
+import {
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { ConnectWalletHeader } from "../ConnectingWallet/ConnectingWalletHeader";
-import { ChooseWalletContent } from "../ChooseWallet/ChooseWalletContent";
 import { UsernameInput } from "./UsernameInput";
 import BaseButton from "../../base/BaseButton";
 import Text from "../../base/Text";
 import { ActivityIndicator, StyleSheet } from "react-native";
-import { ModalFooter } from "../../base/modal/ModalFooter";
 import {
-  EVMWallet,
-  SmartWallet,
+  AssociatedAccount,
+  getAssociatedAccounts,
   isAccountIdAvailable,
 } from "@thirdweb-dev/wallets";
-import { useWallets } from "../../../wallets/hooks/useWallets";
 import {
+  Wallet,
+  useActiveChain,
   useConnect,
   useCreateWalletInstance,
   useSupportedWallet,
+  useThirdwebWallet,
+  useWallet,
 } from "@thirdweb-dev/react-core";
 import { SmartWalletObj } from "../../../wallets/wallets/smart-wallet";
 import { localWallet } from "../../../wallets/wallets/local-wallet";
 
-export type SmartContractModalProps = {
+export type SmartWalletModalProps = {
   onClose: () => void;
   onBackPress: () => void;
   onConnect: () => void;
@@ -51,27 +58,91 @@ function getHeaderText(step: Step) {
   }
 }
 
-export const SmartContractModal = ({
+export const SmartWalletModal = ({
   onClose,
   onBackPress,
   onConnect,
-}: SmartContractModalProps) => {
+}: SmartWalletModalProps) => {
+  const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
+  const [accounts, setAccounts] = useState<AssociatedAccount[] | undefined>();
+  const thirdwebWalletContext = useThirdwebWallet();
+  const localWalletGenerated = useRef(false);
+  const activeWallet = useWallet();
+  const chain = useActiveChain();
+  const createWalletInstance = useCreateWalletInstance();
+
+  // initialize the localWallet
+  useEffect(() => {
+    if (!localWalletGenerated.current) {
+      const wallet = createWalletInstance(localWallet());
+
+      (async () => {
+        await wallet.connect();
+        thirdwebWalletContext?.handleWalletConnect(wallet);
+        localWalletGenerated.current = true;
+      })();
+    }
+  }, [createWalletInstance, thirdwebWalletContext]);
+
+  // get the associated accounts
+  useEffect(() => {
+    if (!localWallet || !chain) {
+      return;
+    }
+
+    (async () => {
+      const _accounts = await getAssociatedAccounts(
+        localWallet,
+        walletObj.factoryAddress,
+        chain,
+      );
+      setAccounts(_accounts);
+    })();
+  }, [chain, walletObj.factoryAddress]);
+
+  // loading state
+  // we don't know whether the user has an account or not
+  if (!accounts) {
+    return (
+      <>
+        <Flex
+          style={{
+            height: "350px",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Spinner size="lg" color="secondary" />
+        </Flex>
+      </>
+    );
+  }
+
+  // no accounts found
+  if (accounts.length === 0) {
+    return <SmartWalletCreate {...props} />;
+  }
+
+  // accounts found
+  return <ConnectToSmartWalletAccount {...props} accounts={accounts} />;
+};
+
+const SmartWalletCreate = ({
+  onClose,
+  onBackPress,
+  onConnect,
+}: SmartWalletModalProps) => {
   const [step, setStep] = useState<Step>("createAccount");
   const [username, setUsername] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [isCreatingAccount, setIsCreatingAccount] = useState<boolean>(false);
   const [isUsernameAvailable, setIsUsernameAvailable] = useState<boolean>(true);
-  const createWalletInstance = useCreateWalletInstance();
-  const [personalWallet, setPersonalWallet] = useState<EVMWallet | undefined>();
-  const supportedWallets = useWallets();
+  const activeWallet = useWallet();
   const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
+  const chain = useActiveChain();
   const connect = useConnect();
 
   const deferredUsername = useDeferredValue(username);
-
-  useEffect(() => {
-    setPersonalWallet(createWalletInstance(localWallet()));
-  }, [createWalletInstance]);
 
   useEffect(() => {
     if (!deferredUsername) {
@@ -82,11 +153,15 @@ export const SmartContractModal = ({
     let isStale = false;
 
     async function checkAccountAvailable() {
+      if (!chain) {
+        throw new Error("No active chain detected");
+      }
+
       setIsCreatingAccount(true);
       const isAvailable = await isAccountIdAvailable(
         deferredUsername,
         walletObj.factoryAddress,
-        walletObj.chain,
+        chain,
       );
       if (isStale) {
         return;
@@ -100,20 +175,14 @@ export const SmartContractModal = ({
     return () => {
       isStale = true;
     };
-  }, [deferredUsername, walletObj.factoryAddress, walletObj.chain]);
+  }, [deferredUsername, walletObj.factoryAddress, chain]);
 
   const onChangeText = (text: string) => {
     setUsername(text);
   };
 
-  const onChooseWallet = useCallback(() => {
-    // TODO:
-    setError(username);
-    setStep("createAccount");
-  }, [username]);
-
   const onCreatePress = useCallback(async () => {
-    if (!isUsernameAvailable || !personalWallet) {
+    if (!isUsernameAvailable || !activeWallet) {
       return;
     }
 
@@ -122,7 +191,7 @@ export const SmartContractModal = ({
     try {
       await connect(walletObj, {
         accountId: username,
-        personalWallet: personalWallet,
+        personalWallet: activeWallet,
       });
       onConnect();
     } catch (e) {
@@ -132,10 +201,10 @@ export const SmartContractModal = ({
     setIsCreatingAccount(false);
     // setStep("selectAccount");
   }, [
+    activeWallet,
     connect,
     isUsernameAvailable,
     onConnect,
-    personalWallet,
     username,
     walletObj,
   ]);
@@ -149,60 +218,6 @@ export const SmartContractModal = ({
     }
   };
 
-  const onCreateNewAccountPress = useCallback(() => {
-    onClose();
-  }, [onClose]);
-
-  const activeComponent = useCallback(() => {
-    switch (step) {
-      case "personalWallet":
-        return (
-          <ChooseWalletContent
-            wallets={supportedWallets}
-            excludeWalletIds={[SmartWallet.id]}
-            onChooseWallet={onChooseWallet}
-          />
-        );
-      case "createAccount":
-        return (
-          <>
-            <UsernameInput onChangeText={onChangeText} />
-            <Text variant="bodySmall" color="red" mt="xs" textAlign="left">
-              {error}
-            </Text>
-            <BaseButton
-              backgroundColor="white"
-              style={styles.modalButton}
-              onPress={onCreatePress}
-            >
-              {isCreatingAccount ? (
-                <ActivityIndicator size="small" color="buttonTextColor" />
-              ) : (
-                <Text variant="bodySmall" color="black">
-                  Create
-                </Text>
-              )}
-            </BaseButton>
-          </>
-        );
-      case "selectAccount": // render available accounts
-        return (
-          <ModalFooter
-            footer="Create new smart account"
-            onPress={onCreateNewAccountPress}
-          />
-        );
-    }
-  }, [
-    error,
-    isCreatingAccount,
-    onChooseWallet,
-    onCreateNewAccountPress,
-    onCreatePress,
-    step,
-    supportedWallets,
-  ]);
-
   return (
     <>
       <ConnectWalletHeader
@@ -213,15 +228,23 @@ export const SmartContractModal = ({
         onBackPress={onBackPressInternal}
       />
 
-      {/* <Box mt="md">
-        {step === "personalWallet" ? (
-          <Step1Image width={180} height={24} color="#2B3036" />
+      <UsernameInput onChangeText={onChangeText} />
+      <Text variant="bodySmall" color="red" mt="xs" textAlign="left">
+        {error}
+      </Text>
+      <BaseButton
+        backgroundColor="white"
+        style={styles.modalButton}
+        onPress={onCreatePress}
+      >
+        {isCreatingAccount ? (
+          <ActivityIndicator size="small" color="buttonTextColor" />
         ) : (
-          <Step2Image width={180} height={24} color="#2B3036" />
+          <Text variant="bodySmall" color="black">
+            Create
+          </Text>
         )}
-      </Box> */}
-
-      {activeComponent()}
+      </BaseButton>
     </>
   );
 };

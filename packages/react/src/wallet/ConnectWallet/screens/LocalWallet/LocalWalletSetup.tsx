@@ -45,16 +45,7 @@ export const LocalWalletSetup: React.FC<{
       return <CreateLocalWallet_Creds {...props} savedCreds={savedCreds} />;
     }
 
-    return (
-      <ReconnectLocalWalletCredentials
-        {...props}
-        creds={savedCreds}
-        onCreate={() => {
-          // not gonna work
-          // setSavedCreds(undefined);
-        }}
-      />
-    );
+    return <ReconnectLocalWalletCredentials {...props} creds={savedCreds} />;
   }
 
   // credentials not supported -----
