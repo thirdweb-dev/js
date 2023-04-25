@@ -2,7 +2,12 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BytesLike, ethers, providers, Signer } from "ethers";
 import invariant from "tiny-invariant";
 import { bytecode as WETHBytecode } from "./WETH9";
-import { getChainProvider, getNativeTokenByChainId } from "../constants";
+import {
+  getChainProvider,
+  getLinkTokenByChainId,
+  getNativeTokenByChainId,
+  getVrfV2WrapperByChainId,
+} from "../constants";
 import { ThirdwebSDK } from "../core";
 import { PreDeployMetadataFetched } from "../schema";
 import {
@@ -990,6 +995,28 @@ export async function encodeConstructorParamsForImplementation(
         }
 
         return nativeTokenWrapperAddress;
+      } else if (p.name && p.name.includes("linkTokenAddress")) {
+        const chainId = (await provider.getNetwork()).chainId;
+        let linkTokenAddress = getLinkTokenByChainId(chainId);
+
+        if (linkTokenAddress === ethers.constants.AddressZero) {
+          throw new Error(
+            "Chainlink LINK token not found on this network. Please provide as a custom param if available.",
+          );
+        }
+
+        return linkTokenAddress;
+      } else if (p.name && p.name.includes("vrfV2Wrapper")) {
+        const chainId = (await provider.getNetwork()).chainId;
+        let vrfV2Wrapper = getVrfV2WrapperByChainId(chainId);
+
+        if (vrfV2Wrapper === ethers.constants.AddressZero) {
+          throw new Error(
+            "Chainlink VRFV2Wrapper token not found on this network. Please provide as a custom param if available.",
+          );
+        }
+
+        return vrfV2Wrapper;
       } else if (p.name && p.name.includes("trustedForwarder")) {
         if (
           (compilerMetadata.analytics?.contract_name &&

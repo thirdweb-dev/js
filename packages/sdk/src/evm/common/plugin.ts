@@ -221,7 +221,6 @@ export async function getMetadataForExtensions(
       const implementationsAddresses = Object.entries(
         extendedMetadata.factoryDeploymentData.implementationAddresses,
       );
-
       try {
         const entry = implementationsAddresses.find(
           ([, implementation]) => implementation !== "",
@@ -232,7 +231,7 @@ export async function getMetadataForExtensions(
           const contract = new ContractWrapper(
             provider,
             implementation,
-            getAllPluginsAbi,
+            getAllExtensionsAbi,
             {},
           );
 
