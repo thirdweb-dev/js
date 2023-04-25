@@ -21,6 +21,7 @@ import {
   fetchAndCacheDeployMetadata,
   fetchAndCachePublishedContractURI,
 } from "./any-evm-utils";
+import { Extension, ExtensionFunction } from "../types/extensions";
 
 /**
  * @internal
@@ -189,9 +190,79 @@ export async function getMetadataForPlugins(
           ).map((fetchedMetadata) => fetchedMetadata.compilerMetadata);
         }
       } catch {}
+    } else {
+      throw new Error(
+        "No implementation found for Router. Can't fetch plugin metadata",
+      );
     }
   }
   return pluginMetadata;
+}
+
+export async function getMetadataForExtensions(
+  publishedMetadataUri: string,
+  storage: ThirdwebStorage,
+): Promise<PreDeployMetadataFetched[]> {
+  let extensionMetadata: PreDeployMetadataFetched[] = [];
+
+  const { compilerMetadata, extendedMetadata } =
+    await fetchAndCacheDeployMetadata(publishedMetadataUri, storage);
+  // check if contract is extension-pattern
+  const isExtensionRouter: boolean = isFeatureEnabled(
+    AbiSchema.parse(compilerMetadata.abi),
+    "ExtensionRouter",
+  );
+
+  if (isExtensionRouter) {
+    if (
+      extendedMetadata &&
+      extendedMetadata.factoryDeploymentData?.implementationAddresses
+    ) {
+      const implementationsAddresses = Object.entries(
+        extendedMetadata.factoryDeploymentData.implementationAddresses,
+      );
+
+      try {
+        const entry = implementationsAddresses.find(
+          ([, implementation]) => implementation !== "",
+        );
+        const [network, implementation] = entry ? entry : [];
+        if (network && implementation) {
+          const provider = getChainProvider(parseInt(network), {});
+          const contract = new ContractWrapper(
+            provider,
+            implementation,
+            getAllPluginsAbi,
+            {},
+          );
+
+          const extensions = await contract.call("getAllExtensions");
+
+          const extensionNames: string[] = Array.from(
+            new Set(extensions.map((item: Extension) => item.metadata.name)),
+          );
+
+          const extensionUris = await Promise.all(
+            extensionNames.map((name) => {
+              return fetchAndCachePublishedContractURI(name);
+            }),
+          );
+          extensionMetadata = (
+            await Promise.all(
+              extensionUris.map(async (uri) => {
+                return fetchAndCacheDeployMetadata(uri, storage);
+              }),
+            )
+          ).map((fetchedMetadata) => fetchedMetadata.compilerMetadata);
+        }
+      } catch {}
+    } else {
+      throw new Error(
+        "No implementation found for Router. Can't fetch extension metadata",
+      );
+    }
+  }
+  return extensionMetadata;
 }
 
 /**
@@ -218,7 +289,11 @@ export function getFunctionSignature(fnInputs: any): string {
     "(" +
     fnInputs
       .map((i: any) => {
-        return i.type === "tuple" ? getFunctionSignature(i.components) : i.type;
+        return i.type === "tuple"
+          ? getFunctionSignature(i.components)
+          : i.type === "tuple[]"
+          ? getFunctionSignature(i.components) + `[]`
+          : i.type;
       })
       .join(",") +
     ")"
@@ -244,4 +319,23 @@ export function generatePluginFunctions(
     });
   }
   return pluginFunctions;
+}
+
+export function generateExtensionFunctions(
+  extensionAbi: any,
+): ExtensionFunction[] {
+  const extensionInterface = new ethers.utils.Interface(extensionAbi);
+  const extensionFunctions: ExtensionFunction[] = [];
+  // TODO - filter out common functions like _msgSender(), contractType(), etc.
+  for (const fnFragment of Object.values(extensionInterface.functions)) {
+    const fn = extensionInterface.getFunction(fnFragment.name);
+    if (fn.name.includes("_")) {
+      continue;
+    }
+    extensionFunctions.push({
+      functionSelector: extensionInterface.getSighash(fn),
+      functionSignature: fn.name + getFunctionSignature(fn.inputs),
+    });
+  }
+  return extensionFunctions;
 }

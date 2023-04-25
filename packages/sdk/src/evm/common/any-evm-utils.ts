@@ -22,11 +22,17 @@ import {
   fetchExtendedReleaseMetadata,
   fetchPreDeployMetadata,
 } from "./feature-detection";
-import { generatePluginFunctions, getMetadataForPlugins } from "./plugin";
+import {
+  generateExtensionFunctions,
+  generatePluginFunctions,
+  getMetadataForExtensions,
+  getMetadataForPlugins,
+} from "./plugin";
 import { Plugin } from "../types/plugins";
 import { DeployMetadata, DeployOptions } from "../types";
 import { DEFAULT_API_KEY } from "../../core/constants/urls";
 import { CUSTOM_GAS_FOR_CHAIN, matchError } from "./any-evm-constants";
+import { Extension } from "../types/extensions";
 
 //
 // =============================
@@ -694,6 +700,10 @@ export async function getDeploymentInfo(
     storage,
   );
   const pluginMetadata = await getMetadataForPlugins(metadataUri, storage);
+  const extensionMetadata = await getMetadataForExtensions(
+    metadataUri,
+    storage,
+  );
 
   // if pluginMetadata is not empty, then it's a plugin-pattern router contract
   if (pluginMetadata.length > 0) {
@@ -739,6 +749,42 @@ export async function getDeploymentInfo(
     };
 
     finalDeploymentInfo.push(...pluginDeploymentInfo, pluginMapTransaction);
+  } else if (extensionMetadata.length > 0) {
+    // get deployment info for all extensions
+    const extensionDeploymentInfo = await Promise.all(
+      extensionMetadata.map(async (metadata) => {
+        const info = await computeDeploymentInfo(
+          "extension",
+          provider,
+          storage,
+          create2FactoryAddress,
+          { metadata: metadata },
+        );
+        return info;
+      }),
+    );
+
+    // create constructor param input for BaseRouter
+    const routerInput: Extension[] = [];
+    extensionMetadata.forEach((metadata, index) => {
+      const extensionFunctions = generateExtensionFunctions(metadata.abi);
+      routerInput.push({
+        metadata: {
+          name: metadata.name,
+          metadataURI: "",
+          implementation:
+            extensionDeploymentInfo[index].transaction.predictedAddress,
+        },
+        functions: extensionFunctions,
+      });
+    });
+
+    // routerInput as constructor param for BaseRouter
+    customParams["_extensions"] = {
+      value: routerInput,
+    };
+
+    finalDeploymentInfo.push(...extensionDeploymentInfo);
   }
 
   const implementationDeployInfo = await computeDeploymentInfo(
@@ -946,8 +992,9 @@ export async function encodeConstructorParamsForImplementation(
         return nativeTokenWrapperAddress;
       } else if (p.name && p.name.includes("trustedForwarder")) {
         if (
-          compilerMetadata.analytics?.contract_name &&
-          compilerMetadata.analytics.contract_name === "Pack"
+          (compilerMetadata.analytics?.contract_name &&
+            compilerMetadata.analytics.contract_name === "Pack") ||
+          compilerMetadata.analytics.contract_name === "PackVRFDirectRouter"
         ) {
           // EOAForwarder for Pack
           const deploymentInfo = await computeDeploymentInfo(

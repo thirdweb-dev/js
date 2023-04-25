@@ -31,6 +31,7 @@ export type DeployedContractType =
   | "implementation"
   | "create2Factory"
   | "plugin"
+  | "extension"
   | "custom";
 
 export type DeploymentTransaction = {
