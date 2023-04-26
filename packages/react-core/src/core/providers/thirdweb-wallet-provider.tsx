@@ -165,7 +165,7 @@ export function ThirdwebWalletProvider(
           };
           saveLastConnectedWalletInfo(walletInfo);
         } else {
-          console.error("Can not save wallet info for", wallet);
+          // console.error("Can not save wallet info for", wallet);
         }
       } else {
         saveLastConnectedWalletInfo(walletInfo);

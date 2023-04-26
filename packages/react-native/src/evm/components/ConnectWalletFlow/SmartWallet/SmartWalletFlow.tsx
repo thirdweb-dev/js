@@ -81,7 +81,7 @@ export const SmartWalletFlow = ({
     return (
       <View style={styles.loadingAccounts}>
         <ConnectWalletHeader
-          headerText={"Loading accounts"}
+          headerText={"Checking accounts"}
           subHeaderText={""}
           walletLogoUrl={SmartWallet.meta.iconURL}
           onClose={() => {}}
