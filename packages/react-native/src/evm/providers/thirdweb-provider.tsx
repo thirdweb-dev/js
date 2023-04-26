@@ -67,7 +67,9 @@ export const ThirdwebProvider = <
   const addedGuestWalletRef = useRef(false);
 
   if (supportedWallets.length === 0 && !guestMode) {
-    throw new Error("You must provide at least one supported wallet");
+    throw new Error(
+      "You must provide at least one supported wallet when not in guest mode",
+    );
   }
 
   const wallets = useMemo(() => {
