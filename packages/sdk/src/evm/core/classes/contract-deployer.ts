@@ -560,7 +560,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param contractName the name of the contract to deploy
    * @param constructorParams the constructor params to pass to the contract
    */
-  deployReleasedContract = buildDeployTransactionFunction(
+  deployPublishedContract = buildDeployTransactionFunction(
     async (
       publisherAddress: AddressOrEns,
       contractName: string,
