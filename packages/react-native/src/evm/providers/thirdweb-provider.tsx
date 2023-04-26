@@ -66,11 +66,13 @@ export const ThirdwebProvider = <
   useCoinbaseWalletListener();
   const addedGuestWalletRef = useRef(false);
 
-  const wallets = useMemo(() => {
-    if (supportedWallets.length === 0) {
-      supportedWallets.push(...DEFAULT_WALLETS);
-    }
+  if (supportedWallets.length === 0 && !guestMode) {
+    throw new Error(
+      "You must provide at least one supported wallet when not in guest mode",
+    );
+  }
 
+  const wallets = useMemo(() => {
     if (guestMode && !addedGuestWalletRef.current) {
       addedGuestWalletRef.current = true;
       supportedWallets.push(localWallet());

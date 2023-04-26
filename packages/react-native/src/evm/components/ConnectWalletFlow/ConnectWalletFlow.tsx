@@ -28,6 +28,10 @@ export const ConnectWalletFlow = () => {
   const onConnectPress = () => {
     if (supportedWallets.length === 1 && !guestMode) {
       onChooseWallet(supportedWallets[0]);
+    } else if (supportedWallets.length === 0 && guestMode) {
+      const w = localWallet();
+      setActiveWallet(w);
+      connectActiveWallet(w);
     }
 
     setModalVisible(true);
