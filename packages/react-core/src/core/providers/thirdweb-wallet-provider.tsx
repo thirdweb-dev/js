@@ -3,6 +3,7 @@ import type { Wallet, WalletInstance } from "../types/wallet";
 import { ThirdwebThemeContext } from "./theme-context";
 import { Chain } from "@thirdweb-dev/chains";
 import {
+  AbstractClientWallet,
   AsyncStorage,
   ConnectParams,
   CreateAsyncStorage,
@@ -61,7 +62,7 @@ type ThirdwebWalletContextData = {
   createWalletStorage: CreateAsyncStorage;
   switchChain: (chain: number) => Promise<void>;
   chainToConnect?: Chain;
-  activeChain?: Chain;
+  activeChain: Chain;
   guestMode?: boolean;
   handleWalletConnect: (
     wallet: WalletInstance,
@@ -75,7 +76,7 @@ const ThirdwebWalletContext = createContext<
 
 export function ThirdwebWalletProvider(
   props: PropsWithChildren<{
-    activeChain?: Chain;
+    activeChain: Chain;
     supportedWallets: Wallet[];
     shouldAutoConnect?: boolean;
     createWalletStorage: CreateAsyncStorage;
@@ -154,19 +155,18 @@ export function ThirdwebWalletProvider(
       };
 
       // if personal wallet exists, we need to replace the connectParams.personalWallet to a stringifiable version
-      const personalWallet = wallet.getPersonalWallet();
-      console.log("personalWallet", personalWallet);
+      const personalWallet = wallet.getPersonalWallet() as AbstractClientWallet;
+
       if (personalWallet) {
-        const personalWalletInfo = await getLastConnectedWalletInfo();
-        if (personalWalletInfo) {
-          walletInfo.connectParams = {
-            ...walletInfo.connectParams,
-            personalWallet: personalWalletInfo,
-          };
-          saveLastConnectedWalletInfo(walletInfo);
-        } else {
-          // console.error("Can not save wallet info for", wallet);
-        }
+        walletInfo.connectParams = {
+          ...walletInfo.connectParams,
+          personalWallet: {
+            walletId: personalWallet.walletId,
+            connectParams: personalWallet.getConnectParams(),
+          },
+        };
+
+        saveLastConnectedWalletInfo(walletInfo);
       } else {
         saveLastConnectedWalletInfo(walletInfo);
       }

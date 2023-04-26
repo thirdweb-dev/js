@@ -33,6 +33,7 @@ import { ThemeProvider } from "@emotion/react";
 import { darkTheme, lightTheme } from "../../design-system";
 import { LocalWalletSetup } from "./screens/LocalWallet/LocalWalletSetup";
 import { SmartWalletConnection } from "./screens/SmartWallet/SmartWalletForm";
+import { LocalWalletInfoProvider } from "./screens/LocalWallet/useLocalWalletInfo";
 
 export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
   guestMode,
@@ -46,6 +47,7 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
   const connectionStatus = useConnectionStatus();
   const disconnect = useDisconnect();
+  const [username, setUsername] = useState("");
 
   const connect = useConnect();
   const wallets = useWallets();
@@ -189,7 +191,9 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
     }
   }, [walletsMeta, showScreen, wallets.length]);
 
-  return (
+  const usingLocalWallet = wallets.find((w) => w.id === "localWallet");
+
+  const content = (
     <ThemeProvider
       theme={
         typeof modalTheme === "object"
@@ -223,6 +227,9 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
             guestMode={guestMode}
             onGuestConnect={() => {
               setShowScreen("localWallet/connect");
+            }}
+            onUsernameSet={(name) => {
+              setUsername(name);
             }}
           />
         )}
@@ -304,6 +311,7 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
 
         {showScreen === "smartWallet/form" && (
           <SmartWalletConnection
+            username={username}
             onBack={handleBack}
             onConnect={() => {
               closeModalAndReset();
@@ -312,5 +320,11 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
         )}
       </Modal>
     </ThemeProvider>
+  );
+
+  return usingLocalWallet ? (
+    <LocalWalletInfoProvider> {content}</LocalWalletInfoProvider>
+  ) : (
+    content
   );
 };

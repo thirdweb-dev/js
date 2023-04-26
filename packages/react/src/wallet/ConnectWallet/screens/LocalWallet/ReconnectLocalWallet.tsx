@@ -111,6 +111,11 @@ export const ReconnectLocalWalletNoCredentials: React.FC<
     setIsConnecting(false);
   };
 
+  const address =
+    (walletData === "loading" || !walletData
+      ? "Fetching..."
+      : walletData.address) || "";
+
   return (
     <>
       <LocalWalletModalHeader onBack={props.onBack} />
@@ -132,9 +137,7 @@ export const ReconnectLocalWalletNoCredentials: React.FC<
 
       <Spacer y="sm" />
 
-      <SecondaryText>
-        {shortenAddress(walletData?.address || "") || "Fetching..."}
-      </SecondaryText>
+      <SecondaryText>{shortenAddress(address)}</SecondaryText>
 
       <Spacer y="lg" />
 
@@ -149,7 +152,7 @@ export const ReconnectLocalWalletNoCredentials: React.FC<
           type="text"
           name="username"
           autoComplete="off"
-          value={walletData?.address || ""}
+          value={address}
           disabled
           style={{ display: "none" }}
         />

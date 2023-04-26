@@ -6,20 +6,29 @@ import {
   ModalTitle,
 } from "../../../../components/modalElements";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
-import { useThirdwebWallet } from "@thirdweb-dev/react-core";
+import {
+  Wallet,
+  useCreateWalletInstance,
+  useSupportedWallet,
+  useThirdwebWallet,
+} from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { DragNDrop } from "../../../../components/DragNDrop";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { FormFooter } from "../../../../components/formElements";
 import { LocalWalletModalHeader } from "./common";
 import { isCredentialsSupported, saveCredentials } from "./credentials";
+import type { LocalWallet } from "@thirdweb-dev/wallets";
 
 export const ImportLocalWallet: React.FC<{
   onConnected: () => void;
   onBack: () => void;
+  meta?: Wallet["meta"];
 }> = (props) => {
   const [jsonString, setJsonString] = useState<string | undefined>();
-  const { localWallet } = useLocalWalletInfo();
+  const { setLocalWallet } = useLocalWalletInfo();
+  const createWalletInstance = useCreateWalletInstance();
+  const localWalletObj = useSupportedWallet("localWallet") as Wallet;
   const [password, setPassword] = useState("");
   const [isWrongPassword, setIsWrongPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -28,6 +37,7 @@ export const ImportLocalWallet: React.FC<{
   const thirdwebWalletContext = useThirdwebWallet();
 
   const handleImport = async () => {
+    const localWallet = createWalletInstance(localWalletObj) as LocalWallet;
     if (!localWallet || !jsonString || !thirdwebWalletContext) {
       throw new Error("Invalid state");
     }
@@ -40,6 +50,7 @@ export const ImportLocalWallet: React.FC<{
         password,
       });
     } catch (e) {
+      console.error(e);
       setIsWrongPassword(true);
       return;
     }
@@ -63,12 +74,13 @@ export const ImportLocalWallet: React.FC<{
     }
 
     thirdwebWalletContext.handleWalletConnect(localWallet);
+    setLocalWallet(localWallet);
     props.onConnected();
   };
 
   return (
     <>
-      <LocalWalletModalHeader onBack={props.onBack} />
+      <LocalWalletModalHeader onBack={props.onBack} meta={props.meta} />
       <ModalTitle
         style={{
           textAlign: "left",
