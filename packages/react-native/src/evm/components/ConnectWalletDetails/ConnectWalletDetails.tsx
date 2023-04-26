@@ -10,9 +10,10 @@ import { NetworkButton } from "./NetworkButton";
 import { WalletDetailsModalHeader } from "./WalletDetailsModalHeader";
 import { useWallet, useBalance, useDisconnect } from "@thirdweb-dev/react-core";
 import { useActiveChain } from "@thirdweb-dev/react-core/evm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ExportLocalWalletModal } from "./ExportLocalWalletModal";
+import { Toast } from "../base/Toast";
 
 export type ConnectWalletDetailsProps = {
   address: string;
@@ -26,11 +27,22 @@ export const ConnectWalletDetails = ({
   const [isNetworkSelectorModalVisible, setIsNetworkSelectorModalVisible] =
     useState(false);
   const [isDisconnecting, setIsDisconnecting] = useState(false);
+  const [addressCopied, setAddressCopied] = useState(false);
 
   const activeWallet = useWallet();
   const disconnect = useDisconnect();
   const chain = useActiveChain();
   const balanceQuery = useBalance();
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (addressCopied) {
+        setAddressCopied(false);
+      }
+    }, 2000);
+
+    return () => clearTimeout(timeout);
+  }, [addressCopied]);
 
   const onPress = () => {
     setIsDetailsModalVisible(true);
@@ -66,6 +78,10 @@ export const ConnectWalletDetails = ({
     setIsExportModalVisible(false);
   };
 
+  const onAddressCopied = () => {
+    setAddressCopied(true);
+  };
+
   return (
     <>
       <TWModal
@@ -79,6 +95,7 @@ export const ConnectWalletDetails = ({
         <WalletDetailsModalHeader
           address={address}
           onDisconnectPress={onDisconnectPress}
+          onAddressCopied={onAddressCopied}
           loading={isDisconnecting}
         />
         <View style={styles.currentNetwork}>
@@ -107,6 +124,9 @@ export const ConnectWalletDetails = ({
               </View>
             </BaseButton>
           </>
+        ) : null}
+        {addressCopied === true ? (
+          <Toast text={"Address copied to clipboard"} />
         ) : null}
       </TWModal>
 
