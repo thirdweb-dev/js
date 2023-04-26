@@ -33,6 +33,7 @@ export abstract class AbstractClientWallet<
   protected dappMetadata: DAppMetaData;
   protected options?: WalletOptions<TAdditionalOpts>;
   static meta: WalletMeta;
+  #connectParams: ConnectParams<TConnectParams> | undefined;
   getMeta() {
     return (this.constructor as typeof AbstractClientWallet).meta;
   }
@@ -68,11 +69,16 @@ export abstract class AbstractClientWallet<
   async connect(
     connectOptions?: ConnectParams<TConnectParams>,
   ): Promise<string> {
+    this.#connectParams = connectOptions;
     const address = await this.#connect(false, connectOptions);
     if (!address) {
       throw new Error("Failed to connect to the wallet.");
     }
     return address;
+  }
+
+  getConnectParams() {
+    return this.#connectParams;
   }
 
   async #connect(

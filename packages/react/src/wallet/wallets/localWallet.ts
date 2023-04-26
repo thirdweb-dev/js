@@ -18,10 +18,13 @@ class LocalWalletWeb extends LocalWallet {
     if (!creds) {
       throw new Error("No Crendentials found");
     }
-    return this.import({
+
+    this.import({
       privateKey: creds.password,
       encryption: false,
     });
+
+    return await this.connect();
   }
 }
 

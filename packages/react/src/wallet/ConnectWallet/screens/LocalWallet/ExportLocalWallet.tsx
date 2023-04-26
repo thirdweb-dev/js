@@ -27,6 +27,9 @@ export const ExportLocalWallet: React.FC<{
   const [address, setAddress] = useState<string | undefined>(undefined);
 
   useEffect(() => {
+    if (walletData === "loading") {
+      return;
+    }
     if (isCredentialsSupported) {
       getCredentials().then((cred) => {
         if (cred) {
@@ -36,10 +39,10 @@ export const ExportLocalWallet: React.FC<{
     } else {
       setAddress(walletData?.address);
     }
-  }, [walletData?.address]);
+  }, [walletData]);
 
   const exportFromLocalStorage = async () => {
-    if (!walletData || !localWallet) {
+    if (!walletData || walletData === "loading" || !localWallet) {
       throw new Error("invalid state");
     }
 

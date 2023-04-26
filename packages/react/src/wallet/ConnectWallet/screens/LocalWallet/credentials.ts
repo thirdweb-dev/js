@@ -49,5 +49,5 @@ export async function saveCredentials(credentials: UserCredentials) {
     throw new Error("Could not save credentials");
   }
 
-  await navigator.credentials.store(cred);
+  return await navigator.credentials.store(cred);
 }

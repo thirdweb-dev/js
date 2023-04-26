@@ -2,209 +2,281 @@ import { Img } from "../../../../components/Img";
 import { Spacer } from "../../../../components/Spacer";
 import { Spinner } from "../../../../components/Spinner";
 import { Button } from "../../../../components/buttons";
-import { ErrorMessage, FormFooter } from "../../../../components/formElements";
+import { FormFooter } from "../../../../components/formElements";
 import { FormField } from "../../../../components/formFields";
 import {
   BackButton,
   ModalDescription,
   ModalTitle,
 } from "../../../../components/modalElements";
+import { iconSize, fontSize, spacing } from "../../../../design-system";
 import {
-  iconSize,
-  fontSize,
-  Theme,
-  spacing,
-  radius,
-} from "../../../../design-system";
-import { CaretRightIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import {
-  useActiveChain,
   useConnect,
   useConnectionStatus,
   useThirdwebWallet,
-  useWallet,
-  WalletInstance,
 } from "@thirdweb-dev/react-core";
-import { useDeferredValue, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSupportedWallet } from "@thirdweb-dev/react-core";
 import {
+  LocalWallet,
   getAssociatedAccounts,
-  AssociatedAccount,
   isAccountIdAvailable,
 } from "@thirdweb-dev/wallets";
+import { isValidPrivateKey } from "@thirdweb-dev/wallets/evm/wallets/local-wallet";
 import { SmartWalletObj } from "../../../wallets/smartWallet";
 import { Flex } from "../../../../components/basic";
-import styled from "@emotion/styled";
 import { useLocalWalletInfo } from "../LocalWallet/useLocalWalletInfo";
-import { getCredentials, saveCredentials } from "../LocalWallet/credentials";
+import {
+  UserCredentials,
+  getCredentials,
+  isCredentialsSupported,
+  saveCredentials,
+} from "../LocalWallet/credentials";
+import { SecondaryText } from "../../../../components/text";
+import { ImportLocalWallet } from "../LocalWallet/ImportLocalWallet";
+import { Chain } from "@thirdweb-dev/chains";
 
 export const SmartWalletConnection: React.FC<{
   onBack: () => void;
   onConnect: () => void;
+  username: string;
 }> = (props) => {
-  const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
-  const [accounts, setAccounts] = useState<AssociatedAccount[] | undefined>();
-  const { localWallet } = useLocalWalletInfo();
+  if (!isCredentialsSupported) {
+    return <p> Credential storage not supported </p>;
+  }
+
+  return <SmartWalletConnection_CredsWrapper {...props} />;
+};
+
+function useInitializeLocalWalletWithCreds() {
+  const { localWallet, walletData } = useLocalWalletInfo();
   const thirdwebWalletContext = useThirdwebWallet();
-  const localWalletGenerated = useRef(false);
-  const chain = useActiveChain();
+  const localWalletInitialized = useRef(false);
+  const gettingCreds = useRef(false);
+  const [generatedRandom, setGeneratedRandom] = useState(false);
 
   // initialize the localWallet from credentials or generate a new one
   useEffect(() => {
-    if (!localWallet) {
+    if (
+      !localWallet ||
+      localWalletInitialized.current ||
+      !isCredentialsSupported
+    ) {
       return;
     }
 
     (async () => {
-      if (!localWalletGenerated.current) {
-        const creds = await getCredentials();
-
-        // generate a random one if no credentials are found
-        if (!creds) {
-          const address = await localWallet.generate();
-
-          const privateKey = await localWallet.export({
-            strategy: "privateKey",
-            encryption: false,
-          });
-
-          // save the credentials
-          await saveCredentials({
-            password: privateKey,
-            name: "Wallet",
-            id: address,
-          });
-        }
-
-        // import the private key from the credentials
-        else {
-          await localWallet.import({
-            privateKey: creds.password,
-            encryption: false,
-          });
-        }
-
-        await localWallet.connect();
-        thirdwebWalletContext?.handleWalletConnect(localWallet);
-        localWalletGenerated.current = true;
+      if (gettingCreds.current) {
+        return;
       }
+
+      let creds: UserCredentials | null = null;
+      try {
+        gettingCreds.current = true;
+        creds = await getCredentials();
+        gettingCreds.current = false;
+      } catch (e) {
+        console.log("failed to get creds");
+        console.error(e);
+      }
+
+      // import the private key from the credentials
+      if (creds && isValidPrivateKey(creds.password)) {
+        setGeneratedRandom(false);
+        await localWallet.import({
+          privateKey: creds.password,
+          encryption: false,
+        });
+      }
+
+      // generate a random one if no credentials are found
+      else {
+        const address = await localWallet.generate();
+        setGeneratedRandom(true);
+
+        const privateKey = await localWallet.export({
+          strategy: "privateKey",
+          encryption: false,
+        });
+
+        // save the credentials
+        const cred = await saveCredentials({
+          password: privateKey,
+          name: "Wallet",
+          id: address,
+        });
+
+        if (!cred) {
+          console.log("cred is not saved");
+        }
+      }
+
+      await localWallet.connect();
+      // thirdwebWalletContext?.handleWalletConnect(localWallet);
+      localWalletInitialized.current = true;
     })();
-  }, [localWallet, thirdwebWalletContext]);
+  }, [localWallet, thirdwebWalletContext, walletData]);
 
-  // get the associated accounts
-  useEffect(() => {
-    if (!localWallet || !chain) {
-      return;
-    }
+  return { generatedRandom, localWallet };
+}
 
-    (async () => {
-      const _accounts = await getAssociatedAccounts(
-        localWallet,
-        walletObj.factoryAddress,
-        chain,
-      );
-      setAccounts(_accounts);
-    })();
-  }, [localWallet, chain, walletObj.factoryAddress]);
+const SmartWalletConnection_CredsWrapper: React.FC<{
+  onBack: () => void;
+  onConnect: () => void;
+  username: string;
+}> = (props) => {
+  const { localWallet, generatedRandom } = useInitializeLocalWalletWithCreds();
+  const chain = useThirdwebWallet()?.activeChain;
 
-  // loading state
-  // we don't know whether the user has an account or not
-  if (!accounts) {
+  if (!localWallet || !chain) {
     return (
-      <>
-        <Flex
-          style={{
-            height: "350px",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Spinner size="lg" color="secondary" />
-        </Flex>
-      </>
+      <Flex
+        style={{
+          height: "350px",
+          alignItems: "center",
+          gap: spacing.lg,
+          justifyContent: "center",
+          flexDirection: "column",
+        }}
+      >
+        {generatedRandom ? (
+          <SecondaryText> Generating Wallet </SecondaryText>
+        ) : (
+          <SecondaryText> Connecting Wallet </SecondaryText>
+        )}
+        <Spinner size="lg" color="secondary" />
+      </Flex>
     );
   }
 
-  // no accounts found
-  if (accounts.length === 0) {
-    return <SmartWalletCreate {...props} />;
-  }
-
-  // accounts found
-  return <ConnectToSmartWalletAccount {...props} accounts={accounts} />;
+  return (
+    <SmartWalletConnection_Creds
+      {...props}
+      localWallet={localWallet}
+      chain={chain}
+    />
+  );
 };
 
-export const SmartWalletCreate: React.FC<{
+export const SmartWalletConnection_Creds: React.FC<{
   onBack: () => void;
   onConnect: () => void;
+  username: string;
+  chain: Chain;
+  localWallet: LocalWallet;
 }> = (props) => {
+  const { localWallet, chain } = props;
   const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
-  const activeWallet = useWallet();
   const connect = useConnect();
-
-  const [userName, setUserName] = useState("");
-  const [connectError, setConnectError] = useState(false);
+  const [userName, setUserName] = useState(props.username);
+  const userNameNow = useRef(userName);
   const connectionStatus = useConnectionStatus();
+  const [canConnect, setCanConnect] = useState(false);
+  const [isValidating, setIsValidating] = useState(true);
+  const [showImport, setShowImport] = useState(false);
+  const [validateOnMount, setValidateOnMount] = useState(true);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const isConnected = useRef(false);
 
-  const [isUsernameAvailable, setIsUsernameAvailable] = useState(false);
-  const [isValidating, setIsValidating] = useState(false);
-  const [switchError, setSwitchError] = useState(false);
-
-  const deferredUserName = useDeferredValue(userName);
-  const chain = useActiveChain();
-
-  useEffect(() => {
-    if (!chain) {
+  const handleConnect = useCallback(async () => {
+    if (isConnected.current || isConnecting) {
       return;
     }
 
-    if (!deferredUserName) {
-      setIsUsernameAvailable(false);
-      return;
-    }
-
-    let isStale = false;
-
-    async function checkAccountAvailable() {
-      if (!chain) {
-        return;
-      }
-      setIsValidating(true);
-      const isAvailable = await isAccountIdAvailable(
-        deferredUserName,
-        walletObj.factoryAddress,
-        chain,
-      );
-      if (isStale) {
-        return;
-      }
-      setIsUsernameAvailable(isAvailable);
-      setIsValidating(false);
-    }
-
-    checkAccountAvailable();
-    return () => {
-      isStale = true;
-    };
-  }, [deferredUserName, walletObj.factoryAddress, chain]);
-
-  const handleSubmit = async () => {
-    if (!activeWallet) {
-      return;
-    }
-    setConnectError(false);
+    setIsConnecting(true);
 
     try {
       await connect(walletObj, {
         accountId: userName,
-        personalWallet: activeWallet,
+        personalWallet: localWallet,
       });
       props.onConnect();
+      isConnected.current = true;
     } catch (e) {
       console.error(e);
-      setConnectError(true);
+      setIsConnecting(false);
     }
-  };
+  }, [connect, isConnecting, localWallet, props, userName, walletObj]);
+
+  const handleUserNameChange = useCallback(
+    async (name: string) => {
+      if (!chain || !localWallet) {
+        return;
+      }
+      setIsValidating(true);
+      console.log("checking if available....");
+      const isAvailable = await isAccountIdAvailable(
+        name,
+        walletObj.factoryAddress,
+        chain,
+      );
+
+      // if username has since changed, ignore
+      if (name !== userNameNow.current) {
+        return;
+      }
+
+      if (isAvailable) {
+        setIsValidating(false);
+        setCanConnect(true);
+        return true;
+      } else {
+        // this is slow
+        const accounts = await getAssociatedAccounts(
+          localWallet,
+          walletObj.factoryAddress,
+          chain,
+        );
+
+        // if username has since changed, ignore
+        if (name !== userNameNow.current) {
+          return;
+        }
+
+        const ownsAccount = accounts.some(
+          (a) => a.accountId === userNameNow.current,
+        );
+
+        setIsValidating(false);
+        setCanConnect(ownsAccount);
+        return ownsAccount;
+      }
+    },
+    [chain, localWallet, walletObj.factoryAddress],
+  );
+
+  useEffect(() => {
+    if (!validateOnMount) {
+      return;
+    }
+
+    setValidateOnMount(false);
+    handleUserNameChange(props.username).then((_canConnect) => {
+      if (_canConnect) {
+        handleConnect();
+      }
+    });
+  }, [validateOnMount, handleUserNameChange, props.username, handleConnect]);
+
+  const showError = !isValidating && userName && !canConnect;
+  const disableConnect = !userName || isValidating || !canConnect;
+
+  if (showImport) {
+    return (
+      <ImportLocalWallet
+        meta={walletObj.meta}
+        onBack={() => {
+          setShowImport(false);
+        }}
+        onConnected={() => {
+          // reset state to show loading skeleton
+          setValidateOnMount(true);
+          setIsValidating(true);
+          setShowImport(false);
+        }}
+      />
+    );
+  }
 
   return (
     <>
@@ -217,10 +289,10 @@ export const SmartWalletCreate: React.FC<{
       />
       <Spacer y="lg" />
 
-      <ModalTitle>Create account</ModalTitle>
+      <ModalTitle>Choose account</ModalTitle>
       <Spacer y="sm" />
       <ModalDescription>
-        Create your account by choosing a unique username
+        Connect your existing account or create a new one
       </ModalDescription>
 
       <Spacer y="xl" />
@@ -228,7 +300,7 @@ export const SmartWalletCreate: React.FC<{
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          handleSubmit();
+          handleConnect();
         }}
       >
         {/*  User Name */}
@@ -241,15 +313,17 @@ export const SmartWalletCreate: React.FC<{
             name="accountId"
             id="accountId"
             errorMessage={
-              !isValidating && userName && !isUsernameAvailable
-                ? "Username not available"
-                : undefined
+              showError ? (
+                <>
+                  Username is not available <br />
+                </>
+              ) : undefined
             }
             autocomplete="on"
             onChange={(value) => {
-              setSwitchError(false);
-              setConnectError(false);
               setUserName(value);
+              userNameNow.current = value;
+              handleUserNameChange(value);
             }}
             label="Username"
             type="text"
@@ -270,49 +344,43 @@ export const SmartWalletCreate: React.FC<{
           )}
         </div>
 
-        <Spacer y="sm" />
-
-        {connectError && (
-          <ErrorMessage
-            style={{
-              display: "flex",
-              gap: spacing.sm,
-              alignItems: "center",
-              fontSize: fontSize.sm,
-            }}
-          >
-            <ExclamationTriangleIcon width={iconSize.sm} height={iconSize.sm} />
-            <span>
-              Could not connect to Smart Wallet <br />
-            </span>
-          </ErrorMessage>
-        )}
-
-        {switchError && (
-          <ErrorMessage
-            style={{
-              display: "flex",
-              gap: spacing.sm,
-              alignItems: "center",
-              fontSize: fontSize.sm,
-            }}
-          >
-            <ExclamationTriangleIcon width={iconSize.sm} height={iconSize.sm} />
-            <span>Failed to switch network.</span>
-          </ErrorMessage>
+        {showError && (
+          <>
+            <Spacer y="sm" />
+            <SecondaryText
+              style={{
+                fontSize: fontSize.sm,
+              }}
+            >
+              Choose a different username if you want to create a new account OR
+              import the wallet that owns this username
+            </SecondaryText>
+          </>
         )}
 
         <Spacer y="xl" />
 
         <FormFooter>
+          {showError && (
+            <Button
+              variant="inverted"
+              type="button"
+              onClick={() => {
+                setShowImport(true);
+              }}
+            >
+              Import wallet
+            </Button>
+          )}
           <Button
             variant="inverted"
             type="submit"
-            disabled={isValidating || !isUsernameAvailable}
+            disabled={disableConnect}
             style={{
               display: "flex",
               alignItems: "center",
               gap: spacing.sm,
+              opacity: disableConnect ? 0.5 : 1,
             }}
           >
             {connectionStatus === "connecting" ? "Connecting" : "Connect"}
@@ -325,95 +393,3 @@ export const SmartWalletCreate: React.FC<{
     </>
   );
 };
-
-export const ConnectToSmartWalletAccount: React.FC<{
-  onBack: () => void;
-  onConnect: () => void;
-  accounts: AssociatedAccount[];
-}> = (props) => {
-  const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
-  const connect = useConnect();
-  const activeWallet = useWallet() as WalletInstance;
-  const [showCreateScreen, setShowCreateScreen] = useState(false);
-
-  if (showCreateScreen) {
-    return (
-      <SmartWalletCreate
-        onBack={() => {
-          setShowCreateScreen(false);
-        }}
-        onConnect={props.onConnect}
-      />
-    );
-  }
-
-  const handleConnect = async (account: AssociatedAccount) => {
-    await connect(walletObj, {
-      accountId: account.accountId,
-      personalWallet: activeWallet,
-    });
-    props.onConnect();
-  };
-
-  return (
-    <>
-      <BackButton onClick={props.onBack} />
-      <Spacer y="md" />
-      <Img
-        src={walletObj.meta.iconURL}
-        width={iconSize.xl}
-        height={iconSize.xl}
-      />
-      <Spacer y="lg" />
-      <ModalTitle> Choose your account </ModalTitle>
-      <Spacer y="sm" />
-      <ModalDescription>
-        Connect to an existing account or create a new one
-      </ModalDescription>
-      <Spacer y="xl" />
-      <Flex gap="sm" flexDirection="column">
-        {props.accounts.map((account) => {
-          return (
-            <AccountButton
-              key={account.account}
-              onClick={() => handleConnect(account)}
-            >
-              {account.accountId}
-              <CaretRightIcon width={iconSize.md} height={iconSize.md} />
-            </AccountButton>
-          );
-        })}
-      </Flex>
-
-      <Spacer y="lg" />
-      <Button
-        onClick={() => {
-          setShowCreateScreen(true);
-        }}
-        variant="link"
-        style={{
-          textAlign: "center",
-          width: "100%",
-        }}
-      >
-        Create a new account
-      </Button>
-    </>
-  );
-};
-
-const AccountButton = styled.button<{ theme?: Theme }>`
-  padding: ${spacing.md};
-  border: none;
-  border-radius: ${radius.md};
-  background: ${({ theme }) => theme.bg.elevated};
-  text-align: left;
-  font-size: ${fontSize.md};
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  &:hover {
-    background: ${({ theme }) => theme.bg.elevatedHover};
-  }
-`;

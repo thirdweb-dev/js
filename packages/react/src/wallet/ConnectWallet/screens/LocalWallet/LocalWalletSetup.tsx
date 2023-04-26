@@ -18,7 +18,7 @@ export const LocalWalletSetup: React.FC<{
   onBack: () => void;
   onConnected: () => void;
 }> = (props) => {
-  const { storageLoading, walletData } = useLocalWalletInfo();
+  const { walletData } = useLocalWalletInfo();
 
   const [savedCreds, setSavedCreds] = useState<
     UserCredentials | null | undefined
@@ -30,7 +30,7 @@ export const LocalWalletSetup: React.FC<{
     });
   }, []);
 
-  const isLoading = storageLoading || savedCreds === undefined;
+  const isLoading = walletData === "loading" || savedCreds === undefined;
 
   if (isLoading) {
     return (

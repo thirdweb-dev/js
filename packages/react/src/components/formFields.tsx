@@ -67,7 +67,7 @@ export const FormField: React.FC<{
   onChange: (value: string) => void;
   label: string;
   placeholder?: string;
-  errorMessage?: string;
+  errorMessage?: React.ReactNode;
   disabled?: boolean;
 }> = (props) => {
   return (
