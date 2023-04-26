@@ -110,6 +110,7 @@ export function minimizeChain(chain: Chain): MinimalChain {
     chainId: chain.chainId,
     testnet: chain.testnet,
     slug: chain.slug,
+    icon: chain.icon,
   };
 }
 
