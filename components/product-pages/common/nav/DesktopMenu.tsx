@@ -2,6 +2,7 @@ import { HoverMenu } from "./HoverMenu";
 import { NavCardProps } from "./NavCard";
 import { Flex, Icon, Stack } from "@chakra-ui/react";
 import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
+import { SiGithub } from "@react-icons/all-files/si/SiGithub";
 import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
 import { SiYoutube } from "@react-icons/all-files/si/SiYoutube";
 import { FiShoppingCart } from "react-icons/fi";
@@ -66,6 +67,18 @@ export const DesktopMenu: React.FC = () => {
           icon={<Icon boxSize="1rem" as={SiDiscord} />}
           category="topnav"
           label="discord"
+        />
+        <TrackedIconButton
+          as={LinkButton}
+          isExternal
+          noIcon
+          href="https://github.com/thirdweb-dev"
+          bg="transparent"
+          color="gray.50"
+          aria-label="discord"
+          icon={<Icon boxSize="1rem" as={SiGithub} />}
+          category="topnav"
+          label="github"
         />
         <TrackedIconButton
           as={LinkButton}
@@ -181,6 +194,13 @@ export const RESOURCES: NavCardProps[] = [
     description: "Learn more about our company",
     link: "/about",
     icon: require("public/assets/tw-icons/general.png"),
+  },
+  {
+    name: "Open Source",
+    label: "open-source",
+    description: "Learn how to contribute to thirdweb",
+    link: "/open-source",
+    icon: require("public/assets/tw-icons/advanced-nfts.png"),
   },
   {
     name: "Docs",

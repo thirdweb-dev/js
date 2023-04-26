@@ -14,6 +14,9 @@ export enum PageId {
   // thirdweb.com
   About = "about-page",
 
+  // thirdweb.com
+  OSS = "oss-page",
+
   // thirdweb.com/auth
   AuthenticationLanding = "auth-landing",
 

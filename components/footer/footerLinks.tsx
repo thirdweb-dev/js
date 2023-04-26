@@ -44,6 +44,11 @@ export const RESOURCES: FooterLinkInfo[] = [
     label: "portal",
   },
   {
+    name: "Open Source",
+    link: "/open-source",
+    label: "open-source",
+  },
+  {
     name: "Guides",
     label: "guides",
     link: "https://blog.thirdweb.com/guides",
