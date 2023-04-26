@@ -13,7 +13,6 @@ import {
   Wallet,
   useCreateWalletInstance,
   useSupportedWallet,
-  useThirdwebWallet,
 } from "@thirdweb-dev/react-core";
 import { PasswordInput } from "../PasswordInput";
 import { LocalWallet } from "../../wallets/wallets/local-wallet";
@@ -23,11 +22,13 @@ import * as FileSystem from "expo-file-system";
 export type LocalWalletImportModalProps = {
   isVisible: boolean;
   onClose: () => void;
+  onWalletImported: (wallet: LocalWallet) => void;
 };
 
 export const LocalWalletImportModal = ({
   isVisible,
   onClose,
+  onWalletImported,
 }: LocalWalletImportModalProps) => {
   const [password, setPassword] = useState<string | undefined>();
   const [jsonFile, setJsonFile] = useState<string | undefined>();
@@ -35,7 +36,6 @@ export const LocalWalletImportModal = ({
   const [isImporting, setIsImporting] = useState<boolean>(false);
   const createWalletInstance = useCreateWalletInstance();
   const localWalletCreator = useSupportedWallet(LocalWallet.id) as Wallet;
-  const twWalletContext = useThirdwebWallet();
 
   const onImportPress = async () => {
     setError(undefined);
@@ -76,8 +76,7 @@ export const LocalWalletImportModal = ({
       encryption: false,
     });
 
-    await localWallet.connect();
-    twWalletContext?.handleWalletConnect(localWallet);
+    onWalletImported(localWallet);
 
     setIsImporting(false);
     onCloseInternal();

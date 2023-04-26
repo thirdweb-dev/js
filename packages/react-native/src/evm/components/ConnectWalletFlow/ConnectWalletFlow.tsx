@@ -6,10 +6,11 @@ import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
 import {
   Wallet,
   useConnect,
+  useIsConnecting,
   useThirdwebWallet,
 } from "@thirdweb-dev/react-core";
-import { useState } from "react";
-import { StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, StyleSheet } from "react-native";
 import { SmartWallet } from "@thirdweb-dev/wallets";
 import { SmartWalletFlow } from "./SmartWallet/SmartWalletFlow";
 import { LocalWalletFlow } from "./LocalWalletFlow";
@@ -22,6 +23,23 @@ export const ConnectWalletFlow = () => {
   const [isConnecting, setIsConnecting] = useState(false);
   const guestMode = useThirdwebWallet()?.guestMode;
   const supportedWallets = useWallets();
+  const isWalletConnecting = useIsConnecting();
+  const [showButtonSpinner, setShowButtonSpinner] = useState(false);
+
+  useEffect(() => {
+    setShowButtonSpinner(isWalletConnecting);
+    const timeout = setTimeout(() => {
+      if (isWalletConnecting) {
+        setShowButtonSpinner(false);
+      }
+    }, 5000);
+
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+  }, [isWalletConnecting]);
 
   const connect = useConnect();
 
@@ -78,7 +96,6 @@ export const ConnectWalletFlow = () => {
           />
         );
       case SmartWallet.id:
-        console.log("smart wallet modal");
         return (
           <SmartWalletFlow
             onClose={() => {
@@ -93,8 +110,6 @@ export const ConnectWalletFlow = () => {
     }
   }
 
-  console.log("isConnecting", isConnecting);
-  console.log("activeWallet", activeWallet);
   return (
     <>
       <TWModal isVisible={modalVisible}>
@@ -130,9 +145,17 @@ export const ConnectWalletFlow = () => {
         onPress={onConnectPress}
         style={styles.connectWalletButton}
       >
+        {/* {showButtonSpinner ? (
+          <ActivityIndicator size="small" color="buttonTextColor" />
+        ) : ( */}
         <Text variant="bodyLarge" color="buttonTextColor">
-          Connect Wallet
+          {showButtonSpinner ? (
+            <ActivityIndicator size="small" color="buttonTextColor" />
+          ) : (
+            "Connect Wallet"
+          )}
         </Text>
+        {/* )} */}
       </BaseButton>
     </>
   );
@@ -142,10 +165,12 @@ const styles = StyleSheet.create({
   connectWalletButton: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "center",
+    alignContent: "center",
     alignItems: "center",
+    justifyContent: "center",
     borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 10,
+    minWidth: 150,
   },
 });

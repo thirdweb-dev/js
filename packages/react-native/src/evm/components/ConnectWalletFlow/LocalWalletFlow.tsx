@@ -6,6 +6,7 @@ import { ModalFooter } from "../base/modal/ModalFooter";
 import { LocalWallet } from "../../wallets/wallets/local-wallet";
 import { LocalWalletImportModal } from "./LocalWalletImportModal";
 import { useState } from "react";
+import { useThirdwebWallet } from "@thirdweb-dev/react-core";
 
 export type LocalWalletFlowProps = {
   onClose: () => void;
@@ -19,6 +20,7 @@ export function LocalWalletFlow({
   onConnectPress,
 }: LocalWalletFlowProps) {
   const [isImportModalVisible, setIsImportModalVisible] = useState(false);
+  const twWalletContext = useThirdwebWallet();
 
   const onImportPress = async () => {
     setIsImportModalVisible(true);
@@ -26,6 +28,11 @@ export function LocalWalletFlow({
 
   const onImportModalClose = () => {
     setIsImportModalVisible(false);
+  };
+
+  const onWalletImported = async (localWallet: LocalWallet) => {
+    await localWallet.connect();
+    twWalletContext?.handleWalletConnect(localWallet);
   };
 
   return (
@@ -54,6 +61,7 @@ export function LocalWalletFlow({
 
       <LocalWalletImportModal
         isVisible={isImportModalVisible}
+        onWalletImported={onWalletImported}
         onClose={onImportModalClose}
       />
     </>

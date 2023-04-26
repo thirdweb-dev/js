@@ -27,7 +27,6 @@ export const UsernameInput = ({
           style={{ ...styles.textInput, color: theme.colors.textPrimary }}
           returnKeyType={"done"}
           clearTextOnFocus={false}
-          placeholder="Your Username"
           autoCapitalize="none"
           autoCorrect={false}
           onChangeText={onChangeText}

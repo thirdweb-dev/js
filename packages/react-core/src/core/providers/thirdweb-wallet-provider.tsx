@@ -138,6 +138,8 @@ export function ThirdwebWalletProvider(
       connectParams?: ConnectParams<Record<string, any>>,
       isAutoConnect = false,
     ) => {
+      console.log("connectParas", connectParams);
+
       const _signer = await wallet.getSigner();
       setSigner(_signer);
       setActiveWallet(wallet);
@@ -153,6 +155,8 @@ export function ThirdwebWalletProvider(
         walletId: wallet.walletId,
         connectParams,
       };
+
+      console.log("connectParas", connectParams);
 
       // if personal wallet exists, we need to replace the connectParams.personalWallet to a stringifiable version
       const personalWallet = wallet.getPersonalWallet() as AbstractClientWallet;
@@ -321,10 +325,13 @@ export function ThirdwebWalletProvider(
         ...(connectParams || {}),
       };
 
+      console.log("connect wallet", _connectedParams);
+
       const wallet = createWalletInstance(WalletObj);
       setConnectionStatus("connecting");
       try {
         await wallet.connect(_connectedParams);
+        console.log("after connect");
         handleWalletConnect(wallet, _connectedParams);
       } catch (e: any) {
         console.error(`Error connecting to wallet: ${e}`);
