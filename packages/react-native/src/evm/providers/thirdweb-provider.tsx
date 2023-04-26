@@ -66,7 +66,7 @@ export const ThirdwebProvider = <
   useCoinbaseWalletListener();
   const addedGuestWalletRef = useRef(false);
 
-  if (supportedWallets.length === 0) {
+  if (supportedWallets.length === 0 && !guestMode) {
     throw new Error("You must provide at least one supported wallet");
   }
 
