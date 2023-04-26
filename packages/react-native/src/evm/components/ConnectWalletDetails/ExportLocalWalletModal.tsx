@@ -15,6 +15,7 @@ import { useAddress, useWallet } from "@thirdweb-dev/react-core";
 import { PasswordInput } from "../PasswordInput";
 import * as FileSystem from "expo-file-system";
 import { LocalWallet } from "../../wallets/wallets/local-wallet";
+import { SmartWallet } from "@thirdweb-dev/wallets";
 
 export type ExportLocalWalletModalProps = {
   isVisible: boolean;
@@ -41,10 +42,18 @@ export const ExportLocalWalletModal = ({
     setIsExporting(true);
     setError(undefined);
 
-    const data = await (activeWallet as LocalWallet).export({
-      strategy: "encryptedJson",
-      password: password,
-    });
+    let data;
+    if (activeWallet?.walletId === SmartWallet.id) {
+      data = await (activeWallet.getPersonalWallet() as LocalWallet).export({
+        strategy: "encryptedJson",
+        password: password,
+      });
+    } else {
+      data = await (activeWallet as LocalWallet).export({
+        strategy: "encryptedJson",
+        password: password,
+      });
+    }
 
     const fileName = "wallet.json";
     if (Platform.OS === "android") {

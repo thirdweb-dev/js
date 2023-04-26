@@ -1,11 +1,11 @@
 import { IconStyleProp } from "./types";
 import Svg, { Path, Rect } from "react-native-svg";
 
-const CopyIcon = ({ size, color }: IconStyleProp) => {
+const CopyIcon = ({ width, height, color }: IconStyleProp) => {
   return (
     <Svg
-      width={size}
-      height={size}
+      width={width}
+      height={height}
       viewBox="0 0 24 24"
       fill="none"
       stroke={color}

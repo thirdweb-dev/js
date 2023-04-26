@@ -52,7 +52,11 @@ export const WalletDetailsModalHeader = ({
             alignItems="center"
           >
             <Address address={address} />
-            <CopyIcon size={14} color={theme.colors.textSecondary} />
+            <CopyIcon
+              width={14}
+              height={14}
+              color={theme.colors.textSecondary}
+            />
           </Box>
           <Text variant="bodySmallSecondary">
             {balanceQuery.data?.displayValue.slice(0, 5)}{" "}

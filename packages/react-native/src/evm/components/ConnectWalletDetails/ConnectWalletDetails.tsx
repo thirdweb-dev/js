@@ -10,10 +10,11 @@ import { NetworkButton } from "./NetworkButton";
 import { WalletDetailsModalHeader } from "./WalletDetailsModalHeader";
 import { useWallet, useBalance, useDisconnect } from "@thirdweb-dev/react-core";
 import { useActiveChain } from "@thirdweb-dev/react-core/evm";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ExportLocalWalletModal } from "./ExportLocalWalletModal";
 import { Toast } from "../base/Toast";
+import { SmartWallet } from "@thirdweb-dev/wallets";
 
 export type ConnectWalletDetailsProps = {
   address: string;
@@ -82,6 +83,35 @@ export const ConnectWalletDetails = ({
     setAddressCopied(true);
   };
 
+  const getAdditionalActions = useCallback(() => {
+    if (
+      activeWallet?.walletId.toLowerCase().includes("localwallet") ||
+      activeWallet?.walletId === SmartWallet.id
+    ) {
+      return (
+        <>
+          <View style={styles.currentNetwork}>
+            <Text variant="bodySmallSecondary">Additional Actions</Text>
+          </View>
+          <BaseButton
+            backgroundColor="background"
+            borderColor="border"
+            mb="sm"
+            style={styles.exportWallet}
+            onPress={onExportLocalWalletPress}
+          >
+            <PocketWalletIcon size={16} />
+            <View style={styles.exportWalletInfo}>
+              <Text variant="bodySmall">Export wallet</Text>
+            </View>
+          </BaseButton>
+        </>
+      );
+    }
+
+    return null;
+  }, [activeWallet?.walletId]);
+
   return (
     <>
       <TWModal
@@ -106,25 +136,7 @@ export const ConnectWalletDetails = ({
           chainName={chain?.name || "Unknown Network"}
           onPress={onChangeNetworkPress}
         />
-        {activeWallet?.walletId.toLowerCase().includes("localwallet") ? (
-          <>
-            <View style={styles.currentNetwork}>
-              <Text variant="bodySmallSecondary">Additional Actions</Text>
-            </View>
-            <BaseButton
-              backgroundColor="background"
-              borderColor="border"
-              mb="sm"
-              style={styles.exportWallet}
-              onPress={onExportLocalWalletPress}
-            >
-              <PocketWalletIcon size={16} />
-              <View style={styles.exportWalletInfo}>
-                <Text variant="bodySmall">Export wallet</Text>
-              </View>
-            </BaseButton>
-          </>
-        ) : null}
+        {getAdditionalActions()}
         {addressCopied === true ? (
           <Toast text={"Address copied to clipboard"} />
         ) : null}
