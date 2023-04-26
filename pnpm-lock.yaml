@@ -735,6 +735,9 @@ importers:
       abitype:
         specifier: ^0.2.5
         version: 0.2.5(typescript@4.9.5)
+      expo-clipboard:
+        specifier: ^4.1.2
+        version: 4.1.2(expo@47.0.13)
       expo-document-picker:
         specifier: ^11.2.2
         version: 11.2.2(expo@47.0.13)
@@ -18065,6 +18068,14 @@ packages:
     transitivePeerDependencies:
       - expo
       - supports-color
+
+  /expo-clipboard@4.1.2(expo@47.0.13):
+    resolution: {integrity: sha512-YSuIs4CV+3gypl7X74sp2ruwAVuhnOngsWs7EGkcvRdX0BBrZZMk3GXGw9a59sU6SW4wGWAfwrhyCT41GUaN+A==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 47.0.13(@babel/core@7.21.3)
+    dev: false
 
   /expo-constants@14.0.2(expo@47.0.13):
     resolution: {integrity: sha512-wzV3nrzTXTI8yG0tfas3fnqCfKV6YE+1GphEREyVDAShEB6mBInX1b6HgtpHFy2wOtnml+lPVmTCeGtjjLnZhA==}
