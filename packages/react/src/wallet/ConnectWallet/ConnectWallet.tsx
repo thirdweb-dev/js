@@ -36,6 +36,7 @@ type ConnectWalletProps = {
   auth?: {
     loginOptions?: LoginOptions;
     loginOptional?: boolean;
+    onLogin?: (token: string) => void;
   };
   style?: React.CSSProperties;
   networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
@@ -77,7 +78,8 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   const signIn = async () => {
     try {
       setShowSignatureModal(true);
-      await login(props.auth?.loginOptions);
+      const token = await login(props.auth?.loginOptions);
+      props?.auth?.onLogin?.(token);
     } catch (err) {
       console.error("failed to log in", err);
     }
