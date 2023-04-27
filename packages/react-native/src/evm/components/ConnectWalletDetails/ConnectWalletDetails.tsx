@@ -29,6 +29,7 @@ export const ConnectWalletDetails = ({
     useState(false);
   const [isDisconnecting, setIsDisconnecting] = useState(false);
   const [addressCopied, setAddressCopied] = useState(false);
+  const [username, setUsername] = useState<string | undefined>();
 
   const activeWallet = useWallet();
   const disconnect = useDisconnect();
@@ -71,9 +72,14 @@ export const ConnectWalletDetails = ({
     setIsExportModalVisible(false);
   };
 
-  const onExportLocalWalletPress = () => {
+  const onExportLocalWalletPress = useCallback(() => {
     setIsExportModalVisible(true);
-  };
+  }, []);
+
+  const onExportSmartWalletPress = useCallback(() => {
+    setUsername((activeWallet as SmartWallet).getConnectParams()?.accountId);
+    onExportLocalWalletPress();
+  }, [activeWallet, onExportLocalWalletPress]);
 
   const onExportModalClose = () => {
     setIsExportModalVisible(false);
@@ -84,10 +90,7 @@ export const ConnectWalletDetails = ({
   };
 
   const getAdditionalActions = useCallback(() => {
-    if (
-      activeWallet?.walletId.toLowerCase().includes("localwallet") ||
-      activeWallet?.walletId === SmartWallet.id
-    ) {
+    if (activeWallet?.walletId.toLowerCase().includes("localwallet")) {
       return (
         <>
           <View style={styles.currentNetwork}>
@@ -109,8 +112,34 @@ export const ConnectWalletDetails = ({
       );
     }
 
+    if (activeWallet?.walletId === SmartWallet.id) {
+      return (
+        <>
+          <View style={styles.currentNetwork}>
+            <Text variant="bodySmallSecondary">Additional Actions</Text>
+          </View>
+          <BaseButton
+            backgroundColor="background"
+            borderColor="border"
+            mb="sm"
+            style={styles.exportWallet}
+            onPress={onExportSmartWalletPress}
+          >
+            <PocketWalletIcon size={16} />
+            <View style={styles.exportWalletInfo}>
+              <Text variant="bodySmall">Export wallet</Text>
+            </View>
+          </BaseButton>
+        </>
+      );
+    }
+
     return null;
-  }, [activeWallet?.walletId]);
+  }, [
+    activeWallet?.walletId,
+    onExportLocalWalletPress,
+    onExportSmartWalletPress,
+  ]);
 
   return (
     <>
@@ -121,6 +150,7 @@ export const ConnectWalletDetails = ({
         <ExportLocalWalletModal
           isVisible={isExportModalVisible}
           onClose={onExportModalClose}
+          username={username}
         />
         <WalletDetailsModalHeader
           address={address}
@@ -158,7 +188,13 @@ export const ConnectWalletDetails = ({
             {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
             {balanceQuery.data?.symbol}
           </Text>
-          <Address variant="bodySmallSecondary" address={address} />
+          {activeWallet?.walletId === SmartWallet.id ? (
+            <Text variant="bodySmallSecondary">
+              {(activeWallet as SmartWallet).getConnectParams()?.accountId}
+            </Text>
+          ) : (
+            <Address variant="bodySmallSecondary" address={address} />
+          )}
         </View>
         <WalletIcon size={32} iconUri={activeWallet?.getMeta().iconURL || ""} />
       </BaseButton>

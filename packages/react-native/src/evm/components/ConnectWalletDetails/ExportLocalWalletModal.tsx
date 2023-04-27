@@ -19,12 +19,14 @@ import { SmartWallet } from "@thirdweb-dev/wallets";
 
 export type ExportLocalWalletModalProps = {
   isVisible: boolean;
+  username?: string;
   onClose: () => void;
 };
 
 export const ExportLocalWalletModal = ({
   isVisible,
   onClose,
+  username,
 }: ExportLocalWalletModalProps) => {
   const [password, setPassword] = useState<string | undefined>();
   const [error, setError] = useState<string | undefined>();
@@ -155,9 +157,11 @@ export const ExportLocalWalletModal = ({
             }
           </Text>
           <Text variant="bodySmall" textAlign="left" mt="lg" mb="xxs">
-            Wallet Address
+            {username ? "Username" : "Wallet Address"}
           </Text>
-          <Text variant="bodySmallSecondary">{address}</Text>
+          <Text variant="bodySmallSecondary">
+            {username ? username : address}
+          </Text>
           <Text variant="bodySmall" textAlign="left" mt="lg" mb="xxs">
             Password
           </Text>
