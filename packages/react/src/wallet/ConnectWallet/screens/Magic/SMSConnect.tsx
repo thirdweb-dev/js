@@ -84,7 +84,7 @@ export const SMSConnect: React.FC<{
           placeholder="+1234567890"
           required
           value={phoneNumber}
-          pattern="\+[7-9]{1}[0-9]+"
+          pattern="\+[0-9]{1}[0-9]+"
           onChange={(e) => {
             setPhoneNumber(e.target.value);
             // check if a valid phone number using browser api
