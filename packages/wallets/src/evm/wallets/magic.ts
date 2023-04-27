@@ -37,18 +37,23 @@ export class MagicLink extends AbstractClientWallet<
     this.options = options;
   }
 
+  async initializeConnector() {
+    // import the connector dynamically
+    const { MagicAuthConnector } = await import("../connectors/magic");
+
+    const magicConnector = new MagicAuthConnector({
+      chains: this.chains,
+      options: this.options,
+    });
+
+    this.magicConnector = magicConnector;
+    this.connector = new WagmiAdapter(magicConnector);
+    return this.connector;
+  }
+
   protected async getConnector(): Promise<TWConnector> {
     if (!this.connector) {
-      // import the connector dynamically
-      const { MagicAuthConnector } = await import("../connectors/magic");
-
-      const magicConnector = new MagicAuthConnector({
-        chains: this.chains,
-        options: this.options,
-      });
-
-      this.magicConnector = magicConnector;
-      this.connector = new WagmiAdapter(magicConnector);
+      return await this.initializeConnector();
     }
     return this.connector;
   }
@@ -60,11 +65,12 @@ export class MagicLink extends AbstractClientWallet<
     return this.magicConnector.getMagicSDK();
   }
 
-  async autoConnect() {
-    await this.getConnector();
+  async autoConnect(options?: MagicAuthConnectOptions) {
+    await this.initializeConnector();
+    await this.magicConnector?.initializeMagicSDK(options);
     const magic = this.getMagic();
     if (await magic.user.isLoggedIn()) {
-      return super.autoConnect();
+      return super.autoConnect(options);
     } else {
       throw new Error("Magic user is not logged in");
     }

@@ -30,16 +30,18 @@ export const EmailConnect: React.FC<{
   const [email, setEmail] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(false);
 
-  const handleSmsConnect = async () => {
+  const handleConnect = async () => {
     const magicWallet = createInstance(magicLinkObj) as MagicLink;
     setIsConnecting(true);
     props.hideModal();
-    await magicWallet.connect({
+    const connectOptions = {
+      chainId: twContext?.activeChain?.chainId,
       email,
-    });
+    };
+    await magicWallet.connect(connectOptions);
     setIsConnecting(false);
     props.showModal();
-    twContext?.handleWalletConnect(magicWallet);
+    twContext?.handleWalletConnect(magicWallet, connectOptions);
     props.onConnect();
   };
 
@@ -62,7 +64,7 @@ export const EmailConnect: React.FC<{
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          handleSmsConnect();
+          handleConnect();
         }}
       >
         {/* Phone number */}

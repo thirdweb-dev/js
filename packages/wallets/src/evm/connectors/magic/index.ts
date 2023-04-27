@@ -76,7 +76,6 @@ export abstract class MagicBaseConnector extends Connector<
       return this.provider;
     }
     const magic = this.getMagicSDK();
-    console.log("magic is", magic);
     this.provider = magic.rpcProvider;
     return this.provider;
   }
@@ -130,6 +129,7 @@ export class MagicAuthConnector extends MagicBaseConnector {
     string,
     MagicSDKExtensionsOption<OAuthExtension["name"]>
   >;
+  #connectedChainId?: number;
 
   // oauthProviders: OAuthProvider[];
   oauthCallbackUrl?: string;
@@ -146,6 +146,9 @@ export class MagicAuthConnector extends MagicBaseConnector {
       throw new Error("Magic API Key is not provided.");
     }
     try {
+      if (options.chainId) {
+        this.initializeMagicSDK({ chainId: options.chainId });
+      }
       const provider = await this.getProvider();
       this.setupListeners();
       this.emit("message", { type: "connecting" });
@@ -160,6 +163,8 @@ export class MagicAuthConnector extends MagicBaseConnector {
       } catch (e) {
         chainId = 0;
       }
+
+      this.#connectedChainId = chainId;
 
       // if there is a user logged in, return the user
       if (isAuthenticated) {
@@ -193,7 +198,6 @@ export class MagicAuthConnector extends MagicBaseConnector {
 
       // LOGIN WITH MAGIC LINK WITH PHONE NUMBER
       if ("phoneNumber" in options) {
-        console.log("loggin with sms", options.phoneNumber);
         await magic.auth.loginWithSMS({
           phoneNumber: options.phoneNumber,
         });
@@ -232,16 +236,29 @@ export class MagicAuthConnector extends MagicBaseConnector {
     throw new Error("Chain ID is not defined");
   }
 
+  initializeMagicSDK({ chainId }: { chainId?: number } = {}) {
+    const options = {
+      ...this.magicSdkConfiguration,
+      extensions: [new OAuthExtension()],
+    };
+    if (chainId) {
+      const chain = this.chains.find((c) => c.chainId === chainId);
+      if (chain) {
+        options.network = {
+          rpcUrl: chain.rpc[0],
+          chainId: chain.chainId,
+        };
+      }
+    }
+    this.magicSDK = new Magic(this.magicOptions.apiKey, options);
+    this.provider = this.magicSDK.rpcProvider;
+    return this.magicSDK;
+  }
+
   getMagicSDK(): InstanceWithExtensions<SDKBase, OAuthExtension[]> {
     if (!this.magicSDK) {
-      this.magicSDK = new Magic(this.magicOptions.apiKey, {
-        ...this.magicSdkConfiguration,
-        extensions: [new OAuthExtension()],
-      });
-      this.provider = this.magicSDK.rpcProvider;
-      return this.magicSDK;
+      return this.initializeMagicSDK();
     }
-
     return this.magicSDK;
   }
 
@@ -250,5 +267,19 @@ export class MagicAuthConnector extends MagicBaseConnector {
     provider.on("accountsChanged", this.onAccountsChanged);
     provider.on("chainChanged", this.onChainChanged);
     provider.on("disconnect", this.onDisconnect);
+  }
+
+  async switchChain(chainId: number): Promise<Chain> {
+    const chain = this.chains.find((c) => c.chainId === chainId);
+
+    if (!chain) {
+      throw new Error("Chain not found");
+    }
+
+    if (this.#connectedChainId !== chainId) {
+      this.initializeMagicSDK({ chainId });
+    }
+
+    return chain;
   }
 }

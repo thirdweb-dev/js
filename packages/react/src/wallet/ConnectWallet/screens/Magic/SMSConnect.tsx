@@ -38,12 +38,14 @@ export const SMSConnect: React.FC<{
     const magicWallet = createInstance(magicLinkObj) as MagicLink;
     setIsConnecting(true);
     props.hideModal();
-    await magicWallet.connect({
+    const connectOptions = {
+      chainId: twContext?.activeChain?.chainId,
       phoneNumber,
-    });
+    };
+    await magicWallet.connect(connectOptions);
     setIsConnecting(false);
     props.showModal();
-    twContext?.handleWalletConnect(magicWallet);
+    twContext?.handleWalletConnect(magicWallet, connectOptions);
     props.onConnect();
   };
 
