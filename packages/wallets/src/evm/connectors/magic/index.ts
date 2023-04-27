@@ -131,8 +131,6 @@ export class MagicAuthConnector extends MagicBaseConnector {
     MagicSDKExtensionsOption<OAuthExtension["name"]>
   >;
 
-  enableSMSLogin?: boolean;
-  enableEmailLogin?: boolean;
   // oauthProviders: OAuthProvider[];
   oauthCallbackUrl?: string;
 
@@ -141,8 +139,6 @@ export class MagicAuthConnector extends MagicBaseConnector {
     this.magicSdkConfiguration = config.options.magicSdkConfiguration;
     // this.oauthProviders = config.options.oauthOptions?.providers || [];
     // this.oauthCallbackUrl = config.options.oauthOptions?.callbackUrl;
-    this.enableSMSLogin = config.options.enableSMSLogin;
-    this.enableEmailLogin = config.options.enableEmailLogin;
   }
 
   async connect(options: MagicAuthConnectOptions) {

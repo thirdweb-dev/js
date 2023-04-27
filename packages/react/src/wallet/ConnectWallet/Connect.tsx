@@ -321,6 +321,8 @@ export const ConnectModal = () => {
 
         {showScreen === "magic/connect" && (
           <MagicConnect
+            showModal={() => setHideModal(true)}
+            hideModal={() => setHideModal(false)}
             onBack={handleBack}
             onConnect={() => {
               closeModalAndReset();

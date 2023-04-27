@@ -14,16 +14,31 @@ import { EnvelopeClosedIcon, ChatBubbleIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { SMSConnect } from "./SMSConnect";
 import { EmailConnect } from "./EmailConnect";
+import { Flex } from "../../../../components/basic";
+import { MagicLinkWallet } from "../../../wallets/magicLink";
+import { ErrorMessage } from "../../../../components/formElements";
 
 export const MagicConnect: React.FC<{
   onBack: () => void;
   onConnect: () => void;
+  showModal: () => void;
+  hideModal: () => void;
 }> = (props) => {
-  const magicLinkObj = useSupportedWallet("magicLink");
+  const magicLinkObj = useSupportedWallet("magicLink") as MagicLinkWallet;
+  const isSmsEnabled = magicLinkObj.config.smsLogin !== false;
+  const isEmailEnabled = magicLinkObj.config.emailLogin !== false;
+
+  let firstScreen: "sms" | "email" | "menu" = "menu";
+  if (isEmailEnabled && !isSmsEnabled) {
+    firstScreen = "email";
+  } else if (isSmsEnabled && !isEmailEnabled) {
+    firstScreen = "sms";
+  }
+
   // const createInstance = useCreateWalletInstance();
   // const twContext = useThirdwebWallet();
   // const [isConnecting, setIsConnecting] = useState(false);
-  const [showUI, setShowUI] = useState<"sms" | "email" | "menu">("menu");
+  const [showUI, setShowUI] = useState<"sms" | "email" | "menu">(firstScreen);
 
   // const handleAuthConnect = async (oauthProvider: MagicOAuthProvider) => {
   //   const magicWallet = createInstance(magicLinkObj) as MagicLink;
@@ -40,8 +55,14 @@ export const MagicConnect: React.FC<{
     return (
       <SMSConnect
         onBack={() => {
-          setShowUI("menu");
+          if (firstScreen === "sms") {
+            props.onBack();
+          } else {
+            setShowUI(firstScreen);
+          }
         }}
+        showModal={props.showModal}
+        hideModal={props.hideModal}
         onConnect={props.onConnect}
       />
     );
@@ -50,8 +71,14 @@ export const MagicConnect: React.FC<{
   if (showUI === "email") {
     return (
       <EmailConnect
+        showModal={props.showModal}
+        hideModal={props.hideModal}
         onBack={() => {
-          setShowUI("menu");
+          if (firstScreen === "email") {
+            props.onBack();
+          } else {
+            setShowUI(firstScreen);
+          }
         }}
         onConnect={props.onConnect}
       />
@@ -98,44 +125,59 @@ export const MagicConnect: React.FC<{
       <Spacer y="md" />
       <ModalTitle> Magic Link </ModalTitle>
       <Spacer y="sm" />
-      <ModalDescription>Login with your phone number or email</ModalDescription>
+      <ModalDescription>
+        {isSmsEnabled &&
+          isEmailEnabled &&
+          "Login with your phone number or email"}
+        {isSmsEnabled && !isEmailEnabled && "Login with your phone number"}
+        {!isSmsEnabled && isEmailEnabled && "Login with your email"}
+      </ModalDescription>
 
       <Spacer y="xl" />
 
-      {/* sms */}
-      <LoginButton
-        variant="secondary"
-        onClick={() => {
-          setShowUI("sms");
-        }}
-      >
-        Phone number
-        <ChatBubbleIcon
-          width={iconSize.md}
-          height={iconSize.md}
-          style={{
-            marginLeft: "auto",
-          }}
-        />
-      </LoginButton>
+      <Flex flexDirection="column" gap="sm">
+        {/* sms */}
+        {isSmsEnabled && (
+          <LoginButton
+            variant="secondary"
+            onClick={() => {
+              setShowUI("sms");
+            }}
+          >
+            Phone number
+            <ChatBubbleIcon
+              width={iconSize.md}
+              height={iconSize.md}
+              style={{
+                marginLeft: "auto",
+              }}
+            />
+          </LoginButton>
+        )}
 
-      <Spacer y="sm" />
+        {/* Email */}
+        {isEmailEnabled && (
+          <LoginButton
+            variant="secondary"
+            onClick={() => {
+              setShowUI("email");
+            }}
+          >
+            Email
+            <EnvelopeClosedIcon
+              width={iconSize.md}
+              height={iconSize.md}
+              style={{
+                marginLeft: "auto",
+              }}
+            />
+          </LoginButton>
+        )}
 
-      <LoginButton
-        variant="secondary"
-        onClick={() => {
-          setShowUI("email");
-        }}
-      >
-        Email
-        <EnvelopeClosedIcon
-          width={iconSize.md}
-          height={iconSize.md}
-          style={{
-            marginLeft: "auto",
-          }}
-        />
-      </LoginButton>
+        {!isEmailEnabled && !isSmsEnabled && (
+          <ErrorMessage> No login methods enabled </ErrorMessage>
+        )}
+      </Flex>
 
       <Spacer y="xl" />
 

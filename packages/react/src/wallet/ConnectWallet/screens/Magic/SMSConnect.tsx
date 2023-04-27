@@ -24,6 +24,8 @@ import { Spinner } from "../../../../components/Spinner";
 export const SMSConnect: React.FC<{
   onBack: () => void;
   onConnect: () => void;
+  showModal: () => void;
+  hideModal: () => void;
 }> = (props) => {
   const magicLinkObj = useSupportedWallet("magicLink");
   const [isConnecting, setIsConnecting] = useState(false);
@@ -35,10 +37,12 @@ export const SMSConnect: React.FC<{
   const handleSmsConnect = async () => {
     const magicWallet = createInstance(magicLinkObj) as MagicLink;
     setIsConnecting(true);
+    props.hideModal();
     await magicWallet.connect({
       phoneNumber,
     });
     setIsConnecting(false);
+    props.showModal();
     twContext?.handleWalletConnect(magicWallet);
     props.onConnect();
   };

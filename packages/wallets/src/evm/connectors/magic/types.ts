@@ -24,8 +24,8 @@ export interface MagicOptions {
 }
 
 export interface MagicAuthOptions extends MagicOptions {
-  enableEmailLogin?: boolean;
-  enableSMSLogin?: boolean;
+  emailLogin?: boolean;
+  smsLogin?: boolean;
   // oauthOptions?: {
   //   providers: OAuthProvider[];
   //   callbackUrl?: string;
