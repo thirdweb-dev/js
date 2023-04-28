@@ -57,7 +57,7 @@ export const EmailConnect: React.FC<{
         height={iconSize.xl}
       />
       <Spacer y="md" />
-      <ModalTitle> Login with Email </ModalTitle>
+      <ModalTitle> Login with email </ModalTitle>
 
       <Spacer y="lg" />
 

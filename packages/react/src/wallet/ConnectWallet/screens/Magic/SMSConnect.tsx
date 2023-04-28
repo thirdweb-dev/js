@@ -61,7 +61,7 @@ export const SMSConnect: React.FC<{
         height={iconSize.xl}
       />
       <Spacer y="md" />
-      <ModalTitle> Login with Phone number </ModalTitle>
+      <ModalTitle> Login with phone number </ModalTitle>
       <Spacer y="sm" />
       <ModalDescription>
         Enter your phone number including country code
