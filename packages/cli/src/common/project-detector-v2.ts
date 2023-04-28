@@ -2,7 +2,7 @@ import detectPackageManager from "../core/detection/detectPackageManager";
 import detectFramework from "../core/detection/detectFramework";
 import detectLibrary from "../core/detection/detectLibrary";
 import detectLanguage from "../core/detection/detectLanguage";
-import { logger, spinner } from "../core/helpers/logger";
+import { logger } from "../core/helpers/logger";
 import path from "path";
 
 export async function detectProjectV2(options: any) {
