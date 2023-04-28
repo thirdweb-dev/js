@@ -1,6 +1,8 @@
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { computeForwarderAddress } from "../common";
 import { PrebuiltContractType } from "../core/types";
 import { ChainId, SUPPORTED_CHAIN_ID, SUPPORTED_CHAIN_IDS } from "./chains";
-import { constants } from "ethers";
+import { constants, ethers } from "ethers";
 
 /**
  * publicly available wallet for local nodes
@@ -347,16 +349,18 @@ export function getMultichainRegistryAddress() {
  * @returns the array of trusted forwarders for the given chain id
  * @internal
  */
-export function getDefaultTrustedForwarders(
+export async function getDefaultTrustedForwarders(
   chainId: SUPPORTED_CHAIN_ID,
-): string[] {
+  provider: ethers.providers.Provider,
+  storage: ThirdwebStorage,
+): Promise<string[]> {
   const chainEnum = SUPPORTED_CHAIN_IDS.find((c) => c === chainId);
   const biconomyForwarder = chainEnum
     ? CONTRACT_ADDRESSES[chainEnum].biconomyForwarder
     : constants.AddressZero;
   const openzeppelinForwarder = chainEnum
     ? CONTRACT_ADDRESSES[chainEnum].openzeppelinForwarder
-    : constants.AddressZero;
+    : await computeForwarderAddress(provider, storage);
   return biconomyForwarder !== constants.AddressZero
     ? [openzeppelinForwarder, biconomyForwarder]
     : [openzeppelinForwarder];

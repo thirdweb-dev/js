@@ -1,3 +1,4 @@
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   CONTRACT_ADDRESSES,
   getContractAddressByChainId,
@@ -10,6 +11,10 @@ import {
   TransactionResult,
 } from "../core/types";
 import { SDKOptionsOutput } from "../schema/sdk-options";
+import {
+  computeEOAForwarderAddress,
+  computeForwarderAddress,
+} from "./any-evm-utils";
 import {
   BiconomyForwarderAbi,
   ChainAwareForwardRequest,
@@ -52,12 +57,19 @@ export async function defaultGaslessSendFunction(
   transaction: GaslessTransaction,
   signer: ethers.Signer,
   provider: ethers.providers.Provider,
+  storage: ThirdwebStorage,
   gaslessOptions?: SDKOptionsOutput["gasless"],
 ): Promise<string> {
   if (gaslessOptions && "biconomy" in gaslessOptions) {
     return biconomySendFunction(transaction, signer, provider, gaslessOptions);
   }
-  return defenderSendFunction(transaction, signer, provider, gaslessOptions);
+  return defenderSendFunction(
+    transaction,
+    signer,
+    provider,
+    storage,
+    gaslessOptions,
+  );
 }
 
 export async function biconomySendFunction(
@@ -166,6 +178,7 @@ export async function defenderSendFunction(
   transaction: GaslessTransaction,
   signer: ethers.Signer,
   provider: ethers.providers.Provider,
+  storage: ThirdwebStorage,
   gaslessOptions?: SDKOptionsOutput["gasless"],
 ): Promise<string> {
   invariant(
@@ -179,10 +192,12 @@ export async function defenderSendFunction(
     (gaslessOptions.openzeppelin.useEOAForwarder
       ? CONTRACT_ADDRESSES[
           transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-        ].openzeppelinForwarderEOA
+        ].openzeppelinForwarderEOA ||
+        (await computeEOAForwarderAddress(provider, storage))
       : CONTRACT_ADDRESSES[
           transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-        ].openzeppelinForwarder);
+        ].openzeppelinForwarder ||
+        (await computeForwarderAddress(provider, storage)));
 
   const forwarder = new ethers.Contract(
     forwarderAddress,

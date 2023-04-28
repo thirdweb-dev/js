@@ -1,5 +1,7 @@
 import {
   TransactionError,
+  computeEOAForwarderAddress,
+  computeForwarderAddress,
   extractFunctionsFromAbi,
   fetchContractMetadataFromAddress,
   fetchSourceFilesFromMetadata,
@@ -789,10 +791,12 @@ export class ContractWrapper<
       (this.options.gasless.openzeppelin.useEOAForwarder
         ? CONTRACT_ADDRESSES[
             transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-          ].openzeppelinForwarderEOA
+          ].openzeppelinForwarderEOA ||
+          (await computeEOAForwarderAddress(this.getProvider(), this.#storage))
         : CONTRACT_ADDRESSES[
             transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-          ].openzeppelinForwarder);
+          ].openzeppelinForwarder ||
+          (await computeForwarderAddress(this.getProvider(), this.#storage)));
 
     const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
     const nonce = await getAndIncrementNonce(forwarder, "getNonce", [

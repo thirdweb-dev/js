@@ -602,6 +602,7 @@ export class Transaction<
       tx,
       this.signer,
       this.provider,
+      this.storage,
       this.gaslessOptions,
     );
 
