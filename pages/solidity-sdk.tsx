@@ -57,7 +57,7 @@ const ContractExtensions: ThirdwebNextPage = () => {
         trackingCategory={TRACKING_CATEGORY}
         name="Solidity SDK"
         title="Build your own contract easily"
-        description="Build your own contracts easily using the Solidity SDK. Base contracts that can be configured with extensions to meet your specific use case."
+        description="Out-of-the-box base contracts and a set of reusable standards, or extensions, that can be integrated into your own smart contract."
         buttonText="Get started"
         buttonLink="https://portal.thirdweb.com/solidity"
         image={require("public/assets/product-pages/extensions/hero.png")}
