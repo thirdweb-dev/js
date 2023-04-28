@@ -14,7 +14,7 @@ import HardhatDetector from "./frameworks/hardhat";
 import { FrameworkDetector } from "./detector";
 import TruffleDetector from "./frameworks/truffle";
 import BrownieDetector from "./frameworks/brownie";
-import FastAPIDetector from "./frameworks/fastApi";
+import FastAPIDetector from "./frameworks/fastAPI";
 import FlaskDetector from "./frameworks/flask";
 import PopulusDetector from "./frameworks/populus";
 import FastifyDetector from "./frameworks/fastify";
