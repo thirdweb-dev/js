@@ -19,7 +19,7 @@ import { PropsWithChildren, useEffect } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import invariant from "tiny-invariant";
 
-type ActionFn = (contract: SmartContract) => any;
+type ActionFn = (contract: SmartContract) => Promise<any>;
 
 interface Web3ButtonProps<TActionFn extends ActionFn> {
   contractAddress: `0x${string}` | `${string}.eth` | string;

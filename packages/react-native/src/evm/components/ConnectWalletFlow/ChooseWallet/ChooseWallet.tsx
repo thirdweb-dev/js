@@ -39,7 +39,7 @@ export function ChooseWallet({
       <ChooseWalletContent wallets={wallets} onChooseWallet={onChooseWallet} />
       {guestMode ? (
         <ModalFooter
-          footer={"Join as Guest"}
+          footer={"Continue as Guest"}
           isLoading={isConnecting}
           onPress={onJoinAsGuestPress}
         />
