@@ -16,7 +16,8 @@ type Screen =
   | "deviceWallet/connect"
   | "deviceWallet/export"
   | "smartWallet/form"
-  | "smartWallet/select-wallet";
+  | "smartWallet/select-wallet"
+  | "magic/connect";
 
 type WalletWrapper = false | "safe" | "smartWallet";
 

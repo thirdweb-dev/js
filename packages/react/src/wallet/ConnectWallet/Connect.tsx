@@ -34,6 +34,7 @@ import { darkTheme, lightTheme } from "../../design-system";
 import { ConnectToLocalWallet } from "./screens/LocalWallet/LocalWalletSetup";
 import { SmartWalletSelection } from "./screens/SmartWallet/SmartWalletSection";
 import { SmartWalletConnection } from "./screens/SmartWallet/SmartWalletForm";
+import { MagicConnect } from "./screens/Magic/MagicConnect";
 
 export const ConnectModal = () => {
   const modalTheme = useModalTheme();
@@ -168,6 +169,11 @@ export const ConnectModal = () => {
       // Local Wallet
       else if (wallet.id === "localWallet") {
         setShowScreen("deviceWallet/connect");
+      }
+
+      // Magic link
+      else if (wallet.id === "magicLink") {
+        setShowScreen("magic/connect");
       }
 
       // others ( they handle their own connection flow)
@@ -306,6 +312,17 @@ export const ConnectModal = () => {
 
         {showScreen === "smartWallet/form" && (
           <SmartWalletConnection
+            onBack={handleBack}
+            onConnect={() => {
+              closeModalAndReset();
+            }}
+          />
+        )}
+
+        {showScreen === "magic/connect" && (
+          <MagicConnect
+            showModal={() => setHideModal(true)}
+            hideModal={() => setHideModal(false)}
             onBack={handleBack}
             onConnect={() => {
               closeModalAndReset();
