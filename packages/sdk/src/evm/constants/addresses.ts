@@ -99,7 +99,7 @@ export const CONTRACT_ADDRESSES: Record<
     twBYOCRegistry: "0x3E6eE864f850F5e5A98bc950B68E181Cf4010F23",
   },
   [ChainId.Arbitrum]: {
-    openzeppelinForwarder: "0x8cbc8B5d71702032904750A66AEfE8B603eBC538", // Broken
+    openzeppelinForwarder: "0x8cbc8B5d71702032904750A66AEfE8B603eBC538", // TODO update
     openzeppelinForwarderEOA: "0x4f247c69184ad61036EC2Bb3213b69F10FbEDe1F",
     biconomyForwarder: "0xfe0fa3C06d03bDC7fb49c892BbB39113B534fB57",
     twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
@@ -116,7 +116,7 @@ export const CONTRACT_ADDRESSES: Record<
     twBYOCRegistry: constants.AddressZero,
   },
   [ChainId.Optimism]: {
-    openzeppelinForwarder: "0x8cbc8B5d71702032904750A66AEfE8B603eBC538", // Broken
+    openzeppelinForwarder: "0x8cbc8B5d71702032904750A66AEfE8B603eBC538", // TODO update
     openzeppelinForwarderEOA: "0x7e80648EB2071E26937F9D42A513ccf4815fc702",
     biconomyForwarder: "0xefba8a2a82ec1fb1273806174f5e28fbb917cf95",
     twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
@@ -133,7 +133,7 @@ export const CONTRACT_ADDRESSES: Record<
     twBYOCRegistry: constants.AddressZero,
   },
   [ChainId.BinanceSmartChainMainnet]: {
-    openzeppelinForwarder: "0x8cbc8B5d71702032904750A66AEfE8B603eBC538", // Broken
+    openzeppelinForwarder: "0x8cbc8B5d71702032904750A66AEfE8B603eBC538", // TODO update
     openzeppelinForwarderEOA: "0xE8dd2Ff0212F86d3197b4AfDC6dAC6ac47eb10aC",
     biconomyForwarder: "0x86C80a8aa58e0A4fa09A69624c31Ab2a6CAD56b8",
     twBYOCRegistry: constants.AddressZero,
@@ -141,7 +141,7 @@ export const CONTRACT_ADDRESSES: Record<
     twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
   },
   [ChainId.BinanceSmartChainTestnet]: {
-    openzeppelinForwarder: "0x8cbc8B5d71702032904750A66AEfE8B603eBC538", // Broken
+    openzeppelinForwarder: "0x8cbc8B5d71702032904750A66AEfE8B603eBC538", // TODO update
     openzeppelinForwarderEOA: "0x7e80648EB2071E26937F9D42A513ccf4815fc702",
     biconomyForwarder: "0x61456BF1715C1415730076BB79ae118E806E74d2",
     twBYOCRegistry: constants.AddressZero,
