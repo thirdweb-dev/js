@@ -11,4 +11,6 @@ export interface PaperWalletConnectorOptions {
   chains: Chain[];
 }
 
-export interface PaperWalletConnectionArgs {}
+export interface PaperWalletConnectionArgs {
+  email?: string;
+}
