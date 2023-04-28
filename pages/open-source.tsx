@@ -249,7 +249,7 @@ const OSS: ThirdwebNextPage = ({ contributors }: PageProps) => {
           </HomepageSection>
           <HomepageSection pb={32}>
             <Heading size="display.sm" mb={12}>
-              Top External Contributors
+              Top Community Contributors
             </Heading>
             <SimpleGrid
               columns={{ base: 2, md: 4 }}
