@@ -372,11 +372,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
 
   private async getDefaultTrustedForwarders(): Promise<string[]> {
     const chainId = await this.getChainID();
-    return await getDefaultTrustedForwarders(
-      chainId,
-      this.getProvider(),
-      this.storage,
-    );
+    return getDefaultTrustedForwarders(chainId);
   }
 
   private async getImplementation(

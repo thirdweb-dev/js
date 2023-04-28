@@ -18,10 +18,11 @@ import {
   PrebuiltContractType,
   DeploySchemaForPrebuiltContractType,
 } from "../core";
-import { BigNumber, Signer } from "ethers";
+import { BigNumber, Signer, providers } from "ethers";
 import { z } from "zod";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import invariant from "tiny-invariant";
+import { SUPPORTED_CHAIN_IDS } from "../constants";
+import { computeForwarderAddress } from "./any-evm-utils";
 
 /**
  *
@@ -42,16 +43,24 @@ export async function getDeployArguments<
 ): Promise<any[]> {
   const chainId = await signer.getChainId();
   const signerAddress = await signer.getAddress();
-  invariant(signer.provider, "Require provider");
+  const chainEnum = SUPPORTED_CHAIN_IDS.find((c) => c === chainId);
+  let trustedForwarders: string[] = [];
+  if (!chainEnum) {
+    const forwarder = await computeForwarderAddress(
+      signer.provider as providers.Provider,
+      storage,
+    );
+    trustedForwarders = [forwarder];
+  } else {
+    trustedForwarders =
+      contractType === PackInitializer.contractType
+        ? []
+        : getDefaultTrustedForwarders(chainId);
+  }
 
-  let trustedForwarders =
-    contractType === PackInitializer.contractType
-      ? []
-      : await getDefaultTrustedForwarders(chainId, signer.provider, storage);
-
-  // override default forwarders if custom ones are passed in
+  // add default forwarders to any custom forwarders passed in
   if (metadata.trusted_forwarders && metadata.trusted_forwarders.length > 0) {
-    trustedForwarders = metadata.trusted_forwarders;
+    trustedForwarders.push(...metadata.trusted_forwarders);
   }
   switch (contractType) {
     case NFTDropInitializer.contractType:
