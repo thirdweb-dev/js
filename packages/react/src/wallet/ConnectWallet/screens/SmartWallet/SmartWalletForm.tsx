@@ -29,9 +29,9 @@ import {
 import { useDeferredValue, useEffect, useState } from "react";
 import { Steps } from "../Safe/Steps";
 import {
-  getAssociatedAccounts,
   AssociatedAccount,
-  isAccountIdAvailable,
+  getAssociatedAccounts,
+  isSmartWalletDeployed,
 } from "@thirdweb-dev/wallets";
 import { SmartWalletObj } from "../../../wallets/smartWallet";
 import { Flex } from "../../../../components/basic";
@@ -81,6 +81,7 @@ export const SmartWalletConnection: React.FC<{
   return <ConnectToSmartWalletAccount {...props} accounts={accounts} />;
 };
 
+// TODO (sw) remove this in favor of gnosis flow
 export const SmartWalletCreate: React.FC<{
   onBack: () => void;
   onConnect: () => void;
@@ -99,36 +100,6 @@ export const SmartWalletCreate: React.FC<{
   const [switchError, setSwitchError] = useState(false);
   const [switchingNetwork, setSwitchingNetwork] = useState(false);
 
-  const deferredUserName = useDeferredValue(userName);
-
-  useEffect(() => {
-    if (!deferredUserName) {
-      setIsUsernameAvailable(false);
-      return;
-    }
-
-    let isStale = false;
-
-    async function checkAccountAvailable() {
-      setIsValidating(true);
-      const isAvailable = await isAccountIdAvailable(
-        deferredUserName,
-        walletObj.factoryAddress,
-        walletObj.chain,
-      );
-      if (isStale) {
-        return;
-      }
-      setIsUsernameAvailable(isAvailable);
-      setIsValidating(false);
-    }
-
-    checkAccountAvailable();
-    return () => {
-      isStale = true;
-    };
-  }, [deferredUserName, walletObj.factoryAddress, walletObj.chain]);
-
   const handleSubmit = async () => {
     if (!activeWallet) {
       return;
@@ -137,7 +108,6 @@ export const SmartWalletCreate: React.FC<{
 
     try {
       await connect(walletObj, {
-        accountId: userName,
         personalWallet: activeWallet,
       });
       props.onConnect();
@@ -329,7 +299,6 @@ export const ConnectToSmartWalletAccount: React.FC<{
 
   const handleConnect = async (account: AssociatedAccount) => {
     await connect(walletObj, {
-      accountId: account.accountId,
       personalWallet: activeWallet,
     });
     props.onConnect();
@@ -358,7 +327,7 @@ export const ConnectToSmartWalletAccount: React.FC<{
               key={account.account}
               onClick={() => handleConnect(account)}
             >
-              {account.accountId}
+              {account.account}
               <CaretRightIcon width={iconSize.md} height={iconSize.md} />
             </AccountButton>
           );

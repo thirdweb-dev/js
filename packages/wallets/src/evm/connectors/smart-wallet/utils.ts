@@ -8,7 +8,6 @@ import { EVMWallet } from "../../interfaces";
 export type AssociatedAccount = {
   account: string;
   accountAdmin: string;
-  accountId: string;
 };
 
 export async function getAssociatedAccounts(
@@ -29,14 +28,16 @@ export async function getAssociatedAccounts(
   return accounts.map((a) => a.data) as AssociatedAccount[];
 }
 
-export async function isAccountIdAvailable(
-  accountId: string,
+export async function isSmartWalletDeployed(
   factoryAddress: string,
+  ownerAddress: string,
   chain: ChainOrRpcUrl,
 ) {
   const readOnlySDK = new ThirdwebSDK(chain);
   const factoryContract = await readOnlySDK.getContract(factoryAddress);
-  const accountAddress = await factoryContract.call("getAddress", [accountId]);
+  const accountAddress = await factoryContract.call("getAddress", [
+    ownerAddress,
+  ]);
   const isDeployed = await isContractDeployed(
     accountAddress,
     readOnlySDK.getProvider(),
