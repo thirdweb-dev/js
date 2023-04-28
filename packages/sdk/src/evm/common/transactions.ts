@@ -215,8 +215,8 @@ export async function defenderSendFunction(
     };
   } else {
     domain = {
-      name: "GSNv2 Forwarder",
-      version: "0.0.1",
+      name: gaslessOptions.openzeppelin.domainName,
+      version: gaslessOptions.openzeppelin.domainVersion,
       chainId: transaction.chainId,
       verifyingContract: forwarderAddress,
     };

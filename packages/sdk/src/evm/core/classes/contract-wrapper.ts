@@ -821,8 +821,8 @@ export class ContractWrapper<
       };
     } else {
       domain = {
-        name: "GSNv2 Forwarder",
-        version: "0.0.1",
+        name: this.options.gasless.openzeppelin.domainName,
+        version: this.options.gasless.openzeppelin.domainVersion,
         chainId: transaction.chainId,
         verifyingContract: forwarderAddress,
       };
