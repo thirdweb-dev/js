@@ -1,4 +1,12 @@
-import { Box, Flex, Icon, Image, SimpleGrid } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Icon,
+  Image,
+  ListItem,
+  SimpleGrid,
+  UnorderedList,
+} from "@chakra-ui/react";
 import { GuidesShowcase } from "components/product-pages/common/GuideShowcase";
 import { Hero } from "components/product-pages/common/Hero";
 import { ProductCard } from "components/product-pages/common/ProductCard";
@@ -123,8 +131,8 @@ const Minting: ThirdwebNextPage = () => {
     >
       <Hero
         name="Minting"
-        title="Launch and mint NFTs at scale"
-        description="Minting allows creators and developers to launch a wide range of NFT content and distribution strategies in a configurable, secure and scalable way."
+        title="Build complete digital asset experiences"
+        description="A simple all-in-one solution to build digital asset experiences, from choosing digital asset types and minting strategies to wallet creation and credit card checkout."
         trackingCategory={TRACKING_CATEGORY}
         buttonText="Get started"
         type="Solutions"
@@ -143,40 +151,24 @@ const Minting: ThirdwebNextPage = () => {
           gap={{ base: 12, md: 6 }}
         >
           <ProductCard
-            title="Flexible"
+            title="Go-to-market faster"
             icon={require("/public/assets/product-pages/extensions/hero-icon-1.png")}
           >
             <Box as="span">
-              Choose different NFT types including 1-of-1 collections, editions,
-              loot boxes, on-demand/dynamic and specialized NFT&apos;s available
-              in thirdweb&apos;s on-chain smart contract registry (
-              <TrackedLink
-                href="/explore"
-                category={TRACKING_CATEGORY}
-                label="explore"
-                color="primary.500"
-              >
-                Explore
-              </TrackedLink>
-              ). Deploy to{" "}
-              <TrackedLink
-                href="https://blog.thirdweb.com/any-contract-any-evm-chain/"
-                isExternal
-                category={TRACKING_CATEGORY}
-                label="700_public_blockchains"
-                color="primary.500"
-              >
-                700+ public blockchains
-              </TrackedLink>{" "}
-              or to your own private blockchain.
+              A Web3 API that allows you to easily interact with contracts and
+              integrate with your existing web2 systems. Simplify the
+              development process by consolidating multiple libraries, vendors,
+              and contract interactions into a single SDK.
             </Box>
           </ProductCard>
           <ProductCard
-            title="Frictionless purchases"
+            title="Extensive digital asset types"
             icon={require("/public/assets/product-pages/extensions/hero-icon-2.png")}
           >
             <Box as="span">
-              Our powerful{" "}
+              {`Discover a large collection of ready-to-deploy NFT types including
+              1-of-1 collections, editions, loot boxes, dynamic from thirdweb's
+              contract library (`}
               <TrackedLink
                 href="https://portal.thirdweb.com/wallet"
                 isExternal
@@ -184,20 +176,10 @@ const Minting: ThirdwebNextPage = () => {
                 label="wallet_sdk"
                 color="primary.500"
               >
-                wallet SDK
-              </TrackedLink>{" "}
-              allows users to create wallets with nothing more than an email,
-              checkout using a credit card or pay from their{" "}
-              <TrackedLink
-                href="https://portal.thirdweb.com/unity/wallet/FundWallet"
-                isExternal
-                category={TRACKING_CATEGORY}
-                label="coinbase_account"
-                color="primary.500"
-              >
-                Coinbase account
+                Explore
               </TrackedLink>
-              .
+              {`).`} Deploy different minting strategies including airdrops,
+              free/paid claims, on demand NFTs and loot boxes.
             </Box>
           </ProductCard>
           <ProductCard
@@ -210,28 +192,6 @@ const Minting: ThirdwebNextPage = () => {
           </ProductCard>
         </SimpleGrid>
       </Hero>
-
-      {/* Video Embed section*/}
-      <ProductSection py={{ base: 12, lg: 24 }}>
-        <Flex alignItems="center" flexDirection="column">
-          <Heading
-            as="h2"
-            size="title.xl"
-            textAlign="center"
-            mb={12}
-            maxW={900}
-          >
-            Focus on creating powerful NFT experiences and let us handle the
-            complexity
-          </Heading>
-          <YoutubeEmbed
-            maxWidth={680}
-            videoId="Eoy84LxJKEU"
-            aspectRatio={16 / 9}
-            title="Create an ERC721 NFT drop using thirdweb"
-          />
-        </Flex>
-      </ProductSection>
 
       {/* build, launch, manage */}
       <ProductSection>
@@ -306,6 +266,111 @@ const Minting: ThirdwebNextPage = () => {
             href="https://portal.thirdweb.com/dashboard"
           />
         </SimpleGrid>
+      </ProductSection>
+
+      {/* Use cases */}
+      <ProductSection overflow="hidden">
+        <Flex flexDir="column" py={24} align="center" gap={12}>
+          <Heading as="h2" size="display.sm" textAlign="center" mb={12}>
+            Build complete NFT experiences with our Minting solution
+          </Heading>
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap={6}>
+            <ProductCard
+              title="For Cloud & Web Services"
+              icon={require("/public/assets/solutions-pages/commerce/hero-icon-1.png")}
+            >
+              <Text size="body.lg">
+                A minting API that is easily integrated into your existing web2
+                systems. Enable developers to quickly build and deploy web3
+                applications
+              </Text>
+              <UnorderedList>
+                <ListItem>
+                  <Text size="body.lg" my={4}>
+                    Launch minting and web3 API based managed services
+                  </Text>
+                </ListItem>
+                <ListItem>
+                  <Text size="body.lg">
+                    Enhance existing content and creator platforms with digital
+                    assets{" "}
+                  </Text>
+                </ListItem>
+              </UnorderedList>
+            </ProductCard>
+            <ProductCard
+              title="For Chains"
+              icon={require("/public/assets/solutions-pages/commerce/hero-icon-4.png")}
+            >
+              <Text size="body.lg">
+                Supercharge on-boarding for brands, apps and developers to your
+                chain
+              </Text>
+              <UnorderedList>
+                <ListItem>
+                  <Text size="body.lg" mt={4}>
+                    NFT Launchpad makes it easy for users to easily launch new
+                    smart contracts and incorporate minting to smart contracts
+                    using API call
+                  </Text>
+                </ListItem>
+              </UnorderedList>
+            </ProductCard>
+            <ProductCard
+              title="For Creators"
+              icon={require("/public/assets/solutions-pages/commerce/hero-icon-3.png")}
+            >
+              <Text size="body.lg">
+                Enable NFT minting for your users with familiar web2-like user
+                experience
+              </Text>
+              <UnorderedList>
+                <ListItem>
+                  <Text my={4} size="body.lg">
+                    Quests where users are rewarded with digital collectibles
+                    for engagement
+                  </Text>
+                </ListItem>
+                <ListItem>
+                  <Text size="body.lg">
+                    Music & video digital collectibles with royalty sharing
+                    mechanism.
+                  </Text>
+                </ListItem>
+                <ListItem>
+                  <Text mt={4} size="body.lg">
+                    Access-based digital collectibles for IRL ticketing &
+                    events.
+                  </Text>
+                </ListItem>
+              </UnorderedList>
+            </ProductCard>
+            <ProductCard
+              title="For Games"
+              icon={require("/public/assets/solutions-pages/commerce/hero-icon-2.png")}
+            >
+              <Text size="body.lg">
+                Easily connect game engines via an API to minting and blockchain
+                infrastructure
+              </Text>
+              <UnorderedList>
+                <ListItem>
+                  <Text my={4} size="body.lg">
+                    In-game asset digital collectibles
+                  </Text>
+                </ListItem>
+                <ListItem>
+                  <Text size="body.lg">Digital trading cards</Text>
+                </ListItem>
+                <ListItem>
+                  <Text mt={4} size="body.lg">
+                    White-label marketplaces to trade in-asset games
+                  </Text>
+                </ListItem>
+              </UnorderedList>
+            </ProductCard>
+          </SimpleGrid>
+        </Flex>
       </ProductSection>
 
       {/* Explore NFT contracts */}
