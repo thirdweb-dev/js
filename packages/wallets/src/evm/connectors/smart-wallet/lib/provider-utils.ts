@@ -14,27 +14,15 @@ import { ProviderConfig } from "../types";
  */
 export async function create4337Provider(
   config: ProviderConfig,
+  accountApi: AccountAPI,
+  originalProvider: providers.BaseProvider,
 ): Promise<ERC4337EthersProvider> {
-  const rpcProvider = getChainProvider(config.chain, {
-    thirdwebApiKey: config.thirdwebApiKey,
-  }) as providers.JsonRpcProvider;
   const entryPoint = EntryPoint__factory.connect(
     config.entryPointAddress,
-    rpcProvider,
+    originalProvider,
   );
 
-  const accountApi = new AccountAPI({
-    chain: config.chain,
-    localSigner: config.localSigner,
-    entryPointAddress: config.entryPointAddress,
-    factoryAddress: config.factoryAddress,
-    paymasterAPI: config.paymasterAPI,
-    accountInfo: config.accountInfo,
-    factoryInfo: config.factoryInfo,
-    accountAddress: config.accountAddress,
-  });
-
-  const chainId = await accountApi.getChainId();
+  const chainId = (await originalProvider.getNetwork()).chainId;
   const httpRpcClient = new HttpRpcClient(
     config.bundlerUrl,
     config.entryPointAddress,
@@ -45,7 +33,7 @@ export async function create4337Provider(
     chainId,
     config,
     config.localSigner,
-    rpcProvider,
+    originalProvider,
     httpRpcClient,
     entryPoint,
     accountApi,

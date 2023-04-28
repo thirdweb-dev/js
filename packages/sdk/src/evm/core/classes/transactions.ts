@@ -354,6 +354,10 @@ export class Transaction<
     this.storage = options.storage || new ThirdwebStorage();
   }
 
+  getTarget() {
+    return this.contract.address;
+  }
+
   getMethod() {
     return this.method;
   }

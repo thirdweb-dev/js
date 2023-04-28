@@ -1,5 +1,9 @@
-import { SmartContract, ThirdwebSDK } from "@thirdweb-dev/sdk";
-import { BigNumberish, BigNumber } from "ethers";
+import {
+  getChainProvider,
+  SmartContract,
+  ThirdwebSDK,
+} from "@thirdweb-dev/sdk";
+import { BigNumberish, BigNumber, ethers } from "ethers";
 import { arrayify, hexConcat } from "ethers/lib/utils";
 import { AccountApiParams } from "../types";
 import { BaseAccountAPI } from "./base-api";
@@ -11,14 +15,16 @@ export class AccountAPI extends BaseAccountAPI {
   accountContract?: SmartContract;
   factoryContract?: SmartContract;
 
-  constructor(params: AccountApiParams) {
-    const sdk = ThirdwebSDK.fromSigner(params.localSigner, params.chain);
+  constructor(
+    params: AccountApiParams,
+    originalProvider: ethers.providers.Provider,
+  ) {
     super({
       ...params,
-      provider: sdk.getProvider(),
+      provider: originalProvider,
     });
     this.params = params;
-    this.sdk = sdk;
+    this.sdk = new ThirdwebSDK(params.localSigner, originalProvider);
   }
 
   async getChainId() {

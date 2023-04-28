@@ -35,6 +35,7 @@ export const SDKOptionsSchema = z
             relayerUrl: z.string().url(),
             relayerForwarderAddress: z.string().optional(),
             useEOAForwarder: z.boolean().default(false),
+            domain: z.string().default("GSNv2 Forwarder"),
           }),
           experimentalChainlessSupport: z.boolean().default(false),
         }),
