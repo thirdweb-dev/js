@@ -28,10 +28,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import { Steps } from "../Safe/Steps";
-import {
-  AccessibleSmartWallets,
-  getAllSmartWallets,
-} from "@thirdweb-dev/wallets";
+import { getAllSmartWallets } from "@thirdweb-dev/wallets";
 import { SmartWalletObj } from "../../../wallets/smartWallet";
 import { Flex } from "../../../../components/basic";
 import styled from "@emotion/styled";

@@ -37,18 +37,18 @@ export async function getAllSigners(
 export async function getAllSmartWallets(
   chain: ChainOrRpcUrl,
   factoryAddress: string,
-  ownerAddress: string,
+  personalWalletAddress: string,
 ): Promise<AccessibleSmartWallets> {
   const readOnlySDK = getSDK(chain);
   const factoryContract = await readOnlySDK.getContract(factoryAddress);
   const ownedAccount = await getSmartWalletAddress(
     chain,
     factoryAddress,
-    ownerAddress,
+    personalWalletAddress,
   );
   const accessibleAccounts: string[] = await factoryContract.call(
     "getAccountsOfSigner",
-    [ownerAddress],
+    [personalWalletAddress],
   );
   return {
     owned: ownedAccount,
@@ -59,12 +59,12 @@ export async function getAllSmartWallets(
 export async function isSmartWalletDeployed(
   chain: ChainOrRpcUrl,
   factoryAddress: string,
-  ownerAddress: string,
+  personalWalletAddress: string,
 ) {
   const readOnlySDK = getSDK(chain);
   const factoryContract = await readOnlySDK.getContract(factoryAddress);
   const accountAddress = await factoryContract.call("getAddress", [
-    ownerAddress,
+    personalWalletAddress,
   ]);
   const isDeployed = await isContractDeployed(
     accountAddress,
@@ -76,12 +76,12 @@ export async function isSmartWalletDeployed(
 async function getSmartWalletAddress(
   chain: ChainOrRpcUrl,
   factoryAddress: string,
-  ownerAddress: string,
+  personalWalletAddress: string,
 ): Promise<string> {
   const readOnlySDK = getSDK(chain);
   const factoryContract = await readOnlySDK.getContract(factoryAddress);
   const accountAddress = await factoryContract.call("getAddress", [
-    ownerAddress,
+    personalWalletAddress,
   ]);
   return accountAddress;
 }
