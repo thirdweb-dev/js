@@ -105,7 +105,7 @@ export const InputContainer = styled.div<{ theme?: Theme }>`
 
 export const ErrorMessage = styled.p<{ theme?: Theme }>`
   all: unset;
-  font-size: ${fontSize.xs};
+  font-size: ${fontSize.sm};
   display: block;
   color: ${(p) => p.theme.input.errorRing};
 `;

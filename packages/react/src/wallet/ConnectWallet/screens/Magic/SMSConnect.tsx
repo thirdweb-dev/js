@@ -93,14 +93,20 @@ export const SMSConnect: React.FC<{
           data-error={error}
         />
 
-        {error && (
-          <>
-            <Spacer y="sm" />
-            <ErrorMessage>Invalid phone number</ErrorMessage>
-          </>
-        )}
+        <div
+          style={{
+            visibility: error ? "visible" : "hidden",
+          }}
+        >
+          <Spacer y="sm" />
+          <ErrorMessage>
+            {!phoneNumber.startsWith("+")
+              ? "Phone number must start with +"
+              : "Invalid phone number"}
+          </ErrorMessage>
+        </div>
 
-        <Spacer y="xl" />
+        <Spacer y="lg" />
 
         <FormFooter>
           <Button

@@ -84,14 +84,16 @@ export const EmailConnect: React.FC<{
           data-error={error}
         />
 
-        {error && (
-          <>
-            <Spacer y="sm" />
-            <ErrorMessage>Invalid Email </ErrorMessage>
-          </>
-        )}
+        <div
+          style={{
+            visibility: error ? "visible" : "hidden",
+          }}
+        >
+          <Spacer y="sm" />
+          <ErrorMessage>Invalid Email </ErrorMessage>
+        </div>
 
-        <Spacer y="xl" />
+        <Spacer y="lg" />
 
         <FormFooter>
           <Button
