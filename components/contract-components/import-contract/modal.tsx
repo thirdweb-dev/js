@@ -51,8 +51,8 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
           <Flex gap={1} direction="column">
             <Heading size="title.sm">Import Contract</Heading>
             <Text color="faded">
-              Importing your contract unlocks smarter SDKs, custom admin
-              dashboards, and tailored data feeds.
+              Import an already deployed contract into thirdweb by entering a
+              contract address below.
             </Text>
           </Flex>
           <Flex gap={3} direction="column">
