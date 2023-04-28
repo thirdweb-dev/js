@@ -21,18 +21,16 @@ export default class EchoDetector implements FrameworkDetector {
       const dependenciesToCheck = ["github.com/labstack/echo"];
 
       dependenciesExist = dependenciesToCheck.some((dependency) =>
-        dependencies.some((importstr) => importstr.name === dependency)
+        dependencies.some((importstr) => importstr.name === dependency),
       );
     }
 
     const mainGoFile = readFileSync(mainGoFilePath, "utf-8");
-    const fileImportExists = fileContainsImport(mainGoFile, "github.com/labstack/echo");
-
-    return (
-      (
-        dependenciesExist ||
-        fileImportExists
-      ) || false
+    const fileImportExists = fileContainsImport(
+      mainGoFile,
+      "github.com/labstack/echo",
     );
+
+    return dependenciesExist || fileImportExists || false;
   }
 }

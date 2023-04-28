@@ -15,11 +15,8 @@ export default class ReactDetector implements LibraryDetector {
 
     const packageJson = readFileSync(packageJsonPath);
     const { dependencies, devDependencies } = parsePackageJson(packageJson);
-    const reactDependencyExists = (
-      dependencies["react"] ||
-      devDependencies["react"] ||
-      false
-    );
+    const reactDependencyExists =
+      dependencies["react"] || devDependencies["react"] || false;
 
     return reactDependencyExists;
   }

@@ -7,17 +7,20 @@ export default class DjangoDetector implements FrameworkDetector {
   public frameworkType: FrameworkType = "django";
 
   public matches(path: string, packageManager: PackageManagerType): boolean {
-    const { dependencies, devDependencies } = getDependenciesForPython(path, packageManager);
+    const { dependencies, devDependencies } = getDependenciesForPython(
+      path,
+      packageManager,
+    );
 
     const additionalFilesToCheck = ["/manage.py"];
-    const additionalFilesExist = additionalFilesToCheck.some((file) => existsSync(path + file));
+    const additionalFilesExist = additionalFilesToCheck.some((file) =>
+      existsSync(path + file),
+    );
 
     return (
-      (
-        dependencies.includes("django") || 
-        devDependencies.includes("django") ||
-        additionalFilesExist
-      ) ||
+      dependencies.includes("django") ||
+      devDependencies.includes("django") ||
+      additionalFilesExist ||
       false
     );
   }

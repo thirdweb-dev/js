@@ -36,9 +36,14 @@ export default async function detect(
     return possiblePackageManagers[0];
   }
 
-  info(`Detected multiple possible package managers: ${possiblePackageManagers.map((s) => `"${s}"`).join(", ")}`);
+  info(
+    `Detected multiple possible package managers: ${possiblePackageManagers
+      .map((s) => `"${s}"`)
+      .join(", ")}`,
+  );
 
-  const question = "We detected multiple possible package managers, which one do you want to use?";
+  const question =
+    "We detected multiple possible package managers, which one do you want to use?";
 
   if (options.ci) {
     return possiblePackageManagers[0];

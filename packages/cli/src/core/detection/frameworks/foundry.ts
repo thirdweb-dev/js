@@ -7,7 +7,9 @@ export default class FoundryDetector implements FrameworkDetector {
 
   public matches(path: string): boolean {
     const additionalFilesToCheck = ["/foundry.toml", "/lib/forge-std/"];
-    const additionalFilesExist = additionalFilesToCheck.some((file) => existsSync(path + file));
+    const additionalFilesExist = additionalFilesToCheck.some((file) =>
+      existsSync(path + file),
+    );
 
     return additionalFilesExist || false;
   }

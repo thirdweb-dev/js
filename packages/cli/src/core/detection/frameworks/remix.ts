@@ -17,19 +17,14 @@ export default class CRADetector implements FrameworkDetector {
     const { dependencies, devDependencies } = parsePackageJson(packageJson);
 
     const additionalFilesToCheck = ["/remix.config.js", "/remix-config.ts"];
-    const additionalFilesExist = additionalFilesToCheck.some((file) => existsSync(path + file));
-
-    const remixDependencies = Object
-      .keys(dependencies)
-      .concat(Object.keys(devDependencies))
-      .filter(dep => dep.startsWith('@remix-run/'));
-
-    return (
-      (
-        remixDependencies.length > 0 ||
-        additionalFilesExist
-      ) ||
-      false
+    const additionalFilesExist = additionalFilesToCheck.some((file) =>
+      existsSync(path + file),
     );
+
+    const remixDependencies = Object.keys(dependencies)
+      .concat(Object.keys(devDependencies))
+      .filter((dep) => dep.startsWith("@remix-run/"));
+
+    return remixDependencies.length > 0 || additionalFilesExist || false;
   }
 }

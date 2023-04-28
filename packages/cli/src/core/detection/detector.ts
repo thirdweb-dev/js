@@ -1,4 +1,11 @@
-import { ProjectType, LanguageType, PackageManagerType, AppType, FrameworkType, LibraryType } from "../types/ProjectType";
+import {
+  ProjectType,
+  LanguageType,
+  PackageManagerType,
+  AppType,
+  FrameworkType,
+  LibraryType,
+} from "../types/ProjectType";
 
 export interface Detector {
   projectType: ProjectType;

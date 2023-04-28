@@ -11,8 +11,7 @@ export default async function detect(
   path: string,
   options: any,
 ): Promise<LanguageType> {
-
-const languageDetectors: LanguageDetector[] = [
+  const languageDetectors: LanguageDetector[] = [
     new JavascriptDetector(),
     new TypescriptDetector(),
     new PythonDetector(),
@@ -31,9 +30,14 @@ const languageDetectors: LanguageDetector[] = [
     return possibleLanguages[0];
   }
 
-  info(`Detected multiple possible languages: ${possibleLanguages.map((s) => `"${s}"`).join(", ")}`);
+  info(
+    `Detected multiple possible languages: ${possibleLanguages
+      .map((s) => `"${s}"`)
+      .join(", ")}`,
+  );
 
-  const question = "We detected multiple possible languages which one do you want to use?";
+  const question =
+    "We detected multiple possible languages which one do you want to use?";
 
   if (options.ci) {
     return possibleLanguages[0];

@@ -15,11 +15,8 @@ export default class ViteDetector implements LibraryDetector {
 
     const packageJson = readFileSync(packageJsonPath);
     const { dependencies, devDependencies } = parsePackageJson(packageJson);
-    const viteDependencyExists = (
-      dependencies["vite"] ||
-      devDependencies["vite"] ||
-      false
-    );
+    const viteDependencyExists =
+      dependencies["vite"] || devDependencies["vite"] || false;
 
     return viteDependencyExists;
   }

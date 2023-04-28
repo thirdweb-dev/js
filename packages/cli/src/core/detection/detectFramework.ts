@@ -66,9 +66,14 @@ export default async function detect(
     return possibleFrameworks[0];
   }
 
-  info(`Detected multiple possible frameworks: ${possibleFrameworks.map((s) => `"${s}"`).join(", ")}`);
+  info(
+    `Detected multiple possible frameworks: ${possibleFrameworks
+      .map((s) => `"${s}"`)
+      .join(", ")}`,
+  );
 
-  const question = "We detected multiple possible frameworks which one do you want to use?";
+  const question =
+    "We detected multiple possible frameworks which one do you want to use?";
 
   if (options.ci) {
     return possibleFrameworks[0];

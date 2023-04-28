@@ -21,18 +21,16 @@ export default class GinDetector implements FrameworkDetector {
       const dependenciesToCheck = ["github.com/gin-gonic/gin"];
 
       dependenciesExist = dependenciesToCheck.some((dependency) =>
-        dependencies.some((importstr) => importstr.name === dependency)
+        dependencies.some((importstr) => importstr.name === dependency),
       );
     }
 
     const mainGoFile = readFileSync(mainGoFilePath, "utf-8");
-    const fileImportExists = fileContainsImport(mainGoFile, "github.com/gin-gonic/gin");
-
-    return (
-      (
-        dependenciesExist ||
-        fileImportExists
-      ) || false
+    const fileImportExists = fileContainsImport(
+      mainGoFile,
+      "github.com/gin-gonic/gin",
     );
+
+    return dependenciesExist || fileImportExists || false;
   }
 }

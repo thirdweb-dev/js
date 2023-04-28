@@ -17,14 +17,15 @@ export default class NextDetector implements FrameworkDetector {
     const { dependencies, devDependencies } = parsePackageJson(packageJson);
 
     const additionalFilesToCheck = ["/next.config.js", "/next-config.ts"];
-    const additionalFilesExist = additionalFilesToCheck.some((file) => existsSync(path + file));
+    const additionalFilesExist = additionalFilesToCheck.some((file) =>
+      existsSync(path + file),
+    );
 
-    const nextDependencyExists = (
-      dependencies["next"] || 
+    const nextDependencyExists =
+      dependencies["next"] ||
       devDependencies["next"] ||
       additionalFilesExist ||
-      false
-    );
+      false;
 
     return nextDependencyExists;
   }

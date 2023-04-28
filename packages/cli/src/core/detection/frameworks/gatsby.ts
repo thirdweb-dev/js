@@ -17,14 +17,15 @@ export default class GatsbyDetector implements FrameworkDetector {
     const { dependencies, devDependencies } = parsePackageJson(packageJson);
 
     const additionalFilesToCheck = ["/gatsby.config.js", "/gatsby-config.ts"];
-    const additionalFilesExist = additionalFilesToCheck.some((file) => existsSync(path + file));
+    const additionalFilesExist = additionalFilesToCheck.some((file) =>
+      existsSync(path + file),
+    );
 
-    const gatsbyDependencyExists = (
+    const gatsbyDependencyExists =
       dependencies["gatsby"] ||
       devDependencies["gatsby"] ||
       additionalFilesExist ||
-      false
-    );
+      false;
 
     return gatsbyDependencyExists;
   }

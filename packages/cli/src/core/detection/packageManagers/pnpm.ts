@@ -9,6 +9,6 @@ export default class PnpmDetector implements PackageManagerDetector {
     const files = ["/pnpm-lock.yaml", "/pnpm-workspace.yaml", "/.pnpm"];
 
     // Check if at least one of these files exists in the current path.
-    return files.some(file => existsSync(path + file));
+    return files.some((file) => existsSync(path + file));
   }
 }

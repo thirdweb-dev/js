@@ -15,11 +15,8 @@ export default class ReactNativeDetector implements LibraryDetector {
 
     const packageJson = readFileSync(packageJsonPath);
     const { dependencies, devDependencies } = parsePackageJson(packageJson);
-    const reactNativeDependencyExists = (
-      dependencies["react-native"] ||
-      devDependencies["react-native"] ||
-      false
-    );
+    const reactNativeDependencyExists =
+      dependencies["react-native"] || devDependencies["react-native"] || false;
 
     return reactNativeDependencyExists;
   }

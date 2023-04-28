@@ -6,6 +6,6 @@ export default class GoModulesDetector implements PackageManagerDetector {
   public packageManagerType: PackageManagerType = "go-modules";
 
   public matches(path: string): boolean {
-    return existsSync(path + "/go.mod")
+    return existsSync(path + "/go.mod");
   }
 }

@@ -7,17 +7,20 @@ export default class PopulusDetector implements FrameworkDetector {
   public frameworkType: FrameworkType = "populus";
 
   public matches(path: string, packageManager: PackageManagerType): boolean {
-    const { dependencies, devDependencies } = getDependenciesForPython(path, packageManager);
+    const { dependencies, devDependencies } = getDependenciesForPython(
+      path,
+      packageManager,
+    );
 
     const additionalFilesToCheck = ["/populus.json", "/populus.yaml"];
-    const additionalFilesExist = additionalFilesToCheck.some((file) => existsSync(path + file));
+    const additionalFilesExist = additionalFilesToCheck.some((file) =>
+      existsSync(path + file),
+    );
 
     return (
-      (
-        dependencies.includes("populus") || 
-        devDependencies.includes("populus") ||
-        additionalFilesExist
-      ) ||
+      dependencies.includes("populus") ||
+      devDependencies.includes("populus") ||
+      additionalFilesExist ||
       false
     );
   }

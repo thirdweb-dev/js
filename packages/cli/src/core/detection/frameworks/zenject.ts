@@ -7,14 +7,11 @@ export default class ZenjectDetector implements FrameworkDetector {
 
   public matches(path: string): boolean {
     const foundZenject = existsSync(path + "/Assets/Zenject");
-    const foundZenjectDLL = existsSync(path + "/Assets/Zenject/OptionalExtras/Zenject.dll");
+    const foundZenjectDLL = existsSync(
+      path + "/Assets/Zenject/OptionalExtras/Zenject.dll",
+    );
     const foundScript = existsSync(path + "/Assets/Scripts/ProjectContext.cs");
 
-    return (
-      foundZenject ||
-      foundZenjectDLL ||
-      foundScript ||
-      false
-    )
+    return foundZenject || foundZenjectDLL || foundScript || false;
   }
 }

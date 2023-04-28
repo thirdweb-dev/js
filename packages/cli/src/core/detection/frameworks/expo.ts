@@ -17,14 +17,15 @@ export default class ExpoDetector implements FrameworkDetector {
     const { dependencies, devDependencies } = parsePackageJson(packageJson);
 
     const additionalFilesToCheck = ["/app.json", "/app.config.js", "/assets"];
-    const additionalFilesExist = additionalFilesToCheck.some((file) => existsSync(path + file));
+    const additionalFilesExist = additionalFilesToCheck.some((file) =>
+      existsSync(path + file),
+    );
 
-    const expoDependencyExists = (
+    const expoDependencyExists =
       dependencies["expo"] ||
       devDependencies["expo"] ||
       additionalFilesExist ||
-      false
-    );
+      false;
 
     return expoDependencyExists;
   }

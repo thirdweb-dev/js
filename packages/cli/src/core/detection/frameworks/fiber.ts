@@ -21,18 +21,16 @@ export default class FiberDetector implements FrameworkDetector {
       const dependenciesToCheck = ["github.com/gofiber/fiber"];
 
       dependenciesExist = dependenciesToCheck.some((dependency) =>
-        dependencies.some((importstr) => importstr.name === dependency)
+        dependencies.some((importstr) => importstr.name === dependency),
       );
     }
 
     const mainGoFile = readFileSync(mainGoFilePath, "utf-8");
-    const fileImportExists = fileContainsImport(mainGoFile, "github.com/gofiber/fiber");
-
-    return (
-      (
-        dependenciesExist ||
-        fileImportExists
-      ) || false
+    const fileImportExists = fileContainsImport(
+      mainGoFile,
+      "github.com/gofiber/fiber",
     );
+
+    return dependenciesExist || fileImportExists || false;
   }
 }

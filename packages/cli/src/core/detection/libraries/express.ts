@@ -15,11 +15,8 @@ export default class ExpressDetector implements LibraryDetector {
 
     const packageJson = readFileSync(packageJsonPath);
     const { dependencies, devDependencies } = parsePackageJson(packageJson);
-    const expressDependencyExists = (
-      dependencies["express"] ||
-      devDependencies["express"] ||
-      false
-    );
+    const expressDependencyExists =
+      dependencies["express"] || devDependencies["express"] || false;
 
     return expressDependencyExists;
   }

@@ -406,7 +406,7 @@ const main = async () => {
     .action(async (options) => {
       await detectExtensions(options);
     });
-  
+
   program
     .command("detect-project")
     .description(

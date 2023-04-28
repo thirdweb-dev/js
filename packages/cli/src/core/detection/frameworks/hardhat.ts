@@ -17,14 +17,15 @@ export default class HardhatDetector implements FrameworkDetector {
     const { dependencies, devDependencies } = parsePackageJson(packageJson);
 
     const additionalFilesToCheck = ["/hardhat.config.js", "/contracts/"];
-    const additionalFilesExist = additionalFilesToCheck.some((file) => existsSync(path + file));
+    const additionalFilesExist = additionalFilesToCheck.some((file) =>
+      existsSync(path + file),
+    );
 
-    const hardhatDependencyExists = (
-      dependencies["hardhat"] || 
+    const hardhatDependencyExists =
+      dependencies["hardhat"] ||
       devDependencies["hardhat"] ||
       additionalFilesExist ||
-      false
-    );
+      false;
 
     return hardhatDependencyExists;
   }

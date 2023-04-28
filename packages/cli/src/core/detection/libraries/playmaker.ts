@@ -9,10 +9,6 @@ export default class PlayMakerDetector implements LibraryDetector {
     const foundPlayMaker = existsSync(path + "/Assets/PlayMaker");
     const foundPlayMakerDLL = existsSync(path + "/Editor/PlayMaker.dll");
 
-    return (
-      foundPlayMaker ||
-      foundPlayMakerDLL ||
-      false
-    )
+    return foundPlayMaker || foundPlayMakerDLL || false;
   }
 }

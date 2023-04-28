@@ -21,18 +21,16 @@ export default class RevelDetector implements FrameworkDetector {
       const dependenciesToCheck = ["github.com/revel/revel"];
 
       dependenciesExist = dependenciesToCheck.some((dependency) =>
-        dependencies.some((importstr) => importstr.name === dependency)
+        dependencies.some((importstr) => importstr.name === dependency),
       );
     }
 
     const mainGoFile = readFileSync(mainGoFilePath, "utf-8");
-    const fileImportExists = fileContainsImport(mainGoFile, "github.com/revel/revel");
-
-    return (
-      (
-        dependenciesExist ||
-        fileImportExists
-      ) || false
+    const fileImportExists = fileContainsImport(
+      mainGoFile,
+      "github.com/revel/revel",
     );
+
+    return dependenciesExist || fileImportExists || false;
   }
 }

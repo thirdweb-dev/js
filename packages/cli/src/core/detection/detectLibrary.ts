@@ -36,9 +36,14 @@ export default async function detect(
     return possibleLibraries[0];
   }
 
-  info(`Detected multiple possible libraries: ${possibleLibraries.map((s) => `"${s}"`).join(", ")}`);
+  info(
+    `Detected multiple possible libraries: ${possibleLibraries
+      .map((s) => `"${s}"`)
+      .join(", ")}`,
+  );
 
-  const question = "We detected multiple possible libraries which one do you want to use?";
+  const question =
+    "We detected multiple possible libraries which one do you want to use?";
 
   if (options.ci) {
     return possibleLibraries[0];

@@ -17,14 +17,14 @@ export default class VueDetector implements FrameworkDetector {
     const { dependencies, devDependencies } = parsePackageJson(packageJson);
 
     const additionalFilesToCheck = ["/vue.config.js"];
-    const additionalFilesExist = additionalFilesToCheck.some((file) => existsSync(path + file));
+    const additionalFilesExist = additionalFilesToCheck.some((file) =>
+      existsSync(path + file),
+    );
 
     return (
-      (
-        dependencies["vue"] || 
-        devDependencies["vue"] ||
-        additionalFilesExist
-      ) ||
+      dependencies["vue"] ||
+      devDependencies["vue"] ||
+      additionalFilesExist ||
       false
     );
   }
