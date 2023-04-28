@@ -26,12 +26,11 @@ import {
   useWallet,
   WalletInstance,
 } from "@thirdweb-dev/react-core";
-import { useDeferredValue, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Steps } from "../Safe/Steps";
 import {
-  getAssociatedAccounts,
   AssociatedAccount,
-  isAccountIdAvailable,
+  getAssociatedAccounts,
 } from "@thirdweb-dev/wallets";
 import { SmartWalletObj } from "../../../wallets/smartWallet";
 import { Flex } from "../../../../components/basic";
@@ -81,6 +80,7 @@ export const SmartWalletConnection: React.FC<{
   return <ConnectToSmartWalletAccount {...props} accounts={accounts} />;
 };
 
+// TODO (sw) remove this in favor of gnosis flow
 export const SmartWalletCreate: React.FC<{
   onBack: () => void;
   onConnect: () => void;
@@ -94,40 +94,8 @@ export const SmartWalletCreate: React.FC<{
   const [connectError, setConnectError] = useState(false);
   const connectionStatus = useConnectionStatus();
 
-  const [isUsernameAvailable, setIsUsernameAvailable] = useState(false);
-  const [isValidating, setIsValidating] = useState(false);
   const [switchError, setSwitchError] = useState(false);
   const [switchingNetwork, setSwitchingNetwork] = useState(false);
-
-  const deferredUserName = useDeferredValue(userName);
-
-  useEffect(() => {
-    if (!deferredUserName) {
-      setIsUsernameAvailable(false);
-      return;
-    }
-
-    let isStale = false;
-
-    async function checkAccountAvailable() {
-      setIsValidating(true);
-      const isAvailable = await isAccountIdAvailable(
-        deferredUserName,
-        walletObj.factoryAddress,
-        walletObj.chain,
-      );
-      if (isStale) {
-        return;
-      }
-      setIsUsernameAvailable(isAvailable);
-      setIsValidating(false);
-    }
-
-    checkAccountAvailable();
-    return () => {
-      isStale = true;
-    };
-  }, [deferredUserName, walletObj.factoryAddress, walletObj.chain]);
 
   const handleSubmit = async () => {
     if (!activeWallet) {
@@ -137,7 +105,6 @@ export const SmartWalletCreate: React.FC<{
 
     try {
       await connect(walletObj, {
-        accountId: userName,
         personalWallet: activeWallet,
       });
       props.onConnect();
@@ -186,11 +153,7 @@ export const SmartWalletCreate: React.FC<{
           <FormField
             name="accountId"
             id="accountId"
-            errorMessage={
-              !isValidating && userName && !isUsernameAvailable
-                ? "Username not available"
-                : undefined
-            }
+            errorMessage={undefined}
             autocomplete="on"
             onChange={(value) => {
               setSwitchError(false);
@@ -202,18 +165,6 @@ export const SmartWalletCreate: React.FC<{
             value={userName}
             required
           />
-
-          {isValidating && (
-            <div
-              style={{
-                position: "absolute",
-                top: "40px",
-                right: spacing.md,
-              }}
-            >
-              <Spinner size="sm" color="link" />
-            </div>
-          )}
         </div>
 
         <Spacer y="sm" />
@@ -287,7 +238,6 @@ export const SmartWalletCreate: React.FC<{
             <Button
               variant="inverted"
               type="submit"
-              disabled={isValidating || !isUsernameAvailable}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -327,9 +277,8 @@ export const ConnectToSmartWalletAccount: React.FC<{
     );
   }
 
-  const handleConnect = async (account: AssociatedAccount) => {
+  const handleConnect = async () => {
     await connect(walletObj, {
-      accountId: account.accountId,
       personalWallet: activeWallet,
     });
     props.onConnect();
@@ -356,9 +305,9 @@ export const ConnectToSmartWalletAccount: React.FC<{
           return (
             <AccountButton
               key={account.account}
-              onClick={() => handleConnect(account)}
+              onClick={() => handleConnect()}
             >
-              {account.accountId}
+              {account.account}
               <CaretRightIcon width={iconSize.md} height={iconSize.md} />
             </AccountButton>
           );
