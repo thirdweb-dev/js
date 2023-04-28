@@ -1,11 +1,11 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Kanazawa",
-  "title": "Meld Testnet Kanazawa",
-  "chain": "Kanazawa",
+  "name": "Meld",
+  "title": "Meld Mainnet",
+  "chain": "MELD",
   "rpc": [
-    "https://kanazawa.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-kanazawa.meldlabs.dev/ext/bc/2Ci7VYrUd4fTBqGA5D2HA6UPHzQ4LQyr8rZQww9MGSv9rNkRzn/rpc"
+    "https://meld.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://network-rpc.meld.com"
   ],
   "faucets": [],
   "features": [],
@@ -21,10 +21,10 @@ export default {
     "format": "png"
   },
   "infoURL": "https://meld.com",
-  "shortName": "kanazawa",
-  "chainId": 222000222,
-  "networkId": 222000222,
+  "shortName": "meld",
+  "chainId": 333000333,
+  "networkId": 333000333,
   "explorers": [],
-  "testnet": true,
-  "slug": "kanazawa"
+  "testnet": false,
+  "slug": "meld"
 } as const satisfies Chain;
