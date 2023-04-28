@@ -31,7 +31,6 @@ import { Steps } from "../Safe/Steps";
 import {
   AssociatedAccount,
   getAssociatedAccounts,
-  isSmartWalletDeployed,
 } from "@thirdweb-dev/wallets";
 import { SmartWalletObj } from "../../../wallets/smartWallet";
 import { Flex } from "../../../../components/basic";
