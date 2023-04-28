@@ -74,3 +74,13 @@ export type ContractLibrariesType =
   | "truffle"
   | "solc"
   | "none";
+
+
+export const contractLibraries: readonly ContractLibrariesType[] = [
+  "brownie",
+  "foundry",
+  "hardhat",
+  "truffle",
+  "solc",
+  "none",
+] as const;

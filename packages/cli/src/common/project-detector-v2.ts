@@ -4,6 +4,7 @@ import detectLibrary from "../core/detection/detectLibrary";
 import detectLanguage from "../core/detection/detectLanguage";
 import { logger } from "../core/helpers/logger";
 import path from "path";
+import { ContractLibrariesType, contractLibraries } from "../core/types/ProjectType";
 
 export async function detectProjectV2(options: any) {
   logger.setSettings({
@@ -37,9 +38,11 @@ export async function detectProjectV2(options: any) {
     options,
     detectedPackageManager,
   );
+  const detectedAppType = contractLibraries.includes(detectedFramework as ContractLibrariesType) ? "contract" : "app";
 
   logger.debug("Detected package manager: " + detectedPackageManager);
   logger.debug("Detected library: " + detectedLibrary);
   logger.debug("Detected language: " + detectedLanguage);
   logger.debug("Detected framework: " + detectedFramework);
+  logger.debug("Detected app type: " + detectedAppType);
 }
