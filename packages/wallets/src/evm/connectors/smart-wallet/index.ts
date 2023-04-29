@@ -143,7 +143,8 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
     };
   }
 
-  async executeBatch(transaction: Transaction[]): Promise<TransactionResult> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async executeBatch(transactions: Transaction[]): Promise<TransactionResult> {
     throw new Error("Method not implemented yet.");
   }
 
