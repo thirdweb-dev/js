@@ -17,18 +17,15 @@ import { providers } from "ethers";
 import {
   getChainProvider,
   SmartContract,
-  ThirdwebSDK,
   Transaction,
+  TransactionResult,
 } from "@thirdweb-dev/sdk";
 import { AccountAPI } from "./lib/account";
-import { JsonRpcPayload } from "@walletconnect/jsonrpc-types";
-import { JsonRpcProvider } from "@walletconnect/jsonrpc-provider";
 
 export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs> {
   private config: SmartWalletConfig;
   private aaProvider: ERC4337EthersProvider | undefined;
   private accountApi: AccountAPI | undefined;
-  private internalSDK: ThirdwebSDK | undefined;
   personalWallet?: EVMWallet;
 
   constructor(config: SmartWalletConfig) {
@@ -65,10 +62,10 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
       accountInfo: config.accountInfo || this.defaultAccountInfo(),
       thirdwebApiKey: config.thirdwebApiKey,
     };
-    this.personalWallet = personalWallet;
     const originalProvider = getChainProvider(config.chain, {
       thirdwebApiKey: config.thirdwebApiKey,
     }) as providers.BaseProvider;
+    this.personalWallet = personalWallet;
     const accountApi = new AccountAPI(providerConfig, originalProvider);
     this.aaProvider = await create4337Provider(
       providerConfig,
@@ -129,40 +126,25 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
     // throw new Error("Method not implemented.");
   }
 
-  async encodeExecute(transaction: Transaction) {
+  async execute(transaction: Transaction): Promise<TransactionResult> {
     if (!this.accountApi) {
       throw new Error("Local Signer not connected");
     }
-    if (!this.internalSDK) {
-      this.internalSDK = ThirdwebSDK.fromSigner(await this.getSigner());
-    }
-    console.log("transaction", transaction.getTarget());
-    return this.accountApi.params.accountInfo.execute(
-      await this.internalSDK.getContract(
-        await this.accountApi.getAccountAddress(),
-        this.config.accountInfo?.abi || MINIMAL_ACCOUNT_ABI,
-      ),
-      transaction.getTarget(),
-      await transaction.getValue(),
-      transaction.encode(),
-    );
+    const signer = await this.getSigner();
+    const tx = await signer.sendTransaction({
+      to: transaction.getTarget(),
+      data: transaction.encode(),
+      value: await transaction.getValue(),
+    });
+    const receipt = await tx.wait();
+    return {
+      receipt,
+    };
   }
 
-  // async executeBatch(transaction: Transaction) {
-  //   if (!this.accountApi) {
-  //     throw new Error("Local Signer not connected");
-  //   }
-  //   if (!this.internalSDK) {
-  //     this.internalSDK = ThirdwebSDK.fromSigner(await this.getSigner());
-  //   }
-
-  //   return this.accountApi.params.accountInfo.execute(
-  //     await this.getAccountContract(),
-  //     transaction.getTarget(),
-  //     await transaction.getValue(),
-  //     transaction.encode(),
-  //   );
-  // }
+  async executeBatch(transaction: Transaction[]): Promise<TransactionResult> {
+    throw new Error("Method not implemented yet.");
+  }
 
   private defaultFactoryInfo(): FactoryContractInfo {
     return {

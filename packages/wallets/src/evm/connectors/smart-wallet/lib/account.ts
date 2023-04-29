@@ -1,10 +1,12 @@
 import {
   getChainProvider,
+  LOCAL_NODE_PKEY,
   SmartContract,
   ThirdwebSDK,
 } from "@thirdweb-dev/sdk";
 import { BigNumberish, BigNumber, ethers } from "ethers";
 import { arrayify, hexConcat } from "ethers/lib/utils";
+import { PrivateKeyWallet } from "../../../wallets/private-key";
 import { AccountApiParams } from "../types";
 import { BaseAccountAPI } from "./base-api";
 import { MINIMAL_ACCOUNT_ABI } from "./constants";
@@ -24,7 +26,10 @@ export class AccountAPI extends BaseAccountAPI {
       provider: originalProvider,
     });
     this.params = params;
-    this.sdk = new ThirdwebSDK(params.localSigner, originalProvider);
+    // Technically dont need the signer here, but we need to encode/estimate gas with it so a signer is required
+    // We don't want to use the localSigner directly since it might be connected to another chain
+    // so we just use the public hardhat pkey instead
+    this.sdk = ThirdwebSDK.fromPrivateKey(LOCAL_NODE_PKEY, params.chain);
   }
 
   async getChainId() {
