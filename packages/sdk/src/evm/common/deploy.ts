@@ -191,3 +191,20 @@ export async function getDeployArguments<
       return [];
   }
 }
+
+export async function getTrustedForwarders(
+  provider: providers.Provider,
+  storage: ThirdwebStorage,
+  contractName?: string,
+): Promise<string[]> {
+  const chainId = (await provider.getNetwork()).chainId;
+  const chainEnum = SUPPORTED_CHAIN_IDS.find((c) => c === chainId);
+  let trustedForwarders: string[] =
+    contractName && contractName === PackInitializer.name
+      ? []
+      : chainEnum
+      ? getDefaultTrustedForwarders(chainId)
+      : [await computeForwarderAddress(provider, storage)]; // TODO: make this default for all chains (standard + others)
+
+  return trustedForwarders;
+}
