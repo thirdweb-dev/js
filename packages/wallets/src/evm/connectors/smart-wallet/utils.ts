@@ -3,44 +3,85 @@ import {
   isContractDeployed,
   ThirdwebSDK,
 } from "@thirdweb-dev/sdk";
-import { EVMWallet } from "../../interfaces";
 
-export type AssociatedAccount = {
-  account: string;
-  accountAdmin: string;
+export type AccessibleSmartWallets = {
+  owned: string;
+  hasSignerRole: string[];
 };
 
-export async function getAssociatedAccounts(
-  personalWallet: EVMWallet,
-  factoryAddress: string,
+const sdkCache = new Map<ChainOrRpcUrl, ThirdwebSDK>();
+
+function getSDK(chain: ChainOrRpcUrl): ThirdwebSDK {
+  const cached = sdkCache.get(chain);
+  if (cached) {
+    return cached;
+  }
+  const sdk = new ThirdwebSDK(chain);
+  sdkCache.set(chain, sdk);
+  return sdk;
+}
+
+export async function getAllSigners(
   chain: ChainOrRpcUrl,
+  factoryAddress: string,
+  smartWalletAddress: string,
 ) {
-  const personalSigner = await personalWallet.getSigner();
-  const readOnlySDK = new ThirdwebSDK(chain);
+  const readOnlySDK = getSDK(chain);
   const factoryContract = await readOnlySDK.getContract(factoryAddress);
-  // TODO this might not scale for very large factories
-  // TODO need to also merge the accounts that have this personalWallet as a secondary signer
-  const accounts = await factoryContract.events.getEvents("AccountCreated", {
-    filters: {
-      accountAdmin: await personalSigner.getAddress(),
-    },
-  });
-  return accounts.map((a) => a.data) as AssociatedAccount[];
+  const signers = await factoryContract.call("getSignersOfAccount", [
+    smartWalletAddress,
+  ]);
+  return signers;
+}
+
+export async function getAllSmartWallets(
+  chain: ChainOrRpcUrl,
+  factoryAddress: string,
+  personalWalletAddress: string,
+): Promise<AccessibleSmartWallets> {
+  const readOnlySDK = getSDK(chain);
+  const factoryContract = await readOnlySDK.getContract(factoryAddress);
+  const ownedAccount = await getSmartWalletAddress(
+    chain,
+    factoryAddress,
+    personalWalletAddress,
+  );
+  const accessibleAccounts: string[] = await factoryContract.call(
+    "getAccountsOfSigner",
+    [personalWalletAddress],
+  );
+  return {
+    owned: ownedAccount,
+    hasSignerRole: accessibleAccounts,
+  };
 }
 
 export async function isSmartWalletDeployed(
-  factoryAddress: string,
-  ownerAddress: string,
   chain: ChainOrRpcUrl,
+  factoryAddress: string,
+  personalWalletAddress: string,
 ) {
-  const readOnlySDK = new ThirdwebSDK(chain);
+  const readOnlySDK = getSDK(chain);
   const factoryContract = await readOnlySDK.getContract(factoryAddress);
   const accountAddress = await factoryContract.call("getAddress", [
-    ownerAddress,
+    personalWalletAddress,
   ]);
   const isDeployed = await isContractDeployed(
     accountAddress,
     readOnlySDK.getProvider(),
   );
-  return !isDeployed;
+  return isDeployed;
+}
+
+async function getSmartWalletAddress(
+  chain: ChainOrRpcUrl,
+  factoryAddress: string,
+  personalWalletAddress: string,
+): Promise<string> {
+  const readOnlySDK = getSDK(chain);
+  const factoryContract = await readOnlySDK.getContract(factoryAddress);
+  const accountAddress = await factoryContract.call("getAddress", [
+    personalWalletAddress,
+  ]);
+  return accountAddress;
 }
