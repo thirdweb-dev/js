@@ -1,5 +1,4 @@
 import { EntryPoint__factory } from "@account-abstraction/contracts";
-import { getChainProvider } from "@thirdweb-dev/sdk";
 import { AccountAPI } from "./account";
 import { providers } from "ethers";
 import { ERC4337EthersProvider } from "./erc4337-provider";
