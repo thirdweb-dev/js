@@ -357,7 +357,7 @@ export function getDefaultTrustedForwarders(
   const openzeppelinForwarder = chainEnum
     ? CONTRACT_ADDRESSES[chainEnum].openzeppelinForwarder
     : constants.AddressZero;
-  return biconomyForwarder !== constants.AddressZero
-    ? [openzeppelinForwarder, biconomyForwarder]
-    : [openzeppelinForwarder];
+  return [openzeppelinForwarder, biconomyForwarder].filter(
+    (a) => a !== constants.AddressZero,
+  );
 }

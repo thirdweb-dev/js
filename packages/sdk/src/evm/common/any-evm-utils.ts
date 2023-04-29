@@ -945,10 +945,7 @@ export async function encodeConstructorParamsForImplementation(
 
         return nativeTokenWrapperAddress;
       } else if (p.name && p.name.includes("trustedForwarder")) {
-        if (
-          compilerMetadata.analytics?.contract_name &&
-          compilerMetadata.analytics.contract_name === "Pack"
-        ) {
+        if (compilerMetadata.name === "Pack") {
           // EOAForwarder for Pack
           const deploymentInfo = await computeDeploymentInfo(
             "infra",
