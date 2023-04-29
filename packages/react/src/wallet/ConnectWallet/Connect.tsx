@@ -34,6 +34,7 @@ import { darkTheme, lightTheme } from "../../design-system";
 import { LocalWalletSetup } from "./screens/LocalWallet/LocalWalletSetup";
 import { SmartWalletConnection } from "./screens/SmartWallet/SmartWalletForm";
 import { LocalWalletInfoProvider } from "./screens/LocalWallet/useLocalWalletInfo";
+import { MagicConnect } from "./screens/Magic/MagicConnect";
 
 export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
   guestMode,
@@ -167,6 +168,11 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
       // Local Wallet
       else if (wallet.id === "localWallet") {
         setShowScreen("localWallet/connect");
+      }
+
+      // Magic link
+      else if (wallet.id === "magicLink") {
+        setShowScreen("magic/connect");
       }
 
       // others ( they handle their own connection flow)
@@ -312,6 +318,17 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
         {showScreen === "smartWallet/form" && (
           <SmartWalletConnection
             username={username}
+            onBack={handleBack}
+            onConnect={() => {
+              closeModalAndReset();
+            }}
+          />
+        )}
+
+        {showScreen === "magic/connect" && (
+          <MagicConnect
+            showModal={() => setHideModal(true)}
+            hideModal={() => setHideModal(false)}
             onBack={handleBack}
             onConnect={() => {
               closeModalAndReset();
