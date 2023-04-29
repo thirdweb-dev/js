@@ -7,39 +7,29 @@ import {
   Wallet,
   useConnect,
   useThirdwebWallet,
-  useWallets,
 } from "@thirdweb-dev/react-core";
-import { useMemo, useRef, useState } from "react";
+import { useState } from "react";
 import { StyleSheet } from "react-native";
 import { LocalWalletFlow } from "./LocalWalletFlow";
 import { LocalWallet, localWallet } from "../../wallets/wallets/local-wallet";
+import { useWallets } from "../../wallets/hooks/useWallets";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [activeWallet, setActiveWallet] = useState<Wallet | undefined>();
   const [isConnecting, setIsConnecting] = useState(false);
   const guestMode = useThirdwebWallet()?.guestMode;
-  const removedGuestWalletRef = useRef(false);
 
   const connect = useConnect();
   const supportedWallets = useWallets();
 
-  const wallets = useMemo(() => {
-    if (
-      guestMode &&
-      supportedWallets[supportedWallets.length - 1].id === LocalWallet.id &&
-      !removedGuestWalletRef.current
-    ) {
-      removedGuestWalletRef.current = true;
-      return supportedWallets.slice(0, supportedWallets.length - 1);
-    }
-
-    return supportedWallets;
-  }, [guestMode, supportedWallets]);
-
   const onConnectPress = () => {
     if (supportedWallets.length === 1 && !guestMode) {
       onChooseWallet(supportedWallets[0]);
+    } else if (supportedWallets.length === 0 && guestMode) {
+      const w = localWallet();
+      setActiveWallet(w);
+      connectActiveWallet(w);
     }
 
     setModalVisible(true);
@@ -110,7 +100,7 @@ export const ConnectWalletFlow = () => {
           )
         ) : (
           <ChooseWallet
-            wallets={wallets}
+            wallets={supportedWallets}
             onChooseWallet={onChooseWallet}
             onJoinAsGuestPress={onJoinAsGuestPress}
             onClose={onClose}

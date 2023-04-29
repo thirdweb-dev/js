@@ -122,9 +122,8 @@ export function ThirdwebWalletProvider(
   const handleWalletConnect = useCallback(
     async (
       wallet: WalletInstance,
-      params?: ConnectParams<Record<string, any>>,
+      connectParams?: ConnectParams<Record<string, any>>,
     ) => {
-      const connectParams = params || walletParams;
       const lastConnectedWallet = {
         walletId: wallet.walletId,
         connectParams,
@@ -144,7 +143,7 @@ export function ThirdwebWalletProvider(
       setActiveWallet(wallet);
       setConnectionStatus("connected");
     },
-    [walletParams],
+    [],
   );
 
   const storeLastActiveChainId = useCallback(async (chainId: number) => {

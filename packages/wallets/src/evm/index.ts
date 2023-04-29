@@ -31,6 +31,7 @@ export * from "./wallets/metamask";
 export * from "./wallets/wallet-connect";
 export * from "./wallets/wallet-connect-v1";
 export * from "./wallets/safe";
+export * from "./wallets/magic";
 export * from "./wallets/smart-wallet";
 
 export type { Chain } from "@thirdweb-dev/chains";
