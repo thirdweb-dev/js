@@ -21,6 +21,13 @@ function getSDK(chain: ChainOrRpcUrl): ThirdwebSDK {
   return sdk;
 }
 
+/**
+ * Get all the signers added to the given smart wallet (excluding owner)
+ * @param chain
+ * @param factoryAddress
+ * @param smartWalletAddress
+ * @returns
+ */
 export async function getAllSigners(
   chain: ChainOrRpcUrl,
   factoryAddress: string,
@@ -34,6 +41,13 @@ export async function getAllSigners(
   return signers;
 }
 
+/**
+ * Get all the smart wallets associated with a personal wallet address
+ * @param chain
+ * @param factoryAddress
+ * @param personalWalletAddress
+ * @returns
+ */
 export async function getAllSmartWallets(
   chain: ChainOrRpcUrl,
   factoryAddress: string,
@@ -56,6 +70,13 @@ export async function getAllSmartWallets(
   };
 }
 
+/**
+ * Check if a smart wallet is deployed for a given personal wallet address
+ * @param chain
+ * @param factoryAddress
+ * @param personalWalletAddress
+ * @returns
+ */
 export async function isSmartWalletDeployed(
   chain: ChainOrRpcUrl,
   factoryAddress: string,
@@ -73,6 +94,13 @@ export async function isSmartWalletDeployed(
   return isDeployed;
 }
 
+/**
+ * Get the associated smart wallet address for a given personal wallet address
+ * @param chain
+ * @param factoryAddress
+ * @param personalWalletAddress
+ * @returns
+ */
 async function getSmartWalletAddress(
   chain: ChainOrRpcUrl,
   factoryAddress: string,
