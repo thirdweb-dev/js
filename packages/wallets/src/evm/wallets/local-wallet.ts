@@ -7,6 +7,7 @@ import { Wallet, utils } from "ethers";
 export type LocalWalletOptions = {
   chain?: Chain;
   storage?: AsyncStorage;
+  thirdwebApiKey?: string;
 };
 
 export type WalletData = {
@@ -68,6 +69,7 @@ export class LocalWallet extends AbstractClientWallet<
         chain: this.options.chain || Ethereum,
         ethersWallet: this.ethersWallet,
         chains: this.options.chains || defaults,
+        thirdwebApiKey: this.options.thirdwebApiKey,
       });
     }
     return this.connector;
