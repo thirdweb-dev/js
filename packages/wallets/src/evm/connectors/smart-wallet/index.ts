@@ -21,6 +21,7 @@ import {
   TransactionResult,
 } from "@thirdweb-dev/sdk";
 import { AccountAPI } from "./lib/account";
+import { DEFAULT_WALLET_API_KEY } from "../../constants/keys";
 
 export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs> {
   private config: SmartWalletConfig;
@@ -63,7 +64,7 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
       thirdwebApiKey: config.thirdwebApiKey,
     };
     const originalProvider = getChainProvider(config.chain, {
-      thirdwebApiKey: config.thirdwebApiKey,
+      thirdwebApiKey: config.thirdwebApiKey || DEFAULT_WALLET_API_KEY,
     }) as providers.BaseProvider;
     this.personalWallet = personalWallet;
     const accountApi = new AccountAPI(providerConfig, originalProvider);
