@@ -14,7 +14,8 @@ import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ExportLocalWalletModal } from "./ExportLocalWalletModal";
 import { Toast } from "../base/Toast";
-import { SmartWallet } from "@thirdweb-dev/wallets";
+import { AbstractClientWallet, SmartWallet } from "@thirdweb-dev/wallets";
+import { SmartWalletAdditionalActions } from "./SmartWalletAdditionalActions";
 
 export type ConnectWalletDetailsProps = {
   address: string;
@@ -29,8 +30,6 @@ export const ConnectWalletDetails = ({
     useState(false);
   const [isDisconnecting, setIsDisconnecting] = useState(false);
   const [addressCopied, setAddressCopied] = useState(false);
-  const [username, setUsername] = useState<string | undefined>();
-
   const activeWallet = useWallet();
   const disconnect = useDisconnect();
   const chain = useActiveChain();
@@ -76,11 +75,6 @@ export const ConnectWalletDetails = ({
     setIsExportModalVisible(true);
   }, []);
 
-  const onExportSmartWalletPress = useCallback(() => {
-    setUsername((activeWallet as SmartWallet).getConnectParams()?.accountId);
-    onExportLocalWalletPress();
-  }, [activeWallet, onExportLocalWalletPress]);
-
   const onExportModalClose = () => {
     setIsExportModalVisible(false);
   };
@@ -113,33 +107,18 @@ export const ConnectWalletDetails = ({
     }
 
     if (activeWallet?.walletId === SmartWallet.id) {
+      const personalWallet =
+        activeWallet?.getPersonalWallet() as AbstractClientWallet;
       return (
-        <>
-          <View style={styles.currentNetwork}>
-            <Text variant="bodySmallSecondary">Additional Actions</Text>
-          </View>
-          <BaseButton
-            backgroundColor="background"
-            borderColor="border"
-            mb="sm"
-            style={styles.exportWallet}
-            onPress={onExportSmartWalletPress}
-          >
-            <PocketWalletIcon size={16} />
-            <View style={styles.exportWalletInfo}>
-              <Text variant="bodySmall">Export wallet</Text>
-            </View>
-          </BaseButton>
-        </>
+        <SmartWalletAdditionalActions
+          personalWallet={personalWallet}
+          onExportPress={onExportLocalWalletPress}
+        />
       );
     }
 
     return null;
-  }, [
-    activeWallet?.walletId,
-    onExportLocalWalletPress,
-    onExportSmartWalletPress,
-  ]);
+  }, [activeWallet, onExportLocalWalletPress]);
 
   return (
     <>
@@ -150,7 +129,6 @@ export const ConnectWalletDetails = ({
         <ExportLocalWalletModal
           isVisible={isExportModalVisible}
           onClose={onExportModalClose}
-          username={username}
         />
         <WalletDetailsModalHeader
           address={address}
@@ -188,13 +166,7 @@ export const ConnectWalletDetails = ({
             {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
             {balanceQuery.data?.symbol}
           </Text>
-          {activeWallet?.walletId === SmartWallet.id ? (
-            <Text variant="bodySmallSecondary">
-              {(activeWallet as SmartWallet).getConnectParams()?.accountId}
-            </Text>
-          ) : (
-            <Address variant="bodySmallSecondary" address={address} />
-          )}
+          <Address variant="bodySmallSecondary" address={address} />
         </View>
         <WalletIcon size={32} iconUri={activeWallet?.getMeta().iconURL || ""} />
       </BaseButton>

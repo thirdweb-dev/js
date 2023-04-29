@@ -1,26 +1,27 @@
 import BaseButton from "../base/BaseButton";
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { ConnectWalletHeader } from "./ConnectingWallet/ConnectingWalletHeader";
 import Text from "../base/Text";
 import { ModalFooter } from "../base/modal/ModalFooter";
 import { LocalWallet } from "../../wallets/wallets/local-wallet";
 import { LocalWalletImportModal } from "./LocalWalletImportModal";
 import { useState } from "react";
-import { useThirdwebWallet } from "@thirdweb-dev/react-core";
 
 export type LocalWalletFlowProps = {
   onClose: () => void;
   onBackPress: () => void;
   onConnectPress: () => void;
+  onWalletImported: (localWallet: LocalWallet) => void;
 };
 
 export function LocalWalletFlow({
   onClose,
   onBackPress,
   onConnectPress,
+  onWalletImported,
 }: LocalWalletFlowProps) {
   const [isImportModalVisible, setIsImportModalVisible] = useState(false);
-  const twWalletContext = useThirdwebWallet();
+  const [isCreatingWallet, setIsCreatingWallet] = useState(false);
 
   const onImportPress = async () => {
     setIsImportModalVisible(true);
@@ -30,9 +31,9 @@ export function LocalWalletFlow({
     setIsImportModalVisible(false);
   };
 
-  const onWalletImported = async (localWallet: LocalWallet) => {
-    await localWallet.connect();
-    twWalletContext?.handleWalletConnect(localWallet);
+  const onConnectPressInternal = () => {
+    setIsCreatingWallet(true);
+    onConnectPress();
   };
 
   return (
@@ -46,12 +47,17 @@ export function LocalWalletFlow({
       <View style={styles.connectingContainer}>
         <BaseButton
           backgroundColor="white"
-          onPress={onConnectPress}
+          minWidth={130}
+          onPress={onConnectPressInternal}
           style={styles.connectWalletButton}
         >
-          <Text variant="bodyLarge" color="black">
-            Create new wallet
-          </Text>
+          {isCreatingWallet ? (
+            <ActivityIndicator size="small" color="buttonTextColor" />
+          ) : (
+            <Text variant="bodyLarge" color="black">
+              Create new wallet
+            </Text>
+          )}
         </BaseButton>
         <Text variant="subHeader" mt="lg">
           -------- OR --------

@@ -37,12 +37,16 @@ export class LocalWallet extends LocalWalletCore {
   }
 }
 
-export const localWallet = () => {
+export const localWallet = (displayName?: string) => {
   const secureStorage = createSecureStorage("localwallet");
   const asyncStorage = createAsyncLocalStorage("localwallet");
   return {
     id: LocalWallet.id,
-    meta: LocalWallet.meta,
+    meta: {
+      name: displayName ? displayName : "Guest Wallet",
+      iconURL:
+        "ipfs://QmcNddbYBuQKiBFnPcxYegjrX6S6z9K1vBNzbBBUJMn2ox/device-wallet.svg",
+    },
     create: (options: WalletOptions) =>
       new LocalWallet({
         ...options,

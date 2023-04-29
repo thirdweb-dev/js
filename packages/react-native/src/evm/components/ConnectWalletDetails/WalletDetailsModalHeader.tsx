@@ -9,7 +9,6 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import Box from "../base/Box";
 import CopyIcon from "../../assets/copy";
-import { SmartWallet } from "@thirdweb-dev/wallets";
 
 interface WalletDetailsModalHeaderProps {
   address: string;
@@ -29,14 +28,7 @@ export const WalletDetailsModalHeader = ({
   const activeWallet = useWallet();
 
   const onAddressPress = async () => {
-    let toCopy;
-    if (activeWallet?.walletId === SmartWallet.id) {
-      toCopy = (activeWallet as SmartWallet).getConnectParams()?.accountId;
-    }
-
-    toCopy = toCopy || address;
-
-    await Clipboard.setStringAsync(toCopy);
+    await Clipboard.setStringAsync(address);
     onAddressCopied?.();
   };
 
@@ -58,13 +50,7 @@ export const WalletDetailsModalHeader = ({
             justifyContent="center"
             alignItems="center"
           >
-            {activeWallet?.walletId === SmartWallet.id ? (
-              <Text variant="bodyLarge">
-                {(activeWallet as SmartWallet).getConnectParams()?.accountId}
-              </Text>
-            ) : (
-              <Address address={address} />
-            )}
+            <Address address={address} />
             <CopyIcon
               width={14}
               height={14}

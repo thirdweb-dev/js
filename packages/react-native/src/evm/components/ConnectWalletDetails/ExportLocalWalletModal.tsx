@@ -16,17 +16,16 @@ import { PasswordInput } from "../PasswordInput";
 import * as FileSystem from "expo-file-system";
 import { LocalWallet } from "../../wallets/wallets/local-wallet";
 import { SmartWallet } from "@thirdweb-dev/wallets";
+import { usePersonalWalletAddress } from "../../wallets/hooks/usePersonalWalletAddress";
 
 export type ExportLocalWalletModalProps = {
   isVisible: boolean;
-  username?: string;
   onClose: () => void;
 };
 
 export const ExportLocalWalletModal = ({
   isVisible,
   onClose,
-  username,
 }: ExportLocalWalletModalProps) => {
   const [password, setPassword] = useState<string | undefined>();
   const [error, setError] = useState<string | undefined>();
@@ -34,6 +33,7 @@ export const ExportLocalWalletModal = ({
 
   const activeWallet = useWallet();
   const address = useAddress();
+  const personalWalletAddress = usePersonalWalletAddress();
 
   const onContinuePress = async () => {
     if (!password) {
@@ -157,10 +157,10 @@ export const ExportLocalWalletModal = ({
             }
           </Text>
           <Text variant="bodySmall" textAlign="left" mt="lg" mb="xxs">
-            {username ? "Username" : "Wallet Address"}
+            Wallet Address
           </Text>
           <Text variant="bodySmallSecondary">
-            {username ? username : address}
+            {personalWalletAddress ? personalWalletAddress : address}
           </Text>
           <Text variant="bodySmall" textAlign="left" mt="lg" mb="xxs">
             Password

@@ -138,8 +138,6 @@ export function ThirdwebWalletProvider(
       connectParams?: ConnectParams<Record<string, any>>,
       isAutoConnect = false,
     ) => {
-      console.log("connectParas", connectParams);
-
       const _signer = await wallet.getSigner();
       setSigner(_signer);
       setActiveWallet(wallet);
@@ -325,13 +323,10 @@ export function ThirdwebWalletProvider(
         ...(connectParams || {}),
       };
 
-      console.log("connect wallet", _connectedParams);
-
       const wallet = createWalletInstance(WalletObj);
       setConnectionStatus("connecting");
       try {
         await wallet.connect(_connectedParams);
-        console.log("after connect");
         handleWalletConnect(wallet, _connectedParams);
       } catch (e: any) {
         console.error(`Error connecting to wallet: ${e}`);
@@ -359,6 +354,12 @@ export function ThirdwebWalletProvider(
     }
 
     await activeWallet.disconnect();
+    if (activeWallet.getPersonalWallet()) {
+      await (
+        activeWallet.getPersonalWallet() as AbstractClientWallet
+      )?.disconnect();
+    }
+
     onWalletDisconnect();
   }, [activeWallet, onWalletDisconnect]);
 

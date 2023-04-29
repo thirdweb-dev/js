@@ -8,31 +8,36 @@ import {
   useConnect,
   useIsConnecting,
   useThirdwebWallet,
+  useWallets,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import { SmartWallet } from "@thirdweb-dev/wallets";
 import { SmartWalletFlow } from "./SmartWallet/SmartWalletFlow";
 import { LocalWalletFlow } from "./LocalWalletFlow";
-import { LocalWallet, localWallet } from "../../wallets/wallets/local-wallet";
-import { useWallets } from "../../wallets/hooks/useWallets";
+import { LocalWallet } from "../../wallets/wallets/local-wallet";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [activeWallet, setActiveWallet] = useState<Wallet | undefined>();
   const [isConnecting, setIsConnecting] = useState(false);
-  const guestMode = useThirdwebWallet()?.guestMode;
   const supportedWallets = useWallets();
   const isWalletConnecting = useIsConnecting();
   const [showButtonSpinner, setShowButtonSpinner] = useState(false);
+  const twWalletContext = useThirdwebWallet();
 
   useEffect(() => {
     setShowButtonSpinner(isWalletConnecting);
+
+    if (!isWalletConnecting) {
+      return;
+    }
+
     const timeout = setTimeout(() => {
       if (isWalletConnecting) {
         setShowButtonSpinner(false);
       }
-    }, 5000);
+    }, 2000);
 
     return () => {
       if (timeout) {
@@ -44,12 +49,8 @@ export const ConnectWalletFlow = () => {
   const connect = useConnect();
 
   const onConnectPress = () => {
-    if (supportedWallets.length === 1 && !guestMode) {
+    if (supportedWallets.length === 1) {
       onChooseWallet(supportedWallets[0]);
-    } else if (supportedWallets.length === 0 && guestMode) {
-      const w = localWallet();
-      setActiveWallet(w);
-      connectActiveWallet(w);
     }
 
     setModalVisible(true);
@@ -57,7 +58,12 @@ export const ConnectWalletFlow = () => {
 
   const onClose = () => {
     setModalVisible(false);
-    setActiveWallet(undefined);
+    reset();
+  };
+
+  const onLocalWalletImported = async (localWallet: LocalWallet) => {
+    await localWallet.connect();
+    twWalletContext?.handleWalletConnect(localWallet);
   };
 
   const connectActiveWallet = async (wallet: Wallet) => {
@@ -68,19 +74,19 @@ export const ConnectWalletFlow = () => {
     });
   };
 
-  const onJoinAsGuestPress = () => {
-    connectActiveWallet(localWallet());
-  };
-
   const onChooseWallet = (wallet: Wallet) => {
     setActiveWallet(() => wallet);
 
-    if (wallet.id !== LocalWallet.id && wallet.id !== SmartWallet.id) {
+    if (wallet.id !== SmartWallet.id) {
       connectActiveWallet(wallet);
     }
   };
 
   const onBackPress = () => {
+    reset();
+  };
+
+  const reset = () => {
     setActiveWallet(undefined);
     setIsConnecting(false);
   };
@@ -92,6 +98,7 @@ export const ConnectWalletFlow = () => {
           <LocalWalletFlow
             onClose={onClose}
             onBackPress={onBackPress}
+            onWalletImported={onLocalWalletImported}
             onConnectPress={() => connectActiveWallet(activeWalletP)}
           />
         );
@@ -100,9 +107,6 @@ export const ConnectWalletFlow = () => {
           <SmartWalletFlow
             onClose={() => {
               onClose();
-            }}
-            onBackPress={() => {
-              setActiveWallet(undefined);
             }}
             onConnect={onBackPress}
           />
@@ -134,7 +138,6 @@ export const ConnectWalletFlow = () => {
           <ChooseWallet
             wallets={supportedWallets}
             onChooseWallet={onChooseWallet}
-            onJoinAsGuestPress={onJoinAsGuestPress}
             onClose={onClose}
           />
         )}
