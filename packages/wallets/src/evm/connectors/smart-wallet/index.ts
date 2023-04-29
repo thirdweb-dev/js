@@ -10,7 +10,7 @@ import {
   SmartWalletConfig,
   SmartWalletConnectionArgs,
 } from "./types";
-import { ENTRYPOINT_ADDRESS, MINIMAL_ACCOUNT_ABI } from "./lib/constants";
+import { ENTRYPOINT_ADDRESS } from "./lib/constants";
 import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
 import { providers } from "ethers";

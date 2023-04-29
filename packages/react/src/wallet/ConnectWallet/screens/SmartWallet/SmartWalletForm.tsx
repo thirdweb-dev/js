@@ -28,10 +28,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import { Steps } from "../Safe/Steps";
-import {
-  AssociatedAccount,
-  getAssociatedAccounts,
-} from "@thirdweb-dev/wallets";
+import { getAllSmartWallets } from "@thirdweb-dev/wallets";
 import { SmartWalletObj } from "../../../wallets/smartWallet";
 import { Flex } from "../../../../components/basic";
 import styled from "@emotion/styled";
@@ -42,7 +39,7 @@ export const SmartWalletConnection: React.FC<{
 }> = (props) => {
   const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
   const activeWallet = useWallet();
-  const [accounts, setAccounts] = useState<AssociatedAccount[] | undefined>();
+  const [accounts, setAccounts] = useState<string[] | undefined>();
 
   useEffect(() => {
     if (!activeWallet) {
@@ -50,12 +47,12 @@ export const SmartWalletConnection: React.FC<{
     }
 
     (async () => {
-      const _accounts = await getAssociatedAccounts(
-        activeWallet,
-        walletObj.factoryAddress,
+      const _accounts = await getAllSmartWallets(
         walletObj.chain,
+        walletObj.factoryAddress,
+        await activeWallet.getAddress(),
       );
-      setAccounts(_accounts);
+      setAccounts([_accounts.owned, ..._accounts.hasSignerRole]);
     })();
   }, [activeWallet, walletObj.chain, walletObj.factoryAddress]);
 
@@ -259,7 +256,7 @@ export const SmartWalletCreate: React.FC<{
 export const ConnectToSmartWalletAccount: React.FC<{
   onBack: () => void;
   onConnect: () => void;
-  accounts: AssociatedAccount[];
+  accounts: string[];
 }> = (props) => {
   const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
   const connect = useConnect();
@@ -303,11 +300,8 @@ export const ConnectToSmartWalletAccount: React.FC<{
       <Flex gap="sm" flexDirection="column">
         {props.accounts.map((account) => {
           return (
-            <AccountButton
-              key={account.account}
-              onClick={() => handleConnect()}
-            >
-              {account.account}
+            <AccountButton key={account} onClick={() => handleConnect()}>
+              {account}
               <CaretRightIcon width={iconSize.md} height={iconSize.md} />
             </AccountButton>
           );

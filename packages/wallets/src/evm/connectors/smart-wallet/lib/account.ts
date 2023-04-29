@@ -1,12 +1,6 @@
-import {
-  getChainProvider,
-  LOCAL_NODE_PKEY,
-  SmartContract,
-  ThirdwebSDK,
-} from "@thirdweb-dev/sdk";
+import { LOCAL_NODE_PKEY, SmartContract, ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { BigNumberish, BigNumber, ethers } from "ethers";
 import { arrayify, hexConcat } from "ethers/lib/utils";
-import { PrivateKeyWallet } from "../../../wallets/private-key";
 import { AccountApiParams } from "../types";
 import { BaseAccountAPI } from "./base-api";
 import { MINIMAL_ACCOUNT_ABI } from "./constants";
