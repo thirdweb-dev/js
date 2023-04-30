@@ -183,6 +183,7 @@ export abstract class BaseAccountAPI {
 
   async encodeUserOpCallDataAndGasLimit(
     detailsForUserOp: TransactionDetailsForUserOp,
+    batched: boolean,
   ): Promise<{ callData: string; callGasLimit: BigNumber }> {
     function parseNumber(a: any): BigNumber | null {
       if (!a || a === "") {
@@ -192,11 +193,13 @@ export abstract class BaseAccountAPI {
     }
 
     const value = parseNumber(detailsForUserOp.value) ?? BigNumber.from(0);
-    const callData = await this.encodeExecute(
-      detailsForUserOp.target,
-      value,
-      detailsForUserOp.data,
-    );
+    const callData = batched
+      ? detailsForUserOp.data
+      : await this.encodeExecute(
+          detailsForUserOp.target,
+          value,
+          detailsForUserOp.data,
+        );
 
     let callGasLimit;
     const isPhantom = await this.checkAccountPhantom();
@@ -265,9 +268,10 @@ export abstract class BaseAccountAPI {
    */
   async createUnsignedUserOp(
     info: TransactionDetailsForUserOp,
+    batched: boolean,
   ): Promise<UserOperationStruct> {
     const { callData, callGasLimit } =
-      await this.encodeUserOpCallDataAndGasLimit(info);
+      await this.encodeUserOpCallDataAndGasLimit(info, batched);
     const initCode = await this.getInitCode();
 
     const initGas = await this.estimateCreationGas(initCode);
@@ -348,8 +352,11 @@ export abstract class BaseAccountAPI {
    */
   async createSignedUserOp(
     info: TransactionDetailsForUserOp,
+    batched: boolean,
   ): Promise<UserOperationStruct> {
-    return await this.signUserOp(await this.createUnsignedUserOp(info));
+    return await this.signUserOp(
+      await this.createUnsignedUserOp(info, batched),
+    );
   }
 
   /**

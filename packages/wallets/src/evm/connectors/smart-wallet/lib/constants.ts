@@ -25,6 +25,29 @@ export const MINIMAL_ACCOUNT_ABI = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "address[]",
+        name: "_target",
+        type: "address[]",
+      },
+      {
+        internalType: "uint256[]",
+        name: "_value",
+        type: "uint256[]",
+      },
+      {
+        internalType: "bytes[]",
+        name: "_calldata",
+        type: "bytes[]",
+      },
+    ],
+    name: "executeBatch",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "getNonce",
     outputs: [
