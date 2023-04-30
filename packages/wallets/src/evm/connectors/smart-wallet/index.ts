@@ -148,7 +148,7 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
     const signer = await this.getSigner();
     const targets = transactions.map((tx) => tx.getTarget());
     const data = transactions.map((tx) => tx.encode());
-    const values = transactions.map((tx) => BigNumber.from(0));
+    const values = transactions.map(() => BigNumber.from(0)); // TODO check if we can handle multiple values
     const callData = await this.accountApi.encodeExecuteBatch(
       targets,
       values,
