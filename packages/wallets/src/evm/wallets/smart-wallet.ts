@@ -1,5 +1,5 @@
 import { AbstractClientWallet, WalletOptions } from "./base";
-import type { ConnectParams, TWConnector } from "../interfaces/tw-connector";
+import type { ConnectParams } from "../interfaces/tw-connector";
 import type {
   SmartWalletConfig,
   SmartWalletConnectionArgs,
