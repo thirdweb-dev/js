@@ -116,6 +116,20 @@ export class AccountAPI extends BaseAccountAPI {
     return tx.encode();
   }
 
+  async encodeExecuteBatch(
+    targets: string[],
+    values: BigNumberish[],
+    datas: string[],
+  ): Promise<string> {
+    const accountContract = await this.getAccountContract();
+    const tx = await accountContract.prepare("executeBatch", [
+      targets,
+      values,
+      datas,
+    ]);
+    return tx.encode();
+  }
+
   async signUserOpHash(userOpHash: string): Promise<string> {
     return await this.params.localSigner.signMessage(arrayify(userOpHash));
   }

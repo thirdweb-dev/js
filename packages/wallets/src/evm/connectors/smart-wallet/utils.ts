@@ -101,7 +101,7 @@ export async function isSmartWalletDeployed(
  * @param personalWalletAddress
  * @returns
  */
-async function getSmartWalletAddress(
+export async function getSmartWalletAddress(
   chain: ChainOrRpcUrl,
   factoryAddress: string,
   personalWalletAddress: string,
