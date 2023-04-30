@@ -15,7 +15,8 @@ type Screen =
   | "wallets/get-started"
   | "localWallet/connect"
   | "localWallet/export"
-  | "smartWallet/form";
+  | "smartWallet/form"
+  | "magic/connect";
 
 type WalletWrapper = false | "safe" | "smartWallet";
 

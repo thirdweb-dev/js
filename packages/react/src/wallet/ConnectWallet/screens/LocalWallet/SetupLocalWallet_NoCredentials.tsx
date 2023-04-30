@@ -54,7 +54,7 @@ export const CreateLocalWallet_NoCreds: React.FC<{
   }
 
   const handleConnect = async () => {
-    if (passwordMismatch || !localWallet || !thirdwebWalletContext) {
+    if (passwordMismatch || !localWallet) {
       throw new Error("Invalid state");
     }
 

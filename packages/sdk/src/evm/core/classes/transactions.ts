@@ -354,6 +354,10 @@ export class Transaction<
     this.storage = options.storage || new ThirdwebStorage();
   }
 
+  getTarget() {
+    return this.contract.address;
+  }
+
   getMethod() {
     return this.method;
   }
@@ -602,6 +606,7 @@ export class Transaction<
       tx,
       this.signer,
       this.provider,
+      this.storage,
       this.gaslessOptions,
     );
 

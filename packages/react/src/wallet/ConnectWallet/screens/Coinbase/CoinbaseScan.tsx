@@ -20,10 +20,6 @@ export const ScanCoinbase: React.FC<{
   const coinbaseWalletObj = useSupportedWallet("coinbaseWallet") as Wallet;
 
   useEffect(() => {
-    if (!twWalletContext) {
-      return;
-    }
-
     (async () => {
       const wallet = createInstance(coinbaseWalletObj) as InstanceType<
         typeof CoinbaseWallet

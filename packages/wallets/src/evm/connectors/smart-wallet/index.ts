@@ -2,16 +2,31 @@ import { Chain } from "@thirdweb-dev/chains";
 import { ConnectParams, TWConnector } from "../../interfaces/tw-connector";
 import { ERC4337EthersProvider } from "./lib/erc4337-provider";
 import { getVerifyingPaymaster } from "./lib/paymaster";
-import { create4337Provider, ProviderConfig } from "./lib/provider-utils";
-import { SmartWalletConfig, SmartWalletConnectionArgs } from "./types";
+import { create4337Provider } from "./lib/provider-utils";
+import {
+  AccountContractInfo,
+  FactoryContractInfo,
+  ProviderConfig,
+  SmartWalletConfig,
+  SmartWalletConnectionArgs,
+} from "./types";
 import { ENTRYPOINT_ADDRESS } from "./lib/constants";
 import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
 import { providers } from "ethers";
+import {
+  getChainProvider,
+  SmartContract,
+  Transaction,
+  TransactionResult,
+} from "@thirdweb-dev/sdk";
+import { AccountAPI } from "./lib/account";
+import { DEFAULT_WALLET_API_KEY } from "../../constants/keys";
 
 export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs> {
   private config: SmartWalletConfig;
   private aaProvider: ERC4337EthersProvider | undefined;
+  private accountApi: AccountAPI | undefined;
   personalWallet?: EVMWallet;
 
   constructor(config: SmartWalletConfig) {
@@ -19,7 +34,7 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
     this.config = config;
   }
 
-  async initialize(personalWallet: EVMWallet, accountId: string) {
+  async initialize(personalWallet: EVMWallet) {
     const config = this.config;
     const chain =
       typeof config.chain === "string"
@@ -34,7 +49,6 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
     const providerConfig: ProviderConfig = {
       chain: config.chain,
       localSigner,
-      accountId,
       entryPointAddress,
       bundlerUrl,
       paymasterAPI: this.config.gasless
@@ -45,21 +59,27 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
           )
         : undefined,
       factoryAddress: config.factoryAddress,
-      factoryAbi: config.factoryAbi,
-      accountAbi: config.accountAbi,
+      factoryInfo: config.factoryInfo || this.defaultFactoryInfo(),
+      accountInfo: config.accountInfo || this.defaultAccountInfo(),
       thirdwebApiKey: config.thirdwebApiKey,
     };
+    const originalProvider = getChainProvider(config.chain, {
+      thirdwebApiKey: config.thirdwebApiKey || DEFAULT_WALLET_API_KEY,
+    }) as providers.BaseProvider;
     this.personalWallet = personalWallet;
-    this.aaProvider = await create4337Provider(providerConfig);
+    const accountApi = new AccountAPI(providerConfig, originalProvider);
+    this.aaProvider = await create4337Provider(
+      providerConfig,
+      accountApi,
+      originalProvider,
+    );
+    this.accountApi = accountApi;
   }
 
   async connect(
     connectionArgs: ConnectParams<SmartWalletConnectionArgs>,
   ): Promise<string> {
-    await this.initialize(
-      connectionArgs.personalWallet,
-      connectionArgs.accountId,
-    );
+    await this.initialize(connectionArgs.personalWallet);
     return await this.getAddress();
   }
 
@@ -105,5 +125,48 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateChains(chains: Chain[]): void {
     // throw new Error("Method not implemented.");
+  }
+
+  async execute(transaction: Transaction): Promise<TransactionResult> {
+    if (!this.accountApi) {
+      throw new Error("Local Signer not connected");
+    }
+    const signer = await this.getSigner();
+    const tx = await signer.sendTransaction({
+      to: transaction.getTarget(),
+      data: transaction.encode(),
+      value: await transaction.getValue(),
+    });
+    const receipt = await tx.wait();
+    return {
+      receipt,
+    };
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async executeBatch(transactions: Transaction[]): Promise<TransactionResult> {
+    throw new Error("Method not implemented yet.");
+  }
+
+  private defaultFactoryInfo(): FactoryContractInfo {
+    return {
+      createAccount: async (factory: SmartContract, owner: string) => {
+        return factory.prepare("createAccount", [owner]);
+      },
+      getAccountAddress: async (factory, owner) => {
+        return factory.call("getAddress", [owner]);
+      },
+    };
+  }
+
+  private defaultAccountInfo(): AccountContractInfo {
+    return {
+      execute: async (account, target, value, data) => {
+        return account.prepare("execute", [target, value, data]);
+      },
+      getNonce: async (account) => {
+        return account.call("getNonce", []);
+      },
+    };
   }
 }

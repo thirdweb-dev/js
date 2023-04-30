@@ -21,10 +21,6 @@ export const ScanMetamask: React.FC<{
   const { onConnected } = props;
 
   useEffect(() => {
-    if (!twWalletContext) {
-      return;
-    }
-
     const metamask = createInstance(metamaskWallet) as MetaMaskWallet;
 
     metamask.connectWithQrCode({

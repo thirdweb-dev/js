@@ -7,6 +7,7 @@ import { Wallet, utils } from "ethers";
 export type LocalWalletOptions = {
   chain?: Chain;
   storage?: AsyncStorage;
+  thirdwebApiKey?: string;
 };
 
 export type WalletData = {
@@ -57,10 +58,15 @@ export class LocalWallet extends AbstractClientWallet<
         throw new Error("wallet is not initialized");
       }
 
+      const defaults = this.options.chain
+        ? [...defaultChains, this.options.chain]
+        : defaultChains;
+
       this.connector = new LocalWalletConnector({
         chain: this.options.chain || Ethereum,
         ethersWallet: this.ethersWallet,
-        chains: this.options.chains || defaultChains,
+        chains: this.options.chains || defaults,
+        thirdwebApiKey: this.options.thirdwebApiKey,
       });
     }
     return this.connector;

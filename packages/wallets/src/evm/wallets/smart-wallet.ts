@@ -5,6 +5,7 @@ import type {
   SmartWalletConnectionArgs,
 } from "../connectors/smart-wallet/types";
 import type { SmartWalletConnector as SmartWalletConnectorType } from "../connectors/smart-wallet";
+import { Transaction, TransactionResult } from "@thirdweb-dev/sdk";
 
 // export types and utils for convenience
 export * from "../connectors/smart-wallet/types";
@@ -33,7 +34,7 @@ export class SmartWallet extends AbstractClientWallet<
     });
   }
 
-  protected async getConnector(): Promise<TWConnector> {
+  async getConnector(): Promise<SmartWalletConnectorType> {
     if (!this.connector) {
       const { SmartWalletConnector } = await import(
         "../connectors/smart-wallet"
@@ -47,6 +48,11 @@ export class SmartWallet extends AbstractClientWallet<
 
   getPersonalWallet() {
     return this.connector?.personalWallet;
+  }
+
+  async execute(transaction: Transaction): Promise<TransactionResult> {
+    const connector = await this.getConnector();
+    return connector.execute(transaction);
   }
 
   autoConnect(params: ConnectParams<SmartWalletConnectionArgs>) {
