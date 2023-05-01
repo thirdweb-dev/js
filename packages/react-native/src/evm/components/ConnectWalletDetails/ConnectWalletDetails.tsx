@@ -10,10 +10,12 @@ import { NetworkButton } from "./NetworkButton";
 import { WalletDetailsModalHeader } from "./WalletDetailsModalHeader";
 import { useWallet, useBalance, useDisconnect } from "@thirdweb-dev/react-core";
 import { useActiveChain } from "@thirdweb-dev/react-core/evm";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ExportLocalWalletModal } from "./ExportLocalWalletModal";
 import { Toast } from "../base/Toast";
+import { AbstractClientWallet, SmartWallet } from "@thirdweb-dev/wallets";
+import { SmartWalletAdditionalActions } from "./SmartWalletAdditionalActions";
 
 export type ConnectWalletDetailsProps = {
   address: string;
@@ -28,7 +30,6 @@ export const ConnectWalletDetails = ({
     useState(false);
   const [isDisconnecting, setIsDisconnecting] = useState(false);
   const [addressCopied, setAddressCopied] = useState(false);
-
   const activeWallet = useWallet();
   const disconnect = useDisconnect();
   const chain = useActiveChain();
@@ -70,9 +71,9 @@ export const ConnectWalletDetails = ({
     setIsExportModalVisible(false);
   };
 
-  const onExportLocalWalletPress = () => {
+  const onExportLocalWalletPress = useCallback(() => {
     setIsExportModalVisible(true);
-  };
+  }, []);
 
   const onExportModalClose = () => {
     setIsExportModalVisible(false);
@@ -81,6 +82,43 @@ export const ConnectWalletDetails = ({
   const onAddressCopied = () => {
     setAddressCopied(true);
   };
+
+  const getAdditionalActions = useCallback(() => {
+    if (activeWallet?.walletId.toLowerCase().includes("localwallet")) {
+      return (
+        <>
+          <View style={styles.currentNetwork}>
+            <Text variant="bodySmallSecondary">Additional Actions</Text>
+          </View>
+          <BaseButton
+            backgroundColor="background"
+            borderColor="border"
+            mb="sm"
+            style={styles.exportWallet}
+            onPress={onExportLocalWalletPress}
+          >
+            <PocketWalletIcon size={16} />
+            <View style={styles.exportWalletInfo}>
+              <Text variant="bodySmall">Export wallet</Text>
+            </View>
+          </BaseButton>
+        </>
+      );
+    }
+
+    if (activeWallet?.walletId === SmartWallet.id) {
+      const personalWallet =
+        activeWallet?.getPersonalWallet() as AbstractClientWallet;
+      return (
+        <SmartWalletAdditionalActions
+          personalWallet={personalWallet}
+          onExportPress={onExportLocalWalletPress}
+        />
+      );
+    }
+
+    return null;
+  }, [activeWallet, onExportLocalWalletPress]);
 
   return (
     <>
@@ -106,25 +144,7 @@ export const ConnectWalletDetails = ({
           chainName={chain?.name || "Unknown Network"}
           onPress={onChangeNetworkPress}
         />
-        {activeWallet?.walletId.toLowerCase().includes("localwallet") ? (
-          <>
-            <View style={styles.currentNetwork}>
-              <Text variant="bodySmallSecondary">Additional Actions</Text>
-            </View>
-            <BaseButton
-              backgroundColor="background"
-              borderColor="border"
-              mb="sm"
-              style={styles.exportWallet}
-              onPress={onExportLocalWalletPress}
-            >
-              <PocketWalletIcon size={16} />
-              <View style={styles.exportWalletInfo}>
-                <Text variant="bodySmall">Export wallet</Text>
-              </View>
-            </BaseButton>
-          </>
-        ) : null}
+        {getAdditionalActions()}
         {addressCopied === true ? (
           <Toast text={"Address copied to clipboard"} />
         ) : null}

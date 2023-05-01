@@ -354,6 +354,12 @@ export function ThirdwebWalletProvider(
     }
 
     await activeWallet.disconnect();
+    if (activeWallet.getPersonalWallet()) {
+      await (
+        activeWallet.getPersonalWallet() as AbstractClientWallet
+      )?.disconnect();
+    }
+
     onWalletDisconnect();
   }, [activeWallet, onWalletDisconnect]);
 

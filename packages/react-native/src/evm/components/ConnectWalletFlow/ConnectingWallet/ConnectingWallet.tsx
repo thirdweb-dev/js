@@ -7,7 +7,7 @@ import { ReactNode } from "react";
 import { ActivityIndicator, Linking, StyleSheet, View } from "react-native";
 
 export type ConnectingWalletProps = {
-  subHeaderText?: ReactNode | string;
+  subHeaderText?: string;
   footer?: ReactNode;
   content?: ReactNode;
   onClose: () => void;
@@ -35,7 +35,7 @@ export function ConnectingWallet({
         onBackPress={onBackPress}
         walletLogoUrl={wallet.meta.iconURL}
         subHeaderText={subHeaderText}
-        close={onClose}
+        onClose={onClose}
       />
       <View style={styles.connectingContainer}>
         <ActivityIndicator size="small" color={theme.colors.linkPrimary} />
