@@ -335,12 +335,7 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
         )}
 
         {showScreen === "magic/connect" && (
-          <MagicConnect
-            showModal={() => setHideModal(true)}
-            hideModal={() => setHideModal(false)}
-            onBack={handleBack}
-            onConnect={onConnect}
-          />
+          <MagicConnect onBack={handleBack} onConnect={onConnect} />
         )}
       </Modal>
     </ThemeProvider>
