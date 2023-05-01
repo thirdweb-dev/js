@@ -21,8 +21,6 @@ import { ErrorMessage } from "../../../../components/formElements";
 export const MagicConnect: React.FC<{
   onBack: () => void;
   onConnect: () => void;
-  showModal: () => void;
-  hideModal: () => void;
 }> = (props) => {
   const magicLinkObj = useSupportedWallet("magicLink") as MagicLinkWallet;
   const isSmsEnabled = magicLinkObj.config.smsLogin !== false;
@@ -47,7 +45,7 @@ export const MagicConnect: React.FC<{
   //     oauthProvider: oauthProvider,
   //   });
   //   setIsConnecting(false);
-  //   twContext?.handleWalletConnect(magicWallet);
+  //   twContext.handleWalletConnect(magicWallet);
   //   props.onConnect();
   // };
 
@@ -61,8 +59,6 @@ export const MagicConnect: React.FC<{
             setShowUI(firstScreen);
           }
         }}
-        showModal={props.showModal}
-        hideModal={props.hideModal}
         onConnect={props.onConnect}
       />
     );
@@ -71,8 +67,6 @@ export const MagicConnect: React.FC<{
   if (showUI === "email") {
     return (
       <EmailConnect
-        showModal={props.showModal}
-        hideModal={props.hideModal}
         onBack={() => {
           if (firstScreen === "email") {
             props.onBack();

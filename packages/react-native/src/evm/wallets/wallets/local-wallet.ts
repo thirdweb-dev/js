@@ -26,6 +26,7 @@ export class LocalWallet extends LocalWalletCore {
         await this.generate();
         await this.save({
           strategy: "privateKey",
+          encryption: false,
         });
       } else {
         this.ethersWallet = new ethers.Wallet(data.data);

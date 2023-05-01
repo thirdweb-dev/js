@@ -73,6 +73,7 @@ export const LocalWalletImportModal = ({
 
     localWallet.save({
       strategy: "privateKey",
+      encryption: false,
     });
 
     await localWallet.connect();

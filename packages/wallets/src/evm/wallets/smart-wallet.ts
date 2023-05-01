@@ -1,4 +1,5 @@
 import { AbstractClientWallet, WalletOptions } from "./base";
+import type { ConnectParams } from "../interfaces/tw-connector";
 import type {
   SmartWalletConfig,
   SmartWalletConnectionArgs,
@@ -57,5 +58,9 @@ export class SmartWallet extends AbstractClientWallet<
   async executeBatch(transactions: Transaction[]): Promise<TransactionResult> {
     const connector = await this.getConnector();
     return connector.executeBatch(transactions);
+  }
+
+  autoConnect(params: ConnectParams<SmartWalletConnectionArgs>) {
+    return this.connect(params);
   }
 }

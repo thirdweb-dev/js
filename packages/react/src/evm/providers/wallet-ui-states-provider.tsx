@@ -13,10 +13,10 @@ type Screen =
   | "safe/select-wallet"
   | "safe/form"
   | "wallets/get-started"
-  | "deviceWallet/connect"
-  | "deviceWallet/export"
-  | "smartWallet/form"
+  | "localWallet/connect"
+  | "localWallet/export"
   | "smartWallet/select-wallet"
+  | "smartWallet/form"
   | "magic/connect";
 
 type WalletWrapper = false | "safe" | "smartWallet";

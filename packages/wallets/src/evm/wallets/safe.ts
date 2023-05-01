@@ -43,14 +43,11 @@ export class SafeWallet extends AbstractClientWallet<{}, SafeConnectionArgs> {
     // no op
   }
 
-  async connect(
-    connectOptions: ConnectParams<SafeConnectionArgs>,
-  ): Promise<string> {
-    // can't save params to storage because one of them is a class instance and can't be saved
-    return await super.connect({ ...connectOptions, saveParams: false });
-  }
-
   getPersonalWallet() {
     return this.connector?.personalWallet;
+  }
+
+  autoConnect(params: ConnectParams<SafeConnectionArgs>) {
+    return this.connect(params);
   }
 }

@@ -137,7 +137,6 @@ const DropContainer = styled.div<{ theme?: Theme }>`
     border-color: ${(p) => p.theme.link.primary};
     svg {
       color: ${(p) => p.theme.link.primary};
-      transform: translateY(-8px);
     }
   }
 
