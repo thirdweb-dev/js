@@ -11,7 +11,7 @@ import {
   HelperLink,
 } from "../../../../components/modalElements";
 import { iconSize, spacing, Theme, fontSize } from "../../../../design-system";
-import { useIsNonLocalWallet } from "../../../hooks/useCanSwitchNetwork";
+import { useIsHeadlessWallet } from "../../../hooks/useIsHeadlessWallet";
 import { Steps } from "./Steps";
 import styled from "@emotion/styled";
 import {
@@ -59,7 +59,7 @@ export const SafeForm: React.FC<{
   const [switchingNetwork, setSwitchingNetwork] = useState(false);
 
   const connectionStatus = useConnectionStatus();
-  const requiresConfirmation = useIsNonLocalWallet();
+  const requiresConfirmation = !useIsHeadlessWallet();
   const chains = useSupportedChains();
 
   // put supported chains first

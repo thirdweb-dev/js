@@ -15,6 +15,7 @@ type Screen =
   | "wallets/get-started"
   | "localWallet/connect"
   | "localWallet/export"
+  | "smartWallet/select-wallet"
   | "smartWallet/form"
   | "magic/connect";
 

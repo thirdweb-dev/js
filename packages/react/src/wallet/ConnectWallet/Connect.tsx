@@ -32,9 +32,10 @@ import { ifWaiting } from "../../evm/utils/ifWaiting";
 import { ThemeProvider } from "@emotion/react";
 import { darkTheme, lightTheme } from "../../design-system";
 import { LocalWalletSetup } from "./screens/LocalWallet/LocalWalletSetup";
-import { SmartWalletConnection } from "./screens/SmartWallet/SmartWalletForm";
+import { SmartWalletForm } from "./screens/SmartWallet/SmartWalletForm";
 import { MagicConnect } from "./screens/Magic/MagicConnect";
 import { LocalWalletInfoProvider } from "./screens/LocalWallet/useLocalWalletInfo";
+import { SmartWalletSelect } from "./screens/SmartWallet/SmartWalletSelect";
 
 export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
   guestMode,
@@ -63,6 +64,7 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
   }, [setIsConnectingToWalletWrapper, setIsWalletModalOpen, setShowScreen]);
 
   const onConnect = useCallback(() => {
+    console.log("wrapper", isConnectingToWalletWrapper);
     if (isConnectingToWalletWrapper === "safe") {
       setShowScreen("safe/form");
     } else if (isConnectingToWalletWrapper === "smartWallet") {
@@ -75,6 +77,8 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
   const onConnectError = useCallback(() => {
     if (isConnectingToWalletWrapper === "safe") {
       setShowScreen("safe/select-wallet");
+    } else if (isConnectingToWalletWrapper === "smartWallet") {
+      setShowScreen("smartWallet/select-wallet");
     } else {
       setShowScreen("walletList");
     }
@@ -83,6 +87,8 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
   const handleBack = useCallback(() => {
     if (isConnectingToWalletWrapper === "safe") {
       setShowScreen("safe/select-wallet");
+    } else if (isConnectingToWalletWrapper === "smartWallet") {
+      setShowScreen("smartWallet/select-wallet");
     } else {
       setShowScreen("walletList");
     }
@@ -160,8 +166,8 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
 
       // Smart Wallet
       else if (wallet.id === "SmartWallet") {
-        // setIsConnectingToWalletWrapper("smartWallet");
-        setShowScreen("smartWallet/form");
+        setIsConnectingToWalletWrapper("smartWallet");
+        setShowScreen("smartWallet/select-wallet");
       }
 
       // Local Wallet
@@ -312,11 +318,19 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
         )}
 
         {showScreen === "smartWallet/form" && (
-          <SmartWalletConnection
+          <SmartWalletForm
             onBack={handleBack}
             onConnect={() => {
               closeModalAndReset();
             }}
+          />
+        )}
+
+        {showScreen === "smartWallet/select-wallet" && (
+          <SmartWalletSelect
+            onBack={handleBack}
+            guestMode={guestMode}
+            walletsMeta={walletsMeta}
           />
         )}
 
@@ -325,20 +339,7 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
             showModal={() => setHideModal(true)}
             hideModal={() => setHideModal(false)}
             onBack={handleBack}
-            onConnect={() => {
-              closeModalAndReset();
-            }}
-          />
-        )}
-
-        {showScreen === "magic/connect" && (
-          <MagicConnect
-            showModal={() => setHideModal(true)}
-            hideModal={() => setHideModal(false)}
-            onBack={handleBack}
-            onConnect={() => {
-              closeModalAndReset();
-            }}
+            onConnect={onConnect}
           />
         )}
       </Modal>
