@@ -6,6 +6,7 @@ import { AbstractClientWallet } from "@thirdweb-dev/wallets";
 import { Address } from "../base/Address";
 import Text from "../base/Text";
 import { usePersonalWalletAddress } from "../../wallets/hooks/usePersonalWalletAddress";
+import { LocalWallet } from "../../wallets/wallets/local-wallet";
 
 export const SmartWalletAdditionalActions = ({
   personalWallet,
@@ -40,18 +41,20 @@ export const SmartWalletAdditionalActions = ({
           ) : null}
         </View>
       </BaseButton>
-      <BaseButton
-        backgroundColor="background"
-        borderColor="border"
-        mb="sm"
-        style={styles.exportWallet}
-        onPress={onExportPress}
-      >
-        <PocketWalletIcon size={16} />
-        <View style={styles.exportWalletInfo}>
-          <Text variant="bodySmall">Export personal wallet</Text>
-        </View>
-      </BaseButton>
+      {personalWallet.walletId === LocalWallet.id ? (
+        <BaseButton
+          backgroundColor="background"
+          borderColor="border"
+          mb="sm"
+          style={styles.exportWallet}
+          onPress={onExportPress}
+        >
+          <PocketWalletIcon size={16} />
+          <View style={styles.exportWalletInfo}>
+            <Text variant="bodySmall">Export personal wallet</Text>
+          </View>
+        </BaseButton>
+      ) : null}
     </>
   );
 };

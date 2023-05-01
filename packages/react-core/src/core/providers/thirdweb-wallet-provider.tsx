@@ -154,8 +154,6 @@ export function ThirdwebWalletProvider(
         connectParams,
       };
 
-      console.log("connectParas", connectParams);
-
       // if personal wallet exists, we need to replace the connectParams.personalWallet to a stringifiable version
       const personalWallet = wallet.getPersonalWallet() as AbstractClientWallet;
 
