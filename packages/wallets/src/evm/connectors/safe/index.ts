@@ -167,7 +167,7 @@ export class SafeConnector extends TWConnector<SafeConnectionArgs> {
     try {
       const account = await this.getAddress();
       return !!account;
-    } catch (e) {
+    } catch {
       return false;
     }
   }
