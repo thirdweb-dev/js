@@ -10,7 +10,6 @@ import { LocalWallet } from "@thirdweb-dev/wallets/evm/wallets/local-wallet";
 import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
 import { MetaMaskWallet } from "@thirdweb-dev/wallets/evm/wallets/metamask";
-import { WalletConnect } from "@thirdweb-dev/wallets/evm/wallets/wallet-connect";
 import { BigNumber } from "ethers";
 import type { ContractInterface, Signer } from "ethers";
 
@@ -22,7 +21,6 @@ declare global {
 
 const API_KEY =
   "339d65590ba0fa79e4c8be0af33d64eda709e13652acb02c6be63f5a1fbef9c3";
-const TW_WC_PROJECT_ID = "145769e410f16970a79ff77b2d89a1e0";
 const SEPARATOR = "/";
 const SUB_SEPARATOR = "#";
 
