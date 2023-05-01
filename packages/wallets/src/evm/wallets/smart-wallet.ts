@@ -55,6 +55,11 @@ export class SmartWallet extends AbstractClientWallet<
     return connector.execute(transaction);
   }
 
+  async executeBatch(transactions: Transaction[]): Promise<TransactionResult> {
+    const connector = await this.getConnector();
+    return connector.executeBatch(transactions);
+  }
+
   autoConnect(params: ConnectParams<SmartWalletConnectionArgs>) {
     return this.connect(params);
   }

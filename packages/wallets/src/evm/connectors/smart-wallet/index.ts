@@ -13,7 +13,7 @@ import {
 import { ENTRYPOINT_ADDRESS } from "./lib/constants";
 import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
-import { providers } from "ethers";
+import { BigNumber, providers } from "ethers";
 import {
   getChainProvider,
   SmartContract,
@@ -128,9 +128,6 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
   }
 
   async execute(transaction: Transaction): Promise<TransactionResult> {
-    if (!this.accountApi) {
-      throw new Error("Local Signer not connected");
-    }
     const signer = await this.getSigner();
     const tx = await signer.sendTransaction({
       to: transaction.getTarget(),
@@ -145,7 +142,30 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async executeBatch(transactions: Transaction[]): Promise<TransactionResult> {
-    throw new Error("Method not implemented yet.");
+    if (!this.accountApi) {
+      throw new Error("Account not connected");
+    }
+    const signer = await this.getSigner();
+    const targets = transactions.map((tx) => tx.getTarget());
+    const data = transactions.map((tx) => tx.encode());
+    const values = transactions.map(() => BigNumber.from(0)); // TODO check if we can handle multiple values
+    const callData = await this.accountApi.encodeExecuteBatch(
+      targets,
+      values,
+      data,
+    );
+    const tx = await signer.sendTransaction(
+      {
+        to: await signer.getAddress(),
+        data: callData,
+        value: 0,
+      },
+      true, // batched tx flag
+    );
+    const receipt = await tx.wait();
+    return {
+      receipt,
+    };
   }
 
   private defaultFactoryInfo(): FactoryContractInfo {
