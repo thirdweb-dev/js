@@ -1,10 +1,19 @@
 import { SafeWallet } from "@thirdweb-dev/wallets";
 import type { Wallet, WalletOptions } from "@thirdweb-dev/react-core";
 
-export const safeWallet = () => {
+type SafeWalletConfig = {
+  personalWallets?: Wallet[];
+};
+
+export type SafeWalletObj = Wallet & {
+  config?: SafeWalletConfig;
+};
+
+export const safeWallet = (config?: SafeWalletConfig) => {
   return {
     id: SafeWallet.id,
     meta: SafeWallet.meta,
     create: (options: WalletOptions) => new SafeWallet({ ...options }),
-  } satisfies Wallet;
+    config,
+  } satisfies SafeWalletObj;
 };

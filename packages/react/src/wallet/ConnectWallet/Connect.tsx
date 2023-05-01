@@ -10,9 +10,11 @@ import { MetamaskConnecting } from "./screens/Metamask/MetamaskConnecting";
 import { MetamaskGetStarted } from "./screens/Metamask/MetamaskGetStarted";
 import { ScanMetamask } from "./screens/Metamask/MetamaskScan";
 import {
+  Wallet,
   useConnect,
   useConnectionStatus,
   useDisconnect,
+  useSupportedWallet,
   useWallets,
 } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useState } from "react";
@@ -36,6 +38,8 @@ import { SmartWalletForm } from "./screens/SmartWallet/SmartWalletForm";
 import { MagicConnect } from "./screens/Magic/MagicConnect";
 import { LocalWalletInfoProvider } from "./screens/LocalWallet/useLocalWalletInfo";
 import { SmartWalletSelect } from "./screens/SmartWallet/SmartWalletSelect";
+import { SmartWalletObj } from "../wallets/smartWallet";
+import { SafeWalletObj } from "../wallets/safeWallet";
 
 export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
   guestMode,
@@ -94,107 +98,119 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
     }
   }, [isConnectingToWalletWrapper, setShowScreen]);
 
-  const walletsMeta: WalletMeta[] = wallets.map((wallet) => ({
-    id: wallet.id,
-    meta: wallet.meta,
-    installed:
-      wallet.id in installedWallets &&
-      installedWallets[wallet.id as keyof typeof installedWallets],
-    onClick: async () => {
-      // Metamask
-      if (wallet.id === "metamask") {
-        if (installedWallets.metamask) {
-          try {
-            await ifWaiting({
-              for: connect(wallet, {}),
-              moreThan: 100,
-              do: () => {
-                setShowScreen("metamask/connecting");
-              },
-            });
+  const getWalletMeta = useCallback(
+    (wallet: Wallet) => ({
+      id: wallet.id,
+      meta: wallet.meta,
+      installed:
+        wallet.id in installedWallets &&
+        installedWallets[wallet.id as keyof typeof installedWallets],
+      onClick: async () => {
+        // Metamask
+        if (wallet.id === "metamask") {
+          if (installedWallets.metamask) {
+            try {
+              await ifWaiting({
+                for: connect(wallet, {}),
+                moreThan: 100,
+                do: () => {
+                  setShowScreen("metamask/connecting");
+                },
+              });
 
-            onConnect();
-          } catch (e) {
-            onConnectError();
+              onConnect();
+            } catch (e) {
+              onConnectError();
+            }
+          }
+
+          // if metamask is not injected
+          else {
+            // on mobile, open metamask app link
+            if (isMobile()) {
+              window.open(
+                `https://metamask.app.link/dapp/${window.location.toString()}`,
+              );
+            } else {
+              // on desktop, show the metamask scan qr code
+              setShowScreen("metamask/scan");
+            }
           }
         }
 
-        // if metamask is not injected
+        // Coinbase Wallet
+        else if (wallet.id === "coinbaseWallet") {
+          if (installedWallets.coinbaseWallet) {
+            try {
+              await ifWaiting({
+                for: connect(wallet, {}),
+                moreThan: 100,
+                do: () => {
+                  setShowScreen("coinbase/connecting");
+                },
+              });
+              onConnect();
+            } catch (e) {
+              onConnectError();
+            }
+          } else {
+            if (isMobile()) {
+              // coinbase will redirect to download page for coinbase wallet apps
+              connect(wallet, {});
+            } else {
+              setShowScreen("coinbase/scan");
+            }
+          }
+        }
+
+        // Safe
+        else if (wallet.id === "Safe") {
+          setIsConnectingToWalletWrapper("safe");
+          setShowScreen("safe/select-wallet");
+        }
+
+        // Smart Wallet
+        else if (wallet.id === "SmartWallet") {
+          setIsConnectingToWalletWrapper("smartWallet");
+          setShowScreen("smartWallet/select-wallet");
+        }
+
+        // Local Wallet
+        else if (wallet.id === "localWallet") {
+          setShowScreen("localWallet/connect");
+        }
+
+        // Magic link
+        else if (wallet.id === "magicLink") {
+          setShowScreen("magic/connect");
+        }
+
+        // others ( they handle their own connection flow)
         else {
-          // on mobile, open metamask app link
-          if (isMobile()) {
-            window.open(
-              `https://metamask.app.link/dapp/${window.location.toString()}`,
-            );
-          } else {
-            // on desktop, show the metamask scan qr code
-            setShowScreen("metamask/scan");
-          }
-        }
-      }
-
-      // Coinbase Wallet
-      else if (wallet.id === "coinbaseWallet") {
-        if (installedWallets.coinbaseWallet) {
           try {
-            await ifWaiting({
-              for: connect(wallet, {}),
-              moreThan: 100,
-              do: () => {
-                setShowScreen("coinbase/connecting");
-              },
-            });
+            setHideModal(true);
+            await connect(wallet, {});
             onConnect();
+            setHideModal(false);
           } catch (e) {
             onConnectError();
-          }
-        } else {
-          if (isMobile()) {
-            // coinbase will redirect to download page for coinbase wallet apps
-            connect(wallet, {});
-          } else {
-            setShowScreen("coinbase/scan");
+            setHideModal(false);
+            console.error(e);
           }
         }
-      }
+      },
+    }),
+    [
+      connect,
+      installedWallets,
+      onConnect,
+      onConnectError,
+      setIsConnectingToWalletWrapper,
+      setShowScreen,
+    ],
+  );
 
-      // Safe
-      else if (wallet.id === "Safe") {
-        setIsConnectingToWalletWrapper("safe");
-        setShowScreen("safe/select-wallet");
-      }
-
-      // Smart Wallet
-      else if (wallet.id === "SmartWallet") {
-        setIsConnectingToWalletWrapper("smartWallet");
-        setShowScreen("smartWallet/select-wallet");
-      }
-
-      // Local Wallet
-      else if (wallet.id === "localWallet") {
-        setShowScreen("localWallet/connect");
-      }
-
-      // Magic link
-      else if (wallet.id === "magicLink") {
-        setShowScreen("magic/connect");
-      }
-
-      // others ( they handle their own connection flow)
-      else {
-        try {
-          setHideModal(true);
-          await connect(wallet, {});
-          onConnect();
-          setHideModal(false);
-        } catch (e) {
-          onConnectError();
-          setHideModal(false);
-          console.error(e);
-        }
-      }
-    },
-  }));
+  const walletsMeta: WalletMeta[] = wallets.map(getWalletMeta);
 
   useEffect(() => {
     if (showScreen === "walletList" && wallets.length === 1) {
@@ -203,6 +219,14 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
   }, [walletsMeta, showScreen, wallets.length]);
 
   const usingLocalWallet = wallets.find((w) => w.id === "localWallet");
+
+  const smartWalletObj = wallets.find((w) => w.id === "SmartWallet") as
+    | SmartWalletObj
+    | undefined;
+
+  const safeWalletObj = wallets.find((w) => w.id === "Safe") as
+    | SafeWalletObj
+    | undefined;
 
   const content = (
     <ThemeProvider
@@ -293,7 +317,11 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
               setIsConnectingToWalletWrapper(false);
               setShowScreen("walletList");
             }}
-            walletsMeta={walletsMeta}
+            walletsMeta={
+              safeWalletObj?.config?.personalWallets
+                ? safeWalletObj?.config.personalWallets.map(getWalletMeta)
+                : walletsMeta
+            }
           />
         )}
 
@@ -332,7 +360,11 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
               setShowScreen("walletList");
             }}
             guestMode={guestMode}
-            walletsMeta={walletsMeta}
+            walletsMeta={
+              smartWalletObj?.config.personalWallets
+                ? smartWalletObj?.config.personalWallets.map(getWalletMeta)
+                : walletsMeta
+            }
           />
         )}
 
