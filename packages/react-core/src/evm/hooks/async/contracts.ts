@@ -36,6 +36,8 @@ import type {
 import type { CallOverrides, ContractInterface, providers } from "ethers";
 import { useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";
+import { BaseContractForAddress } from "@thirdweb-dev/sdk/dist/declarations/src/evm/types/contract";
+import { ContractAddress as GeneratedContractAddress } from "@thirdweb-dev/generated-abis";
 
 // contract type
 async function fetchContractType(
@@ -149,6 +151,16 @@ export type UseContractResult<
 > = UseQueryResult<TContract | undefined> & {
   contract: TContract | undefined;
 };
+
+export function useContract<
+  TContractAddress extends ContractAddress | GeneratedContractAddress,
+>(
+  contractAddress: RequiredParam<TContractAddress>,
+): UseContractResult<
+  TContractAddress extends GeneratedContractAddress
+    ? SmartContract<BaseContractForAddress<TContractAddress>>
+    : SmartContract
+>;
 
 /**
  * Use this resolve a contract address to a smart contract instance.

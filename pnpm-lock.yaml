@@ -605,6 +605,9 @@ importers:
       '@thirdweb-dev/chains':
         specifier: workspace:*
         version: link:../chains
+      '@thirdweb-dev/generated-abis':
+        specifier: workspace:^
+        version: link:../generated-abis
       '@thirdweb-dev/sdk':
         specifier: workspace:*
         version: link:../sdk
