@@ -65,7 +65,6 @@ export const SmartWalletFlow = ({
       await walletInstance.connect();
 
       await connect(walletObj, {
-        accountId: "pepe",
         personalWallet: walletInstance,
       });
       onConnect();
@@ -77,7 +76,6 @@ export const SmartWalletFlow = ({
     await localWalletImported.connect();
 
     await connect(walletObj, {
-      accountId: "pepe",
       personalWallet: localWalletImported,
     });
     onConnect();
