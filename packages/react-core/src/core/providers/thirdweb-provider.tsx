@@ -118,7 +118,9 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
         (chain) => chain.chainId === activeChainIdOrObjWithKey,
       );
       if (!resolveChain) {
-        throw new Error(`Invalid chainId: ${activeChainIdOrObjWithKey}`);
+        throw new Error(
+          `Invalid chainId: ${activeChainIdOrObjWithKey}, It is not one of supportedChains`,
+        );
       }
       return resolveChain;
     }
@@ -128,7 +130,9 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
         (chain) => chain.slug === activeChainIdOrObjWithKey,
       );
       if (!resolvedChain) {
-        throw new Error(`Invalid chain: ${activeChainIdOrObjWithKey}`);
+        throw new Error(
+          `Invalid chain: "${activeChainIdOrObjWithKey}", It is not one of supportedChains`,
+        );
       }
       return resolvedChain;
     }
