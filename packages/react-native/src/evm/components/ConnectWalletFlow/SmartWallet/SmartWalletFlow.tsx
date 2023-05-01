@@ -1,11 +1,9 @@
 import { useCallback, useState } from "react";
-import { SmartWallet } from "@thirdweb-dev/wallets";
 import {
   Wallet,
   useConnect,
   useCreateWalletInstance,
   useSupportedWallet,
-  useWallets,
 } from "@thirdweb-dev/react-core";
 import { SmartWalletObj } from "../../../wallets/wallets/smart-wallet";
 import {
@@ -26,7 +24,6 @@ export const SmartWalletFlow = ({
   // const context = useThirdwebWallet();
   const [showLocalWalletFlow, setShowLocalWalletFlow] = useState<boolean>();
   const createWalletInstance = useCreateWalletInstance();
-  const supportedWallets = useWallets();
   const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
   const connect = useConnect();
 
@@ -139,9 +136,9 @@ export const SmartWalletFlow = ({
   return (
     <ChooseWallet
       headerText={"Personal wallet"}
-      wallets={supportedWallets}
+      subHeaderText={"Select a personal wallet to connect to your smart wallet"}
+      wallets={walletObj.config.personalWallets}
       showGuestWalletAsButton={true}
-      excludeWalletIds={[SmartWallet.id]}
       onChooseWallet={onChoosePersonalWallet}
       onClose={onClose}
     />

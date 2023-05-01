@@ -7,12 +7,9 @@ import {
 } from "@thirdweb-dev/react-core";
 import { PropsWithChildren } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
-import { metamaskWallet } from "../wallets/wallets/metamask-wallet";
-import { rainbowWallet } from "../wallets/wallets/rainbow-wallet";
 import { SecureStorage } from "../../core/SecureStorage";
 import { useCoinbaseWalletListener } from "../wallets/hooks/useCoinbaseWalletListener";
-
-const DEFAULT_WALLETS = [metamaskWallet(), rainbowWallet()];
+import { DEFAULT_WALLETS } from "../constants/wallets";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<ThirdwebProviderCoreProps<TChains>, "supportedWallets"> {

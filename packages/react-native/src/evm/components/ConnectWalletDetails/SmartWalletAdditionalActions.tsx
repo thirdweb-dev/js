@@ -41,7 +41,7 @@ export const SmartWalletAdditionalActions = ({
           ) : null}
         </View>
       </BaseButton>
-      {personalWallet.walletId === LocalWallet.id ? (
+      {personalWallet?.walletId === LocalWallet.id ? (
         <BaseButton
           backgroundColor="background"
           borderColor="border"
