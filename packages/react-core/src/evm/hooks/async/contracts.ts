@@ -32,11 +32,11 @@ import type {
   SUPPORTED_CHAIN_ID,
   ThirdwebSDK,
   ValidContractInstance,
+  BaseContractForAddress,
 } from "@thirdweb-dev/sdk";
 import type { CallOverrides, ContractInterface, providers } from "ethers";
 import { useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";
-import { BaseContractForAddress } from "@thirdweb-dev/sdk/dist/declarations/src/evm/types/contract";
 import { ContractAddress as GeneratedContractAddress } from "@thirdweb-dev/generated-abis";
 
 // contract type
