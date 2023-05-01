@@ -195,7 +195,7 @@ export const ConnectedWalletDetails: React.FC<{
     <MenuButton
       type="button"
       onClick={() => {
-        walletContext?.handleWalletConnect(personalWallet);
+        walletContext.handleWalletConnect(personalWallet);
       }}
     >
       <div

@@ -38,7 +38,7 @@ export const ImportLocalWallet: React.FC<{
 
   const handleImport = async () => {
     const localWallet = createWalletInstance(localWalletObj) as LocalWallet;
-    if (!localWallet || !jsonString || !thirdwebWalletContext) {
+    if (!localWallet || !jsonString) {
       throw new Error("Invalid state");
     }
 

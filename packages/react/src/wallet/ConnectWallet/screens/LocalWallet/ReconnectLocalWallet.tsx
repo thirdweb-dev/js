@@ -91,7 +91,7 @@ export const ReconnectLocalWalletNoCredentials: React.FC<
   }
 
   const handleReconnect = async () => {
-    if (!localWallet || !thirdwebWalletContext) {
+    if (!localWallet) {
       throw new Error("Invalid state");
     }
     setIsConnecting(true);
@@ -271,7 +271,7 @@ export const ReconnectLocalWalletCredentials: React.FC<
   }
 
   const handleConnect = async () => {
-    if (!localWallet || !thirdwebWalletContext) {
+    if (!localWallet) {
       throw new Error("Invalid state");
     }
 

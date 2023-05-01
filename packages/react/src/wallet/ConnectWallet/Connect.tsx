@@ -33,8 +33,8 @@ import { ThemeProvider } from "@emotion/react";
 import { darkTheme, lightTheme } from "../../design-system";
 import { LocalWalletSetup } from "./screens/LocalWallet/LocalWalletSetup";
 import { SmartWalletConnection } from "./screens/SmartWallet/SmartWalletForm";
-import { LocalWalletInfoProvider } from "./screens/LocalWallet/useLocalWalletInfo";
 import { MagicConnect } from "./screens/Magic/MagicConnect";
+import { LocalWalletInfoProvider } from "./screens/LocalWallet/useLocalWalletInfo";
 
 export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
   guestMode,
@@ -48,7 +48,6 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
   const connectionStatus = useConnectionStatus();
   const disconnect = useDisconnect();
-  const [username, setUsername] = useState("");
 
   const connect = useConnect();
   const wallets = useWallets();
@@ -234,9 +233,6 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
             onGuestConnect={() => {
               setShowScreen("localWallet/connect");
             }}
-            onUsernameSet={(name) => {
-              setUsername(name);
-            }}
           />
         )}
 
@@ -317,7 +313,17 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
 
         {showScreen === "smartWallet/form" && (
           <SmartWalletConnection
-            username={username}
+            onBack={handleBack}
+            onConnect={() => {
+              closeModalAndReset();
+            }}
+          />
+        )}
+
+        {showScreen === "magic/connect" && (
+          <MagicConnect
+            showModal={() => setHideModal(true)}
+            hideModal={() => setHideModal(false)}
             onBack={handleBack}
             onConnect={() => {
               closeModalAndReset();

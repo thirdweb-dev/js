@@ -413,7 +413,13 @@ export function ThirdwebWalletProvider(
 }
 
 export function useThirdwebWallet() {
-  return useContext(ThirdwebWalletContext);
+  const ctx = useContext(ThirdwebWalletContext);
+  if (!ctx) {
+    throw new Error(
+      `useThirdwebWallet() can only be used inside <ThirdwebProvider />`,
+    );
+  }
+  return ctx;
 }
 
 async function getLastConnectedWalletInfo() {

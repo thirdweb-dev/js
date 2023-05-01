@@ -47,7 +47,7 @@ export const MagicConnect: React.FC<{
   //     oauthProvider: oauthProvider,
   //   });
   //   setIsConnecting(false);
-  //   twContext?.handleWalletConnect(magicWallet);
+  //   twContext.handleWalletConnect(magicWallet);
   //   props.onConnect();
   // };
 

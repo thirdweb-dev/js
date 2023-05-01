@@ -48,7 +48,7 @@ export const CreateLocalWallet_Creds: React.FC<{
   }
 
   const createNewWallet = async () => {
-    if (!localWallet || !thirdwebWalletContext) {
+    if (!localWallet) {
       throw new Error("Invalid state");
     }
 

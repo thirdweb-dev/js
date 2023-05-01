@@ -23,6 +23,7 @@ import {
   useConnect,
   useConnectionStatus,
   useSupportedWallet,
+  useThirdwebWallet,
   useWallet,
   WalletInstance,
 } from "@thirdweb-dev/react-core";
@@ -40,7 +41,9 @@ export const SmartWalletConnection: React.FC<{
   const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
   const activeWallet = useWallet();
   const [accounts, setAccounts] = useState<string[] | undefined>();
+  const { activeChain } = useThirdwebWallet();
 
+  console.log({ accounts, activeWallet });
   useEffect(() => {
     if (!activeWallet) {
       return;
@@ -48,13 +51,13 @@ export const SmartWalletConnection: React.FC<{
 
     (async () => {
       const _accounts = await getAllSmartWallets(
-        walletObj.chain,
+        activeChain,
         walletObj.factoryAddress,
         await activeWallet.getAddress(),
       );
       setAccounts([_accounts.owned, ..._accounts.hasSignerRole]);
     })();
-  }, [activeWallet, walletObj.chain, walletObj.factoryAddress]);
+  }, [activeWallet, activeChain, walletObj.factoryAddress]);
 
   if (!accounts) {
     return (
@@ -87,6 +90,8 @@ export const SmartWalletCreate: React.FC<{
   const connect = useConnect();
   const chainId = useChainId();
 
+  const { activeChain } = useThirdwebWallet();
+
   const [userName, setUserName] = useState("");
   const [connectError, setConnectError] = useState(false);
   const connectionStatus = useConnectionStatus();
@@ -111,7 +116,7 @@ export const SmartWalletCreate: React.FC<{
     }
   };
 
-  const mismatch = chainId !== walletObj.chain.chainId;
+  const mismatch = chainId !== activeChain.chainId;
 
   return (
     <>
@@ -218,7 +223,7 @@ export const SmartWalletCreate: React.FC<{
                 }
 
                 try {
-                  await activeWallet.switchChain(walletObj.chain.chainId);
+                  await activeWallet.switchChain(activeChain.chainId);
                 } catch (e) {
                   console.error(e);
                   setSwitchError(true);

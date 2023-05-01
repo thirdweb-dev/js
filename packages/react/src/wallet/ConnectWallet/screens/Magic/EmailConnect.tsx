@@ -35,13 +35,13 @@ export const EmailConnect: React.FC<{
     setIsConnecting(true);
     props.hideModal();
     const connectOptions = {
-      chainId: twContext?.activeChain?.chainId,
+      chainId: twContext.activeChain?.chainId,
       email,
     };
     await magicWallet.connect(connectOptions);
     setIsConnecting(false);
     props.showModal();
-    twContext?.handleWalletConnect(magicWallet, connectOptions);
+    twContext.handleWalletConnect(magicWallet, connectOptions);
     props.onConnect();
   };
 
