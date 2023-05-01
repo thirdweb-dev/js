@@ -257,7 +257,10 @@ export function ThirdwebWalletProvider(
       const personalWalletInfo = walletInfo.connectParams?.personalWallet;
 
       if (personalWalletInfo) {
-        const personalWalleObj = props.supportedWallets.find(
+        const personalWallets =
+          walletObj?.config?.personalWallets || props.supportedWallets;
+
+        const personalWalleObj = personalWallets.find(
           (W) => W.id === personalWalletInfo.walletId,
         );
         if (personalWalleObj) {

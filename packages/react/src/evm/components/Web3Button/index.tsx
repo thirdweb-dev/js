@@ -3,7 +3,7 @@ import { Spinner } from "../../../components/Spinner";
 import { Button } from "../../../components/buttons";
 import { darkTheme, lightTheme } from "../../../design-system";
 import { ConnectWallet } from "../../../wallet/ConnectWallet/ConnectWallet";
-import { useIsNonLocalWallet } from "../../../wallet/hooks/useCanSwitchNetwork";
+import { useIsHeadlessWallet } from "../../../wallet/hooks/useIsHeadlessWallet";
 import { ThemeProvider } from "@emotion/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -87,7 +87,7 @@ export const Web3Button = <TAction extends ActionFn>({
   const connectionStatus = useConnectionStatus();
 
   const queryClient = useQueryClient();
-  const requiresConfirmation = useIsNonLocalWallet();
+  const requiresConfirmation = !useIsHeadlessWallet();
 
   const { contract } = useContract(contractAddress, contractAbi || "custom");
   const thirdwebTheme = useContext(ThirdwebThemeContext);
