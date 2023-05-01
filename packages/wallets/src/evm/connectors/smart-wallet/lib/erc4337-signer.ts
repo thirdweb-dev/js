@@ -1,4 +1,4 @@
-import { providers } from "ethers";
+import { ethers, providers } from "ethers";
 
 import { Bytes, Signer } from "ethers";
 import { UserOperationStruct } from "@account-abstraction/contracts";
@@ -37,18 +37,20 @@ export class ERC4337EthersSigner extends Signer {
   // This one is called by Contract. It signs the request and passes in to Provider to be sent.
   async sendTransaction(
     transaction: Deferrable<providers.TransactionRequest>,
+    batched: boolean = false,
   ): Promise<providers.TransactionResponse> {
-    const tx: providers.TransactionRequest = await this.populateTransaction(
-      transaction,
-    );
+    const tx = await ethers.utils.resolveProperties(transaction);
     await this.verifyAllNecessaryFields(tx);
 
-    const userOperation = await this.smartAccountAPI.createSignedUserOp({
-      target: tx.to ?? "",
-      data: tx.data?.toString() ?? "",
-      value: tx.value,
-      gasLimit: tx.gasLimit,
-    });
+    const userOperation = await this.smartAccountAPI.createSignedUserOp(
+      {
+        target: tx.to ?? "",
+        data: tx.data?.toString() ?? "",
+        value: tx.value,
+        gasLimit: tx.gasLimit,
+      },
+      batched,
+    );
 
     const transactionResponse =
       await this.erc4337provider.constructUserOpTransactionResponse(
