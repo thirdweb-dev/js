@@ -14,7 +14,6 @@ import {
   useConnect,
   useConnectionStatus,
   useDisconnect,
-  useSupportedWallet,
   useWallets,
 } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useState } from "react";
@@ -68,7 +67,6 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
   }, [setIsConnectingToWalletWrapper, setIsWalletModalOpen, setShowScreen]);
 
   const onConnect = useCallback(() => {
-    console.log("wrapper", isConnectingToWalletWrapper);
     if (isConnectingToWalletWrapper === "safe") {
       setShowScreen("safe/form");
     } else if (isConnectingToWalletWrapper === "smartWallet") {
