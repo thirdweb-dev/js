@@ -328,7 +328,9 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
 
         {showScreen === "smartWallet/select-wallet" && (
           <SmartWalletSelect
-            onBack={handleBack}
+            onBack={() => {
+              setShowScreen("walletList");
+            }}
             guestMode={guestMode}
             walletsMeta={walletsMeta}
           />
