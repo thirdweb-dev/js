@@ -1,5 +1,6 @@
 import type { Wallet, WalletOptions } from "@thirdweb-dev/react-core";
 import { SmartWallet } from "@thirdweb-dev/wallets";
+import { defaultWallets } from "./defaultWallets";
 
 type SafeWalletConfig = {
   factoryAddress: string;
@@ -9,7 +10,7 @@ type SafeWalletConfig = {
 };
 
 export type SmartWalletObj = Wallet & {
-  config: SafeWalletConfig;
+  config: Required<SafeWalletConfig>;
 };
 
 export const smartWallet = (config: SafeWalletConfig) => {
@@ -18,6 +19,9 @@ export const smartWallet = (config: SafeWalletConfig) => {
     meta: SmartWallet.meta,
     create: (options: WalletOptions) =>
       new SmartWallet({ ...options, ...config }),
-    config,
+    config: {
+      ...config,
+      personalWallets: config?.personalWallets || defaultWallets,
+    },
   } satisfies SmartWalletObj;
 };

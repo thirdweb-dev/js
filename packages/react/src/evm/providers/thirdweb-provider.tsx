@@ -10,13 +10,10 @@ import { ThemeProvider } from "@emotion/react";
 import { darkTheme, lightTheme } from "../../design-system";
 import { PropsWithChildren } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
-import { coinbaseWallet } from "../../wallet/wallets/coinbaseWallet";
-import { metamaskWallet } from "../../wallet/wallets/metamaskWallet";
-import { walletConnectV1 } from "../../wallet/wallets/walletConnectV1";
 import { localWallet } from "../../wallet/wallets/localWallet";
+import { defaultWallets } from "../../wallet/wallets/defaultWallets";
 
 const localWalletObj = localWallet();
-const defaultWallets = [metamaskWallet(), coinbaseWallet(), walletConnectV1()];
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
