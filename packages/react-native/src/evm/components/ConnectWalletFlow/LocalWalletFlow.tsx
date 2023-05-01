@@ -9,7 +9,7 @@ import { useState } from "react";
 
 export type LocalWalletFlowProps = {
   onClose: () => void;
-  onBackPress: () => void;
+  onBackPress?: () => void;
   onConnectPress: () => void;
   onWalletImported: (localWallet: LocalWallet) => void;
 };
@@ -40,7 +40,8 @@ export function LocalWalletFlow({
     <>
       <ConnectWalletHeader
         onBackPress={onBackPress}
-        walletLogoUrl={LocalWallet.meta.iconURL}
+        headerText="Guest Wallet"
+        alignHeader="flex-start"
         subHeaderText={""}
         onClose={onClose}
       />

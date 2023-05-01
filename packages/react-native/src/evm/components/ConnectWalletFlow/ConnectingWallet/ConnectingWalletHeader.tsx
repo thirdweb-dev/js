@@ -6,7 +6,7 @@ import { FlexAlignType, StyleSheet, View } from "react-native";
 
 interface ConnectWalletHeaderProps {
   onClose: () => void;
-  onBackPress: () => void;
+  onBackPress?: () => void;
   walletLogoUrl?: string;
   headerText?: string;
   subHeaderText?: string;
@@ -25,13 +25,17 @@ export const ConnectWalletHeader = ({
   return (
     <>
       <View style={styles.header}>
-        <Icon
-          type="back"
-          width={14}
-          height={14}
-          onPress={onBackPress}
-          color={theme.colors.iconPrimary}
-        />
+        {onBackPress ? (
+          <Icon
+            type="back"
+            width={14}
+            height={14}
+            onPress={onBackPress}
+            color={theme.colors.iconPrimary}
+          />
+        ) : (
+          <View />
+        )}
         {walletLogoUrl ? (
           <ImageSvgUri width={56} height={56} imageUrl={walletLogoUrl} />
         ) : null}

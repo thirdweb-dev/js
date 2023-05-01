@@ -1,9 +1,11 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Wallet,
+  WalletInstance,
   useConnect,
   useCreateWalletInstance,
   useSupportedWallet,
+  useThirdwebWallet,
 } from "@thirdweb-dev/react-core";
 import { SmartWalletObj } from "../../../wallets/wallets/smart-wallet";
 import {
@@ -12,6 +14,11 @@ import {
 } from "../../../wallets/wallets/local-wallet";
 import { ChooseWallet } from "../ChooseWallet/ChooseWallet";
 import { LocalWalletFlow } from "../LocalWalletFlow";
+import { ModalHeaderTextClose } from "../../base/modal/ModalHeaderTextClose";
+import { ActivityIndicator } from "react-native";
+import { useTheme } from "@shopify/restyle";
+import BaseButton from "../../base/BaseButton";
+import Text from "../../base/Text";
 
 export const SmartWalletFlow = ({
   onClose,
@@ -20,62 +27,71 @@ export const SmartWalletFlow = ({
   onClose: () => void;
   onConnect: () => void;
 }) => {
-  // const [accounts, setAccounts] = useState<AssociatedAccount[] | undefined>();
-  // const context = useThirdwebWallet();
   const [showLocalWalletFlow, setShowLocalWalletFlow] = useState<boolean>();
+  const [connectedPersonalWallet, setConnectedPersonalWallet] =
+    useState<WalletInstance>();
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [personalWalletChainId, setPersonalWalletChaindId] = useState<
+    number | undefined
+  >();
+  const theme = useTheme();
   const createWalletInstance = useCreateWalletInstance();
   const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
   const connect = useConnect();
+  const targetChain = useThirdwebWallet().activeChain;
 
-  // initialize the localWallet
-  // useEffect(() => {
-  //   if (!personalWallet) {
-  //     const wallet = createWalletInstance(localWalletCreator());
+  const mismatch = personalWalletChainId
+    ? personalWalletChainId !== targetChain.chainId
+    : false;
 
-  //     (async () => {
-  //       await wallet.connect();
-  //       // handleWalletConnect?.(wallet);
-  //       setPersonalWallet(wallet);
-  //     })();
-  //   }
-  // }, [createWalletInstance, handleWalletConnect, personalWallet]);
+  useEffect(() => {
+    (async () => {
+      if (connectedPersonalWallet) {
+        const chainId = await connectedPersonalWallet.getChainId();
+        setPersonalWalletChaindId(chainId);
+      }
+    })();
+  }, [connectedPersonalWallet]);
 
-  // get the associated accounts
-  // useEffect(() => {
-  //   if (!personalWallet || !chain) {
-  //     return;
-  //   }
+  const connectSmartWallet = useCallback(
+    async (personalWallet: WalletInstance) => {
+      if (!mismatch && personalWalletChainId) {
+        await connect(walletObj, {
+          personalWallet: personalWallet,
+        });
+        onConnect();
+      }
+    },
+    [connect, mismatch, onConnect, personalWalletChainId, walletObj],
+  );
 
-  //   (async () => {
-  //     const _accounts = await getAssociatedAccounts(
-  //       personalWallet as EVMWallet,
-  //       walletObj.factoryAddress,
-  //       chain,
-  //     );
-  //     setAccounts(_accounts);
-  //   })();
-  // }, [chain, personalWallet, walletObj.factoryAddress]);
+  useEffect(() => {
+    if (connectedPersonalWallet) {
+      if (mismatch) {
+        // TODO: Add network switching logic
+        // connectSmartWallet(connectedPersonalWallet);
+      } else {
+        connectSmartWallet(connectedPersonalWallet);
+      }
+    }
+  }, [connectSmartWallet, connectedPersonalWallet, mismatch]);
 
   const connectPersonalWallet = useCallback(
     async (wallet: Wallet) => {
+      setIsConnecting(true);
       const walletInstance = createWalletInstance(wallet);
       await walletInstance.connect();
 
-      await connect(walletObj, {
-        personalWallet: walletInstance,
-      });
-      onConnect();
+      setConnectedPersonalWallet(walletInstance);
     },
-    [connect, createWalletInstance, onConnect, walletObj],
+    [createWalletInstance],
   );
 
   const onLocalWalletImported = async (localWalletImported: LocalWallet) => {
+    setIsConnecting(true);
     await localWalletImported.connect();
 
-    await connect(walletObj, {
-      personalWallet: localWalletImported,
-    });
-    onConnect();
+    connectSmartWallet(localWalletImported);
   };
 
   const onChoosePersonalWallet = useCallback(
@@ -91,36 +107,61 @@ export const SmartWalletFlow = ({
 
   const onLocalWalletBackPress = () => {
     setShowLocalWalletFlow(false);
+    reset();
   };
 
-  // loading state
-  // we don't know whether the user has an account or not
-  // if (!accounts) {
-  //   return (
-  //     <View style={styles.loadingAccounts}>
-  //       <ConnectWalletHeader
-  //         headerText={"Checking local accounts..."}
-  //         subHeaderText={""}
-  //         walletLogoUrl={SmartWallet.meta.iconURL}
-  //         onClose={() => {}}
-  //         onBackPress={() => {}}
-  //       />
-  //       <ActivityIndicator size="small" color="buttonTextColor" />
-  //     </View>
-  //   );
-  // }
+  const onConnectingClosePress = () => {
+    connectedPersonalWallet?.disconnect();
+    reset();
+  };
 
-  // no accounts found
-  // if (personalWallet) {
-  //   return (
-  //     <SmartWalletCreate
-  //       personalWallet={personalWallet}
-  //       onBackPress={onBackPress}
-  //       onClose={onClose}
-  //       onConnect={onConnect}
-  //     />
-  //   );
-  // }
+  const onSwitchNetworkPress = async () => {
+    await connectedPersonalWallet?.switchChain(targetChain.chainId);
+    setPersonalWalletChaindId(targetChain.chainId);
+  };
+
+  const reset = () => {
+    setIsConnecting(false);
+    setConnectedPersonalWallet(undefined);
+    setPersonalWalletChaindId(undefined);
+  };
+
+  if (isConnecting) {
+    return (
+      <>
+        <ModalHeaderTextClose
+          onClose={onConnectingClosePress}
+          headerText={mismatch ? "Network Mismatch" : "Connecting smart wallet"}
+          subHeaderText={
+            mismatch
+              ? "There's a network mismatch between your contract and your wallet"
+              : ""
+          }
+        />
+
+        {mismatch ? null : (
+          <ActivityIndicator size="large" color={theme.colors.linkPrimary} />
+        )}
+
+        {mismatch === true ? (
+          <BaseButton
+            marginVertical="sm"
+            flexDirection="row"
+            justifyContent="flex-start"
+            alignItems="center"
+            paddingHorizontal="md"
+            paddingVertical="sm"
+            gap="md"
+            borderRadius="sm"
+            backgroundColor="backgroundHighlight"
+            onPress={onSwitchNetworkPress}
+          >
+            <Text variant="bodyLarge">Switch Network</Text>
+          </BaseButton>
+        ) : null}
+      </>
+    );
+  }
 
   if (showLocalWalletFlow) {
     return (
@@ -135,219 +176,11 @@ export const SmartWalletFlow = ({
 
   return (
     <ChooseWallet
-      headerText={"Personal wallet"}
+      headerText={"Smart wallet"}
       subHeaderText={"Select a personal wallet to connect to your smart wallet"}
       wallets={walletObj.config.personalWallets}
-      showGuestWalletAsButton={true}
       onChooseWallet={onChoosePersonalWallet}
       onClose={onClose}
     />
   );
-
-  // accounts found
-  // return (
-  //   <ConnectToSmartWalletAccount
-  //     personalWallet={localWallet}
-  //     onBackPress={onBackPress}
-  //     onConnect={onConnect}
-  //     accounts={accounts}
-  //   />
-  // );
 };
-
-// const SmartWalletCreate = ({
-//   personalWallet,
-//   onClose,
-//   onBackPress,
-//   onConnect,
-// }: {
-//   personalWallet: WalletInstance | undefined;
-//   onClose: () => void;
-//   onBackPress: () => void;
-//   onConnect: () => void;
-// }) => {
-//   const [error, setError] = useState<string>("");
-//   const [isCreatingAccount, setIsCreatingAccount] = useState<boolean>(false);
-//   const [isImportModalVisible, setIsImportModalVisible] = useState(false);
-//   const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
-//   const connect = useConnect();
-
-//   const onWalletImported = (localWalletP: LocalWallet) => {
-//     connectSmartWallet(localWalletP);
-//   };
-
-//   const connectSmartWallet = useCallback(
-//     async (wallet: WalletInstance) => {
-//       setIsCreatingAccount(true);
-//       // create account
-//       // try {
-//       await connect(walletObj, {
-//         accountId: "pepe",
-//         personalWallet: wallet,
-//       });
-//       onConnect();
-//       // } catch (e) {
-//       //   console.error("Error connecting your smart wallet.", e);
-//       setError("Error connecting to wallet, please try again");
-//       // }
-//       setIsCreatingAccount(false);
-//     },
-//     [connect, onConnect, walletObj],
-//   );
-
-//   const onCreatePress = useCallback(async () => {
-//     if (!personalWallet) {
-//       return;
-//     }
-
-//     connectSmartWallet(personalWallet);
-//   }, [connectSmartWallet, personalWallet]);
-
-//   const onBackPressInternal = () => {
-//     onBackPress();
-//   };
-
-//   const onImportModalClose = () => {
-//     setIsImportModalVisible(false);
-//   };
-
-//   return (
-//     <>
-//       <ConnectWalletHeader
-//         headerText={"Create account"}
-//         subHeaderText={"Create your account by choosing a unique username"}
-//         alignHeader="flex-start"
-//         walletLogoUrl={SmartWallet.meta.iconURL}
-//         onClose={onClose}
-//         onBackPress={onBackPressInternal}
-//       />
-
-//       <Text variant="bodySmall" color="red" mt="xs" textAlign="left">
-//         {error}
-//       </Text>
-
-//       <BaseButton
-//         backgroundColor="white"
-//         style={styles.modalButton}
-//         onPress={onCreatePress}
-//         mt="sm"
-//       >
-//         {isCreatingAccount ? (
-//           <ActivityIndicator size="small" color="buttonTextColor" />
-//         ) : (
-//           <Text variant="bodySmall" color="black">
-//             Create
-//           </Text>
-//         )}
-//       </BaseButton>
-
-//       <LocalWalletImportModal
-//         isVisible={isImportModalVisible}
-//         onWalletImported={onWalletImported}
-//         onClose={onImportModalClose}
-//       />
-//     </>
-//   );
-// };
-
-// export const ConnectToSmartWalletAccount: React.FC<{
-//   personalWallet: WalletInstance | undefined;
-//   onBackPress: () => void;
-//   onConnect: () => void;
-//   accounts: AssociatedAccount[];
-// }> = ({ onBackPress, onConnect, accounts, personalWallet }) => {
-//   const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
-//   const connect = useConnect();
-//   const [showCreateScreen, setShowCreateScreen] = useState(false);
-//   const [isConnecting, setIsConnecting] = useState(false);
-
-//   if (showCreateScreen) {
-//     return (
-//       <SmartWalletCreate
-//         personalWallet={personalWallet}
-//         onBackPress={() => {
-//           setShowCreateScreen(false);
-//         }}
-//         onClose={onBackPress}
-//         onConnect={onConnect}
-//       />
-//     );
-//   }
-
-//   const handleConnect = async (account: AssociatedAccount) => {
-//     if (!personalWallet) {
-//       throw new Error("No personal wallet defined");
-//     }
-
-//     setIsConnecting(true);
-//     await connect(walletObj, {
-//       accountId: account.account,
-//       personalWallet: personalWallet,
-//     });
-//     onConnect();
-//     setIsConnecting(false);
-//   };
-
-//   return (
-//     <>
-//       <ConnectWalletHeader
-//         headerText={"Choose account"}
-//         subHeaderText={"Connect your existing account or create a new one"}
-//         alignHeader="flex-start"
-//         walletLogoUrl={SmartWallet.meta.iconURL}
-//         onClose={onBackPress}
-//         onBackPress={onBackPress}
-//       />
-
-//       <Box gap="sm" flexDirection="column" marginVertical="md">
-//         {accounts.map((account) => {
-//           return (
-//             <NetworkButton
-//               padding="sm"
-//               chainName={account.accountId}
-//               key={account.account}
-//               onPress={() => handleConnect(account)}
-//             />
-//           );
-//         })}
-//       </Box>
-
-//       <BaseButton
-//         backgroundColor="white"
-//         style={styles.modalButton}
-//         onPress={() => {
-//           setShowCreateScreen(true);
-//         }}
-//       >
-//         {isConnecting ? (
-//           <ActivityIndicator size="small" color="buttonTextColor" />
-//         ) : (
-//           <Text variant="bodySmall" color="black">
-//             Create a new account
-//           </Text>
-//         )}
-//       </BaseButton>
-//     </>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   loadingAccounts: {
-//     height: 300,
-//   },
-//   container: {
-//     flex: 1,
-//   },
-//   modalButton: {
-//     display: "flex",
-//     flexDirection: "row",
-//     alignContent: "center",
-//     alignItems: "center",
-//     justifyContent: "center",
-//     borderRadius: 12,
-//     borderWidth: 0.5,
-//     paddingHorizontal: 10,
-//     paddingVertical: 12,
-//     minWidth: 100,
-//   },
-// });

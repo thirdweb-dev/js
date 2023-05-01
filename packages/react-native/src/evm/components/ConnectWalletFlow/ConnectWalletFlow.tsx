@@ -37,7 +37,7 @@ export const ConnectWalletFlow = () => {
       if (isWalletConnecting) {
         setShowButtonSpinner(false);
       }
-    }, 2000);
+    }, 3000);
 
     return () => {
       if (timeout) {
@@ -77,7 +77,7 @@ export const ConnectWalletFlow = () => {
   const onChooseWallet = (wallet: Wallet) => {
     setActiveWallet(() => wallet);
 
-    if (wallet.id !== SmartWallet.id) {
+    if (wallet.id !== SmartWallet.id && wallet.id !== LocalWallet.id) {
       connectActiveWallet(wallet);
     }
   };
@@ -97,7 +97,7 @@ export const ConnectWalletFlow = () => {
         return (
           <LocalWalletFlow
             onClose={onClose}
-            onBackPress={onBackPress}
+            onBackPress={supportedWallets.length > 1 ? onBackPress : undefined}
             onWalletImported={onLocalWalletImported}
             onConnectPress={() => connectActiveWallet(activeWalletP)}
           />
