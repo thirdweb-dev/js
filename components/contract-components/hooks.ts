@@ -38,6 +38,7 @@ import {
   extractFunctionParamsFromAbi,
   extractFunctionsFromAbi,
   fetchPreDeployMetadata,
+  getTrustedForwarders,
 } from "@thirdweb-dev/sdk/evm";
 import { SnippetApiResponse } from "components/contract-tabs/code/types";
 import { utils } from "ethers";
@@ -464,6 +465,7 @@ export function useCustomContractDeployMutation(
   const signer = useSigner();
   const deployContext = useDeployContextModal();
   const { data: transactions } = useTransactionsForDeploy(ipfsHash);
+  const compilerMetadata = useContractPublishMetadataFromURI(ipfsHash);
 
   return useMutation(
     async (data: ContractDeployMutationParams) => {
@@ -515,13 +517,20 @@ export function useCustomContractDeployMutation(
           data.deployParams._defaultAdmin = data.address || "";
         }
 
-        if (data.deployParams?._trustedForwarders === "") {
-          data.deployParams._trustedForwarders = replaceTemplateValues(
-            "{{trusted_forwarders}}",
-            "address[]",
-            {},
+        if (
+          data.deployParams?._trustedForwarders.length === 0 ||
+          data.deployParams?._trustedForwarders === "[]"
+        ) {
+          const trustedForwarders = await getTrustedForwarders(
+            sdk.getProvider(),
+            sdk.storage,
+            compilerMetadata.data?.name,
           );
+
+          data.deployParams._trustedForwarders =
+            JSON.stringify(trustedForwarders);
         }
+
         // deploy contract
         contractAddress = await sdk.deployer.deployContractFromUri(
           ipfsHash.startsWith("ipfs://") ? ipfsHash : `ipfs://${ipfsHash}`,
