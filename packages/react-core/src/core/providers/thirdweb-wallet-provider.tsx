@@ -257,8 +257,7 @@ export function ThirdwebWalletProvider(
       const personalWalletInfo = walletInfo.connectParams?.personalWallet;
 
       if (personalWalletInfo) {
-        const personalWallets =
-          walletObj?.config?.personalWallets || props.supportedWallets;
+        const personalWallets = walletObj?.config?.personalWallets as Wallet[];
 
         const personalWalleObj = personalWallets.find(
           (W) => W.id === personalWalletInfo.walletId,
@@ -437,6 +436,6 @@ async function saveLastConnectedWalletInfo(
       JSON.stringify(walletInfo),
     );
   } catch (e) {
-    console.error(e);
+    console.error("Error saving the last connected wallet info", e);
   }
 }
