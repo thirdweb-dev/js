@@ -76,7 +76,7 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
 }: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>) => {
   const { activeChain } = props;
 
-  const supportedChainsNonNull = useMemo(() => {
+  const supportedChainsNonNull: Chain[] = useMemo(() => {
     const isActiveChainObject =
       typeof activeChain === "object" && activeChain !== null;
 
@@ -114,14 +114,27 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
 
   const activeChainWithKey = useMemo(() => {
     if (typeof activeChainIdOrObjWithKey === "number") {
-      return supportedChainsWithKey.find(
+      const resolveChain = supportedChainsWithKey.find(
         (chain) => chain.chainId === activeChainIdOrObjWithKey,
       );
+      if (!resolveChain) {
+        throw new Error(
+          `Invalid chainId: ${activeChainIdOrObjWithKey}, It is not one of supportedChains`,
+        );
+      }
+      return resolveChain;
     }
+
     if (typeof activeChainIdOrObjWithKey === "string") {
-      return supportedChainsWithKey.find(
+      const resolvedChain = supportedChainsWithKey.find(
         (chain) => chain.slug === activeChainIdOrObjWithKey,
       );
+      if (!resolvedChain) {
+        throw new Error(
+          `Invalid chain: "${activeChainIdOrObjWithKey}", It is not one of supportedChains`,
+        );
+      }
+      return resolvedChain;
     }
 
     return activeChainIdOrObjWithKey;
