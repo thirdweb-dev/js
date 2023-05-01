@@ -3,7 +3,7 @@ import { ThirdwebAuth } from "@thirdweb-dev/auth";
 import { CoinbasePayIntegration, FundWalletOptions } from "@thirdweb-dev/pay";
 import { ThirdwebSDK, ChainIdOrName } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { DAppMetaData } from "@thirdweb-dev/wallets";
+import { DAppMetaData, WalletConnectV1 } from "@thirdweb-dev/wallets";
 import type { AbstractClientWallet } from "@thirdweb-dev/wallets/evm/wallets/base";
 import { CoinbaseWallet } from "@thirdweb-dev/wallets/evm/wallets/coinbase-wallet";
 import { LocalWallet } from "@thirdweb-dev/wallets/evm/wallets/local-wallet";
@@ -44,7 +44,7 @@ const bigNumberReplacer = (_key: string, value: any) => {
 const WALLETS = [
   MetaMaskWallet,
   InjectedWallet,
-  WalletConnect,
+  WalletConnectV1,
   CoinbaseWallet,
   LocalWallet,
 ] as const;
@@ -135,10 +135,9 @@ class ThirdwebBridge implements TWBridge {
             dappMetadata,
           });
           break;
-        case "walletConnect":
-          walletInstance = new WalletConnect({
+        case "walletConnectV1":
+          walletInstance = new WalletConnectV1({
             dappMetadata,
-            projectId: TW_WC_PROJECT_ID,
           });
           break;
         case "coinbaseWallet":
