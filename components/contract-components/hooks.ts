@@ -518,7 +518,7 @@ export function useCustomContractDeployMutation(
         }
 
         if (
-          data.deployParams?._trustedForwarders.length === 0 ||
+          data.deployParams?._trustedForwarders?.length === 0 ||
           data.deployParams?._trustedForwarders === "[]"
         ) {
           const trustedForwarders = await getTrustedForwarders(
