@@ -68,6 +68,5 @@ export const metamaskWallet = () => {
     id: MetaMaskWallet.id,
     meta: MetaMaskWallet.meta,
     create: (options: WalletOptionsRC) => new MetaMaskWallet(options),
-    config: {},
   } satisfies Wallet;
 };

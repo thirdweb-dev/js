@@ -67,6 +67,5 @@ export const trustWallet = () => {
     id: TrustWallet.id,
     meta: TrustWallet.meta,
     create: (options: WalletOptionsRC) => new TrustWallet(options),
-    config: {},
   } satisfies Wallet;
 };

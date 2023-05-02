@@ -7,6 +7,5 @@ export const metamaskWallet = () => {
     meta: MetaMaskWallet.meta,
     create: (options: WalletOptions) =>
       new MetaMaskWallet({ ...options, qrcode: false }),
-    config: {},
   } satisfies Wallet<MetaMaskWallet>;
 };

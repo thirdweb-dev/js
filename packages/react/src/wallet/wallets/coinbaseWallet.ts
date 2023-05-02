@@ -7,6 +7,5 @@ export const coinbaseWallet = () => {
     meta: CoinbaseWallet.meta,
     create: (options: WalletOptions) =>
       new CoinbaseWallet({ ...options, headlessMode: true }),
-    config: {},
   } satisfies Wallet<CoinbaseWallet>;
 };

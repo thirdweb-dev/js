@@ -66,6 +66,5 @@ export const rainbowWallet = () => {
     id: RainbowWallet.id,
     meta: RainbowWallet.meta,
     create: (options: WalletOptionsRC) => new RainbowWallet(options),
-    config: {},
   } satisfies Wallet;
 };

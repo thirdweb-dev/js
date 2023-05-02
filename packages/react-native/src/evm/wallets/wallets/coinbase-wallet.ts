@@ -82,6 +82,6 @@ export const coinbaseWallet = (config?: { callbackURL?: URL }) => {
     meta: CoinbaseWallet.meta,
     create: (options: WalletOptionsRC) =>
       new CoinbaseWallet({ ...options, callbackURL: callbackURLNonNull }),
-    config: { ...config },
-  } satisfies Wallet;
+    config: config || {},
+  } satisfies Wallet<CoinbaseWallet, { callbackURL?: URL }>;
 };

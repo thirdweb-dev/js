@@ -255,7 +255,14 @@ export function ThirdwebWalletProvider(
       const personalWalletInfo = walletInfo.connectParams?.personalWallet;
 
       if (personalWalletInfo) {
-        const personalWallets = walletObj?.config?.personalWallets as Wallet[];
+        type Config = {
+          personalWallets: Wallet[];
+        };
+
+        const personalWallets =
+          "config" in walletObj
+            ? (walletObj.config as Config).personalWallets
+            : [];
 
         const personalWalleObj = personalWallets.find(
           (W) => W.id === personalWalletInfo.walletId,
