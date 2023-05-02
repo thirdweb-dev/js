@@ -1,15 +1,12 @@
 import { useCreateWalletInstance } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
-import { LocalWallet, walletIds } from "@thirdweb-dev/wallets";
+import { LocalWallet } from "@thirdweb-dev/wallets";
 import { WalletData } from "@thirdweb-dev/wallets/src/evm/wallets/local-wallet";
 import { LocalWalletObj } from "../../../wallets/localWallet";
-import { WalletInfo } from "../../../types";
+import { useWalletInfo } from "../../walletInfo";
 
-export function useLocalWalletInfo(walletsInfo: WalletInfo[]) {
-  const localWalletInfo = walletsInfo.find(
-    (w) => w.wallet.id === walletIds.localWallet,
-  ) as WalletInfo;
-
+export function useLocalWalletInfo() {
+  const localWalletInfo = useWalletInfo("localWallet", true);
   const localWalletObj = localWalletInfo.wallet as LocalWalletObj;
 
   const [walletData, setWalletData] = useState<WalletData | null | "loading">(

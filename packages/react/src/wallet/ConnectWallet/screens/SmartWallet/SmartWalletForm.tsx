@@ -22,7 +22,6 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useState } from "react";
 import { Flex } from "../../../../components/basic";
-import { WalletInfo } from "../../../types";
 import { SmartWalletObj } from "../../../wallets/smartWallet";
 
 export const gnosisAddressPrefixToChainId = {
@@ -38,7 +37,6 @@ export const SmartWalletForm: React.FC<{
   onBack: () => void;
   onConnect: () => void;
   smartWallet: SmartWalletObj;
-  walletsInfo: WalletInfo[];
 }> = (props) => {
   const activeWallet = useWallet(); // personal wallet
 

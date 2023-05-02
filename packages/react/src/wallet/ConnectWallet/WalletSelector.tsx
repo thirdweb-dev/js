@@ -1,4 +1,3 @@
-import { walletIds } from "@thirdweb-dev/wallets";
 import { Img } from "../../components/Img";
 import { Spacer } from "../../components/Spacer";
 import { Flex } from "../../components/basic";
@@ -11,33 +10,32 @@ import {
   spacing,
   Theme,
 } from "../../design-system";
-import { WalletInfo } from "../types";
 import styled from "@emotion/styled";
+import { useWalletInfo, useWalletsInfo } from "./walletInfo";
+import { WalletInfo } from "../types";
+import { walletIds } from "@thirdweb-dev/wallets";
 
 export const WalletSelector: React.FC<{
-  walletsInfo: WalletInfo[];
   onGetStarted: () => void;
   onGuestConnect: () => void;
 }> = (props) => {
-  const showGuestLogin = !!props.walletsInfo.find(
-    (w) => w.wallet.id === walletIds.localWallet,
-  );
-
-  const showGetStarted =
-    !showGuestLogin && !!props.walletsInfo[0].wallet.meta.urls;
-
-  const walletsInfo = props.walletsInfo.filter(
+  const _allWalletsInfo = useWalletsInfo();
+  const allWalletsInfo = _allWalletsInfo.filter(
     (w) => w.wallet.id !== walletIds.localWallet,
   );
+  const localWalletInfo = useWalletInfo("localWallet", false);
+
+  const showGetStarted =
+    !localWalletInfo && !!allWalletsInfo[0].wallet.meta.urls;
 
   return (
     <>
       <ModalTitle>Choose your wallet</ModalTitle>
       <Spacer y="xl" />
 
-      <WalletSelection walletsInfo={walletsInfo} />
+      <WalletSelection walletsInfo={allWalletsInfo} />
 
-      {showGuestLogin && (
+      {localWalletInfo && (
         <>
           <Spacer y="xl" />
           <Flex justifyContent="center">
@@ -68,11 +66,11 @@ export const WalletSelector: React.FC<{
   );
 };
 
-export const WalletSelection: React.FC<{ walletsInfo: WalletInfo[] }> = (
-  props,
-) => {
+export const WalletSelection: React.FC<{ walletsInfo: WalletInfo[] }> = ({
+  walletsInfo,
+}) => {
   // show the installed wallets first
-  const sortedWalletsInfo = props.walletsInfo.sort((a, b) => {
+  const sortedWalletsInfo = walletsInfo.sort((a, b) => {
     if (a.installed && !b.installed) {
       return -1;
     }

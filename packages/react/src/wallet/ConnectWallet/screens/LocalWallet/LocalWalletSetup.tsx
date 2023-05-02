@@ -6,20 +6,17 @@ import {
   CreateLocalWallet_Password,
 } from "./CreateLocalWallet";
 import { ReconnectLocalWallet } from "./ReconnectLocalWallet";
-import { WalletInfo } from "../../../types";
-import { walletIds } from "@thirdweb-dev/wallets";
 import { LocalWalletObj } from "../../../wallets/localWallet";
+import { useWalletInfo } from "../../walletInfo";
 
 export const LocalWalletSetup: React.FC<{
   onBack: () => void;
   onConnected: () => void;
-  walletsInfo: WalletInfo[];
 }> = (props) => {
-  const { walletData } = useLocalWalletInfo(props.walletsInfo);
+  const { walletData } = useLocalWalletInfo();
 
-  const localWalletInfo = props.walletsInfo.find(
-    (w) => w.wallet.id === walletIds.localWallet,
-  ) as WalletInfo;
+  const localWalletInfo = useWalletInfo("localWallet", true);
+
   const wallet = localWalletInfo.wallet as LocalWalletObj;
 
   if (!wallet.config.persist) {
@@ -37,7 +34,6 @@ export const LocalWalletSetup: React.FC<{
   if (walletData) {
     return (
       <ReconnectLocalWallet
-        walletsInfo={props.walletsInfo}
         onConnected={props.onConnected}
         onBack={props.onBack}
       />

@@ -1,14 +1,10 @@
-import { walletIds } from "@thirdweb-dev/wallets";
-import { WalletInfo } from "../../../types";
 import { ConnectingScreen } from "../ConnectingScreen";
+import { useWalletInfo } from "../../walletInfo";
 
 export const CoinbaseWalletSetup: React.FC<{
   onBack: () => void;
-  walletsInfo: WalletInfo[];
-}> = ({ onBack, walletsInfo }) => {
-  const coinbase = walletsInfo.find(
-    (w) => w.wallet.id === walletIds.coinbase,
-  ) as WalletInfo;
+}> = ({ onBack }) => {
+  const coinbase = useWalletInfo("coinbase", true);
 
   return (
     <ConnectingScreen
