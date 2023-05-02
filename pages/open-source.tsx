@@ -319,6 +319,10 @@ export default OSS;
 export const getStaticProps: GetStaticProps = async () => {
   const orgName = "thirdweb-dev";
 
+  if (!process.env.GITHUB_API_TOKEN) {
+    throw new Error("Missing GITHUB_API_TOKEN");
+  }
+
   const authHeader = {
     headers: {
       Authorization: `token ${process.env.GITHUB_API_TOKEN}`,
