@@ -15,10 +15,13 @@ import styled from "@emotion/styled";
 export const WalletSelector: React.FC<{
   walletsMeta: WalletMeta[];
   onGetStarted: () => void;
-  guestMode?: boolean;
   onGuestConnect: () => void;
 }> = (props) => {
-  const showGetStarted = !!props.walletsMeta[0].meta.urls && !props.guestMode;
+  const showGuestLogin = !!props.walletsMeta.find(
+    (w) => w.id === "localWallet",
+  );
+
+  const showGetStarted = !showGuestLogin && !!props.walletsMeta[0].meta.urls;
   const walletsMeta = props.walletsMeta.filter((w) => w.id !== "localWallet");
 
   return (
@@ -28,7 +31,7 @@ export const WalletSelector: React.FC<{
 
       <WalletSelection walletsMeta={walletsMeta} />
 
-      {props.guestMode && (
+      {showGuestLogin && (
         <>
           <Spacer y="xl" />
           <Button
@@ -39,7 +42,6 @@ export const WalletSelector: React.FC<{
             }}
             onClick={props.onGuestConnect}
           >
-            {" "}
             Continue as guest
           </Button>
         </>

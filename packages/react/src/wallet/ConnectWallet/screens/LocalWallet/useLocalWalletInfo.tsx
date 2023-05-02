@@ -8,12 +8,14 @@ import { Wallet } from "@thirdweb-dev/react-core";
 import type { LocalWallet } from "@thirdweb-dev/wallets";
 import { WalletData } from "@thirdweb-dev/wallets/src/evm/wallets/local-wallet";
 import { createContext } from "react";
+import { LocalWalletObj } from "../../../wallets/localWallet";
 
 type LocalWalletInfo = {
   localWallet: LocalWallet | null;
   setLocalWallet: (wallet: LocalWallet) => void;
   walletData: WalletData | null | "loading";
   meta: Wallet["meta"];
+  persist: LocalWalletObj["config"]["persist"];
 };
 
 const LocalWalletInfoCtx = createContext<LocalWalletInfo | undefined>(
@@ -27,10 +29,11 @@ export const LocalWalletInfoProvider: React.FC<React.PropsWithChildren<{}>> = (
     "loading",
   );
   const createWalletInstance = useCreateWalletInstance();
-  const localWalletObj = useSupportedWallet("localWallet") as Wallet;
+  const localWalletObj = useSupportedWallet("localWallet") as LocalWalletObj;
   const [localWallet, setLocalWallet] = useState<LocalWallet | null>(null);
   const activeWallet = useWallet();
   const prevActiveWallet = useRef(activeWallet);
+  const { persist } = localWalletObj.config;
 
   // when wallet is disconnected, reset local wallet
   useEffect(() => {
@@ -43,10 +46,13 @@ export const LocalWalletInfoProvider: React.FC<React.PropsWithChildren<{}>> = (
   useEffect(() => {
     const wallet = createWalletInstance(localWalletObj) as LocalWallet;
     setLocalWallet(wallet);
-    wallet.getSavedData().then((data) => {
-      setWalletData(data);
-    });
-  }, [createWalletInstance, localWalletObj]);
+
+    if (persist) {
+      wallet.getSavedData().then((data) => {
+        setWalletData(data);
+      });
+    }
+  }, [createWalletInstance, localWalletObj, persist]);
 
   return (
     <LocalWalletInfoCtx.Provider
@@ -55,6 +61,7 @@ export const LocalWalletInfoProvider: React.FC<React.PropsWithChildren<{}>> = (
         localWallet,
         walletData,
         meta: localWalletObj.meta,
+        persist,
       }}
     >
       {props.children}

@@ -16,19 +16,13 @@ import { Wallet, useSupportedWallet } from "@thirdweb-dev/react-core";
 
 export const SelectpersonalWallet: React.FC<{
   onBack: () => void;
-  guestMode?: boolean;
   walletsMeta: WalletMeta[];
 }> = (props) => {
   const safeWalletObj = useSupportedWallet("Safe") as Wallet;
-  console.log("wallets meta", props.walletsMeta, props.guestMode);
-
+  const guestWallet = props.walletsMeta.find((w) => w.id === "localWallet");
   const walletsMeta = props.walletsMeta.filter(
     (w) => w.id !== "SmartWallet" && w.id !== "Safe" && w.id !== "localWallet",
   );
-
-  const guestWallet = props.walletsMeta.find((w) => w.id === "localWallet");
-
-  const showGuest = props.guestMode && guestWallet;
 
   return (
     <>
@@ -56,7 +50,7 @@ export const SelectpersonalWallet: React.FC<{
 
       <Spacer y="xl" />
 
-      {showGuest ? (
+      {guestWallet ? (
         <Button
           variant="link"
           onClick={guestWallet.onClick}

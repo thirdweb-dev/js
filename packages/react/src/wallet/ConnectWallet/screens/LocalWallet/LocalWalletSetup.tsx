@@ -25,6 +25,11 @@ export const LocalWalletSetup: React.FC<{
   >();
 
   useEffect(() => {
+    if (!isCredentialsSupported) {
+      setSavedCreds(null);
+      return;
+    }
+
     getCredentials().then((cred) => {
       setSavedCreds(cred);
     });
@@ -47,8 +52,6 @@ export const LocalWalletSetup: React.FC<{
 
     return <ReconnectLocalWalletCredentials {...props} creds={savedCreds} />;
   }
-
-  // credentials not supported -----
 
   if (walletData) {
     return (

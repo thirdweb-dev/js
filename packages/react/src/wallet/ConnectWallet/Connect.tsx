@@ -39,10 +39,9 @@ import { LocalWalletInfoProvider } from "./screens/LocalWallet/useLocalWalletInf
 import { SmartWalletSelect } from "./screens/SmartWallet/SmartWalletSelect";
 import { SmartWalletObj } from "../wallets/smartWallet";
 import { SafeWalletObj } from "../wallets/safeWallet";
+import { FadeIn } from "../../components/FadeIn";
 
-export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
-  guestMode,
-}) => {
+export const ConnectModal = () => {
   const modalTheme = useModalTheme();
   const isConnectingToWalletWrapper = useIsConnectingToWalletWrapper();
   const showScreen = useScreen();
@@ -257,7 +256,6 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
             onGetStarted={() => {
               setShowScreen("wallets/get-started");
             }}
-            guestMode={guestMode}
             onGuestConnect={() => {
               setShowScreen("localWallet/connect");
             }}
@@ -310,7 +308,6 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
 
         {showScreen === "safe/select-wallet" && (
           <SelectpersonalWallet
-            guestMode={guestMode}
             onBack={() => {
               setIsConnectingToWalletWrapper(false);
               setShowScreen("walletList");
@@ -357,7 +354,6 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
             onBack={() => {
               setShowScreen("walletList");
             }}
-            guestMode={guestMode}
             walletsMeta={
               smartWalletObj?.config.personalWallets
                 ? smartWalletObj?.config.personalWallets.map(getWalletMeta)

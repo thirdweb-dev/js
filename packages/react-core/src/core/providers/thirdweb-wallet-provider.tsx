@@ -63,7 +63,6 @@ type ThirdwebWalletContextData = {
   switchChain: (chain: number) => Promise<void>;
   chainToConnect?: Chain;
   activeChain: Chain;
-  guestMode?: boolean;
   handleWalletConnect: (
     wallet: WalletInstance,
     params?: ConnectParams<Record<string, any>>,
@@ -83,7 +82,6 @@ export function ThirdwebWalletProvider(
     dAppMeta?: DAppMetaData;
     chains: Chain[];
     autoSwitch?: boolean;
-    guestMode?: boolean;
   }>,
 ) {
   const [signer, setSigner] = useState<Signer | undefined>(undefined);
@@ -404,7 +402,6 @@ export function ThirdwebWalletProvider(
         handleWalletConnect,
         activeChain: props.activeChain,
         chainToConnect,
-        guestMode: props.guestMode,
       }}
     >
       {props.children}
