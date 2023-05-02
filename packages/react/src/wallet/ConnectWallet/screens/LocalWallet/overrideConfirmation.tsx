@@ -4,15 +4,17 @@ import { Spacer } from "../../../../components/Spacer";
 import { ModalTitle } from "../../../../components/modalElements";
 import { LocalWalletModalHeader } from "./common";
 import { FormFooter } from "../../../../components/formElements";
+import { Wallet } from "@thirdweb-dev/react-core";
 
 export const OverrideConfirmation: React.FC<{
   onBackup: () => void;
   onBack: () => void;
   onSkip: () => void;
+  meta: Wallet["meta"];
 }> = (props) => {
   return (
     <>
-      <LocalWalletModalHeader onBack={props.onBack} />
+      <LocalWalletModalHeader onBack={props.onBack} meta={props.meta} />
       <ModalTitle>Backup your wallet</ModalTitle>
 
       <Spacer y="md" />

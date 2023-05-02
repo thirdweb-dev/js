@@ -7,5 +7,6 @@ export const paperWallet = (config: { clientId: string }) => {
     meta: PaperWallet.meta,
     create: (options: WalletOptions) =>
       new PaperWallet({ ...options, ...config }),
-  } satisfies Wallet;
+    config,
+  } satisfies Wallet<PaperWallet>;
 };

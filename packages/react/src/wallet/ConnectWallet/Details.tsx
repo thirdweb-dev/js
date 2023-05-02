@@ -35,18 +35,19 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useEffect, useMemo, useState } from "react";
 import { fadeInAnimation } from "../../components/FadeIn";
-import type {
+import {
   AbstractClientWallet,
+  LocalWallet,
   MetaMaskWallet,
   SafeWallet,
   SmartWallet,
+  walletIds,
 } from "@thirdweb-dev/wallets";
 import { Flex } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
 import { utils } from "ethers";
 import { GenericWalletIcon } from "./icons/GenericWalletIcon";
 import { ExportLocalWallet } from "./screens/LocalWallet/ExportLocalWallet";
-import { LocalWalletInfoProvider } from "./screens/LocalWallet/useLocalWalletInfo";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -330,7 +331,7 @@ export const ConnectedWalletDetails: React.FC<{
       )}
 
       {/* Switch Account for Metamask */}
-      {activeWallet?.walletId === "metamask" && (
+      {activeWallet?.walletId === walletIds.metamask && (
         <div>
           <Spacer y="md" />
           <MenuButton
@@ -378,7 +379,7 @@ export const ConnectedWalletDetails: React.FC<{
       )}
 
       {/* Export  Wallet */}
-      {activeWallet?.walletId === "localWallet" && (
+      {activeWallet?.walletId === walletIds.localWallet && (
         <>
           <Spacer y="sm" />
           <MenuButton
@@ -450,16 +451,15 @@ export const ConnectedWalletDetails: React.FC<{
             maxWidth: "480px",
           }}
         >
-          <LocalWalletInfoProvider>
-            <ExportLocalWallet
-              onBack={() => {
-                setShowExportModal(false);
-              }}
-              onExport={() => {
-                setShowExportModal(false);
-              }}
-            />
-          </LocalWalletInfoProvider>
+          <ExportLocalWallet
+            localWallet={activeWallet as LocalWallet}
+            onBack={() => {
+              setShowExportModal(false);
+            }}
+            onExport={() => {
+              setShowExportModal(false);
+            }}
+          />
         </Modal>
       )}
     </>

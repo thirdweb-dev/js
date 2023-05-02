@@ -3,7 +3,11 @@ import { ThirdwebAuth } from "@thirdweb-dev/auth";
 import { CoinbasePayIntegration, FundWalletOptions } from "@thirdweb-dev/pay";
 import { ThirdwebSDK, ChainIdOrName } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { DAppMetaData, WalletConnectV1 } from "@thirdweb-dev/wallets";
+import {
+  DAppMetaData,
+  WalletConnectV1,
+  walletIds,
+} from "@thirdweb-dev/wallets";
 import type { AbstractClientWallet } from "@thirdweb-dev/wallets/evm/wallets/base";
 import { CoinbaseWallet } from "@thirdweb-dev/wallets/evm/wallets/coinbase-wallet";
 import { LocalWallet } from "@thirdweb-dev/wallets/evm/wallets/local-wallet";
@@ -128,22 +132,22 @@ class ThirdwebBridge implements TWBridge {
             dappMetadata,
           });
           break;
-        case "metamask":
+        case walletIds.metamask:
           walletInstance = new MetaMaskWallet({
             dappMetadata,
           });
           break;
-        case "walletConnectV1":
+        case walletIds.walletConnectV1:
           walletInstance = new WalletConnectV1({
             dappMetadata,
           });
           break;
-        case "coinbaseWallet":
+        case walletIds.coinbase:
           walletInstance = new CoinbaseWallet({
             dappMetadata,
           });
           break;
-        case "localWallet":
+        case walletIds.localWallet:
           walletInstance = new LocalWallet({
             dappMetadata,
           });

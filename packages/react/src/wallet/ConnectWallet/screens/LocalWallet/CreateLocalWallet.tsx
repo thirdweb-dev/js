@@ -2,41 +2,45 @@ import { Spacer } from "../../../../components/Spacer";
 import { Button } from "../../../../components/buttons";
 import { FormFieldWithIconButton } from "../../../../components/formFields";
 import {
-  HelperLink,
   ModalDescription,
   ModalTitle,
 } from "../../../../components/modalElements";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { useThirdwebWallet } from "@thirdweb-dev/react-core";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { ImportLocalWallet } from "./ImportLocalWallet";
 import { LocalWalletModalHeader } from "./common";
 import { Flex } from "../../../../components/basic";
 import { TextDivider } from "../../../../components/TextDivider";
+import { WalletInfo } from "../../../types";
+import { Spinner } from "../../../../components/Spinner";
+import { spacing } from "../../../../design-system";
 
-export const CreateLocalWallet_NoCreds: React.FC<{
+export const CreateLocalWallet_Password: React.FC<{
   onConnected: () => void;
   onBack: () => void;
+  walletsInfo: WalletInfo[];
 }> = (props) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const passwordMismatch = confirmPassword && password !== confirmPassword;
+  const [isConnecting, setIsConnecting] = useState(false);
 
-  const { localWallet } = useLocalWalletInfo();
+  const { localWallet, meta } = useLocalWalletInfo(props.walletsInfo);
+
   const thirdwebWalletContext = useThirdwebWallet();
   const [showImportScreen, setShowImportScreen] = useState(false);
 
   const [generatedAddress, setGeneratedAddress] = useState<string | null>(null);
 
-  // generate random local wallet
-  const isGenerated = useRef(false);
+  // generating wallet before it's required to render a form with hidden address as username for better autofill
   useEffect(() => {
-    if (!localWallet || showImportScreen) {
+    if (!localWallet || showImportScreen || localWallet.ethersWallet) {
       return;
     }
-    isGenerated.current = true;
+
     localWallet.generate().then((_address) => {
       setGeneratedAddress(_address);
     });
@@ -45,6 +49,7 @@ export const CreateLocalWallet_NoCreds: React.FC<{
   if (showImportScreen) {
     return (
       <ImportLocalWallet
+        walletsInfo={props.walletsInfo}
         onConnected={props.onConnected}
         onBack={() => {
           setShowImportScreen(false);
@@ -58,6 +63,7 @@ export const CreateLocalWallet_NoCreds: React.FC<{
       throw new Error("Invalid state");
     }
 
+    setIsConnecting(true);
     localWallet.connect();
 
     await localWallet.save({
@@ -66,15 +72,16 @@ export const CreateLocalWallet_NoCreds: React.FC<{
     });
 
     thirdwebWalletContext.handleWalletConnect(localWallet);
+    setIsConnecting(false);
     props.onConnected();
   };
 
   return (
     <>
-      <LocalWalletModalHeader onBack={props.onBack} />
+      <LocalWalletModalHeader onBack={props.onBack} meta={meta} />
 
       <Flex alignItems="center" gap="xs">
-        <ModalTitle>Create new wallet</ModalTitle>
+        <ModalTitle>Guest Wallet</ModalTitle>
       </Flex>
 
       <Spacer y="sm" />
@@ -144,9 +151,11 @@ export const CreateLocalWallet_NoCreds: React.FC<{
           type="submit"
           style={{
             width: "100%",
+            gap: spacing.sm,
           }}
         >
-          Create new wallet
+          {isConnecting ? "Connecting" : "Create new wallet"}
+          {isConnecting && <Spinner size="sm" color="inverted" />}
         </Button>
       </form>
 
@@ -159,18 +168,106 @@ export const CreateLocalWallet_NoCreds: React.FC<{
       <Spacer y="lg" />
 
       {/* Import */}
-      <HelperLink
-        as="button"
-        onClick={() => {
-          setShowImportScreen(true);
+      <Flex justifyContent="center">
+        <Button
+          variant="link"
+          onClick={() => {
+            setShowImportScreen(true);
+          }}
+        >
+          Import wallet
+        </Button>
+      </Flex>
+    </>
+  );
+};
+
+export const CreateLocalWallet_Guest: React.FC<{
+  onConnected: () => void;
+  onBack: () => void;
+  walletsInfo: WalletInfo[];
+}> = (props) => {
+  const { localWallet, meta } = useLocalWalletInfo(props.walletsInfo);
+  const thirdwebWalletContext = useThirdwebWallet();
+  const [showImportScreen, setShowImportScreen] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
+
+  if (showImportScreen) {
+    return (
+      <ImportLocalWallet
+        walletsInfo={props.walletsInfo}
+        onConnected={props.onConnected}
+        onBack={() => {
+          setShowImportScreen(false);
         }}
-        style={{
-          textAlign: "center",
-          width: "100%",
+      />
+    );
+  }
+
+  const handleConnect = async () => {
+    if (!localWallet) {
+      throw new Error("Invalid state");
+    }
+    setIsConnecting(true);
+    await localWallet.generate();
+    await localWallet.connect();
+    thirdwebWalletContext.handleWalletConnect(localWallet);
+    setIsConnecting(false);
+    props.onConnected();
+  };
+
+  return (
+    <>
+      <LocalWalletModalHeader onBack={props.onBack} meta={meta} />
+
+      <ModalTitle>Guest wallet</ModalTitle>
+      <Spacer y="xs" />
+      <ModalDescription>
+        Create a new wallet or import an existing one
+      </ModalDescription>
+
+      <Spacer y="xl" />
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleConnect();
         }}
       >
-        Import wallet
-      </HelperLink>
+        {/* Create */}
+        <Button
+          variant="inverted"
+          type="submit"
+          disabled={!localWallet}
+          style={{
+            width: "100%",
+            gap: spacing.sm,
+          }}
+        >
+          {isConnecting ? "Connecting" : "Create new wallet"}
+          {isConnecting && <Spinner size="sm" color="inverted" />}
+        </Button>
+      </form>
+
+      <Spacer y="xl" />
+
+      <TextDivider>
+        <span>OR</span>
+      </TextDivider>
+
+      <Spacer y="lg" />
+
+      {/* Import */}
+      <Flex justifyContent="center">
+        <Button
+          variant="link"
+          onClick={() => {
+            setShowImportScreen(true);
+          }}
+        >
+          Import wallet
+        </Button>
+      </Flex>
     </>
   );
 };

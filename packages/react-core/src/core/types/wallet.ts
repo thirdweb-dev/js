@@ -23,11 +23,12 @@ export type WalletClass<I extends WalletInstance = WalletInstance> = {
   meta: (typeof AbstractClientWallet)["meta"];
 };
 
-export type Wallet<I extends WalletInstance = WalletInstance> = {
+export type Wallet<
+  I extends WalletInstance = WalletInstance,
+  Config extends Record<string, any> = Record<string, any>,
+> = {
   id: string;
   meta: (typeof AbstractClientWallet)["meta"];
   create: (options: WalletOptions) => I;
-  config?: {
-    personalWallets?: Wallet[];
-  };
+  config: Config;
 };

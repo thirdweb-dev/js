@@ -1,3 +1,5 @@
+export { walletIds } from "./walletIds";
+
 export { CredentialsStorage } from "../core/CredentialsStorage";
 
 export { Connector } from "../lib/wagmi-connectors";

@@ -70,6 +70,17 @@ export const Button = styled.button<{
         return p.theme.text.danger;
     }
   }};
+
+  ${(p) => {
+    if (p.variant === "link") {
+      return `
+      padding: 0;
+      &:hover {
+        color: ${p.theme.text.neutral};
+      }`;
+    }
+  }}
+
   cursor: pointer;
 
   /* pressed effect */

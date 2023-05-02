@@ -1,7 +1,7 @@
 import { Modal } from "../../components/Modal";
 import { isMobile } from "../../evm/utils/isMobile";
 import { useInstalledWallets } from "../hooks/useInstalledWallets";
-import { WalletMeta } from "../types";
+import { WalletInfo } from "../types";
 import { WalletSelector } from "./WalletSelector";
 import { CoinbaseWalletSetup } from "./screens/Coinbase/CoinbaseConnecting";
 import { CoinbaseGetStarted } from "./screens/Coinbase/CoinbaseGetStarted";
@@ -35,11 +35,10 @@ import { darkTheme, lightTheme } from "../../design-system";
 import { LocalWalletSetup } from "./screens/LocalWallet/LocalWalletSetup";
 import { SmartWalletForm } from "./screens/SmartWallet/SmartWalletForm";
 import { MagicConnect } from "./screens/Magic/MagicConnect";
-import { LocalWalletInfoProvider } from "./screens/LocalWallet/useLocalWalletInfo";
 import { SmartWalletSelect } from "./screens/SmartWallet/SmartWalletSelect";
 import { SmartWalletObj } from "../wallets/smartWallet";
 import { SafeWalletObj } from "../wallets/safeWallet";
-import { FadeIn } from "../../components/FadeIn";
+import { walletIds } from "@thirdweb-dev/wallets";
 
 export const ConnectModal = () => {
   const modalTheme = useModalTheme();
@@ -95,16 +94,16 @@ export const ConnectModal = () => {
     }
   }, [isConnectingToWalletWrapper, setShowScreen]);
 
-  const getWalletMeta = useCallback(
+  type GetWalletInfo = (wallet: Wallet) => WalletInfo;
+  const getWalletInfo: GetWalletInfo = useCallback(
     (wallet: Wallet) => ({
-      id: wallet.id,
-      meta: wallet.meta,
+      wallet,
       installed:
         wallet.id in installedWallets &&
         installedWallets[wallet.id as keyof typeof installedWallets],
-      onClick: async () => {
+      connect: async () => {
         // Metamask
-        if (wallet.id === "metamask") {
+        if (wallet.id === walletIds.metamask) {
           if (installedWallets.metamask) {
             try {
               await ifWaiting({
@@ -136,7 +135,7 @@ export const ConnectModal = () => {
         }
 
         // Coinbase Wallet
-        else if (wallet.id === "coinbaseWallet") {
+        else if (wallet.id === walletIds.coinbase) {
           if (installedWallets.coinbaseWallet) {
             try {
               await ifWaiting({
@@ -173,7 +172,7 @@ export const ConnectModal = () => {
         }
 
         // Local Wallet
-        else if (wallet.id === "localWallet") {
+        else if (wallet.id === walletIds.localWallet) {
           setShowScreen("localWallet/connect");
         }
 
@@ -207,16 +206,6 @@ export const ConnectModal = () => {
     ],
   );
 
-  const walletsMeta: WalletMeta[] = wallets.map(getWalletMeta);
-
-  useEffect(() => {
-    if (showScreen === "walletList" && wallets.length === 1) {
-      walletsMeta[0].onClick();
-    }
-  }, [walletsMeta, showScreen, wallets.length]);
-
-  const usingLocalWallet = wallets.find((w) => w.id === "localWallet");
-
   const smartWalletObj = wallets.find((w) => w.id === "SmartWallet") as
     | SmartWalletObj
     | undefined;
@@ -224,6 +213,41 @@ export const ConnectModal = () => {
   const safeWalletObj = wallets.find((w) => w.id === "Safe") as
     | SafeWalletObj
     | undefined;
+
+  const walletsInfo: WalletInfo[] = (() => {
+    if (isConnectingToWalletWrapper === "safe") {
+      return safeWalletObj?.config.personalWallets.map(getWalletInfo) || [];
+    }
+
+    if (isConnectingToWalletWrapper === "smartWallet") {
+      return smartWalletObj?.config.personalWallets.map(getWalletInfo) || [];
+    }
+    return wallets.map(getWalletInfo);
+  })();
+
+  // if only one wallet, auto select it
+  useEffect(() => {
+    if (showScreen === "walletList" && wallets.length === 1) {
+      walletsInfo[0].connect();
+    }
+  }, [walletsInfo, showScreen, wallets.length]);
+
+  useEffect(() => {
+    // if the modal is closed, and isConnectingToWalletWrapper is true, open again and connected
+    if (
+      isConnectingToWalletWrapper &&
+      !isWalletModalOpen &&
+      connectionStatus === "connected"
+    ) {
+      console.log("open again");
+      setIsWalletModalOpen(true);
+    }
+  }, [
+    isConnectingToWalletWrapper,
+    isWalletModalOpen,
+    connectionStatus,
+    setIsWalletModalOpen,
+  ]);
 
   const content = (
     <ThemeProvider
@@ -241,18 +265,21 @@ export const ConnectModal = () => {
         }}
         open={hideModal ? false : isWalletModalOpen}
         setOpen={(value) => {
+          console.log("new value", value);
           setIsWalletModalOpen(value);
           if (!value) {
-            closeModalAndReset();
-            if (connectionStatus === "connecting") {
-              disconnect();
+            if (!isConnectingToWalletWrapper) {
+              closeModalAndReset();
+              if (connectionStatus === "connecting") {
+                disconnect();
+              }
             }
           }
         }}
       >
         {showScreen === "walletList" && (
           <WalletSelector
-            walletsMeta={walletsMeta}
+            walletsInfo={walletsInfo}
             onGetStarted={() => {
               setShowScreen("wallets/get-started");
             }}
@@ -264,6 +291,7 @@ export const ConnectModal = () => {
 
         {showScreen === "metamask/get-started" && (
           <MetamaskGetStarted
+            walletsInfo={walletsInfo}
             onBack={() => {
               setShowScreen("metamask/scan");
             }}
@@ -272,6 +300,7 @@ export const ConnectModal = () => {
 
         {showScreen === "coinbase/get-started" && (
           <CoinbaseGetStarted
+            walletsInfo={walletsInfo}
             onBack={() => {
               setShowScreen("coinbase/scan");
             }}
@@ -279,11 +308,12 @@ export const ConnectModal = () => {
         )}
 
         {showScreen === "metamask/connecting" && (
-          <MetamaskConnecting onBack={handleBack} />
+          <MetamaskConnecting onBack={handleBack} walletsInfo={walletsInfo} />
         )}
 
         {showScreen === "metamask/scan" && (
           <ScanMetamask
+            walletsInfo={walletsInfo}
             onBack={handleBack}
             onConnected={onConnect}
             onGetStarted={() => {
@@ -294,6 +324,7 @@ export const ConnectModal = () => {
 
         {showScreen === "coinbase/scan" && (
           <ScanCoinbase
+            walletsInfo={walletsInfo}
             onBack={handleBack}
             onConnected={onConnect}
             onGetStarted={() => {
@@ -303,25 +334,24 @@ export const ConnectModal = () => {
         )}
 
         {showScreen === "coinbase/connecting" && (
-          <CoinbaseWalletSetup onBack={handleBack} />
+          <CoinbaseWalletSetup onBack={handleBack} walletsInfo={walletsInfo} />
         )}
 
         {showScreen === "safe/select-wallet" && (
           <SelectpersonalWallet
+            safeWallet={safeWalletObj as SafeWalletObj}
             onBack={() => {
               setIsConnectingToWalletWrapper(false);
               setShowScreen("walletList");
             }}
-            walletsMeta={
-              safeWalletObj?.config?.personalWallets
-                ? safeWalletObj?.config.personalWallets.map(getWalletMeta)
-                : walletsMeta
-            }
+            walletsInfo={walletsInfo}
           />
         )}
 
         {showScreen === "safe/form" && (
           <SafeForm
+            safeWallet={safeWalletObj as SafeWalletObj}
+            walletsInfo={walletsInfo}
             onBack={handleBack}
             onConnect={() => {
               closeModalAndReset();
@@ -332,16 +362,22 @@ export const ConnectModal = () => {
         {showScreen === "wallets/get-started" && (
           <GetStartedWithWallets
             onBack={handleBack}
-            walletMeta={walletsMeta[0]}
+            walletInfo={walletsInfo[0]}
           />
         )}
 
         {showScreen === "localWallet/connect" && (
-          <LocalWalletSetup onBack={handleBack} onConnected={onConnect} />
+          <LocalWalletSetup
+            onBack={handleBack}
+            onConnected={onConnect}
+            walletsInfo={walletsInfo}
+          />
         )}
 
         {showScreen === "smartWallet/form" && (
           <SmartWalletForm
+            smartWallet={smartWalletObj as SmartWalletObj}
+            walletsInfo={walletsInfo}
             onBack={handleBack}
             onConnect={() => {
               closeModalAndReset();
@@ -351,27 +387,28 @@ export const ConnectModal = () => {
 
         {showScreen === "smartWallet/select-wallet" && (
           <SmartWalletSelect
+            smartWallet={smartWalletObj as SmartWalletObj}
             onBack={() => {
               setShowScreen("walletList");
             }}
-            walletsMeta={
-              smartWalletObj?.config.personalWallets
-                ? smartWalletObj?.config.personalWallets.map(getWalletMeta)
-                : walletsMeta
+            walletsInfo={
+              smartWalletObj?.config?.personalWallets
+                ? smartWalletObj?.config.personalWallets.map(getWalletInfo)
+                : walletsInfo
             }
           />
         )}
 
         {showScreen === "magic/connect" && (
-          <MagicConnect onBack={handleBack} onConnect={onConnect} />
+          <MagicConnect
+            onBack={handleBack}
+            onConnect={onConnect}
+            walletsInfo={walletsInfo}
+          />
         )}
       </Modal>
     </ThemeProvider>
   );
 
-  return usingLocalWallet ? (
-    <LocalWalletInfoProvider> {content}</LocalWalletInfoProvider>
-  ) : (
-    content
-  );
+  return content;
 };

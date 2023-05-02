@@ -9,9 +9,7 @@ import {
   WalletOptions as WalletOptionsRC,
   Wallet,
 } from "@thirdweb-dev/react-core";
-import {
-  WalletConnect,
-} from "@thirdweb-dev/wallets";
+import { WalletConnect } from "@thirdweb-dev/wallets";
 import { Linking } from "react-native";
 
 type WC2Options = Omit<
@@ -69,5 +67,6 @@ export const trustWallet = () => {
     id: TrustWallet.id,
     meta: TrustWallet.meta,
     create: (options: WalletOptionsRC) => new TrustWallet(options),
+    config: {},
   } satisfies Wallet;
 };

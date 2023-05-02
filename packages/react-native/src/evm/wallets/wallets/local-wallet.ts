@@ -53,5 +53,6 @@ export const localWallet = (displayName?: string) => {
         walletStorage: asyncStorage,
         storage: secureStorage,
       }) as LocalWalletCore,
+    config: {},
   } satisfies Wallet;
 };
