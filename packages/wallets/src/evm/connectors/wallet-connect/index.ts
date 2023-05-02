@@ -10,7 +10,7 @@ import type { Chain } from "@thirdweb-dev/chains";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { EthereumProviderOptions } from "@walletconnect/ethereum-provider/dist/types/EthereumProvider";
 import { providers, utils } from "ethers";
-import { walletIds } from "../../walletIds";
+import { walletIds } from "../../constants/walletIds";
 
 type WalletConnectOptions = {
   projectId: EthereumProviderOptions["projectId"];

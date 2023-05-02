@@ -13,7 +13,7 @@ import { UserStatus } from "@paperxyz/embedded-wallet-service-sdk";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { providers, Signer } from "ethers";
 import { utils } from "ethers";
-import { walletIds } from "../../walletIds";
+import { walletIds } from "../../constants/walletIds";
 
 export const PaperChainMap = {
   1: "Ethereum",

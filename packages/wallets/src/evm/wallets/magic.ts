@@ -6,7 +6,7 @@ import type {
   MagicAuthConnector as MagicAuthConnectorType,
 } from "../connectors/magic";
 import { OAuthProvider as _OAuthProvider } from "@magic-ext/oauth";
-import { walletIds } from "../walletIds";
+import { walletIds } from "../constants/walletIds";
 
 export type MagicLinkAdditionalOptions = MagicAuthOptions;
 export type MagicLinkOptions = WalletOptions<MagicAuthOptions>;

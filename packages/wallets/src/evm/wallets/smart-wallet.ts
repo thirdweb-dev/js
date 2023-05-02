@@ -6,7 +6,7 @@ import type {
 } from "../connectors/smart-wallet/types";
 import type { SmartWalletConnector as SmartWalletConnectorType } from "../connectors/smart-wallet";
 import { Transaction, TransactionResult } from "@thirdweb-dev/sdk";
-import { walletIds } from "../walletIds";
+import { walletIds } from "../constants/walletIds";
 
 // export types and utils for convenience
 export * from "../connectors/smart-wallet/types";

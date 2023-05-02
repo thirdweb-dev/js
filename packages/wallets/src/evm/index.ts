@@ -1,4 +1,4 @@
-export { walletIds } from "./walletIds";
+export { walletIds } from "./constants/walletIds";
 
 export { CredentialsStorage } from "../core/CredentialsStorage";
 

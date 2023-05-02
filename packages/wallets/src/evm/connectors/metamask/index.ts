@@ -6,7 +6,7 @@ import {
   UserRejectedRequestError,
 } from "../../../lib/wagmi-core/errors";
 import { assertWindowEthereum } from "../../utils/assertWindowEthereum";
-import { walletIds } from "../../walletIds";
+import { walletIds } from "../../constants/walletIds";
 import { InjectedConnector, InjectedConnectorOptions } from "../injected";
 import { Ethereum } from "../injected/types";
 import type { Chain } from "@thirdweb-dev/chains";

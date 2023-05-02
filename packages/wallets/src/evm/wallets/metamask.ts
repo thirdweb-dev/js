@@ -3,7 +3,7 @@ import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { assertWindowEthereum } from "../utils/assertWindowEthereum";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import type { MetaMaskConnector as MetamaskConnectorType } from "../connectors/metamask";
-import { walletIds } from "../walletIds";
+import { walletIds } from "../constants/walletIds";
 
 type MetamaskAdditionalOptions = {
   /**
