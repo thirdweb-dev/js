@@ -9,9 +9,7 @@ import {
   WalletOptions as WalletOptionsRC,
   Wallet,
 } from "@thirdweb-dev/react-core";
-import {
-  WalletConnect,
-} from "@thirdweb-dev/wallets";
+import { WalletConnect } from "@thirdweb-dev/wallets";
 import { Linking } from "react-native";
 
 type WC2Options = Omit<

@@ -39,7 +39,12 @@ export const BackButton: React.FC<{
   style?: React.CSSProperties;
 }> = (props) => {
   return (
-    <IconButton variant="secondary" onClick={props.onClick} style={props.style}>
+    <IconButton
+      variant="secondary"
+      onClick={props.onClick}
+      style={props.style}
+      type="button"
+    >
       <ChevronLeftIcon
         style={{
           width: iconSize.md,

@@ -14,7 +14,11 @@ import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ExportLocalWalletModal } from "./ExportLocalWalletModal";
 import { Toast } from "../base/Toast";
-import { AbstractClientWallet, SmartWallet } from "@thirdweb-dev/wallets";
+import {
+  AbstractClientWallet,
+  SmartWallet,
+  walletIds,
+} from "@thirdweb-dev/wallets";
 import { SmartWalletAdditionalActions } from "./SmartWalletAdditionalActions";
 
 export type ConnectWalletDetailsProps = {
@@ -84,7 +88,7 @@ export const ConnectWalletDetails = ({
   };
 
   const getAdditionalActions = useCallback(() => {
-    if (activeWallet?.walletId.toLowerCase().includes("localwallet")) {
+    if (activeWallet?.walletId.toLowerCase().includes(walletIds.localWallet)) {
       return (
         <>
           <View style={styles.currentNetwork}>

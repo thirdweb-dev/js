@@ -1,15 +1,16 @@
 import { ConnectingScreen } from "../ConnectingScreen";
-import { Wallet, useSupportedWallet } from "@thirdweb-dev/react-core";
+import { useWalletInfo } from "../../walletInfo";
 
 export const CoinbaseWalletSetup: React.FC<{
   onBack: () => void;
 }> = ({ onBack }) => {
-  const coinbaseWalletObj = useSupportedWallet("coinbaseWallet") as Wallet;
+  const coinbase = useWalletInfo("coinbase", true);
+
   return (
     <ConnectingScreen
       onBack={onBack}
-      walletName={coinbaseWalletObj.meta.name}
-      walletIconURL={coinbaseWalletObj.meta.iconURL}
+      walletName={coinbase.wallet.meta.name}
+      walletIconURL={coinbase.wallet.meta.iconURL}
       supportLink="https://help.coinbase.com/en/wallet/other-topics/troubleshooting-and-tips"
     />
   );

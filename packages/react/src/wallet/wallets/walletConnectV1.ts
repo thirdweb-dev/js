@@ -7,5 +7,5 @@ export const walletConnectV1 = () => {
     meta: WalletConnectV1.meta,
     create: (options: WalletOptions) =>
       new WalletConnectV1({ ...options, qrcode: true }),
-  } satisfies Wallet;
+  } satisfies Wallet<WalletConnectV1>;
 };
