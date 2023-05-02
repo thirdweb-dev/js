@@ -80,7 +80,7 @@ export const SmartWalletForm: React.FC<{
     }
   }, [mismatch, handleConnect, activeWallet, connectedChain]);
 
-  if (connectionStatus === "connecting") {
+  if (connectionStatus === "connecting" || !mismatch) {
     return (
       <Flex
         style={{
