@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import Text from "./Text";
 import { Theme } from "../../styles/theme";
 
@@ -15,14 +15,10 @@ export const Link = ({
   ...props
 }: LinkProps) => {
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
+    <TouchableOpacity onPress={onPress}>
       <Text variant={variant} {...props}>
         {text}
       </Text>
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {},
-});
