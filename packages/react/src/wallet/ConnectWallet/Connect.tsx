@@ -1,7 +1,7 @@
 import { Modal } from "../../components/Modal";
 import { isMobile } from "../../evm/utils/isMobile";
 import { useInstalledWallets } from "../hooks/useInstalledWallets";
-import { WalletMeta } from "../types";
+import { WalletInfo } from "../types";
 import { WalletSelector } from "./WalletSelector";
 import { CoinbaseWalletSetup } from "./screens/Coinbase/CoinbaseConnecting";
 import { CoinbaseGetStarted } from "./screens/Coinbase/CoinbaseGetStarted";
@@ -14,9 +14,10 @@ import {
   useConnect,
   useConnectionStatus,
   useDisconnect,
+  useWallet,
   useWallets,
 } from "@thirdweb-dev/react-core";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { SelectpersonalWallet } from "./screens/Safe/SelectPersonalWallet";
 import { SafeForm } from "./screens/Safe/SafeForm";
 import { GetStartedWithWallets } from "./screens/GetStartedWithWallets";
@@ -35,14 +36,13 @@ import { darkTheme, lightTheme } from "../../design-system";
 import { LocalWalletSetup } from "./screens/LocalWallet/LocalWalletSetup";
 import { SmartWalletForm } from "./screens/SmartWallet/SmartWalletForm";
 import { MagicConnect } from "./screens/Magic/MagicConnect";
-import { LocalWalletInfoProvider } from "./screens/LocalWallet/useLocalWalletInfo";
 import { SmartWalletSelect } from "./screens/SmartWallet/SmartWalletSelect";
 import { SmartWalletObj } from "../wallets/smartWallet";
 import { SafeWalletObj } from "../wallets/safeWallet";
+import { walletIds } from "@thirdweb-dev/wallets";
+import { WalletsInfoCtx } from "./walletInfo";
 
-export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
-  guestMode,
-}) => {
+export const ConnectModal = () => {
   const modalTheme = useModalTheme();
   const isConnectingToWalletWrapper = useIsConnectingToWalletWrapper();
   const showScreen = useScreen();
@@ -55,6 +55,7 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
 
   const connect = useConnect();
   const wallets = useWallets();
+  const activeWallet = useWallet();
   const installedWallets = useInstalledWallets();
 
   // to hide the modal temporarily when showing the third party Modal to avoid z-index issues
@@ -86,6 +87,8 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
     }
   }, [isConnectingToWalletWrapper, setShowScreen]);
 
+  const onlyOneWallet = wallets.length === 1;
+
   const handleBack = useCallback(() => {
     if (isConnectingToWalletWrapper === "safe") {
       setShowScreen("safe/select-wallet");
@@ -96,16 +99,16 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
     }
   }, [isConnectingToWalletWrapper, setShowScreen]);
 
-  const getWalletMeta = useCallback(
+  type GetWalletInfo = (wallet: Wallet) => WalletInfo;
+  const getWalletInfo: GetWalletInfo = useCallback(
     (wallet: Wallet) => ({
-      id: wallet.id,
-      meta: wallet.meta,
+      wallet,
       installed:
         wallet.id in installedWallets &&
         installedWallets[wallet.id as keyof typeof installedWallets],
-      onClick: async () => {
+      connect: async () => {
         // Metamask
-        if (wallet.id === "metamask") {
+        if (wallet.id === walletIds.metamask) {
           if (installedWallets.metamask) {
             try {
               await ifWaiting({
@@ -137,7 +140,7 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
         }
 
         // Coinbase Wallet
-        else if (wallet.id === "coinbaseWallet") {
+        else if (wallet.id === walletIds.coinbase) {
           if (installedWallets.coinbaseWallet) {
             try {
               await ifWaiting({
@@ -162,24 +165,24 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
         }
 
         // Safe
-        else if (wallet.id === "Safe") {
+        else if (wallet.id === walletIds.safe) {
           setIsConnectingToWalletWrapper("safe");
           setShowScreen("safe/select-wallet");
         }
 
         // Smart Wallet
-        else if (wallet.id === "SmartWallet") {
+        else if (wallet.id === walletIds.smartWallet) {
           setIsConnectingToWalletWrapper("smartWallet");
           setShowScreen("smartWallet/select-wallet");
         }
 
         // Local Wallet
-        else if (wallet.id === "localWallet") {
+        else if (wallet.id === walletIds.localWallet) {
           setShowScreen("localWallet/connect");
         }
 
         // Magic link
-        else if (wallet.id === "magicLink") {
+        else if (wallet.id === walletIds.magicLink) {
           setShowScreen("magic/connect");
         }
 
@@ -208,25 +211,63 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
     ],
   );
 
-  const walletsMeta: WalletMeta[] = wallets.map(getWalletMeta);
-
-  useEffect(() => {
-    if (showScreen === "walletList" && wallets.length === 1) {
-      walletsMeta[0].onClick();
-    }
-  }, [walletsMeta, showScreen, wallets.length]);
-
-  const usingLocalWallet = wallets.find((w) => w.id === "localWallet");
-
-  const smartWalletObj = wallets.find((w) => w.id === "SmartWallet") as
+  const smartWalletObj = wallets.find((w) => w.id === walletIds.smartWallet) as
     | SmartWalletObj
     | undefined;
 
-  const safeWalletObj = wallets.find((w) => w.id === "Safe") as
+  const safeWalletObj = wallets.find((w) => w.id === walletIds.safe) as
     | SafeWalletObj
     | undefined;
 
-  const content = (
+  const walletsInfo: WalletInfo[] = (() => {
+    if (isConnectingToWalletWrapper === "safe") {
+      return safeWalletObj?.config.personalWallets.map(getWalletInfo) || [];
+    }
+
+    if (isConnectingToWalletWrapper === "smartWallet") {
+      return smartWalletObj?.config.personalWallets.map(getWalletInfo) || [];
+    }
+    return wallets.map(getWalletInfo);
+  })();
+
+  // if only one wallet, auto select it
+  const connected = useRef(false);
+  useEffect(() => {
+    if (
+      showScreen === "walletList" &&
+      wallets.length === 1 &&
+      !activeWallet &&
+      isWalletModalOpen &&
+      !connected.current
+    ) {
+      connected.current = true;
+      walletsInfo[0].connect();
+    }
+  }, [
+    walletsInfo,
+    showScreen,
+    wallets.length,
+    activeWallet,
+    isWalletModalOpen,
+  ]);
+
+  useEffect(() => {
+    // if the modal is closed, and isConnectingToWalletWrapper is true, open again and connected
+    if (
+      isConnectingToWalletWrapper &&
+      !isWalletModalOpen &&
+      connectionStatus === "connected"
+    ) {
+      setIsWalletModalOpen(true);
+    }
+  }, [
+    isConnectingToWalletWrapper,
+    isWalletModalOpen,
+    connectionStatus,
+    setIsWalletModalOpen,
+  ]);
+
+  return (
     <ThemeProvider
       theme={
         typeof modalTheme === "object"
@@ -236,146 +277,142 @@ export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
           : darkTheme
       }
     >
-      <Modal
-        style={{
-          maxWidth: "480px",
-        }}
-        open={hideModal ? false : isWalletModalOpen}
-        setOpen={(value) => {
-          setIsWalletModalOpen(value);
-          if (!value) {
-            closeModalAndReset();
-            if (connectionStatus === "connecting") {
-              disconnect();
+      <WalletsInfoCtx.Provider value={walletsInfo}>
+        <Modal
+          style={{
+            maxWidth: "480px",
+          }}
+          open={hideModal ? false : isWalletModalOpen}
+          setOpen={(value) => {
+            setIsWalletModalOpen(value);
+
+            if (!value) {
+              if (!isConnectingToWalletWrapper) {
+                closeModalAndReset();
+                if (connectionStatus === "connecting") {
+                  disconnect();
+                }
+              }
             }
-          }
-        }}
-      >
-        {showScreen === "walletList" && (
-          <WalletSelector
-            walletsMeta={walletsMeta}
-            onGetStarted={() => {
-              setShowScreen("wallets/get-started");
-            }}
-            guestMode={guestMode}
-            onGuestConnect={() => {
-              setShowScreen("localWallet/connect");
-            }}
-          />
-        )}
+          }}
+        >
+          {showScreen === "walletList" && (
+            <WalletSelector
+              onGetStarted={() => {
+                setShowScreen("wallets/get-started");
+              }}
+              onGuestConnect={() => {
+                setShowScreen("localWallet/connect");
+              }}
+            />
+          )}
 
-        {showScreen === "metamask/get-started" && (
-          <MetamaskGetStarted
-            onBack={() => {
-              setShowScreen("metamask/scan");
-            }}
-          />
-        )}
+          {showScreen === "metamask/get-started" && (
+            <MetamaskGetStarted
+              onBack={() => {
+                setShowScreen("metamask/scan");
+              }}
+            />
+          )}
 
-        {showScreen === "coinbase/get-started" && (
-          <CoinbaseGetStarted
-            onBack={() => {
-              setShowScreen("coinbase/scan");
-            }}
-          />
-        )}
+          {showScreen === "coinbase/get-started" && (
+            <CoinbaseGetStarted
+              onBack={() => {
+                setShowScreen("coinbase/scan");
+              }}
+            />
+          )}
 
-        {showScreen === "metamask/connecting" && (
-          <MetamaskConnecting onBack={handleBack} />
-        )}
+          {showScreen === "metamask/connecting" && (
+            <MetamaskConnecting onBack={handleBack} />
+          )}
 
-        {showScreen === "metamask/scan" && (
-          <ScanMetamask
-            onBack={handleBack}
-            onConnected={onConnect}
-            onGetStarted={() => {
-              setShowScreen("metamask/get-started");
-            }}
-          />
-        )}
+          {showScreen === "metamask/scan" && (
+            <ScanMetamask
+              onBack={handleBack}
+              onConnected={onConnect}
+              onGetStarted={() => {
+                setShowScreen("metamask/get-started");
+              }}
+            />
+          )}
 
-        {showScreen === "coinbase/scan" && (
-          <ScanCoinbase
-            onBack={handleBack}
-            onConnected={onConnect}
-            onGetStarted={() => {
-              setShowScreen("coinbase/get-started");
-            }}
-          />
-        )}
+          {showScreen === "coinbase/scan" && (
+            <ScanCoinbase
+              onBack={handleBack}
+              onConnected={onConnect}
+              onGetStarted={() => {
+                setShowScreen("coinbase/get-started");
+              }}
+            />
+          )}
 
-        {showScreen === "coinbase/connecting" && (
-          <CoinbaseWalletSetup onBack={handleBack} />
-        )}
+          {showScreen === "coinbase/connecting" && (
+            <CoinbaseWalletSetup onBack={handleBack} />
+          )}
 
-        {showScreen === "safe/select-wallet" && (
-          <SelectpersonalWallet
-            guestMode={guestMode}
-            onBack={() => {
-              setIsConnectingToWalletWrapper(false);
-              setShowScreen("walletList");
-            }}
-            walletsMeta={
-              safeWalletObj?.config?.personalWallets
-                ? safeWalletObj?.config.personalWallets.map(getWalletMeta)
-                : walletsMeta
-            }
-          />
-        )}
+          {showScreen === "safe/select-wallet" && (
+            <SelectpersonalWallet
+              safeWallet={safeWalletObj as SafeWalletObj}
+              onBack={() => {
+                if (onlyOneWallet) {
+                  return;
+                }
+                setIsConnectingToWalletWrapper(false);
+                setShowScreen("walletList");
+              }}
+            />
+          )}
 
-        {showScreen === "safe/form" && (
-          <SafeForm
-            onBack={handleBack}
-            onConnect={() => {
-              closeModalAndReset();
-            }}
-          />
-        )}
+          {showScreen === "safe/form" && (
+            <SafeForm
+              safeWallet={safeWalletObj as SafeWalletObj}
+              onBack={handleBack}
+              onConnect={() => {
+                closeModalAndReset();
+              }}
+            />
+          )}
 
-        {showScreen === "wallets/get-started" && (
-          <GetStartedWithWallets
-            onBack={handleBack}
-            walletMeta={walletsMeta[0]}
-          />
-        )}
+          {showScreen === "wallets/get-started" && (
+            <GetStartedWithWallets
+              onBack={handleBack}
+              walletInfo={walletsInfo[0]}
+            />
+          )}
 
-        {showScreen === "localWallet/connect" && (
-          <LocalWalletSetup onBack={handleBack} onConnected={onConnect} />
-        )}
+          {showScreen === "localWallet/connect" && (
+            <LocalWalletSetup onBack={handleBack} onConnected={onConnect} />
+          )}
 
-        {showScreen === "smartWallet/form" && (
-          <SmartWalletForm
-            onBack={handleBack}
-            onConnect={() => {
-              closeModalAndReset();
-            }}
-          />
-        )}
+          {showScreen === "smartWallet/form" && (
+            <SmartWalletForm
+              smartWallet={smartWalletObj as SmartWalletObj}
+              onBack={handleBack}
+              onConnect={() => {
+                closeModalAndReset();
+              }}
+            />
+          )}
 
-        {showScreen === "smartWallet/select-wallet" && (
-          <SmartWalletSelect
-            onBack={() => {
-              setShowScreen("walletList");
-            }}
-            guestMode={guestMode}
-            walletsMeta={
-              smartWalletObj?.config.personalWallets
-                ? smartWalletObj?.config.personalWallets.map(getWalletMeta)
-                : walletsMeta
-            }
-          />
-        )}
+          {showScreen === "smartWallet/select-wallet" && (
+            <SmartWalletSelect
+              smartWallet={smartWalletObj as SmartWalletObj}
+              onBack={() => {
+                if (onlyOneWallet) {
+                  return;
+                }
+                setShowScreen("walletList");
+                setIsConnectingToWalletWrapper(false);
+              }}
+            />
+          )}
 
-        {showScreen === "magic/connect" && (
-          <MagicConnect onBack={handleBack} onConnect={onConnect} />
-        )}
-      </Modal>
+          {showScreen === "magic/connect" && (
+            <MagicConnect onBack={handleBack} onConnect={onConnect} />
+          )}
+        </Modal>
+      </WalletsInfoCtx.Provider>
     </ThemeProvider>
-  );
-
-  return usingLocalWallet ? (
-    <LocalWalletInfoProvider> {content}</LocalWalletInfoProvider>
-  ) : (
-    content
   );
 };

@@ -17,13 +17,12 @@ import {
   useConnect,
   useConnectionStatus,
   useNetworkMismatch,
-  useSupportedWallet,
   useThirdwebWallet,
   useWallet,
 } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useState } from "react";
-import { SmartWalletObj } from "../../../wallets/smartWallet";
 import { Flex } from "../../../../components/basic";
+import { SmartWalletObj } from "../../../wallets/smartWallet";
 
 export const gnosisAddressPrefixToChainId = {
   eth: 1,
@@ -37,8 +36,8 @@ export const gnosisAddressPrefixToChainId = {
 export const SmartWalletForm: React.FC<{
   onBack: () => void;
   onConnect: () => void;
+  smartWallet: SmartWalletObj;
 }> = (props) => {
-  const smartWalletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
   const activeWallet = useWallet(); // personal wallet
 
   const connect = useConnect();
@@ -63,7 +62,7 @@ export const SmartWalletForm: React.FC<{
     setConnectError(false);
 
     try {
-      await connect(smartWalletObj, {
+      await connect(props.smartWallet, {
         personalWallet: activeWallet,
       });
       onConnect();
@@ -71,7 +70,7 @@ export const SmartWalletForm: React.FC<{
       console.error(e);
       setConnectError(true);
     }
-  }, [activeWallet, connectedChain, connect, onConnect, smartWalletObj]);
+  }, [activeWallet, connectedChain, connect, props.smartWallet, onConnect]);
 
   useEffect(() => {
     if (!mismatch) {
@@ -79,7 +78,7 @@ export const SmartWalletForm: React.FC<{
     }
   }, [mismatch, handleConnect, activeWallet, connectedChain]);
 
-  if (connectionStatus === "connecting") {
+  if (connectionStatus === "connecting" || !mismatch) {
     return (
       <Flex
         style={{
@@ -98,7 +97,7 @@ export const SmartWalletForm: React.FC<{
       <BackButton onClick={props.onBack} />
       <Spacer y="md" />
       <Img
-        src={smartWalletObj.meta.iconURL}
+        src={props.smartWallet.meta.iconURL}
         width={iconSize.xl}
         height={iconSize.xl}
       />

@@ -3,6 +3,7 @@ import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { assertWindowEthereum } from "../utils/assertWindowEthereum";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import type { MetaMaskConnector as MetamaskConnectorType } from "../connectors/metamask";
+import { walletIds } from "../constants/walletIds";
 
 type MetamaskAdditionalOptions = {
   /**
@@ -37,7 +38,7 @@ export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptio
     },
   };
 
-  static id = "metamask" as const;
+  static id = walletIds.metamask;
 
   public get walletName() {
     return "MetaMask" as const;

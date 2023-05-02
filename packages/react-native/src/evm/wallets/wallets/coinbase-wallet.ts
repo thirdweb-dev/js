@@ -8,6 +8,7 @@ import {
   TWConnector,
   WagmiAdapter,
   WalletOptions,
+  walletIds,
 } from "@thirdweb-dev/wallets";
 import {
   Wallet,
@@ -31,7 +32,7 @@ export class CoinbaseWallet extends AbstractClientWallet<CoinbaseWalletConnector
   coinbaseConnector?: CoinbaseWalletConnector;
   provider?: CoinbaseWalletConnector["provider"];
 
-  static id = "coinbaseWallet" as const;
+  static id = walletIds.coinbase;
   public get walletName() {
     return "Coinbase Wallet" as const;
   }
@@ -81,5 +82,6 @@ export const coinbaseWallet = (config?: { callbackURL?: URL }) => {
     meta: CoinbaseWallet.meta,
     create: (options: WalletOptionsRC) =>
       new CoinbaseWallet({ ...options, callbackURL: callbackURLNonNull }),
-  } satisfies Wallet;
+    config: config || {},
+  } satisfies Wallet<CoinbaseWallet, { callbackURL?: URL }>;
 };

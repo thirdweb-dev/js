@@ -1,8 +1,7 @@
-import type { AbstractClientWallet } from "@thirdweb-dev/wallets";
+import { Wallet } from "@thirdweb-dev/react-core";
 
-export type WalletMeta = {
-  id: string;
-  meta: (typeof AbstractClientWallet)["meta"];
+export type WalletInfo = {
+  wallet: Wallet;
   installed: boolean;
-  onClick: () => Promise<void>;
+  connect: () => Promise<void>;
 };
