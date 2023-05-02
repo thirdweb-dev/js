@@ -526,14 +526,27 @@ export function useContractEvents(
  * @beta
  */
 export function useContractRead<
-  TContractAddress extends GeneratedContractAddress,
-  TContract extends BaseContractForAddress<TContractAddress>,
-  TContractInstance extends SmartContract<TContract>,
-  TFunctionName extends keyof TContract["functions"] = keyof TContract["functions"],
+  TContractAddress extends GeneratedContractAddress | ContractAddress,
+  TContract extends TContractAddress extends GeneratedContractAddress
+    ? BaseContractForAddress<TContractAddress>
+    : ValidContractInstance,
+  TContractInstance extends TContractAddress extends GeneratedContractAddress
+    ? SmartContract<BaseContractForAddress<TContractAddress>>
+    : ValidContractInstance,
+  TFunctionName extends TContract extends ValidContractInstance
+    ? Parameters<TContractInstance["call"]>[0]
+    : // @ts-expect-error
+      keyof TContract["functions"] = keyof TContract["functions"],
 >(
-  contract: RequiredParam<TContractInstance>,
+  contract: TContractInstance extends ValidContractInstance
+    ? RequiredParam<TContractInstance> | undefined
+    : // @ts-expect-error
+      SmartContract<BaseContractForAddress<TContractAddress>> | undefined,
   functionName: RequiredParam<TFunctionName & string>,
-  args?: Parameters<TContract["functions"][TFunctionName]>,
+  args?: TContractInstance extends ValidContractInstance
+    ? unknown[]
+    : // @ts-expect-error
+      Parameters<TContract["functions"][TFunctionName]>,
   overrides?: CallOverrides,
 ) {
   const contractAddress = contract?.getAddress();
