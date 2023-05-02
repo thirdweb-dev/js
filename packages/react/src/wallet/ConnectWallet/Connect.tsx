@@ -239,7 +239,6 @@ export const ConnectModal = () => {
       !isWalletModalOpen &&
       connectionStatus === "connected"
     ) {
-      console.log("open again");
       setIsWalletModalOpen(true);
     }
   }, [
@@ -265,7 +264,6 @@ export const ConnectModal = () => {
         }}
         open={hideModal ? false : isWalletModalOpen}
         setOpen={(value) => {
-          console.log("new value", value);
           setIsWalletModalOpen(value);
           if (!value) {
             if (!isConnectingToWalletWrapper) {
