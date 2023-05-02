@@ -16,19 +16,14 @@ import { EmailConnect } from "./EmailConnect";
 import { Flex } from "../../../../components/basic";
 import { MagicLinkWallet } from "../../../wallets/magicLink";
 import { ErrorMessage } from "../../../../components/formElements";
-import { WalletInfo } from "../../../types";
-import { walletIds } from "@thirdweb-dev/wallets";
+import { useWalletInfo } from "../../walletInfo";
 
 export const MagicConnect: React.FC<{
   onBack: () => void;
   onConnect: () => void;
-  walletsInfo: WalletInfo[];
 }> = (props) => {
-  const magicLinkObj = (
-    props.walletsInfo.find(
-      (w) => w.wallet.id === walletIds.magicLink,
-    ) as WalletInfo
-  ).wallet as MagicLinkWallet;
+  const magicInfo = useWalletInfo("magicLink", true);
+  const magicLinkObj = magicInfo.wallet as MagicLinkWallet;
 
   const isSmsEnabled = magicLinkObj.config.smsLogin !== false;
   const isEmailEnabled = magicLinkObj.config.emailLogin !== false;

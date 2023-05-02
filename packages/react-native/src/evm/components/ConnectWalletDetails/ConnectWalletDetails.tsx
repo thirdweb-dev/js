@@ -14,9 +14,12 @@ import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ExportLocalWalletModal } from "./ExportLocalWalletModal";
 import { Toast } from "../base/Toast";
-import { LocalWallet, SmartWallet } from "@thirdweb-dev/wallets";
+import {
+  AbstractClientWallet,
+  SmartWallet,
+  walletIds,
+} from "@thirdweb-dev/wallets";
 import { SmartWalletAdditionalActions } from "./SmartWalletAdditionalActions";
-import { useSmartWallet } from "../../providers/context-provider";
 
 export type ConnectWalletDetailsProps = {
   address: string;
@@ -35,7 +38,6 @@ export const ConnectWalletDetails = ({
   const disconnect = useDisconnect();
   const chain = useActiveChain();
   const balanceQuery = useBalance();
-  const [smartWallet] = useSmartWallet();
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -86,7 +88,7 @@ export const ConnectWalletDetails = ({
   };
 
   const getAdditionalActions = useCallback(() => {
-    if (activeWallet?.walletId === LocalWallet.id) {
+    if (activeWallet?.walletId.toLowerCase().includes(walletIds.localWallet)) {
       return (
         <>
           <View style={styles.currentNetwork}>
@@ -108,16 +110,19 @@ export const ConnectWalletDetails = ({
       );
     }
 
-    if (activeWallet?.walletId === SmartWallet.id || smartWallet) {
+    if (activeWallet?.walletId === SmartWallet.id) {
+      const personalWallet =
+        activeWallet?.getPersonalWallet() as AbstractClientWallet;
       return (
         <SmartWalletAdditionalActions
+          personalWallet={personalWallet}
           onExportPress={onExportLocalWalletPress}
         />
       );
     }
 
     return null;
-  }, [activeWallet?.walletId, onExportLocalWalletPress, smartWallet]);
+  }, [activeWallet, onExportLocalWalletPress]);
 
   return (
     <>

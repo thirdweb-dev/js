@@ -13,14 +13,12 @@ import { ImportLocalWallet } from "./ImportLocalWallet";
 import { LocalWalletModalHeader } from "./common";
 import { Flex } from "../../../../components/basic";
 import { TextDivider } from "../../../../components/TextDivider";
-import { WalletInfo } from "../../../types";
 import { Spinner } from "../../../../components/Spinner";
 import { spacing } from "../../../../design-system";
 
 export const CreateLocalWallet_Password: React.FC<{
   onConnected: () => void;
   onBack: () => void;
-  walletsInfo: WalletInfo[];
 }> = (props) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -28,7 +26,7 @@ export const CreateLocalWallet_Password: React.FC<{
   const passwordMismatch = confirmPassword && password !== confirmPassword;
   const [isConnecting, setIsConnecting] = useState(false);
 
-  const { localWallet, meta } = useLocalWalletInfo(props.walletsInfo);
+  const { localWallet, meta } = useLocalWalletInfo();
 
   const thirdwebWalletContext = useThirdwebWallet();
   const [showImportScreen, setShowImportScreen] = useState(false);
@@ -49,7 +47,6 @@ export const CreateLocalWallet_Password: React.FC<{
   if (showImportScreen) {
     return (
       <ImportLocalWallet
-        walletsInfo={props.walletsInfo}
         onConnected={props.onConnected}
         onBack={() => {
           setShowImportScreen(false);
@@ -185,9 +182,8 @@ export const CreateLocalWallet_Password: React.FC<{
 export const CreateLocalWallet_Guest: React.FC<{
   onConnected: () => void;
   onBack: () => void;
-  walletsInfo: WalletInfo[];
 }> = (props) => {
-  const { localWallet, meta } = useLocalWalletInfo(props.walletsInfo);
+  const { localWallet, meta } = useLocalWalletInfo();
   const thirdwebWalletContext = useThirdwebWallet();
   const [showImportScreen, setShowImportScreen] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
@@ -195,7 +191,6 @@ export const CreateLocalWallet_Guest: React.FC<{
   if (showImportScreen) {
     return (
       <ImportLocalWallet
-        walletsInfo={props.walletsInfo}
         onConnected={props.onConnected}
         onBack={() => {
           setShowImportScreen(false);

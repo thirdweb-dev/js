@@ -15,7 +15,7 @@ import type { CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/Coinbas
 import type { Chain } from "@thirdweb-dev/chains";
 import { providers } from "ethers";
 import { getAddress, hexValue } from "ethers/lib/utils.js";
-import { walletIds } from "../../walletIds";
+import { walletIds } from "../../constants/walletIds";
 
 type Options = CoinbaseWalletSDKOptions & {
   /**

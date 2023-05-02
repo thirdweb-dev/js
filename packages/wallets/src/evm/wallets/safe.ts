@@ -3,7 +3,7 @@ import { AbstractClientWallet, WalletOptions } from "./base";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { SafeConnectionArgs } from "../connectors/safe/types";
 import type { SafeConnector as SafeConnectorType } from "../connectors/safe";
-import { walletIds } from "../walletIds";
+import { walletIds } from "../constants/walletIds";
 
 export { SafeSupportedChainsSet } from "../connectors/safe";
 

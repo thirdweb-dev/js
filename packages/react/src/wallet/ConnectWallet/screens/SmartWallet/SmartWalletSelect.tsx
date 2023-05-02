@@ -9,20 +9,19 @@ import {
   ModalDescription,
 } from "../../../../components/modalElements";
 import { iconSize, spacing } from "../../../../design-system";
-import { WalletInfo } from "../../../types";
 import { WalletSelection } from "../../WalletSelector";
 import styled from "@emotion/styled";
 import { SmartWalletObj } from "../../../wallets/smartWallet";
+import { useWalletInfo, useWalletsInfo } from "../../walletInfo";
 
 export const SmartWalletSelect: React.FC<{
   onBack: () => void;
-  walletsInfo: WalletInfo[];
   smartWallet: SmartWalletObj;
 }> = (props) => {
-  const guestWallet = props.walletsInfo.find(
-    (w) => w.wallet.id === walletIds.localWallet,
-  );
-  const walletsInfo = props.walletsInfo.filter(
+  const guestWallet = useWalletInfo("localWallet", false);
+  const allWalletsInfo = useWalletsInfo();
+
+  const walletsInfo = allWalletsInfo.filter(
     (w) =>
       w.wallet.id !== walletIds.smartWallet &&
       w.wallet.id !== walletIds.safe &&

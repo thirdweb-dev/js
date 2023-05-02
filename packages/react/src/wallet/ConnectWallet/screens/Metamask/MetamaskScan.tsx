@@ -5,18 +5,15 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 
-import { MetaMaskWallet, walletIds } from "@thirdweb-dev/wallets";
-import { WalletInfo } from "../../../types";
+import { MetaMaskWallet } from "@thirdweb-dev/wallets";
+import { useWalletInfo } from "../../walletInfo";
 
 export const ScanMetamask: React.FC<{
   onBack: () => void;
   onGetStarted: () => void;
   onConnected: () => void;
-  walletsInfo: WalletInfo[];
 }> = (props) => {
-  const metamaskInfo = props.walletsInfo.find(
-    (w) => w.wallet.id === walletIds.metamask,
-  ) as WalletInfo;
+  const metamaskInfo = useWalletInfo("metamask", true);
   const { wallet } = metamaskInfo;
 
   const createInstance = useCreateWalletInstance();

@@ -15,20 +15,17 @@ import { DragNDrop } from "../../../../components/DragNDrop";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { FormFooter } from "../../../../components/formElements";
 import { LocalWalletModalHeader } from "./common";
-import { LocalWallet, walletIds } from "@thirdweb-dev/wallets";
-import { WalletInfo } from "../../../types";
+import { LocalWallet } from "@thirdweb-dev/wallets";
+import { useWalletInfo } from "../../walletInfo";
 
 export const ImportLocalWallet: React.FC<{
   onConnected: () => void;
   onBack: () => void;
-  walletsInfo: WalletInfo[];
 }> = (props) => {
   const [jsonString, setJsonString] = useState<string | undefined>();
-  const { setLocalWallet, meta } = useLocalWalletInfo(props.walletsInfo);
+  const { setLocalWallet, meta } = useLocalWalletInfo();
   const createWalletInstance = useCreateWalletInstance();
-  const localWalletInfo = props.walletsInfo.find(
-    (w) => w.wallet.id === walletIds.localWallet,
-  ) as WalletInfo;
+  const localWalletInfo = useWalletInfo("localWallet", true);
   const [password, setPassword] = useState("");
   const [isWrongPassword, setIsWrongPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);

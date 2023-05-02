@@ -17,13 +17,11 @@ import { SecondaryText } from "../../../../components/text";
 import { CreateLocalWallet_Password } from "./CreateLocalWallet";
 import { OverrideConfirmation } from "./overrideConfirmation";
 import { ExportLocalWallet } from "./ExportLocalWallet";
-import { WalletInfo } from "../../../types";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 
 type ReconnectLocalWalletProps = {
   onConnected: () => void;
   onBack: () => void;
-  walletsInfo: WalletInfo[];
 };
 
 /**
@@ -41,9 +39,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
   const [showBackupConfirmation, setShowBackupConfirmation] = useState(false);
   const [showExport, setShowExport] = useState(false);
 
-  const { localWallet, meta, walletData } = useLocalWalletInfo(
-    props.walletsInfo,
-  );
+  const { localWallet, meta, walletData } = useLocalWalletInfo();
 
   const savedAddress = walletData
     ? walletData === "loading"
@@ -92,7 +88,6 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
   if (showCreate) {
     return (
       <CreateLocalWallet_Password
-        walletsInfo={props.walletsInfo}
         onBack={() => {
           setShowCreate(false);
         }}

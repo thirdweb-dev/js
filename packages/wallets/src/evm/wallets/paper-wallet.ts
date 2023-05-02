@@ -6,7 +6,7 @@ import { TWConnector } from "../interfaces/tw-connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { PaperWalletConnector } from "../connectors/paper";
-import { walletIds } from "../walletIds";
+import { walletIds } from "../constants/walletIds";
 
 export type PaperWalletOptions = WalletOptions<PaperWalletAdditionalOptions>;
 

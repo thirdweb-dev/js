@@ -29,7 +29,6 @@ import {
 import { SafeSupportedChainsSet } from "@thirdweb-dev/wallets";
 import { utils } from "ethers";
 import { useState } from "react";
-import { WalletInfo } from "../../../types";
 import { SafeWalletObj } from "../../../wallets/safeWallet";
 
 export const gnosisAddressPrefixToChainId = {
@@ -44,7 +43,6 @@ export const gnosisAddressPrefixToChainId = {
 export const SafeForm: React.FC<{
   onBack: () => void;
   onConnect: () => void;
-  walletsInfo: WalletInfo[];
   safeWallet: SafeWalletObj;
 }> = (props) => {
   const activeWallet = useWallet();

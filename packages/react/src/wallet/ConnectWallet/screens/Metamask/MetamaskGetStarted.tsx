@@ -1,15 +1,10 @@
 import { GetStartedScreen } from "../GetStartedScreen";
-import { walletIds } from "@thirdweb-dev/wallets";
-import { WalletInfo } from "../../../types";
+import { useWalletInfo } from "../../walletInfo";
 
 export const MetamaskGetStarted: React.FC<{
   onBack: () => void;
-  walletsInfo: WalletInfo[];
 }> = (props) => {
-  const walletInfo = props.walletsInfo.find(
-    (w) => w.wallet.id === walletIds.metamask,
-  ) as WalletInfo;
-
+  const walletInfo = useWalletInfo("metamask", true);
   const { name, iconURL } = walletInfo?.wallet.meta;
 
   return (
