@@ -68,7 +68,6 @@ export const ConnectModal = () => {
   }, [setIsConnectingToWalletWrapper, setIsWalletModalOpen, setShowScreen]);
 
   const onConnect = useCallback(() => {
-    console.log("connected", isConnectingToWalletWrapper);
     if (isConnectingToWalletWrapper === "safe") {
       setShowScreen("safe/form");
     } else if (isConnectingToWalletWrapper === "smartWallet") {
