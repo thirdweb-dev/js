@@ -7,6 +7,7 @@ import { Wallet, utils } from "ethers";
 export type LocalWalletOptions = {
   chain?: Chain;
   storage?: AsyncStorage;
+  thirdwebApiKey?: string;
 };
 
 export type WalletData = {
@@ -44,15 +45,12 @@ export class LocalWallet extends AbstractClientWallet<
   constructor(options?: WalletOptions<LocalWalletOptions>) {
     super(LocalWallet.id, options);
     this.options = options || {};
-    this.#storage =
-      options?.storage ||
-      options?.walletStorage ||
-      createAsyncLocalStorage("localWallet");
+    this.#storage = options?.storage || createAsyncLocalStorage("localWallet");
   }
 
   protected async getConnector(): Promise<TWConnector> {
     if (!this.connector) {
-      const { LocalWalletConnector } = await import(
+      const { LocalWalletConnector: LocalWalletConnector } = await import(
         "../connectors/local-wallet"
       );
 
@@ -60,10 +58,15 @@ export class LocalWallet extends AbstractClientWallet<
         throw new Error("wallet is not initialized");
       }
 
+      const defaults = this.options.chain
+        ? [...defaultChains, this.options.chain]
+        : defaultChains;
+
       this.connector = new LocalWalletConnector({
         chain: this.options.chain || Ethereum,
         ethersWallet: this.ethersWallet,
-        chains: this.options.chains || defaultChains,
+        chains: this.options.chains || defaults,
+        thirdwebApiKey: this.options.thirdwebApiKey,
       });
     }
     return this.connector;
@@ -404,7 +407,7 @@ type SaveOptions =
   | { strategy: "encryptedJson"; password: string; storage?: AsyncStorage }
   | {
       strategy: "privateKey";
-      encryption?: EncryptOptions;
+      encryption: EncryptOptions;
       storage?: AsyncStorage;
     }
   | {
@@ -441,7 +444,7 @@ async function defaultDecrypt(message: string, password: string) {
  * - return a noop function
  * @returns
  */
-function getDecryptor(encryption?: DecryptOptions | undefined) {
+function getDecryptor(encryption: DecryptOptions | undefined) {
   const noop = async (msg: string) => msg;
   return encryption
     ? (msg: string) =>
@@ -456,7 +459,7 @@ function getDecryptor(encryption?: DecryptOptions | undefined) {
  * - return a noop function
  * @returns
  */
-function getEncryptor(encryption?: EncryptOptions | undefined) {
+function getEncryptor(encryption: EncryptOptions | undefined) {
   const noop = async (msg: string) => msg;
   return encryption
     ? (msg: string) =>
@@ -464,6 +467,6 @@ function getEncryptor(encryption?: EncryptOptions | undefined) {
     : noop;
 }
 
-function isValidPrivateKey(value: string) {
-  return value.match(/^(0x)?[0-9a-f]{64}$/i);
+export function isValidPrivateKey(value: string) {
+  return !!value.match(/^(0x)?[0-9a-f]{64}$/i);
 }

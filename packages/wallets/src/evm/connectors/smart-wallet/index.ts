@@ -13,12 +13,20 @@ import {
 import { ENTRYPOINT_ADDRESS } from "./lib/constants";
 import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
-import { providers } from "ethers";
-import { SmartContract } from "@thirdweb-dev/sdk";
+import { BigNumber, providers } from "ethers";
+import {
+  getChainProvider,
+  SmartContract,
+  Transaction,
+  TransactionResult,
+} from "@thirdweb-dev/sdk";
+import { AccountAPI } from "./lib/account";
+import { DEFAULT_WALLET_API_KEY } from "../../constants/keys";
 
 export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs> {
   private config: SmartWalletConfig;
   private aaProvider: ERC4337EthersProvider | undefined;
+  private accountApi: AccountAPI | undefined;
   personalWallet?: EVMWallet;
 
   constructor(config: SmartWalletConfig) {
@@ -55,8 +63,17 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
       accountInfo: config.accountInfo || this.defaultAccountInfo(),
       thirdwebApiKey: config.thirdwebApiKey,
     };
+    const originalProvider = getChainProvider(config.chain, {
+      thirdwebApiKey: config.thirdwebApiKey || DEFAULT_WALLET_API_KEY,
+    }) as providers.BaseProvider;
     this.personalWallet = personalWallet;
-    this.aaProvider = await create4337Provider(providerConfig);
+    const accountApi = new AccountAPI(providerConfig, originalProvider);
+    this.aaProvider = await create4337Provider(
+      providerConfig,
+      accountApi,
+      originalProvider,
+    );
+    this.accountApi = accountApi;
   }
 
   async connect(
@@ -108,6 +125,47 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateChains(chains: Chain[]): void {
     // throw new Error("Method not implemented.");
+  }
+
+  async execute(transaction: Transaction): Promise<TransactionResult> {
+    const signer = await this.getSigner();
+    const tx = await signer.sendTransaction({
+      to: transaction.getTarget(),
+      data: transaction.encode(),
+      value: await transaction.getValue(),
+    });
+    const receipt = await tx.wait();
+    return {
+      receipt,
+    };
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async executeBatch(transactions: Transaction[]): Promise<TransactionResult> {
+    if (!this.accountApi) {
+      throw new Error("Account not connected");
+    }
+    const signer = await this.getSigner();
+    const targets = transactions.map((tx) => tx.getTarget());
+    const data = transactions.map((tx) => tx.encode());
+    const values = transactions.map(() => BigNumber.from(0)); // TODO check if we can handle multiple values
+    const callData = await this.accountApi.encodeExecuteBatch(
+      targets,
+      values,
+      data,
+    );
+    const tx = await signer.sendTransaction(
+      {
+        to: await signer.getAddress(),
+        data: callData,
+        value: 0,
+      },
+      true, // batched tx flag
+    );
+    const receipt = await tx.wait();
+    return {
+      receipt,
+    };
   }
 
   private defaultFactoryInfo(): FactoryContractInfo {

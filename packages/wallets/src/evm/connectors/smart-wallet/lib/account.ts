@@ -1,5 +1,5 @@
-import { SmartContract, ThirdwebSDK } from "@thirdweb-dev/sdk";
-import { BigNumberish, BigNumber } from "ethers";
+import { LOCAL_NODE_PKEY, SmartContract, ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { BigNumberish, BigNumber, ethers } from "ethers";
 import { arrayify, hexConcat } from "ethers/lib/utils";
 import { AccountApiParams } from "../types";
 import { BaseAccountAPI } from "./base-api";
@@ -11,14 +11,19 @@ export class AccountAPI extends BaseAccountAPI {
   accountContract?: SmartContract;
   factoryContract?: SmartContract;
 
-  constructor(params: AccountApiParams) {
-    const sdk = ThirdwebSDK.fromSigner(params.localSigner, params.chain);
+  constructor(
+    params: AccountApiParams,
+    originalProvider: ethers.providers.Provider,
+  ) {
     super({
       ...params,
-      provider: sdk.getProvider(),
+      provider: originalProvider,
     });
     this.params = params;
-    this.sdk = sdk;
+    // Technically dont need the signer here, but we need to encode/estimate gas with it so a signer is required
+    // We don't want to use the localSigner directly since it might be connected to another chain
+    // so we just use the public hardhat pkey instead
+    this.sdk = ThirdwebSDK.fromPrivateKey(LOCAL_NODE_PKEY, params.chain);
   }
 
   async getChainId() {
@@ -57,7 +62,7 @@ export class AccountAPI extends BaseAccountAPI {
         "ETH",
       );
     } catch (e) {
-      console.log("Cost to create account: unknown");
+      console.error("Cost to create account: unknown", e);
     }
     return hexConcat([factory.getAddress(), tx.encode()]);
   }
@@ -108,6 +113,20 @@ export class AccountAPI extends BaseAccountAPI {
       value,
       data,
     );
+    return tx.encode();
+  }
+
+  async encodeExecuteBatch(
+    targets: string[],
+    values: BigNumberish[],
+    datas: string[],
+  ): Promise<string> {
+    const accountContract = await this.getAccountContract();
+    const tx = await accountContract.prepare("executeBatch", [
+      targets,
+      values,
+      datas,
+    ]);
     return tx.encode();
   }
 

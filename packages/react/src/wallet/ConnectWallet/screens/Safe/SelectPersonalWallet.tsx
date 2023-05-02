@@ -1,5 +1,6 @@
 import { Img } from "../../../../components/Img";
 import { Spacer } from "../../../../components/Spacer";
+import { Button } from "../../../../components/buttons";
 import {
   BackButton,
   ModalTitle,
@@ -15,12 +16,19 @@ import { Wallet, useSupportedWallet } from "@thirdweb-dev/react-core";
 
 export const SelectpersonalWallet: React.FC<{
   onBack: () => void;
+  guestMode?: boolean;
   walletsMeta: WalletMeta[];
 }> = (props) => {
   const safeWalletObj = useSupportedWallet("Safe") as Wallet;
+  console.log("wallets meta", props.walletsMeta, props.guestMode);
+
   const walletsMeta = props.walletsMeta.filter(
-    (w) => w.id !== "SmartWallet" && w.id !== "Safe",
+    (w) => w.id !== "SmartWallet" && w.id !== "Safe" && w.id !== "localWallet",
   );
+
+  const guestWallet = props.walletsMeta.find((w) => w.id === "localWallet");
+
+  const showGuest = props.guestMode && guestWallet;
 
   return (
     <>
@@ -47,15 +55,29 @@ export const SelectpersonalWallet: React.FC<{
       <WalletSelection walletsMeta={walletsMeta} />
 
       <Spacer y="xl" />
-      <HelperLink
-        target="_blank"
-        href="https://docs.safe.global/learn/what-is-a-smart-contract-account"
-        style={{
-          textAlign: "center",
-        }}
-      >
-        What is a Safe?
-      </HelperLink>
+
+      {showGuest ? (
+        <Button
+          variant="link"
+          onClick={guestWallet.onClick}
+          style={{
+            width: "100%",
+            padding: 0,
+          }}
+        >
+          Continue as guest
+        </Button>
+      ) : (
+        <HelperLink
+          target="_blank"
+          href="https://docs.safe.global/learn/what-is-a-smart-contract-account"
+          style={{
+            textAlign: "center",
+          }}
+        >
+          What is a Safe?
+        </HelperLink>
+      )}
     </>
   );
 };

@@ -9,33 +9,28 @@ import { useState } from "react";
 import BaseButton from "../base/BaseButton";
 import Box from "../base/Box";
 import { ModalHeaderTextClose } from "../base/modal/ModalHeaderTextClose";
-import {
-  Wallet,
-  useCreateWalletInstance,
-  useSupportedWallet,
-  useThirdwebWallet,
-} from "@thirdweb-dev/react-core";
+import { useCreateWalletInstance } from "@thirdweb-dev/react-core";
 import { PasswordInput } from "../PasswordInput";
-import { LocalWallet } from "../../wallets/wallets/local-wallet";
+import { LocalWallet, localWallet } from "../../wallets/wallets/local-wallet";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 
 export type LocalWalletImportModalProps = {
   isVisible: boolean;
   onClose: () => void;
+  onWalletImported: (wallet: LocalWallet) => void;
 };
 
 export const LocalWalletImportModal = ({
   isVisible,
   onClose,
+  onWalletImported,
 }: LocalWalletImportModalProps) => {
   const [password, setPassword] = useState<string | undefined>();
   const [jsonFile, setJsonFile] = useState<string | undefined>();
   const [error, setError] = useState<string | undefined>();
   const [isImporting, setIsImporting] = useState<boolean>(false);
   const createWalletInstance = useCreateWalletInstance();
-  const localWalletCreator = useSupportedWallet(LocalWallet.id) as Wallet;
-  const twWalletContext = useThirdwebWallet();
 
   const onImportPress = async () => {
     setError(undefined);
@@ -57,10 +52,12 @@ export const LocalWalletImportModal = ({
       return;
     }
 
-    const localWallet = createWalletInstance(localWalletCreator) as LocalWallet;
+    const localWalletInstance = createWalletInstance(
+      localWallet(),
+    ) as LocalWallet;
 
     try {
-      await localWallet.import({
+      await localWalletInstance.import({
         encryptedJson: json,
         password: password,
       });
@@ -71,12 +68,12 @@ export const LocalWalletImportModal = ({
       return;
     }
 
-    localWallet.save({
+    localWalletInstance.save({
       strategy: "privateKey",
+      encryption: false,
     });
 
-    await localWallet.connect();
-    twWalletContext?.handleWalletConnect(localWallet);
+    onWalletImported(localWalletInstance);
 
     setIsImporting(false);
     onCloseInternal();

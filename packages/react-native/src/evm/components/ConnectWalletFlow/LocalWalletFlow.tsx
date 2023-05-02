@@ -1,5 +1,5 @@
 import BaseButton from "../base/BaseButton";
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { ConnectWalletHeader } from "./ConnectingWallet/ConnectingWalletHeader";
 import Text from "../base/Text";
 import { ModalFooter } from "../base/modal/ModalFooter";
@@ -9,16 +9,19 @@ import { useState } from "react";
 
 export type LocalWalletFlowProps = {
   onClose: () => void;
-  onBackPress: () => void;
+  onBackPress?: () => void;
   onConnectPress: () => void;
+  onWalletImported: (localWallet: LocalWallet) => void;
 };
 
 export function LocalWalletFlow({
   onClose,
   onBackPress,
   onConnectPress,
+  onWalletImported,
 }: LocalWalletFlowProps) {
   const [isImportModalVisible, setIsImportModalVisible] = useState(false);
+  const [isCreatingWallet, setIsCreatingWallet] = useState(false);
 
   const onImportPress = async () => {
     setIsImportModalVisible(true);
@@ -28,23 +31,34 @@ export function LocalWalletFlow({
     setIsImportModalVisible(false);
   };
 
+  const onConnectPressInternal = () => {
+    setIsCreatingWallet(true);
+    onConnectPress();
+  };
+
   return (
     <>
       <ConnectWalletHeader
         onBackPress={onBackPress}
-        walletLogoUrl={LocalWallet.meta.iconURL}
+        headerText="Guest Wallet"
+        alignHeader="flex-start"
         subHeaderText={""}
-        close={onClose}
+        onClose={onClose}
       />
       <View style={styles.connectingContainer}>
         <BaseButton
           backgroundColor="white"
-          onPress={onConnectPress}
+          minWidth={130}
+          onPress={onConnectPressInternal}
           style={styles.connectWalletButton}
         >
-          <Text variant="bodyLarge" color="black">
-            Create new wallet
-          </Text>
+          {isCreatingWallet ? (
+            <ActivityIndicator size="small" color="buttonTextColor" />
+          ) : (
+            <Text variant="bodyLarge" color="black">
+              Create new wallet
+            </Text>
+          )}
         </BaseButton>
         <Text variant="subHeader" mt="lg">
           -------- OR --------
@@ -54,6 +68,7 @@ export function LocalWalletFlow({
 
       <LocalWalletImportModal
         isVisible={isImportModalVisible}
+        onWalletImported={onWalletImported}
         onClose={onImportModalClose}
       />
     </>

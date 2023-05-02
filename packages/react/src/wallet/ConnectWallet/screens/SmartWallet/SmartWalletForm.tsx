@@ -2,347 +2,186 @@ import { Img } from "../../../../components/Img";
 import { Spacer } from "../../../../components/Spacer";
 import { Spinner } from "../../../../components/Spinner";
 import { Button } from "../../../../components/buttons";
-import { ErrorMessage, FormFooter } from "../../../../components/formElements";
-import { FormField } from "../../../../components/formFields";
+import { ErrorMessage } from "../../../../components/formElements";
 import {
   BackButton,
   ModalDescription,
   ModalTitle,
 } from "../../../../components/modalElements";
+import { iconSize, spacing, Theme, fontSize } from "../../../../design-system";
+import { useIsHeadlessWallet } from "../../../hooks/useIsHeadlessWallet";
+import styled from "@emotion/styled";
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import {
-  iconSize,
-  fontSize,
-  Theme,
-  spacing,
-  radius,
-} from "../../../../design-system";
-import { CaretRightIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import {
-  useChainId,
-  // WalletInstance,
+  useActiveChain,
   useConnect,
   useConnectionStatus,
+  useNetworkMismatch,
   useSupportedWallet,
+  useThirdwebWallet,
   useWallet,
-  WalletInstance,
 } from "@thirdweb-dev/react-core";
-import { useEffect, useState } from "react";
-import { Steps } from "../Safe/Steps";
-import {
-  AssociatedAccount,
-  getAssociatedAccounts,
-} from "@thirdweb-dev/wallets";
+import { useCallback, useEffect, useState } from "react";
 import { SmartWalletObj } from "../../../wallets/smartWallet";
 import { Flex } from "../../../../components/basic";
-import styled from "@emotion/styled";
 
-export const SmartWalletConnection: React.FC<{
+export const gnosisAddressPrefixToChainId = {
+  eth: 1,
+  matic: 137,
+  avax: 43114,
+  bnb: 56,
+  oeth: 10,
+  gor: 5,
+} as const;
+
+export const SmartWalletForm: React.FC<{
   onBack: () => void;
   onConnect: () => void;
 }> = (props) => {
-  const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
-  const activeWallet = useWallet();
-  const [accounts, setAccounts] = useState<AssociatedAccount[] | undefined>();
+  const smartWalletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
+  const activeWallet = useWallet(); // personal wallet
 
-  useEffect(() => {
-    if (!activeWallet) {
-      return;
-    }
-
-    (async () => {
-      const _accounts = await getAssociatedAccounts(
-        activeWallet,
-        walletObj.factoryAddress,
-        walletObj.chain,
-      );
-      setAccounts(_accounts);
-    })();
-  }, [activeWallet, walletObj.chain, walletObj.factoryAddress]);
-
-  if (!accounts) {
-    return (
-      <Flex
-        style={{
-          height: "400px",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Spinner size="lg" color="secondary" />
-      </Flex>
-    );
-  }
-
-  if (accounts.length === 0) {
-    return <SmartWalletCreate {...props} />;
-  }
-
-  return <ConnectToSmartWalletAccount {...props} accounts={accounts} />;
-};
-
-// TODO (sw) remove this in favor of gnosis flow
-export const SmartWalletCreate: React.FC<{
-  onBack: () => void;
-  onConnect: () => void;
-}> = (props) => {
-  const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
-  const activeWallet = useWallet();
   const connect = useConnect();
-  const chainId = useChainId();
+  const connectedChain = useActiveChain();
+  const targetChain = useThirdwebWallet().activeChain;
 
-  const [userName, setUserName] = useState("");
+  const mismatch = useNetworkMismatch();
+
   const [connectError, setConnectError] = useState(false);
-  const connectionStatus = useConnectionStatus();
-
   const [switchError, setSwitchError] = useState(false);
   const [switchingNetwork, setSwitchingNetwork] = useState(false);
 
-  const handleSubmit = async () => {
-    if (!activeWallet) {
+  const connectionStatus = useConnectionStatus();
+  const requiresConfirmation = !useIsHeadlessWallet();
+
+  const { onConnect } = props;
+
+  const handleConnect = useCallback(async () => {
+    if (!activeWallet || !connectedChain) {
       return;
     }
     setConnectError(false);
 
     try {
-      await connect(walletObj, {
+      await connect(smartWalletObj, {
         personalWallet: activeWallet,
       });
-      props.onConnect();
+      onConnect();
     } catch (e) {
       console.error(e);
       setConnectError(true);
     }
-  };
+  }, [activeWallet, connectedChain, connect, onConnect, smartWalletObj]);
 
-  const mismatch = chainId !== walletObj.chain.chainId;
+  useEffect(() => {
+    if (!mismatch) {
+      handleConnect();
+    }
+  }, [mismatch, handleConnect, activeWallet, connectedChain]);
 
-  return (
-    <>
-      <BackButton onClick={props.onBack} />
-      <Spacer y="md" />
-      <Img
-        src={walletObj.meta.iconURL}
-        width={iconSize.xl}
-        height={iconSize.xl}
-      />
-      <Spacer y="lg" />
-
-      <ModalTitle>Create account</ModalTitle>
-      <Spacer y="sm" />
-      <ModalDescription>
-        Create your account by choosing a unique username
-      </ModalDescription>
-
-      <Spacer y="lg" />
-      <Steps step={2} />
-
-      <Spacer y="xl" />
-
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleSubmit();
+  if (connectionStatus === "connecting") {
+    return (
+      <Flex
+        style={{
+          height: "300px",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        {/*  User Name */}
-        <div
-          style={{
-            position: "relative",
-          }}
-        >
-          <FormField
-            name="accountId"
-            id="accountId"
-            errorMessage={undefined}
-            autocomplete="on"
-            onChange={(value) => {
-              setSwitchError(false);
-              setConnectError(false);
-              setUserName(value);
-            }}
-            label="Username"
-            type="text"
-            value={userName}
-            required
-          />
-        </div>
-
-        <Spacer y="sm" />
-
-        {connectError && (
-          <ErrorMessage
-            style={{
-              display: "flex",
-              gap: spacing.sm,
-              alignItems: "center",
-              fontSize: fontSize.sm,
-            }}
-          >
-            <ExclamationTriangleIcon width={iconSize.sm} height={iconSize.sm} />
-            <span>
-              Could not connect to Smart Wallet <br />
-            </span>
-          </ErrorMessage>
-        )}
-
-        {switchError && (
-          <ErrorMessage
-            style={{
-              display: "flex",
-              gap: spacing.sm,
-              alignItems: "center",
-              fontSize: fontSize.sm,
-            }}
-          >
-            <ExclamationTriangleIcon width={iconSize.sm} height={iconSize.sm} />
-            <span>Failed to switch network.</span>
-          </ErrorMessage>
-        )}
-
-        <Spacer y="xl" />
-
-        <FormFooter>
-          {mismatch ? (
-            <Button
-              type="button"
-              variant="secondary"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: spacing.sm,
-              }}
-              onClick={async () => {
-                setConnectError(false);
-                setSwitchError(false);
-                setSwitchingNetwork(true);
-
-                if (!activeWallet) {
-                  throw new Error("No active wallet");
-                }
-
-                try {
-                  await activeWallet.switchChain(walletObj.chain.chainId);
-                } catch (e) {
-                  console.error(e);
-                  setSwitchError(true);
-                } finally {
-                  setSwitchingNetwork(false);
-                }
-              }}
-            >
-              {" "}
-              {switchingNetwork ? "Switching" : "Switch Network"}
-              {switchingNetwork && <Spinner size="sm" color="primary" />}
-            </Button>
-          ) : (
-            <Button
-              variant="inverted"
-              type="submit"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: spacing.sm,
-              }}
-            >
-              {connectionStatus === "connecting" ? "Connecting" : "Connect"}
-              {connectionStatus === "connecting" && (
-                <Spinner size="sm" color="inverted" />
-              )}
-            </Button>
-          )}
-        </FormFooter>
-      </form>
-    </>
-  );
-};
-
-export const ConnectToSmartWalletAccount: React.FC<{
-  onBack: () => void;
-  onConnect: () => void;
-  accounts: AssociatedAccount[];
-}> = (props) => {
-  const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
-  const connect = useConnect();
-  const activeWallet = useWallet() as WalletInstance;
-  const [showCreateScreen, setShowCreateScreen] = useState(false);
-
-  if (showCreateScreen) {
-    return (
-      <SmartWalletCreate
-        onBack={() => {
-          setShowCreateScreen(false);
-        }}
-        onConnect={props.onConnect}
-      />
+        <Spinner color="link" size="lg" />
+      </Flex>
     );
   }
 
-  const handleConnect = async () => {
-    await connect(walletObj, {
-      personalWallet: activeWallet,
-    });
-    props.onConnect();
-  };
-
   return (
     <>
       <BackButton onClick={props.onBack} />
       <Spacer y="md" />
       <Img
-        src={walletObj.meta.iconURL}
+        src={smartWalletObj.meta.iconURL}
         width={iconSize.xl}
         height={iconSize.xl}
       />
       <Spacer y="lg" />
-      <ModalTitle> Choose your account </ModalTitle>
-      <Spacer y="sm" />
+
+      <ModalTitle>Network Mismatch</ModalTitle>
+      <Spacer y="md" />
       <ModalDescription>
-        Connect to an existing account or create a new one
+        Selected wallet is not connected to the required network
       </ModalDescription>
-      <Spacer y="xl" />
-      <Flex gap="sm" flexDirection="column">
-        {props.accounts.map((account) => {
-          return (
-            <AccountButton
-              key={account.account}
-              onClick={() => handleConnect()}
-            >
-              {account.account}
-              <CaretRightIcon width={iconSize.md} height={iconSize.md} />
-            </AccountButton>
-          );
-        })}
-      </Flex>
 
       <Spacer y="lg" />
+
+      {connectError && (
+        <ErrorMessage
+          style={{
+            display: "flex",
+            gap: spacing.sm,
+            alignItems: "center",
+            fontSize: fontSize.sm,
+          }}
+        >
+          <ExclamationTriangleIcon width={iconSize.sm} height={iconSize.sm} />
+          <span>
+            Could not connect to Smart Wallet. <br />
+          </span>
+        </ErrorMessage>
+      )}
+
       <Button
-        onClick={() => {
-          setShowCreateScreen(true);
-        }}
-        variant="link"
+        type="button"
+        variant="secondary"
         style={{
-          textAlign: "center",
-          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          gap: spacing.sm,
+        }}
+        onClick={async () => {
+          if (!activeWallet) {
+            throw new Error("No active wallet");
+          }
+          setConnectError(false);
+          setSwitchError(false);
+          setSwitchingNetwork(true);
+          try {
+            await activeWallet.switchChain(targetChain.chainId);
+          } catch (e) {
+            setSwitchError(true);
+          } finally {
+            setSwitchingNetwork(false);
+          }
         }}
       >
-        Create a new account
+        {" "}
+        {switchingNetwork ? "Switching" : "Switch Network"}
+        {switchingNetwork && <Spinner size="sm" color="primary" />}
       </Button>
+
+      <Spacer y="md" />
+
+      {switchingNetwork && requiresConfirmation && (
+        <ConfirmMessage> Confirm in your wallet </ConfirmMessage>
+      )}
+
+      {switchError && (
+        <ErrorMessage
+          style={{
+            display: "flex",
+            gap: spacing.sm,
+            alignItems: "center",
+            fontSize: fontSize.sm,
+          }}
+        >
+          <ExclamationTriangleIcon width={iconSize.sm} height={iconSize.sm} />
+          <span>Failed to switch network.</span>
+        </ErrorMessage>
+      )}
     </>
   );
 };
 
-const AccountButton = styled.button<{ theme?: Theme }>`
-  padding: ${spacing.md};
-  border: none;
-  border-radius: ${radius.md};
-  background: ${({ theme }) => theme.bg.elevated};
-  text-align: left;
-  font-size: ${fontSize.md};
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  &:hover {
-    background: ${({ theme }) => theme.bg.elevatedHover};
-  }
+const ConfirmMessage = styled.p<{ theme?: Theme }>`
+  font-size: ${fontSize.sm};
+  margin: 0;
+  color: ${(p) => p.theme.link.primary};
 `;

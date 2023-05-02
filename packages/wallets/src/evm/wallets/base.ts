@@ -4,6 +4,7 @@ import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { DEFAULT_DAPP_META } from "../constants/dappMeta";
+import { EVMWallet } from "../interfaces";
 
 export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   chains?: Chain[];
@@ -32,6 +33,7 @@ export abstract class AbstractClientWallet<
   protected dappMetadata: DAppMetaData;
   protected options?: WalletOptions<TAdditionalOpts>;
   static meta: WalletMeta;
+  #connectParams: ConnectParams<TConnectParams> | undefined;
   getMeta() {
     return (this.constructor as typeof AbstractClientWallet).meta;
   }
@@ -67,11 +69,16 @@ export abstract class AbstractClientWallet<
   async connect(
     connectOptions?: ConnectParams<TConnectParams>,
   ): Promise<string> {
+    this.#connectParams = connectOptions;
     const address = await this.#connect(false, connectOptions);
     if (!address) {
       throw new Error("Failed to connect to the wallet.");
     }
     return address;
+  }
+
+  getConnectParams() {
+    return this.#connectParams;
   }
 
   async #connect(
@@ -165,5 +172,12 @@ export abstract class AbstractClientWallet<
     this.chains = chains;
     const connector = await this.getConnector();
     connector.updateChains(chains);
+  }
+
+  /**
+   * If the wallet uses a personal wallet under the hood, return it
+   */
+  getPersonalWallet(): EVMWallet | undefined {
+    return undefined;
   }
 }

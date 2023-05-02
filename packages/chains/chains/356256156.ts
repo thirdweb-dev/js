@@ -29,10 +29,10 @@ export default {
       "name": "Blockscout",
       "url": "https://testnet-explorer.gather.network",
       "icon": {
-        "url": "ipfs://QmeoEHUVYKSJFkM9o5j62rhQqCDN5iQxPC7PtzmH77rSWR",
-        "width": 512,
-        "height": 512,
-        "format": "png"
+        "url": "ipfs://QmTYR8CeFiNbJ1zJHnE3DK2wEN18r2y2vqSKUcLweUT2Gz",
+        "width": 1080,
+        "height": 1080,
+        "format": "svg"
       },
       "standard": "none"
     }

@@ -1,12 +1,12 @@
 import {
   LocalWallet as LocalWalletCore,
-  AsyncStorage,
   TWConnector,
 } from "@thirdweb-dev/wallets";
 import { Wallet } from "@thirdweb-dev/react-core";
 import type { WalletOptions } from "@thirdweb-dev/wallets";
-import * as SecureStore from "expo-secure-store";
 import { ethers, utils } from "ethers";
+import { createSecureStorage } from "../../../core/SecureStorage";
+import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
 
 export class LocalWallet extends LocalWalletCore {
   async generate() {
@@ -26,6 +26,7 @@ export class LocalWallet extends LocalWalletCore {
         await this.generate();
         await this.save({
           strategy: "privateKey",
+          encryption: false,
         });
       } else {
         this.ethersWallet = new ethers.Wallet(data.data);
@@ -36,27 +37,21 @@ export class LocalWallet extends LocalWalletCore {
   }
 }
 
-class SecureStorage implements AsyncStorage {
-  getItem(key: string): Promise<string | null> {
-    return SecureStore.getItemAsync(key);
-  }
-  setItem(key: string, value: string): Promise<void> {
-    return SecureStore.setItemAsync(key, value);
-  }
-  removeItem(key: string): Promise<void> {
-    return SecureStore.deleteItemAsync(key);
-  }
-}
-
-export const localWallet = () => {
-  const secureStorage = new SecureStorage();
+export const localWallet = (displayName?: string) => {
+  const secureStorage = createSecureStorage("localwallet");
+  const asyncStorage = createAsyncLocalStorage("localwallet");
   return {
     id: LocalWallet.id,
-    meta: LocalWallet.meta,
+    meta: {
+      name: displayName ? displayName : "Guest Wallet",
+      iconURL:
+        "ipfs://QmcNddbYBuQKiBFnPcxYegjrX6S6z9K1vBNzbBBUJMn2ox/device-wallet.svg",
+    },
     create: (options: WalletOptions) =>
       new LocalWallet({
         ...options,
-        walletStorage: secureStorage,
+        walletStorage: asyncStorage,
+        storage: secureStorage,
       }) as LocalWalletCore,
   } satisfies Wallet;
 };

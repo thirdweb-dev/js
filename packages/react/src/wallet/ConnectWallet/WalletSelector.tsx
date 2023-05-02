@@ -1,5 +1,6 @@
 import { Img } from "../../components/Img";
 import { Spacer } from "../../components/Spacer";
+import { Button } from "../../components/buttons";
 import { HelperLink, ModalTitle } from "../../components/modalElements";
 import {
   fontSize,
@@ -14,15 +15,37 @@ import styled from "@emotion/styled";
 export const WalletSelector: React.FC<{
   walletsMeta: WalletMeta[];
   onGetStarted: () => void;
+  guestMode?: boolean;
+  onGuestConnect: () => void;
 }> = (props) => {
+  const showGetStarted = !!props.walletsMeta[0].meta.urls && !props.guestMode;
+  const walletsMeta = props.walletsMeta.filter((w) => w.id !== "localWallet");
+
   return (
     <>
       <ModalTitle>Choose your wallet</ModalTitle>
       <Spacer y="xl" />
 
-      <WalletSelection walletsMeta={props.walletsMeta} />
+      <WalletSelection walletsMeta={walletsMeta} />
 
-      {props.walletsMeta[0].meta.urls && (
+      {props.guestMode && (
+        <>
+          <Spacer y="xl" />
+          <Button
+            variant="link"
+            style={{
+              width: "100%",
+              padding: 0,
+            }}
+            onClick={props.onGuestConnect}
+          >
+            {" "}
+            Continue as guest
+          </Button>
+        </>
+      )}
+
+      {showGetStarted && (
         <>
           <Spacer y="xl" />
           <HelperLink

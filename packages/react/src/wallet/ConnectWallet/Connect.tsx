@@ -10,12 +10,13 @@ import { MetamaskConnecting } from "./screens/Metamask/MetamaskConnecting";
 import { MetamaskGetStarted } from "./screens/Metamask/MetamaskGetStarted";
 import { ScanMetamask } from "./screens/Metamask/MetamaskScan";
 import {
+  Wallet,
   useConnect,
   useConnectionStatus,
   useDisconnect,
   useWallets,
 } from "@thirdweb-dev/react-core";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { SelectpersonalWallet } from "./screens/Safe/SelectPersonalWallet";
 import { SafeForm } from "./screens/Safe/SafeForm";
 import { GetStartedWithWallets } from "./screens/GetStartedWithWallets";
@@ -31,12 +32,17 @@ import {
 import { ifWaiting } from "../../evm/utils/ifWaiting";
 import { ThemeProvider } from "@emotion/react";
 import { darkTheme, lightTheme } from "../../design-system";
-import { ConnectToLocalWallet } from "./screens/LocalWallet/LocalWalletSetup";
-import { SmartWalletSelection } from "./screens/SmartWallet/SmartWalletSection";
-import { SmartWalletConnection } from "./screens/SmartWallet/SmartWalletForm";
+import { LocalWalletSetup } from "./screens/LocalWallet/LocalWalletSetup";
+import { SmartWalletForm } from "./screens/SmartWallet/SmartWalletForm";
 import { MagicConnect } from "./screens/Magic/MagicConnect";
+import { LocalWalletInfoProvider } from "./screens/LocalWallet/useLocalWalletInfo";
+import { SmartWalletSelect } from "./screens/SmartWallet/SmartWalletSelect";
+import { SmartWalletObj } from "../wallets/smartWallet";
+import { SafeWalletObj } from "../wallets/safeWallet";
 
-export const ConnectModal = () => {
+export const ConnectModal: React.FC<{ guestMode?: boolean }> = ({
+  guestMode,
+}) => {
   const modalTheme = useModalTheme();
   const isConnectingToWalletWrapper = useIsConnectingToWalletWrapper();
   const showScreen = useScreen();
@@ -90,109 +96,137 @@ export const ConnectModal = () => {
     }
   }, [isConnectingToWalletWrapper, setShowScreen]);
 
-  const walletsMeta: WalletMeta[] = wallets.map((wallet) => ({
-    id: wallet.id,
-    meta: wallet.meta,
-    installed:
-      wallet.id in installedWallets &&
-      installedWallets[wallet.id as keyof typeof installedWallets],
-    onClick: async () => {
-      // Metamask
-      if (wallet.id === "metamask") {
-        if (installedWallets.metamask) {
-          try {
-            await ifWaiting({
-              for: connect(wallet, {}),
-              moreThan: 100,
-              do: () => {
-                setShowScreen("metamask/connecting");
-              },
-            });
+  const getWalletMeta = useCallback(
+    (wallet: Wallet) => ({
+      id: wallet.id,
+      meta: wallet.meta,
+      installed:
+        wallet.id in installedWallets &&
+        installedWallets[wallet.id as keyof typeof installedWallets],
+      onClick: async () => {
+        // Metamask
+        if (wallet.id === "metamask") {
+          if (installedWallets.metamask) {
+            try {
+              await ifWaiting({
+                for: connect(wallet, {}),
+                moreThan: 100,
+                do: () => {
+                  setShowScreen("metamask/connecting");
+                },
+              });
 
-            onConnect();
-          } catch (e) {
-            onConnectError();
+              onConnect();
+            } catch (e) {
+              onConnectError();
+            }
+          }
+
+          // if metamask is not injected
+          else {
+            // on mobile, open metamask app link
+            if (isMobile()) {
+              window.open(
+                `https://metamask.app.link/dapp/${window.location.toString()}`,
+              );
+            } else {
+              // on desktop, show the metamask scan qr code
+              setShowScreen("metamask/scan");
+            }
           }
         }
 
-        // if metamask is not injected
+        // Coinbase Wallet
+        else if (wallet.id === "coinbaseWallet") {
+          if (installedWallets.coinbaseWallet) {
+            try {
+              await ifWaiting({
+                for: connect(wallet, {}),
+                moreThan: 100,
+                do: () => {
+                  setShowScreen("coinbase/connecting");
+                },
+              });
+              onConnect();
+            } catch (e) {
+              onConnectError();
+            }
+          } else {
+            if (isMobile()) {
+              // coinbase will redirect to download page for coinbase wallet apps
+              connect(wallet, {});
+            } else {
+              setShowScreen("coinbase/scan");
+            }
+          }
+        }
+
+        // Safe
+        else if (wallet.id === "Safe") {
+          setIsConnectingToWalletWrapper("safe");
+          setShowScreen("safe/select-wallet");
+        }
+
+        // Smart Wallet
+        else if (wallet.id === "SmartWallet") {
+          setIsConnectingToWalletWrapper("smartWallet");
+          setShowScreen("smartWallet/select-wallet");
+        }
+
+        // Local Wallet
+        else if (wallet.id === "localWallet") {
+          setShowScreen("localWallet/connect");
+        }
+
+        // Magic link
+        else if (wallet.id === "magicLink") {
+          setShowScreen("magic/connect");
+        }
+
+        // others ( they handle their own connection flow)
         else {
-          // on mobile, open metamask app link
-          if (isMobile()) {
-            window.open(
-              `https://metamask.app.link/dapp/${window.location.toString()}`,
-            );
-          } else {
-            // on desktop, show the metamask scan qr code
-            setShowScreen("metamask/scan");
-          }
-        }
-      }
-
-      // Coinbase Wallet
-      else if (wallet.id === "coinbaseWallet") {
-        if (installedWallets.coinbaseWallet) {
           try {
-            await ifWaiting({
-              for: connect(wallet, {}),
-              moreThan: 100,
-              do: () => {
-                setShowScreen("coinbase/connecting");
-              },
-            });
+            setHideModal(true);
+            await connect(wallet, {});
             onConnect();
+            setHideModal(false);
           } catch (e) {
             onConnectError();
-          }
-        } else {
-          if (isMobile()) {
-            // coinbase will redirect to download page for coinbase wallet apps
-            connect(wallet, {});
-          } else {
-            setShowScreen("coinbase/scan");
+            setHideModal(false);
+            console.error(e);
           }
         }
-      }
+      },
+    }),
+    [
+      connect,
+      installedWallets,
+      onConnect,
+      onConnectError,
+      setIsConnectingToWalletWrapper,
+      setShowScreen,
+    ],
+  );
 
-      // Safe
-      else if (wallet.id === "Safe") {
-        setIsConnectingToWalletWrapper("safe");
-        setShowScreen("safe/select-wallet");
-      }
+  const walletsMeta: WalletMeta[] = wallets.map(getWalletMeta);
 
-      // Smart Wallet
-      else if (wallet.id === "SmartWallet") {
-        setIsConnectingToWalletWrapper("smartWallet");
-        setShowScreen("smartWallet/select-wallet");
-      }
+  useEffect(() => {
+    if (showScreen === "walletList" && wallets.length === 1) {
+      walletsMeta[0].onClick();
+    }
+  }, [walletsMeta, showScreen, wallets.length]);
 
-      // Local Wallet
-      else if (wallet.id === "localWallet") {
-        setShowScreen("deviceWallet/connect");
-      }
+  const usingLocalWallet = wallets.find((w) => w.id === "localWallet");
 
-      // Magic link
-      else if (wallet.id === "magicLink") {
-        setShowScreen("magic/connect");
-      }
+  const smartWalletObj = wallets.find((w) => w.id === "SmartWallet") as
+    | SmartWalletObj
+    | undefined;
 
-      // others ( they handle their own connection flow)
-      else {
-        try {
-          setHideModal(true);
-          await connect(wallet, {});
-          onConnect();
-          setHideModal(false);
-        } catch (e) {
-          onConnectError();
-          setHideModal(false);
-          console.error(e);
-        }
-      }
-    },
-  }));
+  const safeWalletObj = wallets.find((w) => w.id === "Safe") as
+    | SafeWalletObj
+    | undefined;
 
-  return (
+  const content = (
     <ThemeProvider
       theme={
         typeof modalTheme === "object"
@@ -222,6 +256,10 @@ export const ConnectModal = () => {
             walletsMeta={walletsMeta}
             onGetStarted={() => {
               setShowScreen("wallets/get-started");
+            }}
+            guestMode={guestMode}
+            onGuestConnect={() => {
+              setShowScreen("localWallet/connect");
             }}
           />
         )}
@@ -272,11 +310,16 @@ export const ConnectModal = () => {
 
         {showScreen === "safe/select-wallet" && (
           <SelectpersonalWallet
+            guestMode={guestMode}
             onBack={() => {
               setIsConnectingToWalletWrapper(false);
               setShowScreen("walletList");
             }}
-            walletsMeta={walletsMeta}
+            walletsMeta={
+              safeWalletObj?.config?.personalWallets
+                ? safeWalletObj?.config.personalWallets.map(getWalletMeta)
+                : walletsMeta
+            }
           />
         )}
 
@@ -296,40 +339,43 @@ export const ConnectModal = () => {
           />
         )}
 
-        {showScreen === "deviceWallet/connect" && (
-          <ConnectToLocalWallet onBack={handleBack} onConnected={onConnect} />
-        )}
-
-        {showScreen === "smartWallet/select-wallet" && (
-          <SmartWalletSelection
-            onBack={() => {
-              setIsConnectingToWalletWrapper(false);
-              setShowScreen("walletList");
-            }}
-            walletsMeta={walletsMeta}
-          />
+        {showScreen === "localWallet/connect" && (
+          <LocalWalletSetup onBack={handleBack} onConnected={onConnect} />
         )}
 
         {showScreen === "smartWallet/form" && (
-          <SmartWalletConnection
+          <SmartWalletForm
             onBack={handleBack}
             onConnect={() => {
               closeModalAndReset();
             }}
+          />
+        )}
+
+        {showScreen === "smartWallet/select-wallet" && (
+          <SmartWalletSelect
+            onBack={() => {
+              setShowScreen("walletList");
+            }}
+            guestMode={guestMode}
+            walletsMeta={
+              smartWalletObj?.config.personalWallets
+                ? smartWalletObj?.config.personalWallets.map(getWalletMeta)
+                : walletsMeta
+            }
           />
         )}
 
         {showScreen === "magic/connect" && (
-          <MagicConnect
-            showModal={() => setHideModal(true)}
-            hideModal={() => setHideModal(false)}
-            onBack={handleBack}
-            onConnect={() => {
-              closeModalAndReset();
-            }}
-          />
+          <MagicConnect onBack={handleBack} onConnect={onConnect} />
         )}
       </Modal>
     </ThemeProvider>
+  );
+
+  return usingLocalWallet ? (
+    <LocalWalletInfoProvider> {content}</LocalWalletInfoProvider>
+  ) : (
+    content
   );
 };

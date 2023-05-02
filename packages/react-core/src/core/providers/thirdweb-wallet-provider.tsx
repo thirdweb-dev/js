@@ -3,6 +3,7 @@ import type { Wallet, WalletInstance } from "../types/wallet";
 import { ThirdwebThemeContext } from "./theme-context";
 import { Chain } from "@thirdweb-dev/chains";
 import {
+  AbstractClientWallet,
   AsyncStorage,
   ConnectParams,
   CreateAsyncStorage,
@@ -20,7 +21,18 @@ import {
 } from "react";
 
 const LAST_CONNECTED_WALLET_STORAGE_KEY = "lastConnectedWallet";
-let coordinatorStorage: AsyncStorage;
+
+let lastConnectedWalletStorage: AsyncStorage;
+
+type LastConnectedWalletInfo = {
+  walletId: string;
+  connectParams?: ConnectParams & {
+    personalWallet?: {
+      walletId: string;
+      connectParams?: ConnectParams;
+    };
+  };
+};
 
 type NonNullable<T> = T extends null | undefined ? never : T;
 type WalletConnectParams<I extends WalletInstance> = Parameters<
@@ -50,7 +62,7 @@ type ThirdwebWalletContextData = {
   createWalletStorage: CreateAsyncStorage;
   switchChain: (chain: number) => Promise<void>;
   chainToConnect?: Chain;
-  activeChain?: Chain;
+  activeChain: Chain;
   guestMode?: boolean;
   handleWalletConnect: (
     wallet: WalletInstance,
@@ -64,7 +76,7 @@ const ThirdwebWalletContext = createContext<
 
 export function ThirdwebWalletProvider(
   props: PropsWithChildren<{
-    activeChain?: Chain;
+    activeChain: Chain;
     supportedWallets: Wallet[];
     shouldAutoConnect?: boolean;
     createWalletStorage: CreateAsyncStorage;
@@ -82,8 +94,9 @@ export function ThirdwebWalletProvider(
     WalletInstance | undefined
   >();
 
-  if (!coordinatorStorage) {
-    coordinatorStorage = props.createWalletStorage("coordinatorStorage");
+  if (!lastConnectedWalletStorage) {
+    lastConnectedWalletStorage =
+      props.createWalletStorage("coordinatorStorage");
   }
 
   // if autoSwitch is enabled - enforce connection to activeChain
@@ -123,31 +136,46 @@ export function ThirdwebWalletProvider(
     async (
       wallet: WalletInstance,
       connectParams?: ConnectParams<Record<string, any>>,
+      isAutoConnect = false,
     ) => {
-      const lastConnectedWallet = {
-        walletId: wallet.walletId,
-        connectParams,
-      };
-
-      try {
-        await coordinatorStorage.setItem(
-          LAST_CONNECTED_WALLET_STORAGE_KEY,
-          JSON.stringify(lastConnectedWallet),
-        );
-      } catch (e) {
-        console.error(e);
-      }
-
       const _signer = await wallet.getSigner();
       setSigner(_signer);
       setActiveWallet(wallet);
       setConnectionStatus("connected");
+
+      // it autoconnected, then the details is already saved in storage, no need to store again
+      if (isAutoConnect) {
+        return;
+      }
+
+      // save to storage
+      const walletInfo: LastConnectedWalletInfo = {
+        walletId: wallet.walletId,
+        connectParams,
+      };
+
+      // if personal wallet exists, we need to replace the connectParams.personalWallet to a stringifiable version
+      const personalWallet = wallet.getPersonalWallet() as AbstractClientWallet;
+
+      if (personalWallet) {
+        walletInfo.connectParams = {
+          ...walletInfo.connectParams,
+          personalWallet: {
+            walletId: personalWallet.walletId,
+            connectParams: personalWallet.getConnectParams(),
+          },
+        };
+
+        saveLastConnectedWalletInfo(walletInfo);
+      } else {
+        saveLastConnectedWalletInfo(walletInfo);
+      }
     },
     [],
   );
 
   const storeLastActiveChainId = useCallback(async (chainId: number) => {
-    const lastConnectedWallet = await coordinatorStorage.getItem(
+    const lastConnectedWallet = await lastConnectedWalletStorage.getItem(
       LAST_CONNECTED_WALLET_STORAGE_KEY,
     );
 
@@ -158,7 +186,7 @@ export function ThirdwebWalletProvider(
     try {
       const parsedWallet = JSON.parse(lastConnectedWallet as string);
       parsedWallet.connectParams.chainId = chainId;
-      await coordinatorStorage.setItem(
+      await lastConnectedWalletStorage.setItem(
         LAST_CONNECTED_WALLET_STORAGE_KEY,
         JSON.stringify(parsedWallet),
       );
@@ -207,52 +235,76 @@ export function ThirdwebWalletProvider(
     }
 
     autoConnectTriggered.current = true;
-    (async () => {
-      const lastConnectedWalletInfo = await coordinatorStorage.getItem(
-        LAST_CONNECTED_WALLET_STORAGE_KEY,
+
+    async function autoconnect() {
+      const walletInfo = await getLastConnectedWalletInfo();
+
+      if (!walletInfo) {
+        setConnectionStatus("disconnected");
+        return;
+      }
+
+      const walletObj = props.supportedWallets.find(
+        (W) => W.id === walletInfo.walletId,
       );
 
-      if (!lastConnectedWalletInfo) {
+      if (!walletObj) {
+        // last connected wallet is no longer present in the supported wallets
         setConnectionStatus("disconnected");
         return;
       }
 
-      let parsedParams: ConnectParams<Record<string, any>> | undefined;
-      let lastConnectedWalletId: string | undefined;
+      const personalWalletInfo = walletInfo.connectParams?.personalWallet;
 
-      try {
-        const parsedWallet = JSON.parse(lastConnectedWalletInfo as string);
-        parsedParams = parsedWallet.connectParams;
-        lastConnectedWalletId = parsedWallet.walletId;
-      } catch (error) {
-        console.error(`Error parsing the last connected wallet: ${error}`);
+      if (personalWalletInfo) {
+        const personalWallets = walletObj?.config?.personalWallets as Wallet[];
+
+        const personalWalleObj = personalWallets.find(
+          (W) => W.id === personalWalletInfo.walletId,
+        );
+        if (personalWalleObj) {
+          // create a personal wallet instance and auto connect it
+          const personalWalletInstance = createWalletInstance(personalWalleObj);
+
+          try {
+            await personalWalletInstance.autoConnect(
+              personalWalletInfo.connectParams,
+            );
+          } catch (e) {
+            console.error(e);
+            setConnectionStatus("disconnected");
+            return;
+          }
+
+          // set the personal wallet instance to the connectParams
+          walletInfo.connectParams = {
+            ...walletInfo.connectParams,
+            personalWallet: personalWalletInstance,
+          };
+        } else {
+          // last used personal wallet is no longer present in the supported wallets
+          setConnectionStatus("disconnected");
+          return;
+        }
       }
 
-      if (!lastConnectedWalletId) {
-        setConnectionStatus("disconnected");
-        return;
-      }
+      // create a wallet instance and auto connect it
+      const wallet = createWalletInstance(walletObj);
 
-      let lastConnectedWallet = props.supportedWallets.find(
-        (W) => W.id === lastConnectedWalletId,
-      );
-
-      if (!lastConnectedWallet) {
-        setConnectionStatus("disconnected");
-        return;
-      }
-
-      const wallet = createWalletInstance(lastConnectedWallet);
       try {
         setConnectionStatus("connecting");
-        await wallet.autoConnect(parsedParams);
-        handleWalletConnect(wallet, parsedParams);
+        await wallet.autoConnect(walletInfo.connectParams);
+        handleWalletConnect(wallet, walletInfo.connectParams, true);
       } catch (e) {
-        coordinatorStorage.removeItem(LAST_CONNECTED_WALLET_STORAGE_KEY);
+        lastConnectedWalletStorage.removeItem(
+          LAST_CONNECTED_WALLET_STORAGE_KEY,
+        );
         setConnectionStatus("disconnected");
         throw e;
       }
-    })();
+    }
+
+    autoconnect();
   }, [
     createWalletInstance,
     props.supportedWallets,
@@ -286,7 +338,9 @@ export function ThirdwebWalletProvider(
   );
 
   const onWalletDisconnect = useCallback(async () => {
-    await coordinatorStorage.removeItem(LAST_CONNECTED_WALLET_STORAGE_KEY);
+    await lastConnectedWalletStorage.removeItem(
+      LAST_CONNECTED_WALLET_STORAGE_KEY,
+    );
     setConnectionStatus("disconnected");
     setSigner(undefined);
     setActiveWallet(undefined);
@@ -300,6 +354,12 @@ export function ThirdwebWalletProvider(
     }
 
     await activeWallet.disconnect();
+    if (activeWallet.getPersonalWallet()) {
+      await (
+        activeWallet.getPersonalWallet() as AbstractClientWallet
+      )?.disconnect();
+    }
+
     onWalletDisconnect();
   }, [activeWallet, onWalletDisconnect]);
 
@@ -353,5 +413,35 @@ export function ThirdwebWalletProvider(
 }
 
 export function useThirdwebWallet() {
-  return useContext(ThirdwebWalletContext);
+  const ctx = useContext(ThirdwebWalletContext);
+  if (!ctx) {
+    throw new Error(
+      `useThirdwebWallet() can only be used inside <ThirdwebProvider />`,
+    );
+  }
+  return ctx;
+}
+
+async function getLastConnectedWalletInfo() {
+  const str = await lastConnectedWalletStorage.getItem(
+    LAST_CONNECTED_WALLET_STORAGE_KEY,
+  );
+  if (!str) {
+    return null;
+  }
+
+  return JSON.parse(str) as LastConnectedWalletInfo;
+}
+
+async function saveLastConnectedWalletInfo(
+  walletInfo: LastConnectedWalletInfo,
+) {
+  try {
+    await lastConnectedWalletStorage.setItem(
+      LAST_CONNECTED_WALLET_STORAGE_KEY,
+      JSON.stringify(walletInfo),
+    );
+  } catch (e) {
+    console.error("Error saving the last connected wallet info", e);
+  }
 }
