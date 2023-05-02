@@ -526,12 +526,14 @@ export function useContractEvents(
  * @beta
  */
 export function useContractRead<
-  TContractInstance extends ValidContractInstance,
-  TFunctionName extends Parameters<TContractInstance["call"]>[0],
+  TContractAddress extends GeneratedContractAddress,
+  TContract extends BaseContractForAddress<TContractAddress>,
+  TContractInstance extends SmartContract<TContract>,
+  TFunctionName extends keyof TContract["functions"] = keyof TContract["functions"],
 >(
   contract: RequiredParam<TContractInstance>,
-  functionName: RequiredParam<TFunctionName | (string & {})>,
-  args?: unknown[],
+  functionName: RequiredParam<TFunctionName & string>,
+  args?: Parameters<TContract["functions"][TFunctionName]>,
   overrides?: CallOverrides,
 ) {
   const contractAddress = contract?.getAddress();
