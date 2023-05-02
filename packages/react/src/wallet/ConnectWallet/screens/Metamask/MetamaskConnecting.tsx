@@ -1,15 +1,20 @@
+import { walletIds } from "@thirdweb-dev/wallets";
 import { ConnectingScreen } from "../ConnectingScreen";
-import { Wallet, useSupportedWallet } from "@thirdweb-dev/react-core";
+import { WalletInfo } from "../../../types";
 
 export const MetamaskConnecting: React.FC<{
   onBack: () => void;
+  walletsInfo: WalletInfo[];
 }> = (props) => {
-  const metamask = useSupportedWallet("metamask") as Wallet;
+  const metamaskInfo = props.walletsInfo.find(
+    (w) => w.wallet.id === walletIds.metamask,
+  ) as WalletInfo;
+  const { name, iconURL } = metamaskInfo.wallet.meta;
   return (
     <ConnectingScreen
       onBack={props.onBack}
-      walletName={metamask.meta.name}
-      walletIconURL={metamask.meta.iconURL}
+      walletName={name}
+      walletIconURL={iconURL}
       supportLink="https://support.metamask.io/hc/en-us/articles/4406430256539-User-Guide-Troubleshooting"
     />
   );

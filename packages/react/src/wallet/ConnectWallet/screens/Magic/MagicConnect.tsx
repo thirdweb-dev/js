@@ -1,4 +1,3 @@
-import { useSupportedWallet } from "@thirdweb-dev/react-core";
 import {
   BackButton,
   ModalDescription,
@@ -17,12 +16,20 @@ import { EmailConnect } from "./EmailConnect";
 import { Flex } from "../../../../components/basic";
 import { MagicLinkWallet } from "../../../wallets/magicLink";
 import { ErrorMessage } from "../../../../components/formElements";
+import { WalletInfo } from "../../../types";
+import { walletIds } from "@thirdweb-dev/wallets";
 
 export const MagicConnect: React.FC<{
   onBack: () => void;
   onConnect: () => void;
+  walletsInfo: WalletInfo[];
 }> = (props) => {
-  const magicLinkObj = useSupportedWallet("magicLink") as MagicLinkWallet;
+  const magicLinkObj = (
+    props.walletsInfo.find(
+      (w) => w.wallet.id === walletIds.magicLink,
+    ) as WalletInfo
+  ).wallet as MagicLinkWallet;
+
   const isSmsEnabled = magicLinkObj.config.smsLogin !== false;
   const isEmailEnabled = magicLinkObj.config.emailLogin !== false;
 
@@ -52,6 +59,7 @@ export const MagicConnect: React.FC<{
   if (showUI === "sms") {
     return (
       <SMSConnect
+        magicLinkWallet={magicLinkObj}
         onBack={() => {
           if (firstScreen === "sms") {
             props.onBack();
@@ -67,6 +75,7 @@ export const MagicConnect: React.FC<{
   if (showUI === "email") {
     return (
       <EmailConnect
+        magicLinkWallet={magicLinkObj}
         onBack={() => {
           if (firstScreen === "email") {
             props.onBack();

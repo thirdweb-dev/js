@@ -1,27 +1,29 @@
 import { ScanScreen } from "../ScanScreen";
-import type { CoinbaseWallet } from "@thirdweb-dev/wallets";
+import { CoinbaseWallet, walletIds } from "@thirdweb-dev/wallets";
 import {
   useCreateWalletInstance,
-  useSupportedWallet,
   useThirdwebWallet,
-  Wallet,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
+import { WalletInfo } from "../../../types";
 
 export const ScanCoinbase: React.FC<{
   onBack: () => void;
   onGetStarted: () => void;
   onConnected: () => void;
+  walletsInfo: WalletInfo[];
 }> = (props) => {
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>(undefined);
   const twWalletContext = useThirdwebWallet();
   const { onConnected } = props;
-  const coinbaseWalletObj = useSupportedWallet("coinbaseWallet") as Wallet;
+  const coinbaseWalletInfo = props.walletsInfo.find(
+    (w) => w.wallet.id === walletIds.coinbase,
+  ) as WalletInfo;
 
   useEffect(() => {
     (async () => {
-      const wallet = createInstance(coinbaseWalletObj) as InstanceType<
+      const wallet = createInstance(coinbaseWalletInfo.wallet) as InstanceType<
         typeof CoinbaseWallet
       >;
 
@@ -38,15 +40,15 @@ export const ScanCoinbase: React.FC<{
           onConnected();
         });
     })();
-  }, [createInstance, twWalletContext, onConnected, coinbaseWalletObj]);
+  }, [createInstance, twWalletContext, onConnected, coinbaseWalletInfo]);
 
   return (
     <ScanScreen
       onBack={props.onBack}
       onGetStarted={props.onGetStarted}
       qrCodeUri={qrCodeUri}
-      walletName={coinbaseWalletObj.meta.name}
-      walletIconURL={coinbaseWalletObj.meta.iconURL}
+      walletName={coinbaseWalletInfo.wallet.meta.name}
+      walletIconURL={coinbaseWalletInfo.wallet.meta.iconURL}
     />
   );
 };

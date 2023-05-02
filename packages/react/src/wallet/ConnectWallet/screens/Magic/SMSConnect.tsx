@@ -1,6 +1,5 @@
 import {
   useCreateWalletInstance,
-  useSupportedWallet,
   useThirdwebWallet,
 } from "@thirdweb-dev/react-core";
 import { Img } from "../../../../components/Img";
@@ -17,15 +16,15 @@ import {
   Input,
 } from "../../../../components/formElements";
 import { Button } from "../../../../components/buttons";
-import { MagicLink } from "@thirdweb-dev/wallets";
 import { useState } from "react";
 import { Spinner } from "../../../../components/Spinner";
+import { MagicLinkWallet } from "../../../wallets/magicLink";
 
 export const SMSConnect: React.FC<{
   onBack: () => void;
   onConnect: () => void;
+  magicLinkWallet: MagicLinkWallet;
 }> = (props) => {
-  const magicLinkObj = useSupportedWallet("magicLink");
   const [isConnecting, setIsConnecting] = useState(false);
   const createInstance = useCreateWalletInstance();
   const twContext = useThirdwebWallet();
@@ -33,7 +32,7 @@ export const SMSConnect: React.FC<{
   const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(false);
 
   const handleSmsConnect = async () => {
-    const magicWallet = createInstance(magicLinkObj) as MagicLink;
+    const magicWallet = createInstance(props.magicLinkWallet);
     setIsConnecting(true);
     const connectOptions = {
       chainId: twContext.activeChain?.chainId,
@@ -52,7 +51,7 @@ export const SMSConnect: React.FC<{
       <BackButton onClick={props.onBack}></BackButton>
       <Spacer y="md" />
       <Img
-        src={magicLinkObj.meta.iconURL}
+        src={props.magicLinkWallet.meta.iconURL}
         width={iconSize.xl}
         height={iconSize.xl}
       />

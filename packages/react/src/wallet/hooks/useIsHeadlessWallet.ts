@@ -1,4 +1,5 @@
 import { useWallet } from "@thirdweb-dev/react-core";
+import { walletIds } from "@thirdweb-dev/wallets";
 
 /**
  *
@@ -10,5 +11,9 @@ export function useIsHeadlessWallet() {
     return false;
   }
   const id = activeWallet.walletId;
-  return id === "localWallet" || id === "PaperWallet" || id === "magicLink";
+  return (
+    id === walletIds.localWallet ||
+    id === walletIds.paper ||
+    id === walletIds.magicLink
+  );
 }

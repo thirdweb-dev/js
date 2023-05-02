@@ -13,6 +13,7 @@ import { UserStatus } from "@paperxyz/embedded-wallet-service-sdk";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { providers, Signer } from "ethers";
 import { utils } from "ethers";
+import { walletIds } from "../../walletIds";
 
 export const PaperChainMap = {
   1: "Ethereum",
@@ -25,7 +26,7 @@ export const PaperChainMap = {
 export type PaperSupportedChainId = keyof typeof PaperChainMap;
 
 export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs> {
-  readonly id: string = "paper-wallet";
+  readonly id: string = walletIds.paper;
   readonly name: string = "Paper Wallet";
   ready: boolean = true;
 

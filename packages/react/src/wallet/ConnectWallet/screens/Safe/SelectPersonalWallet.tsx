@@ -1,5 +1,7 @@
+import { walletIds } from "@thirdweb-dev/wallets";
 import { Img } from "../../../../components/Img";
 import { Spacer } from "../../../../components/Spacer";
+import { Flex } from "../../../../components/basic";
 import { Button } from "../../../../components/buttons";
 import {
   BackButton,
@@ -8,34 +10,33 @@ import {
   ModalDescription,
 } from "../../../../components/modalElements";
 import { iconSize, spacing } from "../../../../design-system";
-import { WalletMeta } from "../../../types";
+import { WalletInfo } from "../../../types";
 import { WalletSelection } from "../../WalletSelector";
 import { Steps } from "./Steps";
 import styled from "@emotion/styled";
-import { Wallet, useSupportedWallet } from "@thirdweb-dev/react-core";
+import { SafeWalletObj } from "../../../wallets/safeWallet";
 
 export const SelectpersonalWallet: React.FC<{
   onBack: () => void;
-  guestMode?: boolean;
-  walletsMeta: WalletMeta[];
+  walletsInfo: WalletInfo[];
+  safeWallet: SafeWalletObj;
 }> = (props) => {
-  const safeWalletObj = useSupportedWallet("Safe") as Wallet;
-  console.log("wallets meta", props.walletsMeta, props.guestMode);
-
-  const walletsMeta = props.walletsMeta.filter(
-    (w) => w.id !== "SmartWallet" && w.id !== "Safe" && w.id !== "localWallet",
+  const guestWallet = props.walletsInfo.find(
+    (w) => w.wallet.id === walletIds.localWallet,
   );
-
-  const guestWallet = props.walletsMeta.find((w) => w.id === "localWallet");
-
-  const showGuest = props.guestMode && guestWallet;
+  const walletsInfo = props.walletsInfo.filter(
+    (w) =>
+      w.wallet.id !== walletIds.smartWallet &&
+      w.wallet.id !== walletIds.safe &&
+      w.wallet.id !== walletIds.localWallet,
+  );
 
   return (
     <>
       <BackButton onClick={props.onBack} />
       <IconContainer>
         <Img
-          src={safeWalletObj.meta.iconURL}
+          src={props.safeWallet.meta.iconURL}
           width={iconSize.xl}
           height={iconSize.xl}
         />
@@ -52,21 +53,16 @@ export const SelectpersonalWallet: React.FC<{
       <Steps step={1} />
       <Spacer y="lg" />
 
-      <WalletSelection walletsMeta={walletsMeta} />
+      <WalletSelection walletsInfo={walletsInfo} />
 
       <Spacer y="xl" />
 
-      {showGuest ? (
-        <Button
-          variant="link"
-          onClick={guestWallet.onClick}
-          style={{
-            width: "100%",
-            padding: 0,
-          }}
-        >
-          Continue as guest
-        </Button>
+      {guestWallet ? (
+        <Flex justifyContent="center">
+          <Button variant="link" onClick={guestWallet.connect}>
+            Continue as guest
+          </Button>
+        </Flex>
       ) : (
         <HelperLink
           target="_blank"

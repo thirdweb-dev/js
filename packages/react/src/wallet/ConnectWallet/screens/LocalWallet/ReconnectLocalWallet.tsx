@@ -5,39 +5,33 @@ import {
   ModalDescription,
   ModalTitle,
 } from "../../../../components/modalElements";
-import {
-  ChevronRightIcon,
-  EyeClosedIcon,
-  EyeOpenIcon,
-} from "@radix-ui/react-icons";
+import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { useThirdwebWallet } from "@thirdweb-dev/react-core";
 import { useState } from "react";
-import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { FormFooter, Label } from "../../../../components/formElements";
-import styled from "@emotion/styled";
-import { Theme, fontSize, spacing } from "../../../../design-system";
+import { spacing } from "../../../../design-system";
 import { Spinner } from "../../../../components/Spinner";
 import { shortenAddress } from "../../../../evm/utils/addresses";
 import { LocalWalletModalHeader } from "./common";
 import { SecondaryText } from "../../../../components/text";
-import { CreateLocalWallet_NoCreds } from "./SetupLocalWallet_NoCredentials";
+import { CreateLocalWallet_Password } from "./CreateLocalWallet";
 import { OverrideConfirmation } from "./overrideConfirmation";
 import { ExportLocalWallet } from "./ExportLocalWallet";
-import { CreateLocalWallet_Creds } from "./SetupLocalWallet_Credentials";
-import { UserCredentials } from "./credentials";
+import { WalletInfo } from "../../../types";
+import { useLocalWalletInfo } from "./useLocalWalletInfo";
 
 type ReconnectLocalWalletProps = {
   onConnected: () => void;
   onBack: () => void;
+  walletsInfo: WalletInfo[];
 };
 
 /**
  * For No-Credential scenario
  */
-export const ReconnectLocalWalletNoCredentials: React.FC<
-  ReconnectLocalWalletProps
-> = (props) => {
-  const { walletData, localWallet } = useLocalWalletInfo();
+export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
+  props,
+) => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isWrongPassword, setIsWrongPassword] = useState(false);
@@ -47,9 +41,24 @@ export const ReconnectLocalWalletNoCredentials: React.FC<
   const [showBackupConfirmation, setShowBackupConfirmation] = useState(false);
   const [showExport, setShowExport] = useState(false);
 
+  const { localWallet, meta, walletData } = useLocalWalletInfo(
+    props.walletsInfo,
+  );
+
+  const savedAddress = walletData
+    ? walletData === "loading"
+      ? ""
+      : walletData.address
+    : "";
+
   if (showExport) {
+    if (!localWallet) {
+      throw new Error("Invalid state");
+    }
+
     return (
       <ExportLocalWallet
+        localWallet={localWallet}
         onBack={() => {
           setShowExport(false);
         }}
@@ -65,6 +74,7 @@ export const ReconnectLocalWalletNoCredentials: React.FC<
   if (showBackupConfirmation) {
     return (
       <OverrideConfirmation
+        meta={meta}
         onBackup={() => {
           setShowExport(true);
         }}
@@ -81,7 +91,8 @@ export const ReconnectLocalWalletNoCredentials: React.FC<
 
   if (showCreate) {
     return (
-      <CreateLocalWallet_NoCreds
+      <CreateLocalWallet_Password
+        walletsInfo={props.walletsInfo}
         onBack={() => {
           setShowCreate(false);
         }}
@@ -111,14 +122,9 @@ export const ReconnectLocalWalletNoCredentials: React.FC<
     setIsConnecting(false);
   };
 
-  const address =
-    (walletData === "loading" || !walletData
-      ? "Fetching..."
-      : walletData.address) || "";
-
   return (
     <>
-      <LocalWalletModalHeader onBack={props.onBack} />
+      <LocalWalletModalHeader onBack={props.onBack} meta={meta} />
       <ModalTitle
         style={{
           textAlign: "left",
@@ -137,7 +143,9 @@ export const ReconnectLocalWalletNoCredentials: React.FC<
 
       <Spacer y="sm" />
 
-      <SecondaryText>{shortenAddress(address)}</SecondaryText>
+      <SecondaryText>
+        {savedAddress === "" ? "Loading..." : shortenAddress(savedAddress)}
+      </SecondaryText>
 
       <Spacer y="lg" />
 
@@ -152,7 +160,7 @@ export const ReconnectLocalWalletNoCredentials: React.FC<
           type="text"
           name="username"
           autoComplete="off"
-          value={address}
+          value={savedAddress}
           disabled
           style={{ display: "none" }}
         />
@@ -213,133 +221,3 @@ export const ReconnectLocalWalletNoCredentials: React.FC<
     </>
   );
 };
-
-export const ReconnectLocalWalletCredentials: React.FC<
-  ReconnectLocalWalletProps & {
-    creds: UserCredentials;
-  }
-> = (props) => {
-  const { localWallet } = useLocalWalletInfo();
-  const thirdwebWalletContext = useThirdwebWallet();
-  const [showBackupConfirmation, setShowBackupConfirmation] = useState(false);
-  const [showExport, setShowExport] = useState(false);
-  const [showCreate, setShowCreate] = useState(false);
-
-  if (showExport) {
-    return (
-      <ExportLocalWallet
-        onBack={() => {
-          setShowExport(false);
-        }}
-        onExport={() => {
-          setShowExport(false);
-          setShowBackupConfirmation(false);
-          setShowCreate(true);
-        }}
-      />
-    );
-  }
-
-  if (showBackupConfirmation) {
-    return (
-      <OverrideConfirmation
-        onBackup={() => {
-          setShowExport(true);
-        }}
-        onSkip={() => {
-          console.log("skip");
-          setShowCreate(true);
-          setShowBackupConfirmation(false);
-        }}
-        onBack={() => {
-          setShowBackupConfirmation(false);
-        }}
-      />
-    );
-  }
-
-  if (showCreate) {
-    return (
-      <CreateLocalWallet_Creds
-        savedCreds={props.creds}
-        onBack={() => {
-          setShowCreate(false);
-        }}
-        onConnected={props.onConnected}
-      />
-    );
-  }
-
-  const handleConnect = async () => {
-    if (!localWallet) {
-      throw new Error("Invalid state");
-    }
-
-    await localWallet.import({
-      privateKey: props.creds.password,
-      encryption: false,
-    });
-
-    await localWallet.connect();
-    thirdwebWalletContext.handleWalletConnect(localWallet);
-    props.onConnected();
-  };
-
-  return (
-    <>
-      <LocalWalletModalHeader onBack={props.onBack} />
-      <ModalTitle
-        style={{
-          textAlign: "left",
-        }}
-      >
-        Guest Wallet
-      </ModalTitle>
-      <Spacer y="xs" />
-      <ModalDescription>
-        Connect to saved wallet on your device
-      </ModalDescription>
-
-      <Spacer y="lg" />
-
-      <Label>Saved Wallet</Label>
-
-      <Spacer y="sm" />
-
-      <AddressButton variant="secondary" onClick={handleConnect}>
-        {shortenAddress(props.creds.id || "") || "Fetching..."}
-        <ChevronRightIcon
-          style={{
-            marginLeft: "auto",
-          }}
-        />
-      </AddressButton>
-
-      <Spacer y="xl" />
-
-      <Button
-        variant="link"
-        style={{
-          textAlign: "center",
-          width: "100%",
-          padding: "2px",
-        }}
-        onClick={() => {
-          setShowBackupConfirmation(true);
-        }}
-      >
-        Create a new wallet
-      </Button>
-    </>
-  );
-};
-
-const AddressButton = styled(Button)<{ theme?: Theme }>`
-  font-size: ${fontSize.md};
-  margin: 0;
-  width: 100%;
-  justify-content: flex-start;
-  &:hover {
-    background-color: ${(props) => props.theme.bg.elevatedHover};
-  }
-`;

@@ -14,7 +14,15 @@ import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ExportLocalWalletModal } from "./ExportLocalWalletModal";
 import { Toast } from "../base/Toast";
+<<<<<<< HEAD
 import { LocalWallet, SmartWallet } from "@thirdweb-dev/wallets";
+=======
+import {
+  AbstractClientWallet,
+  SmartWallet,
+  walletIds,
+} from "@thirdweb-dev/wallets";
+>>>>>>> local-wallet-refactor
 import { SmartWalletAdditionalActions } from "./SmartWalletAdditionalActions";
 import { useSmartWallet } from "../../providers/context-provider";
 
