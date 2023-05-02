@@ -14,7 +14,7 @@ export class LocalWallet extends LocalWalletCore {
     id: walletIds.localWallet,
     name: "Guest Wallet",
     iconURL:
-      "ipfs://QmeAJVqn17aDNQhjEU3kcWVZCFBrfta8LzaDGkS8Egdiyk/local-wallet-mobile.svg",
+      "ipfs://QmQAyJG3y2wZf9u6JXxn8U9Kd1ZVfjtQkf5aua8FcWr8Gm/local-wallet-mobile.svg",
   };
 
   getMeta() {
@@ -54,11 +54,7 @@ export const localWallet = () => {
   const asyncStorage = createAsyncLocalStorage(walletIds.localWallet);
   return {
     id: LocalWallet.id,
-    meta: {
-      name: "Guest Wallet",
-      iconURL:
-        "ipfs://QmeAJVqn17aDNQhjEU3kcWVZCFBrfta8LzaDGkS8Egdiyk/local-wallet-mobile.svg",
-    },
+    meta: LocalWallet.meta,
     create: (options: WalletOptions) =>
       new LocalWallet({
         ...options,

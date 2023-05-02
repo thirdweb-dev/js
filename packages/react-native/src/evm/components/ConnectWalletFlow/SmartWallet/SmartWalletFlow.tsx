@@ -20,7 +20,6 @@ import { useTheme } from "@shopify/restyle";
 import BaseButton from "../../base/BaseButton";
 import Text from "../../base/Text";
 import { walletIds } from "@thirdweb-dev/wallets";
-import { Link } from "../../base/Link";
 
 export const SmartWalletFlow = ({
   onClose,
@@ -187,7 +186,13 @@ export const SmartWalletFlow = ({
         <Text variant="subHeader">
           Select a personal wallet that access the key to your account. You can
           add more keys later.{" "}
-          <Link text="Learn more." onPress={onLearnMorePress} />{" "}
+          <Text
+            variant="subHeader"
+            color="linkPrimary"
+            onPress={onLearnMorePress}
+          >
+            Learn more.
+          </Text>
         </Text>
       }
       wallets={walletObj.config.personalWallets}
