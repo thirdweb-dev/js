@@ -6,6 +6,7 @@ import type {
 } from "../connectors/smart-wallet/types";
 import type { SmartWalletConnector as SmartWalletConnectorType } from "../connectors/smart-wallet";
 import { Transaction, TransactionResult } from "@thirdweb-dev/sdk";
+import { walletIds } from "../walletIds";
 
 // export types and utils for convenience
 export * from "../connectors/smart-wallet/types";
@@ -23,7 +24,7 @@ export class SmartWallet extends AbstractClientWallet<
       "ipfs://QmPSPvHvYWh9BfvLLPDHjVoCuJTd2hSMSgF3N6JCrjuX4v/SmartWallet.svg",
   };
 
-  static id = "SmartWallet" as const;
+  static id = walletIds.smartWallet;
   public get walletName() {
     return "Smart Wallet" as const;
   }

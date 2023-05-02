@@ -206,11 +206,11 @@ export const ConnectModal = () => {
     ],
   );
 
-  const smartWalletObj = wallets.find((w) => w.id === "SmartWallet") as
+  const smartWalletObj = wallets.find((w) => w.id === walletIds.smartWallet) as
     | SmartWalletObj
     | undefined;
 
-  const safeWalletObj = wallets.find((w) => w.id === "Safe") as
+  const safeWalletObj = wallets.find((w) => w.id === walletIds.safe) as
     | SafeWalletObj
     | undefined;
 
