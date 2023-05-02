@@ -11,15 +11,14 @@ import { WalletDetailsModalHeader } from "./WalletDetailsModalHeader";
 import { useWallet, useBalance, useDisconnect } from "@thirdweb-dev/react-core";
 import { useActiveChain } from "@thirdweb-dev/react-core/evm";
 import { useCallback, useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Linking, StyleSheet, View } from "react-native";
 import { ExportLocalWalletModal } from "./ExportLocalWalletModal";
 import { Toast } from "../base/Toast";
-import {
-  AbstractClientWallet,
-  SmartWallet,
-  walletIds,
-} from "@thirdweb-dev/wallets";
+import { SmartWallet, walletIds } from "@thirdweb-dev/wallets";
 import { SmartWalletAdditionalActions } from "./SmartWalletAdditionalActions";
+import { useSmartWallet } from "../../providers/context-provider";
+import { Link } from "../base/Link";
+import Box from "../base/Box";
 
 export type ConnectWalletDetailsProps = {
   address: string;
@@ -36,6 +35,7 @@ export const ConnectWalletDetails = ({
   const [addressCopied, setAddressCopied] = useState(false);
   const activeWallet = useWallet();
   const disconnect = useDisconnect();
+  const [smartWallet, setSmartWallet] = useSmartWallet();
   const chain = useActiveChain();
   const balanceQuery = useBalance();
 
@@ -57,6 +57,7 @@ export const ConnectWalletDetails = ({
     setIsDisconnecting(true);
     disconnect().finally(() => {
       setIsDisconnecting(false);
+      setSmartWallet?.(undefined);
     });
   };
 
@@ -88,7 +89,15 @@ export const ConnectWalletDetails = ({
   };
 
   const getAdditionalActions = useCallback(() => {
-    if (activeWallet?.walletId.toLowerCase().includes(walletIds.localWallet)) {
+    if (activeWallet?.walletId === SmartWallet.id || smartWallet) {
+      return (
+        <SmartWalletAdditionalActions
+          onExportPress={onExportLocalWalletPress}
+        />
+      );
+    }
+
+    if (activeWallet?.walletId === walletIds.localWallet) {
       return (
         <>
           <View style={styles.currentNetwork}>
@@ -106,23 +115,23 @@ export const ConnectWalletDetails = ({
               <Text variant="bodySmall">Export wallet</Text>
             </View>
           </BaseButton>
+
+          <Box flexDirection="row" alignItems="center" justifyContent="center">
+            <Link
+              text="Learn more"
+              onPress={() =>
+                Linking.openURL(
+                  "https://portal.thirdweb.com/wallet/local-wallet",
+                )
+              }
+            />
+          </Box>
         </>
       );
     }
 
-    if (activeWallet?.walletId === SmartWallet.id) {
-      const personalWallet =
-        activeWallet?.getPersonalWallet() as AbstractClientWallet;
-      return (
-        <SmartWalletAdditionalActions
-          personalWallet={personalWallet}
-          onExportPress={onExportLocalWalletPress}
-        />
-      );
-    }
-
     return null;
-  }, [activeWallet, onExportLocalWalletPress]);
+  }, [activeWallet?.walletId, onExportLocalWalletPress, smartWallet]);
 
   return (
     <>

@@ -10,6 +10,17 @@ import { createSecureStorage } from "../../../core/SecureStorage";
 import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
 
 export class LocalWallet extends LocalWalletCore {
+  static meta = {
+    id: walletIds.localWallet,
+    name: "Guest Wallet",
+    iconURL:
+      "ipfs://QmeAJVqn17aDNQhjEU3kcWVZCFBrfta8LzaDGkS8Egdiyk/local-wallet-mobile.svg",
+  };
+
+  getMeta() {
+    return LocalWallet.meta;
+  }
+
   async generate() {
     if (this.ethersWallet) {
       throw new Error("wallet is already initialized");
@@ -38,15 +49,15 @@ export class LocalWallet extends LocalWalletCore {
   }
 }
 
-export const localWallet = (displayName?: string) => {
+export const localWallet = () => {
   const secureStorage = createSecureStorage(walletIds.localWallet);
   const asyncStorage = createAsyncLocalStorage(walletIds.localWallet);
   return {
     id: LocalWallet.id,
     meta: {
-      name: displayName ? displayName : "Guest Wallet",
+      name: "Guest Wallet",
       iconURL:
-        "ipfs://QmcNddbYBuQKiBFnPcxYegjrX6S6z9K1vBNzbBBUJMn2ox/device-wallet.svg",
+        "ipfs://QmeAJVqn17aDNQhjEU3kcWVZCFBrfta8LzaDGkS8Egdiyk/local-wallet-mobile.svg",
     },
     create: (options: WalletOptions) =>
       new LocalWallet({
