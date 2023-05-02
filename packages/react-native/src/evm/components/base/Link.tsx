@@ -1,16 +1,24 @@
 import { TouchableOpacity } from "react-native";
 import Text from "./Text";
+import { Theme } from "../../styles/theme";
+
+type LinkProps = {
+  text: string;
+  variant?: keyof Theme["textVariants"];
+  onPress?: () => void;
+} & (typeof Text)["arguments"];
 
 export const Link = ({
   text,
+  variant = "link",
   onPress,
-}: {
-  text: string;
-  onPress?: () => void;
-}) => {
+  ...props
+}: LinkProps) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      <Text variant="link">{text}</Text>
+      <Text variant={variant} {...props}>
+        {text}
+      </Text>
     </TouchableOpacity>
   );
 };

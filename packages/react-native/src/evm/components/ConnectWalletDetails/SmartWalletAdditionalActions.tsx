@@ -10,7 +10,8 @@ import { LocalWallet } from "../../wallets/wallets/local-wallet";
 import { useThirdwebWallet, useWallet } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import { useSmartWallet } from "../../providers/context-provider";
-import { Label } from "../base/Label";
+import RightArrowIcon from "../../assets/right-arrow";
+import { useTheme } from "@shopify/restyle";
 
 export const SmartWalletAdditionalActions = ({
   onExportPress,
@@ -23,6 +24,7 @@ export const SmartWalletAdditionalActions = ({
   const [smartWalletAddress, setSmartWalletAddress] = useState<string>("");
   const [showSmartWallet, setShowSmartWallet] = useState(false);
   const activeWallet = useWallet();
+  const theme = useTheme();
 
   const wallet = showSmartWallet
     ? smartWallet
@@ -84,9 +86,14 @@ export const SmartWalletAdditionalActions = ({
             ) : null}
           </View>
         </>
-        <Label text="Switch wallet" />
+        <RightArrowIcon
+          height={10}
+          width={10}
+          color={theme.colors.iconPrimary}
+        />
       </BaseButton>
-      {wallet?.walletId === LocalWallet.id ? (
+      {wallet?.walletId === LocalWallet.id ||
+      activeWallet?.walletId === LocalWallet.id ? (
         <BaseButton
           backgroundColor="background"
           borderColor="border"
@@ -96,7 +103,11 @@ export const SmartWalletAdditionalActions = ({
         >
           <PocketWalletIcon size={16} />
           <View style={styles.exportWalletInfo}>
-            <Text variant="bodySmall">Export personal wallet</Text>
+            <Text variant="bodySmall">
+              {wallet?.walletId === LocalWallet.id
+                ? "Export personal wallet"
+                : "Export wallet"}
+            </Text>
           </View>
         </BaseButton>
       ) : null}
