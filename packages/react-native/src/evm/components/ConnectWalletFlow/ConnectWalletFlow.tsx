@@ -77,7 +77,7 @@ export const ConnectWalletFlow = () => {
   const onChooseWallet = (wallet: Wallet) => {
     setActiveWallet(() => wallet);
 
-    if (wallet.id !== SmartWallet.id && wallet.id !== LocalWallet.id) {
+    if (wallet.id !== SmartWallet.id) {
       connectActiveWallet(wallet);
     }
   };

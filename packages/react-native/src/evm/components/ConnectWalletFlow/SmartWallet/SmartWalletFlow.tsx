@@ -19,6 +19,7 @@ import { ActivityIndicator } from "react-native";
 import { useTheme } from "@shopify/restyle";
 import BaseButton from "../../base/BaseButton";
 import Text from "../../base/Text";
+import { walletIds } from "@thirdweb-dev/wallets";
 
 export const SmartWalletFlow = ({
   onClose,
@@ -36,7 +37,7 @@ export const SmartWalletFlow = ({
   >();
   const theme = useTheme();
   const createWalletInstance = useCreateWalletInstance();
-  const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
+  const walletObj = useSupportedWallet(walletIds.smartWallet) as SmartWalletObj;
   const connect = useConnect();
   const targetChain = useThirdwebWallet().activeChain;
 
@@ -176,8 +177,10 @@ export const SmartWalletFlow = ({
 
   return (
     <ChooseWallet
-      headerText={"Smart wallet"}
-      subHeaderText={"Select a personal wallet to connect to your smart wallet"}
+      headerText={"Link Personal Wallet"}
+      subHeaderText={
+        "Select a personal wallet that access the key to your account. You can add more keys later."
+      }
       wallets={walletObj.config.personalWallets}
       onChooseWallet={onChoosePersonalWallet}
       onClose={onClose}

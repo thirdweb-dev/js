@@ -10,6 +10,7 @@ import { LocalWallet } from "../../wallets/wallets/local-wallet";
 import { useThirdwebWallet, useWallet } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import { useSmartWallet } from "../../providers/context-provider";
+import { Label } from "../base/Label";
 
 export const SmartWalletAdditionalActions = ({
   onExportPress,
@@ -63,23 +64,27 @@ export const SmartWalletAdditionalActions = ({
       <BaseButton
         backgroundColor="background"
         borderColor="border"
+        justifyContent="space-between"
         mb="md"
         style={styles.walletDetails}
         onPress={onWalletPress}
       >
-        {wallet?.getMeta().iconURL ? (
-          <WalletIcon size={32} iconUri={wallet?.getMeta().iconURL || ""} />
-        ) : null}
-        <View style={styles.walletInfo}>
-          {personalWalletAddress ? (
-            <Address
-              variant="bodyLarge"
-              address={
-                showSmartWallet ? smartWalletAddress : personalWalletAddress
-              }
-            />
+        <>
+          {wallet?.getMeta().iconURL ? (
+            <WalletIcon size={32} iconUri={wallet?.getMeta().iconURL || ""} />
           ) : null}
-        </View>
+          <View style={styles.walletInfo}>
+            {personalWalletAddress ? (
+              <Address
+                variant="bodyLarge"
+                address={
+                  showSmartWallet ? smartWalletAddress : personalWalletAddress
+                }
+              />
+            ) : null}
+          </View>
+        </>
+        <Label text="Switch wallet" />
       </BaseButton>
       {wallet?.walletId === LocalWallet.id ? (
         <BaseButton
