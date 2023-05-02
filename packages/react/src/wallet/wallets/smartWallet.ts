@@ -9,9 +9,7 @@ type SafeWalletConfig = {
   personalWallets?: Wallet[];
 };
 
-export type SmartWalletObj = Wallet & {
-  config: Required<SafeWalletConfig>;
-};
+export type SmartWalletObj = Wallet<SmartWallet, Required<SafeWalletConfig>>;
 
 export const smartWallet = (config: SafeWalletConfig) => {
   return {

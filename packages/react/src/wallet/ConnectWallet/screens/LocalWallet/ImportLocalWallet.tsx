@@ -7,9 +7,7 @@ import {
 } from "../../../../components/modalElements";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import {
-  Wallet,
   useCreateWalletInstance,
-  useSupportedWallet,
   useThirdwebWallet,
 } from "@thirdweb-dev/react-core";
 import { useState } from "react";
@@ -17,18 +15,17 @@ import { DragNDrop } from "../../../../components/DragNDrop";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { FormFooter } from "../../../../components/formElements";
 import { LocalWalletModalHeader } from "./common";
-import { isCredentialsSupported, saveCredentials } from "./credentials";
-import type { LocalWallet } from "@thirdweb-dev/wallets";
+import { LocalWallet } from "@thirdweb-dev/wallets";
+import { useWalletInfo } from "../../walletInfo";
 
 export const ImportLocalWallet: React.FC<{
   onConnected: () => void;
   onBack: () => void;
-  meta?: Wallet["meta"];
 }> = (props) => {
   const [jsonString, setJsonString] = useState<string | undefined>();
-  const { setLocalWallet } = useLocalWalletInfo();
+  const { setLocalWallet, meta } = useLocalWalletInfo();
   const createWalletInstance = useCreateWalletInstance();
-  const localWalletObj = useSupportedWallet("localWallet") as Wallet;
+  const localWalletInfo = useWalletInfo("localWallet", true);
   const [password, setPassword] = useState("");
   const [isWrongPassword, setIsWrongPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -37,15 +34,15 @@ export const ImportLocalWallet: React.FC<{
   const thirdwebWalletContext = useThirdwebWallet();
 
   const handleImport = async () => {
-    const localWallet = createWalletInstance(localWalletObj) as LocalWallet;
+    const localWallet = createWalletInstance(
+      localWalletInfo.wallet,
+    ) as LocalWallet;
     if (!localWallet || !jsonString) {
       throw new Error("Invalid state");
     }
 
-    let address: string;
-
     try {
-      address = await localWallet.import({
+      await localWallet.import({
         encryptedJson: jsonString,
         password,
       });
@@ -55,23 +52,10 @@ export const ImportLocalWallet: React.FC<{
       return;
     }
 
-    if (isCredentialsSupported) {
-      const privateKey = await localWallet.export({
-        strategy: "privateKey",
-        encryption: false,
-      });
-
-      await saveCredentials({
-        id: address,
-        name: "Wallet",
-        password: privateKey,
-      });
-    } else {
-      await localWallet.save({
-        strategy: "encryptedJson",
-        password,
-      });
-    }
+    await localWallet.save({
+      strategy: "encryptedJson",
+      password,
+    });
 
     thirdwebWalletContext.handleWalletConnect(localWallet);
     setLocalWallet(localWallet);
@@ -80,7 +64,7 @@ export const ImportLocalWallet: React.FC<{
 
   return (
     <>
-      <LocalWalletModalHeader onBack={props.onBack} meta={props.meta} />
+      <LocalWalletModalHeader onBack={props.onBack} meta={meta} />
       <ModalTitle
         style={{
           textAlign: "left",

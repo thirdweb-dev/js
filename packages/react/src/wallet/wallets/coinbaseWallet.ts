@@ -5,6 +5,7 @@ export const coinbaseWallet = () => {
   return {
     id: CoinbaseWallet.id,
     meta: CoinbaseWallet.meta,
-    create: (options: WalletOptions) => new CoinbaseWallet({ ...options, headlessMode: true }),
-  } satisfies Wallet;
+    create: (options: WalletOptions) =>
+      new CoinbaseWallet({ ...options, headlessMode: true }),
+  } satisfies Wallet<CoinbaseWallet>;
 };

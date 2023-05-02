@@ -1,5 +1,7 @@
+import { walletIds } from "@thirdweb-dev/wallets";
 import { Img } from "../../../../components/Img";
 import { Spacer } from "../../../../components/Spacer";
+import { Flex } from "../../../../components/basic";
 import { Button } from "../../../../components/buttons";
 import {
   BackButton,
@@ -7,31 +9,31 @@ import {
   ModalDescription,
 } from "../../../../components/modalElements";
 import { iconSize, spacing } from "../../../../design-system";
-import { WalletMeta } from "../../../types";
 import { WalletSelection } from "../../WalletSelector";
 import styled from "@emotion/styled";
-import { Wallet, useSupportedWallet } from "@thirdweb-dev/react-core";
+import { SmartWalletObj } from "../../../wallets/smartWallet";
+import { useWalletInfo, useWalletsInfo } from "../../walletInfo";
 
 export const SmartWalletSelect: React.FC<{
   onBack: () => void;
-  guestMode?: boolean;
-  walletsMeta: WalletMeta[];
+  smartWallet: SmartWalletObj;
 }> = (props) => {
-  const smartWalletObj = useSupportedWallet("SmartWallet") as Wallet;
+  const guestWallet = useWalletInfo("localWallet", false);
+  const allWalletsInfo = useWalletsInfo();
 
-  const walletsMeta = props.walletsMeta.filter(
-    (w) => w.id !== "SmartWallet" && w.id !== "Safe" && w.id !== "localWallet",
+  const walletsInfo = allWalletsInfo.filter(
+    (w) =>
+      w.wallet.id !== walletIds.smartWallet &&
+      w.wallet.id !== walletIds.safe &&
+      w.wallet.id !== walletIds.localWallet,
   );
-
-  const guestWallet = props.walletsMeta.find((w) => w.id === "localWallet");
-  const showGuest = props.guestMode && guestWallet;
 
   return (
     <>
       <BackButton onClick={props.onBack} />
       <IconContainer>
         <Img
-          src={smartWalletObj.meta.iconURL}
+          src={props.smartWallet.meta.iconURL}
           width={iconSize.xl}
           height={iconSize.xl}
         />
@@ -46,21 +48,17 @@ export const SmartWalletSelect: React.FC<{
 
       <Spacer y="lg" />
 
-      <WalletSelection walletsMeta={walletsMeta} />
+      <WalletSelection walletsInfo={walletsInfo} />
 
-      <Spacer y="xl" />
-
-      {showGuest && (
-        <Button
-          variant="link"
-          onClick={guestWallet.onClick}
-          style={{
-            width: "100%",
-            padding: 0,
-          }}
-        >
-          Continue as guest
-        </Button>
+      {guestWallet && (
+        <>
+          <Spacer y="xl" />
+          <Flex justifyContent="center">
+            <Button variant="link" onClick={guestWallet.connect}>
+              Continue as guest
+            </Button>
+          </Flex>
+        </>
       )}
     </>
   );

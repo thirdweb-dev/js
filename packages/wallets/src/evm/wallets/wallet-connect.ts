@@ -4,6 +4,7 @@ import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { TW_WC_PROJECT_ID } from "../constants/wc";
+import { walletIds } from "../constants/walletIds";
 
 export type WalletConnectOptions = {
   projectId?: string;
@@ -16,7 +17,7 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
 
   connector?: TWConnector;
 
-  static id = "walletConnect";
+  static id = walletIds.walletConnect;
 
   static meta = {
     name: "WalletConnect",

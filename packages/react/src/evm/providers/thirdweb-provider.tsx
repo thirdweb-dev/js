@@ -10,10 +10,7 @@ import { ThemeProvider } from "@emotion/react";
 import { darkTheme, lightTheme } from "../../design-system";
 import { PropsWithChildren } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
-import { localWallet } from "../../wallet/wallets/localWallet";
 import { defaultWallets } from "../../wallet/wallets/defaultWallets";
-
-const localWalletObj = localWallet();
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
@@ -68,14 +65,6 @@ export const ThirdwebProvider = <
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
   const wallets: Wallet[] = supportedWallets || defaultWallets;
 
-  // add local wallet if guest mode is enabled or smart wallet is added
-  if (restProps.guestMode || wallets.find((w) => w.id === "SmartWallet")) {
-    // add only if it's not already added
-    if (!wallets.find((w) => w.id === localWalletObj.id)) {
-      wallets.push(localWalletObj);
-    }
-  }
-
   return (
     <WalletUIStatesProvider theme={theme}>
       <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
@@ -86,7 +75,7 @@ export const ThirdwebProvider = <
           {...restProps}
         >
           {children}
-          <ConnectModal guestMode={restProps.guestMode} />
+          <ConnectModal />
         </ThirdwebProviderCore>
       </ThemeProvider>
     </WalletUIStatesProvider>

@@ -1,5 +1,6 @@
 import { Img } from "../../components/Img";
 import { Spacer } from "../../components/Spacer";
+import { Flex } from "../../components/basic";
 import { Button } from "../../components/buttons";
 import { HelperLink, ModalTitle } from "../../components/modalElements";
 import {
@@ -9,39 +10,39 @@ import {
   spacing,
   Theme,
 } from "../../design-system";
-import { WalletMeta } from "../types";
 import styled from "@emotion/styled";
+import { useWalletInfo, useWalletsInfo } from "./walletInfo";
+import { WalletInfo } from "../types";
+import { walletIds } from "@thirdweb-dev/wallets";
 
 export const WalletSelector: React.FC<{
-  walletsMeta: WalletMeta[];
   onGetStarted: () => void;
-  guestMode?: boolean;
   onGuestConnect: () => void;
 }> = (props) => {
-  const showGetStarted = !!props.walletsMeta[0].meta.urls && !props.guestMode;
-  const walletsMeta = props.walletsMeta.filter((w) => w.id !== "localWallet");
+  const _allWalletsInfo = useWalletsInfo();
+  const allWalletsInfo = _allWalletsInfo.filter(
+    (w) => w.wallet.id !== walletIds.localWallet,
+  );
+  const localWalletInfo = useWalletInfo("localWallet", false);
+
+  const showGetStarted =
+    !localWalletInfo && !!allWalletsInfo[0].wallet.meta.urls;
 
   return (
     <>
       <ModalTitle>Choose your wallet</ModalTitle>
       <Spacer y="xl" />
 
-      <WalletSelection walletsMeta={walletsMeta} />
+      <WalletSelection walletsInfo={allWalletsInfo} />
 
-      {props.guestMode && (
+      {localWalletInfo && (
         <>
           <Spacer y="xl" />
-          <Button
-            variant="link"
-            style={{
-              width: "100%",
-              padding: 0,
-            }}
-            onClick={props.onGuestConnect}
-          >
-            {" "}
-            Continue as guest
-          </Button>
+          <Flex justifyContent="center">
+            <Button variant="link" onClick={props.onGuestConnect}>
+              Continue as guest
+            </Button>
+          </Flex>
         </>
       )}
 
@@ -65,11 +66,11 @@ export const WalletSelector: React.FC<{
   );
 };
 
-export const WalletSelection: React.FC<{ walletsMeta: WalletMeta[] }> = (
-  props,
-) => {
+export const WalletSelection: React.FC<{ walletsInfo: WalletInfo[] }> = ({
+  walletsInfo,
+}) => {
   // show the installed wallets first
-  const sortedWalletsMeta = props.walletsMeta.sort((a, b) => {
+  const sortedWalletsInfo = walletsInfo.sort((a, b) => {
     if (a.installed && !b.installed) {
       return -1;
     }
@@ -81,23 +82,23 @@ export const WalletSelection: React.FC<{ walletsMeta: WalletMeta[] }> = (
 
   return (
     <WalletList>
-      {sortedWalletsMeta.map((walletMeta) => {
+      {sortedWalletsInfo.map((walletInfo) => {
         return (
-          <li key={walletMeta.id}>
+          <li key={walletInfo.wallet.id}>
             <WalletButton
               type="button"
               onClick={() => {
-                walletMeta.onClick();
+                walletInfo.connect();
               }}
             >
               <Img
-                src={walletMeta.meta.iconURL}
+                src={walletInfo.wallet.meta.iconURL}
                 width={iconSize.lg}
                 height={iconSize.lg}
                 loading="eager"
               />
-              <WalletName>{walletMeta.meta.name}</WalletName>
-              {walletMeta.installed && <InstallBadge> Installed </InstallBadge>}
+              <WalletName>{walletInfo.wallet.meta.name}</WalletName>
+              {walletInfo.installed && <InstallBadge> Installed </InstallBadge>}
             </WalletButton>
           </li>
         );
