@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from "react";
 
 type DappContextType = {
   smartWallet?: SmartWallet;
-  setSmartWallet?: (value: SmartWallet) => void;
+  setSmartWallet?: (value?: SmartWallet) => void;
 };
 
 const DappContext = createContext<DappContextType>({});

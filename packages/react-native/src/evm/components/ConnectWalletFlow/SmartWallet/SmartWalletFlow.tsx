@@ -15,11 +15,12 @@ import {
 import { ChooseWallet } from "../ChooseWallet/ChooseWallet";
 import { LocalWalletFlow } from "../LocalWalletFlow";
 import { ModalHeaderTextClose } from "../../base/modal/ModalHeaderTextClose";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Linking } from "react-native";
 import { useTheme } from "@shopify/restyle";
 import BaseButton from "../../base/BaseButton";
 import Text from "../../base/Text";
 import { walletIds } from "@thirdweb-dev/wallets";
+import { Link } from "../../base/Link";
 
 export const SmartWalletFlow = ({
   onClose,
@@ -97,11 +98,11 @@ export const SmartWalletFlow = ({
 
   const onChoosePersonalWallet = useCallback(
     async (wallet: Wallet) => {
-      if (wallet.id === LocalWallet.id) {
-        setShowLocalWalletFlow(true);
-      } else {
-        connectPersonalWallet(wallet);
-      }
+      // if (wallet.id === LocalWallet.id) {
+      //   setShowLocalWalletFlow(true);
+      // } else {
+      connectPersonalWallet(wallet);
+      // }
     },
     [connectPersonalWallet],
   );
@@ -125,6 +126,10 @@ export const SmartWalletFlow = ({
     setIsConnecting(false);
     setConnectedPersonalWallet(undefined);
     setPersonalWalletChaindId(undefined);
+  };
+
+  const onLearnMorePress = () => {
+    Linking.openURL("https://portal.thirdweb.com/wallet");
   };
 
   if (isConnecting) {
@@ -179,7 +184,11 @@ export const SmartWalletFlow = ({
     <ChooseWallet
       headerText={"Link Personal Wallet"}
       subHeaderText={
-        "Select a personal wallet that access the key to your account. You can add more keys later."
+        <Text variant="subHeader">
+          Select a personal wallet that access the key to your account. You can
+          add more keys later.{" "}
+          <Link text="Learn more." onPress={onLearnMorePress} />{" "}
+        </Text>
       }
       wallets={walletObj.config.personalWallets}
       onChooseWallet={onChoosePersonalWallet}
