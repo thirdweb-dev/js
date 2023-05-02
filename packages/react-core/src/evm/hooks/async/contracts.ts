@@ -19,7 +19,10 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getCachedAbiForContract } from "@thirdweb-dev/sdk";
+import {
+  BaseContractInterface,
+  getCachedAbiForContract,
+} from "@thirdweb-dev/sdk";
 import type {
   Abi,
   CommonContractSchemaInput,
@@ -526,11 +529,14 @@ export function useContractEvents(
  * @beta
  */
 export function useContractRead<
-  TContractInstance extends ValidContractInstance,
-  TFunctionName extends Parameters<TContractInstance["call"]>[0],
+  TContractAddress extends GeneratedContractAddress,
+  TContractInstance extends SmartContract<
+    BaseContractForAddress<TContractAddress>
+  >,
+  TFunctionName extends keyof BaseContractForAddress<TContractAddress>["functions"] = keyof BaseContractForAddress<TContractAddress>["functions"],
 >(
   contract: RequiredParam<TContractInstance>,
-  functionName: RequiredParam<TFunctionName | (string & {})>,
+  functionName: RequiredParam<TFunctionName & string>,
   args?: unknown[],
   overrides?: CallOverrides,
 ) {
