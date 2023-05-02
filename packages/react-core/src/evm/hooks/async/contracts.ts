@@ -533,20 +533,29 @@ export function useContractRead<
   TContractInstance extends TContractAddress extends GeneratedContractAddress
     ? SmartContract<BaseContractForAddress<TContractAddress>>
     : ValidContractInstance,
-  TFunctionName extends TContract extends ValidContractInstance
-    ? Parameters<TContractInstance["call"]>[0]
-    : // @ts-expect-error
-      keyof TContract["functions"] = keyof TContract["functions"],
+  TFunctionName extends TContractAddress extends GeneratedContractAddress
+    ? TContract extends BaseContractForAddress<TContractAddress>
+      ? keyof TContract["functions"] // both generated address and a basecontract thingy
+      : never // generated but not a basecontract thingy (shouldn't happen)
+    : Parameters<TContractInstance["call"]>[0], // not generated
 >(
   contract: TContractInstance extends ValidContractInstance
     ? RequiredParam<TContractInstance> | undefined
-    : // @ts-expect-error
-      SmartContract<BaseContractForAddress<TContractAddress>> | undefined,
+    : TContractAddress extends GeneratedContractAddress
+    ?
+        | RequiredParam<SmartContract<BaseContractForAddress<TContractAddress>>>
+        | undefined
+    : RequiredParam<SmartContract> | undefined,
   functionName: RequiredParam<TFunctionName & string>,
-  args?: TContractInstance extends ValidContractInstance
-    ? unknown[]
-    : // @ts-expect-error
-      Parameters<TContract["functions"][TFunctionName]>,
+
+  args?: TContractAddress extends GeneratedContractAddress
+    ? TContract extends BaseContractForAddress<TContractAddress>
+      ? TFunctionName extends keyof TContract["functions"]
+        ? Parameters<TContract["functions"][TFunctionName]> // both generated address and a basecontract thingy
+        : unknown[]
+      : unknown[]
+    : unknown[],
+
   overrides?: CallOverrides,
 ) {
   const contractAddress = contract?.getAddress();
