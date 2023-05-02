@@ -39,8 +39,6 @@ import {
   AbstractClientWallet,
   LocalWallet,
   MetaMaskWallet,
-  SafeWallet,
-  SmartWallet,
   walletIds,
 } from "@thirdweb-dev/wallets";
 import { Flex } from "../../components/basic";
@@ -96,15 +94,11 @@ export const ConnectedWalletDetails: React.FC<{
 
   const sdk = useSDK();
 
-  const isWrapperWallet =
-    activeWallet?.walletId === "Safe" ||
-    activeWallet?.walletId === "SmartWallet";
+  const personalWallet = activeWallet?.getPersonalWallet() as
+    | AbstractClientWallet
+    | undefined;
 
-  const personalWallet = isWrapperWallet
-    ? ((
-        activeWallet as SafeWallet | SmartWallet
-      ).getPersonalWallet() as AbstractClientWallet) // assumes using a client wallet
-    : undefined;
+  const disableSwitchChain = !!personalWallet;
 
   // get personal wallet address and balance
   useEffect(() => {
@@ -165,7 +159,7 @@ export const ConnectedWalletDetails: React.FC<{
     <MenuButton
       id="current-network"
       type="button"
-      disabled={isWrapperWallet}
+      disabled={disableSwitchChain}
       onClick={() => {
         setOpen(false);
         setShowNetworkSelector(true);

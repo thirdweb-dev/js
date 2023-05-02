@@ -183,7 +183,7 @@ class ThirdwebBridge implements TWBridge {
     const walletInstance = this.walletMap.get(wallet);
     if (walletInstance) {
       // local wallet needs to be generated or loaded before connecting
-      if (walletInstance.walletId === "localWallet") {
+      if (walletInstance.walletId === walletIds.localWallet) {
         const localWallet = walletInstance as LocalWallet;
 
         // if password is provided, we can load and save

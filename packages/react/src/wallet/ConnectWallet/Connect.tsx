@@ -160,13 +160,13 @@ export const ConnectModal = () => {
         }
 
         // Safe
-        else if (wallet.id === "Safe") {
+        else if (wallet.id === walletIds.safe) {
           setIsConnectingToWalletWrapper("safe");
           setShowScreen("safe/select-wallet");
         }
 
         // Smart Wallet
-        else if (wallet.id === "SmartWallet") {
+        else if (wallet.id === walletIds.smartWallet) {
           setIsConnectingToWalletWrapper("smartWallet");
           setShowScreen("smartWallet/select-wallet");
         }
@@ -177,7 +177,7 @@ export const ConnectModal = () => {
         }
 
         // Magic link
-        else if (wallet.id === "magicLink") {
+        else if (wallet.id === walletIds.magicLink) {
           setShowScreen("magic/connect");
         }
 

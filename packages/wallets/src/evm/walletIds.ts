@@ -7,4 +7,5 @@ export const walletIds = {
   walletConnectV1: "walletConnectV1",
   walletConnect: "walletConnect",
   magicLink: "magicLink",
+  paper: "PaperWallet",
 };

@@ -1,6 +1,7 @@
 import {
   LocalWallet as LocalWalletCore,
   TWConnector,
+  walletIds,
 } from "@thirdweb-dev/wallets";
 import { Wallet } from "@thirdweb-dev/react-core";
 import type { WalletOptions } from "@thirdweb-dev/wallets";
@@ -38,8 +39,8 @@ export class LocalWallet extends LocalWalletCore {
 }
 
 export const localWallet = (displayName?: string) => {
-  const secureStorage = createSecureStorage("localwallet");
-  const asyncStorage = createAsyncLocalStorage("localwallet");
+  const secureStorage = createSecureStorage(walletIds.localWallet);
+  const asyncStorage = createAsyncLocalStorage(walletIds.localWallet);
   return {
     id: LocalWallet.id,
     meta: {

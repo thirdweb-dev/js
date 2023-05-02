@@ -1,3 +1,4 @@
+import { walletIds } from "@thirdweb-dev/wallets";
 import { WalletInfo } from "../../../types";
 import { GetStartedScreen } from "../GetStartedScreen";
 
@@ -6,7 +7,7 @@ export const CoinbaseGetStarted: React.FC<{
   walletsInfo: WalletInfo[];
 }> = ({ onBack, walletsInfo }) => {
   const coinbaseWalletObj = walletsInfo.find(
-    (w) => w.wallet.id === "coinbaseWallet",
+    (w) => w.wallet.id === walletIds.coinbase,
   ) as WalletInfo;
 
   return (

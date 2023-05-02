@@ -6,6 +6,7 @@ import { TWConnector } from "../interfaces/tw-connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { PaperWalletConnector } from "../connectors/paper";
+import { walletIds } from "../walletIds";
 
 export type PaperWalletOptions = WalletOptions<PaperWalletAdditionalOptions>;
 
@@ -15,7 +16,7 @@ export class PaperWallet extends AbstractClientWallet<
 > {
   connector?: TWConnector;
 
-  static id = "PaperWallet" as const;
+  static id = walletIds.paper;
 
   static meta = {
     name: "Paper Wallet",

@@ -26,8 +26,8 @@ export const SelectpersonalWallet: React.FC<{
   );
   const walletsInfo = props.walletsInfo.filter(
     (w) =>
-      w.wallet.id !== "SmartWallet" &&
-      w.wallet.id !== "Safe" &&
+      w.wallet.id !== walletIds.smartWallet &&
+      w.wallet.id !== walletIds.safe &&
       w.wallet.id !== walletIds.localWallet,
   );
 

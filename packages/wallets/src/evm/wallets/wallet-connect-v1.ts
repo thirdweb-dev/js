@@ -2,6 +2,7 @@ import type { ConnectorData } from "../../lib/wagmi-core";
 import type { WalletConnectV1Connector } from "../connectors/wallet-connect-v1";
 import type WalletConnectProvider from "../connectors/wallet-connect-v1/walletconnect-legacy-provider";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
+import { walletIds } from "../walletIds";
 import { AbstractClientWallet, WalletOptions } from "./base";
 
 export type WalletConnectV1Options = {
@@ -14,7 +15,7 @@ export class WalletConnectV1 extends AbstractClientWallet<WalletConnectV1Options
 
   connector?: TWConnector;
 
-  static id = "walletConnectV1";
+  static id = walletIds.walletConnectV1;
 
   static meta = {
     name: "WalletConnect",
