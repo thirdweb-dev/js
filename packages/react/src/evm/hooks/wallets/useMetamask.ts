@@ -8,7 +8,7 @@ export function useMetamask() {
       const { metamaskWallet } = await import(
         "../../../wallet/wallets/metamask/metamaskWallet"
       );
-      connect(metamaskWallet(), connectOptions);
+      return connect(metamaskWallet(), connectOptions);
     },
     [connect],
   );

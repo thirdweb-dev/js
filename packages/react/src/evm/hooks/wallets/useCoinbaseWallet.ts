@@ -8,7 +8,7 @@ export function useCoinbaseWallet() {
       const { coinbaseWallet } = await import(
         "../../../wallet/wallets/coinbase/coinbaseWallet"
       );
-      connect(coinbaseWallet(), connectOptions);
+      return connect(coinbaseWallet(), connectOptions);
     },
     [connect],
   );
