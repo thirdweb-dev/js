@@ -75,10 +75,10 @@ export class LocalWallet extends AbstractClientWallet<
   }
 
   /**
-   * load saved wallet data from storage or generate a new one and save it
+   * load saved wallet data from storage or generate a new one and save it.
    */
   async loadOrCreate(options: LoadOptions) {
-    if (await this.isSaved()) {
+    if (await this.getSavedData()) {
       await this.load(options);
     } else {
       await this.generate();
@@ -275,12 +275,16 @@ export class LocalWallet extends AbstractClientWallet<
   }
 
   /**
-   * @returns true if wallet data is saved in storage
+   * @returns true if initialized wallet's data is saved in storage
    */
   async isSaved() {
     try {
       const data = await this.getSavedData();
-      return !!data;
+      const address = await this.getAddress();
+      if (data?.address === address) {
+        return true;
+      }
+      return false;
     } catch (e) {
       return false;
     }

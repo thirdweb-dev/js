@@ -188,7 +188,8 @@ class ThirdwebBridge implements TWBridge {
 
         // if password is provided, we can load and save
         if (password) {
-          if (await localWallet.isSaved()) {
+          // if there is a saved wallet, load it with the password
+          if (await localWallet.getSavedData()) {
             await localWallet.load({
               strategy: "encryptedJson",
               password,
