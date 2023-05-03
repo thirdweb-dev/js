@@ -169,8 +169,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
    */
   private async getThirdwebUploadAuthorizationHeaders() {
     return {
-      // "x-api-key": this.thirdwebApiKey,
-      "x-api-key": "abcdefg",
+      "x-api-key": this.thirdwebApiKey,
     };
   }
 
