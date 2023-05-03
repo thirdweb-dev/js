@@ -535,9 +535,9 @@ export function useContractRead<
     : ValidContractInstance,
   TFunctionName extends TContractAddress extends GeneratedContractAddress
     ? TContract extends BaseContractForAddress<TContractAddress>
-      ? keyof TContract["functions"] // both generated address and a basecontract thingy
-      : never // generated but not a basecontract thingy (shouldn't happen)
-    : Parameters<TContractInstance["call"]>[0], // not generated
+      ? keyof TContract["functions"]
+      : never
+    : Parameters<TContractInstance["call"]>[0],
 >(
   contract: TContractInstance extends ValidContractInstance
     ? RequiredParam<TContractInstance> | undefined
@@ -551,7 +551,7 @@ export function useContractRead<
   args?: TContractAddress extends GeneratedContractAddress
     ? TContract extends BaseContractForAddress<TContractAddress>
       ? TFunctionName extends keyof TContract["functions"]
-        ? Parameters<TContract["functions"][TFunctionName]> // both generated address and a basecontract thingy
+        ? Parameters<TContract["functions"][TFunctionName]>
         : unknown[]
       : unknown[]
     : unknown[],
@@ -597,11 +597,27 @@ export function useContractRead<
  * @beta
  */
 export function useContractWrite<
-  TContractInstance extends ValidContractInstance,
-  TFunctionName extends Parameters<TContractInstance["call"]>[0],
+  TContractAddress extends GeneratedContractAddress | ContractAddress,
+  TContract extends TContractAddress extends GeneratedContractAddress
+    ? BaseContractForAddress<TContractAddress>
+    : ValidContractInstance,
+  TContractInstance extends TContractAddress extends GeneratedContractAddress
+    ? SmartContract<BaseContractForAddress<TContractAddress>>
+    : ValidContractInstance,
+  TFunctionName extends TContractAddress extends GeneratedContractAddress
+    ? TContract extends BaseContractForAddress<TContractAddress>
+      ? keyof TContract["functions"] // both generated address and a basecontract thingy
+      : never // generated but not a basecontract thingy (shouldn't happen)
+    : Parameters<TContractInstance["call"]>[0], // not generated
 >(
-  contract: RequiredParam<TContractInstance>,
-  functionName: RequiredParam<TFunctionName | (string & {})>,
+  contract: TContractInstance extends ValidContractInstance
+    ? RequiredParam<TContractInstance> | undefined
+    : TContractAddress extends GeneratedContractAddress
+    ?
+        | RequiredParam<SmartContract<BaseContractForAddress<TContractAddress>>>
+        | undefined
+    : RequiredParam<SmartContract> | undefined,
+  functionName: RequiredParam<TFunctionName & string>,
 ) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
@@ -612,7 +628,12 @@ export function useContractWrite<
       args,
       overrides,
     }: {
-      args?: unknown[];
+      // @ts-expect-error
+      args?: TContract extends BaseContractForAddress<TContractAddress>
+        ? TFunctionName extends keyof TContract["functions"]
+          ? Parameters<TContract["functions"][TFunctionName]>
+          : unknown[]
+        : unknown[];
       overrides?: CallOverrides;
     }) => {
       requiredParamInvariant(contract, "contract must be defined");
