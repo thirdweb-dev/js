@@ -181,6 +181,7 @@
     "tweetnacl": "^1.0.3",
     "uuid": "^9.0.0",
     "yaml": "^2.1.1",
+    "zksync-web3": "^0.14.3",
     "zod": "^3.20.2"
   },
   "resolutions": {
