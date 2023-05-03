@@ -19,7 +19,7 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getCachedAbiForContract } from "@thirdweb-dev/sdk";
+import { getCachedAbiForContract, TransactionResult } from "@thirdweb-dev/sdk";
 import type {
   Abi,
   CommonContractSchemaInput,
@@ -545,6 +545,13 @@ export function useContractRead<
         : unknown[]
       : unknown[]
     : unknown[],
+  TReturnType extends TContractAddress extends GeneratedContractAddress
+    ? TContract extends BaseContractForAddress<TContractAddress>
+      ? TFunctionName extends keyof TContract["functions"]
+        ? ReturnType<TContract["functions"][TFunctionName]>
+        : any
+      : any
+    : any,
 >(
   contract: TContractInstance extends ValidContractInstance
     ? RequiredParam<TContractInstance> | undefined
@@ -568,7 +575,7 @@ export function useContractRead<
           functionName: TFunctionName,
           args?: TArgs,
           overrides?: CallOverrides,
-        ) => Promise<ReturnType<TContract["functions"][TFunctionName]>>
+        ) => Promise<TReturnType>
       )(functionName, args, overrides);
     },
     {
@@ -629,15 +636,7 @@ export function useContractWrite<
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
-  return useMutation<
-    ReturnType<TContract["functions"][TFunctionName]>,
-    unknown,
-    {
-      args?: TArgs | undefined;
-      overrides?: CallOverrides | undefined;
-    },
-    unknown
-  >(
+  return useMutation(
     async ({
       args,
       overrides,
@@ -653,7 +652,7 @@ export function useContractWrite<
           functionName: TFunctionName,
           args?: TArgs,
           overrides?: CallOverrides,
-        ) => Promise<ReturnType<TContract["functions"][TFunctionName]>>
+        ) => Promise<TransactionResult>
       )(functionName, args, overrides);
     },
     {
