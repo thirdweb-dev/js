@@ -68,10 +68,7 @@ export const SmartWalletFlow = ({
 
   useEffect(() => {
     if (connectedPersonalWallet) {
-      if (mismatch) {
-        // TODO: Add network switching logic
-        // connectSmartWallet(connectedPersonalWallet);
-      } else {
+      if (!mismatch) {
         connectSmartWallet(connectedPersonalWallet);
       }
     }
@@ -184,8 +181,9 @@ export const SmartWalletFlow = ({
       headerText={"Link key"}
       subHeaderText={
         <Text variant="subHeader">
-          Choose a personal wallet that acts as your account's key. This
-          controls access to your account.{" "}
+          {
+            "Choose a personal wallet that acts as your account's key. This controls access to your account. "
+          }
           <Text
             variant="subHeader"
             color="linkPrimary"
