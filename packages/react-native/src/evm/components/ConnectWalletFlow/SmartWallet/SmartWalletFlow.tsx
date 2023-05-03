@@ -128,7 +128,7 @@ export const SmartWalletFlow = ({
   };
 
   const onLearnMorePress = () => {
-    Linking.openURL("https://portal.thirdweb.com/wallet");
+    Linking.openURL("https://portal.thirdweb.com/wallet/smart-wallet");
   };
 
   if (isConnecting) {
@@ -181,11 +181,11 @@ export const SmartWalletFlow = ({
 
   return (
     <ChooseWallet
-      headerText={"Link Personal Wallet"}
+      headerText={"Link key"}
       subHeaderText={
         <Text variant="subHeader">
-          Select a personal wallet that access the key to your account. You can
-          add more keys later.{" "}
+          Choose a personal wallet that acts as your account's key. This
+          controls access to your account.{" "}
           <Text
             variant="subHeader"
             color="linkPrimary"
