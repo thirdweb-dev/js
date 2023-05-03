@@ -2,46 +2,98 @@ import { StyleSheet, View } from "react-native";
 import PocketWalletIcon from "../../assets/wallet";
 import BaseButton from "../base/BaseButton";
 import { WalletIcon } from "../base/WalletIcon";
-import { AbstractClientWallet } from "@thirdweb-dev/wallets";
+import { AbstractClientWallet, SmartWallet } from "@thirdweb-dev/wallets";
 import { Address } from "../base/Address";
 import Text from "../base/Text";
 import { usePersonalWalletAddress } from "../../wallets/hooks/usePersonalWalletAddress";
 import { LocalWallet } from "../../wallets/wallets/local-wallet";
+import { useThirdwebWallet, useWallet } from "@thirdweb-dev/react-core";
+import { useEffect, useState } from "react";
+import { useSmartWallet } from "../../providers/context-provider";
+import RightArrowIcon from "../../assets/right-arrow";
+import { useTheme } from "@shopify/restyle";
 
 export const SmartWalletAdditionalActions = ({
-  personalWallet,
   onExportPress,
 }: {
-  personalWallet: AbstractClientWallet;
   onExportPress: () => void;
 }) => {
   const personalWalletAddress = usePersonalWalletAddress();
+  const handleWalletConnect = useThirdwebWallet().handleWalletConnect;
+  const [smartWallet, setSmartWallet] = useSmartWallet();
+  const [smartWalletAddress, setSmartWalletAddress] = useState<string>("");
+  const [showSmartWallet, setShowSmartWallet] = useState(false);
+  const activeWallet = useWallet();
+  const theme = useTheme();
+
+  const wallet = showSmartWallet
+    ? smartWallet
+    : (activeWallet?.getPersonalWallet() as AbstractClientWallet);
+
+  useEffect(() => {
+    if (activeWallet?.walletId === SmartWallet.id) {
+      setSmartWallet?.(activeWallet as SmartWallet);
+      setShowSmartWallet(false);
+    } else {
+      setShowSmartWallet(true);
+    }
+  }, [activeWallet, activeWallet?.walletId, setSmartWallet]);
+
+  useEffect(() => {
+    (async () => {
+      if (smartWallet) {
+        const addr = await smartWallet.getAddress();
+        setSmartWalletAddress(addr);
+      }
+    })();
+  }, [smartWallet]);
+
+  const onWalletPress = () => {
+    if (!wallet) {
+      return;
+    }
+
+    handleWalletConnect(wallet);
+  };
 
   return (
     <>
       <View style={styles.currentNetwork}>
-        <Text variant="bodySmallSecondary">Personal Wallet</Text>
+        <Text variant="bodySmallSecondary">
+          {showSmartWallet ? "Smart Wallet" : "Personal Wallet"}
+        </Text>
       </View>
       <BaseButton
         backgroundColor="background"
         borderColor="border"
+        justifyContent="space-between"
         mb="md"
         style={styles.walletDetails}
-        onPress={() => {}}
+        onPress={onWalletPress}
       >
-        {personalWallet?.getMeta().iconURL ? (
-          <WalletIcon
-            size={32}
-            iconUri={personalWallet?.getMeta().iconURL || ""}
-          />
-        ) : null}
-        <View style={styles.walletInfo}>
-          {personalWalletAddress ? (
-            <Address variant="bodyLarge" address={personalWalletAddress} />
+        <>
+          {wallet?.getMeta().iconURL ? (
+            <WalletIcon size={32} iconUri={wallet?.getMeta().iconURL || ""} />
           ) : null}
-        </View>
+          <View style={styles.walletInfo}>
+            {personalWalletAddress ? (
+              <Address
+                variant="bodyLarge"
+                address={
+                  showSmartWallet ? smartWalletAddress : personalWalletAddress
+                }
+              />
+            ) : null}
+          </View>
+        </>
+        <RightArrowIcon
+          height={10}
+          width={10}
+          color={theme.colors.iconPrimary}
+        />
       </BaseButton>
-      {personalWallet?.walletId === LocalWallet.id ? (
+      {wallet?.walletId === LocalWallet.id ||
+      activeWallet?.walletId === LocalWallet.id ? (
         <BaseButton
           backgroundColor="background"
           borderColor="border"
@@ -51,7 +103,11 @@ export const SmartWalletAdditionalActions = ({
         >
           <PocketWalletIcon size={16} />
           <View style={styles.exportWalletInfo}>
-            <Text variant="bodySmall">Export personal wallet</Text>
+            <Text variant="bodySmall">
+              {wallet?.walletId === LocalWallet.id
+                ? "Export personal wallet"
+                : "Export wallet"}
+            </Text>
           </View>
         </BaseButton>
       ) : null}

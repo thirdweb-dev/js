@@ -21,7 +21,7 @@ export class SmartWallet extends AbstractClientWallet<
   static meta = {
     name: "Smart Wallet",
     iconURL:
-      "ipfs://QmPSPvHvYWh9BfvLLPDHjVoCuJTd2hSMSgF3N6JCrjuX4v/SmartWallet.svg",
+      "ipfs://QmeAJVqn17aDNQhjEU3kcWVZCFBrfta8LzaDGkS8Egdiyk/smart-wallet.svg",
   };
 
   static id = walletIds.smartWallet;

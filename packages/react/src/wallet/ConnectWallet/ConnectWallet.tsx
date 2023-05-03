@@ -36,6 +36,7 @@ type ConnectWalletProps = {
     loginOptions?: LoginOptions;
     loginOptional?: boolean;
     onLogin?: (token: string) => void;
+    onLogout?: () => void;
   };
   style?: React.CSSProperties;
   networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
@@ -152,6 +153,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
             onDisconnect={() => {
               if (authConfig?.authUrl) {
                 logout();
+                props?.auth?.onLogout?.();
               }
             }}
           />
