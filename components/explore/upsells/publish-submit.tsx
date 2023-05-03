@@ -60,7 +60,7 @@ export const PublishUpsellCard: React.FC = () => {
             color="accent.100"
             borderColor="accent.900"
             borderWidth="1px"
-            href="https://form.typeform.com/to/FAwehBFl"
+            href="https://thirdweb.typeform.com/to/rVvsAoqn#hubspot_utk=xxxxx&hubspot_page_name=xxxxx&hubspot_page_url=xxxxx"
             isExternal
             noIcon
             _hover={{
@@ -68,7 +68,7 @@ export const PublishUpsellCard: React.FC = () => {
               color: "accent.900",
             }}
           >
-            Submit Contract
+            Get In Touch
           </LinkButton>
           <LinkButton
             as={TrackedLink}

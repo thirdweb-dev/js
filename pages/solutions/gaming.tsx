@@ -139,8 +139,8 @@ const Gaming: ThirdwebNextPage = () => {
           </Flex>
         }
         secondaryButton={{
-          text: "Request demo",
-          link: "https://thirdweb.typeform.com/tw-solutions",
+          text: "Get In Touch",
+          link: "https://thirdweb.typeform.com/to/fMIj602T#hubspot_utk=xxxxx&hubspot_page_name=xxxxx&hubspot_page_url=xxxxx",
         }}
       >
         <SimpleGrid
