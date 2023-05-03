@@ -7,6 +7,7 @@ import {
   BackButton,
   ModalTitle,
   ModalDescription,
+  HelperLink,
 } from "../../../components/modalElements";
 import { iconSize, spacing } from "../../../design-system";
 import { WalletSelection } from "../../ConnectWallet/WalletSelector";
@@ -39,11 +40,19 @@ export const SelectPersonalWallet: React.FC<{
         />
       </IconContainer>
       <Spacer y="lg" />
-      <ModalTitle>Choose your wallet</ModalTitle>
+      <ModalTitle>Link Personal Wallet</ModalTitle>
       <Spacer y="sm" />
 
       <ModalDescription>
-        Select a personal wallet to connect to smart wallet
+        Select a personal wallet to access your account.{" "}
+        <HelperLink
+          md
+          href="https://portal.thirdweb.com/wallet/smart-wallet"
+          target="_blank"
+        >
+          {" "}
+          Learn More{" "}
+        </HelperLink>
       </ModalDescription>
 
       <Spacer y="lg" />

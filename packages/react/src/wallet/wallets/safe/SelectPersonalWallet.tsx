@@ -39,7 +39,7 @@ export const SelectpersonalWallet: React.FC<{
         />
       </IconContainer>
       <Spacer y="lg" />
-      <ModalTitle>Choose your Wallet</ModalTitle>
+      <ModalTitle>Link Personal Wallet</ModalTitle>
       <Spacer y="sm" />
 
       <ModalDescription>
