@@ -15,17 +15,13 @@ type MetamaskConnectUIProps = ConnectUIProps & {
 
 export const MetamaskConnectUI = (props: MetamaskConnectUIProps) => {
   const [screen, setScreen] = useState<
-    "connecting" | "loading" | "scanning" | "get-started"
-  >("loading");
+    "connecting" | "scanning" | "get-started"
+  >("connecting");
   const { configuredWallet, onConnect } = props;
   const connect = useConnect();
 
   const connectPrompted = useRef(false);
   useEffect(() => {
-    if (screen !== "loading") {
-      return;
-    }
-
     if (connectPrompted.current) {
       return;
     }
@@ -60,9 +56,9 @@ export const MetamaskConnectUI = (props: MetamaskConnectUIProps) => {
         }
       }
     })();
-  }, [screen, configuredWallet, onConnect, connect]);
+  }, [configuredWallet, onConnect, connect]);
 
-  if (screen === "connecting" || screen === "loading") {
+  if (screen === "connecting") {
     return (
       <ConnectingScreen
         onBack={props.goBack}

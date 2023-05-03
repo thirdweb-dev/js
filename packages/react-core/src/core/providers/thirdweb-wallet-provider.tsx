@@ -144,10 +144,10 @@ export function ThirdwebWalletProvider(
       connectParams?: ConnectParams<Record<string, any>>,
       isAutoConnect = false,
     ) => {
-      const _signer = await wallet.getSigner();
-      setSigner(_signer);
       setActiveWallet(wallet);
       setConnectionStatus("connected");
+      const _signer = await wallet.getSigner();
+      setSigner(_signer);
 
       // it autoconnected, then the details is already saved in storage, no need to store again
       if (isAutoConnect) {
