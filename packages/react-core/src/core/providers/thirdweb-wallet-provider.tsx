@@ -63,7 +63,6 @@ type ThirdwebWalletContextData = {
   switchChain: (chain: number) => Promise<void>;
   chainToConnect?: Chain;
   activeChain: Chain;
-  guestMode?: boolean;
   handleWalletConnect: (
     wallet: WalletInstance,
     params?: ConnectParams<Record<string, any>>,
@@ -83,7 +82,6 @@ export function ThirdwebWalletProvider(
     dAppMeta?: DAppMetaData;
     chains: Chain[];
     autoSwitch?: boolean;
-    guestMode?: boolean;
   }>,
 ) {
   const [signer, setSigner] = useState<Signer | undefined>(undefined);
@@ -257,7 +255,14 @@ export function ThirdwebWalletProvider(
       const personalWalletInfo = walletInfo.connectParams?.personalWallet;
 
       if (personalWalletInfo) {
-        const personalWallets = walletObj?.config?.personalWallets as Wallet[];
+        type Config = {
+          personalWallets: Wallet[];
+        };
+
+        const personalWallets =
+          "config" in walletObj
+            ? (walletObj.config as Config).personalWallets
+            : [];
 
         const personalWalleObj = personalWallets.find(
           (W) => W.id === personalWalletInfo.walletId,
@@ -354,6 +359,12 @@ export function ThirdwebWalletProvider(
     }
 
     await activeWallet.disconnect();
+    if (activeWallet.getPersonalWallet()) {
+      await (
+        activeWallet.getPersonalWallet() as AbstractClientWallet
+      )?.disconnect();
+    }
+
     onWalletDisconnect();
   }, [activeWallet, onWalletDisconnect]);
 
@@ -398,7 +409,6 @@ export function ThirdwebWalletProvider(
         handleWalletConnect,
         activeChain: props.activeChain,
         chainToConnect,
-        guestMode: props.guestMode,
       }}
     >
       {props.children}

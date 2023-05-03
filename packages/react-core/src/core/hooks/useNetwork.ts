@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import { useActiveChain, useChainId } from "../../evm/hooks/wallet";
 import { useSupportedChains } from "../../evm/hooks/useSupportedChains";
 import { useSwitchChain, useWallet } from "./wallet-hooks";
-import { assertWindowEthereum } from "@thirdweb-dev/wallets";
+import { assertWindowEthereum, walletIds } from "@thirdweb-dev/wallets";
 
 // this hook is only for backwards compatibility
 
@@ -72,10 +72,10 @@ export function useNetwork(): [NetworkMetadata, SwitchNetwork | undefined] {
   // switch not supported if connected to a mobile wallet
   const switchChainNotSupported =
     !wallet ||
-    wallet.walletId === "walletConnectV1" ||
-    wallet.walletId === "walletConnect" ||
-    (wallet.walletId === "metamask" && !isMetamaskInstalled) ||
-    (wallet.walletId === "coinbaseWallet" && !isCoinbaseInstalled);
+    wallet.walletId === walletIds.walletConnectV1 ||
+    wallet.walletId === walletIds.walletConnect ||
+    (wallet.walletId === walletIds.metamask && !isMetamaskInstalled) ||
+    (wallet.walletId === walletIds.coinbase && !isCoinbaseInstalled);
 
   // error when switching network
   const [error, setError] = useState<Error | undefined>(undefined);

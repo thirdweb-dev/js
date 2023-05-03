@@ -13,7 +13,7 @@ import {
 import { ENTRYPOINT_ADDRESS } from "./lib/constants";
 import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
-import { BigNumber, providers } from "ethers";
+import { BigNumber, ethers, providers } from "ethers";
 import {
   getChainProvider,
   SmartContract,
@@ -171,7 +171,10 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
   private defaultFactoryInfo(): FactoryContractInfo {
     return {
       createAccount: async (factory: SmartContract, owner: string) => {
-        return factory.prepare("createAccount", [owner]);
+        return factory.prepare("createAccount", [
+          owner,
+          ethers.utils.toUtf8Bytes(""),
+        ]);
       },
       getAccountAddress: async (factory, owner) => {
         return factory.call("getAddress", [owner]);

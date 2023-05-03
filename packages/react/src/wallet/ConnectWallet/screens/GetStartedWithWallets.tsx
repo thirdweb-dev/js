@@ -8,14 +8,14 @@ import {
 import { fontSize, iconSize, spacing, Theme } from "../../../design-system";
 import { GetStartedScreen } from "./GetStartedScreen";
 import styled from "@emotion/styled";
-import { WalletMeta } from "../../types";
+import { WalletInfo } from "../../types";
 import { SecondaryText } from "../../../components/text";
 
 export const GetStartedWithWallets: React.FC<{
   onBack: () => void;
-  walletMeta: WalletMeta;
-}> = ({ walletMeta, onBack }) => {
-  const { meta } = walletMeta;
+  walletInfo: WalletInfo;
+}> = ({ walletInfo, onBack }) => {
+  const { meta } = walletInfo.wallet;
 
   return (
     <GetStartedScreen

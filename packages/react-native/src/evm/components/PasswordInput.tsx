@@ -38,9 +38,17 @@ export const PasswordInput = ({
       />
       <TouchableOpacity onPress={onPressEyeIcon}>
         {showPassword ? (
-          <EyeClosed size={18} color={theme.colors.iconSecondary} />
+          <EyeClosed
+            width={18}
+            height={18}
+            color={theme.colors.iconSecondary}
+          />
         ) : (
-          <EyeOpened size={18} color={theme.colors.iconSecondary} />
+          <EyeOpened
+            width={18}
+            height={18}
+            color={theme.colors.iconSecondary}
+          />
         )}
       </TouchableOpacity>
     </Box>

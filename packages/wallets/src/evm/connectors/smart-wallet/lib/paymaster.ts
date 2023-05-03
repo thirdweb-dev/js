@@ -43,7 +43,6 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
     };
     const op = await ethers.utils.resolveProperties(pmOp);
 
-    // console.log("PM - op", op);
     const preVerificationGas = calcPreVerificationGas(op);
     op.preVerificationGas = preVerificationGas;
     // TODO refactor this code out instead of modifying the passed-in userOp in place
@@ -69,13 +68,12 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
         const result = (res.result as any).paymasterAndData || res.result;
         return result.toString();
       } else {
-        console.log("PM - error", JSON.stringify(res));
         throw new Error(
           `Paymaster returned no result from: ${this.paymasterUrl}`,
         );
       }
     } catch (e) {
-      console.log("PM - error", (e as any).result?.error || e);
+      console.error("PM - error", (e as any).result?.error || e);
       throw e;
     }
   }

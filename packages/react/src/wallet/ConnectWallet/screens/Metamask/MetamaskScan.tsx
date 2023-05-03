@@ -1,27 +1,28 @@
 import { ScanScreen } from "../ScanScreen";
 import {
   useCreateWalletInstance,
-  useSupportedWallet,
   useThirdwebWallet,
-  Wallet,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 
-import type { MetaMaskWallet } from "@thirdweb-dev/wallets";
+import { MetaMaskWallet } from "@thirdweb-dev/wallets";
+import { useWalletInfo } from "../../walletInfo";
 
 export const ScanMetamask: React.FC<{
   onBack: () => void;
   onGetStarted: () => void;
   onConnected: () => void;
 }> = (props) => {
-  const metamaskWallet = useSupportedWallet("metamask") as Wallet;
+  const metamaskInfo = useWalletInfo("metamask", true);
+  const { wallet } = metamaskInfo;
+
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const twWalletContext = useThirdwebWallet();
   const { onConnected } = props;
 
   useEffect(() => {
-    const metamask = createInstance(metamaskWallet) as MetaMaskWallet;
+    const metamask = createInstance(wallet) as MetaMaskWallet;
 
     metamask.connectWithQrCode({
       chainId: twWalletContext.chainToConnect?.chainId,
@@ -33,15 +34,15 @@ export const ScanMetamask: React.FC<{
         onConnected();
       },
     });
-  }, [createInstance, twWalletContext, onConnected, metamaskWallet]);
+  }, [createInstance, twWalletContext, onConnected, wallet]);
 
   return (
     <ScanScreen
       onBack={props.onBack}
       onGetStarted={props.onGetStarted}
       qrCodeUri={qrCodeUri}
-      walletName={metamaskWallet.meta.name}
-      walletIconURL={metamaskWallet.meta.iconURL}
+      walletName={wallet.meta.name}
+      walletIconURL={wallet.meta.iconURL}
     />
   );
 };
