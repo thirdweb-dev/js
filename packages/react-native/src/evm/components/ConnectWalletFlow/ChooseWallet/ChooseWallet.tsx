@@ -5,16 +5,16 @@ import {
 import { ModalFooter } from "../../base/modal/ModalFooter";
 import { ModalHeaderTextClose } from "../../base/modal/ModalHeaderTextClose";
 import { ChooseWalletContent } from "./ChooseWalletContent";
-import { Wallet } from "@thirdweb-dev/react-core";
+import { ConfiguredWallet } from "@thirdweb-dev/react-core";
 import { ReactNode, useState } from "react";
 import { View } from "react-native";
 
 export type ChooseWalletProps = {
   headerText?: ReactNode | string;
   subHeaderText?: ReactNode | string;
-  onChooseWallet: (wallet: Wallet) => void;
+  onChooseWallet: (wallet: ConfiguredWallet) => void;
   onClose: () => void;
-  wallets: Wallet[];
+  wallets: ConfiguredWallet[];
   excludeWalletIds?: string[];
   showGuestWalletAsButton?: boolean;
 };

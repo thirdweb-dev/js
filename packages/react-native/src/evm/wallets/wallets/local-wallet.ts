@@ -3,7 +3,7 @@ import {
   TWConnector,
   walletIds,
 } from "@thirdweb-dev/wallets";
-import { Wallet } from "@thirdweb-dev/react-core";
+import { ConfiguredWallet } from "@thirdweb-dev/react-core";
 import type { WalletOptions } from "@thirdweb-dev/wallets";
 import { ethers, utils } from "ethers";
 import { createSecureStorage } from "../../../core/SecureStorage";
@@ -54,5 +54,5 @@ export const localWallet = (displayName?: string) => {
         walletStorage: asyncStorage,
         storage: secureStorage,
       }) as LocalWalletCore,
-  } satisfies Wallet;
+  } satisfies ConfiguredWallet;
 };

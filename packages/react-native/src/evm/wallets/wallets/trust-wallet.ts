@@ -7,7 +7,7 @@ import type {
 } from "@thirdweb-dev/wallets";
 import {
   WalletOptions as WalletOptionsRC,
-  Wallet,
+  ConfiguredWallet,
 } from "@thirdweb-dev/react-core";
 import { WalletConnect } from "@thirdweb-dev/wallets";
 import { Linking } from "react-native";
@@ -67,5 +67,5 @@ export const trustWallet = () => {
     id: TrustWallet.id,
     meta: TrustWallet.meta,
     create: (options: WalletOptionsRC) => new TrustWallet(options),
-  } satisfies Wallet;
+  } satisfies ConfiguredWallet;
 };

@@ -3,7 +3,7 @@ import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
   ThirdwebProviderCore,
   ThirdwebProviderCoreProps,
-  Wallet,
+  ConfiguredWallet,
 } from "@thirdweb-dev/react-core";
 import { PropsWithChildren } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
@@ -26,7 +26,7 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
    * />
    * ```
    */
-  supportedWallets?: Wallet[];
+  supportedWallets?: ConfiguredWallet[];
 }
 
 /**

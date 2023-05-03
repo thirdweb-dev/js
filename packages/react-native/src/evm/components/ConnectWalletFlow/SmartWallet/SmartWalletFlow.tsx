@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import {
-  Wallet,
+  ConfiguredWallet,
   WalletInstance,
   useConnect,
   useCreateWalletInstance,
@@ -77,7 +77,7 @@ export const SmartWalletFlow = ({
   }, [connectSmartWallet, connectedPersonalWallet, mismatch]);
 
   const connectPersonalWallet = useCallback(
-    async (wallet: Wallet) => {
+    async (wallet: ConfiguredWallet) => {
       setIsConnecting(true);
       const walletInstance = createWalletInstance(wallet);
       await walletInstance.connect();
@@ -95,7 +95,7 @@ export const SmartWalletFlow = ({
   };
 
   const onChoosePersonalWallet = useCallback(
-    async (wallet: Wallet) => {
+    async (wallet: ConfiguredWallet) => {
       if (wallet.id === LocalWallet.id) {
         setShowLocalWalletFlow(true);
       } else {
