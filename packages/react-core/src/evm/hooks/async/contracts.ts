@@ -569,7 +569,8 @@ export function useContractRead<
           functionName: string,
           args?: unknown[],
           overrides?: CallOverrides,
-        ) => Promise<any>
+          // @ts-expect-error
+        ) => Promise<ReturnType<TContract["functions"][TFunctionName]>>
       )(functionName, args, overrides);
     },
     {
@@ -628,7 +629,7 @@ export function useContractWrite<
       args,
       overrides,
     }: {
-      // @ts-expect-error
+      // @ts-expect-error (TContractAddress)
       args?: TContract extends BaseContractForAddress<TContractAddress>
         ? TFunctionName extends keyof TContract["functions"]
           ? Parameters<TContract["functions"][TFunctionName]>
@@ -641,8 +642,13 @@ export function useContractWrite<
 
       return (
         contract.call as (
-          functionName: string,
-          args?: unknown[],
+          functionName: TFunctionName & string,
+          // @ts-expect-error (TContractAddress)
+          args?: TContract extends BaseContractForAddress<TContractAddress>
+            ? TFunctionName extends keyof TContract["functions"]
+              ? Parameters<TContract["functions"][TFunctionName]>
+              : unknown[]
+            : unknown[],
           overrides?: CallOverrides,
         ) => Promise<any>
       )(functionName, args, overrides);
