@@ -538,6 +538,13 @@ export function useContractRead<
       ? keyof TContract["functions"]
       : never
     : Parameters<TContractInstance["call"]>[0],
+  TArgs extends TContractAddress extends GeneratedContractAddress
+    ? TContract extends BaseContractForAddress<TContractAddress>
+      ? TFunctionName extends keyof TContract["functions"]
+        ? Parameters<TContract["functions"][TFunctionName]>
+        : unknown[]
+      : unknown[]
+    : unknown[],
 >(
   contract: TContractInstance extends ValidContractInstance
     ? RequiredParam<TContractInstance> | undefined
@@ -547,15 +554,7 @@ export function useContractRead<
         | undefined
     : RequiredParam<SmartContract> | undefined,
   functionName: RequiredParam<TFunctionName & string>,
-
-  args?: TContractAddress extends GeneratedContractAddress
-    ? TContract extends BaseContractForAddress<TContractAddress>
-      ? TFunctionName extends keyof TContract["functions"]
-        ? Parameters<TContract["functions"][TFunctionName]>
-        : unknown[]
-      : unknown[]
-    : unknown[],
-
+  args?: TArgs,
   overrides?: CallOverrides,
 ) {
   const contractAddress = contract?.getAddress();
@@ -566,10 +565,9 @@ export function useContractRead<
       requiredParamInvariant(functionName, "function name must be provided");
       return (
         contract.call as (
-          functionName: string,
-          args?: unknown[],
+          functionName: TFunctionName,
+          args?: TArgs,
           overrides?: CallOverrides,
-          // @ts-expect-error
         ) => Promise<ReturnType<TContract["functions"][TFunctionName]>>
       )(functionName, args, overrides);
     },
@@ -607,9 +605,16 @@ export function useContractWrite<
     : ValidContractInstance,
   TFunctionName extends TContractAddress extends GeneratedContractAddress
     ? TContract extends BaseContractForAddress<TContractAddress>
-      ? keyof TContract["functions"] // both generated address and a basecontract thingy
-      : never // generated but not a basecontract thingy (shouldn't happen)
-    : Parameters<TContractInstance["call"]>[0], // not generated
+      ? keyof TContract["functions"]
+      : never
+    : Parameters<TContractInstance["call"]>[0],
+  TArgs extends TContractAddress extends GeneratedContractAddress
+    ? TContract extends BaseContractForAddress<TContractAddress>
+      ? TFunctionName extends keyof TContract["functions"]
+        ? Parameters<TContract["functions"][TFunctionName]>
+        : unknown[]
+      : unknown[]
+    : any[],
 >(
   contract: TContractInstance extends ValidContractInstance
     ? RequiredParam<TContractInstance> | undefined
@@ -624,17 +629,20 @@ export function useContractWrite<
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
-  return useMutation(
+  return useMutation<
+    ReturnType<TContract["functions"][TFunctionName]>,
+    unknown,
+    {
+      args?: TArgs | undefined;
+      overrides?: CallOverrides | undefined;
+    },
+    unknown
+  >(
     async ({
       args,
       overrides,
     }: {
-      // @ts-expect-error (TContractAddress)
-      args?: TContract extends BaseContractForAddress<TContractAddress>
-        ? TFunctionName extends keyof TContract["functions"]
-          ? Parameters<TContract["functions"][TFunctionName]>
-          : unknown[]
-        : unknown[];
+      args?: TArgs;
       overrides?: CallOverrides;
     }) => {
       requiredParamInvariant(contract, "contract must be defined");
@@ -642,15 +650,10 @@ export function useContractWrite<
 
       return (
         contract.call as (
-          functionName: TFunctionName & string,
-          // @ts-expect-error (TContractAddress)
-          args?: TContract extends BaseContractForAddress<TContractAddress>
-            ? TFunctionName extends keyof TContract["functions"]
-              ? Parameters<TContract["functions"][TFunctionName]>
-              : unknown[]
-            : unknown[],
+          functionName: TFunctionName,
+          args?: TArgs,
           overrides?: CallOverrides,
-        ) => Promise<any>
+        ) => Promise<ReturnType<TContract["functions"][TFunctionName]>>
       )(functionName, args, overrides);
     },
     {
