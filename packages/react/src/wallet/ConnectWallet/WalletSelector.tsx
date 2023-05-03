@@ -13,6 +13,7 @@ import {
 import styled from "@emotion/styled";
 import { ConfiguredWallet } from "@thirdweb-dev/react-core";
 import { useConfiguredWallet } from "../hooks/useConfiguredWallet";
+import { walletIds } from "@thirdweb-dev/wallets";
 
 export const WalletSelector: React.FC<{
   configuredWallets: ConfiguredWallet[];
@@ -20,6 +21,9 @@ export const WalletSelector: React.FC<{
   onGetStarted: () => void;
 }> = (props) => {
   const localWalletInfo = useConfiguredWallet("localWallet", false);
+  const configuredWallets = props.configuredWallets.filter(
+    (w) => w.id !== walletIds.localWallet,
+  );
 
   const showGetStarted =
     !localWalletInfo && !!props.configuredWallets[0].meta.urls;
@@ -30,7 +34,7 @@ export const WalletSelector: React.FC<{
       <Spacer y="xl" />
 
       <WalletSelection
-        configuredWallets={props.configuredWallets}
+        configuredWallets={configuredWallets}
         selectWallet={props.selectWallet}
       />
 
