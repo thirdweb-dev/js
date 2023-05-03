@@ -49,6 +49,10 @@ export const SelectPersonalWallet: React.FC<{
           md
           href="https://portal.thirdweb.com/wallet/smart-wallet"
           target="_blank"
+          style={{
+            display: "inline",
+            whiteSpace: "nowrap",
+          }}
         >
           {" "}
           Learn More{" "}
