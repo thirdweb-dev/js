@@ -53,13 +53,6 @@ export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
    */
   autoConnect?: boolean;
 
-  /**
-   * Whether or not to show a "Join as Guest" option in the wallet modal.
-   *
-   * Join as guest will connect the user to the dApp using a guess wallet users can export.
-   */
-  guestMode?: boolean;
-
   theme?: "light" | "dark";
 
   createWalletStorage?: CreateAsyncStorage;
@@ -119,7 +112,7 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
       );
       if (!resolveChain) {
         throw new Error(
-          `Invalid chainId: ${activeChainIdOrObjWithKey}, It is not one of supportedChains`,
+          `Invalid chainId: ${activeChainIdOrObjWithKey}. It is not one of supportedChains`,
         );
       }
       return resolveChain;
@@ -131,7 +124,7 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
       );
       if (!resolvedChain) {
         throw new Error(
-          `Invalid chain: "${activeChainIdOrObjWithKey}", It is not one of supportedChains`,
+          `Invalid chain: "${activeChainIdOrObjWithKey}". It is not one of supportedChains`,
         );
       }
       return resolvedChain;
@@ -152,7 +145,6 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
         dAppMeta={dAppMeta}
         activeChain={activeChainWithKey}
         autoSwitch={props.autoSwitch}
-        guestMode={props.guestMode}
       >
         <ThirdwebSDKProviderWrapper
           queryClient={props.queryClient}

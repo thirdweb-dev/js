@@ -1,5 +1,6 @@
 import type { CoinbaseWalletConnector } from "../connectors/coinbase-wallet";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
+import { walletIds } from "../constants/walletIds";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import { Buffer } from "buffer";
 
@@ -25,7 +26,7 @@ export class CoinbaseWallet extends AbstractClientWallet {
     },
   };
 
-  static id = "coinbaseWallet" as const;
+  static id = walletIds.coinbase;
   public get walletName() {
     return "Coinbase Wallet" as const;
   }

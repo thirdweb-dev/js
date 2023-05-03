@@ -5,83 +5,44 @@ import {
   ModalTitle,
   ModalDescription,
 } from "../../../../components/modalElements";
-import { LocalWalletModalHeader } from "./common";
-import { Theme } from "../../../../design-system";
+import { Theme, iconSize } from "../../../../design-system";
 import styled from "@emotion/styled";
 import { fontSize } from "../../../../design-system";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { FormFieldWithIconButton } from "../../../../components/formFields";
 import { useEffect, useState } from "react";
-import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { shortenAddress } from "../../../../evm/utils/addresses";
-import { isCredentialsSupported, getCredentials } from "./credentials";
+import { LocalWallet } from "@thirdweb-dev/wallets";
+import { GenericWalletIcon } from "../../icons/GenericWalletIcon";
 
 export const ExportLocalWallet: React.FC<{
   onBack: () => void;
   onExport: () => void;
+  localWallet: LocalWallet;
 }> = (props) => {
-  const { localWallet, walletData } = useLocalWalletInfo();
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isWrongPassword, setIsWrongPassword] = useState(false);
-  const [address, setAddress] = useState<string | undefined>(undefined);
+  const [address, setAddress] = useState("");
 
   useEffect(() => {
-    if (walletData === "loading") {
-      return;
-    }
-    if (isCredentialsSupported) {
-      getCredentials().then((cred) => {
-        if (cred) {
-          setAddress(cred.id);
-        }
-      });
-    } else {
-      setAddress(walletData?.address);
-    }
-  }, [walletData]);
+    props.localWallet.getAddress().then((add) => {
+      setAddress(add);
+    });
+  }, [props.localWallet]);
 
   const exportFromLocalStorage = async () => {
-    if (!walletData || walletData === "loading" || !localWallet) {
+    if (!props.localWallet) {
       throw new Error("invalid state");
     }
 
     try {
-      await localWallet.import({
-        encryptedJson: walletData.data,
-        password,
-      });
+      // await props.localWallet.import({
+      //   encryptedJson: walletData.data,
+      //   password,
+      // });
 
-      const json = await localWallet.export({
-        strategy: "encryptedJson",
-        password,
-      });
-
-      downloadAsFile(JSON.parse(json), "wallet.json", "application/json");
-      props.onExport();
-    } catch (e) {
-      setIsWrongPassword(true);
-      return;
-    }
-  };
-
-  const exportFromCredentials = async () => {
-    if (!localWallet) {
-      throw new Error("invalid state");
-    }
-
-    try {
-      const creds = await getCredentials();
-      if (!creds) {
-        throw new Error("No credentials found");
-      }
-
-      await localWallet.import({
-        privateKey: creds?.password,
-        encryption: false,
-      });
-
-      const json = await localWallet.export({
+      const json = await props.localWallet.export({
         strategy: "encryptedJson",
         password,
       });
@@ -96,7 +57,8 @@ export const ExportLocalWallet: React.FC<{
 
   return (
     <>
-      <LocalWalletModalHeader onBack={props.onBack} />
+      <GenericWalletIcon size={iconSize.xl} />
+      <Spacer y="lg" />
       <ModalTitle
         style={{
           textAlign: "left",
@@ -117,18 +79,14 @@ export const ExportLocalWallet: React.FC<{
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if (isCredentialsSupported) {
-            exportFromCredentials();
-          } else {
-            exportFromLocalStorage();
-          }
+          exportFromLocalStorage();
         }}
       >
         <Label>Wallet Address</Label>
         <Spacer y="sm" />
 
         <SavedWalletAddress>
-          {shortenAddress(address || "") || "Loading..."}
+          {address ? shortenAddress(address) : "Loading"}
         </SavedWalletAddress>
 
         <Spacer y="lg" />
@@ -138,7 +96,7 @@ export const ExportLocalWallet: React.FC<{
           type="text"
           name="username"
           autoComplete="off"
-          value={address || ""}
+          value={address}
           disabled
           style={{ display: "none" }}
         />

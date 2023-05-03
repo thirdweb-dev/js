@@ -1,7 +1,7 @@
 import { MagicLink, MagicLinkAdditionalOptions } from "@thirdweb-dev/wallets";
 import type { Wallet, WalletOptions } from "@thirdweb-dev/react-core";
 
-export type MagicLinkWallet = Wallet & { config: MagicLinkAdditionalOptions };
+export type MagicLinkWallet = Wallet<MagicLink, MagicLinkAdditionalOptions>;
 
 export const magicLink = (config: MagicLinkAdditionalOptions) => {
   return {
