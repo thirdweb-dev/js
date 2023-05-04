@@ -275,7 +275,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
     functionName: string & TMethod,
     args?: Parameters<MarketplaceV3Contract["functions"][TMethod]>,
     overrides?: CallOverrides,
-  ): Promise<any> {
+  ): Promise<ReturnType<MarketplaceV3Contract["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, args, overrides);
   }
 

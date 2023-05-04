@@ -615,7 +615,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
     functionName: string & TMethod,
     args?: Parameters<PrebuiltNFTDrop["functions"][TMethod]>,
     overrides?: CallOverrides,
-  ): Promise<any> {
+  ): Promise<ReturnType<PrebuiltNFTDrop["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, args, overrides);
   }
 }
