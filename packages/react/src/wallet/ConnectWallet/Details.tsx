@@ -23,7 +23,6 @@ import styled from "@emotion/styled";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {
   ChevronRightIcon,
-  PersonIcon,
   PinBottomIcon,
   ShuffleIcon,
 } from "@radix-ui/react-icons";
