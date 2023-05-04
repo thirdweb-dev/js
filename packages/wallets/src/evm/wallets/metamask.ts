@@ -26,6 +26,7 @@ export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptio
   metamaskConnector?: MetamaskConnectorType;
   isInjected: boolean;
 
+  // TODO: remove this
   static meta = {
     name: "MetaMask",
     iconURL:

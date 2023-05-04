@@ -14,6 +14,8 @@ export type CoinbaseWalletOptions = WalletOptions<{ headlessMode?: boolean }>;
 export class CoinbaseWallet extends AbstractClientWallet {
   connector?: TWConnector;
   coinbaseConnector?: CoinbaseWalletConnector;
+
+  // TODO: remove this
   static meta = {
     iconURL:
       "ipfs://QmcJBHopbwfJcLqJpX2xEufSS84aLbF7bHavYhaXUcrLaH/coinbase.svg",

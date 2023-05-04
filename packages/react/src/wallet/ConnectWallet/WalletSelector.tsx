@@ -11,35 +11,43 @@ import {
   Theme,
 } from "../../design-system";
 import styled from "@emotion/styled";
-import { useWalletInfo, useWalletsInfo } from "./walletInfo";
-import { WalletInfo } from "../types";
+import { ConfiguredWallet } from "@thirdweb-dev/react-core";
+import { useConfiguredWallet } from "../hooks/useConfiguredWallet";
 import { walletIds } from "@thirdweb-dev/wallets";
 
 export const WalletSelector: React.FC<{
+  configuredWallets: ConfiguredWallet[];
+  selectWallet: (wallet: ConfiguredWallet) => void;
   onGetStarted: () => void;
-  onGuestConnect: () => void;
 }> = (props) => {
-  const _allWalletsInfo = useWalletsInfo();
-  const allWalletsInfo = _allWalletsInfo.filter(
-    (w) => w.wallet.id !== walletIds.localWallet,
+  const localWalletInfo = useConfiguredWallet("localWallet", false);
+  const configuredWallets = props.configuredWallets.filter(
+    (w) => w.id !== walletIds.localWallet,
   );
-  const localWalletInfo = useWalletInfo("localWallet", false);
 
   const showGetStarted =
-    !localWalletInfo && !!allWalletsInfo[0].wallet.meta.urls;
+    !localWalletInfo && !!props.configuredWallets[0].meta.urls;
 
   return (
     <>
       <ModalTitle>Choose your wallet</ModalTitle>
       <Spacer y="xl" />
 
-      <WalletSelection walletsInfo={allWalletsInfo} />
+      <WalletSelection
+        configuredWallets={configuredWallets}
+        selectWallet={props.selectWallet}
+      />
 
       {localWalletInfo && (
         <>
           <Spacer y="xl" />
           <Flex justifyContent="center">
-            <Button variant="link" onClick={props.onGuestConnect}>
+            <Button
+              variant="link"
+              onClick={() => {
+                props.selectWallet(localWalletInfo);
+              }}
+            >
               Continue as guest
             </Button>
           </Flex>
@@ -66,15 +74,19 @@ export const WalletSelector: React.FC<{
   );
 };
 
-export const WalletSelection: React.FC<{ walletsInfo: WalletInfo[] }> = ({
-  walletsInfo,
-}) => {
+export const WalletSelection: React.FC<{
+  configuredWallets: ConfiguredWallet[];
+  selectWallet: (wallet: ConfiguredWallet) => void;
+}> = (props) => {
   // show the installed wallets first
-  const sortedWalletsInfo = walletsInfo.sort((a, b) => {
-    if (a.installed && !b.installed) {
+  const configuredWallets = props.configuredWallets.sort((a, b) => {
+    const aInstalled = a.isInstalled ? a.isInstalled() : false;
+    const bInstalled = b.isInstalled ? b.isInstalled() : false;
+
+    if (aInstalled && !bInstalled) {
       return -1;
     }
-    if (!a.installed && b.installed) {
+    if (!aInstalled && bInstalled) {
       return 1;
     }
     return 0;
@@ -82,23 +94,26 @@ export const WalletSelection: React.FC<{ walletsInfo: WalletInfo[] }> = ({
 
   return (
     <WalletList>
-      {sortedWalletsInfo.map((walletInfo) => {
+      {configuredWallets.map((configuredWallet) => {
+        const isInstalled = configuredWallet.isInstalled
+          ? configuredWallet.isInstalled()
+          : false;
         return (
-          <li key={walletInfo.wallet.id}>
+          <li key={configuredWallet.id}>
             <WalletButton
               type="button"
               onClick={() => {
-                walletInfo.connect();
+                props.selectWallet(configuredWallet);
               }}
             >
               <Img
-                src={walletInfo.wallet.meta.iconURL}
+                src={configuredWallet.meta.iconURL}
                 width={iconSize.lg}
                 height={iconSize.lg}
                 loading="eager"
               />
-              <WalletName>{walletInfo.wallet.meta.name}</WalletName>
-              {walletInfo.installed && <InstallBadge> Installed </InstallBadge>}
+              <WalletName>{configuredWallet.meta.name}</WalletName>
+              {isInstalled && <InstallBadge> Installed </InstallBadge>}
             </WalletButton>
           </li>
         );

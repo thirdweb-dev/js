@@ -15,7 +15,7 @@ export function usePaperWallet() {
       const { paperWallet } = await import(
         "../../../wallet/wallets/paperWallet"
       );
-      connect(paperWallet({ clientId: options.clientId }), options);
+      return connect(paperWallet({ clientId: options.clientId }), options);
     },
     [connect],
   );

@@ -4,7 +4,7 @@ import { TWModal } from "../base/modal/TWModal";
 import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
 import {
-  Wallet,
+  ConfiguredWallet,
   useConnect,
   useIsConnecting,
   useThirdwebWallet,
@@ -19,7 +19,9 @@ import { LocalWallet } from "../../wallets/wallets/local-wallet";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [activeWallet, setActiveWallet] = useState<Wallet | undefined>();
+  const [activeWallet, setActiveWallet] = useState<
+    ConfiguredWallet | undefined
+  >();
   const [isConnecting, setIsConnecting] = useState(false);
   const supportedWallets = useWallets();
   const isWalletConnecting = useIsConnecting();
@@ -66,7 +68,7 @@ export const ConnectWalletFlow = () => {
     twWalletContext?.handleWalletConnect(localWallet);
   };
 
-  const connectActiveWallet = async (wallet: Wallet) => {
+  const connectActiveWallet = async (wallet: ConfiguredWallet) => {
     setIsConnecting(true);
     connect(wallet, {}).catch((error) => {
       console.error("Error connecting to the wallet", error);
@@ -74,7 +76,7 @@ export const ConnectWalletFlow = () => {
     });
   };
 
-  const onChooseWallet = (wallet: Wallet) => {
+  const onChooseWallet = (wallet: ConfiguredWallet) => {
     setActiveWallet(() => wallet);
 
     if (wallet.id !== SmartWallet.id) {
@@ -91,7 +93,7 @@ export const ConnectWalletFlow = () => {
     setIsConnecting(false);
   };
 
-  function getComponentForWallet(activeWalletP: Wallet) {
+  function getComponentForWallet(activeWalletP: ConfiguredWallet) {
     switch (activeWalletP.id) {
       case LocalWallet.id:
         return (

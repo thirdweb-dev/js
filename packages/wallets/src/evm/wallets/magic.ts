@@ -10,6 +10,7 @@ import { walletIds } from "../constants/walletIds";
 
 export type MagicLinkAdditionalOptions = MagicAuthOptions;
 export type MagicLinkOptions = WalletOptions<MagicAuthOptions>;
+export type MagicLinkConnectOptions = MagicAuthConnectOptions;
 export type MagicOAuthProvider = _OAuthProvider;
 
 export class MagicLink extends AbstractClientWallet<

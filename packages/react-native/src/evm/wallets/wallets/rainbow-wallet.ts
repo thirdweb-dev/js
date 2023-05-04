@@ -7,7 +7,7 @@ import { formatDisplayUri } from "../../utils/uri";
 import { Linking } from "react-native";
 import {
   WalletOptions as WalletOptionsRC,
-  Wallet,
+  ConfiguredWallet,
   ExtraCoreWalletOptions,
 } from "@thirdweb-dev/react-core";
 import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
@@ -66,5 +66,5 @@ export const rainbowWallet = () => {
     id: RainbowWallet.id,
     meta: RainbowWallet.meta,
     create: (options: WalletOptionsRC) => new RainbowWallet(options),
-  } satisfies Wallet;
+  } satisfies ConfiguredWallet;
 };

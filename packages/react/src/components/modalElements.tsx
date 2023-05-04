@@ -55,11 +55,11 @@ export const BackButton: React.FC<{
   );
 };
 
-export const HelperLink = styled.a<{ theme?: Theme }>`
+export const HelperLink = styled.a<{ theme?: Theme; md?: boolean }>`
   all: unset;
   cursor: pointer;
   color: ${(p) => p.theme.link.primary};
-  font-size: ${fontSize.sm};
+  font-size: ${(p) => (p.md ? fontSize.md : fontSize.sm)};
   text-decoration: none;
   display: block;
   ${media.mobile} {

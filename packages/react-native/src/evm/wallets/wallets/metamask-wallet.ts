@@ -8,7 +8,7 @@ import { formatDisplayUri } from "../../utils/uri";
 import { Linking } from "react-native";
 import {
   WalletOptions as WalletOptionsRC,
-  Wallet,
+  ConfiguredWallet,
   ExtraCoreWalletOptions,
 } from "@thirdweb-dev/react-core";
 import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
@@ -68,5 +68,5 @@ export const metamaskWallet = () => {
     id: MetaMaskWallet.id,
     meta: MetaMaskWallet.meta,
     create: (options: WalletOptionsRC) => new MetaMaskWallet(options),
-  } satisfies Wallet;
+  } satisfies ConfiguredWallet;
 };

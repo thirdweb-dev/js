@@ -20,6 +20,7 @@ export type WalletMeta = {
     android?: string;
     ios?: string;
     chrome?: string;
+    firefox?: string;
   };
 };
 

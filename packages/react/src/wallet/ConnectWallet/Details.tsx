@@ -45,7 +45,7 @@ import { Flex } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
 import { utils } from "ethers";
 import { GenericWalletIcon } from "./icons/GenericWalletIcon";
-import { ExportLocalWallet } from "./screens/LocalWallet/ExportLocalWallet";
+import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";

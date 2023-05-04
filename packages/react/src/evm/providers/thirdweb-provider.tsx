@@ -1,11 +1,11 @@
 import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
-  Wallet,
   ThirdwebProviderCore,
   ThirdwebProviderCoreProps,
+  ConfiguredWallet,
 } from "@thirdweb-dev/react-core";
 import { WalletUIStatesProvider } from "./wallet-ui-states-provider";
-import { ConnectModal } from "../../wallet/ConnectWallet/Connect";
+import { ConnectModal } from "../../wallet/ConnectWallet/ConnectModal";
 import { ThemeProvider } from "@emotion/react";
 import { darkTheme, lightTheme } from "../../design-system";
 import { PropsWithChildren } from "react";
@@ -30,7 +30,7 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
    * />
    * ```
    */
-  supportedWallets?: Wallet[];
+  supportedWallets?: ConfiguredWallet[];
 }
 
 /**
@@ -63,7 +63,7 @@ export const ThirdwebProvider = <
   children,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
-  const wallets: Wallet[] = supportedWallets || defaultWallets;
+  const wallets: ConfiguredWallet[] = supportedWallets || defaultWallets;
 
   return (
     <WalletUIStatesProvider theme={theme}>
