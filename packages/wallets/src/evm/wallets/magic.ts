@@ -83,4 +83,8 @@ export class MagicLink extends AbstractClientWallet<
     await magic.user.logout();
     return super.disconnect();
   }
+
+  async connect(options: MagicAuthConnectOptions) {
+    return super.connect(options);
+  }
 }
