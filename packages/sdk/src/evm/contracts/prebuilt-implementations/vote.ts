@@ -510,7 +510,7 @@ export class Vote implements UpdateableNetwork {
     functionName: string & TMethod,
     args?: Parameters<VoteERC20["functions"][TMethod]>,
     overrides?: CallOverrides,
-  ): Promise<any> {
+  ): Promise<ReturnType<VoteERC20["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, args, overrides);
   }
 }
