@@ -142,11 +142,12 @@ const STAKING = {
   showInExplore: true,
 } as const;
 
-const ACCOUNT_ABSTRACTION = {
-  id: "account-abstraction",
-  name: "Account Abstraction",
-  displayName: "Account Abstraction (Beta)",
-  description: "Auto deploy ERC-4337 Smart Wallets for your users.",
+const SMART_WALLET = {
+  id: "smart-wallet",
+  name: "Smart Wallet",
+  displayName: "Smart Wallet (Beta)",
+  description:
+    "Smart wallet factories that let you spin up Account Abstraction (ERC-4337) wallets for your users.",
   contracts: [
     "thirdweb.eth/AccountFactory",
     "thirdweb.eth/DynamicAccountFactory",
@@ -160,7 +161,7 @@ const CATEGORIES = {
   [NFTS.id]: NFTS,
   [MARKETS.id]: MARKETS,
   [DROPS.id]: DROPS,
-  [ACCOUNT_ABSTRACTION.id]: ACCOUNT_ABSTRACTION,
+  [SMART_WALLET.id]: SMART_WALLET,
   [AIRDROP.id]: AIRDROP,
   [GAMING.id]: GAMING,
   [COMMERCE.id]: COMMERCE,
