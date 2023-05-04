@@ -22,8 +22,9 @@ import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { ChevronRightIcon, ShuffleIcon } from "@radix-ui/react-icons";
-import { defaultChains, Localhost } from "@thirdweb-dev/chains";
+import { Localhost } from "@thirdweb-dev/chains";
 import {
+  useActiveChain,
   useAddress,
   useBalance,
   useChainId,
@@ -32,8 +33,9 @@ import {
   useSupportedChains,
   useThirdwebWallet,
   useWallet,
+  WalletInstance,
 } from "@thirdweb-dev/react-core";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { fadeInAnimation } from "../../components/FadeIn";
 import {
   AbstractClientWallet,
@@ -68,25 +70,12 @@ export const ConnectedWalletDetails: React.FC<{
   const address = useAddress();
   const balanceQuery = useBalance();
   const activeWallet = useWallet();
-  const walletContext = useThirdwebWallet();
-  const [personalWalletBalance, setPersonalWalletBalance] = useState<
-    string | undefined
-  >(undefined);
-  const [personalWalletAddress, setPersonalWalletAddress] = useState<
-    string | undefined
-  >(undefined);
   const [showExportModal, setShowExportModal] = useState(false);
+  const [wrapperWallet, setWrapperWallet] = useState<
+    WalletInstance | undefined
+  >();
 
-  const chain = useMemo(() => {
-    return chains.find((_chain) => _chain.chainId === walletChainId);
-  }, [walletChainId, chains]);
-
-  const unknownChain = useMemo(() => {
-    if (!chain) {
-      return defaultChains.find((c) => c.chainId === walletChainId);
-    }
-  }, [walletChainId, chain]);
-
+  const chain = useActiveChain();
   const activeWalletIconURL = activeWallet?.getMeta().iconURL || "";
 
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
@@ -99,24 +88,6 @@ export const ConnectedWalletDetails: React.FC<{
     | undefined;
 
   const disableSwitchChain = !!personalWallet;
-
-  // get personal wallet address and balance
-  useEffect(() => {
-    if (!personalWallet) {
-      setPersonalWalletAddress(undefined);
-      setPersonalWalletBalance(undefined);
-      return;
-    }
-    personalWallet.getAddress().then((_address) => {
-      setPersonalWalletAddress(_address);
-    });
-
-    personalWallet.getSigner().then((signer) => {
-      signer.getBalance().then((balance) => {
-        setPersonalWalletBalance(utils.formatEther(balance));
-      });
-    });
-  }, [personalWallet]);
 
   const trigger = (
     <WalletInfoButton
@@ -156,81 +127,40 @@ export const ConnectedWalletDetails: React.FC<{
   );
 
   const networkSwitcherButton = (
-    <MenuButton
-      id="current-network"
-      type="button"
-      disabled={disableSwitchChain}
-      onClick={() => {
-        setOpen(false);
-        setShowNetworkSelector(true);
-      }}
+    <ToolTip
+      tip={
+        disableSwitchChain ? "Network Switching is disabled" : "Switch Network"
+      }
     >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          position: "relative",
+      <MenuButton
+        id="current-network"
+        type="button"
+        disabled={disableSwitchChain}
+        onClick={() => {
+          setOpen(false);
+          setShowNetworkSelector(true);
         }}
       >
-        <ChainIcon chain={chain || unknownChain} size={iconSize.lg} active />
-      </div>
-      {chain?.name || unknownChain?.name || `Unknown chain #${walletChainId}`}
-      <StyledChevronRightIcon
-        width={iconSize.sm}
-        height={iconSize.sm}
-        style={{
-          flexShrink: 0,
-          marginLeft: "auto",
-        }}
-      />
-    </MenuButton>
-  );
-
-  const switchToPersonalWallet = personalWallet && (
-    <MenuButton
-      type="button"
-      onClick={() => {
-        walletContext.handleWalletConnect(personalWallet);
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          position: "relative",
-        }}
-      >
-        <Img
-          src={personalWallet.getMeta().iconURL}
-          width={iconSize.lg}
-          height={iconSize.lg}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            position: "relative",
+          }}
+        >
+          <ChainIcon chain={chain} size={iconSize.lg} active />
+        </div>
+        {chain?.name || `Unknown chain #${walletChainId}`}
+        <StyledChevronRightIcon
+          width={iconSize.sm}
+          height={iconSize.sm}
+          style={{
+            flexShrink: 0,
+            marginLeft: "auto",
+          }}
         />
-      </div>
-
-      <ColFlex>
-        {personalWalletBalance ? (
-          <WalletBalance>
-            {String(personalWalletBalance).slice(0, 5)}{" "}
-            {balanceQuery.data?.symbol}
-          </WalletBalance>
-        ) : (
-          <Skeleton height={fontSize.sm} width="82px" />
-        )}
-        <Spacer y="xxs" />
-        <WalletAddress>
-          {shortenString(personalWalletAddress || "")}
-        </WalletAddress>
-      </ColFlex>
-
-      <StyledChevronRightIcon
-        width={iconSize.sm}
-        height={iconSize.sm}
-        style={{
-          flexShrink: 0,
-          marginLeft: "auto",
-        }}
-      />
-    </MenuButton>
+      </MenuButton>
+    </ToolTip>
   );
 
   const content = (
@@ -310,20 +240,6 @@ export const ConnectedWalletDetails: React.FC<{
         {networkSwitcherButton}
       </div>
 
-      {/* Switch to Personal Wallet for Safe */}
-      {personalWallet && (
-        <div>
-          <Spacer y="lg" />
-          <DropdownLabel htmlFor="current-network">
-            Personal Wallet
-          </DropdownLabel>
-          <Spacer y="sm" />
-          <ToolTip tip="Switch To Personal Wallet">
-            {switchToPersonalWallet}
-          </ToolTip>
-        </div>
-      )}
-
       {/* Switch Account for Metamask */}
       {activeWallet?.walletId === walletIds.metamask && (
         <div>
@@ -333,6 +249,9 @@ export const ConnectedWalletDetails: React.FC<{
             onClick={() => {
               (activeWallet as MetaMaskWallet).switchAccount();
               setOpen(false);
+            }}
+            style={{
+              fontSize: fontSize.sm,
             }}
           >
             <ShuffleIcon width={iconSize.sm} height={iconSize.sm} />
@@ -391,6 +310,48 @@ export const ConnectedWalletDetails: React.FC<{
             Export Wallet{" "}
           </MenuButton>
         </>
+      )}
+
+      {/* Switch to Personal Wallet for Safe */}
+      {personalWallet && (
+        <div>
+          <Spacer y="lg" />
+          <DropdownLabel htmlFor="current-network">
+            Personal Wallet
+          </DropdownLabel>
+          <Spacer y="xs" />
+          <ToolTip tip="Switch To Personal Wallet">
+            <div>
+              <WalletSwitcher
+                wallet={personalWallet}
+                onSwitch={() => {
+                  setWrapperWallet(activeWallet);
+                }}
+              />
+            </div>
+          </ToolTip>
+        </div>
+      )}
+
+      {/* Switch to Wrapper Wallet */}
+      {wrapperWallet && (
+        <div>
+          <Spacer y="lg" />
+          <DropdownLabel htmlFor="current-network">
+            {wrapperWallet.getMeta().name}
+          </DropdownLabel>
+          <Spacer y="xs" />
+          <ToolTip tip={`Switch to ${wrapperWallet.getMeta().name}`}>
+            <div>
+              <WalletSwitcher
+                wallet={wrapperWallet}
+                onSwitch={() => {
+                  setWrapperWallet(undefined);
+                }}
+              />
+            </div>
+          </ToolTip>
+        </div>
       )}
     </div>
   );
@@ -581,6 +542,12 @@ const MenuButton = styled.button<{ theme?: Theme }>`
       display: none;
     }
   }
+
+  &[disabled]:hover {
+    transition: box-shadow 250ms ease, border-color 250ms ease;
+    border: 1px solid ${(props) => props.theme.text.danger};
+    box-shadow: 0 0 0 1px ${(props) => props.theme.text.danger};
+  }
 `;
 
 const MenuLink = MenuButton.withComponent("a");
@@ -611,3 +578,81 @@ const SecondaryIconContainer = styled.div<{ theme?: Theme }>`
   justify-content: center;
   color: ${(props) => props.theme.icon.secondary};
 `;
+
+function WalletSwitcher({
+  wallet,
+  onSwitch,
+}: {
+  wallet: WalletInstance;
+  onSwitch: () => void;
+}) {
+  const walletContext = useThirdwebWallet();
+  const balanceQuery = useBalance();
+  const [walletBalance, setWalletBalance] = useState<string | undefined>(
+    undefined,
+  );
+  const [address, setAddress] = useState<string | undefined>(undefined);
+
+  // get personal wallet address and balance
+  useEffect(() => {
+    if (!wallet) {
+      setAddress(undefined);
+      setWalletBalance(undefined);
+      return;
+    }
+    wallet.getAddress().then((_address) => {
+      setAddress(_address);
+    });
+
+    wallet.getSigner().then((signer) => {
+      signer.getBalance().then((balance) => {
+        setWalletBalance(utils.formatEther(balance));
+      });
+    });
+  }, [wallet]);
+
+  return (
+    <MenuButton
+      type="button"
+      onClick={() => {
+        walletContext.handleWalletConnect(wallet);
+        onSwitch();
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          position: "relative",
+        }}
+      >
+        <Img
+          src={wallet.getMeta().iconURL}
+          width={iconSize.lg}
+          height={iconSize.lg}
+        />
+      </div>
+
+      <ColFlex>
+        {walletBalance ? (
+          <WalletBalance>
+            {String(walletBalance).slice(0, 5)} {balanceQuery.data?.symbol}
+          </WalletBalance>
+        ) : (
+          <Skeleton height={fontSize.sm} width="82px" />
+        )}
+        <Spacer y="xxs" />
+        <WalletAddress>{shortenString(address || "")}</WalletAddress>
+      </ColFlex>
+
+      <StyledChevronRightIcon
+        width={iconSize.sm}
+        height={iconSize.sm}
+        style={{
+          flexShrink: 0,
+          marginLeft: "auto",
+        }}
+      />
+    </MenuButton>
+  );
+}
