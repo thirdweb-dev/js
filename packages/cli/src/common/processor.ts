@@ -118,7 +118,6 @@ export async function processProject(
     bytecodeUri: "",
   };
   if (options.dynamic) {
-    console.log("Dynamic selected!", options.dynamic);
     const choices = Object.keys(ROUTER_CONTRACTS).map((key) => {
       return { title: key, value: key };
     });
