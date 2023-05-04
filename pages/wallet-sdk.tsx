@@ -1,13 +1,12 @@
 // import { GuidesShowcase } from "../components/product-pages/common/GuideShowcase";
 import { ProductSection } from "../components/product-pages/common/ProductSection";
 import {
+  Box,
   Flex,
   GridItem,
   LinkBox,
   LinkOverlay,
-  ListItem,
   SimpleGrid,
-  UnorderedList,
 } from "@chakra-ui/react";
 import {
   ConnectWallet,
@@ -372,13 +371,20 @@ const WalletSDK: ThirdwebNextPage = () => {
                   to smart contracts.{" "}
                 </Text>
                 <Flex direction="row" justifyContent={"left"} mt={4}>
-                  <ConnectWallet
-                    theme="dark"
-                    btnTitle="Try Connect Wallet"
-                    auth={{
-                      loginOptional: true,
+                  <Box
+                    _hover={{
+                      transition: "all 0.2s ease-in-out",
+                      transform: "scale(1.05)",
                     }}
-                  />
+                  >
+                    <ConnectWallet
+                      theme="dark"
+                      btnTitle="Try Connect Wallet"
+                      auth={{
+                        loginOptional: true,
+                      }}
+                    />
+                  </Box>
                 </Flex>
               </Flex>
 
