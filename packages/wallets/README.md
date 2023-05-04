@@ -27,15 +27,18 @@ await wallet.connect();
 - Metamask
 - Coinbase Wallet
 - Wallet Connect v1 and v2
-- Phantom
-- Injected
-- Device Wallet
+- Smart Wallet (ERC-4337)
+- Local Wallet
 - Paper Wallet
 - Magic.link
 - Ethers
 
 #### Backend Wallets
 
-- Privatekey
+- Private key
 - AWS KMs
 - AWS Sercret Manager
+
+#### Documentation
+
+https://portal.thirdweb.com/wallet
