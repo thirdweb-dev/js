@@ -85,6 +85,14 @@ export class MagicLink extends AbstractClientWallet<
   }
 
   async connect(options: MagicAuthConnectOptions) {
+    if ("email" in options && this.options.emailLogin === false) {
+      throw new Error("Email login is disabled");
+    }
+
+    if ("phoneNumber" in options && this.options.smsLogin === false) {
+      throw new Error("SMS login is disabled");
+    }
+
     return super.connect(options);
   }
 }
