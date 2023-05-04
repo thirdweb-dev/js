@@ -112,7 +112,7 @@ export const ConnectWalletDetails = ({
           >
             <PocketWalletIcon size={16} />
             <View style={styles.exportWalletInfo}>
-              <Text variant="bodySmall">Export wallet</Text>
+              <Text variant="bodySmall">Backup wallet</Text>
             </View>
           </BaseButton>
 
