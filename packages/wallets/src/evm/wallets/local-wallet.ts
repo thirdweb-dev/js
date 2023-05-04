@@ -36,7 +36,7 @@ export class LocalWallet extends AbstractClientWallet<
   static meta = {
     name: "Local Wallet",
     iconURL:
-      "ipfs://QmeAJVqn17aDNQhjEU3kcWVZCFBrfta8LzaDGkS8Egdiyk/local-wallet-desktop.svg",
+      "ipfs://QmbQzSNGvmNYZzem9jZRuYeLe9K2W4pqbdnVUp7Y6edQ8Y/local-wallet.svg",
   };
 
   public get walletName() {

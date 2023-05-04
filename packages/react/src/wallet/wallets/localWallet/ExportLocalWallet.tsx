@@ -19,7 +19,7 @@ import { Spinner } from "../../../components/Spinner";
 import { Flex } from "../../../components/basic";
 
 const localWalletIcon =
-  "ipfs://QmeAJVqn17aDNQhjEU3kcWVZCFBrfta8LzaDGkS8Egdiyk/local-wallet-desktop.svg";
+  "ipfs://QmbQzSNGvmNYZzem9jZRuYeLe9K2W4pqbdnVUp7Y6edQ8Y/local-wallet.svg";
 
 export const ExportLocalWallet: React.FC<{
   onBack: () => void;
