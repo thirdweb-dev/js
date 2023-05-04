@@ -94,22 +94,29 @@ export const SmartWalletAdditionalActions = ({
       </BaseButton>
       {wallet?.walletId === LocalWallet.id ||
       activeWallet?.walletId === LocalWallet.id ? (
-        <BaseButton
-          backgroundColor="background"
-          borderColor="border"
-          mb="sm"
-          style={styles.exportWallet}
-          onPress={onExportPress}
-        >
-          <PocketWalletIcon size={16} />
-          <View style={styles.exportWalletInfo}>
-            <Text variant="bodySmall">
-              {wallet?.walletId === LocalWallet.id
-                ? "Export personal wallet"
-                : "Export wallet"}
-            </Text>
-          </View>
-        </BaseButton>
+        <>
+          <BaseButton
+            backgroundColor="background"
+            borderColor="border"
+            mb="sm"
+            style={styles.exportWallet}
+            onPress={onExportPress}
+          >
+            <PocketWalletIcon size={16} />
+            <View style={styles.exportWalletInfo}>
+              <Text variant="bodySmall">
+                {wallet?.walletId === LocalWallet.id
+                  ? "Backup personal wallet"
+                  : "Backup wallet"}
+              </Text>
+            </View>
+          </BaseButton>
+          <Text variant="error">
+            {
+              "This is a temporary guest wallet. Download a backup if you don't want to lose access to it."
+            }
+          </Text>
+        </>
       ) : null}
     </>
   );

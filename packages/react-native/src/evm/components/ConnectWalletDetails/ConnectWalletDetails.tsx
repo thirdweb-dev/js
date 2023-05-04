@@ -11,14 +11,12 @@ import { WalletDetailsModalHeader } from "./WalletDetailsModalHeader";
 import { useWallet, useBalance, useDisconnect } from "@thirdweb-dev/react-core";
 import { useActiveChain } from "@thirdweb-dev/react-core/evm";
 import { useCallback, useEffect, useState } from "react";
-import { Linking, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { ExportLocalWalletModal } from "./ExportLocalWalletModal";
 import { Toast } from "../base/Toast";
-import { SmartWallet, walletIds } from "@thirdweb-dev/wallets";
+import { LocalWallet, SmartWallet, walletIds } from "@thirdweb-dev/wallets";
 import { SmartWalletAdditionalActions } from "./SmartWalletAdditionalActions";
 import { useSmartWallet } from "../../providers/context-provider";
-import { Link } from "../base/Link";
-import Box from "../base/Box";
 
 export type ConnectWalletDetailsProps = {
   address: string;
@@ -116,16 +114,13 @@ export const ConnectWalletDetails = ({
             </View>
           </BaseButton>
 
-          <Box flexDirection="row" alignItems="center" justifyContent="center">
-            <Link
-              text="Learn more"
-              onPress={() =>
-                Linking.openURL(
-                  "https://portal.thirdweb.com/wallet/local-wallet",
-                )
+          {activeWallet?.walletId === LocalWallet.id ? (
+            <Text variant="error">
+              {
+                "This is a temporary guest wallet. Download a backup if you don't want to lose access to it."
               }
-            />
-          </Box>
+            </Text>
+          ) : null}
         </>
       );
     }
@@ -179,7 +174,11 @@ export const ConnectWalletDetails = ({
             {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
             {balanceQuery.data?.symbol}
           </Text>
-          <Address variant="bodySmallSecondary" address={address} />
+          {activeWallet?.walletId === LocalWallet.id ? (
+            <Text variant="error">Guest</Text>
+          ) : (
+            <Address variant="bodySmallSecondary" address={address} />
+          )}
         </View>
         <WalletIcon size={32} iconUri={activeWallet?.getMeta().iconURL || ""} />
       </BaseButton>

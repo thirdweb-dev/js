@@ -12,8 +12,6 @@ export type Palette = {
   iconSecondary: string;
   iconHighlight: string;
 
-  warning: string;
-
   linkPrimary: string;
 
   labelBackground: string;
@@ -23,6 +21,10 @@ export type Palette = {
   black: string;
   white: string;
   red: string;
+
+  warning: string;
+
+  error: string;
 };
 
 export const paletteBase = {
@@ -30,6 +32,7 @@ export const paletteBase = {
   white: "white",
   red: "red",
   warning: "#F46565",
+  error: "#D85252",
 };
 
 export const paletteLight: Palette = {
