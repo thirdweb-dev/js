@@ -31,14 +31,11 @@ export const WalletButton = ({
       backgroundColor="backgroundHighlight"
       onPress={onPress}
     >
-      <Box
-        flexDirection="row"
-        justifyContent="flex-start"
-        alignItems="center"
-        gap="md"
-      >
+      <Box flexDirection="row" justifyContent="flex-start" alignItems="center">
         <ImageSvgUri imageUrl={walletIconUrl} width={32} height={32} />
-        <Text variant="bodyLarge">{name}</Text>
+        <Text ml="md" variant="bodyLarge">
+          {name}
+        </Text>
       </Box>
       {labelText ? <Label text={labelText} /> : <View />}
     </BaseButton>
