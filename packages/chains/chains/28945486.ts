@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Auxilium Network Mainnet",
   "chain": "AUX",
@@ -18,4 +19,4 @@ export default {
   "slip44": 344,
   "testnet": false,
   "slug": "auxilium-network"
-} as const;
+} as const satisfies Chain;

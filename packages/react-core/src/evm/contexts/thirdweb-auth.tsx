@@ -1,12 +1,15 @@
-import { useSigner } from "../hooks/useSigner";
-import { ThirdwebAuth } from "@thirdweb-dev/auth";
-import { SignerWallet } from "@thirdweb-dev/auth/evm";
 import React, {
   PropsWithChildren,
   createContext,
   useContext,
   useMemo,
 } from "react";
+
+export interface ISecureStorage {
+  getItem(key: string): Promise<string | null>;
+  setItem(key: string, value: string): Promise<void>;
+  removeItem(key: string): Promise<void>;
+}
 
 /**
  * The configuration to use the react SDK with an [auth](https://portal.thirdweb.com/auth) server.
@@ -25,11 +28,20 @@ export interface ThirdwebAuthConfig {
    * This domain should match the domain used on your auth backend.
    */
   domain: string;
+
+  /**
+   * Secure storage to use for storing the auth token when using JWT tokens.
+   * 
+   * Do not use a storage option that stores values accessible outside 
+   * your aplication (like localStorage on web environments) since you may 
+   * be exposing your auth token to malicious actors.
+   * 
+   * ** By default auth uses cookies so no need to set this unless you want to specifically use JWT tokens **
+   */
+  secureStorage?: ISecureStorage;
 }
 
-interface ThirdwebAuthContext extends ThirdwebAuthConfig {
-  auth?: ThirdwebAuth;
-}
+interface ThirdwebAuthContext extends ThirdwebAuthConfig {}
 
 const ThirdwebAuthContext = createContext<ThirdwebAuthContext | undefined>(
   undefined,
@@ -38,8 +50,6 @@ const ThirdwebAuthContext = createContext<ThirdwebAuthContext | undefined>(
 export const ThirdwebAuthProvider: React.FC<
   PropsWithChildren<{ value?: ThirdwebAuthConfig }>
 > = ({ value, children }) => {
-  const signer = useSigner();
-
   // Remove trailing slash from URL if present
   const authContext = useMemo(() => {
     if (!value) {
@@ -49,15 +59,10 @@ export const ThirdwebAuthProvider: React.FC<
     const context: ThirdwebAuthContext = {
       ...value,
       authUrl: value.authUrl?.replace(/\/$/, ""),
-      auth: undefined,
     };
 
-    if (signer) {
-      context.auth = new ThirdwebAuth(new SignerWallet(signer), value.domain);
-    }
-
     return context;
-  }, [value, signer]);
+  }, [value]);
   return (
     <ThirdwebAuthContext.Provider value={authContext}>
       {children}

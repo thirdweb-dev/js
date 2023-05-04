@@ -1,92 +1,166 @@
-import { WalletMeta } from "../../types/wallets";
-import { getWalletsMeta } from "../../utils/wallets";
 import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
 import { TWModal } from "../base/modal/TWModal";
 import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
-import { useConnect, useWallets } from "@thirdweb-dev/react-core";
-import React, { useState } from "react";
-import { StyleSheet } from "react-native";
-import invariant from "tiny-invariant";
+import {
+  ConfiguredWallet,
+  useConnect,
+  useIsConnecting,
+  useThirdwebWallet,
+  useWallets,
+} from "@thirdweb-dev/react-core";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, StyleSheet } from "react-native";
+import { SmartWallet } from "@thirdweb-dev/wallets";
+import { SmartWalletFlow } from "./SmartWallet/SmartWalletFlow";
+import { LocalWalletFlow } from "./LocalWalletFlow";
+import { LocalWallet } from "../../wallets/wallets/local-wallet";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [activeWalletMeta, setActiveWalletMeta] = useState<
-    WalletMeta | undefined
+  const [activeWallet, setActiveWallet] = useState<
+    ConfiguredWallet | undefined
   >();
+  const [isConnecting, setIsConnecting] = useState(false);
+  const supportedWallets = useWallets();
+  const isWalletConnecting = useIsConnecting();
+  const [showButtonSpinner, setShowButtonSpinner] = useState(false);
+  const twWalletContext = useThirdwebWallet();
+
+  useEffect(() => {
+    setShowButtonSpinner(isWalletConnecting);
+
+    if (!isWalletConnecting) {
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      if (isWalletConnecting) {
+        setShowButtonSpinner(false);
+      }
+    }, 3000);
+
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+  }, [isWalletConnecting]);
 
   const connect = useConnect();
-  const supportedWallets = useWallets();
-  const walletClasses = useWallets();
 
   const onConnectPress = () => {
+    if (supportedWallets.length === 1) {
+      onChooseWallet(supportedWallets[0]);
+    }
+
     setModalVisible(true);
   };
 
   const onClose = () => {
     setModalVisible(false);
-    setActiveWalletMeta(undefined);
+    reset();
   };
 
-  const onChooseWallet = (wallet_: WalletMeta) => {
-    setActiveWalletMeta(wallet_);
+  const onLocalWalletImported = async (localWallet: LocalWallet) => {
+    await localWallet.connect();
+    twWalletContext?.handleWalletConnect(localWallet);
+  };
 
-    let walletClass;
-    if (wallet_.versions.includes("2")) {
-      // default to v2
-      walletClass = supportedWallets.find((wallet) => {
-        return wallet.name.toLowerCase().includes(wallet_.id.toLowerCase());
-      });
-      invariant(walletClass, "Wallet class not found");
-    } else if (wallet_.versions.includes("1")) {
-      walletClass = supportedWallets.find((wallet) => {
-        return wallet.name.toLowerCase().includes(wallet_.id.toLowerCase());
-      });
-      invariant(walletClass, "Wallet class not found");
-    } else {
-      walletClass = walletClasses.find((item) => {
-        return item.id.toLowerCase().includes(wallet_.id.toLowerCase());
-      });
-      invariant(walletClass, "Wallet class not found");
-    }
-    connect(walletClass, {}).catch((error) => {
-      console.log("error", error);
+  const connectActiveWallet = async (wallet: ConfiguredWallet) => {
+    setIsConnecting(true);
+    connect(wallet, {}).catch((error) => {
+      console.error("Error connecting to the wallet", error);
       onBackPress();
     });
   };
 
-  const onBackPress = () => {
-    setActiveWalletMeta(undefined);
+  const onChooseWallet = (wallet: ConfiguredWallet) => {
+    setActiveWallet(() => wallet);
+
+    if (wallet.id !== SmartWallet.id) {
+      connectActiveWallet(wallet);
+    }
   };
+
+  const onBackPress = () => {
+    reset();
+  };
+
+  const reset = () => {
+    setActiveWallet(undefined);
+    setIsConnecting(false);
+  };
+
+  function getComponentForWallet(activeWalletP: ConfiguredWallet) {
+    switch (activeWalletP.id) {
+      case LocalWallet.id:
+        return (
+          <LocalWalletFlow
+            onClose={onClose}
+            onBackPress={supportedWallets.length > 1 ? onBackPress : undefined}
+            onWalletImported={onLocalWalletImported}
+            onConnectPress={() => connectActiveWallet(activeWalletP)}
+          />
+        );
+      case SmartWallet.id:
+        return (
+          <SmartWalletFlow
+            onClose={() => {
+              onClose();
+            }}
+            onConnect={onBackPress}
+          />
+        );
+    }
+  }
 
   return (
     <>
       <TWModal isVisible={modalVisible}>
-        {activeWalletMeta ? (
-          <ConnectingWallet
-            wallet={activeWalletMeta}
-            onClose={onClose}
-            onBackPress={onBackPress}
-          />
+        {activeWallet ? (
+          isConnecting ? (
+            <ConnectingWallet
+              content={
+                activeWallet.id === LocalWallet.id ? (
+                  <Text variant="bodySmallSecondary" mt="md">
+                    Creating, encrypting and securing your device wallet.
+                  </Text>
+                ) : undefined
+              }
+              wallet={activeWallet}
+              onClose={onClose}
+              onBackPress={onBackPress}
+            />
+          ) : (
+            getComponentForWallet(activeWallet)
+          )
         ) : (
           <ChooseWallet
-            wallets={getWalletsMeta(supportedWallets)}
+            wallets={supportedWallets}
             onChooseWallet={onChooseWallet}
-            footer={<></>}
             onClose={onClose}
           />
         )}
       </TWModal>
 
       <BaseButton
-        backgroundColor="white"
+        backgroundColor="buttonBackgroundColor"
         onPress={onConnectPress}
         style={styles.connectWalletButton}
       >
-        <Text variant="bodyLarge" color="black">
-          Connect Wallet
+        {/* {showButtonSpinner ? (
+          <ActivityIndicator size="small" color="buttonTextColor" />
+        ) : ( */}
+        <Text variant="bodyLarge" color="buttonTextColor">
+          {showButtonSpinner ? (
+            <ActivityIndicator size="small" color="buttonTextColor" />
+          ) : (
+            "Connect Wallet"
+          )}
         </Text>
+        {/* )} */}
       </BaseButton>
     </>
   );
@@ -96,10 +170,12 @@ const styles = StyleSheet.create({
   connectWalletButton: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "center",
+    alignContent: "center",
     alignItems: "center",
+    justifyContent: "center",
     borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 10,
+    minWidth: 150,
   },
 });

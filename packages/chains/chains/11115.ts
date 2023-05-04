@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Astra Testnet",
   "chain": "Astra",
@@ -28,15 +29,25 @@ export default {
       "name": "Astra EVM Explorer",
       "url": "https://explorer.astranaut.dev",
       "standard": "EIP3091",
-      "icon": "astra"
+      "icon": {
+        "url": "ipfs://QmaBtaukPNNUNjdJSUAwuFFQMLbZX1Pc3fvXKTKQcds7Kf",
+        "width": 104,
+        "height": 80,
+        "format": "png"
+      }
     },
     {
       "name": "Astra PingPub Explorer",
       "url": "https://ping.astranaut.dev/astra",
       "standard": "none",
-      "icon": "astra"
+      "icon": {
+        "url": "ipfs://QmaBtaukPNNUNjdJSUAwuFFQMLbZX1Pc3fvXKTKQcds7Kf",
+        "width": 104,
+        "height": 80,
+        "format": "png"
+      }
     }
   ],
   "testnet": true,
   "slug": "astra-testnet"
-} as const;
+} as const satisfies Chain;

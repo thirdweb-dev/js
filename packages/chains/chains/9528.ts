@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "QEasyWeb3 Testnet",
   "chain": "QET",
@@ -26,4 +27,4 @@ export default {
   ],
   "testnet": true,
   "slug": "qeasyweb3-testnet"
-} as const;
+} as const satisfies Chain;

@@ -251,18 +251,34 @@ export async function twCreate(
       }
 
       if (projectType === "app" && !language) {
-        const res = await prompts({
-          type: "select",
-          name: "language",
-          message: CREATE_MESSAGES.language,
-          choices: [
-            { title: "JavaScript", value: "javascript" },
-            { title: "TypeScript", value: "typescript" },
-          ],
-        });
+        if (framework === "react-native") {
+          const res = await prompts({
+            type: "select",
+            name: "project",
+            message: CREATE_MESSAGES.reactNative,
+            choices: [
+              { title: "Expo Project", value: "expo" },
+              { title: "React Native CLI", value: "typescript" },
+            ],
+          });
 
-        if (typeof res.language === "string") {
-          language = res.language.trim();
+          if (typeof res.project === "string") {
+            language = res.project.trim();
+          }
+        } else {
+          const res = await prompts({
+            type: "select",
+            name: "language",
+            message: CREATE_MESSAGES.language,
+            choices: [
+              { title: "JavaScript", value: "javascript" },
+              { title: "TypeScript", value: "typescript" },
+            ],
+          });
+
+          if (typeof res.language === "string") {
+            language = res.language.trim();
+          }
         }
       }
 
@@ -305,7 +321,7 @@ export async function twCreate(
       const res = await prompts({
         type: "text",
         name: "path",
-        message: CREATE_MESSAGES.contractName,
+        message: projectType === "extension" ? CREATE_MESSAGES.extensionName : CREATE_MESSAGES.contractName,
         initial: defaultName,
         validate: (name: string) => {
           const isValid = /(^[a-z0-9A-Z]+$)|(^[a-z0-9A-Z]+\.sol$)/.test(name);

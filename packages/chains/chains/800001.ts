@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "OctaSpace",
   "chain": "OCTA",
@@ -26,10 +27,15 @@ export default {
     {
       "name": "blockscout",
       "url": "https://explorer.octa.space",
-      "icon": "blockscout",
+      "icon": {
+        "url": "ipfs://bafybeifu5tpui7dk5cjoo54kde7pmuthvnl7sdykobuarsxgu7t2izurnq",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "octaspace"
-} as const;
+} as const satisfies Chain;

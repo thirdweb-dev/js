@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Velas EVM Mainnet",
   "chain": "Velas",
@@ -31,4 +32,4 @@ export default {
   ],
   "testnet": false,
   "slug": "velas-evm"
-} as const;
+} as const satisfies Chain;

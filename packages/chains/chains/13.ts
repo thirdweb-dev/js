@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Diode Testnet Staging",
   "chain": "DIODE",
@@ -18,4 +19,4 @@ export default {
   "networkId": 13,
   "testnet": true,
   "slug": "diode-testnet-staging"
-} as const;
+} as const satisfies Chain;

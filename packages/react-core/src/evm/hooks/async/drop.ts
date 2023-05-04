@@ -17,8 +17,14 @@ import {
   invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
+  useMutation,
+  UseMutationResult,
+  useQueryClient,
+  UseQueryResult,
+} from "@tanstack/react-query";
+import type {
+  NFT,
   NFTMetadataInput,
   QueryAllParams,
   UploadProgressEvent,
@@ -26,6 +32,7 @@ import {
 import { NFTDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/nft-drop";
 import { SignatureDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/signature-drop";
 import { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/smart-contract";
+import type { providers } from "ethers";
 import invariant from "tiny-invariant";
 
 /** **********************/
@@ -44,12 +51,13 @@ import invariant from "tiny-invariant";
  * @param queryParams - query params to pass to the query for the sake of pagination
  * @returns a response object that includes an array of NFTs that are unclaimed
  * @twfeature ERC721LazyMintable
+ * @see {@link https://portal.thirdweb.com/react/react.useunclaimednfts?utm_source=sdk | Documentation}
  * @beta
  */
 export function useUnclaimedNFTs(
   contract: RequiredParam<NFTDrop>,
   queryParams?: QueryAllParams,
-) {
+): UseQueryResult<NFT[]> {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.nft.drop.getAllUnclaimed(contractAddress, queryParams),
@@ -80,6 +88,7 @@ export function useUnclaimedNFTs(
  * @param queryParams - query params to pass to the query for the sake of pagination
  * @returns a response object that includes an array of NFTs that are claimed
  * @twfeature ERC721LazyMintable
+ * @see {@link https://portal.thirdweb.com/react/react.useclaimednfts?utm_source=sdk | Documentation}
  * @beta
  */
 export function useClaimedNFTs(
@@ -107,6 +116,7 @@ export function useClaimedNFTs(
  * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
  * @returns a response object that includes the number of NFTs that are unclaimed
  * @twfeature ERC721LazyMintable
+ * @see {@link https://portal.thirdweb.com/react/react.useunclaimednftsupply?utm_source=sdk | Documentation}
  */
 export function useUnclaimedNFTSupply(
   contract: RequiredParam<NFTDrop | SignatureDrop | SmartContract | null>,
@@ -133,6 +143,7 @@ export function useUnclaimedNFTSupply(
  * @param contract - an instance of a contract that extends the ERC721 spec (NFT drop, Signature Drop, or any custom contract that extends the ERC721 spec)
  * @returns a response object that includes the number of NFTs that are claimed
  * @twfeature ERC721LazyMintable
+ * @see {@link https://portal.thirdweb.com/react/react.useclaimednftsupply?utm_source=sdk | Documentation}
  */
 export function useClaimedNFTSupply(
   contract: RequiredParam<NFTDrop | SignatureDrop | SmartContract | null>,
@@ -158,6 +169,7 @@ export function useClaimedNFTSupply(
  * @param contract - an instance of a {@link RevealableContract}
  * @returns a response object that gets the batches to still be revealed
  * @twfeature ERC721Revealable | ERC1155Revealable
+ * @see {@link https://portal.thirdweb.com/react/react.usebatchestoreveal?utm_source=sdk | Documentation}
  */
 export function useBatchesToReveal<TContract extends RevealableContract>(
   contract: RequiredParam<TContract>,
@@ -213,6 +225,7 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
  * @param contract - an instance of a {@link DropContract}
  * @returns a mutation object that can be used to claim a NFT to the wallet specificed in the params
  * @twfeature ERC721Claimable | ERC1155Claimable | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
+ * @see {@link https://portal.thirdweb.com/react/react.useclaimnft?utm_source=sdk | Documentation}
  * @beta
  */
 export function useClaimNFT<TContract extends DropContract>(
@@ -302,12 +315,13 @@ export function useClaimNFT<TContract extends DropContract>(
  * @param onProgress - an optional callback that will be called with the progress of the upload
  * @returns a mutation object that can be used to lazy mint a batch of NFTs
  * @twfeature ERC721LazyMintable | ERC1155LazyMintable
+ * @see {@link https://portal.thirdweb.com/react/react.uselazymint?utm_source=sdk | Documentation}
  * @beta
  */
 export function useLazyMint<TContract extends DropContract>(
   contract: RequiredParam<TContract>,
   onProgress?: (progress: UploadProgressEvent) => void,
-) {
+): UseMutationResult<any, unknown, any, unknown> {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
@@ -374,6 +388,7 @@ export function useLazyMint<TContract extends DropContract>(
  * @param onProgress - an optional callback that will be called with the progress of the upload
  * @returns a mutation object that can be used to lazy mint a batch of NFTs
  * @twfeature ERC721Revealable | ERC1155Revealable
+ * @see {@link https://portal.thirdweb.com/react/react.usedelayedreveallazymint?utm_source=sdk | Documentation}
  * @beta
  */
 export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
@@ -454,11 +469,23 @@ export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
  * @param contract - an instance of a {@link RevealableContract}
  * @returns a mutation object that can be used to reveal a batch of delayed reveal NFTs
  * @twfeature ERC721Revealable | ERC1155Revealable
+ * @see {@link https://portal.thirdweb.com/react/react.usereveallazymint?utm_source=sdk | Documentation}
  * @beta
  */
 export function useRevealLazyMint<TContract extends RevealableContract>(
   contract: RequiredParam<TContract>,
-) {
+): UseMutationResult<
+  Omit<
+    {
+      receipt: providers.TransactionReceipt;
+      data: () => Promise<unknown>;
+    },
+    "data"
+  >,
+  unknown,
+  RevealLazyMintInput,
+  unknown
+> {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();

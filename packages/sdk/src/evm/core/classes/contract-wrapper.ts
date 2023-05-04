@@ -1,5 +1,7 @@
 import {
   TransactionError,
+  computeEOAForwarderAddress,
+  computeForwarderAddress,
   extractFunctionsFromAbi,
   fetchContractMetadataFromAddress,
   fetchSourceFilesFromMetadata,
@@ -274,20 +276,13 @@ export class ContractWrapper<
    */
   public async call(
     functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
+    args: unknown[] = [],
+    overrides?: CallOverrides,
   ): Promise<any> {
     // parse last arg as tx options if present
-    let txOptions: CallOverrides | undefined;
-    try {
-      if (args.length > 0 && typeof args[args.length - 1] === "object") {
-        const last = args[args.length - 1];
-        txOptions = await CallOverrideSchema.parseAsync(last);
-        // if call overrides found, remove it from args array
-        args = args.slice(0, args.length - 1);
-      }
-    } catch (e) {
-      // no-op
-    }
+    let txOptions: CallOverrides | undefined = overrides
+      ? await CallOverrideSchema.parseAsync(overrides)
+      : undefined;
 
     const functions = extractFunctionsFromAbi(AbiSchema.parse(this.abi)).filter(
       (f) => f.name === functionName,
@@ -796,10 +791,12 @@ export class ContractWrapper<
       (this.options.gasless.openzeppelin.useEOAForwarder
         ? CONTRACT_ADDRESSES[
             transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-          ].openzeppelinForwarderEOA
+          ].openzeppelinForwarderEOA ||
+          (await computeEOAForwarderAddress(this.getProvider(), this.#storage))
         : CONTRACT_ADDRESSES[
             transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-          ].openzeppelinForwarder);
+          ].openzeppelinForwarder ||
+          (await computeForwarderAddress(this.getProvider(), this.#storage)));
 
     const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
     const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
@@ -828,8 +825,8 @@ export class ContractWrapper<
       };
     } else {
       domain = {
-        name: "GSNv2 Forwarder",
-        version: "0.0.1",
+        name: this.options.gasless.openzeppelin.domainName,
+        version: this.options.gasless.openzeppelin.domainVersion,
         chainId: transaction.chainId,
         verifyingContract: forwarderAddress,
       };

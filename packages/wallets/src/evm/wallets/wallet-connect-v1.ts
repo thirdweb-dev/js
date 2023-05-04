@@ -2,19 +2,26 @@ import type { ConnectorData } from "../../lib/wagmi-core";
 import type { WalletConnectV1Connector } from "../connectors/wallet-connect-v1";
 import type WalletConnectProvider from "../connectors/wallet-connect-v1/walletconnect-legacy-provider";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
-import { AbstractBrowserWallet, WalletOptions } from "./base";
+import { walletIds } from "../constants/walletIds";
+import { AbstractClientWallet, WalletOptions } from "./base";
 
 export type WalletConnectV1Options = {
   qrcode?: boolean;
-} & ConstructorParameters<typeof WalletConnectProvider>[0];
+} & Omit<ConstructorParameters<typeof WalletConnectProvider>[0], "clientMeta">;
 
-export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Options> {
+export class WalletConnectV1 extends AbstractClientWallet<WalletConnectV1Options> {
   #walletConnectConnector?: WalletConnectV1Connector;
   #provider?: WalletConnectProvider;
 
   connector?: TWConnector;
 
-  static id = "walletConnectV1" as const;
+  static id = walletIds.walletConnectV1;
+
+  static meta = {
+    name: "WalletConnect",
+    iconURL:
+      "ipfs://QmX58KPRaTC9JYZ7KriuBzeoEaV2P9eZcA3qbFnTHZazKw/wallet-connect.svg",
+  };
 
   public get walletName() {
     return (
@@ -22,8 +29,12 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
     );
   }
 
-  constructor(options: WalletOptions<WalletConnectV1Options>) {
-    super(options.walletId || WalletConnectV1.id, options);
+  qrcode: boolean;
+
+  constructor(options?: WalletOptions<WalletConnectV1Options>) {
+    super(options?.walletId || WalletConnectV1.id, options);
+
+    this.qrcode = options?.qrcode === false ? false : true;
   }
 
   protected async getConnector(): Promise<TWConnector> {
@@ -36,12 +47,12 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
         chains: this.chains,
         storage: this.walletStorage,
         options: {
-          qrcode: this.options.qrcode,
+          qrcode: this.qrcode,
           clientMeta: {
-            description: this.options.dappMetadata.description || "",
-            url: this.options.dappMetadata.url,
-            icons: [this.options.dappMetadata.logoUrl || ""],
-            name: this.options.dappMetadata.name,
+            description: this.dappMetadata.description || "",
+            url: this.dappMetadata.url,
+            icons: [this.dappMetadata.logoUrl || ""],
+            name: this.dappMetadata.name,
           },
         },
       });

@@ -10,9 +10,9 @@ export const SDKOptionsSchema = z
   .object({
     // @ts-expect-error - zod doesn't know anything about readonly
     supportedChains: z.array(ChainInfoInputSchema).default(defaultChains),
-    thirdwebApiKey: z.string().optional().default(DEFAULT_API_KEY),
-    alchemyApiKey: z.string().optional().optional(),
-    infuraApiKey: z.string().optional().optional(),
+    thirdwebApiKey: z.string().default(DEFAULT_API_KEY),
+    alchemyApiKey: z.string().optional(),
+    infuraApiKey: z.string().optional(),
     readonlySettings: z
       .object({
         rpcUrl: z.string().url(),
@@ -35,6 +35,8 @@ export const SDKOptionsSchema = z
             relayerUrl: z.string().url(),
             relayerForwarderAddress: z.string().optional(),
             useEOAForwarder: z.boolean().default(false),
+            domainName: z.string().default("GSNv2 Forwarder"),
+            domainVersion: z.string().default("0.0.1"),
           }),
           experimentalChainlessSupport: z.boolean().default(false),
         }),

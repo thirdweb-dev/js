@@ -1,190 +1,443 @@
+import { ThemeProvider } from "@emotion/react";
 import { ChainIcon } from "../../components/ChainIcon";
 import { Modal } from "../../components/Modal";
 import { Spacer } from "../../components/Spacer";
 import { Spinner } from "../../components/Spinner";
 import { Input } from "../../components/formElements";
 import {
+  darkTheme,
   fontSize,
   iconSize,
+  lightTheme,
   media,
   radius,
   spacing,
   Theme,
 } from "../../design-system";
 import { scrollbar } from "../../design-system/styles";
-import { useWalletRequiresConfirmation } from "../hooks/useCanSwitchNetwork";
 import styled from "@emotion/styled";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import * as Tabs from "@radix-ui/react-tabs";
-import { Chain } from "@thirdweb-dev/chains";
 import {
+  ThirdwebThemeContext,
   useChainId,
   useSupportedChains,
   useSwitchChain,
 } from "@thirdweb-dev/react-core";
-import React, { useMemo } from "react";
+import {
+  memo,
+  useCallback,
+  useContext,
+  useDeferredValue,
+  useMemo,
+  useState,
+} from "react";
+import type { Chain } from "@thirdweb-dev/chains";
+import Fuse from "fuse.js";
+import { Button } from "../../components/buttons";
+import { isMobile } from "../../evm/utils/isMobile";
 
-export const NetworkSelector: React.FC<{
-  open: boolean;
-  setOpen: (show: boolean) => void;
-}> = (props) => {
-  const chains = useSupportedChains();
-  const [searchTerm, setSearchTerm] = React.useState("");
+type RenderChain = React.FC<{
+  chain: Chain;
+  switchChain: () => void;
+  switching: boolean;
+  switchFailed: boolean;
+  close?: () => void;
+}>;
 
-  const { testnets, mainnets, all } = useMemo(() => {
-    const searchTermLower = searchTerm.toLowerCase();
-    const info = {
-      testnets: [] as Chain[],
-      mainnets: [] as Chain[],
-      all: [] as Chain[],
-    };
+export type NetworkSelectorProps = {
+  theme?: "dark" | "light";
+  onClose?: () => void;
+  chains?: Chain[];
+  popularChains?: Chain[];
+  recentChains?: Chain[];
+  renderChain?: RenderChain;
+  onSwitch?: (chain: Chain) => void;
+  onCustomClick?: () => void;
+};
 
-    for (const chain of chains) {
-      if (chain.name.toLowerCase().includes(searchTermLower)) {
-        if (chain.testnet) {
-          info.testnets.push(chain);
-        } else {
-          info.mainnets.push(chain);
-        }
-        info.all.push(chain);
-      }
+const fuseConfig = {
+  threshold: 0.4,
+  keys: [
+    {
+      name: "name",
+      weight: 1,
+    },
+    {
+      name: "chainId",
+      weight: 1,
+    },
+  ],
+};
+
+export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const deferredSearchTerm = useDeferredValue(searchTerm);
+  const themeFromProvider = useContext(ThirdwebThemeContext);
+  const theme = props.theme || themeFromProvider || "dark";
+  const supportedChains = useSupportedChains();
+  const chains = props.chains || supportedChains;
+
+  const _recentChains = props.recentChains;
+
+  // remove recent chains from popular chains
+  const cleanedPopularChains = !_recentChains
+    ? props.popularChains
+    : props.popularChains?.filter((chain) => {
+        return !_recentChains.some(
+          (recentChain) => recentChain.chainId === chain.chainId,
+        );
+      });
+
+  // fuse instances
+  const fuseAllChains = useMemo(() => {
+    return new Fuse(chains, fuseConfig);
+  }, [chains]);
+
+  const fusePopularChains = useMemo(() => {
+    return new Fuse(cleanedPopularChains || [], fuseConfig);
+  }, [cleanedPopularChains]);
+
+  const fuseRecentChains = useMemo(() => {
+    return new Fuse(props.recentChains || [], fuseConfig);
+  }, [props.recentChains]);
+
+  // chains filtered by search term
+  const allChains = useMemo(() => {
+    if (deferredSearchTerm === "") {
+      return chains;
     }
+    return fuseAllChains.search(deferredSearchTerm).map((r) => r.item);
+  }, [fuseAllChains, deferredSearchTerm, chains]);
 
-    return info;
-  }, [chains, searchTerm]);
+  const popularChains = useMemo(() => {
+    if (deferredSearchTerm === "") {
+      return cleanedPopularChains || [];
+    }
+    return fusePopularChains.search(deferredSearchTerm).map((r) => r.item);
+  }, [fusePopularChains, deferredSearchTerm, cleanedPopularChains]);
 
-  const closeModal = () => {
-    props.setOpen(false);
-  };
+  const recentChains = useMemo(() => {
+    if (deferredSearchTerm === "") {
+      return props.recentChains || [];
+    }
+    return fuseRecentChains.search(deferredSearchTerm).map((r) => r.item);
+  }, [fuseRecentChains, deferredSearchTerm, props.recentChains]);
+
+  const { onClose, onSwitch, onCustomClick } = props;
+
+  const handleSwitch = useCallback(
+    (chain: Chain) => {
+      if (onSwitch) {
+        onSwitch(chain);
+      }
+      if (onClose) {
+        onClose();
+      }
+    },
+    [onSwitch, onClose],
+  );
 
   return (
-    <Modal
-      open={props.open}
-      setOpen={props.setOpen}
-      title="Select Network"
-      style={{
-        maxWidth: "480px",
-        paddingBottom: "0px",
-      }}
-    >
-      <Spacer y="xl" />
+    <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
+      <Modal
+        open={true}
+        setOpen={(value) => {
+          if (!value && onClose) {
+            onClose();
+          }
+        }}
+        title="Select Network"
+        style={{
+          maxWidth: "480px",
+          paddingBottom: props.onCustomClick ? spacing.md : "0px",
+        }}
+      >
+        <Spacer y="xl" />
 
-      <Tabs.Root className="TabsRoot" defaultValue="all">
-        <Tabs.List
-          className="TabsList"
-          aria-label="Manage your account"
-          style={{
-            display: "flex",
-            gap: spacing.xxs,
-          }}
-        >
-          <TabButton className="TabsTrigger" value="all">
-            All
-          </TabButton>
-          <TabButton className="TabsTrigger" value="mainnet">
-            Mainnets
-          </TabButton>
-          <TabButton className="TabsTrigger" value="testnet">
-            Testnets
-          </TabButton>
-        </Tabs.List>
-
-        <Spacer y="lg" />
-
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            position: "relative",
-          }}
-        >
-          <StyledMagnifyingGlassIcon />
-          <SearchInput
+        <Tabs.Root className="TabsRoot" defaultValue="all">
+          <Tabs.List
+            className="TabsList"
+            aria-label="Manage your account"
             style={{
-              boxShadow: "none",
+              display: "flex",
+              gap: spacing.xxs,
             }}
-            variant="secondary"
-            placeholder="Search Networks"
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
+          >
+            <TabButton className="TabsTrigger" value="all">
+              All
+            </TabButton>
+            <TabButton className="TabsTrigger" value="mainnet">
+              Mainnets
+            </TabButton>
+            <TabButton className="TabsTrigger" value="testnet">
+              Testnets
+            </TabButton>
+          </Tabs.List>
+
+          <Spacer y="lg" />
+
+          {/* Search */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              position: "relative",
             }}
-          />
-        </div>
+          >
+            <StyledMagnifyingGlassIcon
+              width={iconSize.md}
+              height={iconSize.md}
+            />
 
-        <Spacer y="lg" />
+            <SearchInput
+              style={{
+                boxShadow: "none",
+              }}
+              tabIndex={isMobile() ? -1 : 0}
+              variant="secondary"
+              placeholder="Search Network or Chain ID"
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+              }}
+            />
 
-        <Tabs.Content className="TabsContent" value="all">
-          <NetworkList chains={all} closeModal={closeModal} />
-        </Tabs.Content>
+            {/* Searching Spinner */}
+            {deferredSearchTerm !== searchTerm && (
+              <div
+                style={{
+                  position: "absolute",
+                  right: spacing.md,
+                }}
+              >
+                <Spinner size="md" color="link" />
+              </div>
+            )}
+          </div>
 
-        <Tabs.Content className="TabsContent" value="mainnet">
-          <NetworkList chains={mainnets} closeModal={closeModal} />
-        </Tabs.Content>
+          <Spacer y="lg" />
 
-        <Tabs.Content className="TabsContent" value="testnet">
-          <NetworkList chains={testnets} closeModal={closeModal} />
-        </Tabs.Content>
-      </Tabs.Root>
-    </Modal>
+          <Tabs.Content className="TabsContent" value="all">
+            <NetworkTab
+              allChains={allChains}
+              type="all"
+              popularChains={popularChains}
+              recentChains={recentChains}
+              onSwitch={handleSwitch}
+              renderChain={props.renderChain}
+              close={props.onClose}
+            />
+          </Tabs.Content>
+
+          <Tabs.Content className="TabsContent" value="mainnet">
+            <NetworkTab
+              allChains={allChains}
+              type="mainnet"
+              popularChains={popularChains}
+              recentChains={recentChains}
+              onSwitch={handleSwitch}
+              renderChain={props.renderChain}
+              close={props.onClose}
+            />
+          </Tabs.Content>
+
+          <Tabs.Content className="TabsContent" value="testnet">
+            <NetworkTab
+              allChains={allChains}
+              type="testnet"
+              popularChains={popularChains}
+              recentChains={recentChains}
+              onSwitch={handleSwitch}
+              renderChain={props.renderChain}
+              close={props.onClose}
+            />
+          </Tabs.Content>
+
+          {onCustomClick && (
+            <>
+              <Spacer y="sm" />
+              <Button
+                variant="link"
+                onClick={() => {
+                  onCustomClick();
+                  if (onClose) {
+                    onClose();
+                  }
+                }}
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  fontSize: fontSize.sm,
+                  boxShadow: "none",
+                }}
+              >
+                Add Custom Network
+              </Button>
+            </>
+          )}
+        </Tabs.Root>
+      </Modal>
+    </ThemeProvider>
   );
 };
 
-const NetworkList: React.FC<{
+const filterChainByType = (
+  chains: Chain[],
+  type: "testnet" | "mainnet" | "all",
+) => {
+  if (type === "all") {
+    return chains;
+  }
+
+  if (type === "testnet") {
+    return chains.filter((c) => c.testnet);
+  }
+
+  return chains.filter((c) => !c.testnet);
+};
+
+const NetworkTab = (props: {
+  allChains: Chain[];
+  recentChains?: Chain[];
+  popularChains?: Chain[];
+  type: "testnet" | "mainnet" | "all";
+  onSwitch: (chain: Chain) => void;
+  renderChain?: RenderChain;
+  close?: () => void;
+}) => {
+  const allChains = useMemo(
+    () => filterChainByType(props.allChains, props.type),
+    [props.type, props.allChains],
+  );
+  const recentChains = useMemo(
+    () => filterChainByType(props.recentChains || [], props.type),
+    [props.type, props.recentChains],
+  );
+  const popularChains = useMemo(
+    () => filterChainByType(props.popularChains || [], props.type),
+    [props.type, props.popularChains],
+  );
+
+  return (
+    <ScrollContainer
+      style={{
+        height: "330px",
+      }}
+    >
+      {recentChains.length > 0 && (
+        <div>
+          <SectionLabel>Recently Used</SectionLabel>
+          <Spacer y="sm" />
+          <NetworkList
+            chains={recentChains}
+            onSwitch={props.onSwitch}
+            renderChain={props.renderChain}
+            close={props.close}
+          />
+          <Spacer y="lg" />
+        </div>
+      )}
+
+      {popularChains.length > 0 && (
+        <div>
+          <SectionLabel>Popular</SectionLabel>
+          <Spacer y="sm" />
+          <NetworkList
+            chains={popularChains}
+            onSwitch={props.onSwitch}
+            renderChain={props.renderChain}
+            close={props.close}
+          />
+          <Spacer y="lg" />
+        </div>
+      )}
+
+      {/* separator  */}
+      {(popularChains.length > 0 || recentChains.length > 0) && (
+        <>
+          <SectionLabel>All Networks</SectionLabel>
+          <Spacer y="sm" />
+        </>
+      )}
+
+      <NetworkList
+        chains={allChains}
+        onSwitch={props.onSwitch}
+        renderChain={props.renderChain}
+        close={props.close}
+      />
+    </ScrollContainer>
+  );
+};
+
+const NetworkList = memo(function NetworkList(props: {
   chains: Chain[];
-  closeModal: () => void;
-}> = (props) => {
+  onSwitch: (chain: Chain) => void;
+  renderChain?: RenderChain;
+  close?: () => void;
+}) {
   const switchChain = useSwitchChain();
   const activeChainId = useChainId();
-  const [confirmingChainId, setConfirmingChainId] = React.useState<
-    number | undefined
-  >();
-  const [errorConfirming, setErrorConfirming] = React.useState(false);
-  const requiresConfirmation = useWalletRequiresConfirmation();
+  const [switchingChainId, setSwitchingChainId] = useState(-1);
+  const [errorSwitchingChainId, setErrorSwitchingChainId] = useState(-1);
+
+  const handleSwitch = async (chain: Chain) => {
+    setErrorSwitchingChainId(-1);
+    setSwitchingChainId(chain.chainId);
+
+    try {
+      await switchChain(chain.chainId);
+      props.onSwitch(chain);
+    } catch (e: any) {
+      setErrorSwitchingChainId(chain.chainId);
+      console.error(e);
+    } finally {
+      setSwitchingChainId(-1);
+    }
+  };
+  const RenderChain = props.renderChain;
 
   return (
     <NetworkListUl>
       {props.chains.map((chain) => {
-        const showConfirmMessage = confirmingChainId === chain.chainId;
-        const chainName = (
-          <span>
-            {chain.name}{" "}
-            <NetworkShortName>
-              ({chain.shortName.toUpperCase()})
-            </NetworkShortName>
-          </span>
-        );
+        const confirming = switchingChainId === chain.chainId;
+        const switchingFailed = errorSwitchingChainId === chain.chainId;
+
+        const chainName = <span>{chain.name} </span>;
+
+        if (RenderChain) {
+          return (
+            <li key={chain.chainId}>
+              <RenderChain
+                switchChain={() => {
+                  handleSwitch(chain);
+                }}
+                chain={chain}
+                switching={switchingChainId === chain.chainId}
+                switchFailed={errorSwitchingChainId === chain.chainId}
+                close={props.close}
+              />
+            </li>
+          );
+        }
 
         return (
           <li key={chain.chainId}>
             <NetworkButton
               data-active={activeChainId === chain.chainId}
-              onClick={async () => {
-                if (requiresConfirmation) {
-                  setErrorConfirming(false);
-                  setConfirmingChainId(chain.chainId);
-                }
-
-                try {
-                  await switchChain(chain.chainId);
-                  props.closeModal();
-                } catch (e: any) {
-                  if (requiresConfirmation) {
-                    setErrorConfirming(true);
-                  }
-                  console.error(e);
-                }
+              onClick={() => {
+                handleSwitch(chain);
               }}
             >
               <ChainIcon
                 chain={chain}
                 size={iconSize.lg}
                 active={activeChainId === chain.chainId}
+                loading="lazy"
               />
 
-              {!showConfirmMessage && chainName}
-
-              {showConfirmMessage && (
+              {confirming || switchingFailed ? (
                 <div
                   style={{
                     display: "flex",
@@ -199,20 +452,22 @@ const NetworkList: React.FC<{
                       gap: spacing.xs,
                     }}
                   >
-                    {!errorConfirming && (
+                    {confirming && (
                       <>
                         <ConfirmMessage>Confirm in Wallet</ConfirmMessage>
                         <Spinner size="sm" color="link" />
                       </>
                     )}
 
-                    {errorConfirming && (
+                    {switchingFailed && (
                       <ErrorMessage>
                         Error: Could not Switch Network
                       </ErrorMessage>
                     )}
                   </div>
                 </div>
+              ) : (
+                chainName
               )}
             </NetworkButton>
           </li>
@@ -220,7 +475,7 @@ const NetworkList: React.FC<{
       })}
     </NetworkListUl>
   );
-};
+});
 
 const TabButton = styled(Tabs.Trigger)<{ theme?: Theme }>`
   all: unset;
@@ -228,7 +483,7 @@ const TabButton = styled(Tabs.Trigger)<{ theme?: Theme }>`
   font-weight: 500;
   color: ${(p) => p.theme.text.secondary};
   cursor: pointer;
-  padding: ${spacing.sm} ${spacing.md};
+  padding: ${spacing.sm} ${spacing.sm};
   -webkit-tap-highlight-color: transparent;
   border-radius: ${radius.lg};
   transition: background 0.2s ease, color 0.2s ease;
@@ -238,15 +493,14 @@ const TabButton = styled(Tabs.Trigger)<{ theme?: Theme }>`
   }
 `;
 
-const NetworkListUl = styled.ul<{ theme?: Theme }>`
-  padding: 0;
+const SectionLabel = styled.p<{ theme?: Theme }>`
+  font-size: ${fontSize.sm};
+  color: ${(p) => p.theme.text.secondary};
   margin: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: ${spacing.xs};
-  max-height: 340px;
-  min-height: 200px;
+`;
+
+const ScrollContainer = styled.div<{ theme?: Theme }>`
+  box-sizing: border-box;
   overflow: auto;
   padding-right: 10px;
   padding-bottom: ${spacing.lg};
@@ -259,6 +513,16 @@ const NetworkListUl = styled.ul<{ theme?: Theme }>`
       thumb: p.theme.bg.elevated,
       hover: p.theme.bg.highlighted,
     })}
+`;
+
+const NetworkListUl = styled.ul<{ theme?: Theme }>`
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: ${spacing.xs};
+  box-sizing: border-box;
 `;
 
 const NetworkButton = styled.button<{ theme?: Theme }>`
@@ -274,7 +538,8 @@ const NetworkButton = styled.button<{ theme?: Theme }>`
   transition: background 0.2s ease;
   background: ${(p) => p.theme.bg.elevated};
   color: ${(p) => p.theme.text.neutral};
-  font-weight: 500;
+  font-weight: 600;
+  font-size: ${fontSize.md};
   &:hover {
     background: ${(p) => p.theme.bg.highlighted};
   }
@@ -284,18 +549,9 @@ const NetworkButton = styled.button<{ theme?: Theme }>`
   }
 `;
 
-const NetworkShortName = styled.span<{ theme?: Theme }>`
-  color: ${(p) => p.theme.text.secondary};
-  display: inline-block;
-  font-size: ${fontSize.sm};
-  font-weight: 500;
-`;
-
 const StyledMagnifyingGlassIcon = styled(MagnifyingGlassIcon)<{
   theme?: Theme;
 }>`
-  width: ${iconSize.md};
-  height: ${iconSize.md};
   color: ${(p) => p.theme.text.secondary};
   position: absolute;
   left: 18px;

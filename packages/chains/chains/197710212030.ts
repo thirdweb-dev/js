@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Ntity Mainnet",
   "chain": "Ntity",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "Ntity Blockscout",
       "url": "https://blockscout.ntity.io",
-      "icon": "ntity",
+      "icon": {
+        "url": "ipfs://QmSW2YhCvMpnwtPGTJAuEK2QgyWfFjmnwcrapUg6kqFsPf",
+        "width": 711,
+        "height": 715,
+        "format": "svg"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "ntity"
-} as const;
+} as const satisfies Chain;

@@ -1,5 +1,4 @@
-import React from "react";
-import { Image } from "react-native";
+import ImageSvgUri from "./ImageSvgUri";
 
 export const WalletIcon = ({
   iconUri,
@@ -8,11 +7,5 @@ export const WalletIcon = ({
   iconUri: string;
   size: number;
 }) => {
-  return (
-    <Image
-      alt="wallet icon"
-      style={{ height: size, width: size }}
-      source={{ uri: iconUri }}
-    />
-  );
+  return <ImageSvgUri imageUrl={iconUri} width={size} height={size} />;
 };

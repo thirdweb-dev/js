@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Atoshi Testnet",
   "chain": "ATOSHI",
@@ -30,4 +31,4 @@ export default {
   ],
   "testnet": true,
   "slug": "atoshi-testnet"
-} as const;
+} as const satisfies Chain;

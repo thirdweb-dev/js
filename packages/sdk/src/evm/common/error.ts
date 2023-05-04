@@ -268,7 +268,7 @@ export type FunctionInfo = {
 export type TransactionErrorInfo = {
   reason: string;
   from: string;
-  to: string;
+  to?: string;
   network: providers.Network;
   method?: string;
   data?: string;
@@ -291,10 +291,12 @@ export class TransactionError extends Error {
     errorMessage += `Reason: ${info.reason}`;
     errorMessage += `\n\n\n╔═════════════════════════╗\n║ TRANSACTION INFORMATION ║\n╚═════════════════════════╝\n`;
     errorMessage += withSpaces("from", info.from);
-    errorMessage += withSpaces(
-      "to",
-      info.contractName ? `${info.to} (${info.contractName})` : info.to,
-    );
+    if (info.to) {
+      errorMessage += withSpaces(
+        "to",
+        info.contractName ? `${info.to} (${info.contractName})` : info.to,
+      );
+    }
     errorMessage += withSpaces(
       `chain`,
       `${info.network.name} (${info.network.chainId})`,
@@ -377,8 +379,12 @@ export class TransactionError extends Error {
  * @internal
  */
 export function parseRevertReason(error: any): string {
-  if (error.reason) {
+  if (error.reason && !error.reason.includes("cannot estimate gas")) {
     return error.reason as string;
+  }
+
+  if (error.error) {
+    return error.error as string;
   }
 
   // I think this code path should never be hit, but just in case

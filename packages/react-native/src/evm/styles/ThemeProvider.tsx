@@ -1,7 +1,7 @@
 import { darkTheme, lightTheme, Theme } from "./theme";
 import { ThemeProvider as ShopifyThemeProvider } from "@shopify/restyle";
 import { ThirdwebThemeContext } from "@thirdweb-dev/react-core";
-import React, { PropsWithChildren, useContext } from "react";
+import { PropsWithChildren, useContext } from "react";
 import { useColorScheme } from "react-native";
 
 export type ThemeProviderProps = {
@@ -21,8 +21,8 @@ export function ThemeProvider({
         typeof theme_ === "object"
           ? theme_
           : theme_ === "dark"
-          ? darkTheme
-          : lightTheme
+          ? darkTheme()
+          : lightTheme()
       }
     >
       {children}

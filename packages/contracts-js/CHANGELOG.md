@@ -1,5 +1,25 @@
 # @thirdweb-dev/contracts-js
 
+## 1.3.4
+
+### Patch Changes
+
+- [#959](https://github.com/thirdweb-dev/js/pull/959) [`00d0d01e`](https://github.com/thirdweb-dev/js/commit/00d0d01e619ff5c60b9f31386f51a55b5e466efa) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update contracts package to 3.4.6
+
+## 1.3.3
+
+### Patch Changes
+
+- [#756](https://github.com/thirdweb-dev/js/pull/756) [`b75bcef5`](https://github.com/thirdweb-dev/js/commit/b75bcef55bfdedc260b5b62bb4aff10a7d5c47b6) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Any EVM deploy flow with Create2 factory
+
+## 1.3.2
+
+### Patch Changes
+
+- [#701](https://github.com/thirdweb-dev/js/pull/701) [`71532e5a`](https://github.com/thirdweb-dev/js/commit/71532e5a9fb5b116ba342465ef82e795ca8cc011) Thanks [@kumaryash90](https://github.com/kumaryash90)! - contracts v3.4.4
+
+- [#702](https://github.com/thirdweb-dev/js/pull/702) [`33d1cc7f`](https://github.com/thirdweb-dev/js/commit/33d1cc7f92cd982e9e55130472c0006bb999f682) Thanks [@jnsdls](https://github.com/jnsdls)! - enable `browser` export
+
 ## 1.3.1
 
 ### Patch Changes

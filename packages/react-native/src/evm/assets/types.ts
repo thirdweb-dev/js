@@ -1,4 +1,5 @@
 export type IconStyleProp = {
-  color: string;
-  size: number;
+  color?: string;
+  width: number;
+  height: number;
 };

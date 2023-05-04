@@ -50,6 +50,7 @@ import {
   utils,
 } from "ethers";
 import invariant from "tiny-invariant";
+import { TransactionResultWithId } from "../types";
 
 /**
  * Handles direct listings
@@ -218,6 +219,48 @@ export class MarketplaceDirect {
             id: event[0].args.listingId,
             receipt,
           };
+        },
+      });
+    },
+  );
+
+  /**
+   * Create a batch of new listings
+   *
+   * @remarks Create a batch of new listings on the marketplace
+   *
+   * @example
+   * ```javascript
+   * const listings = [...];
+   * const tx = await contract.direct.createListingsBatch(listings);
+   * ```
+   */
+  createListingsBatch = buildTransactionFunction(
+    async (
+      listings: NewDirectListing[],
+    ): Promise<Transaction<TransactionResultWithId[]>> => {
+      const data = await Promise.all(
+        listings.map(async (listing) => {
+          const tx = await this.createListing.prepare(listing);
+          return tx.encode();
+        }),
+      );
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "multicall",
+        args: [data],
+        parse: (receipt) => {
+          const events = this.contractWrapper.parseLogs<ListingAddedEvent>(
+            "ListingAdded",
+            receipt?.logs,
+          );
+          return events.map((event) => {
+            return {
+              id: event.args.listingId,
+              receipt,
+            };
+          });
         },
       });
     },
@@ -547,9 +590,15 @@ export class MarketplaceDirect {
         ERC721Abi,
         provider,
       ) as IERC721;
+
+      // Handle reverts in case of non-existent tokens
+      let owner;
+      try {
+        owner = await asset.ownerOf(listing.tokenId);
+      } catch (e) {}
       const valid =
-        (await asset.ownerOf(listing.tokenId)).toLowerCase() ===
-        listing.sellerAddress.toLowerCase();
+        owner?.toLowerCase() === listing.sellerAddress.toLowerCase();
+
       return {
         valid,
         error: valid

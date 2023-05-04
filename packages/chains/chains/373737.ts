@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "HAPchain Testnet",
   "chain": "HAPchain",
@@ -26,9 +27,14 @@ export default {
       "name": "HAP EVM Explorer (Blockscout)",
       "url": "https://blockscout-test.hap.land",
       "standard": "none",
-      "icon": "hap"
+      "icon": {
+        "url": "ipfs://QmQ4V9JC25yUrYk2kFJwmKguSsZBQvtGcg6q9zkDV8mkJW",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      }
     }
   ],
   "testnet": true,
   "slug": "hapchain-testnet"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Astar",
   "chain": "ASTR",
@@ -26,9 +27,14 @@ export default {
       "name": "subscan",
       "url": "https://astar.subscan.io",
       "standard": "none",
-      "icon": "subscan"
+      "icon": {
+        "url": "ipfs://Qma2GfW5nQHuA7nGqdEfwaXPL63G9oTwRTQKaGTfjNtM2W",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      }
     }
   ],
   "testnet": false,
   "slug": "astar"
-} as const;
+} as const satisfies Chain;

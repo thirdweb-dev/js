@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Blockchain Genesis Mainnet",
   "chain": "GEN",
@@ -19,4 +20,4 @@ export default {
   "networkId": 10101,
   "testnet": false,
   "slug": "blockchain-genesis"
-} as const;
+} as const satisfies Chain;

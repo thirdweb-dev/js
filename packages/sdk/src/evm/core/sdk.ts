@@ -31,14 +31,16 @@ import type {
 import { UserWallet } from "./wallet/user-wallet";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
+import { ContractAddress, GENERATED_ABI } from "@thirdweb-dev/generated-abis";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import type { EVMWallet } from "@thirdweb-dev/wallets";
-import type { ContractInterface, Signer } from "ethers";
+import type { ContractInterface, Signer, BaseContract } from "ethers";
 import {
   Contract as EthersContract,
   Wallet as EthersWallet,
   utils as ethersUtils,
 } from "ethers";
+import { BaseContractForAddress } from "../types/contract";
+import { ContractVerifier } from "./classes/contract-verifier";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -65,7 +67,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @beta
    */
   static async fromWallet(
-    wallet: EVMWallet,
+    wallet: {
+      getSigner: () => Promise<Signer>;
+    },
     network: ChainOrRpcUrl,
     options: SDKOptions = {},
     storage?: ThirdwebStorage,
@@ -165,6 +169,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   public deployer: ContractDeployer;
   /**
+   * Contract verifier
+   */
+  public verifier: ContractVerifier;
+  /**
    * The registry of deployed contracts
    */
   public multiChainRegistry: MultichainRegistry;
@@ -199,6 +207,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
     this.wallet = new UserWallet(network, options);
     this.deployer = new ContractDeployer(network, options, configuredStorage);
+    this.verifier = new ContractVerifier(network, options, configuredStorage);
     this.multiChainRegistry = new MultichainRegistry(
       network,
       this.storageHandler,
@@ -412,7 +421,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * const contract = await sdk.getContract("{{contract_address}}");
    * ```
    */
-  public async getContract(address: AddressOrEns): Promise<SmartContract>;
+  public async getContract<
+    TContractAddress extends AddressOrEns | ContractAddress,
+  >(
+    address: TContractAddress,
+  ): Promise<
+    TContractAddress extends ContractAddress
+      ? SmartContract<BaseContractForAddress<TContractAddress>>
+      : SmartContract<BaseContract>
+  >;
   /**
    * Get an instance of a Custom ThirdwebContract
    * @param address - the address of the deployed contract
@@ -458,6 +475,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     if (this.contractCache.has(resolvedAddress)) {
       // we know this will be there since we check the has above
       return this.contractCache.get(resolvedAddress) as ValidContractInstance;
+    }
+
+    if (resolvedAddress in GENERATED_ABI) {
+      return await this.getContractFromAbi(
+        resolvedAddress,
+        (GENERATED_ABI as any)[resolvedAddress],
+      );
     }
 
     let newContract: ValidContractInstance;
@@ -670,6 +694,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     this.deployer.updateSignerOrProvider(this.getSignerOrProvider());
     this._publisher.updateSignerOrProvider(this.getSignerOrProvider());
     this.multiChainRegistry.updateSigner(this.getSignerOrProvider());
+    this.verifier.updateSignerOrProvider(this.getSignerOrProvider());
     for (const [, contract] of this.contractCache) {
       contract.onNetworkUpdated(this.getSignerOrProvider());
     }

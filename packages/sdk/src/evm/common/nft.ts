@@ -9,7 +9,6 @@ import {
   InterfaceId_IERC1155,
   InterfaceId_IERC721,
 } from "../constants/contract";
-import { NotFoundError } from "./error";
 import type {
   IERC1155Metadata,
   IERC165,
@@ -86,7 +85,7 @@ export async function fetchTokenMetadataForContract(
   provider: providers.Provider,
   tokenId: BigNumberish,
   storage: ThirdwebStorage,
-) {
+): Promise<NFTMetadata> {
   let uri: string | undefined;
   const erc165 = new Contract(
     contractAddress,
@@ -113,7 +112,12 @@ export async function fetchTokenMetadataForContract(
     throw Error("Contract must implement ERC 1155 or ERC 721.");
   }
   if (!uri) {
-    throw new NotFoundError();
+    // no uri found, return fallback metadata
+    return CommonNFTOutput.parse({
+      ...FALLBACK_METADATA,
+      id: BigNumber.from(tokenId).toString(),
+      uri: "",
+    });
   }
   return fetchTokenMetadata(tokenId, uri, storage);
 }

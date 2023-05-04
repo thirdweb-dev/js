@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Nebula Testnet",
   "chain": "NTN",
@@ -9,7 +10,7 @@ export default {
   },
   "rpc": [
     "https://nebula-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.rpc.novanetwork.io:9070"
+    "https://testnet.rpc.novanetwork.io"
   ],
   "faucets": [
     "https://faucet.novanetwork.io"
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": true,
   "slug": "nebula-testnet"
-} as const;
+} as const satisfies Chain;

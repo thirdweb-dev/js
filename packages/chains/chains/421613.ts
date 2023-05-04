@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Arbitrum Goerli",
   "title": "Arbitrum Goerli Rollup Testnet",
@@ -38,16 +39,8 @@ export default {
     "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/arbitrum/512.png",
     "height": 512,
     "width": 512,
-    "format": "png",
-    "sizes": [
-      512,
-      256,
-      128,
-      64,
-      32,
-      16
-    ]
+    "format": "png"
   },
   "testnet": true,
   "slug": "arbitrum-goerli"
-} as const;
+} as const satisfies Chain;

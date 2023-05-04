@@ -12,14 +12,13 @@ import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../../core/classes/contract-sales";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
-import { Erc721 } from "../../core/classes/erc-721";
 import { StandardErc721 } from "../../core/classes/erc-721-standard";
 import { Erc721WithQuantitySignatureMintable } from "../../core/classes/erc-721-with-quantity-signature-mintable";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import type { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { Address, AddressOrEns } from "../../schema";
-import { Abi } from "../../schema/contracts/custom";
+import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { TokenErc721ContractSchema } from "../../schema/contracts/token-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import type { TokenERC721 } from "@thirdweb-dev/contracts-js";
@@ -102,14 +101,13 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * @internal
    */
   public interceptor: ContractInterceptor<TokenERC721>;
-  public erc721: Erc721<TokenERC721>;
 
   constructor(
     network: NetworkInput,
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: Abi,
+    abi: AbiInput,
     chainId: number,
     contractWrapper = new ContractWrapper<TokenERC721>(
       network,
@@ -120,7 +118,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
   ) {
     super(contractWrapper, storage, chainId);
 
-    this.abi = abi;
+    this.abi = AbiSchema.parse(abi || []);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       TokenErc721ContractSchema,
@@ -143,7 +141,6 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.erc721 = new Erc721(this.contractWrapper, this.storage, chainId);
     this.signature = new Erc721WithQuantitySignatureMintable(
       this.contractWrapper,
       this.storage,
@@ -358,10 +355,13 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
-  ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+  public async call<
+    TMethod extends keyof TokenERC721["functions"] = keyof TokenERC721["functions"],
+  >(
+    functionName: string & TMethod,
+    args?: Parameters<TokenERC721["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ): Promise<ReturnType<TokenERC721["functions"][TMethod]>> {
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 }

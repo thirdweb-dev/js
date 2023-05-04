@@ -16,7 +16,7 @@ import { StandardErc20 } from "../../core/classes/erc-20-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput } from "../../core/types";
-import { Abi } from "../../schema/contracts/custom";
+import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { TokenErc20ContractSchema } from "../../schema/contracts/token-erc20";
 import { SDKOptions } from "../../schema/sdk-options";
 import { Address, AddressOrEns } from "../../schema/shared";
@@ -81,7 +81,7 @@ export class Token extends StandardErc20<TokenERC20> {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: Abi,
+    abi: AbiInput,
     chainId: number,
     contractWrapper = new ContractWrapper<TokenERC20>(
       network,
@@ -91,7 +91,7 @@ export class Token extends StandardErc20<TokenERC20> {
     ),
   ) {
     super(contractWrapper, storage, chainId);
-    this.abi = abi;
+    this.abi = AbiSchema.parse(abi || []);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       TokenErc20ContractSchema,
@@ -319,10 +319,13 @@ export class Token extends StandardErc20<TokenERC20> {
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
-  ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+  public async call<
+    TMethod extends keyof TokenERC20["functions"] = keyof TokenERC20["functions"],
+  >(
+    functionName: string & TMethod,
+    args?: Parameters<TokenERC20["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ): Promise<ReturnType<TokenERC20["functions"][TMethod]>> {
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 }

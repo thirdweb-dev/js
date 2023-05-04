@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Fantasia Chain Mainnet",
   "chain": "FSC",
@@ -26,4 +27,4 @@ export default {
   ],
   "testnet": false,
   "slug": "fantasia-chain"
-} as const;
+} as const satisfies Chain;

@@ -1,8 +1,9 @@
 import { useThirdwebAuthContext } from "../../contexts/thirdweb-auth";
 import { cacheKeys } from "../../utils/cache-keys";
 import { useQuery } from "@tanstack/react-query";
-import { Json, User } from "@thirdweb-dev/auth";
+import type { Json, User } from "@thirdweb-dev/auth";
 import invariant from "tiny-invariant";
+import { AUTH_TOKEN_STORAGE_KEY } from "../../../core/constants/auth";
 
 export interface UserWithData<
   TData extends Json = Json,
@@ -15,6 +16,8 @@ export interface UserWithData<
  * Hook to get the currently logged in user.
  *
  * @returns - The currently logged in user or null if not logged in, as well as a loading state.
+ *
+ * @see {@link https://portal.thirdweb.com/react/react.useuser?utm_source=sdk | Documentation}
  *
  * @beta
  */
@@ -36,10 +39,25 @@ export function useUser<
         "Please specify an authUrl in the authConfig.",
       );
 
+      const token = await authConfig.secureStorage?.getItem(
+        AUTH_TOKEN_STORAGE_KEY,
+      );
       // We include credentials so we can getUser even if API is on different URL
-      const res = await fetch(`${authConfig.authUrl}/user`, {
+      const params = {
         credentials: "include",
-      });
+        ...(token
+          ? {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          : {}),
+      };
+
+      const res = await fetch(
+        `${authConfig.authUrl}/user`,
+        params as RequestInit,
+      );
 
       return (await res.json()) as UserWithData<TData, TContext>;
     },

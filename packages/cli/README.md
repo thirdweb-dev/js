@@ -63,7 +63,7 @@ Deploying published contracts give deployers access to automatic SDKs to integra
 npx thirdweb@latest detect
 ```
 
-As you're developing your contracts, you may want to implement [Extensions](https://portal.thirdweb.com/contractkit) to unlock functionality on the SDKs (ie. nft minting with automatic upload to IPFS) and the dashboard (ie. generated UI to manage permissions). This command will show what extensions were detected on your contract, unlocking the corresponding functionality on the SDKs and dashboard.
+As you're developing your contracts, you may want to implement [Extensions](https://portal.thirdweb.com/solidity/extensions) to unlock functionality on the SDKs (ie. nft minting with automatic upload to IPFS) and the dashboard (ie. generated UI to manage permissions). This command will show what extensions were detected on your contract, unlocking the corresponding functionality on the SDKs and dashboard.
 
 ---
 
@@ -77,7 +77,7 @@ npm i -g @thirdweb-dev/cli
 
 ---
 
-## Supported projects
+## Supported Projects
 
 To publish, you need to be in a directory that contains a project which the CLI is compatible
 with. The projects we support so far:
@@ -89,7 +89,7 @@ with. The projects we support so far:
 
 ---
 
-## Running the examples
+## Running the Examples
 
 Clone the repo and run this command after installing the CLI tool:
 
@@ -111,12 +111,12 @@ git clone https://github.com/thirdweb-dev/js.git
 2. From the project root run
 
 ```bash
-yarn && yarn build
+pnpm i && pnpm build
 ```
 
 3. From inside `js/packages/cli` Run the `build:watch` command to compile any changes in real time
 
 ```bash
 $ npm install -g ./
-$ yarn run build:watch
+$ pnpm build:watch
 ```

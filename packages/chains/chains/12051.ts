@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Singularity ZERO Testnet",
   "chain": "ZERO",
@@ -26,4 +27,4 @@ export default {
   ],
   "testnet": true,
   "slug": "singularity-zero-testnet"
-} as const;
+} as const satisfies Chain;

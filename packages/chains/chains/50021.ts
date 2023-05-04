@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "GTON Testnet",
   "chain": "GTON Testnet",
@@ -28,4 +29,4 @@ export default {
   },
   "testnet": true,
   "slug": "gton-testnet"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Huobi ECO Chain Testnet",
   "chain": "Heco",
@@ -20,4 +21,4 @@ export default {
   "networkId": 256,
   "testnet": true,
   "slug": "huobi-eco-chain-testnet"
-} as const;
+} as const satisfies Chain;

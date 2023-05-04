@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Core Blockchain Testnet",
   "chain": "Core",
@@ -27,10 +28,15 @@ export default {
     {
       "name": "Core Scan Testnet",
       "url": "https://scan.test.btcs.network",
-      "icon": "core",
+      "icon": {
+        "url": "ipfs://QmeTQaBCkpbsxNNWTpoNrMsnwnAEf1wYTcn7CiiZGfUXD2",
+        "width": 200,
+        "height": 217,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "core-blockchain-testnet"
-} as const;
+} as const satisfies Chain;

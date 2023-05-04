@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "ThaiChain 2.0 ThaiFi",
   "chain": "TCH",
@@ -17,4 +18,4 @@ export default {
   "networkId": 17,
   "testnet": false,
   "slug": "thaichain-2-0-thaifi"
-} as const;
+} as const satisfies Chain;

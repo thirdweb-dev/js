@@ -1,10 +1,11 @@
+export { resolveIpfsUri, resolveMimeType } from "../core/utils/ipfs";
+
 export { ThirdwebThemeContext } from "../core/providers/theme-context";
 export { ThirdwebProviderCore } from "../core/providers/thirdweb-provider";
 export type { ThirdwebProviderCoreProps } from "../core/providers/thirdweb-provider";
 
 // constants
 export { __DEV__ } from "../core/constants/runtime";
-export { TW_WC_PROJECT_ID } from "../core/constants/wc";
 
 // wallet hooks
 export {
@@ -15,7 +16,9 @@ export {
   useDisconnect,
   useSwitchChain,
   useWallets,
+  useIsConnecting,
 } from "../core/hooks/wallet-hooks";
+export { useNetwork } from "../core/hooks/useNetwork";
 export { useThirdwebWallet } from "../core/providers/thirdweb-wallet-provider";
 
 // connected wallet hooks
@@ -31,9 +34,12 @@ export {
 export { shouldNeverPersistQuery } from "../core/query-utils/query-key";
 export type { RequiredParam } from "../core/query-utils/required-param";
 export type {
-  SupportedWallet,
-  SupportedWalletInstance,
+  ConfiguredWallet,
+  ConnectUIProps,
+  WalletClass,
+  WalletInstance,
   ExtraCoreWalletOptions,
+  WalletOptions,
 } from "../core/types/wallet";
 
 // auth
@@ -41,7 +47,10 @@ export {
   ThirdwebAuthProvider,
   useThirdwebAuthContext,
 } from "./contexts/thirdweb-auth";
-export type { ThirdwebAuthConfig } from "./contexts/thirdweb-auth";
+export type {
+  ThirdwebAuthConfig,
+  ISecureStorage,
+} from "./contexts/thirdweb-auth";
 
 // config
 export {
@@ -207,6 +216,7 @@ export { useNetworkMismatch } from "./hooks/useNetworkMismatch";
 export { useReadonlySDK } from "./hooks/useReadonlySDK";
 export { useSigner } from "./hooks/useSigner";
 export { useSupportedChains } from "./hooks/useSupportedChains";
+export { useSupportedWallet } from "./hooks/useSupportedWallet";
 export { useAppURI, useSetAppURI } from "./hooks/async/app";
 
 // sdk provider
@@ -215,7 +225,7 @@ export {
   useSDK,
   useSDKChainId,
 } from "./providers/thirdweb-sdk-provider";
-export type { ThirdwebSDKProviderProps } from "./providers/thirdweb-sdk-provider";
+export type { ThirdwebSDKProviderProps } from "./providers/types";
 
 // types
 export type {

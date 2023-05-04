@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Evmos",
   "chain": "Evmos",
@@ -27,15 +28,25 @@ export default {
       "name": "Evmos EVM Explorer (Escan)",
       "url": "https://escan.live",
       "standard": "none",
-      "icon": "evmos"
+      "icon": {
+        "url": "ipfs://QmeZW6VKUFTbz7PPW8PmDR3ZHa6osYPLBFPnW8T5LSU49c",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      }
     },
     {
       "name": "Evmos Cosmos Explorer (Mintscan)",
       "url": "https://www.mintscan.io/evmos",
       "standard": "none",
-      "icon": "evmos"
+      "icon": {
+        "url": "ipfs://QmeZW6VKUFTbz7PPW8PmDR3ZHa6osYPLBFPnW8T5LSU49c",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      }
     }
   ],
   "testnet": false,
   "slug": "evmos"
-} as const;
+} as const satisfies Chain;

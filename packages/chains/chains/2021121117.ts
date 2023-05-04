@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "DataHopper",
   "chain": "HOP",
@@ -17,4 +18,4 @@ export default {
   "networkId": 2021121117,
   "testnet": false,
   "slug": "datahopper"
-} as const;
+} as const satisfies Chain;

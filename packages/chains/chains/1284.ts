@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Moonbeam",
   "chain": "MOON",
@@ -25,4 +26,4 @@ export default {
   ],
   "testnet": false,
   "slug": "moonbeam"
-} as const;
+} as const satisfies Chain;

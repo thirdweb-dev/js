@@ -1,6 +1,7 @@
 import type { CoinbaseWalletConnector } from "../connectors/coinbase-wallet";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
-import { AbstractBrowserWallet, WalletOptions } from "./base";
+import { walletIds } from "../constants/walletIds";
+import { AbstractClientWallet, WalletOptions } from "./base";
 import { Buffer } from "buffer";
 
 if (typeof window !== "undefined") {
@@ -8,21 +9,35 @@ if (typeof window !== "undefined") {
   window.Buffer = Buffer;
 }
 
-export type CoinbaseWalletOptions = WalletOptions<{ theme?: "light" | "dark" }>;
+export type CoinbaseWalletOptions = WalletOptions<{ headlessMode?: boolean }>;
 
-export class CoinbaseWallet extends AbstractBrowserWallet<{
-  theme?: "light" | "dark";
-}> {
+export class CoinbaseWallet extends AbstractClientWallet {
   connector?: TWConnector;
   coinbaseConnector?: CoinbaseWalletConnector;
 
-  static id = "coinbaseWallet" as const;
+  // TODO: remove this
+  static meta = {
+    iconURL:
+      "ipfs://QmcJBHopbwfJcLqJpX2xEufSS84aLbF7bHavYhaXUcrLaH/coinbase.svg",
+    name: "Coinbase Wallet",
+    urls: {
+      chrome:
+        "https://chrome.google.com/webstore/detail/coinbase-wallet-extension/hnfanknocfeofbddgcijnmhnfnkdnaad",
+      android: "https://play.google.com/store/apps/details?id=org.toshi",
+      ios: "https://apps.apple.com/us/app/coinbase-wallet-nfts-crypto/id1278383455",
+    },
+  };
+
+  static id = walletIds.coinbase;
   public get walletName() {
     return "Coinbase Wallet" as const;
   }
 
-  constructor(options: CoinbaseWalletOptions) {
+  headlessMode: boolean;
+
+  constructor(options?: CoinbaseWalletOptions) {
     super(CoinbaseWallet.id, options);
+    this.headlessMode = options?.headlessMode || false;
   }
 
   protected async getConnector(): Promise<TWConnector> {
@@ -35,10 +50,10 @@ export class CoinbaseWallet extends AbstractBrowserWallet<{
       const cbConnector = new CoinbaseWalletConnector({
         chains: this.chains,
         options: {
-          appName: this.options.dappMetadata.name,
+          appName: this.dappMetadata.name,
           reloadOnDisconnect: false,
-          darkMode: this.options.theme === "dark",
-          headlessMode: true,
+          darkMode: this.dappMetadata.isDarkMode,
+          headlessMode: this.headlessMode,
         },
       });
 
@@ -50,11 +65,11 @@ export class CoinbaseWallet extends AbstractBrowserWallet<{
     return this.connector;
   }
 
-  async getQrCode() {
+  async getQrUrl() {
     await this.getConnector();
     if (!this.coinbaseConnector) {
       throw new Error("Coinbase connector not initialized");
     }
-    return this.coinbaseConnector.getQrCode();
+    return this.coinbaseConnector.getQrUrl();
   }
 }

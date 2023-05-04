@@ -1,7 +1,7 @@
 import { Icon } from "../../../assets/icon";
 import { useAppTheme } from "../../../styles/hooks";
 import Text from "../Text";
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { StyleSheet, View } from "react-native";
 
 interface ModalHeaderTextCloseProps {
@@ -27,7 +27,8 @@ export const ModalHeaderTextClose = ({
         )}
         <Icon
           type="close"
-          size={14}
+          width={14}
+          height={14}
           color={theme.colors.iconSecondary}
           onPress={onClose}
         />

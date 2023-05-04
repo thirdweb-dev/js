@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Neon EVM DevNet",
   "chain": "Solana",
@@ -37,4 +38,4 @@ export default {
   ],
   "testnet": false,
   "slug": "neon-evm-devnet"
-} as const;
+} as const satisfies Chain;

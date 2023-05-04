@@ -1,8 +1,9 @@
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   CONTRACT_ADDRESSES,
   getContractAddressByChainId,
 } from "../constants/addresses";
-import { Transaction } from "../core/classes/transactions";
+import { DeployTransaction, Transaction } from "../core/classes/transactions";
 import {
   ForwardRequestMessage,
   GaslessTransaction,
@@ -10,6 +11,10 @@ import {
   TransactionResult,
 } from "../core/types";
 import { SDKOptionsOutput } from "../schema/sdk-options";
+import {
+  computeEOAForwarderAddress,
+  computeForwarderAddress,
+} from "./any-evm-utils";
 import {
   BiconomyForwarderAbi,
   ChainAwareForwardRequest,
@@ -22,6 +27,18 @@ import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
 import fetch from "cross-fetch";
 import { BigNumber, BytesLike, ethers } from "ethers";
 import invariant from "tiny-invariant";
+
+export function buildDeployTransactionFunction<TArgs extends any[]>(
+  fn: (...args: TArgs) => Promise<DeployTransaction>,
+) {
+  async function executeFn(...args: TArgs): Promise<string> {
+    const tx = await fn(...args);
+    return tx.execute();
+  }
+
+  executeFn.prepare = fn;
+  return executeFn;
+}
 
 export function buildTransactionFunction<
   TArgs extends any[],
@@ -40,12 +57,19 @@ export async function defaultGaslessSendFunction(
   transaction: GaslessTransaction,
   signer: ethers.Signer,
   provider: ethers.providers.Provider,
+  storage: ThirdwebStorage,
   gaslessOptions?: SDKOptionsOutput["gasless"],
 ): Promise<string> {
   if (gaslessOptions && "biconomy" in gaslessOptions) {
     return biconomySendFunction(transaction, signer, provider, gaslessOptions);
   }
-  return defenderSendFunction(transaction, signer, provider, gaslessOptions);
+  return defenderSendFunction(
+    transaction,
+    signer,
+    provider,
+    storage,
+    gaslessOptions,
+  );
 }
 
 export async function biconomySendFunction(
@@ -154,6 +178,7 @@ export async function defenderSendFunction(
   transaction: GaslessTransaction,
   signer: ethers.Signer,
   provider: ethers.providers.Provider,
+  storage: ThirdwebStorage,
   gaslessOptions?: SDKOptionsOutput["gasless"],
 ): Promise<string> {
   invariant(
@@ -167,10 +192,12 @@ export async function defenderSendFunction(
     (gaslessOptions.openzeppelin.useEOAForwarder
       ? CONTRACT_ADDRESSES[
           transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-        ].openzeppelinForwarderEOA
+        ].openzeppelinForwarderEOA ||
+        (await computeEOAForwarderAddress(provider, storage))
       : CONTRACT_ADDRESSES[
           transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-        ].openzeppelinForwarder);
+        ].openzeppelinForwarder ||
+        (await computeForwarderAddress(provider, storage)));
 
   const forwarder = new ethers.Contract(
     forwarderAddress,
@@ -203,8 +230,8 @@ export async function defenderSendFunction(
     };
   } else {
     domain = {
-      name: "GSNv2 Forwarder",
-      version: "0.0.1",
+      name: gaslessOptions.openzeppelin.domainName,
+      version: gaslessOptions.openzeppelin.domainVersion,
       chainId: transaction.chainId,
       verifyingContract: forwarderAddress,
     };

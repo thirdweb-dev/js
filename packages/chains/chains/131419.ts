@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "ETND Chain Mainnets",
   "chain": "ETND",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "etndscan",
       "url": "https://scan.etnd.pro",
-      "icon": "ETND",
+      "icon": {
+        "url": "ipfs://Qmd26eRJxPb1jJg5Q4mC2M4kD9Jrs5vmcnr5LczHFMGwSD",
+        "width": 128,
+        "height": 128,
+        "format": "png"
+      },
       "standard": "none"
     }
   ],
   "testnet": false,
   "slug": "etnd-chain-s"
-} as const;
+} as const satisfies Chain;

@@ -20,7 +20,13 @@ import { StandardErc721 } from "../../core/classes/erc-721-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { Abi, AddressOrEns, SDKOptions } from "../../schema";
+import {
+  Abi,
+  AbiInput,
+  AbiSchema,
+  AddressOrEns,
+  SDKOptions,
+} from "../../schema";
 import { MultiwrapContractSchema } from "../../schema/contracts/multiwrap";
 import {
   ERC1155Wrappable,
@@ -102,7 +108,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: Abi,
+    abi: AbiInput,
     chainId: number,
     contractWrapper = new ContractWrapper<MultiwrapContract>(
       network,
@@ -113,7 +119,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
   ) {
     super(contractWrapper, storage, chainId);
 
-    this.abi = abi;
+    this.abi = AbiSchema.parse(abi || []);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       MultiwrapContractSchema,
@@ -422,10 +428,13 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
-  ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+  public async call<
+    TMethod extends keyof MultiwrapContract["functions"] = keyof MultiwrapContract["functions"],
+  >(
+    functionName: string & TMethod,
+    args?: Parameters<MultiwrapContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ): Promise<ReturnType<MultiwrapContract["functions"][TMethod]>> {
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 }

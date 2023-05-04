@@ -9,17 +9,23 @@ import {
   invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  UseMutationResult,
+  useQueryClient,
+  UseQueryResult,
+} from "@tanstack/react-query";
 import type {
   CustomContractMetadata,
   ValidContractInstance,
 } from "@thirdweb-dev/sdk";
+import type { providers } from "ethers";
 import invariant from "tiny-invariant";
 
 // primary sales
 
 /**
- * Get the primary sale recipient 
+ * Get the primary sale recipient
  *
  * @example
  * ```jsx
@@ -30,6 +36,7 @@ import invariant from "tiny-invariant";
  * @param contract - an instance of a {@link SmartContract}
  * @returns the wallet address of the primary sales recipient
  * @twfeature PrimarySale
+ * @see {@link https://portal.thirdweb.com/react/react.useprimarysalerecipient?utm_source=sdk | Documentation}
  * @beta
  */
 export function usePrimarySaleRecipient(
@@ -81,11 +88,19 @@ export function usePrimarySaleRecipient(
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to update the primary sales recipient
  * @twfeature PrimarySale
+ * @see {@link https://portal.thirdweb.com/react/react.useupdateprimarysalerecipient?utm_source=sdk | Documentation}
  * @beta
  */
 export function useUpdatePrimarySaleRecipient(
   contract: RequiredParam<ValidContractInstance>,
-) {
+): UseMutationResult<
+  {
+    receipt: providers.TransactionReceipt;
+  },
+  unknown,
+  string,
+  unknown
+> {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();
   const activeChainId = useSDKChainId();
@@ -124,6 +139,7 @@ export function useUpdatePrimarySaleRecipient(
  * @param contract - an instance of a {@link SmartContract}
  * @returns an object containing recipient address and the royalty basis points
  * @twfeature Royalty
+ * @see {@link https://portal.thirdweb.com/react/react.useroyaltysettings?utm_source=sdk | Documentation}
  * @beta
  */
 export function useRoyaltySettings(
@@ -175,6 +191,7 @@ export function useRoyaltySettings(
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to update the royalty settings
  * @twfeature Royalty
+ * @see {@link https://portal.thirdweb.com/react/react.useupdateroyaltysettings?utm_source=sdk | Documentation}
  * @beta
  */
 export function useUpdateRoyaltySettings(
@@ -221,6 +238,7 @@ export function useUpdateRoyaltySettings(
  * @param contract - an instance of a {@link SmartContract}
  * @returns an object containing the platform fee basis points and the fee recipient address
  * @twfeature PlatformFee
+ * @see {@link https://portal.thirdweb.com/react/react.useplatformfees?utm_source=sdk | Documentation}
  * @beta
  */
 export function usePlatformFees(
@@ -271,6 +289,7 @@ export function usePlatformFees(
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to update the platform fees settings
  * @twfeature PlatformFee
+ * @see {@link https://portal.thirdweb.com/react/react.useupdateplatformfees?utm_source=sdk | Documentation}
  * @beta
  */
 export function useUpdatePlatformFees(
@@ -316,9 +335,13 @@ export function useUpdatePlatformFees(
  *
  * @param contract - an instance of a {@link SmartContract}
  * @returns a {@link CustomContractMetadata} object containing the metadata
+ * @see {@link https://portal.thirdweb.com/react/react.usemetadata?utm_source=sdk | Documentation}
  * @beta
  */
-export function useMetadata(contract: RequiredParam<ValidContractInstance>) {
+export function useMetadata(
+  contract: RequiredParam<ValidContractInstance>,
+  // TODO figure out UseQueryResult type better
+): UseQueryResult {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.extensions.metadata.get(contractAddress),
@@ -336,7 +359,7 @@ export function useMetadata(contract: RequiredParam<ValidContractInstance>) {
 
 /**
  * Set the metadata of this contract
- * 
+ *
  * @example
  * ```jsx
  * const Component = () => {
@@ -354,9 +377,9 @@ export function useMetadata(contract: RequiredParam<ValidContractInstance>) {
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => updateMetadata({ 
-  *        name: "My Contract", 
-  *        description: "This is my contract" 
+ *       onClick={() => updateMetadata({
+ *        name: "My Contract",
+ *        description: "This is my contract"
  *       })}
  *     >
  *       Update Contract Metadata
@@ -366,11 +389,13 @@ export function useMetadata(contract: RequiredParam<ValidContractInstance>) {
  * ```
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to update the metadata
+ * @see {@link https://portal.thirdweb.com/react/react.useupdatemetadata?utm_source=sdk | Documentation}
  * @beta
  */
 export function useUpdateMetadata(
   contract: RequiredParam<ValidContractInstance>,
-) {
+  // TODO figure out UseMutationResult type better
+): UseMutationResult<any, any, any> {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();
   const activeChainId = useSDKChainId();

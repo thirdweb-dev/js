@@ -16,11 +16,12 @@ export const FormFieldWithIconButton: React.FC<{
   onChange: (value: string) => void;
   label: string;
   error?: string;
+  noSave?: boolean;
 }> = (props) => {
   return (
     <div>
       <Label htmlFor={props.id}>{props.label}</Label>
-      <Spacer y="xs" />
+      <Spacer y="sm" />
 
       <InputContainer data-error={!!props.error}>
         <Input
@@ -31,7 +32,14 @@ export const FormFieldWithIconButton: React.FC<{
           id={props.id}
           onChange={(e) => props.onChange(e.target.value)}
           value={props.value}
-          type={props.type}
+          type={props.noSave ? "text" : props.type}
+          style={
+            props.type === "password" && props.noSave
+              ? ({
+                  WebkitTextSecurity: "disc",
+                } as React.CSSProperties)
+              : undefined
+          }
         />
 
         <InputButton type="button" onClick={props.right.onClick}>
@@ -58,11 +66,14 @@ export const FormField: React.FC<{
   type: "text" | "password";
   onChange: (value: string) => void;
   label: string;
+  placeholder?: string;
+  errorMessage?: React.ReactNode;
+  disabled?: boolean;
 }> = (props) => {
   return (
     <div>
       <Label htmlFor={props.id}>{props.label}</Label>
-      <Spacer y="xs" />
+      <Spacer y="sm" />
 
       <Input
         variant="outline"
@@ -73,7 +84,17 @@ export const FormField: React.FC<{
         onChange={(e) => props.onChange(e.target.value)}
         value={props.value}
         type={props.type}
+        data-error={!!props.errorMessage}
+        placeholder={props.placeholder}
+        disabled={props.disabled}
       />
+
+      {props.errorMessage && (
+        <>
+          <Spacer y="xs" />
+          <ErrorMessage>{props.errorMessage}</ErrorMessage>
+        </>
+      )}
     </div>
   );
 };

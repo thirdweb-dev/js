@@ -3,7 +3,7 @@ import { Spinner } from "../../../components/Spinner";
 import { Button } from "../../../components/buttons";
 import { darkTheme, lightTheme } from "../../../design-system";
 import { ConnectWallet } from "../../../wallet/ConnectWallet/ConnectWallet";
-import { useWalletRequiresConfirmation } from "../../../wallet/hooks/useCanSwitchNetwork";
+import { useIsHeadlessWallet } from "../../../wallet/hooks/useIsHeadlessWallet";
 import { ThemeProvider } from "@emotion/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -21,6 +21,8 @@ import { PropsWithChildren, useContext, useState } from "react";
 import invariant from "tiny-invariant";
 
 type ActionFn = (contract: SmartContract) => any;
+
+const TW_WEB3BUTTON = "tw-web3button";
 
 interface Web3ButtonProps<TActionFn extends ActionFn> {
   className?: string;
@@ -40,6 +42,7 @@ interface Web3ButtonProps<TActionFn extends ActionFn> {
   action: TActionFn;
   type?: "button" | "submit" | "reset";
   theme?: "dark" | "light";
+  style?: React.CSSProperties;
 }
 
 /**
@@ -75,6 +78,7 @@ export const Web3Button = <TAction extends ActionFn>({
   className,
   type,
   theme,
+  style,
 }: PropsWithChildren<Web3ButtonProps<TAction>>) => {
   const address = useAddress();
   const sdkChainId = useSDKChainId();
@@ -83,7 +87,7 @@ export const Web3Button = <TAction extends ActionFn>({
   const connectionStatus = useConnectionStatus();
 
   const queryClient = useQueryClient();
-  const requiresConfirmation = useWalletRequiresConfirmation();
+  const requiresConfirmation = !useIsHeadlessWallet();
 
   const { contract } = useContract(contractAddress, contractAbi || "custom");
   const thirdwebTheme = useContext(ThirdwebThemeContext);
@@ -121,7 +125,13 @@ export const Web3Button = <TAction extends ActionFn>({
   );
 
   if (!address) {
-    return <ConnectWallet theme={theme} />;
+    return (
+      <ConnectWallet
+        style={style}
+        theme={theme}
+        className={`${className || ""} ${TW_WEB3BUTTON}--connect-wallet`}
+      />
+    );
   }
 
   // let onClick = () => actionMutation.mutate();
@@ -152,9 +162,11 @@ export const Web3Button = <TAction extends ActionFn>({
       <Button
         variant="inverted"
         type={type}
-        className={className}
+        className={`${className || ""} ${TW_WEB3BUTTON}--switch-network`}
         onClick={handleSwitchChain}
-        style={btnStyle}
+        style={{ ...btnStyle, ...style }}
+        data-is-loading={confirmStatus === "waiting"}
+        data-theme={theme}
       >
         {confirmStatus === "waiting" ? (
           <Spinner size="sm" color={"inverted"} />
@@ -195,10 +207,11 @@ export const Web3Button = <TAction extends ActionFn>({
       <Button
         variant="inverted"
         type={type}
-        className={className}
+        className={`${className || ""} ${TW_WEB3BUTTON}`}
         disabled
-        onClick={handleSwitchChain}
-        style={btnStyle}
+        style={{ ...btnStyle, ...style }}
+        data-is-loading
+        data-theme={theme}
       >
         <Spinner size="md" color={"inverted"} />
       </Button>
@@ -211,10 +224,12 @@ export const Web3Button = <TAction extends ActionFn>({
       <Button
         variant="inverted"
         type={type}
-        className={className}
+        className={`${className || ""} ${TW_WEB3BUTTON}`}
         onClick={() => actionMutation.mutate()}
         disabled={isDisabled}
-        style={btnStyle}
+        style={{ ...btnStyle, ...style }}
+        data-is-loading="false"
+        data-theme={theme}
       >
         {children}
       </Button>

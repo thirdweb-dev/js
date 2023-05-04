@@ -1,4 +1,4 @@
-import { ThemeProvider } from "../styles/ThemeProvider";
+import { ThemeProvider, ThemeProviderProps } from "../styles/ThemeProvider";
 import { ConnectWallet } from "./ConnectWallet";
 import BaseButton from "./base/BaseButton";
 import Text from "./base/Text";
@@ -16,11 +16,10 @@ import {
 import type { SmartContract } from "@thirdweb-dev/sdk";
 import type { CallOverrides, ContractInterface } from "ethers";
 import { PropsWithChildren, useEffect } from "react";
-import React from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import invariant from "tiny-invariant";
 
-type ActionFn = (contract: SmartContract) => any;
+type ActionFn = (contract: SmartContract) => Promise<any>;
 
 interface Web3ButtonProps<TActionFn extends ActionFn> {
   contractAddress: `0x${string}` | `${string}.eth` | string;
@@ -37,7 +36,7 @@ interface Web3ButtonProps<TActionFn extends ActionFn> {
   isDisabled?: boolean;
   // the fn to execute
   action: TActionFn;
-  theme?: "dark" | "light";
+  theme?: ThemeProviderProps["theme"];
 }
 
 /**
@@ -146,7 +145,7 @@ export const Web3Button = <TAction extends ActionFn>({
       connectionStatus === "connecting" ||
       connectionStatus === "unknown"
     ) {
-      content = <ActivityIndicator size="small" color={"black"} />;
+      content = <ActivityIndicator size="small" color="buttonTextColor" />;
       buttonLoading = true;
     }
   }
@@ -154,7 +153,7 @@ export const Web3Button = <TAction extends ActionFn>({
   return (
     <ThemeProvider theme={theme}>
       <BaseButton
-        backgroundColor="white"
+        backgroundColor="buttonBackgroundColor"
         onPress={() => {
           actionMutation.mutate();
         }}
@@ -162,7 +161,7 @@ export const Web3Button = <TAction extends ActionFn>({
         disabled={buttonDisabled || buttonLoading}
       >
         {typeof content === "string" ? (
-          <Text variant="bodyLarge" color="black">
+          <Text variant="bodyLarge" color="buttonTextColor">
             {content}
           </Text>
         ) : (

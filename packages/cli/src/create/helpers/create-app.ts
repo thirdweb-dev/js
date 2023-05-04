@@ -6,7 +6,6 @@ import { tryGitInit } from "./git";
 import { install } from "./install";
 import { isFolderEmpty } from "./is-folder-empty";
 import { getOnline } from "./is-online";
-import { isReactNative } from "./is-react-native";
 import { isWriteable } from "./is-writeable";
 import { makeDir } from "./make-dir";
 import { podInstall } from "./pod-install";
@@ -47,10 +46,6 @@ export async function createApp({
       );
       process.exit(1);
     }
-
-    if (template.includes("react-native") && !template.includes("expo")) {
-      await checkRubyVersion();
-    }
   } else if (framework) {
     frameworkPath = `${framework}-${language || "javascript"}-${
       chain === "solana" ? "solana-" : ""
@@ -65,6 +60,24 @@ export async function createApp({
       );
       process.exit(1);
     }
+  }
+
+  const isReactNative =
+    template?.includes("react-native") || framework === "react-native";
+  function isReactNativeCLI() {
+    return (
+      isReactNative &&
+      (language === "typescript" || (template && !template.includes("expo")))
+    );
+  }
+
+  function isMacOS() {
+    return process.platform === "darwin";
+  }
+
+  if (isReactNativeCLI() && isMacOS()) {
+    // fail early if the user doesn't have the right version of Ruby installed on macOS
+    await checkRubyVersion();
   }
 
   const root = path.resolve(appPath);
@@ -103,7 +116,6 @@ export async function createApp({
     );
   }
 
-  let reactNative = false;
   if (template) {
     /**
      * If a template repository is provided, clone it.
@@ -146,12 +158,6 @@ export async function createApp({
 
     await install(root, null, { packageManager, isOnline });
     console.log();
-
-    reactNative = await isReactNative(template);
-    // no need to run pod install if the template is expo
-    if (reactNative && !template.includes("expo")) {
-      await podInstall(root, isOnline);
-    }
   } else if (framework) {
     /**
      * If a framework is provided, clone it.
@@ -197,6 +203,10 @@ export async function createApp({
     console.log();
   }
 
+  if (isReactNativeCLI() && isMacOS()) {
+    await podInstall(root, isOnline);
+  }
+
   if (tryGitInit(root)) {
     console.log("Initialized a git repository.");
     console.log();
@@ -212,7 +222,7 @@ export async function createApp({
   let startOrDev: string | undefined;
   if (framework && (framework === "next" || framework === "vite")) {
     startOrDev = "dev";
-  } else if (template && !reactNative) {
+  } else if (template) {
     startOrDev = await getStartOrDev(template);
   }
 
@@ -220,26 +230,7 @@ export async function createApp({
   console.log("Inside that directory, you can run several commands:");
   console.log();
 
-  if (startOrDev) {
-    console.log(
-      chalk.cyan(
-        `  ${packageManager} ${
-          useYarn || startOrDev === "start" ? "" : "run "
-        }${startOrDev}`,
-      ),
-    );
-    console.log("    Starts the development server.");
-    console.log();
-    console.log(
-      chalk.cyan(
-        `  ${packageManager} ${
-          useYarn || startOrDev === "start" ? "" : "run "
-        }build`,
-      ),
-    );
-    console.log("    Builds the app for production.");
-    console.log();
-  } else if (reactNative) {
+  if (isReactNative) {
     console.log(
       chalk.cyan(
         `  ${packageManager}${
@@ -258,13 +249,32 @@ export async function createApp({
     );
     console.log("    Runs your app on an iOS emulator or device.");
     console.log();
+  } else if (startOrDev) {
+    console.log(
+      chalk.cyan(
+        `  ${packageManager} ${
+          useYarn || startOrDev === "start" ? "" : "run "
+        }${startOrDev}`,
+      ),
+    );
+    console.log("    Starts the development server.");
+    console.log();
+    console.log(
+      chalk.cyan(
+        `  ${packageManager} ${
+          useYarn || startOrDev === "start" ? "" : "run "
+        }build`,
+      ),
+    );
+    console.log("    Builds the app for production.");
+    console.log();
   }
 
   console.log("We suggest that you begin by typing:");
   console.log();
   console.log(chalk.cyan("  cd"), cdpath);
 
-  if (startOrDev) {
+  if (startOrDev && !isReactNative) {
     console.log(
       `  ${chalk.cyan(
         `${packageManager} ${

@@ -1,5 +1,120 @@
 # thirdweb
 
+## 0.10.13
+
+### Patch Changes
+
+- Updated dependencies [[`d2c7f6d7`](https://github.com/thirdweb-dev/js/commit/d2c7f6d758787fab102ecc0cec16ac74f3c87a1f), [`f12a80a4`](https://github.com/thirdweb-dev/js/commit/f12a80a4758aa91c43084acedb212de9f36a7371), [`bf6df267`](https://github.com/thirdweb-dev/js/commit/bf6df2671131d7ed38650e2bed806081b32dc244), [`8f962bc1`](https://github.com/thirdweb-dev/js/commit/8f962bc15c35da52ed5bc4025bb4cd18b69079e3), [`28b5d1eb`](https://github.com/thirdweb-dev/js/commit/28b5d1eb6d0142d3ebefb8bd078c30949f77fe61), [`0bf29745`](https://github.com/thirdweb-dev/js/commit/0bf29745b0e842763c271ad8773312f0836ea00f), [`f0279c22`](https://github.com/thirdweb-dev/js/commit/f0279c228829b86ff1f828219bcef4fe16901f67), [`1e9fad77`](https://github.com/thirdweb-dev/js/commit/1e9fad779f3ebe535d32c0ce76905a3a8033f2fa), [`00d0d01e`](https://github.com/thirdweb-dev/js/commit/00d0d01e619ff5c60b9f31386f51a55b5e466efa), [`fc96e147`](https://github.com/thirdweb-dev/js/commit/fc96e14750175b19cb66fa7d50cdbad65b42153a)]:
+  - @thirdweb-dev/chains@0.1.13
+  - @thirdweb-dev/sdk@3.10.12
+  - @thirdweb-dev/storage@1.1.2
+
+## 0.10.12
+
+### Patch Changes
+
+- [#894](https://github.com/thirdweb-dev/js/pull/894) [`72db2dc3`](https://github.com/thirdweb-dev/js/commit/72db2dc3e1c63e82ba4d73b6bd5ad4b2f8bbd559) Thanks [@adam-maj](https://github.com/adam-maj)! - Add more clear error messages to thirdweb generate
+
+- Updated dependencies [[`abe88599`](https://github.com/thirdweb-dev/js/commit/abe88599b634699aa3b876fe344bfddc6c1a92d4), [`4acb2b55`](https://github.com/thirdweb-dev/js/commit/4acb2b5561118dde5c7372400d4d754b879aef2e), [`ea04edf4`](https://github.com/thirdweb-dev/js/commit/ea04edf47867617ff74f0aca1471a40b8d9c9f7c), [`77224646`](https://github.com/thirdweb-dev/js/commit/77224646d542db3171394d744b455497cd057633), [`c9ee9b32`](https://github.com/thirdweb-dev/js/commit/c9ee9b32f0a275f7c03d50243f23a7332f148ae5), [`00f4355f`](https://github.com/thirdweb-dev/js/commit/00f4355f1aa8843bb534b173e4d8e0a19dd18b47), [`a6610f12`](https://github.com/thirdweb-dev/js/commit/a6610f1211e9359885b948bf69a66d834707ec07), [`29146e00`](https://github.com/thirdweb-dev/js/commit/29146e009db655304f5753904ae7f8569c12f4ca), [`77224646`](https://github.com/thirdweb-dev/js/commit/77224646d542db3171394d744b455497cd057633), [`bfdd8493`](https://github.com/thirdweb-dev/js/commit/bfdd84939d7cf9c6635b83c971bcc8967b52538c)]:
+  - @thirdweb-dev/sdk@3.10.11
+  - @thirdweb-dev/chains@0.1.12
+
+## 0.10.11
+
+### Patch Changes
+
+- [#877](https://github.com/thirdweb-dev/js/pull/877) [`cef16471`](https://github.com/thirdweb-dev/js/commit/cef16471f4493d7c2c1897a81ffebf84a743716e) Thanks [@iketw](https://github.com/iketw)! - [CLI] Update min ruby version supported to 2.7.6 for React Native templates
+
+- Updated dependencies [[`ac8fa0b3`](https://github.com/thirdweb-dev/js/commit/ac8fa0b34545a2bc0b489a0551d476a9f560e851), [`b75bcef5`](https://github.com/thirdweb-dev/js/commit/b75bcef55bfdedc260b5b62bb4aff10a7d5c47b6), [`c9027fce`](https://github.com/thirdweb-dev/js/commit/c9027fced0fffbf757bf0080bc4a49f5464df647)]:
+  - @thirdweb-dev/sdk@3.10.10
+
+## 0.10.10
+
+### Patch Changes
+
+- Updated dependencies [[`b3d57949`](https://github.com/thirdweb-dev/js/commit/b3d57949bd047831fda7e600b4872200340903b5), [`602d8cbc`](https://github.com/thirdweb-dev/js/commit/602d8cbcfaa7c1e117c01f842f89508f7333fcfe)]:
+  - @thirdweb-dev/sdk@3.10.9
+
+## 0.10.9
+
+### Patch Changes
+
+- [#867](https://github.com/thirdweb-dev/js/pull/867) [`3bb846ad`](https://github.com/thirdweb-dev/js/commit/3bb846adf0484e8b7dc7dfeba9f9c0ee26f4ef35) Thanks [@adam-maj](https://github.com/adam-maj)! - Generate auto detects smart contracts in project
+
+- Updated dependencies [[`1547d76c`](https://github.com/thirdweb-dev/js/commit/1547d76cce52265076c347599014f578c1de6152), [`1b8f812f`](https://github.com/thirdweb-dev/js/commit/1b8f812fb8c910d91fb7535d6446a0b6fc6b2310), [`235eb046`](https://github.com/thirdweb-dev/js/commit/235eb0460ae0638f63acf82957bcfea41b9e955d)]:
+  - @thirdweb-dev/sdk@3.10.8
+  - @thirdweb-dev/chains@0.1.11
+
+## 0.10.8
+
+### Patch Changes
+
+- [#857](https://github.com/thirdweb-dev/js/pull/857) [`3a0e904f`](https://github.com/thirdweb-dev/js/commit/3a0e904fc2bae5134ba3bf65ba666c3360e4fced) Thanks [@adam-maj](https://github.com/adam-maj)! - Add skip intro flag to generate command and fix ABI cache regex
+
+- [#860](https://github.com/thirdweb-dev/js/pull/860) [`058e4357`](https://github.com/thirdweb-dev/js/commit/058e4357c783911a6cab6b38c6eebbb3277dfe93) Thanks [@iketw](https://github.com/iketw)! - [CLI] Only checks ruby version and attempts to run pod install if the platform is macOS
+
+## 0.10.7
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.10.7
+
+## 0.10.6
+
+### Patch Changes
+
+- Updated dependencies [[`b7fcae6e`](https://github.com/thirdweb-dev/js/commit/b7fcae6e40dade7a239b1a6afb1cd996c8f89910), [`839fce1f`](https://github.com/thirdweb-dev/js/commit/839fce1f6f2747d6102033b26c292294e908f75d)]:
+  - @thirdweb-dev/sdk@3.10.6
+  - @thirdweb-dev/storage@1.1.2
+
+## 0.10.5
+
+### Patch Changes
+
+- [#836](https://github.com/thirdweb-dev/js/pull/836) [`db648ed2`](https://github.com/thirdweb-dev/js/commit/db648ed22dba672c64e7893865f9ad8b72189dea) Thanks [@shift4id](https://github.com/shift4id)! - Added the --clean flag to build, publish, and deploy
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.10.5
+
+## 0.10.4
+
+### Patch Changes
+
+- [#757](https://github.com/thirdweb-dev/js/pull/757) [`9ea43969`](https://github.com/thirdweb-dev/js/commit/9ea439692da94f84297bf6a9d04487a1cb74796d) Thanks [@iketw](https://github.com/iketw)! - switch to `thirdwebcdn.com` for default IPFS gateway
+
+- [#794](https://github.com/thirdweb-dev/js/pull/794) [`a6fce0f6`](https://github.com/thirdweb-dev/js/commit/a6fce0f691ffeb2b7ec1355b1c55fa7e58700406) Thanks [@shift4id](https://github.com/shift4id)! - Improved install command
+
+- [#702](https://github.com/thirdweb-dev/js/pull/702) [`33d1cc7f`](https://github.com/thirdweb-dev/js/commit/33d1cc7f92cd982e9e55130472c0006bb999f682) Thanks [@jnsdls](https://github.com/jnsdls)! - enable `browser` export
+
+- [#677](https://github.com/thirdweb-dev/js/pull/677) [`b3eb309c`](https://github.com/thirdweb-dev/js/commit/b3eb309c1ef884f5639b0ecf28795671a1a4dcb6) Thanks [@shift4id](https://github.com/shift4id)! - Add `npx thirdweb install` command
+
+- [#765](https://github.com/thirdweb-dev/js/pull/765) [`92d19070`](https://github.com/thirdweb-dev/js/commit/92d190709b8d516690eca26c97f3e84809121b60) Thanks [@adam-maj](https://github.com/adam-maj)! - Use correct cache and handle download errors
+
+- [#721](https://github.com/thirdweb-dev/js/pull/721) [`1baed0b1`](https://github.com/thirdweb-dev/js/commit/1baed0b1d83b4c92dac44430af5436d04727d92f) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for thirdweb generate
+
+- [#804](https://github.com/thirdweb-dev/js/pull/804) [`a9618d9b`](https://github.com/thirdweb-dev/js/commit/a9618d9bca0e6bfcbb21eda85424f0fff9799fe1) Thanks [@jnsdls](https://github.com/jnsdls)! - improve compatibility and information provided in `install` command
+
+- [#739](https://github.com/thirdweb-dev/js/pull/739) [`4d5fdda9`](https://github.com/thirdweb-dev/js/commit/4d5fdda907af0451507d5e2812ec91fbd513a11c) Thanks [@jnsdls](https://github.com/jnsdls)! - Drop support for node 14
+
+- [#820](https://github.com/thirdweb-dev/js/pull/820) [`08507611`](https://github.com/thirdweb-dev/js/commit/085076117b18a615aa2b1b8f086d434cab3a4e4e) Thanks [@adam-maj](https://github.com/adam-maj)! - Add magical types for thirdweb generate
+
+- [#763](https://github.com/thirdweb-dev/js/pull/763) [`43d8a65e`](https://github.com/thirdweb-dev/js/commit/43d8a65e1dcb306ee7d8fd5fd33b82f7ce6275a9) Thanks [@iketw](https://github.com/iketw)! - [CreateApp] Add expo as an option to creating a React Native app
+
+- [#751](https://github.com/thirdweb-dev/js/pull/751) [`efff9cfd`](https://github.com/thirdweb-dev/js/commit/efff9cfda09499cc471d375d33b1e0b2317708ec) Thanks [@jnsdls](https://github.com/jnsdls)! - remove `tslog` in favor of a basic logger
+
+- [#768](https://github.com/thirdweb-dev/js/pull/768) [`923b9ead`](https://github.com/thirdweb-dev/js/commit/923b9ead3d34397685cfb422fdc3a46ab6741e5e) Thanks [@adam-maj](https://github.com/adam-maj)! - thirdweb create renames contract
+
+- [#767](https://github.com/thirdweb-dev/js/pull/767) [`9fa628f8`](https://github.com/thirdweb-dev/js/commit/9fa628f89492633e4f7ea2b7c542e1587ea17a86) Thanks [@adam-maj](https://github.com/adam-maj)! - Make generate work with useContract
+
+- [#716](https://github.com/thirdweb-dev/js/pull/716) [`17a03e94`](https://github.com/thirdweb-dev/js/commit/17a03e94d274f8c2948bd62f0317068494dc8e1c) Thanks [@iketw](https://github.com/iketw)! - [ReactNativeCLI] Improve React Native's template setup
+
+- [#806](https://github.com/thirdweb-dev/js/pull/806) [`6ea5eea1`](https://github.com/thirdweb-dev/js/commit/6ea5eea1d888a2fce5fada5f62fd9edc72aea500) Thanks [@shift4id](https://github.com/shift4id)! - Improve build times for foundry and hardhat
+
+- Updated dependencies [[`6e9b9dba`](https://github.com/thirdweb-dev/js/commit/6e9b9dba1dfb9e828e6927f441e7223baa5bcc76), [`a6fce0f6`](https://github.com/thirdweb-dev/js/commit/a6fce0f691ffeb2b7ec1355b1c55fa7e58700406), [`9ea43969`](https://github.com/thirdweb-dev/js/commit/9ea439692da94f84297bf6a9d04487a1cb74796d), [`2ec28021`](https://github.com/thirdweb-dev/js/commit/2ec2802119a3c375a1adaed1263ae1eae1384865), [`805896c7`](https://github.com/thirdweb-dev/js/commit/805896c78d5ecbbe1866408fbb73d060f7404146), [`b56511e2`](https://github.com/thirdweb-dev/js/commit/b56511e22d5eb2adf306d5675f1e52ff97a64f3a), [`8ef5a6f2`](https://github.com/thirdweb-dev/js/commit/8ef5a6f21735e6ac235937f6c34495a74c9da364), [`4cbbad98`](https://github.com/thirdweb-dev/js/commit/4cbbad98b303d872c09efedbece179445c7adc9c), [`5f0493d0`](https://github.com/thirdweb-dev/js/commit/5f0493d0fb291b4072cc433412883d352588c397), [`71532e5a`](https://github.com/thirdweb-dev/js/commit/71532e5a9fb5b116ba342465ef82e795ca8cc011), [`33d1cc7f`](https://github.com/thirdweb-dev/js/commit/33d1cc7f92cd982e9e55130472c0006bb999f682), [`de7b6196`](https://github.com/thirdweb-dev/js/commit/de7b6196766d709deeac148a24dd8dd38b3e924a), [`1baed0b1`](https://github.com/thirdweb-dev/js/commit/1baed0b1d83b4c92dac44430af5436d04727d92f), [`52d37f01`](https://github.com/thirdweb-dev/js/commit/52d37f01873c649b36c7d77df6c525a666245132), [`485abd06`](https://github.com/thirdweb-dev/js/commit/485abd06aa972a4f43f71b98f9666f113b932fb3), [`682f1c67`](https://github.com/thirdweb-dev/js/commit/682f1c673f4b02acab3986031942dbd3d67a87fa), [`d8c1c943`](https://github.com/thirdweb-dev/js/commit/d8c1c9433e8dc48a70a1c93a0c1467c12ad79701), [`08507611`](https://github.com/thirdweb-dev/js/commit/085076117b18a615aa2b1b8f086d434cab3a4e4e), [`8463a176`](https://github.com/thirdweb-dev/js/commit/8463a1761ff4741b55a72e6994a29f7dd50b54e1), [`e47ceafe`](https://github.com/thirdweb-dev/js/commit/e47ceafeae950c22860ca4c7dffba7d573e04a94), [`208d97e6`](https://github.com/thirdweb-dev/js/commit/208d97e6a892942171c056768876b3e33399d275), [`5c7c0923`](https://github.com/thirdweb-dev/js/commit/5c7c0923e45b3f0ee27c83a9c4c691ce9bbb8539), [`ba9f593b`](https://github.com/thirdweb-dev/js/commit/ba9f593be8e10289040b466bdcf98ff251f412a3), [`9fa628f8`](https://github.com/thirdweb-dev/js/commit/9fa628f89492633e4f7ea2b7c542e1587ea17a86), [`abf609a4`](https://github.com/thirdweb-dev/js/commit/abf609a40114a509fe07a04bfb0793dc44c9e39d)]:
+  - @thirdweb-dev/sdk@3.10.4
+  - @thirdweb-dev/storage@1.1.1
+
 ## 0.10.3
 
 ### Patch Changes

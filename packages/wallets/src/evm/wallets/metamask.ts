@@ -1,12 +1,18 @@
-import { AsyncStorage } from "../../core/AsyncStorage";
 import type { WalletConnectV1Connector as WalletConnectV1ConnectorType } from "../connectors/wallet-connect-v1";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
-import { AbstractBrowserWallet, WalletOptions } from "./base";
+import { assertWindowEthereum } from "../utils/assertWindowEthereum";
+import { AbstractClientWallet, WalletOptions } from "./base";
+import type { MetaMaskConnector as MetamaskConnectorType } from "../connectors/metamask";
+import { walletIds } from "../constants/walletIds";
 
-export type MetamaskWalletOptions = WalletOptions<{
-  connectorStorage: AsyncStorage;
-  isInjected?: boolean;
-}>;
+type MetamaskAdditionalOptions = {
+  /**
+   * Whether to display the Wallet Connect QR code Modal for connecting to MetaMask on mobile if MetaMask is not injected.
+   */
+  qrcode?: boolean;
+};
+
+export type MetamaskWalletOptions = WalletOptions<MetamaskAdditionalOptions>;
 
 type ConnectWithQrCodeArgs = {
   chainId?: number;
@@ -14,40 +20,58 @@ type ConnectWithQrCodeArgs = {
   onConnected: (accountAddress: string) => void;
 };
 
-export class MetaMask extends AbstractBrowserWallet {
+export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptions> {
   connector?: TWConnector;
-  connectorStorage: AsyncStorage;
-  isInjected?: boolean;
   walletConnectConnector?: WalletConnectV1ConnectorType;
+  metamaskConnector?: MetamaskConnectorType;
+  isInjected: boolean;
 
-  static id = "metamask" as const;
+  // TODO: remove this
+  static meta = {
+    name: "MetaMask",
+    iconURL:
+      "ipfs://QmZZHcw7zcXursywnLDAyY6Hfxzqop5GKgwoq8NB9jjrkN/metamask.svg",
+    urls: {
+      chrome:
+        "https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn",
+      android: "https://play.google.com/store/apps/details?id=io.metamask",
+      ios: "https://apps.apple.com/us/app/metamask-blockchain-wallet/id1438144202",
+    },
+  };
+
+  static id = walletIds.metamask;
 
   public get walletName() {
     return "MetaMask" as const;
   }
 
   constructor(options: MetamaskWalletOptions) {
-    super(MetaMask.id, options);
-    this.connectorStorage = options.connectorStorage;
-    this.isInjected = options.isInjected || false;
+    super(MetaMaskWallet.id, options);
+
+    if (assertWindowEthereum(globalThis.window)) {
+      this.isInjected = !!globalThis.window.ethereum?.isMetaMask;
+    } else {
+      this.isInjected = false;
+    }
   }
 
   protected async getConnector(): Promise<TWConnector> {
     if (!this.connector) {
-      // import the connector dynamically
-      const { MetaMaskConnector } = await import("../connectors/metamask");
-
       // if metamask is injected, use the injected connector
       // otherwise, use the wallet connect connector for using the metamask app on mobile via QR code scan
 
       if (this.isInjected) {
+        // import the connector dynamically
+        const { MetaMaskConnector } = await import("../connectors/metamask");
         const metamaskConnector = new MetaMaskConnector({
           chains: this.chains,
-          connectorStorage: this.connectorStorage,
+          connectorStorage: this.walletStorage,
           options: {
             shimDisconnect: true,
           },
         });
+
+        this.metamaskConnector = metamaskConnector;
 
         this.connector = new WagmiAdapter(metamaskConnector);
       } else {
@@ -57,15 +81,15 @@ export class MetaMask extends AbstractBrowserWallet {
 
         const walletConnectConnector = new WalletConnectV1Connector({
           chains: this.chains,
-          storage: this.connectorStorage,
+          storage: this.walletStorage,
           options: {
             clientMeta: {
-              name: this.options.dappMetadata.name,
-              description: this.options.dappMetadata.description || "",
-              url: this.options.dappMetadata.url,
-              icons: [],
+              name: this.dappMetadata.name,
+              description: this.dappMetadata.description || "",
+              url: this.dappMetadata.url,
+              icons: [this.dappMetadata.logoUrl || ""],
             },
-            qrcode: false,
+            qrcode: this.options?.qrcode,
           },
         });
 
@@ -118,5 +142,13 @@ export class MetaMask extends AbstractBrowserWallet {
 
     // trigger connect flow
     this.connect({ chainId: options.chainId }).then(options.onConnected);
+  }
+
+  async switchAccount() {
+    if (!this.metamaskConnector) {
+      throw new Error("Can not switch Account");
+    }
+
+    await this.metamaskConnector.switchAccount();
   }
 }

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Dexit Network",
   "chain": "DXT",
@@ -26,4 +27,4 @@ export default {
   ],
   "testnet": false,
   "slug": "dexit-network"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "OKBChain Mainnet",
   "chain": "okbchain",
@@ -17,4 +18,4 @@ export default {
   "status": "incubating",
   "testnet": false,
   "slug": "okbchain"
-} as const;
+} as const satisfies Chain;

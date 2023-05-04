@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Ontology Mainnet",
   "chain": "Ontology",
@@ -37,4 +38,4 @@ export default {
   ],
   "testnet": false,
   "slug": "ontology"
-} as const;
+} as const satisfies Chain;

@@ -6,11 +6,11 @@ import {
   UserRejectedRequestError,
   Connector,
 } from "../../../lib/wagmi-core";
-import { Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { EthereumProviderOptions } from "@walletconnect/ethereum-provider/dist/types/EthereumProvider";
-import { providers } from "ethers";
-import { getAddress, hexValue } from "ethers/lib/utils.js";
+import { providers, utils } from "ethers";
+import { walletIds } from "../../constants/walletIds";
 
 type WalletConnectOptions = {
   projectId: EthereumProviderOptions["projectId"];
@@ -70,7 +70,7 @@ export class WalletConnectConnector extends Connector<
   WalletConnectOptions,
   WalletConnectSigner
 > {
-  readonly id = "walletConnect";
+  readonly id = walletIds.walletConnect;
   readonly name = "WalletConnect";
   readonly ready = true;
 
@@ -128,7 +128,8 @@ export class WalletConnectConnector extends Connector<
         await provider.connect({
           pairingTopic,
           chains: [targetChainId],
-          optionalChains,
+          optionalChains:
+            optionalChains.length > 0 ? optionalChains : [targetChainId],
         });
 
         this.#setRequestedChainsIds(this.chains.map(({ chainId }) => chainId));
@@ -139,7 +140,7 @@ export class WalletConnectConnector extends Connector<
       if (accounts.length === 0) {
         throw new Error("No accounts found on provider.");
       }
-      const account = getAddress(accounts[0]);
+      const account = utils.getAddress(accounts[0]);
       const id = await this.getChainId();
       const unsupported = this.isChainUnsupported(id);
 
@@ -175,7 +176,7 @@ export class WalletConnectConnector extends Connector<
     if (accounts.length === 0) {
       throw new Error("No accounts found on provider.");
     }
-    return getAddress(accounts[0]);
+    return utils.getAddress(accounts[0]);
   }
 
   async getChainId() {
@@ -249,7 +250,7 @@ export class WalletConnectConnector extends Connector<
           method: ADD_ETH_CHAIN_METHOD,
           params: [
             {
-              chainId: hexValue(chain.chainId),
+              chainId: utils.hexValue(chain.chainId),
               blockExplorerUrls: [
                 chain.explorers?.length ? chain.explorers[0] : undefined,
               ],
@@ -265,7 +266,7 @@ export class WalletConnectConnector extends Connector<
       }
       await provider.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId: hexValue(chainId) }],
+        params: [{ chainId: utils.hexValue(chainId) }],
       });
 
       return chain;
@@ -297,6 +298,7 @@ export class WalletConnectConnector extends Connector<
     const [defaultChain, ...optionalChains] = this.chains.map(
       ({ chainId }) => chainId,
     );
+
     if (defaultChain) {
       // EthereumProvider populates & deduplicates required methods and events internally
       this.#provider = await EthereumProvider.init({
@@ -420,7 +422,7 @@ export class WalletConnectConnector extends Connector<
     if (accounts.length === 0) {
       this.emit("disconnect");
     } else {
-      this.emit("change", { account: getAddress(accounts[0]) });
+      this.emit("change", { account: utils.getAddress(accounts[0]) });
     }
   };
 

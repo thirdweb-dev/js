@@ -1,10 +1,8 @@
-import type { AbstractWallet } from "../../wallets/abstract";
 import type { Chain } from "@thirdweb-dev/chains";
-
-export type SafeOptions = {};
+import { EVMWallet } from "../../interfaces";
 
 export interface SafeConnectionArgs {
   safeAddress: string;
-  personalWallet: AbstractWallet;
+  personalWallet: EVMWallet;
   chain: Pick<Chain, "chainId" | "rpc">;
 }

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Fuse Sparknet",
   "chain": "fuse",
@@ -25,4 +26,4 @@ export default {
     "height": 512
   },
   "slug": "fuse-sparknet"
-} as const;
+} as const satisfies Chain;

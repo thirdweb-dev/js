@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Kovan",
   "title": "Ethereum Testnet Kovan",
@@ -33,4 +34,4 @@ export default {
   "networkId": 42,
   "testnet": true,
   "slug": "kovan"
-} as const;
+} as const satisfies Chain;

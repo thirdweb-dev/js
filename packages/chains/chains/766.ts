@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "QL1",
   "chain": "QOM",
@@ -26,10 +27,15 @@ export default {
     {
       "name": "QL1 Mainnet Explorer",
       "url": "https://mainnet.qom.one",
-      "icon": "qom",
+      "icon": {
+        "url": "ipfs://QmRc1kJ7AgcDL1BSoMYudatWHTrz27K6WNTwGifQb5V17D",
+        "width": 518,
+        "height": 518,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "ql1"
-} as const;
+} as const satisfies Chain;

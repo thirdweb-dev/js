@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Canto",
   "chain": "Canto",
@@ -36,4 +37,4 @@ export default {
   ],
   "testnet": false,
   "slug": "canto"
-} as const;
+} as const satisfies Chain;

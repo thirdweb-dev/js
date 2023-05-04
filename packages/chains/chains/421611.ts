@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Arbitrum Rinkeby",
   "title": "Arbitrum Testnet Rinkeby",
@@ -41,4 +42,4 @@ export default {
   },
   "testnet": true,
   "slug": "arbitrum-rinkeby"
-} as const;
+} as const satisfies Chain;

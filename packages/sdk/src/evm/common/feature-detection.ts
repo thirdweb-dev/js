@@ -11,6 +11,7 @@ import {
   Abi,
   AbiEvent,
   AbiFunction,
+  AbiInput,
   AbiSchema,
   AbiTypeSchema,
   FullPublishMetadata,
@@ -25,13 +26,14 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import bs58 from "bs58";
 import { BaseContract, BigNumber, ethers } from "ethers";
 import { z } from "zod";
+import { isAddress } from "ethers/lib/utils";
 
 /**
  * @internal
  * @param abi
  * @param feature
  */
-function matchesAbiInterface(abi: Abi, feature: Feature): boolean {
+function matchesAbiInterface(abi: AbiInput, feature: Feature): boolean {
   // returns true if all the functions in `interfaceToMatch` are found in `contract` (removing any duplicates)
   return hasMatchingAbi(abi, feature.abis);
 }
@@ -44,9 +46,9 @@ function matchesAbiInterface(abi: Abi, feature: Feature): boolean {
  */
 export function matchesPrebuiltAbi<T extends BaseContract>(
   contractWrapper: ContractWrapper<BaseContract>,
-  abi: Abi,
+  abi: AbiInput,
 ): contractWrapper is ContractWrapper<T> {
-  return hasMatchingAbi(contractWrapper.abi as Abi, [abi]);
+  return hasMatchingAbi(AbiSchema.parse(contractWrapper.abi || []), [abi]);
 }
 
 /**
@@ -55,7 +57,10 @@ export function matchesPrebuiltAbi<T extends BaseContract>(
  * @param featureAbis
  * @returns
  */
-export function hasMatchingAbi(contractAbi: Abi, featureAbis: readonly Abi[]) {
+export function hasMatchingAbi(
+  contractAbi: AbiInput,
+  featureAbis: readonly AbiInput[],
+) {
   const contractFn = extractFunctionsFromAbi(contractAbi);
   const interfaceFn = featureAbis.flatMap((i: any) =>
     extractFunctionsFromAbi(i),
@@ -139,10 +144,9 @@ function extractCommentFromMetadata(
  * @returns
  * @internal
  */
-export function extractConstructorParamsFromAbi(
-  abi: z.input<typeof AbiSchema>,
-) {
-  for (const input of abi) {
+export function extractConstructorParamsFromAbi(abi: AbiInput) {
+  const parsedAbi = AbiSchema.parse(abi || []);
+  for (const input of parsedAbi) {
     if (input.type === "constructor") {
       return input.inputs || [];
     }
@@ -158,10 +162,11 @@ export function extractConstructorParamsFromAbi(
  * @internal
  */
 export function extractFunctionParamsFromAbi(
-  abi: z.input<typeof AbiSchema>,
+  abi: AbiInput,
   functionName: string,
 ) {
-  for (const input of abi) {
+  const parsedAbi = AbiSchema.parse(abi || []);
+  for (const input of parsedAbi) {
     if (input.type === "function" && input.name === functionName) {
       return input.inputs || [];
     }
@@ -175,7 +180,7 @@ export function extractFunctionParamsFromAbi(
  * @param metadata
  */
 export function extractFunctionsFromAbi(
-  abi: Abi,
+  abi: AbiInput,
   metadata?: Record<string, any>,
 ): AbiFunction[] {
   const functions = (abi || []).filter((el) => el.type === "function");
@@ -191,7 +196,9 @@ export function extractFunctionsFromAbi(
     const promise = out ? `: Promise<${out}>` : `: Promise<TransactionResult>`;
     const signature = `contract.call("${f.name}"${fargs})${promise}`;
     parsed.push({
+      // @ts-ignore we know AbiTypeBaseSchema.name is not going to be undefined since we're doing `.default("")`
       inputs: f.inputs || [],
+      // @ts-ignore we know the AbiTypeBaseSchema.name is not going to be undefined since we're doing `.default("")`
       outputs: f.outputs || [],
       name: f.name || "unknown",
       signature,
@@ -208,10 +215,11 @@ export function extractFunctionsFromAbi(
  * @param metadata
  */
 export function extractEventsFromAbi(
-  abi: Abi,
+  abi: AbiInput,
   metadata?: Record<string, any>,
 ): AbiEvent[] {
-  const events = (abi || []).filter((el) => el.type === "event");
+  const parsedAbi = AbiSchema.parse(abi || []);
+  const events = parsedAbi.filter((el) => el.type === "event");
   const parsed: AbiEvent[] = [];
   for (const e of events) {
     const doc = extractCommentFromMetadata(e.name, metadata, "events");
@@ -309,7 +317,13 @@ export async function resolveContractUriFromAddress(
   address: string,
   provider: ethers.providers.Provider,
 ): Promise<string | undefined> {
-  const bytecode = await provider.getCode(address);
+  let bytecode;
+  try {
+    bytecode = await provider.getCode(address);
+  } catch (e) {
+    throw new Error(`Failed to get bytecode for address ${address}: ${e}`);
+  }
+
   if (bytecode === "0x") {
     const chain = await provider.getNetwork();
     throw new Error(
@@ -338,8 +352,11 @@ export async function resolveContractUriFromAddress(
         "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
       ),
     );
-    const implementationAddress = ethers.utils.hexStripZeros(proxyStorage);
-    if (implementationAddress !== "0x") {
+    const implementationAddress = `0x${proxyStorage.slice(-40)}`;
+    if (
+      isAddress(implementationAddress) &&
+      implementationAddress !== ethers.constants.AddressZero
+    ) {
       return await resolveContractUriFromAddress(
         implementationAddress,
         provider,
@@ -533,10 +550,11 @@ export function getAllDetectedFeatureNames(abi: Abi): string[] {
  * @param featureName
  */
 export function isFeatureEnabled(
-  abi: z.input<typeof AbiSchema>,
+  abi: AbiInput,
   featureName: FeatureName,
 ): boolean {
-  const features = detectFeatures(abi);
+  const parsedAbi = AbiSchema.parse(abi || []);
+  const features = detectFeatures(parsedAbi);
   return _featureEnabled(features, featureName);
 }
 

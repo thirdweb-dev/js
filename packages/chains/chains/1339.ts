@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Elysium Mainnet",
   "title": "An L1, carbon-neutral, tree-planting, metaverse dedicated blockchain created by VulcanForged",
@@ -25,4 +26,4 @@ export default {
   ],
   "testnet": false,
   "slug": "elysium"
-} as const;
+} as const satisfies Chain;

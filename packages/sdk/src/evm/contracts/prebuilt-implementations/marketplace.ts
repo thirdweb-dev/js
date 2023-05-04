@@ -20,7 +20,7 @@ import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput } from "../../core/types";
 import { ListingType } from "../../enums";
-import { Abi } from "../../schema/contracts/custom";
+import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
 import { AddressOrEns } from "../../schema/shared";
@@ -153,7 +153,7 @@ export class Marketplace implements UpdateableNetwork {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: Abi,
+    abi: AbiInput,
     chainId: number,
     contractWrapper = new ContractWrapper<MarketplaceContract>(
       network,
@@ -163,7 +163,7 @@ export class Marketplace implements UpdateableNetwork {
     ),
   ) {
     this._chainId = chainId;
-    this.abi = abi;
+    this.abi = AbiSchema.parse(abi || []);
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this.metadata = new ContractMetadata(
@@ -692,10 +692,13 @@ export class Marketplace implements UpdateableNetwork {
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
-  ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+  public async call<
+    TMethod extends keyof MarketplaceContract["functions"] = keyof MarketplaceContract["functions"],
+  >(
+    functionName: string & TMethod,
+    args?: Parameters<MarketplaceContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ): Promise<ReturnType<MarketplaceContract["functions"][TMethod]>> {
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 }

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "GeneChain",
   "chain": "GeneChain",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": false,
   "slug": "genechain"
-} as const;
+} as const satisfies Chain;

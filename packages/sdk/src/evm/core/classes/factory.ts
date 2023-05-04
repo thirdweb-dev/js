@@ -87,6 +87,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       >,
       eventEmitter: EventEmitter<DeployEvents>,
       version?: number,
+      onExecute?: () => void,
     ): Promise<Transaction<Address>> => {
       const contract = PREBUILT_CONTRACTS_MAP[contractType];
       const metadata = await contract.schema.deploy.parseAsync(
@@ -120,6 +121,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         metadata,
         contractURI,
         signer,
+        this.storage,
       );
 
       const encodedFunc = Contract.getInterface(ABI).encodeFunctionData(
@@ -135,6 +137,10 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         method: "deployProxyByImplementation",
         args: [implementationAddress, encodedFunc, salt],
         parse: (receipt) => {
+          if (onExecute) {
+            onExecute();
+          }
+
           const events = this.parseLogs<ProxyDeployedEvent>(
             "ProxyDeployed",
             receipt.logs,
@@ -164,6 +170,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       initializerFunction: string,
       initializerArgs: any[],
       eventEmitter: EventEmitter<DeployEvents>,
+      onExecute?: () => void,
     ): Promise<Transaction<Address>> => {
       const encodedFunc = Contract.getInterface(
         implementationAbi,
@@ -179,6 +186,10 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           ethers.utils.formatBytes32String(blockNumber.toString()),
         ],
         parse: (receipt) => {
+          if (onExecute) {
+            onExecute();
+          }
+
           const events = this.parseLogs<ProxyDeployedEvent>(
             "ProxyDeployed",
             receipt.logs,

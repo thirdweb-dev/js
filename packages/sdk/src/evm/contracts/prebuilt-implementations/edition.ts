@@ -13,14 +13,13 @@ import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../../core/classes/contract-sales";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
-import { Erc1155 } from "../../core/classes/erc-1155";
 import { Erc1155SignatureMintable } from "../../core/classes/erc-1155-signature-mintable";
 import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { Address, AddressOrEns } from "../../schema";
-import { Abi } from "../../schema/contracts/custom";
+import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { TokenErc1155ContractSchema } from "../../schema/contracts/token-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";
 import { EditionMetadataOrUri } from "../../schema/tokens/edition";
@@ -97,7 +96,6 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    */
   public signature: Erc1155SignatureMintable;
   public interceptor: ContractInterceptor<TokenERC1155>;
-  public erc1155: Erc1155<TokenERC1155>;
   public owner: ContractOwner<TokenERC1155>;
 
   constructor(
@@ -105,7 +103,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: Abi,
+    abi: AbiInput,
     chainId: number,
     contractWrapper = new ContractWrapper<TokenERC1155>(
       network,
@@ -115,7 +113,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
     ),
   ) {
     super(contractWrapper, storage, chainId);
-    this.abi = abi;
+    this.abi = AbiSchema.parse(abi || []);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       TokenErc1155ContractSchema,
@@ -139,7 +137,6 @@ export class Edition extends StandardErc1155<TokenERC1155> {
       this.storage,
       this.roles,
     );
-    this.erc1155 = new Erc1155(this.contractWrapper, this.storage, chainId);
     this.owner = new ContractOwner(this.contractWrapper);
   }
 
@@ -415,10 +412,13 @@ export class Edition extends StandardErc1155<TokenERC1155> {
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
-  ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+  public async call<
+    TMethod extends keyof TokenERC1155["functions"] = keyof TokenERC1155["functions"],
+  >(
+    functionName: string & TMethod,
+    args?: Parameters<TokenERC1155["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ): Promise<ReturnType<TokenERC1155["functions"][TMethod]>> {
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 }

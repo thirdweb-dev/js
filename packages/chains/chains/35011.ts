@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "J2O Taro",
   "chain": "TARO",
@@ -27,10 +28,15 @@ export default {
     {
       "name": "J2O Taro Explorer",
       "url": "https://exp.j2o.io",
-      "icon": "j2otaro",
+      "icon": {
+        "url": "ipfs://QmdUYi8fjnvdM9iFQ7dwE2YvmhDtavSB3bKhCD2GhPxPks",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "j2o-taro"
-} as const;
+} as const satisfies Chain;

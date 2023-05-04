@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Bobaopera",
   "chain": "Bobaopera",
@@ -27,4 +28,4 @@ export default {
   ],
   "testnet": false,
   "slug": "bobaopera"
-} as const;
+} as const satisfies Chain;

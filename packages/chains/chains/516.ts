@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Gear Zero Network Mainnet",
   "chain": "GearZero",
@@ -19,4 +20,4 @@ export default {
   "explorers": [],
   "testnet": false,
   "slug": "gear-zero-network"
-} as const;
+} as const satisfies Chain;

@@ -17,7 +17,11 @@ import {
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useAddress } from "../wallet";
 import { useContractEvents } from "./contracts";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  UseMutationResult,
+  useQueryClient,
+} from "@tanstack/react-query";
 import type {
   AuctionListing,
   DirectListing,
@@ -30,7 +34,8 @@ import type {
 import { ListingType } from "@thirdweb-dev/sdk";
 import { DirectListingInputParams } from "@thirdweb-dev/sdk/dist/declarations/src/evm/schema/marketplacev3/direct-listings";
 import { EnglishAuctionInputParams } from "@thirdweb-dev/sdk/dist/declarations/src/evm/schema/marketplacev3/english-auctions";
-import { BigNumber, BigNumberish } from "ethers";
+import type { BigNumberish, providers } from "ethers";
+import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
 
 /** **********************/
@@ -49,6 +54,7 @@ import invariant from "tiny-invariant";
  * @param contract - an instance of a marketplace contract
  * @param listingId - the listing id to check
  * @returns a response object that includes the desired listing
+ * @see {@link https://portal.thirdweb.com/react/react.uselisting?utm_source=sdk | Documentation}
  * @beta
  */
 export function useListing(
@@ -83,6 +89,7 @@ export function useListing(
  * @param listingId - the listing id to check
  * @returns a response object that includes the desired direct listing
  * @twfeature DirectListings
+ * @see {@link https://portal.thirdweb.com/react/react.usedirectlisting?utm_source=sdk | Documentation}
  */
 export function useDirectListing(
   contract: RequiredParam<MarketplaceV3>,
@@ -119,6 +126,7 @@ export function useDirectListing(
  * @param auctionId - the auction id to check
  * @returns a response object that includes the desired english auction
  * @twfeature EnglishAuctions
+ * @see {@link https://portal.thirdweb.com/react/react.useenglishauctions?utm_source=sdk | Documentation}
  */
 export function useEnglishAuction(
   contract: RequiredParam<MarketplaceV3>,
@@ -153,6 +161,7 @@ export function useEnglishAuction(
  * @param contract - an instance of a marketplace contract
  * @param filter - filter to pass to the query for the sake of pagination & filtering
  * @returns a response object that includes an array of listings
+ * @see {@link https://portal.thirdweb.com/react/react.uselistings?utm_source=sdk | Documentation}
  * @beta
  */
 export function useListings(
@@ -185,6 +194,7 @@ export function useListings(
  * @param filter - filter to pass to the query for the sake of pagination & filtering
  * @returns a response object that includes an array of direct listings
  * @twfeature DirectListings
+ * @see {@link https://portal.thirdweb.com/react/react.usedirectlistings?utm_source=sdk | Documentation}
  */
 export function useDirectListings(
   contract: RequiredParam<MarketplaceV3>,
@@ -219,6 +229,7 @@ export function useDirectListings(
  * @param filter - filter to pass to the query for the sake of pagination & filtering
  * @returns a response object that includes an array of direct listings
  * @twfeature DirectListings
+ * @see {@link https://portal.thirdweb.com/react/react.usevaliddirectlistings?utm_source=sdk | Documentation}
  */
 export function useValidDirectListings(
   contract: RequiredParam<MarketplaceV3>,
@@ -253,6 +264,7 @@ export function useValidDirectListings(
  * @param filter - filter to pass to the query for the sake of pagination & filtering
  * @returns a response object that includes an array of english auctions
  * @twfeature EnglishAuctions
+ * @see {@link https://portal.thirdweb.com/react/react.useenglishauctions?utm_source=sdk | Documentation}
  */
 export function useEnglishAuctions(
   contract: RequiredParam<MarketplaceV3>,
@@ -287,6 +299,7 @@ export function useEnglishAuctions(
  * @param filter - filter to pass to the query for the sake of pagination & filtering
  * @returns a response object that includes an array of english auctions
  * @twfeature EnglishAuctions
+ * @see {@link https://portal.thirdweb.com/react/react.usevalidenglishauctions?utm_source=sdk | Documentation}
  */
 export function useValidEnglishAuctions(
   contract: RequiredParam<MarketplaceV3>,
@@ -319,6 +332,7 @@ export function useValidEnglishAuctions(
  *
  * @param contract - an instance of a marketplace contract
  * @returns a response object that includes the listing count
+ * @see {@link https://portal.thirdweb.com/react/react.uselistingscount?utm_source=sdk | Documentation}
  * @beta
  */
 export function useListingsCount(contract: RequiredParam<Marketplace>) {
@@ -346,6 +360,7 @@ export function useListingsCount(contract: RequiredParam<Marketplace>) {
  * @param contract - an instance of a marketplace v3 contract
  * @returns a response object that includes the direct listings count
  * @twfeature DirectListings
+ * @see {@link https://portal.thirdweb.com/react/react.usedirectlistingscount?utm_source=sdk | Documentation}
  */
 export function useDirectListingsCount(contract: RequiredParam<MarketplaceV3>) {
   const contractAddress = contract?.getAddress();
@@ -374,6 +389,7 @@ export function useDirectListingsCount(contract: RequiredParam<MarketplaceV3>) {
  * @param contract - an instance of a marketplace v3 contract
  * @returns a response object that includes the direct english actions count
  * @twfeature EnglishAuctions
+ * @see {@link https://portal.thirdweb.com/react/react.useenglishauctionscount?utm_source=sdk | Documentation}
  */
 export function useEnglishAuctionsCount(
   contract: RequiredParam<MarketplaceV3>,
@@ -404,6 +420,7 @@ export function useEnglishAuctionsCount(
  * @param contract - an instance of a marketplace contract
  * @param filter - filter to pass to the query for the sake of pagination & filtering
  * @returns a response object that includes an array of listings
+ * @see {@link https://portal.thirdweb.com/react/react.useactivelistings?utm_source=sdk | Documentation}
  * @beta
  */
 export function useActiveListings(
@@ -437,6 +454,7 @@ export function useActiveListings(
  * @param contract - an instance of a marketplace contract
  * @param listingId - the listing id to check
  * @returns a response object that includes the {@link Offer} that is winning the auction
+ * @see {@link https://portal.thirdweb.com/react/react.usewinningbid?utm_source=sdk | Documentation}
  * @beta
  */
 export function useWinningBid(
@@ -477,6 +495,7 @@ export function useWinningBid(
  * @param auctionId - the auction id to check
  * @returns a response object that includes the {@link Bid} that is winning the auction
  * @twfeature EnglishAuctions
+ * @see {@link https://portal.thirdweb.com/react/react.useenglishauctionwinningbid?utm_source=sdk | Documentation}
  */
 export function useEnglishAuctionWinningBid(
   contract: RequiredParam<MarketplaceV3>,
@@ -516,6 +535,7 @@ export function useEnglishAuctionWinningBid(
  * @param listingId - the listing id to check
  * @returns a response object that includes the address of the winner of the auction or undefined if there is no winner yet
  * @twfeature EnglishAuctions
+ * @see {@link https://portal.thirdweb.com/react/react.useauctionwinner?utm_source=sdk | Documentation}
  */
 export function useAuctionWinner(
   contract: RequiredParam<Marketplace | MarketplaceV3>,
@@ -567,6 +587,7 @@ export function useAuctionWinner(
 
  * @returns a response object that includes an array of listings
  * @twfeature EnglishAuctions
+ * @see {@link https://portal.thirdweb.com/react/react.usebidbuffer?utm_source=sdk | Documentation}
  */
 export function useBidBuffer(
   contract: RequiredParam<Marketplace | MarketplaceV3>,
@@ -617,6 +638,7 @@ export function useBidBuffer(
  * @param listingId - the listing id to check
  * @returns a response object that includes the minimum next bid for the auction listing
  * @twfeature EnglishAucton
+ * @see {@link https://portal.thirdweb.com/react/react.useminimumnextbid?utm_source=sdk | Documentation}
  */
 export function useMinimumNextBid(
   contract: RequiredParam<Marketplace | MarketplaceV3>,
@@ -667,6 +689,7 @@ export function useMinimumNextBid(
  *
  * @param contract - an instance of a Marketplace contract
  * @param listingId - the id of the listing to fetch offers for
+ * @see {@link https://portal.thirdweb.com/react/react.useoffers?utm_source=sdk | Documentation}
  * @beta
  */
 export function useOffers(
@@ -717,6 +740,7 @@ export function useOffers(
  * @param contract - an instance of a Marketplace contract
  * @returns a mutation object that can be used to create a new direct listing
  * @twfeature DirectListings
+ * @see {@link https://portal.thirdweb.com/react/react.usecreatedirectlisting?utm_source=sdk | Documentation}
  */
 export function useCreateDirectListing<
   TMarketplace extends Marketplace | MarketplaceV3,
@@ -795,6 +819,7 @@ export function useCreateDirectListing<
  * @param contract - an instance of a Marketplace contract
  * @returns a mutation object that can be used to create a new auction listing
  * @twfeature EnglishAuctions
+ * @see {@link https://portal.thirdweb.com/react/react.usecreateauctionlisting?utm_source=sdk | Documentation}
  */
 export function useCreateAuctionListing<
   TMarketplace extends Marketplace | MarketplaceV3,
@@ -872,9 +897,23 @@ export function useCreateAuctionListing<
  *
  * @param contract - an instance of a Marketplace contract
  * @returns a mutation object that can be used to cancel a listing
+ * @see {@link https://portal.thirdweb.com/react/react.usecancellisting?utm_source=sdk | Documentation}
  * @beta
  */
-export function useCancelListing(contract: RequiredParam<Marketplace>) {
+export function useCancelListing(
+  contract: RequiredParam<Marketplace>,
+): UseMutationResult<
+  Omit<
+    {
+      receipt: providers.TransactionReceipt;
+      data: () => Promise<unknown>;
+    },
+    "data"
+  >,
+  unknown,
+  Pick<AuctionListing | DirectListing, "type" | "id">,
+  unknown
+> {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
@@ -940,6 +979,7 @@ export function useCancelListing(contract: RequiredParam<Marketplace>) {
  * @param contract - an instance of a Marketplace v3 contract
  * @returns a mutation object that can be used to cancel a direct listing
  * @twfeature DirectListings
+ * @see {@link https://portal.thirdweb.com/react/react.usecanceldirectlisting?utm_source=sdk | Documentation}
  */
 export function useCancelDirectListing(contract: RequiredParam<MarketplaceV3>) {
   const activeChainId = useSDKChainId();
@@ -1000,6 +1040,7 @@ export function useCancelDirectListing(contract: RequiredParam<MarketplaceV3>) {
  * @param contract - an instance of a Marketplace v3 contract
  * @returns a mutation object that can be used to cancel an english auction
  * @twfeature EnglishAuctions
+ * @see {@link https://portal.thirdweb.com/react/react.usecancelenglishauction?utm_source=sdk | Documentation}
  */
 export function useCancelEnglishAuction(
   contract: RequiredParam<MarketplaceV3>,
@@ -1061,6 +1102,7 @@ export function useCancelEnglishAuction(
  *
  * @param contract - an instance of a Marketplace contract
  * @returns a mutation object that can be used to make a bid on an auction listing
+ * @see {@link https://portal.thirdweb.com/react/react.usemakebid?utm_source=sdk | Documentation}
  * @beta
  */
 export function useMakeBid(contract: RequiredParam<Marketplace>) {
@@ -1119,6 +1161,7 @@ export function useMakeBid(contract: RequiredParam<Marketplace>) {
  *
  * @param contract - an instance of a Marketplace contract
  * @returns a mutation object that can be used to make a bid on an auction listing
+ * @see {@link https://portal.thirdweb.com/react/react.usemakeoffer?utm_source=sdk | Documentation}
  * @beta
  */
 export function useMakeOffer(contract: RequiredParam<Marketplace>) {
@@ -1148,8 +1191,8 @@ export function useMakeOffer(contract: RequiredParam<Marketplace>) {
 }
 
 /**
- * Accept a specific offer on a direct listing 
- * 
+ * Accept a specific offer on a direct listing
+ *
  * @remarks will accept the latest offer by the given offeror.
  *
  * @example
@@ -1179,6 +1222,7 @@ export function useMakeOffer(contract: RequiredParam<Marketplace>) {
  *
  * @param contract - an instance of a Marketplace contract
  * @returns a mutation object that can be used to accept an offer on a direct listing
+ * @see {@link https://portal.thirdweb.com/react/react.useacceptdirectlistingoffer?utm_source=sdk | Documentation}
  */
 export function useAcceptDirectListingOffer(
   contract: RequiredParam<Marketplace>,
@@ -1237,6 +1281,7 @@ export function useAcceptDirectListingOffer(
  *
  * @param contract - an instance of a Marketplace contract
  * @returns a mutation object that can be used to accept an offer on a direct listing
+ * @see {@link https://portal.thirdweb.com/react/react.useexecuteauctionsale?utm_source=sdk | Documentation}
  * @beta
  */
 export function useExecuteAuctionSale(contract: RequiredParam<Marketplace>) {
@@ -1294,6 +1339,7 @@ export function useExecuteAuctionSale(contract: RequiredParam<Marketplace>) {
  *
  * @param contract - an instance of a Marketplace contract
  * @returns a mutation object that can be used to buy out an auction listing
+ * @see {@link https://portal.thirdweb.com/react/react.usebuynow?utm_source=sdk | Documentation}
  * @beta
  */
 export function useBuyNow(contract: RequiredParam<Marketplace>) {

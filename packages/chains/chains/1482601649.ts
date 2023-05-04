@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Nebula Mainnet",
   "chain": "green-giddy-denebola",
@@ -20,10 +21,15 @@ export default {
     {
       "name": "nebula",
       "url": "https://green-giddy-denebola.explorer.mainnet.skalenodes.com",
-      "icon": "nebula",
+      "icon": {
+        "url": "ipfs://QmfQkfmQuoUUUKwF1yCcrPEzFcWLaqNyiSv5YMcSj6zs74",
+        "width": 500,
+        "height": 500,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "nebula"
-} as const;
+} as const satisfies Chain;

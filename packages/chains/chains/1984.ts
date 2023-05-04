@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Eurus Testnet",
   "chain": "EUN",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "testnetexplorer",
       "url": "https://testnetexplorer.eurus.network",
-      "icon": "eurus",
+      "icon": {
+        "url": "ipfs://QmaGd5L9jGPbfyGXBFhu9gjinWJ66YtNrXq8x6Q98Eep9e",
+        "width": 471,
+        "height": 471,
+        "format": "svg"
+      },
       "standard": "none"
     }
   ],
   "testnet": true,
   "slug": "eurus-testnet"
-} as const;
+} as const satisfies Chain;

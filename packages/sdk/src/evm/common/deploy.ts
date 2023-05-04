@@ -18,8 +18,11 @@ import {
   PrebuiltContractType,
   DeploySchemaForPrebuiltContractType,
 } from "../core";
-import { BigNumber, Signer } from "ethers";
+import { BigNumber, Signer, providers } from "ethers";
 import { z } from "zod";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { SUPPORTED_CHAIN_IDS } from "../constants";
+import { computeForwarderAddress } from "./any-evm-utils";
 
 /**
  *
@@ -36,16 +39,28 @@ export async function getDeployArguments<
   metadata: z.input<DeploySchemaForPrebuiltContractType<TContractType>>,
   contractURI: string,
   signer: Signer,
+  storage: ThirdwebStorage,
 ): Promise<any[]> {
   const chainId = await signer.getChainId();
   const signerAddress = await signer.getAddress();
-  let trustedForwarders =
-    contractType === PackInitializer.contractType
-      ? []
-      : getDefaultTrustedForwarders(chainId);
-  // override default forwarders if custom ones are passed in
+  const chainEnum = SUPPORTED_CHAIN_IDS.find((c) => c === chainId);
+  let trustedForwarders: string[] = [];
+  if (!chainEnum) {
+    const forwarder = await computeForwarderAddress(
+      signer.provider as providers.Provider,
+      storage,
+    );
+    trustedForwarders = [forwarder];
+  } else {
+    trustedForwarders =
+      contractType === PackInitializer.contractType
+        ? []
+        : getDefaultTrustedForwarders(chainId);
+  }
+
+  // add default forwarders to any custom forwarders passed in
   if (metadata.trusted_forwarders && metadata.trusted_forwarders.length > 0) {
-    trustedForwarders = metadata.trusted_forwarders;
+    trustedForwarders.push(...metadata.trusted_forwarders);
   }
   switch (contractType) {
     case NFTDropInitializer.contractType:
@@ -175,4 +190,21 @@ export async function getDeployArguments<
     default:
       return [];
   }
+}
+
+export async function getTrustedForwarders(
+  provider: providers.Provider,
+  storage: ThirdwebStorage,
+  contractName?: string,
+): Promise<string[]> {
+  const chainId = (await provider.getNetwork()).chainId;
+  const chainEnum = SUPPORTED_CHAIN_IDS.find((c) => c === chainId);
+  let trustedForwarders: string[] =
+    contractName && contractName === PackInitializer.name
+      ? []
+      : chainEnum
+      ? getDefaultTrustedForwarders(chainId)
+      : [await computeForwarderAddress(provider, storage)]; // TODO: make this default for all chains (standard + others)
+
+  return trustedForwarders;
 }

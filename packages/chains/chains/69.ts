@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Optimism Kovan",
   "title": "Optimism Testnet Kovan",
@@ -27,4 +28,4 @@ export default {
   "networkId": 69,
   "testnet": true,
   "slug": "optimism-kovan"
-} as const;
+} as const satisfies Chain;
