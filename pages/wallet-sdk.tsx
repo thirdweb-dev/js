@@ -202,8 +202,8 @@ const WALLETS = [
     link: "https://portal.thirdweb.com/wallet/wallet-connect-v1",
   },
   {
-    name: "Gnosis Safe",
-    description: "Connect to multi-sig wallets via Gnosis Safe",
+    name: "Safe",
+    description: "Connect to multi-sig wallets via Safe",
     iconUrl:
       "ipfs://QmbbyxDDmmLQh8DzzeUR6X6B75bESsNUFmbdvS3ZsQ2pN1/SafeToken.svg",
     link: "https://portal.thirdweb.com/wallet/safe",

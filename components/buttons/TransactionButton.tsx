@@ -228,8 +228,7 @@ const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
           </Flex>
         </Heading>
         <Text>
-          You will need to execute this transaction in your Gnosis Safe to
-          continue.
+          You will need to execute this transaction in your Safe to continue.
         </Text>
 
         {showHint && (
@@ -249,7 +248,7 @@ const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
           }:${address}/transactions/queue`}
           isExternal
         >
-          Go To Gnosis Safe
+          Go To Safe
         </LinkButton>
       </Flex>
     );
