@@ -21,7 +21,12 @@ import { ExitIcon } from "./icons/ExitIcon";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { ChevronRightIcon, ShuffleIcon } from "@radix-ui/react-icons";
+import {
+  ChevronRightIcon,
+  PersonIcon,
+  PinBottomIcon,
+  ShuffleIcon,
+} from "@radix-ui/react-icons";
 import { Localhost } from "@thirdweb-dev/chains";
 import {
   useActiveChain,
@@ -46,8 +51,8 @@ import {
 import { Flex } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
 import { utils } from "ethers";
-import { GenericWalletIcon } from "./icons/GenericWalletIcon";
 import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
+import { ErrorMessage } from "../../components/formElements";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -112,9 +117,24 @@ export const ConnectedWalletDetails: React.FC<{
           <Skeleton height={fontSize.sm} width="82px" />
         )}
         <Spacer y="xs" />
-        <WalletAddress className={`${TW_CONNECTED_WALLET}__address`}>
-          {shortenString(address || "")}
-        </WalletAddress>
+
+        {activeWallet?.walletId === walletIds.localWallet ? (
+          <ErrorMessage
+            style={{
+              lineHeight: 1,
+              minWidth: "70px",
+              fontSize: fontSize.xs,
+            }}
+          >
+            Guest
+          </ErrorMessage>
+        ) : address ? (
+          <WalletAddress className={`${TW_CONNECTED_WALLET}__address`}>
+            {shortenString(address || "")}
+          </WalletAddress>
+        ) : (
+          <Skeleton height={fontSize.xs} width="88px" />
+        )}
       </ColFlex>
 
       <Img
@@ -305,10 +325,21 @@ export const ConnectedWalletDetails: React.FC<{
             }}
           >
             <SecondaryIconContainer>
-              <GenericWalletIcon size={iconSize.sm} />
+              <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />
             </SecondaryIconContainer>
-            Export Wallet{" "}
+            Backup wallet{" "}
           </MenuButton>
+          <Spacer y="sm" />
+          <ErrorMessage
+            style={{
+              fontSize: fontSize.xs,
+              textAlign: "center",
+            }}
+          >
+            This is a temporary guest wallet <br />
+            Backup if you {`don't `}
+            want to lose access to it
+          </ErrorMessage>
         </>
       )}
 
