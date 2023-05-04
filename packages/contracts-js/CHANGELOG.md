@@ -1,5 +1,11 @@
 # @thirdweb-dev/contracts-js
 
+## 1.3.4
+
+### Patch Changes
+
+- [#959](https://github.com/thirdweb-dev/js/pull/959) [`00d0d01e`](https://github.com/thirdweb-dev/js/commit/00d0d01e619ff5c60b9f31386f51a55b5e466efa) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update contracts package to 3.4.6
+
 ## 1.3.3
 
 ### Patch Changes
