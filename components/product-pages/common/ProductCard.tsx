@@ -1,17 +1,21 @@
 import { Flex } from "@chakra-ui/react";
 import NextImage, { StaticImageData } from "next/image";
-import { Heading } from "tw-components";
+import { Heading, TrackedLink } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
 interface ProductCardProps {
   title: string;
   icon: StaticImageData;
+  titleLink?: string;
+  linkCategory?: string;
 }
 
 export const ProductCard: ComponentWithChildren<ProductCardProps> = ({
   title,
   icon,
   children,
+  titleLink,
+  linkCategory,
 }) => {
   return (
     <Flex
@@ -30,9 +34,22 @@ export const ProductCard: ComponentWithChildren<ProductCardProps> = ({
           height: "40px",
         }}
       />
-      <Heading size="title.sm" mt="32px">
-        {title}
-      </Heading>
+      {titleLink && linkCategory ? (
+        <TrackedLink
+          href={titleLink}
+          category={linkCategory}
+          target="_blank"
+          textDecoration="underline"
+        >
+          <Heading size="title.sm" mt="32px">
+            {title}
+          </Heading>
+        </TrackedLink>
+      ) : (
+        <Heading size="title.sm" mt="32px">
+          {title}
+        </Heading>
+      )}
       <Flex
         direction={"column"}
         fontSize="body.lg"

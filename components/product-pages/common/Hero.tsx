@@ -30,6 +30,7 @@ export interface HeroProps {
     text: string;
     link: string;
   };
+  imageHeight?: string;
 }
 
 export const Hero: ComponentWithChildren<HeroProps> = ({
@@ -45,6 +46,7 @@ export const Hero: ComponentWithChildren<HeroProps> = ({
   secondaryButton,
   trackingCategory,
   children,
+  imageHeight,
 }) => {
   return (
     <Center
@@ -176,7 +178,7 @@ export const Hero: ComponentWithChildren<HeroProps> = ({
             gridColumnEnd={{ base: undefined, md: "span 3" }}
           >
             <ChakraNextImage
-              maxH={{ base: "480px" }}
+              maxH={{ base: imageHeight ? imageHeight : "480px" }}
               style={{ objectFit: "contain" }}
               alt=""
               loading="eager"

@@ -27,6 +27,7 @@ export const GuidesShowcase: React.FC<GuidesShowcaseProps> = ({
   caseStudies,
   category,
 }) => {
+  const numColumns = guides.length <= 2 ? guides.length : 3;
   return (
     <ProductSection>
       <Flex flexDir="column" py={16} align="center" gap={{ base: 6, lg: 8 }}>
@@ -44,7 +45,11 @@ export const GuidesShowcase: React.FC<GuidesShowcaseProps> = ({
           {description}
         </Heading>
         <Flex direction="column" gap={3}>
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
+          <SimpleGrid
+            columns={{ base: 1, md: numColumns }}
+            gap={6}
+            justifyContent={guides.length <= 2 ? "center" : undefined}
+          >
             {guides.map(({ title: guideTitle, image, link }, idx) => (
               <GuideCard
                 category={category}

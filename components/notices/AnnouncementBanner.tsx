@@ -27,7 +27,7 @@ export const AnnouncementBanner = () => {
       >
         <Box display={{ base: "none", md: "block" }} />
         <TrackedLink
-          href="/open-source"
+          href="/wallet-sdk"
           category="announcement"
           label="open-source"
         >
@@ -46,8 +46,8 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                <strong>Open Source:</strong> Our community drives how we build
-                at thirdweb. Contribute today!
+                <strong>Wallet SDK</strong> allows you to connect any wallet to
+                your apps and games
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>
