@@ -46,11 +46,10 @@ export const WalletDetailsModalHeader = ({
           <Box
             flexDirection="row"
             mr="sm"
-            gap="xs"
             justifyContent="center"
             alignItems="center"
           >
-            <Address address={address} />
+            <Address mr="xs" address={address} />
             <CopyIcon
               width={14}
               height={14}

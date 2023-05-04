@@ -153,7 +153,6 @@ export const SmartWalletFlow = ({
             alignItems="center"
             paddingHorizontal="md"
             paddingVertical="sm"
-            gap="md"
             borderRadius="sm"
             backgroundColor="backgroundHighlight"
             onPress={onSwitchNetworkPress}
