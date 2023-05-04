@@ -256,6 +256,28 @@ const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
           >
             RPC
           </LinkButton>
+          <LinkButton
+            href="/dashboard/wallet"
+            isActive={pathname === "/dashboard/wallet"}
+            _active={{
+              bg: "bgBlack",
+              color: "bgWhite",
+            }}
+            rounded="lg"
+          >
+            Wallet
+          </LinkButton>
+          <LinkButton
+            href="/dashboard/api-keys"
+            isActive={pathname === "/dashboard/api-keys"}
+            _active={{
+              bg: "bgBlack",
+              color: "bgWhite",
+            }}
+            rounded="lg"
+          >
+            API Keys
+          </LinkButton>
         </ButtonGroup>
       </Container>
     </GridItem>

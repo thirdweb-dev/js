@@ -2505,6 +2505,17 @@
   resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.8.3.tgz#cbef3146bfc570849405f59cba18235da95a252a"
   integrity sha512-bQHV8R9Me8IaJoJ2vPG4rXcL7seB7YVuskr4f+f5RyOStSZetwzkWtoqDMl5erkBJy0lDRUnIR2WIkPiC0GJlg==
 
+"@paperxyz/embedded-wallet-service-sdk@^0.0.26":
+  version "0.0.26"
+  resolved "https://registry.yarnpkg.com/@paperxyz/embedded-wallet-service-sdk/-/embedded-wallet-service-sdk-0.0.26.tgz#533ace33f7b5289dee3b33fede1c3d6c447901a4"
+  integrity sha512-2Io6opbzAuwdpflP4N3uTRHk454nx0O5inlnOj9FqpChSF06h1xSVlSA/6lRCrJRxhOuO6uNhrkntItRRPIw7Q==
+  dependencies:
+    "@ethersproject/abstract-signer" "^5.7.0"
+    "@ethersproject/bytes" "^5.7.0"
+    "@ethersproject/properties" "^5.7.0"
+    "@ethersproject/providers" "^5.7.2"
+    "@paperxyz/sdk-common-utilities" "*"
+
 "@paperxyz/embedded-wallet-service-sdk@^0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@paperxyz/embedded-wallet-service-sdk/-/embedded-wallet-service-sdk-0.1.0.tgz#27fbf637479d11909e5e78cf1188f3bc21f83778"
@@ -4120,10 +4131,25 @@
   resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.7.9.tgz#0e975f8a5079972f1827a569079943d43257c42f"
   integrity sha512-4RkayPMV1oS2SKDXfQbFoct1w5k+pvGpmX18tCXMofK/VDRdA2hhxfsQlMvsJ4oTX8b0CI4Y3GDKn5T425jBCw==
 
+"@thirdweb-dev/auth@^3.0.15":
+  version "3.0.15"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/auth/-/auth-3.0.15.tgz#a1ff4f6f83167c7a228a8b92462ff6f5602f6814"
+  integrity sha512-YpoQ4Jy2E7Z/iVFO2XQQbYZWcgJWMwgYa3eKTAiJeOhaoffb9gCf7koGdOA4VyM4WEbVOgwP9Sb78jgeyoFaLQ==
+  dependencies:
+    "@thirdweb-dev/wallets" "0.2.16"
+    cookie "^0.5.0"
+    uuid "^9.0.0"
+    zod "^3.20.2"
+
 "@thirdweb-dev/chain-icons@^1.0.5":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/chain-icons/-/chain-icons-1.0.5.tgz#8a351024337d26a2ceee394f927513d72e1d31a0"
   integrity sha512-NsDboaLji7IOOjgoz/A/qf7A5EDfZN3qgyqt+GOxr5/YXzzyH2Obk8grwv2gDwP2mF5T5RjNex0I8kwA+tyKrw==
+
+"@thirdweb-dev/chains@0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/chains/-/chains-0.1.12.tgz#d585b3cc30f85438ce70e6a0f5c1049caa5b723d"
+  integrity sha512-oF+yqeEDmeV2PJgyWD3ss+kZYjlThBmWnwnwdV7ZteAcYu0TnjqwwDFGRH6TPd+bknyby8r9UluFMlkZJpY8Vw==
 
 "@thirdweb-dev/chains@0.1.13-nightly-fc96e147-20230429021411", "@thirdweb-dev/chains@^0.1.13-nightly-28b5d1eb-20230501215005":
   version "0.1.13-nightly-fc96e147-20230429021411"
@@ -4219,6 +4245,31 @@
     form-data "^4.0.0"
     ipfs-unixfs-importer "^7.0.1"
     uuid "^9.0.0"
+
+"@thirdweb-dev/wallets@0.2.16":
+  version "0.2.16"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/wallets/-/wallets-0.2.16.tgz#3fb6a802bd2b46d21632e5985c2041217978a343"
+  integrity sha512-rgOr1P60NLB5jn3imMjoCT2OL4lVZsNERWChfG8OPve5bnn6mlpQH71rHFyw+cQ301EcCXVAs5spiXXFCR72Aw==
+  dependencies:
+    "@coinbase/wallet-sdk" "^3.6.3"
+    "@paperxyz/embedded-wallet-service-sdk" "^0.0.26"
+    "@safe-global/safe-core-sdk" "^3.3.2"
+    "@safe-global/safe-ethers-adapters" "^0.1.0-alpha.16"
+    "@safe-global/safe-ethers-lib" "^1.9.2"
+    "@thirdweb-dev/chains" "0.1.12"
+    "@walletconnect/ethereum-provider" "~2.4.6"
+    "@walletconnect/jsonrpc-http-connection" "^1.0.0"
+    "@walletconnect/jsonrpc-provider" "^1.0.3"
+    "@walletconnect/jsonrpc-types" "^1.0.1"
+    "@walletconnect/jsonrpc-utils" "^1.0.3"
+    "@walletconnect/legacy-client" "^2.0.0-rc.0"
+    "@walletconnect/legacy-modal" "^2.0.0-rc.0"
+    "@walletconnect/legacy-types" "^2.0.0-rc.0"
+    "@walletconnect/legacy-utils" "^2.0.0-rc.0"
+    buffer "^6.0.3"
+    crypto-js "^4.1.1"
+    eip1193-provider "^1.0.1"
+    eventemitter3 "^5.0.0"
 
 "@thirdweb-dev/wallets@0.2.17-nightly-fc96e147-20230429021411":
   version "0.2.17-nightly-fc96e147-20230429021411"
@@ -6608,6 +6659,11 @@ cookie@^0.4.1:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.4.2.tgz#0e41f24de5ecf317947c82fc789e06a884824432"
   integrity sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA==
+
+cookie@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.5.0.tgz#d1f5d71adec6558c58f389987c366aa47e994f8b"
+  integrity sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw==
 
 cookiejar@^2.1.1:
   version "2.1.4"

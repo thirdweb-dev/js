@@ -80,6 +80,7 @@
     "@babel/core": "^7.21.4",
     "@chakra-ui/cli": "^2.0.0",
     "@next/bundle-analyzer": "^13.3.1",
+    "@thirdweb-dev/auth": "^3.0.15",
     "@trivago/prettier-plugin-sort-imports": "^4.0.0",
     "@types/airtable": "^0.10.1",
     "@types/color": "^3.0.2",

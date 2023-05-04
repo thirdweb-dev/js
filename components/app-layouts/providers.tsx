@@ -68,6 +68,10 @@ export const DashboardThirdwebProvider: ComponentWithChildren<
         safeWallet(),
       ]}
       storageInterface={StorageSingleton}
+      authConfig={{
+        domain: "thirdweb.com",
+        authUrl: "https://api.thirdweb.com/v1/auth",
+      }}
     >
       <SolanaProvider>{children}</SolanaProvider>
     </ThirdwebProvider>

@@ -371,8 +371,8 @@ export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
             <Menu isLazy>
               <MenuButton
                 as={TrackedIconButton}
-                variant="gost"
                 icon={<FiMoreVertical />}
+                variant="gost"
                 onClick={(e) => e.stopPropagation()}
               />
               <MenuList
