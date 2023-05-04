@@ -56,7 +56,7 @@ export abstract class AbstractClientWallet<
    */
   async autoConnect(
     connectOptions?: ConnectParams<TConnectParams>,
-  ): Promise<string | undefined> {
+  ): Promise<string> {
     // remove chainId when autoconnecting to prevent switch-network popup on page load
     const options = connectOptions
       ? { ...connectOptions, chainId: undefined }
