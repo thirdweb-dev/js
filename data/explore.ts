@@ -142,14 +142,17 @@ const STAKING = {
   showInExplore: true,
 } as const;
 
-const BETA = {
-  id: "beta",
-  name: "Beta",
-  displayName: "Beta",
-  description:
-    "Contracts that are not ready yet, but you can already start deploying on selected testnets.",
-  contracts: ["thirdweb.eth/MarketplaceV3"],
-  showInExplore: false,
+const ACCOUNT_ABSTRACTION = {
+  id: "account-abstraction",
+  name: "Account Abstraction",
+  displayName: "Account Abstraction (Beta)",
+  description: "Auto deploy ERC-4337 Smart Wallets for your users.",
+  contracts: [
+    "thirdweb.eth/AccountFactory",
+    "thirdweb.eth/DynamicAccountFactory",
+    "thirdweb.eth/ManagedAccountFactory",
+  ],
+  showInExplore: true,
 } as const;
 
 const CATEGORIES = {
@@ -157,12 +160,12 @@ const CATEGORIES = {
   [NFTS.id]: NFTS,
   [MARKETS.id]: MARKETS,
   [DROPS.id]: DROPS,
-  [GOVERNANCE.id]: GOVERNANCE,
+  [ACCOUNT_ABSTRACTION.id]: ACCOUNT_ABSTRACTION,
   [AIRDROP.id]: AIRDROP,
   [GAMING.id]: GAMING,
   [COMMERCE.id]: COMMERCE,
   [STAKING.id]: STAKING,
-  [BETA.id]: BETA,
+  [GOVERNANCE.id]: GOVERNANCE,
 } as const;
 
 export function getCategory(id: string): ExploreCategory | null {
