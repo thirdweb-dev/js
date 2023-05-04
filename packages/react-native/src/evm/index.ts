@@ -7,6 +7,7 @@ export { rainbowWallet } from "./wallets/wallets/rainbow-wallet";
 export { trustWallet } from "./wallets/wallets/trust-wallet";
 export { smartWallet } from "./wallets/wallets/smart-wallet";
 export { localWallet } from "./wallets/wallets/local-wallet";
+export { walletConnect } from "./wallets/wallets/wallet-connect";
 
 export { useCoinbaseWallet } from "./wallets/hooks/useCoinbaseWallet";
 export { useMetaMaskWallet } from "./wallets/hooks/useMetaMaskWallet";

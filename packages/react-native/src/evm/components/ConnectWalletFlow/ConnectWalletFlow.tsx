@@ -16,6 +16,11 @@ import { SmartWallet } from "@thirdweb-dev/wallets";
 import { SmartWalletFlow } from "./SmartWallet/SmartWalletFlow";
 import { LocalWalletFlow } from "./LocalWalletFlow";
 import { LocalWallet } from "../../wallets/wallets/local-wallet";
+import {
+  WalletConnect,
+  walletConnect,
+} from "../../wallets/wallets/wallet-connect";
+import { WalletConnectFlow } from "./WalletConnect/WalletConnectFlow";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -79,7 +84,8 @@ export const ConnectWalletFlow = () => {
   const onChooseWallet = (wallet: ConfiguredWallet) => {
     setActiveWallet(() => wallet);
 
-    if (wallet.id !== SmartWallet.id) {
+    // these wallets have special flows
+    if (wallet.id !== SmartWallet.id && wallet.id !== WalletConnect.id) {
       connectActiveWallet(wallet);
     }
   };
@@ -111,6 +117,16 @@ export const ConnectWalletFlow = () => {
               onClose();
             }}
             onConnect={onBackPress}
+          />
+        );
+      case WalletConnect.id:
+        return (
+          <WalletConnectFlow
+            onClose={() => {
+              onClose();
+            }}
+            onBackPress={onBackPress}
+            onChooseWallet={onChooseWallet}
           />
         );
     }
