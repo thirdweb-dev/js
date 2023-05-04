@@ -110,7 +110,7 @@ export const ExportLocalWallet: React.FC<{
           textAlign: "left",
         }}
       >
-        Backup Wallet
+        Export Wallet
       </ModalTitle>
 
       <Spacer y="md" />
