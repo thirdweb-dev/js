@@ -17,7 +17,7 @@ export const CoinbaseConnectUI = (props: CoinbaseConnectUIProps) => {
   const [screen, setScreen] = useState<
     "connecting" | "loading" | "scanning" | "get-started"
   >("loading");
-  const { configuredWallet, onConnect: closeModal } = props;
+  const { configuredWallet, done } = props;
   const connect = useConnect();
   const { meta } = configuredWallet;
 
@@ -42,9 +42,9 @@ export const CoinbaseConnectUI = (props: CoinbaseConnectUIProps) => {
           connectPrompted.current = true;
           setScreen("connecting");
           await connect(configuredWallet);
-          closeModal();
+          done();
         } catch (e) {
-          closeModal();
+          done();
         }
       }
 
@@ -58,7 +58,7 @@ export const CoinbaseConnectUI = (props: CoinbaseConnectUIProps) => {
         }
       }
     })();
-  }, [screen, configuredWallet, closeModal, connect]);
+  }, [screen, configuredWallet, done, connect]);
 
   if (screen === "connecting" || screen === "loading") {
     return (
@@ -88,7 +88,7 @@ export const CoinbaseConnectUI = (props: CoinbaseConnectUIProps) => {
     return (
       <CoinbaseScan
         onBack={props.goBack}
-        onConnected={closeModal}
+        onConnected={done}
         onGetStarted={() => setScreen("get-started")}
         configuredWallet={configuredWallet}
       />

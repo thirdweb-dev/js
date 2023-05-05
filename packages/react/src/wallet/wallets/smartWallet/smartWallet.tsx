@@ -62,7 +62,7 @@ export const SmartConnectUI = (props: SafeConnectUIProps) => {
     <SmartWalletConnecting
       onBack={props.goBack}
       onConnect={() => {
-        props.onConnect();
+        props.done();
       }}
       smartWallet={configuredWallet}
     />
