@@ -4,20 +4,12 @@ import { WalletButton } from "../../base/WalletButton";
 import { ConnectWalletHeader } from "../ConnectingWallet/ConnectingWalletHeader";
 import { TW_WC_PROJECT_ID, WC_LINKS } from "../../../constants/walletConnect";
 import Text from "../../base/Text";
+import { WCWallet } from "../../../types/wc";
 
 export type WalletConnectFlowProps = {
   onChooseWallet: (wallet: WCWallet) => void;
   onClose: () => void;
   onBackPress: () => void;
-};
-
-type WCWallet = {
-  iconURL: string;
-  name: string;
-  links: {
-    native: string;
-    universal: string;
-  };
 };
 
 export function WalletConnectFlow({
@@ -36,21 +28,27 @@ export function WalletConnectFlow({
       let response;
       try {
         response = await fetch(
-          `https://explorer-api.walletconnect.com/v3/wallets?projectId=${TW_WC_PROJECT_ID}`,
+          `https://explorer-api.walletconnect.com/v3/wallets?projectId=${TW_WC_PROJECT_ID}&version=2`,
           { signal },
         );
       } catch (err) {
         console.error("Failed to fetch wallets", err);
-        setError(`Failed to fetch wallets: ${err}`);
+        setError("Failed to fetch wallets. Please, try again later.");
       }
 
-      if (response) {
-        const data = await response.json();
+      if (response?.ok) {
+        let data;
+        try {
+          data = await response.json();
+        } catch (err) {
+          console.error("Failed to parse wc json response", err);
+          setError("Failed to fetch wallets. Please, try again later.");
+        }
 
         if (data) {
-          const walletsB = [];
+          const walletsB: WCWallet[] = [];
           const listings = data.listings;
-          for (const key in Object.keys(listings)) {
+          Object.keys(listings).forEach((key) => {
             const listing = listings[key];
 
             walletsB.push({
@@ -58,10 +56,12 @@ export function WalletConnectFlow({
               iconURL: listing.image_url.md,
               links: listing.mobile ? listing.mobile : WC_LINKS,
             });
-          }
+          });
 
           setWallets(walletsB);
         }
+      } else {
+        setError("Failed to fetch wallets. Please, try again later.");
       }
     }
 
@@ -82,10 +82,11 @@ export function WalletConnectFlow({
       <View style={styles.explorerContainer}>
         <FlatList
           keyExtractor={(item) => item.name}
+          showsVerticalScrollIndicator={false}
           data={wallets}
           ListEmptyComponent={
             error ? (
-              <Text variant="error"></Text>
+              <Text variant="error">{error}</Text>
             ) : (
               <ActivityIndicator size="small" color="buttonTextColor" />
             )

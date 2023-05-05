@@ -27,7 +27,7 @@ const WALLET_CONNECT_LINKS = "wallet_connect_links";
 
 export class WalletConnect extends WalletConnectCore {
   static id = walletIds.walletConnect;
-  #links: WCLinks;
+  #links?: WCLinks;
 
   constructor(options: WCOptions) {
     const storage = createAsyncLocalStorage(walletIds.walletConnect);
@@ -43,35 +43,56 @@ export class WalletConnect extends WalletConnectCore {
     this.on("disconnect", () => {
       this.removeListener("open_wallet", this._onWCOpenWallet);
     });
+  }
 
-    this.#links = WC_LINKS;
+  async getConnector() {
+    if (!this.#links) {
+      await this.initLinks();
+    }
 
-    this.initLinks();
+    return super.getConnector();
   }
 
   async initLinks() {
+    console.log("initLinks", this.walletStorage);
     const linksStr = await this.walletStorage.getItem(WALLET_CONNECT_LINKS);
 
-    const links = linksStr ? JSON.parse(linksStr) : WC_LINKS;
+    const links = linksStr ? JSON.parse(linksStr) : undefined;
 
     this.setLinks(links);
   }
 
-  setLinks(linksP: WCLinks) {
+  async setLinks(linksP?: WCLinks) {
+    console.log("setLinks", linksP);
+
     this.#links = linksP;
 
-    this.walletStorage.setItem(WALLET_CONNECT_LINKS, JSON.stringify(linksP));
+    if (linksP) {
+      await this.walletStorage.setItem(
+        WALLET_CONNECT_LINKS,
+        JSON.stringify(linksP),
+      );
+
+      console.log("after stored");
+    }
   }
 
   _onWCOpenWallet(uri?: string) {
-    const links = this.#links;
+    const links = this.#links || WC_LINKS;
+
+    console.log("links", links);
+    console.log("uri", uri);
 
     if (uri) {
       const fullUrl = formatDisplayUri(uri, links);
 
+      console.log("fullUrl.1st", fullUrl);
+
       Linking.openURL(fullUrl);
     } else {
       const fullUrl = formatDisplayUri("", links);
+
+      console.log("fullUrl", fullUrl);
 
       Linking.openURL(fullUrl);
     }
@@ -82,6 +103,7 @@ type WalletConnectConfig = { projectId?: string };
 
 export const walletConnect = (config?: WalletConnectConfig) => {
   const projectId = config?.projectId || TW_WC_PROJECT_ID;
+  console.log("projectId", projectId);
   return {
     id: WalletConnect.id,
     meta: WalletConnectCore.meta,

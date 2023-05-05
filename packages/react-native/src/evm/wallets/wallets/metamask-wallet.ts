@@ -51,6 +51,9 @@ export class MetaMaskWallet extends WalletConnectV1 {
   _onWCOpenWallet(uri?: string) {
     const links = MetaMaskWallet.meta.links;
 
+    console.log("links", links);
+    console.log("uri", uri);
+
     if (uri) {
       const fullUrl = formatDisplayUri(uri, links);
 

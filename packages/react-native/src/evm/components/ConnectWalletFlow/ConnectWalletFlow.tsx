@@ -6,6 +6,7 @@ import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
 import {
   ConfiguredWallet,
   useConnect,
+  useCreateWalletInstance,
   useIsConnecting,
   useThirdwebWallet,
   useWallets,
@@ -21,6 +22,7 @@ import {
   walletConnect,
 } from "../../wallets/wallets/wallet-connect";
 import { WalletConnectFlow } from "./WalletConnect/WalletConnectFlow";
+import { WCWallet } from "../../types/wc";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -32,6 +34,7 @@ export const ConnectWalletFlow = () => {
   const isWalletConnecting = useIsConnecting();
   const [showButtonSpinner, setShowButtonSpinner] = useState(false);
   const twWalletContext = useThirdwebWallet();
+  const createWalletInstance = useCreateWalletInstance();
 
   useEffect(() => {
     setShowButtonSpinner(isWalletConnecting);
@@ -90,6 +93,16 @@ export const ConnectWalletFlow = () => {
     }
   };
 
+  const onChooseWCWallet = async (wallet: WCWallet) => {
+    console.log(wallet);
+    const wcWallet = createWalletInstance(walletConnect());
+    await wcWallet.setLinks(wallet.links);
+
+    console.log("connect");
+    await wcWallet.connect();
+    twWalletContext?.handleWalletConnect(wcWallet);
+  };
+
   const onBackPress = () => {
     reset();
   };
@@ -126,7 +139,7 @@ export const ConnectWalletFlow = () => {
               onClose();
             }}
             onBackPress={onBackPress}
-            onChooseWallet={onChooseWallet}
+            onChooseWallet={onChooseWCWallet}
           />
         );
     }
@@ -146,6 +159,7 @@ export const ConnectWalletFlow = () => {
                 ) : undefined
               }
               wallet={activeWallet}
+              subHeaderText="Connecting your wallet"
               onClose={onClose}
               onBackPress={onBackPress}
             />
