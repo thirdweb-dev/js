@@ -8,7 +8,7 @@ import { ApiKeyTable } from "components/settings/ApiKeyTable";
 import { CreateApiKeyButton } from "components/settings/CreateApiKeyButton";
 import { PageId } from "page-id";
 import React, { useMemo } from "react";
-import { Heading, Text } from "tw-components";
+import { Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
 const DashboardApiKeys: ThirdwebNextPage = () => {
@@ -59,8 +59,15 @@ const DashboardApiKeys: ThirdwebNextPage = () => {
           <CreateApiKeyButton />
         </Flex>
         <Text>
-          These API keys are used to work with thirdweb infrastructure services
-          like smart wallet, storage, analytics, and more.
+          API keys are required to work with thirdweb&apos;s smart wallet
+          infrastructure services. Find the full list of supported networks{" "}
+          <Link
+            href="https://portal.thirdweb.com/wallet/smart-wallet"
+            color="blue.400"
+            isExternal
+          >
+            here
+          </Link>
         </Text>
       </Flex>
 
