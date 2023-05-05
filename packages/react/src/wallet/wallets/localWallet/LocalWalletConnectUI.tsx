@@ -21,7 +21,7 @@ export const LocalWalletConnectUI = (props: LocalWalletConnectUIProps) => {
       <CreateLocalWallet_Guest
         localWallet={props.localWallet}
         goBack={props.goBack}
-        onConnect={props.onConnect}
+        onConnect={props.done}
       />
     );
   }
@@ -43,7 +43,7 @@ export const LocalWalletConnectUI = (props: LocalWalletConnectUIProps) => {
   if (walletData) {
     return (
       <ReconnectLocalWallet
-        onConnect={props.onConnect}
+        onConnect={props.done}
         goBack={props.goBack}
         localWallet={props.localWallet}
       />
@@ -54,7 +54,7 @@ export const LocalWalletConnectUI = (props: LocalWalletConnectUIProps) => {
     <CreateLocalWallet_Password
       goBack={props.goBack}
       localWallet={props.localWallet}
-      onConnect={props.onConnect}
+      onConnect={props.done}
     />
   );
 };

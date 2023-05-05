@@ -65,7 +65,7 @@ export const SafeConnectUI = (props: SafeConnectUIProps) => {
     <SelectAccount
       onBack={props.goBack}
       onConnect={() => {
-        props.onConnect();
+        props.done();
       }}
       safeWallet={props.configuredWallet}
     />
