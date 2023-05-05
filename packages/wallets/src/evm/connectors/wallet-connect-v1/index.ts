@@ -3,7 +3,7 @@ import {
   SwitchChainError,
   UserRejectedRequestError,
   normalizeChainId,
-  Connector,
+  WagmiConnector,
   ProviderRpcError,
 } from "../../../lib/wagmi-core";
 import { walletIds } from "../../constants/walletIds";
@@ -30,7 +30,7 @@ type WalletConnectOptions = ConstructorParameters<
 
 type WalletConnectSigner = providers.JsonRpcSigner;
 
-export class WalletConnectV1Connector extends Connector<
+export class WalletConnectV1Connector extends WagmiConnector<
   WalletConnectProvider,
   WalletConnectOptions,
   WalletConnectSigner

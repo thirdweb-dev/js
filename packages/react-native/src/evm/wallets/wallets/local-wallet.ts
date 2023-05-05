@@ -1,6 +1,6 @@
 import {
   LocalWallet as LocalWalletCore,
-  TWConnector,
+  Connector,
   walletIds,
 } from "@thirdweb-dev/wallets";
 import { ConfiguredWallet } from "@thirdweb-dev/react-core";
@@ -30,7 +30,7 @@ export class LocalWallet extends LocalWalletCore {
     return this.ethersWallet.address;
   }
 
-  protected async getConnector(): Promise<TWConnector> {
+  protected async getConnector(): Promise<Connector> {
     if (!this.ethersWallet) {
       const data = await this.getSavedData();
 

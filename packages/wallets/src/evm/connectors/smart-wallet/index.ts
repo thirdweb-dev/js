@@ -1,5 +1,5 @@
 import { Chain } from "@thirdweb-dev/chains";
-import { ConnectParams, TWConnector } from "../../interfaces/tw-connector";
+import { ConnectParams, Connector } from "../../interfaces/connector";
 import { ERC4337EthersProvider } from "./lib/erc4337-provider";
 import { getVerifyingPaymaster } from "./lib/paymaster";
 import { create4337Provider } from "./lib/provider-utils";
@@ -23,7 +23,7 @@ import {
 import { AccountAPI } from "./lib/account";
 import { DEFAULT_WALLET_API_KEY } from "../../constants/keys";
 
-export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs> {
+export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   private config: SmartWalletConfig;
   private aaProvider: ERC4337EthersProvider | undefined;
   private accountApi: AccountAPI | undefined;

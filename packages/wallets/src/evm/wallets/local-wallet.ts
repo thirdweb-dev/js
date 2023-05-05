@@ -1,5 +1,5 @@
 import { AsyncStorage, createAsyncLocalStorage } from "../../core";
-import { TWConnector } from "../interfaces/tw-connector";
+import { Connector } from "../interfaces/connector";
 import { walletIds } from "../constants/walletIds";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import { Chain, defaultChains, Ethereum } from "@thirdweb-dev/chains";
@@ -26,7 +26,7 @@ export class LocalWallet extends AbstractClientWallet<
   LocalWalletOptions,
   LocalWalletConnectionArgs
 > {
-  connector?: TWConnector;
+  connector?: Connector;
   options: WalletOptions<LocalWalletOptions>;
   ethersWallet?: Wallet;
   #storage: AsyncStorage;
@@ -50,7 +50,7 @@ export class LocalWallet extends AbstractClientWallet<
       options?.storage || createAsyncLocalStorage(walletIds.localWallet);
   }
 
-  protected async getConnector(): Promise<TWConnector> {
+  protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
       const { LocalWalletConnector: LocalWalletConnector } = await import(
         "../connectors/local-wallet"

@@ -702,19 +702,22 @@ export class Transaction<
       // no-op
     }
 
-    return new TransactionError({
-      reason,
-      from,
-      to,
-      method,
-      data,
-      network,
-      rpcUrl,
-      value,
-      hash,
-      contractName,
-      sources,
-    });
+    return new TransactionError(
+      {
+        reason,
+        from,
+        to,
+        method,
+        data,
+        network,
+        rpcUrl,
+        value,
+        hash,
+        contractName,
+        sources,
+      },
+      error,
+    );
   }
 }
 
@@ -853,15 +856,18 @@ export class DeployTransaction extends TransactionContext {
     // Parse the revert reason from the error
     const reason = parseRevertReason(error);
 
-    return new TransactionError({
-      reason,
-      from,
-      method,
-      data,
-      network,
-      rpcUrl,
-      value,
-      hash,
-    });
+    return new TransactionError(
+      {
+        reason,
+        from,
+        method,
+        data,
+        network,
+        rpcUrl,
+        value,
+        hash,
+      },
+      error,
+    );
   }
 }
