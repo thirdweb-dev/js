@@ -1,6 +1,6 @@
 import type { WagmiConnectorData } from "../../lib/wagmi-core";
 import type { WalletConnectConnector } from "../connectors/wallet-connect";
-import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
+import { Connector, WagmiAdapter } from "../interfaces/tw-connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { TW_WC_PROJECT_ID } from "../constants/wc";
@@ -15,7 +15,7 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
   #walletConnectConnector?: WalletConnectConnector;
   #provider?: WalletConnectProvider;
 
-  connector?: TWConnector;
+  connector?: Connector;
 
   static id = walletIds.walletConnect;
 
@@ -39,7 +39,7 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
     this.qrcode = options?.qrcode === false ? false : true;
   }
 
-  protected async getConnector(): Promise<TWConnector> {
+  protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
       // import the connector dynamically
       const { WalletConnectConnector } = await import(

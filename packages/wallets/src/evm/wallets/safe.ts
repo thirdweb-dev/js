@@ -1,4 +1,4 @@
-import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
+import { ConnectParams, Connector } from "../interfaces/tw-connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { SafeConnectionArgs } from "../connectors/safe/types";
@@ -31,7 +31,7 @@ export class SafeWallet extends AbstractClientWallet<{}, SafeConnectionArgs> {
     });
   }
 
-  protected async getConnector(): Promise<TWConnector> {
+  protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
       const { SafeConnector } = await import("../connectors/safe");
       this.connector = new SafeConnector();

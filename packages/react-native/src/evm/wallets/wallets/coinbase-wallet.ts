@@ -5,7 +5,7 @@ import type {
 } from "../connectors/coinbase-wallet";
 import {
   AbstractClientWallet,
-  TWConnector,
+  Connector,
   WagmiAdapter,
   WalletOptions,
   walletIds,
@@ -28,7 +28,7 @@ export class CoinbaseWallet extends AbstractClientWallet<CoinbaseWalletConnector
       "ipfs://QmcJBHopbwfJcLqJpX2xEufSS84aLbF7bHavYhaXUcrLaH/coinbase.svg",
   };
 
-  connector?: TWConnector;
+  connector?: Connector;
   coinbaseConnector?: CoinbaseWalletConnector;
   provider?: CoinbaseWalletConnector["provider"];
 
@@ -49,7 +49,7 @@ export class CoinbaseWallet extends AbstractClientWallet<CoinbaseWalletConnector
     this.callbackURL = options.callbackURL;
   }
 
-  protected async getConnector(): Promise<TWConnector> {
+  protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
       // import the connector dynamically
       const { CoinbaseWalletConnector: CoinbaseWalletConnector } = await import(

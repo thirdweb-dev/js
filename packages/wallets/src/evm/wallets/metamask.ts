@@ -1,5 +1,5 @@
 import type { WalletConnectV1Connector as WalletConnectV1ConnectorType } from "../connectors/wallet-connect-v1";
-import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
+import { Connector, WagmiAdapter } from "../interfaces/tw-connector";
 import { assertWindowEthereum } from "../utils/assertWindowEthereum";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import type { MetaMaskConnector as MetamaskConnectorType } from "../connectors/metamask";
@@ -21,7 +21,7 @@ type ConnectWithQrCodeArgs = {
 };
 
 export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptions> {
-  connector?: TWConnector;
+  connector?: Connector;
   walletConnectConnector?: WalletConnectV1ConnectorType;
   metamaskConnector?: MetamaskConnectorType;
   isInjected: boolean;
@@ -55,7 +55,7 @@ export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptio
     }
   }
 
-  protected async getConnector(): Promise<TWConnector> {
+  protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
       // if metamask is injected, use the injected connector
       // otherwise, use the wallet connect connector for using the metamask app on mobile via QR code scan

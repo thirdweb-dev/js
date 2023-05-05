@@ -15,7 +15,7 @@ export {
 } from "../lib/wagmi-core";
 export type { EVMWallet } from "./interfaces";
 export type { ConnectParams } from "./interfaces/tw-connector";
-export { TWConnector, WagmiAdapter } from "./interfaces/tw-connector";
+export { Connector, WagmiAdapter } from "./interfaces/tw-connector";
 export type {
   AbstractWallet,
   WalletData,

@@ -1,8 +1,8 @@
-import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
+import { Connector, WagmiAdapter } from "../interfaces/tw-connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 
 export class InjectedWallet extends AbstractClientWallet {
-  connector?: TWConnector;
+  connector?: Connector;
 
   static id = "injected" as const;
   public get walletName() {
@@ -13,7 +13,7 @@ export class InjectedWallet extends AbstractClientWallet {
     super(InjectedWallet.id, options);
   }
 
-  protected async getConnector(): Promise<TWConnector> {
+  protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
       // import the connector dynamically
       const { InjectedConnector } = await import("../connectors/injected");
