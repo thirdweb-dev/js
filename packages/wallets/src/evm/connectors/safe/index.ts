@@ -1,4 +1,4 @@
-import { ConnectParams, Connector } from "../../interfaces/tw-connector";
+import { ConnectParams, Connector } from "../../interfaces/connector";
 import type { SafeConnectionArgs } from "./types";
 import { ethers } from "ethers";
 import type { Signer } from "ethers";

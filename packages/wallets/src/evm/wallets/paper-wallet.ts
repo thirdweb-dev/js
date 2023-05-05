@@ -2,7 +2,7 @@ import {
   PaperWalletConnectionArgs,
   PaperWalletAdditionalOptions,
 } from "../connectors/paper/types";
-import { Connector } from "../interfaces/tw-connector";
+import { Connector } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { PaperWalletConnector } from "../connectors/paper";

@@ -14,8 +14,8 @@ export {
   UserRejectedRequestError,
 } from "../lib/wagmi-core";
 export type { EVMWallet } from "./interfaces";
-export type { ConnectParams } from "./interfaces/tw-connector";
-export { Connector, WagmiAdapter } from "./interfaces/tw-connector";
+export type { ConnectParams } from "./interfaces/connector";
+export { Connector, WagmiAdapter } from "./interfaces/connector";
 export type {
   AbstractWallet,
   WalletData,

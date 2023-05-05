@@ -1,5 +1,5 @@
 import { normalizeChainId } from "../../../lib/wagmi-core";
-import { ConnectParams, Connector } from "../../interfaces/tw-connector";
+import { ConnectParams, Connector } from "../../interfaces/connector";
 import type { LocalWalletConnectionArgs } from "../../wallets/local-wallet";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { Signer } from "ethers";

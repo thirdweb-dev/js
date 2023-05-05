@@ -1,4 +1,4 @@
-import { ConnectParams, Connector } from "../interfaces/tw-connector";
+import { ConnectParams, Connector } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { SafeConnectionArgs } from "../connectors/safe/types";

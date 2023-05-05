@@ -1,7 +1,7 @@
 import type { WagmiConnectorData } from "../../lib/wagmi-core";
 import type { WalletConnectV1Connector } from "../connectors/wallet-connect-v1";
 import type WalletConnectProvider from "../connectors/wallet-connect-v1/walletconnect-legacy-provider";
-import { Connector, WagmiAdapter } from "../interfaces/tw-connector";
+import { Connector, WagmiAdapter } from "../interfaces/connector";
 import { walletIds } from "../constants/walletIds";
 import { AbstractClientWallet, WalletOptions } from "./base";
 

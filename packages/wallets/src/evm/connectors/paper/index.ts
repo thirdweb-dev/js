@@ -1,5 +1,5 @@
 import { normalizeChainId } from "../../../lib/wagmi-core";
-import { Connector } from "../../interfaces/tw-connector";
+import { Connector } from "../../interfaces/connector";
 import {
   PaperWalletConnectionArgs,
   PaperWalletConnectorOptions,

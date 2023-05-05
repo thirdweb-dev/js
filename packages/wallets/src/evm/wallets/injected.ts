@@ -1,4 +1,4 @@
-import { Connector, WagmiAdapter } from "../interfaces/tw-connector";
+import { Connector, WagmiAdapter } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 
 export class InjectedWallet extends AbstractClientWallet {

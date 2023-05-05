@@ -1,5 +1,5 @@
 import type { CoinbaseWalletConnector } from "../connectors/coinbase-wallet";
-import { Connector, WagmiAdapter } from "../interfaces/tw-connector";
+import { Connector, WagmiAdapter } from "../interfaces/connector";
 import { walletIds } from "../constants/walletIds";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import { Buffer } from "buffer";
