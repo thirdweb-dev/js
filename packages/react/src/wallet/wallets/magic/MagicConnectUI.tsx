@@ -60,7 +60,7 @@ export const MagicConnectUI = (props: MagicConnectUIProps) => {
             setShowUI(firstScreen);
           }
         }}
-        onConnect={props.onConnect}
+        onConnect={props.done}
       />
     );
   }
@@ -76,7 +76,7 @@ export const MagicConnectUI = (props: MagicConnectUIProps) => {
             setShowUI(firstScreen);
           }
         }}
-        onConnect={props.onConnect}
+        onConnect={props.done}
       />
     );
   }
