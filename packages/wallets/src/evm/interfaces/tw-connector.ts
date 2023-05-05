@@ -1,4 +1,4 @@
-import { Connector } from "../../lib/wagmi-core";
+import { WagmiConnector } from "../../lib/wagmi-core";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { Signer, providers } from "ethers";
 import EventEmitter from "eventemitter3";
@@ -24,9 +24,9 @@ export type ConnectParams<TOpts extends Record<string, any> = {}> = {
 export class WagmiAdapter<
   TConnectParams extends Record<string, any> = {},
 > extends TWConnector<TConnectParams> {
-  wagmiConnector: Connector<any, any, any>;
+  wagmiConnector: WagmiConnector<any, any, any>;
 
-  constructor(wagmiConnector: Connector) {
+  constructor(wagmiConnector: WagmiConnector) {
     super();
     this.wagmiConnector = wagmiConnector;
   }

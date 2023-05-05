@@ -1,25 +1,25 @@
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { default as EventEmitter } from "eventemitter3";
 
-export type ConnectorData<Provider = any> = {
+export type WagmiConnectorData<Provider = any> = {
   account?: string;
   chain?: { id: number; unsupported: boolean };
   provider?: Provider;
 };
 
-export interface ConnectorEvents<Provider = any> {
-  change(data: ConnectorData<Provider>): void;
-  connect(data: ConnectorData<Provider>): void;
+export interface WagmiConnectorEvents<Provider = any> {
+  change(data: WagmiConnectorData<Provider>): void;
+  connect(data: WagmiConnectorData<Provider>): void;
   message({ type, data }: { type: string; data?: unknown }): void;
   disconnect(): void;
   error(error: Error): void;
 }
 
-export abstract class Connector<
+export abstract class WagmiConnector<
   Provider = any,
   Options = any,
   Signer = any,
-> extends EventEmitter<ConnectorEvents<Provider>> {
+> extends EventEmitter<WagmiConnectorEvents<Provider>> {
   /** Unique connector id */
   abstract readonly id: string;
   /** Connector name */
@@ -45,7 +45,7 @@ export abstract class Connector<
 
   abstract connect(config?: {
     chainId?: number;
-  }): Promise<Required<ConnectorData>>;
+  }): Promise<Required<WagmiConnectorData>>;
   abstract disconnect(): Promise<void>;
   abstract getAccount(): Promise<string>;
   abstract getChainId(): Promise<number>;

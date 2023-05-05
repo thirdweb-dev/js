@@ -1,4 +1,4 @@
-import type { ConnectorData } from "../../lib/wagmi-core";
+import type { WagmiConnectorData } from "../../lib/wagmi-core";
 import type { WalletConnectConnector } from "../connectors/wallet-connect";
 import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
@@ -67,7 +67,7 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
     }
   };
 
-  #onConnect = (data: ConnectorData<WalletConnectProvider>) => {
+  #onConnect = (data: WagmiConnectorData<WalletConnectProvider>) => {
     this.#provider = data.provider;
     if (!this.#provider) {
       throw new Error("WalletConnect provider not found after connecting.");

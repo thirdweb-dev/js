@@ -4,7 +4,7 @@ import {
   ProviderRpcError,
   SwitchChainError,
   UserRejectedRequestError,
-  Connector,
+  WagmiConnector,
 } from "../../../lib/wagmi-core";
 import type { Chain } from "@thirdweb-dev/chains";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
@@ -65,7 +65,7 @@ const REQUESTED_CHAINS_KEY = "wagmi.requestedChains";
 const ADD_ETH_CHAIN_METHOD = "wallet_addEthereumChain";
 const LAST_USED_CHAIN_ID = "last-used-chain-id";
 
-export class WalletConnectConnector extends Connector<
+export class WalletConnectConnector extends WagmiConnector<
   WalletConnectProvider,
   WalletConnectOptions,
   WalletConnectSigner
