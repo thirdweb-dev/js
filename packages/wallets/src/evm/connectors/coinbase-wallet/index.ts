@@ -1,4 +1,4 @@
-import { Connector } from "../../../lib/wagmi-connectors";
+import { WagmiConnector } from "../../../lib/wagmi-connectors";
 import {
   UserRejectedRequestError,
   ChainNotConfiguredError,
@@ -30,7 +30,7 @@ type Options = CoinbaseWalletSDKOptions & {
   chainId?: number;
 };
 
-export class CoinbaseWalletConnector extends Connector<
+export class CoinbaseWalletConnector extends WagmiConnector<
   CoinbaseWalletProvider,
   Options,
   providers.JsonRpcSigner
