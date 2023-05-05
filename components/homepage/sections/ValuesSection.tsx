@@ -1,3 +1,4 @@
+import { KeyFeatureLayout } from "./key-features/KeyFeatureLayout";
 import { Box, SimpleGrid } from "@chakra-ui/react";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { ReactNode } from "react";
@@ -59,17 +60,12 @@ const ValueCard: React.FC<FeatureCardProps> = ({ title, description }) => {
 
 export const ValuesSection: React.FC = () => {
   return (
-    <HomepageSection my={24}>
-      <Heading
-        as="h3"
-        fontSize={{ base: "32px", md: "48px" }}
-        letterSpacing="-0.04em"
-        mb={12}
-        textAlign="center"
-      >
-        Our core values.
-      </Heading>
-
+    <KeyFeatureLayout
+      title="Open"
+      titleGradient="linear-gradient(70deg, #A3469D, #B799D5)"
+      headline="True to web3."
+      description=""
+    >
       <SimpleGrid
         background={"rgba(0,0,0,0.2)"}
         boxShadow="0 0 0 1px hsl(0deg 0% 100% / 15%)"
@@ -82,6 +78,6 @@ export const ValuesSection: React.FC = () => {
           <ValueCard {...feature} key={feature.title} />
         ))}
       </SimpleGrid>
-    </HomepageSection>
+    </KeyFeatureLayout>
   );
 };

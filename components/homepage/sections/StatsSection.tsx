@@ -3,15 +3,15 @@ import { Heading, Text } from "tw-components";
 
 const stats: StatBoxProps[] = [
   {
-    title: "70k+",
-    description: "Web3 Developers Use thirdweb",
+    title: "100k+",
+    description: "Web3 Developers use thirdweb",
   },
   {
-    title: "250k+",
+    title: "300k+",
     description: "Total Contracts Deployed",
   },
   {
-    title: "3M+",
+    title: "5M+",
     description: "Total Transactions",
   },
 ];

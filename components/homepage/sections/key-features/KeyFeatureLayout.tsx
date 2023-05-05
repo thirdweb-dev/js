@@ -22,7 +22,7 @@ export const KeyFeatureLayout: ComponentWithChildren<LayoutProps> = ({
       maxW="container.page"
       px={4}
       mx="auto"
-      my={144}
+      my={128}
       position="relative"
       direction="column"
       align="center"
@@ -38,7 +38,7 @@ export const KeyFeatureLayout: ComponentWithChildren<LayoutProps> = ({
       >
         <Heading
           as="h2"
-          size="label.xl"
+          size="title.lg"
           lineHeight="1.15"
           bgGradient={titleGradient}
           bgClip="text"

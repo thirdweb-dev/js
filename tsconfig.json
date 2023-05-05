@@ -32,6 +32,6 @@
     "**/*.tsx",
     "additional.d.ts",
     ".next/types/**/*.ts"
-  ],
+, "hooks/useInView.tss"  ],
   "exclude": ["node_modules", ".next"]
 }

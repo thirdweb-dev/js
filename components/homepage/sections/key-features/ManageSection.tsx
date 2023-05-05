@@ -20,8 +20,8 @@ export const ManageSection: React.FC = () => {
     <KeyFeatureLayout
       title="Manage"
       titleGradient="linear-gradient(70deg, #4F3DA5, #8E81D0)"
-      headline="Manage and interact with your web3 apps."
-      description="Get insights and interact with all your contracts that are deployed on thirdweb from a single place."
+      headline="Your onchain data."
+      description=""
     >
       <SimpleGrid columns={{ md: 11 }} gap={6}>
         <LinkBox

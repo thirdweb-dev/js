@@ -132,10 +132,10 @@ const Item: React.FC<{ item: Item }> = ({ item }) => {
 export const HowItWorksSection: React.FC = () => {
   return (
     <KeyFeatureLayout
-      title="How it works"
+      title="Complete"
       titleGradient="linear-gradient(70deg, #A3469D, #B799D5)"
-      headline="Building for web3 has never been easier."
-      description="Powerful dev tools and managed infrastructure services that simplify the entire web3 development cycle."
+      headline="All-in-one solution."
+      description=""
     >
       <Image
         w="14"
@@ -154,7 +154,7 @@ export const HowItWorksSection: React.FC = () => {
       >
         <Flex
           display={{ base: "none", xl: "flex" }}
-          flex={1}
+          flexGrow={1}
           order={{ base: 2, md: 1 }}
           rounded="8"
           border="2px #171717 solid"
@@ -164,14 +164,14 @@ export const HowItWorksSection: React.FC = () => {
           pb={9}
           w={{ md: "full" }}
           maxW={36}
-          maxH="22rem"
+          maxH="18rem"
         >
           <Image
             opacity={0.55}
             w="full"
             src={require("/public/assets/landingpage/howitworks-apps.png")}
             alt=""
-            mb={6}
+            mb={2}
           />
           <Heading
             opacity={0.55}
@@ -186,7 +186,7 @@ export const HowItWorksSection: React.FC = () => {
           </Heading>
         </Flex>
         <Flex
-          flex={1}
+          flexGrow={1}
           display={{ base: "none", xl: "flex" }}
           order={{ base: 3, md: 3 }}
           rounded="8"
@@ -194,17 +194,17 @@ export const HowItWorksSection: React.FC = () => {
           justify="between"
           flexDir="column"
           align="center"
-          pb={9}
+          pb={12}
           w={{ md: "full" }}
           maxW={36}
-          maxH="22rem"
+          maxH="18rem"
         >
           <Image
             opacity={0.55}
             w="full"
             src={require("/public/assets/landingpage/howitworks-networks.png")}
             alt=""
-            mb={6}
+            mb={2}
           />
           <Heading
             opacity={0.55}
@@ -222,11 +222,17 @@ export const HowItWorksSection: React.FC = () => {
           w={{ base: "full", md: "auto" }}
           order={{ base: 1, md: 2 }}
           gap={{ base: 4, md: 8 }}
-          grow={1}
+          flexGrow={1}
           flexDir="column"
         >
           {data.map(({ title, icons }) => (
-            <Box key={title}>
+            <Box
+              key={title}
+              mt={{
+                base: 4,
+                md: 0,
+              }}
+            >
               <Heading
                 size="title.xs"
                 color="#A0A0A0"

@@ -18,8 +18,8 @@ export const LaunchSection: React.FC = () => {
     <KeyFeatureLayout
       title="Launch"
       titleGradient="linear-gradient(65deg, #C35AB1, #E9A8D9)"
-      headline="Simplified workflow to launch contracts on-chain."
-      description="Deploy your contracts on-chain easily with a single command or through our Dashboard without requiring private keys."
+      headline="Contracts on any chain."
+      description=""
     >
       <SimpleGrid columns={{ md: 2 }} gap={6}>
         <LinkBox

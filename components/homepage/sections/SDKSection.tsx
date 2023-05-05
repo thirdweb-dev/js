@@ -14,12 +14,12 @@ interface SDKSectionProps {
 }
 
 export const SDKSection: React.FC<SDKSectionProps> = ({
-  title = "Connect to web3 easily.",
-  description = "Powerful SDKs to integrate decentralized technologies into your apps, backends, and games.",
+  title = "In any language.",
+  description = "",
   codeSelectorProps,
 }) => {
   return (
-    <HomepageSection id="sdks" bottomPattern mt={20}>
+    <HomepageSection id="sdks" mt={20}>
       <Aurora
         pos={{ left: "50%", top: "50%" }}
         size={{ width: "1500px", height: "1500px" }}

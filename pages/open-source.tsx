@@ -256,39 +256,32 @@ const OSS: ThirdwebNextPage = ({ contributors }: PageProps) => {
               gap={8}
               justifyContent="space-evenly"
             >
-              {contributors
-                .filter((contributor) => contributor.contributions > 0)
-                .filter(
-                  (contributor) => contributor.login.indexOf("[bot]") === -1,
-                )
-                .filter((contributor) => !filterOut.includes(contributor.login))
-                .slice(0, 12)
-                .map((contributor) => (
-                  <Flex
-                    key={contributor.login}
-                    flexDir="row"
-                    gap={2}
-                    alignItems="center"
-                  >
-                    <MaskedAvatar src={contributor.avatar_url} />
-                    <Flex key={contributor.login} flexDir="column" gap={1}>
-                      <TrackedLink
-                        href={`https://github.com/${contributor.login}`}
-                        isExternal
-                        category="team"
-                        label={contributor.login}
-                      >
-                        <Heading size="title.sm">@{contributor.login}</Heading>
-                      </TrackedLink>
-                      <Text size="label.md" color="gray.500">
-                        {contributor.contributions}{" "}
-                        {contributor.contributions === 1
-                          ? "contribution"
-                          : "contributions"}
-                      </Text>
-                    </Flex>
+              {contributors.slice(0, 12).map((contributor) => (
+                <Flex
+                  key={contributor.login}
+                  flexDir="row"
+                  gap={2}
+                  alignItems="center"
+                >
+                  <MaskedAvatar src={contributor.avatar_url} />
+                  <Flex key={contributor.login} flexDir="column" gap={1}>
+                    <TrackedLink
+                      href={`https://github.com/${contributor.login}`}
+                      isExternal
+                      category="team"
+                      label={contributor.login}
+                    >
+                      <Heading size="title.sm">@{contributor.login}</Heading>
+                    </TrackedLink>
+                    <Text size="label.md" color="gray.500">
+                      {contributor.contributions}{" "}
+                      {contributor.contributions === 1
+                        ? "contribution"
+                        : "contributions"}
+                    </Text>
                   </Flex>
-                ))}
+                </Flex>
+              ))}
             </SimpleGrid>
           </HomepageSection>
           <HomepageSection pb={32}>
@@ -344,13 +337,21 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const contributors: Record<string, GithubContributor> = {};
 
-  for (const repo of repos) {
-    const response = await fetch(
-      `https://api.github.com/repos/${orgName}/${repo}/contributors`,
-      authHeader,
-    );
-    const data = (await response.json()) as GithubContributor[];
+  // fetch the contributors for each repository and aggregate them
 
+  const contributorData = await Promise.all(
+    repos.map(async (repo) => {
+      const response = await fetch(
+        `https://api.github.com/repos/${orgName}/${repo}/contributors`,
+        authHeader,
+      );
+      const data = (await response.json()) as GithubContributor[];
+
+      return data;
+    }),
+  );
+
+  for (const data of contributorData) {
     data.forEach((contributor) => {
       const login = contributor.login;
       const contributions = contributor.contributions;
@@ -372,8 +373,13 @@ export const getStaticProps: GetStaticProps = async () => {
     (a, b) => b.contributions - a.contributions,
   );
 
+  const filteredContributors = sortedContributors
+    .filter((contributor) => contributor.contributions > 0)
+    .filter((contributor) => contributor.login.indexOf("[bot]") === -1)
+    .filter((contributor) => !filterOut.includes(contributor.login));
+
   return {
-    props: { contributors: sortedContributors },
+    props: { contributors: filteredContributors },
     revalidate: 3600,
   };
 };

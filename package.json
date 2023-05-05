@@ -68,6 +68,7 @@
     "react-dropzone": "^14.0.1",
     "react-hook-form": "^7.43.9",
     "react-icons": "^4.2.0",
+    "react-intersection-observer": "^9.4.3",
     "react-markdown": "^8.0.7",
     "react-table": "^7.7.0",
     "remark-gfm": "^3.0.1",
@@ -78,7 +79,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",
-    "@chakra-ui/cli": "^2.0.0",
+    "@chakra-ui/cli": "^2.4.0",
     "@next/bundle-analyzer": "^13.3.1",
     "@thirdweb-dev/auth": "^3.0.15",
     "@trivago/prettier-plugin-sort-imports": "^4.0.0",
