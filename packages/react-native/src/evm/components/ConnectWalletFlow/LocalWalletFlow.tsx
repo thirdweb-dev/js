@@ -6,26 +6,26 @@ import { ModalFooter } from "../base/modal/ModalFooter";
 import { LocalWallet } from "../../wallets/wallets/local-wallet";
 import { LocalWalletImportModal } from "./LocalWalletImportModal";
 import { useState } from "react";
-import { ConnectUIProps } from "@thirdweb-dev/react-core";
+import {
+  ConfiguredWallet,
+  ConnectUIProps,
+  useCreateWalletInstance,
+} from "@thirdweb-dev/react-core";
 
 type LocalWalletFlowUIProps = ConnectUIProps & {
-  localWallet: LocalWallet;
+  localWallet: ConfiguredWallet;
+  onWalletImported?: (localWallet: LocalWallet) => void;
 };
-
-// export type LocalWalletFlowProps = {
-//   onClose: () => void;
-//   onBackPress?: () => void;
-//   onConnectPress: () => void;
-//   onWalletImported: (localWallet: LocalWallet) => void;
-// };
 
 export function LocalWalletFlow({
   goBack,
-  setConnectedWallet,
-  onCloseModal,
+  close,
+  done,
+  localWallet,
 }: LocalWalletFlowUIProps) {
   const [isImportModalVisible, setIsImportModalVisible] = useState(false);
   const [isCreatingWallet, setIsCreatingWallet] = useState(false);
+  const createInstance = useCreateWalletInstance();
 
   const onImportPress = async () => {
     setIsImportModalVisible(true);
@@ -35,15 +35,22 @@ export function LocalWalletFlow({
     setIsImportModalVisible(false);
   };
 
-  const onConnectPressInternal = () => {
+  const onConnectPressInternal = async () => {
     setIsCreatingWallet(true);
+
+    const instance = await createInstance(localWallet);
+    await instance.connect();
+
+    done(instance);
   };
 
-  const onWalletImported = async (localWallet: LocalWallet) => {
-    await localWallet.connect();
-    // twWalletContext?.handleWalletConnect(localWallet);
-
-    setConnectedWallet(localWallet);
+  const onWalletImported = async (localWalletP: LocalWallet) => {
+    if (onWalletImported) {
+      onWalletImported(localWalletP);
+    } else {
+      await localWalletP.connect();
+      done(localWalletP);
+    }
   };
 
   return (
@@ -53,7 +60,7 @@ export function LocalWalletFlow({
         headerText="Guest Wallet"
         alignHeader="flex-start"
         subHeaderText={""}
-        onClose={onCloseModal}
+        onClose={close}
       />
       <View style={styles.connectingContainer}>
         <BaseButton

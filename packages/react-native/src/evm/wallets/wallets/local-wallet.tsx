@@ -8,6 +8,7 @@ import type { WalletOptions } from "@thirdweb-dev/wallets";
 import { ethers, utils } from "ethers";
 import { createSecureStorage } from "../../../core/SecureStorage";
 import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
+import { LocalWalletFlow } from "../../components/ConnectWalletFlow/LocalWalletFlow";
 
 export class LocalWallet extends LocalWalletCore {
   static meta = {
@@ -52,7 +53,7 @@ export class LocalWallet extends LocalWalletCore {
 export const localWallet = () => {
   const secureStorage = createSecureStorage(walletIds.localWallet);
   const asyncStorage = createAsyncLocalStorage(walletIds.localWallet);
-  return {
+  const configuredWallet = {
     id: LocalWallet.id,
     meta: LocalWallet.meta,
     create: (options: WalletOptions) =>
@@ -68,13 +69,7 @@ export const localWallet = () => {
       // TODO
       return false;
     },
-    // connectUI: (
-    //   <LocalWalletFlow
-    //     onClose={onClose}
-    //     onBackPress={supportedWallets.length > 1 ? onBackPress : undefined}
-    //     onWalletImported={onLocalWalletImported}
-    //     onConnectPress={() => connectActiveWallet(activeWalletP)}
-    //   />
-    // ),
   };
+
+  return configuredWallet;
 };

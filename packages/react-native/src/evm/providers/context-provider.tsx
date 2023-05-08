@@ -1,18 +1,23 @@
-import { SmartWallet } from "@thirdweb-dev/wallets";
 import { createContext, useContext, useState } from "react";
 
 type DappContextType = {
-  smartWallet?: SmartWallet;
-  setSmartWallet?: (value?: SmartWallet) => void;
+  isConnectModalVisible: boolean;
+  setIsConnectModalVisible: (isVisible: boolean) => void;
+  selectedWallet?: 
 };
 
-const DappContext = createContext<DappContextType>({});
+const DappContext = createContext<DappContextType>({
+  isConnectModalVisible: false,
+  setIsConnectModalVisible: () => {},
+});
 
 export const DappContextProvider = (props: React.PropsWithChildren<{}>) => {
-  const [smartWallet, setSmartWallet] = useState<SmartWallet | undefined>();
+  const [isConnectModalVisible, setIsConnectModalVisible] = useState(false);
 
   return (
-    <DappContext.Provider value={{ smartWallet, setSmartWallet }}>
+    <DappContext.Provider
+      value={{ isConnectModalVisible, setIsConnectModalVisible }}
+    >
       {props.children}
     </DappContext.Provider>
   );
@@ -22,8 +27,17 @@ export const useDappContext = () => {
   return useContext(DappContext);
 };
 
-export const useSmartWallet = () => {
+export const useIsConnectModalVisible = () => {
   const context = useContext(DappContext);
 
-  return [context.smartWallet, context.setSmartWallet] as const;
+  return {
+    isConnectModalVisible: context.isConnectModalVisible,
+    setIsConnectModalVisible: context.setIsConnectModalVisible,
+  } as const;
+};
+
+export const useSelectedWallet = () => {
+  const context = useContext(DappContext);
+
+  return context.selectedWallet;
 };

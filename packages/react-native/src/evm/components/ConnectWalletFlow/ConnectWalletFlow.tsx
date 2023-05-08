@@ -7,16 +7,16 @@ import {
   ConfiguredWallet,
   WalletInstance,
   useConnect,
-  useCreateWalletInstance,
   useIsConnecting,
   useThirdwebWallet,
   useWallets,
 } from "@thirdweb-dev/react-core";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import { SmartWallet } from "@thirdweb-dev/wallets";
 import { SmartWalletFlow } from "./SmartWallet/SmartWalletFlow";
 import { LocalWallet } from "../../wallets/wallets/local-wallet";
+import { useIsConnectModalVisible } from "../../providers/context-provider";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -27,11 +27,9 @@ export const ConnectWalletFlow = () => {
   const supportedWallets = useWallets();
   const isWalletConnecting = useIsConnecting();
   const [showButtonSpinner, setShowButtonSpinner] = useState(false);
-  const twWalletContext = useThirdwebWallet();
-  const createInstance = useCreateWalletInstance();
-  const [wrapperWallet, setWrapperWallet] = useState<
-    ConfiguredWallet | undefined
-  >();
+  const handleWalletConnect = useThirdwebWallet().handleWalletConnect;
+
+  const { setIsConnectModalVisible } = useIsConnectModalVisible();
 
   useEffect(() => {
     setShowButtonSpinner(isWalletConnecting);
@@ -60,7 +58,7 @@ export const ConnectWalletFlow = () => {
       onChooseWallet(supportedWallets[0]);
     }
 
-    setModalVisible(true);
+    setIsConnectModalVisible(true);
   };
 
   const onClose = () => {
@@ -93,105 +91,25 @@ export const ConnectWalletFlow = () => {
     setIsConnecting(false);
   };
 
-  const handleConnect = useCallback(() => {
-    if (wrapperWallet) {
-      setActiveWallet(wrapperWallet);
-    } else {
-      setModalVisible(false);
-    }
-  }, [wrapperWallet]);
-
-  function getComponentForWallet(activeWalletP: ConfiguredWallet) {
-    switch (activeWalletP.id) {
-      // case LocalWallet.id:
-      //   return (
-      //     <LocalWalletFlow
-      //       onClose={onClose}
-      //       onBackPress={supportedWallets.length > 1 ? onBackPress : undefined}
-      //       onWalletImported={onLocalWalletImported}
-      //       onConnectPress={() => connectActiveWallet(activeWalletP)}
-      //     />
-      //   );
-      case SmartWallet.id:
-        return (
-          <SmartWalletFlow
-            onClose={() => {
-              onClose();
-            }}
-            onConnect={onBackPress}
-          />
-        );
-    }
-
-    if (activeWalletP.connectUI) {
-      return (
-        <activeWalletP.connectUI
-          onConnect={handleConnect}
-          createInstance={createInstance}
-          goBack={onBackPress}
-          hideModal={() => {
-            setModalVisible(false);
-          }}
-          isModalHidden={modalVisible}
-          selectWallet={(configuredWallet: ConfiguredWallet) => {
-            setActiveWallet(configuredWallet);
-          }}
-          setConnectedWallet={(wallet: WalletInstance) => {
-            twWalletContext.handleWalletConnect(wallet);
-          }}
-          onCloseModal={onClose}
-          showModal={() => {
-            setModalVisible(true);
-          }}
-          setWrapperWallet={setWrapperWallet}
-        />
-      );
-    }
-  }
+  const handleConnect = (connectedWallet: WalletInstance) => {
+    setModalVisible(false);
+    handleWalletConnect(connectedWallet);
+  };
 
   return (
-    <>
-      <TWModal isVisible={modalVisible}>
-        {activeWallet ? (
-          isConnecting ? (
-            <ConnectingWallet
-              content={
-                activeWallet.id === LocalWallet.id ? (
-                  <Text variant="bodySmallSecondary" mt="md">
-                    Creating, encrypting and securing your device wallet.
-                  </Text>
-                ) : undefined
-              }
-              wallet={activeWallet}
-              onClose={onClose}
-              onBackPress={onBackPress}
-            />
-          ) : (
-            getComponentForWallet(activeWallet)
-          )
+    <BaseButton
+      backgroundColor="buttonBackgroundColor"
+      onPress={onConnectPress}
+      style={styles.connectWalletButton}
+    >
+      <Text variant="bodyLarge" color="buttonTextColor">
+        {showButtonSpinner ? (
+          <ActivityIndicator size="small" color="buttonTextColor" />
         ) : (
-          <ChooseWallet
-            wallets={supportedWallets}
-            onChooseWallet={onChooseWallet}
-            onClose={onClose}
-          />
+          "Connect Wallet"
         )}
-      </TWModal>
-
-      <BaseButton
-        backgroundColor="buttonBackgroundColor"
-        onPress={onConnectPress}
-        style={styles.connectWalletButton}
-      >
-        <Text variant="bodyLarge" color="buttonTextColor">
-          {showButtonSpinner ? (
-            <ActivityIndicator size="small" color="buttonTextColor" />
-          ) : (
-            "Connect Wallet"
-          )}
-        </Text>
-      </BaseButton>
-    </>
+      </Text>
+    </BaseButton>
   );
 };
 
