@@ -42,22 +42,22 @@ export type ConnectUIProps = {
   /**
    * call this function when wallet is connected
    */
-  onConnect: () => void;
+  done: () => void;
 
   /**
    * hide the Connect Wallet Modal but don't close it
    */
-  hideModal: () => void;
+  close: () => void;
 
   /**
    * Modal is open but hidden
    */
-  isModalHidden: boolean;
+  isOpen: boolean;
 
   /**
    * show the hidden Connect Wallet Modal
    */
-  showModal: () => void;
+  show: () => void;
 
   /**
    * go back to the wallet selector screen

@@ -531,19 +531,22 @@ export class ContractWrapper<
       // no-op
     }
 
-    return new TransactionError({
-      reason,
-      from,
-      to,
-      method,
-      data,
-      network,
-      rpcUrl,
-      value,
-      hash,
-      contractName,
-      sources,
-    });
+    return new TransactionError(
+      {
+        reason,
+        from,
+        to,
+        method,
+        data,
+        network,
+        rpcUrl,
+        value,
+        hash,
+        contractName,
+        sources,
+      },
+      error,
+    );
   }
 
   /**
