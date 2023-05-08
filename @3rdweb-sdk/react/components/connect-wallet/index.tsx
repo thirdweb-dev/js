@@ -1,3 +1,4 @@
+import { popularChains } from "../popularChains";
 import {
   Flex,
   Icon,
@@ -14,7 +15,6 @@ import {
   useWallet as useSolWallet,
 } from "@solana/wallet-adapter-react";
 import Solana from "@thirdweb-dev/chain-icons/dist/solana";
-import { defaultChains } from "@thirdweb-dev/chains";
 import {
   ConnectWallet as ConnectWalletNew,
   useAddress,
@@ -125,7 +125,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
       <ConnectWalletNew
         theme={colorMode}
         networkSelector={{
-          popularChains: defaultChains,
+          popularChains,
           recentChains,
           onSwitch(chain) {
             addRecentlyUsedChainId(chain.chainId);

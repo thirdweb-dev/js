@@ -1,6 +1,6 @@
 import { CustomChainRenderer } from "./CustomChainRenderer";
+import { popularChains } from "@3rdweb-sdk/react/components/popularChains";
 import { useColorMode } from "@chakra-ui/react";
-import { defaultChains } from "@thirdweb-dev/chains";
 import {
   NetworkSelector,
   useActiveChain,
@@ -96,7 +96,7 @@ export const NetworkSelectorButton: React.FC<{
           theme={colorMode}
           chains={chains}
           recentChains={recentlyUsedChains}
-          popularChains={defaultChains}
+          popularChains={popularChains}
           renderChain={CustomChainRenderer}
           onCustomClick={() => {
             setIsNetworkConfigModalOpen(true);
