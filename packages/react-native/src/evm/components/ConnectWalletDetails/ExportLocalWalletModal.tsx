@@ -90,6 +90,7 @@ export const ExportLocalWalletModal = ({
               encoding: FileSystem.EncodingType.UTF8,
             },
           );
+          setIsExporting(false);
         } catch (e) {
           console.error("Error writing the file", e);
           setError("Error writing the file. Please try again.");

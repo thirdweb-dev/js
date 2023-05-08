@@ -4,7 +4,7 @@ import {
   WalletConnectV1,
   walletIds,
 } from "@thirdweb-dev/wallets";
-import { formatDisplayUri } from "../../utils/uri";
+import { formatWalletConnectDisplayUri } from "../../utils/uri";
 import { Linking } from "react-native";
 import {
   WalletOptions as WalletOptionsRC,
@@ -52,11 +52,11 @@ export class MetaMaskWallet extends WalletConnectV1 {
     const links = MetaMaskWallet.meta.links;
 
     if (uri) {
-      const fullUrl = formatDisplayUri(uri, links);
+      const fullUrl = formatWalletConnectDisplayUri(uri, links);
 
       Linking.openURL(fullUrl);
     } else {
-      const fullUrl = formatDisplayUri("", links);
+      const fullUrl = formatWalletConnectDisplayUri("", links);
 
       Linking.openURL(fullUrl);
     }
