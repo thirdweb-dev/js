@@ -3,6 +3,7 @@ import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUser } from "@thirdweb-dev/react";
 import invariant from "tiny-invariant";
+import {THIRDWEB_API_HOST} from "../../../constants/urls";
 
 export type ApiKeyInfo = {
   creatorWalletAddress: string;
@@ -16,7 +17,7 @@ export function useApiKeys() {
   return useQuery(
     apiKeys.keys(user?.address as string),
     async () => {
-      const res = await fetch("https://api.thirdweb.com/v1/dashboard/keys", {
+      const res = await fetch(`${THIRDWEB_API_HOST}/v1/keys`, {
         method: "GET",
         credentials: "include",
         headers: {
@@ -43,7 +44,7 @@ export function useCreateApiKey() {
     async () => {
       invariant(user, "No user is logged in");
 
-      const res = await fetch("https://api.thirdweb.com/v1/dashboard/keys", {
+      const res = await fetch(`${THIRDWEB_API_HOST}/v1/keys`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -78,7 +79,7 @@ export function useRevokeApiKey() {
       invariant(user, "No user is logged in");
 
       const res = await fetch(
-        "https://api.thirdweb.com/v1/dashboard/keys/revoke",
+        `${THIRDWEB_API_HOST}/v1/keys/revoke`,
         {
           method: "POST",
           credentials: "include",
