@@ -603,13 +603,16 @@ export class Transaction<
       callOverrides: this.overrides,
     };
 
-    return defaultGaslessSendFunction(
+    console.time("gasless send");
+    const hash = await defaultGaslessSendFunction(
       tx,
       this.signer,
       this.provider,
       this.storage,
       this.gaslessOptions,
     );
+    console.timeLog("gasless send");
+    return hash;
   }
 
   /**
