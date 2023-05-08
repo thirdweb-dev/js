@@ -6,20 +6,24 @@ import { ModalFooter } from "../base/modal/ModalFooter";
 import { LocalWallet } from "../../wallets/wallets/local-wallet";
 import { LocalWalletImportModal } from "./LocalWalletImportModal";
 import { useState } from "react";
+import { ConnectUIProps } from "@thirdweb-dev/react-core";
 
-export type LocalWalletFlowProps = {
-  onClose: () => void;
-  onBackPress?: () => void;
-  onConnectPress: () => void;
-  onWalletImported: (localWallet: LocalWallet) => void;
+type LocalWalletFlowUIProps = ConnectUIProps & {
+  localWallet: LocalWallet;
 };
 
+// export type LocalWalletFlowProps = {
+//   onClose: () => void;
+//   onBackPress?: () => void;
+//   onConnectPress: () => void;
+//   onWalletImported: (localWallet: LocalWallet) => void;
+// };
+
 export function LocalWalletFlow({
-  onClose,
-  onBackPress,
-  onConnectPress,
-  onWalletImported,
-}: LocalWalletFlowProps) {
+  goBack,
+  setConnectedWallet,
+  onCloseModal,
+}: LocalWalletFlowUIProps) {
   const [isImportModalVisible, setIsImportModalVisible] = useState(false);
   const [isCreatingWallet, setIsCreatingWallet] = useState(false);
 
@@ -33,17 +37,23 @@ export function LocalWalletFlow({
 
   const onConnectPressInternal = () => {
     setIsCreatingWallet(true);
-    onConnectPress();
+  };
+
+  const onWalletImported = async (localWallet: LocalWallet) => {
+    await localWallet.connect();
+    // twWalletContext?.handleWalletConnect(localWallet);
+
+    setConnectedWallet(localWallet);
   };
 
   return (
     <>
       <ConnectWalletHeader
-        onBackPress={onBackPress}
+        onBackPress={goBack}
         headerText="Guest Wallet"
         alignHeader="flex-start"
         subHeaderText={""}
-        onClose={onClose}
+        onClose={onCloseModal}
       />
       <View style={styles.connectingContainer}>
         <BaseButton

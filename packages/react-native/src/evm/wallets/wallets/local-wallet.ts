@@ -3,7 +3,7 @@ import {
   Connector,
   walletIds,
 } from "@thirdweb-dev/wallets";
-import { ConfiguredWallet } from "@thirdweb-dev/react-core";
+import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import type { WalletOptions } from "@thirdweb-dev/wallets";
 import { ethers, utils } from "ethers";
 import { createSecureStorage } from "../../../core/SecureStorage";
@@ -61,5 +61,20 @@ export const localWallet = () => {
         walletStorage: asyncStorage,
         storage: secureStorage,
       }) as LocalWalletCore,
-  } satisfies ConfiguredWallet;
+    connectUI(props: ConnectUIProps) {
+      return <LocalWalletFlow {...props} localWallet={configuredWallet} />;
+    },
+    isInstalled() {
+      // TODO
+      return false;
+    },
+    // connectUI: (
+    //   <LocalWalletFlow
+    //     onClose={onClose}
+    //     onBackPress={supportedWallets.length > 1 ? onBackPress : undefined}
+    //     onWalletImported={onLocalWalletImported}
+    //     onConnectPress={() => connectActiveWallet(activeWalletP)}
+    //   />
+    // ),
+  };
 };

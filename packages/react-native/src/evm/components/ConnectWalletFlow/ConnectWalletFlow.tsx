@@ -5,16 +5,17 @@ import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
 import {
   ConfiguredWallet,
+  WalletInstance,
   useConnect,
+  useCreateWalletInstance,
   useIsConnecting,
   useThirdwebWallet,
   useWallets,
 } from "@thirdweb-dev/react-core";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import { SmartWallet } from "@thirdweb-dev/wallets";
 import { SmartWalletFlow } from "./SmartWallet/SmartWalletFlow";
-import { LocalWalletFlow } from "./LocalWalletFlow";
 import { LocalWallet } from "../../wallets/wallets/local-wallet";
 
 export const ConnectWalletFlow = () => {
@@ -27,6 +28,10 @@ export const ConnectWalletFlow = () => {
   const isWalletConnecting = useIsConnecting();
   const [showButtonSpinner, setShowButtonSpinner] = useState(false);
   const twWalletContext = useThirdwebWallet();
+  const createInstance = useCreateWalletInstance();
+  const [wrapperWallet, setWrapperWallet] = useState<
+    ConfiguredWallet | undefined
+  >();
 
   useEffect(() => {
     setShowButtonSpinner(isWalletConnecting);
@@ -63,11 +68,6 @@ export const ConnectWalletFlow = () => {
     reset();
   };
 
-  const onLocalWalletImported = async (localWallet: LocalWallet) => {
-    await localWallet.connect();
-    twWalletContext?.handleWalletConnect(localWallet);
-  };
-
   const connectActiveWallet = async (wallet: ConfiguredWallet) => {
     setIsConnecting(true);
     connect(wallet, {}).catch((error) => {
@@ -93,17 +93,25 @@ export const ConnectWalletFlow = () => {
     setIsConnecting(false);
   };
 
+  const handleConnect = useCallback(() => {
+    if (wrapperWallet) {
+      setActiveWallet(wrapperWallet);
+    } else {
+      setModalVisible(false);
+    }
+  }, [wrapperWallet]);
+
   function getComponentForWallet(activeWalletP: ConfiguredWallet) {
     switch (activeWalletP.id) {
-      case LocalWallet.id:
-        return (
-          <LocalWalletFlow
-            onClose={onClose}
-            onBackPress={supportedWallets.length > 1 ? onBackPress : undefined}
-            onWalletImported={onLocalWalletImported}
-            onConnectPress={() => connectActiveWallet(activeWalletP)}
-          />
-        );
+      // case LocalWallet.id:
+      //   return (
+      //     <LocalWalletFlow
+      //       onClose={onClose}
+      //       onBackPress={supportedWallets.length > 1 ? onBackPress : undefined}
+      //       onWalletImported={onLocalWalletImported}
+      //       onConnectPress={() => connectActiveWallet(activeWalletP)}
+      //     />
+      //   );
       case SmartWallet.id:
         return (
           <SmartWalletFlow
@@ -113,6 +121,31 @@ export const ConnectWalletFlow = () => {
             onConnect={onBackPress}
           />
         );
+    }
+
+    if (activeWalletP.connectUI) {
+      return (
+        <activeWalletP.connectUI
+          onConnect={handleConnect}
+          createInstance={createInstance}
+          goBack={onBackPress}
+          hideModal={() => {
+            setModalVisible(false);
+          }}
+          isModalHidden={modalVisible}
+          selectWallet={(configuredWallet: ConfiguredWallet) => {
+            setActiveWallet(configuredWallet);
+          }}
+          setConnectedWallet={(wallet: WalletInstance) => {
+            twWalletContext.handleWalletConnect(wallet);
+          }}
+          onCloseModal={onClose}
+          showModal={() => {
+            setModalVisible(true);
+          }}
+          setWrapperWallet={setWrapperWallet}
+        />
+      );
     }
   }
 
@@ -150,9 +183,6 @@ export const ConnectWalletFlow = () => {
         onPress={onConnectPress}
         style={styles.connectWalletButton}
       >
-        {/* {showButtonSpinner ? (
-          <ActivityIndicator size="small" color="buttonTextColor" />
-        ) : ( */}
         <Text variant="bodyLarge" color="buttonTextColor">
           {showButtonSpinner ? (
             <ActivityIndicator size="small" color="buttonTextColor" />
@@ -160,7 +190,6 @@ export const ConnectWalletFlow = () => {
             "Connect Wallet"
           )}
         </Text>
-        {/* )} */}
       </BaseButton>
     </>
   );

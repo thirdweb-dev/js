@@ -83,4 +83,6 @@ export type ConnectUIProps = {
    * Set a wrapper wallet
    */
   setWrapperWallet: (configuredWallet: ConfiguredWallet | undefined) => void;
+
+  onCloseModal: () => void;
 };
