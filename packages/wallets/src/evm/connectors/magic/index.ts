@@ -6,10 +6,7 @@ import {
 } from "./types";
 import type { Chain } from "@thirdweb-dev/chains";
 import { ethers, Signer } from "ethers";
-import {
-  // OAuthProvider,
-  OAuthExtension,
-} from "@magic-ext/oauth";
+import { OAuthExtension } from "@magic-ext/oauth";
 import {
   InstanceWithExtensions,
   MagicSDKAdditionalConfiguration,
@@ -21,6 +18,7 @@ import { getAddress } from "ethers/lib/utils";
 import { Magic } from "magic-sdk";
 import type { AbstractProvider } from "web3-core";
 import { RPCProviderModule } from "@magic-sdk/provider/dist/types/modules/rpc-provider";
+import { OpenIdExtension } from "@magic-ext/oidc";
 
 export type MagicAuthConnectOptions =
   | {
@@ -31,6 +29,12 @@ export type MagicAuthConnectOptions =
         }
       | {
           phoneNumber: string;
+        }
+      | {
+          oidc: {
+            jwt: string;
+            providerId: string;
+          };
         }
     );
 // | {
@@ -120,11 +124,17 @@ export abstract class MagicBaseConnector extends WagmiConnector<
     await magic.user.logout();
   }
 
-  abstract getMagicSDK(): InstanceWithExtensions<SDKBase, OAuthExtension[]>;
+  abstract getMagicSDK(): InstanceWithExtensions<
+    SDKBase,
+    (OAuthExtension | OpenIdExtension)[]
+  >;
 }
 
 export class MagicAuthConnector extends MagicBaseConnector {
-  magicSDK?: InstanceWithExtensions<SDKBase, OAuthExtension[]>;
+  magicSDK?: InstanceWithExtensions<
+    SDKBase,
+    (OAuthExtension | OpenIdExtension)[]
+  >;
   magicSdkConfiguration?: MagicSDKAdditionalConfiguration<
     string,
     MagicSDKExtensionsOption<OAuthExtension["name"]>
@@ -203,6 +213,11 @@ export class MagicAuthConnector extends MagicBaseConnector {
         });
       }
 
+      // LOGIN WITH OIDC
+      if ("oidc" in options) {
+        await magic.openid.loginWithOIDC(options.oidc);
+      }
+
       const signer = await this.getSigner();
       let account = (await signer.getAddress()) as Address;
       if (!account.startsWith("0x")) {
@@ -239,8 +254,9 @@ export class MagicAuthConnector extends MagicBaseConnector {
   initializeMagicSDK({ chainId }: { chainId?: number } = {}) {
     const options = {
       ...this.magicSdkConfiguration,
-      extensions: [new OAuthExtension()],
+      extensions: [new OAuthExtension(), new OpenIdExtension()],
     };
+
     if (chainId) {
       const chain = this.chains.find((c) => c.chainId === chainId);
       if (chain) {
@@ -255,7 +271,7 @@ export class MagicAuthConnector extends MagicBaseConnector {
     return this.magicSDK;
   }
 
-  getMagicSDK(): InstanceWithExtensions<SDKBase, OAuthExtension[]> {
+  getMagicSDK() {
     if (!this.magicSDK) {
       return this.initializeMagicSDK();
     }

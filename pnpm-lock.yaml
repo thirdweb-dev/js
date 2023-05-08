@@ -1189,6 +1189,9 @@ importers:
       '@magic-ext/oauth':
         specifier: ^7.6.2
         version: 7.6.2
+      '@magic-ext/oidc':
+        specifier: ^1.0.1
+        version: 1.0.1
       '@magic-sdk/provider':
         specifier: ^13.6.2
         version: 13.6.2(localforage@1.10.0)
@@ -5925,6 +5928,10 @@ packages:
     resolution: {integrity: sha512-yqQBdtkMouD+owAJkPlevLbal/iCREH/D3PmDW9a7Dsfjy2xs557oIpGkLSZexTIHd3Cxga9hWNpdqFukUfzYg==}
     dependencies:
       '@magic-sdk/types': 11.6.2
+    dev: false
+
+  /@magic-ext/oidc@1.0.1:
+    resolution: {integrity: sha512-S52d/WGBKrL3HgNOHaKq83aEGm1iu8SGyDcXzXHu5rY5FG7SrHEJh7k70Fd+TdPwxjKYIieYs3q9CDVhID8sOA==}
     dev: false
 
   /@magic-sdk/commons@9.6.2(@magic-sdk/provider@13.6.2)(@magic-sdk/types@11.6.2):

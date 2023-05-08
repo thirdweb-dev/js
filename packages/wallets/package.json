@@ -289,6 +289,7 @@
     "@coinbase/wallet-sdk": "^3.6.3",
     "@magic-ext/connect": "^6.7.0",
     "@magic-ext/oauth": "^7.6.2",
+    "@magic-ext/oidc": "^1.0.1",
     "@magic-sdk/provider": "^13.6.2",
     "@paperxyz/embedded-wallet-service-sdk": "^0.1.0",
     "@safe-global/safe-core-sdk": "^3.3.2",
