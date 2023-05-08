@@ -94,15 +94,6 @@ export const ConnectWalletFlow = () => {
 
   function getComponentForWallet(activeWalletP: ConfiguredWallet) {
     switch (activeWalletP.id) {
-      // case LocalWallet.id:
-      //   return (
-      //     <LocalWalletFlow
-      //       onClose={onClose}
-      //       onBackPress={supportedWallets.length > 1 ? onBackPress : undefined}
-      //       onWalletImported={onLocalWalletImported}
-      //       onConnectPress={() => connectActiveWallet(activeWalletP)}
-      //     />
-      //   );
       case SmartWallet.id:
         return <SmartWalletFlow onClose={onClose} onConnect={onBackPress} />;
     }

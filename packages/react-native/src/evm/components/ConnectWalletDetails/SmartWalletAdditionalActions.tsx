@@ -39,8 +39,6 @@ export const SmartWalletAdditionalActions = ({
     }
   }, [activeWallet, activeWallet?.walletId, setSmartWallet]);
 
-  console.log(smartWallet, smartWalletAddress);
-
   useEffect(() => {
     (async () => {
       if (smartWallet && !smartWalletAddress) {
