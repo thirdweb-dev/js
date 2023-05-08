@@ -101,7 +101,6 @@ export const SmartWalletFlow = ({
 
   const onLocalWalletBackPress = () => {
     setShowLocalWalletFlow(false);
-    reset();
   };
 
   const onConnectingClosePress = () => {
@@ -165,7 +164,9 @@ export const SmartWalletFlow = ({
       <LocalWalletFlow
         close={onClose}
         goBack={onLocalWalletBackPress}
-        done={onConnectedLocalWallet}
+        onConnected={onConnectedLocalWallet}
+        isOpen={false}
+        open={() => {}}
         localWallet={localWallet()}
       />
     );

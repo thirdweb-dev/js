@@ -39,14 +39,16 @@ export const SmartWalletAdditionalActions = ({
     }
   }, [activeWallet, activeWallet?.walletId, setSmartWallet]);
 
+  console.log(smartWallet, smartWalletAddress);
+
   useEffect(() => {
     (async () => {
-      if (smartWallet) {
+      if (smartWallet && !smartWalletAddress) {
         const addr = await smartWallet.getAddress();
         setSmartWalletAddress(addr);
       }
     })();
-  }, [smartWallet]);
+  }, [smartWallet, smartWalletAddress]);
 
   const onWalletPress = () => {
     if (!wallet) {
@@ -76,14 +78,12 @@ export const SmartWalletAdditionalActions = ({
             <WalletIcon size={32} iconUri={wallet?.getMeta().iconURL || ""} />
           ) : null}
           <View style={styles.walletInfo}>
-            {personalWalletAddress ? (
-              <Address
-                variant="bodyLarge"
-                address={
-                  showSmartWallet ? smartWalletAddress : personalWalletAddress
-                }
-              />
-            ) : null}
+            <Address
+              variant="bodyLarge"
+              address={
+                showSmartWallet ? smartWalletAddress : personalWalletAddress
+              }
+            />
           </View>
         </>
         <RightArrowIcon

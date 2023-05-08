@@ -5,10 +5,8 @@ import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
 import {
   ConfiguredWallet,
-  WalletInstance,
   useConnect,
   useIsConnecting,
-  useThirdwebWallet,
   useWallets,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
@@ -16,7 +14,6 @@ import { ActivityIndicator, StyleSheet } from "react-native";
 import { SmartWallet } from "@thirdweb-dev/wallets";
 import { SmartWalletFlow } from "./SmartWallet/SmartWalletFlow";
 import { LocalWallet } from "../../wallets/wallets/local-wallet";
-import { useIsConnectModalVisible } from "../../providers/context-provider";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -27,9 +24,6 @@ export const ConnectWalletFlow = () => {
   const supportedWallets = useWallets();
   const isWalletConnecting = useIsConnecting();
   const [showButtonSpinner, setShowButtonSpinner] = useState(false);
-  const handleWalletConnect = useThirdwebWallet().handleWalletConnect;
-
-  const { setIsConnectModalVisible } = useIsConnectModalVisible();
 
   useEffect(() => {
     setShowButtonSpinner(isWalletConnecting);
@@ -58,12 +52,19 @@ export const ConnectWalletFlow = () => {
       onChooseWallet(supportedWallets[0]);
     }
 
-    setIsConnectModalVisible(true);
+    setModalVisible(true);
   };
 
-  const onClose = () => {
+  const onClose = (reset?: boolean) => {
     setModalVisible(false);
-    reset();
+
+    if (reset) {
+      resetModal();
+    }
+  };
+
+  const onOpenModal = () => {
+    setModalVisible(true);
   };
 
   const connectActiveWallet = async (wallet: ConfiguredWallet) => {
@@ -83,33 +84,84 @@ export const ConnectWalletFlow = () => {
   };
 
   const onBackPress = () => {
-    reset();
+    resetModal();
   };
 
-  const reset = () => {
+  const resetModal = () => {
     setActiveWallet(undefined);
     setIsConnecting(false);
   };
 
-  const handleConnect = (connectedWallet: WalletInstance) => {
-    setModalVisible(false);
-    handleWalletConnect(connectedWallet);
-  };
+  function getComponentForWallet(activeWalletP: ConfiguredWallet) {
+    switch (activeWalletP.id) {
+      // case LocalWallet.id:
+      //   return (
+      //     <LocalWalletFlow
+      //       onClose={onClose}
+      //       onBackPress={supportedWallets.length > 1 ? onBackPress : undefined}
+      //       onWalletImported={onLocalWalletImported}
+      //       onConnectPress={() => connectActiveWallet(activeWalletP)}
+      //     />
+      //   );
+      case SmartWallet.id:
+        return <SmartWalletFlow onClose={onClose} onConnect={onBackPress} />;
+    }
+
+    if (activeWalletP.connectUI) {
+      return (
+        <activeWalletP.connectUI
+          goBack={onBackPress}
+          close={onClose}
+          isOpen={modalVisible}
+          open={onOpenModal}
+        />
+      );
+    }
+  }
 
   return (
-    <BaseButton
-      backgroundColor="buttonBackgroundColor"
-      onPress={onConnectPress}
-      style={styles.connectWalletButton}
-    >
-      <Text variant="bodyLarge" color="buttonTextColor">
-        {showButtonSpinner ? (
-          <ActivityIndicator size="small" color="buttonTextColor" />
+    <>
+      <TWModal isVisible={modalVisible}>
+        {activeWallet ? (
+          isConnecting ? (
+            <ConnectingWallet
+              content={
+                activeWallet.id === LocalWallet.id ? (
+                  <Text variant="bodySmallSecondary" mt="md">
+                    Creating, encrypting and securing your device wallet.
+                  </Text>
+                ) : undefined
+              }
+              wallet={activeWallet}
+              onClose={onClose}
+              onBackPress={onBackPress}
+            />
+          ) : (
+            getComponentForWallet(activeWallet)
+          )
         ) : (
-          "Connect Wallet"
+          <ChooseWallet
+            wallets={supportedWallets}
+            onChooseWallet={onChooseWallet}
+            onClose={onClose}
+          />
         )}
-      </Text>
-    </BaseButton>
+      </TWModal>
+
+      <BaseButton
+        backgroundColor="buttonBackgroundColor"
+        onPress={onConnectPress}
+        style={styles.connectWalletButton}
+      >
+        <Text variant="bodyLarge" color="buttonTextColor">
+          {showButtonSpinner ? (
+            <ActivityIndicator size="small" color="buttonTextColor" />
+          ) : (
+            "Connect Wallet"
+          )}
+        </Text>
+      </BaseButton>
+    </>
   );
 };
 

@@ -3,7 +3,7 @@ import {
   Connector,
   walletIds,
 } from "@thirdweb-dev/wallets";
-import { ConnectUIProps } from "@thirdweb-dev/react-core";
+import { ConfiguredWallet, ConnectUIProps } from "@thirdweb-dev/react-core";
 import type { WalletOptions } from "@thirdweb-dev/wallets";
 import { ethers, utils } from "ethers";
 import { createSecureStorage } from "../../../core/SecureStorage";
@@ -50,7 +50,7 @@ export class LocalWallet extends LocalWalletCore {
   }
 }
 
-export const localWallet = () => {
+export const localWallet = (): ConfiguredWallet => {
   const secureStorage = createSecureStorage(walletIds.localWallet);
   const asyncStorage = createAsyncLocalStorage(walletIds.localWallet);
   const configuredWallet = {
