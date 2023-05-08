@@ -526,9 +526,10 @@ export class Transaction<
   }
 
   /**
-   * Execute the transaction with gasless
+   * Queue a gasless transaction without waiting for it to be sent
+   * @returns The transaction hash of the transaction
    */
-  private async sendGasless(): Promise<ContractTransaction> {
+  async queue(): Promise<string> {
     invariant(
       this.gaslessOptions &&
         ("openzeppelin" in this.gaslessOptions ||
@@ -602,13 +603,20 @@ export class Transaction<
       callOverrides: this.overrides,
     };
 
-    const txHash = await defaultGaslessSendFunction(
+    return defaultGaslessSendFunction(
       tx,
       this.signer,
       this.provider,
       this.storage,
       this.gaslessOptions,
     );
+  }
+
+  /**
+   * Execute the transaction with gasless
+   */
+  private async sendGasless(): Promise<ContractTransaction> {
+    const txHash = await this.queue();
 
     // Need to poll here because ethers.provider.getTransaction lies about the type
     // It can actually return null, which can happen if we're still in gasless API send queue
