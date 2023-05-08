@@ -187,6 +187,7 @@ export async function defenderSendFunction(
   );
   invariant(signer, "provider is not set");
   invariant(provider, "provider is not set");
+  console.time("forwarder and nonce");
   const forwarderAddress =
     gaslessOptions.openzeppelin.relayerForwarderAddress ||
     (gaslessOptions.openzeppelin.useEOAForwarder
@@ -207,6 +208,7 @@ export async function defenderSendFunction(
   const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
     transaction.from,
   ]);
+  console.timeLog("forwarder and nonce");
   let domain;
   let types;
   let message: ForwardRequestMessage | PermitRequestMessage;
@@ -252,6 +254,7 @@ export async function defenderSendFunction(
 
   // if the executing function is "approve" and matches with erc20 approve signature
   // and if the token supports permit, then we use permit for gasless instead of approve.
+  console.time("sign");
   if (
     transaction.functionName === "approve" &&
     transaction.functionArgs.length === 2
@@ -290,6 +293,7 @@ export async function defenderSendFunction(
     );
     signature = sig;
   }
+  console.timeLog("sign");
 
   let messageType = "forward";
 
@@ -305,10 +309,12 @@ export async function defenderSendFunction(
     type: messageType,
   });
 
+  console.time("post relayer tx");
   const response = await fetch(gaslessOptions.openzeppelin.relayerUrl, {
     method: "POST",
     body,
   });
+  console.timeLog("post relayer tx");
   if (response.ok) {
     const resp = await response.json();
     if (!resp.result) {
