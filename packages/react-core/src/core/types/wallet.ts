@@ -40,47 +40,25 @@ export type ConfiguredWallet<
 
 export type ConnectUIProps = {
   /**
-   * call this function when wallet is connected
+   * close the connect wallet modal
+   * @param reset reset Connect Wallet Modal to initial state, so that if it's opened again, it will start from the wallet-selection screen
+   *
+   * default: `true`
    */
-  done: () => void;
+  close: (reset?: boolean) => void;
 
   /**
-   * hide the Connect Wallet Modal but don't close it
-   */
-  close: () => void;
-
-  /**
-   * Modal is open but hidden
+   * indicates whether the connect wallet modal is open or not
    */
   isOpen: boolean;
 
   /**
-   * show the hidden Connect Wallet Modal
+   * open the connect wallet modal
    */
-  show: () => void;
+  open: () => void;
 
   /**
-   * go back to the wallet selector screen
+   * go back to the wallet selector screen in connect wallet modal
    */
   goBack: () => void;
-
-  /**
-   * show the UI for connecting to given wallet
-   */
-  selectWallet: (wallet: ConfiguredWallet) => void;
-
-  /**
-   * Manually create a wallet instance instead of using `useConnect()` hook
-   */
-  createInstance: (wallet: ConfiguredWallet) => WalletInstance;
-
-  /**
-   * Declare the wallet instance as the "connected". This requires that you manually create the wallet instance and connect it.
-   */
-  setConnectedWallet: (walletInstance: WalletInstance) => void;
-
-  /**
-   * Set a wrapper wallet
-   */
-  setWrapperWallet: (configuredWallet: ConfiguredWallet | undefined) => void;
 };

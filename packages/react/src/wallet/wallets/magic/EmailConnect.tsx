@@ -19,6 +19,8 @@ import { MagicLinkWallet } from "./types";
 
 export const EmailConnect: React.FC<{
   onBack: () => void;
+  close: () => void;
+  open: () => void;
   onConnect: () => void;
   magicLinkWallet: MagicLinkWallet;
 }> = (props) => {
@@ -31,14 +33,23 @@ export const EmailConnect: React.FC<{
   const handleConnect = async () => {
     const magicWallet = createInstance(props.magicLinkWallet) as MagicLink;
     setIsConnecting(true);
+    props.close();
     const connectOptions = {
       chainId: twContext.activeChain?.chainId,
       email,
     };
-    await magicWallet.connect(connectOptions);
-    setIsConnecting(false);
-    twContext.handleWalletConnect(magicWallet, connectOptions);
-    props.onConnect();
+    try {
+      twContext.setConnectionStatus("connecting");
+      await magicWallet.connect(connectOptions);
+      setIsConnecting(false);
+      twContext.handleWalletConnect(magicWallet, connectOptions);
+      props.onConnect();
+    } catch (e) {
+      console.error(e);
+      setIsConnecting(false);
+      twContext.setConnectionStatus("disconnected");
+      props.open();
+    }
   };
 
   const error = email && !isValidEmail;
