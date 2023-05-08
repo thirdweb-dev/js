@@ -1,6 +1,6 @@
 import { AsyncStorage, createAsyncLocalStorage } from "../../core/AsyncStorage";
 import type { DAppMetaData } from "../../core/types/dAppMeta";
-import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
+import { ConnectParams, Connector } from "../interfaces/connector";
 import { AbstractWallet } from "./abstract";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { DEFAULT_DAPP_META } from "../constants/dappMeta";
@@ -49,14 +49,14 @@ export abstract class AbstractClientWallet<
       options?.walletStorage || createAsyncLocalStorage(this.walletId);
   }
 
-  protected abstract getConnector(): Promise<TWConnector<TConnectParams>>;
+  protected abstract getConnector(): Promise<Connector<TConnectParams>>;
 
   /**
    * tries to auto connect to the wallet
    */
   async autoConnect(
     connectOptions?: ConnectParams<TConnectParams>,
-  ): Promise<string | undefined> {
+  ): Promise<string> {
     // remove chainId when autoconnecting to prevent switch-network popup on page load
     const options = connectOptions
       ? { ...connectOptions, chainId: undefined }
@@ -118,7 +118,7 @@ export abstract class AbstractClientWallet<
     return address;
   }
 
-  async #subscribeToEvents(connector: TWConnector) {
+  async #subscribeToEvents(connector: Connector) {
     // subscribe to connector for events
     connector.on("connect", (data) => {
       this.emit("connect", {

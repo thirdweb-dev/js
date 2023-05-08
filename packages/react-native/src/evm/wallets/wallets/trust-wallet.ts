@@ -1,6 +1,6 @@
 import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
 import { TW_WC_PROJECT_ID } from "../../constants/walletConnect";
-import { formatDisplayUri } from "../../utils/uri";
+import { formatWalletConnectDisplayUri } from "../../utils/uri";
 import type {
   WalletConnectOptions,
   WalletOptions,
@@ -51,11 +51,11 @@ export class TrustWallet extends WalletConnect {
     const links = TrustWallet.meta.links;
 
     if (uri) {
-      const fullUrl = formatDisplayUri(uri, links);
+      const fullUrl = formatWalletConnectDisplayUri(uri, links);
 
       Linking.openURL(fullUrl);
     } else {
-      const fullUrl = formatDisplayUri("", links);
+      const fullUrl = formatWalletConnectDisplayUri("", links);
 
       Linking.openURL(fullUrl);
     }

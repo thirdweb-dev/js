@@ -394,11 +394,11 @@ export function ThirdwebWalletProvider(
       return;
     }
 
+    const personalWallet = activeWallet.getPersonalWallet();
     await activeWallet.disconnect();
-    if (activeWallet.getPersonalWallet()) {
-      await (
-        activeWallet.getPersonalWallet() as AbstractClientWallet
-      )?.disconnect();
+
+    if (personalWallet) {
+      await (personalWallet as AbstractClientWallet)?.disconnect();
     }
 
     onWalletDisconnect();

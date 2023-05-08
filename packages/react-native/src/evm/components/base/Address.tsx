@@ -1,5 +1,5 @@
 import { Theme } from "../../styles/theme";
-import { shortenString } from "../../utils/addresses";
+import { shortenWalletAddress } from "../../utils/addresses";
 import Text from "./Text";
 
 type AddressProps = {
@@ -14,7 +14,7 @@ export const Address = ({
 }: AddressProps) => {
   return (
     <Text variant={variant} {...props}>
-      {shortenString(address)}
+      {shortenWalletAddress(address)}
     </Text>
   );
 };

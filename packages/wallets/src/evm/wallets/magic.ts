@@ -1,4 +1,4 @@
-import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
+import { Connector, WagmiAdapter } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import { MagicAuthOptions } from "../connectors/magic/types";
 import type {
@@ -17,7 +17,7 @@ export class MagicLink extends AbstractClientWallet<
   MagicLinkOptions,
   MagicAuthConnectOptions
 > {
-  connector?: TWConnector;
+  connector?: Connector;
   magicConnector?: MagicAuthConnectorType;
 
   static meta = {
@@ -53,7 +53,7 @@ export class MagicLink extends AbstractClientWallet<
     return this.connector;
   }
 
-  protected async getConnector(): Promise<TWConnector> {
+  protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
       return await this.initializeConnector();
     }

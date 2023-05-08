@@ -17,8 +17,10 @@ export const MetamaskConnectUI = (props: MetamaskConnectUIProps) => {
   const [screen, setScreen] = useState<
     "connecting" | "scanning" | "get-started"
   >("connecting");
-  const { configuredWallet, onConnect } = props;
+  const { configuredWallet, close } = props;
   const connect = useConnect();
+
+  const { goBack } = props;
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -37,9 +39,9 @@ export const MetamaskConnectUI = (props: MetamaskConnectUIProps) => {
           connectPrompted.current = true;
           setScreen("connecting");
           await connect(configuredWallet);
-          onConnect();
+          close();
         } catch (e) {
-          onConnect();
+          goBack();
         }
       }
 
@@ -56,7 +58,7 @@ export const MetamaskConnectUI = (props: MetamaskConnectUIProps) => {
         }
       }
     })();
-  }, [configuredWallet, onConnect, connect]);
+  }, [configuredWallet, close, connect, goBack]);
 
   if (screen === "connecting") {
     return (
@@ -86,7 +88,7 @@ export const MetamaskConnectUI = (props: MetamaskConnectUIProps) => {
     return (
       <MetamaskScan
         onBack={props.goBack}
-        onConnected={onConnect}
+        onConnected={close}
         onGetStarted={() => {
           setScreen("get-started");
         }}

@@ -3,9 +3,6 @@ import { WalletSelector } from "./WalletSelector";
 import {
   ConfiguredWallet,
   useConnectionStatus,
-  useCreateWalletInstance,
-  useDisconnect,
-  useThirdwebWallet,
   useWallets,
 } from "@thirdweb-dev/react-core";
 import {
@@ -28,50 +25,33 @@ export const ConnectModal = () => {
   const isWalletModalOpen = useIsWalletModalOpen();
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
   const connectionStatus = useConnectionStatus();
-  const disconnect = useDisconnect();
-  const createInstance = useCreateWalletInstance();
-  const twWalletContext = useThirdwebWallet();
   const configuredWallets = useWallets();
-  const [wrapperWallet, setWrapperWallet] = useState<
-    ConfiguredWallet | undefined
-  >();
 
-  // to hide the modal temporarily when showing the third party Modal to avoid z-index issues
-  const [hideModal, setHideModal] = useState(false);
-
-  const closeModalAndReset = useCallback(() => {
-    setScreen(reservedScreens.main);
-    setIsWalletModalOpen(false);
-    setHideModal(false);
-  }, [setIsWalletModalOpen, setScreen]);
-
-  const handleConnect = useCallback(() => {
-    if (wrapperWallet) {
-      setScreen(wrapperWallet);
-    } else {
-      closeModalAndReset();
-    }
-  }, [wrapperWallet, setScreen, closeModalAndReset]);
+  const handleClose = useCallback(
+    (reset = true) => {
+      if (reset) {
+        setScreen(reservedScreens.main);
+      }
+      setIsWalletModalOpen(false);
+    },
+    [setIsWalletModalOpen],
+  );
 
   const handleBack = useCallback(() => {
-    setScreen("main");
+    setScreen(reservedScreens.main);
   }, [setScreen]);
 
-  // if the modal is closed, and connecting to wrapper, open again
+  const isWrapper =
+    typeof screen !== "string" &&
+    "config" in screen &&
+    !!(screen.config as any).personalWallets;
+
+  // if the modal is closed, rendering a wrapper, personal wallet is connected - open modal back
   useEffect(() => {
-    if (
-      wrapperWallet &&
-      !isWalletModalOpen &&
-      connectionStatus === "connected"
-    ) {
+    if (isWrapper && !isWalletModalOpen && connectionStatus === "connected") {
       setIsWalletModalOpen(true);
     }
-  }, [
-    wrapperWallet,
-    isWalletModalOpen,
-    connectionStatus,
-    setIsWalletModalOpen,
-  ]);
+  }, [isWalletModalOpen, connectionStatus, setIsWalletModalOpen, isWrapper]);
 
   return (
     <ThemeProvider
@@ -87,18 +67,11 @@ export const ConnectModal = () => {
         style={{
           maxWidth: "480px",
         }}
-        open={hideModal ? false : isWalletModalOpen}
+        open={isWalletModalOpen}
         setOpen={(value) => {
           setIsWalletModalOpen(value);
           if (!value) {
-            // ignore if the modal is hidden already
-            if (hideModal) {
-              return;
-            }
-            closeModalAndReset();
-            if (connectionStatus === "connecting") {
-              disconnect();
-            }
+            setScreen(reservedScreens.main); // reset screen
           }
         }}
       >
@@ -120,45 +93,23 @@ export const ConnectModal = () => {
 
         {typeof screen !== "string" && screen.connectUI && (
           <screen.connectUI
-            onConnect={handleConnect}
-            createInstance={createInstance}
             goBack={handleBack}
-            hideModal={() => {
-              setHideModal(true);
+            close={handleClose}
+            isOpen={isWalletModalOpen}
+            open={() => {
+              setIsWalletModalOpen(true);
             }}
-            isModalHidden={hideModal}
-            selectWallet={(configuredWallet) => {
-              setScreen(configuredWallet);
-            }}
-            setConnectedWallet={(wallet) => {
-              twWalletContext.handleWalletConnect(wallet);
-            }}
-            showModal={() => {
-              setHideModal(false);
-            }}
-            setWrapperWallet={setWrapperWallet}
           />
         )}
 
         {typeof screen !== "string" && !screen.connectUI && (
           <HeadlessConnectUI
-            onConnect={handleConnect}
-            createInstance={createInstance}
             goBack={handleBack}
-            hideModal={() => {
-              setHideModal(true);
+            close={handleClose}
+            isOpen={isWalletModalOpen}
+            open={() => {
+              setIsWalletModalOpen(true);
             }}
-            isModalHidden={hideModal}
-            selectWallet={(configuredWallet) => {
-              setScreen(configuredWallet);
-            }}
-            setConnectedWallet={(wallet) => {
-              twWalletContext.handleWalletConnect(wallet);
-            }}
-            showModal={() => {
-              setHideModal(false);
-            }}
-            setWrapperWallet={setWrapperWallet}
             configuredWallet={screen}
           />
         )}

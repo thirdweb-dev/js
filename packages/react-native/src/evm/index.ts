@@ -17,6 +17,12 @@ export { useTrustWallet } from "./wallets/hooks/useTrustWallet";
 export { ConnectWallet } from "./components/ConnectWallet";
 export { Web3Button } from "./components/Web3Button";
 
+// utilities
+export * from "./utils/uri";
+export * from "./utils/addresses";
+export { createAsyncLocalStorage } from "../core/AsyncStorage";
+export { createSecureStorage } from "../core/SecureStorage";
+
 // providers
 // export * from "./providers/full";
 export * from "./providers/thirdweb-provider";

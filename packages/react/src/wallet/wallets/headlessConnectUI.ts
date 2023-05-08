@@ -10,10 +10,9 @@ type HeadlessConnectUIProps = ConnectUIProps & {
 };
 
 export const HeadlessConnectUI = ({
-  hideModal,
-  showModal,
-  onConnect: closeModal,
+  close,
   configuredWallet,
+  open,
 }: HeadlessConnectUIProps) => {
   const connect = useConnect();
   const prompted = useRef(false);
@@ -25,16 +24,15 @@ export const HeadlessConnectUI = ({
     prompted.current = true;
 
     (async () => {
+      close();
       try {
-        hideModal();
         await connect(configuredWallet);
-        closeModal();
       } catch (e) {
-        closeModal();
+        open();
         console.error(e);
       }
     })();
-  }, [closeModal, configuredWallet, hideModal, showModal, connect]);
+  }, [configuredWallet, connect, close, open]);
 
   return null;
 };

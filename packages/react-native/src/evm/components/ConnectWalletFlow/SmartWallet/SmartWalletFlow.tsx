@@ -8,10 +8,7 @@ import {
   useThirdwebWallet,
 } from "@thirdweb-dev/react-core";
 import { SmartWalletObj } from "../../../wallets/wallets/smart-wallet";
-import {
-  LocalWallet,
-  localWallet,
-} from "../../../wallets/wallets/local-wallet";
+import { localWallet } from "../../../wallets/wallets/local-wallet";
 import { ChooseWallet } from "../ChooseWallet/ChooseWallet";
 import { LocalWalletFlow } from "../LocalWalletFlow";
 import { ModalHeaderTextClose } from "../../base/modal/ModalHeaderTextClose";
@@ -85,11 +82,10 @@ export const SmartWalletFlow = ({
     [createWalletInstance],
   );
 
-  const onLocalWalletImported = async (localWalletImported: LocalWallet) => {
+  const onConnectedLocalWallet = async (wallet: WalletInstance) => {
     setIsConnecting(true);
-    await localWalletImported.connect();
 
-    connectSmartWallet(localWalletImported);
+    connectSmartWallet(wallet);
   };
 
   const onChoosePersonalWallet = useCallback(
@@ -105,7 +101,6 @@ export const SmartWalletFlow = ({
 
   const onLocalWalletBackPress = () => {
     setShowLocalWalletFlow(false);
-    reset();
   };
 
   const onConnectingClosePress = () => {
@@ -167,10 +162,12 @@ export const SmartWalletFlow = ({
   if (showLocalWalletFlow) {
     return (
       <LocalWalletFlow
-        onClose={onClose}
-        onBackPress={onLocalWalletBackPress}
-        onWalletImported={onLocalWalletImported}
-        onConnectPress={() => connectPersonalWallet(localWallet())}
+        close={onClose}
+        goBack={onLocalWalletBackPress}
+        onConnected={onConnectedLocalWallet}
+        isOpen={false}
+        open={() => {}}
+        localWallet={localWallet()}
       />
     );
   }

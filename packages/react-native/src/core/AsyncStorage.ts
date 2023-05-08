@@ -45,6 +45,12 @@ export class noopStorage implements IAsyncStorage {
   }
 }
 
+/**
+ * Returns a new instance of AsyncLocalStorage
+ *
+ * @param name Name to namespace the storage with
+ * @returns A new instance of AsyncLocalStorage
+ */
 export function createAsyncLocalStorage(name: string) {
   return new AsyncLocalStorage(name);
 }

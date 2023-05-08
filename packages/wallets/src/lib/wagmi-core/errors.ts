@@ -1,4 +1,4 @@
-import type { Connector } from "../wagmi-connectors";
+import type { WagmiConnector } from "../wagmi-connectors";
 import type { utils } from "ethers";
 
 /**
@@ -113,7 +113,7 @@ export class SwitchChainError extends ProviderRpcError {
 export class SwitchChainNotSupportedError extends Error {
   name = "SwitchChainNotSupportedError";
 
-  constructor({ connector }: { connector: Connector }) {
+  constructor({ connector }: { connector: WagmiConnector }) {
     super(`"${connector.name}" does not support programmatic chain switching.`);
   }
 }
