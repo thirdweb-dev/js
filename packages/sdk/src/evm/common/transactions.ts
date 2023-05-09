@@ -72,12 +72,31 @@ export async function defaultGaslessSendFunction(
   );
 }
 
-export async function biconomySendFunction(
+export async function gaslessQueueFunction(
+  transaction: GaslessTransaction,
+  signer: ethers.Signer,
+  provider: ethers.providers.Provider,
+  storage: ThirdwebStorage,
+  gaslessOptions?: SDKOptionsOutput["gasless"],
+) {
+  if (gaslessOptions && "biconomy" in gaslessOptions) {
+    return biconomyQueueFunction(transaction, signer, provider, gaslessOptions);
+  }
+  return defenderQueueFunction(
+    transaction,
+    signer,
+    provider,
+    storage,
+    gaslessOptions,
+  );
+}
+
+async function biconomyPrepareRequest(
   transaction: GaslessTransaction,
   signer: ethers.Signer,
   provider: ethers.providers.Provider,
   gaslessOptions?: SDKOptionsOutput["gasless"],
-): Promise<string> {
+) {
   invariant(
     gaslessOptions && "biconomy" in gaslessOptions,
     "calling biconomySendFunction without biconomy",
@@ -144,22 +163,53 @@ export async function biconomySendFunction(
   );
 
   const signature = await signer.signMessage(hashToSign);
+
+  return {
+    method: "POST",
+    body: JSON.stringify({
+      from: transaction.from,
+      apiId: gaslessOptions.biconomy.apiId,
+      params: [request, signature],
+      to: transaction.to,
+      gasLimit: transaction.gasLimit.toHexString(),
+    }),
+    headers: {
+      "x-api-key": gaslessOptions.biconomy.apiKey,
+      "Content-Type": "application/json;charset=utf-8",
+    },
+  };
+}
+
+async function biconomyQueueFunction(
+  transaction: GaslessTransaction,
+  signer: ethers.Signer,
+  provider: ethers.providers.Provider,
+  gaslessOptions?: SDKOptionsOutput["gasless"],
+) {
+  const request = await biconomyPrepareRequest(
+    transaction,
+    signer,
+    provider,
+    gaslessOptions,
+  );
+  fetch("https://api.biconomy.io/api/v2/meta-tx/native", request);
+}
+
+export async function biconomySendFunction(
+  transaction: GaslessTransaction,
+  signer: ethers.Signer,
+  provider: ethers.providers.Provider,
+  gaslessOptions?: SDKOptionsOutput["gasless"],
+): Promise<string> {
+  const request = await biconomyPrepareRequest(
+    transaction,
+    signer,
+    provider,
+    gaslessOptions,
+  );
   const response = await fetch(
     "https://api.biconomy.io/api/v2/meta-tx/native",
-    {
-      method: "POST",
-      body: JSON.stringify({
-        from: transaction.from,
-        apiId: gaslessOptions.biconomy.apiId,
-        params: [request, signature],
-        to: transaction.to,
-        gasLimit: transaction.gasLimit.toHexString(),
-      }),
-      headers: {
-        "x-api-key": gaslessOptions.biconomy.apiKey,
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    },
+    request,
   );
 
   if (response.ok) {
@@ -174,20 +224,19 @@ export async function biconomySendFunction(
   );
 }
 
-export async function defenderSendFunction(
+async function defenderPrepareRequest(
   transaction: GaslessTransaction,
   signer: ethers.Signer,
   provider: ethers.providers.Provider,
   storage: ThirdwebStorage,
   gaslessOptions?: SDKOptionsOutput["gasless"],
-): Promise<string> {
+) {
   invariant(
     gaslessOptions && "openzeppelin" in gaslessOptions,
     "calling openzeppelin gasless transaction without openzeppelin config in the SDK options",
   );
   invariant(signer, "provider is not set");
   invariant(provider, "provider is not set");
-  console.time("forwarder and nonce");
   const forwarderAddress =
     gaslessOptions.openzeppelin.relayerForwarderAddress ||
     (gaslessOptions.openzeppelin.useEOAForwarder
@@ -208,7 +257,6 @@ export async function defenderSendFunction(
   const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
     transaction.from,
   ]);
-  console.timeLog("forwarder and nonce");
   let domain;
   let types;
   let message: ForwardRequestMessage | PermitRequestMessage;
@@ -254,7 +302,6 @@ export async function defenderSendFunction(
 
   // if the executing function is "approve" and matches with erc20 approve signature
   // and if the token supports permit, then we use permit for gasless instead of approve.
-  console.time("sign");
   if (
     transaction.functionName === "approve" &&
     transaction.functionArgs.length === 2
@@ -293,7 +340,6 @@ export async function defenderSendFunction(
     );
     signature = sig;
   }
-  console.timeLog("sign");
 
   let messageType = "forward";
 
@@ -302,19 +348,61 @@ export async function defenderSendFunction(
     messageType = "permit";
   }
 
-  const body = JSON.stringify({
-    request: message,
-    signature,
-    forwarderAddress,
-    type: messageType,
-  });
-
-  console.time("post relayer tx");
-  const response = await fetch(gaslessOptions.openzeppelin.relayerUrl, {
+  return {
     method: "POST",
-    body,
-  });
-  console.timeLog("post relayer tx");
+    body: JSON.stringify({
+      request: message,
+      signature,
+      forwarderAddress,
+      type: messageType,
+    }),
+  };
+}
+
+async function defenderQueueFunction(
+  transaction: GaslessTransaction,
+  signer: ethers.Signer,
+  provider: ethers.providers.Provider,
+  storage: ThirdwebStorage,
+  gaslessOptions?: SDKOptionsOutput["gasless"],
+) {
+  invariant(
+    gaslessOptions && "openzeppelin" in gaslessOptions,
+    "calling openzeppelin gasless transaction without openzeppelin config in the SDK options",
+  );
+
+  const request = await defenderPrepareRequest(
+    transaction,
+    signer,
+    provider,
+    storage,
+    gaslessOptions,
+  );
+
+  fetch(gaslessOptions.openzeppelin.relayerUrl, request);
+}
+
+export async function defenderSendFunction(
+  transaction: GaslessTransaction,
+  signer: ethers.Signer,
+  provider: ethers.providers.Provider,
+  storage: ThirdwebStorage,
+  gaslessOptions?: SDKOptionsOutput["gasless"],
+): Promise<string> {
+  invariant(
+    gaslessOptions && "openzeppelin" in gaslessOptions,
+    "calling openzeppelin gasless transaction without openzeppelin config in the SDK options",
+  );
+
+  const request = await defenderPrepareRequest(
+    transaction,
+    signer,
+    provider,
+    storage,
+    gaslessOptions,
+  );
+
+  const response = await fetch(gaslessOptions.openzeppelin.relayerUrl, request);
   if (response.ok) {
     const resp = await response.json();
     if (!resp.result) {

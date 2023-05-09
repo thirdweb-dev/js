@@ -5,7 +5,10 @@ import {
   fetchSourceFilesFromMetadata,
 } from "../../common/metadata-resolver";
 import { isRouterContract } from "../../common/plugin";
-import { defaultGaslessSendFunction } from "../../common/transactions";
+import {
+  defaultGaslessSendFunction,
+  gaslessQueueFunction,
+} from "../../common/transactions";
 import { isBrowser } from "../../common/utils";
 import { ChainId } from "../../constants/chains";
 import { ContractSource } from "../../schema/contracts/custom";
@@ -526,10 +529,60 @@ export class Transaction<
   }
 
   /**
-   * Queue a gasless transaction without waiting for it to be sent
-   * @returns The transaction hash of the transaction
+   * @internal
+   * @beta
+   *
+   * [Danger] Queue a gasless transaction without waiting for it to be sent
    */
-  async queue(): Promise<string> {
+  async queue(): Promise<void> {
+    const tx = await this.prepareGasless();
+    await gaslessQueueFunction(
+      tx,
+      this.signer,
+      this.provider,
+      this.storage,
+      this.gaslessOptions,
+    );
+  }
+
+  /**
+   * Execute the transaction with gasless
+   */
+  private async sendGasless(): Promise<ContractTransaction> {
+    const tx = await this.prepareGasless();
+    const txHash = await defaultGaslessSendFunction(
+      tx,
+      this.signer,
+      this.provider,
+      this.storage,
+      this.gaslessOptions,
+    );
+
+    // Need to poll here because ethers.provider.getTransaction lies about the type
+    // It can actually return null, which can happen if we're still in gasless API send queue
+    let sentTx;
+    let iteration = 1;
+    while (!sentTx) {
+      sentTx = await this.provider.getTransaction(txHash);
+
+      // Exponential (ish) backoff for polling
+      if (!sentTx) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, Math.min(iteration * 1000, 10000)),
+        );
+        iteration++;
+      }
+
+      // Timeout if we still don't have it after a while
+      if (iteration > 20) {
+        throw new Error(`Unable to retrieve transaction with hash ${txHash}`);
+      }
+    }
+
+    return sentTx;
+  }
+
+  private async prepareGasless(): Promise<GaslessTransaction> {
     invariant(
       this.gaslessOptions &&
         ("openzeppelin" in this.gaslessOptions ||
@@ -592,7 +645,7 @@ export class Transaction<
       gas = BigNumber.from(this.overrides.gasLimit);
     }
 
-    const tx: GaslessTransaction = {
+    return {
       from,
       to,
       data,
@@ -602,47 +655,6 @@ export class Transaction<
       functionArgs: args,
       callOverrides: this.overrides,
     };
-
-    console.time("gasless send");
-    const hash = await defaultGaslessSendFunction(
-      tx,
-      this.signer,
-      this.provider,
-      this.storage,
-      this.gaslessOptions,
-    );
-    console.timeLog("gasless send");
-    return hash;
-  }
-
-  /**
-   * Execute the transaction with gasless
-   */
-  private async sendGasless(): Promise<ContractTransaction> {
-    const txHash = await this.queue();
-
-    // Need to poll here because ethers.provider.getTransaction lies about the type
-    // It can actually return null, which can happen if we're still in gasless API send queue
-    let sentTx;
-    let iteration = 1;
-    while (!sentTx) {
-      sentTx = await this.provider.getTransaction(txHash);
-
-      // Exponential (ish) backoff for polling
-      if (!sentTx) {
-        await new Promise((resolve) =>
-          setTimeout(resolve, Math.min(iteration * 1000, 10000)),
-        );
-        iteration++;
-      }
-
-      // Timeout if we still don't have it after a while
-      if (iteration > 20) {
-        throw new Error(`Unable to retrieve transaction with hash ${txHash}`);
-      }
-    }
-
-    return sentTx;
   }
 
   private functionError() {
