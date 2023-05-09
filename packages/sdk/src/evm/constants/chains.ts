@@ -50,7 +50,6 @@ export type SUPPORTED_CHAIN_ID =
 export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[] = [
   ChainId.Mainnet,
   ChainId.Goerli,
-  ChainId.Sepolia,
   ChainId.Polygon,
   ChainId.Mumbai,
   ChainId.Fantom,
