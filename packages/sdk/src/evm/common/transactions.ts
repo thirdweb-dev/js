@@ -72,23 +72,47 @@ export async function defaultGaslessSendFunction(
   );
 }
 
-export async function gaslessQueueFunction(
-  transaction: GaslessTransaction,
-  signer: ethers.Signer,
-  provider: ethers.providers.Provider,
-  storage: ThirdwebStorage,
-  gaslessOptions?: SDKOptionsOutput["gasless"],
-) {
+export async function prepareGaslessRequest(tx: Transaction) {
+  // @ts-expect-error
+  const gaslessTx = await tx.prepareGasless();
+  const gaslessOptions = tx.getGaslessOptions();
+
   if (gaslessOptions && "biconomy" in gaslessOptions) {
-    return biconomyQueueFunction(transaction, signer, provider, gaslessOptions);
+    const request = await biconomyPrepareRequest(
+      gaslessTx,
+      // @ts-expect-error
+      tx.signer,
+      // @ts-expect-error
+      tx.provider,
+      gaslessOptions,
+    );
+
+    return {
+      url: "https://api.biconomy.io/api/v2/meta-tx/native",
+      ...request,
+    };
+  } else {
+    invariant(
+      gaslessOptions && "openzeppelin" in gaslessOptions,
+      "calling openzeppelin gasless transaction without openzeppelin config in the SDK options",
+    );
+
+    const request = await defenderPrepareRequest(
+      gaslessTx,
+      // @ts-expect-error
+      tx.signer,
+      // @ts-expect-error
+      tx.provider,
+      // @ts-expect-error
+      tx.storage,
+      gaslessOptions,
+    );
+
+    return {
+      url: gaslessOptions.openzeppelin.relayerUrl,
+      ...request,
+    };
   }
-  return defenderQueueFunction(
-    transaction,
-    signer,
-    provider,
-    storage,
-    gaslessOptions,
-  );
 }
 
 async function biconomyPrepareRequest(
@@ -178,21 +202,6 @@ async function biconomyPrepareRequest(
       "Content-Type": "application/json;charset=utf-8",
     },
   };
-}
-
-async function biconomyQueueFunction(
-  transaction: GaslessTransaction,
-  signer: ethers.Signer,
-  provider: ethers.providers.Provider,
-  gaslessOptions?: SDKOptionsOutput["gasless"],
-) {
-  const request = await biconomyPrepareRequest(
-    transaction,
-    signer,
-    provider,
-    gaslessOptions,
-  );
-  fetch("https://api.biconomy.io/api/v2/meta-tx/native", request);
 }
 
 export async function biconomySendFunction(
@@ -357,29 +366,6 @@ async function defenderPrepareRequest(
       type: messageType,
     }),
   };
-}
-
-async function defenderQueueFunction(
-  transaction: GaslessTransaction,
-  signer: ethers.Signer,
-  provider: ethers.providers.Provider,
-  storage: ThirdwebStorage,
-  gaslessOptions?: SDKOptionsOutput["gasless"],
-) {
-  invariant(
-    gaslessOptions && "openzeppelin" in gaslessOptions,
-    "calling openzeppelin gasless transaction without openzeppelin config in the SDK options",
-  );
-
-  const request = await defenderPrepareRequest(
-    transaction,
-    signer,
-    provider,
-    storage,
-    gaslessOptions,
-  );
-
-  fetch(gaslessOptions.openzeppelin.relayerUrl, request);
 }
 
 export async function defenderSendFunction(

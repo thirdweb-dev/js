@@ -5,10 +5,7 @@ import {
   fetchSourceFilesFromMetadata,
 } from "../../common/metadata-resolver";
 import { isRouterContract } from "../../common/plugin";
-import {
-  defaultGaslessSendFunction,
-  gaslessQueueFunction,
-} from "../../common/transactions";
+import { defaultGaslessSendFunction } from "../../common/transactions";
 import { isBrowser } from "../../common/utils";
 import { ChainId } from "../../constants/chains";
 import { ContractSource } from "../../schema/contracts/custom";
@@ -526,23 +523,6 @@ export class Transaction<
     }
 
     return { receipt } as TransactionResult as TResult;
-  }
-
-  /**
-   * @internal
-   * @beta
-   *
-   * [Danger] Queue a gasless transaction without waiting for it to be sent
-   */
-  async queue(): Promise<void> {
-    const tx = await this.prepareGasless();
-    await gaslessQueueFunction(
-      tx,
-      this.signer,
-      this.provider,
-      this.storage,
-      this.gaslessOptions,
-    );
   }
 
   /**
