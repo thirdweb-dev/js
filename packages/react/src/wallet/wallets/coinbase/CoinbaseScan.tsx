@@ -2,7 +2,7 @@ import { CoinbaseWallet } from "@thirdweb-dev/wallets";
 import {
   ConfiguredWallet,
   useCreateWalletInstance,
-  useThirdwebWallet,
+  useProviderContext,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import { ScanScreen } from "../../ConnectWallet/screens/ScanScreen";
@@ -15,7 +15,7 @@ export const CoinbaseScan: React.FC<{
 }> = ({ configuredWallet, onConnected, onGetStarted, onBack }) => {
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>(undefined);
-  const twWalletContext = useThirdwebWallet();
+  const twWalletContext = useProviderContext();
 
   useEffect(() => {
     (async () => {

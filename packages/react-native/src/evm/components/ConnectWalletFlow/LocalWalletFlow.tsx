@@ -10,7 +10,7 @@ import {
   ConnectUIProps,
   WalletInstance,
   useCreateWalletInstance,
-  useThirdwebWallet,
+  useProviderContext,
 } from "@thirdweb-dev/react-core";
 
 type LocalWalletFlowUIProps = ConnectUIProps & {
@@ -26,7 +26,7 @@ export function LocalWalletFlow({
 }: LocalWalletFlowUIProps) {
   const [isImportModalVisible, setIsImportModalVisible] = useState(false);
   const [isCreatingWallet, setIsCreatingWallet] = useState(false);
-  const handleWalletConnect = useThirdwebWallet().handleWalletConnect;
+  const handleWalletConnect = useProviderContext().handleWalletConnect;
   const createInstance = useCreateWalletInstance();
 
   const onImportPress = async () => {

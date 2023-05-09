@@ -21,7 +21,7 @@ export default {
   "explorers": [
     {
       "name": "Cronos Testnet Explorer",
-      "url": "https://explorer.cronos.org/testnet",
+      "url": "https://testnet.cronoscan.com",
       "standard": "none"
     }
   ],

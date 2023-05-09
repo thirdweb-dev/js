@@ -1,6 +1,6 @@
 import {
   useCreateWalletInstance,
-  useThirdwebWallet,
+  useProviderContext,
 } from "@thirdweb-dev/react-core";
 import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
@@ -26,7 +26,7 @@ export const EmailConnect: React.FC<{
 }> = (props) => {
   const [isConnecting, setIsConnecting] = useState(false);
   const createInstance = useCreateWalletInstance();
-  const twContext = useThirdwebWallet();
+  const twContext = useProviderContext();
   const [email, setEmail] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(false);
 
