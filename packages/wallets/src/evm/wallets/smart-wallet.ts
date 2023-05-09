@@ -1,11 +1,12 @@
 import { AbstractClientWallet, WalletOptions } from "./base";
-import type { ConnectParams } from "../interfaces/tw-connector";
+import type { ConnectParams } from "../interfaces/connector";
 import type {
   SmartWalletConfig,
   SmartWalletConnectionArgs,
 } from "../connectors/smart-wallet/types";
 import type { SmartWalletConnector as SmartWalletConnectorType } from "../connectors/smart-wallet";
 import { Transaction, TransactionResult } from "@thirdweb-dev/sdk";
+import { walletIds } from "../constants/walletIds";
 
 // export types and utils for convenience
 export * from "../connectors/smart-wallet/types";
@@ -18,12 +19,12 @@ export class SmartWallet extends AbstractClientWallet<
   connector?: SmartWalletConnectorType;
 
   static meta = {
-    name: "SmartWallet",
+    name: "Smart Wallet",
     iconURL:
-      "ipfs://QmPSPvHvYWh9BfvLLPDHjVoCuJTd2hSMSgF3N6JCrjuX4v/SmartWallet.svg",
+      "ipfs://QmeAJVqn17aDNQhjEU3kcWVZCFBrfta8LzaDGkS8Egdiyk/smart-wallet.svg",
   };
 
-  static id = "SmartWallet" as const;
+  static id = walletIds.smartWallet;
   public get walletName() {
     return "Smart Wallet" as const;
   }

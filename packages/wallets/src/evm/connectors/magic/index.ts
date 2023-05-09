@@ -1,4 +1,4 @@
-import { Connector, normalizeChainId } from "../../../lib/wagmi-core";
+import { WagmiConnector, normalizeChainId } from "../../../lib/wagmi-core";
 import {
   MagicAuthOptions,
   MagicConnectorBaseOptions,
@@ -41,7 +41,7 @@ const IS_SERVER = typeof window === "undefined";
 
 type MagicProvider = RPCProviderModule & AbstractProvider;
 
-export abstract class MagicBaseConnector extends Connector<
+export abstract class MagicBaseConnector extends WagmiConnector<
   MagicProvider,
   MagicConnectorBaseOptions
 > {

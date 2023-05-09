@@ -2,17 +2,17 @@ import { useAppTheme } from "../../../styles/hooks";
 import Text from "../../base/Text";
 import { ModalFooter } from "../../base/modal/ModalFooter";
 import { ConnectWalletHeader } from "./ConnectingWalletHeader";
-import type { Wallet } from "@thirdweb-dev/react-core";
+import type { ConfiguredWallet } from "@thirdweb-dev/react-core";
 import { ReactNode } from "react";
 import { ActivityIndicator, Linking, StyleSheet, View } from "react-native";
 
 export type ConnectingWalletProps = {
-  subHeaderText?: ReactNode | string;
+  subHeaderText?: string;
   footer?: ReactNode;
   content?: ReactNode;
   onClose: () => void;
   onBackPress: () => void;
-  wallet: Wallet;
+  wallet: ConfiguredWallet;
 };
 
 export function ConnectingWallet({
@@ -35,7 +35,7 @@ export function ConnectingWallet({
         onBackPress={onBackPress}
         walletLogoUrl={wallet.meta.iconURL}
         subHeaderText={subHeaderText}
-        close={onClose}
+        onClose={onClose}
       />
       <View style={styles.connectingContainer}>
         <ActivityIndicator size="small" color={theme.colors.linkPrimary} />

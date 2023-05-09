@@ -1,4 +1,4 @@
-import { ConnectParams, TWConnector } from "../../interfaces/tw-connector";
+import { ConnectParams, Connector } from "../../interfaces/connector";
 import type { SafeConnectionArgs } from "./types";
 import { ethers } from "ethers";
 import type { Signer } from "ethers";
@@ -32,7 +32,7 @@ export const SafeSupportedChainsSet = new Set(
   Object.keys(CHAIN_ID_TO_GNOSIS_SERVER_URL).map(Number),
 );
 
-export class SafeConnector extends TWConnector<SafeConnectionArgs> {
+export class SafeConnector extends Connector<SafeConnectionArgs> {
   static supportedChains = Object.keys(CHAIN_ID_TO_GNOSIS_SERVER_URL);
   public supportedChains = SafeConnector.supportedChains;
   readonly id = "safe-wallet";
@@ -167,7 +167,7 @@ export class SafeConnector extends TWConnector<SafeConnectionArgs> {
     try {
       const account = await this.getAddress();
       return !!account;
-    } catch {
+    } catch (e) {
       return false;
     }
   }

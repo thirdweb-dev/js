@@ -15,6 +15,8 @@ import { useAddress, useWallet } from "@thirdweb-dev/react-core";
 import { PasswordInput } from "../PasswordInput";
 import * as FileSystem from "expo-file-system";
 import { LocalWallet } from "../../wallets/wallets/local-wallet";
+import { SmartWallet } from "@thirdweb-dev/wallets";
+import { usePersonalWalletAddress } from "../../wallets/hooks/usePersonalWalletAddress";
 
 export type ExportLocalWalletModalProps = {
   isVisible: boolean;
@@ -31,6 +33,7 @@ export const ExportLocalWalletModal = ({
 
   const activeWallet = useWallet();
   const address = useAddress();
+  const personalWalletAddress = usePersonalWalletAddress();
 
   const onContinuePress = async () => {
     if (!password) {
@@ -41,10 +44,18 @@ export const ExportLocalWalletModal = ({
     setIsExporting(true);
     setError(undefined);
 
-    const data = await (activeWallet as LocalWallet).export({
-      strategy: "encryptedJson",
-      password: password,
-    });
+    let data;
+    if (activeWallet?.walletId === SmartWallet.id) {
+      data = await (activeWallet.getPersonalWallet() as LocalWallet).export({
+        strategy: "encryptedJson",
+        password: password,
+      });
+    } else {
+      data = await (activeWallet as LocalWallet).export({
+        strategy: "encryptedJson",
+        password: password,
+      });
+    }
 
     const fileName = "wallet.json";
     if (Platform.OS === "android") {
@@ -79,6 +90,7 @@ export const ExportLocalWalletModal = ({
               encoding: FileSystem.EncodingType.UTF8,
             },
           );
+          setIsExporting(false);
         } catch (e) {
           console.error("Error writing the file", e);
           setError("Error writing the file. Please try again.");
@@ -148,7 +160,9 @@ export const ExportLocalWalletModal = ({
           <Text variant="bodySmall" textAlign="left" mt="lg" mb="xxs">
             Wallet Address
           </Text>
-          <Text variant="bodySmallSecondary">{address}</Text>
+          <Text variant="bodySmallSecondary">
+            {personalWalletAddress ? personalWalletAddress : address}
+          </Text>
           <Text variant="bodySmall" textAlign="left" mt="lg" mb="xxs">
             Password
           </Text>

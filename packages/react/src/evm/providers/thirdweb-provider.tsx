@@ -1,19 +1,16 @@
 import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
-  Wallet,
   ThirdwebProviderCore,
   ThirdwebProviderCoreProps,
+  ConfiguredWallet,
 } from "@thirdweb-dev/react-core";
 import { WalletUIStatesProvider } from "./wallet-ui-states-provider";
-import { ConnectModal } from "../../wallet/ConnectWallet/Connect";
+import { ConnectModal } from "../../wallet/ConnectWallet/ConnectModal";
 import { ThemeProvider } from "@emotion/react";
 import { darkTheme, lightTheme } from "../../design-system";
 import { PropsWithChildren } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
-import { localWallet } from "../../wallet/wallets/localWallet";
 import { defaultWallets } from "../../wallet/wallets/defaultWallets";
-
-const localWalletObj = localWallet();
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
@@ -33,7 +30,7 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
    * />
    * ```
    */
-  supportedWallets?: Wallet[];
+  supportedWallets?: ConfiguredWallet[];
 }
 
 /**
@@ -66,15 +63,7 @@ export const ThirdwebProvider = <
   children,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
-  const wallets: Wallet[] = supportedWallets || defaultWallets;
-
-  // add local wallet if guest mode is enabled or smart wallet is added
-  if (restProps.guestMode || wallets.find((w) => w.id === "SmartWallet")) {
-    // add only if it's not already added
-    if (!wallets.find((w) => w.id === localWalletObj.id)) {
-      wallets.push(localWalletObj);
-    }
-  }
+  const wallets: ConfiguredWallet[] = supportedWallets || defaultWallets;
 
   return (
     <WalletUIStatesProvider theme={theme}>
@@ -86,7 +75,7 @@ export const ThirdwebProvider = <
           {...restProps}
         >
           {children}
-          <ConnectModal guestMode={restProps.guestMode} />
+          <ConnectModal />
         </ThirdwebProviderCore>
       </ThemeProvider>
     </WalletUIStatesProvider>

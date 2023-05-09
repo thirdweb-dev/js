@@ -1,5 +1,5 @@
 import { normalizeChainId } from "../../../lib/wagmi-core";
-import { ConnectParams, TWConnector } from "../../interfaces/tw-connector";
+import { ConnectParams, Connector } from "../../interfaces/connector";
 import type { LocalWalletConnectionArgs } from "../../wallets/local-wallet";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { Signer } from "ethers";
@@ -15,7 +15,7 @@ export type LocalWalletConnectorOptions = {
   thirdwebApiKey?: string;
 };
 
-export class LocalWalletConnector extends TWConnector<LocalWalletConnectionArgs> {
+export class LocalWalletConnector extends Connector<LocalWalletConnectionArgs> {
   readonly id: string = "local_wallet";
   readonly name: string = "Local Wallet";
   options: LocalWalletConnectorOptions;

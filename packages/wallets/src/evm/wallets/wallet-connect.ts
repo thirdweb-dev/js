@@ -1,9 +1,10 @@
-import type { ConnectorData } from "../../lib/wagmi-core";
+import type { WagmiConnectorData } from "../../lib/wagmi-core";
 import type { WalletConnectConnector } from "../connectors/wallet-connect";
-import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
+import { Connector, WagmiAdapter } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { TW_WC_PROJECT_ID } from "../constants/wc";
+import { walletIds } from "../constants/walletIds";
 
 export type WalletConnectOptions = {
   projectId?: string;
@@ -14,9 +15,9 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
   #walletConnectConnector?: WalletConnectConnector;
   #provider?: WalletConnectProvider;
 
-  connector?: TWConnector;
+  connector?: Connector;
 
-  static id = "walletConnect";
+  static id = walletIds.walletConnect;
 
   static meta = {
     name: "WalletConnect",
@@ -38,7 +39,7 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
     this.qrcode = options?.qrcode === false ? false : true;
   }
 
-  protected async getConnector(): Promise<TWConnector> {
+  protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
       // import the connector dynamically
       const { WalletConnectConnector } = await import(
@@ -66,7 +67,7 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
     }
   };
 
-  #onConnect = (data: ConnectorData<WalletConnectProvider>) => {
+  #onConnect = (data: WagmiConnectorData<WalletConnectProvider>) => {
     this.#provider = data.provider;
     if (!this.#provider) {
       throw new Error("WalletConnect provider not found after connecting.");

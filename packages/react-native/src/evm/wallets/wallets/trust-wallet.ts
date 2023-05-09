@@ -1,17 +1,15 @@
 import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
 import { TW_WC_PROJECT_ID } from "../../constants/walletConnect";
-import { formatDisplayUri } from "../../utils/uri";
+import { formatWalletConnectDisplayUri } from "../../utils/uri";
 import type {
   WalletConnectOptions,
   WalletOptions,
 } from "@thirdweb-dev/wallets";
 import {
   WalletOptions as WalletOptionsRC,
-  Wallet,
+  ConfiguredWallet,
 } from "@thirdweb-dev/react-core";
-import {
-  WalletConnect,
-} from "@thirdweb-dev/wallets";
+import { WalletConnect } from "@thirdweb-dev/wallets";
 import { Linking } from "react-native";
 
 type WC2Options = Omit<
@@ -53,11 +51,11 @@ export class TrustWallet extends WalletConnect {
     const links = TrustWallet.meta.links;
 
     if (uri) {
-      const fullUrl = formatDisplayUri(uri, links);
+      const fullUrl = formatWalletConnectDisplayUri(uri, links);
 
       Linking.openURL(fullUrl);
     } else {
-      const fullUrl = formatDisplayUri("", links);
+      const fullUrl = formatWalletConnectDisplayUri("", links);
 
       Linking.openURL(fullUrl);
     }
@@ -69,5 +67,5 @@ export const trustWallet = () => {
     id: TrustWallet.id,
     meta: TrustWallet.meta,
     create: (options: WalletOptionsRC) => new TrustWallet(options),
-  } satisfies Wallet;
+  } satisfies ConfiguredWallet;
 };

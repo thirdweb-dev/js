@@ -29,7 +29,6 @@ export const WalletDetailsModalHeader = ({
 
   const onAddressPress = async () => {
     await Clipboard.setStringAsync(address);
-
     onAddressCopied?.();
   };
 
@@ -47,12 +46,15 @@ export const WalletDetailsModalHeader = ({
           <Box
             flexDirection="row"
             mr="sm"
-            gap="xs"
             justifyContent="center"
             alignItems="center"
           >
-            <Address address={address} />
-            <CopyIcon size={14} color={theme.colors.textSecondary} />
+            <Address mr="xs" address={address} />
+            <CopyIcon
+              width={14}
+              height={14}
+              color={theme.colors.textSecondary}
+            />
           </Box>
           <Text variant="bodySmallSecondary">
             {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
@@ -64,7 +66,8 @@ export const WalletDetailsModalHeader = ({
         ) : (
           <Icon
             type="disconnect"
-            size={18}
+            width={18}
+            height={18}
             onPress={onDisconnectPress}
             color={theme.colors.iconHighlight}
           />

@@ -27,7 +27,8 @@ export const ModalHeaderTextClose = ({
         )}
         <Icon
           type="close"
-          size={14}
+          width={14}
+          height={14}
           color={theme.colors.iconSecondary}
           onPress={onClose}
         />

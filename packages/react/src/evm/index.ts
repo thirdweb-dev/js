@@ -1,4 +1,5 @@
 export { useSafe } from "./connectors/gnosis";
+export { useMagic } from "./connectors/magic";
 
 export { ConnectWallet } from "../wallet/ConnectWallet/ConnectWallet";
 export { NetworkSelector } from "../wallet/ConnectWallet/NetworkSelector";

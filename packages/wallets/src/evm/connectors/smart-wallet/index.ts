@@ -1,5 +1,5 @@
 import { Chain } from "@thirdweb-dev/chains";
-import { ConnectParams, TWConnector } from "../../interfaces/tw-connector";
+import { ConnectParams, Connector } from "../../interfaces/connector";
 import { ERC4337EthersProvider } from "./lib/erc4337-provider";
 import { getVerifyingPaymaster } from "./lib/paymaster";
 import { create4337Provider } from "./lib/provider-utils";
@@ -13,7 +13,7 @@ import {
 import { ENTRYPOINT_ADDRESS } from "./lib/constants";
 import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
-import { BigNumber, providers } from "ethers";
+import { BigNumber, ethers, providers } from "ethers";
 import {
   getChainProvider,
   SmartContract,
@@ -23,7 +23,7 @@ import {
 import { AccountAPI } from "./lib/account";
 import { DEFAULT_WALLET_API_KEY } from "../../constants/keys";
 
-export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs> {
+export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   private config: SmartWalletConfig;
   private aaProvider: ERC4337EthersProvider | undefined;
   private accountApi: AccountAPI | undefined;
@@ -171,7 +171,10 @@ export class SmartWalletConnector extends TWConnector<SmartWalletConnectionArgs>
   private defaultFactoryInfo(): FactoryContractInfo {
     return {
       createAccount: async (factory: SmartContract, owner: string) => {
-        return factory.prepare("createAccount", [owner]);
+        return factory.prepare("createAccount", [
+          owner,
+          ethers.utils.toUtf8Bytes(""),
+        ]);
       },
       getAccountAddress: async (factory, owner) => {
         return factory.call("getAddress", [owner]);

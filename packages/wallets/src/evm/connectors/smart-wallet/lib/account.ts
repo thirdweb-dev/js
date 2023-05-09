@@ -62,7 +62,7 @@ export class AccountAPI extends BaseAccountAPI {
         "ETH",
       );
     } catch (e) {
-      console.log("Cost to create account: unknown");
+      console.error("Cost to create account: unknown", e);
     }
     return hexConcat([factory.getAddress(), tx.encode()]);
   }

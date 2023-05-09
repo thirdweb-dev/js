@@ -343,8 +343,8 @@ importers:
   packages/contracts-js:
     dependencies:
       '@thirdweb-dev/contracts':
-        specifier: 3.4.6-1
-        version: 3.4.6-1
+        specifier: 3.4.7-0
+        version: 3.4.7-0
     devDependencies:
       '@babel/preset-env':
         specifier: ^7.18.10
@@ -605,6 +605,9 @@ importers:
       '@thirdweb-dev/chains':
         specifier: workspace:*
         version: link:../chains
+      '@thirdweb-dev/generated-abis':
+        specifier: workspace:^
+        version: link:../generated-abis
       '@thirdweb-dev/sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -940,17 +943,17 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@metaplex-foundation/amman':
-        specifier: ^0.12.0
+        specifier: ^0.12.1
         version: 0.12.1(typescript@4.9.5)
       '@metaplex-foundation/amman-client':
-        specifier: ^0.2.1
+        specifier: ^0.2.4
         version: 0.2.4
       '@metaplex-foundation/js':
-        specifier: ^0.17.6
-        version: 0.17.12
+        specifier: ^0.19.2
+        version: 0.19.2
       '@metaplex-foundation/mpl-token-metadata':
-        specifier: ^2.3.3
-        version: 2.9.1
+        specifier: ^2.11
+        version: 2.11.0
       '@microsoft/api-documenter':
         specifier: ^7.19.4
         version: 7.21.5(@types/node@18.15.3)
@@ -6147,18 +6150,20 @@ packages:
     resolution: {integrity: sha512-S9RulC2fFCFOQraz61bij+5YCHhSO9llJegK8c8Y6731fSi6snUSQJdCUqYS8AIgR0TKbQvdvgSyIIdbDFZbBA==}
     dev: true
 
-  /@metaplex-foundation/js@0.17.12:
-    resolution: {integrity: sha512-PVGAQSGYGIermfCaRS+7W64YdyHf987Juc1QfQNmnuaolYiyYOibrOmnPIfK45MIbDSQzuREi2r8qwe+D4MDMA==}
+  /@metaplex-foundation/js@0.19.2:
+    resolution: {integrity: sha512-649aBZtKTokjnZpaG10bp095Oh0jV/Yfau1/eoZRB3muqFjFwJ8KDpK8tmqIPIJBwBUGvJlzruv6M/8R/wIPaQ==}
     dependencies:
       '@bundlr-network/client': 0.8.9(debug@4.3.4)
       '@metaplex-foundation/beet': 0.7.1
       '@metaplex-foundation/mpl-auction-house': 2.5.0
+      '@metaplex-foundation/mpl-bubblegum': 0.6.2
       '@metaplex-foundation/mpl-candy-guard': 0.3.2
       '@metaplex-foundation/mpl-candy-machine': 5.1.0
       '@metaplex-foundation/mpl-candy-machine-core': 0.1.2
-      '@metaplex-foundation/mpl-token-metadata': 2.9.1
+      '@metaplex-foundation/mpl-token-metadata': 2.11.0
       '@noble/ed25519': 1.7.3
       '@noble/hashes': 1.2.0
+      '@solana/spl-account-compression': 0.1.8(@solana/web3.js@1.73.3)
       '@solana/spl-token': 0.3.7(@solana/web3.js@1.73.3)
       '@solana/web3.js': 1.73.3
       bignumber.js: 9.1.1
@@ -6188,6 +6193,25 @@ packages:
       '@solana/spl-token': 0.3.7(@solana/web3.js@1.73.3)
       '@solana/web3.js': 1.73.3
       bn.js: 5.2.1
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - supports-color
+      - utf-8-validate
+    dev: true
+
+  /@metaplex-foundation/mpl-bubblegum@0.6.2:
+    resolution: {integrity: sha512-4tF7/FFSNtpozuIGD7gMKcqK2D49eVXZ144xiowC5H1iBeu009/oj2m8Tj6n4DpYFKWJ2JQhhhk0a2q7x0Begw==}
+    dependencies:
+      '@metaplex-foundation/beet': 0.7.1
+      '@metaplex-foundation/beet-solana': 0.4.0
+      '@metaplex-foundation/cusper': 0.0.2
+      '@metaplex-foundation/mpl-token-metadata': 2.11.0
+      '@solana/spl-account-compression': 0.1.8(@solana/web3.js@1.73.3)
+      '@solana/spl-token': 0.1.8
+      '@solana/web3.js': 1.73.3
+      bn.js: 5.2.1
+      js-sha3: 0.8.0
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -6240,8 +6264,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@metaplex-foundation/mpl-token-metadata@2.9.1:
-    resolution: {integrity: sha512-QmeWBG7y2Uu9FyD1JiclPmJtkYA1sd/Vh9US9H9zTGNWnyogM60hqZ9yVcibvkO+aSsWd0ZJIsMXZlewXIx0IQ==}
+  /@metaplex-foundation/mpl-token-metadata@2.11.0:
+    resolution: {integrity: sha512-pwuufw3QuSk0Z/oOmB7gpnlxiIR0bc5RVHLEpwOJ5/4KHEq7PIFxVsNcwDFzLoZJWTcQdvwZTy0d1J/qJMoxxg==}
     dependencies:
       '@metaplex-foundation/beet': 0.7.1
       '@metaplex-foundation/beet-solana': 0.4.0
@@ -8465,11 +8489,48 @@ packages:
     dependencies:
       buffer: 6.0.3
 
+  /@solana/spl-account-compression@0.1.8(@solana/web3.js@1.73.3):
+    resolution: {integrity: sha512-vsvsx358pVFPtyNd8zIZy0lezR0NuvOykQ29Zq+8oto+kHfTXMGXXQ1tKHUYke6XkINIWLFVg/jDi+1D9RYaqQ==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      '@solana/web3.js': ^1.50.1
+    dependencies:
+      '@metaplex-foundation/beet': 0.7.1
+      '@metaplex-foundation/beet-solana': 0.4.0
+      '@solana/web3.js': 1.73.3
+      bn.js: 5.2.1
+      borsh: 0.7.0
+      js-sha3: 0.8.0
+      typescript-collections: 1.3.3
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - supports-color
+      - utf-8-validate
+    dev: true
+
   /@solana/spl-token-registry@0.2.4574:
     resolution: {integrity: sha512-JzlfZmke8Rxug20VT/VpI2XsXlsqMlcORIUivF+Yucj7tFi7A0dXG7h+2UnD0WaZJw8BrUz2ABNkUnv89vbv1A==}
     engines: {node: '>=10'}
     dependencies:
       cross-fetch: 3.0.6
+    dev: true
+
+  /@solana/spl-token@0.1.8:
+    resolution: {integrity: sha512-LZmYCKcPQDtJgecvWOgT/cnoIQPWjdH+QVyzPcFvyDUiT0DiRjZaam4aqNUyvchLFhzgunv3d9xOoyE34ofdoQ==}
+    engines: {node: '>= 10'}
+    dependencies:
+      '@babel/runtime': 7.21.0
+      '@solana/web3.js': 1.73.3
+      bn.js: 5.2.1
+      buffer: 6.0.3
+      buffer-layout: 1.2.2
+      dotenv: 10.0.0
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - supports-color
+      - utf-8-validate
     dev: true
 
   /@solana/spl-token@0.2.0:
@@ -9644,8 +9705,8 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  /@thirdweb-dev/contracts@3.4.6-1:
-    resolution: {integrity: sha512-v6tDS0+sTdlRJinep8nYRJlbsO7hbmIIUzEzBIYuFOxSlw/xuEO6xAfgNB8k3oc3n0NerDop2LQOfTxSVLBK6Q==}
+  /@thirdweb-dev/contracts@3.4.7-0:
+    resolution: {integrity: sha512-yMom2CiaHuj9UZdvbG4EMq1XKAji7GfWfricgIIK+cnBwQoI1PnPwKVMko/4V/h0Jw9p3yZDL6BTscjPSlnL2Q==}
     dev: false
 
   /@tootallnate/once@1.1.2:
@@ -14778,7 +14839,6 @@ packages:
   /dotenv@10.0.0:
     resolution: {integrity: sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==}
     engines: {node: '>=10'}
-    dev: false
 
   /dotenv@8.6.0:
     resolution: {integrity: sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g==}
@@ -27154,6 +27214,10 @@ packages:
     resolution: {integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==}
     dependencies:
       is-typedarray: 1.0.0
+
+  /typescript-collections@1.3.3:
+    resolution: {integrity: sha512-7sI4e/bZijOzyURng88oOFZCISQPTHozfE2sUu5AviFYk5QV7fYGb6YiDl+vKjF/pICA354JImBImL9XJWUvdQ==}
+    dev: true
 
   /typescript@4.8.4:
     resolution: {integrity: sha512-QCh+85mCy+h0IGff8r5XWzOVSbBO+KfeYrMQh7NJ58QujwcE22u+NUSmUxqF+un70P9GXKxa2HCNiTTMJknyjQ==}

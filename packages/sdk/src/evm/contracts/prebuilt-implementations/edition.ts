@@ -418,7 +418,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
     functionName: string & TMethod,
     args?: Parameters<TokenERC1155["functions"][TMethod]>,
     overrides?: CallOverrides,
-  ): Promise<any> {
+  ): Promise<ReturnType<TokenERC1155["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, args, overrides);
   }
 }

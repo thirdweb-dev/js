@@ -789,7 +789,7 @@ export class Pack extends StandardErc1155<PackContract> {
     functionName: string & TMethod,
     args?: any[] & Parameters<PackContract["functions"][TMethod]>,
     overrides?: CallOverrides,
-  ): Promise<any> {
+  ): Promise<ReturnType<PackContract["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, args, overrides);
   }
 

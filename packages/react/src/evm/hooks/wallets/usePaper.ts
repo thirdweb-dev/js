@@ -1,5 +1,5 @@
 import { useConnect, useWallet } from "@thirdweb-dev/react-core";
-import type { PaperWallet } from "@thirdweb-dev/wallets";
+import { PaperWallet, walletIds } from "@thirdweb-dev/wallets";
 import { useCallback, useEffect } from "react";
 import {
   useQuery,
@@ -15,7 +15,7 @@ export function usePaperWallet() {
       const { paperWallet } = await import(
         "../../../wallet/wallets/paperWallet"
       );
-      connect(paperWallet({ clientId: options.clientId }), options);
+      return connect(paperWallet({ clientId: options.clientId }), options);
     },
     [connect],
   );
@@ -28,7 +28,7 @@ export function usePaperWalletUserEmail(): UseQueryResult<string, string> {
   const emailQuery = useQuery<string, string>(
     [wallet?.walletId, "paper-email"],
     () => {
-      if (!wallet || wallet.walletId !== "PaperWallet") {
+      if (!wallet || wallet.walletId !== walletIds.paper) {
         throw "Not connected to Paper Wallet";
       }
       return (wallet as PaperWallet).getEmail();

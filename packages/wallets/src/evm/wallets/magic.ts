@@ -1,4 +1,4 @@
-import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
+import { Connector, WagmiAdapter } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import { MagicAuthOptions } from "../connectors/magic/types";
 import type {
@@ -6,16 +6,18 @@ import type {
   MagicAuthConnector as MagicAuthConnectorType,
 } from "../connectors/magic";
 import { OAuthProvider as _OAuthProvider } from "@magic-ext/oauth";
+import { walletIds } from "../constants/walletIds";
 
 export type MagicLinkAdditionalOptions = MagicAuthOptions;
 export type MagicLinkOptions = WalletOptions<MagicAuthOptions>;
+export type MagicLinkConnectOptions = MagicAuthConnectOptions;
 export type MagicOAuthProvider = _OAuthProvider;
 
 export class MagicLink extends AbstractClientWallet<
   MagicLinkOptions,
   MagicAuthConnectOptions
 > {
-  connector?: TWConnector;
+  connector?: Connector;
   magicConnector?: MagicAuthConnectorType;
 
   static meta = {
@@ -24,7 +26,7 @@ export class MagicLink extends AbstractClientWallet<
     name: "Magic Link",
   };
 
-  static id = "magicLink" as const;
+  static id = walletIds.magicLink;
 
   public get walletName() {
     return "Magic Link" as const;
@@ -51,7 +53,7 @@ export class MagicLink extends AbstractClientWallet<
     return this.connector;
   }
 
-  protected async getConnector(): Promise<TWConnector> {
+  protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
       return await this.initializeConnector();
     }
@@ -80,5 +82,17 @@ export class MagicLink extends AbstractClientWallet<
     const magic = this.getMagic();
     await magic.user.logout();
     return super.disconnect();
+  }
+
+  async connect(options: MagicAuthConnectOptions) {
+    if ("email" in options && this.options.emailLogin === false) {
+      throw new Error("Email login is disabled");
+    }
+
+    if ("phoneNumber" in options && this.options.smsLogin === false) {
+      throw new Error("SMS login is disabled");
+    }
+
+    return super.connect(options);
   }
 }

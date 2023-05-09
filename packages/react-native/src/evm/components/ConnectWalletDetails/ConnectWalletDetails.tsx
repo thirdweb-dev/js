@@ -10,10 +10,13 @@ import { NetworkButton } from "./NetworkButton";
 import { WalletDetailsModalHeader } from "./WalletDetailsModalHeader";
 import { useWallet, useBalance, useDisconnect } from "@thirdweb-dev/react-core";
 import { useActiveChain } from "@thirdweb-dev/react-core/evm";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ExportLocalWalletModal } from "./ExportLocalWalletModal";
 import { Toast } from "../base/Toast";
+import { LocalWallet, SmartWallet, walletIds } from "@thirdweb-dev/wallets";
+import { SmartWalletAdditionalActions } from "./SmartWalletAdditionalActions";
+import { useSmartWallet } from "../../providers/context-provider";
 
 export type ConnectWalletDetailsProps = {
   address: string;
@@ -28,9 +31,9 @@ export const ConnectWalletDetails = ({
     useState(false);
   const [isDisconnecting, setIsDisconnecting] = useState(false);
   const [addressCopied, setAddressCopied] = useState(false);
-
   const activeWallet = useWallet();
   const disconnect = useDisconnect();
+  const [smartWallet, setSmartWallet] = useSmartWallet();
   const chain = useActiveChain();
   const balanceQuery = useBalance();
 
@@ -52,6 +55,7 @@ export const ConnectWalletDetails = ({
     setIsDisconnecting(true);
     disconnect().finally(() => {
       setIsDisconnecting(false);
+      setSmartWallet?.(undefined);
     });
   };
 
@@ -70,9 +74,9 @@ export const ConnectWalletDetails = ({
     setIsExportModalVisible(false);
   };
 
-  const onExportLocalWalletPress = () => {
+  const onExportLocalWalletPress = useCallback(() => {
     setIsExportModalVisible(true);
-  };
+  }, []);
 
   const onExportModalClose = () => {
     setIsExportModalVisible(false);
@@ -81,6 +85,48 @@ export const ConnectWalletDetails = ({
   const onAddressCopied = () => {
     setAddressCopied(true);
   };
+
+  const getAdditionalActions = useCallback(() => {
+    if (activeWallet?.walletId === SmartWallet.id || smartWallet) {
+      return (
+        <SmartWalletAdditionalActions
+          onExportPress={onExportLocalWalletPress}
+        />
+      );
+    }
+
+    if (activeWallet?.walletId === walletIds.localWallet) {
+      return (
+        <>
+          <View style={styles.currentNetwork}>
+            <Text variant="bodySmallSecondary">Additional Actions</Text>
+          </View>
+          <BaseButton
+            backgroundColor="background"
+            borderColor="border"
+            mb="sm"
+            style={styles.exportWallet}
+            onPress={onExportLocalWalletPress}
+          >
+            <PocketWalletIcon size={16} />
+            <View style={styles.exportWalletInfo}>
+              <Text variant="bodySmall">Backup wallet</Text>
+            </View>
+          </BaseButton>
+
+          {activeWallet?.walletId === LocalWallet.id ? (
+            <Text variant="error">
+              {
+                "This is a temporary guest wallet. Download a backup if you don't want to lose access to it."
+              }
+            </Text>
+          ) : null}
+        </>
+      );
+    }
+
+    return null;
+  }, [activeWallet?.walletId, onExportLocalWalletPress, smartWallet]);
 
   return (
     <>
@@ -106,25 +152,7 @@ export const ConnectWalletDetails = ({
           chainName={chain?.name || "Unknown Network"}
           onPress={onChangeNetworkPress}
         />
-        {activeWallet?.walletId.toLowerCase().includes("localwallet") ? (
-          <>
-            <View style={styles.currentNetwork}>
-              <Text variant="bodySmallSecondary">Additional Actions</Text>
-            </View>
-            <BaseButton
-              backgroundColor="background"
-              borderColor="border"
-              mb="sm"
-              style={styles.exportWallet}
-              onPress={onExportLocalWalletPress}
-            >
-              <PocketWalletIcon size={16} />
-              <View style={styles.exportWalletInfo}>
-                <Text variant="bodySmall">Export wallet</Text>
-              </View>
-            </BaseButton>
-          </>
-        ) : null}
+        {getAdditionalActions()}
         {addressCopied === true ? (
           <Toast text={"Address copied to clipboard"} />
         ) : null}
@@ -146,7 +174,11 @@ export const ConnectWalletDetails = ({
             {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
             {balanceQuery.data?.symbol}
           </Text>
-          <Address variant="bodySmallSecondary" address={address} />
+          {activeWallet?.walletId === LocalWallet.id ? (
+            <Text variant="error">Guest</Text>
+          ) : (
+            <Address variant="bodySmallSecondary" address={address} />
+          )}
         </View>
         <WalletIcon size={32} iconUri={activeWallet?.getMeta().iconURL || ""} />
       </BaseButton>

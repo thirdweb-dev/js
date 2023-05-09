@@ -4,12 +4,13 @@ import {
   ProviderRpcError,
   SwitchChainError,
   UserRejectedRequestError,
-  Connector,
+  WagmiConnector,
 } from "../../../lib/wagmi-core";
 import type { Chain } from "@thirdweb-dev/chains";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { EthereumProviderOptions } from "@walletconnect/ethereum-provider/dist/types/EthereumProvider";
 import { providers, utils } from "ethers";
+import { walletIds } from "../../constants/walletIds";
 
 type WalletConnectOptions = {
   projectId: EthereumProviderOptions["projectId"];
@@ -64,12 +65,12 @@ const REQUESTED_CHAINS_KEY = "wagmi.requestedChains";
 const ADD_ETH_CHAIN_METHOD = "wallet_addEthereumChain";
 const LAST_USED_CHAIN_ID = "last-used-chain-id";
 
-export class WalletConnectConnector extends Connector<
+export class WalletConnectConnector extends WagmiConnector<
   WalletConnectProvider,
   WalletConnectOptions,
   WalletConnectSigner
 > {
-  readonly id = "walletConnect";
+  readonly id = walletIds.walletConnect;
   readonly name = "WalletConnect";
   readonly ready = true;
 
@@ -127,7 +128,8 @@ export class WalletConnectConnector extends Connector<
         await provider.connect({
           pairingTopic,
           chains: [targetChainId],
-          optionalChains: optionalChains.length > 0 ? optionalChains : [targetChainId],
+          optionalChains:
+            optionalChains.length > 0 ? optionalChains : [targetChainId],
         });
 
         this.#setRequestedChainsIds(this.chains.map(({ chainId }) => chainId));
