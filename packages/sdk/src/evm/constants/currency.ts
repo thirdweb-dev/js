@@ -32,7 +32,7 @@ export const NATIVE_TOKENS: Record<number, NativeToken> = {
       symbol: "WETH",
     },
   },
-  [ChainId.Sepolia]: {
+11155111: {
     name: "Sepolia Ether",
     symbol: "SEP",
     decimals: 18,

@@ -51,7 +51,7 @@ export const CONTRACT_ADDRESSES: Record<
     twBYOCRegistry: "0xB1Bd9d7942A250BA2Dce27DD601F2ED4211A60C4",
   },
   // TODO
-  [ChainId.Sepolia]: {
+ 11155111: {
     openzeppelinForwarder: constants.AddressZero,
     openzeppelinForwarderEOA: constants.AddressZero,
     biconomyForwarder: constants.AddressZero,

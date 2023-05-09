@@ -7,7 +7,6 @@ import { defaultChains } from "@thirdweb-dev/chains";
 export enum ChainId {
   Mainnet = 1,
   Goerli = 5,
-  Sepolia = 11155111,
   Polygon = 137,
   Mumbai = 80001,
   Localhost = 1337,
@@ -30,7 +29,6 @@ export enum ChainId {
 export type SUPPORTED_CHAIN_ID =
   | ChainId.Mainnet
   | ChainId.Goerli
-  | ChainId.Sepolia
   | ChainId.Mumbai
   | ChainId.Polygon
   | ChainId.Fantom
