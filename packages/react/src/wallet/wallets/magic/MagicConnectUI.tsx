@@ -52,6 +52,8 @@ export const MagicConnectUI = (props: MagicConnectUIProps) => {
   if (showUI === "sms") {
     return (
       <SMSConnect
+        close={props.close}
+        open={props.open}
         magicLinkWallet={props.magicWallet}
         onBack={() => {
           if (firstScreen === "sms") {
@@ -60,7 +62,7 @@ export const MagicConnectUI = (props: MagicConnectUIProps) => {
             setShowUI(firstScreen);
           }
         }}
-        onConnect={props.done}
+        onConnect={props.close}
       />
     );
   }
@@ -68,6 +70,8 @@ export const MagicConnectUI = (props: MagicConnectUIProps) => {
   if (showUI === "email") {
     return (
       <EmailConnect
+        close={props.close}
+        open={props.open}
         magicLinkWallet={props.magicWallet}
         onBack={() => {
           if (firstScreen === "email") {
@@ -76,7 +80,7 @@ export const MagicConnectUI = (props: MagicConnectUIProps) => {
             setShowUI(firstScreen);
           }
         }}
-        onConnect={props.done}
+        onConnect={props.close}
       />
     );
   }

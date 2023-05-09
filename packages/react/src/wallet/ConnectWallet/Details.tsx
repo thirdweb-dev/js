@@ -152,7 +152,6 @@ export const ConnectedWalletDetails: React.FC<{
       }
     >
       <MenuButton
-        id="current-network"
         type="button"
         disabled={disableSwitchChain}
         onClick={() => {
@@ -254,10 +253,42 @@ export const ConnectedWalletDetails: React.FC<{
 
       {/* Network Switcher */}
       <div>
-        <DropdownLabel htmlFor="current-network">Current Network</DropdownLabel>
+        <DropdownLabel>Current Network</DropdownLabel>
         <Spacer y="sm" />
         {networkSwitcherButton}
       </div>
+
+      {/* Switch to Personal Wallet for Safe */}
+      {personalWallet && (
+        <div>
+          <Spacer y="lg" />
+          <DropdownLabel>Switch to Personal Wallet</DropdownLabel>
+          <Spacer y="xs" />
+          <WalletSwitcher
+            wallet={personalWallet}
+            onSwitch={() => {
+              setWrapperWallet(activeWallet);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Switch to Wrapper Wallet */}
+      {wrapperWallet && (
+        <div>
+          <Spacer y="lg" />
+          <DropdownLabel>
+            Switch to {wrapperWallet.getMeta().name}
+          </DropdownLabel>
+          <Spacer y="xs" />
+          <WalletSwitcher
+            wallet={wrapperWallet}
+            onSwitch={() => {
+              setWrapperWallet(undefined);
+            }}
+          />
+        </div>
+      )}
 
       {/* Switch Account for Metamask */}
       {activeWallet?.walletId === walletIds.metamask && (
@@ -340,48 +371,6 @@ export const ConnectedWalletDetails: React.FC<{
             want to lose access to it
           </ErrorMessage>
         </>
-      )}
-
-      {/* Switch to Personal Wallet for Safe */}
-      {personalWallet && (
-        <div>
-          <Spacer y="lg" />
-          <DropdownLabel htmlFor="current-network">
-            Personal Wallet
-          </DropdownLabel>
-          <Spacer y="xs" />
-          <ToolTip tip="Switch To Personal Wallet">
-            <div>
-              <WalletSwitcher
-                wallet={personalWallet}
-                onSwitch={() => {
-                  setWrapperWallet(activeWallet);
-                }}
-              />
-            </div>
-          </ToolTip>
-        </div>
-      )}
-
-      {/* Switch to Wrapper Wallet */}
-      {wrapperWallet && (
-        <div>
-          <Spacer y="lg" />
-          <DropdownLabel htmlFor="current-network">
-            {wrapperWallet.getMeta().name}
-          </DropdownLabel>
-          <Spacer y="xs" />
-          <ToolTip tip={`Switch to ${wrapperWallet.getMeta().name}`}>
-            <div>
-              <WalletSwitcher
-                wallet={wrapperWallet}
-                onSwitch={() => {
-                  setWrapperWallet(undefined);
-                }}
-              />
-            </div>
-          </ToolTip>
-        </div>
       )}
     </div>
   );

@@ -21,6 +21,8 @@ import { iconSize, spacing } from "../../../design-system";
 import { MagicLinkWallet } from "./types";
 
 export const SMSConnect: React.FC<{
+  open: () => void;
+  close: () => void;
   onBack: () => void;
   onConnect: () => void;
   magicLinkWallet: MagicLinkWallet;
@@ -34,14 +36,23 @@ export const SMSConnect: React.FC<{
   const handleSmsConnect = async () => {
     const magicWallet = createInstance(props.magicLinkWallet);
     setIsConnecting(true);
+    props.close();
     const connectOptions = {
       chainId: twContext.activeChain?.chainId,
       phoneNumber,
     };
-    await magicWallet.connect(connectOptions);
-    setIsConnecting(false);
-    twContext.handleWalletConnect(magicWallet, connectOptions);
-    props.onConnect();
+    try {
+      twContext.setConnectionStatus("connecting");
+      await magicWallet.connect(connectOptions);
+      setIsConnecting(false);
+      twContext.handleWalletConnect(magicWallet, connectOptions);
+      props.onConnect();
+    } catch (e) {
+      console.error(e);
+      setIsConnecting(false);
+      twContext.setConnectionStatus("disconnected");
+      props.open();
+    }
   };
 
   const error = phoneNumber && !isValidPhoneNumber;

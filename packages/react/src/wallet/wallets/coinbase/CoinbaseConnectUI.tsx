@@ -13,13 +13,16 @@ type CoinbaseConnectUIProps = ConnectUIProps & {
   configuredWallet: ConfiguredWallet;
 };
 
-export const CoinbaseConnectUI = (props: CoinbaseConnectUIProps) => {
+export const CoinbaseConnectUI = ({
+  configuredWallet,
+  close,
+  goBack,
+}: CoinbaseConnectUIProps) => {
+  const connect = useConnect();
+  const { meta } = configuredWallet;
   const [screen, setScreen] = useState<
     "connecting" | "loading" | "scanning" | "get-started"
   >("loading");
-  const { configuredWallet, done } = props;
-  const connect = useConnect();
-  const { meta } = configuredWallet;
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -42,9 +45,10 @@ export const CoinbaseConnectUI = (props: CoinbaseConnectUIProps) => {
           connectPrompted.current = true;
           setScreen("connecting");
           await connect(configuredWallet);
-          done();
+          close();
         } catch (e) {
-          done();
+          goBack();
+          console.error(e);
         }
       }
 
@@ -58,12 +62,12 @@ export const CoinbaseConnectUI = (props: CoinbaseConnectUIProps) => {
         }
       }
     })();
-  }, [screen, configuredWallet, done, connect]);
+  }, [screen, configuredWallet, close, connect, goBack]);
 
   if (screen === "connecting" || screen === "loading") {
     return (
       <ConnectingScreen
-        onBack={props.goBack}
+        onBack={goBack}
         walletName={meta.name}
         walletIconURL={meta.iconURL}
         supportLink="https://help.coinbase.com/en/wallet/other-topics/troubleshooting-and-tips"
@@ -79,7 +83,7 @@ export const CoinbaseConnectUI = (props: CoinbaseConnectUIProps) => {
         chromeExtensionLink={meta.urls?.chrome}
         googlePlayStoreLink={meta.urls?.android}
         appleStoreLink={meta.urls?.ios}
-        onBack={props.goBack}
+        onBack={goBack}
       />
     );
   }
@@ -87,8 +91,8 @@ export const CoinbaseConnectUI = (props: CoinbaseConnectUIProps) => {
   if (screen === "scanning") {
     return (
       <CoinbaseScan
-        onBack={props.goBack}
-        onConnected={done}
+        onBack={goBack}
+        onConnected={close}
         onGetStarted={() => setScreen("get-started")}
         configuredWallet={configuredWallet}
       />
