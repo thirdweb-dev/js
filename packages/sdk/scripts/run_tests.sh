@@ -7,7 +7,7 @@ export PATH="/home/runner/.local/share/solana/install/active_release/bin:$PATH"
 solana --version
 pnpm run node:solana:start &
 attempts=0
-while ! curl 127.0.0.1:8900  &> /dev/null
+while ! curl 127.0.0.1:8899  &> /dev/null
 do
 	if [ $attempts -gt 30 ]; then
 		printf "%s" "timed out waiting for solana node"

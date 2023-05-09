@@ -66,11 +66,6 @@ export class Token {
    */
   async getMetadata(): Promise<TokenMetadata> {
     const mint = await this.getMint();
-    // const addr = this.metaplex.nfts().pdas().metadata({ mint: this.publicKey });
-    // const addr = findMetadataPda(this.publicKey);
-    // const account = await this.metaplex.rpc().getAccount(addr);
-    // const meta = toMetadata(toMetadataAccount(account));
-    console.log("mint", mint.address.toBase58());
     const meta = await this.metaplex.nfts().findByMint({
       mintAddress: mint.address,
     });

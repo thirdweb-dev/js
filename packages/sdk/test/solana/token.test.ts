@@ -13,7 +13,6 @@ describe("Token", async () => {
       initialSupply: 100,
     });
     token = await sdk.getToken(tokenAddr);
-    console.log("tokenAddr", tokenAddr);
   });
 
   it("fetch metadata", async () => {
