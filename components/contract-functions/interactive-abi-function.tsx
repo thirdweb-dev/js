@@ -7,8 +7,9 @@ import {
   Icon,
   Input,
 } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
 import { useContractWrite } from "@thirdweb-dev/react";
-import { AbiFunction, ValidContractInstance } from "@thirdweb-dev/sdk/evm";
+import { AbiFunction, SmartContract } from "@thirdweb-dev/sdk/evm";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
@@ -17,6 +18,7 @@ import { replaceIpfsUrl } from "lib/sdk";
 import { useEffect, useId, useMemo } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { FiPlay } from "react-icons/fi";
+import invariant from "tiny-invariant";
 import {
   Button,
   Card,
@@ -106,7 +108,18 @@ function formatContractCall(
 
 interface InteractiveAbiFunctionProps {
   abiFunction?: AbiFunction;
-  contract: ValidContractInstance;
+  contract: SmartContract;
+}
+
+function useDelayedRead(
+  contract: Required<SmartContract> | undefined,
+  functionName?: string,
+) {
+  return useMutation(async ({ args }: { args: any[] }) => {
+    invariant(contract, "Contract is required");
+    invariant(functionName, "functionName is required");
+    return contract?.call(functionName, args);
+  });
 }
 
 export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
@@ -145,15 +158,21 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
     isLoading: mutationLoading,
   } = useContractWrite(contract, abiFunction?.name);
 
+  const {
+    mutate: readFn,
+    data: readData,
+    isLoading: readLoading,
+  } = useDelayedRead(contract, abiFunction?.name);
+
   useEffect(() => {
     if (
       form.watch("params").length === 0 &&
       (abiFunction?.stateMutability === "view" ||
         abiFunction?.stateMutability === "pure")
     ) {
-      mutate({ args: [] });
+      readFn({ args: [] });
     }
-  }, [mutate, abiFunction?.stateMutability, form]);
+  }, [readFn, abiFunction?.stateMutability, form]);
 
   return (
     <FormProvider {...form}>
@@ -180,12 +199,20 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
           onSubmit={form.handleSubmit((d) => {
             if (d.params) {
               const formatted = formatContractCall(d.params);
-              mutate({
-                args: formatted,
-                overrides: d.value
-                  ? { value: utils.parseEther(d.value) }
-                  : undefined,
-              });
+              if (
+                contract &&
+                (abiFunction?.stateMutability === "view" ||
+                  abiFunction?.stateMutability === "pure")
+              ) {
+                readFn({ args: formatted });
+              } else {
+                mutate({
+                  args: formatted,
+                  overrides: d.value
+                    ? { value: utils.parseEther(d.value) }
+                    : undefined,
+                });
+              }
             }
           })}
         >
@@ -261,7 +288,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                 {formatError(error as any)}
               </Text>
             </>
-          ) : data !== undefined ? (
+          ) : data !== undefined || readData !== undefined ? (
             <>
               <Divider />
               <Heading size="label.sm">Output</Heading>
@@ -269,20 +296,21 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                 w="full"
                 position="relative"
                 language="json"
-                code={formatResponseData(data)}
+                code={formatResponseData(data || readData)}
               />
-              {typeof data === "string" && data?.startsWith("ipfs://") && (
-                <Text size="label.sm">
-                  <TrackedLink
-                    href={replaceIpfsUrl(data)}
-                    isExternal
-                    category="contract-explorer"
-                    label="open-in-gateway"
-                  >
-                    Open in gateway
-                  </TrackedLink>
-                </Text>
-              )}
+              {typeof readData === "string" &&
+                readData?.startsWith("ipfs://") && (
+                  <Text size="label.sm">
+                    <TrackedLink
+                      href={replaceIpfsUrl(readData)}
+                      isExternal
+                      category="contract-explorer"
+                      label="open-in-gateway"
+                    >
+                      Open in gateway
+                    </TrackedLink>
+                  </Text>
+                )}
             </>
           ) : null}
         </Flex>
@@ -294,7 +322,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
               isDisabled={!abiFunction}
               rightIcon={<Icon as={FiPlay} />}
               colorScheme="primary"
-              isLoading={mutationLoading}
+              isLoading={readLoading}
               type="submit"
               form={formId}
             >

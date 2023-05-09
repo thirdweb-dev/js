@@ -43,7 +43,6 @@ import {
 import { SnippetApiResponse } from "components/contract-tabs/code/types";
 import { utils } from "ethers";
 import { useSupportedChain } from "hooks/chains/configureChains";
-import { replaceTemplateValues } from "lib/deployment/template-values";
 import { isEnsName } from "lib/ens";
 import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton, getEVMThirdwebSDK } from "lib/sdk";

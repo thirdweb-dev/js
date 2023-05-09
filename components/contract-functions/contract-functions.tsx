@@ -11,7 +11,7 @@ import type {
   Abi,
   AbiEvent,
   AbiFunction,
-  ValidContractInstance,
+  SmartContract,
 } from "@thirdweb-dev/sdk/evm";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
 import { SourceFile } from "components/contract-components/types";
@@ -21,7 +21,7 @@ import { Heading } from "tw-components";
 interface ContractFunctionsOverview {
   functions?: AbiFunction[] | null;
   events?: AbiEvent[] | null;
-  contract?: ValidContractInstance;
+  contract?: SmartContract;
   sources?: SourceFile[];
   abi?: Abi;
   onlyFunctions?: boolean;
