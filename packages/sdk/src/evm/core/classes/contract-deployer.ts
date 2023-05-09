@@ -19,17 +19,11 @@ import {
   buildDeployTransactionFunction,
   buildTransactionFunction,
 } from "../../common/transactions";
-import {
-  APPROVED_IMPLEMENTATIONS,
-  EventType,
-  getApprovedImplementation,
-  getContractAddressByChainId,
-} from "../../constants";
+import { EventType, getContractAddressByChainId } from "../../constants";
 import {
   EditionDropInitializer,
   EditionInitializer,
   getContractName,
-  getContractTypeForRemoteName,
   MarketplaceInitializer,
   MarketplaceV3Initializer,
   MultiwrapInitializer,
@@ -75,7 +69,6 @@ import {
   ContractInterface,
   ethers,
 } from "ethers";
-import * as zk from "zksync-web3";
 import { EventEmitter } from "eventemitter3";
 import invariant from "tiny-invariant";
 import { z } from "zod";
@@ -83,7 +76,6 @@ import {
   DeploymentTransaction,
   PrecomputedDeploymentTransaction,
 } from "../../types/any-evm/deploy-data";
-import { twProxyArtifactZK } from "../../constants/temp-artifact/TWProxy";
 
 const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
 
@@ -652,30 +644,6 @@ export class ContractDeployer extends RPCConnectionHandler {
         implementationAbi,
       ).encodeFunctionData(initializerFunction, initializerArgs);
 
-      const chainId = (await this.getProvider().getNetwork()).chainId;
-      if (chainId === 280) {
-        // return this.deployContractWithAbi.prepare(
-        //   twProxyArtifactZK.abi,
-        //   twProxyArtifactZK.bytecode,
-        //   [resolvedAddress, encodedInitializer],
-        // );
-
-        console.log("args: ", resolvedAddress, encodedInitializer);
-        const proxyFactory = new zk.ContractFactory(
-          twProxyArtifactZK.abi,
-          twProxyArtifactZK.bytecode as BytesLike,
-          this.getSigner() as zk.Signer,
-          "create",
-        );
-        const proxy = await proxyFactory.deploy(
-          resolvedAddress,
-          encodedInitializer,
-        );
-        console.log("sent");
-        await proxy.deployed();
-        console.log("Proxy deployed at: ", proxy.address);
-      }
-
       const { TWProxy__factory } = await import(
         "@thirdweb-dev/contracts-js/factories/TWProxy__factory"
       );
@@ -797,35 +765,6 @@ export class ContractDeployer extends RPCConnectionHandler {
         !forceDirectDeploy
       ) {
         const chainId = (await this.getProvider().getNetwork()).chainId;
-
-        if (chainId === 280) {
-          const contractType = getContractTypeForRemoteName(
-            compilerMetadata.name,
-          );
-          invariant(contractType !== "custom", "Invalid contract type");
-          const implementationAddress = getApprovedImplementation(
-            chainId,
-            contractType,
-          );
-          invariant(implementationAddress, "Implementation not found");
-          const initializerParamTypes = extractFunctionParamsFromAbi(
-            compilerMetadata.abi,
-            extendedMetadata.factoryDeploymentData
-              .implementationInitializerFunction,
-          ).map((p) => p.type);
-
-          const paramValues = this.convertParamValues(
-            initializerParamTypes,
-            constructorParamValues,
-          );
-          return await this.deployProxy.prepare(
-            implementationAddress,
-            compilerMetadata.abi,
-            extendedMetadata.factoryDeploymentData
-              .implementationInitializerFunction,
-            paramValues,
-          );
-        }
 
         invariant(
           extendedMetadata.factoryDeploymentData
