@@ -7,6 +7,6 @@ export function isAddressZero(address: string): boolean {
   return (
     utils.isAddress(lowerCaseAddress) &&
     (lowerCaseAddress === constants.AddressZero ||
-      lowerCaseAddress === OtherAddressZero)
+      lowerCaseAddress === OtherAddressZero.toLowerCase())
   );
 }

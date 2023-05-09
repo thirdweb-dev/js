@@ -206,7 +206,7 @@ const RevokeApiKeyButton: React.FC<ApiKeyButtonProps> = ({ apiKey }) => {
 };
 
 const CopyApiKeyButton: React.FC<ApiKeyButtonProps> = ({ apiKey }) => {
-  const { onCopy, setValue } = useClipboard(apiKey);
+  const { onCopy } = useClipboard(apiKey);
   const trackEvent = useTrack();
   const toast = useToast();
 

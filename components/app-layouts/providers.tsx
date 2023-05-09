@@ -5,7 +5,6 @@ import {
   useEVMContractInfo,
 } from "@3rdweb-sdk/react/hooks/useActiveChainId";
 import { useQueryClient } from "@tanstack/react-query";
-import { Ethereum } from "@thirdweb-dev/chains";
 import {
   ThirdwebProvider,
   coinbaseWallet,

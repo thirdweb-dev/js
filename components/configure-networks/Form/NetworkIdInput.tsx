@@ -1,5 +1,5 @@
 import { NetworkConfigFormData } from "../ConfigureNetworkForm";
-import { ToolTipBox } from "./ToolTipBox";
+import { TooltipBox } from "./TooltipBox";
 import { FormControl, Input } from "@chakra-ui/react";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { UseFormReturn } from "react-hook-form";
@@ -28,7 +28,7 @@ export const NetworkIDInput: React.FC<{
     >
       <FormLabel display="flex">
         Network ID
-        <ToolTipBox
+        <TooltipBox
           content={
             <>
               <Text color="heading" mb={4}>

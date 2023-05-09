@@ -1,6 +1,5 @@
 import { KeyFeatureLayout } from "./key-features/KeyFeatureLayout";
 import { Box, SimpleGrid } from "@chakra-ui/react";
-import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { ReactNode } from "react";
 import { Heading, Text, TrackedLink } from "tw-components";
 

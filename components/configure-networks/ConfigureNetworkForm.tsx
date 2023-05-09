@@ -3,7 +3,7 @@ import { IconUpload } from "./Form/IconUpload";
 import { NetworkIDInput } from "./Form/NetworkIdInput";
 import { RemoveButton } from "./Form/RemoveButton";
 import { RpcInput } from "./Form/RpcInput";
-import { ToolTipBox } from "./Form/ToolTipBox";
+import { TooltipBox } from "./Form/TooltipBox";
 import {
   Flex,
   FormControl,
@@ -271,7 +271,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
           <FormControl>
             <FormLabel display="flex">
               Network type
-              <ToolTipBox
+              <TooltipBox
                 content={
                   <>
                     <Text color="heading" display="inline-block" mb={2}>

@@ -1,8 +1,12 @@
-import { Input, InputGroup, InputProps } from "@chakra-ui/react";
-import React from "react";
+import {
+  InputGroup,
+  NumberInput,
+  NumberInputField,
+  NumberInputProps,
+} from "@chakra-ui/react";
 
 interface PriceInputProps
-  extends Omit<InputProps, "onChange" | "value" | "onBlur" | "max" | "min"> {
+  extends Omit<NumberInputProps, "onChange" | "value" | "onBlur" | "max" | "min"> {
   value: string;
   onChange: (value: string) => void;
 }
@@ -15,14 +19,17 @@ export const PriceInput: React.FC<PriceInputProps> = ({
 }) => {
   return (
     <InputGroup>
-      <Input
-        step={0.000000000000000001}
-        type="number"
+      <NumberInput
+        defaultValue={0}
         isDisabled={isDisabled}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
         {...restInputProps}
-      />
+      >
+        <NumberInputField
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+
+        />
+      </NumberInput>
     </InputGroup>
   );
 };

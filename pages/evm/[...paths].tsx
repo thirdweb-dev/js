@@ -24,7 +24,6 @@ import { HomepageSection } from "components/product-pages/homepage/HomepageSecti
 import { SupportedChainsReadyContext } from "contexts/configured-chains";
 import { PrimaryDashboardButton } from "contract-ui/components/primary-dashboard-button";
 import { useContractRouteConfig } from "contract-ui/hooks/useRouteConfig";
-import { ConditionsNotSet } from "contract-ui/tabs/claim-conditions/components/conditions-not-set";
 import { ContractProgramSidebar } from "core-ui/sidebar/detail-page";
 import {
   useSupportedChainsRecord,
@@ -310,7 +309,6 @@ const EVMContractPage: ThirdwebNextPage = () => {
         activeRoute={activeRoute}
       />
       <Container pt={8} maxW="container.page">
-        <ConditionsNotSet address={contractAddress} />
         {activeRoute?.component && (
           <activeRoute.component contractAddress={contractAddress} />
         )}

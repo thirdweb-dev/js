@@ -16,7 +16,12 @@ export const MaxClaimablePerWalletInput: React.FC = () => {
     field,
     dropType,
     phaseIndex,
+    claimConditionType,
   } = useClaimConditionsFormContext();
+
+  if (claimConditionType === "creator" || claimConditionType === "specific") {
+    return null;
+  }
 
   return (
     <CustomFormControl
@@ -33,8 +38,9 @@ export const MaxClaimablePerWalletInput: React.FC = () => {
       helperText={
         !isClaimPhaseV1 ? (
           <>
-            This value applies for <strong>all</strong> wallets, and can be
-            overridden for specific wallets in the snapshot.
+            This value applies for <strong>all</strong> wallets
+            {claimConditionType !== "public" &&
+              ", and can be overridden for specific wallets in the snapshot"}.
           </>
         ) : null
       }

@@ -13,7 +13,6 @@ import { ProductCard } from "components/product-pages/common/ProductCard";
 import { ProductLearnMoreCard } from "components/product-pages/common/ProductLearnMoreCard";
 import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
-import { YoutubeEmbed } from "components/video-embed/YoutubeEmbed";
 import { replaceIpfsUrl } from "lib/sdk";
 import { PageId } from "page-id";
 import { FiArrowRight } from "react-icons/fi";

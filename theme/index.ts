@@ -174,6 +174,40 @@ const chakraTheme: Theme = extendTheme({
         },
       },
     },
+    NumberInput: {
+      defaultProps: {
+        variant: "filled",
+      },
+      variants: {
+        filled: {
+          field: {
+            borderWidth: "1px",
+            borderColor: "inputBorder",
+            background: "inputBg",
+            _hover: {
+              background: "inputBgHover",
+              borderColor: "blue.500",
+            },
+          },
+        },
+      },
+      sizes: {
+        xl: {
+          field: {
+            fontSize: "lg",
+            px: 4,
+            h: 14,
+            borderRadius: "md",
+          },
+          addon: {
+            fontSize: "lg",
+            px: 4,
+            h: 14,
+            borderRadius: "md",
+          },
+        },
+      },
+    },
     Textarea: {
       defaultProps: {
         variant: "filled",

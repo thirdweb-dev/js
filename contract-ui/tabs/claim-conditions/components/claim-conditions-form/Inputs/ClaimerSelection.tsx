@@ -23,6 +23,7 @@ export const ClaimerSelection = () => {
     setOpenSnapshotIndex: setOpenIndex,
     isAdmin,
     isColumn,
+    claimConditionType,
   } = useClaimConditionsFormContext();
 
   const handleClaimerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -84,10 +85,24 @@ export const ClaimerSelection = () => {
     }
   }
 
+  if (
+    !isClaimPhaseV1 &&
+    (claimConditionType === "public" || claimConditionType === "creator")
+  ) {
+    return null;
+  }
+
+  const label =
+    claimConditionType === "overrides"
+      ? "Add Override Snapshot"
+      : claimConditionType === "specific"
+      ? "Add Allowlist"
+      : `Who can claim ${isErc20 ? "tokens" : "NFTs"} during this phase?`;
+
   return (
     <CustomFormControl
       disabled={formDisabled}
-      label={`Who can claim ${isErc20 ? "tokens" : "NFTs"} during this phase?`}
+      label={label}
       error={
         form.getFieldState(`phases.${phaseIndex}.snapshot`, form.formState)
           .error
@@ -95,29 +110,29 @@ export const ClaimerSelection = () => {
       helperText={helperText}
     >
       <Flex direction={{ base: "column", md: "row" }} gap={4}>
-        {/* Select Wallet Eligibility */}
-        <Select
-          isDisabled={formDisabled}
-          w={{ base: "100%", md: "50%" }}
-          value={dropType}
-          onChange={handleClaimerChange}
-        >
-          <option value="any">Any wallet</option>
-          {!isClaimPhaseV1 ? (
-            <option value="overrides">Any wallet (with overrides)</option>
-          ) : null}
-          <option value="specific">Only specific wallets</option>
-        </Select>
+        {claimConditionType === "overrides" ||
+        claimConditionType === "specific" ? null : (
+          <Select
+            isDisabled={formDisabled}
+            w={{ base: "100%", md: "50%" }}
+            value={dropType}
+            onChange={handleClaimerChange}
+          >
+            <option value="any">Any wallet</option>
+            {!isClaimPhaseV1 ? (
+              <option value="overrides">Any wallet (with overrides)</option>
+            ) : null}
+            <option value="specific">Only specific wallets</option>
+          </Select>
+        )}
 
         {/* Edit or See Snapshot */}
         {field.snapshot ? (
           <Flex
-            w={{ base: "100%", md: "50%" }}
             direction={{
               base: "column",
               md: isColumn ? "column" : "row",
             }}
-            align="center"
             gap={1.5}
           >
             {/* disable the "Edit" button when form is disabled, but not when it's a "See" button */}
@@ -141,10 +156,15 @@ export const ClaimerSelection = () => {
               _light={{
                 color: field.snapshot?.length === 0 ? "red.500" : "green.500",
               }}
+              ml={2}
             >
               <Icon as={BsCircleFill} boxSize={2} />
               <Text size="body.sm" color="inherit">
-                <strong>{field.snapshot?.length} addresses</strong> in snapshot
+                <strong>
+                  {field.snapshot?.length} address
+                  {field.snapshot?.length === 1 ? "" : "es"}
+                </strong>{" "}
+                in snapshot
               </Text>
             </Flex>
           </Flex>

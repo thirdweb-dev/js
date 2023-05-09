@@ -1,6 +1,6 @@
 import { CustomFormControl } from "../common";
 import { useClaimConditionsFormContext } from "../index";
-import { Input } from "@chakra-ui/react";
+import { Flex, Input } from "@chakra-ui/react";
 import React from "react";
 import { Heading } from "tw-components";
 
@@ -14,7 +14,7 @@ export const PhaseNameInput: React.FC = () => {
   const inputValue = field.metadata?.name;
 
   if (isClaimPhaseV1) {
-    return <Heading size="label.lg">{inputValue || inputPlaceholder}</Heading>;
+    return null;
   }
 
   return (

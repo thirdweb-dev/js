@@ -6,7 +6,7 @@ import { HomepageSection } from "components/product-pages/homepage/HomepageSecti
 import { useTrack } from "hooks/analytics/useTrack";
 import Hero from "public/assets/landingpage/hero.png";
 import { BsLightningCharge } from "react-icons/bs";
-import { Heading, Link, LinkButton, Text } from "tw-components";
+import { Heading, Link, LinkButton } from "tw-components";
 
 export const HeroSection = () => {
   const trackEvent = useTrack();

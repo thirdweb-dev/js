@@ -3,7 +3,7 @@ import { Box } from "@chakra-ui/react";
 import { DropContract, useResetClaimConditions } from "@thirdweb-dev/react";
 import { ValidContractInstance } from "@thirdweb-dev/sdk/evm";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { ToolTipBox } from "components/configure-networks/Form/ToolTipBox";
+import { TooltipBox } from "components/configure-networks/Form/TooltipBox";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
@@ -65,7 +65,8 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
     >
       <TransactionButton
         colorScheme="secondary"
-        border="1px solid"
+        bg="bgBlack"
+        color="bgWhite"
         transactionCount={1}
         type="button"
         isLoading={resetClaimConditions.isLoading}
@@ -74,10 +75,10 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
         size="sm"
       >
         Reset Eligibility{" "}
-        <ToolTipBox
+        <TooltipBox
           iconColor="secondary.500"
           content={
-            <Text size="body.md" fontStyle="italic" mt={2}>
+            <Text>
               This contract&apos;s claim eligibility stores who has already
               claimed {isErc20 ? "tokens" : "NFTs"} from this contract and
               carries across claim phases. Resetting claim eligibility will
