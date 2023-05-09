@@ -8,6 +8,7 @@ const alchemyUrlMap = {
   // eth
   [ChainId.Mainnet]: `https://eth-mainnet.g.alchemy.com`,
   [ChainId.Goerli]: `https://eth-goerli.g.alchemy.com`,
+  11155111: `https://eth-sepolia.g.alchemy.com`,
   // polygon
   [ChainId.Polygon]: `https://polygon-mainnet.g.alchemy.com`,
   [ChainId.Mumbai]: `https://polygon-mumbai.g.alchemy.com`,
