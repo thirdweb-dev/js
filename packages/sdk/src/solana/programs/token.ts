@@ -1,16 +1,12 @@
 import { Amount, AmountSchema } from "../../core/schema/shared";
 import { CurrencyValue, TokenMetadata } from "../../core/schema/token";
-import { getCompositePluginABI } from "../../evm/common/plugin";
 import { TransactionResult } from "../types/common";
 import { toCurrencyValue } from "../utils/token";
 import { getNework } from "../utils/urls";
 import {
-  findMetadataPda,
   Metaplex,
   toBigNumber,
   token,
-  toMetadata,
-  toMetadataAccount,
 } from "@metaplex-foundation/js";
 import { getAccount, getAssociatedTokenAddress } from "@solana/spl-token";
 import { Connection, PublicKey } from "@solana/web3.js";
