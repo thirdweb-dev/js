@@ -11,7 +11,6 @@ import {
 import { enforceCreator } from "./helpers/creators-helper";
 import { Registry } from "./registry";
 import {
-  findMetadataPda,
   getSignerHistogram,
   Metaplex,
   sol,
@@ -20,10 +19,8 @@ import {
   TransactionBuilder,
 } from "@metaplex-foundation/js";
 import {
-  createCreateMetadataAccountV2Instruction,
   createCreateMetadataAccountV3Instruction,
   DataV2,
-  TokenStandard,
 } from "@metaplex-foundation/mpl-token-metadata";
 import { Keypair } from "@solana/web3.js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
