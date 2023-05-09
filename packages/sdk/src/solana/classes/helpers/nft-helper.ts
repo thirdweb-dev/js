@@ -1,3 +1,4 @@
+import { TokenStandard } from "@metaplex-foundation/mpl-token-metadata";
 import {
   QueryAllParams,
   QueryAllParamsSchema,
@@ -66,8 +67,11 @@ export class NFTHelper {
     nftAddress: string,
     quantity: number = 1,
   ): Promise<TransactionResult> {
-    const result = await this.metaplex.nfts().send({
-      mintAddress: new PublicKey(nftAddress),
+    const result = await this.metaplex.nfts().transfer({
+      nftOrSft: {
+        address: new PublicKey(nftAddress),
+        tokenStandard: TokenStandard.NonFungible,
+      },
       toOwner: new PublicKey(receiverAddress),
       amount: token(quantity, 0),
     });

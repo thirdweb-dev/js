@@ -1,5 +1,6 @@
 import { Amount, AmountSchema } from "../../core/schema/shared";
 import { CurrencyValue, TokenMetadata } from "../../core/schema/token";
+import { getCompositePluginABI } from "../../evm/common/plugin";
 import { TransactionResult } from "../types/common";
 import { toCurrencyValue } from "../utils/token";
 import { getNework } from "../utils/urls";
@@ -65,9 +66,14 @@ export class Token {
    */
   async getMetadata(): Promise<TokenMetadata> {
     const mint = await this.getMint();
-    const addr = findMetadataPda(this.publicKey);
-    const account = await this.metaplex.rpc().getAccount(addr);
-    const meta = toMetadata(toMetadataAccount(account));
+    // const addr = this.metaplex.nfts().pdas().metadata({ mint: this.publicKey });
+    // const addr = findMetadataPda(this.publicKey);
+    // const account = await this.metaplex.rpc().getAccount(addr);
+    // const meta = toMetadata(toMetadataAccount(account));
+    console.log("mint", mint.address.toBase58());
+    const meta = await this.metaplex.nfts().findByMint({
+      mintAddress: mint.address,
+    });
     return {
       ...meta.json,
       id: meta.address.toBase58(),
