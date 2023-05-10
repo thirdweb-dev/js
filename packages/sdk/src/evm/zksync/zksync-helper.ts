@@ -107,7 +107,7 @@ async function registerContractOnMultiChainRegistry(
       chainId,
       address,
     );
-    if (existingMeta && existingMeta != "") {
+    if (existingMeta && existingMeta !== "") {
       console.log("Contract already registered on multi chain registry");
       return true;
     }

@@ -148,6 +148,7 @@ export const CONTRACT_ADDRESSES: Record<
     twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
     twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
   },
+  // eslint-disable-next-line no-useless-computed-key
   [280]: {
     openzeppelinForwarder: "0x8cbc8B5d71702032904750A66AEfE8B603eBC538", // TODO update
     openzeppelinForwarderEOA: "0x7e80648EB2071E26937F9D42A513ccf4815fc702",
@@ -268,6 +269,7 @@ export const APPROVED_IMPLEMENTATIONS: Record<
     "token-drop": "",
     "signature-drop": "", // TODO
   },
+  // eslint-disable-next-line no-useless-computed-key
   [280]: {
     "nft-drop": "0xA8E28D98203848401A4f924358e6c337153D0f04",
     "edition-drop": "",
