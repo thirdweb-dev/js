@@ -1,3 +1,4 @@
+import { DEFAULT_API_KEY } from "../../../core/constants/urls";
 import {
   extractConstructorParams,
   extractFunctions,
@@ -386,7 +387,9 @@ export class ContractPublisher extends RPCConnectionHandler {
             const composite = await getCompositePluginABI(
               implementation,
               compilerMetadata.abi,
-              getChainProvider(parseInt(network), {}), // pass empty object for options instead of this.options
+              getChainProvider(parseInt(network), {
+                thirdwebApiKey: DEFAULT_API_KEY,
+              }),
               {}, // pass empty object for options instead of this.options
               this.storage,
             );
