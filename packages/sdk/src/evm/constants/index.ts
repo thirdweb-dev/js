@@ -4,3 +4,4 @@ export * from "./contract";
 export * from "./currency";
 export * from "./events";
 export * from "./urls";
+export * from "./contract-features";
