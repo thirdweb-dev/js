@@ -11,7 +11,10 @@ import {
   SDKOptions,
 } from "../schema";
 import { isFeatureEnabled } from "./feature-detection";
-import { fetchContractMetadataFromAddress } from "./metadata-resolver";
+import {
+  fetchContractMetadata,
+  fetchContractMetadataFromAddress,
+} from "./metadata-resolver";
 import { unique } from "./utils";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -81,6 +84,18 @@ export async function getCompositePluginABI(
   } catch (err) {}
 
   return pluginABIs.length > 0 ? joinABIs([abi, ...pluginABIs]) : abi;
+}
+
+export async function getCompositeABIfromRelease(
+  publishMetadataUri: string,
+  storage: ThirdwebStorage,
+) {
+  const { compilerMetadata, extendedMetadata } =
+    await fetchAndCacheDeployMetadata(publishMetadataUri, storage);
+
+  const compositeAbi = extendedMetadata?.compositeAbi;
+
+  return compositeAbi;
 }
 
 export function isRouterContract(abi: Abi) {

@@ -1,6 +1,10 @@
+import { fetchAndCachePublishedContractURI } from "../common";
 import { getPrebuiltInfo } from "../common/legacy";
 import { fetchAbiFromAddress } from "../common/metadata-resolver";
-import { getCompositePluginABI } from "../common/plugin";
+import {
+  getCompositeABIfromRelease,
+  getCompositePluginABI,
+} from "../common/plugin";
 import { ALL_ROLES } from "../common/role";
 import type {
   ContractType,
@@ -190,6 +194,15 @@ export const MarketplaceV3Initializer = {
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
+    const chainId = (await provider.getNetwork()).chainId;
+    const isZkSync = chainId === 280 || chainId === 324;
+
+    if (isZkSync) {
+      const uri = await fetchAndCachePublishedContractURI("MarketplaceV3");
+      const compositeAbi = await getCompositeABIfromRelease(uri, storage);
+      console.log("composite abi: ", compositeAbi);
+      return compositeAbi;
+    }
     const abi = await fetchAbiFromAddress(address, provider, storage);
     if (abi) {
       return await getCompositePluginABI(address, abi, provider, {}, storage);
