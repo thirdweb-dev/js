@@ -30,6 +30,7 @@ export {
   useAddress,
   useChainId,
   useActiveChain,
+  useChain,
 } from "./hooks/wallet";
 
 // Utilities and Others

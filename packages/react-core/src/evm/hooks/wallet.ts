@@ -103,6 +103,47 @@ export function useChainId(): number | undefined {
  * Hook for accessing the active Chain the current wallet is connected to
  *
  * ```javascript
+ * import { useChain } from "@thirdweb-dev/react-core"
+ * ```
+ *
+ * @example
+ * You can get the chain of the connected wallet by using the hook as follows:
+ * ```javascript
+ * import { useChain } from "@thirdweb-dev/react-core"
+ *
+ * const App = () => {
+ *   const chain = useChain()
+ *
+ *   return <div>{chain.chainId}</div>
+ * }
+ * ```
+ * @see {@link https://portal.thirdweb.com/react/react.useActiveChain?utm_source=sdk | Documentation}
+ * @public
+ */
+export function useChain(): Chain | undefined {
+  const chainId = useChainId();
+
+  const chains = useSupportedChains();
+
+  const chain = useMemo(() => {
+    return chains.find((_chain) => _chain.chainId === chainId);
+  }, [chainId, chains]);
+
+  const unknownChain = useMemo(() => {
+    if (!chain) {
+      return defaultChains.find((c) => c.chainId === chainId);
+    }
+  }, [chainId, chain]);
+
+  return chain || unknownChain;
+}
+
+/**
+ * @deprecated - This hook is renamed to `useChain`, use `useChain` instead.
+ *
+ * Hook for accessing the active Chain the current wallet is connected to
+ *
+ * ```javascript
  * import { useActiveChain } from "@thirdweb-dev/react-core"
  * ```
  *
@@ -120,20 +161,4 @@ export function useChainId(): number | undefined {
  * @see {@link https://portal.thirdweb.com/react/react.useActiveChain?utm_source=sdk | Documentation}
  * @public
  */
-export function useActiveChain(): Chain | undefined {
-  const chainId = useChainId();
-
-  const chains = useSupportedChains();
-
-  const chain = useMemo(() => {
-    return chains.find((_chain) => _chain.chainId === chainId);
-  }, [chainId, chains]);
-
-  const unknownChain = useMemo(() => {
-    if (!chain) {
-      return defaultChains.find((c) => c.chainId === chainId);
-    }
-  }, [chainId, chain]);
-
-  return chain || unknownChain;
-}
+export const useActiveChain = useChain;
