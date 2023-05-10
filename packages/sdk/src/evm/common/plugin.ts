@@ -11,10 +11,7 @@ import {
   SDKOptions,
 } from "../schema";
 import { isFeatureEnabled } from "./feature-detection";
-import {
-  fetchContractMetadata,
-  fetchContractMetadataFromAddress,
-} from "./metadata-resolver";
+import { fetchContractMetadataFromAddress } from "./metadata-resolver";
 import { unique } from "./utils";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -90,10 +87,12 @@ export async function getCompositeABIfromRelease(
   publishMetadataUri: string,
   storage: ThirdwebStorage,
 ): Promise<Abi> {
-  const { compilerMetadata, extendedMetadata } =
-    await fetchAndCacheDeployMetadata(publishMetadataUri, storage);
+  const { extendedMetadata } = await fetchAndCacheDeployMetadata(
+    publishMetadataUri,
+    storage,
+  );
 
-  const compositeAbi = extendedMetadata?.compositeAbi;
+  const compositeAbi = extendedMetadata?.compositeAbi || [];
 
   return compositeAbi;
 }
