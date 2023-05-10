@@ -1,4 +1,5 @@
 import {
+  COMMUNITY,
   FAUCETS,
   FooterLinkInfo,
   LEGAL,
@@ -66,6 +67,7 @@ const FooterLinksGrid: React.FC = () => {
       <div>
         <FooterLinkGroup heading="SDKs" links={SDKs} />
         <FooterLinkGroup heading="Solutions" links={SOLUTIONS} />
+        <FooterLinkGroup heading="Community" links={COMMUNITY} />
       </div>
       <div>
         <FooterLinkGroup heading="Networks" links={NETWORKS} />
