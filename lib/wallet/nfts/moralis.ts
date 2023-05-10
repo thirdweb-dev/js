@@ -15,6 +15,15 @@ const moralisUrlMap = {
   // binance
   [ChainId.BinanceSmartChainMainnet]: `https://deep-index.moralis.io/api/v2/`,
   [ChainId.BinanceSmartChainTestnet]: `https://deep-index.moralis.io/api/v2/`,
+
+  // Sepolia
+  11155111: `https://deep-index.moralis.io/api/v2/`,
+  // palm
+  11297108109: `https://deep-index.moralis.io/api/v2/`,
+  // cronos
+  25: `https://deep-index.moralis.io/api/v2/`,
+  // cronos testnet
+  338: `https://deep-index.moralis.io/api/v2/`,
 } as const;
 
 type MoralisSupportedChainId = keyof typeof moralisUrlMap;

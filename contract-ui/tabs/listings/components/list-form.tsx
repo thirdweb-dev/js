@@ -37,6 +37,8 @@ import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { isAlchemySupported } from "lib/wallet/nfts/alchemy";
+import { isMoralisSupported } from "lib/wallet/nfts/moralis";
 import { WalletNFT } from "lib/wallet/nfts/types";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -84,22 +86,6 @@ const auctionTimes = [
   { label: "1 year", value: 60 * 60 * 24 * 365 },
 ];
 
-const supportedChains = [
-  ChainId.Mainnet,
-  ChainId.Goerli,
-  ChainId.Polygon,
-  ChainId.Mumbai,
-  ChainId.BinanceSmartChainMainnet,
-  ChainId.BinanceSmartChainTestnet,
-  ChainId.Arbitrum,
-  ChainId.ArbitrumGoerli,
-  ChainId.Optimism,
-  ChainId.OptimismGoerli,
-  ChainId.Fantom,
-  ChainId.Avalanche,
-  ChainId.AvalancheFujiTestnet,
-];
-
 export const CreateListingsForm: React.FC<NFTMintForm> = ({
   contractQuery,
   directList,
@@ -111,7 +97,9 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
   const network = useEVMContractInfo()?.chain;
   const chainId = useDashboardEVMChainId();
 
-  const isSupportedChain = supportedChains.includes(chainId as ChainId);
+  const isSupportedChain =
+    isAlchemySupported(chainId as ChainId) ||
+    isMoralisSupported(chainId as ChainId);
 
   const { data: contractType } = useContractType(
     contractQuery?.contract?.getAddress(),
