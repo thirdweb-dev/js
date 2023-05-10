@@ -49,7 +49,7 @@ export class AccountAPI extends BaseAccountAPI {
 
   async getAccountInitCode(): Promise<string> {
     const factory = await this.getFactoryContract();
-    console.log("AccountAPI - Creating account via factory");
+    console.log("Deploying smart wallet via factory");
     const localSigner = await this.params.localSigner.getAddress();
     const tx = await this.params.factoryInfo.createAccount(
       factory,
@@ -57,12 +57,12 @@ export class AccountAPI extends BaseAccountAPI {
     );
     try {
       console.log(
-        "Cost to create account: ",
+        "Cost to deploy smart wallet: ",
         (await tx.estimateGasCost()).ether,
         "ETH",
       );
     } catch (e) {
-      console.error("Cost to create account: unknown", e);
+      console.error("Cost to deploy smart wallet: unknown", e);
     }
     return hexConcat([factory.getAddress(), tx.encode()]);
   }

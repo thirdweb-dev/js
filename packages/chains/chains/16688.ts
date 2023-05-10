@@ -4,7 +4,7 @@ export default {
   "chain": "IRIShub",
   "rpc": [
     "https://irishub-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "http://34.80.202.172:8545"
+    "https://evmrpc.nyancat.irisnet.org"
   ],
   "features": [
     {

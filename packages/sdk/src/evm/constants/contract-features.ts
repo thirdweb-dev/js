@@ -125,16 +125,22 @@ export type Feature =
   | typeof FEATURE_OFFERS
   | typeof FEATURE_SMART_WALLET
   | typeof FEATURE_SMART_WALLET_FACTORY;
+export type Extension = Feature;
 
 /**
  * @internal
  */
 export type FeatureName = Feature["name"];
+export type ExtensionName = Feature["name"];
 /**
  * @internal
  */
 export type FeatureWithEnabled = Feature & {
   features: Record<string, FeatureWithEnabled>;
+  enabled: boolean;
+};
+export type ExtensionWithEnabled = Extension & {
+  extensions: Record<string, FeatureWithEnabled>;
   enabled: boolean;
 };
 
