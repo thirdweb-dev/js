@@ -133,5 +133,5 @@ export function useSetWallet() {
     context,
     "useSwitchChain() must be used within a <ThirdwebProvider/>",
   );
-  return context.handleWalletConnect;
+  return context.setWallet;
 }

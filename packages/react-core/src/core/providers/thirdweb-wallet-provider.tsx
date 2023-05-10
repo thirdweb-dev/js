@@ -75,7 +75,7 @@ type ThirdwebWalletContextData = {
   switchChain: (chain: number) => Promise<void>;
   chainToConnect?: Chain;
   activeChain: Chain;
-  handleWalletConnect: (
+  setWallet: (
     wallet: WalletInstance,
     params?: ConnectParams<Record<string, any>>,
   ) => void;
@@ -431,7 +431,7 @@ export function ThirdwebWalletProvider(
         createWalletInstance: createWalletInstance,
         createWalletStorage: props.createWalletStorage,
         switchChain,
-        handleWalletConnect: setConnectedWallet,
+        setWallet: setConnectedWallet,
         activeChain: props.activeChain,
         chainToConnect,
       }}

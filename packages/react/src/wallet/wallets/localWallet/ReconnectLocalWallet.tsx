@@ -35,7 +35,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isWrongPassword, setIsWrongPassword] = useState(false);
-  const thirdwebWalletContext = useWalletContext();
+  const { setWallet } = useWalletContext();
   const [isConnecting, setIsConnecting] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
   const [showBackupConfirmation, setShowBackupConfirmation] = useState(false);
@@ -112,7 +112,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
       });
 
       await localWallet.connect();
-      thirdwebWalletContext.handleWalletConnect(localWallet);
+      setWallet(localWallet);
 
       props.onConnect();
     } catch (e) {

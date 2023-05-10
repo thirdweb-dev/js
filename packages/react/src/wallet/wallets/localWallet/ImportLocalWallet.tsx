@@ -31,7 +31,7 @@ export const ImportLocalWallet: React.FC<{
   const [showPassword, setShowPassword] = useState(false);
   const [importedAddress, setImportedAddress] = useState<string | undefined>();
 
-  const thirdwebWalletContext = useWalletContext();
+  const { setWallet } = useWalletContext();
 
   const handleImport = async () => {
     const localWallet = createWalletInstance(props.localWallet) as LocalWallet;
@@ -55,7 +55,7 @@ export const ImportLocalWallet: React.FC<{
       password,
     });
 
-    thirdwebWalletContext.handleWalletConnect(localWallet);
+    setWallet(localWallet);
     setLocalWallet(localWallet);
     props.onConnect();
   };

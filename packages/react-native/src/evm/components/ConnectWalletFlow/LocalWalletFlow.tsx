@@ -26,7 +26,7 @@ export function LocalWalletFlow({
 }: LocalWalletFlowUIProps) {
   const [isImportModalVisible, setIsImportModalVisible] = useState(false);
   const [isCreatingWallet, setIsCreatingWallet] = useState(false);
-  const handleWalletConnect = useWalletContext().handleWalletConnect;
+  const { setWallet } = useWalletContext();
   const createInstance = useCreateWalletInstance();
 
   const onImportPress = async () => {
@@ -50,7 +50,7 @@ export function LocalWalletFlow({
     if (onConnected) {
       onConnected(wallet);
     } else {
-      handleWalletConnect(wallet);
+      setWallet(wallet);
     }
   };
 

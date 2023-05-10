@@ -19,7 +19,7 @@ export const SmartWalletAdditionalActions = ({
   onExportPress: () => void;
 }) => {
   const personalWalletAddress = usePersonalWalletAddress();
-  const handleWalletConnect = useWalletContext().handleWalletConnect;
+  const { setWallet } = useWalletContext();
   const [smartWallet, setSmartWallet] = useSmartWallet();
   const [smartWalletAddress, setSmartWalletAddress] = useState<string>("");
   const [showSmartWallet, setShowSmartWallet] = useState(false);
@@ -53,7 +53,7 @@ export const SmartWalletAdditionalActions = ({
       return;
     }
 
-    handleWalletConnect(wallet);
+    setWallet(wallet);
   };
 
   return (

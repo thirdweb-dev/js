@@ -15,7 +15,7 @@ export const CoinbaseScan: React.FC<{
 }> = ({ configuredWallet, onConnected, onGetStarted, onBack }) => {
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>(undefined);
-  const twWalletContext = useWalletContext();
+  const { setWallet, chainToConnect } = useWalletContext();
 
   useEffect(() => {
     (async () => {
@@ -29,14 +29,20 @@ export const CoinbaseScan: React.FC<{
 
       wallet
         .connect({
-          chainId: twWalletContext.chainToConnect?.chainId,
+          chainId: chainToConnect?.chainId,
         })
         .then(() => {
-          twWalletContext.handleWalletConnect(wallet);
+          setWallet(wallet);
           onConnected();
         });
     })();
-  }, [createInstance, twWalletContext, onConnected, configuredWallet]);
+  }, [
+    createInstance,
+    onConnected,
+    configuredWallet,
+    chainToConnect?.chainId,
+    setWallet,
+  ]);
 
   return (
     <ScanScreen
