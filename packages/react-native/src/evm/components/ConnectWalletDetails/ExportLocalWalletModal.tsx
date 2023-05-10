@@ -155,7 +155,7 @@ export const ExportLocalWalletModal = ({
             <ModalHeaderTextClose flex={1} onClose={onCloseInternal} />
           </Box>
           <Text variant="header" textAlign="left">
-            Export your Wallet
+            Backup your Wallet
           </Text>
           <Text variant="subHeader" mt="md" textAlign="left">
             {
@@ -187,7 +187,7 @@ export const ExportLocalWalletModal = ({
                 <ActivityIndicator size="small" color="buttonTextColor" />
               ) : (
                 <Text variant="bodySmall" color="black">
-                  Export
+                  Backup
                 </Text>
               )}
             </BaseButton>
