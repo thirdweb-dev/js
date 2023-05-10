@@ -1,6 +1,5 @@
 import {
   ExtensionWithEnabled,
-  ExtensionWithWnabled,
   Feature,
   FeatureName,
   FeatureWithEnabled,
@@ -10,7 +9,6 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { DetectableFeature } from "../core/interfaces/DetectableFeature";
 import { decode } from "../lib/cbor-decode.js";
 import {
-  Abi,
   AbiEvent,
   AbiFunction,
   AbiInput,
