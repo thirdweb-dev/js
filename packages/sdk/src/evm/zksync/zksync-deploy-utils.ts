@@ -11,6 +11,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { DeployOptions } from "../types";
 import { ThirdwebSDK } from "../core";
 import { getImplementation } from "./constants/addresses";
+import { DeploymentTransaction } from "../types/any-evm/deploy-data";
 
 export async function zkDeployContractFromUri(
   publishMetadataUri: string,
@@ -80,6 +81,18 @@ export async function zkDeployContractFromUri(
   } else {
     throw new Error("Error deploying contract");
   }
+}
+
+export async function getZkTransactionsForDeploy(): Promise<
+  DeploymentTransaction[]
+> {
+  let transactions: DeploymentTransaction[] = [];
+
+  transactions.push({
+    contractType: "proxy",
+    addresses: [],
+  });
+  return transactions;
 }
 
 async function registerContractOnMultiChainRegistry(
