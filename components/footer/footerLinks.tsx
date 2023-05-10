@@ -81,6 +81,11 @@ export const RESOURCES: FooterLinkInfo[] = [
     label: "careers",
     link: "https://careers.thirdweb.com/",
   },
+  {
+    name: "Press Kit",
+    label: "press-kit",
+    link: "https://ipfs.thirdwebcdn.com/ipfs/QmTWMy6Dw1PDyMxHxNcmDmPE8zqFCQMfD6m2feHVY89zgu/",
+  },
 ];
 
 export const SDKs: FooterLinkInfo[] = [
