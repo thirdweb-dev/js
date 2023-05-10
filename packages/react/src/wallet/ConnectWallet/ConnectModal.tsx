@@ -93,6 +93,7 @@ export const ConnectModal = () => {
 
         {typeof screen !== "string" && screen.connectUI && (
           <screen.connectUI
+            theme={modalTheme}
             goBack={handleBack}
             close={handleClose}
             isOpen={isWalletModalOpen}
@@ -104,6 +105,7 @@ export const ConnectModal = () => {
 
         {typeof screen !== "string" && !screen.connectUI && (
           <HeadlessConnectUI
+            theme={modalTheme}
             goBack={handleBack}
             close={handleClose}
             isOpen={isWalletModalOpen}
