@@ -230,4 +230,11 @@ export const RESOURCES: NavCardProps[] = [
     link: "https://blog.thirdweb.com",
     icon: require("public/assets/tw-icons/datastore.png"),
   },
+  {
+    name: "Events",
+    label: "events",
+    description: "Our latest events",
+    link: "/events",
+    icon: require("public/assets/tw-icons/events.png"),
+  },
 ];
