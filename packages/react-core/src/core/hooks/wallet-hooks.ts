@@ -127,11 +127,11 @@ export function useSwitchChain() {
  *
  * @returns a method to set a connected wallet instance
  */
-export function useSetWallet() {
+export function useSetConnectedWallet() {
   const context = useWalletContext();
   invariant(
     context,
     "useSwitchChain() must be used within a <ThirdwebProvider/>",
   );
-  return context.setWallet;
+  return context.setConnectedWallet;
 }

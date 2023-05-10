@@ -18,7 +18,7 @@ export {
   useWallets,
   useWalletConfig,
   useSetConnectionStatus,
-  useSetWallet,
+  useSetConnectedWallet,
 } from "../core/hooks/wallet-hooks";
 export { useNetwork } from "../core/hooks/useNetwork";
 export { useWalletContext } from "../core/providers/thirdweb-wallet-provider";

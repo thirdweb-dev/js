@@ -26,7 +26,8 @@ export const EmailConnect: React.FC<{
 }> = (props) => {
   const [isConnecting, setIsConnecting] = useState(false);
   const createInstance = useCreateWalletInstance();
-  const { setWallet, setConnectionStatus, activeChain } = useWalletContext();
+  const { setConnectedWallet, setConnectionStatus, activeChain } =
+    useWalletContext();
   const [email, setEmail] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(false);
 
@@ -42,7 +43,7 @@ export const EmailConnect: React.FC<{
       setConnectionStatus("connecting");
       await magicWallet.connect(connectOptions);
       setIsConnecting(false);
-      setWallet(magicWallet, connectOptions);
+      setConnectedWallet(magicWallet, connectOptions);
       props.onConnect();
     } catch (e) {
       console.error(e);

@@ -641,7 +641,7 @@ function WalletSwitcher({
     <MenuButton
       type="button"
       onClick={() => {
-        walletContext.setWallet(wallet);
+        walletContext.setConnectedWallet(wallet);
         onSwitch();
       }}
     >
