@@ -50,6 +50,3 @@ export type { SmartContract } from "./contracts/smart-contract";
 
 // re-export from functions entry point
 export * from "./functions";
-
-// export zk-sync specific functions
-export * from "./zksync";
