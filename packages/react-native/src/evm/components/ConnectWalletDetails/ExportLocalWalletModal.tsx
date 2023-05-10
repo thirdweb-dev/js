@@ -14,9 +14,11 @@ import { ModalHeaderTextClose } from "../base/modal/ModalHeaderTextClose";
 import { useAddress, useWallet } from "@thirdweb-dev/react-core";
 import { PasswordInput } from "../PasswordInput";
 import * as FileSystem from "expo-file-system";
-import { LocalWallet } from "../../wallets/wallets/local-wallet";
+import { LocalWallet, localWallet } from "../../wallets/wallets/local-wallet";
 import { SmartWallet } from "@thirdweb-dev/wallets";
 import { usePersonalWalletAddress } from "../../wallets/hooks/usePersonalWalletAddress";
+import { shortenWalletAddress } from "../../utils/addresses";
+import { WalletIcon } from "../base/WalletIcon";
 
 export type ExportLocalWalletModalProps = {
   isVisible: boolean;
@@ -148,11 +150,14 @@ export const ExportLocalWalletModal = ({
           borderRadius="md"
           p="lg"
         >
-          <ModalHeaderTextClose headerText={""} onClose={onCloseInternal} />
-          <Text variant="header" textAlign="center">
+          <Box flexDirection="row" justifyContent="space-between" mb="sm">
+            <WalletIcon size={32} iconUri={localWallet().meta.iconURL} />
+            <ModalHeaderTextClose flex={1} onClose={onCloseInternal} />
+          </Box>
+          <Text variant="header" textAlign="left">
             Export your Wallet
           </Text>
-          <Text variant="subHeader" mt="md" textAlign="center">
+          <Text variant="subHeader" mt="md" textAlign="left">
             {
               "This will download a JSON file containing your wallet information onto your device encrypted with the password."
             }
@@ -161,7 +166,9 @@ export const ExportLocalWalletModal = ({
             Wallet Address
           </Text>
           <Text variant="bodySmallSecondary">
-            {personalWalletAddress ? personalWalletAddress : address}
+            {shortenWalletAddress(
+              personalWalletAddress ? personalWalletAddress : address,
+            )}
           </Text>
           <Text variant="bodySmall" textAlign="left" mt="lg" mb="xxs">
             Password
@@ -170,12 +177,7 @@ export const ExportLocalWalletModal = ({
           <Text variant="bodySmall" color="red" mt="xs" textAlign="left">
             {error}
           </Text>
-          <Box
-            flexDirection="row"
-            justifyContent="center"
-            paddingHorizontal="md"
-            mt="lg"
-          >
+          <Box flexDirection="row" justifyContent="flex-end" mt="lg">
             <BaseButton
               backgroundColor="white"
               style={styles.modalButton}
