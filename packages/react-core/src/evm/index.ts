@@ -149,6 +149,7 @@ export {
   useExecuteAuctionSale,
   useOffers,
   useBuyNow,
+  useBuyFromListing,
 } from "./hooks/async/marketplace";
 
 // nft

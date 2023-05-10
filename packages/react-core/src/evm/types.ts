@@ -268,6 +268,12 @@ export type BuyNowParams<TListingType = ListingType> =
         type: ListingType.Auction;
       };
 
+export type BuyFromListingParams = {
+  listingId: string;
+  quantity: Amount;
+  buyer: WalletAddress;
+};
+
 // TOKEN DROP //
 
 export type ClaimTokenParams = {
