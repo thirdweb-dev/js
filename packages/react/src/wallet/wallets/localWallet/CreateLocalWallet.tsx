@@ -6,7 +6,7 @@ import {
   ModalTitle,
 } from "../../../components/modalElements";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
-import { useWalletContext } from "@thirdweb-dev/react-core";
+import { useWalletContext, useWallets } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { ImportLocalWallet } from "./ImportLocalWallet";
@@ -27,6 +27,7 @@ export const CreateLocalWallet_Password: React.FC<{
   const [showPassword, setShowPassword] = useState(false);
   const passwordMismatch = confirmPassword && password !== confirmPassword;
   const [isConnecting, setIsConnecting] = useState(false);
+  const singleWallet = useWallets().length === 1;
 
   const { localWallet, meta } = useLocalWalletInfo(props.localWallet);
 
@@ -78,7 +79,11 @@ export const CreateLocalWallet_Password: React.FC<{
 
   return (
     <>
-      <LocalWalletModalHeader onBack={props.goBack} meta={meta} />
+      <LocalWalletModalHeader
+        onBack={props.goBack}
+        meta={meta}
+        hideBack={singleWallet}
+      />
 
       <Flex alignItems="center" gap="xs">
         <ModalTitle>Guest Wallet</ModalTitle>

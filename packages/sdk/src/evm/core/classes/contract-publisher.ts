@@ -1,6 +1,8 @@
+import { DEFAULT_API_KEY } from "../../../core/constants/urls";
 import {
   extractConstructorParams,
   extractFunctions,
+  fetchContractMetadata,
   fetchContractMetadataFromAddress,
   fetchExtendedReleaseMetadata,
   fetchPreDeployMetadata,
@@ -10,11 +12,13 @@ import {
   resolveContractUriFromAddress,
 } from "../../common";
 import { resolveAddress } from "../../common/ens";
+import { getCompositePluginABI } from "../../common/plugin";
 import { buildTransactionFunction } from "../../common/transactions";
-import { getContractPublisherAddress } from "../../constants";
+import { getChainProvider, getContractPublisherAddress } from "../../constants";
 import {
   AbiFunction,
   AddressOrEns,
+  AbiSchema,
   ContractParam,
   ContractSource,
   ExtraPublishMetadata,
@@ -362,6 +366,38 @@ export class ContractPublisher extends RPCConnectionHandler {
         this.storage,
       );
 
+      // For a dynamic contract Router, try to fetch plugin/extension metadata
+      // from the implementation addresses, if any
+      if (extraMetadata.factoryDeploymentData?.implementationAddresses) {
+        const implementationsAddresses = Object.entries(
+          extraMetadata.factoryDeploymentData.implementationAddresses,
+        );
+
+        const entry = implementationsAddresses.find(
+          ([, implementation]) => implementation !== "",
+        );
+        const [network, implementation] = entry ? entry : [];
+
+        if (network && implementation) {
+          try {
+            const compilerMetadata = await fetchContractMetadata(
+              predeployMetadata.metadataUri,
+              this.storage,
+            );
+            const composite = await getCompositePluginABI(
+              implementation,
+              compilerMetadata.abi,
+              getChainProvider(parseInt(network), {
+                thirdwebApiKey: DEFAULT_API_KEY,
+              }),
+              {}, // pass empty object for options instead of this.options
+              this.storage,
+            );
+            extraMetadata.compositeAbi = AbiSchema.parse(composite);
+          } catch {}
+        }
+      }
+
       // ensure version is incremental
       const latestContract = await this.getLatest(
         publisher,
@@ -371,6 +407,7 @@ export class ContractPublisher extends RPCConnectionHandler {
         const latestMetadata = await this.fetchPublishedContractInfo(
           latestContract,
         );
+
         const latestVersion = latestMetadata.publishedMetadata.version;
         if (!isIncrementalVersion(latestVersion, extraMetadata.version)) {
           throw Error(
