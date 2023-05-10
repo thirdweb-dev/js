@@ -5,4 +5,4 @@
 "@thirdweb-dev/react": patch
 ---
 
-[React/ReactNative] Updated useThirdwebWallet to useProviderContext
+[React/ReactNative] Updated useThirdwebWallet to useWalletContext

@@ -1,7 +1,7 @@
 import { ScanScreen } from "../../ConnectWallet/screens/ScanScreen";
 import {
   useCreateWalletInstance,
-  useProviderContext,
+  useWalletContext,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 
@@ -16,7 +16,7 @@ export const MetamaskScan: React.FC<{
 }> = ({ onBack, onConnected, onGetStarted, configuredWallet }) => {
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
-  const twWalletContext = useProviderContext();
+  const twWalletContext = useWalletContext();
 
   useEffect(() => {
     const metamask = createInstance(configuredWallet) as MetaMaskWallet;

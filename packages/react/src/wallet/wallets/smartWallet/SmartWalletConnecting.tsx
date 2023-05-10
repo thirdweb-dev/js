@@ -17,7 +17,7 @@ import {
   useConnect,
   useConnectionStatus,
   useNetworkMismatch,
-  useProviderContext,
+  useWalletContext,
   useWallet,
 } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useState } from "react";
@@ -42,7 +42,7 @@ export const SmartWalletConnecting: React.FC<{
 
   const connect = useConnect();
   const connectedChain = useActiveChain();
-  const targetChain = useProviderContext().activeChain;
+  const targetChain = useWalletContext().activeChain;
 
   const mismatch = useNetworkMismatch();
 

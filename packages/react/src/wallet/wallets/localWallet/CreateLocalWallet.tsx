@@ -6,7 +6,7 @@ import {
   ModalTitle,
 } from "../../../components/modalElements";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
-import { useProviderContext } from "@thirdweb-dev/react-core";
+import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { ImportLocalWallet } from "./ImportLocalWallet";
@@ -30,7 +30,7 @@ export const CreateLocalWallet_Password: React.FC<{
 
   const { localWallet, meta } = useLocalWalletInfo(props.localWallet);
 
-  const thirdwebWalletContext = useProviderContext();
+  const thirdwebWalletContext = useWalletContext();
   const [showImportScreen, setShowImportScreen] = useState(false);
 
   const [generatedAddress, setGeneratedAddress] = useState<string | null>(null);
@@ -188,7 +188,7 @@ export const CreateLocalWallet_Guest: React.FC<{
   localWallet: LocalConfiguredWallet;
 }> = (props) => {
   const { localWallet } = useLocalWalletInfo(props.localWallet);
-  const thirdwebWalletContext = useProviderContext();
+  const thirdwebWalletContext = useWalletContext();
 
   const handleConnect = useCallback(async () => {
     if (!localWallet) {

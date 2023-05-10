@@ -1,6 +1,6 @@
 import {
   useCreateWalletInstance,
-  useProviderContext,
+  useWalletContext,
 } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { Img } from "../../../components/Img";
@@ -29,7 +29,7 @@ export const SMSConnect: React.FC<{
 }> = (props) => {
   const [isConnecting, setIsConnecting] = useState(false);
   const createInstance = useCreateWalletInstance();
-  const twContext = useProviderContext();
+  const twContext = useWalletContext();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(false);
 
