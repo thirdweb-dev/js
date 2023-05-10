@@ -89,7 +89,7 @@
     "@types/flat": "^5.0.2",
     "@types/nprogress": "^0.2.0",
     "@types/papaparse": "^5.3.1",
-    "@types/react": "^18.0.37",
+    "@types/react": "^18.2.6",
     "@types/react-dom": "^18",
     "@types/react-table": "^7.7.7",
     "@types/spdx-correct": "^3.1.0",
