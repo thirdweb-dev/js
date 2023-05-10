@@ -453,11 +453,11 @@ export function ThirdwebWalletProvider(
   );
 }
 
-export function useThirdwebWallet() {
+export function useWalletContext() {
   const ctx = useContext(ThirdwebWalletContext);
   if (!ctx) {
     throw new Error(
-      `useThirdwebWallet() can only be used inside <ThirdwebProvider />`,
+      `useWalletContext() can only be used inside <ThirdwebProvider />`,
     );
   }
   return ctx;

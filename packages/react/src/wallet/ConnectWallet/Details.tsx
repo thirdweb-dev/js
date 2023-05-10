@@ -35,7 +35,7 @@ import {
   useDisconnect,
   useSDK,
   useSupportedChains,
-  useThirdwebWallet,
+  useWalletContext,
   useWallet,
   WalletInstance,
 } from "@thirdweb-dev/react-core";
@@ -605,7 +605,7 @@ function WalletSwitcher({
   wallet: WalletInstance;
   onSwitch: () => void;
 }) {
-  const walletContext = useThirdwebWallet();
+  const walletContext = useWalletContext();
   const balanceQuery = useBalance();
   const [walletBalance, setWalletBalance] = useState<string | undefined>(
     undefined,
