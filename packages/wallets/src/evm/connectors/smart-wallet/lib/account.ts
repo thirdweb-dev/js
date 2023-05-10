@@ -1,15 +1,9 @@
-import {
-  LOCAL_NODE_PKEY,
-  SmartContract,
-  ThirdwebSDK,
-  UserWallet,
-} from "@thirdweb-dev/sdk";
+import { LOCAL_NODE_PKEY, SmartContract, ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { BigNumberish, BigNumber, ethers } from "ethers";
 import { arrayify, hexConcat } from "ethers/lib/utils";
 import { AccountApiParams } from "../types";
 import { BaseAccountAPI } from "./base-api";
 import { MINIMAL_ACCOUNT_ABI } from "./constants";
-import { UserOperationStruct } from "@account-abstraction/contracts";
 
 export class AccountAPI extends BaseAccountAPI {
   sdk: ThirdwebSDK;

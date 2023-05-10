@@ -1,7 +1,6 @@
 import { ethers, providers } from "ethers";
 
 import { Bytes, Signer } from "ethers";
-import { UserOperationStruct } from "@account-abstraction/contracts";
 import { ClientConfig } from "@account-abstraction/sdk";
 import { BaseAccountAPI } from "./base-api";
 import { ERC4337EthersProvider } from "./erc4337-provider";
