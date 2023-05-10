@@ -29,7 +29,8 @@ export const SMSConnect: React.FC<{
 }> = (props) => {
   const [isConnecting, setIsConnecting] = useState(false);
   const createInstance = useCreateWalletInstance();
-  const twContext = useWalletContext();
+  const { setConnectedWallet, activeChain, setConnectionStatus } =
+    useWalletContext();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(false);
 
@@ -38,19 +39,19 @@ export const SMSConnect: React.FC<{
     setIsConnecting(true);
     props.close();
     const connectOptions = {
-      chainId: twContext.activeChain?.chainId,
+      chainId: activeChain?.chainId,
       phoneNumber,
     };
     try {
-      twContext.setConnectionStatus("connecting");
+      setConnectionStatus("connecting");
       await magicWallet.connect(connectOptions);
       setIsConnecting(false);
-      twContext.handleWalletConnect(magicWallet, connectOptions);
+      setConnectedWallet(magicWallet, connectOptions);
       props.onConnect();
     } catch (e) {
       console.error(e);
       setIsConnecting(false);
-      twContext.setConnectionStatus("disconnected");
+      setConnectionStatus("disconnected");
       props.open();
     }
   };

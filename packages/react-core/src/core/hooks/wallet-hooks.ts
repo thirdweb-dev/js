@@ -14,6 +14,18 @@ export function useWallet() {
 }
 
 /**
+ * @returns the current active wallet's configuration object
+ */
+export function useWalletConfig() {
+  const context = useWalletContext();
+  invariant(
+    context,
+    "useWallet() hook must be used within a <ThirdwebProvider/>",
+  );
+  return context.activeWalletConfig;
+}
+
+/**
  *
  * @returns `supportedWallets` configured in the `<ThirdwebProvider/>`
  */
@@ -74,19 +86,15 @@ export function useConnectionStatus() {
 
 /**
  *
- * @returns if the wallet is currently connecting
- *
+ * @returns a method to create an instance of given wallet class
  */
-export function useIsConnecting() {
+export function useSetConnectionStatus() {
   const context = useWalletContext();
   invariant(
     context,
-    "useConnectionStatus() must be used within a <ThirdwebProvider/>",
+    "useSetConnectionStatus() must be used within a <ThirdwebProvider/>",
   );
-  return (
-    context.connectionStatus === "connecting" ||
-    context.connectionStatus === "unknown"
-  );
+  return context.setConnectionStatus;
 }
 
 /**
@@ -113,4 +121,17 @@ export function useSwitchChain() {
     "useSwitchChain() must be used within a <ThirdwebProvider/>",
   );
   return context.switchChain;
+}
+
+/**
+ *
+ * @returns a method to set a connected wallet instance
+ */
+export function useSetConnectedWallet() {
+  const context = useWalletContext();
+  invariant(
+    context,
+    "useSwitchChain() must be used within a <ThirdwebProvider/>",
+  );
+  return context.setConnectedWallet;
 }

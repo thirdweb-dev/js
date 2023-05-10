@@ -45,7 +45,7 @@ export const MagicConnectUI = (props: MagicConnectUIProps) => {
   //     oauthProvider: oauthProvider,
   //   });
   //   setIsConnecting(false);
-  //   twContext.handleWalletConnect(magicWallet);
+  //   twContext.setWallet(magicWallet);
   //   props.onConnect();
   // };
 

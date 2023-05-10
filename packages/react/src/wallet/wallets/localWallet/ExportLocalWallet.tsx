@@ -110,7 +110,7 @@ export const ExportLocalWallet: React.FC<{
           textAlign: "left",
         }}
       >
-        Export Wallet
+        Backup Wallet
       </ModalTitle>
 
       <Spacer y="md" />
@@ -182,7 +182,7 @@ export const ExportLocalWallet: React.FC<{
             }}
             type="submit"
           >
-            Export
+            Backup
           </Button>
         </FormFooter>
       </form>

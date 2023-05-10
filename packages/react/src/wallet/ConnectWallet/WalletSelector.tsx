@@ -12,7 +12,6 @@ import {
 } from "../../design-system";
 import styled from "@emotion/styled";
 import { ConfiguredWallet } from "@thirdweb-dev/react-core";
-import { useConfiguredWallet } from "../hooks/useConfiguredWallet";
 import { walletIds } from "@thirdweb-dev/wallets";
 
 export const WalletSelector: React.FC<{
@@ -20,7 +19,9 @@ export const WalletSelector: React.FC<{
   selectWallet: (wallet: ConfiguredWallet) => void;
   onGetStarted: () => void;
 }> = (props) => {
-  const localWalletInfo = useConfiguredWallet("localWallet", false);
+  const localWalletInfo = props.configuredWallets.find(
+    (w) => w.id === walletIds.localWallet,
+  );
   const configuredWallets = props.configuredWallets.filter(
     (w) => w.id !== walletIds.localWallet,
   );

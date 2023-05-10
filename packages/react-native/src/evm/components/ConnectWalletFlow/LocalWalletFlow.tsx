@@ -3,7 +3,6 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { ConnectWalletHeader } from "./ConnectingWallet/ConnectingWalletHeader";
 import Text from "../base/Text";
 import { ModalFooter } from "../base/modal/ModalFooter";
-import { LocalWalletImportModal } from "./LocalWalletImportModal";
 import { useState } from "react";
 import {
   ConnectUIProps,
@@ -12,6 +11,7 @@ import {
   useWalletContext,
 } from "@thirdweb-dev/react-core";
 import type { LocalConfiguredWallet } from "../../wallets/types/local-wallet";
+import { LocalWalletImportModal } from "./LocalWalletImportModal";
 
 type LocalWalletFlowUIProps = ConnectUIProps & {
   localWallet: LocalConfiguredWallet;
@@ -26,7 +26,7 @@ export function LocalWalletFlow({
 }: LocalWalletFlowUIProps) {
   const [isImportModalVisible, setIsImportModalVisible] = useState(false);
   const [isCreatingWallet, setIsCreatingWallet] = useState(false);
-  const handleWalletConnect = useWalletContext().handleWalletConnect;
+  const { setConnectedWallet } = useWalletContext();
   const createInstance = useCreateWalletInstance();
 
   const onImportPress = async () => {
@@ -50,7 +50,7 @@ export function LocalWalletFlow({
     if (onConnected) {
       onConnected(wallet);
     } else {
-      handleWalletConnect(wallet);
+      setConnectedWallet(wallet);
     }
   };
 
