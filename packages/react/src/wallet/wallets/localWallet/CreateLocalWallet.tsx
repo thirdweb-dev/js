@@ -30,7 +30,7 @@ export const CreateLocalWallet_Password: React.FC<{
 
   const { localWallet, meta } = useLocalWalletInfo(props.localWallet);
 
-  const thirdwebWalletContext = useWalletContext();
+  const { setConnectedWallet } = useWalletContext();
   const [showImportScreen, setShowImportScreen] = useState(false);
 
   const [generatedAddress, setGeneratedAddress] = useState<string | null>(null);
@@ -71,7 +71,7 @@ export const CreateLocalWallet_Password: React.FC<{
       password,
     });
 
-    thirdwebWalletContext.handleWalletConnect(localWallet);
+    setConnectedWallet(localWallet);
     setIsConnecting(false);
     props.onConnect();
   };
@@ -188,7 +188,8 @@ export const CreateLocalWallet_Guest: React.FC<{
   localWallet: LocalConfiguredWallet;
 }> = (props) => {
   const { localWallet } = useLocalWalletInfo(props.localWallet);
-  const thirdwebWalletContext = useWalletContext();
+  const { setConnectedWallet } = useWalletContext();
+  const { onConnect } = props;
 
   const handleConnect = useCallback(async () => {
     if (!localWallet) {
@@ -196,9 +197,9 @@ export const CreateLocalWallet_Guest: React.FC<{
     }
     await localWallet.generate();
     await localWallet.connect();
-    thirdwebWalletContext.handleWalletConnect(localWallet);
-    props.onConnect();
-  }, [localWallet, thirdwebWalletContext, props]);
+    setConnectedWallet(localWallet);
+    onConnect();
+  }, [localWallet, setConnectedWallet, onConnect]);
 
   const connecting = useRef(false);
   useEffect(() => {

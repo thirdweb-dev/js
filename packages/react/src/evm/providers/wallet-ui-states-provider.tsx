@@ -36,7 +36,9 @@ export const useIsWalletModalOpen = () => {
 export const useSetIsWalletModalOpen = () => {
   const context = useContext(SetWalletModalOpen);
   if (context === undefined) {
-    throw new Error("useSetWalletModalOpen must be used within a UIProvider");
+    throw new Error(
+      "useSetWalletModalOpen must be used within a ThirdwebProvider",
+    );
   }
   return context;
 };

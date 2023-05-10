@@ -61,4 +61,9 @@ export type ConnectUIProps = {
    * go back to the wallet selector screen in connect wallet modal
    */
   goBack: () => void;
+
+  /**
+   * theme of the connect wallet modal
+   */
+  theme: "dark" | "light";
 };
