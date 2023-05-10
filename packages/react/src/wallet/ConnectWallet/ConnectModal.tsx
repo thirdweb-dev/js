@@ -3,6 +3,7 @@ import { WalletSelector } from "./WalletSelector";
 import {
   ConfiguredWallet,
   useConnectionStatus,
+  useWallet,
   useWallets,
 } from "@thirdweb-dev/react-core";
 import {
@@ -12,46 +13,68 @@ import {
 } from "../../evm/providers/wallet-ui-states-provider";
 import { ThemeProvider } from "@emotion/react";
 import { darkTheme, lightTheme } from "../../design-system";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { GetStartedWithWallets } from "./screens/GetStartedWithWallets";
 import { reservedScreens } from "./constants";
 import { HeadlessConnectUI } from "../wallets/headlessConnectUI";
 
 export const ConnectModal = () => {
   const modalTheme = useModalTheme();
+  const configuredWallets = useWallets();
+  const initialScreen =
+    configuredWallets.length > 1 ? reservedScreens.main : configuredWallets[0];
+
   const [screen, setScreen] = useState<string | ConfiguredWallet>(
-    reservedScreens.main,
+    initialScreen,
   );
   const isWalletModalOpen = useIsWalletModalOpen();
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
   const connectionStatus = useConnectionStatus();
-  const configuredWallets = useWallets();
+  const wallet = useWallet();
 
   const handleClose = useCallback(
     (reset = true) => {
       if (reset) {
-        setScreen(reservedScreens.main);
+        setScreen(initialScreen);
       }
       setIsWalletModalOpen(false);
     },
-    [setIsWalletModalOpen],
+    [setIsWalletModalOpen, initialScreen],
   );
 
   const handleBack = useCallback(() => {
-    setScreen(reservedScreens.main);
-  }, [setScreen]);
+    setScreen(initialScreen);
+  }, [setScreen, initialScreen]);
 
-  const isWrapper =
+  const isWrapperConnected = !!wallet?.getPersonalWallet();
+
+  const isWrapperScreen =
     typeof screen !== "string" &&
     "config" in screen &&
     !!(screen.config as any).personalWallets;
 
-  // if the modal is closed, rendering a wrapper, personal wallet is connected - open modal back
+  const prevConnectionStatus = useRef(connectionStatus);
+
+  // reopen the screen to complete wrapper wallet's next step after connecting a personal wallet
   useEffect(() => {
-    if (isWrapper && !isWalletModalOpen && connectionStatus === "connected") {
+    if (
+      !isWrapperConnected &&
+      isWrapperScreen &&
+      !isWalletModalOpen &&
+      connectionStatus === "connected" &&
+      prevConnectionStatus.current === "connecting"
+    ) {
       setIsWalletModalOpen(true);
     }
-  }, [isWalletModalOpen, connectionStatus, setIsWalletModalOpen, isWrapper]);
+
+    prevConnectionStatus.current = connectionStatus;
+  }, [
+    isWalletModalOpen,
+    connectionStatus,
+    setIsWalletModalOpen,
+    isWrapperScreen,
+    isWrapperConnected,
+  ]);
 
   return (
     <ThemeProvider
@@ -69,9 +92,10 @@ export const ConnectModal = () => {
         }}
         open={isWalletModalOpen}
         setOpen={(value) => {
+          console.log("set", value);
           setIsWalletModalOpen(value);
           if (!value) {
-            setScreen(reservedScreens.main); // reset screen
+            setScreen(initialScreen); // reset screen
           }
         }}
       >
@@ -81,9 +105,7 @@ export const ConnectModal = () => {
             onGetStarted={() => {
               setScreen(reservedScreens.getStarted);
             }}
-            selectWallet={(wallet) => {
-              setScreen(wallet);
-            }}
+            selectWallet={setScreen}
           />
         )}
 

@@ -1,6 +1,7 @@
 import {
   useCreateWalletInstance,
   useWalletContext,
+  useWallets,
 } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { Img } from "../../../components/Img";
@@ -33,6 +34,7 @@ export const SMSConnect: React.FC<{
     useWalletContext();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(false);
+  const singleWallet = useWallets().length === 1;
 
   const handleSmsConnect = async () => {
     const magicWallet = createInstance(props.magicLinkWallet);
@@ -60,7 +62,7 @@ export const SMSConnect: React.FC<{
 
   return (
     <>
-      <BackButton onClick={props.onBack}></BackButton>
+      {!singleWallet && <BackButton onClick={props.onBack}></BackButton>}
       <Spacer y="md" />
       <Img
         src={props.magicLinkWallet.meta.iconURL}
