@@ -32,35 +32,33 @@ const ClaimTab: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
       direction="column"
       as="form"
       onSubmit={form.handleSubmit(async (data) => {
-        if (address) {
+        trackEvent({
+          category: "nft",
+          action: "claim",
+          label: "attempt",
+        });
+
+        try {
+          await claim.mutateAsync({
+            tokenId,
+            quantity: data.amount,
+            to: data.to,
+          });
           trackEvent({
             category: "nft",
             action: "claim",
-            label: "attempt",
+            label: "success",
           });
-
-          try {
-            await claim.mutateAsync({
-              tokenId,
-              quantity: data.amount,
-              to: address,
-            });
-            trackEvent({
-              category: "nft",
-              action: "claim",
-              label: "success",
-            });
-            onSuccess();
-            form.reset();
-          } catch (error) {
-            trackEvent({
-              category: "nft",
-              action: "claim",
-              label: "error",
-              error,
-            });
-            onError(error);
-          }
+          onSuccess();
+          form.reset();
+        } catch (error) {
+          trackEvent({
+            category: "nft",
+            action: "claim",
+            label: "error",
+            error,
+          });
+          onError(error);
         }
       })}
     >
