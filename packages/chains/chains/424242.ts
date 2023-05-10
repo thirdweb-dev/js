@@ -22,7 +22,7 @@ export default {
     "decimals": 18
   },
   "infoURL": "https://fastex.com",
-  "shortName": "ftn",
+  "shortName": "fastexTestnet",
   "chainId": 424242,
   "networkId": 424242,
   "explorers": [

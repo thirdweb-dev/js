@@ -6,15 +6,15 @@ import { ModalFooter } from "../base/modal/ModalFooter";
 import { LocalWalletImportModal } from "./LocalWalletImportModal";
 import { useState } from "react";
 import {
-  ConfiguredWallet,
   ConnectUIProps,
   WalletInstance,
   useCreateWalletInstance,
   useWalletContext,
 } from "@thirdweb-dev/react-core";
+import type { LocalConfiguredWallet } from "../../wallets/types/local-wallet";
 
 type LocalWalletFlowUIProps = ConnectUIProps & {
-  localWallet: ConfiguredWallet;
+  localWallet: LocalConfiguredWallet;
   onConnected?: (wallet: WalletInstance) => void;
 };
 
@@ -86,6 +86,7 @@ export function LocalWalletFlow({
 
       <LocalWalletImportModal
         isVisible={isImportModalVisible}
+        localWallet={localWallet}
         onWalletImported={connect}
         onClose={onImportModalClose}
       />
