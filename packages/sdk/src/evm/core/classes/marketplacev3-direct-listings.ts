@@ -908,9 +908,15 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
         ERC721Abi,
         provider,
       ) as IERC721;
+
+      // Handle reverts in case of non-existent tokens
+      let owner;
+      try {
+        owner = await asset.ownerOf(listing.tokenId);
+      } catch (e) {}
       const valid =
-        (await asset.ownerOf(listing.tokenId)).toLowerCase() ===
-        listing.creatorAddress.toLowerCase();
+        owner?.toLowerCase() === listing.creatorAddress.toLowerCase();
+
       return {
         valid,
         error: valid

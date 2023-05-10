@@ -143,6 +143,7 @@ const DialogContent = styled.div<{ theme?: Theme }>`
     border-radius: ${radius.xxl};
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
+    max-width: none !important;
   }
 
   & *::selection {

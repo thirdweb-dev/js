@@ -1,1 +1,1 @@
-export { Connector, type ConnectorData } from "./Connector";
+export { WagmiConnector, type WagmiConnectorData } from "./WagmiConnector";

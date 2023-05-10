@@ -16,9 +16,12 @@ export {
   useDisconnect,
   useSwitchChain,
   useWallets,
+  useWalletConfig,
+  useSetConnectionStatus,
+  useSetConnectedWallet,
 } from "../core/hooks/wallet-hooks";
 export { useNetwork } from "../core/hooks/useNetwork";
-export { useThirdwebWallet } from "../core/providers/thirdweb-wallet-provider";
+export { useWalletContext } from "../core/providers/thirdweb-wallet-provider";
 
 // connected wallet hooks
 export {
@@ -27,13 +30,15 @@ export {
   useAddress,
   useChainId,
   useActiveChain,
+  useChain,
 } from "./hooks/wallet";
 
 // Utilities and Others
 export { shouldNeverPersistQuery } from "../core/query-utils/query-key";
 export type { RequiredParam } from "../core/query-utils/required-param";
 export type {
-  Wallet,
+  ConfiguredWallet,
+  ConnectUIProps,
   WalletClass,
   WalletInstance,
   ExtraCoreWalletOptions,
@@ -45,7 +50,10 @@ export {
   ThirdwebAuthProvider,
   useThirdwebAuthContext,
 } from "./contexts/thirdweb-auth";
-export type { ThirdwebAuthConfig, ISecureStorage } from "./contexts/thirdweb-auth";
+export type {
+  ThirdwebAuthConfig,
+  ISecureStorage,
+} from "./contexts/thirdweb-auth";
 
 // config
 export {
@@ -187,7 +195,7 @@ export {
 // thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)
 
 // auth hooks
-export { useLogin, useLogout, useUser } from "./hooks/auth";
+export { useLogin, useLogout, useUser, useAuth } from "./hooks/auth";
 export type { UserWithData } from "./hooks/auth";
 
 // contract hooks
@@ -211,6 +219,7 @@ export { useNetworkMismatch } from "./hooks/useNetworkMismatch";
 export { useReadonlySDK } from "./hooks/useReadonlySDK";
 export { useSigner } from "./hooks/useSigner";
 export { useSupportedChains } from "./hooks/useSupportedChains";
+export { useSupportedWallet } from "./hooks/useSupportedWallet";
 export { useAppURI, useSetAppURI } from "./hooks/async/app";
 
 // sdk provider

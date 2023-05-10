@@ -1,3 +1,4 @@
+import invariant from "tiny-invariant";
 import { ThirdwebSDK } from "../../src/solana";
 import { createTestSDK } from "./before-setup";
 import { expect } from "chai";
@@ -14,6 +15,7 @@ describe("Registry", async () => {
 
   it("deploying should create entries in the registry", async () => {
     const wallet = freshSDK.wallet.getAddress();
+    invariant(wallet, "Wallet not found");
     nftColl = await freshSDK.deployer.createNftCollection({
       name: "Reg Test Collection",
       description: "Test Description",

@@ -321,7 +321,7 @@ export async function twCreate(
       const res = await prompts({
         type: "text",
         name: "path",
-        message: CREATE_MESSAGES.contractName,
+        message: projectType === "extension" ? CREATE_MESSAGES.extensionName : CREATE_MESSAGES.contractName,
         initial: defaultName,
         validate: (name: string) => {
           const isValid = /(^[a-z0-9A-Z]+$)|(^[a-z0-9A-Z]+\.sol$)/.test(name);

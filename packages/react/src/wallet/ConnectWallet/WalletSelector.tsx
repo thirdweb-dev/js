@@ -1,5 +1,7 @@
 import { Img } from "../../components/Img";
 import { Spacer } from "../../components/Spacer";
+import { Flex } from "../../components/basic";
+import { Button } from "../../components/buttons";
 import { HelperLink, ModalTitle } from "../../components/modalElements";
 import {
   fontSize,
@@ -8,53 +10,84 @@ import {
   spacing,
   Theme,
 } from "../../design-system";
-import { WalletMeta } from "../types";
 import styled from "@emotion/styled";
+import { ConfiguredWallet } from "@thirdweb-dev/react-core";
+import { walletIds } from "@thirdweb-dev/wallets";
 
 export const WalletSelector: React.FC<{
-  walletsMeta: WalletMeta[];
+  configuredWallets: ConfiguredWallet[];
+  selectWallet: (wallet: ConfiguredWallet) => void;
   onGetStarted: () => void;
 }> = (props) => {
+  const localWalletInfo = props.configuredWallets.find(
+    (w) => w.id === walletIds.localWallet,
+  );
+  const configuredWallets = props.configuredWallets.filter(
+    (w) => w.id !== walletIds.localWallet,
+  );
+
+  const showGetStarted =
+    !localWalletInfo && !!props.configuredWallets[0].meta.urls;
+
   return (
     <>
-      <ModalTitle
-        style={{
-          textAlign: "left",
-        }}
-      >
-        Choose your wallet
-      </ModalTitle>
-
+      <ModalTitle>Choose your wallet</ModalTitle>
       <Spacer y="xl" />
 
-      <WalletSelection walletsMeta={props.walletsMeta} />
+      <WalletSelection
+        configuredWallets={configuredWallets}
+        selectWallet={props.selectWallet}
+      />
 
-      <Spacer y="xl" />
+      {localWalletInfo && (
+        <>
+          <Spacer y="xl" />
+          <Flex justifyContent="center">
+            <Button
+              variant="link"
+              onClick={() => {
+                props.selectWallet(localWalletInfo);
+              }}
+            >
+              Continue as guest
+            </Button>
+          </Flex>
+        </>
+      )}
 
-      <HelperLink
-        as="button"
-        onClick={props.onGetStarted}
-        style={{
-          display: "block",
-          width: "100%",
-          textAlign: "center",
-        }}
-      >
-        Need help getting started?
-      </HelperLink>
+      {showGetStarted && (
+        <>
+          <Spacer y="xl" />
+          <HelperLink
+            as="button"
+            onClick={props.onGetStarted}
+            style={{
+              display: "block",
+              width: "100%",
+              textAlign: "center",
+            }}
+          >
+            Need help getting started?
+          </HelperLink>
+        </>
+      )}
     </>
   );
 };
 
-export const WalletSelection: React.FC<{ walletsMeta: WalletMeta[] }> = (
-  props,
-) => {
+export const WalletSelection: React.FC<{
+  configuredWallets: ConfiguredWallet[];
+  selectWallet: (wallet: ConfiguredWallet) => void;
+}> = (props) => {
   // show the installed wallets first
-  const sortedWalletsMeta = props.walletsMeta.sort((a, b) => {
-    if (a.installed && !b.installed) {
+  const configuredWallets = props.configuredWallets.sort((a, b) => {
+    const aInstalled = a.isInstalled ? a.isInstalled() : false;
+    const bInstalled = b.isInstalled ? b.isInstalled() : false;
+
+    if (aInstalled && !bInstalled) {
       return -1;
     }
-    if (!a.installed && b.installed) {
+    if (!aInstalled && bInstalled) {
       return 1;
     }
     return 0;
@@ -62,23 +95,26 @@ export const WalletSelection: React.FC<{ walletsMeta: WalletMeta[] }> = (
 
   return (
     <WalletList>
-      {sortedWalletsMeta.map((walletMeta) => {
+      {configuredWallets.map((configuredWallet) => {
+        const isInstalled = configuredWallet.isInstalled
+          ? configuredWallet.isInstalled()
+          : false;
         return (
-          <li key={walletMeta.id}>
+          <li key={configuredWallet.id}>
             <WalletButton
               type="button"
               onClick={() => {
-                walletMeta.onClick();
+                props.selectWallet(configuredWallet);
               }}
             >
               <Img
-                src={walletMeta.iconURL}
+                src={configuredWallet.meta.iconURL}
                 width={iconSize.lg}
                 height={iconSize.lg}
                 loading="eager"
               />
-              <WalletName>{walletMeta.name}</WalletName>
-              {walletMeta.installed && <InstallBadge> Installed </InstallBadge>}
+              <WalletName>{configuredWallet.meta.name}</WalletName>
+              {isInstalled && <InstallBadge> Installed </InstallBadge>}
             </WalletButton>
           </li>
         );

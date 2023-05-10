@@ -8,7 +8,7 @@ export function useWalletConnectV1() {
       const { walletConnectV1 } = await import(
         "../../../wallet/wallets/walletConnectV1"
       );
-      connect(walletConnectV1(), options);
+      return connect(walletConnectV1(), options);
     },
     [connect],
   );
@@ -21,7 +21,7 @@ export function useWalletConnect() {
       const { walletConnect } = await import(
         "../../../wallet/wallets/walletConnect"
       );
-      connect(walletConnect(), options || {});
+      return connect(walletConnect(), options || {});
     },
     [connect],
   );

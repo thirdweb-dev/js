@@ -1,7 +1,7 @@
 import {
   ChainId,
-  getAllDetectedFeatureNames,
-  isFeatureEnabled,
+  getAllDetectedExtensionNames,
+  isExtensionEnabled,
   resolveContractUriFromAddress,
   ThirdwebSDK,
 } from "../../src/evm";
@@ -81,34 +81,36 @@ describe("Publishing", async () => {
 
   it("should extract features", async () => {
     expect(
-      isFeatureEnabled(TokenERC721__factory.abi, "ERC721Enumerable"),
+      isExtensionEnabled(TokenERC721__factory.abi, "ERC721Enumerable"),
     ).to.eq(true);
-    expect(isFeatureEnabled(TokenERC721__factory.abi, "ERC721Mintable")).to.eq(
-      true,
-    );
     expect(
-      isFeatureEnabled(TokenERC721__factory.abi, "ERC721BatchMintable"),
+      isExtensionEnabled(TokenERC721__factory.abi, "ERC721Mintable"),
+    ).to.eq(true);
+    expect(
+      isExtensionEnabled(TokenERC721__factory.abi, "ERC721BatchMintable"),
     ).to.eq(true);
 
     // Drop
     expect(
-      isFeatureEnabled(DropERC721__factory.abi, "ERC721ClaimPhasesV2"),
+      isExtensionEnabled(DropERC721__factory.abi, "ERC721ClaimPhasesV2"),
     ).to.eq(true);
-    expect(isFeatureEnabled(DropERC721__factory.abi, "ERC721Supply")).to.eq(
+    expect(isExtensionEnabled(DropERC721__factory.abi, "ERC721Supply")).to.eq(
       true,
     );
-    expect(isFeatureEnabled(DropERC721__factory.abi, "ERC721Mintable")).to.eq(
+    expect(isExtensionEnabled(DropERC721__factory.abi, "ERC721Mintable")).to.eq(
       false,
     );
   });
 
   it("should extract all features", async () => {
-    const tokenFeatures = getAllDetectedFeatureNames(TokenERC721__factory.abi);
+    const tokenFeatures = getAllDetectedExtensionNames(
+      TokenERC721__factory.abi,
+    );
     expect(tokenFeatures).to.contain("ERC721Enumerable");
-    expect(getAllDetectedFeatureNames(DropERC721__factory.abi)).to.contain(
+    expect(getAllDetectedExtensionNames(DropERC721__factory.abi)).to.contain(
       "ERC721ClaimPhasesV2",
     );
-    expect(getAllDetectedFeatureNames(DropERC721_V3__factory.abi)).to.contain(
+    expect(getAllDetectedExtensionNames(DropERC721_V3__factory.abi)).to.contain(
       "ERC721ClaimPhasesV1",
     );
   });

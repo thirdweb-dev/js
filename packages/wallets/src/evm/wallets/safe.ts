@@ -1,8 +1,9 @@
-import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
+import { ConnectParams, Connector } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { SafeConnectionArgs } from "../connectors/safe/types";
 import type { SafeConnector as SafeConnectorType } from "../connectors/safe";
+import { walletIds } from "../constants/walletIds";
 
 export { SafeSupportedChainsSet } from "../connectors/safe";
 
@@ -19,7 +20,7 @@ export class SafeWallet extends AbstractClientWallet<{}, SafeConnectionArgs> {
       "ipfs://QmbbyxDDmmLQh8DzzeUR6X6B75bESsNUFmbdvS3ZsQ2pN1/SafeToken.svg",
   };
 
-  static id = "Safe" as const;
+  static id = walletIds.safe;
   public get walletName() {
     return "Safe Wallet" as const;
   }
@@ -30,7 +31,7 @@ export class SafeWallet extends AbstractClientWallet<{}, SafeConnectionArgs> {
     });
   }
 
-  protected async getConnector(): Promise<TWConnector> {
+  protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
       const { SafeConnector } = await import("../connectors/safe");
       this.connector = new SafeConnector();
@@ -43,14 +44,11 @@ export class SafeWallet extends AbstractClientWallet<{}, SafeConnectionArgs> {
     // no op
   }
 
-  async connect(
-    connectOptions: ConnectParams<SafeConnectionArgs>,
-  ): Promise<string> {
-    // can't save params to storage because one of them is a class instance and can't be saved
-    return await super.connect({ ...connectOptions, saveParams: false });
-  }
-
   getPersonalWallet() {
     return this.connector?.personalWallet;
+  }
+
+  autoConnect(params: ConnectParams<SafeConnectionArgs>) {
+    return this.connect(params);
   }
 }

@@ -1,5 +1,7 @@
 import {
   TransactionError,
+  computeEOAForwarderAddress,
+  computeForwarderAddress,
   extractFunctionsFromAbi,
   fetchContractMetadataFromAddress,
   fetchSourceFilesFromMetadata,
@@ -529,19 +531,22 @@ export class ContractWrapper<
       // no-op
     }
 
-    return new TransactionError({
-      reason,
-      from,
-      to,
-      method,
-      data,
-      network,
-      rpcUrl,
-      value,
-      hash,
-      contractName,
-      sources,
-    });
+    return new TransactionError(
+      {
+        reason,
+        from,
+        to,
+        method,
+        data,
+        network,
+        rpcUrl,
+        value,
+        hash,
+        contractName,
+        sources,
+      },
+      error,
+    );
   }
 
   /**
@@ -789,10 +794,12 @@ export class ContractWrapper<
       (this.options.gasless.openzeppelin.useEOAForwarder
         ? CONTRACT_ADDRESSES[
             transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-          ].openzeppelinForwarderEOA
+          ].openzeppelinForwarderEOA ||
+          (await computeEOAForwarderAddress(this.getProvider(), this.#storage))
         : CONTRACT_ADDRESSES[
             transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-          ].openzeppelinForwarder);
+          ].openzeppelinForwarder ||
+          (await computeForwarderAddress(this.getProvider(), this.#storage)));
 
     const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
     const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
@@ -821,8 +828,8 @@ export class ContractWrapper<
       };
     } else {
       domain = {
-        name: "GSNv2 Forwarder",
-        version: "0.0.1",
+        name: this.options.gasless.openzeppelin.domainName,
+        version: this.options.gasless.openzeppelin.domainVersion,
         chainId: transaction.chainId,
         verifyingContract: forwarderAddress,
       };

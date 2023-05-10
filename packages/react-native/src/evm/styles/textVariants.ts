@@ -39,4 +39,11 @@ export const textVariants = {
     fontSize: 13,
     lineHeight: 16,
   },
+  error: {
+    color: "error",
+    fontWeight: "500",
+    fontSize: 12,
+    lineHeight: 16,
+    textAlign: "center",
+  },
 };

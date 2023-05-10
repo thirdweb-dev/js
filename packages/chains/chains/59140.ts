@@ -1,17 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
   "name": "Linea Testnet",
-  "title": "Linea Testnet",
+  "title": "Linea Goerli Testnet",
   "chain": "ETH",
   "rpc": [
     "https://linea-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.goerli.linea.build"
+    "https://rpc.goerli.linea.build",
+    "wss://rpc.goerli.linea.build",
+    "https://consensys-zkevm-goerli-prealpha.infura.io/v3/${INFURA_API_KEY}",
+    "wss://consensys-zkevm-goerli-prealpha.infura.io/v3/${INFURA_API_KEY}"
   ],
   "faucets": [
     "https://faucetlink.to/goerli"
   ],
   "nativeCurrency": {
-    "name": "Goerli Ether",
+    "name": "Linea Ether",
     "symbol": "ETH",
     "decimals": 18
   },
@@ -20,9 +23,9 @@ export default {
   "chainId": 59140,
   "networkId": 59140,
   "icon": {
-    "url": "ipfs://QmP6rcphqMTeByPxomeYeR5XRPZaFpwGbZxHkGQKyao4Le",
-    "width": 115,
-    "height": 115,
+    "url": "ipfs://QmURjritnHL7a8TwZgsFwp3f272DJmG5paaPtWDZ98QZwH",
+    "width": 97,
+    "height": 102,
     "format": "svg"
   },
   "parent": {
@@ -36,13 +39,13 @@ export default {
   },
   "explorers": [
     {
-      "name": "Linea Testnet Explorer",
+      "name": "blockscout",
       "url": "https://explorer.goerli.linea.build",
       "standard": "EIP3091",
       "icon": {
-        "url": "ipfs://QmP6rcphqMTeByPxomeYeR5XRPZaFpwGbZxHkGQKyao4Le",
-        "width": 115,
-        "height": 115,
+        "url": "ipfs://QmURjritnHL7a8TwZgsFwp3f272DJmG5paaPtWDZ98QZwH",
+        "width": 97,
+        "height": 102,
         "format": "svg"
       }
     }

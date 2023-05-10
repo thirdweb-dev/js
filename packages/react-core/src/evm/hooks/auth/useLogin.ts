@@ -78,7 +78,7 @@ export function useLogin() {
   };
 }
 
-async function doLogin(
+export async function doLogin(
   wallet: GenericAuthWallet,
   options?: LoginOptions,
 ): Promise<LoginPayload> {

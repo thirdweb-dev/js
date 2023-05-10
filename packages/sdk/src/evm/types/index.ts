@@ -11,3 +11,4 @@ export * from "./events";
 export * from "./multiwrap";
 export * from "./registry";
 export * from "./transactions";
+export * from "./contract";

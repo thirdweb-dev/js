@@ -21,8 +21,8 @@ export function ThemeProvider({
         typeof theme_ === "object"
           ? theme_
           : theme_ === "dark"
-          ? darkTheme
-          : lightTheme
+          ? darkTheme()
+          : lightTheme()
       }
     >
       {children}

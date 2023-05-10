@@ -3,14 +3,17 @@ import { ThirdwebAuth } from "@thirdweb-dev/auth";
 import { CoinbasePayIntegration, FundWalletOptions } from "@thirdweb-dev/pay";
 import { ThirdwebSDK, ChainIdOrName } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { DAppMetaData } from "@thirdweb-dev/wallets";
+import {
+  DAppMetaData,
+  WalletConnectV1,
+  walletIds,
+} from "@thirdweb-dev/wallets";
 import type { AbstractClientWallet } from "@thirdweb-dev/wallets/evm/wallets/base";
 import { CoinbaseWallet } from "@thirdweb-dev/wallets/evm/wallets/coinbase-wallet";
-import { DeviceBrowserWallet } from "@thirdweb-dev/wallets/evm/wallets/device-wallet";
+import { LocalWallet } from "@thirdweb-dev/wallets/evm/wallets/local-wallet";
 import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
 import { MetaMaskWallet } from "@thirdweb-dev/wallets/evm/wallets/metamask";
-import { WalletConnect } from "@thirdweb-dev/wallets/evm/wallets/wallet-connect";
 import { BigNumber } from "ethers";
 import type { ContractInterface, Signer } from "ethers";
 
@@ -22,7 +25,6 @@ declare global {
 
 const API_KEY =
   "339d65590ba0fa79e4c8be0af33d64eda709e13652acb02c6be63f5a1fbef9c3";
-const TW_WC_PROJECT_ID = "145769e410f16970a79ff77b2d89a1e0";
 const SEPARATOR = "/";
 const SUB_SEPARATOR = "#";
 
@@ -44,9 +46,9 @@ const bigNumberReplacer = (_key: string, value: any) => {
 const WALLETS = [
   MetaMaskWallet,
   InjectedWallet,
-  WalletConnect,
+  WalletConnectV1,
   CoinbaseWallet,
-  DeviceBrowserWallet,
+  LocalWallet,
 ] as const;
 
 type PossibleWallet = (typeof WALLETS)[number]["id"];
@@ -130,24 +132,23 @@ class ThirdwebBridge implements TWBridge {
             dappMetadata,
           });
           break;
-        case "metamask":
+        case walletIds.metamask:
           walletInstance = new MetaMaskWallet({
             dappMetadata,
           });
           break;
-        case "walletConnect":
-          walletInstance = new WalletConnect({
+        case walletIds.walletConnectV1:
+          walletInstance = new WalletConnectV1({
             dappMetadata,
-            projectId: TW_WC_PROJECT_ID,
           });
           break;
-        case "coinbaseWallet":
+        case walletIds.coinbase:
           walletInstance = new CoinbaseWallet({
             dappMetadata,
           });
           break;
-        case "deviceWallet":
-          walletInstance = new DeviceBrowserWallet({
+        case walletIds.localWallet:
+          walletInstance = new LocalWallet({
             dappMetadata,
           });
           break;
@@ -181,12 +182,34 @@ class ThirdwebBridge implements TWBridge {
     }
     const walletInstance = this.walletMap.get(wallet);
     if (walletInstance) {
-      if (walletInstance.walletId === "deviceWallet" && password) {
-        const deviceWallet = walletInstance as DeviceBrowserWallet;
-        await deviceWallet.connect({ chainId, password });
-      } else {
-        await walletInstance.connect({ chainId });
+      // local wallet needs to be generated or loaded before connecting
+      if (walletInstance.walletId === walletIds.localWallet) {
+        const localWallet = walletInstance as LocalWallet;
+
+        // if password is provided, we can load and save
+        if (password) {
+          // if there is a saved wallet, load it with the password
+          if (await localWallet.getSavedData()) {
+            await localWallet.load({
+              strategy: "encryptedJson",
+              password,
+            });
+          } else {
+            await localWallet.generate();
+            await localWallet.save({
+              strategy: "encryptedJson",
+              password,
+            });
+          }
+        }
+
+        // if no password is provided, we can only generate
+        else {
+          await localWallet.generate();
+        }
       }
+
+      await walletInstance.connect({ chainId });
       this.activeWallet = walletInstance;
       this.updateSDKSigner(await walletInstance.getSigner());
       return await this.activeSDK.wallet.getAddress();

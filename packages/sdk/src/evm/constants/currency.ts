@@ -1,5 +1,5 @@
 import { NativeToken } from "../types/currency";
-import { ChainId, getSupportedChains, SUPPORTED_CHAIN_ID } from "./chains";
+import { ChainId, getSupportedChains } from "./chains";
 import { ethers } from "ethers";
 
 /**
@@ -11,10 +11,7 @@ export const NATIVE_TOKEN_ADDRESS =
 /**
  * @public
  */
-export const NATIVE_TOKENS: Record<
-  SUPPORTED_CHAIN_ID | ChainId.Hardhat,
-  NativeToken
-> = {
+export const NATIVE_TOKENS: Record<number, NativeToken> = {
   [ChainId.Mainnet]: {
     name: "Ether",
     symbol: "ETH",
@@ -177,6 +174,17 @@ export const NATIVE_TOKENS: Record<
       symbol: "WETH",
     },
   },
+  // eslint-disable-next-line no-useless-computed-key
+  [84531]: {
+    name: "Base Goerli Testnet",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x4200000000000000000000000000000000000006",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
 };
 
 /**
@@ -199,7 +207,7 @@ export function getNativeTokenByChainId(chainId: ChainId): NativeToken {
     };
   }
   return (
-    NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID] || {
+    NATIVE_TOKENS[chainId as number] || {
       name: "Ether",
       symbol: "ETH",
       decimals: 18,
