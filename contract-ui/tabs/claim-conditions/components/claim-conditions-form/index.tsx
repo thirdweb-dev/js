@@ -102,19 +102,19 @@ export const ClaimConditionTypeData: Record<
     description: "Allow any wallet to claim this drop during this claim phase.",
   },
   overrides: {
-    name: "Public (With Overrides)",
+    name: "Public (With Allowlist)",
     description:
       "Allow any wallet to claim this drop during this claim phase with special overrides for some wallet addresses.",
   },
   specific: {
-    name: "Allowlist",
+    name: "Allowlist Only",
     description:
       "Only wallet addresses in the allowlist can claim this drop during this claim phase.",
   },
   creator: {
-    name: "Creator",
+    name: "Only Owner",
     description:
-      "A phase for the creator of the contract to indefinitely claim with no cost, (only gas).",
+      "A phase for the owner of the contract to indefinitely claim with no cost, (only gas).",
   },
   custom: {
     name: "Custom",
