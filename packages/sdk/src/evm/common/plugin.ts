@@ -89,7 +89,7 @@ export async function getCompositePluginABI(
 export async function getCompositeABIfromRelease(
   publishMetadataUri: string,
   storage: ThirdwebStorage,
-) {
+): Promise<Abi> {
   const { compilerMetadata, extendedMetadata } =
     await fetchAndCacheDeployMetadata(publishMetadataUri, storage);
 
