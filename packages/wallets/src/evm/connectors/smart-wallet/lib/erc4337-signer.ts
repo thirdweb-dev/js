@@ -132,9 +132,4 @@ export class ERC4337EthersSigner extends Signer {
   ): Promise<string> {
     throw new Error("not implemented");
   }
-
-  async signUserOperation(userOperation: UserOperationStruct): Promise<string> {
-    const message = await this.smartAccountAPI.getUserOpHash(userOperation);
-    return await this.originalSigner.signMessage(message);
-  }
 }
