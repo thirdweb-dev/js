@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "name": "Kerleano",
-  "title": "Proof of Climate awaReness testnet",
+  "title": "Proof of Carbon Reduction testnet",
   "chain": "CRC",
   "status": "active",
   "rpc": [
@@ -13,7 +13,7 @@ export default {
     "https://github.com/ethereum-pocr/kerleano/blob/main/docs/faucet.md"
   ],
   "nativeCurrency": {
-    "name": "Climate awaReness Coin",
+    "name": "Carbon Reduction Coin",
     "symbol": "CRC",
     "decimals": 18
   },
@@ -21,22 +21,10 @@ export default {
   "shortName": "kerleano",
   "chainId": 1804,
   "networkId": 1804,
-  "icon": {
-    "url": "ipfs://QmRLwpq47tyEd3rfK4tKRhbTvyb3fc7PCutExnL1XAb37A",
-    "width": 334,
-    "height": 360,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "Lite Explorer",
       "url": "https://ethereum-pocr.github.io/explorer/kerleano",
-      "icon": {
-        "url": "ipfs://QmRLwpq47tyEd3rfK4tKRhbTvyb3fc7PCutExnL1XAb37A",
-        "width": 334,
-        "height": 360,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],

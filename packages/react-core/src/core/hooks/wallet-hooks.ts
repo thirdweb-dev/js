@@ -1,11 +1,11 @@
-import { useThirdwebWallet } from "../providers/thirdweb-wallet-provider";
+import { useWalletContext } from "../providers/thirdweb-wallet-provider";
 import invariant from "tiny-invariant";
 
 /**
  * @returns the current active wallet instance
  */
 export function useWallet() {
-  const context = useThirdwebWallet();
+  const context = useWalletContext();
   invariant(
     context,
     "useWallet() hook must be used within a <ThirdwebProvider/>",
@@ -18,7 +18,7 @@ export function useWallet() {
  * @returns `supportedWallets` configured in the `<ThirdwebProvider/>`
  */
 export function useWallets() {
-  const context = useThirdwebWallet();
+  const context = useWalletContext();
   invariant(
     context,
     "useWallets() hook must be used within a <ThirdwebProvider/>",
@@ -31,7 +31,7 @@ export function useWallets() {
  * @returns a method to connect to a wallet class
  */
 export function useConnect() {
-  const context = useThirdwebWallet();
+  const context = useWalletContext();
   invariant(
     context,
     "useConnect() hook must be used within a <ThirdwebProvider/>",
@@ -44,7 +44,7 @@ export function useConnect() {
  * @returns a method to disconnect from the current active wallet
  */
 export function useDisconnect() {
-  const context = useThirdwebWallet();
+  const context = useWalletContext();
   invariant(
     context,
     "useDisconnect() hook must be used within a <ThirdwebProvider/>",
@@ -64,7 +64,7 @@ export function useDisconnect() {
  *
  */
 export function useConnectionStatus() {
-  const context = useThirdwebWallet();
+  const context = useWalletContext();
   invariant(
     context,
     "useConnectionStatus() must be used within a <ThirdwebProvider/>",
@@ -78,7 +78,7 @@ export function useConnectionStatus() {
  *
  */
 export function useIsConnecting() {
-  const context = useThirdwebWallet();
+  const context = useWalletContext();
   invariant(
     context,
     "useConnectionStatus() must be used within a <ThirdwebProvider/>",
@@ -94,7 +94,7 @@ export function useIsConnecting() {
  * @returns a method to create an instance of given wallet class
  */
 export function useCreateWalletInstance() {
-  const context = useThirdwebWallet();
+  const context = useWalletContext();
   invariant(
     context,
     "useCreateWalletInstance() must be used within a <ThirdwebProvider/>",
@@ -107,7 +107,7 @@ export function useCreateWalletInstance() {
  * @returns a method to connect the wallet to network/chain with given chainId
  */
 export function useSwitchChain() {
-  const context = useThirdwebWallet();
+  const context = useWalletContext();
   invariant(
     context,
     "useSwitchChain() must be used within a <ThirdwebProvider/>",

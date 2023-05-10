@@ -6,9 +6,7 @@ export default {
     "https://la-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.lachain.network"
   ],
-  "faucets": [
-    "https://faucet.lachain.network"
-  ],
+  "faucets": [],
   "nativeCurrency": {
     "name": "Test La Coin",
     "symbol": "TLA",
@@ -23,13 +21,7 @@ export default {
   "shortName": "latestnet",
   "chainId": 418,
   "networkId": 418,
-  "explorers": [
-    {
-      "name": "LA Testnet Explorer",
-      "url": "https://testexplorer.lachain.network",
-      "standard": "EIP3091"
-    }
-  ],
+  "explorers": [],
   "testnet": true,
   "slug": "la-testnet"
 } as const satisfies Chain;

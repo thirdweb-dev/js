@@ -34,7 +34,7 @@ export const MagicConnectUI = (props: MagicConnectUIProps) => {
   }
 
   // const createInstance = useCreateWalletInstance();
-  // const twContext = useThirdwebWallet();
+  // const twContext = useWalletContext();
   // const [isConnecting, setIsConnecting] = useState(false);
   const [showUI, setShowUI] = useState<"sms" | "email" | "menu">(firstScreen);
 

@@ -1,7 +1,6 @@
 import { ethers, providers } from "ethers";
 
 import { Bytes, Signer } from "ethers";
-import { UserOperationStruct } from "@account-abstraction/contracts";
 import { ClientConfig } from "@account-abstraction/sdk";
 import { BaseAccountAPI } from "./base-api";
 import { ERC4337EthersProvider } from "./erc4337-provider";
@@ -131,10 +130,5 @@ export class ERC4337EthersSigner extends Signer {
     transaction: Deferrable<providers.TransactionRequest>,
   ): Promise<string> {
     throw new Error("not implemented");
-  }
-
-  async signUserOperation(userOperation: UserOperationStruct): Promise<string> {
-    const message = await this.smartAccountAPI.getUserOpHash(userOperation);
-    return await this.originalSigner.signMessage(message);
   }
 }

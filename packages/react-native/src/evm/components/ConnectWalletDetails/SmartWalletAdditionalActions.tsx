@@ -7,7 +7,7 @@ import { Address } from "../base/Address";
 import Text from "../base/Text";
 import { usePersonalWalletAddress } from "../../wallets/hooks/usePersonalWalletAddress";
 import { LocalWallet } from "../../wallets/wallets/local-wallet";
-import { useThirdwebWallet, useWallet } from "@thirdweb-dev/react-core";
+import { useWalletContext, useWallet } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import { useSmartWallet } from "../../providers/context-provider";
 import RightArrowIcon from "../../assets/right-arrow";
@@ -19,7 +19,7 @@ export const SmartWalletAdditionalActions = ({
   onExportPress: () => void;
 }) => {
   const personalWalletAddress = usePersonalWalletAddress();
-  const handleWalletConnect = useThirdwebWallet().handleWalletConnect;
+  const handleWalletConnect = useWalletContext().handleWalletConnect;
   const [smartWallet, setSmartWallet] = useSmartWallet();
   const [smartWalletAddress, setSmartWalletAddress] = useState<string>("");
   const [showSmartWallet, setShowSmartWallet] = useState(false);

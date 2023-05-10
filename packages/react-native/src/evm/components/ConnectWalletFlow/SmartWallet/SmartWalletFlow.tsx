@@ -5,7 +5,7 @@ import {
   useConnect,
   useCreateWalletInstance,
   useSupportedWallet,
-  useThirdwebWallet,
+  useWalletContext,
 } from "@thirdweb-dev/react-core";
 import { SmartWalletObj } from "../../../wallets/wallets/smart-wallet";
 import { localWallet } from "../../../wallets/wallets/local-wallet";
@@ -36,7 +36,7 @@ export const SmartWalletFlow = ({
   const createWalletInstance = useCreateWalletInstance();
   const walletObj = useSupportedWallet(walletIds.smartWallet) as SmartWalletObj;
   const connect = useConnect();
-  const targetChain = useThirdwebWallet().activeChain;
+  const targetChain = useWalletContext().activeChain;
 
   const mismatch = personalWalletChainId
     ? personalWalletChainId !== targetChain.chainId

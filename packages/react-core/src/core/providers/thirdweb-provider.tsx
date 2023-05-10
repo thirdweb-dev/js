@@ -6,7 +6,7 @@ import { ConfiguredWallet } from "../types/wallet";
 import { ThirdwebThemeContext } from "./theme-context";
 import {
   ThirdwebWalletProvider,
-  useThirdwebWallet,
+  useWalletContext,
 } from "./thirdweb-wallet-provider";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import {
@@ -172,7 +172,7 @@ const ThirdwebSDKProviderWrapper = <TChains extends Chain[]>({
 }: React.PropsWithChildren<
   Omit<ThirdwebSDKProviderProps<TChains>, "signer">
 >) => {
-  const signer = useThirdwebWallet()?.signer;
+  const signer = useWalletContext()?.signer;
 
   return (
     <ThirdwebSDKProvider signer={signer} {...props}>

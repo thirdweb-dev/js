@@ -1,5 +1,115 @@
 # @thirdweb-dev/wallets
 
+## 0.2.19
+
+### Patch Changes
+
+- [#990](https://github.com/thirdweb-dev/js/pull/990) [`6a4aab0b`](https://github.com/thirdweb-dev/js/commit/6a4aab0b8a2e0f6ff1b47992a3c1e5426a74f7ff) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix loadOrCreate for LocalWalletNode
+
+- Updated dependencies [[`32908b76`](https://github.com/thirdweb-dev/js/commit/32908b76832c60e91a0a6e40dbdb1c8f56e9e5be), [`6a4aab0b`](https://github.com/thirdweb-dev/js/commit/6a4aab0b8a2e0f6ff1b47992a3c1e5426a74f7ff)]:
+  - @thirdweb-dev/sdk@3.10.14
+  - @thirdweb-dev/chains@0.1.15
+
+## 0.2.18
+
+### Patch Changes
+
+- [#973](https://github.com/thirdweb-dev/js/pull/973) [`93bdec06`](https://github.com/thirdweb-dev/js/commit/93bdec061dc05ab133e79f5f739dcae9b5393f53) Thanks [@MananTank](https://github.com/MananTank)! - - Fix PaperWallet.connect() error
+
+  - Fix return type of Wallet.autoConnect()
+
+- [#981](https://github.com/thirdweb-dev/js/pull/981) [`ea0f9479`](https://github.com/thirdweb-dev/js/commit/ea0f9479a38d442201e367fce1234c130228fde6) Thanks [@iketw](https://github.com/iketw)! - ## [ReactNative] Allow custom wallets be added to the ConnectWallet button modal
+
+  With this new API you can build your own wallet and wallet UI and integrate it into our ConnectWallet modal:
+
+  ```
+  import type { ConfiguredWallet, ConnectUIProps } from '@thirdweb-dev/react-native';
+  import { createAsyncLocalStorage, ConnectUIProps } from '@thirdweb-dev/react-native';
+  import { WalletOptions } from '@thirdweb-dev/wallets';
+
+  const WALLET_ID = "my-wallet-id";
+
+  export const myWallet = (): ConfiguredWallet => {
+    const asyncStorage = createAsyncLocalStorage(WALLET_ID);
+    const configuredWallet = {
+      id: WALLET_ID,
+      meta: {
+          id: WALLET_ID,
+          name: "My Custom Wallet", // This will be displayed in the connect wallet modal
+          iconURL: "ipfs or https url to an image or svg" // This will be used to fetch the icon to show in the connect wallet modal
+      },
+      create: (options: WalletOptions) =>
+        new MyWallet({
+          ...options,
+          walletStorage: asyncStorage,
+        }),
+      connectUI(props: ConnectUIProps) {
+        return <MyWalletUI {...props} />; // This will show up in the modal after the user selects your wallet
+      },
+    };
+
+    return configuredWallet;
+  };
+  ```
+
+  You can then add the wallet to your `supportedWallets` in the `ThirdwebProvider`:
+
+  ```
+  import { Goerli } from '@thirdweb-dev/chains';
+  import {
+    ThirdwebProvider,
+    metamaskWallet,
+  } from '@thirdweb-dev/react-native';
+
+  const activeChain = Goerli;
+
+  const App = () => {
+    return (
+      <ThirdwebProvider
+        activeChain={activeChain}
+        supportedChains={[activeChain]}
+        supportedWallets={[
+          myWallet(),
+          metamaskWallet(),
+        ]}>
+        <AppInner />
+      </ThirdwebProvider>
+    );
+  };
+  ```
+
+  This new version exposes some utility functions:
+
+  1. `formatWalletConnectDisplayUri`
+
+  Formats the wallet connect `wc://` url for usage with custom wallet links
+
+  2. `shortenWalletAddress`
+
+  Shortens a wallet address for display purposes
+
+  3. `createAsyncLocalStorage` and `createSecureStorage`
+
+  You can use these methods to get wallet compatible storage types.
+
+  - `createAsyncLocalStorage` uses MMKV in the background
+  - `createSecureStorage` uses Expo SecureStore in the background
+
+- [#978](https://github.com/thirdweb-dev/js/pull/978) [`05ebbc15`](https://github.com/thirdweb-dev/js/commit/05ebbc15a012855735fba2aa93887b88e14295d1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Export ethers and private key wallets top level
+
+- [#974](https://github.com/thirdweb-dev/js/pull/974) [`4ca557ae`](https://github.com/thirdweb-dev/js/commit/4ca557ae4ab225e39decc3b7a01a04c0d8e464c7) Thanks [@iketw](https://github.com/iketw)! - [Wallet] Rename Connector to WagmiConnector and TWConnector to Connector
+
+- [#967](https://github.com/thirdweb-dev/js/pull/967) [`7d7685e3`](https://github.com/thirdweb-dev/js/commit/7d7685e3fab5780b3c1d26b8ef431b96f8486972) Thanks [@MananTank](https://github.com/MananTank)! - - Fix type of connect() for magic wallet
+
+  - enforce smsLogin, emailLogin restriction for magic wallet
+  - update the icon for local wallet
+
+- [#977](https://github.com/thirdweb-dev/js/pull/977) [`93bd5733`](https://github.com/thirdweb-dev/js/commit/93bd57337b7d2c2fcd252987d10df3206c839daf) Thanks [@MananTank](https://github.com/MananTank)! - Fix Connect Wallet Open/Close issues
+
+- Updated dependencies [[`5305b42d`](https://github.com/thirdweb-dev/js/commit/5305b42db554b69f903b3d95f3ba0eeddabd6114), [`eb521d24`](https://github.com/thirdweb-dev/js/commit/eb521d240ae7102d44fe2c5223b0a18d867e09ad), [`af4b5356`](https://github.com/thirdweb-dev/js/commit/af4b5356372ffa084c8d0e747d8def46c2ff892c), [`93bd5733`](https://github.com/thirdweb-dev/js/commit/93bd57337b7d2c2fcd252987d10df3206c839daf), [`a2df187b`](https://github.com/thirdweb-dev/js/commit/a2df187bc1867beb2e90853da70dac271f604f12), [`aa9b6acc`](https://github.com/thirdweb-dev/js/commit/aa9b6acc3f5a118c2b5fe9e46732e72c0fc69376)]:
+  - @thirdweb-dev/chains@0.1.14
+  - @thirdweb-dev/sdk@3.10.13
+
 ## 0.2.17
 
 ### Patch Changes

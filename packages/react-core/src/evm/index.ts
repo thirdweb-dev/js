@@ -19,7 +19,7 @@ export {
   useIsConnecting,
 } from "../core/hooks/wallet-hooks";
 export { useNetwork } from "../core/hooks/useNetwork";
-export { useThirdwebWallet } from "../core/providers/thirdweb-wallet-provider";
+export { useWalletContext } from "../core/providers/thirdweb-wallet-provider";
 
 // connected wallet hooks
 export {
