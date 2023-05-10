@@ -1,16 +1,16 @@
 import * as zk from "zksync-web3";
 import invariant from "tiny-invariant";
 import { twProxyArtifactZK } from "./temp-artifact/TWProxy";
-import { getContractTypeForRemoteName } from "../contracts";
 import {
+  convertParamValues,
   extractFunctionParamsFromAbi,
   fetchAndCacheDeployMetadata,
 } from "../common";
-import { BigNumber, BytesLike, Contract, Signer, ethers } from "ethers";
+import { BytesLike, Contract, Signer, ethers } from "ethers";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { getApprovedImplementation } from "../constants";
 import { DeployOptions } from "../types";
 import { ThirdwebSDK } from "../core";
+import { getImplementation } from "./constants/addresses";
 
 export async function zkDeployContractFromUri(
   publishMetadataUri: string,
@@ -24,14 +24,11 @@ export async function zkDeployContractFromUri(
     await fetchAndCacheDeployMetadata(publishMetadataUri, storage);
   const forceDirectDeploy = options?.forceDirectDeploy || false;
 
-  const contractType = getContractTypeForRemoteName(compilerMetadata.name);
-  invariant(contractType !== "custom", "Can't deploy custom contracts yet.");
-
-  const implementationAddress = getApprovedImplementation(
+  const implementationAddress = getImplementation(
     chainId,
-    contractType,
+    compilerMetadata.name,
   );
-  invariant(implementationAddress, "Implementation not found");
+  invariant(implementationAddress, "Contract not supported yet.");
 
   if (
     extendedMetadata &&
@@ -131,43 +128,4 @@ async function registerContractOnMultiChainRegistry(
     console.log("Error registering contract on multi chain registry", e);
     return false;
   }
-}
-
-function convertParamValues(
-  constructorParamTypes: string[],
-  constructorParamValues: any[],
-) {
-  // check that both arrays are same length
-  if (constructorParamTypes.length !== constructorParamValues.length) {
-    throw Error(
-      `Passed the wrong number of constructor arguments: ${constructorParamValues.length}, expected ${constructorParamTypes.length}`,
-    );
-  }
-  return constructorParamTypes.map((p, index) => {
-    if (p === "tuple" || p.endsWith("[]")) {
-      if (typeof constructorParamValues[index] === "string") {
-        return JSON.parse(constructorParamValues[index]);
-      } else {
-        return constructorParamValues[index];
-      }
-    }
-    if (p === "bytes32") {
-      invariant(
-        ethers.utils.isHexString(constructorParamValues[index]),
-        `Could not parse bytes32 value. Expected valid hex string but got "${constructorParamValues[index]}".`,
-      );
-      return ethers.utils.hexZeroPad(constructorParamValues[index], 32);
-    }
-    if (p.startsWith("bytes")) {
-      invariant(
-        ethers.utils.isHexString(constructorParamValues[index]),
-        `Could not parse bytes value. Expected valid hex string but got "${constructorParamValues[index]}".`,
-      );
-      return constructorParamValues[index];
-    }
-    if (p.startsWith("uint") || p.startsWith("int")) {
-      return BigNumber.from(constructorParamValues[index].toString());
-    }
-    return constructorParamValues[index];
-  });
 }

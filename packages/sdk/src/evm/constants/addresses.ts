@@ -23,7 +23,7 @@ const MultichainRegistry_address = "0xcdAD8FA86e18538aC207872E8ff3536501431B73";
  * @internal
  */
 export const CONTRACT_ADDRESSES: Record<
-  number,
+  SUPPORTED_CHAIN_ID,
   {
     openzeppelinForwarder: string;
     openzeppelinForwarderEOA: string;
@@ -148,15 +148,6 @@ export const CONTRACT_ADDRESSES: Record<
     twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
     twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
   },
-  // eslint-disable-next-line no-useless-computed-key
-  [280]: {
-    openzeppelinForwarder: "0x8cbc8B5d71702032904750A66AEfE8B603eBC538", // TODO update
-    openzeppelinForwarderEOA: "0x7e80648EB2071E26937F9D42A513ccf4815fc702",
-    biconomyForwarder: "0x61456BF1715C1415730076BB79ae118E806E74d2",
-    twBYOCRegistry: constants.AddressZero,
-    twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
-    twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
-  },
   [ChainId.Hardhat]: {
     openzeppelinForwarder: constants.AddressZero,
     openzeppelinForwarderEOA: constants.AddressZero,
@@ -182,7 +173,7 @@ type DropContract = Extract<
 
 // @deprecated - should not be needed anymore, rely on the publish data instead
 export const APPROVED_IMPLEMENTATIONS: Record<
-  number,
+  SUPPORTED_CHAIN_ID,
   Record<DropContract, string>
 > = {
   [ChainId.Mainnet]: {
@@ -269,13 +260,6 @@ export const APPROVED_IMPLEMENTATIONS: Record<
     "token-drop": "",
     "signature-drop": "", // TODO
   },
-  // eslint-disable-next-line no-useless-computed-key
-  [280]: {
-    "nft-drop": "0xA8E28D98203848401A4f924358e6c337153D0f04",
-    "edition-drop": "",
-    "token-drop": "",
-    "signature-drop": "", // TODO
-  },
   [ChainId.Hardhat]: {
     "nft-drop": "",
     "edition-drop": "",
@@ -296,7 +280,7 @@ export const APPROVED_IMPLEMENTATIONS: Record<
  * @param contractType
  */
 export function getApprovedImplementation(
-  chainId: number, // TODO use SupportedChainId once we deploy to all chains
+  chainId: SUPPORTED_CHAIN_ID, // TODO use SupportedChainId once we deploy to all chains
   contractType: PrebuiltContractType,
 ): string | null {
   if (chainId in APPROVED_IMPLEMENTATIONS) {

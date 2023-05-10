@@ -1,1 +1,1 @@
-export * from "./zksync-helper";
+export * from "./zksync-deploy-utils";
