@@ -1,5 +1,12 @@
 # @thirdweb-dev/auth
 
+## 3.0.18
+
+### Patch Changes
+
+- Updated dependencies [[`6a4aab0b`](https://github.com/thirdweb-dev/js/commit/6a4aab0b8a2e0f6ff1b47992a3c1e5426a74f7ff)]:
+  - @thirdweb-dev/wallets@0.2.19
+
 ## 3.0.17
 
 ### Patch Changes
