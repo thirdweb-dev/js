@@ -6,7 +6,7 @@ import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
 import {
   ConfiguredWallet,
   useConnect,
-  useIsConnecting,
+  useConnectionStatus,
   useWallets,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
@@ -14,6 +14,7 @@ import { ActivityIndicator, StyleSheet } from "react-native";
 import { SmartWallet } from "@thirdweb-dev/wallets";
 import { SmartWalletFlow } from "./SmartWallet/SmartWalletFlow";
 import { LocalWallet } from "../../wallets/wallets/local-wallet";
+import { useColorScheme } from "react-native";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -22,8 +23,10 @@ export const ConnectWalletFlow = () => {
   >();
   const [isConnecting, setIsConnecting] = useState(false);
   const supportedWallets = useWallets();
-  const isWalletConnecting = useIsConnecting();
+  const connectionStatus = useConnectionStatus();
+  const isWalletConnecting = connectionStatus === "connecting";
   const [showButtonSpinner, setShowButtonSpinner] = useState(false);
+  const theme = useColorScheme();
 
   useEffect(() => {
     setShowButtonSpinner(isWalletConnecting);
@@ -101,6 +104,7 @@ export const ConnectWalletFlow = () => {
     if (activeWalletP.connectUI) {
       return (
         <activeWalletP.connectUI
+          theme={theme || "dark"}
           goBack={onBackPress}
           close={onClose}
           isOpen={modalVisible}

@@ -31,6 +31,10 @@ type ConnectWalletProps = {
   className?: string;
   theme?: "dark" | "light";
   btnTitle?: string;
+  /**
+   * render a custom button to display the connected wallet details instead of the default button
+   */
+  detailsBtn?: () => JSX.Element;
   dropdownPosition?: DropDownPosition;
   auth?: {
     loginOptions?: LoginOptions;
@@ -150,6 +154,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
             className={props.className}
             theme={theme}
             style={props.style}
+            detailsBtn={props.detailsBtn}
             onDisconnect={() => {
               if (authConfig?.authUrl) {
                 logout();

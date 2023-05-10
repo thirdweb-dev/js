@@ -35,7 +35,6 @@ import {
   useDisconnect,
   useSDK,
   useSupportedChains,
-  useWalletContext,
   useWallet,
   WalletInstance,
 } from "@thirdweb-dev/react-core";
@@ -52,6 +51,8 @@ import { FundsIcon } from "./icons/FundsIcon";
 import { utils } from "ethers";
 import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
 import { ErrorMessage } from "../../components/formElements";
+import { useWalletContext } from "@thirdweb-dev/react-core";
+import { useWalletConfig } from "@thirdweb-dev/react-core";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -67,6 +68,7 @@ export const ConnectedWalletDetails: React.FC<{
   style?: React.CSSProperties;
   networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
   className?: string;
+  detailsBtn?: () => JSX.Element;
 }> = (props) => {
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
@@ -74,13 +76,14 @@ export const ConnectedWalletDetails: React.FC<{
   const address = useAddress();
   const balanceQuery = useBalance();
   const activeWallet = useWallet();
+  const activeWalletConfig = useWalletConfig();
   const [showExportModal, setShowExportModal] = useState(false);
   const [wrapperWallet, setWrapperWallet] = useState<
     WalletInstance | undefined
   >();
 
   const chain = useActiveChain();
-  const activeWalletIconURL = activeWallet?.getMeta().iconURL || "";
+  const activeWalletIconURL = activeWalletConfig?.meta.iconURL || "";
 
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
   const [open, setOpen] = useState(false);
@@ -93,7 +96,11 @@ export const ConnectedWalletDetails: React.FC<{
 
   const disableSwitchChain = !!personalWallet;
 
-  const trigger = (
+  const trigger = props.detailsBtn ? (
+    <div>
+      <props.detailsBtn />
+    </div>
+  ) : (
     <WalletInfoButton
       type="button"
       className={`${TW_CONNECTED_WALLET} ${props.className || ""}`}
@@ -107,10 +114,10 @@ export const ConnectedWalletDetails: React.FC<{
       />
 
       <ColFlex>
-        {!balanceQuery.isLoading ? (
+        {balanceQuery.data ? (
           <WalletBalance className={`${TW_CONNECTED_WALLET}__balance`}>
-            {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
-            {balanceQuery.data?.symbol}
+            {balanceQuery.data.displayValue.slice(0, 5)}{" "}
+            {balanceQuery.data.symbol}
           </WalletBalance>
         ) : (
           <Skeleton height={fontSize.sm} width="82px" />
