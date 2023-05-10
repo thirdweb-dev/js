@@ -17,6 +17,8 @@ import { Toast } from "../base/Toast";
 import { LocalWallet, SmartWallet, walletIds } from "@thirdweb-dev/wallets";
 import { SmartWalletAdditionalActions } from "./SmartWalletAdditionalActions";
 import { useSmartWallet } from "../../providers/context-provider";
+import RightArrowIcon from "../../assets/right-arrow";
+import { useTheme } from "@shopify/restyle";
 
 export type ConnectWalletDetailsProps = {
   address: string;
@@ -25,6 +27,7 @@ export type ConnectWalletDetailsProps = {
 export const ConnectWalletDetails = ({
   address,
 }: ConnectWalletDetailsProps) => {
+  const theme = useTheme();
   const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false);
   const [isExportModalVisible, setIsExportModalVisible] = useState(false);
   const [isNetworkSelectorModalVisible, setIsNetworkSelectorModalVisible] =
@@ -105,13 +108,21 @@ export const ConnectWalletDetails = ({
             backgroundColor="background"
             borderColor="border"
             mb="sm"
+            justifyContent="space-between"
             style={styles.exportWallet}
             onPress={onExportLocalWalletPress}
           >
-            <PocketWalletIcon size={16} />
-            <View style={styles.exportWalletInfo}>
-              <Text variant="bodySmall">Backup wallet</Text>
-            </View>
+            <>
+              <PocketWalletIcon size={16} />
+              <View style={styles.exportWalletInfo}>
+                <Text variant="bodySmall">Backup wallet</Text>
+              </View>
+            </>
+            <RightArrowIcon
+              height={10}
+              width={10}
+              color={theme.colors.iconPrimary}
+            />
           </BaseButton>
 
           {activeWallet?.walletId === LocalWallet.id ? (
@@ -126,7 +137,12 @@ export const ConnectWalletDetails = ({
     }
 
     return null;
-  }, [activeWallet?.walletId, onExportLocalWalletPress, smartWallet]);
+  }, [
+    activeWallet?.walletId,
+    onExportLocalWalletPress,
+    smartWallet,
+    theme.colors.iconPrimary,
+  ]);
 
   return (
     <>

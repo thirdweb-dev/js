@@ -97,17 +97,25 @@ export const SmartWalletAdditionalActions = ({
             backgroundColor="background"
             borderColor="border"
             mb="sm"
+            justifyContent="space-between"
             style={styles.exportWallet}
             onPress={onExportPress}
           >
-            <PocketWalletIcon size={16} />
-            <View style={styles.exportWalletInfo}>
-              <Text variant="bodySmall">
-                {wallet?.walletId === LocalWallet.id
-                  ? "Backup personal wallet"
-                  : "Backup wallet"}
-              </Text>
-            </View>
+            <>
+              <PocketWalletIcon size={16} />
+              <View style={styles.exportWalletInfo}>
+                <Text variant="bodySmall">
+                  {wallet?.walletId === LocalWallet.id
+                    ? "Backup personal wallet"
+                    : "Backup wallet"}
+                </Text>
+              </View>
+            </>
+            <RightArrowIcon
+              height={10}
+              width={10}
+              color={theme.colors.iconPrimary}
+            />
           </BaseButton>
           <Text variant="error">
             {
