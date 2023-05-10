@@ -1,6 +1,7 @@
 import {
   useCreateWalletInstance,
   useWalletContext,
+  useWallets,
 } from "@thirdweb-dev/react-core";
 import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
@@ -30,6 +31,7 @@ export const EmailConnect: React.FC<{
     useWalletContext();
   const [email, setEmail] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(false);
+  const singleWallet = useWallets().length === 1;
 
   const handleConnect = async () => {
     const magicWallet = createInstance(props.magicLinkWallet) as MagicLink;
@@ -57,7 +59,7 @@ export const EmailConnect: React.FC<{
 
   return (
     <>
-      <BackButton onClick={props.onBack}></BackButton>
+      {!singleWallet && <BackButton onClick={props.onBack}></BackButton>}
       <Spacer y="md" />
       <Img
         src={props.magicLinkWallet.meta.iconURL}

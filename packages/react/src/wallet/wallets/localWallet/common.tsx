@@ -7,10 +7,11 @@ import { ConfiguredWallet } from "@thirdweb-dev/react-core";
 export const LocalWalletModalHeader: React.FC<{
   onBack: () => void;
   meta: ConfiguredWallet["meta"];
+  hideBack?: boolean;
 }> = (props) => {
   return (
     <>
-      <BackButton onClick={props.onBack} />
+      {!props.hideBack && <BackButton onClick={props.onBack} />}
       <Spacer y="md" />
       <Img src={props.meta.iconURL} width={iconSize.xl} height={iconSize.xl} />
       <Spacer y="sm" />

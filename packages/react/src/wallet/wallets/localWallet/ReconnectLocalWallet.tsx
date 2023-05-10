@@ -6,7 +6,7 @@ import {
   ModalTitle,
 } from "../../../components/modalElements";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
-import { useWalletContext } from "@thirdweb-dev/react-core";
+import { useWalletContext, useWallets } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { FormFooter, Label } from "../../../components/formElements";
 import { spacing } from "../../../design-system";
@@ -43,6 +43,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
   const { localWallet, meta, walletData } = useLocalWalletInfo(
     props.localWallet,
   );
+  const singleWallet = useWallets().length === 1;
 
   const savedAddress = walletData
     ? walletData === "loading"
@@ -123,7 +124,11 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
 
   return (
     <>
-      <LocalWalletModalHeader onBack={props.goBack} meta={meta} />
+      <LocalWalletModalHeader
+        onBack={props.goBack}
+        meta={meta}
+        hideBack={singleWallet}
+      />
       <ModalTitle
         style={{
           textAlign: "left",
