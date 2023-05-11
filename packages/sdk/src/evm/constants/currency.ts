@@ -32,8 +32,7 @@ export const NATIVE_TOKENS: Record<number, NativeToken> = {
       symbol: "WETH",
     },
   },
-  // eslint-disable-next-line no-useless-computed-key
-  [11155111]: {
+  11155111: {
     name: "Sepolia Ether",
     symbol: "SEP",
     decimals: 18,
