@@ -289,7 +289,7 @@
     "@safe-global/safe-ethers-lib": "^1.9.2",
     "@thirdweb-dev/chains": "workspace:*",
     "@thirdweb-dev/sdk": "workspace:*",
-    "@walletconnect/ethereum-provider": "~2.4.6",
+    "@walletconnect/ethereum-provider": "~2.7.3",
     "@walletconnect/jsonrpc-http-connection": "^1.0.0",
     "@walletconnect/jsonrpc-provider": "^1.0.3",
     "@walletconnect/jsonrpc-types": "^1.0.1",
@@ -298,6 +298,7 @@
     "@walletconnect/legacy-modal": "^2.0.0-rc.0",
     "@walletconnect/legacy-types": "^2.0.0-rc.0",
     "@walletconnect/legacy-utils": "^2.0.0-rc.0",
+    "@web3modal/standalone": "^2.4.1",
     "buffer": "^6.0.3",
     "cross-fetch": "^3.1.5",
     "crypto-js": "^4.1.1",
@@ -305,9 +306,6 @@
     "eventemitter3": "^5.0.0",
     "magic-sdk": "^13.6.2",
     "web3-core": "1.5.2"
-  },
-  "resolutions": {
-    "@walletconnect/ethereum-provider": "~2.4.6"
   },
   "peerDependencies": {
     "@aws-sdk/client-secrets-manager": "^3.256.0",
