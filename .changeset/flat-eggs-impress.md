@@ -2,4 +2,4 @@
 "@thirdweb-dev/sdk": patch
 ---
 
-Fix solana token deploy
+Switch type of SmartContract.abi

@@ -1,12 +1,12 @@
 import { Icon } from "../../../assets/icon";
 import { useAppTheme } from "../../../styles/hooks";
+import Box from "../Box";
 import Text from "../Text";
 import { ReactNode } from "react";
-import { StyleSheet, View } from "react-native";
 
 interface ModalHeaderTextCloseProps {
   onClose: () => void;
-  headerText: ReactNode | string;
+  headerText?: ReactNode | string;
   subHeaderText?: ReactNode | string;
 }
 
@@ -14,12 +14,17 @@ export const ModalHeaderTextClose = ({
   headerText,
   subHeaderText,
   onClose,
-}: ModalHeaderTextCloseProps) => {
+  ...props
+}: ModalHeaderTextCloseProps & (typeof Box)["arguments"]) => {
   const theme = useAppTheme();
 
   return (
     <>
-      <View style={styles.header}>
+      <Box
+        flexDirection="row"
+        justifyContent={headerText ? "space-between" : "flex-end"}
+        {...props}
+      >
         {typeof headerText === "string" ? (
           <Text variant="header">{headerText}</Text>
         ) : (
@@ -32,28 +37,14 @@ export const ModalHeaderTextClose = ({
           color={theme.colors.iconSecondary}
           onPress={onClose}
         />
-      </View>
-      <View style={styles.subHeader}>
+      </Box>
+      <Box flexDirection="row" justifyContent="space-between" mt="md">
         {typeof subHeaderText === "string" ? (
           <Text variant="subHeader">{subHeaderText}</Text>
         ) : (
           subHeaderText
         )}
-      </View>
+      </Box>
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  header: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  subHeader: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 16,
-  },
-});
