@@ -167,11 +167,7 @@ const DashboardWallets: ThirdwebNextPage = () => {
                 >
                   <Flex justifyContent="space-between">
                     <Flex alignItems="center" gap={3}>
-                      <ChainIcon
-                        size={25}
-                        ipfsSrc={wallet.iconUrl}
-                        sizes={[]}
-                      />
+                      <ChainIcon size={25} ipfsSrc={wallet.iconUrl} />
 
                       <Heading size="subtitle.sm" as="h3" noOfLines={1}>
                         {wallet.name}

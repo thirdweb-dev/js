@@ -3,7 +3,6 @@ import {
   Code,
   CodeProps,
   Flex,
-  HStack,
   Icon,
   IconButton,
   useClipboard,
