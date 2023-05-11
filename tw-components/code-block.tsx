@@ -9,27 +9,23 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
-import Highlight, {
-  Language,
-  PrismTheme,
-  defaultProps,
-} from "prism-react-renderer";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-import Prism from "prism-react-renderer/prism";
-import darkThemeDefault from "prism-react-renderer/themes/vsDark";
-import lightThemeDefault from "prism-react-renderer/themes/vsLight";
+import { Highlight, Prism, themes } from "prism-react-renderer";
 import { useEffect } from "react";
 import { FiCopy } from "react-icons/fi";
 
+const darkThemeDefault = themes.vsDark;
+const lightThemeDefault = themes.vsLight;
+
+type PrismTheme = typeof darkThemeDefault;
+
 // add solidity lang support for code
-((typeof global !== "undefined" ? global : window) as any).Prism = Prism;
+(typeof global !== "undefined" ? global : window).Prism = Prism;
 require("prismjs/components/prism-solidity");
 // end add solidity support
 
 export interface CodeBlockProps extends Omit<CodeProps, "size"> {
   code: string;
-  language: Language | "solidity";
+  language: string;
   canCopy?: boolean;
   wrap?: boolean;
   prefix?: string;
@@ -68,9 +64,8 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
 
   return (
     <Highlight
-      {...defaultProps}
       code={prefix ? `${prefix} ${code}` : code}
-      language={language as Language}
+      language={language}
       theme={{
         ...theme,
         plain: {

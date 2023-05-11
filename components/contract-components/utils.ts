@@ -2,6 +2,7 @@ import { Polygon } from "@thirdweb-dev/chains";
 import { FeatureName } from "@thirdweb-dev/sdk/dist/declarations/src/evm/constants/contract-features";
 import {
   Abi,
+  AddContractInput,
   ValidContractInstance,
   isFeatureEnabled,
 } from "@thirdweb-dev/sdk/evm";
@@ -54,9 +55,7 @@ export function getGaslessPolygonSDK(signer?: Signer) {
 
 // TODO - instead of util - create a hook for this to avoid requiring signer
 export async function addContractToMultiChainRegistry(
-  contractData: Parameters<
-    typeof gaslessPolygonSDK.multiChainRegistry.addContract
-  >[0],
+  contractData: AddContractInput,
   signer?: Signer,
 ) {
   const gaslessPolygonSDK = getGaslessPolygonSDK(signer);

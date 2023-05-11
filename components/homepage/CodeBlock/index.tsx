@@ -10,22 +10,21 @@ import {
   useTheme,
 } from "@chakra-ui/react";
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
-import Highlight, {
-  Language,
-  PrismTheme,
-  defaultProps,
-} from "prism-react-renderer";
-import darkThemeDefault from "prism-react-renderer/themes/vsDark";
-import lightThemeDefault from "prism-react-renderer/themes/vsLight";
+import { Highlight, themes } from "prism-react-renderer";
 import { useEffect, useRef, useState } from "react";
 import { BsLightning } from "react-icons/bs";
 import { FiCopy } from "react-icons/fi";
 import { useInView } from "react-intersection-observer";
 import { Text } from "tw-components";
 
+const darkThemeDefault = themes.vsDark;
+const lightThemeDefault = themes.vsLight;
+
+type PrismTheme = typeof darkThemeDefault;
+
 export interface CodeBlockProps extends Omit<CodeProps, "size"> {
   code: string;
-  language: Language | "solidity";
+  language: string;
   canCopy?: boolean;
   wrap?: boolean;
   prefix?: string;
@@ -174,7 +173,6 @@ export const HomePageCodeBlock: React.FC<CodeBlockProps> = ({
           )}
         </Flex>
         <Highlight
-          {...defaultProps}
           code={
             prefix
               ? `${prefix} ${code}`
@@ -184,7 +182,7 @@ export const HomePageCodeBlock: React.FC<CodeBlockProps> = ({
                 : code.slice(0, currentCodeIndex)
               : code
           }
-          language={language as Language}
+          language={language}
           theme={{
             ...theme,
             plain: {

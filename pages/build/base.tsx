@@ -10,14 +10,14 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import { SiGithub } from "@react-icons/all-files/si/SiGithub";
-import { HomepageFooter } from "components/footer/Footer";
 import { ChakraNextImage } from "components/Image";
+import { HomepageFooter } from "components/footer/Footer";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { landingSnippets } from "components/product-pages/homepage/CodeSelector";
 import { YoutubeEmbed } from "components/video-embed/YoutubeEmbed";
 import Image from "next/image";
 import { PageId } from "page-id";
-import darkTheme from "prism-react-renderer/themes/dracula";
+import { themes } from "prism-react-renderer";
 import { Suspense } from "react";
 import {
   Card,
@@ -31,6 +31,8 @@ import {
 } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 import { ThirdwebNextPage } from "utils/types";
+
+const darkTheme = themes.dracula;
 
 type SDKCardProps = {
   title: string;

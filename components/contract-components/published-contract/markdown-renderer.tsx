@@ -13,7 +13,6 @@ import {
   UnorderedList,
   chakra,
 } from "@chakra-ui/react";
-import { Language } from "prism-react-renderer";
 import { onlyText } from "react-children-utilities";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -120,7 +119,7 @@ export const MarkdownRenderer: React.FC<
             return (
               <CodeBlock
                 code={onlyText(props.children).trim()}
-                language={language as Language}
+                language={language}
                 mb={4}
                 {...props}
               />

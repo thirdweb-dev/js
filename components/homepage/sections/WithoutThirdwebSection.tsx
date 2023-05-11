@@ -1,7 +1,9 @@
 import { HomePageCodeBlock } from "../CodeBlock";
 import { KeyFeatureLayout } from "./key-features/KeyFeatureLayout";
 import { AspectRatio, GridItem, SimpleGrid } from "@chakra-ui/react";
-import darkTheme from "prism-react-renderer/themes/vsDark";
+import { themes } from "prism-react-renderer";
+
+const darkTheme = themes.vsDark;
 
 const withThirdwebCode = `// Fetch all nfts from a erc721 contract on polygon.
 
