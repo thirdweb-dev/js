@@ -9,7 +9,7 @@ export function useSafe() {
       const { safeWallet } = await import(
         "../../../wallet/wallets/safe/safeWallet"
       );
-      connect(safeWallet(), connectProps);
+      return connect(safeWallet(), connectProps);
     },
     [connect],
   );

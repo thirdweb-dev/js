@@ -13,8 +13,7 @@ import {
 } from "../../../components/modalElements";
 import { iconSize, spacing } from "../../../design-system";
 import { WalletSelection } from "../../ConnectWallet/WalletSelector";
-import { ConfiguredWallet } from "@thirdweb-dev/react-core";
-import { useConfiguredWallet } from "../../hooks/useConfiguredWallet";
+import { ConfiguredWallet, useWallets } from "@thirdweb-dev/react-core";
 import { SafeConfiguredWallet } from "./types";
 
 export const SelectpersonalWallet: React.FC<{
@@ -23,14 +22,17 @@ export const SelectpersonalWallet: React.FC<{
   personalWallets: ConfiguredWallet[];
   selectWallet: (wallet: ConfiguredWallet) => void;
 }> = (props) => {
-  const guestWallet = useConfiguredWallet("localWallet", false);
+  const singleWallet = useWallets().length === 1;
+  const guestWallet = props.personalWallets.find(
+    (w) => w.id === walletIds.localWallet,
+  );
   const personalWallets = props.personalWallets.filter(
     (w) => w.id !== walletIds.localWallet,
   );
 
   return (
     <>
-      <BackButton onClick={props.onBack} />
+      {!singleWallet && <BackButton onClick={props.onBack} />}
       <IconContainer>
         <Img
           src={props.safeWallet.meta.iconURL}

@@ -5,13 +5,19 @@ import {
   resolveContractUriFromAddress,
   ThirdwebSDK,
 } from "../../src/evm";
-import { implementations, signers } from "./before-setup";
+import {
+  defaultProvider,
+  implementations,
+  signers,
+  sdk as mockSdk,
+} from "./before-setup";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   DropERC721__factory,
   DropERC721_V3__factory,
   TokenERC721__factory,
+  MarketplaceV3__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { expect } from "chai";
@@ -527,5 +533,39 @@ describe("Publishing", async () => {
       "0x01551220", // bytes4 param
     ]);
     expect(addr).to.not.eq(undefined);
+  });
+
+  it("Composite Abi for Extension Router", async () => {
+    const ipfsHash = (await resolveContractUriFromAddress(
+      implementations["marketplace-v3"] as string,
+      defaultProvider,
+    )) as string;
+
+    const pub = await mockSdk.getPublisher();
+    const tx = await pub.publish(ipfsHash.concat("rawMeta"), {
+      version: "0.0.1",
+      isDeployableViaFactory: true,
+      factoryDeploymentData: {
+        implementationInitializerFunction: "initialize",
+        implementationAddresses: {
+          [ChainId.Hardhat]: implementations["marketplace-v3"] || "",
+        },
+        factoryAddresses: {
+          // eslint-disable-next-line turbo/no-undeclared-env-vars
+          [ChainId.Hardhat]: (process.env.factoryAddress as string) || "",
+        },
+      },
+    });
+    const contract = await tx.data();
+    expect(contract.id).to.eq("MarketplaceV3");
+
+    const fullMetadata = await pub.fetchFullPublishMetadata(
+      contract.metadataUri,
+    );
+    const compositeAbi = fullMetadata.compositeAbi;
+    expect(
+      compositeAbi != undefined &&
+        compositeAbi.length > MarketplaceV3__factory.abi.length,
+    );
   });
 });

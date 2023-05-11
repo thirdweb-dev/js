@@ -6,7 +6,7 @@ import {
   ModalTitle,
 } from "../../../components/modalElements";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
-import { useWalletContext } from "@thirdweb-dev/react-core";
+import { useWalletContext, useWallets } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { ImportLocalWallet } from "./ImportLocalWallet";
@@ -27,10 +27,11 @@ export const CreateLocalWallet_Password: React.FC<{
   const [showPassword, setShowPassword] = useState(false);
   const passwordMismatch = confirmPassword && password !== confirmPassword;
   const [isConnecting, setIsConnecting] = useState(false);
+  const singleWallet = useWallets().length === 1;
 
   const { localWallet, meta } = useLocalWalletInfo(props.localWallet);
 
-  const thirdwebWalletContext = useWalletContext();
+  const { setConnectedWallet } = useWalletContext();
   const [showImportScreen, setShowImportScreen] = useState(false);
 
   const [generatedAddress, setGeneratedAddress] = useState<string | null>(null);
@@ -71,14 +72,18 @@ export const CreateLocalWallet_Password: React.FC<{
       password,
     });
 
-    thirdwebWalletContext.handleWalletConnect(localWallet);
+    setConnectedWallet(localWallet);
     setIsConnecting(false);
     props.onConnect();
   };
 
   return (
     <>
-      <LocalWalletModalHeader onBack={props.goBack} meta={meta} />
+      <LocalWalletModalHeader
+        onBack={props.goBack}
+        meta={meta}
+        hideBack={singleWallet}
+      />
 
       <Flex alignItems="center" gap="xs">
         <ModalTitle>Guest Wallet</ModalTitle>
@@ -188,7 +193,8 @@ export const CreateLocalWallet_Guest: React.FC<{
   localWallet: LocalConfiguredWallet;
 }> = (props) => {
   const { localWallet } = useLocalWalletInfo(props.localWallet);
-  const thirdwebWalletContext = useWalletContext();
+  const { setConnectedWallet } = useWalletContext();
+  const { onConnect } = props;
 
   const handleConnect = useCallback(async () => {
     if (!localWallet) {
@@ -196,9 +202,9 @@ export const CreateLocalWallet_Guest: React.FC<{
     }
     await localWallet.generate();
     await localWallet.connect();
-    thirdwebWalletContext.handleWalletConnect(localWallet);
-    props.onConnect();
-  }, [localWallet, thirdwebWalletContext, props]);
+    setConnectedWallet(localWallet);
+    onConnect();
+  }, [localWallet, setConnectedWallet, onConnect]);
 
   const connecting = useRef(false);
   useEffect(() => {

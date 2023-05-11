@@ -14,7 +14,7 @@ import {
   ModalDescription,
 } from "../../../components/modalElements";
 import { iconSize, spacing } from "../../../design-system";
-import { ConnectUIProps } from "@thirdweb-dev/react-core";
+import { ConnectUIProps, useWallets } from "@thirdweb-dev/react-core";
 import { MagicLinkWallet } from "./types";
 import { SMSConnect } from "./SMSConnect";
 
@@ -25,6 +25,7 @@ type MagicConnectUIProps = ConnectUIProps & {
 export const MagicConnectUI = (props: MagicConnectUIProps) => {
   const isSmsEnabled = props.magicWallet.config.smsLogin !== false;
   const isEmailEnabled = props.magicWallet.config.emailLogin !== false;
+  const singleWallet = useWallets().length === 1;
 
   let firstScreen: "sms" | "email" | "menu" = "menu";
   if (isEmailEnabled && !isSmsEnabled) {
@@ -45,7 +46,7 @@ export const MagicConnectUI = (props: MagicConnectUIProps) => {
   //     oauthProvider: oauthProvider,
   //   });
   //   setIsConnecting(false);
-  //   twContext.handleWalletConnect(magicWallet);
+  //   twContext.setWallet(magicWallet);
   //   props.onConnect();
   // };
 
@@ -115,7 +116,7 @@ export const MagicConnectUI = (props: MagicConnectUIProps) => {
 
   return (
     <>
-      <BackButton onClick={props.goBack}></BackButton>
+      {!singleWallet && <BackButton onClick={props.goBack}></BackButton>}
       <Spacer y="md" />
       <Img
         src={props.magicWallet.meta.iconURL}

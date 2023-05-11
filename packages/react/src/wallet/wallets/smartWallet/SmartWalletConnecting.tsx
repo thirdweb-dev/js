@@ -20,7 +20,7 @@ import {
   useWalletContext,
   useWallet,
 } from "@thirdweb-dev/react-core";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Flex } from "../../../components/basic";
 import { SmartConfiguredWallet } from "./types";
 
@@ -54,14 +54,16 @@ export const SmartWalletConnecting: React.FC<{
   const requiresConfirmation = !useIsHeadlessWallet();
 
   const { onConnect } = props;
+  const connectStarted = useRef(false);
 
   const handleConnect = useCallback(async () => {
-    if (!activeWallet || !connectedChain) {
+    if (!activeWallet || !connectedChain || connectStarted.current) {
       return;
     }
     setConnectError(false);
 
     try {
+      connectStarted.current = true;
       await connect(props.smartWallet, {
         personalWallet: activeWallet,
       });
@@ -84,9 +86,12 @@ export const SmartWalletConnecting: React.FC<{
         style={{
           height: "300px",
           justifyContent: "center",
+          flexDirection: "column",
+          gap: spacing.xl,
           alignItems: "center",
         }}
       >
+        <ModalTitle>Connecting to Smart Wallet </ModalTitle>
         <Spinner color="link" size="lg" />
       </Flex>
     );

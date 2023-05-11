@@ -16,22 +16,28 @@ export const MetamaskScan: React.FC<{
 }> = ({ onBack, onConnected, onGetStarted, configuredWallet }) => {
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
-  const twWalletContext = useWalletContext();
+  const { setConnectedWallet, chainToConnect } = useWalletContext();
 
   useEffect(() => {
     const metamask = createInstance(configuredWallet) as MetaMaskWallet;
 
     metamask.connectWithQrCode({
-      chainId: twWalletContext.chainToConnect?.chainId,
+      chainId: chainToConnect?.chainId,
       onQrCodeUri(uri) {
         setQrCodeUri(uri);
       },
       onConnected() {
-        twWalletContext.handleWalletConnect(metamask);
+        setConnectedWallet(metamask);
         onConnected();
       },
     });
-  }, [createInstance, twWalletContext, onConnected, configuredWallet]);
+  }, [
+    createInstance,
+    setConnectedWallet,
+    chainToConnect,
+    onConnected,
+    configuredWallet,
+  ]);
 
   return (
     <ScanScreen

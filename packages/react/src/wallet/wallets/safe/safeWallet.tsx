@@ -58,6 +58,7 @@ export const SafeConnectUI = (props: SafeConnectUIProps) => {
       },
       isOpen: props.isOpen,
       open: props.open,
+      theme: props.theme,
     };
 
     if (personalConfiguredWallet.connectUI) {
