@@ -289,7 +289,7 @@
     "@safe-global/safe-ethers-lib": "^1.9.2",
     "@thirdweb-dev/chains": "workspace:*",
     "@thirdweb-dev/sdk": "workspace:*",
-    "@walletconnect/ethereum-provider": "~2.7.3",
+    "@walletconnect/ethereum-provider": "~2.5.1",
     "@walletconnect/jsonrpc-http-connection": "^1.0.0",
     "@walletconnect/jsonrpc-provider": "^1.0.3",
     "@walletconnect/jsonrpc-types": "^1.0.1",
