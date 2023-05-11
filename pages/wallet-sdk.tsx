@@ -271,7 +271,7 @@ const WalletSDK: ThirdwebNextPage = () => {
         title="Connect any wallet"
         description="Connect any wallet to your apps, from custodial wallets to non-custodial wallets."
         buttonText="Get started"
-        buttonLink="https://portal.thirdweb.com/wallet"
+        buttonLink="/dashboard/wallet"
         image={require("public/assets/product-pages/wallet-sdk/hero.png")}
         gradient="linear-gradient(147.15deg, #410AB6 30.17%, #B4F1FF 100.01%)"
         imageHeight="650px"

@@ -16,7 +16,7 @@ export const AnnouncementBanner = () => {
       position="sticky"
       zIndex="10"
       py={3}
-      bgImage="linear-gradient(145.96deg, rgba(205, 0, 238, 1) 5.07%, #1652F0 100%)"
+      bgImage="linear-gradient(145.96deg, #410AB6 5.07%, #5BFF40 100%)"
     >
       <Flex
         w="full"
@@ -46,8 +46,8 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                <strong>Wallet SDK</strong> allows you to connect any wallet to
-                your apps and games
+                <strong>LAUNCH:</strong> Introducing <strong>Wallet SDK</strong>
+                ! Connect any wallets to your apps. Learn more
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>

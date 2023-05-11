@@ -3,6 +3,7 @@ import {
   DashboardThirdwebProviderProps,
 } from "./providers";
 import { EVMContractInfoProvider } from "@3rdweb-sdk/react";
+import { Flex, SimpleGrid } from "@chakra-ui/react";
 import { useWallet as useSolanaWallet } from "@solana/wallet-adapter-react";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { DehydratedState, Hydrate, QueryClient } from "@tanstack/react-query";
@@ -11,6 +12,7 @@ import {
   Persister,
 } from "@tanstack/react-query-persist-client";
 import {
+  ConnectWallet,
   shouldNeverPersistQuery,
   useAddress,
   useBalance,
@@ -25,6 +27,7 @@ import { PrivacyNotice } from "components/notices/PrivacyNotice";
 import { AllChainsProvider } from "contexts/all-chains";
 import { ChainsProvider } from "contexts/configured-chains";
 import { ErrorProvider } from "contexts/error-handler";
+import { isSanctionedAddress } from "data/eth-sanctioned-addresses";
 import { useAddRecentlyUsedChainId } from "hooks/chains/recentlyUsedChains";
 import {
   useIsNetworkConfigModalOpen,
@@ -33,7 +36,8 @@ import {
 import { del, get, set } from "idb-keyval";
 import { useRouter } from "next/router";
 import posthog from "posthog-js";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { Heading } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 import { bigNumberReplacer } from "utils/bignumber";
 import { isBrowser } from "utils/isBrowser";
@@ -133,10 +137,12 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
               <ChainsProvider>
                 <EVMContractInfoProvider value={props.contractInfo}>
                   <DashboardThirdwebProvider>
-                    <PHIdentifier />
-                    {router.pathname !== "/dashboard" && <PrivacyNotice />}
-                    <AppShell {...props} />
-                    <ConfigModal />
+                    <SanctionedAddressesChecker>
+                      <PHIdentifier />
+                      {router.pathname !== "/dashboard" && <PrivacyNotice />}
+                      <AppShell {...props} />
+                      <ConfigModal />
+                    </SanctionedAddressesChecker>
                   </DashboardThirdwebProvider>
                 </EVMContractInfoProvider>
               </ChainsProvider>
@@ -146,6 +152,33 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
       </Hydrate>
     </PersistQueryClientProvider>
   );
+};
+
+const SanctionedAddressesChecker: ComponentWithChildren = ({ children }) => {
+  const address = useAddress();
+  const isBlocked = useMemo(() => {
+    return address && isSanctionedAddress(address);
+  }, [address]);
+  if (isBlocked) {
+    return (
+      <SimpleGrid
+        position="fixed"
+        top={0}
+        right={0}
+        bottom={0}
+        left={0}
+        placeItems="center"
+        bg="black"
+        zIndex="banner"
+      >
+        <Flex gap={4} direction="column" align="center">
+          <Heading as="p">Address is blocked</Heading>
+          <ConnectWallet auth={{ loginOptional: true }} />
+        </Flex>
+      </SimpleGrid>
+    );
+  }
+  return <>{children}</>;
 };
 
 function ConfigModal() {
