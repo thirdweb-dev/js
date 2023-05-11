@@ -1,5 +1,6 @@
 export const walletIds = {
   coinbase: "coinbase",
+  frame: "frame",
   metamask: "metamask",
   localWallet: "localWallet",
   smartWallet: "smartWallet",
