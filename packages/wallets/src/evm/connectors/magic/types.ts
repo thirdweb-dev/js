@@ -30,9 +30,9 @@ export interface MagicAuthOptions extends MagicOptions {
   //   providers: OAuthProvider[];
   //   callbackUrl?: string;
   // };
-  magicSdkConfiguration?: MagicSDKAdditionalConfiguration<
-    string,
-    OAuthExtension[]
+  magicSdkConfiguration?: Omit<
+    MagicSDKAdditionalConfiguration<string, OAuthExtension[]>,
+    "extensions" | "network"
   >;
 }
 

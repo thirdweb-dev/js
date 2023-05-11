@@ -13,7 +13,7 @@ import { iconSize, spacing } from "../../../design-system";
 import { WalletSelection } from "../../ConnectWallet/WalletSelector";
 import styled from "@emotion/styled";
 import { SmartConfiguredWallet } from "./types";
-import { ConfiguredWallet } from "@thirdweb-dev/react-core";
+import { ConfiguredWallet, useWallets } from "@thirdweb-dev/react-core";
 
 export const SelectPersonalWallet: React.FC<{
   onBack: () => void;
@@ -21,6 +21,7 @@ export const SelectPersonalWallet: React.FC<{
   personalWallets: ConfiguredWallet[];
   selectWallet: (wallet: ConfiguredWallet) => void;
 }> = (props) => {
+  const singleWallet = useWallets().length === 1;
   const guestWallet = props.personalWallets.find(
     (w) => w.id === walletIds.localWallet,
   );
@@ -31,7 +32,7 @@ export const SelectPersonalWallet: React.FC<{
 
   return (
     <>
-      <BackButton onClick={props.onBack} />
+      {!singleWallet && <BackButton onClick={props.onBack} />}
       <IconContainer>
         <Img
           src={props.smartWallet.meta.iconURL}
