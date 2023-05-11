@@ -50,15 +50,6 @@ export const CONTRACT_ADDRESSES: Record<
     twRegistry: TWRegistry_address,
     twBYOCRegistry: "0xB1Bd9d7942A250BA2Dce27DD601F2ED4211A60C4",
   },
-  // TODO
- 11155111: {
-    openzeppelinForwarder: constants.AddressZero,
-    openzeppelinForwarderEOA: constants.AddressZero,
-    biconomyForwarder: constants.AddressZero,
-    twFactory: constants.AddressZero,
-    twRegistry: constants.AddressZero,
-    twBYOCRegistry: constants.AddressZero,
-  },
   [ChainId.Polygon]: {
     openzeppelinForwarder: OZ_DEFENDER_FORWARDER_ADDRESS,
     openzeppelinForwarderEOA: "0x4f247c69184ad61036EC2Bb3213b69F10FbEDe1F",
