@@ -4,7 +4,7 @@ import {
   useCreateWalletInstance,
   useWalletContext,
 } from "@thirdweb-dev/react-core";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ScanScreen } from "../../ConnectWallet/screens/ScanScreen";
 
 export const CoinbaseScan: React.FC<{
@@ -17,24 +17,29 @@ export const CoinbaseScan: React.FC<{
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>(undefined);
   const { setConnectedWallet, chainToConnect } = useWalletContext();
 
+  const scanStarted = useRef(false);
+
   useEffect(() => {
+    if (scanStarted.current) {
+      return;
+    }
+
+    scanStarted.current = true;
+
     (async () => {
       const wallet = createInstance(configuredWallet) as InstanceType<
         typeof CoinbaseWallet
       >;
 
-      wallet.getQrUrl().then((uri) => {
-        setQrCodeUri(uri || undefined);
+      const uri = await wallet.getQrUrl();
+      setQrCodeUri(uri || undefined);
+
+      await wallet.connect({
+        chainId: chainToConnect?.chainId,
       });
 
-      wallet
-        .connect({
-          chainId: chainToConnect?.chainId,
-        })
-        .then(() => {
-          setConnectedWallet(wallet);
-          onConnected();
-        });
+      setConnectedWallet(wallet);
+      onConnected();
     })();
   }, [
     createInstance,

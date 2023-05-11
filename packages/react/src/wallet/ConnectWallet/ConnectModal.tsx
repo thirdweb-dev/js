@@ -92,7 +92,6 @@ export const ConnectModal = () => {
         }}
         open={isWalletModalOpen}
         setOpen={(value) => {
-          console.log("set", value);
           setIsWalletModalOpen(value);
           if (!value) {
             setScreen(initialScreen); // reset screen
