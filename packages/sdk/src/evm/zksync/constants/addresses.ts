@@ -19,6 +19,7 @@ export const CONTRACT_ADDRESSES: Record<
 };
 
 export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
+  // ZKSync Era Testnet
   [280]: {
     DropERC721: "0xA8E28D98203848401A4f924358e6c337153D0f04",
     DropERC1155: "0xf3C7d3F0AA374a2D32489929e24D3e9313Aec8bb",
@@ -26,6 +27,23 @@ export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
     SignatureDrop: "",
     Marketplace: "0xA77041a7A34A67D7285c8d3550110e441009436e",
     MarketplaceV3: "0x292c324920d4120F928dA6f04548442fa10B8B0f",
+    TokenERC721: "0xe04593be4c928769ACb157aab0214be1c4E7b6F6",
+    TokenERC1155: "0x4e0C3577335961Ff800FFDA24981EB2F38D94483",
+    TokenERC20: "0x0aecDe90BC11303871E6e4D7d83Ee84433BC115C",
+  },
+
+  // ZKSync Era Mainnet
+  //TODO Add support in next release
+  [324]: {
+    DropERC721: "",
+    DropERC1155: "",
+    DropERC20: "",
+    SignatureDrop: "",
+    Marketplace: "",
+    MarketplaceV3: "",
+    TokenERC721: "",
+    TokenERC1155: "",
+    TokenERC20: "",
   },
 };
 
