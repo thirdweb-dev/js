@@ -13,6 +13,7 @@ import { providers, utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";
 
 type WalletConnectOptions = {
+  theme?: "dark" | "light";
   projectId: EthereumProviderOptions["projectId"];
   qrcode?: EthereumProviderOptions["showQrModal"];
   dappMetadata: DAppMetaData;
@@ -317,6 +318,12 @@ export class WalletConnectConnector extends WagmiConnector<
         rpcMap: Object.fromEntries(
           this.chains.map((chain) => [chain.chainId, chain.rpc[0]]),
         ),
+
+        qrModalOptions: {
+          themeMode: this.options.theme,
+          explorerAllowList: [],
+          explorerDenyList: [],
+        },
       });
     }
   }

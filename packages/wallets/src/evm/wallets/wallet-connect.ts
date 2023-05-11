@@ -9,6 +9,7 @@ import { walletIds } from "../constants/walletIds";
 export type WalletConnectOptions = {
   projectId?: string;
   qrcode?: boolean;
+  theme?: "light" | "dark";
 };
 
 export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
@@ -34,7 +35,6 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
 
   constructor(options?: WalletOptions<WalletConnectOptions>) {
     super(options?.walletId || WalletConnect.id, options);
-
     this.projectId = options?.projectId || TW_WC_PROJECT_ID;
     this.qrcode = options?.qrcode === false ? false : true;
   }
@@ -45,6 +45,7 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
       const { WalletConnectConnector } = await import(
         "../connectors/wallet-connect"
       );
+
       this.#walletConnectConnector = new WalletConnectConnector({
         chains: this.chains,
         options: {
@@ -52,6 +53,7 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
           projectId: this.projectId,
           dappMetadata: this.dappMetadata,
           storage: this.walletStorage,
+          theme: this.options?.theme,
         },
       });
       this.connector = new WagmiAdapter(this.#walletConnectConnector);
