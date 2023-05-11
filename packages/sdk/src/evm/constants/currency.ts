@@ -184,8 +184,7 @@ export const NATIVE_TOKENS: Record<number, NativeToken> = {
       symbol: "WETH",
     },
   },
-  // eslint-disable-next-line no-useless-computed-key
-  [84531]: {
+  84531: {
     name: "Base Goerli Testnet",
     symbol: "ETH",
     decimals: 18,
