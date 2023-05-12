@@ -172,6 +172,9 @@
     },
     "@metaplex-foundation/js": {
       "optional": true
+    },
+    "zksync-web3": {
+      "optional": true
     }
   },
   "dependencies": {
