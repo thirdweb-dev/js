@@ -80,7 +80,6 @@ export class HardhatBuilder extends BaseBuilder {
           logger.debug("Skipping", contractPath, "(not a source target)");
           continue;
         }
-
         for (const [contractName, contractInfo] of Object.entries(
           contractInfos as any,
         )) {
@@ -98,10 +97,13 @@ export class HardhatBuilder extends BaseBuilder {
           }
 
           const bytecode = info.evm.bytecode.object;
-          const deployedBytecode = info.evm.deployedBytecode.object;
+          const deployedBytecode =
+            info.evm.deployedBytecode?.object || bytecode;
           const { metadata, abi } = info;
 
-          const meta = JSON.parse(metadata);
+          const meta = metadata.solc_metadata
+            ? JSON.parse(metadata.solc_metadata)
+            : JSON.parse(metadata);
           const sources = Object.keys(meta.sources)
             .map((path) => {
               const directPath = join(options.projectPath, path);
@@ -129,9 +131,17 @@ export class HardhatBuilder extends BaseBuilder {
           );
           const fileName = fileNames.length > 0 ? fileNames[0] : "";
 
-          if (this.shouldProcessContract(abi, deployedBytecode, contractName)) {
+          const ignoreIpfsHash = !!(actualHardhatConfig as any)?.zksolc; // IPFS hash can't be recovered from ZKSync bytecode
+          if (
+            this.shouldProcessContract(
+              abi,
+              deployedBytecode,
+              contractName,
+              ignoreIpfsHash,
+            )
+          ) {
             contracts.push({
-              metadata,
+              metadata: meta,
               bytecode,
               name: contractName,
               fileName,

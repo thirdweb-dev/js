@@ -12,6 +12,7 @@ export abstract class BaseBuilder implements IBuilder {
     abi: any[],
     bytecode: string,
     name: string,
+    ignoreIpfsHash?: boolean,
   ): boolean {
     if (
       !bytecode ||
@@ -39,7 +40,7 @@ export abstract class BaseBuilder implements IBuilder {
       logger.debug(`Error extracting IPFS hash from '${name}': ${e}`);
     }
 
-    if (!ipfsHash) {
+    if (!ipfsHash && !ignoreIpfsHash) {
       logger.debug(
         `Cannot resolve build metadata IPFS hash for contract '${name}'. Skipping.`,
       );
