@@ -65,13 +65,14 @@ export class TrustWallet extends WalletConnect {
 type TrustWalletConfig = { projectId?: string };
 
 export const trustWallet = (config?: TrustWalletConfig) => {
+  const projectId = config?.projectId ? config.projectId : TW_WC_PROJECT_ID;
   return {
     id: TrustWallet.id,
     meta: TrustWallet.meta,
     create: (options: WalletOptionsRC) =>
-      new TrustWallet({ ...options, ...config }),
+      new TrustWallet({ ...options, projectId: projectId }),
     config: {
-      projectId: config?.projectId,
+      projectId: projectId,
     },
   } satisfies ConfiguredWallet<WalletConnect, TrustWalletConfig>;
 };
