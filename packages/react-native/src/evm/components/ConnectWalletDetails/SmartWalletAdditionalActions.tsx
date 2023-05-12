@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { useSmartWallet } from "../../providers/context-provider";
 import RightArrowIcon from "../../assets/right-arrow";
 import { useTheme } from "@shopify/restyle";
+import { TextInput } from "../base/TextInput";
 
 export const SmartWalletAdditionalActions = ({
   onExportPress,
@@ -25,6 +26,7 @@ export const SmartWalletAdditionalActions = ({
   const [showSmartWallet, setShowSmartWallet] = useState(false);
   const activeWallet = useWallet();
   const theme = useTheme();
+  const [showWCRow, setShowWCRow] = useState(false);
 
   const wallet = showSmartWallet
     ? smartWallet
@@ -56,6 +58,15 @@ export const SmartWalletAdditionalActions = ({
     setConnectedWallet(wallet);
   };
 
+  const onConnectDappPress = () => {
+    setShowWCRow(true);
+  };
+
+  const onAddressChangeText = (text: string) => {
+    console.log(text);
+  };
+
+  console.log("rendering SmartWalletAdditionalActions");
   return (
     <>
       <View style={styles.currentNetwork}>
@@ -90,6 +101,30 @@ export const SmartWalletAdditionalActions = ({
           color={theme.colors.iconPrimary}
         />
       </BaseButton>
+      {showWCRow ? (
+        <TextInput onChangeText={onAddressChangeText} mb="sm" />
+      ) : (
+        <BaseButton
+          backgroundColor="background"
+          borderColor="border"
+          mb="sm"
+          justifyContent="space-between"
+          style={styles.exportWallet}
+          onPress={onConnectDappPress}
+        >
+          <>
+            <PocketWalletIcon size={16} />
+            <View style={styles.exportWalletInfo}>
+              <Text variant="bodySmall">Connect dApp</Text>
+            </View>
+          </>
+          <RightArrowIcon
+            height={10}
+            width={10}
+            color={theme.colors.iconPrimary}
+          />
+        </BaseButton>
+      )}
       {wallet?.walletId === LocalWallet.id ||
       activeWallet?.walletId === LocalWallet.id ? (
         <>
