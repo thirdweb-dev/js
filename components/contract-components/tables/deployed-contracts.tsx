@@ -51,14 +51,7 @@ import {
   FiPlus,
   FiX,
 } from "react-icons/fi";
-import {
-  Column,
-  ColumnInstance,
-  Row,
-  useFilters,
-  usePagination,
-  useTable,
-} from "react-table";
+import { Column, Row, useFilters, usePagination, useTable } from "react-table";
 import {
   Badge,
   Button,
@@ -87,15 +80,21 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
   limit = 10,
 }) => {
   const [showMoreLimit, setShowMoreLimit] = useState(limit);
-  const slicedData = useMemo(() => {
-    if (contractListQuery.data) {
-      return contractListQuery.data.slice(0, showMoreLimit);
+  const [chainFilter, setChainFilter] = useState<number | undefined>();
+
+  const filteredList = useMemo(() => {
+    const list = contractListQuery.data || [];
+    if (!chainFilter) {
+      return list;
     }
-    return [];
-  }, [contractListQuery.data, showMoreLimit]);
+    return list.filter((contract) => contract.chainId === chainFilter);
+  }, [chainFilter, contractListQuery.data]);
+
+  const slicedData = useMemo(() => {
+    return filteredList.slice(0, showMoreLimit);
+  }, [filteredList, showMoreLimit]);
 
   const router = useRouter();
-
   const modalState = useDisclosure();
 
   const chainIdsWithDeployments = useMemo(() => {
@@ -167,6 +166,7 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
         combinedList={slicedData}
         limit={limit}
         chainIdsWithDeployments={chainIdsWithDeployments}
+        setChainFilter={setChainFilter}
       >
         {contractListQuery.isLoading && (
           <Center>
@@ -246,7 +246,7 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
             </Flex>
           </Center>
         )}
-        {contractListQuery.data.length > slicedData.length && (
+        {filteredList.length > slicedData.length && (
           <ShowMoreButton
             limit={limit}
             showMoreLimit={showMoreLimit}
@@ -321,19 +321,13 @@ const RemoveFromDashboardButton: React.FC<RemoveFromDashboardButtonProps> = ({
 };
 
 type SelectNetworkFilterProps = {
-  column: ColumnInstance<{
-    chainId: number;
-    address: string;
-    contractType: () => Promise<ContractType>;
-    metadata: () => Promise<z.output<typeof CommonContractOutputSchema>>;
-    extensions: () => Promise<string[]>;
-  }>;
+  setChainFilter: (chianId: number | undefined) => void;
   chainIdsWithDeployments: number[];
 };
 
 // This is a custom filter UI for selecting from a list of chains that the user deployed to
 function SelectNetworkFilter({
-  column: { setFilter },
+  setChainFilter,
   chainIdsWithDeployments,
 }: SelectNetworkFilterProps) {
   if (chainIdsWithDeployments.length < 2) {
@@ -344,7 +338,7 @@ function SelectNetworkFilter({
       useCleanChainName={true}
       enabledChainIds={chainIdsWithDeployments}
       onSelect={(selectedChain) => {
-        setFilter(selectedChain?.chainId.toString());
+        setChainFilter(selectedChain?.chainId);
       }}
     />
   );
@@ -361,6 +355,7 @@ interface ContractTableProps {
   isFetching?: boolean;
   limit: number;
   chainIdsWithDeployments: number[];
+  setChainFilter: (chainId: number | undefined) => void;
 }
 
 export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
@@ -369,6 +364,7 @@ export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
   isFetching,
   limit,
   chainIdsWithDeployments,
+  setChainFilter,
 }) => {
   const { chainIdToChainRecord } = useAllChainsData();
   const configuredChains = useSupportedChainsRecord();
@@ -392,9 +388,9 @@ export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
         Header: () => null,
         id: "Network",
         accessor: (row) => row.chainId,
-        Filter: (props) => (
+        Filter: () => (
           <SelectNetworkFilter
-            {...props}
+            setChainFilter={setChainFilter}
             chainIdsWithDeployments={chainIdsWithDeployments}
           />
         ),
