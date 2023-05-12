@@ -35,10 +35,10 @@ await personalWallet.generate();
 await personalWallet.connect();
 
 // Setup the Smart Wallet configuration
-const config: SmartWalletConfig = {
+const config = {
   chain: Goerli, // the chain where your smart wallet will be or is deployed
-  factoryAddress: "{{factory_address}}", // your own deployed account factory address
-  thirdwebApiKey: "{{api_key}}", // obtained from the thirdweb dashboard
+  factoryAddress: "0x...", // your own deployed account factory address
+  thirdwebApiKey: "THIRDWEB_API_KEY", // obtained from the thirdweb dashboard
   gasless: true, // enable or disable gasless transactions
 };
 
@@ -51,7 +51,7 @@ await wallet.connect({
 
 export default function App() {
 return (
-    <ThirdwebProvider supportedWallets={[ smartWallet() ]}>
+    <ThirdwebProvider supportedWallets={[ smartWallet({ factoryAddress: "0x...", thirdwebApiKey: "THIRDWEB_API_KEY" }) ]}>
       <ConnectWallet theme="{{theme}}" />
     </ThirdwebProvider>
   );
