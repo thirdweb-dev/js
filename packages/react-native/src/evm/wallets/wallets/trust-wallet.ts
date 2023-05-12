@@ -14,7 +14,7 @@ import { Linking } from "react-native";
 
 type WC2Options = { projectId?: string } & Omit<
   WalletOptions<WalletConnectOptions>,
-  "projectId" | "qrcode" | "walletStorage"
+  "projectId" | "qrcode" | "walletStorage" | "qrModalOptions"
 >;
 
 export class TrustWallet extends WalletConnect {
