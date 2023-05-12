@@ -2,4 +2,4 @@
 "@thirdweb-dev/sdk": patch
 ---
 
-Export resolve address ENS function
+Switch type of SmartContract.abi

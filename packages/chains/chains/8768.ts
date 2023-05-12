@@ -3,7 +3,7 @@ export default {
   "name": "TMY Chain",
   "chain": "TMY",
   "icon": {
-    "url": "ipfs://QmXQu3ib9gTo23mdVgMqmrExga6SmAzDQTTctpVBNtfDu9",
+    "url": "ipfs://Qmcd19ksUvNMD1XQFSC55jJhDPoF2zUzzV7woteFiugwBH",
     "width": 1024,
     "height": 1023,
     "format": "svg"

@@ -251,6 +251,7 @@ export const mochaHooks = {
       marketplaceEntrypointAddress,
     );
     await tx.wait();
+    implementations["marketplace-v3"] = marketplaceEntrypointAddress;
 
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     process.env.registryAddress = thirdwebRegistryAddress;
@@ -270,6 +271,13 @@ export const mochaHooks = {
         gasSettings: {
           maxPriceInGwei: 10000,
         },
+        supportedChains: [
+          {
+            chainId: 31337,
+            rpc: ["http://localhost:8545"],
+            nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+          },
+        ],
       },
       storage,
     );
@@ -366,6 +374,7 @@ async function setupMarketplaceV3(): Promise<string> {
     MarketplaceV3__factory.bytecode,
     signer,
     [pluginMapAddress],
+    "MarketplaceV3",
   );
   return marketplaceV3Address;
 }

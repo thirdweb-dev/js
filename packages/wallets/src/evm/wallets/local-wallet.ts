@@ -338,12 +338,12 @@ export class LocalWallet extends AbstractClientWallet<
   async getSavedData(storage?: AsyncStorage): Promise<WalletData | null> {
     const _storage = storage || this.#storage;
 
-    const savedDataStr = await _storage.getItem(STORAGE_KEY_WALLET_DATA);
-    if (!savedDataStr) {
-      return null;
-    }
-
     try {
+      const savedDataStr = await _storage.getItem(STORAGE_KEY_WALLET_DATA);
+      if (!savedDataStr) {
+        return null;
+      }
+
       const savedData = JSON.parse(savedDataStr);
       if (!savedData) {
         return null;

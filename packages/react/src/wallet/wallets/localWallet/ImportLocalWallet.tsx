@@ -8,7 +8,7 @@ import {
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import {
   useCreateWalletInstance,
-  useThirdwebWallet,
+  useWalletContext,
 } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { DragNDrop } from "../../../components/DragNDrop";
@@ -31,7 +31,7 @@ export const ImportLocalWallet: React.FC<{
   const [showPassword, setShowPassword] = useState(false);
   const [importedAddress, setImportedAddress] = useState<string | undefined>();
 
-  const thirdwebWalletContext = useThirdwebWallet();
+  const { setConnectedWallet } = useWalletContext();
 
   const handleImport = async () => {
     const localWallet = createWalletInstance(props.localWallet) as LocalWallet;
@@ -55,7 +55,7 @@ export const ImportLocalWallet: React.FC<{
       password,
     });
 
-    thirdwebWalletContext.handleWalletConnect(localWallet);
+    setConnectedWallet(localWallet);
     setLocalWallet(localWallet);
     props.onConnect();
   };

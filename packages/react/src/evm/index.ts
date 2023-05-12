@@ -1,3 +1,8 @@
+export {
+  useIsWalletModalOpen,
+  useSetIsWalletModalOpen,
+} from "./providers/wallet-ui-states-provider";
+
 export { useSafe } from "./connectors/gnosis";
 export { useMagic } from "./connectors/magic";
 

@@ -11,7 +11,6 @@ import {
 import { enforceCreator } from "./helpers/creators-helper";
 import { Registry } from "./registry";
 import {
-  findMetadataPda,
   getSignerHistogram,
   Metaplex,
   sol,
@@ -20,7 +19,7 @@ import {
   TransactionBuilder,
 } from "@metaplex-foundation/js";
 import {
-  createCreateMetadataAccountV2Instruction,
+  createCreateMetadataAccountV3Instruction,
   DataV2,
 } from "@metaplex-foundation/mpl-token-metadata";
 import { Keypair } from "@solana/web3.js";
@@ -109,8 +108,11 @@ export class Deployer {
       collection: null,
       uses: null,
     };
-    const metadata = findMetadataPda(mint.publicKey);
-    const metaTx = createCreateMetadataAccountV2Instruction(
+    const metadata = this.metaplex
+      .nfts()
+      .pdas()
+      .metadata({ mint: mint.publicKey });
+    const metaTx = createCreateMetadataAccountV3Instruction(
       {
         metadata,
         mint: mint.publicKey,
@@ -118,7 +120,13 @@ export class Deployer {
         payer: owner,
         updateAuthority: owner,
       },
-      { createMetadataAccountArgsV2: { data, isMutable: false } },
+      {
+        createMetadataAccountArgsV3: {
+          isMutable: true,
+          data,
+          collectionDetails: null,
+        },
+      },
     );
 
     const registryInstructions =

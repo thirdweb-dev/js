@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "3.10.12",
+  "version": "3.10.14",
   "description": "The main thirdweb SDK.",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/sdk",
   "license": "Apache-2.0",
@@ -91,10 +91,10 @@
   "devDependencies": {
     "@aws-sdk/client-secrets-manager": "^3.256.0",
     "@ethersproject/abstract-provider": "^5.7.0",
-    "@metaplex-foundation/amman": "^0.12.0",
-    "@metaplex-foundation/amman-client": "^0.2.1",
-    "@metaplex-foundation/js": "^0.17.6",
-    "@metaplex-foundation/mpl-token-metadata": "^2.3.3",
+    "@metaplex-foundation/amman": "^0.12.1",
+    "@metaplex-foundation/amman-client": "^0.2.4",
+    "@metaplex-foundation/js": "^0.19.2",
+    "@metaplex-foundation/mpl-token-metadata": "^2.11",
     "@microsoft/api-documenter": "^7.19.4",
     "@microsoft/api-extractor": "^7.29.2",
     "@microsoft/tsdoc": "^0.14.1",
