@@ -12,7 +12,7 @@ import {
 import { WalletConnect } from "@thirdweb-dev/wallets";
 import { Linking } from "react-native";
 
-type WC2Options = Omit<
+type WC2Options = { projectId?: string } & Omit<
   WalletOptions<WalletConnectOptions>,
   "projectId" | "qrcode" | "walletStorage"
 >;
@@ -36,7 +36,7 @@ export class TrustWallet extends WalletConnect {
       ...options,
       walletId: "trust",
       qrcode: false,
-      projectId: TW_WC_PROJECT_ID,
+      projectId: options.projectId ? options.projectId : TW_WC_PROJECT_ID,
       walletStorage: storage,
     });
 
@@ -62,10 +62,16 @@ export class TrustWallet extends WalletConnect {
   }
 }
 
-export const trustWallet = () => {
+type TrustWalletConfig = { projectId?: string };
+
+export const trustWallet = (config?: TrustWalletConfig) => {
   return {
     id: TrustWallet.id,
     meta: TrustWallet.meta,
-    create: (options: WalletOptionsRC) => new TrustWallet(options),
-  } satisfies ConfiguredWallet;
+    create: (options: WalletOptionsRC) =>
+      new TrustWallet({ ...options, ...config }),
+    config: {
+      projectId: config?.projectId,
+    },
+  } satisfies ConfiguredWallet<WalletConnect, TrustWalletConfig>;
 };
