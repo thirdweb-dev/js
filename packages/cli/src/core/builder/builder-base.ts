@@ -32,19 +32,21 @@ export abstract class BaseBuilder implements IBuilder {
       logger.debug(`Skipping '${name}'.`);
       return false;
     }
-    // ensure that we can extract IPFS hashes from the bytecode
-    let ipfsHash;
-    try {
-      ipfsHash = extractIPFSHashFromBytecode(bytecode);
-    } catch (e) {
-      logger.debug(`Error extracting IPFS hash from '${name}': ${e}`);
-    }
+    if (!ignoreIpfsHash) {
+      // ensure that we can extract IPFS hashes from the bytecode
+      let ipfsHash;
+      try {
+        ipfsHash = extractIPFSHashFromBytecode(bytecode);
+      } catch (e) {
+        logger.debug(`Error extracting IPFS hash from '${name}': ${e}`);
+      }
 
-    if (!ipfsHash && !ignoreIpfsHash) {
-      logger.debug(
-        `Cannot resolve build metadata IPFS hash for contract '${name}'. Skipping.`,
-      );
-      return false;
+      if (!ipfsHash) {
+        logger.debug(
+          `Cannot resolve build metadata IPFS hash for contract '${name}'. Skipping.`,
+        );
+        return false;
+      }
     }
     return true;
   }

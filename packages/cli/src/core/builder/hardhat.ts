@@ -141,7 +141,7 @@ export class HardhatBuilder extends BaseBuilder {
             )
           ) {
             contracts.push({
-              metadata: meta,
+              metadata: JSON.stringify(meta),
               bytecode,
               name: contractName,
               fileName,
