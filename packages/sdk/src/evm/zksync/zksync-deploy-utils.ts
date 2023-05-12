@@ -3,6 +3,7 @@ import invariant from "tiny-invariant";
 import { twProxyArtifactZK } from "./temp-artifact/TWProxy";
 import {
   convertParamValues,
+  extractConstructorParamsFromAbi,
   extractFunctionParamsFromAbi,
   fetchAndCacheDeployMetadata,
 } from "../common";
@@ -25,12 +26,6 @@ export async function zkDeployContractFromUri(
     await fetchAndCacheDeployMetadata(publishMetadataUri, storage);
   const forceDirectDeploy = options?.forceDirectDeploy || false;
 
-  const implementationAddress = getImplementation(
-    chainId,
-    compilerMetadata.name,
-  );
-  invariant(implementationAddress, "Contract not supported yet.");
-
   if (
     extendedMetadata &&
     extendedMetadata.factoryDeploymentData &&
@@ -38,6 +33,12 @@ export async function zkDeployContractFromUri(
       extendedMetadata.isDeployableViaFactory) &&
     !forceDirectDeploy
   ) {
+    const implementationAddress = getImplementation(
+      chainId,
+      compilerMetadata.name,
+    );
+    invariant(implementationAddress, "Contract not supported yet.");
+
     const initializerParamTypes = extractFunctionParamsFromAbi(
       compilerMetadata.abi,
       extendedMetadata.factoryDeploymentData.implementationInitializerFunction,
@@ -79,7 +80,39 @@ export async function zkDeployContractFromUri(
 
     return proxy.address;
   } else {
-    throw new Error("Error deploying contract");
+    const bytecode = compilerMetadata.bytecode.startsWith("0x")
+      ? compilerMetadata.bytecode
+      : `0x${compilerMetadata.bytecode}`;
+    if (!ethers.utils.isHexString(bytecode)) {
+      throw new Error(`Contract bytecode is invalid.\n\n${bytecode}`);
+    }
+    const constructorParamTypes = extractConstructorParamsFromAbi(
+      compilerMetadata.abi,
+    ).map((p) => p.type);
+    const paramValues = convertParamValues(
+      constructorParamTypes,
+      constructorParamValues,
+    );
+
+    const factory = new zk.ContractFactory(
+      compilerMetadata.abi,
+      bytecode as BytesLike,
+      signer as zk.Signer,
+      "create",
+    );
+    const contract = await factory.deploy(...paramValues);
+
+    await contract.deployed();
+    console.log("Contract deployed at: ", contract.address);
+
+    // register on multichain registry
+    await registerContractOnMultiChainRegistry(
+      contract.address,
+      chainId,
+      compilerMetadata.metadataUri,
+    );
+
+    return contract.address;
   }
 }
 
