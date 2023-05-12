@@ -12,32 +12,25 @@ import { SmartWalletConnecting } from "./SmartWalletConnecting";
 import { SelectPersonalWallet } from "./SelectPersonalWallet";
 import { HeadlessConnectUI } from "../headlessConnectUI";
 
-export const smartWallet = (config: SmartWalletConfig) => {
-  const configuredWallet = {
+export const smartWallet = (
+  config: SmartWalletConfig,
+): SmartConfiguredWallet => {
+  return {
     id: SmartWallet.id,
     meta: SmartWallet.meta,
     create: (options: WalletOptions) =>
       new SmartWallet({ ...options, ...config }),
-    connectUI(props) {
-      return <SmartConnectUI {...props} configuredWallet={configuredWallet} />;
-    },
+    connectUI: SmartConnectUI,
     isInstalled() {
       return false;
     },
-    config: {
-      ...config,
-      personalWallets: config?.personalWallets || defaultWallets,
-    },
-  } satisfies SmartConfiguredWallet;
-
-  return configuredWallet;
+    config,
+  };
 };
 
-type SafeConnectUIProps = ConnectUIProps & {
-  configuredWallet: SmartConfiguredWallet;
-};
-
-export const SmartConnectUI = (props: SafeConnectUIProps) => {
+export const SmartConnectUI = (
+  props: ConnectUIProps<SmartWallet, SmartWalletConfig>,
+) => {
   const activeWallet = useWallet();
   const { configuredWallet } = props;
   const [personalConfiguredWallet, setPersonalConfiguredWallet] = useState<
@@ -56,24 +49,22 @@ export const SmartConnectUI = (props: SafeConnectUIProps) => {
       isOpen: props.isOpen,
       open: props.open,
       theme: props.theme,
+      configuredWallet: personalConfiguredWallet,
     };
 
     if (personalConfiguredWallet.connectUI) {
       return <personalConfiguredWallet.connectUI {..._props} />;
     }
 
-    return (
-      <HeadlessConnectUI
-        {..._props}
-        configuredWallet={personalConfiguredWallet}
-      />
-    );
+    return <HeadlessConnectUI {..._props} />;
   }
 
   if (!activeWallet) {
     return (
       <SelectPersonalWallet
-        personalWallets={configuredWallet.config.personalWallets}
+        personalWallets={
+          configuredWallet.config.personalWallets || defaultWallets
+        }
         onBack={props.goBack}
         smartWallet={configuredWallet}
         selectWallet={setPersonalConfiguredWallet}

@@ -169,7 +169,7 @@ export const SmartWalletFlow = ({
         onConnected={onConnectedLocalWallet}
         isOpen={false}
         open={() => {}}
-        localWallet={localWallet()}
+        configuredWallet={localWallet()}
       />
     );
   }

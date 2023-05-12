@@ -41,35 +41,47 @@ type WalletConnectParams<I extends WalletInstance> = Parameters<
 
 type ConnectionStatus = "unknown" | "connected" | "disconnected" | "connecting";
 
-type ConnectFnArgs<I extends WalletInstance> =
+type ConnectFnArgs<
+  I extends WalletInstance,
+  Config extends Record<string, any> | undefined = undefined,
+> =
   // if second argument is optional
   undefined extends WalletConnectParams<I>
     ? [
-        wallet: ConfiguredWallet<I>,
+        wallet: ConfiguredWallet<I, Config>,
         connectParams?: NonNullable<WalletConnectParams<I>>,
       ]
     : // if second argument is required
       [
-        wallet: ConfiguredWallet<I>,
+        wallet: ConfiguredWallet<I, Config>,
         connectParams: NonNullable<WalletConnectParams<I>>,
       ];
 
 // maps wallet instance to it's wallet config
-const walletInstanceToConfig: Map<WalletInstance, ConfiguredWallet> = new Map();
+const walletInstanceToConfig: Map<
+  WalletInstance,
+  ConfiguredWallet<any, any>
+> = new Map();
 
 type ThirdwebWalletContextData = {
   wallets: ConfiguredWallet[];
   signer?: Signer;
   activeWallet?: WalletInstance;
   activeWalletConfig?: ConfiguredWallet;
-  connect: <I extends WalletInstance>(
-    ...args: ConnectFnArgs<I>
+  connect: <
+    I extends WalletInstance,
+    Config extends Record<string, any> | undefined = undefined,
+  >(
+    ...args: ConnectFnArgs<I, Config>
   ) => Promise<void>;
   disconnect: () => Promise<void>;
   connectionStatus: ConnectionStatus;
   setConnectionStatus: (status: ConnectionStatus) => void;
-  createWalletInstance: <I extends WalletInstance>(
-    Wallet: ConfiguredWallet<I>,
+  createWalletInstance: <
+    I extends WalletInstance,
+    Config extends Record<string, any> | undefined,
+  >(
+    Wallet: ConfiguredWallet<I, Config>,
   ) => I;
   createWalletStorage: CreateAsyncStorage;
   switchChain: (chain: number) => Promise<void>;
@@ -133,7 +145,9 @@ export function ThirdwebWalletProvider(
   }, [props.chains, props.dAppMeta, props.activeChain, theme]);
 
   const createWalletInstance = useCallback(
-    <I extends WalletInstance>(walletConfig: ConfiguredWallet<I>): I => {
+    <I extends WalletInstance, Config extends Record<string, any> | undefined>(
+      walletConfig: ConfiguredWallet<I, Config>,
+    ): I => {
       const walletInstance = walletConfig.create(walletParams);
       walletInstanceToConfig.set(walletInstance, walletConfig);
       return walletInstance;
@@ -343,7 +357,12 @@ export function ThirdwebWalletProvider(
   ]);
 
   const connectWallet = useCallback(
-    async <I extends WalletInstance>(...args: ConnectFnArgs<I>) => {
+    async <
+      I extends WalletInstance,
+      Config extends Record<string, any> | undefined = undefined,
+    >(
+      ...args: ConnectFnArgs<I, Config>
+    ) => {
       const [WalletObj, connectParams] = args;
 
       const _connectedParams = {

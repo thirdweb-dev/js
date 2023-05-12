@@ -5,10 +5,10 @@ export type SmartWalletConfig = {
   factoryAddress: string;
   thirdwebApiKey: string;
   gasless: boolean;
-  personalWallets?: ConfiguredWallet[];
+  personalWallets?: ConfiguredWallet<any, any>[];
 };
 
 export type SmartConfiguredWallet = ConfiguredWallet<
   SmartWallet,
-  Required<SmartWalletConfig>
+  SmartWalletConfig
 >;

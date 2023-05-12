@@ -1,7 +1,5 @@
-import {
-  LocalWallet,
-  localWallet,
-} from "../../../wallets/wallets/local-wallet";
+import { walletIds } from "@thirdweb-dev/wallets";
+import { localWallet } from "../../../wallets/wallets/local-wallet";
 import { ModalFooter } from "../../base/modal/ModalFooter";
 import { ModalHeaderTextClose } from "../../base/modal/ModalHeaderTextClose";
 import { ChooseWalletContent } from "./ChooseWalletContent";
@@ -12,7 +10,7 @@ import { View } from "react-native";
 export type ChooseWalletProps = {
   headerText?: ReactNode | string;
   subHeaderText?: ReactNode | string;
-  onChooseWallet: (wallet: ConfiguredWallet) => void;
+  onChooseWallet: (wallet: ConfiguredWallet<any, any>) => void;
   onClose: () => void;
   wallets: ConfiguredWallet[];
   excludeWalletIds?: string[];
@@ -30,7 +28,7 @@ export function ChooseWallet({
 }: ChooseWalletProps) {
   const [isConnecting, setIsConnecting] = useState(false);
 
-  const guestWallet = wallets.find((w) => w.id === LocalWallet.id);
+  const guestWallet = wallets.find((w) => w.id === walletIds.localWallet);
 
   const onContinueAsGuestPress = () => {
     setIsConnecting(true);
@@ -49,7 +47,7 @@ export function ChooseWallet({
         excludeWalletIds={
           showGuestWalletAsButton
             ? excludeWalletIds
-            : [...excludeWalletIds, LocalWallet.id]
+            : [...excludeWalletIds, walletIds.localWallet]
         }
         onChooseWallet={onChooseWallet}
       />

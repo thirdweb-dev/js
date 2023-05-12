@@ -14,11 +14,11 @@ import { ModalHeaderTextClose } from "../base/modal/ModalHeaderTextClose";
 import { useAddress, useWallet } from "@thirdweb-dev/react-core";
 import { PasswordInput } from "../PasswordInput";
 import * as FileSystem from "expo-file-system";
-import { LocalWallet } from "../../wallets/wallets/local-wallet";
-import { SmartWallet } from "@thirdweb-dev/wallets";
+import { LocalWallet, SmartWallet } from "@thirdweb-dev/wallets";
 import { usePersonalWalletAddress } from "../../wallets/hooks/usePersonalWalletAddress";
 import { shortenWalletAddress } from "../../utils/addresses";
 import { WalletIcon } from "../base/WalletIcon";
+import { LocalWalletNative } from "evm/wallets/wallets/LocalWallet";
 
 export type ExportLocalWalletModalProps = {
   isVisible: boolean;
@@ -48,12 +48,14 @@ export const ExportLocalWalletModal = ({
 
     let data;
     if (activeWallet?.walletId === SmartWallet.id) {
-      data = await (activeWallet.getPersonalWallet() as LocalWallet).export({
+      data = await (
+        activeWallet.getPersonalWallet() as LocalWalletNative
+      ).export({
         strategy: "encryptedJson",
         password: password,
       });
     } else {
-      data = await (activeWallet as LocalWallet).export({
+      data = await (activeWallet as LocalWalletNative).export({
         strategy: "encryptedJson",
         password: password,
       });

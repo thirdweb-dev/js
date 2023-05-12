@@ -1,23 +1,16 @@
-import {
-  ConfiguredWallet,
-  ConnectUIProps,
-  useConnect,
-} from "@thirdweb-dev/react-core";
+import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { useEffect, useRef, useState } from "react";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { CoinbaseScan } from "./CoinbaseScan";
-
-type CoinbaseConnectUIProps = ConnectUIProps & {
-  configuredWallet: ConfiguredWallet;
-};
+import type { CoinbaseWallet } from "@thirdweb-dev/wallets";
 
 export const CoinbaseConnectUI = ({
   configuredWallet,
   close,
   goBack,
-}: CoinbaseConnectUIProps) => {
+}: ConnectUIProps<CoinbaseWallet>) => {
   const connect = useConnect();
   const { meta } = configuredWallet;
   const [screen, setScreen] = useState<
