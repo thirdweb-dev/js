@@ -10,15 +10,6 @@ import { Dispatch, SetStateAction, useMemo } from "react";
 import { Button, CodeBlock, Text, TrackedLink } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
-interface ICodeSegment {
-  snippet: CodeSnippet;
-  environment: CodeEnvironment;
-  setEnvironment: Dispatch<SetStateAction<CodeEnvironment>>;
-  isInstallCommand?: boolean;
-  hideTabs?: boolean;
-  onlyTabs?: boolean;
-}
-
 const Environments: SupportedEnvironment[] = [
   {
     environment: "javascript",
@@ -70,7 +61,18 @@ const Environments: SupportedEnvironment[] = [
   },
 ];
 
-export const CodeSegment: React.FC<ICodeSegment> = ({
+interface CodeSegmentProps {
+  snippet: CodeSnippet;
+  environment: CodeEnvironment;
+  setEnvironment:
+    | Dispatch<SetStateAction<CodeEnvironment>>
+    | ((language: CodeEnvironment) => void);
+  isInstallCommand?: boolean;
+  hideTabs?: boolean;
+  onlyTabs?: boolean;
+}
+
+export const CodeSegment: React.FC<CodeSegmentProps> = ({
   snippet,
   environment,
   setEnvironment,
