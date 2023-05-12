@@ -1,14 +1,35 @@
 import type { WagmiConnectorData } from "../../lib/wagmi-core";
 import type { WalletConnectConnector } from "../connectors/wallet-connect";
+import { QRModalOptions } from "../connectors/wallet-connect/qrModalOptions";
 import { Connector, WagmiAdapter } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { TW_WC_PROJECT_ID } from "../constants/wc";
 import { walletIds } from "../constants/walletIds";
 
+export type WC2_QRModalOptions = QRModalOptions;
+
 export type WalletConnectOptions = {
+  /**
+   * Your project’s unique identifier that can be obtained at cloud.walletconnect.com. Enables following functionalities within Web3Modal: wallet and chain logos, optional WalletConnect RPC, support for all wallets from our Explorer and WalletConnect v2 support. Defaults to undefined.
+   *
+   * https://docs.walletconnect.com/2.0/web3modal/options#projectid-required
+   */
   projectId?: string;
+
+  /**
+   * Whether to display the QR Code Modal.
+   *
+   * Defaults to `true`.
+   */
   qrcode?: boolean;
+
+  /**
+   * options to customize the QR Code Modal
+   *
+   * https://docs.walletconnect.com/2.0/web3modal/options
+   */
+  qrModalOptions?: WC2_QRModalOptions;
 };
 
 export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
@@ -34,7 +55,6 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
 
   constructor(options?: WalletOptions<WalletConnectOptions>) {
     super(options?.walletId || WalletConnect.id, options);
-
     this.projectId = options?.projectId || TW_WC_PROJECT_ID;
     this.qrcode = options?.qrcode === false ? false : true;
   }
@@ -45,6 +65,7 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
       const { WalletConnectConnector } = await import(
         "../connectors/wallet-connect"
       );
+
       this.#walletConnectConnector = new WalletConnectConnector({
         chains: this.chains,
         options: {
@@ -52,6 +73,7 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
           projectId: this.projectId,
           dappMetadata: this.dappMetadata,
           storage: this.walletStorage,
+          qrModalOptions: this.options?.qrModalOptions,
         },
       });
       this.connector = new WagmiAdapter(this.#walletConnectConnector);
