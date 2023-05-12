@@ -1,9 +1,7 @@
 import * as zk from "zksync-web3";
-import invariant from "tiny-invariant";
 import { twProxyArtifactZK } from "./temp-artifact/TWProxy";
 import {
   convertParamValues,
-  extractConstructorParamsFromAbi,
   extractFunctionParamsFromAbi,
   fetchAndCacheDeployMetadata,
 } from "../common";
@@ -37,7 +35,9 @@ export async function zkDeployContractFromUri(
       chainId,
       compilerMetadata.name,
     );
-    invariant(implementationAddress, "Contract not supported yet.");
+    if (!implementationAddress) {
+      throw new Error("Contract not supported yet.");
+    }
 
     const initializerParamTypes = extractFunctionParamsFromAbi(
       compilerMetadata.abi,
@@ -56,7 +56,6 @@ export async function zkDeployContractFromUri(
       paramValues,
     );
 
-    console.log("args: ", implementationAddress, encodedInitializer);
     const proxyFactory = new zk.ContractFactory(
       twProxyArtifactZK.abi,
       twProxyArtifactZK.bytecode as BytesLike,
@@ -69,7 +68,6 @@ export async function zkDeployContractFromUri(
     );
 
     await proxy.deployed();
-    console.log("Proxy deployed at: ", proxy.address);
 
     // register on multichain registry
     await registerContractOnMultiChainRegistry(
@@ -80,39 +78,7 @@ export async function zkDeployContractFromUri(
 
     return proxy.address;
   } else {
-    const bytecode = compilerMetadata.bytecode.startsWith("0x")
-      ? compilerMetadata.bytecode
-      : `0x${compilerMetadata.bytecode}`;
-    if (!ethers.utils.isHexString(bytecode)) {
-      throw new Error(`Contract bytecode is invalid.\n\n${bytecode}`);
-    }
-    const constructorParamTypes = extractConstructorParamsFromAbi(
-      compilerMetadata.abi,
-    ).map((p) => p.type);
-    const paramValues = convertParamValues(
-      constructorParamTypes,
-      constructorParamValues,
-    );
-
-    const factory = new zk.ContractFactory(
-      compilerMetadata.abi,
-      bytecode as BytesLike,
-      signer as zk.Signer,
-      "create",
-    );
-    const contract = await factory.deploy(...paramValues);
-
-    await contract.deployed();
-    console.log("Contract deployed at: ", contract.address);
-
-    // register on multichain registry
-    await registerContractOnMultiChainRegistry(
-      contract.address,
-      chainId,
-      compilerMetadata.metadataUri,
-    );
-
-    return contract.address;
+    throw new Error("Contract not supported yet.");
   }
 }
 
@@ -151,24 +117,14 @@ async function registerContractOnMultiChainRegistry(
       address,
     );
     if (existingMeta && existingMeta !== "") {
-      console.log("Contract already registered on multi chain registry");
       return true;
     }
-    console.log(
-      "Registering contract on multi chain registry:",
-      address,
-      chainId,
-    );
     // add to multichain registry with metadata uri unlocks the contract on SDK/dashboard for everyone
-    const tx = await sdk.multiChainRegistry.addContract({
+    await sdk.multiChainRegistry.addContract({
       address,
       chainId,
       metadataURI,
     });
-    console.log(
-      "Registered contract on multi chain registry",
-      tx.receipt.transactionHash,
-    );
     return true;
   } catch (e) {
     console.log("Error registering contract on multi chain registry", e);
