@@ -8,14 +8,14 @@ import {
 } from "../../../lib/wagmi-core";
 import type { Chain } from "@thirdweb-dev/chains";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
-import { EthereumProviderOptions } from "@walletconnect/ethereum-provider/dist/types/EthereumProvider";
 import { providers, utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";
+import { QRModalOptions } from "./qrModalOptions";
 
 type WalletConnectOptions = {
-  theme?: "dark" | "light";
-  projectId: EthereumProviderOptions["projectId"];
-  qrcode?: EthereumProviderOptions["showQrModal"];
+  qrModalOptions?: QRModalOptions;
+  projectId: string;
+  qrcode?: boolean;
   dappMetadata: DAppMetaData;
   storage: AsyncStorage;
   /**
@@ -320,7 +320,7 @@ export class WalletConnectConnector extends WagmiConnector<
         ),
 
         qrModalOptions: {
-          themeMode: this.options.theme,
+          ...this.options.qrModalOptions,
           explorerAllowList: [],
           explorerDenyList: [],
         },
