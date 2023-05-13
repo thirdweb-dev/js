@@ -7,7 +7,7 @@ import { Address } from "../base/Address";
 import Text from "../base/Text";
 import { usePersonalWalletAddress } from "../../wallets/hooks/usePersonalWalletAddress";
 import { LocalWallet } from "../../wallets/wallets/local-wallet";
-import { useThirdwebWallet, useWallet } from "@thirdweb-dev/react-core";
+import { useWalletContext, useWallet } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import { useSmartWallet } from "../../providers/context-provider";
 import RightArrowIcon from "../../assets/right-arrow";
@@ -19,7 +19,7 @@ export const SmartWalletAdditionalActions = ({
   onExportPress: () => void;
 }) => {
   const personalWalletAddress = usePersonalWalletAddress();
-  const handleWalletConnect = useThirdwebWallet().handleWalletConnect;
+  const { setConnectedWallet } = useWalletContext();
   const [smartWallet, setSmartWallet] = useSmartWallet();
   const [smartWalletAddress, setSmartWalletAddress] = useState<string>("");
   const [showSmartWallet, setShowSmartWallet] = useState(false);
@@ -53,7 +53,7 @@ export const SmartWalletAdditionalActions = ({
       return;
     }
 
-    handleWalletConnect(wallet);
+    setConnectedWallet(wallet);
   };
 
   return (
@@ -97,17 +97,25 @@ export const SmartWalletAdditionalActions = ({
             backgroundColor="background"
             borderColor="border"
             mb="sm"
+            justifyContent="space-between"
             style={styles.exportWallet}
             onPress={onExportPress}
           >
-            <PocketWalletIcon size={16} />
-            <View style={styles.exportWalletInfo}>
-              <Text variant="bodySmall">
-                {wallet?.walletId === LocalWallet.id
-                  ? "Backup personal wallet"
-                  : "Backup wallet"}
-              </Text>
-            </View>
+            <>
+              <PocketWalletIcon size={16} />
+              <View style={styles.exportWalletInfo}>
+                <Text variant="bodySmall">
+                  {wallet?.walletId === LocalWallet.id
+                    ? "Backup personal wallet"
+                    : "Backup wallet"}
+                </Text>
+              </View>
+            </>
+            <RightArrowIcon
+              height={10}
+              width={10}
+              color={theme.colors.iconPrimary}
+            />
           </BaseButton>
           <Text variant="error">
             {

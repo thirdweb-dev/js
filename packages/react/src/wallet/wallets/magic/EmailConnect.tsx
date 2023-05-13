@@ -1,6 +1,7 @@
 import {
   useCreateWalletInstance,
-  useThirdwebWallet,
+  useWalletContext,
+  useWallets,
 } from "@thirdweb-dev/react-core";
 import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
@@ -26,28 +27,30 @@ export const EmailConnect: React.FC<{
 }> = (props) => {
   const [isConnecting, setIsConnecting] = useState(false);
   const createInstance = useCreateWalletInstance();
-  const twContext = useThirdwebWallet();
+  const { setConnectedWallet, setConnectionStatus, activeChain } =
+    useWalletContext();
   const [email, setEmail] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(false);
+  const singleWallet = useWallets().length === 1;
 
   const handleConnect = async () => {
     const magicWallet = createInstance(props.magicLinkWallet) as MagicLink;
     setIsConnecting(true);
     props.close();
     const connectOptions = {
-      chainId: twContext.activeChain?.chainId,
+      chainId: activeChain?.chainId,
       email,
     };
     try {
-      twContext.setConnectionStatus("connecting");
+      setConnectionStatus("connecting");
       await magicWallet.connect(connectOptions);
       setIsConnecting(false);
-      twContext.handleWalletConnect(magicWallet, connectOptions);
+      setConnectedWallet(magicWallet, connectOptions);
       props.onConnect();
     } catch (e) {
       console.error(e);
       setIsConnecting(false);
-      twContext.setConnectionStatus("disconnected");
+      setConnectionStatus("disconnected");
       props.open();
     }
   };
@@ -56,7 +59,7 @@ export const EmailConnect: React.FC<{
 
   return (
     <>
-      <BackButton onClick={props.onBack}></BackButton>
+      {!singleWallet && <BackButton onClick={props.onBack}></BackButton>}
       <Spacer y="md" />
       <Img
         src={props.magicLinkWallet.meta.iconURL}

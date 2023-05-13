@@ -1,3 +1,4 @@
+export { useSmartWallet } from "./evm/hooks/wallets/useSmartWallet";
 export { localWallet } from "./wallet/wallets/localWallet/localWallet";
 export { coinbaseWallet } from "./wallet/wallets/coinbase/coinbaseWallet";
 export { metamaskWallet } from "./wallet/wallets/metamask/metamaskWallet";

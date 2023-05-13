@@ -5,14 +5,14 @@ import {
   useConnect,
   useCreateWalletInstance,
   useSupportedWallet,
-  useThirdwebWallet,
+  useWalletContext,
 } from "@thirdweb-dev/react-core";
 import { SmartWalletObj } from "../../../wallets/wallets/smart-wallet";
 import { localWallet } from "../../../wallets/wallets/local-wallet";
 import { ChooseWallet } from "../ChooseWallet/ChooseWallet";
 import { LocalWalletFlow } from "../LocalWalletFlow";
 import { ModalHeaderTextClose } from "../../base/modal/ModalHeaderTextClose";
-import { ActivityIndicator, Linking } from "react-native";
+import { ActivityIndicator, Linking, useColorScheme } from "react-native";
 import { useTheme } from "@shopify/restyle";
 import BaseButton from "../../base/BaseButton";
 import Text from "../../base/Text";
@@ -36,7 +36,8 @@ export const SmartWalletFlow = ({
   const createWalletInstance = useCreateWalletInstance();
   const walletObj = useSupportedWallet(walletIds.smartWallet) as SmartWalletObj;
   const connect = useConnect();
-  const targetChain = useThirdwebWallet().activeChain;
+  const targetChain = useWalletContext().activeChain;
+  const colorScheme = useColorScheme();
 
   const mismatch = personalWalletChainId
     ? personalWalletChainId !== targetChain.chainId
@@ -162,6 +163,7 @@ export const SmartWalletFlow = ({
   if (showLocalWalletFlow) {
     return (
       <LocalWalletFlow
+        theme={colorScheme || "dark"}
         close={onClose}
         goBack={onLocalWalletBackPress}
         onConnected={onConnectedLocalWallet}
