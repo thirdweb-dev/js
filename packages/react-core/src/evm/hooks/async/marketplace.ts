@@ -1392,7 +1392,7 @@ export function useBuyNow(contract: RequiredParam<Marketplace>) {
  *     mutate: buyNow,
  *     isLoading,
  *     error,
- *   } = useBuyFromListing(contract);
+ *   } = useBuyDirectListing(contract);
  *
  *   if (error) {
  *     console.error("failed to buy direct listing", error);
@@ -1411,10 +1411,10 @@ export function useBuyNow(contract: RequiredParam<Marketplace>) {
  *
  * @param contract - an instance of a MarketplaceV3 contract
  * @returns a mutation object that can be used to buy out a direct listing
- * @see {@link https://portal.thirdweb.com/react/react.useBuyFromListing?utm_source=sdk | Documentation}
+ * @see {@link https://portal.thirdweb.com/react/react.useBuyDirectListing?utm_source=sdk | Documentation}
  * @beta
  */
-export function useBuyFromListing(contract: RequiredParam<MarketplaceV3>) {
+export function useBuyDirectListing(contract: RequiredParam<MarketplaceV3>) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();

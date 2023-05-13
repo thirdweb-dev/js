@@ -49,7 +49,7 @@ const MARKETPLACE_HOOKS = [
   "useCreateAuctionListing",
   "useMakeBid",
   "useBuyNow",
-  "useBuyFromListing",
+  "useBuyDirectListing",
 ];
 
 const DROP_HOOKS = [
