@@ -83,6 +83,20 @@ export async function getCompositePluginABI(
   return pluginABIs.length > 0 ? joinABIs([abi, ...pluginABIs]) : abi;
 }
 
+export async function getCompositeABIfromRelease(
+  publishMetadataUri: string,
+  storage: ThirdwebStorage,
+): Promise<Abi> {
+  const { extendedMetadata } = await fetchAndCacheDeployMetadata(
+    publishMetadataUri,
+    storage,
+  );
+
+  const compositeAbi = extendedMetadata?.compositeAbi || [];
+
+  return compositeAbi;
+}
+
 export function isRouterContract(abi: Abi) {
   const isPluginRouter: boolean = isFeatureEnabled(
     AbiSchema.parse(abi),

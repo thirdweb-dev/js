@@ -1,6 +1,10 @@
+import { fetchAndCachePublishedContractURI } from "../common";
 import { getPrebuiltInfo } from "../common/legacy";
 import { fetchAbiFromAddress } from "../common/metadata-resolver";
-import { getCompositePluginABI } from "../common/plugin";
+import {
+  getCompositeABIfromRelease,
+  getCompositePluginABI,
+} from "../common/plugin";
 import { ALL_ROLES } from "../common/role";
 import type {
   ContractType,
@@ -190,6 +194,18 @@ export const MarketplaceV3Initializer = {
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
+    const chainId = (await provider.getNetwork()).chainId;
+    const isZkSync = chainId === 280 || chainId === 324;
+
+    // Can't resolve IPFS hash from plugin bytecode on ZkSync
+    // Thus, pull the composite ABI from the release page
+    if (isZkSync) {
+      const uri = await fetchAndCachePublishedContractURI("MarketplaceV3");
+      const compositeAbi = await getCompositeABIfromRelease(uri, storage);
+
+      return compositeAbi;
+    }
+
     const abi = await fetchAbiFromAddress(address, provider, storage);
     if (abi) {
       return await getCompositePluginABI(address, abi, provider, {}, storage);

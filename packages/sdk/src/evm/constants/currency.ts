@@ -194,6 +194,17 @@ export const NATIVE_TOKENS: Record<number, NativeToken> = {
       symbol: "WETH",
     },
   },
+  // eslint-disable-next-line no-useless-computed-key
+  [280]: {
+    name: "zkSync Era Testnet",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
 };
 
 /**
