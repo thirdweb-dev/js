@@ -1382,7 +1382,7 @@ export function useBuyNow(contract: RequiredParam<Marketplace>) {
 }
 
 /**
- * Buy a direct listing from a MarketplaceV3 contract
+ * Buy a direct listing
  *
  * @example
  * ```jsx
