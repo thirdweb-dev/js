@@ -39,6 +39,8 @@ export class WCWallet {
         throw new Error("Web3Wallet not initialized");
       }
 
+      this.web3wallet.getActiveSessions();
+
       console.log("wallet.getAddress();");
       const address = await wallet.getAddress();
 
@@ -85,8 +87,12 @@ export class WCWallet {
         // convert `requestParamsMessage` by using a method like hexToUtf8
         const message = ethers.utils.toUtf8String(requestParamsMessage);
 
+        console.log("signed message");
+
         // sign the message
         const signedMessage = await wallet.signMessage(message);
+
+        console.log("signedMessage", signedMessage);
 
         const response = { id, result: signedMessage, jsonrpc: "2.0" };
 
