@@ -61,6 +61,7 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
         as="main"
         colSpan={{ base: 2, md: 1 }}
         rowSpan={1}
+        overflowX="auto"
       >
         {layout === "custom-contract" ? (
           children
