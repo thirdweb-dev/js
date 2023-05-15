@@ -77,22 +77,31 @@ export type ConnectUIProps<
    *
    * ### 1. Using `useConnect` hook
    * ```ts
-   *  const connect = useConnect(configuredWallet);
+   *  const connect = useConnect();
    *
-   *  connect(options);
+   *  // call this function to connect to your wallet
+   *  async function handleConnect() {
+   *    await connect(configuredWallet, options);
+   *  }
+   *
    * ```
    *
    * OR
    *
-   * ### 2. Manually creating wallet instance
+   * ### 2. Manually creating wallet instance and connecting
    * ```ts
-   * const createWalletInstance = useCreateWalletInstance(configuredWallet);
+   * const createWalletInstance = useCreateWalletInstance();
    * const setConnectedWallet = useSetConnectedWallet();
    *
-   * const walletInstance = createWalletInstance();
-   * walletInstance.connect(options);
-   *
-   * setConnectedWallet(walletInstance);
+   * // call this function to connect to your wallet
+   * async function handleConnect() {
+   *   // create instance
+   *   const walletInstance = createWalletInstance();
+   *   // connect wallet
+   *   await walletInstance.connect(options);
+   *   // set connected wallet
+   *   setConnectedWallet(walletInstance);
+   * }
    * ```
    */
   configuredWallet: ConfiguredWallet<I, Config>;
