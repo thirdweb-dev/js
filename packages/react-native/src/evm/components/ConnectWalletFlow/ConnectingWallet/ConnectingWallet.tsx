@@ -2,7 +2,7 @@ import { useAppTheme } from "../../../styles/hooks";
 import Text from "../../base/Text";
 import { ModalFooter } from "../../base/modal/ModalFooter";
 import { ConnectWalletHeader } from "./ConnectingWalletHeader";
-import type { ConfiguredWallet } from "@thirdweb-dev/react-core";
+import type { WalletConfig } from "@thirdweb-dev/react-core";
 import { ReactNode } from "react";
 import { ActivityIndicator, Linking, StyleSheet, View } from "react-native";
 
@@ -12,7 +12,7 @@ export type ConnectingWalletProps = {
   content?: ReactNode;
   onClose: () => void;
   onBackPress: () => void;
-  wallet: ConfiguredWallet;
+  wallet: WalletConfig;
 };
 
 export function ConnectingWallet({

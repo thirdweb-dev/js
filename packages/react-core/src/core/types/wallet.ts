@@ -23,7 +23,7 @@ export type WalletClass<I extends WalletInstance = WalletInstance> = {
   meta: (typeof AbstractClientWallet)["meta"];
 };
 
-export type ConfiguredWallet<
+export type WalletConfig<
   I extends WalletInstance = WalletInstance,
   Config extends Record<string, any> | undefined = undefined,
 > = {
@@ -71,7 +71,7 @@ export type ConnectUIProps<
   theme: "dark" | "light";
 
   /**
-   * `ConfiguredWallet` object of your wallet
+   * `WalletConfig` object of your wallet
    *
    * you can use this to connect to your wallet
    *
@@ -81,7 +81,7 @@ export type ConnectUIProps<
    *
    *  // call this function to connect to your wallet
    *  async function handleConnect() {
-   *    await connect(configuredWallet, options);
+   *    await connect(walletConfig, options);
    *  }
    *
    * ```
@@ -97,7 +97,7 @@ export type ConnectUIProps<
    * // call this function to connect to your wallet
    * async function handleConnect() {
    *   // create instance
-   *   const walletInstance = createWalletInstance();
+   *   const walletInstance = createWalletInstance(walletConfig);
    *   // connect wallet
    *   setConnectionStatus('connecting);
    *   try {
@@ -110,5 +110,5 @@ export type ConnectUIProps<
    * }
    * ```
    */
-  configuredWallet: ConfiguredWallet<I, Config>;
+  walletConfig: WalletConfig<I, Config>;
 };

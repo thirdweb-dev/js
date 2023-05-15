@@ -1,6 +1,6 @@
 import { SafeWallet } from "@thirdweb-dev/wallets";
 import {
-  ConfiguredWallet,
+  WalletConfig,
   ConnectUIProps,
   WalletOptions,
   useDisconnect,
@@ -33,7 +33,7 @@ export const SafeConnectUI = (
 ) => {
   const activeWallet = useWallet();
   const [personalConfiguredWallet, setPersonalConfiguredWallet] = useState<
-    ConfiguredWallet | undefined
+    WalletConfig | undefined
   >();
   const disconnect = useDisconnect();
 
@@ -49,7 +49,7 @@ export const SafeConnectUI = (
       isOpen: props.isOpen,
       open: props.open,
       theme: props.theme,
-      configuredWallet: personalConfiguredWallet,
+      walletConfig: personalConfiguredWallet,
     };
 
     if (personalConfiguredWallet.connectUI) {
@@ -62,9 +62,9 @@ export const SafeConnectUI = (
   if (!activeWallet) {
     return (
       <SelectpersonalWallet
-        personalWallets={props.configuredWallet.config.personalWallets}
+        personalWallets={props.walletConfig.config.personalWallets}
         onBack={props.goBack}
-        safeWallet={props.configuredWallet}
+        safeWallet={props.walletConfig}
         selectWallet={(wallet) => {
           setPersonalConfiguredWallet(wallet);
         }}
@@ -76,7 +76,7 @@ export const SafeConnectUI = (
     <SelectAccount
       onBack={disconnect}
       onConnect={props.close}
-      safeWallet={props.configuredWallet}
+      safeWallet={props.walletConfig}
     />
   );
 };

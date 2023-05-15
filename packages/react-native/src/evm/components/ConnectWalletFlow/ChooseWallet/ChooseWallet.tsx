@@ -3,16 +3,16 @@ import { localWallet } from "../../../wallets/wallets/local-wallet";
 import { ModalFooter } from "../../base/modal/ModalFooter";
 import { ModalHeaderTextClose } from "../../base/modal/ModalHeaderTextClose";
 import { ChooseWalletContent } from "./ChooseWalletContent";
-import { ConfiguredWallet } from "@thirdweb-dev/react-core";
+import { WalletConfig } from "@thirdweb-dev/react-core";
 import { ReactNode, useState } from "react";
 import { View } from "react-native";
 
 export type ChooseWalletProps = {
   headerText?: ReactNode | string;
   subHeaderText?: ReactNode | string;
-  onChooseWallet: (wallet: ConfiguredWallet<any, any>) => void;
+  onChooseWallet: (wallet: WalletConfig<any, any>) => void;
   onClose: () => void;
-  wallets: ConfiguredWallet[];
+  wallets: WalletConfig[];
   excludeWalletIds?: string[];
   showGuestWalletAsButton?: boolean;
 };

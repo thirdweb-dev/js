@@ -1,5 +1,5 @@
 import {
-  ConfiguredWallet,
+  WalletConfig,
   ConnectUIProps,
   WalletOptions,
   useWallet,
@@ -35,9 +35,9 @@ export const SmartConnectUI = (
   props: ConnectUIProps<SmartWallet, Required<SmartWalletConfig>>,
 ) => {
   const activeWallet = useWallet();
-  const { configuredWallet } = props;
+  const { walletConfig } = props;
   const [personalConfiguredWallet, setPersonalConfiguredWallet] = useState<
-    ConfiguredWallet | undefined
+    WalletConfig | undefined
   >();
 
   if (personalConfiguredWallet) {
@@ -52,7 +52,7 @@ export const SmartConnectUI = (
       isOpen: props.isOpen,
       open: props.open,
       theme: props.theme,
-      configuredWallet: personalConfiguredWallet,
+      walletConfig: personalConfiguredWallet,
     };
 
     if (personalConfiguredWallet.connectUI) {
@@ -65,9 +65,9 @@ export const SmartConnectUI = (
   if (!activeWallet) {
     return (
       <SelectPersonalWallet
-        personalWallets={configuredWallet.config.personalWallets}
+        personalWallets={walletConfig.config.personalWallets}
         onBack={props.goBack}
-        smartWallet={configuredWallet}
+        smartWallet={walletConfig}
         selectWallet={setPersonalConfiguredWallet}
       />
     );
@@ -77,7 +77,7 @@ export const SmartConnectUI = (
     <SmartWalletConnecting
       onBack={props.goBack}
       onConnect={props.close}
-      smartWallet={configuredWallet}
+      smartWallet={walletConfig}
     />
   );
 };

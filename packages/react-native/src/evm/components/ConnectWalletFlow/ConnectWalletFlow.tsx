@@ -4,7 +4,7 @@ import { TWModal } from "../base/modal/TWModal";
 import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
 import {
-  ConfiguredWallet,
+  WalletConfig,
   useConnect,
   useConnectionStatus,
   useWallets,
@@ -17,9 +17,7 @@ import { useColorScheme } from "react-native";
 
 export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [activeWallet, setActiveWallet] = useState<
-    ConfiguredWallet | undefined
-  >();
+  const [activeWallet, setActiveWallet] = useState<WalletConfig | undefined>();
   const [isConnecting, setIsConnecting] = useState(false);
   const supportedWallets = useWallets();
   const connectionStatus = useConnectionStatus();
@@ -69,7 +67,7 @@ export const ConnectWalletFlow = () => {
     setModalVisible(true);
   };
 
-  const connectActiveWallet = async (wallet: ConfiguredWallet) => {
+  const connectActiveWallet = async (wallet: WalletConfig) => {
     setIsConnecting(true);
     connect(wallet, {}).catch((error) => {
       console.error("Error connecting to the wallet", error);
@@ -77,7 +75,7 @@ export const ConnectWalletFlow = () => {
     });
   };
 
-  const onChooseWallet = (wallet: ConfiguredWallet) => {
+  const onChooseWallet = (wallet: WalletConfig) => {
     setActiveWallet(() => wallet);
 
     if (wallet.id !== SmartWallet.id) {
@@ -94,7 +92,7 @@ export const ConnectWalletFlow = () => {
     setIsConnecting(false);
   };
 
-  function getComponentForWallet(activeWalletP: ConfiguredWallet) {
+  function getComponentForWallet(activeWalletP: WalletConfig) {
     switch (activeWalletP.id) {
       case SmartWallet.id:
         return <SmartWalletFlow onClose={onClose} onConnect={onBackPress} />;
@@ -108,7 +106,7 @@ export const ConnectWalletFlow = () => {
           close={onClose}
           isOpen={modalVisible}
           open={onOpenModal}
-          configuredWallet={activeWalletP}
+          walletConfig={activeWalletP}
         />
       );
     }

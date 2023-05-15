@@ -13,12 +13,12 @@ import type { LocalWallet } from "@thirdweb-dev/wallets";
 export const LocalWalletConnectUI = (
   props: ConnectUIProps<LocalWallet, LocalWalletConfig>,
 ) => {
-  const { walletData } = useLocalWalletInfo(props.configuredWallet);
+  const { walletData } = useLocalWalletInfo(props.walletConfig);
 
-  if (!props.configuredWallet.config.persist) {
+  if (!props.walletConfig.config.persist) {
     return (
       <CreateLocalWallet_Guest
-        localWallet={props.configuredWallet}
+        localWallet={props.walletConfig}
         goBack={props.goBack}
         onConnect={props.close}
       />
@@ -44,7 +44,7 @@ export const LocalWalletConnectUI = (
       <ReconnectLocalWallet
         onConnect={props.close}
         goBack={props.goBack}
-        localWallet={props.configuredWallet}
+        localWallet={props.walletConfig}
       />
     );
   }
@@ -52,7 +52,7 @@ export const LocalWalletConnectUI = (
   return (
     <CreateLocalWallet_Password
       goBack={props.goBack}
-      localWalletConf={props.configuredWallet}
+      localWalletConf={props.walletConfig}
       onConnect={props.close}
     />
   );

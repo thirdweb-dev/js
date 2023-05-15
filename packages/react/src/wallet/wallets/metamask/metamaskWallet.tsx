@@ -1,8 +1,8 @@
-import type { WalletOptions, ConfiguredWallet } from "@thirdweb-dev/react-core";
+import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { MetaMaskWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
 import { MetamaskConnectUI } from "./MetamaskConnectUI";
 
-export const metamaskWallet = (): ConfiguredWallet<MetaMaskWallet> => {
+export const metamaskWallet = (): WalletConfig<MetaMaskWallet> => {
   return {
     id: MetaMaskWallet.id,
     meta: MetaMaskWallet.meta,

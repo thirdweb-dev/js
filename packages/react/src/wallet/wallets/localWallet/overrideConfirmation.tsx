@@ -4,13 +4,13 @@ import { Spacer } from "../../../components/Spacer";
 import { ModalTitle } from "../../../components/modalElements";
 import { LocalWalletModalHeader } from "./common";
 import { FormFooter } from "../../../components/formElements";
-import { ConfiguredWallet } from "@thirdweb-dev/react-core";
+import { WalletConfig } from "@thirdweb-dev/react-core";
 
 export const OverrideConfirmation: React.FC<{
   onBackup: () => void;
   onBack: () => void;
   onSkip: () => void;
-  meta: ConfiguredWallet["meta"];
+  meta: WalletConfig["meta"];
 }> = (props) => {
   return (
     <>
