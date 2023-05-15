@@ -43,7 +43,7 @@ type ConnectionStatus = "unknown" | "connected" | "disconnected" | "connecting";
 
 type ConnectFnArgs<
   I extends WalletInstance,
-  Config extends Record<string, any> | undefined = undefined,
+  Config extends Record<string, any> | undefined,
 > =
   // if second argument is optional
   undefined extends WalletConnectParams<I>
@@ -177,7 +177,9 @@ export function ThirdwebWalletProvider(
       setActiveWallet(wallet);
       const walletConfig = walletInstanceToConfig.get(wallet);
       if (!walletConfig) {
-        throw new Error("Wallet config not found for wallet instance");
+        throw new Error(
+          "Wallet config not found for given wallet instance. Do not create a wallet instance manually - use the useCreateWalletInstance() hook instead",
+        );
       }
       setActiveWalletConfig(walletConfig);
       setConnectionStatus("connected");
