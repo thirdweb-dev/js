@@ -14,7 +14,7 @@ import { ModalHeaderTextClose } from "../base/modal/ModalHeaderTextClose";
 import { useAddress, useWallet } from "@thirdweb-dev/react-core";
 import { PasswordInput } from "../PasswordInput";
 import * as FileSystem from "expo-file-system";
-import { LocalWallet, SmartWallet } from "@thirdweb-dev/wallets";
+import { SmartWallet } from "@thirdweb-dev/wallets";
 import { usePersonalWalletAddress } from "../../wallets/hooks/usePersonalWalletAddress";
 import { shortenWalletAddress } from "../../utils/addresses";
 import { WalletIcon } from "../base/WalletIcon";
@@ -153,7 +153,7 @@ export const ExportLocalWalletModal = ({
           p="lg"
         >
           <Box flexDirection="row" justifyContent="space-between" mb="sm">
-            <WalletIcon size={32} iconUri={LocalWallet.meta.iconURL} />
+            <WalletIcon size={32} iconUri={LocalWalletNative.meta.iconURL} />
             <ModalHeaderTextClose flex={1} onClose={onCloseInternal} />
           </Box>
           <Text variant="header" textAlign="left">
