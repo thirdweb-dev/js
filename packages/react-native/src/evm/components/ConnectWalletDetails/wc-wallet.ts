@@ -30,6 +30,14 @@ export class WCWallet {
     });
   }
 
+  async getActiveSessions() {
+    if (!this.web3wallet) {
+      throw new Error("Web3Wallet not initialized");
+    }
+
+    return this.web3wallet.getActiveSessions();
+  }
+
   async pair(
     wallet: AbstractClientWallet,
     uri: string,
