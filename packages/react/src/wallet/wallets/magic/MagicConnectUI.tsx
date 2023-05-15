@@ -22,8 +22,8 @@ import { MagicLink } from "@thirdweb-dev/wallets";
 export const MagicConnectUI = (
   props: ConnectUIProps<MagicLink, MagicLinkConfig>,
 ) => {
-  const isSmsEnabled = props.configuredWallet.config.smsLogin !== false;
-  const isEmailEnabled = props.configuredWallet.config.emailLogin !== false;
+  const isSmsEnabled = props.walletConfig.config.smsLogin !== false;
+  const isEmailEnabled = props.walletConfig.config.emailLogin !== false;
   const singleWallet = useWallets().length === 1;
 
   let firstScreen: "sms" | "email" | "menu" = "menu";
@@ -54,7 +54,7 @@ export const MagicConnectUI = (
       <SMSConnect
         close={props.close}
         open={props.open}
-        magicLinkWalletConf={props.configuredWallet}
+        magicLinkWalletConf={props.walletConfig}
         onBack={() => {
           if (firstScreen === "sms") {
             props.goBack();
@@ -72,7 +72,7 @@ export const MagicConnectUI = (
       <EmailConnect
         close={props.close}
         open={props.open}
-        magicLinkWalletConf={props.configuredWallet}
+        magicLinkWalletConf={props.walletConfig}
         onBack={() => {
           if (firstScreen === "email") {
             props.goBack();
@@ -118,7 +118,7 @@ export const MagicConnectUI = (
       {!singleWallet && <BackButton onClick={props.goBack}></BackButton>}
       <Spacer y="md" />
       <Img
-        src={props.configuredWallet.meta.iconURL}
+        src={props.walletConfig.meta.iconURL}
         width={iconSize.xl}
         height={iconSize.xl}
       />

@@ -1,4 +1,4 @@
-import type { WalletOptions, ConfiguredWallet } from "@thirdweb-dev/react-core";
+import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { CoinbaseWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
 import { CoinbaseConnectUI } from "./CoinbaseConnectUI";
 
@@ -32,7 +32,7 @@ export const coinbaseWallet = () => {
       }
       return false;
     },
-  } satisfies ConfiguredWallet<CoinbaseWallet>;
+  } satisfies WalletConfig<CoinbaseWallet>;
 
   return configuredWallet;
 };

@@ -7,12 +7,12 @@ import { CoinbaseScan } from "./CoinbaseScan";
 import type { CoinbaseWallet } from "@thirdweb-dev/wallets";
 
 export const CoinbaseConnectUI = ({
-  configuredWallet,
+  walletConfig,
   close,
   goBack,
 }: ConnectUIProps<CoinbaseWallet>) => {
   const connect = useConnect();
-  const { meta } = configuredWallet;
+  const { meta } = walletConfig;
   const [screen, setScreen] = useState<
     "connecting" | "loading" | "scanning" | "get-started"
   >("loading");
@@ -27,8 +27,8 @@ export const CoinbaseConnectUI = ({
       return;
     }
 
-    const isInstalled = configuredWallet.isInstalled
-      ? configuredWallet.isInstalled()
+    const isInstalled = walletConfig.isInstalled
+      ? walletConfig.isInstalled()
       : false;
 
     // if loading
@@ -37,7 +37,7 @@ export const CoinbaseConnectUI = ({
         try {
           connectPrompted.current = true;
           setScreen("connecting");
-          await connect(configuredWallet);
+          await connect(walletConfig);
           close();
         } catch (e) {
           goBack();
@@ -49,13 +49,13 @@ export const CoinbaseConnectUI = ({
       else {
         if (isMobile()) {
           // coinbase will redirect to download page for coinbase wallet apps
-          connect(configuredWallet);
+          connect(walletConfig);
         } else {
           setScreen("scanning");
         }
       }
     })();
-  }, [screen, configuredWallet, close, connect, goBack]);
+  }, [screen, walletConfig, close, connect, goBack]);
 
   if (screen === "connecting" || screen === "loading") {
     return (
@@ -87,7 +87,7 @@ export const CoinbaseConnectUI = ({
         onBack={goBack}
         onConnected={close}
         onGetStarted={() => setScreen("get-started")}
-        configuredWallet={configuredWallet}
+        configuredWallet={walletConfig}
       />
     );
   }

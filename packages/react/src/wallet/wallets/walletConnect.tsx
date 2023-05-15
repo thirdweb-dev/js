@@ -1,5 +1,5 @@
 import { WalletConnect } from "@thirdweb-dev/wallets";
-import type { ConfiguredWallet, WalletOptions } from "@thirdweb-dev/react-core";
+import type { WalletConfig, WalletOptions } from "@thirdweb-dev/react-core";
 import { TW_WC_PROJECT_ID } from "../constants/wc";
 import type { WC2_QRModalOptions } from "@thirdweb-dev/wallets";
 
@@ -22,7 +22,7 @@ type walletConnectConfig = {
 
 export const walletConnect = (
   config?: walletConnectConfig,
-): ConfiguredWallet<WalletConnect, walletConnectConfig> => {
+): WalletConfig<WalletConnect, walletConnectConfig> => {
   const projectId = config?.projectId || TW_WC_PROJECT_ID;
   return {
     id: WalletConnect.id,

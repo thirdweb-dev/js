@@ -11,12 +11,12 @@ import {
   Theme,
 } from "../../design-system";
 import styled from "@emotion/styled";
-import { ConfiguredWallet } from "@thirdweb-dev/react-core";
+import { WalletConfig } from "@thirdweb-dev/react-core";
 import { walletIds } from "@thirdweb-dev/wallets";
 
 export const WalletSelector: React.FC<{
-  configuredWallets: ConfiguredWallet[];
-  selectWallet: (wallet: ConfiguredWallet) => void;
+  configuredWallets: WalletConfig[];
+  selectWallet: (wallet: WalletConfig) => void;
   onGetStarted: () => void;
 }> = (props) => {
   const localWalletInfo = props.configuredWallets.find(
@@ -76,8 +76,8 @@ export const WalletSelector: React.FC<{
 };
 
 export const WalletSelection: React.FC<{
-  configuredWallets: ConfiguredWallet[];
-  selectWallet: (wallet: ConfiguredWallet) => void;
+  configuredWallets: WalletConfig[];
+  selectWallet: (wallet: WalletConfig) => void;
 }> = (props) => {
   // show the installed wallets first
   const configuredWallets = props.configuredWallets.sort((a, b) => {

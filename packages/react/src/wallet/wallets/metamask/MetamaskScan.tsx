@@ -5,13 +5,13 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useEffect, useRef, useState } from "react";
 import type { MetaMaskWallet } from "@thirdweb-dev/wallets";
-import type { ConfiguredWallet } from "@thirdweb-dev/react-core";
+import type { WalletConfig } from "@thirdweb-dev/react-core";
 
 export const MetamaskScan: React.FC<{
   onBack: () => void;
   onGetStarted: () => void;
   onConnected: () => void;
-  metamaskWalletConf: ConfiguredWallet<MetaMaskWallet>;
+  metamaskWalletConf: WalletConfig<MetaMaskWallet>;
 }> = ({
   onBack,
   onConnected,

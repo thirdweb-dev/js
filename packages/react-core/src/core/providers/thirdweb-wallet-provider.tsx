@@ -1,5 +1,5 @@
 import { DAppMetaData } from "../types/dAppMeta";
-import type { ConfiguredWallet, WalletInstance } from "../types/wallet";
+import type { WalletConfig, WalletInstance } from "../types/wallet";
 import { ThirdwebThemeContext } from "./theme-context";
 import { Chain } from "@thirdweb-dev/chains";
 import {
@@ -48,26 +48,26 @@ type ConnectFnArgs<
   // if second argument is optional
   undefined extends WalletConnectParams<I>
     ? [
-        wallet: ConfiguredWallet<I, Config>,
+        wallet: WalletConfig<I, Config>,
         connectParams?: NonNullable<WalletConnectParams<I>>,
       ]
     : // if second argument is required
       [
-        wallet: ConfiguredWallet<I, Config>,
+        wallet: WalletConfig<I, Config>,
         connectParams: NonNullable<WalletConnectParams<I>>,
       ];
 
 // maps wallet instance to it's wallet config
 const walletInstanceToConfig: Map<
   WalletInstance,
-  ConfiguredWallet<any, any>
+  WalletConfig<any, any>
 > = new Map();
 
 type ThirdwebWalletContextData = {
-  wallets: ConfiguredWallet[];
+  wallets: WalletConfig[];
   signer?: Signer;
   activeWallet?: WalletInstance;
-  activeWalletConfig?: ConfiguredWallet;
+  activeWalletConfig?: WalletConfig;
   connect: <
     I extends WalletInstance,
     Config extends Record<string, any> | undefined = undefined,
@@ -81,7 +81,7 @@ type ThirdwebWalletContextData = {
     I extends WalletInstance,
     Config extends Record<string, any> | undefined,
   >(
-    Wallet: ConfiguredWallet<I, Config>,
+    Wallet: WalletConfig<I, Config>,
   ) => I;
   createWalletStorage: CreateAsyncStorage;
   switchChain: (chain: number) => Promise<void>;
@@ -94,9 +94,7 @@ type ThirdwebWalletContextData = {
   /**
    * Get wallet config object from wallet instance
    */
-  getWalletConfig: (
-    walletInstance: WalletInstance,
-  ) => ConfiguredWallet | undefined;
+  getWalletConfig: (walletInstance: WalletInstance) => WalletConfig | undefined;
 };
 
 const ThirdwebWalletContext = createContext<
@@ -106,7 +104,7 @@ const ThirdwebWalletContext = createContext<
 export function ThirdwebWalletProvider(
   props: PropsWithChildren<{
     activeChain: Chain;
-    supportedWallets: ConfiguredWallet[];
+    supportedWallets: WalletConfig[];
     shouldAutoConnect?: boolean;
     createWalletStorage: CreateAsyncStorage;
     dAppMeta?: DAppMetaData;
@@ -123,7 +121,7 @@ export function ThirdwebWalletProvider(
   >();
 
   const [activeWalletConfig, setActiveWalletConfig] = useState<
-    ConfiguredWallet | undefined
+    WalletConfig | undefined
   >();
 
   if (!lastConnectedWalletStorage) {
@@ -152,7 +150,7 @@ export function ThirdwebWalletProvider(
 
   const createWalletInstance = useCallback(
     <I extends WalletInstance, Config extends Record<string, any> | undefined>(
-      walletConfig: ConfiguredWallet<I, Config>,
+      walletConfig: WalletConfig<I, Config>,
     ): I => {
       const walletInstance = walletConfig.create(walletParams);
       walletInstanceToConfig.set(walletInstance, walletConfig);
@@ -303,7 +301,7 @@ export function ThirdwebWalletProvider(
 
       if (personalWalletInfo) {
         type Config = {
-          personalWallets: ConfiguredWallet[];
+          personalWallets: WalletConfig[];
         };
 
         const personalWallets =

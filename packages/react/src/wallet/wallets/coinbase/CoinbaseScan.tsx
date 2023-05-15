@@ -1,6 +1,6 @@
 import type { CoinbaseWallet } from "@thirdweb-dev/wallets";
 import {
-  ConfiguredWallet,
+  WalletConfig,
   useCreateWalletInstance,
   useWalletContext,
 } from "@thirdweb-dev/react-core";
@@ -11,7 +11,7 @@ export const CoinbaseScan: React.FC<{
   onBack: () => void;
   onGetStarted: () => void;
   onConnected: () => void;
-  configuredWallet: ConfiguredWallet<CoinbaseWallet>;
+  configuredWallet: WalletConfig<CoinbaseWallet>;
 }> = ({ configuredWallet, onConnected, onGetStarted, onBack }) => {
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>(undefined);

@@ -20,7 +20,7 @@ type LocalWalletFlowUIProps = ConnectUIProps<LocalWallet> & {
 export function LocalWalletFlow({
   goBack,
   close,
-  configuredWallet,
+  walletConfig,
   onConnected,
 }: LocalWalletFlowUIProps) {
   const [isImportModalVisible, setIsImportModalVisible] = useState(false);
@@ -39,7 +39,7 @@ export function LocalWalletFlow({
   const onConnectPressInternal = async () => {
     setIsCreatingWallet(true);
 
-    const localWalletInstance = await createInstance(configuredWallet);
+    const localWalletInstance = await createInstance(walletConfig);
     connect(localWalletInstance);
   };
 
@@ -85,7 +85,7 @@ export function LocalWalletFlow({
 
       <LocalWalletImportModal
         isVisible={isImportModalVisible}
-        localWallet={configuredWallet}
+        localWallet={walletConfig}
         onWalletImported={connect}
         onClose={onImportModalClose}
       />

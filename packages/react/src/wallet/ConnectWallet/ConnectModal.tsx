@@ -1,7 +1,7 @@
 import { Modal } from "../../components/Modal";
 import { WalletSelector } from "./WalletSelector";
 import {
-  ConfiguredWallet,
+  WalletConfig,
   useConnectionStatus,
   useWallet,
   useWallets,
@@ -24,9 +24,7 @@ export const ConnectModal = () => {
   const initialScreen =
     configuredWallets.length > 1 ? reservedScreens.main : configuredWallets[0];
 
-  const [screen, setScreen] = useState<string | ConfiguredWallet>(
-    initialScreen,
-  );
+  const [screen, setScreen] = useState<string | WalletConfig>(initialScreen);
   const isWalletModalOpen = useIsWalletModalOpen();
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
   const connectionStatus = useConnectionStatus();
@@ -124,7 +122,7 @@ export const ConnectModal = () => {
             open={() => {
               setIsWalletModalOpen(true);
             }}
-            configuredWallet={screen}
+            walletConfig={screen}
           />
         )}
       </Modal>
