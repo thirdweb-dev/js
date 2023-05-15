@@ -85,7 +85,7 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
         onGetStarted={() => {
           setScreen("get-started");
         }}
-        metamaskWalletConf={walletConfig}
+        walletConfig={walletConfig}
       />
     );
   }

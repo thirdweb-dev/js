@@ -53,7 +53,7 @@ export const SelectpersonalWallet: React.FC<{
       <Spacer y="lg" />
 
       <WalletSelection
-        configuredWallets={personalWallets}
+        walletConfigs={personalWallets}
         selectWallet={props.selectWallet}
       />
 

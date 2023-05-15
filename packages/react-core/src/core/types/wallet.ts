@@ -81,7 +81,7 @@ export type ConnectUIProps<
    *
    *  // call this function to connect to your wallet
    *  async function handleConnect() {
-   *    await connect(configuredWallet, options);
+   *    await connect(walletConfig, options);
    *  }
    *
    * ```
@@ -97,7 +97,7 @@ export type ConnectUIProps<
    * // call this function to connect to your wallet
    * async function handleConnect() {
    *   // create instance
-   *   const walletInstance = createWalletInstance();
+   *   const walletInstance = createWalletInstance(walletConfig);
    *   // connect wallet
    *   setConnectionStatus('connecting);
    *   try {

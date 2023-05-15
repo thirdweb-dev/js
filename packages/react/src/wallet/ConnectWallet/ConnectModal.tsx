@@ -20,9 +20,9 @@ import { HeadlessConnectUI } from "../wallets/headlessConnectUI";
 
 export const ConnectModal = () => {
   const modalTheme = useModalTheme();
-  const configuredWallets = useWallets();
+  const walletConfigs = useWallets();
   const initialScreen =
-    configuredWallets.length > 1 ? reservedScreens.main : configuredWallets[0];
+    walletConfigs.length > 1 ? reservedScreens.main : walletConfigs[0];
 
   const [screen, setScreen] = useState<string | WalletConfig>(initialScreen);
   const isWalletModalOpen = useIsWalletModalOpen();
@@ -101,7 +101,7 @@ export const ConnectModal = () => {
       >
         {screen === reservedScreens.main && (
           <WalletSelector
-            configuredWallets={configuredWallets}
+            walletConfigs={walletConfigs}
             onGetStarted={() => {
               setScreen(reservedScreens.getStarted);
             }}

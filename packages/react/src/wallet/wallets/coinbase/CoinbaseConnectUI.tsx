@@ -87,7 +87,7 @@ export const CoinbaseConnectUI = ({
         onBack={goBack}
         onConnected={close}
         onGetStarted={() => setScreen("get-started")}
-        configuredWallet={walletConfig}
+        walletConfig={walletConfig}
       />
     );
   }

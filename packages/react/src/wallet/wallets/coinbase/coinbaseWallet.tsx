@@ -2,8 +2,8 @@ import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { CoinbaseWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
 import { CoinbaseConnectUI } from "./CoinbaseConnectUI";
 
-export const coinbaseWallet = () => {
-  const configuredWallet = {
+export const coinbaseWallet = (): WalletConfig<CoinbaseWallet> => {
+  return {
     id: CoinbaseWallet.id,
     meta: {
       name: "Coinbase Wallet",
@@ -32,7 +32,5 @@ export const coinbaseWallet = () => {
       }
       return false;
     },
-  } satisfies WalletConfig<CoinbaseWallet>;
-
-  return configuredWallet;
+  };
 };
