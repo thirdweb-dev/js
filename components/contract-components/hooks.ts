@@ -15,7 +15,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { Polygon } from "@thirdweb-dev/chains";
+import { Polygon, ZksyncEra, ZksyncEraTestnet } from "@thirdweb-dev/chains";
 import {
   useAddress,
   useChainId,
@@ -40,8 +40,12 @@ import {
   fetchPreDeployMetadata,
   getTrustedForwarders,
 } from "@thirdweb-dev/sdk/evm";
+import {
+  getZkTransactionsForDeploy,
+  zkDeployContractFromUri,
+} from "@thirdweb-dev/sdk/evm/zksync";
 import { SnippetApiResponse } from "components/contract-tabs/code/types";
-import { utils } from "ethers";
+import { providers, utils } from "ethers";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { isEnsName } from "lib/ens";
 import { getDashboardChainRpc } from "lib/rpc";
@@ -50,6 +54,7 @@ import { getAbsoluteUrl } from "lib/vercel-utils";
 import { StaticImageData } from "next/image";
 import { useMemo } from "react";
 import invariant from "tiny-invariant";
+import { Web3Provider } from "zksync-web3";
 import { z } from "zod";
 
 export interface ContractPublishMetadata {
@@ -531,13 +536,31 @@ export function useCustomContractDeployMutation(
         }
 
         // deploy contract
-        contractAddress = await sdk.deployer.deployContractFromUri(
-          ipfsHash.startsWith("ipfs://") ? ipfsHash : `ipfs://${ipfsHash}`,
-          Object.values(data.deployParams),
-          {
-            forceDirectDeploy,
-          },
-        );
+        // Handle ZkSync deployments separately
+        const isZkSync =
+          chainId === ZksyncEraTestnet.chainId || chainId === ZksyncEra.chainId;
+        if (isZkSync) {
+          // Get metamask signer using zksync-web3 library -- for custom fields in signature
+          const zkSigner = new Web3Provider(
+            window.ethereum as unknown as providers.ExternalProvider,
+          ).getSigner();
+
+          contractAddress = await zkDeployContractFromUri(
+            ipfsHash.startsWith("ipfs://") ? ipfsHash : `ipfs://${ipfsHash}`,
+            Object.values(data.deployParams),
+            zkSigner,
+            StorageSingleton,
+            chainId,
+          );
+        } else {
+          contractAddress = await sdk.deployer.deployContractFromUri(
+            ipfsHash.startsWith("ipfs://") ? ipfsHash : `ipfs://${ipfsHash}`,
+            Object.values(data.deployParams),
+            {
+              forceDirectDeploy,
+            },
+          );
+        }
 
         deployContext.nextStep();
       } catch (e) {
@@ -591,6 +614,15 @@ export function useTransactionsForDeploy(publishMetadataOrUri: string) {
     ["transactions-for-deploy", publishMetadataOrUri, chainId],
     async () => {
       invariant(sdk, "sdk not provided");
+
+      // Handle separately for ZkSync
+      if (
+        chainId === ZksyncEraTestnet.chainId ||
+        chainId === ZksyncEra.chainId
+      ) {
+        return await getZkTransactionsForDeploy();
+      }
+
       return await sdk.deployer.getTransactionsForDeploy(
         publishMetadataOrUri.startsWith("ipfs://")
           ? publishMetadataOrUri

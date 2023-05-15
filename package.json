@@ -38,9 +38,9 @@
     "@tanstack/react-query-persist-client": "^4.29.1",
     "@tanstack/react-table": "8.7.9",
     "@thirdweb-dev/chain-icons": "^1.0.5",
-    "@thirdweb-dev/chains": "^0.1.14-nightly-af4b5356-20230509044351",
-    "@thirdweb-dev/react": "^3.11.10-nightly-af4b5356-20230509044351",
-    "@thirdweb-dev/sdk": "^3.10.13-nightly-af4b5356-20230509044351",
+    "@thirdweb-dev/chains": "0.1.16-nightly-9886c858-20230512232048",
+    "@thirdweb-dev/react": "3.11.12-nightly-9886c858-20230512232048",
+    "@thirdweb-dev/sdk": "3.10.15-nightly-9886c858-20230512232048",
     "@thirdweb-dev/storage": "^1.1.2",
     "@vercel/og": "^0.5.4",
     "airtable": "^0.11.6",
@@ -76,6 +76,7 @@
     "spdx-correct": "^3.1.1",
     "tiny-invariant": "^1.2.0",
     "yarn": "^1.22.19",
+    "zksync-web3": "^0.14.3",
     "zod": "^3.19.1"
   },
   "devDependencies": {
