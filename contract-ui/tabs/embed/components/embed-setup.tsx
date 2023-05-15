@@ -37,6 +37,7 @@ interface EmbedSetupProps {
 }
 
 const IPFS_URI = "ipfs://QmfK9mw9eQKE9vCbtZht9kygpkNWffdwibsJPnCo7MBN4M";
+const ERC721_IPFS_URI = `ipfs://QmRtKLLjdksJtcFhYd7mFx4yoAhgtfrcREAP3Dncsnzoqm`;
 
 interface IframeSrcOptions {
   chain: string;
@@ -82,7 +83,10 @@ const buildIframeSrc = (
   ercOrMarketplace?: string,
   options?: IframeSrcOptions,
 ): string => {
-  const contractEmbedHash = `${IPFS_URI}/${ercOrMarketplace}.html`;
+  const contractEmbedHash =
+    ercOrMarketplace === "erc721"
+      ? ERC721_IPFS_URI
+      : `${IPFS_URI}/${ercOrMarketplace}.html`;
 
   if (!contract || !options || !contractEmbedHash) {
     return "";
@@ -140,7 +144,7 @@ const buildIframeSrc = (
   if (theme && theme !== "light") {
     url.searchParams.append("theme", theme);
   }
-  if (primaryColor && primaryColor !== "purple") {
+  if (primaryColor && primaryColor !== "default") {
     url.searchParams.append("primaryColor", primaryColor);
   }
   if (secondaryColor && secondaryColor !== "orange") {
@@ -369,6 +373,9 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
           <FormControl>
             <FormLabel>Primary Color</FormLabel>
             <Select {...register("primaryColor")}>
+              {ercOrMarketplace === "erc721" && (
+                <option value="default">Default</option>
+              )}
               {colorOptions.map((color) => (
                 <option key={color} value={color}>
                   {color[0].toUpperCase() + color.substring(1)}
