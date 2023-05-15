@@ -10,5 +10,5 @@ export type SmartWalletConfig = {
 
 export type SmartConfiguredWallet = ConfiguredWallet<
   SmartWallet,
-  SmartWalletConfig
+  Required<SmartWalletConfig>
 >;

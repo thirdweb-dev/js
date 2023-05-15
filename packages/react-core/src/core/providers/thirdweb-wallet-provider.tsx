@@ -91,6 +91,12 @@ type ThirdwebWalletContextData = {
     wallet: WalletInstance,
     params?: ConnectParams<Record<string, any>>,
   ) => void;
+  /**
+   * Get wallet config object from wallet instance
+   */
+  getWalletConfig: (
+    walletInstance: WalletInstance,
+  ) => ConfiguredWallet | undefined;
 };
 
 const ThirdwebWalletContext = createContext<
@@ -184,19 +190,21 @@ export function ThirdwebWalletProvider(
       }
 
       // save to storage
+
       const walletInfo: LastConnectedWalletInfo = {
-        walletId: wallet.walletId,
+        walletId: walletConfig.id,
         connectParams,
       };
 
       // if personal wallet exists, we need to replace the connectParams.personalWallet to a stringifiable version
       const personalWallet = wallet.getPersonalWallet() as AbstractClientWallet;
+      const personalWalletConfig = walletInstanceToConfig.get(personalWallet);
 
-      if (personalWallet) {
+      if (personalWallet && personalWalletConfig) {
         walletInfo.connectParams = {
           ...walletInfo.connectParams,
           personalWallet: {
-            walletId: personalWallet.walletId,
+            walletId: personalWalletConfig.id,
             connectParams: personalWallet.getConnectParams(),
           },
         };
@@ -453,6 +461,9 @@ export function ThirdwebWalletProvider(
         setConnectedWallet: setConnectedWallet,
         activeChain: props.activeChain,
         chainToConnect,
+        getWalletConfig: (walletInstance: WalletInstance) => {
+          return walletInstanceToConfig.get(walletInstance);
+        },
       }}
     >
       {props.children}

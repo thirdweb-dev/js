@@ -24,12 +24,15 @@ export const smartWallet = (
     isInstalled() {
       return false;
     },
-    config,
+    config: {
+      ...config,
+      personalWallets: config?.personalWallets || defaultWallets,
+    },
   };
 };
 
 export const SmartConnectUI = (
-  props: ConnectUIProps<SmartWallet, SmartWalletConfig>,
+  props: ConnectUIProps<SmartWallet, Required<SmartWalletConfig>>,
 ) => {
   const activeWallet = useWallet();
   const { configuredWallet } = props;
@@ -62,9 +65,7 @@ export const SmartConnectUI = (
   if (!activeWallet) {
     return (
       <SelectPersonalWallet
-        personalWallets={
-          configuredWallet.config.personalWallets || defaultWallets
-        }
+        personalWallets={configuredWallet.config.personalWallets}
         onBack={props.goBack}
         smartWallet={configuredWallet}
         selectWallet={setPersonalConfiguredWallet}

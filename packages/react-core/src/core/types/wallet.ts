@@ -92,15 +92,21 @@ export type ConnectUIProps<
    * ```ts
    * const createWalletInstance = useCreateWalletInstance();
    * const setConnectedWallet = useSetConnectedWallet();
+   * const setConnectionStatus = useSetConnectionStatus();
    *
    * // call this function to connect to your wallet
    * async function handleConnect() {
    *   // create instance
    *   const walletInstance = createWalletInstance();
    *   // connect wallet
-   *   await walletInstance.connect(options);
-   *   // set connected wallet
-   *   setConnectedWallet(walletInstance);
+   *   setConnectionStatus('connecting);
+   *   try {
+   *     await walletInstance.connect(options);
+   *     // set connected wallet
+   *     setConnectedWallet(walletInstance);
+   *   } catch {
+   *     setConnectionStatus('disconnected');
+   *  }
    * }
    * ```
    */
