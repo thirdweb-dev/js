@@ -19,11 +19,7 @@ export const coinbaseWallet = () => {
     create(options: WalletOptions) {
       return new CoinbaseWallet({ ...options, headlessMode: true });
     },
-    connectUI(props) {
-      return (
-        <CoinbaseConnectUI {...props} configuredWallet={configuredWallet} />
-      );
-    },
+    connectUI: CoinbaseConnectUI,
     isInstalled() {
       if (assertWindowEthereum(globalThis.window)) {
         return (

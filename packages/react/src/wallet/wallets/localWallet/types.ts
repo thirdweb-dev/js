@@ -16,5 +16,5 @@ export type LocalWalletConfig = {
 
 export type LocalConfiguredWallet = ConfiguredWallet<
   LocalWallet,
-  Required<LocalWalletConfig>
+  LocalWalletConfig
 >;

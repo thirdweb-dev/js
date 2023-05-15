@@ -11,9 +11,8 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
-import { SmartWallet } from "@thirdweb-dev/wallets";
+import { SmartWallet, walletIds } from "@thirdweb-dev/wallets";
 import { SmartWalletFlow } from "./SmartWallet/SmartWalletFlow";
-import { LocalWallet } from "../../wallets/wallets/local-wallet";
 import { useColorScheme } from "react-native";
 
 export const ConnectWalletFlow = () => {
@@ -109,6 +108,7 @@ export const ConnectWalletFlow = () => {
           close={onClose}
           isOpen={modalVisible}
           open={onOpenModal}
+          configuredWallet={activeWalletP}
         />
       );
     }
@@ -121,7 +121,7 @@ export const ConnectWalletFlow = () => {
           isConnecting ? (
             <ConnectingWallet
               content={
-                activeWallet.id === LocalWallet.id ? (
+                activeWallet.id === walletIds.localWallet ? (
                   <Text variant="bodySmallSecondary" mt="md">
                     Creating, encrypting and securing your device wallet.
                   </Text>

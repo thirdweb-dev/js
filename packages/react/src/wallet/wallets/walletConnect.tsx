@@ -20,27 +20,24 @@ type walletConnectConfig = {
   qrModalOptions?: WC2_QRModalOptions;
 };
 
-export const walletConnect = (config?: walletConnectConfig) => {
+export const walletConnect = (
+  config?: walletConnectConfig,
+): ConfiguredWallet<WalletConnect, walletConnectConfig> => {
   const projectId = config?.projectId || TW_WC_PROJECT_ID;
-  const configuredWallet = {
+  return {
     id: WalletConnect.id,
-    meta: {
-      name: "WalletConnect",
-      iconURL:
-        "ipfs://QmX58KPRaTC9JYZ7KriuBzeoEaV2P9eZcA3qbFnTHZazKw/wallet-connect.svg",
-    },
-    create: (options: WalletOptions) =>
-      new WalletConnect({
+    meta: WalletConnect.meta,
+    create(options: WalletOptions) {
+      return new WalletConnect({
         ...options,
         qrcode: true,
         projectId,
         qrModalOptions: config?.qrModalOptions,
-      }),
+      });
+    },
     config: {
       projectId,
       qrModalOptions: config?.qrModalOptions,
     },
-  } satisfies ConfiguredWallet<WalletConnect, walletConnectConfig>;
-
-  return configuredWallet;
+  };
 };

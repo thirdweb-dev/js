@@ -1,20 +1,15 @@
 import {
-  ConfiguredWallet,
   ConnectUIProps,
   useConnect,
   useWallets,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useRef } from "react";
 
-type HeadlessConnectUIProps = ConnectUIProps & {
-  configuredWallet: ConfiguredWallet;
-};
-
 export const HeadlessConnectUI = ({
   close,
   configuredWallet,
   open,
-}: HeadlessConnectUIProps) => {
+}: ConnectUIProps) => {
   const connect = useConnect();
   const prompted = useRef(false);
   const singleWallet = useWallets().length === 1;

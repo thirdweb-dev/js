@@ -1,5 +1,5 @@
 import { ConfiguredWallet } from "@thirdweb-dev/react-core";
-import { LocalWallet } from "../wallets/local-wallet";
+import { LocalWallet } from "../wallets/LocalWallet";
 
 export type LocalConfiguredWallet = ConfiguredWallet<LocalWallet>;
 

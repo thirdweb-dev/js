@@ -3,23 +3,33 @@ import {
   useCreateWalletInstance,
   useWalletContext,
 } from "@thirdweb-dev/react-core";
-import { useEffect, useState } from "react";
-
-import { MetaMaskWallet } from "@thirdweb-dev/wallets";
-import { ConfiguredWallet } from "@thirdweb-dev/react-core";
+import { useEffect, useRef, useState } from "react";
+import type { MetaMaskWallet } from "@thirdweb-dev/wallets";
+import type { ConfiguredWallet } from "@thirdweb-dev/react-core";
 
 export const MetamaskScan: React.FC<{
   onBack: () => void;
   onGetStarted: () => void;
   onConnected: () => void;
-  configuredWallet: ConfiguredWallet;
-}> = ({ onBack, onConnected, onGetStarted, configuredWallet }) => {
+  metamaskWalletConf: ConfiguredWallet<MetaMaskWallet>;
+}> = ({
+  onBack,
+  onConnected,
+  onGetStarted,
+  metamaskWalletConf: configuredWallet,
+}) => {
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const { setConnectedWallet, chainToConnect } = useWalletContext();
 
+  const scanStarted = useRef(false);
   useEffect(() => {
-    const metamask = createInstance(configuredWallet) as MetaMaskWallet;
+    if (scanStarted.current) {
+      return;
+    }
+    scanStarted.current = true;
+
+    const metamask = createInstance(configuredWallet);
 
     metamask.connectWithQrCode({
       chainId: chainToConnect?.chainId,

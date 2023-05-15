@@ -1,19 +1,12 @@
-import {
-  ConfiguredWallet,
-  ConnectUIProps,
-  useConnect,
-} from "@thirdweb-dev/react-core";
+import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { useEffect, useRef, useState } from "react";
 import { MetamaskScan } from "./MetamaskScan";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
+import { MetaMaskWallet } from "@thirdweb-dev/wallets";
 
-type MetamaskConnectUIProps = ConnectUIProps & {
-  configuredWallet: ConfiguredWallet;
-};
-
-export const MetamaskConnectUI = (props: MetamaskConnectUIProps) => {
+export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
   const [screen, setScreen] = useState<
     "connecting" | "scanning" | "get-started"
   >("connecting");
@@ -92,7 +85,7 @@ export const MetamaskConnectUI = (props: MetamaskConnectUIProps) => {
         onGetStarted={() => {
           setScreen("get-started");
         }}
-        configuredWallet={configuredWallet}
+        metamaskWalletConf={configuredWallet}
       />
     );
   }

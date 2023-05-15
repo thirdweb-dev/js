@@ -76,6 +76,9 @@ export const ConnectModal = () => {
     isWrapperConnected,
   ]);
 
+  const WalletConnectUI =
+    typeof screen !== "string" && (screen.connectUI || HeadlessConnectUI);
+
   return (
     <ThemeProvider
       theme={
@@ -112,20 +115,8 @@ export const ConnectModal = () => {
           <GetStartedWithWallets onBack={handleBack} />
         )}
 
-        {typeof screen !== "string" && screen.connectUI && (
-          <screen.connectUI
-            theme={modalTheme}
-            goBack={handleBack}
-            close={handleClose}
-            isOpen={isWalletModalOpen}
-            open={() => {
-              setIsWalletModalOpen(true);
-            }}
-          />
-        )}
-
-        {typeof screen !== "string" && !screen.connectUI && (
-          <HeadlessConnectUI
+        {WalletConnectUI && (
+          <WalletConnectUI
             theme={modalTheme}
             goBack={handleBack}
             close={handleClose}
