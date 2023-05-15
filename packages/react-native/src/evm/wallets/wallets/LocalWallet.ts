@@ -5,7 +5,7 @@ import {
 } from "@thirdweb-dev/wallets";
 import { ethers, utils } from "ethers";
 
-export class LocalWalletNative extends LocalWalletCore {
+export class LocalWallet extends LocalWalletCore {
   static meta = {
     id: walletIds.localWallet,
     name: "Guest Wallet",
@@ -14,7 +14,7 @@ export class LocalWalletNative extends LocalWalletCore {
   };
 
   getMeta() {
-    return LocalWalletNative.meta;
+    return LocalWallet.meta;
   }
 
   async generate() {

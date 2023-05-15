@@ -11,9 +11,9 @@ import {
   useWalletContext,
 } from "@thirdweb-dev/react-core";
 import { LocalWalletImportModal } from "./LocalWalletImportModal";
-import { LocalWalletNative } from "evm/wallets/wallets/LocalWallet";
+import { LocalWallet } from "../../wallets/wallets/LocalWallet";
 
-type LocalWalletFlowUIProps = ConnectUIProps<LocalWalletNative> & {
+type LocalWalletFlowUIProps = ConnectUIProps<LocalWallet> & {
   onConnected?: (wallet: WalletInstance) => void;
 };
 

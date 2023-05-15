@@ -1,6 +1,6 @@
 import { ConfiguredWallet } from "@thirdweb-dev/react-core";
-import { LocalWalletNative } from "../wallets/LocalWallet";
+import { LocalWallet } from "../wallets/LocalWallet";
 
-export type LocalConfiguredWallet = ConfiguredWallet<LocalWalletNative>;
+export type LocalConfiguredWallet = ConfiguredWallet<LocalWallet>;
 
-export type LocalWalletInstance = LocalWalletNative;
+export type LocalWalletInstance = LocalWallet;

@@ -18,7 +18,7 @@ import { SmartWallet } from "@thirdweb-dev/wallets";
 import { usePersonalWalletAddress } from "../../wallets/hooks/usePersonalWalletAddress";
 import { shortenWalletAddress } from "../../utils/addresses";
 import { WalletIcon } from "../base/WalletIcon";
-import { LocalWalletNative } from "evm/wallets/wallets/LocalWallet";
+import { LocalWallet } from "../../wallets/wallets/LocalWallet";
 
 export type ExportLocalWalletModalProps = {
   isVisible: boolean;
@@ -48,14 +48,12 @@ export const ExportLocalWalletModal = ({
 
     let data;
     if (activeWallet?.walletId === SmartWallet.id) {
-      data = await (
-        activeWallet.getPersonalWallet() as LocalWalletNative
-      ).export({
+      data = await (activeWallet.getPersonalWallet() as LocalWallet).export({
         strategy: "encryptedJson",
         password: password,
       });
     } else {
-      data = await (activeWallet as LocalWalletNative).export({
+      data = await (activeWallet as LocalWallet).export({
         strategy: "encryptedJson",
         password: password,
       });
@@ -153,7 +151,7 @@ export const ExportLocalWalletModal = ({
           p="lg"
         >
           <Box flexDirection="row" justifyContent="space-between" mb="sm">
-            <WalletIcon size={32} iconUri={LocalWalletNative.meta.iconURL} />
+            <WalletIcon size={32} iconUri={LocalWallet.meta.iconURL} />
             <ModalHeaderTextClose flex={1} onClose={onCloseInternal} />
           </Box>
           <Text variant="header" textAlign="left">
