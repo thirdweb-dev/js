@@ -32,6 +32,10 @@
     "@thirdweb-dev/sdk": "workspace:*",
     "@thirdweb-dev/storage": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",
+    "@walletconnect/core": "2.7.3",
+    "@walletconnect/types": "2.7.3",
+    "@walletconnect/utils": "2.7.3",
+    "@walletconnect/web3wallet": "^1.7.1",
     "abitype": "^0.2.5",
     "expo-clipboard": "^4.1.2",
     "expo-document-picker": "^11.2.2",
@@ -43,7 +47,10 @@
     "tiny-invariant": "^1.2.0"
   },
   "resolutions": {
-    "react-native-mmkv": "2.5.1"
+    "react-native-mmkv": "2.5.1",
+    "@walletconnect/core": "2.7.3",
+    "@walletconnect/types": "2.7.3",
+    "@walletconnect/utils": "2.7.3"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",

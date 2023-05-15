@@ -13,6 +13,8 @@ import { useSmartWallet } from "../../providers/context-provider";
 import RightArrowIcon from "../../assets/right-arrow";
 import { useTheme } from "@shopify/restyle";
 import { TextInput } from "../base/TextInput";
+import Box from "../base/Box";
+import { WCWallet } from "./wc-wallet";
 
 export const SmartWalletAdditionalActions = ({
   onExportPress,
@@ -27,6 +29,9 @@ export const SmartWalletAdditionalActions = ({
   const activeWallet = useWallet();
   const theme = useTheme();
   const [showWCRow, setShowWCRow] = useState(false);
+  const [wcUri, setWCUri] = useState<string | undefined>();
+  const [wcWallet, setWcWallet] = useState<WCWallet | undefined>();
+  const [appMeta, setAppMeta] = useState<{ name: string; iconUrl: string }>();
 
   const wallet = showSmartWallet
     ? smartWallet
@@ -60,13 +65,27 @@ export const SmartWalletAdditionalActions = ({
 
   const onConnectDappPress = () => {
     setShowWCRow(true);
+
+    const wc = new WCWallet();
+    wc.init();
+
+    setWcWallet(wc);
   };
 
   const onAddressChangeText = (text: string) => {
-    console.log(text);
+    setWCUri(text);
   };
 
-  console.log("rendering SmartWalletAdditionalActions");
+  const onWCPress = async () => {
+    if (!wcWallet || !wcUri || !smartWallet) {
+      return;
+    }
+
+    const appMetaP = await wcWallet.pair(smartWallet, wcUri);
+
+    setAppMeta(appMetaP);
+  };
+
   return (
     <>
       <View style={styles.currentNetwork}>
@@ -101,8 +120,27 @@ export const SmartWalletAdditionalActions = ({
           color={theme.colors.iconPrimary}
         />
       </BaseButton>
-      {showWCRow ? (
-        <TextInput onChangeText={onAddressChangeText} mb="sm" />
+      {showWCRow && !appMeta ? (
+        <Box
+          flexDirection="row"
+          mb="sm"
+          borderColor="border"
+          borderWidth={1}
+          borderRadius="md"
+        >
+          <TextInput onChangeText={onAddressChangeText} flex={1} />
+          <BaseButton
+            onPress={onWCPress}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <RightArrowIcon
+              height={20}
+              width={30}
+              color={theme.colors.iconPrimary}
+            />
+          </BaseButton>
+        </Box>
       ) : (
         <BaseButton
           backgroundColor="background"
@@ -113,9 +151,15 @@ export const SmartWalletAdditionalActions = ({
           onPress={onConnectDappPress}
         >
           <>
-            <PocketWalletIcon size={16} />
+            {appMeta ? (
+              <WalletIcon size={32} iconUri={appMeta.iconUrl} />
+            ) : (
+              <PocketWalletIcon size={16} />
+            )}
             <View style={styles.exportWalletInfo}>
-              <Text variant="bodySmall">Connect dApp</Text>
+              <Text variant="bodySmall">
+                {appMeta ? appMeta.name : "Connect app"}
+              </Text>
             </View>
           </>
           <RightArrowIcon
