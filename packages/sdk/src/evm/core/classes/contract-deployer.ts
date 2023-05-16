@@ -774,53 +774,7 @@ export class ContractDeployer extends RPCConnectionHandler {
           constructorParamValues,
         );
 
-        if (
-          extendedMetadata.isDeployableViaProxy ||
-          extendedMetadata.isDeployableViaFactory
-        ) {
-          let implementationAddress = extendedMetadata.factoryDeploymentData
-            .implementationAddresses[chainId] as AddressOrEns;
-          const resolvedImplementationAddress = await resolveAddress(
-            implementationAddress,
-          );
-
-          invariant(
-            resolvedImplementationAddress,
-            `implementationAddress not found for chainId '${chainId}'`,
-          );
-
-          if (extendedMetadata.isDeployableViaFactory) {
-            // deploy via a factory (prioritise factory)
-            invariant(
-              extendedMetadata.factoryDeploymentData.factoryAddresses,
-              "isDeployableViaFactory is true so factoryAddresses is required",
-            );
-            const factoryAddress = extendedMetadata.factoryDeploymentData
-              .factoryAddresses[chainId] as AddressOrEns;
-            invariant(
-              factoryAddress,
-              `isDeployableViaFactory is true and factoryAddress not found for chainId '${chainId}'`,
-            );
-            const resolvedFactoryAddress = await resolveAddress(factoryAddress);
-            return (await this.deployViaFactory.prepare(
-              resolvedFactoryAddress,
-              resolvedImplementationAddress,
-              compilerMetadata.abi,
-              extendedMetadata.factoryDeploymentData
-                .implementationInitializerFunction,
-              paramValues,
-            )) as unknown as DeployTransaction;
-          } else if (extendedMetadata.isDeployableViaProxy) {
-            // deploy a proxy directly
-            return await this.deployProxy.prepare(
-              resolvedImplementationAddress,
-              compilerMetadata.abi,
-              extendedMetadata.factoryDeploymentData
-                .implementationInitializerFunction,
-              paramValues,
-            );
-          }
-        } else if (extendedMetadata.isDeployableViaAutoFactory) {
+        if (extendedMetadata.isDeployableViaAutoFactory) {
           // any evm deployment flow
 
           // 1. Deploy CREATE2 factory (if not already exists)
@@ -891,6 +845,52 @@ export class ContractDeployer extends RPCConnectionHandler {
           )) as unknown as DeployTransaction;
           options?.notifier?.("deployed", "proxy");
           return proxyDeployTransaction;
+        } else if (
+          extendedMetadata.isDeployableViaProxy ||
+          extendedMetadata.isDeployableViaFactory
+        ) {
+          let implementationAddress = extendedMetadata.factoryDeploymentData
+            .implementationAddresses[chainId] as AddressOrEns;
+          const resolvedImplementationAddress = await resolveAddress(
+            implementationAddress,
+          );
+
+          invariant(
+            resolvedImplementationAddress,
+            `implementationAddress not found for chainId '${chainId}'`,
+          );
+
+          if (extendedMetadata.isDeployableViaFactory) {
+            // deploy via a factory (prioritise factory)
+            invariant(
+              extendedMetadata.factoryDeploymentData.factoryAddresses,
+              "isDeployableViaFactory is true so factoryAddresses is required",
+            );
+            const factoryAddress = extendedMetadata.factoryDeploymentData
+              .factoryAddresses[chainId] as AddressOrEns;
+            invariant(
+              factoryAddress,
+              `isDeployableViaFactory is true and factoryAddress not found for chainId '${chainId}'`,
+            );
+            const resolvedFactoryAddress = await resolveAddress(factoryAddress);
+            return (await this.deployViaFactory.prepare(
+              resolvedFactoryAddress,
+              resolvedImplementationAddress,
+              compilerMetadata.abi,
+              extendedMetadata.factoryDeploymentData
+                .implementationInitializerFunction,
+              paramValues,
+            )) as unknown as DeployTransaction;
+          } else if (extendedMetadata.isDeployableViaProxy) {
+            // deploy a proxy directly
+            return await this.deployProxy.prepare(
+              resolvedImplementationAddress,
+              compilerMetadata.abi,
+              extendedMetadata.factoryDeploymentData
+                .implementationInitializerFunction,
+              paramValues,
+            );
+          }
         }
       }
 
