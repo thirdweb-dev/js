@@ -12,7 +12,8 @@ export {
 export { RainbowWallet, rainbowWallet } from "./wallets/wallets/rainbow-wallet";
 export { TrustWallet, trustWallet } from "./wallets/wallets/trust-wallet";
 export { smartWallet } from "./wallets/wallets/smart-wallet";
-export { LocalWallet, localWallet } from "./wallets/wallets/local-wallet";
+export { localWallet } from "./wallets/wallets/local-wallet";
+export { LocalWallet } from "./wallets/wallets/LocalWallet";
 
 export { useCoinbaseWallet } from "./wallets/hooks/useCoinbaseWallet";
 export { useMetaMaskWallet } from "./wallets/hooks/useMetaMaskWallet";

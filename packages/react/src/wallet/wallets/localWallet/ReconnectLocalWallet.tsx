@@ -92,7 +92,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
   if (showCreate) {
     return (
       <CreateLocalWallet_Password
-        localWallet={props.localWallet}
+        localWalletConf={props.localWallet}
         goBack={() => {
           setShowCreate(false);
         }}

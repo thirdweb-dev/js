@@ -15,16 +15,15 @@ import {
 } from "../../../components/modalElements";
 import { iconSize, spacing } from "../../../design-system";
 import { ConnectUIProps, useWallets } from "@thirdweb-dev/react-core";
-import { MagicLinkWallet } from "./types";
+import { MagicLinkConfig } from "./types";
 import { SMSConnect } from "./SMSConnect";
+import { MagicLink } from "@thirdweb-dev/wallets";
 
-type MagicConnectUIProps = ConnectUIProps & {
-  magicWallet: MagicLinkWallet;
-};
-
-export const MagicConnectUI = (props: MagicConnectUIProps) => {
-  const isSmsEnabled = props.magicWallet.config.smsLogin !== false;
-  const isEmailEnabled = props.magicWallet.config.emailLogin !== false;
+export const MagicConnectUI = (
+  props: ConnectUIProps<MagicLink, MagicLinkConfig>,
+) => {
+  const isSmsEnabled = props.walletConfig.config.smsLogin !== false;
+  const isEmailEnabled = props.walletConfig.config.emailLogin !== false;
   const singleWallet = useWallets().length === 1;
 
   let firstScreen: "sms" | "email" | "menu" = "menu";
@@ -55,7 +54,7 @@ export const MagicConnectUI = (props: MagicConnectUIProps) => {
       <SMSConnect
         close={props.close}
         open={props.open}
-        magicLinkWallet={props.magicWallet}
+        magicLinkWalletConf={props.walletConfig}
         onBack={() => {
           if (firstScreen === "sms") {
             props.goBack();
@@ -73,7 +72,7 @@ export const MagicConnectUI = (props: MagicConnectUIProps) => {
       <EmailConnect
         close={props.close}
         open={props.open}
-        magicLinkWallet={props.magicWallet}
+        magicLinkWalletConf={props.walletConfig}
         onBack={() => {
           if (firstScreen === "email") {
             props.goBack();
@@ -119,7 +118,7 @@ export const MagicConnectUI = (props: MagicConnectUIProps) => {
       {!singleWallet && <BackButton onClick={props.goBack}></BackButton>}
       <Spacer y="md" />
       <Img
-        src={props.magicWallet.meta.iconURL}
+        src={props.walletConfig.meta.iconURL}
         width={iconSize.xl}
         height={iconSize.xl}
       />
