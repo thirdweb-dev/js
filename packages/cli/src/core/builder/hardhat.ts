@@ -7,15 +7,16 @@ import { BaseBuilder } from "./builder-base";
 import { existsSync, readFileSync } from "fs";
 import { HardhatConfig } from "hardhat/types";
 import { join, resolve } from "path";
+import { detectHardhatNetwork } from "../detection/detect";
+import { Ora } from "ora";
 
 export class HardhatBuilder extends BaseBuilder {
-  public async compile(options: CompileOptions): Promise<{
+  public async compile(
+    options: CompileOptions,
+    compileLoader?: Ora,
+  ): Promise<{
     contracts: ContractPayload[];
   }> {
-    if (options.clean) {
-      await execute("npx hardhat clean", options.projectPath);
-    }
-    await execute("npx hardhat compile", options.projectPath);
     //we get our very own extractor script from the dir that we're in during execution
     // this is `./dist/cli` (for all purposes of the CLI)
     // then we look up the hardhat config extractor file path from there
@@ -38,6 +39,35 @@ export class HardhatBuilder extends BaseBuilder {
     ) as HardhatConfig;
 
     logger.debug("successfully extracted hardhat config", actualHardhatConfig);
+
+    const otherNetworksInConfig = Object.keys(
+      actualHardhatConfig.networks,
+    ).filter((network) => {
+      return network !== "localhost" && network !== "hardhat";
+    });
+
+    let selectedNetwork: string = "";
+    if (otherNetworksInConfig.length > 0) {
+      if (actualHardhatConfig.defaultNetwork !== "hardhat") {
+        selectedNetwork = actualHardhatConfig.defaultNetwork;
+      } else {
+        compileLoader?.stopAndPersist();
+        otherNetworksInConfig.push("hardhat");
+        selectedNetwork = await detectHardhatNetwork(otherNetworksInConfig);
+        compileLoader?.start();
+      }
+    }
+
+    await execute("npx hardhat clean", options.projectPath);
+
+    if (selectedNetwork.length > 0) {
+      await execute(
+        `npx hardhat compile --network ${selectedNetwork}`,
+        options.projectPath,
+      );
+    } else {
+      await execute(`npx hardhat compile`, options.projectPath);
+    }
 
     const solcConfigs = actualHardhatConfig.solidity.compilers;
     if (solcConfigs) {
@@ -131,7 +161,14 @@ export class HardhatBuilder extends BaseBuilder {
           );
           const fileName = fileNames.length > 0 ? fileNames[0] : "";
 
-          const ignoreIpfsHash = !!(actualHardhatConfig as any)?.zksolc; // IPFS hash can't be recovered from ZKSync bytecode
+          // check if the ZKSync was used for build
+          const network = Object.entries(actualHardhatConfig.networks).find(
+            (nw) => {
+              return nw[0] === selectedNetwork;
+            },
+          );
+          const ignoreIpfsHash = !!(network?.[1] as any).zksync; // IPFS hash can't be recovered from ZKSync bytecode
+
           if (
             this.shouldProcessContract(
               abi,
