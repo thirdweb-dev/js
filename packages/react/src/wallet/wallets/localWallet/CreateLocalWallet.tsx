@@ -20,7 +20,7 @@ import { LocalConfiguredWallet } from "./types";
 export const CreateLocalWallet_Password: React.FC<{
   onConnect: () => void;
   goBack: () => void;
-  localWallet: LocalConfiguredWallet;
+  localWalletConf: LocalConfiguredWallet;
 }> = (props) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -29,7 +29,7 @@ export const CreateLocalWallet_Password: React.FC<{
   const [isConnecting, setIsConnecting] = useState(false);
   const singleWallet = useWallets().length === 1;
 
-  const { localWallet, meta } = useLocalWalletInfo(props.localWallet);
+  const { localWallet, meta } = useLocalWalletInfo(props.localWalletConf);
 
   const { setConnectedWallet } = useWalletContext();
   const [showImportScreen, setShowImportScreen] = useState(false);
@@ -50,7 +50,7 @@ export const CreateLocalWallet_Password: React.FC<{
   if (showImportScreen) {
     return (
       <ImportLocalWallet
-        localWallet={props.localWallet}
+        localWalletConf={props.localWalletConf}
         onConnect={props.onConnect}
         goBack={() => {
           setShowImportScreen(false);

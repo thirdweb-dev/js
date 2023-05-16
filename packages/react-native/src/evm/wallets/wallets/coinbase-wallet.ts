@@ -11,7 +11,7 @@ import {
   walletIds,
 } from "@thirdweb-dev/wallets";
 import {
-  ConfiguredWallet,
+  WalletConfig,
   WalletOptions as WalletOptionsRC,
 } from "@thirdweb-dev/react-core";
 
@@ -83,5 +83,5 @@ export const coinbaseWallet = (config?: { callbackURL?: URL }) => {
     create: (options: WalletOptionsRC) =>
       new CoinbaseWallet({ ...options, callbackURL: callbackURLNonNull }),
     config: config || {},
-  } satisfies ConfiguredWallet<CoinbaseWallet, { callbackURL?: URL }>;
+  } satisfies WalletConfig<CoinbaseWallet, { callbackURL?: URL }>;
 };

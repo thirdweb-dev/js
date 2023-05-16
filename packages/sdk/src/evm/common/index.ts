@@ -15,3 +15,4 @@ export {
 export { getCachedAbiForContract } from "./abi";
 export * from "./any-evm-utils";
 export * from "./ens";
+export { prepareGaslessRequest } from "./transactions";

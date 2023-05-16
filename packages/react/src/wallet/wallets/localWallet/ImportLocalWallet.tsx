@@ -21,10 +21,10 @@ import { LocalConfiguredWallet } from "./types";
 export const ImportLocalWallet: React.FC<{
   onConnect: () => void;
   goBack: () => void;
-  localWallet: LocalConfiguredWallet;
+  localWalletConf: LocalConfiguredWallet;
 }> = (props) => {
   const [jsonString, setJsonString] = useState<string | undefined>();
-  const { setLocalWallet, meta } = useLocalWalletInfo(props.localWallet);
+  const { setLocalWallet, meta } = useLocalWalletInfo(props.localWalletConf);
   const createWalletInstance = useCreateWalletInstance();
   const [password, setPassword] = useState("");
   const [isWrongPassword, setIsWrongPassword] = useState(false);
@@ -34,7 +34,9 @@ export const ImportLocalWallet: React.FC<{
   const { setConnectedWallet } = useWalletContext();
 
   const handleImport = async () => {
-    const localWallet = createWalletInstance(props.localWallet) as LocalWallet;
+    const localWallet = createWalletInstance(
+      props.localWalletConf,
+    ) as LocalWallet;
     if (!localWallet || !jsonString) {
       throw new Error("Invalid state");
     }

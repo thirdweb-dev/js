@@ -13,7 +13,7 @@ import { useIsHeadlessWallet } from "../../hooks/useIsHeadlessWallet";
 import styled from "@emotion/styled";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import {
-  useActiveChain,
+  useChain,
   useConnect,
   useConnectionStatus,
   useNetworkMismatch,
@@ -41,7 +41,7 @@ export const SmartWalletConnecting: React.FC<{
   const activeWallet = useWallet(); // personal wallet
 
   const connect = useConnect();
-  const connectedChain = useActiveChain();
+  const connectedChain = useChain();
   const targetChain = useWalletContext().activeChain;
 
   const mismatch = useNetworkMismatch();

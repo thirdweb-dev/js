@@ -1,59 +1,15 @@
-import {
-  LocalWallet as LocalWalletCore,
-  Connector,
-  walletIds,
-} from "@thirdweb-dev/wallets";
-import { ConnectUIProps } from "@thirdweb-dev/react-core";
-import type { WalletOptions } from "@thirdweb-dev/wallets";
-import { ethers, utils } from "ethers";
+import { LocalWallet } from "./LocalWallet";
+import { WalletOptions, walletIds } from "@thirdweb-dev/wallets";
 import { createSecureStorage } from "../../../core/SecureStorage";
 import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
 import { LocalWalletFlow } from "../../components/ConnectWalletFlow/LocalWalletFlow";
+import { WalletConfig } from "@thirdweb-dev/react-core";
 
-export class LocalWallet extends LocalWalletCore {
-  static meta = {
-    id: walletIds.localWallet,
-    name: "Guest Wallet",
-    iconURL:
-      "ipfs://QmQAyJG3y2wZf9u6JXxn8U9Kd1ZVfjtQkf5aua8FcWr8Gm/local-wallet-mobile.svg",
-  };
-
-  getMeta() {
-    return LocalWallet.meta;
-  }
-
-  async generate() {
-    if (this.ethersWallet) {
-      throw new Error("wallet is already initialized");
-    }
-    const random = utils.randomBytes(32);
-    this.ethersWallet = new ethers.Wallet(random);
-    return this.ethersWallet.address;
-  }
-
-  protected async getConnector(): Promise<Connector> {
-    if (!this.ethersWallet) {
-      const data = await this.getSavedData();
-
-      if (!data) {
-        await this.generate();
-        await this.save({
-          strategy: "privateKey",
-          encryption: false,
-        });
-      } else {
-        this.ethersWallet = new ethers.Wallet(data.data);
-      }
-    }
-
-    return super.getConnector();
-  }
-}
-
-export const localWallet = () => {
+export const localWallet = (): WalletConfig<LocalWallet> => {
   const secureStorage = createSecureStorage(walletIds.localWallet);
   const asyncStorage = createAsyncLocalStorage(walletIds.localWallet);
-  const configuredWallet = {
+
+  return {
     id: LocalWallet.id,
     meta: LocalWallet.meta,
     create: (options: WalletOptions) =>
@@ -62,14 +18,10 @@ export const localWallet = () => {
         walletStorage: asyncStorage,
         storage: secureStorage,
       }),
-    connectUI(props: ConnectUIProps) {
-      return <LocalWalletFlow {...props} localWallet={configuredWallet} />;
-    },
+    connectUI: LocalWalletFlow,
     isInstalled() {
       // TODO
       return false;
     },
   };
-
-  return configuredWallet;
 };
