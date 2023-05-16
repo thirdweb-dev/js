@@ -16,14 +16,14 @@ import { Button } from "../../../components/buttons";
 import { MagicLink } from "@thirdweb-dev/wallets";
 import { useState } from "react";
 import { Spinner } from "../../../components/Spinner";
-import { MagicLinkWallet } from "./types";
+import { ConfiguredMagicLinkWallet } from "./types";
 
 export const EmailConnect: React.FC<{
   onBack: () => void;
   close: () => void;
   open: () => void;
   onConnect: () => void;
-  magicLinkWallet: MagicLinkWallet;
+  magicLinkWalletConf: ConfiguredMagicLinkWallet;
 }> = (props) => {
   const [isConnecting, setIsConnecting] = useState(false);
   const createInstance = useCreateWalletInstance();
@@ -34,7 +34,7 @@ export const EmailConnect: React.FC<{
   const singleWallet = useWallets().length === 1;
 
   const handleConnect = async () => {
-    const magicWallet = createInstance(props.magicLinkWallet) as MagicLink;
+    const magicWallet = createInstance(props.magicLinkWalletConf) as MagicLink;
     setIsConnecting(true);
     props.close();
     const connectOptions = {
@@ -62,7 +62,7 @@ export const EmailConnect: React.FC<{
       {!singleWallet && <BackButton onClick={props.onBack}></BackButton>}
       <Spacer y="md" />
       <Img
-        src={props.magicLinkWallet.meta.iconURL}
+        src={props.magicLinkWalletConf.meta.iconURL}
         width={iconSize.xl}
         height={iconSize.xl}
       />

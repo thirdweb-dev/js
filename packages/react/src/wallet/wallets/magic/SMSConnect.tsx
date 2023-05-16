@@ -19,14 +19,14 @@ import {
   ModalDescription,
 } from "../../../components/modalElements";
 import { iconSize, spacing } from "../../../design-system";
-import { MagicLinkWallet } from "./types";
+import { ConfiguredMagicLinkWallet } from "./types";
 
 export const SMSConnect: React.FC<{
   open: () => void;
   close: () => void;
   onBack: () => void;
   onConnect: () => void;
-  magicLinkWallet: MagicLinkWallet;
+  magicLinkWalletConf: ConfiguredMagicLinkWallet;
 }> = (props) => {
   const [isConnecting, setIsConnecting] = useState(false);
   const createInstance = useCreateWalletInstance();
@@ -37,7 +37,7 @@ export const SMSConnect: React.FC<{
   const singleWallet = useWallets().length === 1;
 
   const handleSmsConnect = async () => {
-    const magicWallet = createInstance(props.magicLinkWallet);
+    const magicWallet = createInstance(props.magicLinkWalletConf);
     setIsConnecting(true);
     props.close();
     const connectOptions = {
@@ -65,7 +65,7 @@ export const SMSConnect: React.FC<{
       {!singleWallet && <BackButton onClick={props.onBack}></BackButton>}
       <Spacer y="md" />
       <Img
-        src={props.magicLinkWallet.meta.iconURL}
+        src={props.magicLinkWalletConf.meta.iconURL}
         width={iconSize.xl}
         height={iconSize.xl}
       />

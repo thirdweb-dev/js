@@ -1,9 +1,9 @@
-import type { WalletOptions, ConfiguredWallet } from "@thirdweb-dev/react-core";
+import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { CoinbaseWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
 import { CoinbaseConnectUI } from "./CoinbaseConnectUI";
 
-export const coinbaseWallet = () => {
-  const configuredWallet = {
+export const coinbaseWallet = (): WalletConfig<CoinbaseWallet> => {
+  return {
     id: CoinbaseWallet.id,
     meta: {
       name: "Coinbase Wallet",
@@ -19,11 +19,7 @@ export const coinbaseWallet = () => {
     create(options: WalletOptions) {
       return new CoinbaseWallet({ ...options, headlessMode: true });
     },
-    connectUI(props) {
-      return (
-        <CoinbaseConnectUI {...props} configuredWallet={configuredWallet} />
-      );
-    },
+    connectUI: CoinbaseConnectUI,
     isInstalled() {
       if (assertWindowEthereum(globalThis.window)) {
         return (
@@ -36,7 +32,5 @@ export const coinbaseWallet = () => {
       }
       return false;
     },
-  } satisfies ConfiguredWallet<CoinbaseWallet>;
-
-  return configuredWallet;
+  };
 };

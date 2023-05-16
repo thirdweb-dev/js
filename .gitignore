@@ -17,3 +17,6 @@ yalc.lock
 build/
 playwright-report/
 .vscode/
+
+# Artifacts
+packages/cli/artifacts/
