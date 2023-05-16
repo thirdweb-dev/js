@@ -5,12 +5,10 @@ import {
   SelectUIProps,
   ConnectUIProps,
   useConnect,
-  useWallets,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useRef } from "react";
 import { Spinner } from "../../components/Spinner";
 import { Flex } from "../../components/basic";
-import { useWalletModalConfig } from "../../evm/providers/wallet-ui-states-provider";
 import { InputSelectionUI } from "./InputSelectionUI";
 
 type PaperConfig = { clientId: string };
@@ -45,6 +43,7 @@ const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet, PaperConfig>> = (
           return "Please enter a valid email address";
         }
       }}
+      supportedWallets={props.supportedWallets}
     />
   );
 };
@@ -53,11 +52,12 @@ const PaperConnectionUI: React.FC<ConnectUIProps<PaperWallet, PaperConfig>> = ({
   close,
   walletConfig,
   open,
+  selectionData,
+  supportedWallets,
 }) => {
-  const { data } = useWalletModalConfig();
   const connectPrompted = useRef(false);
   const connect = useConnect();
-  const singleWallet = useWallets().length === 1;
+  const singleWallet = supportedWallets.length === 1;
   useEffect(() => {
     if (connectPrompted.current) {
       return;
@@ -67,7 +67,7 @@ const PaperConnectionUI: React.FC<ConnectUIProps<PaperWallet, PaperConfig>> = ({
     (async () => {
       close();
       try {
-        await connect(walletConfig, { email: data });
+        await connect(walletConfig, { email: selectionData });
       } catch (e) {
         if (!singleWallet) {
           open();
@@ -75,7 +75,7 @@ const PaperConnectionUI: React.FC<ConnectUIProps<PaperWallet, PaperConfig>> = ({
         console.error(e);
       }
     })();
-  }, [connect, data, walletConfig, close, open, singleWallet]);
+  }, [connect, walletConfig, close, open, singleWallet, selectionData]);
 
   return (
     <Flex

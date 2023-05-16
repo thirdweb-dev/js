@@ -58,11 +58,3 @@ export const useSetIsWalletModalOpen = () => {
   }
   return context;
 };
-
-export const useWalletModalConfig = () => {
-  return useContext(ModalConfigCtx);
-};
-
-export const useSetWalletModalConfig = () => {
-  return useContext(SetModalConfigCtx);
-};

@@ -118,6 +118,22 @@ export type ConnectUIProps<
    * ```
    */
   walletConfig: WalletConfig<I, Config>;
+
+  /**
+   * selectionData passed from `selectUI`'s `onSelect` function
+   */
+  selectionData: any;
+
+  /**
+   * set selectionData
+   * @returns
+   */
+  setSelectionData: (data: any) => void;
+
+  /**
+   * List of all supported wallets including your wallet.
+   */
+  supportedWallets: WalletConfig[];
 };
 
 export type SelectUIProps<
@@ -126,9 +142,10 @@ export type SelectUIProps<
 > = {
   /**
    * Call this function to "select" your wallet and render the screen for connecting the wallet
+   * @param selectionData - selectionData to be passed to `connectUI`'s `selectionData` prop
    * @returns
    */
-  onSelect: () => void;
+  onSelect: (selectionData: any) => void;
 
   /**
    * `WalletConfig` object of your wallet
@@ -136,4 +153,12 @@ export type SelectUIProps<
    * you can use this get metadata of your wallet by doing `walletConfig.meta`
    */
   walletConfig: WalletConfig<I, Config>;
+
+  /**
+   * List of all supported wallets including your wallet.
+   *
+   * You can use this to conditionally render UI based on how many wallets are supported.
+   * For example: You can render a larger UI if only one wallet (your wallet) is supported.
+   */
+  supportedWallets: WalletConfig[];
 };

@@ -3,11 +3,13 @@ import { WalletSelector } from "./WalletSelector";
 import {
   WalletConfig,
   useConnectionStatus,
+  useDisconnect,
   useWallet,
   useWallets,
 } from "@thirdweb-dev/react-core";
 import {
   ModalConfigCtx,
+  SetModalConfigCtx,
   useIsWalletModalOpen,
   useSetIsWalletModalOpen,
 } from "../../evm/providers/wallet-ui-states-provider";
@@ -31,15 +33,21 @@ export const ConnectModal = () => {
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
   const connectionStatus = useConnectionStatus();
   const wallet = useWallet();
+  const walletModalConfig = useContext(ModalConfigCtx);
+  const setWalletModalConfig = useContext(SetModalConfigCtx);
+  const disconnect = useDisconnect();
 
   const handleClose = useCallback(
     (reset = true) => {
       if (reset) {
         setScreen(initialScreen);
       }
+      if (connectionStatus === "connecting") {
+        disconnect();
+      }
       setIsWalletModalOpen(false);
     },
-    [setIsWalletModalOpen, initialScreen],
+    [setIsWalletModalOpen, initialScreen, connectionStatus, disconnect],
   );
 
   const handleBack = useCallback(() => {
@@ -99,6 +107,9 @@ export const ConnectModal = () => {
           if (!value) {
             setScreen(initialScreen); // reset screen
           }
+          if (connectionStatus === "connecting") {
+            disconnect();
+          }
         }}
       >
         {screen === reservedScreens.main && (
@@ -118,6 +129,7 @@ export const ConnectModal = () => {
 
         {WalletConnectUI && (
           <WalletConnectUI
+            supportedWallets={walletConfigs}
             theme={theme}
             goBack={handleBack}
             close={handleClose}
@@ -126,6 +138,13 @@ export const ConnectModal = () => {
               setIsWalletModalOpen(true);
             }}
             walletConfig={screen}
+            selectionData={walletModalConfig.data}
+            setSelectionData={(data) => {
+              setWalletModalConfig((config) => ({
+                ...config,
+                data,
+              }));
+            }}
           />
         )}
       </Modal>

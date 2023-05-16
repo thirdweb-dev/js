@@ -1,4 +1,3 @@
-import { useWallets } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { ErrorMessage, Input } from "../../components/formElements";
 import { Spacer } from "../../components/Spacer";
@@ -7,18 +6,18 @@ import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { Theme, iconSize, spacing } from "../../design-system";
 import { InputButton } from "../../components/buttons";
 import styled from "@emotion/styled";
-import { useSetWalletModalConfig } from "../../evm/providers/wallet-ui-states-provider";
+import { WalletConfig } from "@thirdweb-dev/react-core";
 
 export function InputSelectionUI(props: {
-  onSelect: () => void;
+  onSelect: (data: any) => void;
   placeholder: string;
   name: string;
   type: string;
   errorMessage?: (input: string) => string | undefined;
+  supportedWallets: WalletConfig[];
 }) {
   const [input, setInput] = useState("");
-  const singleWallet = useWallets().length === 1;
-  const setWalletConfig = useSetWalletModalConfig();
+  const singleWallet = props.supportedWallets.length === 1;
   const [error, setError] = useState<string | undefined>();
   const [showError, setShowError] = useState(false);
 
@@ -28,8 +27,7 @@ export function InputSelectionUI(props: {
       return;
     }
 
-    setWalletConfig((config) => ({ ...config, data: input }));
-    props.onSelect();
+    props.onSelect(input);
   };
 
   return (

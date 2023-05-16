@@ -10,7 +10,6 @@ import { ConfiguredMagicLinkWallet } from "./types";
 import { useRef, useEffect } from "react";
 import { Spinner } from "../../../components/Spinner";
 import { Flex } from "../../../components/basic";
-import { useWalletModalConfig } from "../../../evm/providers/wallet-ui-states-provider";
 import { InputSelectionUI } from "../InputSelectionUI";
 
 export function magicLink(
@@ -42,7 +41,6 @@ const MagicSelectionUI: React.FC<
       errorMessage={(input) => {
         const isEmail = input.includes("@");
         const isPhone = Number.isInteger(Number(input[input.length - 1]));
-        console.log({ isEmail, isPhone });
 
         if (isEmail) {
           const isValidEmail = input.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
@@ -53,22 +51,20 @@ const MagicSelectionUI: React.FC<
           if (!input.startsWith("+")) {
             return "Phone number must start with a country code";
           }
-          console.log("all good");
         } else {
           return "Invalid email address or phone number";
         }
       }}
+      supportedWallets={props.supportedWallets}
     />
   );
 };
 
 const MagicConnectionUI: React.FC<
   ConnectUIProps<MagicLink, MagicLinkAdditionalOptions>
-> = ({ close, walletConfig, open }) => {
-  const { data } = useWalletModalConfig();
-
+> = ({ close, walletConfig, open, selectionData, supportedWallets }) => {
   const connectPrompted = useRef(false);
-  const singleWallet = useWallets().length === 1;
+  const singleWallet = supportedWallets.length === 1;
   const connect = useConnect();
 
   useEffect(() => {
@@ -76,14 +72,14 @@ const MagicConnectionUI: React.FC<
       return;
     }
     connectPrompted.current = true;
-    const isEmail = (data as string).includes("@");
+    const isEmail = (selectionData as string).includes("@");
 
     (async () => {
       close();
       try {
         await connect(
           walletConfig,
-          isEmail ? { email: data } : { phoneNumber: data },
+          isEmail ? { email: selectionData } : { phoneNumber: selectionData },
         );
       } catch (e) {
         if (!singleWallet) {
@@ -92,7 +88,7 @@ const MagicConnectionUI: React.FC<
         console.error(e);
       }
     })();
-  }, [connect, data, walletConfig, close, open, singleWallet]);
+  }, [connect, selectionData, walletConfig, close, open, singleWallet]);
 
   return (
     <Flex
