@@ -1,4 +1,4 @@
-import { NetworkInput } from "..";
+import { Erc20, NetworkInput } from "..";
 import { AmountSchema } from "../../../core/schema/shared";
 import { assertEnabled, detectContractFeature } from "../../common";
 import {
@@ -39,9 +39,11 @@ import type {
   IBurnableERC20,
   TokenStake,
   Staking20Base,
+  IERC20,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers, BigNumber, BigNumberish } from "ethers";
+import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 
 /**
  * Standard ERC20 Token functions
@@ -59,6 +61,8 @@ export class Staking20<T extends TokenStake | Staking20Base>
   featureName = FEATURE_TOKEN_STAKE.name;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: ThirdwebStorage;
+  protected _stakingToken: ContractWrapper<IERC20> | undefined;
+  protected _rewardToken: ContractWrapper<IERC20> | undefined;
 
   private _chainId: number;
   get chainId() {
@@ -73,6 +77,8 @@ export class Staking20<T extends TokenStake | Staking20Base>
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this._chainId = chainId;
+
+    this.getStakingAndRewardTokens();
   }
 
   /**
@@ -90,6 +96,21 @@ export class Staking20<T extends TokenStake | Staking20Base>
   }
 
   ////// Standard Staking20 Extension //////
+
+  ////// READ FUNCTIONS //////
+  public async getRewardTokenBalance(): Promise<CurrencyValue> {
+    return fetchCurrencyValue(
+      await this.contractWrapper.getProvider(),
+      await this.contractWrapper.readContract.rewardToken(),
+      await this.contractWrapper.readContract.getRewardTokenBalance(),
+    );
+  }
+
+  public async getTimeUnit(): Promise<number> {
+    return (await this.contractWrapper.readContract.getTimeUnit()).toNumber();
+  }
+
+  ////// WRITE FUNCTIONS //////
   stake = buildTransactionFunction(async (amount: Amount) => {
     // Should add automatic token transfer approval? probably yes a private function
     return Transaction.fromContractWrapper({
@@ -99,4 +120,75 @@ export class Staking20<T extends TokenStake | Staking20Base>
       args: [toWei(amount)],
     });
   });
+
+  withdraw = buildTransactionFunction(async (amount: Amount) => {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "withdraw",
+      // TODO: Update to check decimals as well
+      args: [toWei(amount)],
+    });
+  });
+
+  withdrawRewardTokens = buildTransactionFunction(async (amount: Amount) => {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "withdrawRewardTokens",
+      // TODO: Update to check decimals as well
+      args: [toWei(amount)],
+    });
+  });
+
+  claimRewards = buildTransactionFunction(async () => {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "claimRewards",
+      args: [],
+    });
+  });
+
+  setRewardRatio = buildTransactionFunction(
+    async (numerator: number, denominator: number) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "setRewardRatio",
+        // TODO: Update to check decimals as well
+        args: [numerator, denominator],
+      });
+    },
+  );
+
+  setTimeUnit = buildTransactionFunction(async (timeUnit: number) => {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "setTimeUnit",
+      // TODO: Update to check decimals as well
+      args: [timeUnit],
+    });
+  });
+
+  depositRewardTokens = buildTransactionFunction(async (amount: Amount) => {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "depositRewardTokens",
+      // TODO: Update to check decimals as well
+      args: [amount],
+    });
+  });
+
+  // PRIVATE
+  private async getStakingAndRewardTokens() {
+    this._stakingToken = new ContractWrapper<IERC20>(
+      await this.contractWrapper.getSignerOrProvider(),
+      await this.contractWrapper.readContract.stakingToken(),
+      ERC20Abi,
+      this.contractWrapper.options,
+    );
+    this._rewardToken = new ContractWrapper<IERC20>(
+      await this.contractWrapper.getSignerOrProvider(),
+      await this.contractWrapper.readContract.rewardToken(),
+      ERC20Abi,
+      this.contractWrapper.options,
+    );
+  }
 }

@@ -12,6 +12,7 @@ import {
   FEATURE_PLATFORM_FEE,
   FEATURE_PRIMARY_SALE,
   FEATURE_ROYALTY,
+  FEATURE_TOKEN_STAKE,
 } from "../constants/thirdweb-features";
 import {
   ContractEncoder,
@@ -57,10 +58,14 @@ import type {
   DirectListingsLogic,
   EnglishAuctionsLogic,
   OffersLogic,
+  ITokenStake,
+  TokenStake,
+  Staking20Base,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides } from "ethers";
 import { BaseContractInterface } from "../types/contract";
+import { Staking20 } from "../core/classes/staking-20";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -291,6 +296,13 @@ export class SmartContract<
     return assertEnabled(this.detectOffers(), FEATURE_OFFERS);
   }
 
+  /**
+   * Auto-detects Staking20 standard functions.
+   */
+  get staking20(): Staking20<TokenStake | Staking20Base> {
+    return assertEnabled(this.detectTokenStake(), FEATURE_TOKEN_STAKE);
+  }
+
   private _chainId: number;
   get chainId() {
     return this._chainId;
@@ -514,6 +526,13 @@ export class SmartContract<
   private detectOffers() {
     if (detectContractFeature<OffersLogic>(this.contractWrapper, "Offers")) {
       return new MarketplaceV3Offers(this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  private detectTokenStake() {
+    if (detectContractFeature<TokenStake>(this.contractWrapper, "TokenStake")) {
+      return new Staking20(this.contractWrapper, this.storage, this.chainId);
     }
     return undefined;
   }
