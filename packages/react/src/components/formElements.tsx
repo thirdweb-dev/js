@@ -74,7 +74,7 @@ export const Input = styled.input<{
   }
 
   &[data-error="true"] {
-    box-shadow: 0 0 0 2px ${(p) => p.theme.input.errorRing};
+    box-shadow: 0 0 0 2px ${(p) => p.theme.input.errorRing} !important;
   }
 
   &[disabled] {

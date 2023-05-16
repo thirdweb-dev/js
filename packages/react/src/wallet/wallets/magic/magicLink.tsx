@@ -36,11 +36,14 @@ const MagicSelectionUI: React.FC<
 
   let placeholder = "Enter your email or phone number";
   let type = "text";
+  let emptyErrorMessage = "email or phone number is required";
   if (isEmailEnabled && !isSMSEnabled) {
     placeholder = "Enter your email address";
+    emptyErrorMessage = "email address is required";
     type = "email";
   } else if (!isEmailEnabled && isSMSEnabled) {
     placeholder = "Enter your phone number";
+    emptyErrorMessage = "phone number is required";
     type = "tel";
   }
 
@@ -56,6 +59,7 @@ const MagicSelectionUI: React.FC<
       placeholder={placeholder}
       name="magic-input"
       type={type}
+      emptyErrorMessage={emptyErrorMessage}
       errorMessage={(input) => {
         const isEmail = input.includes("@");
         const isPhone = Number.isInteger(Number(input[input.length - 1]));

@@ -40,9 +40,10 @@ const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet, PaperConfig>> = (
       errorMessage={(input) => {
         const isValidEmail = input.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
         if (!isValidEmail) {
-          return "Please enter a valid email address";
+          return "Invalid email address";
         }
       }}
+      emptyErrorMessage="email address is required"
       supportedWallets={props.supportedWallets}
     />
   );

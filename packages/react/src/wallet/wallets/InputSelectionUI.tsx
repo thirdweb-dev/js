@@ -14,6 +14,7 @@ export function InputSelectionUI(props: {
   name: string;
   type: string;
   errorMessage?: (input: string) => string | undefined;
+  emptyErrorMessage?: string;
   supportedWallets: WalletConfig[];
 }) {
   const [input, setInput] = useState("");
@@ -30,6 +31,10 @@ export function InputSelectionUI(props: {
     props.onSelect(input);
   };
 
+  const renderingError =
+    (showError && !!error) ||
+    (!input && !!props.emptyErrorMessage && showError);
+
   return (
     <div>
       <div
@@ -43,6 +48,7 @@ export function InputSelectionUI(props: {
           type={props.type}
           name={props.name}
           value={input}
+          data-error={renderingError}
           onChange={(e) => {
             setInput(e.target.value);
             if (props.errorMessage) {
@@ -75,6 +81,16 @@ export function InputSelectionUI(props: {
           <ErrorMessage>{error}</ErrorMessage>
         </>
       )}
+
+      {!(showError && error) &&
+        !input &&
+        props.emptyErrorMessage &&
+        showError && (
+          <>
+            <Spacer y="xs" />
+            <ErrorMessage>{props.emptyErrorMessage}</ErrorMessage>
+          </>
+        )}
 
       {!singleWallet && (
         <>
