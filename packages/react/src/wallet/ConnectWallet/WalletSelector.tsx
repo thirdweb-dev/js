@@ -11,23 +11,22 @@ import {
   Theme,
 } from "../../design-system";
 import styled from "@emotion/styled";
-import { ConfiguredWallet } from "@thirdweb-dev/react-core";
+import { WalletConfig } from "@thirdweb-dev/react-core";
 import { walletIds } from "@thirdweb-dev/wallets";
 
 export const WalletSelector: React.FC<{
-  configuredWallets: ConfiguredWallet[];
-  selectWallet: (wallet: ConfiguredWallet) => void;
+  walletConfigs: WalletConfig[];
+  selectWallet: (wallet: WalletConfig) => void;
   onGetStarted: () => void;
 }> = (props) => {
-  const localWalletInfo = props.configuredWallets.find(
+  const localWalletInfo = props.walletConfigs.find(
     (w) => w.id === walletIds.localWallet,
   );
-  const configuredWallets = props.configuredWallets.filter(
+  const walletConfigs = props.walletConfigs.filter(
     (w) => w.id !== walletIds.localWallet,
   );
 
-  const showGetStarted =
-    !localWalletInfo && !!props.configuredWallets[0].meta.urls;
+  const showGetStarted = !localWalletInfo && !!props.walletConfigs[0].meta.urls;
 
   return (
     <>
@@ -35,7 +34,7 @@ export const WalletSelector: React.FC<{
       <Spacer y="xl" />
 
       <WalletSelection
-        configuredWallets={configuredWallets}
+        walletConfigs={walletConfigs}
         selectWallet={props.selectWallet}
       />
 
@@ -76,11 +75,11 @@ export const WalletSelector: React.FC<{
 };
 
 export const WalletSelection: React.FC<{
-  configuredWallets: ConfiguredWallet[];
-  selectWallet: (wallet: ConfiguredWallet) => void;
+  walletConfigs: WalletConfig[];
+  selectWallet: (wallet: WalletConfig) => void;
 }> = (props) => {
   // show the installed wallets first
-  const configuredWallets = props.configuredWallets.sort((a, b) => {
+  const walletConfigs = props.walletConfigs.sort((a, b) => {
     const aInstalled = a.isInstalled ? a.isInstalled() : false;
     const bInstalled = b.isInstalled ? b.isInstalled() : false;
 
@@ -95,25 +94,25 @@ export const WalletSelection: React.FC<{
 
   return (
     <WalletList>
-      {configuredWallets.map((configuredWallet) => {
-        const isInstalled = configuredWallet.isInstalled
-          ? configuredWallet.isInstalled()
+      {walletConfigs.map((walletConfig) => {
+        const isInstalled = walletConfig.isInstalled
+          ? walletConfig.isInstalled()
           : false;
         return (
-          <li key={configuredWallet.id}>
+          <li key={walletConfig.id}>
             <WalletButton
               type="button"
               onClick={() => {
-                props.selectWallet(configuredWallet);
+                props.selectWallet(walletConfig);
               }}
             >
               <Img
-                src={configuredWallet.meta.iconURL}
+                src={walletConfig.meta.iconURL}
                 width={iconSize.lg}
                 height={iconSize.lg}
                 loading="eager"
               />
-              <WalletName>{configuredWallet.meta.name}</WalletName>
+              <WalletName>{walletConfig.meta.name}</WalletName>
               {isInstalled && <InstallBadge> Installed </InstallBadge>}
             </WalletButton>
           </li>

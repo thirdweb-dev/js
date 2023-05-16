@@ -1,4 +1,4 @@
-import type { ConfiguredWallet, WalletOptions } from "@thirdweb-dev/react-core";
+import type { WalletConfig, WalletOptions } from "@thirdweb-dev/react-core";
 import {
   SmartWallet,
   SmartWalletConfig as SmartWalletConfigWallets,
@@ -6,18 +6,16 @@ import {
 import { DEFAULT_WALLETS } from "../../constants/wallets";
 
 type SmartWalletConfig = {
-  personalWallets: ConfiguredWallet[];
+  personalWallets: WalletConfig[];
 } & SmartWalletConfigWallets;
 
-export type SmartWalletObj = ConfiguredWallet & {
-  config: SmartWalletConfig;
-};
+export type SmartWalletObj = WalletConfig<SmartWallet, SmartWalletConfig>;
 
 export const smartWallet = (
   config: Omit<SmartWalletConfig, "personalWallets"> & {
-    personalWallets?: ConfiguredWallet[];
+    personalWallets?: WalletConfig[];
   },
-): ConfiguredWallet<SmartWallet, SmartWalletConfig> => {
+): WalletConfig<SmartWallet, SmartWalletConfig> => {
   return {
     id: SmartWallet.id,
     meta: SmartWallet.meta,

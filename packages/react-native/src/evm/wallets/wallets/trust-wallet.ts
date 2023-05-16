@@ -7,7 +7,7 @@ import type {
 } from "@thirdweb-dev/wallets";
 import {
   WalletOptions as WalletOptionsRC,
-  ConfiguredWallet,
+  WalletConfig,
 } from "@thirdweb-dev/react-core";
 import { WalletConnect } from "@thirdweb-dev/wallets";
 import { Linking } from "react-native";
@@ -74,5 +74,5 @@ export const trustWallet = (config?: TrustWalletConfig) => {
     config: {
       projectId: projectId,
     },
-  } satisfies ConfiguredWallet<WalletConnect, TrustWalletConfig>;
+  } satisfies WalletConfig<WalletConnect, TrustWalletConfig>;
 };

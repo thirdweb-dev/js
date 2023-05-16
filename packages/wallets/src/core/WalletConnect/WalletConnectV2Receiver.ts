@@ -15,10 +15,6 @@ import {
 import { IWalletConnectReceiver } from "./IWalletConnectReceiver";
 import { AbstractWallet } from "../../evm/wallets/abstract";
 
-const WC_NOT_INIT_ERROR = new Error(
-  "Please, set `enableConnectApp` in the config and connect the wallet first.",
-);
-
 type WalletConnectV2ReceiverConfig = Omit<
   WalletConnectReceiverConfig,
   "enableConnectApp"
@@ -74,7 +70,7 @@ export class WalletConnectV2Receiver implements IWalletConnectReceiver {
 
   async connectApp(wcUri: string) {
     if (!this.#wcWallet) {
-      throw WC_NOT_INIT_ERROR;
+      throw new Error("Please, init the wallet before connecting an app.");
     }
     await this.#wcWallet.core.pairing.pair({ uri: wcUri });
   }
@@ -84,7 +80,9 @@ export class WalletConnectV2Receiver implements IWalletConnectReceiver {
     proposal: SignClientTypes.EventArguments["session_proposal"],
   ) {
     if (!this.#wcWallet) {
-      throw WC_NOT_INIT_ERROR;
+      throw new Error(
+        "Please, init the wallet before making session requests.",
+      );
     }
 
     if (!proposal) {
@@ -120,7 +118,9 @@ export class WalletConnectV2Receiver implements IWalletConnectReceiver {
     proposal: SignClientTypes.EventArguments["session_proposal"],
   ) {
     if (!this.#wcWallet) {
-      throw WC_NOT_INIT_ERROR;
+      throw new Error(
+        "Please, init the wallet before making session requests.",
+      );
     }
 
     if (!proposal) {
@@ -174,8 +174,10 @@ export class WalletConnectV2Receiver implements IWalletConnectReceiver {
   }
 
   #setupWalletConnectEventsListeners() {
-    if (!this.#wcWallet || !this.#session) {
-      throw WC_NOT_INIT_ERROR;
+    if (!this.#wcWallet) {
+      throw new Error(
+        "Please, init the wallet before making session requests.",
+      );
     }
 
     this.#wcWallet.on(
@@ -185,19 +187,22 @@ export class WalletConnectV2Receiver implements IWalletConnectReceiver {
       },
     );
 
-    const requestSession = this.#session;
     this.#wcWallet.on(
       "session_request",
       async (
         requestEvent: SignClientTypes.EventArguments["session_request"],
       ) => {
+        if (!this.#session) {
+          console.log("No session found on session_request event.");
+          return;
+        }
         const { params } = requestEvent;
         const { request } = params;
 
         switch (request.method) {
           case EIP155_SIGNING_METHODS.ETH_SIGN:
           case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
-            this.#onSessionRequest?.(requestEvent, requestSession);
+            this.#onSessionRequest?.(requestEvent, this.#session);
         }
       },
     );

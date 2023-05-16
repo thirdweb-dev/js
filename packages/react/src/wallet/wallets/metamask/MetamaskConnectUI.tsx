@@ -1,23 +1,16 @@
-import {
-  ConfiguredWallet,
-  ConnectUIProps,
-  useConnect,
-} from "@thirdweb-dev/react-core";
+import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { useEffect, useRef, useState } from "react";
 import { MetamaskScan } from "./MetamaskScan";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
+import { MetaMaskWallet } from "@thirdweb-dev/wallets";
 
-type MetamaskConnectUIProps = ConnectUIProps & {
-  configuredWallet: ConfiguredWallet;
-};
-
-export const MetamaskConnectUI = (props: MetamaskConnectUIProps) => {
+export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
   const [screen, setScreen] = useState<
     "connecting" | "scanning" | "get-started"
   >("connecting");
-  const { configuredWallet, close } = props;
+  const { walletConfig, close } = props;
   const connect = useConnect();
 
   const { goBack } = props;
@@ -28,8 +21,8 @@ export const MetamaskConnectUI = (props: MetamaskConnectUIProps) => {
       return;
     }
 
-    const isInstalled = configuredWallet.isInstalled
-      ? configuredWallet.isInstalled()
+    const isInstalled = walletConfig.isInstalled
+      ? walletConfig.isInstalled()
       : false;
 
     // if loading
@@ -38,7 +31,7 @@ export const MetamaskConnectUI = (props: MetamaskConnectUIProps) => {
         try {
           connectPrompted.current = true;
           setScreen("connecting");
-          await connect(configuredWallet);
+          await connect(walletConfig);
           close();
         } catch (e) {
           goBack();
@@ -58,14 +51,14 @@ export const MetamaskConnectUI = (props: MetamaskConnectUIProps) => {
         }
       }
     })();
-  }, [configuredWallet, close, connect, goBack]);
+  }, [walletConfig, close, connect, goBack]);
 
   if (screen === "connecting") {
     return (
       <ConnectingScreen
         onBack={props.goBack}
-        walletName={configuredWallet.meta.name}
-        walletIconURL={configuredWallet.meta.iconURL}
+        walletName={walletConfig.meta.name}
+        walletIconURL={walletConfig.meta.iconURL}
         supportLink="https://support.metamask.io/hc/en-us/articles/4406430256539-User-Guide-Troubleshooting"
       />
     );
@@ -74,11 +67,11 @@ export const MetamaskConnectUI = (props: MetamaskConnectUIProps) => {
   if (screen === "get-started") {
     return (
       <GetStartedScreen
-        walletIconURL={configuredWallet.meta.iconURL}
-        walletName={configuredWallet.meta.name}
-        chromeExtensionLink={configuredWallet.meta.urls?.chrome}
-        googlePlayStoreLink={configuredWallet.meta.urls?.android}
-        appleStoreLink={configuredWallet.meta.urls?.ios}
+        walletIconURL={walletConfig.meta.iconURL}
+        walletName={walletConfig.meta.name}
+        chromeExtensionLink={walletConfig.meta.urls?.chrome}
+        googlePlayStoreLink={walletConfig.meta.urls?.android}
+        appleStoreLink={walletConfig.meta.urls?.ios}
         onBack={props.goBack}
       />
     );
@@ -92,7 +85,7 @@ export const MetamaskConnectUI = (props: MetamaskConnectUIProps) => {
         onGetStarted={() => {
           setScreen("get-started");
         }}
-        configuredWallet={configuredWallet}
+        walletConfig={walletConfig}
       />
     );
   }

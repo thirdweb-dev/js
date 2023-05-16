@@ -1,4 +1,4 @@
-import { ConfiguredWallet } from "@thirdweb-dev/react-core";
+import { WalletConfig } from "@thirdweb-dev/react-core";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 
 export type LocalWalletConfig = {
@@ -14,7 +14,7 @@ export type LocalWalletConfig = {
   persist?: boolean;
 };
 
-export type LocalConfiguredWallet = ConfiguredWallet<
+export type LocalConfiguredWallet = WalletConfig<
   LocalWallet,
-  Required<LocalWalletConfig>
+  LocalWalletConfig
 >;

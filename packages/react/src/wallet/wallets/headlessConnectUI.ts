@@ -1,20 +1,15 @@
 import {
-  ConfiguredWallet,
   ConnectUIProps,
   useConnect,
   useWallets,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useRef } from "react";
 
-type HeadlessConnectUIProps = ConnectUIProps & {
-  configuredWallet: ConfiguredWallet;
-};
-
 export const HeadlessConnectUI = ({
   close,
-  configuredWallet,
+  walletConfig,
   open,
-}: HeadlessConnectUIProps) => {
+}: ConnectUIProps) => {
   const connect = useConnect();
   const prompted = useRef(false);
   const singleWallet = useWallets().length === 1;
@@ -28,7 +23,7 @@ export const HeadlessConnectUI = ({
     (async () => {
       close();
       try {
-        await connect(configuredWallet);
+        await connect(walletConfig);
       } catch (e) {
         if (!singleWallet) {
           open();
@@ -36,7 +31,7 @@ export const HeadlessConnectUI = ({
         console.error(e);
       }
     })();
-  }, [configuredWallet, connect, close, open, singleWallet]);
+  }, [walletConfig, connect, close, open, singleWallet]);
 
   return null;
 };

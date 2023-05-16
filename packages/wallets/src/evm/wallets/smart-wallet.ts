@@ -44,6 +44,8 @@ export class SmartWallet
       ...options,
     });
 
+    console.log("enable connect app", options.enableConnectApp);
+
     this.enableConnectApp = options?.enableConnectApp || false;
 
     this.#wcReceiver = this.enableConnectApp

@@ -2,11 +2,14 @@ import { StyleSheet, View } from "react-native";
 import PocketWalletIcon from "../../assets/wallet";
 import BaseButton from "../base/BaseButton";
 import { WalletIcon } from "../base/WalletIcon";
-import { AbstractClientWallet, SmartWallet } from "@thirdweb-dev/wallets";
+import {
+  AbstractClientWallet,
+  SmartWallet,
+  walletIds,
+} from "@thirdweb-dev/wallets";
 import { Address } from "../base/Address";
 import Text from "../base/Text";
 import { usePersonalWalletAddress } from "../../wallets/hooks/usePersonalWalletAddress";
-import { LocalWallet } from "../../wallets/wallets/local-wallet";
 import { useWalletContext, useWallet } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import { useSmartWallet } from "../../providers/context-provider";
@@ -163,7 +166,7 @@ export const SmartWalletAdditionalActions = ({
           color={theme.colors.iconPrimary}
         />
       </BaseButton>
-      {showSmartWallet && smartWallet?.enableConnectApp ? (
+      {!showSmartWallet && smartWallet?.enableConnectApp ? (
         showWCRow && !appMeta ? (
           <Box
             flexDirection="row"
@@ -235,8 +238,8 @@ export const SmartWalletAdditionalActions = ({
           requestData={sessionRequestData}
         />
       ) : null}
-      {wallet?.walletId === LocalWallet.id ||
-      activeWallet?.walletId === LocalWallet.id ? (
+      {wallet?.walletId === walletIds.localWallet ||
+      activeWallet?.walletId === walletIds.localWallet ? (
         <>
           <BaseButton
             backgroundColor="background"
@@ -250,7 +253,7 @@ export const SmartWalletAdditionalActions = ({
               <PocketWalletIcon size={16} />
               <View style={styles.exportWalletInfo}>
                 <Text variant="bodySmall">
-                  {wallet?.walletId === LocalWallet.id
+                  {wallet?.walletId === walletIds.localWallet
                     ? "Backup personal wallet"
                     : "Backup wallet"}
                 </Text>
