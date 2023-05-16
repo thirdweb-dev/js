@@ -1225,6 +1225,9 @@ importers:
       '@thirdweb-dev/sdk':
         specifier: workspace:*
         version: link:../sdk
+      '@walletconnect/core':
+        specifier: 2.7.3
+        version: 2.7.3
       '@walletconnect/ethereum-provider':
         specifier: 2.6.0
         version: 2.6.0(@web3modal/standalone@2.4.1)(typescript@4.9.5)
@@ -1252,6 +1255,15 @@ importers:
       '@walletconnect/legacy-utils':
         specifier: ^2.0.0-rc.0
         version: 2.0.0
+      '@walletconnect/types':
+        specifier: 2.7.3
+        version: 2.7.3
+      '@walletconnect/utils':
+        specifier: 2.7.3
+        version: 2.7.3
+      '@walletconnect/web3wallet':
+        specifier: ^1.7.1
+        version: 1.7.1
       '@web3modal/standalone':
         specifier: ^2.4.1
         version: 2.4.1
@@ -12066,6 +12078,30 @@ packages:
       '@wallet-standard/base': 1.0.1
     dev: true
 
+  /@walletconnect/auth-client@2.0.7:
+    resolution: {integrity: sha512-hebY0yS3Xwc/sD7uFul987fVToiFS1vxePBCAGOwv6eR1CL3o93uM1LVM7lJFWAkr9m5CRFwaCt/B/qeQvPsNg==}
+    engines: {node: '>=16'}
+    dependencies:
+      '@ethersproject/hash': 5.7.0
+      '@ethersproject/transactions': 5.7.0
+      '@stablelib/random': 1.0.2
+      '@walletconnect/core': 2.7.3
+      '@walletconnect/events': 1.0.1
+      '@walletconnect/heartbeat': 1.2.1
+      '@walletconnect/jsonrpc-utils': 1.0.7
+      '@walletconnect/logger': 2.0.1
+      '@walletconnect/time': 1.0.2
+      '@walletconnect/utils': 2.7.3
+      events: 3.3.0
+      isomorphic-unfetch: 3.1.0
+    transitivePeerDependencies:
+      - '@react-native-async-storage/async-storage'
+      - bufferutil
+      - encoding
+      - lokijs
+      - utf-8-validate
+    dev: false
+
   /@walletconnect/auth-client@2.0.7(@react-native-async-storage/async-storage@1.17.12):
     resolution: {integrity: sha512-hebY0yS3Xwc/sD7uFul987fVToiFS1vxePBCAGOwv6eR1CL3o93uM1LVM7lJFWAkr9m5CRFwaCt/B/qeQvPsNg==}
     engines: {node: '>=16'}
@@ -12153,7 +12189,6 @@ packages:
       - bufferutil
       - lokijs
       - utf-8-validate
-    dev: true
 
   /@walletconnect/core@2.7.3(@react-native-async-storage/async-storage@1.17.12):
     resolution: {integrity: sha512-Ldb9ZE74jpivioW+Z65Lc5XVuddDQcqmXjmuZleliQwwg8USKi4qjiC3A3796jzGUCIdgKVHN1ZkudkXo2CSNw==}
@@ -12533,7 +12568,6 @@ packages:
       - bufferutil
       - lokijs
       - utf-8-validate
-    dev: true
 
   /@walletconnect/sign-client@2.7.3(@react-native-async-storage/async-storage@1.17.12):
     resolution: {integrity: sha512-QDlgBv0EoMt1OQ7SjUJA8DSx3zcKvBcKDueETYUPwP29i1Mc5gSozrpzEoSLcH3TVTt4bTcTEkqVvGvWsglJig==}
@@ -12594,7 +12628,6 @@ packages:
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
       - lokijs
-    dev: true
 
   /@walletconnect/types@2.7.3(@react-native-async-storage/async-storage@1.17.12):
     resolution: {integrity: sha512-01U/GwrtokgBfBzLwZQQogkYh/+HBvClO4Oet3bClnyzHZ//Jv3Xf3X9LluNrHaulzPqdc9g7wnFkpjkVqKicQ==}
@@ -12685,7 +12718,6 @@ packages:
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
       - lokijs
-    dev: true
 
   /@walletconnect/utils@2.7.3(@react-native-async-storage/async-storage@1.17.12):
     resolution: {integrity: sha512-ecKnoks3N8CaP5KYIrgJct5YNmvlfp1Ec8BuiXw5Gmta1HFnKpzvjmAG1627XGEfB2UVc9O2Rmbx+UmhuyB5KQ==}
@@ -12708,6 +12740,25 @@ packages:
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
       - lokijs
+    dev: false
+
+  /@walletconnect/web3wallet@1.7.1:
+    resolution: {integrity: sha512-yXGnSD8YLTp3VbMm+vdbcxAyGaMORSrlTDaGqwY7VhDj7YVtrTJ3Zg1JfAQWApjSWhcOM9c8hcwwwxJTamlIAQ==}
+    dependencies:
+      '@walletconnect/auth-client': 2.0.7
+      '@walletconnect/core': 2.7.3
+      '@walletconnect/jsonrpc-provider': 1.0.12
+      '@walletconnect/jsonrpc-utils': 1.0.7
+      '@walletconnect/logger': 2.0.1
+      '@walletconnect/sign-client': 2.7.3
+      '@walletconnect/types': 2.7.3
+      '@walletconnect/utils': 2.7.3
+    transitivePeerDependencies:
+      - '@react-native-async-storage/async-storage'
+      - bufferutil
+      - encoding
+      - lokijs
+      - utf-8-validate
     dev: false
 
   /@walletconnect/web3wallet@1.7.1(@react-native-async-storage/async-storage@1.17.12):
