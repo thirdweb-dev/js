@@ -16,7 +16,7 @@ import { Transaction } from "./transactions";
 import type { TokenStake, Staking20Base } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 import { AmountSchema } from "../../../core/schema/shared";
 
 /**
@@ -147,9 +147,14 @@ export class Staking20<T extends TokenStake | Staking20Base>
   ////// WRITE FUNCTIONS //////
   stake = buildTransactionFunction(async (amount: Amount) => {
     // Approve tokens on staking contract
-    this._stakingToken?.writeContract.approve(
-      await this.getAddress(),
-      await this.normalizeAmount(amount, this._stakingToken),
+    await this.handleTokenApproval(
+      await this.normalizeAmount(
+        amount,
+        this._stakingToken as ContractWrapper<BaseERC20>,
+      ),
+      await this.contractWrapper.getSignerAddress(),
+      this.getAddress(),
+      this._stakingToken as ContractWrapper<BaseERC20>,
     );
 
     return Transaction.fromContractWrapper({
@@ -220,9 +225,14 @@ export class Staking20<T extends TokenStake | Staking20Base>
 
   depositRewardTokens = buildTransactionFunction(async (amount: Amount) => {
     // Approve spending of reward tokens
-    this._rewardToken?.writeContract.approve(
-      await this.getAddress(),
-      await this.normalizeAmount(amount, this._rewardToken),
+    await this.handleTokenApproval(
+      await this.normalizeAmount(
+        amount,
+        this._rewardToken as ContractWrapper<BaseERC20>,
+      ),
+      await this.contractWrapper.getSignerAddress(),
+      this.getAddress(),
+      this._rewardToken as ContractWrapper<BaseERC20>,
     );
 
     return Transaction.fromContractWrapper({
@@ -259,5 +269,24 @@ export class Staking20<T extends TokenStake | Staking20Base>
   ): Promise<BigNumber> {
     const decimals = await tokenContractWrapper.readContract.decimals();
     return ethers.utils.parseUnits(AmountSchema.parse(amount), decimals);
+  }
+
+  private async handleTokenApproval(
+    amount: BigNumberish,
+    owner: AddressOrEns,
+    spender: AddressOrEns,
+    tokenContractWrapper: ContractWrapper<BaseERC20>,
+  ) {
+    // Check if already approved
+    const allowance = await tokenContractWrapper.readContract.allowance(
+      await resolveAddress(owner),
+      await resolveAddress(spender),
+    );
+    if (allowance.gte(amount)) return;
+    // Approve token spending
+    await tokenContractWrapper.writeContract.approve(
+      await resolveAddress(spender),
+      amount,
+    );
   }
 }
