@@ -72,6 +72,21 @@ export class Staking20<T extends TokenStake | Staking20Base>
   ////// Standard Staking20 Extension //////
 
   ////// READ FUNCTIONS //////
+
+  /**
+   * Get the number of reward tokens in the staking contract
+   *
+   * @remarks Get the number of reward tokens the staking contract owns. To deposit reward tokens, use the `depositRewardTokens` function.
+   *
+   * @example
+   * ```javascript
+   * // Get reward token balance for staking contract
+   * const balance = await contract.staking20.getRewardTokenBalance();
+   * ```
+   *
+   * @returns Number of reward tokens, see {@link CurrencyValue}
+   * @twfeature Staking20
+   */
   public async getRewardTokenBalance(): Promise<CurrencyValue> {
     return fetchCurrencyValue(
       await this.contractWrapper.getProvider(),
@@ -80,10 +95,36 @@ export class Staking20<T extends TokenStake | Staking20Base>
     );
   }
 
+  /**
+   * Get the time unit for new reward tokens set in the staking contract.
+   *
+   * @remarks Get the time unit after which new rewards are issued.
+   *
+   * @example
+   * ```javascript
+   * // Get time unit for staking contract
+   * const timeUnit = await contract.staking20.getTimeUnit();
+   * ```
+   *
+   * @returns number
+   * @twfeature Staking20
+   */
   public async getTimeUnit(): Promise<number> {
     return (await this.contractWrapper.readContract.getTimeUnit()).toNumber();
   }
 
+  /**
+   * Get the tokens staked by a particular address
+   *
+   * @example
+   * ```javascript
+   * // Get tokens staked by address or ENS
+   * const timeUnit = await contract.staking20.getTokensStaked("thirdweb.eth");
+   * ```
+   *
+   * @returns Number of tokens staked, see {@link CurrencyValue}
+   * @twfeature Staking20
+   */
   public async getTokensStaked(address: AddressOrEns): Promise<CurrencyValue> {
     return fetchCurrencyValue(
       await this.contractWrapper.getProvider(),
@@ -96,6 +137,18 @@ export class Staking20<T extends TokenStake | Staking20Base>
     );
   }
 
+  /**
+   * Get the unclaimed rewards for a particular wallet address or ENS.
+   *
+   * @example
+   * ```javascript
+   * // Get unclaimed rewards
+   * const unclaimedRewards = await contract.staking20.getRewards("thirdweb.eth");
+   * ```
+   *
+   * @returns Number of unclaimed reward tokens, see {@link CurrencyValue}
+   * @twfeature Staking20
+   */
   public async getRewards(address: AddressOrEns): Promise<CurrencyValue> {
     return fetchCurrencyValue(
       await this.contractWrapper.getProvider(),
@@ -109,6 +162,26 @@ export class Staking20<T extends TokenStake | Staking20Base>
   }
 
   // TODO: Create a type
+
+  /**
+   * Get the time unit for new reward tokens set in the staking contract.
+   *
+   * @example
+   * ```javascript
+   * // Get time unit for staking contract
+   * const rewardRatio = await contract.staking20.getRewardRatio();
+   * ```
+   *
+   * @returns Reward ratio numerator and denominator
+   * ```javascript
+   * {
+   *    numerator: 1,
+   *    denominator: 2
+   * }
+   * ```
+   *
+   * @twfeature Staking20
+   */
   public async getRewardRatio(): Promise<{
     numerator: number;
     denominator: number;
@@ -124,6 +197,19 @@ export class Staking20<T extends TokenStake | Staking20Base>
   }
 
   // TODO: Create types
+
+  /**
+   * Get information about staking token
+   *
+   * @example
+   * ```javascript
+   * // Get staking token info
+   * const stakingToken = await contract.staking20.getStakingToken();
+   * ```
+   *
+   * @returns see {@link Currency}
+   * @twfeature Staking20
+   */
   public async getStakingToken(): Promise<Currency & { address: string }> {
     return {
       ...(await fetchCurrencyMetadata(
@@ -134,6 +220,20 @@ export class Staking20<T extends TokenStake | Staking20Base>
     };
   }
 
+  // TODO: Create types
+
+  /**
+   * Get information about reward token
+   *
+   * @example
+   * ```javascript
+   * // Get reward token info
+   * const rewardToken = await contract.staking20.getRewardToken();
+   * ```
+   *
+   * @returns see {@link Currency}
+   * @twfeature Staking20
+   */
   public async getRewardToken(): Promise<Currency & { address: string }> {
     return {
       ...(await fetchCurrencyMetadata(
@@ -145,6 +245,18 @@ export class Staking20<T extends TokenStake | Staking20Base>
   }
 
   ////// WRITE FUNCTIONS //////
+
+  /**
+   * Stake tokens in the staking contract. Automatically fetches and seeks token transfer approval.
+   *
+   * @example
+   * ```javascript
+   * // Stake 10 tokens
+   * const stake = await contract.staking20.stake(10);
+   * ```
+   *
+   * @twfeature Staking20
+   */
   stake = buildTransactionFunction(async (amount: Amount) => {
     // Approve tokens on staking contract
     await this.handleTokenApproval(
@@ -169,6 +281,17 @@ export class Staking20<T extends TokenStake | Staking20Base>
     });
   });
 
+  /**
+   * Withdraw staking tokens from the contract.
+   *
+   * @example
+   * ```javascript
+   * // Withdraw 10 tokens
+   * const withdraw = await contract.staking20.withdraw(10);
+   * ```
+   *
+   * @twfeature Staking20
+   */
   withdraw = buildTransactionFunction(async (amount: Amount) => {
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
@@ -183,6 +306,17 @@ export class Staking20<T extends TokenStake | Staking20Base>
     });
   });
 
+  /**
+   * Withdraw deposited reward tokens
+   *
+   * @example
+   * ```javascript
+   * // Withdraw 10 reward tokens
+   * const withdraw = await contract.staking20.withdrawRewardTokens(10);
+   * ```
+   *
+   * @twfeature Staking20
+   */
   withdrawRewardTokens = buildTransactionFunction(async (amount: Amount) => {
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
@@ -197,6 +331,17 @@ export class Staking20<T extends TokenStake | Staking20Base>
     });
   });
 
+  /**
+   * Claim rewards and receive reward tokens.
+   *
+   * @example
+   * ```javascript
+   * // Claim rewards
+   * const claim = await contract.staking20.claimRewards();
+   * ```
+   *
+   * @twfeature Staking20
+   */
   claimRewards = buildTransactionFunction(async () => {
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
@@ -205,6 +350,20 @@ export class Staking20<T extends TokenStake | Staking20Base>
     });
   });
 
+  /**
+   * Set reward ratio for the staking contract.
+   *
+   * @param numerator - numerator for the reward ratio
+   * @param denominator - denominator for the reward ratio
+   *
+   * @example
+   * ```javascript
+   * // Set reward ratio
+   * const setRatio = await contract.staking20.setRewardRatio(1, 2);
+   * ```
+   *
+   * @twfeature Staking20
+   */
   setRewardRatio = buildTransactionFunction(
     async (numerator: number, denominator: number) => {
       return Transaction.fromContractWrapper({
@@ -215,6 +374,17 @@ export class Staking20<T extends TokenStake | Staking20Base>
     },
   );
 
+  /**
+   * Set time unit for which every reward token is issued.
+   *
+   * @example
+   * ```javascript
+   * // Set time unit
+   * const setUnits = await contract.staking20.setTimeUnit(60000);
+   * ```
+   *
+   * @twfeature Staking20
+   */
   setTimeUnit = buildTransactionFunction(async (timeUnit: number) => {
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
@@ -223,6 +393,17 @@ export class Staking20<T extends TokenStake | Staking20Base>
     });
   });
 
+  /**
+   * Deposit reward tokens in the staking contract. Automatically fetches and seeks token transfer approval.
+   *
+   * @example
+   * ```javascript
+   * // Deposit reward tokens
+   * const deposit = await contract.staking20.depositRewardTokens(500);
+   * ```
+   *
+   * @twfeature Staking20
+   */
   depositRewardTokens = buildTransactionFunction(async (amount: Amount) => {
     // Approve spending of reward tokens
     await this.handleTokenApproval(

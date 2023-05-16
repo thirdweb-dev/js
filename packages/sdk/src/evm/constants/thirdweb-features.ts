@@ -305,8 +305,8 @@ export const FEATURE_SMART_WALLET = {
 } as const;
 
 export const FEATURE_TOKEN_STAKE = {
-  name: "TokenStake",
-  namespace: "tokenstake",
+  name: "Staking20",
+  namespace: "staking20",
   docLinks: {
     // TODO
     sdk: "",

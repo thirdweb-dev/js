@@ -530,7 +530,7 @@ export class SmartContract<
   }
 
   private detectTokenStake() {
-    if (detectContractFeature<TokenStake>(this.contractWrapper, "TokenStake")) {
+    if (detectContractFeature<TokenStake>(this.contractWrapper, "Staking20")) {
       return new Staking20(this.contractWrapper, this.storage, this.chainId);
     }
     return undefined;
