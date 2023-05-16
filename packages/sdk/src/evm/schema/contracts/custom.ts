@@ -134,6 +134,14 @@ export const FactoryDeploymentSchema = z.object({
 /**
  * @internal
  */
+export const DeploymentNetworkSchema = z.object({
+  networksEnabled: z.array(z.number()).default([]),
+  networksDisabled: z.array(z.number()).default([]),
+});
+
+/**
+ * @internal
+ */
 export const ExtraPublishMetadataSchemaInput = z
   .object({
     version: z.string().refine(
@@ -162,6 +170,8 @@ export const ExtraPublishMetadataSchemaInput = z
     isDeployableViaFactory: z.boolean().optional(),
     isDeployableViaProxy: z.boolean().optional(),
     factoryDeploymentData: FactoryDeploymentSchema.optional(),
+    isDeployableViaAutoFactory: z.boolean().optional(),
+    networksForDeployment: DeploymentNetworkSchema.optional(),
     constructorParams: z
       .record(
         z.string(),

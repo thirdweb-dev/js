@@ -755,8 +755,6 @@ export class ContractDeployer extends RPCConnectionHandler {
       if (
         extendedMetadata &&
         extendedMetadata.factoryDeploymentData &&
-        (extendedMetadata.isDeployableViaProxy ||
-          extendedMetadata.isDeployableViaFactory) &&
         !forceDirectDeploy
       ) {
         const chainId = (await this.getProvider().getNetwork()).chainId;
@@ -776,10 +774,12 @@ export class ContractDeployer extends RPCConnectionHandler {
           constructorParamValues,
         );
 
-        let implementationAddress = extendedMetadata.factoryDeploymentData
-          .implementationAddresses[chainId] as AddressOrEns;
-
-        if (implementationAddress) {
+        if (
+          extendedMetadata.isDeployableViaProxy ||
+          extendedMetadata.isDeployableViaFactory
+        ) {
+          let implementationAddress = extendedMetadata.factoryDeploymentData
+            .implementationAddresses[chainId] as AddressOrEns;
           const resolvedImplementationAddress = await resolveAddress(
             implementationAddress,
           );
@@ -820,7 +820,7 @@ export class ContractDeployer extends RPCConnectionHandler {
               paramValues,
             );
           }
-        } else {
+        } else if (extendedMetadata.isDeployableViaAutoFactory) {
           // any evm deployment flow
 
           // 1. Deploy CREATE2 factory (if not already exists)
@@ -834,7 +834,7 @@ export class ContractDeployer extends RPCConnectionHandler {
             create2Factory,
           );
 
-          implementationAddress = deploymentInfo.find(
+          const implementationAddress = deploymentInfo.find(
             (i) => i.type === "implementation",
           )?.transaction.predictedAddress as string;
 
