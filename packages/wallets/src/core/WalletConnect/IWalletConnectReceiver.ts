@@ -1,14 +1,16 @@
 // wcv2
-import { SignClientTypes } from "@walletconnect/types";
+import { SessionTypes, SignClientTypes } from "@walletconnect/types";
 import { AbstractWallet } from "../../evm/wallets/abstract";
 
-type JsonRpcError = {
+export type ErrorResponse = { code: number; message: string; data?: string };
+
+export type JsonRpcError = {
   id: number;
   jsonrpc: string;
-  error: { code: number; message: string; data?: string };
+  error: ErrorResponse;
 };
 
-type JsonRpcResult = { id: number; jsonrpc: string; result: string };
+export type JsonRpcResult = { id: number; jsonrpc: string; result: string };
 
 export interface IWalletConnectReceiver {
   connectApp(uri: string): Promise<void>;
@@ -22,10 +24,15 @@ export interface IWalletConnectReceiver {
   approveEIP155Request(
     wallet: AbstractWallet,
     requestEvent: SignClientTypes.EventArguments["session_request"],
-  ): Promise<JsonRpcResult | JsonRpcError>;
+  ): Promise<void>;
   rejectEIP155Request(
     request: SignClientTypes.EventArguments["session_request"],
-  ): Promise<JsonRpcError>;
+  ): Promise<void>;
+  getActiveSessions(): Record<string, SessionTypes.Struct>;
+  disconnectSession(params: {
+    topic: string;
+    reason: ErrorResponse;
+  }): Promise<void>;
 }
 
 export class NoOpWalletConnectReceiver implements IWalletConnectReceiver {
@@ -52,20 +59,25 @@ export class NoOpWalletConnectReceiver implements IWalletConnectReceiver {
     wallet: AbstractWallet,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     requestEvent: SignClientTypes.EventArguments["session_request"],
-  ): Promise<JsonRpcError | JsonRpcResult> {
-    return Promise.resolve({ id: 0, jsonrpc: "2.0", result: "" });
+  ): Promise<void> {
+    return Promise.resolve();
   }
   rejectEIP155Request(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     request: SignClientTypes.EventArguments["session_request"],
-  ): Promise<JsonRpcError> {
-    return Promise.resolve({
-      id: 0,
-      jsonrpc: "2.0",
-      error: {
-        code: 0,
-        message: "",
-      },
-    });
+  ): Promise<void> {
+    return Promise.resolve();
+  }
+
+  getActiveSessions(): Record<string, SessionTypes.Struct> {
+    return {};
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  disconnectSession(params: {
+    topic: string;
+    reason: ErrorResponse;
+  }): Promise<void> {
+    return Promise.resolve();
   }
 }

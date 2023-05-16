@@ -12,7 +12,10 @@ import {
   TW_WC_PROJECT_ID,
   WC_RELAY_URL,
 } from "../../evm/constants/wc";
-import { IWalletConnectReceiver } from "./IWalletConnectReceiver";
+import {
+  ErrorResponse,
+  IWalletConnectReceiver,
+} from "./IWalletConnectReceiver";
 import { AbstractWallet } from "../../evm/wallets/abstract";
 
 type WalletConnectV2ReceiverConfig = Omit<
@@ -21,6 +24,9 @@ type WalletConnectV2ReceiverConfig = Omit<
 > & {
   onSessionProposal?: (
     proposal: SignClientTypes.EventArguments["session_proposal"],
+  ) => Promise<void>;
+  onSessionDelete?: (
+    session: SignClientTypes.EventArguments["session_delete"],
   ) => Promise<void>;
   onSessionRequest?: (
     request: SignClientTypes.EventArguments["session_request"],
@@ -36,6 +42,9 @@ export class WalletConnectV2Receiver implements IWalletConnectReceiver {
   #wcMetadata: WalletConnectMetadata;
   #onSessionProposal?: (
     proposal: SignClientTypes.EventArguments["session_proposal"],
+  ) => Promise<void>;
+  #onSessionDelete?: (
+    session: SignClientTypes.EventArguments["session_delete"],
   ) => Promise<void>;
   #onSessionRequest?: (
     request: SignClientTypes.EventArguments["session_request"],
@@ -56,6 +65,7 @@ export class WalletConnectV2Receiver implements IWalletConnectReceiver {
     });
 
     this.#onSessionProposal = options?.onSessionProposal;
+    this.#onSessionDelete = options?.onSessionDelete;
     this.#onSessionRequest = options?.onSessionRequest;
   }
 
@@ -64,6 +74,12 @@ export class WalletConnectV2Receiver implements IWalletConnectReceiver {
       core: this.#core,
       metadata: this.#wcMetadata,
     });
+
+    const sessions = this.#wcWallet.getActiveSessions();
+    const keys = Object.keys(sessions);
+    if (keys.length > 0) {
+      this.#session = sessions[keys[0]];
+    }
 
     this.#setupWalletConnectEventsListeners();
   }
@@ -138,39 +154,74 @@ export class WalletConnectV2Receiver implements IWalletConnectReceiver {
     wallet: AbstractWallet,
     requestEvent: SignClientTypes.EventArguments["session_request"],
   ) {
-    const { params, id } = requestEvent;
+    const { topic, params, id } = requestEvent;
     const { request } = params;
+
+    console.log("receiver.method", request.method);
 
     switch (request.method) {
       case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
       case EIP155_SIGNING_METHODS.ETH_SIGN:
         const message = this.#getSignParamsMessage(request.params);
         const signedMessage = await wallet.signMessage(message);
-        return {
+
+        console.log("message", message);
+        console.log("signedMessage", signedMessage);
+
+        const response = {
           id,
           jsonrpc: "2.0",
           result: signedMessage,
         };
+        return this.#wcWallet?.respondSessionRequest({ topic, response });
       default:
-        return {
+        const error = {
           id,
           jsonrpc: "2.0",
           error: getSdkError("INVALID_EVENT"),
         };
+        return this.#wcWallet?.respondSessionRequest({
+          topic,
+          response: error,
+        });
     }
   }
 
   async rejectEIP155Request(
     request: SignClientTypes.EventArguments["session_request"],
   ) {
-    const { id } = request;
+    const { topic, id } = request;
     const error = getSdkError("USER_REJECTED_METHODS");
 
-    return {
+    const response = {
       id,
       jsonrpc: "2.0",
       error: error,
     };
+
+    return this.#wcWallet?.respondSessionRequest({ topic, response });
+  }
+
+  getActiveSessions(): Record<string, SessionTypes.Struct> {
+    if (!this.#wcWallet) {
+      throw new Error("Please, init the wallet before getting sessions.");
+    }
+    // return this.#session
+    //   ? { [this]: this.#session }
+    //   : this.#wcWallet.getActiveSessions();
+
+    return this.#wcWallet.getActiveSessions();
+  }
+
+  disconnectSession(params: {
+    topic: string;
+    reason: ErrorResponse;
+  }): Promise<void> {
+    if (!this.#wcWallet) {
+      throw new Error("Please, init the wallet before disconnecting sessions.");
+    }
+
+    return this.#wcWallet?.disconnectSession(params);
   }
 
   #setupWalletConnectEventsListeners() {
@@ -184,6 +235,13 @@ export class WalletConnectV2Receiver implements IWalletConnectReceiver {
       "session_proposal",
       (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
         this.#onSessionProposal?.(proposal);
+      },
+    );
+
+    this.#wcWallet.on(
+      "session_delete",
+      (session: SignClientTypes.EventArguments["session_delete"]) => {
+        this.#onSessionDelete?.(session);
       },
     );
 

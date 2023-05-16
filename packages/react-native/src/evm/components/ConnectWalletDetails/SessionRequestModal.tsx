@@ -22,13 +22,26 @@ export const SessionRequestModal = ({
 
   return (
     <Modal isVisible={isVisible} backdropOpacity={0.7}>
-      <Box>
-        <Text variant="bodyLarge">Session Proposal</Text>
+      <Box
+        flexDirection="column"
+        backgroundColor="background"
+        borderRadius="md"
+        p="lg"
+      >
+        <Text variant="bodyLarge">Session Request</Text>
         <Text variant="bodyLarge">
           {requestData.session.peer.metadata.name}
         </Text>
-        <Box flexDirection="row">
+        <Box flexDirection="row" justifyContent="space-evenly" mt="lg">
           <BaseButton
+            alignContent="center"
+            alignItems="center"
+            borderRadius="sm"
+            borderWidth={0.5}
+            paddingHorizontal="sm"
+            paddingVertical="md"
+            minWidth={100}
+            borderColor="border"
             onPress={async () => {
               await (
                 wallet as unknown as IWalletConnectReceiver
@@ -39,6 +52,15 @@ export const SessionRequestModal = ({
             <Text variant="bodySmall">Reject</Text>
           </BaseButton>
           <BaseButton
+            alignContent="center"
+            alignItems="center"
+            borderRadius="sm"
+            borderWidth={0.5}
+            paddingHorizontal="sm"
+            paddingVertical="md"
+            minWidth={100}
+            backgroundColor="white"
+            borderColor="border"
             onPress={async () => {
               if (!wallet) {
                 throw new Error("Wallet not connected.");
@@ -49,7 +71,9 @@ export const SessionRequestModal = ({
               onClose();
             }}
           >
-            <Text variant="bodySmall">Approve</Text>
+            <Text variant="bodySmall" color="black">
+              Approve
+            </Text>
           </BaseButton>
         </Box>
       </Box>

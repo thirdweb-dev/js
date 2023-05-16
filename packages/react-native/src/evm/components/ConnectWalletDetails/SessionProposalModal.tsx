@@ -19,17 +19,33 @@ export const SessionProposalModal = ({
 }) => {
   const wallet = useWallet();
 
+  console.log("proposal", proposal);
+  console.log("proposal", proposal.params);
+
   return (
-    <Modal isVisible={isVisible} backdropOpacity={0.7}>
-      <Box>
+    <Modal isVisible={isVisible} backdropOpacity={0.9}>
+      <Box
+        flexDirection="column"
+        backgroundColor="background"
+        borderRadius="md"
+        p="lg"
+      >
         <Text variant="bodyLarge">Session Proposal</Text>
         <Text variant="bodyLarge">
           {proposal.params.proposer.metadata.name}
         </Text>
-        <Box flexDirection="row">
+        <Box flexDirection="row" justifyContent="space-evenly" mt="lg">
           <BaseButton
+            alignContent="center"
+            alignItems="center"
+            borderRadius="sm"
+            borderWidth={0.5}
+            paddingHorizontal="sm"
+            paddingVertical="md"
+            minWidth={100}
+            borderColor="border"
             onPress={async () => {
-              await (wallet as unknown as IWalletConnectReceiver).rejectSession(
+              (wallet as unknown as IWalletConnectReceiver).rejectSession(
                 proposal,
               );
               onClose();
@@ -38,6 +54,15 @@ export const SessionProposalModal = ({
             <Text variant="bodySmall">Reject</Text>
           </BaseButton>
           <BaseButton
+            alignContent="center"
+            alignItems="center"
+            borderRadius="sm"
+            borderWidth={0.5}
+            paddingHorizontal="sm"
+            paddingVertical="md"
+            minWidth={100}
+            backgroundColor="white"
+            borderColor="border"
             onPress={async () => {
               if (!wallet) {
                 throw new Error("Wallet not connected.");
@@ -52,7 +77,9 @@ export const SessionProposalModal = ({
               onClose();
             }}
           >
-            <Text variant="bodySmall">Approve</Text>
+            <Text variant="bodySmall" color="black">
+              Approve
+            </Text>
           </BaseButton>
         </Box>
       </Box>

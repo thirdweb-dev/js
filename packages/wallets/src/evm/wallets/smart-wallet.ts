@@ -8,6 +8,7 @@ import type { SmartWalletConnector as SmartWalletConnectorType } from "../connec
 import { Transaction, TransactionResult } from "@thirdweb-dev/sdk";
 import { walletIds } from "../constants/walletIds";
 import {
+  ErrorResponse,
   IWalletConnectReceiver,
   NoOpWalletConnectReceiver,
 } from "../../core/WalletConnect/IWalletConnectReceiver";
@@ -52,6 +53,7 @@ export class SmartWallet
       ? new WalletConnectV2Receiver({
           onSessionProposal: this.#onSessionProposal,
           onSessionRequest: this.#onSessionRequest,
+          onSessionDelete: this.#onSessionDelete,
           walletConnectV2Metadata: options?.walletConnectV2Metadata,
           walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
           walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
@@ -125,19 +127,45 @@ export class SmartWallet
     return this.#wcReceiver.rejectEIP155Request(request);
   }
 
+  getActiveSessions() {
+    return this.#wcReceiver.getActiveSessions();
+  }
+
+  disconnectSession(params: {
+    topic: string;
+    reason: ErrorResponse;
+  }): Promise<void> {
+    return this.#wcReceiver?.disconnectSession(params);
+  }
+
   // wc receiver
   #onSessionProposal = async (
     proposal: SignClientTypes.EventArguments["session_proposal"],
   ) => {
+    console.log("smart-wallet.proposal", proposal);
     this.emit("message", { type: "session_proposal", data: proposal });
+  };
+
+  #onSessionDelete = async (
+    session: SignClientTypes.EventArguments["session_delete"],
+  ) => {
+    this.emit("message", { type: "session_delete", data: session });
+    this.disconnectSession({
+      topic: session.topic,
+      reason: {
+        message: "Session deleted",
+        code: 1,
+      },
+    });
   };
 
   #onSessionRequest = async (
     request: SignClientTypes.EventArguments["session_request"],
     session: SessionTypes.Struct,
   ) => {
+    console.log("smart-wallet.request", request);
     this.emit("message", {
-      type: "session_proposal",
+      type: "session_request",
       data: { request, session },
     });
   };

@@ -4,6 +4,7 @@ import BaseButton from "../base/BaseButton";
 import { WalletIcon } from "../base/WalletIcon";
 import {
   AbstractClientWallet,
+  IWalletConnectReceiver,
   SmartWallet,
   walletIds,
 } from "@thirdweb-dev/wallets";
@@ -64,6 +65,9 @@ export const SmartWalletAdditionalActions = ({
           data as SignClientTypes.EventArguments["session_proposal"],
         );
         break;
+      case "session_delete":
+        setAppMeta(undefined);
+        break;
       case "session_request":
         setSessionRequestData(
           data as {
@@ -99,6 +103,18 @@ export const SmartWalletAdditionalActions = ({
   useEffect(() => {
     if (smartWallet) {
       smartWallet.addListener("message", onSmartWalletWCMessage);
+
+      const sessions = (
+        smartWallet as unknown as IWalletConnectReceiver
+      ).getActiveSessions();
+      console.log("sessions", sessions);
+      const keys = Object.keys(sessions);
+      if (keys.length > 0) {
+        setAppMeta({
+          name: sessions[keys[0]].peer.metadata.name,
+          iconUrl: sessions[keys[0]].peer.metadata.icons[0],
+        });
+      }
     }
 
     return () => {
@@ -222,6 +238,7 @@ export const SmartWalletAdditionalActions = ({
           isVisible={true}
           onApprove={(appName: string, appIconUrl: string) => {
             setAppMeta({ name: appName, iconUrl: appIconUrl });
+            setSessionProposalData(undefined);
           }}
           onClose={() => {
             setSessionProposalData(undefined);
@@ -233,7 +250,7 @@ export const SmartWalletAdditionalActions = ({
         <SessionRequestModal
           isVisible={true}
           onClose={() => {
-            setSessionProposalData(undefined);
+            setSessionRequestData(undefined);
           }}
           requestData={sessionRequestData}
         />
