@@ -63,6 +63,7 @@ import {
   FEATURE_SMART_WALLET,
   FEATURE_SMART_WALLET_FACTORY,
   FEATURE_TOKEN_STAKE,
+  FEATURE_NFT_STAKE,
 } from "./thirdweb-features";
 
 /**
@@ -126,7 +127,8 @@ export type Feature =
   | typeof FEATURE_OFFERS
   | typeof FEATURE_SMART_WALLET
   | typeof FEATURE_SMART_WALLET_FACTORY
-  | typeof FEATURE_TOKEN_STAKE;
+  | typeof FEATURE_TOKEN_STAKE
+  | typeof FEATURE_NFT_STAKE;
 export type Extension = Feature;
 
 /**
@@ -170,4 +172,5 @@ export const SUPPORTED_FEATURES: Record<string, Feature> = {
   [FEATURE_SMART_WALLET_FACTORY.name]: FEATURE_SMART_WALLET_FACTORY,
   [FEATURE_SMART_WALLET.name]: FEATURE_SMART_WALLET,
   [FEATURE_TOKEN_STAKE.name]: FEATURE_TOKEN_STAKE,
+  [FEATURE_NFT_STAKE.name]: FEATURE_NFT_STAKE,
 };

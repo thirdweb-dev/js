@@ -6,6 +6,7 @@ import {
   FEATURE_APPURI,
   FEATURE_DIRECT_LISTINGS,
   FEATURE_ENGLISH_AUCTIONS,
+  FEATURE_NFT_STAKE,
   FEATURE_OFFERS,
   FEATURE_OWNER,
   FEATURE_PERMISSIONS,
@@ -60,11 +61,14 @@ import type {
   OffersLogic,
   TokenStake,
   Staking20Base,
+  NFTStake,
+  Staking721Base,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides } from "ethers";
 import { BaseContractInterface } from "../types/contract";
 import { Staking20 } from "../core/classes/staking-20";
+import { Staking721 } from "../core/classes/staking-721";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -302,6 +306,13 @@ export class SmartContract<
     return assertEnabled(this.detectTokenStake(), FEATURE_TOKEN_STAKE);
   }
 
+  /**
+   * Auto-detects Staking721 standard functions.
+   */
+  get staking721(): Staking721<NFTStake | Staking721Base> {
+    return assertEnabled(this.detectNftStake(), FEATURE_NFT_STAKE);
+  }
+
   private _chainId: number;
   get chainId() {
     return this._chainId;
@@ -532,6 +543,13 @@ export class SmartContract<
   private detectTokenStake() {
     if (detectContractFeature<TokenStake>(this.contractWrapper, "Staking20")) {
       return new Staking20(this.contractWrapper, this.storage, this.chainId);
+    }
+    return undefined;
+  }
+
+  private detectNftStake() {
+    if (detectContractFeature<NFTStake>(this.contractWrapper, "Staking721")) {
+      return new Staking721(this.contractWrapper, this.storage, this.chainId);
     }
     return undefined;
   }
