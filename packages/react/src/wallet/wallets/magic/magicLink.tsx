@@ -31,27 +31,54 @@ export function magicLink(
 const MagicSelectionUI: React.FC<
   SelectUIProps<MagicLink, MagicLinkAdditionalOptions>
 > = (props) => {
+  const isEmailEnabled = props.walletConfig.config.emailLogin !== false;
+  const isSMSEnabled = props.walletConfig.config.smsLogin !== false;
+
+  let placeholder = "Enter your email or phone number";
+  let type = "text";
+  if (isEmailEnabled && !isSMSEnabled) {
+    placeholder = "Enter your email address";
+    type = "email";
+  } else if (!isEmailEnabled && isSMSEnabled) {
+    placeholder = "Enter your phone number";
+    type = "tel";
+  }
+
+  if (!isEmailEnabled && !isSMSEnabled) {
+    throw new Error(
+      'MagicLink must have either "emailLogin" or "smsLogin" enabled',
+    );
+  }
+
   return (
     <InputSelectionUI
       onSelect={props.onSelect}
-      placeholder="Enter your email or phone number"
+      placeholder={placeholder}
       name="magic-input"
-      type="text"
+      type={type}
       errorMessage={(input) => {
         const isEmail = input.includes("@");
         const isPhone = Number.isInteger(Number(input[input.length - 1]));
 
-        if (isEmail) {
+        if (isEmail && isEmailEnabled) {
           const isValidEmail = input.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
           if (!isValidEmail) {
-            return "Please enter a valid email address";
+            return "Invalid email address";
           }
-        } else if (isPhone) {
+        } else if (isPhone && isSMSEnabled) {
           if (!input.startsWith("+")) {
             return "Phone number must start with a country code";
           }
         } else {
-          return "Invalid email address or phone number";
+          if (isEmailEnabled && isSMSEnabled) {
+            return "Invalid email address or phone number";
+          }
+          if (isEmailEnabled) {
+            return "Invalid email address";
+          }
+          if (isSMSEnabled) {
+            return "Invalid phone number";
+          }
         }
       }}
       supportedWallets={props.supportedWallets}
