@@ -2,7 +2,6 @@ import { NetworkInput } from "..";
 import {
   fetchCurrencyMetadata,
   fetchCurrencyValue,
-  toWei,
 } from "../../common/currency";
 import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
@@ -156,7 +155,12 @@ export class Staking20<T extends TokenStake | Staking20Base>
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
       method: "stake",
-      args: [await this.normalizeAmount(amount, this._stakingToken!)],
+      args: [
+        await this.normalizeAmount(
+          amount,
+          this._stakingToken as ContractWrapper<BaseERC20>,
+        ),
+      ],
     });
   });
 
@@ -165,7 +169,12 @@ export class Staking20<T extends TokenStake | Staking20Base>
       contractWrapper: this.contractWrapper,
       method: "withdraw",
       // TODO: Update to check decimals as well
-      args: [await this.normalizeAmount(amount, this._stakingToken!)],
+      args: [
+        await this.normalizeAmount(
+          amount,
+          this._stakingToken as ContractWrapper<BaseERC20>,
+        ),
+      ],
     });
   });
 
@@ -174,7 +183,12 @@ export class Staking20<T extends TokenStake | Staking20Base>
       contractWrapper: this.contractWrapper,
       method: "withdrawRewardTokens",
       // TODO: Update to check decimals as well
-      args: [await this.normalizeAmount(amount, this._rewardToken!)],
+      args: [
+        await this.normalizeAmount(
+          amount,
+          this?._rewardToken as ContractWrapper<BaseERC20>,
+        ),
+      ],
     });
   });
 
@@ -214,7 +228,12 @@ export class Staking20<T extends TokenStake | Staking20Base>
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
       method: "depositRewardTokens",
-      args: [await this.normalizeAmount(amount, this._rewardToken!)],
+      args: [
+        await this.normalizeAmount(
+          amount,
+          this._rewardToken as ContractWrapper<BaseERC20>,
+        ),
+      ],
     });
   });
 
