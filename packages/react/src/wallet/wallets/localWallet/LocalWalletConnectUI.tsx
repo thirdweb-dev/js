@@ -42,6 +42,8 @@ export const LocalWalletConnectUI = (
   if (walletData) {
     return (
       <ReconnectLocalWallet
+        renderBackButton={props.supportedWallets.length > 1}
+        supportedWallets={props.supportedWallets}
         onConnect={props.close}
         goBack={props.goBack}
         localWallet={props.walletConfig}
@@ -54,6 +56,7 @@ export const LocalWalletConnectUI = (
       goBack={props.goBack}
       localWalletConf={props.walletConfig}
       onConnect={props.close}
+      renderBackButton={props.supportedWallets.length > 1}
     />
   );
 };
