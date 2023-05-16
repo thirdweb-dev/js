@@ -17,6 +17,8 @@ import { Transaction } from "./transactions";
 import type { TokenStake, Staking20Base } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
+import { BigNumber, ethers } from "ethers";
+import { AmountSchema } from "../../../core/schema/shared";
 
 /**
  * Standard ERC20 Token functions
@@ -145,12 +147,16 @@ export class Staking20<T extends TokenStake | Staking20Base>
 
   ////// WRITE FUNCTIONS //////
   stake = buildTransactionFunction(async (amount: Amount) => {
-    // Should add automatic token transfer approval? probably yes a private function
+    // Approve tokens on staking contract
+    this._stakingToken?.writeContract.approve(
+      await this.getAddress(),
+      await this.normalizeAmount(amount, this._stakingToken),
+    );
+
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
       method: "stake",
-      // TODO: Update to check decimals as well
-      args: [toWei(amount)],
+      args: [await this.normalizeAmount(amount, this._stakingToken!)],
     });
   });
 
@@ -159,7 +165,7 @@ export class Staking20<T extends TokenStake | Staking20Base>
       contractWrapper: this.contractWrapper,
       method: "withdraw",
       // TODO: Update to check decimals as well
-      args: [toWei(amount)],
+      args: [await this.normalizeAmount(amount, this._stakingToken!)],
     });
   });
 
@@ -168,7 +174,7 @@ export class Staking20<T extends TokenStake | Staking20Base>
       contractWrapper: this.contractWrapper,
       method: "withdrawRewardTokens",
       // TODO: Update to check decimals as well
-      args: [toWei(amount)],
+      args: [await this.normalizeAmount(amount, this._rewardToken!)],
     });
   });
 
@@ -185,7 +191,6 @@ export class Staking20<T extends TokenStake | Staking20Base>
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "setRewardRatio",
-        // TODO: Update to check decimals as well
         args: [numerator, denominator],
       });
     },
@@ -195,18 +200,21 @@ export class Staking20<T extends TokenStake | Staking20Base>
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
       method: "setTimeUnit",
-      // TODO: Update to check decimals as well
       args: [timeUnit],
     });
   });
 
   depositRewardTokens = buildTransactionFunction(async (amount: Amount) => {
-    // TODO: Perform approval for reward tokens
+    // Approve spending of reward tokens
+    this._rewardToken?.writeContract.approve(
+      await this.getAddress(),
+      await this.normalizeAmount(amount, this._rewardToken),
+    );
+
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
       method: "depositRewardTokens",
-      // TODO: Update to check decimals as well
-      args: [amount],
+      args: [await this.normalizeAmount(amount, this._rewardToken!)],
     });
   });
 
@@ -224,5 +232,13 @@ export class Staking20<T extends TokenStake | Staking20Base>
       ERC20Abi,
       this.contractWrapper.options,
     );
+  }
+
+  private async normalizeAmount(
+    amount: Amount,
+    tokenContractWrapper: ContractWrapper<BaseERC20>,
+  ): Promise<BigNumber> {
+    const decimals = await tokenContractWrapper.readContract.decimals();
+    return ethers.utils.parseUnits(AmountSchema.parse(amount), decimals);
   }
 }
