@@ -58,7 +58,6 @@ import type {
   DirectListingsLogic,
   EnglishAuctionsLogic,
   OffersLogic,
-  ITokenStake,
   TokenStake,
   Staking20Base,
 } from "@thirdweb-dev/contracts-js";

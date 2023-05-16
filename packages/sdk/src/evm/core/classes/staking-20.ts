@@ -1,6 +1,4 @@
-import { Erc20, NetworkInput } from "..";
-import { AmountSchema } from "../../../core/schema/shared";
-import { assertEnabled, detectContractFeature } from "../../common";
+import { NetworkInput } from "..";
 import {
   fetchCurrencyMetadata,
   fetchCurrencyValue,
@@ -8,41 +6,16 @@ import {
 } from "../../common/currency";
 import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
-import {
-  FEATURE_TOKEN,
-  FEATURE_TOKEN_MINTABLE,
-  FEATURE_TOKEN_BATCH_MINTABLE,
-  FEATURE_TOKEN_BURNABLE,
-  FEATURE_TOKEN_SIGNATURE_MINTABLE,
-  FEATURE_TOKEN_CLAIM_CONDITIONS_V2,
-} from "../../constants/erc20-features";
 import { FEATURE_TOKEN_STAKE } from "../../constants/thirdweb-features";
-import { Address, AddressOrEns, TokenMintInput } from "../../schema";
-import { Currency, CurrencyValue, Amount, ClaimOptions } from "../../types";
-import {
-  BaseERC20,
-  BaseSignatureMintERC20,
-  BaseDropERC20,
-} from "../../types/eips";
+import { Address, AddressOrEns } from "../../schema";
+import { Currency, CurrencyValue, Amount } from "../../types";
+import { BaseERC20 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { ContractWrapper } from "./contract-wrapper";
-import { Erc20Burnable } from "./erc-20-burnable";
-import { Erc20Droppable } from "./erc-20-droppable";
-import { Erc20Mintable } from "./erc-20-mintable";
-import { Erc20SignatureMintable } from "./erc-20-signature-mintable";
 import { Transaction } from "./transactions";
-import type {
-  TokenERC20,
-  DropERC20,
-  IMintableERC20,
-  IBurnableERC20,
-  TokenStake,
-  Staking20Base,
-  IERC20,
-} from "@thirdweb-dev/contracts-js";
+import type { TokenStake, Staking20Base } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers, BigNumber, BigNumberish } from "ethers";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 
 /**
@@ -61,8 +34,8 @@ export class Staking20<T extends TokenStake | Staking20Base>
   featureName = FEATURE_TOKEN_STAKE.name;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: ThirdwebStorage;
-  protected _stakingToken: ContractWrapper<IERC20> | undefined;
-  protected _rewardToken: ContractWrapper<IERC20> | undefined;
+  protected _stakingToken: ContractWrapper<BaseERC20> | undefined;
+  protected _rewardToken: ContractWrapper<BaseERC20> | undefined;
 
   private _chainId: number;
   get chainId() {
@@ -101,13 +74,73 @@ export class Staking20<T extends TokenStake | Staking20Base>
   public async getRewardTokenBalance(): Promise<CurrencyValue> {
     return fetchCurrencyValue(
       await this.contractWrapper.getProvider(),
-      await this.contractWrapper.readContract.rewardToken(),
+      (await this.getRewardToken()).address,
       await this.contractWrapper.readContract.getRewardTokenBalance(),
     );
   }
 
   public async getTimeUnit(): Promise<number> {
     return (await this.contractWrapper.readContract.getTimeUnit()).toNumber();
+  }
+
+  public async getTokensStaked(address: AddressOrEns): Promise<CurrencyValue> {
+    return fetchCurrencyValue(
+      await this.contractWrapper.getProvider(),
+      (await this.getStakingToken()).address,
+      (
+        await this.contractWrapper.readContract.getStakeInfo(
+          await resolveAddress(address),
+        )
+      )[0],
+    );
+  }
+
+  public async getRewards(address: AddressOrEns): Promise<CurrencyValue> {
+    return fetchCurrencyValue(
+      await this.contractWrapper.getProvider(),
+      (await this.getRewardToken()).address,
+      (
+        await this.contractWrapper.readContract.getStakeInfo(
+          await resolveAddress(address),
+        )
+      )[1],
+    );
+  }
+
+  // TODO: Create a type
+  public async getRewardRatio(): Promise<{
+    numerator: number;
+    denominator: number;
+  }> {
+    return {
+      numerator: (
+        await this.contractWrapper.readContract.getRewardRatio()
+      )[0].toNumber(),
+      denominator: (
+        await this.contractWrapper.readContract.getRewardRatio()
+      )[1].toNumber(),
+    };
+  }
+
+  // TODO: Create types
+  public async getStakingToken(): Promise<Currency & { address: string }> {
+    return {
+      ...(await fetchCurrencyMetadata(
+        await this.contractWrapper.getProvider(),
+        await this.contractWrapper.readContract.stakingToken(),
+      )),
+      address: await this.contractWrapper.readContract.stakingToken(),
+    };
+  }
+
+  public async getRewardToken(): Promise<Currency & { address: string }> {
+    return {
+      ...(await fetchCurrencyMetadata(
+        await this.contractWrapper.getProvider(),
+        await this.contractWrapper.readContract.rewardToken(),
+      )),
+      address: await this.contractWrapper.readContract.rewardToken(),
+    };
   }
 
   ////// WRITE FUNCTIONS //////
@@ -168,6 +201,7 @@ export class Staking20<T extends TokenStake | Staking20Base>
   });
 
   depositRewardTokens = buildTransactionFunction(async (amount: Amount) => {
+    // TODO: Perform approval for reward tokens
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
       method: "depositRewardTokens",
@@ -178,13 +212,13 @@ export class Staking20<T extends TokenStake | Staking20Base>
 
   // PRIVATE
   private async getStakingAndRewardTokens() {
-    this._stakingToken = new ContractWrapper<IERC20>(
+    this._stakingToken = new ContractWrapper<BaseERC20>(
       await this.contractWrapper.getSignerOrProvider(),
       await this.contractWrapper.readContract.stakingToken(),
       ERC20Abi,
       this.contractWrapper.options,
     );
-    this._rewardToken = new ContractWrapper<IERC20>(
+    this._rewardToken = new ContractWrapper<BaseERC20>(
       await this.contractWrapper.getSignerOrProvider(),
       await this.contractWrapper.readContract.rewardToken(),
       ERC20Abi,
