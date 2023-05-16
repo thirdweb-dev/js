@@ -1,6 +1,6 @@
 import { useWallets } from "@thirdweb-dev/react-core";
 import { useState } from "react";
-import { Input } from "../../components/formElements";
+import { ErrorMessage, Input } from "../../components/formElements";
 import { Spacer } from "../../components/Spacer";
 import { TextDivider } from "../../components/TextDivider";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
@@ -14,12 +14,20 @@ export function InputSelectionUI(props: {
   placeholder: string;
   name: string;
   type: string;
+  errorMessage?: (input: string) => string | undefined;
 }) {
   const [input, setInput] = useState("");
   const singleWallet = useWallets().length === 1;
   const setWalletConfig = useSetWalletModalConfig();
+  const [error, setError] = useState<string | undefined>();
+  const [showError, setShowError] = useState(false);
 
   const handleSelect = () => {
+    setShowError(true);
+    if (!input || !!error) {
+      return;
+    }
+
     setWalletConfig((config) => ({ ...config, data: input }));
     props.onSelect();
   };
@@ -39,6 +47,11 @@ export function InputSelectionUI(props: {
           value={input}
           onChange={(e) => {
             setInput(e.target.value);
+            if (props.errorMessage) {
+              setError(props.errorMessage(e.target.value));
+            } else {
+              setError(undefined);
+            }
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
@@ -48,14 +61,22 @@ export function InputSelectionUI(props: {
         />
 
         <CircleInputButton
-          disabled={!input}
+          onClick={() => {
+            handleSelect();
+          }}
           color="inverted"
           type="button"
-          onClick={handleSelect}
         >
-          <ArrowRightIcon width={iconSize.xs} height={iconSize.xs} />
+          <ArrowRightIcon width={iconSize.sm} height={iconSize.sm} />
         </CircleInputButton>
       </div>
+
+      {showError && error && (
+        <>
+          <Spacer y="xs" />
+          <ErrorMessage>{error}</ErrorMessage>
+        </>
+      )}
 
       {!singleWallet && (
         <>
@@ -71,15 +92,15 @@ export function InputSelectionUI(props: {
 }
 
 const CircleInputButton = styled(InputButton)<{ theme?: Theme }>`
-  background: ${(p) => p.theme.bg.inverted};
+  background: ${(p) => p.theme.bg.highlighted};
   border-radius: 50%;
   padding: ${spacing.xxs};
-  color: ${(p) => p.theme.text.inverted};
+  color: ${(p) => p.theme.text.neutral};
   position: absolute;
   top: 50%;
-  right: ${spacing.md};
+  right: ${spacing.sm};
   transform: translateY(-50%);
   &:hover {
-    color: ${(p) => p.theme.text.inverted};
+    color: ${(p) => p.theme.text.neutral};
   }
 `;
