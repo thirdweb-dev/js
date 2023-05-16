@@ -107,6 +107,9 @@ export const ConnectWalletFlow = () => {
           isOpen={modalVisible}
           open={onOpenModal}
           walletConfig={activeWalletP}
+          supportedWallets={supportedWallets}
+          selectionData={undefined} // TODO
+          setSelectionData={() => {}} // TODO
         />
       );
     }

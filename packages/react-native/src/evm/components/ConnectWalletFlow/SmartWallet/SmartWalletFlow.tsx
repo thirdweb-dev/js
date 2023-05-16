@@ -6,6 +6,7 @@ import {
   useCreateWalletInstance,
   useSupportedWallet,
   useWalletContext,
+  useWallets,
 } from "@thirdweb-dev/react-core";
 import { SmartWalletObj } from "../../../wallets/wallets/smart-wallet";
 import { localWallet } from "../../../wallets/wallets/local-wallet";
@@ -38,6 +39,7 @@ export const SmartWalletFlow = ({
   const connect = useConnect();
   const targetChain = useWalletContext().activeChain;
   const colorScheme = useColorScheme();
+  const supportedWallets = useWallets();
 
   const mismatch = personalWalletChainId
     ? personalWalletChainId !== targetChain.chainId
@@ -170,6 +172,9 @@ export const SmartWalletFlow = ({
         isOpen={false}
         open={() => {}}
         walletConfig={localWallet()}
+        selectionData={undefined} // TODO
+        setSelectionData={() => {}} // TODO
+        supportedWallets={supportedWallets} // TODO - pass personal wallets instead
       />
     );
   }
