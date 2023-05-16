@@ -37,7 +37,7 @@ interface Web3ButtonProps<TActionFn extends ActionFn> {
   // the fn to execute
   action: TActionFn;
   theme?: ThemeProviderProps["theme"];
-  connectWalletProps?: ConnectWalletProps;
+  connectWalletProps?: Omit<ConnectWalletProps, "detailsButton">;
 }
 
 /**

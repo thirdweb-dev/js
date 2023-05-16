@@ -37,3 +37,21 @@ const customDetailsButton = (
 
 <ConnectWallet detailsButton={customDetailsButton} />;
 ```
+
+### Web3Button
+
+The `buttonTitle` and `modalTitle` props are also available in the `Web3Button` config since we show a `ConnectWallet` button
+if you don't have a connected wallet:
+
+```javascript
+<Web3Button
+  connectWalletProps={{
+    buttonTitle: "Connect to claim",
+    modalTitle: "Pick a wallet",
+  }}
+  contractAddress="contract-address"
+  action={(contract) => contract?.erc1155.claim(0, 1)}
+>
+  Claim Factory
+</Web3Button>
+```
