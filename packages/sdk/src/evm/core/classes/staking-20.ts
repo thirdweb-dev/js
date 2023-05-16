@@ -282,7 +282,9 @@ export class Staking20<T extends TokenStake | Staking20Base>
       await resolveAddress(owner),
       await resolveAddress(spender),
     );
-    if (allowance.gte(amount)) return;
+    if (allowance.gte(amount)) {
+      return;
+    }
     // Approve token spending
     await tokenContractWrapper.writeContract.approve(
       await resolveAddress(spender),
