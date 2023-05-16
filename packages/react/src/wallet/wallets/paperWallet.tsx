@@ -1,5 +1,17 @@
 import { PaperWallet } from "@thirdweb-dev/wallets";
-import type { WalletConfig, WalletOptions } from "@thirdweb-dev/react-core";
+import {
+  WalletConfig,
+  WalletOptions,
+  SelectUIProps,
+  ConnectUIProps,
+  useConnect,
+  useWallets,
+} from "@thirdweb-dev/react-core";
+import { useEffect, useRef } from "react";
+import { Spinner } from "../../components/Spinner";
+import { Flex } from "../../components/basic";
+import { useWalletModalConfig } from "../../evm/providers/wallet-ui-states-provider";
+import { InputSelectionUI } from "./InputSelectionUI";
 
 type PaperConfig = { clientId: string };
 
@@ -13,5 +25,61 @@ export const paperWallet = (
       return new PaperWallet({ ...options, ...config });
     },
     config,
+    selectUI: PaperSelectionUI,
+    connectUI: PaperConnectionUI,
   };
+};
+
+const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet, PaperConfig>> = (
+  props,
+) => {
+  return (
+    <InputSelectionUI
+      onSelect={props.onSelect}
+      placeholder="Enter your email"
+      name="email"
+      type="email"
+    />
+  );
+};
+
+const PaperConnectionUI: React.FC<ConnectUIProps<PaperWallet, PaperConfig>> = ({
+  close,
+  walletConfig,
+  open,
+}) => {
+  const { data } = useWalletModalConfig();
+  const connectPrompted = useRef(false);
+  const connect = useConnect();
+  const singleWallet = useWallets().length === 1;
+  useEffect(() => {
+    if (connectPrompted.current) {
+      return;
+    }
+    connectPrompted.current = true;
+
+    (async () => {
+      close();
+      try {
+        await connect(walletConfig, { email: data });
+      } catch (e) {
+        if (!singleWallet) {
+          open();
+        }
+        console.error(e);
+      }
+    })();
+  }, [connect, data, walletConfig, close, open, singleWallet]);
+
+  return (
+    <Flex
+      justifyContent="center"
+      alignItems="center"
+      style={{
+        minHeight: "250px",
+      }}
+    >
+      <Spinner size="md" color="primary" />
+    </Flex>
+  );
 };

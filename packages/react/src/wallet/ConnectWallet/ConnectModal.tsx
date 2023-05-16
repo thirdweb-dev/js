@@ -7,22 +7,24 @@ import {
   useWallets,
 } from "@thirdweb-dev/react-core";
 import {
+  ModalConfigCtx,
   useIsWalletModalOpen,
-  useModalTheme,
   useSetIsWalletModalOpen,
 } from "../../evm/providers/wallet-ui-states-provider";
 import { ThemeProvider } from "@emotion/react";
 import { darkTheme, lightTheme } from "../../design-system";
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, useContext } from "react";
 import { GetStartedWithWallets } from "./screens/GetStartedWithWallets";
 import { reservedScreens } from "./constants";
 import { HeadlessConnectUI } from "../wallets/headlessConnectUI";
 
 export const ConnectModal = () => {
-  const modalTheme = useModalTheme();
+  const { theme, title } = useContext(ModalConfigCtx);
   const walletConfigs = useWallets();
   const initialScreen =
-    walletConfigs.length > 1 ? reservedScreens.main : walletConfigs[0];
+    walletConfigs.length === 1 && !walletConfigs[0].selectUI
+      ? walletConfigs[0]
+      : reservedScreens.main;
 
   const [screen, setScreen] = useState<string | WalletConfig>(initialScreen);
   const isWalletModalOpen = useIsWalletModalOpen();
@@ -80,9 +82,9 @@ export const ConnectModal = () => {
   return (
     <ThemeProvider
       theme={
-        typeof modalTheme === "object"
-          ? modalTheme
-          : modalTheme === "light"
+        typeof theme === "object"
+          ? theme
+          : theme === "light"
           ? lightTheme
           : darkTheme
       }
@@ -101,6 +103,7 @@ export const ConnectModal = () => {
       >
         {screen === reservedScreens.main && (
           <WalletSelector
+            title={title}
             walletConfigs={walletConfigs}
             onGetStarted={() => {
               setScreen(reservedScreens.getStarted);
@@ -115,7 +118,7 @@ export const ConnectModal = () => {
 
         {WalletConnectUI && (
           <WalletConnectUI
-            theme={modalTheme}
+            theme={theme}
             goBack={handleBack}
             close={handleClose}
             isOpen={isWalletModalOpen}

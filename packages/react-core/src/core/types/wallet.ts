@@ -30,7 +30,14 @@ export type WalletConfig<
   id: string;
   meta: (typeof AbstractClientWallet)["meta"];
   create: (options: WalletOptions) => I;
+  /**
+   * UI for connecting wallet
+   */
   connectUI?: React.FC<ConnectUIProps<I, Config>>;
+  /**
+   * UI for selecting wallet - this UI is rendered in the wallet selection screen
+   */
+  selectUI?: React.FC<SelectUIProps<I, Config>>;
   isInstalled?: () => boolean;
 } & (Config extends undefined
   ? {}
@@ -109,6 +116,24 @@ export type ConnectUIProps<
    *  }
    * }
    * ```
+   */
+  walletConfig: WalletConfig<I, Config>;
+};
+
+export type SelectUIProps<
+  I extends WalletInstance = WalletInstance,
+  Config extends Record<string, any> | undefined = undefined,
+> = {
+  /**
+   * Call this function to "select" your wallet and render the screen for connecting the wallet
+   * @returns
+   */
+  onSelect: () => void;
+
+  /**
+   * `WalletConfig` object of your wallet
+   *
+   * you can use this get metadata of your wallet by doing `walletConfig.meta`
    */
   walletConfig: WalletConfig<I, Config>;
 };

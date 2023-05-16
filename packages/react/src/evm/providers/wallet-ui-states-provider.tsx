@@ -1,29 +1,45 @@
 import { useState, createContext, useContext } from "react";
 
 type BoolSetter = (value: boolean) => void;
-type ThemeSetter = (value: "light" | "dark") => void;
+
+type ModalConfig = {
+  title: string;
+  theme: "light" | "dark";
+  data: any;
+};
 
 const WalletModalOpen = createContext(false);
 const SetWalletModalOpen = createContext<BoolSetter | undefined>(undefined);
 
-const ModalThemeContext = createContext<"light" | "dark">("dark");
-const SetModalThemeContext = createContext<ThemeSetter | undefined>(undefined);
+export const ModalConfigCtx = createContext<ModalConfig>({
+  title: "",
+  theme: "dark",
+  data: undefined,
+});
+
+export const SetModalConfigCtx = createContext<
+  React.Dispatch<React.SetStateAction<ModalConfig>>
+>(() => {});
 
 export const WalletUIStatesProvider = (
   props: React.PropsWithChildren<{ theme?: "light" | "dark" }>,
 ) => {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
 
-  const [modalTheme, setModalTheme] = useState(props.theme || "dark");
+  const [modalConfig, setModalConfig] = useState<ModalConfig>({
+    title: "Choose your wallet",
+    theme: props.theme || "dark",
+    data: undefined,
+  });
 
   return (
     <WalletModalOpen.Provider value={isWalletModalOpen}>
       <SetWalletModalOpen.Provider value={setIsWalletModalOpen}>
-        <ModalThemeContext.Provider value={modalTheme}>
-          <SetModalThemeContext.Provider value={setModalTheme}>
+        <ModalConfigCtx.Provider value={modalConfig}>
+          <SetModalConfigCtx.Provider value={setModalConfig}>
             {props.children}
-          </SetModalThemeContext.Provider>
-        </ModalThemeContext.Provider>
+          </SetModalConfigCtx.Provider>
+        </ModalConfigCtx.Provider>
       </SetWalletModalOpen.Provider>
     </WalletModalOpen.Provider>
   );
@@ -43,14 +59,10 @@ export const useSetIsWalletModalOpen = () => {
   return context;
 };
 
-export const useModalTheme = () => {
-  return useContext(ModalThemeContext);
+export const useWalletModalConfig = () => {
+  return useContext(ModalConfigCtx);
 };
 
-export const useSetModalTheme = () => {
-  const context = useContext(SetModalThemeContext);
-  if (context === undefined) {
-    throw new Error("useSetModalTheme must be used within a UIProvider");
-  }
-  return context;
+export const useSetWalletModalConfig = () => {
+  return useContext(SetModalConfigCtx);
 };

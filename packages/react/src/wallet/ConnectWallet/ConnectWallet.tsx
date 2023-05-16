@@ -13,8 +13,8 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useContext, useState } from "react";
 import {
+  SetModalConfigCtx,
   useSetIsWalletModalOpen,
-  useSetModalTheme,
 } from "../../evm/providers/wallet-ui-states-provider";
 import { Button } from "../../components/buttons";
 import { Spinner } from "../../components/Spinner";
@@ -31,6 +31,11 @@ type ConnectWalletProps = {
   className?: string;
   theme?: "dark" | "light";
   btnTitle?: string;
+  /**
+   * Set a custom title for the modal
+   * @default "Choose your wallet"
+   */
+  modalTitle?: string;
   /**
    * render a custom button to display the connected wallet details instead of the default button
    */
@@ -65,7 +70,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   const btnTitle = props.btnTitle || "Connect Wallet";
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
 
-  const setModalTheme = useSetModalTheme();
+  const setModalConfig = useContext(SetModalConfigCtx);
 
   const address = useAddress();
   const [showSignatureModal, setShowSignatureModal] = useState(false);
@@ -141,7 +146,11 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
               connectionStatus === "connecting" ? "Connecting" : btnTitle
             }
             onClick={() => {
-              setModalTheme(theme);
+              setModalConfig({
+                title: props.modalTitle || "Choose your wallet",
+                theme,
+                data: undefined,
+              });
               setIsWalletModalOpen(true);
             }}
           >

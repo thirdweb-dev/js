@@ -65,9 +65,7 @@ export const SafeConnectUI = (
         personalWallets={props.walletConfig.config.personalWallets}
         onBack={props.goBack}
         safeWallet={props.walletConfig}
-        selectWallet={(wallet) => {
-          setPersonalConfiguredWallet(wallet);
-        }}
+        selectWallet={setPersonalConfiguredWallet}
       />
     );
   }
