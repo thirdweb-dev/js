@@ -14,12 +14,11 @@ import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ExportLocalWalletModal } from "./ExportLocalWalletModal";
 import { Toast } from "../base/Toast";
-import {
-  AbstractClientWallet,
-  SmartWallet,
-  walletIds,
-} from "@thirdweb-dev/wallets";
+import { LocalWallet, SmartWallet, walletIds } from "@thirdweb-dev/wallets";
 import { SmartWalletAdditionalActions } from "./SmartWalletAdditionalActions";
+import { useSmartWallet } from "../../providers/context-provider";
+import RightArrowIcon from "../../assets/right-arrow";
+import { useTheme } from "@shopify/restyle";
 
 export type ConnectWalletDetailsProps = {
   address: string;
@@ -28,6 +27,7 @@ export type ConnectWalletDetailsProps = {
 export const ConnectWalletDetails = ({
   address,
 }: ConnectWalletDetailsProps) => {
+  const theme = useTheme();
   const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false);
   const [isExportModalVisible, setIsExportModalVisible] = useState(false);
   const [isNetworkSelectorModalVisible, setIsNetworkSelectorModalVisible] =
@@ -36,6 +36,7 @@ export const ConnectWalletDetails = ({
   const [addressCopied, setAddressCopied] = useState(false);
   const activeWallet = useWallet();
   const disconnect = useDisconnect();
+  const [smartWallet, setSmartWallet] = useSmartWallet();
   const chain = useActiveChain();
   const balanceQuery = useBalance();
 
@@ -57,6 +58,7 @@ export const ConnectWalletDetails = ({
     setIsDisconnecting(true);
     disconnect().finally(() => {
       setIsDisconnecting(false);
+      setSmartWallet?.(undefined);
     });
   };
 
@@ -88,7 +90,15 @@ export const ConnectWalletDetails = ({
   };
 
   const getAdditionalActions = useCallback(() => {
-    if (activeWallet?.walletId.toLowerCase().includes(walletIds.localWallet)) {
+    if (activeWallet?.walletId === SmartWallet.id || smartWallet) {
+      return (
+        <SmartWalletAdditionalActions
+          onExportPress={onExportLocalWalletPress}
+        />
+      );
+    }
+
+    if (activeWallet?.walletId === walletIds.localWallet) {
       return (
         <>
           <View style={styles.currentNetwork}>
@@ -98,31 +108,41 @@ export const ConnectWalletDetails = ({
             backgroundColor="background"
             borderColor="border"
             mb="sm"
+            justifyContent="space-between"
             style={styles.exportWallet}
             onPress={onExportLocalWalletPress}
           >
-            <PocketWalletIcon size={16} />
-            <View style={styles.exportWalletInfo}>
-              <Text variant="bodySmall">Export wallet</Text>
-            </View>
+            <>
+              <PocketWalletIcon size={16} />
+              <View style={styles.exportWalletInfo}>
+                <Text variant="bodySmall">Backup wallet</Text>
+              </View>
+            </>
+            <RightArrowIcon
+              height={10}
+              width={10}
+              color={theme.colors.iconPrimary}
+            />
           </BaseButton>
+
+          {activeWallet?.walletId === LocalWallet.id ? (
+            <Text variant="error">
+              {
+                "This is a temporary guest wallet. Download a backup if you don't want to lose access to it."
+              }
+            </Text>
+          ) : null}
         </>
       );
     }
 
-    if (activeWallet?.walletId === SmartWallet.id) {
-      const personalWallet =
-        activeWallet?.getPersonalWallet() as AbstractClientWallet;
-      return (
-        <SmartWalletAdditionalActions
-          personalWallet={personalWallet}
-          onExportPress={onExportLocalWalletPress}
-        />
-      );
-    }
-
     return null;
-  }, [activeWallet, onExportLocalWalletPress]);
+  }, [
+    activeWallet?.walletId,
+    onExportLocalWalletPress,
+    smartWallet,
+    theme.colors.iconPrimary,
+  ]);
 
   return (
     <>
@@ -170,7 +190,11 @@ export const ConnectWalletDetails = ({
             {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
             {balanceQuery.data?.symbol}
           </Text>
-          <Address variant="bodySmallSecondary" address={address} />
+          {activeWallet?.walletId === LocalWallet.id ? (
+            <Text variant="error">Guest</Text>
+          ) : (
+            <Address variant="bodySmallSecondary" address={address} />
+          )}
         </View>
         <WalletIcon size={32} iconUri={activeWallet?.getMeta().iconURL || ""} />
       </BaseButton>

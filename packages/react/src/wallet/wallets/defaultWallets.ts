@@ -1,9 +1,9 @@
-import { Wallet } from "@thirdweb-dev/react-core";
-import { coinbaseWallet } from "./coinbaseWallet";
-import { metamaskWallet } from "./metamaskWallet";
+import { WalletConfig } from "@thirdweb-dev/react-core";
+import { coinbaseWallet } from "./coinbase/coinbaseWallet";
+import { metamaskWallet } from "./metamask/metamaskWallet";
 import { walletConnectV1 } from "./walletConnectV1";
 
-export const defaultWallets: Wallet[] = [
+export const defaultWallets: WalletConfig<any, any>[] = [
   metamaskWallet(),
   coinbaseWallet(),
   walletConnectV1(),

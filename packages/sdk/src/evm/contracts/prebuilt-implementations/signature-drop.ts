@@ -511,7 +511,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     functionName: string & TMethod,
     args?: Parameters<SignatureDropContract["functions"][TMethod]>,
     overrides?: CallOverrides,
-  ): Promise<any> {
+  ): Promise<ReturnType<SignatureDropContract["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, args, overrides);
   }
 }

@@ -1,5 +1,5 @@
 import { AsyncStorage, createAsyncLocalStorage } from "../../core";
-import { TWConnector } from "../interfaces/tw-connector";
+import { Connector } from "../interfaces/connector";
 import { walletIds } from "../constants/walletIds";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import { Chain, defaultChains, Ethereum } from "@thirdweb-dev/chains";
@@ -26,7 +26,7 @@ export class LocalWallet extends AbstractClientWallet<
   LocalWalletOptions,
   LocalWalletConnectionArgs
 > {
-  connector?: TWConnector;
+  connector?: Connector;
   options: WalletOptions<LocalWalletOptions>;
   ethersWallet?: Wallet;
   #storage: AsyncStorage;
@@ -36,7 +36,7 @@ export class LocalWallet extends AbstractClientWallet<
   static meta = {
     name: "Local Wallet",
     iconURL:
-      "ipfs://QmcNddbYBuQKiBFnPcxYegjrX6S6z9K1vBNzbBBUJMn2ox/device-wallet.svg",
+      "ipfs://QmbQzSNGvmNYZzem9jZRuYeLe9K2W4pqbdnVUp7Y6edQ8Y/local-wallet.svg",
   };
 
   public get walletName() {
@@ -50,7 +50,7 @@ export class LocalWallet extends AbstractClientWallet<
       options?.storage || createAsyncLocalStorage(walletIds.localWallet);
   }
 
-  protected async getConnector(): Promise<TWConnector> {
+  protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
       const { LocalWalletConnector: LocalWalletConnector } = await import(
         "../connectors/local-wallet"
@@ -75,10 +75,10 @@ export class LocalWallet extends AbstractClientWallet<
   }
 
   /**
-   * load saved wallet data from storage or generate a new one and save it
+   * load saved wallet data from storage or generate a new one and save it.
    */
   async loadOrCreate(options: LoadOptions) {
-    if (await this.isSaved()) {
+    if (await this.getSavedData()) {
       await this.load(options);
     } else {
       await this.generate();
@@ -275,12 +275,16 @@ export class LocalWallet extends AbstractClientWallet<
   }
 
   /**
-   * @returns true if wallet data is saved in storage
+   * @returns true if initialized wallet's data is saved in storage
    */
   async isSaved() {
     try {
       const data = await this.getSavedData();
-      return !!data;
+      const address = await this.getAddress();
+      if (data?.address === address) {
+        return true;
+      }
+      return false;
     } catch (e) {
       return false;
     }
@@ -334,12 +338,12 @@ export class LocalWallet extends AbstractClientWallet<
   async getSavedData(storage?: AsyncStorage): Promise<WalletData | null> {
     const _storage = storage || this.#storage;
 
-    const savedDataStr = await _storage.getItem(STORAGE_KEY_WALLET_DATA);
-    if (!savedDataStr) {
-      return null;
-    }
-
     try {
+      const savedDataStr = await _storage.getItem(STORAGE_KEY_WALLET_DATA);
+      if (!savedDataStr) {
+        return null;
+      }
+
       const savedData = JSON.parse(savedDataStr);
       if (!savedData) {
         return null;

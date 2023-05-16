@@ -1,12 +1,12 @@
 import { useMemo } from "react";
-import type { Wallet } from "@thirdweb-dev/react-core";
+import type { WalletConfig } from "@thirdweb-dev/react-core";
 import { StyleSheet, View, FlatList } from "react-native";
 import { WalletButton } from "../../base/WalletButton";
 
 interface InitialExplorerContentProps {
-  wallets: Wallet[];
+  wallets: WalletConfig[];
   excludeWalletIds?: string[];
-  onChooseWallet: (wallet: Wallet) => void;
+  onChooseWallet: (wallet: WalletConfig) => void;
 }
 
 export const ChooseWalletContent = ({

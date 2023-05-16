@@ -1,24 +1,22 @@
 import { useCallback, useEffect, useState } from "react";
 import {
-  Wallet,
+  WalletConfig,
   WalletInstance,
   useConnect,
   useCreateWalletInstance,
   useSupportedWallet,
-  useThirdwebWallet,
+  useWalletContext,
 } from "@thirdweb-dev/react-core";
 import { SmartWalletObj } from "../../../wallets/wallets/smart-wallet";
-import {
-  LocalWallet,
-  localWallet,
-} from "../../../wallets/wallets/local-wallet";
+import { localWallet } from "../../../wallets/wallets/local-wallet";
 import { ChooseWallet } from "../ChooseWallet/ChooseWallet";
 import { LocalWalletFlow } from "../LocalWalletFlow";
 import { ModalHeaderTextClose } from "../../base/modal/ModalHeaderTextClose";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Linking, useColorScheme } from "react-native";
 import { useTheme } from "@shopify/restyle";
 import BaseButton from "../../base/BaseButton";
 import Text from "../../base/Text";
+import { walletIds } from "@thirdweb-dev/wallets";
 
 export const SmartWalletFlow = ({
   onClose,
@@ -36,9 +34,10 @@ export const SmartWalletFlow = ({
   >();
   const theme = useTheme();
   const createWalletInstance = useCreateWalletInstance();
-  const walletObj = useSupportedWallet("SmartWallet") as SmartWalletObj;
+  const walletObj = useSupportedWallet(walletIds.smartWallet) as SmartWalletObj;
   const connect = useConnect();
-  const targetChain = useThirdwebWallet().activeChain;
+  const targetChain = useWalletContext().activeChain;
+  const colorScheme = useColorScheme();
 
   const mismatch = personalWalletChainId
     ? personalWalletChainId !== targetChain.chainId
@@ -67,17 +66,14 @@ export const SmartWalletFlow = ({
 
   useEffect(() => {
     if (connectedPersonalWallet) {
-      if (mismatch) {
-        // TODO: Add network switching logic
-        // connectSmartWallet(connectedPersonalWallet);
-      } else {
+      if (!mismatch) {
         connectSmartWallet(connectedPersonalWallet);
       }
     }
   }, [connectSmartWallet, connectedPersonalWallet, mismatch]);
 
   const connectPersonalWallet = useCallback(
-    async (wallet: Wallet) => {
+    async (wallet: WalletConfig) => {
       setIsConnecting(true);
       const walletInstance = createWalletInstance(wallet);
       await walletInstance.connect();
@@ -87,27 +83,25 @@ export const SmartWalletFlow = ({
     [createWalletInstance],
   );
 
-  const onLocalWalletImported = async (localWalletImported: LocalWallet) => {
+  const onConnectedLocalWallet = async (wallet: WalletInstance) => {
     setIsConnecting(true);
-    await localWalletImported.connect();
 
-    connectSmartWallet(localWalletImported);
+    connectSmartWallet(wallet);
   };
 
   const onChoosePersonalWallet = useCallback(
-    async (wallet: Wallet) => {
-      if (wallet.id === LocalWallet.id) {
-        setShowLocalWalletFlow(true);
-      } else {
-        connectPersonalWallet(wallet);
-      }
+    async (wallet: WalletConfig) => {
+      // if (wallet.id === LocalWallet.id) {
+      //   setShowLocalWalletFlow(true);
+      // } else {
+      connectPersonalWallet(wallet);
+      // }
     },
     [connectPersonalWallet],
   );
 
   const onLocalWalletBackPress = () => {
     setShowLocalWalletFlow(false);
-    reset();
   };
 
   const onConnectingClosePress = () => {
@@ -124,6 +118,10 @@ export const SmartWalletFlow = ({
     setIsConnecting(false);
     setConnectedPersonalWallet(undefined);
     setPersonalWalletChaindId(undefined);
+  };
+
+  const onLearnMorePress = () => {
+    Linking.openURL("https://portal.thirdweb.com/wallet/smart-wallet");
   };
 
   if (isConnecting) {
@@ -151,7 +149,6 @@ export const SmartWalletFlow = ({
             alignItems="center"
             paddingHorizontal="md"
             paddingVertical="sm"
-            gap="md"
             borderRadius="sm"
             backgroundColor="backgroundHighlight"
             onPress={onSwitchNetworkPress}
@@ -166,18 +163,34 @@ export const SmartWalletFlow = ({
   if (showLocalWalletFlow) {
     return (
       <LocalWalletFlow
-        onClose={onClose}
-        onBackPress={onLocalWalletBackPress}
-        onWalletImported={onLocalWalletImported}
-        onConnectPress={() => connectPersonalWallet(localWallet())}
+        theme={colorScheme || "dark"}
+        close={onClose}
+        goBack={onLocalWalletBackPress}
+        onConnected={onConnectedLocalWallet}
+        isOpen={false}
+        open={() => {}}
+        walletConfig={localWallet()}
       />
     );
   }
 
   return (
     <ChooseWallet
-      headerText={"Smart wallet"}
-      subHeaderText={"Select a personal wallet to connect to your smart wallet"}
+      headerText={"Link key"}
+      subHeaderText={
+        <Text variant="subHeader">
+          {
+            "Choose a personal wallet that acts as your account's key. This controls access to your account. "
+          }
+          <Text
+            variant="subHeader"
+            color="linkPrimary"
+            onPress={onLearnMorePress}
+          >
+            Learn more.
+          </Text>
+        </Text>
+      }
       wallets={walletObj.config.personalWallets}
       onChooseWallet={onChoosePersonalWallet}
       onClose={onClose}

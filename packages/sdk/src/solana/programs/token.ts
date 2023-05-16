@@ -4,12 +4,9 @@ import { TransactionResult } from "../types/common";
 import { toCurrencyValue } from "../utils/token";
 import { getNework } from "../utils/urls";
 import {
-  findMetadataPda,
   Metaplex,
   toBigNumber,
   token,
-  toMetadata,
-  toMetadataAccount,
 } from "@metaplex-foundation/js";
 import { getAccount, getAssociatedTokenAddress } from "@solana/spl-token";
 import { Connection, PublicKey } from "@solana/web3.js";
@@ -65,9 +62,9 @@ export class Token {
    */
   async getMetadata(): Promise<TokenMetadata> {
     const mint = await this.getMint();
-    const addr = findMetadataPda(this.publicKey);
-    const account = await this.metaplex.rpc().getAccount(addr);
-    const meta = toMetadata(toMetadataAccount(account));
+    const meta = await this.metaplex.nfts().findByMint({
+      mintAddress: mint.address,
+    });
     return {
       ...meta.json,
       id: meta.address.toBase58(),

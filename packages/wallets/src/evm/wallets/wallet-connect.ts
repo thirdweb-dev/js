@@ -1,21 +1,42 @@
-import type { ConnectorData } from "../../lib/wagmi-core";
+import type { WagmiConnectorData } from "../../lib/wagmi-core";
 import type { WalletConnectConnector } from "../connectors/wallet-connect";
-import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
+import { QRModalOptions } from "../connectors/wallet-connect/qrModalOptions";
+import { Connector, WagmiAdapter } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { TW_WC_PROJECT_ID } from "../constants/wc";
 import { walletIds } from "../constants/walletIds";
 
+export type WC2_QRModalOptions = QRModalOptions;
+
 export type WalletConnectOptions = {
+  /**
+   * Your project’s unique identifier that can be obtained at cloud.walletconnect.com. Enables following functionalities within Web3Modal: wallet and chain logos, optional WalletConnect RPC, support for all wallets from our Explorer and WalletConnect v2 support. Defaults to undefined.
+   *
+   * https://docs.walletconnect.com/2.0/web3modal/options#projectid-required
+   */
   projectId?: string;
+
+  /**
+   * Whether to display the QR Code Modal.
+   *
+   * Defaults to `true`.
+   */
   qrcode?: boolean;
+
+  /**
+   * options to customize the QR Code Modal
+   *
+   * https://docs.walletconnect.com/2.0/web3modal/options
+   */
+  qrModalOptions?: WC2_QRModalOptions;
 };
 
 export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
   #walletConnectConnector?: WalletConnectConnector;
   #provider?: WalletConnectProvider;
 
-  connector?: TWConnector;
+  connector?: Connector;
 
   static id = walletIds.walletConnect;
 
@@ -34,17 +55,17 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
 
   constructor(options?: WalletOptions<WalletConnectOptions>) {
     super(options?.walletId || WalletConnect.id, options);
-
     this.projectId = options?.projectId || TW_WC_PROJECT_ID;
     this.qrcode = options?.qrcode === false ? false : true;
   }
 
-  protected async getConnector(): Promise<TWConnector> {
+  protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
       // import the connector dynamically
       const { WalletConnectConnector } = await import(
         "../connectors/wallet-connect"
       );
+
       this.#walletConnectConnector = new WalletConnectConnector({
         chains: this.chains,
         options: {
@@ -52,6 +73,7 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
           projectId: this.projectId,
           dappMetadata: this.dappMetadata,
           storage: this.walletStorage,
+          qrModalOptions: this.options?.qrModalOptions,
         },
       });
       this.connector = new WagmiAdapter(this.#walletConnectConnector);
@@ -67,7 +89,7 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
     }
   };
 
-  #onConnect = (data: ConnectorData<WalletConnectProvider>) => {
+  #onConnect = (data: WagmiConnectorData<WalletConnectProvider>) => {
     this.#provider = data.provider;
     if (!this.#provider) {
       throw new Error("WalletConnect provider not found after connecting.");

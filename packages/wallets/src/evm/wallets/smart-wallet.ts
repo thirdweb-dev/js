@@ -1,5 +1,5 @@
 import { AbstractClientWallet, WalletOptions } from "./base";
-import type { ConnectParams } from "../interfaces/tw-connector";
+import type { ConnectParams } from "../interfaces/connector";
 import type {
   SmartWalletConfig,
   SmartWalletConnectionArgs,
@@ -21,7 +21,7 @@ export class SmartWallet extends AbstractClientWallet<
   static meta = {
     name: "Smart Wallet",
     iconURL:
-      "ipfs://QmPSPvHvYWh9BfvLLPDHjVoCuJTd2hSMSgF3N6JCrjuX4v/SmartWallet.svg",
+      "ipfs://QmeAJVqn17aDNQhjEU3kcWVZCFBrfta8LzaDGkS8Egdiyk/smart-wallet.svg",
   };
 
   static id = walletIds.smartWallet;

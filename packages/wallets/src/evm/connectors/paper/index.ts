@@ -1,5 +1,5 @@
 import { normalizeChainId } from "../../../lib/wagmi-core";
-import { TWConnector } from "../../interfaces/tw-connector";
+import { Connector } from "../../interfaces/connector";
 import {
   PaperWalletConnectionArgs,
   PaperWalletConnectorOptions,
@@ -25,7 +25,7 @@ export const PaperChainMap = {
 
 export type PaperSupportedChainId = keyof typeof PaperChainMap;
 
-export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs> {
+export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
   readonly id: string = walletIds.paper;
   readonly name: string = "Paper Wallet";
   ready: boolean = true;
@@ -72,7 +72,7 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
     return this.#paper;
   }
 
-  async connect(options: { email?: string; chainId?: number }) {
+  async connect(options?: { email?: string; chainId?: number }) {
     const paperSDK = await this.getPaperSDK();
     if (!paperSDK) {
       throw new Error("Paper SDK not initialized");
@@ -82,7 +82,7 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
       case UserStatus.LOGGED_OUT: {
         let authResult: AuthLoginReturnType;
 
-        if (options.email) {
+        if (options?.email) {
           authResult = await paperSDK.auth.loginWithPaperEmailOtp({
             email: options.email,
           });

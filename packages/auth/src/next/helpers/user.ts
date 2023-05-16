@@ -56,7 +56,7 @@ export async function getUser<
     return authenticatedUser;
   }
 
-  const data = await ctx.callbacks.onUser(authenticatedUser);
+  const data = await ctx.callbacks.onUser(authenticatedUser, req);
   if (!data) {
     return authenticatedUser;
   }

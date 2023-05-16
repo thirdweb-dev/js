@@ -1,5 +1,5 @@
 import { DAppMetaData } from "../types/dAppMeta";
-import type { Wallet, WalletInstance } from "../types/wallet";
+import type { WalletConfig, WalletInstance } from "../types/wallet";
 import { ThirdwebThemeContext } from "./theme-context";
 import { Chain } from "@thirdweb-dev/chains";
 import {
@@ -41,32 +41,60 @@ type WalletConnectParams<I extends WalletInstance> = Parameters<
 
 type ConnectionStatus = "unknown" | "connected" | "disconnected" | "connecting";
 
-type ConnectFnArgs<I extends WalletInstance> =
+type ConnectFnArgs<
+  I extends WalletInstance,
+  Config extends Record<string, any> | undefined,
+> =
   // if second argument is optional
   undefined extends WalletConnectParams<I>
-    ? [wallet: Wallet<I>, connectParams?: NonNullable<WalletConnectParams<I>>]
+    ? [
+        wallet: WalletConfig<I, Config>,
+        connectParams?: NonNullable<WalletConnectParams<I>>,
+      ]
     : // if second argument is required
-      [wallet: Wallet<I>, connectParams: NonNullable<WalletConnectParams<I>>];
+      [
+        wallet: WalletConfig<I, Config>,
+        connectParams: NonNullable<WalletConnectParams<I>>,
+      ];
+
+// maps wallet instance to it's wallet config
+const walletInstanceToConfig: Map<
+  WalletInstance,
+  WalletConfig<any, any>
+> = new Map();
 
 type ThirdwebWalletContextData = {
-  wallets: Wallet[];
+  wallets: WalletConfig[];
   signer?: Signer;
   activeWallet?: WalletInstance;
-  connect: <I extends WalletInstance>(
-    ...args: ConnectFnArgs<I>
+  activeWalletConfig?: WalletConfig;
+  connect: <
+    I extends WalletInstance,
+    Config extends Record<string, any> | undefined = undefined,
+  >(
+    ...args: ConnectFnArgs<I, Config>
   ) => Promise<void>;
   disconnect: () => Promise<void>;
   connectionStatus: ConnectionStatus;
   setConnectionStatus: (status: ConnectionStatus) => void;
-  createWalletInstance: <I extends WalletInstance>(Wallet: Wallet<I>) => I;
+  createWalletInstance: <
+    I extends WalletInstance,
+    Config extends Record<string, any> | undefined,
+  >(
+    Wallet: WalletConfig<I, Config>,
+  ) => I;
   createWalletStorage: CreateAsyncStorage;
   switchChain: (chain: number) => Promise<void>;
   chainToConnect?: Chain;
   activeChain: Chain;
-  handleWalletConnect: (
+  setConnectedWallet: (
     wallet: WalletInstance,
     params?: ConnectParams<Record<string, any>>,
   ) => void;
+  /**
+   * Get wallet config object from wallet instance
+   */
+  getWalletConfig: (walletInstance: WalletInstance) => WalletConfig | undefined;
 };
 
 const ThirdwebWalletContext = createContext<
@@ -76,7 +104,7 @@ const ThirdwebWalletContext = createContext<
 export function ThirdwebWalletProvider(
   props: PropsWithChildren<{
     activeChain: Chain;
-    supportedWallets: Wallet[];
+    supportedWallets: WalletConfig[];
     shouldAutoConnect?: boolean;
     createWalletStorage: CreateAsyncStorage;
     dAppMeta?: DAppMetaData;
@@ -90,6 +118,10 @@ export function ThirdwebWalletProvider(
 
   const [activeWallet, setActiveWallet] = useState<
     WalletInstance | undefined
+  >();
+
+  const [activeWalletConfig, setActiveWalletConfig] = useState<
+    WalletConfig | undefined
   >();
 
   if (!lastConnectedWalletStorage) {
@@ -117,8 +149,12 @@ export function ThirdwebWalletProvider(
   }, [props.chains, props.dAppMeta, props.activeChain, theme]);
 
   const createWalletInstance = useCallback(
-    <I extends WalletInstance>(wallet: Wallet<I>): I => {
-      return wallet.create(walletParams);
+    <I extends WalletInstance, Config extends Record<string, any> | undefined>(
+      walletConfig: WalletConfig<I, Config>,
+    ): I => {
+      const walletInstance = walletConfig.create(walletParams);
+      walletInstanceToConfig.set(walletInstance, walletConfig);
+      return walletInstance;
     },
     [walletParams],
   );
@@ -130,16 +166,23 @@ export function ThirdwebWalletProvider(
     }
   }, [activeWallet, props.chains]);
 
-  const handleWalletConnect = useCallback(
+  const setConnectedWallet = useCallback(
     async (
       wallet: WalletInstance,
       connectParams?: ConnectParams<Record<string, any>>,
       isAutoConnect = false,
     ) => {
+      setActiveWallet(wallet);
+      const walletConfig = walletInstanceToConfig.get(wallet);
+      if (!walletConfig) {
+        throw new Error(
+          "Wallet config not found for given wallet instance. Do not create a wallet instance manually - use the useCreateWalletInstance() hook instead",
+        );
+      }
+      setActiveWalletConfig(walletConfig);
+      setConnectionStatus("connected");
       const _signer = await wallet.getSigner();
       setSigner(_signer);
-      setActiveWallet(wallet);
-      setConnectionStatus("connected");
 
       // it autoconnected, then the details is already saved in storage, no need to store again
       if (isAutoConnect) {
@@ -147,19 +190,21 @@ export function ThirdwebWalletProvider(
       }
 
       // save to storage
+
       const walletInfo: LastConnectedWalletInfo = {
-        walletId: wallet.walletId,
+        walletId: walletConfig.id,
         connectParams,
       };
 
       // if personal wallet exists, we need to replace the connectParams.personalWallet to a stringifiable version
       const personalWallet = wallet.getPersonalWallet() as AbstractClientWallet;
+      const personalWalletConfig = walletInstanceToConfig.get(personalWallet);
 
-      if (personalWallet) {
+      if (personalWallet && personalWalletConfig) {
         walletInfo.connectParams = {
           ...walletInfo.connectParams,
           personalWallet: {
-            walletId: personalWallet.walletId,
+            walletId: personalWalletConfig.id,
             connectParams: personalWallet.getConnectParams(),
           },
         };
@@ -256,7 +301,7 @@ export function ThirdwebWalletProvider(
 
       if (personalWalletInfo) {
         type Config = {
-          personalWallets: Wallet[];
+          personalWallets: WalletConfig[];
         };
 
         const personalWallets =
@@ -299,7 +344,7 @@ export function ThirdwebWalletProvider(
       try {
         setConnectionStatus("connecting");
         await wallet.autoConnect(walletInfo.connectParams);
-        handleWalletConnect(wallet, walletInfo.connectParams, true);
+        setConnectedWallet(wallet, walletInfo.connectParams, true);
       } catch (e) {
         lastConnectedWalletStorage.removeItem(
           LAST_CONNECTED_WALLET_STORAGE_KEY,
@@ -313,14 +358,19 @@ export function ThirdwebWalletProvider(
   }, [
     createWalletInstance,
     props.supportedWallets,
-    handleWalletConnect,
+    setConnectedWallet,
     props.shouldAutoConnect,
     activeWallet,
     connectionStatus,
   ]);
 
   const connectWallet = useCallback(
-    async <I extends WalletInstance>(...args: ConnectFnArgs<I>) => {
+    async <
+      I extends WalletInstance,
+      Config extends Record<string, any> | undefined = undefined,
+    >(
+      ...args: ConnectFnArgs<I, Config>
+    ) => {
       const [WalletObj, connectParams] = args;
 
       const _connectedParams = {
@@ -332,14 +382,14 @@ export function ThirdwebWalletProvider(
       setConnectionStatus("connecting");
       try {
         await wallet.connect(_connectedParams);
-        handleWalletConnect(wallet, _connectedParams);
+        setConnectedWallet(wallet, _connectedParams);
       } catch (e: any) {
         console.error(`Error connecting to wallet: ${e}`);
         setConnectionStatus("disconnected");
         throw e;
       }
     },
-    [createWalletInstance, handleWalletConnect, chainToConnect],
+    [createWalletInstance, setConnectedWallet, chainToConnect],
   );
 
   const onWalletDisconnect = useCallback(async () => {
@@ -349,6 +399,7 @@ export function ThirdwebWalletProvider(
     setConnectionStatus("disconnected");
     setSigner(undefined);
     setActiveWallet(undefined);
+    setActiveWalletConfig(undefined);
   }, []);
 
   const disconnectWallet = useCallback(async () => {
@@ -358,11 +409,11 @@ export function ThirdwebWalletProvider(
       return;
     }
 
+    const personalWallet = activeWallet.getPersonalWallet();
     await activeWallet.disconnect();
-    if (activeWallet.getPersonalWallet()) {
-      await (
-        activeWallet.getPersonalWallet() as AbstractClientWallet
-      )?.disconnect();
+
+    if (personalWallet) {
+      await (personalWallet as AbstractClientWallet)?.disconnect();
     }
 
     onWalletDisconnect();
@@ -401,14 +452,18 @@ export function ThirdwebWalletProvider(
         connect: connectWallet,
         signer,
         activeWallet,
+        activeWalletConfig,
         connectionStatus,
         setConnectionStatus,
         createWalletInstance: createWalletInstance,
         createWalletStorage: props.createWalletStorage,
         switchChain,
-        handleWalletConnect,
+        setConnectedWallet: setConnectedWallet,
         activeChain: props.activeChain,
         chainToConnect,
+        getWalletConfig: (walletInstance: WalletInstance) => {
+          return walletInstanceToConfig.get(walletInstance);
+        },
       }}
     >
       {props.children}
@@ -416,11 +471,11 @@ export function ThirdwebWalletProvider(
   );
 }
 
-export function useThirdwebWallet() {
+export function useWalletContext() {
   const ctx = useContext(ThirdwebWalletContext);
   if (!ctx) {
     throw new Error(
-      `useThirdwebWallet() can only be used inside <ThirdwebProvider />`,
+      `useWalletContext() can only be used inside <ThirdwebProvider />`,
     );
   }
   return ctx;

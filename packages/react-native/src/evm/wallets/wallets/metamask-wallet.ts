@@ -4,11 +4,11 @@ import {
   WalletConnectV1,
   walletIds,
 } from "@thirdweb-dev/wallets";
-import { formatDisplayUri } from "../../utils/uri";
+import { formatWalletConnectDisplayUri } from "../../utils/uri";
 import { Linking } from "react-native";
 import {
   WalletOptions as WalletOptionsRC,
-  Wallet,
+  WalletConfig,
   ExtraCoreWalletOptions,
 } from "@thirdweb-dev/react-core";
 import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
@@ -52,11 +52,11 @@ export class MetaMaskWallet extends WalletConnectV1 {
     const links = MetaMaskWallet.meta.links;
 
     if (uri) {
-      const fullUrl = formatDisplayUri(uri, links);
+      const fullUrl = formatWalletConnectDisplayUri(uri, links);
 
       Linking.openURL(fullUrl);
     } else {
-      const fullUrl = formatDisplayUri("", links);
+      const fullUrl = formatWalletConnectDisplayUri("", links);
 
       Linking.openURL(fullUrl);
     }
@@ -68,5 +68,5 @@ export const metamaskWallet = () => {
     id: MetaMaskWallet.id,
     meta: MetaMaskWallet.meta,
     create: (options: WalletOptionsRC) => new MetaMaskWallet(options),
-  } satisfies Wallet;
+  } satisfies WalletConfig;
 };

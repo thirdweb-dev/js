@@ -416,7 +416,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
     functionName: string & TMethod,
     args?: Parameters<PrebuiltEditionDrop["functions"][TMethod]>,
     overrides?: CallOverrides,
-  ): Promise<any> {
+  ): Promise<ReturnType<PrebuiltEditionDrop["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, args, overrides);
   }
 }

@@ -1,5 +1,156 @@
 # @thirdweb-dev/wallets
 
+## 0.2.19
+
+### Patch Changes
+
+- [#990](https://github.com/thirdweb-dev/js/pull/990) [`6a4aab0b`](https://github.com/thirdweb-dev/js/commit/6a4aab0b8a2e0f6ff1b47992a3c1e5426a74f7ff) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix loadOrCreate for LocalWalletNode
+
+- Updated dependencies [[`32908b76`](https://github.com/thirdweb-dev/js/commit/32908b76832c60e91a0a6e40dbdb1c8f56e9e5be), [`6a4aab0b`](https://github.com/thirdweb-dev/js/commit/6a4aab0b8a2e0f6ff1b47992a3c1e5426a74f7ff)]:
+  - @thirdweb-dev/sdk@3.10.14
+  - @thirdweb-dev/chains@0.1.15
+
+## 0.2.18
+
+### Patch Changes
+
+- [#973](https://github.com/thirdweb-dev/js/pull/973) [`93bdec06`](https://github.com/thirdweb-dev/js/commit/93bdec061dc05ab133e79f5f739dcae9b5393f53) Thanks [@MananTank](https://github.com/MananTank)! - - Fix PaperWallet.connect() error
+
+  - Fix return type of Wallet.autoConnect()
+
+- [#981](https://github.com/thirdweb-dev/js/pull/981) [`ea0f9479`](https://github.com/thirdweb-dev/js/commit/ea0f9479a38d442201e367fce1234c130228fde6) Thanks [@iketw](https://github.com/iketw)! - ## [ReactNative] Allow custom wallets be added to the ConnectWallet button modal
+
+  With this new API you can build your own wallet and wallet UI and integrate it into our ConnectWallet modal:
+
+  ```
+  import type { ConfiguredWallet, ConnectUIProps } from '@thirdweb-dev/react-native';
+  import { createAsyncLocalStorage, ConnectUIProps } from '@thirdweb-dev/react-native';
+  import { WalletOptions } from '@thirdweb-dev/wallets';
+
+  const WALLET_ID = "my-wallet-id";
+
+  export const myWallet = (): ConfiguredWallet => {
+    const asyncStorage = createAsyncLocalStorage(WALLET_ID);
+    const configuredWallet = {
+      id: WALLET_ID,
+      meta: {
+          id: WALLET_ID,
+          name: "My Custom Wallet", // This will be displayed in the connect wallet modal
+          iconURL: "ipfs or https url to an image or svg" // This will be used to fetch the icon to show in the connect wallet modal
+      },
+      create: (options: WalletOptions) =>
+        new MyWallet({
+          ...options,
+          walletStorage: asyncStorage,
+        }),
+      connectUI(props: ConnectUIProps) {
+        return <MyWalletUI {...props} />; // This will show up in the modal after the user selects your wallet
+      },
+    };
+
+    return configuredWallet;
+  };
+  ```
+
+  You can then add the wallet to your `supportedWallets` in the `ThirdwebProvider`:
+
+  ```
+  import { Goerli } from '@thirdweb-dev/chains';
+  import {
+    ThirdwebProvider,
+    metamaskWallet,
+  } from '@thirdweb-dev/react-native';
+
+  const activeChain = Goerli;
+
+  const App = () => {
+    return (
+      <ThirdwebProvider
+        activeChain={activeChain}
+        supportedChains={[activeChain]}
+        supportedWallets={[
+          myWallet(),
+          metamaskWallet(),
+        ]}>
+        <AppInner />
+      </ThirdwebProvider>
+    );
+  };
+  ```
+
+  This new version exposes some utility functions:
+
+  1. `formatWalletConnectDisplayUri`
+
+  Formats the wallet connect `wc://` url for usage with custom wallet links
+
+  2. `shortenWalletAddress`
+
+  Shortens a wallet address for display purposes
+
+  3. `createAsyncLocalStorage` and `createSecureStorage`
+
+  You can use these methods to get wallet compatible storage types.
+
+  - `createAsyncLocalStorage` uses MMKV in the background
+  - `createSecureStorage` uses Expo SecureStore in the background
+
+- [#978](https://github.com/thirdweb-dev/js/pull/978) [`05ebbc15`](https://github.com/thirdweb-dev/js/commit/05ebbc15a012855735fba2aa93887b88e14295d1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Export ethers and private key wallets top level
+
+- [#974](https://github.com/thirdweb-dev/js/pull/974) [`4ca557ae`](https://github.com/thirdweb-dev/js/commit/4ca557ae4ab225e39decc3b7a01a04c0d8e464c7) Thanks [@iketw](https://github.com/iketw)! - [Wallet] Rename Connector to WagmiConnector and TWConnector to Connector
+
+- [#967](https://github.com/thirdweb-dev/js/pull/967) [`7d7685e3`](https://github.com/thirdweb-dev/js/commit/7d7685e3fab5780b3c1d26b8ef431b96f8486972) Thanks [@MananTank](https://github.com/MananTank)! - - Fix type of connect() for magic wallet
+
+  - enforce smsLogin, emailLogin restriction for magic wallet
+  - update the icon for local wallet
+
+- [#977](https://github.com/thirdweb-dev/js/pull/977) [`93bd5733`](https://github.com/thirdweb-dev/js/commit/93bd57337b7d2c2fcd252987d10df3206c839daf) Thanks [@MananTank](https://github.com/MananTank)! - Fix Connect Wallet Open/Close issues
+
+- Updated dependencies [[`5305b42d`](https://github.com/thirdweb-dev/js/commit/5305b42db554b69f903b3d95f3ba0eeddabd6114), [`eb521d24`](https://github.com/thirdweb-dev/js/commit/eb521d240ae7102d44fe2c5223b0a18d867e09ad), [`af4b5356`](https://github.com/thirdweb-dev/js/commit/af4b5356372ffa084c8d0e747d8def46c2ff892c), [`93bd5733`](https://github.com/thirdweb-dev/js/commit/93bd57337b7d2c2fcd252987d10df3206c839daf), [`a2df187b`](https://github.com/thirdweb-dev/js/commit/a2df187bc1867beb2e90853da70dac271f604f12), [`aa9b6acc`](https://github.com/thirdweb-dev/js/commit/aa9b6acc3f5a118c2b5fe9e46732e72c0fc69376)]:
+  - @thirdweb-dev/chains@0.1.14
+  - @thirdweb-dev/sdk@3.10.13
+
+## 0.2.17
+
+### Patch Changes
+
+- [#937](https://github.com/thirdweb-dev/js/pull/937) [`7012513b`](https://github.com/thirdweb-dev/js/commit/7012513bc20f283b2cde46c0b938af33fe3a1a20) Thanks [@iketw](https://github.com/iketw)! - [ReactNative] Adding Smart Wallet to React Native as an option in the ConnectWallet button
+
+- [#941](https://github.com/thirdweb-dev/js/pull/941) [`5d67b280`](https://github.com/thirdweb-dev/js/commit/5d67b2807f2504add4c202d2eb18897415662fb6) Thanks [@MananTank](https://github.com/MananTank)! - Add Magic Link
+
+- [#931](https://github.com/thirdweb-dev/js/pull/931) [`f12a80a4`](https://github.com/thirdweb-dev/js/commit/f12a80a4758aa91c43084acedb212de9f36a7371) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Default RPC for Local Wallet
+
+- [#948](https://github.com/thirdweb-dev/js/pull/948) [`5a67d5d8`](https://github.com/thirdweb-dev/js/commit/5a67d5d89474eac9a638ffaddba139b62965deff) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Batch transactions for Smart Wallets
+
+- [#787](https://github.com/thirdweb-dev/js/pull/787) [`d2c7f6d7`](https://github.com/thirdweb-dev/js/commit/d2c7f6d758787fab102ecc0cec16ac74f3c87a1f) Thanks [@iketw](https://github.com/iketw)! - [ReactNative] Adds Device Wallet
+
+- [#955](https://github.com/thirdweb-dev/js/pull/955) [`c7c2530c`](https://github.com/thirdweb-dev/js/commit/c7c2530c7f2ef412f1e40428391e85decf504392) Thanks [@MananTank](https://github.com/MananTank)! - Local wallet UI refactor and other fixes
+
+- [#930](https://github.com/thirdweb-dev/js/pull/930) [`e22e4a47`](https://github.com/thirdweb-dev/js/commit/e22e4a47d73e1bbc6e3f0ae7ed56717b44e5ffcd) Thanks [@MananTank](https://github.com/MananTank)! - suggest first supportedWallet for getting started in ConnectWallet
+
+- [#942](https://github.com/thirdweb-dev/js/pull/942) [`1e4ac672`](https://github.com/thirdweb-dev/js/commit/1e4ac672720c2fb01046bec195877a074ffbda06) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Simplify and generalize SmartWallet API
+
+- [#947](https://github.com/thirdweb-dev/js/pull/947) [`fc96e147`](https://github.com/thirdweb-dev/js/commit/fc96e14750175b19cb66fa7d50cdbad65b42153a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose execute functions directly from SmartWallet
+
+- [#956](https://github.com/thirdweb-dev/js/pull/956) [`4a69f8c8`](https://github.com/thirdweb-dev/js/commit/4a69f8c85dec420615e9eda8d1ad5b5ef0b87713) Thanks [@iketw](https://github.com/iketw)! - [ReactNative] Allow switching between personal wallet and smart wallet
+
+  - Updates SmartWallet and LocalWallet icons
+  - Adds "Learn More" links to both new wallets
+
+- [#953](https://github.com/thirdweb-dev/js/pull/953) [`26cd91ff`](https://github.com/thirdweb-dev/js/commit/26cd91ffe18dad37133a18988f21185c13d64cfb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Latest default factory for SmartWallet
+
+- [#945](https://github.com/thirdweb-dev/js/pull/945) [`0186721b`](https://github.com/thirdweb-dev/js/commit/0186721bc455aa1f8454839a1a25fa4062b45102) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New utility functions for SmartWallet
+
+- [#927](https://github.com/thirdweb-dev/js/pull/927) [`1e9fad77`](https://github.com/thirdweb-dev/js/commit/1e9fad779f3ebe535d32c0ce76905a3a8033f2fa) Thanks [@MananTank](https://github.com/MananTank)! - safe, deviceWallet and smartWallet autoconnect
+
+- [#929](https://github.com/thirdweb-dev/js/pull/929) [`7af99d9a`](https://github.com/thirdweb-dev/js/commit/7af99d9a6d54492a29a90288a25b30773a8a10a7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Use entrypoint v0.6 for smart accounts
+
+- [#904](https://github.com/thirdweb-dev/js/pull/904) [`8cfb4f38`](https://github.com/thirdweb-dev/js/commit/8cfb4f38ed89c26ad04f19d27c65c24cefa976b6) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Introducing SmartWallet to easily connect to ERC4337 compatible account contracts
+
+- Updated dependencies [[`d2c7f6d7`](https://github.com/thirdweb-dev/js/commit/d2c7f6d758787fab102ecc0cec16ac74f3c87a1f), [`f12a80a4`](https://github.com/thirdweb-dev/js/commit/f12a80a4758aa91c43084acedb212de9f36a7371), [`bf6df267`](https://github.com/thirdweb-dev/js/commit/bf6df2671131d7ed38650e2bed806081b32dc244), [`8f962bc1`](https://github.com/thirdweb-dev/js/commit/8f962bc15c35da52ed5bc4025bb4cd18b69079e3), [`28b5d1eb`](https://github.com/thirdweb-dev/js/commit/28b5d1eb6d0142d3ebefb8bd078c30949f77fe61), [`0bf29745`](https://github.com/thirdweb-dev/js/commit/0bf29745b0e842763c271ad8773312f0836ea00f), [`f0279c22`](https://github.com/thirdweb-dev/js/commit/f0279c228829b86ff1f828219bcef4fe16901f67), [`1e9fad77`](https://github.com/thirdweb-dev/js/commit/1e9fad779f3ebe535d32c0ce76905a3a8033f2fa), [`00d0d01e`](https://github.com/thirdweb-dev/js/commit/00d0d01e619ff5c60b9f31386f51a55b5e466efa), [`fc96e147`](https://github.com/thirdweb-dev/js/commit/fc96e14750175b19cb66fa7d50cdbad65b42153a)]:
+  - @thirdweb-dev/chains@0.1.13
+  - @thirdweb-dev/sdk@3.10.12
+
 ## 0.2.16
 
 ### Patch Changes

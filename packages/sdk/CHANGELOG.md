@@ -1,5 +1,56 @@
 # @thirdweb-dev/sdk
 
+## 3.10.14
+
+### Patch Changes
+
+- [#992](https://github.com/thirdweb-dev/js/pull/992) [`32908b76`](https://github.com/thirdweb-dev/js/commit/32908b76832c60e91a0a6e40dbdb1c8f56e9e5be) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add alias for extension detection functions
+
+- Updated dependencies [[`6a4aab0b`](https://github.com/thirdweb-dev/js/commit/6a4aab0b8a2e0f6ff1b47992a3c1e5426a74f7ff)]:
+  - @thirdweb-dev/chains@0.1.15
+
+## 3.10.13
+
+### Patch Changes
+
+- [#976](https://github.com/thirdweb-dev/js/pull/976) [`eb521d24`](https://github.com/thirdweb-dev/js/commit/eb521d240ae7102d44fe2c5223b0a18d867e09ad) Thanks [@adam-maj](https://github.com/adam-maj)! - Expose raw error on transaction error
+
+- [#986](https://github.com/thirdweb-dev/js/pull/986) [`af4b5356`](https://github.com/thirdweb-dev/js/commit/af4b5356372ffa084c8d0e747d8def46c2ff892c) Thanks [@adam-maj](https://github.com/adam-maj)! - Parse snapshot inputs in chunks
+
+- [#977](https://github.com/thirdweb-dev/js/pull/977) [`93bd5733`](https://github.com/thirdweb-dev/js/commit/93bd57337b7d2c2fcd252987d10df3206c839daf) Thanks [@MananTank](https://github.com/MananTank)! - Fix Connect Wallet Open/Close issues
+
+- [#985](https://github.com/thirdweb-dev/js/pull/985) [`a2df187b`](https://github.com/thirdweb-dev/js/commit/a2df187bc1867beb2e90853da70dac271f604f12) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix solana token deploy
+
+- [#975](https://github.com/thirdweb-dev/js/pull/975) [`aa9b6acc`](https://github.com/thirdweb-dev/js/commit/aa9b6acc3f5a118c2b5fe9e46732e72c0fc69376) Thanks [@adam-maj](https://github.com/adam-maj)! - Export resolve address ENS function
+
+- Updated dependencies [[`5305b42d`](https://github.com/thirdweb-dev/js/commit/5305b42db554b69f903b3d95f3ba0eeddabd6114)]:
+  - @thirdweb-dev/chains@0.1.14
+
+## 3.10.12
+
+### Patch Changes
+
+- [#932](https://github.com/thirdweb-dev/js/pull/932) [`bf6df267`](https://github.com/thirdweb-dev/js/commit/bf6df2671131d7ed38650e2bed806081b32dc244) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Add SKALE chains gas price
+
+- [#944](https://github.com/thirdweb-dev/js/pull/944) [`8f962bc1`](https://github.com/thirdweb-dev/js/commit/8f962bc15c35da52ed5bc4025bb4cd18b69079e3) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix forwarder domain and address computation
+
+- [#951](https://github.com/thirdweb-dev/js/pull/951) [`28b5d1eb`](https://github.com/thirdweb-dev/js/commit/28b5d1eb6d0142d3ebefb8bd078c30949f77fe61) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Custom gas-price for Theta network
+
+- [#961](https://github.com/thirdweb-dev/js/pull/961) [`0bf29745`](https://github.com/thirdweb-dev/js/commit/0bf29745b0e842763c271ad8773312f0836ea00f) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update forwarder addresses to GSNv2 Forwarder
+
+- [#905](https://github.com/thirdweb-dev/js/pull/905) [`f0279c22`](https://github.com/thirdweb-dev/js/commit/f0279c228829b86ff1f828219bcef4fe16901f67) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Verification utils for any EVM contracts
+
+- [#927](https://github.com/thirdweb-dev/js/pull/927) [`1e9fad77`](https://github.com/thirdweb-dev/js/commit/1e9fad779f3ebe535d32c0ce76905a3a8033f2fa) Thanks [@MananTank](https://github.com/MananTank)! - safe, deviceWallet and smartWallet autoconnect
+
+- [#959](https://github.com/thirdweb-dev/js/pull/959) [`00d0d01e`](https://github.com/thirdweb-dev/js/commit/00d0d01e619ff5c60b9f31386f51a55b5e466efa) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Detect Account and AccountFactory contracts
+
+- [#947](https://github.com/thirdweb-dev/js/pull/947) [`fc96e147`](https://github.com/thirdweb-dev/js/commit/fc96e14750175b19cb66fa7d50cdbad65b42153a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose Transaction.getTarget()
+
+- Updated dependencies [[`00d0d01e`](https://github.com/thirdweb-dev/js/commit/00d0d01e619ff5c60b9f31386f51a55b5e466efa), [`d2c7f6d7`](https://github.com/thirdweb-dev/js/commit/d2c7f6d758787fab102ecc0cec16ac74f3c87a1f), [`f12a80a4`](https://github.com/thirdweb-dev/js/commit/f12a80a4758aa91c43084acedb212de9f36a7371)]:
+  - @thirdweb-dev/contracts-js@1.3.4
+  - @thirdweb-dev/chains@0.1.13
+  - @thirdweb-dev/storage@1.1.2
+
 ## 3.10.11
 
 ### Patch Changes

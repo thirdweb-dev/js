@@ -434,7 +434,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
     functionName: string & TMethod,
     args?: Parameters<MultiwrapContract["functions"][TMethod]>,
     overrides?: CallOverrides,
-  ): Promise<any> {
+  ): Promise<ReturnType<MultiwrapContract["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, args, overrides);
   }
 }

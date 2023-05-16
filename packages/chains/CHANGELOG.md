@@ -1,5 +1,25 @@
 # @thirdweb-dev/chains
 
+## 0.1.15
+
+### Patch Changes
+
+- [#990](https://github.com/thirdweb-dev/js/pull/990) [`6a4aab0b`](https://github.com/thirdweb-dev/js/commit/6a4aab0b8a2e0f6ff1b47992a3c1e5426a74f7ff) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - updated chains
+
+## 0.1.14
+
+### Patch Changes
+
+- [#954](https://github.com/thirdweb-dev/js/pull/954) [`5305b42d`](https://github.com/thirdweb-dev/js/commit/5305b42db554b69f903b3d95f3ba0eeddabd6114) Thanks [@jarrodwatts](https://github.com/jarrodwatts)! - useContract now types correctly for thirdweb generate
+
+## 0.1.13
+
+### Patch Changes
+
+- [#787](https://github.com/thirdweb-dev/js/pull/787) [`d2c7f6d7`](https://github.com/thirdweb-dev/js/commit/d2c7f6d758787fab102ecc0cec16ac74f3c87a1f) Thanks [@iketw](https://github.com/iketw)! - [ReactNative] Adds Device Wallet
+
+- [#931](https://github.com/thirdweb-dev/js/pull/931) [`f12a80a4`](https://github.com/thirdweb-dev/js/commit/f12a80a4758aa91c43084acedb212de9f36a7371) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updated chains
+
 ## 0.1.12
 
 ### Patch Changes

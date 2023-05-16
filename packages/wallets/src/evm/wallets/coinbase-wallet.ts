@@ -1,5 +1,5 @@
 import type { CoinbaseWalletConnector } from "../connectors/coinbase-wallet";
-import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
+import { Connector, WagmiAdapter } from "../interfaces/connector";
 import { walletIds } from "../constants/walletIds";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import { Buffer } from "buffer";
@@ -12,8 +12,10 @@ if (typeof window !== "undefined") {
 export type CoinbaseWalletOptions = WalletOptions<{ headlessMode?: boolean }>;
 
 export class CoinbaseWallet extends AbstractClientWallet {
-  connector?: TWConnector;
+  connector?: Connector;
   coinbaseConnector?: CoinbaseWalletConnector;
+
+  // TODO: remove this
   static meta = {
     iconURL:
       "ipfs://QmcJBHopbwfJcLqJpX2xEufSS84aLbF7bHavYhaXUcrLaH/coinbase.svg",
@@ -38,7 +40,7 @@ export class CoinbaseWallet extends AbstractClientWallet {
     this.headlessMode = options?.headlessMode || false;
   }
 
-  protected async getConnector(): Promise<TWConnector> {
+  protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
       // import the connector dynamically
       const { CoinbaseWalletConnector } = await import(

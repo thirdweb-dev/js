@@ -16,10 +16,12 @@ export {
   useDisconnect,
   useSwitchChain,
   useWallets,
-  useIsConnecting,
+  useWalletConfig,
+  useSetConnectionStatus,
+  useSetConnectedWallet,
 } from "../core/hooks/wallet-hooks";
 export { useNetwork } from "../core/hooks/useNetwork";
-export { useThirdwebWallet } from "../core/providers/thirdweb-wallet-provider";
+export { useWalletContext } from "../core/providers/thirdweb-wallet-provider";
 
 // connected wallet hooks
 export {
@@ -28,13 +30,15 @@ export {
   useAddress,
   useChainId,
   useActiveChain,
+  useChain,
 } from "./hooks/wallet";
 
 // Utilities and Others
 export { shouldNeverPersistQuery } from "../core/query-utils/query-key";
 export type { RequiredParam } from "../core/query-utils/required-param";
 export type {
-  Wallet,
+  WalletConfig,
+  ConnectUIProps,
   WalletClass,
   WalletInstance,
   ExtraCoreWalletOptions,

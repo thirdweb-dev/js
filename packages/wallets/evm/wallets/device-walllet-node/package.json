@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-wallets-evm-wallets-local-walllet-node.cjs.js",
-  "module": "dist/thirdweb-dev-wallets-evm-wallets-local-walllet-node.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-wallets-evm-wallets-local-walllet-node.esm.js": "./dist/thirdweb-dev-wallets-evm-wallets-local-walllet-node.browser.esm.js"
-  }
-}

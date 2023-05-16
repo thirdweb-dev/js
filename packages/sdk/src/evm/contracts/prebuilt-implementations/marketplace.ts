@@ -698,7 +698,7 @@ export class Marketplace implements UpdateableNetwork {
     functionName: string & TMethod,
     args?: Parameters<MarketplaceContract["functions"][TMethod]>,
     overrides?: CallOverrides,
-  ): Promise<any> {
+  ): Promise<ReturnType<MarketplaceContract["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, args, overrides);
   }
 }

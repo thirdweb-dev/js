@@ -1,5 +1,5 @@
 import { AsyncStorage } from "../../../core/AsyncStorage";
-import { Connector } from "../../../lib/wagmi-connectors";
+import { WagmiConnector } from "../../../lib/wagmi-connectors";
 import {
   AddChainError,
   ChainNotConfiguredError,
@@ -49,7 +49,7 @@ type InjectedConnectorConstructorArg = {
   options?: InjectedConnectorOptions;
 };
 
-export class InjectedConnector extends Connector<
+export class InjectedConnector extends WagmiConnector<
   Ethereum,
   ConnectorOptions,
   providers.JsonRpcSigner
