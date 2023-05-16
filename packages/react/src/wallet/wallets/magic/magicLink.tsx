@@ -4,7 +4,6 @@ import {
   SelectUIProps,
   WalletOptions,
   useConnect,
-  useWallets,
 } from "@thirdweb-dev/react-core";
 import { ConfiguredMagicLinkWallet } from "./types";
 import { useRef, useEffect } from "react";
