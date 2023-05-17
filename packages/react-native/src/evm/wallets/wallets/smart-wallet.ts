@@ -9,7 +9,7 @@ type SafeWalletConfig = {
   personalWallets: WalletConfig[];
 };
 
-export type SmartWalletObj = WalletConfig<SmartWallet, SafeWalletConfig>;
+export type SmartWalletObj = WalletConfig<SmartWallet>;
 
 export const smartWallet = (
   config: Omit<SafeWalletConfig, "personalWallets"> & {
@@ -21,9 +21,6 @@ export const smartWallet = (
     meta: SmartWallet.meta,
     create: (options: WalletOptions) =>
       new SmartWallet({ ...options, ...config }),
-    config: {
-      ...config,
-      personalWallets: config.personalWallets || DEFAULT_WALLETS,
-    },
-  } satisfies WalletConfig<SmartWallet, SafeWalletConfig>;
+    personalWallets: config.personalWallets || DEFAULT_WALLETS,
+  } satisfies WalletConfig<SmartWallet>;
 };

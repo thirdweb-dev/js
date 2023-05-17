@@ -19,20 +19,24 @@ export function magicLink(
     meta: MagicLink.meta,
     create: (options: WalletOptions) =>
       new MagicLink({ ...options, ...config }),
-    config,
     connectUI: MagicConnectionUI,
-    selectUI: MagicSelectionUI,
+    selectUI(props) {
+      return <MagicSelectionUI {...props} config={config} />;
+    },
     isInstalled() {
       return false;
     },
+    autoSwitch: true,
   };
 }
 
 const MagicSelectionUI: React.FC<
-  SelectUIProps<MagicLink, MagicLinkAdditionalOptions>
+  SelectUIProps<MagicLink> & {
+    config: MagicLinkAdditionalOptions;
+  }
 > = (props) => {
-  const isEmailEnabled = props.walletConfig.config.emailLogin !== false;
-  const isSMSEnabled = props.walletConfig.config.smsLogin !== false;
+  const isEmailEnabled = props.config.emailLogin !== false;
+  const isSMSEnabled = props.config.smsLogin !== false;
 
   let placeholder = "Enter your email or phone number";
   let type = "text";
@@ -90,9 +94,13 @@ const MagicSelectionUI: React.FC<
   );
 };
 
-const MagicConnectionUI: React.FC<
-  ConnectUIProps<MagicLink, MagicLinkAdditionalOptions>
-> = ({ close, walletConfig, open, selectionData, supportedWallets }) => {
+const MagicConnectionUI: React.FC<ConnectUIProps<MagicLink>> = ({
+  close,
+  walletConfig,
+  open,
+  selectionData,
+  supportedWallets,
+}) => {
   const connectPrompted = useRef(false);
   const singleWallet = supportedWallets.length === 1;
   const connect = useConnect();

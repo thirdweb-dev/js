@@ -71,8 +71,5 @@ export const trustWallet = (config?: TrustWalletConfig) => {
     meta: TrustWallet.meta,
     create: (options: WalletOptionsRC) =>
       new TrustWallet({ ...options, projectId: projectId }),
-    config: {
-      projectId: projectId,
-    },
-  } satisfies WalletConfig<WalletConnect, TrustWalletConfig>;
+  } satisfies WalletConfig<WalletConnect>;
 };

@@ -26,6 +26,7 @@ type ReconnectLocalWalletProps = {
   localWallet: LocalConfiguredWallet;
   supportedWallets: WalletConfig[];
   renderBackButton: boolean;
+  persist: boolean;
 };
 
 /**
@@ -44,6 +45,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
   const [showExport, setShowExport] = useState(false);
   const { localWallet, meta, walletData } = useLocalWalletInfo(
     props.localWallet,
+    props.persist,
   );
 
   const savedAddress = walletData
@@ -93,6 +95,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
   if (showCreate) {
     return (
       <CreateLocalWallet_Password
+        persist={props.persist}
         renderBackButton={props.supportedWallets.length > 1}
         localWalletConf={props.localWallet}
         goBack={() => {

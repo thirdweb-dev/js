@@ -14,7 +14,4 @@ export type LocalWalletConfig = {
   persist?: boolean;
 };
 
-export type LocalConfiguredWallet = WalletConfig<
-  LocalWallet,
-  LocalWalletConfig
->;
+export type LocalConfiguredWallet = WalletConfig<LocalWallet>;

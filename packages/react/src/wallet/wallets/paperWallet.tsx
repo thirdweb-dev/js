@@ -13,24 +13,20 @@ import { InputSelectionUI } from "./InputSelectionUI";
 
 type PaperConfig = { clientId: string };
 
-export const paperWallet = (
-  config: PaperConfig,
-): WalletConfig<PaperWallet, PaperConfig> => {
+export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
   return {
     id: PaperWallet.id,
     meta: PaperWallet.meta,
     create(options: WalletOptions) {
       return new PaperWallet({ ...options, ...config });
     },
-    config,
+    autoSwitch: true,
     selectUI: PaperSelectionUI,
     connectUI: PaperConnectionUI,
   };
 };
 
-const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet, PaperConfig>> = (
-  props,
-) => {
+const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet>> = (props) => {
   return (
     <InputSelectionUI
       onSelect={props.onSelect}
@@ -49,7 +45,7 @@ const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet, PaperConfig>> = (
   );
 };
 
-const PaperConnectionUI: React.FC<ConnectUIProps<PaperWallet, PaperConfig>> = ({
+const PaperConnectionUI: React.FC<ConnectUIProps<PaperWallet>> = ({
   close,
   walletConfig,
   open,

@@ -11,7 +11,10 @@ export const CoinbaseConnectUI = ({
   close,
   goBack,
   supportedWallets,
-}: ConnectUIProps<CoinbaseWallet>) => {
+  autoSwitch,
+}: ConnectUIProps<CoinbaseWallet> & {
+  autoSwitch?: boolean;
+}) => {
   const connect = useConnect();
   const { meta } = walletConfig;
   const [screen, setScreen] = useState<
@@ -90,6 +93,7 @@ export const CoinbaseConnectUI = ({
         onGetStarted={() => setScreen("get-started")}
         walletConfig={walletConfig}
         hideBackButton={supportedWallets.length === 1}
+        autoSwitch={autoSwitch}
       />
     );
   }

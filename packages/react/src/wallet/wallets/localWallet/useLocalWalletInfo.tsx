@@ -6,6 +6,7 @@ import { LocalConfiguredWallet } from "./types";
 
 export function useLocalWalletInfo(
   localConfiguredWallet: LocalConfiguredWallet,
+  persist: boolean,
 ) {
   const [walletData, setWalletData] = useState<WalletData | null | "loading">(
     "loading",
@@ -17,18 +18,18 @@ export function useLocalWalletInfo(
     const wallet = createWalletInstance(localConfiguredWallet) as LocalWallet;
     setLocalWallet(wallet);
 
-    if (localConfiguredWallet.config.persist) {
+    if (persist) {
       wallet.getSavedData().then((data) => {
         setWalletData(data);
       });
     }
-  }, [createWalletInstance, localConfiguredWallet]);
+  }, [createWalletInstance, localConfiguredWallet, persist]);
 
   return {
     setLocalWallet,
     localWallet,
     walletData,
     meta: localConfiguredWallet.meta,
-    persist: localConfiguredWallet.config.persist,
+    persist: persist,
   };
 }

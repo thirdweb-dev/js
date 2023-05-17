@@ -3,14 +3,16 @@ import {
   ConnectUIProps,
   WalletOptions,
   useWallet,
+  useConnectionStatus,
+  useDisconnect,
 } from "@thirdweb-dev/react-core";
 import { SmartWallet } from "@thirdweb-dev/wallets";
-import { defaultWallets } from "../defaultWallets";
 import { SmartConfiguredWallet, SmartWalletConfig } from "./types";
 import { useState } from "react";
 import { SmartWalletConnecting } from "./SmartWalletConnecting";
 import { SelectPersonalWallet } from "./SelectPersonalWallet";
 import { HeadlessConnectUI } from "../headlessConnectUI";
+import { defaultWallets } from "../defaultWallets";
 
 export const smartWallet = (
   config: SmartWalletConfig,
@@ -20,25 +22,25 @@ export const smartWallet = (
     meta: SmartWallet.meta,
     create: (options: WalletOptions) =>
       new SmartWallet({ ...options, ...config }),
-    connectUI: SmartConnectUI,
+    connectUI(props) {
+      return <SmartConnectUI {...props} />;
+    },
     isInstalled() {
       return false;
     },
-    config: {
-      ...config,
-      personalWallets: config?.personalWallets || defaultWallets,
-    },
+    personalWallets: config.personalWallets || defaultWallets,
+    autoSwitch: true,
   };
 };
 
-export const SmartConnectUI = (
-  props: ConnectUIProps<SmartWallet, Required<SmartWalletConfig>>,
-) => {
+export const SmartConnectUI = (props: ConnectUIProps<SmartWallet>) => {
   const activeWallet = useWallet();
   const { walletConfig } = props;
   const [personalConfiguredWallet, setPersonalConfiguredWallet] = useState<
     WalletConfig | undefined
   >();
+  const disconnect = useDisconnect();
+  const connectionStatus = useConnectionStatus();
 
   if (personalConfiguredWallet) {
     const _props = {
@@ -48,12 +50,15 @@ export const SmartConnectUI = (
       },
       goBack: () => {
         setPersonalConfiguredWallet(undefined);
+        if (connectionStatus === "connecting") {
+          disconnect();
+        }
       },
       isOpen: props.isOpen,
       open: props.open,
       theme: props.theme,
       walletConfig: personalConfiguredWallet,
-      supportedWallets: props.walletConfig.config.personalWallets,
+      supportedWallets: props.walletConfig.personalWallets as WalletConfig[],
       selectionData: props.selectionData,
       setSelectionData: props.setSelectionData,
     };
@@ -68,7 +73,7 @@ export const SmartConnectUI = (
   if (!activeWallet) {
     return (
       <SelectPersonalWallet
-        personalWallets={walletConfig.config.personalWallets}
+        personalWallets={walletConfig.personalWallets as WalletConfig[]}
         onBack={props.goBack}
         smartWallet={walletConfig}
         selectWallet={setPersonalConfiguredWallet}

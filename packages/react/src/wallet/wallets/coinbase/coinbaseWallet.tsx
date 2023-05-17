@@ -2,7 +2,18 @@ import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { CoinbaseWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
 import { CoinbaseConnectUI } from "./CoinbaseConnectUI";
 
-export const coinbaseWallet = (): WalletConfig<CoinbaseWallet> => {
+type CoinbaseOptions = {
+  /**
+   * whether to switch to `activeChain` after connecting to the wallet or just stay on the chain that wallet is already connected to
+   * default - false
+   * @default false
+   */
+  autoSwitch?: boolean;
+};
+
+export const coinbaseWallet = (
+  options?: CoinbaseOptions,
+): WalletConfig<CoinbaseWallet> => {
   return {
     id: CoinbaseWallet.id,
     meta: {
@@ -16,10 +27,12 @@ export const coinbaseWallet = (): WalletConfig<CoinbaseWallet> => {
         ios: "https://apps.apple.com/us/app/coinbase-wallet-nfts-crypto/id1278383455",
       },
     },
-    create(options: WalletOptions) {
-      return new CoinbaseWallet({ ...options, headlessMode: true });
+    create(walletOptions: WalletOptions) {
+      return new CoinbaseWallet({ ...walletOptions, headlessMode: true });
     },
-    connectUI: CoinbaseConnectUI,
+    connectUI(props) {
+      return <CoinbaseConnectUI {...props} autoSwitch={options?.autoSwitch} />;
+    },
     isInstalled() {
       if (assertWindowEthereum(globalThis.window)) {
         return (
@@ -32,5 +45,6 @@ export const coinbaseWallet = (): WalletConfig<CoinbaseWallet> => {
       }
       return false;
     },
+    autoSwitch: options?.autoSwitch,
   };
 };

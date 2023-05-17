@@ -56,11 +56,6 @@ export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
   theme?: "light" | "dark";
 
   createWalletStorage?: CreateAsyncStorage;
-
-  /**
-   * Whether or not to automatically switch to wallet's network to active chain
-   */
-  autoSwitch?: boolean;
 }
 
 export const ThirdwebProviderCore = <TChains extends Chain[]>({
@@ -144,7 +139,6 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
         createWalletStorage={createWalletStorage}
         dAppMeta={dAppMeta}
         activeChain={activeChainWithKey}
-        autoSwitch={props.autoSwitch}
       >
         <ThirdwebSDKProviderWrapper
           queryClient={props.queryClient}

@@ -10,7 +10,7 @@ import { View } from "react-native";
 export type ChooseWalletProps = {
   headerText?: ReactNode | string;
   subHeaderText?: ReactNode | string;
-  onChooseWallet: (wallet: WalletConfig<any, any>) => void;
+  onChooseWallet: (wallet: WalletConfig<any>) => void;
   onClose: () => void;
   wallets: WalletConfig[];
   excludeWalletIds?: string[];

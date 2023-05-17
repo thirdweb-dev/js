@@ -5,6 +5,7 @@ import {
   WalletOptions,
   useDisconnect,
   useWallet,
+  useConnectionStatus,
 } from "@thirdweb-dev/react-core";
 import { defaultWallets } from "../defaultWallets";
 import { useState } from "react";
@@ -22,20 +23,18 @@ export const safeWallet = (config?: SafeWalletConfig): SafeWalletObj => {
     isInstalled() {
       return false;
     },
-    config: {
-      personalWallets: config?.personalWallets || defaultWallets,
-    },
+    personalWallets: config?.personalWallets || defaultWallets,
+    autoSwitch: true,
   };
 };
 
-export const SafeConnectUI = (
-  props: ConnectUIProps<SafeWallet, Required<SafeWalletConfig>>,
-) => {
+export const SafeConnectUI = (props: ConnectUIProps<SafeWallet>) => {
   const activeWallet = useWallet();
   const [personalConfiguredWallet, setPersonalConfiguredWallet] = useState<
     WalletConfig | undefined
   >();
   const disconnect = useDisconnect();
+  const connectionStatus = useConnectionStatus();
 
   if (personalConfiguredWallet) {
     const _props = {
@@ -45,12 +44,15 @@ export const SafeConnectUI = (
       },
       goBack: () => {
         setPersonalConfiguredWallet(undefined);
+        if (connectionStatus === "connecting") {
+          disconnect();
+        }
       },
       isOpen: props.isOpen,
       open: props.open,
       theme: props.theme,
       walletConfig: personalConfiguredWallet,
-      supportedWallets: props.walletConfig.config.personalWallets,
+      supportedWallets: props.walletConfig.personalWallets as WalletConfig[],
       selectionData: props.selectionData,
       setSelectionData: props.setSelectionData,
     };
@@ -65,7 +67,7 @@ export const SafeConnectUI = (
   if (!activeWallet) {
     return (
       <SelectpersonalWallet
-        personalWallets={props.walletConfig.config.personalWallets}
+        personalWallets={props.walletConfig.personalWallets as WalletConfig[]}
         onBack={props.goBack}
         safeWallet={props.walletConfig}
         selectWallet={setPersonalConfiguredWallet}

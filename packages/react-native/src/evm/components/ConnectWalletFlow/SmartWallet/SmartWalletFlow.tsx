@@ -196,7 +196,7 @@ export const SmartWalletFlow = ({
           </Text>
         </Text>
       }
-      wallets={walletObj.config.personalWallets}
+      wallets={walletObj.personalWallets as WalletConfig[]}
       onChooseWallet={onChoosePersonalWallet}
       onClose={onClose}
     />

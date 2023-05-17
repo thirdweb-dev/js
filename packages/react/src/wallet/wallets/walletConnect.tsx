@@ -18,26 +18,30 @@ type walletConnectConfig = {
    * https://docs.walletconnect.com/2.0/web3modal/options
    */
   qrModalOptions?: WC2_QRModalOptions;
+
+  /**
+   * whether to switch to `activeChain` after connecting to the wallet or just stay on the chain that wallet is already connected to
+   * default - false
+   * @default false
+   */
+  autoSwitch?: boolean;
 };
 
 export const walletConnect = (
-  config?: walletConnectConfig,
-): WalletConfig<WalletConnect, walletConnectConfig> => {
-  const projectId = config?.projectId || TW_WC_PROJECT_ID;
+  options?: walletConnectConfig,
+): WalletConfig<WalletConnect> => {
+  const projectId = options?.projectId || TW_WC_PROJECT_ID;
   return {
     id: WalletConnect.id,
     meta: WalletConnect.meta,
-    create(options: WalletOptions) {
+    create(walletOptions: WalletOptions) {
       return new WalletConnect({
-        ...options,
+        ...walletOptions,
         qrcode: true,
         projectId,
-        qrModalOptions: config?.qrModalOptions,
+        qrModalOptions: options?.qrModalOptions,
       });
     },
-    config: {
-      projectId,
-      qrModalOptions: config?.qrModalOptions,
-    },
+    autoSwitch: options?.autoSwitch,
   };
 };
