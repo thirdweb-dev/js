@@ -10,7 +10,7 @@ export const TextDivider = styled.div<{ theme?: Theme }>`
   &::after {
     content: "";
     flex: 1;
-    border-bottom: 1px solid ${(p) => p.theme.bg.highlighted};
+    border-bottom: 1px solid ${(p) => p.theme.bg.elevated};
   }
 
   span {

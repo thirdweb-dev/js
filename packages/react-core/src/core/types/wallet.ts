@@ -30,7 +30,14 @@ export type WalletConfig<
   id: string;
   meta: (typeof AbstractClientWallet)["meta"];
   create: (options: WalletOptions) => I;
+  /**
+   * UI for connecting wallet
+   */
   connectUI?: React.FC<ConnectUIProps<I, Config>>;
+  /**
+   * UI for selecting wallet - this UI is rendered in the wallet selection screen
+   */
+  selectUI?: React.FC<SelectUIProps<I, Config>>;
   isInstalled?: () => boolean;
 } & (Config extends undefined
   ? {}
@@ -111,4 +118,47 @@ export type ConnectUIProps<
    * ```
    */
   walletConfig: WalletConfig<I, Config>;
+
+  /**
+   * selectionData passed from `selectUI`'s `onSelect` function
+   */
+  selectionData: any;
+
+  /**
+   * set selectionData
+   * @returns
+   */
+  setSelectionData: (data: any) => void;
+
+  /**
+   * List of all supported wallets including your wallet.
+   */
+  supportedWallets: WalletConfig[];
+};
+
+export type SelectUIProps<
+  I extends WalletInstance = WalletInstance,
+  Config extends Record<string, any> | undefined = undefined,
+> = {
+  /**
+   * Call this function to "select" your wallet and render the screen for connecting the wallet
+   * @param selectionData - selectionData to be passed to `connectUI`'s `selectionData` prop
+   * @returns
+   */
+  onSelect: (selectionData: any) => void;
+
+  /**
+   * `WalletConfig` object of your wallet
+   *
+   * you can use this get metadata of your wallet by doing `walletConfig.meta`
+   */
+  walletConfig: WalletConfig<I, Config>;
+
+  /**
+   * List of all supported wallets including your wallet.
+   *
+   * You can use this to conditionally render UI based on how many wallets are supported.
+   * For example: You can render a larger UI if only one wallet (your wallet) is supported.
+   */
+  supportedWallets: WalletConfig[];
 };

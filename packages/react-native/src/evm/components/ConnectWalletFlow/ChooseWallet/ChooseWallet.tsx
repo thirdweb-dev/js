@@ -18,7 +18,7 @@ export type ChooseWalletProps = {
 };
 
 export function ChooseWallet({
-  headerText = "Choose your Wallet",
+  headerText,
   subHeaderText,
   wallets,
   onChooseWallet,
@@ -39,7 +39,7 @@ export function ChooseWallet({
     <View>
       <ModalHeaderTextClose
         onClose={onClose}
-        headerText={headerText}
+        headerText={headerText ? headerText : "Choose your wallet"}
         subHeaderText={subHeaderText}
       />
       <ChooseWalletContent

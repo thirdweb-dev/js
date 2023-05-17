@@ -6,7 +6,7 @@ import {
   ModalTitle,
 } from "../../../components/modalElements";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
-import { useWalletContext, useWallets } from "@thirdweb-dev/react-core";
+import { WalletConfig, useWalletContext } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { FormFooter, Label } from "../../../components/formElements";
 import { spacing } from "../../../design-system";
@@ -24,6 +24,8 @@ type ReconnectLocalWalletProps = {
   onConnect: () => void;
   goBack: () => void;
   localWallet: LocalConfiguredWallet;
+  supportedWallets: WalletConfig[];
+  renderBackButton: boolean;
 };
 
 /**
@@ -43,7 +45,6 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
   const { localWallet, meta, walletData } = useLocalWalletInfo(
     props.localWallet,
   );
-  const singleWallet = useWallets().length === 1;
 
   const savedAddress = walletData
     ? walletData === "loading"
@@ -92,6 +93,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
   if (showCreate) {
     return (
       <CreateLocalWallet_Password
+        renderBackButton={props.supportedWallets.length > 1}
         localWalletConf={props.localWallet}
         goBack={() => {
           setShowCreate(false);
@@ -127,7 +129,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
       <LocalWalletModalHeader
         onBack={props.goBack}
         meta={meta}
-        hideBack={singleWallet}
+        hideBack={!props.renderBackButton}
       />
       <ModalTitle
         style={{
