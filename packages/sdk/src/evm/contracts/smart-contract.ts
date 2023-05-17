@@ -3,6 +3,7 @@ import { FEATURE_TOKEN } from "../constants/erc20-features";
 import { FEATURE_NFT } from "../constants/erc721-features";
 import { FEATURE_EDITION } from "../constants/erc1155-features";
 import {
+  FEATURE_AIRDROP_TOKEN,
   FEATURE_APPURI,
   FEATURE_DIRECT_LISTINGS,
   FEATURE_ENGLISH_AUCTIONS,
@@ -57,10 +58,12 @@ import type {
   DirectListingsLogic,
   EnglishAuctionsLogic,
   OffersLogic,
+  AirdropERC20,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides } from "ethers";
 import { BaseContractInterface } from "../types/contract";
+import { TokenAirdrop } from "../core/classes/airdrop-erc20";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -291,6 +294,10 @@ export class SmartContract<
     return assertEnabled(this.detectOffers(), FEATURE_OFFERS);
   }
 
+  get airdrop20(): TokenAirdrop<AirdropERC20> {
+    return assertEnabled(this.detectAirdrop20(), FEATURE_AIRDROP_TOKEN);
+  }
+
   private _chainId: number;
   get chainId() {
     return this._chainId;
@@ -514,6 +521,15 @@ export class SmartContract<
   private detectOffers() {
     if (detectContractFeature<OffersLogic>(this.contractWrapper, "Offers")) {
       return new MarketplaceV3Offers(this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  private detectAirdrop20() {
+    if (
+      detectContractFeature<AirdropERC20>(this.contractWrapper, "AirdropERC20")
+    ) {
+      return new TokenAirdrop(this.contractWrapper, this.storage, this.chainId);
     }
     return undefined;
   }

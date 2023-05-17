@@ -13,6 +13,7 @@ import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/dist/abis/IRoyalty.j
 import IOwnableAbi from "@thirdweb-dev/contracts-js/dist/abis/Ownable.json";
 import IAccountFactory from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactory.json";
 import IAccount from "@thirdweb-dev/contracts-js/dist/abis/IAccount.json";
+import IAirdropERC20 from "@thirdweb-dev/contracts-js/dist/abis/IAirdropERC20.json";
 
 export const getAllPluginsAbi = [
   {
@@ -300,5 +301,17 @@ export const FEATURE_SMART_WALLET = {
     contracts: "",
   },
   abis: [IAccount],
+  features: {},
+} as const;
+
+export const FEATURE_AIRDROP_TOKEN = {
+  name: "AirdropERC20",
+  namespace: "airdroperc20",
+  docLinks: {
+    // TODO
+    sdk: "",
+    contracts: "",
+  },
+  abis: [IAirdropERC20],
   features: {},
 } as const;
