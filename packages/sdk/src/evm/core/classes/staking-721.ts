@@ -76,6 +76,21 @@ export class Staking721<T extends NFTStake | Staking721Base>
   ////// Standard Staking721 Extension //////
 
   // READ FUNCTIONS
+
+  /**
+   * Get the number of reward tokens in the staking contract
+   *
+   * @remarks Get the number of reward tokens the staking contract owns. To deposit reward tokens, use the `depositRewardTokens` function.
+   *
+   * @example
+   * ```javascript
+   * // Get reward token balance for staking contract
+   * const balance = await contract.staking721.getRewardTokenBalance();
+   * ```
+   *
+   * @returns Number of reward tokens, see {@link CurrencyValue}
+   * @twfeature Staking721
+   */
   public async getRewardTokenBalance(): Promise<CurrencyValue> {
     return fetchCurrencyValue(
       await this.contractWrapper.getProvider(),
@@ -84,6 +99,18 @@ export class Staking721<T extends NFTStake | Staking721Base>
     );
   }
 
+  /**
+   * Get information about reward token
+   *
+   * @example
+   * ```javascript
+   * // Get reward token info
+   * const rewardToken = await contract.staking721.getRewardToken();
+   * ```
+   *
+   * @returns see {@link Currency}
+   * @twfeature Staking721
+   */
   public async getRewardToken(): Promise<Currency & { address: string }> {
     return {
       ...(await fetchCurrencyMetadata(
@@ -94,10 +121,34 @@ export class Staking721<T extends NFTStake | Staking721Base>
     };
   }
 
+  /**
+   * Get address for the staking token
+   *
+   * @example
+   * ```javascript
+   * // Get staking token address
+   * const rewardToken = await contract.staking721.getStakingTokenAddress();
+   * ```
+   *
+   * @returns string
+   * @twfeature Staking721
+   */
   public async getStakingTokenAddress(): Promise<string> {
     return await this.contractWrapper.readContract.stakingToken();
   }
 
+  /**
+   * Get reward tokens rewarded per unit time
+   *
+   * @example
+   * ```javascript
+   * // Get rewards per unit time
+   * const rewardToken = await contract.staking721.getRewardsPerUnitTime();
+   * ```
+   *
+   * @returns see {@link CurrencyValue}
+   * @twfeature Staking721
+   */
   public async getRewardsPerUnitTime(): Promise<CurrencyValue> {
     return fetchCurrencyValue(
       await this.contractWrapper.getProvider(),
@@ -106,11 +157,34 @@ export class Staking721<T extends NFTStake | Staking721Base>
     );
   }
 
-  // array of token ids staked
+  /**
+   * Get list of token IDs staked in an array
+   *
+   * @example
+   * ```javascript
+   * // Get tokens staked
+   * const rewardToken = await contract.staking721.getTokensStaked("thirdweb.eth");
+   * ```
+   *
+   * @returns see {@link BigNumber}
+   * @twfeature Staking721
+   */
   public async getTokensStaked(staker: AddressOrEns): Promise<BigNumberish[]> {
     return (await this.contractWrapper.readContract.getStakeInfo(staker))[0];
   }
 
+  /**
+   * Get amount of unclaimed reward tokens for a specific address or ENS
+   *
+   * @example
+   * ```javascript
+   * // Get unclaimed rewards
+   * const rewardToken = await contract.staking721.getRewards("thirdweb.eth");
+   * ```
+   *
+   * @returns see {@link CurrencyValue}
+   * @twfeature Staking721
+   */
   public async getRewards(address: AddressOrEns): Promise<CurrencyValue> {
     return fetchCurrencyValue(
       await this.contractWrapper.getProvider(),
@@ -123,12 +197,35 @@ export class Staking721<T extends NFTStake | Staking721Base>
     );
   }
 
-  public async getTimeUnit(): Promise<number> {
+  /**
+   * Get time unit for the staking contract
+   *
+   * @example
+   * ```javascript
+   * // Get tokens staked
+   * const rewardToken = await contract.staking721.getTimeUnits()
+   * ```
+   *
+   * @returns number
+   * @twfeature Staking721
+   */
+  public async getTimeUnits(): Promise<number> {
     return (await this.contractWrapper.readContract.getTimeUnit()).toNumber();
   }
 
   // WRITE FUNCTIONS
 
+  /**
+   * Claim rewards and receive reward tokens.
+   *
+   * @example
+   * ```javascript
+   * // Claim rewards
+   * const claim = await contract.staking721.claimRewards();
+   * ```
+   *
+   * @twfeature Staking721
+   */
   claimRewards = buildTransactionFunction(async () => {
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
@@ -137,6 +234,17 @@ export class Staking721<T extends NFTStake | Staking721Base>
     });
   });
 
+  /**
+   * Deposit reward tokens in the staking contract. Automatically fetches and seeks token transfer approval.
+   *
+   * @example
+   * ```javascript
+   * // Deposit reward tokens
+   * const deposit = await contract.staking721.depositRewardTokens(500);
+   * ```
+   *
+   * @twfeature Staking721
+   */
   depositRewardTokens = buildTransactionFunction(async (amount: Amount) => {
     // Approve spending of reward tokens
     await this.handleTokenApproval(
@@ -161,6 +269,17 @@ export class Staking721<T extends NFTStake | Staking721Base>
     });
   });
 
+  /**
+   * Set rewards that can be received per unit time set in the contract
+   *
+   * @example
+   * ```javascript
+   * // Set rewards to be 5 tokens per unit time
+   * const deposit = await contract.staking721.setRewardsPerUnitTime(5);
+   * ```
+   *
+   * @twfeature Staking721
+   */
   setRewardsPerUnitTime = buildTransactionFunction(async (rewards: Amount) => {
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
@@ -174,6 +293,17 @@ export class Staking721<T extends NFTStake | Staking721Base>
     });
   });
 
+  /**
+   * Set time unit for which every reward token is issued.
+   *
+   * @example
+   * ```javascript
+   * // Set time unit
+   * const setUnits = await contract.staking721.setTimeUnit(60000);
+   * ```
+   *
+   * @twfeature Staking721
+   */
   setTimeUnit = buildTransactionFunction(async (timeUnit: number) => {
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
@@ -182,6 +312,17 @@ export class Staking721<T extends NFTStake | Staking721Base>
     });
   });
 
+  /**
+   * Stake given token IDs to the staking contract. NFT transfer approvals are handled automatically.
+   *
+   * @example
+   * ```javascript
+   * // Stake token IDs 1 and 2
+   * const setUnits = await contract.staking721.stake([1, 2]);
+   * ```
+   *
+   * @twfeature Staking721
+   */
   stake = buildTransactionFunction(async (tokenIds: BigNumberish[]) => {
     // Handle approval
     await this.handleNftApproval(
@@ -198,6 +339,17 @@ export class Staking721<T extends NFTStake | Staking721Base>
     });
   });
 
+  /**
+   * Withdraw specific token IDs from the staking contract
+   *
+   * @example
+   * ```javascript
+   * // Withdraw token IDs 1 and 2
+   * const setUnits = await contract.staking721.withdraw([1, 2]);
+   * ```
+   *
+   * @twfeature Staking721
+   */
   withdraw = buildTransactionFunction(async (tokenIds: BigNumberish[]) => {
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
@@ -206,6 +358,17 @@ export class Staking721<T extends NFTStake | Staking721Base>
     });
   });
 
+  /**
+   * Withdraw deposited reward tokens
+   *
+   * @example
+   * ```javascript
+   * // Withdraw 10 reward tokens
+   * const withdraw = await contract.staking721.withdrawRewardTokens(10);
+   * ```
+   *
+   * @twfeature Staking721
+   */
   withdrawRewardTokens = buildTransactionFunction(async (amount: Amount) => {
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,

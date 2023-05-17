@@ -77,6 +77,20 @@ export class Staking1155<T extends EditionStake | Staking1155Base>
 
   // READ FUNCTIONS
 
+  /**
+   * Get the number of reward tokens in the staking contract
+   *
+   * @remarks Get the number of reward tokens the staking contract owns. To deposit reward tokens, use the `depositRewardTokens` function.
+   *
+   * @example
+   * ```javascript
+   * // Get reward token balance for staking contract
+   * const balance = await contract.staking1155.getRewardTokenBalance();
+   * ```
+   *
+   * @returns Number of reward tokens, see {@link CurrencyValue}
+   * @twfeature Staking1155
+   */
   public async getRewardTokenBalance(): Promise<CurrencyValue> {
     return fetchCurrencyValue(
       await this.contractWrapper.getProvider(),
@@ -85,6 +99,18 @@ export class Staking1155<T extends EditionStake | Staking1155Base>
     );
   }
 
+  /**
+   * Get information about reward token
+   *
+   * @example
+   * ```javascript
+   * // Get reward token info
+   * const rewardToken = await contract.staking1155.getRewardToken();
+   * ```
+   *
+   * @returns see {@link Currency}
+   * @twfeature Staking1155
+   */
   public async getRewardToken(): Promise<Currency & { address: string }> {
     return {
       ...(await fetchCurrencyMetadata(
@@ -95,6 +121,18 @@ export class Staking1155<T extends EditionStake | Staking1155Base>
     };
   }
 
+  /**
+   * Get default rewards per unit time set in the contract
+   *
+   * @example
+   * ```javascript
+   * // Get default rewards
+   * const rewards = await contract.staking1155.getDefaultRewardsPerUnitTime();
+   * ```
+   *
+   * @returns see {@link CurrencyValue}
+   * @twfeature Staking1155
+   */
   public async getDefaultRewardsPerUnitTime(): Promise<CurrencyValue> {
     return fetchCurrencyValue(
       await this.contractWrapper.getProvider(),
@@ -103,10 +141,34 @@ export class Staking1155<T extends EditionStake | Staking1155Base>
     );
   }
 
+  /**
+   * Get default time unit set in the contract
+   *
+   * @example
+   * ```javascript
+   * // Get time unit
+   * const units = await contract.staking1155.getDefaultTimeUnit();
+   * ```
+   *
+   * @returns BigNumberish
+   * @twfeature Staking1155
+   */
   public async getDefaultTimeUnit(): Promise<BigNumberish> {
     return await this.contractWrapper.readContract.getDefaultTimeUnit();
   }
 
+  /**
+   * Get rewards per unit time for a specific token ID
+   *
+   * @example
+   * ```javascript
+   * // Get rewards per unit time for token ID 1
+   * const rewards = await contract.staking1155.getRewardsPerUnitTime(1);
+   * ```
+   *
+   * @returns see {@link CurrencyValue}
+   * @twfeature Staking1155
+   */
   public async getRewardsPerUnitTime(
     tokenId: BigNumberish,
   ): Promise<CurrencyValue> {
@@ -117,6 +179,18 @@ export class Staking1155<T extends EditionStake | Staking1155Base>
     );
   }
 
+  /**
+   * Get unclaimed rewards for a specific wallet
+   *
+   * @example
+   * ```javascript
+   * // Get unclaimed rewards
+   * const rewards = await contract.staking1155.getRewards("thirdweb.eth");
+   * ```
+   *
+   * @returns see {@link CurrencyValue}
+   * @twfeature Staking1155
+   */
   public async getRewards(address: AddressOrEns): Promise<CurrencyValue> {
     return fetchCurrencyValue(
       await this.contractWrapper.getProvider(),
@@ -129,7 +203,17 @@ export class Staking1155<T extends EditionStake | Staking1155Base>
     );
   }
 
-  // ?
+  /**
+   * Get all the tokens staked by a specific wallet
+   *
+   * @example
+   * ```javascript
+   * // Get tokens staked for token ID 1
+   * const tokensStaked = await contract.staking1155.getTokensStaked("thirdweb.eth");
+   * ```
+   *
+   * @twfeature Staking1155
+   */
   public async getTokensStaked(
     address: AddressOrEns,
   ): Promise<{ tokenId: BigNumberish; amount: CurrencyValue }[]> {
@@ -152,6 +236,18 @@ export class Staking1155<T extends EditionStake | Staking1155Base>
     return tokensStaked;
   }
 
+  /**
+   * Get the number of copies staked by token ID and staker
+   *
+   * @example
+   * ```javascript
+   * // Get tokens staked for token ID 1
+   * const tokensStaked = await contract.staking1155.getTokensStakedByTokenId(1, "thirdweb.eth");
+   * ```
+   *
+   * @returns see {@link CurrencyValue}
+   * @twfeature Staking1155
+   */
   public async getTokensStakedByTokenId(
     tokenId: BigNumberish,
     staker: AddressOrEns,
@@ -168,17 +264,53 @@ export class Staking1155<T extends EditionStake | Staking1155Base>
     );
   }
 
+  /**
+   * Get the time unit set for a specific token ID
+   *
+   * @example
+   * ```javascript
+   * // Get time unit for token ID 1
+   * const timeUnit = await contract.staking1155.getTimeUnit(1);
+   * ```
+   *
+   * @returns number
+   * @twfeature Staking1155
+   */
   public async getTimeUnit(tokenId: BigNumberish): Promise<number> {
     return (
       await this.contractWrapper.readContract.getTimeUnit(tokenId)
     ).toNumber();
   }
 
+  /**
+   * Get address for the staking token
+   *
+   * @example
+   * ```javascript
+   * // Get staking token address
+   * const rewardToken = await contract.staking1155.getStakingTokenAddress();
+   * ```
+   *
+   * @returns string
+   * @twfeature Staking1155
+   */
   public async getStakingTokenAddress(): Promise<string> {
     return await this.contractWrapper.readContract.stakingToken();
   }
 
   // WRITE FUNCTIONS
+
+  /**
+   * Claim rewards and receive reward tokens.
+   *
+   * @example
+   * ```javascript
+   * // Claim rewards
+   * const claim = await contract.staking1155.claimRewards();
+   * ```
+   *
+   * @twfeature Staking1155
+   */
   claimRewards = buildTransactionFunction(async (tokenId: BigNumberish) => {
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
@@ -187,6 +319,17 @@ export class Staking1155<T extends EditionStake | Staking1155Base>
     });
   });
 
+  /**
+   * Deposit reward tokens in the staking contract. Automatically fetches and seeks token transfer approval.
+   *
+   * @example
+   * ```javascript
+   * // Deposit reward tokens
+   * const deposit = await contract.staking1155.depositRewardTokens(500);
+   * ```
+   *
+   * @twfeature Staking1155
+   */
   depositRewardTokens = buildTransactionFunction(async (amount: Amount) => {
     // Approve spending of reward tokens
     await this.handleTokenApproval(
@@ -211,6 +354,17 @@ export class Staking1155<T extends EditionStake | Staking1155Base>
     });
   });
 
+  /**
+   * Set default rewards per unit time for token IDs that are not overriden
+   *
+   * @example
+   * ```javascript
+   * // Set reward to 100 tokens
+   * const rewards = await contract.staking1155.setDefaultRewardsPerUnitTime(100);
+   * ```
+   *
+   * @twfeature Staking1155
+   */
   setDefaultRewardsPerUnitTime = buildTransactionFunction(
     async (rewards: Amount) => {
       return Transaction.fromContractWrapper({
@@ -226,6 +380,17 @@ export class Staking1155<T extends EditionStake | Staking1155Base>
     },
   );
 
+  /**
+   * Set default time unit for all token IDs that are not overriden
+   *
+   * @example
+   * ```javascript
+   * // Set default time unit to 60000
+   * const units = await contract.staking1155.setDefaultTimeUnit(60000);
+   * ```
+   *
+   * @twfeature Staking1155
+   */
   setDefaultTimeUnit = buildTransactionFunction(async (timeUnit: number) => {
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
@@ -234,6 +399,17 @@ export class Staking1155<T extends EditionStake | Staking1155Base>
     });
   });
 
+  /**
+   * Set rewards per unit time for a specific token ID
+   *
+   * @example
+   * ```javascript
+   * // Set 10 reward tokens per unit time for token ID 1
+   * const rewards = await contract.staking1155.setRewardsPerUnitTime(1, 10);
+   * ```
+   *
+   * @twfeature Staking1155
+   */
   setRewardsPerUnitTime = buildTransactionFunction(
     async (tokenId: BigNumberish, rewards: Amount) => {
       return Transaction.fromContractWrapper({
@@ -250,6 +426,17 @@ export class Staking1155<T extends EditionStake | Staking1155Base>
     },
   );
 
+  /**
+   * Set time unit for a specific token ID
+   *
+   * @example
+   * ```javascript
+   * // Set time unit for token ID 1 to 60000
+   * const units = await contract.staking1155.setTimeUnit(1, 60000);
+   * ```
+   *
+   * @twfeature Staking1155
+   */
   setTimeUnit = buildTransactionFunction(
     async (tokenId: BigNumberish, timeUnit: number) => {
       return Transaction.fromContractWrapper({
@@ -260,6 +447,17 @@ export class Staking1155<T extends EditionStake | Staking1155Base>
     },
   );
 
+  /**
+   * Stake certain amount of copies for a specific token ID
+   *
+   * @example
+   * ```javascript
+   * // Stake 10 copies of token ID 1
+   * const stake = await contract.staking1155.stake(1, 10);
+   * ```
+   *
+   * @twfeature Staking1155
+   */
   stake = buildTransactionFunction(
     async (tokenId: BigNumberish, amount: Amount) => {
       // approval
@@ -283,6 +481,17 @@ export class Staking1155<T extends EditionStake | Staking1155Base>
     },
   );
 
+  /**
+   * Withdraw specific token ID and their amount
+   *
+   * @example
+   * ```javascript
+   * // Withdraw 10 copies of token ID 1
+   * const withdraw = await contract.staking1155.withdraw(1, 10);
+   * ```
+   *
+   * @twfeature Staking1155
+   */
   withdraw = buildTransactionFunction(
     async (tokenId: BigNumberish, amount: Amount) => {
       return Transaction.fromContractWrapper({
@@ -299,6 +508,17 @@ export class Staking1155<T extends EditionStake | Staking1155Base>
     },
   );
 
+  /**
+   * Withdraw deposited reward tokens
+   *
+   * @example
+   * ```javascript
+   * // Withdraw 10 reward tokens
+   * const withdraw = await contract.staking1155.withdrawRewardTokens(10);
+   * ```
+   *
+   * @twfeature Staking1155
+   */
   withdrawRewardTokens = buildTransactionFunction(async (amount: Amount) => {
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
