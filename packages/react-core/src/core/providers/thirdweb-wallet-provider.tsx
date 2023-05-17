@@ -293,11 +293,11 @@ export function ThirdwebWalletProvider(
         if (personalWalleObj) {
           // create a personal wallet instance and auto connect it
           const personalWalletInstance = createWalletInstance(personalWalleObj);
-
+          const connectParams = { ...personalWalletInfo.connectParams };
+          // set chain id of wrapper wallet to personal wallet - both should be same
+          connectParams.chainId = walletInfo.connectParams?.chainId;
           try {
-            await personalWalletInstance.autoConnect(
-              personalWalletInfo.connectParams,
-            );
+            await personalWalletInstance.autoConnect(connectParams);
           } catch (e) {
             console.error(e);
             setConnectionStatus("disconnected");
@@ -321,8 +321,12 @@ export function ThirdwebWalletProvider(
 
       try {
         setConnectionStatus("connecting");
-        await wallet.autoConnect(walletInfo.connectParams);
-        setConnectedWallet(wallet, walletInfo.connectParams, true);
+        const connectParams = { ...walletInfo.connectParams };
+        if (!walletObj.autoSwitch) {
+          connectParams.chainId = undefined;
+        }
+        await wallet.autoConnect(connectParams);
+        setConnectedWallet(wallet, connectParams, true);
       } catch (e) {
         lastConnectedWalletStorage.removeItem(
           LAST_CONNECTED_WALLET_STORAGE_KEY,
