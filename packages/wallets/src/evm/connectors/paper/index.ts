@@ -19,7 +19,7 @@ export const PaperChainMap = {
   1: "Ethereum",
   5: "Goerli",
   137: "Polygon",
-  250: "Fantom",
+  250: "Fantom Opera",
   4002: "Fantom Testnet",
   80001: "Mumbai",
   43114: "Avalanche",
