@@ -779,7 +779,7 @@ export class ContractDeployer extends RPCConnectionHandler {
           constructorParamValues,
         );
 
-        if (extendedMetadata.deployType === DeployTypeInput.Enum.AutoFactory) {
+        if (extendedMetadata.deployType === "autoFactory") {
           // any evm deployment flow
 
           // 1. Deploy CREATE2 factory (if not already exists)

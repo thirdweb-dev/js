@@ -134,12 +134,13 @@ export const FactoryDeploymentSchema = z.object({
 /**
  * @internal
  */
-export const DeployTypeInput = z.enum([
-  "Standard",
-  "AutoFactory",
-  "CustomFactory",
+export const DeployTypeInput = z.union([
+  z.literal("standard"),
+  z.literal("autoFactory"),
+  z.literal("customFactory"),
 ]);
-export type DeployType = z.infer<typeof DeployTypeInput>;
+// );
+// export type DeployType = z.infer<typeof DeployTypeInput>;
 
 /**
  * @internal
