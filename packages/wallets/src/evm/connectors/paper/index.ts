@@ -19,8 +19,16 @@ export const PaperChainMap = {
   1: "Ethereum",
   5: "Goerli",
   137: "Polygon",
+  250: "Fantom",
+  4002: "FantomTestnet",
   80001: "Mumbai",
   43114: "Avalanche",
+  10: "Optimism",
+  420: "OptimismGoerli",
+  56: "BSC",
+  97: "BSCTestnet",
+  42161: "ArbitrumOne",
+  421613: "ArbitrumGoerli",
 } as const;
 
 export type PaperSupportedChainId = keyof typeof PaperChainMap;

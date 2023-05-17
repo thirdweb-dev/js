@@ -21,11 +21,14 @@ export function usePaperWallet() {
   );
 }
 
-export function usePaperWalletUserEmail(): UseQueryResult<string, string> {
+export function usePaperWalletUserEmail(): UseQueryResult<
+  string | undefined,
+  string
+> {
   const wallet = useWallet();
   const queryClient = useQueryClient();
 
-  const emailQuery = useQuery<string, string>(
+  const emailQuery = useQuery<string | undefined, string>(
     [wallet?.walletId, "paper-email"],
     () => {
       if (!wallet || wallet.walletId !== walletIds.paper) {
