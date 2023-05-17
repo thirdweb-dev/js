@@ -99,6 +99,23 @@ export class Staking721<T extends NFTStake | Staking721Base>
     };
   }
 
+  public async getRewardsPerUnitTime(): Promise<CurrencyValue> {
+    return fetchCurrencyValue(
+      await this.contractWrapper.getProvider(),
+      (await this.getRewardToken()).address,
+      await this.contractWrapper.readContract.getRewardsPerUnitTime(),
+    );
+  }
+
+  // array of token ids staked
+  public async getTokensStaked(staker: AddressOrEns): Promise<BigNumberish[]> {
+    return (await this.contractWrapper.readContract.getStakeInfo(staker))[0];
+  }
+
+  public async getTimeUnit(): Promise<number> {
+    return (await this.contractWrapper.readContract.getTimeUnit()).toNumber();
+  }
+
   // WRITE FUNCTIONS
 
   claimRewards = buildTransactionFunction(async () => {
