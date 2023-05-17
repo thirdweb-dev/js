@@ -4,7 +4,7 @@ import {
   WalletConfig,
   useConnectionStatus,
   useDisconnect,
-  useWalletConfig,
+  useWallet,
   useWallets,
 } from "@thirdweb-dev/react-core";
 import {
@@ -32,7 +32,7 @@ export const ConnectModal = () => {
   const isWalletModalOpen = useIsWalletModalOpen();
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
   const connectionStatus = useConnectionStatus();
-  const walletConfig = useWalletConfig();
+  const wallet = useWallet();
   const walletModalConfig = useContext(ModalConfigCtx);
   const setWalletModalConfig = useContext(SetModalConfigCtx);
   const disconnect = useDisconnect();
@@ -59,19 +59,19 @@ export const ConnectModal = () => {
 
   const prevConnectionStatus = useRef(connectionStatus);
 
-  // if screen's wallet is not connected and modal is closed and connectionStatus is connected
-  // then reopen the modal
+  const isWrapperScreen = typeof screen !== "string" && screen.personalWallets;
+
+  const isWrapperConnected = !!wallet?.getPersonalWallet();
+
+  // reopen the screen to complete wrapper wallet's next step after connecting a personal wallet
   useEffect(() => {
     if (
-      // if modal is closed
+      !isWrapperConnected &&
+      isWrapperScreen &&
       !isWalletModalOpen &&
-      // a wallet is connected
       connectionStatus === "connected" &&
-      // rendering a screen for a wallet - and it's not connected
-      typeof screen !== "string" &&
-      screen.id !== walletConfig?.id
+      prevConnectionStatus.current === "connecting"
     ) {
-      // then reopen the modal
       setIsWalletModalOpen(true);
     }
 
@@ -80,8 +80,8 @@ export const ConnectModal = () => {
     isWalletModalOpen,
     connectionStatus,
     setIsWalletModalOpen,
-    screen,
-    walletConfig?.id,
+    isWrapperScreen,
+    isWrapperConnected,
   ]);
 
   const WalletConnectUI =
