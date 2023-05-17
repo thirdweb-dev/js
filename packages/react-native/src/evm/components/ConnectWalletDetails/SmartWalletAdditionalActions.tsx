@@ -4,9 +4,6 @@ import BaseButton from "../base/BaseButton";
 import { WalletIcon } from "../base/WalletIcon";
 import {
   AbstractClientWallet,
-  IWalletConnectReceiver,
-  WCProposal,
-  WCRequest,
   SmartWallet,
   walletIds,
 } from "@thirdweb-dev/wallets";
@@ -18,10 +15,6 @@ import { useEffect, useState } from "react";
 import { useSmartWallet } from "../../providers/context-provider";
 import RightArrowIcon from "../../assets/right-arrow";
 import { useTheme } from "@shopify/restyle";
-import { TextInput } from "../base/TextInput";
-import Box from "../base/Box";
-import { SessionProposalModal } from "./SessionProposalModal";
-import { SessionRequestModal } from "./SessionRequestModal";
 
 export const SmartWalletAdditionalActions = ({
   onExportPress,
@@ -35,42 +28,10 @@ export const SmartWalletAdditionalActions = ({
   const [showSmartWallet, setShowSmartWallet] = useState(false);
   const activeWallet = useWallet();
   const theme = useTheme();
-  const [showWCRow, setShowWCRow] = useState(false);
-  const [wcUri, setWCUri] = useState<string | undefined>();
-  const [appMeta, setAppMeta] = useState<{ name: string; iconUrl: string }>();
-  const [sessionProposalData, setSessionProposalData] = useState<
-    WCProposal | undefined
-  >();
-  const [sessionRequestData, setSessionRequestData] = useState<
-    WCRequest | undefined
-  >();
 
   const wallet = showSmartWallet
     ? smartWallet
     : (activeWallet?.getPersonalWallet() as AbstractClientWallet);
-
-  const onSmartWalletWCMessage = ({
-    type,
-    data,
-  }: {
-    type: string;
-    data?: unknown;
-  }) => {
-    switch (type) {
-      case "session_proposal":
-        setSessionProposalData(data as WCProposal);
-        break;
-      case "session_delete":
-        setAppMeta(undefined);
-        break;
-      case "session_request":
-        setSessionRequestData(data as WCRequest);
-        break;
-      default:
-        // method not implemented
-        return;
-    }
-  };
 
   useEffect(() => {
     if (activeWallet?.walletId === SmartWallet.id) {
@@ -90,51 +51,12 @@ export const SmartWalletAdditionalActions = ({
     })();
   }, [smartWallet, smartWalletAddress]);
 
-  useEffect(() => {
-    if (smartWallet) {
-      smartWallet.addListener("message", onSmartWalletWCMessage);
-
-      const sessions = (
-        smartWallet as unknown as IWalletConnectReceiver
-      ).getActiveSessions();
-      console.log("sessions", sessions);
-      if (Object.keys(sessions).length > 0) {
-        setAppMeta({
-          name: sessions[0].peer.metadata.name,
-          iconUrl: sessions[0].peer.metadata.icons[0],
-        });
-      }
-    }
-
-    return () => {
-      if (smartWallet) {
-        smartWallet.removeListener("message", onSmartWalletWCMessage);
-      }
-    };
-  }, [smartWallet]);
-
   const onWalletPress = () => {
     if (!wallet) {
       return;
     }
 
     setConnectedWallet(wallet);
-  };
-
-  const onConnectDappPress = () => {
-    setShowWCRow(true);
-  };
-
-  const onAddressChangeText = (text: string) => {
-    setWCUri(text);
-  };
-
-  const onWCPress = () => {
-    if (!wcUri || !smartWallet) {
-      return;
-    }
-
-    smartWallet.connectApp(wcUri);
   };
 
   return (
@@ -171,79 +93,6 @@ export const SmartWalletAdditionalActions = ({
           color={theme.colors.iconPrimary}
         />
       </BaseButton>
-      {!showSmartWallet && smartWallet?.enableConnectApp ? (
-        showWCRow && !appMeta ? (
-          <Box
-            flexDirection="row"
-            mb="sm"
-            borderColor="border"
-            borderWidth={1}
-            borderRadius="md"
-          >
-            <TextInput onChangeText={onAddressChangeText} flex={1} />
-            <BaseButton
-              onPress={onWCPress}
-              justifyContent="center"
-              alignItems="center"
-            >
-              <RightArrowIcon
-                height={20}
-                width={30}
-                color={theme.colors.iconPrimary}
-              />
-            </BaseButton>
-          </Box>
-        ) : (
-          <BaseButton
-            backgroundColor="background"
-            borderColor="border"
-            mb="sm"
-            justifyContent="space-between"
-            style={styles.exportWallet}
-            onPress={onConnectDappPress}
-          >
-            <>
-              {appMeta ? (
-                <WalletIcon size={32} iconUri={appMeta.iconUrl} />
-              ) : (
-                <PocketWalletIcon size={16} />
-              )}
-              <View style={styles.exportWalletInfo}>
-                <Text variant="bodySmall">
-                  {appMeta ? appMeta.name : "Connect app"}
-                </Text>
-              </View>
-            </>
-            <RightArrowIcon
-              height={10}
-              width={10}
-              color={theme.colors.iconPrimary}
-            />
-          </BaseButton>
-        )
-      ) : null}
-      {sessionProposalData ? (
-        <SessionProposalModal
-          isVisible={true}
-          onApprove={(appName: string, appIconUrl: string) => {
-            setAppMeta({ name: appName, iconUrl: appIconUrl });
-            setSessionProposalData(undefined);
-          }}
-          onClose={() => {
-            setSessionProposalData(undefined);
-          }}
-          proposal={sessionProposalData}
-        />
-      ) : null}
-      {sessionRequestData ? (
-        <SessionRequestModal
-          isVisible={true}
-          onClose={() => {
-            setSessionRequestData(undefined);
-          }}
-          requestData={sessionRequestData}
-        />
-      ) : null}
       {wallet?.walletId === walletIds.localWallet ||
       activeWallet?.walletId === walletIds.localWallet ? (
         <>

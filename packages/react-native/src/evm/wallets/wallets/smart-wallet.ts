@@ -1,21 +1,21 @@
 import type { WalletConfig, WalletOptions } from "@thirdweb-dev/react-core";
-import {
-  SmartWallet,
-  SmartWalletConfig as SmartWalletConfigWallets,
-} from "@thirdweb-dev/wallets";
+import { SmartWallet } from "@thirdweb-dev/wallets";
 import { DEFAULT_WALLETS } from "../../constants/wallets";
 
-type SmartWalletConfig = {
+type SafeWalletConfig = {
+  factoryAddress: string;
+  thirdwebApiKey: string;
+  gasless: boolean;
   personalWallets: WalletConfig[];
-} & SmartWalletConfigWallets;
+};
 
-export type SmartWalletObj = WalletConfig<SmartWallet, SmartWalletConfig>;
+export type SmartWalletObj = WalletConfig<SmartWallet, SafeWalletConfig>;
 
 export const smartWallet = (
-  config: Omit<SmartWalletConfig, "personalWallets"> & {
+  config: Omit<SafeWalletConfig, "personalWallets"> & {
     personalWallets?: WalletConfig[];
   },
-): WalletConfig<SmartWallet, SmartWalletConfig> => {
+) => {
   return {
     id: SmartWallet.id,
     meta: SmartWallet.meta,
@@ -25,5 +25,5 @@ export const smartWallet = (
       ...config,
       personalWallets: config.personalWallets || DEFAULT_WALLETS,
     },
-  };
+  } satisfies WalletConfig<SmartWallet, SafeWalletConfig>;
 };
