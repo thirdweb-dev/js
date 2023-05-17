@@ -5,10 +5,7 @@ import {
 } from "../../common/currency";
 import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
-import {
-  FEATURE_NFT_STAKE,
-  FEATURE_TOKEN_STAKE,
-} from "../../constants/thirdweb-features";
+import { FEATURE_NFT_STAKE } from "../../constants/thirdweb-features";
 import { Address, AddressOrEns } from "../../schema";
 import { Currency, CurrencyValue, Amount } from "../../types";
 import { BaseERC20, BaseERC721 } from "../../types/eips";
@@ -16,26 +13,21 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
-import type {
-  TokenStake,
-  Staking20Base,
-  NFTStake,
-  Staking721Base,
-} from "@thirdweb-dev/contracts-js";
+import type { NFTStake, Staking721Base } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
-import { BigNumber, BigNumberish, ethers } from "ethers";
-import { AmountSchema } from "../../../core/schema/shared";
+import { BigNumberish } from "ethers";
 import { Staking } from "./staking";
 
 /**
- * Standard ERC20 Token functions
- * @remarks Basic functionality for a ERC20 contract that handles all unit transformation for you.
+ * Standard ERC721 Staking functions
+ * @remarks Basic functionality for an ERC721 staking contract.
  * @example
  * ```javascript
+ * // stake token IDs 1 and 2
  * const contract = await sdk.getContract("{{contract_address}}");
- * await contract.erc20.transfer(walletAddress, amount);
+ * await contract.staking721.stake([1, 2]);
  * ```
  * @public
  */
@@ -100,6 +92,10 @@ export class Staking721<T extends NFTStake | Staking721Base>
       )),
       address: await this.contractWrapper.readContract.rewardToken(),
     };
+  }
+
+  public async getStakingTokenAddress(): Promise<string> {
+    return await this.contractWrapper.readContract.stakingToken();
   }
 
   public async getRewardsPerUnitTime(): Promise<CurrencyValue> {

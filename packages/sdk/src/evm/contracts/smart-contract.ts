@@ -5,6 +5,7 @@ import { FEATURE_EDITION } from "../constants/erc1155-features";
 import {
   FEATURE_APPURI,
   FEATURE_DIRECT_LISTINGS,
+  FEATURE_EDITION_STAKE,
   FEATURE_ENGLISH_AUCTIONS,
   FEATURE_NFT_STAKE,
   FEATURE_OFFERS,
@@ -63,12 +64,15 @@ import type {
   Staking20Base,
   NFTStake,
   Staking721Base,
+  EditionStake,
+  Staking1155Base,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides } from "ethers";
 import { BaseContractInterface } from "../types/contract";
 import { Staking20 } from "../core/classes/staking-20";
 import { Staking721 } from "../core/classes/staking-721";
+import { Staking1155 } from "../core/classes/staking-1155";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -313,6 +317,13 @@ export class SmartContract<
     return assertEnabled(this.detectNftStake(), FEATURE_NFT_STAKE);
   }
 
+  /**
+   * Auto-detects Staking1155 standard functions.
+   */
+  get staking1155(): Staking1155<EditionStake | Staking1155Base> {
+    return assertEnabled(this.detectEditionStake(), FEATURE_EDITION_STAKE);
+  }
+
   private _chainId: number;
   get chainId() {
     return this._chainId;
@@ -550,6 +561,15 @@ export class SmartContract<
   private detectNftStake() {
     if (detectContractFeature<NFTStake>(this.contractWrapper, "Staking721")) {
       return new Staking721(this.contractWrapper, this.storage, this.chainId);
+    }
+    return undefined;
+  }
+
+  private detectEditionStake() {
+    if (
+      detectContractFeature<EditionStake>(this.contractWrapper, "Staking1155")
+    ) {
+      return new Staking1155(this.contractWrapper, this.storage, this.chainId);
     }
     return undefined;
   }

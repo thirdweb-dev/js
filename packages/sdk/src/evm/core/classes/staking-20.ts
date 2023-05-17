@@ -16,17 +16,16 @@ import { Transaction } from "./transactions";
 import type { TokenStake, Staking20Base } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
-import { BigNumber, BigNumberish, ethers } from "ethers";
-import { AmountSchema } from "../../../core/schema/shared";
 import { Staking } from "./staking";
 
 /**
- * Standard ERC20 Token functions
- * @remarks Basic functionality for a ERC20 contract that handles all unit transformation for you.
+ * Standard ERC20 Staking functions
+ * @remarks Basic functionality for an ERC20 staking contract.
  * @example
  * ```javascript
+ * // stake 500 ERC20 tokens in the staking contract
  * const contract = await sdk.getContract("{{contract_address}}");
- * await contract.erc20.transfer(walletAddress, amount);
+ * await contract.staking20.stake(500);
  * ```
  * @public
  */
