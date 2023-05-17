@@ -15,7 +15,13 @@ import { SmartWallet, walletIds } from "@thirdweb-dev/wallets";
 import { SmartWalletFlow } from "./SmartWallet/SmartWalletFlow";
 import { useColorScheme } from "react-native";
 
-export const ConnectWalletFlow = () => {
+export const ConnectWalletFlow = ({
+  buttonTitle,
+  modalTitle,
+}: {
+  buttonTitle?: string;
+  modalTitle?: string;
+}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [activeWallet, setActiveWallet] = useState<WalletConfig | undefined>();
   const [isConnecting, setIsConnecting] = useState(false);
@@ -137,6 +143,7 @@ export const ConnectWalletFlow = () => {
           )
         ) : (
           <ChooseWallet
+            headerText={modalTitle}
             wallets={supportedWallets}
             onChooseWallet={onChooseWallet}
             onClose={onClose}
@@ -152,6 +159,8 @@ export const ConnectWalletFlow = () => {
         <Text variant="bodyLarge" color="buttonTextColor">
           {showButtonSpinner ? (
             <ActivityIndicator size="small" color="buttonTextColor" />
+          ) : buttonTitle ? (
+            buttonTitle
           ) : (
             "Connect Wallet"
           )}
