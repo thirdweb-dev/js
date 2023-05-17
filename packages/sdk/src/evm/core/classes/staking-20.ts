@@ -18,6 +18,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { AmountSchema } from "../../../core/schema/shared";
+import { Staking } from "./staking";
 
 /**
  * Standard ERC20 Token functions
@@ -30,6 +31,7 @@ import { AmountSchema } from "../../../core/schema/shared";
  * @public
  */
 export class Staking20<T extends TokenStake | Staking20Base>
+  extends Staking
   implements UpdateableNetwork, DetectableFeature
 {
   featureName = FEATURE_TOKEN_STAKE.name;
@@ -48,11 +50,12 @@ export class Staking20<T extends TokenStake | Staking20Base>
     storage: ThirdwebStorage,
     chainId: number,
   ) {
+    super();
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this._chainId = chainId;
 
-    this.getStakingAndRewardTokens();
+    this.getContractWrappers();
   }
 
   /**
@@ -429,7 +432,7 @@ export class Staking20<T extends TokenStake | Staking20Base>
   });
 
   // PRIVATE
-  private async getStakingAndRewardTokens() {
+  private async getContractWrappers() {
     this._stakingToken = new ContractWrapper<BaseERC20>(
       await this.contractWrapper.getSignerOrProvider(),
       await this.contractWrapper.readContract.stakingToken(),
@@ -441,35 +444,6 @@ export class Staking20<T extends TokenStake | Staking20Base>
       await this.contractWrapper.readContract.rewardToken(),
       ERC20Abi,
       this.contractWrapper.options,
-    );
-  }
-
-  private async normalizeAmount(
-    amount: Amount,
-    tokenContractWrapper: ContractWrapper<BaseERC20>,
-  ): Promise<BigNumber> {
-    const decimals = await tokenContractWrapper.readContract.decimals();
-    return ethers.utils.parseUnits(AmountSchema.parse(amount), decimals);
-  }
-
-  private async handleTokenApproval(
-    amount: BigNumberish,
-    owner: AddressOrEns,
-    spender: AddressOrEns,
-    tokenContractWrapper: ContractWrapper<BaseERC20>,
-  ) {
-    // Check if already approved
-    const allowance = await tokenContractWrapper.readContract.allowance(
-      await resolveAddress(owner),
-      await resolveAddress(spender),
-    );
-    if (allowance.gte(amount)) {
-      return;
-    }
-    // Approve token spending
-    await tokenContractWrapper.writeContract.approve(
-      await resolveAddress(spender),
-      amount,
     );
   }
 }
