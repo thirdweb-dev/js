@@ -1,10 +1,9 @@
 import { useWallet } from "@thirdweb-dev/react-core";
-import { SignClientTypes } from "@walletconnect/types";
 import Modal from "react-native-modal";
 import Box from "../base/Box";
 import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
-import { IWalletConnectReceiver } from "@thirdweb-dev/wallets";
+import { IWalletConnectReceiver, WCProposal } from "@thirdweb-dev/wallets";
 
 export const SessionProposalModal = ({
   isVisible,
@@ -13,14 +12,13 @@ export const SessionProposalModal = ({
   onClose,
 }: {
   isVisible: boolean;
-  proposal: SignClientTypes.EventArguments["session_proposal"];
+  proposal: WCProposal;
   onApprove: (appName: string, appIconUrl: string) => void;
   onClose: () => void;
 }) => {
   const wallet = useWallet();
 
   console.log("proposal", proposal);
-  console.log("proposal", proposal.params);
 
   return (
     <Modal isVisible={isVisible} backdropOpacity={0.9}>
@@ -31,9 +29,7 @@ export const SessionProposalModal = ({
         p="lg"
       >
         <Text variant="bodyLarge">Session Proposal</Text>
-        <Text variant="bodyLarge">
-          {proposal.params.proposer.metadata.name}
-        </Text>
+        <Text variant="bodyLarge">{proposal.proposer.metadata.name}</Text>
         <Box flexDirection="row" justifyContent="space-evenly" mt="lg">
           <BaseButton
             alignContent="center"
@@ -45,9 +41,7 @@ export const SessionProposalModal = ({
             minWidth={100}
             borderColor="border"
             onPress={async () => {
-              (wallet as unknown as IWalletConnectReceiver).rejectSession(
-                proposal,
-              );
+              (wallet as unknown as IWalletConnectReceiver).rejectSession();
               onClose();
             }}
           >
@@ -69,10 +63,10 @@ export const SessionProposalModal = ({
               }
               await (
                 wallet as unknown as IWalletConnectReceiver
-              ).approveSession(wallet, proposal);
+              ).approveSession();
               onApprove(
-                proposal.params.proposer.metadata.name,
-                proposal.params.proposer.metadata.icons[0],
+                proposal.proposer.metadata.name,
+                proposal.proposer.metadata.icons[0],
               );
               onClose();
             }}

@@ -1,12 +1,6 @@
 export { walletIds } from "./constants/walletIds";
 
-export { CredentialsStorage } from "../core/CredentialsStorage";
-
-export type { IWalletConnectReceiver } from "../core/WalletConnect/IWalletConnectReceiver";
-export { WalletConnectV2Receiver } from "../core/WalletConnect/WalletConnectV2Receiver";
-
 export { WagmiConnector } from "../lib/wagmi-connectors";
-export type { DAppMetaData } from "../core/types/dAppMeta";
 export { DEFAULT_DAPP_META } from "./constants/dappMeta";
 export {
   AddChainError,

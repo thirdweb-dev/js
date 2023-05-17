@@ -4,54 +4,38 @@ import { ICore, SessionTypes, SignClientTypes } from "@walletconnect/types";
 import { getSdkError } from "@walletconnect/utils";
 import { utils } from "ethers";
 import {
-  WalletConnectMetadata,
+  WCSession,
+  WalletConnectWallet,
   WalletConnectReceiverConfig,
+  WCMetadata,
 } from "../types/walletConnect";
 import {
   EIP155_SIGNING_METHODS,
   TW_WC_PROJECT_ID,
   WC_RELAY_URL,
 } from "../../evm/constants/wc";
-import {
-  ErrorResponse,
-  IWalletConnectReceiver,
-} from "./IWalletConnectReceiver";
 import { AbstractWallet } from "../../evm/wallets/abstract";
 
-type WalletConnectV2ReceiverConfig = Omit<
+type WalletConnectV2WalletConfig = Omit<
   WalletConnectReceiverConfig,
   "enableConnectApp"
-> & {
-  onSessionProposal?: (
-    proposal: SignClientTypes.EventArguments["session_proposal"],
-  ) => Promise<void>;
-  onSessionDelete?: (
-    session: SignClientTypes.EventArguments["session_delete"],
-  ) => Promise<void>;
-  onSessionRequest?: (
-    request: SignClientTypes.EventArguments["session_request"],
-    session: SessionTypes.Struct,
-  ) => Promise<void>;
-};
+>;
 
-export class WalletConnectV2Receiver implements IWalletConnectReceiver {
-  // wcv2
+export class WalletConnectV2Wallet extends WalletConnectWallet {
   #core: ICore;
   #wcWallet: IWeb3Wallet | undefined;
   #session: SessionTypes.Struct | undefined;
-  #wcMetadata: WalletConnectMetadata;
-  #onSessionProposal?: (
-    proposal: SignClientTypes.EventArguments["session_proposal"],
-  ) => Promise<void>;
-  #onSessionDelete?: (
-    session: SignClientTypes.EventArguments["session_delete"],
-  ) => Promise<void>;
-  #onSessionRequest?: (
-    request: SignClientTypes.EventArguments["session_request"],
-    session: SessionTypes.Struct,
-  ) => Promise<void>;
+  #wcMetadata: WCMetadata;
+  #activeProposal:
+    | SignClientTypes.EventArguments["session_proposal"]
+    | undefined;
+  #activeRequestEvent:
+    | SignClientTypes.EventArguments["session_request"]
+    | undefined;
 
-  constructor(options: WalletConnectV2ReceiverConfig) {
+  constructor(options: WalletConnectV2WalletConfig) {
+    super();
+
     this.#wcMetadata = options?.walletConnectV2Metadata || {
       name: "Thirdweb Smart Wallet",
       description: "Thirdweb Smart Wallet",
@@ -63,10 +47,6 @@ export class WalletConnectV2Receiver implements IWalletConnectReceiver {
       projectId: options?.walletConenctV2ProjectId || TW_WC_PROJECT_ID,
       relayUrl: options?.walletConnectV2RelayUrl || WC_RELAY_URL,
     });
-
-    this.#onSessionProposal = options?.onSessionProposal;
-    this.#onSessionDelete = options?.onSessionDelete;
-    this.#onSessionRequest = options?.onSessionRequest;
   }
 
   async init() {
@@ -91,23 +71,20 @@ export class WalletConnectV2Receiver implements IWalletConnectReceiver {
     await this.#wcWallet.core.pairing.pair({ uri: wcUri });
   }
 
-  async approveSession(
-    wallet: AbstractWallet,
-    proposal: SignClientTypes.EventArguments["session_proposal"],
-  ) {
+  async approveSession(wallet: AbstractWallet) {
     if (!this.#wcWallet) {
       throw new Error(
         "Please, init the wallet before making session requests.",
       );
     }
 
-    if (!proposal) {
+    if (!this.#activeProposal) {
       throw new Error("Please, pass a valid proposal.");
     }
 
     const account = await wallet.getAddress();
 
-    const { id, params } = proposal;
+    const { id, params } = this.#activeProposal;
     const { requiredNamespaces, relays } = params;
 
     const namespaces: SessionTypes.Namespaces = {};
@@ -130,31 +107,29 @@ export class WalletConnectV2Receiver implements IWalletConnectReceiver {
     });
   }
 
-  async rejectSession(
-    proposal: SignClientTypes.EventArguments["session_proposal"],
-  ) {
+  async rejectSession() {
     if (!this.#wcWallet) {
       throw new Error(
         "Please, init the wallet before making session requests.",
       );
     }
 
-    if (!proposal) {
+    if (!this.#activeProposal) {
       throw new Error("Please, pass a valid proposal.");
     }
 
-    const { id } = proposal;
+    const { id } = this.#activeProposal;
     await this.#wcWallet.rejectSession({
       id,
       reason: getSdkError("USER_REJECTED_METHODS"),
     });
   }
 
-  async approveEIP155Request(
-    wallet: AbstractWallet,
-    requestEvent: SignClientTypes.EventArguments["session_request"],
-  ) {
-    const { topic, params, id } = requestEvent;
+  async approveEIP155Request(wallet: AbstractWallet) {
+    if (!this.#activeRequestEvent) {
+      return;
+    }
+    const { topic, params, id } = this.#activeRequestEvent;
     const { request } = params;
 
     console.log("receiver.method", request.method);
@@ -187,10 +162,11 @@ export class WalletConnectV2Receiver implements IWalletConnectReceiver {
     }
   }
 
-  async rejectEIP155Request(
-    request: SignClientTypes.EventArguments["session_request"],
-  ) {
-    const { topic, id } = request;
+  async rejectEIP155Request() {
+    if (!this.#activeRequestEvent) {
+      return;
+    }
+    const { topic, id } = this.#activeRequestEvent;
     const error = getSdkError("USER_REJECTED_METHODS");
 
     const response = {
@@ -202,24 +178,43 @@ export class WalletConnectV2Receiver implements IWalletConnectReceiver {
     return this.#wcWallet?.respondSessionRequest({ topic, response });
   }
 
-  getActiveSessions(): Record<string, SessionTypes.Struct> {
+  getActiveSessions(): WCSession[] {
     if (!this.#wcWallet) {
       throw new Error("Please, init the wallet before getting sessions.");
     }
-    // return this.#session
-    //   ? { [this]: this.#session }
-    //   : this.#wcWallet.getActiveSessions();
 
-    return this.#wcWallet.getActiveSessions();
+    const sessions = this.#wcWallet.getActiveSessions();
+
+    const thisSessions = [];
+
+    for (const sessionKey in Object.keys(sessions)) {
+      const topic = sessions[sessionKey].topic;
+      const peerMeta = sessions[sessionKey].peer.metadata;
+
+      thisSessions.push({
+        topic,
+        peer: {
+          metadata: peerMeta,
+        },
+      });
+    }
+
+    return thisSessions;
   }
 
-  disconnectSession(params: {
-    topic: string;
-    reason: ErrorResponse;
-  }): Promise<void> {
+  disconnectSession(): Promise<void> {
     if (!this.#wcWallet) {
       throw new Error("Please, init the wallet before disconnecting sessions.");
     }
+
+    if (!this.#session) {
+      return Promise.resolve();
+    }
+
+    const params = {
+      topic: this.#session.topic,
+      reason: getSdkError("USER_DISCONNECTED"),
+    };
 
     return this.#wcWallet?.disconnectSession(params);
   }
@@ -234,14 +229,23 @@ export class WalletConnectV2Receiver implements IWalletConnectReceiver {
     this.#wcWallet.on(
       "session_proposal",
       (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
-        this.#onSessionProposal?.(proposal);
+        this.#activeProposal = proposal;
+
+        this.emit("session_proposal", {
+          proposer: {
+            metadata: proposal.params.proposer.metadata,
+          },
+        });
       },
     );
 
     this.#wcWallet.on(
       "session_delete",
       (session: SignClientTypes.EventArguments["session_delete"]) => {
-        this.#onSessionDelete?.(session);
+        this.#session = undefined;
+        this.#activeProposal = undefined;
+
+        this.emit("session_delete", { topic: session.topic });
       },
     );
 
@@ -260,7 +264,16 @@ export class WalletConnectV2Receiver implements IWalletConnectReceiver {
         switch (request.method) {
           case EIP155_SIGNING_METHODS.ETH_SIGN:
           case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
-            this.#onSessionRequest?.(requestEvent, this.#session);
+            this.#activeRequestEvent = requestEvent;
+
+            this.emit("session_request", {
+              topic: this.#session.topic,
+              peer: {
+                metadata: this.#session.peer.metadata,
+              },
+              method: request.method,
+            });
+            return;
         }
       },
     );

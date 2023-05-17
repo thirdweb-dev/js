@@ -1,10 +1,9 @@
 import { useWallet } from "@thirdweb-dev/react-core";
-import { SessionTypes, SignClientTypes } from "@walletconnect/types";
 import Modal from "react-native-modal";
 import Box from "../base/Box";
 import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
-import { IWalletConnectReceiver } from "@thirdweb-dev/wallets";
+import { IWalletConnectReceiver, WCRequest } from "@thirdweb-dev/wallets";
 
 export const SessionRequestModal = ({
   isVisible,
@@ -12,10 +11,7 @@ export const SessionRequestModal = ({
   onClose,
 }: {
   isVisible: boolean;
-  requestData: {
-    request: SignClientTypes.EventArguments["session_request"];
-    session: SessionTypes.Struct;
-  };
+  requestData: WCRequest;
   onClose: () => void;
 }) => {
   const wallet = useWallet();
@@ -29,9 +25,7 @@ export const SessionRequestModal = ({
         p="lg"
       >
         <Text variant="bodyLarge">Session Request</Text>
-        <Text variant="bodyLarge">
-          {requestData.session.peer.metadata.name}
-        </Text>
+        <Text variant="bodyLarge">{requestData.peer.metadata.name}</Text>
         <Box flexDirection="row" justifyContent="space-evenly" mt="lg">
           <BaseButton
             alignContent="center"
@@ -45,7 +39,7 @@ export const SessionRequestModal = ({
             onPress={async () => {
               await (
                 wallet as unknown as IWalletConnectReceiver
-              ).rejectEIP155Request(requestData.request);
+              ).rejectRequest();
               onClose();
             }}
           >
@@ -67,7 +61,7 @@ export const SessionRequestModal = ({
               }
               await (
                 wallet as unknown as IWalletConnectReceiver
-              ).approveEIP155Request(wallet, requestData.request);
+              ).approveRequest();
               onClose();
             }}
           >

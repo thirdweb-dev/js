@@ -5,6 +5,8 @@ import { WalletIcon } from "../base/WalletIcon";
 import {
   AbstractClientWallet,
   IWalletConnectReceiver,
+  WCProposal,
+  WCRequest,
   SmartWallet,
   walletIds,
 } from "@thirdweb-dev/wallets";
@@ -16,7 +18,6 @@ import { useEffect, useState } from "react";
 import { useSmartWallet } from "../../providers/context-provider";
 import RightArrowIcon from "../../assets/right-arrow";
 import { useTheme } from "@shopify/restyle";
-import { SessionTypes, SignClientTypes } from "@walletconnect/types";
 import { TextInput } from "../base/TextInput";
 import Box from "../base/Box";
 import { SessionProposalModal } from "./SessionProposalModal";
@@ -38,14 +39,10 @@ export const SmartWalletAdditionalActions = ({
   const [wcUri, setWCUri] = useState<string | undefined>();
   const [appMeta, setAppMeta] = useState<{ name: string; iconUrl: string }>();
   const [sessionProposalData, setSessionProposalData] = useState<
-    SignClientTypes.EventArguments["session_proposal"] | undefined
+    WCProposal | undefined
   >();
   const [sessionRequestData, setSessionRequestData] = useState<
-    | {
-        request: SignClientTypes.EventArguments["session_request"];
-        session: SessionTypes.Struct;
-      }
-    | undefined
+    WCRequest | undefined
   >();
 
   const wallet = showSmartWallet
@@ -61,20 +58,13 @@ export const SmartWalletAdditionalActions = ({
   }) => {
     switch (type) {
       case "session_proposal":
-        setSessionProposalData(
-          data as SignClientTypes.EventArguments["session_proposal"],
-        );
+        setSessionProposalData(data as WCProposal);
         break;
       case "session_delete":
         setAppMeta(undefined);
         break;
       case "session_request":
-        setSessionRequestData(
-          data as {
-            request: SignClientTypes.EventArguments["session_request"];
-            session: SessionTypes.Struct;
-          },
-        );
+        setSessionRequestData(data as WCRequest);
         break;
       default:
         // method not implemented
@@ -108,11 +98,10 @@ export const SmartWalletAdditionalActions = ({
         smartWallet as unknown as IWalletConnectReceiver
       ).getActiveSessions();
       console.log("sessions", sessions);
-      const keys = Object.keys(sessions);
-      if (keys.length > 0) {
+      if (Object.keys(sessions).length > 0) {
         setAppMeta({
-          name: sessions[keys[0]].peer.metadata.name,
-          iconUrl: sessions[keys[0]].peer.metadata.icons[0],
+          name: sessions[0].peer.metadata.name,
+          iconUrl: sessions[0].peer.metadata.icons[0],
         });
       }
     }

@@ -8,13 +8,14 @@ import type { SmartWalletConnector as SmartWalletConnectorType } from "../connec
 import { Transaction, TransactionResult } from "@thirdweb-dev/sdk";
 import { walletIds } from "../constants/walletIds";
 import {
-  ErrorResponse,
   IWalletConnectReceiver,
-  NoOpWalletConnectReceiver,
-} from "../../core/WalletConnect/IWalletConnectReceiver";
-import { SessionTypes, SignClientTypes } from "@walletconnect/types";
-import { WalletConnectV2Receiver } from "../../core/WalletConnect/WalletConnectV2Receiver";
-import { AbstractWallet } from "./abstract";
+  WCSession,
+  WalletConnectWallet,
+  WCProposal,
+  WCRequest,
+} from "../../core/types/walletConnect";
+import { WalletConnectV2Wallet } from "../../core/WalletConnect/WalletConnectV2Wallet";
+import { NoOpWalletConnectReceiver } from "../../core/WalletConnect/constants";
 
 // export types and utils for convenience
 export * from "../connectors/smart-wallet/types";
@@ -27,7 +28,7 @@ export class SmartWallet
   connector?: SmartWalletConnectorType;
 
   public enableConnectApp: boolean = false;
-  #wcReceiver: IWalletConnectReceiver;
+  #wcWallet: WalletConnectWallet;
 
   static meta = {
     name: "Smart Wallet",
@@ -49,11 +50,8 @@ export class SmartWallet
 
     this.enableConnectApp = options?.enableConnectApp || false;
 
-    this.#wcReceiver = this.enableConnectApp
-      ? new WalletConnectV2Receiver({
-          onSessionProposal: this.#onSessionProposal,
-          onSessionRequest: this.#onSessionRequest,
-          onSessionDelete: this.#onSessionDelete,
+    this.#wcWallet = this.enableConnectApp
+      ? new WalletConnectV2Wallet({
           walletConnectV2Metadata: options?.walletConnectV2Metadata,
           walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
           walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
@@ -64,7 +62,9 @@ export class SmartWallet
   async getConnector(): Promise<SmartWalletConnectorType> {
     if (!this.connector) {
       if (this.enableConnectApp) {
-        await (this.#wcReceiver as WalletConnectV2Receiver)?.init();
+        await this.#wcWallet.init();
+
+        this.#setupWalletConnectEventsListeners();
       }
 
       const { SmartWalletConnector } = await import(
@@ -101,72 +101,66 @@ export class SmartWallet
       throw new Error("enableConnectApp is set to false in this wallet config");
     }
 
-    this.#wcReceiver?.connectApp(uri);
+    this.#wcWallet?.connectApp(uri);
   }
 
-  approveSession(
-    wallet: AbstractWallet,
-    proposal: SignClientTypes.EventArguments["session_proposal"],
-  ): Promise<void> {
-    return this.#wcReceiver.approveSession(wallet, proposal);
+  approveSession(): Promise<void> {
+    return this.#wcWallet.approveSession(this);
   }
 
-  rejectSession(proposal: SignClientTypes.EventArguments["session_proposal"]) {
-    return this.#wcReceiver.rejectSession(proposal);
+  rejectSession() {
+    return this.#wcWallet.rejectSession();
   }
 
-  approveEIP155Request(
-    wallet: AbstractWallet,
-    requestEvent: SignClientTypes.EventArguments["session_request"],
-  ) {
-    return this.#wcReceiver.approveEIP155Request(wallet, requestEvent);
-  }
-  rejectEIP155Request(
-    request: SignClientTypes.EventArguments["session_request"],
-  ) {
-    return this.#wcReceiver.rejectEIP155Request(request);
+  approveRequest() {
+    return this.#wcWallet.approveEIP155Request(this);
   }
 
-  getActiveSessions() {
-    return this.#wcReceiver.getActiveSessions();
+  rejectRequest() {
+    return this.#wcWallet.rejectEIP155Request();
   }
 
-  disconnectSession(params: {
-    topic: string;
-    reason: ErrorResponse;
-  }): Promise<void> {
-    return this.#wcReceiver?.disconnectSession(params);
+  getActiveSessions(): WCSession[] {
+    if (!this.#wcWallet) {
+      throw new Error(
+        "Please, init the wallet before making session requests.",
+      );
+    }
+
+    return this.#wcWallet.getActiveSessions();
   }
 
-  // wc receiver
-  #onSessionProposal = async (
-    proposal: SignClientTypes.EventArguments["session_proposal"],
-  ) => {
-    console.log("smart-wallet.proposal", proposal);
-    this.emit("message", { type: "session_proposal", data: proposal });
-  };
+  disconnectSession(): Promise<void> {
+    return this.#wcWallet?.disconnectSession();
+  }
 
-  #onSessionDelete = async (
-    session: SignClientTypes.EventArguments["session_delete"],
-  ) => {
-    this.emit("message", { type: "session_delete", data: session });
-    this.disconnectSession({
-      topic: session.topic,
-      reason: {
-        message: "Session deleted",
-        code: 1,
-      },
+  #setupWalletConnectEventsListeners() {
+    if (!this.#wcWallet) {
+      throw new Error(
+        "Please, init the wallet before making session requests.",
+      );
+    }
+
+    this.#wcWallet.on("session_proposal", (proposal: WCProposal) => {
+      this.emit("message", {
+        type: "session_proposal",
+        data: proposal,
+      });
     });
-  };
 
-  #onSessionRequest = async (
-    request: SignClientTypes.EventArguments["session_request"],
-    session: SessionTypes.Struct,
-  ) => {
-    console.log("smart-wallet.request", request);
-    this.emit("message", {
-      type: "session_request",
-      data: { request, session },
+    this.#wcWallet.on("session_delete", (topic: string) => {
+      this.emit("message", { type: "session_delete", data: topic });
+
+      this.#wcWallet.disconnectSession();
     });
-  };
+
+    this.#wcWallet.on("session_request", (request: WCRequest) => {
+      console.log("smart-wallet.request", request);
+
+      this.emit("message", {
+        type: "session_request",
+        data: request,
+      });
+    });
+  }
 }
