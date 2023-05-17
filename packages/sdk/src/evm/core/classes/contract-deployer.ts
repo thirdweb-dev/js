@@ -39,7 +39,12 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../../contracts";
-import { Address, AddressOrEns, SDKOptions } from "../../schema";
+import {
+  Address,
+  AddressOrEns,
+  DeployTypeInput,
+  SDKOptions,
+} from "../../schema";
 import {
   DeployEvent,
   DeployEvents,
@@ -774,7 +779,7 @@ export class ContractDeployer extends RPCConnectionHandler {
           constructorParamValues,
         );
 
-        if (extendedMetadata.isDeployableViaAutoFactory) {
+        if (extendedMetadata.deployType === DeployTypeInput.Enum.AutoFactory) {
           // any evm deployment flow
 
           // 1. Deploy CREATE2 factory (if not already exists)
