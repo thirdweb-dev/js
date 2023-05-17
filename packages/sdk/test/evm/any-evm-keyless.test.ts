@@ -23,7 +23,7 @@ describe("Any EVM Keyless Deploy", async () => {
     // "ipfs://QmXu9ezFNgXBX1juLZ7kwdf5KpTD1x9GPHnk14QB2NpUvK/0";
     // "ipfs://QmRj8VEy1nA287YM6UKf4eTAzYk7f4PRciiqVoer6NN6wd/0";
     const publishUri =
-      "ipfs://QmNiPFhbYwuJ5C5eF3rWkbBY4hYkzLNDrcoDuycC8rC9dt/0";
+      "ipfs://QmWXmZoF5pJGDoMBmbxnAk1Gda43yeyrJhPzigSyp8HMXn/0";
 
     transactionCount = (await sdk.deployer.getTransactionsForDeploy(publishUri))
       .length;
@@ -64,7 +64,7 @@ describe("Any EVM Keyless Deploy", async () => {
     // const publishUri = "ipfs://QmP2QPzc81zg5rqhU9u7cDeSyD4aZH8RdVF8Nuh6rCCgxV";
     // "ipfs://QmaibbXVEJSdW2xkbsVpGq6PKiqspi9LKaT22hoLjigtMt/0";
     const publishUri =
-      "ipfs://QmeJsfy9VHzWVrpXb2THoYoEysLqH3RKwBDLjmPWaEDmPW/0";
+      "ipfs://QmVMYjPmtsQCxzbPALaXE2WwhnGE8F6mNn4FQE8iAqUTuD/0";
     transactionCount = (await sdk.deployer.getTransactionsForDeploy(publishUri))
       .length;
 
