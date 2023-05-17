@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { Img } from "../../components/Img";
 import { Spacer } from "../../components/Spacer";
 import { Flex } from "../../components/basic";
@@ -13,11 +14,13 @@ import {
 import styled from "@emotion/styled";
 import { WalletConfig } from "@thirdweb-dev/react-core";
 import { walletIds } from "@thirdweb-dev/wallets";
+import { SetModalConfigCtx } from "../../evm/providers/wallet-ui-states-provider";
 
 export const WalletSelector: React.FC<{
   walletConfigs: WalletConfig[];
   selectWallet: (wallet: WalletConfig) => void;
   onGetStarted: () => void;
+  title: string;
 }> = (props) => {
   const localWalletInfo = props.walletConfigs.find(
     (w) => w.id === walletIds.localWallet,
@@ -30,7 +33,7 @@ export const WalletSelector: React.FC<{
 
   return (
     <>
-      <ModalTitle>Choose your wallet</ModalTitle>
+      <ModalTitle> {props.title} </ModalTitle>
       <Spacer y="xl" />
 
       <WalletSelection
@@ -78,19 +81,31 @@ export const WalletSelection: React.FC<{
   walletConfigs: WalletConfig[];
   selectWallet: (wallet: WalletConfig) => void;
 }> = (props) => {
-  // show the installed wallets first
-  const walletConfigs = props.walletConfigs.sort((a, b) => {
-    const aInstalled = a.isInstalled ? a.isInstalled() : false;
-    const bInstalled = b.isInstalled ? b.isInstalled() : false;
+  const setModalConfig = useContext(SetModalConfigCtx);
+  const walletConfigs = props.walletConfigs
+    // show the installed wallets first
+    .sort((a, b) => {
+      const aInstalled = a.isInstalled ? a.isInstalled() : false;
+      const bInstalled = b.isInstalled ? b.isInstalled() : false;
 
-    if (aInstalled && !bInstalled) {
-      return -1;
-    }
-    if (!aInstalled && bInstalled) {
-      return 1;
-    }
-    return 0;
-  });
+      if (aInstalled && !bInstalled) {
+        return -1;
+      }
+      if (!aInstalled && bInstalled) {
+        return 1;
+      }
+      return 0;
+    })
+    // show the wallets with selectUI first before others
+    .sort((a, b) => {
+      if (a.selectUI && !b.selectUI) {
+        return -1;
+      }
+      if (!a.selectUI && b.selectUI) {
+        return 1;
+      }
+      return 0;
+    });
 
   return (
     <WalletList>
@@ -100,21 +115,32 @@ export const WalletSelection: React.FC<{
           : false;
         return (
           <li key={walletConfig.id}>
-            <WalletButton
-              type="button"
-              onClick={() => {
-                props.selectWallet(walletConfig);
-              }}
-            >
-              <Img
-                src={walletConfig.meta.iconURL}
-                width={iconSize.lg}
-                height={iconSize.lg}
-                loading="eager"
+            {walletConfig.selectUI ? (
+              <walletConfig.selectUI
+                supportedWallets={props.walletConfigs}
+                onSelect={(data) => {
+                  props.selectWallet(walletConfig);
+                  setModalConfig((config) => ({ ...config, data }));
+                }}
+                walletConfig={walletConfig}
               />
-              <WalletName>{walletConfig.meta.name}</WalletName>
-              {isInstalled && <InstallBadge> Installed </InstallBadge>}
-            </WalletButton>
+            ) : (
+              <WalletButton
+                type="button"
+                onClick={() => {
+                  props.selectWallet(walletConfig);
+                }}
+              >
+                <Img
+                  src={walletConfig.meta.iconURL}
+                  width={iconSize.lg}
+                  height={iconSize.lg}
+                  loading="eager"
+                />
+                <WalletName>{walletConfig.meta.name}</WalletName>
+                {isInstalled && <InstallBadge> Installed </InstallBadge>}
+              </WalletButton>
+            )}
           </li>
         );
       })}

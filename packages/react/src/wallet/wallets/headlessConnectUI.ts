@@ -1,18 +1,15 @@
-import {
-  ConnectUIProps,
-  useConnect,
-  useWallets,
-} from "@thirdweb-dev/react-core";
+import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
 import { useEffect, useRef } from "react";
 
 export const HeadlessConnectUI = ({
   close,
   walletConfig,
   open,
+  supportedWallets,
 }: ConnectUIProps) => {
   const connect = useConnect();
   const prompted = useRef(false);
-  const singleWallet = useWallets().length === 1;
+  const singleWallet = supportedWallets.length === 1;
 
   useEffect(() => {
     if (prompted.current) {
