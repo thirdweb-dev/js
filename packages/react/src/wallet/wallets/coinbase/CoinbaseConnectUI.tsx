@@ -10,6 +10,7 @@ export const CoinbaseConnectUI = ({
   walletConfig,
   close,
   goBack,
+  supportedWallets,
 }: ConnectUIProps<CoinbaseWallet>) => {
   const connect = useConnect();
   const { meta } = walletConfig;
@@ -88,6 +89,7 @@ export const CoinbaseConnectUI = ({
         onConnected={close}
         onGetStarted={() => setScreen("get-started")}
         walletConfig={walletConfig}
+        hideBackButton={supportedWallets.length === 1}
       />
     );
   }

@@ -22,10 +22,12 @@ import { useTheme } from "@shopify/restyle";
 
 export type ConnectWalletDetailsProps = {
   address: string;
+  detailsButton?: React.ReactElement;
 };
 
 export const ConnectWalletDetails = ({
   address,
+  detailsButton,
 }: ConnectWalletDetailsProps) => {
   const theme = useTheme();
   const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false);
@@ -184,19 +186,28 @@ export const ConnectWalletDetails = ({
         style={styles.walletDetails}
         onPress={onPress}
       >
-        <ChainIcon size={32} chainIconUrl={chain?.icon?.url} />
-        <View style={styles.walletInfo}>
-          <Text variant="bodySmall">
-            {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
-            {balanceQuery.data?.symbol}
-          </Text>
-          {activeWallet?.walletId === LocalWallet.id ? (
-            <Text variant="error">Guest</Text>
-          ) : (
-            <Address variant="bodySmallSecondary" address={address} />
-          )}
-        </View>
-        <WalletIcon size={32} iconUri={activeWallet?.getMeta().iconURL || ""} />
+        {detailsButton ? (
+          detailsButton
+        ) : (
+          <>
+            <ChainIcon size={32} chainIconUrl={chain?.icon?.url} />
+            <View style={styles.walletInfo}>
+              <Text variant="bodySmall">
+                {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
+                {balanceQuery.data?.symbol}
+              </Text>
+              {activeWallet?.walletId === LocalWallet.id ? (
+                <Text variant="error">Guest</Text>
+              ) : (
+                <Address variant="bodySmallSecondary" address={address} />
+              )}
+            </View>
+            <WalletIcon
+              size={32}
+              iconUri={activeWallet?.getMeta().iconURL || ""}
+            />
+          </>
+        )}
       </BaseButton>
     </>
   );
