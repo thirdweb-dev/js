@@ -236,5 +236,9 @@ export const Web3Button = <TAction extends ActionFn>({
     );
   }
 
-  return { button };
+  return (
+    <ThemeProvider theme={themeToUse === "dark" ? darkTheme : lightTheme}>
+      {button}
+    </ThemeProvider>
+  );
 };

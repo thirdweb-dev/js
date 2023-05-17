@@ -2,9 +2,8 @@ import { LocalWallet } from "./LocalWallet";
 import { WalletOptions, walletIds } from "@thirdweb-dev/wallets";
 import { createSecureStorage } from "../../../core/SecureStorage";
 import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
-import { WalletConfig } from "@thirdweb-dev/react-core";
 
-export const localWallet = (): WalletConfig<LocalWallet> => {
+export const localWallet = () => {
   const secureStorage = createSecureStorage(walletIds.localWallet);
   const asyncStorage = createAsyncLocalStorage(walletIds.localWallet);
 
@@ -17,9 +16,5 @@ export const localWallet = (): WalletConfig<LocalWallet> => {
         walletStorage: asyncStorage,
         storage: secureStorage,
       }),
-    isInstalled() {
-      // TODO
-      return false;
-    },
   };
 };

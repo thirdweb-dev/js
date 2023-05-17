@@ -18,13 +18,17 @@ export const ConnectWalletFlow = () => {
     .data;
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [activeWallet, setActiveWallet] = useState<WalletConfig | undefined>(
-    walletConfig,
-  );
+  const [activeWallet, setActiveWallet] = useState<WalletConfig | undefined>();
   const [isConnecting, setIsConnecting] = useState(false);
   const supportedWallets = useWallets();
   const theme = useColorScheme();
   const connect = useConnect();
+
+  useEffect(() => {
+    if (walletConfig) {
+      onChooseWallet(walletConfig);
+    }
+  }, [walletConfig]);
 
   const onClose = (reset?: boolean) => {
     setModalState(CLOSE_MODAL_STATE);
@@ -38,12 +42,9 @@ export const ConnectWalletFlow = () => {
     setModalVisible(true);
   };
 
-  const connectActiveWallet = async () => {
-    if (!activeWallet) {
-      throw new Error("Select a wallet before connecting.");
-    }
+  const connectActiveWallet = async (wallet: WalletConfig) => {
     setIsConnecting(true);
-    connect(activeWallet, {}).catch((error) => {
+    connect(wallet, {}).catch((error) => {
       console.error("Error connecting to the wallet", error);
       onBackPress();
     });
@@ -54,7 +55,7 @@ export const ConnectWalletFlow = () => {
 
     // TODO: Change for !wallet.connectUI
     if (wallet.id !== SmartWallet.id) {
-      connectActiveWallet();
+      connectActiveWallet(wallet);
     }
   };
 
