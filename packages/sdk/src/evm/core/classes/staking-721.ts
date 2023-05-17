@@ -112,6 +112,18 @@ export class Staking721<T extends NFTStake | Staking721Base>
     return (await this.contractWrapper.readContract.getStakeInfo(staker))[0];
   }
 
+  public async getRewards(address: AddressOrEns): Promise<CurrencyValue> {
+    return fetchCurrencyValue(
+      await this.contractWrapper.getProvider(),
+      (await this.getRewardToken()).address,
+      (
+        await this.contractWrapper.readContract.getStakeInfo(
+          await resolveAddress(address),
+        )
+      )[1],
+    );
+  }
+
   public async getTimeUnit(): Promise<number> {
     return (await this.contractWrapper.readContract.getTimeUnit()).toNumber();
   }

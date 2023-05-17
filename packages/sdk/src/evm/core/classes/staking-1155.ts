@@ -85,6 +85,103 @@ export class Staking1155<T extends EditionStake | Staking1155Base>
 
   // READ FUNCTIONS
 
+  public async getRewardTokenBalance(): Promise<CurrencyValue> {
+    return fetchCurrencyValue(
+      await this.contractWrapper.getProvider(),
+      (await this.getRewardToken()).address,
+      await this.contractWrapper.readContract.getRewardTokenBalance(),
+    );
+  }
+
+  public async getRewardToken(): Promise<Currency & { address: string }> {
+    return {
+      ...(await fetchCurrencyMetadata(
+        await this.contractWrapper.getProvider(),
+        await this.contractWrapper.readContract.rewardToken(),
+      )),
+      address: await this.contractWrapper.readContract.rewardToken(),
+    };
+  }
+
+  public async getDefaultRewardsPerUnitTime(): Promise<CurrencyValue> {
+    return fetchCurrencyValue(
+      await this.contractWrapper.getProvider(),
+      (await this.getRewardToken()).address,
+      await this.contractWrapper.readContract.getDefaultRewardsPerUnitTime(),
+    );
+  }
+
+  public async getDefaultTimeUnit(): Promise<BigNumberish> {
+    return await this.contractWrapper.readContract.getDefaultTimeUnit();
+  }
+
+  public async getRewardsPerUnitTime(
+    tokenId: BigNumberish,
+  ): Promise<CurrencyValue> {
+    return fetchCurrencyValue(
+      await this.contractWrapper.getProvider(),
+      (await this.getRewardToken()).address,
+      await this.contractWrapper.readContract.getRewardsPerUnitTime(tokenId),
+    );
+  }
+
+  public async getRewards(address: AddressOrEns): Promise<CurrencyValue> {
+    return fetchCurrencyValue(
+      await this.contractWrapper.getProvider(),
+      (await this.getRewardToken()).address,
+      (
+        await this.contractWrapper.readContract.getStakeInfo(
+          await resolveAddress(address),
+        )
+      )[2],
+    );
+  }
+
+  // ?
+  public async getTokensStaked(
+    address: AddressOrEns,
+  ): Promise<{ tokenId: BigNumberish; amount: CurrencyValue }[]> {
+    const stakeInfo = await this.contractWrapper.readContract.getStakeInfo(
+      await resolveAddress(address),
+    );
+    let tokensStaked: { tokenId: BigNumberish; amount: CurrencyValue }[] = [];
+    for (let i = 0; i < stakeInfo[0].length; i++) {
+      tokensStaked.push({
+        tokenId: stakeInfo[0][i],
+        amount: await fetchCurrencyValue(
+          await this.contractWrapper.getProvider(),
+          (
+            await this.getRewardToken()
+          ).address,
+          stakeInfo[1][i],
+        ),
+      });
+    }
+    return tokensStaked;
+  }
+
+  public async getTokensStakedByTokenId(
+    tokenId: BigNumberish,
+    staker: AddressOrEns,
+  ): Promise<CurrencyValue> {
+    return fetchCurrencyValue(
+      await this.contractWrapper.getProvider(),
+      (await this.getRewardToken()).address,
+      (
+        await this.contractWrapper.readContract.getStakeInfoForToken(
+          tokenId,
+          await resolveAddress(staker),
+        )
+      )[0],
+    );
+  }
+
+  public async getTimeUnit(tokenId: BigNumberish): Promise<number> {
+    return (
+      await this.contractWrapper.readContract.getTimeUnit(tokenId)
+    ).toNumber();
+  }
+
   // WRITE FUNCTIONS
   claimRewards = buildTransactionFunction(async (tokenId: BigNumberish) => {
     return Transaction.fromContractWrapper({
