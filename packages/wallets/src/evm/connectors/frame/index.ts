@@ -65,7 +65,9 @@ export class FrameConnector extends WagmiConnector<
   async connect(config?: { chainId?: number } | undefined) {
     try {
       const provider = await this.getProvider();
-      if (!provider) throw new ConnectorNotFoundError();
+      if (!provider) {
+        throw new ConnectorNotFoundError();
+      }
 
       this.setupListeners();
 
@@ -85,15 +87,18 @@ export class FrameConnector extends WagmiConnector<
       }
 
       // Add shim to storage signalling wallet is connected
-      if (this.options.shimDisconnect)
+      if (this.options.shimDisconnect) {
         this.connectorStorage.setItem(this.shimDisconnectKey, "true");
+      }
 
       return { account, provider, chain: { id, unsupported } };
     } catch (error) {
-      if (this.isUserRejectedRequestError(error))
+      if (this.isUserRejectedRequestError(error)) {
         throw new UserRejectedRequestError(error as Error);
-      if ((error as ProviderRpcError).code === -32002)
+      }
+      if ((error as ProviderRpcError).code === -32002) {
         throw new ResourceUnavailableError(error as ProviderRpcError);
+      }
       throw error;
     }
   }
@@ -185,7 +190,9 @@ export class FrameConnector extends WagmiConnector<
 
   async switchChain(chainId: number) {
     const provider = await this.getProvider();
-    if (!provider) throw new ConnectorNotFoundError();
+    if (!provider) {
+      throw new ConnectorNotFoundError();
+    }
     const chainIdHex = hexValue(chainId);
 
     try {
@@ -196,7 +203,9 @@ export class FrameConnector extends WagmiConnector<
         }),
         new Promise<void>((res) =>
           this.on("change", ({ chain }) => {
-            if (chain?.id === chainId) res();
+            if (chain?.id === chainId) {
+              res();
+            }
           }),
         ),
       ]);
@@ -212,16 +221,17 @@ export class FrameConnector extends WagmiConnector<
           testnet: true,
         }
       );
-    } catch (error) {
+    } catch (switchChainError) {
       const chain = this.chains.find((x) => x.chainId === chainId);
-      if (!chain)
+      if (!chain) {
         throw new ChainNotConfiguredError({
           chainId,
           connectorId: this.id,
         });
+      }
 
       // Indicates chain is not added to provider
-      if ((error as ProviderRpcError).code === 4902) {
+      if ((switchChainError as ProviderRpcError).code === 4902) {
         try {
           await provider.request({
             method: "wallet_addEthereumChain",
@@ -237,30 +247,31 @@ export class FrameConnector extends WagmiConnector<
           });
 
           const currentChainId = await this.getChainId();
-          if (currentChainId !== chainId)
+          if (currentChainId !== chainId) {
             throw new UserRejectedRequestError(
               new Error("User rejected switch after adding network."),
             );
+          }
 
           return chain;
-        } catch (error) {
+        } catch (addChainError) {
           // if user rejects request to add chain
-          if (this.isUserRejectedRequestError(error)) {
-            throw new UserRejectedRequestError(error);
+          if (this.isUserRejectedRequestError(addChainError)) {
+            throw new UserRejectedRequestError(addChainError);
           }
 
           // else other error
-          throw new AddChainError((error as Error).message);
+          throw new AddChainError((addChainError as Error).message);
         }
       }
 
       // if user rejects request to switch chain
-      if (this.isUserRejectedRequestError(error)) {
-        throw new UserRejectedRequestError(error as Error);
+      if (this.isUserRejectedRequestError(switchChainError)) {
+        throw new UserRejectedRequestError(switchChainError as Error);
       }
 
       // else other error
-      throw new SwitchChainError(error as Error);
+      throw new SwitchChainError(switchChainError as Error);
     }
   }
 
@@ -321,8 +332,9 @@ export class FrameConnector extends WagmiConnector<
   protected onDisconnect = () => {
     this.emit("disconnect");
     // Remove shim signalling wallet is disconnected
-    if (this.options.shimDisconnect)
+    if (this.options.shimDisconnect) {
       this.connectorStorage.removeItem(this.shimDisconnectKey);
+    }
   };
 
   protected isUserRejectedRequestError(error: unknown) {
