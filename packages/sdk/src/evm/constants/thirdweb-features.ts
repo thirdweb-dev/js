@@ -15,6 +15,7 @@ import IAccountFactory from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactor
 import IAccount from "@thirdweb-dev/contracts-js/dist/abis/IAccount.json";
 import IStaking20 from "@thirdweb-dev/contracts-js/dist/abis/IStaking20.json";
 import IStaking721 from "@thirdweb-dev/contracts-js/dist/abis/IStaking721.json";
+import IStaking1155 from "@thirdweb-dev/contracts-js/dist/abis/IStaking1155.json";
 
 export const getAllPluginsAbi = [
   {
@@ -326,5 +327,17 @@ export const FEATURE_NFT_STAKE = {
     contracts: "",
   },
   abis: [IStaking721],
+  features: {},
+} as const;
+
+export const FEATURE_EDITION_STAKE = {
+  name: "Staking1155",
+  namespace: "staking1155",
+  docLinks: {
+    // TODO
+    sdk: "",
+    contracts: "",
+  },
+  abis: [IStaking1155],
   features: {},
 } as const;
