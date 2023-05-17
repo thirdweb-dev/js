@@ -185,9 +185,15 @@ export class WalletConnectV2Wallet extends WalletConnectWallet {
 
     const sessions = this.#wcWallet.getActiveSessions();
 
-    const thisSessions = [];
+    const sessionKeys = Object.keys(sessions);
+    if (!sessions || sessionKeys.length === 0) {
+      return [];
+    }
 
-    for (const sessionKey in Object.keys(sessions)) {
+    console.log("sessions", sessions);
+
+    const thisSessions = [];
+    for (const sessionKey of sessionKeys) {
       const topic = sessions[sessionKey].topic;
       const peerMeta = sessions[sessionKey].peer.metadata;
 
