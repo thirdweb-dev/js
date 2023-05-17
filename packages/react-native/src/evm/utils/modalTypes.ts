@@ -1,7 +1,14 @@
 import { WalletConfig } from "@thirdweb-dev/react-core";
 
+export const CLOSE_MODAL_STATE: ClosedModal = {
+  view: "Closed",
+  data: {},
+  isOpen: false,
+  isSheet: true,
+};
+
 export type ModalView =
-  | "None"
+  | "Closed"
   | "ConnectWalletFlow"
   | "ChooseWallet"
   | "WalletUI"
@@ -9,48 +16,43 @@ export type ModalView =
   | "WCSessionRequest"
   | "WCSessionProposal";
 
-export type EmptyModal = {
-  view: "None";
-  data: {};
+export type SheetModal = {
   isOpen: boolean;
+  isSheet: true;
 };
+
+export type DialogModal = {
+  isOpen: boolean;
+  isSheet: false;
+};
+
+export type ClosedModal = {
+  view: "Closed";
+  data: {};
+} & SheetModal;
 
 // connect wallet flow
 export type ConnectWalletFlowData = {
   modalTitle?: string;
+  walletConfig?: WalletConfig;
 };
 
 export type ConnectWalletFlowModal = {
   view: "ConnectWalletFlow";
   data: ConnectWalletFlowData;
-  isOpen: boolean;
+} & SheetModal;
+
+// wallet details
+export type WalletDetailsData = {
+  address: string;
 };
 
-// choose wallet
-export type ChooseWalletData = {
-  modalTitle?: string;
-};
-
-export type ChooseWalletModal = {
-  view: "ChooseWallet";
-  data: ChooseWalletData;
-  isOpen: boolean;
-};
-
-// wallet ui
-export type WalletUIData = {
-  connectModalTitle?: string;
-  walletConfig: WalletConfig;
-};
-
-export type WalletUIModal = {
-  view: "WalletUI";
-  data: WalletUIData;
-  isOpen: boolean;
-};
+export type WalletDetailsModal = {
+  view: "WalletDetails";
+  data: WalletDetailsData;
+} & SheetModal;
 
 export type ModalState =
-  | EmptyModal
+  | ClosedModal
   | ConnectWalletFlowModal
-  | ChooseWalletModal
-  | WalletUIModal;
+  | WalletDetailsModal;

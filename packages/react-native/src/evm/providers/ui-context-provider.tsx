@@ -8,18 +8,20 @@ type UIContextType = {
 
 const UIContext = createContext<UIContextType>({
   modalState: {
-    view: "None",
+    view: "Closed",
     data: {},
     isOpen: false,
+    isSheet: true,
   },
   setModalState: () => {},
 });
 
 export const UIContextProvider = (props: React.PropsWithChildren<{}>) => {
   const [modalState, setModalState] = useState<ModalState>({
-    view: "None",
+    view: "Closed",
     data: {},
     isOpen: false,
+    isSheet: true,
   });
 
   return (

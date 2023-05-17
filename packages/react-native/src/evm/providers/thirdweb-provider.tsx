@@ -13,6 +13,7 @@ import { DEFAULT_WALLETS } from "../constants/wallets";
 import { DappContextProvider } from "./context-provider";
 import { UIContextProvider } from "./ui-context-provider";
 import { MainModal } from "../components/MainModal";
+import { ThemeProvider } from "../styles/ThemeProvider";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<ThirdwebProviderCoreProps<TChains>, "supportedWallets"> {
@@ -59,6 +60,7 @@ export const ThirdwebProvider = <
   thirdwebApiKey = DEFAULT_API_KEY,
   supportedWallets = DEFAULT_WALLETS,
   authConfig,
+  theme,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
   useCoinbaseWalletListener();
@@ -78,10 +80,12 @@ export const ThirdwebProvider = <
       {...restProps}
     >
       <DappContextProvider>
-        <UIContextProvider>
-          {children}
-          <MainModal />
-        </UIContextProvider>
+        <ThemeProvider theme={theme ? theme : "dark"}>
+          <UIContextProvider>
+            {children}
+            <MainModal />
+          </UIContextProvider>
+        </ThemeProvider>
       </DappContextProvider>
     </ThirdwebProviderCore>
   );

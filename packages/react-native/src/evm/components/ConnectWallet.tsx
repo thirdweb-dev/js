@@ -10,6 +10,7 @@ import { ActivityIndicator, Animated, StyleSheet } from "react-native";
 import BaseButton from "./base/BaseButton";
 import Text from "./base/Text";
 import { useModalState } from "../providers/ui-context-provider";
+import { CLOSE_MODAL_STATE } from "../utils/modalTypes";
 
 export type ConnectWalletProps = {
   theme?: ThemeProviderProps["theme"];
@@ -41,7 +42,7 @@ export const ConnectWallet = ({
   const supportedWallets = useWallets();
   const isWalletConnecting = connectionStatus === "connecting";
   const [showButtonSpinner, setShowButtonSpinner] = useState(false);
-  const { setModalState } = useModalState();
+  const { modalState, setModalState } = useModalState();
 
   useEffect(() => {
     setShowButtonSpinner(isWalletConnecting);
@@ -64,6 +65,12 @@ export const ConnectWallet = ({
   }, [isWalletConnecting]);
 
   useEffect(() => {
+    if (address && modalState.view !== "Closed") {
+      setModalState(CLOSE_MODAL_STATE);
+    }
+  }, [address]);
+
+  useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 300,
@@ -71,24 +78,15 @@ export const ConnectWallet = ({
     }).start();
   }, [fadeAnim]);
 
-  const onConnectPress = () => {
-    if (supportedWallets.length === 1) {
-      setModalState({
-        isOpen: true,
-        view: "WalletUI",
-        data: {
-          walletConfig: supportedWallets[0],
-        },
-      });
-
-      return;
-    }
-
+  const onConnectWalletPress = () => {
     setModalState({
       isOpen: true,
+      isSheet: true,
       view: "ConnectWalletFlow",
       data: {
         modalTitle,
+        walletConfig:
+          supportedWallets.length === 1 ? supportedWallets[0] : undefined,
       },
     });
   };
@@ -104,7 +102,7 @@ export const ConnectWallet = ({
         ) : (
           <BaseButton
             backgroundColor="buttonBackgroundColor"
-            onPress={onConnectPress}
+            onPress={onConnectWalletPress}
             style={styles.connectWalletButton}
           >
             <Text variant="bodyLarge" color="buttonTextColor">
