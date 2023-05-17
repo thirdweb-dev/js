@@ -1,22 +1,15 @@
-import {
-  ConfiguredWallet,
-  ConnectUIProps,
-  useConnect,
-} from "@thirdweb-dev/react-core";
+import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
+import { FrameWallet } from "@thirdweb-dev/wallets";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { useEffect, useRef, useState } from "react";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 
-type FrameConnectUIProps = ConnectUIProps & {
-  configuredWallet: ConfiguredWallet;
-};
-
-export const FrameConnectUI = (props: FrameConnectUIProps) => {
+export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
   const [screen, setScreen] = useState<"connecting" | "get-started">(
     "connecting",
   );
-  const { configuredWallet, close } = props;
+  const { walletConfig, close } = props;
   const connect = useConnect();
 
   const { goBack } = props;
@@ -27,8 +20,8 @@ export const FrameConnectUI = (props: FrameConnectUIProps) => {
       return;
     }
 
-    const isInstalled = configuredWallet.isInstalled
-      ? configuredWallet.isInstalled()
+    const isInstalled = walletConfig.isInstalled
+      ? walletConfig.isInstalled()
       : false;
 
     // if loading
@@ -38,7 +31,7 @@ export const FrameConnectUI = (props: FrameConnectUIProps) => {
         try {
           connectPrompted.current = true;
           setScreen("connecting");
-          await connect(configuredWallet);
+          await connect(walletConfig);
           close();
         } catch (e) {
           goBack();
@@ -50,14 +43,14 @@ export const FrameConnectUI = (props: FrameConnectUIProps) => {
         window.open("https://frame.sh");
       }
     })();
-  }, [configuredWallet, close, connect, goBack]);
+  }, [walletConfig, close, connect, goBack]);
 
   if (screen === "connecting") {
     return (
       <ConnectingScreen
         onBack={props.goBack}
-        walletName={configuredWallet.meta.name}
-        walletIconURL={configuredWallet.meta.iconURL}
+        walletName={walletConfig.meta.name}
+        walletIconURL={walletConfig.meta.iconURL}
         supportLink="https://support.metamask.io/hc/en-us/articles/4406430256539-User-Guide-Troubleshooting"
       />
     );
@@ -66,11 +59,11 @@ export const FrameConnectUI = (props: FrameConnectUIProps) => {
   if (screen === "get-started") {
     return (
       <GetStartedScreen
-        walletIconURL={configuredWallet.meta.iconURL}
-        walletName={configuredWallet.meta.name}
-        chromeExtensionLink={configuredWallet.meta.urls?.chrome}
-        googlePlayStoreLink={configuredWallet.meta.urls?.android}
-        appleStoreLink={configuredWallet.meta.urls?.ios}
+        walletIconURL={walletConfig.meta.iconURL}
+        walletName={walletConfig.meta.name}
+        chromeExtensionLink={walletConfig.meta.urls?.chrome}
+        googlePlayStoreLink={walletConfig.meta.urls?.android}
+        appleStoreLink={walletConfig.meta.urls?.ios}
         onBack={props.goBack}
       />
     );
