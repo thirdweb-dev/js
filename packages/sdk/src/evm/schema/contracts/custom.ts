@@ -125,9 +125,18 @@ export const ChainIdToAddressSchema = z.record(z.string(), z.string());
 /**
  * @internal
  */
+export const CustomFactoryInput = z.object({
+  factoryFunction: z.string(),
+  paramTypes: z.array(z.string()).default([]),
+});
+
+/**
+ * @internal
+ */
 export const FactoryDeploymentSchema = z.object({
   implementationAddresses: ChainIdToAddressSchema,
   implementationInitializerFunction: z.string().default("initialize"),
+  customFactoryInput: CustomFactoryInput.optional(),
   factoryAddresses: ChainIdToAddressSchema.optional(),
 });
 
@@ -139,8 +148,6 @@ export const DeployTypeInput = z.union([
   z.literal("autoFactory"),
   z.literal("customFactory"),
 ]);
-// );
-// export type DeployType = z.infer<typeof DeployTypeInput>;
 
 /**
  * @internal

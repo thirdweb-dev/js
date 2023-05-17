@@ -39,12 +39,7 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../../contracts";
-import {
-  Address,
-  AddressOrEns,
-  DeployTypeInput,
-  SDKOptions,
-} from "../../schema";
+import { Address, AddressOrEns, SDKOptions } from "../../schema";
 import {
   DeployEvent,
   DeployEvents,
@@ -850,6 +845,34 @@ export class ContractDeployer extends RPCConnectionHandler {
           )) as unknown as DeployTransaction;
           options?.notifier?.("deployed", "proxy");
           return proxyDeployTransaction;
+        } else if (extendedMetadata.deployType === "customFactory") {
+          invariant(
+            extendedMetadata.factoryDeploymentData.customFactoryInput
+              ?.factoryFunction,
+            `customFactoryFunction not set'`,
+          );
+          const factoryFunctionParamTypes =
+            extendedMetadata.factoryDeploymentData.customFactoryInput
+              .paramTypes;
+          const factoryFunctionparamValues = convertParamValues(
+            factoryFunctionParamTypes,
+            constructorParamValues,
+          );
+
+          invariant(
+            options?.customFactory,
+            "Custom factory address is required.",
+          );
+          const tempSdk = ThirdwebSDK.fromSigner(signer);
+          const customFactory = await tempSdk.getContract(
+            options.customFactory,
+          );
+
+          return await customFactory.call(
+            extendedMetadata.factoryDeploymentData.customFactoryInput
+              .factoryFunction,
+            factoryFunctionparamValues,
+          );
         } else if (
           extendedMetadata.isDeployableViaProxy ||
           extendedMetadata.isDeployableViaFactory
