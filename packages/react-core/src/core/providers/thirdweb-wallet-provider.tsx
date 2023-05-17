@@ -294,8 +294,13 @@ export function ThirdwebWalletProvider(
           // create a personal wallet instance and auto connect it
           const personalWalletInstance = createWalletInstance(personalWalleObj);
           const connectParams = { ...personalWalletInfo.connectParams };
-          // set chain id of wrapper wallet to personal wallet - both should be same
-          connectParams.chainId = walletInfo.connectParams?.chainId;
+
+          if (personalWalleObj.autoSwitch) {
+            // set chain id of wrapper wallet to personal wallet - both should be same
+            connectParams.chainId =
+              walletInfo.connectParams?.chainId || connectParams.chainId;
+          }
+
           try {
             await personalWalletInstance.autoConnect(connectParams);
           } catch (e) {
