@@ -297,7 +297,7 @@
     "@magic-ext/connect": "^6.7.0",
     "@magic-ext/oauth": "^7.6.2",
     "@magic-sdk/provider": "^13.6.2",
-    "@paperxyz/embedded-wallet-service-sdk": "^0.1.0",
+    "@paperxyz/embedded-wallet-service-sdk": "^1.0.0",
     "@safe-global/safe-core-sdk": "^3.3.2",
     "@safe-global/safe-ethers-adapters": "^0.1.0-alpha.16",
     "@safe-global/safe-ethers-lib": "^1.9.2",
