@@ -18,11 +18,6 @@ export default {
   "networkId": 71402,
   "explorers": [
     {
-      "name": "GWScout Explorer",
-      "url": "https://gw-mainnet-explorer.nervosdao.community",
-      "standard": "none"
-    },
-    {
       "name": "GWScan Block Explorer",
       "url": "https://v1.gwscan.com",
       "standard": "none"

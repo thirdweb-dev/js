@@ -325,7 +325,7 @@ export class Token extends StandardErc20<TokenERC20> {
     functionName: string & TMethod,
     args?: Parameters<TokenERC20["functions"][TMethod]>,
     overrides?: CallOverrides,
-  ): Promise<any> {
+  ): Promise<ReturnType<TokenERC20["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, args, overrides);
   }
 }

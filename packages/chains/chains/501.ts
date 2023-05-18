@@ -25,7 +25,7 @@ export default {
   "explorers": [
     {
       "name": "blockexplorer",
-      "url": "https://explorer.camino.foundation",
+      "url": "https://suite.camino.network/explorer",
       "standard": "none"
     }
   ],

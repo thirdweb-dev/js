@@ -27,6 +27,8 @@ export const Button = styled.button<{
             return p.theme.bg.invertedFocused;
           case "secondary":
             return p.theme.bg.highlighted;
+          case "link":
+            return "none";
           case "danger":
             return p.theme.text.danger;
         }
@@ -37,6 +39,8 @@ export const Button = styled.button<{
     switch (p.variant) {
       case "danger":
         return `0 0 0 2px ${p.theme.text.danger}`;
+      case "link":
+        return "none";
       default:
         return "none";
     }
@@ -66,6 +70,17 @@ export const Button = styled.button<{
         return p.theme.text.danger;
     }
   }};
+
+  ${(p) => {
+    if (p.variant === "link") {
+      return `
+      padding: 0;
+      &:hover {
+        color: ${p.theme.text.neutral};
+      }`;
+    }
+  }}
+
   cursor: pointer;
 
   /* pressed effect */
@@ -119,5 +134,8 @@ export const InputButton = styled.button<{ theme?: Theme }>`
   color: ${(p) => p.theme.text.secondary};
   &:hover {
     color: ${(p) => p.theme.text.neutral};
+  }
+  &[disabled] {
+    cursor: not-allowed;
   }
 `;

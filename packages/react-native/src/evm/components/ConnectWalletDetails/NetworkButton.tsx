@@ -1,3 +1,4 @@
+import { Theme } from "../../styles/theme";
 import BaseButton from "../base/BaseButton";
 import { ChainIcon } from "../base/ChainIcon";
 import Text from "../base/Text";
@@ -6,6 +7,7 @@ import { StyleSheet } from "react-native";
 interface NetworkButtonProps {
   chainIconUrl?: string;
   chainName: string;
+  padding?: keyof Theme["spacing"];
   onPress: () => void;
 }
 
@@ -13,17 +15,19 @@ export const NetworkButton = ({
   onPress,
   chainName,
   chainIconUrl,
+  padding,
 }: NetworkButtonProps) => {
   return (
     <BaseButton
-      mt="md"
-      p="md"
+      p={padding || "md"}
       backgroundColor="background"
       style={styles.networkContainer}
       onPress={onPress}
       borderColor="border"
     >
-      <ChainIcon chainIconUrl={chainIconUrl} size={32} active={false} />
+      {chainIconUrl ? (
+        <ChainIcon chainIconUrl={chainIconUrl} size={32} active={false} />
+      ) : null}
       <Text variant="bodyLarge" style={styles.networkText}>
         {chainName}
       </Text>

@@ -425,7 +425,7 @@ export class Split implements UpdateableNetwork {
     functionName: string & TMethod,
     args?: Parameters<SplitContract["functions"][TMethod]>,
     overrides?: CallOverrides,
-  ): Promise<any> {
+  ): Promise<ReturnType<SplitContract["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, args, overrides);
   }
 }

@@ -1,6 +1,8 @@
+export { walletIds } from "./constants/walletIds";
+
 export { CredentialsStorage } from "../core/CredentialsStorage";
 
-export { Connector } from "../lib/wagmi-connectors";
+export { WagmiConnector } from "../lib/wagmi-connectors";
 export type { DAppMetaData } from "../core/types/dAppMeta";
 export { DEFAULT_DAPP_META } from "./constants/dappMeta";
 export {
@@ -12,8 +14,8 @@ export {
   UserRejectedRequestError,
 } from "../lib/wagmi-core";
 export type { EVMWallet } from "./interfaces";
-export type { ConnectParams } from "./interfaces/tw-connector";
-export { TWConnector, WagmiAdapter } from "./interfaces/tw-connector";
+export type { ConnectParams } from "./interfaces/connector";
+export { Connector, WagmiAdapter } from "./interfaces/connector";
 export type {
   AbstractWallet,
   WalletData,
@@ -25,12 +27,16 @@ export * from "./wallets/paper-wallet";
 export type { WalletOptions } from "./wallets/base";
 export { AbstractClientWallet } from "./wallets/base";
 export * from "./wallets/coinbase-wallet";
-export * from "./wallets/device-wallet";
+export * from "./wallets/local-wallet";
 export * from "./wallets/injected";
 export * from "./wallets/metamask";
 export * from "./wallets/wallet-connect";
 export * from "./wallets/wallet-connect-v1";
 export * from "./wallets/safe";
+export * from "./wallets/magic";
+export * from "./wallets/smart-wallet";
+export * from "./wallets/ethers";
+export * from "./wallets/private-key";
 
 export type { Chain } from "@thirdweb-dev/chains";
 

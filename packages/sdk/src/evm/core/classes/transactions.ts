@@ -354,6 +354,10 @@ export class Transaction<
     this.storage = options.storage || new ThirdwebStorage();
   }
 
+  getTarget() {
+    return this.contract.address;
+  }
+
   getMethod() {
     return this.method;
   }
@@ -525,6 +529,40 @@ export class Transaction<
    * Execute the transaction with gasless
    */
   private async sendGasless(): Promise<ContractTransaction> {
+    const tx = await this.prepareGasless();
+    const txHash = await defaultGaslessSendFunction(
+      tx,
+      this.signer,
+      this.provider,
+      this.storage,
+      this.gaslessOptions,
+    );
+
+    // Need to poll here because ethers.provider.getTransaction lies about the type
+    // It can actually return null, which can happen if we're still in gasless API send queue
+    let sentTx;
+    let iteration = 1;
+    while (!sentTx) {
+      sentTx = await this.provider.getTransaction(txHash);
+
+      // Exponential (ish) backoff for polling
+      if (!sentTx) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, Math.min(iteration * 1000, 10000)),
+        );
+        iteration++;
+      }
+
+      // Timeout if we still don't have it after a while
+      if (iteration > 20) {
+        throw new Error(`Unable to retrieve transaction with hash ${txHash}`);
+      }
+    }
+
+    return sentTx;
+  }
+
+  private async prepareGasless(): Promise<GaslessTransaction> {
     invariant(
       this.gaslessOptions &&
         ("openzeppelin" in this.gaslessOptions ||
@@ -587,7 +625,7 @@ export class Transaction<
       gas = BigNumber.from(this.overrides.gasLimit);
     }
 
-    const tx: GaslessTransaction = {
+    return {
       from,
       to,
       data,
@@ -597,36 +635,6 @@ export class Transaction<
       functionArgs: args,
       callOverrides: this.overrides,
     };
-
-    const txHash = await defaultGaslessSendFunction(
-      tx,
-      this.signer,
-      this.provider,
-      this.gaslessOptions,
-    );
-
-    // Need to poll here because ethers.provider.getTransaction lies about the type
-    // It can actually return null, which can happen if we're still in gasless API send queue
-    let sentTx;
-    let iteration = 1;
-    while (!sentTx) {
-      sentTx = await this.provider.getTransaction(txHash);
-
-      // Exponential (ish) backoff for polling
-      if (!sentTx) {
-        await new Promise((resolve) =>
-          setTimeout(resolve, Math.min(iteration * 1000, 10000)),
-        );
-        iteration++;
-      }
-
-      // Timeout if we still don't have it after a while
-      if (iteration > 20) {
-        throw new Error(`Unable to retrieve transaction with hash ${txHash}`);
-      }
-    }
-
-    return sentTx;
   }
 
   private functionError() {
@@ -697,19 +705,22 @@ export class Transaction<
       // no-op
     }
 
-    return new TransactionError({
-      reason,
-      from,
-      to,
-      method,
-      data,
-      network,
-      rpcUrl,
-      value,
-      hash,
-      contractName,
-      sources,
-    });
+    return new TransactionError(
+      {
+        reason,
+        from,
+        to,
+        method,
+        data,
+        network,
+        rpcUrl,
+        value,
+        hash,
+        contractName,
+        sources,
+      },
+      error,
+    );
   }
 }
 
@@ -848,15 +859,18 @@ export class DeployTransaction extends TransactionContext {
     // Parse the revert reason from the error
     const reason = parseRevertReason(error);
 
-    return new TransactionError({
-      reason,
-      from,
-      method,
-      data,
-      network,
-      rpcUrl,
-      value,
-      hash,
-    });
+    return new TransactionError(
+      {
+        reason,
+        from,
+        method,
+        data,
+        network,
+        rpcUrl,
+        value,
+        hash,
+      },
+      error,
+    );
   }
 }

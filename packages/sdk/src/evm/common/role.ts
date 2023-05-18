@@ -13,6 +13,7 @@ const roleMap = {
   asset: "ASSET_ROLE",
   unwrap: "UNWRAP_ROLE",
   factory: "FACTORY_ROLE",
+  signer: "SIGNER_ROLE",
 } as const;
 
 /**

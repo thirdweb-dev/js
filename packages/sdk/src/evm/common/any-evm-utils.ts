@@ -2,7 +2,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BytesLike, ethers, providers, Signer } from "ethers";
 import invariant from "tiny-invariant";
 import { bytecode as WETHBytecode } from "./WETH9";
-import { getNativeTokenByChainId } from "../constants";
+import { getChainProvider, getNativeTokenByChainId } from "../constants";
 import { ThirdwebSDK } from "../core";
 import { PreDeployMetadataFetched } from "../schema";
 import {
@@ -25,6 +25,8 @@ import {
 import { generatePluginFunctions, getMetadataForPlugins } from "./plugin";
 import { Plugin } from "../types/plugins";
 import { DeployMetadata, DeployOptions } from "../types";
+import { DEFAULT_API_KEY } from "../../core/constants/urls";
+import { CUSTOM_GAS_FOR_CHAIN, matchError } from "./any-evm-constants";
 
 //
 // =============================
@@ -101,7 +103,7 @@ export async function isContractDeployed(
 ): Promise<boolean> {
   const code = await provider.getCode(address);
 
-  return code !== "0x";
+  return code !== "0x" && code !== "0x0";
 }
 
 /**
@@ -123,11 +125,10 @@ export async function isEIP155Enforced(
       "0xf8a58085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffafffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf31ba02222222222222222222222222222222222222222222222222222222222222222a02222222222222222222222222222222222222222222222222222222222222222",
     );
   } catch (e: any) {
-    if (
-      e.toString().toLowerCase().includes("eip-155") ||
-      e.message?.toString().toLowerCase().includes("eip-155") ||
-      e.data?.message?.toString().toLowerCase().includes("eip-155")
-    ) {
+    const errorMsg = e.toString().toLowerCase();
+    const errorJson = JSON.stringify(e).toLowerCase();
+
+    if (matchError(errorMsg) || matchError(errorJson)) {
       return true;
     }
     return false;
@@ -155,8 +156,14 @@ export async function getCreate2FactoryAddress(
   }
 
   const enforceEip155 = await isEIP155Enforced(provider);
-  const chainId = enforceEip155 ? (await provider.getNetwork()).chainId : 0;
-  const deploymentInfo = getCreate2FactoryDeploymentInfo(chainId);
+  const networkId = (await provider.getNetwork()).chainId;
+  const chainId = enforceEip155 ? networkId : 0;
+  const deploymentInfo = CUSTOM_GAS_FOR_CHAIN[networkId]
+    ? getCreate2FactoryDeploymentInfo(
+        chainId,
+        CUSTOM_GAS_FOR_CHAIN[networkId].gasPrice,
+      )
+    : getCreate2FactoryDeploymentInfo(chainId);
 
   return deploymentInfo.deployment;
 }
@@ -330,6 +337,130 @@ export async function computeNativeTokenAddress(
   ).transaction.predictedAddress;
 }
 
+/**
+ *
+ * @public
+ * @param contractName
+ * @param chainId
+ * @param storage
+ */
+export async function getThirdwebContractAddress(
+  contractName: string,
+  chainId: number,
+  storage: ThirdwebStorage,
+): Promise<string> {
+  const provider = getChainProvider(chainId, {
+    thirdwebApiKey: DEFAULT_API_KEY,
+  });
+  const contractAddress = await predictThirdwebContractAddress(
+    contractName,
+    chainId,
+    storage,
+  );
+  const isDeployed = await isContractDeployed(contractAddress, provider);
+  invariant(isDeployed, "Contract not deployed yet");
+
+  return contractAddress;
+}
+
+/**
+ *
+ * @public
+ * @param contractName
+ * @param chainId
+ * @param storage
+ */
+export async function predictThirdwebContractAddress(
+  contractName: string,
+  chainId: number,
+  storage: ThirdwebStorage,
+): Promise<string> {
+  const provider = getChainProvider(chainId, {
+    thirdwebApiKey: DEFAULT_API_KEY,
+  });
+  const publishUri = await fetchAndCachePublishedContractURI(contractName);
+  const create2Factory = await getCreate2FactoryAddress(provider);
+  invariant(create2Factory, "Thirdweb stack not found");
+
+  const pluginMetadata = await getMetadataForPlugins(publishUri, storage);
+
+  // if pluginMetadata is not empty, then it's a plugin-pattern router contract
+  if (pluginMetadata.length > 0) {
+    const deploymentInfo = await getDeploymentInfo(
+      publishUri,
+      storage,
+      provider,
+      create2Factory,
+    );
+
+    const implementation = deploymentInfo.find(
+      (contract) => contract.type === "implementation",
+    )?.transaction.predictedAddress;
+    invariant(implementation, "Error computing address for plugin router");
+
+    return implementation;
+  }
+
+  const implementation = await computeDeploymentInfo(
+    "implementation",
+    provider,
+    storage,
+    create2Factory,
+    { contractName: contractName },
+  );
+
+  return implementation.transaction.predictedAddress;
+}
+
+/**
+ *
+ * @internal
+ * @param contractName
+ * @param chainId
+ * @param storage
+ */
+export async function getEncodedConstructorParamsForThirdwebContract(
+  contractName: string,
+  chainId: number,
+  storage: ThirdwebStorage,
+  constructorParamMap?: ConstructorParamMap,
+): Promise<BytesLike | undefined> {
+  const provider = getChainProvider(chainId, {
+    thirdwebApiKey: DEFAULT_API_KEY,
+  });
+  const publishUri = await fetchAndCachePublishedContractURI(contractName);
+  const metadata = await fetchAndCacheDeployMetadata(publishUri, storage);
+  const create2Factory = await getCreate2FactoryAddress(provider);
+  invariant(create2Factory, "Thirdweb stack not found");
+
+  const pluginMetadata = await getMetadataForPlugins(publishUri, storage);
+
+  let encodedArgs;
+
+  // if pluginMetadata is not empty, then it's a plugin-pattern router contract
+  if (pluginMetadata.length > 0) {
+    const deploymentInfo = await getDeploymentInfo(
+      publishUri,
+      storage,
+      provider,
+      create2Factory,
+    );
+    encodedArgs = deploymentInfo.find(
+      (contract) => contract.type === "implementation",
+    )?.encodedArgs;
+  } else {
+    encodedArgs = await encodeConstructorParamsForImplementation(
+      metadata.compilerMetadata,
+      provider,
+      storage,
+      create2Factory,
+      constructorParamMap,
+    );
+  }
+
+  return encodedArgs;
+}
+
 //
 // ==============================================
 // ======== Create / Send Transactions ==========
@@ -393,7 +524,12 @@ export async function deployCreate2Factory(
   const networkId = (await signer.provider.getNetwork()).chainId;
   const chainId = enforceEip155 ? networkId : 0;
   console.debug(`ChainId ${networkId} enforces EIP155: ${enforceEip155}`);
-  const deploymentInfo = getCreate2FactoryDeploymentInfo(chainId);
+  const deploymentInfo = CUSTOM_GAS_FOR_CHAIN[networkId]
+    ? getCreate2FactoryDeploymentInfo(
+        chainId,
+        CUSTOM_GAS_FOR_CHAIN[networkId].gasPrice,
+      )
+    : getCreate2FactoryDeploymentInfo(chainId);
 
   const factoryExists = await isContractDeployed(
     deploymentInfo.deployment,
@@ -403,14 +539,15 @@ export async function deployCreate2Factory(
   // deploy community factory if not already deployed
   if (!factoryExists) {
     // send balance to the keyless signer
+    const valueToSend = CUSTOM_GAS_FOR_CHAIN[networkId]
+      ? BigNumber.from(CUSTOM_GAS_FOR_CHAIN[networkId].gasPrice).mul(100000)
+      : toWei("0.01");
     if (
-      (await signer.provider.getBalance(deploymentInfo.signer)).lt(
-        toWei("0.01"),
-      )
+      (await signer.provider.getBalance(deploymentInfo.signer)).lt(valueToSend)
     ) {
       await signer.sendTransaction({
         to: deploymentInfo.signer,
-        value: toWei("0.01"),
+        value: valueToSend,
       });
     }
 
@@ -423,8 +560,10 @@ export async function deployCreate2Factory(
       options?.notifier?.("deploying", "create2Factory");
       await signer.provider.sendTransaction(deploymentInfo.transaction);
       options?.notifier?.("deployed", "create2Factory");
-    } catch (err) {
-      throw new Error(`Couldn't deploy CREATE2 factory: ${err}`);
+    } catch (err: any) {
+      throw new Error(
+        `Couldn't deploy CREATE2 factory: ${JSON.stringify(err)}`,
+      );
     }
   }
 
@@ -452,11 +591,12 @@ export async function deployContractDeterministicRaw(
   gasLimit: number = 7000000,
 ) {
   // Check if the implementation contract is already deployed
-  const code = predictedAddress
-    ? await signer.provider?.getCode(predictedAddress)
-    : "0x";
+  invariant(signer.provider, "Provider required");
+  const contractDeployed = predictedAddress
+    ? await isContractDeployed(predictedAddress, signer.provider)
+    : false;
 
-  if (code === "0x") {
+  if (!contractDeployed) {
     console.debug(
       `deploying contract via create2 factory at: ${predictedAddress}`,
     );
@@ -495,9 +635,13 @@ export async function deployContractDeterministic(
   gasLimit: number = 7000000,
 ) {
   // Check if the implementation contract is already deployed
-  const code = await signer.provider?.getCode(transaction.predictedAddress);
+  invariant(signer.provider, "Provider required");
+  const contractDeployed = await isContractDeployed(
+    transaction.predictedAddress,
+    signer.provider,
+  );
 
-  if (code === "0x") {
+  if (!contractDeployed) {
     console.debug(
       `deploying contract via create2 factory at: ${transaction.predictedAddress}`,
     );
@@ -681,9 +825,10 @@ export async function computeDeploymentInfo(
   // Different treatment for WETH contract
   if (contractName === "WETH9") {
     const address = computeDeploymentAddress(WETHBytecode, [], create2Factory);
-    const code = await provider.getCode(address);
+    const contractDeployed = await isContractDeployed(address, provider);
     let initBytecodeWithSalt = "";
-    if (code === "0x") {
+
+    if (!contractDeployed) {
       initBytecodeWithSalt = getInitBytecodeWithSalt(WETHBytecode, []);
     }
     return {
@@ -716,10 +861,10 @@ export async function computeDeploymentInfo(
     encodedArgs,
     create2Factory,
   );
-  const code = await provider.getCode(address);
+  const contractDeployed = await isContractDeployed(address, provider);
 
   let initBytecodeWithSalt = "";
-  if (code === "0x") {
+  if (!contractDeployed) {
     initBytecodeWithSalt = getInitBytecodeWithSalt(
       metadata.bytecode,
       encodedArgs,
@@ -734,6 +879,7 @@ export async function computeDeploymentInfo(
       to: create2Factory,
       data: initBytecodeWithSalt,
     },
+    encodedArgs,
   };
 }
 
@@ -743,7 +889,7 @@ export async function computeDeploymentInfo(
  * Determine constructor params required by an implementation contract.
  * Return abi-encoded params.
  */
-async function encodeConstructorParamsForImplementation(
+export async function encodeConstructorParamsForImplementation(
   compilerMetadata: PreDeployMetadataFetched,
   provider: providers.Provider,
   storage: ThirdwebStorage,
@@ -799,10 +945,7 @@ async function encodeConstructorParamsForImplementation(
 
         return nativeTokenWrapperAddress;
       } else if (p.name && p.name.includes("trustedForwarder")) {
-        if (
-          compilerMetadata.analytics?.contract_name &&
-          compilerMetadata.analytics.contract_name === "Pack"
-        ) {
+        if (compilerMetadata.name === "Pack") {
           // EOAForwarder for Pack
           const deploymentInfo = await computeDeploymentInfo(
             "infra",
@@ -846,6 +989,45 @@ async function encodeConstructorParamsForImplementation(
   return encodedArgs;
 }
 
+export function convertParamValues(
+  constructorParamTypes: string[],
+  constructorParamValues: any[],
+) {
+  // check that both arrays are same length
+  if (constructorParamTypes.length !== constructorParamValues.length) {
+    throw Error(
+      `Passed the wrong number of constructor arguments: ${constructorParamValues.length}, expected ${constructorParamTypes.length}`,
+    );
+  }
+  return constructorParamTypes.map((p, index) => {
+    if (p === "tuple" || p.endsWith("[]")) {
+      if (typeof constructorParamValues[index] === "string") {
+        return JSON.parse(constructorParamValues[index]);
+      } else {
+        return constructorParamValues[index];
+      }
+    }
+    if (p === "bytes32") {
+      invariant(
+        ethers.utils.isHexString(constructorParamValues[index]),
+        `Could not parse bytes32 value. Expected valid hex string but got "${constructorParamValues[index]}".`,
+      );
+      return ethers.utils.hexZeroPad(constructorParamValues[index], 32);
+    }
+    if (p.startsWith("bytes")) {
+      invariant(
+        ethers.utils.isHexString(constructorParamValues[index]),
+        `Could not parse bytes value. Expected valid hex string but got "${constructorParamValues[index]}".`,
+      );
+      return constructorParamValues[index];
+    }
+    if (p.startsWith("uint") || p.startsWith("int")) {
+      return BigNumber.from(constructorParamValues[index].toString());
+    }
+    return constructorParamValues[index];
+  });
+}
+
 /**
  *
  * @public
@@ -854,11 +1036,12 @@ async function encodeConstructorParamsForImplementation(
  */
 export function getCreate2FactoryDeploymentInfo(
   chainId: number,
+  gasPrice?: number,
 ): KeylessDeploymentInfo {
   const signature = ethers.utils.joinSignature(SIGNATURE);
   const deploymentTransaction = getKeylessTxn(
     {
-      gasPrice: 100 * 10 ** 9,
+      gasPrice: gasPrice ? gasPrice : 100 * 10 ** 9,
       gasLimit: 100000,
       nonce: 0,
       data: CREATE2_FACTORY_BYTECODE,

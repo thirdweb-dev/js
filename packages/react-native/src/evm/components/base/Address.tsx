@@ -1,13 +1,20 @@
 import { Theme } from "../../styles/theme";
-import { shortenString } from "../../utils/addresses";
+import { shortenWalletAddress } from "../../utils/addresses";
 import Text from "./Text";
+
+type AddressProps = {
+  address: string;
+  variant?: keyof Theme["textVariants"];
+} & (typeof Text)["arguments"];
 
 export const Address = ({
   address,
   variant = "bodyLarge",
-}: {
-  address: string;
-  variant?: keyof Theme["textVariants"];
-}) => {
-  return <Text variant={variant}>{shortenString(address)}</Text>;
+  ...props
+}: AddressProps) => {
+  return (
+    <Text variant={variant} {...props}>
+      {shortenWalletAddress(address)}
+    </Text>
+  );
 };

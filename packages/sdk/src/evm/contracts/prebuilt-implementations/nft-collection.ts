@@ -361,7 +361,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
     functionName: string & TMethod,
     args?: Parameters<TokenERC721["functions"][TMethod]>,
     overrides?: CallOverrides,
-  ): Promise<any> {
+  ): Promise<ReturnType<TokenERC721["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, args, overrides);
   }
 }

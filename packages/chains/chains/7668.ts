@@ -21,7 +21,7 @@ export default {
     {
       "name": "rootnet",
       "url": "https://explorer.rootnet.live",
-      "standard": "none"
+      "standard": "EIP3091"
     }
   ],
   "testnet": false,

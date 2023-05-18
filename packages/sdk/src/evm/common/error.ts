@@ -285,8 +285,9 @@ export type TransactionErrorInfo = {
 export class TransactionError extends Error {
   #reason: string;
   #info: TransactionErrorInfo;
+  #raw: any;
 
-  constructor(info: TransactionErrorInfo) {
+  constructor(info: TransactionErrorInfo, raw: any) {
     let errorMessage = `\n\n\n╔═══════════════════╗\n║ TRANSACTION ERROR ║\n╚═══════════════════╝\n\n`;
     errorMessage += `Reason: ${info.reason}`;
     errorMessage += `\n\n\n╔═════════════════════════╗\n║ TRANSACTION INFORMATION ║\n╚═════════════════════════╝\n`;
@@ -363,11 +364,16 @@ export class TransactionError extends Error {
 
     this.#reason = info.reason;
     this.#info = info;
+    this.#raw = raw;
   }
 
   // Keep reason here for backwards compatibility
   get reason(): string {
     return this.#reason;
+  }
+
+  get raw(): any {
+    return this.#raw;
   }
 
   get info(): TransactionErrorInfo {
