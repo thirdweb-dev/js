@@ -863,7 +863,7 @@ export class ContractDeployer extends RPCConnectionHandler {
             options?.customFactory,
             "Custom factory address is required.",
           );
-          const tempSdk = ThirdwebSDK.fromSigner(signer);
+          const tempSdk = ThirdwebSDK.fromSigner(signer); // TODO: extract getContract as helper function
           const customFactory = await tempSdk.getContract(
             options.customFactory,
           );
