@@ -384,6 +384,7 @@ const KitchenSinkExample = () => {
 | [`useCancelListing`](https://portal.thirdweb.com/react/react.usecancellisting)               | Use this to cancel a listing on your marketplace contract.                                |
 | [`useMakeBid`](https://portal.thirdweb.com/react/react.usemakebid)                           | Use this to place a bid on an auction listing from your marketplace contract.             |
 | [`useBuyNow`](https://portal.thirdweb.com/react/react.usebuynow)                             | Use this to buy out an auction listing from your marketplace contract.                    |
+| [`useBuyDirectListing`](https://portal.thirdweb.com/react/react.useBuyDirectListing)             | Use this to buy from a direct listing in your marketplace v3 contract.                    |
 
 ### Permissions Controls
 
