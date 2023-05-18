@@ -1,8 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Fastex Chain (Bahamut)",
+  "name": "Sahara",
   "title": "Bahamut mainnet Sahara",
-  "chain": "Fastex Chain (Bahamut)",
+  "chain": "Bahamut",
   "icon": {
     "url": "ipfs://QmSemioP83RXnDWwTZbet8VpwJxcFRboX4B3pcdhLZGodP",
     "width": 200,
@@ -10,7 +10,7 @@ export default {
     "format": "png"
   },
   "rpc": [
-    "https://fastex-chain-bahamut.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://sahara.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.sahara.bahamutchain.com",
     "https://rpc2.sahara.bahamutchain.com"
   ],
@@ -40,5 +40,5 @@ export default {
     }
   ],
   "testnet": false,
-  "slug": "fastex-chain-bahamut"
+  "slug": "sahara"
 } as const satisfies Chain;
