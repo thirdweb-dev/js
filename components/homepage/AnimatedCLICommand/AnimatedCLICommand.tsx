@@ -69,7 +69,7 @@ function useCycledTyping(texts: string[]) {
   return spanRef;
 }
 
-const CopyButton: React.FC<{ text: string }> = ({ text }) => {
+export const CopyButton: React.FC<{ text: string }> = ({ text }) => {
   const { onCopy, hasCopied } = useClipboard(text);
   const trackEvent = useTrack();
   return (

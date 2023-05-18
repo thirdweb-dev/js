@@ -203,18 +203,18 @@ export const RESOURCES: NavCardProps[] = [
     icon: require("public/assets/tw-icons/general.png"),
   },
   {
-    name: "Open Source",
-    label: "open-source",
-    description: "Learn how to contribute to thirdweb",
-    link: "/open-source",
-    icon: require("public/assets/tw-icons/advanced-nfts.png"),
-  },
-  {
     name: "Docs",
     label: "docs",
     description: "Complete thirdweb documentation",
     link: "https://portal.thirdweb.com",
     icon: require("public/assets/tw-icons/pack.png"),
+  },
+  {
+    name: "Templates",
+    label: "templates",
+    description: "Ready-to-ship repositories",
+    link: "/templates",
+    icon: require("public/assets/tw-icons/dynamic-nft.png"),
   },
   {
     name: "Guides",
@@ -229,6 +229,13 @@ export const RESOURCES: NavCardProps[] = [
     description: "Our latest news and updates",
     link: "https://blog.thirdweb.com",
     icon: require("public/assets/tw-icons/datastore.png"),
+  },
+  {
+    name: "Open Source",
+    label: "open-source",
+    description: "Learn how to contribute to thirdweb",
+    link: "/open-source",
+    icon: require("public/assets/tw-icons/advanced-nfts.png"),
   },
   {
     name: "Events",

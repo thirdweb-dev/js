@@ -7,11 +7,13 @@ interface GeneralCtaProps extends Omit<LinkButtonProps, "href"> {
   title: string;
   href: string;
   size?: ButtonProps["size"];
+  iconColor?: string;
 }
 
 export const ProductButton: React.FC<GeneralCtaProps> = ({
   title,
   href,
+  iconColor = "yellow.400",
   ...props
 }) => {
   const trackEvent = useTrack();
@@ -19,7 +21,7 @@ export const ProductButton: React.FC<GeneralCtaProps> = ({
   return (
     <LinkButton
       leftIcon={
-        <Icon as={BsFillLightningChargeFill} color="yellow.400" boxSize={4} />
+        <Icon as={BsFillLightningChargeFill} color={iconColor} boxSize={4} />
       }
       w="full"
       py={"24px"}

@@ -14,6 +14,12 @@ export enum PageId {
   // thirdweb.com
   About = "about-page",
 
+  // thirdweb.com/templates
+  Templates = "templates-page",
+
+  // thirdweb.com/template/[templateId]
+  Template = "template-page",
+
   // thirdweb.com
   OSS = "oss-page",
 

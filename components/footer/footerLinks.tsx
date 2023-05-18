@@ -62,6 +62,11 @@ export const RESOURCES: FooterLinkInfo[] = [
     label: "portal",
   },
   {
+    name: "Templates",
+    link: "/templates",
+    label: "templates",
+  },
+  {
     name: "Open Source",
     link: "/open-source",
     label: "open-source",
