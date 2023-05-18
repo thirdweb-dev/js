@@ -1,16 +1,16 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Oasis Testnet",
-  "title": "Bahamut Testnet Oasis",
+  "name": "Fastex Chain (Bahamut) Oasis Testnet",
+  "title": "Bahamut testnet Oasis",
   "icon": {
     "url": "ipfs://QmSemioP83RXnDWwTZbet8VpwJxcFRboX4B3pcdhLZGodP",
     "width": 200,
     "height": 200,
     "format": "png"
   },
-  "chain": "Bahamut",
+  "chain": "Fastex Chain (Bahamut)",
   "rpc": [
-    "https://oasis-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://fastex-chain-bahamut-oasis-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.oasis.bahamutchain.com"
   ],
   "features": [
@@ -41,5 +41,5 @@ export default {
     }
   ],
   "testnet": true,
-  "slug": "oasis-testnet"
+  "slug": "fastex-chain-bahamut-oasis-testnet"
 } as const satisfies Chain;

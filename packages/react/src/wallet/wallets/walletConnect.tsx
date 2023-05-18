@@ -1,5 +1,5 @@
 import { WalletConnect } from "@thirdweb-dev/wallets";
-import type { ConfiguredWallet, WalletOptions } from "@thirdweb-dev/react-core";
+import type { WalletConfig, WalletOptions } from "@thirdweb-dev/react-core";
 import { TW_WC_PROJECT_ID } from "../constants/wc";
 import type { WC2_QRModalOptions } from "@thirdweb-dev/wallets";
 
@@ -20,27 +20,24 @@ type walletConnectConfig = {
   qrModalOptions?: WC2_QRModalOptions;
 };
 
-export const walletConnect = (config?: walletConnectConfig) => {
+export const walletConnect = (
+  config?: walletConnectConfig,
+): WalletConfig<WalletConnect, walletConnectConfig> => {
   const projectId = config?.projectId || TW_WC_PROJECT_ID;
-  const configuredWallet = {
+  return {
     id: WalletConnect.id,
-    meta: {
-      name: "WalletConnect",
-      iconURL:
-        "ipfs://QmX58KPRaTC9JYZ7KriuBzeoEaV2P9eZcA3qbFnTHZazKw/wallet-connect.svg",
-    },
-    create: (options: WalletOptions) =>
-      new WalletConnect({
+    meta: WalletConnect.meta,
+    create(options: WalletOptions) {
+      return new WalletConnect({
         ...options,
         qrcode: true,
         projectId,
         qrModalOptions: config?.qrModalOptions,
-      }),
+      });
+    },
     config: {
       projectId,
       qrModalOptions: config?.qrModalOptions,
     },
-  } satisfies ConfiguredWallet<WalletConnect, walletConnectConfig>;
-
-  return configuredWallet;
+  };
 };

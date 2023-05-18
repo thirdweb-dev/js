@@ -23,12 +23,13 @@ import styled from "@emotion/styled";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {
   ChevronRightIcon,
+  EnterIcon,
   PinBottomIcon,
   ShuffleIcon,
 } from "@radix-ui/react-icons";
 import { Localhost } from "@thirdweb-dev/chains";
 import {
-  useActiveChain,
+  useChain,
   useAddress,
   useBalance,
   useChainId,
@@ -38,17 +39,11 @@ import {
   useWallet,
   WalletInstance,
 } from "@thirdweb-dev/react-core";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { fadeInAnimation } from "../../components/FadeIn";
-import {
-  AbstractClientWallet,
-  LocalWallet,
-  MetaMaskWallet,
-  walletIds,
-} from "@thirdweb-dev/wallets";
+import { LocalWallet, MetaMaskWallet, walletIds } from "@thirdweb-dev/wallets";
 import { Flex } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
-import { utils } from "ethers";
 import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
 import { ErrorMessage } from "../../components/formElements";
 import { useWalletContext } from "@thirdweb-dev/react-core";
@@ -81,8 +76,9 @@ export const ConnectedWalletDetails: React.FC<{
   const [wrapperWallet, setWrapperWallet] = useState<
     WalletInstance | undefined
   >();
+  const walletContext = useWalletContext();
 
-  const chain = useActiveChain();
+  const chain = useChain();
   const activeWalletIconURL = activeWalletConfig?.meta.iconURL || "";
 
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
@@ -91,8 +87,13 @@ export const ConnectedWalletDetails: React.FC<{
   const sdk = useSDK();
 
   const personalWallet = activeWallet?.getPersonalWallet() as
-    | AbstractClientWallet
+    | WalletInstance
     | undefined;
+
+  const personalWalletConfig =
+    personalWallet && walletContext.getWalletConfig(personalWallet);
+  const wrapperWalletConfig =
+    wrapperWallet && walletContext.getWalletConfig(wrapperWallet);
 
   const disableSwitchChain = !!personalWallet;
 
@@ -261,67 +262,58 @@ export const ConnectedWalletDetails: React.FC<{
       {/* Network Switcher */}
       <div>
         <DropdownLabel>Current Network</DropdownLabel>
-        <Spacer y="sm" />
+        <Spacer y="xs" />
         {networkSwitcherButton}
       </div>
 
-      {/* Switch to Personal Wallet for Safe */}
-      {personalWallet && (
-        <div>
-          <Spacer y="lg" />
-          <DropdownLabel>Switch to Personal Wallet</DropdownLabel>
-          <Spacer y="xs" />
+      <Spacer y="md" />
+
+      <Flex flexDirection="column" gap={"sm"}>
+        {/* Switch to Personal Wallet for Safe */}
+        {personalWallet && personalWalletConfig && (
           <WalletSwitcher
             wallet={personalWallet}
+            name="Personal Wallet"
             onSwitch={() => {
               setWrapperWallet(activeWallet);
             }}
           />
-        </div>
-      )}
+        )}
 
-      {/* Switch to Wrapper Wallet */}
-      {wrapperWallet && (
-        <div>
-          <Spacer y="lg" />
-          <DropdownLabel>
-            Switch to {wrapperWallet.getMeta().name}
-          </DropdownLabel>
-          <Spacer y="xs" />
+        {/* Switch to Wrapper Wallet */}
+        {wrapperWalletConfig && wrapperWallet && (
           <WalletSwitcher
+            name={wrapperWalletConfig.meta.name}
             wallet={wrapperWallet}
             onSwitch={() => {
               setWrapperWallet(undefined);
             }}
           />
-        </div>
-      )}
+        )}
 
-      {/* Switch Account for Metamask */}
-      {activeWallet?.walletId === walletIds.metamask && (
-        <div>
-          <Spacer y="md" />
-          <MenuButton
-            type="button"
-            onClick={() => {
-              (activeWallet as MetaMaskWallet).switchAccount();
-              setOpen(false);
-            }}
-            style={{
-              fontSize: fontSize.sm,
-            }}
-          >
-            <ShuffleIcon width={iconSize.sm} height={iconSize.sm} />
-            Switch Account
-          </MenuButton>
-        </div>
-      )}
+        {/* Switch Account for Metamask */}
+        {activeWalletConfig &&
+          activeWalletConfig.id === walletIds.metamask &&
+          activeWalletConfig.isInstalled &&
+          activeWalletConfig.isInstalled() && (
+            <MenuButton
+              type="button"
+              onClick={() => {
+                (activeWallet as MetaMaskWallet).switchAccount();
+                setOpen(false);
+              }}
+              style={{
+                fontSize: fontSize.sm,
+              }}
+            >
+              <ShuffleIcon width={iconSize.sm} height={iconSize.sm} />
+              Switch Account
+            </MenuButton>
+          )}
 
-      {/* Request Testnet funds */}
-      {((chain?.faucets && chain.faucets.length > 0) ||
-        chain?.chainId === Localhost.chainId) && (
-        <div>
-          <Spacer y="md" />
+        {/* Request Testnet funds */}
+        {((chain?.faucets && chain.faucets.length > 0) ||
+          chain?.chainId === Localhost.chainId) && (
           <MenuLink
             href={chain?.faucets ? chain.faucets[0] : "#"}
             target="_blank"
@@ -345,40 +337,39 @@ export const ConnectedWalletDetails: React.FC<{
             </SecondaryIconContainer>
             Request Testnet Funds
           </MenuLink>
-        </div>
-      )}
+        )}
 
-      {/* Export  Wallet */}
-      {activeWallet?.walletId === walletIds.localWallet && (
-        <>
-          <Spacer y="sm" />
-          <MenuButton
-            onClick={() => {
-              setShowExportModal(true);
-              setOpen(false);
-            }}
-            style={{
-              fontSize: fontSize.sm,
-            }}
-          >
-            <SecondaryIconContainer>
-              <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />
-            </SecondaryIconContainer>
-            Backup wallet{" "}
-          </MenuButton>
-          <Spacer y="sm" />
-          <ErrorMessage
-            style={{
-              fontSize: fontSize.xs,
-              textAlign: "center",
-            }}
-          >
-            This is a temporary guest wallet <br />
-            Backup if you {`don't `}
-            want to lose access to it
-          </ErrorMessage>
-        </>
-      )}
+        {/* Export  Wallet */}
+        {activeWallet?.walletId === walletIds.localWallet && (
+          <div>
+            <MenuButton
+              onClick={() => {
+                setShowExportModal(true);
+                setOpen(false);
+              }}
+              style={{
+                fontSize: fontSize.sm,
+              }}
+            >
+              <SecondaryIconContainer>
+                <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />
+              </SecondaryIconContainer>
+              Backup wallet{" "}
+            </MenuButton>
+            <Spacer y="sm" />
+            <ErrorMessage
+              style={{
+                fontSize: fontSize.xs,
+                textAlign: "center",
+              }}
+            >
+              This is a temporary guest wallet <br />
+              Backup if you {`don't `}
+              want to lose access to it
+            </ErrorMessage>
+          </div>
+        )}
+      </Flex>
     </div>
   );
 
@@ -608,34 +599,13 @@ const SecondaryIconContainer = styled.div<{ theme?: Theme }>`
 function WalletSwitcher({
   wallet,
   onSwitch,
+  name,
 }: {
   wallet: WalletInstance;
   onSwitch: () => void;
+  name: string;
 }) {
   const walletContext = useWalletContext();
-  const balanceQuery = useBalance();
-  const [walletBalance, setWalletBalance] = useState<string | undefined>(
-    undefined,
-  );
-  const [address, setAddress] = useState<string | undefined>(undefined);
-
-  // get personal wallet address and balance
-  useEffect(() => {
-    if (!wallet) {
-      setAddress(undefined);
-      setWalletBalance(undefined);
-      return;
-    }
-    wallet.getAddress().then((_address) => {
-      setAddress(_address);
-    });
-
-    wallet.getSigner().then((signer) => {
-      signer.getBalance().then((balance) => {
-        setWalletBalance(utils.formatEther(balance));
-      });
-    });
-  }, [wallet]);
 
   return (
     <MenuButton
@@ -644,41 +614,12 @@ function WalletSwitcher({
         walletContext.setConnectedWallet(wallet);
         onSwitch();
       }}
+      style={{
+        fontSize: fontSize.sm,
+      }}
     >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          position: "relative",
-        }}
-      >
-        <Img
-          src={wallet.getMeta().iconURL}
-          width={iconSize.lg}
-          height={iconSize.lg}
-        />
-      </div>
-
-      <ColFlex>
-        {walletBalance ? (
-          <WalletBalance>
-            {String(walletBalance).slice(0, 5)} {balanceQuery.data?.symbol}
-          </WalletBalance>
-        ) : (
-          <Skeleton height={fontSize.sm} width="82px" />
-        )}
-        <Spacer y="xxs" />
-        <WalletAddress>{shortenString(address || "")}</WalletAddress>
-      </ColFlex>
-
-      <StyledChevronRightIcon
-        width={iconSize.sm}
-        height={iconSize.sm}
-        style={{
-          flexShrink: 0,
-          marginLeft: "auto",
-        }}
-      />
+      <EnterIcon width={iconSize.sm} height={iconSize.sm} />
+      Switch to {name}
     </MenuButton>
   );
 }
