@@ -135,4 +135,7 @@ export const InputButton = styled.button<{ theme?: Theme }>`
   &:hover {
     color: ${(p) => p.theme.text.neutral};
   }
+  &[disabled] {
+    cursor: not-allowed;
+  }
 `;

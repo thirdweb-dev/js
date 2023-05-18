@@ -5,7 +5,7 @@ export default {
   "chain": "MELD",
   "rpc": [
     "https://meld.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/meld/mainnet/rpc"
+    "https://network-rpc.meld.com"
   ],
   "faucets": [],
   "features": [],
@@ -24,19 +24,7 @@ export default {
   "shortName": "meld",
   "chainId": 333000333,
   "networkId": 333000333,
-  "explorers": [
-    {
-      "name": "explorer",
-      "url": "https://subnets.avax.network/meld",
-      "icon": {
-        "url": "ipfs://QmRhB4AbjDrhvwfSAQi2JvKirFiDWxzJvKEvG8S8AdDdED",
-        "width": 4000,
-        "height": 4000,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
-  ],
+  "explorers": [],
   "testnet": false,
   "slug": "meld"
 } as const satisfies Chain;

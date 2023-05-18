@@ -53,6 +53,9 @@ export const SmartConnectUI = (
       open: props.open,
       theme: props.theme,
       walletConfig: personalConfiguredWallet,
+      supportedWallets: props.walletConfig.config.personalWallets,
+      selectionData: props.selectionData,
+      setSelectionData: props.setSelectionData,
     };
 
     if (personalConfiguredWallet.connectUI) {
@@ -69,6 +72,7 @@ export const SmartConnectUI = (
         onBack={props.goBack}
         smartWallet={walletConfig}
         selectWallet={setPersonalConfiguredWallet}
+        renderBackButton={props.supportedWallets.length > 1}
       />
     );
   }

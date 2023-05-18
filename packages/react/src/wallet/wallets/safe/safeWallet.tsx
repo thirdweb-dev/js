@@ -50,6 +50,9 @@ export const SafeConnectUI = (
       open: props.open,
       theme: props.theme,
       walletConfig: personalConfiguredWallet,
+      supportedWallets: props.walletConfig.config.personalWallets,
+      selectionData: props.selectionData,
+      setSelectionData: props.setSelectionData,
     };
 
     if (personalConfiguredWallet.connectUI) {
@@ -65,9 +68,8 @@ export const SafeConnectUI = (
         personalWallets={props.walletConfig.config.personalWallets}
         onBack={props.goBack}
         safeWallet={props.walletConfig}
-        selectWallet={(wallet) => {
-          setPersonalConfiguredWallet(wallet);
-        }}
+        selectWallet={setPersonalConfiguredWallet}
+        renderBackButton={props.supportedWallets.length > 1}
       />
     );
   }
