@@ -152,7 +152,8 @@ export const DeployTypeInput = z.union([
 /**
  * @internal
  */
-export const DeploymentNetworkSchema = z.object({
+export const DeploymentNetworkInput = z.object({
+  allNetworks: z.boolean(),
   networksEnabled: z.array(z.number()).default([]),
   networksDisabled: z.array(z.number()).default([]),
 });
@@ -189,7 +190,7 @@ export const ExtraPublishMetadataSchemaInput = z
     isDeployableViaProxy: z.boolean().optional(),
     factoryDeploymentData: FactoryDeploymentSchema.optional(),
     deployType: DeployTypeInput.optional(),
-    networksForDeployment: DeploymentNetworkSchema.optional(),
+    networksForDeployment: DeploymentNetworkInput.optional(),
     constructorParams: z
       .record(
         z.string(),
