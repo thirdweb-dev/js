@@ -14,8 +14,8 @@ import { useWalletContext, useWallet } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import { useSmartWallet } from "../../providers/context-provider";
 import RightArrowIcon from "../../assets/right-arrow";
-import { useTheme } from "@shopify/restyle";
 import { ConnectAppField } from "./ConnectAppField";
+import { useAppTheme } from "../../styles/hooks";
 
 export const SmartWalletAdditionalActions = ({
   onExportPress,
@@ -28,7 +28,7 @@ export const SmartWalletAdditionalActions = ({
   const [smartWalletAddress, setSmartWalletAddress] = useState<string>("");
   const [showSmartWallet, setShowSmartWallet] = useState(false);
   const activeWallet = useWallet();
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   const wallet = showSmartWallet
     ? smartWallet

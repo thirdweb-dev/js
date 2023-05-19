@@ -14,6 +14,7 @@ import { LocalWallet } from "@thirdweb-dev/wallets/evm/wallets/local-wallet";
 import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
 import { MetaMaskWallet } from "@thirdweb-dev/wallets/evm/wallets/metamask";
+import { MagicLink } from "@thirdweb-dev/wallets/evm/wallets/magic";
 import { BigNumber } from "ethers";
 import type { ContractInterface, Signer } from "ethers";
 
@@ -49,6 +50,7 @@ const WALLETS = [
   WalletConnectV1,
   CoinbaseWallet,
   LocalWallet,
+  MagicLink,
 ] as const;
 
 type PossibleWallet = (typeof WALLETS)[number]["id"];
@@ -59,7 +61,12 @@ type FundWalletInput = FundWalletOptions & {
 
 interface TWBridge {
   initialize: (chain: ChainIdOrName, options: string) => void;
-  connect: (wallet: PossibleWallet, chainId?: number) => Promise<string>;
+  connect: (
+    wallet: PossibleWallet,
+    chainId?: number,
+    password?: string,
+    email?: string,
+  ) => Promise<string>;
   disconnect: () => Promise<void>;
   switchNetwork: (chainId: number) => Promise<void>;
   invoke: (route: string, payload: string) => Promise<string | undefined>;
@@ -152,6 +159,12 @@ class ThirdwebBridge implements TWBridge {
             dappMetadata,
           });
           break;
+        case walletIds.magicLink:
+          walletInstance = new MagicLink({
+            apiKey: sdkOptions.wallet?.magicLinkApiKey,
+            emailLogin: true,
+          });
+          break;
         default:
           throw new Error(`Unknown wallet type: ${possibleWallet.id}`);
       }
@@ -173,6 +186,7 @@ class ThirdwebBridge implements TWBridge {
     wallet: PossibleWallet = "injected",
     chainId?: number | undefined,
     password?: string,
+    email?: string,
   ) {
     if (!this.activeSDK) {
       throw new Error("SDK not initialized");
@@ -209,7 +223,15 @@ class ThirdwebBridge implements TWBridge {
         }
       }
 
-      await walletInstance.connect({ chainId });
+      if (walletInstance.walletId === walletIds.magicLink) {
+        const magicLinkWallet = walletInstance as MagicLink;
+        if (!email) {
+          throw new Error("Email is required for Magic Link Wallet");
+        }
+        await magicLinkWallet.connect({ chainId, email });
+      } else {
+        await walletInstance.connect({ chainId });
+      }
       this.activeWallet = walletInstance;
       this.updateSDKSigner(await walletInstance.getSigner());
       return await this.activeSDK.wallet.getAddress();

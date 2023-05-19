@@ -1,5 +1,6 @@
 export { darkTheme, lightTheme } from "./styles/theme";
 export type { Theme, ButtonTheme } from "./styles/theme";
+export { useAppTheme } from "./styles/hooks";
 
 export {
   CoinbaseWallet,
