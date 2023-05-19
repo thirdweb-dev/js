@@ -1,6 +1,6 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Metaplayerone Network",
+  "name": "Metaplayerone Dubai Testnet",
   "chain": "MP1 Dubai-Testnet",
   "icon": {
     "url": "ipfs://QmfJKxmubJrqYWDcR2PnPvmpukxPz4fYDu3hqTaSnpJDxC",
@@ -9,7 +9,7 @@ export default {
     "format": "svg"
   },
   "rpc": [
-    "https://metaplayerone-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://metaplayerone-dubai-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-dubai.mp1network.com/"
   ],
   "faucets": [],
@@ -36,5 +36,5 @@ export default {
     }
   ],
   "testnet": true,
-  "slug": "metaplayerone-network"
+  "slug": "metaplayerone-dubai-testnet"
 } as const satisfies Chain;
