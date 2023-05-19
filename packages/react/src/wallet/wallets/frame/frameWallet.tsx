@@ -10,7 +10,7 @@ import { FrameConnectUI } from "./FrameConnectUI";
 export const frameWallet = (): WalletConfig<FrameWallet> => ({
   id: FrameWallet.id,
   meta: {
-    name: "Frame Wallet",
+    name: "Frame",
     iconURL:
       "https://frame.nyc3.digitaloceanspaces.com/bundle/home/favicon.8f0e1342.png",
     urls: {
