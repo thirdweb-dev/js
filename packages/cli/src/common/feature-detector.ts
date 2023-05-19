@@ -34,12 +34,7 @@ export async function detectExtensions(options: any) {
   let compiledResult;
   const compileLoader = spinner("Compiling project...");
   try {
-    compiledResult = await build(
-      projectPath,
-      projectType,
-      options,
-      compileLoader,
-    );
+    compiledResult = await build(projectPath, projectType, options);
   } catch (e) {
     compileLoader.fail("Compilation failed");
     logger.error(e);

@@ -38,14 +38,14 @@ export class HardhatBuilder extends BaseBuilder {
 
     let ignoreIpfsHash = false;
     if (options.zksync) {
-      ignoreIpfsHash = true; // IPFS hash can't be recovered from ZKSync bytecode
-      const zkNetwork = Object.values(actualHardhatConfig.networks).find(
+      const zkNetwork = Object.entries(actualHardhatConfig.networks).find(
         (network) => {
-          return (network as any).zksync;
+          return (network[1] as any).zksync;
         },
       );
+      ignoreIpfsHash = (zkNetwork?.[1] as any).zksync; // IPFS hash can't be recovered from ZKSync bytecode
       await execute(
-        `npx hardhat compile --network ${zkNetwork}`,
+        `npx hardhat compile --network ${zkNetwork?.[0]}`,
         options.projectPath,
       );
     } else {

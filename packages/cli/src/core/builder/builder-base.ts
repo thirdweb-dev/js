@@ -4,9 +4,7 @@ import { ContractPayload } from "../interfaces/ContractPayload";
 import { extractIPFSHashFromBytecode } from "@thirdweb-dev/sdk/evm";
 
 export abstract class BaseBuilder implements IBuilder {
-  abstract compile(
-    options: CompileOptions,
-  ): Promise<{ contracts: ContractPayload[] }>;
+  abstract compile(options: any): Promise<{ contracts: ContractPayload[] }>;
 
   protected shouldProcessContract(
     abi: any[],
