@@ -28,11 +28,11 @@ export function downloadAndExtractRepo(
 ): Promise<void> {
   return pipeline(
     got.stream(
-      `https://codeload.github.com/thirdweb-example/${name}/tar.gz/main`,
+      `https://codeload.github.com/thirdweb-example/${name}/tar.gz/temp-zksync`,
     ),
     tar.extract(
       { cwd: root, strip: filePath ? filePath.split("/").length + 1 : 1 },
-      [`${name}-main${filePath ? `/${filePath}` : ""}`],
+      [`${name}-temp-zksync${filePath ? `/${filePath}` : ""}`],
     ),
   );
 }
