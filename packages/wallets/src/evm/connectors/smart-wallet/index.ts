@@ -52,8 +52,8 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       entryPointAddress,
       bundlerUrl,
       paymasterAPI: this.config.gasless
-        ? this.config.customPaymasterAPI
-          ? this.config.customPaymasterAPI
+        ? this.config.paymasterAPI
+          ? this.config.paymasterAPI
           : getVerifyingPaymaster(
               paymasterUrl,
               entryPointAddress,
