@@ -1,5 +1,21 @@
 # @thirdweb-dev/react-native
 
+## 0.2.13
+
+### Patch Changes
+
+- [#1025](https://github.com/thirdweb-dev/js/pull/1025) [`99ffa8ce`](https://github.com/thirdweb-dev/js/commit/99ffa8ce3b47948f0b6aa3809e734d449a8377bb) Thanks [@iketw](https://github.com/iketw)! - [ReactNative] Single global modal. No API changes
+
+  Added the capability of using our theme outside the SDK.
+  ThirdwebProvider's children component are now wrapped in a ThemeProvider.
+
+- Updated dependencies [[`b6f48e10`](https://github.com/thirdweb-dev/js/commit/b6f48e1088b5d36a51103de4afda53179029faaf), [`d5123044`](https://github.com/thirdweb-dev/js/commit/d51230441a097734be092c42b45dea07629e65fa), [`3c8c5d56`](https://github.com/thirdweb-dev/js/commit/3c8c5d56f2a21c0918fede71061c6745f2956f83), [`907d97be`](https://github.com/thirdweb-dev/js/commit/907d97bedef7331148bdfe8b9bf1e19459282e4c)]:
+  - @thirdweb-dev/wallets@0.2.21
+  - @thirdweb-dev/react-core@3.12.1
+  - @thirdweb-dev/storage@1.1.3
+  - @thirdweb-dev/chains@0.1.17
+  - @thirdweb-dev/sdk@3.10.16
+
 ## 0.2.12
 
 ### Patch Changes
