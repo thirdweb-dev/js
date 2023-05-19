@@ -1,14 +1,14 @@
 import { StyleSheet, TextInput } from "react-native";
-import { useTheme } from "@shopify/restyle";
 import Box from "../../base/Box";
 import Text from "../../base/Text";
+import { useAppTheme } from "../../../styles/hooks";
 
 export const UsernameInput = ({
   onChangeText,
 }: {
   onChangeText: TextInput["props"]["onChangeText"];
 }) => {
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   return (
     <>
