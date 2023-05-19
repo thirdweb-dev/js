@@ -28,7 +28,7 @@ export const SessionProposalModal = ({
         borderRadius="md"
         p="lg"
       >
-        <Text variant="bodyLarge">Session Proposal</Text>
+        <Text variant="bodyLarge">Connect to App</Text>
         <Text variant="bodyLarge">{proposal.proposer.metadata.name}</Text>
         <Box flexDirection="row" justifyContent="space-evenly" mt="lg">
           <BaseButton

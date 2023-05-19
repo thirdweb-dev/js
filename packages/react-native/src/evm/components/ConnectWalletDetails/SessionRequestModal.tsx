@@ -5,6 +5,24 @@ import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
 import { IWalletConnectReceiver, WCRequest } from "@thirdweb-dev/wallets";
 
+const getTitle = (method: string) => {
+  switch (method) {
+    case "switch_chain":
+      return "Switch Chain";
+    default:
+      return "Sign this message?";
+  }
+};
+
+const getContent = (requestData: WCRequest) => {
+  switch (requestData.method) {
+    case "switch_chain":
+      return `Switch to ${requestData.params[0].chainId}`;
+    default:
+      return `Message: ${requestData.params[0]}`;
+  }
+};
+
 export const SessionRequestModal = ({
   isVisible,
   requestData,
@@ -24,8 +42,11 @@ export const SessionRequestModal = ({
         borderRadius="md"
         p="lg"
       >
-        <Text variant="bodyLarge">Session Request</Text>
-        <Text variant="bodyLarge">{requestData.peer.metadata.name}</Text>
+        <Text variant="bodyLarge" mb="md">
+          {requestData.peer.metadata.name}
+        </Text>
+        <Text variant="bodyLarge">{getTitle(requestData.method)}</Text>
+        <Text variant="bodyLarge">{getContent(requestData)}</Text>
         <Box flexDirection="row" justifyContent="space-evenly" mt="lg">
           <BaseButton
             alignContent="center"
