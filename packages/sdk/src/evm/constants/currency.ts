@@ -37,7 +37,7 @@ export const NATIVE_TOKENS: Record<number, NativeToken> = {
     symbol: "SEP",
     decimals: 18,
     wrapped: {
-      address: "0xD0dF82dE051244f04BfF3A8bB1f62E1cD39eED92",
+      address: "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9",
       name: "Wrapped Ether",
       symbol: "WETH",
     },
