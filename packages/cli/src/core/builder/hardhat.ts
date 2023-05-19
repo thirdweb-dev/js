@@ -1,20 +1,14 @@
 import { findFiles } from "../../common/file-helper";
 import { execute } from "../helpers/exec";
 import { logger } from "../helpers/logger";
-import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
 import { existsSync, readFileSync } from "fs";
 import { HardhatConfig } from "hardhat/types";
 import { join, resolve } from "path";
-import { detectHardhatNetwork } from "../detection/detect";
-import { Ora } from "ora";
 
 export class HardhatBuilder extends BaseBuilder {
-  public async compile(
-    options: CompileOptions,
-    compileLoader?: Ora,
-  ): Promise<{
+  public async compile(options: any): Promise<{
     contracts: ContractPayload[];
   }> {
     //we get our very own extractor script from the dir that we're in during execution
@@ -40,29 +34,18 @@ export class HardhatBuilder extends BaseBuilder {
 
     logger.debug("successfully extracted hardhat config", actualHardhatConfig);
 
-    const otherNetworksInConfig = Object.keys(
-      actualHardhatConfig.networks,
-    ).filter((network) => {
-      return network !== "localhost" && network !== "hardhat";
-    });
-
-    let selectedNetwork: string = "";
-    if (otherNetworksInConfig.length > 0) {
-      if (actualHardhatConfig.defaultNetwork !== "hardhat") {
-        selectedNetwork = actualHardhatConfig.defaultNetwork;
-      } else {
-        compileLoader?.stopAndPersist();
-        otherNetworksInConfig.push("hardhat");
-        selectedNetwork = await detectHardhatNetwork(otherNetworksInConfig);
-        compileLoader?.start();
-      }
-    }
-
     await execute("npx hardhat clean", options.projectPath);
 
-    if (selectedNetwork.length > 0) {
+    let ignoreIpfsHash = false;
+    if (options.zksync) {
+      ignoreIpfsHash = true; // IPFS hash can't be recovered from ZKSync bytecode
+      const zkNetwork = Object.values(actualHardhatConfig.networks).find(
+        (network) => {
+          return (network as any).zksync;
+        },
+      );
       await execute(
-        `npx hardhat compile --network ${selectedNetwork}`,
+        `npx hardhat compile --network ${zkNetwork}`,
         options.projectPath,
       );
     } else {
@@ -160,14 +143,6 @@ export class HardhatBuilder extends BaseBuilder {
             meta?.settings?.compilationTarget || {},
           );
           const fileName = fileNames.length > 0 ? fileNames[0] : "";
-
-          // check if the ZKSync was used for build
-          const network = Object.entries(actualHardhatConfig.networks).find(
-            (nw) => {
-              return nw[0] === selectedNetwork;
-            },
-          );
-          const ignoreIpfsHash = !!(network?.[1] as any).zksync; // IPFS hash can't be recovered from ZKSync bytecode
 
           if (
             this.shouldProcessContract(

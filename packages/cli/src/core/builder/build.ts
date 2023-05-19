@@ -1,4 +1,3 @@
-import { Ora } from "ora";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { ProjectType } from "../types/ProjectType";
 import { BrownieBuilder } from "./brownie";
@@ -11,7 +10,6 @@ export default async function build(
   path: string,
   projectType: ProjectType,
   options: { clean: boolean },
-  compileLoader?: Ora,
 ): Promise<{
   contracts: ContractPayload[];
 }> {
@@ -38,12 +36,9 @@ export default async function build(
       break;
     }
   }
-  return await builder.compile(
-    {
-      name: "",
-      projectPath: path,
-      clean: options.clean,
-    },
-    compileLoader,
-  );
+  return await builder.compile({
+    name: "",
+    projectPath: path,
+    clean: options.clean,
+  });
 }

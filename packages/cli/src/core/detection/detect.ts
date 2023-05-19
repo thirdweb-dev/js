@@ -74,16 +74,6 @@ export default async function detect(
   }
 }
 
-export async function detectHardhatNetwork(networksInConfig: any) {
-  const question = "Which network would you like to use";
-  const answer = await inquirer.prompt({
-    type: "list",
-    choices: networksInConfig,
-    name: question,
-  });
-  return answer[question];
-}
-
 // Check if a directory has any .sol files or a /contracts folder with .sol files
 function hasContracts(path: any) {
   return (

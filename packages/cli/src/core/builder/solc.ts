@@ -1,4 +1,3 @@
-import { Ora } from "ora";
 import { findFiles } from "../../common/file-helper";
 import { logger } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
@@ -10,10 +9,7 @@ import solc from "solc";
 
 export class SolcBuilder extends BaseBuilder {
   /* eslint-disable @typescript-eslint/no-unused-vars */
-  public async compile(
-    options: CompileOptions,
-    compileLoader?: Ora,
-  ): Promise<{
+  public async compile(options: CompileOptions): Promise<{
     contracts: ContractPayload[];
   }> {
     // find solidity files...
