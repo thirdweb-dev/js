@@ -2,6 +2,12 @@ import type { Chain } from "../src/types";
 export default {
   "name": "LaChain",
   "chain": "LaChain",
+  "icon": {
+    "url": "ipfs://bafkreiecoqvit2mikpbpbtzy2zrn6e7fvqdegm72sdcathdwmgiyuzey7u",
+    "width": 104,
+    "height": 114,
+    "format": "png"
+  },
   "rpc": [
     "https://lachain-lachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.mainnet.lachain.network",

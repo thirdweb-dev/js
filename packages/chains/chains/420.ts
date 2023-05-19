@@ -8,7 +8,9 @@ export default {
     "https://optimism-goerli.infura.io/v3/${INFURA_API_KEY}",
     "https://goerli.optimism.io/"
   ],
-  "faucets": [],
+  "faucets": [
+    "https://coinbase.com/faucets/optimism-goerli-faucet"
+  ],
   "nativeCurrency": {
     "name": "Goerli Ether",
     "symbol": "ETH",
