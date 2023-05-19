@@ -406,9 +406,9 @@ export async function twCreate(
           ];
         } else if (standard === "smartwallet") {
           choices = [
-            { title: "Non-Upgradeable", value: "Account" },
-            { title: "Managed", value: "ManagedAccount" },
-            { title: "Dynamic", value: "DynamicAccount" },
+            { title: "Non-Upgradeable", value: "Account,AccountFactory" },
+            { title: "Managed", value: "ManagedAccount,ManagedAccountFactory" },
+            { title: "Dynamic", value: "DynamicAccount,DynamicAccountFactory" },
           ];
         }
 

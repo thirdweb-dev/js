@@ -46,8 +46,13 @@ export async function createContractProject({
 }: ICreateContractProject) {
   // Check that the selected base contract is valid
   if (baseContract) {
-    const found = hasBaseContract(baseContract);
-
+    let found = false;
+    if (baseContract.includes(",")) {
+      const [account, factory] = baseContract.split(",");
+      found = hasBaseContract(account) && hasBaseContract(factory);
+    } else {
+      found = hasBaseContract(baseContract);
+    }
     if (!found) {
       console.error(
         `Could not locate the base contract for ${chalk.red(
@@ -98,18 +103,36 @@ export async function createContractProject({
     }
 
     if (baseContract && baseContract.length > 0) {
-      const baseContractText = readBaseContract(baseContract);
+      // Split the two contracts if it is a smart account base contract
+      if (baseContract.includes(",")) {
+        const accountContract = baseContract.split(",");
+        const baseContractText = [readBaseContract(accountContract[0]), readBaseContract(accountContract[1])];
 
-      // Set the contents of the Contract.sol file to the base contract
-      let contractFile = "";
-      contractFile = path.join(root, contractName);
+        // Set the contents of the Contract.sol file to the base contract
+        let contractFile = ["", ""];
+        contractFile[0] = path.join(root, contractName)
+        contractFile[1] = path.join(root, contractName + "Factory");
 
-      // Write the base contract to the MyContract.sol file
-      await writeFile(contractFile, baseContractText);
+        // Write the base contract to the MyContract.sol file
+        await writeFile(contractFile[0], baseContractText[0]);
+        await writeFile(contractFile[1], baseContractText[1]);
 
-      console.log(
-        `${chalk.green("Success!")} Created ${contractName} at ${contractPath}`,
-      );
+        console.log(
+          `${chalk.green("Success!")} Created ${contractName} at ${contractPath}`,
+        );
+      } else {
+        const baseContractText = readBaseContract(baseContract);
+        // Set the contents of the Contract.sol file to the base contract
+        let contractFile = "";
+        contractFile = path.join(root, contractName);
+
+        // Write the base contract to the MyContract.sol file
+        await writeFile(contractFile, baseContractText);
+
+        console.log(
+          `${chalk.green("Success!")} Created ${contractName} at ${contractPath}`,
+        );
+      }
     }
 
     if (!baseContract && createExtension) {
@@ -169,24 +192,50 @@ export async function createContractProject({
 
       // Add in a new contracts file with specific base contract
       if (baseContract && baseContract.length > 0) {
-        const baseContractText = readBaseContract(baseContract).replace(
-          "contract Contract",
-          `contract ${contractName.replace(".sol", "")}`,
-        );
+        // Split the two contracts if it is a smart account base contract
+        if (baseContract.includes(",")) {
+          let [account, factory] = baseContract.split(",");
+          const baseContractText = [readBaseContract(account).replace(
+            "contract Contract",
+            `contract ${contractName.replace(".sol", "")}`), readBaseContract(factory).replace(
+              "contract Contract",
+              `contract ${contractName.replace(".sol", "")}`)];
+          let contractFile = ["", ""];
+          if (framework === "hardhat") {
+            fs.unlinkSync(path.join(root, "contracts", "Contract.sol"));
+            contractFile[0] = path.join(root, "contracts", contractName);
+            contractFile[1] = path.join(root, "contracts", contractName + "Factory");
+          }
+          if (framework === "forge") {
+            fs.unlinkSync(path.join(root, "src", "Contract.sol"));
+            contractFile[0] = path.join(root, "src", contractName);
+            contractFile[1] = path.join(root, "src", contractName.replace(".sol", "Factory.sol"));
+          }
 
-        // Set the filename of the new file and delete the dummy Contract.sol file
-        let contractFile = "";
-        if (framework === "hardhat") {
-          fs.unlinkSync(path.join(root, "contracts", "Contract.sol"));
-          contractFile = path.join(root, "contracts", contractName);
-        }
-        if (framework === "forge") {
-          fs.unlinkSync(path.join(root, "src", "Contract.sol"));
-          contractFile = path.join(root, "src", contractName);
-        }
+          // Write the base contract to the new file
+          await writeFile(contractFile[0], baseContractText[0]);
+          await writeFile(contractFile[1], baseContractText[1]);
 
-        // Write the base contract to the new file
-        await writeFile(contractFile, baseContractText);
+        } else {
+          const baseContractText = readBaseContract(baseContract).replace(
+            "contract Contract",
+            `contract ${contractName.replace(".sol", "")}`,
+          );
+
+          // Set the filename of the new file and delete the dummy Contract.sol file
+          let contractFile = "";
+          if (framework === "hardhat") {
+            fs.unlinkSync(path.join(root, "contracts", "Contract.sol"));
+            contractFile = path.join(root, "contracts", contractName);
+          }
+          if (framework === "forge") {
+            fs.unlinkSync(path.join(root, "src", "Contract.sol"));
+            contractFile = path.join(root, "src", contractName);
+          }
+
+          // Write the base contract to the new file
+          await writeFile(contractFile, baseContractText);
+        }
       }
 
       if (!baseContract && createExtension) {
