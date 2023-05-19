@@ -852,8 +852,9 @@ export class ContractDeployer extends RPCConnectionHandler {
             `customFactoryFunction not set'`,
           );
           const factoryFunctionParamTypes =
-            extendedMetadata.factoryDeploymentData.customFactoryInput
-              .paramTypes;
+            extendedMetadata.factoryDeploymentData.customFactoryInput.params.map(
+              (p) => p.type,
+            );
           const factoryFunctionparamValues = convertParamValues(
             factoryFunctionParamTypes,
             constructorParamValues,
