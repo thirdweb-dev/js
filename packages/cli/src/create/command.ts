@@ -189,14 +189,14 @@ export async function twCreate(
     if (!projectPath) {
       console.log(
         "\nPlease specify the project directory:\n" +
-          `  ${chalk.cyan("npx thirdweb create")} ${chalk.green(
-            "<project-directory>",
-          )}\n` +
-          "For example:\n" +
-          `  ${chalk.cyan("npx thirdweb create")} ${chalk.green(
-            "my-thirdweb-app",
-          )}\n\n` +
-          `Run ${chalk.cyan("npx thirdweb --help")} to see all options.`,
+        `  ${chalk.cyan("npx thirdweb create")} ${chalk.green(
+          "<project-directory>",
+        )}\n` +
+        "For example:\n" +
+        `  ${chalk.cyan("npx thirdweb create")} ${chalk.green(
+          "my-thirdweb-app",
+        )}\n\n` +
+        `Run ${chalk.cyan("npx thirdweb --help")} to see all options.`,
       );
       process.exit(1);
     }
@@ -228,21 +228,21 @@ export async function twCreate(
           choices:
             chain === "solana"
               ? [
-                  { title: "Next.js", value: "next" },
-                  { title: "Create React App", value: "cra" },
-                  { title: "Node.js", value: "node" },
-                  { title: "Express", value: "express" },
-                  // Solana doesn't support Vite just yet:
-                  // { title: "Vite", value: "vite" },
-                ]
+                { title: "Next.js", value: "next" },
+                { title: "Create React App", value: "cra" },
+                { title: "Node.js", value: "node" },
+                { title: "Express", value: "express" },
+                // Solana doesn't support Vite just yet:
+                // { title: "Vite", value: "vite" },
+              ]
               : [
-                  { title: "Next.js", value: "next" },
-                  { title: "Create React App", value: "cra" },
-                  { title: "Vite", value: "vite" },
-                  { title: "React Native", value: "react-native" },
-                  { title: "Node.js", value: "node" },
-                  { title: "Express", value: "express" },
-                ],
+                { title: "Next.js", value: "next" },
+                { title: "Create React App", value: "cra" },
+                { title: "Vite", value: "vite" },
+                { title: "React Native", value: "react-native" },
+                { title: "Node.js", value: "node" },
+                { title: "Express", value: "express" },
+              ],
         });
 
         if (typeof res.framework === "string") {
@@ -340,14 +340,14 @@ export async function twCreate(
       if (!contractName) {
         console.log(
           "\nPlease specify the contract name:\n" +
-            `  ${chalk.cyan(
-              "npx thirdweb create --contract --name",
-            )} ${chalk.green("<contract-name>")}\n` +
-            "For example:\n" +
-            `  ${chalk.cyan(
-              "npx thirdweb create --contract --name",
-            )} ${chalk.green("MyContract")}\n\n` +
-            `Run ${chalk.cyan("npx thirdweb --help")} to see all options.`,
+          `  ${chalk.cyan(
+            "npx thirdweb create --contract --name",
+          )} ${chalk.green("<contract-name>")}\n` +
+          "For example:\n" +
+          `  ${chalk.cyan(
+            "npx thirdweb create --contract --name",
+          )} ${chalk.green("MyContract")}\n\n` +
+          `Run ${chalk.cyan("npx thirdweb --help")} to see all options.`,
         );
         process.exit(1);
       }
@@ -367,6 +367,7 @@ export async function twCreate(
           { title: "ERC721", value: "erc721" },
           { title: "ERC20", value: "erc20" },
           { title: "ERC1155", value: "erc1155" },
+          { title: "Smart Wallet", value: "smartwallet" },
         ],
       });
 
@@ -402,6 +403,12 @@ export async function twCreate(
             { title: "Lazy Mint", value: "ERC1155LazyMint" },
             { title: "Delayed Reveal", value: "ERC1155DelayedReveal" },
             { title: "Drop", value: "ERC1155Drop" },
+          ];
+        } else if (standard === "smartwallet") {
+          choices = [
+            { title: "Non-Upgradeable", value: "Account" },
+            { title: "Managed", value: "ManagedAccount" },
+            { title: "Dynamic", value: "DynamicAccount" },
           ];
         }
 
@@ -445,8 +452,8 @@ export async function twCreate(
   const packageManager = !!options.useNpm
     ? "npm"
     : !!options.usePnpm
-    ? "pnpm"
-    : getPkgManager();
+      ? "pnpm"
+      : getPkgManager();
 
   const template =
     typeof options.template === "string" ? options.template.trim() : undefined;

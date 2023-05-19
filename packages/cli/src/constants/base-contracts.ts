@@ -1,5 +1,5 @@
 const baseContracts = {
-  ERC721Base: `// SPDX-License-Identifier: MIT
+    ERC721Base: `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC721Base.sol";
@@ -21,7 +21,7 @@ contract Contract is ERC721Base {
     {}
 
 }`,
-  ERC721SignatureMint: `// SPDX-License-Identifier: Apache-2.0
+    ERC721SignatureMint: `// SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC721SignatureMint.sol";
@@ -43,7 +43,7 @@ contract Contract is ERC721SignatureMint {
         )
     {}
 }`,
-  ERC721LazyMint: `// SPDX-License-Identifier: Apache-2.0
+    ERC721LazyMint: `// SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC721LazyMint.sol";
@@ -56,7 +56,7 @@ contract Contract is ERC721LazyMint {
         uint128 _royaltyBps
     ) ERC721LazyMint(_name, _symbol, _royaltyRecipient, _royaltyBps) {}
 }`,
-  ERC721DelayedReveal: `// SPDX-License-Identifier: Apache-2.0
+    ERC721DelayedReveal: `// SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC721DelayedReveal.sol";
@@ -69,7 +69,7 @@ contract Contract is ERC721DelayedReveal {
         uint128 _royaltyBps
     ) ERC721DelayedReveal(_name, _symbol, _royaltyRecipient, _royaltyBps) {}
 }`,
-  ERC721Drop: `// SPDX-License-Identifier: Apache-2.0
+    ERC721Drop: `// SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC721Drop.sol";
@@ -91,7 +91,7 @@ contract Contract is ERC721Drop {
         )
     {}
 }`,
-  ERC1155Base: `// SPDX-License-Identifier: MIT
+    ERC1155Base: `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC1155Base.sol";
@@ -113,7 +113,7 @@ contract Contract is ERC1155Base {
     {}
 
 }`,
-  Staking721Base: `// SPDX-License-Identifier: MIT
+    Staking721Base: `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/Staking721Base.sol";
@@ -135,7 +135,7 @@ contract Contract is Staking721Base {
         )
     {}
 }`,
-  ERC1155SignatureMint: `// SPDX-License-Identifier: Apache-2.0
+    ERC1155SignatureMint: `// SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC1155SignatureMint.sol";
@@ -157,7 +157,7 @@ contract Contract is ERC1155SignatureMint {
         )
     {}
 }`,
-  ERC1155LazyMint: `// SPDX-License-Identifier: Apache-2.0
+    ERC1155LazyMint: `// SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC1155LazyMint.sol";
@@ -170,7 +170,7 @@ contract Contract is ERC1155LazyMint {
         uint128 _royaltyBps
     ) ERC1155LazyMint(_name, _symbol, _royaltyRecipient, _royaltyBps) {}
 }`,
-  ERC1155DelayedReveal: `// SPDX-License-Identifier: Apache-2.0
+    ERC1155DelayedReveal: `// SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC1155DelayedReveal.sol";
@@ -183,7 +183,7 @@ contract Contract is ERC1155DelayedReveal {
         uint128 _royaltyBps
     ) ERC1155DelayedReveal(_name, _symbol, _royaltyRecipient, _royaltyBps) {}
 }`,
-  ERC1155Drop: `// SPDX-License-Identifier: Apache-2.0
+    ERC1155Drop: `// SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC1155Drop.sol";
@@ -205,7 +205,7 @@ contract Contract is ERC1155Drop {
         )
     {}
 }`,
-  Staking1155Base: `// SPDX-License-Identifier: MIT
+    Staking1155Base: `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/Staking1155Base.sol";
@@ -227,7 +227,7 @@ contract Contract is Staking1155Base {
         )
     {}
 }`,
-  ERC20Base: `// SPDX-License-Identifier: MIT
+    ERC20Base: `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC20Base.sol";
@@ -243,7 +243,7 @@ contract Contract is ERC20Base {
         )
     {}
 }`,
-  ERC20Vote: `// SPDX-License-Identifier: MIT
+    ERC20Vote: `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC20Vote.sol";
@@ -259,7 +259,7 @@ contract Contract is ERC20Vote {
         )
     {}
 }`,
-  ERC20SignatureMint: `// SPDX-License-Identifier: MIT
+    ERC20SignatureMint: `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC20SignatureMint.sol";
@@ -278,7 +278,7 @@ contract Contract is ERC20SignatureMint {
     {}
 }`,
 
-  ERC20SignatureMintVote: `// SPDX-License-Identifier: MIT
+    ERC20SignatureMintVote: `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC20SignatureMintVote.sol";
@@ -297,7 +297,7 @@ contract Contract is ERC20SignatureMintVote {
     {}
 }`,
 
-  ERC20Drop: `// SPDX-License-Identifier: MIT
+    ERC20Drop: `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC20Drop.sol";
@@ -315,7 +315,7 @@ contract Contract is ERC20Drop {
         )
     {}
 }`,
-  ERC20DropVote: `// SPDX-License-Identifier: MIT
+    ERC20DropVote: `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC20DropVote.sol";
@@ -333,7 +333,7 @@ contract Contract is ERC20DropVote {
         )
     {}
 }`,
-  Staking20Base: `// SPDX-License-Identifier: MIT
+    Staking20Base: `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/Staking20Base.sol";
@@ -357,6 +357,81 @@ contract Contract is Staking20Base {
         )
     {}
 }`,
+
+    Account: `// SPDX-License-Identifier: MIT
+    pragma solidity ^0.8.0;
+
+    import "@thirdweb-dev/contracts/smart-wallet/non-upgradeable/Account.sol";
+
+    contract Contract is Account {
+        constructor(
+            IEntryPoint _entrypoint,
+            address _factory
+        ) Account(_entrypoint, _factory) {
+            _disableInitializers();
+        }
+    }`,
+
+    ManagedAccount: `// SPDX-License-Identifier: MIT
+    pragma solidity ^0.8.0;
+
+    import "@thirdweb-dev/contracts/smart-wallet/managed/ManagedAccount.sol";
+
+    contract Contract is ManagedAccount {
+        constructor(
+            IEntryPoint _entrypoint,
+            address _factory
+        ) Account(_entrypoint, _factory) {
+            _disableInitializers();
+        }
+    }`,
+
+    DynamicAccount: `// SPDX-License-Identifier: MIT
+    pragma solidity ^0.8.0;
+
+    import "@thirdweb-dev/contracts/smart-wallet/dynamic/DynamicAccount.sol";
+
+    contract Contract is DynamicAccount {
+        constructor(
+            IEntryPoint _entrypoint,
+            address _factory
+        ) Account(_entrypoint, _factory) {
+            _disableInitializers();
+        }
+    }`,
+
+    AccountFactory: `// SPDX-License-Identifier: MIT
+    pragma solidity ^0.8.0;
+
+    import "@thirdweb-dev/contracts/smart-wallet/non-upgradeable/AccountFactory.sol";
+
+    contract ContractFactory is AccountFactory {
+        constructor(
+            IEntryPoint _entrypoint
+        ) AccountFactory(_entrypoint) {}
+    }`,
+
+    ManagedAccountFactory: `// SPDX-License-Identifier: MIT
+    pragma solidity ^0.8.0;
+
+    import "@thirdweb-dev/contracts/smart-wallet/managed/ManagedAccountFactory.sol";
+
+    contract ContractFactory is ManagedAccountFactory {
+        constructor(
+            IEntryPoint _entrypoint
+        ) ManagedAccountFactory(_entrypoint) {}
+    }`,
+
+    DynamicAccountFactory: `// SPDX-License-Identifier: MIT
+    pragma solidity ^0.8.0;
+
+    import "@thirdweb-dev/contracts/smart-wallet/dynamic/DynamicAccountFactory.sol";
+
+    contract ContractFactory is DynamicAccountFactory {
+        constructor(
+            IEntryPoint _entrypoint
+        ) DynamicAccountFactory(_entrypoint) {}
+    }`,
 };
 
 export default baseContracts;
