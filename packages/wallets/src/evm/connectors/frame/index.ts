@@ -180,7 +180,9 @@ export class FrameConnector extends WagmiConnector<
       }
 
       const provider = await this.getProvider();
-      if (!provider) throw new ConnectorNotFoundError();
+      if (!provider) {
+        throw new ConnectorNotFoundError();
+      }
       const account = await this.getAccount();
       return !!account;
     } catch {
