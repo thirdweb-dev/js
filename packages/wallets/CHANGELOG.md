@@ -1,5 +1,15 @@
 # @thirdweb-dev/wallets
 
+## 0.2.21
+
+### Patch Changes
+
+- [#1034](https://github.com/thirdweb-dev/js/pull/1034) [`b6f48e10`](https://github.com/thirdweb-dev/js/commit/b6f48e1088b5d36a51103de4afda53179029faaf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose overrideable paymasterAPI in SmartWalletConfig
+
+- Updated dependencies [[`3c8c5d56`](https://github.com/thirdweb-dev/js/commit/3c8c5d56f2a21c0918fede71061c6745f2956f83), [`907d97be`](https://github.com/thirdweb-dev/js/commit/907d97bedef7331148bdfe8b9bf1e19459282e4c)]:
+  - @thirdweb-dev/chains@0.1.17
+  - @thirdweb-dev/sdk@3.10.16
+
 ## 0.2.20
 
 ### Patch Changes
