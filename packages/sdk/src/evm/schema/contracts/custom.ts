@@ -127,7 +127,7 @@ export const ChainIdToAddressSchema = z.record(z.string(), z.string());
  */
 export const CustomFactoryInput = z.object({
   factoryFunction: z.string(),
-  paramTypes: z.array(z.string()).default([]),
+  params: z.array(z.object({ name: z.string(), type: z.string() })).default([]),
 });
 
 /**
@@ -155,7 +155,6 @@ export const DeployTypeInput = z.union([
 export const DeploymentNetworkInput = z.object({
   allNetworks: z.boolean(),
   networksEnabled: z.array(z.number()).default([]),
-  networksDisabled: z.array(z.number()).default([]),
 });
 
 /**
