@@ -15,6 +15,11 @@ import {
 import { TransactionDetailsForUserOp } from "./transaction-details";
 import { getUserOpHashV06 } from "./utils";
 import { DUMMY_PAYMASTER_AND_DATA, SIG_SIZE } from "./paymaster";
+import { Buffer } from "buffer";
+
+if (typeof window !== undefined) {
+  window.Buffer = Buffer;
+}
 
 export interface BaseApiParams {
   provider: providers.Provider;
