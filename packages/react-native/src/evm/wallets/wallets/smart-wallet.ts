@@ -26,7 +26,7 @@ export const smartWallet = (
         ...options,
         ...config,
         walletStorage: createAsyncLocalStorage("smart-wallet"),
-        storage: createLocalStorage("smart-wallet"),
+        wcStorage: createLocalStorage("smart-wallet"),
       }),
     config: {
       ...config,

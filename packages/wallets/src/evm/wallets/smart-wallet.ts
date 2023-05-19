@@ -59,7 +59,7 @@ export class SmartWallet
             walletConnectV2Metadata: options?.walletConnectV2Metadata,
             walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
             walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
-            storage: options?.storage || createLocalStorage("smart-wallet"),
+            storage: options?.wcStorage || createLocalStorage("smart-wallet"),
           })
         : new WalletConnectV2Handler({
             walletConnectV2Metadata: options?.walletConnectV2Metadata,

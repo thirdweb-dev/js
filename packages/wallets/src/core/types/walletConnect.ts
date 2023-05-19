@@ -12,7 +12,7 @@ export type WalletConnectReceiverConfig = {
   walletConnectV2Metadata?: WCMetadata;
   walletConenctV2ProjectId?: string;
   walletConnectV2RelayUrl?: string;
-  storage?: IStorage;
+  wcStorage?: IStorage;
 };
 
 export type WCMetadata = {
