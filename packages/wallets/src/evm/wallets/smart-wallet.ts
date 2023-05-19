@@ -11,6 +11,7 @@ import { walletIds } from "../constants/walletIds";
 // export types and utils for convenience
 export * from "../connectors/smart-wallet/types";
 export * from "../connectors/smart-wallet/utils";
+export type { PaymasterAPI } from "@account-abstraction/sdk";
 
 export class SmartWallet extends AbstractClientWallet<
   SmartWalletConfig,
