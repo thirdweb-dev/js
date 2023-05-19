@@ -31,6 +31,7 @@ export const ConnectWalletDetails = ({
       },
       isOpen: true,
       isSheet: true,
+      caller: "ConnectWalletDetails",
     });
   };
 

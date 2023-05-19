@@ -1,10 +1,13 @@
 import { WalletConfig } from "@thirdweb-dev/react-core";
 
-export const CLOSE_MODAL_STATE: ClosedModal = {
-  view: "Closed",
-  data: {},
-  isOpen: false,
-  isSheet: true,
+export const CLOSE_MODAL_STATE = (caller: Caller): ModalState => {
+  return {
+    view: "Closed",
+    data: {},
+    isOpen: false,
+    isSheet: true,
+    caller: caller,
+  };
 };
 
 export type ModalView =
@@ -16,14 +19,24 @@ export type ModalView =
   | "WCSessionRequest"
   | "WCSessionProposal";
 
+export type Caller =
+  | "init"
+  | "ConnectWallet"
+  | "ConnectWalletDetails"
+  | "ConnectWalletDetailsModal"
+  | "ConnectWalletFlow"
+  | "MainModal";
+
 export type SheetModal = {
   isOpen: boolean;
   isSheet: true;
+  caller: Caller;
 };
 
 export type DialogModal = {
   isOpen: boolean;
   isSheet: false;
+  caller: Caller;
 };
 
 export type ClosedModal = {

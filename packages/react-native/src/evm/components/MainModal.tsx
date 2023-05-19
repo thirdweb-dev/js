@@ -3,9 +3,10 @@ import { useModalState } from "../providers/ui-context-provider";
 import { ConnectWalletFlow } from "./ConnectWalletFlow/ConnectWalletFlow";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { useMemo } from "react";
-import { useAppTheme } from "../styles/hooks";
 import { ConnectWalletDetailsModal } from "./ConnectWalletDetails/ConnectWalletDetailsModal";
 import { CLOSE_MODAL_STATE } from "../utils/modalTypes";
+import { ThemeProvider } from "../styles/ThemeProvider";
+import { useAppTheme } from "../styles/hooks";
 
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 const DEVICE_WIDTH = Dimensions.get("window").width;
@@ -29,26 +30,28 @@ export const MainModal = () => {
   }, [modalState.view]);
 
   const onBackdropPress = () => {
-    setModalState(CLOSE_MODAL_STATE);
+    setModalState(CLOSE_MODAL_STATE("MainModal"));
   };
 
   return (
-    <Modal
-      useNativeDriver
-      hideModalContentWhileAnimating={true}
-      isVisible={isOpen}
-      onBackdropPress={onBackdropPress}
-    >
-      {isSheet ? (
-        <View
-          style={[styles.modal, { backgroundColor: theme.colors.background }]}
-        >
-          <View style={styles.contentContainer}>{view}</View>
-        </View>
-      ) : (
-        view
-      )}
-    </Modal>
+    <ThemeProvider theme={theme}>
+      <Modal
+        useNativeDriver
+        hideModalContentWhileAnimating={true}
+        isVisible={isOpen}
+        onBackdropPress={onBackdropPress}
+      >
+        {isSheet ? (
+          <View
+            style={[styles.modal, { backgroundColor: theme.colors.background }]}
+          >
+            <View style={styles.contentContainer}>{view}</View>
+          </View>
+        ) : (
+          view
+        )}
+      </Modal>
+    </ThemeProvider>
   );
 };
 

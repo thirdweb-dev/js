@@ -4,7 +4,6 @@ import { Toast } from "../base/Toast";
 import { ExportLocalWalletModal } from "./ExportLocalWalletModal";
 import { NetworkButton } from "./NetworkButton";
 import { WalletDetailsModalHeader } from "./WalletDetailsModalHeader";
-import { useTheme } from "@shopify/restyle";
 import {
   useActiveChain,
   useDisconnect,
@@ -20,9 +19,10 @@ import { SmartWalletAdditionalActions } from "./SmartWalletAdditionalActions";
 import Text from "../base/Text";
 import { useModalState } from "../../providers/ui-context-provider";
 import { CLOSE_MODAL_STATE, WalletDetailsModal } from "../../utils/modalTypes";
+import { useAppTheme } from "../../styles/hooks";
 
 export const ConnectWalletDetailsModal = () => {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const [isExportModalVisible, setIsExportModalVisible] = useState(false);
   const activeWallet = useWallet();
   const chain = useActiveChain();
@@ -44,7 +44,7 @@ export const ConnectWalletDetailsModal = () => {
 
   const onDisconnectPress = () => {
     disconnect().finally(() => {
-      setModalState(CLOSE_MODAL_STATE);
+      setModalState(CLOSE_MODAL_STATE("ConnectWalletDetailsModal"));
       setSmartWallet?.(undefined);
     });
   };

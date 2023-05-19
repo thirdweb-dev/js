@@ -80,7 +80,7 @@ export const ThirdwebProvider = <
       {...restProps}
     >
       <DappContextProvider>
-        <ThemeProvider theme={theme ? theme : "dark"}>
+        <ThemeProvider theme={theme}>
           <UIContextProvider>
             {children}
             <MainModal />

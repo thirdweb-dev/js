@@ -10,7 +10,6 @@ import { ActivityIndicator, Animated, StyleSheet } from "react-native";
 import BaseButton from "./base/BaseButton";
 import Text from "./base/Text";
 import { useModalState } from "../providers/ui-context-provider";
-import { CLOSE_MODAL_STATE } from "../utils/modalTypes";
 
 export type ConnectWalletProps = {
   theme?: ThemeProviderProps["theme"];
@@ -42,7 +41,7 @@ export const ConnectWallet = ({
   const supportedWallets = useWallets();
   const isWalletConnecting = connectionStatus === "connecting";
   const [showButtonSpinner, setShowButtonSpinner] = useState(false);
-  const { modalState, setModalState } = useModalState();
+  const { setModalState } = useModalState();
 
   useEffect(() => {
     setShowButtonSpinner(isWalletConnecting);
@@ -65,12 +64,6 @@ export const ConnectWallet = ({
   }, [isWalletConnecting]);
 
   useEffect(() => {
-    if (address && modalState.view !== "Closed") {
-      setModalState(CLOSE_MODAL_STATE);
-    }
-  }, [address]);
-
-  useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 300,
@@ -88,6 +81,7 @@ export const ConnectWallet = ({
         walletConfig:
           supportedWallets.length === 1 ? supportedWallets[0] : undefined,
       },
+      caller: "ConnectWallet",
     });
   };
 
