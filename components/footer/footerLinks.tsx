@@ -89,7 +89,7 @@ export const RESOURCES: FooterLinkInfo[] = [
   {
     name: "Press Kit",
     label: "press-kit",
-    link: "https://ipfs.thirdwebcdn.com/ipfs/QmTWMy6Dw1PDyMxHxNcmDmPE8zqFCQMfD6m2feHVY89zgu/",
+    link: "https://ipfs-2.thirdwebcdn.com/ipfs/QmTWMy6Dw1PDyMxHxNcmDmPE8zqFCQMfD6m2feHVY89zgu/",
   },
 ];
 
