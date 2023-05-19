@@ -7,4 +7,4 @@ export * from "./types/walletConnect";
 export { CredentialsStorage } from "./CredentialsStorage";
 
 export * from "./types/walletConnect";
-export { WalletConnectV2Wallet } from "./WalletConnect/WalletConnectV2Wallet";
+export { WalletConnectV2Handler as WalletConnectV2Wallet } from "./WalletConnect/WalletConnectV2Handler";

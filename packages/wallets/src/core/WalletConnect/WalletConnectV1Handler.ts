@@ -1,6 +1,6 @@
 import {
   WCSession,
-  WalletConnectWallet,
+  WalletConnectHandler,
   WalletConnectReceiverConfig,
   WCMetadata,
 } from "../types/walletConnect";
@@ -23,7 +23,7 @@ type WalletConnectV1WalletConfig = Omit<
 
 const STORAGE_URI_KEY = "storage_uri_key";
 
-export class WalletConnectV1Wallet extends WalletConnectWallet {
+export class WalletConnectV1Handler extends WalletConnectHandler {
   #wcMetadata: WCMetadata;
   #wcWallet: WalletConnect | undefined;
 
@@ -50,8 +50,11 @@ export class WalletConnectV1Wallet extends WalletConnectWallet {
   async init(): Promise<void> {
     const uri = this.#storage.getItem(STORAGE_URI_KEY);
 
+    console.log("uri", uri);
+
     if (uri) {
       this.#init(uri);
+      this.#wcWallet?.createSession();
     }
 
     return Promise.resolve();
@@ -75,9 +78,10 @@ export class WalletConnectV1Wallet extends WalletConnectWallet {
     }
 
     const address = await wallet.getAddress();
+    const chainId = await wallet.getChainId();
     this.#wcWallet.approveSession({
       accounts: [address],
-      chainId: 1,
+      chainId: chainId,
     });
 
     return Promise.resolve();
@@ -97,17 +101,32 @@ export class WalletConnectV1Wallet extends WalletConnectWallet {
     console.log("wcwalletv1.approve", !!this.#wcWallet);
     console.log("wcwalletv1.activeCallReqeust", this.#activeCallRequest);
 
-    const { params } = this.#activeCallRequest;
-    const message = params[0];
-    const stringarray = new TextDecoder().decode(utils.arrayify(message));
-    console.log("wcwalletv1.stringarray", stringarray);
-    const signedMessage = await wallet.signMessage(stringarray);
+    const { params, method } = this.#activeCallRequest;
 
-    console.log("wcwalletv1.signedMessage", signedMessage);
+    let result;
+    switch (method) {
+      case EIP155_SIGNING_METHODS.ETH_SIGN:
+        const ethMsg = params[1];
+        result = await wallet.signMessage(utils.arrayify(ethMsg));
+        break;
+      case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
+        console.log("call_request", method);
+
+        const message = params[0];
+        result = await wallet.signMessage(utils.arrayify(message));
+
+        console.log("wcwalletv1.signedMessage", result);
+        break;
+      case EIP155_SIGNING_METHODS.SWITCH_CHAIN: {
+        await wallet.switchChain(params[0].chainId);
+        result = params[0].chainId;
+        break;
+      }
+    }
 
     this.#wcWallet?.approveRequest({
       id: this.#activeCallRequest?.id,
-      result: signedMessage,
+      result,
     });
 
     return Promise.resolve();
@@ -130,6 +149,8 @@ export class WalletConnectV1Wallet extends WalletConnectWallet {
       return [];
     }
 
+    console.log("getActiveSession.session", session);
+
     const result: WCSession[] = [
       {
         topic: session?.clientId,
@@ -148,7 +169,7 @@ export class WalletConnectV1Wallet extends WalletConnectWallet {
 
     return result;
   }
-  disconnectSession(): Promise<void> {
+  async disconnectSession(): Promise<void> {
     this.#wcWallet?.killSession();
 
     this.#wcWallet?.off("session_request");
@@ -157,6 +178,9 @@ export class WalletConnectV1Wallet extends WalletConnectWallet {
 
     this.#storage.removeItem(STORAGE_URI_KEY);
     this.#wcWallet = undefined;
+
+    this.emit("session_delete");
+
     return Promise.resolve();
   }
 
@@ -166,6 +190,8 @@ export class WalletConnectV1Wallet extends WalletConnectWallet {
       clientMeta: this.#wcMetadata,
       storage: this.#sessionStorage,
     });
+
+    this.#wcWallet.connect();
 
     this.#setupWalletConnectEventsListeners();
   }
@@ -182,7 +208,7 @@ export class WalletConnectV1Wallet extends WalletConnectWallet {
     // Subscribe to session requests
     this.#wcWallet.on("session_request", (error, payload) => {
       if (error) {
-        throw error;
+        throw new Error(`WCV1H.session_request error: ${error.message}`);
       }
 
       this.#activeSessionPayload = payload;
@@ -201,35 +227,58 @@ export class WalletConnectV1Wallet extends WalletConnectWallet {
       console.log("call_request", error, payload);
 
       if (error) {
-        throw error;
+        throw new Error(`WCV1H.call_request error: ${error.message}`);
       }
 
       const { params, method } = payload;
-
-      console.log("session_request", payload);
+      this.#activeCallRequest = payload;
 
       switch (method) {
         case EIP155_SIGNING_METHODS.ETH_SIGN:
         case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
-          this.#activeCallRequest = payload;
-
           console.log("call_request", method);
+
+          const message = params[0];
+          const decodedMessage = new TextDecoder().decode(
+            utils.arrayify(message),
+          );
+          console.log("call_request", method);
+
+          const paramsCopy = [...params];
+          paramsCopy[0] = decodedMessage;
 
           this.emit("session_request", {
             topic: params[1],
-            message: params[0],
+            params: paramsCopy,
             peer: {
               metadata: this.#activeSessionPayload.params[0].peerMeta,
             },
             method: method,
           });
-          return;
+          break;
+        case EIP155_SIGNING_METHODS.SWITCH_CHAIN:
+          console.log("call_request", method);
+
+          this.emit("session_request", {
+            topic: params[1],
+            params: params,
+            peer: {
+              metadata: this.#activeSessionPayload.params[0].peerMeta,
+            },
+            method: method,
+          });
+          break;
+        default:
+          throw new Error(
+            `WalletConnectV1Handler.call_request. Method not implemented: ${method}`,
+          );
       }
     });
 
     this.#wcWallet.on("disconnect", (error) => {
+      console.log("disconnect", error);
       if (error) {
-        throw error;
+        throw new Error(`WCV1H.disconnect error: ${error.message}`);
       }
 
       this.disconnectSession();

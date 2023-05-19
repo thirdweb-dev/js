@@ -8,15 +8,16 @@ import type { SmartWalletConnector as SmartWalletConnectorType } from "../connec
 import { Transaction, TransactionResult } from "@thirdweb-dev/sdk";
 import { walletIds } from "../constants/walletIds";
 import {
-  IWalletConnectReceiver,
   WCSession,
-  WalletConnectWallet,
+  WalletConnectHandler,
   WCProposal,
   WCRequest,
+  IWalletConnectReceiver,
+  WalletConnectReceiverConfig,
 } from "../../core/types/walletConnect";
-import { WalletConnectV2Wallet } from "../../core/WalletConnect/WalletConnectV2Wallet";
-import { NoOpWalletConnectReceiver } from "../../core/WalletConnect/constants";
-import { WalletConnectV1Wallet } from "../../core/WalletConnect/WalletConnectV1Wallet";
+import { WalletConnectV2Handler } from "../../core/WalletConnect/WalletConnectV2Handler";
+import { NoOpWalletConnectHandler } from "../../core/WalletConnect/constants";
+import { WalletConnectV1Handler } from "../../core/WalletConnect/WalletConnectV1Handler";
 import { createLocalStorage } from "../../core";
 
 // export types and utils for convenience
@@ -30,8 +31,8 @@ export class SmartWallet
   connector?: SmartWalletConnectorType;
 
   public enableConnectApp: boolean = false;
-  #enableWalletConnectV1: boolean = false;
-  #wcWallet: WalletConnectWallet;
+  #enableWalletConnectV1: WalletConnectReceiverConfig["wcVersion"];
+  #wcWallet: WalletConnectHandler;
 
   static meta = {
     name: "Smart Wallet",
@@ -52,22 +53,20 @@ export class SmartWallet
     console.log("enable connect app", options.enableConnectApp);
 
     this.enableConnectApp = options?.enableConnectApp || false;
-    this.#enableWalletConnectV1 = options?.enableWalletConnectV1 || false;
-
     this.#wcWallet = this.enableConnectApp
-      ? this.#enableWalletConnectV1
-        ? new WalletConnectV1Wallet({
+      ? options?.wcVersion === "v1"
+        ? new WalletConnectV1Handler({
             walletConnectV2Metadata: options?.walletConnectV2Metadata,
             walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
             walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
             storage: options?.storage || createLocalStorage("smart-wallet"),
           })
-        : new WalletConnectV2Wallet({
+        : new WalletConnectV2Handler({
             walletConnectV2Metadata: options?.walletConnectV2Metadata,
             walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
             walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
           })
-      : new NoOpWalletConnectReceiver();
+      : new NoOpWalletConnectHandler();
   }
 
   async getConnector(): Promise<SmartWalletConnectorType> {
@@ -154,14 +153,28 @@ export class SmartWallet
 
     this.#wcWallet.on("session_proposal", (proposal: WCProposal) => {
       console.log("smart-wallet.proposal");
+
       this.emit("message", {
         type: "session_proposal",
         data: proposal,
       });
     });
 
-    this.#wcWallet.on("session_delete", (topic: string) => {
-      this.emit("message", { type: "session_delete", data: topic });
+    this.#wcWallet.on("session_delete", () => {
+      console.log("smart-wallet.session_delete");
+
+      this.emit("message", { type: "session_delete" });
+    });
+
+    this.#wcWallet.on("switch_chain", (request: WCRequest) => {
+      console.log("smart-wallet.switch_chain");
+
+      const chainId = request.params[0].chainId;
+
+      this.emit("message", {
+        type: "switch_chain",
+        data: { chainId },
+      });
 
       this.#wcWallet.disconnectSession();
     });

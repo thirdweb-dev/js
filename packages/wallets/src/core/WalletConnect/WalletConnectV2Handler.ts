@@ -9,7 +9,7 @@ import { getSdkError } from "@walletconnect/utils";
 import { utils } from "ethers";
 import {
   WCSession,
-  WalletConnectWallet,
+  WalletConnectHandler,
   WalletConnectReceiverConfig,
   WCMetadata,
 } from "../types/walletConnect";
@@ -25,7 +25,7 @@ type WalletConnectV2WalletConfig = Omit<
   "enableConnectApp"
 >;
 
-export class WalletConnectV2Wallet extends WalletConnectWallet {
+export class WalletConnectV2Handler extends WalletConnectHandler {
   #core: ICore;
   #wcWallet: IWeb3Wallet | undefined;
   #session: SessionTypes.Struct | undefined;

@@ -8,7 +8,7 @@ export type WalletConnectMetadata = IWeb3Wallet["metadata"];
 // connect dapp support through wcv2 protocol
 export type WalletConnectReceiverConfig = {
   enableConnectApp?: boolean;
-  enableWalletConnectV1?: boolean;
+  wcVersion?: "v1" | "v2";
   walletConnectV2Metadata?: WCMetadata;
   walletConenctV2ProjectId?: string;
   walletConnectV2RelayUrl?: string;
@@ -58,6 +58,7 @@ export type WCProposal = {
 export type WCRequest = {
   topic: string;
   peer: WCPeer;
+  params: any;
   method: string;
 };
 
@@ -76,7 +77,7 @@ export interface IWalletConnectReceiver {
   disconnectSession(): Promise<void>;
 }
 
-export abstract class WalletConnectWallet extends EventEmitter {
+export abstract class WalletConnectHandler extends EventEmitter {
   abstract init(): Promise<void>;
   abstract connectApp(uri: string): Promise<void>;
   abstract approveSession(wallet: AbstractClientWallet): Promise<void>;

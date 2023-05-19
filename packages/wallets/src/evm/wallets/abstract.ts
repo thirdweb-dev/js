@@ -3,6 +3,7 @@ import type { Signer } from "ethers";
 import { providers, Contract, utils } from "ethers";
 import EventEmitter from "eventemitter3";
 import { Ecosystem, GenericAuthWallet } from "../../core/interfaces/auth";
+import { Bytes } from "@ethersproject/bytes";
 
 // TODO improve this
 function chainIdToThirdwebRpc(chainId: number) {
@@ -74,7 +75,7 @@ export abstract class AbstractWallet
   /**
    * @returns the signature of the message
    */
-  public async signMessage(message: string): Promise<string> {
+  public async signMessage(message: Bytes | string): Promise<string> {
     const signer = await this.getCachedSigner();
     return await signer.signMessage(message);
   }

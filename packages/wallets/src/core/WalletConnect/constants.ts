@@ -1,7 +1,7 @@
 import { AbstractWallet } from "../../evm/wallets/abstract";
-import { WCSession, WalletConnectWallet } from "../types/walletConnect";
+import { WCSession, WalletConnectHandler } from "../types/walletConnect";
 
-export class NoOpWalletConnectReceiver extends WalletConnectWallet {
+export class NoOpWalletConnectHandler extends WalletConnectHandler {
   init() {
     return Promise.resolve();
   }
