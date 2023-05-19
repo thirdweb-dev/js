@@ -20,14 +20,10 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
       return;
     }
 
-    const isInstalled = walletConfig.isInstalled
-      ? walletConfig.isInstalled()
-      : false;
-
     // if loading
     (async () => {
-      // if injected or not mobile we connect
-      if (isInstalled || !isMobile) {
+      // if not mobile we connect
+      if (!isMobile()) {
         try {
           connectPrompted.current = true;
           setScreen("connecting");
@@ -51,7 +47,7 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
         onBack={props.goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
-        supportLink="https://support.metamask.io/hc/en-us/articles/4406430256539-User-Guide-Troubleshooting"
+        supportLink="https://docs.frame.sh"
       />
     );
   }
