@@ -16,6 +16,8 @@ import {
 } from "../../core/types/walletConnect";
 import { WalletConnectV2Wallet } from "../../core/WalletConnect/WalletConnectV2Wallet";
 import { NoOpWalletConnectReceiver } from "../../core/WalletConnect/constants";
+import { WalletConnectV1Wallet } from "../../core/WalletConnect/WalletConnectV1Wallet";
+import { createLocalStorage } from "../../core";
 
 // export types and utils for convenience
 export * from "../connectors/smart-wallet/types";
@@ -28,6 +30,7 @@ export class SmartWallet
   connector?: SmartWalletConnectorType;
 
   public enableConnectApp: boolean = false;
+  #enableWalletConnectV1: boolean = false;
   #wcWallet: WalletConnectWallet;
 
   static meta = {
@@ -49,13 +52,21 @@ export class SmartWallet
     console.log("enable connect app", options.enableConnectApp);
 
     this.enableConnectApp = options?.enableConnectApp || false;
+    this.#enableWalletConnectV1 = options?.enableWalletConnectV1 || false;
 
     this.#wcWallet = this.enableConnectApp
-      ? new WalletConnectV2Wallet({
-          walletConnectV2Metadata: options?.walletConnectV2Metadata,
-          walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
-          walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
-        })
+      ? this.#enableWalletConnectV1
+        ? new WalletConnectV1Wallet({
+            walletConnectV2Metadata: options?.walletConnectV2Metadata,
+            walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
+            walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
+            storage: options?.storage || createLocalStorage("smart-wallet"),
+          })
+        : new WalletConnectV2Wallet({
+            walletConnectV2Metadata: options?.walletConnectV2Metadata,
+            walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
+            walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
+          })
       : new NoOpWalletConnectReceiver();
   }
 
@@ -142,6 +153,7 @@ export class SmartWallet
     }
 
     this.#wcWallet.on("session_proposal", (proposal: WCProposal) => {
+      console.log("smart-wallet.proposal");
       this.emit("message", {
         type: "session_proposal",
         data: proposal,

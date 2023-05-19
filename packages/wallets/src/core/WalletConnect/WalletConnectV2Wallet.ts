@@ -1,5 +1,9 @@
 import { Core } from "@walletconnect/core";
-import { IWeb3Wallet, Web3Wallet } from "@walletconnect/web3wallet";
+import {
+  IWeb3Wallet,
+  Web3Wallet,
+  Web3WalletTypes,
+} from "@walletconnect/web3wallet";
 import { ICore, SessionTypes, SignClientTypes } from "@walletconnect/types";
 import { getSdkError } from "@walletconnect/utils";
 import { utils } from "ethers";
@@ -26,12 +30,8 @@ export class WalletConnectV2Wallet extends WalletConnectWallet {
   #wcWallet: IWeb3Wallet | undefined;
   #session: SessionTypes.Struct | undefined;
   #wcMetadata: WCMetadata;
-  #activeProposal:
-    | SignClientTypes.EventArguments["session_proposal"]
-    | undefined;
-  #activeRequestEvent:
-    | SignClientTypes.EventArguments["session_request"]
-    | undefined;
+  #activeProposal: Web3WalletTypes.SessionProposal | undefined;
+  #activeRequestEvent: Web3WalletTypes.SessionRequest | undefined;
 
   constructor(options: WalletConnectV2WalletConfig) {
     super();
@@ -90,7 +90,7 @@ export class WalletConnectV2Wallet extends WalletConnectWallet {
     const namespaces: SessionTypes.Namespaces = {};
     Object.keys(requiredNamespaces).forEach((key) => {
       const accounts: string[] = [];
-      requiredNamespaces[key].chains?.map((chain) => {
+      requiredNamespaces[key].chains?.map((chain: string) => {
         accounts.push(`${chain}:${account}`);
       });
       namespaces[key] = {
@@ -234,7 +234,7 @@ export class WalletConnectV2Wallet extends WalletConnectWallet {
 
     this.#wcWallet.on(
       "session_proposal",
-      (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
+      (proposal: Web3WalletTypes.SessionProposal) => {
         this.#activeProposal = proposal;
 
         this.emit("session_proposal", {
@@ -257,9 +257,7 @@ export class WalletConnectV2Wallet extends WalletConnectWallet {
 
     this.#wcWallet.on(
       "session_request",
-      async (
-        requestEvent: SignClientTypes.EventArguments["session_request"],
-      ) => {
+      async (requestEvent: Web3WalletTypes.SessionRequest) => {
         if (!this.#session) {
           console.log("No session found on session_request event.");
           return;

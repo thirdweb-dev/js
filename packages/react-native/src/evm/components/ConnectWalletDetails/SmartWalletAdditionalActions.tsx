@@ -122,7 +122,12 @@ export const SmartWalletAdditionalActions = ({
   };
 
   const onConnectDappPress = () => {
-    setShowWCRow(true);
+    if (appMeta) {
+      setAppMeta(undefined);
+      (smartWallet as unknown as IWalletConnectReceiver).disconnectSession();
+    } else {
+      setShowWCRow(true);
+    }
   };
 
   const onAddressChangeText = (text: string) => {
@@ -130,6 +135,9 @@ export const SmartWalletAdditionalActions = ({
   };
 
   const onWCPress = () => {
+    console.log(wcUri);
+    console.log(!!smartWallet);
+
     if (!wcUri || !smartWallet) {
       return;
     }
@@ -273,7 +281,7 @@ export const SmartWalletAdditionalActions = ({
           </BaseButton>
           <Text variant="error">
             {
-              "This is a temporary guest wallet. Download a backup if you don't want to lose access to it."
+              "This is a temporary guest wallet. Download a backup if you don't want to loose access to it."
             }
           </Text>
         </>

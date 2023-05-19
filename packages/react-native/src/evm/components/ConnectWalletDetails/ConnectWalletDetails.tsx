@@ -130,7 +130,7 @@ export const ConnectWalletDetails = ({
           {activeWallet?.walletId === LocalWallet.id ? (
             <Text variant="error">
               {
-                "This is a temporary guest wallet. Download a backup if you don't want to lose access to it."
+                "This is a temporary guest wallet. Download a backup if you don't want to loose access to it."
               }
             </Text>
           ) : null}
