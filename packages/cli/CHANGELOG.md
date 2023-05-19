@@ -1,5 +1,17 @@
 # thirdweb
 
+## 0.10.16
+
+### Patch Changes
+
+- [#926](https://github.com/thirdweb-dev/js/pull/926) [`84fc3b6f`](https://github.com/thirdweb-dev/js/commit/84fc3b6fab112b91563348f1a88820bd49a2f9b3) Thanks [@Marfuen](https://github.com/Marfuen)! - Added detect-project command, reorganized folder structure for detecting, added many more detections.
+
+- [#926](https://github.com/thirdweb-dev/js/pull/926) [`84fc3b6f`](https://github.com/thirdweb-dev/js/commit/84fc3b6fab112b91563348f1a88820bd49a2f9b3) Thanks [@Marfuen](https://github.com/Marfuen)! - Added log to see detected app type to the "detect-project" command
+
+- Updated dependencies [[`e9b69300`](https://github.com/thirdweb-dev/js/commit/e9b69300d15b233609f1ed897256ec9a1eef3e28), [`49ec2d17`](https://github.com/thirdweb-dev/js/commit/49ec2d171ecb1c9240398b7b486a452eb9429979), [`799d98e8`](https://github.com/thirdweb-dev/js/commit/799d98e86258677ab72931fa8397aee653fe8b34), [`c3645c45`](https://github.com/thirdweb-dev/js/commit/c3645c451b5e9a0fcf651fa07eb0e31ebf1882ca), [`470e0a14`](https://github.com/thirdweb-dev/js/commit/470e0a144db6aa03e7789e231bbdfae43144f0e0), [`482f6d1b`](https://github.com/thirdweb-dev/js/commit/482f6d1b58ac99b331fc750d3eeb6082556fd526), [`e4356e76`](https://github.com/thirdweb-dev/js/commit/e4356e76d1506624afe2eb6feeaf57dc376f372f), [`9886c858`](https://github.com/thirdweb-dev/js/commit/9886c858d9c8d0f677aba6572dbf5cc6c876edf2), [`8db78299`](https://github.com/thirdweb-dev/js/commit/8db78299ea6cfb51d93b91bb1a351644a83c73d2)]:
+  - @thirdweb-dev/sdk@3.10.15
+  - @thirdweb-dev/chains@0.1.16
+
 ## 0.10.15
 
 ### Patch Changes

@@ -22,6 +22,11 @@ export default {
       "name": "Scroll Alpha Testnet Block Explorer",
       "url": "https://blockscout.scroll.io",
       "standard": "EIP3091"
+    },
+    {
+      "name": "Scroll Alpha Testnet Block Explorer",
+      "url": "https://scrollexplorer.unifra.io",
+      "standard": "EIP3091"
     }
   ],
   "parent": {
