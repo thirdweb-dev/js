@@ -21,6 +21,7 @@ export type SmartWalletConfig = {
   gasless: boolean;
   bundlerUrl?: string;
   paymasterUrl?: string;
+  customPaymasterAPI?: PaymasterAPI;
   entryPointAddress?: string;
 } & ContractInfoInput;
 
