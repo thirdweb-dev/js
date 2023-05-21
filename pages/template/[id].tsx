@@ -1,10 +1,4 @@
-import {
-  Box,
-  DarkMode,
-  Flex,
-  Image,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import { Box, DarkMode, Flex, Image } from "@chakra-ui/react";
 import { CopyButton } from "components/homepage/AnimatedCLICommand/AnimatedCLICommand";
 import { ProductButton } from "components/product-pages/common/ProductButton";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
