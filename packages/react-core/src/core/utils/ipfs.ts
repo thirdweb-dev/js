@@ -1,17 +1,23 @@
-import { DEFAULT_IPFS_RESOLVER_OPTIONS } from "../constants/ipfs";
 import mime from "mime/lite.js";
+import {
+  parseGatewayUrls,
+  prepareGatewayUrls,
+  replaceSchemeWithGatewayUrl,
+} from "@thirdweb-dev/storage";
 
-export function resolveIpfsUri(
-  uri?: string,
-  options = DEFAULT_IPFS_RESOLVER_OPTIONS,
-) {
+// TODO legacy remove this when possible
+export interface IPFSResolverOptions {
+  gatewayUrl: string;
+}
+
+export function resolveIpfsUri(uri?: string, options?: IPFSResolverOptions) {
   if (!uri) {
     return undefined;
   }
-  if (uri.startsWith("ipfs://")) {
-    return uri.replace("ipfs://", options.gatewayUrl);
-  }
-  return uri;
+  const gatewayUrls = prepareGatewayUrls(
+    parseGatewayUrls(options?.gatewayUrl ? [options?.gatewayUrl] : undefined),
+  );
+  return replaceSchemeWithGatewayUrl(uri, gatewayUrls);
 }
 
 export async function resolveMimeType(url?: string) {

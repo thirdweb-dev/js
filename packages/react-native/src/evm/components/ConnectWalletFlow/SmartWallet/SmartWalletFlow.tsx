@@ -14,10 +14,10 @@ import { ChooseWallet } from "../ChooseWallet/ChooseWallet";
 import { LocalWalletFlow } from "../LocalWalletFlow";
 import { ModalHeaderTextClose } from "../../base/modal/ModalHeaderTextClose";
 import { ActivityIndicator, Linking, useColorScheme } from "react-native";
-import { useTheme } from "@shopify/restyle";
 import BaseButton from "../../base/BaseButton";
 import Text from "../../base/Text";
 import { walletIds } from "@thirdweb-dev/wallets";
+import { useAppTheme } from "../../../styles/hooks";
 
 export const SmartWalletFlow = ({
   onClose,
@@ -33,7 +33,7 @@ export const SmartWalletFlow = ({
   const [personalWalletChainId, setPersonalWalletChaindId] = useState<
     number | undefined
   >();
-  const theme = useTheme();
+  const theme = useAppTheme();
   const createWalletInstance = useCreateWalletInstance();
   const walletObj = useSupportedWallet(walletIds.smartWallet) as SmartWalletObj;
   const connect = useConnect();
