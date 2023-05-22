@@ -1,6 +1,6 @@
 import { useWallet } from "@thirdweb-dev/react-core";
 import { IWalletConnectReceiver } from "@thirdweb-dev/wallets";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Box from "../base/Box";
 import BaseButton from "../base/BaseButton";
 import DisconnectIcon from "../../assets/disconnect";
@@ -11,23 +11,19 @@ import { StyleSheet, View } from "react-native";
 import Text from "../base/Text";
 import { WalletIcon } from "../base/WalletIcon";
 import WalletConnectIcon from "../../assets/wallet-connect";
+import QrCodeIcon from "../../assets/qr-code";
+import { QRCodeScan } from "./QRCodeScan";
+import { parseWalletConnectUri } from "@walletconnect/utils";
 
-export const ConnectAppField = () => {
+const ConnectAppField = () => {
   const theme = useTheme();
   const [showWCInput, setShowWCInput] = useState(false);
   const [wcUri, setWCUri] = useState<string | undefined>();
   const [appMeta, setAppMeta] = useState<{ name: string; iconUrl: string }>();
   const wallet = useWallet();
+  const [showQRCodeScan, setShowQRCodeScan] = useState(false);
 
-  const onSmartWalletWCMessage = ({ type }: { type: string }) => {
-    if (type === "session_approved") {
-      getAppMeta();
-    } else if (type === "session_delete") {
-      reset();
-    }
-  };
-
-  const getAppMeta = () => {
+  const getAppMeta = useCallback(() => {
     const sessions = (
       wallet as unknown as IWalletConnectReceiver
     ).getActiveSessions();
@@ -37,7 +33,18 @@ export const ConnectAppField = () => {
         iconUrl: sessions[0].peer.metadata.icons[0],
       });
     }
-  };
+  }, [wallet]);
+
+  const onSmartWalletWCMessage = useCallback(
+    ({ type }: { type: string }) => {
+      if (type === "session_approved") {
+        getAppMeta();
+      } else if (type === "session_delete") {
+        reset();
+      }
+    },
+    [getAppMeta],
+  );
 
   useEffect(() => {
     if (wallet) {
@@ -51,7 +58,7 @@ export const ConnectAppField = () => {
         wallet.removeListener("message", onSmartWalletWCMessage);
       }
     };
-  }, [wallet]);
+  }, [getAppMeta, onSmartWalletWCMessage, wallet]);
 
   const onConnectDappPress = () => {
     if (appMeta) {
@@ -71,12 +78,39 @@ export const ConnectAppField = () => {
     setWCUri(text);
   };
 
+  const onQRCodeScan = (data: string) => {
+    if (wcUri !== data) {
+      setWCUri(data);
+      setShowQRCodeScan(false);
+
+      onWCPress();
+    }
+  };
+
+  const onQRClose = () => {
+    setShowQRCodeScan(false);
+  };
+
   const onWCPress = () => {
     if (!wcUri || !wallet) {
       return;
     }
 
-    (wallet as unknown as IWalletConnectReceiver).connectApp(wcUri);
+    let parsedUri;
+    try {
+      parsedUri = parseWalletConnectUri(wcUri);
+    } catch (error) {
+      console.error("Error parsing the wallet connect uri", error);
+      return;
+    }
+
+    if (parsedUri.protocol === "wc") {
+      (wallet as unknown as IWalletConnectReceiver).connectApp(wcUri);
+    }
+  };
+
+  const onScanQRPress = () => {
+    setShowQRCodeScan(true);
   };
 
   return (
@@ -89,7 +123,12 @@ export const ConnectAppField = () => {
           borderWidth={1}
           borderRadius="md"
         >
-          <TextInput onChangeText={onAddressChangeText} flex={1} />
+          <TextInput
+            onChangeText={onAddressChangeText}
+            flex={1}
+            placeholder={"wc://..."}
+            placeholderTextColor={theme.colors.textSecondary}
+          />
           <BaseButton
             onPress={onWCPress}
             justifyContent="center"
@@ -97,6 +136,18 @@ export const ConnectAppField = () => {
           >
             <RightArrowIcon
               height={20}
+              width={30}
+              color={theme.colors.iconPrimary}
+            />
+          </BaseButton>
+          <BaseButton
+            onPress={onScanQRPress}
+            justifyContent="center"
+            alignItems="center"
+            marginHorizontal="xs"
+          >
+            <QrCodeIcon
+              height={30}
               width={30}
               color={theme.colors.iconPrimary}
             />
@@ -138,9 +189,17 @@ export const ConnectAppField = () => {
           )}
         </BaseButton>
       )}
+
+      <QRCodeScan
+        isVisible={showQRCodeScan}
+        onQRCodeScan={onQRCodeScan}
+        onClose={onQRClose}
+      />
     </>
   );
 };
+
+export default ConnectAppField;
 
 const styles = StyleSheet.create({
   walletInfo: {
