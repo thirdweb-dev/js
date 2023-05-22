@@ -13,6 +13,7 @@ import type {
 import { EVMWallet } from "../../interfaces";
 import { WalletOptions } from "../../wallets/base";
 import { BaseApiParams } from "./lib/base-api";
+import { WalletConnectReceiverConfig } from "../../../core/types/walletConnect";
 
 export type SmartWalletConfig = {
   chain: ChainOrRpcUrl;
@@ -21,8 +22,10 @@ export type SmartWalletConfig = {
   gasless: boolean;
   bundlerUrl?: string;
   paymasterUrl?: string;
+  paymasterAPI?: PaymasterAPI;
   entryPointAddress?: string;
-} & ContractInfoInput;
+} & ContractInfoInput &
+  WalletConnectReceiverConfig;
 
 export type SmartWalletConnectionArgs = {
   personalWallet: EVMWallet;

@@ -8,7 +8,8 @@ export default {
     "https://eth-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://goerli.infura.io/v3/${INFURA_API_KEY}",
     "wss://goerli.infura.io/v3/${INFURA_API_KEY}",
-    "https://rpc.goerli.mudit.blog/"
+    "https://rpc.goerli.mudit.blog/",
+    "https://ethereum-goerli.publicnode.com"
   ],
   "faucets": [
     "https://faucet.paradigm.xyz/",

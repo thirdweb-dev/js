@@ -3,7 +3,7 @@ import type { WalletConfig } from "@thirdweb-dev/react-core";
 import { StyleSheet, View, FlatList } from "react-native";
 import { WalletButton } from "../../base/WalletButton";
 
-interface InitialExplorerContentProps {
+interface ChooseWalletContentProps {
   wallets: WalletConfig[];
   excludeWalletIds?: string[];
   onChooseWallet: (wallet: WalletConfig) => void;
@@ -13,7 +13,7 @@ export const ChooseWalletContent = ({
   wallets,
   excludeWalletIds,
   onChooseWallet,
-}: InitialExplorerContentProps) => {
+}: ChooseWalletContentProps) => {
   const walletsToDisplay = useMemo(() => {
     return wallets.filter(
       (w) => !!!excludeWalletIds?.find((ewId) => ewId === w.id),

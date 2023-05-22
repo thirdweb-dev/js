@@ -5,7 +5,7 @@ import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
 import { WalletIcon } from "../base/WalletIcon";
 import { useWallet, useBalance } from "@thirdweb-dev/react-core";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import Box from "../base/Box";
 import CopyIcon from "../../assets/copy";
@@ -21,7 +21,6 @@ export const WalletDetailsModalHeader = ({
   address,
   onDisconnectPress,
   onAddressCopied,
-  loading,
 }: WalletDetailsModalHeaderProps) => {
   const theme = useAppTheme();
   const balanceQuery = useBalance();
@@ -61,17 +60,13 @@ export const WalletDetailsModalHeader = ({
             {balanceQuery.data?.symbol}
           </Text>
         </BaseButton>
-        {loading ? (
-          <ActivityIndicator size={18} color={theme.colors.iconHighlight} />
-        ) : (
-          <Icon
-            type="disconnect"
-            width={18}
-            height={18}
-            onPress={onDisconnectPress}
-            color={theme.colors.iconHighlight}
-          />
-        )}
+        <Icon
+          type="disconnect"
+          width={18}
+          height={18}
+          onPress={onDisconnectPress}
+          color={theme.colors.iconHighlight}
+        />
       </View>
     </>
   );

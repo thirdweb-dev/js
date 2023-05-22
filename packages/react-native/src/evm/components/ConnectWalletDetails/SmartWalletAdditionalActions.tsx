@@ -14,7 +14,8 @@ import { useWalletContext, useWallet } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import { useSmartWallet } from "../../providers/context-provider";
 import RightArrowIcon from "../../assets/right-arrow";
-import { useTheme } from "@shopify/restyle";
+import { ConnectAppField } from "./ConnectAppField";
+import { useAppTheme } from "../../styles/hooks";
 
 export const SmartWalletAdditionalActions = ({
   onExportPress,
@@ -27,7 +28,7 @@ export const SmartWalletAdditionalActions = ({
   const [smartWalletAddress, setSmartWalletAddress] = useState<string>("");
   const [showSmartWallet, setShowSmartWallet] = useState(false);
   const activeWallet = useWallet();
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   const wallet = showSmartWallet
     ? smartWallet
@@ -93,6 +94,9 @@ export const SmartWalletAdditionalActions = ({
           color={theme.colors.iconPrimary}
         />
       </BaseButton>
+      {!showSmartWallet && smartWallet?.enableConnectApp ? (
+        <ConnectAppField />
+      ) : null}
       {wallet?.walletId === walletIds.localWallet ||
       activeWallet?.walletId === walletIds.localWallet ? (
         <>
@@ -122,7 +126,7 @@ export const SmartWalletAdditionalActions = ({
           </BaseButton>
           <Text variant="error">
             {
-              "This is a temporary guest wallet. Download a backup if you don't want to lose access to it."
+              "This is a temporary guest wallet. Download a backup if you don't want to loose access to it."
             }
           </Text>
         </>

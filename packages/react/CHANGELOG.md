@@ -1,5 +1,27 @@
 # @thirdweb-dev/react
 
+## 3.12.2
+
+### Patch Changes
+
+- Updated dependencies [[`30e5593d`](https://github.com/thirdweb-dev/js/commit/30e5593dd1ce9abd809ad216a1cfce77b897093c), [`30e5593d`](https://github.com/thirdweb-dev/js/commit/30e5593dd1ce9abd809ad216a1cfce77b897093c)]:
+  - @thirdweb-dev/wallets@0.2.22
+  - @thirdweb-dev/chains@0.1.18
+  - @thirdweb-dev/react-core@3.12.2
+  - @thirdweb-dev/sdk@3.10.17
+
+## 3.12.1
+
+### Patch Changes
+
+- [#1030](https://github.com/thirdweb-dev/js/pull/1030) [`61212d27`](https://github.com/thirdweb-dev/js/commit/61212d27d7203112a0278893cb67ec94a20408c7) Thanks [@adam-maj](https://github.com/adam-maj)! - Add ability to configure gatewayUrl and pull gatewayUrl from storage in MediaRenderer
+
+- Updated dependencies [[`b6f48e10`](https://github.com/thirdweb-dev/js/commit/b6f48e1088b5d36a51103de4afda53179029faaf), [`d5123044`](https://github.com/thirdweb-dev/js/commit/d51230441a097734be092c42b45dea07629e65fa), [`3c8c5d56`](https://github.com/thirdweb-dev/js/commit/3c8c5d56f2a21c0918fede71061c6745f2956f83), [`907d97be`](https://github.com/thirdweb-dev/js/commit/907d97bedef7331148bdfe8b9bf1e19459282e4c)]:
+  - @thirdweb-dev/wallets@0.2.21
+  - @thirdweb-dev/react-core@3.12.1
+  - @thirdweb-dev/chains@0.1.17
+  - @thirdweb-dev/sdk@3.10.16
+
 ## 3.12.0
 
 ### Minor Changes
