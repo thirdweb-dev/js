@@ -1,5 +1,6 @@
 import { SmartWallet } from "@thirdweb-dev/wallets";
 import { createContext, useContext, useState } from "react";
+import { useWalletConnectListener } from "../wallets/hooks/useWalletConnectListener";
 
 type DappContextType = {
   smartWallet?: SmartWallet;
@@ -10,6 +11,8 @@ const DappContext = createContext<DappContextType>({});
 
 export const DappContextProvider = (props: React.PropsWithChildren<{}>) => {
   const [smartWallet, setSmartWallet] = useState<SmartWallet | undefined>();
+
+  useWalletConnectListener();
 
   return (
     <DappContext.Provider value={{ smartWallet, setSmartWallet }}>

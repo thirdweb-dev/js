@@ -7,6 +7,8 @@ import { ConnectWalletDetailsModal } from "./ConnectWalletDetails/ConnectWalletD
 import { CLOSE_MODAL_STATE } from "../utils/modalTypes";
 import { ThemeProvider } from "../styles/ThemeProvider";
 import { useAppTheme } from "../styles/hooks";
+import { SessionRequestModal } from "./ConnectWalletDetails/SessionRequestModal";
+import { SessionProposalModal } from "./ConnectWalletDetails/SessionProposalModal";
 
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 const DEVICE_WIDTH = Dimensions.get("window").width;
@@ -24,6 +26,10 @@ export const MainModal = () => {
         return <ConnectWalletFlow />;
       case "WalletDetails":
         return <ConnectWalletDetailsModal />;
+      case "WalletConnectSessionRequestModal":
+        return <SessionRequestModal />;
+      case "WalletConnectSessionProposalModal":
+        return <SessionProposalModal />;
       default:
         return null;
     }
