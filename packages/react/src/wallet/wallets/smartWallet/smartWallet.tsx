@@ -32,7 +32,7 @@ export const smartWallet = (
 };
 
 export const SmartConnectUI = (
-  props: ConnectUIProps<SmartWallet, Required<SmartWalletConfig>>,
+  props: ConnectUIProps<SmartWallet, SmartWalletConfig>,
 ) => {
   const activeWallet = useWallet();
   const { walletConfig } = props;

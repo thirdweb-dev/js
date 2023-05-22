@@ -5,12 +5,10 @@ import {
 } from "@thirdweb-dev/wallets";
 
 export type SmartWalletConfig = SmartWalletConfig_ & {
-  personalWallets?: WalletConfig<any, any>[];
+  personalWallets: WalletConfig<any, any>[];
 };
 
 export type SmartConfiguredWallet = WalletConfig<
   SmartWallet,
-  SmartWalletConfig_ & {
-    personalWallets: WalletConfig<any, any>[];
-  }
+  SmartWalletConfig
 >;
