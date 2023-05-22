@@ -33,7 +33,7 @@ const getContent = (requestData: WCRequest) => {
 
 export const SessionRequestModal = () => {
   const { modalState, setModalState } = useModalState();
-  const { requestData } = (modalState as WalletConnectSessionRequestModal).data;
+  const { data: requestData } = modalState as WalletConnectSessionRequestModal;
 
   const wallet = useWallet();
 

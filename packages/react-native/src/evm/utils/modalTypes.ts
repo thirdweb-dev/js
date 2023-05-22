@@ -71,23 +71,14 @@ export type WalletDetailsModal = {
 } & SheetModal;
 
 // wallet connect
-export type WalletConnectSessionRequestData = {
-  requestData: WCRequest;
-};
-
 export type WalletConnectSessionRequestModal = {
   view: "WalletConnectSessionRequestModal";
-  data: WalletConnectSessionRequestData;
+  data: WCRequest;
 } & DialogModal;
-
-// wallet connect
-export type WalletConnectSessionProposalData = {
-  proposalData: WCProposal;
-};
 
 export type WalletConnectSessionProposalModal = {
   view: "WalletConnectSessionProposalModal";
-  data: WalletConnectSessionProposalData;
+  data: WCProposal;
 } & DialogModal;
 
 export type ModalState =

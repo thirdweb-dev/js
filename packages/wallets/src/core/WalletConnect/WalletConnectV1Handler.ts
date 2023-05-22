@@ -79,10 +79,12 @@ export class WalletConnectV1Handler extends WalletConnectHandler {
 
     const address = await wallet.getAddress();
     const chainId = await wallet.getChainId();
-    this.#wcWallet.approveSession({
+    await this.#wcWallet.approveSession({
       accounts: [address],
       chainId: chainId,
     });
+
+    this.emit("session_approved");
 
     return Promise.resolve();
   }
@@ -205,6 +207,7 @@ export class WalletConnectV1Handler extends WalletConnectHandler {
 
     // Subscribe to session requests
     this.#wcWallet.on("session_request", (error, payload) => {
+      console.log("session_request", error, payload);
       if (error) {
         throw new Error(`WCV1H.session_request error: ${error.message}`);
       }

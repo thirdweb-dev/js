@@ -5,7 +5,6 @@ import {
   Web3WalletTypes,
 } from "@walletconnect/web3wallet";
 import { ICore, SessionTypes, SignClientTypes } from "@walletconnect/types";
-import { getSdkError } from "@walletconnect/utils";
 import { utils } from "ethers";
 import {
   WCSession,
@@ -105,6 +104,8 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
       relayProtocol: relays[0].protocol,
       namespaces,
     });
+
+    this.emit("session_approved");
   }
 
   async rejectSession() {
@@ -121,7 +122,10 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
     const { id } = this.#activeProposal;
     await this.#wcWallet.rejectSession({
       id,
-      reason: getSdkError("USER_REJECTED_METHODS"),
+      reason: {
+        message: "User rejected methods.",
+        code: 5002,
+      },
     });
   }
 
@@ -153,7 +157,10 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
         const error = {
           id,
           jsonrpc: "2.0",
-          error: getSdkError("INVALID_EVENT"),
+          error: {
+            message: "Invalid event.",
+            code: 1002,
+          },
         };
         return this.#wcWallet?.respondSessionRequest({
           topic,
@@ -163,18 +170,23 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
   }
 
   async rejectEIP155Request() {
+    console.log("rejectEIP155Request", this.#activeRequestEvent);
+
     if (!this.#activeRequestEvent) {
       return;
     }
     const { topic, id } = this.#activeRequestEvent;
-    const error = getSdkError("USER_REJECTED_METHODS");
 
     const response = {
       id,
       jsonrpc: "2.0",
-      error: error,
+      error: {
+        message: "User rejected methods.",
+        code: 5002,
+      },
     };
 
+    console.log("respond", topic, id);
     return this.#wcWallet?.respondSessionRequest({ topic, response });
   }
 
@@ -219,7 +231,10 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
 
     const params = {
       topic: this.#session.topic,
-      reason: getSdkError("USER_DISCONNECTED"),
+      reason: {
+        message: "User disconnected.",
+        code: 6000,
+      },
     };
 
     return this.#wcWallet?.disconnectSession(params);
@@ -262,22 +277,36 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
           console.log("No session found on session_request event.");
           return;
         }
-        const { params } = requestEvent;
-        const { request } = params;
+        const { params: requestParams } = requestEvent;
+        const { request } = requestParams;
+        const { params } = request;
+
+        console.log("request.method", params, request);
 
         switch (request.method) {
           case EIP155_SIGNING_METHODS.ETH_SIGN:
           case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
             this.#activeRequestEvent = requestEvent;
 
+            const message = params[0];
+            const decodedMessage = new TextDecoder().decode(
+              utils.arrayify(message),
+            );
+
+            const paramsCopy = [...params];
+            paramsCopy[0] = decodedMessage;
+
             this.emit("session_request", {
               topic: this.#session.topic,
+              params: paramsCopy,
               peer: {
                 metadata: this.#session.peer.metadata,
               },
               method: request.method,
             });
             return;
+          default:
+            throw new Error(`WCV2.Method not supported: ${request.method}`);
         }
       },
     );

@@ -115,8 +115,12 @@ export class SmartWallet
     this.#wcWallet?.connectApp(uri);
   }
 
-  approveSession(): Promise<void> {
-    return this.#wcWallet.approveSession(this);
+  async approveSession(): Promise<void> {
+    await this.#wcWallet.approveSession(this);
+
+    console.log("smart-wallet.approveSession");
+
+    this.emit("message", { type: "session_approved" });
   }
 
   rejectSession() {
@@ -153,7 +157,7 @@ export class SmartWallet
     }
 
     this.#wcWallet.on("session_proposal", (proposal: WCProposal) => {
-      console.log("smart-wallet.proposal");
+      console.log("smart-wallet.proposal", proposal);
 
       this.emit("message", {
         type: "session_proposal",

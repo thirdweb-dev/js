@@ -1,11 +1,7 @@
 import { useWallet } from "@thirdweb-dev/react-core";
-import { walletIds } from "@thirdweb-dev/wallets";
 import { useCallback, useEffect } from "react";
 import { useModalState } from "../../providers/ui-context-provider";
-import {
-  WalletConnectSessionProposalData,
-  WalletConnectSessionRequestData,
-} from "../../utils/modalTypes";
+import { WCProposal, WCRequest, walletIds } from "@thirdweb-dev/wallets";
 
 /**
  * Registers listeners for wallet connect if the active wallet
@@ -22,10 +18,7 @@ export function useWalletConnectListener() {
           setModalState({
             view: "WalletConnectSessionProposalModal",
             caller: "WCSessionProposalListener",
-            data: {
-              proposalData: (data as WalletConnectSessionProposalData)
-                .proposalData,
-            },
+            data: data as WCProposal,
             isOpen: true,
             isSheet: false,
           });
@@ -37,10 +30,7 @@ export function useWalletConnectListener() {
           setModalState({
             view: "WalletConnectSessionRequestModal",
             caller: "WCSessionRequestListener",
-            data: {
-              requestData: (data as WalletConnectSessionRequestData)
-                .requestData,
-            },
+            data: data as WCRequest,
             isOpen: true,
             isSheet: false,
           });
@@ -53,7 +43,7 @@ export function useWalletConnectListener() {
   );
 
   useEffect(() => {
-    if (activeWallet?.walletId === walletIds.smartWallet) {
+    if (activeWallet && activeWallet?.walletId === walletIds.smartWallet) {
       activeWallet.addListener("message", onSmartWalletWCMessage);
     }
 

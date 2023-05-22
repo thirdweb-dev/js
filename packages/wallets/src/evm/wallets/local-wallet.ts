@@ -1,28 +1,15 @@
-import {
-  AsyncStorage,
-  IWalletConnectReceiver,
-  WCProposal,
-  WCRequest,
-  WCSession,
-  WalletConnectHandler,
-  WalletConnectReceiverConfig,
-  createAsyncLocalStorage,
-  createLocalStorage,
-} from "../../core";
+import { AsyncStorage, createAsyncLocalStorage } from "../../core";
 import { Connector } from "../interfaces/connector";
 import { walletIds } from "../constants/walletIds";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import { Chain, defaultChains, Ethereum } from "@thirdweb-dev/chains";
 import { Wallet, utils } from "ethers";
-import { WalletConnectV1Handler } from "../../core/WalletConnect/WalletConnectV1Handler";
-import { WalletConnectV2Handler } from "../../core/WalletConnect/WalletConnectV2Handler";
-import { NoOpWalletConnectHandler } from "../../core/WalletConnect/constants";
 
 export type LocalWalletOptions = {
   chain?: Chain;
   storage?: AsyncStorage;
   thirdwebApiKey?: string;
-} & WalletConnectReceiverConfig;
+};
 
 export type WalletData = {
   address: string;
@@ -35,20 +22,16 @@ export type LocalWalletConnectionArgs = {};
 
 const STORAGE_KEY_WALLET_DATA = "localWalletData";
 
-export class LocalWallet
-  extends AbstractClientWallet<LocalWalletOptions, LocalWalletConnectionArgs>
-  implements IWalletConnectReceiver
-{
+export class LocalWallet extends AbstractClientWallet<
+  LocalWalletOptions,
+  LocalWalletConnectionArgs
+> {
   connector?: Connector;
   options: WalletOptions<LocalWalletOptions>;
   ethersWallet?: Wallet;
   #storage: AsyncStorage;
 
   static id = walletIds.localWallet;
-
-  public enableConnectApp: boolean = false;
-  #enableWalletConnectV1: WalletConnectReceiverConfig["wcVersion"];
-  #wcWallet: WalletConnectHandler;
 
   static meta = {
     name: "Local Wallet",
@@ -65,33 +48,10 @@ export class LocalWallet
     this.options = options || {};
     this.#storage =
       options?.storage || createAsyncLocalStorage(walletIds.localWallet);
-
-    console.log("local-wallet.wcStorage", options?.wcStorage);
-    this.enableConnectApp = options?.enableConnectApp || false;
-    this.#wcWallet = this.enableConnectApp
-      ? options?.wcVersion === "v1"
-        ? new WalletConnectV1Handler({
-            walletConnectV2Metadata: options?.walletConnectV2Metadata,
-            walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
-            walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
-            storage: options?.wcStorage || createLocalStorage("local-wallet"),
-          })
-        : new WalletConnectV2Handler({
-            walletConnectV2Metadata: options?.walletConnectV2Metadata,
-            walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
-            walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
-          })
-      : new NoOpWalletConnectHandler();
   }
 
   protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
-      if (this.enableConnectApp) {
-        await this.#wcWallet.init();
-
-        this.#setupWalletConnectEventsListeners();
-      }
-
       const { LocalWalletConnector: LocalWalletConnector } = await import(
         "../connectors/local-wallet"
       );
@@ -401,89 +361,6 @@ export class LocalWallet
   async #saveData(data: WalletData, storage?: AsyncStorage) {
     const _storage = storage || this.#storage;
     await _storage.setItem(STORAGE_KEY_WALLET_DATA, JSON.stringify(data));
-  }
-
-  async connectApp(uri: string) {
-    if (!this.enableConnectApp) {
-      throw new Error("enableConnectApp is set to false in this wallet config");
-    }
-
-    this.#wcWallet?.connectApp(uri);
-  }
-
-  approveSession(): Promise<void> {
-    return this.#wcWallet.approveSession(this);
-  }
-
-  rejectSession() {
-    return this.#wcWallet.rejectSession();
-  }
-
-  approveRequest() {
-    return this.#wcWallet.approveEIP155Request(this);
-  }
-
-  rejectRequest() {
-    return this.#wcWallet.rejectEIP155Request();
-  }
-
-  getActiveSessions(): WCSession[] {
-    if (!this.#wcWallet) {
-      throw new Error(
-        "Please, init the wallet before making session requests.",
-      );
-    }
-
-    return this.#wcWallet.getActiveSessions();
-  }
-
-  disconnectSession(): Promise<void> {
-    return this.#wcWallet?.disconnectSession();
-  }
-
-  #setupWalletConnectEventsListeners() {
-    if (!this.#wcWallet) {
-      throw new Error(
-        "Please, init the wallet before making session requests.",
-      );
-    }
-
-    this.#wcWallet.on("session_proposal", (proposal: WCProposal) => {
-      console.log("smart-wallet.proposal");
-
-      this.emit("message", {
-        type: "session_proposal",
-        data: proposal,
-      });
-    });
-
-    this.#wcWallet.on("session_delete", () => {
-      console.log("smart-wallet.session_delete");
-
-      this.emit("message", { type: "session_delete" });
-    });
-
-    this.#wcWallet.on("switch_chain", (request: WCRequest) => {
-      console.log("smart-wallet.switch_chain");
-
-      const chainId = request.params[0].chainId;
-
-      this.emit("message", {
-        type: "switch_chain",
-        data: { chainId },
-      });
-
-      this.#wcWallet.disconnectSession();
-    });
-
-    this.#wcWallet.on("session_request", (request: WCRequest) => {
-      console.log("smart-wallet.request", request);
-
-      this.emit("message", {
-        type: "session_request",
-        data: request,
-      });
-    });
   }
 }
 

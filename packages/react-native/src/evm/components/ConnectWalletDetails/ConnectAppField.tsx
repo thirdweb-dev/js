@@ -19,28 +19,38 @@ export const ConnectAppField = () => {
   const [appMeta, setAppMeta] = useState<{ name: string; iconUrl: string }>();
   const wallet = useWallet();
 
+  const onSmartWalletWCMessage = ({ type }: { type: string }) => {
+    if (type === "session_approved") {
+      getAppMeta();
+    } else if (type === "session_delete") {
+      reset();
+    }
+  };
+
+  const getAppMeta = () => {
+    const sessions = (
+      wallet as unknown as IWalletConnectReceiver
+    ).getActiveSessions();
+    if (Object.keys(sessions).length > 0) {
+      setAppMeta({
+        name: sessions[0].peer.metadata.name,
+        iconUrl: sessions[0].peer.metadata.icons[0],
+      });
+    }
+  };
+
   useEffect(() => {
     if (wallet) {
-      // TODO: Add listener for SessionApproved
-      // wallet.addListener("message", onSmartWalletWCMessage);
+      wallet.addListener("message", onSmartWalletWCMessage);
 
-      const sessions = (
-        wallet as unknown as IWalletConnectReceiver
-      ).getActiveSessions();
-      console.log("sessions", sessions);
-      if (Object.keys(sessions).length > 0) {
-        setAppMeta({
-          name: sessions[0].peer.metadata.name,
-          iconUrl: sessions[0].peer.metadata.icons[0],
-        });
-      }
+      getAppMeta();
     }
 
-    // return () => {
-    //   if (wallet) {
-    //     wallet.removeListener("message", onSmartWalletWCMessage);
-    //   }
-    // };
+    return () => {
+      if (wallet) {
+        wallet.removeListener("message", onSmartWalletWCMessage);
+      }
+    };
   }, [wallet]);
 
   const onConnectDappPress = () => {
@@ -62,9 +72,6 @@ export const ConnectAppField = () => {
   };
 
   const onWCPress = () => {
-    console.log(wcUri);
-    console.log(!!wallet);
-
     if (!wcUri || !wallet) {
       return;
     }

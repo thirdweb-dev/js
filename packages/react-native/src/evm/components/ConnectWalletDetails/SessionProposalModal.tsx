@@ -9,18 +9,12 @@ import {
 } from "../../utils/modalTypes";
 import { useModalState } from "../../providers/ui-context-provider";
 
-export const SessionProposalModal = ({
-  onApprove,
-}: {
-  onApprove: (appName: string, appIconUrl: string) => void;
-}) => {
+export const SessionProposalModal = () => {
   const { modalState, setModalState } = useModalState();
-  const { proposalData } = (modalState as WalletConnectSessionProposalModal)
-    .data;
+  const { data: proposalData } =
+    modalState as WalletConnectSessionProposalModal;
 
   const wallet = useWallet();
-
-  console.log("proposal", proposalData);
 
   const onClose = () => {
     setModalState(CLOSE_MODAL_STATE("SessionProposalModal"));
@@ -69,10 +63,6 @@ export const SessionProposalModal = ({
             await (
               wallet as unknown as IWalletConnectReceiver
             ).approveSession();
-            onApprove(
-              proposalData.proposer.metadata.name,
-              proposalData.proposer.metadata.icons[0],
-            );
             onClose();
           }}
         >
