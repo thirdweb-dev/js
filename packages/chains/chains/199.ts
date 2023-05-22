@@ -12,15 +12,15 @@ export default {
     "symbol": "BTT",
     "decimals": 18
   },
-  "infoURL": "https://bittorrentchain.io/",
+  "infoURL": "https:/bt.io",
   "shortName": "BTT",
   "chainId": 199,
   "networkId": 199,
   "explorers": [
     {
-      "name": "bttcscan",
-      "url": "https://scan.bittorrentchain.io",
-      "standard": "none"
+      "name": "BitTorrent Chain Explorer",
+      "url": "https://bttcscan.com",
+      "standard": "EIP3091"
     }
   ],
   "testnet": false,
