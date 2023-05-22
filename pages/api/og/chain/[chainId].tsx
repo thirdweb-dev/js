@@ -7,15 +7,14 @@ import { getAllChainRecords } from "utils/allChainsRecords";
 export const config = {
   runtime: "edge",
 };
-const bgWithIcon = new URL(
-  `og-lib/assets/chain/bg-with-icon.png`,
-  import.meta.url,
-).toString();
 
-const bgNoIcon = new URL(
-  `og-lib/assets/chain/bg-no-icon.png`,
-  import.meta.url,
-).toString();
+const bgWithIcon = fetch(
+  new URL("og-lib/assets/chain/bg-with-icon.png", import.meta.url),
+).then((res) => res.arrayBuffer());
+
+const bgNoIcon = fetch(
+  new URL("og-lib/assets/chain/bg-no-icon.png", import.meta.url),
+).then((res) => res.arrayBuffer());
 
 const inter400_ = fetch(
   new URL(`og-lib/fonts/inter/400.ttf`, import.meta.url),
@@ -94,10 +93,11 @@ export default async function handler(req: NextRequest) {
     "https://ipfs-2.thirdwebcdn.com/ipfs/",
   );
 
-  const [inter400, inter500, inter700] = await Promise.all([
+  const [inter400, inter500, inter700, imageData] = await Promise.all([
     inter400_,
     inter500_,
     inter700_,
+    iconUrl ? bgWithIcon : bgNoIcon,
   ]);
 
   return new ImageResponse(
@@ -108,10 +108,16 @@ export default async function handler(req: NextRequest) {
         style={{
           background: "#0D0D12",
           fontFamily: "Inter",
-          backgroundImage: `url(${iconUrl ? bgWithIcon : bgNoIcon})`,
-          backgroundSize: "cover",
         }}
       >
+        {/* eslint-disable-next-line jsx-a11y/alt-text */}
+        <img
+          // @ts-expect-error - this works fine
+          src={imageData}
+          width="1200px"
+          height="630px"
+          tw="absolute object-cover"
+        />
         {/* the actual component starts here */}
 
         {iconUrl && (

@@ -7,10 +7,10 @@ import { PublishedContractOG } from "og-lib/url-utils";
 export const config = {
   runtime: "edge",
 };
-const bgImgUrl = new URL(
-  `og-lib/assets/publish/background.png`,
-  import.meta.url,
-).toString();
+
+const image = fetch(
+  new URL("og-lib/assets/publish/background.png", import.meta.url),
+).then((res) => res.arrayBuffer());
 
 const inter400_ = fetch(
   new URL(`og-lib/fonts/inter/400.ttf`, import.meta.url),
@@ -168,6 +168,7 @@ export default async function handler(req: NextRequest) {
     ibmPlexMono400,
     ibmPlexMono500,
     ibmPlexMono700,
+    imageData,
   ] = await Promise.all([
     inter400_,
     inter500_,
@@ -175,6 +176,7 @@ export default async function handler(req: NextRequest) {
     ibmPlexMono400_,
     ibmPlexMono500_,
     ibmPlexMono700_,
+    image,
   ]);
 
   return new ImageResponse(
@@ -185,10 +187,16 @@ export default async function handler(req: NextRequest) {
         style={{
           background: "#0D0D12",
           fontFamily: "Inter",
-          backgroundImage: `url(${bgImgUrl})`,
-          backgroundSize: "cover",
         }}
       >
+        {/* eslint-disable-next-line jsx-a11y/alt-text */}
+        <img
+          // @ts-expect-error - this works fine
+          src={imageData}
+          width="1200px"
+          height="630px"
+          tw="absolute object-cover"
+        />
         {/* the actual component starts here */}
 
         <div tw="w-full h-full flex flex-col justify-between">

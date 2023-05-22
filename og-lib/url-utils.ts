@@ -34,6 +34,8 @@ interface OgImageContract {
   // >;
 }
 
+const OG_VERSION = "0.1.0";
+
 type OgProps = {
   publishedContract: OGImagePublishedContract;
   profile: OgImageProfile;
@@ -57,6 +59,7 @@ function toUrl<TOgType extends keyof OgProps>(
     }
   });
   url.searchParams.sort();
+  url.searchParams.append("og_version", OG_VERSION);
   return url;
 }
 
