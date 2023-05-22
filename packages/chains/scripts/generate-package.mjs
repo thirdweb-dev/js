@@ -216,9 +216,11 @@ export default ${JSON.stringify(chain, null, 2)} as const satisfies Chain;`,
 
   imports.push(`import c${chain.chainId} from "../chains/${chain.chainId}";`);
 
-  exports.push(`export const ${exportName} = c${chain.chainId};`);
+  exports.push(
+    `export { default as ${exportName} } from "../chains/${chain.chainId}"`,
+  );
 
-  exportNames.push(exportName);
+  exportNames.push(`c${chain.chainId}`);
 }
 
 fs.writeFileSync(
@@ -229,7 +231,7 @@ import type { Chain } from "./types";
 ${exports.join("\n")}
 export * from "./types";
 export * from "./utils";
-export const defaultChains = [Ethereum, Goerli, Polygon, Mumbai, Arbitrum, ArbitrumGoerli, Optimism, OptimismGoerli, Binance, BinanceTestnet, Fantom, FantomTestnet, Avalanche, AvalancheFuji, Localhost];
+export const defaultChains = [c1, c5, c137, c80001, c42161, c421613, c10, c420, c56, c97, c250, c4002, c43114, c43113, c1337];
 export const allChains = [${exportNames.join(", ")}];
 
 const chainsById = {
