@@ -315,7 +315,9 @@ export class ContractWrapper<
     // TODO validate each argument
     if (fn.stateMutability === "view" || fn.stateMutability === "pure") {
       // read function
-      return (this.readContract as any)[fnName](...args, txOptions);
+      return txOptions
+        ? (this.readContract as any)[fnName](...args, txOptions)
+        : (this.readContract as any)[fnName](...args);
     } else {
       // write function
       const receipt = await this.sendTransaction(fnName, args, txOptions);
