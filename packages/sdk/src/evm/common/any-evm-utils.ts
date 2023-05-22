@@ -131,7 +131,7 @@ export async function isEIP155Enforced(
     if (matchError(errorMsg) || matchError(errorJson)) {
       return true;
     }
-    return false;
+    return true;
   }
   return false;
 }
