@@ -354,18 +354,6 @@ export class DropErc1155ClaimConditions<
                 pricePerToken: claimVerification.priceInProof,
               } as IDropSinglePhase.AllowlistProofStruct,
             );
-            // TODO (cc) in new override format, anyone can claim (no allow list restriction)
-            // TODO (cc) instead check if maxClaimablePerWallet is 0 and this address has no overrides
-            // TODO (cc) meaning this address is not allowed to claim
-            if (
-              (claimCondition.maxClaimablePerWallet === "0" &&
-                claimVerification.maxClaimable ===
-                  ethers.constants.MaxUint256) ||
-              claimVerification.maxClaimable === BigNumber.from(0)
-            ) {
-              reasons.push(ClaimEligibility.AddressNotAllowed);
-              return reasons;
-            }
           } else if (this.isNewMultiphaseDrop(this.contractWrapper)) {
             activeConditionIndex =
               await this.contractWrapper.readContract.getActiveClaimConditionId(
@@ -385,15 +373,6 @@ export class DropErc1155ClaimConditions<
                 pricePerToken: claimVerification.priceInProof,
               } as IDropSinglePhase.AllowlistProofStruct,
             );
-            if (
-              (claimCondition.maxClaimablePerWallet === "0" &&
-                claimVerification.maxClaimable ===
-                  ethers.constants.MaxUint256) ||
-              claimVerification.maxClaimable === BigNumber.from(0)
-            ) {
-              reasons.push(ClaimEligibility.AddressNotAllowed);
-              return reasons;
-            }
           }
         } catch (e: any) {
           console.warn(
