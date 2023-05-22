@@ -35,7 +35,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
   constructor(options: WalletConnectV2WalletConfig) {
     super();
 
-    this.#wcMetadata = options?.walletConnectV2Metadata || {
+    this.#wcMetadata = options?.walletConnectWalletMetadata || {
       name: "Thirdweb Smart Wallet",
       description: "Thirdweb Smart Wallet",
       url: "https://thirdweb.com",

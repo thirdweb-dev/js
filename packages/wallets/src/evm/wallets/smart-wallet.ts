@@ -55,13 +55,13 @@ export class SmartWallet
     this.#wcWallet = this.enableConnectApp
       ? options?.wcVersion === "v1"
         ? new WalletConnectV1Handler({
-            walletConnectV2Metadata: options?.walletConnectV2Metadata,
+            walletConnectWalletMetadata: options?.walletConnectWalletMetadata,
             walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
             walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
             storage: options?.wcStorage || createLocalStorage("smart-wallet"),
           })
         : new WalletConnectV2Handler({
-            walletConnectV2Metadata: options?.walletConnectV2Metadata,
+            walletConnectWalletMetadata: options?.walletConnectWalletMetadata,
             walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
             walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
           })
