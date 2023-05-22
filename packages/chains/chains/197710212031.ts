@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Haradev Testnet",
   "chain": "Ntity",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "Ntity Haradev Blockscout",
       "url": "https://blockscout.haradev.com",
-      "icon": "ntity",
+      "icon": {
+        "url": "ipfs://QmSW2YhCvMpnwtPGTJAuEK2QgyWfFjmnwcrapUg6kqFsPf",
+        "width": 711,
+        "height": 715,
+        "format": "svg"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "haradev-testnet"
-} as const;
+} as const satisfies Chain;

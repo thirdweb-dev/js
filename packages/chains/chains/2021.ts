@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Edgeware EdgeEVM Mainnet",
   "chain": "EDG",
@@ -49,9 +50,14 @@ export default {
       "name": "Subscan",
       "url": "https://edgeware.subscan.io",
       "standard": "none",
-      "icon": "subscan"
+      "icon": {
+        "url": "ipfs://Qma2GfW5nQHuA7nGqdEfwaXPL63G9oTwRTQKaGTfjNtM2W",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      }
     }
   ],
   "testnet": false,
   "slug": "edgeware-edgeevm"
-} as const;
+} as const satisfies Chain;

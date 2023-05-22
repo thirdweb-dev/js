@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "BeanEco SmartChain",
   "title": "BESC Mainnet",
@@ -27,4 +28,4 @@ export default {
   ],
   "testnet": false,
   "slug": "beaneco-smartchain"
-} as const;
+} as const satisfies Chain;

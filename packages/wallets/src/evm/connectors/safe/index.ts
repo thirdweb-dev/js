@@ -1,9 +1,14 @@
-import { ConnectParams, TWConnector } from "../../interfaces/tw-connector";
-import { AbstractWallet } from "../../wallets/abstract";
+import { ConnectParams, Connector } from "../../interfaces/connector";
 import type { SafeConnectionArgs } from "./types";
 import { ethers } from "ethers";
 import type { Signer } from "ethers";
-import { AbstractBrowserWallet } from "../../wallets/base";
+import {
+  SafeService,
+  SafeEthersSigner,
+} from "@safe-global/safe-ethers-adapters";
+import safeCoreSdk from "@safe-global/safe-core-sdk";
+import safeEthersLib from "@safe-global/safe-ethers-lib";
+import { EVMWallet } from "../../interfaces";
 
 // excerpt from https://docs.gnosis-safe.io/backend/available-services
 const CHAIN_ID_TO_GNOSIS_SERVER_URL = {
@@ -27,17 +32,17 @@ export const SafeSupportedChainsSet = new Set(
   Object.keys(CHAIN_ID_TO_GNOSIS_SERVER_URL).map(Number),
 );
 
-export class SafeConnector extends TWConnector<SafeConnectionArgs> {
+export class SafeConnector extends Connector<SafeConnectionArgs> {
   static supportedChains = Object.keys(CHAIN_ID_TO_GNOSIS_SERVER_URL);
   public supportedChains = SafeConnector.supportedChains;
   readonly id = "safe-wallet";
   ready = !__IS_SERVER__;
   name = "Safe Wallet";
   // config
-  public previousConnector?: AbstractWallet;
+  public previousConnector?: EVMWallet;
   // private options: SafeOptions;
   private safeSigner?: Signer;
-  personalWallet?: AbstractBrowserWallet;
+  personalWallet?: EVMWallet;
 
   constructor() {
     super();
@@ -88,23 +93,17 @@ export class SafeConnector extends TWConnector<SafeConnectionArgs> {
       throw new Error("Chain not supported");
     }
 
-    const [safeEthersAdapters, safeCoreSdk, safeEthersLib] = await Promise.all([
-      import("@safe-global/safe-ethers-adapters"),
-      import("@safe-global/safe-core-sdk"),
-      import("@safe-global/safe-ethers-lib"),
-    ]);
-
-    const ethAdapter = new safeEthersLib.default({
+    const ethAdapter = new safeEthersLib({
       ethers,
       signerOrProvider: signer,
     });
 
-    const safe = await safeCoreSdk.default.create({
+    const safe = await safeCoreSdk.create({
       ethAdapter: ethAdapter as any,
       safeAddress,
     });
-    const service = new safeEthersAdapters.SafeService(serverUrl);
-    const safeSigner = new safeEthersAdapters.SafeEthersSigner(
+    const service = new SafeService(serverUrl);
+    const safeSigner = new SafeEthersSigner(
       safe as any,
       service,
       signer.provider,
@@ -168,7 +167,7 @@ export class SafeConnector extends TWConnector<SafeConnectionArgs> {
     try {
       const account = await this.getAddress();
       return !!account;
-    } catch {
+    } catch (e) {
       return false;
     }
   }

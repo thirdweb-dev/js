@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Filecoin - Mainnet",
   "chain": "FIL",
@@ -58,4 +59,4 @@ export default {
   ],
   "testnet": false,
   "slug": "filecoin"
-} as const;
+} as const satisfies Chain;

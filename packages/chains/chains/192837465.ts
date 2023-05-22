@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Gather Mainnet Network",
   "chain": "GTH",
@@ -15,19 +16,25 @@ export default {
   "shortName": "GTH",
   "chainId": 192837465,
   "networkId": 192837465,
-  "explorers": [
-    {
-      "name": "Blockscout",
-      "url": "https://explorer.gather.network",
-      "standard": "none"
-    }
-  ],
   "icon": {
     "url": "ipfs://Qmc9AJGg9aNhoH56n3deaZeUc8Ty1jDYJsW6Lu6hgSZH4S",
     "height": 512,
     "width": 512,
     "format": "png"
   },
+  "explorers": [
+    {
+      "name": "Blockscout",
+      "url": "https://explorer.gather.network",
+      "icon": {
+        "url": "ipfs://QmTYR8CeFiNbJ1zJHnE3DK2wEN18r2y2vqSKUcLweUT2Gz",
+        "width": 1080,
+        "height": 1080,
+        "format": "svg"
+      },
+      "standard": "none"
+    }
+  ],
   "testnet": false,
   "slug": "gather-network"
-} as const;
+} as const satisfies Chain;

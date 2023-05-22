@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Rupaya",
   "chain": "RUPX",
@@ -15,4 +16,4 @@ export default {
   "slip44": 499,
   "testnet": false,
   "slug": "rupaya"
-} as const;
+} as const satisfies Chain;

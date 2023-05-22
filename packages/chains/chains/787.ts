@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Acala Network",
   "chain": "ACA",
@@ -15,4 +16,4 @@ export default {
   "slip44": 787,
   "testnet": false,
   "slug": "acala-network"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Elastos Smart Chain",
   "chain": "ETH",
@@ -26,4 +27,4 @@ export default {
   ],
   "testnet": false,
   "slug": "elastos-smart-chain"
-} as const;
+} as const satisfies Chain;

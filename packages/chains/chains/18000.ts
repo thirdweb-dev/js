@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Frontier of Dreams Testnet",
   "chain": "Game Network",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": true,
   "slug": "frontier-of-dreams-testnet"
-} as const;
+} as const satisfies Chain;

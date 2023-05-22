@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "KLYNTAR",
   "chain": "KLY",
@@ -34,4 +35,4 @@ export default {
   "status": "incubating",
   "testnet": false,
   "slug": "klyntar"
-} as const;
+} as const satisfies Chain;

@@ -1,4 +1,5 @@
 import {
+  ExtensionWithEnabled,
   Feature,
   FeatureName,
   FeatureWithEnabled,
@@ -8,7 +9,6 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { DetectableFeature } from "../core/interfaces/DetectableFeature";
 import { decode } from "../lib/cbor-decode.js";
 import {
-  Abi,
   AbiEvent,
   AbiFunction,
   AbiInput,
@@ -26,6 +26,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import bs58 from "bs58";
 import { BaseContract, BigNumber, ethers } from "ethers";
 import { z } from "zod";
+import { isAddress } from "ethers/lib/utils";
 
 /**
  * @internal
@@ -316,7 +317,13 @@ export async function resolveContractUriFromAddress(
   address: string,
   provider: ethers.providers.Provider,
 ): Promise<string | undefined> {
-  const bytecode = await provider.getCode(address);
+  let bytecode;
+  try {
+    bytecode = await provider.getCode(address);
+  } catch (e) {
+    throw new Error(`Failed to get bytecode for address ${address}: ${e}`);
+  }
+
   if (bytecode === "0x") {
     const chain = await provider.getNetwork();
     throw new Error(
@@ -345,8 +352,11 @@ export async function resolveContractUriFromAddress(
         "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
       ),
     );
-    const implementationAddress = ethers.utils.hexStripZeros(proxyStorage);
-    if (implementationAddress !== "0x") {
+    const implementationAddress = `0x${proxyStorage.slice(-40)}`;
+    if (
+      isAddress(implementationAddress) &&
+      implementationAddress !== ethers.constants.AddressZero
+    ) {
       return await resolveContractUriFromAddress(
         implementationAddress,
         provider,
@@ -474,7 +484,7 @@ export async function fetchExtendedReleaseMetadata(
  * @returns the nested struct of all features and whether they're detected in the abi
  */
 export function detectFeatures(
-  abi: Abi,
+  abi: AbiInput,
   features: Record<string, Feature> = SUPPORTED_FEATURES,
 ): Record<string, FeatureWithEnabled> {
   const results: Record<string, FeatureWithEnabled> = {};
@@ -513,29 +523,56 @@ function extractFeatures(
  * Return all the detected features in the abi
  * @param abi - parsed array of abi entries
  * @returns array of all detected extensions with full information on each feature
- * @public
+ * @internal
+ * @deprecated use getAllDetectedExtensions instead
  */
-export function getAllDetectedFeatures(abi: Abi): FeatureWithEnabled[] {
+export function getAllDetectedFeatures(abi: AbiInput): FeatureWithEnabled[] {
   const features: FeatureWithEnabled[] = [];
   extractFeatures(detectFeatures(abi), features);
   return features;
 }
 
 /**
+ * Return all the detected extensions in the abi
+ * @param abi - parsed array of abi entries
+ * @returns array of all detected extensions with full information on each feature
+ * @public
+ */
+export function getAllDetectedExtensions(
+  abi: AbiInput,
+): ExtensionWithEnabled[] {
+  return getAllDetectedFeatures(abi).map((f) => ({
+    ...f,
+    extensions: f.features,
+  }));
+}
+
+/**
  * Return all the detected features names in the abi
  * @param abi - parsed array of abi entries
  * @returns array of all detected features names
- * @public
+ * @internal
+ * @deprecated use getAllExtensionNames instead
  */
-export function getAllDetectedFeatureNames(abi: Abi): string[] {
+export function getAllDetectedFeatureNames(abi: AbiInput): string[] {
   const features: FeatureWithEnabled[] = [];
   extractFeatures(detectFeatures(abi), features);
   return features.map((f) => f.name);
 }
 
 /**
+ * Return all the detected extension names in the abi
+ * @param abi - parsed array of abi entries
+ * @returns array of all detected features names
+ * @public
+ */
+export function getAllDetectedExtensionNames(abi: AbiInput): string[] {
+  return getAllDetectedFeatureNames(abi);
+}
+
+/**
  * Checks whether the given ABI supports a given feature
- * @internal
+ * @deprecated use isExtensionEnabled instead
  * @param abi
  * @param featureName
  */
@@ -543,9 +580,18 @@ export function isFeatureEnabled(
   abi: AbiInput,
   featureName: FeatureName,
 ): boolean {
-  const parsedAbi = AbiSchema.parse(abi || []);
-  const features = detectFeatures(parsedAbi);
+  const features = detectFeatures(abi);
   return _featureEnabled(features, featureName);
+}
+
+/**
+ * Checks whether the given ABI supports a given extension
+ * @public
+ * @param abi
+ * @param featureName
+ */
+export function isExtensionEnabled(abi: AbiInput, featureName: FeatureName) {
+  return isFeatureEnabled(abi, featureName);
 }
 
 /**

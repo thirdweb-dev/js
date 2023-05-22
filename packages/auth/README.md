@@ -13,6 +13,14 @@
 <p align="center"><strong>Best in class wallet authentication for Node backends</strong></p>
 <br />
 
+## Overview
+
+Auth is a developer SDK that lets you integrate passwordless web3-native authentication and authorization into your applications.
+
+It enables users to sign in with their wallets, allowing apps to access rich blockchain-level data and interact with their users on-chain.
+
+With Auth, developers can build applications that have secure, self-custodied, web3-first authentication.
+
 ## Installation
 
 Install the latest version of the SDK with either `npm` or `yarn`:
@@ -25,6 +33,6 @@ npm install @thirdweb-dev/auth
 yarn add @thirdweb-dev/auth
 ```
 
-## Documentation
+## Resources
 
-- [Auth Docs](https://portal.thirdweb.com/auth)
+- Check out the [Auth Documentation](https://portal.thirdweb.com/auth) for full guides and API references on how to use Auth.

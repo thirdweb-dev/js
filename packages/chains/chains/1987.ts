@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "EtherGem",
   "chain": "EGEM",
@@ -18,4 +19,4 @@ export default {
   "slip44": 1987,
   "testnet": false,
   "slug": "ethergem"
-} as const;
+} as const satisfies Chain;

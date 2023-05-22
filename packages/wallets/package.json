@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/wallets",
-  "version": "0.2.8",
+  "version": "0.2.22",
   "main": "dist/thirdweb-dev-wallets.cjs.js",
   "module": "dist/thirdweb-dev-wallets.esm.js",
   "types": "dist/thirdweb-dev-wallets.cjs.d.ts",
@@ -42,6 +42,13 @@
         "default": "./evm/wallets/safe/dist/thirdweb-dev-wallets-evm-wallets-safe.esm.js"
       },
       "default": "./evm/wallets/safe/dist/thirdweb-dev-wallets-evm-wallets-safe.cjs.js"
+    },
+    "./evm/wallets/magic": {
+      "module": {
+        "browser": "./evm/wallets/magic/dist/thirdweb-dev-wallets-evm-wallets-magic.browser.esm.js",
+        "default": "./evm/wallets/magic/dist/thirdweb-dev-wallets-evm-wallets-magic.esm.js"
+      },
+      "default": "./evm/wallets/magic/dist/thirdweb-dev-wallets-evm-wallets-magic.cjs.js"
     },
     "./evm/wallets/ethers": {
       "module": {
@@ -106,12 +113,26 @@
       },
       "default": "./evm/wallets/private-key/dist/thirdweb-dev-wallets-evm-wallets-private-key.cjs.js"
     },
+    "./evm/wallets/local-wallet": {
+      "module": {
+        "browser": "./evm/wallets/local-wallet/dist/thirdweb-dev-wallets-evm-wallets-local-wallet.browser.esm.js",
+        "default": "./evm/wallets/local-wallet/dist/thirdweb-dev-wallets-evm-wallets-local-wallet.esm.js"
+      },
+      "default": "./evm/wallets/local-wallet/dist/thirdweb-dev-wallets-evm-wallets-local-wallet.cjs.js"
+    },
     "./evm/wallets/paper-wallet": {
       "module": {
         "browser": "./evm/wallets/paper-wallet/dist/thirdweb-dev-wallets-evm-wallets-paper-wallet.browser.esm.js",
         "default": "./evm/wallets/paper-wallet/dist/thirdweb-dev-wallets-evm-wallets-paper-wallet.esm.js"
       },
       "default": "./evm/wallets/paper-wallet/dist/thirdweb-dev-wallets-evm-wallets-paper-wallet.cjs.js"
+    },
+    "./evm/wallets/smart-wallet": {
+      "module": {
+        "browser": "./evm/wallets/smart-wallet/dist/thirdweb-dev-wallets-evm-wallets-smart-wallet.browser.esm.js",
+        "default": "./evm/wallets/smart-wallet/dist/thirdweb-dev-wallets-evm-wallets-smart-wallet.esm.js"
+      },
+      "default": "./evm/wallets/smart-wallet/dist/thirdweb-dev-wallets-evm-wallets-smart-wallet.cjs.js"
     },
     "./evm/connectors/safe": {
       "module": {
@@ -120,12 +141,12 @@
       },
       "default": "./evm/connectors/safe/dist/thirdweb-dev-wallets-evm-connectors-safe.cjs.js"
     },
-    "./evm/wallets/device-wallet": {
+    "./evm/connectors/magic": {
       "module": {
-        "browser": "./evm/wallets/device-wallet/dist/thirdweb-dev-wallets-evm-wallets-device-wallet.browser.esm.js",
-        "default": "./evm/wallets/device-wallet/dist/thirdweb-dev-wallets-evm-wallets-device-wallet.esm.js"
+        "browser": "./evm/connectors/magic/dist/thirdweb-dev-wallets-evm-connectors-magic.browser.esm.js",
+        "default": "./evm/connectors/magic/dist/thirdweb-dev-wallets-evm-connectors-magic.esm.js"
       },
-      "default": "./evm/wallets/device-wallet/dist/thirdweb-dev-wallets-evm-wallets-device-wallet.cjs.js"
+      "default": "./evm/connectors/magic/dist/thirdweb-dev-wallets-evm-connectors-magic.cjs.js"
     },
     "./evm/connectors/paper": {
       "module": {
@@ -169,6 +190,13 @@
       },
       "default": "./evm/connectors/metamask/dist/thirdweb-dev-wallets-evm-connectors-metamask.cjs.js"
     },
+    "./evm/wallets/local-wallet-node": {
+      "module": {
+        "browser": "./evm/wallets/local-wallet-node/dist/thirdweb-dev-wallets-evm-wallets-local-wallet-node.browser.esm.js",
+        "default": "./evm/wallets/local-wallet-node/dist/thirdweb-dev-wallets-evm-wallets-local-wallet-node.esm.js"
+      },
+      "default": "./evm/wallets/local-wallet-node/dist/thirdweb-dev-wallets-evm-wallets-local-wallet-node.cjs.js"
+    },
     "./evm/wallets/wallet-connect-v1": {
       "module": {
         "browser": "./evm/wallets/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-wallets-wallet-connect-v1.browser.esm.js",
@@ -183,12 +211,19 @@
       },
       "default": "./evm/wallets/aws-secrets-manager/dist/thirdweb-dev-wallets-evm-wallets-aws-secrets-manager.cjs.js"
     },
-    "./evm/connectors/device-wallet": {
+    "./evm/connectors/local-wallet": {
       "module": {
-        "browser": "./evm/connectors/device-wallet/dist/thirdweb-dev-wallets-evm-connectors-device-wallet.browser.esm.js",
-        "default": "./evm/connectors/device-wallet/dist/thirdweb-dev-wallets-evm-connectors-device-wallet.esm.js"
+        "browser": "./evm/connectors/local-wallet/dist/thirdweb-dev-wallets-evm-connectors-local-wallet.browser.esm.js",
+        "default": "./evm/connectors/local-wallet/dist/thirdweb-dev-wallets-evm-connectors-local-wallet.esm.js"
       },
-      "default": "./evm/connectors/device-wallet/dist/thirdweb-dev-wallets-evm-connectors-device-wallet.cjs.js"
+      "default": "./evm/connectors/local-wallet/dist/thirdweb-dev-wallets-evm-connectors-local-wallet.cjs.js"
+    },
+    "./evm/connectors/smart-wallet": {
+      "module": {
+        "browser": "./evm/connectors/smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-smart-wallet.browser.esm.js",
+        "default": "./evm/connectors/smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-smart-wallet.esm.js"
+      },
+      "default": "./evm/connectors/smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-smart-wallet.cjs.js"
     },
     "./evm/connectors/wallet-connect": {
       "module": {
@@ -241,13 +276,22 @@
   },
   "sideEffects": false,
   "dependencies": {
+    "@account-abstraction/contracts": "^0.5.0",
+    "@account-abstraction/sdk": "^0.5.0",
+    "@account-abstraction/utils": "^0.5.0",
     "@coinbase/wallet-sdk": "^3.6.3",
-    "@paperxyz/embedded-wallet-service-sdk": "^0.0.26",
+    "@magic-ext/connect": "^6.7.0",
+    "@magic-ext/oauth": "^7.6.2",
+    "@magic-sdk/provider": "^13.6.2",
+    "@paperxyz/embedded-wallet-service-sdk": "^1.0.0",
     "@safe-global/safe-core-sdk": "^3.3.2",
     "@safe-global/safe-ethers-adapters": "^0.1.0-alpha.16",
     "@safe-global/safe-ethers-lib": "^1.9.2",
     "@thirdweb-dev/chains": "workspace:*",
-    "@walletconnect/ethereum-provider": "~2.4.6",
+    "@thirdweb-dev/sdk": "workspace:*",
+    "@walletconnect/client": "^1.8.0",
+    "@walletconnect/core": "2.7.3",
+    "@walletconnect/ethereum-provider": "2.6.0",
     "@walletconnect/jsonrpc-http-connection": "^1.0.0",
     "@walletconnect/jsonrpc-provider": "^1.0.3",
     "@walletconnect/jsonrpc-types": "^1.0.1",
@@ -256,12 +300,23 @@
     "@walletconnect/legacy-modal": "^2.0.0-rc.0",
     "@walletconnect/legacy-types": "^2.0.0-rc.0",
     "@walletconnect/legacy-utils": "^2.0.0-rc.0",
+    "@walletconnect/types": "2.7.3",
+    "@walletconnect/utils": "2.7.3",
+    "@walletconnect/web3wallet": "^1.7.1",
+    "@web3modal/standalone": "^2.4.1",
     "buffer": "^6.0.3",
+    "cross-fetch": "^3.1.5",
+    "crypto-js": "^4.1.1",
     "eip1193-provider": "^1.0.1",
-    "eventemitter3": "^5.0.0"
+    "eventemitter3": "^5.0.0",
+    "magic-sdk": "^13.6.2",
+    "web3-core": "1.5.2"
   },
   "resolutions": {
-    "@walletconnect/ethereum-provider": "~2.4.6"
+    "@walletconnect/ethereum-provider": "2.6.0",
+    "@walletconnect/core": "2.7.3",
+    "@walletconnect/types": "2.7.3",
+    "@walletconnect/utils": "2.7.3"
   },
   "peerDependencies": {
     "@aws-sdk/client-secrets-manager": "^3.256.0",
@@ -301,6 +356,7 @@
     "@preconstruct/cli": "^2.2.1",
     "@solana/web3.js": "^1.62.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
+    "@types/crypto-js": "^4.1.1",
     "bs58": "^5.0.0",
     "eslint-config-thirdweb": "workspace:*",
     "ethers": "^5.7.2",

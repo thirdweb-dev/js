@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "DAX CHAIN",
   "chain": "DAX",
@@ -17,4 +18,4 @@ export default {
   "networkId": 142,
   "testnet": false,
   "slug": "dax-chain"
-} as const;
+} as const satisfies Chain;

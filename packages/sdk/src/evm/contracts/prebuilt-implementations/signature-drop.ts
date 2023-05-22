@@ -509,13 +509,9 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     TMethod extends keyof SignatureDropContract["functions"] = keyof SignatureDropContract["functions"],
   >(
     functionName: string & TMethod,
-    ...args:
-      | (any[] & Parameters<SignatureDropContract["functions"][TMethod]>)
-      | [
-          ...(any[] & Parameters<SignatureDropContract["functions"][TMethod]>),
-          CallOverrides,
-        ]
-  ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+    args?: Parameters<SignatureDropContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ): Promise<ReturnType<SignatureDropContract["functions"][TMethod]>> {
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 }

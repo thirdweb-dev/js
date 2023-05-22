@@ -1,5 +1,6 @@
 import {
   Abi,
+  AbiSchema,
   ChainId,
   CONTRACTS_MAP,
   ContractType,
@@ -63,6 +64,7 @@ import {
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ContractInterface, ethers } from "ethers";
 import hardhat from "hardhat";
+import { generatePluginFunctions } from "../../src/evm/common/plugin";
 
 // it's there, trust me bro
 const hardhatEthers = (hardhat as any).ethers;
@@ -249,6 +251,7 @@ export const mochaHooks = {
       marketplaceEntrypointAddress,
     );
     await tx.wait();
+    implementations["marketplace-v3"] = marketplaceEntrypointAddress;
 
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     process.env.registryAddress = thirdwebRegistryAddress;
@@ -268,43 +271,17 @@ export const mochaHooks = {
         gasSettings: {
           maxPriceInGwei: 10000,
         },
+        supportedChains: [
+          {
+            chainId: 31337,
+            rpc: ["http://localhost:8545"],
+            nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+          },
+        ],
       },
       storage,
     );
   },
-};
-
-const getFunctionSignature = (fnInputs: any): string => {
-  return (
-    "(" +
-    fnInputs
-      .map((i) => {
-        return i.type === "tuple" ? getFunctionSignature(i.components) : i.type;
-      })
-      .join(",") +
-    ")"
-  );
-};
-
-const generatePluginFunctions = (
-  pluginAddress: string,
-  pluginAbi: Abi,
-): Plugin[] => {
-  const pluginInterface = new ethers.utils.Interface(pluginAbi);
-  const pluginFunctions: Plugin[] = [];
-  // TODO - filter out common functions like _msgSender(), contractType(), etc.
-  for (const fnFragment of Object.values(pluginInterface.functions)) {
-    const fn = pluginInterface.getFunction(fnFragment.name);
-    if (fn.name.includes("_")) {
-      continue;
-    }
-    pluginFunctions.push({
-      functionSelector: pluginInterface.getSighash(fn),
-      functionSignature: fn.name + getFunctionSignature(fn.inputs),
-      pluginAddress,
-    });
-  }
-  return pluginFunctions;
 };
 
 // Setup multichain registry for tests
@@ -322,7 +299,7 @@ async function setupMultichainRegistry(
 
   const plugins: Plugin[] = generatePluginFunctions(
     multichainRegistryLogic.address,
-    TWMultichainRegistryLogic__factory.abi,
+    AbiSchema.parse(TWMultichainRegistryLogic__factory.abi),
   );
 
   const pluginMapDeployer = (await new ethers.ContractFactory(
@@ -357,7 +334,7 @@ async function setupMarketplaceV3(): Promise<string> {
   );
   const pluginsDirectListings: Plugin[] = generatePluginFunctions(
     directListingsPluginAddress,
-    DirectListingsLogic__factory.abi,
+    AbiSchema.parse(DirectListingsLogic__factory.abi),
   );
 
   // English Auctions
@@ -369,7 +346,7 @@ async function setupMarketplaceV3(): Promise<string> {
   );
   const pluginsEnglishAuctions: Plugin[] = generatePluginFunctions(
     englishAuctionPluginAddress,
-    EnglishAuctionsLogic__factory.abi,
+    AbiSchema.parse(EnglishAuctionsLogic__factory.abi),
   );
 
   // Offers
@@ -380,7 +357,7 @@ async function setupMarketplaceV3(): Promise<string> {
   );
   const pluginsOffers: Plugin[] = generatePluginFunctions(
     offersLogicPluginAddress,
-    OffersLogic__factory.abi,
+    AbiSchema.parse(OffersLogic__factory.abi),
   );
 
   // Map
@@ -397,6 +374,7 @@ async function setupMarketplaceV3(): Promise<string> {
     MarketplaceV3__factory.bytecode,
     signer,
     [pluginMapAddress],
+    "MarketplaceV3",
   );
   return marketplaceV3Address;
 }

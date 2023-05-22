@@ -13,8 +13,9 @@ import {
   normalizeChainId,
   Chain,
   ProviderRpcError,
+  walletIds,
+  WagmiConnector,
 } from "@thirdweb-dev/wallets";
-import { Connector } from "@thirdweb-dev/wallets";
 import type { Address } from "abitype";
 import { providers } from "ethers";
 import { getAddress, hexValue } from "ethers/lib/utils.js";
@@ -33,12 +34,12 @@ export type CoinbaseWalletConnectorOptions = WalletMobileSDKProviderOptions &
     chainId?: number;
   };
 
-export class CoinbaseWalletConnector extends Connector<
+export class CoinbaseWalletConnector extends WagmiConnector<
   WalletMobileSDKEVMProvider,
   CoinbaseWalletConnectorOptions,
   providers.JsonRpcSigner
 > {
-  readonly id = "coinbaseWallet";
+  readonly id = walletIds.coinbase;
   readonly name = "Coinbase Wallet";
   readonly ready = true;
 
@@ -60,8 +61,8 @@ export class CoinbaseWalletConnector extends Connector<
 
     configure({
       callbackURL: options.callbackURL,
-      hostURL: options.hostURL,
-      hostPackageName: options.hostPackageName,
+      hostURL: options.hostURL || new URL("https://wallet.coinbase.com/wsegue"),
+      hostPackageName: options.hostPackageName || "org.toshi",
     });
   }
 

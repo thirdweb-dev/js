@@ -1,5 +1,5 @@
-import { ThemeProvider } from "../styles/ThemeProvider";
-import { ConnectWallet } from "./ConnectWallet";
+import { ThemeProvider, ThemeProviderProps } from "../styles/ThemeProvider";
+import { ConnectWallet, ConnectWalletProps } from "./ConnectWallet";
 import BaseButton from "./base/BaseButton";
 import Text from "./base/Text";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -19,7 +19,7 @@ import { PropsWithChildren, useEffect } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import invariant from "tiny-invariant";
 
-type ActionFn = (contract: SmartContract) => any;
+type ActionFn = (contract: SmartContract) => Promise<any>;
 
 interface Web3ButtonProps<TActionFn extends ActionFn> {
   contractAddress: `0x${string}` | `${string}.eth` | string;
@@ -36,7 +36,8 @@ interface Web3ButtonProps<TActionFn extends ActionFn> {
   isDisabled?: boolean;
   // the fn to execute
   action: TActionFn;
-  theme?: "dark" | "light";
+  theme?: ThemeProviderProps["theme"];
+  connectWalletProps?: Omit<ConnectWalletProps, "detailsButton">;
 }
 
 /**
@@ -70,6 +71,7 @@ export const Web3Button = <TAction extends ActionFn>({
   children,
   action,
   theme,
+  connectWalletProps,
 }: PropsWithChildren<Web3ButtonProps<TAction>>) => {
   const address = useAddress();
   const activeWallet = useWallet();
@@ -128,7 +130,7 @@ export const Web3Button = <TAction extends ActionFn>({
   }, [actionMutation, activeWallet]);
 
   if (!address) {
-    return <ConnectWallet theme={theme} />;
+    return <ConnectWallet theme={theme} {...connectWalletProps} />;
   }
 
   let content = children;
@@ -145,7 +147,7 @@ export const Web3Button = <TAction extends ActionFn>({
       connectionStatus === "connecting" ||
       connectionStatus === "unknown"
     ) {
-      content = <ActivityIndicator size="small" color={"black"} />;
+      content = <ActivityIndicator size="small" color="buttonTextColor" />;
       buttonLoading = true;
     }
   }
@@ -153,7 +155,7 @@ export const Web3Button = <TAction extends ActionFn>({
   return (
     <ThemeProvider theme={theme}>
       <BaseButton
-        backgroundColor="white"
+        backgroundColor="buttonBackgroundColor"
         onPress={() => {
           actionMutation.mutate();
         }}
@@ -161,7 +163,7 @@ export const Web3Button = <TAction extends ActionFn>({
         disabled={buttonDisabled || buttonLoading}
       >
         {typeof content === "string" ? (
-          <Text variant="bodyLarge" color="black">
+          <Text variant="bodyLarge" color="buttonTextColor">
             {content}
           </Text>
         ) : (

@@ -1,3 +1,4 @@
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   CONTRACT_ADDRESSES,
   getContractAddressByChainId,
@@ -10,6 +11,10 @@ import {
   TransactionResult,
 } from "../core/types";
 import { SDKOptionsOutput } from "../schema/sdk-options";
+import {
+  computeEOAForwarderAddress,
+  computeForwarderAddress,
+} from "./any-evm-utils";
 import {
   BiconomyForwarderAbi,
   ChainAwareForwardRequest,
@@ -52,20 +57,70 @@ export async function defaultGaslessSendFunction(
   transaction: GaslessTransaction,
   signer: ethers.Signer,
   provider: ethers.providers.Provider,
+  storage: ThirdwebStorage,
   gaslessOptions?: SDKOptionsOutput["gasless"],
 ): Promise<string> {
   if (gaslessOptions && "biconomy" in gaslessOptions) {
     return biconomySendFunction(transaction, signer, provider, gaslessOptions);
   }
-  return defenderSendFunction(transaction, signer, provider, gaslessOptions);
+  return defenderSendFunction(
+    transaction,
+    signer,
+    provider,
+    storage,
+    gaslessOptions,
+  );
 }
 
-export async function biconomySendFunction(
+export async function prepareGaslessRequest(tx: Transaction) {
+  // @ts-expect-error
+  const gaslessTx = await tx.prepareGasless();
+  const gaslessOptions = tx.getGaslessOptions();
+
+  if (gaslessOptions && "biconomy" in gaslessOptions) {
+    const request = await biconomyPrepareRequest(
+      gaslessTx,
+      // @ts-expect-error
+      tx.signer,
+      // @ts-expect-error
+      tx.provider,
+      gaslessOptions,
+    );
+
+    return {
+      url: "https://api.biconomy.io/api/v2/meta-tx/native",
+      ...request,
+    };
+  } else {
+    invariant(
+      gaslessOptions && "openzeppelin" in gaslessOptions,
+      "calling openzeppelin gasless transaction without openzeppelin config in the SDK options",
+    );
+
+    const request = await defenderPrepareRequest(
+      gaslessTx,
+      // @ts-expect-error
+      tx.signer,
+      // @ts-expect-error
+      tx.provider,
+      // @ts-expect-error
+      tx.storage,
+      gaslessOptions,
+    );
+
+    return {
+      url: gaslessOptions.openzeppelin.relayerUrl,
+      ...request,
+    };
+  }
+}
+
+async function biconomyPrepareRequest(
   transaction: GaslessTransaction,
   signer: ethers.Signer,
   provider: ethers.providers.Provider,
   gaslessOptions?: SDKOptionsOutput["gasless"],
-): Promise<string> {
+) {
   invariant(
     gaslessOptions && "biconomy" in gaslessOptions,
     "calling biconomySendFunction without biconomy",
@@ -132,22 +187,38 @@ export async function biconomySendFunction(
   );
 
   const signature = await signer.signMessage(hashToSign);
+
+  return {
+    method: "POST",
+    body: JSON.stringify({
+      from: transaction.from,
+      apiId: gaslessOptions.biconomy.apiId,
+      params: [request, signature],
+      to: transaction.to,
+      gasLimit: transaction.gasLimit.toHexString(),
+    }),
+    headers: {
+      "x-api-key": gaslessOptions.biconomy.apiKey,
+      "Content-Type": "application/json;charset=utf-8",
+    },
+  };
+}
+
+export async function biconomySendFunction(
+  transaction: GaslessTransaction,
+  signer: ethers.Signer,
+  provider: ethers.providers.Provider,
+  gaslessOptions?: SDKOptionsOutput["gasless"],
+): Promise<string> {
+  const request = await biconomyPrepareRequest(
+    transaction,
+    signer,
+    provider,
+    gaslessOptions,
+  );
   const response = await fetch(
     "https://api.biconomy.io/api/v2/meta-tx/native",
-    {
-      method: "POST",
-      body: JSON.stringify({
-        from: transaction.from,
-        apiId: gaslessOptions.biconomy.apiId,
-        params: [request, signature],
-        to: transaction.to,
-        gasLimit: transaction.gasLimit.toHexString(),
-      }),
-      headers: {
-        "x-api-key": gaslessOptions.biconomy.apiKey,
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    },
+    request,
   );
 
   if (response.ok) {
@@ -162,12 +233,13 @@ export async function biconomySendFunction(
   );
 }
 
-export async function defenderSendFunction(
+async function defenderPrepareRequest(
   transaction: GaslessTransaction,
   signer: ethers.Signer,
   provider: ethers.providers.Provider,
+  storage: ThirdwebStorage,
   gaslessOptions?: SDKOptionsOutput["gasless"],
-): Promise<string> {
+) {
   invariant(
     gaslessOptions && "openzeppelin" in gaslessOptions,
     "calling openzeppelin gasless transaction without openzeppelin config in the SDK options",
@@ -179,10 +251,12 @@ export async function defenderSendFunction(
     (gaslessOptions.openzeppelin.useEOAForwarder
       ? CONTRACT_ADDRESSES[
           transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-        ].openzeppelinForwarderEOA
+        ].openzeppelinForwarderEOA ||
+        (await computeEOAForwarderAddress(provider, storage))
       : CONTRACT_ADDRESSES[
           transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-        ].openzeppelinForwarder);
+        ].openzeppelinForwarder ||
+        (await computeForwarderAddress(provider, storage)));
 
   const forwarder = new ethers.Contract(
     forwarderAddress,
@@ -215,8 +289,8 @@ export async function defenderSendFunction(
     };
   } else {
     domain = {
-      name: "GSNv2 Forwarder",
-      version: "0.0.1",
+      name: gaslessOptions.openzeppelin.domainName,
+      version: gaslessOptions.openzeppelin.domainVersion,
       chainId: transaction.chainId,
       verifyingContract: forwarderAddress,
     };
@@ -283,17 +357,38 @@ export async function defenderSendFunction(
     messageType = "permit";
   }
 
-  const body = JSON.stringify({
-    request: message,
-    signature,
-    forwarderAddress,
-    type: messageType,
-  });
-
-  const response = await fetch(gaslessOptions.openzeppelin.relayerUrl, {
+  return {
     method: "POST",
-    body,
-  });
+    body: JSON.stringify({
+      request: message,
+      signature,
+      forwarderAddress,
+      type: messageType,
+    }),
+  };
+}
+
+export async function defenderSendFunction(
+  transaction: GaslessTransaction,
+  signer: ethers.Signer,
+  provider: ethers.providers.Provider,
+  storage: ThirdwebStorage,
+  gaslessOptions?: SDKOptionsOutput["gasless"],
+): Promise<string> {
+  invariant(
+    gaslessOptions && "openzeppelin" in gaslessOptions,
+    "calling openzeppelin gasless transaction without openzeppelin config in the SDK options",
+  );
+
+  const request = await defenderPrepareRequest(
+    transaction,
+    signer,
+    provider,
+    storage,
+    gaslessOptions,
+  );
+
+  const response = await fetch(gaslessOptions.openzeppelin.relayerUrl, request);
   if (response.ok) {
     const resp = await response.json();
     if (!resp.result) {

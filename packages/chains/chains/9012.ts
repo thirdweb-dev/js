@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "BerylBit Mainnet",
   "chain": "BRB",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": false,
   "slug": "berylbit"
-} as const;
+} as const satisfies Chain;

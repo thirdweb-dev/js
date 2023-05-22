@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Dexilla Testnet",
   "chain": "Dexilla",
@@ -39,4 +40,4 @@ export default {
   },
   "testnet": true,
   "slug": "dexilla-testnet"
-} as const;
+} as const satisfies Chain;

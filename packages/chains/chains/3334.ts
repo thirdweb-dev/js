@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Web3Q Galileo",
   "chain": "Web3Q",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": false,
   "slug": "web3q-galileo"
-} as const;
+} as const satisfies Chain;

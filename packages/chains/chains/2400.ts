@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "TCG Verse Mainnet",
   "chain": "TCG Verse",
@@ -34,4 +35,4 @@ export default {
   },
   "testnet": false,
   "slug": "tcg-verse"
-} as const;
+} as const satisfies Chain;

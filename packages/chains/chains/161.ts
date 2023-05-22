@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Armonia Eva Chain Testnet",
   "chain": "Wall-e",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": true,
   "slug": "armonia-eva-chain-testnet"
-} as const;
+} as const satisfies Chain;

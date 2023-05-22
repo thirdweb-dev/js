@@ -1,93 +1,139 @@
-import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
-import { TWModal } from "../base/modal/TWModal";
 import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
-import { Wallet, useConnect, useWallets } from "@thirdweb-dev/react-core";
-import { useEffect, useState } from "react";
-import { Linking, StyleSheet } from "react-native";
-import { handleResponse } from "@coinbase/wallet-mobile-sdk";
+import { WalletConfig, useConnect, useWallets } from "@thirdweb-dev/react-core";
+import { useCallback, useEffect, useState } from "react";
+import { SmartWallet, walletIds } from "@thirdweb-dev/wallets";
+import { SmartWalletFlow } from "./SmartWallet/SmartWalletFlow";
+import { useColorScheme } from "react-native";
+import { useModalState } from "../../providers/ui-context-provider";
+import {
+  CLOSE_MODAL_STATE,
+  ConnectWalletFlowModal,
+} from "../../utils/modalTypes";
 
 export const ConnectWalletFlow = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [activeWallet, setActiveWallet] = useState<Wallet | undefined>();
+  const { modalState, setModalState } = useModalState();
+  const { modalTitle, walletConfig } = (modalState as ConnectWalletFlowModal)
+    .data;
 
-  const connect = useConnect();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [activeWallet, setActiveWallet] = useState<WalletConfig | undefined>();
+  const [isConnecting, setIsConnecting] = useState(false);
   const supportedWallets = useWallets();
+  const theme = useColorScheme();
+  const connect = useConnect();
+
+  const onClose = useCallback(
+    (reset?: boolean) => {
+      setModalState(CLOSE_MODAL_STATE("ConnectWalletFlow"));
+
+      if (reset) {
+        resetModal();
+      }
+    },
+    [setModalState],
+  );
+
+  const connectActiveWallet = useCallback(
+    async (wallet: WalletConfig) => {
+      setIsConnecting(true);
+      connect(wallet, {})
+        .catch((error) => {
+          console.error("Error connecting to the wallet", error);
+        })
+        .finally(() => {
+          onClose(true);
+        });
+    },
+    [connect, onClose],
+  );
+
+  const onChooseWallet = useCallback(
+    (wallet: WalletConfig) => {
+      setActiveWallet(() => wallet);
+
+      // TODO: Change for !wallet.connectUI
+      if (wallet.id !== SmartWallet.id) {
+        connectActiveWallet(wallet);
+      }
+    },
+    [connectActiveWallet],
+  );
 
   useEffect(() => {
-    if (activeWallet && activeWallet.meta.name.toLowerCase().includes("coinbase")) {
-      const sub = Linking.addEventListener("url", ({ url }) => {
-        if (url) {
-          handleResponse(new URL(url));
-        }
-      });
-      return () => sub?.remove();
+    if (walletConfig) {
+      onChooseWallet(walletConfig);
     }
-  }, [activeWallet]);
+  }, [onChooseWallet, walletConfig]);
 
-  const onConnectPress = () => {
+  const onOpenModal = () => {
     setModalVisible(true);
   };
 
-  const onClose = () => {
-    setModalVisible(false);
-    setActiveWallet(undefined);
-  };
-
-  const onChooseWallet = async (wallet: Wallet) => {
-    setActiveWallet(() => wallet);
-
-    await connect(wallet, {}).catch((error) => {
-      console.log("error", error);
-      onBackPress();
-    });
-  };
-
   const onBackPress = () => {
-    setActiveWallet(undefined);
+    resetModal();
   };
+
+  const onConnected = () => {
+    onClose(true);
+  };
+
+  const resetModal = () => {
+    setActiveWallet(undefined);
+    setIsConnecting(false);
+  };
+
+  function getComponentForWallet() {
+    switch (activeWallet?.id) {
+      case SmartWallet.id:
+        return <SmartWalletFlow onClose={onClose} onConnect={onConnected} />;
+    }
+
+    if (activeWallet?.connectUI) {
+      return (
+        <activeWallet.connectUI
+          theme={theme || "dark"}
+          goBack={onBackPress}
+          close={onClose}
+          isOpen={modalVisible}
+          open={onOpenModal}
+          walletConfig={activeWallet}
+          supportedWallets={supportedWallets}
+          selectionData={undefined} // TODO
+          setSelectionData={() => {}} // TODO
+        />
+      );
+    }
+  }
 
   return (
     <>
-      <TWModal isVisible={modalVisible}>
-        {activeWallet ? (
+      {activeWallet ? (
+        isConnecting ? (
           <ConnectingWallet
+            content={
+              activeWallet.id === walletIds.localWallet ? (
+                <Text variant="bodySmallSecondary" mt="md">
+                  Creating, encrypting and securing your device wallet.
+                </Text>
+              ) : undefined
+            }
             wallet={activeWallet}
             onClose={onClose}
             onBackPress={onBackPress}
           />
         ) : (
-          <ChooseWallet
-            wallets={supportedWallets}
-            onChooseWallet={onChooseWallet}
-            footer={<></>}
-            onClose={onClose}
-          />
-        )}
-      </TWModal>
-
-      <BaseButton
-        backgroundColor="white"
-        onPress={onConnectPress}
-        style={styles.connectWalletButton}
-      >
-        <Text variant="bodyLarge" color="black">
-          Connect Wallet
-        </Text>
-      </BaseButton>
+          getComponentForWallet()
+        )
+      ) : (
+        <ChooseWallet
+          headerText={modalTitle}
+          wallets={supportedWallets}
+          onChooseWallet={onChooseWallet}
+          onClose={onClose}
+        />
+      )}
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  connectWalletButton: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-});

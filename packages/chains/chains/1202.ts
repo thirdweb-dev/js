@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "World Trade Technical Chain Mainnet",
   "chain": "WTT",
@@ -25,4 +26,4 @@ export default {
   ],
   "testnet": false,
   "slug": "world-trade-technical-chain"
-} as const;
+} as const satisfies Chain;

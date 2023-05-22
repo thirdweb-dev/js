@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Shardeum Liberty 2.X",
   "chain": "Shardeum",
@@ -27,7 +28,7 @@ export default {
     {
       "name": "Shardeum Scan",
       "url": "https://explorer-liberty20.shardeum.org",
-      "standard": "none"
+      "standard": "EIP3091"
     }
   ],
   "redFlags": [
@@ -35,4 +36,4 @@ export default {
   ],
   "testnet": false,
   "slug": "shardeum-liberty-2-x"
-} as const;
+} as const satisfies Chain;

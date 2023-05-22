@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "ENULS Testnet",
   "chain": "ENULS",
@@ -28,10 +29,15 @@ export default {
     {
       "name": "enulsscan",
       "url": "https://beta.evmscan.nuls.io",
-      "icon": "enuls",
+      "icon": {
+        "url": "ipfs://QmYz8LK5WkUN8UwqKfWUjnyLuYqQZWihT7J766YXft4TSy",
+        "width": 26,
+        "height": 41,
+        "format": "svg"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "enuls-testnet"
-} as const;
+} as const satisfies Chain;

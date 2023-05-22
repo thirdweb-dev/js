@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "POA Network Core",
   "chain": "POA",
@@ -25,4 +26,4 @@ export default {
   ],
   "testnet": false,
   "slug": "poa-network-core"
-} as const;
+} as const satisfies Chain;

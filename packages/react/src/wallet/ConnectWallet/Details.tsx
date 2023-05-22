@@ -16,36 +16,54 @@ import {
 } from "../../design-system";
 import { shortenString } from "../../evm/utils/addresses";
 import { isMobile } from "../../evm/utils/isMobile";
-import { NetworkSelector } from "./NetworkSelector";
+import { NetworkSelector, NetworkSelectorProps } from "./NetworkSelector";
 import { ExitIcon } from "./icons/ExitIcon";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { ChevronRightIcon } from "@radix-ui/react-icons";
-import { defaultChains } from "@thirdweb-dev/chains";
 import {
+  ChevronRightIcon,
+  EnterIcon,
+  PinBottomIcon,
+  ShuffleIcon,
+} from "@radix-ui/react-icons";
+import { Localhost } from "@thirdweb-dev/chains";
+import {
+  useChain,
   useAddress,
   useBalance,
   useChainId,
   useDisconnect,
+  useSDK,
   useSupportedChains,
-  useThirdwebWallet,
   useWallet,
+  WalletInstance,
 } from "@thirdweb-dev/react-core";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { fadeInAnimation } from "../../components/FadeIn";
-import type { SafeWallet } from "@thirdweb-dev/wallets";
+import { LocalWallet, MetaMaskWallet, walletIds } from "@thirdweb-dev/wallets";
 import { Flex } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
-import { utils } from "ethers";
+import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
+import { ErrorMessage } from "../../components/formElements";
+import { useWalletContext } from "@thirdweb-dev/react-core";
+import { useWalletConfig } from "@thirdweb-dev/react-core";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
   align: "start" | "center" | "end";
 };
 
+const TW_CONNECTED_WALLET = "tw-connected-wallet";
+
 export const ConnectedWalletDetails: React.FC<{
   dropdownPosition?: DropDownPosition;
+  onDisconnect: () => void;
+  theme: "dark" | "light";
+  style?: React.CSSProperties;
+  networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
+  className?: string;
+  detailsBtn?: () => JSX.Element;
 }> = (props) => {
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
@@ -53,149 +71,122 @@ export const ConnectedWalletDetails: React.FC<{
   const address = useAddress();
   const balanceQuery = useBalance();
   const activeWallet = useWallet();
-  const walletContext = useThirdwebWallet();
-  const [personalWalletBalance, setPersonalWalletBalance] = useState<
-    string | undefined
-  >(undefined);
-  const [personalWalletAddress, setPersonalWalletAddress] = useState<
-    string | undefined
-  >(undefined);
+  const activeWalletConfig = useWalletConfig();
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [wrapperWallet, setWrapperWallet] = useState<
+    WalletInstance | undefined
+  >();
+  const walletContext = useWalletContext();
 
-  const chain = useMemo(() => {
-    return chains.find((_chain) => _chain.chainId === walletChainId);
-  }, [walletChainId, chains]);
-
-  const unknownChain = useMemo(() => {
-    if (!chain) {
-      return defaultChains.find((c) => c.chainId === walletChainId);
-    }
-  }, [walletChainId, chain]);
-
-  const activeWalletIconURL = activeWallet?.getMeta().iconURL || "";
+  const chain = useChain();
+  const activeWalletIconURL = activeWalletConfig?.meta.iconURL || "";
 
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const personalWallet =
-    activeWallet?.walletId === "Safe"
-      ? (activeWallet as SafeWallet).getPersonalWallet()
-      : undefined;
+  const sdk = useSDK();
 
-  // get personal wallet address and balance
-  useEffect(() => {
-    if (!personalWallet) {
-      setPersonalWalletAddress(undefined);
-      setPersonalWalletBalance(undefined);
-      return;
-    }
-    personalWallet.getAddress().then((_address) => {
-      setPersonalWalletAddress(_address);
-    });
+  const personalWallet = activeWallet?.getPersonalWallet() as
+    | WalletInstance
+    | undefined;
 
-    personalWallet.getSigner().then((signer) => {
-      signer.getBalance().then((balance) => {
-        setPersonalWalletBalance(utils.formatEther(balance));
-      });
-    });
-  }, [personalWallet]);
+  const personalWalletConfig =
+    personalWallet && walletContext.getWalletConfig(personalWallet);
+  const wrapperWalletConfig =
+    wrapperWallet && walletContext.getWalletConfig(wrapperWallet);
 
-  const trigger = (
-    <WalletInfoButton type="button">
-      <ChainIcon chain={chain} size={iconSize.lg} />
+  const disableSwitchChain = !!personalWallet;
+
+  const trigger = props.detailsBtn ? (
+    <div>
+      <props.detailsBtn />
+    </div>
+  ) : (
+    <WalletInfoButton
+      type="button"
+      className={`${TW_CONNECTED_WALLET} ${props.className || ""}`}
+      data-theme={props.theme}
+      style={props.style}
+    >
+      <ChainIcon
+        chain={chain}
+        size={iconSize.lg}
+        className={`${TW_CONNECTED_WALLET}__network-icon`}
+      />
 
       <ColFlex>
-        {!balanceQuery.isLoading ? (
-          <WalletBalance>
-            {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
-            {balanceQuery.data?.symbol}
+        {balanceQuery.data ? (
+          <WalletBalance className={`${TW_CONNECTED_WALLET}__balance`}>
+            {balanceQuery.data.displayValue.slice(0, 5)}{" "}
+            {balanceQuery.data.symbol}
           </WalletBalance>
         ) : (
           <Skeleton height={fontSize.sm} width="82px" />
         )}
-        <Spacer y="xxs" />
-        <WalletAddress>{shortenString(address || "")}</WalletAddress>
+        <Spacer y="xs" />
+
+        {activeWallet?.walletId === walletIds.localWallet ? (
+          <ErrorMessage
+            style={{
+              lineHeight: 1,
+              minWidth: "70px",
+              fontSize: fontSize.xs,
+            }}
+          >
+            Guest
+          </ErrorMessage>
+        ) : address ? (
+          <WalletAddress className={`${TW_CONNECTED_WALLET}__address`}>
+            {shortenString(address || "")}
+          </WalletAddress>
+        ) : (
+          <Skeleton height={fontSize.xs} width="88px" />
+        )}
       </ColFlex>
 
-      <Img width={iconSize.lg} height={iconSize.lg} src={activeWalletIconURL} />
+      <Img
+        width={iconSize.lg}
+        height={iconSize.lg}
+        src={activeWalletIconURL}
+        className={`${TW_CONNECTED_WALLET}__wallet-icon`}
+      />
     </WalletInfoButton>
   );
 
   const networkSwitcherButton = (
-    <MenuButton
-      id="current-network"
-      type="button"
-      disabled={activeWallet?.walletId === "Safe"}
-      onClick={() => {
-        setOpen(false);
-        setShowNetworkSelector(true);
-      }}
+    <ToolTip
+      tip={
+        disableSwitchChain ? "Network Switching is disabled" : "Switch Network"
+      }
     >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          position: "relative",
+      <MenuButton
+        type="button"
+        disabled={disableSwitchChain}
+        onClick={() => {
+          setOpen(false);
+          setShowNetworkSelector(true);
         }}
       >
-        <ChainIcon chain={chain || unknownChain} size={iconSize.lg} active />
-      </div>
-      {chain?.name || unknownChain?.name || `Unknown chain #${walletChainId}`}
-      <StyledChevronRightIcon
-        width={iconSize.sm}
-        height={iconSize.sm}
-        style={{
-          flexShrink: 0,
-          marginLeft: "auto",
-        }}
-      />
-    </MenuButton>
-  );
-
-  const switchToPersonalWallet = personalWallet && (
-    <MenuButton
-      type="button"
-      onClick={() => {
-        walletContext?.handleWalletConnect(personalWallet);
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          position: "relative",
-        }}
-      >
-        <Img
-          src={personalWallet.getMeta().iconURL}
-          width={iconSize.lg}
-          height={iconSize.lg}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            position: "relative",
+          }}
+        >
+          <ChainIcon chain={chain} size={iconSize.lg} active />
+        </div>
+        {chain?.name || `Unknown chain #${walletChainId}`}
+        <StyledChevronRightIcon
+          width={iconSize.sm}
+          height={iconSize.sm}
+          style={{
+            flexShrink: 0,
+            marginLeft: "auto",
+          }}
         />
-      </div>
-
-      <ColFlex>
-        {personalWalletBalance ? (
-          <WalletBalance>
-            {String(personalWalletBalance).slice(0, 5)}{" "}
-            {balanceQuery.data?.symbol}
-          </WalletBalance>
-        ) : (
-          <Skeleton height={fontSize.sm} width="82px" />
-        )}
-        <Spacer y="xxs" />
-        <WalletAddress>
-          {shortenString(personalWalletAddress || "")}
-        </WalletAddress>
-      </ColFlex>
-
-      <StyledChevronRightIcon
-        width={iconSize.sm}
-        height={iconSize.sm}
-        style={{
-          flexShrink: 0,
-          marginLeft: "auto",
-        }}
-      />
-    </MenuButton>
+      </MenuButton>
+    </ToolTip>
   );
 
   const content = (
@@ -249,6 +240,7 @@ export const ConnectedWalletDetails: React.FC<{
                 variant="secondary"
                 onClick={() => {
                   disconnect();
+                  props.onDisconnect();
                 }}
               >
                 <ExitIcon size={iconSize.md} />
@@ -269,33 +261,71 @@ export const ConnectedWalletDetails: React.FC<{
 
       {/* Network Switcher */}
       <div>
-        <DropdownLabel htmlFor="current-network">Current Network</DropdownLabel>
-        <Spacer y="sm" />
+        <DropdownLabel>Current Network</DropdownLabel>
+        <Spacer y="xs" />
         {networkSwitcherButton}
       </div>
 
-      {/* Switch to Personal Wallet for Safe */}
-      {personalWallet && (
-        <div>
-          <Spacer y="lg" />
-          <DropdownLabel htmlFor="current-network">
-            Personal Wallet
-          </DropdownLabel>
-          <Spacer y="sm" />
-          <ToolTip tip="Switch To Personal Wallet">
-            {switchToPersonalWallet}
-          </ToolTip>
-        </div>
-      )}
+      <Spacer y="md" />
 
-      {/* Request Testnet funds */}
-      {chain?.faucets && chain.faucets.length > 0 && (
-        <div>
-          <Spacer y="lg" />
+      <Flex flexDirection="column" gap={"sm"}>
+        {/* Switch to Personal Wallet for Safe */}
+        {personalWallet && personalWalletConfig && (
+          <WalletSwitcher
+            wallet={personalWallet}
+            name="Personal Wallet"
+            onSwitch={() => {
+              setWrapperWallet(activeWallet);
+            }}
+          />
+        )}
+
+        {/* Switch to Wrapper Wallet */}
+        {wrapperWalletConfig && wrapperWallet && (
+          <WalletSwitcher
+            name={wrapperWalletConfig.meta.name}
+            wallet={wrapperWallet}
+            onSwitch={() => {
+              setWrapperWallet(undefined);
+            }}
+          />
+        )}
+
+        {/* Switch Account for Metamask */}
+        {activeWalletConfig &&
+          activeWalletConfig.id === walletIds.metamask &&
+          activeWalletConfig.isInstalled &&
+          activeWalletConfig.isInstalled() && (
+            <MenuButton
+              type="button"
+              onClick={() => {
+                (activeWallet as MetaMaskWallet).switchAccount();
+                setOpen(false);
+              }}
+              style={{
+                fontSize: fontSize.sm,
+              }}
+            >
+              <ShuffleIcon width={iconSize.sm} height={iconSize.sm} />
+              Switch Account
+            </MenuButton>
+          )}
+
+        {/* Request Testnet funds */}
+        {((chain?.faucets && chain.faucets.length > 0) ||
+          chain?.chainId === Localhost.chainId) && (
           <MenuLink
-            href={chain.faucets[0]}
+            href={chain?.faucets ? chain.faucets[0] : "#"}
             target="_blank"
             as="a"
+            onClick={async (e) => {
+              if (chain.chainId === Localhost.chainId) {
+                e.preventDefault();
+                setOpen(false);
+                await sdk?.wallet.requestFunds(10);
+                await balanceQuery.refetch();
+              }
+            }}
             style={{
               textDecoration: "none",
               color: "inherit",
@@ -307,8 +337,39 @@ export const ConnectedWalletDetails: React.FC<{
             </SecondaryIconContainer>
             Request Testnet Funds
           </MenuLink>
-        </div>
-      )}
+        )}
+
+        {/* Export  Wallet */}
+        {activeWallet?.walletId === walletIds.localWallet && (
+          <div>
+            <MenuButton
+              onClick={() => {
+                setShowExportModal(true);
+                setOpen(false);
+              }}
+              style={{
+                fontSize: fontSize.sm,
+              }}
+            >
+              <SecondaryIconContainer>
+                <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />
+              </SecondaryIconContainer>
+              Backup wallet{" "}
+            </MenuButton>
+            <Spacer y="sm" />
+            <ErrorMessage
+              style={{
+                fontSize: fontSize.xs,
+                textAlign: "center",
+              }}
+            >
+              This is a temporary guest wallet <br />
+              Backup if you {`don't `}
+              want to lose access to it
+            </ErrorMessage>
+          </div>
+        )}
+      </Flex>
     </div>
   );
 
@@ -347,9 +408,31 @@ export const ConnectedWalletDetails: React.FC<{
 
       {showNetworkSelector && (
         <NetworkSelector
-          open={showNetworkSelector}
-          setOpen={setShowNetworkSelector}
+          theme={props.theme}
+          chains={chains}
+          {...props.networkSelector}
+          onClose={() => setShowNetworkSelector(false)}
         />
+      )}
+
+      {showExportModal && (
+        <Modal
+          open={true}
+          setOpen={setShowExportModal}
+          style={{
+            maxWidth: "480px",
+          }}
+        >
+          <ExportLocalWallet
+            localWallet={activeWallet as LocalWallet}
+            onBack={() => {
+              setShowExportModal(false);
+            }}
+            onExport={() => {
+              setShowExportModal(false);
+            }}
+          />
+        </Modal>
       )}
     </>
   );
@@ -367,7 +450,7 @@ const dropdownContentFade = keyframes`
 `;
 
 const DropDownContent = styled(DropdownMenu.Content)<{ theme?: Theme }>`
-  width: 340px;
+  width: 360px;
   box-sizing: border-box;
   max-width: 100%;
   border-radius: ${radius.lg};
@@ -377,16 +460,17 @@ const DropDownContent = styled(DropdownMenu.Content)<{ theme?: Theme }>`
   border: 1px solid ${(props) => props.theme.border.base};
   background-color: ${(props) => props.theme.bg.base};
   z-index: 1000000;
+  line-height: 1;
 `;
 
 const WalletInfoButton = styled.button<{ theme?: Theme }>`
   all: unset;
   background: ${(props) => props.theme.bg.base};
   border: 1px solid ${(props) => props.theme.border.base};
-  padding: ${spacing.sm} ${spacing.md};
+  padding: ${spacing.sm} ${spacing.sm};
   border-radius: ${radius.lg};
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: ${spacing.md};
   box-sizing: border-box;
@@ -461,6 +545,7 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   color: ${(props) => props.theme.text.neutral} !important;
   gap: ${spacing.sm};
   -webkit-tap-highlight-color: transparent;
+  line-height: 1.3;
 
   &:not([disabled]):hover {
     transition: box-shadow 250ms ease, border-color 250ms ease;
@@ -473,6 +558,12 @@ const MenuButton = styled.button<{ theme?: Theme }>`
     svg {
       display: none;
     }
+  }
+
+  &[disabled]:hover {
+    transition: box-shadow 250ms ease, border-color 250ms ease;
+    border: 1px solid ${(props) => props.theme.text.danger};
+    box-shadow: 0 0 0 1px ${(props) => props.theme.text.danger};
   }
 `;
 
@@ -504,3 +595,31 @@ const SecondaryIconContainer = styled.div<{ theme?: Theme }>`
   justify-content: center;
   color: ${(props) => props.theme.icon.secondary};
 `;
+
+function WalletSwitcher({
+  wallet,
+  onSwitch,
+  name,
+}: {
+  wallet: WalletInstance;
+  onSwitch: () => void;
+  name: string;
+}) {
+  const walletContext = useWalletContext();
+
+  return (
+    <MenuButton
+      type="button"
+      onClick={() => {
+        walletContext.setConnectedWallet(wallet);
+        onSwitch();
+      }}
+      style={{
+        fontSize: fontSize.sm,
+      }}
+    >
+      <EnterIcon width={iconSize.sm} height={iconSize.sm} />
+      Switch to {name}
+    </MenuButton>
+  );
+}

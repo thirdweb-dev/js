@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Cronos Testnet",
   "chain": "CRO",
@@ -20,10 +21,10 @@ export default {
   "explorers": [
     {
       "name": "Cronos Testnet Explorer",
-      "url": "https://testnet.cronoscan.com",
+      "url": "https://explorer.cronos.org/testnet",
       "standard": "none"
     }
   ],
   "testnet": true,
   "slug": "cronos-testnet"
-} as const;
+} as const satisfies Chain;

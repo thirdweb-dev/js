@@ -1,13 +1,14 @@
+import type { Chain } from "../src/types";
 export default {
-  "name": "CamelArk Mainnet",
+  "name": "Camelark Mainnet",
   "chainId": 20001,
-  "shortName": "CamelArk",
+  "shortName": "Camelark",
   "chain": "ETHW",
   "icon": {
-    "url": "ipfs://QmbXDcCWHh8jExE1tAUkUKzXyTb8srpC75ogZq1QYkMMRW",
+    "url": "ipfs://QmeJerrsURFNt2LL7DE7TxeunjrQXiuezdfHyqmsbwX3MZ",
     "width": 128,
     "height": 128,
-    "format": "svg"
+    "format": "png"
   },
   "networkId": 20001,
   "nativeCurrency": {
@@ -22,7 +23,7 @@ export default {
   "faucets": [],
   "explorers": [
     {
-      "name": "CamelArkscan",
+      "name": "CamelarkScan",
       "url": "https://scan.camelark.com",
       "standard": "EIP3091"
     }
@@ -30,4 +31,4 @@ export default {
   "infoURL": "https://www.camelark.com",
   "testnet": false,
   "slug": "camelark"
-} as const;
+} as const satisfies Chain;

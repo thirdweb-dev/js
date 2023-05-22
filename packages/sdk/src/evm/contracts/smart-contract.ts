@@ -39,6 +39,7 @@ import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { UpdateableNetwork } from "../core/interfaces/contract";
 import { Address } from "../schema";
 import {
+  Abi,
   AbiInput,
   AbiSchema,
   CustomContractSchema,
@@ -58,7 +59,7 @@ import type {
   OffersLogic,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BaseContract, CallOverrides, ContractInterface } from "ethers";
+import { BaseContract, CallOverrides } from "ethers";
 import { BaseContractInterface } from "../types/contract";
 
 /**
@@ -100,7 +101,7 @@ export class SmartContract<
   public encoder: ContractEncoder<TContract>;
   public estimator: GasCostEstimator<TContract>;
   public publishedMetadata: ContractPublishedMetadata<TContract>;
-  public abi: ContractInterface;
+  public abi: Abi;
   public metadata: ContractMetadata<BaseContract, any>;
 
   /**
@@ -381,14 +382,10 @@ export class SmartContract<
     TMethod extends keyof TContract["functions"] = keyof TContract["functions"],
   >(
     functionName: string & TMethod,
-    ...args:
-      | (any[] & Parameters<TContract["functions"][TMethod]>)
-      | [
-          ...(any[] & Parameters<TContract["functions"][TMethod]>),
-          CallOverrides,
-        ]
+    args?: Parameters<TContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
   ): Promise<ReturnType<TContract["functions"][TMethod]>> {
-    return this.contractWrapper.call(functionName, ...args);
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 
   /** ********************

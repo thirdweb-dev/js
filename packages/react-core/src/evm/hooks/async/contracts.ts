@@ -19,7 +19,7 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getCachedAbiForContract } from "@thirdweb-dev/sdk";
+import { getCachedAbiForContract, TransactionResult } from "@thirdweb-dev/sdk";
 import type {
   Abi,
   CommonContractSchemaInput,
@@ -32,10 +32,12 @@ import type {
   SUPPORTED_CHAIN_ID,
   ThirdwebSDK,
   ValidContractInstance,
+  BaseContractForAddress,
 } from "@thirdweb-dev/sdk";
 import type { CallOverrides, ContractInterface, providers } from "ethers";
 import { useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";
+import { ContractAddress as GeneratedContractAddress } from "@thirdweb-dev/generated-abis";
 
 // contract type
 async function fetchContractType(
@@ -150,6 +152,16 @@ export type UseContractResult<
   contract: TContract | undefined;
 };
 
+export function useContract<
+  TContractAddress extends ContractAddress | GeneratedContractAddress,
+>(
+  contractAddress: RequiredParam<TContractAddress>,
+): UseContractResult<
+  TContractAddress extends GeneratedContractAddress
+    ? SmartContract<BaseContractForAddress<TContractAddress>>
+    : SmartContract
+>;
+
 /**
  * Use this resolve a contract address to a smart contract instance.
  *
@@ -160,6 +172,7 @@ export type UseContractResult<
  *
  * @param contractAddress - the address of the deployed contract
  * @returns a response object that includes the contract once it is resolved
+ * @see {@link https://portal.thirdweb.com/react/react.usecontract?utm_source=sdk | Documentation}
  * @public
  */
 export function useContract(
@@ -177,6 +190,7 @@ export function useContract(
  * @param contractAddress - the address of the deployed contract
  * @param _contractType - the type of the contract
  * @returns a response object that includes the contract once it is resolved
+ * @see {@link https://portal.thirdweb.com/react/react.usecontract?utm_source=sdk | Documentation}
  * @public
  */
 export function useContract<TContractType extends ContractType>(
@@ -199,6 +213,7 @@ export function useContract<TContractType extends ContractType>(
  * @param contractAddress - the address of the deployed contract
  * @param _abi - the ABI of the contract to use
  * @returns a response object that includes the contract once it is resolved
+ * @see {@link https://portal.thirdweb.com/react/react.usecontract?utm_source=sdk | Documentation}
  * @public
  */
 
@@ -409,6 +424,7 @@ export function useContractMetadataUpdate(
  * @param eventName - the name of the event to query for (omit this or pass `undefined` to query for all events)
  * @param options - options includes the filters ({@link QueryAllEvents}) for the query as well as if you want to subscribe to real-time updates (default: true)
  * @returns a response object that includes the contract events
+ * @see {@link https://portal.thirdweb.com/react/react.usecontractevents?utm_source=sdk | Documentation}
  * @beta
  */
 export function useContractEvents(
@@ -427,11 +443,11 @@ export function useContractEvents(
     () =>
       createCacheKeyWithNetwork(
         eventName
-          ? cacheKeys.contract.events.getAllEvents(contractAddress)
-          : cacheKeys.contract.events.getEvents(
+          ? cacheKeys.contract.events.getEvents(
               contractAddress,
               eventName as string,
-            ),
+            )
+          : cacheKeys.contract.events.getAllEvents(contractAddress),
         activeChainId,
       ),
     [activeChainId, contractAddress, eventName],
@@ -506,26 +522,61 @@ export function useContractEvents(
  * @param functionName - the name of the function to call
  * @param args - The arguments to pass to the function (if any), with optional call arguments as the last parameter
  * @returns a response object that includes the data returned by the function call
- *
+ * @see {@link https://portal.thirdweb.com/react/react.usecontractread?utm_source=sdk | Documentation}
  * @beta
  */
-export function useContractRead(
-  contract: RequiredParam<ValidContractInstance>,
-  functionName: RequiredParam<string>,
-  ...args: unknown[] | [...unknown[], CallOverrides]
+export function useContractRead<
+  TContractAddress extends GeneratedContractAddress | ContractAddress,
+  TContract extends TContractAddress extends GeneratedContractAddress
+    ? BaseContractForAddress<TContractAddress>
+    : ValidContractInstance,
+  TContractInstance extends TContractAddress extends GeneratedContractAddress
+    ? SmartContract<BaseContractForAddress<TContractAddress>>
+    : ValidContractInstance,
+  TFunctionName extends TContractAddress extends GeneratedContractAddress
+    ? TContract extends BaseContractForAddress<TContractAddress>
+      ? keyof TContract["functions"]
+      : never
+    : Parameters<TContractInstance["call"]>[0],
+  TArgs extends TContractAddress extends GeneratedContractAddress
+    ? TContract extends BaseContractForAddress<TContractAddress>
+      ? TFunctionName extends keyof TContract["functions"]
+        ? Parameters<TContract["functions"][TFunctionName]>
+        : unknown[]
+      : unknown[]
+    : unknown[],
+  TReturnType extends TContractAddress extends GeneratedContractAddress
+    ? TContract extends BaseContractForAddress<TContractAddress>
+      ? TFunctionName extends keyof TContract["functions"]
+        ? ReturnType<TContract["functions"][TFunctionName]>
+        : any
+      : any
+    : any,
+>(
+  contract: TContractInstance extends ValidContractInstance
+    ? RequiredParam<TContractInstance> | undefined
+    : TContractAddress extends GeneratedContractAddress
+    ?
+        | RequiredParam<SmartContract<BaseContractForAddress<TContractAddress>>>
+        | undefined
+    : RequiredParam<SmartContract> | undefined,
+  functionName: RequiredParam<TFunctionName & string>,
+  args?: TArgs,
+  overrides?: CallOverrides,
 ) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
-    cacheKeys.contract.call(contractAddress, functionName, args),
+    cacheKeys.contract.call(contractAddress, functionName, args, overrides),
     () => {
       requiredParamInvariant(contract, "contract must be defined");
       requiredParamInvariant(functionName, "function name must be provided");
       return (
         contract.call as (
-          functionName: string,
-          ...args: unknown[] | [...unknown[], CallOverrides]
-        ) => Promise<any>
-      )(functionName, ...args);
+          functionName: TFunctionName,
+          args?: TArgs,
+          overrides?: CallOverrides,
+        ) => Promise<TReturnType>
+      )(functionName, args, overrides);
     },
     {
       enabled: !!contract && !!functionName,
@@ -548,35 +599,61 @@ export function useContractRead(
  * @param contract - the contract instance of the contract to call a function on
  * @param functionName - the name of the function to call
  * @returns a response object that includes the write function to call
- *
+ * @see {@link https://portal.thirdweb.com/react/react.usecontractwrite?utm_source=sdk | Documentation}
  * @beta
  */
-export function useContractWrite(
-  contract: RequiredParam<ValidContractInstance>,
-  functionName: RequiredParam<string>,
+export function useContractWrite<
+  TContractAddress extends GeneratedContractAddress | ContractAddress,
+  TContract extends TContractAddress extends GeneratedContractAddress
+    ? BaseContractForAddress<TContractAddress>
+    : ValidContractInstance,
+  TContractInstance extends TContractAddress extends GeneratedContractAddress
+    ? SmartContract<BaseContractForAddress<TContractAddress>>
+    : ValidContractInstance,
+  TFunctionName extends TContractAddress extends GeneratedContractAddress
+    ? TContract extends BaseContractForAddress<TContractAddress>
+      ? keyof TContract["functions"]
+      : never
+    : Parameters<TContractInstance["call"]>[0],
+  TArgs extends TContractAddress extends GeneratedContractAddress
+    ? TContract extends BaseContractForAddress<TContractAddress>
+      ? TFunctionName extends keyof TContract["functions"]
+        ? Parameters<TContract["functions"][TFunctionName]>
+        : unknown[]
+      : unknown[]
+    : any[],
+>(
+  contract: TContractInstance extends ValidContractInstance
+    ? RequiredParam<TContractInstance> | undefined
+    : TContractAddress extends GeneratedContractAddress
+    ?
+        | RequiredParam<SmartContract<BaseContractForAddress<TContractAddress>>>
+        | undefined
+    : RequiredParam<SmartContract> | undefined,
+  functionName: RequiredParam<TFunctionName & string>,
 ) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (callParams?: unknown[] | [...unknown[], CallOverrides]) => {
+    async ({
+      args,
+      overrides,
+    }: {
+      args?: TArgs;
+      overrides?: CallOverrides;
+    }) => {
       requiredParamInvariant(contract, "contract must be defined");
       requiredParamInvariant(functionName, "function name must be provided");
-      if (!callParams?.length) {
-        return (
-          contract.call as (
-            functionName: string,
-            ...args: unknown[] | [...unknown[], CallOverrides]
-          ) => Promise<any>
-        )(functionName);
-      }
+
       return (
         contract.call as (
-          functionName: string,
-          ...args: unknown[] | [...unknown[], CallOverrides]
-        ) => Promise<any>
-      )(functionName, ...callParams);
+          functionName: TFunctionName,
+          args?: TArgs,
+          overrides?: CallOverrides,
+        ) => Promise<TransactionResult>
+      )(functionName, args, overrides);
     },
     {
       onSettled: () =>

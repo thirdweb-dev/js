@@ -1,6 +1,13 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Palm Testnet",
   "chain": "Palm",
+  "icon": {
+    "url": "ipfs://bafkreihifvvbq6xzviygveivayogqiotdtpjvilu27bgqobduqemzeq7o4",
+    "width": 72,
+    "height": 72,
+    "format": "svg"
+  },
   "rpc": [
     "https://palm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://palm-testnet.infura.io/v3/${INFURA_API_KEY}"
@@ -24,4 +31,4 @@ export default {
   ],
   "testnet": true,
   "slug": "palm-testnet"
-} as const;
+} as const satisfies Chain;

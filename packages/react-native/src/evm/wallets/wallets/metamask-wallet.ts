@@ -1,11 +1,16 @@
-import { WalletOptions, WalletConnectV1Options, WalletConnectV1 } from "@thirdweb-dev/wallets";
-import { formatDisplayUri } from "../../utils/uri";
+import {
+  WalletOptions,
+  WalletConnectV1Options,
+  WalletConnectV1,
+  walletIds,
+} from "@thirdweb-dev/wallets";
+import { formatWalletConnectDisplayUri } from "../../utils/uri";
 import { Linking } from "react-native";
 import {
-    WalletOptions as WalletOptionsRC,
-    Wallet,
-    ExtraCoreWalletOptions
-  } from "@thirdweb-dev/react-core";
+  WalletOptions as WalletOptionsRC,
+  WalletConfig,
+  ExtraCoreWalletOptions,
+} from "@thirdweb-dev/react-core";
 import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
 
 type WC1Options = Omit<
@@ -15,12 +20,12 @@ type WC1Options = Omit<
   ExtraCoreWalletOptions;
 
 export class MetaMaskWallet extends WalletConnectV1 {
-  static id = "metamask" as const;
+  static id = walletIds.metamask;
   static meta = {
-    id: "metamask",
+    id: walletIds.metamask,
     name: "MetaMask",
     iconURL:
-      "https://registry.walletconnect.org/v2/logo/md/5195e9db-94d8-4579-6f11-ef553be95100",
+      "ipfs://QmZZHcw7zcXursywnLDAyY6Hfxzqop5GKgwoq8NB9jjrkN/metamask.svg",
     links: {
       native: "metamask:",
       universal: "https://metamask.app.link",
@@ -28,10 +33,10 @@ export class MetaMaskWallet extends WalletConnectV1 {
   };
 
   constructor(options: WC1Options) {
-    const storage = createAsyncLocalStorage("metamask");
+    const storage = createAsyncLocalStorage(walletIds.metamask);
     super({
       ...options,
-      walletId: "metamask",
+      walletId: walletIds.metamask,
       walletStorage: storage,
       qrcode: false,
     });
@@ -47,11 +52,11 @@ export class MetaMaskWallet extends WalletConnectV1 {
     const links = MetaMaskWallet.meta.links;
 
     if (uri) {
-      const fullUrl = formatDisplayUri(uri, links);
+      const fullUrl = formatWalletConnectDisplayUri(uri, links);
 
       Linking.openURL(fullUrl);
     } else {
-      const fullUrl = formatDisplayUri("", links);
+      const fullUrl = formatWalletConnectDisplayUri("", links);
 
       Linking.openURL(fullUrl);
     }
@@ -63,5 +68,5 @@ export const metamaskWallet = () => {
     id: MetaMaskWallet.id,
     meta: MetaMaskWallet.meta,
     create: (options: WalletOptionsRC) => new MetaMaskWallet(options),
-  } satisfies Wallet;
+  } satisfies WalletConfig;
 };

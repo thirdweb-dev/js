@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "ONUS Chain Testnet",
   "title": "ONUS Chain Testnet",
@@ -20,10 +21,15 @@ export default {
     {
       "name": "Onus explorer testnet",
       "url": "https://explorer-testnet.onuschain.io",
-      "icon": "onus",
+      "icon": {
+        "url": "ipfs://bafkreiec34ik3glrm5jrzafdytvu4kxdsrxhqmagbe27fytdcuzkhoooay",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "onus-chain-testnet"
-} as const;
+} as const satisfies Chain;

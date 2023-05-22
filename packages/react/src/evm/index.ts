@@ -1,6 +1,14 @@
+export {
+  useIsWalletModalOpen,
+  useSetIsWalletModalOpen,
+} from "./providers/wallet-ui-states-provider";
+
 export { useSafe } from "./connectors/gnosis";
+export { useMagic } from "./connectors/magic";
 
 export { ConnectWallet } from "../wallet/ConnectWallet/ConnectWallet";
+export { NetworkSelector } from "../wallet/ConnectWallet/NetworkSelector";
+export type { NetworkSelectorProps } from "../wallet/ConnectWallet/NetworkSelector";
 
 // UI components
 export * from "./components/MediaRenderer";

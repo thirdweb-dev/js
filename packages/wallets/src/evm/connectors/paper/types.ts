@@ -3,7 +3,6 @@ import type { Chain } from "@thirdweb-dev/chains";
 export type PaperWalletAdditionalOptions = {
   clientId: string;
   chain: Pick<Chain, "chainId" | "rpc">;
-  chains: Chain[];
 };
 
 export interface PaperWalletConnectorOptions {
@@ -12,4 +11,6 @@ export interface PaperWalletConnectorOptions {
   chains: Chain[];
 }
 
-export interface PaperWalletConnectionArgs {}
+export interface PaperWalletConnectionArgs {
+  email?: string;
+}

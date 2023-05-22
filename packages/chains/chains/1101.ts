@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Polygon zkEVM",
   "title": "Polygon zkEVM",
@@ -26,7 +27,12 @@ export default {
     {
       "name": "blockscout",
       "url": "https://zkevm.polygonscan.com",
-      "icon": "zkevm",
+      "icon": {
+        "url": "ipfs://QmNmJZkQgx9RcFLS3rvxQTVYcPfyAFPr667keHTUxB9PDv",
+        "width": 122,
+        "height": 135,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
@@ -41,4 +47,4 @@ export default {
   },
   "testnet": false,
   "slug": "polygon-zkevm"
-} as const;
+} as const satisfies Chain;

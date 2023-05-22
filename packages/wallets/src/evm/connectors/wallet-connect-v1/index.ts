@@ -3,9 +3,10 @@ import {
   SwitchChainError,
   UserRejectedRequestError,
   normalizeChainId,
-  Connector,
+  WagmiConnector,
   ProviderRpcError,
 } from "../../../lib/wagmi-core";
+import { walletIds } from "../../constants/walletIds";
 import type WalletConnectProvider from "./walletconnect-legacy-provider/index";
 import type { Chain } from "@thirdweb-dev/chains";
 import { IWalletConnectSession } from "@walletconnect/legacy-types";
@@ -29,12 +30,12 @@ type WalletConnectOptions = ConstructorParameters<
 
 type WalletConnectSigner = providers.JsonRpcSigner;
 
-export class WalletConnectV1Connector extends Connector<
+export class WalletConnectV1Connector extends WagmiConnector<
   WalletConnectProvider,
   WalletConnectOptions,
   WalletConnectSigner
 > {
-  readonly id = "walletConnectV1";
+  readonly id = walletIds.walletConnectV1;
   readonly name = "WalletConnectV1";
   readonly ready = true;
 
@@ -246,7 +247,6 @@ export class WalletConnectV1Connector extends Connector<
           `Chain ${chainId} is not added in the list of supported chains`,
         );
       }
-      console.log({ chain });
 
       // if chain is not configured in the wallet
       if (/Unrecognized chain ID/i.test(message)) {

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Lightlink Phoenix Mainnet",
   "chain": "Lightlink Phoenix Mainnet",
@@ -31,10 +32,15 @@ export default {
     {
       "name": "phoenix",
       "url": "https://phoenix.lightlink.io",
-      "icon": "lightlink",
+      "icon": {
+        "url": "ipfs://QmNRUoMgx16hurD3au3ou5A9rmTLYmre8WiGmQEPFmP2Vo",
+        "width": 600,
+        "height": 600,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "lightlink-phoenix"
-} as const;
+} as const satisfies Chain;

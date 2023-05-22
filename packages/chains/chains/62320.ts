@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Celo Baklava Testnet",
   "chainId": 62320,
@@ -20,4 +21,4 @@ export default {
   "infoURL": "https://docs.celo.org/",
   "testnet": true,
   "slug": "celo-baklava-testnet"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "The Root Network - Mainnet",
   "chain": "TRN",
@@ -20,9 +21,9 @@ export default {
     {
       "name": "rootnet",
       "url": "https://explorer.rootnet.live",
-      "standard": "none"
+      "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "the-root-network"
-} as const;
+} as const satisfies Chain;

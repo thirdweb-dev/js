@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "CyberdeckNet",
   "chain": "cyberdeck",
@@ -26,10 +27,15 @@ export default {
     {
       "name": "CybEthExplorer",
       "url": "http://cybeth1.cyberdeck.eu:8000",
-      "icon": "cyberdeck",
+      "icon": {
+        "url": "ipfs://QmTvYMJXeZeWxYPuoQ15mHCS8K5EQzkMMCHQVs3GshooyR",
+        "width": 193,
+        "height": 214,
+        "format": "png"
+      },
       "standard": "none"
     }
   ],
   "testnet": false,
   "slug": "cyberdecknet"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Eleanor",
   "title": "Metatime Testnet Eleanor",
@@ -28,4 +29,4 @@ export default {
   ],
   "testnet": true,
   "slug": "eleanor"
-} as const;
+} as const satisfies Chain;

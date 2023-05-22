@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Bittex Mainnet",
   "chain": "BTX",
@@ -25,4 +26,4 @@ export default {
   ],
   "testnet": false,
   "slug": "bittex"
-} as const;
+} as const satisfies Chain;

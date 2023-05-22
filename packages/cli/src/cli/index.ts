@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { detectExtensions } from "../common/feature-detector";
+import { detectProjectV2 } from "../common/project-detector-v2";
 import { processProject } from "../common/processor";
 import { cliVersion, pkg } from "../constants/urls";
 import { info, logger, spinner } from "../core/helpers/logger";
@@ -251,6 +252,7 @@ const main = async () => {
   program
     .command("build")
     .description("Compile contract and detect thirdweb contract extensions")
+    .option("--clean", "clear the cache before building")
     .option("-p, --path <project-path>", "path to project", ".")
     .option("-d, --debug", "show debug logs")
     .option("-a, --all", "run detection on all contracts")
@@ -262,6 +264,7 @@ const main = async () => {
     .command("deploy")
     .description("Deploy your (or team) contracts securely to blockchains")
     .option("-p, --path <project-path>", "path to project", ".")
+    .option("--clean", "clear the cache before building")
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
@@ -310,6 +313,7 @@ const main = async () => {
       "-cn, --contract-name [name]",
       "Filter for contracts that contain this contract name",
     )
+    .option("--clean", "clear the cache before building")
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
@@ -340,6 +344,7 @@ const main = async () => {
       "-cn, --contract-name [name]",
       "Filter for contracts that contain this contract name",
     )
+    .option("--clean", "clear the cache before building")
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
@@ -403,15 +408,22 @@ const main = async () => {
     });
 
   program
+    .command("detect-project")
+    .description(
+      "Detect the type of project your are running and let you know what it is.",
+    )
+    .option("-p, --path <project-path>", "path to project", ".")
+    .option("-d, --debug", "show debug logs")
+    .action(async (options) => {
+      await detectProjectV2(options);
+    });
+
+  program
     .command("generate")
     .description(
       "Preload ABIs and generate types for your smart contract to strongly type the thirdweb SDK",
     )
     .option("-p, --path <project-path>", "path to project", ".")
-    .option(
-      "-d, --deployer <deployer-address>",
-      "address of the contract deployer",
-    )
     .action(async (options) => {
       await generate(options);
     });

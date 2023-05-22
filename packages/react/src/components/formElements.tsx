@@ -20,6 +20,8 @@ export const Input = styled.input<{
   border: none;
   border-radius: 6px;
   color: ${(p) => p.theme.text.neutral};
+  -webkit-appearance: none;
+  appearance: none;
   background: ${(p) => {
     switch (p.variant) {
       case "secondary":
@@ -48,9 +50,16 @@ export const Input = styled.input<{
   /* when browser auto-fills the input  */
   &:-webkit-autofill {
     -webkit-text-fill-color: ${(p) => p.theme.text.neutral};
-    -webkit-box-shadow: 0 0 0px 1000px ${(p) => p.theme.bg.elevated} inset;
-    box-shadow: 0 0 0px 1000px ${(p) => p.theme.bg.elevated} inset;
-    /* transition: background-color 5000s ease-in-out 0s; */
+    -webkit-box-shadow: 0 0 0px 1000px ${(p) => p.theme.bg.elevated} inset !important;
+    box-shadow: 0 0 0px 1000px ${(p) => p.theme.bg.elevated} inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  &:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px ${(p) => p.theme.bg.elevated} inset,
+      0 0 0 2px ${(p) => p.theme.input.focusRing} !important;
+    box-shadow: 0 0 0px 1000px ${(p) => p.theme.bg.elevated} inset,
+      0 0 0 2px ${(p) => p.theme.input.focusRing} !important;
   }
 
   &:focus {
@@ -65,7 +74,11 @@ export const Input = styled.input<{
   }
 
   &[data-error="true"] {
-    box-shadow: 0 0 0 2px ${(p) => p.theme.input.errorRing};
+    box-shadow: 0 0 0 2px ${(p) => p.theme.input.errorRing} !important;
+  }
+
+  &[disabled] {
+    cursor: not-allowed;
   }
 `;
 
@@ -92,7 +105,14 @@ export const InputContainer = styled.div<{ theme?: Theme }>`
 
 export const ErrorMessage = styled.p<{ theme?: Theme }>`
   all: unset;
-  font-size: ${fontSize.xs};
+  font-size: ${fontSize.sm};
   display: block;
   color: ${(p) => p.theme.input.errorRing};
+  line-height: 1.5;
+`;
+
+export const FormFooter = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: ${spacing.sm};
 `;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Palette Chain Mainnet",
   "chain": "PLT",
@@ -13,7 +14,7 @@ export default {
   },
   "features": [],
   "infoURL": "https://hashpalette.com/",
-  "shortName": "PaletteChain",
+  "shortName": "PCM",
   "chainId": 1718,
   "networkId": 1718,
   "icon": {
@@ -26,10 +27,15 @@ export default {
     {
       "name": "Palettescan",
       "url": "https://palettescan.com",
-      "icon": "PLT",
+      "icon": {
+        "url": "ipfs://QmPCEGZD1p1keTT2YfPp725azx1r9Ci41hejeUuGL2whFA",
+        "width": 800,
+        "height": 800,
+        "format": "png"
+      },
       "standard": "none"
     }
   ],
   "testnet": false,
   "slug": "palette-chain"
-} as const;
+} as const satisfies Chain;

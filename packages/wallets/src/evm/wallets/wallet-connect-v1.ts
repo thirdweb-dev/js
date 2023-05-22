@@ -1,23 +1,24 @@
-import type { ConnectorData } from "../../lib/wagmi-core";
+import type { WagmiConnectorData } from "../../lib/wagmi-core";
 import type { WalletConnectV1Connector } from "../connectors/wallet-connect-v1";
 import type WalletConnectProvider from "../connectors/wallet-connect-v1/walletconnect-legacy-provider";
-import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
-import { AbstractBrowserWallet, WalletOptions } from "./base";
+import { Connector, WagmiAdapter } from "../interfaces/connector";
+import { walletIds } from "../constants/walletIds";
+import { AbstractClientWallet, WalletOptions } from "./base";
 
 export type WalletConnectV1Options = {
   qrcode?: boolean;
 } & Omit<ConstructorParameters<typeof WalletConnectProvider>[0], "clientMeta">;
 
-export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Options> {
+export class WalletConnectV1 extends AbstractClientWallet<WalletConnectV1Options> {
   #walletConnectConnector?: WalletConnectV1Connector;
   #provider?: WalletConnectProvider;
 
-  connector?: TWConnector;
+  connector?: Connector;
 
-  static id = "walletConnectV1";
+  static id = walletIds.walletConnectV1;
 
   static meta = {
-    name: "Wallet Connect",
+    name: "WalletConnect",
     iconURL:
       "ipfs://QmX58KPRaTC9JYZ7KriuBzeoEaV2P9eZcA3qbFnTHZazKw/wallet-connect.svg",
   };
@@ -36,7 +37,7 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
     this.qrcode = options?.qrcode === false ? false : true;
   }
 
-  protected async getConnector(): Promise<TWConnector> {
+  protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
       // import the connector dynamically
       const { WalletConnectV1Connector } = await import(
@@ -62,7 +63,7 @@ export class WalletConnectV1 extends AbstractBrowserWallet<WalletConnectV1Option
     return this.connector;
   }
 
-  #onConnect = (data: ConnectorData<WalletConnectProvider>) => {
+  #onConnect = (data: WagmiConnectorData<WalletConnectProvider>) => {
     this.#provider = data.provider;
     if (!this.#provider) {
       throw new Error("WalletConnect provider not found after connecting.");

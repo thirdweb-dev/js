@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Alaya Dev Testnet",
   "chain": "Alaya",
@@ -33,4 +34,4 @@ export default {
   ],
   "testnet": true,
   "slug": "alaya-dev-testnet"
-} as const;
+} as const satisfies Chain;

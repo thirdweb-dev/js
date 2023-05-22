@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Beresheet BereEVM Testnet",
   "chain": "EDG",
@@ -25,4 +26,4 @@ export default {
   ],
   "testnet": true,
   "slug": "beresheet-bereevm-testnet"
-} as const;
+} as const satisfies Chain;

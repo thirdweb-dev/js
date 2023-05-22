@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Dogechain Mainnet",
   "chain": "DC",
@@ -10,8 +11,8 @@ export default {
   "rpc": [
     "https://dogechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.dogechain.dog",
-    "https://rpc-us.dogechain.dog",
-    "https://rpc01.dogechain.dog"
+    "https://rpc01-sg.dogechain.dog",
+    "https://rpc.ankr.com/dogechain"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": false,
   "slug": "dogechain"
-} as const;
+} as const satisfies Chain;

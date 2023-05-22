@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Dos Fuji Subnet",
   "chain": "DOS",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": true,
   "slug": "dos-fuji-subnet"
-} as const;
+} as const satisfies Chain;

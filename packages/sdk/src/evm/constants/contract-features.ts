@@ -60,6 +60,8 @@ import {
   FEATURE_ENGLISH_AUCTIONS,
   FEATURE_OFFERS,
   FEATURE_EXTENSION_ROUTER,
+  FEATURE_SMART_WALLET,
+  FEATURE_SMART_WALLET_FACTORY,
 } from "./thirdweb-features";
 
 /**
@@ -120,17 +122,25 @@ export type Feature =
   | typeof FEATURE_EXTENSION_ROUTER
   | typeof FEATURE_DIRECT_LISTINGS
   | typeof FEATURE_ENGLISH_AUCTIONS
-  | typeof FEATURE_OFFERS;
+  | typeof FEATURE_OFFERS
+  | typeof FEATURE_SMART_WALLET
+  | typeof FEATURE_SMART_WALLET_FACTORY;
+export type Extension = Feature;
 
 /**
  * @internal
  */
 export type FeatureName = Feature["name"];
+export type ExtensionName = Feature["name"];
 /**
  * @internal
  */
 export type FeatureWithEnabled = Feature & {
   features: Record<string, FeatureWithEnabled>;
+  enabled: boolean;
+};
+export type ExtensionWithEnabled = Extension & {
+  extensions: Record<string, FeatureWithEnabled>;
   enabled: boolean;
 };
 
@@ -155,4 +165,6 @@ export const SUPPORTED_FEATURES: Record<string, Feature> = {
   [FEATURE_DIRECT_LISTINGS.name]: FEATURE_DIRECT_LISTINGS,
   [FEATURE_ENGLISH_AUCTIONS.name]: FEATURE_ENGLISH_AUCTIONS,
   [FEATURE_OFFERS.name]: FEATURE_OFFERS,
+  [FEATURE_SMART_WALLET_FACTORY.name]: FEATURE_SMART_WALLET_FACTORY,
+  [FEATURE_SMART_WALLET.name]: FEATURE_SMART_WALLET,
 };

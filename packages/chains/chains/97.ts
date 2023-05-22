@@ -1,8 +1,10 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Binance Smart Chain Testnet",
   "chain": "BSC",
   "rpc": [
     "https://binance-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://bsc-testnet.publicnode.com",
     "https://data-seed-prebsc-2-s3.binance.org:8545",
     "https://data-seed-prebsc-1-s3.binance.org:8545",
     "https://data-seed-prebsc-2-s2.binance.org:8545",
@@ -33,16 +35,8 @@ export default {
     "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/binance-coin/512.png",
     "height": 512,
     "width": 512,
-    "format": "png",
-    "sizes": [
-      512,
-      256,
-      128,
-      64,
-      32,
-      16
-    ]
+    "format": "png"
   },
   "testnet": true,
   "slug": "binance-testnet"
-} as const;
+} as const satisfies Chain;

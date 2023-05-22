@@ -1,9 +1,10 @@
 import { AsyncStorage, createAsyncLocalStorage } from "../../core/AsyncStorage";
 import type { DAppMetaData } from "../../core/types/dAppMeta";
-import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
+import { ConnectParams, Connector } from "../interfaces/connector";
 import { AbstractWallet } from "./abstract";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { DEFAULT_DAPP_META } from "../constants/dappMeta";
+import { EVMWallet } from "../interfaces";
 
 export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   chains?: Chain[];
@@ -15,9 +16,15 @@ export type WalletOptions<TOpts extends Record<string, any> = {}> = {
 export type WalletMeta = {
   name: string;
   iconURL: string;
+  urls?: {
+    android?: string;
+    ios?: string;
+    chrome?: string;
+    firefox?: string;
+  };
 };
 
-export abstract class AbstractBrowserWallet<
+export abstract class AbstractClientWallet<
   TAdditionalOpts extends Record<string, any> = {},
   TConnectParams extends Record<string, any> = {},
 > extends AbstractWallet {
@@ -27,8 +34,9 @@ export abstract class AbstractBrowserWallet<
   protected dappMetadata: DAppMetaData;
   protected options?: WalletOptions<TAdditionalOpts>;
   static meta: WalletMeta;
+  #connectParams: ConnectParams<TConnectParams> | undefined;
   getMeta() {
-    return (this.constructor as typeof AbstractBrowserWallet).meta;
+    return (this.constructor as typeof AbstractClientWallet).meta;
   }
 
   constructor(walletId: string, options?: WalletOptions<TAdditionalOpts>) {
@@ -41,15 +49,19 @@ export abstract class AbstractBrowserWallet<
       options?.walletStorage || createAsyncLocalStorage(this.walletId);
   }
 
-  protected abstract getConnector(): Promise<TWConnector<TConnectParams>>;
+  protected abstract getConnector(): Promise<Connector<TConnectParams>>;
 
   /**
    * tries to auto connect to the wallet
    */
   async autoConnect(
     connectOptions?: ConnectParams<TConnectParams>,
-  ): Promise<string | undefined> {
-    return this.#connect(true, connectOptions);
+  ): Promise<string> {
+    // remove chainId when autoconnecting to prevent switch-network popup on page load
+    const options = connectOptions
+      ? { ...connectOptions, chainId: undefined }
+      : undefined;
+    return this.#connect(true, options);
   }
 
   /**
@@ -58,11 +70,16 @@ export abstract class AbstractBrowserWallet<
   async connect(
     connectOptions?: ConnectParams<TConnectParams>,
   ): Promise<string> {
+    this.#connectParams = connectOptions;
     const address = await this.#connect(false, connectOptions);
     if (!address) {
       throw new Error("Failed to connect to the wallet.");
     }
     return address;
+  }
+
+  getConnectParams() {
+    return this.#connectParams;
   }
 
   async #connect(
@@ -75,6 +92,7 @@ export abstract class AbstractBrowserWallet<
 
     const isConnected = await connector.isConnected();
 
+    // if already connected, return the address and setup listeners
     if (isConnected) {
       const address = await connector.getAddress();
       connector.setupListeners();
@@ -90,13 +108,17 @@ export abstract class AbstractBrowserWallet<
       });
 
       return address;
-    } else if (!isAutoConnect) {
-      const address = await connector.connect(connectOptions);
-      return address;
     }
+
+    if (isAutoConnect) {
+      throw new Error("Failed to auto connect to the wallet.");
+    }
+
+    const address = await connector.connect(connectOptions);
+    return address;
   }
 
-  async #subscribeToEvents(connector: TWConnector) {
+  async #subscribeToEvents(connector: Connector) {
     // subscribe to connector for events
     connector.on("connect", (data) => {
       this.emit("connect", {
@@ -151,5 +173,12 @@ export abstract class AbstractBrowserWallet<
     this.chains = chains;
     const connector = await this.getConnector();
     connector.updateChains(chains);
+  }
+
+  /**
+   * If the wallet uses a personal wallet under the hood, return it
+   */
+  getPersonalWallet(): EVMWallet | undefined {
+    return undefined;
   }
 }

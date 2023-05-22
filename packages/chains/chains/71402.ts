@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Godwoken Mainnet",
   "chain": "GWT",
@@ -17,11 +18,6 @@ export default {
   "networkId": 71402,
   "explorers": [
     {
-      "name": "GWScout Explorer",
-      "url": "https://gw-mainnet-explorer.nervosdao.community",
-      "standard": "none"
-    },
-    {
       "name": "GWScan Block Explorer",
       "url": "https://v1.gwscan.com",
       "standard": "none"
@@ -29,4 +25,4 @@ export default {
   ],
   "testnet": false,
   "slug": "godwoken"
-} as const;
+} as const satisfies Chain;

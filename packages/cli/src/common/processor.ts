@@ -97,7 +97,7 @@ export async function processProject(
   let compiledResult: { contracts: ContractPayload[] };
   const compileLoader = spinner("Compiling project...");
   try {
-    compiledResult = await build(projectPath, projectType);
+    compiledResult = await build(projectPath, projectType, options);
   } catch (e) {
     compileLoader.fail("Compilation failed");
     logger.error(e);
@@ -220,27 +220,29 @@ export async function processProject(
   const soliditySDKPackage = "@thirdweb-dev/contracts";
   let usesSoliditySDK = false;
 
-  if (selectedRouter.name === "thirdweb-router") {
-    const deployArgs: TWRouterParams = {
-      extensionRegistry: EXTENSION_REGISTRY_ADDRESS,
-      extensionNames: selectedContracts.map((c) => c.name),
-    };
-
-    const outputDeployArgs = JSON.stringify(deployArgs, undefined, 2);
-    writeFileSync("./deployArgs.json", outputDeployArgs, "utf-8");
-    info(
-      "Deployment parameters written to deployArgs.json in your project directory",
-    );
-  } else {
-    const deployArgs: RouterParams = await formatToExtensions(
-      selectedContracts,
-    );
-
-    const outputDeployArgs = JSON.stringify(deployArgs, undefined, 2);
-    writeFileSync("./deployArgs.json", outputDeployArgs, "utf-8");
-    info(
-      "Deployment parameters written to deployArgs.json in your project directory",
-    );
+  if(options.dynamic) {
+    if (selectedRouter.name === "thirdweb-router") {
+      const deployArgs: TWRouterParams = {
+        extensionRegistry: EXTENSION_REGISTRY_ADDRESS,
+        extensionNames: selectedContracts.map((c) => c.name),
+      };
+  
+      const outputDeployArgs = JSON.stringify(deployArgs, undefined, 2);
+      writeFileSync("./deployArgs.json", outputDeployArgs, "utf-8");
+      info(
+        "Deployment parameters written to deployArgs.json in your project directory",
+      );
+    } else {
+      const deployArgs: RouterParams = await formatToExtensions(
+        selectedContracts,
+      );
+  
+      const outputDeployArgs = JSON.stringify(deployArgs, undefined, 2);
+      writeFileSync("./deployArgs.json", outputDeployArgs, "utf-8");
+      info(
+        "Deployment parameters written to deployArgs.json in your project directory",
+      );
+    }
   }
 
   const loader = spinner("Uploading contract data...");
