@@ -122,10 +122,7 @@ export abstract class BaseAccountAPI {
       this.getAccountAddress(),
     );
     if (senderAddressCode.length > 2) {
-      // console.log(`SimpleAccount Contract already deployed at ${this.senderAddress}`)
       this.isPhantom = false;
-    } else {
-      // console.log(`SimpleAccount Contract is NOT YET deployed at ${this.senderAddress} - working in "phantom account" mode.`)
     }
     return this.isPhantom;
   }

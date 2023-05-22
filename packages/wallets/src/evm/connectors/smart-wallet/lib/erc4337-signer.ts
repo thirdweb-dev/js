@@ -122,6 +122,17 @@ export class ERC4337EthersSigner extends Signer {
   }
 
   async signMessage(message: Bytes | string): Promise<string> {
+    const isNotDeployed = await this.smartAccountAPI.checkAccountPhantom();
+    if (isNotDeployed) {
+      console.log(
+        "Account contract not deployed yet. Deploying account before signing message",
+      );
+      const tx = await this.sendTransaction({
+        to: await this.getAddress(),
+        data: "0x",
+      });
+      await tx.wait();
+    }
     return await this.originalSigner.signMessage(message);
   }
 
