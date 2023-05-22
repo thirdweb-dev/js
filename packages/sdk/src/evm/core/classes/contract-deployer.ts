@@ -1,6 +1,7 @@
 import {
   extractConstructorParamsFromAbi,
   extractFunctionParamsFromAbi,
+  fetchContractMetadataFromAddress,
 } from "../../common";
 import {
   computeCloneFactoryAddress,
@@ -846,27 +847,43 @@ export class ContractDeployer extends RPCConnectionHandler {
           options?.notifier?.("deployed", "proxy");
           return proxyDeployTransaction;
         } else if (extendedMetadata.deployType === "customFactory") {
+          let customFactoryAddress = extendedMetadata.factoryDeploymentData
+            .customFactoryInput?.customFactoryAddresses[
+            chainId
+          ] as AddressOrEns;
+          const resolvedCustomFactoryAddress = await resolveAddress(
+            customFactoryAddress,
+          );
+
+          invariant(
+            resolvedCustomFactoryAddress,
+            `customFactoryAddress not found for chainId '${chainId}'`,
+          );
           invariant(
             extendedMetadata.factoryDeploymentData.customFactoryInput
               ?.factoryFunction,
             `customFactoryFunction not set'`,
           );
-          const factoryFunctionParamTypes =
-            extendedMetadata.factoryDeploymentData.customFactoryInput.params.map(
-              (p) => p.type,
-            );
+
+          const customFactoryMetadata = await fetchContractMetadataFromAddress(
+            resolvedCustomFactoryAddress,
+            this.getProvider(),
+            this.storage,
+          );
+
+          const factoryFunctionParamTypes = extractFunctionParamsFromAbi(
+            customFactoryMetadata.abi,
+            extendedMetadata.factoryDeploymentData.customFactoryInput
+              .factoryFunction,
+          ).map((p) => p.type);
           const factoryFunctionparamValues = convertParamValues(
             factoryFunctionParamTypes,
             constructorParamValues,
           );
 
-          invariant(
-            options?.customFactory,
-            "Custom factory address is required.",
-          );
           const tempSdk = ThirdwebSDK.fromSigner(signer); // TODO: extract getContract as helper function
           const customFactory = await tempSdk.getContract(
-            options.customFactory,
+            resolvedCustomFactoryAddress,
           );
 
           return await customFactory.call(

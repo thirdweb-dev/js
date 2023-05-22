@@ -128,6 +128,7 @@ export const ChainIdToAddressSchema = z.record(z.string(), z.string());
 export const CustomFactoryInput = z.object({
   factoryFunction: z.string(),
   params: z.array(z.object({ name: z.string(), type: z.string() })).default([]),
+  customFactoryAddresses: ChainIdToAddressSchema,
 });
 
 /**
