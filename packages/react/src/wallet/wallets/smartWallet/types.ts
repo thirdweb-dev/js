@@ -1,14 +1,16 @@
 import { WalletConfig } from "@thirdweb-dev/react-core";
-import { SmartWallet } from "@thirdweb-dev/wallets";
+import {
+  SmartWallet,
+  SmartWalletConfig as SmartWalletConfig_,
+} from "@thirdweb-dev/wallets";
 
-export type SmartWalletConfig = {
-  factoryAddress: string;
-  thirdwebApiKey: string;
-  gasless: boolean;
+export type SmartWalletConfig = SmartWalletConfig_ & {
   personalWallets?: WalletConfig<any, any>[];
 };
 
 export type SmartConfiguredWallet = WalletConfig<
   SmartWallet,
-  Required<SmartWalletConfig>
+  SmartWalletConfig_ & {
+    personalWallets: WalletConfig<any, any>[];
+  }
 >;
