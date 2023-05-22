@@ -2,6 +2,7 @@ import {
   BaseGoerli,
   Chain,
   Polygon,
+  PolygonZkevmTestnet,
   Sepolia,
   allChains,
 } from "@thirdweb-dev/chains";
@@ -64,6 +65,8 @@ export const apiMap: Record<number, string> = {
   1313161554: "https://api.aurorascan.dev/api",
   1313161555: "https://api-testnet.aurorascan.dev/api",
   [BaseGoerli.chainId]: "https://api-goerli.basescan.org/api",
+  [PolygonZkevmTestnet.chainId]:
+    "https://api-testnet-zkevm.polygonscan.com/api",
 };
 
 export const blockExplorerMap: Record<number, { name: string; url: string }> = {
@@ -121,8 +124,9 @@ export const apiKeyMap: Record<number, string> = {
   [ChainId.OptimismGoerli]: process.env.OPTIMISMSCAN_KEY as string,
   [ChainId.BinanceSmartChainMainnet]: process.env.BSCSCAN_KEY as string,
   [ChainId.BinanceSmartChainTestnet]: process.env.BSCSCAN_KEY as string,
-  // no api key needed for base
+  // no api key needed for these
   [BaseGoerli.chainId]: "" as string,
+  [PolygonZkevmTestnet.chainId]: "" as string,
 };
 
 const chhainIdToChain: Record<number, Chain> = allChains.reduce(
