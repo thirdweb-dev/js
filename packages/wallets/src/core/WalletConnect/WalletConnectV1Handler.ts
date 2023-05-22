@@ -50,8 +50,6 @@ export class WalletConnectV1Handler extends WalletConnectHandler {
   async init(): Promise<void> {
     const uri = this.#storage.getItem(STORAGE_URI_KEY);
 
-    console.log("uri", uri);
-
     if (uri) {
       this.#init(uri);
     }
@@ -60,7 +58,6 @@ export class WalletConnectV1Handler extends WalletConnectHandler {
   }
 
   async connectApp(uri: string): Promise<void> {
-    console.log("connectApp", uri);
     if (!this.#wcWallet) {
       this.#storage.setItem(STORAGE_URI_KEY, uri);
 
@@ -100,9 +97,6 @@ export class WalletConnectV1Handler extends WalletConnectHandler {
     return Promise.resolve();
   }
   async approveEIP155Request(wallet: AbstractClientWallet): Promise<void> {
-    console.log("wcwalletv1.approve", !!this.#wcWallet);
-    console.log("wcwalletv1.activeCallReqeust", this.#activeCallRequest);
-
     const { params, method } = this.#activeCallRequest;
 
     let result;
@@ -112,12 +106,8 @@ export class WalletConnectV1Handler extends WalletConnectHandler {
         result = await wallet.signMessage(utils.arrayify(ethMsg));
         break;
       case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
-        console.log("call_request", method);
-
         const message = params[0];
         result = await wallet.signMessage(utils.arrayify(message));
-
-        console.log("wcwalletv1.signedMessage", result);
         break;
       case EIP155_SIGNING_METHODS.SWITCH_CHAIN: {
         await wallet.switchChain(params[0].chainId);
@@ -134,7 +124,6 @@ export class WalletConnectV1Handler extends WalletConnectHandler {
     return Promise.resolve();
   }
   rejectEIP155Request(): Promise<void> {
-    console.log("wcwallet.reject", !!this.#wcWallet);
     this.#wcWallet?.rejectRequest({
       id: 1,
       error: {
@@ -150,8 +139,6 @@ export class WalletConnectV1Handler extends WalletConnectHandler {
     if (!session) {
       return [];
     }
-
-    console.log("getActiveSession.session", session);
 
     const result: WCSession[] = [
       {
@@ -203,18 +190,13 @@ export class WalletConnectV1Handler extends WalletConnectHandler {
       );
     }
 
-    console.log("setupWalletListeners");
-
     // Subscribe to session requests
     this.#wcWallet.on("session_request", (error, payload) => {
-      console.log("session_request", error, payload);
       if (error) {
         throw new Error(`WCV1H.session_request error: ${error.message}`);
       }
 
       this.#activeSessionPayload = payload;
-
-      console.log("session_proposal", payload);
 
       this.emit("session_proposal", {
         proposer: {
@@ -225,8 +207,6 @@ export class WalletConnectV1Handler extends WalletConnectHandler {
 
     // Subscribe to call requests
     this.#wcWallet.on("call_request", (error, payload) => {
-      console.log("call_request", error, payload);
-
       if (error) {
         throw new Error(`WCV1H.call_request error: ${error.message}`);
       }
@@ -237,13 +217,10 @@ export class WalletConnectV1Handler extends WalletConnectHandler {
       switch (method) {
         case EIP155_SIGNING_METHODS.ETH_SIGN:
         case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
-          console.log("call_request", method);
-
           const message = params[0];
           const decodedMessage = new TextDecoder().decode(
             utils.arrayify(message),
           );
-          console.log("call_request", method);
 
           const paramsCopy = [...params];
           paramsCopy[0] = decodedMessage;
@@ -258,8 +235,6 @@ export class WalletConnectV1Handler extends WalletConnectHandler {
           });
           break;
         case EIP155_SIGNING_METHODS.SWITCH_CHAIN:
-          console.log("call_request", method);
-
           this.emit("session_request", {
             topic: params[1],
             params: params,
@@ -277,7 +252,6 @@ export class WalletConnectV1Handler extends WalletConnectHandler {
     });
 
     this.#wcWallet.on("disconnect", (error) => {
-      console.log("disconnect", error);
       if (error) {
         throw new Error(`WCV1H.disconnect error: ${error.message}`);
       }

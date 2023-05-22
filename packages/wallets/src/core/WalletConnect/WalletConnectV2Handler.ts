@@ -136,16 +136,11 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
     const { topic, params, id } = this.#activeRequestEvent;
     const { request } = params;
 
-    console.log("receiver.method", request.method);
-
     switch (request.method) {
       case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
       case EIP155_SIGNING_METHODS.ETH_SIGN:
         const message = this.#getSignParamsMessage(request.params);
         const signedMessage = await wallet.signMessage(message);
-
-        console.log("message", message);
-        console.log("signedMessage", signedMessage);
 
         const response = {
           id,
@@ -170,8 +165,6 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
   }
 
   async rejectEIP155Request() {
-    console.log("rejectEIP155Request", this.#activeRequestEvent);
-
     if (!this.#activeRequestEvent) {
       return;
     }
@@ -186,7 +179,6 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
       },
     };
 
-    console.log("respond", topic, id);
     return this.#wcWallet?.respondSessionRequest({ topic, response });
   }
 
@@ -201,8 +193,6 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
     if (!sessions || sessionKeys.length === 0) {
       return [];
     }
-
-    console.log("sessions", sessions);
 
     const thisSessions = [];
     for (const sessionKey of sessionKeys) {
@@ -274,14 +264,11 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
       "session_request",
       async (requestEvent: Web3WalletTypes.SessionRequest) => {
         if (!this.#session) {
-          console.log("No session found on session_request event.");
           return;
         }
         const { params: requestParams } = requestEvent;
         const { request } = requestParams;
         const { params } = request;
-
-        console.log("request.method", params, request);
 
         switch (request.method) {
           case EIP155_SIGNING_METHODS.ETH_SIGN:

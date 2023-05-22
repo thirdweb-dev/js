@@ -51,8 +51,6 @@ export class SmartWallet
       ...options,
     });
 
-    console.log("enable connect app", options.enableConnectApp);
-
     this.enableConnectApp = options?.enableConnectApp || false;
     this.#wcWallet = this.enableConnectApp
       ? options?.wcVersion === "v1"
@@ -118,8 +116,6 @@ export class SmartWallet
   async approveSession(): Promise<void> {
     await this.#wcWallet.approveSession(this);
 
-    console.log("smart-wallet.approveSession");
-
     this.emit("message", { type: "session_approved" });
   }
 
@@ -157,8 +153,6 @@ export class SmartWallet
     }
 
     this.#wcWallet.on("session_proposal", (proposal: WCProposal) => {
-      console.log("smart-wallet.proposal", proposal);
-
       this.emit("message", {
         type: "session_proposal",
         data: proposal,
@@ -166,14 +160,10 @@ export class SmartWallet
     });
 
     this.#wcWallet.on("session_delete", () => {
-      console.log("smart-wallet.session_delete");
-
       this.emit("message", { type: "session_delete" });
     });
 
     this.#wcWallet.on("switch_chain", (request: WCRequest) => {
-      console.log("smart-wallet.switch_chain");
-
       const chainId = request.params[0].chainId;
 
       this.emit("message", {
@@ -185,8 +175,6 @@ export class SmartWallet
     });
 
     this.#wcWallet.on("session_request", (request: WCRequest) => {
-      console.log("smart-wallet.request", request);
-
       this.emit("message", {
         type: "session_request",
         data: request,
