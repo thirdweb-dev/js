@@ -352,18 +352,6 @@ export class DropClaimConditions<
                 pricePerToken: claimVerification.priceInProof,
               } as IDropSinglePhase.AllowlistProofStruct,
             );
-            if (
-              (convertQuantityToBigNumber(
-                claimCondition.maxClaimablePerWallet,
-                decimals,
-              ).eq(0) &&
-                claimVerification.maxClaimable ===
-                  ethers.constants.MaxUint256) ||
-              claimVerification.maxClaimable === BigNumber.from(0)
-            ) {
-              reasons.push(ClaimEligibility.AddressNotAllowed);
-              return reasons;
-            }
           } else if (this.isNewMultiphaseDrop(this.contractWrapper)) {
             activeConditionIndex =
               await this.contractWrapper.readContract.getActiveClaimConditionId();
