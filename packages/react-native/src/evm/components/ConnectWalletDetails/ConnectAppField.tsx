@@ -1,10 +1,6 @@
 import { useWallet } from "@thirdweb-dev/react-core";
-import {
-  IWalletConnectReceiver,
-  WCProposal,
-  WCRequest,
-} from "@thirdweb-dev/wallets";
-import { useCallback, useEffect, useState } from "react";
+import { IWalletConnectReceiver } from "@thirdweb-dev/wallets";
+import { useEffect, useState } from "react";
 import Box from "../base/Box";
 import BaseButton from "../base/BaseButton";
 import DisconnectIcon from "../../assets/disconnect";
@@ -13,50 +9,20 @@ import { TextInput } from "../base/TextInput";
 import RightArrowIcon from "../../assets/right-arrow";
 import { StyleSheet, View } from "react-native";
 import Text from "../base/Text";
-import PocketWalletIcon from "../../assets/wallet";
 import { WalletIcon } from "../base/WalletIcon";
-import { SessionProposalModal } from "./SessionProposalModal";
-import { SessionRequestModal } from "./SessionRequestModal";
-
-// type AppMeta = { name: string; iconUrl: string };
-
-// type ConnectAppFieldProps = { appMeta?: AppMeta };
+import WalletConnectIcon from "../../assets/wallet-connect";
 
 export const ConnectAppField = () => {
   const theme = useTheme();
   const [showWCInput, setShowWCInput] = useState(false);
   const [wcUri, setWCUri] = useState<string | undefined>();
   const [appMeta, setAppMeta] = useState<{ name: string; iconUrl: string }>();
-  const [sessionProposalData, setSessionProposalData] = useState<
-    WCProposal | undefined
-  >();
-  const [sessionRequestData, setSessionRequestData] = useState<
-    WCRequest | undefined
-  >();
   const wallet = useWallet();
-
-  const onSmartWalletWCMessage = useCallback(
-    ({ type, data }: { type: string; data?: unknown }) => {
-      switch (type) {
-        case "session_proposal":
-          setSessionProposalData(data as WCProposal);
-          break;
-        case "session_delete":
-          reset();
-          break;
-        case "session_request":
-          setSessionRequestData(data as WCRequest);
-          break;
-        default:
-        // method not implemented
-      }
-    },
-    [],
-  );
 
   useEffect(() => {
     if (wallet) {
-      wallet.addListener("message", onSmartWalletWCMessage);
+      // TODO: Add listener for SessionApproved
+      // wallet.addListener("message", onSmartWalletWCMessage);
 
       const sessions = (
         wallet as unknown as IWalletConnectReceiver
@@ -70,12 +36,12 @@ export const ConnectAppField = () => {
       }
     }
 
-    return () => {
-      if (wallet) {
-        wallet.removeListener("message", onSmartWalletWCMessage);
-      }
-    };
-  }, [onSmartWalletWCMessage, wallet]);
+    // return () => {
+    //   if (wallet) {
+    //     wallet.removeListener("message", onSmartWalletWCMessage);
+    //   }
+    // };
+  }, [wallet]);
 
   const onConnectDappPress = () => {
     if (appMeta) {
@@ -142,7 +108,7 @@ export const ConnectAppField = () => {
             {appMeta ? (
               <WalletIcon size={32} iconUri={appMeta.iconUrl} />
             ) : (
-              <PocketWalletIcon size={16} />
+              <WalletConnectIcon width={16} height={16} />
             )}
             <View style={styles.exportWalletInfo}>
               <Text variant="bodySmall">
@@ -165,28 +131,6 @@ export const ConnectAppField = () => {
           )}
         </BaseButton>
       )}
-      {sessionProposalData ? (
-        <SessionProposalModal
-          isVisible={true}
-          onApprove={(appName: string, appIconUrl: string) => {
-            setAppMeta({ name: appName, iconUrl: appIconUrl });
-            setSessionProposalData(undefined);
-          }}
-          onClose={() => {
-            setSessionProposalData(undefined);
-          }}
-          proposal={sessionProposalData}
-        />
-      ) : null}
-      {sessionRequestData ? (
-        <SessionRequestModal
-          isVisible={true}
-          onClose={() => {
-            setSessionRequestData(undefined);
-          }}
-          requestData={sessionRequestData}
-        />
-      ) : null}
     </>
   );
 };

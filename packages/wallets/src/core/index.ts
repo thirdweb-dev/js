@@ -1,5 +1,5 @@
 export * from "./AsyncStorage";
-export * from "./IStorage";
+export * from "./SyncStorage";
 export * from "./interfaces/auth";
 export type { DAppMetaData } from "./types/dAppMeta";
 export * from "./types/walletConnect";

@@ -1,3 +1,5 @@
+export { EIP155_SIGNING_METHODS } from "./constants/wc";
+
 export { walletIds } from "./constants/walletIds";
 
 export { WagmiConnector } from "../lib/wagmi-connectors";

@@ -5,7 +5,7 @@ import {
   createAsyncLocalStorage,
 } from "@thirdweb-dev/wallets";
 import { DEFAULT_WALLETS } from "../../constants/wallets";
-import { createLocalStorage } from "../../../core/AsyncStorage";
+import { createSyncStorage } from "../../../core/AsyncStorage";
 
 type SmartWalletConfig = {
   personalWallets: WalletConfig[];
@@ -26,7 +26,7 @@ export const smartWallet = (
         ...options,
         ...config,
         walletStorage: createAsyncLocalStorage("smart-wallet"),
-        wcStorage: createLocalStorage("smart-wallet"),
+        wcStorage: createSyncStorage("smart-wallet"),
       }),
     config: {
       ...config,

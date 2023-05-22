@@ -1,4 +1,5 @@
 import { WalletConfig } from "@thirdweb-dev/react-core";
+import { WCProposal, WCRequest } from "@thirdweb-dev/wallets";
 
 export const CLOSE_MODAL_STATE = (caller: Caller): ModalState => {
   return {
@@ -25,7 +26,11 @@ export type Caller =
   | "ConnectWalletDetails"
   | "ConnectWalletDetailsModal"
   | "ConnectWalletFlow"
-  | "MainModal";
+  | "MainModal"
+  | "SessionRequestModal"
+  | "SessionProposalModal"
+  | "WCSessionProposalListener"
+  | "WCSessionRequestListener";
 
 export type SheetModal = {
   isOpen: boolean;
@@ -65,7 +70,29 @@ export type WalletDetailsModal = {
   data: WalletDetailsData;
 } & SheetModal;
 
+// wallet connect
+export type WalletConnectSessionRequestData = {
+  requestData: WCRequest;
+};
+
+export type WalletConnectSessionRequestModal = {
+  view: "WalletConnectSessionRequestModal";
+  data: WalletConnectSessionRequestData;
+} & DialogModal;
+
+// wallet connect
+export type WalletConnectSessionProposalData = {
+  proposalData: WCProposal;
+};
+
+export type WalletConnectSessionProposalModal = {
+  view: "WalletConnectSessionProposalModal";
+  data: WalletConnectSessionProposalData;
+} & DialogModal;
+
 export type ModalState =
   | ClosedModal
   | ConnectWalletFlowModal
-  | WalletDetailsModal;
+  | WalletDetailsModal
+  | WalletConnectSessionRequestModal
+  | WalletConnectSessionProposalModal;

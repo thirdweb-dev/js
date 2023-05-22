@@ -7,7 +7,7 @@ import {
 import WalletConnect from "@walletconnect/client";
 import { EIP155_SIGNING_METHODS } from "../../evm/constants/wc";
 import { AbstractClientWallet } from "../../evm/wallets/base";
-import { IStorage } from "../IStorage";
+import { SyncStorage } from "../SyncStorage";
 import {
   ISessionStorage,
   IWalletConnectSession,
@@ -18,7 +18,7 @@ type WalletConnectV1WalletConfig = Omit<
   WalletConnectReceiverConfig,
   "enableConnectApp"
 > & {
-  storage: IStorage;
+  storage: SyncStorage;
 };
 
 const STORAGE_URI_KEY = "storage_uri_key";
@@ -30,7 +30,7 @@ export class WalletConnectV1Handler extends WalletConnectHandler {
   #activeSessionPayload: any;
   #activeCallRequest: any;
 
-  #storage: IStorage;
+  #storage: SyncStorage;
   #sessionStorage: ISessionStorage;
 
   constructor(options: WalletConnectV1WalletConfig) {
@@ -54,13 +54,13 @@ export class WalletConnectV1Handler extends WalletConnectHandler {
 
     if (uri) {
       this.#init(uri);
-      this.#wcWallet?.createSession();
     }
 
     return Promise.resolve();
   }
 
   async connectApp(uri: string): Promise<void> {
+    console.log("connectApp", uri);
     if (!this.#wcWallet) {
       this.#storage.setItem(STORAGE_URI_KEY, uri);
 
@@ -191,8 +191,6 @@ export class WalletConnectV1Handler extends WalletConnectHandler {
       storage: this.#sessionStorage,
     });
 
-    this.#wcWallet.connect();
-
     this.#setupWalletConnectEventsListeners();
   }
 
@@ -287,9 +285,9 @@ export class WalletConnectV1Handler extends WalletConnectHandler {
 }
 
 class SessionStorage implements ISessionStorage {
-  #storage: IStorage;
+  #storage: SyncStorage;
 
-  constructor(storage: IStorage) {
+  constructor(storage: SyncStorage) {
     this.#storage = storage;
   }
 

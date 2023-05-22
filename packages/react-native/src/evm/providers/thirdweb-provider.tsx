@@ -65,6 +65,8 @@ export const ThirdwebProvider = <
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
   useCoinbaseWalletListener();
 
+  useWalletConnectListener();
+
   return (
     <ThirdwebProviderCore
       thirdwebApiKey={thirdwebApiKey}

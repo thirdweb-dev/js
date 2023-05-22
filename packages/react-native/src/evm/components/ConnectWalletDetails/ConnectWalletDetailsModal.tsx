@@ -20,6 +20,7 @@ import Text from "../base/Text";
 import { useModalState } from "../../providers/ui-context-provider";
 import { CLOSE_MODAL_STATE, WalletDetailsModal } from "../../utils/modalTypes";
 import { useAppTheme } from "../../styles/hooks";
+import { ConnectAppField } from "./ConnectAppField";
 
 export const ConnectWalletDetailsModal = () => {
   const theme = useAppTheme();
@@ -82,6 +83,7 @@ export const ConnectWalletDetailsModal = () => {
           <View style={styles.currentNetwork}>
             <Text variant="bodySmallSecondary">Additional Actions</Text>
           </View>
+          <ConnectAppField />
           <BaseButton
             backgroundColor="background"
             borderColor="border"

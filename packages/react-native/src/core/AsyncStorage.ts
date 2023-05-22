@@ -1,4 +1,7 @@
-import { AsyncStorage as IAsyncStorage, IStorage } from "@thirdweb-dev/wallets";
+import {
+  AsyncStorage as IAsyncStorage,
+  SyncStorage,
+} from "@thirdweb-dev/wallets";
 import { MMKV } from "react-native-mmkv";
 
 const PREFIX = "__TW__";
@@ -31,7 +34,7 @@ export class AsyncLocalStorage implements IAsyncStorage {
   }
 }
 
-export class LocalStorage implements IStorage {
+export class LocalStorage implements SyncStorage {
   name: string;
   asyncStorage: MMKV;
 
@@ -83,6 +86,6 @@ export function createAsyncLocalStorage(name: string) {
  * @param name Name to namespace the storage with
  * @returns A new instance of LocalStorage
  */
-export function createLocalStorage(name: string) {
+export function createSyncStorage(name: string) {
   return new LocalStorage(name);
 }

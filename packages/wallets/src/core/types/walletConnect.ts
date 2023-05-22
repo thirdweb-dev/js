@@ -1,7 +1,7 @@
 import { IWeb3Wallet } from "@walletconnect/web3wallet";
 import EventEmitter from "eventemitter3";
 import { AbstractClientWallet } from "../../evm/wallets/base";
-import { IStorage } from "../IStorage";
+import { SyncStorage } from "../SyncStorage";
 
 export type WalletConnectMetadata = IWeb3Wallet["metadata"];
 
@@ -12,7 +12,7 @@ export type WalletConnectReceiverConfig = {
   walletConnectV2Metadata?: WCMetadata;
   walletConenctV2ProjectId?: string;
   walletConnectV2RelayUrl?: string;
-  wcStorage?: IStorage;
+  wcStorage?: SyncStorage;
 };
 
 export type WCMetadata = {

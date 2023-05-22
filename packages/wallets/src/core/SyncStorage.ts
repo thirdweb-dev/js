@@ -1,4 +1,4 @@
-export interface IStorage {
+export interface SyncStorage {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;
   removeItem(key: string): void;
@@ -6,7 +6,7 @@ export interface IStorage {
 
 const PREFIX = "__TW__";
 
-export class LocalStorage implements IStorage {
+export class LocalStorage implements SyncStorage {
   name: string;
 
   constructor(name: string) {
