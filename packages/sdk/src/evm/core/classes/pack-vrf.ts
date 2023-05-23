@@ -1,15 +1,11 @@
-import {
-  ContractEvents,
-  NetworkInput,
-  Transaction,
-  TransactionResultWithId,
-} from "..";
 import { fetchCurrencyMetadata } from "../../common";
 import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import { LINK_TOKEN_ADDRESS } from "../../constants";
 import { FEATURE_PACK_VRF } from "../../constants/thirdweb-features";
-import { Address, AddressOrEns, PackRewards, SDKOptions } from "../../schema";
+import { Address, AddressOrEns } from "../../schema/shared";
+import { SDKOptions } from "../../schema/sdk-options";
+import { PackRewards } from "../../schema/tokens/pack";
 import { Amount, CurrencyValue } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
@@ -26,6 +22,9 @@ import {
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/IPackVRFDirect";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers } from "ethers";
+import type { NetworkInput, TransactionResultWithId } from "../types";
+import { ContractEvents } from "./contract-events";
+import { Transaction } from "./transactions";
 
 export class PackVRF implements UpdateableNetwork, DetectableFeature {
   featureName = FEATURE_PACK_VRF.name;

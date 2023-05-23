@@ -4,7 +4,6 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
 } from "react-native";
-import Modal from "react-native-modal";
 import { useState } from "react";
 import BaseButton from "../base/BaseButton";
 import Box from "../base/Box";
@@ -17,6 +16,7 @@ import type {
 } from "../../wallets/types/local-wallet";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
+import { TWModal } from "../base/modal/TWModal";
 
 export type LocalWalletImportModalProps = {
   isVisible: boolean;
@@ -110,7 +110,7 @@ export const LocalWalletImportModal = ({
   };
 
   return (
-    <Modal isVisible={isVisible} backdropOpacity={0.7}>
+    <TWModal isVisible={isVisible} backdropOpacity={0.7}>
       <KeyboardAvoidingView behavior="padding">
         <Box
           flexDirection="column"
@@ -168,7 +168,7 @@ export const LocalWalletImportModal = ({
           </Box>
         </Box>
       </KeyboardAvoidingView>
-    </Modal>
+    </TWModal>
   );
 };
 

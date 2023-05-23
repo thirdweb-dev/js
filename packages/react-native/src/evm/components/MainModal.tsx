@@ -1,4 +1,3 @@
-import Modal from "react-native-modal";
 import { useModalState } from "../providers/ui-context-provider";
 import { ConnectWalletFlow } from "./ConnectWalletFlow/ConnectWalletFlow";
 import { Dimensions, StyleSheet, View } from "react-native";
@@ -9,6 +8,7 @@ import { ThemeProvider } from "../styles/ThemeProvider";
 import { useAppTheme } from "../styles/hooks";
 import { SessionRequestModal } from "./ConnectWalletDetails/SessionRequestModal";
 import { SessionProposalModal } from "./ConnectWalletDetails/SessionProposalModal";
+import { TWModal } from "./base/modal/TWModal";
 
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 const DEVICE_WIDTH = Dimensions.get("window").width;
@@ -41,12 +41,7 @@ export const MainModal = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Modal
-        useNativeDriver
-        hideModalContentWhileAnimating={true}
-        isVisible={isOpen}
-        onBackdropPress={onBackdropPress}
-      >
+      <TWModal isVisible={isOpen} onBackdropPress={onBackdropPress}>
         {isSheet ? (
           <View
             style={[styles.modal, { backgroundColor: theme.colors.background }]}
@@ -56,7 +51,7 @@ export const MainModal = () => {
         ) : (
           view
         )}
-      </Modal>
+      </TWModal>
     </ThemeProvider>
   );
 };

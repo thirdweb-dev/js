@@ -1,6 +1,6 @@
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_CLAIM_CONDITIONS_V2 } from "../../constants/erc1155-features";
-import { AddressOrEns } from "../../schema";
+import { AddressOrEns } from "../../schema/shared";
 import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
 import { BaseClaimConditionERC1155 } from "../../types/eips";

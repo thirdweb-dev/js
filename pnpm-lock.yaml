@@ -841,6 +841,9 @@ importers:
       react-native:
         specifier: ^0.71.0
         version: 0.71.4(@babel/core@7.21.3)(@babel/preset-env@7.20.2)(react@18.2.0)
+      react-native-camera:
+        specifier: ^4.2.1
+        version: 4.2.1
       typescript:
         specifier: ^4.7.4
         version: 4.9.5
@@ -26394,6 +26397,12 @@ packages:
     dependencies:
       prop-types: 15.8.1
     dev: false
+
+  /react-native-camera@4.2.1:
+    resolution: {integrity: sha512-+Vkql24PFYQfsPRznJCvPwJQfyzCnjlcww/iZ4Ej80bgivKjL9eU0IMQIXp4yi6XCrKi4voWXxIDPMupQZKeIQ==}
+    dependencies:
+      prop-types: 15.8.1
+    dev: true
 
   /react-native-codegen@0.71.5:
     resolution: {integrity: sha512-rfsuc0zkuUuMjFnrT55I1mDZ+pBRp2zAiRwxck3m6qeGJBGK5OV5JH66eDQ4aa+3m0of316CqrJDRzVlYufzIg==}
