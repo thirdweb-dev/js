@@ -754,13 +754,23 @@ export class ContractDeployer extends RPCConnectionHandler {
       const { compilerMetadata, extendedMetadata } =
         await fetchAndCacheDeployMetadata(publishMetadataUri, this.storage);
       const forceDirectDeploy = options?.forceDirectDeploy || false;
+
+      const chainId = (await this.getProvider().getNetwork()).chainId;
+      const isNetworkEnabled =
+        extendedMetadata?.networksForDeployment?.networksEnabled.includes(
+          chainId,
+        );
+      if (extendedMetadata?.networksForDeployment && !isNetworkEnabled) {
+        throw new Error(
+          `Deployments disabled on this network, with chainId: ${chainId}`,
+        );
+      }
+
       if (
         extendedMetadata &&
         extendedMetadata.factoryDeploymentData &&
         !forceDirectDeploy
       ) {
-        const chainId = (await this.getProvider().getNetwork()).chainId;
-
         invariant(
           extendedMetadata.factoryDeploymentData
             .implementationInitializerFunction,
