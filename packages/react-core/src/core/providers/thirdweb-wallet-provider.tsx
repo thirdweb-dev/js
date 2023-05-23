@@ -346,11 +346,11 @@ export function ThirdwebWalletProvider(
         await wallet.autoConnect(walletInfo.connectParams);
         setConnectedWallet(wallet, walletInfo.connectParams, true);
       } catch (e) {
+        console.error(e);
         lastConnectedWalletStorage.removeItem(
           LAST_CONNECTED_WALLET_STORAGE_KEY,
         );
         setConnectionStatus("disconnected");
-        throw e;
       }
     }
 

@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 1.1.3
+
+### Patch Changes
+
+- [#1037](https://github.com/thirdweb-dev/js/pull/1037) [`d5123044`](https://github.com/thirdweb-dev/js/commit/d51230441a097734be092c42b45dea07629e65fa) Thanks [@jnsdls](https://github.com/jnsdls)! - update ipfs gateways - add more fallbacks
+
 ## 1.1.2
 
 ### Patch Changes

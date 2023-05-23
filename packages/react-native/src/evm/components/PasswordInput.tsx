@@ -2,15 +2,15 @@ import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import Box from "./base/Box";
 import { useState } from "react";
 import EyeClosed from "../assets/eye-closed";
-import { useTheme } from "@shopify/restyle";
 import EyeOpened from "../assets/eye-opened";
+import { useAppTheme } from "../styles/hooks";
 
 export const PasswordInput = ({
   onChangeText,
 }: {
   onChangeText: TextInput["props"]["onChangeText"];
 }) => {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const [showPassword, setShowPassword] = useState(false);
 
   const onPressEyeIcon = () => {

@@ -1,5 +1,28 @@
 # @thirdweb-dev/auth
 
+## 3.0.21
+
+### Patch Changes
+
+- Updated dependencies [[`30e5593d`](https://github.com/thirdweb-dev/js/commit/30e5593dd1ce9abd809ad216a1cfce77b897093c)]:
+  - @thirdweb-dev/wallets@0.2.22
+
+## 3.0.20
+
+### Patch Changes
+
+- Updated dependencies [[`b6f48e10`](https://github.com/thirdweb-dev/js/commit/b6f48e1088b5d36a51103de4afda53179029faaf)]:
+  - @thirdweb-dev/wallets@0.2.21
+
+## 3.0.19
+
+### Patch Changes
+
+- [#1013](https://github.com/thirdweb-dev/js/pull/1013) [`b92aabe4`](https://github.com/thirdweb-dev/js/commit/b92aabe450f40b248fd1b7533f1d3bc7f8f25288) Thanks [@adam-maj](https://github.com/adam-maj)! - Expose request on onUser hook
+
+- Updated dependencies [[`738c0ec6`](https://github.com/thirdweb-dev/js/commit/738c0ec6c4190aa2252233c1382aed5d982cc7b8), [`d495a4b8`](https://github.com/thirdweb-dev/js/commit/d495a4b8a6e0599e5b4611620f3fded80a411173), [`4f843833`](https://github.com/thirdweb-dev/js/commit/4f8438335e3e3731b67ae271cb34c383832242a0)]:
+  - @thirdweb-dev/wallets@0.2.20
+
 ## 3.0.18
 
 ### Patch Changes

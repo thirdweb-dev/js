@@ -1,6 +1,6 @@
-import { useTheme } from "@shopify/restyle";
 import Text from "../Text";
 import { TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
+import { useAppTheme } from "../../../styles/hooks";
 
 export const ModalFooter = ({
   footer,
@@ -11,7 +11,7 @@ export const ModalFooter = ({
   isLoading?: boolean;
   onPress?: () => void;
 }) => {
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   return (
     <TouchableOpacity style={styles.footer} onPress={onPress}>
