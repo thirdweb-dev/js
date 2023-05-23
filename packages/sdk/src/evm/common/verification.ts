@@ -2,9 +2,6 @@ import { ThirdwebSDK } from "../core/sdk";
 import {
   extractConstructorParamsFromAbi,
   fetchSourceFilesFromMetadata,
-  getEncodedConstructorParamsForThirdwebContract,
-  getThirdwebContractAddress,
-  isContractDeployed,
   resolveContractUriFromAddress,
 } from ".";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -16,6 +13,9 @@ import { ConstructorParamMap } from "../types/any-evm/deploy-data";
 import { getChainProvider } from "../constants";
 import invariant from "tiny-invariant";
 import { DEFAULT_API_KEY } from "../../core/constants/urls";
+import { getEncodedConstructorParamsForThirdwebContract } from "./any-evm-utils/getEncodedConstructorParamsForThirdwebContract";
+import { isContractDeployed } from "./any-evm-utils/isContractDeployed";
+import { getThirdwebContractAddress } from "./any-evm-utils/getThirdwebContractAddress";
 
 const RequestStatus = {
   OK: "1",

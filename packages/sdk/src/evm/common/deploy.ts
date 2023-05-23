@@ -18,11 +18,11 @@ import { BigNumber, Signer, providers } from "ethers";
 import { z } from "zod";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { SUPPORTED_CHAIN_IDS } from "../constants";
-import { computeForwarderAddress } from "./any-evm-utils";
 import type {
   PrebuiltContractType,
   DeploySchemaForPrebuiltContractType,
 } from "../core/types";
+import { computeForwarderAddress } from "./any-evm-utils/computeForwarderAddress";
 
 /**
  *

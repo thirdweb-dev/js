@@ -11,10 +11,7 @@ import {
   TransactionResult,
 } from "../core/types";
 import { SDKOptionsOutput } from "../schema/sdk-options";
-import {
-  computeEOAForwarderAddress,
-  computeForwarderAddress,
-} from "./any-evm-utils";
+
 import {
   BiconomyForwarderAbi,
   ChainAwareForwardRequest,
@@ -27,6 +24,8 @@ import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
 import fetch from "cross-fetch";
 import { BigNumber, BytesLike, ethers } from "ethers";
 import invariant from "tiny-invariant";
+import { computeEOAForwarderAddress } from "./any-evm-utils/computeEOAForwarderAddress";
+import { computeForwarderAddress } from "./any-evm-utils/computeForwarderAddress";
 
 export function buildDeployTransactionFunction<TArgs extends any[]>(
   fn: (...args: TArgs) => Promise<DeployTransaction>,

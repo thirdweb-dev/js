@@ -1,7 +1,5 @@
 import {
   TransactionError,
-  computeEOAForwarderAddress,
-  computeForwarderAddress,
   extractFunctionsFromAbi,
   fetchContractMetadataFromAddress,
   fetchSourceFilesFromMetadata,
@@ -46,6 +44,8 @@ import {
 } from "ethers";
 import { ConnectionInfo } from "ethers/lib/utils.js";
 import invariant from "tiny-invariant";
+import { computeEOAForwarderAddress } from "../../common/any-evm-utils/computeEOAForwarderAddress";
+import { computeForwarderAddress } from "../../common/any-evm-utils/computeForwarderAddress";
 
 /**
  * @internal

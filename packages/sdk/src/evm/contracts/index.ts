@@ -1,4 +1,3 @@
-import { fetchAndCachePublishedContractURI } from "../common";
 import { getPrebuiltInfo } from "../common/legacy";
 import { fetchAbiFromAddress } from "../common/metadata-resolver";
 import {
@@ -28,6 +27,7 @@ import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
+import { fetchAndCachePublishedContractURI } from "../common/any-evm-utils/fetchAndCachePublishedContractURI";
 
 type InitalizeParams = [
   network: NetworkInput,

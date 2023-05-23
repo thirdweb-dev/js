@@ -1,16 +1,14 @@
 import * as zk from "zksync-web3";
 import { twProxyArtifactZK } from "./temp-artifact/TWProxy";
-import {
-  convertParamValues,
-  extractFunctionParamsFromAbi,
-  fetchAndCacheDeployMetadata,
-} from "../common";
+import { extractFunctionParamsFromAbi } from "../common";
 import { BytesLike, Contract, Signer, ethers } from "ethers";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { DeployOptions } from "../types";
 import { ThirdwebSDK } from "../core/sdk";
 import { getImplementation } from "./constants/addresses";
 import { DeploymentTransaction } from "../types/any-evm/deploy-data";
+import { convertParamValues } from "../common/any-evm-utils/convertParamValues";
+import { fetchAndCacheDeployMetadata } from "../common/any-evm-utils/fetchAndCacheDeployMetadata";
 
 export async function zkDeployContractFromUri(
   publishMetadataUri: string,
