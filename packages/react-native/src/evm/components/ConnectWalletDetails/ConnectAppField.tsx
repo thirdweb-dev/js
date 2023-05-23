@@ -13,7 +13,6 @@ import { WalletIcon } from "../base/WalletIcon";
 import WalletConnectIcon from "../../assets/wallet-connect";
 import QrCodeIcon from "../../assets/qr-code";
 import { QRCodeScan } from "./QRCodeScan";
-import { parseWalletConnectUri } from "@walletconnect/utils";
 
 const ConnectAppField = () => {
   const theme = useTheme();
@@ -96,15 +95,7 @@ const ConnectAppField = () => {
       return;
     }
 
-    let parsedUri;
-    try {
-      parsedUri = parseWalletConnectUri(wcUri);
-    } catch (error) {
-      console.error("Error parsing the wallet connect uri", error);
-      return;
-    }
-
-    if (parsedUri.protocol === "wc") {
+    if (wcUri.startsWith("wc:")) {
       (wallet as unknown as IWalletConnectReceiver).connectApp(wcUri);
     }
   };
