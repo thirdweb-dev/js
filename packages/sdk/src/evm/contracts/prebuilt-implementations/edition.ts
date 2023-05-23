@@ -18,7 +18,7 @@ import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { Address, AddressOrEns } from "../../schema";
+import { Address, AddressOrEns } from "../../schema/shared";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { TokenErc1155ContractSchema } from "../../schema/contracts/token-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";

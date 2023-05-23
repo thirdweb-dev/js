@@ -8,7 +8,7 @@ import {
   resolveContractUriFromAddress,
 } from ".";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { Abi } from "../schema";
+import { Abi } from "../schema/contracts/custom";
 import { ethers, utils } from "ethers";
 import { EtherscanResult, VerificationStatus } from "../types/verification";
 import fetch from "cross-fetch";

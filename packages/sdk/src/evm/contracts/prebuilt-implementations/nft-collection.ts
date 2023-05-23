@@ -17,7 +17,7 @@ import { Erc721WithQuantitySignatureMintable } from "../../core/classes/erc-721-
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import type { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { Address, AddressOrEns } from "../../schema";
+import { Address, AddressOrEns } from "../../schema/shared";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { TokenErc721ContractSchema } from "../../schema/contracts/token-erc721";
 import { SDKOptions } from "../../schema/sdk-options";

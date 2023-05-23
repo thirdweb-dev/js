@@ -5,8 +5,8 @@ import {
   AbiSchema,
   ContractInfoSchema,
   ContractSource,
-  Address,
-} from "../schema";
+} from "../schema/contracts/custom";
+import { Address } from "../schema/shared";
 import { resolveContractUriFromAddress } from "./feature-detection";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { providers } from "ethers";

@@ -26,7 +26,8 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { PackVRF } from "../../core/classes/pack-vrf";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { Abi, AbiInput, AbiSchema, Address, AddressOrEns } from "../../schema";
+import { Address, AddressOrEns } from "../../schema/shared";
+import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { PackContractSchema } from "../../schema/contracts/packs";
 import { SDKOptions } from "../../schema/sdk-options";
 import {

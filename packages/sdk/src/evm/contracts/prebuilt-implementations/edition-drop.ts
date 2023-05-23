@@ -20,7 +20,7 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { PaperCheckout } from "../../integrations/thirdweb-checkout";
-import { Address, AddressOrEns } from "../../schema";
+import { Address, AddressOrEns } from "../../schema/shared";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { DropErc1155ContractSchema } from "../../schema/contracts/drop-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";

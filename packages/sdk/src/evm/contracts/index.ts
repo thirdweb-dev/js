@@ -12,19 +12,17 @@ import type {
   PrebuiltContractType,
 } from "../core/types";
 import { getSignerAndProvider } from "../functions/getSignerAndProvider";
-import {
-  Address,
-  DropErc1155ContractSchema,
-  DropErc721ContractSchema,
-  MarketplaceContractSchema,
-  PackContractSchema,
-  SDKOptions,
-  SplitsContractSchema,
-  TokenErc1155ContractSchema,
-  TokenErc20ContractSchema,
-  TokenErc721ContractSchema,
-  VoteContractSchema,
-} from "../schema";
+import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
+import { DropErc721ContractSchema } from "../schema/contracts/drop-erc721";
+import { MarketplaceContractSchema } from "../schema/contracts/marketplace";
+import { SplitsContractSchema } from "../schema/contracts/splits";
+import { TokenErc1155ContractSchema } from "../schema/contracts/token-erc1155";
+import { TokenErc20ContractSchema } from "../schema/contracts/token-erc20";
+import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
+import { Address } from "../schema/shared";
+import { PackContractSchema } from "../schema/contracts/packs";
+import { SDKOptions } from "../schema/sdk-options";
+import { VoteContractSchema } from "../schema/contracts/vote";
 import { Abi, AbiSchema } from "../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";

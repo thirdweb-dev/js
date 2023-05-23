@@ -4,7 +4,7 @@ import invariant from "tiny-invariant";
 import { bytecode as WETHBytecode } from "./WETH9";
 import { getChainProvider, getNativeTokenByChainId } from "../constants";
 import { ThirdwebSDK } from "../core/sdk";
-import { PreDeployMetadataFetched } from "../schema";
+import { PreDeployMetadataFetched } from "../schema/contracts/custom";
 import {
   DeployedContractType,
   KeylessDeploymentInfo,
