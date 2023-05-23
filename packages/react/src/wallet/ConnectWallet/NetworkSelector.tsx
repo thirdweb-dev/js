@@ -20,6 +20,8 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import * as Tabs from "@radix-ui/react-tabs";
 import {
   ThirdwebThemeContext,
+  useAddress,
+  useBalance,
   useChainId,
   useSupportedChains,
   useSwitchChain,
@@ -54,6 +56,7 @@ export type NetworkSelectorProps = {
   renderChain?: RenderChain;
   onSwitch?: (chain: Chain) => void;
   onCustomClick?: () => void;
+  onCreatePrivateNetwork?(chain?: Chain, error?: string): Promise<void>;
 };
 
 const fuseConfig = {
@@ -71,58 +74,8 @@ const fuseConfig = {
 };
 
 export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const deferredSearchTerm = useDeferredValue(searchTerm);
   const themeFromProvider = useContext(ThirdwebThemeContext);
   const theme = props.theme || themeFromProvider || "dark";
-  const supportedChains = useSupportedChains();
-  const chains = props.chains || supportedChains;
-
-  const _recentChains = props.recentChains;
-
-  // remove recent chains from popular chains
-  const cleanedPopularChains = !_recentChains
-    ? props.popularChains
-    : props.popularChains?.filter((chain) => {
-        return !_recentChains.some(
-          (recentChain) => recentChain.chainId === chain.chainId,
-        );
-      });
-
-  // fuse instances
-  const fuseAllChains = useMemo(() => {
-    return new Fuse(chains, fuseConfig);
-  }, [chains]);
-
-  const fusePopularChains = useMemo(() => {
-    return new Fuse(cleanedPopularChains || [], fuseConfig);
-  }, [cleanedPopularChains]);
-
-  const fuseRecentChains = useMemo(() => {
-    return new Fuse(props.recentChains || [], fuseConfig);
-  }, [props.recentChains]);
-
-  // chains filtered by search term
-  const allChains = useMemo(() => {
-    if (deferredSearchTerm === "") {
-      return chains;
-    }
-    return fuseAllChains.search(deferredSearchTerm).map((r) => r.item);
-  }, [fuseAllChains, deferredSearchTerm, chains]);
-
-  const popularChains = useMemo(() => {
-    if (deferredSearchTerm === "") {
-      return cleanedPopularChains || [];
-    }
-    return fusePopularChains.search(deferredSearchTerm).map((r) => r.item);
-  }, [fusePopularChains, deferredSearchTerm, cleanedPopularChains]);
-
-  const recentChains = useMemo(() => {
-    if (deferredSearchTerm === "") {
-      return props.recentChains || [];
-    }
-    return fuseRecentChains.search(deferredSearchTerm).map((r) => r.item);
-  }, [fuseRecentChains, deferredSearchTerm, props.recentChains]);
 
   const { onClose, onSwitch, onCustomClick } = props;
 
@@ -173,108 +126,58 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
             <TabButton className="TabsTrigger" value="testnet">
               Testnets
             </TabButton>
-          </Tabs.List>
-
-          <Spacer y="lg" />
-
-          {/* Search */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              position: "relative",
-            }}
-          >
-            <StyledMagnifyingGlassIcon
-              width={iconSize.md}
-              height={iconSize.md}
-            />
-
-            <SearchInput
-              style={{
-                boxShadow: "none",
-              }}
-              tabIndex={isMobile() ? -1 : 0}
-              variant="secondary"
-              placeholder="Search Network or Chain ID"
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-              }}
-            />
-
-            {/* Searching Spinner */}
-            {deferredSearchTerm !== searchTerm && (
-              <div
-                style={{
-                  position: "absolute",
-                  right: spacing.md,
-                }}
-              >
-                <Spinner size="md" color="link" />
-              </div>
+            {props.onCreatePrivateNetwork && (
+              <TabButton className="TabsTrigger" value="private">
+                Private
+              </TabButton>
             )}
-          </div>
+          </Tabs.List>
 
           <Spacer y="lg" />
 
           <Tabs.Content className="TabsContent" value="all">
             <NetworkTab
-              allChains={allChains}
               type="all"
-              popularChains={popularChains}
-              recentChains={recentChains}
+              chains={props.chains}
+              popularChains={props.popularChains}
+              recentChains={props.recentChains}
               onSwitch={handleSwitch}
               renderChain={props.renderChain}
-              close={props.onClose}
+              onClose={props.onClose}
+              onCustomClick={props.onCustomClick}
             />
           </Tabs.Content>
 
           <Tabs.Content className="TabsContent" value="mainnet">
             <NetworkTab
-              allChains={allChains}
               type="mainnet"
-              popularChains={popularChains}
-              recentChains={recentChains}
+              chains={props.chains}
+              popularChains={props.popularChains}
+              recentChains={props.recentChains}
               onSwitch={handleSwitch}
               renderChain={props.renderChain}
-              close={props.onClose}
+              onClose={props.onClose}
+              onCustomClick={props.onCustomClick}
             />
           </Tabs.Content>
 
           <Tabs.Content className="TabsContent" value="testnet">
             <NetworkTab
-              allChains={allChains}
               type="testnet"
-              popularChains={popularChains}
-              recentChains={recentChains}
+              chains={props.chains}
+              popularChains={props.popularChains}
+              recentChains={props.recentChains}
               onSwitch={handleSwitch}
               renderChain={props.renderChain}
-              close={props.onClose}
+              onClose={props.onClose}
+              onCustomClick={props.onCustomClick}
             />
           </Tabs.Content>
 
-          {onCustomClick && (
-            <>
-              <Spacer y="sm" />
-              <Button
-                variant="link"
-                onClick={() => {
-                  onCustomClick();
-                  if (onClose) {
-                    onClose();
-                  }
-                }}
-                style={{
-                  display: "flex",
-                  width: "100%",
-                  fontSize: fontSize.sm,
-                  boxShadow: "none",
-                }}
-              >
-                Add Custom Network
-              </Button>
-            </>
+          {props.onCreatePrivateNetwork && (
+            <Tabs.Content className="TabsContent" value="private">
+              <PrivateNetworkTab onCreateClick={props.onCreatePrivateNetwork} />
+            </Tabs.Content>
           )}
         </Tabs.Root>
       </Modal>
@@ -282,10 +185,9 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
   );
 };
 
-const filterChainByType = (
-  chains: Chain[],
-  type: "testnet" | "mainnet" | "all",
-) => {
+type ChainType = "private" | "testnet" | "mainnet" | "all";
+
+const filterChainByType = (chains: Chain[], type: ChainType) => {
   if (type === "all") {
     return chains;
   }
@@ -297,77 +199,232 @@ const filterChainByType = (
   return chains.filter((c) => !c.testnet);
 };
 
-const NetworkTab = (props: {
-  allChains: Chain[];
-  recentChains?: Chain[];
-  popularChains?: Chain[];
-  type: "testnet" | "mainnet" | "all";
-  onSwitch: (chain: Chain) => void;
-  renderChain?: RenderChain;
-  close?: () => void;
-}) => {
-  const allChains = useMemo(
-    () => filterChainByType(props.allChains, props.type),
-    [props.type, props.allChains],
-  );
-  const recentChains = useMemo(
-    () => filterChainByType(props.recentChains || [], props.type),
-    [props.type, props.recentChains],
-  );
-  const popularChains = useMemo(
-    () => filterChainByType(props.popularChains || [], props.type),
-    [props.type, props.popularChains],
-  );
+interface StealthTestEnvironment {
+  id: string;
+  chainId: number;
+  name: string;
+  status: "PENDING" | "ACTIVE" | "ERROR";
+  networks: {
+    eth: {
+      url: string;
+    };
+  };
+}
 
+const PrivateNetworkTab = (props: { onCreateClick(): Promise<void> }) => {
+  const [loading, setLoading] = useState(false);
   return (
     <ScrollContainer
       style={{
         height: "330px",
       }}
     >
-      {recentChains.length > 0 && (
-        <div>
-          <SectionLabel>Recently Used</SectionLabel>
-          <Spacer y="sm" />
-          <NetworkList
-            chains={recentChains}
-            onSwitch={props.onSwitch}
-            renderChain={props.renderChain}
-            close={props.close}
-          />
-          <Spacer y="lg" />
-        </div>
-      )}
-
-      {popularChains.length > 0 && (
-        <div>
-          <SectionLabel>Popular</SectionLabel>
-          <Spacer y="sm" />
-          <NetworkList
-            chains={popularChains}
-            onSwitch={props.onSwitch}
-            renderChain={props.renderChain}
-            close={props.close}
-          />
-          <Spacer y="lg" />
-        </div>
-      )}
-
-      {/* separator  */}
-      {(popularChains.length > 0 || recentChains.length > 0) && (
-        <>
-          <SectionLabel>All Networks</SectionLabel>
-          <Spacer y="sm" />
-        </>
-      )}
-
-      <NetworkList
-        chains={allChains}
-        onSwitch={props.onSwitch}
+      <Button
+        variant="inverted"
+        style={{
+          width: "100%",
+          boxShadow: "none",
+        }}
+        onClick={async () => {
+          setLoading(true);
+          await props.onCreateClick();
+          setLoading(false);
+        }}
+      >
+        {loading ? (
+          <Spinner size="sm" color="inverted" />
+        ) : (
+          "Create Private Network on StealthTest"
+        )}
+      </Button>
+      {/* <NetworkList
+        chains={[]}
+        onSwitch={() => {}}
         renderChain={props.renderChain}
         close={props.close}
       />
+      <Spacer y="lg" /> */}
     </ScrollContainer>
+  );
+};
+
+const NetworkTab = (props: {
+  chains?: Chain[];
+  recentChains?: Chain[];
+  popularChains?: Chain[];
+  type: ChainType;
+  onSwitch: (chain: Chain) => void;
+  renderChain?: RenderChain;
+  onClose?: () => void;
+  onCustomClick?: () => void;
+}) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const deferredSearchTerm = useDeferredValue(searchTerm);
+  const supportedChains = useSupportedChains();
+  const chains = props.chains || supportedChains;
+  const _recentChains = props.recentChains;
+
+  // remove recent chains from popular chains
+  const cleanedPopularChains = !_recentChains
+    ? props.popularChains
+    : props.popularChains?.filter((chain) => {
+        return !_recentChains.some(
+          (recentChain) => recentChain.chainId === chain.chainId,
+        );
+      });
+
+  // fuse instances
+  const fuseAllChains = useMemo(() => {
+    return new Fuse(chains, fuseConfig);
+  }, [chains]);
+
+  const fusePopularChains = useMemo(() => {
+    return new Fuse(cleanedPopularChains || [], fuseConfig);
+  }, [cleanedPopularChains]);
+
+  const fuseRecentChains = useMemo(() => {
+    return new Fuse(props.recentChains || [], fuseConfig);
+  }, [props.recentChains]);
+
+  // chains filtered by search term
+  const allChains = useMemo(() => {
+    if (deferredSearchTerm === "") {
+      return chains;
+    }
+    return filterChainByType(
+      fuseAllChains.search(deferredSearchTerm).map((r) => r.item),
+      props.type,
+    );
+  }, [fuseAllChains, deferredSearchTerm, chains, props.type]);
+
+  const popularChains = useMemo(() => {
+    if (deferredSearchTerm === "") {
+      return cleanedPopularChains || [];
+    }
+    return filterChainByType(
+      fusePopularChains.search(deferredSearchTerm).map((r) => r.item),
+      props.type,
+    );
+  }, [fusePopularChains, deferredSearchTerm, cleanedPopularChains, props.type]);
+
+  const recentChains = useMemo(() => {
+    if (deferredSearchTerm === "") {
+      return props.recentChains || [];
+    }
+    return filterChainByType(
+      fuseRecentChains.search(deferredSearchTerm).map((r) => r.item),
+      props.type,
+    );
+  }, [fuseRecentChains, deferredSearchTerm, props.recentChains, props.type]);
+
+  return (
+    <>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          position: "relative",
+        }}
+      >
+        <StyledMagnifyingGlassIcon width={iconSize.md} height={iconSize.md} />
+
+        <SearchInput
+          style={{
+            boxShadow: "none",
+          }}
+          tabIndex={isMobile() ? -1 : 0}
+          variant="secondary"
+          placeholder="Search Network or Chain ID"
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+          }}
+        />
+
+        {/* Searching Spinner */}
+        {deferredSearchTerm !== searchTerm && (
+          <div
+            style={{
+              position: "absolute",
+              right: spacing.md,
+            }}
+          >
+            <Spinner size="md" color="link" />
+          </div>
+        )}
+      </div>
+
+      <Spacer y="lg" />
+
+      <ScrollContainer
+        style={{
+          height: "330px",
+        }}
+      >
+        {recentChains.length > 0 && (
+          <div>
+            <SectionLabel>Recently Used</SectionLabel>
+            <Spacer y="sm" />
+            <NetworkList
+              chains={recentChains}
+              onSwitch={props.onSwitch}
+              renderChain={props.renderChain}
+              close={props.onClose}
+            />
+            <Spacer y="lg" />
+          </div>
+        )}
+
+        {popularChains.length > 0 && (
+          <div>
+            <SectionLabel>Popular</SectionLabel>
+            <Spacer y="sm" />
+            <NetworkList
+              chains={popularChains}
+              onSwitch={props.onSwitch}
+              renderChain={props.renderChain}
+              close={props.onClose}
+            />
+            <Spacer y="lg" />
+          </div>
+        )}
+
+        {/* separator  */}
+        {(popularChains.length > 0 || recentChains.length > 0) && (
+          <>
+            <SectionLabel>All Networks</SectionLabel>
+            <Spacer y="sm" />
+          </>
+        )}
+
+        <NetworkList
+          chains={allChains}
+          onSwitch={props.onSwitch}
+          renderChain={props.renderChain}
+          close={props.onClose}
+        />
+      </ScrollContainer>
+      {props.onCustomClick && (
+        <>
+          <Spacer y="sm" />
+          <Button
+            variant="link"
+            onClick={() => {
+              props.onCustomClick!();
+              props.onClose?.();
+            }}
+            style={{
+              display: "flex",
+              width: "100%",
+              fontSize: fontSize.sm,
+              boxShadow: "none",
+            }}
+          >
+            Add Custom Network
+          </Button>
+        </>
+      )}
+    </>
   );
 };
 
@@ -560,6 +617,8 @@ const StyledMagnifyingGlassIcon = styled(MagnifyingGlassIcon)<{
 const SearchInput = styled(Input)<{ theme?: Theme }>`
   padding: ${spacing.sm} ${spacing.md} ${spacing.sm} 60px;
 `;
+
+// testing
 
 const ConfirmMessage = styled.div<{ theme?: Theme }>`
   font-size: ${fontSize.sm};
