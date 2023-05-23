@@ -13,15 +13,7 @@ import {
   FEATURE_PRIMARY_SALE,
   FEATURE_ROYALTY,
 } from "../constants/thirdweb-features";
-import {
-  ContractEncoder,
-  ContractOwner,
-  MarketplaceV3DirectListings,
-  MarketplaceV3EnglishAuctions,
-  MarketplaceV3Offers,
-  NetworkInput,
-  Transaction,
-} from "../core";
+import { Transaction } from "../core/classes";
 import { ContractAppURI } from "../core/classes/contract-appuri";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
@@ -61,6 +53,14 @@ import type {
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides } from "ethers";
 import { BaseContractInterface } from "../types/contract";
+import {
+  ContractEncoder,
+  ContractOwner,
+  MarketplaceV3DirectListings,
+  MarketplaceV3EnglishAuctions,
+  MarketplaceV3Offers,
+} from "../core/classes";
+import { NetworkInput } from "../core/types";
 
 /**
  * Custom contract dynamic class with feature detection
