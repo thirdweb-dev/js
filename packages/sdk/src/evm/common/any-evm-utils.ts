@@ -3,7 +3,7 @@ import { BigNumber, BytesLike, ethers, providers, Signer } from "ethers";
 import invariant from "tiny-invariant";
 import { bytecode as WETHBytecode } from "./WETH9";
 import { getChainProvider, getNativeTokenByChainId } from "../constants";
-import { ThirdwebSDK } from "../core";
+import { ThirdwebSDK } from "../core/sdk";
 import { PreDeployMetadataFetched } from "../schema";
 import {
   DeployedContractType,
@@ -207,7 +207,7 @@ export function getInitBytecodeWithSalt(
 }
 
 /**
- 
+
  * Pre-compute a contract's deployment address for a CREATE2 deployment.
  *
  * @public

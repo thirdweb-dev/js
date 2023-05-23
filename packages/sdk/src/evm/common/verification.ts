@@ -1,4 +1,4 @@
-import { ThirdwebSDK } from "../core";
+import { ThirdwebSDK } from "../core/sdk";
 import {
   extractConstructorParamsFromAbi,
   fetchSourceFilesFromMetadata,
