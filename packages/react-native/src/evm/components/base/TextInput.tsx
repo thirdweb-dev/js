@@ -2,10 +2,13 @@ import { StyleSheet, TextInput as TextInputRN } from "react-native";
 import Box from "./Box";
 import { useTheme } from "@shopify/restyle";
 
-type TextInputProps = (typeof Box)["arguments"] &
-  TextInputRN["props"]["onChangeText"];
+type TextInputProps = (typeof Box)["arguments"] & TextInputRN["props"];
 
-export const TextInput = ({ onChangeText, ...props }: TextInputProps) => {
+export const TextInput = ({
+  onChangeText,
+  placeholder,
+  ...props
+}: TextInputProps) => {
   const theme = useTheme();
 
   return (
@@ -22,9 +25,11 @@ export const TextInput = ({ onChangeText, ...props }: TextInputProps) => {
         style={{ ...styles.textInput, color: theme.colors.textPrimary }}
         returnKeyType={"done"}
         clearTextOnFocus={false}
+        placeholder={placeholder}
         autoCapitalize="none"
         autoCorrect={false}
         onChangeText={onChangeText}
+        {...props}
       />
     </Box>
   );

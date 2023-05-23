@@ -14,7 +14,7 @@ import { useWalletContext, useWallet } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import { useSmartWallet } from "../../providers/context-provider";
 import RightArrowIcon from "../../assets/right-arrow";
-import { ConnectAppField } from "./ConnectAppField";
+import ConnectAppField from "./ConnectAppField";
 import { useAppTheme } from "../../styles/hooks";
 
 export const SmartWalletAdditionalActions = ({
