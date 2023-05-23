@@ -14,6 +14,7 @@ import { DappContextProvider } from "./context-provider";
 import { UIContextProvider } from "./ui-context-provider";
 import { MainModal } from "../components/MainModal";
 import { ThemeProvider } from "../styles/ThemeProvider";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<ThirdwebProviderCoreProps<TChains>, "supportedWallets"> {
@@ -80,12 +81,14 @@ export const ThirdwebProvider = <
       {...restProps}
     >
       <ThemeProvider theme={theme}>
-        <UIContextProvider>
-          <DappContextProvider>
-            {children}
-            <MainModal />
-          </DappContextProvider>
-        </UIContextProvider>
+        <SafeAreaProvider>
+          <UIContextProvider>
+            <DappContextProvider>
+              {children}
+              <MainModal />
+            </DappContextProvider>
+          </UIContextProvider>
+        </SafeAreaProvider>
       </ThemeProvider>
     </ThirdwebProviderCore>
   );
