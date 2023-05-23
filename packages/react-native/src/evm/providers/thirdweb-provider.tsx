@@ -79,14 +79,14 @@ export const ThirdwebProvider = <
       createWalletStorage={createWalletStorage}
       {...restProps}
     >
-      <DappContextProvider>
-        <ThemeProvider theme={theme}>
-          <UIContextProvider>
+      <ThemeProvider theme={theme}>
+        <UIContextProvider>
+          <DappContextProvider>
             {children}
             <MainModal />
-          </UIContextProvider>
-        </ThemeProvider>
-      </DappContextProvider>
+          </DappContextProvider>
+        </UIContextProvider>
+      </ThemeProvider>
     </ThirdwebProviderCore>
   );
 };

@@ -69,13 +69,15 @@
     "prettier": "^2.7.1",
     "react": "^18.2.0",
     "react-native": "^0.71.0",
+    "react-native-camera": "^4.2.1",
     "typescript": "^4.7.4"
   },
   "peerDependencies": {
     "ethers": ">=5.5.1 <6",
     "expo": "^47.0.0",
     "react": ">=18.0.0",
-    "react-native": ">=0.70.0"
+    "react-native": ">=0.70.0",
+    "react-native-camera": "^4.2.1"
   },
   "engines": {
     "node": ">= 16.0.0"

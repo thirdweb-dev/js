@@ -24,14 +24,42 @@ export const ConnectWalletFlow = () => {
   const theme = useColorScheme();
   const connect = useConnect();
 
-  const onChooseWallet = useCallback((wallet: WalletConfig) => {
-    setActiveWallet(() => wallet);
+  const onClose = useCallback(
+    (reset?: boolean) => {
+      setModalState(CLOSE_MODAL_STATE("ConnectWalletFlow"));
 
-    // TODO: Change for !wallet.connectUI
-    if (wallet.id !== SmartWallet.id) {
-      connectActiveWallet(wallet);
-    }
-  }, []);
+      if (reset) {
+        resetModal();
+      }
+    },
+    [setModalState],
+  );
+
+  const connectActiveWallet = useCallback(
+    async (wallet: WalletConfig) => {
+      setIsConnecting(true);
+      connect(wallet, {})
+        .catch((error) => {
+          console.error("Error connecting to the wallet", error);
+        })
+        .finally(() => {
+          onClose(true);
+        });
+    },
+    [connect, onClose],
+  );
+
+  const onChooseWallet = useCallback(
+    (wallet: WalletConfig) => {
+      setActiveWallet(() => wallet);
+
+      // TODO: Change for !wallet.connectUI
+      if (wallet.id !== SmartWallet.id) {
+        connectActiveWallet(wallet);
+      }
+    },
+    [connectActiveWallet],
+  );
 
   useEffect(() => {
     if (walletConfig) {
@@ -39,27 +67,8 @@ export const ConnectWalletFlow = () => {
     }
   }, [onChooseWallet, walletConfig]);
 
-  const onClose = (reset?: boolean) => {
-    setModalState(CLOSE_MODAL_STATE("ConnectWalletFlow"));
-
-    if (reset) {
-      resetModal();
-    }
-  };
-
   const onOpenModal = () => {
     setModalVisible(true);
-  };
-
-  const connectActiveWallet = async (wallet: WalletConfig) => {
-    setIsConnecting(true);
-    connect(wallet, {})
-      .catch((error) => {
-        console.error("Error connecting to the wallet", error);
-      })
-      .finally(() => {
-        onClose(true);
-      });
   };
 
   const onBackPress = () => {

@@ -1,8 +1,6 @@
 import { useConnect } from "@thirdweb-dev/react-core";
-import type {
-  SmartWalletConnectionArgs,
-  SmartWalletConfig,
-} from "@thirdweb-dev/wallets/evm/wallets/smart-wallet";
+import type { SmartWalletConfig } from "../../../wallet/wallets/smartWallet/types";
+import type { SmartWalletConnectionArgs } from "@thirdweb-dev/wallets/evm/wallets/smart-wallet";
 import { useCallback } from "react";
 
 export function useSmartWallet() {
