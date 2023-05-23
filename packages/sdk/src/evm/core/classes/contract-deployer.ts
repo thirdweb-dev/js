@@ -759,7 +759,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       const isNetworkEnabled =
         extendedMetadata?.networksForDeployment?.networksEnabled.includes(
           chainId,
-        );
+        ) || extendedMetadata?.networksForDeployment?.allNetworks;
       if (extendedMetadata?.networksForDeployment && !isNetworkEnabled) {
         throw new Error(
           `Deployments disabled on this network, with chainId: ${chainId}`,
