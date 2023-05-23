@@ -20,7 +20,12 @@ export type {
 } from "./schema/sdk-options";
 export type { FeatureWithEnabled } from "./constants/contract-features";
 
-export * from "./core";
+// core
+export * from "./core/types";
+export * from "./core/classes";
+export * from "./core/wallet";
+export * from "./core/sdk";
+
 export * from "./types";
 export * from "./enums";
 export * from "./common";
