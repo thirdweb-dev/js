@@ -154,7 +154,7 @@ export const DeployTypeInput = z.union([
  * @internal
  */
 export const DeploymentNetworkInput = z.object({
-  allNetworks: z.boolean(),
+  allNetworks: z.boolean().optional(),
   networksEnabled: z.array(z.number()).default([]),
 });
 
