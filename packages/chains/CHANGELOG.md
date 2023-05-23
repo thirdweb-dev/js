@@ -1,5 +1,19 @@
 # @thirdweb-dev/chains
 
+## 0.1.18
+
+### Patch Changes
+
+- [#1040](https://github.com/thirdweb-dev/js/pull/1040) [`30e5593d`](https://github.com/thirdweb-dev/js/commit/30e5593dd1ce9abd809ad216a1cfce77b897093c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update chains
+
+## 0.1.17
+
+### Patch Changes
+
+- [#1031](https://github.com/thirdweb-dev/js/pull/1031) [`3c8c5d56`](https://github.com/thirdweb-dev/js/commit/3c8c5d56f2a21c0918fede71061c6745f2956f83) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
+- [#1033](https://github.com/thirdweb-dev/js/pull/1033) [`907d97be`](https://github.com/thirdweb-dev/js/commit/907d97bedef7331148bdfe8b9bf1e19459282e4c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Added faucet for optimism goerli
+
 ## 0.1.16
 
 ### Patch Changes

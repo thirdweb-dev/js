@@ -52,11 +52,13 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       entryPointAddress,
       bundlerUrl,
       paymasterAPI: this.config.gasless
-        ? getVerifyingPaymaster(
-            paymasterUrl,
-            entryPointAddress,
-            this.config.thirdwebApiKey,
-          )
+        ? this.config.paymasterAPI
+          ? this.config.paymasterAPI
+          : getVerifyingPaymaster(
+              paymasterUrl,
+              entryPointAddress,
+              this.config.thirdwebApiKey,
+            )
         : undefined,
       factoryAddress: config.factoryAddress,
       factoryInfo: config.factoryInfo || this.defaultFactoryInfo(),
