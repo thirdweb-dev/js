@@ -20,6 +20,7 @@ export * from "./any-evm-utils/computeDeploymentInfo";
 export * from "./any-evm-utils/computeEOAForwarderAddress";
 export * from "./any-evm-utils/computeForwarderAddress";
 export * from "./any-evm-utils/computeNativeTokenAddress";
+export * from "./any-evm-utils/constants";
 export * from "./any-evm-utils/convertParamValues";
 export * from "./any-evm-utils/createTransactionBatches";
 export * from "./any-evm-utils/deployContractDeterministic";
