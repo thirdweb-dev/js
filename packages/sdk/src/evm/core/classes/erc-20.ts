@@ -1,4 +1,3 @@
-import { NetworkInput } from "..";
 import { AmountSchema } from "../../../core/schema/shared";
 import { assertEnabled, detectContractFeature } from "../../common";
 import {
@@ -24,6 +23,7 @@ import {
 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
+import type { NetworkInput } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20Burnable } from "./erc-20-burnable";
 import { Erc20Droppable } from "./erc-20-droppable";
