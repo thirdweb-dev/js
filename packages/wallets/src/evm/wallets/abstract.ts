@@ -51,7 +51,6 @@ export abstract class AbstractWallet
   implements GenericAuthWallet, EVMWallet
 {
   public type: Ecosystem = "evm";
-  protected signerPromise?: Promise<Signer>;
 
   public abstract getSigner(): Promise<Signer>;
 
