@@ -197,7 +197,7 @@ abstract class TransactionContext {
   /**
    * Get the address of the transaction signer
    */
-  protected async getSignerAddress() {
+  public async getSignerAddress() {
     return this.signer.getAddress();
   }
 

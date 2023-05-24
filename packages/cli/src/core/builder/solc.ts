@@ -8,6 +8,7 @@ import { basename, join } from "path";
 import solc from "solc";
 
 export class SolcBuilder extends BaseBuilder {
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   public async compile(options: CompileOptions): Promise<{
     contracts: ContractPayload[];
   }> {

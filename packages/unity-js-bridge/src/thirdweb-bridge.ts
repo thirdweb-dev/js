@@ -5,6 +5,7 @@ import { ThirdwebSDK, ChainIdOrName } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   DAppMetaData,
+  SmartWalletConfig,
   WalletConnectV1,
   walletIds,
 } from "@thirdweb-dev/wallets";
@@ -15,6 +16,7 @@ import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
 import { MetaMaskWallet } from "@thirdweb-dev/wallets/evm/wallets/metamask";
 import { MagicLink } from "@thirdweb-dev/wallets/evm/wallets/magic";
+import { SmartWallet } from "@thirdweb-dev/wallets/evm/wallets/smart-wallet";
 import { BigNumber } from "ethers";
 import type { ContractInterface, Signer } from "ethers";
 
@@ -51,6 +53,7 @@ const WALLETS = [
   CoinbaseWallet,
   LocalWallet,
   MagicLink,
+  SmartWallet,
 ] as const;
 
 type PossibleWallet = (typeof WALLETS)[number]["id"];
@@ -165,6 +168,20 @@ class ThirdwebBridge implements TWBridge {
             emailLogin: true,
           });
           break;
+        case walletIds.smartWallet:
+          const config: SmartWalletConfig = {
+            chain: chain,
+            factoryAddress: sdkOptions.smartWalletConfig?.factoryAddress,
+            thirdwebApiKey: sdkOptions.smartWalletConfig?.thirdwebApiKey,
+            gasless: sdkOptions.smartWalletConfig?.gasless,
+            bundlerUrl: sdkOptions.smartWalletConfig?.bundlerUrl,
+            paymasterUrl: sdkOptions.smartWalletConfig?.paymasterUrl,
+            // paymasterAPI: sdkOptions.smartWalletConfig?.paymasterAPI,
+            entryPointAddress: sdkOptions.smartWalletConfig?.entryPointAddress,
+          };
+
+          walletInstance = new SmartWallet(config);
+          break;
         default:
           throw new Error(`Unknown wallet type: ${possibleWallet.id}`);
       }
@@ -215,10 +232,7 @@ class ThirdwebBridge implements TWBridge {
               password,
             });
           }
-        }
-
-        // if no password is provided, we can only generate
-        else {
+        } else {
           await localWallet.generate();
         }
       }
@@ -229,9 +243,13 @@ class ThirdwebBridge implements TWBridge {
           throw new Error("Email is required for Magic Link Wallet");
         }
         await magicLinkWallet.connect({ chainId, email });
+      } else if (walletInstance.walletId === walletIds.smartWallet) {
+        const smartWallet = walletInstance as SmartWallet;
+        await this.setupSmartWallet(smartWallet);
       } else {
         await walletInstance.connect({ chainId });
       }
+
       this.activeWallet = walletInstance;
       this.updateSDKSigner(await walletInstance.getSigner());
       return await this.activeSDK.wallet.getAddress();
@@ -431,6 +449,20 @@ class ThirdwebBridge implements TWBridge {
     const cbPay = new CoinbasePayIntegration({ appId });
 
     return await cbPay.fundWallet(fundOptions);
+  }
+
+  // TODO: Add personal wallet options and check if deployed
+  public async setupSmartWallet(sw: SmartWallet) {
+    const personalWallet = new LocalWallet();
+    await personalWallet.loadOrCreate({
+      strategy: "mnemonic",
+      encryption: false,
+    });
+    const personalWalletAddress = await personalWallet.getAddress();
+    console.log("Personal wallet address:", personalWalletAddress);
+    await sw.connect({
+      personalWallet,
+    });
   }
 }
 
