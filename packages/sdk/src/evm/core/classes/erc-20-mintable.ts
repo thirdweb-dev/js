@@ -2,7 +2,7 @@ import { detectContractFeature } from "../../common";
 import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_TOKEN_MINTABLE } from "../../constants/erc20-features";
-import { AddressOrEns } from "../../schema";
+import { AddressOrEns } from "../../schema/shared";
 import { Amount } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";

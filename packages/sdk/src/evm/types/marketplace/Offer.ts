@@ -1,4 +1,4 @@
-import { AddressOrEns } from "../../schema";
+import { AddressOrEns } from "../../schema/shared";
 import { CurrencyValue } from "../currency";
 import { BigNumber, BigNumberish } from "ethers";
 
