@@ -244,7 +244,7 @@ export class Erc721<
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "transferFrom(address,address,uint256)",
-        args: [from, await resolveAddress(to), tokenId],
+        args: [await resolveAddress(from), await resolveAddress(to), tokenId],
       });
     },
   );
