@@ -9,7 +9,7 @@ import { TruffleBuilder } from "./truffle";
 export default async function build(
   path: string,
   projectType: ProjectType,
-  options: { clean: boolean },
+  options: any,
 ): Promise<{
   contracts: ContractPayload[];
 }> {
@@ -40,5 +40,6 @@ export default async function build(
     name: "",
     projectPath: path,
     clean: options.clean,
+    zksync: options.zksync,
   });
 }
