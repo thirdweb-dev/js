@@ -41,12 +41,6 @@ export const DappContextProvider = (props: React.PropsWithChildren<{}>) => {
     return null;
   }, [magicWallet]);
 
-  // useEffect(() => {
-  //   if (magicSDK) {
-  //     return magicSDK();
-  //   }
-  // }, [magicSDK]);
-
   return (
     <DappContext.Provider
       value={{

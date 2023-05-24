@@ -190,8 +190,6 @@ export function ThirdwebWalletProvider(
       const _signer = await wallet.getSigner();
       setSigner(_signer);
 
-      const address = await _signer.getAddress();
-
       // it autoconnected, then the details is already saved in storage, no need to store again
       if (isAutoConnect) {
         return;
