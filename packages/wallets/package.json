@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/wallets",
-  "version": "0.2.20",
+  "version": "0.2.22",
   "main": "dist/thirdweb-dev-wallets.cjs.js",
   "module": "dist/thirdweb-dev-wallets.esm.js",
   "types": "dist/thirdweb-dev-wallets.cjs.d.ts",
@@ -289,6 +289,8 @@
     "@safe-global/safe-ethers-lib": "^1.9.2",
     "@thirdweb-dev/chains": "workspace:*",
     "@thirdweb-dev/sdk": "workspace:*",
+    "@walletconnect/client": "^1.8.0",
+    "@walletconnect/core": "2.7.3",
     "@walletconnect/ethereum-provider": "2.6.0",
     "@walletconnect/jsonrpc-http-connection": "^1.0.0",
     "@walletconnect/jsonrpc-provider": "^1.0.3",
@@ -298,6 +300,9 @@
     "@walletconnect/legacy-modal": "^2.0.0-rc.0",
     "@walletconnect/legacy-types": "^2.0.0-rc.0",
     "@walletconnect/legacy-utils": "^2.0.0-rc.0",
+    "@walletconnect/types": "2.7.3",
+    "@walletconnect/utils": "2.7.3",
+    "@walletconnect/web3wallet": "^1.7.1",
     "@web3modal/standalone": "^2.4.1",
     "buffer": "^6.0.3",
     "cross-fetch": "^3.1.5",
@@ -308,7 +313,10 @@
     "web3-core": "1.5.2"
   },
   "resolutions": {
-    "@walletconnect/ethereum-provider": "2.6.0"
+    "@walletconnect/ethereum-provider": "2.6.0",
+    "@walletconnect/core": "2.7.3",
+    "@walletconnect/types": "2.7.3",
+    "@walletconnect/utils": "2.7.3"
   },
   "peerDependencies": {
     "@aws-sdk/client-secrets-manager": "^3.256.0",

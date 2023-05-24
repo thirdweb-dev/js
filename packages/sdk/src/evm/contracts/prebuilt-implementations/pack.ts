@@ -12,7 +12,7 @@ import { uploadOrExtractURI } from "../../common/nft";
 import { getRoleHash } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_PACK_VRF } from "../../constants/thirdweb-features";
-import { ContractAppURI } from "../../core";
+import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -26,7 +26,8 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { PackVRF } from "../../core/classes/pack-vrf";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { Abi, AbiInput, AbiSchema, Address, AddressOrEns } from "../../schema";
+import { Address, AddressOrEns } from "../../schema/shared";
+import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { PackContractSchema } from "../../schema/contracts/packs";
 import { SDKOptions } from "../../schema/sdk-options";
 import {

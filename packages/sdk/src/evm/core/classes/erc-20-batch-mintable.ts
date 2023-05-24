@@ -1,7 +1,7 @@
 import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_TOKEN_BATCH_MINTABLE } from "../../constants/erc20-features";
-import { TokenMintInput } from "../../schema";
+import { TokenMintInput } from "../../schema/tokens/token";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20 } from "./erc-20";

@@ -1,8 +1,7 @@
-import { NetworkInput, Transaction, TransactionResult } from "..";
 import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import { getMultichainRegistryAddress } from "../../constants/addresses";
-import { AddressOrEns } from "../../schema";
+import { AddressOrEns } from "../../schema/shared";
 import { PublishedMetadata } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import { AddContractInput, ContractInput, DeployedContract } from "../../types";
@@ -15,6 +14,8 @@ import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegi
 import TWRegistryRouterABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryRouter.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { constants, utils } from "ethers";
+import { Transaction } from "./transactions";
+import type { NetworkInput, TransactionResult } from "../types";
 
 /**
  * @internal

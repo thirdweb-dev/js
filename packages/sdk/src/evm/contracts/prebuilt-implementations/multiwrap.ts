@@ -8,7 +8,7 @@ import { resolveAddress } from "../../common/ens";
 import { isTokenApprovedForTransfer } from "../../common/marketplace";
 import { uploadOrExtractURI } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
-import { ContractAppURI } from "../../core";
+import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
@@ -20,13 +20,9 @@ import { StandardErc721 } from "../../core/classes/erc-721-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
-import {
-  Abi,
-  AbiInput,
-  AbiSchema,
-  AddressOrEns,
-  SDKOptions,
-} from "../../schema";
+import { AddressOrEns } from "../../schema/shared";
+import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
+import { SDKOptions } from "../../schema/sdk-options";
 import { MultiwrapContractSchema } from "../../schema/contracts/multiwrap";
 import {
   ERC1155Wrappable,

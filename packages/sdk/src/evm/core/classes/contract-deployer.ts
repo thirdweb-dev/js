@@ -39,7 +39,8 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../../contracts";
-import { Address, AddressOrEns, SDKOptions } from "../../schema";
+import { Address, AddressOrEns } from "../../schema/shared";
+import { SDKOptions } from "../../schema/sdk-options";
 import {
   DeployEvent,
   DeployEvents,

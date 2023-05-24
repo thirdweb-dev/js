@@ -21,7 +21,7 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../../contracts";
-import { Address } from "../../schema";
+import { Address } from "../../schema/shared";
 import { SDKOptions } from "../../schema/sdk-options";
 import { DeployEvents } from "../../types";
 import {

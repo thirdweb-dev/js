@@ -6,7 +6,6 @@ import {
   Share,
   StyleSheet,
 } from "react-native";
-import Modal from "react-native-modal";
 import { useState } from "react";
 import BaseButton from "../base/BaseButton";
 import Box from "../base/Box";
@@ -19,6 +18,7 @@ import { usePersonalWalletAddress } from "../../wallets/hooks/usePersonalWalletA
 import { shortenWalletAddress } from "../../utils/addresses";
 import { WalletIcon } from "../base/WalletIcon";
 import { LocalWallet } from "../../wallets/wallets/LocalWallet";
+import { TWModal } from "../base/modal/TWModal";
 
 export type ExportLocalWalletModalProps = {
   isVisible: boolean;
@@ -142,7 +142,7 @@ export const ExportLocalWalletModal = ({
   };
 
   return (
-    <Modal isVisible={isVisible} backdropOpacity={0.7}>
+    <TWModal isVisible={isVisible} backdropOpacity={0.7}>
       <KeyboardAvoidingView behavior="padding">
         <Box
           flexDirection="column"
@@ -194,7 +194,7 @@ export const ExportLocalWalletModal = ({
           </Box>
         </Box>
       </KeyboardAvoidingView>
-    </Modal>
+    </TWModal>
   );
 };
 

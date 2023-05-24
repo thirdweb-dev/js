@@ -1,5 +1,6 @@
 export { darkTheme, lightTheme } from "./styles/theme";
 export type { Theme, ButtonTheme } from "./styles/theme";
+export { useAppTheme } from "./styles/hooks";
 
 export {
   CoinbaseWallet,
@@ -26,6 +27,7 @@ export { Web3Button } from "./components/Web3Button";
 // utilities
 export * from "./utils/uri";
 export * from "./utils/addresses";
+export { createSyncStorage as createLocalStorage } from "../core/AsyncStorage";
 export { createAsyncLocalStorage } from "../core/AsyncStorage";
 export { createSecureStorage } from "../core/SecureStorage";
 

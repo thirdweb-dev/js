@@ -1,4 +1,4 @@
-import { Address } from "../schema";
+import { Address } from "../schema/shared";
 
 /**
  * The SplitRecipient type represents a recipient of some royalty, indicated by their split percentage.
