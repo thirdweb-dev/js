@@ -22,7 +22,7 @@ export class MagicConnector extends Connector<MagicConnectorOptions> {
     this.magicOptions = options;
     this.chains = options.chains ? options.chains : defaultChains;
     this.magicSdkConfiguration = options.magicSdkConfiguration;
-    this.magicSDK = this.initializeMagicSDK();
+    this.magicSDK = this.initializeMagicSDK({ chainId: options?.chainId || 0 });
   }
 
   async connect(options: MagicConnectorOptions): Promise<string> {
@@ -31,23 +31,27 @@ export class MagicConnector extends Connector<MagicConnectorOptions> {
     }
 
     console.log("connect", options);
-    if (options.chainId) {
-      this.initializeMagicSDK({ chainId: options.chainId });
-    }
+    // if (options.chainId) {
+    //   this.initializeMagicSDK({ chainId: options.chainId });
+    // }
+    await this.getProvider();
     this.setupListeners();
     this.emit("message", { type: "connecting" });
 
     // Check if there is a user logged in
-    const isAuthenticated = false; //await this.isConnected();
+    const isAuthenticated = await this.isConnected();
     console.log("isAuthenticated", isAuthenticated);
 
     // Check if we have a chainId, in case of error just assign 0 for legacy
     let chainId: number;
     try {
+      console.log("getChainId");
       chainId = await this.getChainId();
     } catch (e) {
       chainId = 0;
     }
+
+    console.log("chainId", chainId);
 
     this.connectedChainId = chainId;
 
@@ -56,15 +60,8 @@ export class MagicConnector extends Connector<MagicConnectorOptions> {
       return await this.getAddress();
     }
 
+    console.log("getMagicSDK");
     const magic = this.getMagicSDK();
-
-    // LOGIN WITH MAGIC LINK WITH OAUTH PROVIDER
-    // if ("oauthProvider" in options) {
-    //   await magic.oauth.loginWithRedirect({
-    //     provider: options.oauthProvider,
-    //     redirectURI: this.oauthCallbackUrl || window.location.href,
-    //   });
-    // }
 
     // LOGIN WITH MAGIC LINK WITH EMAIL
     if (options.email) {
@@ -86,6 +83,7 @@ export class MagicConnector extends Connector<MagicConnectorOptions> {
       address = `0x${address}`;
     }
 
+    console.log("connected.address", address);
     return address;
   }
   async disconnect(): Promise<void> {
@@ -93,10 +91,8 @@ export class MagicConnector extends Connector<MagicConnectorOptions> {
     await magic.user.logout();
   }
   async getAddress(): Promise<string> {
-    const provider = new ethers.providers.Web3Provider(
-      (await this.getProvider()) as any, // TODO: fix type mismatch
-    );
-    const signer = provider.getSigner();
+    const signer = await this.getSigner();
+
     const account = await signer.getAddress();
     if (account.startsWith("0x")) {
       return account;
@@ -142,25 +138,26 @@ export class MagicConnector extends Connector<MagicConnectorOptions> {
     }
   }
   async setupListeners(): Promise<void> {
-    const provider = await this.getProvider();
-    provider.on("accountsChanged", () => {
+    this.provider?.on("accountsChanged", () => {
       console.log("accountsChanged");
     });
-    provider.on("chainChanged", () => {
+    this.provider?.on("chainChanged", () => {
       console.log("chainChanged");
     });
-    provider.on("disconnect", () => {
-      console.log("disconnect");
-    });
+    this.provider?.on("disconnect", this.onDisconnect);
 
     return Promise.resolve();
   }
+
   updateChains(chains: Chain[]): void {
-    console.log("updateChains", chains);
-    throw new Error("Method not implemented.");
+    this.chains = chains;
   }
 
   // my methods
+
+  onDisconnect(): void {
+    this.emit("disconnect");
+  }
 
   getMagicSDK() {
     if (!this.magicSDK) {
@@ -170,21 +167,23 @@ export class MagicConnector extends Connector<MagicConnectorOptions> {
   }
 
   initializeMagicSDK({ chainId }: { chainId?: number } = {}) {
-    const options = {
-      ...this.magicSdkConfiguration,
-    };
-
+    console.log("init.magic", chainId);
     if (chainId) {
       const chain = this.chains.find((c) => c.chainId === chainId);
+      console.log("init.magic.chain", chain);
       if (chain) {
-        options.network = {
+        this.magicSdkConfiguration = this.magicSdkConfiguration || {};
+        this.magicSdkConfiguration.network = {
           rpcUrl: chain.rpc[0],
           chainId: chain.chainId,
         };
       }
     }
 
-    this.magicSDK = new Magic(this.magicOptions.apiKey, options);
+    this.magicSDK = new Magic(
+      this.magicOptions.apiKey,
+      this.magicSdkConfiguration,
+    );
     this.provider = this.magicSDK.rpcProvider;
 
     return this.magicSDK;
@@ -192,6 +191,7 @@ export class MagicConnector extends Connector<MagicConnectorOptions> {
 
   async getChainId(): Promise<number> {
     const networkOptions = this.magicSdkConfiguration?.network;
+    console.log("getChainId", networkOptions);
     if (typeof networkOptions === "object") {
       const chainID = networkOptions.chainId;
       if (chainID) {

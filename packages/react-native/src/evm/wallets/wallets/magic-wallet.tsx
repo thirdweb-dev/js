@@ -1,14 +1,21 @@
-import { WalletOptions, walletIds } from "@thirdweb-dev/wallets";
+import { walletIds } from "@thirdweb-dev/wallets";
 import {
   ConnectUIProps,
   SelectUIProps,
   WalletConfig,
+  WalletOptions,
   useCreateWalletInstance,
+  useSetConnectedWallet,
+  useWalletContext,
 } from "@thirdweb-dev/react-core";
-import { TextInput } from "react-native";
 import { MagicLinkOptions } from "../connectors/magic/types";
 import { MagicWallet } from "./MagicWallet";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { useEffect, useRef } from "react";
+import Box from "../../components/base/Box";
+import { TextInput } from "../../components/base/TextInput";
+import Text from "../../components/base/Text";
+import { ActivityIndicator } from "react-native";
+import { useMagicWallet } from "../../providers/context-provider";
 
 export const magicWallet = (
   config: MagicLinkOptions,
@@ -17,7 +24,11 @@ export const magicWallet = (
     id: walletIds.magicLink,
     meta: MagicWallet.meta,
     create: (options: WalletOptions) => {
-      return new MagicWallet({ ...options, ...config });
+      return new MagicWallet({
+        ...options,
+        ...config,
+        chainId: options.chain.chainId,
+      });
     },
     /**
      * UI for connecting wallet
@@ -27,11 +38,27 @@ export const magicWallet = (
      * UI for selecting wallet - this UI is rendered in the wallet selection screen
      */
     selectUI: (props: SelectUIProps<MagicWallet, MagicLinkOptions>) => {
+      console.log("selectUI.magicWallet");
       return (
-        <TextInput
-          style={{ width: 100, backgroundColor: "white", flex: 1 }}
-          onEndEditing={props.onSelect}
-        />
+        <Box flex={1}>
+          <TextInput
+            placeholder="Enter your email or phone number"
+            placeholderTextColor="gray"
+            onEndEditing={(
+              e: (typeof TextInput)["arguments"]["onEndEditing"],
+            ) => {
+              console.log("onEndEditing", e.nativeEvent.text);
+              props.onSelect(e.nativeEvent.text);
+            }}
+          />
+          <Text
+            marginVertical="sm"
+            variant="bodySmallSecondary"
+            textAlign="center"
+          >
+            ---- OR ----
+          </Text>
+        </Box>
       );
     },
     isInstalled: () => {
@@ -45,13 +72,62 @@ export const magicWallet = (
 
 const MagicConnectionUI: React.FC<
   ConnectUIProps<MagicWallet, MagicLinkOptions>
-> = (props) => {
+> = ({ selectionData, walletConfig, close }) => {
   const createWalletInstance = useCreateWalletInstance();
-  const magic = createWalletInstance(props.walletConfig).getMagicSDK();
+  const setConnectedWallet = useSetConnectedWallet();
+  const chainToConnect = useWalletContext().chainToConnect;
+  const { magicWallet, setMagicWallet } = useMagicWallet();
+
+  useEffect(() => {
+    console.log("create magic wallet instance");
+    const inst = createWalletInstance(walletConfig);
+    setMagicWallet?.(inst);
+  }, [createWalletInstance, setMagicWallet, walletConfig]);
+
+  const connectPrompted = useRef(false);
+
+  useEffect(() => {
+    if (connectPrompted.current || !magicWallet) {
+      return;
+    }
+    connectPrompted.current = true;
+    const isEmail = (selectionData as string).includes("@");
+
+    console.log("calling connect");
+
+    (async () => {
+      // close();
+      try {
+        const connectParams = {
+          chainId: chainToConnect?.chainId,
+          ...walletConfig.config,
+          ...(isEmail
+            ? { email: selectionData }
+            : { phoneNumber: selectionData }),
+        };
+        close();
+        await magicWallet.connect(connectParams);
+
+        const res = await magicWallet.getMagicSDK().user.getMetadata();
+        console.log("magic.connectUI.afterConnect", res);
+
+        setConnectedWallet(magicWallet, connectParams);
+      } catch (e) {
+        console.error("Error connecting to magic", e);
+      }
+    })();
+  }, [
+    selectionData,
+    walletConfig,
+    close,
+    magicWallet,
+    setConnectedWallet,
+    chainToConnect?.chainId,
+  ]);
 
   return (
-    <SafeAreaProvider>
-      <magic.Relayer />
-    </SafeAreaProvider>
+    <Box minHeight={500}>
+      <ActivityIndicator size="small" />
+    </Box>
   );
 };

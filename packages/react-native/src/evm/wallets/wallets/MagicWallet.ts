@@ -10,7 +10,7 @@ export class MagicWallet extends AbstractClientWallet<
   MagicLinkOptions,
   MagicConnectorOptions
 > {
-  connector: MagicConnectorType | undefined;
+  connector?: MagicConnectorType;
   options: MagicLinkOptions;
 
   static meta = {
@@ -42,6 +42,8 @@ export class MagicWallet extends AbstractClientWallet<
     console.log("initializeConnector", this.options);
     this.connector = new MagicConnector({
       ...this.options,
+      chainId: this.options.chainId,
+      chains: this.chains,
     });
 
     return this.connector;
@@ -49,5 +51,21 @@ export class MagicWallet extends AbstractClientWallet<
 
   getMagicSDK() {
     return (this.connector as MagicConnector)?.getMagicSDK();
+  }
+
+  async autoConnect(options?: MagicConnectorOptions) {
+    this.connector?.initializeMagicSDK(options);
+    const magic = this.getMagicSDK();
+    if (await magic.user.isLoggedIn()) {
+      return super.autoConnect(options);
+    } else {
+      throw new Error("Magic user is not logged in");
+    }
+  }
+
+  async disconnect() {
+    const magic = this.getMagicSDK();
+    await magic.user.logout();
+    return super.disconnect();
   }
 }

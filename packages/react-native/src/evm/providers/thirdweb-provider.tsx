@@ -83,10 +83,12 @@ export const ThirdwebProvider = <
       <ThemeProvider theme={theme}>
         <SafeAreaProvider>
           <UIContextProvider>
-            <DappContextProvider>
-              {children}
-              <MainModal />
-            </DappContextProvider>
+            <SafeAreaProvider>
+              <DappContextProvider>
+                {children}
+                <MainModal />
+              </DappContextProvider>
+            </SafeAreaProvider>
           </UIContextProvider>
         </SafeAreaProvider>
       </ThemeProvider>

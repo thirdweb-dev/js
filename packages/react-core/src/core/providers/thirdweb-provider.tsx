@@ -14,7 +14,7 @@ import {
   CreateAsyncStorage,
   DAppMetaData,
 } from "@thirdweb-dev/wallets";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 
 /**
  * The possible props for the ThirdwebProvider.
@@ -173,6 +173,12 @@ const ThirdwebSDKProviderWrapper = <TChains extends Chain[]>({
   Omit<ThirdwebSDKProviderProps<TChains>, "signer">
 >) => {
   const signer = useWalletContext()?.signer;
+
+  useEffect(() => {
+    (async () => {
+      console.log("wrapper.signer.address", await signer?.getAddress());
+    })();
+  }, [signer]);
 
   return (
     <ThirdwebSDKProvider signer={signer} {...props}>

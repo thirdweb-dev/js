@@ -15,6 +15,8 @@ export { TrustWallet, trustWallet } from "./wallets/wallets/trust-wallet";
 export { smartWallet } from "./wallets/wallets/smart-wallet";
 export { localWallet } from "./wallets/wallets/local-wallet";
 export { LocalWallet } from "./wallets/wallets/LocalWallet";
+export { magicWallet } from "./wallets/wallets/magic-wallet";
+export { MagicWallet } from "./wallets/wallets/MagicWallet";
 
 export { useCoinbaseWallet } from "./wallets/hooks/useCoinbaseWallet";
 export { useMetaMaskWallet } from "./wallets/hooks/useMetaMaskWallet";

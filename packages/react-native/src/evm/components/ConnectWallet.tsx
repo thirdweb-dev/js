@@ -43,6 +43,8 @@ export const ConnectWallet = ({
   const [showButtonSpinner, setShowButtonSpinner] = useState(false);
   const { setModalState } = useModalState();
 
+  console.log("address", address);
+
   useEffect(() => {
     setShowButtonSpinner(isWalletConnecting);
 

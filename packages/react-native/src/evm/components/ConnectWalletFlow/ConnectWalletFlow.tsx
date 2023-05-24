@@ -20,6 +20,7 @@ export const ConnectWalletFlow = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [activeWallet, setActiveWallet] = useState<WalletConfig | undefined>();
   const [isConnecting, setIsConnecting] = useState(false);
+  const [selectionData, setSelectionData] = useState<any>();
   const supportedWallets = useWallets();
   const theme = useColorScheme();
   const connect = useConnect();
@@ -36,9 +37,9 @@ export const ConnectWalletFlow = () => {
   );
 
   const connectActiveWallet = useCallback(
-    async (wallet: WalletConfig) => {
+    async (wallet: WalletConfig, data?: any) => {
       setIsConnecting(true);
-      connect(wallet, {})
+      connect(wallet, { ...data })
         .catch((error) => {
           console.error("Error connecting to the wallet", error);
         })
@@ -50,18 +51,23 @@ export const ConnectWalletFlow = () => {
   );
 
   const onChooseWallet = useCallback(
-    (wallet: WalletConfig) => {
+    (wallet: WalletConfig, data?: any) => {
+      console.log("onChooseWallet", wallet.id, data);
       setActiveWallet(() => wallet);
+      setSelectionData(data);
 
-      // TODO: Change for !wallet.connectUI
-      if (wallet.id !== SmartWallet.id) {
-        connectActiveWallet(wallet);
+      // If not smart wallet (sw has it's own flow, need to migrate it to connectUI)
+      // &&
+      // If the wallet has no custom connect UI, then connect it
+      if (wallet.id !== SmartWallet.id && !wallet.connectUI) {
+        connectActiveWallet(wallet, data);
       }
     },
     [connectActiveWallet],
   );
 
   useEffect(() => {
+    // case when only one wallet is passed in supportedWallets
     if (walletConfig) {
       onChooseWallet(walletConfig);
     }
@@ -90,17 +96,18 @@ export const ConnectWalletFlow = () => {
         return <SmartWalletFlow onClose={onClose} onConnect={onConnected} />;
     }
 
+    console.log("rendering connect ui", activeWallet?.id);
     if (activeWallet?.connectUI) {
       return (
         <activeWallet.connectUI
           theme={theme || "dark"}
           goBack={onBackPress}
-          close={onClose}
+          close={() => onClose(true)}
           isOpen={modalVisible}
           open={onOpenModal}
           walletConfig={activeWallet}
           supportedWallets={supportedWallets}
-          selectionData={undefined} // TODO
+          selectionData={selectionData}
           setSelectionData={() => {}} // TODO
         />
       );

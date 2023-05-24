@@ -7,7 +7,7 @@ import Box from "../../base/Box";
 interface ChooseWalletContentProps {
   wallets: WalletConfig[];
   excludeWalletIds?: string[];
-  onChooseWallet: (wallet: WalletConfig) => void;
+  onChooseWallet: (wallet: WalletConfig, data?: any) => void;
 }
 
 export const ChooseWalletContent = ({
@@ -44,7 +44,7 @@ export const ChooseWalletContent = ({
                     supportedWallets={wallets}
                     onSelect={(data) => {
                       console.log("data", data);
-                      onChooseWallet(item);
+                      onChooseWallet(item, data);
                     }}
                     walletConfig={item}
                   />

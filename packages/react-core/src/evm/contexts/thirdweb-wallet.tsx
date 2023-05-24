@@ -50,9 +50,18 @@ export const ThirdwebConnectedWalletProvider: React.FC<
   useEffect(() => {
     let s = signer;
     if (signer) {
+      (async () => {
+        console.log("signer.twconnected.address.before");
+        const address = await signer.getChainId();
+        console.log("signer.twconnected.address", address);
+      })();
       // just get both of these up front and keep them around with the context
       Promise.all([signer.getAddress(), signer.getChainId()])
         .then(([address, chainId]) => {
+          console.log("connected wallet context");
+          console.log("address", address);
+          console.log("chainId", chainId);
+
           const chain = chains.find((c) => c.chainId === chainId);
           let rpcUrl = undefined;
           if (chain) {
@@ -64,9 +73,11 @@ export const ThirdwebConnectedWalletProvider: React.FC<
               });
             } catch (e) {
               // failed to get a viable rpc url, nothing we can do
+              console.error(e);
             }
           }
 
+          console.log("check same signer", signer === s);
           // only if the signer is still the same!
           if (signer === s) {
             const wallet = new UserWallet(signer, {
@@ -81,14 +92,19 @@ export const ThirdwebConnectedWalletProvider: React.FC<
           }
         })
         .catch((err) => {
+          console.log("check same signer", err);
           if (__DEV__) {
             console.warn(
               "failed to get wallet instance in `<ThirdwebConnectedWalletProvider />`",
               err,
             );
           }
+        })
+        .finally(() => {
+          console.log("check same signer promise resolved");
         });
     } else {
+      console.log("signer.twconnected.signer.notprovided");
       // if signer is not provided, re-set the context value to initial values
       setContextValue(INITIAL_CONTEXT_VALUE);
     }

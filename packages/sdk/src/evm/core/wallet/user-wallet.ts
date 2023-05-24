@@ -193,6 +193,7 @@ export class UserWallet {
    */
   public async sign(message: string): Promise<string> {
     const signer = this.requireWallet();
+
     return await signer.signMessage(message);
   }
 

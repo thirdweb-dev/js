@@ -83,6 +83,7 @@ type ThirdwebWalletContextData = {
   >(
     Wallet: WalletConfig<I, Config>,
   ) => I;
+  createdWalletInstance?: WalletInstance;
   createWalletStorage: CreateAsyncStorage;
   switchChain: (chain: number) => Promise<void>;
   chainToConnect?: Chain;
@@ -120,6 +121,10 @@ export function ThirdwebWalletProvider(
     WalletInstance | undefined
   >();
 
+  const [createdWalletInstance, setCreatedWalletInstance] = useState<
+    WalletInstance | undefined
+  >();
+
   const [activeWalletConfig, setActiveWalletConfig] = useState<
     WalletConfig | undefined
   >();
@@ -153,6 +158,7 @@ export function ThirdwebWalletProvider(
       walletConfig: WalletConfig<I, Config>,
     ): I => {
       const walletInstance = walletConfig.create(walletParams);
+      setCreatedWalletInstance(walletInstance);
       walletInstanceToConfig.set(walletInstance, walletConfig);
       return walletInstance;
     },
@@ -172,6 +178,7 @@ export function ThirdwebWalletProvider(
       connectParams?: ConnectParams<Record<string, any>>,
       isAutoConnect = false,
     ) => {
+      console.log("setConnectedWallet");
       setActiveWallet(wallet);
       const walletConfig = walletInstanceToConfig.get(wallet);
       if (!walletConfig) {
@@ -183,6 +190,9 @@ export function ThirdwebWalletProvider(
       setConnectionStatus("connected");
       const _signer = await wallet.getSigner();
       setSigner(_signer);
+
+      const address = await _signer.getAddress();
+      console.log("setConnected.getSigner.address", address);
 
       // it autoconnected, then the details is already saved in storage, no need to store again
       if (isAutoConnect) {
@@ -456,6 +466,7 @@ export function ThirdwebWalletProvider(
         connectionStatus,
         setConnectionStatus,
         createWalletInstance: createWalletInstance,
+        createdWalletInstance: createdWalletInstance,
         createWalletStorage: props.createWalletStorage,
         switchChain,
         setConnectedWallet: setConnectedWallet,
