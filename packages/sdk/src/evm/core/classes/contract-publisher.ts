@@ -17,7 +17,6 @@ import { buildTransactionFunction } from "../../common/transactions";
 import { getChainProvider, getContractPublisherAddress } from "../../constants";
 import {
   AbiFunction,
-  AddressOrEns,
   AbiSchema,
   ContractParam,
   ContractSource,
@@ -31,8 +30,9 @@ import {
   PublishedContract,
   PublishedContractFetched,
   PublishedContractSchema,
-  SDKOptions,
-} from "../../schema";
+} from "../../schema/contracts/custom";
+import { SDKOptions } from "../../schema/sdk-options";
+import { AddressOrEns } from "../../schema/shared";
 import { NetworkInput, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { RPCConnectionHandler } from "./rpc-connection-handler";

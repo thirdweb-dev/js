@@ -20,7 +20,7 @@ import { isBrowser } from "../../common/utils";
 import { CONTRACT_ADDRESSES, ChainId } from "../../constants";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import { EventType } from "../../constants/events";
-import { Address, CallOverrideSchema } from "../../schema";
+import { Address, CallOverrideSchema } from "../../schema/shared";
 import { AbiSchema, ContractSource } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import {

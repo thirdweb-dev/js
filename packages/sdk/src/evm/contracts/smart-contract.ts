@@ -16,15 +16,7 @@ import {
   FEATURE_ROYALTY,
   FEATURE_TOKEN_STAKE,
 } from "../constants/thirdweb-features";
-import {
-  ContractEncoder,
-  ContractOwner,
-  MarketplaceV3DirectListings,
-  MarketplaceV3EnglishAuctions,
-  MarketplaceV3Offers,
-  NetworkInput,
-  Transaction,
-} from "../core";
+import { Transaction } from "../core/classes/transactions";
 import { ContractAppURI } from "../core/classes/contract-appuri";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
@@ -40,7 +32,7 @@ import { Erc721 } from "../core/classes/erc-721";
 import { Erc1155 } from "../core/classes/erc-1155";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { Address } from "../schema";
+import { Address } from "../schema/shared";
 import {
   Abi,
   AbiInput,
@@ -73,6 +65,13 @@ import { BaseContractInterface } from "../types/contract";
 import { Staking20 } from "../core/classes/staking-20";
 import { Staking721 } from "../core/classes/staking-721";
 import { Staking1155 } from "../core/classes/staking-1155";
+
+import { NetworkInput } from "../core/types";
+import { ContractEncoder } from "../core/classes/contract-encoder";
+import { ContractOwner } from "../core/classes/contract-owner";
+import { MarketplaceV3DirectListings } from "../core/classes/marketplacev3-direct-listings";
+import { MarketplaceV3EnglishAuctions } from "../core/classes/marketplacev3-english-auction";
+import { MarketplaceV3Offers } from "../core/classes/marketplacev3-offers";
 
 /**
  * Custom contract dynamic class with feature detection

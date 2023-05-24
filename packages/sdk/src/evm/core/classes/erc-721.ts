@@ -23,7 +23,7 @@ import {
   FEATURE_NFT_TIERED_DROP,
   FEATURE_NFT_SIGNATURE_MINTABLE_V2,
 } from "../../constants/erc721-features";
-import { Address, AddressOrEns } from "../../schema";
+import { Address, AddressOrEns } from "../../schema/shared";
 import { ClaimOptions, UploadProgressEvent } from "../../types";
 import {
   BaseClaimConditionERC721,

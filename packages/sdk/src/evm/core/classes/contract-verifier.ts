@@ -4,7 +4,7 @@ import {
   verify,
   verifyThirdwebPrebuiltImplementation,
 } from "../../common";
-import { SDKOptions } from "../../schema";
+import { SDKOptions } from "../../schema/sdk-options";
 import { ConstructorParamMap } from "../../types/any-evm/deploy-data";
 import { NetworkInput } from "../types";
 import { RPCConnectionHandler } from "./rpc-connection-handler";

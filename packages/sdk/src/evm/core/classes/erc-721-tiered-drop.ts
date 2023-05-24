@@ -8,7 +8,7 @@ import {
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { getBaseUriFromBatch, uploadOrExtractURIs } from "../../common/nft";
 import { FEATURE_NFT_TIERED_DROP } from "../../constants/erc721-features";
-import { GenericRequest } from "../../schema";
+import { GenericRequest } from "../../schema/contracts/common";
 import {
   TieredDropPayloadInput,
   TieredDropPayloadOutput,
