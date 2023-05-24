@@ -207,7 +207,11 @@ const Templates: ThirdwebNextPage = () => {
           >
             Kickstart your development process with ready-to-ship repositories.
           </Text>
-          <SimpleGrid columns={{ lg: 3, base: 1 }} gap={6} margin="0 auto">
+          <SimpleGrid
+            columns={{ lg: 3, md: 2, base: 1 }}
+            gap={6}
+            margin="0 auto"
+          >
             {templates.map((template, idx) => (
               <TemplateCard key={template.title + idx} {...template} />
             ))}
