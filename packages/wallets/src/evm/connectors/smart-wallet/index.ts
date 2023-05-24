@@ -122,7 +122,8 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     throw new Error("Not supported.");
   }
   setupListeners(): Promise<void> {
-    throw new Error("Method not implemented.");
+    //throw new Error("Method not implemented.");
+    return Promise.resolve();
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateChains(chains: Chain[]): void {
