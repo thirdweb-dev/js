@@ -6,6 +6,7 @@ import {
   WalletOptions,
   useCreateWalletInstance,
   useSetConnectedWallet,
+  useSetConnectionStatus,
   useWalletContext,
 } from "@thirdweb-dev/react-core";
 import { MagicLinkOptions } from "../connectors/magic/types";
@@ -74,6 +75,7 @@ const MagicConnectionUI: React.FC<
   const createWalletInstance = useCreateWalletInstance();
   const setConnectedWallet = useSetConnectedWallet();
   const chainToConnect = useWalletContext().chainToConnect;
+  const setConnectionStatus = useSetConnectionStatus();
   const { magicWallet, setMagicWallet } = useMagicWallet();
 
   useEffect(() => {
@@ -93,6 +95,7 @@ const MagicConnectionUI: React.FC<
     (async () => {
       // close();
       try {
+        setConnectionStatus("connecting");
         const connectParams = {
           chainId: chainToConnect?.chainId,
           ...walletConfig.config,
@@ -105,7 +108,9 @@ const MagicConnectionUI: React.FC<
         await magicWallet.getMagicSDK().user.getMetadata();
 
         setConnectedWallet(magicWallet, connectParams);
+        setConnectionStatus("connected");
       } catch (e) {
+        setConnectionStatus("disconnected");
         console.error("Error connecting to magic", e);
       }
     })();
