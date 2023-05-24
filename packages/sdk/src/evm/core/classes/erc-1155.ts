@@ -246,6 +246,43 @@ export class Erc1155<
   );
 
   /**
+   * Transfer an NFT from a specific wallet
+   *
+   * @remarks Transfer an NFT from a specific wallet to another wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to send the NFT to
+   * const toAddress = "{{wallet_address}}";
+   * const tokenId = "0"; // The token ID of the NFT you want to send
+   * const amount = 3; // How many copies of the NFTs to transfer
+   * await contract.erc1155.transfer(toAddress, tokenId, amount);
+   * ```
+   * @twfeature ERC1155
+   */
+  transferFrom = buildTransactionFunction(
+    async (
+      from: AddressOrEns,
+      to: AddressOrEns,
+      tokenId: BigNumberish,
+      amount: BigNumberish,
+      data: BytesLike = [0],
+    ) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "safeTransferFrom",
+        args: [
+          await resolveAddress(from),
+          await resolveAddress(to),
+          tokenId,
+          amount,
+          data,
+        ],
+      });
+    },
+  );
+
+  /**
    * Set approval for all NFTs
    * @remarks Approve or remove operator as an operator for the caller. Operators can call transferFrom or safeTransferFrom for any token owned by the caller.
    * @example

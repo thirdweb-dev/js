@@ -1,6 +1,6 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Scroll",
+  "name": "Scroll Sepolia Testnet",
   "chain": "ETH",
   "status": "incubating",
   "rpc": [],
@@ -11,15 +11,15 @@ export default {
     "decimals": 18
   },
   "infoURL": "https://scroll.io",
-  "shortName": "scr",
-  "chainId": 534352,
-  "networkId": 534352,
+  "shortName": "scr-sepolia",
+  "chainId": 534351,
+  "networkId": 534351,
   "explorers": [],
   "parent": {
     "type": "L2",
-    "chain": "eip155-1",
+    "chain": "eip155-11155111",
     "bridges": []
   },
-  "testnet": false,
-  "slug": "scroll"
+  "testnet": true,
+  "slug": "scroll-sepolia-testnet"
 } as const satisfies Chain;
