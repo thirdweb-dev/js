@@ -106,12 +106,9 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   async isConnected(): Promise<boolean> {
     try {
-      console.log("isConnected");
       const address = await this.getAddress();
-      console.log("isConnected.address", address);
       return !!address;
     } catch (e) {
-      console.log("isConnected.error", e);
       return false;
     }
   }

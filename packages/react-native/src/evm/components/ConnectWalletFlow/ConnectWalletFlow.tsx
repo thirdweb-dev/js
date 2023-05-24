@@ -52,7 +52,6 @@ export const ConnectWalletFlow = () => {
 
   const onChooseWallet = useCallback(
     (wallet: WalletConfig, data?: any) => {
-      console.log("onChooseWallet", wallet.id, data);
       setActiveWallet(() => wallet);
       setSelectionData(data);
 
@@ -96,7 +95,6 @@ export const ConnectWalletFlow = () => {
         return <SmartWalletFlow onClose={onClose} onConnect={onConnected} />;
     }
 
-    console.log("rendering connect ui", activeWallet?.id);
     if (activeWallet?.connectUI) {
       return (
         <activeWallet.connectUI

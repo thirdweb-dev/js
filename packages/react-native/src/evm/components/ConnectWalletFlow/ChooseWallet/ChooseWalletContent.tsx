@@ -43,7 +43,6 @@ export const ChooseWalletContent = ({
                   <item.selectUI
                     supportedWallets={wallets}
                     onSelect={(data) => {
-                      console.log("data", data);
                       onChooseWallet(item, data);
                     }}
                     walletConfig={item}

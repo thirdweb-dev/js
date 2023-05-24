@@ -30,7 +30,6 @@ export class MagicConnector extends Connector<MagicConnectorOptions> {
       throw new Error("Magic API Key is not provided.");
     }
 
-    console.log("connect", options);
     // if (options.chainId) {
     //   this.initializeMagicSDK({ chainId: options.chainId });
     // }
@@ -40,18 +39,14 @@ export class MagicConnector extends Connector<MagicConnectorOptions> {
 
     // Check if there is a user logged in
     const isAuthenticated = await this.isConnected();
-    console.log("isAuthenticated", isAuthenticated);
 
     // Check if we have a chainId, in case of error just assign 0 for legacy
     let chainId: number;
     try {
-      console.log("getChainId");
       chainId = await this.getChainId();
     } catch (e) {
       chainId = 0;
     }
-
-    console.log("chainId", chainId);
 
     this.connectedChainId = chainId;
 
@@ -60,7 +55,6 @@ export class MagicConnector extends Connector<MagicConnectorOptions> {
       return await this.getAddress();
     }
 
-    console.log("getMagicSDK");
     const magic = this.getMagicSDK();
 
     // LOGIN WITH MAGIC LINK WITH EMAIL
@@ -83,7 +77,6 @@ export class MagicConnector extends Connector<MagicConnectorOptions> {
       address = `0x${address}`;
     }
 
-    console.log("connected.address", address);
     return address;
   }
   async disconnect(): Promise<void> {
@@ -129,21 +122,17 @@ export class MagicConnector extends Connector<MagicConnectorOptions> {
   }
   isConnected(): Promise<boolean> {
     const magic = this.getMagicSDK();
-    console.log("isConnected.after.getsdk");
     try {
       return magic.user.isLoggedIn();
     } catch (e) {
-      console.log("isConnected.after.getsdk.catch", e);
       return Promise.resolve(false);
     }
   }
   async setupListeners(): Promise<void> {
     this.provider?.on("accountsChanged", () => {
-      console.log("accountsChanged");
+      throw new Error("Accounts changed not implemented");
     });
-    this.provider?.on("chainChanged", () => {
-      console.log("chainChanged");
-    });
+    this.provider?.on("chainChanged", this.onChainChanged);
     this.provider?.on("disconnect", this.onDisconnect);
 
     return Promise.resolve();
@@ -167,10 +156,8 @@ export class MagicConnector extends Connector<MagicConnectorOptions> {
   }
 
   initializeMagicSDK({ chainId }: { chainId?: number } = {}) {
-    console.log("init.magic", chainId);
     if (chainId) {
       const chain = this.chains.find((c) => c.chainId === chainId);
-      console.log("init.magic.chain", chain);
       if (chain) {
         this.magicSdkConfiguration = this.magicSdkConfiguration || {};
         this.magicSdkConfiguration.network = {
@@ -191,7 +178,6 @@ export class MagicConnector extends Connector<MagicConnectorOptions> {
 
   async getChainId(): Promise<number> {
     const networkOptions = this.magicSdkConfiguration?.network;
-    console.log("getChainId", networkOptions);
     if (typeof networkOptions === "object") {
       const chainID = networkOptions.chainId;
       if (chainID) {
@@ -199,5 +185,15 @@ export class MagicConnector extends Connector<MagicConnectorOptions> {
       }
     }
     throw new Error("Chain ID is not defined");
+  }
+
+  protected isChainUnsupported(chainId: number) {
+    return !this.chains.some((x) => x.chainId === chainId);
+  }
+
+  protected onChainChanged(chainId: string | number): void {
+    const id = normalizeChainId(chainId);
+    const unsupported = this.isChainUnsupported(id);
+    this.emit("change", { chain: { id, unsupported } });
   }
 }

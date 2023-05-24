@@ -38,7 +38,6 @@ export const magicWallet = (
      * UI for selecting wallet - this UI is rendered in the wallet selection screen
      */
     selectUI: (props: SelectUIProps<MagicWallet, MagicLinkOptions>) => {
-      console.log("selectUI.magicWallet");
       return (
         <Box flex={1}>
           <TextInput
@@ -47,7 +46,6 @@ export const magicWallet = (
             onEndEditing={(
               e: (typeof TextInput)["arguments"]["onEndEditing"],
             ) => {
-              console.log("onEndEditing", e.nativeEvent.text);
               props.onSelect(e.nativeEvent.text);
             }}
           />
@@ -79,7 +77,6 @@ const MagicConnectionUI: React.FC<
   const { magicWallet, setMagicWallet } = useMagicWallet();
 
   useEffect(() => {
-    console.log("create magic wallet instance");
     const inst = createWalletInstance(walletConfig);
     setMagicWallet?.(inst);
   }, [createWalletInstance, setMagicWallet, walletConfig]);
@@ -93,8 +90,6 @@ const MagicConnectionUI: React.FC<
     connectPrompted.current = true;
     const isEmail = (selectionData as string).includes("@");
 
-    console.log("calling connect");
-
     (async () => {
       // close();
       try {
@@ -107,9 +102,7 @@ const MagicConnectionUI: React.FC<
         };
         close();
         await magicWallet.connect(connectParams);
-
-        const res = await magicWallet.getMagicSDK().user.getMetadata();
-        console.log("magic.connectUI.afterConnect", res);
+        await magicWallet.getMagicSDK().user.getMetadata();
 
         setConnectedWallet(magicWallet, connectParams);
       } catch (e) {

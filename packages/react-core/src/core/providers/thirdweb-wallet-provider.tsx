@@ -178,7 +178,6 @@ export function ThirdwebWalletProvider(
       connectParams?: ConnectParams<Record<string, any>>,
       isAutoConnect = false,
     ) => {
-      console.log("setConnectedWallet");
       setActiveWallet(wallet);
       const walletConfig = walletInstanceToConfig.get(wallet);
       if (!walletConfig) {
@@ -192,7 +191,6 @@ export function ThirdwebWalletProvider(
       setSigner(_signer);
 
       const address = await _signer.getAddress();
-      console.log("setConnected.getSigner.address", address);
 
       // it autoconnected, then the details is already saved in storage, no need to store again
       if (isAutoConnect) {

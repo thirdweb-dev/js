@@ -174,12 +174,6 @@ const ThirdwebSDKProviderWrapper = <TChains extends Chain[]>({
 >) => {
   const signer = useWalletContext()?.signer;
 
-  useEffect(() => {
-    (async () => {
-      console.log("wrapper.signer.address", await signer?.getAddress());
-    })();
-  }, [signer]);
-
   return (
     <ThirdwebSDKProvider signer={signer} {...props}>
       {children}

@@ -39,7 +39,6 @@ export class MagicWallet extends AbstractClientWallet<
   // my methods
 
   initializeConnector() {
-    console.log("initializeConnector", this.options);
     this.connector = new MagicConnector({
       ...this.options,
       chainId: this.options.chainId,
