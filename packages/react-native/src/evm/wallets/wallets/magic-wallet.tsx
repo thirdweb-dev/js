@@ -76,7 +76,7 @@ const MagicConnectionUI: React.FC<
   const setConnectedWallet = useSetConnectedWallet();
   const chainToConnect = useWalletContext().chainToConnect;
   const setConnectionStatus = useSetConnectionStatus();
-  const { magicWallet, setMagicWallet } = useMagicWallet();
+  const { magicWallet: ctxMagicWallet, setMagicWallet } = useMagicWallet();
 
   useEffect(() => {
     const inst = createWalletInstance(walletConfig);
@@ -86,7 +86,7 @@ const MagicConnectionUI: React.FC<
   const connectPrompted = useRef(false);
 
   useEffect(() => {
-    if (connectPrompted.current || !magicWallet) {
+    if (connectPrompted.current || !ctxMagicWallet) {
       return;
     }
     connectPrompted.current = true;
@@ -104,10 +104,10 @@ const MagicConnectionUI: React.FC<
             : { phoneNumber: selectionData }),
         };
         close();
-        await magicWallet.connect(connectParams);
-        await magicWallet.getMagicSDK().user.getMetadata();
+        await ctxMagicWallet.connect(connectParams);
+        await ctxMagicWallet.getMagicSDK().user.getMetadata();
 
-        setConnectedWallet(magicWallet, connectParams);
+        setConnectedWallet(ctxMagicWallet, connectParams);
         setConnectionStatus("connected");
       } catch (e) {
         setConnectionStatus("disconnected");
@@ -118,8 +118,9 @@ const MagicConnectionUI: React.FC<
     selectionData,
     walletConfig,
     close,
-    magicWallet,
+    ctxMagicWallet,
     setConnectedWallet,
+    setConnectionStatus,
     chainToConnect?.chainId,
   ]);
 

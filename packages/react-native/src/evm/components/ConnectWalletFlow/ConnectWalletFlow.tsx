@@ -76,13 +76,13 @@ export const ConnectWalletFlow = () => {
     setModalVisible(true);
   };
 
-  const onBackPress = () => {
+  const onBackPress = useCallback(() => {
     resetModal();
-  };
+  }, []);
 
-  const onConnected = () => {
+  const onConnected = useCallback(() => {
     onClose(true);
-  };
+  }, [onClose]);
 
   const resetModal = () => {
     setActiveWallet(undefined);
