@@ -18,6 +18,7 @@ import {
   WC_RELAY_URL,
 } from "../../evm/constants/wc";
 import { AbstractWallet } from "../../evm/wallets/abstract";
+import { formatJsonRpcResult } from "@walletconnect/jsonrpc-utils";
 
 type WalletConnectV2WalletConfig = Omit<
   WalletConnectReceiverConfig,
@@ -136,18 +137,45 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
     const { topic, params, id } = this.#activeRequestEvent;
     const { request } = params;
 
+    let response;
     switch (request.method) {
       case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
       case EIP155_SIGNING_METHODS.ETH_SIGN:
         const message = this.#getSignParamsMessage(request.params);
         const signedMessage = await wallet.signMessage(message);
 
-        const response = {
-          id,
-          jsonrpc: "2.0",
-          result: signedMessage,
-        };
-        return this.#wcWallet?.respondSessionRequest({ topic, response });
+        response = formatJsonRpcResult(id, signedMessage);
+        // const response = {
+        //   id,
+        //   jsonrpc: "2.0",
+        //   result: signedMessage,
+        // };
+        break;
+      // case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA:
+      // case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V3:
+      // case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V4:
+      //   const {
+      //     domain,
+      //     types,
+      //     message: data,
+      //   } = getSignTypedDataParamsData(request.params);
+      //   // https://github.com/ethers-io/ethers.js/issues/687#issuecomment-714069471
+      //   delete types.EIP712Domain;
+      //   const signedData = await wallet._signTypedData(domain, types, data);
+      //   return formatJsonRpcResult(id, signedData);
+      case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
+        const signer = await wallet.getSigner();
+        const sendTransaction = request.params[0];
+        const { hash } = await signer.sendTransaction(sendTransaction);
+
+        response = formatJsonRpcResult(id, hash);
+        break;
+      case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
+        const signerSign = await wallet.getSigner();
+        const signTransaction = request.params[0];
+
+        const signature = await signerSign.signTransaction(signTransaction);
+        response = formatJsonRpcResult(id, signature);
       default:
         const error = {
           id,
@@ -162,6 +190,8 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
           response: error,
         });
     }
+
+    this.#wcWallet?.respondSessionRequest({ topic, response });
   }
 
   async rejectEIP155Request() {
