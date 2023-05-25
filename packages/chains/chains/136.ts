@@ -2,7 +2,12 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Deamchain Mainnet",
   "chain": "Deamchain",
-  "icon": "deam",
+  "icon": {
+    "url": "ipfs://QmXvHWmjfXKdZMSz7x82NR4SjEqigKdJELVHbnzUPkj17F",
+    "width": 512,
+    "height": 512,
+    "format": "svg"
+  },
   "rpc": [
     "https://deamchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.deamchain.com"
@@ -22,7 +27,12 @@ export default {
       "name": "Deamchain Block Explorer",
       "url": "https://scan.deamchain.com",
       "standard": "EIP3091",
-      "icon": "deam"
+      "icon": {
+        "url": "ipfs://QmXvHWmjfXKdZMSz7x82NR4SjEqigKdJELVHbnzUPkj17F",
+        "width": 512,
+        "height": 512,
+        "format": "svg"
+      }
     }
   ],
   "testnet": false,
