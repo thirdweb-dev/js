@@ -73,7 +73,7 @@ type ThirdwebWalletContextData = {
     Config extends Record<string, any> | undefined = undefined,
   >(
     ...args: ConnectFnArgs<I, Config>
-  ) => Promise<void>;
+  ) => Promise<I>;
   disconnect: () => Promise<void>;
   connectionStatus: ConnectionStatus;
   setConnectionStatus: (status: ConnectionStatus) => void;
@@ -370,7 +370,7 @@ export function ThirdwebWalletProvider(
       Config extends Record<string, any> | undefined = undefined,
     >(
       ...args: ConnectFnArgs<I, Config>
-    ) => {
+    ): Promise<I> => {
       const [WalletObj, connectParams] = args;
 
       const _connectedParams = {
@@ -388,6 +388,8 @@ export function ThirdwebWalletProvider(
         setConnectionStatus("disconnected");
         throw e;
       }
+
+      return wallet;
     },
     [createWalletInstance, setConnectedWallet, chainToConnect],
   );
