@@ -1,7 +1,7 @@
 import {
-  extractConstructorParamsFromAbi,
   extractFunctionParamsFromAbi,
-} from "../../common";
+  extractConstructorParamsFromAbi,
+} from "../../common/feature-detection";
 import {
   computeCloneFactoryAddress,
   convertParamValues,

@@ -1,12 +1,13 @@
 import {
-  TransactionError,
   computeEOAForwarderAddress,
   computeForwarderAddress,
-  extractFunctionsFromAbi,
+} from "../../common/any-evm-utils";
+import { parseRevertReason, TransactionError } from "../../common/error";
+import { extractFunctionsFromAbi } from "../../common/feature-detection";
+import {
   fetchContractMetadataFromAddress,
   fetchSourceFilesFromMetadata,
-  parseRevertReason,
-} from "../../common";
+} from "../../common/metadata-resolver";
 import {
   BiconomyForwarderAbi,
   ChainAwareForwardRequest,

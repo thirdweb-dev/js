@@ -1,4 +1,7 @@
-import { assertEnabled, detectContractFeature } from "../../common";
+import {
+  assertEnabled,
+  detectContractFeature,
+} from "../../common/feature-detection";
 import {
   FEATURE_DIRECT_LISTINGS,
   FEATURE_ENGLISH_AUCTIONS,

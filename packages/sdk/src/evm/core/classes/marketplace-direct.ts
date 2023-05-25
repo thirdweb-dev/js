@@ -1,4 +1,7 @@
-import { ListingNotFoundError, WrongListingTypeError } from "../../common";
+import {
+  ListingNotFoundError,
+  WrongListingTypeError,
+} from "../../common/error";
 import {
   cleanCurrencyAddress,
   fetchCurrencyValue,
