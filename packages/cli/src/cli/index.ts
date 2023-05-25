@@ -294,6 +294,7 @@ const main = async () => {
       "--dynamic",
       "Deploy a dynamic smart contract made up of extensions to blockchains",
     )
+    .option("--zksync", "Deploy on ZKSync")
     .action(async (options) => {
       const url = await deploy(options);
       if (url) {

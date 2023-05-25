@@ -2,6 +2,7 @@ import * as zk from "zksync-web3";
 import { twProxyArtifactZK } from "./temp-artifact/TWProxy";
 import {
   convertParamValues,
+  extractConstructorParamsFromAbi,
   extractFunctionParamsFromAbi,
   fetchAndCacheDeployMetadata,
 } from "../common";
@@ -78,7 +79,37 @@ export async function zkDeployContractFromUri(
 
     return proxy.address;
   } else {
-    throw new Error("Contract not supported yet.");
+    // throw new Error("Contract not supported yet.");
+    const bytecode = compilerMetadata.bytecode.startsWith("0x")
+      ? compilerMetadata.bytecode
+      : `0x${compilerMetadata.bytecode}`;
+    if (!ethers.utils.isHexString(bytecode)) {
+      throw new Error(`Contract bytecode is invalid.\n\n${bytecode}`);
+    }
+    const constructorParamTypes = extractConstructorParamsFromAbi(
+      compilerMetadata.abi,
+    ).map((p) => p.type);
+    const paramValues = convertParamValues(
+      constructorParamTypes,
+      constructorParamValues,
+    );
+
+    const factory = new zk.ContractFactory(
+      compilerMetadata.abi,
+      compilerMetadata.bytecode as BytesLike,
+      signer as zk.Signer,
+      "create",
+    );
+    const contract = await factory.deploy(...paramValues);
+
+    // register on multichain registry
+    await registerContractOnMultiChainRegistry(
+      contract.address,
+      chainId,
+      compilerMetadata.metadataUri,
+    );
+
+    return contract.address;
   }
 }
 

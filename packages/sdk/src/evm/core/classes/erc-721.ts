@@ -226,6 +226,30 @@ export class Erc721<
   );
 
   /**
+   * Transfer an NFT from a specific wallet
+   *
+   * @remarks Transfer an NFT from the given wallet to another wallet.
+   *
+   * @example
+   * ```javascript
+   * const fromWalletAddress = "{{wallet_address}}";
+   * const toWalletAddress = "{{wallet_address}}";
+   * const tokenId = 0;
+   * await contract.erc721.transferFrom(fromWalletAddress, toWalletAddress, tokenId);
+   * ```
+   * @twfeature ERC721
+   */
+  transferFrom = buildTransactionFunction(
+    async (from: AddressOrEns, to: AddressOrEns, tokenId: BigNumberish) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "transferFrom(address,address,uint256)",
+        args: [await resolveAddress(from), await resolveAddress(to), tokenId],
+      });
+    },
+  );
+
+  /**
    * Set approval for all NFTs
    * @remarks Approve or remove operator as an operator for the caller. Operators can call transferFrom or safeTransferFrom for any token owned by the caller.
    * @example
