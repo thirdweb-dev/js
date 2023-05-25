@@ -14,7 +14,7 @@ import {
   CreateAsyncStorage,
   DAppMetaData,
 } from "@thirdweb-dev/wallets";
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 
 /**
  * The possible props for the ThirdwebProvider.

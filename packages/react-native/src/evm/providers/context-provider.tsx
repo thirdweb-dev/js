@@ -41,7 +41,6 @@ export const DappContextProvider = (props: React.PropsWithChildren<{}>) => {
     return null;
   }, [magicWallet]);
 
-  console.log("dapp context provider.render");
   return (
     <DappContext.Provider
       value={{

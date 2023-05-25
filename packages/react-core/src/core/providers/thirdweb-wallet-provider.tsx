@@ -7,6 +7,7 @@ import {
   AsyncStorage,
   ConnectParams,
   CreateAsyncStorage,
+  walletIds,
 } from "@thirdweb-dev/wallets";
 import { Signer } from "ethers";
 import {
@@ -158,7 +159,14 @@ export function ThirdwebWalletProvider(
       walletConfig: WalletConfig<I, Config>,
     ): I => {
       const walletInstance = walletConfig.create(walletParams);
-      setCreatedWalletInstance(walletInstance);
+      if (walletInstance.walletId === walletIds.magicLink) {
+        // NOTE: removing this if statement causes the component to re-render
+        // Patch for magic link wallet in react native
+        // needed because we need to add a component to the view tree
+        // from the instance, right before calling connect.
+        // Check it out in RN's DappContextProvider.
+        setCreatedWalletInstance(walletInstance);
+      }
       walletInstanceToConfig.set(walletInstance, walletConfig);
       return walletInstance;
     },
