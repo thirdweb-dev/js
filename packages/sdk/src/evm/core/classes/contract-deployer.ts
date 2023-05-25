@@ -74,7 +74,6 @@ import {
   DeploymentTransaction,
   PrecomputedDeploymentTransaction,
 } from "../../types/any-evm/deploy-data";
-import { ContractWrapper } from "./contract-wrapper";
 
 const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
 
