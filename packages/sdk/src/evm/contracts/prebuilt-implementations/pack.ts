@@ -1,6 +1,9 @@
 import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
-import { assertEnabled, detectContractFeature } from "../../common";
+import {
+  assertEnabled,
+  detectContractFeature,
+} from "../../common/feature-detection";
 import {
   fetchCurrencyMetadata,
   hasERC20Allowance,

@@ -1,7 +1,7 @@
 import {
-  extractConstructorParamsFromAbi,
   extractFunctionParamsFromAbi,
-} from "../../common";
+  extractConstructorParamsFromAbi,
+} from "../../common/feature-detection";
 import {
   computeCloneFactoryAddress,
   convertParamValues,
@@ -54,11 +54,11 @@ import {
   VoteContractDeployMetadata,
 } from "../../types";
 import { ThirdwebSDK } from "../sdk";
+import { NetworkInput } from "../types";
 import {
   DeploySchemaForPrebuiltContractType,
-  NetworkInput,
   PrebuiltContractType,
-} from "../types";
+} from "../../contracts";
 import { ContractFactory } from "./factory";
 import { ContractRegistry } from "./registry";
 import { RPCConnectionHandler } from "./rpc-connection-handler";

@@ -1,5 +1,8 @@
 import { AmountSchema } from "../../../core/schema/shared";
-import { assertEnabled, detectContractFeature } from "../../common";
+import {
+  assertEnabled,
+  detectContractFeature,
+} from "../../common/feature-detection";
 import {
   fetchCurrencyMetadata,
   fetchCurrencyValue,

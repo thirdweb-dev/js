@@ -1,4 +1,4 @@
-import { detectContractFeature } from "../../common";
+import { detectContractFeature } from "../../common/feature-detection";
 import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_TOKEN_MINTABLE } from "../../constants/erc20-features";

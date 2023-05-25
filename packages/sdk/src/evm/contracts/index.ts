@@ -1,4 +1,4 @@
-import { fetchAndCachePublishedContractURI } from "../common";
+import { fetchAndCachePublishedContractURI } from "../common/any-evm-utils";
 import { getPrebuiltInfo } from "../common/legacy";
 import { fetchAbiFromAddress } from "../common/metadata-resolver";
 import {
@@ -6,11 +6,7 @@ import {
   getCompositePluginABI,
 } from "../common/plugin";
 import { ALL_ROLES } from "../common/role";
-import type {
-  ContractType,
-  NetworkInput,
-  PrebuiltContractType,
-} from "../core/types";
+import type { NetworkInput } from "../core/types";
 import { getSignerAndProvider } from "../functions/getSignerAndProvider";
 import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
 import { DropErc721ContractSchema } from "../schema/contracts/drop-erc721";
@@ -28,6 +24,7 @@ import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
+import type { SmartContract as SmartContractType } from "./smart-contract";
 
 type InitalizeParams = [
   network: NetworkInput,
@@ -687,3 +684,31 @@ export function getContractName(
     (contract) => contract.contractType === type,
   )?.name;
 }
+
+export type PrebuiltContractsMap = typeof PREBUILT_CONTRACTS_MAP;
+export type PrebuiltContractsInstances = {
+  [K in keyof PrebuiltContractsMap]: Awaited<
+    ReturnType<(typeof PREBUILT_CONTRACTS_MAP)[K]["initialize"]>
+  >;
+};
+
+export type ContractsMap = typeof CONTRACTS_MAP;
+
+export type PrebuiltContractType = keyof PrebuiltContractsMap;
+
+export type ValidContractInstance =
+  | Awaited<ReturnType<ContractsMap[keyof PrebuiltContractsMap]["initialize"]>>
+  | SmartContractType;
+
+export type SchemaForPrebuiltContractType<
+  TContractType extends PrebuiltContractType,
+> = PrebuiltContractsMap[TContractType]["schema"];
+
+export type ContractForPrebuiltContractType<
+  TContractType extends PrebuiltContractType,
+> = PrebuiltContractsInstances[TContractType];
+
+export type ContractType = keyof ContractsMap;
+export type DeploySchemaForPrebuiltContractType<
+  TContractType extends PrebuiltContractType,
+> = SchemaForPrebuiltContractType<TContractType>["deploy"];

@@ -22,7 +22,7 @@ import { computeForwarderAddress } from "./any-evm-utils";
 import type {
   PrebuiltContractType,
   DeploySchemaForPrebuiltContractType,
-} from "../core/types";
+} from "../contracts";
 
 /**
  *
