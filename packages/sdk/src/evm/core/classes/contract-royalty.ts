@@ -1,4 +1,4 @@
-import { hasFunction } from "../../common";
+import { hasFunction } from "../../common/feature-detection";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_ROYALTY } from "../../constants/thirdweb-features";
 import { CommonRoyaltySchema } from "../../schema/contracts/common";

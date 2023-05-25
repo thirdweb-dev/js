@@ -1,4 +1,7 @@
-import { detectContractFeature, hasFunction } from "../../common";
+import {
+  hasFunction,
+  detectContractFeature,
+} from "../../common/feature-detection";
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";

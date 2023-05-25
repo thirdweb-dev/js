@@ -1,9 +1,9 @@
+import { ExtensionNotImplementedError } from "../../common/error";
 import {
-  detectContractFeature,
-  ExtensionNotImplementedError,
   hasFunction,
-  fetchContractMetadataFromAddress,
-} from "../../common";
+  detectContractFeature,
+} from "../../common/feature-detection";
+import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_METADATA } from "../../constants/thirdweb-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";

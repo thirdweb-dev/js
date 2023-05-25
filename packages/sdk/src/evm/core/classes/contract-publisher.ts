@@ -1,19 +1,21 @@
 import { DEFAULT_API_KEY } from "../../../core/constants/urls";
+import { resolveAddress } from "../../common/ens";
 import {
   extractConstructorParams,
   extractFunctions,
-  fetchContractMetadata,
-  fetchContractMetadataFromAddress,
   fetchExtendedReleaseMetadata,
-  fetchPreDeployMetadata,
   fetchRawPredeployMetadata,
-  fetchSourceFilesFromMetadata,
-  isIncrementalVersion,
   resolveContractUriFromAddress,
-} from "../../common";
-import { resolveAddress } from "../../common/ens";
+} from "../../common/feature-detection";
+import { fetchPreDeployMetadata } from "../../common/feature-detection";
+import {
+  fetchContractMetadataFromAddress,
+  fetchSourceFilesFromMetadata,
+  fetchContractMetadata,
+} from "../../common/metadata-resolver";
 import { getCompositePluginABI } from "../../common/plugin";
 import { buildTransactionFunction } from "../../common/transactions";
+import { isIncrementalVersion } from "../../common/version-checker";
 import { getChainProvider, getContractPublisherAddress } from "../../constants";
 import {
   AbiFunction,

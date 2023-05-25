@@ -1,12 +1,14 @@
 import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import {
+  ExtensionNotImplementedError,
+  NotFoundError,
+} from "../../common/error";
+import {
+  hasFunction,
   assertEnabled,
   detectContractFeature,
-  ExtensionNotImplementedError,
-  hasFunction,
-  NotFoundError,
-} from "../../common";
+} from "../../common/feature-detection";
 import { resolveAddress } from "../../common/ens";
 import { FALLBACK_METADATA, fetchTokenMetadata } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";

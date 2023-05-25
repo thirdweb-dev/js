@@ -1,4 +1,5 @@
-import { fetchCurrencyValue, getAllDetectedFeatureNames } from "../common";
+import { fetchCurrencyValue } from "../common/currency";
+import { getAllDetectedFeatureNames } from "../common/feature-detection";
 import { resolveAddress } from "../common/ens";
 import { getCompositePluginABI } from "../common/plugin";
 import { createStorage } from "../common/storage";
@@ -23,13 +24,12 @@ import { ContractPublisher } from "./classes/contract-publisher";
 import { MultichainRegistry } from "./classes/multichain-registry";
 import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
 import type {
-  ChainOrRpcUrl,
   ContractForPrebuiltContractType,
   ContractType,
-  NetworkInput,
   PrebuiltContractType,
   ValidContractInstance,
-} from "./types";
+} from "../contracts";
+import type { NetworkInput, ChainOrRpcUrl } from "./types";
 import { UserWallet } from "./wallet/user-wallet";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";

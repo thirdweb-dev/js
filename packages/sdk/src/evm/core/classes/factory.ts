@@ -26,9 +26,9 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { DeployEvents } from "../../types";
 import {
   DeploySchemaForPrebuiltContractType,
-  NetworkInput,
   PrebuiltContractType,
-} from "../types";
+} from "../../contracts";
+import { NetworkInput } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 import type { TWFactory } from "@thirdweb-dev/contracts-js";
