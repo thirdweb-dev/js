@@ -1,5 +1,5 @@
 import { DEFAULT_API_KEY } from "../../core/constants/urls";
-import { ChainInfoInputSchema } from "./shared";
+import { ChainInfoInputSchema } from "./ChainInfoInputSchema";
 import { defaultChains } from "@thirdweb-dev/chains";
 import { z } from "zod";
 
