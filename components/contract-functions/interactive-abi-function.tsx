@@ -154,7 +154,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
   const {
     mutate,
     data,
-    error,
+    error: mutationError,
     isLoading: mutationLoading,
   } = useContractWrite(contract, abiFunction?.name);
 
@@ -162,7 +162,10 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
     mutate: readFn,
     data: readData,
     isLoading: readLoading,
+    error: readError,
   } = useDelayedRead(contract, abiFunction?.name);
+
+  const error = isView ? readError : mutationError;
 
   useEffect(() => {
     if (
