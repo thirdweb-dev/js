@@ -2,7 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Scroll Alpha Testnet",
   "chain": "ETH",
-  "status": "incubating",
+  "status": "active",
   "rpc": [
     "https://scroll-alpha-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://alpha-rpc.scroll.io/l2"
