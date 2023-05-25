@@ -1,4 +1,4 @@
-import { getRoleHash } from "../../common";
+import { getRoleHash } from "../../common/role";
 import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import { ContractAppURI } from "../../core/classes/contract-appuri";

@@ -1,5 +1,5 @@
 import { AmountSchema } from "../../../core/schema/shared";
-import { includesErrorMessage } from "../../common";
+import { includesErrorMessage } from "../../common/error";
 import {
   abstractContractModelToLegacy,
   abstractContractModelToNew,

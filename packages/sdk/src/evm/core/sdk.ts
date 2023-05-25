@@ -1,4 +1,5 @@
-import { fetchCurrencyValue, getAllDetectedFeatureNames } from "../common";
+import { fetchCurrencyValue } from "../common/currency";
+import { getAllDetectedFeatureNames } from "../common/feature-detection";
 import { resolveAddress } from "../common/ens";
 import { getCompositePluginABI } from "../common/plugin";
 import { createStorage } from "../common/storage";
