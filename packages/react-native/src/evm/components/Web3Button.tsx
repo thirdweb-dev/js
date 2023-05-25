@@ -1,5 +1,5 @@
 import { ThemeProvider, ThemeProviderProps } from "../styles/ThemeProvider";
-import { ConnectWallet } from "./ConnectWallet";
+import { ConnectWallet, ConnectWalletProps } from "./ConnectWallet";
 import BaseButton from "./base/BaseButton";
 import Text from "./base/Text";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -37,6 +37,7 @@ interface Web3ButtonProps<TActionFn extends ActionFn> {
   // the fn to execute
   action: TActionFn;
   theme?: ThemeProviderProps["theme"];
+  connectWalletProps?: Omit<ConnectWalletProps, "detailsButton">;
 }
 
 /**
@@ -70,6 +71,7 @@ export const Web3Button = <TAction extends ActionFn>({
   children,
   action,
   theme,
+  connectWalletProps,
 }: PropsWithChildren<Web3ButtonProps<TAction>>) => {
   const address = useAddress();
   const activeWallet = useWallet();
@@ -128,7 +130,7 @@ export const Web3Button = <TAction extends ActionFn>({
   }, [actionMutation, activeWallet]);
 
   if (!address) {
-    return <ConnectWallet theme={theme} />;
+    return <ConnectWallet theme={theme} {...connectWalletProps} />;
   }
 
   let content = children;

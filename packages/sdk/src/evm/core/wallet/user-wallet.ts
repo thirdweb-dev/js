@@ -11,7 +11,8 @@ import {
   LOCAL_NODE_PKEY,
   NATIVE_TOKEN_ADDRESS,
 } from "../../constants";
-import { Address, AddressOrEns, SDKOptions } from "../../schema";
+import { Address, AddressOrEns } from "../../schema/shared";
+import { SDKOptions } from "../../schema/sdk-options";
 import { Amount, CurrencyValue } from "../../types";
 import { ContractWrapper } from "../classes/contract-wrapper";
 import { RPCConnectionHandler } from "../classes/rpc-connection-handler";

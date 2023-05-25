@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { Img } from "../../components/Img";
 import { Spacer } from "../../components/Spacer";
 import { Flex } from "../../components/basic";
@@ -11,31 +12,32 @@ import {
   Theme,
 } from "../../design-system";
 import styled from "@emotion/styled";
-import { ConfiguredWallet } from "@thirdweb-dev/react-core";
+import { WalletConfig } from "@thirdweb-dev/react-core";
 import { walletIds } from "@thirdweb-dev/wallets";
+import { SetModalConfigCtx } from "../../evm/providers/wallet-ui-states-provider";
 
 export const WalletSelector: React.FC<{
-  configuredWallets: ConfiguredWallet[];
-  selectWallet: (wallet: ConfiguredWallet) => void;
+  walletConfigs: WalletConfig[];
+  selectWallet: (wallet: WalletConfig) => void;
   onGetStarted: () => void;
+  title: string;
 }> = (props) => {
-  const localWalletInfo = props.configuredWallets.find(
+  const localWalletInfo = props.walletConfigs.find(
     (w) => w.id === walletIds.localWallet,
   );
-  const configuredWallets = props.configuredWallets.filter(
+  const walletConfigs = props.walletConfigs.filter(
     (w) => w.id !== walletIds.localWallet,
   );
 
-  const showGetStarted =
-    !localWalletInfo && !!props.configuredWallets[0].meta.urls;
+  const showGetStarted = !localWalletInfo && !!props.walletConfigs[0].meta.urls;
 
   return (
     <>
-      <ModalTitle>Choose your wallet</ModalTitle>
+      <ModalTitle> {props.title} </ModalTitle>
       <Spacer y="xl" />
 
       <WalletSelection
-        configuredWallets={configuredWallets}
+        walletConfigs={walletConfigs}
         selectWallet={props.selectWallet}
       />
 
@@ -76,46 +78,69 @@ export const WalletSelector: React.FC<{
 };
 
 export const WalletSelection: React.FC<{
-  configuredWallets: ConfiguredWallet[];
-  selectWallet: (wallet: ConfiguredWallet) => void;
+  walletConfigs: WalletConfig[];
+  selectWallet: (wallet: WalletConfig) => void;
 }> = (props) => {
-  // show the installed wallets first
-  const configuredWallets = props.configuredWallets.sort((a, b) => {
-    const aInstalled = a.isInstalled ? a.isInstalled() : false;
-    const bInstalled = b.isInstalled ? b.isInstalled() : false;
+  const setModalConfig = useContext(SetModalConfigCtx);
+  const walletConfigs = props.walletConfigs
+    // show the installed wallets first
+    .sort((a, b) => {
+      const aInstalled = a.isInstalled ? a.isInstalled() : false;
+      const bInstalled = b.isInstalled ? b.isInstalled() : false;
 
-    if (aInstalled && !bInstalled) {
-      return -1;
-    }
-    if (!aInstalled && bInstalled) {
-      return 1;
-    }
-    return 0;
-  });
+      if (aInstalled && !bInstalled) {
+        return -1;
+      }
+      if (!aInstalled && bInstalled) {
+        return 1;
+      }
+      return 0;
+    })
+    // show the wallets with selectUI first before others
+    .sort((a, b) => {
+      if (a.selectUI && !b.selectUI) {
+        return -1;
+      }
+      if (!a.selectUI && b.selectUI) {
+        return 1;
+      }
+      return 0;
+    });
 
   return (
     <WalletList>
-      {configuredWallets.map((configuredWallet) => {
-        const isInstalled = configuredWallet.isInstalled
-          ? configuredWallet.isInstalled()
+      {walletConfigs.map((walletConfig) => {
+        const isInstalled = walletConfig.isInstalled
+          ? walletConfig.isInstalled()
           : false;
         return (
-          <li key={configuredWallet.id}>
-            <WalletButton
-              type="button"
-              onClick={() => {
-                props.selectWallet(configuredWallet);
-              }}
-            >
-              <Img
-                src={configuredWallet.meta.iconURL}
-                width={iconSize.lg}
-                height={iconSize.lg}
-                loading="eager"
+          <li key={walletConfig.id}>
+            {walletConfig.selectUI ? (
+              <walletConfig.selectUI
+                supportedWallets={props.walletConfigs}
+                onSelect={(data) => {
+                  props.selectWallet(walletConfig);
+                  setModalConfig((config) => ({ ...config, data }));
+                }}
+                walletConfig={walletConfig}
               />
-              <WalletName>{configuredWallet.meta.name}</WalletName>
-              {isInstalled && <InstallBadge> Installed </InstallBadge>}
-            </WalletButton>
+            ) : (
+              <WalletButton
+                type="button"
+                onClick={() => {
+                  props.selectWallet(walletConfig);
+                }}
+              >
+                <Img
+                  src={walletConfig.meta.iconURL}
+                  width={iconSize.lg}
+                  height={iconSize.lg}
+                  loading="eager"
+                />
+                <WalletName>{walletConfig.meta.name}</WalletName>
+                {isInstalled && <InstallBadge> Installed </InstallBadge>}
+              </WalletButton>
+            )}
           </li>
         );
       })}

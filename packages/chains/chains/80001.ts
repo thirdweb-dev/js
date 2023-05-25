@@ -15,7 +15,8 @@ export default {
     "https://polygon-mumbai.infura.io/v3/${INFURA_API_KEY}",
     "https://matic-mumbai.chainstacklabs.com",
     "https://rpc-mumbai.maticvigil.com",
-    "https://matic-testnet-archive-rpc.bwarelabs.com"
+    "https://matic-testnet-archive-rpc.bwarelabs.com",
+    "https://polygon-mumbai-bor.publicnode.com"
   ],
   "faucets": [
     "https://faucet.polygon.technology/"

@@ -7,7 +7,7 @@ import {
   NetworkInput,
   PrebuiltContractType,
 } from "../core/types";
-import { AddressOrEns } from "../schema";
+import { AddressOrEns } from "../schema/shared";
 import { SDKOptions } from "../schema/sdk-options";
 import { getContractFromAbi } from "./getContractFromAbi";
 import { getSignerAndProvider } from "./getSignerAndProvider";

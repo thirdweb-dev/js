@@ -1,12 +1,12 @@
-import { ThirdwebSDK } from "../core";
+import { ThirdwebSDK } from "../core/sdk";
 import {
   Abi,
   PublishedMetadata,
   AbiSchema,
   ContractInfoSchema,
   ContractSource,
-  Address,
-} from "../schema";
+} from "../schema/contracts/custom";
+import { Address } from "../schema/shared";
 import { resolveContractUriFromAddress } from "./feature-detection";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { providers } from "ethers";
@@ -81,7 +81,9 @@ export async function fetchContractMetadataFromAddress(
     }
   }
   if (!metadata) {
-    throw new Error(`Could not resolve metadata for contract at ${address}`);
+    throw new Error(
+      `No ABI found for this contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${address}`,
+    );
   }
   putInCache(address, chainId, metadata);
   return metadata;

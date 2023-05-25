@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { detectExtensions } from "../common/feature-detector";
+import { detectProjectV2 } from "../common/project-detector-v2";
 import { processProject } from "../common/processor";
 import { cliVersion, pkg } from "../constants/urls";
 import { info, logger, spinner } from "../core/helpers/logger";
@@ -293,6 +294,7 @@ const main = async () => {
       "--dynamic",
       "Deploy a dynamic smart contract made up of extensions to blockchains",
     )
+    .option("--zksync", "Deploy on ZKSync")
     .action(async (options) => {
       const url = await deploy(options);
       if (url) {
@@ -404,6 +406,17 @@ const main = async () => {
     .option("-a, --all", "run detection on all contracts")
     .action(async (options) => {
       await detectExtensions(options);
+    });
+
+  program
+    .command("detect-project")
+    .description(
+      "Detect the type of project your are running and let you know what it is.",
+    )
+    .option("-p, --path <project-path>", "path to project", ".")
+    .option("-d, --debug", "show debug logs")
+    .action(async (options) => {
+      await detectProjectV2(options);
     });
 
   program

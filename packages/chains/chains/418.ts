@@ -1,16 +1,22 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "LA Testnet",
-  "chain": "LATestnet",
+  "name": "LaTestnet",
+  "chain": "LaTestnet",
+  "icon": {
+    "url": "ipfs://QmQxGA6rhuCQDXUueVcNvFRhMEWisyTmnF57TqL7h6k6cZ",
+    "width": 1280,
+    "height": 1280,
+    "format": "png"
+  },
   "rpc": [
-    "https://la-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://latestnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.lachain.network"
   ],
   "faucets": [
     "https://faucet.lachain.network"
   ],
   "nativeCurrency": {
-    "name": "Test La Coin",
+    "name": "Test LaCoin",
     "symbol": "TLA",
     "decimals": 18
   },
@@ -25,11 +31,11 @@ export default {
   "networkId": 418,
   "explorers": [
     {
-      "name": "LA Testnet Explorer",
+      "name": "LaTestnet Explorer",
       "url": "https://testexplorer.lachain.network",
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
-  "slug": "la-testnet"
+  "slug": "latestnet"
 } as const satisfies Chain;

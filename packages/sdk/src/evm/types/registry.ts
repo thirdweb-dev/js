@@ -1,5 +1,5 @@
-import { ContractType } from "../core";
-import { Address, AddressOrEns } from "../schema";
+import type { ContractType } from "../core/types";
+import type { Address, AddressOrEns } from "../schema/shared";
 
 export type ContractInput = {
   address: AddressOrEns;

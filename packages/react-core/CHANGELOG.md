@@ -1,5 +1,64 @@
 # @thirdweb-dev/react-core
 
+## 3.12.2
+
+### Patch Changes
+
+- Updated dependencies [[`30e5593d`](https://github.com/thirdweb-dev/js/commit/30e5593dd1ce9abd809ad216a1cfce77b897093c), [`30e5593d`](https://github.com/thirdweb-dev/js/commit/30e5593dd1ce9abd809ad216a1cfce77b897093c)]:
+  - @thirdweb-dev/wallets@0.2.22
+  - @thirdweb-dev/chains@0.1.18
+  - @thirdweb-dev/sdk@3.10.17
+
+## 3.12.1
+
+### Patch Changes
+
+- [#1037](https://github.com/thirdweb-dev/js/pull/1037) [`d5123044`](https://github.com/thirdweb-dev/js/commit/d51230441a097734be092c42b45dea07629e65fa) Thanks [@jnsdls](https://github.com/jnsdls)! - update ipfs gateways - add more fallbacks
+
+- Updated dependencies [[`b6f48e10`](https://github.com/thirdweb-dev/js/commit/b6f48e1088b5d36a51103de4afda53179029faaf), [`d5123044`](https://github.com/thirdweb-dev/js/commit/d51230441a097734be092c42b45dea07629e65fa), [`3c8c5d56`](https://github.com/thirdweb-dev/js/commit/3c8c5d56f2a21c0918fede71061c6745f2956f83), [`907d97be`](https://github.com/thirdweb-dev/js/commit/907d97bedef7331148bdfe8b9bf1e19459282e4c)]:
+  - @thirdweb-dev/wallets@0.2.21
+  - @thirdweb-dev/storage@1.1.3
+  - @thirdweb-dev/chains@0.1.17
+  - @thirdweb-dev/sdk@3.10.16
+
+## 3.12.0
+
+### Minor Changes
+
+- [#993](https://github.com/thirdweb-dev/js/pull/993) [`b1ede491`](https://github.com/thirdweb-dev/js/commit/b1ede491fbfbeca0ff3d6f5a6162546671bf8b99) Thanks [@0xfrosty](https://github.com/0xfrosty)! - Add React hook useBuyDirectListing() to buy a direct listing in a MarketplaceV3 contract
+
+### Patch Changes
+
+- [#1015](https://github.com/thirdweb-dev/js/pull/1015) [`39bd9630`](https://github.com/thirdweb-dev/js/commit/39bd963015ac00a1e4da2d0b4c9d85b334c7ad46) Thanks [@MananTank](https://github.com/MananTank)! - - add `selectUI` api in `WalletConfig` to allow rendering a custom UI for selecting a wallet
+
+  - Render an input for paper wallet and magic link using `selectUI` api
+  - add prop `modalTitle` on `ConnectWallet` to configure a custom title for the modal
+  - add props `selectionData`, `setSelectionData` and `supportedWallets` on `connectUI`
+
+- [#996](https://github.com/thirdweb-dev/js/pull/996) [`c3645c45`](https://github.com/thirdweb-dev/js/commit/c3645c451b5e9a0fcf651fa07eb0e31ebf1882ca) Thanks [@MananTank](https://github.com/MananTank)! - - add `theme` in `ConfiguredWallet.connectUI`'s props - to use theme aware UI for wallets
+
+  - add `useWalletConfig` hook to get the `ConfiguredWallet` object for active wallet
+  - add hooks `useSetConnectedWallet`, `useSetConnectionStatus`
+  - rename `useActiveChain` to `useChain` - keep the `useActiveChain` also with deprecated tag
+  - make `useSafe` hook await-able by returning the promise of connect() call
+  - add hook `useSmartWallet`
+  - allow rendering custom wallet details button via `<ConnectWallet detailsButton={} />` prop
+  - Rename "Export" to "Backup" in local wallet UI
+
+- [#1011](https://github.com/thirdweb-dev/js/pull/1011) [`470e0a14`](https://github.com/thirdweb-dev/js/commit/470e0a144db6aa03e7789e231bbdfae43144f0e0) Thanks [@MananTank](https://github.com/MananTank)! - rename ConfiguredWallet to WalletConfig
+
+  ```diff
+  - import { ConfiguredWallet } from '@thirdweb-dev/react';
+  + import { WalletConfig } from '@thirdweb-dev/react';
+  ```
+
+- [#989](https://github.com/thirdweb-dev/js/pull/989) [`8db78299`](https://github.com/thirdweb-dev/js/commit/8db78299ea6cfb51d93b91bb1a351644a83c73d2) Thanks [@iketw](https://github.com/iketw)! - [React/ReactNative] Updated useThirdwebWallet to useWalletContext
+
+- Updated dependencies [[`e9b69300`](https://github.com/thirdweb-dev/js/commit/e9b69300d15b233609f1ed897256ec9a1eef3e28), [`49ec2d17`](https://github.com/thirdweb-dev/js/commit/49ec2d171ecb1c9240398b7b486a452eb9429979), [`799d98e8`](https://github.com/thirdweb-dev/js/commit/799d98e86258677ab72931fa8397aee653fe8b34), [`c3645c45`](https://github.com/thirdweb-dev/js/commit/c3645c451b5e9a0fcf651fa07eb0e31ebf1882ca), [`470e0a14`](https://github.com/thirdweb-dev/js/commit/470e0a144db6aa03e7789e231bbdfae43144f0e0), [`738c0ec6`](https://github.com/thirdweb-dev/js/commit/738c0ec6c4190aa2252233c1382aed5d982cc7b8), [`d495a4b8`](https://github.com/thirdweb-dev/js/commit/d495a4b8a6e0599e5b4611620f3fded80a411173), [`482f6d1b`](https://github.com/thirdweb-dev/js/commit/482f6d1b58ac99b331fc750d3eeb6082556fd526), [`e4356e76`](https://github.com/thirdweb-dev/js/commit/e4356e76d1506624afe2eb6feeaf57dc376f372f), [`9886c858`](https://github.com/thirdweb-dev/js/commit/9886c858d9c8d0f677aba6572dbf5cc6c876edf2), [`8db78299`](https://github.com/thirdweb-dev/js/commit/8db78299ea6cfb51d93b91bb1a351644a83c73d2), [`4f843833`](https://github.com/thirdweb-dev/js/commit/4f8438335e3e3731b67ae271cb34c383832242a0)]:
+  - @thirdweb-dev/sdk@3.10.15
+  - @thirdweb-dev/chains@0.1.16
+  - @thirdweb-dev/wallets@0.2.20
+
 ## 3.11.11
 
 ### Patch Changes

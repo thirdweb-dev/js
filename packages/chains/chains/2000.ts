@@ -11,8 +11,8 @@ export default {
   "rpc": [
     "https://dogechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.dogechain.dog",
-    "https://rpc-us.dogechain.dog",
-    "https://rpc01.dogechain.dog"
+    "https://rpc01-sg.dogechain.dog",
+    "https://rpc.ankr.com/dogechain"
   ],
   "faucets": [],
   "nativeCurrency": {

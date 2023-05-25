@@ -5,6 +5,7 @@ import {
 import { useSDKChainId } from "../../providers/thirdweb-sdk-provider";
 import {
   AcceptDirectOffer,
+  BuyFromListingParams,
   BuyNowParams,
   ExecuteAuctionSale,
   MakeBidParams,
@@ -1368,6 +1369,71 @@ export function useBuyNow(contract: RequiredParam<Marketplace>) {
         "contract does not support auction.buyoutListing",
       );
       return await contract.auction.buyoutListing(data.id);
+    },
+    {
+      onSettled: () =>
+        invalidateContractAndBalances(
+          queryClient,
+          contractAddress,
+          activeChainId,
+        ),
+    },
+  );
+}
+
+/**
+ * Buy a direct listing
+ *
+ * @example
+ * ```jsx
+ * const Component = () => {
+ *   const { contract } = useContract("{{contract_address}}", "marketplace-v3");
+ *   const {
+ *     mutate: buyNow,
+ *     isLoading,
+ *     error,
+ *   } = useBuyDirectListing(contract);
+ *
+ *   if (error) {
+ *     console.error("failed to buy direct listing", error);
+ *   }
+ *
+ *   return (
+ *     <button
+ *       disabled={isLoading}
+ *       onClick={() => buyNow({listingId: 1, quantity: 1, buyer: "{{address}}"})}
+ *     >
+ *       Buy listing!
+ *     </button>
+ *   );
+ * };
+ * ```
+ *
+ * @param contract - an instance of a MarketplaceV3 contract
+ * @returns a mutation object that can be used to buy out a direct listing
+ * @see {@link https://portal.thirdweb.com/react/react.useBuyDirectListing?utm_source=sdk | Documentation}
+ * @beta
+ */
+export function useBuyDirectListing(contract: RequiredParam<MarketplaceV3>) {
+  const activeChainId = useSDKChainId();
+  const contractAddress = contract?.getAddress();
+  const queryClient = useQueryClient();
+  const walletAddress = useAddress();
+
+  return useMutation(
+    async (data: BuyFromListingParams) => {
+      invariant(walletAddress, "no wallet connected, cannot buy from listing");
+      requiredParamInvariant(contract, "No Contract instance provided");
+      invariant(
+        contract.directListings.buyFromListing,
+        "contract does not support directListings.buyFromListing"
+      );
+
+      return await contract.directListings.buyFromListing(
+        data.listingId,
+        data.quantity,
+        data.buyer
+      );
     },
     {
       onSettled: () =>

@@ -32,6 +32,16 @@ export const NATIVE_TOKENS: Record<number, NativeToken> = {
       symbol: "WETH",
     },
   },
+  11155111: {
+    name: "Sepolia Ether",
+    symbol: "SEP",
+    decimals: 18,
+    wrapped: {
+      address: "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
   [ChainId.Polygon]: {
     name: "Matic",
     symbol: "MATIC",
@@ -174,13 +184,23 @@ export const NATIVE_TOKENS: Record<number, NativeToken> = {
       symbol: "WETH",
     },
   },
-  // eslint-disable-next-line no-useless-computed-key
-  [84531]: {
+  84531: {
     name: "Base Goerli Testnet",
     symbol: "ETH",
     decimals: 18,
     wrapped: {
       address: "0x4200000000000000000000000000000000000006",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
+  // eslint-disable-next-line no-useless-computed-key
+  [280]: {
+    name: "zkSync Era Testnet",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91",
       name: "Wrapped Ether",
       symbol: "WETH",
     },
