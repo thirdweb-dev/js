@@ -1,10 +1,9 @@
-import { Provider } from "@ethersproject/abstract-provider";
 import {
   Magic,
   MagicSDKAdditionalConfiguration,
 } from "@magic-sdk/react-native-bare";
 import { Chain, Connector, normalizeChainId } from "@thirdweb-dev/wallets";
-import { Signer, ethers } from "ethers";
+import { Signer, ethers, providers } from "ethers";
 import { defaultChains } from "@thirdweb-dev/chains";
 import { MagicConnectorOptions } from "./types";
 
@@ -99,7 +98,7 @@ export class MagicConnector extends Connector<MagicConnectorOptions> {
     const signer = await provider.getSigner();
     return signer;
   }
-  getProvider(): Promise<Provider> {
+  getProvider(): Promise<providers.Provider> {
     if (this.provider) {
       return this.provider;
     }
