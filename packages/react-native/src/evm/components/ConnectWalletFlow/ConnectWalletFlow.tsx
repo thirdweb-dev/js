@@ -89,7 +89,7 @@ export const ConnectWalletFlow = () => {
     setIsConnecting(false);
   };
 
-  function getComponentForWallet() {
+  const getComponentForWallet = useCallback(() => {
     switch (activeWallet?.id) {
       case SmartWallet.id:
         return <SmartWalletFlow onClose={onClose} onConnect={onConnected} />;
@@ -110,7 +110,16 @@ export const ConnectWalletFlow = () => {
         />
       );
     }
-  }
+  }, [
+    activeWallet,
+    modalVisible,
+    onBackPress,
+    onClose,
+    onConnected,
+    selectionData,
+    supportedWallets,
+    theme,
+  ]);
 
   return (
     <>
