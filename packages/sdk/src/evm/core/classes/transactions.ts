@@ -750,7 +750,7 @@ export class DeployTransaction extends TransactionContext {
 
   async simulate() {
     const populatedTx = await this.populateTransaction();
-    this.signer.call(populatedTx);
+    return this.signer.call(populatedTx);
   }
 
   async estimateGasLimit(): Promise<BigNumber> {
