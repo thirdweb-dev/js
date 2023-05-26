@@ -233,6 +233,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
             ethers.utils.toUtf8Bytes(""),
           ]);
         } catch {
+          // TODO remove try catch 
           return factory.call("getAddress", [
             owner
           ]);
