@@ -1,7 +1,5 @@
-import {
-  computeEOAForwarderAddress,
-  computeForwarderAddress,
-} from "../../common/any-evm-utils";
+import { computeEOAForwarderAddress } from "../../common/any-evm-utils/computeEOAForwarderAddress";
+import { computeForwarderAddress } from "../../common/any-evm-utils/computeForwarderAddress";
 import { parseRevertReason, TransactionError } from "../../common/error";
 import { extractFunctionsFromAbi } from "../../common/feature-detection/extractFunctionsFromAbi";
 import {

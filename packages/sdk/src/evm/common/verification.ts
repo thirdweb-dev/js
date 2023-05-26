@@ -1,9 +1,7 @@
 import { ThirdwebSDK } from "../core/sdk";
-import {
-  getThirdwebContractAddress,
-  getEncodedConstructorParamsForThirdwebContract,
-  isContractDeployed,
-} from "./any-evm-utils";
+import { isContractDeployed } from "./any-evm-utils/isContractDeployed";
+import { getEncodedConstructorParamsForThirdwebContract } from "./any-evm-utils/getEncodedConstructorParamsForThirdwebContract";
+import { getThirdwebContractAddress } from "./any-evm-utils/getThirdwebContractAddress";
 import { extractConstructorParamsFromAbi } from "./feature-detection/extractConstructorParamsFromAbi";
 import { resolveContractUriFromAddress } from "./feature-detection/resolveContractUriFromAddress";
 import { fetchSourceFilesFromMetadata } from "./metadata-resolver";
