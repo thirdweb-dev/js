@@ -137,8 +137,6 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
     const { topic, params, id } = this.#activeRequestEvent;
     const { request } = params;
 
-    console.log("approveEIP155Request", id);
-
     let response;
     switch (request.method) {
       case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
@@ -163,13 +161,10 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
       case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
         const signer = await wallet.getSigner();
         const sendTransaction = request.params[0];
-        console.log("approving sendTransaction");
 
         const tx = await signer.sendTransaction(sendTransaction);
 
         const { transactionHash } = await tx.wait();
-
-        console.log("sendTransaction.hash", transactionHash);
 
         response = formatJsonRpcResult(id, transactionHash);
         break;
@@ -194,9 +189,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
         });
     }
 
-    console.log("respond session request", response);
     return this.#wcWallet?.respondSessionRequest({ topic, response });
-    console.log("after respond session request");
   }
 
   async rejectEIP155Request() {
@@ -301,11 +294,9 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
         if (!this.#session) {
           return;
         }
-        const { params: requestParams, id } = requestEvent;
+        const { params: requestParams } = requestEvent;
         const { request } = requestParams;
         const { params } = request;
-
-        console.log("on session request listener", id);
 
         switch (request.method) {
           case EIP155_SIGNING_METHODS.ETH_SIGN:
