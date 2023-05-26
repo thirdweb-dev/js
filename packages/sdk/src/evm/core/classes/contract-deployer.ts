@@ -1087,7 +1087,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       extendedMetadata.factoryDeploymentData &&
       (extendedMetadata.isDeployableViaProxy ||
         extendedMetadata.isDeployableViaFactory ||
-        extendedMetadata.deployType === "customFactory") &&
+        extendedMetadata.deployType === "autoFactory") &&
       !forceDirectDeploy
     ) {
       const chainId = (await this.getProvider().getNetwork()).chainId;
