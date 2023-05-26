@@ -1,6 +1,7 @@
-import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../constants";
+import { SUPPORTED_CHAIN_ID } from "../constants/chains";
+import { NATIVE_TOKENS } from "../constants/currency";
 import { Feature } from "../constants/contract-features";
-import { ContractSource } from "../schema";
+import { ContractSource } from "../schema/contracts/custom";
 import { BigNumber, BigNumberish, ethers, providers } from "ethers";
 
 /**
@@ -285,8 +286,9 @@ export type TransactionErrorInfo = {
 export class TransactionError extends Error {
   #reason: string;
   #info: TransactionErrorInfo;
+  #raw: any;
 
-  constructor(info: TransactionErrorInfo) {
+  constructor(info: TransactionErrorInfo, raw: any) {
     let errorMessage = `\n\n\n╔═══════════════════╗\n║ TRANSACTION ERROR ║\n╚═══════════════════╝\n\n`;
     errorMessage += `Reason: ${info.reason}`;
     errorMessage += `\n\n\n╔═════════════════════════╗\n║ TRANSACTION INFORMATION ║\n╚═════════════════════════╝\n`;
@@ -363,11 +365,16 @@ export class TransactionError extends Error {
 
     this.#reason = info.reason;
     this.#info = info;
+    this.#raw = raw;
   }
 
   // Keep reason here for backwards compatibility
   get reason(): string {
     return this.#reason;
+  }
+
+  get raw(): any {
+    return this.#raw;
   }
 
   get info(): TransactionErrorInfo {
@@ -379,8 +386,12 @@ export class TransactionError extends Error {
  * @internal
  */
 export function parseRevertReason(error: any): string {
-  if (error.reason) {
+  if (error.reason && !error.reason.includes("cannot estimate gas")) {
     return error.reason as string;
+  }
+
+  if (error.error) {
+    return error.error as string;
   }
 
   // I think this code path should never be hit, but just in case

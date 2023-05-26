@@ -3,24 +3,22 @@ import {
   getAllPluginsAbi,
 } from "../constants/thirdweb-features";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { Address } from "../schema/shared";
 import {
   Abi,
   AbiSchema,
-  Address,
   PreDeployMetadataFetched,
-  SDKOptions,
-} from "../schema";
-import { isFeatureEnabled } from "./feature-detection";
+} from "../schema/contracts/custom";
+import { SDKOptions } from "../schema/sdk-options";
+import { isFeatureEnabled } from "./feature-detection/isFeatureEnabled";
 import { fetchContractMetadataFromAddress } from "./metadata-resolver";
 import { unique } from "./utils";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 import { Plugin } from "../types/plugins";
-import { getChainProvider } from "../constants";
-import {
-  fetchAndCacheDeployMetadata,
-  fetchAndCachePublishedContractURI,
-} from "./any-evm-utils";
+import { getChainProvider } from "../constants/urls";
+import { fetchAndCachePublishedContractURI } from "./any-evm-utils/fetchAndCachePublishedContractURI";
+import { fetchAndCacheDeployMetadata } from "./any-evm-utils/fetchAndCacheDeployMetadata";
 
 /**
  * @internal
@@ -81,6 +79,20 @@ export async function getCompositePluginABI(
   } catch (err) {}
 
   return pluginABIs.length > 0 ? joinABIs([abi, ...pluginABIs]) : abi;
+}
+
+export async function getCompositeABIfromRelease(
+  publishMetadataUri: string,
+  storage: ThirdwebStorage,
+): Promise<Abi> {
+  const { extendedMetadata } = await fetchAndCacheDeployMetadata(
+    publishMetadataUri,
+    storage,
+  );
+
+  const compositeAbi = extendedMetadata?.compositeAbi || [];
+
+  return compositeAbi;
 }
 
 export function isRouterContract(abi: Abi) {

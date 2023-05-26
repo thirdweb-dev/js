@@ -58,8 +58,14 @@ export async function isTokenApprovedForTransfer(
       if (approved) {
         return true;
       }
+
+      // Handle reverts in case of non-existent tokens
+      let approvedAddress;
+      try {
+        approvedAddress = await asset.getApproved(tokenId);
+      } catch (e) {}
       return (
-        (await asset.getApproved(tokenId)).toLowerCase() ===
+        approvedAddress?.toLowerCase() ===
         transferrerContractAddress.toLowerCase()
       );
     } else if (isERC1155) {

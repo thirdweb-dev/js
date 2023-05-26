@@ -1,10 +1,11 @@
 import { normalizeChainId } from "../../../lib/wagmi-core";
-import { TWConnector } from "../../interfaces/tw-connector";
+import { Connector } from "../../interfaces/connector";
 import {
   PaperWalletConnectionArgs,
   PaperWalletConnectorOptions,
 } from "./types";
 import type {
+  AuthLoginReturnType,
   InitializedUser,
   PaperEmbeddedWalletSdk,
 } from "@paperxyz/embedded-wallet-service-sdk";
@@ -12,16 +13,28 @@ import { UserStatus } from "@paperxyz/embedded-wallet-service-sdk";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { providers, Signer } from "ethers";
 import { utils } from "ethers";
+import { walletIds } from "../../constants/walletIds";
 
 export const PaperChainMap = {
   1: "Ethereum",
   5: "Goerli",
   137: "Polygon",
+  250: "Fantom",
+  4002: "FantomTestnet",
   80001: "Mumbai",
+  43114: "Avalanche",
+  10: "Optimism",
+  420: "OptimismGoerli",
+  56: "BSC",
+  97: "BSCTestnet",
+  42161: "ArbitrumOne",
+  421613: "ArbitrumGoerli",
 } as const;
 
-export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs> {
-  readonly id: string = "paper-wallet";
+export type PaperSupportedChainId = keyof typeof PaperChainMap;
+
+export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
+  readonly id: string = walletIds.paper;
   readonly name: string = "Paper Wallet";
   ready: boolean = true;
 
@@ -67,7 +80,7 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
     return this.#paper;
   }
 
-  async connect() {
+  async connect(options?: { email?: string; chainId?: number }) {
     const paperSDK = await this.getPaperSDK();
     if (!paperSDK) {
       throw new Error("Paper SDK not initialized");
@@ -75,7 +88,15 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
     let user = await paperSDK.getUser();
     switch (user.status) {
       case UserStatus.LOGGED_OUT: {
-        const authResult = await paperSDK.auth.loginWithPaperModal();
+        let authResult: AuthLoginReturnType;
+
+        if (options?.email) {
+          authResult = await paperSDK.auth.loginWithPaperEmailOtp({
+            email: options.email,
+          });
+        } else {
+          authResult = await paperSDK.auth.loginWithPaperModal();
+        }
         this.user = authResult.user;
         break;
       }
@@ -93,7 +114,8 @@ export class PaperWalletConnector extends TWConnector<PaperWalletConnectionArgs>
   }
 
   async disconnect(): Promise<void> {
-    // await this.paper?.auth.logout();
+    const paper = await this.#paper;
+    await paper?.auth.logout();
     this.user = null;
   }
 

@@ -17,21 +17,24 @@ export const ScanScreen: React.FC<{
   qrCodeUri?: string;
   walletName: string;
   walletIconURL: string;
+  hideBackButton?: boolean;
 }> = (props) => {
   const walletName = props.walletName.toLowerCase().includes("wallet")
     ? props.walletName
     : `${props.walletName} wallet`;
   return (
     <>
-      <BackButton
-        onClick={props.onBack}
-        style={{
-          position: "absolute",
-          zIndex: 10,
-          left: spacing.lg,
-          top: spacing.lg,
-        }}
-      />
+      {!props.hideBackButton && (
+        <BackButton
+          onClick={props.onBack}
+          style={{
+            position: "absolute",
+            zIndex: 10,
+            left: spacing.lg,
+            top: spacing.lg,
+          }}
+        />
+      )}
       <div
         style={{
           textAlign: "center",
@@ -50,7 +53,13 @@ export const ScanScreen: React.FC<{
 
         <Spacer y="xl" />
 
-        <ModalTitle>Scan with {walletName} </ModalTitle>
+        <ModalTitle
+          style={{
+            textAlign: "center",
+          }}
+        >
+          Scan with {walletName}{" "}
+        </ModalTitle>
         <Spacer y="md" />
 
         <ModalDescription>

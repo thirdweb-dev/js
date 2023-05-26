@@ -1,5 +1,5 @@
 import { FileOrBufferOrStringSchema } from "../../../core/schema/shared";
-import { toSemver } from "../../common";
+import { toSemver } from "../../common/version-checker";
 import {
   AddressOrEnsSchema,
   BigNumberishSchema,
@@ -174,6 +174,7 @@ export const ExtraPublishMetadataSchemaInput = z
           .catchall(z.any()),
       )
       .optional(),
+    compositeAbi: AbiSchema.optional(),
   })
   .catchall(z.any());
 

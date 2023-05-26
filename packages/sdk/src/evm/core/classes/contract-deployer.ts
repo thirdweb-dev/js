@@ -1,25 +1,23 @@
-import {
-  extractConstructorParamsFromAbi,
-  extractFunctionParamsFromAbi,
-} from "../../common";
-import {
-  computeCloneFactoryAddress,
-  createTransactionBatches,
-  deployContractDeterministic,
-  deployWithThrowawayDeployer,
-  fetchAndCacheDeployMetadata,
-  getCreate2FactoryAddress,
-  getDeploymentInfo,
-  isContractDeployed,
-} from "../../common/any-evm-utils";
-import { deployCreate2Factory } from "../../common/any-evm-utils";
+import { extractConstructorParamsFromAbi } from "../../common/feature-detection/extractConstructorParamsFromAbi";
+import { extractFunctionParamsFromAbi } from "../../common/feature-detection/extractFunctionParamsFromAbi";
+import { fetchAndCacheDeployMetadata } from "../../common/any-evm-utils/fetchAndCacheDeployMetadata";
+import { isContractDeployed } from "../../common/any-evm-utils/isContractDeployed";
+import { computeCloneFactoryAddress } from "../../common/any-evm-utils/computeCloneFactoryAddress";
+import { convertParamValues } from "../../common/any-evm-utils/convertParamValues";
+import { createTransactionBatches } from "../../common/any-evm-utils/createTransactionBatches";
+import { deployContractDeterministic } from "../../common/any-evm-utils/deployContractDeterministic";
+import { deployCreate2Factory } from "../../common/any-evm-utils/deployCreate2Factory";
+import { deployWithThrowawayDeployer } from "../../common/any-evm-utils/deployWithThrowawayDeployer";
+import { getCreate2FactoryAddress } from "../../common/any-evm-utils/getCreate2FactoryAddress";
+import { getDeploymentInfo } from "../../common/any-evm-utils/getDeploymentInfo";
 import { getDeployArguments } from "../../common/deploy";
 import { resolveAddress } from "../../common/ens";
 import {
   buildDeployTransactionFunction,
   buildTransactionFunction,
 } from "../../common/transactions";
-import { EventType, getContractAddressByChainId } from "../../constants";
+import { EventType } from "../../constants/events";
+import { getContractAddressByChainId } from "../../constants/addresses";
 import {
   EditionDropInitializer,
   EditionInitializer,
@@ -38,7 +36,8 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../../contracts";
-import { Address, AddressOrEns, SDKOptions } from "../../schema";
+import { Address, AddressOrEns } from "../../schema/shared";
+import { SDKOptions } from "../../schema/sdk-options";
 import {
   DeployEvent,
   DeployEvents,
@@ -52,23 +51,17 @@ import {
   VoteContractDeployMetadata,
 } from "../../types";
 import { ThirdwebSDK } from "../sdk";
+import { NetworkInput } from "../types";
 import {
   DeploySchemaForPrebuiltContractType,
-  NetworkInput,
   PrebuiltContractType,
-} from "../types";
+} from "../../contracts";
 import { ContractFactory } from "./factory";
 import { ContractRegistry } from "./registry";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
 import { DeployTransaction, Transaction } from "./transactions";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
-  BigNumber,
-  BytesLike,
-  Contract,
-  ContractInterface,
-  ethers,
-} from "ethers";
+import { BytesLike, Contract, ContractInterface, ethers } from "ethers";
 import { EventEmitter } from "eventemitter3";
 import invariant from "tiny-invariant";
 import { z } from "zod";
@@ -643,6 +636,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       const encodedInitializer = Contract.getInterface(
         implementationAbi,
       ).encodeFunctionData(initializerFunction, initializerArgs);
+
       const { TWProxy__factory } = await import(
         "@thirdweb-dev/contracts-js/factories/TWProxy__factory"
       );
@@ -775,7 +769,7 @@ export class ContractDeployer extends RPCConnectionHandler {
           extendedMetadata.factoryDeploymentData
             .implementationInitializerFunction,
         ).map((p) => p.type);
-        const paramValues = this.convertParamValues(
+        const paramValues = convertParamValues(
           initializerParamTypes,
           constructorParamValues,
         );
@@ -907,7 +901,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       const constructorParamTypes = extractConstructorParamsFromAbi(
         compilerMetadata.abi,
       ).map((p) => p.type);
-      const paramValues = this.convertParamValues(
+      const paramValues = convertParamValues(
         constructorParamTypes,
         constructorParamValues,
       );
@@ -1106,44 +1100,5 @@ export class ContractDeployer extends RPCConnectionHandler {
   private hasLocalFactory() {
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     return process.env.factoryAddress !== undefined;
-  }
-
-  private convertParamValues(
-    constructorParamTypes: string[],
-    constructorParamValues: any[],
-  ) {
-    // check that both arrays are same length
-    if (constructorParamTypes.length !== constructorParamValues.length) {
-      throw Error(
-        `Passed the wrong number of constructor arguments: ${constructorParamValues.length}, expected ${constructorParamTypes.length}`,
-      );
-    }
-    return constructorParamTypes.map((p, index) => {
-      if (p === "tuple" || p.endsWith("[]")) {
-        if (typeof constructorParamValues[index] === "string") {
-          return JSON.parse(constructorParamValues[index]);
-        } else {
-          return constructorParamValues[index];
-        }
-      }
-      if (p === "bytes32") {
-        invariant(
-          ethers.utils.isHexString(constructorParamValues[index]),
-          `Could not parse bytes32 value. Expected valid hex string but got "${constructorParamValues[index]}".`,
-        );
-        return ethers.utils.hexZeroPad(constructorParamValues[index], 32);
-      }
-      if (p.startsWith("bytes")) {
-        invariant(
-          ethers.utils.isHexString(constructorParamValues[index]),
-          `Could not parse bytes value. Expected valid hex string but got "${constructorParamValues[index]}".`,
-        );
-        return constructorParamValues[index];
-      }
-      if (p.startsWith("uint") || p.startsWith("int")) {
-        return BigNumber.from(constructorParamValues[index].toString());
-      }
-      return constructorParamValues[index];
-    });
   }
 }

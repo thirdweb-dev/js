@@ -6,8 +6,10 @@ export function useSafe() {
   const connect = useConnect();
   return useCallback(
     async (connectProps: SafeConnectionArgs) => {
-      const { safeWallet } = await import("../../../wallet/wallets/safeWallet");
-      connect(safeWallet(), connectProps);
+      const { safeWallet } = await import(
+        "../../../wallet/wallets/safe/safeWallet"
+      );
+      return connect(safeWallet(), connectProps);
     },
     [connect],
   );

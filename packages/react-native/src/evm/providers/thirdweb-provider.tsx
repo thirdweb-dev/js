@@ -3,16 +3,18 @@ import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
   ThirdwebProviderCore,
   ThirdwebProviderCoreProps,
-  Wallet,
+  WalletConfig,
 } from "@thirdweb-dev/react-core";
 import { PropsWithChildren } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
-import { metamaskWallet } from "../wallets/wallets/metamask-wallet";
-import { rainbowWallet } from "../wallets/wallets/rainbow-wallet";
 import { SecureStorage } from "../../core/SecureStorage";
 import { useCoinbaseWalletListener } from "../wallets/hooks/useCoinbaseWalletListener";
-
-const DEFAULT_WALLETS = [metamaskWallet(), rainbowWallet()];
+import { DEFAULT_WALLETS } from "../constants/wallets";
+import { DappContextProvider } from "./context-provider";
+import { UIContextProvider } from "./ui-context-provider";
+import { MainModal } from "../components/MainModal";
+import { ThemeProvider } from "../styles/ThemeProvider";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<ThirdwebProviderCoreProps<TChains>, "supportedWallets"> {
@@ -29,7 +31,7 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
    * />
    * ```
    */
-  supportedWallets?: Wallet[];
+  supportedWallets?: WalletConfig[];
 }
 
 /**
@@ -59,6 +61,7 @@ export const ThirdwebProvider = <
   thirdwebApiKey = DEFAULT_API_KEY,
   supportedWallets = DEFAULT_WALLETS,
   authConfig,
+  theme,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
   useCoinbaseWalletListener();
@@ -67,11 +70,28 @@ export const ThirdwebProvider = <
     <ThirdwebProviderCore
       thirdwebApiKey={thirdwebApiKey}
       supportedWallets={supportedWallets}
-      authConfig={authConfig ? (authConfig.secureStorage ? authConfig : {...authConfig, secureStorage: new SecureStorage('auth')}) : undefined}
+      authConfig={
+        authConfig
+          ? authConfig.secureStorage
+            ? authConfig
+            : { ...authConfig, secureStorage: new SecureStorage("auth") }
+          : undefined
+      }
       createWalletStorage={createWalletStorage}
       {...restProps}
     >
-      {children}
+      <ThemeProvider theme={theme}>
+        <SafeAreaProvider>
+          <UIContextProvider>
+            <SafeAreaProvider>
+              <DappContextProvider>
+                {children}
+                <MainModal />
+              </DappContextProvider>
+            </SafeAreaProvider>
+          </UIContextProvider>
+        </SafeAreaProvider>
+      </ThemeProvider>
     </ThirdwebProviderCore>
   );
 };

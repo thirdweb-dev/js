@@ -1,14 +1,16 @@
 import { Img } from "../../../components/Img";
 import { QRCode } from "../../../components/QRCode";
 import { Spacer } from "../../../components/Spacer";
+import { Flex } from "../../../components/basic";
 import {
   BackButton,
   HelperLink,
   ModalDescription,
   ModalTitle,
 } from "../../../components/modalElements";
-import { fontSize, iconSize, radius, spacing } from "../../../design-system";
+import { iconSize, radius, spacing } from "../../../design-system";
 import { Theme } from "../../../design-system/index";
+import { isMobile } from "../../../evm/utils/isMobile";
 import { Apple, Chrome, GooglePlay } from "../iconURLs";
 import styled from "@emotion/styled";
 import { useState } from "react";
@@ -17,9 +19,11 @@ export const GetStartedScreen: React.FC<{
   onBack: () => void;
   walletName: string;
   walletIconURL: string;
-  chromeExtensionLink: string;
-  googlePlayStoreLink: string;
-  appleStoreLink: string;
+  chromeExtensionLink?: string;
+  googlePlayStoreLink?: string;
+  appleStoreLink?: string;
+  header?: React.ReactNode;
+  footer?: React.ReactNode;
 }> = (props) => {
   const [showScreen, setShowScreen] = useState<
     "base" | "android-scan" | "ios-scan"
@@ -49,25 +53,25 @@ export const GetStartedScreen: React.FC<{
         }}
       />
 
-      {showScreen === "android-scan" && (
+      {showScreen === "android-scan" && props.googlePlayStoreLink && (
         <ScanScreen
           platformIcon={
             <Img src={GooglePlay} width={iconSize.md} height={iconSize.md} />
           }
           url={props.googlePlayStoreLink}
-          platform="Android"
+          platform="Google Play"
           walletName={props.walletName}
           walletIconURL={props.walletIconURL}
         />
       )}
 
-      {showScreen === "ios-scan" && (
+      {showScreen === "ios-scan" && props.appleStoreLink && (
         <ScanScreen
           platformIcon={
             <Img width={iconSize.md} height={iconSize.md} src={Apple} />
           }
           url={props.appleStoreLink}
-          platform="iOS"
+          platform="App Store"
           walletName={props.walletName}
           walletIconURL={props.walletIconURL}
         />
@@ -77,54 +81,78 @@ export const GetStartedScreen: React.FC<{
         <>
           <Spacer y="lg" />
 
-          <Img
-            src={props.walletIconURL}
-            width={iconSize.xl}
-            height={iconSize.xl}
-            alt=""
-          />
+          {props.header || (
+            <>
+              <Img
+                src={props.walletIconURL}
+                width={iconSize.xl}
+                height={iconSize.xl}
+                alt=""
+              />
 
-          <Spacer y="lg" />
+              <Spacer y="lg" />
 
-          <ModalTitle>Get started with {props.walletName}</ModalTitle>
-          <Spacer y="sm" />
+              <ModalTitle>Get started with {props.walletName}</ModalTitle>
+              <Spacer y="sm" />
 
-          <ModalDescription>
-            Download your preferred option and refresh this page
-          </ModalDescription>
+              <ModalDescription>
+                Download your preferred option and refresh this page
+              </ModalDescription>
+            </>
+          )}
           <Spacer y="xl" />
 
-          {/* Chrome Extension  */}
-          <ButtonLink target="_blank" href={props.chromeExtensionLink}>
-            <Img width={iconSize.lg} height={iconSize.lg} src={Chrome} />
-            <span>Download Chrome Extension</span>
-          </ButtonLink>
-          <Spacer y="xs" />
+          <Flex flexDirection="column" gap="xs">
+            {/* Chrome Extension  */}
+            {props.chromeExtensionLink && (
+              <ButtonLink
+                onClick={() => {
+                  window.open(props.chromeExtensionLink, "_blank");
+                }}
+              >
+                <Img width={iconSize.lg} height={iconSize.lg} src={Chrome} />
+                <span>Download Chrome Extension</span>
+              </ButtonLink>
+            )}
 
-          {/* Google Play store  */}
-          <ButtonLink
-            as="button"
-            target="_blank"
-            onClick={() => {
-              setShowScreen("android-scan");
-            }}
-          >
-            <Img width={iconSize.lg} height={iconSize.lg} src={GooglePlay} />
-            <span>Download on Google Play</span>
-          </ButtonLink>
-          <Spacer y="xs" />
+            {/* Google Play store  */}
+            {props.googlePlayStoreLink && (
+              <ButtonLink
+                as="button"
+                onClick={() => {
+                  if (isMobile()) {
+                    window.open(props.googlePlayStoreLink, "_blank");
+                  } else {
+                    setShowScreen("android-scan");
+                  }
+                }}
+              >
+                <Img
+                  width={iconSize.lg}
+                  height={iconSize.lg}
+                  src={GooglePlay}
+                />
+                <span>Download on Google Play</span>
+              </ButtonLink>
+            )}
 
-          {/* App Store  */}
-          <ButtonLink
-            as="button"
-            target="_blank"
-            onClick={() => {
-              setShowScreen("ios-scan");
-            }}
-          >
-            <Img width={iconSize.lg} height={iconSize.lg} src={Apple} />
-            <span>Download on App Store</span>
-          </ButtonLink>
+            {/* App Store  */}
+            {props.appleStoreLink && (
+              <ButtonLink
+                as="button"
+                onClick={() => {
+                  if (isMobile()) {
+                    window.open(props.appleStoreLink, "_blank");
+                  } else {
+                    setShowScreen("ios-scan");
+                  }
+                }}
+              >
+                <Img width={iconSize.lg} height={iconSize.lg} src={Apple} />
+                <span>Download on App Store</span>
+              </ButtonLink>
+            )}
+          </Flex>
         </>
       )}
 
@@ -144,6 +172,8 @@ export const GetStartedScreen: React.FC<{
           </HelperLink>
         </>
       )}
+
+      {!isScanScreen && props.footer}
     </>
   );
 };
@@ -184,12 +214,8 @@ const ScanScreen: React.FC<{
         }}
       >
         {props.platformIcon}
-        <ModalTitle
-          style={{
-            fontSize: fontSize.xl,
-          }}
-        >
-          Install {props.walletName} for {props.platform}
+        <ModalTitle>
+          Install {props.walletName} on {props.platform}
         </ModalTitle>
       </div>
 
@@ -202,7 +228,7 @@ const ScanScreen: React.FC<{
   );
 };
 
-export const ButtonLink = styled.a<{ theme?: Theme }>`
+export const ButtonLink = styled.button<{ theme?: Theme }>`
   all: unset;
   text-decoration: none;
   padding: ${spacing.sm} ${spacing.md};

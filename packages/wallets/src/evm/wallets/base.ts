@@ -1,9 +1,10 @@
 import { AsyncStorage, createAsyncLocalStorage } from "../../core/AsyncStorage";
 import type { DAppMetaData } from "../../core/types/dAppMeta";
-import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
+import { ConnectParams, Connector } from "../interfaces/connector";
 import { AbstractWallet } from "./abstract";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { DEFAULT_DAPP_META } from "../constants/dappMeta";
+import { EVMWallet } from "../interfaces";
 
 export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   chains?: Chain[];
@@ -15,6 +16,12 @@ export type WalletOptions<TOpts extends Record<string, any> = {}> = {
 export type WalletMeta = {
   name: string;
   iconURL: string;
+  urls?: {
+    android?: string;
+    ios?: string;
+    chrome?: string;
+    firefox?: string;
+  };
 };
 
 export abstract class AbstractClientWallet<
@@ -27,6 +34,7 @@ export abstract class AbstractClientWallet<
   protected dappMetadata: DAppMetaData;
   protected options?: WalletOptions<TAdditionalOpts>;
   static meta: WalletMeta;
+  #connectParams: ConnectParams<TConnectParams> | undefined;
   getMeta() {
     return (this.constructor as typeof AbstractClientWallet).meta;
   }
@@ -41,14 +49,14 @@ export abstract class AbstractClientWallet<
       options?.walletStorage || createAsyncLocalStorage(this.walletId);
   }
 
-  protected abstract getConnector(): Promise<TWConnector<TConnectParams>>;
+  protected abstract getConnector(): Promise<Connector<TConnectParams>>;
 
   /**
    * tries to auto connect to the wallet
    */
   async autoConnect(
     connectOptions?: ConnectParams<TConnectParams>,
-  ): Promise<string | undefined> {
+  ): Promise<string> {
     // remove chainId when autoconnecting to prevent switch-network popup on page load
     const options = connectOptions
       ? { ...connectOptions, chainId: undefined }
@@ -62,11 +70,16 @@ export abstract class AbstractClientWallet<
   async connect(
     connectOptions?: ConnectParams<TConnectParams>,
   ): Promise<string> {
+    this.#connectParams = connectOptions;
     const address = await this.#connect(false, connectOptions);
     if (!address) {
       throw new Error("Failed to connect to the wallet.");
     }
     return address;
+  }
+
+  getConnectParams() {
+    return this.#connectParams;
   }
 
   async #connect(
@@ -105,7 +118,7 @@ export abstract class AbstractClientWallet<
     return address;
   }
 
-  async #subscribeToEvents(connector: TWConnector) {
+  async #subscribeToEvents(connector: Connector) {
     // subscribe to connector for events
     connector.on("connect", (data) => {
       this.emit("connect", {
@@ -160,5 +173,12 @@ export abstract class AbstractClientWallet<
     this.chains = chains;
     const connector = await this.getConnector();
     connector.updateChains(chains);
+  }
+
+  /**
+   * If the wallet uses a personal wallet under the hood, return it
+   */
+  getPersonalWallet(): EVMWallet | undefined {
+    return undefined;
   }
 }

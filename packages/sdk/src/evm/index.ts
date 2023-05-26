@@ -1,7 +1,8 @@
 // handle browser vs node global
 globalThis.global = globalThis;
 
-export type { ContractType, NetworkInput } from "./core/types";
+export type { NetworkInput } from "./core/types";
+export type { ContractType } from "./contracts";
 
 export type { Role } from "./common/role";
 
@@ -26,6 +27,8 @@ export * from "./enums";
 export * from "./common";
 export * from "./constants";
 export * from "./contracts";
+
+export { StaticJsonRpcBatchProvider } from "./lib/static-batch-rpc";
 
 // export integration things
 export * from "./integrations/thirdweb-checkout";

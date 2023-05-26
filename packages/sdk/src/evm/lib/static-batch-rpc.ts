@@ -120,12 +120,12 @@ export class StaticJsonRpcBatchProvider extends providers.StaticJsonRpcProvider 
       inflightRequest.reject = reject;
     });
 
+    this._pendingBatch.push(inflightRequest);
+
     // if we would go *over* the size limit of the batch with this request, send the batch now
     if (this._pendingBatch.length === this._sizeLimit) {
       this.sendCurrentBatch(request);
     }
-
-    this._pendingBatch.push(inflightRequest);
 
     if (!this._pendingBatchAggregator) {
       // Schedule batch for next event loop + short duration

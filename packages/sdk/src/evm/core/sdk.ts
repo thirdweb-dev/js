@@ -1,39 +1,37 @@
-import { fetchCurrencyValue, getAllDetectedFeatureNames } from "../common";
+import { fetchCurrencyValue } from "../common/currency";
+import { getAllDetectedFeatureNames } from "../common/feature-detection/getAllDetectedFeatureNames";
 import { resolveAddress } from "../common/ens";
 import { getCompositePluginABI } from "../common/plugin";
 import { createStorage } from "../common/storage";
-import {
-  getChainProvider,
-  isChainConfig,
-  NATIVE_TOKEN_ADDRESS,
-  setSupportedChains,
-} from "../constants";
+import { getChainProvider, isChainConfig } from "../constants/urls";
+import { setSupportedChains } from "../constants/chains";
+import { NATIVE_TOKEN_ADDRESS } from "../constants/currency";
 import {
   PREBUILT_CONTRACTS_MAP,
   getContractTypeForRemoteName,
 } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
 import { getSignerAndProvider } from "../functions/getSignerAndProvider";
-import { Abi, AbiSchema, AddressOrEns, SDKOptions } from "../schema";
+import { Abi, AbiSchema } from "../schema/contracts/custom";
+import { AddressOrEns } from "../schema/shared";
+import { SDKOptions } from "../schema/sdk-options";
 import { ContractWithMetadata, CurrencyValue } from "../types";
-import { ContractDeployer } from "./classes";
+import { ContractDeployer } from "./classes/contract-deployer";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { MultichainRegistry } from "./classes/multichain-registry";
 import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
 import type {
-  ChainOrRpcUrl,
   ContractForPrebuiltContractType,
   ContractType,
-  NetworkInput,
   PrebuiltContractType,
   ValidContractInstance,
-} from "./types";
+} from "../contracts";
+import type { NetworkInput, ChainOrRpcUrl } from "./types";
 import { UserWallet } from "./wallet/user-wallet";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import { ContractAddress, GENERATED_ABI } from "@thirdweb-dev/generated-abis";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import type { EVMWallet } from "@thirdweb-dev/wallets";
 import type { ContractInterface, Signer, BaseContract } from "ethers";
 import {
   Contract as EthersContract,
@@ -41,6 +39,7 @@ import {
   utils as ethersUtils,
 } from "ethers";
 import { BaseContractForAddress } from "../types/contract";
+import { ContractVerifier } from "./classes/contract-verifier";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -67,7 +66,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @beta
    */
   static async fromWallet(
-    wallet: EVMWallet,
+    wallet: {
+      getSigner: () => Promise<Signer>;
+    },
     network: ChainOrRpcUrl,
     options: SDKOptions = {},
     storage?: ThirdwebStorage,
@@ -167,6 +168,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   public deployer: ContractDeployer;
   /**
+   * Contract verifier
+   */
+  public verifier: ContractVerifier;
+  /**
    * The registry of deployed contracts
    */
   public multiChainRegistry: MultichainRegistry;
@@ -201,6 +206,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
     this.wallet = new UserWallet(network, options);
     this.deployer = new ContractDeployer(network, options, configuredStorage);
+    this.verifier = new ContractVerifier(network, options, configuredStorage);
     this.multiChainRegistry = new MultichainRegistry(
       network,
       this.storageHandler,
@@ -215,9 +221,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
   get auth() {
     throw new Error(
-      `The sdk.auth namespace has been moved to the @thirdweb-dev/auth package and is no longer available after @thirdweb-dev/sdk >= 3.7.0. 
+      `The sdk.auth namespace has been moved to the @thirdweb-dev/auth package and is no longer available after @thirdweb-dev/sdk >= 3.7.0.
       Please visit https://portal.thirdweb.com/auth for instructions on how to switch to using the new auth package (@thirdweb-dev/auth@3.0.0).
-      
+
       If you still want to use the old @thirdweb-dev/auth@2.0.0 package, you can downgrade the SDK to version 3.6.0.`,
     );
   }
@@ -687,6 +693,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     this.deployer.updateSignerOrProvider(this.getSignerOrProvider());
     this._publisher.updateSignerOrProvider(this.getSignerOrProvider());
     this.multiChainRegistry.updateSigner(this.getSignerOrProvider());
+    this.verifier.updateSignerOrProvider(this.getSignerOrProvider());
     for (const [, contract] of this.contractCache) {
       contract.onNetworkUpdated(this.getSignerOrProvider());
     }

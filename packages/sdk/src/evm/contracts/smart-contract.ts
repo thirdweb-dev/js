@@ -1,4 +1,6 @@
-import { ALL_ROLES, assertEnabled, detectContractFeature } from "../common";
+import { assertEnabled } from "../common/feature-detection/assertEnabled";
+import { detectContractFeature } from "../common/feature-detection/detectContractFeature";
+import { ALL_ROLES } from "../common/role";
 import { FEATURE_TOKEN } from "../constants/erc20-features";
 import { FEATURE_NFT } from "../constants/erc721-features";
 import { FEATURE_EDITION } from "../constants/erc1155-features";
@@ -13,15 +15,7 @@ import {
   FEATURE_PRIMARY_SALE,
   FEATURE_ROYALTY,
 } from "../constants/thirdweb-features";
-import {
-  ContractEncoder,
-  ContractOwner,
-  MarketplaceV3DirectListings,
-  MarketplaceV3EnglishAuctions,
-  MarketplaceV3Offers,
-  NetworkInput,
-  Transaction,
-} from "../core";
+import { Transaction } from "../core/classes/transactions";
 import { ContractAppURI } from "../core/classes/contract-appuri";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
@@ -37,8 +31,9 @@ import { Erc721 } from "../core/classes/erc-721";
 import { Erc1155 } from "../core/classes/erc-1155";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { Address } from "../schema";
+import { Address } from "../schema/shared";
 import {
+  Abi,
   AbiInput,
   AbiSchema,
   CustomContractSchema,
@@ -58,8 +53,15 @@ import type {
   OffersLogic,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BaseContract, CallOverrides, ContractInterface } from "ethers";
+import { BaseContract, CallOverrides } from "ethers";
 import { BaseContractInterface } from "../types/contract";
+
+import { NetworkInput } from "../core/types";
+import { ContractEncoder } from "../core/classes/contract-encoder";
+import { ContractOwner } from "../core/classes/contract-owner";
+import { MarketplaceV3DirectListings } from "../core/classes/marketplacev3-direct-listings";
+import { MarketplaceV3EnglishAuctions } from "../core/classes/marketplacev3-english-auction";
+import { MarketplaceV3Offers } from "../core/classes/marketplacev3-offers";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -100,7 +102,7 @@ export class SmartContract<
   public encoder: ContractEncoder<TContract>;
   public estimator: GasCostEstimator<TContract>;
   public publishedMetadata: ContractPublishedMetadata<TContract>;
-  public abi: ContractInterface;
+  public abi: Abi;
   public metadata: ContractMetadata<BaseContract, any>;
 
   /**

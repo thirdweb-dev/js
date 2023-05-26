@@ -4,7 +4,7 @@ import {
 } from "../../common/currency";
 import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
-import { ContractAppURI } from "../../core";
+import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -15,7 +15,8 @@ import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { VoteType } from "../../enums";
-import { Abi, AbiInput, AbiSchema, Address, AddressOrEns } from "../../schema";
+import { Address, AddressOrEns } from "../../schema/shared";
+import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { VoteContractSchema } from "../../schema/contracts/vote";
 import { SDKOptions } from "../../schema/sdk-options";
 import { CurrencyValue } from "../../types/currency";
@@ -510,7 +511,7 @@ export class Vote implements UpdateableNetwork {
     functionName: string & TMethod,
     args?: Parameters<VoteERC20["functions"][TMethod]>,
     overrides?: CallOverrides,
-  ): Promise<any> {
+  ): Promise<ReturnType<VoteERC20["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, args, overrides);
   }
 }

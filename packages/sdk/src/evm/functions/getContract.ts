@@ -2,12 +2,12 @@ import { resolveAddress } from "../common/ens";
 import { PREBUILT_CONTRACTS_MAP } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
 import { ContractPublisher } from "../core/classes/contract-publisher";
+import { NetworkInput } from "../core/types";
 import {
   ContractForPrebuiltContractType,
-  NetworkInput,
   PrebuiltContractType,
-} from "../core/types";
-import { AddressOrEns } from "../schema";
+} from "../contracts";
+import { AddressOrEns } from "../schema/shared";
 import { SDKOptions } from "../schema/sdk-options";
 import { getContractFromAbi } from "./getContractFromAbi";
 import { getSignerAndProvider } from "./getSignerAndProvider";

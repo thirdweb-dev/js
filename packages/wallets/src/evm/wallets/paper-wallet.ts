@@ -2,10 +2,11 @@ import {
   PaperWalletConnectionArgs,
   PaperWalletAdditionalOptions,
 } from "../connectors/paper/types";
-import { TWConnector } from "../interfaces/tw-connector";
+import { Connector } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { PaperWalletConnector } from "../connectors/paper";
+import { walletIds } from "../constants/walletIds";
 
 export type PaperWalletOptions = WalletOptions<PaperWalletAdditionalOptions>;
 
@@ -13,9 +14,9 @@ export class PaperWallet extends AbstractClientWallet<
   PaperWalletAdditionalOptions,
   PaperWalletConnectionArgs
 > {
-  connector?: TWConnector;
+  connector?: Connector;
 
-  static id = "PaperWallet" as const;
+  static id = walletIds.paper;
 
   static meta = {
     name: "Paper Wallet",
@@ -37,10 +38,9 @@ export class PaperWallet extends AbstractClientWallet<
 
     this.clientId = options.clientId;
     this.chain = options.chain;
-    this.chains = options.chains;
   }
 
-  protected async getConnector(): Promise<TWConnector> {
+  protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
       const { PaperWalletConnector } = await import("../connectors/paper");
       this.connector = new PaperWalletConnector({

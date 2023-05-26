@@ -1,4 +1,7 @@
-import { ListingNotFoundError, WrongListingTypeError } from "../../common";
+import {
+  ListingNotFoundError,
+  WrongListingTypeError,
+} from "../../common/error";
 import {
   cleanCurrencyAddress,
   fetchCurrencyValue,
@@ -20,7 +23,7 @@ import {
   InterfaceId_IERC721,
 } from "../../constants/contract";
 import { ListingType } from "../../enums";
-import { AddressOrEns } from "../../schema";
+import { AddressOrEns } from "../../schema/shared";
 import { Price } from "../../types/currency";
 import {
   DirectListing,
@@ -590,9 +593,15 @@ export class MarketplaceDirect {
         ERC721Abi,
         provider,
       ) as IERC721;
+
+      // Handle reverts in case of non-existent tokens
+      let owner;
+      try {
+        owner = await asset.ownerOf(listing.tokenId);
+      } catch (e) {}
       const valid =
-        (await asset.ownerOf(listing.tokenId)).toLowerCase() ===
-        listing.sellerAddress.toLowerCase();
+        owner?.toLowerCase() === listing.sellerAddress.toLowerCase();
+
       return {
         valid,
         error: valid

@@ -1,31 +1,30 @@
+import { fetchAndCachePublishedContractURI } from "../common/any-evm-utils/fetchAndCachePublishedContractURI";
 import { getPrebuiltInfo } from "../common/legacy";
 import { fetchAbiFromAddress } from "../common/metadata-resolver";
-import { getCompositePluginABI } from "../common/plugin";
-import { ALL_ROLES } from "../common/role";
-import type {
-  ContractType,
-  NetworkInput,
-  PrebuiltContractType,
-} from "../core/types";
-import { getSignerAndProvider } from "../functions/getSignerAndProvider";
 import {
-  Address,
-  DropErc1155ContractSchema,
-  DropErc721ContractSchema,
-  MarketplaceContractSchema,
-  PackContractSchema,
-  SDKOptions,
-  SplitsContractSchema,
-  TokenErc1155ContractSchema,
-  TokenErc20ContractSchema,
-  TokenErc721ContractSchema,
-  VoteContractSchema,
-} from "../schema";
+  getCompositeABIfromRelease,
+  getCompositePluginABI,
+} from "../common/plugin";
+import { ALL_ROLES } from "../common/role";
+import type { NetworkInput } from "../core/types";
+import { getSignerAndProvider } from "../functions/getSignerAndProvider";
+import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
+import { DropErc721ContractSchema } from "../schema/contracts/drop-erc721";
+import { MarketplaceContractSchema } from "../schema/contracts/marketplace";
+import { SplitsContractSchema } from "../schema/contracts/splits";
+import { TokenErc1155ContractSchema } from "../schema/contracts/token-erc1155";
+import { TokenErc20ContractSchema } from "../schema/contracts/token-erc20";
+import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
+import { Address } from "../schema/shared";
+import { PackContractSchema } from "../schema/contracts/packs";
+import { SDKOptions } from "../schema/sdk-options";
+import { VoteContractSchema } from "../schema/contracts/vote";
 import { Abi, AbiSchema } from "../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
+import type { SmartContract as SmartContractType } from "./smart-contract";
 
 type InitalizeParams = [
   network: NetworkInput,
@@ -190,6 +189,18 @@ export const MarketplaceV3Initializer = {
     provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
   ) => {
+    const chainId = (await provider.getNetwork()).chainId;
+    const isZkSync = chainId === 280 || chainId === 324;
+
+    // Can't resolve IPFS hash from plugin bytecode on ZkSync
+    // Thus, pull the composite ABI from the release page
+    if (isZkSync) {
+      const uri = await fetchAndCachePublishedContractURI("MarketplaceV3");
+      const compositeAbi = await getCompositeABIfromRelease(uri, storage);
+
+      return compositeAbi;
+    }
+
     const abi = await fetchAbiFromAddress(address, provider, storage);
     if (abi) {
       return await getCompositePluginABI(address, abi, provider, {}, storage);
@@ -673,3 +684,31 @@ export function getContractName(
     (contract) => contract.contractType === type,
   )?.name;
 }
+
+export type PrebuiltContractsMap = typeof PREBUILT_CONTRACTS_MAP;
+export type PrebuiltContractsInstances = {
+  [K in keyof PrebuiltContractsMap]: Awaited<
+    ReturnType<(typeof PREBUILT_CONTRACTS_MAP)[K]["initialize"]>
+  >;
+};
+
+export type ContractsMap = typeof CONTRACTS_MAP;
+
+export type PrebuiltContractType = keyof PrebuiltContractsMap;
+
+export type ValidContractInstance =
+  | Awaited<ReturnType<ContractsMap[keyof PrebuiltContractsMap]["initialize"]>>
+  | SmartContractType;
+
+export type SchemaForPrebuiltContractType<
+  TContractType extends PrebuiltContractType,
+> = PrebuiltContractsMap[TContractType]["schema"];
+
+export type ContractForPrebuiltContractType<
+  TContractType extends PrebuiltContractType,
+> = PrebuiltContractsInstances[TContractType];
+
+export type ContractType = keyof ContractsMap;
+export type DeploySchemaForPrebuiltContractType<
+  TContractType extends PrebuiltContractType,
+> = SchemaForPrebuiltContractType<TContractType>["deploy"];

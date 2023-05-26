@@ -1,4 +1,5 @@
-import { PreDeployMetadataFetched } from "../../schema";
+import { BytesLike } from "ethers";
+import { PreDeployMetadataFetched } from "../../schema/contracts/custom";
 
 export type PrecomputedDeploymentTransaction = {
   predictedAddress: string;
@@ -10,6 +11,7 @@ export type DeploymentPreset = {
   name?: string;
   type: DeployedContractType;
   transaction: PrecomputedDeploymentTransaction;
+  encodedArgs?: BytesLike;
 };
 
 export type KeylessTransaction = {

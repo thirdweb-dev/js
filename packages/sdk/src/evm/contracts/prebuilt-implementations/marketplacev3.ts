@@ -1,10 +1,11 @@
-import { assertEnabled, detectContractFeature } from "../../common";
+import { assertEnabled } from "../../common/feature-detection/assertEnabled";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
 import {
   FEATURE_DIRECT_LISTINGS,
   FEATURE_ENGLISH_AUCTIONS,
   FEATURE_OFFERS,
 } from "../../constants/thirdweb-features";
-import { ContractAppURI } from "../../core";
+import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -275,7 +276,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
     functionName: string & TMethod,
     args?: Parameters<MarketplaceV3Contract["functions"][TMethod]>,
     overrides?: CallOverrides,
-  ): Promise<any> {
+  ): Promise<ReturnType<MarketplaceV3Contract["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, args, overrides);
   }
 

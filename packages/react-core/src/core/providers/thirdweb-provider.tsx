@@ -2,11 +2,11 @@ import { ThirdwebAuthProvider } from "../../evm/contexts/thirdweb-auth";
 import { useUpdateChainsWithApiKeys } from "../../evm/hooks/chain-hooks";
 import { ThirdwebSDKProvider } from "../../evm/providers/thirdweb-sdk-provider";
 import { ThirdwebSDKProviderProps } from "../../evm/providers/types";
-import { Wallet } from "../types/wallet";
+import { WalletConfig } from "../types/wallet";
 import { ThirdwebThemeContext } from "./theme-context";
 import {
   ThirdwebWalletProvider,
-  useThirdwebWallet,
+  useWalletContext,
 } from "./thirdweb-wallet-provider";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import {
@@ -40,7 +40,7 @@ export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
    * };
    * ```
    */
-  supportedWallets: Wallet[];
+  supportedWallets: WalletConfig[];
 
   /**
    * Metadata to pass to wallet connect and walletlink wallet connect. (Used to show *which* dApp is being connected to in mobile wallets that support it)
@@ -69,7 +69,7 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
 }: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>) => {
   const { activeChain } = props;
 
-  const supportedChainsNonNull = useMemo(() => {
+  const supportedChainsNonNull: Chain[] = useMemo(() => {
     const isActiveChainObject =
       typeof activeChain === "object" && activeChain !== null;
 
@@ -107,14 +107,27 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
 
   const activeChainWithKey = useMemo(() => {
     if (typeof activeChainIdOrObjWithKey === "number") {
-      return supportedChainsWithKey.find(
+      const resolveChain = supportedChainsWithKey.find(
         (chain) => chain.chainId === activeChainIdOrObjWithKey,
       );
+      if (!resolveChain) {
+        throw new Error(
+          `Invalid chainId: ${activeChainIdOrObjWithKey}. It is not one of supportedChains`,
+        );
+      }
+      return resolveChain;
     }
+
     if (typeof activeChainIdOrObjWithKey === "string") {
-      return supportedChainsWithKey.find(
+      const resolvedChain = supportedChainsWithKey.find(
         (chain) => chain.slug === activeChainIdOrObjWithKey,
       );
+      if (!resolvedChain) {
+        throw new Error(
+          `Invalid chain: "${activeChainIdOrObjWithKey}". It is not one of supportedChains`,
+        );
+      }
+      return resolvedChain;
     }
 
     return activeChainIdOrObjWithKey;
@@ -159,7 +172,7 @@ const ThirdwebSDKProviderWrapper = <TChains extends Chain[]>({
 }: React.PropsWithChildren<
   Omit<ThirdwebSDKProviderProps<TChains>, "signer">
 >) => {
-  const signer = useThirdwebWallet()?.signer;
+  const signer = useWalletContext()?.signer;
 
   return (
     <ThirdwebSDKProvider signer={signer} {...props}>

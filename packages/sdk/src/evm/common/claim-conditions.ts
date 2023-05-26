@@ -1,7 +1,7 @@
 import { Quantity } from "../../core/schema/shared";
-import { NATIVE_TOKEN_ADDRESS } from "../constants";
+import { NATIVE_TOKEN_ADDRESS } from "../constants/currency";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { Address } from "../schema";
+import { Address } from "../schema/shared";
 import {
   AbstractClaimConditionContractStruct,
   ClaimConditionInputArray,
