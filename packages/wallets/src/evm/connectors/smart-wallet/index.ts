@@ -227,10 +227,16 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         ]);
       },
       getAccountAddress: async (factory, owner) => {
-        return factory.call("getAddress", [
-          owner,
-          ethers.utils.toUtf8Bytes(""),
-        ]);
+        try {
+          return factory.call("getAddress", [
+            owner,
+            ethers.utils.toUtf8Bytes(""),
+          ]);
+        } catch {
+          return factory.call("getAddress", [
+            owner
+          ]);
+        }
       },
     };
   }
