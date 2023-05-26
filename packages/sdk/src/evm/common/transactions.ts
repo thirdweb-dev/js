@@ -11,10 +11,8 @@ import {
   TransactionResult,
 } from "../core/types";
 import { SDKOptionsOutput } from "../schema/sdk-options";
-import {
-  computeEOAForwarderAddress,
-  computeForwarderAddress,
-} from "./any-evm-utils";
+import { computeEOAForwarderAddress } from "./any-evm-utils/computeEOAForwarderAddress";
+import { computeForwarderAddress } from "./any-evm-utils/computeForwarderAddress";
 import {
   BiconomyForwarderAbi,
   ChainAwareForwardRequest,

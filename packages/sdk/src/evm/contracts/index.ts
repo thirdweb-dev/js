@@ -1,4 +1,4 @@
-import { fetchAndCachePublishedContractURI } from "../common/any-evm-utils";
+import { fetchAndCachePublishedContractURI } from "../common/any-evm-utils/fetchAndCachePublishedContractURI";
 import { getPrebuiltInfo } from "../common/legacy";
 import { fetchAbiFromAddress } from "../common/metadata-resolver";
 import {
