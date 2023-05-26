@@ -18,6 +18,7 @@ import {
   WC_RELAY_URL,
 } from "../../evm/constants/wc";
 import { AbstractWallet } from "../../evm/wallets/abstract";
+import { formatJsonRpcResult } from "@walletconnect/jsonrpc-utils";
 
 type WalletConnectV2WalletConfig = Omit<
   WalletConnectReceiverConfig,
@@ -136,18 +137,46 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
     const { topic, params, id } = this.#activeRequestEvent;
     const { request } = params;
 
+    console.log("approveEIP155Request", id);
+
+    let response;
     switch (request.method) {
       case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
       case EIP155_SIGNING_METHODS.ETH_SIGN:
         const message = this.#getSignParamsMessage(request.params);
         const signedMessage = await wallet.signMessage(message);
 
-        const response = {
-          id,
-          jsonrpc: "2.0",
-          result: signedMessage,
-        };
-        return this.#wcWallet?.respondSessionRequest({ topic, response });
+        response = formatJsonRpcResult(id, signedMessage);
+        break;
+      // case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA:
+      // case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V3:
+      // case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V4:
+      //   const {
+      //     domain,
+      //     types,
+      //     message: data,
+      //   } = getSignTypedDataParamsData(request.params);
+      //   // https://github.com/ethers-io/ethers.js/issues/687#issuecomment-714069471
+      //   delete types.EIP712Domain;
+      //   const signedData = await wallet._signTypedData(domain, types, data);
+      //   return formatJsonRpcResult(id, signedData);
+      case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
+        const signer = await wallet.getSigner();
+        const sendTransaction = request.params[0];
+        console.log("approving sendTransaction");
+
+        const { hash } = await signer.sendTransaction(sendTransaction);
+
+        console.log("sendTransaction.hash", hash);
+
+        response = formatJsonRpcResult(id, hash);
+        break;
+      case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
+        const signerSign = await wallet.getSigner();
+        const signTransaction = request.params[0];
+
+        const signature = await signerSign.signTransaction(signTransaction);
+        response = formatJsonRpcResult(id, signature);
       default:
         const error = {
           id,
@@ -162,6 +191,10 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
           response: error,
         });
     }
+
+    console.log("respond session request", response);
+    return this.#wcWallet?.respondSessionRequest({ topic, response });
+    console.log("after respond session request");
   }
 
   async rejectEIP155Request() {
@@ -266,9 +299,11 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
         if (!this.#session) {
           return;
         }
-        const { params: requestParams } = requestEvent;
+        const { params: requestParams, id } = requestEvent;
         const { request } = requestParams;
         const { params } = request;
+
+        console.log("on session request listener", id);
 
         switch (request.method) {
           case EIP155_SIGNING_METHODS.ETH_SIGN:
@@ -286,6 +321,19 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
             this.emit("session_request", {
               topic: this.#session.topic,
               params: paramsCopy,
+              peer: {
+                metadata: this.#session.peer.metadata,
+              },
+              method: request.method,
+            });
+            return;
+          case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
+          case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
+            this.#activeRequestEvent = requestEvent;
+
+            this.emit("session_request", {
+              topic: this.#session.topic,
+              params: requestEvent.params,
               peer: {
                 metadata: this.#session.peer.metadata,
               },

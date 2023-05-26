@@ -172,6 +172,10 @@ export class SmartWallet
     return this.#wcWallet?.disconnectSession();
   }
 
+  isWCReceiverEnabled() {
+    return this.enableConnectApp;
+  }
+
   #setupWalletConnectEventsListeners() {
     if (!this.#wcWallet) {
       throw new Error(
