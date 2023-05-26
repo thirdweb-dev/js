@@ -3,7 +3,7 @@ import {
   QueryAllParams,
 } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
-import { detectContractFeature } from "../../common/feature-detection";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
 import { FEATURE_NFT_SUPPLY } from "../../constants/erc721-features";
 import { BaseERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";

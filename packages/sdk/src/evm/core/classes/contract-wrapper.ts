@@ -1,9 +1,7 @@
-import {
-  computeEOAForwarderAddress,
-  computeForwarderAddress,
-} from "../../common/any-evm-utils";
+import { computeEOAForwarderAddress } from "../../common/any-evm-utils/computeEOAForwarderAddress";
+import { computeForwarderAddress } from "../../common/any-evm-utils/computeForwarderAddress";
 import { parseRevertReason, TransactionError } from "../../common/error";
-import { extractFunctionsFromAbi } from "../../common/feature-detection";
+import { extractFunctionsFromAbi } from "../../common/feature-detection/extractFunctionsFromAbi";
 import {
   fetchContractMetadataFromAddress,
   fetchSourceFilesFromMetadata,
@@ -18,8 +16,11 @@ import { getPolygonGasPriorityFee } from "../../common/gas-price";
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
 import { isBrowser } from "../../common/utils";
-import { CONTRACT_ADDRESSES, ChainId } from "../../constants";
-import { getContractAddressByChainId } from "../../constants/addresses";
+import { ChainId } from "../../constants/chains";
+import {
+  CONTRACT_ADDRESSES,
+  getContractAddressByChainId,
+} from "../../constants/addresses";
 import { EventType } from "../../constants/events";
 import { Address, CallOverrideSchema } from "../../schema/shared";
 import { AbiSchema, ContractSource } from "../../schema/contracts/custom";

@@ -1,7 +1,5 @@
-import {
-  assertEnabled,
-  detectContractFeature,
-} from "../common/feature-detection";
+import { assertEnabled } from "../common/feature-detection/assertEnabled";
+import { detectContractFeature } from "../common/feature-detection/detectContractFeature";
 import { ALL_ROLES } from "../common/role";
 import { FEATURE_TOKEN } from "../constants/erc20-features";
 import { FEATURE_NFT } from "../constants/erc721-features";
