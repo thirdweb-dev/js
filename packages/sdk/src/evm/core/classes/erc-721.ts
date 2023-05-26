@@ -3,10 +3,12 @@ import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import {
   assertEnabled,
   detectContractFeature,
-  ExtensionNotImplementedError,
   hasFunction,
+} from "../../common/feature-detection";
+import {
+  ExtensionNotImplementedError,
   NotFoundError,
-} from "../../common";
+} from "../../common/error";
 import { resolveAddress } from "../../common/ens";
 import { FALLBACK_METADATA, fetchTokenMetadata } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
@@ -23,7 +25,7 @@ import {
   FEATURE_NFT_TIERED_DROP,
   FEATURE_NFT_SIGNATURE_MINTABLE_V2,
 } from "../../constants/erc721-features";
-import { Address, AddressOrEns } from "../../schema";
+import { Address, AddressOrEns } from "../../schema/shared";
 import { ClaimOptions, UploadProgressEvent } from "../../types";
 import {
   BaseClaimConditionERC721,
@@ -221,6 +223,30 @@ export class Erc721<
         contractWrapper: this.contractWrapper,
         method: "transferFrom(address,address,uint256)",
         args: [from, await resolveAddress(to), tokenId],
+      });
+    },
+  );
+
+  /**
+   * Transfer an NFT from a specific wallet
+   *
+   * @remarks Transfer an NFT from the given wallet to another wallet.
+   *
+   * @example
+   * ```javascript
+   * const fromWalletAddress = "{{wallet_address}}";
+   * const toWalletAddress = "{{wallet_address}}";
+   * const tokenId = 0;
+   * await contract.erc721.transferFrom(fromWalletAddress, toWalletAddress, tokenId);
+   * ```
+   * @twfeature ERC721
+   */
+  transferFrom = buildTransactionFunction(
+    async (from: AddressOrEns, to: AddressOrEns, tokenId: BigNumberish) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "transferFrom(address,address,uint256)",
+        args: [await resolveAddress(from), await resolveAddress(to), tokenId],
       });
     },
   );

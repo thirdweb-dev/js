@@ -9,6 +9,7 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import Box from "../base/Box";
 import CopyIcon from "../../assets/copy";
+import { useState } from "react";
 
 interface WalletDetailsModalHeaderProps {
   address: string;
@@ -21,15 +22,20 @@ export const WalletDetailsModalHeader = ({
   address,
   onDisconnectPress,
   onAddressCopied,
-  loading,
 }: WalletDetailsModalHeaderProps) => {
   const theme = useAppTheme();
   const balanceQuery = useBalance();
   const activeWallet = useWallet();
+  const [showLoading, setShowLoading] = useState(false);
 
   const onAddressPress = async () => {
     await Clipboard.setStringAsync(address);
     onAddressCopied?.();
+  };
+
+  const onDisconnectPressInternal = () => {
+    setShowLoading(true);
+    onDisconnectPress();
   };
 
   return (
@@ -61,14 +67,14 @@ export const WalletDetailsModalHeader = ({
             {balanceQuery.data?.symbol}
           </Text>
         </BaseButton>
-        {loading ? (
-          <ActivityIndicator size={18} color={theme.colors.iconHighlight} />
+        {showLoading ? (
+          <ActivityIndicator size="small" color={theme.colors.iconHighlight} />
         ) : (
           <Icon
             type="disconnect"
             width={18}
             height={18}
-            onPress={onDisconnectPress}
+            onPress={onDisconnectPressInternal}
             color={theme.colors.iconHighlight}
           />
         )}

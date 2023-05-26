@@ -1,10 +1,13 @@
-import { assertEnabled, detectContractFeature } from "../../common";
+import {
+  assertEnabled,
+  detectContractFeature,
+} from "../../common/feature-detection";
 import {
   FEATURE_DIRECT_LISTINGS,
   FEATURE_ENGLISH_AUCTIONS,
   FEATURE_OFFERS,
 } from "../../constants/thirdweb-features";
-import { ContractAppURI } from "../../core";
+import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";

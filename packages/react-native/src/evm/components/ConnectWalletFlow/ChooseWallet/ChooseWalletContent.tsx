@@ -2,18 +2,19 @@ import { useMemo } from "react";
 import type { WalletConfig } from "@thirdweb-dev/react-core";
 import { StyleSheet, View, FlatList } from "react-native";
 import { WalletButton } from "../../base/WalletButton";
+import Box from "../../base/Box";
 
-interface InitialExplorerContentProps {
+interface ChooseWalletContentProps {
   wallets: WalletConfig[];
   excludeWalletIds?: string[];
-  onChooseWallet: (wallet: WalletConfig) => void;
+  onChooseWallet: (wallet: WalletConfig, data?: any) => void;
 }
 
 export const ChooseWalletContent = ({
   wallets,
   excludeWalletIds,
   onChooseWallet,
-}: InitialExplorerContentProps) => {
+}: ChooseWalletContentProps) => {
   const walletsToDisplay = useMemo(() => {
     return wallets.filter(
       (w) => !!!excludeWalletIds?.find((ewId) => ewId === w.id),
@@ -28,13 +29,34 @@ export const ChooseWalletContent = ({
         renderItem={({ item, index }) => {
           const marginBottom =
             index === walletsToDisplay.length - 1 ? "none" : "xxs";
+
           return (
-            <WalletButton
-              walletIconUrl={item.meta.iconURL}
-              name={item.meta.name}
-              onPress={() => onChooseWallet(item)}
-              mb={marginBottom}
-            />
+            <>
+              {item.selectUI ? (
+                <Box
+                  mb={marginBottom}
+                  flexDirection="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  borderRadius="sm"
+                >
+                  <item.selectUI
+                    supportedWallets={wallets}
+                    onSelect={(data) => {
+                      onChooseWallet(item, data);
+                    }}
+                    walletConfig={item}
+                  />
+                </Box>
+              ) : (
+                <WalletButton
+                  walletIconUrl={item.meta.iconURL}
+                  name={item.meta.name}
+                  onPress={() => onChooseWallet(item)}
+                  mb={marginBottom}
+                />
+              )}
+            </>
           );
         }}
       />

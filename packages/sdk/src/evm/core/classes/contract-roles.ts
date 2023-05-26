@@ -1,10 +1,10 @@
-import { hasFunction } from "../../common";
+import { hasFunction } from "../../common/feature-detection";
 import { resolveAddress } from "../../common/ens";
 import { MissingRoleError } from "../../common/error";
 import { getRoleHash, Role } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_PERMISSIONS } from "../../constants/thirdweb-features";
-import { Address, AddressOrEns } from "../../schema";
+import { Address, AddressOrEns } from "../../schema/shared";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";

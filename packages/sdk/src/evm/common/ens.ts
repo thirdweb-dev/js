@@ -1,5 +1,5 @@
 import { getSignerAndProvider } from "../functions/getSignerAndProvider";
-import { Address, AddressOrEns, AddressOrEnsSchema } from "../schema";
+import { Address, AddressOrEns, AddressOrEnsSchema } from "../schema/shared";
 import type { providers } from "ethers";
 
 type CachedEns = {

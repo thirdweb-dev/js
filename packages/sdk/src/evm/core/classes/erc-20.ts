@@ -1,6 +1,8 @@
-import { NetworkInput } from "..";
 import { AmountSchema } from "../../../core/schema/shared";
-import { assertEnabled, detectContractFeature } from "../../common";
+import {
+  assertEnabled,
+  detectContractFeature,
+} from "../../common/feature-detection";
 import {
   fetchCurrencyMetadata,
   fetchCurrencyValue,
@@ -15,7 +17,8 @@ import {
   FEATURE_TOKEN_SIGNATURE_MINTABLE,
   FEATURE_TOKEN_CLAIM_CONDITIONS_V2,
 } from "../../constants/erc20-features";
-import { Address, AddressOrEns, TokenMintInput } from "../../schema";
+import { Address, AddressOrEns } from "../../schema/shared";
+import { TokenMintInput } from "../../schema/tokens/token";
 import { Currency, CurrencyValue, Amount, ClaimOptions } from "../../types";
 import {
   BaseERC20,
@@ -24,6 +27,7 @@ import {
 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
+import type { NetworkInput } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20Burnable } from "./erc-20-burnable";
 import { Erc20Droppable } from "./erc-20-droppable";

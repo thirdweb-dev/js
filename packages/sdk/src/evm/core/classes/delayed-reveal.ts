@@ -1,10 +1,10 @@
-import { Transaction, TransactionResultWithId } from "..";
+import { Transaction } from "./transactions";
 import {
   CommonNFTInput,
   NFTMetadata,
   NFTMetadataInput,
 } from "../../../core/schema/nft";
-import { hasFunction } from "../../common";
+import { hasFunction } from "../../common/feature-detection";
 import {
   fetchTokenMetadataForContract,
   getBaseUriFromBatch,
@@ -26,6 +26,7 @@ import DeprecatedAbi from "@thirdweb-dev/contracts-js/dist/abis/IDelayedRevealDe
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers } from "ethers";
+import type { TransactionResultWithId } from "../types";
 
 /**
  * Handles delayed reveal logic

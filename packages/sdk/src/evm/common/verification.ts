@@ -1,14 +1,16 @@
-import { ThirdwebSDK } from "../core";
+import { ThirdwebSDK } from "../core/sdk";
+import {
+  getThirdwebContractAddress,
+  getEncodedConstructorParamsForThirdwebContract,
+  isContractDeployed,
+} from "./any-evm-utils";
 import {
   extractConstructorParamsFromAbi,
-  fetchSourceFilesFromMetadata,
-  getEncodedConstructorParamsForThirdwebContract,
-  getThirdwebContractAddress,
-  isContractDeployed,
   resolveContractUriFromAddress,
-} from ".";
+} from "./feature-detection";
+import { fetchSourceFilesFromMetadata } from "./metadata-resolver";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { Abi } from "../schema";
+import { Abi } from "../schema/contracts/custom";
 import { ethers, utils } from "ethers";
 import { EtherscanResult, VerificationStatus } from "../types/verification";
 import fetch from "cross-fetch";

@@ -1,8 +1,8 @@
-import { Ecosystem, GenericAuthWallet } from "../../core";
 import { EVMWallet } from "../interfaces";
 import type { Signer } from "ethers";
-import { providers, Contract, utils } from "ethers";
+import { providers, Contract, utils, Bytes } from "ethers";
 import EventEmitter from "eventemitter3";
+import { Ecosystem, GenericAuthWallet } from "../../core/interfaces/auth";
 
 // TODO improve this
 function chainIdToThirdwebRpc(chainId: number) {
@@ -51,7 +51,6 @@ export abstract class AbstractWallet
   implements GenericAuthWallet, EVMWallet
 {
   public type: Ecosystem = "evm";
-  protected signerPromise?: Promise<Signer>;
 
   public abstract getSigner(): Promise<Signer>;
 
@@ -59,7 +58,7 @@ export abstract class AbstractWallet
    * @returns the account address from connected wallet
    */
   public async getAddress(): Promise<string> {
-    const signer = await this.getCachedSigner();
+    const signer = await this.getSigner();
     return signer.getAddress();
   }
 
@@ -67,15 +66,15 @@ export abstract class AbstractWallet
    * @returns the chain id from connected wallet
    */
   public async getChainId(): Promise<number> {
-    const signer = await this.getCachedSigner();
+    const signer = await this.getSigner();
     return signer.getChainId();
   }
 
   /**
    * @returns the signature of the message
    */
-  public async signMessage(message: string): Promise<string> {
-    const signer = await this.getCachedSigner();
+  public async signMessage(message: Bytes | string): Promise<string> {
+    const signer = await this.getSigner();
     return await signer.signMessage(message);
   }
 
@@ -113,19 +112,5 @@ export abstract class AbstractWallet
     }
 
     return false;
-  }
-
-  public async getCachedSigner(): Promise<Signer> {
-    // if we already have a signer promise, return that
-    if (this.signerPromise) {
-      return this.signerPromise;
-    }
-
-    this.signerPromise = this.getSigner().catch(() => {
-      this.signerPromise = undefined;
-      throw new Error("Unable to get a signer!");
-    });
-
-    return this.signerPromise;
   }
 }

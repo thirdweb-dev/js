@@ -1,12 +1,13 @@
 import {
-  TransactionError,
   computeEOAForwarderAddress,
   computeForwarderAddress,
-  extractFunctionsFromAbi,
+} from "../../common/any-evm-utils";
+import { parseRevertReason, TransactionError } from "../../common/error";
+import { extractFunctionsFromAbi } from "../../common/feature-detection";
+import {
   fetchContractMetadataFromAddress,
   fetchSourceFilesFromMetadata,
-  parseRevertReason,
-} from "../../common";
+} from "../../common/metadata-resolver";
 import {
   BiconomyForwarderAbi,
   ChainAwareForwardRequest,
@@ -20,7 +21,7 @@ import { isBrowser } from "../../common/utils";
 import { CONTRACT_ADDRESSES, ChainId } from "../../constants";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import { EventType } from "../../constants/events";
-import { Address, CallOverrideSchema } from "../../schema";
+import { Address, CallOverrideSchema } from "../../schema/shared";
 import { AbiSchema, ContractSource } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
@@ -315,7 +316,9 @@ export class ContractWrapper<
     // TODO validate each argument
     if (fn.stateMutability === "view" || fn.stateMutability === "pure") {
       // read function
-      return (this.readContract as any)[fnName](...args);
+      return txOptions
+        ? (this.readContract as any)[fnName](...args, txOptions)
+        : (this.readContract as any)[fnName](...args);
     } else {
       // write function
       const receipt = await this.sendTransaction(fnName, args, txOptions);

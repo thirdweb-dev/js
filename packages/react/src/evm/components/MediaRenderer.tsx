@@ -7,7 +7,11 @@ import {
   CarbonPlayFilledAlt,
 } from "./Icons";
 import { useQuery } from "@tanstack/react-query";
-import { resolveIpfsUri, resolveMimeType } from "@thirdweb-dev/react-core";
+import {
+  resolveIpfsUri,
+  resolveMimeType,
+  useStorage,
+} from "@thirdweb-dev/react-core";
 import React, {
   ReactNode,
   useEffect,
@@ -57,6 +61,10 @@ export interface MediaRendererProps extends SharedMediaProps {
    * The media poster image uri. (if applicable)
    */
   poster?: string | null;
+  /**
+   * The IPFS gateway URL to use
+   */
+  gatewayUrl?: string;
   width?: string;
   height?: string;
 }
@@ -426,6 +434,7 @@ export const MediaRenderer = React.forwardRef<
       src,
       poster,
       alt,
+      gatewayUrl,
       requireInteraction = false,
       width = "300px",
       height = "300px",
@@ -441,8 +450,16 @@ export const MediaRenderer = React.forwardRef<
       height,
       ...style,
     };
-    const videoOrImageSrc = useResolvedMediaType(src ?? undefined, mimeType);
-    const possiblePosterSrc = useResolvedMediaType(poster ?? undefined);
+    const videoOrImageSrc = useResolvedMediaType(
+      src ?? undefined,
+      mimeType,
+      gatewayUrl,
+    );
+    const possiblePosterSrc = useResolvedMediaType(
+      poster ?? undefined,
+      undefined,
+      gatewayUrl,
+    );
 
     if (!videoOrImageSrc.mimeType) {
       return (
@@ -562,8 +579,25 @@ export interface MediaType {
  * }
  * ```
  */
-export function useResolvedMediaType(uri?: string, mimeType?: string) {
-  const resolvedUrl = useMemo(() => resolveIpfsUri(uri), [uri]);
+export function useResolvedMediaType(
+  uri?: string,
+  mimeType?: string,
+  gatewayUrl?: string,
+) {
+  const storage = useStorage();
+
+  const resolvedUrl = useMemo(
+    () =>
+      resolveIpfsUri(
+        uri,
+        gatewayUrl
+          ? { gatewayUrl }
+          : storage
+          ? { gatewayUrl: storage.gatewayUrls["ipfs://"][0] }
+          : undefined,
+      ),
+    [uri, storage, gatewayUrl],
+  );
   const resolvedMimType = useQuery(
     ["mime-type", resolvedUrl],
     () => resolveMimeType(resolvedUrl),

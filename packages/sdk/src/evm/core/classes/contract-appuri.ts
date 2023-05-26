@@ -1,4 +1,4 @@
-import { detectContractFeature } from "../../common";
+import { detectContractFeature } from "../../common/feature-detection";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_APPURI } from "../../constants/thirdweb-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";

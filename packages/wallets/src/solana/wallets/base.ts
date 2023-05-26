@@ -12,12 +12,12 @@ export abstract class AbstractWallet
   public abstract getSigner(): Promise<SolanaSigner>;
 
   public async getAddress(): Promise<string> {
-    const signer = await this.getCachedSigner();
+    const signer = await this.getSigner();
     return signer.publicKey.toBase58();
   }
 
   public async signMessage(message: string): Promise<string> {
-    const signer = await this.getCachedSigner();
+    const signer = await this.getSigner();
     const encodedMessage = new TextEncoder().encode(message);
     const signedMessage = await signer.signMessage(encodedMessage);
     const signature = bs58.encode(signedMessage);
@@ -35,19 +35,5 @@ export abstract class AbstractWallet
       bs58.decode(signature),
       bs58.decode(address),
     );
-  }
-
-  public async getCachedSigner(): Promise<SolanaSigner> {
-    if (!!this.signer) {
-      return this.signer;
-    }
-
-    this.signer = await this.getSigner();
-
-    if (!this.signer) {
-      throw new Error("Unable to get a signer!");
-    }
-
-    return this.signer;
   }
 }

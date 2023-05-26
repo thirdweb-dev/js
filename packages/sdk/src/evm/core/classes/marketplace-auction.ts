@@ -1,9 +1,9 @@
 import {
-  AuctionAlreadyStartedError,
-  AuctionHasNotEndedError,
   ListingNotFoundError,
   WrongListingTypeError,
-} from "../../common";
+  AuctionAlreadyStartedError,
+  AuctionHasNotEndedError,
+} from "../../common/error";
 import {
   cleanCurrencyAddress,
   fetchCurrencyMetadata,
