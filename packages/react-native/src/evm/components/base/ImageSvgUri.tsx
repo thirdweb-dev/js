@@ -3,7 +3,7 @@ import { Image } from "react-native";
 import { SvgUri } from "react-native-svg";
 
 const ImageSvgUri = ({
-  imageUrl,
+  imageUrl = "",
   width,
   height,
   imageAlt = "",
