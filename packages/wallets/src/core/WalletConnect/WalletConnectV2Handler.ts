@@ -165,11 +165,13 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
         const sendTransaction = request.params[0];
         console.log("approving sendTransaction");
 
-        const { hash } = await signer.sendTransaction(sendTransaction);
+        const tx = await signer.sendTransaction(sendTransaction);
 
-        console.log("sendTransaction.hash", hash);
+        const { transactionHash } = await tx.wait();
 
-        response = formatJsonRpcResult(id, hash);
+        console.log("sendTransaction.hash", transactionHash);
+
+        response = formatJsonRpcResult(id, transactionHash);
         break;
       case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
         const signerSign = await wallet.getSigner();
