@@ -1,6 +1,6 @@
 import { decode } from "../../lib/cbor-decode.js";
 import bs58 from "bs58";
-import { hexToBytes } from "./hexToBytes.js";
+import { hexToBytes } from "./hexToBytes";
 
 /**
  * @internal
