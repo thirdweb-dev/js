@@ -1,5 +1,5 @@
 import { AmountSchema } from "../../../core/schema/shared";
-import { NATIVE_TOKEN_ADDRESS } from "../../constants";
+import { NATIVE_TOKEN_ADDRESS } from "../../constants/currency";
 import {
   AddressOrEnsSchema,
   BigNumberishSchema,

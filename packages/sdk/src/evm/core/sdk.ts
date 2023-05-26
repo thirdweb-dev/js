@@ -1,14 +1,11 @@
 import { fetchCurrencyValue } from "../common/currency";
-import { getAllDetectedFeatureNames } from "../common/feature-detection";
+import { getAllDetectedFeatureNames } from "../common/feature-detection/getAllDetectedFeatureNames";
 import { resolveAddress } from "../common/ens";
 import { getCompositePluginABI } from "../common/plugin";
 import { createStorage } from "../common/storage";
-import {
-  getChainProvider,
-  isChainConfig,
-  NATIVE_TOKEN_ADDRESS,
-  setSupportedChains,
-} from "../constants";
+import { getChainProvider, isChainConfig } from "../constants/urls";
+import { setSupportedChains } from "../constants/chains";
+import { NATIVE_TOKEN_ADDRESS } from "../constants/currency";
 import {
   PREBUILT_CONTRACTS_MAP,
   getContractTypeForRemoteName,

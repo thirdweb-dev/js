@@ -118,6 +118,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     this.aaProvider = undefined;
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   async switchChain(chainId: number): Promise<void> {
     // TODO implement chain switching
     const provider = await this.getProvider();

@@ -4,10 +4,8 @@ import {
   fetchAndCacheDeployMetadata,
   convertParamValues,
 } from "../common/any-evm-utils";
-import {
-  extractFunctionParamsFromAbi,
-  extractConstructorParamsFromAbi,
-} from "../common/feature-detection";
+import { extractConstructorParamsFromAbi } from "../common/feature-detection/extractConstructorParamsFromAbi";
+import { extractFunctionParamsFromAbi } from "../common/feature-detection/extractFunctionParamsFromAbi";
 import { BytesLike, Contract, Signer, ethers } from "ethers";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { DeployOptions } from "../types";

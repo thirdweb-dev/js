@@ -1,9 +1,9 @@
 import { getDeployArguments } from "../../common/deploy";
 import { buildTransactionFunction } from "../../common/transactions";
 import {
-  getApprovedImplementation,
   getDefaultTrustedForwarders,
-} from "../../constants";
+  getApprovedImplementation,
+} from "../../constants/addresses";
 import {
   EditionDropInitializer,
   EditionInitializer,
