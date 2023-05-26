@@ -17,10 +17,8 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 import { Plugin } from "../types/plugins";
 import { getChainProvider } from "../constants/urls";
-import {
-  fetchAndCacheDeployMetadata,
-  fetchAndCachePublishedContractURI,
-} from "./any-evm-utils";
+import { fetchAndCachePublishedContractURI } from "./any-evm-utils/fetchAndCachePublishedContractURI";
+import { fetchAndCacheDeployMetadata } from "./any-evm-utils/fetchAndCacheDeployMetadata";
 
 /**
  * @internal
