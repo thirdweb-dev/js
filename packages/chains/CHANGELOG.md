@@ -1,5 +1,44 @@
 # @thirdweb-dev/chains
 
+## 0.1.18
+
+### Patch Changes
+
+- [#1040](https://github.com/thirdweb-dev/js/pull/1040) [`30e5593d`](https://github.com/thirdweb-dev/js/commit/30e5593dd1ce9abd809ad216a1cfce77b897093c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update chains
+
+## 0.1.17
+
+### Patch Changes
+
+- [#1031](https://github.com/thirdweb-dev/js/pull/1031) [`3c8c5d56`](https://github.com/thirdweb-dev/js/commit/3c8c5d56f2a21c0918fede71061c6745f2956f83) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
+- [#1033](https://github.com/thirdweb-dev/js/pull/1033) [`907d97be`](https://github.com/thirdweb-dev/js/commit/907d97bedef7331148bdfe8b9bf1e19459282e4c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Added faucet for optimism goerli
+
+## 0.1.16
+
+### Patch Changes
+
+- [#996](https://github.com/thirdweb-dev/js/pull/996) [`c3645c45`](https://github.com/thirdweb-dev/js/commit/c3645c451b5e9a0fcf651fa07eb0e31ebf1882ca) Thanks [@MananTank](https://github.com/MananTank)! - - add `theme` in `ConfiguredWallet.connectUI`'s props - to use theme aware UI for wallets
+
+  - add `useWalletConfig` hook to get the `ConfiguredWallet` object for active wallet
+  - add hooks `useSetConnectedWallet`, `useSetConnectionStatus`
+  - rename `useActiveChain` to `useChain` - keep the `useActiveChain` also with deprecated tag
+  - make `useSafe` hook await-able by returning the promise of connect() call
+  - add hook `useSmartWallet`
+  - allow rendering custom wallet details button via `<ConnectWallet detailsButton={} />` prop
+  - Rename "Export" to "Backup" in local wallet UI
+
+- [#1011](https://github.com/thirdweb-dev/js/pull/1011) [`470e0a14`](https://github.com/thirdweb-dev/js/commit/470e0a144db6aa03e7789e231bbdfae43144f0e0) Thanks [@MananTank](https://github.com/MananTank)! - rename ConfiguredWallet to WalletConfig
+
+  ```diff
+  - import { ConfiguredWallet } from '@thirdweb-dev/react';
+  + import { WalletConfig } from '@thirdweb-dev/react';
+  ```
+
+- [#995](https://github.com/thirdweb-dev/js/pull/995) [`482f6d1b`](https://github.com/thirdweb-dev/js/commit/482f6d1b58ac99b331fc750d3eeb6082556fd526) Thanks [@iketw](https://github.com/iketw)! - [Chains] Update chains
+
+- [#989](https://github.com/thirdweb-dev/js/pull/989) [`8db78299`](https://github.com/thirdweb-dev/js/commit/8db78299ea6cfb51d93b91bb1a351644a83c73d2) Thanks [@iketw](https://github.com/iketw)! - [React/ReactNative] Updated useThirdwebWallet to useWalletContext
+
 ## 0.1.15
 
 ### Patch Changes

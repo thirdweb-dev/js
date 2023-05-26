@@ -1,5 +1,5 @@
 import { getContractTypeForRemoteName } from "../../contracts";
-import { ContractType } from "../../core/types";
+import { ContractType } from "../../contracts";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import { Contract, ethers } from "ethers";
 

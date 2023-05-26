@@ -1,5 +1,6 @@
 export { darkTheme, lightTheme } from "./styles/theme";
 export type { Theme, ButtonTheme } from "./styles/theme";
+export { useAppTheme } from "./styles/hooks";
 
 export {
   CoinbaseWallet,
@@ -14,6 +15,8 @@ export { TrustWallet, trustWallet } from "./wallets/wallets/trust-wallet";
 export { smartWallet } from "./wallets/wallets/smart-wallet";
 export { localWallet } from "./wallets/wallets/local-wallet";
 export { LocalWallet } from "./wallets/wallets/LocalWallet";
+export { magicWallet } from "./wallets/wallets/magic-wallet";
+export { MagicWallet } from "./wallets/wallets/MagicWallet";
 
 export { useCoinbaseWallet } from "./wallets/hooks/useCoinbaseWallet";
 export { useMetaMaskWallet } from "./wallets/hooks/useMetaMaskWallet";
@@ -26,6 +29,7 @@ export { Web3Button } from "./components/Web3Button";
 // utilities
 export * from "./utils/uri";
 export * from "./utils/addresses";
+export { createSyncStorage as createLocalStorage } from "../core/AsyncStorage";
 export { createAsyncLocalStorage } from "../core/AsyncStorage";
 export { createSecureStorage } from "../core/SecureStorage";
 

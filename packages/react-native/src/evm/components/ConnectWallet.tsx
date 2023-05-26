@@ -1,9 +1,15 @@
 import { ThemeProvider, ThemeProviderProps } from "../styles/ThemeProvider";
 import { ConnectWalletDetails } from "./ConnectWalletDetails/ConnectWalletDetails";
-import { ConnectWalletFlow } from "./ConnectWalletFlow/ConnectWalletFlow";
-import { useAddress } from "@thirdweb-dev/react-core";
-import React, { useEffect, useRef } from "react";
-import { Animated } from "react-native";
+import {
+  useAddress,
+  useConnectionStatus,
+  useWallets,
+} from "@thirdweb-dev/react-core";
+import React, { useEffect, useRef, useState } from "react";
+import { ActivityIndicator, Animated, StyleSheet } from "react-native";
+import BaseButton from "./base/BaseButton";
+import Text from "./base/Text";
+import { useModalState } from "../providers/ui-context-provider";
 
 export type ConnectWalletProps = {
   theme?: ThemeProviderProps["theme"];
@@ -30,8 +36,33 @@ export const ConnectWallet = ({
   theme,
 }: ConnectWalletProps) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
-
   const address = useAddress();
+  const connectionStatus = useConnectionStatus();
+  const supportedWallets = useWallets();
+  const isWalletConnecting = connectionStatus === "connecting";
+  const [showButtonSpinner, setShowButtonSpinner] = useState(false);
+  const { setModalState } = useModalState();
+
+  useEffect(() => {
+    setShowButtonSpinner(isWalletConnecting);
+
+    if (!isWalletConnecting) {
+      setShowButtonSpinner(false);
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      if (isWalletConnecting) {
+        setShowButtonSpinner(false);
+      }
+    }, 5000);
+
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+  }, [isWalletConnecting]);
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -40,6 +71,20 @@ export const ConnectWallet = ({
       useNativeDriver: true,
     }).start();
   }, [fadeAnim]);
+
+  const onConnectWalletPress = () => {
+    setModalState({
+      isOpen: true,
+      isSheet: true,
+      view: "ConnectWalletFlow",
+      data: {
+        modalTitle,
+        walletConfig:
+          supportedWallets.length === 1 ? supportedWallets[0] : undefined,
+      },
+      caller: "ConnectWallet",
+    });
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -50,12 +95,37 @@ export const ConnectWallet = ({
             detailsButton={detailsButton}
           />
         ) : (
-          <ConnectWalletFlow
-            buttonTitle={buttonTitle}
-            modalTitle={modalTitle}
-          />
+          <BaseButton
+            backgroundColor="buttonBackgroundColor"
+            onPress={onConnectWalletPress}
+            style={styles.connectWalletButton}
+          >
+            <Text variant="bodyLarge" color="buttonTextColor">
+              {showButtonSpinner ? (
+                <ActivityIndicator size="small" color="buttonTextColor" />
+              ) : buttonTitle ? (
+                buttonTitle
+              ) : (
+                "Connect Wallet"
+              )}
+            </Text>
+          </BaseButton>
         )}
       </Animated.View>
     </ThemeProvider>
   );
 };
+
+const styles = StyleSheet.create({
+  connectWalletButton: {
+    display: "flex",
+    flexDirection: "row",
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    minWidth: 150,
+  },
+});

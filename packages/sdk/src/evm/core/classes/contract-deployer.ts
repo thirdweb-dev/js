@@ -1,7 +1,5 @@
-import {
-  extractConstructorParamsFromAbi,
-  extractFunctionParamsFromAbi,
-} from "../../common";
+import { extractConstructorParamsFromAbi } from "../../common/feature-detection/extractConstructorParamsFromAbi";
+import { extractFunctionParamsFromAbi } from "../../common/feature-detection/extractFunctionParamsFromAbi";
 import {
   computeCloneFactoryAddress,
   convertParamValues,
@@ -20,7 +18,8 @@ import {
   buildDeployTransactionFunction,
   buildTransactionFunction,
 } from "../../common/transactions";
-import { EventType, getContractAddressByChainId } from "../../constants";
+import { EventType } from "../../constants/events";
+import { getContractAddressByChainId } from "../../constants/addresses";
 import {
   EditionDropInitializer,
   EditionInitializer,
@@ -39,7 +38,8 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../../contracts";
-import { Address, AddressOrEns, SDKOptions } from "../../schema";
+import { Address, AddressOrEns } from "../../schema/shared";
+import { SDKOptions } from "../../schema/sdk-options";
 import {
   DeployEvent,
   DeployEvents,
@@ -53,11 +53,11 @@ import {
   VoteContractDeployMetadata,
 } from "../../types";
 import { ThirdwebSDK } from "../sdk";
+import { NetworkInput } from "../types";
 import {
   DeploySchemaForPrebuiltContractType,
-  NetworkInput,
   PrebuiltContractType,
-} from "../types";
+} from "../../contracts";
 import { ContractFactory } from "./factory";
 import { ContractRegistry } from "./registry";
 import { RPCConnectionHandler } from "./rpc-connection-handler";

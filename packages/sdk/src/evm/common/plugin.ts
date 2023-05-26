@@ -3,20 +3,20 @@ import {
   getAllPluginsAbi,
 } from "../constants/thirdweb-features";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { Address } from "../schema/shared";
 import {
   Abi,
   AbiSchema,
-  Address,
   PreDeployMetadataFetched,
-  SDKOptions,
-} from "../schema";
-import { isFeatureEnabled } from "./feature-detection";
+} from "../schema/contracts/custom";
+import { SDKOptions } from "../schema/sdk-options";
+import { isFeatureEnabled } from "./feature-detection/isFeatureEnabled";
 import { fetchContractMetadataFromAddress } from "./metadata-resolver";
 import { unique } from "./utils";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 import { Plugin } from "../types/plugins";
-import { getChainProvider } from "../constants";
+import { getChainProvider } from "../constants/urls";
 import {
   fetchAndCacheDeployMetadata,
   fetchAndCachePublishedContractURI,

@@ -1,5 +1,5 @@
 import { NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
-import { detectContractFeature } from "../../common/feature-detection";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
 import { getPrebuiltInfo } from "../../common/legacy";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";

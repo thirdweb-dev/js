@@ -5,13 +5,12 @@ import {
 } from "../../common/currency";
 import { resolveAddress } from "../../common/ens";
 import { EIP712Domain, signTypedDataInternal } from "../../common/sign";
-import {
-  ChainId,
-  getChainProvider,
-  LOCAL_NODE_PKEY,
-  NATIVE_TOKEN_ADDRESS,
-} from "../../constants";
-import { Address, AddressOrEns, SDKOptions } from "../../schema";
+import { LOCAL_NODE_PKEY } from "../../constants/addresses";
+import { ChainId } from "../../constants/chains";
+import { NATIVE_TOKEN_ADDRESS } from "../../constants/currency";
+import { getChainProvider } from "../../constants/urls";
+import { Address, AddressOrEns } from "../../schema/shared";
+import { SDKOptions } from "../../schema/sdk-options";
 import { Amount, CurrencyValue } from "../../types";
 import { ContractWrapper } from "../classes/contract-wrapper";
 import { RPCConnectionHandler } from "../classes/rpc-connection-handler";

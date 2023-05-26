@@ -2,9 +2,10 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BytesLike, ethers, providers, Signer } from "ethers";
 import invariant from "tiny-invariant";
 import { bytecode as WETHBytecode } from "./WETH9";
-import { getChainProvider, getNativeTokenByChainId } from "../constants";
-import { ThirdwebSDK } from "../core";
-import { PreDeployMetadataFetched } from "../schema";
+import { getNativeTokenByChainId } from "../constants/currency";
+import { getChainProvider } from "../constants/urls";
+import { ThirdwebSDK } from "../core/sdk";
+import { PreDeployMetadataFetched } from "../schema/contracts/custom";
 import {
   DeployedContractType,
   KeylessDeploymentInfo,
@@ -17,11 +18,9 @@ import {
   DeploymentPreset,
 } from "../types/any-evm/deploy-data";
 import { toWei } from "./currency";
-import {
-  extractConstructorParamsFromAbi,
-  fetchExtendedReleaseMetadata,
-  fetchPreDeployMetadata,
-} from "./feature-detection";
+import { extractConstructorParamsFromAbi } from "./feature-detection/extractConstructorParamsFromAbi";
+import { fetchExtendedReleaseMetadata } from "./feature-detection/fetchExtendedReleaseMetadata";
+import { fetchPreDeployMetadata } from "./feature-detection/fetchPreDeployMetadata";
 import { generatePluginFunctions, getMetadataForPlugins } from "./plugin";
 import { Plugin } from "../types/plugins";
 import { DeployMetadata, DeployOptions } from "../types";
@@ -207,7 +206,7 @@ export function getInitBytecodeWithSalt(
 }
 
 /**
- 
+
  * Pre-compute a contract's deployment address for a CREATE2 deployment.
  *
  * @public

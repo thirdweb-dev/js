@@ -2,7 +2,7 @@ import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
 import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
-import { Address, AddressOrEns } from "../../schema";
+import { Address, AddressOrEns } from "../../schema/shared";
 import { BaseERC721 } from "../../types/eips";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { NetworkInput } from "../types";

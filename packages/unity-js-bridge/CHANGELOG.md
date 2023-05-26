@@ -1,5 +1,35 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.2.32
+
+### Patch Changes
+
+- Updated dependencies [[`30e5593d`](https://github.com/thirdweb-dev/js/commit/30e5593dd1ce9abd809ad216a1cfce77b897093c)]:
+  - @thirdweb-dev/wallets@0.2.22
+  - @thirdweb-dev/auth@3.0.21
+  - @thirdweb-dev/sdk@3.10.17
+
+## 0.2.31
+
+### Patch Changes
+
+- [#1038](https://github.com/thirdweb-dev/js/pull/1038) [`58df84f8`](https://github.com/thirdweb-dev/js/commit/58df84f8baff1b1c15b834326b305be68ad1f402) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Added MagicLink and passing email to Connect
+
+- Updated dependencies [[`b6f48e10`](https://github.com/thirdweb-dev/js/commit/b6f48e1088b5d36a51103de4afda53179029faaf), [`d5123044`](https://github.com/thirdweb-dev/js/commit/d51230441a097734be092c42b45dea07629e65fa)]:
+  - @thirdweb-dev/wallets@0.2.21
+  - @thirdweb-dev/storage@1.1.3
+  - @thirdweb-dev/auth@3.0.20
+  - @thirdweb-dev/sdk@3.10.16
+
+## 0.2.30
+
+### Patch Changes
+
+- Updated dependencies [[`e9b69300`](https://github.com/thirdweb-dev/js/commit/e9b69300d15b233609f1ed897256ec9a1eef3e28), [`49ec2d17`](https://github.com/thirdweb-dev/js/commit/49ec2d171ecb1c9240398b7b486a452eb9429979), [`799d98e8`](https://github.com/thirdweb-dev/js/commit/799d98e86258677ab72931fa8397aee653fe8b34), [`738c0ec6`](https://github.com/thirdweb-dev/js/commit/738c0ec6c4190aa2252233c1382aed5d982cc7b8), [`d495a4b8`](https://github.com/thirdweb-dev/js/commit/d495a4b8a6e0599e5b4611620f3fded80a411173), [`b92aabe4`](https://github.com/thirdweb-dev/js/commit/b92aabe450f40b248fd1b7533f1d3bc7f8f25288), [`e4356e76`](https://github.com/thirdweb-dev/js/commit/e4356e76d1506624afe2eb6feeaf57dc376f372f), [`9886c858`](https://github.com/thirdweb-dev/js/commit/9886c858d9c8d0f677aba6572dbf5cc6c876edf2), [`4f843833`](https://github.com/thirdweb-dev/js/commit/4f8438335e3e3731b67ae271cb34c383832242a0)]:
+  - @thirdweb-dev/sdk@3.10.15
+  - @thirdweb-dev/wallets@0.2.20
+  - @thirdweb-dev/auth@3.0.19
+
 ## 0.2.29
 
 ### Patch Changes

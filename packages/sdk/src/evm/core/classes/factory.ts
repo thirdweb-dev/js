@@ -1,9 +1,9 @@
 import { getDeployArguments } from "../../common/deploy";
 import { buildTransactionFunction } from "../../common/transactions";
 import {
-  getApprovedImplementation,
   getDefaultTrustedForwarders,
-} from "../../constants";
+  getApprovedImplementation,
+} from "../../constants/addresses";
 import {
   EditionDropInitializer,
   EditionInitializer,
@@ -21,14 +21,14 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../../contracts";
-import { Address } from "../../schema";
+import { Address } from "../../schema/shared";
 import { SDKOptions } from "../../schema/sdk-options";
 import { DeployEvents } from "../../types";
 import {
   DeploySchemaForPrebuiltContractType,
-  NetworkInput,
   PrebuiltContractType,
-} from "../types";
+} from "../../contracts";
+import { NetworkInput } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 import type { TWFactory } from "@thirdweb-dev/contracts-js";

@@ -133,4 +133,8 @@ export class AccountAPI extends BaseAccountAPI {
   async signUserOpHash(userOpHash: string): Promise<string> {
     return await this.params.localSigner.signMessage(arrayify(userOpHash));
   }
+
+  async isAcountDeployed() {
+    return !(await this.checkAccountPhantom());
+  }
 }
