@@ -18,6 +18,7 @@ import { Command } from "commander";
 import open from "open";
 import prompts from "prompts";
 import Cache from "sync-disk-cache";
+import { installV2 } from "../install/installV2";
 
 const main = async () => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
@@ -204,8 +205,10 @@ const main = async () => {
     )
     .option("--nightly", "Install the nightly version of packages.")
     .option("--dev", "Install the dev version of packages")
+    .option("-d, --debug", "show debug logs")
     .action(async (path, options) => {
-      await install(path, options);
+      // await install(path, options);
+      await installV2(path, options);
     });
 
   program

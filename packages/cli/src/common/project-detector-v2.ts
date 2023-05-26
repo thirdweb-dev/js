@@ -38,7 +38,7 @@ export async function detectProjectV2(options: any) {
     options,
     detectedPackageManager,
   );
-  const detectedAppType = contractLibraries.includes(detectedFramework as ContractLibrariesType) ? "contract" : "app";
+  const detectedAppType = detectedFramework !== "none" ? contractLibraries.includes(detectedFramework as ContractLibrariesType) ? "contract" : "app" : "app";
 
   logger.debug("Detected package manager: " + detectedPackageManager);
   logger.debug("Detected library: " + detectedLibrary);
