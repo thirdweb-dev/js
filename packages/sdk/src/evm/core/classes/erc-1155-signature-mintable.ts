@@ -1,4 +1,4 @@
-import { hasFunction } from "../../common/feature-detection";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { getPrebuiltInfo } from "../../common/legacy";
 import { uploadOrExtractURIs } from "../../common/nft";

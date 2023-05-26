@@ -1,4 +1,4 @@
-import { EventType } from "../../constants";
+import { EventType } from "../../constants/events";
 import { ContractEvent, EventQueryOptions } from "../../types";
 import { ContractWrapper } from "./contract-wrapper";
 import type { BaseContract, Event, providers } from "ethers";

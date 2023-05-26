@@ -1,7 +1,5 @@
-import {
-  extractFunctionParamsFromAbi,
-  extractConstructorParamsFromAbi,
-} from "../../common/feature-detection";
+import { extractConstructorParamsFromAbi } from "../../common/feature-detection/extractConstructorParamsFromAbi";
+import { extractFunctionParamsFromAbi } from "../../common/feature-detection/extractFunctionParamsFromAbi";
 import {
   computeCloneFactoryAddress,
   convertParamValues,
@@ -20,7 +18,8 @@ import {
   buildDeployTransactionFunction,
   buildTransactionFunction,
 } from "../../common/transactions";
-import { EventType, getContractAddressByChainId } from "../../constants";
+import { EventType } from "../../constants/events";
+import { getContractAddressByChainId } from "../../constants/addresses";
 import {
   EditionDropInitializer,
   EditionInitializer,

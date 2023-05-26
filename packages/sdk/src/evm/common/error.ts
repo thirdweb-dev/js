@@ -1,4 +1,5 @@
-import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../constants";
+import { SUPPORTED_CHAIN_ID } from "../constants/chains";
+import { NATIVE_TOKENS } from "../constants/currency";
 import { Feature } from "../constants/contract-features";
 import { ContractSource } from "../schema/contracts/custom";
 import { BigNumber, BigNumberish, ethers, providers } from "ethers";

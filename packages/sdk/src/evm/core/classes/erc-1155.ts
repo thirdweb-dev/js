@@ -4,11 +4,9 @@ import {
   ExtensionNotImplementedError,
   NotFoundError,
 } from "../../common/error";
-import {
-  hasFunction,
-  assertEnabled,
-  detectContractFeature,
-} from "../../common/feature-detection";
+import { assertEnabled } from "../../common/feature-detection/assertEnabled";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
 import { resolveAddress } from "../../common/ens";
 import { FALLBACK_METADATA, fetchTokenMetadata } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
