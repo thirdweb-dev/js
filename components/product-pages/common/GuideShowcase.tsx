@@ -6,6 +6,7 @@ import { Heading, TrackedLink, TrackedLinkProps } from "tw-components";
 
 type BlogPost = {
   title: string;
+  description?: string;
   image: string;
   link: string;
 };
@@ -50,20 +51,31 @@ export const GuidesShowcase: React.FC<GuidesShowcaseProps> = ({
             gap={6}
             justifyContent={guides.length <= 2 ? "center" : undefined}
           >
-            {guides.map(({ title: guideTitle, image, link }, idx) => (
-              <GuideCard
-                category={category}
-                label="guide"
-                trackingProps={{
-                  guide: guideTitle.replaceAll(" ", "_").toLowerCase(),
-                }}
-                index={idx}
-                key={guideTitle}
-                image={image}
-                title={guideTitle}
-                link={link}
-              />
-            ))}
+            {guides.map(
+              (
+                {
+                  title: guideTitle,
+                  description: guideDescription,
+                  image,
+                  link,
+                },
+                idx,
+              ) => (
+                <GuideCard
+                  category={category}
+                  label="guide"
+                  trackingProps={{
+                    guide: guideTitle.replaceAll(" ", "_").toLowerCase(),
+                  }}
+                  index={idx}
+                  key={guideTitle}
+                  image={image}
+                  title={guideTitle}
+                  description={guideDescription || ""}
+                  link={link}
+                />
+              ),
+            )}
           </SimpleGrid>
         </Flex>
         {solution && (

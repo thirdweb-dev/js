@@ -1,66 +1,41 @@
-import {
-  AspectRatio,
-  Box,
-  Container,
-  Flex,
-  SimpleGrid,
-} from "@chakra-ui/react";
-import { SDKSection } from "components/homepage/sections/SDKSection";
-import { GameShowcase } from "components/product-pages/common/GameShowcase";
+import { AspectRatio, Box, Flex, SimpleGrid } from "@chakra-ui/react";
 import { GuidesShowcase } from "components/product-pages/common/GuideShowcase";
 import { Hero } from "components/product-pages/common/Hero";
-import { ProductCard } from "components/product-pages/common/ProductCard";
+import { ImageCard } from "components/product-pages/common/ImageCard";
 import { ProductLearnMoreCard } from "components/product-pages/common/ProductLearnMoreCard";
 import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
-import { CatAttackCard } from "pages/build/base";
 import { Heading, TrackedLink } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "gaming_kit";
 
-const GAMING_GUIDES = [
-  {
-    title: "Get Started with the Unity SDK",
-    image:
-      "https://blog.thirdweb.com/content/images/size/w2000/2022/11/Group-625859--1-.png",
-    link: "https://blog.thirdweb.com/guides/get-started-with-thirdwebs-unity-sdk/",
-  },
-  {
-    title: "Build A Native Web3 Game (iOS, Android, Windows, Mac)",
-    image:
-      "https://blog.thirdweb.com/content/images/size/w2000/2023/03/Sell-An-ERC20-Token-As-In-Game-Currency-In-A-Unity-Game.png",
-    link: "https://blog.thirdweb.com/guides/how-to-build-a-web3-game/",
-  },
-  {
-    title: "Set up Coinbase Pay in your Unity Project",
-    image:
-      "https://blog.thirdweb.com/content/images/size/w2000/2022/12/Coinbase-Pay-guide.png",
-    link: "https://blog.thirdweb.com/guides/set-up-coinbase-pay-in-your-unity-project/",
-  },
-];
-
 const GAMING_CASE_STUDIES = [
   {
-    title: "Pixels Builds an On-Chain Ecosystem for its Open-World Web3 Game",
+    title: "Heroic Story",
+    description:
+      "Launched at #1 on OpenSea resulting in 1K+ NFTs and over 400+ETH in Volume.",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w2000/2022/11/Heroic-Story-thumbnail-2.png",
+    link: "https://blog.thirdweb.com/case-studies/heroic-story-uses-dynamic-nfts-to-build-a-web3-free-to-own-mmorpg-fantasy-game/",
+  },
+  {
+    title: "Pixels",
+    description:
+      "100K+ monthly active wallets and 1.5M+ monthly on-chain transactions.",
     image:
       "https://blog.thirdweb.com/content/images/size/w2000/2023/04/Pixels-Builds-an-Onchain-Ecosystem-for-its-Web3-Game-thirdweb-Case-Study.png",
     link: "https://blog.thirdweb.com/case-studies/pixels-builds-an-onchain-ecosystem-for-its-web3-game/",
   },
   {
-    title: "Fractal, Web3 Gaming Platform and Marketplace for Blockchain Games",
+    title: "Fractal",
+    description:
+      "Opened access for all games to 900+ chains with one simple integration.",
     image:
       "https://blog.thirdweb.com/content/images/size/w2000/2022/11/Fractal.png",
-    link: "https://blog.thirdweb.com/fractal-web3-gaming-platform-and-marketplace-for-blockchain-games-expands-to-evm-chains/",
-  },
-  {
-    title:
-      "Dreamworks Launches NFT Avatars for the Metaverse in Collaboration with Gala's VOX",
-    image:
-      "https://blog.thirdweb.com/content/images/size/w2000/2022/10/DreamWorks-Launches-NFT-Avatars-with-Gala-s-VOX---thirdweb-Case-Study-2.png",
-    link: "https://blog.thirdweb.com/dreamworks-launches-nft-avatars-for-web3-games-with-gala-and-the-sims-creators-voxverse/",
+    link: "https://blog.thirdweb.com/case-studies/fractal-web3-gaming-platform-and-marketplace-for-blockchain-games-expands-to-evm-chains/",
   },
 ];
 
@@ -87,23 +62,8 @@ const Gaming: ThirdwebNextPage = () => {
     >
       <Hero
         name="GamingKit"
-        title="Build web3 games on any platform"
-        description={
-          <>
-            Build web3 games with our{" "}
-            <TrackedLink
-              fontWeight={700}
-              category={TRACKING_CATEGORY}
-              href="https://portal.thirdweb.com/unity"
-              label="unity SDK"
-              isExternal
-            >
-              Unity SDK
-            </TrackedLink>{" "}
-            for all supported platforms, including: Native, Mobile, Console,
-            Browser, and VR.
-          </>
-        }
+        title="Build blockchain games on any platform"
+        description="Add web3 features to your game on all platforms, including: Native, Mobile, Console, Browser and VR."
         buttonText="Get started"
         buttonLink="https://portal.thirdweb.com/gamingkit"
         gradient="linear-gradient(145.96deg, rgba(205, 0, 238, 1) 5.07%, #1652F0 100%)"
@@ -149,47 +109,28 @@ const Gaming: ThirdwebNextPage = () => {
           columns={{ base: 1, md: 3 }}
           gap={{ base: 12, md: 6 }}
         >
-          <ProductCard
-            title="Monetize with in-game asset sales"
-            icon={require("/public/assets/product-pages/extensions/hero-icon-1.png")}
+          <ImageCard
+            title="Unlock new revenue streams"
+            image={require("/public/assets/solutions-pages/gaming/revenue-streams.png")}
           >
-            Get additional revenue streams with primary sales and royalty fees
-            from secondary sales for in-game assets represented as NFTs.
-          </ProductCard>
-          <ProductCard
-            title="Build web3 games faster"
-            icon={require("/public/assets/product-pages/extensions/hero-icon-2.png")}
+            Primary sales and royalty fees from secondary sales for in-game
+            assets represented as NFTs.
+          </ImageCard>
+          <ImageCard
+            title="Increase user retention"
+            image={require("/public/assets/solutions-pages/gaming/user-loyalty.png")}
           >
-            <span>
-              Our SDKs detect <strong>extensions</strong> in contracts to handle
-              all common contract operations for devs without the need for
-              boiler plate.
-            </span>
-          </ProductCard>
-          <ProductCard
-            title="Frictionless web3 experience for players"
-            icon={require("/public/assets/product-pages/extensions/hero-icon-3.png")}
+            Reward your players with in game currency and digital assets.
+          </ImageCard>
+          <ImageCard
+            title="Engage with your community"
+            image={require("/public/assets/solutions-pages/gaming/grow-community.png")}
           >
-            <span>
-              Generate wallets for players on the back-end. Remove the need for
-              disruptive transaction pop-ups entirely with{" "}
-              <strong>Device Wallet</strong>.
-            </span>
-          </ProductCard>
+            Enable access to other games within the studio seamlessly by
+            creating an immersive ecosystem.
+          </ImageCard>
         </SimpleGrid>
       </Hero>
-
-      <ProductSection py={{ base: 12, lg: 24 }}>
-        <SDKSection
-          description="The ultimate development framework for all types of web3 games:
-            free-to-own, play-to-earn, nft game, etc. Powerful Gaming Engine
-            SDKs to integrate web3 features into your game."
-          codeSelectorProps={{
-            defaultLanguage: "unity",
-            docs: "https://portal.thirdweb.com/gamingkit",
-          }}
-        />
-      </ProductSection>
 
       <ProductSection py={{ base: 12, lg: 24 }}>
         <Flex alignItems="center" flexDirection="column">
@@ -202,22 +143,31 @@ const Gaming: ThirdwebNextPage = () => {
           >
             Create new gaming universes
           </Heading>
-          <Heading
-            as="h3"
-            size="subtitle.lg"
-            textAlign="center"
-            maxW="lg"
-            color="whiteAlpha.700"
-            fontWeight={400}
-            fontSize="20px"
-            mb={8}
+          <SimpleGrid
+            justifyContent="flex-start"
+            w={{ base: "100%", md: "60%" }}
+            columns={{ base: 1, md: 2 }}
+            gap={{ base: 12, md: 6 }}
           >
-            Get inspiration from viral web3 game <strong>Cat Attack</strong>{" "}
-            built in just 2 days using thirdweb.
-          </Heading>
-          <Container maxW="3xl">
-            <CatAttackCard trackingCategory={TRACKING_CATEGORY} hideGithub />
-          </Container>
+            <ImageCard
+              title="Cat Attack Mobile"
+              image={require("/public/assets/solutions-pages/gaming/catattack-square.png")}
+              TRACKING_CATEGORY={TRACKING_CATEGORY}
+              href="https://catattack.thirdweb.com"
+            >
+              Viral web3 mobile game Cat Attack built in just 2 days using
+              thirdweb.
+            </ImageCard>
+            <ImageCard
+              title="Web3 Warriors"
+              image={require("/public/assets/solutions-pages/gaming/web3warriors.png")}
+              TRACKING_CATEGORY={TRACKING_CATEGORY}
+              href="https://web3warriors.thirdweb.com"
+            >
+              An Onchain Survival Game. Escape the dungeon by battling
+              terrifying bosses.
+            </ImageCard>
+          </SimpleGrid>
         </Flex>
       </ProductSection>
 
@@ -232,18 +182,8 @@ const Gaming: ThirdwebNextPage = () => {
             category={TRACKING_CATEGORY}
             description={
               <>
-                Discover{" "}
-                <TrackedLink
-                  category={TRACKING_CATEGORY}
-                  href="https://thirdweb.com/explore/gaming"
-                  isExternal
-                  label="build_explore"
-                  color="blue.400"
-                  _hover={{ textDecor: "underline" }}
-                >
-                  ready-to-go contracts
-                </TrackedLink>{" "}
-                for popular gaming use cases. Our powerful{" "}
+                We enable the customization needed for a complex game economy
+                with our powerful{" "}
                 <TrackedLink
                   category={TRACKING_CATEGORY}
                   href="https://portal.thirdweb.com/gamingkit"
@@ -252,23 +192,8 @@ const Gaming: ThirdwebNextPage = () => {
                   _hover={{ textDecor: "underline" }}
                 >
                   Gaming SDK
-                </TrackedLink>{" "}
-                enables you to easily integrate web3 features into games across
-                native, mobile, console, browser, and VR platforms.
-                <br />
-                <TrackedLink
-                  category={TRACKING_CATEGORY}
-                  href="https://portal.thirdweb.com/unity"
-                  label="build_unity_sdk"
-                  isExternal
-                  color="blue.400"
-                  _hover={{ textDecor: "underline" }}
-                >
-                  Unity SDK
-                </TrackedLink>{" "}
-                available now.
-                <br />
-                Unreal Engine SDK coming soon.
+                </TrackedLink>
+                .
               </>
             }
             icon={require("/public/assets/product-pages/dashboard/hero-icon-1.png")}
@@ -277,34 +202,24 @@ const Gaming: ThirdwebNextPage = () => {
           <ProductLearnMoreCard
             title="Launch"
             category={TRACKING_CATEGORY}
-            description="Deploy web3 games to any EVM chain (700+). Seamless contract deployment workflow designed for web3 dev teams to easily collaborate."
+            description="Deploy any game to any EVM chain (900+)."
             icon={require("/public/assets/product-pages/dashboard/hero-icon-2.png")}
-            href="https://portal.thirdweb.com/gamingkit"
+            href="https://blog.thirdweb.com/any-contract-any-evm-chain/"
           />
           <ProductLearnMoreCard
             title="Manage"
             category={TRACKING_CATEGORY}
-            description="A single dashboard to configure your contracts and monitor contract activity for all your game's deployed contracts. Get insights on transaction count, volume, gas spend per contract to inform your game development."
+            description="Monitor all of your game insights including transaction count, volume, gas spend per contract to inform your game development."
             icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
             href="https://portal.thirdweb.com/dashboard"
           />
         </SimpleGrid>
       </ProductSection>
 
-      <GameShowcase />
-
-      <GuidesShowcase
-        title="Start building web3 games"
-        category={TRACKING_CATEGORY}
-        description="Check out our guides and case studies to start building games with thirdweb"
-        solution="Gaming"
-        guides={GAMING_GUIDES}
-      />
-
       <GuidesShowcase
         title="The best web3 games are built using thirdweb"
         category={TRACKING_CATEGORY}
-        description="Learn from case studies on how other web3 games built their games using GamingKit."
+        description="Focus on building a great game and let us do the rest."
         solution="Gaming"
         guides={GAMING_CASE_STUDIES}
         caseStudies
