@@ -1,6 +1,6 @@
 import {
+  getStepAddToRegistry,
   getStepDeploy,
-  stepAddToRegistry,
   useDeployContextModal,
 } from "./contract-deploy-form/deploy-context-modal";
 import { uploadContractMetadata } from "./contract-deploy-form/deploy-form-utils";
@@ -22,6 +22,7 @@ import {
   useSDK,
   useSDKChainId,
   useSigner,
+  useWalletConfig,
 } from "@thirdweb-dev/react";
 import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/declarations/src/evm/constants/contract-features";
 import { DeploymentTransaction } from "@thirdweb-dev/sdk/dist/declarations/src/evm/types/any-evm/deploy-data";
@@ -44,6 +45,7 @@ import {
   getZkTransactionsForDeploy,
   zkDeployContractFromUri,
 } from "@thirdweb-dev/sdk/evm/zksync";
+import { walletIds } from "@thirdweb-dev/wallets";
 import { SnippetApiResponse } from "components/contract-tabs/code/types";
 import { providers, utils } from "ethers";
 import { useSupportedChain } from "hooks/chains/configureChains";
@@ -56,6 +58,12 @@ import { useMemo } from "react";
 import invariant from "tiny-invariant";
 import { Web3Provider } from "zksync-web3";
 import { z } from "zod";
+
+const HEADLESS_WALLET_IDS = [
+  walletIds.localWallet,
+  walletIds.magicLink,
+  walletIds.paper,
+];
 
 export interface ContractPublishMetadata {
   image: string | StaticImageData;
@@ -471,6 +479,8 @@ export function useCustomContractDeployMutation(
   const { data: transactions } = useTransactionsForDeploy(ipfsHash);
   const compilerMetadata = useContractPublishMetadataFromURI(ipfsHash);
 
+  const walletConfig = useWalletConfig();
+
   return useMutation(
     async (data: ContractDeployMutationParams) => {
       invariant(
@@ -478,7 +488,15 @@ export function useCustomContractDeployMutation(
         "sdk is not ready or does not support publishing",
       );
 
-      const stepDeploy = getStepDeploy(transactions?.length || 1);
+      const requiresSignature =
+        HEADLESS_WALLET_IDS.indexOf(walletConfig?.id || "") === -1;
+
+      const stepDeploy = getStepDeploy(
+        transactions?.length || 1,
+        requiresSignature,
+      );
+
+      const stepAddToRegistry = getStepAddToRegistry(requiresSignature);
 
       // open the modal with the appropriate steps
       deployContext.open(

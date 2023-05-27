@@ -8,6 +8,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   ThirdwebProvider,
   coinbaseWallet,
+  localWallet,
   metamaskWallet,
   safeWallet,
   walletConnectV1,
@@ -67,6 +68,7 @@ export const DashboardThirdwebProvider: ComponentWithChildren<
         coinbaseWallet(),
         walletConnectV1(),
         safeWallet(),
+        localWallet(),
       ]}
       storageInterface={StorageSingleton}
       authConfig={{

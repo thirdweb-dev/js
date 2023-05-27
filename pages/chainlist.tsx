@@ -298,7 +298,7 @@ export const getStaticProps: GetStaticProps<DashboardRPCProps> = async () => {
       slug: chain.slug,
       name: chain.name,
       chainId: chain.chainId,
-      iconUrl: "icon" in chain ? chain.icon.url : "",
+      iconUrl: chain.icon?.url ? chain.icon.url : "",
       symbol: chain.nativeCurrency.symbol,
       hasRpc:
         "rpc" in chain &&

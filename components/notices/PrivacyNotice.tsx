@@ -1,55 +1,56 @@
 import {
+  AspectRatio,
+  Center,
   Divider,
   Flex,
   Modal,
   ModalBody,
   ModalContent,
-  ModalHeader,
+  ModalFooter,
   ModalOverlay,
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useAddress } from "@thirdweb-dev/react";
-import { Logo } from "components/logo";
-import { useLocalStorage } from "hooks/useLocalStorage";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { Button, Checkbox, Heading, Text, TrackedLink } from "tw-components";
+import {
+  useAddress,
+  useDisconnect,
+  useLogin,
+  useUser,
+} from "@thirdweb-dev/react";
+import { IconLogo } from "components/logo";
+import { useTrack } from "hooks/analytics/useTrack";
+import { Button, Heading, Text, TrackedLink } from "tw-components";
 
-export function useShouldShowTOSNotice() {
-  const [acceptedTOS, setHasAcceptedTOS] = useLocalStorage(
-    "has-accepted-tos",
-    false,
-  );
-  const address = useAddress();
-  const solAddress = useWallet().publicKey?.toBase58();
-  const [hasTimedOut, setHasTimedOut] = useState(false);
-  useEffect(() => {
-    const t = setTimeout(() => {
-      setHasTimedOut(true);
-    }, 2000);
-    return () => clearTimeout(t);
-  }, []);
-  return [
-    hasTimedOut && !!(address || solAddress) && !acceptedTOS,
-    setHasAcceptedTOS,
-  ] as const;
-}
+const TRACKING_CATEGORY = "notice";
 
 export const PrivacyNotice: React.FC = () => {
-  const [shouldSHowPrivacyNotice, setHasAcceptedTOS] = useShouldShowTOSNotice();
-
+  const track = useTrack();
+  const evmAddress = useAddress();
+  const solAddress = useWallet().publicKey?.toBase58();
+  const { isLoading, isLoggedIn } = useUser();
+  const { login, isLoading: loginLoading } = useLogin();
+  const disconnect = useDisconnect();
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  const { register, watch, handleSubmit } = useForm<{ accepted: false }>();
+  if (!evmAddress && !solAddress) {
+    // if neither solana or evm wallets are connected then don't show the notice
+    return null;
+  }
 
-  if (!shouldSHowPrivacyNotice) {
+  // temporary
+  if (!evmAddress && solAddress) {
+    // don't show the notice if it's solana
+    return null;
+  }
+
+  if (isLoading || isLoggedIn) {
+    // if the user is logged in or we're loading the user then don't show the notice
     return null;
   }
 
   return (
     <Modal
-      size={isMobile ? "full" : "xl"}
+      size={isMobile ? "full" : "lg"}
       closeOnEsc={false}
       allowPinchZoom
       closeOnOverlayClick={false}
@@ -58,66 +59,106 @@ export const PrivacyNotice: React.FC = () => {
       onClose={() => undefined}
     >
       <ModalOverlay />
-      <ModalContent p={{ base: 0, md: 8 }}>
-        <ModalHeader mt={{ base: 8, md: 0 }}>
-          <Flex align="flex-start" gap={1}>
-            <Logo />
-          </Flex>
-        </ModalHeader>
-        <ModalBody>
+      <ModalContent>
+        <ModalBody p={6} as={Flex} justify="center" gap={2} flexDir="column">
+          <Center>
+            <AspectRatio ratio={1} w="120px">
+              <IconLogo />
+            </AspectRatio>
+          </Center>
+          <Heading size="subtitle.md" textAlign="center">
+            Welcome to the <strong>thirdweb dashboard</strong>
+          </Heading>
+
+          <Text textAlign="center">
+            By connecting your wallet and using the thirdweb dashboard, you
+            agree to our{" "}
+            <TrackedLink
+              href="/tos"
+              isExternal
+              category={TRACKING_CATEGORY}
+              label="terms"
+              textDecoration="underline"
+              _hover={{
+                opacity: 0.8,
+              }}
+            >
+              Terms of Service
+            </TrackedLink>{" "}
+            and{" "}
+            <TrackedLink
+              href="/privacy"
+              isExternal
+              category={TRACKING_CATEGORY}
+              label="privacy"
+              textDecoration="underline"
+              _hover={{
+                opacity: 0.8,
+              }}
+            >
+              Privacy Policy
+            </TrackedLink>
+            .
+          </Text>
+        </ModalBody>
+        <Divider />
+        <ModalFooter w="full" p={6}>
           <Flex
-            gap={1}
-            flexDirection="column"
-            as="form"
-            onSubmit={handleSubmit(() => setHasAcceptedTOS(true))}
+            w="full"
+            gap={2}
+            direction={{ base: "column-reverse", md: "row" }}
           >
-            <Heading size="subtitle.md">
-              Welcome to the thirdweb dashboard
-            </Heading>
-            <Flex mt={1}>
-              <Checkbox autoFocus={true} isRequired {...register("accepted")} />
-              <Text ml={3}>
-                I have read and agree to the{" "}
-                <TrackedLink
-                  href="/privacy"
-                  isExternal
-                  category="notice"
-                  label="privacy"
-                  textDecoration="underline"
-                  _hover={{
-                    opacity: 0.8,
-                  }}
-                >
-                  Privacy Policy
-                </TrackedLink>{" "}
-                and{" "}
-                <TrackedLink
-                  href="/tos"
-                  isExternal
-                  category="notice"
-                  label="terms"
-                  textDecoration="underline"
-                  _hover={{
-                    opacity: 0.8,
-                  }}
-                >
-                  Terms of Service
-                </TrackedLink>
-                .
-              </Text>
-            </Flex>
-            <Divider my={4} />
             <Button
-              width="100%"
-              type="submit"
+              isDisabled={loginLoading}
+              w="100%"
+              variant="outline"
+              onClick={() => {
+                track({
+                  category: TRACKING_CATEGORY,
+                  action: "cancel",
+                });
+                disconnect().catch((err) => {
+                  console.error("failed to disconnect wallet", err);
+                });
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              isLoading={loginLoading}
+              w="100%"
               borderRadius="md"
               colorScheme="primary"
-              isDisabled={!watch("accepted")}
+              onClick={() => {
+                track({
+                  category: TRACKING_CATEGORY,
+                  action: "accept_sign",
+                  label: "attempt",
+                });
+                login()
+                  .then(() => {
+                    track({
+                      category: TRACKING_CATEGORY,
+                      action: "accept_sign",
+                      label: "success",
+                    });
+                  })
+                  .catch((err) => {
+                    console.error("failed to login", err);
+                    track({
+                      category: TRACKING_CATEGORY,
+                      action: "accept_sign",
+                      label: "error",
+                      error: err,
+                    });
+                  });
+              }}
+              autoFocus
             >
-              Continue
+              Accept & Sign
             </Button>
           </Flex>
-        </ModalBody>
+        </ModalFooter>
       </ModalContent>
     </Modal>
   );

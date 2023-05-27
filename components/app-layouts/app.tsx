@@ -34,7 +34,6 @@ import {
   useSetIsNetworkConfigModalOpen,
 } from "hooks/networkConfigModal";
 import { del, get, set } from "idb-keyval";
-import { useRouter } from "next/router";
 import posthog from "posthog-js";
 import React, { useEffect, useMemo, useState } from "react";
 import { Heading } from "tw-components";
@@ -116,9 +115,6 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
         },
       }),
   );
-
-  const router = useRouter();
-
   return (
     <PersistQueryClientProvider
       client={queryClient}
@@ -139,7 +135,7 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
                   <DashboardThirdwebProvider>
                     <SanctionedAddressesChecker>
                       <PHIdentifier />
-                      {router.pathname !== "/dashboard" && <PrivacyNotice />}
+                      <PrivacyNotice />
                       <AppShell {...props} />
                       <ConfigModal />
                     </SanctionedAddressesChecker>

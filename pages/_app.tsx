@@ -122,29 +122,6 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
     return `${base}${path}`;
   }, [router.asPath]);
 
-  // shortcut everything and only set up the necessities for the OG renderer
-  if (router.pathname.startsWith("/_og/")) {
-    return (
-      <>
-        <Global
-          styles={css`
-            ${fontSizeCssVars}
-
-            .emoji {
-              height: 1em;
-              width: 1em;
-              margin: 0 0.05em 0 0.1em;
-              vertical-align: -0.1em;
-              display: inline;
-            }
-          `}
-        />
-        <ChakraProvider theme={chakraThemeWithFonts}>
-          <Component {...pageProps} />
-        </ChakraProvider>
-      </>
-    );
-  }
   return (
     <ConsoleApp
       seoCanonical={canonicalUrl}

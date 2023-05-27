@@ -146,34 +146,33 @@ const DeployModalStep: React.FC<DeployModalStepProps> = ({
   );
 };
 
-export const getStepDeploy = (transactionsNumber: number): DeployModalStep => ({
-  title: "Deploying contract",
-  description: `Your wallet will prompt you to sign ${
-    transactionsNumber === 1 ? "the" : transactionsNumber || 1
-  } transaction${transactionsNumber > 1 ? "s" : ""}.`,
-});
-
-export const stepCustomChainDeploy: DeployModalStep = {
-  title: "Deploying contract",
-  description: (
-    <>
-      Your wallet will prompt you{" "}
-      <i>
-        <b>twice</b>
-      </i>{" "}
-      to sign transactions.
-    </>
-  ),
-};
-
-export const stepAddToRegistry: DeployModalStep = {
-  title: "Adding to dashboard",
-  description: (
-    <>
-      Your wallet will prompt you to sign the transaction.{" "}
-      <i>
-        This step is <b>gasless</b>.
-      </i>
-    </>
-  ),
-};
+export function getStepDeploy(
+  transactionsNumber: number,
+  requiresSignature = true,
+): DeployModalStep {
+  return {
+    title: "Deploying contract",
+    description: requiresSignature
+      ? `Your wallet will prompt you to sign ${
+          transactionsNumber === 1 ? "the" : transactionsNumber || 1
+        } transaction${transactionsNumber > 1 ? "s" : ""}.`
+      : "This may take a few seconds.",
+  };
+}
+export function getStepAddToRegistry(
+  requiresSignature = true,
+): DeployModalStep {
+  return {
+    title: "Adding to dashboard",
+    description: (
+      <>
+        {requiresSignature
+          ? "Your wallet will prompt you to sign the transaction. "
+          : ""}
+        <i>
+          This step is <b>gasless</b>.
+        </i>
+      </>
+    ),
+  };
+}

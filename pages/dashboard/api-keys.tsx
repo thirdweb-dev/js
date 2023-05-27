@@ -21,7 +21,7 @@ const DashboardApiKeys: ThirdwebNextPage = () => {
         title: "Connect and sign-in with your wallet to get started",
         description:
           "In order to create and manage your developer API keys, you need to sign-in with a wallet.",
-        children: <ConnectWallet ecosystem="evm" requireLogin={true} />,
+        children: <ConnectWallet ecosystem="evm" />,
         completed: !!user?.address,
       },
       {

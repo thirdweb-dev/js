@@ -36,14 +36,12 @@ import { shortenString } from "utils/usedapp-external";
 
 export interface ConnectWalletProps extends ButtonProps {
   ecosystem?: "evm" | "solana" | "either";
-  requireLogin?: boolean;
   shrinkMobile?: boolean;
   upsellTestnet?: boolean;
   onChainSelect?: (chainId: number) => void;
 }
 
 export const ConnectWallet: React.FC<ConnectWalletProps> = ({
-  requireLogin = false,
   ecosystem = "either",
   ...buttonProps
 }) => {
@@ -69,7 +67,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
   }, [solWallet.publicKey, setValueSol]);
 
   useEffect(() => {
-    if (!!user && user?.address !== address) {
+    if (!!address && !!user && user?.address !== address) {
       logout();
     }
   }, [address, user, logout]);
@@ -134,9 +132,6 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
             setIsNetworkConfigModalOpen(true);
           },
           renderChain: CustomChainRenderer,
-        }}
-        auth={{
-          loginOptional: !requireLogin,
         }}
       />
     );
