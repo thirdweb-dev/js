@@ -5,9 +5,10 @@ import Text from "../base/Text";
 import { WalletIcon } from "../base/WalletIcon";
 import { useWallet, useBalance } from "@thirdweb-dev/react-core";
 import { useActiveChain } from "@thirdweb-dev/react-core/evm";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 import { useModalState } from "../../providers/ui-context-provider";
+import Box from "../base/Box";
 
 export type ConnectWalletDetailsProps = {
   address: string;
@@ -46,9 +47,9 @@ export const ConnectWalletDetails = ({
         {detailsButton ? (
           detailsButton
         ) : (
-          <>
+          <Box flex={1} flexDirection="row" justifyContent="space-between">
             <ChainIcon size={32} chainIconUrl={chain?.icon?.url} />
-            <View style={styles.walletInfo}>
+            <Box justifyContent="center" alignItems="flex-start">
               <Text variant="bodySmall">
                 {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
                 {balanceQuery.data?.symbol}
@@ -58,12 +59,12 @@ export const ConnectWalletDetails = ({
               ) : (
                 <Address variant="bodySmallSecondary" address={address} />
               )}
-            </View>
+            </Box>
             <WalletIcon
               size={32}
               iconUri={activeWallet?.getMeta().iconURL || ""}
             />
-          </>
+          </Box>
         )}
       </BaseButton>
     </>
@@ -71,14 +72,6 @@ export const ConnectWalletDetails = ({
 };
 
 const styles = StyleSheet.create({
-  walletInfo: {
-    flex: 1,
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    alignContent: "center",
-    flexDirection: "column",
-    marginLeft: 5,
-  },
   walletDetails: {
     display: "flex",
     flexDirection: "row",
