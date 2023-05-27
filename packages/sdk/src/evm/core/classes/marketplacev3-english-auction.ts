@@ -1,4 +1,4 @@
-import { AuctionHasNotEndedError } from "../../common";
+import { AuctionHasNotEndedError } from "../../common/error";
 import {
   cleanCurrencyAddress,
   fetchCurrencyMetadata,
@@ -12,7 +12,7 @@ import { fetchTokenMetadataForContract } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_ENGLISH_AUCTIONS } from "../../constants/thirdweb-features";
 import { Status } from "../../enums";
-import { Address, AddressOrEns } from "../../schema";
+import { Address, AddressOrEns } from "../../schema/shared";
 import {
   EnglishAuctionInputParams,
   EnglishAuctionInputParamsSchema,

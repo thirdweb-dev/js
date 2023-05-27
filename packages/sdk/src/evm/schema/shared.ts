@@ -1,6 +1,7 @@
 import { EnsSchema } from "./ens";
 import { BigNumber, CallOverrides, utils } from "ethers";
 import { z } from "zod";
+import { ChainInfoInputSchema } from "./ChainInfoInputSchema";
 
 export const BigNumberSchema = z
   .union([
@@ -76,17 +77,6 @@ export const CallOverrideSchema: z.ZodType<CallOverrides> = z
     type: z.number().optional(),
   })
   .strict();
-
-export const ChainInfoInputSchema = z.object({
-  rpc: z.array(z.string().url()),
-  chainId: z.number(),
-  nativeCurrency: z.object({
-    name: z.string(),
-    symbol: z.string(),
-    decimals: z.number(),
-  }),
-  slug: z.string(),
-});
 
 export type ChainInfo = z.infer<typeof ChainInfoInputSchema>;
 

@@ -75,6 +75,7 @@ export interface IWalletConnectReceiver {
   rejectRequest(): Promise<void>;
   getActiveSessions(): WCSession[];
   disconnectSession(): Promise<void>;
+  isWCReceiverEnabled(): boolean;
 }
 
 export abstract class WalletConnectHandler extends EventEmitter {

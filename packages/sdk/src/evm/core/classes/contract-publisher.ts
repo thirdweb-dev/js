@@ -1,23 +1,23 @@
 import { DEFAULT_API_KEY } from "../../../core/constants/urls";
-import {
-  extractConstructorParams,
-  extractFunctions,
-  fetchContractMetadata,
-  fetchContractMetadataFromAddress,
-  fetchExtendedReleaseMetadata,
-  fetchPreDeployMetadata,
-  fetchRawPredeployMetadata,
-  fetchSourceFilesFromMetadata,
-  isIncrementalVersion,
-  resolveContractUriFromAddress,
-} from "../../common";
 import { resolveAddress } from "../../common/ens";
+import { fetchPreDeployMetadata } from "../../common/feature-detection/fetchPreDeployMetadata";
+import { extractFunctions } from "../../common/feature-detection/extractFunctions";
+import { extractConstructorParams } from "../../common/feature-detection/extractConstructorParams";
+import { fetchExtendedReleaseMetadata } from "../../common/feature-detection/fetchExtendedReleaseMetadata";
+import { fetchRawPredeployMetadata } from "../../common/feature-detection/fetchRawPredeployMetadata";
+import { resolveContractUriFromAddress } from "../../common/feature-detection/resolveContractUriFromAddress";
+import {
+  fetchContractMetadataFromAddress,
+  fetchSourceFilesFromMetadata,
+  fetchContractMetadata,
+} from "../../common/metadata-resolver";
 import { getCompositePluginABI } from "../../common/plugin";
 import { buildTransactionFunction } from "../../common/transactions";
-import { getChainProvider, getContractPublisherAddress } from "../../constants";
+import { isIncrementalVersion } from "../../common/version-checker";
+import { getContractPublisherAddress } from "../../constants/addresses";
+import { getChainProvider } from "../../constants/urls";
 import {
   AbiFunction,
-  AddressOrEns,
   AbiSchema,
   ContractParam,
   ContractSource,
@@ -31,8 +31,9 @@ import {
   PublishedContract,
   PublishedContractFetched,
   PublishedContractSchema,
-  SDKOptions,
-} from "../../schema";
+} from "../../schema/contracts/custom";
+import { SDKOptions } from "../../schema/sdk-options";
+import { AddressOrEns } from "../../schema/shared";
 import { NetworkInput, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { RPCConnectionHandler } from "./rpc-connection-handler";

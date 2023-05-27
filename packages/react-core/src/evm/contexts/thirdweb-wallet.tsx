@@ -64,6 +64,7 @@ export const ThirdwebConnectedWalletProvider: React.FC<
               });
             } catch (e) {
               // failed to get a viable rpc url, nothing we can do
+              console.error(e);
             }
           }
 

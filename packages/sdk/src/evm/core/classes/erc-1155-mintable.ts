@@ -1,10 +1,11 @@
 import { NFT } from "../../../core/schema/nft";
-import { detectContractFeature } from "../../common";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
 import { resolveAddress } from "../../common/ens";
 import { uploadOrExtractURI } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_MINTABLE } from "../../constants/erc1155-features";
-import { AddressOrEns, EditionMetadataOrUri } from "../../schema";
+import { EditionMetadataOrUri } from "../../schema/tokens/edition";
+import { AddressOrEns } from "../../schema/shared";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";

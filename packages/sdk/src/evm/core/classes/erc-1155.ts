@@ -1,12 +1,12 @@
 import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import {
-  assertEnabled,
-  detectContractFeature,
   ExtensionNotImplementedError,
-  hasFunction,
   NotFoundError,
-} from "../../common";
+} from "../../common/error";
+import { assertEnabled } from "../../common/feature-detection/assertEnabled";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
 import { resolveAddress } from "../../common/ens";
 import { FALLBACK_METADATA, fetchTokenMetadata } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
@@ -22,7 +22,7 @@ import {
   FEATURE_EDITION_CLAIM_CONDITIONS_V2,
   FEATURE_EDITION_LAZY_MINTABLE_V2,
 } from "../../constants/erc1155-features";
-import { Address, AddressOrEns } from "../../schema";
+import { Address, AddressOrEns } from "../../schema/shared";
 import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
 import { EditionMetadataOrUri } from "../../schema/tokens/edition";
 import { ClaimOptions, UploadProgressEvent } from "../../types";
@@ -241,6 +241,43 @@ export class Erc1155<
         contractWrapper: this.contractWrapper,
         method: "safeTransferFrom",
         args: [from, await resolveAddress(to), tokenId, amount, data],
+      });
+    },
+  );
+
+  /**
+   * Transfer an NFT from a specific wallet
+   *
+   * @remarks Transfer an NFT from a specific wallet to another wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to send the NFT to
+   * const toAddress = "{{wallet_address}}";
+   * const tokenId = "0"; // The token ID of the NFT you want to send
+   * const amount = 3; // How many copies of the NFTs to transfer
+   * await contract.erc1155.transfer(toAddress, tokenId, amount);
+   * ```
+   * @twfeature ERC1155
+   */
+  transferFrom = buildTransactionFunction(
+    async (
+      from: AddressOrEns,
+      to: AddressOrEns,
+      tokenId: BigNumberish,
+      amount: BigNumberish,
+      data: BytesLike = [0],
+    ) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "safeTransferFrom",
+        args: [
+          await resolveAddress(from),
+          await resolveAddress(to),
+          tokenId,
+          amount,
+          data,
+        ],
       });
     },
   );

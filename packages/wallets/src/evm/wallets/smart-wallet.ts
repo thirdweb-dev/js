@@ -13,7 +13,6 @@ import {
   WCProposal,
   WCRequest,
   IWalletConnectReceiver,
-  WalletConnectReceiverConfig,
 } from "../../core/types/walletConnect";
 import { WalletConnectV2Handler } from "../../core/WalletConnect/WalletConnectV2Handler";
 import { NoOpWalletConnectHandler } from "../../core/WalletConnect/constants";
@@ -32,7 +31,6 @@ export class SmartWallet
   connector?: SmartWalletConnectorType;
 
   public enableConnectApp: boolean = false;
-  #enableWalletConnectV1: WalletConnectReceiverConfig["wcVersion"];
   #wcWallet: WalletConnectHandler;
 
   static meta = {
@@ -90,14 +88,43 @@ export class SmartWallet
     return this.connector?.personalWallet;
   }
 
+  /**
+   * Execute a single transaction
+   * @param transactions
+   * @returns the transaction receipt
+   */
   async execute(transaction: Transaction): Promise<TransactionResult> {
     const connector = await this.getConnector();
     return connector.execute(transaction);
   }
 
+  /**
+   * Execute multiple transactions in a single batch
+   * @param transactions
+   * @returns the transaction receipt
+   */
   async executeBatch(transactions: Transaction[]): Promise<TransactionResult> {
     const connector = await this.getConnector();
     return connector.executeBatch(transactions);
+  }
+
+  /**
+   * Manually deploy the smart wallet contract. If already deployed this will throw an error.
+   * Note that this is not necessary as the smart wallet will be deployed automatically on the first transaction the user makes.
+   * @returns the transaction receipt
+   */
+  async deploy(): Promise<TransactionResult> {
+    const connector = await this.getConnector();
+    return connector.deploy();
+  }
+
+  /**
+   * Check if the smart wallet contract is deployed
+   * @returns true if the smart wallet contract is deployed
+   */
+  async isDeployed(): Promise<boolean> {
+    const connector = await this.getConnector();
+    return connector.isDeployed();
   }
 
   autoConnect(params: ConnectParams<SmartWalletConnectionArgs>) {
@@ -143,6 +170,10 @@ export class SmartWallet
 
   disconnectSession(): Promise<void> {
     return this.#wcWallet?.disconnectSession();
+  }
+
+  isWCReceiverEnabled() {
+    return this.enableConnectApp;
   }
 
   #setupWalletConnectEventsListeners() {

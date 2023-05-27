@@ -1,8 +1,6 @@
-import {
-  detectContractFeature,
-  hasFunction,
-  includesErrorMessage,
-} from "../../common";
+import { includesErrorMessage } from "../../common/error";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
 import {
   abstractContractModelToLegacy,
   abstractContractModelToNew,
@@ -20,11 +18,9 @@ import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
 import { buildTransactionFunction } from "../../common/transactions";
 import { isNode } from "../../common/utils";
 import { ClaimEligibility } from "../../enums";
-import {
-  AbstractClaimConditionContractStruct,
-  AddressOrEns,
-  SnapshotEntryWithProof,
-} from "../../schema";
+import { AbstractClaimConditionContractStruct } from "../../schema/contracts/common/claim-conditions";
+import { AddressOrEns } from "../../schema/shared";
+import { SnapshotEntryWithProof } from "../../schema/contracts/common/snapshots";
 import {
   ClaimCondition,
   ClaimConditionFetchOptions,

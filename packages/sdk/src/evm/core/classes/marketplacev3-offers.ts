@@ -8,7 +8,8 @@ import { resolveAddress } from "../../common/ens";
 import { getAllInBatches, handleTokenApproval } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
-import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
+import { SUPPORTED_CHAIN_ID } from "../../constants/chains";
+import { NATIVE_TOKENS } from "../../constants/currency";
 import { FEATURE_OFFERS } from "../../constants/thirdweb-features";
 import { Status } from "../../enums";
 import {

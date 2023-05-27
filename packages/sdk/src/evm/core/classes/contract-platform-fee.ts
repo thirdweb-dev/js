@@ -1,6 +1,6 @@
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_PLATFORM_FEE } from "../../constants/thirdweb-features";
-import { CommonPlatformFeeSchema } from "../../schema";
+import { CommonPlatformFeeSchema } from "../../schema/contracts/common";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
