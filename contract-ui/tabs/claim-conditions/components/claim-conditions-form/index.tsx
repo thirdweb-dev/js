@@ -636,7 +636,9 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                       You have unsaved changes
                     </Text>
                   )}
-                  {controlledFields.length > 0 || hasRemovedPhases ? (
+                  {controlledFields.length > 0 ||
+                  hasRemovedPhases ||
+                  !isMultiPhase ? (
                     <TransactionButton
                       colorScheme="primary"
                       transactionCount={1}
