@@ -45,6 +45,34 @@ export const SmartWalletFlow = ({
     ? personalWalletChainId !== targetChain.chainId
     : false;
 
+  const connectPersonalWallet = useCallback(
+    async (wallet: WalletConfig) => {
+      setIsConnecting(true);
+      const walletInstance = createWalletInstance(wallet);
+      await walletInstance.connect();
+
+      setConnectedPersonalWallet(walletInstance);
+    },
+    [createWalletInstance],
+  );
+
+  const onChoosePersonalWallet = useCallback(
+    async (wallet: WalletConfig) => {
+      // if (wallet.id === LocalWallet.id) {
+      //   setShowLocalWalletFlow(true);
+      // } else {
+      connectPersonalWallet(wallet);
+      // }
+    },
+    [connectPersonalWallet],
+  );
+
+  useEffect(() => {
+    if (walletObj.config.personalWallets?.length === 1) {
+      onChoosePersonalWallet(walletObj.config.personalWallets[0]);
+    }
+  }, [onChoosePersonalWallet, walletObj.config.personalWallets]);
+
   useEffect(() => {
     (async () => {
       if (connectedPersonalWallet) {
@@ -74,33 +102,11 @@ export const SmartWalletFlow = ({
     }
   }, [connectSmartWallet, connectedPersonalWallet, mismatch]);
 
-  const connectPersonalWallet = useCallback(
-    async (wallet: WalletConfig) => {
-      setIsConnecting(true);
-      const walletInstance = createWalletInstance(wallet);
-      await walletInstance.connect();
-
-      setConnectedPersonalWallet(walletInstance);
-    },
-    [createWalletInstance],
-  );
-
   const onConnectedLocalWallet = async (wallet: WalletInstance) => {
     setIsConnecting(true);
 
     connectSmartWallet(wallet);
   };
-
-  const onChoosePersonalWallet = useCallback(
-    async (wallet: WalletConfig) => {
-      // if (wallet.id === LocalWallet.id) {
-      //   setShowLocalWalletFlow(true);
-      // } else {
-      connectPersonalWallet(wallet);
-      // }
-    },
-    [connectPersonalWallet],
-  );
 
   const onLocalWalletBackPress = () => {
     setShowLocalWalletFlow(false);

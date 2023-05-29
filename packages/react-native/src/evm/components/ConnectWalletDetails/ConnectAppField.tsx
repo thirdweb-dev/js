@@ -23,14 +23,16 @@ const ConnectAppField = () => {
   const [showQRCodeScan, setShowQRCodeScan] = useState(false);
 
   const getAppMeta = useCallback(() => {
-    const sessions = (
-      wallet as unknown as IWalletConnectReceiver
-    ).getActiveSessions();
-    if (Object.keys(sessions).length > 0) {
-      setAppMeta({
-        name: sessions[0].peer.metadata.name,
-        iconUrl: sessions[0].peer.metadata.icons[0],
-      });
+    if (wallet && "isWCReceiverEnabled" in wallet) {
+      const sessions = (
+        wallet as unknown as IWalletConnectReceiver
+      ).getActiveSessions();
+      if (Object.keys(sessions).length > 0) {
+        setAppMeta({
+          name: sessions[0].peer.metadata.name,
+          iconUrl: sessions[0].peer.metadata.icons[0],
+        });
+      }
     }
   }, [wallet]);
 

@@ -4,7 +4,7 @@ import {
   NFTMetadata,
   NFTMetadataInput,
 } from "../../../core/schema/nft";
-import { hasFunction } from "../../common/feature-detection";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
 import {
   fetchTokenMetadataForContract,
   getBaseUriFromBatch,

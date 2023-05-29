@@ -1,10 +1,8 @@
 import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
-import {
-  assertEnabled,
-  detectContractFeature,
-  hasFunction,
-} from "../../common/feature-detection";
+import { assertEnabled } from "../../common/feature-detection/assertEnabled";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
 import {
   ExtensionNotImplementedError,
   NotFoundError,

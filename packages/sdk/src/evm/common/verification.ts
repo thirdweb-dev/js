@@ -1,13 +1,9 @@
 import { ThirdwebSDK } from "../core/sdk";
-import {
-  getThirdwebContractAddress,
-  getEncodedConstructorParamsForThirdwebContract,
-  isContractDeployed,
-} from "./any-evm-utils";
-import {
-  extractConstructorParamsFromAbi,
-  resolveContractUriFromAddress,
-} from "./feature-detection";
+import { isContractDeployed } from "./any-evm-utils/isContractDeployed";
+import { getEncodedConstructorParamsForThirdwebContract } from "./any-evm-utils/getEncodedConstructorParamsForThirdwebContract";
+import { getThirdwebContractAddress } from "./any-evm-utils/getThirdwebContractAddress";
+import { extractConstructorParamsFromAbi } from "./feature-detection/extractConstructorParamsFromAbi";
+import { resolveContractUriFromAddress } from "./feature-detection/resolveContractUriFromAddress";
 import { fetchSourceFilesFromMetadata } from "./metadata-resolver";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Abi } from "../schema/contracts/custom";
@@ -15,7 +11,7 @@ import { ethers, utils } from "ethers";
 import { EtherscanResult, VerificationStatus } from "../types/verification";
 import fetch from "cross-fetch";
 import { ConstructorParamMap } from "../types/any-evm/deploy-data";
-import { getChainProvider } from "../constants";
+import { getChainProvider } from "../constants/urls";
 import invariant from "tiny-invariant";
 import { DEFAULT_API_KEY } from "../../core/constants/urls";
 
