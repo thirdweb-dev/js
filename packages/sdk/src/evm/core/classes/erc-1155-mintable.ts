@@ -1,5 +1,5 @@
 import { NFT } from "../../../core/schema/nft";
-import { detectContractFeature } from "../../common";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
 import { resolveAddress } from "../../common/ens";
 import { uploadOrExtractURI } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";

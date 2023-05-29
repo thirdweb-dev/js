@@ -1,6 +1,6 @@
 import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
-import { getRoleHash } from "../../common";
+import { getRoleHash } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
 import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";

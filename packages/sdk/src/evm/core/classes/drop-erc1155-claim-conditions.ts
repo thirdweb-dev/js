@@ -1,8 +1,6 @@
-import {
-  detectContractFeature,
-  hasFunction,
-  includesErrorMessage,
-} from "../../common";
+import { includesErrorMessage } from "../../common/error";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
 import {
   abstractContractModelToLegacy,
   abstractContractModelToNew,

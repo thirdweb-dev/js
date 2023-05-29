@@ -33,7 +33,7 @@ export async function generate(options: GenerateOptions) {
     const configAddresses = thirdwebConfig.contracts.map((contract) =>
       contract.address.toLowerCase(),
     );
-    const newAddresses = addresses.filter(
+    const newAddresses = Array.from(new Set(addresses)).filter(
       (address) => !configAddresses.includes(address.toLowerCase()),
     );
 

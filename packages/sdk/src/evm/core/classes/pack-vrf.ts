@@ -1,7 +1,7 @@
-import { fetchCurrencyMetadata } from "../../common";
+import { fetchCurrencyMetadata } from "../../common/currency";
 import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
-import { LINK_TOKEN_ADDRESS } from "../../constants";
+import { LINK_TOKEN_ADDRESS } from "../../constants/currency";
 import { FEATURE_PACK_VRF } from "../../constants/thirdweb-features";
 import { Address, AddressOrEns } from "../../schema/shared";
 import { SDKOptions } from "../../schema/sdk-options";

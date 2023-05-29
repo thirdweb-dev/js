@@ -3,7 +3,7 @@ import {
   QueryAllParams,
 } from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
-import { getRoleHash } from "../../common";
+import { getRoleHash } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
 import { ContractAppURI } from "../../core/classes/contract-appuri";

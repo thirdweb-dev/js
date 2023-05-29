@@ -145,11 +145,6 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
         const signedMessage = await wallet.signMessage(message);
 
         response = formatJsonRpcResult(id, signedMessage);
-        // const response = {
-        //   id,
-        //   jsonrpc: "2.0",
-        //   result: signedMessage,
-        // };
         break;
       // case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA:
       // case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V3:
@@ -166,9 +161,12 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
       case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
         const signer = await wallet.getSigner();
         const sendTransaction = request.params[0];
-        const { hash } = await signer.sendTransaction(sendTransaction);
 
-        response = formatJsonRpcResult(id, hash);
+        const tx = await signer.sendTransaction(sendTransaction);
+
+        const { transactionHash } = await tx.wait();
+
+        response = formatJsonRpcResult(id, transactionHash);
         break;
       case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
         const signerSign = await wallet.getSigner();
@@ -191,7 +189,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
         });
     }
 
-    this.#wcWallet?.respondSessionRequest({ topic, response });
+    return this.#wcWallet?.respondSessionRequest({ topic, response });
   }
 
   async rejectEIP155Request() {
@@ -316,6 +314,19 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
             this.emit("session_request", {
               topic: this.#session.topic,
               params: paramsCopy,
+              peer: {
+                metadata: this.#session.peer.metadata,
+              },
+              method: request.method,
+            });
+            return;
+          case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
+          case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
+            this.#activeRequestEvent = requestEvent;
+
+            this.emit("session_request", {
+              topic: this.#session.topic,
+              params: requestEvent.params,
               peer: {
                 metadata: this.#session.peer.metadata,
               },

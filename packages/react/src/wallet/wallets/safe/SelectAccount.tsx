@@ -24,6 +24,7 @@ import {
   useConnect,
   useConnectionStatus,
   useSupportedChains,
+  useSwitchChain,
   useWallet,
 } from "@thirdweb-dev/react-core";
 import { SafeSupportedChainsSet } from "@thirdweb-dev/wallets";
@@ -99,6 +100,8 @@ export const SelectAccount: React.FC<{
 
   const isValidAddress = utils.isAddress(safeAddress);
   const disableNetworkSelection = supportedChains.length === 1;
+
+  const switchChain = useSwitchChain();
 
   return (
     <>
@@ -317,7 +320,7 @@ export const SelectAccount: React.FC<{
                 setSwitchError(false);
                 setSwitchingNetwork(true);
                 try {
-                  await activeWallet.switchChain(safeChainId);
+                  await switchChain(safeChainId);
                 } catch (e) {
                   setSwitchError(true);
                 } finally {

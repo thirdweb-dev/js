@@ -1,9 +1,9 @@
 import { ethers } from "ethers";
 import {
-  checkVerificationStatus,
-  verify,
   verifyThirdwebPrebuiltImplementation,
-} from "../../common";
+  checkVerificationStatus,
+} from "../../common/verification";
+import { verify } from "../../common/verification";
 import { SDKOptions } from "../../schema/sdk-options";
 import { ConstructorParamMap } from "../../types/any-evm/deploy-data";
 import { NetworkInput } from "../types";

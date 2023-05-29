@@ -1,6 +1,4 @@
 import { INFRA_CONTRACTS_MAP } from "../common/infra-data";
-import type { CONTRACTS_MAP, PREBUILT_CONTRACTS_MAP } from "../contracts";
-import type { SmartContract } from "../contracts/smart-contract";
 import type { Chain, ChainSlug, ChainId } from "@thirdweb-dev/chains";
 import type {
   BigNumber,
@@ -24,35 +22,8 @@ type Equals<A1, A2> = (<A>() => A extends A2 ? 1 : 0) extends <
   : 0;
 
 // --- end utility types --- //
-export type PrebuiltContractsMap = typeof PREBUILT_CONTRACTS_MAP;
-export type PrebuiltContractsInstances = {
-  [K in keyof PrebuiltContractsMap]: Awaited<
-    ReturnType<(typeof PREBUILT_CONTRACTS_MAP)[K]["initialize"]>
-  >;
-};
-export type ContractsMap = typeof CONTRACTS_MAP;
-
-export type PrebuiltContractType = keyof PrebuiltContractsMap;
-export type ContractType = keyof ContractsMap;
-
 export type InfraContractsMap = typeof INFRA_CONTRACTS_MAP;
 export type InfraContractType = keyof InfraContractsMap;
-
-export type ValidContractInstance =
-  | Awaited<ReturnType<ContractsMap[keyof PrebuiltContractsMap]["initialize"]>>
-  | SmartContract;
-
-export type SchemaForPrebuiltContractType<
-  TContractType extends PrebuiltContractType,
-> = PrebuiltContractsMap[TContractType]["schema"];
-
-export type DeploySchemaForPrebuiltContractType<
-  TContractType extends PrebuiltContractType,
-> = SchemaForPrebuiltContractType<TContractType>["deploy"];
-
-export type ContractForPrebuiltContractType<
-  TContractType extends PrebuiltContractType,
-> = PrebuiltContractsInstances[TContractType];
 
 export type ChainOrRpc = ChainSlug | (string & {});
 export type ChainIdOrNumber = ChainId | (number & {});
