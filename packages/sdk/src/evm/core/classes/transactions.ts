@@ -4,7 +4,7 @@ import {
   fetchContractMetadataFromAddress,
   fetchSourceFilesFromMetadata,
 } from "../../common/metadata-resolver";
-import { isRouterContract } from "../../common/plugin";
+import { isRouterContract } from "../../common/plugin/isRouterContract";
 import { defaultGaslessSendFunction } from "../../common/transactions";
 import { isBrowser } from "../../common/utils";
 import { ChainId } from "../../constants/chains";

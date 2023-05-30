@@ -1,10 +1,6 @@
 import { fetchAndCachePublishedContractURI } from "../common/any-evm-utils/fetchAndCachePublishedContractURI";
 import { getPrebuiltInfo } from "../common/legacy";
 import { fetchAbiFromAddress } from "../common/metadata-resolver";
-import {
-  getCompositeABIfromRelease,
-  getCompositePluginABI,
-} from "../common/plugin";
 import { ALL_ROLES } from "../common/role";
 import type { NetworkInput } from "../core/types";
 import { getSignerAndProvider } from "../functions/getSignerAndProvider";
@@ -25,6 +21,8 @@ import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 import type { SmartContract as SmartContractType } from "./smart-contract";
+import { getCompositeABIfromRelease } from "../common/plugin/getCompositeABIfromRelease";
+import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
 
 type InitalizeParams = [
   network: NetworkInput,

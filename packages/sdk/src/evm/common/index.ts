@@ -76,10 +76,11 @@ export * from "./any-evm-utils/estimateGasForDeploy";
 export * from "./any-evm-utils/createTransactionBatches";
 
 export * from "./deploy";
-export {
-  convertToReadableQuantity,
-  fetchSnapshotEntryForAddress,
-} from "./claim-conditions";
+
+// claim-conditions
+export { convertToReadableQuantity } from "./claim-conditions/convertToReadableQuantity";
+export { fetchSnapshotEntryForAddress } from "./claim-conditions/fetchSnapshotEntryForAddress";
+
 export { getCachedAbiForContract } from "./abi";
 export * from "./ens";
 export { prepareGaslessRequest } from "./transactions";
