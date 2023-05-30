@@ -147,29 +147,24 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
       signer.provider,
     );
 
-    // See this test for more details:
-    // https://github.com/safe-global/safe-contracts/blob/9d188d3ef514fb7391466a6b5f010db4cc0f3c8b/test/handlers/CompatibilityFallbackHandler.spec.ts#L86-L94
     safeSigner.signMessage = async (message: string | ethers.utils.Bytes) => {
-      console.log("Signing message...");
-
-      console.log("Encoding message with safe...");
+      // Encoding the message in the format expected by Safe. See this test for more details:
+      // https://github.com/safe-global/safe-contracts/blob/9d188d3ef514fb7391466a6b5f010db4cc0f3c8b/test/handlers/CompatibilityFallbackHandler.spec.ts#L86-L94
       const encodedMessage = ethers.utils._TypedDataEncoder.hash(
         { verifyingContract: safeAddress, chainId: await this.getChainId() },
         EIP712_SAFE_MESSAGE_TYPE,
         { message: ethers.utils.hashMessage(message) },
       );
 
+      // Encode the request to the signMessage function of the SafeMessageLib
       const contract = new ethers.BaseContract(
         SIGN_MESSAGE_LIB_ADDRESS,
         SIGN_MESSAGE_LIB_ABI,
       );
-
-      console.log("Encoding function data...");
       const data = contract.interface.encodeFunctionData("signMessage", [
         encodedMessage,
       ]);
 
-      console.log(data);
       const to = SIGN_MESSAGE_LIB_ADDRESS;
       const value = "0";
       const operation = 1; // 1 indicates a delegatecall
@@ -179,7 +174,7 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
       const gasToken = ethers.constants.AddressZero;
       const refundReceiver = ethers.constants.AddressZero;
 
-      console.log("Creating transaction...");
+      // Create the safe transaction to approve the signature
       const safeTx = await safe.createTransaction({
         safeTransactionData: {
           to,
@@ -194,16 +189,32 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
         },
       });
 
-      console.log("Executing transaction...");
-      const txHash = await safe.getTransactionHash(safeTx);
-      const safeSignature = await safe.signTypedData(safeTx);
-      console.log(safeSignature);
-      await service.proposeTx(safe.getAddress(), txHash, safeTx, safeSignature);
+      // Sign and propose the safe transaction
+      const safeTxHash = await safe.getTransactionHash(safeTx);
+      const safeSignature = await safe.signTransactionHash(safeTxHash);
+      await service.proposeTx(
+        safe.getAddress(),
+        safeTxHash,
+        safeTx,
+        safeSignature,
+      );
 
-      const receipt = await signer.provider?.waitForTransaction(txHash);
-      console.log(receipt);
+      // Poll while we wait for the safe transaction to reach minimum confirmations
+      while (true) {
+        try {
+          const txDetails = await service.getSafeTxDetails(safeTxHash);
+          if (txDetails.transactionHash) {
+            console.log("Received tx details, waiting for transaction...");
+            console.log(txDetails.transactionHash);
+            await signer.provider!.waitForTransaction(
+              txDetails.transactionHash,
+            );
+            break;
+          }
+        } catch (e) {}
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+      }
 
-      console.log(encodedMessage);
       return encodedMessage;
     };
 
