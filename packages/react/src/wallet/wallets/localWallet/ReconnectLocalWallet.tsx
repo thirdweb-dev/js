@@ -18,12 +18,12 @@ import { CreateLocalWallet_Password } from "./CreateLocalWallet";
 import { OverrideConfirmation } from "./overrideConfirmation";
 import { ExportLocalWallet } from "./ExportLocalWallet";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
-import { LocalConfiguredWallet } from "./types";
+import { LocalWalletConfig } from "./types";
 
 type ReconnectLocalWalletProps = {
   onConnect: () => void;
   goBack: () => void;
-  localWallet: LocalConfiguredWallet;
+  localWallet: LocalWalletConfig;
   supportedWallets: WalletConfig[];
   renderBackButton: boolean;
 };
