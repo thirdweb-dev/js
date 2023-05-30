@@ -1,4 +1,4 @@
-import { calculateClaimCost } from "../../common/claim-conditions";
+import { calculateClaimCost } from "../../common/claim-conditions/calculateClaimCost";
 import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_CLAIM_CUSTOM } from "../../constants/erc1155-features";

@@ -1,4 +1,4 @@
-import { CustomChain } from "../types/any-evm/chains";
+import type { CustomChain } from "../types/any-evm/chains";
 
 export const ERROR_SUBSTRINGS = [
   "eip-155",

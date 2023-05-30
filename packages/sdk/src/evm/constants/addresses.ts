@@ -1,4 +1,4 @@
-import { PrebuiltContractType } from "../contracts";
+import type { PrebuiltContractType } from "../contracts";
 import { ChainId, SUPPORTED_CHAIN_ID, SUPPORTED_CHAIN_IDS } from "./chains";
 import { constants } from "ethers";
 
