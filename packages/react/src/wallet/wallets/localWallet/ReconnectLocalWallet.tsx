@@ -59,7 +59,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
 
     return (
       <ExportLocalWallet
-        localWallet={localWallet}
+        localWalletConfig={props.localWallet}
         onBack={() => {
           setShowExport(false);
         }}
@@ -78,10 +78,6 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
         meta={meta}
         onBackup={() => {
           setShowExport(true);
-        }}
-        onSkip={() => {
-          setShowBackupConfirmation(false);
-          setShowCreate(true);
         }}
         onBack={() => {
           setShowBackupConfirmation(false);
