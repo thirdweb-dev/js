@@ -55,10 +55,10 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         ? this.config.paymasterAPI
           ? this.config.paymasterAPI
           : getVerifyingPaymaster(
-            paymasterUrl,
-            entryPointAddress,
-            this.config.thirdwebApiKey,
-          )
+              paymasterUrl,
+              entryPointAddress,
+              this.config.thirdwebApiKey,
+            )
         : undefined,
       factoryAddress: config.factoryAddress,
       factoryInfo: config.factoryInfo || this.defaultFactoryInfo(),
@@ -134,7 +134,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  updateChains(chains: Chain[]): void { }
+  updateChains(chains: Chain[]): void {}
 
   /**
    * Execute a single transaction
@@ -228,15 +228,14 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       },
       getAccountAddress: async (factory, owner) => {
         try {
-          return factory.call("getAddress", [
+          return await factory.call("getAddress", [
             owner,
             ethers.utils.toUtf8Bytes(""),
           ]);
-        } catch {
+        } catch (e) {
+          console.log("Falling back to old factory");
           // TODO remove after a few versions
-          return factory.call("getAddress", [
-            owner
-          ]);
+          return factory.call("getAddress", [owner]);
         }
       },
     };
