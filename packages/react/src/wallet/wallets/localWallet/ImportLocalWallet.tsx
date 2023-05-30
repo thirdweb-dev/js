@@ -16,12 +16,12 @@ import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { FormFooter } from "../../../components/formElements";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 import { LocalWalletModalHeader } from "./common";
-import { LocalConfiguredWallet } from "./types";
+import { LocalWalletConfig } from "./types";
 
 export const ImportLocalWallet: React.FC<{
   onConnect: () => void;
   goBack: () => void;
-  localWalletConf: LocalConfiguredWallet;
+  localWalletConf: LocalWalletConfig;
 }> = (props) => {
   const [jsonString, setJsonString] = useState<string | undefined>();
   const { setLocalWallet, meta } = useLocalWalletInfo(props.localWalletConf);

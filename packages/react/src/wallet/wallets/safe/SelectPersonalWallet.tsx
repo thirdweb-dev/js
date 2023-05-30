@@ -14,11 +14,11 @@ import {
 import { iconSize, spacing } from "../../../design-system";
 import { WalletSelection } from "../../ConnectWallet/WalletSelector";
 import { WalletConfig } from "@thirdweb-dev/react-core";
-import { SafeConfiguredWallet } from "./types";
+import { SafeWalletConfig } from "./types";
 
 export const SelectpersonalWallet: React.FC<{
   onBack: () => void;
-  safeWallet: SafeConfiguredWallet;
+  safeWallet: SafeWalletConfig;
   personalWallets: WalletConfig[];
   selectWallet: (wallet: WalletConfig) => void;
   renderBackButton?: boolean;

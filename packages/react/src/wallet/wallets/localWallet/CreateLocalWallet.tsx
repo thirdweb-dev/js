@@ -15,12 +15,12 @@ import { Flex } from "../../../components/basic";
 import { TextDivider } from "../../../components/TextDivider";
 import { Spinner } from "../../../components/Spinner";
 import { spacing } from "../../../design-system";
-import { LocalConfiguredWallet } from "./types";
+import { LocalWalletConfig } from "./types";
 
 export const CreateLocalWallet_Password: React.FC<{
   onConnect: () => void;
   goBack: () => void;
-  localWalletConf: LocalConfiguredWallet;
+  localWalletConf: LocalWalletConfig;
   renderBackButton: boolean;
 }> = (props) => {
   const [password, setPassword] = useState("");
@@ -190,7 +190,7 @@ export const CreateLocalWallet_Password: React.FC<{
 export const CreateLocalWallet_Guest: React.FC<{
   onConnect: () => void;
   goBack: () => void;
-  localWallet: LocalConfiguredWallet;
+  localWallet: LocalWalletConfig;
 }> = (props) => {
   const { localWallet } = useLocalWalletInfo(props.localWallet);
   const { setConnectedWallet } = useWalletContext();
