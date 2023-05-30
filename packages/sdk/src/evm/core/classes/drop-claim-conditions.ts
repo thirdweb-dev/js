@@ -1,5 +1,5 @@
 import { AmountSchema } from "../../../core/schema/shared";
-import { includesErrorMessage } from "../../common";
+import { includesErrorMessage } from "../../common/error";
 import {
   abstractContractModelToLegacy,
   abstractContractModelToNew,
@@ -14,10 +14,8 @@ import {
 } from "../../common/claim-conditions";
 import { isNativeToken } from "../../common/currency";
 import { resolveAddress } from "../../common/ens";
-import {
-  detectContractFeature,
-  hasFunction,
-} from "../../common/feature-detection";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
 import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
 import { buildTransactionFunction } from "../../common/transactions";
 import { isNode } from "../../common/utils";

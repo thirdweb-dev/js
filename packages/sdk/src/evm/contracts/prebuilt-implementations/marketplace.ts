@@ -1,10 +1,11 @@
 import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
-import { ListingNotFoundError } from "../../common";
+import { ListingNotFoundError } from "../../common/error";
 import { isNativeToken } from "../../common/currency";
 import { mapOffer } from "../../common/marketplace";
 import { getRoleHash } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
-import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
+import { SUPPORTED_CHAIN_ID } from "../../constants/chains";
+import { NATIVE_TOKENS } from "../../constants/currency";
 import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";

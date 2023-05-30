@@ -19,6 +19,7 @@ import {
   useNetworkMismatch,
   useWalletContext,
   useWallet,
+  useSwitchChain,
 } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Flex } from "../../../components/basic";
@@ -55,6 +56,8 @@ export const SmartWalletConnecting: React.FC<{
 
   const { onConnect } = props;
   const connectStarted = useRef(false);
+
+  const switchChain = useSwitchChain();
 
   const handleConnect = useCallback(async () => {
     if (!activeWallet || !connectedChain || connectStarted.current) {
@@ -148,7 +151,7 @@ export const SmartWalletConnecting: React.FC<{
           setSwitchError(false);
           setSwitchingNetwork(true);
           try {
-            await activeWallet.switchChain(targetChain.chainId);
+            await switchChain(targetChain.chainId);
           } catch (e) {
             setSwitchError(true);
           } finally {

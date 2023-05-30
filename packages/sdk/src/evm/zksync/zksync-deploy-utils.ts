@@ -1,11 +1,9 @@
 import * as zk from "zksync-web3";
 import { twProxyArtifactZK } from "./temp-artifact/TWProxy";
-import {
-  convertParamValues,
-  extractConstructorParamsFromAbi,
-  extractFunctionParamsFromAbi,
-  fetchAndCacheDeployMetadata,
-} from "../common";
+import { fetchAndCacheDeployMetadata } from "../common/any-evm-utils/fetchAndCacheDeployMetadata";
+import { convertParamValues } from "../common/any-evm-utils/convertParamValues";
+import { extractConstructorParamsFromAbi } from "../common/feature-detection/extractConstructorParamsFromAbi";
+import { extractFunctionParamsFromAbi } from "../common/feature-detection/extractFunctionParamsFromAbi";
 import { BytesLike, Contract, Signer, ethers } from "ethers";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { DeployOptions } from "../types";

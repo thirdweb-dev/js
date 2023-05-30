@@ -47,6 +47,7 @@ export const ConnectWallet = ({
     setShowButtonSpinner(isWalletConnecting);
 
     if (!isWalletConnecting) {
+      setShowButtonSpinner(false);
       return;
     }
 
@@ -54,7 +55,7 @@ export const ConnectWallet = ({
       if (isWalletConnecting) {
         setShowButtonSpinner(false);
       }
-    }, 3000);
+    }, 5000);
 
     return () => {
       if (timeout) {

@@ -1,4 +1,4 @@
-import { AuctionHasNotEndedError } from "../../common";
+import { AuctionHasNotEndedError } from "../../common/error";
 import {
   cleanCurrencyAddress,
   fetchCurrencyMetadata,

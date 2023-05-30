@@ -1,4 +1,4 @@
-import { hasFunction } from "../../common";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
 import { resolveAddress } from "../../common/ens";
 import { MissingRoleError } from "../../common/error";
 import { getRoleHash, Role } from "../../common/role";
