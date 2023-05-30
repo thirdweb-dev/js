@@ -14,7 +14,10 @@ import {
 import styled from "@emotion/styled";
 import { WalletConfig } from "@thirdweb-dev/react-core";
 import { walletIds } from "@thirdweb-dev/wallets";
-import { SetModalConfigCtx } from "../../evm/providers/wallet-ui-states-provider";
+import {
+  ModalConfigCtx,
+  SetModalConfigCtx,
+} from "../../evm/providers/wallet-ui-states-provider";
 
 export const WalletSelector: React.FC<{
   walletConfigs: WalletConfig[];
@@ -81,6 +84,7 @@ export const WalletSelection: React.FC<{
   walletConfigs: WalletConfig[];
   selectWallet: (wallet: WalletConfig) => void;
 }> = (props) => {
+  const modalConfig = useContext(ModalConfigCtx);
   const setModalConfig = useContext(SetModalConfigCtx);
   const walletConfigs = props.walletConfigs
     // show the installed wallets first
@@ -117,6 +121,7 @@ export const WalletSelection: React.FC<{
           <li key={walletConfig.id}>
             {walletConfig.selectUI ? (
               <walletConfig.selectUI
+                theme={modalConfig.theme}
                 supportedWallets={props.walletConfigs}
                 onSelect={(data) => {
                   props.selectWallet(walletConfig);
