@@ -3,7 +3,7 @@ import { BytesLike } from "ethers";
 import invariant from "tiny-invariant";
 import { getChainProvider } from "../../constants/urls";
 import { ConstructorParamMap } from "../../types/any-evm/deploy-data";
-import { getMetadataForPlugins } from "../plugin";
+import { getMetadataForPlugins } from "../plugin/getMetadataForPlugins";
 import { DEFAULT_API_KEY } from "../../../core/constants/urls";
 import { fetchAndCachePublishedContractURI } from "./fetchAndCachePublishedContractURI";
 import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
