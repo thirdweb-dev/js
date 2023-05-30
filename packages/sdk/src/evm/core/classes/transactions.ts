@@ -26,6 +26,7 @@ import {
   Contract,
   ContractFactory,
   ContractTransaction,
+  ethers,
   providers,
   Signer,
   utils,
@@ -743,6 +744,14 @@ export class DeployTransaction extends TransactionContext {
     );
   }
 
+  getTarget(): string {
+    return ethers.constants.AddressZero;
+  }
+
+  getMethod(): string {
+    return "deploy";
+  }
+
   async sign(): Promise<string> {
     const populatedTx = await this.populateTransaction();
     return this.signer.signTransaction(populatedTx);
@@ -750,7 +759,7 @@ export class DeployTransaction extends TransactionContext {
 
   async simulate() {
     const populatedTx = await this.populateTransaction();
-    this.signer.call(populatedTx);
+    return this.signer.call(populatedTx);
   }
 
   async estimateGasLimit(): Promise<BigNumber> {
