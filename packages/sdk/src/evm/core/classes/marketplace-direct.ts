@@ -2,13 +2,11 @@ import {
   ListingNotFoundError,
   WrongListingTypeError,
 } from "../../common/error";
-import {
-  cleanCurrencyAddress,
-  fetchCurrencyValue,
-  isNativeToken,
-  normalizePriceValue,
-  setErc20Allowance,
-} from "../../common/currency";
+import { cleanCurrencyAddress } from "../../common/currency/cleanCurrencyAddress";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { isNativeToken } from "../../common/currency/isNativeToken";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
 import { resolveAddress } from "../../common/ens";
 import {
   handleTokenApproval,

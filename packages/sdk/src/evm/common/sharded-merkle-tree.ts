@@ -8,7 +8,7 @@ import {
 } from "../schema/contracts/common/snapshots";
 import { SnapshotInput } from "../types";
 import { convertQuantityToBigNumber } from "./claim-conditions";
-import { fetchCurrencyMetadata } from "./currency";
+import { fetchCurrencyMetadata } from "./currency/fetchCurrencyMetadata";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers, utils } from "ethers";
 import { MerkleTree } from "merkletreejs";
