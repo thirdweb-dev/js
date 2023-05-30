@@ -57,7 +57,7 @@
     },
     "@thirdweb-dev/contracts-js#build": {
       "outputs": ["dist/**", "factories/**", "src/**"],
-      "inputs": ["package.json"],
+      "inputs": ["package.json", "scripts/**"],
       "dependsOn": ["^build"]
     },
     "test": {
