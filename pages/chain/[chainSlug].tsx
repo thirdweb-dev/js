@@ -100,6 +100,15 @@ function useChainStats(
   });
 }
 
+const lineaTestnetPopularContracts = [
+  "thirdweb.eth/DropERC721",
+  "thirdweb.eth/Marketplace",
+  "thirdweb.eth/TokenERC721",
+  "thirdweb.eth/DropERC1155",
+  "thirdweb.eth/DropERC20",
+  "thirdweb.eth/TokenERC1155",
+];
+
 const ChainPage: ThirdwebNextPage = ({
   chain,
   category,
@@ -122,6 +131,8 @@ const ChainPage: ThirdwebNextPage = ({
     }
     return `linear-gradient(180deg, ${gradientColors[0]} 0%, ${gradientColors[1]} 100%)`;
   }, [gradientColors]);
+
+  const isLineaTestnet = chain?.chainId === 59140;
 
   return (
     <>
@@ -268,7 +279,10 @@ const ChainPage: ThirdwebNextPage = ({
               }
             >
               <SimpleGrid columns={{ base: 6, md: 12 }} gap={6} mt={2}>
-                {category.contracts.map((publishedContractId, idx) => {
+                {(isLineaTestnet
+                  ? lineaTestnetPopularContracts
+                  : category.contracts
+                ).map((publishedContractId, idx) => {
                   const [publisher, contractId] =
                     publishedContractId.split("/");
                   return (
