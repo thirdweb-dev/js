@@ -4262,17 +4262,29 @@
   dependencies:
     tslib "^2.4.0"
 
-"@tanstack/query-async-storage-persister@^4.19.1":
-  version "4.29.7"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-async-storage-persister/-/query-async-storage-persister-4.29.7.tgz#d855ae92d24a99c229eff4f637b5eafb8dff5108"
-  integrity sha512-W144qVR3+Tu6iPrRtMMBReKGCzpOHS6+nFMOwAS/f/V6BaUeYCuOuYzjEVP7UtF8uR2LHEME7ojOIc0sE76xwA==
+"@tanstack/query-async-storage-persister@^4.29.11":
+  version "4.29.11"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-async-storage-persister/-/query-async-storage-persister-4.29.11.tgz#0ef1df940ad0e9c28b9898cbb11be36f1aa3ec30"
+  integrity sha512-bsP2xAZ48zXuiOCDO9dcpUXaWL3qbQFDnQTpGESq/2zB76OT3ij0uVqSgc6bR6tyYcXXiJ00wdWmwid82nYvdg==
   dependencies:
-    "@tanstack/query-persist-client-core" "4.29.7"
+    "@tanstack/query-persist-client-core" "4.29.11"
+
+"@tanstack/query-core@4.29.11":
+  version "4.29.11"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.29.11.tgz#fa338f7d6897c6be5de6d8dabd603d9b78ee48c7"
+  integrity sha512-8C+hF6SFAb/TlFZyS9FItgNwrw4PMa7YeX+KQYe2ZAiEz6uzg6yIr+QBzPkUwZ/L0bXvGd1sufTm3wotoz+GwQ==
 
 "@tanstack/query-core@4.29.7":
   version "4.29.7"
   resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.29.7.tgz#9fe4587e23cb9566b937c518ffa44226041d388d"
   integrity sha512-GXG4b5hV2Loir+h2G+RXhJdoZhJLnrBWsuLB2r0qBRyhWuXq9w/dWxzvpP89H0UARlH6Mr9DiVj4SMtpkF/aUA==
+
+"@tanstack/query-persist-client-core@4.29.11":
+  version "4.29.11"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-persist-client-core/-/query-persist-client-core-4.29.11.tgz#96b4b83bead480eb37e024a59fd59bfd84b0545e"
+  integrity sha512-CSmMZchr+446r79NJ/pjD2yfjqNqFV7k8BnqOq4yTZvXsaQLEIn3tsaU45IsPgs4N7g9OBfPUPDdapSQvck2WQ==
+  dependencies:
+    "@tanstack/query-core" "4.29.11"
 
 "@tanstack/query-persist-client-core@4.29.7":
   version "4.29.7"
