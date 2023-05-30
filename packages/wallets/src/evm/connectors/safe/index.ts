@@ -112,6 +112,8 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
     // See this test for more details:
     // https://github.com/safe-global/safe-contracts/blob/9d188d3ef514fb7391466a6b5f010db4cc0f3c8b/test/handlers/CompatibilityFallbackHandler.spec.ts#L86-L94
     safeSigner.signMessage = async (message: string | ethers.utils.Bytes) => {
+      const SIGN_MESSAGE_LIB_ADDRESS =
+        "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2";
       const EIP712_SAFE_MESSAGE_TYPE = {
         SafeMessage: [{ type: "bytes", name: "message" }],
       };
@@ -124,7 +126,42 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
 
       const safeMessage = ethers.utils.arrayify(encodedMessage);
       const signature = await signer.signMessage(safeMessage);
-      return signature.replace(/1b$/, "1f").replace(/1c$/, "20");
+      const signatureHash = signature.replace(/1b$/, "1f").replace(/1c$/, "20");
+
+      const data = ethers.utils.defaultAbiCoder.encode(
+        ["signMessage(bytes32)"],
+        [signatureHash],
+      );
+
+      const to = SIGN_MESSAGE_LIB_ADDRESS;
+      const value = "0";
+      const operation = 1; // 1 indicates a delegatecall
+      const safeTxGas = 50000;
+      const baseGas = 50000;
+      const gasPrice = 0;
+      const gasToken = ethers.constants.AddressZero;
+      const refundReceiver = ethers.constants.AddressZero;
+      const nonce = await safe.getNonce();
+
+      // Submit the transaction
+      const tx = await safe.createTransaction({
+        safeTransactionData: {
+          to,
+          value,
+          operation,
+          data,
+          baseGas,
+          safeTxGas,
+          gasPrice,
+          gasToken,
+          refundReceiver,
+          nonce,
+        },
+      });
+
+      await safe.executeTransaction(tx);
+
+      return signatureHash;
     };
 
     // set the personal signer as "previous connector" so that we can re-connect to it later when disconnecting
