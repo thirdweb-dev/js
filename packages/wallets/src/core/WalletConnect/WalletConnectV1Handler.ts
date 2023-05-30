@@ -12,7 +12,7 @@ import {
   ISessionStorage,
   IWalletConnectSession,
 } from "@walletconnect/legacy-types";
-import { utils } from "ethers";
+import { ethers, utils } from "ethers";
 
 type WalletConnectV1WalletConfig = Omit<
   WalletConnectReceiverConfig,
@@ -99,27 +99,60 @@ export class WalletConnectV1Handler extends WalletConnectHandler {
   async approveEIP155Request(wallet: AbstractClientWallet): Promise<void> {
     const { params, method } = this.#activeCallRequest;
 
-    let result;
-    switch (method) {
-      case EIP155_SIGNING_METHODS.ETH_SIGN:
-        const ethMsg = params[1];
-        result = await wallet.signMessage(utils.arrayify(ethMsg));
-        break;
-      case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
-        const message = params[0];
-        result = await wallet.signMessage(utils.arrayify(message));
-        break;
-      case EIP155_SIGNING_METHODS.SWITCH_CHAIN: {
-        await wallet.switchChain(params[0].chainId);
-        result = params[0].chainId;
-        break;
-      }
-    }
+    try {
+      let result;
+      switch (method) {
+        case EIP155_SIGNING_METHODS.ETH_SIGN:
+          const ethMsg = params[1];
+          result = await wallet.signMessage(utils.arrayify(ethMsg));
+          break;
+        case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
+          const message = params[0];
+          result = await wallet.signMessage(utils.arrayify(message));
+          break;
+        case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
+          const chainId = await wallet.getChainId();
+          const signer = await wallet.getSigner();
 
-    this.#wcWallet?.approveRequest({
-      id: this.#activeCallRequest?.id,
-      result,
-    });
+          const tx = await signer.sendTransaction(
+            this.#parseTxParams(params, chainId),
+          );
+          const { transactionHash } = await tx.wait();
+          result = transactionHash;
+          break;
+        case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
+          const chainIdSign = await wallet.getChainId();
+          const signerSign = await wallet.getSigner();
+
+          const txParams = await signerSign.populateTransaction(
+            this.#parseTxParams(params, chainIdSign),
+          );
+          result = await signerSign.signTransaction(txParams);
+          break;
+        case EIP155_SIGNING_METHODS.SWITCH_CHAIN: {
+          await wallet.switchChain(params[0].chainId);
+          result = params[0].chainId;
+          break;
+        }
+      }
+
+      this.#wcWallet?.approveRequest({
+        id: this.#activeCallRequest?.id,
+        result,
+      });
+    } catch (error) {
+      let message;
+      if (error instanceof Error) {
+        message = error.message;
+      } else {
+        message = `Error executing the method: ${method}`;
+      }
+
+      this.#wcWallet?.rejectRequest({
+        id: this.#activeCallRequest?.id,
+        error: { message },
+      });
+    }
 
     return Promise.resolve();
   }
@@ -183,6 +216,27 @@ export class WalletConnectV1Handler extends WalletConnectHandler {
     this.#setupWalletConnectEventsListeners();
   }
 
+  #parseTxParams(params: any, chainId: number) {
+    let txParams: ethers.providers.TransactionRequest = {
+      from: params[0].from,
+      data: params[0].data,
+      chainId: chainId,
+    };
+    if (params[0].gas) {
+      txParams = {
+        ...txParams,
+        gasLimit: params[0].gas,
+      };
+    }
+    if (params[0].to) {
+      txParams = {
+        ...txParams,
+        to: params[0].to,
+      };
+    }
+    return txParams;
+  }
+
   #setupWalletConnectEventsListeners() {
     if (!this.#wcWallet) {
       throw new Error(
@@ -233,8 +287,25 @@ export class WalletConnectV1Handler extends WalletConnectHandler {
             },
             method: method,
           });
-          break;
+          return;
         case EIP155_SIGNING_METHODS.SWITCH_CHAIN:
+          const chain = params[0]; // {"chainId":"0x13881"}
+          const chainId = parseInt(chain.chainId, 16);
+          chain.chainId = chainId;
+
+          const paramsCopyWithChain = [...params];
+          paramsCopyWithChain[0] = chain;
+
+          this.emit("session_request", {
+            topic: params[1],
+            params: paramsCopyWithChain,
+            peer: {
+              metadata: this.#activeSessionPayload.params[0].peerMeta,
+            },
+            method: method,
+          });
+          return;
+
           this.emit("session_request", {
             topic: params[1],
             params: params,
@@ -243,7 +314,18 @@ export class WalletConnectV1Handler extends WalletConnectHandler {
             },
             method: method,
           });
-          break;
+          return;
+        case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
+        case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
+          this.emit("session_request", {
+            topic: method,
+            params: params,
+            peer: {
+              metadata: this.#activeSessionPayload.params[0].peerMeta,
+            },
+            method: method,
+          });
+          return;
         default:
           throw new Error(
             `WalletConnectV1Handler.call_request. Method not implemented: ${method}`,
