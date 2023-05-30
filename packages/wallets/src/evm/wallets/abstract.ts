@@ -105,6 +105,7 @@ export abstract class AbstractWallet
 
     // Check if the address is a smart contract wallet
     if (chainId !== undefined) {
+      console.log("Checking smart contract wallet...");
       try {
         const isValid = await checkContractWalletSignature(
           message,

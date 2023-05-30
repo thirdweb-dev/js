@@ -213,7 +213,8 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
         await new Promise((resolve) => setTimeout(resolve, 5000));
       }
 
-      return encodedMessage;
+      // For on-chain signatures, safe expects just "0x" as the signature
+      return "0x";
     };
 
     // set the personal signer as "previous connector" so that we can re-connect to it later when disconnecting
