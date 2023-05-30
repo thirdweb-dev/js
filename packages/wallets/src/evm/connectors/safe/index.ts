@@ -204,8 +204,6 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
         try {
           const txDetails = await service.getSafeTxDetails(safeTxHash);
           if (txDetails.transactionHash) {
-            console.log("Received tx details, waiting for transaction...");
-            console.log(txDetails.transactionHash);
             await signer.provider?.waitForTransaction(
               txDetails.transactionHash,
             );
