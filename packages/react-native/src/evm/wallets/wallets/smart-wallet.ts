@@ -8,15 +8,13 @@ import { DEFAULT_WALLETS } from "../../constants/wallets";
 import { createSyncStorage } from "../../../core/AsyncStorage";
 
 type SmartWalletConfig = {
-  personalWallets: WalletConfig[];
-} & SmartWalletConfigWallets;
+  personalWallets?: WalletConfig<any, any>[];
+} & Omit<SmartWalletConfigWallets, "chain">;
 
 export type SmartWalletObj = WalletConfig<SmartWallet, SmartWalletConfig>;
 
 export const smartWallet = (
-  config: Omit<SmartWalletConfig, "personalWallets"> & {
-    personalWallets?: WalletConfig[];
-  },
+  config: SmartWalletConfig,
 ): WalletConfig<SmartWallet, SmartWalletConfig> => {
   return {
     id: SmartWallet.id,

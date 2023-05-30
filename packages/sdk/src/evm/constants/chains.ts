@@ -1,4 +1,4 @@
-import { ChainInfo } from "../schema/shared";
+import type { ChainInfo } from "../schema/shared";
 import { defaultChains } from "@thirdweb-dev/chains";
 
 /**

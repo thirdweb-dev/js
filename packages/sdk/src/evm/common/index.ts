@@ -27,7 +27,22 @@ export * from "./feature-detection/detectContractFeature";
 export * from "./feature-detection/hasFunction";
 
 export * from "./version-checker";
-export * from "./currency";
+
+// currency
+export { isNativeToken } from "./currency/isNativeToken";
+export { cleanCurrencyAddress } from "./currency/cleanCurrencyAddress";
+export { normalizePriceValue } from "./currency/normalizePriceValue";
+export { fetchCurrencyMetadata } from "./currency/fetchCurrencyMetadata";
+export { fetchCurrencyValue } from "./currency/fetchCurrencyValue";
+export { setErc20Allowance } from "./currency/setErc20Allowance";
+export { approveErc20Allowance } from "./currency/approveErc20Allowance";
+export { hasERC20Allowance } from "./currency/hasERC20Allowance";
+export { normalizeAmount } from "./currency/normalizeAmount";
+export { toEther } from "./currency/toEther";
+export { toWei } from "./currency/toWei";
+export { toUnits } from "./currency/toUnits";
+export { toDisplayValue } from "./currency/toDisplayValue";
+
 export * from "./verification";
 
 // any-evm-utils
@@ -61,10 +76,11 @@ export * from "./any-evm-utils/estimateGasForDeploy";
 export * from "./any-evm-utils/createTransactionBatches";
 
 export * from "./deploy";
-export {
-  convertToReadableQuantity,
-  fetchSnapshotEntryForAddress,
-} from "./claim-conditions";
+
+// claim-conditions
+export { convertToReadableQuantity } from "./claim-conditions/convertToReadableQuantity";
+export { fetchSnapshotEntryForAddress } from "./claim-conditions/fetchSnapshotEntryForAddress";
+
 export { getCachedAbiForContract } from "./abi";
 export * from "./ens";
 export { prepareGaslessRequest } from "./transactions";

@@ -1,4 +1,3 @@
-import { fetchCurrencyValue } from "../../common/currency";
 import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import { ContractAppURI } from "../../core/classes/contract-appuri";
@@ -25,6 +24,7 @@ import type {
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, CallOverrides, Contract } from "ethers";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 
 /**
  * Create custom royalty splits to distribute funds.

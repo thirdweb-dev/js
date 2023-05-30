@@ -1,4 +1,4 @@
-import { fetchCurrencyValue } from "../../common/currency";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import { TokenHolderBalance } from "../../types";
 import { ContractEvents } from "./contract-events";
 import { ContractWrapper } from "./contract-wrapper";
