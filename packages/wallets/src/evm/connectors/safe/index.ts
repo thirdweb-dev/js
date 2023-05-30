@@ -60,10 +60,6 @@ const SIGN_MESSAGE_LIB_ABI = [
   },
 ];
 
-const EIP712_SAFE_MESSAGE_TYPE = {
-  SafeMessage: [{ type: "bytes", name: "message" }],
-};
-
 const __IS_SERVER__ = typeof window === "undefined";
 
 export const SafeSupportedChainsSet = new Set(
@@ -148,21 +144,13 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
     );
 
     safeSigner.signMessage = async (message: string | ethers.utils.Bytes) => {
-      // Encoding the message in the format expected by Safe. See this test for more details:
-      // https://github.com/safe-global/safe-contracts/blob/9d188d3ef514fb7391466a6b5f010db4cc0f3c8b/test/handlers/CompatibilityFallbackHandler.spec.ts#L86-L94
-      const encodedMessage = ethers.utils._TypedDataEncoder.hash(
-        { verifyingContract: safeAddress, chainId: await this.getChainId() },
-        EIP712_SAFE_MESSAGE_TYPE,
-        { message: ethers.utils.hashMessage(message) },
-      );
-
       // Encode the request to the signMessage function of the SafeMessageLib
       const contract = new ethers.BaseContract(
         SIGN_MESSAGE_LIB_ADDRESS,
         SIGN_MESSAGE_LIB_ABI,
       );
       const data = contract.interface.encodeFunctionData("signMessage", [
-        encodedMessage,
+        message,
       ]);
 
       const to = SIGN_MESSAGE_LIB_ADDRESS;
