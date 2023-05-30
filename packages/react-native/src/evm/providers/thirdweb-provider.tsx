@@ -31,7 +31,7 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
    * />
    * ```
    */
-  supportedWallets?: WalletConfig[];
+  supportedWallets?: WalletConfig<any, any>[];
 }
 
 /**
