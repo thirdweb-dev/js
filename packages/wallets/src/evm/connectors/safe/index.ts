@@ -26,6 +26,44 @@ const CHAIN_ID_TO_GNOSIS_SERVER_URL = {
   10: "https://safe-transaction-optimism.safe.global",
 } as const;
 
+const SIGN_MESSAGE_LIB_ADDRESS =
+  // "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2";
+  "0x58FCe385Ed16beB4BCE49c8DF34c7d6975807520";
+
+const SIGN_MESSAGE_LIB_ABI = [
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "bytes32",
+        name: "msgHash",
+        type: "bytes32",
+      },
+    ],
+    name: "SignMsg",
+    type: "event",
+  },
+  {
+    inputs: [{ internalType: "bytes", name: "message", type: "bytes" }],
+    name: "getMessageHash",
+    outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "bytes", name: "_data", type: "bytes" }],
+    name: "signMessage",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+];
+
+const EIP712_SAFE_MESSAGE_TYPE = {
+  SafeMessage: [{ type: "bytes", name: "message" }],
+};
+
 const __IS_SERVER__ = typeof window === "undefined";
 
 export const SafeSupportedChainsSet = new Set(
@@ -112,27 +150,26 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
     // See this test for more details:
     // https://github.com/safe-global/safe-contracts/blob/9d188d3ef514fb7391466a6b5f010db4cc0f3c8b/test/handlers/CompatibilityFallbackHandler.spec.ts#L86-L94
     safeSigner.signMessage = async (message: string | ethers.utils.Bytes) => {
-      const SIGN_MESSAGE_LIB_ADDRESS =
-        "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2";
-      const EIP712_SAFE_MESSAGE_TYPE = {
-        SafeMessage: [{ type: "bytes", name: "message" }],
-      };
+      console.log("Signing message...");
 
+      console.log("Encoding message with safe...");
       const encodedMessage = ethers.utils._TypedDataEncoder.hash(
         { verifyingContract: safeAddress, chainId: await this.getChainId() },
         EIP712_SAFE_MESSAGE_TYPE,
         { message: ethers.utils.hashMessage(message) },
       );
 
-      const safeMessage = ethers.utils.arrayify(encodedMessage);
-      const signature = await signer.signMessage(safeMessage);
-      const signatureHash = signature.replace(/1b$/, "1f").replace(/1c$/, "20");
-
-      const data = ethers.utils.defaultAbiCoder.encode(
-        ["signMessage(bytes32)"],
-        [signatureHash],
+      const contract = new ethers.BaseContract(
+        SIGN_MESSAGE_LIB_ADDRESS,
+        SIGN_MESSAGE_LIB_ABI,
       );
 
+      console.log("Encoding function data...");
+      const data = contract.interface.encodeFunctionData("signMessage", [
+        encodedMessage,
+      ]);
+
+      console.log(data);
       const to = SIGN_MESSAGE_LIB_ADDRESS;
       const value = "0";
       const operation = 1; // 1 indicates a delegatecall
@@ -141,10 +178,9 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
       const gasPrice = 0;
       const gasToken = ethers.constants.AddressZero;
       const refundReceiver = ethers.constants.AddressZero;
-      const nonce = await safe.getNonce();
 
-      // Submit the transaction
-      const tx = await safe.createTransaction({
+      console.log("Creating transaction...");
+      const safeTx = await safe.createTransaction({
         safeTransactionData: {
           to,
           value,
@@ -155,13 +191,20 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
           gasPrice,
           gasToken,
           refundReceiver,
-          nonce,
         },
       });
 
-      await safe.executeTransaction(tx);
+      console.log("Executing transaction...");
+      const txHash = await safe.getTransactionHash(safeTx);
+      const safeSignature = await safe.signTypedData(safeTx);
+      console.log(safeSignature);
+      await service.proposeTx(safe.getAddress(), txHash, safeTx, safeSignature);
 
-      return signatureHash;
+      const receipt = await signer.provider?.waitForTransaction(txHash);
+      console.log(receipt);
+
+      console.log(encodedMessage);
+      return encodedMessage;
     };
 
     // set the personal signer as "previous connector" so that we can re-connect to it later when disconnecting
