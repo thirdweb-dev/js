@@ -11,6 +11,7 @@ import {
   localWallet,
   metamaskWallet,
   safeWallet,
+  useWalletConfig,
   walletConnectV1,
 } from "@thirdweb-dev/react";
 import { DASHBOARD_THIRDWEB_API_KEY } from "constants/rpc";
@@ -18,7 +19,7 @@ import { useSupportedChains } from "hooks/chains/configureChains";
 import { useNativeColorMode } from "hooks/useNativeColorMode";
 import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton } from "lib/sdk";
-import { useMemo } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { ComponentWithChildren } from "types/component-with-children";
 
 export interface DashboardThirdwebProviderProps {
@@ -47,6 +48,9 @@ export const DashboardThirdwebProvider: ComponentWithChildren<
     };
   }, [chain]);
 
+  // TODO remove this once safe works
+  const [requiresAuth, setRequiresAuth] = useState(true);
+
   return (
     <ThirdwebProvider
       queryClient={queryClient}
@@ -71,12 +75,30 @@ export const DashboardThirdwebProvider: ComponentWithChildren<
         localWallet(),
       ]}
       storageInterface={StorageSingleton}
-      authConfig={{
-        domain: THIRDWEB_DOMAIN,
-        authUrl: `${THIRDWEB_API_HOST}/v1/auth`,
-      }}
+      authConfig={
+        requiresAuth
+          ? {
+              domain: THIRDWEB_DOMAIN,
+              authUrl: `${THIRDWEB_API_HOST}/v1/auth`,
+            }
+          : undefined
+      }
     >
+      <RequiresAuthProvider setState={setRequiresAuth} />
       <SolanaProvider>{children}</SolanaProvider>
     </ThirdwebProvider>
   );
+};
+
+const RequiresAuthProvider: React.FC<{
+  setState: Dispatch<SetStateAction<boolean>>;
+}> = ({ setState }) => {
+  const walletConfig = useWalletConfig();
+  useEffect(() => {
+    if (!walletConfig?.id) {
+      return;
+    }
+    setState(walletConfig.id !== "safe");
+  }, [setState, walletConfig?.id]);
+  return null;
 };

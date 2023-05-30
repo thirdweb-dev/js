@@ -16,6 +16,7 @@ import {
   useDisconnect,
   useLogin,
   useUser,
+  useWalletConfig,
 } from "@thirdweb-dev/react";
 import { IconLogo } from "components/logo";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -26,11 +27,18 @@ const TRACKING_CATEGORY = "notice";
 export const PrivacyNotice: React.FC = () => {
   const track = useTrack();
   const evmAddress = useAddress();
+  const walletId = useWalletConfig()?.id;
   const solAddress = useWallet().publicKey?.toBase58();
   const { isLoading, isLoggedIn } = useUser();
   const { login, isLoading: loginLoading } = useLogin();
   const disconnect = useDisconnect();
   const isMobile = useBreakpointValue({ base: true, md: false });
+
+  // if no wallet id or wallet id is safe then skip for now
+  // TODO remove this once safe works
+  if (!walletId || walletId === "safe") {
+    return null;
+  }
 
   if (!evmAddress && !solAddress) {
     // if neither solana or evm wallets are connected then don't show the notice
