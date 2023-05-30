@@ -22,12 +22,6 @@ import {
   SnapshotInfo,
 } from "../types";
 import {
-  approveErc20Allowance,
-  fetchCurrencyValue,
-  isNativeToken,
-  normalizePriceValue,
-} from "./currency";
-import {
   ShardedMerkleTree,
   SnapshotFormatVersion,
 } from "./sharded-merkle-tree";
@@ -44,6 +38,10 @@ import {
   providers,
   utils,
 } from "ethers";
+import { approveErc20Allowance } from "./currency/approveErc20Allowance";
+import { fetchCurrencyValue } from "./currency/fetchCurrencyValue";
+import { isNativeToken } from "./currency/isNativeToken";
+import { normalizePriceValue } from "./currency/normalizePriceValue";
 
 /**
  * Returns proofs and the overrides required for the transaction.

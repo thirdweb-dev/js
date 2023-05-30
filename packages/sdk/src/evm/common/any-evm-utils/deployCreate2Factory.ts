@@ -1,6 +1,6 @@
 import { BigNumber, Signer } from "ethers";
 import invariant from "tiny-invariant";
-import { toWei } from "../currency";
+import { toWei } from "../currency/toWei";
 import { DeployOptions } from "../../types";
 import { CUSTOM_GAS_FOR_CHAIN } from "../any-evm-constants";
 import { COMMON_FACTORY } from "./constants";

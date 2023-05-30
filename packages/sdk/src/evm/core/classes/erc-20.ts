@@ -1,10 +1,6 @@
 import { AmountSchema } from "../../../core/schema/shared";
 import { assertEnabled } from "../../common/feature-detection/assertEnabled";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
-import {
-  fetchCurrencyMetadata,
-  fetchCurrencyValue,
-} from "../../common/currency";
 import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import {
@@ -40,6 +36,8 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers, BigNumber, BigNumberish } from "ethers";
+import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 
 /**
  * Standard ERC20 Token functions

@@ -2,11 +2,6 @@ import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
 import { assertEnabled } from "../../common/feature-detection/assertEnabled";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
-import {
-  fetchCurrencyMetadata,
-  hasERC20Allowance,
-  normalizePriceValue,
-} from "../../common/currency";
 import { resolveAddress } from "../../common/ens";
 import { isTokenApprovedForTransfer } from "../../common/marketplace";
 import { uploadOrExtractURI } from "../../common/nft";
@@ -50,6 +45,9 @@ import {
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/Pack";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, ethers } from "ethers";
+import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
+import { hasERC20Allowance } from "../../common/currency/hasERC20Allowance";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 
 /**
  * Create lootboxes of NFTs with rarity based open mechanics.
