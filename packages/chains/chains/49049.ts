@@ -1,11 +1,18 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Floripa",
-  "title": "Wireshape Testnet Floripa",
+  "name": "Wireshape Floripa Testnet",
+  "title": "Wireshape Floripa Testnet",
   "chain": "Wireshape",
+  "icon": {
+    "url": "ipfs://QmTAyT3YrW2654CBRqRkec2cCznv6EBsbsRc2y6WQPbvXx",
+    "width": 1280,
+    "height": 1280,
+    "format": "png"
+  },
   "rpc": [
-    "https://floripa.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-floripa.wireshape.org"
+    "https://wireshape-floripa-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-floripa.wireshape.org",
+    "https://floripa.rpc.thirdweb.com"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -25,5 +32,5 @@ export default {
     }
   ],
   "testnet": true,
-  "slug": "floripa"
+  "slug": "wireshape-floripa-testnet"
 } as const satisfies Chain;
