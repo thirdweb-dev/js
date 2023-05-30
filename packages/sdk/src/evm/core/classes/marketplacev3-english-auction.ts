@@ -1,11 +1,4 @@
 import { AuctionHasNotEndedError } from "../../common/error";
-import {
-  cleanCurrencyAddress,
-  fetchCurrencyMetadata,
-  fetchCurrencyValue,
-  normalizePriceValue,
-  setErc20Allowance,
-} from "../../common/currency";
 import { resolveAddress } from "../../common/ens";
 import { getAllInBatches, handleTokenApproval } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
@@ -38,6 +31,11 @@ import { NewAuctionEvent } from "@thirdweb-dev/contracts-js/dist/declarations/sr
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers, constants } from "ethers";
 import invariant from "tiny-invariant";
+import { cleanCurrencyAddress } from "../../common/currency/cleanCurrencyAddress";
+import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
 
 /**
  * Handles auctions

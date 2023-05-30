@@ -1,4 +1,4 @@
-import { fetchCurrencyMetadata } from "../../common/currency";
+import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
 import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import { LINK_TOKEN_ADDRESS } from "../../constants/currency";

@@ -5,7 +5,6 @@ import {
   NFTMetadataInput,
   NFTMetadataOrUri,
 } from "../../../core/schema/nft";
-import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { getBaseUriFromBatch, uploadOrExtractURIs } from "../../common/nft";
 import { FEATURE_NFT_TIERED_DROP } from "../../constants/erc721-features";
 import { GenericRequest } from "../../schema/contracts/common";
@@ -30,6 +29,8 @@ import { BigNumberish, ethers } from "ethers";
 import invariant from "tiny-invariant";
 import { Transaction } from "./transactions";
 import { buildTransactionFunction } from "../../common/transactions";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
 
 export class Erc721TieredDrop implements DetectableFeature {
   featureName = FEATURE_NFT_TIERED_DROP.name;
