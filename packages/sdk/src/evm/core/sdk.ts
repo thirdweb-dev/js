@@ -1,4 +1,3 @@
-import { fetchCurrencyValue } from "../common/currency";
 import { getAllDetectedFeatureNames } from "../common/feature-detection/getAllDetectedFeatureNames";
 import { resolveAddress } from "../common/ens";
 import { getCompositePluginABI } from "../common/plugin";
@@ -40,6 +39,7 @@ import {
 } from "ethers";
 import { BaseContractForAddress } from "../types/contract";
 import { ContractVerifier } from "./classes/contract-verifier";
+import { fetchCurrencyValue } from "../common/currency/fetchCurrencyValue";
 
 /**
  * The main entry point for the thirdweb SDK

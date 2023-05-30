@@ -12,7 +12,7 @@ import {
   transformResultToClaimCondition,
   updateExistingClaimConditions,
 } from "../../common/claim-conditions";
-import { isNativeToken } from "../../common/currency";
+import { isNativeToken } from "../../common/currency/isNativeToken";
 import { resolveAddress } from "../../common/ens";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
 import { hasFunction } from "../../common/feature-detection/hasFunction";
