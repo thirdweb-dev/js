@@ -206,7 +206,7 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
           if (txDetails.transactionHash) {
             console.log("Received tx details, waiting for transaction...");
             console.log(txDetails.transactionHash);
-            await signer.provider!.waitForTransaction(
+            await signer.provider?.waitForTransaction(
               txDetails.transactionHash,
             );
             break;
