@@ -19,7 +19,6 @@ import {
 } from "../../evm/constants/wc";
 import { AbstractWallet } from "../../evm/wallets/abstract";
 import { formatJsonRpcResult } from "@walletconnect/jsonrpc-utils";
-import { AbstractClientWallet } from "../../evm";
 
 type WalletConnectV2WalletConfig = Omit<
   WalletConnectReceiverConfig,
@@ -131,7 +130,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
     });
   }
 
-  async approveEIP155Request(wallet: AbstractClientWallet) {
+  async approveEIP155Request(wallet: AbstractWallet) {
     if (!this.#activeRequestEvent) {
       return;
     }
