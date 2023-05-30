@@ -60,6 +60,7 @@ export class MagicConnector extends Connector<MagicConnectorOptions> {
     if (options.email) {
       await magic.auth.loginWithEmailOTP({
         email: options.email,
+        showUI: false,
       });
     }
 

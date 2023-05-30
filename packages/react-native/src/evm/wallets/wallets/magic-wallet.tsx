@@ -127,6 +127,7 @@ const MagicConnectionUI: React.FC<
   return (
     <Box minHeight={500}>
       <ActivityIndicator size="small" />
+      <TextInput placeholder="Enter the OTP sent to your email / phone number" />
     </Box>
   );
 };
