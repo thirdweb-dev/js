@@ -1,4 +1,5 @@
-import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_TOKEN_SIGNATURE_MINTABLE } from "../../constants/erc20-features";
 import type { TokenInitializer } from "../../contracts";

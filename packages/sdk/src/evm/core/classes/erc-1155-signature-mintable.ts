@@ -1,5 +1,6 @@
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
 import { hasFunction } from "../../common/feature-detection/hasFunction";
-import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { getPrebuiltInfo } from "../../common/legacy";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
