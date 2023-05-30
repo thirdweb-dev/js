@@ -38,6 +38,12 @@ export async function checkContractWalletSignature(
   const provider = new providers.JsonRpcProvider(chainIdToThirdwebRpc(chainId));
   const walletContract = new Contract(address, EIP1271_ABI, provider);
   const _hashMessage = utils.hashMessage(message);
+  console.log(
+    "Verifying hash message",
+    _hashMessage,
+    "and signature",
+    signature,
+  );
   try {
     const res = await walletContract.isValidSignature(_hashMessage, signature);
     return res === EIP1271_MAGICVALUE;
