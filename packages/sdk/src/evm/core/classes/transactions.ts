@@ -26,6 +26,7 @@ import {
   Contract,
   ContractFactory,
   ContractTransaction,
+  ethers,
   providers,
   Signer,
   utils,
@@ -741,6 +742,14 @@ export class DeployTransaction extends TransactionContext {
         this.factory.interface.encodeDeploy(this.args),
       ]),
     );
+  }
+
+  getTarget(): string {
+    return ethers.constants.AddressZero;
+  }
+
+  getMethod(): string {
+    return "deploy";
   }
 
   async sign(): Promise<string> {
