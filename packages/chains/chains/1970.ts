@@ -4,7 +4,7 @@ export default {
   "chain": "SCS",
   "rpc": [
     "https://super-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://superexchain.com:8545"
+    "https://rpc.scschain.com"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -12,7 +12,7 @@ export default {
     "symbol": "SCS",
     "decimals": 18
   },
-  "infoURL": "https://superexchain.com",
+  "infoURL": "https://scschain.com",
   "shortName": "scs",
   "chainId": 1970,
   "networkId": 1970,
@@ -25,7 +25,7 @@ export default {
   "explorers": [
     {
       "name": "blockscout",
-      "url": "https://scan.superexchain.com",
+      "url": "https://scan.scschain.com",
       "standard": "EIP3091"
     }
   ],
