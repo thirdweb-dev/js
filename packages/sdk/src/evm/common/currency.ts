@@ -7,8 +7,10 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Amount, Currency, CurrencyValue, Price } from "../types/currency";
 import { BaseERC20 } from "../types/eips";
 import type { IERC20, IERC20Metadata } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
-import ERC20MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC20Metadata.json";
+// @ts-expect-error
+import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.js";
+// @ts-expect-error
+import ERC20MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC20Metadata.js";
 import {
   BigNumber,
   BigNumberish,

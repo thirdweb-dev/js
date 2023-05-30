@@ -32,7 +32,8 @@ import {
   PermitRequestMessage,
 } from "../types";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
-import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
+// @ts-expect-error
+import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import fetch from "cross-fetch";
 import {

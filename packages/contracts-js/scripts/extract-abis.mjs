@@ -23,9 +23,18 @@ const main = () => {
     const contractJsonFile = readFileSync(join(libFolder, abiFile), "utf-8");
     const contractJson = JSON.parse(contractJsonFile);
     const abi = contractJson.abi;
+
+    const content = JSON.stringify(abi, null, 2);
+
+    // for backward compatibility
     writeFileSync(
       join(destinationFolder, basename(abiFile)),
-      JSON.stringify(abi, null, 2),
+      content,
+    );
+
+    writeFileSync(
+      join(destinationFolder, basename(abiFile).replace('.json', '.js')),
+      `export default ${content}`,
     );
   }
 };

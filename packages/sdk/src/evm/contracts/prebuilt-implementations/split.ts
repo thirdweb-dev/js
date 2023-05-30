@@ -22,7 +22,8 @@ import type {
   IERC20,
   Split as SplitContract,
 } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
+// @ts-expect-error
+import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, CallOverrides, Contract } from "ethers";
 

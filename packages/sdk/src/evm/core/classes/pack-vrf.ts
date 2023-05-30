@@ -12,8 +12,10 @@ import { UpdateableNetwork } from "../interfaces/contract";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20 } from "./erc-20";
 import type { ERC20, PackVRFDirect } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/ERC20.json";
-import IPackAbi from "@thirdweb-dev/contracts-js/dist/abis/IPackVRFDirect.json";
+// @ts-expect-error
+import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/ERC20.js";
+// @ts-expect-error
+import IPackAbi from "@thirdweb-dev/contracts-js/dist/abis/IPackVRFDirect.js";
 import {
   ITokenBundle,
   PackOpenedEvent,

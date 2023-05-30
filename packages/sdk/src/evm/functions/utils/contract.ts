@@ -1,6 +1,7 @@
 import { getContractTypeForRemoteName } from "../../contracts";
 import { ContractType } from "../../contracts";
-import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
+// @ts-expect-error
+import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.js";
 import { Contract, ethers } from "ethers";
 
 type ResolveContractTypeParams = {

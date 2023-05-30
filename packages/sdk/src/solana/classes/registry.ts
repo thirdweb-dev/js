@@ -1,5 +1,5 @@
 import { TWREGISTRY_PROGRAM_ID } from "../constants/addresses";
-import TWRegistryIDL from "../idl/tw_registry.json";
+import TWRegistryIDL from "../idl/tw_registry.js";
 import { Program } from "../programs/program";
 import { ProgramType } from "../programs/types";
 import { WalletAccount } from "../types/common";

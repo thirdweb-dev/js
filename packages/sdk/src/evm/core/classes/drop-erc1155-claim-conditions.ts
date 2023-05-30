@@ -46,7 +46,8 @@ import type {
   IDropSinglePhase_V1,
   IERC20,
 } from "@thirdweb-dev/contracts-js";
-import IERC20ABI from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
+// @ts-expect-error
+import IERC20ABI from "@thirdweb-dev/contracts-js/dist/abis/IERC20.js";
 import type { IDropClaimCondition_V2 } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC20_V2";
 import type { IClaimCondition } from "@thirdweb-dev/contracts-js/src/IDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";

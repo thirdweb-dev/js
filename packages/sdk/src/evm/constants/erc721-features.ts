@@ -1,19 +1,35 @@
-import IBurnableERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IBurnableERC721.json";
-import IClaimableERC721 from "@thirdweb-dev/contracts-js/dist/abis/IClaimableERC721.json";
-import DelayedRevealAbi from "@thirdweb-dev/contracts-js/dist/abis/IDelayedReveal.json";
-import IDrop from "@thirdweb-dev/contracts-js/dist/abis/IDrop.json";
-import DropERC721_V3Abi from "@thirdweb-dev/contracts-js/dist/abis/IDropERC721_V3.json";
-import IDropSinglePhase from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase.json";
-import IDropSinglePhaseV1 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase_V1.json";
-import Erc721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
-import Erc721EnumerableAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC721Enumerable.json";
-import Erc721SupplyAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC721Supply.json";
-import ILazyMintAbi from "@thirdweb-dev/contracts-js/dist/abis/ILazyMint.json";
-import IMintableERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableERC721.json";
-import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.json";
-import SignatureMintERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC721.json";
-import SignatureMintERC721_V1Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC721_V1.json";
-import TieredDropAbi from "@thirdweb-dev/contracts-js/dist/abis/LazyMintWithTier.json";
+// @ts-expect-error
+import IBurnableERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IBurnableERC721.js";
+// @ts-expect-error
+import IClaimableERC721 from "@thirdweb-dev/contracts-js/dist/abis/IClaimableERC721.js";
+// @ts-expect-error
+import DelayedRevealAbi from "@thirdweb-dev/contracts-js/dist/abis/IDelayedReveal.js";
+// @ts-expect-error
+import IDrop from "@thirdweb-dev/contracts-js/dist/abis/IDrop.js";
+// @ts-expect-error
+import DropERC721_V3Abi from "@thirdweb-dev/contracts-js/dist/abis/IDropERC721_V3.js";
+// @ts-expect-error
+import IDropSinglePhase from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase.js";
+// @ts-expect-error
+import IDropSinglePhaseV1 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase_V1.js";
+// @ts-expect-error
+import Erc721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.js";
+// @ts-expect-error
+import Erc721EnumerableAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC721Enumerable.js";
+// @ts-expect-error
+import Erc721SupplyAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC721Supply.js";
+// @ts-expect-error
+import ILazyMintAbi from "@thirdweb-dev/contracts-js/dist/abis/ILazyMint.js";
+// @ts-expect-error
+import IMintableERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableERC721.js";
+// @ts-expect-error
+import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.js";
+// @ts-expect-error
+import SignatureMintERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC721.js";
+// @ts-expect-error
+import SignatureMintERC721_V1Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC721_V1.js";
+// @ts-expect-error
+import TieredDropAbi from "@thirdweb-dev/contracts-js/dist/abis/LazyMintWithTier.js";
 
 export const FEATURE_NFT_BURNABLE = {
   name: "ERC721Burnable",
