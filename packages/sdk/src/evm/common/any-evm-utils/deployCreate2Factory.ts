@@ -54,10 +54,12 @@ export async function deployCreate2Factory(
     if (
       (await signer.provider.getBalance(deploymentInfo.signer)).lt(valueToSend)
     ) {
-      await signer.sendTransaction({
-        to: deploymentInfo.signer,
-        value: valueToSend,
-      });
+      await (
+        await signer.sendTransaction({
+          to: deploymentInfo.signer,
+          value: valueToSend,
+        })
+      ).wait();
     }
 
     // deploy
@@ -67,7 +69,9 @@ export async function deployCreate2Factory(
       );
 
       options?.notifier?.("deploying", "create2Factory");
-      await signer.provider.sendTransaction(deploymentInfo.transaction);
+      await (
+        await signer.provider.sendTransaction(deploymentInfo.transaction)
+      ).wait();
       options?.notifier?.("deployed", "create2Factory");
     } catch (err: any) {
       throw new Error(
