@@ -2,4 +2,4 @@
 "@thirdweb-dev/unity-js-bridge": patch
 ---
 
-smart wallet connector webgl
+add sideEffects: false in package.json

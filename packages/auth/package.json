@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/auth",
-  "version": "3.0.21",
+  "version": "3.0.22",
   "main": "dist/thirdweb-dev-auth.cjs.js",
   "module": "dist/thirdweb-dev-auth.esm.js",
   "browser": {
@@ -54,6 +54,7 @@
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/auth",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
+  "sideEffects": false,
   "scripts": {
     "build": "preconstruct build",
     "format": "prettier --write 'src/**/*'",
