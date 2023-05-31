@@ -1,5 +1,17 @@
 # @thirdweb-dev/chains
 
+## 0.1.19
+
+### Patch Changes
+
+- [#1065](https://github.com/thirdweb-dev/js/pull/1065) [`bd86661f`](https://github.com/thirdweb-dev/js/commit/bd86661f54ca2f1eb09cbae35c704dc79be1b63a) Thanks [@iketw](https://github.com/iketw)! - [Chains] update chains
+
+- [#1064](https://github.com/thirdweb-dev/js/pull/1064) [`c85810ee`](https://github.com/thirdweb-dev/js/commit/c85810eee318b10eee4ada61828adaa51f94ea6c) Thanks [@MananTank](https://github.com/MananTank)! - Do not cache signer in wallets
+
+- [#1047](https://github.com/thirdweb-dev/js/pull/1047) [`6fd10f94`](https://github.com/thirdweb-dev/js/commit/6fd10f94b469dc5659e2ff4ce92a5aff86f3c89d) Thanks [@MananTank](https://github.com/MananTank)! - Fix tree-shaking issue in `@thirdweb-dev/chains`
+
+- [#1090](https://github.com/thirdweb-dev/js/pull/1090) [`5f1e6abb`](https://github.com/thirdweb-dev/js/commit/5f1e6abb391f5c58dbdb207f569b3dd0b5d4729c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add base-goerli to default chains
+
 ## 0.1.18
 
 ### Patch Changes
