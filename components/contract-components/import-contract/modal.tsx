@@ -5,12 +5,13 @@ import {
   ModalContent,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { TransactionButton } from "components/buttons/TransactionButton";
+import { useChainId } from "@thirdweb-dev/react";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
 import { useRouter } from "next/router";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Heading, Text } from "tw-components";
+import { FiFilePlus } from "react-icons/fi";
+import { Button, Heading, Text } from "tw-components";
 
 type ImportModalProps = {
   isOpen: boolean;
@@ -19,7 +20,6 @@ type ImportModalProps = {
 
 const defaultValues = {
   contractAddress: "",
-  chainId: 1,
 };
 
 export const ImportModal: React.FC<ImportModalProps> = (props) => {
@@ -33,6 +33,9 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
   }, [form, props]);
 
   const router = useRouter();
+  const chainId = useChainId();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <Modal isOpen={props.isOpen} onClose={onClose} isCentered size="lg">
@@ -41,15 +44,18 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
         as="form"
         onSubmit={form.handleSubmit((data) => {
           router.push(
-            `/${data.chainId}/${data.contractAddress}?import=true&add=true`,
+            `/${chainId || 1}/${data.contractAddress}?import=true&add=true`,
           );
+          setIsLoading(true);
         })}
         p={8}
         rounded="lg"
       >
         <Flex gap={6} direction="column">
           <Flex gap={1} direction="column">
-            <Heading size="title.sm">Import Contract</Heading>
+            <Heading size="title.sm" mb={1}>
+              Import Contract
+            </Heading>
             <Text color="faded">
               Import an already deployed contract into thirdweb by entering a
               contract address below.
@@ -61,22 +67,17 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
               {...form.register("contractAddress")}
             />
 
-            <NetworkSelectorButton
-              onSwitchChain={(chain) => {
-                form.setValue("chainId", chain.chainId);
-              }}
-            />
+            <NetworkSelectorButton />
           </Flex>
-          <TransactionButton
+          <Button
             ml="auto"
+            leftIcon={<FiFilePlus />}
             colorScheme="primary"
             type="submit"
-            transactionCount={1}
-            isLoading={false}
-            isGasless
+            isLoading={isLoading}
           >
             Import
-          </TransactionButton>
+          </Button>
         </Flex>
       </ModalContent>
     </Modal>
