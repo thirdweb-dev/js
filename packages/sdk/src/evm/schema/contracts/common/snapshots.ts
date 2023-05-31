@@ -1,5 +1,5 @@
 import { QuantitySchema } from "../../../../core/schema/shared";
-import { AddressOrEnsSchema } from "../../shared";
+import { AddressOrEnsSchema } from "../../shared/AddressOrEnsSchema";
 import { ethers } from "ethers";
 import { z } from "zod";
 

@@ -1,4 +1,4 @@
-import { Address } from "../../schema/shared";
+import { Address } from "../../schema/shared/Address";
 import { Abi } from "../../schema/contracts/custom";
 import { fetchContractMetadataFromAddress } from "../metadata-resolver";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";

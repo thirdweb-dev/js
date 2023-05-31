@@ -4,7 +4,7 @@ import { isProvider, isSigner } from "../functions/getSignerAndProvider";
 import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
 import type { SDKOptions, SDKOptionsOutput } from "../schema/sdk-options";
 import { SDKOptionsSchema } from "../schema/sdk-options";
-import type { ChainInfo } from "../schema/shared";
+import type { ChainInfo } from "../schema/shared/ChainInfo";
 import { getChainRPC } from "@thirdweb-dev/chains";
 import type { Chain } from "@thirdweb-dev/chains";
 import { providers } from "ethers";
