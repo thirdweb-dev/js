@@ -22,6 +22,18 @@ const employees = [
     twitter: "AnshuTukol",
   },
   {
+    name: "Atharva Deosthale",
+    twitter: "athudeosthale",
+  },
+  {
+    name: "Atif Khan",
+    twitter: "atifkhan31",
+  },
+  {
+    name: "Avneesh Agarwal",
+    twitter: "avneesh0612",
+  },
+  {
     name: "Beverly Rivas",
     twitter: "BevRivas",
   },
@@ -31,11 +43,14 @@ const employees = [
   },
   {
     name: "Catty Berragan",
-    twitter: "CathalUK",
   },
   {
     name: "Ciara Nightingale",
     twitter: "ciaranightingal",
+  },
+  {
+    name: "Danny Friday",
+    twitter: "dannibles",
   },
   {
     name: "Devin Rattray",
@@ -48,6 +63,10 @@ const employees = [
   {
     name: "Erika Khanna",
     twitter: "heyerikakhanna",
+  },
+  {
+    name: "Farhan Khwaja",
+    twitter: "farhan_khwaja",
   },
   {
     name: "Jake Loo",
@@ -64,6 +83,10 @@ const employees = [
   {
     name: "Joaquim Verges",
     twitter: "joenrv",
+  },
+  {
+    name: "Joher Khan",
+    twitter: "joherkhan",
   },
   {
     name: "Jonas Daniels",
@@ -90,6 +113,10 @@ const employees = [
     twitter: "Marfuenn",
   },
   {
+    name: "Mike Shin",
+    twitter: "mdjshin",
+  },
+  {
     name: "Muhammad Meigooni",
     twitter: "mmeigooni",
   },
@@ -114,12 +141,23 @@ const employees = [
     twitter: "saminacodes",
   },
   {
+    name: "Sean Watase",
+    twitter: "watase_eth",
+  },
+  {
     name: "Sian Morton",
     twitter: "Sian_Morton",
   },
   {
+    name: "Tair Asim",
+    twitter: "tair",
+  },
+  {
+    name: "Waren Gonzaga",
+    twitter: "warengonzaga",
+  },
+  {
     name: "Yan Giet",
-    twitter: "ygiet",
   },
   {
     name: "Yash Kumar",
@@ -278,7 +316,7 @@ const About: ThirdwebNextPage = () => {
               {employees.map((employee) => (
                 <Flex key={employee.name} flexDir="column" gap={1}>
                   <Heading size="title.sm">{employee.name}</Heading>
-                  {employee.twitter ? (
+                  {employee.twitter && (
                     <TrackedLink
                       href={`https://twitter.com/${employee.twitter}`}
                       isExternal
@@ -289,15 +327,6 @@ const About: ThirdwebNextPage = () => {
                         @{employee.twitter}
                       </Text>
                     </TrackedLink>
-                  ) : (
-                    <Text
-                      size="label.md"
-                      color="gray.700"
-                      fontWeight={400}
-                      fontStyle="italic"
-                    >
-                      no twitter
-                    </Text>
                   )}
                 </Flex>
               ))}
