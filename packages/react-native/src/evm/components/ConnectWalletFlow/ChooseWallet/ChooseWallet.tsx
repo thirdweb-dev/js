@@ -12,7 +12,7 @@ export type ChooseWalletProps = {
   subHeaderText?: ReactNode | string;
   onChooseWallet: (wallet: WalletConfig<any, any>, data?: any) => void;
   onClose: () => void;
-  wallets: WalletConfig[];
+  wallets: WalletConfig<any, any>[];
   excludeWalletIds?: string[];
   showGuestWalletAsButton?: boolean;
 };

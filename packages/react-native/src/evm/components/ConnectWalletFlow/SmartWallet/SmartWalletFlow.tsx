@@ -18,6 +18,7 @@ import BaseButton from "../../base/BaseButton";
 import Text from "../../base/Text";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { useAppTheme } from "../../../styles/hooks";
+import { DEFAULT_WALLETS } from "../../../constants/wallets";
 
 export const SmartWalletFlow = ({
   onClose,
@@ -202,7 +203,7 @@ export const SmartWalletFlow = ({
           </Text>
         </Text>
       }
-      wallets={walletObj.config.personalWallets}
+      wallets={walletObj.config.personalWallets || DEFAULT_WALLETS}
       onChooseWallet={onChoosePersonalWallet}
       onClose={onClose}
     />

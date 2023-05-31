@@ -23,7 +23,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Flex } from "../../../components/basic";
-import { SmartConfiguredWallet } from "./types";
+import { SmartWalletConfig } from "./types";
 
 export const gnosisAddressPrefixToChainId = {
   eth: 1,
@@ -37,7 +37,7 @@ export const gnosisAddressPrefixToChainId = {
 export const SmartWalletConnecting: React.FC<{
   onBack: () => void;
   onConnect: () => void;
-  smartWallet: SmartConfiguredWallet;
+  smartWallet: SmartWalletConfig;
 }> = (props) => {
   const activeWallet = useWallet(); // personal wallet
 
