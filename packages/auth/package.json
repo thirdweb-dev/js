@@ -54,6 +54,7 @@
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/auth",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
+  "sideEffects": false,
   "scripts": {
     "build": "preconstruct build",
     "format": "prettier --write 'src/**/*'",

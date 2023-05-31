@@ -26,6 +26,7 @@
     "eslint-config-thirdweb": "workspace:*",
     "@thirdweb-dev/tsconfig": "workspace:*"
   },
+  "sideEffects": false,
   "scripts": {
     "format": "prettier --write 'src/**/*'",
     "lint": "eslint src/",
