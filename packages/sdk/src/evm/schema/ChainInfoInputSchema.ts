@@ -10,5 +10,3 @@ export const ChainInfoInputSchema = z.object({
   }),
   slug: z.string(),
 });
-
-export type ChainInfo = z.infer<typeof ChainInfoInputSchema>;

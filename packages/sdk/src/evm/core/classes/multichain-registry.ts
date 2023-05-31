@@ -1,6 +1,6 @@
 import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
-import { getMultichainRegistryAddress } from "../../constants/addresses";
+import { getMultichainRegistryAddress } from "../../constants/addresses/getMultichainRegistryAddress";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { PublishedMetadata } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";

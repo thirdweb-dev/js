@@ -14,7 +14,7 @@ import {
 import { getCompositePluginABI } from "../../common/plugin/getCompositePluginABI";
 import { buildTransactionFunction } from "../../common/transactions";
 import { isIncrementalVersion } from "../../common/version-checker";
-import { getContractPublisherAddress } from "../../constants/addresses";
+import { getContractPublisherAddress } from "../../constants/addresses/getContractPublisherAddress";
 import { getChainProvider } from "../../constants/urls";
 import {
   AbiFunction,

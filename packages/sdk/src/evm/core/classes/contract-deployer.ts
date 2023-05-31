@@ -17,7 +17,7 @@ import {
   buildTransactionFunction,
 } from "../../common/transactions";
 import { EventType } from "../../constants/events";
-import { getContractAddressByChainId } from "../../constants/addresses";
+import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
 import {
   EditionDropInitializer,
   EditionInitializer,

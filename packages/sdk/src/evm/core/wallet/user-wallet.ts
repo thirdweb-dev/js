@@ -1,7 +1,7 @@
 import { resolveAddress } from "../../common/ens";
 import { EIP712Domain, signTypedDataInternal } from "../../common/sign";
-import { LOCAL_NODE_PKEY } from "../../constants/addresses";
-import { ChainId } from "../../constants/chains";
+import { LOCAL_NODE_PKEY } from "../../constants/addresses/LOCAL_NODE_PKEY";
+import { ChainId } from "../../constants/chains/ChainId";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/currency";
 import { getChainProvider } from "../../constants/urls";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
