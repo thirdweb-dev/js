@@ -7,7 +7,6 @@ export enum PageId {
   // ---------------------------------------------------------------------------
   //  marketing / growth pages
   // ---------------------------------------------------------------------------
-
   // thirdweb.com
   Homepage = "homepage-landing",
 
@@ -72,7 +71,6 @@ export enum PageId {
   // ---------------------------------------------------------------------------
   //  general product pages
   // ---------------------------------------------------------------------------
-
   // thirdweb.com/dashboard
   Dashboard = "dashboard",
 
@@ -105,7 +103,6 @@ export enum PageId {
   // ---------------------------------------------------------------------------
   //  solutions pages
   // ---------------------------------------------------------------------------
-
   SolutionsCommerce = "solutions-commerce",
   SolutionsGaming = "solutions-gaming",
   SolutionsMinting = "solutions-minting",
@@ -113,19 +110,16 @@ export enum PageId {
   // ---------------------------------------------------------------------------
   //  network pages
   // ---------------------------------------------------------------------------
-
   NetworkSolana = "network-solana",
 
   // ---------------------------------------------------------------------------
   //  faucets pages
   // ---------------------------------------------------------------------------
-
   FaucetSolana = "faucet-solana",
 
   // ---------------------------------------------------------------------------
   //  "publish" product pages
   // ---------------------------------------------------------------------------
-
   // thirdweb.com/contracts/publish
   PublishMultiple = "publish-multiple-contracts",
 
@@ -143,7 +137,6 @@ export enum PageId {
   // ---------------------------------------------------------------------------
   //  "deploy" product pages
   // ---------------------------------------------------------------------------
-
   // thirdweb.com/contracts/deploy
   DeployMultiple = "deploy-multiple-contracts",
 
@@ -183,8 +176,8 @@ export enum PageId {
   BearMarketAirdrop = "bear-market-airdrop",
 
   // ---------------------------------------------------------------------------
-  //  learn pages
+  //  community pages
   // ---------------------------------------------------------------------------
-
   Learn = "learn",
+  Ambassadors = "ambassadors",
 }
