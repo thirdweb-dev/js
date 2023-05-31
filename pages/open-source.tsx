@@ -247,43 +247,47 @@ const OSS: ThirdwebNextPage = ({ contributors }: PageProps) => {
               </Flex>
             </Flex>
           </HomepageSection>
-          <HomepageSection pb={32}>
-            <Heading size="display.sm" mb={12}>
-              Top Community Contributors
-            </Heading>
-            <SimpleGrid
-              columns={{ base: 2, md: 4 }}
-              gap={8}
-              justifyContent="space-evenly"
-            >
-              {contributors.slice(0, 12).map((contributor) => (
-                <Flex
-                  key={contributor.login}
-                  flexDir="row"
-                  gap={2}
-                  alignItems="center"
-                >
-                  <MaskedAvatar src={contributor.avatar_url} />
-                  <Flex key={contributor.login} flexDir="column" gap={1}>
-                    <TrackedLink
-                      href={`https://github.com/${contributor.login}`}
-                      isExternal
-                      category="team"
-                      label={contributor.login}
-                    >
-                      <Heading size="title.sm">@{contributor.login}</Heading>
-                    </TrackedLink>
-                    <Text size="label.md" color="gray.500">
-                      {contributor.contributions}{" "}
-                      {contributor.contributions === 1
-                        ? "contribution"
-                        : "contributions"}
-                    </Text>
+
+          {contributors.length > 0 && (
+            <HomepageSection pb={32}>
+              <Heading size="display.sm" mb={12}>
+                Top Community Contributors
+              </Heading>
+              <SimpleGrid
+                columns={{ base: 2, md: 4 }}
+                gap={8}
+                justifyContent="space-evenly"
+              >
+                {contributors.slice(0, 12).map((contributor) => (
+                  <Flex
+                    key={contributor.login}
+                    flexDir="row"
+                    gap={2}
+                    alignItems="center"
+                  >
+                    <MaskedAvatar src={contributor.avatar_url} />
+                    <Flex key={contributor.login} flexDir="column" gap={1}>
+                      <TrackedLink
+                        href={`https://github.com/${contributor.login}`}
+                        isExternal
+                        category="team"
+                        label={contributor.login}
+                      >
+                        <Heading size="title.sm">@{contributor.login}</Heading>
+                      </TrackedLink>
+                      <Text size="label.md" color="gray.500">
+                        {contributor.contributions}{" "}
+                        {contributor.contributions === 1
+                          ? "contribution"
+                          : "contributions"}
+                      </Text>
+                    </Flex>
                   </Flex>
-                </Flex>
-              ))}
-            </SimpleGrid>
-          </HomepageSection>
+                ))}
+              </SimpleGrid>
+            </HomepageSection>
+          )}
+
           <HomepageSection pb={32}>
             <Heading size="display.sm" mb={12}>
               Repositories
@@ -312,6 +316,12 @@ export default OSS;
 export const getStaticProps: GetStaticProps = async () => {
   // Array of accounts to be tracked
   const accounts = ["thirdweb-dev", "thirdweb-example"];
+
+  if (!process.env.GITHUB_API_TOKEN) {
+    return {
+      props: { contributors: [] },
+    };
+  }
 
   const authHeader = {
     headers: {
