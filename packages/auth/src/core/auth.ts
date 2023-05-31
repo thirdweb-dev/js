@@ -54,7 +54,8 @@ export class ThirdwebAuth {
       nonce: parsedOptions?.nonce,
       expiration_time:
         parsedOptions?.expirationTime || new Date(Date.now() + 1000 * 60 * 5),
-      invalid_before: parsedOptions?.invalidBefore,
+      invalid_before:
+        parsedOptions?.invalidBefore || new Date(Date.now() - 1000 * 60 * 5),
       resources: parsedOptions?.resources,
     });
 
