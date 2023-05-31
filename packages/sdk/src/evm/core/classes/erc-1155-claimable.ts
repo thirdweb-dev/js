@@ -2,7 +2,7 @@ import { calculateClaimCost } from "../../common/claim-conditions/calculateClaim
 import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_CLAIM_CUSTOM } from "../../constants/erc1155-features";
-import { AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { ClaimOptions } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";

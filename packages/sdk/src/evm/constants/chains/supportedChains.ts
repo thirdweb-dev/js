@@ -1,4 +1,4 @@
-import type { ChainInfo } from "../../schema/shared";
+import type { ChainInfo } from "../../schema/shared/ChainInfo";
 import { defaultChains } from "@thirdweb-dev/chains";
 
 // @ts-expect-error

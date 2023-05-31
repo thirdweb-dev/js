@@ -1,6 +1,6 @@
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/currency";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
-import { Address } from "../../schema/shared";
+import { Address } from "../../schema/shared/Address";
 import { Price } from "../../types";
 import { BigNumberish, CallOverrides } from "ethers";
 import { approveErc20Allowance } from "../currency/approveErc20Allowance";

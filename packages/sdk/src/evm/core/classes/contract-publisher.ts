@@ -33,7 +33,7 @@ import {
   PublishedContractSchema,
 } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
-import { AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { NetworkInput, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { RPCConnectionHandler } from "./rpc-connection-handler";

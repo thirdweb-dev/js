@@ -18,7 +18,8 @@ import { signTypedDataInternal } from "../../common/sign";
 import { isBrowser } from "../../common/utils";
 import { ChainId } from "../../constants/chains/ChainId";
 import { EventType } from "../../constants/events";
-import { Address, CallOverrideSchema } from "../../schema/shared";
+import { Address } from "../../schema/shared/Address";
+import { CallOverrideSchema } from "../../schema/shared/CallOverrideSchema";
 import { AbiSchema, ContractSource } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import {

@@ -11,7 +11,8 @@ import {
   FEATURE_TOKEN_SIGNATURE_MINTABLE,
   FEATURE_TOKEN_CLAIM_CONDITIONS_V2,
 } from "../../constants/erc20-features";
-import { Address, AddressOrEns } from "../../schema/shared";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { TokenMintInput } from "../../schema/tokens/token";
 import { Currency, CurrencyValue, Amount, ClaimOptions } from "../../types";
 import {

@@ -3,7 +3,7 @@ import {
   CommonNFTOutput,
   NFTInputOrUriSchema,
 } from "../../../core/schema/nft";
-import { BigNumberishSchema, BigNumberSchema } from "../shared";
+import { BigNumberishSchema, BigNumberSchema } from "../shared/BigNumberSchema";
 import { z } from "zod";
 
 /**

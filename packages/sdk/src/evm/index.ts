@@ -12,7 +12,17 @@ export * from "./schema/tokens/common/properties";
 export * from "./schema/tokens/token";
 export * from "./schema/tokens/edition";
 export * from "./schema/contracts/common";
-export * from "./schema/shared";
+
+// shared
+export * from "./schema/shared/BigNumberSchema";
+export * from "./schema/shared/AddressSchema";
+export * from "./schema/shared/AddressOrEnsSchema";
+export * from "./schema/shared/RawDateSchema";
+export * from "./schema/shared/CallOverrideSchema";
+export * from "./schema/shared/ChainInfo";
+export * from "./schema/shared/Ens";
+export * from "./schema/shared/Address";
+
 export type {
   SDKOptions,
   SDKOptionsSchema,

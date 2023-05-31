@@ -36,7 +36,8 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../../contracts";
-import { Address, AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { Address } from "../../schema/shared/Address";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
   DeployEvent,
