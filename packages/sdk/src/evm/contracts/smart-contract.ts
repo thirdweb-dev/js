@@ -52,7 +52,7 @@ import type {
   DirectListingsLogic,
   EnglishAuctionsLogic,
   OffersLogic,
-  BaseAccountFactory,
+  IAccountFactory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides } from "ethers";
@@ -296,7 +296,7 @@ export class SmartContract<
   }
 
   // TODO: documentation comments.
-  get smartWalletFactory(): SmartWalletFactory<BaseAccountFactory> {
+  get smartWalletFactory(): SmartWalletFactory<IAccountFactory> {
     return assertEnabled(
       this.detectSmartWalletFactory(),
       FEATURE_SMART_WALLET_FACTORY,
@@ -534,7 +534,7 @@ export class SmartContract<
 
   private detectSmartWalletFactory() {
     if (
-      detectContractFeature<BaseAccountFactory>(this.contractWrapper, "SmartWalletFactory")
+      detectContractFeature<IAccountFactory>(this.contractWrapper, FEATURE_SMART_WALLET_FACTORY.name)
     ) {
       return new SmartWalletFactory(this.contractWrapper);
     }

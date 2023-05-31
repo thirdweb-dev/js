@@ -1,4 +1,4 @@
-import type { BaseAccountFactory } from "@thirdweb-dev/contracts-js";
+import type { IAccountFactory } from "@thirdweb-dev/contracts-js";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { FEATURE_SMART_WALLET_FACTORY } from "../../constants/thirdweb-features";
 
@@ -13,16 +13,16 @@ import { TransactionResultWithAddress } from "../types";
 import { BytesLike, ethers } from "ethers";
 import { AccountCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/AccountFactory";
 
-export class SmartWalletFactory<TContract extends BaseAccountFactory> implements DetectableFeature {
+export class SmartWalletFactory<TContract extends IAccountFactory> implements DetectableFeature {
 
   featureName = FEATURE_SMART_WALLET_FACTORY.name;
-  private contractWrapper: ContractWrapper<BaseAccountFactory>;
+  private contractWrapper: ContractWrapper<IAccountFactory>;
 
   // utilities
-  public events: ContractEvents<BaseAccountFactory>;
-  public interceptor: ContractInterceptor<BaseAccountFactory>;
-  public encoder: ContractEncoder<BaseAccountFactory>;
-  public estimator: GasCostEstimator<BaseAccountFactory>;
+  public events: ContractEvents<IAccountFactory>;
+  public interceptor: ContractInterceptor<IAccountFactory>;
+  public encoder: ContractEncoder<IAccountFactory>;
+  public estimator: GasCostEstimator<IAccountFactory>;
 
   constructor(
     contractWrapper: ContractWrapper<TContract>,
