@@ -218,6 +218,12 @@ const WALLETS = [
 
 const GUIDES = [
   {
+    title: "How to Add a Connect Wallet Button to Your Website",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w2000/2023/03/Add-a-connect-wallet-button-to-your-website-2.png",
+    link: "https://blog.thirdweb.com/guides/add-connectwallet-to-your-website/",
+  },
+  {
     title: "How to use ERC-4337 Smart Wallets",
     image:
       "https://blog.thirdweb.com/content/images/size/w2000/2023/05/How-to-use-smart-wallet-.png",
@@ -252,7 +258,7 @@ const WalletSDK: ThirdwebNextPage = () => {
       seo={{
         title: "Wallet SDK: The Complete Web3 Wallet Toolkit",
         description:
-          "Build any web3 wallet experience with thirdweb’s Wallet SDK for Ethereum. Connect Wallet UI, ERC-4337 smart accounts, local wallets, and more.",
+          "Build any web3 wallet experience with thirdweb's Wallet SDK for Ethereum. Connect Wallet UI, ERC-4337 smart accounts, local wallets, and more.",
         openGraph: {
           images: [
             {
