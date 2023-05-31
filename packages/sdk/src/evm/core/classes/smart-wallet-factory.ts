@@ -2,16 +2,15 @@ import type { IAccountFactory } from "@thirdweb-dev/contracts-js";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { FEATURE_SMART_WALLET_FACTORY } from "../../constants/thirdweb-features";
 
-import { ContractEncoder } from "./contract-encoder";
 import { ContractEvents } from "./contract-events";
-import { ContractInterceptor } from "./contract-interceptor";
 import { ContractWrapper } from "./contract-wrapper";
-import { GasCostEstimator } from "./gas-cost-estimator";
 import { buildTransactionFunction } from "../../common/transactions";
 import { Transaction } from "./transactions";
 import { TransactionResultWithAddress } from "../types";
 import { BytesLike, ethers } from "ethers";
 import { AccountCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/AccountFactory";
+import { AccountEvent } from "../../types";
+import { isContractDeployed } from "../../common";
 
 export class SmartWalletFactory<TContract extends IAccountFactory> implements DetectableFeature {
 
@@ -20,9 +19,6 @@ export class SmartWalletFactory<TContract extends IAccountFactory> implements De
 
   // utilities
   public events: ContractEvents<IAccountFactory>;
-  public interceptor: ContractInterceptor<IAccountFactory>;
-  public encoder: ContractEncoder<IAccountFactory>;
-  public estimator: GasCostEstimator<IAccountFactory>;
 
   constructor(
     contractWrapper: ContractWrapper<TContract>,
@@ -30,9 +26,6 @@ export class SmartWalletFactory<TContract extends IAccountFactory> implements De
     this.contractWrapper = contractWrapper;
     
     this.events = new ContractEvents(this.contractWrapper);
-		this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.encoder = new ContractEncoder(this.contractWrapper);
-    this.estimator = new GasCostEstimator(this.contractWrapper);
   }
 
   getAddress(): string {
@@ -44,7 +37,7 @@ export class SmartWalletFactory<TContract extends IAccountFactory> implements De
    *******************************/
 
 	// TODO: Write documentation for function.
-	public async getWalletForAdmin(admin: string, extraData?: BytesLike | ""): Promise<string> {
+	public async predictWalletAddress(admin: string, extraData?: BytesLike): Promise<string> {
 		let data: BytesLike = ethers.utils.toUtf8Bytes("");
 		if(extraData) {
 			data = extraData;
@@ -53,7 +46,7 @@ export class SmartWalletFactory<TContract extends IAccountFactory> implements De
 	}
 
 	// TODO: Write documentation for function.
-	public async getSignersOfWallet(wallet: string): Promise<string[]> {
+	public async getAssociatedSigners(wallet: string): Promise<string[]> {
 		return this.contractWrapper.readContract.getSignersOfAccount(wallet);
 	}
 
@@ -61,6 +54,27 @@ export class SmartWalletFactory<TContract extends IAccountFactory> implements De
 	public async getAssociatedWallets(signer: string): Promise<string[]> {
 		return this.contractWrapper.readContract.getAccountsOfSigner(signer);
 	}
+
+  // TODO: Write documentation for function.
+  public async getAllWallets(): Promise<AccountEvent[]> {
+    const filter = {
+      fromBlock: 0,
+      toBlock: "latest",
+    }
+
+    const events = await this.events.getEvents("AccountCreated", filter);
+    console.log(events);
+
+    return events.map((event) => {
+      return { account: event.data.account, admin: event.data.accountAdmin };
+    });
+  }
+
+  // TODO: Write documentation for function.
+  public async isWalletDeployed(admin: string, extraData?: BytesLike): Promise<boolean> {
+    const addr = await this.predictWalletAddress(admin, extraData);
+    return isContractDeployed(addr, this.contractWrapper.getProvider());
+  }
 
 	/*********************************
    * WRITE FUNCTIONS
@@ -70,8 +84,13 @@ export class SmartWalletFactory<TContract extends IAccountFactory> implements De
 	createWallet = buildTransactionFunction(
 		async (
 			walletAdmin: string,
-			extraData?: BytesLike | "",
+			extraData?: BytesLike,
 		): Promise<Transaction<TransactionResultWithAddress>> => {
+
+      if(await this.isWalletDeployed(walletAdmin, extraData)) {
+        throw new Error(`Wallet already deployed for admin: ${walletAdmin}`);
+      }
+
 
 			let data: BytesLike = ethers.utils.toUtf8Bytes("");
 			if(extraData) {
