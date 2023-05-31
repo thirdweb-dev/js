@@ -26,9 +26,30 @@ const CHAIN_ID_TO_GNOSIS_SERVER_URL = {
   10: "https://safe-transaction-optimism.safe.global",
 } as const;
 
-const SIGN_MESSAGE_LIB_ADDRESS =
-  // "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2";
-  "0x58FCe385Ed16beB4BCE49c8DF34c7d6975807520";
+const CHAIN_ID_TO_SIGN_MESSAGE_LIB_ADDRESS = {
+  // mainnet
+  1: "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+  // polygon
+  137: "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+  // bsc
+  56: "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+  // arbitrum
+  42161: "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+  // aurora
+  1313161554: "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+  // avalanche
+  43114: "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+  // optimism
+  10: "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+  // base goerli
+  84531: "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+  // celo
+  42220: "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+  // goerli
+  5: "0x58FCe385Ed16beB4BCE49c8DF34c7d6975807520",
+  // gnosis chain
+  100: "0x58FCe385Ed16beB4BCE49c8DF34c7d6975807520",
+} as const;
 
 const SIGN_MESSAGE_LIB_ABI = [
   {
@@ -122,8 +143,10 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
     }
 
     const serverUrl = CHAIN_ID_TO_GNOSIS_SERVER_URL[safeChainId];
+    const signMessageLibAddress =
+      CHAIN_ID_TO_SIGN_MESSAGE_LIB_ADDRESS[safeChainId];
 
-    if (!serverUrl) {
+    if (!serverUrl || !signMessageLibAddress) {
       throw new Error("Chain not supported");
     }
 
@@ -146,14 +169,14 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
     safeSigner.signMessage = async (message: string | ethers.utils.Bytes) => {
       // Encode the request to the signMessage function of the SafeMessageLib
       const contract = new ethers.BaseContract(
-        SIGN_MESSAGE_LIB_ADDRESS,
+        signMessageLibAddress,
         SIGN_MESSAGE_LIB_ABI,
       );
       const data = contract.interface.encodeFunctionData("signMessage", [
         ethers.utils.hashMessage(message),
       ]);
 
-      const to = SIGN_MESSAGE_LIB_ADDRESS;
+      const to = signMessageLibAddress;
       const value = "0";
       const operation = 1; // 1 indicates a delegatecall
       const safeTxGas = 50000;
