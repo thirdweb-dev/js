@@ -3,7 +3,7 @@ import { resolveAddress } from "../common/ens";
 import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
 import { createStorage } from "../common/storage";
 import { getChainProvider, isChainConfig } from "../constants/urls";
-import { setSupportedChains } from "../constants/chains";
+import { setSupportedChains } from "../constants/chains/supportedChains";
 import { NATIVE_TOKEN_ADDRESS } from "../constants/currency";
 import {
   PREBUILT_CONTRACTS_MAP,

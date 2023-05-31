@@ -6,7 +6,7 @@ import { resolveAddress } from "../../common/ens";
 import { getAllInBatches, handleTokenApproval } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
-import { SUPPORTED_CHAIN_ID } from "../../constants/chains";
+import { SUPPORTED_CHAIN_ID } from "../../constants/chains/SUPPORTED_CHAIN_ID";
 import { NATIVE_TOKENS } from "../../constants/currency";
 import { FEATURE_OFFERS } from "../../constants/thirdweb-features";
 import { Status } from "../../enums";

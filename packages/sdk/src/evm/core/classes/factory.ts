@@ -1,10 +1,6 @@
 import { getDeployArguments } from "../../common/deploy";
 import { buildTransactionFunction } from "../../common/transactions";
 import {
-  getDefaultTrustedForwarders,
-  getApprovedImplementation,
-} from "../../constants/addresses";
-import {
   EditionDropInitializer,
   EditionInitializer,
   getContractName,
@@ -45,6 +41,8 @@ import {
 import { EventEmitter } from "eventemitter3";
 import invariant from "tiny-invariant";
 import { z } from "zod";
+import { getApprovedImplementation } from "../../constants/addresses/getApprovedImplementation";
+import { getDefaultTrustedForwarders } from "../../constants/addresses/getDefaultTrustedForwarders";
 
 /**
  * @internal
