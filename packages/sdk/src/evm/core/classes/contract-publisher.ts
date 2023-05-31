@@ -11,7 +11,7 @@ import {
   fetchSourceFilesFromMetadata,
   fetchContractMetadata,
 } from "../../common/metadata-resolver";
-import { getCompositePluginABI } from "../../common/plugin";
+import { getCompositePluginABI } from "../../common/plugin/getCompositePluginABI";
 import { buildTransactionFunction } from "../../common/transactions";
 import { isIncrementalVersion } from "../../common/version-checker";
 import { getContractPublisherAddress } from "../../constants/addresses";

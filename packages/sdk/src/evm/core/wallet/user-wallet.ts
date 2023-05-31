@@ -1,8 +1,3 @@
-import {
-  fetchCurrencyValue,
-  isNativeToken,
-  normalizePriceValue,
-} from "../../common/currency";
 import { resolveAddress } from "../../common/ens";
 import { EIP712Domain, signTypedDataInternal } from "../../common/sign";
 import { LOCAL_NODE_PKEY } from "../../constants/addresses";
@@ -21,6 +16,9 @@ import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.js";
 import { BigNumber, ethers, providers, Signer, TypedDataField } from "ethers";
 import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { isNativeToken } from "../../common/currency/isNativeToken";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 
 /**
  *

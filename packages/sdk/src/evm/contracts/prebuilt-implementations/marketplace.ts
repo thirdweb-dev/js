@@ -1,6 +1,6 @@
 import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
 import { ListingNotFoundError } from "../../common/error";
-import { isNativeToken } from "../../common/currency";
+import { isNativeToken } from "../../common/currency/isNativeToken";
 import { mapOffer } from "../../common/marketplace";
 import { getRoleHash } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
