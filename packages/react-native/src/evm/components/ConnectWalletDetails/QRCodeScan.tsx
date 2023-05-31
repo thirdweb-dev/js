@@ -12,7 +12,7 @@ export const QRCodeScan = ({
   onClose: () => void;
 }) => {
   return (
-    <TWModal isVisible={isVisible} backdropOpacity={0.7}>
+    <TWModal isVisible={isVisible} backdropOpacity={1}>
       <ModalHeaderTextClose headerText={"Scan to Connect"} onClose={onClose} />
       <RNCamera
         style={{ flex: 1 }}
