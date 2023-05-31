@@ -21,7 +21,7 @@ import {
   InterfaceId_IERC721,
 } from "../../constants/contract";
 import { ListingType } from "../../enums";
-import { AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Price } from "../../types/currency";
 import {
   DirectListing,

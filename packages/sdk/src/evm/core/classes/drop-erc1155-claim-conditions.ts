@@ -8,7 +8,7 @@ import { buildTransactionFunction } from "../../common/transactions";
 import { isNode } from "../../common/utils";
 import { ClaimEligibility } from "../../enums";
 import { AbstractClaimConditionContractStruct } from "../../schema/contracts/common/claim-conditions";
-import { AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { SnapshotEntryWithProof } from "../../schema/contracts/common/snapshots";
 import {
   ClaimCondition,

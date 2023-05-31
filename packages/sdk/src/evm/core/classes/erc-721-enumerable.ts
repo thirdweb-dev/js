@@ -1,7 +1,7 @@
 import { NFT } from "../../../core/schema/nft";
 import { resolveAddress } from "../../common/ens";
 import { FEATURE_NFT_ENUMERABLE } from "../../constants/erc721-features";
-import { AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { BaseERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";

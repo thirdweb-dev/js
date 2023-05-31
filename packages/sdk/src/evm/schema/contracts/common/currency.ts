@@ -1,4 +1,4 @@
-import { BigNumberSchema } from "../../shared";
+import { BigNumberSchema } from "../../shared/BigNumberSchema";
 import { z } from "zod";
 
 /**
