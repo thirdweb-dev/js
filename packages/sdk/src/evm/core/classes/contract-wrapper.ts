@@ -33,7 +33,7 @@ import {
 } from "../types";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
 // @ts-expect-error
-import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.js";
+import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import fetch from "cross-fetch";
 import {

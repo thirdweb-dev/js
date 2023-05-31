@@ -70,13 +70,13 @@ export const EditionDropInitializer = {
       ? (
           await import(
             // @ts-expect-error
-            "@thirdweb-dev/contracts-js/dist/abis/DropERC1155.js"
+            "@thirdweb-dev/contracts-js/dist/abis/DropERC1155"
           )
         ).default
       : (
           await import(
             // @ts-expect-error
-            "@thirdweb-dev/contracts-js/dist/abis/DropERC1155_V2.js"
+            "@thirdweb-dev/contracts-js/dist/abis/DropERC1155_V2"
           )
         ).default;
   },
@@ -119,7 +119,7 @@ export const EditionInitializer = {
     return (
       await import(
         // @ts-expect-error
-        "@thirdweb-dev/contracts-js/dist/abis/TokenERC1155.js"
+        "@thirdweb-dev/contracts-js/dist/abis/TokenERC1155"
       )
     ).default;
   },
@@ -163,7 +163,7 @@ export const MarketplaceInitializer = {
     return (
       await import(
         // @ts-expect-error
-        "@thirdweb-dev/contracts-js/dist/abis/Marketplace.js"
+        "@thirdweb-dev/contracts-js/dist/abis/Marketplace"
       )
     ).default;
   },
@@ -219,7 +219,7 @@ export const MarketplaceV3Initializer = {
     const localAbi = (
       await import(
         // @ts-expect-error
-        "@thirdweb-dev/contracts-js/dist/abis/MarketplaceV3.js"
+        "@thirdweb-dev/contracts-js/dist/abis/MarketplaceV3"
       )
     ).default;
     return await getCompositePluginABI(
@@ -269,7 +269,7 @@ export const MultiwrapInitializer = {
     return (
       await import(
         // @ts-expect-error
-        "@thirdweb-dev/contracts-js/dist/abis/Multiwrap.js"
+        "@thirdweb-dev/contracts-js/dist/abis/Multiwrap"
       )
     ).default;
   },
@@ -313,7 +313,7 @@ export const NFTCollectionInitializer = {
     return (
       await import(
         // @ts-expect-error
-        "@thirdweb-dev/contracts-js/dist/abis/TokenERC721.js"
+        "@thirdweb-dev/contracts-js/dist/abis/TokenERC721"
       )
     ).default;
   },
@@ -358,13 +358,13 @@ export const NFTDropInitializer = {
       ? (
           await import(
             // @ts-expect-error
-            "@thirdweb-dev/contracts-js/dist/abis/DropERC721.js"
+            "@thirdweb-dev/contracts-js/dist/abis/DropERC721"
           )
         ).default
       : (
           await import(
             // @ts-expect-error
-            "@thirdweb-dev/contracts-js/dist/abis/DropERC721_V3.js"
+            "@thirdweb-dev/contracts-js/dist/abis/DropERC721_V3"
           )
         ).default;
   },
@@ -409,7 +409,7 @@ export const PackInitializer = {
       (
         await import(
           // @ts-expect-error
-          "@thirdweb-dev/contracts-js/dist/abis/Pack.js"
+          "@thirdweb-dev/contracts-js/dist/abis/Pack"
         )
       ).default || [],
     );
@@ -456,13 +456,13 @@ export const SignatureDropInitializer = {
       ? (
           await import(
             // @ts-expect-error
-            "@thirdweb-dev/contracts-js/dist/abis/SignatureDrop.js"
+            "@thirdweb-dev/contracts-js/dist/abis/SignatureDrop"
           )
         ).default
       : (
           await import(
             // @ts-expect-error
-            "@thirdweb-dev/contracts-js/dist/abis/SignatureDrop_V4.js"
+            "@thirdweb-dev/contracts-js/dist/abis/SignatureDrop_V4"
           )
         ).default;
   },
@@ -506,7 +506,7 @@ export const SplitInitializer = {
     return (
       await import(
         // @ts-expect-error
-        "@thirdweb-dev/contracts-js/dist/abis/Split.js"
+        "@thirdweb-dev/contracts-js/dist/abis/Split"
       )
     ).default;
   },
@@ -552,13 +552,13 @@ export const TokenDropInitializer = {
       ? (
           await import(
             // @ts-expect-error
-            "@thirdweb-dev/contracts-js/dist/abis/DropERC20.js"
+            "@thirdweb-dev/contracts-js/dist/abis/DropERC20"
           )
         ).default
       : (
           await import(
             // @ts-expect-error
-            "@thirdweb-dev/contracts-js/dist/abis/DropERC20_V2.js"
+            "@thirdweb-dev/contracts-js/dist/abis/DropERC20_V2"
           )
         ).default;
   },
@@ -601,7 +601,7 @@ export const TokenInitializer = {
     return (
       await import(
         // @ts-expect-error
-        "@thirdweb-dev/contracts-js/dist/abis/TokenERC20.js"
+        "@thirdweb-dev/contracts-js/dist/abis/TokenERC20"
       )
     ).default;
   },
@@ -645,7 +645,7 @@ export const VoteInitializer = {
     return (
       await import(
         // @ts-expect-error
-        "@thirdweb-dev/contracts-js/dist/abis/VoteERC20.js"
+        "@thirdweb-dev/contracts-js/dist/abis/VoteERC20"
       )
     ).default;
   },

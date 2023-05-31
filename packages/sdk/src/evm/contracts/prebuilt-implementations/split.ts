@@ -22,7 +22,7 @@ import type {
   Split as SplitContract,
 } from "@thirdweb-dev/contracts-js";
 // @ts-expect-error
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.js";
+import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, CallOverrides, Contract } from "ethers";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";

@@ -15,11 +15,11 @@ import type {
   IERC721Metadata,
 } from "@thirdweb-dev/contracts-js";
 // @ts-expect-error
-import ERC165MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.js";
+import ERC165MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC165";
 // @ts-expect-error
-import ERC721MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC721Metadata.js";
+import ERC721MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC721Metadata";
 // @ts-expect-error
-import ERC1155MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155Metadata.js";
+import ERC1155MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155Metadata";
 import type {
   ThirdwebStorage,
   UploadProgressEvent,

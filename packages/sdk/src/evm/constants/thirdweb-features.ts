@@ -1,33 +1,33 @@
 // @ts-expect-error
-import IERC2771ContextAbi from "@thirdweb-dev/contracts-js/dist/abis/ERC2771Context.js";
+import IERC2771ContextAbi from "@thirdweb-dev/contracts-js/dist/abis/ERC2771Context";
 // @ts-expect-error
-import IAppURI from "@thirdweb-dev/contracts-js/dist/abis/IAppURI.js";
+import IAppURI from "@thirdweb-dev/contracts-js/dist/abis/IAppURI";
 // @ts-expect-error
-import IContractMetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IContractMetadata.js";
+import IContractMetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IContractMetadata";
 // @ts-expect-error
-import IDirectListingsAbi from "@thirdweb-dev/contracts-js/dist/abis/IDirectListings.js";
+import IDirectListingsAbi from "@thirdweb-dev/contracts-js/dist/abis/IDirectListings";
 // @ts-expect-error
-import IEnglishAuctionsAbi from "@thirdweb-dev/contracts-js/dist/abis/IEnglishAuctions.js";
+import IEnglishAuctionsAbi from "@thirdweb-dev/contracts-js/dist/abis/IEnglishAuctions";
 // @ts-expect-error
-import IOffersAbi from "@thirdweb-dev/contracts-js/dist/abis/IOffers.js";
+import IOffersAbi from "@thirdweb-dev/contracts-js/dist/abis/IOffers";
 // @ts-expect-error
-import IPackVRFAbi from "@thirdweb-dev/contracts-js/dist/abis/IPackVRFDirect.js";
+import IPackVRFAbi from "@thirdweb-dev/contracts-js/dist/abis/IPackVRFDirect";
 // @ts-expect-error
-import IPermissionsAbi from "@thirdweb-dev/contracts-js/dist/abis/IPermissions.js";
+import IPermissionsAbi from "@thirdweb-dev/contracts-js/dist/abis/IPermissions";
 // @ts-expect-error
-import IPermissionsEnumerableAbi from "@thirdweb-dev/contracts-js/dist/abis/IPermissionsEnumerable.js";
+import IPermissionsEnumerableAbi from "@thirdweb-dev/contracts-js/dist/abis/IPermissionsEnumerable";
 // @ts-expect-error
-import IThirdwebPlatformFeeAbi from "@thirdweb-dev/contracts-js/dist/abis/IPlatformFee.js";
+import IThirdwebPlatformFeeAbi from "@thirdweb-dev/contracts-js/dist/abis/IPlatformFee";
 // @ts-expect-error
-import IThirdwebPrimarySaleAbi from "@thirdweb-dev/contracts-js/dist/abis/IPrimarySale.js";
+import IThirdwebPrimarySaleAbi from "@thirdweb-dev/contracts-js/dist/abis/IPrimarySale";
 // @ts-expect-error
-import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/dist/abis/IRoyalty.js";
+import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/dist/abis/IRoyalty";
 // @ts-expect-error
-import IOwnableAbi from "@thirdweb-dev/contracts-js/dist/abis/Ownable.js";
+import IOwnableAbi from "@thirdweb-dev/contracts-js/dist/abis/Ownable";
 // @ts-expect-error
-import IAccountFactory from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactory.js";
+import IAccountFactory from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactory";
 // @ts-expect-error
-import IAccount from "@thirdweb-dev/contracts-js/dist/abis/IAccount.js";
+import IAccount from "@thirdweb-dev/contracts-js/dist/abis/IAccount";
 
 export const getAllPluginsAbi = [
   {

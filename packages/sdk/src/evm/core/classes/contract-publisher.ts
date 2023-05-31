@@ -43,7 +43,7 @@ import type {
   IContractPublisher,
 } from "@thirdweb-dev/contracts-js";
 // @ts-expect-error
-import ContractPublisherAbi from "@thirdweb-dev/contracts-js/dist/abis/ContractPublisher.js";
+import ContractPublisherAbi from "@thirdweb-dev/contracts-js/dist/abis/ContractPublisher";
 import { ContractPublishedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ContractPublisher";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { constants, utils } from "ethers";

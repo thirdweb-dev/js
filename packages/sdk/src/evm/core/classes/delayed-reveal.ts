@@ -23,7 +23,7 @@ import type {
   SignatureDrop,
 } from "@thirdweb-dev/contracts-js";
 // @ts-expect-error
-import DeprecatedAbi from "@thirdweb-dev/contracts-js/dist/abis/IDelayedRevealDeprecated.js";
+import DeprecatedAbi from "@thirdweb-dev/contracts-js/dist/abis/IDelayedRevealDeprecated";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers } from "ethers";

@@ -32,8 +32,15 @@ const main = () => {
       content,
     );
 
+    // esm
     writeFileSync(
-      join(destinationFolder, basename(abiFile).replace('.json', '.js')),
+      join(destinationFolder, basename(abiFile).replace('.json', '.mjs')),
+      `export default ${content}`,
+    );
+
+    // cjs
+    writeFileSync(
+      join(destinationFolder, basename(abiFile).replace('.json', '.cjs')),
       `module.exports = ${content}`,
     );
   }

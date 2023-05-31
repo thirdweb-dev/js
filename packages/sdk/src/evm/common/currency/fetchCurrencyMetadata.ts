@@ -1,7 +1,8 @@
 import { getNativeTokenByChainId } from "../../constants/currency";
 import { Currency } from "../../types/currency";
 import type { IERC20Metadata } from "@thirdweb-dev/contracts-js";
-import ERC20MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC20Metadata.json";
+// @ts-expect-error
+import ERC20MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC20Metadata";
 import { Contract, providers } from "ethers";
 import { isNativeToken } from "./isNativeToken";
 

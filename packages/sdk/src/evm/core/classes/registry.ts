@@ -7,7 +7,7 @@ import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 import type { TWRegistry } from "@thirdweb-dev/contracts-js";
 // @ts-expect-error
-import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWRegistry.js";
+import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWRegistry";
 import { constants, utils } from "ethers";
 
 /**

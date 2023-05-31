@@ -14,11 +14,11 @@ import {
 import { fetchCurrencyValue } from "./currency/fetchCurrencyValue";
 import type { IERC1155, IERC165, IERC721 } from "@thirdweb-dev/contracts-js";
 // @ts-expect-error
-import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.js";
+import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165";
 // @ts-expect-error
-import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.js";
+import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721";
 // @ts-expect-error
-import ERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.js";
+import ERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155";
 import {
   BigNumber,
   BigNumberish,

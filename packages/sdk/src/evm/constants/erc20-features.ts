@@ -1,23 +1,23 @@
 // @ts-expect-error
-import IBurnableERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IBurnableERC20.js";
+import IBurnableERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IBurnableERC20";
 // @ts-expect-error
-import IDrop from "@thirdweb-dev/contracts-js/dist/abis/IDrop.js";
+import IDrop from "@thirdweb-dev/contracts-js/dist/abis/IDrop";
 // @ts-expect-error
-import DropERC20_V2Abi from "@thirdweb-dev/contracts-js/dist/abis/IDropERC20_V2.js";
+import DropERC20_V2Abi from "@thirdweb-dev/contracts-js/dist/abis/IDropERC20_V2";
 // @ts-expect-error
-import IDropSinglePhase from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase.js";
+import IDropSinglePhase from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase";
 // @ts-expect-error
-import IDropSinglePhaseV1 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase_V1.js";
+import IDropSinglePhaseV1 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase_V1";
 // @ts-expect-error
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.js";
+import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20";
 // @ts-expect-error
-import IERC20PermitAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC20Permit.js";
+import IERC20PermitAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC20Permit";
 // @ts-expect-error
-import IMintableERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableERC20.js";
+import IMintableERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableERC20";
 // @ts-expect-error
-import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.js";
+import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall";
 // @ts-expect-error
-import ISignatureMintERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC20.js";
+import ISignatureMintERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC20";
 
 export const FEATURE_TOKEN_CLAIM_CONDITIONS_V1 = {
   name: "ERC20ClaimConditionsV1",

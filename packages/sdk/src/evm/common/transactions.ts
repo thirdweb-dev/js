@@ -22,7 +22,7 @@ import {
 import { signEIP2612Permit } from "./permit";
 import { signTypedDataInternal } from "./sign";
 // @ts-expect-error
-import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.js";
+import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder";
 import fetch from "cross-fetch";
 import { BigNumber, BytesLike, ethers } from "ethers";
 import invariant from "tiny-invariant";

@@ -24,7 +24,7 @@ import {
 } from "../../types/vote";
 import type { IERC20, VoteERC20 } from "@thirdweb-dev/contracts-js";
 // @ts-expect-error
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.js";
+import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20";
 import { ProposalCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/VoteERC20";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {

@@ -11,9 +11,9 @@ import type {
   TWMultichainRegistryLogic,
 } from "@thirdweb-dev/contracts-js";
 // @ts-expect-error
-import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryLogic.js";
+import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryLogic";
 // @ts-expect-error
-import TWRegistryRouterABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryRouter.js";
+import TWRegistryRouterABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryRouter";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { constants, utils } from "ethers";
 import { Transaction } from "./transactions";

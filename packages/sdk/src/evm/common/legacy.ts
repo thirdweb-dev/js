@@ -1,5 +1,5 @@
 // @ts-expect-error
-import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.js";
+import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract";
 import { ethers } from "ethers";
 
 export async function getPrebuiltInfo(

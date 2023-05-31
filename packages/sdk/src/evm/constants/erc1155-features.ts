@@ -1,29 +1,29 @@
 // @ts-expect-error
-import IBurnableERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IBurnableERC1155.js";
+import IBurnableERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IBurnableERC1155";
 // @ts-expect-error
-import IClaimableERC1155 from "@thirdweb-dev/contracts-js/dist/abis/IClaimableERC1155.js";
+import IClaimableERC1155 from "@thirdweb-dev/contracts-js/dist/abis/IClaimableERC1155";
 // @ts-expect-error
-import DelayedRevealAbi from "@thirdweb-dev/contracts-js/dist/abis/IDelayedReveal.js";
+import DelayedRevealAbi from "@thirdweb-dev/contracts-js/dist/abis/IDelayedReveal";
 // @ts-expect-error
-import IDropMultiPhase1155 from "@thirdweb-dev/contracts-js/dist/abis/IDrop1155.js";
+import IDropMultiPhase1155 from "@thirdweb-dev/contracts-js/dist/abis/IDrop1155";
 // @ts-expect-error
-import DropERC1155_V2Abi from "@thirdweb-dev/contracts-js/dist/abis/IDropERC1155_V2.js";
+import DropERC1155_V2Abi from "@thirdweb-dev/contracts-js/dist/abis/IDropERC1155_V2";
 // @ts-expect-error
-import IDropSinglePhase1155 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase1155.js";
+import IDropSinglePhase1155 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase1155";
 // @ts-expect-error
-import IDropSinglePhase1155_V1 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase1155_V1.js";
+import IDropSinglePhase1155_V1 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase1155_V1";
 // @ts-expect-error
-import Erc1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.js";
+import Erc1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155";
 // @ts-expect-error
-import Erc1155EnumerableAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155Enumerable.js";
+import Erc1155EnumerableAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155Enumerable";
 // @ts-expect-error
-import ILazyMintAbi from "@thirdweb-dev/contracts-js/dist/abis/ILazyMint.js";
+import ILazyMintAbi from "@thirdweb-dev/contracts-js/dist/abis/ILazyMint";
 // @ts-expect-error
-import IMintableERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableERC1155.js";
+import IMintableERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableERC1155";
 // @ts-expect-error
-import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.js";
+import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall";
 // @ts-expect-error
-import ISignatureMintERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC1155.js";
+import ISignatureMintERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC1155";
 
 export const FEATURE_EDITION_BURNABLE = {
   name: "ERC1155Burnable",

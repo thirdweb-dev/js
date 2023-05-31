@@ -33,7 +33,7 @@ import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 import type { TWFactory } from "@thirdweb-dev/contracts-js";
 // @ts-expect-error
-import TWFactoryAbi from "@thirdweb-dev/contracts-js/dist/abis/TWFactory.js";
+import TWFactoryAbi from "@thirdweb-dev/contracts-js/dist/abis/TWFactory";
 import { ProxyDeployedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TWFactory";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {

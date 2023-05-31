@@ -3,7 +3,8 @@ import { MultichainRegistry } from "../../src/evm/core/classes/multichain-regist
 import { ContractRegistry } from "../../src/evm/core/classes/registry";
 import { sdk, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import RouterABI from "@thirdweb-dev/contracts-js/dist/abis/Router.json";
+// @ts-expect-error
+import RouterABI from "@thirdweb-dev/contracts-js/dist/abis/Router";
 import { expect } from "chai";
 
 describe("Contract Registry", () => {

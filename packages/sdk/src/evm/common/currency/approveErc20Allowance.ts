@@ -1,6 +1,7 @@
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import type { IERC20 } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
+// @ts-expect-error
+import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 
 export async function approveErc20Allowance(
