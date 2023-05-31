@@ -21,6 +21,7 @@ describe("npx thirdweb publish", () => {
     expect(await exists("BasicContract.sol")).toEqual(true);
 
     await waitForText(ERROR_MESSAGES.noConfiguration);
+
     await writeText("y");
 
     // wait for program to finish

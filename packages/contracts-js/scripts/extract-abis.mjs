@@ -34,7 +34,7 @@ const main = () => {
 
     writeFileSync(
       join(destinationFolder, basename(abiFile).replace('.json', '.js')),
-      `export default ${content}`,
+      `module.exports = ${content}`,
     );
   }
 };
