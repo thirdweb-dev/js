@@ -17,6 +17,7 @@ export * from "./feature-detection/extractMinimalProxyImplementationAddress";
 export * from "./feature-detection/resolveContractUriFromAddress";
 export * from "./feature-detection/extractIPFSHashFromBytecode";
 export * from "./feature-detection/fetchRawPredeployMetadata";
+export * from "./feature-detection/fetchPreDeployMetadata";
 export * from "./feature-detection/fetchExtendedReleaseMetadata";
 export * from "./feature-detection/detectFeatures";
 export * from "./feature-detection/getAllDetectedFeatures";
