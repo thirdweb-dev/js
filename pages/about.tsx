@@ -158,6 +158,7 @@ const employees = [
   },
   {
     name: "Yan Giet",
+    twitter: "yangiet_",
   },
   {
     name: "Yash Kumar",
