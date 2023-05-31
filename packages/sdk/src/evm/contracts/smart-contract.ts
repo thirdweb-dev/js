@@ -14,6 +14,7 @@ import {
   FEATURE_PLATFORM_FEE,
   FEATURE_PRIMARY_SALE,
   FEATURE_ROYALTY,
+  FEATURE_SMART_WALLET_FACTORY,
 } from "../constants/thirdweb-features";
 import { Transaction } from "../core/classes/transactions";
 import { ContractAppURI } from "../core/classes/contract-appuri";
@@ -51,6 +52,7 @@ import type {
   DirectListingsLogic,
   EnglishAuctionsLogic,
   OffersLogic,
+  BaseAccountFactory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides } from "ethers";
@@ -62,6 +64,7 @@ import { ContractOwner } from "../core/classes/contract-owner";
 import { MarketplaceV3DirectListings } from "../core/classes/marketplacev3-direct-listings";
 import { MarketplaceV3EnglishAuctions } from "../core/classes/marketplacev3-english-auction";
 import { MarketplaceV3Offers } from "../core/classes/marketplacev3-offers";
+import { SmartWalletFactory } from "../core/classes/smart-wallet-factory";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -292,6 +295,14 @@ export class SmartContract<
     return assertEnabled(this.detectOffers(), FEATURE_OFFERS);
   }
 
+  // TODO: documentation comments.
+  get smartWalletFactory(): SmartWalletFactory<BaseAccountFactory> {
+    return assertEnabled(
+      this.detectSmartWalletFactory(),
+      FEATURE_SMART_WALLET_FACTORY,
+    );
+  }
+
   private _chainId: number;
   get chainId() {
     return this._chainId;
@@ -515,6 +526,17 @@ export class SmartContract<
   private detectOffers() {
     if (detectContractFeature<OffersLogic>(this.contractWrapper, "Offers")) {
       return new MarketplaceV3Offers(this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  // ========== Smart account features ==========
+
+  private detectSmartWalletFactory() {
+    if (
+      detectContractFeature<BaseAccountFactory>(this.contractWrapper, "SmartWalletFactory")
+    ) {
+      return new SmartWalletFactory(this.contractWrapper);
     }
     return undefined;
   }
