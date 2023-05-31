@@ -1,8 +1,4 @@
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
-  CONTRACT_ADDRESSES,
-  getContractAddressByChainId,
-} from "../constants/addresses";
 import { DeployTransaction, Transaction } from "../core/classes/transactions";
 import {
   ForwardRequestMessage,
@@ -25,6 +21,8 @@ import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
 import fetch from "cross-fetch";
 import { BigNumber, BytesLike, ethers } from "ethers";
 import invariant from "tiny-invariant";
+import { CONTRACT_ADDRESSES } from "../constants/addresses/CONTRACT_ADDRESSES";
+import { getContractAddressByChainId } from "../constants/addresses/getContractAddressByChainId";
 
 export function buildDeployTransactionFunction<TArgs extends any[]>(
   fn: (...args: TArgs) => Promise<DeployTransaction>,

@@ -4,7 +4,7 @@ import { isNativeToken } from "../../common/currency/isNativeToken";
 import { mapOffer } from "../../common/marketplace";
 import { getRoleHash } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
-import { SUPPORTED_CHAIN_ID } from "../../constants/chains";
+import { SUPPORTED_CHAIN_ID } from "../../constants/chains/SUPPORTED_CHAIN_ID";
 import { NATIVE_TOKENS } from "../../constants/currency";
 import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";

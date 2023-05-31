@@ -7,7 +7,7 @@ import {
 import { isRouterContract } from "../../common/plugin/isRouterContract";
 import { defaultGaslessSendFunction } from "../../common/transactions";
 import { isBrowser } from "../../common/utils";
-import { ChainId } from "../../constants/chains";
+import { ChainId } from "../../constants/chains/ChainId";
 import { ContractSource } from "../../schema/contracts/custom";
 import { SDKOptionsOutput } from "../../schema/sdk-options";
 import {

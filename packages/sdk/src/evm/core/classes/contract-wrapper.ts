@@ -16,11 +16,7 @@ import { getPolygonGasPriorityFee } from "../../common/gas-price";
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
 import { isBrowser } from "../../common/utils";
-import { ChainId } from "../../constants/chains";
-import {
-  CONTRACT_ADDRESSES,
-  getContractAddressByChainId,
-} from "../../constants/addresses";
+import { ChainId } from "../../constants/chains/ChainId";
 import { EventType } from "../../constants/events";
 import { Address, CallOverrideSchema } from "../../schema/shared";
 import { AbiSchema, ContractSource } from "../../schema/contracts/custom";
@@ -48,6 +44,8 @@ import {
 } from "ethers";
 import { ConnectionInfo } from "ethers/lib/utils.js";
 import invariant from "tiny-invariant";
+import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
+import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
 
 /**
  * @internal
