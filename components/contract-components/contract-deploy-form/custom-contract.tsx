@@ -13,6 +13,7 @@ import { PrimarySaleFieldset } from "./primary-sale-fieldset";
 import { RoyaltyFieldset } from "./royalty-fieldset";
 import { Recipient, SplitFieldset } from "./split-fieldset";
 import { Divider, Flex, FormControl } from "@chakra-ui/react";
+import { LineaTestnet } from "@thirdweb-dev/chains";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
 import {
@@ -68,6 +69,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
   const ensQuery = useEns(walletAddress);
   const connectedWallet = ensQuery.data?.address || walletAddress;
   const trackEvent = useTrack();
+
   const compilerMetadata = useContractPublishMetadataFromURI(ipfsHash);
   const fullPublishMetadata = useContractFullPublishMetadata(ipfsHash);
   const constructorParams = useConstructorParamsFromABI(
@@ -122,6 +124,11 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     }, {} as Record<string, string>),
   };
 
+  // FIXME - temporaryly disabling add to dashboard by default on linea
+  const shouldDefaulCheckAddToDashboard = selectedChain
+    ? selectedChain !== LineaTestnet.chainId
+    : false;
+
   const form = useForm<{
     addToDashboard: boolean;
     deployParams: Record<string, string>;
@@ -134,11 +141,11 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     recipients?: Recipient[];
   }>({
     defaultValues: {
-      addToDashboard: true,
+      addToDashboard: shouldDefaulCheckAddToDashboard,
       deployParams: parseDeployParams,
     },
     values: {
-      addToDashboard: true,
+      addToDashboard: shouldDefaulCheckAddToDashboard,
       deployParams: parseDeployParams,
     },
     resetOptions: {
@@ -297,7 +304,9 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
               {isSplit && <SplitFieldset form={form} />}
             </Flex>
             {Object.keys(formDeployParams).map((paramKey) => {
-              const deployParam = deployParams.find((p) => p.name === paramKey);
+              const deployParam = deployParams.find(
+                (p: any) => p.name === paramKey,
+              );
               const contructorParams =
                 fullPublishMetadata.data?.constructorParams || {};
               const extraMetadataParam = contructorParams[paramKey];
@@ -389,7 +398,10 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
         </Flex>
 
         <Flex alignItems="center" gap={3}>
-          <Checkbox {...form.register("addToDashboard")} defaultChecked />
+          <Checkbox
+            {...form.register("addToDashboard")}
+            defaultChecked={shouldDefaulCheckAddToDashboard}
+          />
 
           <Text mt={1}>
             Add to dashboard so I can find it in the list of my contracts at{" "}
