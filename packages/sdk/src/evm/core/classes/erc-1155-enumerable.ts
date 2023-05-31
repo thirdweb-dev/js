@@ -3,7 +3,7 @@ import {
   QueryAllParams,
 } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { FEATURE_EDITION_ENUMERABLE } from "../../constants/erc1155-features";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { BaseERC1155 } from "../../types/eips";

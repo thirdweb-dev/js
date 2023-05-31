@@ -11,7 +11,7 @@ import { deployWithThrowawayDeployer } from "../../common/any-evm-utils/deployWi
 import { getCreate2FactoryAddress } from "../../common/any-evm-utils/getCreate2FactoryAddress";
 import { getDeploymentInfo } from "../../common/any-evm-utils/getDeploymentInfo";
 import { getDeployArguments } from "../../common/deploy";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import {
   buildDeployTransactionFunction,
   buildTransactionFunction,

@@ -1,5 +1,5 @@
 import { DEFAULT_API_KEY } from "../../../core/constants/urls";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { fetchPreDeployMetadata } from "../../common/feature-detection/fetchPreDeployMetadata";
 import { extractFunctions } from "../../common/feature-detection/extractFunctions";
 import { extractConstructorParams } from "../../common/feature-detection/extractConstructorParams";

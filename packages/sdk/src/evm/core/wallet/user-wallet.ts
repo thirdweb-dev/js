@@ -1,4 +1,4 @@
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { EIP712Domain, signTypedDataInternal } from "../../common/sign";
 import { LOCAL_NODE_PKEY } from "../../constants/addresses/LOCAL_NODE_PKEY";
 import { ChainId } from "../../constants/chains/ChainId";

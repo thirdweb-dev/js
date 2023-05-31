@@ -1,5 +1,5 @@
 import { NFT, NFTMetadataOrUri } from "../../../core/schema/nft";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_BATCH_MINTABLE } from "../../constants/erc721-features";

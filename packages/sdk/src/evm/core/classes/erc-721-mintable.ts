@@ -1,6 +1,6 @@
 import { NFT, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { uploadOrExtractURI } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_MINTABLE } from "../../constants/erc721-features";

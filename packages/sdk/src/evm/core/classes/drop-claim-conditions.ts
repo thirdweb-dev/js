@@ -1,7 +1,7 @@
 import { AmountSchema } from "../../../core/schema/shared";
 import { includesErrorMessage } from "../../common/error";
 import { isNativeToken } from "../../common/currency/isNativeToken";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
 import { hasFunction } from "../../common/feature-detection/hasFunction";
 import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";

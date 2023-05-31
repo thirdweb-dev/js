@@ -1,5 +1,5 @@
 import { NFT, NFTMetadataOrUri } from "../../../core/schema/nft";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { isTokenApprovedForTransfer } from "../../common/marketplace";
 import { uploadOrExtractURI } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
