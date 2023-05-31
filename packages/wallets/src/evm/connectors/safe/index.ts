@@ -150,7 +150,7 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
         SIGN_MESSAGE_LIB_ABI,
       );
       const data = contract.interface.encodeFunctionData("signMessage", [
-        message,
+        ethers.utils.hashMessage(message),
       ]);
 
       const to = SIGN_MESSAGE_LIB_ADDRESS;
