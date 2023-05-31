@@ -3,7 +3,7 @@ import { resolveAddress } from "../common/ens";
 import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
 import { createStorage } from "../common/storage";
 import { getChainProvider, isChainConfig } from "../constants/urls";
-import { setSupportedChains } from "../constants/chains";
+import { setSupportedChains } from "../constants/chains/supportedChains";
 import { NATIVE_TOKEN_ADDRESS } from "../constants/currency";
 import {
   PREBUILT_CONTRACTS_MAP,
@@ -12,7 +12,7 @@ import {
 import { SmartContract } from "../contracts/smart-contract";
 import { getSignerAndProvider } from "../functions/getSignerAndProvider";
 import { Abi, AbiSchema } from "../schema/contracts/custom";
-import { AddressOrEns } from "../schema/shared";
+import { AddressOrEns } from "../schema/shared/AddressOrEnsSchema";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWithMetadata, CurrencyValue } from "../types";
 import { ContractDeployer } from "./classes/contract-deployer";

@@ -2,7 +2,7 @@ import {
   BasisPointsSchema,
   FileOrBufferOrStringSchema,
 } from "../../../../core/schema/shared";
-import { AddressOrEnsSchema } from "../../shared";
+import { AddressOrEnsSchema } from "../../shared/AddressOrEnsSchema";
 import { constants } from "ethers";
 import { z } from "zod";
 

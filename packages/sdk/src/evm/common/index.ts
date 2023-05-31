@@ -68,7 +68,6 @@ export * from "./any-evm-utils/deployContractDeterministic";
 export * from "./any-evm-utils/getDeploymentInfo";
 export * from "./any-evm-utils/deployWithThrowawayDeployer";
 export * from "./any-evm-utils/computeDeploymentInfo";
-export * from "./any-evm-utils/encodeConstructorParamsForImplementation";
 export * from "./any-evm-utils/convertParamValues";
 export * from "./any-evm-utils/getCreate2FactoryDeploymentInfo";
 export * from "./any-evm-utils/fetchAndCachePublishedContractURI";
