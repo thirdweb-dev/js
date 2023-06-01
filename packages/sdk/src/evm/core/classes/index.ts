@@ -22,7 +22,6 @@ export * from "./marketplace-auction";
 export * from "./marketplacev3-direct-listings";
 export * from "./marketplacev3-english-auction";
 export * from "./marketplacev3-offers";
-export * from "./contract-deployer";
 export * from "./gas-cost-estimator";
 export * from "./delayed-reveal";
 export * from "./contract-events";
