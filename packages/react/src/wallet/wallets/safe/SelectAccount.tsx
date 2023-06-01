@@ -24,12 +24,13 @@ import {
   useConnect,
   useConnectionStatus,
   useSupportedChains,
+  useSwitchChain,
   useWallet,
 } from "@thirdweb-dev/react-core";
 import { SafeSupportedChainsSet } from "@thirdweb-dev/wallets";
 import { utils } from "ethers";
 import { useState } from "react";
-import { SafeWalletObj } from "./types";
+import { SafeWalletConfig } from "./types";
 
 export const gnosisAddressPrefixToChainId = {
   eth: 1,
@@ -43,7 +44,7 @@ export const gnosisAddressPrefixToChainId = {
 export const SelectAccount: React.FC<{
   onBack: () => void;
   onConnect: () => void;
-  safeWallet: SafeWalletObj;
+  safeWalletConfig: SafeWalletConfig;
 }> = (props) => {
   const activeWallet = useWallet();
   const connect = useConnect();
@@ -83,7 +84,7 @@ export const SelectAccount: React.FC<{
     setSafeConnectError(false);
 
     try {
-      await connect(props.safeWallet, {
+      await connect(props.safeWalletConfig, {
         chain: selectedSafeChain,
         personalWallet: activeWallet,
         safeAddress,
@@ -100,12 +101,14 @@ export const SelectAccount: React.FC<{
   const isValidAddress = utils.isAddress(safeAddress);
   const disableNetworkSelection = supportedChains.length === 1;
 
+  const switchChain = useSwitchChain();
+
   return (
     <>
       <BackButton onClick={props.onBack} />
       <Spacer y="md" />
       <Img
-        src={props.safeWallet.meta.iconURL}
+        src={props.safeWalletConfig.meta.iconURL}
         width={iconSize.xl}
         height={iconSize.xl}
       />
@@ -317,7 +320,7 @@ export const SelectAccount: React.FC<{
                 setSwitchError(false);
                 setSwitchingNetwork(true);
                 try {
-                  await activeWallet.switchChain(safeChainId);
+                  await switchChain(safeChainId);
                 } catch (e) {
                   setSwitchError(true);
                 } finally {

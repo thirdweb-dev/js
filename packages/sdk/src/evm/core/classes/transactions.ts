@@ -4,10 +4,10 @@ import {
   fetchContractMetadataFromAddress,
   fetchSourceFilesFromMetadata,
 } from "../../common/metadata-resolver";
-import { isRouterContract } from "../../common/plugin";
+import { isRouterContract } from "../../common/plugin/isRouterContract";
 import { defaultGaslessSendFunction } from "../../common/transactions";
 import { isBrowser } from "../../common/utils";
-import { ChainId } from "../../constants/chains";
+import { ChainId } from "../../constants/chains/ChainId";
 import { ContractSource } from "../../schema/contracts/custom";
 import { SDKOptionsOutput } from "../../schema/sdk-options";
 import {
@@ -26,6 +26,7 @@ import {
   Contract,
   ContractFactory,
   ContractTransaction,
+  ethers,
   providers,
   Signer,
   utils,
@@ -743,6 +744,14 @@ export class DeployTransaction extends TransactionContext {
     );
   }
 
+  getTarget(): string {
+    return ethers.constants.AddressZero;
+  }
+
+  getMethod(): string {
+    return "deploy";
+  }
+
   async sign(): Promise<string> {
     const populatedTx = await this.populateTransaction();
     return this.signer.signTransaction(populatedTx);
@@ -750,7 +759,7 @@ export class DeployTransaction extends TransactionContext {
 
   async simulate() {
     const populatedTx = await this.populateTransaction();
-    this.signer.call(populatedTx);
+    return this.signer.call(populatedTx);
   }
 
   async estimateGasLimit(): Promise<BigNumber> {

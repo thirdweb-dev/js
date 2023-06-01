@@ -1,8 +1,8 @@
 import { resolveAddress } from "../common/ens";
-import { getCompositePluginABI } from "../common/plugin";
+import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
 import { SmartContract } from "../contracts/smart-contract";
 import { NetworkInput } from "../core/types";
-import { AddressOrEns } from "../schema/shared";
+import { AddressOrEns } from "../schema/shared/AddressOrEnsSchema";
 import { AbiSchema } from "../schema/contracts/custom";
 import { SDKOptions } from "../schema/sdk-options";
 import { getSignerAndProvider } from "./getSignerAndProvider";

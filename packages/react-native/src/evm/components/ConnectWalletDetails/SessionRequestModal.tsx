@@ -1,11 +1,10 @@
-import { useWallet } from "@thirdweb-dev/react-core";
+import { useChain, useWallet } from "@thirdweb-dev/react-core";
 import Box from "../base/Box";
 import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
 import {
   EIP155_SIGNING_METHODS,
   IWalletConnectReceiver,
-  WCRequest,
 } from "@thirdweb-dev/wallets";
 import { useModalState } from "../../providers/ui-context-provider";
 import {
@@ -14,7 +13,7 @@ import {
 } from "../../utils/modalTypes";
 import { ActivityIndicator, Dimensions } from "react-native";
 import { shortenWalletAddress } from "../../utils/addresses";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 const getTitle = (method: string) => {
   switch (method) {
@@ -28,45 +27,6 @@ const getTitle = (method: string) => {
   }
 };
 
-const getContent = (requestData: WCRequest) => {
-  switch (requestData.method) {
-    case EIP155_SIGNING_METHODS.SWITCH_CHAIN:
-      return (
-        <Text variant="bodySmall" textAlign="left">
-          {`Switch to ${requestData.params[0].chainId}`}
-        </Text>
-      );
-    case EIP155_SIGNING_METHODS.ETH_SIGN:
-    case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
-      return (
-        <Text variant="bodySmall" textAlign="left">
-          {requestData.params[0]}
-        </Text>
-      );
-    case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
-    case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
-      const { params } = requestData;
-      const { request } = params;
-      const transaction = request.params[0];
-
-      const from = transaction.from;
-      const to = transaction.to;
-
-      return (
-        <Box>
-          <Text variant="bodySmall" textAlign="left">
-            {`from: ${shortenWalletAddress(from)}`}
-          </Text>
-          <Text variant="bodySmall" textAlign="left" mt="sm">
-            {`to: ${shortenWalletAddress(to)}`}
-          </Text>
-        </Box>
-      );
-    default:
-      throw new Error(`Method not implemented: ${requestData.method}`);
-  }
-};
-
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 
 export const SessionRequestModal = () => {
@@ -75,6 +35,7 @@ export const SessionRequestModal = () => {
   const [approvingRequest, setApprovingRequest] = useState(false);
 
   const wallet = useWallet();
+  const chain = useChain();
 
   const onClose = () => {
     setModalState(CLOSE_MODAL_STATE("SessionRequestModal"));
@@ -94,6 +55,48 @@ export const SessionRequestModal = () => {
       });
   };
 
+  const getContent = useCallback(() => {
+    switch (requestData.method) {
+      case EIP155_SIGNING_METHODS.SWITCH_CHAIN:
+        return (
+          <Text variant="bodySmall" textAlign="left">
+            {`Switch to ${
+              requestData.params[0].chainId === chain?.chainId
+                ? chain?.slug
+                : requestData.params[0].chainId
+            }`}
+          </Text>
+        );
+      case EIP155_SIGNING_METHODS.ETH_SIGN:
+      case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
+        return (
+          <Text variant="bodySmall" textAlign="left">
+            {requestData.params[0]}
+          </Text>
+        );
+      case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
+      case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
+        const { params } = requestData;
+        const transaction = params[0];
+
+        const from = transaction.from;
+        const to = transaction.to;
+
+        return (
+          <Box>
+            <Text variant="bodySmall" textAlign="left">
+              {`from: ${shortenWalletAddress(from)}`}
+            </Text>
+            <Text variant="bodySmall" textAlign="left" mt="sm">
+              {`to: ${shortenWalletAddress(to)}`}
+            </Text>
+          </Box>
+        );
+      default:
+        throw new Error(`Method not implemented: ${requestData.method}`);
+    }
+  }, [requestData]);
+
   return (
     <Box
       flexDirection="column"
@@ -108,7 +111,7 @@ export const SessionRequestModal = () => {
         {getTitle(requestData.method)}
       </Text>
       <Box maxHeight={MODAL_HEIGHT} mt="md">
-        {getContent(requestData)}
+        {getContent()}
       </Box>
       <Box flexDirection="row" justifyContent="space-evenly" mt="lg">
         <BaseButton

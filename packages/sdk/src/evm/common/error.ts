@@ -1,4 +1,4 @@
-import { SUPPORTED_CHAIN_ID } from "../constants/chains";
+import { SUPPORTED_CHAIN_ID } from "../constants/chains/SUPPORTED_CHAIN_ID";
 import { NATIVE_TOKENS } from "../constants/currency";
 import { Feature } from "../constants/contract-features";
 import { ContractSource } from "../schema/contracts/custom";

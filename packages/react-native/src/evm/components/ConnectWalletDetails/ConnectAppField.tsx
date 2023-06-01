@@ -23,14 +23,16 @@ const ConnectAppField = () => {
   const [showQRCodeScan, setShowQRCodeScan] = useState(false);
 
   const getAppMeta = useCallback(() => {
-    const sessions = (
-      wallet as unknown as IWalletConnectReceiver
-    ).getActiveSessions();
-    if (Object.keys(sessions).length > 0) {
-      setAppMeta({
-        name: sessions[0].peer.metadata.name,
-        iconUrl: sessions[0].peer.metadata.icons[0],
-      });
+    if (wallet && "isWCReceiverEnabled" in wallet) {
+      const sessions = (
+        wallet as unknown as IWalletConnectReceiver
+      ).getActiveSessions();
+      if (Object.keys(sessions).length > 0) {
+        setAppMeta({
+          name: sessions[0].peer.metadata.name,
+          iconUrl: sessions[0].peer.metadata.icons[0],
+        });
+      }
     }
   }, [wallet]);
 
@@ -78,11 +80,11 @@ const ConnectAppField = () => {
   };
 
   const onQRCodeScan = (data: string) => {
-    if (wcUri !== data) {
+    if (wcUri !== data && data.startsWith("wc:")) {
       setWCUri(data);
       setShowQRCodeScan(false);
 
-      onWCPress();
+      onWCPress(data);
     }
   };
 
@@ -90,13 +92,15 @@ const ConnectAppField = () => {
     setShowQRCodeScan(false);
   };
 
-  const onWCPress = () => {
-    if (!wcUri || !wallet) {
+  const onWCPress = (uri?: string) => {
+    if (!(wcUri || uri) || !wallet) {
       return;
     }
 
-    if (wcUri.startsWith("wc:")) {
-      (wallet as unknown as IWalletConnectReceiver).connectApp(wcUri);
+    const uriToUse = uri || wcUri;
+
+    if (uriToUse?.startsWith("wc:")) {
+      (wallet as unknown as IWalletConnectReceiver).connectApp(uriToUse);
     }
   };
 
@@ -117,11 +121,12 @@ const ConnectAppField = () => {
           <TextInput
             onChangeText={onAddressChangeText}
             flex={1}
+            value={wcUri}
             placeholder={"wc://..."}
             placeholderTextColor={theme.colors.textSecondary}
           />
           <BaseButton
-            onPress={onWCPress}
+            onPress={() => onWCPress()}
             justifyContent="center"
             alignItems="center"
           >

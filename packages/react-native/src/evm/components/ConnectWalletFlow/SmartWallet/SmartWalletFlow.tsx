@@ -18,6 +18,7 @@ import BaseButton from "../../base/BaseButton";
 import Text from "../../base/Text";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { useAppTheme } from "../../../styles/hooks";
+import { DEFAULT_WALLETS } from "../../../constants/wallets";
 
 export const SmartWalletFlow = ({
   onClose,
@@ -44,6 +45,34 @@ export const SmartWalletFlow = ({
   const mismatch = personalWalletChainId
     ? personalWalletChainId !== targetChain.chainId
     : false;
+
+  const connectPersonalWallet = useCallback(
+    async (wallet: WalletConfig) => {
+      setIsConnecting(true);
+      const walletInstance = createWalletInstance(wallet);
+      await walletInstance.connect();
+
+      setConnectedPersonalWallet(walletInstance);
+    },
+    [createWalletInstance],
+  );
+
+  const onChoosePersonalWallet = useCallback(
+    async (wallet: WalletConfig) => {
+      // if (wallet.id === LocalWallet.id) {
+      //   setShowLocalWalletFlow(true);
+      // } else {
+      connectPersonalWallet(wallet);
+      // }
+    },
+    [connectPersonalWallet],
+  );
+
+  useEffect(() => {
+    if (walletObj.config.personalWallets?.length === 1) {
+      onChoosePersonalWallet(walletObj.config.personalWallets[0]);
+    }
+  }, [onChoosePersonalWallet, walletObj.config.personalWallets]);
 
   useEffect(() => {
     (async () => {
@@ -74,33 +103,11 @@ export const SmartWalletFlow = ({
     }
   }, [connectSmartWallet, connectedPersonalWallet, mismatch]);
 
-  const connectPersonalWallet = useCallback(
-    async (wallet: WalletConfig) => {
-      setIsConnecting(true);
-      const walletInstance = createWalletInstance(wallet);
-      await walletInstance.connect();
-
-      setConnectedPersonalWallet(walletInstance);
-    },
-    [createWalletInstance],
-  );
-
   const onConnectedLocalWallet = async (wallet: WalletInstance) => {
     setIsConnecting(true);
 
     connectSmartWallet(wallet);
   };
-
-  const onChoosePersonalWallet = useCallback(
-    async (wallet: WalletConfig) => {
-      // if (wallet.id === LocalWallet.id) {
-      //   setShowLocalWalletFlow(true);
-      // } else {
-      connectPersonalWallet(wallet);
-      // }
-    },
-    [connectPersonalWallet],
-  );
 
   const onLocalWalletBackPress = () => {
     setShowLocalWalletFlow(false);
@@ -196,7 +203,7 @@ export const SmartWalletFlow = ({
           </Text>
         </Text>
       }
-      wallets={walletObj.config.personalWallets}
+      wallets={walletObj.config.personalWallets || DEFAULT_WALLETS}
       onChooseWallet={onChoosePersonalWallet}
       onClose={onClose}
     />

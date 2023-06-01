@@ -1,4 +1,4 @@
-import { BigNumberTransformSchema } from "../../shared";
+import { BigNumberTransformSchema } from "../../shared/BigNumberSchema";
 import { z } from "zod";
 
 const PropertiesInput = z

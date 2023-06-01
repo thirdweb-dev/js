@@ -25,7 +25,7 @@ export default {
     },
     {
       "name": "Scroll Alpha Testnet Block Explorer",
-      "url": "https://scrollexplorer.unifra.io",
+      "url": "https://scrollscan.co",
       "standard": "EIP3091"
     }
   ],

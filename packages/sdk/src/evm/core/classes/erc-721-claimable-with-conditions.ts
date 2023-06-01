@@ -1,7 +1,7 @@
 import { NFT } from "../../../core/schema/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_CLAIM_CONDITIONS_V2 } from "../../constants/erc721-features";
-import { AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ClaimOptions } from "../../types";
 import { BaseClaimConditionERC721 } from "../../types/eips";

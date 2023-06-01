@@ -17,7 +17,7 @@ import {
   buildTransactionFunction,
 } from "../../common/transactions";
 import { EventType } from "../../constants/events";
-import { getContractAddressByChainId } from "../../constants/addresses";
+import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
 import {
   EditionDropInitializer,
   EditionInitializer,
@@ -36,7 +36,8 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../../contracts";
-import { Address, AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { Address } from "../../schema/shared/Address";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
   DeployEvent,

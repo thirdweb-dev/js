@@ -1,9 +1,7 @@
-import {
-  cleanCurrencyAddress,
-  fetchCurrencyValue,
-  normalizePriceValue,
-  setErc20Allowance,
-} from "../../common/currency";
+import { cleanCurrencyAddress } from "../../common/currency/cleanCurrencyAddress";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
 import { resolveAddress } from "../../common/ens";
 import {
   getAllInBatches,
@@ -18,7 +16,7 @@ import {
 } from "../../constants/contract";
 import { FEATURE_DIRECT_LISTINGS } from "../../constants/thirdweb-features";
 import { Status } from "../../enums";
-import { AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import {
   DirectListingInputParams,
   DirectListingInputParamsSchema,
