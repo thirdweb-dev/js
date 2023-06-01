@@ -86,7 +86,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   const signIn = async () => {
     try {
       setShowSignatureModal(true);
-      const token = await login(props.auth?.loginOptions);
+      const token = await login();
       props?.auth?.onLogin?.(token);
     } catch (err) {
       console.error("failed to log in", err);
