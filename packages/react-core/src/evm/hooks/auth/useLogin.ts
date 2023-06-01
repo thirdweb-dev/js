@@ -109,10 +109,10 @@ export async function doLogin(
     nonce: options?.nonce || nonce,
     issued_at: new Date().toISOString(),
     expiration_time: new Date(
-      options?.expirationTime || Date.now() + 1000 * 60 * 5,
+      options?.expirationTime || Date.now() + 1000 * 60 * 10,
     ).toISOString(),
     invalid_before: new Date(
-      options?.invalidBefore || Date.now(),
+      options?.invalidBefore || Date.now() - 1000 * 60 * 10,
     ).toISOString(),
     resources: options?.resources,
   };

@@ -53,9 +53,9 @@ export class ThirdwebAuth {
       chain_id: chainId,
       nonce: parsedOptions?.nonce,
       expiration_time:
-        parsedOptions?.expirationTime || new Date(Date.now() + 1000 * 60 * 5),
+        parsedOptions?.expirationTime || new Date(Date.now() + 1000 * 60 * 10),
       invalid_before:
-        parsedOptions?.invalidBefore || new Date(Date.now() - 1000 * 60 * 5),
+        parsedOptions?.invalidBefore || new Date(Date.now() - 1000 * 60 * 10),
       resources: parsedOptions?.resources,
     });
 
