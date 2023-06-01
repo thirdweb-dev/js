@@ -87,8 +87,7 @@ import {
 import { TokensClaimedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TieredDrop";
 import invariant from "tiny-invariant";
 import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
-import { normalizePriceValue } from "../../common";
-
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ContractMetadata } from "./contract-metadata";
 import { DropClaimConditions } from "./drop-claim-conditions";
