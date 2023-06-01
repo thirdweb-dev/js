@@ -1,6 +1,6 @@
 import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Address } from "../../schema/shared/Address";

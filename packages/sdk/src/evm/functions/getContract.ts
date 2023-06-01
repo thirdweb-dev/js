@@ -1,4 +1,4 @@
-import { resolveAddress } from "../common/ens";
+import { resolveAddress } from "../common/ens/resolveAddress";
 import { PREBUILT_CONTRACTS_MAP } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
 import { ContractPublisher } from "../core/classes/contract-publisher";
@@ -10,7 +10,7 @@ import {
 import { AddressOrEns } from "../schema/shared/AddressOrEnsSchema";
 import { SDKOptions } from "../schema/sdk-options";
 import { getContractFromAbi } from "./getContractFromAbi";
-import { getSignerAndProvider } from "./getSignerAndProvider";
+import { getSignerAndProvider } from "../constants/urls";
 import {
   cacheContract,
   getCachedContract,

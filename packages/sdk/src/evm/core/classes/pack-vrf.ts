@@ -1,5 +1,5 @@
 import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { LINK_TOKEN_ADDRESS } from "../../constants/currency";
 import { FEATURE_PACK_VRF } from "../../constants/thirdweb-features";

@@ -1,4 +1,4 @@
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { getMultichainRegistryAddress } from "../../constants/addresses/getMultichainRegistryAddress";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
