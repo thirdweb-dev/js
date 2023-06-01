@@ -1,5 +1,6 @@
 import { Json, ThirdwebAuth as ThirdwebAuthSDK } from "../core";
 import { getUser } from "./helpers/user";
+import payloadHandler from "./routes/payload";
 import loginHandler from "./routes/login";
 import logoutHandler from "./routes/logout";
 import userHandler from "./routes/user";
@@ -46,6 +47,13 @@ export function ThirdwebAuth<
 
   router.use(express.json());
   router.use(cookieMiddleware);
+
+  router.get(
+    "/payload",
+    asyncHandler((req: Request, res: Response) =>
+      payloadHandler(req, res, ctx as ThirdwebAuthContext),
+    ),
+  );
 
   router.post(
     "/login",

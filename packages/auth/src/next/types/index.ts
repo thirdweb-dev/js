@@ -14,7 +14,7 @@ type RequestType =
   | NextRequest
   | NextApiRequest;
 
-export type ThirdwebAuthRoute = "login" | "logout" | "user";
+export type ThirdwebAuthRoute = "payload" | "login" | "logout" | "user";
 
 export type ThirdwebAuthUser<
   TData extends Json = Json,

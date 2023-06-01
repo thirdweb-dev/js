@@ -37,7 +37,7 @@ export function useLogin() {
   const signer = useSDK()?.wallet.getSigner();
 
   const login = useMutation({
-    mutationFn: async (options?: LoginOptions) => {
+    mutationFn: async () => {
       invariant(
         authConfig,
         "Please specify an authConfig in the ThirdwebProvider",
@@ -48,8 +48,26 @@ export function useLogin() {
         "Please specify an authUrl in the authConfig.",
       );
 
-      const payload = doLogin(new SignerWallet(signer), options);
-      const res = await fetch(`${authConfig.authUrl}/login`, {
+      let res = await fetch(`${authConfig.authUrl}/payload`, {
+        method: "GET",
+      });
+
+      if (!res.ok) {
+        throw new Error(`Failed to get payload with status code ${res.status}`);
+      }
+
+      let payloadData: LoginPayloadData;
+      try {
+        ({ payload: payloadData } = await res.json());
+      } catch {
+        throw new Error(`Failed to get payload`);
+      }
+
+      const payload = await doLoginWithPayload(
+        new SignerWallet(signer),
+        payloadData,
+      );
+      res = await fetch(`${authConfig.authUrl}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -72,7 +90,7 @@ export function useLogin() {
   });
 
   return {
-    login: (options?: LoginOptions) => login.mutateAsync(options),
+    login: () => login.mutateAsync(),
     isLoading: login.isLoading,
   };
 }
@@ -80,7 +98,20 @@ export function useLogin() {
 // login function extracted directly from auth
 const isBrowser = () => typeof window !== "undefined";
 
-async function doLogin(
+export async function doLoginWithPayload(
+  wallet: GenericAuthWallet,
+  payload: LoginPayloadData,
+): Promise<LoginPayload> {
+  const message = generateMessage(payload);
+  const signature = await wallet.signMessage(message);
+
+  return {
+    payload,
+    signature,
+  };
+}
+
+export async function doLogin(
   wallet: GenericAuthWallet,
   options?: LoginOptions,
 ): Promise<LoginPayload> {
@@ -119,12 +150,7 @@ async function doLogin(
     resources: options?.resources,
   };
 
-  const signature = await wallet.signMessage(generateMessage(payloadData));
-
-  return {
-    payload: payloadData,
-    signature,
-  };
+  return doLoginWithPayload(wallet, payloadData);
 }
 
 // generate straight from auth
