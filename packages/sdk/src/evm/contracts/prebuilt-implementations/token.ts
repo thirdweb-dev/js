@@ -11,7 +11,7 @@ import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractPrimarySale } from "../../core/classes/contract-sales";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { TokenERC20History } from "../../core/classes/erc-20-history";
-import { Erc20SignatureMintable } from "../../core/classes/erc-20-signature-mintable";
+import { Erc20SignatureMintable } from "../../core/classes/erc-20";
 import { StandardErc20 } from "../../core/classes/erc-20-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
