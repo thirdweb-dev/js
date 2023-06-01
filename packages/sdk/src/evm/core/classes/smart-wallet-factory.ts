@@ -108,7 +108,6 @@ export class SmartWalletFactory<TContract extends IAccountFactory> implements De
     }
 
     const events = await this.events.getEvents("AccountCreated", filter);
-    console.log(events);
 
     return events.map((event) => {
       return { account: event.data.account, admin: event.data.accountAdmin };
