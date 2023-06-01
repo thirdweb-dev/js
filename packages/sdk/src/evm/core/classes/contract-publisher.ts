@@ -11,10 +11,10 @@ import {
   fetchSourceFilesFromMetadata,
   fetchContractMetadata,
 } from "../../common/metadata-resolver";
-import { getCompositePluginABI } from "../../common/plugin";
+import { getCompositePluginABI } from "../../common/plugin/getCompositePluginABI";
 import { buildTransactionFunction } from "../../common/transactions";
 import { isIncrementalVersion } from "../../common/version-checker";
-import { getContractPublisherAddress } from "../../constants/addresses";
+import { getContractPublisherAddress } from "../../constants/addresses/getContractPublisherAddress";
 import { getChainProvider } from "../../constants/urls";
 import {
   AbiFunction,
@@ -33,7 +33,7 @@ import {
   PublishedContractSchema,
 } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
-import { AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { NetworkInput, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { RPCConnectionHandler } from "./rpc-connection-handler";

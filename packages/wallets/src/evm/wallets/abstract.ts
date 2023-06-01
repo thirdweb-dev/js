@@ -88,12 +88,19 @@ export abstract class AbstractWallet
     address: string,
     chainId?: number,
   ): Promise<boolean> {
-    const messageHash = utils.hashMessage(message);
-    const messageHashBytes = utils.arrayify(messageHash);
-    const recoveredAddress = utils.recoverAddress(messageHashBytes, signature);
+    try {
+      const messageHash = utils.hashMessage(message);
+      const messageHashBytes = utils.arrayify(messageHash);
+      const recoveredAddress = utils.recoverAddress(
+        messageHashBytes,
+        signature,
+      );
 
-    if (recoveredAddress === address) {
-      return true;
+      if (recoveredAddress === address) {
+        return true;
+      }
+    } catch {
+      // no-op
     }
 
     // Check if the address is a smart contract wallet

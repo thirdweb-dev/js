@@ -1,8 +1,8 @@
 import { NFT } from "../../../core/schema/nft";
-import { calculateClaimCost } from "../../common/claim-conditions";
+import { calculateClaimCost } from "../../common/claim-conditions/calculateClaimCost";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_CLAIM_CUSTOM } from "../../constants/erc721-features";
-import { AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { ClaimOptions } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";

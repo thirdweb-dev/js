@@ -1,4 +1,4 @@
-import { ChainId } from "../constants/chains";
+import { ChainId } from "../constants/chains/ChainId";
 import fetch from "cross-fetch";
 import { BigNumber, ethers } from "ethers";
 

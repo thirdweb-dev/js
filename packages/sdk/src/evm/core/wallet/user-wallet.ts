@@ -1,15 +1,11 @@
-import {
-  fetchCurrencyValue,
-  isNativeToken,
-  normalizePriceValue,
-} from "../../common/currency";
 import { resolveAddress } from "../../common/ens";
 import { EIP712Domain, signTypedDataInternal } from "../../common/sign";
-import { LOCAL_NODE_PKEY } from "../../constants/addresses";
-import { ChainId } from "../../constants/chains";
+import { LOCAL_NODE_PKEY } from "../../constants/addresses/LOCAL_NODE_PKEY";
+import { ChainId } from "../../constants/chains/ChainId";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/currency";
 import { getChainProvider } from "../../constants/urls";
-import { Address, AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { Address } from "../../schema/shared/Address";
 import { SDKOptions } from "../../schema/sdk-options";
 import { Amount, CurrencyValue } from "../../types";
 import { ContractWrapper } from "../classes/contract-wrapper";
@@ -21,6 +17,9 @@ import { BigNumberish, BigNumber, ethers, providers, Signer, TypedDataField } fr
 import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
 import { BlockTag } from "@ethersproject/abstract-provider";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { isNativeToken } from "../../common/currency/isNativeToken";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 
 /**
  *

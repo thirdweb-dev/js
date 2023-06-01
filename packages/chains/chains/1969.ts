@@ -4,17 +4,17 @@ export default {
   "chain": "TSCS",
   "rpc": [
     "https://super-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.superexchain.com:8544"
+    "https://testnetrpc.scschain.com"
   ],
   "faucets": [
-    "https://testnet.superexchain.com"
+    "https://testnet.scschain.com"
   ],
   "nativeCurrency": {
     "name": "Super Chain Native Token",
     "symbol": "TSCS",
     "decimals": 18
   },
-  "infoURL": "https://testnet.superexchain.com",
+  "infoURL": "https://testnet.scschain.com",
   "shortName": "tscs",
   "chainId": 1969,
   "networkId": 1969,
@@ -27,7 +27,7 @@ export default {
   "explorers": [
     {
       "name": "blockscout",
-      "url": "https://testnetscan.superexchain.com",
+      "url": "https://testnetscan.scschain.com",
       "standard": "EIP3091"
     }
   ],

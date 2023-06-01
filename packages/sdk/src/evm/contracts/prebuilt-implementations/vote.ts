@@ -1,7 +1,3 @@
-import {
-  fetchCurrencyMetadata,
-  fetchCurrencyValue,
-} from "../../common/currency";
 import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import { ContractAppURI } from "../../core/classes/contract-appuri";
@@ -15,7 +11,8 @@ import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { VoteType } from "../../enums";
-import { Address, AddressOrEns } from "../../schema/shared";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { VoteContractSchema } from "../../schema/contracts/vote";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -37,6 +34,8 @@ import {
   Contract,
   ethers,
 } from "ethers";
+import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 
 /**
  * Create a decentralized organization for token holders to vote on proposals.

@@ -3,6 +3,7 @@ import type { WalletConfig } from "@thirdweb-dev/react-core";
 import { StyleSheet, View, FlatList } from "react-native";
 import { WalletButton } from "../../base/WalletButton";
 import Box from "../../base/Box";
+import { useTheme } from "@shopify/restyle";
 
 interface ChooseWalletContentProps {
   wallets: WalletConfig[];
@@ -20,6 +21,7 @@ export const ChooseWalletContent = ({
       (w) => !!!excludeWalletIds?.find((ewId) => ewId === w.id),
     );
   }, [wallets, excludeWalletIds]);
+  const theme = useTheme();
 
   return (
     <View style={styles.explorerContainer}>
@@ -41,6 +43,7 @@ export const ChooseWalletContent = ({
                   borderRadius="sm"
                 >
                   <item.selectUI
+                    theme={theme}
                     supportedWallets={wallets}
                     onSelect={(data) => {
                       onChooseWallet(item, data);

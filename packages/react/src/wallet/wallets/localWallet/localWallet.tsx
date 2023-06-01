@@ -1,10 +1,10 @@
 import { LocalWallet, WalletOptions } from "@thirdweb-dev/wallets";
-import { LocalWalletConfig, LocalConfiguredWallet } from "./types";
+import { LocalWalletConfigOptions, LocalWalletConfig } from "./types";
 import { LocalWalletConnectUI } from "./LocalWalletConnectUI";
 
 export const localWallet = (
-  config?: LocalWalletConfig,
-): LocalConfiguredWallet => {
+  config?: LocalWalletConfigOptions,
+): LocalWalletConfig => {
   return {
     id: LocalWallet.id,
     meta: { ...LocalWallet.meta, name: "Guest Wallet" },

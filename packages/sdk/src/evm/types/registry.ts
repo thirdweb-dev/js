@@ -1,5 +1,6 @@
 import { ContractType } from "../contracts";
-import type { Address, AddressOrEns } from "../schema/shared";
+import type { Address } from "../schema/shared/Address";
+import type { AddressOrEns } from "../schema/shared/AddressOrEnsSchema";
 
 export type ContractInput = {
   address: AddressOrEns;
