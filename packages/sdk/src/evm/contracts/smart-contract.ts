@@ -295,7 +295,34 @@ export class SmartContract<
     return assertEnabled(this.detectOffers(), FEATURE_OFFERS);
   }
 
-  // TODO: documentation comments.
+  /**
+   * Smart Wallet Factory
+   * 
+   * @remarks Create smart wallets and fetch data about them.
+   * @example
+   * ```javascript
+   * 
+   * // Predict the address of the smart wallet that will be created for an admin.
+   * const deterministicAddress = await contract.smartWalletFactory.predictWalletAddress(admin, extraData);
+   * 
+   * // Create smart wallets
+   * const tx = await contract.smartWalletFactory.createWallet(admin, extraData);
+   * // the same as `deterministicAddress`
+   * const smartWalletAddress = tx.address;
+   * 
+   * // Get all smart wallets created by the factory
+   * const allWallets = await contract.smartWalletFactory.getAllWallets();
+   * 
+   * // Get all smart wallets on which a signer has been given authority.
+   * const associatedWallets = await contract.smartWalletFactory.getAssociatedWallets(signer);
+   * 
+   * // Get all signers who have been given authority on a smart wallet.
+   * const associatedSigners = await contract.smartWalletFactory.getAssociatedSigners(smartWalletAddress);
+   * 
+   * // Check whether a smart wallet has already been created for a given admin.
+   * const isWalletDeployed = await contract.smartWalletFactory.isWalletDeployed(admin, extraData);
+   * ```
+   */
   get smartWalletFactory(): SmartWalletFactory<IAccountFactory> {
     return assertEnabled(
       this.detectSmartWalletFactory(),
