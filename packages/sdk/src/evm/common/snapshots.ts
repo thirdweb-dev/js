@@ -1,4 +1,3 @@
-import { SnapshotInputSchema } from "../schema/contracts/common/snapshots";
 import {
   SnapshotInfo,
   SnapshotInput,
