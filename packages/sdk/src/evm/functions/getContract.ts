@@ -10,7 +10,7 @@ import {
 import { AddressOrEns } from "../schema/shared/AddressOrEnsSchema";
 import { SDKOptions } from "../schema/sdk-options";
 import { getContractFromAbi } from "./getContractFromAbi";
-import { getSignerAndProvider } from "./getSignerAndProvider";
+import { getSignerAndProvider } from "../constants/urls";
 import {
   cacheContract,
   getCachedContract,

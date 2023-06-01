@@ -5,7 +5,7 @@ import { NetworkInput } from "../core/types";
 import { AddressOrEns } from "../schema/shared/AddressOrEnsSchema";
 import { AbiSchema } from "../schema/contracts/custom";
 import { SDKOptions } from "../schema/sdk-options";
-import { getSignerAndProvider } from "./getSignerAndProvider";
+import { getSignerAndProvider } from "../constants/urls";
 import {
   cacheContract,
   getCachedContract,

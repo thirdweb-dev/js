@@ -10,7 +10,7 @@ import {
   getContractTypeForRemoteName,
 } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
-import { getSignerAndProvider } from "../functions/getSignerAndProvider";
+import { getSignerAndProvider } from "../constants/urls";
 import { Abi, AbiSchema } from "../schema/contracts/custom";
 import { AddressOrEns } from "../schema/shared/AddressOrEnsSchema";
 import { SDKOptions } from "../schema/sdk-options";

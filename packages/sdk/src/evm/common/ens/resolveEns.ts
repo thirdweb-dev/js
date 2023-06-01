@@ -1,4 +1,4 @@
-import { getSignerAndProvider } from "../../functions/getSignerAndProvider";
+import { getSignerAndProvider } from "../../constants/urls";
 import type { providers } from "ethers";
 
 type CachedEns = {
@@ -52,5 +52,3 @@ export async function resolveEns(
   }
   return resolvedPromise.address;
 }
-
-
