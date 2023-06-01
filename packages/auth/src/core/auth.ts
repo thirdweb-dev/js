@@ -6,7 +6,6 @@ import {
   LoginPayloadDataSchema,
   AuthenticationPayloadDataSchema,
   AuthenticationPayloadData,
-  LoginOptionsSchema,
   VerifyOptionsSchema,
   VerifyOptions,
   GenerateOptionsSchema,
@@ -14,6 +13,7 @@ import {
   AuthenticateOptions,
   User,
   Json,
+  LoginOptionsSchema,
 } from "./schema";
 import { isBrowser } from "./utils";
 import type { GenericAuthWallet } from "@thirdweb-dev/wallets";
@@ -46,7 +46,7 @@ export class ThirdwebAuth {
     return LoginPayloadDataSchema.parse({
       type: this.wallet.type,
       domain: parsedOptions?.domain || this.domain,
-      address: await this.wallet.getAddress(),
+      address: parsedOptions?.address || (await this.wallet.getAddress()),
       statement: parsedOptions?.statement,
       version: parsedOptions?.version,
       uri: parsedOptions?.uri,

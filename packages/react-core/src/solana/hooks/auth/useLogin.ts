@@ -47,9 +47,14 @@ export function useLogin() {
         authConfig.authUrl,
         "Please specify an authUrl in the authConfig.",
       );
-
+      const wallet = new SignerWallet(signer);
+      const address = await wallet.getAddress();
       let res = await fetch(`${authConfig.authUrl}/payload`, {
-        method: "GET",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ address }),
       });
 
       if (!res.ok) {
@@ -63,10 +68,7 @@ export function useLogin() {
         throw new Error(`Failed to get payload`);
       }
 
-      const payload = await doLoginWithPayload(
-        new SignerWallet(signer),
-        payloadData,
-      );
+      const payload = await doLoginWithPayload(wallet, payloadData);
       res = await fetch(`${authConfig.authUrl}/login`, {
         method: "POST",
         headers: {

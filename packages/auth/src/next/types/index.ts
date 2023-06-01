@@ -5,6 +5,10 @@ import { GetServerSidePropsContext, NextApiRequest } from "next";
 import { NextRequest } from "next/server";
 import { z } from "zod";
 
+export const PayloadBodySchema = z.object({
+  address: z.string(),
+});
+
 export const LoginPayloadBodySchema = z.object({
   payload: LoginPayloadOutputSchema,
 });

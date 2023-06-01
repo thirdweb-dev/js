@@ -38,8 +38,13 @@ export function useLogin() {
         "Please specify an authUrl in the authConfig.",
       );
 
+      const address = await wallet.getAddress();
       let res = await fetch(`${authConfig.authUrl}/payload`, {
-        method: "GET",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ address }),
       });
 
       if (!res.ok) {
