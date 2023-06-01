@@ -42,7 +42,6 @@ type ConnectWalletProps = {
   detailsBtn?: () => JSX.Element;
   dropdownPosition?: DropDownPosition;
   auth?: {
-    loginOptions?: LoginOptions;
     loginOptional?: boolean;
     onLogin?: (token: string) => void;
     onLogout?: () => void;
