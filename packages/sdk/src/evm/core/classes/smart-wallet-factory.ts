@@ -36,7 +36,19 @@ export class SmartWalletFactory<TContract extends IAccountFactory> implements De
    * READ FUNCTIONS
    *******************************/
 
-	// TODO: Write documentation for function.
+	/**
+   * Get the deterministic address of the smart wallet that will be created for the given admin.
+   * 
+   * @example
+   * ```javascript
+   * const walletAddress = await contract.smartWalletFactory.predictWalletAddress(admin);
+   * ```
+   * @param admin - The admin of the smart wallet.
+   * @param extraData - (Optional) Extra data to be passed to the smart wallet on creation.
+   * @returns the deterministic address of the smart wallet that will be created for the given admin.
+   * 
+   * @twfeature SmartWalletFactory
+   */
 	public async predictWalletAddress(admin: string, extraData?: BytesLike): Promise<string> {
 		let data: BytesLike = ethers.utils.toUtf8Bytes("");
 		if(extraData) {
@@ -45,17 +57,50 @@ export class SmartWalletFactory<TContract extends IAccountFactory> implements De
 		return this.contractWrapper.readContract.getAddress(admin, data);
 	}
 
-	// TODO: Write documentation for function.
+	/**
+   * Get all signers who have authority on the given smart wallet.
+   * 
+   * @example
+   * ```javascript
+   * const allSigners = await contract.smartWalletFactory.getAssociatedSigners(admin);
+   * ```
+   * @param wallet - The smart wallet address.
+   * @returns all signers who have authority on the given smart wallet.
+   * 
+   * @twfeature SmartWalletFactory
+   */
 	public async getAssociatedSigners(wallet: string): Promise<string[]> {
 		return this.contractWrapper.readContract.getSignersOfAccount(wallet);
 	}
 
-	// TODO: Write documentation for function.
+	/**
+   * Get all wallets on which the given signer has authority.
+   * 
+   * @example
+   * ```javascript
+   * const allWallets = await contract.smartWalletFactory.getAssociatedWallets(admin);
+   * ```
+   * @param signer - The smart wallet address.
+   * @returns all wallets on which the given signer has authority.
+   * 
+   * @twfeature SmartWalletFactory
+   */
 	public async getAssociatedWallets(signer: string): Promise<string[]> {
 		return this.contractWrapper.readContract.getAccountsOfSigner(signer);
 	}
 
-  // TODO: Write documentation for function.
+  /**
+   * Get all wallets created via the smart wallet factory.
+   * 
+   * @example
+   * ```javascript
+   * const allWallets = await contract.smartWalletFactory.getAllWallets();
+   * ```
+   * 
+   * @returns all wallets created via the smart wallet factory.
+   * 
+   * @twfeature SmartWalletFactory
+   */
   public async getAllWallets(): Promise<AccountEvent[]> {
     const filter = {
       fromBlock: 0,
@@ -70,7 +115,13 @@ export class SmartWalletFactory<TContract extends IAccountFactory> implements De
     });
   }
 
-  // TODO: Write documentation for function.
+  /**
+   * Determine whether the smart wallet has been deployed for the given admin.
+   * 
+   * @param admin - The admin of the smart wallet.
+   * @param extraData - (Optional) Extra data to be passed to the smart wallet on creation.
+   * @returns whether the smart wallet has been deployed for the given admin.
+   */
   public async isWalletDeployed(admin: string, extraData?: BytesLike): Promise<boolean> {
     const addr = await this.predictWalletAddress(admin, extraData);
     return isContractDeployed(addr, this.contractWrapper.getProvider());
@@ -80,7 +131,23 @@ export class SmartWalletFactory<TContract extends IAccountFactory> implements De
    * WRITE FUNCTIONS
    *******************************/
 
-	// TODO: Write documentation for function.
+	/**
+   * Create a smart wallet.
+   * 
+   * @remarks Create a smart wallet for an admin. The admin will have complete authority over the smart wallet.
+   * 
+   * @param admin - The admin of the smart wallet.
+   * @param extraData - (Optional) Extra data to be passed to the smart wallet on creation.
+   * 
+   * @example
+   *  ```javascript
+   * const tx = await contract.smartWalletFactory.createWallet(admin, extraData);
+   * const receipt = tx.receipt();
+   * const smartWalletAddress = tx.address;
+   * ```
+   * 
+   * @twfeature SmartWalletFactory
+   */
 	createWallet = buildTransactionFunction(
 		async (
 			walletAdmin: string,
