@@ -11,7 +11,7 @@ import { SplitsContractSchema } from "../schema/contracts/splits";
 import { TokenErc1155ContractSchema } from "../schema/contracts/token-erc1155";
 import { TokenErc20ContractSchema } from "../schema/contracts/token-erc20";
 import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
-import { Address } from "../schema/shared";
+import { Address } from "../schema/shared/Address";
 import { PackContractSchema } from "../schema/contracts/packs";
 import { SDKOptions } from "../schema/sdk-options";
 import { VoteContractSchema } from "../schema/contracts/vote";

@@ -15,7 +15,7 @@ import { StandardErc721 } from "../../core/classes/erc-721-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import { MultiwrapContractSchema } from "../../schema/contracts/multiwrap";

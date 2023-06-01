@@ -32,7 +32,7 @@ import { Erc721 } from "../core/classes/erc-721";
 import { Erc1155 } from "../core/classes/erc-1155";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { Address } from "../schema/shared";
+import { Address } from "../schema/shared/Address";
 import {
   Abi,
   AbiInput,

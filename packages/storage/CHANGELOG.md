@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 1.1.4
+
+### Patch Changes
+
+- [#1098](https://github.com/thirdweb-dev/js/pull/1098) [`67450789`](https://github.com/thirdweb-dev/js/commit/67450789473b6008b86453ee4f4c7b99461223a6) Thanks [@MananTank](https://github.com/MananTank)! - add sideEffects: false in package.json
+
 ## 1.1.3
 
 ### Patch Changes

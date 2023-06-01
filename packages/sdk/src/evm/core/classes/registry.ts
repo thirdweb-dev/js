@@ -1,6 +1,6 @@
 import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
-import { AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { SDKOptions } from "../../schema/sdk-options";
 import type { NetworkInput, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";

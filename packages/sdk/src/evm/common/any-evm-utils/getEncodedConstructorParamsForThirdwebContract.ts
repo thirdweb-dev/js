@@ -8,7 +8,7 @@ import { DEFAULT_API_KEY } from "../../../core/constants/urls";
 import { fetchAndCachePublishedContractURI } from "./fetchAndCachePublishedContractURI";
 import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
 import { getCreate2FactoryAddress } from "./getCreate2FactoryAddress";
-import { encodeConstructorParamsForImplementation } from "./encodeConstructorParamsForImplementation";
+import { encodeConstructorParamsForImplementation } from "./computeDeploymentInfo";
 import { getDeploymentInfo } from "./getDeploymentInfo";
 
 /**

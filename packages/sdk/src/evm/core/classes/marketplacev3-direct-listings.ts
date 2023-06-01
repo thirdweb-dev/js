@@ -16,7 +16,7 @@ import {
 } from "../../constants/contract";
 import { FEATURE_DIRECT_LISTINGS } from "../../constants/thirdweb-features";
 import { Status } from "../../enums";
-import { AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import {
   DirectListingInputParams,
   DirectListingInputParamsSchema,

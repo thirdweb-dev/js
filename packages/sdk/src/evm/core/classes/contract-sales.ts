@@ -1,6 +1,6 @@
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_PRIMARY_SALE } from "../../constants/thirdweb-features";
-import { Address } from "../../schema/shared";
+import { Address } from "../../schema/shared/Address";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";

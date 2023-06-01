@@ -1,9 +1,6 @@
 import { PercentSchema } from "../../../core/schema/shared";
-import {
-  AddressOrEnsSchema,
-  BigNumberishSchema,
-  BigNumberSchema,
-} from "../shared";
+import { BigNumberishSchema, BigNumberSchema } from "../shared/BigNumberSchema";
+import { AddressOrEnsSchema } from "../shared/AddressOrEnsSchema";
 import {
   CommonContractOutputSchema,
   CommonContractSchema,

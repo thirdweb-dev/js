@@ -6,7 +6,7 @@ import {
   ContractInfoSchema,
   ContractSource,
 } from "../schema/contracts/custom";
-import { Address } from "../schema/shared";
+import { Address } from "../schema/shared/Address";
 import { resolveContractUriFromAddress } from "./feature-detection/resolveContractUriFromAddress";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { providers } from "ethers";
