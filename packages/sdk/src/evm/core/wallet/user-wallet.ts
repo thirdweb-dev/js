@@ -13,9 +13,10 @@ import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
 import { NetworkInput, TransactionResult } from "../types";
 import type { IERC20 } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
-import { BigNumber, ethers, providers, Signer, TypedDataField } from "ethers";
+import { BigNumberish, BigNumber, ethers, providers, Signer, TypedDataField } from "ethers";
 import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
+import { BlockTag } from "@ethersproject/abstract-provider";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import { isNativeToken } from "../../common/currency/isNativeToken";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
@@ -160,6 +161,20 @@ export class UserWallet {
   public async getChainId(): Promise<number> {
     return await this.requireWallet().getChainId();
   }
+
+  /**
+   * Get the number of transactions sent from this address.
+   * @param blockTag - Optional - the block tag to read the nonce from
+   */
+  public async getNonce(
+    blockTag?: BlockTag,
+  ): Promise<BigNumberish> {
+    const txCount = await this.connection.getProvider().getTransactionCount(
+      await this.getAddress(),
+      blockTag,
+    );
+    return txCount;
+  };
 
   /**
    * Checks whether there's a signer connected with the SDK

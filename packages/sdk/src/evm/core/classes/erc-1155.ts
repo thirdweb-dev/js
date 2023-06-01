@@ -363,12 +363,12 @@ export class Erc1155<
       const input = await AirdropInputSchema.parseAsync(addresses);
 
       const totalToAirdrop = input.reduce((prev, curr) => {
-        return prev + Number(curr?.quantity || 1);
-      }, 0);
+        return BigNumber.from(prev).add(BigNumber.from(curr?.quantity || 1));
+      }, BigNumber.from(0));
 
-      if (balanceOf.toNumber() < totalToAirdrop) {
+      if (balanceOf.lt(BigNumber.from(totalToAirdrop))) {
         throw new Error(
-          `The caller owns ${balanceOf.toNumber()} NFTs, but wants to airdrop ${totalToAirdrop} NFTs.`,
+          `The caller owns ${balanceOf.toString()} NFTs, but wants to airdrop ${totalToAirdrop.toString()} NFTs.`,
         );
       }
 
