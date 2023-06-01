@@ -11,13 +11,13 @@ import { deployWithThrowawayDeployer } from "../../common/any-evm-utils/deployWi
 import { getCreate2FactoryAddress } from "../../common/any-evm-utils/getCreate2FactoryAddress";
 import { getDeploymentInfo } from "../../common/any-evm-utils/getDeploymentInfo";
 import { getDeployArguments } from "../../common/deploy";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import {
   buildDeployTransactionFunction,
   buildTransactionFunction,
 } from "../../common/transactions";
 import { EventType } from "../../constants/events";
-import { getContractAddressByChainId } from "../../constants/addresses";
+import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
 import {
   EditionDropInitializer,
   EditionInitializer,
@@ -36,7 +36,8 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../../contracts";
-import { Address, AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { Address } from "../../schema/shared/Address";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
   DeployEvent,

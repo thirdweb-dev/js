@@ -4,10 +4,10 @@ import {
   fetchContractMetadataFromAddress,
   fetchSourceFilesFromMetadata,
 } from "../../common/metadata-resolver";
-import { isRouterContract } from "../../common/plugin";
+import { isRouterContract } from "../../common/plugin/isRouterContract";
 import { defaultGaslessSendFunction } from "../../common/transactions";
 import { isBrowser } from "../../common/utils";
-import { ChainId } from "../../constants/chains";
+import { ChainId } from "../../constants/chains/ChainId";
 import { ContractSource } from "../../schema/contracts/custom";
 import { SDKOptionsOutput } from "../../schema/sdk-options";
 import {
@@ -26,6 +26,7 @@ import {
   Contract,
   ContractFactory,
   ContractTransaction,
+  ethers,
   providers,
   Signer,
   utils,
@@ -741,6 +742,14 @@ export class DeployTransaction extends TransactionContext {
         this.factory.interface.encodeDeploy(this.args),
       ]),
     );
+  }
+
+  getTarget(): string {
+    return ethers.constants.AddressZero;
+  }
+
+  getMethod(): string {
+    return "deploy";
   }
 
   async sign(): Promise<string> {

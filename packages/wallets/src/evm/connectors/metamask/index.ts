@@ -14,7 +14,7 @@ import { utils } from "ethers";
 
 export type MetaMaskConnectorOptions = Pick<
   InjectedConnectorOptions,
-  "shimChainChangedDisconnect" | "shimDisconnect"
+  "shimDisconnect"
 > & {
   /**
    * While "disconnected" with `shimDisconnect`, allows user to select a different MetaMask account (than the currently connected account) when trying to connect.

@@ -6,13 +6,12 @@ import {
 import { resolveOrGenerateId } from "../../../common/signature-minting";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
 import {
-  AddressOrEnsSchema,
-  AddressSchema,
-  BigNumberishSchema,
   BigNumberSchema,
-  EndDateSchema,
-  StartDateSchema,
-} from "../../shared";
+  BigNumberishSchema,
+} from "../../shared/BigNumberSchema";
+import { EndDateSchema, StartDateSchema } from "../../shared/RawDateSchema";
+import { AddressOrEnsSchema } from "../../shared/AddressOrEnsSchema";
+import { AddressSchema } from "../../shared/AddressSchema";
 import { constants } from "ethers";
 import { z } from "zod";
 

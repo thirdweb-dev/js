@@ -1,19 +1,7 @@
 import { AmountSchema } from "../../../core/schema/shared";
 import { includesErrorMessage } from "../../common/error";
-import {
-  abstractContractModelToLegacy,
-  abstractContractModelToNew,
-  convertQuantityToBigNumber,
-  fetchSnapshotEntryForAddress,
-  legacyContractModelToAbstract,
-  newContractModelToAbstract,
-  prepareClaim,
-  processClaimConditionInputs,
-  transformResultToClaimCondition,
-  updateExistingClaimConditions,
-} from "../../common/claim-conditions";
-import { isNativeToken } from "../../common/currency";
-import { resolveAddress } from "../../common/ens";
+import { isNativeToken } from "../../common/currency/isNativeToken";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
 import { hasFunction } from "../../common/feature-detection/hasFunction";
 import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
@@ -21,7 +9,7 @@ import { buildTransactionFunction } from "../../common/transactions";
 import { isNode } from "../../common/utils";
 import { ClaimEligibility } from "../../enums";
 import { AbstractClaimConditionContractStruct } from "../../schema/contracts/common/claim-conditions";
-import { AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { SnapshotEntryWithProof } from "../../schema/contracts/common/snapshots";
 import {
   Amount,
@@ -58,6 +46,16 @@ import type { IClaimCondition } from "@thirdweb-dev/contracts-js/src/IDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants, ethers, utils } from "ethers";
 import deepEqual from "fast-deep-equal";
+import { fetchSnapshotEntryForAddress } from "../../common/claim-conditions/fetchSnapshotEntryForAddress";
+import { abstractContractModelToLegacy } from "../../common/claim-conditions/abstractContractModelToLegacy";
+import { abstractContractModelToNew } from "../../common/claim-conditions/abstractContractModelToNew";
+import { convertQuantityToBigNumber } from "../../common/claim-conditions/convertQuantityToBigNumber";
+import { legacyContractModelToAbstract } from "../../common/claim-conditions/legacyContractModelToAbstract";
+import { newContractModelToAbstract } from "../../common/claim-conditions/newContractModelToAbstract";
+import { prepareClaim } from "../../common/claim-conditions/prepareClaim";
+import { processClaimConditionInputs } from "../../common/claim-conditions/processClaimConditionInputs";
+import { transformResultToClaimCondition } from "../../common/claim-conditions/transformResultToClaimCondition";
+import { updateExistingClaimConditions } from "../../common/claim-conditions/updateExistingClaimConditions";
 
 /**
  * Manages claim conditions for NFT Drop contracts

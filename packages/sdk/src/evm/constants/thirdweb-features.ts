@@ -284,8 +284,8 @@ export const FEATURE_SMART_WALLET_FACTORY = {
   namespace: "smartwallet.factory",
   docLinks: {
     // TODO
-    sdk: "",
-    contracts: "",
+    sdk: "sdk.smartWalletFactory",
+    contracts: "smartWalletFactory",
   },
   abis: [IAccountFactory],
   features: {},

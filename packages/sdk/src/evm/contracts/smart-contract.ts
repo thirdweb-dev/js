@@ -14,6 +14,7 @@ import {
   FEATURE_PLATFORM_FEE,
   FEATURE_PRIMARY_SALE,
   FEATURE_ROYALTY,
+  FEATURE_SMART_WALLET_FACTORY,
 } from "../constants/thirdweb-features";
 import { Transaction } from "../core/classes/transactions";
 import { ContractAppURI } from "../core/classes/contract-appuri";
@@ -31,7 +32,7 @@ import { Erc721 } from "../core/classes/erc-721";
 import { Erc1155 } from "../core/classes/erc-1155";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { Address } from "../schema/shared";
+import { Address } from "../schema/shared/Address";
 import {
   Abi,
   AbiInput,
@@ -51,6 +52,7 @@ import type {
   DirectListingsLogic,
   EnglishAuctionsLogic,
   OffersLogic,
+  IAccountFactory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides } from "ethers";
@@ -62,6 +64,7 @@ import { ContractOwner } from "../core/classes/contract-owner";
 import { MarketplaceV3DirectListings } from "../core/classes/marketplacev3-direct-listings";
 import { MarketplaceV3EnglishAuctions } from "../core/classes/marketplacev3-english-auction";
 import { MarketplaceV3Offers } from "../core/classes/marketplacev3-offers";
+import { SmartWalletFactory } from "../core/classes/smart-wallet-factory";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -292,6 +295,41 @@ export class SmartContract<
     return assertEnabled(this.detectOffers(), FEATURE_OFFERS);
   }
 
+  /**
+   * Smart Wallet Factory
+   * 
+   * @remarks Create smart wallets and fetch data about them.
+   * @example
+   * ```javascript
+   * 
+   * // Predict the address of the smart wallet that will be created for an admin.
+   * const deterministicAddress = await contract.smartWalletFactory.predictWalletAddress(admin, extraData);
+   * 
+   * // Create smart wallets
+   * const tx = await contract.smartWalletFactory.createWallet(admin, extraData);
+   * // the same as `deterministicAddress`
+   * const smartWalletAddress = tx.address;
+   * 
+   * // Get all smart wallets created by the factory
+   * const allWallets = await contract.smartWalletFactory.getAllWallets();
+   * 
+   * // Get all smart wallets on which a signer has been given authority.
+   * const associatedWallets = await contract.smartWalletFactory.getAssociatedWallets(signer);
+   * 
+   * // Get all signers who have been given authority on a smart wallet.
+   * const associatedSigners = await contract.smartWalletFactory.getAssociatedSigners(smartWalletAddress);
+   * 
+   * // Check whether a smart wallet has already been created for a given admin.
+   * const isWalletDeployed = await contract.smartWalletFactory.isWalletDeployed(admin, extraData);
+   * ```
+   */
+  get smartWalletFactory(): SmartWalletFactory<IAccountFactory> {
+    return assertEnabled(
+      this.detectSmartWalletFactory(),
+      FEATURE_SMART_WALLET_FACTORY,
+    );
+  }
+
   private _chainId: number;
   get chainId() {
     return this._chainId;
@@ -515,6 +553,17 @@ export class SmartContract<
   private detectOffers() {
     if (detectContractFeature<OffersLogic>(this.contractWrapper, "Offers")) {
       return new MarketplaceV3Offers(this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  // ========== Smart account features ==========
+
+  private detectSmartWalletFactory() {
+    if (
+      detectContractFeature<IAccountFactory>(this.contractWrapper, FEATURE_SMART_WALLET_FACTORY.name)
+    ) {
+      return new SmartWalletFactory(this.contractWrapper);
     }
     return undefined;
   }

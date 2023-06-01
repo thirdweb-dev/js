@@ -1,13 +1,9 @@
 import { fetchAndCachePublishedContractURI } from "../common/any-evm-utils/fetchAndCachePublishedContractURI";
 import { getPrebuiltInfo } from "../common/legacy";
 import { fetchAbiFromAddress } from "../common/metadata-resolver";
-import {
-  getCompositeABIfromRelease,
-  getCompositePluginABI,
-} from "../common/plugin";
 import { ALL_ROLES } from "../common/role";
 import type { NetworkInput } from "../core/types";
-import { getSignerAndProvider } from "../functions/getSignerAndProvider";
+import { getSignerAndProvider } from "../constants/urls";
 import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
 import { DropErc721ContractSchema } from "../schema/contracts/drop-erc721";
 import { MarketplaceContractSchema } from "../schema/contracts/marketplace";
@@ -15,7 +11,7 @@ import { SplitsContractSchema } from "../schema/contracts/splits";
 import { TokenErc1155ContractSchema } from "../schema/contracts/token-erc1155";
 import { TokenErc20ContractSchema } from "../schema/contracts/token-erc20";
 import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
-import { Address } from "../schema/shared";
+import { Address } from "../schema/shared/Address";
 import { PackContractSchema } from "../schema/contracts/packs";
 import { SDKOptions } from "../schema/sdk-options";
 import { VoteContractSchema } from "../schema/contracts/vote";
@@ -25,6 +21,8 @@ import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 import type { SmartContract as SmartContractType } from "./smart-contract";
+import { getCompositeABIfromRelease } from "../common/plugin/getCompositeABIfromRelease";
+import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
 
 type InitalizeParams = [
   network: NetworkInput,

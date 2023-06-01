@@ -326,7 +326,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
 
             this.emit("session_request", {
               topic: this.#session.topic,
-              params: requestEvent.params,
+              params: requestEvent.params.request.params,
               peer: {
                 metadata: this.#session.peer.metadata,
               },

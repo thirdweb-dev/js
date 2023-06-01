@@ -1,19 +1,18 @@
-import { fetchCurrencyValue } from "../common/currency";
 import { getAllDetectedFeatureNames } from "../common/feature-detection/getAllDetectedFeatureNames";
-import { resolveAddress } from "../common/ens";
-import { getCompositePluginABI } from "../common/plugin";
+import { resolveAddress } from "../common/ens/resolveAddress";
+import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
 import { createStorage } from "../common/storage";
 import { getChainProvider, isChainConfig } from "../constants/urls";
-import { setSupportedChains } from "../constants/chains";
+import { setSupportedChains } from "../constants/chains/supportedChains";
 import { NATIVE_TOKEN_ADDRESS } from "../constants/currency";
 import {
   PREBUILT_CONTRACTS_MAP,
   getContractTypeForRemoteName,
 } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
-import { getSignerAndProvider } from "../functions/getSignerAndProvider";
+import { getSignerAndProvider } from "../constants/urls";
 import { Abi, AbiSchema } from "../schema/contracts/custom";
-import { AddressOrEns } from "../schema/shared";
+import { AddressOrEns } from "../schema/shared/AddressOrEnsSchema";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWithMetadata, CurrencyValue } from "../types";
 import { ContractDeployer } from "./classes/contract-deployer";
@@ -40,6 +39,7 @@ import {
 } from "ethers";
 import { BaseContractForAddress } from "../types/contract";
 import { ContractVerifier } from "./classes/contract-verifier";
+import { fetchCurrencyValue } from "../common/currency/fetchCurrencyValue";
 
 /**
  * The main entry point for the thirdweb SDK
