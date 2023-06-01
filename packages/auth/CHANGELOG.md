@@ -1,5 +1,16 @@
 # @thirdweb-dev/auth
 
+## 3.0.23
+
+### Patch Changes
+
+- [#1101](https://github.com/thirdweb-dev/js/pull/1101) [`e1846c44`](https://github.com/thirdweb-dev/js/commit/e1846c44696bcb25a6a137d63e117e7d2ce9d979) Thanks [@adam-maj](https://github.com/adam-maj)! - Bump invalid before with 5 minute window
+
+- [#1098](https://github.com/thirdweb-dev/js/pull/1098) [`67450789`](https://github.com/thirdweb-dev/js/commit/67450789473b6008b86453ee4f4c7b99461223a6) Thanks [@MananTank](https://github.com/MananTank)! - add sideEffects: false in package.json
+
+- Updated dependencies []:
+  - @thirdweb-dev/wallets@0.2.24
+
 ## 3.0.22
 
 ### Patch Changes

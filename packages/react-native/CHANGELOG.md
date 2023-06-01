@@ -1,5 +1,17 @@
 # @thirdweb-dev/react-native
 
+## 0.2.16
+
+### Patch Changes
+
+- [#1103](https://github.com/thirdweb-dev/js/pull/1103) [`89102b0c`](https://github.com/thirdweb-dev/js/commit/89102b0c895011bb6528d2b9bc4289173b351c8d) Thanks [@iketw](https://github.com/iketw)! - [ReactNative] Fix bug where the wc uri is not being copied in the textinput after scanning it
+
+- Updated dependencies [[`23d90b3e`](https://github.com/thirdweb-dev/js/commit/23d90b3e779a5bfdb7058b8c51349d9c278fcbce), [`cc56037e`](https://github.com/thirdweb-dev/js/commit/cc56037e64560b9e0fc16eb0ac7cc2e47e2c9fdf), [`67450789`](https://github.com/thirdweb-dev/js/commit/67450789473b6008b86453ee4f4c7b99461223a6)]:
+  - @thirdweb-dev/sdk@3.10.19
+  - @thirdweb-dev/storage@1.1.4
+  - @thirdweb-dev/react-core@3.12.4
+  - @thirdweb-dev/wallets@0.2.24
+
 ## 0.2.15
 
 ### Patch Changes
