@@ -8,12 +8,12 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import { useContractWrite } from "@thirdweb-dev/react";
+import { useAddress, useContractWrite } from "@thirdweb-dev/react";
 import { AbiFunction, SmartContract } from "@thirdweb-dev/sdk/evm";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
-import { BigNumber, utils } from "ethers";
+import { BigNumber, CallOverrides, constants, utils } from "ethers";
 import { replaceIpfsUrl } from "lib/sdk";
 import { useEffect, useId, useMemo } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
@@ -115,11 +115,13 @@ function useDelayedRead(
   contract: Required<SmartContract> | undefined,
   functionName?: string,
 ) {
-  return useMutation(async ({ args }: { args: any[] }) => {
-    invariant(contract, "Contract is required");
-    invariant(functionName, "functionName is required");
-    return contract?.call(functionName, args);
-  });
+  return useMutation(
+    async ({ args, overrides }: { args: any[]; overrides?: CallOverrides }) => {
+      invariant(contract, "Contract is required");
+      invariant(functionName, "functionName is required");
+      return contract?.call(functionName, args, overrides);
+    },
+  );
 }
 
 export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
@@ -167,15 +169,17 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
 
   const error = isView ? readError : mutationError;
 
+  const connectedWalletAddress = useAddress() || constants.AddressZero;
+
   useEffect(() => {
     if (
       form.watch("params").length === 0 &&
       (abiFunction?.stateMutability === "view" ||
         abiFunction?.stateMutability === "pure")
     ) {
-      readFn({ args: [] });
+      readFn({ args: [], overrides: { from: connectedWalletAddress } });
     }
-  }, [readFn, abiFunction?.stateMutability, form]);
+  }, [readFn, abiFunction?.stateMutability, form, connectedWalletAddress]);
 
   return (
     <FormProvider {...form}>
@@ -207,7 +211,10 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                 (abiFunction?.stateMutability === "view" ||
                   abiFunction?.stateMutability === "pure")
               ) {
-                readFn({ args: formatted });
+                readFn({
+                  args: formatted,
+                  overrides: { from: connectedWalletAddress },
+                });
               } else {
                 mutate({
                   args: formatted,
