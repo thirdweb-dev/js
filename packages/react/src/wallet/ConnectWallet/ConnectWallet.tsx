@@ -20,7 +20,6 @@ import { Button } from "../../components/buttons";
 import { Spinner } from "../../components/Spinner";
 import styled from "@emotion/styled";
 import { fadeInAnimation } from "../../components/FadeIn";
-import type { LoginOptions } from "@thirdweb-dev/auth";
 import { LockIcon } from "./icons/LockIcon";
 import { Flex } from "../../components/basic";
 import { shortenAddress } from "../../evm/utils/addresses";
