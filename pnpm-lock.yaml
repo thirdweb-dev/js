@@ -352,8 +352,8 @@ importers:
   packages/contracts-js:
     dependencies:
       '@thirdweb-dev/contracts':
-        specifier: 3.5.5-1
-        version: 3.5.5-1
+        specifier: 3.5.5
+        version: 3.5.5
     devDependencies:
       '@babel/preset-env':
         specifier: ^7.18.10
@@ -9819,8 +9819,8 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  /@thirdweb-dev/contracts@3.5.5-1:
-    resolution: {integrity: sha512-wVhzdTfUTGhhMSimcH3p7aXavFkFZRdN31jkkzc/XGHAcMOKOuYLnH/fwnOqKl/pI0fg7a5ADG9x8CgdvmQjwg==}
+  /@thirdweb-dev/contracts@3.5.5:
+    resolution: {integrity: sha512-rXbqptxsyTQQ2J9x4ZrxdLbUE8syN11/g5eGHhLQjAaUH1RzwULeAFOJmTYrCf1bg1VOxcqBbdV6tfu7FiOQEQ==}
     dev: false
 
   /@tootallnate/once@1.1.2:
