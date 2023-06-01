@@ -46,7 +46,7 @@ import type { IClaimCondition } from "@thirdweb-dev/contracts-js/src/IDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants, ethers, utils } from "ethers";
 import deepEqual from "fast-deep-equal";
-import { fetchSnapshotEntryForAddress } from "../../common";
+import { fetchSnapshotEntryForAddress } from "../../common/claim-conditions/fetchSnapshotEntryForAddress";
 import { abstractContractModelToLegacy } from "../../common/claim-conditions/abstractContractModelToLegacy";
 import { abstractContractModelToNew } from "../../common/claim-conditions/abstractContractModelToNew";
 import { convertQuantityToBigNumber } from "../../common/claim-conditions/convertQuantityToBigNumber";

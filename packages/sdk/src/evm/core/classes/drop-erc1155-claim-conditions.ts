@@ -43,13 +43,13 @@ import { BigNumber, BigNumberish, constants, ethers, utils } from "ethers";
 import deepEqual from "fast-deep-equal";
 import { legacyContractModelToAbstract } from "../../common/claim-conditions/legacyContractModelToAbstract";
 import { newContractModelToAbstract } from "../../common/claim-conditions/newContractModelToAbstract";
-import { fetchSnapshotEntryForAddress } from "../../common";
 import { abstractContractModelToLegacy } from "../../common/claim-conditions/abstractContractModelToLegacy";
 import { abstractContractModelToNew } from "../../common/claim-conditions/abstractContractModelToNew";
 import { prepareClaim } from "../../common/claim-conditions/prepareClaim";
 import { processClaimConditionInputs } from "../../common/claim-conditions/processClaimConditionInputs";
 import { transformResultToClaimCondition } from "../../common/claim-conditions/transformResultToClaimCondition";
 import { updateExistingClaimConditions } from "../../common/claim-conditions/updateExistingClaimConditions";
+import { fetchSnapshotEntryForAddress } from "../../common/claim-conditions/fetchSnapshotEntryForAddress";
 
 /**
  * Manages claim conditions for Edition Drop contracts
