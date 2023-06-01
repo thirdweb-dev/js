@@ -1,7 +1,5 @@
-import {
-  getSignerAndProvider,
-  isSigner,
-} from "../../functions/getSignerAndProvider";
+import { isSigner } from "../../functions/getSignerAndProvider";
+import { getSignerAndProvider } from "../../constants/urls";
 import {
   SDKOptions,
   SDKOptionsOutput,
