@@ -445,6 +445,7 @@ const WalletSDK: ThirdwebNextPage = () => {
             src={require("/public/assets/product-pages/wallet-sdk/how-it-works.png")}
             alt="How it works"
             mb={16}
+            mx="auto"
             maxH="700px"
           />
           <SimpleGrid
