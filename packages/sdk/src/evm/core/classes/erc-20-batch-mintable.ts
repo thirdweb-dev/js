@@ -1,4 +1,4 @@
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_TOKEN_BATCH_MINTABLE } from "../../constants/erc20-features";
 import { TokenMintInput } from "../../schema/tokens/token";

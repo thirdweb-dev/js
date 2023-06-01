@@ -82,5 +82,9 @@ export { convertToReadableQuantity } from "./claim-conditions/convertToReadableQ
 export { fetchSnapshotEntryForAddress } from "./claim-conditions/fetchSnapshotEntryForAddress";
 
 export { getCachedAbiForContract } from "./abi";
-export * from "./ens";
+
+// ens
+export * from "./ens/resolveEns";
+export * from "./ens/resolveAddress";
+
 export { prepareGaslessRequest } from "./transactions";

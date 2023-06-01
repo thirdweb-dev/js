@@ -7,7 +7,7 @@ import {
   ExtensionNotImplementedError,
   NotFoundError,
 } from "../../common/error";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { FALLBACK_METADATA, fetchTokenMetadata } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import {

@@ -1,4 +1,4 @@
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_TOKEN_BURNABLE } from "../../constants/erc20-features";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";

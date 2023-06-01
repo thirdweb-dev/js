@@ -1,5 +1,5 @@
 import { getAllDetectedFeatureNames } from "../common/feature-detection/getAllDetectedFeatureNames";
-import { resolveAddress } from "../common/ens";
+import { resolveAddress } from "../common/ens/resolveAddress";
 import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
 import { createStorage } from "../common/storage";
 import { getChainProvider, isChainConfig } from "../constants/urls";

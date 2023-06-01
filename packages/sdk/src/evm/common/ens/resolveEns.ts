@@ -1,9 +1,4 @@
-import { getSignerAndProvider } from "../functions/getSignerAndProvider";
-import {
-  AddressOrEns,
-  AddressOrEnsSchema,
-} from "../schema/shared/AddressOrEnsSchema";
-import { Address } from "../schema/shared/Address";
+import { getSignerAndProvider } from "../../functions/getSignerAndProvider";
 import type { providers } from "ethers";
 
 type CachedEns = {
@@ -58,8 +53,4 @@ export async function resolveEns(
   return resolvedPromise.address;
 }
 
-export async function resolveAddress(
-  addressOrEns: AddressOrEns,
-): Promise<Address> {
-  return AddressOrEnsSchema.parseAsync(addressOrEns);
-}
+

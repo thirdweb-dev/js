@@ -1,4 +1,4 @@
-import { resolveAddress } from "../common/ens";
+import { resolveAddress } from "../common/ens/resolveAddress";
 import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
 import { SmartContract } from "../contracts/smart-contract";
 import { NetworkInput } from "../core/types";

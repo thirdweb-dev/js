@@ -1,4 +1,4 @@
-import { resolveAddress } from "../common/ens";
+import { resolveAddress } from "../common/ens/resolveAddress";
 import { PREBUILT_CONTRACTS_MAP } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
 import { ContractPublisher } from "../core/classes/contract-publisher";
