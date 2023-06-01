@@ -95,7 +95,7 @@ export const SessionRequestModal = () => {
       default:
         throw new Error(`Method not implemented: ${requestData.method}`);
     }
-  }, [requestData]);
+  }, [chain?.chainId, chain?.slug, requestData]);
 
   return (
     <Box
