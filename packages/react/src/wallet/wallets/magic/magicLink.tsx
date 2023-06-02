@@ -65,7 +65,8 @@ const MagicSelectionUI: React.FC<
         const isPhone = Number.isInteger(Number(input[input.length - 1]));
 
         if (isEmail && isEmailEnabled) {
-          const isValidEmail = input.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
+          const emailRegex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
+          const isValidEmail = emailRegex.test(input);
           if (!isValidEmail) {
             return "Invalid email address";
           }
