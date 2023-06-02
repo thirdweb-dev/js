@@ -36,7 +36,7 @@ import invariant from "tiny-invariant";
  * @param contract - an instance of a smart wallet factory contract
  * @returns a response object that includes an array of all smart wallets with their associated admin
  * @twfeature SmartWalletFactory
- * @see {@link https://portal.thirdweb.com/react/react.usesmartwallet?utm_source=sdk | Documentation}
+ * @see {@link https://portal.thirdweb.com/react/react.usesmartwallets?utm_source=sdk | Documentation}
  * @beta
  */
 export function useSmartWallets(
