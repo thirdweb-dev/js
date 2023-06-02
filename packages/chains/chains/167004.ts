@@ -3,9 +3,9 @@ export default {
   "name": "Taiko (Alpha-2 Testnet)",
   "chain": "ETH",
   "icon": {
-    "url": "ipfs://QmWMUDmNHzCtism9dYK1JooerZJ4da6kGt67HAQmLiEykc",
-    "width": 1001,
-    "height": 1001,
+    "url": "ipfs://QmcHdmVr5VRUJq13jnM6tgah5Ge7hn3Dm14eY6vwivJ5ui",
+    "width": 288,
+    "height": 258,
     "format": "png"
   },
   "rpc": [
