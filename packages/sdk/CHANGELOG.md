@@ -1,5 +1,26 @@
 # @thirdweb-dev/sdk
 
+## 3.10.20
+
+### Patch Changes
+
+- [#1104](https://github.com/thirdweb-dev/js/pull/1104) [`ce36322b`](https://github.com/thirdweb-dev/js/commit/ce36322b383af73905894b73f9409a146359ffb0) Thanks [@farhanW3](https://github.com/farhanW3)! - Added getNonce() to User-Wallets, to help with getting the nonce of the wallet. Updated ERC1155 airdrop to use BigNumber to avoid overflow issue
+
+- [#1105](https://github.com/thirdweb-dev/js/pull/1105) [`c60658ed`](https://github.com/thirdweb-dev/js/commit/c60658ed8c94867cca831b0d5535006da5b40aa6) Thanks [@MananTank](https://github.com/MananTank)! - Reduce Circular dependencies
+
+- [#1110](https://github.com/thirdweb-dev/js/pull/1110) [`aa9e952c`](https://github.com/thirdweb-dev/js/commit/aa9e952cb519a47ed112d2905b1f3787863035b6) Thanks [@MananTank](https://github.com/MananTank)! - Reduce circular dependencies
+
+- [#1095](https://github.com/thirdweb-dev/js/pull/1095) [`564eaccf`](https://github.com/thirdweb-dev/js/commit/564eaccf480a81f36db43c782392595a5021e5ac) Thanks [@nkrishang](https://github.com/nkrishang)! - Add SmartWalletFactory extension detection and logic
+
+- [#1112](https://github.com/thirdweb-dev/js/pull/1112) [`6aee0413`](https://github.com/thirdweb-dev/js/commit/6aee0413439b9ca408879bbb3c38c538c89d01af) Thanks [@MananTank](https://github.com/MananTank)! - Reduce circular dependencies
+
+- [#1108](https://github.com/thirdweb-dev/js/pull/1108) [`e93aa70e`](https://github.com/thirdweb-dev/js/commit/e93aa70ef0093a2526404e11b7ddae8fb98c213b) Thanks [@MananTank](https://github.com/MananTank)! - Reduce circular deps
+
+- [#1117](https://github.com/thirdweb-dev/js/pull/1117) [`51bbd3d1`](https://github.com/thirdweb-dev/js/commit/51bbd3d1bccbb92a1405ea50f6c178c091a90f20) Thanks [@MananTank](https://github.com/MananTank)! - Reduce circular dependencies
+
+- Updated dependencies [[`564eaccf`](https://github.com/thirdweb-dev/js/commit/564eaccf480a81f36db43c782392595a5021e5ac)]:
+  - @thirdweb-dev/contracts-js@1.3.5
+
 ## 3.10.19
 
 ### Patch Changes
