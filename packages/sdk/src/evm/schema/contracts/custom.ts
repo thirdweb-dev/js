@@ -125,10 +125,37 @@ export const ChainIdToAddressSchema = z.record(z.string(), z.string());
 /**
  * @internal
  */
+export const CustomFactoryInput = z.object({
+  factoryFunction: z.string(),
+  params: z.array(z.object({ name: z.string(), type: z.string() })).default([]),
+  customFactoryAddresses: ChainIdToAddressSchema,
+});
+
+/**
+ * @internal
+ */
 export const FactoryDeploymentSchema = z.object({
   implementationAddresses: ChainIdToAddressSchema,
   implementationInitializerFunction: z.string().default("initialize"),
+  customFactoryInput: CustomFactoryInput.optional(),
   factoryAddresses: ChainIdToAddressSchema.optional(),
+});
+
+/**
+ * @internal
+ */
+export const DeployTypeInput = z.union([
+  z.literal("standard"),
+  z.literal("autoFactory"),
+  z.literal("customFactory"),
+]);
+
+/**
+ * @internal
+ */
+export const DeploymentNetworkInput = z.object({
+  allNetworks: z.boolean().optional(),
+  networksEnabled: z.array(z.number()).default([]),
 });
 
 /**
@@ -162,6 +189,8 @@ export const ExtraPublishMetadataSchemaInput = z
     isDeployableViaFactory: z.boolean().optional(),
     isDeployableViaProxy: z.boolean().optional(),
     factoryDeploymentData: FactoryDeploymentSchema.optional(),
+    deployType: DeployTypeInput.optional(),
+    networksForDeployment: DeploymentNetworkInput.optional(),
     constructorParams: z
       .record(
         z.string(),
@@ -170,6 +199,7 @@ export const ExtraPublishMetadataSchemaInput = z
             displayName: z.string().optional(),
             description: z.string().optional(),
             defaultValue: z.string().optional(),
+            hidden: z.boolean().optional(),
           })
           .catchall(z.any()),
       )
