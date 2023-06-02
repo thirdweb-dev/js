@@ -32,19 +32,25 @@ export const GuidesShowcase: React.FC<GuidesShowcaseProps> = ({
   return (
     <ProductSection>
       <Flex flexDir="column" py={16} align="center" gap={{ base: 6, lg: 8 }}>
-        <Heading as="h2" size="display.sm" fontWeight={700} textAlign="center">
-          {title}
-        </Heading>
-
-        <Heading
-          as="h3"
-          maxW="820px"
-          textAlign="center"
-          color="whiteAlpha.600"
-          size="subtitle.md"
-        >
-          {description}
-        </Heading>
+        <Flex flexDir="column" gap={2} justifyContent="start">
+          <Heading
+            as="h2"
+            size="display.sm"
+            fontWeight={700}
+            textAlign="center"
+          >
+            {title}
+          </Heading>
+          <Heading
+            as="h3"
+            maxW="820px"
+            textAlign="center"
+            color="whiteAlpha.600"
+            size="subtitle.md"
+          >
+            {description}
+          </Heading>
+        </Flex>
         <Flex direction="column" gap={3}>
           <SimpleGrid
             columns={{ base: 1, md: numColumns }}

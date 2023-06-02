@@ -50,13 +50,12 @@ export const HomePageCodeBlock: React.FC<CodeBlockProps> = ({
   prefix,
   canCopy = true,
   wrap = true,
-  darkTheme,
+  darkTheme = themes.vsDark,
   lightTheme,
   autoType = false,
   typingSpeed = 50,
   title,
   titleColor,
-
   ...restCodeProps
 }) => {
   const { ref, inView } = useInView({

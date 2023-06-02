@@ -110,7 +110,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
               }
             />
           )}
-          <Box as="span" display="block" my={1} color="heading">
+          <Box as="span" display="block" my={1} color="heading" h="full">
             {tokens.map((line, i) => (
               // eslint-disable-next-line react/jsx-key
               <Box {...getLineProps({ line, key: i })}>
