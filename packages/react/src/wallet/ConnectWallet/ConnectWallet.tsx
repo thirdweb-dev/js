@@ -20,7 +20,6 @@ import { Button } from "../../components/buttons";
 import { Spinner } from "../../components/Spinner";
 import styled from "@emotion/styled";
 import { fadeInAnimation } from "../../components/FadeIn";
-import type { LoginOptions } from "@thirdweb-dev/auth";
 import { LockIcon } from "./icons/LockIcon";
 import { Flex } from "../../components/basic";
 import { shortenAddress } from "../../evm/utils/addresses";
@@ -42,7 +41,6 @@ type ConnectWalletProps = {
   detailsBtn?: () => JSX.Element;
   dropdownPosition?: DropDownPosition;
   auth?: {
-    loginOptions?: LoginOptions;
     loginOptional?: boolean;
     onLogin?: (token: string) => void;
     onLogout?: () => void;
@@ -86,7 +84,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   const signIn = async () => {
     try {
       setShowSignatureModal(true);
-      const token = await login(props.auth?.loginOptions);
+      const token = await login();
       props?.auth?.onLogin?.(token);
     } catch (err) {
       console.error("failed to log in", err);
