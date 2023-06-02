@@ -86,5 +86,3 @@ export { getCachedAbiForContract } from "./abi";
 // ens
 export * from "./ens/resolveEns";
 export * from "./ens/resolveAddress";
-
-export { prepareGaslessRequest } from "./transactions";
