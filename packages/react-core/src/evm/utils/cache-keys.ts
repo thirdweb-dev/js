@@ -118,6 +118,11 @@ export const cacheKeys = {
         overrides,
       ]),
 
+    smartWalletFactory: {
+      getAll: (contractAddress: RequiredParam<ContractAddress>) =>
+        createContractCacheKey(contractAddress, ["smartWalletFactory"]),
+    },
+
     app: {
       get: (contractAddress: RequiredParam<ContractAddress>) =>
         createContractCacheKey(contractAddress, ["appURI"]),
