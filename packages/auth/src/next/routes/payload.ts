@@ -13,8 +13,6 @@ export default async function handler(
   }
 
   const parsedPayload = PayloadBodySchema.safeParse(req.body);
-
-  // Get signed login payload from the frontend
   if (!parsedPayload.success) {
     return res.status(400).json({ error: "Please provide an address" });
   }
