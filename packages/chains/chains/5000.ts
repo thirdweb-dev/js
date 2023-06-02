@@ -8,8 +8,8 @@ export default {
   ],
   "faucets": [],
   "nativeCurrency": {
-    "name": "Mantle",
-    "symbol": "MNT",
+    "name": "BitDAO",
+    "symbol": "BIT",
     "decimals": 18
   },
   "infoURL": "https://mantle.xyz",

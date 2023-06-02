@@ -1,32 +1,29 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Rollux Testnet",
+  "name": "Syscoin Rollux Testnet",
   "chain": "SYS",
   "rpc": [
-    "https://rollux-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://syscoin-rollux-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-tanenbaum.rollux.com",
-    "https://rpc.ankr.com/rollux_testnet/${ANKR_API_KEY}",
     "wss://rpc-tanenbaum.rollux.com/wss"
   ],
-  "faucets": [
-    "https://rollux.id/faucetapp"
-  ],
+  "faucets": [],
   "nativeCurrency": {
-    "name": "Testnet Syscoin",
-    "symbol": "TSYS",
+    "name": "Rollux Testnet Syscoin",
+    "symbol": "tSYS",
     "decimals": 18
   },
-  "infoURL": "https://rollux.com",
+  "infoURL": "https://syscoin.org",
   "shortName": "tsys-rollux",
   "chainId": 57000,
   "networkId": 57000,
   "explorers": [
     {
-      "name": "Rollux Testnet Explorer",
+      "name": "Syscoin Rollux Testnet Explorer",
       "url": "https://rollux.tanenbaum.io",
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
-  "slug": "rollux-testnet"
+  "slug": "syscoin-rollux-testnet"
 } as const satisfies Chain;
