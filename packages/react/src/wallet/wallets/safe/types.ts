@@ -1,16 +1,11 @@
 import { WalletConfig } from "@thirdweb-dev/react-core";
 import { SafeWallet } from "@thirdweb-dev/wallets";
 
-export type SafeWalletConfig = {
+export type SafeWalletConfigOptions = {
   personalWallets?: WalletConfig<any, any>[];
 };
 
-export type SafeWalletObj = WalletConfig<
+export type SafeWalletConfig = WalletConfig<
   SafeWallet,
-  Required<SafeWalletConfig>
->;
-
-export type SafeConfiguredWallet = WalletConfig<
-  SafeWallet,
-  Required<SafeWalletConfig>
+  Required<SafeWalletConfigOptions>
 >;

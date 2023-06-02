@@ -26,6 +26,61 @@ const CHAIN_ID_TO_GNOSIS_SERVER_URL = {
   10: "https://safe-transaction-optimism.safe.global",
 } as const;
 
+const CHAIN_ID_TO_SIGN_MESSAGE_LIB_ADDRESS = {
+  // mainnet
+  1: "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+  // polygon
+  137: "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+  // bsc
+  56: "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+  // arbitrum
+  42161: "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+  // aurora
+  1313161554: "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+  // avalanche
+  43114: "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+  // optimism
+  10: "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+  // base goerli
+  84531: "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+  // celo
+  42220: "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+  // goerli
+  5: "0x58FCe385Ed16beB4BCE49c8DF34c7d6975807520",
+  // gnosis chain
+  100: "0x58FCe385Ed16beB4BCE49c8DF34c7d6975807520",
+} as const;
+
+const SIGN_MESSAGE_LIB_ABI = [
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "bytes32",
+        name: "msgHash",
+        type: "bytes32",
+      },
+    ],
+    name: "SignMsg",
+    type: "event",
+  },
+  {
+    inputs: [{ internalType: "bytes", name: "message", type: "bytes" }],
+    name: "getMessageHash",
+    outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "bytes", name: "_data", type: "bytes" }],
+    name: "signMessage",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+];
+
 const __IS_SERVER__ = typeof window === "undefined";
 
 export const SafeSupportedChainsSet = new Set(
@@ -88,8 +143,10 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
     }
 
     const serverUrl = CHAIN_ID_TO_GNOSIS_SERVER_URL[safeChainId];
+    const signMessageLibAddress =
+      CHAIN_ID_TO_SIGN_MESSAGE_LIB_ADDRESS[safeChainId];
 
-    if (!serverUrl) {
+    if (!serverUrl || !signMessageLibAddress) {
       throw new Error("Chain not supported");
     }
 
@@ -109,22 +166,66 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
       signer.provider,
     );
 
-    // See this test for more details:
-    // https://github.com/safe-global/safe-contracts/blob/9d188d3ef514fb7391466a6b5f010db4cc0f3c8b/test/handlers/CompatibilityFallbackHandler.spec.ts#L86-L94
     safeSigner.signMessage = async (message: string | ethers.utils.Bytes) => {
-      const EIP712_SAFE_MESSAGE_TYPE = {
-        SafeMessage: [{ type: "bytes", name: "message" }],
-      };
+      // Encode the request to the signMessage function of the SafeMessageLib
+      const contract = new ethers.BaseContract(
+        signMessageLibAddress,
+        SIGN_MESSAGE_LIB_ABI,
+      );
+      const data = contract.interface.encodeFunctionData("signMessage", [
+        ethers.utils.hashMessage(message),
+      ]);
 
-      const encodedMessage = ethers.utils._TypedDataEncoder.hash(
-        { verifyingContract: safeAddress, chainId: await this.getChainId() },
-        EIP712_SAFE_MESSAGE_TYPE,
-        { message: ethers.utils.hashMessage(message) },
+      const to = signMessageLibAddress;
+      const value = "0";
+      const operation = 1; // 1 indicates a delegatecall
+      const safeTxGas = 50000;
+      const baseGas = 50000;
+      const gasPrice = 0;
+      const gasToken = ethers.constants.AddressZero;
+      const refundReceiver = ethers.constants.AddressZero;
+
+      // Create the safe transaction to approve the signature
+      const safeTx = await safe.createTransaction({
+        safeTransactionData: {
+          to,
+          value,
+          operation,
+          data,
+          baseGas,
+          safeTxGas,
+          gasPrice,
+          gasToken,
+          refundReceiver,
+        },
+      });
+
+      // Sign and propose the safe transaction
+      const safeTxHash = await safe.getTransactionHash(safeTx);
+      const safeSignature = await safe.signTransactionHash(safeTxHash);
+      await service.proposeTx(
+        safe.getAddress(),
+        safeTxHash,
+        safeTx,
+        safeSignature,
       );
 
-      const safeMessage = ethers.utils.arrayify(encodedMessage);
-      const signature = await signer.signMessage(safeMessage);
-      return signature.replace(/1b$/, "1f").replace(/1c$/, "20");
+      // Poll while we wait for the safe transaction to reach minimum confirmations
+      while (true) {
+        try {
+          const txDetails = await service.getSafeTxDetails(safeTxHash);
+          if (txDetails.transactionHash) {
+            await signer.provider?.waitForTransaction(
+              txDetails.transactionHash,
+            );
+            break;
+          }
+        } catch (e) {}
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+      }
+
+      // For on-chain signatures, safe expects just "0x" as the signature
+      return "0x";
     };
 
     // set the personal signer as "previous connector" so that we can re-connect to it later when disconnecting

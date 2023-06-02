@@ -27,7 +27,7 @@ export function useLogin() {
   const wallet = useWallet();
 
   const login = useMutation({
-    mutationFn: async (options?: LoginOptions) => {
+    mutationFn: async () => {
       invariant(
         authConfig,
         "Please specify an authConfig in the ThirdwebProvider",
@@ -38,14 +38,29 @@ export function useLogin() {
         "Please specify an authUrl in the authConfig.",
       );
 
-      // we need to generate this auth payload
-
-      const payload = await doLogin(wallet, {
-        ...authConfig,
-        ...(options || {}),
+      const address = await wallet.getAddress();
+      let res = await fetch(`${authConfig.authUrl}/payload`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ address }),
       });
 
-      const res = await fetch(`${authConfig.authUrl}/login`, {
+      if (!res.ok) {
+        throw new Error(`Failed to get payload with status code ${res.status}`);
+      }
+
+      let payloadData: LoginPayloadData;
+      try {
+        ({ payload: payloadData } = await res.json());
+      } catch {
+        throw new Error(`Failed to get payload`);
+      }
+
+      const payload = await doLoginWithPayload(wallet, payloadData);
+
+      res = await fetch(`${authConfig.authUrl}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -73,8 +88,21 @@ export function useLogin() {
   });
 
   return {
-    login: (options?: LoginOptions) => login.mutateAsync(options),
+    login: () => login.mutateAsync(),
     isLoading: login.isLoading,
+  };
+}
+
+export async function doLoginWithPayload(
+  wallet: GenericAuthWallet,
+  payload: LoginPayloadData,
+): Promise<LoginPayload> {
+  const message = generateMessage(payload);
+  const signature = await wallet.signMessage(message);
+
+  return {
+    payload,
+    signature,
   };
 }
 
@@ -109,20 +137,15 @@ export async function doLogin(
     nonce: options?.nonce || nonce,
     issued_at: new Date().toISOString(),
     expiration_time: new Date(
-      options?.expirationTime || Date.now() + 1000 * 60 * 5,
+      options?.expirationTime || Date.now() + 1000 * 60 * 10,
     ).toISOString(),
     invalid_before: new Date(
-      options?.invalidBefore || Date.now(),
+      options?.invalidBefore || Date.now() - 1000 * 60 * 10,
     ).toISOString(),
     resources: options?.resources,
   };
 
-  const signature = await wallet.signMessage(generateMessage(payloadData));
-
-  return {
-    payload: payloadData,
-    signature,
-  };
+  return doLoginWithPayload(wallet, payloadData);
 }
 
 // generate straight from auth

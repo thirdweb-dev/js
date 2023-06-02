@@ -2,12 +2,7 @@ import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
 import { assertEnabled } from "../../common/feature-detection/assertEnabled";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
-import {
-  fetchCurrencyMetadata,
-  hasERC20Allowance,
-  normalizePriceValue,
-} from "../../common/currency";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { isTokenApprovedForTransfer } from "../../common/marketplace";
 import { uploadOrExtractURI } from "../../common/nft";
 import { getRoleHash } from "../../common/role";
@@ -27,7 +22,8 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { PackVRF } from "../../core/classes/pack-vrf";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { Address, AddressOrEns } from "../../schema/shared";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { PackContractSchema } from "../../schema/contracts/packs";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -50,6 +46,9 @@ import {
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/Pack";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, ethers } from "ethers";
+import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
+import { hasERC20Allowance } from "../../common/currency/hasERC20Allowance";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 
 /**
  * Create lootboxes of NFTs with rarity based open mechanics.

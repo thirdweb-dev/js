@@ -1,6 +1,7 @@
 import { NFTInputOrUriSchema } from "../../../core/schema/nft";
 import { AmountSchema } from "../../../core/schema/shared";
-import { BigNumberishSchema, RawDateSchema } from "../shared";
+import { BigNumberishSchema } from "../shared/BigNumberSchema";
+import { RawDateSchema } from "../shared/RawDateSchema";
 import {
   ERC1155WrappableSchema,
   ERC20WrappableSchema,

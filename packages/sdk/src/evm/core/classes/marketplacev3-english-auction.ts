@@ -1,18 +1,12 @@
 import { AuctionHasNotEndedError } from "../../common/error";
-import {
-  cleanCurrencyAddress,
-  fetchCurrencyMetadata,
-  fetchCurrencyValue,
-  normalizePriceValue,
-  setErc20Allowance,
-} from "../../common/currency";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { getAllInBatches, handleTokenApproval } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_ENGLISH_AUCTIONS } from "../../constants/thirdweb-features";
 import { Status } from "../../enums";
-import { Address, AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { Address } from "../../schema/shared/Address";
 import {
   EnglishAuctionInputParams,
   EnglishAuctionInputParamsSchema,
@@ -38,6 +32,11 @@ import { NewAuctionEvent } from "@thirdweb-dev/contracts-js/dist/declarations/sr
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers, constants } from "ethers";
 import invariant from "tiny-invariant";
+import { cleanCurrencyAddress } from "../../common/currency/cleanCurrencyAddress";
+import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
 
 /**
  * Handles auctions

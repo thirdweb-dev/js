@@ -1,5 +1,5 @@
 import { AmountSchema } from "../../../core/schema/shared";
-import { AddressOrEnsSchema } from "../shared";
+import { AddressOrEnsSchema } from "../shared/AddressOrEnsSchema";
 import { z } from "zod";
 
 /**

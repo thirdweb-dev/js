@@ -1,7 +1,7 @@
 import { WalletConfig } from "@thirdweb-dev/react-core";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 
-export type LocalWalletConfig = {
+export type LocalWalletConfigOptions = {
   /**
    * If `true`, the encrypted wallet JSON will be stored on localStorage with user's password.
    * the user will not need to enter their password again when they visit the site. Beacuse of this, swallet can not be auto connected.
@@ -14,7 +14,7 @@ export type LocalWalletConfig = {
   persist?: boolean;
 };
 
-export type LocalConfiguredWallet = WalletConfig<
+export type LocalWalletConfig = WalletConfig<
   LocalWallet,
-  LocalWalletConfig
+  LocalWalletConfigOptions
 >;

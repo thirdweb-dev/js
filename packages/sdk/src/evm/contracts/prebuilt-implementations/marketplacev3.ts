@@ -23,7 +23,7 @@ import { NetworkInput } from "../../core/types";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
-import { Address } from "../../schema/shared";
+import { Address } from "../../schema/shared/Address";
 import type {
   MarketplaceV3 as MarketplaceV3Contract,
   DirectListingsLogic,

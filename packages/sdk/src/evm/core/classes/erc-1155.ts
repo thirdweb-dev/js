@@ -7,8 +7,12 @@ import {
 import { assertEnabled } from "../../common/feature-detection/assertEnabled";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
 import { hasFunction } from "../../common/feature-detection/hasFunction";
-import { resolveAddress } from "../../common/ens";
-import { FALLBACK_METADATA, fetchTokenMetadata } from "../../common/nft";
+import { resolveAddress } from "../../common/ens/resolveAddress";
+import {
+  FALLBACK_METADATA,
+  fetchTokenMetadata,
+  uploadOrExtractURI,
+} from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import {
   FEATURE_EDITION,
@@ -22,7 +26,8 @@ import {
   FEATURE_EDITION_CLAIM_CONDITIONS_V2,
   FEATURE_EDITION_LAZY_MINTABLE_V2,
 } from "../../constants/erc1155-features";
-import { Address, AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { Address } from "../../schema/shared/Address";
 import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
 import { EditionMetadataOrUri } from "../../schema/tokens/edition";
 import { ClaimOptions, UploadProgressEvent } from "../../types";
@@ -37,10 +42,6 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { NetworkInput, TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import { Erc1155Burnable } from "./erc-1155-burnable";
-import { Erc1155Enumerable } from "./erc-1155-enumerable";
-import { Erc1155LazyMintable } from "./erc-1155-lazymintable";
-import { Erc1155Mintable } from "./erc-1155-mintable";
 import { Erc1155SignatureMintable } from "./erc-1155-signature-mintable";
 import { Transaction } from "./transactions";
 import type {
@@ -55,6 +56,20 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import { ERC1155Claimable } from "./erc-1155-claimable";
 import { Erc1155ClaimableWithConditions } from "./erc-1155-claimable-with-conditions";
+
+import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
+
+import { getPrebuiltInfo } from "../../common/legacy";
+import { uploadOrExtractURIs } from "../../common/nft";
+import { BaseDelayedRevealERC1155 } from "../../types/eips";
+import { DelayedReveal } from "./delayed-reveal";
+import type { DropERC1155_V2 } from "@thirdweb-dev/contracts-js";
+import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
+
+import type { IMulticall } from "@thirdweb-dev/contracts-js";
+import { TransferSingleEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ITokenERC1155";
+
+import { TokensMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TokenERC1155";
 
 /**
  * Standard ERC1155 NFT functions
@@ -348,12 +363,12 @@ export class Erc1155<
       const input = await AirdropInputSchema.parseAsync(addresses);
 
       const totalToAirdrop = input.reduce((prev, curr) => {
-        return prev + Number(curr?.quantity || 1);
-      }, 0);
+        return BigNumber.from(prev).add(BigNumber.from(curr?.quantity || 1));
+      }, BigNumber.from(0));
 
-      if (balanceOf.toNumber() < totalToAirdrop) {
+      if (balanceOf.lt(BigNumber.from(totalToAirdrop))) {
         throw new Error(
-          `The caller owns ${balanceOf.toNumber()} NFTs, but wants to airdrop ${totalToAirdrop} NFTs.`,
+          `The caller owns ${balanceOf.toString()} NFTs, but wants to airdrop ${totalToAirdrop.toString()} NFTs.`,
         );
       }
 
@@ -1218,4 +1233,716 @@ export class Erc1155<
     }
     return undefined;
   }
+}
+
+export class Erc1155Burnable implements DetectableFeature {
+  featureName = FEATURE_EDITION_BURNABLE.name;
+
+  private contractWrapper: ContractWrapper<IBurnableERC1155>;
+
+  constructor(contractWrapper: ContractWrapper<IBurnableERC1155>) {
+    this.contractWrapper = contractWrapper;
+  }
+
+  /**
+   * Burn a specified amount of a NFTs
+   *
+   * @remarks Burn the specified NFTs from the connected wallet
+   *
+   * @param tokenId - the token Id to burn
+   * @param amount - amount to burn
+   *
+   * @example
+   * ```javascript
+   * // The token ID to burn NFTs of
+   * const tokenId = 0;
+   * // The amount of the NFT you want to burn
+   * const amount = 2;
+   *
+   * const result = await contract.edition.burn.tokens(tokenId, amount);
+   * ```
+   */
+  tokens = buildTransactionFunction(
+    async (tokenId: BigNumberish, amount: BigNumberish) => {
+      const account = await this.contractWrapper.getSignerAddress();
+      return this.from.prepare(account, tokenId, amount);
+    },
+  );
+
+  /**
+   * Burn a specified amount of a NFTs
+   *
+   * @remarks Burn the specified NFTs from a specified wallet
+   *
+   * @param account - the address to burn NFTs from
+   * @param tokenId - the tokenId to burn
+   * @param amount - amount to burn
+   *
+   * @example
+   * ```javascript
+   * // The address of the wallet to burn NFTS from
+   * const account = "0x...";
+   * // The token ID to burn NFTs of
+   * const tokenId = 0;
+   * // The amount of this NFT you want to burn
+   * const amount = 2;
+   *
+   * const result = await contract.edition.burn.from(account, tokenId, amount);
+   * ```
+   */
+  from = buildTransactionFunction(
+    async (
+      account: AddressOrEns,
+      tokenId: BigNumberish,
+      amount: BigNumberish,
+    ) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "burn",
+        args: [await resolveAddress(account), tokenId, amount],
+      });
+    },
+  );
+
+  /**
+   * Burn a batch of NFTs
+   *
+   * @remarks Burn the batch NFTs from the connected wallet
+   *
+   * @param tokenIds - the tokenIds to burn
+   * @param amounts - amount of each token to burn
+   *
+   * @example
+   * ```javascript
+   * // The token IDs to burn NFTs of
+   * const tokenIds = [0, 1];
+   * // The amounts of each NFT you want to burn
+   * const amounts = [2, 2];
+   *
+   * const result = await contract.edition.burn.batch(tokenIds, amounts);
+   * ```
+   */
+  batch = buildTransactionFunction(
+    async (tokenIds: BigNumberish[], amounts: BigNumberish[]) => {
+      const account = await this.contractWrapper.getSignerAddress();
+      return this.batchFrom.prepare(account, tokenIds, amounts);
+    },
+  );
+
+  /**
+   * Burn a batch of NFTs
+   *
+   * @remarks Burn the batch NFTs from the specified wallet
+   *
+   * @param account - the address to burn NFTs from
+   * @param tokenIds - the tokenIds to burn
+   * @param amounts - amount of each token to burn
+   *
+   * @example
+   * ```javascript
+   * // The address of the wallet to burn NFTS from
+   * const account = "0x...";
+   * // The token IDs to burn NFTs of
+   * const tokenIds = [0, 1];
+   * // The amounts of each NFT you want to burn
+   * const amounts = [2, 2];
+   *
+   * const result = await contract.edition.burn.batchFrom(account, tokenIds, amounts);
+   * ```
+   */
+  batchFrom = buildTransactionFunction(
+    async (
+      account: AddressOrEns,
+      tokenIds: BigNumberish[],
+      amounts: BigNumberish[],
+    ) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "burnBatch",
+        args: [await resolveAddress(account), tokenIds, amounts],
+      });
+    },
+  );
+}
+
+/**
+ * List ERC1155 NFTs
+ * @remarks Easily list all the NFTs in a ERC1155 contract.
+ * @example
+ * ```javascript
+ * const contract = await sdk.getContract("{{contract_address}}");
+ * const nfts = await contract.edition.query.all();
+ * ```
+ * @public
+ */
+export class Erc1155Enumerable implements DetectableFeature {
+  featureName = FEATURE_EDITION_ENUMERABLE.name;
+  private contractWrapper: ContractWrapper<BaseERC1155 & IERC1155Enumerable>;
+  private erc1155: Erc1155;
+
+  constructor(
+    erc1155: Erc1155,
+    contractWrapper: ContractWrapper<BaseERC1155 & IERC1155Enumerable>,
+  ) {
+    this.erc1155 = erc1155;
+    this.contractWrapper = contractWrapper;
+  }
+
+  /**
+   * Get All NFTs
+   *
+   * @remarks Get all the data associated with every NFT in this contract.
+   *
+   * By default, returns the first 100 NFTs, use queryParams to fetch more.
+   *
+   * @example
+   * ```javascript
+   * const nfts = await contract.edition.query.all();
+   * ```
+   * @param queryParams - optional filtering to only fetch a subset of results.
+   * @returns The NFT metadata for all NFTs queried.
+   */
+  public async all(queryParams?: QueryAllParams): Promise<NFT[]> {
+    const start = BigNumber.from(queryParams?.start || 0).toNumber();
+    const count = BigNumber.from(
+      queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
+    ).toNumber();
+    const maxId = Math.min((await this.totalCount()).toNumber(), start + count);
+    return await Promise.all(
+      [...Array(maxId - start).keys()].map((i) =>
+        this.erc1155.get((start + i).toString()),
+      ),
+    );
+  }
+
+  /**
+   * Get the number of NFTs minted
+   * @remarks This returns the total number of NFTs minted in this contract, **not** the total supply of a given token.
+   *
+   * @returns the total number of NFTs minted in this contract
+   * @public
+   */
+  public async totalCount(): Promise<BigNumber> {
+    return await this.contractWrapper.readContract.nextTokenIdToMint();
+  }
+
+  /**
+   * Get the supply of token for a given tokenId.
+   * @remarks This is **not** the sum of supply of all NFTs in the contract.
+   *
+   * @returns the total number of NFTs minted in this contract
+   * @public
+   */
+  public async totalCirculatingSupply(
+    tokenId: BigNumberish,
+  ): Promise<BigNumber> {
+    return await this.contractWrapper.readContract.totalSupply(tokenId);
+  }
+
+  /**
+   * Get all NFTs owned by a specific wallet
+   *
+   * @remarks Get all the data associated with the NFTs owned by a specific wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet to get the NFTs of
+   * const address = "{{wallet_address}}";
+   * const nfts = await contract.edition.query.owned(address);
+   * ```
+   *
+   * @returns The NFT metadata for all NFTs in the contract.
+   */
+  public async owned(walletAddress?: AddressOrEns): Promise<NFT[]> {
+    const address = await resolveAddress(
+      walletAddress || (await this.contractWrapper.getSignerAddress()),
+    );
+    const maxId = await this.contractWrapper.readContract.nextTokenIdToMint();
+    const balances = await this.contractWrapper.readContract.balanceOfBatch(
+      Array(maxId.toNumber()).fill(address),
+      Array.from(Array(maxId.toNumber()).keys()),
+    );
+
+    const ownedBalances = balances
+      .map((b, i) => {
+        return {
+          tokenId: i,
+          balance: b,
+        };
+      })
+      .filter((b) => b.balance.gt(0));
+    return await Promise.all(
+      ownedBalances.map(async (b) => {
+        const editionMetadata = await this.erc1155.get(b.tokenId.toString());
+        return {
+          ...editionMetadata,
+          owner: address,
+          quantityOwned: b.balance.toString(),
+        };
+      }),
+    );
+  }
+}
+
+export class Erc1155LazyMintable implements DetectableFeature {
+  featureName = FEATURE_EDITION_LAZY_MINTABLE_V2.name;
+
+  /**
+   * Delayed reveal
+   * @remarks Create a batch of encrypted NFTs that can be revealed at a later time.
+   * @example
+   * ```javascript
+   * // the real NFTs, these will be encrypted until you reveal them
+   * const realNFTs = [{
+   *   name: "Common NFT #1",
+   *   description: "Common NFT, one of many.",
+   *   image: fs.readFileSync("path/to/image.png"),
+   * }, {
+   *   name: "Super Rare NFT #2",
+   *   description: "You got a Super Rare NFT!",
+   *   image: fs.readFileSync("path/to/image.png"),
+   * }];
+   * // A placeholder NFT that people will get immediately in their wallet, and will be converted to the real NFT at reveal time
+   * const placeholderNFT = {
+   *   name: "Hidden NFT",
+   *   description: "Will be revealed next week!"
+   * };
+   * // Create and encrypt the NFTs
+   * await contract.edition.drop.revealer.createDelayedRevealBatch(
+   *   placeholderNFT,
+   *   realNFTs,
+   *   "my secret password",
+   * );
+   * // Whenever you're ready, reveal your NFTs at any time
+   * const batchId = 0; // the batch to reveal
+   * await contract.edition.drop.revealer.reveal(batchId, "my secret password");
+   * ```
+   */
+  public revealer: DelayedReveal<BaseDelayedRevealERC1155> | undefined;
+
+  private contractWrapper: ContractWrapper<BaseDropERC1155>;
+  private erc1155: Erc1155;
+  private storage: ThirdwebStorage;
+
+  constructor(
+    erc1155: Erc1155,
+    contractWrapper: ContractWrapper<BaseDropERC1155>,
+    storage: ThirdwebStorage,
+  ) {
+    this.erc1155 = erc1155;
+    this.contractWrapper = contractWrapper;
+
+    this.storage = storage;
+    this.revealer = this.detectErc1155Revealable();
+  }
+
+  /**
+   * Create a batch of NFTs to be claimed in the future
+   *
+   * @remarks Create batch allows you to create a batch of many NFTs in one transaction.
+   *
+   * @example
+   * ```javascript
+   * // Custom metadata of the NFTs to create
+   * const metadatas = [{
+   *   name: "Cool NFT",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   * }, {
+   *   name: "Cool NFT",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/image.png"),
+   * }];
+   *
+   * const results = await contract.erc1155.lazyMint(metadatas); // uploads and creates the NFTs on chain
+   * const firstTokenId = results[0].id; // token id of the first created NFT
+   * const firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT
+   * ```
+   *
+   * @param metadatas - The metadata to include in the batch.
+   * @param options - optional upload progress callback
+   */
+  lazyMint = buildTransactionFunction(
+    async (
+      metadatas: NFTMetadataOrUri[],
+      options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+      },
+    ): Promise<Transaction<TransactionResultWithId<NFTMetadata>[]>> => {
+      const startFileNumber = await this.erc1155.nextTokenIdToMint();
+      const batch = await uploadOrExtractURIs(
+        metadatas,
+        this.storage,
+        startFileNumber.toNumber(),
+        options,
+      );
+      // ensure baseUri is the same for the entire batch
+      const baseUri = batch[0].substring(0, batch[0].lastIndexOf("/"));
+      for (let i = 0; i < batch.length; i++) {
+        const uri = batch[i].substring(0, batch[i].lastIndexOf("/"));
+        if (baseUri !== uri) {
+          throw new Error(
+            `Can only create batches with the same base URI for every entry in the batch. Expected '${baseUri}' but got '${uri}'`,
+          );
+        }
+      }
+
+      const parse = (receipt: ethers.providers.TransactionReceipt) => {
+        const event = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
+          "TokensLazyMinted",
+          receipt?.logs,
+        );
+        const startingIndex = event[0].args.startTokenId;
+        const endingIndex = event[0].args.endTokenId;
+        const results: TransactionResultWithId<NFTMetadata>[] = [];
+        for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
+          results.push({
+            id,
+            receipt,
+            data: () => this.erc1155.getTokenMetadata(id),
+          });
+        }
+        return results;
+      };
+
+      const prebuiltInfo = await getPrebuiltInfo(
+        this.contractWrapper.readContract.address,
+        this.contractWrapper.getProvider(),
+      );
+      if (
+        this.isLegacyEditionDropContract(this.contractWrapper, prebuiltInfo)
+      ) {
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper,
+          method: "lazyMint",
+          args: [
+            batch.length,
+            `${baseUri.endsWith("/") ? baseUri : `${baseUri}/`}`,
+          ],
+          parse,
+        });
+      } else {
+        // new contracts/extensions have support for delayed reveal that adds an extra parameter to lazyMint
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper,
+          method: "lazyMint",
+          args: [
+            batch.length,
+            `${baseUri.endsWith("/") ? baseUri : `${baseUri}/`}`,
+            ethers.utils.toUtf8Bytes(""),
+          ],
+          parse,
+        });
+      }
+    },
+  );
+
+  /** ******************************
+   * PRIVATE FUNCTIONS
+   *******************************/
+
+  private detectErc1155Revealable():
+    | DelayedReveal<BaseDelayedRevealERC1155>
+    | undefined {
+    if (
+      detectContractFeature<BaseDelayedRevealERC1155>(
+        this.contractWrapper,
+        "ERC1155Revealable",
+      )
+    ) {
+      return new DelayedReveal(
+        this.contractWrapper,
+        this.storage,
+        FEATURE_EDITION_REVEALABLE.name,
+        () => this.erc1155.nextTokenIdToMint(),
+      );
+    }
+    return undefined;
+  }
+
+  private isLegacyEditionDropContract(
+    contractWrapper: ContractWrapper<any>,
+    info: Awaited<ReturnType<typeof getPrebuiltInfo>>,
+  ): contractWrapper is ContractWrapper<DropERC1155_V2> {
+    return (info && info.type === "DropERC1155" && info.version < 3) || false;
+  }
+}
+
+/**
+ * Mint ERC1155 NFTs
+ * @remarks NFT minting functionality that handles IPFS storage for you.
+ * @example
+ * ```javascript
+ * const contract = await sdk.getContract("{{contract_address}}");
+ * await contract.edition.mint.to(walletAddress, nftMetadata);
+ * ```
+ * @public
+ */
+export class Erc1155Mintable implements DetectableFeature {
+  featureName = FEATURE_EDITION_MINTABLE.name;
+  private contractWrapper: ContractWrapper<IMintableERC1155>;
+  private erc1155: Erc1155;
+  private storage: ThirdwebStorage;
+
+  /**
+   * Batch mint Tokens to many addresses
+   */
+  public batch: Erc1155BatchMintable | undefined;
+
+  constructor(
+    erc1155: Erc1155,
+    contractWrapper: ContractWrapper<IMintableERC1155>,
+    storage: ThirdwebStorage,
+  ) {
+    this.erc1155 = erc1155;
+    this.contractWrapper = contractWrapper;
+    this.storage = storage;
+    this.batch = this.detectErc1155BatchMintable();
+  }
+
+  /**
+   * Mint an NFT with a limited supply
+   *
+   * @remarks Mint an NFT with a limited supply to a specified wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to mint the NFT to
+   * const toAddress = "{{wallet_address}}"
+   *
+   * // Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
+   * const metadata = {
+   *   name: "Cool NFT",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   * }
+   *
+   * const metadataWithSupply = {
+   *   metadata,
+   *   supply: 1000, // The number of this NFT you want to mint
+   * }
+   *
+   * const tx = await contract.edition.mint.to(toAddress, metadataWithSupply);
+   * const receipt = tx.receipt; // the transaction receipt
+   * const tokenId = tx.id; // the id of the NFT minted
+   * const nft = await tx.data(); // (optional) fetch details of minted NFT
+   * ```
+   *
+   */
+  to = buildTransactionFunction(
+    async (
+      to: AddressOrEns,
+      metadataWithSupply: EditionMetadataOrUri,
+    ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
+      const tx = (await this.getMintTransaction(
+        to,
+        metadataWithSupply,
+      )) as any as Transaction<TransactionResultWithId<NFT>>;
+      tx.setParse((receipt) => {
+        const event = this.contractWrapper.parseLogs<TransferSingleEvent>(
+          "TransferSingle",
+          receipt?.logs,
+        );
+        if (event.length === 0) {
+          throw new Error("TransferSingleEvent event not found");
+        }
+        const id = event[0].args.id;
+        return {
+          id,
+          receipt,
+          data: () => this.erc1155.get(id.toString()),
+        };
+      });
+      return tx;
+    },
+  );
+
+  /**
+   * @deprecated Use `contract.erc1155.mint.prepare(...args)` instead
+   */
+  public async getMintTransaction(
+    to: AddressOrEns,
+    metadataWithSupply: EditionMetadataOrUri,
+  ): Promise<Transaction> {
+    const uri = await uploadOrExtractURI(
+      metadataWithSupply.metadata,
+      this.storage,
+    );
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "mintTo",
+      args: [
+        await resolveAddress(to),
+        ethers.constants.MaxUint256,
+        uri,
+        metadataWithSupply.supply,
+      ],
+    });
+  }
+
+  /**
+   * Increase the supply of an existing NFT and mint it to a given wallet address
+   *
+   * @param to - the address to mint to
+   * @param tokenId - the token id of the NFT to increase supply of
+   * @param additionalSupply - the additional amount to mint
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to mint the NFT to
+   * const toAddress = "{{wallet_address}}"
+   * const tokenId = 0;
+   * const additionalSupply = 1000;
+   *
+   * const tx = await contract.edition.mint.additionalSupplyTo(toAddress, tokenId, additionalSupply);
+   * ```
+   */
+  additionalSupplyTo = buildTransactionFunction(
+    async (
+      to: AddressOrEns,
+      tokenId: BigNumberish,
+      additionalSupply: BigNumberish,
+    ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
+      const metadata = await this.erc1155.getTokenMetadata(tokenId);
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "mintTo",
+        args: [
+          await resolveAddress(to),
+          tokenId,
+          metadata.uri,
+          additionalSupply,
+        ],
+        parse: (receipt) => {
+          return {
+            id: BigNumber.from(tokenId),
+            receipt,
+            data: () => this.erc1155.get(tokenId),
+          };
+        },
+      });
+    },
+  );
+
+  private detectErc1155BatchMintable() {
+    if (
+      detectContractFeature<IMintableERC1155 & IMulticall>(
+        this.contractWrapper,
+        "ERC1155BatchMintable",
+      )
+    ) {
+      return new Erc1155BatchMintable(
+        this.erc1155,
+        this.contractWrapper,
+        this.storage,
+      );
+    }
+  }
+}
+
+/**
+ * Mint Many ERC1155 NFTs at once
+ * @remarks NFT batch minting functionality that handles IPFS storage for you.
+ * @example
+ * ```javascript
+ * const contract = await sdk.getContract("{{contract_address}}");
+ * await contract.edition.mint.batch.to(walletAddress, [nftMetadataWithSupply1, nftMetadataWithSupply2, ...]);
+ * ```
+ * @public
+ */
+export class Erc1155BatchMintable implements DetectableFeature {
+  featureName = FEATURE_EDITION_BATCH_MINTABLE.name;
+  private contractWrapper: ContractWrapper<IMintableERC1155 & IMulticall>;
+  private erc1155: Erc1155;
+  private storage: ThirdwebStorage;
+
+  constructor(
+    erc1155: Erc1155,
+    contractWrapper: ContractWrapper<IMintableERC1155 & IMulticall>,
+    storage: ThirdwebStorage,
+  ) {
+    this.erc1155 = erc1155;
+    this.contractWrapper = contractWrapper;
+    this.storage = storage;
+  }
+
+  /**
+   * Mint Many NFTs with limited supplies
+   *
+   * @remarks Mint many different NFTs with limited supplies to a specified wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to mint the NFT to
+   * const toAddress = "{{wallet_address}}"
+   *
+   * // Custom metadata and supplies of your NFTs
+   * const metadataWithSupply = [{
+   *   supply: 50, // The number of this NFT you want to mint
+   *   metadata: {
+   *     name: "Cool NFT #1",
+   *     description: "This is a cool NFT",
+   *     image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   *   },
+   * }, {
+   *   supply: 100,
+   *   metadata: {
+   *     name: "Cool NFT #2",
+   *     description: "This is a cool NFT",
+   *     image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   *   },
+   * }];
+   *
+   * const tx = await contract.edition.mint.batch.to(toAddress, metadataWithSupply);
+   * const receipt = tx[0].receipt; // same transaction receipt for all minted NFTs
+   * const firstTokenId = tx[0].id; // token id of the first minted NFT
+   * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
+   * ```
+   */
+  to = buildTransactionFunction(
+    async (
+      to: AddressOrEns,
+      metadataWithSupply: EditionMetadataOrUri[],
+    ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
+      const metadatas = metadataWithSupply.map((a) => a.metadata);
+      const supplies = metadataWithSupply.map((a) => a.supply);
+      const uris = await uploadOrExtractURIs(metadatas, this.storage);
+      const resolvedAddress = await resolveAddress(to);
+      const encoded = await Promise.all(
+        uris.map(async (uri, index) =>
+          this.contractWrapper.readContract.interface.encodeFunctionData(
+            "mintTo",
+            [
+              resolvedAddress,
+              ethers.constants.MaxUint256,
+              uri,
+              supplies[index],
+            ],
+          ),
+        ),
+      );
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "multicall",
+        args: [encoded],
+        parse: (receipt) => {
+          const events = this.contractWrapper.parseLogs<TokensMintedEvent>(
+            "TokensMinted",
+            receipt.logs,
+          );
+          if (events.length === 0 || events.length < metadatas.length) {
+            throw new Error("TokenMinted event not found, minting failed");
+          }
+          return events.map((e) => {
+            const id = e.args.tokenIdMinted;
+            return {
+              id,
+              receipt,
+              data: () => this.erc1155.get(id),
+            };
+          });
+        },
+      });
+    },
+  );
 }

@@ -4,6 +4,10 @@ import type { GenericAuthWallet } from "@thirdweb-dev/wallets";
 import { Request } from "express";
 import { z } from "zod";
 
+export const PayloadBodySchema = z.object({
+  address: z.string(),
+});
+
 export const LoginPayloadBodySchema = z.object({
   payload: LoginPayloadOutputSchema,
 });

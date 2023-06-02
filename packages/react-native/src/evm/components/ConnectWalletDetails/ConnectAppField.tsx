@@ -80,11 +80,11 @@ const ConnectAppField = () => {
   };
 
   const onQRCodeScan = (data: string) => {
-    if (wcUri !== data) {
+    if (wcUri !== data && data.startsWith("wc:")) {
       setWCUri(data);
       setShowQRCodeScan(false);
 
-      onWCPress();
+      onWCPress(data);
     }
   };
 
@@ -92,13 +92,15 @@ const ConnectAppField = () => {
     setShowQRCodeScan(false);
   };
 
-  const onWCPress = () => {
-    if (!wcUri || !wallet) {
+  const onWCPress = (uri?: string) => {
+    if (!(wcUri || uri) || !wallet) {
       return;
     }
 
-    if (wcUri.startsWith("wc:")) {
-      (wallet as unknown as IWalletConnectReceiver).connectApp(wcUri);
+    const uriToUse = uri || wcUri;
+
+    if (uriToUse?.startsWith("wc:")) {
+      (wallet as unknown as IWalletConnectReceiver).connectApp(uriToUse);
     }
   };
 
@@ -119,11 +121,12 @@ const ConnectAppField = () => {
           <TextInput
             onChangeText={onAddressChangeText}
             flex={1}
+            value={wcUri}
             placeholder={"wc://..."}
             placeholderTextColor={theme.colors.textSecondary}
           />
           <BaseButton
-            onPress={onWCPress}
+            onPress={() => onWCPress()}
             justifyContent="center"
             alignItems="center"
           >
