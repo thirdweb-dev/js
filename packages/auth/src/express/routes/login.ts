@@ -64,6 +64,10 @@ export default async function handler(
     }
   }
 
+  const {
+    payload: { exp },
+  } = ctx.auth.parseToken(token);
+
   // Securely set httpOnly cookie on request to prevent XSS on frontend
   // And set path to / to enable thirdweb_auth_token usage on all endpoints
   res.setHeader(
@@ -72,6 +76,7 @@ export default async function handler(
       domain: ctx.cookieOptions?.domain,
       path: ctx.cookieOptions?.path || "/",
       sameSite: ctx.cookieOptions?.sameSite || "none",
+      expires: new Date(exp * 1000),
       httpOnly: true,
       secure: true,
     }),
