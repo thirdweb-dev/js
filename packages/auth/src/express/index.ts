@@ -48,7 +48,7 @@ export function ThirdwebAuth<
   router.use(express.json());
   router.use(cookieMiddleware);
 
-  router.get(
+  router.post(
     "/payload",
     asyncHandler((req: Request, res: Response) =>
       payloadHandler(req, res, ctx as ThirdwebAuthContext),

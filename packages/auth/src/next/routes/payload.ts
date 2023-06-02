@@ -6,9 +6,9 @@ export default async function handler(
   res: NextApiResponse,
   ctx: ThirdwebAuthContext,
 ) {
-  if (req.method !== "GET") {
+  if (req.method !== "POST") {
     return res.status(405).json({
-      error: "Invalid method. Only GET supported.",
+      error: "Invalid method. Only POST supported.",
     });
   }
 
