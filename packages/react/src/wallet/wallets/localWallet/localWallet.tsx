@@ -14,7 +14,6 @@ export const localWallet = (
     },
     connectUI: LocalWalletConnectUI,
     isInstalled() {
-      // TODO
       return false;
     },
   };
