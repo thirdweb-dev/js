@@ -15,24 +15,6 @@ import type { providers, Signer } from "ethers";
 import { utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";
 
-export const PaperChainMap = {
-  1: "Ethereum",
-  5: "Goerli",
-  137: "Polygon",
-  250: "Fantom",
-  4002: "FantomTestnet",
-  80001: "Mumbai",
-  43114: "Avalanche",
-  10: "Optimism",
-  420: "OptimismGoerli",
-  56: "BSC",
-  97: "BSCTestnet",
-  42161: "ArbitrumOne",
-  421613: "ArbitrumGoerli",
-} as const;
-
-export type PaperSupportedChainId = keyof typeof PaperChainMap;
-
 export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
   readonly id: string = walletIds.paper;
   readonly name: string = "Paper Wallet";
@@ -53,23 +35,13 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
     if (!this.#paper) {
       this.#paper = new Promise(async (resolve, reject) => {
         try {
-          if (!(this.options.chain.chainId in PaperChainMap)) {
-            throw new Error(
-              "Unsupported chain id: " + this.options.chain.chainId,
-            );
-          }
-
           const { PaperEmbeddedWalletSdk } = await import(
             "@paperxyz/embedded-wallet-service-sdk"
           );
-          const chainName =
-            PaperChainMap[
-              this.options.chain.chainId as keyof typeof PaperChainMap
-            ];
           resolve(
             new PaperEmbeddedWalletSdk({
               clientId: this.options.clientId,
-              chain: chainName,
+              chain: "Ethereum", // just pass Ethereum no matter what chain we are going to connect
             }),
           );
         } catch (err) {
@@ -175,20 +147,13 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
   }
 
   async switchChain(chainId: number): Promise<void> {
-    // check if chainId is supported or not
-    if (!(chainId in PaperChainMap)) {
-      throw new Error("Chain not supported");
-    }
-
-    const chainName = PaperChainMap[chainId as keyof typeof PaperChainMap];
-
     const chain = this.options.chains.find((c) => c.chainId === chainId);
     if (!chain) {
       throw new Error("Chain not configured");
     }
 
     // update chain in wallet
-    await this.user?.wallet.setChain({ chain: chainName });
+    await this.user?.wallet.setChain({ chain: "Ethereum" }); // just pass Ethereum no matter what chain we are going to connect
 
     // update signer
     this.#signer = await this.user?.wallet.getEthersJsSigner({
@@ -228,13 +193,10 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
     }
   };
 
-  protected isChainUnsupported(chainId: number) {
-    return !(chainId in PaperChainMap);
-  }
-
   protected onChainChanged = (chainId: number | string) => {
     const id = normalizeChainId(chainId);
-    const unsupported = this.isChainUnsupported(id);
+    const unsupported =
+      this.options.chains.findIndex((c) => c.chainId === id) === -1;
     this.emit("change", { chain: { id, unsupported } });
   };
 

@@ -38,7 +38,8 @@ const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet, PaperConfig>> = (
       name="email"
       type="email"
       errorMessage={(input) => {
-        const isValidEmail = input.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
+        const emailRegex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
+        const isValidEmail = emailRegex.test(input);
         if (!isValidEmail) {
           return "Invalid email address";
         }
