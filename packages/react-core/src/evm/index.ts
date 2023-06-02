@@ -194,6 +194,12 @@ export {
   useBurnToken,
 } from "./hooks/async/token";
 
+// smart wallet factory
+export {
+  useSmartWallets,
+  useCreateSmartWallet,
+} from "./hooks/async/smart-wallet-factory";
+
 // thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)
 
 // auth hooks

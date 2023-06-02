@@ -1,4 +1,4 @@
-import { resolveEns } from "../common/ens";
+import { resolveEns } from "../common/ens/resolveEns";
 import { utils } from "ethers";
 import { z } from "zod";
 

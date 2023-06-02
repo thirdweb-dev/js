@@ -161,4 +161,9 @@ export type SelectUIProps<
    * For example: You can render a larger UI if only one wallet (your wallet) is supported.
    */
   supportedWallets: WalletConfig[];
+
+  /**
+   * theme of the connect wallet modal
+   */
+  theme: "dark" | "light";
 };

@@ -41,13 +41,14 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { fadeInAnimation } from "../../components/FadeIn";
-import { LocalWallet, MetaMaskWallet, walletIds } from "@thirdweb-dev/wallets";
+import { MetaMaskWallet, walletIds } from "@thirdweb-dev/wallets";
 import { Flex } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
 import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
 import { ErrorMessage } from "../../components/formElements";
 import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useWalletConfig } from "@thirdweb-dev/react-core";
+import { LocalWalletConfig } from "../wallets/localWallet/types";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -424,7 +425,7 @@ export const ConnectedWalletDetails: React.FC<{
           }}
         >
           <ExportLocalWallet
-            localWallet={activeWallet as LocalWallet}
+            localWalletConfig={activeWalletConfig as LocalWalletConfig}
             onBack={() => {
               setShowExportModal(false);
             }}

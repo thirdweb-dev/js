@@ -4,12 +4,13 @@ import {
   ConstructorParamMap,
   DeploymentPreset,
 } from "../../types/any-evm/deploy-data";
-import { generatePluginFunctions, getMetadataForPlugins } from "../plugin";
 import { Plugin } from "../../types/plugins";
 import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
 import { getCreate2FactoryAddress } from "./getCreate2FactoryAddress";
 import { caches } from "./caches";
 import { computeDeploymentInfo } from "./computeDeploymentInfo";
+import { generatePluginFunctions } from "../plugin/generatePluginFunctions";
+import { getMetadataForPlugins } from "../plugin/getMetadataForPlugins";
 /**
  *
  * Returns txn data for keyless deploys as well as signer deploys.

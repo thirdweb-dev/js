@@ -6,12 +6,12 @@ import {
 import { ReconnectLocalWallet } from "./ReconnectLocalWallet";
 import { Flex } from "../../../components/basic";
 import { ConnectUIProps } from "@thirdweb-dev/react-core";
-import { LocalWalletConfig } from "./types";
+import { LocalWalletConfigOptions } from "./types";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import type { LocalWallet } from "@thirdweb-dev/wallets";
 
 export const LocalWalletConnectUI = (
-  props: ConnectUIProps<LocalWallet, LocalWalletConfig>,
+  props: ConnectUIProps<LocalWallet, LocalWalletConfigOptions>,
 ) => {
   const { walletData } = useLocalWalletInfo(props.walletConfig);
 

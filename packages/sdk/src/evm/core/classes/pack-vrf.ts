@@ -1,9 +1,10 @@
-import { fetchCurrencyMetadata } from "../../common/currency";
-import { resolveAddress } from "../../common/ens";
+import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { LINK_TOKEN_ADDRESS } from "../../constants/currency";
 import { FEATURE_PACK_VRF } from "../../constants/thirdweb-features";
-import { Address, AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { Address } from "../../schema/shared/Address";
 import { SDKOptions } from "../../schema/sdk-options";
 import { PackRewards } from "../../schema/tokens/pack";
 import { Amount, CurrencyValue } from "../../types";

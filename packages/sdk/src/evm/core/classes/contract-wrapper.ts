@@ -2,10 +2,8 @@ import { computeEOAForwarderAddress } from "../../common/any-evm-utils/computeEO
 import { computeForwarderAddress } from "../../common/any-evm-utils/computeForwarderAddress";
 import { parseRevertReason, TransactionError } from "../../common/error";
 import { extractFunctionsFromAbi } from "../../common/feature-detection/extractFunctionsFromAbi";
-import {
-  fetchContractMetadataFromAddress,
-  fetchSourceFilesFromMetadata,
-} from "../../common/metadata-resolver";
+import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
+import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
 import {
   BiconomyForwarderAbi,
   ChainAwareForwardRequest,
@@ -16,13 +14,10 @@ import { getPolygonGasPriorityFee } from "../../common/gas-price";
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
 import { isBrowser } from "../../common/utils";
-import { ChainId } from "../../constants/chains";
-import {
-  CONTRACT_ADDRESSES,
-  getContractAddressByChainId,
-} from "../../constants/addresses";
+import { ChainId } from "../../constants/chains/ChainId";
 import { EventType } from "../../constants/events";
-import { Address, CallOverrideSchema } from "../../schema/shared";
+import { Address } from "../../schema/shared/Address";
+import { CallOverrideSchema } from "../../schema/shared/CallOverrideSchema";
 import { AbiSchema, ContractSource } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
@@ -48,6 +43,8 @@ import {
 } from "ethers";
 import { ConnectionInfo } from "ethers/lib/utils.js";
 import invariant from "tiny-invariant";
+import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
+import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
 
 /**
  * @internal

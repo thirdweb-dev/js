@@ -16,12 +16,12 @@ import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { FormFooter } from "../../../components/formElements";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 import { LocalWalletModalHeader } from "./common";
-import { LocalConfiguredWallet } from "./types";
+import { LocalWalletConfig } from "./types";
 
 export const ImportLocalWallet: React.FC<{
   onConnect: () => void;
   goBack: () => void;
-  localWalletConf: LocalConfiguredWallet;
+  localWalletConf: LocalWalletConfig;
 }> = (props) => {
   const [jsonString, setJsonString] = useState<string | undefined>();
   const { setLocalWallet, meta } = useLocalWalletInfo(props.localWalletConf);
@@ -31,7 +31,7 @@ export const ImportLocalWallet: React.FC<{
   const [showPassword, setShowPassword] = useState(false);
   const [importedAddress, setImportedAddress] = useState<string | undefined>();
 
-  const { setConnectedWallet } = useWalletContext();
+  const { setConnectedWallet, setConnectionStatus } = useWalletContext();
 
   const handleImport = async () => {
     const localWallet = createWalletInstance(
@@ -51,6 +51,9 @@ export const ImportLocalWallet: React.FC<{
       setIsWrongPassword(true);
       return;
     }
+
+    setConnectionStatus("connecting");
+    await localWallet.connect();
 
     await localWallet.save({
       strategy: "encryptedJson",

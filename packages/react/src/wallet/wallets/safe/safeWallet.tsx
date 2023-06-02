@@ -9,11 +9,13 @@ import {
 import { defaultWallets } from "../defaultWallets";
 import { useState } from "react";
 import { SelectpersonalWallet } from "./SelectPersonalWallet";
-import { SafeWalletConfig, SafeWalletObj } from "./types";
+import { SafeWalletConfigOptions, SafeWalletConfig } from "./types";
 import { SelectAccount } from "./SelectAccount";
 import { HeadlessConnectUI } from "../headlessConnectUI";
 
-export const safeWallet = (config?: SafeWalletConfig): SafeWalletObj => {
+export const safeWallet = (
+  config?: SafeWalletConfigOptions,
+): SafeWalletConfig => {
   return {
     id: SafeWallet.id,
     meta: SafeWallet.meta,
@@ -29,34 +31,34 @@ export const safeWallet = (config?: SafeWalletConfig): SafeWalletObj => {
 };
 
 export const SafeConnectUI = (
-  props: ConnectUIProps<SafeWallet, Required<SafeWalletConfig>>,
+  props: ConnectUIProps<SafeWallet, Required<SafeWalletConfigOptions>>,
 ) => {
   const activeWallet = useWallet();
-  const [personalConfiguredWallet, setPersonalConfiguredWallet] = useState<
+  const [personalWalletConfig, setPersonalWalletConfig] = useState<
     WalletConfig | undefined
   >();
   const disconnect = useDisconnect();
 
-  if (personalConfiguredWallet) {
+  if (personalWalletConfig) {
     const _props = {
       close: () => {
-        setPersonalConfiguredWallet(undefined);
+        setPersonalWalletConfig(undefined);
         props.close(false); // do not reset
       },
       goBack: () => {
-        setPersonalConfiguredWallet(undefined);
+        setPersonalWalletConfig(undefined);
       },
       isOpen: props.isOpen,
       open: props.open,
       theme: props.theme,
-      walletConfig: personalConfiguredWallet,
+      walletConfig: personalWalletConfig,
       supportedWallets: props.walletConfig.config.personalWallets,
       selectionData: props.selectionData,
       setSelectionData: props.setSelectionData,
     };
 
-    if (personalConfiguredWallet.connectUI) {
-      return <personalConfiguredWallet.connectUI {..._props} />;
+    if (personalWalletConfig.connectUI) {
+      return <personalWalletConfig.connectUI {..._props} />;
     }
 
     return <HeadlessConnectUI {..._props} />;
@@ -68,7 +70,7 @@ export const SafeConnectUI = (
         personalWallets={props.walletConfig.config.personalWallets}
         onBack={props.goBack}
         safeWallet={props.walletConfig}
-        selectWallet={setPersonalConfiguredWallet}
+        selectWallet={setPersonalWalletConfig}
         renderBackButton={props.supportedWallets.length > 1}
       />
     );
@@ -78,7 +80,7 @@ export const SafeConnectUI = (
     <SelectAccount
       onBack={disconnect}
       onConnect={props.close}
-      safeWallet={props.walletConfig}
+      safeWalletConfig={props.walletConfig}
     />
   );
 };

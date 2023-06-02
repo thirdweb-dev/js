@@ -1,5 +1,83 @@
 # @thirdweb-dev/wallets
 
+## 0.2.25
+
+### Patch Changes
+
+- [#1118](https://github.com/thirdweb-dev/js/pull/1118) [`9b20fc9a`](https://github.com/thirdweb-dev/js/commit/9b20fc9ad2d303edc31f44fbd2ea3b4dcf35d11e) Thanks [@MananTank](https://github.com/MananTank)! - Remove chain restriction in paper wallet
+
+- Updated dependencies [[`ce36322b`](https://github.com/thirdweb-dev/js/commit/ce36322b383af73905894b73f9409a146359ffb0), [`c60658ed`](https://github.com/thirdweb-dev/js/commit/c60658ed8c94867cca831b0d5535006da5b40aa6), [`aa9e952c`](https://github.com/thirdweb-dev/js/commit/aa9e952cb519a47ed112d2905b1f3787863035b6), [`564eaccf`](https://github.com/thirdweb-dev/js/commit/564eaccf480a81f36db43c782392595a5021e5ac), [`6aee0413`](https://github.com/thirdweb-dev/js/commit/6aee0413439b9ca408879bbb3c38c538c89d01af), [`e93aa70e`](https://github.com/thirdweb-dev/js/commit/e93aa70ef0093a2526404e11b7ddae8fb98c213b), [`51bbd3d1`](https://github.com/thirdweb-dev/js/commit/51bbd3d1bccbb92a1405ea50f6c178c091a90f20)]:
+  - @thirdweb-dev/sdk@3.10.20
+
+## 0.2.24
+
+### Patch Changes
+
+- Updated dependencies [[`23d90b3e`](https://github.com/thirdweb-dev/js/commit/23d90b3e779a5bfdb7058b8c51349d9c278fcbce), [`cc56037e`](https://github.com/thirdweb-dev/js/commit/cc56037e64560b9e0fc16eb0ac7cc2e47e2c9fdf)]:
+  - @thirdweb-dev/sdk@3.10.19
+
+## 0.2.23
+
+### Patch Changes
+
+- [#1010](https://github.com/thirdweb-dev/js/pull/1010) [`bba9767a`](https://github.com/thirdweb-dev/js/commit/bba9767adfe20e41055450b86e4448fcb2119855) Thanks [@iketw](https://github.com/iketw)! - [ReactNative-Wallets] Enables SmartWallet to connect to an app, with implementation in React Native
+
+  - Wallets package
+
+  1. Smart Wallet now supports connecting an external app to it. It acts as an actual wallet implementing the WC protocol
+  2. There are two WalletConnect handlers to manage V1 and V2 WC connections
+  3. Creates a synchronous storage interface used in WCV1
+  4. To have your connector support WC, you need to implement the interface: IWalletConnectReceiver.
+  5. You can now pass the flag enableConnectApp to the smart wallet config to enable a new field in our modal to connect an app to your smart wallet
+
+  ```
+  smartWallet({
+      factoryAddress: "..."
+      thirdwebApiKey: "apiKey"
+      gasless: true,
+      personalWallets: [localWallet()],
+      enableConnectApp: true,
+  }),
+  ```
+
+  - React Native
+
+  1. Creates new modals for WC SessionRequests and SessionApprovals
+  2. Implements SyncStorage using MMKV
+
+- [#1065](https://github.com/thirdweb-dev/js/pull/1065) [`bd86661f`](https://github.com/thirdweb-dev/js/commit/bd86661f54ca2f1eb09cbae35c704dc79be1b63a) Thanks [@iketw](https://github.com/iketw)! - [ReactNative] Add support for signing in with email/phone using magic sdk
+
+  Devs can now add a new supportedWallet:
+
+  ```javascript
+  import { Goerli } from '@thirdweb-dev/chains';
+  import { ThirdwebProvider, magicWallet } from '@thirdweb-dev/react-native';
+
+  <ThirdwebProvider
+      activeChain={Goerli}
+      supportedWallets={[
+      magicWallet({
+          apiKey: 'magic_api_key',
+      }),
+  ]}>
+  ```
+
+- [#1070](https://github.com/thirdweb-dev/js/pull/1070) [`68fa1896`](https://github.com/thirdweb-dev/js/commit/68fa1896f75d3514e00cc380924fd8bc623064f0) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose smartWallet.deploy() and smartWallet.isDeployed()
+
+- [#1085](https://github.com/thirdweb-dev/js/pull/1085) [`292a321a`](https://github.com/thirdweb-dev/js/commit/292a321a95ed2d847097eed205353dd69eeb8d54) Thanks [@MananTank](https://github.com/MananTank)! - Fix Metamask disconnection on switch chain
+
+- [#1073](https://github.com/thirdweb-dev/js/pull/1073) [`f3b2ae3f`](https://github.com/thirdweb-dev/js/commit/f3b2ae3f6d9c66356c521d3b9c2a6c096dbb4b57) Thanks [@ciaranightingale](https://github.com/ciaranightingale)! - Update Smart Wallet "getAddress" with "data" arg
+
+- [#1088](https://github.com/thirdweb-dev/js/pull/1088) [`4f99ccb4`](https://github.com/thirdweb-dev/js/commit/4f99ccb49c584946de709fbc01017611d2828b76) Thanks [@iketw](https://github.com/iketw)! - [RN/Wallets] Adds send_transaction support for wcv1 Connect to App feature
+
+- [#1064](https://github.com/thirdweb-dev/js/pull/1064) [`c85810ee`](https://github.com/thirdweb-dev/js/commit/c85810eee318b10eee4ada61828adaa51f94ea6c) Thanks [@MananTank](https://github.com/MananTank)! - Do not cache signer in wallets
+
+- [#1087](https://github.com/thirdweb-dev/js/pull/1087) [`35984362`](https://github.com/thirdweb-dev/js/commit/35984362b0a60e5b9c3d3c9731450a8f47deb1c4) Thanks [@adam-maj](https://github.com/adam-maj)! - Add proper on-chain signing for Safe
+
+- Updated dependencies [[`2f1df0b5`](https://github.com/thirdweb-dev/js/commit/2f1df0b5354a8ee55089b2c1e61c058788d890f1), [`189daf02`](https://github.com/thirdweb-dev/js/commit/189daf0280a90ed730200088948526a594da3408), [`afae0873`](https://github.com/thirdweb-dev/js/commit/afae0873b0e3f9741f5a9c44c5d255f38c6a9111), [`c6e74ef0`](https://github.com/thirdweb-dev/js/commit/c6e74ef0b00210f52e6778c548061376d3ba7001), [`ee4c7de2`](https://github.com/thirdweb-dev/js/commit/ee4c7de25cb63f99f33b90da8e26293bbfbe6f3e), [`f7b352a5`](https://github.com/thirdweb-dev/js/commit/f7b352a585a23726eaa3be116f65db56b005f4d8), [`4a1d7581`](https://github.com/thirdweb-dev/js/commit/4a1d75811058d6974616bdc12a6040cea5444e40), [`bdabbef7`](https://github.com/thirdweb-dev/js/commit/bdabbef71a2421a2dceb384f93bb6a59a3ddf007), [`59206233`](https://github.com/thirdweb-dev/js/commit/59206233e15ccfe3dc32047060055219d35938f2), [`98efd090`](https://github.com/thirdweb-dev/js/commit/98efd090f63cfd9dfed7b89b20b6e43db88cf75c), [`8eecf4c2`](https://github.com/thirdweb-dev/js/commit/8eecf4c2d5b0d6447ad5b9cdbf0269818bbb3498), [`bd86661f`](https://github.com/thirdweb-dev/js/commit/bd86661f54ca2f1eb09cbae35c704dc79be1b63a), [`d5651006`](https://github.com/thirdweb-dev/js/commit/d565100614d7d4e256554f998b8ce978a566051c), [`da576108`](https://github.com/thirdweb-dev/js/commit/da5761080288c3b325f54fb56c80f96405a1cb5d), [`c85810ee`](https://github.com/thirdweb-dev/js/commit/c85810eee318b10eee4ada61828adaa51f94ea6c), [`6fd10f94`](https://github.com/thirdweb-dev/js/commit/6fd10f94b469dc5659e2ff4ce92a5aff86f3c89d), [`5f1e6abb`](https://github.com/thirdweb-dev/js/commit/5f1e6abb391f5c58dbdb207f569b3dd0b5d4729c), [`a034b032`](https://github.com/thirdweb-dev/js/commit/a034b0321fd0113ed51d95d538b5c3020615c227)]:
+  - @thirdweb-dev/sdk@3.10.18
+  - @thirdweb-dev/chains@0.1.19
+
 ## 0.2.22
 
 ### Patch Changes

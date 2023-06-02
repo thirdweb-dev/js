@@ -1,10 +1,10 @@
 import { FileOrBufferOrStringSchema } from "../../../core/schema/shared";
 import { toSemver } from "../../common/version-checker";
 import {
-  AddressOrEnsSchema,
   BigNumberishSchema,
   BigNumberTransformSchema,
-} from "../shared";
+} from "../shared/BigNumberSchema";
+import { AddressOrEnsSchema } from "../shared/AddressOrEnsSchema";
 import {
   CommonContractOutputSchema,
   CommonContractSchema,

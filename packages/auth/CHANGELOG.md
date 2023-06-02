@@ -1,5 +1,36 @@
 # @thirdweb-dev/auth
 
+## 3.1.0
+
+### Minor Changes
+
+- [#1114](https://github.com/thirdweb-dev/js/pull/1114) [`2283e71a`](https://github.com/thirdweb-dev/js/commit/2283e71acaaf3d15eb2d6121682f1d2a81eec4f3) Thanks [@adam-maj](https://github.com/adam-maj)! - Switch to server-side payload generation
+
+### Patch Changes
+
+- [#1111](https://github.com/thirdweb-dev/js/pull/1111) [`21627c03`](https://github.com/thirdweb-dev/js/commit/21627c03d1bb1658fee19b12d580faa6c7f048d9) Thanks [@adam-maj](https://github.com/adam-maj)! - Update expiration dates for auth
+
+- Updated dependencies [[`9b20fc9a`](https://github.com/thirdweb-dev/js/commit/9b20fc9ad2d303edc31f44fbd2ea3b4dcf35d11e)]:
+  - @thirdweb-dev/wallets@0.2.25
+
+## 3.0.23
+
+### Patch Changes
+
+- [#1101](https://github.com/thirdweb-dev/js/pull/1101) [`e1846c44`](https://github.com/thirdweb-dev/js/commit/e1846c44696bcb25a6a137d63e117e7d2ce9d979) Thanks [@adam-maj](https://github.com/adam-maj)! - Bump invalid before with 5 minute window
+
+- [#1098](https://github.com/thirdweb-dev/js/pull/1098) [`67450789`](https://github.com/thirdweb-dev/js/commit/67450789473b6008b86453ee4f4c7b99461223a6) Thanks [@MananTank](https://github.com/MananTank)! - add sideEffects: false in package.json
+
+- Updated dependencies []:
+  - @thirdweb-dev/wallets@0.2.24
+
+## 3.0.22
+
+### Patch Changes
+
+- Updated dependencies [[`bba9767a`](https://github.com/thirdweb-dev/js/commit/bba9767adfe20e41055450b86e4448fcb2119855), [`bd86661f`](https://github.com/thirdweb-dev/js/commit/bd86661f54ca2f1eb09cbae35c704dc79be1b63a), [`68fa1896`](https://github.com/thirdweb-dev/js/commit/68fa1896f75d3514e00cc380924fd8bc623064f0), [`292a321a`](https://github.com/thirdweb-dev/js/commit/292a321a95ed2d847097eed205353dd69eeb8d54), [`f3b2ae3f`](https://github.com/thirdweb-dev/js/commit/f3b2ae3f6d9c66356c521d3b9c2a6c096dbb4b57), [`4f99ccb4`](https://github.com/thirdweb-dev/js/commit/4f99ccb49c584946de709fbc01017611d2828b76), [`c85810ee`](https://github.com/thirdweb-dev/js/commit/c85810eee318b10eee4ada61828adaa51f94ea6c), [`35984362`](https://github.com/thirdweb-dev/js/commit/35984362b0a60e5b9c3d3c9731450a8f47deb1c4)]:
+  - @thirdweb-dev/wallets@0.2.23
+
 ## 3.0.21
 
 ### Patch Changes

@@ -5,6 +5,10 @@ import { GetServerSidePropsContext, NextApiRequest } from "next";
 import { NextRequest } from "next/server";
 import { z } from "zod";
 
+export const PayloadBodySchema = z.object({
+  address: z.string(),
+});
+
 export const LoginPayloadBodySchema = z.object({
   payload: LoginPayloadOutputSchema,
 });
@@ -14,7 +18,7 @@ type RequestType =
   | NextRequest
   | NextApiRequest;
 
-export type ThirdwebAuthRoute = "login" | "logout" | "user";
+export type ThirdwebAuthRoute = "payload" | "login" | "logout" | "user";
 
 export type ThirdwebAuthUser<
   TData extends Json = Json,

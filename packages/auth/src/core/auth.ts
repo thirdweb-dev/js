@@ -6,7 +6,6 @@ import {
   LoginPayloadDataSchema,
   AuthenticationPayloadDataSchema,
   AuthenticationPayloadData,
-  LoginOptionsSchema,
   VerifyOptionsSchema,
   VerifyOptions,
   GenerateOptionsSchema,
@@ -14,6 +13,7 @@ import {
   AuthenticateOptions,
   User,
   Json,
+  LoginOptionsSchema,
 } from "./schema";
 import { isBrowser } from "./utils";
 import type { GenericAuthWallet } from "@thirdweb-dev/wallets";
@@ -31,7 +31,7 @@ export class ThirdwebAuth {
     this.wallet = wallet;
   }
 
-  public async login(options?: LoginOptions): Promise<LoginPayload> {
+  public async payload(options?: LoginOptions): Promise<LoginPayloadData> {
     const parsedOptions = LoginOptionsSchema.parse(options);
 
     let chainId: string | undefined = parsedOptions?.chainId;
@@ -43,28 +43,38 @@ export class ThirdwebAuth {
       }
     }
 
-    const payloadData = LoginPayloadDataSchema.parse({
+    return LoginPayloadDataSchema.parse({
       type: this.wallet.type,
       domain: parsedOptions?.domain || this.domain,
-      address: await this.wallet.getAddress(),
+      address: parsedOptions?.address || (await this.wallet.getAddress()),
       statement: parsedOptions?.statement,
       version: parsedOptions?.version,
       uri: parsedOptions?.uri,
       chain_id: chainId,
       nonce: parsedOptions?.nonce,
       expiration_time:
-        parsedOptions?.expirationTime || new Date(Date.now() + 1000 * 60 * 5),
-      invalid_before: parsedOptions?.invalidBefore,
+        parsedOptions?.expirationTime || new Date(Date.now() + 1000 * 60 * 10),
+      invalid_before:
+        parsedOptions?.invalidBefore || new Date(Date.now() - 1000 * 60 * 10),
       resources: parsedOptions?.resources,
     });
+  }
 
-    const message = this.generateMessage(payloadData);
+  public async loginWithPayload(
+    payload: LoginPayloadData,
+  ): Promise<LoginPayload> {
+    const message = this.generateMessage(payload);
     const signature = await this.wallet.signMessage(message);
 
     return {
-      payload: payloadData,
+      payload,
       signature,
     };
+  }
+
+  public async login(options?: LoginOptions): Promise<LoginPayload> {
+    const payloadData = await this.payload(options);
+    return await this.loginWithPayload(payloadData);
   }
 
   public async verify(

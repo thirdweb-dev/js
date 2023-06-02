@@ -4,11 +4,11 @@ import {
   SmartWalletConfig as SmartWalletConfig_,
 } from "@thirdweb-dev/wallets";
 
-export type SmartWalletConfig = Omit<SmartWalletConfig_, "chain"> & {
+export type SmartWalletConfigOptions = Omit<SmartWalletConfig_, "chain"> & {
   personalWallets?: WalletConfig<any, any>[];
 };
 
-export type SmartConfiguredWallet = WalletConfig<
+export type SmartWalletConfig = WalletConfig<
   SmartWallet,
-  SmartWalletConfig
+  SmartWalletConfigOptions
 >;
