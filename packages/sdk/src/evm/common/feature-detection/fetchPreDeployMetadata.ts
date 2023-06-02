@@ -2,7 +2,7 @@ import {
   PreDeployMetadataFetched,
   PreDeployMetadataFetchedSchema,
 } from "../../schema/contracts/custom";
-import { fetchContractMetadata } from "../metadata-resolver";
+import { fetchContractMetadata } from "../fetchContractMetadata";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { fetchRawPredeployMetadata } from "./fetchRawPredeployMetadata";
 
