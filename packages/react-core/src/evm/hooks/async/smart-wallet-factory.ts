@@ -102,7 +102,7 @@ export function useCreateSmartWallet(
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (admin: string, extraData: BytesLike) => {
+    async (admin: string, extraData?: BytesLike) => {
       requiredParamInvariant(contract, "contract is undefined");
 
       return contract.smartWalletFactory.createWallet(
