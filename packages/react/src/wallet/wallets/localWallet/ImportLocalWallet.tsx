@@ -31,7 +31,7 @@ export const ImportLocalWallet: React.FC<{
   const [showPassword, setShowPassword] = useState(false);
   const [importedAddress, setImportedAddress] = useState<string | undefined>();
 
-  const { setConnectedWallet } = useWalletContext();
+  const { setConnectedWallet, setConnectionStatus } = useWalletContext();
 
   const handleImport = async () => {
     const localWallet = createWalletInstance(
@@ -51,6 +51,9 @@ export const ImportLocalWallet: React.FC<{
       setIsWrongPassword(true);
       return;
     }
+
+    setConnectionStatus("connecting");
+    await localWallet.connect();
 
     await localWallet.save({
       strategy: "encryptedJson",

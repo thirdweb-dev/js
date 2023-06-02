@@ -238,7 +238,7 @@ export const SelectAccount: React.FC<{
             )}
           </NetworkSelect>
           {!disableNetworkSelection && (
-            <ChevronDownIcon
+            <StyledChevronDownIcon
               width={iconSize.sm}
               height={iconSize.sm}
               style={{
@@ -393,4 +393,8 @@ const NetworkSelect = styled.select<{ theme?: Theme }>`
     opacity: 1;
     cursor: not-allowed;
   }
+`;
+
+const StyledChevronDownIcon = styled(ChevronDownIcon)<{ theme?: Theme }>`
+  color: ${(p) => p.theme.icon.secondary};
 `;
