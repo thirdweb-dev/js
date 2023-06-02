@@ -1691,7 +1691,9 @@ export class ContractDeployer extends RPCConnectionHandler {
       if (
         extendedMetadata &&
         extendedMetadata.factoryDeploymentData &&
-        !forceDirectDeploy
+        !forceDirectDeploy &&
+        (!extendedMetadata.deployType ||
+          extendedMetadata.deployType !== "standard")
       ) {
         if (extendedMetadata.deployType === "customFactory") {
           return await this.deployViaCustomFactory.prepare(
