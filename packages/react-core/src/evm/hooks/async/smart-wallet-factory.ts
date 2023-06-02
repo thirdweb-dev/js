@@ -14,9 +14,8 @@ import {
   UseQueryResult,
 } from "@tanstack/react-query";
 import type {
-  AccountEvent,
+  AccountEvent, SmartContract,
 } from "@thirdweb-dev/sdk";
-import { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/smart-contract";
 import type { BytesLike } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -49,8 +48,8 @@ export function useSmartWallets(
     () => {
       requiredParamInvariant(contract, "No Contract instance provided");
       invariant(
-        contract.smartWalletFactory.getAll,
-        "Contract instance does not support contract.smartWalletFactory.getAll",
+        contract.smartWalletFactory.getAllWallets,
+        "Contract instance does not support contract.smartWalletFactory.getAllWallets",
       );
       return contract.smartWalletFactory.getAllWallets();
     },
