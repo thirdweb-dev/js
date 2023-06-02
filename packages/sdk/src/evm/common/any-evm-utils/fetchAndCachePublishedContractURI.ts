@@ -35,5 +35,5 @@ export async function fetchAndCachePublishedContractURI(
   const uri = model.publishMetadataUri;
   uriCache[contractName] = uri;
 
-  return contractName;
+  return uri;
 }
