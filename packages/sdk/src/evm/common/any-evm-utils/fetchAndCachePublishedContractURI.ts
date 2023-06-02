@@ -1,4 +1,8 @@
-import { ThirdwebSDK } from "../../core/sdk";
+import { Contract } from "ethers";
+import ContractPublisherAbi from "@thirdweb-dev/contracts-js/dist/abis/ContractPublisher.json";
+import type { ContractPublisher } from "@thirdweb-dev/contracts-js";
+import { getContractPublisherAddress } from "../../constants/addresses/getContractPublisherAddress";
+import { getChainProvider } from "../../constants/urls";
 
 const uriCache: Record<string, string> = {};
 
@@ -10,17 +14,26 @@ export async function fetchAndCachePublishedContractURI(
   if (uriCache[contractName]) {
     return uriCache[contractName];
   }
-  // fetch the publish URI from the ContractPublisher contract
-  const publishedContract = await new ThirdwebSDK("polygon")
-    .getPublisher()
-    .getVersion(THIRDWEB_DEPLOYER, contractName);
-  if (!publishedContract) {
+
+  const contract = new Contract(
+    getContractPublisherAddress(),
+    ContractPublisherAbi,
+    getChainProvider("polygon", {}),
+  ) as ContractPublisher;
+
+  const model = await contract.getPublishedContract(
+    THIRDWEB_DEPLOYER,
+    contractName,
+  );
+
+  if (!model) {
     throw new Error(
       `No published contract found for ${contractName} at version by '${THIRDWEB_DEPLOYER}'`,
     );
   }
-  const uri = publishedContract.metadataUri;
+
+  const uri = model.publishMetadataUri;
   uriCache[contractName] = uri;
 
-  return uri;
+  return contractName;
 }
