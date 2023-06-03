@@ -1,75 +1,58 @@
-import { PasteInput } from "./PasteInput";
-import { Flex, FormControl } from "@chakra-ui/react";
-import { defaultChains } from "@thirdweb-dev/chains";
-import { useMemo } from "react";
-import { FormLabel, Heading, Link, Text } from "tw-components";
+import { CustomFactory } from "./custom-factory";
+import { DefaultFactory } from "./default-factory";
+import { ButtonGroup, Flex } from "@chakra-ui/react";
+import { Abi } from "@thirdweb-dev/sdk";
+import { Dispatch, SetStateAction } from "react";
+import { useFormContext } from "react-hook-form";
+import { Button, Heading } from "tw-components";
 
-export const FactoryFieldset = () => {
-  const configuredChains = defaultChains;
+interface FactoryFieldsetProps {
+  abi: Abi;
+  setCustomFactoryAbi: Dispatch<SetStateAction<Abi>>;
+}
 
-  const { mainnets, testnets } = useMemo(() => {
-    return {
-      mainnets: configuredChains.filter((n) => !n.testnet),
-      testnets: configuredChains.filter((n) => n.testnet),
-    };
-  }, [configuredChains]);
+export const FactoryFieldset: React.FC<FactoryFieldsetProps> = ({
+  abi,
+  setCustomFactoryAbi,
+}) => {
+  const form = useFormContext();
 
   return (
-    <Flex gap={16} direction="column" as="fieldset">
-      <Flex gap={2} direction="column">
+    <Flex gap={12} direction="column" as="fieldset">
+      <Flex gap={6} direction="column">
         <Heading size="title.lg">Factory deploy settings</Heading>
-        <Text fontStyle="normal">
-          Factory deployment requires having deployed implementations of your
-          contract already available on each chain you want to support. If you
-          already have a contract address, paste it into the corresponding
-          network. Your contracts will need to implement the IContract
-          interface.{" "}
-          <Link
-            href="https://portal.thirdweb.com/publish#factory-deploys"
-            color="blue.600"
+        <ButtonGroup size="sm" variant="ghost" spacing={{ base: 0.5, md: 2 }}>
+          <Button
+            type="button"
+            isActive={form.watch("deployType") === "autoFactory"}
+            _active={{
+              bg: "bgBlack",
+              color: "bgWhite",
+            }}
+            rounded="lg"
+            onClick={() => form.setValue("deployType", "autoFactory")}
           >
-            Learn more
-          </Link>
-          .
-        </Text>
-      </Flex>
-      <Flex flexDir="column" gap={4}>
-        <Heading size="title.md">Mainnets</Heading>
-        {mainnets.map(({ chainId, name }) => (
-          <FormControl key={`factory${chainId}`}>
-            <Flex gap={4} alignItems="center">
-              <FormLabel
-                mb={2}
-                width={{ base: "150px", md: "270px" }}
-                lineHeight="150%"
-              >
-                {name}
-              </FormLabel>
-              <PasteInput
-                formKey={`factoryDeploymentData.factoryAddresses.${chainId}`}
-              />
-            </Flex>
-          </FormControl>
-        ))}
-      </Flex>
-      <Flex flexDir="column" gap={4}>
-        <Heading size="title.md">Testnets</Heading>
-        {testnets.map(({ chainId, name }) => (
-          <FormControl key={`factory${chainId}`}>
-            <Flex gap={4} alignItems="center">
-              <FormLabel
-                mb={2}
-                width={{ base: "150px", md: "270px" }}
-                lineHeight="150%"
-              >
-                {name}
-              </FormLabel>
-              <PasteInput
-                formKey={`factoryDeploymentData.factoryAddresses.${chainId}`}
-              />
-            </Flex>
-          </FormControl>
-        ))}
+            Default Factory
+          </Button>
+          <Button
+            type="button"
+            isActive={form.watch("deployType") === "customFactory"}
+            _active={{
+              bg: "bgBlack",
+              color: "bgWhite",
+            }}
+            rounded="lg"
+            onClick={() => form.setValue("deployType", "customFactory")}
+          >
+            Custom Factory (Advanced)
+          </Button>
+        </ButtonGroup>
+        {form.watch("deployType") === "autoFactory" && (
+          <DefaultFactory abi={abi} />
+        )}
+        {form.watch("deployType") === "customFactory" && (
+          <CustomFactory setCustomFactoryAbi={setCustomFactoryAbi} />
+        )}
       </Flex>
     </Flex>
   );

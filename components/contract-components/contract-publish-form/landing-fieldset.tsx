@@ -22,7 +22,6 @@ import { FileInput } from "components/shared/FileInput";
 import { SelectOption } from "core-ui/batch-upload/lazy-mint-form/select-option";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { replaceIpfsUrl } from "lib/sdk";
-import { Dispatch, SetStateAction } from "react";
 import { useFormContext } from "react-hook-form";
 import { FiTrash, FiUpload } from "react-icons/fi";
 import {
@@ -36,17 +35,11 @@ import {
 } from "tw-components";
 
 interface LandingFieldsetProps {
-  contractSelection: "standard" | "proxy" | "factory";
-  setContractSelection: Dispatch<
-    SetStateAction<"standard" | "proxy" | "factory">
-  >;
   latestVersion: string | undefined;
   placeholderVersion: string;
 }
 
 export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
-  contractSelection,
-  setContractSelection,
   latestVersion,
   placeholderVersion,
 }) => {
@@ -323,35 +316,27 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
       </Box>
       <Box>
         <Heading size="title.md" mb={2}>
-          Choose your contract type
+          Deployment options
         </Heading>
         <Text size="body.md" mb={4}>
-          Not sure which contract type to choose?{" "}
-          <Link href="https://portal.thirdweb.com/publish" color="primary.600">
-            Learn more
-          </Link>
-          .
+          Choose how users will deploy your published contract.
         </Text>
         <Flex flexDir="column" gap={2} width="full">
           <SelectOption
-            name="Standard contract"
-            onClick={() => setContractSelection("standard")}
-            isActive={contractSelection === "standard"}
-            infoText="Use this if your contract does not follow the factory contract or proxy contract pattern."
+            name="Direct deploy"
+            description="Users will directly deploy the full contract."
+            onClick={() => form.setValue("deployType", "standard")}
+            isActive={form.watch("deployType") === "standard"}
             width="full"
           />
           <SelectOption
-            name="Proxy contract"
-            onClick={() => setContractSelection("proxy")}
-            isActive={contractSelection === "proxy"}
-            infoText="Use this if your contract follows the proxy contract pattern. This makes it cheaper for users to deploy your contract."
-            width="full"
-          />
-          <SelectOption
-            name="Factory contract"
-            onClick={() => setContractSelection("factory")}
-            isActive={contractSelection === "factory"}
-            infoText="Use this if your contract follows the factory contract pattern. This lets you call an initializer function when users deploy your contract."
+            name="Deploy via factory"
+            description="Users will deploy your contract through a default or custom factory contract."
+            onClick={() => form.setValue("deployType", "autoFactory")}
+            isActive={
+              form.watch("deployType") === "autoFactory" ||
+              form.watch("deployType") === "customFactory"
+            }
             width="full"
           />
         </Flex>

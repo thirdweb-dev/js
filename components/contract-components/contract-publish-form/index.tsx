@@ -11,14 +11,15 @@ import { ContractId } from "../types";
 import { ContractParamsFieldset } from "./contract-params-fieldset";
 import { FactoryFieldset } from "./factory-fieldset";
 import { LandingFieldset } from "./landing-fieldset";
-import { ProxyFieldset } from "./proxy-fieldset";
+import { NetworksFieldset } from "./networks-fieldset";
 import { ConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { Box, Divider, Flex, Icon, IconButton } from "@chakra-ui/react";
 import { defaultChains } from "@thirdweb-dev/chains";
 import { useAddress } from "@thirdweb-dev/react";
 import {
+  Abi,
   CONTRACT_ADDRESSES,
-  ExtraPublishMetadata,
+  ExtraPublishMetadataSchemaInput,
 } from "@thirdweb-dev/sdk/evm";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -27,6 +28,16 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { IoChevronBack } from "react-icons/io5";
 import { Button, Text } from "tw-components";
+import { z } from "zod";
+
+const ExtraPublishMetadataSchema = ExtraPublishMetadataSchemaInput.extend({
+  customFactoryAddresses: z.array(
+    z.object({
+      key: z.number(),
+      value: z.string(),
+    }),
+  ),
+});
 
 interface ContractPublishFormProps {
   contractId: ContractId;
@@ -35,13 +46,12 @@ interface ContractPublishFormProps {
 export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   contractId,
 }) => {
+  const [customFactoryAbi, setCustomFactoryAbi] = useState<Abi>([]);
+
   const configuredChains = defaultChains;
   const configuredChainsIds = configuredChains.map((c) => c.chainId);
-  const [contractSelection, setContractSelection] = useState<
-    "standard" | "proxy" | "factory"
-  >("standard");
   const [fieldsetToShow, setFieldsetToShow] = useState<
-    "landing" | "proxy" | "factory" | "contractParams"
+    "landing" | "factory" | "contractParams" | "networks"
   >("landing");
   const trackEvent = useTrack();
 
@@ -52,7 +62,6 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   );
   const address = useAddress();
   const publishMutation = usePublishMutation();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const publishMetadata = useContractPublishMetadataFromURI(contractId);
   const prePublishMetadata = useContractPrePublishMetadata(contractId, address);
@@ -61,8 +70,6 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
     prePublishMetadata.data?.latestPublishedContractMetadata?.publishedMetadata
       .version;
 
-  const form = useForm<ExtraPublishMetadata>();
-
   const placeholderVersion = useMemo(() => {
     if (latestVersion) {
       const versplit = latestVersion.split(".");
@@ -70,6 +77,89 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
     }
     return "1.0.0";
   }, [latestVersion]);
+
+  const transformedQueryData = useMemo(() => {
+    return {
+      ...prePublishMetadata.data?.latestPublishedContractMetadata
+        ?.publishedMetadata,
+      changelog: "",
+      version: placeholderVersion,
+      displayName:
+        prePublishMetadata.data?.latestPublishedContractMetadata
+          ?.publishedMetadata.displayName ||
+        prePublishMetadata.data?.preDeployMetadata.info.title ||
+        publishMetadata.data?.name ||
+        "",
+      description:
+        prePublishMetadata.data?.latestPublishedContractMetadata
+          ?.publishedMetadata.description ||
+        prePublishMetadata.data?.preDeployMetadata.info.notice ||
+        "",
+      factoryDeploymentData: prePublishMetadata.data
+        ?.latestPublishedContractMetadata?.publishedMetadata
+        ?.factoryDeploymentData || {
+        factoryAddresses: Object.fromEntries(
+          configuredChainsIds
+            .map((id) =>
+              id in CONTRACT_ADDRESSES
+                ? [
+                    id,
+                    CONTRACT_ADDRESSES[id as keyof typeof CONTRACT_ADDRESSES]
+                      .twFactory,
+                  ]
+                : null,
+            )
+            .filter(Boolean) as [number, string][],
+        ),
+        implementationAddresses: Object.fromEntries(
+          configuredChainsIds.map((id) => [id, ""]),
+        ),
+        implementationInitializerFunction: "initialize",
+        customFactoryInput: {
+          factoryFunction:
+            prePublishMetadata.data?.latestPublishedContractMetadata
+              ?.publishedMetadata.factoryDeploymentData?.customFactoryInput
+              ?.factoryFunction || "deployProxyByImplementation",
+          customFactoryAddresses:
+            prePublishMetadata.data?.latestPublishedContractMetadata
+              ?.publishedMetadata?.factoryDeploymentData?.customFactoryInput
+              ?.customFactoryAddresses || {},
+        },
+      },
+      constructorParams:
+        prePublishMetadata.data?.latestPublishedContractMetadata
+          ?.publishedMetadata?.constructorParams || {},
+      networksForDeployment: prePublishMetadata.data
+        ?.latestPublishedContractMetadata?.publishedMetadata
+        .networksForDeployment || {
+        allNetworks: true,
+      },
+      deployType:
+        prePublishMetadata.data?.latestPublishedContractMetadata
+          ?.publishedMetadata?.deployType || "standard",
+      customFactoryAddresses: Object.entries(
+        prePublishMetadata.data?.latestPublishedContractMetadata
+          ?.publishedMetadata?.factoryDeploymentData?.customFactoryInput
+          ?.customFactoryAddresses || {},
+      ).map(([key, value]) => ({ key: Number(key), value })),
+    };
+  }, [
+    configuredChainsIds,
+    placeholderVersion,
+    prePublishMetadata.data?.latestPublishedContractMetadata?.publishedMetadata,
+    prePublishMetadata.data?.preDeployMetadata.info.notice,
+    prePublishMetadata.data?.preDeployMetadata.info.title,
+    publishMetadata.data?.name,
+  ]);
+
+  const form = useForm<z.input<typeof ExtraPublishMetadataSchema>>({
+    defaultValues: transformedQueryData,
+    values: transformedQueryData,
+    resetOptions: {
+      keepDirty: true,
+      keepDirtyValues: true,
+    },
+  });
 
   const hasTrackedImpression = useRef<boolean>(false);
   useEffect(() => {
@@ -87,74 +177,6 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
     !form.watch("version") ||
     !form.watch("displayName") ||
     !!form.getFieldState("version", form.formState).error;
-
-  useEffect(() => {
-    if (address) {
-      form.reset(
-        {
-          ...prePublishMetadata.data?.latestPublishedContractMetadata
-            ?.publishedMetadata,
-          changelog: "",
-          version: placeholderVersion,
-          displayName:
-            prePublishMetadata.data?.latestPublishedContractMetadata
-              ?.publishedMetadata.displayName ||
-            prePublishMetadata.data?.preDeployMetadata.info.title ||
-            publishMetadata.data?.name ||
-            "",
-          description:
-            prePublishMetadata.data?.latestPublishedContractMetadata
-              ?.publishedMetadata.description ||
-            prePublishMetadata.data?.preDeployMetadata.info.notice ||
-            "",
-          factoryDeploymentData: prePublishMetadata.data
-            ?.latestPublishedContractMetadata?.publishedMetadata
-            ?.factoryDeploymentData || {
-            factoryAddresses: Object.fromEntries(
-              configuredChainsIds
-                .map((id) =>
-                  id in CONTRACT_ADDRESSES
-                    ? [
-                        id,
-                        CONTRACT_ADDRESSES[
-                          id as keyof typeof CONTRACT_ADDRESSES
-                        ].twFactory,
-                      ]
-                    : null,
-                )
-                .filter(Boolean) as [number, string][],
-            ),
-            implementationAddresses: Object.fromEntries(
-              configuredChainsIds.map((id) => [id, ""]),
-            ),
-            implementationInitializerFunction: "initialize",
-          },
-          constructorParams:
-            prePublishMetadata.data?.latestPublishedContractMetadata
-              ?.publishedMetadata?.constructorParams || {},
-        },
-        { keepDirtyValues: true },
-      );
-
-      if (
-        prePublishMetadata.data?.latestPublishedContractMetadata
-          ?.publishedMetadata.isDeployableViaFactory
-      ) {
-        setContractSelection("factory");
-      } else if (
-        prePublishMetadata.data?.latestPublishedContractMetadata
-          ?.publishedMetadata.isDeployableViaProxy
-      ) {
-        setContractSelection("proxy");
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    prePublishMetadata.data,
-    address,
-    placeholderVersion,
-    form.formState.isDirty,
-  ]);
 
   const ensQuery = useEns(address);
 
@@ -178,16 +200,28 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   const constructorParams = useConstructorParamsFromABI(
     publishMetadata.data?.abi,
   );
+
   const initializerParams = useFunctionParamsFromABI(
-    publishMetadata.data?.abi,
-    fullPublishMetadata.data?.factoryDeploymentData
-      ?.implementationInitializerFunction || "initialize",
+    form.watch("deployType") === "customFactory"
+      ? customFactoryAbi
+      : publishMetadata.data?.abi,
+    form.watch("deployType") === "customFactory"
+      ? form.watch(
+          `factoryDeploymentData.customFactoryInput.factoryFunction`,
+        ) ||
+          fullPublishMetadata.data?.factoryDeploymentData?.customFactoryInput
+            ?.factoryFunction ||
+          "deployProxyByImplementation"
+      : form.watch("factoryDeploymentData.implementationInitializerFunction") ||
+          fullPublishMetadata.data?.factoryDeploymentData
+            ?.implementationInitializerFunction ||
+          "initialize",
   );
 
   const deployParams =
-    contractSelection === "proxy" || contractSelection === "factory"
-      ? initializerParams
-      : constructorParams;
+    form.watch("deployType") === "standard"
+      ? constructorParams
+      : initializerParams;
 
   // during loading and after success we should stay in loading state
   const isLoading = publishMutation.isLoading || publishMutation.isSuccess;
@@ -206,11 +240,22 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
           as="form"
           id="contract-release-form"
           onSubmit={form.handleSubmit((data) => {
-            // the drawer has another form inside it which triggers this one on submit
-            // hacky solution to avoid double submission
-            if (isDrawerOpen) {
-              return;
-            }
+            const addressArray =
+              Object.keys(data?.customFactoryAddresses || {}).length > 0
+                ? (data?.customFactoryAddresses as unknown as {
+                    key: number;
+                    value: string;
+                  }[])
+                : [];
+
+            const addressObj = addressArray.reduce<Record<number, string>>(
+              (obj, item) => {
+                obj[item.key] = item.value;
+                return obj;
+              },
+              {},
+            );
+
             trackEvent({
               category: "publish",
               action: "click",
@@ -223,8 +268,30 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
                 predeployUri: contractId,
                 extraMetadata: {
                   ...data,
-                  isDeployableViaFactory: contractSelection === "factory",
-                  isDeployableViaProxy: contractSelection === "proxy",
+                  networksForDeployment: {
+                    allNetworks:
+                      data.deployType === "customFactory"
+                        ? false
+                        : data.networksForDeployment?.allNetworks,
+                    networksEnabled:
+                      addressArray.length > 0
+                        ? Object.keys(addressObj).map((val) => Number(val))
+                        : data.networksForDeployment?.networksEnabled,
+                  },
+                  factoryDeploymentData: {
+                    ...data.factoryDeploymentData,
+                    implementationAddresses:
+                      data.factoryDeploymentData?.implementationAddresses || {},
+                    customFactoryInput: {
+                      factoryFunction:
+                        data.factoryDeploymentData?.customFactoryInput
+                          ?.factoryFunction || "deployProxyByImplementation",
+                      customFactoryAddresses:
+                        addressObj ||
+                        data.factoryDeploymentData?.customFactoryInput
+                          ?.customFactoryAddresses,
+                    },
+                  },
                 },
                 contractName: publishMetadata.data?.name,
               },
@@ -238,13 +305,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
                     uris: contractId,
                     release_id: `${ensNameOrAddress}/${publishMetadata.data?.name}`,
                     version: data.version,
-                    type: data.isDeployableViaProxy
-                      ? "proxy"
-                      : data.isDeployableViaFactory
-                      ? "factory"
-                      : "standard",
-                    is_proxy: data.isDeployableViaProxy,
-                    is_factory: data.isDeployableViaFactory,
+                    type: data.deployType,
                   });
                   if (successRedirectUrl) {
                     router.push(
@@ -263,7 +324,6 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
                     label: "error",
                     uris: contractId,
                     release_id: `${ensNameOrAddress}/${publishMetadata.data?.name}`,
-                    is_proxy: data.isDeployableViaProxy,
                     is_factory: data.isDeployableViaFactory,
                   });
                 },
@@ -280,11 +340,12 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
                 variant="ghost"
                 onClick={() =>
                   fieldsetToShow === "contractParams" &&
-                  contractSelection === "proxy"
-                    ? setFieldsetToShow("proxy")
-                    : fieldsetToShow === "contractParams" &&
-                      contractSelection === "factory"
+                  (form.watch("deployType") === "autoFactory" ||
+                    form.watch("deployType") === "customFactory")
                     ? setFieldsetToShow("factory")
+                    : fieldsetToShow === "contractParams" &&
+                      form.watch("deployType") === "standard"
+                    ? setFieldsetToShow("networks")
                     : setFieldsetToShow("landing")
                 }
                 aria-label="Back"
@@ -296,8 +357,6 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
           )}
           {fieldsetToShow === "landing" && (
             <LandingFieldset
-              contractSelection={contractSelection}
-              setContractSelection={setContractSelection}
               latestVersion={latestVersion}
               placeholderVersion={placeholderVersion}
             />
@@ -305,19 +364,17 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
           {fieldsetToShow === "contractParams" && (
             <ContractParamsFieldset deployParams={deployParams} />
           )}
-          {fieldsetToShow === "proxy" && (
-            <ProxyFieldset
-              setIsDrawerOpen={setIsDrawerOpen}
-              contractId={contractId}
-            />
-          )}
           {fieldsetToShow === "factory" && (
             <Flex flexDir="column" gap={24}>
-              <ProxyFieldset
-                setIsDrawerOpen={setIsDrawerOpen}
-                contractId={contractId}
+              <FactoryFieldset
+                abi={publishMetadata.data?.abi || []}
+                setCustomFactoryAbi={setCustomFactoryAbi}
               />
-              <FactoryFieldset />
+            </Flex>
+          )}
+          {fieldsetToShow === "networks" && (
+            <Flex flexDir="column" gap={24}>
+              <NetworksFieldset fromStandard />
             </Flex>
           )}
           <Flex flexDir="column" gap={6}>
@@ -334,11 +391,11 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
                   <ConnectWallet />
                 </>
               ) : fieldsetToShow === "landing" &&
-                contractSelection === "proxy" ? (
+                form.watch("deployType") === "standard" ? (
                 <>
                   <Box />
                   <Button
-                    onClick={() => setFieldsetToShow("proxy")}
+                    onClick={() => setFieldsetToShow("networks")}
                     colorScheme="primary"
                     isDisabled={disableNext}
                   >
@@ -346,7 +403,8 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
                   </Button>
                 </>
               ) : fieldsetToShow === "landing" &&
-                contractSelection === "factory" ? (
+                (form.watch("deployType") === "autoFactory" ||
+                  form.watch("deployType") === "customFactory") ? (
                 <>
                   <Box />
                   <Button

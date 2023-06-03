@@ -15,7 +15,12 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { Polygon, ZksyncEra, ZksyncEraTestnet } from "@thirdweb-dev/chains";
+import {
+  Polygon,
+  ZksyncEra,
+  ZksyncEraTestnet,
+  getChainByChainId,
+} from "@thirdweb-dev/chains";
 import {
   useAddress,
   useChainId,
@@ -831,4 +836,20 @@ export function useFeatureContractCodeSnippetQuery(language: string) {
     );
     return (await res.json()) as SnippetApiResponse;
   });
+}
+
+export function useCustomFactoryAbi(contractAddress: string, chainId: number) {
+  return useQuery(
+    ["custom-factory-abi", { contractAddress, chainId }],
+    async () => {
+      const chain = getChainByChainId(chainId);
+      const sdk = getEVMThirdwebSDK(chainId, getDashboardChainRpc(chain));
+      invariant(sdk, "sdk is not defined");
+
+      return (await sdk.getContract(contractAddress)).abi;
+    },
+    {
+      enabled: !!contractAddress && !!chainId,
+    },
+  );
 }

@@ -6,16 +6,22 @@ import { useMemo, useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import { Button, MenuItem, Text } from "tw-components";
 
-export const NetworkSelectDropdown: React.FC<{
+interface NetworkSelectDropdownProps {
   enabledChainIds?: number[];
   disabledChainIds?: number[];
   useCleanChainName?: boolean;
   isDisabled?: boolean;
   onSelect?: (chain: StoredChain | undefined) => void;
-}> = (props) => {
-  const supportedChains = useSupportedChains();
+}
 
-  const { enabledChainIds, disabledChainIds, useCleanChainName } = props;
+export const NetworkSelectDropdown: React.FC<NetworkSelectDropdownProps> = ({
+  enabledChainIds,
+  disabledChainIds,
+  useCleanChainName,
+  isDisabled,
+  onSelect,
+}) => {
+  const supportedChains = useSupportedChains();
 
   const chains = useMemo(() => {
     // return only enabled chains if enabled chains are specified
@@ -36,7 +42,6 @@ export const NetworkSelectDropdown: React.FC<{
     return supportedChains;
   }, [supportedChains, enabledChainIds, disabledChainIds]);
 
-  const { onSelect } = props;
   const [selectedOption, setSelectedOption] = useState<StoredChain | undefined>(
     undefined,
   );
@@ -66,7 +71,7 @@ export const NetworkSelectDropdown: React.FC<{
             }
             bg="transparent !important"
             p={0}
-            isDisabled={props.isDisabled}
+            isDisabled={isDisabled}
             display="flex"
             color="secondary"
             _hover={{

@@ -21,6 +21,7 @@ import { useFormContext } from "react-hook-form";
 import {
   Button,
   Card,
+  Checkbox,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
@@ -202,6 +203,36 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                     </FormHelperText>
                   </FormControl>
                 </Flex>
+                {form.watch(`constructorParams.${param.name}.defaultValue`) && (
+                  <Flex flexDir="column" w="full">
+                    <FormControl
+                      isInvalid={
+                        !!form.getFieldState(
+                          `constructorParams.${param.name}.description`,
+                          form.formState,
+                        ).error
+                      }
+                    >
+                      <Flex gap={2} justifyContent="start">
+                        <Checkbox
+                          placeSelf="start"
+                          {...form.register(
+                            `constructorParams.${param.name}.hidden`,
+                          )}
+                        />
+                        <Flex flexDir="column">
+                          <FormLabel as={Text} m={0}>
+                            Advanced Parameter
+                          </FormLabel>
+                          <Text>
+                            This parameter will be in the collapsed advanced
+                            section.
+                          </Text>
+                        </Flex>
+                      </Flex>
+                    </FormControl>
+                  </Flex>
+                )}
               </Flex>
               {idx !== deployParams.length - 1 ? <Divider mt={8} /> : null}
             </Flex>
