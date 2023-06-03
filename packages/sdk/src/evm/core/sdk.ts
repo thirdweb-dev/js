@@ -1861,7 +1861,10 @@ export class ContractDeployer extends RPCConnectionHandler {
       let implementationAddress = extendedMetadata.factoryDeploymentData
         .implementationAddresses[chainId] as AddressOrEns;
 
-      if (!implementationAddress) {
+      if (
+        !implementationAddress ||
+        extendedMetadata.deployType === "autoFactory"
+      ) {
         const create2FactoryAddress = await getCreate2FactoryAddress(
           this.getProvider(),
         );
