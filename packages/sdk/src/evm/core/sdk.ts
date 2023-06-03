@@ -1687,7 +1687,6 @@ export class ContractDeployer extends RPCConnectionHandler {
           `Deployments disabled on this network, with chainId: ${chainId}`,
         );
       }
-
       if (
         extendedMetadata &&
         extendedMetadata.factoryDeploymentData &&
@@ -1734,6 +1733,18 @@ export class ContractDeployer extends RPCConnectionHandler {
           ) {
             let implementationAddress = extendedMetadata.factoryDeploymentData
               .implementationAddresses[chainId] as AddressOrEns;
+
+            if (!implementationAddress) {
+              return await this.deployViaAutoFactory.prepare(
+                publishMetadataUri,
+                { compilerMetadata, extendedMetadata },
+                signer,
+                extendedMetadata.factoryDeploymentData
+                  .implementationInitializerFunction,
+                paramValues,
+                options,
+              );
+            }
             const resolvedImplementationAddress = await resolveAddress(
               implementationAddress,
             );
