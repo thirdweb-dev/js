@@ -2,4 +2,4 @@
 "@thirdweb-dev/sdk": patch
 ---
 
-Reduce circular deps
+enable zksync mainnet deployments

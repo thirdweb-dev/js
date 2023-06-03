@@ -14,6 +14,7 @@ import {
   User,
   Json,
   LoginOptionsSchema,
+  AuthenticationPayload,
 } from "./schema";
 import { isBrowser } from "./utils";
 import type { GenericAuthWallet } from "@thirdweb-dev/wallets";
@@ -286,12 +287,7 @@ export class ThirdwebAuth {
     const parsedOptions = AuthenticateOptionsSchema.parse(options);
     const domain = parsedOptions?.domain || this.domain;
 
-    const encodedPayload = token.split(".")[1];
-    const encodedSignature = token.split(".")[2];
-    const payload: AuthenticationPayloadData = JSON.parse(
-      Buffer.from(encodedPayload, "base64").toString(),
-    );
-    const signature = Buffer.from(encodedSignature, "base64").toString();
+    const { payload, signature } = this.parseToken(token);
 
     // Check that the payload unique ID is valid
     if (parsedOptions?.validateTokenId !== undefined) {
@@ -356,6 +352,20 @@ export class ThirdwebAuth {
     return {
       address: payload.sub,
       session: payload.ctx as TSession | undefined,
+    };
+  }
+
+  public parseToken(token: string): AuthenticationPayload {
+    const encodedPayload = token.split(".")[1];
+    const encodedSignature = token.split(".")[2];
+    const payload: AuthenticationPayloadData = JSON.parse(
+      Buffer.from(encodedPayload, "base64").toString(),
+    );
+    const signature = Buffer.from(encodedSignature, "base64").toString();
+
+    return {
+      payload,
+      signature,
     };
   }
 

@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Taiko (Alpha-2 Testnet)",
+  "name": "Taiko (Alpha-3 Testnet)",
   "chain": "ETH",
+  "status": "active",
   "icon": {
     "url": "ipfs://QmcHdmVr5VRUJq13jnM6tgah5Ge7hn3Dm14eY6vwivJ5ui",
     "width": 288,
@@ -9,8 +10,8 @@ export default {
     "format": "png"
   },
   "rpc": [
-    "https://taiko-alpha-2-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.a2.taiko.xyz"
+    "https://taiko-alpha-3-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.test.taiko.xyz"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -19,16 +20,16 @@ export default {
     "decimals": 18
   },
   "infoURL": "https://taiko.xyz",
-  "shortName": "taiko-a2",
-  "chainId": 167004,
-  "networkId": 167004,
+  "shortName": "taiko-a3",
+  "chainId": 167005,
+  "networkId": 167005,
   "explorers": [
     {
       "name": "blockscout",
-      "url": "https://explorer.a2.taiko.xyz",
+      "url": "https://explorer.test.taiko.xyz",
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
-  "slug": "taiko-alpha-2-testnet"
+  "slug": "taiko-alpha-3-testnet"
 } as const satisfies Chain;

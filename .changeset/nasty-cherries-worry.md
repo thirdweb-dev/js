@@ -2,4 +2,4 @@
 "@thirdweb-dev/sdk": patch
 ---
 
-Reduce Circular dependencies
+Fix any evm deployments

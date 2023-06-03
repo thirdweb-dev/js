@@ -2,4 +2,4 @@
 "@thirdweb-dev/sdk": patch
 ---
 
-Reduce circular dependencies
+Check standard deploy type

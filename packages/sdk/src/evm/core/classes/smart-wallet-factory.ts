@@ -36,7 +36,7 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
    *******************************/
 
   /**
-   * Get the deterministic address of the smart wallet that will be created for the given admin.
+   * Get the deterministic address of the smart wallet that will be created
    *
    * @example
    * ```javascript
@@ -60,7 +60,7 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
   }
 
   /**
-   * Get all signers who have authority on the given smart wallet.
+   * Get all signers who have authority on the given smart wallet
    *
    * @example
    * ```javascript
@@ -76,7 +76,7 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
   }
 
   /**
-   * Get all wallets on which the given signer has authority.
+   * Get all wallets on which the given signer has authority
    *
    * @example
    * ```javascript
@@ -92,7 +92,7 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
   }
 
   /**
-   * Get all wallets created via the smart wallet factory.
+   * Get all wallets
    *
    * @example
    * ```javascript
@@ -117,7 +117,7 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
   }
 
   /**
-   * Determine whether the smart wallet has been deployed for the given admin.
+   * Check if a smart wallet has been deployed for the given admin
    *
    * @param admin - The admin of the smart wallet.
    * @param extraData - (Optional) Extra data to be passed to the smart wallet on creation.
@@ -136,7 +136,7 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
    *******************************/
 
   /**
-   * Create a smart wallet.
+   * Create a smart wallet
    *
    * @remarks Create a smart wallet for an admin. The admin will have complete authority over the smart wallet.
    *

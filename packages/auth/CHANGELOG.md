@@ -1,5 +1,18 @@
 # @thirdweb-dev/auth
 
+## 3.1.0
+
+### Minor Changes
+
+- [#1114](https://github.com/thirdweb-dev/js/pull/1114) [`2283e71a`](https://github.com/thirdweb-dev/js/commit/2283e71acaaf3d15eb2d6121682f1d2a81eec4f3) Thanks [@adam-maj](https://github.com/adam-maj)! - Switch to server-side payload generation
+
+### Patch Changes
+
+- [#1111](https://github.com/thirdweb-dev/js/pull/1111) [`21627c03`](https://github.com/thirdweb-dev/js/commit/21627c03d1bb1658fee19b12d580faa6c7f048d9) Thanks [@adam-maj](https://github.com/adam-maj)! - Update expiration dates for auth
+
+- Updated dependencies [[`9b20fc9a`](https://github.com/thirdweb-dev/js/commit/9b20fc9ad2d303edc31f44fbd2ea3b4dcf35d11e)]:
+  - @thirdweb-dev/wallets@0.2.25
+
 ## 3.0.23
 
 ### Patch Changes

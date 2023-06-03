@@ -1,9 +1,7 @@
 import { TransactionError, parseRevertReason } from "../../common/error";
 import { getPolygonGasPriorityFee } from "../../common/gas-price";
-import {
-  fetchContractMetadataFromAddress,
-  fetchSourceFilesFromMetadata,
-} from "../../common/metadata-resolver";
+import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
+import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
 import { isRouterContract } from "../../common/plugin/isRouterContract";
 // import { defaultGaslessSendFunction } from "../../common/transactions";
 import { isBrowser } from "../../common/utils";

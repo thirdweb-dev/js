@@ -2,10 +2,8 @@ import { computeEOAForwarderAddress } from "../../common/any-evm-utils/computeEO
 import { computeForwarderAddress } from "../../common/any-evm-utils/computeForwarderAddress";
 import { parseRevertReason, TransactionError } from "../../common/error";
 import { extractFunctionsFromAbi } from "../../common/feature-detection/extractFunctionsFromAbi";
-import {
-  fetchContractMetadataFromAddress,
-  fetchSourceFilesFromMetadata,
-} from "../../common/metadata-resolver";
+import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
+import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
 import {
   BiconomyForwarderAbi,
   ChainAwareForwardRequest,

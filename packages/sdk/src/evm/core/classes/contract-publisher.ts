@@ -6,11 +6,9 @@ import { extractConstructorParams } from "../../common/feature-detection/extract
 import { fetchExtendedReleaseMetadata } from "../../common/feature-detection/fetchExtendedReleaseMetadata";
 import { fetchRawPredeployMetadata } from "../../common/feature-detection/fetchRawPredeployMetadata";
 import { resolveContractUriFromAddress } from "../../common/feature-detection/resolveContractUriFromAddress";
-import {
-  fetchContractMetadataFromAddress,
-  fetchSourceFilesFromMetadata,
-  fetchContractMetadata,
-} from "../../common/metadata-resolver";
+import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
+import { fetchContractMetadata } from "../../common/fetchContractMetadata";
+import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
 import { getCompositePluginABI } from "../../common/plugin/getCompositePluginABI";
 import { buildTransactionFunction } from "../../common/transactions";
 import { isIncrementalVersion } from "../../common/version-checker";

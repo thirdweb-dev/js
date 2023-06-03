@@ -4,7 +4,7 @@ import { getEncodedConstructorParamsForThirdwebContract } from "./any-evm-utils/
 import { getThirdwebContractAddress } from "./any-evm-utils/getThirdwebContractAddress";
 import { extractConstructorParamsFromAbi } from "./feature-detection/extractConstructorParamsFromAbi";
 import { resolveContractUriFromAddress } from "./feature-detection/resolveContractUriFromAddress";
-import { fetchSourceFilesFromMetadata } from "./metadata-resolver";
+import { fetchSourceFilesFromMetadata } from "./fetchSourceFilesFromMetadata";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Abi } from "../schema/contracts/custom";
 import { ethers, utils } from "ethers";
