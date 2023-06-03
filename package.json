@@ -73,6 +73,7 @@
     "react-intersection-observer": "^9.4.3",
     "react-markdown": "^8.0.7",
     "react-table": "^7.7.0",
+    "recharts": "^2.6.2",
     "remark-gfm": "^3.0.1",
     "spdx-correct": "^3.1.1",
     "tiny-invariant": "^1.2.0",

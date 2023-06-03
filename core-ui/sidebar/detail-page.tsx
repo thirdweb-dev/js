@@ -16,7 +16,7 @@ import { EnhancedRoute } from "contract-ui/types/types";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { FiMenu } from "react-icons/fi";
-import { Heading, Link, Text } from "tw-components";
+import { Badge, Heading, Link, Text } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 import { shortenIfAddress } from "utils/usedapp-external";
 
@@ -100,6 +100,7 @@ export const ContractProgramSidebar: React.FC<ContractSidebarProps> = ({
                 .map((r) => ({
                   title: r.title,
                   href: `/${r.path.replace("overview", "")}`,
+                  isBeta: r.isBeta,
                   onClick: () => {
                     openState.onClose();
                   },
@@ -119,6 +120,7 @@ export const ContractProgramSidebar: React.FC<ContractSidebarProps> = ({
                 .map((r) => ({
                   title: r.title,
                   href: `/${r.path}`,
+                  isBeta: r.isBeta,
                   extensionDetectedState: r.isEnabled,
                   onClick: () => {
                     openState.onClose();
@@ -148,6 +150,7 @@ type NavLinkSectionprops = {
   links: Array<{
     href: string;
     title: string;
+    isBeta?: true;
     extensionDetectedState?: ExtensionDetectedState;
     onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
   }>;
@@ -174,9 +177,18 @@ const NavLinkSection: React.FC<NavLinkSectionprops> = ({
         </Text>
       </Flex>
       {filteredLinks.map((link) => (
-        <NavLink key={link.href} {...link}>
-          {link.title}
-        </NavLink>
+        <Flex gap={2}>
+          <NavLink key={link.href} {...link}>
+            {link.title}
+          </NavLink>
+          {link.isBeta && (
+            <Box>
+              <Badge colorScheme="green" variant="subtle">
+                Beta
+              </Badge>
+            </Box>
+          )}
+        </Flex>
       ))}
     </Flex>
   );
