@@ -7,7 +7,7 @@ type AddressProps = {
   variant?: keyof Theme["textVariants"];
 } & (typeof Text)["arguments"];
 
-export const Address = ({
+export const AddressDisplay = ({
   address,
   variant = "bodyLarge",
   ...props
