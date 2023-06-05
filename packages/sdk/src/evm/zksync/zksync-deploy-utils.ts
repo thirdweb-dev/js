@@ -26,56 +26,65 @@ export async function zkDeployContractFromUri(
   if (
     extendedMetadata &&
     extendedMetadata.factoryDeploymentData &&
-    (extendedMetadata.isDeployableViaProxy ||
-      extendedMetadata.isDeployableViaFactory) &&
-    !forceDirectDeploy
+    !forceDirectDeploy &&
+    (!extendedMetadata.deployType || extendedMetadata.deployType !== "standard")
   ) {
-    const implementationAddress = getImplementation(
-      chainId,
-      compilerMetadata.name,
-    );
-    if (!implementationAddress) {
-      throw new Error("Contract not supported yet.");
+    if (
+      extendedMetadata.isDeployableViaProxy ||
+      extendedMetadata.isDeployableViaFactory ||
+      extendedMetadata.deployType === "autoFactory"
+    ) {
+      const implementationAddress = getImplementation(
+        chainId,
+        compilerMetadata.name,
+      );
+      if (!implementationAddress) {
+        throw new Error("Contract not supported yet.");
+      }
+
+      const initializerParamTypes = extractFunctionParamsFromAbi(
+        compilerMetadata.abi,
+        extendedMetadata.factoryDeploymentData
+          .implementationInitializerFunction,
+      ).map((p) => p.type);
+
+      const paramValues = convertParamValues(
+        initializerParamTypes,
+        constructorParamValues,
+      );
+
+      const encodedInitializer = Contract.getInterface(
+        compilerMetadata.abi,
+      ).encodeFunctionData(
+        extendedMetadata.factoryDeploymentData
+          .implementationInitializerFunction,
+        paramValues,
+      );
+
+      const proxyFactory = new zk.ContractFactory(
+        twProxyArtifactZK.abi,
+        twProxyArtifactZK.bytecode as BytesLike,
+        signer as zk.Signer,
+        "create",
+      );
+      const proxy = await proxyFactory.deploy(
+        implementationAddress,
+        encodedInitializer,
+      );
+
+      await proxy.deployed();
+
+      // register on multichain registry
+      await registerContractOnMultiChainRegistry(
+        proxy.address,
+        chainId,
+        compilerMetadata.metadataUri,
+      );
+
+      return proxy.address;
+    } else {
+      throw new Error("Invalid deploy type");
     }
-
-    const initializerParamTypes = extractFunctionParamsFromAbi(
-      compilerMetadata.abi,
-      extendedMetadata.factoryDeploymentData.implementationInitializerFunction,
-    ).map((p) => p.type);
-
-    const paramValues = convertParamValues(
-      initializerParamTypes,
-      constructorParamValues,
-    );
-
-    const encodedInitializer = Contract.getInterface(
-      compilerMetadata.abi,
-    ).encodeFunctionData(
-      extendedMetadata.factoryDeploymentData.implementationInitializerFunction,
-      paramValues,
-    );
-
-    const proxyFactory = new zk.ContractFactory(
-      twProxyArtifactZK.abi,
-      twProxyArtifactZK.bytecode as BytesLike,
-      signer as zk.Signer,
-      "create",
-    );
-    const proxy = await proxyFactory.deploy(
-      implementationAddress,
-      encodedInitializer,
-    );
-
-    await proxy.deployed();
-
-    // register on multichain registry
-    await registerContractOnMultiChainRegistry(
-      proxy.address,
-      chainId,
-      compilerMetadata.metadataUri,
-    );
-
-    return proxy.address;
   } else {
     // throw new Error("Contract not supported yet.");
     const bytecode = compilerMetadata.bytecode.startsWith("0x")

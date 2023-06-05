@@ -33,17 +33,16 @@ export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
   },
 
   // ZKSync Era Mainnet
-  //TODO Add support in next release
   [324]: {
-    DropERC721: "",
-    DropERC1155: "",
-    DropERC20: "",
+    DropERC721: "0x9742f5ac11958cFAd151eBF0Fc31302fA409036E",
+    DropERC1155: "0x4027561E163a420c4e5Db46E07EBd581CAa8Bb62",
+    DropERC20: "0xf3C7d3F0AA374a2D32489929e24D3e9313Aec8bb",
     SignatureDrop: "",
     Marketplace: "",
-    MarketplaceV3: "",
-    TokenERC721: "",
-    TokenERC1155: "",
-    TokenERC20: "",
+    MarketplaceV3: "0xF8fd1016420c2B7832714241d36Efe55D41df126",
+    TokenERC721: "0x26279882D5E93045D4FA986847CAAC048b2Bac3b",
+    TokenERC1155: "0xA8E28D98203848401A4f924358e6c337153D0f04",
+    TokenERC20: "0x56Abb6a3f25DCcdaDa106191053b1CC54C196DEE",
   },
 };
 
