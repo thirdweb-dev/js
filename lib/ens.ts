@@ -1,8 +1,22 @@
 import { getEVMThirdwebSDK } from "./sdk";
+import { Provider } from "@ethersproject/abstract-provider";
 import { Ethereum } from "@thirdweb-dev/chains";
 import { utils } from "ethers";
 import { getDashboardChainRpc } from "lib/rpc";
 import invariant from "tiny-invariant";
+
+let THIRDWEB_PROVIDER: Provider | null = null;
+
+function getMainnetProvider(): Provider {
+  if (THIRDWEB_PROVIDER) {
+    return THIRDWEB_PROVIDER;
+  }
+  THIRDWEB_PROVIDER = getEVMThirdwebSDK(
+    Ethereum.chainId,
+    getDashboardChainRpc(Ethereum),
+  ).getProvider();
+  return THIRDWEB_PROVIDER;
+}
 
 export interface ENSResolveResult {
   ensName: string | null;
@@ -18,13 +32,8 @@ export async function resolveAddressToEnsName(
 ): Promise<ENSResolveResult> {
   invariant(utils.isAddress(address), "address must be a valid address");
 
-  const provider = getEVMThirdwebSDK(
-    Ethereum.chainId,
-    getDashboardChainRpc(Ethereum),
-  ).getProvider();
-
   return {
-    ensName: await provider.lookupAddress(address),
+    ensName: await getMainnetProvider().lookupAddress(address),
     address,
   };
 }
@@ -34,14 +43,9 @@ export async function resolveEnsNameToAddress(
 ): Promise<ENSResolveResult> {
   invariant(isEnsName(ensName), "ensName must be a valid ens name");
 
-  const provider = getEVMThirdwebSDK(
-    Ethereum.chainId,
-    getDashboardChainRpc(Ethereum),
-  ).getProvider();
-
   return {
     ensName,
-    address: await provider.resolveName(ensName),
+    address: await getMainnetProvider().resolveName(ensName),
   };
 }
 
