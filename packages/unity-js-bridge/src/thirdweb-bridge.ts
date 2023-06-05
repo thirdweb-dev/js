@@ -81,6 +81,7 @@ interface TWBridge {
     callback: (jsAction: any, jsTaskId: string, jsResult: string) => void,
   ) => void;
   fundWallet: (options: string) => Promise<void>;
+  exportWallet: (password: string) => Promise<string>;
 }
 
 const w = window;
@@ -215,26 +216,8 @@ class ThirdwebBridge implements TWBridge {
     if (walletInstance) {
       // local wallet needs to be generated or loaded before connecting
       if (walletInstance.walletId === walletIds.localWallet) {
-        const localWallet = walletInstance as LocalWallet;
-
-        // if password is provided, we can load and save
-        if (password) {
-          // if there is a saved wallet, load it with the password
-          if (await localWallet.getSavedData()) {
-            await localWallet.load({
-              strategy: "encryptedJson",
-              password,
-            });
-          } else {
-            await localWallet.generate();
-            await localWallet.save({
-              strategy: "encryptedJson",
-              password,
-            });
-          }
-        } else {
-          await localWallet.generate();
-        }
+        await this.initializeLocalWallet(password as string);
+        walletInstance.connect({ chainId });
       }
 
       if (walletInstance.walletId === walletIds.magicLink) {
@@ -245,7 +228,10 @@ class ThirdwebBridge implements TWBridge {
         await magicLinkWallet.connect({ chainId, email });
       } else if (walletInstance.walletId === walletIds.smartWallet) {
         const smartWallet = walletInstance as SmartWallet;
-        await this.setupSmartWallet(smartWallet);
+        const personalWallet = await this.initializeLocalWallet(
+          password as string,
+        );
+        await this.initializeSmartWallet(smartWallet, personalWallet);
       } else {
         await walletInstance.connect({ chainId });
       }
@@ -451,18 +437,42 @@ class ThirdwebBridge implements TWBridge {
     return await cbPay.fundWallet(fundOptions);
   }
 
-  // TODO: Add personal wallet options and check if deployed
-  public async setupSmartWallet(sw: SmartWallet) {
-    const personalWallet = new LocalWallet();
-    await personalWallet.loadOrCreate({
-      strategy: "mnemonic",
-      encryption: false,
+  public async exportWallet(password: string): Promise<string> {
+    const localWallet = this.walletMap.get(
+      walletIds.localWallet,
+    ) as LocalWallet;
+    return await localWallet.export({
+      strategy: "encryptedJson",
+      password: password,
     });
+  }
+
+  // TODO: Add personal wallet options and check if deployed
+  public async initializeSmartWallet(
+    sw: SmartWallet,
+    personalWallet: LocalWallet,
+  ) {
     const personalWalletAddress = await personalWallet.getAddress();
     console.log("Personal wallet address:", personalWalletAddress);
     await sw.connect({
       personalWallet,
     });
+    if (sw.listenerCount("disconnect") === 1) {
+      sw.on("disconnect", () => {
+        personalWallet.disconnect();
+      });
+    }
+  }
+
+  public async initializeLocalWallet(password: string): Promise<LocalWallet> {
+    const localWallet = this.walletMap.get(
+      walletIds.localWallet,
+    ) as LocalWallet;
+    await localWallet.loadOrCreate({
+      strategy: "encryptedJson",
+      password,
+    });
+    return localWallet;
   }
 }
 
