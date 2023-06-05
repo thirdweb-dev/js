@@ -1,5 +1,4 @@
 import {
-  Box,
   ButtonGroup,
   Center,
   Divider,
@@ -21,9 +20,11 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import pluralize from "pluralize";
 import { SetStateAction, useMemo, useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
 import { Button, Text } from "tw-components";
+import { TableContainer } from "tw-components/table-container";
 
 type TWTableProps<TRowData> = {
   columns: ColumnDef<TRowData, any>[];
@@ -38,6 +39,7 @@ type TWTableProps<TRowData> = {
     pageSize: number;
     showLess?: boolean;
   };
+  title: string;
 };
 
 export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
@@ -103,13 +105,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
   });
 
   return (
-    <Box
-      p={0}
-      overflowX="auto"
-      position="relative"
-      overflowY="hidden"
-      borderTopRadius="lg"
-    >
+    <TableContainer>
       <Table>
         <Thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -168,7 +164,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                     <Td
                       key={cell.id}
                       borderBottomWidth="inherit"
-                      borderBottomColor="borderColor"
+                      borderBottomColor="accent.100"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -182,7 +178,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                   <Td
                     isNumeric
                     borderBottomWidth="inherit"
-                    borderBottomColor="borderColor"
+                    borderBottomColor="accent.100"
                   >
                     <Icon as={FiArrowRight} />
                   </Td>
@@ -196,14 +192,14 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
         <Center>
           <Flex py={4} direction="row" gap={4} align="center">
             <Spinner size="sm" />
-            <Text>Loading programs</Text>
+            <Text>Loading {pluralize(tableProps.title, 0, false)}</Text>
           </Flex>
         </Center>
       )}
       {tableProps.data.length === 0 && tableProps.isFetched && (
         <Center>
           <Flex py={4} direction="column" gap={4} align="center">
-            <Text>No programs found.</Text>
+            <Text>No {pluralize(tableProps.title, 0, false)} found.</Text>
           </Flex>
         </Center>
       )}
@@ -217,7 +213,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
         showMoreLimit={showMoreLimit}
         setShowMoreLimit={setShowMoreLimit}
       />
-    </Box>
+    </TableContainer>
   );
 }
 

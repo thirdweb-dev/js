@@ -2,20 +2,12 @@ import { ContractCellContext, ContractId } from "../types";
 import { ContractDescriptionCell } from "./cells/description";
 import { ContractImageCell } from "./cells/image";
 import { ContractNameCell } from "./cells/name";
-import {
-  Box,
-  Spinner,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
+import { Spinner, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { Column, Row, useTable } from "react-table";
 import { Text } from "tw-components";
+import { TableContainer } from "tw-components/table-container";
 import { ComponentWithChildren } from "types/component-with-children";
 
 interface DeployableContractTableProps {
@@ -62,7 +54,7 @@ export const DeployableContractTable: ComponentWithChildren<
     data: contractIds.map((contractId) => ({ contractId })),
   });
   return (
-    <Box borderTopRadius="lg" p={0} overflowX="auto" position="relative">
+    <TableContainer>
       {isFetching && (
         <Spinner
           color="primary"
@@ -107,7 +99,7 @@ export const DeployableContractTable: ComponentWithChildren<
         </Tbody>
       </Table>
       {children}
-    </Box>
+    </TableContainer>
   );
 };
 

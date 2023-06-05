@@ -104,6 +104,7 @@ export const DeployedPrograms: React.FC<DeployedProgramsProps> = ({
       )}
 
       <TWTable
+        title="program"
         columns={columns}
         data={programListQuery.data}
         isLoading={programListQuery.isLoading}

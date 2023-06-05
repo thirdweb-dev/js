@@ -1,13 +1,13 @@
 import BuiltinSolanaDeployForm from "../contract-deploy-form/solana-program";
 import { PublishedContractDetails } from "../hooks";
 import {
-  Box,
   Flex,
   Icon,
   Image,
   Select,
   Spinner,
   Table,
+  TableContainer,
   Tbody,
   Td,
   Th,
@@ -190,7 +190,7 @@ export const PublishedContractTable: ComponentWithChildren<
     data: rows,
   });
   return (
-    <Box borderTopRadius="lg" p={0} overflowX="auto" position="relative">
+    <TableContainer>
       {isFetching && (
         <Spinner
           color="primary"
@@ -226,7 +226,7 @@ export const PublishedContractTable: ComponentWithChildren<
         </Tbody>
       </Table>
       {children}
-    </Box>
+    </TableContainer>
   );
 };
 

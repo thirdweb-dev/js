@@ -11,6 +11,7 @@ import {
   Portal,
   Select,
   Table,
+  TableContainer,
   Tbody,
   Td,
   Th,
@@ -158,13 +159,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
   // Render the UI for your table
   return (
     <Flex flexGrow={1} overflow="auto">
-      <Box
-        maxW="100%"
-        overflowX="auto"
-        position="relative"
-        p={0}
-        borderTopRadius="lg"
-      >
+      <TableContainer maxW="100%">
         <Table {...getTableProps()}>
           <Thead>
             {headerGroups.map((headerGroup) => (
@@ -208,7 +203,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
             })}
           </Tbody>
         </Table>
-      </Box>
+      </TableContainer>
 
       <Portal containerRef={portalRef}>
         <Center w="100%">

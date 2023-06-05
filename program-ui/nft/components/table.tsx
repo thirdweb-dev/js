@@ -1,5 +1,4 @@
 import {
-  Box,
   Center,
   Flex,
   Icon,
@@ -8,6 +7,7 @@ import {
   Skeleton,
   Spinner,
   Table,
+  TableContainer,
   Tbody,
   Td,
   Th,
@@ -148,13 +148,7 @@ export const NFTGetAllTable: React.FC<{
   const drawerTabs = useNFTDrawerTabs("solana", program, tokenRow);
   return (
     <Flex gap={4} direction="column">
-      <Box
-        maxW="100%"
-        overflowX="auto"
-        position="relative"
-        p={0}
-        borderTopRadius="lg"
-      >
+      <TableContainer maxW="100%">
         {getAllQueryResult.isFetching && (
           <Spinner
             color="primary"
@@ -245,7 +239,7 @@ export const NFTGetAllTable: React.FC<{
             )}
           </Tbody>
         </Table>
-      </Box>
+      </TableContainer>
       <Center w="100%">
         <Flex gap={2} direction="row" align="center">
           <IconButton

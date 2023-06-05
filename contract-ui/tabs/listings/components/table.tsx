@@ -1,6 +1,5 @@
 import { ListingDrawer } from "./listing-drawer";
 import {
-  Box,
   ButtonGroup,
   Center,
   Flex,
@@ -10,6 +9,7 @@ import {
   Skeleton,
   Spinner,
   Table,
+  TableContainer,
   Tbody,
   Td,
   Th,
@@ -174,13 +174,7 @@ export const ListingsTable: React.FC<ListingsTableProps> = ({ contract }) => {
         </Button>
       </ButtonGroup>
 
-      <Box
-        maxW="100%"
-        overflowX="auto"
-        position="relative"
-        p={0}
-        borderTopRadius="lg"
-      >
+      <TableContainer>
         {((listingsToShow === "all" && getAllQueryResult.isFetching) ||
           (listingsToShow === "active" && getActiveQueryResult.isFetching)) && (
           <Spinner
@@ -274,7 +268,7 @@ export const ListingsTable: React.FC<ListingsTableProps> = ({ contract }) => {
             )}
           </Tbody>
         </Table>
-      </Box>
+      </TableContainer>
       <Center w="100%">
         <Flex gap={2} direction="row" align="center">
           <IconButton

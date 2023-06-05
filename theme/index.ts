@@ -229,13 +229,17 @@ const chakraTheme: Theme = extendTheme({
         list: {
           bg: "backgroundHighlight",
           py: 0,
+          borderWidth: 1,
+          borderColor: "borderColor",
+          borderRadius: "lg",
+          overflow: "hidden",
         },
         item: {
           bg: "backgroundHighlight",
           _hover: {
             bg: "accent.200",
           },
-          py: 2,
+          py: 3,
         },
       },
     },
@@ -246,6 +250,17 @@ const chakraTheme: Theme = extendTheme({
         },
         cell: {
           borderColor: "borderColor",
+        },
+      },
+      sizes: {
+        md: {
+          td: {
+            py: 2,
+            px: 6,
+          },
+          th: {
+            py: 4,
+          },
         },
       },
     },

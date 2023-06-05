@@ -13,6 +13,7 @@ import {
   Select,
   Stack,
   Table,
+  TableContainer,
   Tbody,
   Td,
   Th,
@@ -348,7 +349,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
   // Render the UI for your table
   return (
     <Flex flexGrow={1} overflow="auto">
-      <Box w="100%" borderTopRadius="lg">
+      <TableContainer>
         <Table {...getTableProps()}>
           <Thead>
             {headerGroups.map((headerGroup) => (
@@ -384,7 +385,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
             })}
           </Tbody>
         </Table>
-      </Box>
+      </TableContainer>
 
       <Portal containerRef={portalRef}>
         <Center w="100%">

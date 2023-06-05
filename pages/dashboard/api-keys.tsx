@@ -1,47 +1,37 @@
 import { ConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
-import { Center, Flex, Spinner } from "@chakra-ui/react";
+import { Container, Divider, Flex } from "@chakra-ui/react";
 import { useUser } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
-import { StepsCard } from "components/dashboard/StepsCard";
 import { ApiKeyTable } from "components/settings/ApiKeyTable";
 import { CreateApiKeyButton } from "components/settings/CreateApiKeyButton";
 import { PageId } from "page-id";
-import React, { useMemo } from "react";
-import { Heading, Link, Text } from "tw-components";
+import { Card, Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
 const DashboardApiKeys: ThirdwebNextPage = () => {
-  const { user } = useUser();
+  const { user, isLoading } = useUser();
   const keysQuery = useApiKeys();
 
-  const steps = useMemo(
-    () => [
-      {
-        title: "Connect and sign-in with your wallet to get started",
-        description:
-          "In order to create and manage your developer API keys, you need to sign-in with a wallet.",
-        children: <ConnectWallet ecosystem="evm" />,
-        completed: !!user?.address,
-      },
-      {
-        title: "Create your first API key",
-        description:
-          "Your API key can be used to access thirdweb infrastructure services like smart wallets, storage, analytics, and more.",
-        children: <CreateApiKeyButton />,
-        completed: (keysQuery.data?.length || 0) > 0,
-      },
-    ],
-    [user?.address, keysQuery.data?.length],
-  );
+  if (isLoading) {
+    return null;
+  }
 
-  if (!user?.address || (keysQuery.isFetched && keysQuery.data?.length === 0)) {
+  if (!user?.address) {
     return (
-      <StepsCard
-        title="Get started with thirdweb developer API keys"
-        description="Create a new API key to get started with thirdweb infrastructure services"
-        steps={steps}
-      />
+      <Container maxW="lg">
+        <Card p={6} as={Flex} flexDir="column" gap={2}>
+          <Heading as="h2" size="title.sm">
+            Connect your wallet to get started
+          </Heading>
+          <Text>
+            In order to create and manage your developer API keys, you need to
+            sign-in with a wallet.
+          </Text>
+          <Divider my={4} />
+          <ConnectWallet ecosystem="evm" />
+        </Card>
+      </Container>
     );
   }
 
@@ -63,31 +53,20 @@ const DashboardApiKeys: ThirdwebNextPage = () => {
           infrastructure services. Find the full list of supported networks{" "}
           <Link
             href="https://portal.thirdweb.com/wallet/smart-wallet"
-            color="blue.400"
+            color="blue.500"
             isExternal
           >
             here
           </Link>
+          .
         </Text>
       </Flex>
 
-      <ApiKeyTable isLoading={keysQuery.isLoading} keys={keysQuery.data || []}>
-        {keysQuery.isLoading && (
-          <Center>
-            <Flex py={4} direction="row" gap={4} align="center">
-              <Spinner size="sm" />
-              <Text>Loading API Keys</Text>
-            </Flex>
-          </Center>
-        )}
-        {keysQuery.data?.length === 0 && keysQuery.isFetched && (
-          <Center>
-            <Flex py={4} direction="column" gap={4} align="center">
-              <Text>No API keys found. Create one to get started!</Text>
-            </Flex>
-          </Center>
-        )}
-      </ApiKeyTable>
+      <ApiKeyTable
+        keys={keysQuery.data || []}
+        isLoading={keysQuery.isLoading}
+        isFetched={keysQuery.isFetched}
+      />
     </Flex>
   );
 };
