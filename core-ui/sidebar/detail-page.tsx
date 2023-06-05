@@ -177,7 +177,7 @@ const NavLinkSection: React.FC<NavLinkSectionprops> = ({
         </Text>
       </Flex>
       {filteredLinks.map((link) => (
-        <Flex gap={2}>
+        <Flex gap={2} key={link.href}>
           <NavLink key={link.href} {...link}>
             {link.title}
           </NavLink>
