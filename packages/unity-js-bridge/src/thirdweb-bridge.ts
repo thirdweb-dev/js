@@ -454,15 +454,15 @@ class ThirdwebBridge implements TWBridge {
     await sw.connect({
       personalWallet,
     });
+    sw.on("disconnect", () => {
+      personalWallet.disconnect();
+    });
   }
 
   public async initializeLocalWallet(password: string): Promise<LocalWallet> {
     const localWallet = this.walletMap.get(
       walletIds.localWallet,
     ) as LocalWallet;
-    if (localWallet.ethersWallet) {
-      localWallet.ethersWallet = undefined;
-    }
     await localWallet.loadOrCreate({
       strategy: "encryptedJson",
       password,
