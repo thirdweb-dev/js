@@ -29,7 +29,7 @@ export const COMMUNITY: FooterLinkInfo[] = [
     link: "/events",
   },
   {
-    link: "https://ambassador.thirdweb.com/",
+    link: "/ambassadors",
     name: "Ambassadors",
     label: "ambassadors",
   },
