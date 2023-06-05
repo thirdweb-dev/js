@@ -4,7 +4,8 @@ export default {
   "chain": "NEAR",
   "rpc": [
     "https://aurora.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.aurora.dev"
+    "https://mainnet.aurora.dev",
+    "https://1rpc.io/{1RPC_API_KEY}/aurora"
   ],
   "faucets": [],
   "nativeCurrency": {

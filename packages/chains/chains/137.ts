@@ -18,7 +18,8 @@ export default {
     "https://rpc-mainnet.maticvigil.com",
     "https://rpc-mainnet.matic.quiknode.pro",
     "https://matic-mainnet-full-rpc.bwarelabs.com",
-    "https://polygon-bor.publicnode.com"
+    "https://polygon-bor.publicnode.com",
+    "https://1rpc.io/{1RPC_API_KEY}/matic"
   ],
   "faucets": [],
   "nativeCurrency": {

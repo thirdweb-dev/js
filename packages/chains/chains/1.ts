@@ -15,7 +15,8 @@ export default {
     "wss://mainnet.infura.io/ws/v3/${INFURA_API_KEY}",
     "https://api.mycryptoapi.com/eth",
     "https://cloudflare-eth.com",
-    "https://ethereum.publicnode.com"
+    "https://ethereum.publicnode.com",
+    "https://1rpc.io/{1RPC_API_KEY}/eth"
   ],
   "features": [
     {

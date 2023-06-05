@@ -13,7 +13,8 @@ export default {
   "rpc": [
     "https://celo.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://forno.celo.org",
-    "wss://forno.celo.org/ws"
+    "wss://forno.celo.org/ws",
+    "https://1rpc.io/{1RPC_API_KEY}/celo"
   ],
   "faucets": [
     "https://free-online-app.com/faucet-for-eth-evm-chains/"

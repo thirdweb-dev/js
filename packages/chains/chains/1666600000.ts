@@ -5,7 +5,8 @@ export default {
   "rpc": [
     "https://harmony-shard-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.harmony.one",
-    "https://api.s0.t.hmny.io"
+    "https://api.s0.t.hmny.io",
+    "https://1rpc.io/{1RPC_API_Key}/one"
   ],
   "faucets": [
     "https://free-online-app.com/faucet-for-eth-evm-chains/"

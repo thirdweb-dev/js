@@ -4,7 +4,8 @@ export default {
   "chain": "ETH",
   "rpc": [
     "https://base-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://goerli.base.org"
+    "https://goerli.base.org",
+    "https://1rpc.io/{1RPC_API_KEY}/base-goerli"
   ],
   "faucets": [
     "https://www.coinbase.com/faucets/base-ethereum-goerli-faucet"

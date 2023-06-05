@@ -12,7 +12,8 @@ export default {
     "https://avalanche.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://avalanche-mainnet.infura.io/v3/${INFURA_API_KEY}",
     "https://api.avax.network/ext/bc/C/rpc",
-    "https://avalanche-c-chain.publicnode.com"
+    "https://avalanche-c-chain.publicnode.com",
+    "https://1rpc.io/{1RPC_API_KEY}/avax/c"
   ],
   "features": [
     {

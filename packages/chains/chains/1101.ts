@@ -5,7 +5,8 @@ export default {
   "chain": "Polygon",
   "rpc": [
     "https://polygon-zkevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://zkevm-rpc.com"
+    "https://zkevm-rpc.com",
+    "https://1rpc.io/{1RPC_API_KEY}/zkevm"
   ],
   "faucets": [],
   "nativeCurrency": {

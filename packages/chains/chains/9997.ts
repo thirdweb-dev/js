@@ -4,7 +4,8 @@ export default {
   "chain": "ETH",
   "rpc": [
     "https://altlayer-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rollup-api.altlayer.io"
+    "https://testnet-rollup-api.altlayer.io",
+    "https://1rpc.io/{1RPC_API_KEY}/alt-testnet"
   ],
   "faucets": [],
   "nativeCurrency": {

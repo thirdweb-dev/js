@@ -7,7 +7,8 @@ export default {
     "https://klaytn.blockpi.network/v1/rpc/public",
     "https://klaytn-mainnet-rpc.allthatnode.com:8551",
     "https://public-en-cypress.klaytn.net",
-    "https://public-node-api.klaytnapi.com/v1/cypress"
+    "https://public-node-api.klaytnapi.com/v1/cypress",
+    "https://1rpc.io/{1RPC_API_KEY}/klay"
   ],
   "faucets": [],
   "nativeCurrency": {

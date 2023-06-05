@@ -63,6 +63,14 @@ export function getChainRPCs(
       infuraApiKey ? rpc.replace("${INFURA_API_KEY}", infuraApiKey) : rpc,
     );
 
+  const 1RPC = modeChains
+  .filter((rpc) => {
+    return rpc.includes("${1RPC_API_KEY}") && 1rpcApiKey;
+  })
+  .map((rpc) =>
+    1rpcApiKey ? rpc.replace("${1RPC_API_KEY}", 1rpcApiKey) : rpc,
+  );
+
   const allOtherRpcs = modeChains.filter((rpc) => {
     return !rpc.includes("${");
   });
@@ -71,6 +79,7 @@ export function getChainRPCs(
     ...thirdwebRPC,
     ...infuraRPC,
     ...alchemyRPC,
+    ...1RPC,
     ...allOtherRpcs,
   ];
 

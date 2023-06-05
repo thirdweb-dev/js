@@ -4,7 +4,8 @@ export default {
   "chain": "ETH",
   "rpc": [
     "https://zksync-era.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.era.zksync.io"
+    "https://mainnet.era.zksync.io",
+    "https://1rpc.io/{1RPC_API_KEY}/zksync2-era"
   ],
   "faucets": [],
   "nativeCurrency": {

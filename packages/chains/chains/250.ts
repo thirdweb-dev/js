@@ -5,7 +5,8 @@ export default {
   "rpc": [
     "https://fantom.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://fantom.publicnode.com",
-    "https://rpc.ftm.tools"
+    "https://rpc.ftm.tools",
+    "https://1rpc.io/{1RPC_API_KEY}/ftm"
   ],
   "faucets": [
     "https://free-online-app.com/faucet-for-eth-evm-chains/"
