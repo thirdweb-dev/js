@@ -33,6 +33,9 @@ export { createSyncStorage as createLocalStorage } from "../core/AsyncStorage";
 export { createAsyncLocalStorage } from "../core/AsyncStorage";
 export { createSecureStorage } from "../core/SecureStorage";
 
+// ui components
+export * from "./components/base";
+
 // providers
 // export * from "./providers/full";
 export * from "./providers/thirdweb-provider";
