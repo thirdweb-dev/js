@@ -231,7 +231,7 @@ class ThirdwebBridge implements TWBridge {
         const personalWallet = await this.initializeLocalWallet(
           password as string,
         );
-        await this.setupSmartWallet(smartWallet, personalWallet);
+        await this.initializeSmartWallet(smartWallet, personalWallet);
       } else {
         await walletInstance.connect({ chainId });
       }
@@ -448,15 +448,20 @@ class ThirdwebBridge implements TWBridge {
   }
 
   // TODO: Add personal wallet options and check if deployed
-  public async setupSmartWallet(sw: SmartWallet, personalWallet: LocalWallet) {
+  public async initializeSmartWallet(
+    sw: SmartWallet,
+    personalWallet: LocalWallet,
+  ) {
     const personalWalletAddress = await personalWallet.getAddress();
     console.log("Personal wallet address:", personalWalletAddress);
     await sw.connect({
       personalWallet,
     });
-    sw.on("disconnect", () => {
-      personalWallet.disconnect();
-    });
+    if (sw.listenerCount("disconnect") === 1) {
+      sw.on("disconnect", () => {
+        personalWallet.disconnect();
+      });
+    }
   }
 
   public async initializeLocalWallet(password: string): Promise<LocalWallet> {
