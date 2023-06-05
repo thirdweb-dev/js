@@ -9,7 +9,7 @@ import type {
   IAccountPermissions,
   IMulticall 
 } from "@thirdweb-dev/contracts-js";
-import { AccessRestrictions, RoleRequest, } from "../../types";
+import { AccessRestrictions, RoleAction, RoleRequest, SignedAccountPermissionsPayload, } from "../../types";
 import { randomUUID } from "crypto";
 import invariant from "tiny-invariant";
 import { buildTransactionFunction } from "../../common/transactions";
@@ -18,9 +18,6 @@ export class SmartWallet<TContract extends IAccount & IAccountPermissions & IMul
     
   featureName = FEATURE_SMART_WALLET.name;
   private contractWrapper: ContractWrapper<IAccount & IAccountPermissions & IMulticall>;
-
-  private GRANT = 0;
-  private REVOKE = 1;
 
   constructor(contractWrapper: ContractWrapper<TContract>) {
     this.contractWrapper = contractWrapper;
@@ -42,6 +39,40 @@ export class SmartWallet<TContract extends IAccount & IAccountPermissions & IMul
   /*********************************
    * WRITE FUNCTIONS
   ********************************/
+
+  private async generatePayload(signer: string, roleAction: RoleAction ): Promise<SignedAccountPermissionsPayload> {
+    // Derive role for target signer.
+    const role = ethers.utils.solidityKeccak256(["string"], [signer]);
+
+    // Get role request struct.
+    const payload: IAccountPermissions.RoleRequestStruct = {
+      role,
+      target: signer,
+      action: roleAction,
+      validityStartTimestamp: 0,
+      validityEndTimestamp: ethers.constants.MaxUint256,
+      uid: randomUUID(),
+    }
+
+    // Generate signature
+    const chainId = await this.contractWrapper.getChainID();
+    const connectedSigner = this.contractWrapper.getSigner();
+    invariant(connectedSigner, "No signer available");
+
+    const signature = await this.contractWrapper.signTypedData(
+      connectedSigner,
+      {
+        name: "AccountPermissions",
+        version: "1",
+        chainId,
+        verifyingContract: this.contractWrapper.readContract.address,
+      },
+      { RoleRequest },
+      payload
+    );
+
+    return { payload, signature };
+  }
   
   // TODO: documentation
   grantAccess = buildTransactionFunction(
@@ -69,35 +100,10 @@ export class SmartWallet<TContract extends IAccount & IAccountPermissions & IMul
       encoded.push(this.contractWrapper.readContract.interface.encodeFunctionData("setRoleRestrictions", [roleRestrictions]));
 
       // ===== Preparing [2] `changeRole` =====
-      
-      // Get role request struct.
-      const roleRequest: IAccountPermissions.RoleRequestStruct = {
-        role,
-        target: signer,
-        action: this.GRANT,
-        validityStartTimestamp: 0,
-        validityEndTimestamp: ethers.constants.MaxUint256,
-        uid: randomUUID(),
-      }
 
-      // Generate signature
-      const chainId = await this.contractWrapper.getChainID();
-      const connectedSigner = this.contractWrapper.getSigner();
-      invariant(connectedSigner, "No signer available");
-
-      const signature = await this.contractWrapper.signTypedData(
-        connectedSigner,
-        {
-          name: "AccountPermissions",
-          version: "1",
-          chainId,
-          verifyingContract: this.contractWrapper.readContract.address,
-        },
-        { RoleRequest },
-        roleRequest
-      );
+      const { payload, signature } = await this.generatePayload(signer, RoleAction.GRANT);
       
-      encoded.push(this.contractWrapper.readContract.interface.encodeFunctionData("changeRole", [roleRequest, signature]));
+      encoded.push(this.contractWrapper.readContract.interface.encodeFunctionData("changeRole", [payload, signature]));
       
       // Perform multicall
       return Transaction.fromContractWrapper({
@@ -113,41 +119,12 @@ export class SmartWallet<TContract extends IAccount & IAccountPermissions & IMul
     async(
       signer: string,
     ): Promise<Transaction> => {
-      // Derive role for target signer.
-      const role = ethers.utils.solidityKeccak256(["string"], [signer]);
-
-
-      // Get role request struct.
-      const roleRequest: IAccountPermissions.RoleRequestStruct = {
-        role,
-        target: signer,
-        action: this.REVOKE,
-        validityStartTimestamp: 0,
-        validityEndTimestamp: ethers.constants.MaxUint256,
-        uid: randomUUID(),
-      }
-
-      // Generate signature
-      const chainId = await this.contractWrapper.getChainID();
-      const connectedSigner = this.contractWrapper.getSigner();
-      invariant(connectedSigner, "No signer available");
-
-      const signature = await this.contractWrapper.signTypedData(
-        connectedSigner,
-        {
-          name: "AccountPermissions",
-          version: "1",
-          chainId,
-          verifyingContract: this.contractWrapper.readContract.address,
-        },
-        { RoleRequest },
-        roleRequest
-      );
+      const { payload, signature } = await this.generatePayload(signer, RoleAction.REVOKE);
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "changeRole",
-        args: [roleRequest, signature],
+        args: [payload, signature],
       })
     }
   )

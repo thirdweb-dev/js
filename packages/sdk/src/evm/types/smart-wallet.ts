@@ -1,4 +1,5 @@
-import { BigNumber } from "ethers";
+import type { IAccountPermissions } from "@thirdweb-dev/contracts-js";
+import { BigNumber, BytesLike } from "ethers";
 
 export type AccountEvent = {
   account: string;
@@ -11,6 +12,13 @@ export type AccessRestrictions = {
   maxValuePerTransaction: BigNumber;
   approvedTargets: string[];
 }
+
+export type SignedAccountPermissionsPayload = {
+  payload: IAccountPermissions.RoleRequestStruct;
+  signature: BytesLike;
+}
+
+export enum RoleAction { GRANT = 0, REVOKE = 1 }
 
 export const RoleRequest = [
   { name: "role", type: "bytes32" },
