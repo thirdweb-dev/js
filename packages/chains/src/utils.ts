@@ -4,6 +4,7 @@ export type ChainRPCOptions = {
   thirdwebApiKey?: string;
   alchemyApiKey?: string;
   infuraApiKey?: string;
+  1rpcApiKey?: string;
   mode?: "http" | "ws";
 };
 
