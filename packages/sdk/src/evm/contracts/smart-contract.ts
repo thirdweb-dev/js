@@ -15,6 +15,7 @@ import {
   FEATURE_PRIMARY_SALE,
   FEATURE_ROYALTY,
   FEATURE_SMART_WALLET_FACTORY,
+  FEATURE_SMART_WALLET,
 } from "../constants/thirdweb-features";
 import { Transaction } from "../core/classes/transactions";
 import { ContractAppURI } from "../core/classes/contract-appuri";
@@ -53,6 +54,9 @@ import type {
   EnglishAuctionsLogic,
   OffersLogic,
   IAccountFactory,
+  IAccount,
+  IAccountPermissions,
+  IMulticall,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides } from "ethers";
@@ -65,6 +69,7 @@ import { MarketplaceV3DirectListings } from "../core/classes/marketplacev3-direc
 import { MarketplaceV3EnglishAuctions } from "../core/classes/marketplacev3-english-auction";
 import { MarketplaceV3Offers } from "../core/classes/marketplacev3-offers";
 import { SmartWalletFactory } from "../core/classes/smart-wallet-factory";
+import { SmartWallet } from "../core/classes/smart-wallet";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -330,6 +335,14 @@ export class SmartContract<
     );
   }
 
+  // TODO documentation
+  get smartWallet(): SmartWallet<IAccount & IAccountPermissions & IMulticall> {
+    return assertEnabled(
+      this.detectSmartWallet(),
+      FEATURE_SMART_WALLET,
+    )
+  }
+
   private _chainId: number;
   get chainId() {
     return this._chainId;
@@ -564,6 +577,15 @@ export class SmartContract<
       detectContractFeature<IAccountFactory>(this.contractWrapper, FEATURE_SMART_WALLET_FACTORY.name)
     ) {
       return new SmartWalletFactory(this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectSmartWallet() {
+    if (
+      detectContractFeature<IAccountPermissions & IAccount & IMulticall>(this.contractWrapper, FEATURE_SMART_WALLET.name)
+    ) {
+      return new SmartWallet(this.contractWrapper);
     }
     return undefined;
   }
