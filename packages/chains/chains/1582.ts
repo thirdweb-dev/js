@@ -16,7 +16,7 @@ export default {
   ],
   "nativeCurrency": {
     "name": "Ether",
-    "symbol": "ETH",
+    "symbol": "gETH",
     "decimals": 18
   },
   "infoURL": "https://tarotestnet.com",
