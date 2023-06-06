@@ -15,6 +15,7 @@ export type AccessRestrictions = {
 
 export type SignerWithRestrictions = {
   signer: string;
+  isAdmin: boolean;
   restrictions: AccessRestrictions;
 }
 

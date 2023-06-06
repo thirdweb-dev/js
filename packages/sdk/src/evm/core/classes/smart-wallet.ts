@@ -5,12 +5,14 @@ import { ethers, BigNumber } from "ethers";
 import { Transaction } from "./transactions";
 
 import type {
-  IAccountCore, IAccountPermissions
+  IAccountCore, IAccountFactory, IAccountPermissions,
 } from "@thirdweb-dev/contracts-js";
-import { AccessRestrictions, RoleAction, RoleRequest, SignedAccountPermissionsPayload, } from "../../types";
+import IAccountFactoryAbi from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactory.json";
+import { AccessRestrictions, RoleAction, RoleRequest, SignedAccountPermissionsPayload, SignerWithRestrictions } from "../../types";
 import { randomUUID } from "crypto";
 import invariant from "tiny-invariant";
 import { buildTransactionFunction } from "../../common/transactions";
+import { SmartWalletFactory } from "./smart-wallet-factory";
 
 export class SmartWallet<TContract extends IAccountCore> implements DetectableFeature {
     
@@ -72,6 +74,14 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
     return { payload, signature };
   }
 
+  private async getFactory(): Promise<SmartWalletFactory<IAccountFactory>> {
+    // Get factory.
+    const chainId = await this.contractWrapper.getChainID();
+    const factoryAddress = await this.getFactoryAddress();
+    const wrapper =  new ContractWrapper<IAccountFactory>(chainId, factoryAddress, IAccountFactoryAbi, this.contractWrapper.options);
+    return new SmartWalletFactory(wrapper);
+  }
+
   /*********************************
    * READ FUNCTIONS
   ********************************/
@@ -85,6 +95,21 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
   // TODO: documentation
   public async getFactoryAddress(): Promise<string> {
     return this.contractWrapper.readContract.factory();
+  }
+
+  // TODO: documentation
+  public async getSignersWithRestrictions(): Promise<SignerWithRestrictions[]> {
+    // Get all associated signers.
+    const factory = await this.getFactory();
+    const signers: string[] = await factory.getAssociatedSigners(this.getAddress());
+    
+    return await Promise.all(
+      signers.map(async (signer) => {
+        const isAdmin = await this.contractWrapper.readContract.isAdmin(signer);
+        const restrictions = await this.getAccessRestrictions(signer);
+        return { signer, isAdmin, restrictions };
+      })
+    );
   }
   
   /*********************************
