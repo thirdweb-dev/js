@@ -7,10 +7,10 @@ export type AccountEvent = {
 };
 
 export type AccessRestrictions = {
-  startTimestamp: Date;
-  expirationTimestamp: Date;
-  maxValuePerTransaction: BigNumber;
-  approvedTargets: string[];
+  startDate: Date;
+  expirationDate: Date;
+  nativeTokenLimitPerTransaction: BigNumber;
+  approvedCallTargets: string[];
 }
 
 export type SignedAccountPermissionsPayload = {

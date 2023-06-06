@@ -94,10 +94,10 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
       // Get role restrictions struct.
       const roleRestrictions: IAccountPermissions.RoleRestrictionsStruct = {
         role,
-        approvedTargets: restrictions.approvedTargets,
-        maxValuePerTransaction: restrictions.maxValuePerTransaction,
-        startTimestamp: Math.floor(restrictions.startTimestamp.getTime() / 1000),
-        endTimestamp: Math.floor(restrictions.expirationTimestamp.getTime() / 1000),
+        approvedTargets: restrictions.approvedCallTargets,
+        maxValuePerTransaction: restrictions.nativeTokenLimitPerTransaction,
+        startTimestamp: Math.floor(restrictions.startDate.getTime() / 1000),
+        endTimestamp: Math.floor(restrictions.expirationDate.getTime() / 1000),
       }
 
       encoded.push(this.contractWrapper.readContract.interface.encodeFunctionData("setRoleRestrictions", [roleRestrictions]));
