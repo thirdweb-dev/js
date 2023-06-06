@@ -362,6 +362,11 @@ export class LocalWallet extends AbstractClientWallet<
     const _storage = storage || this.#storage;
     await _storage.setItem(STORAGE_KEY_WALLET_DATA, JSON.stringify(data));
   }
+
+  async disconnect() {
+    await super.disconnect();
+    this.ethersWallet = undefined;
+  }
 }
 
 type DecryptOptions =
