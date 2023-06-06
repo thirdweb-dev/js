@@ -3,10 +3,10 @@ import {
   QueryAllParams,
 } from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
-import { getRoleHash } from "../../common";
+import { getRoleHash } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
-import { ContractAppURI } from "../../core";
+import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -25,7 +25,8 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { PaperCheckout } from "../../integrations/thirdweb-checkout";
-import { Address, AddressOrEns } from "../../schema";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { Address } from "../../schema/shared/Address";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -511,7 +512,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     functionName: string & TMethod,
     args?: Parameters<SignatureDropContract["functions"][TMethod]>,
     overrides?: CallOverrides,
-  ): Promise<any> {
+  ): Promise<ReturnType<SignatureDropContract["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, args, overrides);
   }
 }

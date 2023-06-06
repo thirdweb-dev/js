@@ -6,9 +6,9 @@ export function useCoinbaseWallet() {
   return useCallback(
     async (connectOptions?: { chainId?: number }) => {
       const { coinbaseWallet } = await import(
-        "../../../wallet/wallets/coinbaseWallet"
+        "../../../wallet/wallets/coinbase/coinbaseWallet"
       );
-      connect(coinbaseWallet(), connectOptions);
+      return connect(coinbaseWallet(), connectOptions);
     },
     [connect],
   );

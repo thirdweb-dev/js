@@ -1,14 +1,9 @@
 import { NFT, NFTMetadataOrUri } from "../../../core/schema/nft";
-import {
-  fetchCurrencyMetadata,
-  hasERC20Allowance,
-  normalizePriceValue,
-} from "../../common/currency";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { isTokenApprovedForTransfer } from "../../common/marketplace";
 import { uploadOrExtractURI } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
-import { ContractAppURI } from "../../core";
+import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
@@ -20,13 +15,9 @@ import { StandardErc721 } from "../../core/classes/erc-721-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
-import {
-  Abi,
-  AbiInput,
-  AbiSchema,
-  AddressOrEns,
-  SDKOptions,
-} from "../../schema";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
+import { SDKOptions } from "../../schema/sdk-options";
 import { MultiwrapContractSchema } from "../../schema/contracts/multiwrap";
 import {
   ERC1155Wrappable,
@@ -42,6 +33,9 @@ import {
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/Multiwrap";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumberish, CallOverrides, ethers } from "ethers";
+import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
+import { hasERC20Allowance } from "../../common/currency/hasERC20Allowance";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 
 /**
  * Multiwrap lets you wrap any number of ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token bundle.
@@ -434,7 +428,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
     functionName: string & TMethod,
     args?: Parameters<MultiwrapContract["functions"][TMethod]>,
     overrides?: CallOverrides,
-  ): Promise<any> {
+  ): Promise<ReturnType<MultiwrapContract["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, args, overrides);
   }
 }

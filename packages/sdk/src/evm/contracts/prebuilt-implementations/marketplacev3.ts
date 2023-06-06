@@ -1,10 +1,11 @@
-import { assertEnabled, detectContractFeature } from "../../common";
+import { assertEnabled } from "../../common/feature-detection/assertEnabled";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
 import {
   FEATURE_DIRECT_LISTINGS,
   FEATURE_ENGLISH_AUCTIONS,
   FEATURE_OFFERS,
 } from "../../constants/thirdweb-features";
-import { ContractAppURI } from "../../core";
+import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -22,7 +23,7 @@ import { NetworkInput } from "../../core/types";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
-import { Address } from "../../schema/shared";
+import { Address } from "../../schema/shared/Address";
 import type {
   MarketplaceV3 as MarketplaceV3Contract,
   DirectListingsLogic,
@@ -275,7 +276,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
     functionName: string & TMethod,
     args?: Parameters<MarketplaceV3Contract["functions"][TMethod]>,
     overrides?: CallOverrides,
-  ): Promise<any> {
+  ): Promise<ReturnType<MarketplaceV3Contract["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, args, overrides);
   }
 

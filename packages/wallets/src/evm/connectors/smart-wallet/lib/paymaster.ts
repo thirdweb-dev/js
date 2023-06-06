@@ -1,11 +1,10 @@
-import { ethers } from "ethers";
-import { PaymasterAPI, calcPreVerificationGas } from "@account-abstraction/sdk";
+import { PaymasterAPI } from "@account-abstraction/sdk";
 import { UserOperationStruct } from "@account-abstraction/contracts";
 import { toJSON } from "./utils";
 import fetch from "cross-fetch";
 
-const SIG_SIZE = 65;
-const DUMMY_PAYMASTER_AND_DATA =
+export const SIG_SIZE = 65;
+export const DUMMY_PAYMASTER_AND_DATA =
   "0x0101010101010101010101010101010101010101000000000000000000000000000000000000000000000000000001010101010100000000000000000000000000000000000000000000000000000000000000000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101";
 
 class VerifyingPaymasterAPI extends PaymasterAPI {
@@ -22,33 +21,6 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
   async getPaymasterAndData(
     userOp: Partial<UserOperationStruct>,
   ): Promise<string> {
-    // Hack: userOp includes empty paymasterAndData which calcPreVerificationGas requires.
-    try {
-      // userOp.preVerificationGas contains a promise that will resolve to an error.
-      await ethers.utils.resolveProperties(userOp);
-      // eslint-disable-next-line no-empty
-    } catch (_) {}
-    const pmOp: Partial<UserOperationStruct> = {
-      sender: userOp.sender,
-      nonce: userOp.nonce,
-      initCode: userOp.initCode,
-      callData: userOp.callData,
-      callGasLimit: userOp.callGasLimit,
-      verificationGasLimit: userOp.verificationGasLimit,
-      maxFeePerGas: userOp.maxFeePerGas,
-      maxPriorityFeePerGas: userOp.maxPriorityFeePerGas,
-      // A dummy value here is required in order to calculate a correct preVerificationGas value.
-      paymasterAndData: DUMMY_PAYMASTER_AND_DATA,
-      signature: ethers.utils.hexlify(Buffer.alloc(SIG_SIZE, 1)),
-    };
-    const op = await ethers.utils.resolveProperties(pmOp);
-
-    // console.log("PM - op", op);
-    const preVerificationGas = calcPreVerificationGas(op);
-    op.preVerificationGas = preVerificationGas;
-    // TODO refactor this code out instead of modifying the passed-in userOp in place
-    userOp.preVerificationGas = preVerificationGas;
-
     // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.
     try {
       const response = await fetch(this.paymasterUrl, {
@@ -61,7 +33,7 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
           jsonrpc: "2.0",
           id: 1,
           method: "pm_sponsorUserOperation",
-          params: [await toJSON(op), { entryPoint: this.entryPoint }],
+          params: [await toJSON(userOp), { entryPoint: this.entryPoint }],
         }),
       });
       const res = await response.json();
@@ -69,13 +41,12 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
         const result = (res.result as any).paymasterAndData || res.result;
         return result.toString();
       } else {
-        console.log("PM - error", JSON.stringify(res));
         throw new Error(
           `Paymaster returned no result from: ${this.paymasterUrl}`,
         );
       }
     } catch (e) {
-      console.log("PM - error", (e as any).result?.error || e);
+      console.error("PM - error", (e as any).result?.error || e);
       throw e;
     }
   }

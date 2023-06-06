@@ -1,5 +1,157 @@
 # @thirdweb-dev/sdk
 
+## 3.10.20
+
+### Patch Changes
+
+- [#1104](https://github.com/thirdweb-dev/js/pull/1104) [`ce36322b`](https://github.com/thirdweb-dev/js/commit/ce36322b383af73905894b73f9409a146359ffb0) Thanks [@farhanW3](https://github.com/farhanW3)! - Added getNonce() to User-Wallets, to help with getting the nonce of the wallet. Updated ERC1155 airdrop to use BigNumber to avoid overflow issue
+
+- [#1105](https://github.com/thirdweb-dev/js/pull/1105) [`c60658ed`](https://github.com/thirdweb-dev/js/commit/c60658ed8c94867cca831b0d5535006da5b40aa6) Thanks [@MananTank](https://github.com/MananTank)! - Reduce Circular dependencies
+
+- [#1110](https://github.com/thirdweb-dev/js/pull/1110) [`aa9e952c`](https://github.com/thirdweb-dev/js/commit/aa9e952cb519a47ed112d2905b1f3787863035b6) Thanks [@MananTank](https://github.com/MananTank)! - Reduce circular dependencies
+
+- [#1095](https://github.com/thirdweb-dev/js/pull/1095) [`564eaccf`](https://github.com/thirdweb-dev/js/commit/564eaccf480a81f36db43c782392595a5021e5ac) Thanks [@nkrishang](https://github.com/nkrishang)! - Add SmartWalletFactory extension detection and logic
+
+- [#1112](https://github.com/thirdweb-dev/js/pull/1112) [`6aee0413`](https://github.com/thirdweb-dev/js/commit/6aee0413439b9ca408879bbb3c38c538c89d01af) Thanks [@MananTank](https://github.com/MananTank)! - Reduce circular dependencies
+
+- [#1108](https://github.com/thirdweb-dev/js/pull/1108) [`e93aa70e`](https://github.com/thirdweb-dev/js/commit/e93aa70ef0093a2526404e11b7ddae8fb98c213b) Thanks [@MananTank](https://github.com/MananTank)! - Reduce circular deps
+
+- [#1117](https://github.com/thirdweb-dev/js/pull/1117) [`51bbd3d1`](https://github.com/thirdweb-dev/js/commit/51bbd3d1bccbb92a1405ea50f6c178c091a90f20) Thanks [@MananTank](https://github.com/MananTank)! - Reduce circular dependencies
+
+- Updated dependencies [[`564eaccf`](https://github.com/thirdweb-dev/js/commit/564eaccf480a81f36db43c782392595a5021e5ac)]:
+  - @thirdweb-dev/contracts-js@1.3.5
+
+## 3.10.19
+
+### Patch Changes
+
+- [#1100](https://github.com/thirdweb-dev/js/pull/1100) [`23d90b3e`](https://github.com/thirdweb-dev/js/commit/23d90b3e779a5bfdb7058b8c51349d9c278fcbce) Thanks [@MananTank](https://github.com/MananTank)! - Reduce circular dependencies
+
+- [#1102](https://github.com/thirdweb-dev/js/pull/1102) [`cc56037e`](https://github.com/thirdweb-dev/js/commit/cc56037e64560b9e0fc16eb0ac7cc2e47e2c9fdf) Thanks [@MananTank](https://github.com/MananTank)! - Reduce circular dependencies
+
+- Updated dependencies [[`67450789`](https://github.com/thirdweb-dev/js/commit/67450789473b6008b86453ee4f4c7b99461223a6)]:
+  - @thirdweb-dev/storage@1.1.4
+
+## 3.10.18
+
+### Patch Changes
+
+- [#1093](https://github.com/thirdweb-dev/js/pull/1093) [`2f1df0b5`](https://github.com/thirdweb-dev/js/commit/2f1df0b5354a8ee55089b2c1e61c058788d890f1) Thanks [@MananTank](https://github.com/MananTank)! - Reduce circular dependencies
+
+- [#1061](https://github.com/thirdweb-dev/js/pull/1061) [`189daf02`](https://github.com/thirdweb-dev/js/commit/189daf0280a90ed730200088948526a594da3408) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add erc721.transferFrom
+
+- [#1051](https://github.com/thirdweb-dev/js/pull/1051) [`afae0873`](https://github.com/thirdweb-dev/js/commit/afae0873b0e3f9741f5a9c44c5d255f38c6a9111) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Fix bad check on ineligibily reasons for erc1155
+
+- [#1043](https://github.com/thirdweb-dev/js/pull/1043) [`c6e74ef0`](https://github.com/thirdweb-dev/js/commit/c6e74ef0b00210f52e6778c548061376d3ba7001) Thanks [@kumaryash90](https://github.com/kumaryash90)! - allow overrides for read actions
+
+- [#1071](https://github.com/thirdweb-dev/js/pull/1071) [`ee4c7de2`](https://github.com/thirdweb-dev/js/commit/ee4c7de25cb63f99f33b90da8e26293bbfbe6f3e) Thanks [@MananTank](https://github.com/MananTank)! - Reduce circular dependencies
+
+- [#1060](https://github.com/thirdweb-dev/js/pull/1060) [`f7b352a5`](https://github.com/thirdweb-dev/js/commit/f7b352a585a23726eaa3be116f65db56b005f4d8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose getSignerAddress() on Transaction objects
+
+- [#1049](https://github.com/thirdweb-dev/js/pull/1049) [`4a1d7581`](https://github.com/thirdweb-dev/js/commit/4a1d75811058d6974616bdc12a6040cea5444e40) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Remove an unnecessary check in claim conditions ineligibility
+
+- [#1094](https://github.com/thirdweb-dev/js/pull/1094) [`bdabbef7`](https://github.com/thirdweb-dev/js/commit/bdabbef71a2421a2dceb384f93bb6a59a3ddf007) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix Create2 factory deployment
+
+- [#1089](https://github.com/thirdweb-dev/js/pull/1089) [`59206233`](https://github.com/thirdweb-dev/js/commit/59206233e15ccfe3dc32047060055219d35938f2) Thanks [@MananTank](https://github.com/MananTank)! - Reduce circular dependencies
+
+- [#1062](https://github.com/thirdweb-dev/js/pull/1062) [`98efd090`](https://github.com/thirdweb-dev/js/commit/98efd090f63cfd9dfed7b89b20b6e43db88cf75c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add erc1155.transferFrom
+
+- [#1072](https://github.com/thirdweb-dev/js/pull/1072) [`8eecf4c2`](https://github.com/thirdweb-dev/js/commit/8eecf4c2d5b0d6447ad5b9cdbf0269818bbb3498) Thanks [@MananTank](https://github.com/MananTank)! - Reduce circular dependencies
+
+- [#1055](https://github.com/thirdweb-dev/js/pull/1055) [`d5651006`](https://github.com/thirdweb-dev/js/commit/d565100614d7d4e256554f998b8ce978a566051c) Thanks [@MananTank](https://github.com/MananTank)! - Reduce cyclic deps
+
+- [#1091](https://github.com/thirdweb-dev/js/pull/1091) [`da576108`](https://github.com/thirdweb-dev/js/commit/da5761080288c3b325f54fb56c80f96405a1cb5d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Return data from DeployTransaction.simulate()
+
+- [#1064](https://github.com/thirdweb-dev/js/pull/1064) [`c85810ee`](https://github.com/thirdweb-dev/js/commit/c85810eee318b10eee4ada61828adaa51f94ea6c) Thanks [@MananTank](https://github.com/MananTank)! - Do not cache signer in wallets
+
+- [#1075](https://github.com/thirdweb-dev/js/pull/1075) [`a034b032`](https://github.com/thirdweb-dev/js/commit/a034b0321fd0113ed51d95d538b5c3020615c227) Thanks [@MananTank](https://github.com/MananTank)! - Reduce circular dependencies
+
+- Updated dependencies [[`bd86661f`](https://github.com/thirdweb-dev/js/commit/bd86661f54ca2f1eb09cbae35c704dc79be1b63a), [`c85810ee`](https://github.com/thirdweb-dev/js/commit/c85810eee318b10eee4ada61828adaa51f94ea6c), [`6fd10f94`](https://github.com/thirdweb-dev/js/commit/6fd10f94b469dc5659e2ff4ce92a5aff86f3c89d), [`5f1e6abb`](https://github.com/thirdweb-dev/js/commit/5f1e6abb391f5c58dbdb207f569b3dd0b5d4729c)]:
+  - @thirdweb-dev/chains@0.1.19
+
+## 3.10.17
+
+### Patch Changes
+
+- Updated dependencies [[`30e5593d`](https://github.com/thirdweb-dev/js/commit/30e5593dd1ce9abd809ad216a1cfce77b897093c)]:
+  - @thirdweb-dev/chains@0.1.18
+
+## 3.10.16
+
+### Patch Changes
+
+- Updated dependencies [[`d5123044`](https://github.com/thirdweb-dev/js/commit/d51230441a097734be092c42b45dea07629e65fa), [`3c8c5d56`](https://github.com/thirdweb-dev/js/commit/3c8c5d56f2a21c0918fede71061c6745f2956f83), [`907d97be`](https://github.com/thirdweb-dev/js/commit/907d97bedef7331148bdfe8b9bf1e19459282e4c)]:
+  - @thirdweb-dev/storage@1.1.3
+  - @thirdweb-dev/chains@0.1.17
+
+## 3.10.15
+
+### Patch Changes
+
+- [#713](https://github.com/thirdweb-dev/js/pull/713) [`e9b69300`](https://github.com/thirdweb-dev/js/commit/e9b69300d15b233609f1ed897256ec9a1eef3e28) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Display plugins on router release page
+
+- [#983](https://github.com/thirdweb-dev/js/pull/983) [`49ec2d17`](https://github.com/thirdweb-dev/js/commit/49ec2d171ecb1c9240398b7b486a452eb9429979) Thanks [@adam-maj](https://github.com/adam-maj)! - Add the ability to queue a transaction
+
+- [#997](https://github.com/thirdweb-dev/js/pull/997) [`799d98e8`](https://github.com/thirdweb-dev/js/commit/799d98e86258677ab72931fa8397aee653fe8b34) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Switch type of SmartContract.abi
+
+- [#1021](https://github.com/thirdweb-dev/js/pull/1021) [`e4356e76`](https://github.com/thirdweb-dev/js/commit/e4356e76d1506624afe2eb6feeaf57dc376f372f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update error message when contracts ABIs cannot be resolved, with url to import contract
+
+- [#988](https://github.com/thirdweb-dev/js/pull/988) [`9886c858`](https://github.com/thirdweb-dev/js/commit/9886c858d9c8d0f677aba6572dbf5cc6c876edf2) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Support ZKSync
+
+- Updated dependencies [[`c3645c45`](https://github.com/thirdweb-dev/js/commit/c3645c451b5e9a0fcf651fa07eb0e31ebf1882ca), [`470e0a14`](https://github.com/thirdweb-dev/js/commit/470e0a144db6aa03e7789e231bbdfae43144f0e0), [`482f6d1b`](https://github.com/thirdweb-dev/js/commit/482f6d1b58ac99b331fc750d3eeb6082556fd526), [`8db78299`](https://github.com/thirdweb-dev/js/commit/8db78299ea6cfb51d93b91bb1a351644a83c73d2)]:
+  - @thirdweb-dev/chains@0.1.16
+
+## 3.10.14
+
+### Patch Changes
+
+- [#992](https://github.com/thirdweb-dev/js/pull/992) [`32908b76`](https://github.com/thirdweb-dev/js/commit/32908b76832c60e91a0a6e40dbdb1c8f56e9e5be) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add alias for extension detection functions
+
+- Updated dependencies [[`6a4aab0b`](https://github.com/thirdweb-dev/js/commit/6a4aab0b8a2e0f6ff1b47992a3c1e5426a74f7ff)]:
+  - @thirdweb-dev/chains@0.1.15
+
+## 3.10.13
+
+### Patch Changes
+
+- [#976](https://github.com/thirdweb-dev/js/pull/976) [`eb521d24`](https://github.com/thirdweb-dev/js/commit/eb521d240ae7102d44fe2c5223b0a18d867e09ad) Thanks [@adam-maj](https://github.com/adam-maj)! - Expose raw error on transaction error
+
+- [#986](https://github.com/thirdweb-dev/js/pull/986) [`af4b5356`](https://github.com/thirdweb-dev/js/commit/af4b5356372ffa084c8d0e747d8def46c2ff892c) Thanks [@adam-maj](https://github.com/adam-maj)! - Parse snapshot inputs in chunks
+
+- [#977](https://github.com/thirdweb-dev/js/pull/977) [`93bd5733`](https://github.com/thirdweb-dev/js/commit/93bd57337b7d2c2fcd252987d10df3206c839daf) Thanks [@MananTank](https://github.com/MananTank)! - Fix Connect Wallet Open/Close issues
+
+- [#985](https://github.com/thirdweb-dev/js/pull/985) [`a2df187b`](https://github.com/thirdweb-dev/js/commit/a2df187bc1867beb2e90853da70dac271f604f12) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix solana token deploy
+
+- [#975](https://github.com/thirdweb-dev/js/pull/975) [`aa9b6acc`](https://github.com/thirdweb-dev/js/commit/aa9b6acc3f5a118c2b5fe9e46732e72c0fc69376) Thanks [@adam-maj](https://github.com/adam-maj)! - Export resolve address ENS function
+
+- Updated dependencies [[`5305b42d`](https://github.com/thirdweb-dev/js/commit/5305b42db554b69f903b3d95f3ba0eeddabd6114)]:
+  - @thirdweb-dev/chains@0.1.14
+
+## 3.10.12
+
+### Patch Changes
+
+- [#932](https://github.com/thirdweb-dev/js/pull/932) [`bf6df267`](https://github.com/thirdweb-dev/js/commit/bf6df2671131d7ed38650e2bed806081b32dc244) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Add SKALE chains gas price
+
+- [#944](https://github.com/thirdweb-dev/js/pull/944) [`8f962bc1`](https://github.com/thirdweb-dev/js/commit/8f962bc15c35da52ed5bc4025bb4cd18b69079e3) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix forwarder domain and address computation
+
+- [#951](https://github.com/thirdweb-dev/js/pull/951) [`28b5d1eb`](https://github.com/thirdweb-dev/js/commit/28b5d1eb6d0142d3ebefb8bd078c30949f77fe61) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Custom gas-price for Theta network
+
+- [#961](https://github.com/thirdweb-dev/js/pull/961) [`0bf29745`](https://github.com/thirdweb-dev/js/commit/0bf29745b0e842763c271ad8773312f0836ea00f) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update forwarder addresses to GSNv2 Forwarder
+
+- [#905](https://github.com/thirdweb-dev/js/pull/905) [`f0279c22`](https://github.com/thirdweb-dev/js/commit/f0279c228829b86ff1f828219bcef4fe16901f67) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Verification utils for any EVM contracts
+
+- [#927](https://github.com/thirdweb-dev/js/pull/927) [`1e9fad77`](https://github.com/thirdweb-dev/js/commit/1e9fad779f3ebe535d32c0ce76905a3a8033f2fa) Thanks [@MananTank](https://github.com/MananTank)! - safe, deviceWallet and smartWallet autoconnect
+
+- [#959](https://github.com/thirdweb-dev/js/pull/959) [`00d0d01e`](https://github.com/thirdweb-dev/js/commit/00d0d01e619ff5c60b9f31386f51a55b5e466efa) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Detect Account and AccountFactory contracts
+
+- [#947](https://github.com/thirdweb-dev/js/pull/947) [`fc96e147`](https://github.com/thirdweb-dev/js/commit/fc96e14750175b19cb66fa7d50cdbad65b42153a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose Transaction.getTarget()
+
+- Updated dependencies [[`00d0d01e`](https://github.com/thirdweb-dev/js/commit/00d0d01e619ff5c60b9f31386f51a55b5e466efa), [`d2c7f6d7`](https://github.com/thirdweb-dev/js/commit/d2c7f6d758787fab102ecc0cec16ac74f3c87a1f), [`f12a80a4`](https://github.com/thirdweb-dev/js/commit/f12a80a4758aa91c43084acedb212de9f36a7371)]:
+  - @thirdweb-dev/contracts-js@1.3.4
+  - @thirdweb-dev/chains@0.1.13
+  - @thirdweb-dev/storage@1.1.2
+
 ## 3.10.11
 
 ### Patch Changes

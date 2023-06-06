@@ -1,7 +1,6 @@
-import { providers } from "ethers";
+import { ethers, providers } from "ethers";
 
 import { Bytes, Signer } from "ethers";
-import { UserOperationStruct } from "@account-abstraction/contracts";
 import { ClientConfig } from "@account-abstraction/sdk";
 import { BaseAccountAPI } from "./base-api";
 import { ERC4337EthersProvider } from "./erc4337-provider";
@@ -37,18 +36,20 @@ export class ERC4337EthersSigner extends Signer {
   // This one is called by Contract. It signs the request and passes in to Provider to be sent.
   async sendTransaction(
     transaction: Deferrable<providers.TransactionRequest>,
+    batched: boolean = false,
   ): Promise<providers.TransactionResponse> {
-    const tx: providers.TransactionRequest = await this.populateTransaction(
-      transaction,
-    );
+    const tx = await ethers.utils.resolveProperties(transaction);
     await this.verifyAllNecessaryFields(tx);
 
-    const userOperation = await this.smartAccountAPI.createSignedUserOp({
-      target: tx.to ?? "",
-      data: tx.data?.toString() ?? "",
-      value: tx.value,
-      gasLimit: tx.gasLimit,
-    });
+    const userOperation = await this.smartAccountAPI.createSignedUserOp(
+      {
+        target: tx.to ?? "",
+        data: tx.data?.toString() ?? "",
+        value: tx.value,
+        gasLimit: tx.gasLimit,
+      },
+      batched,
+    );
 
     const transactionResponse =
       await this.erc4337provider.constructUserOpTransactionResponse(
@@ -121,6 +122,17 @@ export class ERC4337EthersSigner extends Signer {
   }
 
   async signMessage(message: Bytes | string): Promise<string> {
+    const isNotDeployed = await this.smartAccountAPI.checkAccountPhantom();
+    if (isNotDeployed) {
+      console.log(
+        "Account contract not deployed yet. Deploying account before signing message",
+      );
+      const tx = await this.sendTransaction({
+        to: await this.getAddress(),
+        data: "0x",
+      });
+      await tx.wait();
+    }
     return await this.originalSigner.signMessage(message);
   }
 
@@ -129,10 +141,5 @@ export class ERC4337EthersSigner extends Signer {
     transaction: Deferrable<providers.TransactionRequest>,
   ): Promise<string> {
     throw new Error("not implemented");
-  }
-
-  async signUserOperation(userOperation: UserOperationStruct): Promise<string> {
-    const message = await this.smartAccountAPI.getUserOpHash(userOperation);
-    return await this.originalSigner.signMessage(message);
   }
 }

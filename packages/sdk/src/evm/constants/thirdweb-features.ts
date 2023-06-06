@@ -11,6 +11,8 @@ import IThirdwebPlatformFeeAbi from "@thirdweb-dev/contracts-js/dist/abis/IPlatf
 import IThirdwebPrimarySaleAbi from "@thirdweb-dev/contracts-js/dist/abis/IPrimarySale.json";
 import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/dist/abis/IRoyalty.json";
 import IOwnableAbi from "@thirdweb-dev/contracts-js/dist/abis/Ownable.json";
+import IAccountFactory from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactory.json";
+import IAccount from "@thirdweb-dev/contracts-js/dist/abis/IAccount.json";
 
 export const getAllPluginsAbi = [
   {
@@ -274,5 +276,29 @@ export const FEATURE_OFFERS = {
     contracts: "",
   },
   abis: [IOffersAbi],
+  features: {},
+} as const;
+
+export const FEATURE_SMART_WALLET_FACTORY = {
+  name: "SmartWalletFactory",
+  namespace: "smartwallet.factory",
+  docLinks: {
+    // TODO
+    sdk: "sdk.smartWalletFactory",
+    contracts: "smartWalletFactory",
+  },
+  abis: [IAccountFactory],
+  features: {},
+} as const;
+
+export const FEATURE_SMART_WALLET = {
+  name: "SmartWallet",
+  namespace: "smartwallet",
+  docLinks: {
+    // TODO
+    sdk: "",
+    contracts: "",
+  },
+  abis: [IAccount],
   features: {},
 } as const;

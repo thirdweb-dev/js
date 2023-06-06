@@ -6,6 +6,7 @@ import {
   UserRejectedRequestError,
 } from "../../../lib/wagmi-core/errors";
 import { assertWindowEthereum } from "../../utils/assertWindowEthereum";
+import { walletIds } from "../../constants/walletIds";
 import { InjectedConnector, InjectedConnectorOptions } from "../injected";
 import { Ethereum } from "../injected/types";
 import type { Chain } from "@thirdweb-dev/chains";
@@ -13,7 +14,7 @@ import { utils } from "ethers";
 
 export type MetaMaskConnectorOptions = Pick<
   InjectedConnectorOptions,
-  "shimChainChangedDisconnect" | "shimDisconnect"
+  "shimDisconnect"
 > & {
   /**
    * While "disconnected" with `shimDisconnect`, allows user to select a different MetaMask account (than the currently connected account) when trying to connect.
@@ -28,7 +29,7 @@ type MetamaskConnectorConstructorArg = {
 };
 
 export class MetaMaskConnector extends InjectedConnector {
-  readonly id = "metaMask";
+  readonly id = walletIds.metamask;
   #UNSTABLE_shimOnConnectSelectAccount: MetaMaskConnectorOptions["UNSTABLE_shimOnConnectSelectAccount"];
 
   constructor(arg: MetamaskConnectorConstructorArg) {

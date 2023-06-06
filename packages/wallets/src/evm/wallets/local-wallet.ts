@@ -1,5 +1,6 @@
 import { AsyncStorage, createAsyncLocalStorage } from "../../core";
-import { TWConnector } from "../interfaces/tw-connector";
+import { Connector } from "../interfaces/connector";
+import { walletIds } from "../constants/walletIds";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import { Chain, defaultChains, Ethereum } from "@thirdweb-dev/chains";
 import { Wallet, utils } from "ethers";
@@ -7,6 +8,7 @@ import { Wallet, utils } from "ethers";
 export type LocalWalletOptions = {
   chain?: Chain;
   storage?: AsyncStorage;
+  thirdwebApiKey?: string;
 };
 
 export type WalletData = {
@@ -24,17 +26,17 @@ export class LocalWallet extends AbstractClientWallet<
   LocalWalletOptions,
   LocalWalletConnectionArgs
 > {
-  connector?: TWConnector;
+  connector?: Connector;
   options: WalletOptions<LocalWalletOptions>;
   ethersWallet?: Wallet;
   #storage: AsyncStorage;
 
-  static id = "localWallet";
+  static id = walletIds.localWallet;
 
   static meta = {
     name: "Local Wallet",
     iconURL:
-      "ipfs://QmcNddbYBuQKiBFnPcxYegjrX6S6z9K1vBNzbBBUJMn2ox/device-wallet.svg",
+      "ipfs://QmbQzSNGvmNYZzem9jZRuYeLe9K2W4pqbdnVUp7Y6edQ8Y/local-wallet.svg",
   };
 
   public get walletName() {
@@ -45,14 +47,12 @@ export class LocalWallet extends AbstractClientWallet<
     super(LocalWallet.id, options);
     this.options = options || {};
     this.#storage =
-      options?.storage ||
-      options?.walletStorage ||
-      createAsyncLocalStorage("localWallet");
+      options?.storage || createAsyncLocalStorage(walletIds.localWallet);
   }
 
-  protected async getConnector(): Promise<TWConnector> {
+  protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
-      const { LocalWalletConnector } = await import(
+      const { LocalWalletConnector: LocalWalletConnector } = await import(
         "../connectors/local-wallet"
       );
 
@@ -60,20 +60,25 @@ export class LocalWallet extends AbstractClientWallet<
         throw new Error("wallet is not initialized");
       }
 
+      const defaults = this.options.chain
+        ? [...defaultChains, this.options.chain]
+        : defaultChains;
+
       this.connector = new LocalWalletConnector({
         chain: this.options.chain || Ethereum,
         ethersWallet: this.ethersWallet,
-        chains: this.options.chains || defaultChains,
+        chains: this.options.chains || defaults,
+        thirdwebApiKey: this.options.thirdwebApiKey,
       });
     }
     return this.connector;
   }
 
   /**
-   * load saved wallet data from storage or generate a new one and save it
+   * load saved wallet data from storage or generate a new one and save it.
    */
   async loadOrCreate(options: LoadOptions) {
-    if (await this.isSaved()) {
+    if (await this.getSavedData()) {
       await this.load(options);
     } else {
       await this.generate();
@@ -270,12 +275,16 @@ export class LocalWallet extends AbstractClientWallet<
   }
 
   /**
-   * @returns true if wallet data is saved in storage
+   * @returns true if initialized wallet's data is saved in storage
    */
   async isSaved() {
     try {
       const data = await this.getSavedData();
-      return !!data;
+      const address = await this.getAddress();
+      if (data?.address === address) {
+        return true;
+      }
+      return false;
     } catch (e) {
       return false;
     }
@@ -329,12 +338,12 @@ export class LocalWallet extends AbstractClientWallet<
   async getSavedData(storage?: AsyncStorage): Promise<WalletData | null> {
     const _storage = storage || this.#storage;
 
-    const savedDataStr = await _storage.getItem(STORAGE_KEY_WALLET_DATA);
-    if (!savedDataStr) {
-      return null;
-    }
-
     try {
+      const savedDataStr = await _storage.getItem(STORAGE_KEY_WALLET_DATA);
+      if (!savedDataStr) {
+        return null;
+      }
+
       const savedData = JSON.parse(savedDataStr);
       if (!savedData) {
         return null;
@@ -352,6 +361,11 @@ export class LocalWallet extends AbstractClientWallet<
   async #saveData(data: WalletData, storage?: AsyncStorage) {
     const _storage = storage || this.#storage;
     await _storage.setItem(STORAGE_KEY_WALLET_DATA, JSON.stringify(data));
+  }
+
+  async disconnect() {
+    await super.disconnect();
+    this.ethersWallet = undefined;
   }
 }
 
@@ -404,7 +418,7 @@ type SaveOptions =
   | { strategy: "encryptedJson"; password: string; storage?: AsyncStorage }
   | {
       strategy: "privateKey";
-      encryption?: EncryptOptions;
+      encryption: EncryptOptions;
       storage?: AsyncStorage;
     }
   | {
@@ -441,7 +455,7 @@ async function defaultDecrypt(message: string, password: string) {
  * - return a noop function
  * @returns
  */
-function getDecryptor(encryption?: DecryptOptions | undefined) {
+function getDecryptor(encryption: DecryptOptions | undefined) {
   const noop = async (msg: string) => msg;
   return encryption
     ? (msg: string) =>
@@ -456,7 +470,7 @@ function getDecryptor(encryption?: DecryptOptions | undefined) {
  * - return a noop function
  * @returns
  */
-function getEncryptor(encryption?: EncryptOptions | undefined) {
+function getEncryptor(encryption: EncryptOptions | undefined) {
   const noop = async (msg: string) => msg;
   return encryption
     ? (msg: string) =>
@@ -464,6 +478,6 @@ function getEncryptor(encryption?: EncryptOptions | undefined) {
     : noop;
 }
 
-function isValidPrivateKey(value: string) {
-  return value.match(/^(0x)?[0-9a-f]{64}$/i);
+export function isValidPrivateKey(value: string) {
+  return !!value.match(/^(0x)?[0-9a-f]{64}$/i);
 }

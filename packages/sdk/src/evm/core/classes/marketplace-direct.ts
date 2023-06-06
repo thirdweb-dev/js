@@ -1,12 +1,13 @@
-import { ListingNotFoundError, WrongListingTypeError } from "../../common";
 import {
-  cleanCurrencyAddress,
-  fetchCurrencyValue,
-  isNativeToken,
-  normalizePriceValue,
-  setErc20Allowance,
-} from "../../common/currency";
-import { resolveAddress } from "../../common/ens";
+  ListingNotFoundError,
+  WrongListingTypeError,
+} from "../../common/error";
+import { cleanCurrencyAddress } from "../../common/currency/cleanCurrencyAddress";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { isNativeToken } from "../../common/currency/isNativeToken";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import {
   handleTokenApproval,
   isTokenApprovedForTransfer,
@@ -20,7 +21,7 @@ import {
   InterfaceId_IERC721,
 } from "../../constants/contract";
 import { ListingType } from "../../enums";
-import { AddressOrEns } from "../../schema";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Price } from "../../types/currency";
 import {
   DirectListing,

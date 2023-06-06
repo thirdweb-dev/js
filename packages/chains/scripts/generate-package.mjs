@@ -81,6 +81,7 @@ chains = chains
 const imports = [];
 const exports = [];
 const exportNames = [];
+const exportNameToChain = {};
 
 const takenSlugs = {};
 
@@ -216,9 +217,13 @@ export default ${JSON.stringify(chain, null, 2)} as const satisfies Chain;`,
 
   imports.push(`import c${chain.chainId} from "../chains/${chain.chainId}";`);
 
-  exports.push(`export const ${exportName} = c${chain.chainId};`);
+  exports.push(
+    `export { default as ${exportName} } from "../chains/${chain.chainId}"`,
+  );
 
-  exportNames.push(exportName);
+  const key = `c${chain.chainId}`;
+  exportNames.push(key);
+  exportNameToChain[key] = chain;
 }
 
 fs.writeFileSync(
@@ -229,22 +234,58 @@ import type { Chain } from "./types";
 ${exports.join("\n")}
 export * from "./types";
 export * from "./utils";
-export const defaultChains = [Ethereum, Goerli, Polygon, Mumbai, Arbitrum, ArbitrumGoerli, Optimism, OptimismGoerli, Binance, BinanceTestnet, Fantom, FantomTestnet, Avalanche, AvalancheFuji, Localhost];
-export const allChains = [${exportNames.join(", ")}];
+export const defaultChains = [c1, c5, c84531, c137, c80001, c42161, c421613, c10, c420, c56, c97, c250, c4002, c43114, c43113, c1337];
+export const allChains: Chain[] = [${exportNames.join(", ")}];
 
-const chainsById = {
-  ${exportNames.map((n) => `[${n}.chainId]: ${n}`).join(",\n")}
-} as const;
+type ChainsById = {
+  ${exportNames
+    .map((n) => `${exportNameToChain[n].chainId}: typeof ${n}`)
+    .join(",\n")}
+};
 
-const chainIdsBySlug = {
-  ${exportNames.map((n) => `[${n}.slug]: ${n}.chainId`).join(",\n")}
-} as const;
+type ChainIdsBySlug = {
+  ${exportNames
+    .map(
+      (n) => `"${exportNameToChain[n].slug}": ${exportNameToChain[n].chainId}`,
+    )
+    .join(",\n")}
+};
+
+let _chainsById: Record<number, Chain>;
+let _chainIdsBySlug: Record<string, number>;
+
+function getChainsById() {
+  if (_chainsById) {
+    return _chainsById;
+  }
+  _chainsById = {};
+  allChains.forEach((chain) => {
+    _chainsById[chain.chainId] = chain;
+  });
+  return _chainsById;
+}
+
+export function getChainIdsBySlug() {
+  if (_chainIdsBySlug) {
+    return _chainIdsBySlug;
+  }
+  _chainIdsBySlug = {};
+  allChains.forEach((chain) => {
+    _chainIdsBySlug[chain.slug] = chain.chainId;
+  });
+  return _chainIdsBySlug;
+}
+
+export type ChainSlug = keyof ChainIdsBySlug;
+export type ChainId = keyof ChainsById;
 
 function isValidChainId(chainId: number): chainId is ChainId {
+  const chainsById = getChainsById();
   return chainId in chainsById;
 }
 
 function isValidChainSlug(slug: string): slug is ChainSlug {
+  const chainIdsBySlug = getChainIdsBySlug();
   return slug in chainIdsBySlug;
 }
 
@@ -252,7 +293,8 @@ export function getChainByChainId<TChainId extends ChainId>(
   chainId: TChainId | (number & {}),
 ) {
   if (isValidChainId(chainId)) {
-    return chainsById[chainId] as (typeof chainsById)[TChainId];
+    const chainsById = getChainsById();
+    return chainsById[chainId] as ChainsById[TChainId];
   }
   throw new Error(\`Chain with chainId "\${chainId}" not found\`);
 }
@@ -261,13 +303,13 @@ export function getChainBySlug<TSlug extends ChainSlug>(
   slug: TSlug | (string & {}),
 ) {
   if (isValidChainSlug(slug)) {
-    return chainsById[chainIdsBySlug[slug]] as (typeof chainsById)[
-      (typeof chainIdsBySlug)[TSlug]
-      ];
+    const chainIdsBySlug = getChainIdsBySlug();
+    const chainsById = getChainsById();
+    return chainsById[
+      chainIdsBySlug[slug]
+    ] as ChainsById[ChainIdsBySlug[TSlug]];
   }
   throw new Error(\`Chain with slug "\${slug}" not found\`);
 }
-
-export type ChainSlug = keyof typeof chainIdsBySlug;
-export type ChainId = keyof typeof chainsById;`,
+`,
 );

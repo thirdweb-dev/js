@@ -19,7 +19,7 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getCachedAbiForContract } from "@thirdweb-dev/sdk";
+import { getCachedAbiForContract, TransactionResult } from "@thirdweb-dev/sdk";
 import type {
   Abi,
   CommonContractSchemaInput,
@@ -32,10 +32,12 @@ import type {
   SUPPORTED_CHAIN_ID,
   ThirdwebSDK,
   ValidContractInstance,
+  BaseContractForAddress,
 } from "@thirdweb-dev/sdk";
 import type { CallOverrides, ContractInterface, providers } from "ethers";
 import { useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";
+import { ContractAddress as GeneratedContractAddress } from "@thirdweb-dev/generated-abis";
 
 // contract type
 async function fetchContractType(
@@ -149,6 +151,16 @@ export type UseContractResult<
 > = UseQueryResult<TContract | undefined> & {
   contract: TContract | undefined;
 };
+
+export function useContract<
+  TContractAddress extends ContractAddress | GeneratedContractAddress,
+>(
+  contractAddress: RequiredParam<TContractAddress>,
+): UseContractResult<
+  TContractAddress extends GeneratedContractAddress
+    ? SmartContract<BaseContractForAddress<TContractAddress>>
+    : SmartContract
+>;
 
 /**
  * Use this resolve a contract address to a smart contract instance.
@@ -514,12 +526,42 @@ export function useContractEvents(
  * @beta
  */
 export function useContractRead<
-  TContractInstance extends ValidContractInstance,
-  TFunctionName extends Parameters<TContractInstance["call"]>[0],
+  TContractAddress extends GeneratedContractAddress | ContractAddress,
+  TContract extends TContractAddress extends GeneratedContractAddress
+    ? BaseContractForAddress<TContractAddress>
+    : ValidContractInstance,
+  TContractInstance extends TContractAddress extends GeneratedContractAddress
+    ? SmartContract<BaseContractForAddress<TContractAddress>>
+    : ValidContractInstance,
+  TFunctionName extends TContractAddress extends GeneratedContractAddress
+    ? TContract extends BaseContractForAddress<TContractAddress>
+      ? keyof TContract["functions"]
+      : never
+    : Parameters<TContractInstance["call"]>[0],
+  TArgs extends TContractAddress extends GeneratedContractAddress
+    ? TContract extends BaseContractForAddress<TContractAddress>
+      ? TFunctionName extends keyof TContract["functions"]
+        ? Parameters<TContract["functions"][TFunctionName]>
+        : unknown[]
+      : unknown[]
+    : unknown[],
+  TReturnType extends TContractAddress extends GeneratedContractAddress
+    ? TContract extends BaseContractForAddress<TContractAddress>
+      ? TFunctionName extends keyof TContract["functions"]
+        ? ReturnType<TContract["functions"][TFunctionName]>
+        : any
+      : any
+    : any,
 >(
-  contract: RequiredParam<TContractInstance>,
-  functionName: RequiredParam<TFunctionName | (string & {})>,
-  args?: unknown[],
+  contract: TContractInstance extends ValidContractInstance
+    ? RequiredParam<TContractInstance> | undefined
+    : TContractAddress extends GeneratedContractAddress
+    ?
+        | RequiredParam<SmartContract<BaseContractForAddress<TContractAddress>>>
+        | undefined
+    : RequiredParam<SmartContract> | undefined,
+  functionName: RequiredParam<TFunctionName & string>,
+  args?: TArgs,
   overrides?: CallOverrides,
 ) {
   const contractAddress = contract?.getAddress();
@@ -530,10 +572,10 @@ export function useContractRead<
       requiredParamInvariant(functionName, "function name must be provided");
       return (
         contract.call as (
-          functionName: string,
-          args?: unknown[],
+          functionName: TFunctionName,
+          args?: TArgs,
           overrides?: CallOverrides,
-        ) => Promise<any>
+        ) => Promise<TReturnType>
       )(functionName, args, overrides);
     },
     {
@@ -561,11 +603,34 @@ export function useContractRead<
  * @beta
  */
 export function useContractWrite<
-  TContractInstance extends ValidContractInstance,
-  TFunctionName extends Parameters<TContractInstance["call"]>[0],
+  TContractAddress extends GeneratedContractAddress | ContractAddress,
+  TContract extends TContractAddress extends GeneratedContractAddress
+    ? BaseContractForAddress<TContractAddress>
+    : ValidContractInstance,
+  TContractInstance extends TContractAddress extends GeneratedContractAddress
+    ? SmartContract<BaseContractForAddress<TContractAddress>>
+    : ValidContractInstance,
+  TFunctionName extends TContractAddress extends GeneratedContractAddress
+    ? TContract extends BaseContractForAddress<TContractAddress>
+      ? keyof TContract["functions"]
+      : never
+    : Parameters<TContractInstance["call"]>[0],
+  TArgs extends TContractAddress extends GeneratedContractAddress
+    ? TContract extends BaseContractForAddress<TContractAddress>
+      ? TFunctionName extends keyof TContract["functions"]
+        ? Parameters<TContract["functions"][TFunctionName]>
+        : unknown[]
+      : unknown[]
+    : any[],
 >(
-  contract: RequiredParam<TContractInstance>,
-  functionName: RequiredParam<TFunctionName | (string & {})>,
+  contract: TContractInstance extends ValidContractInstance
+    ? RequiredParam<TContractInstance> | undefined
+    : TContractAddress extends GeneratedContractAddress
+    ?
+        | RequiredParam<SmartContract<BaseContractForAddress<TContractAddress>>>
+        | undefined
+    : RequiredParam<SmartContract> | undefined,
+  functionName: RequiredParam<TFunctionName & string>,
 ) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
@@ -576,7 +641,7 @@ export function useContractWrite<
       args,
       overrides,
     }: {
-      args?: unknown[];
+      args?: TArgs;
       overrides?: CallOverrides;
     }) => {
       requiredParamInvariant(contract, "contract must be defined");
@@ -584,10 +649,10 @@ export function useContractWrite<
 
       return (
         contract.call as (
-          functionName: string,
-          args?: unknown[],
+          functionName: TFunctionName,
+          args?: TArgs,
           overrides?: CallOverrides,
-        ) => Promise<any>
+        ) => Promise<TransactionResult>
       )(functionName, args, overrides);
     },
     {

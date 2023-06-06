@@ -1,24 +1,32 @@
 import BaseButton from "../base/BaseButton";
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { ConnectWalletHeader } from "./ConnectingWallet/ConnectingWalletHeader";
 import Text from "../base/Text";
 import { ModalFooter } from "../base/modal/ModalFooter";
-import { LocalWallet } from "../../wallets/wallets/local-wallet";
-import { LocalWalletImportModal } from "./LocalWalletImportModal";
 import { useState } from "react";
+import {
+  ConnectUIProps,
+  WalletInstance,
+  useCreateWalletInstance,
+  useWalletContext,
+} from "@thirdweb-dev/react-core";
+import { LocalWalletImportModal } from "./LocalWalletImportModal";
+import { LocalWallet } from "../../wallets/wallets/LocalWallet";
 
-export type LocalWalletFlowProps = {
-  onClose: () => void;
-  onBackPress: () => void;
-  onConnectPress: () => void;
+type LocalWalletFlowUIProps = ConnectUIProps<LocalWallet> & {
+  onConnected?: (wallet: WalletInstance) => void;
 };
 
 export function LocalWalletFlow({
-  onClose,
-  onBackPress,
-  onConnectPress,
-}: LocalWalletFlowProps) {
+  goBack,
+  close,
+  walletConfig,
+  onConnected,
+}: LocalWalletFlowUIProps) {
   const [isImportModalVisible, setIsImportModalVisible] = useState(false);
+  const [isCreatingWallet, setIsCreatingWallet] = useState(false);
+  const { setConnectedWallet } = useWalletContext();
+  const createInstance = useCreateWalletInstance();
 
   const onImportPress = async () => {
     setIsImportModalVisible(true);
@@ -28,23 +36,46 @@ export function LocalWalletFlow({
     setIsImportModalVisible(false);
   };
 
+  const onConnectPressInternal = async () => {
+    setIsCreatingWallet(true);
+
+    const localWalletInstance = await createInstance(walletConfig);
+    connect(localWalletInstance);
+  };
+
+  const connect = async (wallet: WalletInstance) => {
+    await wallet.connect();
+
+    if (onConnected) {
+      onConnected(wallet);
+    } else {
+      setConnectedWallet(wallet);
+    }
+  };
+
   return (
     <>
       <ConnectWalletHeader
-        onBackPress={onBackPress}
-        walletLogoUrl={LocalWallet.meta.iconURL}
+        onBackPress={goBack}
+        headerText="Guest Wallet"
+        alignHeader="flex-start"
         subHeaderText={""}
-        close={onClose}
+        onClose={close}
       />
       <View style={styles.connectingContainer}>
         <BaseButton
           backgroundColor="white"
-          onPress={onConnectPress}
+          minWidth={130}
+          onPress={onConnectPressInternal}
           style={styles.connectWalletButton}
         >
-          <Text variant="bodyLarge" color="black">
-            Create new wallet
-          </Text>
+          {isCreatingWallet ? (
+            <ActivityIndicator size="small" color="buttonTextColor" />
+          ) : (
+            <Text variant="bodyLarge" color="black">
+              Create new wallet
+            </Text>
+          )}
         </BaseButton>
         <Text variant="subHeader" mt="lg">
           -------- OR --------
@@ -54,6 +85,8 @@ export function LocalWalletFlow({
 
       <LocalWalletImportModal
         isVisible={isImportModalVisible}
+        localWallet={walletConfig}
+        onWalletImported={connect}
         onClose={onImportModalClose}
       />
     </>

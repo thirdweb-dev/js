@@ -16,10 +16,12 @@ export {
   useDisconnect,
   useSwitchChain,
   useWallets,
-  useIsConnecting,
+  useWalletConfig,
+  useSetConnectionStatus,
+  useSetConnectedWallet,
 } from "../core/hooks/wallet-hooks";
 export { useNetwork } from "../core/hooks/useNetwork";
-export { useThirdwebWallet } from "../core/providers/thirdweb-wallet-provider";
+export { useWalletContext } from "../core/providers/thirdweb-wallet-provider";
 
 // connected wallet hooks
 export {
@@ -28,13 +30,16 @@ export {
   useAddress,
   useChainId,
   useActiveChain,
+  useChain,
 } from "./hooks/wallet";
 
 // Utilities and Others
 export { shouldNeverPersistQuery } from "../core/query-utils/query-key";
 export type { RequiredParam } from "../core/query-utils/required-param";
 export type {
-  Wallet,
+  WalletConfig,
+  ConnectUIProps,
+  SelectUIProps,
   WalletClass,
   WalletInstance,
   ExtraCoreWalletOptions,
@@ -148,6 +153,7 @@ export {
   useExecuteAuctionSale,
   useOffers,
   useBuyNow,
+  useBuyDirectListing,
 } from "./hooks/async/marketplace";
 
 // nft
@@ -187,6 +193,12 @@ export {
   useTransferBatchToken,
   useBurnToken,
 } from "./hooks/async/token";
+
+// smart wallet factory
+export {
+  useSmartWallets,
+  useCreateSmartWallet,
+} from "./hooks/async/smart-wallet-factory";
 
 // thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)
 

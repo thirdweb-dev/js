@@ -1,4 +1,4 @@
-import { CustomChain } from "../types/any-evm/chains";
+import type { CustomChain } from "../types/any-evm/chains";
 
 export const ERROR_SUBSTRINGS = [
   "eip-155",
@@ -30,6 +30,14 @@ export const CUSTOM_GAS_FOR_CHAIN: Record<number, CustomChain> = {
   [1351057110]: {
     name: "Chaos (SKALE Testnet)",
     gasPrice: 100000,
+  },
+  [361]: {
+    name: "Theta Mainnet",
+    gasPrice: 4000 * 10 ** 9,
+  },
+  [365]: {
+    name: "Theta Testnet",
+    gasPrice: 4000 * 10 ** 9,
   },
 };
 /* eslint-enable no-useless-computed-key */

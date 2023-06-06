@@ -1,5 +1,5 @@
 import { QueryAllParams } from "../../../core/schema/QueryParams";
-import { AddressOrEns } from "../../schema";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { BigNumberish } from "ethers";
 
 /**

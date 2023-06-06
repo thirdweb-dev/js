@@ -1,10 +1,8 @@
 import { AmountSchema } from "../../../core/schema/shared";
-import { NATIVE_TOKEN_ADDRESS } from "../../constants";
-import {
-  AddressOrEnsSchema,
-  BigNumberishSchema,
-  EndDateSchema,
-} from "../shared";
+import { NATIVE_TOKEN_ADDRESS } from "../../constants/currency";
+import { AddressOrEnsSchema } from "../shared/AddressOrEnsSchema";
+import { BigNumberishSchema } from "../shared/BigNumberSchema";
+import { EndDateSchema } from "../shared/RawDateSchema";
 import { z } from "zod";
 
 /**

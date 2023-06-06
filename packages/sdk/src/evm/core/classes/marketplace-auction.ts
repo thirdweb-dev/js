@@ -1,17 +1,15 @@
 import {
-  AuctionAlreadyStartedError,
-  AuctionHasNotEndedError,
   ListingNotFoundError,
   WrongListingTypeError,
-} from "../../common";
-import {
-  cleanCurrencyAddress,
-  fetchCurrencyMetadata,
-  fetchCurrencyValue,
-  normalizePriceValue,
-  setErc20Allowance,
-} from "../../common/currency";
-import { resolveAddress } from "../../common/ens";
+  AuctionAlreadyStartedError,
+  AuctionHasNotEndedError,
+} from "../../common/error";
+import { cleanCurrencyAddress } from "../../common/currency/cleanCurrencyAddress";
+import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import {
   handleTokenApproval,
   isWinningBid,

@@ -1,10 +1,9 @@
-import {
-  TransactionError,
-  extractFunctionsFromAbi,
-  fetchContractMetadataFromAddress,
-  fetchSourceFilesFromMetadata,
-  parseRevertReason,
-} from "../../common";
+import { computeEOAForwarderAddress } from "../../common/any-evm-utils/computeEOAForwarderAddress";
+import { computeForwarderAddress } from "../../common/any-evm-utils/computeForwarderAddress";
+import { parseRevertReason, TransactionError } from "../../common/error";
+import { extractFunctionsFromAbi } from "../../common/feature-detection/extractFunctionsFromAbi";
+import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
+import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
 import {
   BiconomyForwarderAbi,
   ChainAwareForwardRequest,
@@ -15,10 +14,10 @@ import { getPolygonGasPriorityFee } from "../../common/gas-price";
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
 import { isBrowser } from "../../common/utils";
-import { CONTRACT_ADDRESSES, ChainId } from "../../constants";
-import { getContractAddressByChainId } from "../../constants/addresses";
+import { ChainId } from "../../constants/chains/ChainId";
 import { EventType } from "../../constants/events";
-import { Address, CallOverrideSchema } from "../../schema";
+import { Address } from "../../schema/shared/Address";
+import { CallOverrideSchema } from "../../schema/shared/CallOverrideSchema";
 import { AbiSchema, ContractSource } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
@@ -44,6 +43,8 @@ import {
 } from "ethers";
 import { ConnectionInfo } from "ethers/lib/utils.js";
 import invariant from "tiny-invariant";
+import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
+import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
 
 /**
  * @internal
@@ -313,7 +314,9 @@ export class ContractWrapper<
     // TODO validate each argument
     if (fn.stateMutability === "view" || fn.stateMutability === "pure") {
       // read function
-      return (this.readContract as any)[fnName](...args);
+      return txOptions
+        ? (this.readContract as any)[fnName](...args, txOptions)
+        : (this.readContract as any)[fnName](...args);
     } else {
       // write function
       const receipt = await this.sendTransaction(fnName, args, txOptions);
@@ -529,19 +532,22 @@ export class ContractWrapper<
       // no-op
     }
 
-    return new TransactionError({
-      reason,
-      from,
-      to,
-      method,
-      data,
-      network,
-      rpcUrl,
-      value,
-      hash,
-      contractName,
-      sources,
-    });
+    return new TransactionError(
+      {
+        reason,
+        from,
+        to,
+        method,
+        data,
+        network,
+        rpcUrl,
+        value,
+        hash,
+        contractName,
+        sources,
+      },
+      error,
+    );
   }
 
   /**
@@ -789,10 +795,12 @@ export class ContractWrapper<
       (this.options.gasless.openzeppelin.useEOAForwarder
         ? CONTRACT_ADDRESSES[
             transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-          ].openzeppelinForwarderEOA
+          ].openzeppelinForwarderEOA ||
+          (await computeEOAForwarderAddress(this.getProvider(), this.#storage))
         : CONTRACT_ADDRESSES[
             transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-          ].openzeppelinForwarder);
+          ].openzeppelinForwarder ||
+          (await computeForwarderAddress(this.getProvider(), this.#storage)));
 
     const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
     const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
@@ -821,8 +829,8 @@ export class ContractWrapper<
       };
     } else {
       domain = {
-        name: "GSNv2 Forwarder",
-        version: "0.0.1",
+        name: this.options.gasless.openzeppelin.domainName,
+        version: this.options.gasless.openzeppelin.domainVersion,
         chainId: transaction.chainId,
         verifyingContract: forwarderAddress,
       };

@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Chiado Testnet",
-  "chain": "CHI",
+  "name": "Gnosis Chiado Testnet",
+  "chain": "GNO",
   "icon": {
     "url": "ipfs://bafybeidk4swpgdyqmpz6shd5onvpaujvwiwthrhypufnwr6xh3dausz2dm",
     "width": 1800,
@@ -9,16 +9,17 @@ export default {
     "format": "png"
   },
   "rpc": [
-    "https://chiado-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://gnosis-chiado-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.chiadochain.net",
-    "https://rpc.eu-central-2.gateway.fm/v3/gnosis/archival/chiado"
+    "https://rpc.chiado.gnosis.gateway.fm",
+    "wss://rpc.chiadochain.net/wss"
   ],
   "faucets": [
     "https://gnosisfaucet.com"
   ],
   "nativeCurrency": {
     "name": "Chiado xDAI",
-    "symbol": "xDAI",
+    "symbol": "XDAI",
     "decimals": 18
   },
   "infoURL": "https://docs.gnosischain.com",
@@ -39,5 +40,5 @@ export default {
     }
   ],
   "testnet": true,
-  "slug": "chiado-testnet"
+  "slug": "gnosis-chiado-testnet"
 } as const satisfies Chain;

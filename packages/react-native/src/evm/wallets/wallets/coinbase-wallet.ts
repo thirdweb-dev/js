@@ -5,12 +5,13 @@ import type {
 } from "../connectors/coinbase-wallet";
 import {
   AbstractClientWallet,
-  TWConnector,
+  Connector,
   WagmiAdapter,
   WalletOptions,
+  walletIds,
 } from "@thirdweb-dev/wallets";
 import {
-  Wallet,
+  WalletConfig,
   WalletOptions as WalletOptionsRC,
 } from "@thirdweb-dev/react-core";
 
@@ -27,11 +28,11 @@ export class CoinbaseWallet extends AbstractClientWallet<CoinbaseWalletConnector
       "ipfs://QmcJBHopbwfJcLqJpX2xEufSS84aLbF7bHavYhaXUcrLaH/coinbase.svg",
   };
 
-  connector?: TWConnector;
+  connector?: Connector;
   coinbaseConnector?: CoinbaseWalletConnector;
   provider?: CoinbaseWalletConnector["provider"];
 
-  static id = "coinbaseWallet" as const;
+  static id = walletIds.coinbase;
   public get walletName() {
     return "Coinbase Wallet" as const;
   }
@@ -48,7 +49,7 @@ export class CoinbaseWallet extends AbstractClientWallet<CoinbaseWalletConnector
     this.callbackURL = options.callbackURL;
   }
 
-  protected async getConnector(): Promise<TWConnector> {
+  protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
       // import the connector dynamically
       const { CoinbaseWalletConnector: CoinbaseWalletConnector } = await import(
@@ -81,5 +82,6 @@ export const coinbaseWallet = (config?: { callbackURL?: URL }) => {
     meta: CoinbaseWallet.meta,
     create: (options: WalletOptionsRC) =>
       new CoinbaseWallet({ ...options, callbackURL: callbackURLNonNull }),
-  } satisfies Wallet;
+    config: config || {},
+  } satisfies WalletConfig<CoinbaseWallet, { callbackURL?: URL }>;
 };

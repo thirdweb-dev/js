@@ -1,5 +1,6 @@
 import { NativeToken } from "../types/currency";
-import { ChainId, getSupportedChains } from "./chains";
+import { ChainId } from "./chains/ChainId";
+import { getSupportedChains } from "./chains/supportedChains";
 import { ethers } from "ethers";
 
 /**
@@ -28,6 +29,16 @@ export const NATIVE_TOKENS: Record<number, NativeToken> = {
     decimals: 18,
     wrapped: {
       address: "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
+  11155111: {
+    name: "Sepolia Ether",
+    symbol: "SEP",
+    decimals: 18,
+    wrapped: {
+      address: "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9",
       name: "Wrapped Ether",
       symbol: "WETH",
     },
@@ -174,13 +185,23 @@ export const NATIVE_TOKENS: Record<number, NativeToken> = {
       symbol: "WETH",
     },
   },
-  // eslint-disable-next-line no-useless-computed-key
-  [84531]: {
+  84531: {
     name: "Base Goerli Testnet",
     symbol: "ETH",
     decimals: 18,
     wrapped: {
       address: "0x4200000000000000000000000000000000000006",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
+  // eslint-disable-next-line no-useless-computed-key
+  [280]: {
+    name: "zkSync Era Testnet",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91",
       name: "Wrapped Ether",
       symbol: "WETH",
     },

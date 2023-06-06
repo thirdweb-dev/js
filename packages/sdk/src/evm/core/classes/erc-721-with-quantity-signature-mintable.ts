@@ -1,5 +1,7 @@
-import { detectContractFeature, hasFunction } from "../../common";
-import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_SIGNATURE_MINTABLE_V2 } from "../../constants/erc721-features";

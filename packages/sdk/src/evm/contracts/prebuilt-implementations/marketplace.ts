@@ -1,11 +1,12 @@
 import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
-import { ListingNotFoundError } from "../../common";
-import { isNativeToken } from "../../common/currency";
+import { ListingNotFoundError } from "../../common/error";
+import { isNativeToken } from "../../common/currency/isNativeToken";
 import { mapOffer } from "../../common/marketplace";
 import { getRoleHash } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
-import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
-import { ContractAppURI } from "../../core";
+import { SUPPORTED_CHAIN_ID } from "../../constants/chains/SUPPORTED_CHAIN_ID";
+import { NATIVE_TOKENS } from "../../constants/currency";
+import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -23,7 +24,7 @@ import { ListingType } from "../../enums";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
-import { AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Price } from "../../types/currency";
 import { AuctionListing, DirectListing, Offer } from "../../types/marketplace";
 import { MarketplaceFilter } from "../../types/marketplace/MarketPlaceFilter";
@@ -698,7 +699,7 @@ export class Marketplace implements UpdateableNetwork {
     functionName: string & TMethod,
     args?: Parameters<MarketplaceContract["functions"][TMethod]>,
     overrides?: CallOverrides,
-  ): Promise<any> {
+  ): Promise<ReturnType<MarketplaceContract["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, args, overrides);
   }
 }

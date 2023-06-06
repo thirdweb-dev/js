@@ -70,6 +70,17 @@ export const Button = styled.button<{
         return p.theme.text.danger;
     }
   }};
+
+  ${(p) => {
+    if (p.variant === "link") {
+      return `
+      padding: 0;
+      &:hover {
+        color: ${p.theme.text.neutral};
+      }`;
+    }
+  }}
+
   cursor: pointer;
 
   /* pressed effect */
@@ -123,5 +134,8 @@ export const InputButton = styled.button<{ theme?: Theme }>`
   color: ${(p) => p.theme.text.secondary};
   &:hover {
     color: ${(p) => p.theme.text.neutral};
+  }
+  &[disabled] {
+    cursor: not-allowed;
   }
 `;

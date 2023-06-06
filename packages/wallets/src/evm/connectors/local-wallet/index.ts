@@ -1,18 +1,21 @@
 import { normalizeChainId } from "../../../lib/wagmi-core";
-import { ConnectParams, TWConnector } from "../../interfaces/tw-connector";
-import type { LocalWalletConnectionArgs as LocalWalletConnectionArgs } from "../../wallets/local-wallet";
+import { ConnectParams, Connector } from "../../interfaces/connector";
+import type { LocalWalletConnectionArgs } from "../../wallets/local-wallet";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { Signer } from "ethers";
 import { providers } from "ethers";
 import type { Wallet } from "ethers";
+import { getChainProvider } from "@thirdweb-dev/sdk";
+import { DEFAULT_WALLET_API_KEY } from "../../constants/keys";
 
 export type LocalWalletConnectorOptions = {
   chain: Chain;
   ethersWallet: Wallet;
   chains: Chain[];
+  thirdwebApiKey?: string;
 };
 
-export class LocalWalletConnector extends TWConnector<LocalWalletConnectionArgs> {
+export class LocalWalletConnector extends Connector<LocalWalletConnectionArgs> {
   readonly id: string = "local_wallet";
   readonly name: string = "Local Wallet";
   options: LocalWalletConnectorOptions;
@@ -60,9 +63,9 @@ export class LocalWalletConnector extends TWConnector<LocalWalletConnectionArgs>
 
   async getProvider() {
     if (!this.#provider) {
-      this.#provider = new providers.JsonRpcBatchProvider(
-        this.options.chain.rpc[0],
-      );
+      this.#provider = getChainProvider(this.options.chain, {
+        thirdwebApiKey: this.options.thirdwebApiKey || DEFAULT_WALLET_API_KEY,
+      });
     }
     return this.#provider;
   }
@@ -81,10 +84,14 @@ export class LocalWalletConnector extends TWConnector<LocalWalletConnectionArgs>
   async switchChain(chainId: number): Promise<void> {
     const chain = this.options.chains.find((c) => c.chainId === chainId);
     if (!chain) {
-      throw new Error("Chain not found");
+      throw new Error(
+        `Chain not found for chainId ${chainId}, please add it to the chains property when creating this wallet`,
+      );
     }
 
-    this.#provider = new providers.JsonRpcBatchProvider(chain.rpc[0]);
+    this.#provider = getChainProvider(chain, {
+      thirdwebApiKey: this.options.thirdwebApiKey || DEFAULT_WALLET_API_KEY,
+    });
     this.#signer = getSignerFromEthersWallet(
       this.options.ethersWallet,
       this.#provider,

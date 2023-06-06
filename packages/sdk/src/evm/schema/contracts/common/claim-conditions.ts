@@ -7,8 +7,8 @@ import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
 import {
   BigNumberishSchema,
   BigNumberSchema,
-  StartDateSchema,
-} from "../../shared";
+} from "../../shared/BigNumberSchema";
+import { StartDateSchema } from "../../shared/RawDateSchema";
 import { CurrencyValueSchema } from "./currency";
 import { SnapshotInputSchema } from "./snapshots";
 import { BigNumber, BigNumberish, utils } from "ethers";

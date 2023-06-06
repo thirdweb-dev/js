@@ -34,6 +34,7 @@ const JsonSchema: z.ZodType<Json> = z.lazy(
 export const LoginOptionsSchema = z
   .object({
     domain: z.string().optional(),
+    address: z.string().optional(),
     statement: z.string().optional(),
     uri: z.string().optional(),
     version: z.string().optional(),

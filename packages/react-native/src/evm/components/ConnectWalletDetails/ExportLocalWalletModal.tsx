@@ -6,7 +6,6 @@ import {
   Share,
   StyleSheet,
 } from "react-native";
-import Modal from "react-native-modal";
 import { useState } from "react";
 import BaseButton from "../base/BaseButton";
 import Box from "../base/Box";
@@ -14,7 +13,12 @@ import { ModalHeaderTextClose } from "../base/modal/ModalHeaderTextClose";
 import { useAddress, useWallet } from "@thirdweb-dev/react-core";
 import { PasswordInput } from "../PasswordInput";
 import * as FileSystem from "expo-file-system";
-import { LocalWallet } from "../../wallets/wallets/local-wallet";
+import { SmartWallet } from "@thirdweb-dev/wallets";
+import { usePersonalWalletAddress } from "../../wallets/hooks/usePersonalWalletAddress";
+import { shortenWalletAddress } from "../../utils/addresses";
+import { WalletIcon } from "../base/WalletIcon";
+import { LocalWallet } from "../../wallets/wallets/LocalWallet";
+import { TWModal } from "../base/modal/TWModal";
 
 export type ExportLocalWalletModalProps = {
   isVisible: boolean;
@@ -31,6 +35,7 @@ export const ExportLocalWalletModal = ({
 
   const activeWallet = useWallet();
   const address = useAddress();
+  const personalWalletAddress = usePersonalWalletAddress();
 
   const onContinuePress = async () => {
     if (!password) {
@@ -41,10 +46,18 @@ export const ExportLocalWalletModal = ({
     setIsExporting(true);
     setError(undefined);
 
-    const data = await (activeWallet as LocalWallet).export({
-      strategy: "encryptedJson",
-      password: password,
-    });
+    let data;
+    if (activeWallet?.walletId === SmartWallet.id) {
+      data = await (activeWallet.getPersonalWallet() as LocalWallet).export({
+        strategy: "encryptedJson",
+        password: password,
+      });
+    } else {
+      data = await (activeWallet as LocalWallet).export({
+        strategy: "encryptedJson",
+        password: password,
+      });
+    }
 
     const fileName = "wallet.json";
     if (Platform.OS === "android") {
@@ -79,6 +92,7 @@ export const ExportLocalWalletModal = ({
               encoding: FileSystem.EncodingType.UTF8,
             },
           );
+          setIsExporting(false);
         } catch (e) {
           console.error("Error writing the file", e);
           setError("Error writing the file. Please try again.");
@@ -128,7 +142,7 @@ export const ExportLocalWalletModal = ({
   };
 
   return (
-    <Modal isVisible={isVisible} backdropOpacity={0.7}>
+    <TWModal isVisible={isVisible} backdropOpacity={0.7}>
       <KeyboardAvoidingView behavior="padding">
         <Box
           flexDirection="column"
@@ -136,11 +150,14 @@ export const ExportLocalWalletModal = ({
           borderRadius="md"
           p="lg"
         >
-          <ModalHeaderTextClose headerText={""} onClose={onCloseInternal} />
-          <Text variant="header" textAlign="center">
-            Export your Wallet
+          <Box flexDirection="row" justifyContent="space-between" mb="sm">
+            <WalletIcon size={32} iconUri={LocalWallet.meta.iconURL} />
+            <ModalHeaderTextClose flex={1} onClose={onCloseInternal} />
+          </Box>
+          <Text variant="header" textAlign="left">
+            Backup your Wallet
           </Text>
-          <Text variant="subHeader" mt="md" textAlign="center">
+          <Text variant="subHeader" mt="md" textAlign="left">
             {
               "This will download a JSON file containing your wallet information onto your device encrypted with the password."
             }
@@ -148,7 +165,11 @@ export const ExportLocalWalletModal = ({
           <Text variant="bodySmall" textAlign="left" mt="lg" mb="xxs">
             Wallet Address
           </Text>
-          <Text variant="bodySmallSecondary">{address}</Text>
+          <Text variant="bodySmallSecondary">
+            {shortenWalletAddress(
+              personalWalletAddress ? personalWalletAddress : address,
+            )}
+          </Text>
           <Text variant="bodySmall" textAlign="left" mt="lg" mb="xxs">
             Password
           </Text>
@@ -156,12 +177,7 @@ export const ExportLocalWalletModal = ({
           <Text variant="bodySmall" color="red" mt="xs" textAlign="left">
             {error}
           </Text>
-          <Box
-            flexDirection="row"
-            justifyContent="center"
-            paddingHorizontal="md"
-            mt="lg"
-          >
+          <Box flexDirection="row" justifyContent="flex-end" mt="lg">
             <BaseButton
               backgroundColor="white"
               style={styles.modalButton}
@@ -171,14 +187,14 @@ export const ExportLocalWalletModal = ({
                 <ActivityIndicator size="small" color="buttonTextColor" />
               ) : (
                 <Text variant="bodySmall" color="black">
-                  Export
+                  Backup
                 </Text>
               )}
             </BaseButton>
           </Box>
         </Box>
       </KeyboardAvoidingView>
-    </Modal>
+    </TWModal>
   );
 };
 

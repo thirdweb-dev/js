@@ -1,5 +1,5 @@
-import { ISecureStorage } from '@thirdweb-dev/react-core';
-import * as SecureStore from 'expo-secure-store';
+import { ISecureStorage } from "@thirdweb-dev/react-core";
+import * as SecureStore from "expo-secure-store";
 
 const PREFIX = "__tw__";
 
@@ -17,7 +17,10 @@ export class SecureStorage implements ISecureStorage {
   }
 
   setItem(key: string, value: string) {
-    return this.asyncStorage.setItemAsync(`${PREFIX}_${this.name}_${key}`, value);
+    return this.asyncStorage.setItemAsync(
+      `${PREFIX}_${this.name}_${key}`,
+      value,
+    );
   }
 
   removeItem(key: string) {
@@ -25,6 +28,12 @@ export class SecureStorage implements ISecureStorage {
   }
 }
 
+/**
+ * Returns a new instance of SecureStorage implemented by Expo SecureStore
+ *
+ * @param name Name to namespace the storage with
+ * @returns A new instance of SecureStorage
+ */
 export function createSecureStorage(name: string) {
   return new SecureStorage(name);
 }

@@ -1,20 +1,22 @@
-import {
-  extractConstructorParams,
-  extractFunctions,
-  fetchContractMetadataFromAddress,
-  fetchExtendedReleaseMetadata,
-  fetchPreDeployMetadata,
-  fetchRawPredeployMetadata,
-  fetchSourceFilesFromMetadata,
-  isIncrementalVersion,
-  resolveContractUriFromAddress,
-} from "../../common";
-import { resolveAddress } from "../../common/ens";
+import { DEFAULT_API_KEY } from "../../../core/constants/urls";
+import { resolveAddress } from "../../common/ens/resolveAddress";
+import { fetchPreDeployMetadata } from "../../common/feature-detection/fetchPreDeployMetadata";
+import { extractFunctions } from "../../common/feature-detection/extractFunctions";
+import { extractConstructorParams } from "../../common/feature-detection/extractConstructorParams";
+import { fetchExtendedReleaseMetadata } from "../../common/feature-detection/fetchExtendedReleaseMetadata";
+import { fetchRawPredeployMetadata } from "../../common/feature-detection/fetchRawPredeployMetadata";
+import { resolveContractUriFromAddress } from "../../common/feature-detection/resolveContractUriFromAddress";
+import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
+import { fetchContractMetadata } from "../../common/fetchContractMetadata";
+import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
+import { getCompositePluginABI } from "../../common/plugin/getCompositePluginABI";
 import { buildTransactionFunction } from "../../common/transactions";
-import { getContractPublisherAddress } from "../../constants";
+import { isIncrementalVersion } from "../../common/version-checker";
+import { getContractPublisherAddress } from "../../constants/addresses/getContractPublisherAddress";
+import { getChainProvider } from "../../constants/urls";
 import {
   AbiFunction,
-  AddressOrEns,
+  AbiSchema,
   ContractParam,
   ContractSource,
   ExtraPublishMetadata,
@@ -27,8 +29,9 @@ import {
   PublishedContract,
   PublishedContractFetched,
   PublishedContractSchema,
-  SDKOptions,
-} from "../../schema";
+} from "../../schema/contracts/custom";
+import { SDKOptions } from "../../schema/sdk-options";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { NetworkInput, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
@@ -362,6 +365,38 @@ export class ContractPublisher extends RPCConnectionHandler {
         this.storage,
       );
 
+      // For a dynamic contract Router, try to fetch plugin/extension metadata
+      // from the implementation addresses, if any
+      if (extraMetadata.factoryDeploymentData?.implementationAddresses) {
+        const implementationsAddresses = Object.entries(
+          extraMetadata.factoryDeploymentData.implementationAddresses,
+        );
+
+        const entry = implementationsAddresses.find(
+          ([, implementation]) => implementation !== "",
+        );
+        const [network, implementation] = entry ? entry : [];
+
+        if (network && implementation) {
+          try {
+            const compilerMetadata = await fetchContractMetadata(
+              predeployMetadata.metadataUri,
+              this.storage,
+            );
+            const composite = await getCompositePluginABI(
+              implementation,
+              compilerMetadata.abi,
+              getChainProvider(parseInt(network), {
+                thirdwebApiKey: DEFAULT_API_KEY,
+              }),
+              {}, // pass empty object for options instead of this.options
+              this.storage,
+            );
+            extraMetadata.compositeAbi = AbiSchema.parse(composite);
+          } catch {}
+        }
+      }
+
       // ensure version is incremental
       const latestContract = await this.getLatest(
         publisher,
@@ -371,6 +406,7 @@ export class ContractPublisher extends RPCConnectionHandler {
         const latestMetadata = await this.fetchPublishedContractInfo(
           latestContract,
         );
+
         const latestVersion = latestMetadata.publishedMetadata.version;
         if (!isIncrementalVersion(latestVersion, extraMetadata.version)) {
           throw Error(

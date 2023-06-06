@@ -18,6 +18,13 @@ export default {
   "shortName": "TelosEVMTestnet",
   "chainId": 41,
   "networkId": 41,
+  "explorers": [
+    {
+      "name": "teloscan",
+      "url": "https://testnet.teloscan.io",
+      "standard": "EIP3091"
+    }
+  ],
   "testnet": true,
   "icon": {
     "url": "ipfs://QmdkgQDtDedsNNth3ZVgWfwRZPCePLA13MtLvV4CEYSuTR/TLOS.png",

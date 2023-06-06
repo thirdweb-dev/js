@@ -1,7 +1,7 @@
-import { getRoleHash } from "../../common";
-import { resolveAddress } from "../../common/ens";
+import { getRoleHash } from "../../common/role";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
-import { ContractAppURI } from "../../core";
+import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -15,7 +15,8 @@ import { StandardErc20 } from "../../core/classes/erc-20-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput } from "../../core/types";
-import { Address, AddressOrEns } from "../../schema";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../../schema/contracts/drop-erc20";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -316,7 +317,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
     functionName: string & TMethod,
     args?: Parameters<PrebuiltTokenDrop["functions"][TMethod]>,
     overrides?: CallOverrides,
-  ): Promise<any> {
+  ): Promise<ReturnType<PrebuiltTokenDrop["functions"][TMethod]>> {
     return this.contractWrapper.call(functionName, args, overrides);
   }
 }

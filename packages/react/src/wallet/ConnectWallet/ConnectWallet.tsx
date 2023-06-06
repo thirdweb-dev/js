@@ -13,15 +13,13 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useContext, useState } from "react";
 import {
-  useIsConnectingToWalletWrapper,
+  SetModalConfigCtx,
   useSetIsWalletModalOpen,
-  useSetModalTheme,
 } from "../../evm/providers/wallet-ui-states-provider";
 import { Button } from "../../components/buttons";
 import { Spinner } from "../../components/Spinner";
 import styled from "@emotion/styled";
 import { fadeInAnimation } from "../../components/FadeIn";
-import type { LoginOptions } from "@thirdweb-dev/auth";
 import { LockIcon } from "./icons/LockIcon";
 import { Flex } from "../../components/basic";
 import { shortenAddress } from "../../evm/utils/addresses";
@@ -32,10 +30,20 @@ type ConnectWalletProps = {
   className?: string;
   theme?: "dark" | "light";
   btnTitle?: string;
+  /**
+   * Set a custom title for the modal
+   * @default "Choose your wallet"
+   */
+  modalTitle?: string;
+  /**
+   * render a custom button to display the connected wallet details instead of the default button
+   */
+  detailsBtn?: () => JSX.Element;
   dropdownPosition?: DropDownPosition;
   auth?: {
-    loginOptions?: LoginOptions;
     loginOptional?: boolean;
+    onLogin?: (token: string) => void;
+    onLogout?: () => void;
   };
   style?: React.CSSProperties;
   networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
@@ -52,7 +60,6 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   const activeWallet = useWallet();
   const themeFromProvider = useContext(ThirdwebThemeContext);
   const theme = props.theme || themeFromProvider || "dark";
-  const isConnectingToWalletWrapper = useIsConnectingToWalletWrapper();
   const connectionStatus = useConnectionStatus();
 
   const isLoading =
@@ -61,7 +68,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   const btnTitle = props.btnTitle || "Connect Wallet";
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
 
-  const setModalTheme = useSetModalTheme();
+  const setModalConfig = useContext(SetModalConfigCtx);
 
   const address = useAddress();
   const [showSignatureModal, setShowSignatureModal] = useState(false);
@@ -77,7 +84,8 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   const signIn = async () => {
     try {
       setShowSignatureModal(true);
-      await login(props.auth?.loginOptions);
+      const token = await login();
+      props?.auth?.onLogin?.(token);
     } catch (err) {
       console.error("failed to log in", err);
     }
@@ -119,7 +127,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
       )}
 
       {!requiresSignIn &&
-        (!activeWallet || isConnectingToWalletWrapper ? (
+        (!activeWallet ? (
           // connect wallet button
           <AnimatedButton
             disabled={isLoading}
@@ -136,7 +144,11 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
               connectionStatus === "connecting" ? "Connecting" : btnTitle
             }
             onClick={() => {
-              setModalTheme(theme);
+              setModalConfig({
+                title: props.modalTitle || "Choose your wallet",
+                theme,
+                data: undefined,
+              });
               setIsWalletModalOpen(true);
             }}
           >
@@ -149,9 +161,11 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
             className={props.className}
             theme={theme}
             style={props.style}
+            detailsBtn={props.detailsBtn}
             onDisconnect={() => {
               if (authConfig?.authUrl) {
                 logout();
+                props?.auth?.onLogout?.();
               }
             }}
           />

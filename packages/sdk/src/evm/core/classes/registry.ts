@@ -1,9 +1,8 @@
-import { TransactionResult } from "..";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
-import { AddressOrEns } from "../../schema";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { SDKOptions } from "../../schema/sdk-options";
-import { NetworkInput } from "../types";
+import type { NetworkInput, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 import type { TWRegistry } from "@thirdweb-dev/contracts-js";

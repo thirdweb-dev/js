@@ -1,14 +1,13 @@
-import {
-  fetchCurrencyValue,
-  isNativeToken,
-  normalizePriceValue,
-  setErc20Allowance,
-} from "../../common/currency";
-import { resolveAddress } from "../../common/ens";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { isNativeToken } from "../../common/currency/isNativeToken";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { getAllInBatches, handleTokenApproval } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
-import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
+import { SUPPORTED_CHAIN_ID } from "../../constants/chains/SUPPORTED_CHAIN_ID";
+import { NATIVE_TOKENS } from "../../constants/currency";
 import { FEATURE_OFFERS } from "../../constants/thirdweb-features";
 import { Status } from "../../enums";
 import {

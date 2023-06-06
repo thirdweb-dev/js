@@ -14,6 +14,7 @@ import {
 } from "@account-abstraction/sdk";
 import { TransactionDetailsForUserOp } from "./transaction-details";
 import { getUserOpHashV06 } from "./utils";
+import { DUMMY_PAYMASTER_AND_DATA, SIG_SIZE } from "./paymaster";
 
 export interface BaseApiParams {
   provider: providers.Provider;
@@ -121,10 +122,7 @@ export abstract class BaseAccountAPI {
       this.getAccountAddress(),
     );
     if (senderAddressCode.length > 2) {
-      // console.log(`SimpleAccount Contract already deployed at ${this.senderAddress}`)
       this.isPhantom = false;
-    } else {
-      // console.log(`SimpleAccount Contract is NOT YET deployed at ${this.senderAddress} - working in "phantom account" mode.`)
     }
     return this.isPhantom;
   }
@@ -183,6 +181,7 @@ export abstract class BaseAccountAPI {
 
   async encodeUserOpCallDataAndGasLimit(
     detailsForUserOp: TransactionDetailsForUserOp,
+    batched: boolean,
   ): Promise<{ callData: string; callGasLimit: BigNumber }> {
     function parseNumber(a: any): BigNumber | null {
       if (!a || a === "") {
@@ -192,11 +191,13 @@ export abstract class BaseAccountAPI {
     }
 
     const value = parseNumber(detailsForUserOp.value) ?? BigNumber.from(0);
-    const callData = await this.encodeExecute(
-      detailsForUserOp.target,
-      value,
-      detailsForUserOp.data,
-    );
+    const callData = batched
+      ? detailsForUserOp.data
+      : await this.encodeExecute(
+          detailsForUserOp.target,
+          value,
+          detailsForUserOp.data,
+        );
 
     let callGasLimit;
     const isPhantom = await this.checkAccountPhantom();
@@ -265,9 +266,10 @@ export abstract class BaseAccountAPI {
    */
   async createUnsignedUserOp(
     info: TransactionDetailsForUserOp,
+    batched: boolean,
   ): Promise<UserOperationStruct> {
     const { callData, callGasLimit } =
-      await this.encodeUserOpCallDataAndGasLimit(info);
+      await this.encodeUserOpCallDataAndGasLimit(info, batched);
     const initCode = await this.getInitCode();
 
     const initGas = await this.estimateCreationGas(initCode);
@@ -299,24 +301,45 @@ export abstract class BaseAccountAPI {
     };
 
     let paymasterAndData: string | undefined;
+    let userOp = partialUserOp;
     if (this.paymasterAPI) {
       // fill (partial) preVerificationGas (all except the cost of the generated paymasterAndData)
-      paymasterAndData = await this.paymasterAPI.getPaymasterAndData(
-        partialUserOp,
-      );
+      try {
+        // userOp.preVerificationGas contains a promise that will resolve to an error.
+        await ethers.utils.resolveProperties(userOp);
+        // eslint-disable-next-line no-empty
+      } catch (_) {}
+      const pmOp: Partial<UserOperationStruct> = {
+        sender: userOp.sender,
+        nonce: userOp.nonce,
+        initCode: userOp.initCode,
+        callData: userOp.callData,
+        callGasLimit: userOp.callGasLimit,
+        verificationGasLimit: userOp.verificationGasLimit,
+        maxFeePerGas: userOp.maxFeePerGas,
+        maxPriorityFeePerGas: userOp.maxPriorityFeePerGas,
+        // A dummy value here is required in order to calculate a correct preVerificationGas value.
+        paymasterAndData: DUMMY_PAYMASTER_AND_DATA,
+        signature: ethers.utils.hexlify(Buffer.alloc(SIG_SIZE, 1)),
+      };
+      userOp = await ethers.utils.resolveProperties(pmOp);
+      const preVerificationGas = calcPreVerificationGas(userOp);
+      userOp.preVerificationGas = preVerificationGas;
+      paymasterAndData = await this.paymasterAPI.getPaymasterAndData(userOp);
       if (paymasterAndData === "0x") {
         paymasterAndData = undefined;
       }
     }
+
     if (paymasterAndData) {
-      partialUserOp.paymasterAndData = paymasterAndData;
+      userOp.paymasterAndData = paymasterAndData;
       return {
-        ...partialUserOp,
+        ...userOp,
         signature: "",
       };
     } else {
       const modifiedOp = {
-        ...partialUserOp,
+        ...userOp,
         paymasterAndData: "0x",
       };
       modifiedOp.preVerificationGas = await this.getPreVerificationGas(
@@ -348,8 +371,11 @@ export abstract class BaseAccountAPI {
    */
   async createSignedUserOp(
     info: TransactionDetailsForUserOp,
+    batched: boolean,
   ): Promise<UserOperationStruct> {
-    return await this.signUserOp(await this.createUnsignedUserOp(info));
+    return await this.signUserOp(
+      await this.createUnsignedUserOp(info, batched),
+    );
   }
 
   /**

@@ -13,5 +13,4 @@ export {
 } from "./errors";
 export type { EthersError } from "./errors";
 
-// TODO remove unused exports from ./errors
-export { Connector, type ConnectorData } from "../wagmi-connectors";
+export { WagmiConnector, type WagmiConnectorData } from "../wagmi-connectors";
