@@ -5,19 +5,17 @@ import { ethers } from "ethers";
 import { Transaction } from "./transactions";
 
 import type {
-  IAccount, 
-  IAccountPermissions,
-  IMulticall 
+  IAccountCore, IAccountPermissions
 } from "@thirdweb-dev/contracts-js";
 import { AccessRestrictions, RoleAction, RoleRequest, SignedAccountPermissionsPayload, } from "../../types";
 import { randomUUID } from "crypto";
 import invariant from "tiny-invariant";
 import { buildTransactionFunction } from "../../common/transactions";
 
-export class SmartWallet<TContract extends IAccount & IAccountPermissions & IMulticall> implements DetectableFeature {
+export class SmartWallet<TContract extends IAccountCore> implements DetectableFeature {
     
   featureName = FEATURE_SMART_WALLET.name;
-  private contractWrapper: ContractWrapper<IAccount & IAccountPermissions & IMulticall>;
+  private contractWrapper: ContractWrapper<IAccountCore>;
 
   constructor(contractWrapper: ContractWrapper<TContract>) {
     this.contractWrapper = contractWrapper;

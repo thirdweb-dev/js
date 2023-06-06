@@ -54,9 +54,7 @@ import type {
   EnglishAuctionsLogic,
   OffersLogic,
   IAccountFactory,
-  IAccount,
-  IAccountPermissions,
-  IMulticall,
+  IAccountCore
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides } from "ethers";
@@ -336,7 +334,7 @@ export class SmartContract<
   }
 
   // TODO documentation
-  get smartWallet(): SmartWallet<IAccount & IAccountPermissions & IMulticall> {
+  get smartWallet(): SmartWallet<IAccountCore> {
     return assertEnabled(
       this.detectSmartWallet(),
       FEATURE_SMART_WALLET,
@@ -583,7 +581,7 @@ export class SmartContract<
 
   private detectSmartWallet() {
     if (
-      detectContractFeature<IAccountPermissions & IAccount & IMulticall>(this.contractWrapper, FEATURE_SMART_WALLET.name)
+      detectContractFeature<IAccountCore>(this.contractWrapper, FEATURE_SMART_WALLET.name)
     ) {
       return new SmartWallet(this.contractWrapper);
     }
