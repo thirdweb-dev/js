@@ -9,7 +9,15 @@ import { Linking } from "react-native";
 import { WCMeta } from "../types/wc";
 import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
 
-export type WC2Options = { projectId?: string } & Omit<
+export type WC2Options = {
+  /**
+   * The WalletConnectV2 projectId.
+   *
+   * We provide a default projectId but recommend you get your own
+   * when launching your app in production.
+   */
+  projectId?: string;
+} & Omit<
   WalletOptions<WalletConnectOptions>,
   "projectId" | "qrcode" | "qrModalOptions"
 > & {

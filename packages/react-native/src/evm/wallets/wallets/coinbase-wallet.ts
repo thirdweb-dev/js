@@ -22,7 +22,6 @@ type CoinbaseWalletOptions = Omit<
 
 export class CoinbaseWallet extends AbstractClientWallet<CoinbaseWalletConnectorOptions> {
   static meta = {
-    id: "coinbase",
     name: "Coinbase Wallet",
     iconURL:
       "ipfs://QmcJBHopbwfJcLqJpX2xEufSS84aLbF7bHavYhaXUcrLaH/coinbase.svg",

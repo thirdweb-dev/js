@@ -10,54 +10,48 @@ Find an example below implementing `MyWallet` that supports the `WalletConnectV2
 
 ```javascript
 import {
-  WC2Options,
   WCMeta,
   WalletConnectV2,
-  WalletOptions as WalletOptionsRC,
+  WalletOptions,
   WalletConfig,
 } from '@thirdweb-dev/react-native';
 
 export class MyWallet extends WalletConnectV2 {
-  static id = 'mywallet' as const;
+  static id = 'mywallet' as const; // ID needed to identify your wallet in the SDK.
   static meta = {
-    id: 'mywallet',
-    name: 'My Wallet',
+    name: 'My Wallet', // Name that will show up in our Connect Modal.
     iconURL:
-      'my-wallet-icon-url-ipfs-or-png',
-    links: {
+      'my-wallet-icon-url-ipfs-or-png', // Icon that will show up in our Connect Modal.
+    links: { // The WalletConnect mobile links.
       native: 'mywallet://',
       universal: 'https://mywallet.com',
     },
   };
-
-  constructor(options: WC2Options) {
-    super({
-      ...options,
-      walletId: MyWallet.id,
-    });
-  }
 
   getMeta(): WCMeta {
     return MyWallet.meta;
   }
 }
 
+/**
+ * The WalletConnectV2 projectId.
+ *
+ * We provide a default projectId but recommend you get your own
+ * when launching your app in production.
+ */
 type MyWalletConfig = { projectId?: string };
 
-export const myWallet = (config?: MyWalletConfig) => {
+export const myWallet = (config?: MyWalletConfig): WalletConfig<WalletConnectV2> => {
   return {
     id: MyWallet.id,
     meta: MyWallet.meta,
-    create: (options: WalletOptionsRC) =>
+    create: (options: WalletOptions) =>
       new MyWallet({
         ...options,
         projectId: config?.projectId,
         walletId: MyWallet.id,
       }),
-    config: {
-      projectId: config?.projectId,
-    },
-  } satisfies WalletConfig<WalletConnectV2, MyWalletConfig>;
+  };
 };
 ```
 
