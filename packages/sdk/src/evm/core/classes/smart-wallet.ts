@@ -34,6 +34,11 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
     return this.contractWrapper.readContract.getRoleRestrictionsForAccount(signer);
   }
 
+  // TODO: documentation
+  public async getFactoryAddress(): Promise<string> {
+    return this.contractWrapper.readContract.factory();
+  }
+  
   /*********************************
    * WRITE FUNCTIONS
   ********************************/
