@@ -1,7 +1,7 @@
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { FEATURE_SMART_WALLET } from "../../constants/thirdweb-features";
-import { ethers } from "ethers";
+import { ethers, BigNumber } from "ethers";
 import { Transaction } from "./transactions";
 
 import type {
@@ -26,22 +26,17 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
   }
 
   /*********************************
-   * READ FUNCTIONS
+   * HELPER FUNCTIONS
   ********************************/
 
-  // TODO: documentation
-  public async getAccessRestrictions(signer: string): Promise<IAccountPermissions.RoleRestrictionsStruct> {
-    return this.contractWrapper.readContract.getRoleRestrictionsForAccount(signer);
+  private parseRoleRestrictionsStruct(restrictions: IAccountPermissions.RoleRestrictionsStruct): AccessRestrictions {
+    return {
+      startDate: new Date(parseInt((restrictions.startTimestamp).toString())),
+      expirationDate: new Date(parseInt((restrictions.endTimestamp).toString())),
+      nativeTokenLimitPerTransaction: BigNumber.from(restrictions.maxValuePerTransaction),
+      approvedCallTargets: restrictions.approvedTargets,
+    }
   }
-
-  // TODO: documentation
-  public async getFactoryAddress(): Promise<string> {
-    return this.contractWrapper.readContract.factory();
-  }
-  
-  /*********************************
-   * WRITE FUNCTIONS
-  ********************************/
 
   private async generatePayload(signer: string, roleAction: RoleAction ): Promise<SignedAccountPermissionsPayload> {
     // Derive role for target signer.
@@ -76,6 +71,25 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
 
     return { payload, signature };
   }
+
+  /*********************************
+   * READ FUNCTIONS
+  ********************************/
+
+  // TODO: documentation
+  public async getAccessRestrictions(signer: string): Promise<AccessRestrictions> {
+    const roleRestrictions: IAccountPermissions.RoleRestrictionsStruct = await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signer);
+    return this.parseRoleRestrictionsStruct(roleRestrictions);
+  }
+
+  // TODO: documentation
+  public async getFactoryAddress(): Promise<string> {
+    return this.contractWrapper.readContract.factory();
+  }
+  
+  /*********************************
+   * WRITE FUNCTIONS
+  ********************************/
   
   // TODO: documentation
   grantAccess = buildTransactionFunction(

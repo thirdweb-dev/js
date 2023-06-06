@@ -13,6 +13,11 @@ export type AccessRestrictions = {
   approvedCallTargets: string[];
 }
 
+export type SignerWithRestrictions = {
+  signer: string;
+  restrictions: AccessRestrictions;
+}
+
 export type SignedAccountPermissionsPayload = {
   payload: IAccountPermissions.RoleRequestStruct;
   signature: BytesLike;
