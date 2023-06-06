@@ -19,7 +19,7 @@ export function extractFunctionsFromAbi(
     const args =
       f.inputs?.map((i) => `${i.name || "key"}: ${toJSType(i)}`)?.join(", ") ||
       "";
-    const fargs = args ? `, ${args}` : "";
+    const fargs = args ? `, [${args}]` : "";
     const out = f.outputs?.map((o) => toJSType(o, true))?.join(", ");
     const promise = out ? `: Promise<${out}>` : `: Promise<TransactionResult>`;
     const signature = `contract.call("${f.name}"${fargs})${promise}`;
