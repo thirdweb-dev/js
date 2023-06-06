@@ -2,8 +2,11 @@ import React, {
   PropsWithChildren,
   createContext,
   useContext,
+  useEffect,
   useMemo,
 } from "react";
+import { useLogout, useUser } from "../hooks/auth";
+import { useWallet } from "../../core/hooks/wallet-hooks";
 
 export interface ISecureStorage {
   getItem(key: string): Promise<string | null>;
@@ -31,11 +34,11 @@ export interface ThirdwebAuthConfig {
 
   /**
    * Secure storage to use for storing the auth token when using JWT tokens.
-   * 
-   * Do not use a storage option that stores values accessible outside 
-   * your aplication (like localStorage on web environments) since you may 
+   *
+   * Do not use a storage option that stores values accessible outside
+   * your aplication (like localStorage on web environments) since you may
    * be exposing your auth token to malicious actors.
-   * 
+   *
    * ** By default auth uses cookies so no need to set this unless you want to specifically use JWT tokens **
    */
   secureStorage?: ISecureStorage;
@@ -63,13 +66,44 @@ export const ThirdwebAuthProvider: React.FC<
 
     return context;
   }, [value]);
+
   return (
     <ThirdwebAuthContext.Provider value={authContext}>
       {children}
+      <DisconnectOnAccountSwitch />
     </ThirdwebAuthContext.Provider>
   );
 };
 
 export function useThirdwebAuthContext() {
   return useContext(ThirdwebAuthContext);
+}
+
+function DisconnectOnAccountSwitch() {
+  const { logout } = useLogout();
+  const wallet = useWallet();
+  const { isLoggedIn } = useUser();
+
+  useEffect(() => {
+    const handleChange = (data: { address?: string; chainId?: number }) => {
+      // if the user changes their account, logout
+      if (data.address) {
+        logout();
+      }
+    };
+
+    const shouldAddListener = wallet && isLoggedIn;
+
+    if (shouldAddListener) {
+      wallet.addListener("change", handleChange);
+    }
+
+    return () => {
+      if (shouldAddListener) {
+        wallet.removeListener("change", handleChange);
+      }
+    };
+  }, [wallet, logout, isLoggedIn]);
+
+  return null;
 }
