@@ -4,7 +4,7 @@
 /** @type {Omit<Chain, "slug">} */
 export default {
   name: "Taro Testnet",
-  chain: "TARO",
+  chain: "gETH",
   shortName: "Taro",
   chainId: 1582,
   testnet: true,
@@ -30,5 +30,4 @@ export default {
   faucets: ["https://tarotestnet.com"],
   infoURL: "https://tarotestnet.com",
   networkId: 1582,
-  slug: "taro-testnet",
 };
