@@ -847,14 +847,18 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
       id: listing.listingId.toString(),
       tokenId: listing.tokenId.toString(),
       quantity: listing.quantity.toString(),
-      startTimeInSeconds: BigNumber.from(listing.startTimestamp).toNumber(),
+      startTimeInSeconds: Math.floor(
+        BigNumber.from(listing.startTimestamp).toNumber() / 1000,
+      ),
       asset: await fetchTokenMetadataForContract(
         listing.assetContract,
         this.contractWrapper.getProvider(),
         listing.tokenId,
         this.storage,
       ),
-      endTimeInSeconds: BigNumber.from(listing.endTimestamp).toNumber(),
+      endTimeInSeconds: Math.floor(
+        BigNumber.from(listing.endTimestamp).toNumber() / 1000,
+      ),
       creatorAddress: listing.listingCreator,
       isReservedListing: listing.reserved,
       status: status,

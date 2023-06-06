@@ -838,8 +838,12 @@ export class MarketplaceV3EnglishAuctions<
         auction.timeBufferInSeconds,
       ).toNumber(),
       bidBufferBps: BigNumber.from(auction.bidBufferBps).toNumber(),
-      startTimeInSeconds: BigNumber.from(auction.startTimestamp).toNumber(),
-      endTimeInSeconds: BigNumber.from(auction.endTimestamp).toNumber(),
+      startTimeInSeconds: Math.floor(
+        BigNumber.from(auction.startTimestamp).toNumber() / 1000,
+      ),
+      endTimeInSeconds: Math.floor(
+        BigNumber.from(auction.endTimestamp).toNumber() / 1000,
+      ),
       asset: await fetchTokenMetadataForContract(
         auction.assetContract,
         this.contractWrapper.getProvider(),
