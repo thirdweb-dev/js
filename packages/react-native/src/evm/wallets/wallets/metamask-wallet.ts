@@ -1,23 +1,10 @@
-import {
-  WalletOptions,
-  WalletConnectV1Options,
-  WalletConnectV1,
-  walletIds,
-} from "@thirdweb-dev/wallets";
-import { formatWalletConnectDisplayUri } from "../../utils/uri";
-import { Linking } from "react-native";
+import { walletIds } from "@thirdweb-dev/wallets";
 import {
   WalletOptions as WalletOptionsRC,
   WalletConfig,
-  ExtraCoreWalletOptions,
 } from "@thirdweb-dev/react-core";
-import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
-
-type WC1Options = Omit<
-  WalletOptions<WalletConnectV1Options>,
-  "qrcode" | "walletStorage"
-> &
-  ExtraCoreWalletOptions;
+import { WC1Options, WalletConnectV1 } from "./WalletConnectV1";
+import { WCMeta } from "../types/wc";
 
 export class MetaMaskWallet extends WalletConnectV1 {
   static id = walletIds.metamask;
@@ -33,33 +20,11 @@ export class MetaMaskWallet extends WalletConnectV1 {
   };
 
   constructor(options: WC1Options) {
-    const storage = createAsyncLocalStorage(walletIds.metamask);
-    super({
-      ...options,
-      walletId: walletIds.metamask,
-      walletStorage: storage,
-      qrcode: false,
-    });
-
-    this.on("open_wallet", this._onWCOpenWallet);
-
-    this.on("disconnect", () => {
-      this.removeListener("open_wallet", this._onWCOpenWallet);
-    });
+    super(options);
   }
 
-  _onWCOpenWallet(uri?: string) {
-    const links = MetaMaskWallet.meta.links;
-
-    if (uri) {
-      const fullUrl = formatWalletConnectDisplayUri(uri, links);
-
-      Linking.openURL(fullUrl);
-    } else {
-      const fullUrl = formatWalletConnectDisplayUri("", links);
-
-      Linking.openURL(fullUrl);
-    }
+  getMeta(): WCMeta {
+    return MetaMaskWallet.meta;
   }
 }
 
@@ -67,6 +32,7 @@ export const metamaskWallet = () => {
   return {
     id: MetaMaskWallet.id,
     meta: MetaMaskWallet.meta,
-    create: (options: WalletOptionsRC) => new MetaMaskWallet(options),
+    create: (options: WalletOptionsRC) =>
+      new MetaMaskWallet({ ...options, walletId: walletIds.metamask }),
   } satisfies WalletConfig;
 };
