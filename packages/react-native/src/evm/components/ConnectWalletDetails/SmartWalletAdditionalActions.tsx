@@ -7,7 +7,7 @@ import {
   SmartWallet,
   walletIds,
 } from "@thirdweb-dev/wallets";
-import { Address } from "../base/Address";
+import { AddressDisplay } from "../base/AddressDisplay";
 import Text from "../base/Text";
 import { usePersonalWalletAddress } from "../../wallets/hooks/usePersonalWalletAddress";
 import { useWalletContext, useWallet } from "@thirdweb-dev/react-core";
@@ -80,7 +80,7 @@ export const SmartWalletAdditionalActions = ({
             <WalletIcon size={32} iconUri={wallet?.getMeta().iconURL || ""} />
           ) : null}
           <View style={styles.walletInfo}>
-            <Address
+            <AddressDisplay
               variant="bodyLarge"
               address={
                 showSmartWallet ? smartWalletAddress : personalWalletAddress

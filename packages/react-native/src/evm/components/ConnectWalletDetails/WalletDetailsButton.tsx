@@ -1,4 +1,4 @@
-import { Address } from "../base/Address";
+import { AddressDisplay } from "../base/AddressDisplay";
 import BaseButton from "../base/BaseButton";
 import { ChainIcon } from "../base/ChainIcon";
 import Text from "../base/Text";
@@ -15,7 +15,7 @@ export type ConnectWalletDetailsProps = {
   detailsButton?: React.ReactElement;
 };
 
-export const ConnectWalletDetails = ({
+export const WalletDetailsButton = ({
   address,
   detailsButton,
 }: ConnectWalletDetailsProps) => {
@@ -57,7 +57,10 @@ export const ConnectWalletDetails = ({
               {activeWallet?.walletId === LocalWallet.id ? (
                 <Text variant="error">Guest</Text>
               ) : (
-                <Address variant="bodySmallSecondary" address={address} />
+                <AddressDisplay
+                  variant="bodySmallSecondary"
+                  address={address}
+                />
               )}
             </Box>
             <WalletIcon

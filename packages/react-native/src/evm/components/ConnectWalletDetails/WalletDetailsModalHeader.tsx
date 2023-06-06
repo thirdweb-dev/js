@@ -1,6 +1,6 @@
 import { Icon } from "../../assets/icon";
 import { useAppTheme } from "../../styles/hooks";
-import { Address } from "../base/Address";
+import { AddressDisplay } from "../base/AddressDisplay";
 import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
 import { WalletIcon } from "../base/WalletIcon";
@@ -55,7 +55,7 @@ export const WalletDetailsModalHeader = ({
             justifyContent="center"
             alignItems="center"
           >
-            <Address mr="xs" address={address} />
+            <AddressDisplay mr="xs" address={address} />
             <CopyIcon
               width={14}
               height={14}
