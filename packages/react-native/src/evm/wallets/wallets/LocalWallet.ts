@@ -1,13 +1,11 @@
 import {
   LocalWallet as LocalWalletCore,
   Connector,
-  walletIds,
 } from "@thirdweb-dev/wallets";
 import { ethers, utils } from "ethers";
 
 export class LocalWallet extends LocalWalletCore {
   static meta = {
-    id: walletIds.localWallet,
     name: "Guest Wallet",
     iconURL:
       "ipfs://QmQAyJG3y2wZf9u6JXxn8U9Kd1ZVfjtQkf5aua8FcWr8Gm/local-wallet-mobile.svg",
