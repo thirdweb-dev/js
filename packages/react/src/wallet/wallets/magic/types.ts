@@ -3,7 +3,4 @@ import { MagicLink, MagicLinkAdditionalOptions } from "@thirdweb-dev/wallets";
 
 export type MagicLinkConfig = MagicLinkAdditionalOptions;
 
-export type ConfiguredMagicLinkWallet = WalletConfig<
-  MagicLink,
-  MagicLinkConfig
->;
+export type ConfiguredMagicLinkWallet = WalletConfig<MagicLink>;
