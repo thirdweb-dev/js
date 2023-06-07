@@ -20,8 +20,7 @@ export const frameWallet = (): WalletConfig<FrameWallet> => ({
     },
   },
   create(options: WalletOptions) {
-    const walletStorage = createAsyncLocalStorage(walletIds.frame);
-    return new FrameWallet({ ...options, walletStorage });
+    return new FrameWallet(options);
   },
   connectUI: FrameConnectUI,
   isInstalled() {
