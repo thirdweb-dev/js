@@ -53,7 +53,7 @@
     "emotion-theming": "^11.0.0",
     "ethers": "^5.4.6",
     "flat": "^5.0.2",
-    "framer-motion": "^10.0.0",
+    "framer-motion": "^10.12.16",
     "fuse.js": "^6.6.2",
     "idb-keyval": "^6.2.0",
     "next": "^13.4.4",
