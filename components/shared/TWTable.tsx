@@ -23,8 +23,7 @@ import {
 import pluralize from "pluralize";
 import { SetStateAction, useMemo, useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
-import { Button, Text } from "tw-components";
-import { TableContainer } from "tw-components/table-container";
+import { Button, TableContainer, Text } from "tw-components";
 
 type TWTableProps<TRowData> = {
   columns: ColumnDef<TRowData, any>[];

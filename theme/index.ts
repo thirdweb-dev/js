@@ -257,9 +257,15 @@ const chakraTheme: Theme = extendTheme({
           td: {
             py: 2,
             px: 6,
+            borderBottom: "none",
+            fontSize: "14px",
           },
           th: {
             py: 4,
+            fontSize: "12px",
+            color: "faded",
+            borderBottom: "none",
+            fontWeight: "600",
           },
         },
       },

@@ -135,8 +135,8 @@ export const AutoBarChart = <
       <ResponsiveContainer width="100%" height="100%">
         <RechartsBarChart
           data={data}
-          onMouseMove={(state) => {
-            console.log(state);
+          onMouseMove={() => {
+            // console.log(state);
           }}
         >
           <defs>

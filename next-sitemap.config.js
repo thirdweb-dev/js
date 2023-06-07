@@ -16,12 +16,9 @@ module.exports = {
           ? "allow"
           : "disallow"]: "/",
       },
-      {
-        userAgent: "*",
-        disallow: ["/_og"],
-      },
     ],
   },
+  exclude: ["/chain/validate"],
   transform: async (config, path) => {
     // ignore og image paths
     if (path.includes("_og")) {
