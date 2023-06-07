@@ -524,8 +524,8 @@ const WalletSDK: ThirdwebNextPage = () => {
               md: "row",
             }}
             justifyContent="center"
-            gap={12}
-            mb={12}
+            gap={{ base: 4, md: 8 }}
+            mb={{ base: 8, md: 16 }}
           >
             <HighlightedButton
               isHighlighted={selectedTab === "invisible-wallet-experience"}
