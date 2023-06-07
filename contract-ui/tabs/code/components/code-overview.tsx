@@ -21,7 +21,7 @@ import {
   Tabs,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { Chain } from "@thirdweb-dev/chains";
+import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { useAddress } from "@thirdweb-dev/react";
 import {
   Abi,
@@ -217,23 +217,6 @@ export default function Component() {
   },
 };
 
-const preSupportedSlugs = [
-  "ethereum",
-  "goerli",
-  "polygon",
-  "mumbai",
-  "binance",
-  "binance-testnet",
-  "avalanche",
-  "avalanche-fuji",
-  "fantom",
-  "fantom-testnet",
-  "arbitrum",
-  "arbitrum-goerli",
-  "optimism",
-  "optimism-goerli",
-];
-
 function getExportName(slug: string) {
   let exportName = slug
     .split("-")
@@ -261,6 +244,7 @@ function formatSnippet(
   { contractAddress, fn, args, chainName, rpcUrl, address }: SnippetOptions,
 ) {
   const code = { ...snippet };
+  const preSupportedSlugs = defaultChains.map((chain) => chain.slug);
   for (const key of Object.keys(code)) {
     const env = key as CodeEnvironment;
 
@@ -270,7 +254,7 @@ function formatSnippet(
 
       ?.replace(
         'import {{chainName}} from "@thirdweb-dev/chains";',
-        preSupportedSlugs.includes(chainName as string)
+        preSupportedSlugs.includes(chainName as any)
           ? ""
           : `import ${
               env === "javascript" ? "{ {{chainName}} }" : "{{chainName}}"
@@ -280,7 +264,7 @@ function formatSnippet(
         /{{chainName}}/gm,
         !chainName || chainName?.startsWith("0x") || chainName?.endsWith(".eth")
           ? '"ethereum"'
-          : preSupportedSlugs.includes(chainName)
+          : preSupportedSlugs.includes(chainName as any)
           ? `"${chainName}"`
           : env === "javascript"
           ? getExportName(chainName)
@@ -289,7 +273,7 @@ function formatSnippet(
       ?.replace(/{{function}}/gm, fn || "")
       ?.replace(
         /{{chainNameOrRpc}}/gm,
-        preSupportedSlugs.includes(chainName as string)
+        preSupportedSlugs.includes(chainName as any)
           ? chainName
           : rpcUrl?.replace(
               // eslint-disable-next-line no-template-curly-in-string
