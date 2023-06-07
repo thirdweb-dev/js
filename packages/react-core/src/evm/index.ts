@@ -196,6 +196,7 @@ export {
 
 // smart wallet factory
 export {
+  useIsSmartWalletDeployed,
   useSmartWallets,
   useCreateSmartWallet,
 } from "./hooks/async/smart-wallet-factory";
