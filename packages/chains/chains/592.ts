@@ -4,6 +4,7 @@ export default {
   "chain": "ASTR",
   "rpc": [
     "https://astar.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://evm.astar.network",
     "https://rpc.astar.network:8545"
   ],
   "faucets": [],
