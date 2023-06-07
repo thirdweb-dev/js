@@ -69,6 +69,7 @@ interface TWBridge {
     chainId?: number,
     password?: string,
     email?: string,
+    personalWallet?: PossibleWallet,
   ) => Promise<string>;
   disconnect: () => Promise<void>;
   switchNetwork: (chainId: number) => Promise<void>;
@@ -205,6 +206,7 @@ class ThirdwebBridge implements TWBridge {
     chainId?: number | undefined,
     password?: string,
     email?: string,
+    personalWallet: PossibleWallet = "localWallet",
   ) {
     if (!this.activeSDK) {
       throw new Error("SDK not initialized");
@@ -228,10 +230,24 @@ class ThirdwebBridge implements TWBridge {
         await magicLinkWallet.connect({ chainId, email });
       } else if (walletInstance.walletId === walletIds.smartWallet) {
         const smartWallet = walletInstance as SmartWallet;
-        const personalWallet = await this.initializeLocalWallet(
-          password as string,
+        const eoaWallet = this.walletMap.get(personalWallet);
+        // Connect flow for EOA first
+        await this.connect(
+          eoaWallet?.walletId,
+          chainId,
+          password,
+          email,
+          personalWallet,
         );
-        await this.initializeSmartWallet(smartWallet, personalWallet);
+        if (this.activeWallet) {
+          // Pass EOA and reconnect to initialize smart wallet
+          await this.initializeSmartWallet(smartWallet, this.activeWallet);
+        } else {
+          // If EOA wallet is not connected, throw error
+          throw new Error(
+            "Unable to connect EOA wallet to initialize smart wallet!",
+          );
+        }
       } else {
         await walletInstance.connect({ chainId });
       }
@@ -450,7 +466,7 @@ class ThirdwebBridge implements TWBridge {
   // TODO: Add personal wallet options and check if deployed
   public async initializeSmartWallet(
     sw: SmartWallet,
-    personalWallet: LocalWallet,
+    personalWallet: AbstractClientWallet,
   ) {
     const personalWalletAddress = await personalWallet.getAddress();
     console.log("Personal wallet address:", personalWalletAddress);
