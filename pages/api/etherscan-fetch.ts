@@ -1,5 +1,5 @@
-import { apiKeyMap, apiMap } from "./verify";
 import { ChainId } from "@thirdweb-dev/sdk/evm";
+import { apiKeyMap, apiMap } from "lib/maps";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export type EtherscanResult = {

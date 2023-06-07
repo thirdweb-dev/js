@@ -1,19 +1,10 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { LumaEvent } from "pages/events";
+import { NextResponse } from "next/server";
 
-type LumaResponse = {
-  entries: LumaEvent[];
+export const config = {
+  runtime: "edge",
 };
 
-type ErrorResponse = {
-  message: string;
-  error: unknown;
-};
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<LumaResponse | ErrorResponse>,
-): Promise<void> {
+export default async function handler() {
   const date = new Date().toISOString();
   const url = `https://api.lu.ma/public/v2/event/get-events-hosting?series_mode=series&after=${date}`;
 
@@ -26,9 +17,12 @@ export default async function handler(
       },
     });
 
-    const data: LumaResponse = await response.json();
-    res.status(200).json(data);
+    const data = await response.json();
+    return NextResponse.json(data, { status: 200 });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching events", error });
+    return NextResponse.json(
+      { message: "Error fetching events", error },
+      { status: 500 },
+    );
   }
 }

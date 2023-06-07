@@ -2,7 +2,6 @@ import {
   BaseGoerli,
   Chain,
   Polygon,
-  PolygonZkevmTestnet,
   Sepolia,
   allChains,
 } from "@thirdweb-dev/chains";
@@ -14,6 +13,7 @@ import {
   resolveContractUriFromAddress,
 } from "@thirdweb-dev/sdk/evm";
 import { ethers, utils } from "ethers";
+import { apiKeyMap, apiMap } from "lib/maps";
 import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton, getEVMThirdwebSDK } from "lib/sdk";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -35,40 +35,6 @@ export const VerificationStatus = {
   ALREADY_VERIFIED: "Contract source code already verified",
   AUTOMATICALLY_VERIFIED: "Already Verified",
 };
-
-export const apiMap: Record<number, string> = {
-  1: "https://api.etherscan.io/api",
-  3: "https://api-ropsten.etherscan.io/api",
-  5: "https://api-goerli.etherscan.io/api",
-  10: "https://api-optimistic.etherscan.io/api",
-  25: "https://api.cronoscan.com/api",
-  42: "https://api-kovan.etherscan.io/api",
-  56: "https://api.bscscan.com/api",
-  97: "https://api-testnet.bscscan.com/api",
-  128: "https://api.hecoinfo.com/api",
-  137: "https://api.polygonscan.com/api",
-  199: "https://api.bttcscan.com/api",
-  250: "https://api.ftmscan.com/api",
-  256: "https://api-testnet.hecoinfo.com/api",
-  420: "https://api-goerli-optimistic.etherscan.io/api",
-  1029: "https://api-testnet.bttcscan.com/api",
-  1284: "https://api-moonbeam.moonscan.io/api",
-  1285: "https://api-moonriver.moonscan.io/api",
-  1287: "https://api-moonbase.moonscan.io/api",
-  [Sepolia.chainId]: "https://api-sepolia.etherscan.io/api",
-  4002: "https://api-testnet.ftmscan.com/api",
-  42161: "https://api.arbiscan.io/api",
-  43113: "https://api-testnet.snowtrace.io/api",
-  43114: "https://api.snowtrace.io/api",
-  421613: "https://api-goerli.arbiscan.io/api",
-  80001: "https://api-testnet.polygonscan.com/api",
-  1313161554: "https://api.aurorascan.dev/api",
-  1313161555: "https://api-testnet.aurorascan.dev/api",
-  [BaseGoerli.chainId]: "https://api-goerli.basescan.org/api",
-  [PolygonZkevmTestnet.chainId]:
-    "https://api-testnet-zkevm.polygonscan.com/api",
-};
-
 export const blockExplorerMap: Record<number, { name: string; url: string }> = {
   1: { name: "Etherscan", url: "https://etherscan.io/" },
   3: { name: "Ropsten Etherscan", url: "https://ropsten.etherscan.io/" },
@@ -107,28 +73,6 @@ export const blockExplorerMap: Record<number, { name: string; url: string }> = {
     url: "https://goerli.basescan.org/",
   },
 };
-
-export const apiKeyMap: Record<number, string> = {
-  [ChainId.Mainnet]: process.env.ETHERSCAN_KEY as string,
-  [ChainId.Goerli]: process.env.ETHERSCAN_KEY as string,
-  [Sepolia.chainId]: process.env.ETHERSCAN_KEY as string,
-  [ChainId.Polygon]: process.env.POLYGONSCAN_KEY as string,
-  [ChainId.Mumbai]: process.env.POLYGONSCAN_KEY as string,
-  [ChainId.Fantom]: process.env.FANTOMSCAN_KEY as string,
-  [ChainId.FantomTestnet]: process.env.FANTOMSCAN_KEY as string,
-  [ChainId.Avalanche]: process.env.SNOWTRACE_KEY as string,
-  [ChainId.AvalancheFujiTestnet]: process.env.SNOWTRACE_KEY as string,
-  [ChainId.Arbitrum]: process.env.ARBITRUMSCAN_KEY as string,
-  [ChainId.ArbitrumGoerli]: process.env.ARBITRUMSCAN_KEY as string,
-  [ChainId.Optimism]: process.env.OPTIMISMSCAN_KEY as string,
-  [ChainId.OptimismGoerli]: process.env.OPTIMISMSCAN_KEY as string,
-  [ChainId.BinanceSmartChainMainnet]: process.env.BSCSCAN_KEY as string,
-  [ChainId.BinanceSmartChainTestnet]: process.env.BSCSCAN_KEY as string,
-  // no api key needed for these
-  [BaseGoerli.chainId]: "" as string,
-  [PolygonZkevmTestnet.chainId]: "" as string,
-};
-
 const chhainIdToChain: Record<number, Chain> = allChains.reduce(
   (acc, chain) => {
     acc[chain.chainId] = chain;

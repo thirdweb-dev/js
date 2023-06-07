@@ -1,20 +1,23 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import invariant from "tiny-invariant";
+
+export const config = {
+  runtime: "edge",
+};
 
 interface EmailSignupPayload {
   email: string;
   send_welcome_email?: boolean;
 }
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextRequest) => {
   if (req.method !== "POST") {
-    return res.status(400).json({ error: "invalid method" });
+    return NextResponse.json({ error: "invalid method" }, { status: 400 });
   }
 
-  const { email, send_welcome_email = false } = JSON.parse(
-    req.body,
-  ) as EmailSignupPayload;
+  const requestBody = (await req.json()) as EmailSignupPayload;
 
+  const { email, send_welcome_email = false } = requestBody;
   invariant(process.env.BEEHIIV_API_KEY, "missing BEEHIIV_API_KEY");
 
   const response = await fetch("https://api.beehiiv.com/v1/subscribers", {
@@ -31,7 +34,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }),
   });
 
-  return res.status(response.status).json({ status: response.statusText });
+  return NextResponse.json(
+    { status: response.statusText },
+    {
+      status: response.status,
+    },
+  );
 };
 
 export default handler;

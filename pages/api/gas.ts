@@ -1,8 +1,17 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+export const config = {
+  runtime: "edge",
+};
+
+const handler = async (req: NextRequest) => {
   if (req.method !== "GET") {
-    return res.status(400).json({ error: "invalid method" });
+    return NextResponse.json(
+      { error: "invalid method" },
+      {
+        status: 400,
+      },
+    );
   }
 
   const gasPriceEndpoint = `https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=${process.env.ETHERSCAN_KEY}`;
@@ -17,26 +26,39 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const ethPriceData = await ethPriceRes.json();
 
     if (!gasData?.result) {
-      return res.status(400).json({ error: "Failed to fetch gas price" });
+      return NextResponse.json(
+        { error: "Failed to fetch gas price" },
+        {
+          status: 400,
+        },
+      );
     }
 
     if (!ethPriceData?.result) {
-      return res.status(400).json({ error: "Failed to fetch ETH price" });
+      return NextResponse.json(
+        { error: "Failed to fetch ETH price" },
+        {
+          status: 400,
+        },
+      );
     }
 
-    // cache for 60 seconds, with up to 120 seconds of stale time
-    res.setHeader(
-      "Cache-Control",
-      "public, s-maxage=60, stale-while-revalidate=119",
+    return NextResponse.json(
+      {
+        gasPrice: gasData.result.ProposeGasPrice,
+        ethPrice: ethPriceData.result.ethusd,
+      },
+      {
+        status: 200,
+        headers: [
+          // cache for 60 seconds, with up to 120 seconds of stale time
+          ["Cache-Control", "public, s-maxage=60, stale-while-revalidate=119"],
+        ],
+      },
     );
-
-    return res.status(200).json({
-      gasPrice: gasData.result.ProposeGasPrice,
-      ethPrice: ethPriceData.result.ethusd,
-    });
   } catch (err) {
     console.error(err);
-    return res.status(502).json({ error: "Invalid response" });
+    return NextResponse.json({ error: "Invalid response" }, { status: 502 });
   }
 };
 
