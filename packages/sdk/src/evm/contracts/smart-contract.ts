@@ -78,7 +78,7 @@ import { SmartWalletFactory } from "../core/classes/smart-wallet-factory";
  * const contract = await sdk.getContract("{{contract_address}}");
  *
  * // call any function in your contract
- * await contract.call("myCustomFunction", param1, param2);
+ * await contract.call("myCustomFunction", [param1, param2]);
  *
  * // if your contract follows the ERC721 standard, contract.nft will be present
  * const allNFTs = await contract.erc721.query.all()
@@ -297,28 +297,28 @@ export class SmartContract<
 
   /**
    * Smart Wallet Factory
-   * 
+   *
    * @remarks Create smart wallets and fetch data about them.
    * @example
    * ```javascript
-   * 
+   *
    * // Predict the address of the smart wallet that will be created for an admin.
    * const deterministicAddress = await contract.smartWalletFactory.predictWalletAddress(admin, extraData);
-   * 
+   *
    * // Create smart wallets
    * const tx = await contract.smartWalletFactory.createWallet(admin, extraData);
    * // the same as `deterministicAddress`
    * const smartWalletAddress = tx.address;
-   * 
+   *
    * // Get all smart wallets created by the factory
    * const allWallets = await contract.smartWalletFactory.getAllWallets();
-   * 
+   *
    * // Get all smart wallets on which a signer has been given authority.
    * const associatedWallets = await contract.smartWalletFactory.getAssociatedWallets(signer);
-   * 
+   *
    * // Get all signers who have been given authority on a smart wallet.
    * const associatedSigners = await contract.smartWalletFactory.getAssociatedSigners(smartWalletAddress);
-   * 
+   *
    * // Check whether a smart wallet has already been created for a given admin.
    * const isWalletDeployed = await contract.smartWalletFactory.isWalletDeployed(admin, extraData);
    * ```
@@ -405,11 +405,11 @@ export class SmartContract<
    * console.log(myValue);
    *
    * // write functions will return the transaction receipt
-   * const tx = await contract.call("myWriteFunction", arg1, arg2);
+   * const tx = await contract.call("myWriteFunction", [arg1, arg2]);
    * const receipt = tx.receipt;
    *
    * // Optionally override transaction options
-   * await contract.call("myWriteFunction", arg1, arg2, {
+   * await contract.call("myWriteFunction", [arg1, arg2], {
    *  gasLimit: 1000000, // override default gas limit
    *  value: ethers.utils.parseEther("0.1"), // send 0.1 ether with the contract call
    * };
@@ -561,7 +561,10 @@ export class SmartContract<
 
   private detectSmartWalletFactory() {
     if (
-      detectContractFeature<IAccountFactory>(this.contractWrapper, FEATURE_SMART_WALLET_FACTORY.name)
+      detectContractFeature<IAccountFactory>(
+        this.contractWrapper,
+        FEATURE_SMART_WALLET_FACTORY.name,
+      )
     ) {
       return new SmartWalletFactory(this.contractWrapper);
     }

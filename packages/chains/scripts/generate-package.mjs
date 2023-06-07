@@ -54,6 +54,8 @@ for (const file of additionalChainsFiles) {
   const additionalChain = await import(
     path.join("file://", additionalChainsDir, file)
   );
+
+  chains = chains.filter((c) => c.chainId !== additionalChain.default.chainId);
   chains.push(additionalChain.default);
 }
 
