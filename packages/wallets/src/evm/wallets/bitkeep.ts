@@ -33,7 +33,8 @@ export class BitKeepWallet extends AbstractClientWallet<BitKeepAdditionalOptions
     urls: {
       chrome:
         "https://chrome.google.com/webstore/detail/bitkeep-crypto-nft-wallet/jiidiaalihmmhddjgbnbgdfflelocpak",
-      android: "https://play.google.com/store/apps/details?id=com.bitkeep.wallet",
+      android:
+        "https://play.google.com/store/apps/details?id=com.bitkeep.wallet",
       ios: "https://apps.apple.com/app/bitkeep/id1395301115",
     },
   };
@@ -48,7 +49,9 @@ export class BitKeepWallet extends AbstractClientWallet<BitKeepAdditionalOptions
     super(BitKeepWallet.id, options);
 
     if (assertWindowEthereum(globalThis.window)) {
-      this.isInjected = (!!globalThis.window.ethereum?.isBitKeep) || !!(globalThis.window?.bitkeep.ethereum?.isBitKeep);
+      this.isInjected =
+        !!globalThis.window.ethereum?.isBitKeep ||
+        !!globalThis.window.bitkeep?.ethereum?.isBitKeep;
     } else {
       this.isInjected = false;
     }
