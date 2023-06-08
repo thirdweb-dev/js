@@ -38,6 +38,7 @@ export const changes = [
       "./evm/wallets/abstract": "./src/evm/wallets/abstract.ts",
       "./evm/wallets/injected": "./src/evm/wallets/injected.ts",
       "./evm/wallets/metamask": "./src/evm/wallets/metamask.ts",
+      "./evm/wallets/bitkeep": "./src/evm/wallets/bitkeep.ts",
       "./solana/wallets/signer": "./src/solana/wallets/signer.ts",
       "./solana/wallets/keypair": "./src/solana/wallets/keypair.ts",
       "./evm/wallets/private-key": "./src/evm/wallets/private-key.ts",
@@ -48,6 +49,7 @@ export const changes = [
       "./evm/wallets/coinbase-wallet": "./src/evm/wallets/coinbase-wallet.ts",
       "./evm/connectors/injected": "./src/evm/connectors/injected/index.ts",
       "./evm/connectors/metamask": "./src/evm/connectors/metamask/index.ts",
+      "./evm/connectors/bitkeep": "./src/evm/connectors/bitkeep/index.ts",
       "./evm/wallets/aws-secrets-manager":
         "./src/evm/wallets/aws-secrets-manager.ts",
       "./evm/connectors/local-wallet":

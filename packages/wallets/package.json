@@ -64,6 +64,13 @@
       },
       "default": "./evm/wallets/aws-kms/dist/thirdweb-dev-wallets-evm-wallets-aws-kms.cjs.js"
     },
+    "./evm/wallets/bitkeep": {
+        "module": {
+            "browser": "./evm/wallets/bitkeep/dist/thirdweb-dev-wallets-evm-wallets-bitkeep.browser.esm.js",
+            "default": "./evm/wallets/bitkeep/dist/thirdweb-dev-wallets-evm-wallets-bitkeep.esm.js"
+        },
+        "default": "./evm/wallets/bitkeep/dist/thirdweb-dev-wallets-evm-wallets-bitkeep.cjs.js"
+    },
     "./solana/wallets/base": {
       "module": {
         "browser": "./solana/wallets/base/dist/thirdweb-dev-wallets-solana-wallets-base.browser.esm.js",
@@ -175,6 +182,13 @@
         "default": "./evm/wallets/coinbase-wallet/dist/thirdweb-dev-wallets-evm-wallets-coinbase-wallet.esm.js"
       },
       "default": "./evm/wallets/coinbase-wallet/dist/thirdweb-dev-wallets-evm-wallets-coinbase-wallet.cjs.js"
+    },
+    "./evm/connectors/bitkeep": {
+        "module": {
+            "browser": "./evm/connectors/bitkeep/dist/thirdweb-dev-wallets-evm-connectors-bitkeep.browser.esm.js",
+            "default": "./evm/connectors/bitkeep/dist/thirdweb-dev-wallets-evm-connectors-bitkeep.esm.js"
+        },
+        "default": "./evm/connectors/bitkeep/dist/thirdweb-dev-wallets-evm-connectors-bitkeep.cjs.js"
     },
     "./evm/connectors/injected": {
       "module": {
@@ -369,6 +383,7 @@
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
+    "dev": "tsc && preconstruct dev",
     "build": "tsc && preconstruct build",
     "push": "yalc push"
   }

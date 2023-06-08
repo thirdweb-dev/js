@@ -2,6 +2,7 @@ export { useSmartWallet } from "./evm/hooks/wallets/useSmartWallet";
 export { localWallet } from "./wallet/wallets/localWallet/localWallet";
 export { coinbaseWallet } from "./wallet/wallets/coinbase/coinbaseWallet";
 export { metamaskWallet } from "./wallet/wallets/metamask/metamaskWallet";
+export { bitkeepWallet } from "./wallet/wallets/bitkeep/BitKeepWallet";
 export { paperWallet } from "./wallet/wallets/paperWallet";
 export { safeWallet } from "./wallet/wallets/safe/safeWallet";
 export { walletConnect } from "./wallet/wallets/walletConnect";

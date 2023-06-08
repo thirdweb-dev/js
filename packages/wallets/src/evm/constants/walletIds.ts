@@ -1,6 +1,7 @@
 export const walletIds = {
   coinbase: "coinbase",
   metamask: "metamask",
+  bitkeep: "bitkeep",
   localWallet: "localWallet",
   smartWallet: "smartWallet",
   safe: "safe",

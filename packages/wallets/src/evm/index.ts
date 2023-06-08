@@ -29,6 +29,7 @@ export * from "./wallets/coinbase-wallet";
 export * from "./wallets/local-wallet";
 export * from "./wallets/injected";
 export * from "./wallets/metamask";
+export * from "./wallets/bitkeep";
 export * from "./wallets/wallet-connect";
 export * from "./wallets/wallet-connect-v1";
 export * from "./wallets/safe";

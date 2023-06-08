@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-wallets-evm-connectors-bitkeep.cjs.js",
+  "module": "dist/thirdweb-dev-wallets-evm-connectors-bitkeep.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-wallets-evm-connectors-bitkeep.esm.js": "./dist/thirdweb-dev-wallets-evm-connectors-bitkeep.browser.esm.js"
+  }
+}
