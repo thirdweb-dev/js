@@ -3,6 +3,7 @@ import {
   requiredParamInvariant,
 } from "../../../core/query-utils/required-param";
 import { useSDKChainId } from "../../providers/thirdweb-sdk-provider";
+import { WalletAddress } from "../../types";
 import {
   cacheKeys,
   invalidateContractAndBalances,
@@ -52,6 +53,41 @@ export function useSmartWallets(
         "Contract instance does not support contract.smartWalletFactory.getAllWallets",
       );
       return contract.smartWalletFactory.getAllWallets();
+    },
+    { enabled: !!contract },
+  );
+}
+
+/**
+ * Check if a smart wallet has been deployed for the given admin
+ *
+ * @example
+ * ```javascript
+ * const { data: isSmartWalletDeployed, isLoading, error } = useIsSmartWalletDeployed(contract);
+ * ```
+ *
+ * @param contract - an instance of a smart wallet factory contract
+ * @returns a boolean indicating if a smart wallet has been deployed for the given admin
+ * @twfeature SmartWalletFactory
+ * @see {@link https://portal.thirdweb.com/react/react.useissmartwalletdeployed?utm_source=sdk | Documentation}
+ * @beta
+ */
+export function useIsSmartWalletDeployed(
+  contract: RequiredParam<SmartContract>,
+  admin: RequiredParam<WalletAddress>,
+  extraData?: BytesLike,
+): UseQueryResult<boolean> {
+  const contractAddress = contract?.getAddress();
+  return useQueryWithNetwork(
+    cacheKeys.contract.smartWalletFactory.getAll(contractAddress),
+    () => {
+      requiredParamInvariant(contract, "No Contract instance provided");
+      invariant(
+        contract.smartWalletFactory.isWalletDeployed,
+        "Contract instance does not support contract.smartWalletFactory.getAllWallets",
+      );
+      invariant(admin, "No wallet address provided");
+      return contract.smartWalletFactory.isWalletDeployed(admin, extraData);
     },
     { enabled: !!contract },
   );
