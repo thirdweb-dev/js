@@ -15,7 +15,7 @@ import {
   UseQueryResult,
 } from "@tanstack/react-query";
 import type {
-  AccountEvent, AddressOrEns, SmartContract,
+  SmartContract,
 } from "@thirdweb-dev/sdk";
 import type { BytesLike } from "ethers";
 import invariant from "tiny-invariant";
