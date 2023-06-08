@@ -1,7 +1,8 @@
 import React, { PropsWithChildren, useEffect, useMemo } from "react";
-import { useLogout, useUser } from "../hooks/auth";
+import { useUser } from "../hooks/auth";
 import { useWallet } from "../../core/hooks/wallet-hooks";
 import { ThirdwebAuthConfig, ThirdwebAuthContext } from "./thirdweb-auth";
+import Cookies from "js-cookie";
 
 export const ThirdwebAuthProvider: React.FC<
   PropsWithChildren<{ value?: ThirdwebAuthConfig }>
@@ -23,20 +24,24 @@ export const ThirdwebAuthProvider: React.FC<
   return (
     <ThirdwebAuthContext.Provider value={authContext}>
       {children}
-      <DisconnectOnAccountSwitch />
+      <ChangeActiveWalletOnAccountSwitch />
     </ThirdwebAuthContext.Provider>
   );
 };
-function DisconnectOnAccountSwitch() {
-  const { logout } = useLogout();
+
+function ChangeActiveWalletOnAccountSwitch() {
   const wallet = useWallet();
   const { isLoggedIn } = useUser();
 
   useEffect(() => {
     const handleChange = (data: { address?: string; chainId?: number }) => {
-      // if the user changes their account, logout
-      if (data.address) {
-        logout();
+      // if the user changes their account, switch the active account cookie
+      if (
+        data.address &&
+        Cookies.get(`thirdweb_auth_active_account`) &&
+        data.address !== Cookies.get(`thirdweb_auth_active_account`)
+      ) {
+        Cookies.set(`thirdweb_auth_active_account`, data.address);
       }
     };
 
@@ -51,7 +56,7 @@ function DisconnectOnAccountSwitch() {
         wallet.removeListener("change", handleChange);
       }
     };
-  }, [wallet, logout, isLoggedIn]);
+  }, [wallet, isLoggedIn]);
 
   return null;
 }

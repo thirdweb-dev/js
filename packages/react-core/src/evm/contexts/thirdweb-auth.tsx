@@ -1,13 +1,4 @@
-import React, {
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-} from "react";
-import { useUser } from "../hooks/auth";
-import { useWallet } from "../../core/hooks/wallet-hooks";
-import Cookies from "js-cookie";
+import { createContext, useContext } from "react";
 
 export interface ISecureStorage {
   getItem(key: string): Promise<string | null>;
@@ -47,67 +38,10 @@ export interface ThirdwebAuthConfig {
 
 export interface ThirdwebAuthContext extends ThirdwebAuthConfig {}
 
-const ThirdwebAuthContext = createContext<ThirdwebAuthContext | undefined>(
-  undefined,
-);
-
-export const ThirdwebAuthProvider: React.FC<
-  PropsWithChildren<{ value?: ThirdwebAuthConfig }>
-> = ({ value, children }) => {
-  // Remove trailing slash from URL if present
-  const authContext = useMemo(() => {
-    if (!value) {
-      return undefined;
-    }
-
-    const context: ThirdwebAuthContext = {
-      ...value,
-      authUrl: value.authUrl?.replace(/\/$/, ""),
-    };
-
-    return context;
-  }, [value]);
-
-  return (
-    <ThirdwebAuthContext.Provider value={authContext}>
-      {children}
-      <ChangeActiveWalletOnAccountSwitch />
-    </ThirdwebAuthContext.Provider>
-  );
-};
+export const ThirdwebAuthContext = createContext<
+  ThirdwebAuthContext | undefined
+>(undefined);
 
 export function useThirdwebAuthContext() {
   return useContext(ThirdwebAuthContext);
-}
-
-function ChangeActiveWalletOnAccountSwitch() {
-  const wallet = useWallet();
-  const { isLoggedIn } = useUser();
-
-  useEffect(() => {
-    const handleChange = (data: { address?: string; chainId?: number }) => {
-      // if the user changes their account, switch the active account cookie
-      if (
-        data.address &&
-        Cookies.get(`thirdweb_auth_active_account`) &&
-        data.address !== Cookies.get(`thirdweb_auth_active_account`)
-      ) {
-        Cookies.set(`thirdweb_auth_active_account`, data.address);
-      }
-    };
-
-    const shouldAddListener = wallet && isLoggedIn;
-
-    if (shouldAddListener) {
-      wallet.addListener("change", handleChange);
-    }
-
-    return () => {
-      if (shouldAddListener) {
-        wallet.removeListener("change", handleChange);
-      }
-    };
-  }, [wallet, isLoggedIn]);
-
-  return null;
 }
