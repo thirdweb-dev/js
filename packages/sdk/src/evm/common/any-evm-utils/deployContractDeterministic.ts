@@ -1,7 +1,7 @@
 import { BigNumber, ethers, Signer } from "ethers";
 import invariant from "tiny-invariant";
 import { PrecomputedDeploymentTransaction } from "../../types/any-evm/deploy-data";
-import { DeployOptions } from "../../types";
+import type { DeployOptions } from "../../types/deploy";
 import { isContractDeployed } from "./isContractDeployed";
 
 /**

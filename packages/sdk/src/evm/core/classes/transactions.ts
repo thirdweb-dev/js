@@ -34,7 +34,7 @@ import { FormatTypes } from "ethers/lib/utils.js";
 import type { ConnectionInfo } from "ethers/lib/utils.js";
 import invariant from "tiny-invariant";
 import EventEmitter from "eventemitter3";
-import type { DeployEvents } from "../../types"; // done
+import type { DeployEvents } from "../../types/deploy";
 import { ForwardRequestMessage, PermitRequestMessage } from "../types";
 import { computeEOAForwarderAddress } from "../../common/any-evm-utils/computeEOAForwarderAddress";
 import { computeForwarderAddress } from "../../common/any-evm-utils/computeForwarderAddress";

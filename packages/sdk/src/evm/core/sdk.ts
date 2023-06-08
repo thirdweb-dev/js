@@ -14,7 +14,6 @@ import { getSignerAndProvider } from "../constants/urls";
 import { Abi, AbiSchema } from "../schema/contracts/custom";
 import { AddressOrEns } from "../schema/shared/AddressOrEnsSchema";
 import { SDKOptions } from "../schema/sdk-options";
-import { ContractWithMetadata, CurrencyValue, DeployMetadata } from "../types";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { MultichainRegistry } from "./classes/multichain-registry";
 import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
@@ -77,18 +76,21 @@ import {
   VoteInitializer,
 } from "../contracts";
 import { Address } from "../schema/shared/Address";
-import {
-  DeployEvent,
+import type { CurrencyValue } from "../types/currency";
+import type {
   DeployEvents,
-  DeployOptions,
+  NFTContractDeployMetadata,
+  MultiwrapContractDeployMetadata,
+  TokenContractDeployMetadata,
   MarketplaceContractDeployMetadata,
   MarketplaceV3ContractDeployMetadata,
-  MultiwrapContractDeployMetadata,
-  NFTContractDeployMetadata,
   SplitContractDeployMetadata,
-  TokenContractDeployMetadata,
   VoteContractDeployMetadata,
-} from "../types";
+  DeployOptions,
+  DeployMetadata,
+  DeployEvent,
+} from "../types/deploy";
+import type { ContractWithMetadata } from "../types/registry";
 import { DeploySchemaForPrebuiltContractType } from "../contracts";
 import { ContractFactory } from "./classes/factory";
 import { ContractRegistry } from "./classes/registry";

@@ -3,11 +3,11 @@ import {
   AbstractClaimConditionContractStruct,
   ClaimConditionInputArray,
 } from "../../schema/contracts/common/claim-conditions";
-import {
+import type {
   ClaimConditionInput,
-  FilledConditionInput,
   SnapshotInfo,
-} from "../../types";
+  FilledConditionInput,
+} from "../../types/claim-conditions/claim-conditions";
 import { SnapshotFormatVersion } from "../sharded-merkle-tree";
 import { createSnapshot } from "../snapshots";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";

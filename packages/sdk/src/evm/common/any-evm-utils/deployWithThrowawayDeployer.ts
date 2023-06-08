@@ -1,6 +1,6 @@
 import { ethers, Signer } from "ethers";
 import { PrecomputedDeploymentTransaction } from "../../types/any-evm/deploy-data";
-import { DeployOptions } from "../../types";
+import type { DeployOptions } from "../../types/deploy";
 import { DEPLOYER_ABI, DEPLOYER_BYTECODE } from "./constants";
 import { createTransactionBatches } from "./createTransactionBatches";
 
