@@ -5,11 +5,12 @@ import { useUser } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { ApiKeyTable } from "components/settings/ApiKeyTable";
 import { CreateApiKeyButton } from "components/settings/CreateApiKeyButton";
+import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
 import { Card, Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
-const DashboardApiKeys: ThirdwebNextPage = () => {
+const SettingsApiKeysPage: ThirdwebNextPage = () => {
   const { user, isLoading } = useUser();
   const keysQuery = useApiKeys();
 
@@ -71,10 +72,14 @@ const DashboardApiKeys: ThirdwebNextPage = () => {
   );
 };
 
-DashboardApiKeys.getLayout = (page, props) => (
-  <AppLayout {...props}>{page}</AppLayout>
+SettingsApiKeysPage.getLayout = (page, props) => (
+  <AppLayout {...props}>
+    <SettingsSidebar activePage="apiKeys" />
+
+    {page}
+  </AppLayout>
 );
 
-DashboardApiKeys.pageId = PageId.DashboardApiKeys;
+SettingsApiKeysPage.pageId = PageId.SettingsApiKeys;
 
-export default DashboardApiKeys;
+export default SettingsApiKeysPage;

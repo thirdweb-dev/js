@@ -590,7 +590,7 @@ const DashboardWallets: ThirdwebNextPage = () => {
             </Text>
             <Text>
               2.{" "}
-              <Link href="/dashboard/api-keys" isExternal color="blue.500">
+              <Link href="/settings/api-keys" isExternal color="blue.500">
                 Get an API key
               </Link>{" "}
               to access thirdweb&apos;s bundler and paymaster infrastructure,

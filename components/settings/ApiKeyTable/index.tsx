@@ -1,6 +1,6 @@
-import CopyApiKeyButton from "./CopyButton";
-import EditApiKeyModal from "./EditModal";
-import RevokeApiKeyButton from "./RevokeButton";
+import { CopyApiKeyButton } from "./CopyButton";
+import { EditApiKeyModal } from "./EditModal";
+import { RevokeApiKeyButton } from "./RevokeButton";
 import { ApiKeyInfo } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, Icon, Menu, MenuButton, MenuList } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";

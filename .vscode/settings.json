@@ -1,5 +1,5 @@
 {
   "typescript.tsdk": "./node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "cSpell.words": ["rdweb", "tanstack", "Thirdweb"]
+  "cSpell.words": ["rdweb", "solana", "tanstack", "Thirdweb", "usedapp"]
 }

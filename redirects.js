@@ -102,6 +102,18 @@ function redirects() {
       destination: "/explore",
       permanent: false,
     },
+    // temp until we have settings overview
+    {
+      source: "/settings",
+      destination: "/settings/api-keys",
+      permanent: false,
+    },
+    // backwards compat: page moved to pages/settings/api-key
+    {
+      source: "/dashboard/api-keys",
+      destination: "/settings/api-keys",
+      permanent: true,
+    },
   ];
 }
 

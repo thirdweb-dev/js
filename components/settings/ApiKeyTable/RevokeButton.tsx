@@ -8,7 +8,9 @@ interface RevokeApiKeyButtonProps {
   apiKey: string;
 }
 
-const RevokeApiKeyButton: React.FC<RevokeApiKeyButtonProps> = ({ apiKey }) => {
+export const RevokeApiKeyButton: React.FC<RevokeApiKeyButtonProps> = ({
+  apiKey,
+}) => {
   const mutation = useRevokeApiKey();
   const { onSuccess, onError } = useTxNotifications(
     "API key revoked",
@@ -41,5 +43,3 @@ const RevokeApiKeyButton: React.FC<RevokeApiKeyButtonProps> = ({ apiKey }) => {
     </MenuItem>
   );
 };
-
-export default RevokeApiKeyButton;

@@ -7,7 +7,9 @@ interface CopyApiKeyButtonProps {
   apiKey: string;
 }
 
-const CopyApiKeyButton: React.FC<CopyApiKeyButtonProps> = ({ apiKey }) => {
+export const CopyApiKeyButton: React.FC<CopyApiKeyButtonProps> = ({
+  apiKey,
+}) => {
   const { onCopy } = useClipboard(apiKey);
   const trackEvent = useTrack();
   const toast = useToast();
@@ -56,5 +58,3 @@ const CopyApiKeyButton: React.FC<CopyApiKeyButtonProps> = ({ apiKey }) => {
     </Flex>
   );
 };
-
-export default CopyApiKeyButton;

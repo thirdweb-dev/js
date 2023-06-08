@@ -24,7 +24,7 @@ type FormData = {
   name: string;
 };
 
-const EditApiKeyModal: React.FC<EditApiKeyModalProps> = ({
+export const EditApiKeyModal: React.FC<EditApiKeyModalProps> = ({
   apiKey,
   open,
   onClose,
@@ -108,5 +108,3 @@ const EditApiKeyModal: React.FC<EditApiKeyModalProps> = ({
     </>
   );
 };
-
-export default EditApiKeyModal;

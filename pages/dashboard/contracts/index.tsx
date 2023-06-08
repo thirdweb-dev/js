@@ -237,6 +237,7 @@ const Contracts: ThirdwebNextPage = () => {
 Contracts.getLayout = (page, props) => (
   <AppLayout ecosystem="evm" {...props}>
     <ContractsSidebar activePage="deployed" />
+
     {page}
   </AppLayout>
 );
