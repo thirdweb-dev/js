@@ -59,6 +59,11 @@ const LazyContractClaimConditionsPage = dynamic(() =>
     ({ ContractClaimConditionsPage }) => ContractClaimConditionsPage,
   ),
 );
+const LazyContractSmartWalletFactoryPage = dynamic(() =>
+  import("../tabs/wallet-factory/page").then(
+    ({ SmartWalletFactoryPage }) => SmartWalletFactoryPage,
+  ),
+);
 const LazyContractPermissionsPage = dynamic(() =>
   import("../tabs/permissions/page").then(
     ({ ContractPermissionsPage }) => ContractPermissionsPage,
@@ -207,6 +212,15 @@ export function useContractRouteConfig(
       path: "claim-conditions",
       isEnabled: claimconditionExtensionDetection,
       component: LazyContractClaimConditionsPage,
+    },
+    {
+      title: "Wallet Factory",
+      path: "wallet-factory",
+      isEnabled: extensionDetectedState({
+        contractQuery,
+        feature: ["SmartWalletFactory"],
+      }),
+      component: LazyContractSmartWalletFactoryPage,
     },
     {
       title: "Permissions",
