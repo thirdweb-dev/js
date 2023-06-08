@@ -46,6 +46,7 @@ export type ThirdwebAuthConfig<
       | ((tokenId: string) => void)
       | ((tokenId: string) => Promise<void>);
     tokenDurationInSeconds?: number;
+    refreshIntervalInSeconds?: number;
   };
   cookieOptions?: {
     domain?: string;

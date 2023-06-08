@@ -15,6 +15,7 @@ import {
   Json,
   LoginOptionsSchema,
   AuthenticationPayload,
+  AuthenticationPayloadDataInput,
 } from "./schema";
 import { isBrowser } from "./utils";
 import type { GenericAuthWallet } from "@thirdweb-dev/wallets";
@@ -218,7 +219,7 @@ export class ThirdwebAuth {
     }
 
     const adminAddress = await this.wallet.getAddress();
-    const payloadData = AuthenticationPayloadDataSchema.parse({
+    return this.createToken({
       iss: adminAddress,
       sub: userAddress,
       aud: domain,
@@ -230,29 +231,19 @@ export class ThirdwebAuth {
       jti: parsedOptions?.tokenId,
       ctx: session,
     });
+  }
 
-    const message = JSON.stringify(payloadData);
-    const signature = await this.wallet.signMessage(message);
-
-    // Header used for JWT token specifying hash algorithm
-    const header = {
-      // Specify ECDSA with SHA-256 for hashing algorithm
-      alg: "ES256",
-      typ: "JWT",
-    };
-
-    const encodedHeader = Buffer.from(JSON.stringify(header)).toString(
-      "base64",
-    );
-    const encodedData = Buffer.from(JSON.stringify(payloadData))
-      .toString("base64")
-      .replace(/=/g, "");
-    const encodedSignature = Buffer.from(signature).toString("base64");
-
-    // Generate a JWT token with base64 encoded header, payload, and signature
-    const token = `${encodedHeader}.${encodedData}.${encodedSignature}`;
-
-    return token;
+  public async refresh(token: string, expirationTime?: Date): Promise<string> {
+    const { payload } = this.parseToken(token);
+    return this.createToken({
+      iss: payload.iss,
+      sub: payload.sub,
+      aud: payload.aud,
+      nbf: new Date(),
+      exp: expirationTime || new Date(Date.now() + 1000 * 60 * 60 * 5),
+      iat: new Date(),
+      ctx: payload.ctx,
+    });
   }
 
   /**
@@ -367,6 +358,35 @@ export class ThirdwebAuth {
       payload,
       signature,
     };
+  }
+
+  private async createToken(
+    payload: AuthenticationPayloadDataInput,
+  ): Promise<string> {
+    const payloadData = AuthenticationPayloadDataSchema.parse(payload);
+
+    const message = JSON.stringify(payloadData);
+    const signature = await this.wallet.signMessage(message);
+
+    // Header used for JWT token specifying hash algorithm
+    const header = {
+      // Specify ECDSA with SHA-256 for hashing algorithm
+      alg: "ES256",
+      typ: "JWT",
+    };
+
+    const encodedHeader = Buffer.from(JSON.stringify(header)).toString(
+      "base64",
+    );
+    const encodedData = Buffer.from(JSON.stringify(payloadData))
+      .toString("base64")
+      .replace(/=/g, "");
+    const encodedSignature = Buffer.from(signature).toString("base64");
+
+    // Generate a JWT token with base64 encoded header, payload, and signature
+    const token = `${encodedHeader}.${encodedData}.${encodedSignature}`;
+
+    return token;
   }
 
   private async verifySignature(

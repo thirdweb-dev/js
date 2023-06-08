@@ -1,3 +1,7 @@
+import {
+  THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
+  THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX,
+} from "../../constants";
 import { GenerateOptions } from "../../core";
 import { LoginPayloadBodySchema, ThirdwebAuthContext } from "../types";
 import { serialize } from "cookie";
@@ -72,12 +76,28 @@ export default async function handler(
   // And set path to / to enable thirdweb_auth_token usage on all endpoints
   res.setHeader(
     "Set-Cookie",
-    serialize("thirdweb_auth_token", token, {
+    serialize(
+      `${THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX}_${payload.payload.address}`,
+      token,
+      {
+        domain: ctx.cookieOptions?.domain,
+        path: ctx.cookieOptions?.path || "/",
+        sameSite: ctx.cookieOptions?.sameSite || "none",
+        expires: new Date(exp * 1000),
+        httpOnly: true,
+        secure: true,
+      },
+    ),
+  );
+
+  res.setHeader(
+    "Set-Cookie",
+    serialize(THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE, payload.payload.address, {
       domain: ctx.cookieOptions?.domain,
       path: ctx.cookieOptions?.path || "/",
       sameSite: ctx.cookieOptions?.sameSite || "none",
       expires: new Date(exp * 1000),
-      httpOnly: true,
+      httpOnly: false,
       secure: true,
     }),
   );
