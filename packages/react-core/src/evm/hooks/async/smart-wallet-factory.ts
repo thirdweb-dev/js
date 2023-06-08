@@ -86,6 +86,7 @@ export function useIsSmartWalletDeployed(
         contract.smartWalletFactory.isWalletDeployed,
         "Contract instance does not support contract.smartWalletFactory.getAllWallets",
       );
+      invariant(admin, "No wallet address provided");
       return contract.smartWalletFactory.isWalletDeployed(admin, extraData);
     },
     { enabled: !!contract },
