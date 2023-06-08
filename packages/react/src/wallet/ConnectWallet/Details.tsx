@@ -118,7 +118,7 @@ export const ConnectedWalletDetails: React.FC<{
       <ColFlex>
         {balanceQuery.data ? (
           <WalletBalance className={`${TW_CONNECTED_WALLET}__balance`}>
-            {balanceQuery.data.displayValue.slice(0, 5)}{" "}
+            {Number(balanceQuery.data.displayValue).toFixed(3)}{" "}
             {balanceQuery.data.symbol}
           </WalletBalance>
         ) : (
