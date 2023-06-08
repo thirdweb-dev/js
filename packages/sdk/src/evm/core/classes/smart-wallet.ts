@@ -40,7 +40,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
     }
   }
 
-  private async generatePayload(signer: string, roleAction: RoleAction ): Promise<SignedAccountPermissionsPayload> {
+  private async generatePayload(signer: string, roleAction: RoleAction): Promise<SignedAccountPermissionsPayload> {
     // Derive role for target signer.
     const role = ethers.utils.solidityKeccak256(["string"], [signer]);
 
@@ -150,6 +150,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
       signer: string,
       restrictions: AccessRestrictions,
     ): Promise<Transaction> => {
+
       // Performing a multicall: [1] setting restrictions for role, [2] granting role to signer.
       const encoded: string[] = [];
 
@@ -173,6 +174,9 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
 
       const { payload, signature } = await this.generatePayload(signer, RoleAction.GRANT);
       
+      const isValidSigner = await this.contractWrapper.readContract.verifyRoleRequest(payload, signature);
+      if(!isValidSigner) { throw new Error(`Invalid signature.`) }
+      
       encoded.push(this.contractWrapper.readContract.interface.encodeFunctionData("changeRole", [payload, signature]));
       
       // Perform multicall
@@ -190,6 +194,9 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
       signer: string,
     ): Promise<Transaction> => {
       const { payload, signature } = await this.generatePayload(signer, RoleAction.REVOKE);
+      
+      const isValidSigner = await this.contractWrapper.readContract.verifyRoleRequest(payload, signature);
+      if(!isValidSigner) { throw new Error(`Invalid signature.`) }
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
