@@ -19,7 +19,7 @@ import {
   ExclamationTriangleIcon,
 } from "@radix-ui/react-icons";
 import {
-  useActiveChain,
+  useChain,
   useChainId,
   useConnect,
   useConnectionStatus,
@@ -48,7 +48,7 @@ export const SelectAccount: React.FC<{
 }> = (props) => {
   const activeWallet = useWallet();
   const connect = useConnect();
-  const activeChain = useActiveChain();
+  const activeChain = useChain();
   const connectedChainId = useChainId();
 
   const [safeAddress, setSafeAddress] = useState("");

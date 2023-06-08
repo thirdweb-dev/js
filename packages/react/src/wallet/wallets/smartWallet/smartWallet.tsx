@@ -15,24 +15,21 @@ import { HeadlessConnectUI } from "../headlessConnectUI";
 export const smartWallet = (
   config: SmartWalletConfigOptions,
 ): SmartWalletConfig => {
+  const personalWallets = config?.personalWallets || defaultWallets;
   return {
     id: SmartWallet.id,
     meta: SmartWallet.meta,
     create: (options: WalletOptions) =>
       new SmartWallet({ ...options, ...config }),
-    connectUI: SmartConnectUI,
-    isInstalled() {
-      return false;
+    connectUI(props) {
+      return <SmartConnectUI {...props} personalWallets={personalWallets} />;
     },
-    config: {
-      ...config,
-      personalWallets: config?.personalWallets || defaultWallets,
-    },
+    personalWallets,
   };
 };
 
 export const SmartConnectUI = (
-  props: ConnectUIProps<SmartWallet, SmartWalletConfigOptions>,
+  props: ConnectUIProps<SmartWallet> & { personalWallets: WalletConfig[] },
 ) => {
   const activeWallet = useWallet();
   const { walletConfig } = props;
@@ -53,8 +50,7 @@ export const SmartConnectUI = (
       open: props.open,
       theme: props.theme,
       walletConfig: personalWalletConfig,
-      supportedWallets: props.walletConfig.config
-        .personalWallets as WalletConfig[],
+      supportedWallets: props.personalWallets,
       selectionData: props.selectionData,
       setSelectionData: props.setSelectionData,
     };
@@ -69,7 +65,7 @@ export const SmartConnectUI = (
   if (!activeWallet) {
     return (
       <SelectPersonalWallet
-        personalWallets={walletConfig.config.personalWallets as WalletConfig[]}
+        personalWallets={props.personalWallets}
         onBack={props.goBack}
         smartWallet={walletConfig}
         selectWallet={setPersonalWalletConfig}

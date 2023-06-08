@@ -22,6 +22,7 @@ export const CreateLocalWallet_Password: React.FC<{
   goBack: () => void;
   localWalletConf: LocalWalletConfig;
   renderBackButton: boolean;
+  persist: boolean;
 }> = (props) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -29,7 +30,10 @@ export const CreateLocalWallet_Password: React.FC<{
   const passwordMismatch = confirmPassword && password !== confirmPassword;
   const [isConnecting, setIsConnecting] = useState(false);
 
-  const { localWallet, meta } = useLocalWalletInfo(props.localWalletConf);
+  const { localWallet, meta } = useLocalWalletInfo(
+    props.localWalletConf,
+    props.persist,
+  );
 
   const { setConnectedWallet, setConnectionStatus } = useWalletContext();
   const [showImportScreen, setShowImportScreen] = useState(false);
@@ -55,6 +59,7 @@ export const CreateLocalWallet_Password: React.FC<{
         goBack={() => {
           setShowImportScreen(false);
         }}
+        persist={props.persist}
       />
     );
   }
@@ -192,8 +197,9 @@ export const CreateLocalWallet_Guest: React.FC<{
   onConnect: () => void;
   goBack: () => void;
   localWallet: LocalWalletConfig;
+  persist: boolean;
 }> = (props) => {
-  const { localWallet } = useLocalWalletInfo(props.localWallet);
+  const { localWallet } = useLocalWalletInfo(props.localWallet, props.persist);
   const { setConnectedWallet, setConnectionStatus } = useWalletContext();
   const { onConnect } = props;
 

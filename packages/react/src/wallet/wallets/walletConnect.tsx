@@ -22,7 +22,7 @@ type walletConnectConfig = {
 
 export const walletConnect = (
   config?: walletConnectConfig,
-): WalletConfig<WalletConnect, walletConnectConfig> => {
+): WalletConfig<WalletConnect> => {
   const projectId = config?.projectId || TW_WC_PROJECT_ID;
   return {
     id: WalletConnect.id,
@@ -34,10 +34,6 @@ export const walletConnect = (
         projectId,
         qrModalOptions: config?.qrModalOptions,
       });
-    },
-    config: {
-      projectId,
-      qrModalOptions: config?.qrModalOptions,
     },
   };
 };
