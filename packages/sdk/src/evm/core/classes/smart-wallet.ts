@@ -115,6 +115,30 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
   /*********************************
    * WRITE FUNCTIONS
   ********************************/
+
+  grantAdminAccess = buildTransactionFunction(
+    async(
+      signer: string,
+    ): Promise<Transaction> => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "setAdmin",
+        args: [signer, true],
+      })
+    }
+  )
+
+  revokeAdminAccess = buildTransactionFunction(
+    async(
+      signer: string,
+    ): Promise<Transaction> => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "setAdmin",
+        args: [signer, false],
+      })
+    }
+  )
   
   // TODO: documentation
   grantAccess = buildTransactionFunction(
