@@ -8,7 +8,7 @@ import type {
   IAccountCore, IAccountFactory, IAccountPermissions,
 } from "@thirdweb-dev/contracts-js";
 import IAccountFactoryAbi from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactory.json";
-import { AccessRestrictions, RoleAction, RoleRequest, SignedAccountPermissionsPayload, SignerWithRestrictions } from "../../types";
+import { AccessRestrictions, AccessRestrictionsInput, RoleAction, RoleRequest, SignedAccountPermissionsPayload, SignerWithRestrictions } from "../../types";
 import { randomUUID } from "crypto";
 import invariant from "tiny-invariant";
 import { buildTransactionFunction } from "../../common/transactions";
@@ -144,7 +144,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
   grantAccess = buildTransactionFunction(
     async(
       signer: string,
-      restrictions: AccessRestrictions,
+      restrictions: AccessRestrictionsInput,
     ): Promise<Transaction> => {
       // Performing a multicall: [1] setting restrictions for role, [2] granting role to signer.
       const encoded: string[] = [];
@@ -159,8 +159,8 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
         role,
         approvedTargets: restrictions.approvedCallTargets,
         maxValuePerTransaction: restrictions.nativeTokenLimitPerTransaction,
-        startTimestamp: Math.floor(restrictions.startDate.getTime() / 1000),
-        endTimestamp: Math.floor(restrictions.expirationDate.getTime() / 1000),
+        startTimestamp: restrictions.startDate,
+        endTimestamp: restrictions.expirationDate,
       }
 
       encoded.push(this.contractWrapper.readContract.interface.encodeFunctionData("setRoleRestrictions", [roleRestrictions]));

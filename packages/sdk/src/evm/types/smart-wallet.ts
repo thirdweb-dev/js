@@ -1,5 +1,8 @@
 import type { IAccountPermissions } from "@thirdweb-dev/contracts-js";
 import { BigNumber, BytesLike } from "ethers";
+import { EndDateSchema, StartDateSchema } from "../schema";
+import { AmountSchema } from "../../core/schema/shared";
+import { z } from "zod";
 
 export type AccountEvent = {
   account: string;
@@ -34,3 +37,14 @@ export const RoleRequest = [
   { name: "validityEndTimestamp", type: "uint128" },
   { name: "uid", type: "bytes32" },
 ];
+
+// Zod things
+
+export const AccessRestrictionsInput = z.object({
+  startDate: StartDateSchema,
+  expirationDate: EndDateSchema,
+  nativeTokenLimitPerTransaction: AmountSchema,
+  approvedCallTargets: z.array(z.string())
+})
+
+export type AccessRestrictionsInput = z.output<typeof AccessRestrictionsInput>;
