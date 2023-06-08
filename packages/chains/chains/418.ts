@@ -10,8 +10,7 @@ export default {
   },
   "rpc": [
     "https://latestnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.testnet.lachain.network",
-    "https://lachain-testnet.rpc-nodes.cedalio.dev"
+    "https://rpc.testnet.lachain.network"
   ],
   "faucets": [
     "https://faucet.lachain.network"
