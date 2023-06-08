@@ -3,6 +3,7 @@ import {
   requiredParamInvariant,
 } from "../../../core/query-utils/required-param";
 import { useSDKChainId } from "../../providers/thirdweb-sdk-provider";
+import { WalletAddress } from "../../types";
 import {
   cacheKeys,
   invalidateContractAndBalances,
@@ -14,7 +15,7 @@ import {
   UseQueryResult,
 } from "@tanstack/react-query";
 import type {
-  AccountEvent, AddressOrEns, SmartContract,
+  AccountEvent, SmartContract,
 } from "@thirdweb-dev/sdk";
 import type { BytesLike } from "ethers";
 import invariant from "tiny-invariant";
@@ -73,9 +74,9 @@ export function useSmartWallets(
  */
 export function useIsSmartWalletDeployed(
   contract: RequiredParam<SmartContract>,
-  admin: AddressOrEns,
+  admin: RequiredParam<WalletAddress>,
   extraData?: BytesLike,
-): UseQueryResult<AccountEvent[]> {
+): UseQueryResult<boolean> {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.smartWalletFactory.getAll(contractAddress),
@@ -85,6 +86,7 @@ export function useIsSmartWalletDeployed(
         contract.smartWalletFactory.isWalletDeployed,
         "Contract instance does not support contract.smartWalletFactory.getAllWallets",
       );
+      invariant(admin, "No wallet address provided");
       return contract.smartWalletFactory.isWalletDeployed(admin, extraData);
     },
     { enabled: !!contract },
