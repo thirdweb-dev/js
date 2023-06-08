@@ -3,18 +3,72 @@ import { FrameWallet } from "@thirdweb-dev/wallets";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { useEffect, useRef, useState } from "react";
-import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
+import {
+  BackButton,
+  HelperLink,
+  ModalDescription,
+  ModalTitle,
+} from "../../../components/modalElements";
+import { Spacer } from "../../../components/Spacer";
+import { Flex } from "../../../components/basic";
+import { ButtonLink } from "../../ConnectWallet/screens/GetStartedScreen";
+import { Img } from "../../../components/Img";
+import { iconSize } from "../../../design-system";
+
+const FrameFailedConnect: React.FC<{
+  onBack: () => void;
+  walletIconURL: string;
+  supportLink: string;
+}> = (props) => {
+  return (
+    <>
+      <BackButton onClick={() => props.onBack()} />
+      <Spacer y="lg" />
+      {
+        <>
+          <ModalTitle>Failed to connect to Frame.</ModalTitle>
+          <Spacer y="sm" />
+
+          <ModalDescription>
+            Make sure the desktop app is installed and running. You can download
+            Frame from the link below. Make sure to refresh this page once Frame
+            is running.
+          </ModalDescription>
+        </>
+      }
+      <Spacer y="xl" />
+      <Flex flexDirection="column" gap="xs">
+        <ButtonLink
+          onClick={() => {
+            window.open("https://frame.sh", "_blank");
+          }}
+        >
+          <Img
+            width={iconSize.lg}
+            height={iconSize.lg}
+            src={props.walletIconURL}
+          />
+          <span>Download Frame</span>
+        </ButtonLink>
+      </Flex>
+      <Spacer y="xl" />
+      <HelperLink target="_blank" href={props.supportLink}>
+        Still having troubles connecting?
+      </HelperLink>
+    </>
+  );
+};
 
 export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
-  const [screen, setScreen] = useState<"connecting" | "get-started">(
+  const [screen, setScreen] = useState<"connecting" | "connect-failed">(
     "connecting",
   );
-  const { walletConfig, close } = props;
   const connect = useConnect();
-
-  const { goBack } = props;
-
   const connectPrompted = useRef(false);
+  const { walletConfig, close, goBack } = props;
+  const downloadLink = "https://frame.sh";
+  const supportLink = "https://docs.frame.sh";
+
   useEffect(() => {
     if (connectPrompted.current) {
       return;
@@ -30,13 +84,13 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
           await connect(walletConfig);
           close();
         } catch (e) {
-          goBack();
+          setScreen("connect-failed");
         }
       }
 
       // on mobile we open the website
       else if (isMobile()) {
-        window.open("https://frame.sh");
+        window.open(downloadLink);
       }
     })();
   }, [walletConfig, close, connect, goBack]);
@@ -44,23 +98,20 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
   if (screen === "connecting") {
     return (
       <ConnectingScreen
-        onBack={props.goBack}
+        onBack={goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
-        supportLink="https://docs.frame.sh"
+        supportLink={supportLink}
       />
     );
   }
 
-  if (screen === "get-started") {
+  if (screen === "connect-failed") {
     return (
-      <GetStartedScreen
+      <FrameFailedConnect
+        onBack={goBack}
         walletIconURL={walletConfig.meta.iconURL}
-        walletName={walletConfig.meta.name}
-        chromeExtensionLink={walletConfig.meta.urls?.chrome}
-        googlePlayStoreLink={walletConfig.meta.urls?.android}
-        appleStoreLink={walletConfig.meta.urls?.ios}
-        onBack={props.goBack}
+        supportLink={supportLink}
       />
     );
   }
