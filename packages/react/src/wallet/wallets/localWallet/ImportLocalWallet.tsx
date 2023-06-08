@@ -22,9 +22,13 @@ export const ImportLocalWallet: React.FC<{
   onConnect: () => void;
   goBack: () => void;
   localWalletConf: LocalWalletConfig;
+  persist: boolean;
 }> = (props) => {
   const [jsonString, setJsonString] = useState<string | undefined>();
-  const { setLocalWallet, meta } = useLocalWalletInfo(props.localWalletConf);
+  const { setLocalWallet, meta } = useLocalWalletInfo(
+    props.localWalletConf,
+    props.persist,
+  );
   const createWalletInstance = useCreateWalletInstance();
   const [password, setPassword] = useState("");
   const [isWrongPassword, setIsWrongPassword] = useState(false);
