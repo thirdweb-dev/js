@@ -29,7 +29,8 @@ import {
 } from "../../constants/erc721-features";
 import type { Address } from "../../schema/shared/Address";
 import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
-import type { ClaimOptions, UploadProgressEvent } from "../../types";
+import type { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
+import type { UploadProgressEvent } from "../../types/events";
 import type {
   BaseClaimConditionERC721,
   BaseDropERC721,

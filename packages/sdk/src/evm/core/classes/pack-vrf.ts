@@ -7,7 +7,7 @@ import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Address } from "../../schema/shared/Address";
 import { SDKOptions } from "../../schema/sdk-options";
 import { PackRewards } from "../../schema/tokens/pack";
-import { Amount, CurrencyValue } from "../../types";
+import type { Amount, CurrencyValue } from "../../types/currency";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { ContractWrapper } from "./contract-wrapper";
