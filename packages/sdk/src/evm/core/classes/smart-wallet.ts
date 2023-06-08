@@ -151,6 +151,11 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
       restrictions: AccessRestrictions,
     ): Promise<Transaction> => {
 
+      const currentRole = (await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signer)).role;
+      if(currentRole !== "0x0000000000000000000000000000000000000000000000000000000000000000") {
+        throw new Error("Signer already has access");
+      }
+
       // Performing a multicall: [1] setting restrictions for role, [2] granting role to signer.
       const encoded: string[] = [];
 
@@ -193,6 +198,11 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
     async(
       signer: string,
     ): Promise<Transaction> => {
+      const currentRole = (await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signer)).role;
+      if(currentRole === "0x0000000000000000000000000000000000000000000000000000000000000000") {
+        throw new Error("Signer does not have access");
+      }
+
       const { payload, signature } = await this.generatePayload(signer, RoleAction.REVOKE);
       
       const isValidSigner = await this.contractWrapper.readContract.verifyRoleRequest(payload, signature);
