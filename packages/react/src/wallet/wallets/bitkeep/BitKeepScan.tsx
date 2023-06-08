@@ -15,7 +15,8 @@ export const BitKeepScan: React.FC<{
 }> = ({ onBack, onConnected, onGetStarted, walletConfig }) => {
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
-  const { setConnectedWallet, chainToConnect } = useWalletContext();
+  const { setConnectedWallet, chainToConnect, setConnectionStatus } =
+    useWalletContext();
 
   const scanStarted = useRef(false);
   useEffect(() => {
@@ -26,6 +27,7 @@ export const BitKeepScan: React.FC<{
 
     const bitkeep = createInstance(walletConfig);
 
+    setConnectionStatus("connecting");
     bitkeep.connectWithQrCode({
       chainId: chainToConnect?.chainId,
       onQrCodeUri(uri) {
@@ -42,6 +44,7 @@ export const BitKeepScan: React.FC<{
     chainToConnect,
     onConnected,
     walletConfig,
+    setConnectionStatus,
   ]);
 
   return (
