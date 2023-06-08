@@ -1,6 +1,6 @@
 import { BigNumber, BytesLike, ethers, Signer } from "ethers";
 import invariant from "tiny-invariant";
-import { DeployOptions } from "../../types";
+import type { DeployOptions } from "../../types/deploy";
 import { isContractDeployed } from "./isContractDeployed";
 import { getInitBytecodeWithSalt } from "./getInitBytecodeWithSalt";
 

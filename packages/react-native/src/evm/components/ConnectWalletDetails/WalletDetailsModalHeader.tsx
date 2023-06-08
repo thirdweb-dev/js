@@ -63,7 +63,9 @@ export const WalletDetailsModalHeader = ({
             />
           </Box>
           <Text variant="bodySmallSecondary">
-            {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
+            {balanceQuery.data
+              ? Number(balanceQuery.data.displayValue).toFixed(3)
+              : ""}{" "}
             {balanceQuery.data?.symbol}
           </Text>
         </BaseButton>

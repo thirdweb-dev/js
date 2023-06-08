@@ -2,7 +2,7 @@ import {
   AbstractClaimConditionContractStruct,
   ClaimConditionOutputSchema,
 } from "../../schema/contracts/common/claim-conditions";
-import { ClaimCondition } from "../../types";
+import type { ClaimCondition } from "../../types/claim-conditions/claim-conditions";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, providers } from "ethers";
 import { fetchCurrencyValue } from "../currency/fetchCurrencyValue";
