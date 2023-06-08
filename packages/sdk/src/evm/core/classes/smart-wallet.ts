@@ -8,7 +8,7 @@ import type {
   IAccountCore, IAccountFactory, IAccountPermissions,
 } from "@thirdweb-dev/contracts-js";
 import IAccountFactoryAbi from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactory.json";
-import { AccessRestrictions, AccessRestrictionsInput, RoleAction, RoleRequest, SignedAccountPermissionsPayload, SignerWithRestrictions } from "../../types";
+import { AccessRestrictions, RoleAction, RoleRequest, SignedAccountPermissionsPayload, SignerWithRestrictions } from "../../types";
 import { randomUUID } from "crypto";
 import invariant from "tiny-invariant";
 import { buildTransactionFunction } from "../../common/transactions";
@@ -33,8 +33,8 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
 
   private parseRoleRestrictionsStruct(restrictions: IAccountPermissions.RoleRestrictionsStruct): AccessRestrictions {
     return {
-      startDate: new Date(parseInt((restrictions.startTimestamp).toString())),
-      expirationDate: new Date(parseInt((restrictions.endTimestamp).toString())),
+      startDate: new Date(parseInt((restrictions.startTimestamp).toString()) * 1000),
+      expirationDate: new Date(parseInt((restrictions.endTimestamp).toString()) * 1000),
       nativeTokenLimitPerTransaction: BigNumber.from(restrictions.maxValuePerTransaction),
       approvedCallTargets: restrictions.approvedTargets,
     }
@@ -50,8 +50,12 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
       target: signer,
       action: roleAction,
       validityStartTimestamp: 0,
-      validityEndTimestamp: ethers.constants.MaxUint256,
-      uid: randomUUID(),
+      validityEndTimestamp: BigNumber.from(
+        Math.floor(
+          (new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 * 10)).getTime() / 1000
+        )
+      ),
+      uid: ethers.utils.solidityKeccak256(["string"], [randomUUID()]),
     }
 
     // Generate signature
@@ -62,7 +66,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
     const signature = await this.contractWrapper.signTypedData(
       connectedSigner,
       {
-        name: "AccountPermissions",
+        name: "Account",
         version: "1",
         chainId,
         verifyingContract: this.contractWrapper.readContract.address,
@@ -144,7 +148,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
   grantAccess = buildTransactionFunction(
     async(
       signer: string,
-      restrictions: AccessRestrictionsInput,
+      restrictions: AccessRestrictions,
     ): Promise<Transaction> => {
       // Performing a multicall: [1] setting restrictions for role, [2] granting role to signer.
       const encoded: string[] = [];
@@ -159,8 +163,8 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
         role,
         approvedTargets: restrictions.approvedCallTargets,
         maxValuePerTransaction: restrictions.nativeTokenLimitPerTransaction,
-        startTimestamp: restrictions.startDate,
-        endTimestamp: restrictions.expirationDate,
+        startTimestamp: Math.floor(restrictions.startDate.getTime() / 1000),
+        endTimestamp: Math.floor(restrictions.expirationDate.getTime() / 1000),
       }
 
       encoded.push(this.contractWrapper.readContract.interface.encodeFunctionData("setRoleRestrictions", [roleRestrictions]));
