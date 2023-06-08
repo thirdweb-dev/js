@@ -51,7 +51,9 @@ export const WalletDetailsButton = ({
             <ChainIcon size={32} chainIconUrl={chain?.icon?.url} />
             <Box justifyContent="center" alignItems="flex-start">
               <Text variant="bodySmall">
-                {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
+                {balanceQuery.data
+                  ? Number(balanceQuery.data.displayValue).toFixed(3)
+                  : ""}{" "}
                 {balanceQuery.data?.symbol}
               </Text>
               {activeWallet?.walletId === LocalWallet.id ? (
