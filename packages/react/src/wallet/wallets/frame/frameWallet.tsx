@@ -1,10 +1,5 @@
 import type { WalletConfig, WalletOptions } from "@thirdweb-dev/react-core";
-import {
-  FrameWallet,
-  assertWindowEthereum,
-  createAsyncLocalStorage,
-  walletIds,
-} from "@thirdweb-dev/wallets";
+import { FrameWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
 import { FrameConnectUI } from "./FrameConnectUI";
 
 export const frameWallet = (): WalletConfig<FrameWallet> => ({
