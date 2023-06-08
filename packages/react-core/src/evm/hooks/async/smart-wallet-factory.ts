@@ -3,6 +3,7 @@ import {
   requiredParamInvariant,
 } from "../../../core/query-utils/required-param";
 import { useSDKChainId } from "../../providers/thirdweb-sdk-provider";
+import { WalletAddress } from "../../types";
 import {
   cacheKeys,
   invalidateContractAndBalances,
@@ -73,9 +74,9 @@ export function useSmartWallets(
  */
 export function useIsSmartWalletDeployed(
   contract: RequiredParam<SmartContract>,
-  admin: AddressOrEns,
+  admin: RequiredParam<WalletAddress>,
   extraData?: BytesLike,
-): UseQueryResult<AccountEvent[]> {
+): UseQueryResult<boolean> {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.smartWalletFactory.getAll(contractAddress),
