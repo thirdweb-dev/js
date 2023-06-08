@@ -1,7 +1,9 @@
-import { Center, Flex, Image, Skeleton } from "@chakra-ui/react";
+import { Center, Flex, Icon, Image, Skeleton } from "@chakra-ui/react";
 import { Chain } from "@thirdweb-dev/chains";
 import { ChainIcon } from "components/icons/ChainIcon";
-import { Heading, Text } from "tw-components";
+import Link from "next/link";
+import { FiExternalLink } from "react-icons/fi";
+import { Heading, LinkButton, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
 interface MetadataHeaderProps {
@@ -27,6 +29,10 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
   chain,
 }) => {
   const cleanedChainName = chain?.name?.replace("Mainnet", "").trim();
+  const validBlockExplorer = chain?.explorers?.find(
+    (explorer) => explorer.standard === "EIP3091",
+  );
+
   return (
     <Flex align={{ base: "flex-start", md: "center" }} gap={4}>
       {(data?.image || !isLoaded) && !isError ? (
@@ -128,6 +134,18 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
         )}
         <Flex gap={2}>
           <AddressCopyButton size="xs" address={address} />
+          {validBlockExplorer && (
+            <LinkButton
+              variant="outline"
+              isExternal
+              size="xs"
+              noIcon
+              href={`${validBlockExplorer.url}/address/${address}`}
+              leftIcon={<Icon as={FiExternalLink} />}
+            >
+              View on {validBlockExplorer.name}
+            </LinkButton>
+          )}
         </Flex>
       </Flex>
     </Flex>
