@@ -57,9 +57,7 @@ export const ConnectModal = () => {
   const isWrapperConnected = !!wallet?.getPersonalWallet();
 
   const isWrapperScreen =
-    typeof screen !== "string" &&
-    "config" in screen &&
-    !!(screen.config as any).personalWallets;
+    typeof screen !== "string" && !!screen.personalWallets;
 
   const prevConnectionStatus = useRef(connectionStatus);
 

@@ -45,7 +45,7 @@ export interface ThirdwebAuthConfig {
   secureStorage?: ISecureStorage;
 }
 
-interface ThirdwebAuthContext extends ThirdwebAuthConfig {}
+export interface ThirdwebAuthContext extends ThirdwebAuthConfig {}
 
 const ThirdwebAuthContext = createContext<ThirdwebAuthContext | undefined>(
   undefined,

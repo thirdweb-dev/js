@@ -1,4 +1,4 @@
-import { ThirdwebAuthProvider } from "../../evm/contexts/thirdweb-auth";
+import { ThirdwebAuthProvider } from "../../evm/contexts/ThirdwebAuthProvider";
 import { useUpdateChainsWithApiKeys } from "../../evm/hooks/chain-hooks";
 import { ThirdwebSDKProvider } from "../../evm/providers/thirdweb-sdk-provider";
 import { ThirdwebSDKProviderProps } from "../../evm/providers/types";
