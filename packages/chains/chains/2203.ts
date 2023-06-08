@@ -16,22 +16,12 @@ export default {
   "shortName": "BTC",
   "chainId": 2203,
   "networkId": 2203,
-  "icon": {
-    "url": "ipfs://bafkreic4aq265oaf6yze7ba5okefqh6vnqudyrz6ovukvbnrlhet36itle",
-    "width": 200,
-    "height": 200,
-    "format": "png"
-  },
+  "icon": "ebtc",
   "explorers": [
     {
       "name": "Explorer",
       "url": "https://explorer.bitcoinevm.com",
-      "icon": {
-        "url": "ipfs://bafkreic4aq265oaf6yze7ba5okefqh6vnqudyrz6ovukvbnrlhet36itle",
-        "width": 200,
-        "height": 200,
-        "format": "png"
-      },
+      "icon": "ebtc",
       "standard": "none"
     }
   ],
