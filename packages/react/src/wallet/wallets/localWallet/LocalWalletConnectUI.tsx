@@ -13,7 +13,6 @@ export const LocalWalletConnectUI = (
   props: ConnectUIProps<LocalWallet> & { persist: boolean },
 ) => {
   const { walletData } = useLocalWalletInfo(props.walletConfig, props.persist);
-  console.log({ persist: props.persist });
 
   if (!props.persist) {
     return (
