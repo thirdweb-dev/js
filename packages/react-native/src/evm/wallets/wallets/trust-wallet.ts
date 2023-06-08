@@ -35,8 +35,5 @@ export const trustWallet = (config?: TrustWalletConfig) => {
         walletId: "trust",
         projectId: config?.projectId,
       }),
-    config: {
-      projectId: config?.projectId,
-    },
-  } satisfies WalletConfig<WalletConnectV2, TrustWalletConfig>;
+  } satisfies WalletConfig<WalletConnectV2>;
 };

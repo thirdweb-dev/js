@@ -9,12 +9,15 @@ export const localWallet = (
     id: LocalWallet.id,
     meta: { ...LocalWallet.meta, name: "Guest Wallet" },
     create: (options: WalletOptions) => new LocalWallet(options),
-    config: {
-      persist: config && config.persist !== undefined ? config.persist : true,
-    },
-    connectUI: LocalWalletConnectUI,
-    isInstalled() {
-      return false;
+    connectUI(props) {
+      return (
+        <LocalWalletConnectUI
+          {...props}
+          persist={
+            config && config.persist !== undefined ? config.persist : true
+          }
+        />
+      );
     },
   };
 };
