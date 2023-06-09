@@ -3,7 +3,7 @@ import { getPrebuiltInfo } from "../common/legacy";
 import { fetchAbiFromAddress } from "../common/metadata-resolver";
 import { ALL_ROLES } from "../common/role";
 import type { NetworkInput } from "../core/types";
-import { getSignerAndProvider } from "../functions/getSignerAndProvider";
+import { getSignerAndProvider } from "../constants/urls";
 import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
 import { DropErc721ContractSchema } from "../schema/contracts/drop-erc721";
 import { MarketplaceContractSchema } from "../schema/contracts/marketplace";

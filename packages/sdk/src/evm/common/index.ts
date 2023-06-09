@@ -28,6 +28,7 @@ export * from "./feature-detection/detectContractFeature";
 export * from "./feature-detection/hasFunction";
 
 export * from "./version-checker";
+export * from "./fetchSourceFilesFromMetadata";
 
 // currency
 export { isNativeToken } from "./currency/isNativeToken";
@@ -82,5 +83,7 @@ export { convertToReadableQuantity } from "./claim-conditions/convertToReadableQ
 export { fetchSnapshotEntryForAddress } from "./claim-conditions/fetchSnapshotEntryForAddress";
 
 export { getCachedAbiForContract } from "./abi";
-export * from "./ens";
-export { prepareGaslessRequest } from "./transactions";
+
+// ens
+export * from "./ens/resolveEns";
+export * from "./ens/resolveAddress";

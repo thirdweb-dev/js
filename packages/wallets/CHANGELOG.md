@@ -1,5 +1,26 @@
 # @thirdweb-dev/wallets
 
+## 0.2.26
+
+### Patch Changes
+
+- [#1153](https://github.com/thirdweb-dev/js/pull/1153) [`2a443365`](https://github.com/thirdweb-dev/js/commit/2a443365bdc3d47d0f41fc895f70256dcde423f5) Thanks [@kristofgazso](https://github.com/kristofgazso)! - Fix Celo BASEFEE check
+
+- [#1132](https://github.com/thirdweb-dev/js/pull/1132) [`197a6838`](https://github.com/thirdweb-dev/js/commit/197a6838f69ae8b9ad46524e7c469fc757d0a2cb) Thanks [@MananTank](https://github.com/MananTank)! - Clear localWallet.ethersWallet when calling localWallet.disconnect
+
+- Updated dependencies [[`3bf7f375`](https://github.com/thirdweb-dev/js/commit/3bf7f375933cbd7dd8c682a66e8c67bbcb268bf7), [`16232de9`](https://github.com/thirdweb-dev/js/commit/16232de9eab9966e24e335929b2a3919346af265), [`8687d6ac`](https://github.com/thirdweb-dev/js/commit/8687d6ac3a363eae63eeb1959a953cbcd282d353), [`645b0303`](https://github.com/thirdweb-dev/js/commit/645b0303cc1a9cbb0a0e9cbd67d11c3b865e4584), [`522453fd`](https://github.com/thirdweb-dev/js/commit/522453fd568b8c350141a96f9f1c6d5a3ef74493), [`6803c3e9`](https://github.com/thirdweb-dev/js/commit/6803c3e97ca74eed19cd90095afde25b02150d51), [`56f85e57`](https://github.com/thirdweb-dev/js/commit/56f85e57df84bfa93e3230639c95d12466f8aec7), [`6a91b6a0`](https://github.com/thirdweb-dev/js/commit/6a91b6a0253bab5914d4ebdad951dd1c5d141fbc), [`a5f16b6d`](https://github.com/thirdweb-dev/js/commit/a5f16b6dc50b37920a6e5210b60aa6a1682ceb63), [`b6728603`](https://github.com/thirdweb-dev/js/commit/b6728603972ccd6c95108b25e8562807f0f95e19), [`ed47fd53`](https://github.com/thirdweb-dev/js/commit/ed47fd5310d11323080d984bca18a96fdef3a977)]:
+  - @thirdweb-dev/sdk@3.10.21
+  - @thirdweb-dev/chains@0.1.20
+
+## 0.2.25
+
+### Patch Changes
+
+- [#1118](https://github.com/thirdweb-dev/js/pull/1118) [`9b20fc9a`](https://github.com/thirdweb-dev/js/commit/9b20fc9ad2d303edc31f44fbd2ea3b4dcf35d11e) Thanks [@MananTank](https://github.com/MananTank)! - Remove chain restriction in paper wallet
+
+- Updated dependencies [[`ce36322b`](https://github.com/thirdweb-dev/js/commit/ce36322b383af73905894b73f9409a146359ffb0), [`c60658ed`](https://github.com/thirdweb-dev/js/commit/c60658ed8c94867cca831b0d5535006da5b40aa6), [`aa9e952c`](https://github.com/thirdweb-dev/js/commit/aa9e952cb519a47ed112d2905b1f3787863035b6), [`564eaccf`](https://github.com/thirdweb-dev/js/commit/564eaccf480a81f36db43c782392595a5021e5ac), [`6aee0413`](https://github.com/thirdweb-dev/js/commit/6aee0413439b9ca408879bbb3c38c538c89d01af), [`e93aa70e`](https://github.com/thirdweb-dev/js/commit/e93aa70ef0093a2526404e11b7ddae8fb98c213b), [`51bbd3d1`](https://github.com/thirdweb-dev/js/commit/51bbd3d1bccbb92a1405ea50f6c178c091a90f20)]:
+  - @thirdweb-dev/sdk@3.10.20
+
 ## 0.2.24
 
 ### Patch Changes

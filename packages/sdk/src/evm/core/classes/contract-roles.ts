@@ -1,5 +1,5 @@
 import { hasFunction } from "../../common/feature-detection/hasFunction";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { MissingRoleError } from "../../common/error";
 import { getRoleHash, Role } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";

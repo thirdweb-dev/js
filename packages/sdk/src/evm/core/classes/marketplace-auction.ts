@@ -9,7 +9,7 @@ import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetada
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import {
   handleTokenApproval,
   isWinningBid,

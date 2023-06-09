@@ -47,10 +47,8 @@ export type {
 } from "../core/types/wallet";
 
 // auth
-export {
-  ThirdwebAuthProvider,
-  useThirdwebAuthContext,
-} from "./contexts/thirdweb-auth";
+export { useThirdwebAuthContext } from "./contexts/thirdweb-auth";
+export { ThirdwebAuthProvider } from "./contexts/ThirdwebAuthProvider";
 export type {
   ThirdwebAuthConfig,
   ISecureStorage,
@@ -193,6 +191,13 @@ export {
   useTransferBatchToken,
   useBurnToken,
 } from "./hooks/async/token";
+
+// smart wallet factory
+export {
+  useIsSmartWalletDeployed,
+  useSmartWallets,
+  useCreateSmartWallet,
+} from "./hooks/async/smart-wallet-factory";
 
 // thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)
 

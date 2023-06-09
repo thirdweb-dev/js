@@ -1,7 +1,7 @@
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { fetchExtendedReleaseMetadata } from "../feature-detection/fetchExtendedReleaseMetadata";
 import { fetchPreDeployMetadata } from "../feature-detection/fetchPreDeployMetadata";
-import { DeployMetadata } from "../../types";
+import type { DeployMetadata } from "../../types/deploy";
 
 const deployMetadataCache: Record<string, any> = {};
 

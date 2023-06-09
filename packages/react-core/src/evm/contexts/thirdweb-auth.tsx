@@ -1,9 +1,4 @@
-import React, {
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useMemo,
-} from "react";
+import { createContext, useContext } from "react";
 
 export interface ISecureStorage {
   getItem(key: string): Promise<string | null>;
@@ -31,44 +26,21 @@ export interface ThirdwebAuthConfig {
 
   /**
    * Secure storage to use for storing the auth token when using JWT tokens.
-   * 
-   * Do not use a storage option that stores values accessible outside 
-   * your aplication (like localStorage on web environments) since you may 
+   *
+   * Do not use a storage option that stores values accessible outside
+   * your aplication (like localStorage on web environments) since you may
    * be exposing your auth token to malicious actors.
-   * 
+   *
    * ** By default auth uses cookies so no need to set this unless you want to specifically use JWT tokens **
    */
   secureStorage?: ISecureStorage;
 }
 
-interface ThirdwebAuthContext extends ThirdwebAuthConfig {}
+export interface ThirdwebAuthContext extends ThirdwebAuthConfig {}
 
-const ThirdwebAuthContext = createContext<ThirdwebAuthContext | undefined>(
-  undefined,
-);
-
-export const ThirdwebAuthProvider: React.FC<
-  PropsWithChildren<{ value?: ThirdwebAuthConfig }>
-> = ({ value, children }) => {
-  // Remove trailing slash from URL if present
-  const authContext = useMemo(() => {
-    if (!value) {
-      return undefined;
-    }
-
-    const context: ThirdwebAuthContext = {
-      ...value,
-      authUrl: value.authUrl?.replace(/\/$/, ""),
-    };
-
-    return context;
-  }, [value]);
-  return (
-    <ThirdwebAuthContext.Provider value={authContext}>
-      {children}
-    </ThirdwebAuthContext.Provider>
-  );
-};
+export const ThirdwebAuthContext = createContext<
+  ThirdwebAuthContext | undefined
+>(undefined);
 
 export function useThirdwebAuthContext() {
   return useContext(ThirdwebAuthContext);

@@ -8,14 +8,14 @@ import { DEFAULT_WALLETS } from "../../constants/wallets";
 import { createSyncStorage } from "../../../core/AsyncStorage";
 
 type SmartWalletConfig = {
-  personalWallets?: WalletConfig<any, any>[];
+  personalWallets?: WalletConfig<any>[];
 } & Omit<SmartWalletConfigWallets, "chain">;
 
-export type SmartWalletObj = WalletConfig<SmartWallet, SmartWalletConfig>;
+export type SmartWalletObj = WalletConfig<SmartWallet>;
 
 export const smartWallet = (
   config: SmartWalletConfig,
-): WalletConfig<SmartWallet, SmartWalletConfig> => {
+): WalletConfig<SmartWallet> => {
   return {
     id: SmartWallet.id,
     meta: SmartWallet.meta,
@@ -26,9 +26,6 @@ export const smartWallet = (
         walletStorage: createAsyncLocalStorage("smart-wallet"),
         wcStorage: createSyncStorage("smart-wallet"),
       }),
-    config: {
-      ...config,
-      personalWallets: config.personalWallets || DEFAULT_WALLETS,
-    },
+    personalWallets: config.personalWallets || DEFAULT_WALLETS,
   };
 };

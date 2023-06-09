@@ -19,9 +19,16 @@ export function magicLink(
     meta: MagicLink.meta,
     create: (options: WalletOptions) =>
       new MagicLink({ ...options, ...config }),
-    config,
     connectUI: MagicConnectionUI,
-    selectUI: MagicSelectionUI,
+    selectUI(props) {
+      return (
+        <MagicSelectionUI
+          {...props}
+          emailLogin={config.emailLogin !== false}
+          smsLogin={config.smsLogin !== false}
+        />
+      );
+    },
     isInstalled() {
       return false;
     },
@@ -29,10 +36,13 @@ export function magicLink(
 }
 
 const MagicSelectionUI: React.FC<
-  SelectUIProps<MagicLink, MagicLinkAdditionalOptions>
+  SelectUIProps<MagicLink> & {
+    emailLogin: boolean;
+    smsLogin: boolean;
+  }
 > = (props) => {
-  const isEmailEnabled = props.walletConfig.config.emailLogin !== false;
-  const isSMSEnabled = props.walletConfig.config.smsLogin !== false;
+  const isEmailEnabled = props.emailLogin !== false;
+  const isSMSEnabled = props.smsLogin !== false;
 
   let placeholder = "Enter your email or phone number";
   let type = "text";
@@ -65,7 +75,8 @@ const MagicSelectionUI: React.FC<
         const isPhone = Number.isInteger(Number(input[input.length - 1]));
 
         if (isEmail && isEmailEnabled) {
-          const isValidEmail = input.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
+          const emailRegex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
+          const isValidEmail = emailRegex.test(input);
           if (!isValidEmail) {
             return "Invalid email address";
           }
@@ -90,9 +101,13 @@ const MagicSelectionUI: React.FC<
   );
 };
 
-const MagicConnectionUI: React.FC<
-  ConnectUIProps<MagicLink, MagicLinkAdditionalOptions>
-> = ({ close, walletConfig, open, selectionData, supportedWallets }) => {
+const MagicConnectionUI: React.FC<ConnectUIProps<MagicLink>> = ({
+  close,
+  walletConfig,
+  open,
+  selectionData,
+  supportedWallets,
+}) => {
   const connectPrompted = useRef(false);
   const singleWallet = supportedWallets.length === 1;
   const connect = useConnect();

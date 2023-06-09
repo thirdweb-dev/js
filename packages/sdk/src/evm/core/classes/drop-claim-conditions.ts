@@ -1,7 +1,7 @@
 import { AmountSchema } from "../../../core/schema/shared";
 import { includesErrorMessage } from "../../common/error";
 import { isNativeToken } from "../../common/currency/isNativeToken";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
 import { hasFunction } from "../../common/feature-detection/hasFunction";
 import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
@@ -11,14 +11,14 @@ import { ClaimEligibility } from "../../enums";
 import { AbstractClaimConditionContractStruct } from "../../schema/contracts/common/claim-conditions";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { SnapshotEntryWithProof } from "../../schema/contracts/common/snapshots";
-import {
-  Amount,
-  ClaimCondition,
+import type {
   ClaimConditionFetchOptions,
+  ClaimCondition,
   ClaimConditionInput,
-  ClaimOptions,
   ClaimVerification,
-} from "../../types";
+  ClaimOptions,
+} from "../../types/claim-conditions/claim-conditions";
+import type { Amount } from "../../types/currency";
 import {
   BaseClaimConditionERC721,
   BaseDropERC20,
@@ -46,7 +46,7 @@ import type { IClaimCondition } from "@thirdweb-dev/contracts-js/src/IDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants, ethers, utils } from "ethers";
 import deepEqual from "fast-deep-equal";
-import { fetchSnapshotEntryForAddress } from "../../common";
+import { fetchSnapshotEntryForAddress } from "../../common/claim-conditions/fetchSnapshotEntryForAddress";
 import { abstractContractModelToLegacy } from "../../common/claim-conditions/abstractContractModelToLegacy";
 import { abstractContractModelToNew } from "../../common/claim-conditions/abstractContractModelToNew";
 import { convertQuantityToBigNumber } from "../../common/claim-conditions/convertQuantityToBigNumber";

@@ -1,5 +1,6 @@
 import { Json, ThirdwebAuth as ThirdwebAuthSDK } from "../core";
 import { getUser } from "./helpers/user";
+import payloadHandler from "./routes/payload";
 import loginHandler from "./routes/login";
 import logoutHandler from "./routes/logout";
 import userHandler from "./routes/user";
@@ -27,6 +28,8 @@ async function ThirdwebAuthRouter(
   const action = thirdweb?.[0] as ThirdwebAuthRoute;
 
   switch (action) {
+    case "payload":
+      return await payloadHandler(req, res, ctx);
     case "login":
       return await loginHandler(req, res, ctx);
     case "user":

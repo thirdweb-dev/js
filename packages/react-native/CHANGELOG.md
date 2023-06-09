@@ -1,5 +1,93 @@
 # @thirdweb-dev/react-native
 
+## 0.2.18
+
+### Patch Changes
+
+- [#1137](https://github.com/thirdweb-dev/js/pull/1137) [`dec4c4a8`](https://github.com/thirdweb-dev/js/commit/dec4c4a8cfd3f3b257e537fa84ed038e781e6311) Thanks [@iketw](https://github.com/iketw)! - [ReactNative] Export WCV1 and WCV2 abstract classes to facilitate creation of wallet connect based wallets
+
+  You can now extend the abstract classes `WalletConnectV1` or `WalletConnectV2` and set your own metadata when implementing a wallet.
+
+  Find an example below implementing `MyWallet` that supports the `WalletConnectV2` protocol.
+
+  ```javascript
+  import {
+    WCMeta,
+    WalletConnectV2,
+    WalletOptions,
+    WalletConfig,
+  } from '@thirdweb-dev/react-native';
+
+  export class MyWallet extends WalletConnectV2 {
+    static id = 'mywallet' as const; // ID needed to identify your wallet in the SDK.
+    static meta = {
+      name: 'My Wallet', // Name that will show up in our Connect Modal.
+      iconURL:
+        'my-wallet-icon-url-ipfs-or-png', // Icon that will show up in our Connect Modal.
+      links: { // The WalletConnect mobile links.
+        native: 'mywallet://',
+        universal: 'https://mywallet.com',
+      },
+    };
+
+    getMeta(): WCMeta {
+      return MyWallet.meta;
+    }
+  }
+
+  /**
+   * The WalletConnectV2 projectId.
+   *
+   * We provide a default projectId but recommend you get your own
+   * when launching your app in production.
+   */
+  type MyWalletConfig = { projectId?: string };
+
+  export const myWallet = (config?: MyWalletConfig): WalletConfig<WalletConnectV2> => {
+    return {
+      id: MyWallet.id,
+      meta: MyWallet.meta,
+      create: (options: WalletOptions) =>
+        new MyWallet({
+          ...options,
+          projectId: config?.projectId,
+          walletId: MyWallet.id,
+        }),
+    };
+  };
+  ```
+
+  You can then use your new wallet in the `ThirdwebProvider`'s `supportedWallets` prop:
+
+  ```javascript
+  import { ThirdwebProvider } from "@thirdweb-dev/react-native";
+
+  <ThirdwebProvider supportedWallets={[myWallet()]}>
+    <App />
+  </ThirdwebProvider>;
+  ```
+
+- [#1151](https://github.com/thirdweb-dev/js/pull/1151) [`2a0294d8`](https://github.com/thirdweb-dev/js/commit/2a0294d8e67bbc08dcf59c79174a7626deb0e90a) Thanks [@MananTank](https://github.com/MananTank)! - Fix wrong balance in ConnectWallet
+
+- [#1135](https://github.com/thirdweb-dev/js/pull/1135) [`15ef4779`](https://github.com/thirdweb-dev/js/commit/15ef4779e0a95cbae3053bdecfd4d54e4c30b07b) Thanks [@iketw](https://github.com/iketw)! - [ReactNative] Exports base UI components (react-native/components/base). They can now be used in your application.
+
+- [#1144](https://github.com/thirdweb-dev/js/pull/1144) [`9ce3eb6a`](https://github.com/thirdweb-dev/js/commit/9ce3eb6aad957aff38fb4a25383ed17ff58e988f) Thanks [@MananTank](https://github.com/MananTank)! - Remove WalletConfig.config object from wallets
+
+- Updated dependencies [[`2a443365`](https://github.com/thirdweb-dev/js/commit/2a443365bdc3d47d0f41fc895f70256dcde423f5), [`3bf7f375`](https://github.com/thirdweb-dev/js/commit/3bf7f375933cbd7dd8c682a66e8c67bbcb268bf7), [`6a194262`](https://github.com/thirdweb-dev/js/commit/6a19426200297b8da158c7d860d31efcc8c15822), [`16232de9`](https://github.com/thirdweb-dev/js/commit/16232de9eab9966e24e335929b2a3919346af265), [`54cfd6d8`](https://github.com/thirdweb-dev/js/commit/54cfd6d8916c42d87b6aa438e607ce525766b686), [`8687d6ac`](https://github.com/thirdweb-dev/js/commit/8687d6ac3a363eae63eeb1959a953cbcd282d353), [`645b0303`](https://github.com/thirdweb-dev/js/commit/645b0303cc1a9cbb0a0e9cbd67d11c3b865e4584), [`522453fd`](https://github.com/thirdweb-dev/js/commit/522453fd568b8c350141a96f9f1c6d5a3ef74493), [`9a015a23`](https://github.com/thirdweb-dev/js/commit/9a015a23cde09c8ba6c36593a84303ffe409a79a), [`6803c3e9`](https://github.com/thirdweb-dev/js/commit/6803c3e97ca74eed19cd90095afde25b02150d51), [`0cba69ca`](https://github.com/thirdweb-dev/js/commit/0cba69ca40a8cf6f106344247d0082212cd169da), [`56f85e57`](https://github.com/thirdweb-dev/js/commit/56f85e57df84bfa93e3230639c95d12466f8aec7), [`197a6838`](https://github.com/thirdweb-dev/js/commit/197a6838f69ae8b9ad46524e7c469fc757d0a2cb), [`6a91b6a0`](https://github.com/thirdweb-dev/js/commit/6a91b6a0253bab5914d4ebdad951dd1c5d141fbc), [`e32faeb5`](https://github.com/thirdweb-dev/js/commit/e32faeb57a5c2193c40cb6129fab92b84069b12d), [`a5f16b6d`](https://github.com/thirdweb-dev/js/commit/a5f16b6dc50b37920a6e5210b60aa6a1682ceb63), [`b6728603`](https://github.com/thirdweb-dev/js/commit/b6728603972ccd6c95108b25e8562807f0f95e19), [`ed47fd53`](https://github.com/thirdweb-dev/js/commit/ed47fd5310d11323080d984bca18a96fdef3a977), [`9ce3eb6a`](https://github.com/thirdweb-dev/js/commit/9ce3eb6aad957aff38fb4a25383ed17ff58e988f)]:
+  - @thirdweb-dev/wallets@0.2.26
+  - @thirdweb-dev/sdk@3.10.21
+  - @thirdweb-dev/react-core@3.13.1
+  - @thirdweb-dev/chains@0.1.20
+
+## 0.2.17
+
+### Patch Changes
+
+- Updated dependencies [[`ce36322b`](https://github.com/thirdweb-dev/js/commit/ce36322b383af73905894b73f9409a146359ffb0), [`c60658ed`](https://github.com/thirdweb-dev/js/commit/c60658ed8c94867cca831b0d5535006da5b40aa6), [`aa9e952c`](https://github.com/thirdweb-dev/js/commit/aa9e952cb519a47ed112d2905b1f3787863035b6), [`564eaccf`](https://github.com/thirdweb-dev/js/commit/564eaccf480a81f36db43c782392595a5021e5ac), [`6aee0413`](https://github.com/thirdweb-dev/js/commit/6aee0413439b9ca408879bbb3c38c538c89d01af), [`21627c03`](https://github.com/thirdweb-dev/js/commit/21627c03d1bb1658fee19b12d580faa6c7f048d9), [`2283e71a`](https://github.com/thirdweb-dev/js/commit/2283e71acaaf3d15eb2d6121682f1d2a81eec4f3), [`e93aa70e`](https://github.com/thirdweb-dev/js/commit/e93aa70ef0093a2526404e11b7ddae8fb98c213b), [`51bbd3d1`](https://github.com/thirdweb-dev/js/commit/51bbd3d1bccbb92a1405ea50f6c178c091a90f20), [`9b20fc9a`](https://github.com/thirdweb-dev/js/commit/9b20fc9ad2d303edc31f44fbd2ea3b4dcf35d11e)]:
+  - @thirdweb-dev/sdk@3.10.20
+  - @thirdweb-dev/react-core@3.13.0
+  - @thirdweb-dev/wallets@0.2.25
+
 ## 0.2.16
 
 ### Patch Changes

@@ -1,10 +1,14 @@
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { getMultichainRegistryAddress } from "../../constants/addresses/getMultichainRegistryAddress";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { PublishedMetadata } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
-import { AddContractInput, ContractInput, DeployedContract } from "../../types";
+import type {
+  DeployedContract,
+  AddContractInput,
+  ContractInput,
+} from "../../types/registry";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
   TWMultichainRegistryRouter,

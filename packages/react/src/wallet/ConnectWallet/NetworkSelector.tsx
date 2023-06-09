@@ -36,6 +36,9 @@ import type { Chain } from "@thirdweb-dev/chains";
 import Fuse from "fuse.js";
 import { Button } from "../../components/buttons";
 import { isMobile } from "../../evm/utils/isMobile";
+import { useEffect } from "react";
+import { Flex } from "../../components/basic";
+import { SecondaryText } from "../../components/text";
 
 type RenderChain = React.FC<{
   chain: Chain;
@@ -397,6 +400,29 @@ const NetworkList = memo(function NetworkList(props: {
     }
   };
   const RenderChain = props.renderChain;
+
+  const [isLoading, setIsLoading] = useState(props.chains.length > 100);
+
+  useEffect(() => {
+    if (isLoading) {
+      setIsLoading(false);
+    }
+  }, [isLoading]);
+
+  if (isLoading) {
+    return (
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        style={{
+          height: "250px",
+        }}
+      >
+        {/* Don't put a spinner here - it's gonna freeze */}
+        <SecondaryText>Loading</SecondaryText>
+      </Flex>
+    );
+  }
 
   return (
     <NetworkListUl>

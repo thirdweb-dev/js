@@ -1,5 +1,11 @@
 # @thirdweb-dev/contracts-js
 
+## 1.3.5
+
+### Patch Changes
+
+- [#1095](https://github.com/thirdweb-dev/js/pull/1095) [`564eaccf`](https://github.com/thirdweb-dev/js/commit/564eaccf480a81f36db43c782392595a5021e5ac) Thanks [@nkrishang](https://github.com/nkrishang)! - Add SmartWalletFactory extension detection and logic
+
 ## 1.3.4
 
 ### Patch Changes

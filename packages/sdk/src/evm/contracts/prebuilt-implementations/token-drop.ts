@@ -1,5 +1,5 @@
 import { getRoleHash } from "../../common/role";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
@@ -20,7 +20,7 @@ import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../../schema/contracts/drop-erc20";
 import { SDKOptions } from "../../schema/sdk-options";
-import { Amount, CurrencyValue } from "../../types";
+import type { CurrencyValue, Amount } from "../../types/currency";
 import { PrebuiltTokenDrop } from "../../types/eips";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { CallOverrides, constants } from "ethers";

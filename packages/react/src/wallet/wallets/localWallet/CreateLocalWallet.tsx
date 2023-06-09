@@ -22,6 +22,7 @@ export const CreateLocalWallet_Password: React.FC<{
   goBack: () => void;
   localWalletConf: LocalWalletConfig;
   renderBackButton: boolean;
+  persist: boolean;
 }> = (props) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -29,9 +30,12 @@ export const CreateLocalWallet_Password: React.FC<{
   const passwordMismatch = confirmPassword && password !== confirmPassword;
   const [isConnecting, setIsConnecting] = useState(false);
 
-  const { localWallet, meta } = useLocalWalletInfo(props.localWalletConf);
+  const { localWallet, meta } = useLocalWalletInfo(
+    props.localWalletConf,
+    props.persist,
+  );
 
-  const { setConnectedWallet } = useWalletContext();
+  const { setConnectedWallet, setConnectionStatus } = useWalletContext();
   const [showImportScreen, setShowImportScreen] = useState(false);
 
   const [generatedAddress, setGeneratedAddress] = useState<string | null>(null);
@@ -55,6 +59,7 @@ export const CreateLocalWallet_Password: React.FC<{
         goBack={() => {
           setShowImportScreen(false);
         }}
+        persist={props.persist}
       />
     );
   }
@@ -65,7 +70,8 @@ export const CreateLocalWallet_Password: React.FC<{
     }
 
     setIsConnecting(true);
-    localWallet.connect();
+    setConnectionStatus("connecting");
+    await localWallet.connect();
 
     await localWallet.save({
       strategy: "encryptedJson",
@@ -191,9 +197,10 @@ export const CreateLocalWallet_Guest: React.FC<{
   onConnect: () => void;
   goBack: () => void;
   localWallet: LocalWalletConfig;
+  persist: boolean;
 }> = (props) => {
-  const { localWallet } = useLocalWalletInfo(props.localWallet);
-  const { setConnectedWallet } = useWalletContext();
+  const { localWallet } = useLocalWalletInfo(props.localWallet, props.persist);
+  const { setConnectedWallet, setConnectionStatus } = useWalletContext();
   const { onConnect } = props;
 
   const handleConnect = useCallback(async () => {
@@ -201,10 +208,11 @@ export const CreateLocalWallet_Guest: React.FC<{
       throw new Error("Invalid state");
     }
     await localWallet.generate();
+    setConnectionStatus("connecting");
     await localWallet.connect();
     setConnectedWallet(localWallet);
     onConnect();
-  }, [localWallet, setConnectedWallet, onConnect]);
+  }, [localWallet, setConnectedWallet, onConnect, setConnectionStatus]);
 
   const connecting = useRef(false);
   useEffect(() => {

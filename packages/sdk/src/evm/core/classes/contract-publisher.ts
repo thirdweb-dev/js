@@ -1,16 +1,14 @@
 import { DEFAULT_API_KEY } from "../../../core/constants/urls";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { fetchPreDeployMetadata } from "../../common/feature-detection/fetchPreDeployMetadata";
 import { extractFunctions } from "../../common/feature-detection/extractFunctions";
 import { extractConstructorParams } from "../../common/feature-detection/extractConstructorParams";
 import { fetchExtendedReleaseMetadata } from "../../common/feature-detection/fetchExtendedReleaseMetadata";
 import { fetchRawPredeployMetadata } from "../../common/feature-detection/fetchRawPredeployMetadata";
 import { resolveContractUriFromAddress } from "../../common/feature-detection/resolveContractUriFromAddress";
-import {
-  fetchContractMetadataFromAddress,
-  fetchSourceFilesFromMetadata,
-  fetchContractMetadata,
-} from "../../common/metadata-resolver";
+import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
+import { fetchContractMetadata } from "../../common/fetchContractMetadata";
+import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
 import { getCompositePluginABI } from "../../common/plugin/getCompositePluginABI";
 import { buildTransactionFunction } from "../../common/transactions";
 import { isIncrementalVersion } from "../../common/version-checker";

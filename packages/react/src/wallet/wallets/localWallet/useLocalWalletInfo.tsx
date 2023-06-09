@@ -4,7 +4,10 @@ import { LocalWallet } from "@thirdweb-dev/wallets";
 import { WalletData } from "@thirdweb-dev/wallets/src/evm/wallets/local-wallet";
 import { LocalWalletConfig } from "./types";
 
-export function useLocalWalletInfo(localWalletConfig: LocalWalletConfig) {
+export function useLocalWalletInfo(
+  localWalletConfig: LocalWalletConfig,
+  persist: boolean,
+) {
   const [walletData, setWalletData] = useState<WalletData | null | "loading">(
     "loading",
   );
@@ -15,18 +18,18 @@ export function useLocalWalletInfo(localWalletConfig: LocalWalletConfig) {
     const wallet = createWalletInstance(localWalletConfig) as LocalWallet;
     setLocalWallet(wallet);
 
-    if (localWalletConfig.config.persist) {
+    if (persist) {
       wallet.getSavedData().then((data) => {
         setWalletData(data);
       });
     }
-  }, [createWalletInstance, localWalletConfig]);
+  }, [createWalletInstance, localWalletConfig, persist]);
 
   return {
     setLocalWallet,
     localWallet,
     walletData,
     meta: localWalletConfig.meta,
-    persist: localWalletConfig.config.persist,
+    persist: persist,
   };
 }

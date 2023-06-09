@@ -69,10 +69,10 @@ export const SmartWalletFlow = ({
   );
 
   useEffect(() => {
-    if (walletObj.config.personalWallets?.length === 1) {
-      onChoosePersonalWallet(walletObj.config.personalWallets[0]);
+    if (walletObj.personalWallets?.length === 1) {
+      onChoosePersonalWallet(walletObj.personalWallets[0]);
     }
-  }, [onChoosePersonalWallet, walletObj.config.personalWallets]);
+  }, [onChoosePersonalWallet, walletObj.personalWallets]);
 
   useEffect(() => {
     (async () => {
@@ -203,7 +203,7 @@ export const SmartWalletFlow = ({
           </Text>
         </Text>
       }
-      wallets={walletObj.config.personalWallets || DEFAULT_WALLETS}
+      wallets={walletObj.personalWallets || DEFAULT_WALLETS}
       onChooseWallet={onChoosePersonalWallet}
       onClose={onClose}
     />
