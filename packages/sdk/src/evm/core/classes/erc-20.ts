@@ -14,12 +14,9 @@ import {
 import type { Address } from "../../schema/shared/Address";
 import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import type { TokenMintInput } from "../../schema/tokens/token";
-import type {
-  Currency,
-  CurrencyValue,
-  Amount,
-  ClaimOptions,
-} from "../../types";
+import type { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
+import type { CurrencyValue } from "../../types/currency";
+import type { Amount, Currency } from "../../types/currency";
 import type {
   BaseERC20,
   BaseSignatureMintERC20,
