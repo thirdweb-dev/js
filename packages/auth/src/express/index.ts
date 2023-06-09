@@ -4,6 +4,7 @@ import payloadHandler from "./routes/payload";
 import loginHandler from "./routes/login";
 import logoutHandler from "./routes/logout";
 import userHandler from "./routes/user";
+import activeHandler from "./routes/active";
 import {
   ThirdwebAuthConfig,
   ThirdwebAuthContext,
@@ -73,6 +74,13 @@ export function ThirdwebAuth<
     "/logout",
     asyncHandler((req: Request, res: Response) =>
       logoutHandler(req, res, ctx as ThirdwebAuthContext),
+    ),
+  );
+
+  router.post(
+    "/active",
+    asyncHandler((req: Request, res: Response) =>
+      activeHandler(req, res, ctx as ThirdwebAuthContext),
     ),
   );
 

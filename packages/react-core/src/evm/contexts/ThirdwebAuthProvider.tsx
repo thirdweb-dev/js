@@ -1,8 +1,12 @@
 import React, { PropsWithChildren, useEffect, useMemo } from "react";
-import { useUser } from "../hooks/auth";
-import { useWallet } from "../../core/hooks/wallet-hooks";
-import { ThirdwebAuthConfig, ThirdwebAuthContext } from "./thirdweb-auth";
-import Cookies from "js-cookie";
+import {
+  ThirdwebAuthConfig,
+  ThirdwebAuthContext,
+  useThirdwebAuthContext,
+} from "./thirdweb-auth";
+import { useAddress } from "../hooks/wallet";
+import { cacheKeys } from "../utils/cache-keys";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const ThirdwebAuthProvider: React.FC<
   PropsWithChildren<{ value?: ThirdwebAuthConfig }>
@@ -30,33 +34,35 @@ export const ThirdwebAuthProvider: React.FC<
 };
 
 function ChangeActiveWalletOnAccountSwitch() {
-  const wallet = useWallet();
-  const { isLoggedIn } = useUser();
+  const address = useAddress();
+  const authConfig = useThirdwebAuthContext();
+  const queryClient = useQueryClient();
 
+  // When active wallet switches, switch the active account cookie and invalidate user query
   useEffect(() => {
-    const handleChange = (data: { address?: string; chainId?: number }) => {
-      // if the user changes their account, switch the active account cookie
-      if (
-        data.address &&
-        Cookies.get(`thirdweb_auth_active_account`) &&
-        data.address !== Cookies.get(`thirdweb_auth_active_account`)
-      ) {
-        Cookies.set(`thirdweb_auth_active_account`, data.address);
+    const switchActiveAccount = async () => {
+      if (authConfig && authConfig.authUrl) {
+        if (address && queryClient) {
+          const res = await fetch(`${authConfig.authUrl}/active`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              address,
+            }),
+          });
+
+          if (res.ok) {
+            queryClient.invalidateQueries(cacheKeys.auth.user());
+          }
+        }
       }
     };
 
-    const shouldAddListener = wallet && isLoggedIn;
-
-    if (shouldAddListener) {
-      wallet.addListener("change", handleChange);
-    }
-
-    return () => {
-      if (shouldAddListener) {
-        wallet.removeListener("change", handleChange);
-      }
-    };
-  }, [wallet, isLoggedIn]);
+    switchActiveAccount();
+  }, [address, queryClient, authConfig]);
 
   return null;
 }

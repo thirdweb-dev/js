@@ -103,7 +103,6 @@
     "@thirdweb-dev/sdk": "workspace:*",
     "@thirdweb-dev/storage": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",
-    "js-cookie": "^3.0.5",
     "mime": "3.0.0",
     "tiny-invariant": "^1.2.0"
   },

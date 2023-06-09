@@ -8,6 +8,10 @@ export const PayloadBodySchema = z.object({
   address: z.string(),
 });
 
+export const ActiveBodySchema = z.object({
+  address: z.string(),
+});
+
 export const LoginPayloadBodySchema = z.object({
   payload: LoginPayloadOutputSchema,
 });
