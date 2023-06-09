@@ -7,7 +7,7 @@ import { ThirdwebAuthContext, ThirdwebAuthUser } from "../types";
 import { GetServerSidePropsContext, NextApiRequest } from "next";
 import { NextRequest } from "next/server";
 
-function getCookie(
+export function getCookie(
   req: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest,
   cookie: string,
 ): string | undefined {

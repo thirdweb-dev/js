@@ -1,8 +1,11 @@
 import { serialize } from "cookie";
-import { getToken } from "../helpers/user";
+import { getCookie } from "../helpers/user";
 import { ActiveBodySchema, ThirdwebAuthContext } from "../types";
 import { NextApiRequest, NextApiResponse } from "next";
-import { THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE } from "../../constants";
+import {
+  THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
+  THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX,
+} from "../../constants";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,22 +23,34 @@ export default async function handler(
     return res.status(400).json({ error: "Please provide an address" });
   }
 
-  console.log("Checking for token....");
-  const token = getToken(req);
-  if (!token) {
-    return res.status(400).json({ error: "No currently active account" });
-  }
+  let cookieExpiration: Date;
+  const cookie = getCookie(
+    req,
+    `${THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX}_${parsedPayload.data.address}`,
+  );
 
-  const {
-    payload: { exp },
-  } = ctx.auth.parseToken(token);
+  if (cookie) {
+    // If the new account is already logged in, get the expiration time from the cookie
+    const {
+      payload: { exp },
+    } = ctx.auth.parseToken(cookie);
+    cookieExpiration = new Date(exp * 1000);
+  } else if (ctx.authOptions?.tokenDurationInSeconds) {
+    // Otherwise, if we have a token duration in seconds, set it to that
+    cookieExpiration = new Date(
+      Date.now() + 1000 * ctx.authOptions.tokenDurationInSeconds,
+    );
+  } else {
+    // Otherwise, just default to 5 hours
+    cookieExpiration = new Date(Date.now() + 1000 * 60 * 60 * 5);
+  }
 
   res.setHeader("Set-Cookie", [
     serialize(THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE, parsedPayload.data.address, {
       domain: ctx.cookieOptions?.domain,
       path: ctx.cookieOptions?.path || "/",
       sameSite: ctx.cookieOptions?.sameSite || "none",
-      expires: new Date(exp * 1000),
+      expires: cookieExpiration,
       httpOnly: true,
       secure: true,
     }),

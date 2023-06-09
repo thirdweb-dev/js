@@ -6,7 +6,7 @@ import { Json } from "../../core/schema";
 import { ThirdwebAuthContext, ThirdwebAuthUser } from "../types";
 import { Request } from "express";
 
-function getCookie(req: Request, cookie: string): string | undefined {
+export function getCookie(req: Request, cookie: string): string | undefined {
   if (typeof req.cookies.get === "function") {
     return req.cookies.get(cookie);
   }
