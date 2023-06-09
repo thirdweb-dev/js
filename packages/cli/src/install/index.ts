@@ -5,46 +5,44 @@ import ora from "ora";
 // Import project dependencies
 import detectFramework from "../core/detection/detectFramework";
 import detectPackageManager from "../core/detection/detectPackageManager";
-import detectLibrary from "../core/detection/detectLibrary";
-import { info } from "../core/helpers/logger";
 import { ContractLibrariesType, contractLibraries } from "../core/types/ProjectType";
-import { checkIfBrowniePackageIsInstalled, getDependenciesForFoundry, getDependenciesForGo, getDependenciesForPython, getLatestVersion, installOrUpdate, parsePackageJson, processAppType, processContractAppType } from "../lib/utils";
+import { checkIfBrowniePackageIsInstalled, getDependenciesForFoundry, getDependenciesForGo, getDependenciesForPython, installOrUpdate, parsePackageJson, processAppType, processContractAppType } from "../lib/utils";
 
 // Define excluded dependencies
 const EXCLUDED_DEPENDENCIES = ["@thirdweb-dev/chain-icons"];
 
-export async function installV2(projectPath = ".", options: any) {
+export async function install(projectPath = ".", options: any) {
+  let installer;
+  let updater;
+
+  // Initialize all dependencies.
   let jsDependencies: { [key: string]: string } | string[] = {};
-  let pythonDependencies: string[] = [];
   let jsDevDependencies: { [key: string]: string } | string[] = {};
+  let pythonDependencies: string[] = [];
   let pythonDevDependencies: string[] = [];
   let peerDependencies: { [key: string]: string } = {};
   let goDependencies: { name: string; version: string }[] = [];
+  const thirdwebDepsToInstall = new Set<string>();
+  const otherDeps = new Set<string>();
 
   // Initialize brownie and foundry checks
   let thirdwebExistsInBrownie = { package: "", exists: false };
   let thirdwebExistsInFoundry = false;
 
-  // Detect the package manager, framework, and library used in the project
+
+  // Detect the package manager, and framework used in the project
   const detectedPackageManager = await detectPackageManager(projectPath, options);
   const detectedFramework = await detectFramework(projectPath, options, detectedPackageManager);
-  const detectedLibrary = await detectLibrary(projectPath, options, detectedPackageManager);
 
   // Determine project type
   const detectedAppType = detectedFramework !== "none" ? contractLibraries.includes(detectedFramework as ContractLibrariesType) ? "contract" : "app" : "app";
 
-  // Identify if a specific package manager is used
+  // Identify which specific package manager is used
   const isBrowniePackageManager = detectedPackageManager === "brownie";
   const isFoundryPackageManager = detectedPackageManager === "foundry";
   const isGoPackageManager = detectedPackageManager === "go-modules";
   const isPythonPackageManager = ["pip", "pipenv", "poetry"].includes(detectedPackageManager);
   const isJSPackageManager = ["yarn", "pnpm", "npm"].includes(detectedPackageManager);
-
-  // Log the detected items
-  info(`Detected package manager: "${detectedPackageManager}"`);
-  info(`Detected framework: "${detectedFramework}"`);
-  info(`Detected library: "${detectedLibrary}"`);
-  info(`Detected project type: "${detectedAppType}"`);
 
   // Processing JS/TS dependencies
   if (isJSPackageManager) {
@@ -130,9 +128,6 @@ export async function installV2(projectPath = ".", options: any) {
       .concat(thirdwebExistsInFoundry ? ["lib/thirdweb-contracts"] : [])
   );
 
-  const thirdwebDepsToInstall = new Set<string>();
-  const otherDeps = new Set<string>();
-
   if (detectedAppType === "contract") {
     processContractAppType({ detectedPackageManager, thirdwebDepsToUpdate, thirdwebDepsToInstall, isJSPackageManager })
   } else if (detectedAppType === "app") {
@@ -153,9 +148,6 @@ export async function installV2(projectPath = ".", options: any) {
     thirdwebDepsToUpdate.delete(excludedDep);
     thirdwebDepsToInstall.delete(excludedDep);
   });
-
-  let installer;
-  let updater;
 
   try {
     const dependenciesToAdd = [
@@ -183,9 +175,8 @@ export async function installV2(projectPath = ".", options: any) {
       updater?.succeed(`Updated: "${dependenciesToUpdate.join('", "')}"`);
     }
 
-
   } catch (err) {
-    console.error("Can't install within project");
+    console.error("Can't install within project: ", err);
     return Promise.reject("Can't install within project");
   }
 }
