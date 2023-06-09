@@ -15,6 +15,7 @@ import {
 import { TransactionDetailsForUserOp } from "./transaction-details";
 import { getUserOpHashV06 } from "./utils";
 import { DUMMY_PAYMASTER_AND_DATA, SIG_SIZE } from "./paymaster";
+import { CeloAlfajoresTestnet, CeloBaklavaTestnet, Celo } from "@thirdweb-dev/chains"
 
 export interface BaseApiParams {
   provider: providers.Provider;
@@ -282,6 +283,12 @@ export abstract class BaseAccountAPI {
       const feeData = await this.provider.getFeeData();
       if (!maxFeePerGas) {
         maxFeePerGas = feeData.maxFeePerGas ?? undefined;
+        const network = await this.provider.getNetwork();
+        const chainId = network.chainId;
+
+        if (chainId === Celo.chainId || chainId === CeloAlfajoresTestnet.chainId || chainId === CeloBaklavaTestnet.chainId) {
+          maxPriorityFeePerGas = maxFeePerGas;
+        }
       }
       if (!maxPriorityFeePerGas) {
         maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;

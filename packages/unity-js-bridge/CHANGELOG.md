@@ -1,5 +1,18 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.2.36
+
+### Patch Changes
+
+- [#1133](https://github.com/thirdweb-dev/js/pull/1133) [`b8498c2a`](https://github.com/thirdweb-dev/js/commit/b8498c2a10ad0480d50c2ce8db3d613d6ad75d8f) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - local wallet persistence, sw personal lw, disonnection handling, export handling
+
+- [#1142](https://github.com/thirdweb-dev/js/pull/1142) [`193de1e9`](https://github.com/thirdweb-dev/js/commit/193de1e9d86284a8d384e44fdd5194cf2e6d471a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Add ability to pass any personal wallet for WebGL smart wallets
+
+- Updated dependencies [[`2a443365`](https://github.com/thirdweb-dev/js/commit/2a443365bdc3d47d0f41fc895f70256dcde423f5), [`3bf7f375`](https://github.com/thirdweb-dev/js/commit/3bf7f375933cbd7dd8c682a66e8c67bbcb268bf7), [`8687d6ac`](https://github.com/thirdweb-dev/js/commit/8687d6ac3a363eae63eeb1959a953cbcd282d353), [`522453fd`](https://github.com/thirdweb-dev/js/commit/522453fd568b8c350141a96f9f1c6d5a3ef74493), [`6803c3e9`](https://github.com/thirdweb-dev/js/commit/6803c3e97ca74eed19cd90095afde25b02150d51), [`ab14cd89`](https://github.com/thirdweb-dev/js/commit/ab14cd89385aefad7f32e20a22baa9fce42b98e2), [`56f85e57`](https://github.com/thirdweb-dev/js/commit/56f85e57df84bfa93e3230639c95d12466f8aec7), [`197a6838`](https://github.com/thirdweb-dev/js/commit/197a6838f69ae8b9ad46524e7c469fc757d0a2cb), [`6a91b6a0`](https://github.com/thirdweb-dev/js/commit/6a91b6a0253bab5914d4ebdad951dd1c5d141fbc), [`a5f16b6d`](https://github.com/thirdweb-dev/js/commit/a5f16b6dc50b37920a6e5210b60aa6a1682ceb63), [`b6728603`](https://github.com/thirdweb-dev/js/commit/b6728603972ccd6c95108b25e8562807f0f95e19), [`ed47fd53`](https://github.com/thirdweb-dev/js/commit/ed47fd5310d11323080d984bca18a96fdef3a977)]:
+  - @thirdweb-dev/wallets@0.2.26
+  - @thirdweb-dev/sdk@3.10.21
+  - @thirdweb-dev/auth@3.1.1
+
 ## 0.2.35
 
 ### Patch Changes
