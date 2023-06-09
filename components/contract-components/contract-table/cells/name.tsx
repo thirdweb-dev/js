@@ -10,7 +10,9 @@ export const ContractNameCell: React.FC<
 
   return (
     <Skeleton isLoaded={publishMetadata.isSuccess}>
-      <Text size="label.md">{publishMetadata.data?.name}</Text>
+      <Text size="label.md" textAlign="left">
+        {publishMetadata.data?.name}
+      </Text>
     </Skeleton>
   );
 };
