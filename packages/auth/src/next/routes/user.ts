@@ -18,7 +18,10 @@ export default async function handler(
     });
   }
 
-  if (ctx.authOptions?.refreshIntervalInSeconds) {
+  const user = await getUser(req, ctx);
+
+  // Importantly, make sure the user was actually logged in before refreshing
+  if (user && ctx.authOptions?.refreshIntervalInSeconds) {
     const token = getToken(req);
     if (token) {
       const payload = ctx.auth.parseToken(token);
@@ -60,6 +63,5 @@ export default async function handler(
     }
   }
 
-  const user = await getUser(req, ctx);
   return res.status(200).json(user);
 }
