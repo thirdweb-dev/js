@@ -2,7 +2,10 @@ import {
   ClaimConditionInputSchema,
   ClaimConditionOutputSchema,
 } from "../../schema/contracts/common/claim-conditions";
-import { ClaimCondition, ClaimConditionInput } from "../../types";
+import type {
+  ClaimConditionInput,
+  ClaimCondition,
+} from "../../types/claim-conditions/claim-conditions";
 import { ethers } from "ethers";
 
 /**

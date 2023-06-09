@@ -3,7 +3,7 @@ import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_CLAIM_CUSTOM } from "../../constants/erc1155-features";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
-import { ClaimOptions } from "../../types";
+import type { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";

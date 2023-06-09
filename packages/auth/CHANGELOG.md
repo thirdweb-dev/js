@@ -1,5 +1,14 @@
 # @thirdweb-dev/auth
 
+## 3.1.1
+
+### Patch Changes
+
+- [#1126](https://github.com/thirdweb-dev/js/pull/1126) [`ab14cd89`](https://github.com/thirdweb-dev/js/commit/ab14cd89385aefad7f32e20a22baa9fce42b98e2) Thanks [@adam-maj](https://github.com/adam-maj)! - Add expiration date to cookie
+
+- Updated dependencies [[`2a443365`](https://github.com/thirdweb-dev/js/commit/2a443365bdc3d47d0f41fc895f70256dcde423f5), [`197a6838`](https://github.com/thirdweb-dev/js/commit/197a6838f69ae8b9ad46524e7c469fc757d0a2cb)]:
+  - @thirdweb-dev/wallets@0.2.26
+
 ## 3.1.0
 
 ### Minor Changes
