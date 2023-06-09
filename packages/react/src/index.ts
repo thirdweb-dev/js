@@ -8,6 +8,7 @@ export { walletConnect } from "./wallet/wallets/walletConnect";
 export { walletConnectV1 } from "./wallet/wallets/walletConnectV1";
 export { smartWallet } from "./wallet/wallets/smartWallet/smartWallet";
 export { magicLink } from "./wallet/wallets/magic/magicLink";
+export { gryfynWallet } from "./wallet/wallets/gryfyn/gryfynWallet";
 
 // at the moment we'll re-export everything from the evm package
 export * from "./evm";

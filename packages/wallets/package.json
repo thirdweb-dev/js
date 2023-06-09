@@ -57,6 +57,13 @@
       },
       "default": "./evm/wallets/ethers/dist/thirdweb-dev-wallets-evm-wallets-ethers.cjs.js"
     },
+    "./evm/wallets/gryfyn": {
+      "module": {
+        "browser": "./evm/wallets/gryfyn/dist/thirdweb-dev-wallets-evm-wallets-gryfyn.browser.esm.js",
+        "default": "./evm/wallets/gryfyn/dist/thirdweb-dev-wallets-evm-wallets-gryfyn.esm.js"
+      },
+      "default": "./evm/wallets/gryfyn/dist/thirdweb-dev-wallets-evm-wallets-gryfyn.cjs.js"
+    },
     "./evm/wallets/aws-kms": {
       "module": {
         "browser": "./evm/wallets/aws-kms/dist/thirdweb-dev-wallets-evm-wallets-aws-kms.browser.esm.js",
@@ -168,6 +175,13 @@
         "default": "./solana/wallets/private-key/dist/thirdweb-dev-wallets-solana-wallets-private-key.esm.js"
       },
       "default": "./solana/wallets/private-key/dist/thirdweb-dev-wallets-solana-wallets-private-key.cjs.js"
+    },
+    "./evm/connectors/gryfyn": {
+      "module": {
+        "browser": "./evm/connectors/gryfyn/dist/thirdweb-dev-wallets-evm-connectors-gryfyn.browser.esm.js",
+        "default": "./evm/connectors/gryfyn/dist/thirdweb-dev-wallets-evm-connectors-gryfyn.esm.js"
+      },
+      "default": "./evm/connectors/gryfyn/dist/thirdweb-dev-wallets-evm-connectors-gryfyn.cjs.js"
     },
     "./evm/wallets/coinbase-wallet": {
       "module": {

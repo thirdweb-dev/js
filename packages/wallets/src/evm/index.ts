@@ -36,7 +36,7 @@ export * from "./wallets/magic";
 export * from "./wallets/smart-wallet";
 export * from "./wallets/ethers";
 export * from "./wallets/private-key";
-
+export * from "./wallets/gryfyn";
 export type { Chain } from "@thirdweb-dev/chains";
 
 // export the window ethereum util
