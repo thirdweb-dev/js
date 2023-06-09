@@ -14,7 +14,7 @@ import {
   OfferInputParams,
   OfferInputParamsSchema,
 } from "../../schema/marketplacev3/offer";
-import { MarketplaceFilter } from "../../types";
+import type { MarketplaceFilter } from "../../types/marketplace";
 import { OfferV3 } from "../../types/marketplacev3";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";

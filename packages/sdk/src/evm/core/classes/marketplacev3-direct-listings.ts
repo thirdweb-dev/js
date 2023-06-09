@@ -21,7 +21,8 @@ import {
   DirectListingInputParams,
   DirectListingInputParamsSchema,
 } from "../../schema/marketplacev3/direct-listings";
-import { DirectListingV3, MarketplaceFilter } from "../../types";
+import type { MarketplaceFilter } from "../../types/marketplace";
+import type { DirectListingV3 } from "../../types/marketplacev3";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";

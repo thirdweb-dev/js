@@ -16,22 +16,23 @@ import { HeadlessConnectUI } from "../headlessConnectUI";
 export const safeWallet = (
   config?: SafeWalletConfigOptions,
 ): SafeWalletConfig => {
+  const personalWallets = config?.personalWallets || defaultWallets;
   return {
     id: SafeWallet.id,
     meta: SafeWallet.meta,
     create: (options: WalletOptions) => new SafeWallet({ ...options }),
-    connectUI: SafeConnectUI,
+    connectUI(props) {
+      return <SafeConnectUI {...props} personalWallets={personalWallets} />;
+    },
     isInstalled() {
       return false;
     },
-    config: {
-      personalWallets: config?.personalWallets || defaultWallets,
-    },
+    personalWallets: personalWallets,
   };
 };
 
 export const SafeConnectUI = (
-  props: ConnectUIProps<SafeWallet, Required<SafeWalletConfigOptions>>,
+  props: ConnectUIProps<SafeWallet> & { personalWallets: WalletConfig[] },
 ) => {
   const activeWallet = useWallet();
   const [personalWalletConfig, setPersonalWalletConfig] = useState<
@@ -52,7 +53,7 @@ export const SafeConnectUI = (
       open: props.open,
       theme: props.theme,
       walletConfig: personalWalletConfig,
-      supportedWallets: props.walletConfig.config.personalWallets,
+      supportedWallets: props.personalWallets,
       selectionData: props.selectionData,
       setSelectionData: props.setSelectionData,
     };
@@ -67,7 +68,7 @@ export const SafeConnectUI = (
   if (!activeWallet) {
     return (
       <SelectpersonalWallet
-        personalWallets={props.walletConfig.config.personalWallets}
+        personalWallets={props.personalWallets}
         onBack={props.goBack}
         safeWallet={props.walletConfig}
         selectWallet={setPersonalWalletConfig}

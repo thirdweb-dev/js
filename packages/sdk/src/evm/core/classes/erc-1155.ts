@@ -30,7 +30,8 @@ import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Address } from "../../schema/shared/Address";
 import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
 import { EditionMetadataOrUri } from "../../schema/tokens/edition";
-import { ClaimOptions, UploadProgressEvent } from "../../types";
+import type { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
+import type { UploadProgressEvent } from "../../types/events";
 import { AirdropInput } from "../../types/airdrop/airdrop";
 import {
   BaseClaimConditionERC1155,

@@ -1,5 +1,21 @@
 # @thirdweb-dev/react
 
+## 3.13.1
+
+### Patch Changes
+
+- [#1151](https://github.com/thirdweb-dev/js/pull/1151) [`2a0294d8`](https://github.com/thirdweb-dev/js/commit/2a0294d8e67bbc08dcf59c79174a7626deb0e90a) Thanks [@MananTank](https://github.com/MananTank)! - Fix wrong balance in ConnectWallet
+
+- [#1149](https://github.com/thirdweb-dev/js/pull/1149) [`65ecf072`](https://github.com/thirdweb-dev/js/commit/65ecf072eb810eaf850c0af94f3db5af51de8a28) Thanks [@MananTank](https://github.com/MananTank)! - Improve rendering of long network list in ConnectWallet Modal
+
+- [#1144](https://github.com/thirdweb-dev/js/pull/1144) [`9ce3eb6a`](https://github.com/thirdweb-dev/js/commit/9ce3eb6aad957aff38fb4a25383ed17ff58e988f) Thanks [@MananTank](https://github.com/MananTank)! - Remove WalletConfig.config object from wallets
+
+- Updated dependencies [[`2a443365`](https://github.com/thirdweb-dev/js/commit/2a443365bdc3d47d0f41fc895f70256dcde423f5), [`3bf7f375`](https://github.com/thirdweb-dev/js/commit/3bf7f375933cbd7dd8c682a66e8c67bbcb268bf7), [`6a194262`](https://github.com/thirdweb-dev/js/commit/6a19426200297b8da158c7d860d31efcc8c15822), [`16232de9`](https://github.com/thirdweb-dev/js/commit/16232de9eab9966e24e335929b2a3919346af265), [`54cfd6d8`](https://github.com/thirdweb-dev/js/commit/54cfd6d8916c42d87b6aa438e607ce525766b686), [`8687d6ac`](https://github.com/thirdweb-dev/js/commit/8687d6ac3a363eae63eeb1959a953cbcd282d353), [`645b0303`](https://github.com/thirdweb-dev/js/commit/645b0303cc1a9cbb0a0e9cbd67d11c3b865e4584), [`522453fd`](https://github.com/thirdweb-dev/js/commit/522453fd568b8c350141a96f9f1c6d5a3ef74493), [`9a015a23`](https://github.com/thirdweb-dev/js/commit/9a015a23cde09c8ba6c36593a84303ffe409a79a), [`6803c3e9`](https://github.com/thirdweb-dev/js/commit/6803c3e97ca74eed19cd90095afde25b02150d51), [`0cba69ca`](https://github.com/thirdweb-dev/js/commit/0cba69ca40a8cf6f106344247d0082212cd169da), [`56f85e57`](https://github.com/thirdweb-dev/js/commit/56f85e57df84bfa93e3230639c95d12466f8aec7), [`197a6838`](https://github.com/thirdweb-dev/js/commit/197a6838f69ae8b9ad46524e7c469fc757d0a2cb), [`6a91b6a0`](https://github.com/thirdweb-dev/js/commit/6a91b6a0253bab5914d4ebdad951dd1c5d141fbc), [`e32faeb5`](https://github.com/thirdweb-dev/js/commit/e32faeb57a5c2193c40cb6129fab92b84069b12d), [`a5f16b6d`](https://github.com/thirdweb-dev/js/commit/a5f16b6dc50b37920a6e5210b60aa6a1682ceb63), [`b6728603`](https://github.com/thirdweb-dev/js/commit/b6728603972ccd6c95108b25e8562807f0f95e19), [`ed47fd53`](https://github.com/thirdweb-dev/js/commit/ed47fd5310d11323080d984bca18a96fdef3a977), [`9ce3eb6a`](https://github.com/thirdweb-dev/js/commit/9ce3eb6aad957aff38fb4a25383ed17ff58e988f)]:
+  - @thirdweb-dev/wallets@0.2.26
+  - @thirdweb-dev/sdk@3.10.21
+  - @thirdweb-dev/react-core@3.13.1
+  - @thirdweb-dev/chains@0.1.20
+
 ## 3.13.0
 
 ### Patch Changes
