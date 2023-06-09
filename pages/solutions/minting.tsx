@@ -1,10 +1,5 @@
-import {
-  Box,
-  Flex,
-  ListItem,
-  SimpleGrid,
-  UnorderedList,
-} from "@chakra-ui/react";
+import { Box, Flex, SimpleGrid, useBreakpointValue } from "@chakra-ui/react";
+import { ChakraNextImage } from "components/Image";
 import { DeployAndAirdrop } from "components/homepage/DeployAndAirdrop";
 import { GuidesShowcase } from "components/product-pages/common/GuideShowcase";
 import { Hero } from "components/product-pages/common/Hero";
@@ -13,7 +8,7 @@ import { ProductLearnMoreCard } from "components/product-pages/common/ProductLea
 import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
 import { PageId } from "page-id";
-import { Heading, Text, TrackedLink } from "tw-components";
+import { Heading, TrackedLink } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "minting_kit";
@@ -36,6 +31,7 @@ const CASE_STUDIES = [
 ];
 
 const Minting: ThirdwebNextPage = () => {
+  const isMobile = useBreakpointValue({ base: true, md: false });
   return (
     <ProductPage
       seo={{
@@ -190,106 +186,18 @@ const Minting: ThirdwebNextPage = () => {
 
       {/* Use cases */}
       <ProductSection overflow="hidden">
-        <Flex flexDir="column" py={24} align="center" gap={12}>
-          <Heading as="h2" size="display.sm" textAlign="center" mb={12}>
+        <Flex flexDir="column" py={24} align="center" gap={{ base: 8, md: 4 }}>
+          <Heading as="h2" size="display.sm" textAlign="center">
             Build complete NFT experiences with our Minting solution
           </Heading>
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap={6}>
-            <ProductCard
-              title="For Cloud & Web Services"
-              icon={require("/public/assets/solutions-pages/commerce/hero-icon-1.png")}
-            >
-              <Text size="body.lg">
-                A minting API that is easily integrated into your existing web2
-                systems. Enable developers to quickly build and deploy web3
-                applications
-              </Text>
-              <UnorderedList>
-                <ListItem>
-                  <Text size="body.lg" my={4}>
-                    Launch minting and web3 API based managed services
-                  </Text>
-                </ListItem>
-                <ListItem>
-                  <Text size="body.lg">
-                    Enhance existing content and creator platforms with digital
-                    assets{" "}
-                  </Text>
-                </ListItem>
-              </UnorderedList>
-            </ProductCard>
-            <ProductCard
-              title="For Chains"
-              icon={require("/public/assets/solutions-pages/commerce/hero-icon-4.png")}
-            >
-              <Text size="body.lg">
-                Supercharge on-boarding for brands, apps and developers to your
-                chain
-              </Text>
-              <UnorderedList>
-                <ListItem>
-                  <Text size="body.lg" mt={4}>
-                    NFT Launchpad makes it easy for users to easily launch new
-                    smart contracts and incorporate minting to smart contracts
-                    using API call
-                  </Text>
-                </ListItem>
-              </UnorderedList>
-            </ProductCard>
-            <ProductCard
-              title="For Creators"
-              icon={require("/public/assets/solutions-pages/commerce/hero-icon-3.png")}
-            >
-              <Text size="body.lg">
-                Enable NFT minting for your users with familiar web2-like user
-                experience
-              </Text>
-              <UnorderedList>
-                <ListItem>
-                  <Text my={4} size="body.lg">
-                    Quests where users are rewarded with digital collectibles
-                    for engagement
-                  </Text>
-                </ListItem>
-                <ListItem>
-                  <Text size="body.lg">
-                    Music & video digital collectibles with royalty sharing
-                    mechanism.
-                  </Text>
-                </ListItem>
-                <ListItem>
-                  <Text mt={4} size="body.lg">
-                    Access-based digital collectibles for IRL ticketing &
-                    events.
-                  </Text>
-                </ListItem>
-              </UnorderedList>
-            </ProductCard>
-            <ProductCard
-              title="For Games"
-              icon={require("/public/assets/solutions-pages/commerce/hero-icon-2.png")}
-            >
-              <Text size="body.lg">
-                Easily connect game engines via an API to minting and blockchain
-                infrastructure
-              </Text>
-              <UnorderedList>
-                <ListItem>
-                  <Text my={4} size="body.lg">
-                    In-game asset digital collectibles
-                  </Text>
-                </ListItem>
-                <ListItem>
-                  <Text size="body.lg">Digital trading cards</Text>
-                </ListItem>
-                <ListItem>
-                  <Text mt={4} size="body.lg">
-                    White-label marketplaces to trade in-asset games
-                  </Text>
-                </ListItem>
-              </UnorderedList>
-            </ProductCard>
-          </SimpleGrid>
+          <ChakraNextImage
+            src={
+              isMobile
+                ? require("/public/assets/solutions-pages/minting/what-can-you-build-mobile.png")
+                : require("/public/assets/solutions-pages/minting/what-can-you-build.png")
+            }
+            alt="What can you build with our minting solution"
+          />
         </Flex>
       </ProductSection>
 
