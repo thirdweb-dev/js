@@ -27,7 +27,7 @@ export type ThirdwebAuthRoute =
   | "login"
   | "logout"
   | "user"
-  | "active";
+  | "switch-account";
 
 export type ThirdwebAuthUser<
   TData extends Json = Json,

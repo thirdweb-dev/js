@@ -4,7 +4,7 @@ import payloadHandler from "./routes/payload";
 import loginHandler from "./routes/login";
 import logoutHandler from "./routes/logout";
 import userHandler from "./routes/user";
-import activeHandler from "./routes/active";
+import switchAccountHandler from "./routes/switch-account";
 import {
   ThirdwebAuthConfig,
   ThirdwebAuthContext,
@@ -78,9 +78,9 @@ export function ThirdwebAuth<
   );
 
   router.post(
-    "/active",
+    "/switch-account",
     asyncHandler((req: Request, res: Response) =>
-      activeHandler(req, res, ctx as ThirdwebAuthContext),
+      switchAccountHandler(req, res, ctx as ThirdwebAuthContext),
     ),
   );
 

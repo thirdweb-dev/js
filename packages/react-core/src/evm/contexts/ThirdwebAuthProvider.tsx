@@ -4,9 +4,11 @@ import {
   ThirdwebAuthContext,
   useThirdwebAuthContext,
 } from "./thirdweb-auth";
-import { useAddress } from "../hooks/wallet";
-import { cacheKeys } from "../utils/cache-keys";
 import { useQueryClient } from "@tanstack/react-query";
+import { useWallet } from "../../core/hooks/wallet-hooks";
+import { WalletData } from "@thirdweb-dev/wallets";
+import { useLogout } from "../hooks/auth";
+import { useSwitchAccount } from "../hooks/auth/useSwitchAccount";
 
 export const ThirdwebAuthProvider: React.FC<
   PropsWithChildren<{ value?: ThirdwebAuthConfig }>
@@ -34,35 +36,53 @@ export const ThirdwebAuthProvider: React.FC<
 };
 
 function ChangeActiveWalletOnAccountSwitch() {
-  const address = useAddress();
+  const wallet = useWallet();
+  const { logout } = useLogout();
+  const { switchAccount } = useSwitchAccount();
   const authConfig = useThirdwebAuthContext();
   const queryClient = useQueryClient();
 
   // When active wallet switches, switch the active account cookie and invalidate user query
   useEffect(() => {
-    const switchActiveAccount = async () => {
-      if (authConfig && authConfig.authUrl) {
-        if (address && queryClient) {
-          const res = await fetch(`${authConfig.authUrl}/active`, {
-            method: "POST",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              address,
-            }),
-          });
+    const handleSwitchAccount = async (data: WalletData) => {
+      if (!data.address) {
+        return;
+      }
 
-          if (res.ok) {
-            queryClient.invalidateQueries(cacheKeys.auth.user());
-          }
-        }
+      try {
+        await switchAccount(data.address);
+      } catch (err) {
+        console.warn(
+          `[Auth] Failed to switch account to ${data.address} with error:\n`,
+          err,
+        );
       }
     };
 
-    switchActiveAccount();
-  }, [address, queryClient, authConfig]);
+    const handleLogout = async () => {
+      try {
+        await logout();
+      } catch (err) {
+        console.warn(`[Auth] Failed to logout with error:\n`, err);
+      }
+    };
+
+    const shouldAddListener = !!wallet && authConfig && authConfig.authUrl;
+
+    if (shouldAddListener) {
+      wallet.addListener("connect", handleSwitchAccount);
+      wallet.addListener("change", handleSwitchAccount);
+      wallet.addListener("disconnect", handleLogout);
+    }
+
+    return () => {
+      if (shouldAddListener) {
+        wallet.removeListener("connect", handleSwitchAccount);
+        wallet.removeListener("change", handleSwitchAccount);
+        wallet.removeListener("disconnect", handleLogout);
+      }
+    };
+  }, [wallet, queryClient, authConfig, logout]);
 
   return null;
 }
