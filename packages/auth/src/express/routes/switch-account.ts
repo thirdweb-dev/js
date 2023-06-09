@@ -3,6 +3,7 @@ import { ActiveBodySchema, ThirdwebAuthContext } from "../types";
 import { serialize } from "cookie";
 import {
   THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
+  THIRDWEB_AUTH_DEFAULT_TOKEN_DURATION_IN_SECONDS,
   THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX,
 } from "../../constants";
 import { getCookie } from "../helpers/user";
@@ -41,8 +42,10 @@ export default async function handler(
       Date.now() + 1000 * ctx.authOptions.tokenDurationInSeconds,
     );
   } else {
-    // Otherwise, just default to 5 hours
-    cookieExpiration = new Date(Date.now() + 1000 * 60 * 60 * 5);
+    // Otherwise, just default to 24 hours
+    cookieExpiration = new Date(
+      Date.now() + 1000 * THIRDWEB_AUTH_DEFAULT_TOKEN_DURATION_IN_SECONDS,
+    );
   }
 
   res.setHeader("Set-Cookie", [

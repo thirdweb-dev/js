@@ -1,4 +1,8 @@
 import {
+  THIRDWEB_AUTH_DEFAULT_LOGIN_PAYLOAD_DURATION_IN_SECONDS,
+  THIRDWEB_AUTH_DEFAULT_TOKEN_DURATION_IN_SECONDS,
+} from "../constants";
+import {
   LoginOptions,
   LoginPayload,
   GenerateOptions,
@@ -55,9 +59,17 @@ export class ThirdwebAuth {
       chain_id: chainId,
       nonce: parsedOptions?.nonce,
       expiration_time:
-        parsedOptions?.expirationTime || new Date(Date.now() + 1000 * 60 * 10),
+        parsedOptions?.expirationTime ||
+        new Date(
+          Date.now() +
+            1000 * THIRDWEB_AUTH_DEFAULT_LOGIN_PAYLOAD_DURATION_IN_SECONDS,
+        ),
       invalid_before:
-        parsedOptions?.invalidBefore || new Date(Date.now() - 1000 * 60 * 10),
+        parsedOptions?.invalidBefore ||
+        new Date(
+          Date.now() -
+            1000 * THIRDWEB_AUTH_DEFAULT_LOGIN_PAYLOAD_DURATION_IN_SECONDS,
+        ),
       resources: parsedOptions?.resources,
     });
   }
@@ -226,7 +238,9 @@ export class ThirdwebAuth {
       nbf: parsedOptions?.invalidBefore || new Date(),
       exp:
         parsedOptions?.expirationTime ||
-        new Date(Date.now() + 1000 * 60 * 60 * 5),
+        new Date(
+          Date.now() + 1000 * THIRDWEB_AUTH_DEFAULT_TOKEN_DURATION_IN_SECONDS,
+        ),
       iat: new Date(),
       jti: parsedOptions?.tokenId,
       ctx: session,
@@ -240,7 +254,11 @@ export class ThirdwebAuth {
       sub: payload.sub,
       aud: payload.aud,
       nbf: new Date(),
-      exp: expirationTime || new Date(Date.now() + 1000 * 60 * 60 * 5),
+      exp:
+        expirationTime ||
+        new Date(
+          Date.now() + 1000 * THIRDWEB_AUTH_DEFAULT_TOKEN_DURATION_IN_SECONDS,
+        ),
       iat: new Date(),
       ctx: payload.ctx,
     });

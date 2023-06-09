@@ -82,7 +82,7 @@ function ChangeActiveWalletOnAccountSwitch() {
         wallet.removeListener("disconnect", handleLogout);
       }
     };
-  }, [wallet, queryClient, authConfig, logout]);
+  }, [wallet, queryClient, authConfig, logout, switchAccount]);
 
   return null;
 }
