@@ -1,5 +1,13 @@
 # @thirdweb-dev/chains
 
+## 0.1.20
+
+### Patch Changes
+
+- [#1140](https://github.com/thirdweb-dev/js/pull/1140) [`16232de9`](https://github.com/thirdweb-dev/js/commit/16232de9eab9966e24e335929b2a3919346af265) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update chains
+
+- [#1138](https://github.com/thirdweb-dev/js/pull/1138) [`645b0303`](https://github.com/thirdweb-dev/js/commit/645b0303cc1a9cbb0a0e9cbd67d11c3b865e4584) Thanks [@jcstein](https://github.com/jcstein)! - feat: create Taro Testnet
+
 ## 0.1.19
 
 ### Patch Changes
