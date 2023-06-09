@@ -39,7 +39,7 @@ export default async function handler(
         const refreshedPayload = ctx.auth.parseToken(refreshedToken);
         res.setHeader("Set-Cookie", [
           serialize(
-            `${THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX}_${refreshedPayload.payload.sub}`,
+            `${THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX}_${user.address}`,
             refreshedToken,
             {
               domain: ctx.cookieOptions?.domain,
@@ -50,7 +50,7 @@ export default async function handler(
               secure: true,
             },
           ),
-          serialize(THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE, payload.payload.sub, {
+          serialize(THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE, user.address, {
             domain: ctx.cookieOptions?.domain,
             path: ctx.cookieOptions?.path || "/",
             sameSite: ctx.cookieOptions?.sameSite || "none",
