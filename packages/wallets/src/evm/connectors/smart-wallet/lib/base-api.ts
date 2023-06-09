@@ -284,10 +284,10 @@ export abstract class BaseAccountAPI {
       if (!maxFeePerGas) {
         maxFeePerGas = feeData.maxFeePerGas ?? undefined;
         const network = await this.provider.getNetwork();
-        const chainId = network.chainId
+        const chainId = network.chainId;
 
         if (chainId === Celo.chainId || chainId === CeloAlfajoresTestnet.chainId || chainId === CeloBaklavaTestnet.chainId) {
-          maxPriorityFeePerGas = maxFeePerGas
+          maxPriorityFeePerGas = maxFeePerGas;
         }
       }
       if (!maxPriorityFeePerGas) {
