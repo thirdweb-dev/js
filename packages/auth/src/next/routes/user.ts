@@ -1,5 +1,8 @@
 import { serialize } from "cookie";
-import { THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX } from "../../constants";
+import {
+  THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
+  THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX,
+} from "../../constants";
 import { getToken, getUser } from "../helpers/user";
 import { ThirdwebAuthContext } from "../types";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -31,8 +34,7 @@ export default async function handler(
           : undefined;
         const refreshedToken = await ctx.auth.refresh(token, expirationTime);
         const refreshedPayload = ctx.auth.parseToken(refreshedToken);
-        res.setHeader(
-          "Set-Cookie",
+        res.setHeader("Set-Cookie", [
           serialize(
             `${THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX}_${refreshedPayload.payload.sub}`,
             refreshedToken,
@@ -45,7 +47,15 @@ export default async function handler(
               secure: true,
             },
           ),
-        );
+          serialize(THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE, payload.payload.sub, {
+            domain: ctx.cookieOptions?.domain,
+            path: ctx.cookieOptions?.path || "/",
+            sameSite: ctx.cookieOptions?.sameSite || "none",
+            expires: new Date(refreshedPayload.payload.exp * 1000),
+            httpOnly: true,
+            secure: true,
+          }),
+        ]);
       }
     }
   }
