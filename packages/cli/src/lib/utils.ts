@@ -101,7 +101,7 @@ export const fileContainsImport = (file: string, importToCheck: string) => {
 };
 
 export const getDependenciesForPython = (
-  path: string,
+  filePath: string,
   packageManager: PackageManagerType,
 ) => {
   let dependencies: string[] = [];
@@ -109,33 +109,33 @@ export const getDependenciesForPython = (
 
   switch (packageManager) {
     case "pip":
-      const foundRequirementsTxt = existsSync(path + "/requirements.txt");
+      const foundRequirementsTxt = existsSync(filePath + "/requirements.txt");
       if (!foundRequirementsTxt) {
         // Create a temporary requirements.txt file
         // runCommand("pip", ["freeze"], true, undefined, "requirements.txt");
         break;
       }
-      const requirementsTxt = readFileSync(path + "/requirements.txt");
+      const requirementsTxt = readFileSync(filePath + "/requirements.txt");
       dependencies = parseRequirementsTxt(requirementsTxt).dependencies;
       // Delete file now that we're done with it
       // runCommand("rm", ["requirements.txt"], true);
       break;
     case "pipenv":
-      const foundPipFile = existsSync(path + "Pipfile");
+      const foundPipFile = existsSync(filePath + "Pipfile");
       if (!foundPipFile) {
         break;
       }
-      const pipFile = readFileSync(path + "Pipfile", "utf-8");
+      const pipFile = readFileSync(filePath + "Pipfile", "utf-8");
       const parsedPipFile = parsePipFile(pipFile);
       dependencies = parsedPipFile.dependencies;
       devDependencies = parsedPipFile.devDependencies;
       break;
     case "poetry":
-      const foundPyProjectToml = existsSync(path + "/pyproject.toml");
+      const foundPyProjectToml = existsSync(filePath + "/pyproject.toml");
       if (!foundPyProjectToml) {
         break;
       }
-      const pyProjectFile = readFileSync(path + "/pyproject.toml", "utf-8");
+      const pyProjectFile = readFileSync(filePath + "/pyproject.toml", "utf-8");
       dependencies = parsePyProjectToml(pyProjectFile).dependencies;
       break;
     default:
@@ -222,7 +222,7 @@ export const installOrUpdate = async (packageManager: PackageManagerType, depend
   }
 
   if (typeOfAction === "install") {
-    if (!dependenciesToAdd.length) return;
+    if (!dependenciesToAdd.length) {return;}
     const commands = [...installCommand, ...dependenciesToAdd];
 
     await runCommand(runner, commands, true);
@@ -232,7 +232,7 @@ export const installOrUpdate = async (packageManager: PackageManagerType, depend
     }
   }
   if (typeOfAction === "update") {
-    if (!dependenciesToUpdate.length) return;
+    if (!dependenciesToUpdate.length) {return;}
     const commands = [...updateCommand, ...dependenciesToUpdate];
     await runCommand(runner, commands, true);
   }
