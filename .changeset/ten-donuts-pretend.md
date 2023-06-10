@@ -3,9 +3,9 @@
 "@thirdweb-dev/react": patch
 ---
 
-'[Wallets/React] Adds Frame Wallet as a supported wallet.'
+'[Wallets/React] Adds Frame as a supported wallet.'
 
-You can now use the Frame Wallet by adding `frameWallet()` in the ThirdwebProvider's `supportedWallets` prop.
+You can now use Frame by adding `frameWallet()` in the ThirdwebProvider's `supportedWallets` prop.
 
 ```javascript
 import {
