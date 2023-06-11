@@ -57,6 +57,13 @@
       },
       "default": "./evm/wallets/ethers/dist/thirdweb-dev-wallets-evm-wallets-ethers.cjs.js"
     },
+    "./evm/wallets/zerion": {
+      "module": {
+        "browser": "./evm/wallets/zerion/dist/thirdweb-dev-wallets-evm-wallets-zerion.browser.esm.js",
+        "default": "./evm/wallets/zerion/dist/thirdweb-dev-wallets-evm-wallets-zerion.esm.js"
+      },
+      "default": "./evm/wallets/zerion/dist/thirdweb-dev-wallets-evm-wallets-zerion.cjs.js"
+    },
     "./evm/wallets/aws-kms": {
       "module": {
         "browser": "./evm/wallets/aws-kms/dist/thirdweb-dev-wallets-evm-wallets-aws-kms.browser.esm.js",
@@ -168,6 +175,13 @@
         "default": "./solana/wallets/private-key/dist/thirdweb-dev-wallets-solana-wallets-private-key.esm.js"
       },
       "default": "./solana/wallets/private-key/dist/thirdweb-dev-wallets-solana-wallets-private-key.cjs.js"
+    },
+    "./evm/connectors/zerion": {
+      "module": {
+        "browser": "./evm/connectors/zerion/dist/thirdweb-dev-wallets-evm-connectors-zerion.browser.esm.js",
+        "default": "./evm/connectors/zerion/dist/thirdweb-dev-wallets-evm-connectors-zerion.esm.js"
+      },
+      "default": "./evm/connectors/zerion/dist/thirdweb-dev-wallets-evm-connectors-zerion.cjs.js"
     },
     "./evm/wallets/coinbase-wallet": {
       "module": {

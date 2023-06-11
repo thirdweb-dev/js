@@ -10,7 +10,7 @@ export const zerionWallet = (): WalletConfig<ZerionWallet> => {
     },
     isInstalled() {
       if (assertWindowEthereum(globalThis.window)) {
-        return globalThis.window.ethereum.isZerion;
+        return !!globalThis.window.ethereum.isZerion;
       }
       return false;
     },
