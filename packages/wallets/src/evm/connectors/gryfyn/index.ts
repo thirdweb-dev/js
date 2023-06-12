@@ -1,8 +1,9 @@
-import { providers } from "ethers";
+import { providers, utils } from "ethers";
 import { Connector } from "../../interfaces/connector";
 import GryFyn from "./lib/index";
 import { Chain } from "@thirdweb-dev/chains";
 import { GryFynProviderPopup } from "./lib/gryfynProviderPopup";
+import { normalizeChainId } from "../../../lib/wagmi-core";
 
 export type GryFynConnectorOptions = {
   apiKey: string;
@@ -13,13 +14,14 @@ export class GryFynConnector extends Connector {
   #provider?: providers.Web3Provider;
   #options: GryFynConnectorOptions;
   #gryfynProvider?: GryFynProviderPopup;
+  #signer?: providers.JsonRpcSigner;
 
   constructor(options: GryFynConnectorOptions) {
     super();
     this.#options = options;
   }
 
-  async connect(): Promise<string> {
+  async connect(options: { chainId?: number }): Promise<string> {
     await this.getProvider();
     if (!this.#gryfynProvider) {
       throw new Error("No provider");
@@ -27,16 +29,21 @@ export class GryFynConnector extends Connector {
 
     this.emit("message", { type: "connecting" });
 
-    // THIS IS NOT WORKING
+    if (options.chainId) {
+      await this.#gryfynProvider.setChainId(options.chainId);
+    }
+
+    await this.#gryfynProvider.connect();
+
     const accounts = await this.#gryfynProvider.request({
       method: "eth_requestAccounts",
     });
 
-    if (accounts?.code === 4100) {
-      throw new Error("Not Logged in");
+    if (Array.isArray(accounts)) {
+      return accounts[0] as string;
     }
 
-    return accounts[0] as string;
+    throw new Error("Not Logged in");
   }
 
   async disconnect(): Promise<void> {
@@ -50,15 +57,19 @@ export class GryFynConnector extends Connector {
     const gryfynProvider = GryFyn.getProvider(this.#options.apiKey, {});
     this.#gryfynProvider = gryfynProvider;
 
-    const provider = new providers.Web3Provider(gryfynProvider);
+    const provider = new providers.Web3Provider(gryfynProvider, "any");
     this.#provider = provider;
     return provider;
   }
 
   async getSigner() {
+    if (this.#signer) {
+      return this.#signer;
+    }
     const provider = await this.getProvider();
-    const signer = provider.getSigner();
-    return signer;
+    this.#signer = provider.getSigner();
+
+    return this.#signer;
   }
 
   async getAddress() {
@@ -67,13 +78,28 @@ export class GryFynConnector extends Connector {
     return address;
   }
 
-  switchChain(chainId: number): Promise<void> {
-    console.log(chainId);
-    throw new Error("Method not implemented.");
+  async switchChain(chainId: number): Promise<void> {
+    await this.getProvider();
+    if (!this.#gryfynProvider) {
+      throw new Error("No provider");
+    }
+
+    await this.#gryfynProvider.setChainId(chainId);
+    const provider = new providers.Web3Provider(this.#gryfynProvider);
+
+    this.#provider = provider;
+    this.#signer = provider.getSigner();
+
+    this.emit("change", { chain: { id: chainId, unsupported: false } });
   }
 
   async setupListeners(): Promise<void> {
-    // TODO
+    const provider = await this.getProvider();
+    if (provider.on) {
+      provider.on("accountsChanged", this.onAccountsChanged);
+      provider.on("chainChanged", this.onChainChanged);
+      provider.on("disconnect", this.onDisconnect);
+    }
   }
 
   async isConnected(): Promise<boolean> {
@@ -88,4 +114,25 @@ export class GryFynConnector extends Connector {
   updateChains(chains: Chain[]): void {
     this.#options.chains = chains;
   }
+
+  protected onAccountsChanged = async (accounts: string[]) => {
+    if (accounts.length === 0) {
+      await this.onDisconnect();
+    } else {
+      this.emit("change", {
+        account: utils.getAddress(accounts[0] as string),
+      });
+    }
+  };
+
+  protected onChainChanged = (chainId: number | string) => {
+    const id = normalizeChainId(chainId);
+    const unsupported =
+      this.#options.chains.findIndex((c) => c.chainId === id) === -1;
+    this.emit("change", { chain: { id, unsupported } });
+  };
+
+  protected onDisconnect = async () => {
+    this.emit("disconnect");
+  };
 }
