@@ -65,6 +65,18 @@ return (
     </ThirdwebProvider>
   );
 }`,
+      unity: `using UnityEngine;
+using Thirdweb;
+
+public class ConnectWalletButton: MonoBehaviour
+{
+    public async void ConnectWallet()
+    {
+        int chainId = 1;
+        string address = await ThirdwebManager.Instance.SDK.wallet.Connect(new WalletConnection(WalletProvider.SmartWallet, chainId));
+        Debug.Log("Connected successfully to: " + address);
+    }
+}`,
     },
   },
   {
@@ -114,11 +126,13 @@ return (
       unity: `using UnityEngine;
 using Thirdweb;
 
-public class ConnectWalletNativePlatforms : MonoBehaviour
+public class ConnectWalletButton: MonoBehaviour
 {
-    public async void ConnectLocalWalletWithPassword()
+    public async void ConnectWallet()
     {
-        var address = await ThirdwebManager.Instance.SDK.wallet.Connect(new WalletConnection() { password = "myEpicPassword" });
+        int chainId = 1;
+        string password = "myOptionalPassword";
+        string address = await ThirdwebManager.Instance.SDK.wallet.Connect(new WalletConnection(WalletProvider.LocalWallet, chainId, password));
         Debug.Log("Connected successfully to: " + address);
     }
 }`,
@@ -155,7 +169,18 @@ return (
     </ThirdwebProvider>
   );
 }`,
-      unity: ``,
+      unity: `using UnityEngine;
+using Thirdweb;
+
+public class ConnectWalletButton: MonoBehaviour
+{
+    public async void ConnectWallet()
+    {
+        int chainId = 1;
+        string address = await ThirdwebManager.Instance.SDK.wallet.Connect(new WalletConnection(WalletProvider.Coinbase, chainId));
+        Debug.Log("Connected successfully to: " + address);
+    }
+}`,
     },
   },
   {
@@ -189,7 +214,18 @@ return (
     </ThirdwebProvider>
   );
 }`,
-      unity: ``,
+      unity: `using UnityEngine;
+using Thirdweb;
+
+public class ConnectWalletButton: MonoBehaviour
+{
+    public async void ConnectWallet()
+    {
+        int chainId = 1;
+        string address = await ThirdwebManager.Instance.SDK.wallet.Connect(new WalletConnection(WalletProvider.Metamask, chainId));
+        Debug.Log("Connected successfully to: " + address);
+    }
+}`,
     },
   },
   {
@@ -317,11 +353,12 @@ return (
       unity: `using UnityEngine;
 using Thirdweb;
 
-public class ConnectWalletNativePlatforms : MonoBehaviour
+public class ConnectWalletButton: MonoBehaviour
 {
-    public async void ConnectWalletConnect()
+    public async void ConnectWallet()
     {
-        var address = await ThirdwebManager.Instance.SDK.wallet.Connect(new WalletConnection() { provider = WalletProvider.WalletConnect });
+        int chainId = 1;
+        string address = await ThirdwebManager.Instance.SDK.wallet.Connect(new WalletConnection(WalletProvider.WalletConnectV1, chainId));
         Debug.Log("Connected successfully to: " + address);
     }
 }`,
@@ -395,7 +432,19 @@ return (
     </ThirdwebProvider>
   );
 }`,
-      unity: ``,
+      unity: `using UnityEngine;
+using Thirdweb;
+
+public class ConnectWalletButton: MonoBehaviour
+{
+    public async void ConnectWallet()
+    {
+        int chainId = 1;
+        string email = "email@email.com";
+        string address = await ThirdwebManager.Instance.SDK.wallet.Connect(new WalletConnection(WalletProvider.MagicLink, chainId, null, email));
+        Debug.Log("Connected successfully to: " + address);
+    }
+}`,
     },
   },
 ] as const;
