@@ -133,7 +133,7 @@ export function replaceObjectGatewayUrlsWithSchemes<TData = unknown>(
   gatewayUrls: GatewayUrls,
 ): TData {
   if (typeof data === "string") {
-    return replaceGatewayUrlWithScheme(data, gatewayUrls) as TData;
+    return replaceGatewayUrlWithScheme(data, gatewayUrls) as any as TData;
   }
   if (typeof data === "object") {
     if (!data) {
@@ -147,7 +147,7 @@ export function replaceObjectGatewayUrlsWithSchemes<TData = unknown>(
     if (Array.isArray(data)) {
       return data.map((entry) =>
         replaceObjectGatewayUrlsWithSchemes(entry, gatewayUrls),
-      ) as TData;
+      ) as any as TData;
     }
 
     return Object.fromEntries(
@@ -155,7 +155,7 @@ export function replaceObjectGatewayUrlsWithSchemes<TData = unknown>(
         key,
         replaceObjectGatewayUrlsWithSchemes(value, gatewayUrls),
       ]),
-    ) as TData;
+    ) as any as TData;
   }
 
   return data;
@@ -169,7 +169,7 @@ export function replaceObjectSchemesWithGatewayUrls<TData = unknown>(
   gatewayUrls: GatewayUrls,
 ): TData {
   if (typeof data === "string") {
-    return replaceSchemeWithGatewayUrl(data, gatewayUrls) as TData;
+    return replaceSchemeWithGatewayUrl(data, gatewayUrls) as any as TData;
   }
   if (typeof data === "object") {
     if (!data) {
@@ -181,14 +181,14 @@ export function replaceObjectSchemesWithGatewayUrls<TData = unknown>(
     if (Array.isArray(data)) {
       return data.map((entry) =>
         replaceObjectSchemesWithGatewayUrls(entry, gatewayUrls),
-      ) as TData;
+      ) as any as TData;
     }
     return Object.fromEntries(
       Object.entries(data).map(([key, value]) => [
         key,
         replaceObjectSchemesWithGatewayUrls(value, gatewayUrls),
       ]),
-    ) as TData;
+    ) as any as TData;
   }
 
   return data;

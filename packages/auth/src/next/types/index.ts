@@ -9,6 +9,10 @@ export const PayloadBodySchema = z.object({
   address: z.string(),
 });
 
+export const ActiveBodySchema = z.object({
+  address: z.string(),
+});
+
 export const LoginPayloadBodySchema = z.object({
   payload: LoginPayloadOutputSchema,
 });
@@ -18,7 +22,12 @@ type RequestType =
   | NextRequest
   | NextApiRequest;
 
-export type ThirdwebAuthRoute = "payload" | "login" | "logout" | "user";
+export type ThirdwebAuthRoute =
+  | "payload"
+  | "login"
+  | "logout"
+  | "user"
+  | "switch-account";
 
 export type ThirdwebAuthUser<
   TData extends Json = Json,
@@ -46,6 +55,7 @@ export type ThirdwebAuthConfig<
       | ((tokenId: string) => void)
       | ((tokenId: string) => Promise<void>);
     tokenDurationInSeconds?: number;
+    refreshIntervalInSeconds?: number;
   };
   cookieOptions?: {
     domain?: string;

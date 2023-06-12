@@ -8,6 +8,7 @@ export { useLogin, doLogin } from "./useLogin";
 export { useLogout } from "./useLogout";
 export type { UserWithData } from "./useUser";
 export { useUser } from "./useUser";
+export { useSwitchAccount } from "./useSwitchAccount";
 
 export function useAuth() {
   const wallet = useWallet();

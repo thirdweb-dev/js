@@ -22,7 +22,7 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { Address } from "../../schema/shared/Address";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { TokenMintInput } from "../../schema/tokens/token";
-import { Amount, CurrencyValue } from "../../types";
+import type { CurrencyValue, Amount } from "../../types/currency";
 import type { TokenERC20 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { CallOverrides, constants } from "ethers";

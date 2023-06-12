@@ -8,6 +8,10 @@ export const PayloadBodySchema = z.object({
   address: z.string(),
 });
 
+export const ActiveBodySchema = z.object({
+  address: z.string(),
+});
+
 export const LoginPayloadBodySchema = z.object({
   payload: LoginPayloadOutputSchema,
 });
@@ -40,6 +44,7 @@ export type ThirdwebAuthConfig<
       | ((tokenId: string) => void)
       | ((tokenId: string) => Promise<void>);
     tokenDurationInSeconds?: number;
+    refreshIntervalInSeconds?: number;
   };
   cookieOptions?: {
     domain?: string;

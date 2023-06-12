@@ -11,7 +11,8 @@ import {
 } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FeatureName } from "../../constants/contract-features";
-import { BatchToReveal, UploadProgressEvent } from "../../types";
+import type { BatchToReveal } from "../../types/delayed-reveal";
+import type { UploadProgressEvent } from "../../types/events";
 import {
   BaseDelayedRevealERC1155,
   BaseDelayedRevealERC721,

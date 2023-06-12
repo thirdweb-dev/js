@@ -181,6 +181,13 @@ export type AuthenticationPayloadData = z.output<
 >;
 
 /**
+ * @internal
+ */
+export type AuthenticationPayloadDataInput = z.input<
+  typeof AuthenticationPayloadDataSchema
+>;
+
+/**
  * @public
  */
 export type AuthenticationPayload = z.output<

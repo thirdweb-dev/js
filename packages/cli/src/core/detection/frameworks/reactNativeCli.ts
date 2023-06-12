@@ -16,14 +16,14 @@ export default class ReactNativeCLIDetector implements FrameworkDetector {
     const packageJson = readFileSync(packageJsonPath);
     const { dependencies, devDependencies } = parsePackageJson(packageJson);
 
-    const additionalFilesToCheck = ["/android", "/ios"];
+    const additionalFilesToCheck: string[] = [];
     const additionalFilesExist = additionalFilesToCheck.some((file) =>
       existsSync(path + file),
     );
 
     return (
-      dependencies["react-native"] ||
-      devDependencies["react-native"] ||
+      !!dependencies["react-native"] ||
+      !!devDependencies["react-native"] ||
       additionalFilesExist ||
       false
     );

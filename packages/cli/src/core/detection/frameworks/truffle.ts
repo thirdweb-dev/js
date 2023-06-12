@@ -19,15 +19,14 @@ export default class TruffleDetector implements FrameworkDetector {
     const additionalFilesToCheck = [
       "/truffle.config.js",
       "/truffle.js",
-      "/contracts/",
     ];
     const additionalFilesExist = additionalFilesToCheck.some((file) =>
       existsSync(path + file),
     );
 
     return (
-      dependencies["truffle"] ||
-      devDependencies["truffle"] ||
+      !!dependencies["truffle"] ||
+      !!devDependencies["truffle"] ||
       additionalFilesExist ||
       false
     );

@@ -276,6 +276,7 @@ export const mochaHooks = {
             chainId: 31337,
             rpc: ["http://localhost:8545"],
             nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+            slug: "hardhat",
           },
         ],
       },
