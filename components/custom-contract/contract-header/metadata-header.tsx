@@ -1,7 +1,6 @@
 import { Center, Flex, Icon, Image, Skeleton } from "@chakra-ui/react";
 import { Chain } from "@thirdweb-dev/chains";
 import { ChainIcon } from "components/icons/ChainIcon";
-import Link from "next/link";
 import { FiExternalLink } from "react-icons/fi";
 import { Heading, LinkButton, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
