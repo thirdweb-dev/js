@@ -25,8 +25,6 @@ export const AccessRestrictionsZod = z.object({
 
 export type AccessRestrictionsInput = z.input<typeof AccessRestrictionsZod>;
 
-export type AccessRestrictionsOutput = z.output<typeof AccessRestrictionsZod>;
-
 export type SignerWithRestrictions = {
   signer: string;
   isAdmin: boolean;
