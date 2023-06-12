@@ -105,63 +105,19 @@ export async function directDeployDeterministicWithUri(
   saltForCreate2?: string,
   gasLimit: number = 7000000,
 ) {
-  invariant(signer.provider, "Provider is required");
   const { compilerMetadata } = await fetchAndCacheDeployMetadata(
     publishMetadataUri,
     storage,
   );
 
-  // 1. Deploy CREATE2 factory (if not already exists)
-  const create2Factory = await deployCreate2Factory(signer);
-
-  // 2. Encode constructor params
-  const constructorParamTypes = extractConstructorParamsFromAbi(
-    compilerMetadata.abi,
-  ).map((p) => {
-    return p.type;
-  });
-
-  const encodedArgs = convertParamValues(
-    constructorParamTypes,
-    constructorArgs,
-  );
-
-  // 3. Construct deployment transaction
-  const address = computeDeploymentAddress(
+  await directDeployDeterministic(
     compilerMetadata.bytecode,
-    encodedArgs,
-    create2Factory,
+    compilerMetadata.abi,
+    signer,
+    constructorArgs,
     saltForCreate2,
+    gasLimit,
   );
-  const contractDeployed = await isContractDeployed(address, signer.provider);
-
-  let initBytecodeWithSalt = "";
-  if (!contractDeployed) {
-    console.debug(`deploying contract via create2 factory at: ${address}`);
-
-    initBytecodeWithSalt = getInitBytecodeWithSalt(
-      compilerMetadata.bytecode,
-      encodedArgs,
-      saltForCreate2,
-    );
-
-    let tx: PopulatedTransaction = {
-      to: create2Factory,
-      data: initBytecodeWithSalt,
-    };
-
-    try {
-      await signer.estimateGas(tx);
-    } catch (e) {
-      console.debug("error estimating gas while deploying prebuilt: ", e);
-      tx.gasLimit = BigNumber.from(gasLimit);
-    }
-
-    // 4. Deploy
-    await (await signer.sendTransaction(tx)).wait();
-  } else {
-    throw new Error(`Contract already deployed at ${address}`);
-  }
 }
 
 export async function predictAddressDeterministic(
@@ -206,34 +162,16 @@ export async function predictAddressDeterministicWithUri(
   constructorArgs: any[],
   saltForCreate2?: string,
 ): Promise<string> {
-  invariant(signer.provider, "Provider is required");
   const { compilerMetadata } = await fetchAndCacheDeployMetadata(
     publishMetadataUri,
     storage,
   );
 
-  // 1. Deploy CREATE2 factory (if not already exists)
-  const create2Factory = await deployCreate2Factory(signer, {});
-
-  // 2. Encode constructor params
-  const constructorParamTypes = extractConstructorParamsFromAbi(
-    compilerMetadata.abi,
-  ).map((p) => {
-    return p.type;
-  });
-
-  const encodedArgs = convertParamValues(
-    constructorParamTypes,
-    constructorArgs,
-  );
-
-  // 3. Construct deployment transaction
-  const address = computeDeploymentAddress(
+  return await predictAddressDeterministic(
     compilerMetadata.bytecode,
-    encodedArgs,
-    create2Factory,
+    compilerMetadata.abi,
+    signer,
+    constructorArgs,
     saltForCreate2,
   );
-
-  return address;
 }
