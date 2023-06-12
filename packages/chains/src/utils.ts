@@ -4,7 +4,7 @@ export type ChainRPCOptions = {
   thirdwebApiKey?: string;
   alchemyApiKey?: string;
   infuraApiKey?: string;
-  1rpcApiKey?: string;
+  oneRPCApiKey?: string;
   mode?: "http" | "ws";
 };
 
@@ -24,7 +24,7 @@ export function getChainRPCs(
   chain: Pick<Chain, "rpc" | "chainId">,
   options?: ChainRPCOptions,
 ): string[] {
-  const { thirdwebApiKey, alchemyApiKey, infuraApiKey, mode } = {
+  const { thirdwebApiKey, alchemyApiKey, infuraApiKey, oneRPCApiKey, mode } = {
     ...defaultOptions,
     ...options,
   };
@@ -64,12 +64,12 @@ export function getChainRPCs(
       infuraApiKey ? rpc.replace("${INFURA_API_KEY}", infuraApiKey) : rpc,
     );
 
-  const 1RPC = modeChains
+  const OneRPC = modeChains
   .filter((rpc) => {
-    return rpc.includes("${1RPC_API_KEY}") && 1rpcApiKey;
+    return rpc.includes("${1RPC_API_KEY}") && oneRPCApiKey;
   })
   .map((rpc) =>
-    1rpcApiKey ? rpc.replace("${1RPC_API_KEY}", 1rpcApiKey) : rpc,
+    oneRPCApiKey ? rpc.replace("${1RPC_API_KEY}", oneRPCApiKey) : rpc,
   );
 
   const allOtherRpcs = modeChains.filter((rpc) => {
@@ -80,7 +80,7 @@ export function getChainRPCs(
     ...thirdwebRPC,
     ...infuraRPC,
     ...alchemyRPC,
-    ...1RPC,
+    ...OneRPC,
     ...allOtherRpcs,
   ];
 
