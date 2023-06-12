@@ -194,7 +194,59 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
     }
   );
 
-  // TODO: Add / remove approved targets.
+  // TODO: documentation
+  approveTargetForSigner = buildTransactionFunction(
+    async(
+      signer: string,
+      target: string,
+    ): Promise<Transaction> => {
+      const restrictionsForSigner: IAccountPermissions.RoleRestrictionsStruct = await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signer);
+
+      if(restrictionsForSigner.role === "0x0000000000000000000000000000000000000000000000000000000000000000") {
+        throw new Error("Signer does not have any access");
+      }
+
+      if(restrictionsForSigner.approvedTargets.includes(target)) {
+        throw new Error("Target is already approved");
+      }
+
+      const newTargets = [...restrictionsForSigner.approvedTargets, target];
+
+      const newRestrictions: IAccountPermissions.RoleRestrictionsStruct = { ...restrictionsForSigner, approvedTargets: newTargets };
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "setRoleRestrictions",
+        args: [newRestrictions],
+      })
+    }
+  )
+  
+  // TODO: documentation
+  revokeTargetForSigner = buildTransactionFunction(
+    async(
+      signer: string,
+      target: string,
+    ): Promise<Transaction> => {
+      const restrictionsForSigner: IAccountPermissions.RoleRestrictionsStruct = await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signer);
+
+      if(restrictionsForSigner.role === "0x0000000000000000000000000000000000000000000000000000000000000000") {
+        throw new Error("Signer does not have any access");
+      }
+
+      if(!restrictionsForSigner.approvedTargets.includes(target)) {
+        throw new Error("Target is not already approved");
+      }
+
+      const newTargets = restrictionsForSigner.approvedTargets.filter((approvedTarget) => ethers.utils.getAddress(approvedTarget) !== ethers.utils.getAddress(target));
+
+      const newRestrictions: IAccountPermissions.RoleRestrictionsStruct = { ...restrictionsForSigner, approvedTargets: newTargets };
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "setRoleRestrictions",
+        args: [newRestrictions],
+      })
+    }
+  )
 
   updateAccess = buildTransactionFunction(
     async(
