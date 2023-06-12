@@ -16,7 +16,7 @@ import {
 } from "../../design-system";
 import { shortenString } from "../../evm/utils/addresses";
 import { isMobile } from "../../evm/utils/isMobile";
-import { NetworkSelector, NetworkSelectorProps } from "./NetworkSelector";
+import { NetworkSelector, type NetworkSelectorProps } from "./NetworkSelector";
 import { ExitIcon } from "./icons/ExitIcon";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";

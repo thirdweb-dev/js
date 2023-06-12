@@ -1,5 +1,5 @@
 import { darkTheme, iconSize, lightTheme, spacing } from "../../design-system";
-import { ConnectedWalletDetails, DropDownPosition } from "./Details";
+import { ConnectedWalletDetails, type DropDownPosition } from "./Details";
 import { ThemeProvider } from "@emotion/react";
 import {
   ThirdwebThemeContext,
