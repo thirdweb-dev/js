@@ -9,10 +9,10 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import IAccountFactoryAbi from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactory.json";
 import { AccessRestrictions, RoleAction, RoleRequest, SignedAccountPermissionsPayload, SignerWithRestrictions, AccessRestrictionsInput, AccessRestrictionsZod} from "../../types";
-import { randomUUID } from "crypto";
 import invariant from "tiny-invariant";
 import { buildTransactionFunction } from "../../common/transactions";
 import { SmartWalletFactory } from "./smart-wallet-factory";
+import { resolveOrGenerateId } from "../../common/signature-minting";
 
 export class SmartWallet<TContract extends IAccountCore> implements DetectableFeature {
     
@@ -72,7 +72,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
           (new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 * 10)).getTime() / 1000
         )
       ),
-      uid: ethers.utils.solidityKeccak256(["string"], [randomUUID()]),
+      uid: resolveOrGenerateId(undefined),
     }
 
     // Generate signature
