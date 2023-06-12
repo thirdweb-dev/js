@@ -192,6 +192,36 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
       })
     }
   );
+
+  // TODO: Add / remove approved targets.
+
+  updateAccess = buildTransactionFunction(
+    async(
+      signer: string,
+      restrictions: AccessRestrictions,
+    ): Promise<Transaction> => {
+      
+      const currentRole = (await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signer)).role;
+      if(currentRole === "0x0000000000000000000000000000000000000000000000000000000000000000") {
+        throw new Error("Signer does not have any access");
+      }
+
+      // Get role restrictions struct.
+      const roleRestrictions: IAccountPermissions.RoleRestrictionsStruct = {
+        role: currentRole,
+        approvedTargets: restrictions.approvedCallTargets,
+        maxValuePerTransaction: restrictions.nativeTokenLimitPerTransaction,
+        startTimestamp: Math.floor(restrictions.startDate.getTime() / 1000),
+        endTimestamp: Math.floor(restrictions.expirationDate.getTime() / 1000),
+      }
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "setRoleRestrictions",
+        args: [roleRestrictions],
+      })
+    }
+  )
   
   // TODO: documentation
   revokeAccess = buildTransactionFunction(
@@ -200,7 +230,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
     ): Promise<Transaction> => {
       const currentRole = (await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signer)).role;
       if(currentRole === "0x0000000000000000000000000000000000000000000000000000000000000000") {
-        throw new Error("Signer does not have access");
+        throw new Error("Signer does not have any access");
       }
 
       const { payload, signature } = await this.generatePayload(signer, RoleAction.REVOKE);

@@ -7,9 +7,9 @@ export type AccountEvent = {
 };
 
 export type AccessRestrictions = {
-  startDate: Date;
-  expirationDate: Date;
-  nativeTokenLimitPerTransaction: BigNumber;
+  startDate: Date;  // StartDateSchema
+  expirationDate: Date; // EndDateSchema
+  nativeTokenLimitPerTransaction: BigNumber; // AmountSchema
   approvedCallTargets: string[];
 }
 
