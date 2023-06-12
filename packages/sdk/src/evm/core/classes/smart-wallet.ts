@@ -8,7 +8,7 @@ import type {
   IAccountCore, IAccountFactory, IAccountPermissions,
 } from "@thirdweb-dev/contracts-js";
 import IAccountFactoryAbi from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactory.json";
-import { AccessRestrictions, RoleAction, RoleRequest, SignedAccountPermissionsPayload, SignerWithRestrictions } from "../../types";
+import { AccessRestrictions, RoleAction, RoleRequest, SignedAccountPermissionsPayload, SignerWithRestrictions, AccessRestrictionsInput, AccessRestrictionsOutput, AccessRestrictionsZod} from "../../types";
 import { randomUUID } from "crypto";
 import invariant from "tiny-invariant";
 import { buildTransactionFunction } from "../../common/transactions";
@@ -148,13 +148,14 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
   grantAccess = buildTransactionFunction(
     async(
       signer: string,
-      restrictions: AccessRestrictions,
+      restrictions: AccessRestrictionsInput,
     ): Promise<Transaction> => {
 
       const currentRole = (await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signer)).role;
       if(currentRole !== "0x0000000000000000000000000000000000000000000000000000000000000000") {
         throw new Error("Signer already has access");
       }
+      const parsedRestrictions = await AccessRestrictionsZod.parseAsync(restrictions);
 
       // Performing a multicall: [1] setting restrictions for role, [2] granting role to signer.
       const encoded: string[] = [];
@@ -167,10 +168,10 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
       // Get role restrictions struct.
       const roleRestrictions: IAccountPermissions.RoleRestrictionsStruct = {
         role,
-        approvedTargets: restrictions.approvedCallTargets,
-        maxValuePerTransaction: restrictions.nativeTokenLimitPerTransaction,
-        startTimestamp: Math.floor(restrictions.startDate.getTime() / 1000),
-        endTimestamp: Math.floor(restrictions.expirationDate.getTime() / 1000),
+        approvedTargets: parsedRestrictions.approvedCallTargets,
+        maxValuePerTransaction: parsedRestrictions.nativeTokenLimitPerTransaction,
+        startTimestamp: parsedRestrictions.startDate,
+        endTimestamp: parsedRestrictions.expirationDate,
       }
 
       encoded.push(this.contractWrapper.readContract.interface.encodeFunctionData("setRoleRestrictions", [roleRestrictions]));
@@ -198,21 +199,22 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
   updateAccess = buildTransactionFunction(
     async(
       signer: string,
-      restrictions: AccessRestrictions,
+      restrictions: AccessRestrictionsInput,
     ): Promise<Transaction> => {
       
       const currentRole = (await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signer)).role;
       if(currentRole === "0x0000000000000000000000000000000000000000000000000000000000000000") {
         throw new Error("Signer does not have any access");
       }
+      const parsedRestrictions = await AccessRestrictionsZod.parseAsync(restrictions);
 
       // Get role restrictions struct.
       const roleRestrictions: IAccountPermissions.RoleRestrictionsStruct = {
         role: currentRole,
-        approvedTargets: restrictions.approvedCallTargets,
-        maxValuePerTransaction: restrictions.nativeTokenLimitPerTransaction,
-        startTimestamp: Math.floor(restrictions.startDate.getTime() / 1000),
-        endTimestamp: Math.floor(restrictions.expirationDate.getTime() / 1000),
+        approvedTargets: parsedRestrictions.approvedCallTargets,
+        maxValuePerTransaction: parsedRestrictions.nativeTokenLimitPerTransaction,
+        startTimestamp: parsedRestrictions.startDate,
+        endTimestamp: parsedRestrictions.expirationDate,
       }
 
       return Transaction.fromContractWrapper({

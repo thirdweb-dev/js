@@ -1,5 +1,8 @@
 import type { IAccountPermissions } from "@thirdweb-dev/contracts-js";
 import { BigNumber, BytesLike } from "ethers";
+import { z } from "zod";
+import { AmountSchema } from "../../core/schema/shared";
+import { EndDateSchema, StartDateSchema } from "../schema";
 
 export type AccountEvent = {
   account: string;
@@ -7,11 +10,22 @@ export type AccountEvent = {
 };
 
 export type AccessRestrictions = {
-  startDate: Date;  // StartDateSchema
-  expirationDate: Date; // EndDateSchema
-  nativeTokenLimitPerTransaction: BigNumber; // AmountSchema
+  startDate: Date;
+  expirationDate: Date;
+  nativeTokenLimitPerTransaction: BigNumber;
   approvedCallTargets: string[];
 }
+
+export const AccessRestrictionsZod = z.object({
+  startDate: StartDateSchema,
+  expirationDate: EndDateSchema,
+  nativeTokenLimitPerTransaction: AmountSchema.default(0),
+  approvedCallTargets: z.array(z.string()),
+});
+
+export type AccessRestrictionsInput = z.input<typeof AccessRestrictionsZod>;
+
+export type AccessRestrictionsOutput = z.output<typeof AccessRestrictionsZod>;
 
 export type SignerWithRestrictions = {
   signer: string;
