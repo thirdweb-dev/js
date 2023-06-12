@@ -129,6 +129,7 @@ export async function install(projectPath = ".", options: any) {
       .concat(thirdwebExistsInFoundry ? ["lib/thirdweb-contracts"] : [])
   );
 
+  // Figure out which dependencies to install and which to update.
   if (detectedAppType === "contract") {
     processContractAppType({ detectedPackageManager, thirdwebDepsToUpdate, thirdwebDepsToInstall, isJSPackageManager })
   } else if (detectedAppType === "app") {

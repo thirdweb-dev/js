@@ -3,4 +3,4 @@
 "thirdweb": patch
 ---
 
-Update chains and improve the install command
+Enhance CLI Install command and update chains
