@@ -1,6 +1,7 @@
 // Import required dependencies
 import { existsSync, readFileSync } from "fs";
 import ora from "ora";
+import inquirer from "inquirer";
 
 // Import project dependencies
 import detectFramework from "../core/detection/detectFramework";
@@ -148,6 +149,43 @@ export async function install(projectPath = ".", options: any) {
     thirdwebDepsToUpdate.delete(excludedDep);
     thirdwebDepsToInstall.delete(excludedDep);
   });
+
+  // Ask which dependencies to install
+  if (thirdwebDepsToInstall.size !== 0) {
+    const answer = await inquirer.prompt({
+      type: "checkbox",
+      choices: [...thirdwebDepsToInstall],
+      message: "Which thirdweb dependencies would you like to install?",
+      name: "dependencies",
+      default: [...thirdwebDepsToInstall],
+    });
+
+    if (answer.dependencies.length !== thirdwebDepsToInstall.size) {
+      thirdwebDepsToUpdate.clear();
+      answer.dependencies.forEach((dep: string) => thirdwebDepsToInstall.add(dep));
+    }
+  }
+
+  // Ask which dependencies to update
+  if (thirdwebDepsToUpdate.size !== 0) {
+    const answer = await inquirer.prompt({
+      type: "checkbox",
+      choices: [...thirdwebDepsToUpdate],
+      message: "Which thirdweb dependencies would you like to update?",
+      name: "dependencies",
+      default: [...thirdwebDepsToUpdate],
+    });
+
+    if (answer.dependencies.length !== thirdwebDepsToUpdate.size) {
+      thirdwebDepsToUpdate.clear();
+      answer.dependencies.forEach((dep: string) => thirdwebDepsToUpdate.add(dep));
+    }
+  }
+
+  if (thirdwebDepsToInstall.size === 0 && thirdwebDepsToUpdate.size === 0) {
+    console.log("No thirdweb dependencies to install or update.");
+    return;
+  }
 
   try {
     const dependenciesToAdd = [
