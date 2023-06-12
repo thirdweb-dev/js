@@ -12,7 +12,7 @@ export default {
   "rpc": [
     "https://wireshape-floripa-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-floripa.wireshape.org",
-    "https://floripa.rpc.thirdweb.com"
+    "https://wireshape-floripa-testnet.rpc.thirdweb.com"
   ],
   "faucets": [],
   "nativeCurrency": {
