@@ -1,4 +1,4 @@
-import { IconFC } from "./types";
+import type { IconFC } from "./types";
 
 export const ExitIcon: IconFC = ({ size }) => {
   return (
