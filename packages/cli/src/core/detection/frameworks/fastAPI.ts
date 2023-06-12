@@ -12,7 +12,7 @@ export default class FastAPIDetector implements FrameworkDetector {
       packageManager,
     );
 
-    const additionalFilesToCheck = ["/app.py", "/main.py"];
+    const additionalFilesToCheck: string[] = [];
     const additionalFilesExist = additionalFilesToCheck.some((file) =>
       existsSync(path + file),
     );

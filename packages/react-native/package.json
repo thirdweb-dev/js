@@ -60,7 +60,7 @@
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.56.0",
     "babel-jest": "^29.2.1",
-    "eslint": "^8.21.0",
+    "eslint": "^8.42.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-import": "^2.26.0",

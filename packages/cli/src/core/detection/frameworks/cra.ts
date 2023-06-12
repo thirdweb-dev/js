@@ -16,8 +16,8 @@ export default class CRADetector implements FrameworkDetector {
     const packageJson = readFileSync(packageJsonPath);
     const { dependencies, devDependencies } = parsePackageJson(packageJson);
     const craDependencyExists =
-      dependencies["react-scripts"] ||
-      devDependencies["react-scripts"] ||
+      !!dependencies["react-scripts"] ||
+      !!devDependencies["react-scripts"] ||
       false;
 
     return craDependencyExists;
