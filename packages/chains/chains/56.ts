@@ -18,7 +18,7 @@ export default {
     "https://bsc-dataseed3.binance.org",
     "https://bsc-dataseed2.binance.org",
     "https://bsc-dataseed1.binance.org",
-    "https://1rpc.io/{1RPC_API_KEY}/eth"
+    "https://1rpc.io/{1RPC_API_KEY}/bnb"
   ],
   "faucets": [
     "https://free-online-app.com/faucet-for-eth-evm-chains/"
