@@ -35,7 +35,7 @@ export const DeployAndAirdrop = () => {
   const [selectedTab, setSelectedTab] = useState("deploy");
 
   return (
-    <Flex w="full" flexDir="column" mx="auto" mt={6}>
+    <Flex w={{ base: "100%", md: "60%" }} flexDir="column" mx="auto" mt={6}>
       <Flex
         direction={{
           base: "column",

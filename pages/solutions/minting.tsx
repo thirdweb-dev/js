@@ -1,4 +1,12 @@
-import { Box, Flex, SimpleGrid, useBreakpointValue } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Icon,
+  ListItem,
+  SimpleGrid,
+  UnorderedList,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { DeployAndAirdrop } from "components/homepage/DeployAndAirdrop";
 import { GuidesShowcase } from "components/product-pages/common/GuideShowcase";
@@ -8,7 +16,8 @@ import { ProductLearnMoreCard } from "components/product-pages/common/ProductLea
 import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
 import { PageId } from "page-id";
-import { Heading, TrackedLink } from "tw-components";
+import { FiArrowRight } from "react-icons/fi";
+import { Heading, Text, TrackedLink } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "minting_kit";
@@ -186,10 +195,200 @@ const Minting: ThirdwebNextPage = () => {
 
       {/* Use cases */}
       <ProductSection overflow="hidden">
-        <Flex flexDir="column" py={24} align="center" gap={{ base: 8, md: 4 }}>
+        <Flex flexDir="column" py={24} align="center" gap={{ base: 8, md: 12 }}>
           <Heading as="h2" size="display.sm" textAlign="center">
             Build complete NFT experiences with our Minting solution
           </Heading>
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap={6}>
+            <ProductCard
+              title="For Cloud & Web Services"
+              icon={require("/public/assets/solutions-pages/commerce/hero-icon-1.png")}
+            >
+              <Text size="body.lg">
+                A minting API that is easily integrated into your existing web2
+                systems. Enable developers to quickly build and deploy web3
+                applications
+              </Text>
+              <UnorderedList>
+                <ListItem>
+                  <Text size="body.lg" my={4}>
+                    Launch minting and web3 API based managed services
+                  </Text>
+                </ListItem>
+                <ListItem>
+                  <Text size="body.lg">
+                    Enhance existing content and creator platforms with digital
+                    assets{" "}
+                  </Text>
+                </ListItem>
+              </UnorderedList>
+            </ProductCard>
+            <ProductCard
+              title="For Chains & Platforms"
+              icon={require("/public/assets/solutions-pages/commerce/hero-icon-4.png")}
+            >
+              <Flex
+                justifyContent="space-between"
+                flexDir="column"
+                gap={4}
+                h="full"
+              >
+                <Box h="full">
+                  <Text size="body.lg">
+                    Supercharge on-boarding for brands, apps and developers to
+                    your chain
+                  </Text>
+                  <UnorderedList>
+                    <ListItem>
+                      <Text size="body.lg" mt={4}>
+                        NFT Launchpad makes it easy for users to easily launch
+                        new smart contracts and incorporate minting to smart
+                        contracts using API call
+                      </Text>
+                    </ListItem>
+                  </UnorderedList>
+                </Box>
+                <TrackedLink
+                  width="auto"
+                  href="https://portal.thirdweb.com/minting/getting-started/selecting-smart-contract"
+                  category={TRACKING_CATEGORY}
+                  label="learn_more_chains"
+                  isExternal
+                  color="white"
+                  display="flex"
+                  alignItems="center"
+                  gap={1}
+                  role="group"
+                >
+                  <span>Learn more</span>{" "}
+                  <Icon
+                    as={FiArrowRight}
+                    transform="rotate(-45deg)"
+                    transition="transform 0.2s"
+                    _groupHover={{
+                      transform: "rotate(-45deg) translateX(2px)",
+                    }}
+                  />
+                </TrackedLink>
+              </Flex>
+            </ProductCard>
+            <ProductCard
+              title="For Creators"
+              icon={require("/public/assets/solutions-pages/commerce/hero-icon-3.png")}
+            >
+              <Flex
+                justifyContent="space-between"
+                flexDir="column"
+                gap={4}
+                h="full"
+              >
+                <Box h="full">
+                  <Text size="body.lg">
+                    Enable NFT minting for your users with familiar web2-like
+                    user experience
+                  </Text>
+                  <UnorderedList>
+                    <ListItem>
+                      <Text my={4} size="body.lg">
+                        Quests where users are rewarded with digital
+                        collectibles for engagement
+                      </Text>
+                    </ListItem>
+                    <ListItem>
+                      <Text size="body.lg">
+                        Music & video digital collectibles with royalty sharing
+                        mechanism.
+                      </Text>
+                    </ListItem>
+                    <ListItem>
+                      <Text mt={4} size="body.lg">
+                        Access-based digital collectibles for IRL ticketing &
+                        events.
+                      </Text>
+                    </ListItem>
+                  </UnorderedList>
+                  <TrackedLink
+                    mt={6}
+                    width="auto"
+                    href="https://portal.thirdweb.com/digital-collectibles"
+                    category={TRACKING_CATEGORY}
+                    label="learn_more_digital_collectibles"
+                    isExternal
+                    color="white"
+                    display="flex"
+                    alignItems="center"
+                    gap={1}
+                    role="group"
+                  >
+                    <span>Learn more</span>{" "}
+                    <Icon
+                      as={FiArrowRight}
+                      transform="rotate(-45deg)"
+                      transition="transform 0.2s"
+                      _groupHover={{
+                        transform: "rotate(-45deg) translateX(2px)",
+                      }}
+                    />
+                  </TrackedLink>
+                </Box>
+              </Flex>
+            </ProductCard>
+            <ProductCard
+              title="For Games"
+              icon={require("/public/assets/solutions-pages/commerce/hero-icon-2.png")}
+            >
+              <Flex
+                justifyContent="space-between"
+                flexDir="column"
+                gap={4}
+                h="full"
+              >
+                <Box h="full">
+                  <Text size="body.lg">
+                    Easily connect game engines via an API to minting and
+                    blockchain infrastructure
+                  </Text>
+                  <UnorderedList>
+                    <ListItem>
+                      <Text my={4} size="body.lg">
+                        In-game asset digital collectibles
+                      </Text>
+                    </ListItem>
+                    <ListItem>
+                      <Text size="body.lg">Digital trading cards</Text>
+                    </ListItem>
+                    <ListItem>
+                      <Text mt={4} size="body.lg">
+                        White-label marketplaces to trade in-asset games
+                      </Text>
+                    </ListItem>
+                  </UnorderedList>
+                </Box>
+                <TrackedLink
+                  width="auto"
+                  href="https://portal.thirdweb.com/gamingkit/quickstart"
+                  category={TRACKING_CATEGORY}
+                  label="learn_more_digital_games"
+                  isExternal
+                  color="white"
+                  display="flex"
+                  alignItems="center"
+                  gap={1}
+                  role="group"
+                >
+                  <span>Learn more</span>{" "}
+                  <Icon
+                    as={FiArrowRight}
+                    transform="rotate(-45deg)"
+                    transition="transform 0.2s"
+                    _groupHover={{
+                      transform: "rotate(-45deg) translateX(2px)",
+                    }}
+                  />
+                </TrackedLink>
+              </Flex>
+            </ProductCard>
+          </SimpleGrid>
           <ChakraNextImage
             src={
               isMobile
