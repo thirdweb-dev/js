@@ -57,14 +57,14 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    * @returns The generated payload and signature produced on signing that payload.
    *
    */
-  private async generatePayload(signer: string, roleAction: RoleAction): Promise<SignedAccountPermissionsPayload> {
+  private async generatePayload(signerAddress: string, roleAction: RoleAction): Promise<SignedAccountPermissionsPayload> {
     // Derive role for target signer.
-    const role = ethers.utils.solidityKeccak256(["string"], [signer]);
+    const role = ethers.utils.solidityKeccak256(["string"], [signerAddress]);
 
     // Get role request struct.
     const payload: IAccountPermissions.RoleRequestStruct = {
       role,
-      target: signer,
+      target: signerAddress,
       action: roleAction,
       validityStartTimestamp: 0,
       validityEndTimestamp: BigNumber.from(
@@ -125,8 +125,8 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    *
    * @twfeature SmartWallet
    */
-  public async getAccessRestrictions(signer: string): Promise<AccessRestrictions> {
-    const roleRestrictions: IAccountPermissions.RoleRestrictionsStruct = await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signer);
+  public async getAccessRestrictions(signerAddress: string): Promise<AccessRestrictions> {
+    const roleRestrictions: IAccountPermissions.RoleRestrictionsStruct = await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signerAddress);
     return this.parseRoleRestrictionsStruct(roleRestrictions);
   }
 
@@ -191,12 +191,12 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    */
   grantAdminAccess = buildTransactionFunction(
     async(
-      signer: string,
+      signerAddress: string,
     ): Promise<Transaction> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "setAdmin",
-        args: [signer, true],
+        args: [signerAddress, true],
       })
     }
   )
@@ -218,12 +218,12 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    */
   revokeAdminAccess = buildTransactionFunction(
     async(
-      signer: string,
+      signerAddress: string,
     ): Promise<Transaction> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "setAdmin",
-        args: [signer, false],
+        args: [signerAddress, false],
       })
     }
   )
@@ -246,11 +246,11 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    */
   grantAccess = buildTransactionFunction(
     async(
-      signer: string,
+      signerAddress: string,
       restrictions: AccessRestrictionsInput,
     ): Promise<Transaction> => {
 
-      const currentRole = (await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signer)).role;
+      const currentRole = (await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signerAddress)).role;
       if(currentRole !== this.emptyRole) {
         throw new Error("Signer already has access");
       }
@@ -262,7 +262,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
       // ===== Preparing [1] `setRoleRestrictions` =====
 
       // Derive role for target signer.
-      const role = ethers.utils.solidityKeccak256(["string"], [signer]);
+      const role = ethers.utils.solidityKeccak256(["string"], [signerAddress]);
 
       // Get role restrictions struct.
       const roleRestrictions: IAccountPermissions.RoleRestrictionsStruct = {
@@ -277,7 +277,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
 
       // ===== Preparing [2] `changeRole` =====
 
-      const { payload, signature } = await this.generatePayload(signer, RoleAction.GRANT);
+      const { payload, signature } = await this.generatePayload(signerAddress, RoleAction.GRANT);
       
       const isValidSigner = await this.contractWrapper.readContract.verifyRoleRequest(payload, signature);
       if(!isValidSigner) { throw new Error(`Invalid signature.`) }
@@ -311,10 +311,10 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    */
   approveTargetForSigner = buildTransactionFunction(
     async(
-      signer: string,
+      signerAddress: string,
       target: string,
     ): Promise<Transaction> => {
-      const restrictionsForSigner: IAccountPermissions.RoleRestrictionsStruct = await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signer);
+      const restrictionsForSigner: IAccountPermissions.RoleRestrictionsStruct = await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signerAddress);
 
       if(restrictionsForSigner.role === this.emptyRole) {
         throw new Error("Signer does not have any access");
@@ -353,10 +353,10 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    */
   disapproveTargetForSigner = buildTransactionFunction(
     async(
-      signer: string,
+      signerAddress: string,
       target: string,
     ): Promise<Transaction> => {
-      const restrictionsForSigner: IAccountPermissions.RoleRestrictionsStruct = await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signer);
+      const restrictionsForSigner: IAccountPermissions.RoleRestrictionsStruct = await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signerAddress);
 
       if(restrictionsForSigner.role === this.emptyRole) {
         throw new Error("Signer does not have any access");
@@ -395,11 +395,11 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    */
   updateAccess = buildTransactionFunction(
     async(
-      signer: string,
+      signerAddress: string,
       restrictions: AccessRestrictionsInput,
     ): Promise<Transaction> => {
       
-      const currentRole = (await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signer)).role;
+      const currentRole = (await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signerAddress)).role;
       if(currentRole === this.emptyRole) {
         throw new Error("Signer does not have any access");
       }
@@ -439,14 +439,14 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    */
   revokeAccess = buildTransactionFunction(
     async(
-      signer: string,
+      signerAddress: string,
     ): Promise<Transaction> => {
-      const currentRole = (await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signer)).role;
+      const currentRole = (await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signerAddress)).role;
       if(currentRole === this.emptyRole) {
         throw new Error("Signer does not have any access");
       }
 
-      const { payload, signature } = await this.generatePayload(signer, RoleAction.REVOKE);
+      const { payload, signature } = await this.generatePayload(signerAddress, RoleAction.REVOKE);
       
       const isValidSigner = await this.contractWrapper.readContract.verifyRoleRequest(payload, signature);
       if(!isValidSigner) { throw new Error(`Invalid signature.`) }
