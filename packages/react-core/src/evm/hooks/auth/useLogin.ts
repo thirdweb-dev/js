@@ -39,12 +39,13 @@ export function useLogin() {
       );
 
       const address = await wallet.getAddress();
+      const chainId = await wallet.getChainId();
       let res = await fetch(`${authConfig.authUrl}/payload`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ address }),
+        body: JSON.stringify({ address, chainId: chainId.toString() }),
       });
 
       if (!res.ok) {
