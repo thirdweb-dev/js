@@ -9,6 +9,7 @@ import detectPackageManager from "../core/detection/detectPackageManager";
 import detectLibrary from "../core/detection/detectLibrary";
 import { ContractLibrariesType, contractLibraries } from "../core/types/ProjectType";
 import { checkIfBrowniePackageIsInstalled, getDependenciesForFoundry, getDependenciesForGo, getDependenciesForPython, installOrUpdate, parsePackageJson, processAppType, processContractAppType } from "../lib/utils";
+import { logger } from "../core/helpers/logger";
 
 // Define excluded dependencies
 const EXCLUDED_DEPENDENCIES = ["@thirdweb-dev/chain-icons"];
@@ -190,6 +191,13 @@ export async function install(projectPath = ".", options: any) {
   if (thirdwebDepsToInstall.size === 0 && thirdwebDepsToUpdate.size === 0) {
     console.log("No thirdweb dependencies to install or update.");
     return;
+  }
+
+  if (debug) {
+    logger.info("Detected package manager: " + detectedPackageManager);
+    logger.info("Detected library: " + detectedLibrary);
+    logger.info("Detected framework: " + detectedFramework);
+    logger.info("Detected app type: " + detectedAppType);
   }
 
   try {
