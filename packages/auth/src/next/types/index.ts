@@ -7,6 +7,7 @@ import { z } from "zod";
 
 export const PayloadBodySchema = z.object({
   address: z.string(),
+  chainId: z.string().optional(),
 });
 
 export const ActiveBodySchema = z.object({
