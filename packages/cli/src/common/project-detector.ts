@@ -4,7 +4,7 @@ import detectLibrary from "../core/detection/detectLibrary";
 import detectLanguage from "../core/detection/detectLanguage";
 import { logger, spinner } from "../core/helpers/logger";
 import path from "path";
-import { ContractLibrariesType, contractLibraries } from "../core/types/ProjectType";
+import { AppType, ContractLibrariesType, contractLibraries } from "../core/types/ProjectType";
 import { FeatureWithEnabled, detectFeatures } from "@thirdweb-dev/sdk";
 import chalk from "chalk";
 import ora from "ora";
@@ -48,7 +48,7 @@ export async function detectProject(options: any) {
     options,
     detectedPackageManager,
   );
-  const detectedAppType = detectedFramework !== "none" ? contractLibraries.includes(detectedFramework as ContractLibrariesType) ? "contract" : "app" : "app";
+  const detectedAppType = detectedFramework !== "none" ? contractLibraries.includes(detectedFramework as ContractLibrariesType) ? "contract" : "app" : "app" as AppType;
   const detectedContractLibrary = detectedAppType === "contract" ? detectedFramework as ContractLibrariesType : "none";
 
   logger.info("Detected package manager: " + detectedPackageManager);
@@ -163,6 +163,15 @@ export async function detectProject(options: any) {
       logger.info(`     ${chalk.cyan(deployCmd)}`);
       logger.info(``);
     });
+  }
+
+  return {
+    detectedPackageManager,
+    detectedLanguage,
+    detectedLibrary,
+    detectedFramework,
+    detectedAppType,
+    detectedContractLibrary,
   }
 }
 

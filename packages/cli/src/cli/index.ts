@@ -18,6 +18,7 @@ import open from "open";
 import prompts from "prompts";
 import Cache from "sync-disk-cache";
 import { install } from "../install";
+import { dev } from "../dev";
 
 const main = async () => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
@@ -416,6 +417,15 @@ const main = async () => {
     .option("-p, --path <project-path>", "path to project", ".")
     .action(async (options) => {
       await generate(options);
+    });
+  
+  program
+    .command("dev")
+    .description("Optimizes ABIs and types for your smart contracts and starts a local dev server")
+    .option("-p, --path <project-path>", "path to project", ".")
+    .option("-d, --debug", "show debug logs")
+    .action(async (path, options) => {
+      await dev(path, options);
     });
 
   await program.parseAsync();

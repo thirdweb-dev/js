@@ -8,6 +8,7 @@ export type ThirdwebConfig = {
 export type GenerateOptions = {
   path: string;
   deployer?: string;
+  logs: boolean;
 };
 
 export type ContractChainPrompt = {

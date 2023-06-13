@@ -49,7 +49,6 @@ export type FrameworkType =
   | "django"
   | "flask"
   | "fastapi"
-  | "populus"
   | "fastify"
   | "gin"
   | "echo"

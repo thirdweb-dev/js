@@ -113,9 +113,11 @@ export async function generate(options: GenerateOptions) {
         );
       } catch {
         // If metadata for a contract fails, just go onto the next one
-        ora(
-          `Unable to download ABI for contract ${contract.address}, skipping.`,
-        ).warn();
+        if (options.logs) {
+          ora(
+            `Unable to download ABI for contract ${contract.address}, skipping.`,
+          ).warn();
+        }
         return;
       }
 
@@ -124,7 +126,11 @@ export async function generate(options: GenerateOptions) {
         metadata: contractMetadata,
       });
     }),
-  );
+  ).catch(() => {
+    if (options.logs) {
+      ora(`Error while downloading ABIs, error: ${e.message}`).warn();
+    }
+  });
 
   // Store the ABIs in the the SDKs ABI cache files
   const packagePath = `${projectPath}/node_modules/@thirdweb-dev/generated-abis/dist`;

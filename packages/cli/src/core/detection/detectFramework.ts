@@ -16,7 +16,6 @@ import TruffleDetector from "./frameworks/truffle";
 import BrownieDetector from "./frameworks/brownie";
 import FastAPIDetector from "./frameworks/fastAPI";
 import FlaskDetector from "./frameworks/flask";
-import PopulusDetector from "./frameworks/populus";
 import FastifyDetector from "./frameworks/fastify";
 import EchoDetector from "./frameworks/echo";
 import FiberDetector from "./frameworks/fiber";
@@ -44,7 +43,6 @@ export default async function detect(
     new GinDetector(),
     new HardhatDetector(),
     new NextDetector(),
-    new PopulusDetector(),
     new ReactNativeCLIDetector(),
     new RemixDetector(),
     new RevelDetector(),
