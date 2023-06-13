@@ -23,6 +23,7 @@ import { ethers } from "ethers";
 import type { SmartContract as SmartContractType } from "./smart-contract";
 import { getCompositeABIfromRelease } from "../common/plugin/getCompositeABIfromRelease";
 import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
+import { TOKEN_INITIALIZER_ROLES } from "./TokenInitializerRoles";
 
 type InitalizeParams = [
   network: NetworkInput,
@@ -524,7 +525,7 @@ export const TokenInitializer = {
   name: "TokenERC20" as const,
   contractType: "token" as const,
   schema: TokenErc20ContractSchema,
-  roles: ["admin", "minter", "transfer"] as const,
+  roles: TOKEN_INITIALIZER_ROLES,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {

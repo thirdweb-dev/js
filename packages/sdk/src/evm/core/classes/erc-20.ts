@@ -41,7 +41,6 @@ import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
-import type { TokenInitializer } from "../../contracts";
 import {
   FilledSignaturePayload20,
   MintRequest20,
@@ -58,6 +57,7 @@ import invariant from "tiny-invariant";
 import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ContractMetadata } from "./contract-metadata";
 import { DropClaimConditions } from "./drop-claim-conditions";
+import { TOKEN_INITIALIZER_ROLES } from "../../contracts/TokenInitializerRoles";
 
 /**
  * Standard ERC20 Token functions
@@ -905,12 +905,12 @@ export class Erc20SignatureMintable implements DetectableFeature {
 
   private contractWrapper: ContractWrapper<TokenERC20>;
   private roles:
-    | ContractRoles<TokenERC20, (typeof TokenInitializer.roles)[number]>
+    | ContractRoles<TokenERC20, (typeof TOKEN_INITIALIZER_ROLES)[number]>
     | undefined;
 
   constructor(
     contractWrapper: ContractWrapper<TokenERC20>,
-    roles?: ContractRoles<TokenERC20, (typeof TokenInitializer.roles)[number]>,
+    roles?: ContractRoles<TokenERC20, (typeof TOKEN_INITIALIZER_ROLES)[number]>,
   ) {
     this.contractWrapper = contractWrapper;
     this.roles = roles;

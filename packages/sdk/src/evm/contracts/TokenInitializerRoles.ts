@@ -1,0 +1,1 @@
+export const TOKEN_INITIALIZER_ROLES = ["admin", "minter", "transfer"] as const;
