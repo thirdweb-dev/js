@@ -16,14 +16,14 @@ export type AccessRestrictions = {
   approvedCallTargets: string[];
 }
 
-export const AccessRestrictionsZod = z.object({
+export const AccessRestrictionsSchema = z.object({
   startDate: StartDateSchema,
   expirationDate: EndDateSchema,
   nativeTokenLimitPerTransaction: AmountSchema.default(0),
   approvedCallTargets: z.array(z.string()),
 });
 
-export type AccessRestrictionsInput = z.input<typeof AccessRestrictionsZod>;
+export type AccessRestrictionsInput = z.input<typeof AccessRestrictionsSchema>;
 
 export type SignerWithRestrictions = {
   signer: string;

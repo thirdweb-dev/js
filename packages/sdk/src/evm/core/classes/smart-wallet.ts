@@ -8,7 +8,7 @@ import type {
   IAccountCore, IAccountFactory, IAccountPermissions,
 } from "@thirdweb-dev/contracts-js";
 import IAccountFactoryAbi from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactory.json";
-import { AccessRestrictions, RoleAction, RoleRequest, SignedAccountPermissionsPayload, SignerWithRestrictions, AccessRestrictionsInput, AccessRestrictionsZod} from "../../types";
+import { AccessRestrictions, RoleAction, RoleRequest, SignedAccountPermissionsPayload, SignerWithRestrictions, AccessRestrictionsInput, AccessRestrictionsSchema} from "../../types";
 import invariant from "tiny-invariant";
 import { buildTransactionFunction } from "../../common/transactions";
 import { SmartWalletFactory } from "./smart-wallet-factory";
@@ -254,7 +254,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
       if(currentRole !== this.emptyRole) {
         throw new Error("Signer already has access");
       }
-      const parsedRestrictions = await AccessRestrictionsZod.parseAsync(restrictions);
+      const parsedRestrictions = await AccessRestrictionsSchema.parseAsync(restrictions);
 
       // Performing a multicall: [1] setting restrictions for role, [2] granting role to signer.
       const encoded: string[] = [];
@@ -403,7 +403,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
       if(currentRole === this.emptyRole) {
         throw new Error("Signer does not have any access");
       }
-      const parsedRestrictions = await AccessRestrictionsZod.parseAsync(restrictions);
+      const parsedRestrictions = await AccessRestrictionsSchema.parseAsync(restrictions);
 
       // Get role restrictions struct.
       const roleRestrictions: IAccountPermissions.RoleRestrictionsStruct = {
