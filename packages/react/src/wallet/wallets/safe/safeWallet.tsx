@@ -9,7 +9,7 @@ import {
 import { defaultWallets } from "../defaultWallets";
 import { useState } from "react";
 import { SelectpersonalWallet } from "./SelectPersonalWallet";
-import { SafeWalletConfigOptions, SafeWalletConfig } from "./types";
+import type { SafeWalletConfigOptions, SafeWalletConfig } from "./types";
 import { SelectAccount } from "./SelectAccount";
 import { HeadlessConnectUI } from "../headlessConnectUI";
 

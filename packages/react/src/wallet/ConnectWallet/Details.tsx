@@ -16,7 +16,7 @@ import {
 } from "../../design-system";
 import { shortenString } from "../../evm/utils/addresses";
 import { isMobile } from "../../evm/utils/isMobile";
-import { NetworkSelector, NetworkSelectorProps } from "./NetworkSelector";
+import { NetworkSelector, type NetworkSelectorProps } from "./NetworkSelector";
 import { ExitIcon } from "./icons/ExitIcon";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
@@ -48,7 +48,7 @@ import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
 import { ErrorMessage } from "../../components/formElements";
 import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useWalletConfig } from "@thirdweb-dev/react-core";
-import { LocalWalletConfig } from "../wallets/localWallet/types";
+import type { LocalWalletConfig } from "../wallets/localWallet/types";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";

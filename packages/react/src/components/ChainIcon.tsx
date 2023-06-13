@@ -1,4 +1,4 @@
-import { Theme } from "../design-system";
+import type { Theme } from "../design-system";
 import styled from "@emotion/styled";
 import { Chain } from "@thirdweb-dev/chains";
 import { resolveIpfsUri } from "@thirdweb-dev/react-core";

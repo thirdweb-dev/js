@@ -15,7 +15,7 @@ import { Flex } from "../../../components/basic";
 import { TextDivider } from "../../../components/TextDivider";
 import { Spinner } from "../../../components/Spinner";
 import { spacing } from "../../../design-system";
-import { LocalWalletConfig } from "./types";
+import type { LocalWalletConfig } from "./types";
 
 export const CreateLocalWallet_Password: React.FC<{
   onConnect: () => void;
