@@ -215,6 +215,8 @@ export const ConnectedWalletDetails: React.FC<{
                 gap: spacing.xs,
                 alignItems: "center",
               }}
+              data-test="connected-wallet-address"
+              data-address={address}
             >
               <AccountAddress> {shortenString(address || "")}</AccountAddress>
               <IconButton
