@@ -16,7 +16,7 @@ import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { FormFooter } from "../../../components/formElements";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 import { LocalWalletModalHeader } from "./common";
-import { LocalWalletConfig } from "./types";
+import type { LocalWalletConfig } from "./types";
 
 export const ImportLocalWallet: React.FC<{
   onConnect: () => void;

@@ -29501,5 +29501,5 @@ packages:
     resolution: {tarball: https://codeload.github.com/Bundlr-Network/avsc/tar.gz/a730cc8018b79e114b6a3381bbb57760a24c6cef}
     name: avsc
     version: 5.4.7
-    engines: {node: '>=0.11'}
+    engines: { node: ">=0.11" }
     dev: true

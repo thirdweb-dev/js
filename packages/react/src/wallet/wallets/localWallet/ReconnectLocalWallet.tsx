@@ -18,7 +18,7 @@ import { CreateLocalWallet_Password } from "./CreateLocalWallet";
 import { OverrideConfirmation } from "./overrideConfirmation";
 import { ExportLocalWallet } from "./ExportLocalWallet";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
-import { LocalWalletConfig } from "./types";
+import type { LocalWalletConfig } from "./types";
 
 type ReconnectLocalWalletProps = {
   onConnect: () => void;

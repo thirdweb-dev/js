@@ -1,5 +1,5 @@
 import { darkTheme, iconSize, lightTheme, spacing } from "../../design-system";
-import { ConnectedWalletDetails, DropDownPosition } from "./Details";
+import { ConnectedWalletDetails, type DropDownPosition } from "./Details";
 import { ThemeProvider } from "@emotion/react";
 import {
   ThirdwebThemeContext,
@@ -24,7 +24,7 @@ import { LockIcon } from "./icons/LockIcon";
 import { Flex } from "../../components/basic";
 import { shortenAddress } from "../../evm/utils/addresses";
 import { SignatureModal } from "./SignatureModal";
-import { NetworkSelectorProps } from "./NetworkSelector";
+import type { NetworkSelectorProps } from "./NetworkSelector";
 
 type ConnectWalletProps = {
   className?: string;
@@ -151,6 +151,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
               });
               setIsWalletModalOpen(true);
             }}
+          data-test="connect-wallet-button"
           >
             {isLoading ? <Spinner size="sm" color="inverted" /> : btnTitle}
           </AnimatedButton>
