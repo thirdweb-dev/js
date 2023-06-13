@@ -30,8 +30,8 @@ import {
   utils,
 } from "ethers";
 import { BigNumber } from "ethers";
-import { FormatTypes } from "ethers/lib/utils.js";
-import type { ConnectionInfo } from "ethers/lib/utils.js";
+import { FormatTypes } from "ethers/lib/utils";
+import type { ConnectionInfo } from "ethers/lib/utils";
 import invariant from "tiny-invariant";
 import EventEmitter from "eventemitter3";
 import type { DeployEvents } from "../../types/deploy";

@@ -18,7 +18,7 @@ import {
 } from "@thirdweb-dev/wallets";
 import type { Address } from "abitype";
 import { providers } from "ethers";
-import { getAddress, hexValue } from "ethers/lib/utils.js";
+import { getAddress, hexValue } from "ethers/lib/utils";
 
 export type CoinbaseWalletConnectorOptions = WalletMobileSDKProviderOptions &
   ConfigurationParams & {

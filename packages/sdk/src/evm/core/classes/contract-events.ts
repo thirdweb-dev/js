@@ -2,7 +2,7 @@ import { EventType } from "../../constants/events";
 import type { ContractEvent, EventQueryOptions } from "../../types/events";
 import { ContractWrapper } from "./contract-wrapper";
 import type { BaseContract, Event, providers } from "ethers";
-import type { EventFragment } from "ethers/lib/utils.js";
+import type { EventFragment } from "ethers/lib/utils";
 import type { EventEmitter } from "eventemitter3";
 
 /**

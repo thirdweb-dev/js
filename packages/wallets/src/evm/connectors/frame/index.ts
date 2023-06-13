@@ -1,5 +1,5 @@
 import { providers } from "ethers";
-import { getAddress, hexValue } from "ethers/lib/utils.js";
+import { getAddress, hexValue } from "ethers/lib/utils";
 import type Provider from "ethereum-provider";
 import type { Address } from "abitype";
 import type { Chain } from "@thirdweb-dev/chains";
