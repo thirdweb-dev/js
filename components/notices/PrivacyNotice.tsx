@@ -8,6 +8,11 @@ import {
   ModalContent,
   ModalFooter,
   ModalOverlay,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -18,27 +23,24 @@ import {
   useUser,
   useWalletConfig,
 } from "@thirdweb-dev/react";
+import { ExternalApprovalNotice } from "components/buttons/TransactionButton";
 import { IconLogo } from "components/logo";
 import { useTrack } from "hooks/analytics/useTrack";
-import { Button, Heading, Text, TrackedLink } from "tw-components";
+import { useRef } from "react";
+import { Button, Card, Heading, Text, TrackedLink } from "tw-components";
 
 const TRACKING_CATEGORY = "notice";
 
 export const PrivacyNotice: React.FC = () => {
   const track = useTrack();
   const evmAddress = useAddress();
-  const walletId = useWalletConfig()?.id;
   const solAddress = useWallet().publicKey?.toBase58();
+  const walletId = useWalletConfig()?.id;
   const { isLoading, isLoggedIn } = useUser();
   const { login, isLoading: loginLoading } = useLogin();
   const disconnect = useDisconnect();
   const isMobile = useBreakpointValue({ base: true, md: false });
-
-  // if no wallet id or wallet id is safe then skip for now
-  // TODO remove this once safe works
-  if (!walletId || walletId === "safe") {
-    return null;
-  }
+  const initialFocusRef = useRef<HTMLButtonElement>(null);
 
   if (!evmAddress && !solAddress) {
     // if neither solana or evm wallets are connected then don't show the notice
@@ -132,39 +134,63 @@ export const PrivacyNotice: React.FC = () => {
             >
               Cancel
             </Button>
-            <Button
-              isLoading={loginLoading}
-              w="100%"
-              borderRadius="md"
-              colorScheme="primary"
-              onClick={() => {
-                track({
-                  category: TRACKING_CATEGORY,
-                  action: "accept_sign",
-                  label: "attempt",
-                });
-                login()
-                  .then(() => {
-                    track({
-                      category: TRACKING_CATEGORY,
-                      action: "accept_sign",
-                      label: "success",
-                    });
-                  })
-                  .catch((err) => {
-                    console.error("failed to login", err);
-                    track({
-                      category: TRACKING_CATEGORY,
-                      action: "accept_sign",
-                      label: "error",
-                      error: err,
-                    });
-                  });
-              }}
-              autoFocus
+            <Popover
+              initialFocusRef={initialFocusRef}
+              isLazy
+              isOpen={walletId === "safe" && loginLoading}
             >
-              Accept & Sign
-            </Button>
+              <PopoverTrigger>
+                <Button
+                  isLoading={loginLoading}
+                  w="100%"
+                  borderRadius="md"
+                  colorScheme="primary"
+                  onClick={() => {
+                    track({
+                      category: TRACKING_CATEGORY,
+                      action: "accept_sign",
+                      label: "attempt",
+                    });
+                    login()
+                      .then(() => {
+                        track({
+                          category: TRACKING_CATEGORY,
+                          action: "accept_sign",
+                          label: "success",
+                        });
+                      })
+                      .catch((err) => {
+                        console.error("failed to login", err);
+                        track({
+                          category: TRACKING_CATEGORY,
+                          action: "accept_sign",
+                          label: "error",
+                          error: err,
+                        });
+                      });
+                  }}
+                  autoFocus
+                >
+                  Accept & Sign
+                </Button>
+              </PopoverTrigger>
+              <Card
+                maxW="sm"
+                w="auto"
+                as={PopoverContent}
+                bg="backgroundCardHighlight"
+                mx={6}
+                boxShadow="0px 0px 2px 0px var(--popper-arrow-shadow-color)"
+              >
+                <PopoverArrow bg="backgroundCardHighlight" />
+                <PopoverBody>
+                  <ExternalApprovalNotice
+                    walletId={walletId}
+                    initialFocusRef={initialFocusRef}
+                  />
+                </PopoverBody>
+              </Card>
+            </Popover>
           </Flex>
         </ModalFooter>
       </ModalContent>

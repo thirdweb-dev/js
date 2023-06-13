@@ -17,10 +17,7 @@ import {
 import Solana from "@thirdweb-dev/chain-icons/dist/solana";
 import {
   ConnectWallet as ConnectWalletNew,
-  useAddress,
   useConnectionStatus,
-  useLogout,
-  useUser,
 } from "@thirdweb-dev/react";
 import { ChakraNextImage } from "components/Image";
 import { CustomChainRenderer } from "components/selects/CustomChainRenderer";
@@ -45,9 +42,6 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
   ecosystem = "either",
   ...buttonProps
 }) => {
-  const { user } = useUser();
-  const address = useAddress();
-  const { logout } = useLogout();
   const { colorMode } = useColorMode();
   const recentChains = useRecentlyUsedChains();
   const addRecentlyUsedChainId = useAddRecentlyUsedChainId();
@@ -65,12 +59,6 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
       setValueSol(solWallet.publicKey?.toBase58());
     }
   }, [solWallet.publicKey, setValueSol]);
-
-  useEffect(() => {
-    if (!!address && !!user && user?.address !== address) {
-      logout();
-    }
-  }, [address, user, logout]);
 
   const connectionStatus = useConnectionStatus();
 

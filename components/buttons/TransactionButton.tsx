@@ -202,7 +202,7 @@ interface ExternalApprovalNoticeProps {
   initialFocusRef: React.RefObject<HTMLButtonElement>;
 }
 
-const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
+export const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
   walletId,
   initialFocusRef,
 }) => {
@@ -217,7 +217,7 @@ const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
     return () => clearTimeout(t);
   }, []);
 
-  if (walletId === "Safe") {
+  if (walletId?.toLowerCase() === "safe") {
     const isChainIdSupported = chainId in CHAIN_ID_TO_GNOSIS;
     return (
       <Flex direction="column" gap={4}>
