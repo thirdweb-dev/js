@@ -1,15 +1,18 @@
-import { ThirdwebSDK } from "../core/sdk";
 import { Abi, PublishedMetadata } from "../schema/contracts/custom";
 import { Address } from "../schema/shared/Address";
 import { resolveContractUriFromAddress } from "./feature-detection/resolveContractUriFromAddress";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { providers } from "ethers";
 import { fetchContractMetadata } from "./fetchContractMetadata";
+import { MultichainRegistry } from "../core/classes/multichain-registry";
 
 // Internal static cache
 const metadataCache: Record<string, PublishedMetadata> = {};
 // polygonSDK to fetch metadata from the multichain registry
-const polygonSDK = new ThirdwebSDK("polygon");
+const multiChainRegistry = new MultichainRegistry(
+  "polygon",
+  new ThirdwebStorage(),
+);
 
 function getCacheKey(address: string, chainId: number) {
   return `${address}-${chainId}`;
@@ -60,11 +63,10 @@ export async function fetchContractMetadataFromAddress(
     );
     try {
       // try from multichain registry
-      const importedUri =
-        await polygonSDK.multiChainRegistry.getContractMetadataURI(
-          chainId,
-          address,
-        );
+      const importedUri = await multiChainRegistry.getContractMetadataURI(
+        chainId,
+        address,
+      );
       if (!importedUri) {
         throw new Error(
           `Could not resolve metadata for contract at ${address}`,
