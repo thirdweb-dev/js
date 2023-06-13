@@ -16,23 +16,12 @@ import {
   ModalOverlay,
   Spinner,
 } from "@chakra-ui/react";
-import {
-  QueryClient,
-  useQueries,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { Chain } from "@thirdweb-dev/chains";
+import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAddress } from "@thirdweb-dev/react";
-import { fetchEns } from "components/contract-components/hooks";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
-import { useSupportedChains } from "hooks/chains/configureChains";
 import { useDebounce } from "hooks/common/useDebounce";
-import { isPossibleEVMAddress } from "lib/address-utils";
-import { getDashboardChainRpc } from "lib/rpc";
-import { getEVMThirdwebSDK } from "lib/sdk";
 import { SearchMode, getSearchQuery } from "lib/search";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -49,119 +38,6 @@ type ContractSearchResult = {
 };
 
 const TRACKING_CATEGORY = "any_contract_search";
-
-function onChainContractSearchQuery(
-  searchQuery: string,
-  chain: Chain,
-  queryClient: QueryClient,
-  trackEvent: ReturnType<typeof useTrack>,
-) {
-  return {
-    queryKey: [
-      "onchain-contract-search",
-      { chainId: chain.chainId, search: searchQuery },
-    ],
-    queryFn: async () => {
-      trackEvent({
-        category: TRACKING_CATEGORY,
-        action: "query",
-        label: "attempt",
-        searchQuery,
-      });
-      if (!isPossibleEVMAddress(searchQuery)) {
-        throw new Error("Not a valid EVM address");
-      }
-      let address = searchQuery;
-      // if it's an ens address first resolve the real address
-      if (searchQuery?.endsWith(".eth")) {
-        const ensResult = await fetchEns(queryClient, searchQuery);
-        if (!ensResult.address) {
-          throw new Error("Failed to resolve ENS name.");
-        }
-        address = ensResult.address;
-      }
-      // create a new sdk for the given chain (this is cached inside the helper FN so should be fine to just do)
-      const chainSdk = getEVMThirdwebSDK(
-        chain.chainId,
-        getDashboardChainRpc(chain),
-      );
-
-      // check if there is anything on that chain at the address
-      const chainProvider = chainSdk.getProvider();
-      let chainCode: string;
-      try {
-        chainCode = await chainProvider.getCode(address);
-      } catch (err) {
-        // if we fail to get the code just return null
-        return null;
-      }
-
-      const chainHasContract = chainCode && chainCode !== "0x";
-      //  if there's no contract on the chain we can skip it and return null
-      if (!chainHasContract) {
-        return null;
-      }
-      // if there is a contract we now want to try to resolve it, if we can resolve it then we'll return the contract info, otherwise it needs to be imported
-      let result: ContractSearchResult;
-      try {
-        const contract = await chainSdk.getContract(address);
-        try {
-          const metadata = await contract.metadata.get();
-          result = {
-            address,
-            chainId: chain.chainId,
-            metadata,
-            needsImport: false,
-          };
-        } catch (err) {
-          result = {
-            address,
-            chainId: chain.chainId,
-            needsImport: false,
-            metadata: {
-              name: address,
-            },
-          };
-        }
-      } catch (err) {
-        // if we can't resolve the contract we need to import it
-        result = {
-          address,
-          chainId: chain.chainId,
-          needsImport: true,
-          metadata: {
-            name: address,
-          },
-        };
-      }
-      return result;
-    },
-    enabled:
-      isPossibleEVMAddress(searchQuery) && !!chain?.chainId && !!queryClient,
-    refetchOnWindowFocus: false,
-    refetchInterval: 0,
-    refetchOnMount: false,
-    retry: 0,
-    onSuccess: (d: unknown) => {
-      trackEvent({
-        category: TRACKING_CATEGORY,
-        action: "query",
-        label: "success",
-        searchQuery,
-        response: d,
-      });
-    },
-    onError: (err: unknown) => {
-      trackEvent({
-        category: TRACKING_CATEGORY,
-        action: "query",
-        label: "failure",
-        searchQuery,
-        error: err,
-      });
-    },
-  };
-}
 
 const typesenseApiKey =
   process.env.NEXT_PUBLIC_TYPESENSE_CONTRACT_API_KEY || "";
@@ -242,22 +118,6 @@ function contractTypesenseSearchQuery(
   };
 }
 
-function useContractSearch(searchQuery: string) {
-  const queryClient = useQueryClient();
-  const configureChains = useSupportedChains();
-  const trackEvent = useTrack();
-  return useQueries({
-    queries: configureChains.map((chain) => {
-      return onChainContractSearchQuery(
-        searchQuery,
-        chain,
-        queryClient,
-        trackEvent,
-      );
-    }),
-  });
-}
-
 export const CmdKSearch: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [searchMode, setSearchMode] = useState<SearchMode>("mainnet");
@@ -291,13 +151,11 @@ export const CmdKSearch: React.FC = () => {
       trackEvent,
     ),
   );
-  const searchQueryResponses = useContractSearch(debouncedSearchValue);
 
   const data = useMemo(() => {
-    const potentiallyDuplicated = [
-      ...(typesenseSearchQuery.data || []),
-      ...searchQueryResponses.map((r) => r.data),
-    ].filter((d) => !!d) as ContractSearchResult[];
+    const potentiallyDuplicated = [...(typesenseSearchQuery.data || [])].filter(
+      (d) => !!d,
+    ) as ContractSearchResult[];
 
     // dedupe the results
     return Array.from(
@@ -307,27 +165,13 @@ export const CmdKSearch: React.FC = () => {
         return `${d.chainId}_${d.address}` === chainIdAndAddress;
       });
     }) as ContractSearchResult[];
-  }, [searchQueryResponses, typesenseSearchQuery]);
+  }, [typesenseSearchQuery]);
 
   const isFetching = useMemo(() => {
     return (
-      typesenseSearchQuery.isFetching ||
-      debouncedSearchValue !== searchValue ||
-      searchQueryResponses.some((r) => r.isFetching)
+      typesenseSearchQuery.isFetching || debouncedSearchValue !== searchValue
     );
-  }, [
-    debouncedSearchValue,
-    searchQueryResponses,
-    searchValue,
-    typesenseSearchQuery.isFetching,
-  ]);
-
-  const error = useMemo(() => {
-    return !isFetching && !data.length
-      ? searchQueryResponses.find((r) => r.error)?.error
-      : undefined;
-  }, [data.length, isFetching, searchQueryResponses]);
-
+  }, [debouncedSearchValue, searchValue, typesenseSearchQuery.isFetching]);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const router = useRouter();
@@ -481,16 +325,7 @@ export const CmdKSearch: React.FC = () => {
               </ButtonGroup>
 
               <Flex py={2}>
-                {error ? (
-                  <Text
-                    p={3}
-                    color="red.400"
-                    _light={{ color: "red.600" }}
-                    size="label.md"
-                  >
-                    {(error as Error).message}
-                  </Text>
-                ) : !data || data?.length === 0 ? (
+                {!data || data?.length === 0 ? (
                   <Text p={3} size="label.md">
                     No contracts found.
                   </Text>
