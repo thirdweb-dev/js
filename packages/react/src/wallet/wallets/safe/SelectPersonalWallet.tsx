@@ -66,6 +66,7 @@ export const SelectpersonalWallet: React.FC<{
             onClick={() => {
               props.selectWallet(guestWallet);
             }}
+            data-test="continue-as-guest-button"
           >
             Continue as guest
           </Button>

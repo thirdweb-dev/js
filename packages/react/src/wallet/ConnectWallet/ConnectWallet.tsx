@@ -151,6 +151,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
               });
               setIsWalletModalOpen(true);
             }}
+          data-test="connect-wallet-button"
           >
             {isLoading ? <Spinner size="sm" color="inverted" /> : btnTitle}
           </AnimatedButton>

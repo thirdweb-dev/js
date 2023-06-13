@@ -108,6 +108,7 @@ export const ConnectedWalletDetails: React.FC<{
       className={`${TW_CONNECTED_WALLET} ${props.className || ""}`}
       data-theme={props.theme}
       style={props.style}
+        data-test="connected-wallet-details"
     >
       <ChainIcon
         chain={chain}
@@ -221,6 +222,7 @@ export const ConnectedWalletDetails: React.FC<{
                 style={{
                   padding: "3px",
                 }}
+                data-test="copy-address"
               >
                 <CopyIcon
                   text={address || ""}
