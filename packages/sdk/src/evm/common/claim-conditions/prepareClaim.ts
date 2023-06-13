@@ -1,5 +1,8 @@
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
-import { ClaimCondition, ClaimVerification } from "../../types";
+import type {
+  ClaimCondition,
+  ClaimVerification,
+} from "../../types/claim-conditions/claim-conditions";
 import { SnapshotFormatVersion } from "../sharded-merkle-tree";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants, ethers, utils } from "ethers";

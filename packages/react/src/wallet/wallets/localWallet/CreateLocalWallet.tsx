@@ -15,7 +15,7 @@ import { Flex } from "../../../components/basic";
 import { TextDivider } from "../../../components/TextDivider";
 import { Spinner } from "../../../components/Spinner";
 import { spacing } from "../../../design-system";
-import { LocalWalletConfig } from "./types";
+import type { LocalWalletConfig } from "./types";
 
 export const CreateLocalWallet_Password: React.FC<{
   onConnect: () => void;
@@ -133,6 +133,7 @@ export const CreateLocalWallet_Password: React.FC<{
           label="Password"
           type={showPassword ? "text" : "password"}
           value={password}
+          data-test="new-password"
         />
 
         <Spacer y="lg" />
@@ -152,6 +153,7 @@ export const CreateLocalWallet_Password: React.FC<{
           type={showPassword ? "text" : "password"}
           value={confirmPassword}
           error={passwordMismatch ? "Passwords don't match" : ""}
+          data-test="confirm-password"
         />
 
         <Spacer y="xl" />
@@ -164,6 +166,7 @@ export const CreateLocalWallet_Password: React.FC<{
             width: "100%",
             gap: spacing.sm,
           }}
+          data-test="create-new-wallet-button"
         >
           {isConnecting ? "Connecting" : "Create new wallet"}
           {isConnecting && <Spinner size="sm" color="inverted" />}

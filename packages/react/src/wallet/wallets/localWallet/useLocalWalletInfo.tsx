@@ -2,7 +2,7 @@ import { useCreateWalletInstance } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 import { WalletData } from "@thirdweb-dev/wallets/src/evm/wallets/local-wallet";
-import { LocalWalletConfig } from "./types";
+import type { LocalWalletConfig } from "./types";
 
 export function useLocalWalletInfo(
   localWalletConfig: LocalWalletConfig,

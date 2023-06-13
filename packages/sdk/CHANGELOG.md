@@ -1,5 +1,30 @@
 # @thirdweb-dev/sdk
 
+## 3.10.21
+
+### Patch Changes
+
+- [#1131](https://github.com/thirdweb-dev/js/pull/1131) [`3bf7f375`](https://github.com/thirdweb-dev/js/commit/3bf7f375933cbd7dd8c682a66e8c67bbcb268bf7) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Handle old released standard contracts
+
+- [#1127](https://github.com/thirdweb-dev/js/pull/1127) [`8687d6ac`](https://github.com/thirdweb-dev/js/commit/8687d6ac3a363eae63eeb1959a953cbcd282d353) Thanks [@kumaryash90](https://github.com/kumaryash90)! - add missing exports
+
+- [#1120](https://github.com/thirdweb-dev/js/pull/1120) [`522453fd`](https://github.com/thirdweb-dev/js/commit/522453fd568b8c350141a96f9f1c6d5a3ef74493) Thanks [@MananTank](https://github.com/MananTank)! - Reduce circular dependencies
+
+- [#1129](https://github.com/thirdweb-dev/js/pull/1129) [`6803c3e9`](https://github.com/thirdweb-dev/js/commit/6803c3e97ca74eed19cd90095afde25b02150d51) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix any evm deployments
+
+- [#1124](https://github.com/thirdweb-dev/js/pull/1124) [`56f85e57`](https://github.com/thirdweb-dev/js/commit/56f85e57df84bfa93e3230639c95d12466f8aec7) Thanks [@MananTank](https://github.com/MananTank)! - Reduce circular dependencies
+
+- [#1016](https://github.com/thirdweb-dev/js/pull/1016) [`6a91b6a0`](https://github.com/thirdweb-dev/js/commit/6a91b6a0253bab5914d4ebdad951dd1c5d141fbc) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update publish flow
+
+- [#1125](https://github.com/thirdweb-dev/js/pull/1125) [`a5f16b6d`](https://github.com/thirdweb-dev/js/commit/a5f16b6dc50b37920a6e5210b60aa6a1682ceb63) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Check standard deploy type
+
+- [#1128](https://github.com/thirdweb-dev/js/pull/1128) [`b6728603`](https://github.com/thirdweb-dev/js/commit/b6728603972ccd6c95108b25e8562807f0f95e19) Thanks [@kumaryash90](https://github.com/kumaryash90)! - enable zksync mainnet deployments
+
+- [#1152](https://github.com/thirdweb-dev/js/pull/1152) [`ed47fd53`](https://github.com/thirdweb-dev/js/commit/ed47fd5310d11323080d984bca18a96fdef3a977) Thanks [@MananTank](https://github.com/MananTank)! - Reduce circular dependencies
+
+- Updated dependencies [[`16232de9`](https://github.com/thirdweb-dev/js/commit/16232de9eab9966e24e335929b2a3919346af265), [`645b0303`](https://github.com/thirdweb-dev/js/commit/645b0303cc1a9cbb0a0e9cbd67d11c3b865e4584)]:
+  - @thirdweb-dev/chains@0.1.20
+
 ## 3.10.20
 
 ### Patch Changes

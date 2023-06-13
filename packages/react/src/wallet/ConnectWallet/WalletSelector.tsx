@@ -53,6 +53,7 @@ export const WalletSelector: React.FC<{
               onClick={() => {
                 props.selectWallet(localWalletInfo);
               }}
+              data-test="continue-as-guest-button"
             >
               Continue as guest
             </Button>

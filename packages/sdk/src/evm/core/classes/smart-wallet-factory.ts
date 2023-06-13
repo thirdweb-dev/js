@@ -9,7 +9,7 @@ import { Transaction } from "./transactions";
 import { TransactionResultWithAddress } from "../types";
 import { BytesLike, ethers } from "ethers";
 import { AccountCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/AccountFactory";
-import { AccountEvent } from "../../types";
+import type { AccountEvent } from "../../types/smart-wallet";
 import { isContractDeployed } from "../../common/any-evm-utils/isContractDeployed";
 
 export class SmartWalletFactory<TContract extends IAccountFactory>

@@ -10,14 +10,14 @@ import { ClaimEligibility } from "../../enums";
 import { AbstractClaimConditionContractStruct } from "../../schema/contracts/common/claim-conditions";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { SnapshotEntryWithProof } from "../../schema/contracts/common/snapshots";
-import {
-  ClaimCondition,
+import type {
   ClaimConditionFetchOptions,
+  ClaimCondition,
   ClaimConditionInput,
   ClaimConditionsForToken,
-  ClaimOptions,
   ClaimVerification,
-} from "../../types";
+  ClaimOptions,
+} from "../../types/claim-conditions/claim-conditions";
 import {
   BaseClaimConditionERC1155,
   PrebuiltEditionDrop,

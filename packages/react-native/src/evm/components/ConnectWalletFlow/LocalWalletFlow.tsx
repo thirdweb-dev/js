@@ -68,6 +68,7 @@ export function LocalWalletFlow({
           minWidth={130}
           onPress={onConnectPressInternal}
           style={styles.connectWalletButton}
+          data-test="create-new-wallet-button"
         >
           {isCreatingWallet ? (
             <ActivityIndicator size="small" color="buttonTextColor" />

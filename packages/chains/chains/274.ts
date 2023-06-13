@@ -11,7 +11,8 @@ export default {
   "rpc": [
     "https://lachain-lachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.mainnet.lachain.network",
-    "https://rpc2.mainnet.lachain.network"
+    "https://rpc2.mainnet.lachain.network",
+    "https://lachain.rpc-nodes.cedalio.dev"
   ],
   "faucets": [],
   "nativeCurrency": {
