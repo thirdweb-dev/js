@@ -67,6 +67,7 @@ export const PrivacyNotice: React.FC = () => {
       isCentered
       isOpen
       onClose={() => undefined}
+      trapFocus={false}
     >
       <ModalOverlay />
       <ModalContent>
