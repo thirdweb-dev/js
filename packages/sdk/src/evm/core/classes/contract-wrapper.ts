@@ -41,7 +41,7 @@ import {
   ethers,
   providers,
 } from "ethers";
-import { ConnectionInfo } from "ethers/lib/utils.js";
+import { ConnectionInfo } from "ethers/lib/utils";
 import invariant from "tiny-invariant";
 import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
 import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
