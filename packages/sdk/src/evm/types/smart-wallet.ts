@@ -3,6 +3,7 @@ import { BigNumber, BytesLike } from "ethers";
 import { z } from "zod";
 import { AmountSchema } from "../../core/schema/shared";
 import { EndDateSchema, StartDateSchema } from "../schema";
+import { AddressOrEnsSchema } from "../schema";
 
 export type AccountEvent = {
   account: string;
@@ -20,7 +21,7 @@ export const AccessRestrictionsSchema = z.object({
   startDate: StartDateSchema,
   expirationDate: EndDateSchema,
   nativeTokenLimitPerTransaction: AmountSchema.default(0),
-  approvedCallTargets: z.array(z.string()),
+  approvedCallTargets: z.array(AddressOrEnsSchema),
 });
 
 export type AccessRestrictionsInput = z.input<typeof AccessRestrictionsSchema>;

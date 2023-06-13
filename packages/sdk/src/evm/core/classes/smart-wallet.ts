@@ -13,6 +13,7 @@ import invariant from "tiny-invariant";
 import { buildTransactionFunction } from "../../common/transactions";
 import { SmartWalletFactory } from "./smart-wallet-factory";
 import { resolveOrGenerateId } from "../../common/signature-minting";
+import { AddressOrEns } from "../../schema";
 
 export class SmartWallet<TContract extends IAccountCore> implements DetectableFeature {
     
@@ -57,7 +58,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    * @returns The generated payload and signature produced on signing that payload.
    *
    */
-  private async generatePayload(signerAddress: string, roleAction: RoleAction): Promise<SignedAccountPermissionsPayload> {
+  private async generatePayload(signerAddress: AddressOrEns, roleAction: RoleAction): Promise<SignedAccountPermissionsPayload> {
     // Derive role for target signer.
     const role = ethers.utils.solidityKeccak256(["string"], [signerAddress]);
 
@@ -125,7 +126,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    *
    * @twfeature SmartWallet
    */
-  public async getAccessRestrictions(signerAddress: string): Promise<AccessRestrictions> {
+  public async getAccessRestrictions(signerAddress: AddressOrEns): Promise<AccessRestrictions> {
     const roleRestrictions: IAccountPermissions.RoleRestrictionsStruct = await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signerAddress);
     return this.parseRoleRestrictionsStruct(roleRestrictions);
   }
@@ -191,7 +192,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    */
   grantAdminAccess = buildTransactionFunction(
     async(
-      signerAddress: string,
+      signerAddress: AddressOrEns,
     ): Promise<Transaction> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -218,7 +219,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    */
   revokeAdminAccess = buildTransactionFunction(
     async(
-      signerAddress: string,
+      signerAddress: AddressOrEns,
     ): Promise<Transaction> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -246,7 +247,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    */
   grantAccess = buildTransactionFunction(
     async(
-      signerAddress: string,
+      signerAddress: AddressOrEns,
       restrictions: AccessRestrictionsInput,
     ): Promise<Transaction> => {
 
@@ -311,7 +312,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    */
   approveTargetForSigner = buildTransactionFunction(
     async(
-      signerAddress: string,
+      signerAddress: AddressOrEns,
       target: string,
     ): Promise<Transaction> => {
       const restrictionsForSigner: IAccountPermissions.RoleRestrictionsStruct = await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signerAddress);
@@ -353,7 +354,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    */
   disapproveTargetForSigner = buildTransactionFunction(
     async(
-      signerAddress: string,
+      signerAddress: AddressOrEns,
       target: string,
     ): Promise<Transaction> => {
       const restrictionsForSigner: IAccountPermissions.RoleRestrictionsStruct = await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signerAddress);
@@ -395,7 +396,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    */
   updateAccess = buildTransactionFunction(
     async(
-      signerAddress: string,
+      signerAddress: AddressOrEns,
       restrictions: AccessRestrictionsInput,
     ): Promise<Transaction> => {
       
@@ -439,7 +440,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    */
   revokeAccess = buildTransactionFunction(
     async(
-      signerAddress: string,
+      signerAddress: AddressOrEns,
     ): Promise<Transaction> => {
       const currentRole = (await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signerAddress)).role;
       if(currentRole === this.emptyRole) {
