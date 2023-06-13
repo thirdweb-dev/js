@@ -10,25 +10,21 @@ import Box from "../base/Box";
 import { ModalHeaderTextClose } from "../base/modal/ModalHeaderTextClose";
 import { useCreateWalletInstance } from "@thirdweb-dev/react-core";
 import { PasswordInput } from "../PasswordInput";
-import type {
-  LocalConfiguredWallet,
-  LocalWalletInstance,
-} from "../../wallets/types/local-wallet";
+import type { LocalWalletInstance } from "../../wallets/types/local-wallet";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import { TWModal } from "../base/modal/TWModal";
+import { localWallet } from "../../wallets/wallets/local-wallet";
 
 export type LocalWalletImportModalProps = {
   isVisible: boolean;
   onClose: () => void;
-  localWallet: LocalConfiguredWallet;
   onWalletImported: (wallet: LocalWalletInstance) => void;
 };
 
 export const LocalWalletImportModal = ({
   isVisible,
   onClose,
-  localWallet,
   onWalletImported,
 }: LocalWalletImportModalProps) => {
   const [password, setPassword] = useState<string | undefined>();
@@ -57,7 +53,7 @@ export const LocalWalletImportModal = ({
       return;
     }
 
-    const localWalletInstance = createWalletInstance(localWallet);
+    const localWalletInstance = createWalletInstance(localWallet());
 
     try {
       await localWalletInstance.import({

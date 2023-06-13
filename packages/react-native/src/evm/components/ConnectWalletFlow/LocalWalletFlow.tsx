@@ -85,7 +85,6 @@ export function LocalWalletFlow({
 
       <LocalWalletImportModal
         isVisible={isImportModalVisible}
-        localWallet={walletConfig}
         onWalletImported={connect}
         onClose={onImportModalClose}
       />
