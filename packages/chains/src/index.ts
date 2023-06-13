@@ -1365,7 +1365,7 @@ export { default as ParibuNetTestnet } from "../chains/3500"
 export { default as JfinChain } from "../chains/3501"
 export { default as Pandoproject } from "../chains/3601"
 export { default as PandoprojectTestnet } from "../chains/3602"
-export { default as Metacodechain } from "../chains/3666"
+export { default as Jouleverse } from "../chains/3666"
 export { default as Bittex } from "../chains/3690"
 export { default as EmpireNetwork } from "../chains/3693"
 export { default as Crossbell } from "../chains/3737"
@@ -3206,7 +3206,7 @@ type ChainIdsBySlug = {
 "jfin-chain": 3501,
 "pandoproject": 3601,
 "pandoproject-testnet": 3602,
-"metacodechain": 3666,
+"jouleverse": 3666,
 "bittex": 3690,
 "empire-network": 3693,
 "crossbell": 3737,
