@@ -1,6 +1,7 @@
-import { MediaRenderer, SharedMediaProps } from "./MediaRenderer";
 import { NFTMetadata } from "@thirdweb-dev/sdk";
 import React from "react";
+import type { SharedMediaProps } from "./types";
+import { MediaRenderer } from "./MediaRenderer";
 
 /**
  * The props for the {@link ThirdwebNftMedia} component.

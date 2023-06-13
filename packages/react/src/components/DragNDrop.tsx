@@ -4,7 +4,7 @@ import { Theme, fontSize, iconSize, radius, spacing } from "../design-system";
 import styled from "@emotion/styled";
 import { Spacer } from "./Spacer";
 import { isMobile } from "../evm/utils/isMobile";
-import { IconFC } from "../wallet/ConnectWallet/icons/types";
+import type { IconFC } from "../wallet/ConnectWallet/icons/types";
 
 export const DragNDrop: React.FC<{
   extension: string;

@@ -1,4 +1,4 @@
-import { IconFC } from "./types";
+import type { IconFC } from "./types";
 
 export const FundsIcon: IconFC = ({ size }) => {
   return (

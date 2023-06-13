@@ -22,7 +22,7 @@ import {
   useCreateWalletInstance,
   useWallet,
 } from "@thirdweb-dev/react-core";
-import { LocalWalletConfig } from "./types";
+import type { LocalWalletConfig } from "./types";
 
 const localWalletIcon =
   "ipfs://QmbQzSNGvmNYZzem9jZRuYeLe9K2W4pqbdnVUp7Y6edQ8Y/local-wallet.svg";

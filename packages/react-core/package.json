@@ -79,6 +79,7 @@
     "@solana/web3.js": "^1.62.0",
     "@thirdweb-dev/auth": "workspace:*",
     "@thirdweb-dev/tsconfig": "workspace:*",
+    "@types/js-cookie": "^3.0.3",
     "@types/mime": "3.0.0",
     "@types/react": "^18.0.5",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
