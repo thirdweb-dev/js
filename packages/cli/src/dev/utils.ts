@@ -1,7 +1,5 @@
-import { findMatches } from "../common/file-helper";
 import { AppType, ContractLibrariesType, FrameworkType, LanguageType, LibraryType, PackageManagerType } from "../core/types/ProjectType";
 import { runCommand } from "../create/helpers/run-command";
-import { exec } from "child_process";
 import chokidar from 'chokidar';
 import { generate } from "../generate/command";
 
@@ -18,6 +16,7 @@ export const runDevEnv = async (detections: {
   const { detectedPackageManager, detectedFramework } = detections;
   let runner: string = "";
   let devCommand: string[] = [];
+  const isJs = ["npm", "yarn", "pnpm"].includes(detectedPackageManager);
 
   switch (detectedPackageManager) {
     case "npm":
@@ -61,7 +60,9 @@ export const runDevEnv = async (detections: {
     .on('change', async file => {
       log(`File ${file} has been changed`);
       // Re-run the generate command on file change.
-      await generate({ path: projectPath.path, logs: false });
+      if (isJs) {
+        await generate({ path: projectPath.path });
+      }
     })
     .on('unlink', path => log(`File ${path} has been removed`));
 
@@ -148,8 +149,8 @@ const getPythonDevCommand = (detectedFramework: FrameworkType, detectedPackageMa
       };
     case "flask":
       return {
-        runner: prefix + "python",
-        devCommand: ["app.py"],
+        runner: prefix + "flask",
+        devCommand: ["run"],
       };
     case "fastapi":
       return {
