@@ -1,7 +1,7 @@
-import type { MediaRendererProps } from "./MediaRenderer";
 import "@google/model-viewer";
 import type { ModelViewerElement } from "@google/model-viewer";
 import React from "react";
+import type { MediaRendererProps } from "./types";
 
 declare global {
   namespace JSX {

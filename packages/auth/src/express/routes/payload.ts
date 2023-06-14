@@ -23,7 +23,7 @@ export default async function handler(
     statement: ctx.authOptions?.statement,
     uri: ctx.authOptions?.uri,
     version: ctx.authOptions?.version,
-    chainId: ctx.authOptions?.chainId,
+    chainId: parsedPayload.data.chainId || ctx.authOptions?.chainId,
     resources: ctx.authOptions?.resources,
   });
 

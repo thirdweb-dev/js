@@ -1,4 +1,4 @@
-import { FrameworkType, PackageManagerType } from "../core/types/ProjectType";
+import { FrameworkType, LibraryType, PackageManagerType } from "../core/types/ProjectType";
 
 export type IProcessContractAppTypeArgs = {
   detectedPackageManager: PackageManagerType;
@@ -8,6 +8,7 @@ export type IProcessContractAppTypeArgs = {
 }
 
 export type IProcessAppTypeArgs = {
+  detectedLibrary: LibraryType;
   detectedFramework: FrameworkType;
   thirdwebDepsToUpdate: Set<string>;
   thirdwebDepsToInstall: Set<string>;

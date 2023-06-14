@@ -2,14 +2,14 @@ import { Address } from "../../schema/shared/Address";
 import { Abi } from "../../schema/contracts/custom";
 import { fetchContractMetadataFromAddress } from "../metadata-resolver";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers } from "ethers";
+import { providers } from "ethers";
 
 /**
  * @internal
  */
 export async function getPluginABI(
   addresses: Address[],
-  provider: ethers.providers.Provider,
+  provider: providers.Provider,
   storage: ThirdwebStorage,
 ): Promise<Abi[]> {
   return (

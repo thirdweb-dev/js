@@ -5,7 +5,7 @@ import {
   WalletOptions,
   useConnect,
 } from "@thirdweb-dev/react-core";
-import { ConfiguredMagicLinkWallet } from "./types";
+import type { ConfiguredMagicLinkWallet } from "./types";
 import { useRef, useEffect } from "react";
 import { Spinner } from "../../../components/Spinner";
 import { Flex } from "../../../components/basic";

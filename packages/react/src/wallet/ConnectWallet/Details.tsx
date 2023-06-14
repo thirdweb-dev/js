@@ -16,7 +16,7 @@ import {
 } from "../../design-system";
 import { shortenString } from "../../evm/utils/addresses";
 import { isMobile } from "../../evm/utils/isMobile";
-import { NetworkSelector, NetworkSelectorProps } from "./NetworkSelector";
+import { NetworkSelector, type NetworkSelectorProps } from "./NetworkSelector";
 import { ExitIcon } from "./icons/ExitIcon";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
@@ -48,7 +48,7 @@ import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
 import { ErrorMessage } from "../../components/formElements";
 import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useWalletConfig } from "@thirdweb-dev/react-core";
-import { LocalWalletConfig } from "../wallets/localWallet/types";
+import type { LocalWalletConfig } from "../wallets/localWallet/types";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -108,6 +108,7 @@ export const ConnectedWalletDetails: React.FC<{
       className={`${TW_CONNECTED_WALLET} ${props.className || ""}`}
       data-theme={props.theme}
       style={props.style}
+        data-test="connected-wallet-details"
     >
       <ChainIcon
         chain={chain}
@@ -214,6 +215,8 @@ export const ConnectedWalletDetails: React.FC<{
                 gap: spacing.xs,
                 alignItems: "center",
               }}
+              data-test="connected-wallet-address"
+              data-address={address}
             >
               <AccountAddress> {shortenString(address || "")}</AccountAddress>
               <IconButton
@@ -221,6 +224,7 @@ export const ConnectedWalletDetails: React.FC<{
                 style={{
                   padding: "3px",
                 }}
+                data-test="copy-address"
               >
                 <CopyIcon
                   text={address || ""}
