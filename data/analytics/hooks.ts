@@ -58,8 +58,8 @@ export function useTransactionAnalytics(params: AnalyticsQueryParams) {
         endDate: `${params.endDate?.getDate()}-${params.endDate?.getMonth()}-${params.endDate?.getFullYear()}`,
       },
     ] as const,
-    queryFn: () => {
-      return getTransactionAnalytics(params);
+    queryFn: async () => {
+      return await getTransactionAnalytics(params);
     },
     enabled: !!params.contractAddress && !!params.chainId,
     suspense: true,
@@ -95,8 +95,8 @@ export function useTotalTransactionAnalytics(params: AnalyticsQueryParams) {
         currentDate: new Date().toISOString().split("T")[0],
       },
     ] as const,
-    queryFn: () => {
-      return getTotalTransactionAnalytics(params);
+    queryFn: async () => {
+      return await getTotalTransactionAnalytics(params);
     },
     enabled: !!params.contractAddress && !!params.chainId,
     suspense: true,
@@ -133,8 +133,8 @@ export function useLogsAnalytics(params: AnalyticsQueryParams) {
         endDate: `${params.endDate?.getDate()}-${params.endDate?.getMonth()}-${params.endDate?.getFullYear()}`,
       },
     ] as const,
-    queryFn: () => {
-      return getLogsAnalytics(params);
+    queryFn: async () => {
+      return await getLogsAnalytics(params);
     },
     enabled: !!params.contractAddress && !!params.chainId,
     suspense: true,
@@ -166,8 +166,8 @@ export function useTotalLogsAnalytics(params: AnalyticsQueryParams) {
         currentDate: new Date().toISOString().split("T")[0],
       },
     ] as const,
-    queryFn: () => {
-      return getTotalLogsAnalytics(params);
+    queryFn: async () => {
+      return await getTotalLogsAnalytics(params);
     },
     enabled: !!params.contractAddress && !!params.chainId,
     suspense: true,
