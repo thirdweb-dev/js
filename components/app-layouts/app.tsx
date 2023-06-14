@@ -41,7 +41,7 @@ import { ComponentWithChildren } from "types/component-with-children";
 import { bigNumberReplacer } from "utils/bignumber";
 import { isBrowser } from "utils/isBrowser";
 
-const __CACHE_BUSTER = "v3.12.1";
+const __CACHE_BUSTER = "v3.12.2";
 
 interface AsyncStorage {
   getItem: (key: string) => Promise<string | null>;
