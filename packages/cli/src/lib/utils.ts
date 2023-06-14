@@ -222,6 +222,29 @@ export const installOrUpdate = async (packageManager: PackageManagerType, depend
       break;
   }
 
+  // try to install with pip first, if it fails, try pip3.
+  if (runner === "pip") {
+    try {
+      await runCommand("pip", ["--version"], false, () => {}, true);
+    }
+    catch (error) {
+      const err = error as any;
+      if (err.command === "pip" && err.exitCode === -2) {
+        try {
+          await runCommand("pip3", ["--version"], false, () => {}, true);
+          runner = "pip3";
+        }
+        catch (e) {
+          console.error("pip or pip3 are not installed, please install pip or pip3 and try again.");
+          return;
+        }
+      } else {
+        console.error(err);
+        return;
+      }
+    }
+  }
+
   if (typeOfAction === "install") {
     if (!dependenciesToAdd.length) {return;}
     const commands = [...installCommand, ...dependenciesToAdd];
@@ -232,6 +255,7 @@ export const installOrUpdate = async (packageManager: PackageManagerType, depend
       await runCommand(runner, [...deleteCommand, options.oldVersion], printLogs);
     }
   }
+
   if (typeOfAction === "update") {
     if (!dependenciesToUpdate.length) {return;}
     const commands = [...updateCommand, ...dependenciesToUpdate];
