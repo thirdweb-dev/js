@@ -14,6 +14,7 @@ import { buildTransactionFunction } from "../../common/transactions";
 import { SmartWalletFactory } from "./smart-wallet-factory";
 import { resolveOrGenerateId } from "../../common/signature-minting";
 import { AddressOrEns } from "../../schema";
+import { resolveAddress } from "../../common";
 
 export class SmartWallet<TContract extends IAccountCore> implements DetectableFeature {
     
@@ -194,10 +195,11 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
     async(
       signerAddress: AddressOrEns,
     ): Promise<Transaction> => {
+      const resolvedSignerAddress = await resolveAddress(signerAddress);
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "setAdmin",
-        args: [signerAddress, true],
+        args: [resolvedSignerAddress, true],
       })
     }
   )
@@ -221,10 +223,11 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
     async(
       signerAddress: AddressOrEns,
     ): Promise<Transaction> => {
+      const resolvedSignerAddress = await resolveAddress(signerAddress);
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "setAdmin",
-        args: [signerAddress, false],
+        args: [resolvedSignerAddress, false],
       })
     }
   )
@@ -251,7 +254,9 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
       restrictions: AccessRestrictionsInput,
     ): Promise<Transaction> => {
 
-      const currentRole = (await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signerAddress)).role;
+      const resolvedSignerAddress = await resolveAddress(signerAddress);
+
+      const currentRole = (await this.contractWrapper.readContract.getRoleRestrictionsForAccount(resolvedSignerAddress)).role;
       if(currentRole !== this.emptyRole) {
         throw new Error("Signer already has access");
       }
@@ -263,7 +268,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
       // ===== Preparing [1] `setRoleRestrictions` =====
 
       // Derive role for target signer.
-      const role = ethers.utils.solidityKeccak256(["string"], [signerAddress]);
+      const role = ethers.utils.solidityKeccak256(["string"], [resolvedSignerAddress]);
 
       // Get role restrictions struct.
       const roleRestrictions: IAccountPermissions.RoleRestrictionsStruct = {
@@ -278,7 +283,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
 
       // ===== Preparing [2] `changeRole` =====
 
-      const { payload, signature } = await this.generatePayload(signerAddress, RoleAction.GRANT);
+      const { payload, signature } = await this.generatePayload(resolvedSignerAddress, RoleAction.GRANT);
       
       const isValidSigner = await this.contractWrapper.readContract.verifyRoleRequest(payload, signature);
       if(!isValidSigner) { throw new Error(`Invalid signature.`) }
@@ -315,7 +320,8 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
       signerAddress: AddressOrEns,
       target: string,
     ): Promise<Transaction> => {
-      const restrictionsForSigner: IAccountPermissions.RoleRestrictionsStruct = await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signerAddress);
+      const resolvedSignerAddress = await resolveAddress(signerAddress);
+      const restrictionsForSigner: IAccountPermissions.RoleRestrictionsStruct = await this.contractWrapper.readContract.getRoleRestrictionsForAccount(resolvedSignerAddress);
 
       if(restrictionsForSigner.role === this.emptyRole) {
         throw new Error("Signer does not have any access");
@@ -357,7 +363,8 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
       signerAddress: AddressOrEns,
       target: string,
     ): Promise<Transaction> => {
-      const restrictionsForSigner: IAccountPermissions.RoleRestrictionsStruct = await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signerAddress);
+      const resolvedSignerAddress = await resolveAddress(signerAddress);
+      const restrictionsForSigner: IAccountPermissions.RoleRestrictionsStruct = await this.contractWrapper.readContract.getRoleRestrictionsForAccount(resolvedSignerAddress);
 
       if(restrictionsForSigner.role === this.emptyRole) {
         throw new Error("Signer does not have any access");
@@ -399,8 +406,10 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
       signerAddress: AddressOrEns,
       restrictions: AccessRestrictionsInput,
     ): Promise<Transaction> => {
+
+      const resolvedSignerAddress = await resolveAddress(signerAddress);
       
-      const currentRole = (await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signerAddress)).role;
+      const currentRole = (await this.contractWrapper.readContract.getRoleRestrictionsForAccount(resolvedSignerAddress)).role;
       if(currentRole === this.emptyRole) {
         throw new Error("Signer does not have any access");
       }
@@ -442,12 +451,15 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
     async(
       signerAddress: AddressOrEns,
     ): Promise<Transaction> => {
-      const currentRole = (await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signerAddress)).role;
+
+      const resolvedSignerAddress = await resolveAddress(signerAddress);
+
+      const currentRole = (await this.contractWrapper.readContract.getRoleRestrictionsForAccount(resolvedSignerAddress)).role;
       if(currentRole === this.emptyRole) {
         throw new Error("Signer does not have any access");
       }
 
-      const { payload, signature } = await this.generatePayload(signerAddress, RoleAction.REVOKE);
+      const { payload, signature } = await this.generatePayload(resolvedSignerAddress, RoleAction.REVOKE);
       
       const isValidSigner = await this.contractWrapper.readContract.verifyRoleRequest(payload, signature);
       if(!isValidSigner) { throw new Error(`Invalid signature.`) }
