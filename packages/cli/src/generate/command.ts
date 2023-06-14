@@ -126,7 +126,7 @@ export async function generate(options: GenerateOptions) {
         metadata: contractMetadata,
       });
     }),
-  ).catch(() => {
+  ).catch((e) => {
     if (options.logs) {
       ora(`Error while downloading ABIs, error: ${e.message}`).warn();
     }
