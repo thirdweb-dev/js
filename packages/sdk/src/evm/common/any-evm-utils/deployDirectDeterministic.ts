@@ -1,4 +1,10 @@
-import { BigNumber, PopulatedTransaction, Signer } from "ethers";
+import {
+  BigNumber,
+  PopulatedTransaction,
+  Signer,
+  ethers,
+  providers,
+} from "ethers";
 import invariant from "tiny-invariant";
 import { isContractDeployed } from "./isContractDeployed";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -9,6 +15,7 @@ import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
 import { deployCreate2Factory } from "./deployCreate2Factory";
 import { convertParamValues } from "./convertParamValues";
 import { AbiInput } from "../../schema";
+import { getCreate2FactoryAddress } from "./getCreate2FactoryAddress";
 
 /**
  * Direct deploy a contract at a deterministic address, using Create2 method
@@ -32,6 +39,10 @@ export async function directDeployDeterministic(
 ) {
   invariant(signer.provider, "Provider is required");
 
+  const bytecodePrefixed = bytecode.startsWith("0x")
+    ? bytecode
+    : `0x${bytecode}`;
+
   // 1. Deploy CREATE2 factory (if not already exists)
   const create2Factory = await deployCreate2Factory(signer);
 
@@ -41,15 +52,18 @@ export async function directDeployDeterministic(
       return p.type;
     },
   );
-
-  const encodedArgs = convertParamValues(
+  const paramValues = convertParamValues(
     constructorParamTypes,
     constructorArgs,
+  );
+  const encodedArgs = ethers.utils.defaultAbiCoder.encode(
+    constructorParamTypes,
+    paramValues,
   );
 
   // 3. Construct deployment transaction
   const address = computeDeploymentAddress(
-    bytecode,
+    bytecodePrefixed,
     encodedArgs,
     create2Factory,
     saltForCreate2,
@@ -61,7 +75,7 @@ export async function directDeployDeterministic(
     console.debug(`deploying contract via create2 factory at: ${address}`);
 
     initBytecodeWithSalt = getInitBytecodeWithSalt(
-      bytecode,
+      bytecodePrefixed,
       encodedArgs,
       saltForCreate2,
     );
@@ -123,14 +137,16 @@ export async function directDeployDeterministicWithUri(
 export async function predictAddressDeterministic(
   bytecode: string,
   abi: AbiInput,
-  signer: Signer,
+  provider: providers.Provider,
   constructorArgs: any[],
   saltForCreate2?: string,
 ) {
-  invariant(signer.provider, "Provider is required");
+  const bytecodePrefixed = bytecode.startsWith("0x")
+    ? bytecode
+    : `0x${bytecode}`;
 
   // 1. Deploy CREATE2 factory (if not already exists)
-  const create2Factory = await deployCreate2Factory(signer);
+  const create2Factory = await getCreate2FactoryAddress(provider);
 
   // 2. Encode constructor params
   const constructorParamTypes = extractConstructorParamsFromAbi(abi).map(
@@ -139,14 +155,18 @@ export async function predictAddressDeterministic(
     },
   );
 
-  const encodedArgs = convertParamValues(
+  const paramValues = convertParamValues(
     constructorParamTypes,
     constructorArgs,
+  );
+  const encodedArgs = ethers.utils.defaultAbiCoder.encode(
+    constructorParamTypes,
+    paramValues,
   );
 
   // 3. Construct deployment transaction
   const address = computeDeploymentAddress(
-    bytecode,
+    bytecodePrefixed,
     encodedArgs,
     create2Factory,
     saltForCreate2,
@@ -157,7 +177,7 @@ export async function predictAddressDeterministic(
 
 export async function predictAddressDeterministicWithUri(
   publishMetadataUri: string,
-  signer: Signer,
+  provider: providers.Provider,
   storage: ThirdwebStorage,
   constructorArgs: any[],
   saltForCreate2?: string,
@@ -170,7 +190,7 @@ export async function predictAddressDeterministicWithUri(
   return await predictAddressDeterministic(
     compilerMetadata.bytecode,
     compilerMetadata.abi,
-    signer,
+    provider,
     constructorArgs,
     saltForCreate2,
   );
