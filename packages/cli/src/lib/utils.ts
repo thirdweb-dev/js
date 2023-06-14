@@ -163,11 +163,12 @@ export const getLatestVersion = async (packageName: string): Promise<any> => {
   }
 }
 
-export const installOrUpdate = async (packageManager: PackageManagerType, dependenciesToAdd: string[], dependenciesToUpdate: string[], typeOfAction: "install" | "update", options?: { oldVersion: string }) => {
+export const installOrUpdate = async (packageManager: PackageManagerType, dependenciesToAdd: string[], dependenciesToUpdate: string[], typeOfAction: "install" | "update", options?: { oldVersion?: string, debug?: boolean }) => {
   let runner: string = "";
   let installCommand: string[] = [];
   let updateCommand: string[] = [];
   let deleteCommand: string[] = [];
+  let printLogs = options?.debug || false;
 
   switch (packageManager) {
     case "npm":
@@ -178,7 +179,7 @@ export const installOrUpdate = async (packageManager: PackageManagerType, depend
     case "yarn":
       runner = "yarn";
       installCommand = ["add"];
-      updateCommand = ["upgrade"];
+      updateCommand = ["add"];
       break;
     case "pnpm":
       runner = "pnpm";
@@ -225,16 +226,16 @@ export const installOrUpdate = async (packageManager: PackageManagerType, depend
     if (!dependenciesToAdd.length) {return;}
     const commands = [...installCommand, ...dependenciesToAdd];
 
-    await runCommand(runner, commands, true);
+    await runCommand(runner, commands, printLogs);
 
     if (options?.oldVersion) {
-      await runCommand(runner, [...deleteCommand, options.oldVersion], true);
+      await runCommand(runner, [...deleteCommand, options.oldVersion], printLogs);
     }
   }
   if (typeOfAction === "update") {
     if (!dependenciesToUpdate.length) {return;}
     const commands = [...updateCommand, ...dependenciesToUpdate];
-    await runCommand(runner, commands, true);
+    await runCommand(runner, commands, printLogs);
   }
 };
 
@@ -322,7 +323,7 @@ export const processContractAppType = async (args: IProcessContractAppTypeArgs):
 };
 
 export const processAppType = async (args: IProcessAppTypeArgs): Promise<void> => {
-  const { detectedFramework, thirdwebDepsToUpdate, thirdwebDepsToInstall, hasEthers, isJSPackageManager, otherDeps, isPythonPackageManager, isGoPackageManager } = args;
+  const { detectedFramework, thirdwebDepsToUpdate, thirdwebDepsToInstall, hasEthers, isJSPackageManager, otherDeps, isPythonPackageManager, isGoPackageManager, detectedLibrary } = args;
 
   const reactlibs = [
     "react",
@@ -336,13 +337,20 @@ export const processAppType = async (args: IProcessAppTypeArgs): Promise<void> =
     "svelte",
   ]
   const shouldInstallThirdwebReact = reactlibs.includes(detectedFramework as string);
+  const shouldInstallThirdwebReactNative = detectedLibrary === "react-native";
 
   if (isJSPackageManager) {
     if (!thirdwebDepsToUpdate.has(`@thirdweb-dev/react`) && shouldInstallThirdwebReact) {
       thirdwebDepsToInstall.add(`@thirdweb-dev/react`);
     }
-    if (!thirdwebDepsToUpdate.has(`@thirdweb-dev/sdk`)) {
+    if (!thirdwebDepsToUpdate.has(`@thirdweb-dev/sdk`) && !shouldInstallThirdwebReactNative) {
       thirdwebDepsToInstall.add(`@thirdweb-dev/sdk`);
+    }
+    if (!thirdwebDepsToUpdate.has(`@thirdweb-dev/react-native`) && shouldInstallThirdwebReactNative) {
+      thirdwebDepsToInstall.add(`@thirdweb-dev/react-native`);
+    }
+    if (!thirdwebDepsToUpdate.has(`@thirdweb-dev/react-native-compat`) && shouldInstallThirdwebReactNative) {
+      thirdwebDepsToInstall.add(`@thirdweb-dev/react-native-compat`);
     }
     if (!hasEthers) {
       otherDeps.add("ethers@5");
