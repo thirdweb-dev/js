@@ -205,6 +205,7 @@ export const ExportLocalWallet: React.FC<{
               type={showPassword ? "text" : "password"}
               value={password}
               error={isWrongPassword ? "Wrong Password" : ""}
+              dataTest="current-password"
             />
             <Spacer y="xl" />
           </>

@@ -8,7 +8,7 @@ import {
   SnapshotFormatVersion,
 } from "./sharded-merkle-tree";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers } from "ethers";
+import { providers } from "ethers";
 import { parseSnapshotInputs } from "./parseSnapshotInputs";
 
 /**
@@ -24,7 +24,7 @@ import { parseSnapshotInputs } from "./parseSnapshotInputs";
 export async function createSnapshot(
   snapshotInput: SnapshotInput,
   tokenDecimals: number,
-  provider: ethers.providers.Provider,
+  provider: providers.Provider,
   storage: ThirdwebStorage,
   snapshotFormatVersion: SnapshotFormatVersion,
 ): Promise<SnapshotInfo> {
