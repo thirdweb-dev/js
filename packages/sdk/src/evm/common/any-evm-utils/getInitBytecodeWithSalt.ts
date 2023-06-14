@@ -15,7 +15,7 @@ export function getInitBytecodeWithSalt(
   encodedArgs: BytesLike,
   salt?: string,
 ): string {
-  const saltHash = salt ? getSaltHash(salt) : getSaltHash(bytecode);
+  const saltHash = salt ? ethers.utils.id(salt) : getSaltHash(bytecode);
 
   const initBytecodeWithSalt = ethers.utils.solidityPack(
     ["bytes32", "bytes", "bytes"],

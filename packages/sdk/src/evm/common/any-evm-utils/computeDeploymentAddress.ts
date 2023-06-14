@@ -15,7 +15,7 @@ export function computeDeploymentAddress(
   create2FactoryAddress: string,
   salt?: string,
 ): string {
-  const saltHash = salt ? getSaltHash(salt) : getSaltHash(bytecode);
+  const saltHash = salt ? ethers.utils.id(salt) : getSaltHash(bytecode);
 
   // 1. create init bytecode hash with contract's bytecode and encoded args
   const initBytecode = ethers.utils.solidityPack(
