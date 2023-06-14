@@ -10,6 +10,7 @@ import type { TWMultichainRegistryLogic } from "@thirdweb-dev/contracts-js";
 
 // Internal static cache
 const metadataCache: Record<string, PublishedMetadata> = {};
+let multichainRegistry: Contract | undefined = undefined;
 
 function getCacheKey(address: string, chainId: number) {
   return `${address}-${chainId}`;
@@ -60,13 +61,18 @@ export async function fetchContractMetadataFromAddress(
     );
     try {
       // try from multichain registry
-      const contract = new Contract(
-        getMultichainRegistryAddress(),
-        TWRegistryABI,
-        getChainProvider("polygon", {}),
-      ) as TWMultichainRegistryLogic;
+      if (!multichainRegistry) {
+        multichainRegistry = new Contract(
+          getMultichainRegistryAddress(),
+          TWRegistryABI,
+          getChainProvider("polygon", {}),
+        ) as TWMultichainRegistryLogic;
+      }
 
-      const importedUri = await contract.getMetadataUri(chainId, address);
+      const importedUri = await multichainRegistry.getMetadataUri(
+        chainId,
+        address,
+      );
       if (!importedUri) {
         throw new Error(
           `Could not resolve metadata for contract at ${address}`,
