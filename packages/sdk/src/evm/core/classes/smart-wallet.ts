@@ -59,7 +59,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    * @returns The generated payload and signature produced on signing that payload.
    *
    */
-  private async generatePayload(signerAddress: AddressOrEns, roleAction: RoleAction): Promise<SignedAccountPermissionsPayload> {
+  private async generatePayload(signerAddress: string, roleAction: RoleAction): Promise<SignedAccountPermissionsPayload> {
     // Derive role for target signer.
     const role = ethers.utils.solidityKeccak256(["string"], [signerAddress]);
 
@@ -128,7 +128,8 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    * @twfeature SmartWallet
    */
   public async getAccessRestrictions(signerAddress: AddressOrEns): Promise<AccessRestrictions> {
-    const roleRestrictions: IAccountPermissions.RoleRestrictionsStruct = await this.contractWrapper.readContract.getRoleRestrictionsForAccount(signerAddress);
+    const resolvedSignerAddress = await resolveAddress(signerAddress);
+    const roleRestrictions: IAccountPermissions.RoleRestrictionsStruct = await this.contractWrapper.readContract.getRoleRestrictionsForAccount(resolvedSignerAddress);
     return this.parseRoleRestrictionsStruct(roleRestrictions);
   }
 
