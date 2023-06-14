@@ -5,7 +5,6 @@ export async function runCommand(
   args: string[],
   logging: boolean = false,
   onData?: (data: any) => void,
-  suppressLogs: boolean = false,
 ) {
   return new Promise<void>((resolve, reject) => {
     /**
@@ -29,9 +28,7 @@ export async function runCommand(
     });
 
     child.on("error", (err) => {
-      if (!suppressLogs) {
-        console.log("Spawn error", err)
-      }
+      console.log("Spawn error", err)
     });
 
     child.on("close", (code) => {
