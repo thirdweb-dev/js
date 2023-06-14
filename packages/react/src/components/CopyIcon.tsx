@@ -1,4 +1,4 @@
-import { Theme } from "../design-system";
+import type { Theme } from "../design-system";
 import { useClipboard } from "../evm/components/hooks/useCopyClipboard";
 import { ToolTip } from "./Tooltip";
 import styled from "@emotion/styled";

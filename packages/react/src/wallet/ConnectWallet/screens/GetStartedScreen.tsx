@@ -9,7 +9,7 @@ import {
   ModalTitle,
 } from "../../../components/modalElements";
 import { iconSize, radius, spacing } from "../../../design-system";
-import { Theme } from "../../../design-system/index";
+import type { Theme } from "../../../design-system/index";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { Apple, Chrome, GooglePlay } from "../iconURLs";
 import styled from "@emotion/styled";
