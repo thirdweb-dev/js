@@ -189,6 +189,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
           type={showPassword ? "text" : "password"}
           value={password}
           error={isWrongPassword ? "Wrong Password" : ""}
+          dataTest="current-password"
         />
 
         <Spacer y="lg" />

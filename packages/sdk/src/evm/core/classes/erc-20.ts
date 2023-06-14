@@ -57,7 +57,7 @@ import invariant from "tiny-invariant";
 import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ContractMetadata } from "./contract-metadata";
 import { DropClaimConditions } from "./drop-claim-conditions";
-import { TOKEN_INITIALIZER_ROLES } from "../../contracts/TokenInitializerRoles";
+import { CONTRACT_ROLES } from "../../contracts/contractRoles";
 
 /**
  * Standard ERC20 Token functions
@@ -905,12 +905,12 @@ export class Erc20SignatureMintable implements DetectableFeature {
 
   private contractWrapper: ContractWrapper<TokenERC20>;
   private roles:
-    | ContractRoles<TokenERC20, (typeof TOKEN_INITIALIZER_ROLES)[number]>
+    | ContractRoles<TokenERC20, (typeof CONTRACT_ROLES)[number]>
     | undefined;
 
   constructor(
     contractWrapper: ContractWrapper<TokenERC20>,
-    roles?: ContractRoles<TokenERC20, (typeof TOKEN_INITIALIZER_ROLES)[number]>,
+    roles?: ContractRoles<TokenERC20, (typeof CONTRACT_ROLES)[number]>,
   ) {
     this.contractWrapper = contractWrapper;
     this.roles = roles;
