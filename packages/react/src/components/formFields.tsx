@@ -17,6 +17,7 @@ export const FormFieldWithIconButton: React.FC<{
   label: string;
   error?: string;
   noSave?: boolean;
+  dataTest?: string;
 }> = (props) => {
   return (
     <div>
@@ -40,6 +41,7 @@ export const FormFieldWithIconButton: React.FC<{
                 } as React.CSSProperties)
               : undefined
           }
+          data-test={props.dataTest}
         />
 
         <InputButton type="button" onClick={props.right.onClick}>
