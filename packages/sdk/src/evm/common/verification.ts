@@ -6,7 +6,7 @@ import { resolveContractUriFromAddress } from "./feature-detection/resolveContra
 import { fetchSourceFilesFromMetadata } from "./fetchSourceFilesFromMetadata";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Abi } from "../schema/contracts/custom";
-import { Contract, ethers, utils } from "ethers";
+import { Contract, utils, providers } from "ethers";
 import { EtherscanResult, VerificationStatus } from "../types/verification";
 import fetch from "cross-fetch";
 import { ConstructorParamMap } from "../types/any-evm/deploy-data";
@@ -323,7 +323,7 @@ async function fetchConstructorParams(
   explorerAPIKey: string,
   contractAddress: string,
   abi: Abi,
-  provider: ethers.providers.Provider,
+  provider: providers.Provider,
   storage: ThirdwebStorage,
 ): Promise<string> {
   const constructorParamTypes = extractConstructorParamsFromAbi(abi);
@@ -411,7 +411,7 @@ async function fetchConstructorParams(
     try {
       // sanity check that the constructor params are valid
       // TODO: should we sanity check after each attempt?
-      ethers.utils.defaultAbiCoder.decode(
+      utils.defaultAbiCoder.decode(
         contract.deploy.inputs,
         `0x${constructorArgs}`,
       );
@@ -439,7 +439,7 @@ async function fetchConstructorParams(
  */
 async function fetchDeployBytecodeFromPublishedContractMetadata(
   contractAddress: string,
-  provider: ethers.providers.Provider,
+  provider: providers.Provider,
   storage: ThirdwebStorage,
 ): Promise<string | undefined> {
   const compilerMetaUri = await resolveContractUriFromAddress(

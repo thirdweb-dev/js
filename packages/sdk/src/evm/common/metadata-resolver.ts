@@ -5,7 +5,8 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Contract, providers } from "ethers";
 import { fetchContractMetadata } from "./fetchContractMetadata";
 import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryLogic.json";
-import { getChainProvider, getMultichainRegistryAddress } from "../constants";
+import { getMultichainRegistryAddress } from "../constants/addresses/getMultichainRegistryAddress";
+import { getChainProvider } from "../constants/urls";
 import type { TWMultichainRegistryLogic } from "@thirdweb-dev/contracts-js";
 
 // Internal static cache
