@@ -224,24 +224,22 @@ export const installOrUpdate = async (packageManager: PackageManagerType, depend
 
   // try to install with pip first, if it fails, try pip3.
   if (runner === "pip") {
-    try {
-      await runCommand("pip", ["--version"], false, () => {}, true);
-    }
-    catch (error) {
-      const err = error as any;
-      if (err.command === "pip" && err.exitCode === -2) {
-        try {
-          await runCommand("pip3", ["--version"], false, () => {}, true);
-          runner = "pip3";
-        }
-        catch (e) {
-          console.error("pip or pip3 are not installed, please install pip or pip3 and try again.");
+    for (const pip of ["pip", "pip3"]) {
+      try {
+        await runCommand(pip, ["--version"], false, () => {}, true);
+        runner = pip;
+        break;
+      } catch (error) {
+        const err = error as any;
+        if (err.command !== pip || err.exitCode !== -2) {
+          console.error(err);
           return;
         }
-      } else {
-        console.error(err);
-        return;
       }
+    }
+    if (runner === "pip") {
+      console.error("pip or pip3 are not installed, please install pip or pip3 and try again.");
+      return;
     }
   }
 
