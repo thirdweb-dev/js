@@ -103,7 +103,7 @@ import {
   DeploymentTransaction,
   PrecomputedDeploymentTransaction,
 } from "../types/any-evm/deploy-data";
-import { fetchContractMetadataFromAddress } from "../common";
+import { fetchContractMetadataFromAddress } from "../common/metadata-resolver";
 
 /**
  * The main entry point for the thirdweb SDK
