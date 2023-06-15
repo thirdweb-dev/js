@@ -1,5 +1,5 @@
 import { LocalWallet, WalletOptions } from "@thirdweb-dev/wallets";
-import { LocalWalletConfigOptions, LocalWalletConfig } from "./types";
+import type { LocalWalletConfigOptions, LocalWalletConfig } from "./types";
 import { LocalWalletConnectUI } from "./LocalWalletConnectUI";
 
 export const localWallet = (

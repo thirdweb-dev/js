@@ -1,4 +1,4 @@
-import { Theme } from "../design-system";
+import type { Theme } from "../design-system";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 

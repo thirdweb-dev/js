@@ -18,10 +18,11 @@ export type PackageManagerType =
   | "npm"
   | "pnpm"
   | "pip"
-  | "conda"
   | "pipenv"
   | "poetry"
   | "go-modules"
+  | "brownie"
+  | "foundry"
   | "none";
 export type LanguageType =
   | "javascript"
@@ -59,14 +60,13 @@ export type FrameworkType =
 export type LibraryType =
   | "react"
   | "react-native"
-  | "vue"
   | "svelte"
   | "vite"
   | "express"
   | "web3py"
   | "playmaker"
   | "none";
-export type AppType = "app" | "contract" | "library" | "none";
+export type AppType = "app" | "contract" | "none";
 export type ContractLibrariesType =
   | "brownie"
   | "foundry"

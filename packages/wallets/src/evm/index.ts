@@ -27,6 +27,7 @@ export type { WalletOptions } from "./wallets/base";
 export { AbstractClientWallet } from "./wallets/base";
 export * from "./wallets/coinbase-wallet";
 export * from "./wallets/local-wallet";
+export * from "./wallets/frame";
 export * from "./wallets/injected";
 export * from "./wallets/metamask";
 export * from "./wallets/wallet-connect";
@@ -36,6 +37,7 @@ export * from "./wallets/magic";
 export * from "./wallets/smart-wallet";
 export * from "./wallets/ethers";
 export * from "./wallets/private-key";
+export * from "./wallets/zerion";
 
 export type { Chain } from "@thirdweb-dev/chains";
 

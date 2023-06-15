@@ -1,4 +1,4 @@
-import { fontSize, radius, shadow, spacing, Theme } from "../design-system";
+import { fontSize, radius, shadow, spacing, type Theme } from "../design-system";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as RXPopover from "@radix-ui/react-popover";

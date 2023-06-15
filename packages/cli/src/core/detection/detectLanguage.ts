@@ -30,6 +30,10 @@ export default async function detect(
     return possibleLanguages[0];
   }
 
+  if (possibleLanguages.includes("typescript") && possibleLanguages.includes("javascript")) {
+    return "typescript";
+  }
+
   info(
     `Detected multiple possible languages: ${possibleLanguages
       .map((s) => `"${s}"`)

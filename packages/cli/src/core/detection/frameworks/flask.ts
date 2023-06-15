@@ -12,7 +12,7 @@ export default class FlaskDetector implements FrameworkDetector {
       packageManager,
     );
 
-    const additionalFilesToCheck = ["/app.py", "/application.py"];
+    const additionalFilesToCheck: string[] = [];
     const additionalFilesExist = additionalFilesToCheck.some((file) =>
       existsSync(path + file),
     );

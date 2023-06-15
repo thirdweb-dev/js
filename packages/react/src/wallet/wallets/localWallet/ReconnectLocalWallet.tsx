@@ -18,7 +18,7 @@ import { CreateLocalWallet_Password } from "./CreateLocalWallet";
 import { OverrideConfirmation } from "./overrideConfirmation";
 import { ExportLocalWallet } from "./ExportLocalWallet";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
-import { LocalWalletConfig } from "./types";
+import type { LocalWalletConfig } from "./types";
 
 type ReconnectLocalWalletProps = {
   onConnect: () => void;
@@ -189,6 +189,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
           type={showPassword ? "text" : "password"}
           value={password}
           error={isWrongPassword ? "Wrong Password" : ""}
+          dataTest="current-password"
         />
 
         <Spacer y="lg" />
