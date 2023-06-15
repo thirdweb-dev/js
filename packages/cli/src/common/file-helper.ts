@@ -65,10 +65,14 @@ export function findMatches(
     if (stat.isDirectory()) {
       findMatches(filename, filter, results);
     } else {
-      const fileContents = readFileSync(filename, "utf-8");
-      const matches = fileContents.match(filter);
-      if (matches) {
-        results.push(...matches);
+      try {
+        const fileContents = readFileSync(filename, "utf-8");
+        const matches = fileContents.match(filter);
+        if (matches) {
+          results.push(...matches);
+        }
+      } catch (e) {
+        logger.debug(`Could not read file ${filename}, it's most likely too large`);
       }
     }
   }
