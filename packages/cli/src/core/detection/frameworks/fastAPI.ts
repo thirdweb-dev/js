@@ -18,8 +18,8 @@ export default class FastAPIDetector implements FrameworkDetector {
     );
 
     return (
-      dependencies.includes("fastapi") ||
-      devDependencies.includes("fastapi") ||
+      !!dependencies.find(dep => dep === "fastapi") ||
+      !!devDependencies.find(dep => dep === "fastapi") ||
       additionalFilesExist ||
       false
     );
