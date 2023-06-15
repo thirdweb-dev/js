@@ -55,7 +55,7 @@ export async function fetchContractMetadataFromAddress(
     }
     metadata = await fetchContractMetadata(compilerMetadataUri, storage);
   } catch (e) {
-    console.warn(
+    console.debug(
       "Failed to get Contract Metadata from IPFS, defaulting to onchain registry",
       e,
     );
