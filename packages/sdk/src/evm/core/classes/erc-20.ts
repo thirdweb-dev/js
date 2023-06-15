@@ -35,7 +35,7 @@ import type {
   IMulticall,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers, BigNumber, BigNumberish } from "ethers";
+import { utils, BigNumber, BigNumberish } from "ethers";
 import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 
@@ -637,7 +637,7 @@ export class Erc20<
    */
   public async normalizeAmount(amount: Amount): Promise<BigNumber> {
     const decimals = await this.contractWrapper.readContract.decimals();
-    return ethers.utils.parseUnits(AmountSchema.parse(amount), decimals);
+    return utils.parseUnits(AmountSchema.parse(amount), decimals);
   }
 
   /**
@@ -1124,7 +1124,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
       mintRequest.price,
       mintRequest.currencyAddress,
     );
-    const amountWithDecimals = ethers.utils.parseUnits(
+    const amountWithDecimals = utils.parseUnits(
       mintRequest.quantity,
       await this.contractWrapper.readContract.decimals(),
     );
