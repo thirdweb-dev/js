@@ -282,8 +282,8 @@ const WalletSDK: ThirdwebNextPage = () => {
         gradient="linear-gradient(147.15deg, #410AB6 30.17%, #B4F1FF 100.01%)"
         imageHeight="650px"
         secondaryButton={{
-          text: "Request Demo",
-          link: "https://thirdweb.typeform.com/to/Q93CVgUc",
+          text: "Get In Touch",
+          link: "/contact-us",
         }}
       >
         <SimpleGrid

@@ -1,14 +1,10 @@
 import { HoverMenu } from "./HoverMenu";
 import { NavCardProps } from "./NavCard";
-import { Flex, Icon, Stack } from "@chakra-ui/react";
-import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
-import { SiGithub } from "@react-icons/all-files/si/SiGithub";
-import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
-import { SiYoutube } from "@react-icons/all-files/si/SiYoutube";
+import { Flex, Stack } from "@chakra-ui/react";
 import { FiShoppingCart } from "react-icons/fi";
 import { IoGameControllerOutline } from "react-icons/io5";
 import { TfiStamp } from "react-icons/tfi";
-import { LinkButton, TrackedIconButton, TrackedLink } from "tw-components";
+import { TrackedLink, TrackedLinkButton } from "tw-components";
 
 export const DesktopMenu: React.FC = () => {
   return (
@@ -37,62 +33,20 @@ export const DesktopMenu: React.FC = () => {
         >
           Docs
         </TrackedLink>
+        <TrackedLinkButton
+          bgColor="white"
+          _hover={{
+            bgColor: "white",
+            opacity: 0.8,
+          }}
+          color="black"
+          href="/contact-us"
+          category="landing-page"
+          label="contact-us"
+        >
+          Contact Us
+        </TrackedLinkButton>
       </Stack>
-
-      <Flex
-        display={{ base: "none", md: "flex" }}
-        direction="row"
-        align="center"
-      >
-        <TrackedIconButton
-          as={LinkButton}
-          isExternal
-          noIcon
-          href="https://twitter.com/thirdweb"
-          color="gray.50"
-          bg="transparent"
-          aria-label="twitter"
-          icon={<Icon boxSize="1rem" as={SiTwitter} />}
-          category="topnav"
-          label="twitter"
-        />
-        <TrackedIconButton
-          as={LinkButton}
-          isExternal
-          noIcon
-          href="https://discord.gg/thirdweb"
-          bg="transparent"
-          color="gray.50"
-          aria-label="discord"
-          icon={<Icon boxSize="1rem" as={SiDiscord} />}
-          category="topnav"
-          label="discord"
-        />
-        <TrackedIconButton
-          as={LinkButton}
-          isExternal
-          noIcon
-          href="https://github.com/thirdweb-dev"
-          bg="transparent"
-          color="gray.50"
-          aria-label="discord"
-          icon={<Icon boxSize="1rem" as={SiGithub} />}
-          category="topnav"
-          label="github"
-        />
-        <TrackedIconButton
-          as={LinkButton}
-          isExternal
-          noIcon
-          href="https://www.youtube.com/channel/UCdzMx7Zhy5va5End1-XJFbA"
-          bg="transparent"
-          color="gray.50"
-          aria-label="YouTube"
-          icon={<Icon boxSize="1rem" as={SiYoutube} />}
-          category="topnav"
-          label="youtube"
-        />
-      </Flex>
     </Flex>
   );
 };

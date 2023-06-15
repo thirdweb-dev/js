@@ -84,7 +84,7 @@ const Commerce: ThirdwebNextPage = () => {
         }
         secondaryButton={{
           text: "Get In Touch",
-          link: "https://thirdweb.typeform.com/to/fMIj602T#hubspot_utk=xxxxx&hubspot_page_name=xxxxx&hubspot_page_url=xxxxx",
+          link: "/contact-us",
         }}
       >
         <SimpleGrid

@@ -1,3 +1,4 @@
+import { Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 
 const PARTNER_LOGO_MAP = {
@@ -53,6 +54,14 @@ const PARTNER_LOGO_MAP = {
     img: require("./logos/pixels.png"),
     filter: "brightness(0) invert(1)",
   },
+  coinbase: {
+    img: require("./logos/coinbase.png"),
+    filter: undefined,
+  },
+  polygon: {
+    img: require("./logos/polygon.png"),
+    filter: undefined,
+  },
 } as const;
 
 export type Partner = keyof typeof PARTNER_LOGO_MAP;
@@ -62,18 +71,20 @@ interface PartnerLogoProps {
 }
 export const PartnerLogo: React.FC<PartnerLogoProps> = ({ partner }) => {
   return (
-    <ChakraNextImage
-      opacity="0.8"
-      pointerEvents="none"
-      w="auto"
-      maxW="150px"
-      h={{ base: "40px", md: "50px" }}
-      loading="eager"
-      filter={PARTNER_LOGO_MAP[partner].filter}
-      src={PARTNER_LOGO_MAP[partner].img}
-      alt={partner}
-      sizes="(max-width: 768px) 25vw,
-              10vw"
-    />
+    <Flex justifyContent="center">
+      <ChakraNextImage
+        opacity="0.8"
+        pointerEvents="none"
+        w="auto"
+        maxW="150px"
+        h={{ base: "40px", md: "50px" }}
+        loading="eager"
+        filter={PARTNER_LOGO_MAP[partner].filter}
+        src={PARTNER_LOGO_MAP[partner].img}
+        alt={partner}
+        sizes="(max-width: 768px) 25vw,
+                10vw"
+      />
+    </Flex>
   );
 };
