@@ -18,8 +18,8 @@ export default class FlaskDetector implements FrameworkDetector {
     );
 
     return (
-      dependencies.includes("flask") ||
-      devDependencies.includes("flask") ||
+      !!dependencies.find(dep => dep === "flask") ||
+      !!devDependencies.find(dep => dep === "flask") ||
       additionalFilesExist ||
       false
     );

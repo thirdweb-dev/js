@@ -18,8 +18,8 @@ export default class DjangoDetector implements FrameworkDetector {
     );
 
     return (
-      dependencies.includes("django") ||
-      devDependencies.includes("django") ||
+      !!dependencies.find(dep => dep === "django") ||
+      !!devDependencies.find(dep => dep === "django") ||
       additionalFilesExist ||
       false
     );
