@@ -113,11 +113,9 @@ export async function generate(options: GenerateOptions) {
         );
       } catch {
         // If metadata for a contract fails, just go onto the next one
-        if (options.logs) {
-          ora(
-            `Unable to download ABI for contract ${contract.address}, skipping.`,
-          ).warn();
-        }
+        ora(
+          `Unable to download ABI for contract ${contract.address}, skipping.`,
+        ).warn();
         return;
       }
 
@@ -127,9 +125,7 @@ export async function generate(options: GenerateOptions) {
       });
     }),
   ).catch((e) => {
-    if (options.logs) {
-      ora(`Error while downloading ABIs, error: ${e.message}`).warn();
-    }
+    ora(`Error while downloading ABIs, error: ${e.message}`).warn();
   });
 
   // Store the ABIs in the the SDKs ABI cache files

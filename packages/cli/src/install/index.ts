@@ -208,7 +208,7 @@ export async function install(projectPath = ".", options: any) {
 
     const dependenciesToUpdate = [...thirdwebDepsToUpdate].map(
       (dep) => `${dep}${version}`,
-    )
+    );
 
     if (thirdwebDepsToInstall.size !== 0) {
       installer = ora(

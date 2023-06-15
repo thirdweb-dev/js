@@ -206,6 +206,7 @@ const main = async () => {
     .option("--nightly", "Install the nightly version of packages.")
     .option("--dev", "Install the dev version of packages")
     .option("-d, --debug", "show debug logs")
+    .option("-p, --path <project-path>", "path to project", ".")
     .action(async (path, options) => {
       await install(path, options);
     });
