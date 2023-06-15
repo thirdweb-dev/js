@@ -56,6 +56,7 @@ export const runDevEnv = async (detections: {
   // Something to use when events are received.
   const log = console.log.bind(console);
 
+  // This will enable us to run the generate command on file change.
   watcher
     .on('change', async file => {
       log(`File ${file} has been changed`);
@@ -66,7 +67,6 @@ export const runDevEnv = async (detections: {
     })
     .on('unlink', path => log(`File ${path} has been removed`));
 
-  // Start npm run dev initially
   await runCommand(runner, devCommand, true);
 
   // On Ctrl+C or server stop, clean up watcher.
@@ -75,6 +75,7 @@ export const runDevEnv = async (detections: {
     process.exit();
   });
 
+  // On Ctrl+C or server stop, clean up watcher.
   process.on('SIGTERM', () => {
     watcher.close();
     process.exit();
