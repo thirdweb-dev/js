@@ -133,7 +133,7 @@ export const CreateLocalWallet_Password: React.FC<{
           label="Password"
           type={showPassword ? "text" : "password"}
           value={password}
-          data-test="new-password"
+          dataTest="new-password"
         />
 
         <Spacer y="lg" />
@@ -153,7 +153,7 @@ export const CreateLocalWallet_Password: React.FC<{
           type={showPassword ? "text" : "password"}
           value={confirmPassword}
           error={passwordMismatch ? "Passwords don't match" : ""}
-          data-test="confirm-password"
+          dataTest="confirm-password"
         />
 
         <Spacer y="xl" />

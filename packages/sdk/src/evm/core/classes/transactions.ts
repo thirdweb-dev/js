@@ -24,10 +24,10 @@ import {
   Contract,
   ContractFactory,
   ContractTransaction,
-  ethers,
   providers,
   Signer,
   utils,
+  constants,
 } from "ethers";
 import { BigNumber } from "ethers";
 import { FormatTypes } from "ethers/lib/utils.js";
@@ -759,7 +759,7 @@ export class DeployTransaction extends TransactionContext {
   }
 
   getTarget(): string {
-    return ethers.constants.AddressZero;
+    return constants.AddressZero;
   }
 
   getMethod(): string {
@@ -900,8 +900,8 @@ export class DeployTransaction extends TransactionContext {
 
 export async function defaultGaslessSendFunction(
   transaction: GaslessTransaction,
-  signer: ethers.Signer,
-  provider: ethers.providers.Provider,
+  signer: Signer,
+  provider: providers.Provider,
   storage: ThirdwebStorage,
   gaslessOptions?: SDKOptionsOutput["gasless"],
 ): Promise<string> {
@@ -919,8 +919,8 @@ export async function defaultGaslessSendFunction(
 
 export async function biconomySendFunction(
   transaction: GaslessTransaction,
-  signer: ethers.Signer,
-  provider: ethers.providers.Provider,
+  signer: Signer,
+  provider: providers.Provider,
   gaslessOptions?: SDKOptionsOutput["gasless"],
 ): Promise<string> {
   const request = await biconomyPrepareRequest(
@@ -948,8 +948,8 @@ export async function biconomySendFunction(
 
 export async function defenderSendFunction(
   transaction: GaslessTransaction,
-  signer: ethers.Signer,
-  provider: ethers.providers.Provider,
+  signer: Signer,
+  provider: providers.Provider,
   storage: ThirdwebStorage,
   gaslessOptions?: SDKOptionsOutput["gasless"],
 ): Promise<string> {
@@ -982,8 +982,8 @@ export async function defenderSendFunction(
 
 async function defenderPrepareRequest(
   transaction: GaslessTransaction,
-  signer: ethers.Signer,
-  provider: ethers.providers.Provider,
+  signer: Signer,
+  provider: providers.Provider,
   storage: ThirdwebStorage,
   gaslessOptions?: SDKOptionsOutput["gasless"],
 ) {
@@ -1005,11 +1005,7 @@ async function defenderPrepareRequest(
         ].openzeppelinForwarder ||
         (await computeForwarderAddress(provider, storage)));
 
-  const forwarder = new ethers.Contract(
-    forwarderAddress,
-    ForwarderABI,
-    provider,
-  );
+  const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
   const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
     transaction.from,
   ]);
@@ -1073,7 +1069,7 @@ async function defenderPrepareRequest(
       amount,
     );
 
-    const { r, s, v } = ethers.utils.splitSignature(sig);
+    const { r, s, v } = utils.splitSignature(sig);
 
     message = {
       to: transaction.to,
@@ -1160,8 +1156,8 @@ export async function prepareGaslessRequest(tx: Transaction) {
 
 async function biconomyPrepareRequest(
   transaction: GaslessTransaction,
-  signer: ethers.Signer,
-  provider: ethers.providers.Provider,
+  signer: Signer,
+  provider: providers.Provider,
   gaslessOptions?: SDKOptionsOutput["gasless"],
 ) {
   invariant(
@@ -1170,7 +1166,7 @@ async function biconomyPrepareRequest(
   );
   invariant(signer && provider, "signer and provider must be set");
 
-  const forwarder = new ethers.Contract(
+  const forwarder = new Contract(
     getContractAddressByChainId(
       transaction.chainId,
       "biconomyForwarder",
@@ -1187,7 +1183,7 @@ async function biconomyPrepareRequest(
   const request = {
     from: transaction.from,
     to: transaction.to,
-    token: ethers.constants.AddressZero,
+    token: constants.AddressZero,
     txGas: transaction.gasLimit.toNumber(),
     tokenGasPrice: "0",
     batchId,
@@ -1202,8 +1198,8 @@ async function biconomyPrepareRequest(
     data: transaction.data,
   };
 
-  const hashToSign = ethers.utils.arrayify(
-    ethers.utils.solidityKeccak256(
+  const hashToSign = utils.arrayify(
+    utils.solidityKeccak256(
       [
         "address",
         "address",
@@ -1224,7 +1220,7 @@ async function biconomyPrepareRequest(
         request.batchId,
         request.batchNonce,
         request.deadline,
-        ethers.utils.keccak256(request.data),
+        utils.keccak256(request.data),
       ],
     ),
   );
