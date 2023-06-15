@@ -121,6 +121,8 @@ export const cacheKeys = {
     smartWalletFactory: {
       getAll: (contractAddress: RequiredParam<ContractAddress>) =>
         createContractCacheKey(contractAddress, ["smartWalletFactory"]),
+      isSmartWalletDeployed: (contractAdress: RequiredParam<ContractAddress>) =>
+        createContractCacheKey(contractAdress, ["isSmartWalletDeployed"]),
     },
 
     app: {
