@@ -10,41 +10,35 @@ import Box from "../base/Box";
 import { ModalHeaderTextClose } from "../base/modal/ModalHeaderTextClose";
 import { useCreateWalletInstance } from "@thirdweb-dev/react-core";
 import { PasswordInput } from "../PasswordInput";
-import type {
-  LocalConfiguredWallet,
-  LocalWalletInstance,
-} from "../../wallets/types/local-wallet";
+import type { LocalWalletInstance } from "../../wallets/types/local-wallet";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import { TWModal } from "../base/modal/TWModal";
+import { localWallet } from "../../wallets/wallets/local-wallet";
+import { TextInput } from "../base";
 
 export type LocalWalletImportModalProps = {
   isVisible: boolean;
   onClose: () => void;
-  localWallet: LocalConfiguredWallet;
   onWalletImported: (wallet: LocalWalletInstance) => void;
 };
 
 export const LocalWalletImportModal = ({
   isVisible,
   onClose,
-  localWallet,
   onWalletImported,
 }: LocalWalletImportModalProps) => {
   const [password, setPassword] = useState<string | undefined>();
+  const [privateKey, setPrivateKey] = useState<string | undefined>(undefined);
   const [jsonFile, setJsonFile] = useState<string | undefined>();
   const [error, setError] = useState<string | undefined>();
   const [isImporting, setIsImporting] = useState<boolean>(false);
   const createWalletInstance = useCreateWalletInstance();
 
-  const onImportPress = async () => {
-    setError(undefined);
-    if (!password || !jsonFile) {
-      setError("Please enter a password and select a file.");
-      return;
+  const createLocalWalletFromJsonFile = async () => {
+    if (!jsonFile || !password) {
+      return null;
     }
-
-    setIsImporting(true);
 
     let json;
     try {
@@ -52,12 +46,10 @@ export const LocalWalletImportModal = ({
         encoding: FileSystem.EncodingType.UTF8,
       });
     } catch (err) {
-      setError("Error reading the file. Please try again.");
-      setIsImporting(false);
-      return;
+      return null;
     }
 
-    const localWalletInstance = createWalletInstance(localWallet);
+    const localWalletInstance = createWalletInstance(localWallet());
 
     try {
       await localWalletInstance.import({
@@ -66,7 +58,44 @@ export const LocalWalletImportModal = ({
       });
     } catch (err) {
       console.error("Error importing the wallet", err);
-      setError("Invalid password");
+      return null;
+    }
+
+    return localWalletInstance;
+  };
+
+  const createLocalWalletPK = async () => {
+    if (!privateKey) {
+      return null;
+    }
+
+    const localWalletInstance = createWalletInstance(localWallet());
+
+    try {
+      await localWalletInstance.import({
+        privateKey: privateKey,
+        encryption: false,
+      });
+    } catch (err) {
+      console.error("Error importing the wallet", err);
+      return null;
+    }
+
+    return localWalletInstance;
+  };
+
+  const onImportPress = async () => {
+    setError(undefined);
+    setIsImporting(true);
+
+    let localWalletInstance = await createLocalWalletFromJsonFile();
+
+    if (!localWalletInstance) {
+      localWalletInstance = await createLocalWalletPK();
+    }
+
+    if (!localWalletInstance) {
+      setError("Please, double check your password or private key.");
       setIsImporting(false);
       return;
     }
@@ -109,6 +138,10 @@ export const LocalWalletImportModal = ({
     }
   };
 
+  const onPrivateKeyEntered = (text: string) => {
+    setPrivateKey(text);
+  };
+
   return (
     <TWModal isVisible={isVisible} backdropOpacity={0.7}>
       <KeyboardAvoidingView behavior="padding">
@@ -146,6 +179,14 @@ export const LocalWalletImportModal = ({
           <Text variant="bodySmall" color="red" mt="xs" textAlign="left">
             {error}
           </Text>
+          <Text variant="bodySmall" m="xs" textAlign="center">
+            ---- Or enter a private key ----
+          </Text>
+          <TextInput
+            secureTextEntry={true}
+            placeholder={"Private key"}
+            onChangeText={onPrivateKeyEntered}
+          />
           <Box
             flexDirection="row"
             justifyContent="center"
