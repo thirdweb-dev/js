@@ -26,8 +26,8 @@ export default class BrownieDetector implements FrameworkDetector {
     });
 
     return (
-      !!dependencies.find(dep => dep === "brownie") ||
-      !!devDependencies.find(dep => dep === "brownie") ||
+      !!dependencies.find(dep => dep.includes("brownie")) ||
+      !!devDependencies.find(dep => dep.includes("brownie")) ||
       additionalFilesExist ||
       additionalDirectoriesExist ||
       false
