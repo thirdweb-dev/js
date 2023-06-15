@@ -25,6 +25,7 @@ import { SDKOptions } from "../../schema/sdk-options";
 import type { TokenERC721 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumberish, CallOverrides, constants } from "ethers";
+import { CONTRACT_ROLES } from "../contractRoles";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -41,7 +42,7 @@ import { BigNumberish, CallOverrides, constants } from "ethers";
  * @public
  */
 export class NFTCollection extends StandardErc721<TokenERC721> {
-  static contractRoles = ["admin", "minter", "transfer"] as const;
+  static contractRoles = CONTRACT_ROLES;
 
   public abi: Abi;
   public metadata: ContractMetadata<

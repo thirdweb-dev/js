@@ -54,7 +54,7 @@ export const EditionDropInitializer = {
   name: "DropERC1155" as const,
   contractType: prebuiltContractTypes["edition-drop"],
   schema: DropErc1155ContractSchema,
-  roles: ["admin", "minter", "transfer"] as const,
+  roles: CONTRACT_ROLES,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
@@ -100,7 +100,7 @@ export const EditionInitializer = {
   name: "TokenERC1155" as const,
   contractType: prebuiltContractTypes["edition"],
   schema: TokenErc1155ContractSchema,
-  roles: ["admin", "minter", "transfer"] as const,
+  roles: CONTRACT_ROLES,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
@@ -280,7 +280,7 @@ export const NFTCollectionInitializer = {
   name: "TokenERC721" as const,
   contractType: prebuiltContractTypes["nft-collection"],
   schema: TokenErc721ContractSchema,
-  roles: ["admin", "minter", "transfer"] as const,
+  roles: CONTRACT_ROLES,
 
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
@@ -321,7 +321,7 @@ export const NFTDropInitializer = {
   name: "DropERC721" as const,
   contractType: prebuiltContractTypes["nft-drop"],
   schema: DropErc721ContractSchema,
-  roles: ["admin", "minter", "transfer"] as const,
+  roles: CONTRACT_ROLES,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
@@ -409,7 +409,7 @@ export const SignatureDropInitializer = {
   name: "SignatureDrop" as const,
   contractType: prebuiltContractTypes["signature-drop"],
   schema: DropErc721ContractSchema,
-  roles: ["admin", "minter", "transfer"] as const,
+  roles: CONTRACT_ROLES,
 
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
