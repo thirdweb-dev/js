@@ -7,7 +7,7 @@ import { Abi, AbiSchema } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import { isFeatureEnabled } from "../feature-detection/isFeatureEnabled";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers } from "ethers";
+import { providers } from "ethers";
 import { joinABIs } from "./joinABIs";
 import { getPluginABI } from "./getPluginABI";
 
@@ -17,7 +17,7 @@ import { getPluginABI } from "./getPluginABI";
 export async function getCompositePluginABI(
   address: string,
   abi: Abi,
-  provider: ethers.providers.Provider,
+  provider: providers.Provider,
   options: SDKOptions,
   storage: ThirdwebStorage,
 ): Promise<Abi> {
