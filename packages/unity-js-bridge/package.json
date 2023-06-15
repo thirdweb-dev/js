@@ -17,6 +17,7 @@
     "@thirdweb-dev/sdk": "workspace:*",
     "@thirdweb-dev/storage": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",
+    "@thirdweb-dev/chains": "workspace:*",
     "ethers": "^5.7.2"
   },
   "devDependencies": {
