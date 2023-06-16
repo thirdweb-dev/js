@@ -9,10 +9,18 @@ export async function dev(options: any) {
 
   // Run detection.
   const detections = await detectProject(options);
+  if (detections.detectedAppType === "contract") {
+    ora("Contracts cannot be run in dev mode. Perhaps you meant to use `thirdweb build`?").fail();
+    return;
+  }
 
   // Run generate command. Only generate ABIs for JS projects for now, will add Python and Go.
   if (["npm", "yarn", "pnpm"].includes(detections.detectedPackageManager)) {
-    await generate({ path: options.path });
+    try {
+      await generate({ path: options.path, debug: options.debug });
+    } catch (error) {
+      ora(`${error}`).fail();
+    }
   }
 
   if(detections.detectedFramework === "expo" || detections.detectedFramework === "react-native-cli") {
@@ -31,6 +39,7 @@ export async function dev(options: any) {
 
   try {
     // Run dev command.
+    ora("Starting dev server...").info();
     await runDev(detections, options, mobilePlatform);
   } catch (error) {
     ora(`${error}`).fail();

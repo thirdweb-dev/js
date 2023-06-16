@@ -30,12 +30,12 @@ export const runDev = async (detections: DetectionsType, options: any, mobilePla
     case "pip":
     case "pipenv":
     case "poetry":
-      const { runner: pythonRunner, devCommand: pythonCommand } = getPythonDevCommand(detectedFramework, detectedPackageManager);
+      const { runner: pythonRunner, command: pythonCommand } = getPythonDevCommand(detectedFramework, detectedPackageManager);
       runner = pythonRunner;
       command = pythonCommand;
       break;
     case "go-modules":
-      const { runner: goRunner, devCommand: goCommand } = getGoDevCommand(detectedFramework, options.path);
+      const { runner: goRunner, command: goCommand } = getGoDevCommand(detectedFramework, options.path);
       runner = goRunner;
       command = goCommand;
       break;
@@ -64,6 +64,7 @@ export const runDev = async (detections: DetectionsType, options: any, mobilePla
       // Re-run the generate command on file change.
       if (isJs) {
         await generate({ path: options.path, debug: false });
+        ora("Refetched ABIs for any contracts found").info();
       }
     })
     .on('unlink', path => log(`File ${path} has been removed`));
@@ -75,6 +76,7 @@ export const runDev = async (detections: DetectionsType, options: any, mobilePla
 
   try {
     ora(`Your contract's ABIs are being optimized in the background while you develop, and will listen for any new ones.`).info();
+    ora(`Attempting to run ${runner} ${command.join(" ")}, based on the detected project`).info();
     await runCommand(runner, command, true);
   } catch (error) {
     throw new Error("Project failed to run! Try running `thirdweb dev -d` to see a more detailed error");
@@ -129,18 +131,15 @@ const getJsDevCommand = (detectedFramework: FrameworkType, detectedPackageManage
       finalCommand.runner = "npx";
       finalCommand.command = ["react-native", `run-${mobilePlatform}`];
       break;
-    case "express":
-      finalCommand.runner = detectedPackageManager;
-      finalCommand.command = ["dev"];
-      break;
-    case "fastify":
-      finalCommand.runner = detectedPackageManager;
-      finalCommand.command = ["dev"];
-      break;
     case "vite":
       finalCommand.runner = detectedPackageManager;
       finalCommand.command = ["vite"];
+    case "fastify":
+      finalCommand.runner = detectedPackageManager;
+      finalCommand.command = ["dev"];
     default:
+      finalCommand.runner = detectedPackageManager;
+      finalCommand.command = ["dev"];
       break;
   }
 
@@ -155,57 +154,66 @@ const getPythonDevCommand = (detectedFramework: FrameworkType, detectedPackageMa
   const isPipEnv = detectedPackageManager === "pipenv";
   const isPoetry = detectedPackageManager === "poetry";
   const prefix = isPipEnv ? "pipenv run " : isPoetry ? "poetry run " : "";
+  let finalCommand: {
+    runner: string;
+    command: string[];
+  } = {
+    runner: "",
+    command: [],
+  };
 
   switch (detectedFramework) {
     case "django":
-      return {
-        runner: prefix + "python",
-        devCommand: ["manage.py", "runserver"],
-      };
+      finalCommand.runner = "python";
+      finalCommand.command = ["manage.py", "runserver"];
+      break;
     case "flask":
-      return {
-        runner: prefix + "flask",
-        devCommand: ["run"],
-      };
+      finalCommand.runner = "flask";
+      finalCommand.command = ["run"];
+      break;
     case "fastapi":
-      return {
-        runner: prefix + "uvicorn",
-        devCommand: ["main:app", "--reload"],
-      };
+      finalCommand.runner = "uvicorn";
+      finalCommand.command = ["main:app", "--reload"];
+      break;
     default:
-      return {
-        runner: "",
-        devCommand: [""],
-      };
+      break;
   }
+  if (prefix) {
+    finalCommand.command.unshift(prefix);
+  }
+
+  return finalCommand;
 };
 
 const getGoDevCommand = (detectedFramework: FrameworkType, projectPath: string) => {
+  let finalCommand: {
+    runner: string;
+    command: string[];
+  } = {
+    runner: "",
+    command: [],
+  };
+
   switch (detectedFramework) {
     case "gin":
-      return {
-        runner: "go",
-        devCommand: ["run", "main.go"],
-      };
+      finalCommand.runner = "go";
+      finalCommand.command = ["run", projectPath];
+      break;
     case "echo":
-      return {
-        runner: "go",
-        devCommand: ["run", "main.go"],
-      };
+      finalCommand.runner = "go";
+      finalCommand.command = ["run", projectPath];
+      break;
     case "revel":
-      return {
-        runner: "revel",
-        devCommand: ["run", projectPath],
-      };
+      finalCommand.runner = "revel";
+      finalCommand.command = ["run", projectPath];
+      break;
     case "fiber":
-      return {
-        runner: "go",
-        devCommand: ["run", "main.go"],
-      };
+      finalCommand.runner = "go";
+      finalCommand.command = ["run", projectPath];
+      break;
     default:
-      return {
-        runner: "",
-        devCommand: [""],
-      };
+      break;
   }
+
+  return finalCommand;
 };
