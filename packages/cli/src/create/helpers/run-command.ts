@@ -1,4 +1,4 @@
-import spawn from "cross-spawn";
+import { spawn } from "cross-spawn";
 
 export async function runCommand(
   command: string,
@@ -9,8 +9,9 @@ export async function runCommand(
   return new Promise<void>((resolve, reject) => {
     /**
      * Spawn the installation process.
-     */
+    */
     const child = spawn(command, args);
+
     child.stdout?.on("data", (data) => {
       if (onData) {
         onData(data);
@@ -20,14 +21,19 @@ export async function runCommand(
       }
     });
 
-    child.stderr?.on("error", (err) => {
+    child.stderr?.on("data", (data) => {
       if (logging) {
-        console.error(err);
+        console.error(data.toString());
       }
     });
+
+    child.on("error", (err) => {
+      console.log("Spawn error", err)
+    });
+
     child.on("close", (code) => {
       if (code !== 0) {
-        reject({ command: `${command}` });
+        reject({ command: `${command}`, exitCode: code });
         return;
       }
       resolve();

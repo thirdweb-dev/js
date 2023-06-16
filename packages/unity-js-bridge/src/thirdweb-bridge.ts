@@ -18,6 +18,7 @@ import { MetaMaskWallet } from "@thirdweb-dev/wallets/evm/wallets/metamask";
 import { MagicLink } from "@thirdweb-dev/wallets/evm/wallets/magic";
 import { SmartWallet } from "@thirdweb-dev/wallets/evm/wallets/smart-wallet";
 import { BigNumber } from "ethers";
+import { allChains } from "@thirdweb-dev/chains";
 import type { ContractInterface, Signer } from "ethers";
 
 declare global {
@@ -142,32 +143,38 @@ class ThirdwebBridge implements TWBridge {
         case "injected":
           walletInstance = new InjectedWallet({
             dappMetadata,
+            chains: allChains,
           });
           break;
         case walletIds.metamask:
           walletInstance = new MetaMaskWallet({
             dappMetadata,
+            chains: allChains,
           });
           break;
         case walletIds.walletConnectV1:
           walletInstance = new WalletConnectV1({
             dappMetadata,
+            chains: allChains,
           });
           break;
         case walletIds.coinbase:
           walletInstance = new CoinbaseWallet({
             dappMetadata,
+            chains: allChains,
           });
           break;
         case walletIds.localWallet:
           walletInstance = new LocalWallet({
             dappMetadata,
+            chains: allChains,
           });
           break;
         case walletIds.magicLink:
           walletInstance = new MagicLink({
             apiKey: sdkOptions.wallet?.magicLinkApiKey,
             emailLogin: true,
+            chains: allChains,
           });
           break;
         case walletIds.smartWallet:

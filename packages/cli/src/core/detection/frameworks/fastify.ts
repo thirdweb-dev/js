@@ -16,19 +16,14 @@ export default class FastifyDetector implements FrameworkDetector {
     const packageJson = readFileSync(packageJsonPath);
     const { dependencies, devDependencies } = parsePackageJson(packageJson);
 
-    const additionalFilesToCheck = [
-      "/server.js",
-      "/app.js",
-      "/server.ts",
-      "/app.ts",
-    ];
+    const additionalFilesToCheck: string[] = [];
     const additionalFilesExist = additionalFilesToCheck.some((file) =>
       existsSync(path + file),
     );
 
     const fastifyDependencyExists =
-      dependencies["fastify"] ||
-      devDependencies["fastify"] ||
+      !!dependencies["fastify"] ||
+      !!devDependencies["fastify"] ||
       additionalFilesExist ||
       false;
 

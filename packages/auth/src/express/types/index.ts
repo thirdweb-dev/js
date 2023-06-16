@@ -6,6 +6,11 @@ import { z } from "zod";
 
 export const PayloadBodySchema = z.object({
   address: z.string(),
+  chainId: z.string().optional(),
+});
+
+export const ActiveBodySchema = z.object({
+  address: z.string(),
 });
 
 export const LoginPayloadBodySchema = z.object({
@@ -40,6 +45,7 @@ export type ThirdwebAuthConfig<
       | ((tokenId: string) => void)
       | ((tokenId: string) => Promise<void>);
     tokenDurationInSeconds?: number;
+    refreshIntervalInSeconds?: number;
   };
   cookieOptions?: {
     domain?: string;
