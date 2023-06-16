@@ -9,7 +9,7 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const CommonContractSchema = z.object({
+export const CommonContractSchema = /* @__PURE__ */ z.object({
   name: z.string(),
   description: z.string().optional(),
   image: FileOrBufferOrStringSchema.optional(),
@@ -22,14 +22,15 @@ export type CommonContractSchemaInput = z.input<typeof CommonContractSchema>;
 /**
  * @internal
  */
-export const CommonContractOutputSchema = CommonContractSchema.extend({
-  image: z.string().optional(),
-}).catchall(z.unknown());
+export const CommonContractOutputSchema =
+  /* @__PURE__ */ CommonContractSchema.extend({
+    image: z.string().optional(),
+  }).catchall(z.unknown());
 
 /**
  * @internal
  */
-export const CommonRoyaltySchema = z.object({
+export const CommonRoyaltySchema = /* @__PURE__ */ z.object({
   /**
    * The amount of royalty collected on all royalties represented as basis points.
    * The default is 0 (no royalties).
@@ -53,7 +54,7 @@ export const CommonRoyaltySchema = z.object({
 /**
  * @internal
  */
-export const CommonPrimarySaleSchema = z.object({
+export const CommonPrimarySaleSchema = /* @__PURE__ */ z.object({
   /**
    * primary sale recipient address
    */
@@ -63,7 +64,7 @@ export const CommonPrimarySaleSchema = z.object({
 /**
  * @internal
  */
-export const CommonPlatformFeeSchema = z.object({
+export const CommonPlatformFeeSchema = /* @__PURE__ */ z.object({
   /**
    * platform fee basis points
    */
@@ -77,14 +78,14 @@ export const CommonPlatformFeeSchema = z.object({
 /**
  * @internal
  */
-export const CommonTrustedForwarderSchema = z.object({
+export const CommonTrustedForwarderSchema = /* @__PURE__ */ z.object({
   trusted_forwarders: z.array(AddressOrEnsSchema).default([]),
 });
 
 /**
  * @internal
  */
-export const CommonSymbolSchema = z.object({
+export const CommonSymbolSchema = /* @__PURE__ */ z.object({
   symbol: z.string().default(""),
 });
 

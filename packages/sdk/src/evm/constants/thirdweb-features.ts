@@ -148,7 +148,7 @@ export const FEATURE_PERMISSIONS_ENUMERABLE = {
   features: {},
 } as const;
 
-export const FEATURE_PERMISSIONS = {
+export const FEATURE_PERMISSIONS = /* @__PURE__ */ {
   name: "Permissions",
   namespace: "roles",
   docLinks: {

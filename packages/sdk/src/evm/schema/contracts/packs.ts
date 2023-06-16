@@ -8,14 +8,16 @@ import {
 } from "./common";
 
 export const PackContractInput =
-  CommonContractSchema.merge(CommonRoyaltySchema).merge(CommonSymbolSchema);
-
-export const PackContractOutput =
-  CommonContractOutputSchema.merge(CommonRoyaltySchema).merge(
+  /* @__PURE__ */ CommonContractSchema.merge(CommonRoyaltySchema).merge(
     CommonSymbolSchema,
   );
 
-export const PackContractDeploy = PackContractInput.merge(
+export const PackContractOutput =
+  /* @__PURE__ */ CommonContractOutputSchema.merge(CommonRoyaltySchema).merge(
+    CommonSymbolSchema,
+  );
+
+export const PackContractDeploy = /* @__PURE__ */ PackContractInput.merge(
   CommonPlatformFeeSchema,
 ).merge(CommonTrustedForwarderSchema);
 
