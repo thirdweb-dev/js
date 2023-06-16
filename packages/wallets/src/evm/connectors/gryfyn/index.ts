@@ -32,7 +32,13 @@ export class GryFynConnector extends Connector {
     this.emit("message", { type: "connecting" });
 
     if (options.chainId) {
-      await this.#gryfynProvider.setChainId(options.chainId);
+      if (supportedChainIds.has(String(options.chainId))) {
+        await this.#gryfynProvider.setChainID(String(options.chainId));
+      } else {
+        console.error(
+          `Unsupported chainId ${options.chainId}, Connecting to default chain`,
+        );
+      }
     }
 
     await this.#gryfynProvider.connect();
@@ -49,7 +55,12 @@ export class GryFynConnector extends Connector {
   }
 
   async disconnect(): Promise<void> {
-    // TODO
+    if (this.#gryfynProvider) {
+      await this.#gryfynProvider.logout();
+    }
+    this.#provider = undefined;
+    this.#signer = undefined;
+    this.#gryfynProvider = undefined;
   }
 
   async getProvider() {
