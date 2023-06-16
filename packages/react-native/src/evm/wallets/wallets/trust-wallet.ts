@@ -1,5 +1,5 @@
 import { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
-import { WC2Options, WalletConnectV2 } from "./WalletConnectV2";
+import { WalletConnectV2 } from "./WalletConnectV2";
 import { WCMeta } from "../types/wc";
 
 export class TrustWallet extends WalletConnectV2 {
@@ -13,10 +13,6 @@ export class TrustWallet extends WalletConnectV2 {
       universal: "https://link.trustwallet.com",
     },
   };
-
-  constructor(options: WC2Options) {
-    super(options);
-  }
 
   getMeta(): WCMeta {
     return TrustWallet.meta;

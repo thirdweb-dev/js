@@ -17,7 +17,6 @@ export { localWallet } from "./wallets/wallets/local-wallet";
 export { LocalWallet } from "./wallets/wallets/LocalWallet";
 export { magicWallet } from "./wallets/wallets/magic-wallet";
 export { MagicWallet } from "./wallets/wallets/MagicWallet";
-export * from "./wallets/wallets/WalletConnectV1";
 export * from "./wallets/wallets/WalletConnectV2";
 export type { WCMeta } from "./wallets/types/wc";
 
