@@ -1,4 +1,3 @@
-import { AmountSchema } from "../../../core/schema/shared";
 import { assertEnabled } from "../../common/feature-detection/assertEnabled";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
 import { resolveAddress } from "../../common/ens/resolveAddress";
@@ -58,6 +57,7 @@ import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ContractMetadata } from "./contract-metadata";
 import { DropClaimConditions } from "./drop-claim-conditions";
 import { CONTRACT_ROLES } from "../../contracts/contractRoles";
+import { normalizeAmount } from "../../common/currency/normalizeAmount";
 
 /**
  * Standard ERC20 Token functions
@@ -636,8 +636,7 @@ export class Erc20<
    * @param amount
    */
   public async normalizeAmount(amount: Amount): Promise<BigNumber> {
-    const decimals = await this.contractWrapper.readContract.decimals();
-    return utils.parseUnits(AmountSchema.parse(amount), decimals);
+    return normalizeAmount(this.contractWrapper, amount);
   }
 
   /**

@@ -1,4 +1,4 @@
-export * from "./error";
+// export * from "./error";
 // export * from "./snapshots";
 export { type Role } from "./role";
 export { fetchContractMetadataFromAddress } from "./metadata-resolver";
