@@ -2,48 +2,49 @@ import { AppType, ContractLibrariesType, FrameworkType, LanguageType, LibraryTyp
 import { runCommand } from "../create/helpers/run-command";
 import chokidar from 'chokidar';
 import { generate } from "../generate/command";
+import ora from "ora";
 
-export const runDevEnv = async (detections: {
+type DetectionsType = {
   detectedPackageManager: PackageManagerType;
   detectedLanguage: LanguageType;
   detectedLibrary: LibraryType;
   detectedFramework: FrameworkType;
   detectedAppType: AppType;
   detectedContractLibrary: ContractLibrariesType;
-}, projectPath: {
-  path: string;
-}) => {
+}
+
+export const runDev = async (detections: DetectionsType, options: any, mobilePlatform: "ios" | "android") => {
   const { detectedPackageManager, detectedFramework } = detections;
   let runner: string = "";
-  let devCommand: string[] = [];
+  let command: string[] = [];
   const isJs = ["npm", "yarn", "pnpm"].includes(detectedPackageManager);
 
   switch (detectedPackageManager) {
     case "npm":
     case "yarn":
     case "pnpm":
-      const { runner: jsRunner, devCommand: jsDevCommand } = getJsDevCommand(detectedFramework, detectedPackageManager);
+      const { runner: jsRunner, command: jsCommand } = getJsDevCommand(detectedFramework, detectedPackageManager, mobilePlatform);
       runner = jsRunner;
-      devCommand = jsDevCommand;
+      command = jsCommand;
       break;
     case "pip":
     case "pipenv":
     case "poetry":
-      const { runner: pythonRunner, devCommand: pythonDevCommand } = getPythonDevCommand(detectedFramework, detectedPackageManager);
+      const { runner: pythonRunner, devCommand: pythonCommand } = getPythonDevCommand(detectedFramework, detectedPackageManager);
       runner = pythonRunner;
-      devCommand = pythonDevCommand;
+      command = pythonCommand;
       break;
     case "go-modules":
-      const { runner: goRunner, devCommand: goDevCommand } = getGoDevCommand(detectedFramework, projectPath.path);
+      const { runner: goRunner, devCommand: goCommand } = getGoDevCommand(detectedFramework, options.path);
       runner = goRunner;
-      devCommand = goDevCommand;
+      command = goCommand;
       break;
     default:
       break;
   }
 
     // Initialize watcher.
-  let watcher = chokidar.watch(projectPath.path, {
+  let watcher = chokidar.watch(options.path, {
     ignored: [
       /(^|[\/\\])\../, // ignore dotfiles
       '**/node_modules/**', // ignore node_modules
@@ -62,79 +63,92 @@ export const runDevEnv = async (detections: {
       log(`File ${file} has been changed`);
       // Re-run the generate command on file change.
       if (isJs) {
-        await generate({ path: projectPath.path });
+        await generate({ path: options.path, debug: false });
       }
     })
     .on('unlink', path => log(`File ${path} has been removed`));
 
-  await runCommand(runner, devCommand, true);
+  const stopWatching = () => {
+    watcher.close();
+    process.exit();
+  };
+
+  try {
+    ora(`Your contract's ABIs are being optimized in the background while you develop, and will listen for any new ones.`).info();
+    await runCommand(runner, command, true);
+  } catch (error) {
+    throw new Error("Project failed to run! Try running `thirdweb dev -d` to see a more detailed error");
+  }
 
   // On Ctrl+C or server stop, clean up watcher.
   process.on('SIGINT', () => {
-    watcher.close();
-    process.exit();
+    stopWatching();
   });
 
-  // On Ctrl+C or server stop, clean up watcher.
   process.on('SIGTERM', () => {
-    watcher.close();
-    process.exit();
+    stopWatching();
   });
 };
 
-const getJsDevCommand = (detectedFramework: FrameworkType, detectedPackageManager: PackageManagerType) => {
+const getJsDevCommand = (detectedFramework: FrameworkType, detectedPackageManager: PackageManagerType, mobilePlatform: "ios" | "android") => {
+  const prefix = detectedPackageManager === "yarn" ? "" : "run";
+  let finalCommand: {
+    runner: string;
+    command: string[];
+  } = {
+    runner: "",
+    command: [],
+  };
+
   switch (detectedFramework) {
     case "next":
-      return {
-        runner: detectedPackageManager,
-        devCommand: ["run", "dev"],
-      };
+      finalCommand.runner = detectedPackageManager;
+      finalCommand.command = ["dev"];
+      break;
     case "gatsby":
-      return {
-        runner: "gatsby",
-        devCommand: ["develop"],
-      };
+      finalCommand.runner = "npx";
+      finalCommand.command = ["gatsby", "develop"];
+      break;
     case "remix":
-      return {
-        runner: detectedPackageManager,
-        devCommand: ["run", "dev"],
-      };
+      finalCommand.runner = detectedPackageManager;
+      finalCommand.command = ["dev"];
+      break;
     case "cra":
-      return {
-        runner: detectedPackageManager,
-        devCommand: ["start"],
-      };
+      finalCommand.runner = detectedPackageManager;
+      finalCommand.command = ["start"];
+      break;
     case "vue":
-      return {
-        runner: detectedPackageManager,
-        devCommand: ["run", "serve"],
-      };
+      finalCommand.runner = detectedPackageManager;
+      finalCommand.command = ["serve"];
+      break;
     case "expo":
-      return {
-        runner: "expo",
-        devCommand: ["start"],
-      };
+      finalCommand.runner = detectedPackageManager;
+      finalCommand.command = [mobilePlatform];
+      break;
     case "react-native-cli":
-      return {
-        runner: "react-native",
-        devCommand: ["run-android"],
-      };
+      finalCommand.runner = "npx";
+      finalCommand.command = ["react-native", `run-${mobilePlatform}`];
+      break;
     case "express":
-      return {
-        runner: "node",
-        devCommand: ["server.js"],
-      };
+      finalCommand.runner = detectedPackageManager;
+      finalCommand.command = ["dev"];
+      break;
     case "fastify":
-      return {
-        runner: "node",
-        devCommand: ["server.js"],
-      };
+      finalCommand.runner = detectedPackageManager;
+      finalCommand.command = ["dev"];
+      break;
+    case "vite":
+      finalCommand.runner = detectedPackageManager;
+      finalCommand.command = ["vite"];
     default:
-      return {
-        runner: "",
-        devCommand: [""],
-      };
+      break;
   }
+
+  if (prefix) {
+    finalCommand.command.unshift(prefix);
+  }
+
+  return finalCommand;
 };
 
 const getPythonDevCommand = (detectedFramework: FrameworkType, detectedPackageManager: PackageManagerType) => {

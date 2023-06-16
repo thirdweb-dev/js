@@ -55,12 +55,12 @@ export type FrameworkType =
   | "revel"
   | "fiber"
   | "zenject"
+  | "vite"
   | "none";
 export type LibraryType =
   | "react"
   | "react-native"
   | "svelte"
-  | "vite"
   | "express"
   | "web3py"
   | "playmaker"

@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import { detectExtensions } from "../common/feature-detector";
 import { detectProject } from "../common/project-detector";
 import { processProject } from "../common/processor";
 import { cliVersion, pkg } from "../constants/urls";
@@ -19,6 +18,7 @@ import prompts from "prompts";
 import Cache from "sync-disk-cache";
 import { install } from "../install";
 import { dev } from "../dev";
+import { build } from "../build";
 
 const main = async () => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
@@ -253,17 +253,6 @@ const main = async () => {
     });
 
   program
-    .command("build")
-    .description("Compile contract and detect thirdweb contract extensions")
-    .option("--clean", "clear the cache before building")
-    .option("-p, --path <project-path>", "path to project", ".")
-    .option("-d, --debug", "show debug logs")
-    .option("-a, --all", "run detection on all contracts")
-    .action(async (options) => {
-      await detectExtensions(options);
-    });
-
-  program
     .command("deploy")
     .description("Deploy your (or team) contracts securely to blockchains")
     .option("-p, --path <project-path>", "path to project", ".")
@@ -406,6 +395,7 @@ const main = async () => {
     )
     .option("-p, --path <project-path>", "path to project", ".")
     .option("-d, --debug", "show debug logs")
+    .option("-a, --all", "show all detected extensions")
     .action(async (options) => {
       await detectProject(options);
     });
@@ -424,9 +414,20 @@ const main = async () => {
     .command("dev")
     .description("Optimizes ABIs and types for your smart contracts and starts a local dev server")
     .option("-p, --path <project-path>", "path to project", ".")
+    .option("-d, --debug", "show debug logs", false)
+    .action(async (options) => {
+      await dev(options);
+    });
+
+  program
+    .command("build")
+    .description("Optimizes ABIs and types for your smart contracts for your production build")
+    .option("--clean", "clear the cache before building")
+    .option("-p, --path <project-path>", "path to project", ".")
     .option("-d, --debug", "show debug logs")
-    .action(async (path, options) => {
-      await dev(path, options);
+    .option("-a, --all", "run detection on all contracts")
+    .action(async (options) => {
+      await build(options);
     });
 
   await program.parseAsync();

@@ -51,11 +51,13 @@ export async function detectProject(options: any) {
   const detectedAppType = detectedFramework !== "none" ? contractLibraries.includes(detectedFramework as ContractLibrariesType) ? "contract" : "app" : "app" as AppType;
   const detectedContractLibrary = detectedAppType === "contract" ? detectedFramework as ContractLibrariesType : "none";
 
-  logger.info("Detected package manager: " + detectedPackageManager);
-  logger.info("Detected library: " + detectedLibrary);
-  logger.info("Detected language: " + detectedLanguage);
-  logger.info("Detected framework: " + detectedFramework);
-  logger.info("Detected app type: " + detectedAppType);
+  logger.info("------------------------------------");
+  ora("Detected package manager: " + detectedPackageManager).info();
+  ora("Detected library: " + detectedLibrary).info();
+  ora("Detected language: " + detectedLanguage).info();
+  ora("Detected framework: " + detectedFramework).info();
+  ora("Detected app type: " + detectedAppType).info();
+  logger.info("------------------------------------");
 
   if (detectedAppType === "contract") {
     let compiledResult;
