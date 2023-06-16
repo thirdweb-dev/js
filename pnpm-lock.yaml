@@ -1180,6 +1180,9 @@ importers:
       '@thirdweb-dev/auth':
         specifier: workspace:*
         version: link:../auth
+      '@thirdweb-dev/chains':
+        specifier: workspace:*
+        version: link:../chains
       '@thirdweb-dev/pay':
         specifier: workspace:*
         version: link:../pay

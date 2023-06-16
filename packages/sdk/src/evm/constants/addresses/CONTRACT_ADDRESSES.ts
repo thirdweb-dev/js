@@ -24,7 +24,7 @@ export const CONTRACT_ADDRESSES: Record<
     twRegistry: string;
     twBYOCRegistry: string;
   }
-> = {
+> = /* @__PURE__ */ {
   [ChainId.Mainnet]: {
     openzeppelinForwarder: OZ_DEFENDER_FORWARDER_ADDRESS,
     openzeppelinForwarderEOA: "0x76ce2CB1Ae48Fa067f4fb8c5f803111AE0B24BEA",

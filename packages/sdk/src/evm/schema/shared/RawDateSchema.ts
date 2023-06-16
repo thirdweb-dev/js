@@ -1,7 +1,7 @@
 import { BigNumber } from "ethers";
 import { z } from "zod";
 
-export const RawDateSchema = z.union([
+export const RawDateSchema = /* @__PURE__ */ z.union([
   z.date().transform((i) => {
     return BigNumber.from(Math.floor(i.getTime() / 1000));
   }),
@@ -13,11 +13,13 @@ export const RawDateSchema = z.union([
 /**
  * Default to now
  */
-export const StartDateSchema = RawDateSchema.default(new Date(0));
+export const StartDateSchema = /* @__PURE__ */ RawDateSchema.default(
+  new Date(0),
+);
 
 /**
  * Default to 10 years from now
  */
-export const EndDateSchema = RawDateSchema.default(
+export const EndDateSchema = /* @__PURE__ */ RawDateSchema.default(
   new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 * 10),
 );

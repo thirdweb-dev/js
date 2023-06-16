@@ -6,11 +6,11 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const MerkleSchema = z.object({
+export const MerkleSchema = /* @__PURE__ */ z.object({
   merkle: z.record(z.string()).default({}),
 });
 
-export const SnapshotEntryInput = z.object({
+export const SnapshotEntryInput = /* @__PURE__ */ z.object({
   address: AddressOrEnsSchema,
   maxClaimable: QuantitySchema.default(0), // defaults to 0
   price: QuantitySchema.optional(), // defaults to unlimited, but can be undefined in old snapshots
@@ -41,7 +41,7 @@ export type ShardedSnapshot = {
 /**
  * @internal
  */
-export const SnapshotInputSchema = z.union([
+export const SnapshotInputSchema = /* @__PURE__ */ z.union([
   z.array(z.string()).transform(
     async (strings) =>
       await Promise.all(
@@ -55,13 +55,14 @@ export const SnapshotInputSchema = z.union([
   z.array(SnapshotEntryInput),
 ]);
 
-export const SnapshotEntryWithProofSchema = SnapshotEntryInput.extend({
-  proof: z.array(z.string()),
-});
+export const SnapshotEntryWithProofSchema =
+  /* @__PURE__ */ SnapshotEntryInput.extend({
+    proof: z.array(z.string()),
+  });
 /**
  * @internal
  */
-export const SnapshotSchema = z.object({
+export const SnapshotSchema = /* @__PURE__ */ z.object({
   /**
    * The merkle root
    */
@@ -78,7 +79,7 @@ export type SnapshotEntryWithProof = z.output<
 /**
  * @internal
  */
-export const SnapshotInfoSchema = z.object({
+export const SnapshotInfoSchema = /* @__PURE__ */ z.object({
   merkleRoot: z.string(),
   snapshotUri: z.string(),
 });
