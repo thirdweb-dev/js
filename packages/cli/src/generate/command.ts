@@ -95,7 +95,9 @@ export async function generate(options: GenerateOptions) {
   }
 
   // Attempt to download the ABI for each contract
-  ora(`Downloading ABIs for contracts configured in 'thirdweb.json'`).info();
+  if (options.debug) {
+    ora(`Downloading ABIs for contracts configured in 'thirdweb.json'`).info();
+  }
   const storage = new ThirdwebStorage();
   const metadata: {
     address: string;
@@ -113,9 +115,11 @@ export async function generate(options: GenerateOptions) {
         );
       } catch {
         // If metadata for a contract fails, just go onto the next one
-        ora(
-          `Unable to download ABI for contract ${contract.address}, skipping.`,
-        ).warn();
+        if (options.debug) {
+          ora(
+            `Unable to download ABI for contract ${contract.address}, skipping.`,
+          ).warn();
+        }
         return;
       }
 
@@ -125,15 +129,19 @@ export async function generate(options: GenerateOptions) {
       });
     }),
   ).catch((e) => {
-    ora(`Error while downloading ABIs, error: ${e.message}`).warn();
+    if (options.debug) {
+      ora(`Error while downloading ABIs, error: ${e.message}`).warn();
+    }
   });
 
   // Store the ABIs in the the SDKs ABI cache files
   const packagePath = `${projectPath}/node_modules/@thirdweb-dev/generated-abis/dist`;
   if (!fs.existsSync(packagePath)) {
-    ora(
-      `Unable to cache ABIs. Please ensure that you have the latest @thirdweb-dev/sdk package installed.`,
-    ).fail();
+    if (options.debug) {
+      ora(
+        `Unable to cache ABIs. Please ensure that you have the latest @thirdweb-dev/sdk package installed.`,
+      ).fail();
+    }
     process.exit(1);
   }
 
@@ -180,11 +188,13 @@ export async function generate(options: GenerateOptions) {
     fs.writeFileSync(typeFilePath, updatedFile);
   }
 
-  ora(
-    `Downloaded and cached ABIs for ${metadata.length} smart contract${
-      metadata.length === 1 ? "" : "s"
-    }`,
-  ).succeed();
+  if (options.debug) {
+    ora(
+      `Downloaded and cached ABIs for ${metadata.length} smart contract${
+        metadata.length === 1 ? "" : "s"
+      }`,
+    ).succeed();
+  }
 
   // Add generate command to postinstall
   const packageJsonPath = `${projectPath}/package.json`;
@@ -226,7 +236,9 @@ export async function generate(options: GenerateOptions) {
     ),
   );
 
-  ora(
-    "Added 'npx thirdweb generate' to postinstall in package.json.\n\n - This is necessary to use 'thirdweb generate' in production.\n",
-  ).info();
+  if (options.debug) {
+    ora(
+      "Added 'npx thirdweb generate' to postinstall in package.json.\n\n - This is necessary to use 'thirdweb generate' in production.\n",
+    ).info();
+  }
 }
