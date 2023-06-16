@@ -89,6 +89,9 @@ const getJsBuildCommand = (detectedFramework: FrameworkType, detectedPackageMana
       finalCommand.runner = detectedPackageManager;
       finalCommand.command = ["build"];
       break;
+    case "vite":
+      finalCommand.runner = detectedPackageManager;
+      finalCommand.command = ["build"];
     default:
       break;
     }
