@@ -105,7 +105,7 @@ export const FEATURE_NFT_CLAIM_CUSTOM = {
   features: {},
 } as const;
 
-export const FEATURE_NFT_LAZY_MINTABLE = {
+export const FEATURE_NFT_LAZY_MINTABLE = /* @__PURE__ */ {
   name: "ERC721LazyMintable",
   namespace: "nft.drop",
   docLinks: {
@@ -129,7 +129,7 @@ export const FEATURE_NFT_BATCH_MINTABLE = {
   features: {},
 } as const;
 
-export const FEATURE_NFT_MINTABLE = {
+export const FEATURE_NFT_MINTABLE = /* @__PURE__ */ {
   name: "ERC721Mintable",
   namespace: "nft.mint",
   docLinks: {
@@ -175,7 +175,7 @@ export const FEATURE_NFT_ENUMERABLE = {
   features: {},
 } as const;
 
-export const FEATURE_NFT_SUPPLY = {
+export const FEATURE_NFT_SUPPLY = /* @__PURE__ */ {
   name: "ERC721Supply",
   namespace: "nft.query",
   docLinks: {
@@ -188,7 +188,7 @@ export const FEATURE_NFT_SUPPLY = {
   },
 } as const;
 
-export const FEATURE_OPEN_EDITION_SHARED_METADATA = {
+export const FEATURE_OPEN_EDITION_SHARED_METADATA = /* @__PURE__ */ {
   name: "ERC721SharedMetadata",
   namespace: "nft.sharedmetadata",
   docLinks: {
@@ -199,7 +199,7 @@ export const FEATURE_OPEN_EDITION_SHARED_METADATA = {
   features: {},
 } as const;
 
-export const FEATURE_NFT = {
+export const FEATURE_NFT = /* @__PURE__ */ {
   name: "ERC721",
   namespace: "nft",
   docLinks: {

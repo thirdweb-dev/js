@@ -9,7 +9,7 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const BasicNFTInput = z.object({
+export const BasicNFTInput = /* @__PURE__ */ z.object({
   name: z.union([z.string(), z.number()]).optional().nullable(),
   description: z.string().nullable().optional().nullable(),
   image: FileOrBufferOrStringSchema.nullable().optional(),
@@ -20,7 +20,7 @@ export const BasicNFTInput = z.object({
 /**
  * @internal
  */
-export const CommonNFTInput = BasicNFTInput.extend({
+export const CommonNFTInput = /* @__PURE__ */ BasicNFTInput.extend({
   external_url: FileOrBufferOrStringSchema.nullable().optional(),
   background_color: HexColor.optional().nullable(),
   properties: OptionalPropertiesInput,
@@ -30,12 +30,15 @@ export const CommonNFTInput = BasicNFTInput.extend({
 /**
  * @internal
  */
-export const NFTInputOrUriSchema = z.union([CommonNFTInput, z.string()]);
+export const NFTInputOrUriSchema = /* @__PURE__ */ z.union([
+  CommonNFTInput,
+  z.string(),
+]);
 
 /**
  * @internal
  */
-export const CommonNFTOutput = CommonNFTInput.extend({
+export const CommonNFTOutput = /* @__PURE__ */ CommonNFTInput.extend({
   id: z.string(),
   uri: z.string(),
   image: z.string().nullable().optional(),

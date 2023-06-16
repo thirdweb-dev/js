@@ -8,12 +8,13 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const TieredDropPayloadSchema = BaseSignaturePayloadInput.extend({
-  tierPriority: z.array(z.string()),
-  royaltyRecipient: AddressOrEnsSchema.default(constants.AddressZero),
-  royaltyBps: BasisPointsSchema.default(0),
-  quantity: BigNumberSchema.default(1),
-});
+export const TieredDropPayloadSchema =
+  /* @__PURE__ */ BaseSignaturePayloadInput.extend({
+    tierPriority: z.array(z.string()),
+    royaltyRecipient: AddressOrEnsSchema.default(constants.AddressZero),
+    royaltyBps: BasisPointsSchema.default(0),
+    quantity: BigNumberSchema.default(1),
+  });
 
 /**
  * @public

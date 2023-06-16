@@ -2009,10 +2009,10 @@ export class Erc721SharedMetadata implements DetectableFeature {
         method: "setSharedMetadata",
         args: [
           {
-            name: metadata.name || "",
-            description: metadata.description || "",
-            image: imageUri,
-            animation_url: animationUri,
+            name: `${parsedMetadata.name || ""}`,
+            description: parsedMetadata.description || "",
+            imageURI: imageUri,
+            animationURI: animationUri,
           },
         ],
       });

@@ -149,7 +149,7 @@ export type ExtensionWithEnabled = Extension & {
 /**
  * @internal
  */
-export const SUPPORTED_FEATURES: Record<string, Feature> = {
+export const SUPPORTED_FEATURES: Record<string, Feature> = /* @__PURE__ */ {
   [FEATURE_TOKEN.name]: FEATURE_TOKEN,
   [FEATURE_NFT.name]: FEATURE_NFT,
   [FEATURE_EDITION.name]: FEATURE_EDITION,
