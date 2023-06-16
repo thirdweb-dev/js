@@ -11,7 +11,7 @@ type DropContract = Extract<
 export const APPROVED_IMPLEMENTATIONS: Record<
   SUPPORTED_CHAIN_ID,
   Record<DropContract, string>
-> = {
+> = /* @__PURE__ */ {
   [ChainId.Mainnet]: {
     "nft-drop": "0x60fF9952e0084A6DEac44203838cDC91ABeC8736",
     "edition-drop": "0x74af262d0671F378F97a1EDC3d0970Dbe8A1C550",

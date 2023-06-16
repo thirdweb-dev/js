@@ -14,8 +14,15 @@ function getGasStationUrl(chainId: ChainId.Polygon | ChainId.Mumbai): string {
   }
 }
 
-const MIN_POLYGON_GAS_PRICE = ethers.utils.parseUnits("31", "gwei");
-const MIN_MUMBAI_GAS_PRICE = ethers.utils.parseUnits("1", "gwei");
+const MIN_POLYGON_GAS_PRICE = /* @__PURE__ */ ethers.utils.parseUnits(
+  "31",
+  "gwei",
+);
+
+const MIN_MUMBAI_GAS_PRICE = /* @__PURE__ */ ethers.utils.parseUnits(
+  "1",
+  "gwei",
+);
 
 /**
  * @internal

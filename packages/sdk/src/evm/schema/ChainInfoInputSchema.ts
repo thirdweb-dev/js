@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const ChainInfoInputSchema = z.object({
+export const ChainInfoInputSchema = /* @__PURE__ */ z.object({
   rpc: z.array(z.string().url()),
   chainId: z.number(),
   nativeCurrency: z.object({

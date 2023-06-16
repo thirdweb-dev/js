@@ -8,7 +8,7 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const EnglishAuctionInputParamsSchema = z.object({
+export const EnglishAuctionInputParamsSchema = /* @__PURE__ */ z.object({
   /**
    * The address of the asset being auctioned.
    */

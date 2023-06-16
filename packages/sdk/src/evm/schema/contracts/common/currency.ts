@@ -4,7 +4,7 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const CurrencySchema = z.object({
+export const CurrencySchema = /* @__PURE__ */ z.object({
   name: z.string(),
   symbol: z.string(),
   decimals: z.number(),
@@ -13,7 +13,7 @@ export const CurrencySchema = z.object({
 /**
  * @internal
  */
-export const CurrencyValueSchema = CurrencySchema.extend({
+export const CurrencyValueSchema = /* @__PURE__ */ CurrencySchema.extend({
   value: BigNumberSchema,
   displayValue: z.string(),
 });
