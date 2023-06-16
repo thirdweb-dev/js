@@ -10,7 +10,7 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const NFTDropInitialConditionsInputSchema = z.object({
+export const NFTDropInitialConditionsInputSchema = /* @__PURE__ */ z.object({
   totalSupply: AmountSchema,
 });
 
@@ -18,7 +18,7 @@ export const NFTDropInitialConditionsInputSchema = z.object({
  * @internal
  */
 // TODO: Handle allow lists and end times
-export const NFTDropUpdatableConditionsInputSchema = z.object({
+export const NFTDropUpdatableConditionsInputSchema = /* @__PURE__ */ z.object({
   price: AmountSchema.optional(),
   currencyAddress: z.string().nullable().optional(),
   primarySaleRecipient: z.string().optional(),
@@ -30,7 +30,7 @@ export const NFTDropUpdatableConditionsInputSchema = z.object({
 /**
  * @internal
  */
-export const NFTDropUpdatableConditionsOutputSchema = z.object({
+export const NFTDropUpdatableConditionsOutputSchema = /* @__PURE__ */ z.object({
   price: CurrencyValueSchema,
   currencyAddress: z.string().nullable(),
   primarySaleRecipient: z.string(),
@@ -47,22 +47,26 @@ export const NFTDropUpdatableConditionsOutputSchema = z.object({
  * @internal
  */
 export const NFTDropContractInputSchema =
-  NFTCollectionMetadataInputSchema.merge(NFTDropInitialConditionsInputSchema);
+  /* @__PURE__ */ NFTCollectionMetadataInputSchema.merge(
+    NFTDropInitialConditionsInputSchema,
+  );
 
 /**
  * @public
  */
-export type NFTDropContractInput = z.input<typeof NFTDropContractInputSchema>;
+export type NFTDropContractInput = /* @__PURE__ */ z.input<
+  typeof NFTDropContractInputSchema
+>;
 
 /**
  * @public
  */
-export type NFTDropConditionsInput = z.input<
+export type NFTDropConditionsInput = /* @__PURE__ */ z.input<
   typeof NFTDropUpdatableConditionsInputSchema
 >;
 /**
  * @public
  */
-export type NFTDropConditions = z.output<
+export type NFTDropConditions = /* @__PURE__ */ z.output<
   typeof NFTDropUpdatableConditionsOutputSchema
 >;

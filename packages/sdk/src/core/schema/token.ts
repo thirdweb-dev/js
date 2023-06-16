@@ -4,7 +4,7 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const CommonTokenInputSchema = z.object({
+export const CommonTokenInputSchema = /* @__PURE__ */ z.object({
   name: z.string(),
   symbol: z.string(),
   decimals: z.number(),
@@ -16,7 +16,7 @@ export const CommonTokenInputSchema = z.object({
 /**
  * @internal
  */
-export const CurrencyValueSchema = z.object({
+export const CurrencyValueSchema = /* @__PURE__ */ z.object({
   value: z.string(),
   displayValue: z.string(),
 });
@@ -30,10 +30,11 @@ export type CurrencyValue = z.input<typeof CurrencyValueSchema>;
 /**
  * @internal
  */
-export const CommonTokenOutputSchema = CommonTokenInputSchema.extend({
-  image: z.string().optional(),
-  supply: CurrencyValueSchema,
-}).catchall(z.unknown());
+export const CommonTokenOutputSchema =
+  /* @__PURE__ */ CommonTokenInputSchema.extend({
+    image: z.string().optional(),
+    supply: CurrencyValueSchema,
+  }).catchall(z.unknown());
 
 /**
  * Metadata for a token

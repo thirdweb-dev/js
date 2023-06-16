@@ -8,7 +8,7 @@ import {
 } from "./common";
 import { z } from "zod";
 
-export const VoteSettingsInputSchema = z.object({
+export const VoteSettingsInputSchema = /* @__PURE__ */ z.object({
   voting_delay_in_blocks: z.number().min(0).default(0),
   voting_period_in_blocks: z.number().min(1).default(1),
   voting_token_address: AddressOrEnsSchema,
@@ -16,19 +16,19 @@ export const VoteSettingsInputSchema = z.object({
   proposal_token_threshold: BigNumberishSchema.default(1),
 });
 
-export const VoteSettingsOuputSchema = VoteSettingsInputSchema.extend({
-  proposal_token_threshold: BigNumberSchema,
-});
+export const VoteSettingsOuputSchema =
+  /* @__PURE__ */ VoteSettingsInputSchema.extend({
+    proposal_token_threshold: BigNumberSchema,
+  });
 
-export const VoteContractInput = CommonContractSchema.merge(
+export const VoteContractInput = /* @__PURE__ */ CommonContractSchema.merge(
   VoteSettingsInputSchema,
 );
 
-export const VoteContractOutput = CommonContractOutputSchema.merge(
-  VoteSettingsOuputSchema,
-);
+export const VoteContractOutput =
+  /* @__PURE__ */ CommonContractOutputSchema.merge(VoteSettingsOuputSchema);
 
-export const VoteContractDeploy = VoteContractInput.merge(
+export const VoteContractDeploy = /* @__PURE__ */ VoteContractInput.merge(
   CommonTrustedForwarderSchema,
 );
 
@@ -38,7 +38,7 @@ export const VoteContractSchema = {
   input: VoteContractInput,
 };
 
-export const ProposalOutputSchema = z.object({
+export const ProposalOutputSchema = /* @__PURE__ */ z.object({
   proposalId: BigNumberSchema,
   proposer: z.string(),
   targets: z.array(z.string()),

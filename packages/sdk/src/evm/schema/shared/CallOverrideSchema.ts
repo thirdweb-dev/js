@@ -3,7 +3,7 @@ import { z } from "zod";
 import { AddressOrEnsSchema } from "./AddressOrEnsSchema";
 import { BigNumberishSchema } from "./BigNumberSchema";
 
-export const CallOverrideSchema: z.ZodType<CallOverrides> = z
+export const CallOverrideSchema: /* @__PURE__ */ z.ZodType<CallOverrides> = z
   .object({
     gasLimit: BigNumberishSchema.optional(),
     gasPrice: BigNumberishSchema.optional(),

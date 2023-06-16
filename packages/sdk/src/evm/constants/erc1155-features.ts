@@ -89,7 +89,7 @@ export const FEATURE_EDITION_REVEALABLE = {
   features: {},
 } as const;
 
-export const FEATURE_EDITION_LAZY_MINTABLE_V2 = {
+export const FEATURE_EDITION_LAZY_MINTABLE_V2 = /* @__PURE__ */ {
   name: "ERC1155LazyMintableV2",
   namespace: "edition.drop",
   docLinks: {
@@ -102,7 +102,7 @@ export const FEATURE_EDITION_LAZY_MINTABLE_V2 = {
   },
 } as const;
 
-export const FEATURE_EDITION_LAZY_MINTABLE_V1 = {
+export const FEATURE_EDITION_LAZY_MINTABLE_V1 = /* @__PURE__ */ {
   name: "ERC1155LazyMintableV1",
   namespace: "edition.drop",
   docLinks: {
@@ -148,7 +148,7 @@ export const FEATURE_EDITION_BATCH_MINTABLE = {
   features: {},
 } as const;
 
-export const FEATURE_EDITION_MINTABLE = {
+export const FEATURE_EDITION_MINTABLE = /* @__PURE__ */ {
   name: "ERC1155Mintable",
   namespace: "edition.mint",
   docLinks: {
@@ -172,7 +172,7 @@ export const FEATURE_EDITION_ENUMERABLE = {
   features: {},
 } as const;
 
-export const FEATURE_EDITION = {
+export const FEATURE_EDITION = /* @__PURE__ */ {
   name: "ERC1155",
   namespace: "edition",
   docLinks: {

@@ -1,7 +1,7 @@
 import { BigNumber } from "ethers";
 import { z } from "zod";
 
-export const BigNumberSchema = z
+export const BigNumberSchema = /* @__PURE__ */ z
   .union([
     z.string(),
     z.number(),
@@ -12,11 +12,11 @@ export const BigNumberSchema = z
   ])
   .transform((arg) => BigNumber.from(arg));
 
-export const BigNumberishSchema = BigNumberSchema.transform((arg) =>
-  arg.toString(),
+export const BigNumberishSchema = /* @__PURE__ */ BigNumberSchema.transform(
+  (arg) => arg.toString(),
 );
 
-export const BigNumberTransformSchema = z
+export const BigNumberTransformSchema = /* @__PURE__ */ z
   .union([
     z.bigint(),
     z.custom<BigNumber>((data) => {
