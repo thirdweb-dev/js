@@ -9,18 +9,23 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const CommonNFTInput = z
-  .object({
-    name: z.union([z.string(), z.number()]).optional().nullable(),
-    description: z.string().nullable().optional().nullable(),
-    image: FileOrBufferOrStringSchema.nullable().optional(),
-    external_url: FileOrBufferOrStringSchema.nullable().optional(),
-    animation_url: FileOrBufferOrStringSchema.optional().nullable(),
-    background_color: HexColor.optional().nullable(),
-    properties: OptionalPropertiesInput,
-    attributes: OptionalPropertiesInput,
-  })
-  .catchall(z.union([BigNumberTransformSchema, z.unknown()]));
+export const BasicNFTInput = z.object({
+  name: z.union([z.string(), z.number()]).optional().nullable(),
+  description: z.string().nullable().optional().nullable(),
+  image: FileOrBufferOrStringSchema.nullable().optional(),
+
+  animation_url: FileOrBufferOrStringSchema.optional().nullable(),
+});
+
+/**
+ * @internal
+ */
+export const CommonNFTInput = BasicNFTInput.extend({
+  external_url: FileOrBufferOrStringSchema.nullable().optional(),
+  background_color: HexColor.optional().nullable(),
+  properties: OptionalPropertiesInput,
+  attributes: OptionalPropertiesInput,
+}).catchall(z.union([BigNumberTransformSchema, z.unknown()]));
 
 /**
  * @internal
@@ -37,6 +42,11 @@ export const CommonNFTOutput = CommonNFTInput.extend({
   external_url: z.string().nullable().optional(),
   animation_url: z.string().nullable().optional(),
 });
+
+/**
+ * @public
+ */
+export type BasicNFTInput = z.input<typeof BasicNFTInput>;
 
 /**
  * @public

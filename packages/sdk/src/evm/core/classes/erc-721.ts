@@ -26,6 +26,7 @@ import {
   FEATURE_NFT_SUPPLY,
   FEATURE_NFT_TIERED_DROP,
   FEATURE_NFT_SIGNATURE_MINTABLE_V2,
+  FEATURE_OPEN_EDITION_SHARED_METADATA,
 } from "../../constants/erc721-features";
 import type { Address } from "../../schema/shared/Address";
 import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
@@ -50,6 +51,7 @@ import type {
   IERC721Enumerable,
   IERC721Supply,
   IMintableERC721,
+  ISharedMetadata,
   ISignatureAction,
   ISignatureMintERC721,
   Multiwrap,
@@ -57,7 +59,11 @@ import type {
   TieredDrop,
   TokenERC721,
 } from "@thirdweb-dev/contracts-js";
-import type { ThirdwebStorage } from "@thirdweb-dev/storage";
+import {
+  FileOrBuffer,
+  isFileOrBuffer,
+  type ThirdwebStorage,
+} from "@thirdweb-dev/storage";
 import {
   BigNumber,
   BigNumberish,
@@ -77,7 +83,11 @@ import { TransferEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/
 
 import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
 
-import { CommonNFTInput, NFTMetadataInput } from "../../../core/schema/nft";
+import {
+  BasicNFTInput,
+  CommonNFTInput,
+  NFTMetadataInput,
+} from "../../../core/schema/nft";
 import { GenericRequest } from "../../schema/contracts/common";
 import {
   TieredDropPayloadInput,
@@ -1957,6 +1967,55 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
       });
 
       return tx;
+    },
+  );
+}
+
+export class Erc721SharedMetadata implements DetectableFeature {
+  featureName = FEATURE_OPEN_EDITION_SHARED_METADATA.name;
+
+  private erc721: Erc721;
+  private contractWrapper: ContractWrapper<ISharedMetadata>;
+  private storage: ThirdwebStorage;
+
+  constructor(
+    erc721: Erc721,
+    contractWrapper: ContractWrapper<ISharedMetadata>,
+    storage: ThirdwebStorage,
+  ) {
+    this.erc721 = erc721;
+    this.contractWrapper = contractWrapper;
+    this.storage = storage;
+  }
+
+  set = buildTransactionFunction(
+    async (
+      metadata: BasicNFTInput,
+    ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
+      const parsedMetadata = BasicNFTInput.parse(metadata);
+
+      // take the input and upload image and animation if it is not a URI already
+      const batch: FileOrBuffer[] = [];
+      if (isFileOrBuffer(parsedMetadata.image)) {
+        batch.push(parsedMetadata.image);
+      }
+      if (isFileOrBuffer(parsedMetadata.animation_url)) {
+        batch.push(parsedMetadata.animation_url);
+      }
+      const [imageUri, animationUri] = await this.storage.uploadBatch(batch);
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "setSharedMetadata",
+        args: [
+          {
+            name: metadata.name || "",
+            description: metadata.description || "",
+            image: imageUri,
+            animation_url: animationUri,
+          },
+        ],
+      });
     },
   );
 }
