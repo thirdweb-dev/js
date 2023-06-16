@@ -18,7 +18,7 @@ import prompts from "prompts";
 import Cache from "sync-disk-cache";
 import { install } from "../install";
 import { dev } from "../dev";
-import { build } from "../build";
+import { build } from "../buildCommand";
 
 const main = async () => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
