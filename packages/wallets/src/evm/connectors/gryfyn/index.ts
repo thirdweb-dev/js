@@ -56,7 +56,8 @@ export class GryFynConnector extends Connector {
 
   async disconnect(): Promise<void> {
     if (this.gryfynProvider) {
-      await this.gryfynProvider.logout();
+      await this.gryfynProvider.removeAllListeners();
+      await this.gryfynProvider.removeIFrame();
     }
     this.#provider = undefined;
     this.#signer = undefined;
