@@ -9,7 +9,7 @@ export const EnsSchema: z.ZodType<
   `0x${string}`,
   z.ZodTypeDef,
   `${string}.eth` | `${string}.cb.id`
-> = z
+> = /* @__PURE__ */ z
   .custom<EnsName>(
     (ens) =>
       typeof ens === "string" &&

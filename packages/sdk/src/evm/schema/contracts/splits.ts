@@ -7,17 +7,18 @@ import {
 } from "./common";
 import { z } from "zod";
 
-const SplitRecipientInputSchema = z.object({
+const SplitRecipientInputSchema = /* @__PURE__ */ z.object({
   address: AddressOrEnsSchema,
   sharesBps: BasisPointsSchema.gt(0, "Shares must be greater than 0"),
 });
 
-const SplitRecipientOuputSchema = SplitRecipientInputSchema.extend({
-  address: AddressOrEnsSchema,
-  sharesBps: BasisPointsSchema,
-});
+const SplitRecipientOuputSchema =
+  /* @__PURE__ */ SplitRecipientInputSchema.extend({
+    address: AddressOrEnsSchema,
+    sharesBps: BasisPointsSchema,
+  });
 
-export const SplitsContractInput = CommonContractSchema.extend({
+export const SplitsContractInput = /* @__PURE__ */ CommonContractSchema.extend({
   recipients: z
     .array(SplitRecipientInputSchema)
     .default([])
@@ -55,11 +56,12 @@ export const SplitsContractInput = CommonContractSchema.extend({
     }),
 });
 
-export const SplitsContractOutput = CommonContractOutputSchema.extend({
-  recipients: z.array(SplitRecipientOuputSchema),
-});
+export const SplitsContractOutput =
+  /* @__PURE__ */ CommonContractOutputSchema.extend({
+    recipients: z.array(SplitRecipientOuputSchema),
+  });
 
-export const SplitsContractDeploy = SplitsContractInput.merge(
+export const SplitsContractDeploy = /* @__PURE__ */ SplitsContractInput.merge(
   SplitsContractInput,
 ).merge(CommonTrustedForwarderSchema);
 

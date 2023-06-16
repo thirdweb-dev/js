@@ -634,7 +634,7 @@ async function getContractInfo(
  * a map from contractType -> contract metadata
  * @internal
  */
-export const PREBUILT_CONTRACTS_MAP = {
+export const PREBUILT_CONTRACTS_MAP = /* @__PURE__ */ {
   [prebuiltContractTypes["edition-drop"]]: EditionDropInitializer,
   [prebuiltContractTypes.edition]: EditionInitializer,
   [prebuiltContractTypes.marketplace]: MarketplaceInitializer,
@@ -650,7 +650,7 @@ export const PREBUILT_CONTRACTS_MAP = {
   [prebuiltContractTypes.vote]: VoteInitializer,
 } as const;
 
-export const PREBUILT_CONTRACTS_APPURI_MAP = {
+export const PREBUILT_CONTRACTS_APPURI_MAP = /* @__PURE__ */ {
   [prebuiltContractTypes["edition-drop"]]:
     "ipfs://QmNm3wRzpKYWo1SRtJfgfxtvudp5p2nXD6EttcsQJHwTmk",
   [prebuiltContractTypes.edition]: "",
@@ -679,7 +679,7 @@ const SmartContract = {
   roles: ALL_ROLES,
 };
 
-export const CONTRACTS_MAP = {
+export const CONTRACTS_MAP = /* @__PURE__ */ {
   ...PREBUILT_CONTRACTS_MAP,
   [SmartContract.contractType]: SmartContract,
 } as const;
