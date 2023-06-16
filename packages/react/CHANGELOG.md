@@ -1,5 +1,42 @@
 # @thirdweb-dev/react
 
+## 3.14.0
+
+### Minor Changes
+
+- [#1160](https://github.com/thirdweb-dev/js/pull/1160) [`654b8ab3`](https://github.com/thirdweb-dev/js/commit/654b8ab35184e02127a5a47f05d78606dd5b29ca) Thanks [@zerts](https://github.com/zerts)! - Add Zerion Wallet
+
+### Patch Changes
+
+- [#1000](https://github.com/thirdweb-dev/js/pull/1000) [`329bccec`](https://github.com/thirdweb-dev/js/commit/329bccec4b88b02db5bac6c1415158928843376a) Thanks [@goosewobbler](https://github.com/goosewobbler)! - '[Wallets/React] Adds Frame as a supported wallet.'
+
+  You can now use Frame by adding `frameWallet()` in the ThirdwebProvider's `supportedWallets` prop.
+
+  ```javascript
+  import {
+    ThirdwebProvider,
+    localWallet,
+    frameWallet,
+  } from "@thirdweb-dev/react";
+
+  <ThirdwebProvider
+    activeChain={activeChain}
+    supportedWallets={[frameWallet(), localWallet()]}
+  >
+    <App />
+  </ThirdwebProvider>;
+  ```
+
+- [#1172](https://github.com/thirdweb-dev/js/pull/1172) [`ecdcf82c`](https://github.com/thirdweb-dev/js/commit/ecdcf82cf3ad4090b7c9da97a1a13e4987425b38) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add data-test to passworrd inputs
+
+- [#1164](https://github.com/thirdweb-dev/js/pull/1164) [`a5578abf`](https://github.com/thirdweb-dev/js/commit/a5578abf664349bc608f3dcd9404ba103f7d8d43) Thanks [@kienngo98](https://github.com/kienngo98)! - reduce circular dependencies
+
+- Updated dependencies [[`cc20f93e`](https://github.com/thirdweb-dev/js/commit/cc20f93e178d86ee2b3f39102bbb0811de211f05), [`08403dd9`](https://github.com/thirdweb-dev/js/commit/08403dd9da7284054173aaba6ef06ac39f560c08), [`654b8ab3`](https://github.com/thirdweb-dev/js/commit/654b8ab35184e02127a5a47f05d78606dd5b29ca), [`a430160e`](https://github.com/thirdweb-dev/js/commit/a430160e6b4771c03d97f6ede91f1aeaa043e50e), [`12b07aad`](https://github.com/thirdweb-dev/js/commit/12b07aad9ae3176daf9d05864247d4806a16c9d2), [`d60e544a`](https://github.com/thirdweb-dev/js/commit/d60e544a240b93312743e62096ee2dc77d0c1bd1), [`7d2a446e`](https://github.com/thirdweb-dev/js/commit/7d2a446ecef9c6c14959d31e9a66537783b9adac), [`088f2567`](https://github.com/thirdweb-dev/js/commit/088f2567f615360edd44776b20ae0bedff250f43), [`8e28b0f5`](https://github.com/thirdweb-dev/js/commit/8e28b0f5e75596d29273ed80269bcee6d209adb4), [`01293857`](https://github.com/thirdweb-dev/js/commit/01293857fac8531bd94764203cd24b3daa4db51f), [`329bccec`](https://github.com/thirdweb-dev/js/commit/329bccec4b88b02db5bac6c1415158928843376a), [`20bbad1a`](https://github.com/thirdweb-dev/js/commit/20bbad1abcb1ec573318d326b09278492a488abd), [`36f3191f`](https://github.com/thirdweb-dev/js/commit/36f3191f3e8819c878685de8caa393b71be8e65c)]:
+  - @thirdweb-dev/chains@0.1.21
+  - @thirdweb-dev/react-core@3.14.0
+  - @thirdweb-dev/wallets@0.3.0
+  - @thirdweb-dev/sdk@3.10.22
+
 ## 3.13.1
 
 ### Patch Changes
