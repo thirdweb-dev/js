@@ -8,7 +8,7 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const OfferInputParamsSchema = z.object({
+export const OfferInputParamsSchema = /* @__PURE__ */ z.object({
   /**
    * The address of the asset being sought.
    */

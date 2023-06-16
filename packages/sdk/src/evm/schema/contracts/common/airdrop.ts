@@ -5,7 +5,7 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const AirdropAddressInput = z.object({
+export const AirdropAddressInput = /* @__PURE__ */ z.object({
   address: AddressOrEnsSchema,
   quantity: AmountSchema.default(1),
 });
@@ -13,7 +13,7 @@ export const AirdropAddressInput = z.object({
 /**
  * @internal
  */
-export const AirdropInputSchema = z.union([
+export const AirdropInputSchema = /* @__PURE__ */ z.union([
   z.array(z.string()).transform(
     async (strings) =>
       await Promise.all(
