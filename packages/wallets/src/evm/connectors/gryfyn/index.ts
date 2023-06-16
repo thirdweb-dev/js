@@ -10,6 +10,8 @@ export type GryFynConnectorOptions = {
   chains: Chain[];
 };
 
+const supportedChainIds = new Set(["5", "80001", "97"]);
+
 export class GryFynConnector extends Connector {
   #provider?: providers.Web3Provider;
   #options: GryFynConnectorOptions;
@@ -79,12 +81,16 @@ export class GryFynConnector extends Connector {
   }
 
   async switchChain(chainId: number): Promise<void> {
+    if (!supportedChainIds.has(String(chainId))) {
+      throw new Error("Unsupported chain");
+    }
+
     await this.getProvider();
     if (!this.#gryfynProvider) {
       throw new Error("No provider");
     }
 
-    await this.#gryfynProvider.setChainId(chainId);
+    await this.#gryfynProvider.setChainID(String(chainId));
     const provider = new providers.Web3Provider(this.#gryfynProvider);
 
     this.#provider = provider;
