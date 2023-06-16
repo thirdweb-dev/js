@@ -5,7 +5,6 @@ import inquirer from "inquirer";
 import ReactDetector from "./libraries/react";
 import ExpressDetector from "./libraries/express";
 import ReactNativeDetector from "./libraries/reactNative";
-import ViteDetector from "./libraries/vite";
 import Web3PyDetector from "./libraries/web3py";
 import PlayMakerDetector from "./libraries/playmaker";
 
@@ -19,7 +18,6 @@ export default async function detect(
     new ExpressDetector(),
     new ReactDetector(),
     new ReactNativeDetector(),
-    new ViteDetector(),
     new Web3PyDetector(),
     new PlayMakerDetector(),
   ];

@@ -22,6 +22,7 @@ import FiberDetector from "./frameworks/fiber";
 import GinDetector from "./frameworks/gin";
 import RevelDetector from "./frameworks/revel";
 import ZenjectDetector from "./frameworks/zenject";
+import ViteDetector from "./frameworks/vite";
 
 export default async function detect(
   path: string,
@@ -49,6 +50,7 @@ export default async function detect(
     new TruffleDetector(),
     new VueDetector(),
     new ZenjectDetector(),
+    new ViteDetector(),
   ];
 
   const possibleFrameworks = frameworkDetectors
