@@ -1,5 +1,23 @@
 # thirdweb
 
+## 0.10.23
+
+### Patch Changes
+
+- [#1184](https://github.com/thirdweb-dev/js/pull/1184) [`e7f1ce43`](https://github.com/thirdweb-dev/js/commit/e7f1ce43b04c6ea81fd05c02c8392a16c38d6053) Thanks [@Marfuen](https://github.com/Marfuen)! - Fix typo issues with python detectors
+
+- [#1074](https://github.com/thirdweb-dev/js/pull/1074) [`cc20f93e`](https://github.com/thirdweb-dev/js/commit/cc20f93e178d86ee2b3f39102bbb0811de211f05) Thanks [@Marfuen](https://github.com/Marfuen)! - Enhance CLI Install command and update chains
+
+- [#1154](https://github.com/thirdweb-dev/js/pull/1154) [`02d55a06`](https://github.com/thirdweb-dev/js/commit/02d55a063e7c53761d57e6cb6bf63ea78e454d70) Thanks [@beauwilliams](https://github.com/beauwilliams)! - fix: always use latest CLI version in CI
+
+- [#1171](https://github.com/thirdweb-dev/js/pull/1171) [`c0e2c945`](https://github.com/thirdweb-dev/js/commit/c0e2c9457f5ba992163b175f85b0f4b92b070f48) Thanks [@Marfuen](https://github.com/Marfuen)! - Minor bug fixes and improvements
+
+- [#1183](https://github.com/thirdweb-dev/js/pull/1183) [`224b7241`](https://github.com/thirdweb-dev/js/commit/224b7241dc82155d3207a2d16523ceaae5532f40) Thanks [@Marfuen](https://github.com/Marfuen)! - Python detectors bug fixes
+
+- Updated dependencies [[`cc20f93e`](https://github.com/thirdweb-dev/js/commit/cc20f93e178d86ee2b3f39102bbb0811de211f05), [`a430160e`](https://github.com/thirdweb-dev/js/commit/a430160e6b4771c03d97f6ede91f1aeaa043e50e), [`12b07aad`](https://github.com/thirdweb-dev/js/commit/12b07aad9ae3176daf9d05864247d4806a16c9d2), [`7d2a446e`](https://github.com/thirdweb-dev/js/commit/7d2a446ecef9c6c14959d31e9a66537783b9adac), [`8e28b0f5`](https://github.com/thirdweb-dev/js/commit/8e28b0f5e75596d29273ed80269bcee6d209adb4), [`01293857`](https://github.com/thirdweb-dev/js/commit/01293857fac8531bd94764203cd24b3daa4db51f), [`20bbad1a`](https://github.com/thirdweb-dev/js/commit/20bbad1abcb1ec573318d326b09278492a488abd)]:
+  - @thirdweb-dev/chains@0.1.21
+  - @thirdweb-dev/sdk@3.10.22
+
 ## 0.10.22
 
 ### Patch Changes
