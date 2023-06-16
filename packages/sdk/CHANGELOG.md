@@ -1,5 +1,24 @@
 # @thirdweb-dev/sdk
 
+## 3.10.22
+
+### Patch Changes
+
+- [#1162](https://github.com/thirdweb-dev/js/pull/1162) [`a430160e`](https://github.com/thirdweb-dev/js/commit/a430160e6b4771c03d97f6ede91f1aeaa043e50e) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Util for deterministic direct deployments
+
+- [#1167](https://github.com/thirdweb-dev/js/pull/1167) [`12b07aad`](https://github.com/thirdweb-dev/js/commit/12b07aad9ae3176daf9d05864247d4806a16c9d2) Thanks [@kienngo98](https://github.com/kienngo98)! - Reduce circular dependencies
+
+- [#1155](https://github.com/thirdweb-dev/js/pull/1155) [`7d2a446e`](https://github.com/thirdweb-dev/js/commit/7d2a446ecef9c6c14959d31e9a66537783b9adac) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Expose salt input for proxy deployments in contract deployer
+
+- [#1175](https://github.com/thirdweb-dev/js/pull/1175) [`01293857`](https://github.com/thirdweb-dev/js/commit/01293857fac8531bd94764203cd24b3daa4db51f) Thanks [@MananTank](https://github.com/MananTank)! - - enable no-cycle eslint rule
+
+  - various tree-shaking improvements
+
+- [#1181](https://github.com/thirdweb-dev/js/pull/1181) [`20bbad1a`](https://github.com/thirdweb-dev/js/commit/20bbad1abcb1ec573318d326b09278492a488abd) Thanks [@iketw](https://github.com/iketw)! - [SDK] Change the failed to fetch contract metadata warn to debug. Users were getting confused thinking this was an error.
+
+- Updated dependencies [[`cc20f93e`](https://github.com/thirdweb-dev/js/commit/cc20f93e178d86ee2b3f39102bbb0811de211f05), [`8e28b0f5`](https://github.com/thirdweb-dev/js/commit/8e28b0f5e75596d29273ed80269bcee6d209adb4)]:
+  - @thirdweb-dev/chains@0.1.21
+
 ## 3.10.21
 
 ### Patch Changes

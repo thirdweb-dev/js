@@ -6,7 +6,7 @@ import { z } from "zod";
 /**
  * @public
  */
-export const SDKOptionsSchema = z
+export const SDKOptionsSchema = /* @__PURE__ */ z
   .object({
     // @ts-expect-error - zod doesn't know anything about readonly
     supportedChains: z.array(ChainInfoInputSchema).default(defaultChains),

@@ -8,7 +8,7 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const DirectListingInputParamsSchema = z.object({
+export const DirectListingInputParamsSchema = /* @__PURE__ */ z.object({
   /**
    * The address of the asset being listed.
    */

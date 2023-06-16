@@ -1,21 +1,20 @@
-import { Zora_IERC721Drop } from "@thirdweb-dev/contracts-js";
-import { TokensClaimedEvent } from "@thirdweb-dev/contracts-js/src/DropSinglePhase";
-import { BigNumberish, BigNumber, BytesLike } from "ethers";
+import type { Zora_IERC721Drop } from "@thirdweb-dev/contracts-js";
+import { BigNumberish, BigNumber } from "ethers";
 import { NFT } from "../../../core/schema/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_CLAIM_ZORA } from "../../constants/erc721-features";
 import { AddressOrEns } from "../../schema";
-import { ClaimOptions } from "../../types";
+import type { ClaimOptions } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import { Erc721 } from "./erc-721";
+import type { Erc721 } from "./erc-721";
 import { Transaction } from "./transactions";
-import { toWei } from "../../common";
 import {
   IERC721Drop,
   SaleEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/Zora_IERC721Drop";
+import { toWei } from "../../common/currency/toWei";
 
 /**
  * Configure and claim ERC721 NFTs
@@ -68,6 +67,19 @@ export class Erc721ClaimableZora implements DetectableFeature {
       options?: ClaimOptions,
     ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
       // TODO validation on destinationAddr / options
+      const signerAddress = await this.contractWrapper
+        .getSigner()
+        ?.getAddress();
+      if (destinationAddress !== signerAddress) {
+        throw new Error(
+          "Zora Drop: Destination address must match connected wallet address",
+        );
+      }
+      if (options?.pricePerToken) {
+        throw new Error(
+          "Zora Drop: Custom pricePerToken is not supported. Price is automatically calculated",
+        );
+      }
       const saleDetails = await this.getSaleDetails();
       console.log(saleDetails);
       const price = saleDetails.publicSalePrice;

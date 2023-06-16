@@ -9,7 +9,7 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const CommonNFTInput = z
+export const CommonNFTInput = /* @__PURE__ */ z
   .object({
     name: z.union([z.string(), z.number()]).optional().nullable(),
     description: z.string().nullable().optional().nullable(),
@@ -25,12 +25,15 @@ export const CommonNFTInput = z
 /**
  * @internal
  */
-export const NFTInputOrUriSchema = z.union([CommonNFTInput, z.string()]);
+export const NFTInputOrUriSchema = /* @__PURE__ */ z.union([
+  CommonNFTInput,
+  z.string(),
+]);
 
 /**
  * @internal
  */
-export const CommonNFTOutput = CommonNFTInput.extend({
+export const CommonNFTOutput = /* @__PURE__ */ CommonNFTInput.extend({
   id: z.string(),
   uri: z.string(),
   image: z.string().nullable().optional(),

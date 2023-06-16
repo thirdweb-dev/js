@@ -12,7 +12,7 @@ export default class Web3PyDetector implements LibraryDetector {
     );
 
     return (
-      dependencies.includes("web3") || devDependencies.includes("web3") || false
+      !!dependencies.find(dep => dep.includes("web3")) || !!devDependencies.find(dep => dep.includes("web3")) || false
     );
   }
 }

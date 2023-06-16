@@ -6,6 +6,7 @@ import { DeployedContractType } from "../any-evm/deploy-data";
 
 export type DeployOptions = {
   forceDirectDeploy?: boolean;
+  saltForProxyDeploy?: string;
   notifier?: (
     status: "deploying" | "deployed",
     contractType: DeployedContractType | string,

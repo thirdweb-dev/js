@@ -1,4 +1,4 @@
-import { NativeToken } from "../types/currency";
+import type { NativeToken } from "../types/currency";
 import { ChainId } from "./chains/ChainId";
 import { getSupportedChains } from "./chains/supportedChains";
 import { ethers } from "ethers";
@@ -12,7 +12,7 @@ export const NATIVE_TOKEN_ADDRESS =
 /**
  * @public
  */
-export const NATIVE_TOKENS: Record<number, NativeToken> = {
+export const NATIVE_TOKENS: Record<number, NativeToken> = /* @__PURE__ */ {
   [ChainId.Mainnet]: {
     name: "Ether",
     symbol: "ETH",
@@ -241,7 +241,7 @@ export function getNativeTokenByChainId(chainId: ChainId): NativeToken {
   );
 }
 
-export const LINK_TOKEN_ADDRESS: Record<number, string> = {
+export const LINK_TOKEN_ADDRESS: Record<number, string> = /* @__PURE__ */ {
   [ChainId.Mainnet]: "0x514910771AF9Ca656af840dff83E8264EcF986CA",
   [ChainId.Goerli]: "0x326C977E6efc84E512bB9C30f76E30c160eD06FB",
   [ChainId.BinanceSmartChainMainnet]:

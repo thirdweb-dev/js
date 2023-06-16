@@ -10,7 +10,7 @@ import { getInitBytecodeWithSalt } from "./getInitBytecodeWithSalt";
  *
  * @public
  *
- * @param singer
+ * @param signer
  * @param bytecode
  * @param encodedArgs
  * @param create2FactoryAddress
