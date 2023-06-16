@@ -20,23 +20,23 @@ const columns = [
   }),
 ];
 
-interface SmartWalletsTableProps {
-  smartWalletsQuery: ReturnType<typeof useSmartWallets>;
+interface AccountsTableProps {
+  accountsQuery: ReturnType<typeof useSmartWallets>;
 }
 
-export const SmartWalletsTable: React.FC<SmartWalletsTableProps> = ({
-  smartWalletsQuery,
+export const AccountsTable: React.FC<AccountsTableProps> = ({
+  accountsQuery,
 }) => {
   const router = useRouter();
   const network = useDashboardEVMChainId();
 
   return (
     <TWTable
-      title="smart wallet"
+      title="account"
       columns={columns}
-      data={smartWalletsQuery.data || []}
-      isLoading={smartWalletsQuery.isLoading}
-      isFetched={smartWalletsQuery.isFetched}
+      data={accountsQuery.data || []}
+      isLoading={accountsQuery.isLoading}
+      isFetched={accountsQuery.isFetched}
       onRowClick={(row) => {
         router.push(`/${network}/${row.account}`);
       }}

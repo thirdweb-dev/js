@@ -6,15 +6,15 @@ import {
 } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 
-interface CreateWalletButtonProps {
+interface CreateAccountButtonProps {
   contractQuery: ReturnType<typeof useContract>;
 }
 
-export const CreateWalletButton: React.FC<CreateWalletButtonProps> = ({
+export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
   contractQuery,
   ...restButtonProps
 }) => {
-  const { mutate: createWallet, isLoading } = useCreateSmartWallet(
+  const { mutate: createAccount, isLoading } = useCreateSmartWallet(
     contractQuery?.contract,
   );
 
@@ -31,13 +31,13 @@ export const CreateWalletButton: React.FC<CreateWalletButtonProps> = ({
   return (
     <TransactionButton
       colorScheme="primary"
-      onClick={() => createWallet(address)}
+      onClick={() => createAccount(address)}
       isLoading={isLoading}
       transactionCount={1}
       isDisabled={isSmartWalletDeployed}
       {...restButtonProps}
     >
-      Create Wallet
+      Create Account
     </TransactionButton>
   );
 };
