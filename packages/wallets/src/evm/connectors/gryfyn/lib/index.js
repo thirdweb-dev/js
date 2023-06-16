@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const Lib = (() => {
   var e = {
       145: (e, t) => {

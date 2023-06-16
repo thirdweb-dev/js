@@ -1,6 +1,7 @@
 /// <reference types="node" />
 import EventEmitter from 'events';
 import { EIP1193Provider } from './interfaces/provider';
+
 export declare class GryFynProvider extends EventEmitter implements EIP1193Provider {
     API_ORIGIN: string;
     private isFrameReady;

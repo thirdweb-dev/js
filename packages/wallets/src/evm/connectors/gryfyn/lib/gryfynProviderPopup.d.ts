@@ -2,6 +2,7 @@
 import EventEmitter from 'events';
 import { EIP1193Provider } from './interfaces/provider';
 import { SignMessageCustomOption } from './interfaces';
+
 export declare class GryFynProviderPopup extends EventEmitter implements EIP1193Provider {
     API_ORIGIN: string;
     private isFrameReady;

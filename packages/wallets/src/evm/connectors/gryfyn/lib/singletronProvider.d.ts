@@ -1,6 +1,7 @@
 import { GryFynProvider } from './gryfynProvider';
 import { GryFynProviderWeb } from './gryfynProviderWeb';
 import { GryFynProviderPopup } from './gryfynProviderPopup';
+
 export declare class GryFyn {
     static instance: GryFynProvider;
     static instancePopup: GryFynProviderPopup;
