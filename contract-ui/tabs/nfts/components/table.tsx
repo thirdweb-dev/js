@@ -108,6 +108,12 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
   const getAllQueryResult = useNFTs(contract, queryParams);
   const totalCountQuery = useTotalCount(contract);
 
+  // any higher and the useTable breaks
+  let safeTotalCount = BigNumber.from(totalCountQuery.data || 0);
+  if (safeTotalCount.gte(1_000_000)) {
+    safeTotalCount = BigNumber.from(1_000_000);
+  }
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -133,10 +139,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
       },
       manualPagination: true,
       pageCount: Math.max(
-        Math.ceil(
-          BigNumber.from(totalCountQuery.data || 0).toNumber() /
-            queryParams.count,
-        ),
+        Math.ceil(safeTotalCount.div(queryParams.count || 1).toNumber()),
         1,
       ),
     },
