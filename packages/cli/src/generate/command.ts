@@ -197,10 +197,19 @@ export async function generate(options: GenerateOptions) {
     return;
   }
 
+  const exportString = `export THIRDWEB_CLI_SKIP_INTRO=true && npx --yes thirdweb generate`;
+
+  const getFormattedScript = (script: string) => {
+    if (!script.includes(exportString)) {
+      return script + ` && ${exportString}`;
+    } else {
+      return script;
+    }
+  };
+
   const postinstall = packageJson.scripts?.postinstall
-    ? packageJson.scripts.postinstall +
-      ` && export THIRDWEB_CLI_SKIP_INTRO=true && npx --yes thirdweb@latest generate`
-    : `export THIRDWEB_CLI_SKIP_INTRO=true && npx --yes thirdweb@latest generate`;
+    ? getFormattedScript(packageJson.scripts.postinstall)
+    : `export THIRDWEB_CLI_SKIP_INTRO=true && npx --yes thirdweb generate`;
 
   fs.writeFileSync(
     packageJsonPath,
