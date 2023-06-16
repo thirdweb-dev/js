@@ -49,7 +49,7 @@ export function useTabHref(
     | "direct-listings"
     | "english-auctions"
     | "app"
-    | "wallet-factory",
+    | "accounts",
 ) {
   const contractInfo = useEVMContractInfo();
   invariant(contractInfo, "can not use useTabHref() without a contractInfo");

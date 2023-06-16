@@ -630,7 +630,7 @@ const DashboardWallets: ThirdwebNextPage = () => {
           </Heading>
           <Flex flexDir="column">
             <Text>
-              1. Deploy a smart wallet factory contract, you can deploy one in
+              1. Deploy an account factory contract, you can deploy one in
               1-click via the{" "}
               <Link href="/explore/smart-wallet" isExternal color="blue.500">
                 explore page

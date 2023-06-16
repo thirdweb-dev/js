@@ -32,7 +32,7 @@ export const ContractChecklist: React.FC<ContractChecklistProps> = ({
 }) => {
   const nftHref = useTabHref("nfts");
   const tokenHref = useTabHref("tokens");
-  const walletFactoryHref = useTabHref("wallet-factory");
+  const accountsHref = useTabHref("accounts");
   const claimConditionsHref = useTabHref("claim-conditions");
 
   const nfts = useNFTs(contract, { count: 1 });
@@ -165,17 +165,17 @@ export const ContractChecklist: React.FC<ContractChecklistProps> = ({
     });
   }
 
-  const isSmartWalletFactory = detectFeatures(contract, ["SmartWalletFactory"]);
-  if (isSmartWalletFactory) {
+  const isAccountFactory = detectFeatures(contract, ["SmartWalletFactory"]);
+  if (isAccountFactory) {
     steps.push({
-      title: "First wallet created",
+      title: "First account created",
       children: (
         <Text size="label.sm">
           Head to the{" "}
-          <Link href={walletFactoryHref} color="blue.500">
-            Wallet factory tab
+          <Link href={accountsHref} color="blue.500">
+            Accounts tab
           </Link>{" "}
-          to create your first wallet.
+          to create your first account.
         </Text>
       ),
       completed: (smartWallets.data?.length || 0) > 0,
