@@ -26,6 +26,7 @@ import {
   EnterIcon,
   PinBottomIcon,
   ShuffleIcon,
+  UploadIcon,
 } from "@radix-ui/react-icons";
 import { Localhost } from "@thirdweb-dev/chains";
 import {
@@ -49,6 +50,8 @@ import { ErrorMessage } from "../../components/formElements";
 import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useWalletConfig } from "@thirdweb-dev/react-core";
 import type { LocalWalletConfig } from "../wallets/localWallet/types";
+// TEMPORARY
+import { GrynFynWallet } from "@thirdweb-dev/wallets";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -108,7 +111,7 @@ export const ConnectedWalletDetails: React.FC<{
       className={`${TW_CONNECTED_WALLET} ${props.className || ""}`}
       data-theme={props.theme}
       style={props.style}
-        data-test="connected-wallet-details"
+      data-test="connected-wallet-details"
     >
       <ChainIcon
         chain={chain}
@@ -345,6 +348,28 @@ export const ConnectedWalletDetails: React.FC<{
               <FundsIcon size={iconSize.sm} />
             </SecondaryIconContainer>
             Request Testnet Funds
+          </MenuLink>
+        )}
+
+        {/* TEMPORARY */}
+        {/* Gryfyn wallet */}
+        {activeWallet && activeWallet instanceof GrynFynWallet && (
+          <MenuLink
+            target="_blank"
+            onClick={async () => {
+              await activeWallet.openWallet();
+              setOpen(false);
+            }}
+            style={{
+              textDecoration: "none",
+              color: "inherit",
+              fontSize: fontSize.sm,
+            }}
+          >
+            <SecondaryIconContainer>
+              <UploadIcon width={iconSize.sm} height={iconSize.sm} />
+            </SecondaryIconContainer>
+            Open Gryfyn Wallet
           </MenuLink>
         )}
 

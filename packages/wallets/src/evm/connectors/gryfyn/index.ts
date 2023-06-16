@@ -15,7 +15,7 @@ const supportedChainIds = new Set(["5", "80001", "97"]);
 export class GryFynConnector extends Connector {
   #provider?: providers.Web3Provider;
   #options: GryFynConnectorOptions;
-  #gryfynProvider?: GryFynProviderPopup;
+  gryfynProvider?: GryFynProviderPopup;
   #signer?: providers.JsonRpcSigner;
 
   constructor(options: GryFynConnectorOptions) {
@@ -25,7 +25,7 @@ export class GryFynConnector extends Connector {
 
   async connect(options: { chainId?: number }): Promise<string> {
     await this.getProvider();
-    if (!this.#gryfynProvider) {
+    if (!this.gryfynProvider) {
       throw new Error("No provider");
     }
 
@@ -33,7 +33,7 @@ export class GryFynConnector extends Connector {
 
     if (options.chainId) {
       if (supportedChainIds.has(String(options.chainId))) {
-        await this.#gryfynProvider.setChainID(String(options.chainId));
+        await this.gryfynProvider.setChainID(String(options.chainId));
       } else {
         console.error(
           `Unsupported chainId ${options.chainId}, Connecting to default chain`,
@@ -41,9 +41,9 @@ export class GryFynConnector extends Connector {
       }
     }
 
-    await this.#gryfynProvider.connect();
+    await this.gryfynProvider.connect();
 
-    const accounts = await this.#gryfynProvider.request({
+    const accounts = await this.gryfynProvider.request({
       method: "eth_requestAccounts",
     });
 
@@ -55,12 +55,12 @@ export class GryFynConnector extends Connector {
   }
 
   async disconnect(): Promise<void> {
-    if (this.#gryfynProvider) {
-      await this.#gryfynProvider.logout();
+    if (this.gryfynProvider) {
+      await this.gryfynProvider.logout();
     }
     this.#provider = undefined;
     this.#signer = undefined;
-    this.#gryfynProvider = undefined;
+    this.gryfynProvider = undefined;
   }
 
   async getProvider() {
@@ -68,7 +68,7 @@ export class GryFynConnector extends Connector {
       return this.#provider;
     }
     const gryfynProvider = GryFyn.getProvider(this.#options.apiKey, {});
-    this.#gryfynProvider = gryfynProvider;
+    this.gryfynProvider = gryfynProvider;
 
     const provider = new providers.Web3Provider(gryfynProvider, "any");
     this.#provider = provider;
@@ -97,12 +97,12 @@ export class GryFynConnector extends Connector {
     }
 
     await this.getProvider();
-    if (!this.#gryfynProvider) {
+    if (!this.gryfynProvider) {
       throw new Error("No provider");
     }
 
-    await this.#gryfynProvider.setChainID(String(chainId));
-    const provider = new providers.Web3Provider(this.#gryfynProvider);
+    await this.gryfynProvider.setChainID(String(chainId));
+    const provider = new providers.Web3Provider(this.gryfynProvider);
 
     this.#provider = provider;
     this.#signer = provider.getSigner();

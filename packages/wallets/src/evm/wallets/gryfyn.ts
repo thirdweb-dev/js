@@ -29,4 +29,11 @@ export class GrynFynWallet extends AbstractClientWallet {
     throw new Error("Autoconnect not supported");
     return "";
   }
+
+  async openWallet() {
+    const connector = await this.getConnector();
+    if (connector.gryfynProvider) {
+      return connector.gryfynProvider.openWallet();
+    }
+  }
 }
