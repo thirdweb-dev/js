@@ -14,6 +14,9 @@ export function useActivity(contractAddress?: string, autoUpdate?: boolean) {
 
   const eventsQuery = useContractEvents(contractQuery.contract, undefined, {
     subscribe: autoUpdate,
+    queryFilter: {
+      fromBlock: -20000,
+    },
   });
 
   return useMemo(() => {
