@@ -17,8 +17,8 @@ import {
 import { toWei } from "../../common/currency/toWei";
 
 /**
- * Configure and claim ERC721 NFTs
- * @remarks Manage claim phases and claim ERC721 NFTs that have been lazily minted.
+ * Claim ERC721 NFTs from a Zora Drop
+ * @remarks Purchase NFTs on a Zora Drop
  * @example
  * ```javascript
  * const contract = await sdk.getContract("{{contract_address}}");
@@ -40,23 +40,22 @@ export class Erc721ClaimableZora implements DetectableFeature {
   }
 
   /**
-   * Claim NFTs to a specific Wallet
+   * Claim NFT
    *
    * @remarks Let the specified wallet claim NFTs.
    *
    * @example
    * ```javascript
    * const address = "{{wallet_address}}"; // address of the wallet you want to claim the NFTs
-   * const tokenId = 0; // the id of the NFT you want to claim
    * const quantity = 1; // how many NFTs you want to claim
    *
-   * const tx = await contract.erc721.claimTo(address, tokenId, quantity);
+   * const tx = await contract.erc721.claimTo(address, quantity);
    * const receipt = tx[0].receipt; // the transaction receipt
    * ```
    *
-   * @param destinationAddress - Address you want to send the token to
+   * @param destinationAddress - Address you want to send the token to, needs to be the connected wallet address
    * @param quantity - Quantity of the tokens you want to claim
-   * @param options - Options for claiming the NFTs
+   * @param options - Not applicable
    *
    * @returns - Receipt for the transaction
    */
