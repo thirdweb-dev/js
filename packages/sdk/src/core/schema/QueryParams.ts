@@ -5,15 +5,16 @@ import { z } from "zod";
  */
 export const DEFAULT_QUERY_ALL_COUNT = 100;
 
-export const QueryAllParamsSchema = /* @__PURE__ */ z
-  .object({
-    start: z.number().default(0),
-    count: z.number().default(DEFAULT_QUERY_ALL_COUNT),
-  })
-  .default({
-    start: 0,
-    count: DEFAULT_QUERY_ALL_COUNT,
-  });
+export const QueryAllParamsSchema = /* @__PURE__ */ (() =>
+  z
+    .object({
+      start: z.number().default(0),
+      count: z.number().default(DEFAULT_QUERY_ALL_COUNT),
+    })
+    .default({
+      start: 0,
+      count: DEFAULT_QUERY_ALL_COUNT,
+    }))();
 
 /**
  * Pagination Parameters

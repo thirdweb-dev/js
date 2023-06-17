@@ -4,22 +4,24 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const CommonTokenInputSchema = /* @__PURE__ */ z.object({
-  name: z.string(),
-  symbol: z.string(),
-  decimals: z.number(),
-  description: z.string().optional(),
-  image: FileOrBufferOrStringSchema.optional(),
-  external_link: z.string().url().optional(),
-});
+export const CommonTokenInputSchema = /* @__PURE__ */ (() =>
+  z.object({
+    name: z.string(),
+    symbol: z.string(),
+    decimals: z.number(),
+    description: z.string().optional(),
+    image: FileOrBufferOrStringSchema.optional(),
+    external_link: z.string().url().optional(),
+  }))();
 
 /**
  * @internal
  */
-export const CurrencyValueSchema = /* @__PURE__ */ z.object({
-  value: z.string(),
-  displayValue: z.string(),
-});
+export const CurrencyValueSchema = /* @__PURE__ */ (() =>
+  z.object({
+    value: z.string(),
+    displayValue: z.string(),
+  }))();
 
 /**
  * Currency value and display value
@@ -30,11 +32,11 @@ export type CurrencyValue = z.input<typeof CurrencyValueSchema>;
 /**
  * @internal
  */
-export const CommonTokenOutputSchema =
-  /* @__PURE__ */ CommonTokenInputSchema.extend({
+export const CommonTokenOutputSchema = /* @__PURE__ */ (() =>
+  CommonTokenInputSchema.extend({
     image: z.string().optional(),
     supply: CurrencyValueSchema,
-  }).catchall(z.unknown());
+  }).catchall(z.unknown()))();
 
 /**
  * Metadata for a token
