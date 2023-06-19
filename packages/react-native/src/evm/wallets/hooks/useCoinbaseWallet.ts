@@ -18,8 +18,11 @@ export function useCoinbaseWallet(callbackURL: string) {
   return useCallback(
     async (connectOptions?: { chainId?: number; callbackURL: string }) => {
       const { coinbaseWallet } = await import("../wallets/coinbase-wallet");
-      // @ts-ignore
-      connect(coinbaseWallet({ callbackURL: callbackURL }), connectOptions);
+      return connect(
+        // @ts-ignore
+        coinbaseWallet({ callbackURL: callbackURL }),
+        connectOptions,
+      );
     },
     [connect, callbackURL],
   );
