@@ -14,7 +14,7 @@ export { fetchContractMetadataFromAddress } from "./metadata-resolver";
 // export * from "./feature-detection/extractFunctionsFromAbi";
 // export * from "./feature-detection/extractEventsFromAbi";
 // export * from "./feature-detection/extractMinimalProxyImplementationAddress";
-// export * from "./feature-detection/resolveContractUriFromAddress";
+export * from "./feature-detection/resolveContractUriFromAddress";
 export { extractIPFSHashFromBytecode } from "./feature-detection/extractIPFSHashFromBytecode";
 // export * from "./feature-detection/fetchRawPredeployMetadata";
 // export * from "./feature-detection/fetchPreDeployMetadata";
