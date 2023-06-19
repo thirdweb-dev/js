@@ -12,7 +12,7 @@ export function useRainbowWallet() {
   return useCallback(
     async (connectOptions?: { chainId?: number }) => {
       const { rainbowWallet } = await import("../wallets/rainbow-wallet");
-      connect(rainbowWallet(), connectOptions);
+      return connect(rainbowWallet(), connectOptions);
     },
     [connect],
   );
