@@ -525,7 +525,7 @@ export class DropErc1155ClaimConditions<
    * @param claimConditionInputs - The claim conditions
    * @param resetClaimEligibilityForAll - Whether to reset the state of who already claimed NFTs previously
    */
-  set = buildTransactionFunction(
+  set = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenId: BigNumberish,
       claimConditionInputs: ClaimConditionInput[],
@@ -575,7 +575,7 @@ export class DropErc1155ClaimConditions<
    * @param claimConditionsForToken - The claim conditions for each NFT
    * @param resetClaimEligibilityForAll - Whether to reset the state of who already claimed NFTs previously
    */
-  setBatch = buildTransactionFunction(
+  setBatch = /* @__PURE__ */ buildTransactionFunction(
     async (
       claimConditionsForToken: ClaimConditionsForToken[],
       resetClaimEligibilityForAll = false,
@@ -769,7 +769,7 @@ export class DropErc1155ClaimConditions<
    * @param index - the index of the claim condition to update, as given by the index from the result of `getAll()`
    * @param claimConditionInput - the new data to update, previous data will be retained
    */
-  update = buildTransactionFunction(
+  update = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenId: BigNumberish,
       index: number,

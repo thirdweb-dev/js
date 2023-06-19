@@ -59,25 +59,27 @@ export class Erc20SignatureMintable implements DetectableFeature {
    * @param signedPayload - the previously generated payload and signature with {@link Erc20SignatureMintable.generate}
    * @twfeature ERC20SignatureMintable
    */
-  mint = buildTransactionFunction(async (signedPayload: SignedPayload20) => {
-    const mintRequest = signedPayload.payload;
-    const signature = signedPayload.signature;
-    const message = await this.mapPayloadToContractStruct(mintRequest);
-    const overrides = await this.contractWrapper.getCallOverrides();
-    // TODO: Transaction Sequence Pattern
-    await setErc20Allowance(
-      this.contractWrapper,
-      BigNumber.from(message.price),
-      mintRequest.currencyAddress,
-      overrides,
-    );
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "mintWithSignature",
-      args: [message, signature],
-      overrides,
-    });
-  });
+  mint = /* @__PURE__ */ buildTransactionFunction(
+    async (signedPayload: SignedPayload20) => {
+      const mintRequest = signedPayload.payload;
+      const signature = signedPayload.signature;
+      const message = await this.mapPayloadToContractStruct(mintRequest);
+      const overrides = await this.contractWrapper.getCallOverrides();
+      // TODO: Transaction Sequence Pattern
+      await setErc20Allowance(
+        this.contractWrapper,
+        BigNumber.from(message.price),
+        mintRequest.currencyAddress,
+        overrides,
+      );
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "mintWithSignature",
+        args: [message, signature],
+        overrides,
+      });
+    },
+  );
 
   /**
    * Mint any number of generated tokens signatures at once
@@ -85,7 +87,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
    * @param signedPayloads - the array of signed payloads to mint
    * @twfeature ERC20SignatureMintable
    */
-  mintBatch = buildTransactionFunction(
+  mintBatch = /* @__PURE__ */ buildTransactionFunction(
     async (signedPayloads: SignedPayload20[]) => {
       const contractPayloads = await Promise.all(
         signedPayloads.map(async (s) => {

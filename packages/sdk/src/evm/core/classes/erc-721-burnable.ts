@@ -28,11 +28,13 @@ export class Erc721Burnable implements DetectableFeature {
    * await contract.nft.burn.token(tokenId);
    * ```
    */
-  token = buildTransactionFunction(async (tokenId: BigNumberish) => {
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "burn",
-      args: [tokenId],
-    });
-  });
+  token = /* @__PURE__ */ buildTransactionFunction(
+    async (tokenId: BigNumberish) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "burn",
+        args: [tokenId],
+      });
+    },
+  );
 }
