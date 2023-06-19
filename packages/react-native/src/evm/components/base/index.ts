@@ -1,3 +1,6 @@
+export { ModalFooter } from "./modal/ModalFooter";
+export { ModalHeaderTextClose } from "./modal/ModalHeaderTextClose";
+export { TWModal } from "./modal/TWModal";
 export { ActiveDot } from "./ActiveDot";
 export { AddressDisplay } from "./AddressDisplay";
 export { default as BaseButton } from "./BaseButton";
