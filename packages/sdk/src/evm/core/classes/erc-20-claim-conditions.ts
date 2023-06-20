@@ -92,7 +92,7 @@ export class Erc20ClaimableWithConditions implements DetectableFeature {
    * @param claimData
    * @returns - The transaction receipt
    */
-  to = buildTransactionFunction(
+  to = /* @__PURE__ */ buildTransactionFunction(
     async (
       destinationAddress: AddressOrEns,
       amount: Amount,

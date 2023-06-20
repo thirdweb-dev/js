@@ -374,7 +374,7 @@ const NetworkTab = (props: {
   );
 };
 
-const NetworkList = memo(function NetworkList(props: {
+const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
   chains: Chain[];
   onSwitch: (chain: Chain) => void;
   renderChain?: RenderChain;
@@ -503,7 +503,9 @@ const NetworkList = memo(function NetworkList(props: {
   );
 });
 
-const TabButton = styled(Tabs.Trigger)<{ theme?: Theme }>`
+const TabButton = /* @__PURE__ */ styled(/* @__PURE__ */ Tabs.Trigger)<{
+  theme?: Theme;
+}>`
   all: unset;
   font-size: ${fontSize.md};
   font-weight: 500;
@@ -575,7 +577,7 @@ const NetworkButton = styled.button<{ theme?: Theme }>`
   }
 `;
 
-const StyledMagnifyingGlassIcon = styled(MagnifyingGlassIcon)<{
+const StyledMagnifyingGlassIcon = /* @__PURE__ */ styled(MagnifyingGlassIcon)<{
   theme?: Theme;
 }>`
   color: ${(p) => p.theme.text.secondary};
@@ -583,7 +585,7 @@ const StyledMagnifyingGlassIcon = styled(MagnifyingGlassIcon)<{
   left: 18px;
 `;
 
-const SearchInput = styled(Input)<{ theme?: Theme }>`
+const SearchInput = /* @__PURE__ */ styled(Input)<{ theme?: Theme }>`
   padding: ${spacing.sm} ${spacing.md} ${spacing.sm} 60px;
 `;
 

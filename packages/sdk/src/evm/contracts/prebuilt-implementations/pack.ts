@@ -378,7 +378,7 @@ export class Pack extends StandardErc1155<PackContract> {
    * const tx = await contract.create(pack);
    * ```
    */
-  create = buildTransactionFunction(
+  create = /* @__PURE__ */ buildTransactionFunction(
     async (metadataWithRewards: PackMetadataInput) => {
       const signerAddress = await this.contractWrapper.getSignerAddress();
       return this.createTo.prepare(signerAddress, metadataWithRewards);
@@ -425,7 +425,7 @@ export class Pack extends StandardErc1155<PackContract> {
    * const tx = await contract.addPackContents(packId, packContents);
    * ```
    */
-  addPackContents = buildTransactionFunction(
+  addPackContents = /* @__PURE__ */ buildTransactionFunction(
     async (packId: BigNumberish, packContents: PackRewards) => {
       const signerAddress = await this.contractWrapper.getSignerAddress();
       const parsedContents = await PackRewardsOutputSchema.parseAsync(
@@ -507,7 +507,7 @@ export class Pack extends StandardErc1155<PackContract> {
    * const tx = await contract.createTo("0x...", pack);
    * ```
    */
-  createTo = buildTransactionFunction(
+  createTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       to: AddressOrEns,
       metadataWithRewards: PackMetadataInput,
@@ -577,7 +577,7 @@ export class Pack extends StandardErc1155<PackContract> {
    * const tx = await contract.open(tokenId, amount);
    * ```
    */
-  open = buildTransactionFunction(
+  open = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenId: BigNumberish,
       amount: BigNumberish = 1,

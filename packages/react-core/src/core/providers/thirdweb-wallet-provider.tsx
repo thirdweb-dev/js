@@ -88,7 +88,7 @@ type ThirdwebWalletContextData = {
   getWalletConfig: (walletInstance: WalletInstance) => WalletConfig | undefined;
 };
 
-const ThirdwebWalletContext = createContext<
+const ThirdwebWalletContext = /* @__PURE__ */ createContext<
   ThirdwebWalletContextData | undefined
 >(undefined);
 

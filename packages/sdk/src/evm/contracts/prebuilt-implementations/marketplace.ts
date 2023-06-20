@@ -384,7 +384,7 @@ export class Marketplace implements UpdateableNetwork {
    * @param quantityDesired - the quantity that you want to buy (for ERC1155 tokens)
    * @param receiver - optional receiver of the bought listing if different from the connected wallet (for direct listings only)
    */
-  buyoutListing = buildTransactionFunction(
+  buyoutListing = /* @__PURE__ */ buildTransactionFunction(
     async (
       listingId: BigNumberish,
       quantityDesired?: BigNumberish,
@@ -438,7 +438,7 @@ export class Marketplace implements UpdateableNetwork {
    * );
    * ```
    */
-  makeOffer = buildTransactionFunction(
+  makeOffer = /* @__PURE__ */ buildTransactionFunction(
     async (
       listingId: BigNumberish,
       pricePerToken: Price,
@@ -486,7 +486,7 @@ export class Marketplace implements UpdateableNetwork {
    * ```
    * @param bufferBps - the bps value
    */
-  setBidBufferBps = buildTransactionFunction(
+  setBidBufferBps = /* @__PURE__ */ buildTransactionFunction(
     async (bufferBps: BigNumberish) => {
       await this.roles.verify(
         ["admin"],
@@ -514,7 +514,7 @@ export class Marketplace implements UpdateableNetwork {
    * ```
    * @param bufferInSeconds - the seconds value
    */
-  setTimeBufferInSeconds = buildTransactionFunction(
+  setTimeBufferInSeconds = /* @__PURE__ */ buildTransactionFunction(
     async (bufferInSeconds: BigNumberish) => {
       await this.roles.verify(
         ["admin"],
@@ -536,7 +536,7 @@ export class Marketplace implements UpdateableNetwork {
    * It is possible to allow listing from multiple contract addresses.
    * @param contractAddress - the NFT contract address
    */
-  allowListingFromSpecificAssetOnly = buildTransactionFunction(
+  allowListingFromSpecificAssetOnly = /* @__PURE__ */ buildTransactionFunction(
     async (contractAddress: string) => {
       const encoded: string[] = [];
       const members = await this.roles.get("asset");
@@ -566,27 +566,29 @@ export class Marketplace implements UpdateableNetwork {
   /**
    * Allow listings from any NFT contract
    */
-  allowListingFromAnyAsset = buildTransactionFunction(async () => {
-    const encoded: string[] = [];
-    const members = await this.roles.get("asset");
-    for (const addr in members) {
+  allowListingFromAnyAsset = /* @__PURE__ */ buildTransactionFunction(
+    async () => {
+      const encoded: string[] = [];
+      const members = await this.roles.get("asset");
+      for (const addr in members) {
+        encoded.push(
+          this.encoder.encode("revokeRole", [getRoleHash("asset"), addr]),
+        );
+      }
       encoded.push(
-        this.encoder.encode("revokeRole", [getRoleHash("asset"), addr]),
+        this.encoder.encode("grantRole", [
+          getRoleHash("asset"),
+          constants.AddressZero,
+        ]),
       );
-    }
-    encoded.push(
-      this.encoder.encode("grantRole", [
-        getRoleHash("asset"),
-        constants.AddressZero,
-      ]),
-    );
 
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "multicall",
-      args: [encoded],
-    });
-  });
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "multicall",
+        args: [encoded],
+      });
+    },
+  );
 
   /** ******************************
    * PRIVATE FUNCTIONS

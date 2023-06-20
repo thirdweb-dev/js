@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-parameter-properties */
-import { BigNumber, ethers, Signer } from "ethers";
+import { BigNumber, providers, Signer } from "ethers";
 import { hexValue, resolveProperties } from "ethers/lib/utils";
 
 import {
@@ -12,7 +12,7 @@ import { BaseAccountAPI } from "./base-api";
 import { ERC4337EthersSigner } from "./erc4337-signer";
 import { HttpRpcClient } from "./http-rpc-client";
 
-export class ERC4337EthersProvider extends ethers.providers.BaseProvider {
+export class ERC4337EthersProvider extends providers.BaseProvider {
   initializedBlockNumber!: number;
 
   readonly signer: ERC4337EthersSigner;
@@ -21,7 +21,7 @@ export class ERC4337EthersProvider extends ethers.providers.BaseProvider {
     readonly chainId: number,
     readonly config: ClientConfig,
     readonly originalSigner: Signer,
-    readonly originalProvider: ethers.providers.BaseProvider,
+    readonly originalProvider: providers.BaseProvider,
     readonly httpRpcClient: HttpRpcClient,
     readonly entryPoint: EntryPoint,
     readonly smartAccountAPI: BaseAccountAPI,
@@ -80,17 +80,17 @@ export class ERC4337EthersProvider extends ethers.providers.BaseProvider {
 
   async getTransaction(
     transactionHash: string | Promise<string>,
-  ): Promise<ethers.providers.TransactionResponse> {
+  ): Promise<providers.TransactionResponse> {
     // TODO
     return await super.getTransaction(transactionHash);
   }
 
   async getTransactionReceipt(
     transactionHash: string | Promise<string>,
-  ): Promise<ethers.providers.TransactionReceipt> {
+  ): Promise<providers.TransactionReceipt> {
     const userOpHash = await transactionHash;
     const sender = await this.getSenderAccountAddress();
-    return await new Promise<ethers.providers.TransactionReceipt>(
+    return await new Promise<providers.TransactionReceipt>(
       (resolve, reject) => {
         new UserOperationEventListener(
           resolve,
@@ -111,10 +111,10 @@ export class ERC4337EthersProvider extends ethers.providers.BaseProvider {
     transactionHash: string,
     confirmations?: number,
     timeout?: number,
-  ): Promise<ethers.providers.TransactionReceipt> {
+  ): Promise<providers.TransactionReceipt> {
     const sender = await this.getSenderAccountAddress();
 
-    return await new Promise<ethers.providers.TransactionReceipt>(
+    return await new Promise<providers.TransactionReceipt>(
       (resolve, reject) => {
         const listener = new UserOperationEventListener(
           resolve,
@@ -133,21 +133,20 @@ export class ERC4337EthersProvider extends ethers.providers.BaseProvider {
   // fabricate a response in a format usable by ethers users...
   async constructUserOpTransactionResponse(
     userOp1: UserOperationStruct,
-  ): Promise<ethers.providers.TransactionResponse> {
+  ): Promise<providers.TransactionResponse> {
     const userOp = await resolveProperties(userOp1);
     const userOpHash = await this.smartAccountAPI.getUserOpHash(userOp);
-    const waitForUserOp =
-      async (): Promise<ethers.providers.TransactionReceipt> =>
-        await new Promise((resolve, reject) => {
-          new UserOperationEventListener(
-            resolve,
-            reject,
-            this.entryPoint,
-            userOp.sender,
-            userOpHash,
-            userOp.nonce,
-          ).start();
-        });
+    const waitForUserOp = async (): Promise<providers.TransactionReceipt> =>
+      await new Promise((resolve, reject) => {
+        new UserOperationEventListener(
+          resolve,
+          reject,
+          this.entryPoint,
+          userOp.sender,
+          userOpHash,
+          userOp.nonce,
+        ).start();
+      });
     return {
       hash: userOpHash,
       confirmations: 0,
@@ -160,7 +159,7 @@ export class ERC4337EthersProvider extends ethers.providers.BaseProvider {
       wait: async (
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         confirmations?: number,
-      ): Promise<ethers.providers.TransactionReceipt> => {
+      ): Promise<providers.TransactionReceipt> => {
         const transactionReceipt = await waitForUserOp();
         if (userOp.initCode.length !== 0) {
           // checking if the wallet has been deployed by the transaction; it must be if we are here

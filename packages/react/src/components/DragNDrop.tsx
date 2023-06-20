@@ -117,7 +117,9 @@ export const DragNDrop: React.FC<{
   );
 };
 
-const UploadIconSecondary = styled(UploadIcon)<{ theme?: Theme }>`
+const UploadIconSecondary = /* @__PURE__ */ styled(UploadIcon)<{
+  theme?: Theme;
+}>`
   color: ${(props) => props.theme.text.secondary};
   transition: transform 200ms ease, color 200ms ease;
 `;

@@ -196,7 +196,7 @@ export class StandardErc721<
    * await contract.transfer(walletAddress, tokenId);
    * ```
    */
-  transfer = buildTransactionFunction(
+  transfer = /* @__PURE__ */ buildTransactionFunction(
     async (to: AddressOrEns, tokenId: BigNumberish): Promise<Transaction> => {
       return this.erc721.transfer.prepare(to, tokenId);
     },
@@ -209,7 +209,7 @@ export class StandardErc721<
    *
    * @internal
    */
-  setApprovalForAll = buildTransactionFunction(
+  setApprovalForAll = /* @__PURE__ */ buildTransactionFunction(
     async (operator: AddressOrEns, approved: boolean): Promise<Transaction> => {
       return this.erc721.setApprovalForAll.prepare(operator, approved);
     },
@@ -222,7 +222,7 @@ export class StandardErc721<
    *
    * @internal
    */
-  setApprovalForToken = buildTransactionFunction(
+  setApprovalForToken = /* @__PURE__ */ buildTransactionFunction(
     async (
       operator: AddressOrEns,
       tokenId: BigNumberish,

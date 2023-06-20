@@ -131,7 +131,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * @twfeature Permissions
    *
    * */
-  setAll = buildTransactionFunction(
+  setAll = /* @__PURE__ */ buildTransactionFunction(
     async (rolesWithAddresses: {
       [key in TRole]?: AddressOrEns[];
     }): Promise<Transaction> => {
@@ -245,7 +245,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * @public
    * @twfeature Permissions
    */
-  grant = buildTransactionFunction(
+  grant = /* @__PURE__ */ buildTransactionFunction(
     async (role: TRole, address: AddressOrEns): Promise<Transaction> => {
       invariant(
         this.roles.includes(role),
@@ -285,7 +285,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * @public
    * @twfeature Permissions
    */
-  revoke = buildTransactionFunction(
+  revoke = /* @__PURE__ */ buildTransactionFunction(
     async (role: TRole, address: AddressOrEns): Promise<Transaction> => {
       invariant(
         this.roles.includes(role),

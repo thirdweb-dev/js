@@ -73,7 +73,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * @param signedPayload - the previously generated payload and signature with {@link Erc1155SignatureMintable.generate}
    * @twfeature ERC1155SignatureMintable
    */
-  mint = buildTransactionFunction(
+  mint = /* @__PURE__ */ buildTransactionFunction(
     async (
       signedPayload: SignedPayload1155,
     ): Promise<Transaction<TransactionResultWithId>> => {
@@ -128,7 +128,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * @param signedPayloads - the array of signed payloads to mint
    * @twfeature ERC1155SignatureMintable
    */
-  mintBatch = buildTransactionFunction(
+  mintBatch = /* @__PURE__ */ buildTransactionFunction(
     async (
       signedPayloads: SignedPayload1155[],
     ): Promise<Transaction<TransactionResultWithId[]>> => {

@@ -394,7 +394,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * @param metadatas - The metadata to include in the batch.
    * @param options - optional upload progress callback
    */
-  createBatch = buildTransactionFunction(
+  createBatch = /* @__PURE__ */ buildTransactionFunction(
     async (
       metadatas: NFTMetadataOrUri[],
       options?: {
@@ -448,7 +448,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
-  claimTo = buildTransactionFunction(
+  claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       destinationAddress: AddressOrEns,
       quantity: BigNumberish,
@@ -465,7 +465,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
-  claim = buildTransactionFunction(
+  claim = /* @__PURE__ */ buildTransactionFunction(
     async (
       quantity: BigNumberish,
       options?: ClaimOptions,
@@ -482,9 +482,11 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * const result = await contract.burnToken(tokenId);
    * ```
    */
-  burn = buildTransactionFunction(async (tokenId: BigNumberish) => {
-    return this.erc721.burn.prepare(tokenId);
-  });
+  burn = /* @__PURE__ */ buildTransactionFunction(
+    async (tokenId: BigNumberish) => {
+      return this.erc721.burn.prepare(tokenId);
+    },
+  );
 
   /**
    * @internal

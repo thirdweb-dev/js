@@ -376,7 +376,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * @param metadatas - The metadata to include in the batch.
    * @param options - optional upload progress callback
    */
-  createBatch = buildTransactionFunction(
+  createBatch = /* @__PURE__ */ buildTransactionFunction(
     async (
       metadatas: NFTMetadataOrUri[],
       options?: {
@@ -428,7 +428,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
-  claimTo = buildTransactionFunction(
+  claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       destinationAddress: AddressOrEns,
       quantity: BigNumberish,
@@ -447,7 +447,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
-  claim = buildTransactionFunction(
+  claim = /* @__PURE__ */ buildTransactionFunction(
     async (
       quantity: BigNumberish,
       checkERC20Allowance = true,
@@ -471,9 +471,11 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * ```
    *
    */
-  burn = buildTransactionFunction(async (tokenId: BigNumberish) => {
-    return this.erc721.burn.prepare(tokenId);
-  });
+  burn = /* @__PURE__ */ buildTransactionFunction(
+    async (tokenId: BigNumberish) => {
+      return this.erc721.burn.prepare(tokenId);
+    },
+  );
 
   /******************************
    * STANDARD ERC721 FUNCTIONS
@@ -551,7 +553,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * await contract.transfer(walletAddress, tokenId);
    * ```
    */
-  transfer = buildTransactionFunction(
+  transfer = /* @__PURE__ */ buildTransactionFunction(
     async (to: AddressOrEns, tokenId: BigNumberish) => {
       return this.erc721.transfer.prepare(to, tokenId);
     },
@@ -564,7 +566,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    *
    * @internal
    */
-  setApprovalForAll = buildTransactionFunction(
+  setApprovalForAll = /* @__PURE__ */ buildTransactionFunction(
     async (operator: AddressOrEns, approved: boolean) => {
       return this.erc721.setApprovalForAll.prepare(operator, approved);
     },
@@ -577,7 +579,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    *
    * @internal
    */
-  setApprovalForToken = buildTransactionFunction(
+  setApprovalForToken = /* @__PURE__ */ buildTransactionFunction(
     async (operator: AddressOrEns, tokenId: BigNumberish) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
