@@ -8,3 +8,5 @@ export * from "./eye-opened";
 export * from "./qr-code";
 export * from "./right-arrow";
 export * from "./wallet";
+export * from "./money";
+export * from "./switch";
