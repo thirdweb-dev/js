@@ -2,4 +2,4 @@
 "@thirdweb-dev/sdk": patch
 ---
 
-Clean up unnecessary exports in @sdk/src/evm/common
+Abstract duplicated code; treeshake ethers.js imports
