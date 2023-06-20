@@ -152,7 +152,9 @@ const DialogContent = styled.div<{ theme?: Theme }>`
   }
 `;
 
-const DialogTitle = styled(Dialog.Title)<{ theme?: Theme }>`
+const DialogTitle = /* @__PURE__ */ styled(/* @__PURE__ */ Dialog.Title)<{
+  theme?: Theme;
+}>`
   margin: 0;
   font-weight: 500;
   color: ${(p) => p.theme.text.neutral};
