@@ -310,13 +310,15 @@ export class Split implements UpdateableNetwork {
    *
    * @param walletAddress - The address to distributes the amount to
    */
-  withdraw = buildTransactionFunction(async (walletAddress: AddressOrEns) => {
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "release(address)",
-      args: [await resolveAddress(walletAddress)],
-    });
-  });
+  withdraw = /* @__PURE__ */ buildTransactionFunction(
+    async (walletAddress: AddressOrEns) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "release(address)",
+        args: [await resolveAddress(walletAddress)],
+      });
+    },
+  );
 
   /**
    * Triggers a transfer to account of the amount of a given currency they are owed.
@@ -324,7 +326,7 @@ export class Split implements UpdateableNetwork {
    * @param walletAddress - The address to distributes the amount to
    * @param tokenAddress - The address of the currency contract to distribute funds
    */
-  withdrawToken = buildTransactionFunction(
+  withdrawToken = /* @__PURE__ */ buildTransactionFunction(
     async (walletAddress: AddressOrEns, tokenAddress: AddressOrEns) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -347,7 +349,7 @@ export class Split implements UpdateableNetwork {
    * await contract.distribute();
    * ```
    */
-  distribute = buildTransactionFunction(async () => {
+  distribute = /* @__PURE__ */ buildTransactionFunction(async () => {
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
       method: "distribute()",
@@ -369,7 +371,7 @@ export class Split implements UpdateableNetwork {
    *
    * @param tokenAddress - The address of the currency contract to distribute funds
    */
-  distributeToken = buildTransactionFunction(
+  distributeToken = /* @__PURE__ */ buildTransactionFunction(
     async (tokenAddress: AddressOrEns) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,

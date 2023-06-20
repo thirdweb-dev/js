@@ -17,11 +17,11 @@ export const EditionMetadataOutputSchema = /* @__PURE__ */ z.object({
 /**
  * @internal
  */
-export const EditionMetadataWithOwnerOutputSchema =
-  /* @__PURE__ */ EditionMetadataOutputSchema.extend({
+export const EditionMetadataWithOwnerOutputSchema = /* @__PURE__ */ (() =>
+  EditionMetadataOutputSchema.extend({
     owner: z.string(),
     quantityOwned: BigNumberSchema,
-  });
+  }))();
 
 /**
  * @internal

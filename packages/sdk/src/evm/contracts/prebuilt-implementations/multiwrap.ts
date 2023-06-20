@@ -236,7 +236,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
    * @param wrappedTokenMetadata - metadata to represent the wrapped token bundle
    * @param recipientAddress - Optional. The address to send the wrapped token bundle to
    */
-  wrap = buildTransactionFunction(
+  wrap = /* @__PURE__ */ buildTransactionFunction(
     async (
       contents: TokensToWrap,
       wrappedTokenMetadata: NFTMetadataOrUri,
@@ -284,7 +284,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
    * @param wrappedTokenId - the id of the wrapped token bundle
    * @param recipientAddress - Optional. The address to send the unwrapped tokens to
    */
-  unwrap = buildTransactionFunction(
+  unwrap = /* @__PURE__ */ buildTransactionFunction(
     async (wrappedTokenId: BigNumberish, recipientAddress?: AddressOrEns) => {
       const recipient = await resolveAddress(
         recipientAddress

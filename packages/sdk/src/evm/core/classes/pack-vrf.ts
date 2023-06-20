@@ -80,7 +80,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * @returns
    * @twfeature PackVRF
    */
-  open = buildTransactionFunction(
+  open = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenId: BigNumberish,
       amount: BigNumberish = 1,
@@ -127,7 +127,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * @returns the random rewards from opening a pack
    * @twfeature PackVRF
    */
-  claimRewards = buildTransactionFunction(
+  claimRewards = /* @__PURE__ */ buildTransactionFunction(
     async (gasLimit = 500000): Promise<Transaction<Promise<PackRewards>>> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,

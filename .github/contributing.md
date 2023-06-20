@@ -59,8 +59,14 @@ To begin:
    ```
    pnpm install
    ```
+   If you are on windows, use the `--ignore-scripts` flag
+   ```
+   pnpm install --ignore-scripts
+   ```
 
 Now you have got the repo on your local machine, and you're ready to start making your changes!
+
+<br/>
 
 ### Test Your Changes
 

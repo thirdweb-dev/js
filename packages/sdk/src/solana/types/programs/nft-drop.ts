@@ -18,30 +18,32 @@ export const NFTDropInitialConditionsInputSchema = /* @__PURE__ */ z.object({
  * @internal
  */
 // TODO: Handle allow lists and end times
-export const NFTDropUpdatableConditionsInputSchema = /* @__PURE__ */ z.object({
-  price: AmountSchema.optional(),
-  currencyAddress: z.string().nullable().optional(),
-  primarySaleRecipient: z.string().optional(),
-  sellerFeeBasisPoints: BasisPointsSchema.optional(),
-  startTime: z.date().optional(),
-  maxClaimable: QuantitySchema.optional(),
-});
+export const NFTDropUpdatableConditionsInputSchema = /* @__PURE__ */ (() =>
+  z.object({
+    price: AmountSchema.optional(),
+    currencyAddress: z.string().nullable().optional(),
+    primarySaleRecipient: z.string().optional(),
+    sellerFeeBasisPoints: BasisPointsSchema.optional(),
+    startTime: z.date().optional(),
+    maxClaimable: QuantitySchema.optional(),
+  }))();
 
 /**
  * @internal
  */
-export const NFTDropUpdatableConditionsOutputSchema = /* @__PURE__ */ z.object({
-  price: CurrencyValueSchema,
-  currencyAddress: z.string().nullable(),
-  primarySaleRecipient: z.string(),
-  sellerFeeBasisPoints: BasisPointsSchema,
-  startTime: z.date().nullable(),
-  totalAvailableSupply: z.number(),
-  lazyMintedSupply: z.number(),
-  claimedSupply: z.number(),
-  maxClaimable: QuantitySchema,
-  isReadyToClaim: z.boolean(),
-});
+export const NFTDropUpdatableConditionsOutputSchema = /* @__PURE__ */ (() =>
+  z.object({
+    price: CurrencyValueSchema,
+    currencyAddress: z.string().nullable(),
+    primarySaleRecipient: z.string(),
+    sellerFeeBasisPoints: BasisPointsSchema,
+    startTime: z.date().nullable(),
+    totalAvailableSupply: z.number(),
+    lazyMintedSupply: z.number(),
+    claimedSupply: z.number(),
+    maxClaimable: QuantitySchema,
+    isReadyToClaim: z.boolean(),
+  }))();
 
 /**
  * @internal

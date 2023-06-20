@@ -18,23 +18,24 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const BaseSignaturePayloadInput = /* @__PURE__ */ z.object({
-  to: AddressOrEnsSchema.refine(
-    (address) => address.toLowerCase() !== constants.AddressZero,
-    {
-      message: "Cannot create payload to mint to zero address",
-    },
-  ),
-  price: AmountSchema.default(0),
-  currencyAddress: AddressSchema.default(NATIVE_TOKEN_ADDRESS),
-  mintStartTime: StartDateSchema,
-  mintEndTime: EndDateSchema,
-  uid: z
-    .string()
-    .optional()
-    .transform((arg) => resolveOrGenerateId(arg)),
-  primarySaleRecipient: AddressOrEnsSchema.default(constants.AddressZero),
-});
+export const BaseSignaturePayloadInput = /* @__PURE__ */ (() =>
+  z.object({
+    to: AddressOrEnsSchema.refine(
+      (address) => address.toLowerCase() !== constants.AddressZero,
+      {
+        message: "Cannot create payload to mint to zero address",
+      },
+    ),
+    price: AmountSchema.default(0),
+    currencyAddress: AddressSchema.default(NATIVE_TOKEN_ADDRESS),
+    mintStartTime: StartDateSchema,
+    mintEndTime: EndDateSchema,
+    uid: z
+      .string()
+      .optional()
+      .transform((arg) => resolveOrGenerateId(arg)),
+    primarySaleRecipient: AddressOrEnsSchema.default(constants.AddressZero),
+  }))();
 
 /**
  * @internal
@@ -56,33 +57,33 @@ export const Signature20PayloadOutput =
 /**
  * @internal
  */
-export const Signature721PayloadInput =
-  /* @__PURE__ */ BaseSignaturePayloadInput.extend({
+export const Signature721PayloadInput = /* @__PURE__ */ (() =>
+  BaseSignaturePayloadInput.extend({
     metadata: NFTInputOrUriSchema,
     royaltyRecipient: z.string().default(constants.AddressZero),
     royaltyBps: BasisPointsSchema.default(0),
-  });
+  }))();
 
 /**
  * @internal
  */
-export const Signature721PayloadOutput =
-  /* @__PURE__ */ Signature721PayloadInput.extend({
+export const Signature721PayloadOutput = /* @__PURE__ */ (() =>
+  Signature721PayloadInput.extend({
     metadata: NFTInputOrUriSchema.default(""),
     uri: z.string(),
     royaltyBps: BigNumberSchema,
     mintStartTime: BigNumberSchema,
     mintEndTime: BigNumberSchema,
-  });
+  }))();
 
 /**
  * @internal
  */
-export const Signature1155PayloadInput =
-  /* @__PURE__ */ Signature721PayloadInput.extend({
+export const Signature1155PayloadInput = /* @__PURE__ */ (() =>
+  Signature721PayloadInput.extend({
     metadata: NFTInputOrUriSchema.default(""),
     quantity: BigNumberishSchema,
-  });
+  }))();
 
 /**
  * @internal
@@ -104,19 +105,19 @@ export const Signature1155PayloadOutput =
 /**
  * @internal
  */
-export const Signature721WithQuantityInput =
-  /* @__PURE__ */ Signature721PayloadInput.extend({
+export const Signature721WithQuantityInput = /* @__PURE__ */ (() =>
+  Signature721PayloadInput.extend({
     metadata: NFTInputOrUriSchema.default(""),
     quantity: BigNumberSchema.default(1),
-  });
+  }))();
 
 /**
  * @internal
  */
-export const Signature721WithQuantityOutput =
-  /* @__PURE__ */ Signature721PayloadOutput.extend({
+export const Signature721WithQuantityOutput = /* @__PURE__ */ (() =>
+  Signature721PayloadOutput.extend({
     quantity: BigNumberSchema.default(1),
-  });
+  }))();
 
 /**
  * @public

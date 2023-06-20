@@ -5,21 +5,22 @@ import { z } from "zod";
 /**
  * @internal
  */
-const PropertiesInput = /* @__PURE__ */ z.object({}).catchall(z.unknown());
+const PropertiesInput = /* @__PURE__ */ (() =>
+  z.object({}).catchall(z.unknown()))();
 
 /**
  * @internal
  */
-export const OptionalPropertiesInput = /* @__PURE__ */ z
-  .union([z.array(PropertiesInput), PropertiesInput])
-  .optional();
+export const OptionalPropertiesInput = /* @__PURE__ */ (() =>
+  z.union([z.array(PropertiesInput), PropertiesInput]).optional())();
 
 /**
  * @internal
  */
-export const RawDateSchema = /* @__PURE__ */ z.date().transform((i) => {
-  return Math.floor(i.getTime() / 1000);
-});
+export const RawDateSchema = /* @__PURE__ */ (() =>
+  z.date().transform((i) => {
+    return Math.floor(i.getTime() / 1000);
+  }))();
 
 /**
  * @internal
@@ -50,7 +51,8 @@ export type WalletAccount = {
 /**
  * @internal
  */
-export const AddressSchema = /* @__PURE__ */ z.union([
-  z.string(),
-  z.instanceof(PublicKey).transform((key) => key.toBase58()),
-]);
+export const AddressSchema = /* @__PURE__ */ (() =>
+  z.union([
+    z.string(),
+    z.instanceof(PublicKey).transform((key) => key.toBase58()),
+  ]))();

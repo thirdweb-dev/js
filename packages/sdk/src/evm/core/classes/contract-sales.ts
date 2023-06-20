@@ -51,7 +51,7 @@ export class ContractPrimarySale<TContract extends IPrimarySale>
    * @public
    * @twfeature PrimarySale
    */
-  setRecipient = buildTransactionFunction(
+  setRecipient = /* @__PURE__ */ buildTransactionFunction(
     async (recipient: string): Promise<Transaction> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper as ContractWrapper<IPrimarySale>,
