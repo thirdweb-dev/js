@@ -91,7 +91,7 @@ export class DelayedReveal<
    * @param password - the password that will be used to reveal these NFTs
    * @param options - additional options like upload progress
    */
-  createDelayedRevealBatch = buildTransactionFunction(
+  createDelayedRevealBatch = /* @__PURE__ */ buildTransactionFunction(
     async (
       placeholder: NFTMetadataInput,
       metadatas: NFTMetadataInput[],
@@ -197,7 +197,7 @@ export class DelayedReveal<
    * @param batchId - the id of the batch to reveal
    * @param password - the password
    */
-  reveal = buildTransactionFunction(
+  reveal = /* @__PURE__ */ buildTransactionFunction(
     async (batchId: BigNumberish, password: string): Promise<Transaction> => {
       if (!password) {
         throw new Error("Password is required");

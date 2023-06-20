@@ -54,24 +54,26 @@ export class Erc20BatchMintable implements DetectableFeature {
    * await contract.token.mint.batch(data);
    * ```
    */
-  to = buildTransactionFunction(async (args: TokenMintInput[]) => {
-    const encoded: string[] = [];
-    for (const arg of args) {
-      encoded.push(
-        this.contractWrapper.readContract.interface.encodeFunctionData(
-          "mintTo",
-          [
-            await resolveAddress(arg.toAddress),
-            await this.erc20.normalizeAmount(arg.amount),
-          ],
-        ),
-      );
-    }
+  to = /* @__PURE__ */ buildTransactionFunction(
+    async (args: TokenMintInput[]) => {
+      const encoded: string[] = [];
+      for (const arg of args) {
+        encoded.push(
+          this.contractWrapper.readContract.interface.encodeFunctionData(
+            "mintTo",
+            [
+              await resolveAddress(arg.toAddress),
+              await this.erc20.normalizeAmount(arg.amount),
+            ],
+          ),
+        );
+      }
 
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "multicall",
-      args: [encoded],
-    });
-  });
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "multicall",
+        args: [encoded],
+      });
+    },
+  );
 }

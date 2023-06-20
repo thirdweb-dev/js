@@ -35,7 +35,7 @@ export class Erc1155Burnable implements DetectableFeature {
    * const result = await contract.edition.burn.tokens(tokenId, amount);
    * ```
    */
-  tokens = buildTransactionFunction(
+  tokens = /* @__PURE__ */ buildTransactionFunction(
     async (tokenId: BigNumberish, amount: BigNumberish) => {
       const account = await this.contractWrapper.getSignerAddress();
       return this.from.prepare(account, tokenId, amount);
@@ -63,7 +63,7 @@ export class Erc1155Burnable implements DetectableFeature {
    * const result = await contract.edition.burn.from(account, tokenId, amount);
    * ```
    */
-  from = buildTransactionFunction(
+  from = /* @__PURE__ */ buildTransactionFunction(
     async (
       account: AddressOrEns,
       tokenId: BigNumberish,
@@ -95,7 +95,7 @@ export class Erc1155Burnable implements DetectableFeature {
    * const result = await contract.edition.burn.batch(tokenIds, amounts);
    * ```
    */
-  batch = buildTransactionFunction(
+  batch = /* @__PURE__ */ buildTransactionFunction(
     async (tokenIds: BigNumberish[], amounts: BigNumberish[]) => {
       const account = await this.contractWrapper.getSignerAddress();
       return this.batchFrom.prepare(account, tokenIds, amounts);
@@ -123,7 +123,7 @@ export class Erc1155Burnable implements DetectableFeature {
    * const result = await contract.edition.burn.batchFrom(account, tokenIds, amounts);
    * ```
    */
-  batchFrom = buildTransactionFunction(
+  batchFrom = /* @__PURE__ */ buildTransactionFunction(
     async (
       account: AddressOrEns,
       tokenIds: BigNumberish[],

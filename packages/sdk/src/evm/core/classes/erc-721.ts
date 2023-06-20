@@ -56,6 +56,7 @@ import type {
   SignatureDrop,
   TieredDrop,
   TokenERC721,
+  Zora_IERC721Drop,
 } from "@thirdweb-dev/contracts-js";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
@@ -67,6 +68,7 @@ import { Erc721TieredDrop } from "./erc-721-tiered-drop";
 import { Erc721ClaimableWithConditions } from "./erc-721-claim-conditions";
 import { Erc721Claimable } from "./erc-721-claimable";
 import { Erc721SharedMetadata } from "./erc-721-shared-metadata";
+import { Erc721ClaimableZora } from "./erc-721-claim-zora";
 
 /**
  * Standard ERC721 NFT functions
@@ -97,6 +99,7 @@ export class Erc721<
   private claimWithConditions: Erc721ClaimableWithConditions | undefined;
   private claimCustom: Erc721Claimable | undefined;
   private erc721SharedMetadata: Erc721SharedMetadata | undefined;
+  private claimZora: Erc721ClaimableZora | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: ThirdwebStorage;
 
@@ -120,7 +123,7 @@ export class Erc721<
     this.signatureMintable = this.detectErc721SignatureMintable();
     this.claimWithConditions = this.detectErc721ClaimableWithConditions();
     this.claimCustom = this.detectErc721Claimable();
-    this.erc721SharedMetadata = this.detectSharedMetadata();
+    this.claimZora = this.detectErc721ClaimableZora();
     this._chainId = chainId;
   }
 
@@ -226,7 +229,7 @@ export class Erc721<
    * ```
    * @twfeature ERC721
    */
-  transfer = buildTransactionFunction(
+  transfer = /* @__PURE__ */ buildTransactionFunction(
     async (to: AddressOrEns, tokenId: BigNumberish) => {
       const from = await this.contractWrapper.getSignerAddress();
       return Transaction.fromContractWrapper({
@@ -251,7 +254,7 @@ export class Erc721<
    * ```
    * @twfeature ERC721
    */
-  transferFrom = buildTransactionFunction(
+  transferFrom = /* @__PURE__ */ buildTransactionFunction(
     async (from: AddressOrEns, to: AddressOrEns, tokenId: BigNumberish) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -273,7 +276,7 @@ export class Erc721<
    * @param approved - whether to approve or remove
    * @twfeature ERC721
    */
-  setApprovalForAll = buildTransactionFunction(
+  setApprovalForAll = /* @__PURE__ */ buildTransactionFunction(
     async (operator: AddressOrEns, approved: boolean) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -297,7 +300,7 @@ export class Erc721<
    *
    * @internal
    */
-  setApprovalForToken = buildTransactionFunction(
+  setApprovalForToken = /* @__PURE__ */ buildTransactionFunction(
     async (operator: AddressOrEns, tokenId: BigNumberish) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -451,12 +454,14 @@ export class Erc721<
    * ```
    * @twfeature ERC721Mintable
    */
-  mint = buildTransactionFunction(async (metadata: NFTMetadataOrUri) => {
-    return this.mintTo.prepare(
-      await this.contractWrapper.getSignerAddress(),
-      metadata,
-    );
-  });
+  mint = /* @__PURE__ */ buildTransactionFunction(
+    async (metadata: NFTMetadataOrUri) => {
+      return this.mintTo.prepare(
+        await this.contractWrapper.getSignerAddress(),
+        metadata,
+      );
+    },
+  );
 
   /**
    * Mint an NFT to a specific wallet
@@ -482,7 +487,7 @@ export class Erc721<
    * ```
    * @twfeature ERC721Mintable
    */
-  mintTo = buildTransactionFunction(
+  mintTo = /* @__PURE__ */ buildTransactionFunction(
     async (receiver: AddressOrEns, metadata: NFTMetadataOrUri) => {
       return assertEnabled(this.mintable, FEATURE_NFT_MINTABLE).to.prepare(
         receiver,
@@ -534,7 +539,7 @@ export class Erc721<
    * ```
    * @twfeature ERC721BatchMintable
    */
-  mintBatch = buildTransactionFunction(
+  mintBatch = /* @__PURE__ */ buildTransactionFunction(
     async (metadatas: NFTMetadataOrUri[]) => {
       return this.mintBatchTo.prepare(
         await this.contractWrapper.getSignerAddress(),
@@ -571,7 +576,7 @@ export class Erc721<
    * ```
    * @twfeature ERC721BatchMintable
    */
-  mintBatchTo = buildTransactionFunction(
+  mintBatchTo = /* @__PURE__ */ buildTransactionFunction(
     async (receiver: AddressOrEns, metadatas: NFTMetadataOrUri[]) => {
       return assertEnabled(
         this.mintable?.batch,
@@ -592,11 +597,13 @@ export class Erc721<
    * ```
    * @twfeature ERC721Burnable
    */
-  burn = buildTransactionFunction(async (tokenId: BigNumberish) => {
-    return assertEnabled(this.burnable, FEATURE_NFT_BURNABLE).token.prepare(
-      tokenId,
-    );
-  });
+  burn = /* @__PURE__ */ buildTransactionFunction(
+    async (tokenId: BigNumberish) => {
+      return assertEnabled(this.burnable, FEATURE_NFT_BURNABLE).token.prepare(
+        tokenId,
+      );
+    },
+  );
 
   ////// ERC721 LazyMint Extension //////
 
@@ -627,7 +634,7 @@ export class Erc721<
    * @param options - optional upload progress callback
    * @twfeature ERC721LazyMintable
    */
-  lazyMint = buildTransactionFunction(
+  lazyMint = /* @__PURE__ */ buildTransactionFunction(
     async (
       metadatas: NFTMetadataOrUri[],
       options?: {
@@ -663,7 +670,7 @@ export class Erc721<
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1
    */
-  claim = buildTransactionFunction(
+  claim = /* @__PURE__ */ buildTransactionFunction(
     async (quantity: BigNumberish, options?: ClaimOptions) => {
       return this.claimTo.prepare(
         await this.contractWrapper.getSignerAddress(),
@@ -695,7 +702,7 @@ export class Erc721<
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1
    */
-  claimTo = buildTransactionFunction(
+  claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       destinationAddress: AddressOrEns,
       quantity: BigNumberish,
@@ -703,6 +710,7 @@ export class Erc721<
     ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
       const claimWithConditions = this.claimWithConditions;
       const claim = this.claimCustom;
+      const claimZora = this.claimZora;
       if (claimWithConditions) {
         return claimWithConditions.to.prepare(
           destinationAddress,
@@ -712,6 +720,9 @@ export class Erc721<
       }
       if (claim) {
         return claim.to.prepare(destinationAddress, quantity, options);
+      }
+      if (claimZora) {
+        return claimZora.to.prepare(destinationAddress, quantity, options);
       }
       throw new ExtensionNotImplementedError(FEATURE_NFT_CLAIM_CUSTOM);
     },
@@ -1054,14 +1065,14 @@ export class Erc721<
     return undefined;
   }
 
-  private detectSharedMetadata(): Erc721SharedMetadata | undefined {
+  private detectErc721ClaimableZora(): Erc721ClaimableZora | undefined {
     if (
-      detectContractFeature<ISharedMetadata>(
+      detectContractFeature<Zora_IERC721Drop>(
         this.contractWrapper,
-        "ERC721SharedMetadata",
+        "ERC721ClaimZora",
       )
     ) {
-      return new Erc721SharedMetadata(this.contractWrapper, this.storage);
+      return new Erc721ClaimableZora(this, this.contractWrapper);
     }
     return undefined;
   }

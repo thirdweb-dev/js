@@ -112,7 +112,7 @@ export class Erc721TieredDrop implements DetectableFeature {
     return nfts;
   }
 
-  createBatchWithTier = buildTransactionFunction(
+  createBatchWithTier = /* @__PURE__ */ buildTransactionFunction(
     async (
       metadatas: NFTMetadataOrUri[],
       tier: string,
@@ -161,7 +161,7 @@ export class Erc721TieredDrop implements DetectableFeature {
     },
   );
 
-  createDelayedRevealBatchWithTier = buildTransactionFunction(
+  createDelayedRevealBatchWithTier = /* @__PURE__ */ buildTransactionFunction(
     async (
       placeholder: NFTMetadataInput,
       metadatas: NFTMetadataInput[],
@@ -256,7 +256,7 @@ export class Erc721TieredDrop implements DetectableFeature {
     },
   );
 
-  reveal = buildTransactionFunction(
+  reveal = /* @__PURE__ */ buildTransactionFunction(
     async (batchId: BigNumberish, password: string) => {
       if (!password) {
         throw new Error("Password is required");

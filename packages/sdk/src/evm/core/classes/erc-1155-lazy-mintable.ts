@@ -99,7 +99,7 @@ export class Erc1155LazyMintable implements DetectableFeature {
    * @param metadatas - The metadata to include in the batch.
    * @param options - optional upload progress callback
    */
-  lazyMint = buildTransactionFunction(
+  lazyMint = /* @__PURE__ */ buildTransactionFunction(
     async (
       metadatas: NFTMetadataOrUri[],
       options?: {

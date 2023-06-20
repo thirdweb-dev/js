@@ -68,7 +68,7 @@ export class Erc721BatchMintable implements DetectableFeature {
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```
    */
-  to = buildTransactionFunction(
+  to = /* @__PURE__ */ buildTransactionFunction(
     async (
       to: AddressOrEns,
       metadatas: NFTMetadataOrUri[],

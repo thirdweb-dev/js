@@ -80,7 +80,7 @@ export class Erc1155Mintable implements DetectableFeature {
    * ```
    *
    */
-  to = buildTransactionFunction(
+  to = /* @__PURE__ */ buildTransactionFunction(
     async (
       to: AddressOrEns,
       metadataWithSupply: EditionMetadataOrUri,
@@ -148,7 +148,7 @@ export class Erc1155Mintable implements DetectableFeature {
    * const tx = await contract.edition.mint.additionalSupplyTo(toAddress, tokenId, additionalSupply);
    * ```
    */
-  additionalSupplyTo = buildTransactionFunction(
+  additionalSupplyTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       to: AddressOrEns,
       tokenId: BigNumberish,

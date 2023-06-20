@@ -344,7 +344,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * ```
    * @twfeature DirectListings
    */
-  createListing = buildTransactionFunction(
+  createListing = /* @__PURE__ */ buildTransactionFunction(
     async (
       listing: DirectListingInputParams,
     ): Promise<Transaction<TransactionResultWithId>> => {
@@ -414,7 +414,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * const tx = await contract.directListings.createListingsBatch(listings);
    * ```
    */
-  createListingsBatch = buildTransactionFunction(
+  createListingsBatch = /* @__PURE__ */ buildTransactionFunction(
     async (
       listings: DirectListingInputParams[],
     ): Promise<Transaction<TransactionResultWithId[]>> => {
@@ -482,7 +482,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * ```
    * @twfeature DirectListings
    */
-  updateListing = buildTransactionFunction(
+  updateListing = /* @__PURE__ */ buildTransactionFunction(
     async (
       listingId: BigNumberish,
       listing: DirectListingInputParams,
@@ -551,13 +551,15 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * ```
    * @twfeature DirectListings
    */
-  cancelListing = buildTransactionFunction(async (listingId: BigNumberish) => {
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "cancelListing",
-      args: [listingId],
-    });
-  });
+  cancelListing = /* @__PURE__ */ buildTransactionFunction(
+    async (listingId: BigNumberish) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "cancelListing",
+        args: [listingId],
+      });
+    },
+  );
 
   /**
    * Buy direct listing for a specific wallet
@@ -579,7 +581,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * @param receiver - optional receiver of the bought listing if different from the connected wallet
    * @twfeature DirectListings
    */
-  buyFromListing = buildTransactionFunction(
+  buyFromListing = /* @__PURE__ */ buildTransactionFunction(
     async (
       listingId: BigNumberish,
       quantityDesired: BigNumberish,
@@ -642,7 +644,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * @param buyer - Address of buyer being approved
    * @twfeature DirectListings
    */
-  approveBuyerForReservedListing = buildTransactionFunction(
+  approveBuyerForReservedListing = /* @__PURE__ */ buildTransactionFunction(
     async (listingId: BigNumberish, buyer: AddressOrEns) => {
       const isApproved = await this.isBuyerApprovedForListing(listingId, buyer);
 
@@ -674,23 +676,27 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * @param listingId - The listing id to buy
    * @param buyer - Address of buyer being approved
    */
-  revokeBuyerApprovalForReservedListing = buildTransactionFunction(
-    async (listingId: BigNumberish, buyer: AddressOrEns) => {
-      const isApproved = await this.isBuyerApprovedForListing(listingId, buyer);
-
-      if (isApproved) {
-        return Transaction.fromContractWrapper({
-          contractWrapper: this.contractWrapper,
-          method: "approveBuyerForListing",
-          args: [listingId, buyer, false],
-        });
-      } else {
-        throw new Error(
-          `Buyer ${buyer} not approved for listing ${listingId}.`,
+  revokeBuyerApprovalForReservedListing =
+    /* @__PURE__ */ buildTransactionFunction(
+      async (listingId: BigNumberish, buyer: AddressOrEns) => {
+        const isApproved = await this.isBuyerApprovedForListing(
+          listingId,
+          buyer,
         );
-      }
-    },
-  );
+
+        if (isApproved) {
+          return Transaction.fromContractWrapper({
+            contractWrapper: this.contractWrapper,
+            method: "approveBuyerForListing",
+            args: [listingId, buyer, false],
+          });
+        } else {
+          throw new Error(
+            `Buyer ${buyer} not approved for listing ${listingId}.`,
+          );
+        }
+      },
+    );
 
   /**
    * Approve a currency for a direct listing
@@ -709,7 +715,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * @param pricePerTokenInCurrency - Price per token in the currency
    * @twfeature DirectListings
    */
-  approveCurrencyForListing = buildTransactionFunction(
+  approveCurrencyForListing = /* @__PURE__ */ buildTransactionFunction(
     async (
       listingId: BigNumberish,
       currencyContractAddress: AddressOrEns,
@@ -761,7 +767,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * @param currencyContractAddress - Address of currency
    * @twfeature DirectListings
    */
-  revokeCurrencyApprovalForListing = buildTransactionFunction(
+  revokeCurrencyApprovalForListing = /* @__PURE__ */ buildTransactionFunction(
     async (listingId: BigNumberish, currencyContractAddress: AddressOrEns) => {
       const listing = await this.validateListing(BigNumber.from(listingId));
 

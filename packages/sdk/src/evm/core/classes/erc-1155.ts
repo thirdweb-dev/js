@@ -232,7 +232,7 @@ export class Erc1155<
    * ```
    * @twfeature ERC1155
    */
-  transfer = buildTransactionFunction(
+  transfer = /* @__PURE__ */ buildTransactionFunction(
     async (
       to: AddressOrEns,
       tokenId: BigNumberish,
@@ -263,7 +263,7 @@ export class Erc1155<
    * ```
    * @twfeature ERC1155
    */
-  transferFrom = buildTransactionFunction(
+  transferFrom = /* @__PURE__ */ buildTransactionFunction(
     async (
       from: AddressOrEns,
       to: AddressOrEns,
@@ -297,7 +297,7 @@ export class Erc1155<
    * @param approved - whether to approve or remove
    * @twfeature ERC1155
    */
-  setApprovalForAll = buildTransactionFunction(
+  setApprovalForAll = /* @__PURE__ */ buildTransactionFunction(
     async (operator: string, approved: boolean) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -338,7 +338,7 @@ export class Erc1155<
    * ```
    * @twfeature ERC1155BatchTransferable
    */
-  airdrop = buildTransactionFunction(
+  airdrop = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenId: BigNumberish,
       addresses: AirdropInput,
@@ -500,7 +500,7 @@ export class Erc1155<
    * ```
    * @twfeature ERC1155Mintable
    */
-  mint = buildTransactionFunction(
+  mint = /* @__PURE__ */ buildTransactionFunction(
     async (
       metadataWithSupply: EditionMetadataOrUri,
     ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
@@ -540,7 +540,7 @@ export class Erc1155<
    * ```
    * @twfeature ERC1155Mintable
    */
-  mintTo = buildTransactionFunction(
+  mintTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       receiver: AddressOrEns,
       metadataWithSupply: EditionMetadataOrUri,
@@ -585,7 +585,7 @@ export class Erc1155<
    * @param additionalSupply - the additional amount to mint
    * @twfeature ERC1155Mintable
    */
-  mintAdditionalSupply = buildTransactionFunction(
+  mintAdditionalSupply = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenId: BigNumberish,
       additionalSupply: BigNumberish,
@@ -609,7 +609,7 @@ export class Erc1155<
    * @param additionalSupply - the additional amount to mint
    * @twfeature ERC1155Mintable
    */
-  mintAdditionalSupplyTo = buildTransactionFunction(
+  mintAdditionalSupplyTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       receiver: AddressOrEns,
       tokenId: BigNumberish,
@@ -655,7 +655,7 @@ export class Erc1155<
    * ```
    * @twfeature ERC1155BatchMintable
    */
-  mintBatch = buildTransactionFunction(
+  mintBatch = /* @__PURE__ */ buildTransactionFunction(
     async (
       metadataWithSupply: EditionMetadataOrUri[],
     ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
@@ -700,7 +700,7 @@ export class Erc1155<
    * ```
    * @twfeature ERC1155BatchMintable
    */
-  mintBatchTo = buildTransactionFunction(
+  mintBatchTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       receiver: AddressOrEns,
       metadataWithSupply: EditionMetadataOrUri[],
@@ -733,7 +733,7 @@ export class Erc1155<
    * ```
    * @twfeature ERC1155Burnable
    */
-  burn = buildTransactionFunction(
+  burn = /* @__PURE__ */ buildTransactionFunction(
     async (tokenId: BigNumberish, amount: BigNumberish) => {
       return assertEnabled(
         this.burnable,
@@ -764,7 +764,7 @@ export class Erc1155<
    * ```
    * @twfeature ERC1155Burnable
    */
-  burnFrom = buildTransactionFunction(
+  burnFrom = /* @__PURE__ */ buildTransactionFunction(
     async (
       account: AddressOrEns,
       tokenId: BigNumberish,
@@ -796,7 +796,7 @@ export class Erc1155<
    * ```
    * @twfeature ERC1155Burnable
    */
-  burnBatch = buildTransactionFunction(
+  burnBatch = /* @__PURE__ */ buildTransactionFunction(
     async (tokenIds: BigNumberish[], amounts: BigNumberish[]) => {
       return assertEnabled(
         this.burnable,
@@ -827,7 +827,7 @@ export class Erc1155<
    * ```
    * @twfeature ERC1155Burnable
    */
-  burnBatchFrom = buildTransactionFunction(
+  burnBatchFrom = /* @__PURE__ */ buildTransactionFunction(
     async (
       account: AddressOrEns,
       tokenIds: BigNumberish[],
@@ -869,7 +869,7 @@ export class Erc1155<
    * @param options - optional upload progress callback
    * @twfeature ERC1155LazyMintableV1 | ERC1155LazyMintableV2
    */
-  lazyMint = buildTransactionFunction(
+  lazyMint = /* @__PURE__ */ buildTransactionFunction(
     async (
       metadatas: NFTMetadataOrUri[],
       options?: {
@@ -943,7 +943,7 @@ export class Erc1155<
    * @returns - Receipt for the transaction
    * @twfeature ERC1155ClaimCustom | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
    */
-  claim = buildTransactionFunction(
+  claim = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenId: BigNumberish,
       quantity: BigNumberish,
@@ -981,7 +981,7 @@ export class Erc1155<
    * @returns - Receipt for the transaction
    * @twfeature ERC1155ClaimCustom | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
    */
-  claimTo = buildTransactionFunction(
+  claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       destinationAddress: AddressOrEns,
       tokenId: BigNumberish,

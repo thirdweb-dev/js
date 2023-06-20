@@ -30,21 +30,20 @@ export const CommonNFTInput = /* @__PURE__ */ BasicNFTInput.extend({
 /**
  * @internal
  */
-export const NFTInputOrUriSchema = /* @__PURE__ */ z.union([
-  CommonNFTInput,
-  z.string(),
-]);
+export const NFTInputOrUriSchema = /* @__PURE__ */ (() =>
+  z.union([CommonNFTInput, z.string()]))();
 
 /**
  * @internal
  */
-export const CommonNFTOutput = /* @__PURE__ */ CommonNFTInput.extend({
-  id: z.string(),
-  uri: z.string(),
-  image: z.string().nullable().optional(),
-  external_url: z.string().nullable().optional(),
-  animation_url: z.string().nullable().optional(),
-});
+export const CommonNFTOutput = /* @__PURE__ */ (() =>
+  CommonNFTInput.extend({
+    id: z.string(),
+    uri: z.string(),
+    image: z.string().nullable().optional(),
+    external_url: z.string().nullable().optional(),
+    animation_url: z.string().nullable().optional(),
+  }))();
 
 /**
  * @public

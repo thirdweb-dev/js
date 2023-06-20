@@ -69,7 +69,7 @@ export class Erc721Mintable implements DetectableFeature {
    * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
    */
-  to = buildTransactionFunction(
+  to = /* @__PURE__ */ buildTransactionFunction(
     async (
       to: AddressOrEns,
       metadata: NFTMetadataOrUri,
