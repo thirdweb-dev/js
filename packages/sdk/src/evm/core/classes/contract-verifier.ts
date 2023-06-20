@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { utils } from "ethers";
 import {
   verifyThirdwebPrebuiltImplementation,
   checkVerificationStatus,
@@ -123,7 +123,7 @@ export class ContractVerifier extends RPCConnectionHandler {
         return arg.value;
       });
 
-      encodedArgs = ethers.utils.defaultAbiCoder.encode(
+      encodedArgs = utils.defaultAbiCoder.encode(
         paramTypes,
         paramValues,
       );

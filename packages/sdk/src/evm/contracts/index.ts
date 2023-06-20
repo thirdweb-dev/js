@@ -19,7 +19,7 @@ import { Abi, AbiSchema } from "../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers } from "ethers";
+import { providers } from "ethers";
 import type { SmartContract as SmartContractType } from "./smart-contract";
 import { getCompositeABIfromRelease } from "../common/plugin/getCompositeABIfromRelease";
 import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
@@ -83,7 +83,7 @@ export const EditionDropInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -129,7 +129,7 @@ export const EditionInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -169,7 +169,7 @@ export const MarketplaceInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -210,7 +210,7 @@ export const MarketplaceV3Initializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const chainId = (await provider.getNetwork()).chainId;
@@ -270,7 +270,7 @@ export const MultiwrapInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -310,7 +310,7 @@ export const NFTCollectionInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -350,7 +350,7 @@ export const NFTDropInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -397,7 +397,7 @@ export const PackInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ): Promise<Abi> => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -439,7 +439,7 @@ export const SignatureDropInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -489,7 +489,7 @@ export const SplitInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -529,7 +529,7 @@ export const TokenDropInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -572,7 +572,7 @@ export const TokenInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -613,7 +613,7 @@ export const VoteInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -628,7 +628,7 @@ export const VoteInitializer = {
 
 async function getContractInfo(
   address: Address,
-  provider: ethers.providers.Provider,
+  provider: providers.Provider,
 ) {
   try {
     return await getPrebuiltInfo(address, provider);

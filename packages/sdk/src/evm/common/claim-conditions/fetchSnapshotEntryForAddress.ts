@@ -7,13 +7,13 @@ import {
   SnapshotFormatVersion,
 } from "../sharded-merkle-tree";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers } from "ethers";
+import { providers } from "ethers";
 
 export async function fetchSnapshotEntryForAddress(
   address: string,
   merkleRoot: string,
   merkleMetadata: Record<string, string> | undefined,
-  provider: ethers.providers.Provider,
+  provider: providers.Provider,
   storage: ThirdwebStorage,
   snapshotFormatVersion: SnapshotFormatVersion,
 ): Promise<SnapshotEntryWithProof | null> {

@@ -1,5 +1,5 @@
 import { Quantity } from "../../../core/schema/shared";
-import { ethers } from "ethers";
+import { utils, constants } from "ethers";
 
 /**
  * @internal
@@ -11,8 +11,8 @@ export function convertQuantityToBigNumber(
   tokenDecimals: number,
 ) {
   if (quantity === "unlimited") {
-    return ethers.constants.MaxUint256;
+    return constants.MaxUint256;
   } else {
-    return ethers.utils.parseUnits(quantity, tokenDecimals);
+    return utils.parseUnits(quantity, tokenDecimals);
   }
 }
