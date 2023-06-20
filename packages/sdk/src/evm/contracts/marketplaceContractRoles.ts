@@ -1,0 +1,1 @@
+export const MARKETPLACE_CONTRACT_ROLES = ["admin", "lister", "asset"] as const;

@@ -34,6 +34,7 @@ import { NewOfferEventObject } from "@thirdweb-dev/contracts-js/dist/declaration
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 import invariant from "tiny-invariant";
+import { MARKETPLACE_CONTRACT_ROLES } from "../marketplaceContractRoles";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -50,7 +51,7 @@ import invariant from "tiny-invariant";
  * @public
  */
 export class Marketplace implements UpdateableNetwork {
-  static contractRoles = ["admin", "lister", "asset"] as const;
+  static contractRoles = MARKETPLACE_CONTRACT_ROLES;
 
   public abi: Abi;
   private contractWrapper: ContractWrapper<MarketplaceContract>;

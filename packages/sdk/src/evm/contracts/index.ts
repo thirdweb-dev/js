@@ -24,6 +24,7 @@ import type { SmartContract as SmartContractType } from "./smart-contract";
 import { getCompositeABIfromRelease } from "../common/plugin/getCompositeABIfromRelease";
 import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
 import { CONTRACT_ROLES } from "./contractRoles";
+import { MARKETPLACE_CONTRACT_ROLES } from "./marketplaceContractRoles";
 
 const prebuiltContractTypes = {
   vote: "vote",
@@ -140,7 +141,7 @@ export const MarketplaceInitializer = {
   name: "Marketplace" as const,
   contractType: prebuiltContractTypes.marketplace,
   schema: MarketplaceContractSchema,
-  roles: ["admin", "lister", "asset"] as const,
+  roles: MARKETPLACE_CONTRACT_ROLES,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
@@ -181,7 +182,7 @@ export const MarketplaceV3Initializer = {
   name: "MarketplaceV3" as const,
   contractType: prebuiltContractTypes["marketplace-v3"],
   schema: MarketplaceContractSchema,
-  roles: ["admin", "lister", "asset"] as const,
+  roles: MARKETPLACE_CONTRACT_ROLES,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
