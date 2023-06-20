@@ -5,10 +5,10 @@ import {
   WalletConfig,
 } from "@thirdweb-dev/react-core";
 import { WalletUIStatesProvider } from "./wallet-ui-states-provider";
-import { ConnectModal } from "../../wallet/ConnectWallet/ConnectModal";
+const ConnectModal = lazy(() => import("../../wallet/ConnectWallet/ConnectModal"));
 import { ThemeProvider } from "@emotion/react";
 import { darkTheme, lightTheme } from "../../design-system";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, lazy } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { defaultWallets } from "../../wallet/wallets/defaultWallets";
 

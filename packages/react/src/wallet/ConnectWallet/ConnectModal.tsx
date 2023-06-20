@@ -20,7 +20,7 @@ import { GetStartedWithWallets } from "./screens/GetStartedWithWallets";
 import { reservedScreens } from "./constants";
 import { HeadlessConnectUI } from "../wallets/headlessConnectUI";
 
-export const ConnectModal = () => {
+export default function ConnectModal() {
   const { theme, title } = useContext(ModalConfigCtx);
   const walletConfigs = useWallets();
   const initialScreen =
