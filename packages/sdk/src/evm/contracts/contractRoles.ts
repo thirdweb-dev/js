@@ -1,1 +1,1 @@
-export const CONTRACT_ROLES = ["admin", "minter", "transfer"] as const;
+export const NFT_BASE_CONTRACT_ROLES = ["admin", "minter", "transfer"] as const;

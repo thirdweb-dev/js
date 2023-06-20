@@ -32,7 +32,6 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { CallOverrides } from "ethers";
-import { MARKETPLACE_CONTRACT_ROLES } from "../marketplaceContractRoles";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -49,7 +48,7 @@ import { MARKETPLACE_CONTRACT_ROLES } from "../marketplaceContractRoles";
  * @public
  */
 export class MarketplaceV3 implements UpdateableNetwork {
-  static contractRoles = MARKETPLACE_CONTRACT_ROLES;
+  static contractRoles = ["admin", "lister", "asset"] as const;
 
   public abi: Abi;
   private contractWrapper: ContractWrapper<MarketplaceV3Contract>;

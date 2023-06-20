@@ -35,7 +35,7 @@ import { UploadProgressEvent } from "../../types/events";
 import type { SignatureDrop as SignatureDropContract } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
-import { CONTRACT_ROLES } from "../contractRoles";
+import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
  * Setup a collection of NFTs where when it comes to minting, you can authorize
@@ -54,7 +54,7 @@ import { CONTRACT_ROLES } from "../contractRoles";
  * @public
  */
 export class SignatureDrop extends StandardErc721<SignatureDropContract> {
-  static contractRoles = CONTRACT_ROLES;
+  static contractRoles = NFT_BASE_CONTRACT_ROLES;
 
   public abi: Abi;
   public owner: ContractOwner<SignatureDropContract>;

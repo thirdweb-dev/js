@@ -23,8 +23,7 @@ import { ethers } from "ethers";
 import type { SmartContract as SmartContractType } from "./smart-contract";
 import { getCompositeABIfromRelease } from "../common/plugin/getCompositeABIfromRelease";
 import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
-import { CONTRACT_ROLES } from "./contractRoles";
-import { MARKETPLACE_CONTRACT_ROLES } from "./marketplaceContractRoles";
+import { NFT_BASE_CONTRACT_ROLES } from "./contractRoles";
 
 const prebuiltContractTypes = {
   vote: "vote",
@@ -55,7 +54,7 @@ export const EditionDropInitializer = {
   name: "DropERC1155" as const,
   contractType: prebuiltContractTypes["edition-drop"],
   schema: DropErc1155ContractSchema,
-  roles: CONTRACT_ROLES,
+  roles: NFT_BASE_CONTRACT_ROLES,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
@@ -101,7 +100,7 @@ export const EditionInitializer = {
   name: "TokenERC1155" as const,
   contractType: prebuiltContractTypes["edition"],
   schema: TokenErc1155ContractSchema,
-  roles: CONTRACT_ROLES,
+  roles: NFT_BASE_CONTRACT_ROLES,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
@@ -141,7 +140,7 @@ export const MarketplaceInitializer = {
   name: "Marketplace" as const,
   contractType: prebuiltContractTypes.marketplace,
   schema: MarketplaceContractSchema,
-  roles: MARKETPLACE_CONTRACT_ROLES,
+  roles: ["admin", "lister", "asset"] as const,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
@@ -182,7 +181,7 @@ export const MarketplaceV3Initializer = {
   name: "MarketplaceV3" as const,
   contractType: prebuiltContractTypes["marketplace-v3"],
   schema: MarketplaceContractSchema,
-  roles: MARKETPLACE_CONTRACT_ROLES,
+  roles: ["admin", "lister", "asset"] as const,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
@@ -281,7 +280,7 @@ export const NFTCollectionInitializer = {
   name: "TokenERC721" as const,
   contractType: prebuiltContractTypes["nft-collection"],
   schema: TokenErc721ContractSchema,
-  roles: CONTRACT_ROLES,
+  roles: NFT_BASE_CONTRACT_ROLES,
 
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
@@ -322,7 +321,7 @@ export const NFTDropInitializer = {
   name: "DropERC721" as const,
   contractType: prebuiltContractTypes["nft-drop"],
   schema: DropErc721ContractSchema,
-  roles: CONTRACT_ROLES,
+  roles: NFT_BASE_CONTRACT_ROLES,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
@@ -410,7 +409,7 @@ export const SignatureDropInitializer = {
   name: "SignatureDrop" as const,
   contractType: prebuiltContractTypes["signature-drop"],
   schema: DropErc721ContractSchema,
-  roles: CONTRACT_ROLES,
+  roles: NFT_BASE_CONTRACT_ROLES,
 
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
@@ -544,7 +543,7 @@ export const TokenInitializer = {
   name: "TokenERC20" as const,
   contractType: prebuiltContractTypes.token,
   schema: TokenErc20ContractSchema,
-  roles: CONTRACT_ROLES,
+  roles: NFT_BASE_CONTRACT_ROLES,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {

@@ -27,7 +27,7 @@ import { EditionMetadataOrUri } from "../../schema/tokens/edition";
 import type { TokenERC1155 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
-import { CONTRACT_ROLES } from "../contractRoles";
+import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.
@@ -44,7 +44,7 @@ import { CONTRACT_ROLES } from "../contractRoles";
  * @public
  */
 export class Edition extends StandardErc1155<TokenERC1155> {
-  static contractRoles = CONTRACT_ROLES;
+  static contractRoles = NFT_BASE_CONTRACT_ROLES;
 
   public abi: Abi;
   public metadata: ContractMetadata<
