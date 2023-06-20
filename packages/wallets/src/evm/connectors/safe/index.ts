@@ -83,12 +83,13 @@ const SIGN_MESSAGE_LIB_ABI = [
 
 const __IS_SERVER__ = typeof window === "undefined";
 
-export const SafeSupportedChainsSet = new Set(
-  Object.keys(CHAIN_ID_TO_GNOSIS_SERVER_URL).map(Number),
-);
+export const SafeSupportedChainsSet = /* @__PURE__ */ (() =>
+  new Set(Object.keys(CHAIN_ID_TO_GNOSIS_SERVER_URL).map(Number)))();
 
 export class SafeConnector extends Connector<SafeConnectionArgs> {
-  static supportedChains = Object.keys(CHAIN_ID_TO_GNOSIS_SERVER_URL);
+  static supportedChains = /* @__PURE__ */ Object.keys(
+    CHAIN_ID_TO_GNOSIS_SERVER_URL,
+  );
   public supportedChains = SafeConnector.supportedChains;
   readonly id = "safe-wallet";
   ready = !__IS_SERVER__;

@@ -151,7 +151,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
               });
               setIsWalletModalOpen(true);
             }}
-          data-test="connect-wallet-button"
+            data-test="connect-wallet-button"
           >
             {isLoading ? <Spinner size="sm" color="inverted" /> : btnTitle}
           </AnimatedButton>
@@ -175,6 +175,6 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   );
 };
 
-const AnimatedButton = styled(Button)`
+const AnimatedButton = /* @__PURE__ */ styled(Button)`
   animation: ${fadeInAnimation} 300ms ease;
 `;

@@ -8,9 +8,10 @@ interface ThirdwebConfigContext {
   infuraApiKey?: string;
 }
 
-const ThirdwebConfigContext = createContext<ThirdwebConfigContext>({
-  chains: defaultChains,
-});
+const ThirdwebConfigContext =
+  /* @__PURE__ */ createContext<ThirdwebConfigContext>({
+    chains: defaultChains,
+  });
 
 export const ThirdwebConfigProvider: React.FC<
   PropsWithChildren<{
