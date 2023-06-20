@@ -333,7 +333,7 @@ export class MarketplaceV3EnglishAuctions<
    * @returns the transaction hash and the auction id
    * @twfeature EnglishAuctions
    */
-  createAuction = buildTransactionFunction(
+  createAuction = /* @__PURE__ */ buildTransactionFunction(
     async (
       auction: EnglishAuctionInputParams,
     ): Promise<Transaction<TransactionResultWithId>> => {
@@ -409,7 +409,7 @@ export class MarketplaceV3EnglishAuctions<
    * const tx = await contract.englishAuctions.createAuctionsBatch(auctions);
    * ```
    */
-  createAuctionsBatch = buildTransactionFunction(
+  createAuctionsBatch = /* @__PURE__ */ buildTransactionFunction(
     async (
       listings: EnglishAuctionInputParams[],
     ): Promise<Transaction<TransactionResultWithId[]>> => {
@@ -457,22 +457,24 @@ export class MarketplaceV3EnglishAuctions<
    * @returns the transaction result
    * @twfeature EnglishAuctions
    */
-  buyoutAuction = buildTransactionFunction(async (auctionId: BigNumberish) => {
-    const auction = await this.validateAuction(BigNumber.from(auctionId));
+  buyoutAuction = /* @__PURE__ */ buildTransactionFunction(
+    async (auctionId: BigNumberish) => {
+      const auction = await this.validateAuction(BigNumber.from(auctionId));
 
-    const currencyMetadata = await fetchCurrencyMetadata(
-      this.contractWrapper.getProvider(),
-      auction.currencyContractAddress,
-    );
+      const currencyMetadata = await fetchCurrencyMetadata(
+        this.contractWrapper.getProvider(),
+        auction.currencyContractAddress,
+      );
 
-    return this.makeBid.prepare(
-      auctionId,
-      ethers.utils.formatUnits(
-        auction.buyoutBidAmount,
-        currencyMetadata.decimals,
-      ),
-    );
-  });
+      return this.makeBid.prepare(
+        auctionId,
+        ethers.utils.formatUnits(
+          auction.buyoutBidAmount,
+          currencyMetadata.decimals,
+        ),
+      );
+    },
+  );
 
   /**
    * Bid on an english auction
@@ -493,7 +495,7 @@ export class MarketplaceV3EnglishAuctions<
    * @returns the transaction result
    * @twfeature EnglishAuctions
    */
-  makeBid = buildTransactionFunction(
+  makeBid = /* @__PURE__ */ buildTransactionFunction(
     async (auctionId: BigNumberish, bidAmount: Price) => {
       const auction = await this.validateAuction(BigNumber.from(auctionId));
 
@@ -568,18 +570,20 @@ export class MarketplaceV3EnglishAuctions<
    * @returns the transaction result
    * @twfeature EnglishAuctions
    */
-  cancelAuction = buildTransactionFunction(async (auctionId: BigNumberish) => {
-    const winningBid = await this.getWinningBid(auctionId);
-    if (winningBid) {
-      throw new Error(`Bids already made.`);
-    }
+  cancelAuction = /* @__PURE__ */ buildTransactionFunction(
+    async (auctionId: BigNumberish) => {
+      const winningBid = await this.getWinningBid(auctionId);
+      if (winningBid) {
+        throw new Error(`Bids already made.`);
+      }
 
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "cancelAuction",
-      args: [auctionId],
-    });
-  });
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "cancelAuction",
+        args: [auctionId],
+      });
+    },
+  );
 
   /**
    * Close the english auction for the bidder
@@ -598,7 +602,7 @@ export class MarketplaceV3EnglishAuctions<
    * @returns the transaction result
    * @twfeature EnglishAuctions
    */
-  closeAuctionForBidder = buildTransactionFunction(
+  closeAuctionForBidder = /* @__PURE__ */ buildTransactionFunction(
     async (auctionId: BigNumberish, closeFor?: AddressOrEns) => {
       if (!closeFor) {
         closeFor = await this.contractWrapper.getSignerAddress();
@@ -639,7 +643,7 @@ export class MarketplaceV3EnglishAuctions<
    * @returns the transaction result
    * @twfeature EnglishAuctions
    */
-  closeAuctionForSeller = buildTransactionFunction(
+  closeAuctionForSeller = /* @__PURE__ */ buildTransactionFunction(
     async (auctionId: BigNumberish) => {
       const auction = await this.validateAuction(BigNumber.from(auctionId));
       try {
@@ -677,34 +681,36 @@ export class MarketplaceV3EnglishAuctions<
    * @returns the transaction result
    * @twfeature EnglishAuctions
    */
-  executeSale = buildTransactionFunction(async (auctionId: BigNumberish) => {
-    const auction = await this.validateAuction(BigNumber.from(auctionId));
-    try {
-      const winningBid = await this.getWinningBid(auctionId);
-      invariant(winningBid, "No winning bid found");
-      const closeForSeller = this.encoder.encode("collectAuctionPayout", [
-        auctionId,
-      ]);
-      const closeForBuyer = this.encoder.encode("collectAuctionTokens", [
-        auctionId,
-      ]);
-      return Transaction.fromContractWrapper({
-        contractWrapper: this
-          .contractWrapper as unknown as ContractWrapper<IMulticall>,
-        method: "multicall",
-        args: [[closeForSeller, closeForBuyer]],
-      });
-    } catch (err: any) {
-      if (err.message.includes("Marketplace: auction still active.")) {
-        throw new AuctionHasNotEndedError(
-          auctionId.toString(),
-          auction.endTimeInSeconds.toString(),
-        );
-      } else {
-        throw err;
+  executeSale = /* @__PURE__ */ buildTransactionFunction(
+    async (auctionId: BigNumberish) => {
+      const auction = await this.validateAuction(BigNumber.from(auctionId));
+      try {
+        const winningBid = await this.getWinningBid(auctionId);
+        invariant(winningBid, "No winning bid found");
+        const closeForSeller = this.encoder.encode("collectAuctionPayout", [
+          auctionId,
+        ]);
+        const closeForBuyer = this.encoder.encode("collectAuctionTokens", [
+          auctionId,
+        ]);
+        return Transaction.fromContractWrapper({
+          contractWrapper: this
+            .contractWrapper as unknown as ContractWrapper<IMulticall>,
+          method: "multicall",
+          args: [[closeForSeller, closeForBuyer]],
+        });
+      } catch (err: any) {
+        if (err.message.includes("Marketplace: auction still active.")) {
+          throw new AuctionHasNotEndedError(
+            auctionId.toString(),
+            auction.endTimeInSeconds.toString(),
+          );
+        } else {
+          throw err;
+        }
       }
-    }
-  });
+    },
+  );
 
   /**
    * Get the buffer for an english auction

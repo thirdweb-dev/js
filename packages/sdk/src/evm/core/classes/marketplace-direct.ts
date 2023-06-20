@@ -161,7 +161,7 @@ export class MarketplaceDirect {
    * const id = tx.id; // the id of the newly created listing
    * ```
    */
-  createListing = buildTransactionFunction(
+  createListing = /* @__PURE__ */ buildTransactionFunction(
     async (listing: NewDirectListing) => {
       validateNewListingParam(listing);
 
@@ -236,7 +236,7 @@ export class MarketplaceDirect {
    * const tx = await contract.direct.createListingsBatch(listings);
    * ```
    */
-  createListingsBatch = buildTransactionFunction(
+  createListingsBatch = /* @__PURE__ */ buildTransactionFunction(
     async (
       listings: NewDirectListing[],
     ): Promise<Transaction<TransactionResultWithId[]>> => {
@@ -293,7 +293,7 @@ export class MarketplaceDirect {
    * );
    * ```
    */
-  makeOffer = buildTransactionFunction(
+  makeOffer = /* @__PURE__ */ buildTransactionFunction(
     async (
       listingId: BigNumberish,
       quantityDesired: BigNumberish,
@@ -367,7 +367,7 @@ export class MarketplaceDirect {
    * await contract.direct.acceptOffer(listingId, offeror);
    * ```
    */
-  acceptOffer = buildTransactionFunction(
+  acceptOffer = /* @__PURE__ */ buildTransactionFunction(
     async (listingId: BigNumberish, addressOfOfferor: AddressOrEns) => {
       /**
        * TODO:
@@ -407,7 +407,7 @@ export class MarketplaceDirect {
    * @param quantityDesired - the quantity to buy
    * @param receiver - optional receiver of the bought listing if different from the connected wallet
    */
-  buyoutListing = buildTransactionFunction(
+  buyoutListing = /* @__PURE__ */ buildTransactionFunction(
     async (
       listingId: BigNumberish,
       quantityDesired: BigNumberish,
@@ -456,21 +456,23 @@ export class MarketplaceDirect {
    *
    * @param listing - the new listing information
    */
-  updateListing = buildTransactionFunction(async (listing: DirectListing) => {
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "updateListing",
-      args: [
-        listing.id,
-        listing.quantity,
-        listing.buyoutPrice, // reserve price, doesn't matter for direct listing
-        listing.buyoutPrice,
-        await resolveAddress(listing.currencyContractAddress),
-        listing.startTimeInSeconds,
-        listing.secondsUntilEnd,
-      ],
-    });
-  });
+  updateListing = /* @__PURE__ */ buildTransactionFunction(
+    async (listing: DirectListing) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "updateListing",
+        args: [
+          listing.id,
+          listing.quantity,
+          listing.buyoutPrice, // reserve price, doesn't matter for direct listing
+          listing.buyoutPrice,
+          await resolveAddress(listing.currencyContractAddress),
+          listing.startTimeInSeconds,
+          listing.secondsUntilEnd,
+        ],
+      });
+    },
+  );
 
   /**
    * Cancel Direct Listing
@@ -485,13 +487,15 @@ export class MarketplaceDirect {
    * await contract.direct.cancelListing(listingId);
    * ```
    */
-  cancelListing = buildTransactionFunction(async (listingId: BigNumberish) => {
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "cancelDirectListing",
-      args: [listingId],
-    });
-  });
+  cancelListing = /* @__PURE__ */ buildTransactionFunction(
+    async (listingId: BigNumberish) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "cancelDirectListing",
+        args: [listingId],
+      });
+    },
+  );
 
   /** ******************************
    * PRIVATE FUNCTIONS
