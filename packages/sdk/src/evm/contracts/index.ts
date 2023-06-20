@@ -23,7 +23,7 @@ import { ethers } from "ethers";
 import type { SmartContract as SmartContractType } from "./smart-contract";
 import { getCompositeABIfromRelease } from "../common/plugin/getCompositeABIfromRelease";
 import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
-import { ADMIN_ROLE, MARKETPLACE_CONTRACT_ROLES, NFT_BASE_CONTRACT_ROLES, PACK_CONTRACT_ROLES } from "./contractRoles";
+import { ADMIN_ROLE, MARKETPLACE_CONTRACT_ROLES, NFT_BASE_CONTRACT_ROLES, PACK_CONTRACT_ROLES, TOKEN_DROP_CONTRACT_ROLES } from "./contractRoles";
 
 const prebuiltContractTypes = {
   vote: "vote",
@@ -499,7 +499,7 @@ export const TokenDropInitializer = {
   name: "DropERC20" as const,
   contractType: prebuiltContractTypes["token-drop"],
   schema: DropErc20ContractSchema,
-  roles: ["admin", "transfer"] as const,
+  roles: TOKEN_DROP_CONTRACT_ROLES,
 
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams

@@ -24,6 +24,7 @@ import type { CurrencyValue, Amount } from "../../types/currency";
 import { PrebuiltTokenDrop } from "../../types/eips";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { CallOverrides, constants } from "ethers";
+import { TOKEN_DROP_CONTRACT_ROLES } from "../contractRoles";
 
 /**
  * Create a Drop contract for a standard crypto token or cryptocurrency.
@@ -39,7 +40,7 @@ import { CallOverrides, constants } from "ethers";
  *
  */
 export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
-  static contractRoles = ["admin", "transfer"] as const;
+  static contractRoles = TOKEN_DROP_CONTRACT_ROLES;
 
   public abi: Abi;
   public metadata: ContractMetadata<

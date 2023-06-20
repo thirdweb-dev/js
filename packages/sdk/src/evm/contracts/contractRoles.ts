@@ -5,3 +5,5 @@ export const NFT_BASE_CONTRACT_ROLES = ["admin", "minter", "transfer"] as const;
 export const MARKETPLACE_CONTRACT_ROLES = ["admin", "lister", "asset"] as const;
 
 export const PACK_CONTRACT_ROLES = ["admin", "minter", "asset", "transfer"] as const;
+
+export const TOKEN_DROP_CONTRACT_ROLES = ["admin", "transfer"] as const;
