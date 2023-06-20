@@ -49,6 +49,7 @@ import { BigNumber, BigNumberish, CallOverrides, ethers } from "ethers";
 import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
 import { hasERC20Allowance } from "../../common/currency/hasERC20Allowance";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { PACK_CONTRACT_ROLES } from "../contractRoles";
 
 /**
  * Create lootboxes of NFTs with rarity based open mechanics.
@@ -65,7 +66,7 @@ import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
  * @public
  */
 export class Pack extends StandardErc1155<PackContract> {
-  static contractRoles = ["admin", "minter", "asset", "transfer"] as const;
+  static contractRoles = PACK_CONTRACT_ROLES;
 
   public abi: Abi;
   public metadata: ContractMetadata<PackContract, typeof PackContractSchema>;

@@ -23,7 +23,7 @@ import { ethers } from "ethers";
 import type { SmartContract as SmartContractType } from "./smart-contract";
 import { getCompositeABIfromRelease } from "../common/plugin/getCompositeABIfromRelease";
 import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
-import { ADMIN_ROLE, MARKETPLACE_CONTRACT_ROLES, NFT_BASE_CONTRACT_ROLES } from "./contractRoles";
+import { ADMIN_ROLE, MARKETPLACE_CONTRACT_ROLES, NFT_BASE_CONTRACT_ROLES, PACK_CONTRACT_ROLES } from "./contractRoles";
 
 const prebuiltContractTypes = {
   vote: "vote",
@@ -367,7 +367,7 @@ export const PackInitializer = {
   name: "Pack" as const,
   contractType: prebuiltContractTypes["pack"],
   schema: PackContractSchema,
-  roles: ["admin", "minter", "asset", "transfer"] as const,
+  roles: PACK_CONTRACT_ROLES,
 
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
