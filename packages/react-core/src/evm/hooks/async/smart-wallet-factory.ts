@@ -79,7 +79,7 @@ export function useIsSmartWalletDeployed(
 ): UseQueryResult<boolean> {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
-    cacheKeys.contract.smartWalletFactory.getAll(contractAddress),
+    cacheKeys.contract.smartWalletFactory.isSmartWalletDeployed(contractAddress, admin),
     () => {
       requiredParamInvariant(contract, "No Contract instance provided");
       invariant(

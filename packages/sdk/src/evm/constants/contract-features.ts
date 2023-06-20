@@ -27,6 +27,7 @@ import {
   FEATURE_NFT_CLAIM_PHASES_V1,
   FEATURE_NFT_SIGNATURE_MINTABLE_V1,
   FEATURE_NFT_SIGNATURE_MINTABLE_V2,
+  FEATURE_NFT_CLAIM_ZORA,
 } from "./erc721-features";
 import {
   FEATURE_EDITION,
@@ -85,6 +86,7 @@ export type Feature =
   | typeof FEATURE_NFT_BATCH_MINTABLE
   | typeof FEATURE_NFT_LAZY_MINTABLE
   | typeof FEATURE_NFT_CLAIM_CUSTOM
+  | typeof FEATURE_NFT_CLAIM_ZORA
   | typeof FEATURE_NFT_CLAIM_CONDITIONS_V1
   | typeof FEATURE_NFT_CLAIM_CONDITIONS_V2
   | typeof FEATURE_NFT_CLAIM_PHASES_V1
@@ -147,7 +149,7 @@ export type ExtensionWithEnabled = Extension & {
 /**
  * @internal
  */
-export const SUPPORTED_FEATURES: Record<string, Feature> = {
+export const SUPPORTED_FEATURES: Record<string, Feature> = /* @__PURE__ */ {
   [FEATURE_TOKEN.name]: FEATURE_TOKEN,
   [FEATURE_NFT.name]: FEATURE_NFT,
   [FEATURE_EDITION.name]: FEATURE_EDITION,

@@ -65,7 +65,7 @@ export class ContractPlatformFee<TContract extends IPlatformFee>
    * @param platformFeeInfo - the platform fee information
    * @twfeature PlatformFee
    */
-  set = buildTransactionFunction(
+  set = /* @__PURE__ */ buildTransactionFunction(
     async (
       platformFeeInfo: z.input<typeof CommonPlatformFeeSchema>,
     ): Promise<Transaction> => {

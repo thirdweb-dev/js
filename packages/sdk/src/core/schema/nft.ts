@@ -9,34 +9,37 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const CommonNFTInput = z
-  .object({
-    name: z.union([z.string(), z.number()]).optional().nullable(),
-    description: z.string().nullable().optional().nullable(),
-    image: FileOrBufferOrStringSchema.nullable().optional(),
-    external_url: FileOrBufferOrStringSchema.nullable().optional(),
-    animation_url: FileOrBufferOrStringSchema.optional().nullable(),
-    background_color: HexColor.optional().nullable(),
-    properties: OptionalPropertiesInput,
-    attributes: OptionalPropertiesInput,
-  })
-  .catchall(z.union([BigNumberTransformSchema, z.unknown()]));
+export const CommonNFTInput = /* @__PURE__ */ (() =>
+  z
+    .object({
+      name: z.union([z.string(), z.number()]).optional().nullable(),
+      description: z.string().nullable().optional().nullable(),
+      image: FileOrBufferOrStringSchema.nullable().optional(),
+      external_url: FileOrBufferOrStringSchema.nullable().optional(),
+      animation_url: FileOrBufferOrStringSchema.optional().nullable(),
+      background_color: HexColor.optional().nullable(),
+      properties: OptionalPropertiesInput,
+      attributes: OptionalPropertiesInput,
+    })
+    .catchall(z.union([BigNumberTransformSchema, z.unknown()])))();
 
 /**
  * @internal
  */
-export const NFTInputOrUriSchema = z.union([CommonNFTInput, z.string()]);
+export const NFTInputOrUriSchema = /* @__PURE__ */ (() =>
+  z.union([CommonNFTInput, z.string()]))();
 
 /**
  * @internal
  */
-export const CommonNFTOutput = CommonNFTInput.extend({
-  id: z.string(),
-  uri: z.string(),
-  image: z.string().nullable().optional(),
-  external_url: z.string().nullable().optional(),
-  animation_url: z.string().nullable().optional(),
-});
+export const CommonNFTOutput = /* @__PURE__ */ (() =>
+  CommonNFTInput.extend({
+    id: z.string(),
+    uri: z.string(),
+    image: z.string().nullable().optional(),
+    external_url: z.string().nullable().optional(),
+    animation_url: z.string().nullable().optional(),
+  }))();
 
 /**
  * @public

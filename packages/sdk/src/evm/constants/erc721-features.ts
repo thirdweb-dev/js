@@ -14,6 +14,7 @@ import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.json";
 import SignatureMintERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC721.json";
 import SignatureMintERC721_V1Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC721_V1.json";
 import TieredDropAbi from "@thirdweb-dev/contracts-js/dist/abis/LazyMintWithTier.json";
+import zora_IDropERC721 from "@thirdweb-dev/contracts-js/dist/abis/zora_IERC721Drop.json";
 
 export const FEATURE_NFT_BURNABLE = {
   name: "ERC721Burnable",
@@ -104,7 +105,18 @@ export const FEATURE_NFT_CLAIM_CUSTOM = {
   features: {},
 } as const;
 
-export const FEATURE_NFT_LAZY_MINTABLE = {
+export const FEATURE_NFT_CLAIM_ZORA = {
+  name: "ERC721ClaimZora",
+  namespace: "nft.drop.claim",
+  docLinks: {
+    sdk: "sdk.erc721claimable",
+    contracts: "erc721claimzora",
+  },
+  abis: [Erc721Abi, zora_IDropERC721],
+  features: {},
+} as const;
+
+export const FEATURE_NFT_LAZY_MINTABLE = /* @__PURE__ */ {
   name: "ERC721LazyMintable",
   namespace: "nft.drop",
   docLinks: {
@@ -128,7 +140,7 @@ export const FEATURE_NFT_BATCH_MINTABLE = {
   features: {},
 } as const;
 
-export const FEATURE_NFT_MINTABLE = {
+export const FEATURE_NFT_MINTABLE = /* @__PURE__ */ {
   name: "ERC721Mintable",
   namespace: "nft.mint",
   docLinks: {
@@ -174,7 +186,7 @@ export const FEATURE_NFT_ENUMERABLE = {
   features: {},
 } as const;
 
-export const FEATURE_NFT_SUPPLY = {
+export const FEATURE_NFT_SUPPLY = /* @__PURE__ */ {
   name: "ERC721Supply",
   namespace: "nft.query",
   docLinks: {
@@ -187,7 +199,7 @@ export const FEATURE_NFT_SUPPLY = {
   },
 } as const;
 
-export const FEATURE_NFT = {
+export const FEATURE_NFT = /* @__PURE__ */ {
   name: "ERC721",
   namespace: "nft",
   docLinks: {
@@ -204,6 +216,7 @@ export const FEATURE_NFT = {
     [FEATURE_NFT_SIGNATURE_MINTABLE_V2.name]: FEATURE_NFT_SIGNATURE_MINTABLE_V2,
     [FEATURE_NFT_TIERED_DROP.name]: FEATURE_NFT_TIERED_DROP,
     [FEATURE_NFT_CLAIM_CUSTOM.name]: FEATURE_NFT_CLAIM_CUSTOM,
+    [FEATURE_NFT_CLAIM_ZORA.name]: FEATURE_NFT_CLAIM_ZORA,
     [FEATURE_NFT_CLAIM_CONDITIONS_V1.name]: FEATURE_NFT_CLAIM_CONDITIONS_V1,
     [FEATURE_NFT_CLAIM_CONDITIONS_V2.name]: FEATURE_NFT_CLAIM_CONDITIONS_V2,
     [FEATURE_NFT_CLAIM_PHASES_V1.name]: FEATURE_NFT_CLAIM_PHASES_V1,

@@ -98,7 +98,7 @@ export class MultichainRegistry {
       }));
   }
 
-  addContract = buildTransactionFunction(
+  addContract = /* @__PURE__ */ buildTransactionFunction(
     async (
       contract: AddContractInput,
     ): Promise<Transaction<TransactionResult>> => {
@@ -106,7 +106,7 @@ export class MultichainRegistry {
     },
   );
 
-  addContracts = buildTransactionFunction(
+  addContracts = /* @__PURE__ */ buildTransactionFunction(
     async (
       contracts: AddContractInput[],
     ): Promise<Transaction<TransactionResult>> => {
@@ -131,7 +131,7 @@ export class MultichainRegistry {
     },
   );
 
-  removeContract = buildTransactionFunction(
+  removeContract = /* @__PURE__ */ buildTransactionFunction(
     async (
       contract: ContractInput,
     ): Promise<Transaction<TransactionResult>> => {
@@ -139,7 +139,7 @@ export class MultichainRegistry {
     },
   );
 
-  removeContracts = buildTransactionFunction(
+  removeContracts = /* @__PURE__ */ buildTransactionFunction(
     async (
       contracts: ContractInput[],
     ): Promise<Transaction<TransactionResult>> => {

@@ -150,7 +150,7 @@ export class ContractMetadata<
    * @param metadata - the metadata to set
    * @twfeature ContractMetadata
    */
-  set = buildTransactionFunction(
+  set = /* @__PURE__ */ buildTransactionFunction(
     async (metadata: z.input<TSchema["input"]>) => {
       const uri = await this._parseAndUploadMetadata(metadata);
 
@@ -186,7 +186,7 @@ export class ContractMetadata<
    * @param metadata - the metadata to update
    * @twfeature ContractMetadata
    * */
-  update = buildTransactionFunction(
+  update = /* @__PURE__ */ buildTransactionFunction(
     async (metadata: Partial<z.input<TSchema["input"]>>) => {
       return await this.set.prepare({
         ...(await this.get()),

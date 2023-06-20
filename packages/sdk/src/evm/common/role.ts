@@ -24,7 +24,7 @@ export type Role = keyof typeof roleMap;
 /**
  * @public
  */
-export const ALL_ROLES = Object.keys(roleMap) as Role[];
+export const ALL_ROLES = /* @__PURE__ */ Object.keys(roleMap) as Role[];
 
 /**
  * @internal

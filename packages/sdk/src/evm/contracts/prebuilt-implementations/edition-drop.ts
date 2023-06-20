@@ -268,7 +268,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * @param metadatas - The metadata to include in the batch.
    * @param options - optional upload progress callback
    */
-  createBatch = buildTransactionFunction(
+  createBatch = /* @__PURE__ */ buildTransactionFunction(
     async (
       metadatas: NFTMetadataOrUri[],
       options?: {
@@ -327,7 +327,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    *
    * @returns - Receipt for the transaction
    */
-  claimTo = buildTransactionFunction(
+  claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       destinationAddress: AddressOrEns,
       tokenId: BigNumberish,
@@ -357,7 +357,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    *
    * @returns - Receipt for the transaction
    */
-  claim = buildTransactionFunction(
+  claim = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenId: BigNumberish,
       quantity: BigNumberish,
@@ -384,7 +384,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * const result = await contract.burnTokens(tokenId, amount);
    * ```
    */
-  burnTokens = buildTransactionFunction(
+  burnTokens = /* @__PURE__ */ buildTransactionFunction(
     async (tokenId: BigNumberish, amount: BigNumberish) => {
       return this.erc1155.burn.prepare(tokenId, amount);
     },
