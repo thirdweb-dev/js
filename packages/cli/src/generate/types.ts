@@ -9,6 +9,7 @@ export type GenerateOptions = {
   path: string;
   deployer?: string;
   debug?: boolean;
+  watch?: boolean;
 };
 
 export type ContractChainPrompt = {

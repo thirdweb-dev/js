@@ -43,7 +43,7 @@ export const runDev = async (detections: DetectionsType, options: any, mobilePla
       break;
   }
 
-    // Initialize watcher.
+  // Initialize watcher.
   let watcher = chokidar.watch(options.path, {
     ignored: [
       /(^|[\/\\])\../, // ignore dotfiles

@@ -13,6 +13,7 @@ import { findMatches } from "../common/file-helper";
 import ora from "ora";
 import { GenerateOptions, ThirdwebConfig } from "./types";
 import { CHAIN_OPTIONS, getContractsForAddresses } from "./utils";
+import chokidar from "chokidar";
 
 export async function generate(options: GenerateOptions) {
   let projectPath: string = options.path?.replace(/\/$/, "") || ".";
@@ -194,6 +195,55 @@ export async function generate(options: GenerateOptions) {
         metadata.length === 1 ? "" : "s"
       }`,
     ).succeed();
+  }
+
+  if (options.watch) {
+    console.log("Watching for changes...")
+    // Initialize watcher.
+    let watcher = chokidar.watch(options.path, {
+      ignored: [
+        /(^|[\/\\])\../, // ignore dotfiles
+        '**/node_modules/**', // ignore node_modules
+        'package.json', // ignore package.json
+        'thirdweb.json' // ignore thirdweb.json
+      ],
+      persistent: true
+    });
+
+    // Something to use when events are received.
+    const log = console.log.bind(console);
+
+    // This will enable us to run the generate command on file change.
+    watcher
+      .on('change', async file => {
+        log(`File ${file} has been changed`);
+        // Re-run the generate command on file change.
+        await generate({ path: options.path, debug: false });
+        ora("Refetched ABIs for any contracts found").info();
+      })
+
+    const stopWatching = () => {
+      watcher.close();
+      process.exit();
+    };
+
+    // On Ctrl+C or server stop, clean up watcher.
+    process.on('SIGINT', () => {
+      stopWatching();
+    });
+
+    // On terminal disconnect, clean up watcher.
+    process.on('SIGHUP', () => {
+      stopWatching();
+    })
+
+    // On termination, clean up watcher.
+    process.on('SIGTERM', () => {
+      stopWatching();
+    });
+
+    // This is to prevent the process from closing instantly. We can expect the logic below to be ran when the user runs the command without the watch flag.
+    return new Promise(() => {});
   }
 
   // Add generate command to postinstall

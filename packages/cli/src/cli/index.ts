@@ -406,6 +406,8 @@ const main = async () => {
       "Preload ABIs and generate types for your smart contract to strongly type the thirdweb SDK",
     )
     .option("-p, --path <project-path>", "path to project", ".")
+    .option("-d, --debug", "show debug logs", true)
+    .option("-w, --watch", "watch for new contract definitions.", false)
     .action(async (options) => {
       await generate(options);
     });
