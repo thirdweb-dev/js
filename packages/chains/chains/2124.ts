@@ -2,12 +2,6 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Metaplayerone Dubai Testnet",
   "chain": "MP1 Dubai-Testnet",
-  "icon": {
-    "url": "ipfs://QmfJKxmubJrqYWDcR2PnPvmpukxPz4fYDu3hqTaSnpJDxC",
-    "width": 42,
-    "height": 23,
-    "format": "svg"
-  },
   "rpc": [
     "https://metaplayerone-dubai-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-dubai.mp1network.com/"
@@ -26,12 +20,6 @@ export default {
     {
       "name": "MP1Scan",
       "url": "https://dubai.mp1scan.io",
-      "icon": {
-        "url": "ipfs://QmfJKxmubJrqYWDcR2PnPvmpukxPz4fYDu3hqTaSnpJDxC",
-        "width": 42,
-        "height": 23,
-        "format": "svg"
-      },
       "standard": "EIP3091"
     }
   ],

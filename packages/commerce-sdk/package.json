@@ -1,0 +1,31 @@
+{
+  "name": "@thirdweb-dev/commerce-sdk",
+  "version": "0.0.1",
+  "main": "dist/thirdweb-dev-commerce-sdk.cjs.js",
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/commerce-sdk",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/thirdweb-dev/js/issues"
+  },
+  "author": "thirdweb eng <eng@thirdweb.com>",
+  "dependencies": {
+    "@preconstruct/cli": "^2.2.1",
+    "@thirdweb-dev/chains": "0.1.21",
+    "@thirdweb-dev/sdk": "3.10.22",
+    "crypto": "^1.0.1",
+    "next": "^13.2.4"
+  },
+  "devDependencies": {
+    "@thirdweb-dev/tsconfig": "workspace:0.1.7",
+    "ethers": "^5.7.2"
+  },
+  "scripts": {
+    "format": "prettier --write 'src/**/*'",
+    "lint": "eslint src/",
+    "fix": "eslint src/ --fix",
+    "clean": "rm -rf dist/",
+    "build": "tsc && preconstruct build",
+    "preconstruct:fix": "preconstruct fix",
+    "push": "yalc push"
+  }
+}
