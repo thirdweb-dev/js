@@ -26,7 +26,7 @@ import {
   FEATURE_NFT_SUPPLY,
   FEATURE_NFT_TIERED_DROP,
   FEATURE_NFT_SIGNATURE_MINTABLE_V2,
-  FEATURE_SHARED_METADATA,
+  FEATURE_NFT_SHARED_METADATA,
 } from "../../constants/erc721-features";
 import type { Address } from "../../schema/shared/Address";
 import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
@@ -50,7 +50,6 @@ import type {
   IClaimableERC721,
   IERC721Supply,
   IMintableERC721,
-  ISharedMetadata,
   ISignatureMintERC721,
   Multiwrap,
   SignatureDrop,
@@ -868,10 +867,6 @@ export class Erc721<
     );
   }
 
-  get sharedMetadata() {
-    return assertEnabled(this.erc721SharedMetadata, FEATURE_SHARED_METADATA);
-  }
-
   ////// ERC721 DelayedReveal Extension //////
 
   /**
@@ -908,6 +903,31 @@ export class Erc721<
    */
   get revealer() {
     return assertEnabled(this.lazyMintable?.revealer, FEATURE_NFT_REVEALABLE);
+  }
+
+  ////// ERC721 Shared Metadata Extension (Open Edition) //////
+
+  /**
+   * Shared Metadata Extension (Open Edition)
+   * @remarks Set shared metadata for all NFTs in the collection. (Open Edition)
+   * @example
+   * ```javascript
+   * // defiine the metadata
+   * const metadata = {
+   *  name: "Shared Metadata",
+   *  description: "Every NFT in this collection will share this metadata."
+   * };
+   *
+   *
+   * const tx = contract.erc721.sharedMetadata.set(metadata);
+   * ```
+   * @twfeature ERC721SharedMetadata
+   */
+  get sharedMetadata() {
+    return assertEnabled(
+      this.erc721SharedMetadata,
+      FEATURE_NFT_SHARED_METADATA,
+    );
   }
 
   /** ******************************

@@ -200,7 +200,7 @@ export const FEATURE_NFT_SUPPLY = /* @__PURE__ */ {
   },
 } as const;
 
-export const FEATURE_SHARED_METADATA = /* @__PURE__ */ {
+export const FEATURE_NFT_SHARED_METADATA = /* @__PURE__ */ {
   name: "ERC721SharedMetadata",
   namespace: "nft.sharedmetadata",
   docLinks: {
@@ -233,6 +233,6 @@ export const FEATURE_NFT = /* @__PURE__ */ {
     [FEATURE_NFT_CLAIM_CONDITIONS_V2.name]: FEATURE_NFT_CLAIM_CONDITIONS_V2,
     [FEATURE_NFT_CLAIM_PHASES_V1.name]: FEATURE_NFT_CLAIM_PHASES_V1,
     [FEATURE_NFT_CLAIM_PHASES_V2.name]: FEATURE_NFT_CLAIM_PHASES_V2,
-    [FEATURE_SHARED_METADATA.name]: FEATURE_SHARED_METADATA,
+    [FEATURE_NFT_SHARED_METADATA.name]: FEATURE_NFT_SHARED_METADATA,
   },
 } as const;
