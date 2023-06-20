@@ -14,7 +14,7 @@ interface TWSDKContext {
   _inProvider?: true;
 }
 
-const ThirdwebSDKContext = createContext<TWSDKContext>({});
+const ThirdwebSDKContext = /* @__PURE__ */ createContext<TWSDKContext>({});
 
 /**
  *

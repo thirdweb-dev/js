@@ -41,7 +41,7 @@ export interface ThirdwebNftMediaProps extends SharedMediaProps {
  * }
  * ```
  */
-export const ThirdwebNftMedia = React.forwardRef<
+export const ThirdwebNftMedia = /* @__PURE__ */ React.forwardRef<
   HTMLMediaElement,
   ThirdwebNftMediaProps
 >(({ metadata, width = "300px", height = "300px", style, ...props }, ref) => {
