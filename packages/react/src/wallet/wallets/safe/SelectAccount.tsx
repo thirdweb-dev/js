@@ -395,6 +395,8 @@ const NetworkSelect = styled.select<{ theme?: Theme }>`
   }
 `;
 
-const StyledChevronDownIcon = styled(ChevronDownIcon)<{ theme?: Theme }>`
+const StyledChevronDownIcon = /* @__PURE__ */ styled(ChevronDownIcon)<{
+  theme?: Theme;
+}>`
   color: ${(p) => p.theme.icon.secondary};
 `;

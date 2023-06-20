@@ -109,7 +109,7 @@ export const SmartWalletAdditionalActions = ({
             onPress={onExportPress}
           >
             <>
-              <PocketWalletIcon size={16} />
+              <PocketWalletIcon width={16} height={16} />
               <View style={styles.exportWalletInfo}>
                 <Text variant="bodySmall">
                   {wallet?.walletId === walletIds.localWallet

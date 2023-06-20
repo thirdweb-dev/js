@@ -108,7 +108,7 @@ export const ConnectedWalletDetails: React.FC<{
       className={`${TW_CONNECTED_WALLET} ${props.className || ""}`}
       data-theme={props.theme}
       style={props.style}
-        data-test="connected-wallet-details"
+      data-test="connected-wallet-details"
     >
       <ChainIcon
         chain={chain}
@@ -458,7 +458,9 @@ const dropdownContentFade = keyframes`
   }
 `;
 
-const DropDownContent = styled(DropdownMenu.Content)<{ theme?: Theme }>`
+const DropDownContent = /* @__PURE__ */ styled(
+  /* @__PURE__ */ DropdownMenu.Content,
+)<{ theme?: Theme }>`
   width: 360px;
   box-sizing: border-box;
   max-width: 100%;
@@ -576,19 +578,25 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   }
 `;
 
-const MenuLink = MenuButton.withComponent("a");
+const MenuLink = /* @__PURE__ */ MenuButton.withComponent("a");
 
-export const DropdownMenuItem = styled(DropdownMenu.Item)<{ theme?: Theme }>`
+export const DropdownMenuItem = /* @__PURE__ */ styled(
+  /* @__PURE__ */ DropdownMenu.Item,
+)<{ theme?: Theme }>`
   outline: none;
 `;
 
-export const StyledChevronRightIcon = styled(ChevronRightIcon)<{
+export const StyledChevronRightIcon = /* @__PURE__ */ styled(
+  /* @__PURE__ */ ChevronRightIcon,
+)<{
   theme?: Theme;
 }>`
   color: ${(props) => props.theme.text.secondary};
 `;
 
-const DisconnectIconButton = styled(IconButton)<{ theme?: Theme }>`
+const DisconnectIconButton = /* @__PURE__ */ styled(IconButton)<{
+  theme?: Theme;
+}>`
   margin-right: -${spacing.xxs};
   margin-left: auto;
   color: ${(props) => props.theme.icon.secondary};
