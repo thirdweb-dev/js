@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 import { Chain } from "@thirdweb-dev/chains";
 import { resolveIpfsUri } from "@thirdweb-dev/react-core";
 
-const defaultChainIcon = resolveIpfsUri(
+const defaultChainIcon = /* @__PURE__ */ resolveIpfsUri(
   "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
 );
 
