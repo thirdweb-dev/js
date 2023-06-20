@@ -36,6 +36,7 @@ import { BigNumberish, CallOverrides, ethers } from "ethers";
 import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
 import { hasERC20Allowance } from "../../common/currency/hasERC20Allowance";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { MULTIWRAP_CONTRACT_ROLES } from "../contractRoles";
 
 /**
  * Multiwrap lets you wrap any number of ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token bundle.
@@ -52,13 +53,7 @@ import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
  * @beta
  */
 export class Multiwrap extends StandardErc721<MultiwrapContract> {
-  static contractRoles = [
-    "admin",
-    "transfer",
-    "minter",
-    "unwrap",
-    "asset",
-  ] as const;
+  static contractRoles = MULTIWRAP_CONTRACT_ROLES;
 
   public abi: Abi;
   public encoder: ContractEncoder<MultiwrapContract>;
