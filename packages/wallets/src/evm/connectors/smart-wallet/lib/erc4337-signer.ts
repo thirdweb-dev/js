@@ -3,7 +3,7 @@ import { ethers, providers } from "ethers";
 import { Bytes, Signer } from "ethers";
 import { ClientConfig } from "@account-abstraction/sdk";
 import { BaseAccountAPI } from "./base-api";
-import { ERC4337EthersProvider } from "./erc4337-provider";
+import type { ERC4337EthersProvider } from "./erc4337-provider";
 import { defineReadOnly, Deferrable } from "ethers/lib/utils";
 import { HttpRpcClient } from "./http-rpc-client";
 

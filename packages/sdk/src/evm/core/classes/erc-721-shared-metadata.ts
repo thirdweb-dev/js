@@ -8,7 +8,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import type { ISharedMetadata } from "@thirdweb-dev/contracts-js";
 import { buildTransactionFunction } from "../../common/transactions";
-import { BasicNFTInput, NFT } from "../../../core/schema/nft";
+import { BasicNFTInput } from "../../../core/schema/nft";
 import { Transaction } from "./transactions";
 import { TransactionResultWithId } from "../types";
 
@@ -57,7 +57,7 @@ export class Erc721SharedMetadata implements DetectableFeature {
    *
    * @returns - Receipt for the transaction
    */
-  set = buildTransactionFunction(
+  set = /* @__PURE__ */ buildTransactionFunction(
     async (
       metadata: BasicNFTInput,
     ): Promise<Transaction<TransactionResultWithId<unknown>[]>> => {
