@@ -60,7 +60,7 @@ export async function signTypedDataInternal(
         message,
       );
     } catch (err: any) {
-      if (err?.message?.includes("Method eth_signTypedData_v4 not supported")) {
+      if (err?.message?.includes("eth_signTypedData_v4")) {
         signature = await provider.send("eth_signTypedData", [
           signerAddress,
           JSON.stringify(payload),
