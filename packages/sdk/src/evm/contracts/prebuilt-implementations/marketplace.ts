@@ -34,6 +34,7 @@ import { NewOfferEventObject } from "@thirdweb-dev/contracts-js/dist/declaration
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 import invariant from "tiny-invariant";
+import { ADMIN_ROLE, MARKETPLACE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -50,7 +51,7 @@ import invariant from "tiny-invariant";
  * @public
  */
 export class Marketplace implements UpdateableNetwork {
-  static contractRoles = ["admin", "lister", "asset"] as const;
+  static contractRoles = MARKETPLACE_CONTRACT_ROLES;
 
   public abi: Abi;
   private contractWrapper: ContractWrapper<MarketplaceContract>;
@@ -488,7 +489,7 @@ export class Marketplace implements UpdateableNetwork {
   setBidBufferBps = buildTransactionFunction(
     async (bufferBps: BigNumberish) => {
       await this.roles.verify(
-        ["admin"],
+        ADMIN_ROLE,
         await this.contractWrapper.getSignerAddress(),
       );
 
@@ -516,7 +517,7 @@ export class Marketplace implements UpdateableNetwork {
   setTimeBufferInSeconds = buildTransactionFunction(
     async (bufferInSeconds: BigNumberish) => {
       await this.roles.verify(
-        ["admin"],
+        ADMIN_ROLE,
         await this.contractWrapper.getSignerAddress(),
       );
 

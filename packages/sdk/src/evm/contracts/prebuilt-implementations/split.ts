@@ -26,6 +26,7 @@ import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, CallOverrides, Contract } from "ethers";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { ADMIN_ROLE } from "../contractRoles";
 
 /**
  * Create custom royalty splits to distribute funds.
@@ -42,7 +43,7 @@ import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
  * @public
  */
 export class Split implements UpdateableNetwork {
-  static contractRoles = ["admin"] as const;
+  static contractRoles = ADMIN_ROLE;
 
   private contractWrapper: ContractWrapper<SplitContract>;
   private storage: ThirdwebStorage;
