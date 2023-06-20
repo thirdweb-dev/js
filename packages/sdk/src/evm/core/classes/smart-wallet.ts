@@ -192,7 +192,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    *
    * @twfeature SmartWallet
    */
-  grantAdminAccess = buildTransactionFunction(
+  grantAdminAccess = /* @__PURE__ */ buildTransactionFunction(
     async(
       signerAddress: AddressOrEns,
     ): Promise<Transaction> => {
@@ -220,7 +220,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    *
    * @twfeature SmartWallet
    */
-  revokeAdminAccess = buildTransactionFunction(
+  revokeAdminAccess = /* @__PURE__ */ buildTransactionFunction(
     async(
       signerAddress: AddressOrEns,
     ): Promise<Transaction> => {
@@ -249,7 +249,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    *
    * @twfeature SmartWallet
    */
-  grantAccess = buildTransactionFunction(
+  grantAccess = /* @__PURE__ */ buildTransactionFunction(
     async(
       signerAddress: AddressOrEns,
       restrictions: AccessRestrictionsInput,
@@ -316,7 +316,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    *
    * @twfeature SmartWallet
    */
-  approveTargetForSigner = buildTransactionFunction(
+  approveTargetForSigner = /* @__PURE__ */ buildTransactionFunction(
     async(
       signerAddress: AddressOrEns,
       target: string,
@@ -359,7 +359,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    *
    * @twfeature SmartWallet
    */
-  disapproveTargetForSigner = buildTransactionFunction(
+  disapproveTargetForSigner = /* @__PURE__ */ buildTransactionFunction(
     async(
       signerAddress: AddressOrEns,
       target: string,
@@ -402,7 +402,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    *
    * @twfeature SmartWallet
    */
-  updateAccess = buildTransactionFunction(
+  updateAccess = /* @__PURE__ */ buildTransactionFunction(
     async(
       signerAddress: AddressOrEns,
       restrictions: AccessRestrictionsInput,
@@ -448,7 +448,7 @@ export class SmartWallet<TContract extends IAccountCore> implements DetectableFe
    *
    * @twfeature SmartWallet
    */
-  revokeAccess = buildTransactionFunction(
+  revokeAccess = /* @__PURE__ */ buildTransactionFunction(
     async(
       signerAddress: AddressOrEns,
     ): Promise<Transaction> => {
