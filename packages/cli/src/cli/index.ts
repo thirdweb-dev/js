@@ -1,14 +1,4 @@
 #!/usr/bin/env node
-import { detectProject } from "../common/project-detector";
-import { processProject } from "../common/processor";
-import { cliVersion, pkg } from "../constants/urls";
-import { info, logger, spinner } from "../core/helpers/logger";
-import { CacheEntry } from "../core/types/cache";
-import { twCreate } from "../create/command";
-import { deploy } from "../deploy";
-import { generate } from "../generate/command";
-import { findPackageInstallation } from "../helpers/detect-local-packages";
-import { upload } from "../storage/command";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import chalk from "chalk";
 import { exec, spawn } from "child_process";
@@ -16,9 +6,19 @@ import { Command } from "commander";
 import open from "open";
 import prompts from "prompts";
 import Cache from "sync-disk-cache";
-import { install } from "../install";
-import { dev } from "../dev";
 import { build } from "../buildCommand";
+import { processProject } from "../common/processor";
+import { detectProject } from "../common/project-detector";
+import { cliVersion, pkg } from "../constants/urls";
+import { info, logger, spinner } from "../core/helpers/logger";
+import { CacheEntry } from "../core/types/cache";
+import { twCreate } from "../create/command";
+import { deploy } from "../deploy";
+import { dev } from "../dev";
+import { generate } from "../generate/command";
+import { findPackageInstallation } from "../helpers/detect-local-packages";
+import { install } from "../install";
+import { upload } from "../storage/command";
 
 const main = async () => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
@@ -206,7 +206,6 @@ const main = async () => {
     .option("--nightly", "Install the nightly version of packages.")
     .option("--dev", "Install the dev version of packages")
     .option("-d, --debug", "show debug logs")
-    .option("-p, --path <project-path>", "path to project", ".")
     .action(async (path, options) => {
       await install(path, options);
     });
