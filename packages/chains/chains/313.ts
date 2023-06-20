@@ -25,22 +25,10 @@ export default {
   "shortName": "ncn",
   "chainId": 313,
   "networkId": 313,
-  "icon": {
-    "url": "ipfs://Qmc9zDWXar67cMUodp28mbN5pnwbVibxGXhwa8YCDvxmTR",
-    "width": 62,
-    "height": 59,
-    "format": "svg"
-  },
   "explorers": [
     {
       "name": "neuroscan",
       "url": "https://ncnscan.com",
-      "icon": {
-        "url": "ipfs://Qmc9zDWXar67cMUodp28mbN5pnwbVibxGXhwa8YCDvxmTR",
-        "width": 62,
-        "height": 59,
-        "format": "svg"
-      },
       "standard": "EIP3091"
     }
   ],
