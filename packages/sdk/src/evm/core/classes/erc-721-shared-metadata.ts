@@ -10,7 +10,7 @@ import type { ISharedMetadata } from "@thirdweb-dev/contracts-js";
 import { buildTransactionFunction } from "../../common/transactions";
 import { BasicNFTInput } from "../../../core/schema/nft";
 import { Transaction } from "./transactions";
-import { TransactionResultWithId } from "../types";
+import { TransactionResult, TransactionResultWithId } from "../types";
 
 /**
  * Set shared metadata for ERC721 NFTs (Open Edition)
@@ -60,7 +60,7 @@ export class Erc721SharedMetadata implements DetectableFeature {
   set = /* @__PURE__ */ buildTransactionFunction(
     async (
       metadata: BasicNFTInput,
-    ): Promise<Transaction<TransactionResultWithId<unknown>[]>> => {
+    ): Promise<Transaction<TransactionResult>> => {
       const parsedMetadata = BasicNFTInput.parse(metadata);
 
       // take the input and upload image and animation if it is not a URI already
