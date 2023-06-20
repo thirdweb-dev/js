@@ -578,6 +578,9 @@ importers:
       eslint-config-thirdweb:
         specifier: workspace:*
         version: link:../eslint-config-thirdweb
+      eslint-plugin-better-tree-shaking:
+        specifier: 0.0.3
+        version: 0.0.3(eslint@8.42.0)
       eslint-plugin-import:
         specifier: ^2.26.0
         version: 2.27.5(@typescript-eslint/parser@5.55.0)(eslint-import-resolver-typescript@3.5.3)(eslint@8.42.0)
@@ -699,6 +702,9 @@ importers:
       eslint-config-thirdweb:
         specifier: workspace:*
         version: link:../eslint-config-thirdweb
+      eslint-plugin-better-tree-shaking:
+        specifier: 0.0.3
+        version: 0.0.3(eslint@8.42.0)
       eslint-plugin-import:
         specifier: ^2.26.0
         version: 2.27.5(@typescript-eslint/parser@5.55.0)(eslint-import-resolver-typescript@3.5.3)(eslint@8.42.0)
@@ -1350,6 +1356,9 @@ importers:
       eslint-config-thirdweb:
         specifier: workspace:*
         version: link:../eslint-config-thirdweb
+      eslint-plugin-better-tree-shaking:
+        specifier: 0.0.3
+        version: 0.0.3(eslint@8.42.0)
       ethereum-provider:
         specifier: ^0.7.7
         version: 0.7.7

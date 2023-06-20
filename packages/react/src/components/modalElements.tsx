@@ -5,7 +5,7 @@ import styled from "@emotion/styled";
 import { Title } from "@radix-ui/react-dialog";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 
-export const ModalTitle = styled(Title)<{
+export const ModalTitle = /* @__PURE__ */ styled(Title)<{
   theme?: Theme;
   centerOnMobile?: boolean;
 }>`
