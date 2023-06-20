@@ -242,7 +242,7 @@ export class Erc20<
    * ```
    * @twfeature ERC20
    */
-  transfer = buildTransactionFunction(
+  transfer = /* @__PURE__ */ buildTransactionFunction(
     async (to: AddressOrEns, amount: Amount) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -270,7 +270,7 @@ export class Erc20<
    * ```
    * @twfeature ERC20
    */
-  transferFrom = buildTransactionFunction(
+  transferFrom = /* @__PURE__ */ buildTransactionFunction(
     async (from: AddressOrEns, to: AddressOrEns, amount: Amount) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -297,7 +297,7 @@ export class Erc20<
    * ```
    * @twfeature ERC20
    */
-  setAllowance = buildTransactionFunction(
+  setAllowance = /* @__PURE__ */ buildTransactionFunction(
     async (spender: AddressOrEns, amount: Amount) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -332,22 +332,24 @@ export class Erc20<
    * await contract.erc20.transferBatch(data);
    * ```
    */
-  transferBatch = buildTransactionFunction(async (args: TokenMintInput[]) => {
-    const encoded = await Promise.all(
-      args.map(async (arg) => {
-        const amountWithDecimals = await this.normalizeAmount(arg.amount);
-        return this.contractWrapper.readContract.interface.encodeFunctionData(
-          "transfer",
-          [await resolveAddress(arg.toAddress), amountWithDecimals],
-        );
-      }),
-    );
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "multicall",
-      args: [encoded],
-    });
-  });
+  transferBatch = /* @__PURE__ */ buildTransactionFunction(
+    async (args: TokenMintInput[]) => {
+      const encoded = await Promise.all(
+        args.map(async (arg) => {
+          const amountWithDecimals = await this.normalizeAmount(arg.amount);
+          return this.contractWrapper.readContract.interface.encodeFunctionData(
+            "transfer",
+            [await resolveAddress(arg.toAddress), amountWithDecimals],
+          );
+        }),
+      );
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "multicall",
+        args: [encoded],
+      });
+    },
+  );
 
   ////// ERC20 Mintable Extension //////
 
@@ -363,7 +365,7 @@ export class Erc20<
    * ```
    * @twfeature ERC20Mintable
    */
-  mint = buildTransactionFunction(async (amount: Amount) => {
+  mint = /* @__PURE__ */ buildTransactionFunction(async (amount: Amount) => {
     return this.mintTo.prepare(
       await this.contractWrapper.getSignerAddress(),
       amount,
@@ -383,7 +385,7 @@ export class Erc20<
    * ```
    * @twfeature ERC20Mintable
    */
-  mintTo = buildTransactionFunction(
+  mintTo = /* @__PURE__ */ buildTransactionFunction(
     async (receiver: AddressOrEns, amount: Amount) => {
       return assertEnabled(this.mintable, FEATURE_TOKEN_MINTABLE).to.prepare(
         receiver,
@@ -436,12 +438,14 @@ export class Erc20<
    * ```
    * @twfeature ERC20BatchMintable
    */
-  mintBatchTo = buildTransactionFunction(async (args: TokenMintInput[]) => {
-    return assertEnabled(
-      this.mintable?.batch,
-      FEATURE_TOKEN_BATCH_MINTABLE,
-    ).to.prepare(args);
-  });
+  mintBatchTo = /* @__PURE__ */ buildTransactionFunction(
+    async (args: TokenMintInput[]) => {
+      return assertEnabled(
+        this.mintable?.batch,
+        FEATURE_TOKEN_BATCH_MINTABLE,
+      ).to.prepare(args);
+    },
+  );
 
   ////// ERC20 Burnable Extension //////
 
@@ -459,7 +463,7 @@ export class Erc20<
    * ```
    * @twfeature ERC20Burnable
    */
-  burn = buildTransactionFunction(async (amount: Amount) => {
+  burn = /* @__PURE__ */ buildTransactionFunction(async (amount: Amount) => {
     return assertEnabled(this.burnable, FEATURE_TOKEN_BURNABLE).tokens.prepare(
       amount,
     );
@@ -482,7 +486,7 @@ export class Erc20<
    * ```
    * @twfeature ERC20Burnable
    */
-  burnFrom = buildTransactionFunction(
+  burnFrom = /* @__PURE__ */ buildTransactionFunction(
     async (holder: AddressOrEns, amount: Amount) => {
       return assertEnabled(this.burnable, FEATURE_TOKEN_BURNABLE).from.prepare(
         holder,
@@ -514,7 +518,7 @@ export class Erc20<
    * @returns - The transaction receipt
    * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1
    */
-  claim = buildTransactionFunction(
+  claim = /* @__PURE__ */ buildTransactionFunction(
     async (amount: Amount, options?: ClaimOptions) => {
       return this.claimTo.prepare(
         await this.contractWrapper.getSignerAddress(),
@@ -545,7 +549,7 @@ export class Erc20<
    * @returns - The transaction receipt
    * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1
    */
-  claimTo = buildTransactionFunction(
+  claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       destinationAddress: AddressOrEns,
       amount: Amount,

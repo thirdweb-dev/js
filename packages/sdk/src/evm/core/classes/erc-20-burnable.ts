@@ -33,7 +33,7 @@ export class Erc20Burnable implements DetectableFeature {
    * await contract.token.burn.tokens(amount);
    * ```
    */
-  tokens = buildTransactionFunction(async (amount: Amount) => {
+  tokens = /* @__PURE__ */ buildTransactionFunction(async (amount: Amount) => {
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
       method: "burn",
@@ -57,7 +57,7 @@ export class Erc20Burnable implements DetectableFeature {
    * await contract.token.burn.from(holderAddress, amount);
    * ```
    */
-  from = buildTransactionFunction(
+  from = /* @__PURE__ */ buildTransactionFunction(
     async (holder: AddressOrEns, amount: Amount) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,

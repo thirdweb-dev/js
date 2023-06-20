@@ -59,7 +59,7 @@ export class Erc721ClaimableZora implements DetectableFeature {
    *
    * @returns - Receipt for the transaction
    */
-  to = buildTransactionFunction(
+  to = /* @__PURE__ */ buildTransactionFunction(
     async (
       destinationAddress: AddressOrEns,
       quantity: BigNumberish,

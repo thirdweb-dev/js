@@ -229,7 +229,7 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @internal
    * @param profileMetadata
    */
-  updatePublisherProfile = buildTransactionFunction(
+  updatePublisherProfile = /* @__PURE__ */ buildTransactionFunction(
     async (profileMetadata: ProfileMetadataInput) => {
       const signer = this.getSigner();
       invariant(signer, "A signer is required");
@@ -351,7 +351,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     return undefined;
   }
 
-  publish = buildTransactionFunction(
+  publish = /* @__PURE__ */ buildTransactionFunction(
     async (
       predeployUri: string,
       extraMetadata: ExtraPublishMetadata,
@@ -466,7 +466,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     },
   );
 
-  unpublish = buildTransactionFunction(
+  unpublish = /* @__PURE__ */ buildTransactionFunction(
     async (
       publisher: AddressOrEns,
       contractId: string,
