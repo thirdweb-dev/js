@@ -49,8 +49,7 @@ export * from "./verification";
 
 // any-evm-utils
 export * from "./any-evm-utils/constants";
-export * from "./any-evm-utils/isContractDeployed";	
-
+export * from "./any-evm-utils/isContractDeployed";
 export * from "./any-evm-utils/isEIP155Enforced";
 export * from "./any-evm-utils/getCreate2FactoryAddress";
 export * from "./any-evm-utils/getSaltHash";
