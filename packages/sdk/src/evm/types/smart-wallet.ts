@@ -17,11 +17,11 @@ export type AccessRestrictions = {
   approvedCallTargets: string[];
 }
 
-export const AccessRestrictionsSchema = z.object({
+export const AccessRestrictionsSchema = /* @__PURE__ */ z.object({
   startDate: StartDateSchema,
   expirationDate: EndDateSchema,
-  nativeTokenLimitPerTransaction: AmountSchema.default(0),
-  approvedCallTargets: z.array(AddressOrEnsSchema),
+  nativeTokenLimitPerTransaction: /* @__PURE__ */ AmountSchema.default(0),
+  approvedCallTargets: /* @__PURE__ */ z.array(AddressOrEnsSchema),
 });
 
 export type AccessRestrictionsInput = z.input<typeof AccessRestrictionsSchema>;
