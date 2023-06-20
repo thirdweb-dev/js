@@ -33,7 +33,7 @@ import type {
   IBurnableERC20,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { utils, BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 
