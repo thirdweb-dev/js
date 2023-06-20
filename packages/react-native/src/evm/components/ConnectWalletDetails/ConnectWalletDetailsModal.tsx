@@ -2,7 +2,7 @@ import { StyleSheet, View } from "react-native";
 import Box from "../base/Box";
 import { Toast } from "../base/Toast";
 import { ExportLocalWalletModal } from "./ExportLocalWalletModal";
-import { NetworkButton } from "./NetworkButton";
+import { NetworkButton } from "../base/NetworkButton";
 import { WalletDetailsModalHeader } from "./WalletDetailsModalHeader";
 import {
   useActiveChain,
@@ -113,7 +113,7 @@ export const ConnectWalletDetailsModal = () => {
             onPress={onExportLocalWalletPress}
           >
             <>
-              <PocketWalletIcon size={16} />
+              <PocketWalletIcon width={16} height={16} />
               <View style={styles.exportWalletInfo}>
                 <Text variant="bodySmall">Backup wallet</Text>
               </View>
@@ -134,7 +134,7 @@ export const ConnectWalletDetailsModal = () => {
             onPress={onImportLocalWalletPress}
           >
             <>
-              <PocketWalletIcon size={16} />
+              <PocketWalletIcon width={16} height={16} />
               <View style={styles.exportWalletInfo}>
                 <Text variant="bodySmall">Import wallet</Text>
               </View>
