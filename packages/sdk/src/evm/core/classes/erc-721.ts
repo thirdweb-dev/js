@@ -54,6 +54,7 @@ import type {
   SignatureDrop,
   TieredDrop,
   TokenERC721,
+  Zora_IERC721Drop,
 } from "@thirdweb-dev/contracts-js";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
@@ -64,6 +65,7 @@ import { Erc721Supply } from "./erc-721-supply";
 import { Erc721TieredDrop } from "./erc-721-tiered-drop";
 import { Erc721ClaimableWithConditions } from "./erc-721-claim-conditions";
 import { Erc721Claimable } from "./erc-721-claimable";
+import { Erc721ClaimableZora } from "./erc-721-claim-zora";
 
 /**
  * Standard ERC721 NFT functions
@@ -93,6 +95,7 @@ export class Erc721<
   private signatureMintable: Erc721WithQuantitySignatureMintable | undefined;
   private claimWithConditions: Erc721ClaimableWithConditions | undefined;
   private claimCustom: Erc721Claimable | undefined;
+  private claimZora: Erc721ClaimableZora | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: ThirdwebStorage;
 
@@ -116,6 +119,7 @@ export class Erc721<
     this.signatureMintable = this.detectErc721SignatureMintable();
     this.claimWithConditions = this.detectErc721ClaimableWithConditions();
     this.claimCustom = this.detectErc721Claimable();
+    this.claimZora = this.detectErc721ClaimableZora();
     this._chainId = chainId;
   }
 
@@ -702,6 +706,7 @@ export class Erc721<
     ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
       const claimWithConditions = this.claimWithConditions;
       const claim = this.claimCustom;
+      const claimZora = this.claimZora;
       if (claimWithConditions) {
         return claimWithConditions.to.prepare(
           destinationAddress,
@@ -711,6 +716,9 @@ export class Erc721<
       }
       if (claim) {
         return claim.to.prepare(destinationAddress, quantity, options);
+      }
+      if (claimZora) {
+        return claimZora.to.prepare(destinationAddress, quantity, options);
       }
       throw new ExtensionNotImplementedError(FEATURE_NFT_CLAIM_CUSTOM);
     },
@@ -1045,6 +1053,18 @@ export class Erc721<
       )
     ) {
       return new Erc721Claimable(this, this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectErc721ClaimableZora(): Erc721ClaimableZora | undefined {
+    if (
+      detectContractFeature<Zora_IERC721Drop>(
+        this.contractWrapper,
+        "ERC721ClaimZora",
+      )
+    ) {
+      return new Erc721ClaimableZora(this, this.contractWrapper);
     }
     return undefined;
   }
