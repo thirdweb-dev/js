@@ -48,7 +48,7 @@ export class ContractOwner<TContract extends Ownable>
    * ```
    * @twfeature Ownable
    */
-  set = buildTransactionFunction(
+  set = /* @__PURE__ */ buildTransactionFunction(
     async (address: AddressOrEns): Promise<Transaction> => {
       const resolvedAddress = await resolveAddress(address);
 

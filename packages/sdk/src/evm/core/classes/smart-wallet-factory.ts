@@ -152,7 +152,7 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
    *
    * @twfeature SmartWalletFactory
    */
-  createWallet = buildTransactionFunction(
+  createWallet = /* @__PURE__ */ buildTransactionFunction(
     async (
       walletAdmin: string,
       extraData?: BytesLike,

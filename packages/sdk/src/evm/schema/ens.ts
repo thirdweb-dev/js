@@ -9,17 +9,18 @@ export const EnsSchema: z.ZodType<
   `0x${string}`,
   z.ZodTypeDef,
   `${string}.eth` | `${string}.cb.id`
-> = /* @__PURE__ */ z
-  .custom<EnsName>(
-    (ens) =>
-      typeof ens === "string" &&
-      (ens.endsWith(".eth") || ens.endsWith(".cb.id")),
-  )
-  .transform(async (ens) => resolveEns(ens))
-  .refine(
-    (address): address is `0x${string}` =>
-      !!address && utils.isAddress(address),
-    {
-      message: "Provided value was not a valid ENS name",
-    },
-  );
+> = /* @__PURE__ */ (() =>
+  z
+    .custom<EnsName>(
+      (ens) =>
+        typeof ens === "string" &&
+        (ens.endsWith(".eth") || ens.endsWith(".cb.id")),
+    )
+    .transform(async (ens) => resolveEns(ens))
+    .refine(
+      (address): address is `0x${string}` =>
+        !!address && utils.isAddress(address),
+      {
+        message: "Provided value was not a valid ENS name",
+      },
+    ))();

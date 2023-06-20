@@ -1063,6 +1063,9 @@ importers:
       eslint-config-thirdweb:
         specifier: workspace:*
         version: link:../eslint-config-thirdweb
+      eslint-plugin-better-tree-shaking:
+        specifier: 0.0.3
+        version: 0.0.3(eslint@8.42.0)
       eslint-plugin-import:
         specifier: ^2.26.0
         version: 2.27.5(@typescript-eslint/parser@5.55.0)(eslint-import-resolver-typescript@3.5.3)(eslint@8.42.0)
@@ -16408,6 +16411,14 @@ packages:
       eslint-import-resolver-typescript: 3.5.3(eslint-plugin-import@2.27.5)(eslint@8.42.0)
     transitivePeerDependencies:
       - supports-color
+
+  /eslint-plugin-better-tree-shaking@0.0.3(eslint@8.42.0):
+    resolution: {integrity: sha512-U5OjauLSVcXvlh2La3ptPwIs6JwLPJKP20OQdTDBe2oh0cHvBeEwhQ8mjFrEoCMdQdmMdrSBkSRLG3gLxFjK3A==}
+    peerDependencies:
+      eslint: '>=4.0.0'
+    dependencies:
+      eslint: 8.42.0
+    dev: true
 
   /eslint-plugin-eslint-comments@3.2.0(eslint@8.42.0):
     resolution: {integrity: sha512-0jkOl0hfojIHHmEHgmNdqv4fmh7300NdpA9FFpF7zaoLvB/QeXOGNLIo86oAveJFrfB1p05kC8hpEMHM8DwWVQ==}

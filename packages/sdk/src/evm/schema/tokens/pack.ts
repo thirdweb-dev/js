@@ -35,9 +35,10 @@ const ERC1155RewardSchema = /* @__PURE__ */ ERC1155WrappableSchema.omit({
 /**
  * @internal
  */
-const ERC20RewardContentsSchema = /* @__PURE__ */ ERC20RewardSchema.extend({
-  totalRewards: BigNumberishSchema.default("1"),
-});
+const ERC20RewardContentsSchema = /* @__PURE__ */ (() =>
+  ERC20RewardSchema.extend({
+    totalRewards: BigNumberishSchema.default("1"),
+  }))();
 
 /**
  * @internal
@@ -47,37 +48,40 @@ const ERC721RewardContentsSchema = ERC721RewardSchema;
 /**
  * @internal
  */
-const ERC1155RewardContentsSchema = /* @__PURE__ */ ERC1155RewardSchema.extend({
-  totalRewards: BigNumberishSchema.default("1"),
-});
+const ERC1155RewardContentsSchema = /* @__PURE__ */ (() =>
+  ERC1155RewardSchema.extend({
+    totalRewards: BigNumberishSchema.default("1"),
+  }))();
 
 /**
  * @internal
  */
-export const PackRewardsSchema = /* @__PURE__ */ z.object({
-  erc20Rewards: z.array(ERC20RewardSchema).default([]),
-  erc721Rewards: z.array(ERC721RewardSchema).default([]),
-  erc1155Rewards: z.array(ERC1155RewardSchema).default([]),
-});
+export const PackRewardsSchema = /* @__PURE__ */ (() =>
+  z.object({
+    erc20Rewards: z.array(ERC20RewardSchema).default([]),
+    erc721Rewards: z.array(ERC721RewardSchema).default([]),
+    erc1155Rewards: z.array(ERC1155RewardSchema).default([]),
+  }))();
 
 /**
  * @internal
  */
-export const PackRewardsOutputSchema = /* @__PURE__ */ z.object({
-  erc20Rewards: z.array(ERC20RewardContentsSchema).default([]),
-  erc721Rewards: z.array(ERC721RewardContentsSchema).default([]),
-  erc1155Rewards: z.array(ERC1155RewardContentsSchema).default([]),
-});
+export const PackRewardsOutputSchema = /* @__PURE__ */ (() =>
+  z.object({
+    erc20Rewards: z.array(ERC20RewardContentsSchema).default([]),
+    erc721Rewards: z.array(ERC721RewardContentsSchema).default([]),
+    erc1155Rewards: z.array(ERC1155RewardContentsSchema).default([]),
+  }))();
 
 /**
  * @internal
  */
-export const PackMetadataInputSchema =
-  /* @__PURE__ */ PackRewardsOutputSchema.extend({
+export const PackMetadataInputSchema = /* @__PURE__ */ (() =>
+  PackRewardsOutputSchema.extend({
     packMetadata: NFTInputOrUriSchema,
     rewardsPerPack: BigNumberishSchema.default("1"),
     openStartTime: RawDateSchema.default(new Date()),
-  });
+  }))();
 
 /**
  * @public
