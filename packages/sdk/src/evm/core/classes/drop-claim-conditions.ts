@@ -548,7 +548,7 @@ export class DropClaimConditions<
    * @param claimConditionInputs - The claim conditions
    * @param resetClaimEligibilityForAll - Whether to reset the state of who already claimed NFTs previously
    */
-  set = buildTransactionFunction(
+  set = /* @__PURE__ */ buildTransactionFunction(
     async (
       claimConditionInputs: ClaimConditionInput[],
       resetClaimEligibilityForAll = false,
@@ -716,7 +716,7 @@ export class DropClaimConditions<
    * @param index - the index of the claim condition to update, as given by the index from the result of `getAll()`
    * @param claimConditionInput - the new data to update, previous data will be retained
    */
-  update = buildTransactionFunction(
+  update = /* @__PURE__ */ buildTransactionFunction(
     async (
       index: number,
       claimConditionInput: ClaimConditionInput,

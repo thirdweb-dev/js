@@ -77,7 +77,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     this.storage = storage;
   }
 
-  deploy = buildTransactionFunction(
+  deploy = /* @__PURE__ */ buildTransactionFunction(
     async <TContractType extends PrebuiltContractType>(
       contractType: TContractType,
       contractMetadata: z.input<
@@ -164,7 +164,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
   );
 
   // TODO once IContractFactory is implemented, this can be probably be moved to its own class
-  deployProxyByImplementation = buildTransactionFunction(
+  deployProxyByImplementation = /* @__PURE__ */ buildTransactionFunction(
     async (
       implementationAddress: Address,
       implementationAbi: ContractInterface,

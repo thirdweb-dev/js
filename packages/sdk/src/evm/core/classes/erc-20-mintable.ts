@@ -50,9 +50,11 @@ export class Erc20Mintable implements DetectableFeature {
    * await contract.token.mint.to(toAddress, amount);
    * ```
    */
-  to = buildTransactionFunction(async (to: AddressOrEns, amount: Amount) => {
-    return await this.getMintTransaction(to, amount);
-  });
+  to = /* @__PURE__ */ buildTransactionFunction(
+    async (to: AddressOrEns, amount: Amount) => {
+      return await this.getMintTransaction(to, amount);
+    },
+  );
 
   /**
    * @deprecated Use `contract.erc20.mint.prepare(...args)` instead
