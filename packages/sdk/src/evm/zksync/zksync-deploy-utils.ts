@@ -1,4 +1,7 @@
-import * as zk from "zksync-web3";
+import {
+  ContractFactory as ZkContractFactory,
+  type Signer as ZkSigner,
+} from "zksync-web3";
 import { twProxyArtifactZK } from "./temp-artifact/TWProxy";
 import { fetchAndCacheDeployMetadata } from "../common/any-evm-utils/fetchAndCacheDeployMetadata";
 import { convertParamValues } from "../common/any-evm-utils/convertParamValues";
@@ -61,10 +64,10 @@ export async function zkDeployContractFromUri(
         paramValues,
       );
 
-      const proxyFactory = new zk.ContractFactory(
+      const proxyFactory = new ZkContractFactory(
         twProxyArtifactZK.abi,
         twProxyArtifactZK.bytecode as BytesLike,
-        signer as zk.Signer,
+        signer as ZkSigner,
         "create",
       );
       const proxy = await proxyFactory.deploy(
@@ -101,10 +104,10 @@ export async function zkDeployContractFromUri(
       constructorParamValues,
     );
 
-    const factory = new zk.ContractFactory(
+    const factory = new ZkContractFactory(
       compilerMetadata.abi,
       compilerMetadata.bytecode as BytesLike,
-      signer as zk.Signer,
+      signer as ZkSigner,
       "create",
     );
     const contract = await factory.deploy(...paramValues);
