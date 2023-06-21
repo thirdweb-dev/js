@@ -10,7 +10,7 @@ import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 import type { IMintableERC1155 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers } from "ethers";
+import { constants } from "ethers";
 import { uploadOrExtractURIs } from "../../common/nft";
 import type { IMulticall } from "@thirdweb-dev/contracts-js";
 import { TokensMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TokenERC1155";
@@ -91,7 +91,7 @@ export class Erc1155BatchMintable implements DetectableFeature {
             "mintTo",
             [
               resolvedAddress,
-              ethers.constants.MaxUint256,
+              constants.MaxUint256,
               uri,
               supplies[index],
             ],

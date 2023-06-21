@@ -1,4 +1,3 @@
-import { AmountSchema } from "../../../core/schema/shared";
 import { assertEnabled } from "../../common/feature-detection/assertEnabled";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
 import { resolveAddress } from "../../common/ens/resolveAddress";
@@ -34,7 +33,7 @@ import type {
   IBurnableERC20,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers, BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 
@@ -42,6 +41,7 @@ import { Erc20Burnable } from "./erc-20-burnable";
 import { Erc20Droppable } from "./erc-20-droppable";
 import { Erc20Mintable } from "./erc-20-mintable";
 import { Erc20SignatureMintable } from "./erc-20-signature-mintable";
+import { normalizeAmount } from "../../common/currency/normalizeAmount";
 
 /**
  * Standard ERC20 Token functions
@@ -624,8 +624,7 @@ export class Erc20<
    * @param amount
    */
   public async normalizeAmount(amount: Amount): Promise<BigNumber> {
-    const decimals = await this.contractWrapper.readContract.decimals();
-    return ethers.utils.parseUnits(AmountSchema.parse(amount), decimals);
+    return normalizeAmount(this.contractWrapper, amount);
   }
 
   /**

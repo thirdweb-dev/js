@@ -12,7 +12,7 @@ import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 import type { IMintableERC1155 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, type BigNumberish, constants } from "ethers";
 import type { IMulticall } from "@thirdweb-dev/contracts-js";
 import { TransferSingleEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ITokenERC1155";
 import type { Erc1155 } from "./erc-1155";
@@ -124,7 +124,7 @@ export class Erc1155Mintable implements DetectableFeature {
       method: "mintTo",
       args: [
         await resolveAddress(to),
-        ethers.constants.MaxUint256,
+        constants.MaxUint256,
         uri,
         metadataWithSupply.supply,
       ],

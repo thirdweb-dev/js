@@ -1,10 +1,13 @@
-import * as zk from "zksync-web3";
+import {
+  ContractFactory as ZkContractFactory,
+  type Signer as ZkSigner,
+} from "zksync-web3";
 import { twProxyArtifactZK } from "./temp-artifact/TWProxy";
 import { fetchAndCacheDeployMetadata } from "../common/any-evm-utils/fetchAndCacheDeployMetadata";
 import { convertParamValues } from "../common/any-evm-utils/convertParamValues";
 import { extractConstructorParamsFromAbi } from "../common/feature-detection/extractConstructorParamsFromAbi";
 import { extractFunctionParamsFromAbi } from "../common/feature-detection/extractFunctionParamsFromAbi";
-import { BytesLike, Contract, Signer, ethers } from "ethers";
+import { type BytesLike, Contract, type Signer, utils, Wallet } from "ethers";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { DeployOptions } from "../types/deploy";
 import { ThirdwebSDK } from "../core/sdk";
@@ -61,10 +64,10 @@ export async function zkDeployContractFromUri(
         paramValues,
       );
 
-      const proxyFactory = new zk.ContractFactory(
+      const proxyFactory = new ZkContractFactory(
         twProxyArtifactZK.abi,
         twProxyArtifactZK.bytecode as BytesLike,
-        signer as zk.Signer,
+        signer as ZkSigner,
         "create",
       );
       const proxy = await proxyFactory.deploy(
@@ -90,7 +93,7 @@ export async function zkDeployContractFromUri(
     const bytecode = compilerMetadata.bytecode.startsWith("0x")
       ? compilerMetadata.bytecode
       : `0x${compilerMetadata.bytecode}`;
-    if (!ethers.utils.isHexString(bytecode)) {
+    if (!utils.isHexString(bytecode)) {
       throw new Error(`Contract bytecode is invalid.\n\n${bytecode}`);
     }
     const constructorParamTypes = extractConstructorParamsFromAbi(
@@ -101,10 +104,10 @@ export async function zkDeployContractFromUri(
       constructorParamValues,
     );
 
-    const factory = new zk.ContractFactory(
+    const factory = new ZkContractFactory(
       compilerMetadata.abi,
       compilerMetadata.bytecode as BytesLike,
-      signer as zk.Signer,
+      signer as ZkSigner,
       "create",
     );
     const contract = await factory.deploy(...paramValues);
@@ -139,7 +142,7 @@ async function registerContractOnMultiChainRegistry(
 ) {
   try {
     // random wallet is fine here, we're doing gasless calls
-    const wallet = ethers.Wallet.createRandom();
+    const wallet = Wallet.createRandom();
     const sdk = ThirdwebSDK.fromPrivateKey(wallet.privateKey, "polygon", {
       gasless: {
         openzeppelin: {
