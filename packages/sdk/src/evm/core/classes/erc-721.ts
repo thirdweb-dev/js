@@ -56,6 +56,7 @@ import type {
   TieredDrop,
   TokenERC721,
   Zora_IERC721Drop,
+  ISharedMetadata,
 } from "@thirdweb-dev/contracts-js";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
@@ -123,6 +124,7 @@ export class Erc721<
     this.claimWithConditions = this.detectErc721ClaimableWithConditions();
     this.claimCustom = this.detectErc721Claimable();
     this.claimZora = this.detectErc721ClaimableZora();
+    this.erc721SharedMetadata = this.detectErc721SharedMetadata();
     this._chainId = chainId;
   }
 
@@ -1093,6 +1095,18 @@ export class Erc721<
       )
     ) {
       return new Erc721ClaimableZora(this, this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectErc721SharedMetadata(): Erc721SharedMetadata | undefined {
+    if (
+      detectContractFeature<ISharedMetadata>(
+        this.contractWrapper,
+        "ERC721SharedMetadata",
+      )
+    ) {
+      return new Erc721SharedMetadata(this.contractWrapper, this.storage);
     }
     return undefined;
   }
