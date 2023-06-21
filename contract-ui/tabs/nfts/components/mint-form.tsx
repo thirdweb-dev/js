@@ -16,7 +16,12 @@ import {
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { UseMutationResult } from "@tanstack/react-query";
-import { NFTContract, useAddress, useMintNFT } from "@thirdweb-dev/react";
+import {
+  NFTContract,
+  useAddress,
+  useMintNFT,
+  useSetSharedMetadata,
+} from "@thirdweb-dev/react";
 import type { useMintNFT as useMintNFTSolana } from "@thirdweb-dev/react/solana";
 import type { NFTMetadataInput } from "@thirdweb-dev/sdk";
 import { OpenSeaPropertyBadge } from "components/badges/opensea";
@@ -47,6 +52,7 @@ type NFTMintForm =
         | ReturnType<typeof useMintNFT>
         | ReturnType<typeof useMintNFTSolana>;
       lazyMintMutation?: undefined;
+      sharedMetadataMutation?: undefined;
       ecosystem: "evm" | "solana";
     }
   | {
@@ -57,6 +63,14 @@ type NFTMintForm =
         { metadatas: NFTMetadataInput[] }
       >;
       mintMutation?: undefined;
+      sharedMetadataMutation?: undefined;
+      ecosystem: "evm" | "solana";
+    }
+  | {
+      contract?: NFTContract;
+      sharedMetadataMutation: ReturnType<typeof useSetSharedMetadata>;
+      mintMutation?: undefined;
+      lazyMintMutation?: undefined;
       ecosystem: "evm" | "solana";
     };
 
@@ -65,6 +79,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
   lazyMintMutation,
   mintMutation,
   ecosystem,
+  sharedMetadataMutation,
 }) => {
   const trackEvent = useTrack();
   const evmAddress = useAddress();
@@ -72,7 +87,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
   const wallet = useWallet(); // TODO (SOL) as single address hook?
   const address =
     ecosystem === "evm" ? evmAddress : wallet?.publicKey?.toBase58();
-  const mutation = mintMutation || lazyMintMutation;
+  const mutation = mintMutation || lazyMintMutation || sharedMetadataMutation;
 
   const {
     setValue,
@@ -159,7 +174,9 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
   return (
     <>
       <DrawerHeader>
-        <Heading>Mint NFT</Heading>
+        <Heading>
+          {sharedMetadataMutation ? "Set NFT Metadata" : "Mint NFT"}
+        </Heading>
       </DrawerHeader>
       <DrawerBody>
         <Stack
@@ -239,6 +256,34 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                 },
               );
             }
+
+            if (sharedMetadataMutation) {
+              trackEvent({
+                category: "nft",
+                action: "set-shared-metadata",
+                label: "attempt",
+              });
+              sharedMetadataMutation.mutate(parseAttributes(data), {
+                onSuccess: () => {
+                  trackEvent({
+                    category: "nft",
+                    action: "set-shared-metadata",
+                    label: "success",
+                  });
+                  onSuccess();
+                  modalContext.onClose();
+                },
+                onError: (error: any) => {
+                  trackEvent({
+                    category: "nft",
+                    action: "set-shared-metadata",
+                    label: "error",
+                    error,
+                  });
+                  onError(error);
+                },
+              });
+            }
           })}
         >
           <Stack>
@@ -303,68 +348,74 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
               <>{errors?.description?.message}</>
             </FormErrorMessage>
           </FormControl>
-          {isErc1155 && mintMutation && (
-            <FormControl isRequired isInvalid={!!errors.supply}>
-              <FormLabel>Initial Supply</FormLabel>
-              <Input
-                type="number"
-                step="1"
-                pattern="[0-9]"
-                {...register("supply")}
-              />
-              <FormErrorMessage>{errors?.supply?.message}</FormErrorMessage>
-            </FormControl>
-          )}
-          <PropertiesFormControl
-            watch={watch}
-            errors={errors as any}
-            control={control}
-            register={register}
-            setValue={setValue}
-          />
-          <Accordion
-            allowToggle={!(errors.background_color || errors.external_url)}
-            index={
-              errors.background_color || errors.external_url ? [0] : undefined
-            }
-          >
-            <AccordionItem>
-              <AccordionButton px={0} justifyContent="space-between">
-                <Heading size="subtitle.md">Advanced Metadata</Heading>
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel px={0} as={Stack} spacing={6}>
-                <FormControl isInvalid={!!errors.background_color}>
-                  <FormLabel>
-                    Background Color <OpenSeaPropertyBadge />
-                  </FormLabel>
-                  <Input max="6" {...register("background_color")} />
-                  <FormHelperText>
-                    Must be a six-character hexadecimal with a pre-pended #.
-                  </FormHelperText>
-                  <FormErrorMessage>
-                    <>{errors?.background_color?.message}</>
-                  </FormErrorMessage>
+          {!sharedMetadataMutation && (
+            <>
+              {isErc1155 && mintMutation && (
+                <FormControl isRequired isInvalid={!!errors.supply}>
+                  <FormLabel>Initial Supply</FormLabel>
+                  <Input
+                    type="number"
+                    step="1"
+                    pattern="[0-9]"
+                    {...register("supply")}
+                  />
+                  <FormErrorMessage>{errors?.supply?.message}</FormErrorMessage>
                 </FormControl>
-                {!externalIsTextFile && (
-                  <FormControl isInvalid={!!errors.external_url}>
-                    <FormLabel>
-                      External URL <OpenSeaPropertyBadge />
-                    </FormLabel>
-                    <Input {...register("external_url")} />
-                    <FormHelperText>
-                      This is the URL that will appear below the asset&apos;s
-                      image on OpenSea and will allow users to leave OpenSea and
-                      view the item on your site.
-                    </FormHelperText>
-                    <FormErrorMessage>
-                      {errors?.external_url?.message as unknown as string}
-                    </FormErrorMessage>
-                  </FormControl>
-                )}
-              </AccordionPanel>
-            </AccordionItem>
-          </Accordion>
+              )}
+              <PropertiesFormControl
+                watch={watch}
+                errors={errors as any}
+                control={control}
+                register={register}
+                setValue={setValue}
+              />
+              <Accordion
+                allowToggle={!(errors.background_color || errors.external_url)}
+                index={
+                  errors.background_color || errors.external_url
+                    ? [0]
+                    : undefined
+                }
+              >
+                <AccordionItem>
+                  <AccordionButton px={0} justifyContent="space-between">
+                    <Heading size="subtitle.md">Advanced Metadata</Heading>
+                    <AccordionIcon />
+                  </AccordionButton>
+                  <AccordionPanel px={0} as={Stack} spacing={6}>
+                    <FormControl isInvalid={!!errors.background_color}>
+                      <FormLabel>
+                        Background Color <OpenSeaPropertyBadge />
+                      </FormLabel>
+                      <Input max="6" {...register("background_color")} />
+                      <FormHelperText>
+                        Must be a six-character hexadecimal with a pre-pended #.
+                      </FormHelperText>
+                      <FormErrorMessage>
+                        <>{errors?.background_color?.message}</>
+                      </FormErrorMessage>
+                    </FormControl>
+                    {!externalIsTextFile && (
+                      <FormControl isInvalid={!!errors.external_url}>
+                        <FormLabel>
+                          External URL <OpenSeaPropertyBadge />
+                        </FormLabel>
+                        <Input {...register("external_url")} />
+                        <FormHelperText>
+                          This is the URL that will appear below the
+                          asset&apos;s image on OpenSea and will allow users to
+                          leave OpenSea and view the item on your site.
+                        </FormHelperText>
+                        <FormErrorMessage>
+                          {errors?.external_url?.message as unknown as string}
+                        </FormErrorMessage>
+                      </FormControl>
+                    )}
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion>
+            </>
+          )}
         </Stack>
       </DrawerBody>
       <DrawerFooter>
@@ -385,7 +436,11 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
           colorScheme="primary"
           isDisabled={!isDirty}
         >
-          {lazyMintMutation && "Lazy "} Mint NFT
+          {sharedMetadataMutation
+            ? "Set NFT Metadata"
+            : lazyMintMutation
+            ? "Lazy Mint NFT"
+            : "Mint NFT"}
         </TransactionButton>
       </DrawerFooter>
     </>

@@ -3,6 +3,7 @@ import { NFTClaimButton } from "./components/claim-button";
 import { NFTLazyMintButton } from "./components/lazy-mint-button";
 import { NFTMintButton } from "./components/mint-button";
 import { NFTRevealButton } from "./components/reveal-button";
+import { NFTSharedMetadataButton } from "./components/shared-metadata-button";
 import { SupplyCards } from "./components/supply-cards";
 import { NFTGetAllTable } from "./components/table";
 import { Box, Flex } from "@chakra-ui/react";
@@ -52,6 +53,7 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
           <NFTRevealButton contractQuery={contractQuery} />
           <NFTClaimButton contractQuery={contractQuery} />
           <NFTMintButton contractQuery={contractQuery} />
+          <NFTSharedMetadataButton contractQuery={contractQuery} />
           <NFTLazyMintButton contractQuery={contractQuery} />
           <BatchLazyMintButton contractQuery={contractQuery} />
         </Flex>
