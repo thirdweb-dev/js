@@ -68,10 +68,12 @@ export const rewardPoints = async ({
 
       const tokenContract = await sdk.getContract(tokenContractAddress, "token");
       try {
-        const tx = await tokenContract.transfer(wallet, rewardAmount);
+        const tx = await tokenContract.erc20.transfer(wallet, rewardAmount);
         console.log(`Rewarding ${rewardAmount} points to wallet address: ${wallet}`, `tx: ${tx.receipt.transactionHash}`);
         return "OK";
       } catch (e) {
+        console.log(tokenContract.getAddress());
+        console.log(tokenContract.getAddress());
         throw new Error(`Error rewarding points to wallet address: \n${e}`);
       }
     } else {
