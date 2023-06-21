@@ -15,13 +15,9 @@ export interface MarketplaceFilter extends QueryAllParams {
 /**
  * English auctions cannot be retrieved by offeror.
  */
-export interface MarketplaceFilterWithoutOfferor extends MarketplaceFilter {
-  offeror?: never;
-}
+export interface MarketplaceFilterWithoutOfferor extends Omit<MarketplaceFilter, 'offeror'> {}
 
 /**
  * Offers cannot be retrieved by seller.
  */
-export interface MarketplaceFilterWithoutSeller extends MarketplaceFilter {
-  seller?: never;
-}
+export interface MarketplaceFilterWithoutSeller extends Omit<MarketplaceFilter, 'seller'> {}
