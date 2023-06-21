@@ -45,7 +45,13 @@ import {
   PackOpenedEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/Pack";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, CallOverrides, ethers } from "ethers";
+import {
+  BigNumber,
+  type BigNumberish,
+  type CallOverrides,
+  constants,
+  utils,
+} from "ethers";
 import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
 import { hasERC20Allowance } from "../../common/currency/hasERC20Allowance";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
@@ -244,7 +250,7 @@ export class Pack extends StandardErc1155<PackContract> {
   public async isTransferRestricted(): Promise<boolean> {
     const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
       getRoleHash("transfer"),
-      ethers.constants.AddressZero,
+      constants.AddressZero,
     );
     return !anyoneCanTransfer;
   }
@@ -284,11 +290,11 @@ export class Pack extends StandardErc1155<PackContract> {
             this.contractWrapper.getProvider(),
             reward.assetContract,
           );
-          const quantityPerReward = ethers.utils.formatUnits(
+          const quantityPerReward = utils.formatUnits(
             amount,
             tokenMetadata.decimals,
           );
-          const totalRewards = ethers.utils.formatUnits(
+          const totalRewards = utils.formatUnits(
             BigNumber.from(reward.totalAmount).div(amount),
             tokenMetadata.decimals,
           );
@@ -620,7 +626,7 @@ export class Pack extends StandardErc1155<PackContract> {
                 );
                 erc20Rewards.push({
                   contractAddress: reward.assetContract,
-                  quantityPerReward: ethers.utils
+                  quantityPerReward: utils
                     .formatUnits(reward.totalAmount, tokenMetadata.decimals)
                     .toString(),
                 });

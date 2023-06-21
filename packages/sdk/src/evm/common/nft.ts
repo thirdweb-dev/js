@@ -21,7 +21,13 @@ import type {
   ThirdwebStorage,
   UploadProgressEvent,
 } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, Contract, ethers, providers } from "ethers";
+import {
+  BigNumber,
+  type BigNumberish,
+  Contract,
+  utils,
+  type providers,
+} from "ethers";
 
 export const FALLBACK_METADATA = {
   name: "Failed to load NFT metadata",
@@ -42,7 +48,7 @@ export async function fetchTokenMetadata(
 ): Promise<NFTMetadata> {
   const parsedUri = tokenUri.replace(
     "{id}",
-    ethers.utils.hexZeroPad(BigNumber.from(tokenId).toHexString(), 32).slice(2),
+    utils.hexZeroPad(BigNumber.from(tokenId).toHexString(), 32).slice(2),
   );
   let jsonMetadata;
   try {

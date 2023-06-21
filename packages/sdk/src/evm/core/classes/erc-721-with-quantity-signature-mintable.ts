@@ -27,7 +27,7 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/SignatureDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, type providers } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -75,7 +75,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
       const signature = signedPayload.signature;
 
       const overrides = await this.contractWrapper.getCallOverrides();
-      const parse = (receipt: ethers.providers.TransactionReceipt) => {
+      const parse = (receipt: providers.TransactionReceipt) => {
         const t =
           this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
             "TokensMintedWithSignature",

@@ -7,7 +7,7 @@ import { fetchAndCacheDeployMetadata } from "../common/any-evm-utils/fetchAndCac
 import { convertParamValues } from "../common/any-evm-utils/convertParamValues";
 import { extractConstructorParamsFromAbi } from "../common/feature-detection/extractConstructorParamsFromAbi";
 import { extractFunctionParamsFromAbi } from "../common/feature-detection/extractFunctionParamsFromAbi";
-import { BytesLike, Contract, Signer, ethers } from "ethers";
+import { type BytesLike, Contract, type Signer, utils, Wallet } from "ethers";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { DeployOptions } from "../types/deploy";
 import { ThirdwebSDK } from "../core/sdk";
@@ -93,7 +93,7 @@ export async function zkDeployContractFromUri(
     const bytecode = compilerMetadata.bytecode.startsWith("0x")
       ? compilerMetadata.bytecode
       : `0x${compilerMetadata.bytecode}`;
-    if (!ethers.utils.isHexString(bytecode)) {
+    if (!utils.isHexString(bytecode)) {
       throw new Error(`Contract bytecode is invalid.\n\n${bytecode}`);
     }
     const constructorParamTypes = extractConstructorParamsFromAbi(
@@ -142,7 +142,7 @@ async function registerContractOnMultiChainRegistry(
 ) {
   try {
     // random wallet is fine here, we're doing gasless calls
-    const wallet = ethers.Wallet.createRandom();
+    const wallet = Wallet.createRandom();
     const sdk = ThirdwebSDK.fromPrivateKey(wallet.privateKey, "polygon", {
       gasless: {
         openzeppelin: {

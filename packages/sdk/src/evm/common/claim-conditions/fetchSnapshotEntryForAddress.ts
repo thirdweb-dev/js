@@ -7,7 +7,7 @@ import {
   SnapshotFormatVersion,
 } from "../sharded-merkle-tree";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { providers } from "ethers";
+import type { providers } from "ethers";
 
 export async function fetchSnapshotEntryForAddress(
   address: string,

@@ -29,7 +29,7 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ITokenERC1155";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, constants } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -50,7 +50,10 @@ export class Erc1155SignatureMintable implements DetectableFeature {
   constructor(
     contractWrapper: ContractWrapper<BaseSignatureMintERC1155 | TokenERC1155>,
     storage: ThirdwebStorage,
-    roles?: ContractRoles<TokenERC1155, (typeof NFT_BASE_CONTRACT_ROLES)[number]>,
+    roles?: ContractRoles<
+      TokenERC1155,
+      (typeof NFT_BASE_CONTRACT_ROLES)[number]
+    >,
   ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
@@ -263,7 +266,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
   ): Promise<SignedPayload1155> {
     const payload = {
       ...payloadToSign,
-      tokenId: ethers.constants.MaxUint256,
+      tokenId: constants.MaxUint256,
     };
     return this.generateFromTokenId(payload);
   }
@@ -324,7 +327,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
   ): Promise<SignedPayload1155[]> {
     const payloads = payloadsToSign.map((payload) => ({
       ...payload,
-      tokenId: ethers.constants.MaxUint256,
+      tokenId: constants.MaxUint256,
     }));
     return this.generateBatchFromTokenIds(payloads);
   }

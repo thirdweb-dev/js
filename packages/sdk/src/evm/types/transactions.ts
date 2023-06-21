@@ -2,14 +2,14 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { TransactionResult } from "../core/types";
 import { SDKOptionsOutput } from "../schema/sdk-options";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
+import type {
   providers,
-  type Signer,
-  type CallOverrides,
-  type BaseContract,
-  type Contract,
-  type ContractInterface,
-  type ContractFactory,
+  Signer,
+  CallOverrides,
+  BaseContract,
+  Contract,
+  ContractInterface,
+  ContractFactory,
 } from "ethers";
 import EventEmitter from "eventemitter3";
 import { DeployEvents } from "./deploy";

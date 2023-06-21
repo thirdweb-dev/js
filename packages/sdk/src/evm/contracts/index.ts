@@ -19,7 +19,7 @@ import { Abi, AbiSchema } from "../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { providers } from "ethers";
+import type { providers } from "ethers";
 import type { SmartContract as SmartContractType } from "./smart-contract";
 import { getCompositeABIfromRelease } from "../common/plugin/getCompositeABIfromRelease";
 import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
@@ -626,10 +626,7 @@ export const VoteInitializer = {
   },
 };
 
-async function getContractInfo(
-  address: Address,
-  provider: providers.Provider,
-) {
+async function getContractInfo(address: Address, provider: providers.Provider) {
   try {
     return await getPrebuiltInfo(address, provider);
   } catch (e) {

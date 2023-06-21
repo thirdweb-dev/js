@@ -12,7 +12,7 @@ import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { providers, utils } from "ethers";
+import { type providers, utils } from "ethers";
 import { getPrebuiltInfo } from "../../common/legacy";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { BaseDelayedRevealERC1155 } from "../../types/eips";

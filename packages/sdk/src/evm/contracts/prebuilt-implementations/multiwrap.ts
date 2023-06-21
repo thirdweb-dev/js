@@ -32,7 +32,7 @@ import {
   TokensWrappedEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/Multiwrap";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumberish, CallOverrides, ethers } from "ethers";
+import { type BigNumberish, type CallOverrides, utils } from "ethers";
 import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
 import { hasERC20Allowance } from "../../common/currency/hasERC20Allowance";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
@@ -166,7 +166,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
           );
           erc20Tokens.push({
             contractAddress: token.assetContract,
-            quantity: ethers.utils.formatUnits(
+            quantity: utils.formatUnits(
               token.totalAmount,
               tokenMetadata.decimals,
             ),
