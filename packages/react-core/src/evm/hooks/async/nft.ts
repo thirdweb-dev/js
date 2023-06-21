@@ -25,7 +25,7 @@ import {
   UseMutationResult,
   useQueryClient,
 } from "@tanstack/react-query";
-import { Erc1155, QueryAllParams, NFT, Erc721 } from "@thirdweb-dev/sdk";
+import { Erc1155, QueryAllParams, NFT } from "@thirdweb-dev/sdk";
 import { BigNumber, BigNumberish, providers } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -683,22 +683,20 @@ export function useBurnNFT<TContract extends NFTContract>(
  * TODO add docs
  * @private
  */
-export function useSetSharedMetadata<TContract extends Erc721>(
+export function useSetSharedMetadata<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
 ) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
+  const { erc721 } = getErcs(contract);
 
   return useMutation(
     async (data: BasicNFTInput) => {
-      invariant(contract, "contract is undefined");
-      invariant(
-        "sharedMetadata" in contract,
-        "contract does not support setSharedMetadata",
-      );
-
-      await contract.sharedMetadata.set(data);
+      if (erc721) {
+        return await erc721.sharedMetadata.set(data);
+      }
+      invariant(false, "Unknown NFT type");
     },
     {
       onSettled: () =>
