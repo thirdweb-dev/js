@@ -125,6 +125,11 @@ export const cacheKeys = {
         createContractCacheKey(contractAdress, ["isSmartWalletDeployed", admin]),
     },
 
+    smartWallet: {
+      signers: (contractAddress: RequiredParam<ContractAddress>) =>
+        createContractCacheKey(contractAddress, ["smartWallet", "signers"]),
+    },
+
     app: {
       get: (contractAddress: RequiredParam<ContractAddress>) =>
         createContractCacheKey(contractAddress, ["appURI"]),
