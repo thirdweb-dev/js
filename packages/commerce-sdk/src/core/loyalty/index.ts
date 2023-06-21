@@ -66,8 +66,8 @@ export const rewardPoints = async ({
         sdkOptions,
       );
 
+      const tokenContract = await sdk.getContract(tokenContractAddress, "token");
       try {
-        const tokenContract = await sdk.getContract(tokenContractAddress, "token");
         const tx = await tokenContract.transfer(wallet, rewardAmount);
         console.log(`Rewarding ${rewardAmount} points to wallet address: ${wallet}`, `tx: ${tx.receipt.transactionHash}`);
         return "OK";
