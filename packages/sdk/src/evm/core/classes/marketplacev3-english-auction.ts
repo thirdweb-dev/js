@@ -11,7 +11,7 @@ import {
   EnglishAuctionInputParams,
   EnglishAuctionInputParamsSchema,
 } from "../../schema/marketplacev3/english-auctions";
-import type { MarketplaceFilter } from "../../types/marketplace";
+import type { MarketplaceFilter, MarketplaceFilterWithoutOfferor } from "../../types/marketplace";
 import { CurrencyValue, Price } from "../../types/currency";
 import { EnglishAuction, Bid } from "../../types/marketplacev3";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
@@ -104,7 +104,7 @@ export class MarketplaceV3EnglishAuctions<
    * @returns the Auction object array
    * @twfeature EnglishAuctions
    */
-  public async getAll(filter?: MarketplaceFilter): Promise<EnglishAuction[]> {
+  public async getAll(filter?: MarketplaceFilterWithoutOfferor): Promise<EnglishAuction[]> {
     const totalAuctions = await this.getTotalCount();
 
     let start = BigNumber.from(filter?.start || 0).toNumber();

@@ -11,3 +11,10 @@ export interface MarketplaceFilter extends QueryAllParams {
   tokenId?: BigNumberish;
   offeror?: AddressOrEns;
 }
+
+/**
+ * English auctions cannot be retrieved by offeror.
+ */
+export interface MarketplaceFilterWithoutOfferor extends MarketplaceFilter {
+  offeror?: never;
+}
