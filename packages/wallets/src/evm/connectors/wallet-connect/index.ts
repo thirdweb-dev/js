@@ -250,17 +250,18 @@ export class WalletConnectConnector extends WagmiConnector<
       const isChainApproved = namespaceChains.includes(chainId);
 
       if (!isChainApproved && namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
+        const blockExplorerUrls = chain.explorers?.length
+          ? { blockExplorerUrls: [chain.explorers[0].url] }
+          : {};
         await provider.request({
           method: ADD_ETH_CHAIN_METHOD,
           params: [
             {
               chainId: utils.hexValue(chain.chainId),
-              blockExplorerUrls: [
-                chain.explorers?.length ? chain.explorers[0] : undefined,
-              ],
               chainName: chain.name,
               nativeCurrency: chain.nativeCurrency,
               rpcUrls: [...chain.rpc],
+              ...blockExplorerUrls,
             },
           ],
         });
@@ -282,6 +283,7 @@ export class WalletConnectConnector extends WagmiConnector<
       if (/user rejected request/i.test(message)) {
         throw new UserRejectedRequestError(error);
       }
+
       throw new SwitchChainError(error);
     }
   }
