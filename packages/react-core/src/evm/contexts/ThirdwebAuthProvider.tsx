@@ -52,7 +52,7 @@ function ChangeActiveWalletOnAccountSwitch() {
       try {
         await switchAccount(data.address);
       } catch (err) {
-        console.warn(
+        console.debug(
           `[Auth] Failed to switch account to ${data.address} with error:\n`,
           err,
         );
@@ -63,7 +63,7 @@ function ChangeActiveWalletOnAccountSwitch() {
       try {
         await logout();
       } catch (err) {
-        console.warn(`[Auth] Failed to logout with error:\n`, err);
+        console.debug(`[Auth] Failed to logout with error:\n`, err);
       }
     };
 
