@@ -9,19 +9,25 @@ import { z } from "zod";
 /**
  * @internal
  */
+export const BasicNFTInput = /* @__PURE__ */ (() =>
+  z.object({
+    name: z.union([z.string(), z.number()]).optional().nullable(),
+    description: z.string().nullable().optional().nullable(),
+    image: FileOrBufferOrStringSchema.nullable().optional(),
+
+    animation_url: FileOrBufferOrStringSchema.optional().nullable(),
+  }))();
+
+/**
+ * @internal
+ */
 export const CommonNFTInput = /* @__PURE__ */ (() =>
-  z
-    .object({
-      name: z.union([z.string(), z.number()]).optional().nullable(),
-      description: z.string().nullable().optional().nullable(),
-      image: FileOrBufferOrStringSchema.nullable().optional(),
-      external_url: FileOrBufferOrStringSchema.nullable().optional(),
-      animation_url: FileOrBufferOrStringSchema.optional().nullable(),
-      background_color: HexColor.optional().nullable(),
-      properties: OptionalPropertiesInput,
-      attributes: OptionalPropertiesInput,
-    })
-    .catchall(z.union([BigNumberTransformSchema, z.unknown()])))();
+  BasicNFTInput.extend({
+    external_url: FileOrBufferOrStringSchema.nullable().optional(),
+    background_color: HexColor.optional().nullable(),
+    properties: OptionalPropertiesInput,
+    attributes: OptionalPropertiesInput,
+  }).catchall(z.union([BigNumberTransformSchema, z.unknown()])))();
 
 /**
  * @internal
@@ -44,15 +50,22 @@ export const CommonNFTOutput = /* @__PURE__ */ (() =>
 /**
  * @public
  */
-export type NFTMetadataInput = z.input<typeof CommonNFTInput>;
+export type BasicNFTInput = /* @__PURE__ */ z.input<typeof BasicNFTInput>;
+
 /**
  * @public
  */
-export type NFTMetadataOrUri = z.input<typeof NFTInputOrUriSchema>;
+export type NFTMetadataInput = /* @__PURE__ */ z.input<typeof CommonNFTInput>;
 /**
  * @public
  */
-export type NFTMetadata = z.output<typeof CommonNFTOutput>;
+export type NFTMetadataOrUri = /* @__PURE__ */ z.input<
+  typeof NFTInputOrUriSchema
+>;
+/**
+ * @public
+ */
+export type NFTMetadata = /* @__PURE__ */ z.output<typeof CommonNFTOutput>;
 /**
  * @public
  */
