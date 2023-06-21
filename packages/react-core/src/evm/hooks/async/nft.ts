@@ -1,3 +1,4 @@
+import { BasicNFTInput } from "@thirdweb-dev/sdk/dist/declarations/src/core/schema/nft";
 import {
   requiredParamInvariant,
   RequiredParam,
@@ -663,6 +664,37 @@ export function useBurnNFT<TContract extends NFTContract>(
       if (erc721) {
         const { tokenId } = data;
         return await erc721.burn(tokenId);
+      }
+      invariant(false, "Unknown NFT type");
+    },
+    {
+      onSettled: () =>
+        invalidateContractAndBalances(
+          queryClient,
+          contractAddress,
+          activeChainId,
+        ),
+    },
+  );
+}
+
+/**
+ * Set shared metadata
+ * TODO add docs
+ * @private
+ */
+export function useSetSharedMetadata<TContract extends NFTContract>(
+  contract: RequiredParam<TContract>,
+) {
+  const activeChainId = useSDKChainId();
+  const contractAddress = contract?.getAddress();
+  const queryClient = useQueryClient();
+  const { erc721 } = getErcs(contract);
+
+  return useMutation(
+    async (data: BasicNFTInput) => {
+      if (erc721) {
+        return await erc721.sharedMetadata.set(data);
       }
       invariant(false, "Unknown NFT type");
     },

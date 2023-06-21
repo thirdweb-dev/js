@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react",
-  "version": "3.14.0",
+  "version": "3.14.1",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -107,6 +107,7 @@
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-thirdweb": "workspace:*",
+    "eslint-plugin-better-tree-shaking": "0.0.3",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-inclusive-language": "^2.2.0",
     "eslint-plugin-prettier": "^4.2.1",

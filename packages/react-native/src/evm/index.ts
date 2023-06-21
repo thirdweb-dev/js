@@ -38,6 +38,9 @@ export { createSecureStorage } from "../core/SecureStorage";
 // ui components
 export * from "./components/base";
 
+// assets / icons
+export * from "./assets";
+
 // providers
 // export * from "./providers/full";
 export * from "./providers/thirdweb-provider";

@@ -8,9 +8,9 @@ import { BigNumber, utils } from "ethers";
 function getGasStationUrl(chainId: ChainId.Polygon | ChainId.Mumbai): string {
   switch (chainId) {
     case ChainId.Polygon:
-      return "https://gasstation-mainnet.matic.network/v2";
+      return "https://gasstation.polygon.technology/v2";
     case ChainId.Mumbai:
-      return "https://gasstation-mumbai.matic.today/v2";
+      return "https://gasstation-testnet.polygon.technology/v2";
   }
 }
 

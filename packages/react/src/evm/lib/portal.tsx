@@ -26,7 +26,9 @@ function useForceUpdate() {
   }, []);
 }
 
-const useIsomorphicLayoutEffect = canUseDOM() ? useLayoutEffect : useEffect;
+const useIsomorphicLayoutEffect = /* @__PURE__ */ canUseDOM()
+  ? useLayoutEffect
+  : useEffect;
 
 /**
  * Portal from `@reach/portal`

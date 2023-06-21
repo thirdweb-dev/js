@@ -27,6 +27,7 @@ import {
   FEATURE_NFT_CLAIM_PHASES_V1,
   FEATURE_NFT_SIGNATURE_MINTABLE_V1,
   FEATURE_NFT_SIGNATURE_MINTABLE_V2,
+  FEATURE_NFT_SHARED_METADATA,
   FEATURE_NFT_CLAIM_ZORA,
 } from "./erc721-features";
 import {
@@ -96,6 +97,7 @@ export type Feature =
   | typeof FEATURE_NFT_SIGNATURE_MINTABLE_V2
   | typeof FEATURE_NFT_BURNABLE
   | typeof FEATURE_NFT_TIERED_DROP
+  | typeof FEATURE_NFT_SHARED_METADATA
   | typeof FEATURE_EDITION
   | typeof FEATURE_EDITION_ENUMERABLE
   | typeof FEATURE_EDITION_MINTABLE
@@ -127,6 +129,7 @@ export type Feature =
   | typeof FEATURE_OFFERS
   | typeof FEATURE_SMART_WALLET
   | typeof FEATURE_SMART_WALLET_FACTORY;
+
 export type Extension = Feature;
 
 /**
