@@ -18,3 +18,10 @@ export interface MarketplaceFilter extends QueryAllParams {
 export interface MarketplaceFilterWithoutOfferor extends MarketplaceFilter {
   offeror?: never;
 }
+
+/**
+ * Offers cannot be retrieved by seller.
+ */
+export interface MarketplaceFilterWithoutSeller extends MarketplaceFilter {
+  seller?: never;
+}
