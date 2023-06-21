@@ -8,11 +8,13 @@ import type { ContractWrapper } from "./contract-wrapper";
 import type {
   IERC721Enumerable,
   IERC721Supply,
+  OpenEditionERC721,
 } from "@thirdweb-dev/contracts-js";
 import { BigNumber, constants } from "ethers";
 import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
 import type { Erc721 } from "./erc-721";
 import { Erc721Enumerable } from "./erc-721-enumerable";
+import { hasFunction } from "../../common";
 
 /**
  * List ERC721 NFTs

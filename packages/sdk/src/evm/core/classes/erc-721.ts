@@ -952,12 +952,10 @@ export class Erc721<
    * @internal
    */
   public async nextTokenIdToMint(): Promise<BigNumber> {
-    if (hasFunction<TokenERC721>("totalSupply", this.contractWrapper)) {
-      return await this.contractWrapper.readContract.totalSupply();
-    } else if (
-      hasFunction<TokenERC721>("nextTokenIdToMint", this.contractWrapper)
-    ) {
+    if (hasFunction<TokenERC721>("nextTokenIdToMint", this.contractWrapper)) {
       return await this.contractWrapper.readContract.nextTokenIdToMint();
+    } else if (hasFunction<TokenERC721>("totalSupply", this.contractWrapper)) {
+      return await this.contractWrapper.readContract.totalSupply();
     } else {
       throw new Error(
         "Contract requires either `nextTokenIdToMint` or `totalSupply` function available to determine the next token ID to mint",
