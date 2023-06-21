@@ -1,4 +1,4 @@
-import { BytesLike, ethers } from "ethers";
+import { type BytesLike, utils } from "ethers";
 import { getSaltHash } from "./getSaltHash";
 
 /**
@@ -15,27 +15,27 @@ export function computeDeploymentAddress(
   create2FactoryAddress: string,
   salt?: string,
 ): string {
-  const saltHash = salt ? ethers.utils.id(salt) : getSaltHash(bytecode);
+  const saltHash = salt ? utils.id(salt) : getSaltHash(bytecode);
 
   // 1. create init bytecode hash with contract's bytecode and encoded args
-  const initBytecode = ethers.utils.solidityPack(
+  const initBytecode = utils.solidityPack(
     ["bytes", "bytes"],
     [bytecode, encodedArgs],
   );
 
   // 2. abi-encode pack the deployer address, salt, and bytecode hash
-  const deployInfoPacked = ethers.utils.solidityPack(
+  const deployInfoPacked = utils.solidityPack(
     ["bytes1", "address", "bytes32", "bytes32"],
     [
       "0xff",
       create2FactoryAddress,
       saltHash,
-      ethers.utils.solidityKeccak256(["bytes"], [initBytecode]),
+      utils.solidityKeccak256(["bytes"], [initBytecode]),
     ],
   );
 
   // 3. hash the packed deploy info
-  const hashedDeployInfo = ethers.utils.solidityKeccak256(
+  const hashedDeployInfo = utils.solidityKeccak256(
     ["bytes"],
     [deployInfoPacked],
   );

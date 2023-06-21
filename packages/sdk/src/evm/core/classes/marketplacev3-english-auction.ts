@@ -30,7 +30,7 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import { NewAuctionEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IEnglishAuctions";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, ethers, constants } from "ethers";
+import { BigNumber, type BigNumberish, utils, constants } from "ethers";
 import invariant from "tiny-invariant";
 import { cleanCurrencyAddress } from "../../common/currency/cleanCurrencyAddress";
 import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
@@ -468,10 +468,7 @@ export class MarketplaceV3EnglishAuctions<
 
       return this.makeBid.prepare(
         auctionId,
-        ethers.utils.formatUnits(
-          auction.buyoutBidAmount,
-          currencyMetadata.decimals,
-        ),
+        utils.formatUnits(auction.buyoutBidAmount, currencyMetadata.decimals),
       );
     },
   );

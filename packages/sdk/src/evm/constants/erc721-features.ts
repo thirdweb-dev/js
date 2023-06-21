@@ -14,6 +14,7 @@ import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.json";
 import SignatureMintERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC721.json";
 import SignatureMintERC721_V1Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC721_V1.json";
 import TieredDropAbi from "@thirdweb-dev/contracts-js/dist/abis/LazyMintWithTier.json";
+import SharedMetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/ISharedMetadata.json";
 import zora_IDropERC721 from "@thirdweb-dev/contracts-js/dist/abis/zora_IERC721Drop.json";
 
 export const FEATURE_NFT_BURNABLE = {
@@ -199,6 +200,17 @@ export const FEATURE_NFT_SUPPLY = /* @__PURE__ */ {
   },
 } as const;
 
+export const FEATURE_NFT_SHARED_METADATA = /* @__PURE__ */ {
+  name: "ERC721SharedMetadata",
+  namespace: "nft.sharedmetadata",
+  docLinks: {
+    sdk: "sdk.sharedmetadata",
+    contracts: "ISharedMetadata",
+  },
+  abis: [Erc721Abi, SharedMetadataAbi],
+  features: {},
+} as const;
+
 export const FEATURE_NFT = /* @__PURE__ */ {
   name: "ERC721",
   namespace: "nft",
@@ -221,5 +233,6 @@ export const FEATURE_NFT = /* @__PURE__ */ {
     [FEATURE_NFT_CLAIM_CONDITIONS_V2.name]: FEATURE_NFT_CLAIM_CONDITIONS_V2,
     [FEATURE_NFT_CLAIM_PHASES_V1.name]: FEATURE_NFT_CLAIM_PHASES_V1,
     [FEATURE_NFT_CLAIM_PHASES_V2.name]: FEATURE_NFT_CLAIM_PHASES_V2,
+    [FEATURE_NFT_SHARED_METADATA.name]: FEATURE_NFT_SHARED_METADATA,
   },
 } as const;

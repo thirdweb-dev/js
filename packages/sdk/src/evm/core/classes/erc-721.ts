@@ -26,6 +26,7 @@ import {
   FEATURE_NFT_SUPPLY,
   FEATURE_NFT_TIERED_DROP,
   FEATURE_NFT_SIGNATURE_MINTABLE_V2,
+  FEATURE_NFT_SHARED_METADATA,
 } from "../../constants/erc721-features";
 import type { Address } from "../../schema/shared/Address";
 import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
@@ -55,6 +56,7 @@ import type {
   TieredDrop,
   TokenERC721,
   Zora_IERC721Drop,
+  ISharedMetadata,
 } from "@thirdweb-dev/contracts-js";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
@@ -65,6 +67,7 @@ import { Erc721Supply } from "./erc-721-supply";
 import { Erc721TieredDrop } from "./erc-721-tiered-drop";
 import { Erc721ClaimableWithConditions } from "./erc-721-claim-conditions";
 import { Erc721Claimable } from "./erc-721-claimable";
+import { Erc721SharedMetadata } from "./erc-721-shared-metadata";
 import { Erc721ClaimableZora } from "./erc-721-claim-zora";
 
 /**
@@ -95,6 +98,7 @@ export class Erc721<
   private signatureMintable: Erc721WithQuantitySignatureMintable | undefined;
   private claimWithConditions: Erc721ClaimableWithConditions | undefined;
   private claimCustom: Erc721Claimable | undefined;
+  private erc721SharedMetadata: Erc721SharedMetadata | undefined;
   private claimZora: Erc721ClaimableZora | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: ThirdwebStorage;
@@ -120,6 +124,7 @@ export class Erc721<
     this.claimWithConditions = this.detectErc721ClaimableWithConditions();
     this.claimCustom = this.detectErc721Claimable();
     this.claimZora = this.detectErc721ClaimableZora();
+    this.erc721SharedMetadata = this.detectErc721SharedMetadata();
     this._chainId = chainId;
   }
 
@@ -902,6 +907,31 @@ export class Erc721<
     return assertEnabled(this.lazyMintable?.revealer, FEATURE_NFT_REVEALABLE);
   }
 
+  ////// ERC721 Shared Metadata Extension (Open Edition) //////
+
+  /**
+   * Set shared metadata for all NFTs
+   * @remarks Set shared metadata for all NFTs in the collection. (Open Edition)
+   * @example
+   * ```javascript
+   * // defiine the metadata
+   * const metadata = {
+   *  name: "Shared Metadata",
+   *  description: "Every NFT in this collection will share this metadata."
+   * };
+   *
+   *
+   * const tx = contract.erc721.sharedMetadata.set(metadata);
+   * ```
+   * @twfeature ERC721SharedMetadata
+   */
+  get sharedMetadata() {
+    return assertEnabled(
+      this.erc721SharedMetadata,
+      FEATURE_NFT_SHARED_METADATA,
+    );
+  }
+
   /** ******************************
    * PRIVATE FUNCTIONS
    *******************************/
@@ -1065,6 +1095,18 @@ export class Erc721<
       )
     ) {
       return new Erc721ClaimableZora(this, this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectErc721SharedMetadata(): Erc721SharedMetadata | undefined {
+    if (
+      detectContractFeature<ISharedMetadata>(
+        this.contractWrapper,
+        "ERC721SharedMetadata",
+      )
+    ) {
+      return new Erc721SharedMetadata(this.contractWrapper, this.storage);
     }
     return undefined;
   }

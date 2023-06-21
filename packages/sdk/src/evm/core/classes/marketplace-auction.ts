@@ -35,7 +35,7 @@ import {
   Marketplace as MarketplaceContract,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, ethers, constants } from "ethers";
+import { BigNumber, BigNumberish, utils, constants } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -340,10 +340,7 @@ export class MarketplaceAuction {
 
       return this.makeBid.prepare(
         listingId,
-        ethers.utils.formatUnits(
-          listing.buyoutPrice,
-          currencyMetadata.decimals,
-        ),
+        utils.formatUnits(listing.buyoutPrice, currencyMetadata.decimals),
       );
     },
   );
@@ -414,7 +411,7 @@ export class MarketplaceAuction {
           listing.quantity,
           listing.currencyContractAddress,
           normalizedPrice,
-          ethers.constants.MaxUint256,
+          constants.MaxUint256,
         ],
         overrides,
       });

@@ -29,10 +29,10 @@ import { ProposalCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declaratio
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
-  BigNumberish,
-  CallOverrides,
+  type BigNumberish,
+  type CallOverrides,
   Contract,
-  ethers,
+  utils,
 } from "ethers";
 import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
@@ -253,7 +253,7 @@ export class Vote implements UpdateableNetwork {
     const tos = proposal.executions.map((p) => p.toAddress);
     const values = proposal.executions.map((p) => p.nativeTokenValue);
     const datas = proposal.executions.map((p) => p.transactionData);
-    const descriptionHash = ethers.utils.id(proposal.description);
+    const descriptionHash = utils.id(proposal.description);
     try {
       await this.contractWrapper
         .callStatic()
@@ -278,7 +278,7 @@ export class Vote implements UpdateableNetwork {
       symbol: "",
       decimals: 18,
       value: balance,
-      displayValue: ethers.utils.formatUnits(balance, 18),
+      displayValue: utils.formatUnits(balance, 18),
     };
   }
 
@@ -475,7 +475,7 @@ export class Vote implements UpdateableNetwork {
       const tos = proposal.executions.map((p) => p.toAddress);
       const values = proposal.executions.map((p) => p.nativeTokenValue);
       const datas = proposal.executions.map((p) => p.transactionData);
-      const descriptionHash = ethers.utils.id(proposal.description);
+      const descriptionHash = utils.id(proposal.description);
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,

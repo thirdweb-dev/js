@@ -26,6 +26,7 @@ import type { CurrencyValue, Amount } from "../../types/currency";
 import type { TokenERC20 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { CallOverrides, constants } from "ethers";
+import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
  * Create a standard crypto token or cryptocurrency.
@@ -42,7 +43,7 @@ import { CallOverrides, constants } from "ethers";
  * @public
  */
 export class Token extends StandardErc20<TokenERC20> {
-  static contractRoles = ["admin", "minter", "transfer"] as const;
+  static contractRoles = NFT_BASE_CONTRACT_ROLES;
 
   public abi: Abi;
   public metadata: ContractMetadata<

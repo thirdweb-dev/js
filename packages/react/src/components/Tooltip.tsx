@@ -40,7 +40,11 @@ to {
 }
 `;
 
-const TooltipContent = styled(RadixTooltip.Content)<{ theme?: Theme }>`
+const TooltipContent = /* @__PURE__ */ styled(
+  /* @__PURE__ */ RadixTooltip.Content,
+)<{
+  theme?: Theme;
+}>`
   background: ${(p) => p.theme.tooltip.bg};
   color: ${(p) => p.theme.tooltip.text};
   border-radius: ${radius.sm};
@@ -56,6 +60,10 @@ const TooltipContent = styled(RadixTooltip.Content)<{ theme?: Theme }>`
   line-height: 1.5;
 `;
 
-const TooltipArrow = styled(RadixTooltip.Arrow)<{ theme?: Theme }>`
+const TooltipArrow = /* @__PURE__ */ styled(
+  /* @__PURE__ */ RadixTooltip.Arrow,
+)<{
+  theme?: Theme;
+}>`
   fill: ${(p) => p.theme.tooltip.bg};
 `;

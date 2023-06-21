@@ -1,6 +1,6 @@
 import { QuantitySchema } from "../../../../core/schema/shared";
 import { AddressOrEnsSchema } from "../../shared/AddressOrEnsSchema";
-import { ethers } from "ethers";
+import { constants } from "ethers";
 import { z } from "zod";
 
 /**
@@ -17,7 +17,7 @@ export const SnapshotEntryInput = /* @__PURE__ */ (() =>
     maxClaimable: QuantitySchema.default(0), // defaults to 0
     price: QuantitySchema.optional(), // defaults to unlimited, but can be undefined in old snapshots
     currencyAddress: AddressOrEnsSchema.default(
-      ethers.constants.AddressZero,
+      constants.AddressZero,
     ).optional(), // defaults to AddressZero, but can be undefined for old snapshots
   }))();
 

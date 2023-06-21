@@ -1,8 +1,8 @@
-import { NATIVE_TOKEN_ADDRESS, ThirdwebSDK } from "../../src/evm";
+import { ThirdwebSDK } from "../../src/evm";
 import { SmartContract } from "../../src/evm/contracts/smart-contract";
 import { jsonProvider, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { expect, assert } from "chai";
+import { expect } from "chai";
 import { ethers } from "ethers";
 
 describe("Any EVM Keyless Deploy", async () => {

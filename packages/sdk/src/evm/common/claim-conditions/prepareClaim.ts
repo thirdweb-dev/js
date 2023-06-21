@@ -5,7 +5,7 @@ import type {
 } from "../../types/claim-conditions/claim-conditions";
 import { SnapshotFormatVersion } from "../sharded-merkle-tree";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, constants, ethers, utils } from "ethers";
+import { BigNumber, type BigNumberish, constants, utils } from "ethers";
 import { approveErc20Allowance } from "../currency/approveErc20Allowance";
 import { isNativeToken } from "../currency/isNativeToken";
 import { normalizePriceValue } from "../currency/normalizePriceValue";
@@ -54,22 +54,19 @@ export async function prepareClaim(
         // override only if not default values (unlimited for quantity, zero addr for currency)
         maxClaimable =
           snapshotEntry.maxClaimable === "unlimited"
-            ? ethers.constants.MaxUint256
-            : ethers.utils.parseUnits(
-                snapshotEntry.maxClaimable,
-                tokenDecimals,
-              );
+            ? constants.MaxUint256
+            : utils.parseUnits(snapshotEntry.maxClaimable, tokenDecimals);
         priceInProof =
           snapshotEntry.price === undefined ||
           snapshotEntry.price === "unlimited"
-            ? ethers.constants.MaxUint256
+            ? constants.MaxUint256
             : await normalizePriceValue(
                 contractWrapper.getProvider(),
                 snapshotEntry.price,
-                snapshotEntry.currencyAddress || ethers.constants.AddressZero,
+                snapshotEntry.currencyAddress || constants.AddressZero,
               );
         currencyAddressInProof =
-          snapshotEntry.currencyAddress || ethers.constants.AddressZero;
+          snapshotEntry.currencyAddress || constants.AddressZero;
       } else {
         // if no snapshot entry, and it's a v1 format (exclusive allowlist) then address can't claim
         if (snapshotFormatVersion === SnapshotFormatVersion.V1) {
@@ -95,19 +92,19 @@ export async function prepareClaim(
   // if proof price is unlimited, then we use the price from the claim condition
   // this mimics the contract behavior
   const pricePerToken =
-    priceInProof.toString() !== ethers.constants.MaxUint256.toString()
+    priceInProof.toString() !== constants.MaxUint256.toString()
       ? priceInProof
       : activeClaimCondition.price;
   // same for currency address
   const currencyAddress =
-    currencyAddressInProof !== ethers.constants.AddressZero
+    currencyAddressInProof !== constants.AddressZero
       ? currencyAddressInProof
       : activeClaimCondition.currencyAddress;
   if (pricePerToken.gt(0)) {
     if (isNativeToken(currencyAddress)) {
       overrides["value"] = BigNumber.from(pricePerToken)
         .mul(quantity)
-        .div(ethers.utils.parseUnits("1", tokenDecimals));
+        .div(utils.parseUnits("1", tokenDecimals));
     } else if (checkERC20Allowance) {
       await approveErc20Allowance(
         contractWrapper,
