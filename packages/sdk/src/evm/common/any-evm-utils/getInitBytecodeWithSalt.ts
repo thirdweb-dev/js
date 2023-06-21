@@ -1,4 +1,4 @@
-import { BytesLike, ethers } from "ethers";
+import { type BytesLike, utils } from "ethers";
 import { getSaltHash } from "./getSaltHash";
 
 /**
@@ -15,9 +15,9 @@ export function getInitBytecodeWithSalt(
   encodedArgs: BytesLike,
   salt?: string,
 ): string {
-  const saltHash = salt ? ethers.utils.id(salt) : getSaltHash(bytecode);
+  const saltHash = salt ? utils.id(salt) : getSaltHash(bytecode);
 
-  const initBytecodeWithSalt = ethers.utils.solidityPack(
+  const initBytecodeWithSalt = utils.solidityPack(
     ["bytes32", "bytes", "bytes"],
     [saltHash, bytecode, encodedArgs],
   );

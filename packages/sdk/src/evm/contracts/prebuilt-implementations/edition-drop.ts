@@ -28,6 +28,7 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { PrebuiltEditionDrop } from "../../types/eips";
 import { ThirdwebStorage, UploadProgressEvent } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
+import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -44,7 +45,7 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
  * @public
  */
 export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
-  private static contractRoles = ["admin", "minter", "transfer"] as const;
+  private static contractRoles = NFT_BASE_CONTRACT_ROLES;
 
   public abi: Abi;
   public sales: ContractPrimarySale<PrebuiltEditionDrop>;

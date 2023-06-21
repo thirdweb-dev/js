@@ -2,7 +2,7 @@ import { SUPPORTED_CHAIN_ID } from "../constants/chains/SUPPORTED_CHAIN_ID";
 import { NATIVE_TOKENS } from "../constants/currency";
 import { Feature } from "../constants/contract-features";
 import { ContractSource } from "../schema/contracts/custom";
-import { BigNumber, BigNumberish, ethers, providers } from "ethers";
+import { BigNumber, type BigNumberish, utils, type providers } from "ethers";
 
 /**
  * Error that may get thrown if IPFS returns nothing for a given uri.
@@ -320,7 +320,7 @@ export class TransactionError extends Error {
     if (info.value && info.value.gt(0)) {
       errorMessage += withSpaces(
         "value",
-        `${ethers.utils.formatEther(info.value)} ${
+        `${utils.formatEther(info.value)} ${
           NATIVE_TOKENS[info.network.chainId as SUPPORTED_CHAIN_ID]?.symbol ||
           ""
         }`,

@@ -4,7 +4,7 @@ import type { DetectableFeature } from "../interfaces/DetectableFeature";
 import type { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 import type { TokenERC20 } from "@thirdweb-dev/contracts-js";
-import { ethers, BigNumber } from "ethers";
+import { utils, BigNumber } from "ethers";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
 import type { TokenInitializer } from "../../contracts";
@@ -252,7 +252,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
       mintRequest.price,
       mintRequest.currencyAddress,
     );
-    const amountWithDecimals = ethers.utils.parseUnits(
+    const amountWithDecimals = utils.parseUnits(
       mintRequest.quantity,
       await this.contractWrapper.readContract.decimals(),
     );

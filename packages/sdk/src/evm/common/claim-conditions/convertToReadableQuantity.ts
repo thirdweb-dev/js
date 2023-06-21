@@ -1,4 +1,4 @@
-import { BigNumberish, ethers } from "ethers";
+import { type BigNumberish, constants, utils } from "ethers";
 
 /**
  * @internal
@@ -9,9 +9,9 @@ export function convertToReadableQuantity(
   bn: BigNumberish,
   tokenDecimals: number,
 ) {
-  if (bn.toString() === ethers.constants.MaxUint256.toString()) {
+  if (bn.toString() === constants.MaxUint256.toString()) {
     return "unlimited";
   } else {
-    return ethers.utils.formatUnits(bn, tokenDecimals);
+    return utils.formatUnits(bn, tokenDecimals);
   }
 }
