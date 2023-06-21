@@ -64,14 +64,19 @@ export class Erc721SharedMetadata implements DetectableFeature {
       const parsedMetadata = BasicNFTInput.parse(metadata);
 
       // take the input and upload image and animation if it is not a URI already
-      const batch: FileOrBuffer[] = [];
+      const batch = [];
+
       if (isFileOrBuffer(parsedMetadata.image)) {
-        batch.push(parsedMetadata.image);
+        batch.push(this.storage.upload(parsedMetadata.image));
+      } else {
+        batch.push(Promise.resolve(undefined));
       }
       if (isFileOrBuffer(parsedMetadata.animation_url)) {
-        batch.push(parsedMetadata.animation_url);
+        batch.push(this.storage.upload(parsedMetadata.animation_url));
+      } else {
+        batch.push(Promise.resolve(undefined));
       }
-      const [imageUri, animationUri] = await this.storage.uploadBatch(batch);
+      const [imageUri, animationUri] = await Promise.all(batch);
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -80,8 +85,8 @@ export class Erc721SharedMetadata implements DetectableFeature {
           {
             name: `${parsedMetadata.name || ""}`,
             description: parsedMetadata.description || "",
-            imageURI: imageUri,
-            animationURI: animationUri,
+            imageURI: imageUri || "",
+            animationURI: animationUri || "",
           },
         ],
       });
