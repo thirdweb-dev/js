@@ -4,13 +4,18 @@ import { DEFAULT_GATEWAY_URLS } from "../src/common/urls";
 import { expect } from "chai";
 import { readFileSync } from "fs";
 
+const toTestUrl = (url: string) => {
+  const regex = /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/g;
+  return url.replace(regex, "{uuid}");
+}
+
 describe("IPFS", async () => {
   const storage = new ThirdwebStorage();
 
   it("Should resolve scheme with gateway URL", async () => {
     const uri = `ipfs://example`;
     const url = storage.resolveScheme(uri);
-    expect(url).to.equal(`${DEFAULT_GATEWAY_URLS["ipfs://"][0]}example`);
+    expect(toTestUrl(url)).to.equal(`${DEFAULT_GATEWAY_URLS["ipfs://"][0]}example`);
   });
 
   it("Should upload buffer with file number", async () => {
@@ -264,7 +269,7 @@ describe("IPFS", async () => {
     const res = await storage.download(uri);
     const json = await res.json();
 
-    expect(json.image).to.equal(
+    expect(toTestUrl(json.image)).to.equal(
       "ipfs://QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0",
     );
   });
@@ -281,7 +286,7 @@ describe("IPFS", async () => {
 
     const json = await storage.downloadJSON(uri);
 
-    expect(json.image).to.equal(
+    expect(toTestUrl(json.image)).to.equal(
       `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
     );
   });
@@ -305,10 +310,10 @@ describe("IPFS", async () => {
     const res = await singleStorage.download(uri);
     const json = await res.json();
 
-    expect(json.image).to.equal(
+    expect(toTestUrl(json.image)).to.equal(
       `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0`,
     );
-    expect(json.animation_url).to.equal(
+    expect(toTestUrl(json.animation_url)).to.equal(
       `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
     );
   });
@@ -330,10 +335,10 @@ describe("IPFS", async () => {
     const res = await storage.download(uri);
     const json = await res.json();
 
-    expect(json.image).to.equal(
+    expect(toTestUrl(json.image)).to.equal(
       `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
     );
-    expect(json.animation_url).to.equal(
+    expect(toTestUrl(json.animation_url)).to.equal(
       `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
     );
   });
@@ -350,7 +355,8 @@ describe("IPFS", async () => {
       },
     );
 
-    expect(uri.startsWith(`${DEFAULT_GATEWAY_URLS["ipfs://"][0]}`)).to.equal(
+    const testUri = toTestUrl(uri)
+    expect(testUri.startsWith(`${DEFAULT_GATEWAY_URLS["ipfs://"][0]}`)).to.equal(
       true,
     );
   });
@@ -364,7 +370,7 @@ describe("IPFS", async () => {
       { alwaysUpload: true },
     );
 
-    expect(uri).to.equal(
+    expect(toTestUrl(uri)).to.equal(
       `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0`,
     );
   });

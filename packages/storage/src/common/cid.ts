@@ -1,8 +1,9 @@
 import { FileOrBufferOrString } from "../types";
-import { DEFAULT_GATEWAY_URLS } from "./urls";
+import {DEFAULT_GATEWAY_URLS, preprocessGatewayUrl} from "./urls";
 import { isBufferOrStringWithName } from "./utils";
 import fetch from "cross-fetch";
 import { importer } from "ipfs-unixfs-importer";
+import {v4 as uuid} from "uuid";
 
 type CIDVersion = 0 | 1;
 type ContentWithPath = {
@@ -67,7 +68,8 @@ export async function getCID(
 }
 
 export async function isUploaded(cid: string) {
-  const res = await fetch(`${DEFAULT_GATEWAY_URLS["ipfs://"][0]}${cid}`, {
+  const url = preprocessGatewayUrl(DEFAULT_GATEWAY_URLS["ipfs://"][0])
+  const res = await fetch(`${url}${cid}`, {
     method: "HEAD",
     headers: {
       // tell the gateway to skip fetching from origin in order to fail fast on 404s and just re-upload in those cases

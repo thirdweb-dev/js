@@ -1,4 +1,5 @@
 import { GatewayUrls } from "../types";
+import { v4 as uuid } from "uuid";
 
 /**
  * @internal
@@ -6,10 +7,7 @@ import { GatewayUrls } from "../types";
 export const DEFAULT_GATEWAY_URLS: GatewayUrls = {
   // Note: Gateway URLs should have trailing slashes (we clean this on user input)
   "ipfs://": [
-    // "https://ipfs-2.thirdwebcdn.com/ipfs/", // Reputation here is bad, so we're removing it from the default list
-    "https://ipfs-3.thirdwebcdn.com/ipfs/",
-    "https://ipfs-4.thirdwebcdn.com/ipfs/",
-    "https://ipfs-5.thirdwebcdn.com/ipfs/",
+    "https://{uuid}.ipfs-public.thirdwebcdn.com/ipfs/",
     "https://cloudflare-ipfs.com/ipfs/",
     "https://ipfs.io/ipfs/",
     // TODO this one can become the default again once it's stable (no more VT issues)
@@ -45,6 +43,13 @@ export function parseGatewayUrls(
 /**
  * @internal
  */
+export function preprocessGatewayUrl(url: string) {
+  return url.replace(/{uuid}/g, uuid())
+}
+
+/**
+ * @internal
+ */
 export function prepareGatewayUrls(gatewayUrls?: GatewayUrls): GatewayUrls {
   const allGatewayUrls = {
     ...gatewayUrls,
@@ -54,9 +59,15 @@ export function prepareGatewayUrls(gatewayUrls?: GatewayUrls): GatewayUrls {
   for (const key of Object.keys(DEFAULT_GATEWAY_URLS)) {
     if (gatewayUrls && gatewayUrls[key]) {
       // Make sure that all user gateway URLs have trailing slashes
-      const cleanedGatewayUrls = gatewayUrls[key].map(
+      let cleanedGatewayUrls = gatewayUrls[key].map(
         (url) => url.replace(/\/$/, "") + "/",
       );
+
+      // Make sure that {uuid} is substituted in all user gateway URLs
+      cleanedGatewayUrls = cleanedGatewayUrls.map((url) =>
+        preprocessGatewayUrl(url),
+      );
+
       allGatewayUrls[key] = [
         ...cleanedGatewayUrls,
         ...DEFAULT_GATEWAY_URLS[key],
