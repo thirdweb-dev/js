@@ -19,8 +19,8 @@ export default {
   "networkId": 1,
   "icon": {
     "url": "ipfs://QmT7PSXBiVBma6E15hNkivmstqLu3JSnG1jXN5pTmcCGRC",
-    "width": 200,
-    "height": 200,
+    "width": 180,
+    "height": 180,
     "format": "png"
   },
   "explorers": [
