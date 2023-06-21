@@ -247,7 +247,7 @@ export class WalletConnectConnector extends WagmiConnector<
       const isChainApproved = namespaceChains.includes(chainId);
 
       if (!isChainApproved && namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
-        let blockExplorerUrls = chain.explorers?.length
+        const blockExplorerUrls = chain.explorers?.length
           ? { blockExplorerUrls: [chain.explorers[0].url] }
           : {};
         await provider.request({
