@@ -99,7 +99,7 @@
     "@types/react-table": "^7.7.7",
     "@types/spdx-correct": "^3.1.0",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
-    "@typescript-eslint/parser": "^5.59.8",
+    "@typescript-eslint/parser": "^5.60.0",
     "eslint": "^8.42.0",
     "eslint-config-next": "^13.4.4",
     "eslint-config-prettier": "^8.8.0",
