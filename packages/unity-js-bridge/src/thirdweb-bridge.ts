@@ -1,12 +1,16 @@
 /// --- Thirdweb Brige ---
 import { ThirdwebAuth } from "@thirdweb-dev/auth";
 import { CoinbasePayIntegration, FundWalletOptions } from "@thirdweb-dev/pay";
-import { ThirdwebSDK, ChainIdOrName } from "@thirdweb-dev/sdk";
+import {
+  ThirdwebSDK,
+  ChainIdOrName,
+  getChainIdFromNetwork,
+  getChainId,
+} from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   DAppMetaData,
   SmartWalletConfig,
-  WalletConnectV1,
   walletIds,
 } from "@thirdweb-dev/wallets";
 import type { AbstractClientWallet } from "@thirdweb-dev/wallets/evm/wallets/base";
@@ -17,8 +21,10 @@ import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
 import { MetaMaskWallet } from "@thirdweb-dev/wallets/evm/wallets/metamask";
 import { MagicLink } from "@thirdweb-dev/wallets/evm/wallets/magic";
 import { SmartWallet } from "@thirdweb-dev/wallets/evm/wallets/smart-wallet";
+import { WalletConnect } from "@thirdweb-dev/wallets/evm/wallets/wallet-connect";
+import { PaperWallet } from "@thirdweb-dev/wallets/evm/wallets/paper-wallet";
 import { BigNumber } from "ethers";
-import { allChains } from "@thirdweb-dev/chains";
+import { Ethereum, allChains } from "@thirdweb-dev/chains";
 import type { ContractInterface, Signer } from "ethers";
 
 declare global {
@@ -50,7 +56,8 @@ const bigNumberReplacer = (_key: string, value: any) => {
 const WALLETS = [
   MetaMaskWallet,
   InjectedWallet,
-  WalletConnectV1,
+  WalletConnect,
+  PaperWallet,
   CoinbaseWallet,
   LocalWallet,
   MagicLink,
@@ -152,8 +159,9 @@ class ThirdwebBridge implements TWBridge {
             chains: allChains,
           });
           break;
-        case walletIds.walletConnectV1:
-          walletInstance = new WalletConnectV1({
+        case walletIds.walletConnect:
+          walletInstance = new WalletConnect({
+            projectId: sdkOptions.wallet?.walletConnectProjectId,
             dappMetadata,
             chains: allChains,
           });
@@ -172,8 +180,17 @@ class ThirdwebBridge implements TWBridge {
           break;
         case walletIds.magicLink:
           walletInstance = new MagicLink({
+            dappMetadata,
             apiKey: sdkOptions.wallet?.magicLinkApiKey,
             emailLogin: true,
+            chains: allChains,
+          });
+          break;
+        case walletIds.paper:
+          walletInstance = new PaperWallet({
+            clientId: sdkOptions.wallet?.paperClientId,
+            chain: Ethereum,
+            dappMetadata,
             chains: allChains,
           });
           break;
@@ -235,6 +252,12 @@ class ThirdwebBridge implements TWBridge {
           throw new Error("Email is required for Magic Link Wallet");
         }
         await magicLinkWallet.connect({ chainId, email });
+      } else if (walletInstance.walletId === walletIds.paper) {
+        const paperWallet = walletInstance as PaperWallet;
+        if (!email) {
+          throw new Error("Email is required for Paper Wallet");
+        }
+        await paperWallet.connect({ chainId, email });
       } else if (walletInstance.walletId === walletIds.smartWallet) {
         const smartWallet = walletInstance as SmartWallet;
         const eoaWallet = this.walletMap.get(personalWallet);
