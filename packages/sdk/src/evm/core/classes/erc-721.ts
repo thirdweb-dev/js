@@ -56,7 +56,7 @@ import type {
   TieredDrop,
   TokenERC721,
   Zora_IERC721Drop,
-  ISharedMetadata,
+  SharedMetadata,
 } from "@thirdweb-dev/contracts-js";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
@@ -1101,7 +1101,7 @@ export class Erc721<
 
   private detectErc721SharedMetadata(): Erc721SharedMetadata | undefined {
     if (
-      detectContractFeature<ISharedMetadata>(
+      detectContractFeature<SharedMetadata>(
         this.contractWrapper,
         "ERC721SharedMetadata",
       )
