@@ -908,7 +908,7 @@ export class Erc721<
   ////// ERC721 Shared Metadata Extension (Open Edition) //////
 
   /**
-   * Shared Metadata Extension (Open Edition)
+   * Set shared metadata for all NFTs
    * @remarks Set shared metadata for all NFTs in the collection. (Open Edition)
    * @example
    * ```javascript
