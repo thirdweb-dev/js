@@ -774,11 +774,11 @@ export class Erc721<
    */
   public async totalClaimedSupply(): Promise<BigNumber> {
     const contract = this.contractWrapper;
-    if (hasFunction<DropERC721>("nextTokenIdToClaim", contract)) {
-      return contract.readContract.nextTokenIdToClaim();
-    }
     if (hasFunction<SignatureDrop>("totalMinted", contract)) {
       return contract.readContract.totalMinted();
+    }
+    if (hasFunction<DropERC721>("nextTokenIdToClaim", contract)) {
+      return contract.readContract.nextTokenIdToClaim();
     }
     throw new Error(
       "No function found on contract to get total claimed supply",
@@ -952,9 +952,11 @@ export class Erc721<
    * @internal
    */
   public async nextTokenIdToMint(): Promise<BigNumber> {
-    if (hasFunction<TokenERC721>("nextTokenIdToMint", this.contractWrapper)) {
+    if (hasFunction<TokenERC721>("totalSupply", this.contractWrapper)) {
       return await this.contractWrapper.readContract.nextTokenIdToMint();
-    } else if (hasFunction<TokenERC721>("totalSupply", this.contractWrapper)) {
+    } else if (
+      hasFunction<TokenERC721>("nextTokenIdToMint", this.contractWrapper)
+    ) {
       return await this.contractWrapper.readContract.totalSupply();
     } else {
       throw new Error(
