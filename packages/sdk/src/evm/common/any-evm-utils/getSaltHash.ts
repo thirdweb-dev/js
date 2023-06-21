@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { utils } from "ethers";
 
 /**
  * Generate salt for deployment with Create2
@@ -8,9 +8,9 @@ import { ethers } from "ethers";
  * @param bytecode: Creation bytecode of the contract to deploy
  */
 export function getSaltHash(bytecode: string): string {
-  const bytecodeHash = ethers.utils.id(bytecode);
+  const bytecodeHash = utils.id(bytecode);
   const salt = `tw.${bytecodeHash}`;
-  const saltHash = ethers.utils.id(salt);
+  const saltHash = utils.id(salt);
 
   return saltHash;
 }

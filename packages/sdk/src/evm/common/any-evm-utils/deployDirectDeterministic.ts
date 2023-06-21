@@ -1,9 +1,9 @@
 import {
   BigNumber,
-  PopulatedTransaction,
-  Signer,
-  ethers,
-  providers,
+  type PopulatedTransaction,
+  type Signer,
+  utils,
+  type providers,
 } from "ethers";
 import invariant from "tiny-invariant";
 import { isContractDeployed } from "./isContractDeployed";
@@ -56,7 +56,7 @@ export async function directDeployDeterministic(
     constructorParamTypes,
     constructorArgs,
   );
-  const encodedArgs = ethers.utils.defaultAbiCoder.encode(
+  const encodedArgs = utils.defaultAbiCoder.encode(
     constructorParamTypes,
     paramValues,
   );
@@ -159,7 +159,7 @@ export async function predictAddressDeterministic(
     constructorParamTypes,
     constructorArgs,
   );
-  const encodedArgs = ethers.utils.defaultAbiCoder.encode(
+  const encodedArgs = utils.defaultAbiCoder.encode(
     constructorParamTypes,
     paramValues,
   );

@@ -5,7 +5,7 @@ import { getPrebuiltInfo } from "../../common/legacy";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_SIGNATURE_MINTABLE } from "../../constants/erc1155-features";
-import type { NFTCollectionInitializer } from "../../contracts";
+import { NFT_BASE_CONTRACT_ROLES } from "../../contracts/contractRoles";
 import {
   FilledSignaturePayload1155WithTokenId,
   MintRequest1155,
@@ -29,7 +29,7 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ITokenERC1155";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, constants } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -44,10 +44,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
   >;
   private storage: ThirdwebStorage;
   private roles:
-    | ContractRoles<
-        TokenERC1155,
-        (typeof NFTCollectionInitializer.roles)[number]
-      >
+    | ContractRoles<TokenERC1155, (typeof NFT_BASE_CONTRACT_ROLES)[number]>
     | undefined;
 
   constructor(
@@ -55,7 +52,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
     storage: ThirdwebStorage,
     roles?: ContractRoles<
       TokenERC1155,
-      (typeof NFTCollectionInitializer.roles)[number]
+      (typeof NFT_BASE_CONTRACT_ROLES)[number]
     >,
   ) {
     this.contractWrapper = contractWrapper;
@@ -269,7 +266,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
   ): Promise<SignedPayload1155> {
     const payload = {
       ...payloadToSign,
-      tokenId: ethers.constants.MaxUint256,
+      tokenId: constants.MaxUint256,
     };
     return this.generateFromTokenId(payload);
   }
@@ -330,7 +327,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
   ): Promise<SignedPayload1155[]> {
     const payloads = payloadsToSign.map((payload) => ({
       ...payload,
-      tokenId: ethers.constants.MaxUint256,
+      tokenId: constants.MaxUint256,
     }));
     return this.generateBatchFromTokenIds(payloads);
   }

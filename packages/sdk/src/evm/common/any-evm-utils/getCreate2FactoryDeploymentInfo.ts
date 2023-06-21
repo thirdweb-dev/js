@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { utils } from "ethers";
 import { KeylessDeploymentInfo } from "../../types/any-evm/deploy-data";
 import { SIGNATURE, CREATE2_FACTORY_BYTECODE } from "./constants";
 import { getKeylessTxn } from "./getKeylessTxn";
@@ -13,7 +13,7 @@ export function getCreate2FactoryDeploymentInfo(
   chainId: number,
   gasPrice?: number,
 ): KeylessDeploymentInfo {
-  const signature = ethers.utils.joinSignature(SIGNATURE);
+  const signature = utils.joinSignature(SIGNATURE);
   const deploymentTransaction = getKeylessTxn(
     {
       gasPrice: gasPrice ? gasPrice : 100 * 10 ** 9,
@@ -24,7 +24,7 @@ export function getCreate2FactoryDeploymentInfo(
     },
     signature,
   );
-  const create2FactoryAddress = ethers.utils.getContractAddress({
+  const create2FactoryAddress = utils.getContractAddress({
     from: deploymentTransaction.signer,
     nonce: 0,
   });

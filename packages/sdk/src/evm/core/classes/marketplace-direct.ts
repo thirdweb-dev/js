@@ -44,9 +44,8 @@ import { ListingAddedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
-  BigNumberish,
+  type BigNumberish,
   Contract,
-  ethers,
   constants,
   utils,
 } from "ethers";
@@ -330,7 +329,7 @@ export class MarketplaceDirect {
         overrides,
       );
 
-      let expirationTimestamp = ethers.constants.MaxUint256;
+      let expirationTimestamp = constants.MaxUint256;
       if (expirationDate) {
         expirationTimestamp = BigNumber.from(
           Math.floor(expirationDate.getTime() / 1000),
