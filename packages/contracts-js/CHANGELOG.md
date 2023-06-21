@@ -1,5 +1,13 @@
 # @thirdweb-dev/contracts-js
 
+## 1.3.6
+
+### Patch Changes
+
+- [#1197](https://github.com/thirdweb-dev/js/pull/1197) [`e0ce4a37`](https://github.com/thirdweb-dev/js/commit/e0ce4a37596a91a072f8551e323fce6723113dcb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Added Zora drop ABI
+
+- [#1134](https://github.com/thirdweb-dev/js/pull/1134) [`990c665d`](https://github.com/thirdweb-dev/js/commit/990c665de9e5c1070dc80fe0f1b434e251f70a94) Thanks [@nkrishang](https://github.com/nkrishang)! - Introduce SmartWallet sdk class
+
 ## 1.3.5
 
 ### Patch Changes
