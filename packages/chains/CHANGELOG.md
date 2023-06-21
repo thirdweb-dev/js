@@ -1,5 +1,11 @@
 # @thirdweb-dev/chains
 
+## 0.1.22
+
+### Patch Changes
+
+- [#1192](https://github.com/thirdweb-dev/js/pull/1192) [`f41f1a29`](https://github.com/thirdweb-dev/js/commit/f41f1a2958a2cedcf0496c9a3ca284d0b98f1b89) Thanks [@jnsdls](https://github.com/jnsdls)! - fix arbitrum goerli infura url
+
 ## 0.1.21
 
 ### Patch Changes

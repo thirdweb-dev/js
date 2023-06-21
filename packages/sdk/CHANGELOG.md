@@ -1,5 +1,31 @@
 # @thirdweb-dev/sdk
 
+## 3.10.23
+
+### Patch Changes
+
+- [#1196](https://github.com/thirdweb-dev/js/pull/1196) [`d9b7360d`](https://github.com/thirdweb-dev/js/commit/d9b7360d1d78abcdaca89aa35e66388cbc5eb26c) Thanks [@MananTank](https://github.com/MananTank)! - refactor erc-721.ts, erc-1155.ts, erc-20.ts
+
+- [#1208](https://github.com/thirdweb-dev/js/pull/1208) [`8a2d9204`](https://github.com/thirdweb-dev/js/commit/8a2d92046a416c99c6bfecf63a6fdb6cc02ea175) Thanks [@sebas5384](https://github.com/sebas5384)! - Updated gas station URL
+
+- [#1134](https://github.com/thirdweb-dev/js/pull/1134) [`990c665d`](https://github.com/thirdweb-dev/js/commit/990c665de9e5c1070dc80fe0f1b434e251f70a94) Thanks [@nkrishang](https://github.com/nkrishang)! - Introduce SmartWallet sdk class
+
+- [#1199](https://github.com/thirdweb-dev/js/pull/1199) [`c6f44722`](https://github.com/thirdweb-dev/js/commit/c6f44722f9d123db4e7c4c799fe8e0374a02107c) Thanks [@MananTank](https://github.com/MananTank)! - Add eslint-plugin-better-tree-shaking for improved tree-shaking
+
+- [#1191](https://github.com/thirdweb-dev/js/pull/1191) [`45ae105e`](https://github.com/thirdweb-dev/js/commit/45ae105ed3e48bfbf6be84aa12ecb0fb55a917b7) Thanks [@kumaryash90](https://github.com/kumaryash90)! - OZ minimal forwarder addresses for zksync testnet and mainnet
+
+- [#1198](https://github.com/thirdweb-dev/js/pull/1198) [`bb7ca20e`](https://github.com/thirdweb-dev/js/commit/bb7ca20e49c5c374b12a4ed746a2ac3db488abd9) Thanks [@MananTank](https://github.com/MananTank)! - Better PURE annotations for tree shaking
+
+- [#1193](https://github.com/thirdweb-dev/js/pull/1193) [`23d61cfe`](https://github.com/thirdweb-dev/js/commit/23d61cfeff2e5a885c511416d7491e7933ed404a) Thanks [@jnsdls](https://github.com/jnsdls)! - add shared metadata extension (open edition)
+
+- [#1189](https://github.com/thirdweb-dev/js/pull/1189) [`8941b226`](https://github.com/thirdweb-dev/js/commit/8941b22682d1b15a6e0d311b1e8548b95d6cfadf) Thanks [@MananTank](https://github.com/MananTank)! - Add PURE annotations to improve tree-shaking
+
+- [#1197](https://github.com/thirdweb-dev/js/pull/1197) [`e0ce4a37`](https://github.com/thirdweb-dev/js/commit/e0ce4a37596a91a072f8551e323fce6723113dcb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - contract.erc721.claim(quantity) now supports Zora contracts
+
+- Updated dependencies [[`e0ce4a37`](https://github.com/thirdweb-dev/js/commit/e0ce4a37596a91a072f8551e323fce6723113dcb), [`990c665d`](https://github.com/thirdweb-dev/js/commit/990c665de9e5c1070dc80fe0f1b434e251f70a94), [`f41f1a29`](https://github.com/thirdweb-dev/js/commit/f41f1a2958a2cedcf0496c9a3ca284d0b98f1b89)]:
+  - @thirdweb-dev/contracts-js@1.3.6
+  - @thirdweb-dev/chains@0.1.22
+
 ## 3.10.22
 
 ### Patch Changes
