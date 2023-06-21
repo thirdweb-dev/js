@@ -37,7 +37,7 @@ interface EmbedSetupProps {
 }
 
 const IPFS_URI = "ipfs://QmUe6MdTHr4it2k7rMkLZZ44TGWVKZSFEcYCbrCzuD7LP4";
-const ERC721_IPFS_URI = `ipfs://QmZG9dPDYCpTuzM3mVvdtmpjqwCbhErPipNvT945QqzWHk`;
+const ERC721_IPFS_URI = `ipfs://QmPvTEZKMiHfQ4AHnd8uvUy3yPxKL2MesWGi3KGGT5Ro2n`;
 
 interface IframeSrcOptions {
   chain: string;
