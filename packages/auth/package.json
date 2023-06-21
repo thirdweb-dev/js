@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/auth",
-  "version": "3.0.19",
+  "version": "3.2.1",
   "main": "dist/thirdweb-dev-auth.cjs.js",
   "module": "dist/thirdweb-dev-auth.esm.js",
   "browser": {
@@ -54,6 +54,7 @@
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/auth",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
+  "sideEffects": false,
   "scripts": {
     "build": "preconstruct build",
     "format": "prettier --write 'src/**/*'",
@@ -100,7 +101,7 @@
     "@typescript-eslint/parser": "^5.33.0",
     "chai": "^4.3.6",
     "cookie-parser": "^1.4.6",
-    "eslint": "^8.21.0",
+    "eslint": "^8.42.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-import": "^2.26.0",

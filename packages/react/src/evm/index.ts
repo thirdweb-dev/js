@@ -22,6 +22,7 @@ export { useInstalledWallets } from "../wallet/hooks/useInstalledWallets";
 // wallet connection hooks
 export { useMetamask } from "./hooks/wallets/useMetamask";
 export { useCoinbaseWallet } from "./hooks/wallets/useCoinbaseWallet";
+export { useFrameWallet } from "./hooks/wallets/useFrame";
 
 export {
   usePaperWalletUserEmail,

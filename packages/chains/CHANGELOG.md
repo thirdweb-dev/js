@@ -1,5 +1,53 @@
 # @thirdweb-dev/chains
 
+## 0.1.22
+
+### Patch Changes
+
+- [#1192](https://github.com/thirdweb-dev/js/pull/1192) [`f41f1a29`](https://github.com/thirdweb-dev/js/commit/f41f1a2958a2cedcf0496c9a3ca284d0b98f1b89) Thanks [@jnsdls](https://github.com/jnsdls)! - fix arbitrum goerli infura url
+
+## 0.1.21
+
+### Patch Changes
+
+- [#1074](https://github.com/thirdweb-dev/js/pull/1074) [`cc20f93e`](https://github.com/thirdweb-dev/js/commit/cc20f93e178d86ee2b3f39102bbb0811de211f05) Thanks [@Marfuen](https://github.com/Marfuen)! - Enhance CLI Install command and update chains
+
+- [#1185](https://github.com/thirdweb-dev/js/pull/1185) [`8e28b0f5`](https://github.com/thirdweb-dev/js/commit/8e28b0f5e75596d29273ed80269bcee6d209adb4) Thanks [@jnsdls](https://github.com/jnsdls)! - add Zora Mainnet
+
+## 0.1.20
+
+### Patch Changes
+
+- [#1140](https://github.com/thirdweb-dev/js/pull/1140) [`16232de9`](https://github.com/thirdweb-dev/js/commit/16232de9eab9966e24e335929b2a3919346af265) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update chains
+
+- [#1138](https://github.com/thirdweb-dev/js/pull/1138) [`645b0303`](https://github.com/thirdweb-dev/js/commit/645b0303cc1a9cbb0a0e9cbd67d11c3b865e4584) Thanks [@jcstein](https://github.com/jcstein)! - feat: create Taro Testnet
+
+## 0.1.19
+
+### Patch Changes
+
+- [#1065](https://github.com/thirdweb-dev/js/pull/1065) [`bd86661f`](https://github.com/thirdweb-dev/js/commit/bd86661f54ca2f1eb09cbae35c704dc79be1b63a) Thanks [@iketw](https://github.com/iketw)! - [Chains] update chains
+
+- [#1064](https://github.com/thirdweb-dev/js/pull/1064) [`c85810ee`](https://github.com/thirdweb-dev/js/commit/c85810eee318b10eee4ada61828adaa51f94ea6c) Thanks [@MananTank](https://github.com/MananTank)! - Do not cache signer in wallets
+
+- [#1047](https://github.com/thirdweb-dev/js/pull/1047) [`6fd10f94`](https://github.com/thirdweb-dev/js/commit/6fd10f94b469dc5659e2ff4ce92a5aff86f3c89d) Thanks [@MananTank](https://github.com/MananTank)! - Fix tree-shaking issue in `@thirdweb-dev/chains`
+
+- [#1090](https://github.com/thirdweb-dev/js/pull/1090) [`5f1e6abb`](https://github.com/thirdweb-dev/js/commit/5f1e6abb391f5c58dbdb207f569b3dd0b5d4729c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add base-goerli to default chains
+
+## 0.1.18
+
+### Patch Changes
+
+- [#1040](https://github.com/thirdweb-dev/js/pull/1040) [`30e5593d`](https://github.com/thirdweb-dev/js/commit/30e5593dd1ce9abd809ad216a1cfce77b897093c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update chains
+
+## 0.1.17
+
+### Patch Changes
+
+- [#1031](https://github.com/thirdweb-dev/js/pull/1031) [`3c8c5d56`](https://github.com/thirdweb-dev/js/commit/3c8c5d56f2a21c0918fede71061c6745f2956f83) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
+- [#1033](https://github.com/thirdweb-dev/js/pull/1033) [`907d97be`](https://github.com/thirdweb-dev/js/commit/907d97bedef7331148bdfe8b9bf1e19459282e4c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Added faucet for optimism goerli
+
 ## 0.1.16
 
 ### Patch Changes

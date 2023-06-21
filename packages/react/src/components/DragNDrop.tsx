@@ -4,7 +4,7 @@ import { Theme, fontSize, iconSize, radius, spacing } from "../design-system";
 import styled from "@emotion/styled";
 import { Spacer } from "./Spacer";
 import { isMobile } from "../evm/utils/isMobile";
-import { IconFC } from "../wallet/ConnectWallet/icons/types";
+import type { IconFC } from "../wallet/ConnectWallet/icons/types";
 
 export const DragNDrop: React.FC<{
   extension: string;
@@ -117,7 +117,9 @@ export const DragNDrop: React.FC<{
   );
 };
 
-const UploadIconSecondary = styled(UploadIcon)<{ theme?: Theme }>`
+const UploadIconSecondary = /* @__PURE__ */ styled(UploadIcon)<{
+  theme?: Theme;
+}>`
   color: ${(props) => props.theme.text.secondary};
   transition: transform 200ms ease, color 200ms ease;
 `;

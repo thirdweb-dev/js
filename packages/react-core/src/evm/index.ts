@@ -47,10 +47,8 @@ export type {
 } from "../core/types/wallet";
 
 // auth
-export {
-  ThirdwebAuthProvider,
-  useThirdwebAuthContext,
-} from "./contexts/thirdweb-auth";
+export { useThirdwebAuthContext } from "./contexts/thirdweb-auth";
+export { ThirdwebAuthProvider } from "./contexts/ThirdwebAuthProvider";
 export type {
   ThirdwebAuthConfig,
   ISecureStorage,
@@ -169,6 +167,7 @@ export {
   useTransferNFT,
   useAirdropNFT,
   useBurnNFT,
+  useSetSharedMetadata,
 } from "./hooks/async/nft";
 
 // roles
@@ -194,10 +193,23 @@ export {
   useBurnToken,
 } from "./hooks/async/token";
 
+// smart wallet factory
+export {
+  useIsSmartWalletDeployed,
+  useSmartWallets,
+  useCreateSmartWallet,
+} from "./hooks/async/smart-wallet-factory";
+
 // thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)
 
 // auth hooks
-export { useLogin, useLogout, useUser, useAuth } from "./hooks/auth";
+export {
+  useLogin,
+  useLogout,
+  useUser,
+  useAuth,
+  useSwitchAccount,
+} from "./hooks/auth";
 export type { UserWithData } from "./hooks/auth";
 
 // contract hooks

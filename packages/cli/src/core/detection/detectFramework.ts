@@ -29,7 +29,6 @@ export default async function detect(
   options: any,
   detectedPackageManager: PackageManagerType,
 ): Promise<FrameworkType> {
-  // We could optimize further if we want, by only running the detectors that match the package manager.
   const frameworkDetectors: FrameworkDetector[] = [
     new BrownieDetector(),
     new CRADetector(),
@@ -64,6 +63,10 @@ export default async function detect(
 
   if (possibleFrameworks.length === 1) {
     return possibleFrameworks[0];
+  }
+
+  if (possibleFrameworks.includes("expo") && possibleFrameworks.includes("react-native-cli")) {
+    return "expo";
   }
 
   info(

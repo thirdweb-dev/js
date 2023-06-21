@@ -3,7 +3,7 @@ import { Image } from "react-native";
 import { SvgUri } from "react-native-svg";
 
 const ImageSvgUri = ({
-  imageUrl,
+  imageUrl = "",
   width,
   height,
   imageAlt = "",
@@ -15,6 +15,10 @@ const ImageSvgUri = ({
 }) => {
   const isSvg = imageUrl.toLowerCase().endsWith(".svg");
   const resolvedImageUrl = resolveIpfsUri(imageUrl) || "";
+
+  if (!resolvedImageUrl || resolvedImageUrl === "") {
+    return null;
+  }
 
   if (isSvg) {
     return <SvgUri width={width} height={height} uri={resolvedImageUrl} />;

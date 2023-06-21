@@ -12,7 +12,7 @@ export function useMetaMaskWallet() {
   return useCallback(
     async (connectOptions?: { chainId?: number }) => {
       const { metamaskWallet } = await import("../wallets/metamask-wallet");
-      connect(metamaskWallet(), connectOptions);
+      return connect(metamaskWallet(), connectOptions);
     },
     [connect],
   );

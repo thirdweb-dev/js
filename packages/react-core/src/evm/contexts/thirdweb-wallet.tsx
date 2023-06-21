@@ -26,7 +26,9 @@ const INITIAL_CONTEXT_VALUE: ThirdwebConnectedWalletContext = {
 };
 
 const ThirdwebConnectedWalletContext =
-  createContext<ThirdwebConnectedWalletContext>(INITIAL_CONTEXT_VALUE);
+  /* @__PURE__ */ createContext<ThirdwebConnectedWalletContext>(
+    INITIAL_CONTEXT_VALUE,
+  );
 
 export const ThirdwebConnectedWalletProvider: React.FC<
   PropsWithChildren<{ signer?: Signer }>
@@ -64,6 +66,7 @@ export const ThirdwebConnectedWalletProvider: React.FC<
               });
             } catch (e) {
               // failed to get a viable rpc url, nothing we can do
+              console.error(e);
             }
           }
 

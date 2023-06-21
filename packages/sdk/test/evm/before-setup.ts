@@ -64,7 +64,7 @@ import {
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ContractInterface, ethers } from "ethers";
 import hardhat from "hardhat";
-import { generatePluginFunctions } from "../../src/evm/common/plugin";
+import { generatePluginFunctions } from "../../src/evm/common/plugin/generatePluginFunctions";
 
 // it's there, trust me bro
 const hardhatEthers = (hardhat as any).ethers;
@@ -276,6 +276,7 @@ export const mochaHooks = {
             chainId: 31337,
             rpc: ["http://localhost:8545"],
             nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+            slug: "hardhat",
           },
         ],
       },

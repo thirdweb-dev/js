@@ -1,6 +1,6 @@
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_PLATFORM_FEE } from "../../constants/thirdweb-features";
-import { CommonPlatformFeeSchema } from "../../schema";
+import { CommonPlatformFeeSchema } from "../../schema/contracts/common";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
@@ -65,7 +65,7 @@ export class ContractPlatformFee<TContract extends IPlatformFee>
    * @param platformFeeInfo - the platform fee information
    * @twfeature PlatformFee
    */
-  set = buildTransactionFunction(
+  set = /* @__PURE__ */ buildTransactionFunction(
     async (
       platformFeeInfo: z.input<typeof CommonPlatformFeeSchema>,
     ): Promise<Transaction> => {

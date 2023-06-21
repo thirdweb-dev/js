@@ -1,4 +1,3 @@
-import { SnapshotInputSchema } from "../schema";
 import {
   SnapshotInfo,
   SnapshotInput,
@@ -9,22 +8,8 @@ import {
   SnapshotFormatVersion,
 } from "./sharded-merkle-tree";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers } from "ethers";
-
-export async function parseSnapshotInputs(inputs: SnapshotInput) {
-  const chunkSize = 25000;
-  const chunks = Array.from(
-    { length: Math.ceil(inputs.length / chunkSize) },
-    (_, i) => inputs.slice(i * chunkSize, i * chunkSize + chunkSize),
-  );
-
-  const results = [];
-  for (const chunk of chunks) {
-    results.push(...(await SnapshotInputSchema.parseAsync(chunk)));
-  }
-
-  return results;
-}
+import { providers } from "ethers";
+import { parseSnapshotInputs } from "./parseSnapshotInputs";
 
 /**
  * Create a snapshot (merkle tree) from a list of addresses and uploads it to IPFS
@@ -39,7 +24,7 @@ export async function parseSnapshotInputs(inputs: SnapshotInput) {
 export async function createSnapshot(
   snapshotInput: SnapshotInput,
   tokenDecimals: number,
-  provider: ethers.providers.Provider,
+  provider: providers.Provider,
   storage: ThirdwebStorage,
   snapshotFormatVersion: SnapshotFormatVersion,
 ): Promise<SnapshotInfo> {

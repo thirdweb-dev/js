@@ -22,8 +22,8 @@ export default class GatsbyDetector implements FrameworkDetector {
     );
 
     const gatsbyDependencyExists =
-      dependencies["gatsby"] ||
-      devDependencies["gatsby"] ||
+      !!dependencies["gatsby"] ||
+      !!devDependencies["gatsby"] ||
       additionalFilesExist ||
       false;
 

@@ -12,7 +12,7 @@ import IThirdwebPrimarySaleAbi from "@thirdweb-dev/contracts-js/dist/abis/IPrima
 import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/dist/abis/IRoyalty.json";
 import IOwnableAbi from "@thirdweb-dev/contracts-js/dist/abis/Ownable.json";
 import IAccountFactory from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactory.json";
-import IAccount from "@thirdweb-dev/contracts-js/dist/abis/IAccount.json";
+import IAccountCore from "@thirdweb-dev/contracts-js/dist/abis/IAccountCore.json";
 
 export const getAllPluginsAbi = [
   {
@@ -148,7 +148,7 @@ export const FEATURE_PERMISSIONS_ENUMERABLE = {
   features: {},
 } as const;
 
-export const FEATURE_PERMISSIONS = {
+export const FEATURE_PERMISSIONS = /* @__PURE__ */ {
   name: "Permissions",
   namespace: "roles",
   docLinks: {
@@ -284,8 +284,8 @@ export const FEATURE_SMART_WALLET_FACTORY = {
   namespace: "smartwallet.factory",
   docLinks: {
     // TODO
-    sdk: "",
-    contracts: "",
+    sdk: "sdk.smartWalletFactory",
+    contracts: "smartWalletFactory",
   },
   abis: [IAccountFactory],
   features: {},
@@ -299,6 +299,6 @@ export const FEATURE_SMART_WALLET = {
     sdk: "",
     contracts: "",
   },
-  abis: [IAccount],
+  abis: [IAccountCore],
   features: {},
 } as const;

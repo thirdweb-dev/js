@@ -3,14 +3,15 @@ export default {
   "name": "LaTestnet",
   "chain": "LaTestnet",
   "icon": {
-    "url": "ipfs://bafkreiecoqvit2mikpbpbtzy2zrn6e7fvqdegm72sdcathdwmgiyuzey7u",
-    "width": 104,
-    "height": 114,
+    "url": "ipfs://QmQxGA6rhuCQDXUueVcNvFRhMEWisyTmnF57TqL7h6k6cZ",
+    "width": 1280,
+    "height": 1280,
     "format": "png"
   },
   "rpc": [
     "https://latestnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.testnet.lachain.network"
+    "https://rpc.testnet.lachain.network",
+    "https://lachain-testnet.rpc-nodes.cedalio.dev"
   ],
   "faucets": [
     "https://faucet.lachain.network"

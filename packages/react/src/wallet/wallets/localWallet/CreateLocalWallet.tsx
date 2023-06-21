@@ -15,13 +15,14 @@ import { Flex } from "../../../components/basic";
 import { TextDivider } from "../../../components/TextDivider";
 import { Spinner } from "../../../components/Spinner";
 import { spacing } from "../../../design-system";
-import { LocalConfiguredWallet } from "./types";
+import type { LocalWalletConfig } from "./types";
 
 export const CreateLocalWallet_Password: React.FC<{
   onConnect: () => void;
   goBack: () => void;
-  localWalletConf: LocalConfiguredWallet;
+  localWalletConf: LocalWalletConfig;
   renderBackButton: boolean;
+  persist: boolean;
 }> = (props) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -29,9 +30,12 @@ export const CreateLocalWallet_Password: React.FC<{
   const passwordMismatch = confirmPassword && password !== confirmPassword;
   const [isConnecting, setIsConnecting] = useState(false);
 
-  const { localWallet, meta } = useLocalWalletInfo(props.localWalletConf);
+  const { localWallet, meta } = useLocalWalletInfo(
+    props.localWalletConf,
+    props.persist,
+  );
 
-  const { setConnectedWallet } = useWalletContext();
+  const { setConnectedWallet, setConnectionStatus } = useWalletContext();
   const [showImportScreen, setShowImportScreen] = useState(false);
 
   const [generatedAddress, setGeneratedAddress] = useState<string | null>(null);
@@ -55,6 +59,7 @@ export const CreateLocalWallet_Password: React.FC<{
         goBack={() => {
           setShowImportScreen(false);
         }}
+        persist={props.persist}
       />
     );
   }
@@ -65,7 +70,8 @@ export const CreateLocalWallet_Password: React.FC<{
     }
 
     setIsConnecting(true);
-    localWallet.connect();
+    setConnectionStatus("connecting");
+    await localWallet.connect();
 
     await localWallet.save({
       strategy: "encryptedJson",
@@ -127,6 +133,7 @@ export const CreateLocalWallet_Password: React.FC<{
           label="Password"
           type={showPassword ? "text" : "password"}
           value={password}
+          dataTest="new-password"
         />
 
         <Spacer y="lg" />
@@ -146,6 +153,7 @@ export const CreateLocalWallet_Password: React.FC<{
           type={showPassword ? "text" : "password"}
           value={confirmPassword}
           error={passwordMismatch ? "Passwords don't match" : ""}
+          dataTest="confirm-password"
         />
 
         <Spacer y="xl" />
@@ -158,6 +166,7 @@ export const CreateLocalWallet_Password: React.FC<{
             width: "100%",
             gap: spacing.sm,
           }}
+          data-test="create-new-wallet-button"
         >
           {isConnecting ? "Connecting" : "Create new wallet"}
           {isConnecting && <Spinner size="sm" color="inverted" />}
@@ -190,10 +199,11 @@ export const CreateLocalWallet_Password: React.FC<{
 export const CreateLocalWallet_Guest: React.FC<{
   onConnect: () => void;
   goBack: () => void;
-  localWallet: LocalConfiguredWallet;
+  localWallet: LocalWalletConfig;
+  persist: boolean;
 }> = (props) => {
-  const { localWallet } = useLocalWalletInfo(props.localWallet);
-  const { setConnectedWallet } = useWalletContext();
+  const { localWallet } = useLocalWalletInfo(props.localWallet, props.persist);
+  const { setConnectedWallet, setConnectionStatus } = useWalletContext();
   const { onConnect } = props;
 
   const handleConnect = useCallback(async () => {
@@ -201,10 +211,11 @@ export const CreateLocalWallet_Guest: React.FC<{
       throw new Error("Invalid state");
     }
     await localWallet.generate();
+    setConnectionStatus("connecting");
     await localWallet.connect();
     setConnectedWallet(localWallet);
     onConnect();
-  }, [localWallet, setConnectedWallet, onConnect]);
+  }, [localWallet, setConnectedWallet, onConnect, setConnectionStatus]);
 
   const connecting = useRef(false);
   useEffect(() => {

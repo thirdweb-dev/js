@@ -8,7 +8,7 @@ import {
   ModalTitle,
 } from "../../../components/modalElements";
 import { fontSize, iconSize, spacing } from "../../../design-system";
-import { Theme } from "../../../design-system/index";
+import type { Theme } from "../../../design-system/index";
 import styled from "@emotion/styled";
 
 export const ScanScreen: React.FC<{

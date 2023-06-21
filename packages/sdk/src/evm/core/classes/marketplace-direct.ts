@@ -1,12 +1,13 @@
-import { ListingNotFoundError, WrongListingTypeError } from "../../common";
 import {
-  cleanCurrencyAddress,
-  fetchCurrencyValue,
-  isNativeToken,
-  normalizePriceValue,
-  setErc20Allowance,
-} from "../../common/currency";
-import { resolveAddress } from "../../common/ens";
+  ListingNotFoundError,
+  WrongListingTypeError,
+} from "../../common/error";
+import { cleanCurrencyAddress } from "../../common/currency/cleanCurrencyAddress";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { isNativeToken } from "../../common/currency/isNativeToken";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import {
   handleTokenApproval,
   isTokenApprovedForTransfer,
@@ -20,7 +21,7 @@ import {
   InterfaceId_IERC721,
 } from "../../constants/contract";
 import { ListingType } from "../../enums";
-import { AddressOrEns } from "../../schema";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Price } from "../../types/currency";
 import {
   DirectListing,
@@ -43,9 +44,8 @@ import { ListingAddedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
-  BigNumberish,
+  type BigNumberish,
   Contract,
-  ethers,
   constants,
   utils,
 } from "ethers";
@@ -160,7 +160,7 @@ export class MarketplaceDirect {
    * const id = tx.id; // the id of the newly created listing
    * ```
    */
-  createListing = buildTransactionFunction(
+  createListing = /* @__PURE__ */ buildTransactionFunction(
     async (listing: NewDirectListing) => {
       validateNewListingParam(listing);
 
@@ -235,7 +235,7 @@ export class MarketplaceDirect {
    * const tx = await contract.direct.createListingsBatch(listings);
    * ```
    */
-  createListingsBatch = buildTransactionFunction(
+  createListingsBatch = /* @__PURE__ */ buildTransactionFunction(
     async (
       listings: NewDirectListing[],
     ): Promise<Transaction<TransactionResultWithId[]>> => {
@@ -292,7 +292,7 @@ export class MarketplaceDirect {
    * );
    * ```
    */
-  makeOffer = buildTransactionFunction(
+  makeOffer = /* @__PURE__ */ buildTransactionFunction(
     async (
       listingId: BigNumberish,
       quantityDesired: BigNumberish,
@@ -329,7 +329,7 @@ export class MarketplaceDirect {
         overrides,
       );
 
-      let expirationTimestamp = ethers.constants.MaxUint256;
+      let expirationTimestamp = constants.MaxUint256;
       if (expirationDate) {
         expirationTimestamp = BigNumber.from(
           Math.floor(expirationDate.getTime() / 1000),
@@ -366,7 +366,7 @@ export class MarketplaceDirect {
    * await contract.direct.acceptOffer(listingId, offeror);
    * ```
    */
-  acceptOffer = buildTransactionFunction(
+  acceptOffer = /* @__PURE__ */ buildTransactionFunction(
     async (listingId: BigNumberish, addressOfOfferor: AddressOrEns) => {
       /**
        * TODO:
@@ -406,7 +406,7 @@ export class MarketplaceDirect {
    * @param quantityDesired - the quantity to buy
    * @param receiver - optional receiver of the bought listing if different from the connected wallet
    */
-  buyoutListing = buildTransactionFunction(
+  buyoutListing = /* @__PURE__ */ buildTransactionFunction(
     async (
       listingId: BigNumberish,
       quantityDesired: BigNumberish,
@@ -455,21 +455,23 @@ export class MarketplaceDirect {
    *
    * @param listing - the new listing information
    */
-  updateListing = buildTransactionFunction(async (listing: DirectListing) => {
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "updateListing",
-      args: [
-        listing.id,
-        listing.quantity,
-        listing.buyoutPrice, // reserve price, doesn't matter for direct listing
-        listing.buyoutPrice,
-        await resolveAddress(listing.currencyContractAddress),
-        listing.startTimeInSeconds,
-        listing.secondsUntilEnd,
-      ],
-    });
-  });
+  updateListing = /* @__PURE__ */ buildTransactionFunction(
+    async (listing: DirectListing) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "updateListing",
+        args: [
+          listing.id,
+          listing.quantity,
+          listing.buyoutPrice, // reserve price, doesn't matter for direct listing
+          listing.buyoutPrice,
+          await resolveAddress(listing.currencyContractAddress),
+          listing.startTimeInSeconds,
+          listing.secondsUntilEnd,
+        ],
+      });
+    },
+  );
 
   /**
    * Cancel Direct Listing
@@ -484,13 +486,15 @@ export class MarketplaceDirect {
    * await contract.direct.cancelListing(listingId);
    * ```
    */
-  cancelListing = buildTransactionFunction(async (listingId: BigNumberish) => {
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "cancelDirectListing",
-      args: [listingId],
-    });
-  });
+  cancelListing = /* @__PURE__ */ buildTransactionFunction(
+    async (listingId: BigNumberish) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "cancelDirectListing",
+        args: [listingId],
+      });
+    },
+  );
 
   /** ******************************
    * PRIVATE FUNCTIONS

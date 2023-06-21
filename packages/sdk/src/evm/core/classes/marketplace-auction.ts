@@ -1,17 +1,15 @@
 import {
-  AuctionAlreadyStartedError,
-  AuctionHasNotEndedError,
   ListingNotFoundError,
   WrongListingTypeError,
-} from "../../common";
-import {
-  cleanCurrencyAddress,
-  fetchCurrencyMetadata,
-  fetchCurrencyValue,
-  normalizePriceValue,
-  setErc20Allowance,
-} from "../../common/currency";
-import { resolveAddress } from "../../common/ens";
+  AuctionAlreadyStartedError,
+  AuctionHasNotEndedError,
+} from "../../common/error";
+import { cleanCurrencyAddress } from "../../common/currency/cleanCurrencyAddress";
+import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import {
   handleTokenApproval,
   isWinningBid,
@@ -37,7 +35,7 @@ import {
   Marketplace as MarketplaceContract,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, ethers, constants } from "ethers";
+import { BigNumber, BigNumberish, utils, constants } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -204,7 +202,7 @@ export class MarketplaceAuction {
    * const id = tx.id; // the id of the newly created listing
    * ```
    */
-  createListing = buildTransactionFunction(
+  createListing = /* @__PURE__ */ buildTransactionFunction(
     async (
       listing: NewAuctionListing,
     ): Promise<Transaction<TransactionResultWithId>> => {
@@ -287,7 +285,7 @@ export class MarketplaceAuction {
    * const tx = await contract.auction.createListingsBatch(auctions);
    * ```
    */
-  createListingsBatch = buildTransactionFunction(
+  createListingsBatch = /* @__PURE__ */ buildTransactionFunction(
     async (
       listings: NewAuctionListing[],
     ): Promise<Transaction<TransactionResultWithId[]>> => {
@@ -331,19 +329,21 @@ export class MarketplaceAuction {
    * await contract.auction.buyoutListing(listingId);
    * ```
    */
-  buyoutListing = buildTransactionFunction(async (listingId: BigNumberish) => {
-    const listing = await this.validateListing(BigNumber.from(listingId));
+  buyoutListing = /* @__PURE__ */ buildTransactionFunction(
+    async (listingId: BigNumberish) => {
+      const listing = await this.validateListing(BigNumber.from(listingId));
 
-    const currencyMetadata = await fetchCurrencyMetadata(
-      this.contractWrapper.getProvider(),
-      listing.currencyContractAddress,
-    );
+      const currencyMetadata = await fetchCurrencyMetadata(
+        this.contractWrapper.getProvider(),
+        listing.currencyContractAddress,
+      );
 
-    return this.makeBid.prepare(
-      listingId,
-      ethers.utils.formatUnits(listing.buyoutPrice, currencyMetadata.decimals),
-    );
-  });
+      return this.makeBid.prepare(
+        listingId,
+        utils.formatUnits(listing.buyoutPrice, currencyMetadata.decimals),
+      );
+    },
+  );
 
   /**
    * Bid On Auction
@@ -360,7 +360,7 @@ export class MarketplaceAuction {
    * await contract.auction.makeBid(listingId, pricePerToken);
    * ```
    */
-  makeBid = buildTransactionFunction(
+  makeBid = /* @__PURE__ */ buildTransactionFunction(
     async (listingId: BigNumberish, pricePerToken: Price) => {
       const listing = await this.validateListing(BigNumber.from(listingId));
       const normalizedPrice = await normalizePriceValue(
@@ -411,7 +411,7 @@ export class MarketplaceAuction {
           listing.quantity,
           listing.currencyContractAddress,
           normalizedPrice,
-          ethers.constants.MaxUint256,
+          constants.MaxUint256,
         ],
         overrides,
       });
@@ -431,28 +431,30 @@ export class MarketplaceAuction {
    * await contract.auction.cancelListing(listingId);
    * ```
    */
-  cancelListing = buildTransactionFunction(async (listingId: BigNumberish) => {
-    const listing = await this.validateListing(BigNumber.from(listingId));
+  cancelListing = /* @__PURE__ */ buildTransactionFunction(
+    async (listingId: BigNumberish) => {
+      const listing = await this.validateListing(BigNumber.from(listingId));
 
-    const now = BigNumber.from(Math.floor(Date.now() / 1000));
-    const startTime = BigNumber.from(listing.startTimeInEpochSeconds);
+      const now = BigNumber.from(Math.floor(Date.now() / 1000));
+      const startTime = BigNumber.from(listing.startTimeInEpochSeconds);
 
-    const offers = await this.contractWrapper.readContract.winningBid(
-      listingId,
-    );
-    if (now.gt(startTime) && offers.offeror !== constants.AddressZero) {
-      throw new AuctionAlreadyStartedError(listingId.toString());
-    }
+      const offers = await this.contractWrapper.readContract.winningBid(
+        listingId,
+      );
+      if (now.gt(startTime) && offers.offeror !== constants.AddressZero) {
+        throw new AuctionAlreadyStartedError(listingId.toString());
+      }
 
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "closeAuction",
-      args: [
-        BigNumber.from(listingId),
-        await this.contractWrapper.getSignerAddress(),
-      ],
-    });
-  });
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "closeAuction",
+        args: [
+          BigNumber.from(listingId),
+          await this.contractWrapper.getSignerAddress(),
+        ],
+      });
+    },
+  );
 
   /**
    * Close the Auction for the buyer or the seller
@@ -469,7 +471,7 @@ export class MarketplaceAuction {
    * @param listingId - the auction  listing ud to close
    * @param closeFor - optionally pass the auction creator address or winning bid offeror address to close the auction on their behalf
    */
-  closeListing = buildTransactionFunction(
+  closeListing = /* @__PURE__ */ buildTransactionFunction(
     async (listingId: BigNumberish, closeFor?: string) => {
       if (!closeFor) {
         closeFor = await this.contractWrapper.getSignerAddress();
@@ -508,55 +510,59 @@ export class MarketplaceAuction {
    *
    * @param listingId - the auction  listing ud to close
    */
-  executeSale = buildTransactionFunction(async (listingId: BigNumberish) => {
-    const listing = await this.validateListing(BigNumber.from(listingId));
-    try {
-      const winningBid = await this.getWinningBid(listingId);
-      invariant(winningBid, "No winning bid found");
-      const closeForSeller = this.encoder.encode("closeAuction", [
-        listingId,
-        listing.sellerAddress,
-      ]);
-      const closeForBuyer = this.encoder.encode("closeAuction", [
-        listingId,
-        winningBid.buyerAddress,
-      ]);
-      return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper,
-        method: "multicall",
-        args: [closeForSeller, closeForBuyer],
-      });
-    } catch (err: any) {
-      if (err.message.includes("cannot close auction before it has ended")) {
-        throw new AuctionHasNotEndedError(
-          listingId.toString(),
-          listing.endTimeInEpochSeconds.toString(),
-        );
-      } else {
-        throw err;
+  executeSale = /* @__PURE__ */ buildTransactionFunction(
+    async (listingId: BigNumberish) => {
+      const listing = await this.validateListing(BigNumber.from(listingId));
+      try {
+        const winningBid = await this.getWinningBid(listingId);
+        invariant(winningBid, "No winning bid found");
+        const closeForSeller = this.encoder.encode("closeAuction", [
+          listingId,
+          listing.sellerAddress,
+        ]);
+        const closeForBuyer = this.encoder.encode("closeAuction", [
+          listingId,
+          winningBid.buyerAddress,
+        ]);
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper,
+          method: "multicall",
+          args: [closeForSeller, closeForBuyer],
+        });
+      } catch (err: any) {
+        if (err.message.includes("cannot close auction before it has ended")) {
+          throw new AuctionHasNotEndedError(
+            listingId.toString(),
+            listing.endTimeInEpochSeconds.toString(),
+          );
+        } else {
+          throw err;
+        }
       }
-    }
-  });
+    },
+  );
 
   /**
    * Update an Auction listing with new metadata
    * @param listing - the listing id to update
    */
-  updateListing = buildTransactionFunction(async (listing: AuctionListing) => {
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "updateListing",
-      args: [
-        listing.id,
-        listing.quantity,
-        listing.reservePrice,
-        listing.buyoutPrice,
-        listing.currencyContractAddress,
-        listing.startTimeInEpochSeconds,
-        listing.endTimeInEpochSeconds,
-      ],
-    });
-  });
+  updateListing = /* @__PURE__ */ buildTransactionFunction(
+    async (listing: AuctionListing) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "updateListing",
+        args: [
+          listing.id,
+          listing.quantity,
+          listing.reservePrice,
+          listing.buyoutPrice,
+          listing.currencyContractAddress,
+          listing.startTimeInEpochSeconds,
+          listing.endTimeInEpochSeconds,
+        ],
+      });
+    },
+  );
 
   /**
    * Get the buffer in basis points between offers
