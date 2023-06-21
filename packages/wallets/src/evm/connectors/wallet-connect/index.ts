@@ -236,8 +236,11 @@ export class WalletConnectConnector extends WagmiConnector<
 
   async switchChain(chainId: number) {
     const chain = this.chains.find((chain_) => chain_.chainId === chainId);
+
     if (!chain) {
-      throw new SwitchChainError(new Error("chain not found on connector."));
+      throw new SwitchChainError(
+        `Chain with ID: ${chainId}, not found on connector.`,
+      );
     }
 
     try {
