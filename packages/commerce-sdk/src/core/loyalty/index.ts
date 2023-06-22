@@ -1,12 +1,14 @@
 import { SDKOptions, ThirdwebSDK } from "@thirdweb-dev/sdk";
 import crypto from "crypto";
 import { NextApiRequest } from "next";
-import { LoyaltyRewardsParams, ResponseBody } from "../../../types";
+import { LoyaltyRewardsParams, ResponseBody, RewardTokensParams } from "../../../types";
 import { GET_ORDER_BY_ID_QUERY } from "../../lib/queries";
 import { getRawBody, shopifyFetchAdminAPI } from '../../lib/utils';
 
 /**
- * Gift ERC20 loyalty tokens to a customer using their wallet address from each purchase.
+ * Gift ERC20 loyalty tokens to a customer using their wallet address.
+ * 
+ * @description This function is used to gift loyalty tokens to a customer using their wallet address. The customer must have purchased and item from your store in order to receive the loyalty tokens. The function will check the order ID and verify that the customer has purchased an item from your store. If the customer has purchased an item from your store, the function will gift the customer the loyalty tokens.
  * 
  * @example
  * ```
@@ -25,7 +27,7 @@ import { getRawBody, shopifyFetchAdminAPI } from '../../lib/utils';
  * @public
  */
 
-export async function rewardPoints({
+export async function rewardTokensOnPurchase({
   nextApiRequest,
   webhookSecret,
   tokenContractAddress,
@@ -86,17 +88,17 @@ export async function rewardPoints({
           }
         : undefined;
 
-      const sdk = ThirdwebSDK.fromPrivateKey(
-        privateKey,
-        chain,
-        sdkOptions,
-      );
-
-      const tokenContract = await sdk.getContract(tokenContractAddress, "token");
       try {
-        const tx = await tokenContract.erc20.transfer(wallet, rewardAmount);
-        console.log(`Rewarding ${rewardAmount} points to wallet address: ${wallet}`, `tx: ${tx.receipt.transactionHash}`);
-        return tx.receipt.transactionHash;
+        const tx = await rewardTokens({
+          wallet,
+          tokenContractAddress,
+          rewardAmount,
+          chain,
+          privateKey,
+          sdkOptions
+        })
+        console.log(`Rewarding ${rewardAmount} points to wallet address: ${wallet}`, `tx: ${tx}`);
+        return tx;
       } catch (e) {
         throw new Error(`Error rewarding points to wallet address: \n${e}`);
       }
@@ -104,6 +106,68 @@ export async function rewardPoints({
       throw new Error("Forbidden");
     }
 };
+
+/**
+ * Send tokens to specified wallet address.
+ * 
+ * @example
+ * ```javascript
+ * const txHash = await sendTokens({
+ *   wallet: "{{wallet_address}}",
+ *   tokenContractAddress: {{"contract_address"}},
+ *   amount: 100,
+ *   chain: "goerli",
+ *   privateKey: {{"private_key"}},
+ * });
+ * ```
+ * @returns Transaction hash
+ * @public
+ * */
+
+export async function rewardTokens({
+  wallet,
+  tokenContractAddress,
+  rewardAmount,
+  chain,
+  privateKey,
+  sdkOptions,
+}: RewardTokensParams) {
+  const sdk = ThirdwebSDK.fromPrivateKey(
+    privateKey,
+    chain,
+    sdkOptions,
+  );
+
+  const tokenContract = await sdk.getContract(tokenContractAddress, "token");
+  try {
+    const tx = await tokenContract.erc20.transfer(wallet, rewardAmount);
+    console.log(`Rewarding ${rewardAmount} points to wallet address: ${wallet}`, `tx: ${tx.receipt.transactionHash}`);
+    return tx.receipt.transactionHash;
+  } catch (e) {
+    throw new Error(`Error rewarding points to wallet address: \n${e}`);
+  }
+};
+
+/**
+ * Generate and send an NFT receipt for a customer on item purchase.
+ * 
+ * @example
+ * ```javascript
+ * const receipt = await sendNFTReceipt({
+ *  nextApiRequest: {{next_api_request}},
+ *  contractAddress: {{"contract_address"}},
+ *  webhookSecret: {{"webhook_secret"}},
+ *  chain: "goerli",
+ *  privateKey: {{"private_key"}},
+ *  shopifyAdminUrl: {{"shopify_admin_url"}},
+ *  shopifyAccessToken: {{"shopify_access_token"}},
+ * });
+ * ```
+ * @returns Transaction hash
+ * @public
+ * */
+
+// export async function sendNFTReceipt();
 
 /**
  * Check customers eligibility for loyalty rewards.
@@ -147,20 +211,3 @@ export async function checkEligibility({
  * */
 
 // export async function generateDiscount();
-
-/**
- * Generate and send an NFT receipt for a customer.
- * 
- * @example
- * ```javascript
- * const receipt = await sendNFTReceipt({
- *  wallet: {{"wallet_address"}},
- *  shopifyAdminUrl: {{"shopify_admin_url"}},
- *  shopifyAccessToken: {{"shopify_access_token"}},
- * });
- * ```
- * @returns Transaction hash
- * @public
- * */
-
-// export async function sendNFTReceipt();

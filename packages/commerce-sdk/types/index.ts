@@ -1,3 +1,4 @@
+import { SDKOptions } from "@thirdweb-dev/sdk";
 import { NextApiRequest } from "next";
 
 export type LoyaltyRewardsParams = {
@@ -11,6 +12,15 @@ export type LoyaltyRewardsParams = {
   shopifyAdminUrl: string;
   shopifyAccessToken: string;
 };
+
+export type RewardTokensParams = {
+  wallet: string;
+  tokenContractAddress: string;
+  rewardAmount: number;
+  chain: string;
+  privateKey: string;
+  sdkOptions?: SDKOptions;
+}
 
 export interface ShopifyFetchParams {
   shopifyAdminUrl: string;
