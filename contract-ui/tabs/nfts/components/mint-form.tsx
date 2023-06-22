@@ -101,7 +101,9 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
   const modalContext = useModalContext();
 
   const { onSuccess, onError } = useTxNotifications(
-    "NFT minted successfully",
+    sharedMetadataMutation
+      ? "Metadata Set successfully"
+      : "NFT minted successfully",
     "Failed to mint NFT",
   );
 
