@@ -216,6 +216,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                       {...cell.getCellProps()}
                       borderBottomWidth="inherit"
                       borderColor="borderColor"
+                      maxW="sm"
                     >
                       {cell.render("Cell")}
                     </Td>
