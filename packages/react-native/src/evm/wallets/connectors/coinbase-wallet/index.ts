@@ -72,10 +72,10 @@ export class CoinbaseWalletConnector extends WagmiConnector<
 
       this.emit("message", { type: "connecting" });
 
-      const account = (await provider.request({
+      const accounts: string[] = await provider.request({
         method: "eth_requestAccounts",
         params: [],
-      })) as Address;
+      });
       // Switch to chain if provided
       let id = await this.getChainId();
       let unsupported = this.isChainUnsupported(id);
@@ -93,7 +93,7 @@ export class CoinbaseWalletConnector extends WagmiConnector<
       }
 
       return {
-        account,
+        account: accounts[0],
         chain: { id, unsupported },
         provider: new providers.Web3Provider(
           provider as unknown as providers.ExternalProvider,

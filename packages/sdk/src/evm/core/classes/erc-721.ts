@@ -57,6 +57,7 @@ import type {
   TokenERC721,
   Zora_IERC721Drop,
   ISharedMetadata,
+  OpenEditionERC721,
 } from "@thirdweb-dev/contracts-js";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
@@ -774,11 +775,11 @@ export class Erc721<
    */
   public async totalClaimedSupply(): Promise<BigNumber> {
     const contract = this.contractWrapper;
-    if (hasFunction<DropERC721>("nextTokenIdToClaim", contract)) {
-      return contract.readContract.nextTokenIdToClaim();
-    }
     if (hasFunction<SignatureDrop>("totalMinted", contract)) {
       return contract.readContract.totalMinted();
+    }
+    if (hasFunction<DropERC721>("nextTokenIdToClaim", contract)) {
+      return contract.readContract.nextTokenIdToClaim();
     }
     throw new Error(
       "No function found on contract to get total claimed supply",
@@ -953,7 +954,17 @@ export class Erc721<
    */
   public async nextTokenIdToMint(): Promise<BigNumber> {
     if (hasFunction<TokenERC721>("nextTokenIdToMint", this.contractWrapper)) {
-      return await this.contractWrapper.readContract.nextTokenIdToMint();
+      let nextTokenIdToMint =
+        await this.contractWrapper.readContract.nextTokenIdToMint();
+      // handle open editions and contracts with startTokenId
+      if (
+        hasFunction<OpenEditionERC721>("startTokenId", this.contractWrapper)
+      ) {
+        nextTokenIdToMint = nextTokenIdToMint.sub(
+          await this.contractWrapper.readContract.startTokenId(),
+        );
+      }
+      return nextTokenIdToMint;
     } else if (hasFunction<TokenERC721>("totalSupply", this.contractWrapper)) {
       return await this.contractWrapper.readContract.totalSupply();
     } else {
