@@ -774,11 +774,11 @@ export class Erc721<
    */
   public async totalClaimedSupply(): Promise<BigNumber> {
     const contract = this.contractWrapper;
-    if (hasFunction<DropERC721>("nextTokenIdToClaim", contract)) {
-      return contract.readContract.nextTokenIdToClaim();
-    }
     if (hasFunction<SignatureDrop>("totalMinted", contract)) {
       return contract.readContract.totalMinted();
+    }
+    if (hasFunction<DropERC721>("nextTokenIdToClaim", contract)) {
+      return contract.readContract.nextTokenIdToClaim();
     }
     throw new Error(
       "No function found on contract to get total claimed supply",

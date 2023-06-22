@@ -8,11 +8,13 @@ import type { ContractWrapper } from "./contract-wrapper";
 import type {
   IERC721Enumerable,
   IERC721Supply,
+  OpenEditionERC721,
 } from "@thirdweb-dev/contracts-js";
 import { BigNumber, constants } from "ethers";
 import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
 import type { Erc721 } from "./erc-721";
 import { Erc721Enumerable } from "./erc-721-enumerable";
+import { hasFunction } from "../../common";
 
 /**
  * List ERC721 NFTs
@@ -56,7 +58,13 @@ export class Erc721Supply implements DetectableFeature {
    * @returns The NFT metadata for all NFTs queried.
    */
   public async all(queryParams?: QueryAllParams): Promise<NFT[]> {
-    const start = BigNumber.from(queryParams?.start || 0).toNumber();
+    let startTokenId = BigNumber.from(queryParams?.start || 0);
+    if (hasFunction<OpenEditionERC721>("startTokenId", this.contractWrapper)) {
+      startTokenId = startTokenId.add(
+        await this.contractWrapper.readContract.startTokenId(),
+      );
+    }
+    const start = startTokenId.toNumber();
     const count = BigNumber.from(
       queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
     ).toNumber();
