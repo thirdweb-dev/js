@@ -11,8 +11,7 @@ export default {
   },
   "rpc": [
     "https://horizen-gobi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://gobi-testnet.horizenlabs.io/ethv1",
-    "https://rpc.ankr.com/horizen_testnet_evm"
+    "https://gobi-testnet.horizenlabs.io/ethv1"
   ],
   "features": [
     {

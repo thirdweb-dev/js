@@ -4,7 +4,7 @@ export default {
   "chain": "ATH",
   "rpc": [
     "https://atheios.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.atheios.org/"
+    "https://wallet.atheios.com:8797"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -12,7 +12,7 @@ export default {
     "symbol": "ATH",
     "decimals": 18
   },
-  "infoURL": "https://atheios.org",
+  "infoURL": "https://atheios.com",
   "shortName": "ath",
   "chainId": 1620,
   "networkId": 11235813,
