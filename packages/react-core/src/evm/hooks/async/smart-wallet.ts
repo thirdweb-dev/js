@@ -3,7 +3,6 @@ import {
   requiredParamInvariant,
 } from "../../../core/query-utils/required-param";
 import { useSDKChainId } from "../../providers/thirdweb-sdk-provider";
-import { WalletAddress } from "../../types";
 import {
   cacheKeys,
   invalidateContractAndBalances,
@@ -15,9 +14,10 @@ import {
   UseQueryResult,
 } from "@tanstack/react-query";
 import type {
-  SignerWithRestrictions, SmartContract,
+  SignerWithRestrictions,
+  SignerWithRestrictionsBatchInput,
+  SmartContract,
 } from "@thirdweb-dev/sdk";
-import type { BytesLike } from "ethers";
 import invariant from "tiny-invariant";
 
 
@@ -58,79 +58,44 @@ export function useSmartWalletSigners(
   );
 }
 
-/**
- * Check if a smart wallet has been deployed for the given admin
- *
- * @example
- * ```javascript
- * const { data: isSmartWalletDeployed, isLoading, error } = useIsSmartWalletDeployed(contract);
- * ```
- *
- * @param contract - an instance of a smart wallet factory contract
- * @returns a boolean indicating if a smart wallet has been deployed for the given admin
- * @twfeature SmartWalletFactory
- * @see {@link https://portal.thirdweb.com/react/react.useissmartwalletdeployed?utm_source=sdk | Documentation}
- * @beta
- */
-export function useIsSmartWalletDeployed(
-  contract: RequiredParam<SmartContract>,
-  admin: RequiredParam<WalletAddress>,
-  extraData?: BytesLike,
-): UseQueryResult<boolean> {
-  const contractAddress = contract?.getAddress();
-  return useQueryWithNetwork(
-    cacheKeys.contract.smartWalletFactory.isSmartWalletDeployed(contractAddress, admin),
-    () => {
-      requiredParamInvariant(contract, "No Contract instance provided");
-      invariant(
-        contract.smartWalletFactory.isWalletDeployed,
-        "Contract instance does not support contract.smartWalletFactory.getAllWallets",
-      );
-      invariant(admin, "No wallet address provided");
-      return contract.smartWalletFactory.isWalletDeployed(admin, extraData);
-    },
-    { enabled: !!contract },
-  );
-}
-
 /** **********************/
 /**     WRITE HOOKS     **/
 /** **********************/
 /**
- * Create a smart wallet
+ * Set the wallet's entire snapshot of permissions
  *
  * @example
  * ```jsx
  * const Component = () => {
  *   const { contract } = useContract("{{contract_address}}");
  *   const {
- *     mutate: createSmartWallet,
+ *     mutate: setSmartWalletSigners,
  *     isLoading,
  *     error,
- *   } = useCreateSmartWallet(contract);
+ *   } = useSetSmartWalletSigners(contract);
  *
  *   if (error) {
- *     console.error("failed to create smart wallet", error);
+ *     console.error("failed to set smart wallet signers", error);
  *   }
  *
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => createSmartWallet("0x...")}
+ *       onClick={() => setSmartWalletSigners("0x...")}
  *     >
- *       Create Smart Wallet
+ *       Set Smart Wallet Signers
  *     </button>
  *   );
  * };
  * ```
  *
- * @param contract - an instance of a smart wallet factory contract
- * @returns a mutation object that can be used to create a smart wallet
- * @twfeature SmartWalletFactory
- * @see {@link https://portal.thirdweb.com/react/react.usecreatesmartwallet?utm_source=sdk | Documentation}
+ * @param contract - an instance of a smart wallet contract
+ * @returns a mutation object that can be used to set the smart wallet signers
+ * @twfeature SmartWallet
+ * @see {@link https://portal.thirdweb.com/react/react.usesetsmartwalletsigners?utm_source=sdk | Documentation}
  * @beta
  */
-export function useCreateSmartWallet(
+export function useSetSmartWalletSigners(
   contract: RequiredParam<SmartContract>,
 ) {
   const activeChainId = useSDKChainId();
@@ -138,13 +103,10 @@ export function useCreateSmartWallet(
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (admin: string, extraData?: BytesLike) => {
+    async (permissionsSnapshot: SignerWithRestrictionsBatchInput) => {
       requiredParamInvariant(contract, "contract is undefined");
 
-      return contract.smartWalletFactory.createWallet(
-        admin,
-        extraData,
-      );
+      return contract.smartWallet.setAccess(permissionsSnapshot);
     },
     {
       onSettled: () =>

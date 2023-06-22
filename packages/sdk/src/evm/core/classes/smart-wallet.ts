@@ -156,7 +156,7 @@ export class SmartWallet<TContract extends IAccountCore>
    ********************************/
 
   /**
-   * Get the restrictions under which a given signer can use the smart wallet.
+   * Get the restrictions under which a given signer can use the smart wallet
    *
    * @example
    * ```javascript
@@ -179,7 +179,8 @@ export class SmartWallet<TContract extends IAccountCore>
   }
 
   /**
-   * Get the address of the EIP-4337 factory contract which deployed the smart wallet
+   * Get the deployer of the smart wallet
+   * @remarks Get the address of the EIP-4337 factory contract which deployed the smart wallet
    *
    * @example
    * ```javascript
@@ -194,7 +195,7 @@ export class SmartWallet<TContract extends IAccountCore>
   }
 
   /**
-   * Get all signers (admin or non-admin) of the smart wallet, along with their access restrictions.
+   * Get all signers with their access restrictions
    *
    * @example
    * ```javascript
@@ -225,7 +226,7 @@ export class SmartWallet<TContract extends IAccountCore>
    ********************************/
 
   /**
-   * Grant an address admin access to the smart wallet.
+   * Grant an address admin access to the smart wallet
    *
    * @remarks Grants an address admin access to the smart wallet. The admin will have complete authority over the smart wallet.
    *
@@ -251,7 +252,7 @@ export class SmartWallet<TContract extends IAccountCore>
   );
 
   /**
-   * Revoke an address' admin access to the smart wallet.
+   * Revoke an address' admin access to the smart wallet
    *
    * @remarks Revokes an address' admin access to the smart wallet.
    *
@@ -277,7 +278,7 @@ export class SmartWallet<TContract extends IAccountCore>
   );
 
   /**
-   * Grant an address access to the smart wallet with certain restrictions.
+   * Grant an address access to the smart wallet with restrictions
    *
    * @remarks Grants an address access to the smart wallet with certain restrictions.
    *
@@ -369,7 +370,7 @@ export class SmartWallet<TContract extends IAccountCore>
   );
 
   /**
-   * Approve an address as a call target for a given signer on the smart wallet.
+   * Approve an address as a call target for a given signer on the smart wallet
    *
    * @remarks Approves an address as a call target for a given signer on the smart wallet.
    *
@@ -418,7 +419,7 @@ export class SmartWallet<TContract extends IAccountCore>
   );
 
   /**
-   * Disapprove an address as a call target for a given signer on the smart wallet.
+   * Disapprove an address as a call target for a given signer on the smart wallet
    *
    * @remarks Disapprove an address as a call target for a given signer on the smart wallet.
    *
@@ -470,7 +471,7 @@ export class SmartWallet<TContract extends IAccountCore>
   );
 
   /**
-   * Update an address' access to the smart wallet.
+   * Update the restrictions of an address for using the smart wallet
    *
    * @remarks Updates an address' access to the smart wallet.
    *
@@ -523,7 +524,7 @@ export class SmartWallet<TContract extends IAccountCore>
   );
 
   /**
-   * Revoke an address' access to the smart wallet.
+   * Revoke a scoped access address to the smart wallet
    *
    * @remarks Revokes an address' access to the smart wallet.
    *
@@ -573,7 +574,7 @@ export class SmartWallet<TContract extends IAccountCore>
   );
 
   /**
-   * Set the wallet's entire snapshot of permissions.
+   * Set the wallet's entire snapshot of permissions
    *
    * @remarks Sets the wallet's entire snapshot of permissions.
    *
