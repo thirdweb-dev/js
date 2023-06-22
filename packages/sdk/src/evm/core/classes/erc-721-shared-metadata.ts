@@ -82,11 +82,16 @@ export class Erc721SharedMetadata implements DetectableFeature {
 
       if (isFileOrBuffer(parsedMetadata.image)) {
         batch.push(this.storage.upload(parsedMetadata.image));
+      } else if (typeof parsedMetadata.image === "string") {
+        batch.push(Promise.resolve(parsedMetadata.image));
       } else {
         batch.push(Promise.resolve(undefined));
       }
+
       if (isFileOrBuffer(parsedMetadata.animation_url)) {
         batch.push(this.storage.upload(parsedMetadata.animation_url));
+      } else if (typeof parsedMetadata.animation_url === "string") {
+        batch.push(Promise.resolve(parsedMetadata.animation_url));
       } else {
         batch.push(Promise.resolve(undefined));
       }
