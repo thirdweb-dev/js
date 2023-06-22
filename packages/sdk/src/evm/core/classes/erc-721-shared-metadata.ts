@@ -2,7 +2,7 @@ import { isFileOrBuffer, type ThirdwebStorage } from "@thirdweb-dev/storage";
 import { FEATURE_NFT_SHARED_METADATA } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
-import type { ISharedMetadata } from "@thirdweb-dev/contracts-js";
+import type { SharedMetadata } from "@thirdweb-dev/contracts-js";
 import { buildTransactionFunction } from "../../common/transactions";
 import { BasicNFTInput } from "../../../core/schema/nft";
 import { Transaction } from "./transactions";
@@ -19,15 +19,33 @@ import { TransactionResult } from "../types";
 export class Erc721SharedMetadata implements DetectableFeature {
   featureName = FEATURE_NFT_SHARED_METADATA.name;
 
-  private contractWrapper: ContractWrapper<ISharedMetadata>;
+  private contractWrapper: ContractWrapper<SharedMetadata>;
   private storage: ThirdwebStorage;
 
   constructor(
-    contractWrapper: ContractWrapper<ISharedMetadata>,
+    contractWrapper: ContractWrapper<SharedMetadata>,
     storage: ThirdwebStorage,
   ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
+  }
+
+  /**
+   * Get Shared Metadata
+   *
+   * @remarks Get the shared metadata for the Open Edition NFTs.
+   *
+   * @example
+   * ```javascript
+   * const contract = await sdk.getContract("{{contract_address}}");
+   *
+   * const tx = await contract.erc721.sharedMetadata.get();
+   * ```
+   *
+   * @returns - The shared metadata for the Open Edition NFTs.
+   */
+  public async get(): Promise<BasicNFTInput> {
+    return await this.contractWrapper.readContract.sharedMetadata();
   }
 
   /**
