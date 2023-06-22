@@ -156,6 +156,25 @@ export class SmartWallet<TContract extends IAccountCore>
    ********************************/
 
   /**
+   * Get whether a signer is an admin on the smart wallet.
+   *
+   * @example
+   * ```javascript
+   * const isAdmin = await contract.smartWallet.isAdmin(signer);
+   * ```
+   * @param signer - The address of a signer of the smart wallet.
+   * @returns whether a signer is an admin on the smart wallet.
+   *
+   * @twfeature SmartWallet
+   */
+  public async isAdmin(signerAddress: AddressOrEns): Promise<boolean> {
+    const resolvedSignerAddress = await resolveAddress(signerAddress);
+    return await this.contractWrapper.readContract.isAdmin(
+      resolvedSignerAddress,
+    );
+  }
+
+  /**
    * Get the restrictions under which a given signer can use the smart wallet.
    *
    * @example
