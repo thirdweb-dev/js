@@ -1,5 +1,20 @@
+import { NextApiRequest } from "next";
+
+export type LoyaltyRewardsParams = {
+  nextApiRequest: NextApiRequest;
+  webhookSecret: string;
+  tokenContractAddress: string;
+  gaslessRelayerUrl?: string;
+  chain: string;
+  rewardAmount: number;
+  privateKey: string;
+  shopifyAdminUrl: string;
+  shopifyAccessToken: string;
+};
 
 export interface ShopifyFetchParams {
+  shopifyAdminUrl: string;
+  shopifyAccessToken: string;
   query: string;
   variables?: Record<string, unknown>;
 }

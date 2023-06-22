@@ -1,49 +1,45 @@
 import { SDKOptions, ThirdwebSDK } from "@thirdweb-dev/sdk";
 import crypto from "crypto";
 import { NextApiRequest } from "next";
-import { ResponseBody } from "../../../types";
+import { LoyaltyRewardsParams, ResponseBody } from "../../../types";
 import { GET_ORDER_BY_ID_QUERY } from "../../lib/queries";
 import { getRawBody, shopifyFetchAdminAPI } from '../../lib/utils';
 
-export type LoyaltyRewardsParams = {
-  request: NextApiRequest;
-  webhookSecret: string;
-  tokenContractAddress: string;
-  gaslessRelayerUrl?: string;
-  chain: string;
-  rewardAmount: number;
-  privateKey: string;
-};
-
 /**
- * Gift ERC20 loyalty tokens to a customer using their wallet address for each purchase.
- *
+ * Gift ERC20 loyalty tokens to a customer using their wallet address from each purchase.
+ * 
  * @example
  * ```
  * const txHash = await rewardPoints({
-    request: req,
+    nextApiRequest: {{next_api_request}},
     rewardAmount: 100,
-    tokenContractAddress: "0x5e09aE51392483dd429459A38091294BA6ebd74d",
-    webhookSecret: secretKey,
-    chain: APP_NETWORK,
+    tokenContractAddress: {{"contract_address"}},
+    webhookSecret: {{"webhook_secret"}},
+    chain: "goerli",
+    privateKey: {{"private_key"}},
+    shopifyAdminUrl: {{"shopify_admin_url"}},
+    shopifyAccessToken: {{"shopify_access_token"}},
   });
  * ```
- * @returns transaction hash
+ * @returns Transaction hash
  * @public
  */
-export const rewardPoints = async ({
-  request,
+
+export async function rewardPoints({
+  nextApiRequest,
   webhookSecret,
   tokenContractAddress,
   gaslessRelayerUrl,
   chain,
   rewardAmount,
   privateKey,
-}: LoyaltyRewardsParams) => {
+  shopifyAdminUrl,
+  shopifyAccessToken,
+}: LoyaltyRewardsParams) {
   const secretKey = webhookSecret;
 
-  const hmac = request.headers["x-shopify-hmac-sha256"];
-  const body = await getRawBody(request);
+  const hmac = nextApiRequest.headers["x-shopify-hmac-sha256"];
+  const body = await getRawBody(nextApiRequest);
   const hash = crypto
     .createHmac("sha256", secretKey)
     .update(body)
@@ -51,9 +47,11 @@ export const rewardPoints = async ({
 
     // Compare our hash to Shopify's hash
     if (hash === hmac) {
-      const shopifyOrderId = request.headers["x-shopify-order-id"];
+      const shopifyOrderId = nextApiRequest.headers["x-shopify-order-id"];
 
       const response = await shopifyFetchAdminAPI({
+        shopifyAdminUrl,
+        shopifyAccessToken,
         query: GET_ORDER_BY_ID_QUERY,
         variables: {
           id: `gid://shopify/Order/${shopifyOrderId}`,
@@ -106,3 +104,63 @@ export const rewardPoints = async ({
       throw new Error("Forbidden");
     }
 };
+
+/**
+ * Check customers eligibility for loyalty rewards.
+ * 
+ * @example
+ * ```javascript
+ * const isEligible = await checkEligibility({
+ *  request: req,
+ *  webhookSecret: secretKey,
+ *  shopifyAdminUrl: {{"shopify_admin_url"}},
+ *  shopifyAccessToken: {{"shopify_access_token"}},
+ * });
+ * ```
+ * @returns boolean
+ * @public
+ * */
+export async function checkEligibility({
+  request,
+  webhookSecret,
+}: {
+  request: NextApiRequest;
+  webhookSecret: string;
+}) {
+  return true;
+};
+
+
+/**
+ * Generate a discount code for a customer.
+ * 
+ * @example
+ * ```javascript
+ * const discountCode = await generateDiscount({
+ *   wallet: {{"wallet_address"}},
+ *   shopifyAdminUrl: {{"shopify_admin_url"}},
+ *   shopifyAccessToken: {{"shopify_access_token"}},
+ * });
+ * ```
+ * @returns Discount code
+ * @public
+ * */
+
+// export async function generateDiscount();
+
+/**
+ * Generate and send an NFT receipt for a customer.
+ * 
+ * @example
+ * ```javascript
+ * const receipt = await sendNFTReceipt({
+ *  wallet: {{"wallet_address"}},
+ *  shopifyAdminUrl: {{"shopify_admin_url"}},
+ *  shopifyAccessToken: {{"shopify_access_token"}},
+ * });
+ * ```
+ * @returns Transaction hash
+ * @public
+ * */
+
+// export async function sendNFTReceipt();

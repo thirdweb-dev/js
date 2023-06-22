@@ -10,8 +10,8 @@ export async function getRawBody(readable: Readable): Promise<Buffer> {
 }
 
 export async function shopifyFetchAdminAPI(params: ShopifyFetchParams) {
-  const endpoint = process.env.SHOPIFY_ADMIN_API_URL as string;
-  const key = process.env.SHOPIFY_ADMIN_ACCESS_TOKEN as string;
+  const endpoint = params.shopifyAdminUrl;
+  const key = params.shopifyAccessToken;
 
   return fetchFromShopify(params, endpoint, {
     "X-Shopify-Access-Token": key,
@@ -19,8 +19,8 @@ export async function shopifyFetchAdminAPI(params: ShopifyFetchParams) {
 }
 
 export async function shopifyFetch(params: ShopifyFetchParams) {
-  const endpoint = process.env.SHOPIFY_STORE_DOMAIN as string;
-  const key = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN as string;
+  const endpoint = params.shopifyAdminUrl;
+  const key = params.shopifyAccessToken;
 
   return fetchFromShopify(params, endpoint, {
     "Shopify-Storefront-Private-Token": key,
