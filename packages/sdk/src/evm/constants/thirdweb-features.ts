@@ -128,7 +128,7 @@ export const FEATURE_PRIMARY_SALE = {
 
 export const FEATURE_PLATFORM_FEE = {
   name: "PlatformFee",
-  namespace: "platformFee",
+  namespace: "platformFees",
   docLinks: {
     sdk: "sdk.platformfee",
     contracts: "platformfee",

@@ -31,21 +31,32 @@ export class Erc721SharedMetadata implements DetectableFeature {
   }
 
   /**
-  * Get Shared Metadata
-  *
-  * @remarks Get the shared metadata for the Open Edition NFTs.
-  *
-  * @example
-  * ```javascript
-  * const contract = await sdk.getContract("{{contract_address}}");
-  *
-  * const tx = await contract.erc721.sharedMetadata.get();
-  * ```
-  *
-  * @returns - The shared metadata for the Open Edition NFTs.
-  */
-  public async get(): Promise<BasicNFTInput> {
-    return await this.contractWrapper.readContract.sharedMetadata();
+   * Get Shared Metadata
+   *
+   * @remarks Get the shared metadata for the Open Edition NFTs.
+   *
+   * @example
+   * ```javascript
+   * const contract = await sdk.getContract("{{contract_address}}");
+   *
+   * const tx = await contract.erc721.sharedMetadata.get();
+   * ```
+   *
+   * @returns - The shared metadata for the Open Edition NFTs.
+   */
+  public async get(): Promise<BasicNFTInput | undefined> {
+    const metadata = await this.contractWrapper.readContract.sharedMetadata();
+
+    if (metadata.every((value) => value === "")) {
+      return undefined;
+    }
+
+    return {
+      name: metadata.name,
+      description: metadata.description,
+      image: metadata.imageURI,
+      animation_url: metadata.animationURI,
+    };
   }
 
   /**
