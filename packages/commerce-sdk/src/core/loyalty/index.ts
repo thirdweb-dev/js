@@ -1,9 +1,36 @@
 import { SDKOptions, ThirdwebSDK } from "@thirdweb-dev/sdk";
 import crypto from "crypto";
-import { ResponseBody, rewardPointsProps } from "../../../types";
+import { NextApiRequest } from "next";
+import { ResponseBody } from "../../../types";
 import { GET_ORDER_BY_ID_QUERY } from "../../lib/queries";
 import { getRawBody, shopifyFetchAdminAPI } from '../../lib/utils';
- 
+
+export type LoyaltyRewardsParams = {
+  request: NextApiRequest;
+  webhookSecret: string;
+  tokenContractAddress: string;
+  gaslessRelayerUrl?: string;
+  chain: string;
+  rewardAmount: number;
+  privateKey: string;
+};
+
+/**
+ * Gift ERC20 loyalty tokens to a customer using their wallet address for each purchase.
+ *
+ * @example
+ * ```
+ * const txHash = await rewardPoints({
+    request: req,
+    rewardAmount: 100,
+    tokenContractAddress: "0x5e09aE51392483dd429459A38091294BA6ebd74d",
+    webhookSecret: secretKey,
+    chain: APP_NETWORK,
+  });
+ * ```
+ * @returns transaction hash
+ * @public
+ */
 export const rewardPoints = async ({
   request,
   webhookSecret,
@@ -11,7 +38,8 @@ export const rewardPoints = async ({
   gaslessRelayerUrl,
   chain,
   rewardAmount,
-}: rewardPointsProps) => {
+  privateKey,
+}: LoyaltyRewardsParams) => {
   const secretKey = webhookSecret;
 
   const hmac = request.headers["x-shopify-hmac-sha256"];
@@ -61,7 +89,7 @@ export const rewardPoints = async ({
         : undefined;
 
       const sdk = ThirdwebSDK.fromPrivateKey(
-        process.env.GENERATED_PRIVATE_KEY as string,
+        privateKey,
         chain,
         sdkOptions,
       );
@@ -70,10 +98,8 @@ export const rewardPoints = async ({
       try {
         const tx = await tokenContract.erc20.transfer(wallet, rewardAmount);
         console.log(`Rewarding ${rewardAmount} points to wallet address: ${wallet}`, `tx: ${tx.receipt.transactionHash}`);
-        return "OK";
+        return tx.receipt.transactionHash;
       } catch (e) {
-        console.log(tokenContract.getAddress());
-        console.log(tokenContract.getAddress());
         throw new Error(`Error rewarding points to wallet address: \n${e}`);
       }
     } else {

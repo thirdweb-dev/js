@@ -1,13 +1,3 @@
-import { NextApiRequest } from 'next';
-
-export type rewardPointsProps = {
-  request: NextApiRequest;
-  webhookSecret: string;
-  tokenContractAddress: string;
-  gaslessRelayerUrl?: string;
-  chain: string;
-  rewardAmount: number;
-};
 
 export interface ShopifyFetchParams {
   query: string;
