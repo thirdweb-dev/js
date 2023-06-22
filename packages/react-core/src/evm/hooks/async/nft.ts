@@ -336,7 +336,7 @@ export function useNFTBalance(
  */
 export function useSharedMetadata(
   contract: RequiredParam<NFTContract>,
-): UseQueryResult<BasicNFTInput> {
+): UseQueryResult<BasicNFTInput | undefined> {
   const contractAddress = contract?.getAddress();
   const { erc721 } = getErcs(contract);
   return useQueryWithNetwork(
