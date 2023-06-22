@@ -18,15 +18,15 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
     "createWalletStorage" | "supportedWallets"
   > {
   /**
-   * Wallets that will be supported by the dApp
-   * @defaultValue [metamaskWallet(), coinbaseWallet(), walletConnectV1()]
+   * Wallets supported by the dApp
+   * @defaultValue `[ metamaskWallet(), coinbaseWallet(), walletConnect() ]`
    *
    * @example
    * ```jsx
-   * import { metamaskWallet, coinbaseWallet, walletConnectV1 } from "@thirdweb-dev/react";
+   * import { metamaskWallet, coinbaseWallet, walletConnect } from "@thirdweb-dev/react";
    *
    * <ThirdwebProvider
-   *  supportedWallets={[metamaskWallet(), coinbaseWallet(), walletConnectV1()]}
+   *  supportedWallets={[metamaskWallet(), coinbaseWallet(), walletConnect()]}
    * />
    * ```
    */
