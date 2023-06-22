@@ -1,7 +1,7 @@
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { FEATURE_SMART_WALLET } from "../../constants/thirdweb-features";
-import { utils, BigNumber, BytesLike } from "ethers";
+import { utils, BigNumber } from "ethers";
 import { Transaction } from "./transactions";
 
 import type {
