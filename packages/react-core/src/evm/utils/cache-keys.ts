@@ -190,6 +190,14 @@ export const cacheKeys = {
             ]),
         },
       },
+      sharedMetadata: {
+        get: (
+          contractAddress: RequiredParam<ContractAddress>,
+        ) =>
+          createContractCacheKey(
+            contractAddress
+          ),
+      },
       drop: {
         getAllUnclaimed: (
           contractAddress: RequiredParam<ContractAddress>,
