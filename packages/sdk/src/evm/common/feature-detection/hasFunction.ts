@@ -1,5 +1,5 @@
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
-import { BaseContract } from "ethers";
+import type { ContractWrapper } from "../../core/classes/contract-wrapper";
+import type { BaseContract } from "ethers";
 
 /**
  * @internal
