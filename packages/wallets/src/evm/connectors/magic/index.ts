@@ -208,15 +208,15 @@ export class MagicAuthConnector extends MagicBaseConnector {
         }
 
         // LOGIN WITH MAGIC LINK WITH PHONE NUMBER
-        if ("phoneNumber" in options) {
+        else if ("phoneNumber" in options) {
           await magic.auth.loginWithSMS({
             phoneNumber: options.phoneNumber,
           });
+        } else {
+          throw new Error(
+            "Invalid options: Either provide and email or phoneNumber when using Magic Auth",
+          );
         }
-
-        throw new Error(
-          "Invalid options: Either provide and email or phoneNumber when using Magic Auth",
-        );
       }
 
       const signer = await this.getSigner();
