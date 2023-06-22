@@ -14,7 +14,7 @@ import { BigNumber, constants } from "ethers";
 import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
 import type { Erc721 } from "./erc-721";
 import { Erc721Enumerable } from "./erc-721-enumerable";
-import { hasFunction } from "../../common";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
 
 /**
  * List ERC721 NFTs

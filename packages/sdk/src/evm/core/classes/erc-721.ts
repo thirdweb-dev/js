@@ -56,12 +56,11 @@ import type {
   TieredDrop,
   TokenERC721,
   Zora_IERC721Drop,
-  ISharedMetadata,
+  SharedMetadata,
   OpenEditionERC721,
 } from "@thirdweb-dev/contracts-js";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
-
 import { Erc721LazyMintable } from "./erc-721-lazy-mintable";
 import { Erc721Mintable } from "./erc-721-mintable";
 import { Erc721Supply } from "./erc-721-supply";
@@ -1112,7 +1111,7 @@ export class Erc721<
 
   private detectErc721SharedMetadata(): Erc721SharedMetadata | undefined {
     if (
-      detectContractFeature<ISharedMetadata>(
+      detectContractFeature<SharedMetadata>(
         this.contractWrapper,
         "ERC721SharedMetadata",
       )
