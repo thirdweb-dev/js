@@ -1,5 +1,4 @@
 import { GatewayUrls } from "../types";
-import {CID} from "multiformats/cid";
 import {normalizeCID} from "./cid";
 
 /**
@@ -8,7 +7,7 @@ import {normalizeCID} from "./cid";
 export const DEFAULT_GATEWAY_URLS: GatewayUrls = {
   // Note: Gateway URLs should have trailing slashes (we clean this on user input)
   "ipfs://": [
-    "https://*.ipfs-staging.thirdwebcdn.com/ipfs/",
+    "https://*.ipfs-staging.thirdwebcdn.com/",
     "https://cloudflare-ipfs.com/ipfs/",
     "https://ipfs.io/ipfs/",
     // TODO this one can become the default again once it's stable (no more VT issues)
