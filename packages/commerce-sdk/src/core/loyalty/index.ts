@@ -127,6 +127,8 @@ export async function rewardTokens({
   sdkOptions,
 }: RewardTokensParams) {
   const localWallet = new LocalWallet();
+  await localWallet.generate();
+  await localWallet.connect();
 
   const sdk = await ThirdwebSDK.fromWallet(
     localWallet,
