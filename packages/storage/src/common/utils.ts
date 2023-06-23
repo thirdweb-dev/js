@@ -1,5 +1,5 @@
 import { BufferOrStringWithName, FileOrBuffer, GatewayUrls } from "../types";
-import {preprocessGatewayUrl} from "./urls";
+import {getUrlForCid} from "./urls";
 
 /**
  * @internal
@@ -123,9 +123,8 @@ export function replaceSchemeWithGatewayUrl(
     return uri;
   }
 
-  const gatewayUrl = preprocessGatewayUrl(schemeGatewayUrls[index]);
-
-  return uri.replace(scheme, gatewayUrl);
+  const path = uri.replace(scheme, '')
+  return getUrlForCid(schemeGatewayUrls[index], path);
 }
 
 /**

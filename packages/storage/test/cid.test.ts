@@ -8,7 +8,7 @@ describe("CID", async () => {
       [{ content: new TextEncoder().encode("hello world") }],
       false,
     );
-    expect(cid).to.equal("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD");
+    expect(cid).to.equal("bafybeihykld7uyxzogax6vgyvag42y7464eywpf55gxi5qpoisibh3c5wa");
   });
 
   it("Should correctly get CID of a file", async () => {
@@ -16,7 +16,7 @@ describe("CID", async () => {
       [{ content: fs.readFileSync("test/files/0.jpg") }],
       false,
     );
-    expect(cid).to.equal("QmSBs7aGB52CF2kXdQaHS6kvQuFACufCbfMKjrB5gSytiT");
+    expect(cid).to.equal("bafybeibzf2f55kjfljocohhwjbeuxlohcdebvovimcaexq53tn4jx5mria");
   });
 
   it("Should correctly upload directory", async () => {
@@ -25,6 +25,6 @@ describe("CID", async () => {
       { path: "1.jpg", content: fs.readFileSync("test/files/1.jpg") },
     ];
     const cid = await getCID(files);
-    expect(cid).to.equal("QmYtBTkEnTGrzkns2L8R4rL3keowVg3nGcBhPbwrbAWTRP");
+    expect(cid).to.equal("bafybeie4vcsw3ew6io6paaltdvwkpcoeyn6uoewvu7op7fhhztpnivqnyy");
   });
 });

@@ -1,9 +1,9 @@
-import { FileOrBufferOrString } from "../types";
-import {DEFAULT_GATEWAY_URLS, preprocessGatewayUrl} from "./urls";
-import { isBufferOrStringWithName } from "./utils";
+import {FileOrBufferOrString} from "../types";
+import {DEFAULT_GATEWAY_URLS, getUrlForCid} from "./urls";
+import {isBufferOrStringWithName} from "./utils";
 import fetch from "cross-fetch";
-import { importer } from "ipfs-unixfs-importer";
-import {v4 as uuid} from "uuid";
+import {importer} from "ipfs-unixfs-importer";
+import {CID} from "multiformats/cid";
 
 type CIDVersion = 0 | 1;
 type ContentWithPath = {
@@ -61,14 +61,14 @@ export async function getCID(
     dummyBlockstore as any,
     options,
   )) {
-    lastCid = cid;
+    lastCid = cid.toV1().toString();
   }
 
-  return `${lastCid}`;
+  return lastCid;
 }
 
 export async function isUploaded(cid: string) {
-  const url = preprocessGatewayUrl(DEFAULT_GATEWAY_URLS["ipfs://"][0])
+  const url = getUrlForCid(DEFAULT_GATEWAY_URLS["ipfs://"][0], cid)
   const res = await fetch(`${url}${cid}`, {
     method: "HEAD",
     headers: {
@@ -77,4 +77,15 @@ export async function isUploaded(cid: string) {
     },
   });
   return res.ok;
+}
+
+export function normalizeCID(cid: string) {
+  let normalized: string
+  try {
+    normalized = CID.parse(cid).toV1().toString();
+  }
+  catch (e) {
+    throw new Error(`The CID ${cid} is not valid.`)
+  }
+  return normalized
 }

@@ -1,5 +1,6 @@
 import { GatewayUrls } from "../types";
-import { v4 as uuid } from "uuid";
+import {CID} from "multiformats/cid";
+import {normalizeCID} from "./cid";
 
 /**
  * @internal
@@ -7,7 +8,7 @@ import { v4 as uuid } from "uuid";
 export const DEFAULT_GATEWAY_URLS: GatewayUrls = {
   // Note: Gateway URLs should have trailing slashes (we clean this on user input)
   "ipfs://": [
-    "https://{uuid}.ipfs-public.thirdwebcdn.com/ipfs/",
+    "https://*.ipfs-staging.thirdwebcdn.com/ipfs/",
     "https://cloudflare-ipfs.com/ipfs/",
     "https://ipfs.io/ipfs/",
     // TODO this one can become the default again once it's stable (no more VT issues)
@@ -43,8 +44,17 @@ export function parseGatewayUrls(
 /**
  * @internal
  */
-export function preprocessGatewayUrl(url: string) {
-  return url.replace(/{uuid}/g, uuid())
+export function getUrlForCid(gatewayUrl: string, cid: string): string {
+  if (gatewayUrl.includes('ipfs-staging.thirdwebcdn.com')) {
+    const prefix = 'https://';
+    const suffix = '.ipfs-staging.thirdwebcdn.com/';
+    const parts = cid.split('/');
+    const hash = parts[0]
+    const normalizedHash = normalizeCID(hash)
+    const filePath = parts.slice(1).join('/');
+    return `${prefix}${normalizedHash}${suffix}${filePath}`;
+  }
+  return gatewayUrl.replace("{cid}", cid);
 }
 
 /**
@@ -61,11 +71,6 @@ export function prepareGatewayUrls(gatewayUrls?: GatewayUrls): GatewayUrls {
       // Make sure that all user gateway URLs have trailing slashes
       let cleanedGatewayUrls = gatewayUrls[key].map(
         (url) => url.replace(/\/$/, "") + "/",
-      );
-
-      // Make sure that {uuid} is substituted in all user gateway URLs
-      cleanedGatewayUrls = cleanedGatewayUrls.map((url) =>
-        preprocessGatewayUrl(url),
       );
 
       allGatewayUrls[key] = [
