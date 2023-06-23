@@ -1,7 +1,7 @@
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { FEATURE_SMART_WALLET } from "../../constants/thirdweb-features";
-import { utils, BigNumber, BytesLike } from "ethers";
+import { utils, BigNumber } from "ethers";
 import { Transaction } from "./transactions";
 
 import type {
@@ -22,10 +22,10 @@ import {
 } from "../../types";
 import invariant from "tiny-invariant";
 import { buildTransactionFunction } from "../../common/transactions";
-import { SmartWalletFactory } from "./smart-wallet-factory";
 import { resolveOrGenerateId } from "../../common/signature-minting";
 import { AddressOrEns, RawDateSchema } from "../../schema";
 import { resolveAddress } from "../../common";
+import { Signer } from "ethers";
 
 export class SmartWallet<TContract extends IAccountCore>
   implements DetectableFeature
@@ -138,7 +138,7 @@ export class SmartWallet<TContract extends IAccountCore>
    * @returns Returns the address of the factory
    *
    */
-  private async getFactory(): Promise<SmartWalletFactory<IAccountFactory>> {
+  private async getFactory(): Promise<ContractWrapper<IAccountFactory>> {
     // Get factory.
     const chainId = await this.contractWrapper.getChainID();
     const factoryAddress = await this.getFactoryAddress();
@@ -148,7 +148,8 @@ export class SmartWallet<TContract extends IAccountCore>
       IAccountFactoryAbi,
       this.contractWrapper.options,
     );
-    return new SmartWalletFactory(wrapper);
+    wrapper.updateSignerOrProvider(this.contractWrapper.getSigner() as Signer);
+    return wrapper;
   }
 
   /*********************************
@@ -225,10 +226,8 @@ export class SmartWallet<TContract extends IAccountCore>
    */
   public async getSignersWithRestrictions(): Promise<SignerWithRestrictions[]> {
     // Get all associated signers.
-    const factory = await this.getFactory();
-    const signers: string[] = await factory.getAssociatedSigners(
-      this.getAddress(),
-    );
+    const contract = await this.getFactory();
+    const signers: string[] = await contract.readContract.getSignersOfAccount(this.getAddress());
 
     return await Promise.all(
       signers.map(async (signer) => {
