@@ -85,7 +85,7 @@ export function useSmartWalletsForAddress(
         contract.smartWalletFactory.getAssociatedWallets,
         "Contract instance does not support contract.smartWalletFactory.getAssociatedWallets",
       );
-      return contract.smartWalletFactory.getAssociatedWallets(address);
+      return contract.smartWalletFactory.getAssociatedWallets(address || "");
     },
     { enabled: !!contract },
   );
