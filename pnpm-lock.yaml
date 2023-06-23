@@ -369,6 +369,9 @@ importers:
       crypto:
         specifier: ^1.0.1
         version: 1.0.1
+      ethers:
+        specifier: ^5.7.2
+        version: 5.7.2
       next:
         specifier: ^13.2.4
         version: 13.2.4(@babel/core@7.21.3)(react-dom@18.2.0)(react@18.2.0)
@@ -376,9 +379,6 @@ importers:
       '@thirdweb-dev/tsconfig':
         specifier: workspace:*
         version: link:../tw-tsconfig
-      ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
 
   packages/contracts-js:
     dependencies:

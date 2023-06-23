@@ -14,11 +14,11 @@
     "@thirdweb-dev/sdk": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",
     "crypto": "^1.0.1",
-    "next": "^13.2.4"
+    "next": "^13.2.4",
+    "ethers": "^5.7.2"
   },
   "devDependencies": {
-    "@thirdweb-dev/tsconfig": "workspace:*",
-    "ethers": "^5.7.2"
+    "@thirdweb-dev/tsconfig": "workspace:*"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
