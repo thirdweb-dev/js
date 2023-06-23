@@ -4,6 +4,7 @@ export { coinbaseWallet } from "./wallet/wallets/coinbase/coinbaseWallet";
 export { frameWallet } from "./wallet/wallets/frame/frameWallet";
 export { metamaskWallet } from "./wallet/wallets/metamask/metamaskWallet";
 export { paperWallet } from "./wallet/wallets/paperWallet";
+export { rainbowWallet } from "./wallet/wallets/rainbow/RainbowWallet";
 export { safeWallet } from "./wallet/wallets/safe/safeWallet";
 export { walletConnect } from "./wallet/wallets/walletConnect";
 export { walletConnectV1 } from "./wallet/wallets/walletConnectV1";
