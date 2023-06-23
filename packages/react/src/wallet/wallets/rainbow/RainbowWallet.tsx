@@ -20,7 +20,7 @@ export const rainbowWallet = (
     meta: {
       name: "Rainbow Wallet",
       iconURL:
-        "https://registry.walletconnect.org/v2/logo/md/7a33d7f1-3d12-4b5c-f3ee-5cd83cb1b500",
+        "ipfs://QmSZn47p4DVVBfzvg9BAX2EqwnPxkT1YAE7rUnrtd9CybQ/rainbow-logo.png",
     },
     create: (walletOptions: WalletOptions) => {
       return new WalletConnect({
