@@ -32,6 +32,7 @@ export type MagicAuthConnectOptions =
       | {
           phoneNumber: string;
         }
+      | {}
     );
 // | {
 //     oauthProvider: OAuthProvider;
@@ -130,6 +131,7 @@ export class MagicAuthConnector extends MagicBaseConnector {
     MagicSDKExtensionsOption<OAuthExtension["name"]>
   >;
   #connectedChainId?: number;
+  #type?: "connect" | "auth";
 
   // oauthProviders: OAuthProvider[];
   oauthCallbackUrl?: string;
@@ -137,6 +139,7 @@ export class MagicAuthConnector extends MagicBaseConnector {
   constructor(config: { chains?: Chain[]; options: MagicAuthOptions }) {
     super(config);
     this.magicSdkConfiguration = config.options.magicSdkConfiguration;
+    this.#type = config.options.type;
     // this.oauthProviders = config.options.oauthOptions?.providers || [];
     // this.oauthCallbackUrl = config.options.oauthOptions?.callbackUrl;
   }
@@ -180,27 +183,40 @@ export class MagicAuthConnector extends MagicBaseConnector {
 
       const magic = this.getMagicSDK();
 
-      // LOGIN WITH MAGIC LINK WITH OAUTH PROVIDER
-      // if ("oauthProvider" in options) {
-      //   await magic.oauth.loginWithRedirect({
-      //     provider: options.oauthProvider,
-      //     redirectURI: this.oauthCallbackUrl || window.location.href,
-      //   });
-      // }
+      if (this.#type === "connect") {
+        if ("email" in options || "phoneNumber" in options) {
+          console.warn(
+            "Passing email or phoneNumber is not required for Magic Connect",
+          );
+        }
+        await magic.wallet.connectWithUI();
+      } else {
+        // LOGIN WITH MAGIC LINK WITH OAUTH PROVIDER
+        // if ("oauthProvider" in options) {
+        //   await magic.oauth.loginWithRedirect({
+        //     provider: options.oauthProvider,
+        //     redirectURI: this.oauthCallbackUrl || window.location.href,
+        //   });
+        // }
 
-      // LOGIN WITH MAGIC LINK WITH EMAIL
-      if ("email" in options) {
-        await magic.auth.loginWithMagicLink({
-          email: options.email,
-          showUI: true,
-        });
-      }
+        // LOGIN WITH MAGIC LINK WITH EMAIL
+        if ("email" in options) {
+          await magic.auth.loginWithMagicLink({
+            email: options.email,
+            showUI: true,
+          });
+        }
 
-      // LOGIN WITH MAGIC LINK WITH PHONE NUMBER
-      if ("phoneNumber" in options) {
-        await magic.auth.loginWithSMS({
-          phoneNumber: options.phoneNumber,
-        });
+        // LOGIN WITH MAGIC LINK WITH PHONE NUMBER
+        else if ("phoneNumber" in options) {
+          await magic.auth.loginWithSMS({
+            phoneNumber: options.phoneNumber,
+          });
+        } else {
+          throw new Error(
+            "Invalid options: Either provide and email or phoneNumber when using Magic Auth",
+          );
+        }
       }
 
       const signer = await this.getSigner();

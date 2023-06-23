@@ -15,7 +15,7 @@ import {
   UseQueryResult,
 } from "@tanstack/react-query";
 import type {
-  AccountEvent, SmartContract,
+  AccountEvent, AddressOrEns, SmartContract,
 } from "@thirdweb-dev/sdk";
 import type { BytesLike } from "ethers";
 import invariant from "tiny-invariant";
@@ -53,6 +53,39 @@ export function useSmartWallets(
         "Contract instance does not support contract.smartWalletFactory.getAllWallets",
       );
       return contract.smartWalletFactory.getAllWallets();
+    },
+    { enabled: !!contract },
+  );
+}
+
+/**
+ * Get all wallets associated with the provided address
+ *
+ * @example
+ * ```javascript
+ * const { data: smartWalletsForAddress, isLoading, error } = useSmartWalletsForAddress(contract, "{{wallet_address}}");
+ * ```
+ *
+ * @param contract - an instance of a smart wallet factory contract
+ * @returns a response object that includes an array of all smart wallets associated with the adress
+ * @twfeature SmartWalletFactory
+ * @see {@link https://portal.thirdweb.com/react/react.usesmartwalletsforaddress?utm_source=sdk | Documentation}
+ * @beta
+ */
+export function useSmartWalletsForAddress(
+  contract: RequiredParam<SmartContract>,
+  address: AddressOrEns,
+): UseQueryResult<string[]> {
+  const contractAddress = contract?.getAddress();
+  return useQueryWithNetwork(
+    cacheKeys.contract.smartWalletFactory.getAllForAddress(contractAddress, address),
+    () => {
+      requiredParamInvariant(contract, "No Contract instance provided");
+      invariant(
+        contract.smartWalletFactory.getAssociatedWallets,
+        "Contract instance does not support contract.smartWalletFactory.getAssociatedWallets",
+      );
+      return contract.smartWalletFactory.getAssociatedWallets(address);
     },
     { enabled: !!contract },
   );
