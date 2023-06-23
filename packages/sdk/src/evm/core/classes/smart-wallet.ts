@@ -48,14 +48,18 @@ export class SmartWallet<TContract extends IAccountCore>
    * HELPER FUNCTIONS
    ********************************/
 
-  private hasDuplicateSigners(signers: SignerWithRestrictionsBatchInput): boolean {
+  private hasDuplicateSigners(
+    signers: SignerWithRestrictionsBatchInput,
+  ): boolean {
     const encounteredSigners = new Set();
-  
-    return signers.map(item => item.signer).some(signer => {
-      const isDuplicate = encounteredSigners.has(signer);
-      encounteredSigners.add(signer);
-      return isDuplicate;
-    });
+
+    return signers
+      .map((item) => item.signer)
+      .some((signer) => {
+        const isDuplicate = encounteredSigners.has(signer);
+        encounteredSigners.add(signer);
+        return isDuplicate;
+      });
   }
 
   /**
@@ -228,7 +232,9 @@ export class SmartWallet<TContract extends IAccountCore>
   public async getSignersWithRestrictions(): Promise<SignerWithRestrictions[]> {
     // Get all associated signers.
     const contract = await this.getFactory();
-    const signers: string[] = await contract.readContract.getSignersOfAccount(this.getAddress());
+    const signers: string[] = await contract.readContract.getSignersOfAccount(
+      this.getAddress(),
+    );
 
     return await Promise.all(
       signers.map(async (signer) => {
@@ -342,8 +348,9 @@ export class SmartWallet<TContract extends IAccountCore>
       const roleRestrictions: IAccountPermissions.RoleRestrictionsStruct = {
         role,
         approvedTargets: parsedRestrictions.approvedCallTargets,
-        maxValuePerTransaction:
-          utils.parseEther(parsedRestrictions.nativeTokenLimitPerTransaction),
+        maxValuePerTransaction: utils.parseEther(
+          parsedRestrictions.nativeTokenLimitPerTransaction,
+        ),
         startTimestamp: parsedRestrictions.startDate,
         endTimestamp: parsedRestrictions.expirationDate,
       };
@@ -527,8 +534,9 @@ export class SmartWallet<TContract extends IAccountCore>
       const roleRestrictions: IAccountPermissions.RoleRestrictionsStruct = {
         role: currentRole,
         approvedTargets: parsedRestrictions.approvedCallTargets,
-        maxValuePerTransaction:
-          utils.parseEther(parsedRestrictions.nativeTokenLimitPerTransaction),
+        maxValuePerTransaction: utils.parseEther(
+          parsedRestrictions.nativeTokenLimitPerTransaction,
+        ),
         startTimestamp: parsedRestrictions.startDate,
         endTimestamp: parsedRestrictions.expirationDate,
       };
@@ -607,11 +615,12 @@ export class SmartWallet<TContract extends IAccountCore>
    * @twfeature SmartWallet
    */
   setAccess = /* @__PURE__ */ buildTransactionFunction(
-    async (permissionsSnapshot: SignerWithRestrictionsBatchInput): Promise<Transaction> => {
-
+    async (
+      permissionsSnapshot: SignerWithRestrictionsBatchInput,
+    ): Promise<Transaction> => {
       /**
        * All cases
-       * 
+       *
        * - Add new admin :check:
        * - Remove current admin :check:
        * - Add new scoped :check:
@@ -619,51 +628,57 @@ export class SmartWallet<TContract extends IAccountCore>
        * - Update current scoped :check:
        * - Current admin -> new scoped :check:
        * - Current scoped -> new admin :check:
-      **/
+       **/
 
       // No duplicate signers in input!
-      if(this.hasDuplicateSigners(permissionsSnapshot)) {
-        throw new Error("Duplicate signers found in input.")
+      if (this.hasDuplicateSigners(permissionsSnapshot)) {
+        throw new Error("Duplicate signers found in input.");
       }
 
-      const currentPermissionsSnapshot = await this.getSignersWithRestrictions();
+      const currentPermissionsSnapshot =
+        await this.getSignersWithRestrictions();
 
       // Performing a multicall.
       const encoded: string[] = [];
 
       // First make all calls related to admin access.
-      const allCurrentAdmins = currentPermissionsSnapshot.filter((result) => result.isAdmin).map((result) => result.signer);
-      const allNewAdmins = permissionsSnapshot.filter((result) => result.isAdmin).map((result) => result.signer);
+      const allCurrentAdmins = currentPermissionsSnapshot
+        .filter((result) => result.isAdmin)
+        .map((result) => result.signer);
+      const allNewAdmins = permissionsSnapshot
+        .filter((result) => result.isAdmin)
+        .map((result) => result.signer);
 
       // All remove-admin actions.
-      for(const currentAdmin of allCurrentAdmins) {
-        if(!allNewAdmins.includes(currentAdmin)) {
+      for (const currentAdmin of allCurrentAdmins) {
+        if (!allNewAdmins.includes(currentAdmin)) {
           encoded.push(
             this.contractWrapper.readContract.interface.encodeFunctionData(
               "setAdmin",
               [currentAdmin, false],
             ),
-          )
+          );
         }
       }
 
       // All add-admin actions.
       const toRemoveAsScoped: Record<string, string> = {};
-      for(const newAdmin of allNewAdmins) {
-        if(!allCurrentAdmins.includes(newAdmin)) {
-
-          const data = this.contractWrapper.readContract.interface.encodeFunctionData(
-            "setAdmin",
-            [newAdmin, true],
-          );
-          
+      for (const newAdmin of allNewAdmins) {
+        if (!allCurrentAdmins.includes(newAdmin)) {
+          const data =
+            this.contractWrapper.readContract.interface.encodeFunctionData(
+              "setAdmin",
+              [newAdmin, true],
+            );
 
           // If the new admin is already a scoped account, we need to remove them as a scoped account first.
-          const currentRole = (await this.contractWrapper.readContract.getRoleRestrictionsForAccount(newAdmin)).role;
-          if(currentRole === this.emptyRole) {
-            encoded.push(
-              data,
+          const currentRole = (
+            await this.contractWrapper.readContract.getRoleRestrictionsForAccount(
+              newAdmin,
             )
+          ).role;
+          if (currentRole === this.emptyRole) {
+            encoded.push(data);
           } else {
             toRemoveAsScoped[newAdmin] = data;
           }
@@ -671,14 +686,17 @@ export class SmartWallet<TContract extends IAccountCore>
       }
 
       // All scoped actions.
-      const allCurrentScoped = currentPermissionsSnapshot.filter((result) => !result.isAdmin).map((result) => result.signer);
-      const allNewScoped = permissionsSnapshot.filter((result) => !result.isAdmin).map((result) => result.signer);
+      const allCurrentScoped = currentPermissionsSnapshot
+        .filter((result) => !result.isAdmin)
+        .map((result) => result.signer);
+      const allNewScoped = permissionsSnapshot
+        .filter((result) => !result.isAdmin)
+        .map((result) => result.signer);
 
       // All remove-scoped actions.
       const newAdminsToRemoveAsScoped = Object.keys(toRemoveAsScoped);
-      for(const currentScoped of allCurrentScoped) {
-        if(!allNewScoped.includes(currentScoped)) {
-
+      for (const currentScoped of allCurrentScoped) {
+        if (!allNewScoped.includes(currentScoped)) {
           const { payload, signature } = await this.generatePayload(
             currentScoped,
             RoleAction.REVOKE,
@@ -689,33 +707,32 @@ export class SmartWallet<TContract extends IAccountCore>
               "changeRole",
               [payload, signature],
             ),
-          )
+          );
 
-          if(newAdminsToRemoveAsScoped.includes(currentScoped)) {
-            encoded.push(
-              toRemoveAsScoped[currentScoped],
-            )
+          if (newAdminsToRemoveAsScoped.includes(currentScoped)) {
+            encoded.push(toRemoveAsScoped[currentScoped]);
           }
         }
       }
 
       // All add-scoped actions.
-      for(const newScoped of allNewScoped) {
-        if(!allCurrentScoped.includes(newScoped)) {
-
+      for (const newScoped of allNewScoped) {
+        if (!allCurrentScoped.includes(newScoped)) {
           // Derive role for target signer.
           const role = utils.solidityKeccak256(["string"], [newScoped]);
-          
+
           const parsedRestrictions = await AccessRestrictionsSchema.parseAsync(
-            permissionsSnapshot.find((result) => result.signer === newScoped)?.restrictions
+            permissionsSnapshot.find((result) => result.signer === newScoped)
+              ?.restrictions,
           );
 
           // Get role restrictions struct.
           const roleRestrictions: IAccountPermissions.RoleRestrictionsStruct = {
             role,
             approvedTargets: parsedRestrictions.approvedCallTargets,
-            maxValuePerTransaction:
-            utils.parseEther(parsedRestrictions.nativeTokenLimitPerTransaction),
+            maxValuePerTransaction: utils.parseEther(
+              parsedRestrictions.nativeTokenLimitPerTransaction,
+            ),
             startTimestamp: parsedRestrictions.startDate,
             endTimestamp: parsedRestrictions.expirationDate,
           };
@@ -737,26 +754,29 @@ export class SmartWallet<TContract extends IAccountCore>
               "changeRole",
               [payload, signature],
             ),
-          )
+          );
         }
       }
 
       // All update-scoped actions.
-      for(const currentScoped of allCurrentScoped) {
-        if(allNewScoped.includes(currentScoped)) {
+      for (const currentScoped of allCurrentScoped) {
+        if (allNewScoped.includes(currentScoped)) {
           // Derive role for target signer.
           const role = utils.solidityKeccak256(["string"], [currentScoped]);
-          
+
           const parsedRestrictions = await AccessRestrictionsSchema.parseAsync(
-            permissionsSnapshot.find((result) => result.signer === currentScoped)?.restrictions
+            permissionsSnapshot.find(
+              (result) => result.signer === currentScoped,
+            )?.restrictions,
           );
 
           // Get role restrictions struct.
           const roleRestrictions: IAccountPermissions.RoleRestrictionsStruct = {
             role,
             approvedTargets: parsedRestrictions.approvedCallTargets,
-            maxValuePerTransaction:
-            utils.parseEther(parsedRestrictions.nativeTokenLimitPerTransaction),
+            maxValuePerTransaction: utils.parseEther(
+              parsedRestrictions.nativeTokenLimitPerTransaction,
+            ),
             startTimestamp: parsedRestrictions.startDate,
             endTimestamp: parsedRestrictions.expirationDate,
           };
@@ -776,6 +796,6 @@ export class SmartWallet<TContract extends IAccountCore>
         method: "multicall",
         args: [encoded],
       });
-    }
-  )
+    },
+  );
 }
