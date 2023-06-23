@@ -50,6 +50,7 @@ import {
 import {
   getZkTransactionsForDeploy,
   zkDeployContractFromUri,
+  zkGetDefaultTrustedForwarders,
 } from "@thirdweb-dev/sdk/evm/zksync";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { SnippetApiResponse } from "components/contract-tabs/code/types";
@@ -564,24 +565,29 @@ export function useCustomContractDeployMutation(
           data.deployParams._defaultAdmin = data.address || "";
         }
 
+        // Handle ZkSync deployments separately
+        const isZkSync =
+          chainId === ZksyncEraTestnet.chainId || chainId === ZksyncEra.chainId;
         if (
           data.deployParams?._trustedForwarders?.length === 0 ||
           data.deployParams?._trustedForwarders === "[]"
         ) {
-          const trustedForwarders = await getTrustedForwarders(
-            sdk.getProvider(),
-            sdk.storage,
-            compilerMetadata.data?.name,
-          );
+          const trustedForwarders = isZkSync
+            ? zkGetDefaultTrustedForwarders(
+                chainId,
+                compilerMetadata.data?.name,
+              )
+            : await getTrustedForwarders(
+                sdk.getProvider(),
+                sdk.storage,
+                compilerMetadata.data?.name,
+              );
 
           data.deployParams._trustedForwarders =
             JSON.stringify(trustedForwarders);
         }
 
         // deploy contract
-        // Handle ZkSync deployments separately
-        const isZkSync =
-          chainId === ZksyncEraTestnet.chainId || chainId === ZksyncEra.chainId;
         if (isZkSync) {
           // Get metamask signer using zksync-web3 library -- for custom fields in signature
           const zkSigner = new Web3Provider(
