@@ -44,8 +44,9 @@ export class TrustWallet extends AbstractClientWallet<TrustAdditionalOptions> {
   isInjected: boolean;
 
   static meta = {
-    name: "Trust",
-    iconURL: "ipfs://QmPzc4XfeBkBoHnDHitMRjqD5N38tyH4U1UaDU1d22QQpt/trust.png",
+    name: "Trust Wallet",
+    iconURL:
+      "ipfs://QmNigQbXk7wKZwDcgN38Znj1ZZQ3JEG3DD6fUKLBU8SUTP/trust%20wallet.svg",
     urls: {
       chrome:
         "https://chrome.google.com/webstore/detail/trust-wallet/egjidjbpglichdcondbcbdnbeeppgdph",
@@ -58,7 +59,7 @@ export class TrustWallet extends AbstractClientWallet<TrustAdditionalOptions> {
   static id = walletIds.trust;
 
   public get walletName() {
-    return "Trust" as const;
+    return "Trust Wallet" as const;
   }
 
   constructor(options: TrustWalletOptions) {
