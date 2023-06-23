@@ -23,7 +23,7 @@ import {
 import invariant from "tiny-invariant";
 import { buildTransactionFunction } from "../../common/transactions";
 import { resolveOrGenerateId } from "../../common/signature-minting";
-import { AddressOrEns, RawDateSchema } from "../../schema";
+import { AddressOrEns } from "../../schema";
 import { resolveAddress } from "../../common";
 import { Signer } from "ethers";
 
