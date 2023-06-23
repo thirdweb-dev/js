@@ -1,6 +1,7 @@
 import { SDKOptions, ThirdwebSDK } from "@thirdweb-dev/sdk";
-import { LocalWallet } from "@thirdweb-dev/wallets";
+import { AbstractClientWallet } from "@thirdweb-dev/wallets";
 import crypto from "crypto";
+import { Signer } from 'ethers';
 import { NextApiRequest } from "next";
 import { LoyaltyRewardsParams, ResponseBody, RewardTokensParams } from "../../../types";
 import { GET_ORDER_BY_ID_QUERY } from "../../lib/queries";
@@ -12,16 +13,20 @@ import { getRawBody, shopifyFetchAdminAPI } from '../../lib/utils';
  * @description This function is used to gift loyalty tokens to a customer using their wallet address. The customer must have purchased and item from your store in order to receive the loyalty tokens. The function will check the order ID and verify that the customer has purchased an item from your store. If the customer has purchased an item from your store, the function will gift the customer the loyalty tokens.
  * 
  * @example
- * ```
+ * ```javascript
+ * import ethers from "ethers";
+ * const signer = new ethers.Wallet("{{private_key}}");
+ * 
  * const txHash = await rewardPoints({
-    nextApiRequest: {{next_api_request}},
-    rewardAmount: 100,
-    tokenContractAddress: {{"contract_address"}},
-    webhookSecret: {{"webhook_secret"}},
-    chain: "goerli",
-    shopifyAdminUrl: {{"shopify_admin_url"}},
-    shopifyAccessToken: {{"shopify_access_token"}},
-  });
+ *   signer: signer,
+ *   nextApiRequest: {{next_api_request}},
+ *   rewardAmount: 100,
+ *   tokenContractAddress: {{"contract_address"}},
+ *   webhookSecret: {{"webhook_secret"}},
+ *   chain: "goerli",
+ *   shopifyAdminUrl: {{"shopify_admin_url"}},
+ *   shopifyAccessToken: {{"shopify_access_token"}},
+ * });
  * ```
  * @returns Transaction hash
  * @public
@@ -36,6 +41,7 @@ export async function rewardTokensOnPurchase({
   rewardAmount,
   shopifyAdminUrl,
   shopifyAccessToken,
+  signerOrWallet,
 }: LoyaltyRewardsParams) {
   const hmac = nextApiRequest.headers["x-shopify-hmac-sha256"];
   const body = await getRawBody(nextApiRequest);
@@ -44,63 +50,64 @@ export async function rewardTokensOnPurchase({
     .update(body)
     .digest("base64");
 
-    // Compare our hash to Shopify's hash
-    if (hash === hmac) {
-      const shopifyOrderId = nextApiRequest.headers["x-shopify-order-id"];
+  // Compare our hash to Shopify's hash
+  if (hash === hmac) {
+    const shopifyOrderId = nextApiRequest.headers["x-shopify-order-id"];
 
-      const response = await shopifyFetchAdminAPI({
-        shopifyAdminUrl,
-        shopifyAccessToken,
-        query: GET_ORDER_BY_ID_QUERY,
-        variables: {
-          id: `gid://shopify/Order/${shopifyOrderId}`,
-        },
-      });
+    const response = await shopifyFetchAdminAPI({
+      shopifyAdminUrl,
+      shopifyAccessToken,
+      query: GET_ORDER_BY_ID_QUERY,
+      variables: {
+        id: `gid://shopify/Order/${shopifyOrderId}`,
+      },
+    });
 
-      const respBody = response.body as ResponseBody;
+    const respBody = response.body as ResponseBody;
 
-      if (!respBody.data.order.lineItems) {
-        throw new Error("Order did not contain any line items");
-      }
-
-      const itemsPurchased = respBody.data.order.lineItems.edges.map(
-        (edge) => edge.node,
-      );
-
-      let wallet = "";
-      try {
-        wallet =
-          itemsPurchased[0].customAttributes.find(
-            (e: any) => e.key === "wallet",
-          )?.value || "";
-      } catch (e) {
-        throw new Error("No wallet address found in order's custom attributes");
-      }
-
-      const sdkOptions: SDKOptions | undefined = gaslessRelayerUrl
-        ? {
-            gasless: {
-              openzeppelin: { relayerUrl: gaslessRelayerUrl },
-            },
-          }
-        : undefined;
-
-      try {
-        const tx = await rewardTokens({
-          wallet,
-          tokenContractAddress,
-          rewardAmount,
-          chain,
-          sdkOptions
-        })
-        console.log(`Rewarding ${rewardAmount} points to wallet address: ${wallet}`, `tx: ${tx}`);
-        return tx;
-      } catch (e) {
-        throw new Error(`Error rewarding points to wallet address: \n${e}`);
-      }
-    } else {
-      throw new Error("Forbidden");
+    if (!respBody.data.order.lineItems) {
+      throw new Error("Order did not contain any line items");
     }
+
+    const itemsPurchased = respBody.data.order.lineItems.edges.map(
+      (edge) => edge.node,
+    );
+
+    let wallet = "";
+    try {
+      wallet =
+        itemsPurchased[0].customAttributes.find(
+          (e: any) => e.key === "wallet",
+        )?.value || "";
+    } catch (e) {
+      throw new Error("No wallet address found in order's custom attributes");
+    }
+
+    const sdkOptions: SDKOptions | undefined = gaslessRelayerUrl
+      ? {
+        gasless: {
+          openzeppelin: { relayerUrl: gaslessRelayerUrl },
+        },
+      }
+      : undefined;
+
+    try {
+      const tx = await rewardTokens({
+        signerOrWallet,
+        wallet,
+        tokenContractAddress,
+        rewardAmount,
+        chain,
+        sdkOptions
+      })
+      console.log(`Rewarding ${rewardAmount} points to wallet address: ${wallet}`, `tx: ${tx}`);
+      return tx;
+    } catch (e) {
+      throw new Error(`Error rewarding points to wallet address: \n${e}`);
+    }
+  } else {
+    throw new Error("Forbidden");
+  }
 };
 
 /**
@@ -125,16 +132,26 @@ export async function rewardTokens({
   rewardAmount,
   chain,
   sdkOptions,
+  signerOrWallet,
 }: RewardTokensParams) {
-  const localWallet = new LocalWallet();
-  await localWallet.generate();
-  await localWallet.connect();
+  let sdk = undefined;
+  if (signerOrWallet instanceof Signer) {
+    sdk = ThirdwebSDK.fromSigner(
+      signerOrWallet,
+      chain,
+      sdkOptions,
+    );
+  }
 
-  const sdk = await ThirdwebSDK.fromWallet(
-    localWallet,
-    chain,
-    sdkOptions,
-  );
+  if (signerOrWallet instanceof AbstractClientWallet) {
+    sdk = await ThirdwebSDK.fromWallet(
+      signerOrWallet,
+      chain,
+      sdkOptions,
+    );
+  }
+
+  if (!sdk) return;
 
   const tokenContract = await sdk.getContract(tokenContractAddress, "token");
   try {
@@ -195,7 +212,7 @@ export async function checkEligibility({
 
 /**
  * Generate a discount code for a customer.
- * 
+ *
  * @example
  * ```javascript
  * const discountCode = await generateDiscount({

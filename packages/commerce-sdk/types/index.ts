@@ -1,7 +1,10 @@
 import { SDKOptions } from "@thirdweb-dev/sdk";
+import { AbstractClientWallet } from "@thirdweb-dev/wallets";
+import { Signer } from 'ethers';
 import { NextApiRequest } from "next";
 
 export type LoyaltyRewardsParams = {
+  signerOrWallet: Signer | AbstractClientWallet;
   nextApiRequest: NextApiRequest;
   webhookSecret: string;
   tokenContractAddress: string;
@@ -13,6 +16,7 @@ export type LoyaltyRewardsParams = {
 };
 
 export type RewardTokensParams = {
+  signerOrWallet: Signer | AbstractClientWallet;
   wallet: string;
   tokenContractAddress: string;
   rewardAmount: number;
