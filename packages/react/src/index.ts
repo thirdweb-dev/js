@@ -5,6 +5,7 @@ export { frameWallet } from "./wallet/wallets/frame/frameWallet";
 export { metamaskWallet } from "./wallet/wallets/metamask/metamaskWallet";
 export { paperWallet } from "./wallet/wallets/paperWallet";
 export { safeWallet } from "./wallet/wallets/safe/safeWallet";
+export { trustWallet } from "./wallet/wallets/trustWallet/TrustWallet";
 export { walletConnect } from "./wallet/wallets/walletConnect";
 export { walletConnectV1 } from "./wallet/wallets/walletConnectV1";
 export { smartWallet } from "./wallet/wallets/smartWallet/smartWallet";
