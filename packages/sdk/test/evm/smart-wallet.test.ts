@@ -1,7 +1,7 @@
 import { sdk, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { SignerWithRestrictions, AccessRestrictions, SmartWallet, SmartWalletFactory } from "../../src/evm";
+import { SignerWithRestrictions, AccessRestrictions, SmartWallet, SmartWalletFactory, SignerWithRestrictionsInput, SignerWithRestrictionsBatchInput } from "../../src/evm";
 import { ContractFactory, utils } from "ethers";
 import EntrypointArtifact from "./mock/EntryPoint.json";
 import AccountFactoryArtifact from "./mock/AccountFactory.json";
@@ -19,11 +19,30 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
     let smartWallet: SmartWallet<IAccountCore>;
 
     let adminWallet: SignerWithAddress;
+
     let signer1Wallet: SignerWithAddress;
     let signer2Wallet: SignerWithAddress;
+    let signer3Wallet: SignerWithAddress;
+    let signer4Wallet: SignerWithAddress;
+    let signer5Wallet: SignerWithAddress;
+    let signer6Wallet: SignerWithAddress;
+    let signer7Wallet: SignerWithAddress;
+    let signer8Wallet: SignerWithAddress;
+    let signer9Wallet: SignerWithAddress;
 
     before(async () => {
-        [adminWallet, signer1Wallet, signer2Wallet] = signers;
+        [
+            adminWallet,
+            signer1Wallet,
+            signer2Wallet,
+            signer3Wallet, 
+            signer4Wallet, 
+            signer5Wallet, 
+            signer6Wallet, 
+            signer7Wallet, 
+            signer8Wallet, 
+            signer9Wallet,
+        ] = signers;
     })
 
     beforeEach(async () => {
@@ -308,6 +327,154 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
             const newRestrictions = (await smartWallet.getSignersWithRestrictions()).find((result) => utils.getAddress(result.signer) === utils.getAddress(signer1Wallet.address))?.restrictions as AccessRestrictions;
             assert.strictEqual(newRestrictions.approvedCallTargets.length, 1, "New signer1 should have one approved call targets.");
             assert.strictEqual(newRestrictions.approvedCallTargets[0], adminWallet.address, "New signer1 should have the expected approved call targets.");
+        })
+
+        it("Should be able to set access for the smart wallet in a batch.", async () => {
+            /**
+             * All cases to test
+             * 
+             * - 1. Adding a new admin
+             * - 2. Removing existing admin
+             * - 3. Adding a new scoped signer
+             * - 4. Removing an existing scoped signer
+             * - 5. Updating the restrictions of an existing scoped signer
+             * - 6. Existing admin -> new scoped signer (demote)
+             * - 7. Existing scoped signer -> new admin :check: (promote)
+             **/
+
+            const signersWithRestrictions: SignerWithRestrictionsBatchInput = [];
+
+            // Setup
+
+            const restrictionsForAdmin: SignerWithRestrictionsInput = {
+                signer: adminWallet.address,
+                isAdmin: true,
+                restrictions: { approvedCallTargets: [] }
+            }
+            signersWithRestrictions.push(restrictionsForAdmin);
+            
+            // Adding a new admin: Signer3
+            const restrictionsSigner3: SignerWithRestrictionsInput = {
+                signer: signer3Wallet.address,
+                isAdmin: true,
+                restrictions: { approvedCallTargets: [] }
+            }
+            signersWithRestrictions.push(restrictionsSigner3);
+
+            // Removing existing admin
+            await smartWallet.grantAdminAccess(signer4Wallet.address);
+
+            const restrictionsSigner4: SignerWithRestrictionsInput = {
+                signer: signer4Wallet.address,
+                isAdmin: false,
+                restrictions: { approvedCallTargets: [] }
+            }
+            signersWithRestrictions.push(restrictionsSigner4);
+
+            // Adding a new scoped signer
+            const restrictionsSigner5: SignerWithRestrictionsInput = {
+                signer: signer5Wallet.address,
+                isAdmin: false,
+                restrictions: { approvedCallTargets: [adminWallet.address] }
+            }
+            signersWithRestrictions.push(restrictionsSigner5);
+
+            // Removing an existing scoped signer
+            await smartWallet.grantAccess(signer6Wallet.address, { approvedCallTargets: [adminWallet.address] });
+
+            const restrictionsSigner6: SignerWithRestrictionsInput = {
+                signer: signer6Wallet.address,
+                isAdmin: false,
+                restrictions: { approvedCallTargets: [] }
+            }
+            signersWithRestrictions.push(restrictionsSigner6);
+
+            // Updating the restrictions of an existing scoped signer
+
+            await smartWallet.grantAccess(signer7Wallet.address, { approvedCallTargets: [adminWallet.address] });
+
+            const restrictionsSigner7: SignerWithRestrictionsInput = {
+                signer: signer7Wallet.address,
+                isAdmin: false,
+                restrictions: { approvedCallTargets: [signer1Wallet.address] }
+            }
+            signersWithRestrictions.push(restrictionsSigner7);
+
+            // Existing admin -> new scoped signer (demote)
+            await smartWallet.grantAdminAccess(signer8Wallet.address);
+
+            const restrictionsSigner8: SignerWithRestrictionsInput = {
+                signer: signer8Wallet.address,
+                isAdmin: false,
+                restrictions: { approvedCallTargets: [adminWallet.address] }
+            }
+            signersWithRestrictions.push(restrictionsSigner8);
+
+            // Existing scoped signer -> new admin (promote)
+            await smartWallet.grantAccess(signer9Wallet.address, { approvedCallTargets: [adminWallet.address] });
+
+            const restrictionsSigner9: SignerWithRestrictionsInput = {
+                signer: signer9Wallet.address,
+                isAdmin: true,
+                restrictions: { approvedCallTargets: [] }
+            }
+            signersWithRestrictions.push(restrictionsSigner9);
+
+            // Set access in batch
+            await smartWallet.setAccess(signersWithRestrictions);
+
+            // Now checking if permissions are set correctly
+            const signersWithRestrictionsAfter = await smartWallet.getSignersWithRestrictions();
+            
+            for(const restrictions of signersWithRestrictionsAfter) {
+
+                switch (restrictions.signer) {
+
+                    // `adminWallet` should be an admin
+                    case adminWallet.address:
+                        assert.isTrue(restrictions.isAdmin, "Admin wallet should be an admin.");
+                        break;
+                    // `signer3Wallet` should be an admin
+                    case signer3Wallet.address:
+                        assert.isTrue(restrictions.isAdmin, "Signer3 wallet should be an admin.");
+                        break;
+                    // `signer4Wallet` should not be admin or scoped signer
+                    case signer4Wallet.address:
+                        assert.isFalse(restrictions.isAdmin, "Signer4 wallet should not be an admin.");
+                        assert.strictEqual(restrictions.restrictions.approvedCallTargets.length, 0, "Signer4 wallet should not have any approved call targets.");
+                        break;
+                    // `signer5Wallet` should be a scoped signer
+                    case signer5Wallet.address:
+                        assert.isFalse(restrictions.isAdmin, "Signer5 wallet should not be an admin.");
+                        assert.strictEqual(restrictions.restrictions.approvedCallTargets.length, 1, "Signer5 wallet should have one approved call target.");
+                        assert.strictEqual(restrictions.restrictions.approvedCallTargets[0], adminWallet.address, "Signer5 wallet should have the expected approved call targets.");
+                        break;
+                    // `signer6Wallet` should not be admin or scoped signer
+                    case signer6Wallet.address:
+                        assert.isFalse(restrictions.isAdmin, "Signer6 wallet should not be an admin.");
+                        assert.strictEqual(restrictions.restrictions.approvedCallTargets.length, 0, "Signer6 wallet should not have any approved call targets.");
+                        break;
+                    // `signer7Wallet` should be a scoped signer with its updated restrictions
+                    case signer7Wallet.address:
+                        assert.isFalse(restrictions.isAdmin, "Signer7 wallet should not be an admin.");
+                        assert.strictEqual(restrictions.restrictions.approvedCallTargets.length, 1, "Signer7 wallet should have one approved call target.");
+                        assert.strictEqual(restrictions.restrictions.approvedCallTargets[0], signer1Wallet.address, "Signer7 wallet should have the expected approved call targets.");
+                        break;
+                    // `signer8Wallet` should be a scoped signer
+                    case signer8Wallet.address:
+                        assert.isFalse(restrictions.isAdmin, "Signer8 wallet should not be an admin.");
+                        assert.strictEqual(restrictions.restrictions.approvedCallTargets.length, 1, "Signer8 wallet should have one approved call target.");
+                        assert.strictEqual(restrictions.restrictions.approvedCallTargets[0], adminWallet.address, "Signer8 wallet should have the expected approved call targets.");
+                        break;
+                    // `signer9Wallet` should be an admin
+                    case signer9Wallet.address:
+                        assert.isTrue(restrictions.isAdmin, "Signer9 wallet should be an admin.");
+                        break;
+                    default:
+                        assert.fail("Unexpected signer.");
+
+                }
+            }
         })
     })
 })
