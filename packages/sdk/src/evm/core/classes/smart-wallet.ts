@@ -342,7 +342,7 @@ export class SmartWallet<TContract extends IAccountCore>
         role,
         approvedTargets: parsedRestrictions.approvedCallTargets,
         maxValuePerTransaction:
-          parsedRestrictions.nativeTokenLimitPerTransaction,
+          utils.parseEther(parsedRestrictions.nativeTokenLimitPerTransaction),
         startTimestamp: parsedRestrictions.startDate,
         endTimestamp: parsedRestrictions.expirationDate,
       };
@@ -527,7 +527,7 @@ export class SmartWallet<TContract extends IAccountCore>
         role: currentRole,
         approvedTargets: parsedRestrictions.approvedCallTargets,
         maxValuePerTransaction:
-          parsedRestrictions.nativeTokenLimitPerTransaction,
+          utils.parseEther(parsedRestrictions.nativeTokenLimitPerTransaction),
         startTimestamp: parsedRestrictions.startDate,
         endTimestamp: parsedRestrictions.expirationDate,
       };
@@ -714,7 +714,7 @@ export class SmartWallet<TContract extends IAccountCore>
             role,
             approvedTargets: parsedRestrictions.approvedCallTargets,
             maxValuePerTransaction:
-            parsedRestrictions.nativeTokenLimitPerTransaction,
+            utils.parseEther(parsedRestrictions.nativeTokenLimitPerTransaction),
             startTimestamp: parsedRestrictions.startDate,
             endTimestamp: parsedRestrictions.expirationDate,
           };
@@ -755,7 +755,7 @@ export class SmartWallet<TContract extends IAccountCore>
             role,
             approvedTargets: parsedRestrictions.approvedCallTargets,
             maxValuePerTransaction:
-            parsedRestrictions.nativeTokenLimitPerTransaction,
+            utils.parseEther(parsedRestrictions.nativeTokenLimitPerTransaction),
             startTimestamp: parsedRestrictions.startDate,
             endTimestamp: parsedRestrictions.expirationDate,
           };

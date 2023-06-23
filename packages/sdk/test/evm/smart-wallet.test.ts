@@ -155,7 +155,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
             await smartWallet.grantAccess(
                 signer1Wallet.address, 
                 {
-                    nativeTokenLimitPerTransaction: utils.parseEther("1").toString(),
+                    nativeTokenLimitPerTransaction: "1",
                     approvedCallTargets: [adminWallet.address] 
                 }
             );
@@ -177,7 +177,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
             await smartWallet.grantAccess(
                 signer1Wallet.address, 
                 {
-                    nativeTokenLimitPerTransaction: utils.parseEther("1").toString(),
+                    nativeTokenLimitPerTransaction: "1",
                     approvedCallTargets: [adminWallet.address] 
                 }
             );
@@ -198,7 +198,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
             await smartWallet.grantAccess(
                 signer1Wallet.address, 
                 {
-                    nativeTokenLimitPerTransaction: utils.parseEther("1").toString(),
+                    nativeTokenLimitPerTransaction: "1",
                     approvedCallTargets: [adminWallet.address] 
                 }
             );
@@ -235,7 +235,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
             await smartWallet.grantAccess(
                 signer1Wallet.address, 
                 {
-                    nativeTokenLimitPerTransaction: utils.parseEther("1").toString(),
+                    nativeTokenLimitPerTransaction: "1",
                     approvedCallTargets: [adminWallet.address] 
                 }
             );
@@ -253,7 +253,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
             await smartWallet.updateAccess(
                 signer1Wallet.address, 
                 {
-                    nativeTokenLimitPerTransaction: utils.parseEther("3").toString(),
+                    nativeTokenLimitPerTransaction: "3",
                     approvedCallTargets: [signer2Wallet.address] 
                 }
             )
@@ -288,7 +288,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
             await smartWallet.grantAccess(
                 signer1Wallet.address, 
                 {
-                    nativeTokenLimitPerTransaction: utils.parseEther("1").toString(),
+                    nativeTokenLimitPerTransaction: "1",
                     approvedCallTargets: [adminWallet.address] 
                 }
             );
@@ -311,7 +311,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
             await smartWallet.grantAccess(
                 signer1Wallet.address, 
                 {
-                    nativeTokenLimitPerTransaction: utils.parseEther("1").toString(),
+                    nativeTokenLimitPerTransaction: "1",
                     approvedCallTargets: [adminWallet.address, signer2Wallet.address]
                 }
             );
