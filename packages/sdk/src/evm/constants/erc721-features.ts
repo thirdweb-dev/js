@@ -14,7 +14,7 @@ import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.json";
 import SignatureMintERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC721.json";
 import SignatureMintERC721_V1Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC721_V1.json";
 import TieredDropAbi from "@thirdweb-dev/contracts-js/dist/abis/LazyMintWithTier.json";
-import SharedMetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/ISharedMetadata.json";
+import SharedMetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/SharedMetadata.json";
 import zora_IDropERC721 from "@thirdweb-dev/contracts-js/dist/abis/zora_IERC721Drop.json";
 
 export const FEATURE_NFT_BURNABLE = {
@@ -205,7 +205,7 @@ export const FEATURE_NFT_SHARED_METADATA = /* @__PURE__ */ {
   namespace: "nft.sharedmetadata",
   docLinks: {
     sdk: "sdk.sharedmetadata",
-    contracts: "ISharedMetadata",
+    contracts: "SharedMetadata",
   },
   abis: [Erc721Abi, SharedMetadataAbi],
   features: {},
