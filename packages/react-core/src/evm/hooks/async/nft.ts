@@ -24,6 +24,7 @@ import {
   useMutation,
   UseMutationResult,
   useQueryClient,
+  UseQueryResult,
 } from "@tanstack/react-query";
 import { Erc1155, QueryAllParams, NFT } from "@thirdweb-dev/sdk";
 import { BigNumber, BigNumberish, providers } from "ethers";
@@ -319,6 +320,44 @@ export function useNFTBalance(
   );
 }
 
+/**
+ * Get the shared metadata of an Open Edition NFT contract
+ *
+ * @example
+ * ```javascript
+ * const { data: sharedMetadata, isLoading, error } = useSharedMetadata(contract);
+ * ```
+ *
+ * @param contract - an instance of a {@link NFTContract}
+ * @returns a response object that includes the shared metadata of the contract
+ * @twfeature ERC721SharedMetadata
+ * @see {@link https://portal.thirdweb.com/react/react.usesharedmetadata?utm_source=sdk | Documentation}
+ * @beta
+ */
+export function useSharedMetadata(
+  contract: RequiredParam<NFTContract>,
+): UseQueryResult<BasicNFTInput | undefined> {
+  const contractAddress = contract?.getAddress();
+  const { erc721 } = getErcs(contract);
+  return useQueryWithNetwork(
+    cacheKeys.contract.nft.sharedMetadata.get(contractAddress),
+    () => {
+      requiredParamInvariant(contract, "No Contract instance provided");
+      if (erc721) {
+        invariant(
+          erc721.sharedMetadata.get,
+          "Contract instance does not support sharedMetadata.get",
+        );
+        return erc721.sharedMetadata.get();
+      }
+      invariant(false, "Unknown NFT type");
+    },
+    {
+      enabled: !!contract,
+    },
+  );
+}
+
 /** **********************/
 /**     WRITE HOOKS     **/
 /** **********************/
@@ -604,10 +643,6 @@ export function useAirdropNFT(contract: Erc1155) {
     },
   );
 }
-
-/** **********************/
-/**     WRITE HOOKS     **/
-/** **********************/
 
 /**
  * Burn an NFT

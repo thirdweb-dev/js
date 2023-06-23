@@ -11,6 +11,7 @@ import { type BytesLike, utils } from "ethers";
 import { AccountCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/AccountFactory";
 import type { AccountEvent } from "../../types/smart-wallet";
 import { isContractDeployed } from "../../common/any-evm-utils/isContractDeployed";
+import { EventQueryOptions } from "../../types";
 
 export class SmartWalletFactory<TContract extends IAccountFactory>
   implements DetectableFeature
@@ -103,11 +104,8 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
    *
    * @twfeature SmartWalletFactory
    */
-  public async getAllWallets(): Promise<AccountEvent[]> {
-    const filter = {
-      fromBlock: 0,
-      toBlock: "latest",
-    };
+  public async getAllWallets(eventFilter?: EventQueryOptions): Promise<AccountEvent[]> {
+    let filter = eventFilter ? eventFilter : { fromBlock: -20000 };
 
     const events = await this.events.getEvents("AccountCreated", filter);
 

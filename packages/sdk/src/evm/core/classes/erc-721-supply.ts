@@ -14,7 +14,7 @@ import { BigNumber, constants } from "ethers";
 import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
 import type { Erc721 } from "./erc-721";
 import { Erc721Enumerable } from "./erc-721-enumerable";
-import { hasFunction } from "../../common";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
 
 /**
  * List ERC721 NFTs
@@ -58,19 +58,22 @@ export class Erc721Supply implements DetectableFeature {
    * @returns The NFT metadata for all NFTs queried.
    */
   public async all(queryParams?: QueryAllParams): Promise<NFT[]> {
-    let startTokenId = BigNumber.from(queryParams?.start || 0);
+    let startTokenId = BigNumber.from(0);
     if (hasFunction<OpenEditionERC721>("startTokenId", this.contractWrapper)) {
-      startTokenId = startTokenId.add(
-        await this.contractWrapper.readContract.startTokenId(),
-      );
+      startTokenId = await this.contractWrapper.readContract.startTokenId();
     }
-    const start = startTokenId.toNumber();
+    const start = BigNumber.from(queryParams?.start || 0)
+      .add(startTokenId)
+      .toNumber();
     const count = BigNumber.from(
       queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
     ).toNumber();
 
     const maxSupply = await this.erc721.nextTokenIdToMint();
-    const maxId = Math.min(maxSupply.toNumber(), start + count);
+    const maxId = Math.min(
+      maxSupply.add(startTokenId).toNumber(),
+      start + count,
+    );
     return await Promise.all(
       [...Array(maxId - start).keys()].map((i) =>
         this.erc721.get((start + i).toString()),

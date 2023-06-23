@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/wallets",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "main": "dist/thirdweb-dev-wallets.cjs.js",
   "module": "dist/thirdweb-dev-wallets.esm.js",
   "types": "dist/thirdweb-dev-wallets.cjs.d.ts",
@@ -56,6 +56,13 @@
         "default": "./evm/wallets/magic/dist/thirdweb-dev-wallets-evm-wallets-magic.esm.js"
       },
       "default": "./evm/wallets/magic/dist/thirdweb-dev-wallets-evm-wallets-magic.cjs.js"
+    },
+    "./evm/wallets/trust": {
+      "module": {
+        "browser": "./evm/wallets/trust/dist/thirdweb-dev-wallets-evm-wallets-trust.browser.esm.js",
+        "default": "./evm/wallets/trust/dist/thirdweb-dev-wallets-evm-wallets-trust.esm.js"
+      },
+      "default": "./evm/wallets/trust/dist/thirdweb-dev-wallets-evm-wallets-trust.cjs.js"
     },
     "./evm/wallets/ethers": {
       "module": {
@@ -175,6 +182,13 @@
         "default": "./evm/connectors/paper/dist/thirdweb-dev-wallets-evm-connectors-paper.esm.js"
       },
       "default": "./evm/connectors/paper/dist/thirdweb-dev-wallets-evm-connectors-paper.cjs.js"
+    },
+    "./evm/connectors/trust": {
+      "module": {
+        "browser": "./evm/connectors/trust/dist/thirdweb-dev-wallets-evm-connectors-trust.browser.esm.js",
+        "default": "./evm/connectors/trust/dist/thirdweb-dev-wallets-evm-connectors-trust.esm.js"
+      },
+      "default": "./evm/connectors/trust/dist/thirdweb-dev-wallets-evm-connectors-trust.cjs.js"
     },
     "./evm/wallets/wallet-connect": {
       "module": {
