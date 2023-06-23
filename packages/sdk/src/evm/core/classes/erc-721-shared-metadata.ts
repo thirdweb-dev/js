@@ -44,8 +44,19 @@ export class Erc721SharedMetadata implements DetectableFeature {
    *
    * @returns - The shared metadata for the Open Edition NFTs.
    */
-  public async get(): Promise<BasicNFTInput> {
-    return await this.contractWrapper.readContract.sharedMetadata();
+  public async get(): Promise<BasicNFTInput | undefined> {
+    const metadata = await this.contractWrapper.readContract.sharedMetadata();
+
+    if (metadata.every((value) => value === "")) {
+      return undefined;
+    }
+
+    return {
+      name: metadata.name,
+      description: metadata.description,
+      image: metadata.imageURI,
+      animation_url: metadata.animationURI,
+    };
   }
 
   /**
@@ -82,11 +93,16 @@ export class Erc721SharedMetadata implements DetectableFeature {
 
       if (isFileOrBuffer(parsedMetadata.image)) {
         batch.push(this.storage.upload(parsedMetadata.image));
+      } else if (typeof parsedMetadata.image === "string") {
+        batch.push(Promise.resolve(parsedMetadata.image));
       } else {
         batch.push(Promise.resolve(undefined));
       }
+
       if (isFileOrBuffer(parsedMetadata.animation_url)) {
         batch.push(this.storage.upload(parsedMetadata.animation_url));
+      } else if (typeof parsedMetadata.animation_url === "string") {
+        batch.push(Promise.resolve(parsedMetadata.animation_url));
       } else {
         batch.push(Promise.resolve(undefined));
       }
