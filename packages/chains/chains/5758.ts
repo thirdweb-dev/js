@@ -10,7 +10,7 @@ export default {
   },
   "rpc": [
     "https://satoshichain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.satoshichain.io"
+    "https://testnet-rpc.satoshichain.io"
   ],
   "faucets": [
     "https://faucet.satoshichain.io"
@@ -21,13 +21,13 @@ export default {
     "decimals": 18
   },
   "infoURL": "https://satoshichain.net",
-  "shortName": "sats",
+  "shortName": "satst",
   "chainId": 5758,
   "networkId": 5758,
   "explorers": [
     {
-      "name": "SatoshiChain Explorer",
-      "url": "https://satoshiscan.io",
+      "name": "SatoshiChain Testnet Explorer",
+      "url": "https://testnet.satoshiscan.io",
       "standard": "EIP3091"
     }
   ],

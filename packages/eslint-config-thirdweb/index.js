@@ -17,7 +17,7 @@ module.exports = {
     // import rules
     "import/first": "error",
     "import/newline-after-import": "error",
-    "import/no-cycle": "warn",
+    "import/no-cycle": "error",
     "import/no-useless-path-segments": "error",
 
     //eslint

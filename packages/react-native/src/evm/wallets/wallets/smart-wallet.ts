@@ -1,31 +1,31 @@
-import type { ConfiguredWallet, WalletOptions } from "@thirdweb-dev/react-core";
-import { SmartWallet } from "@thirdweb-dev/wallets";
+import type { WalletConfig, WalletOptions } from "@thirdweb-dev/react-core";
+import {
+  SmartWallet,
+  SmartWalletConfig as SmartWalletConfigWallets,
+  createAsyncLocalStorage,
+} from "@thirdweb-dev/wallets";
 import { DEFAULT_WALLETS } from "../../constants/wallets";
+import { createSyncStorage } from "../../../core/AsyncStorage";
 
-type SafeWalletConfig = {
-  factoryAddress: string;
-  thirdwebApiKey: string;
-  gasless: boolean;
-  personalWallets: ConfiguredWallet[];
-};
+type SmartWalletConfig = {
+  personalWallets?: WalletConfig<any>[];
+} & Omit<SmartWalletConfigWallets, "chain">;
 
-export type SmartWalletObj = ConfiguredWallet & {
-  config: SafeWalletConfig;
-};
+export type SmartWalletObj = WalletConfig<SmartWallet>;
 
 export const smartWallet = (
-  config: Omit<SafeWalletConfig, "personalWallets"> & {
-    personalWallets?: ConfiguredWallet[];
-  },
-) => {
+  config: SmartWalletConfig,
+): WalletConfig<SmartWallet> => {
   return {
     id: SmartWallet.id,
     meta: SmartWallet.meta,
     create: (options: WalletOptions) =>
-      new SmartWallet({ ...options, ...config }),
-    config: {
-      ...config,
-      personalWallets: config.personalWallets || DEFAULT_WALLETS,
-    },
-  } satisfies ConfiguredWallet<SmartWallet, SafeWalletConfig>;
+      new SmartWallet({
+        ...options,
+        ...config,
+        walletStorage: createAsyncLocalStorage("smart-wallet"),
+        wcStorage: createSyncStorage("smart-wallet"),
+      }),
+    personalWallets: config.personalWallets || DEFAULT_WALLETS,
+  };
 };

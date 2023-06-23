@@ -1,17 +1,17 @@
-import { NFT } from "../../../core/schema/nft";
-import { calculateClaimCost } from "../../common/claim-conditions";
+import type { NFT } from "../../../core/schema/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_CLAIM_CUSTOM } from "../../constants/erc721-features";
-import { AddressOrEns } from "../../schema";
-import { ClaimOptions } from "../../types";
+import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import type { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { TransactionResultWithId } from "../types";
-import { ContractWrapper } from "./contract-wrapper";
-import { Erc721 } from "./erc-721";
+import type { TransactionResultWithId } from "../types";
+import type { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 import type { IClaimableERC721 } from "@thirdweb-dev/contracts-js";
-import { TokensClaimedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IClaimableERC721";
 import { BigNumber, BigNumberish, CallOverrides } from "ethers";
+import { TokensClaimedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TieredDrop";
+import { calculateClaimCost } from "../../common/claim-conditions/calculateClaimCost";
+import type { Erc721 } from "./erc-721";
 
 /**
  * Configure and claim ERC721 NFTs
@@ -22,6 +22,7 @@ import { BigNumber, BigNumberish, CallOverrides } from "ethers";
  * await contract.erc721.claim(tokenId, quantity);
  * ```
  */
+
 export class Erc721Claimable implements DetectableFeature {
   featureName = FEATURE_NFT_CLAIM_CUSTOM.name;
 
@@ -78,10 +79,9 @@ export class Erc721Claimable implements DetectableFeature {
    * @example
    * ```javascript
    * const address = "{{wallet_address}}"; // address of the wallet you want to claim the NFTs
-   * const tokenId = 0; // the id of the NFT you want to claim
    * const quantity = 1; // how many NFTs you want to claim
    *
-   * const tx = await contract.erc721.claimTo(address, tokenId, quantity);
+   * const tx = await contract.erc721.claimTo(address, quantity);
    * const receipt = tx[0].receipt; // the transaction receipt
    * ```
    *
@@ -91,7 +91,7 @@ export class Erc721Claimable implements DetectableFeature {
    *
    * @returns - Receipt for the transaction
    */
-  to = buildTransactionFunction(
+  to = /* @__PURE__ */ buildTransactionFunction(
     async (
       destinationAddress: AddressOrEns,
       quantity: BigNumberish,

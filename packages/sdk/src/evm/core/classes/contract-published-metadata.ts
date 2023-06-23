@@ -1,8 +1,6 @@
-import {
-  extractEventsFromAbi,
-  extractFunctionsFromAbi,
-  fetchContractMetadataFromAddress,
-} from "../../common";
+import { extractEventsFromAbi } from "../../common/feature-detection/extractEventsFromAbi";
+import { extractFunctionsFromAbi } from "../../common/feature-detection/extractFunctionsFromAbi";
+import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
 import {
   AbiEvent,
   AbiFunction,

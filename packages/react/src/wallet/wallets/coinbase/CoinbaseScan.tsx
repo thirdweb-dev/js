@@ -1,6 +1,6 @@
-import { CoinbaseWallet } from "@thirdweb-dev/wallets";
+import type { CoinbaseWallet } from "@thirdweb-dev/wallets";
 import {
-  ConfiguredWallet,
+  WalletConfig,
   useCreateWalletInstance,
   useWalletContext,
 } from "@thirdweb-dev/react-core";
@@ -11,11 +11,13 @@ export const CoinbaseScan: React.FC<{
   onBack: () => void;
   onGetStarted: () => void;
   onConnected: () => void;
-  configuredWallet: ConfiguredWallet;
-}> = ({ configuredWallet, onConnected, onGetStarted, onBack }) => {
+  walletConfig: WalletConfig<CoinbaseWallet>;
+  hideBackButton?: boolean;
+}> = ({ walletConfig, onConnected, onGetStarted, onBack, hideBackButton }) => {
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>(undefined);
-  const { setConnectedWallet, chainToConnect } = useWalletContext();
+  const { setConnectedWallet, chainToConnect, setConnectionStatus } =
+    useWalletContext();
 
   const scanStarted = useRef(false);
 
@@ -27,26 +29,32 @@ export const CoinbaseScan: React.FC<{
     scanStarted.current = true;
 
     (async () => {
-      const wallet = createInstance(configuredWallet) as InstanceType<
+      const wallet = createInstance(walletConfig) as InstanceType<
         typeof CoinbaseWallet
       >;
 
       const uri = await wallet.getQrUrl();
       setQrCodeUri(uri || undefined);
 
-      await wallet.connect({
-        chainId: chainToConnect?.chainId,
-      });
+      setConnectionStatus("connecting");
+      try {
+        await wallet.connect({
+          chainId: chainToConnect?.chainId,
+        });
 
-      setConnectedWallet(wallet);
-      onConnected();
+        setConnectedWallet(wallet);
+        onConnected();
+      } catch {
+        setConnectionStatus("disconnected");
+      }
     })();
   }, [
     createInstance,
     onConnected,
-    configuredWallet,
+    walletConfig,
     chainToConnect?.chainId,
     setConnectedWallet,
+    setConnectionStatus,
   ]);
 
   return (
@@ -54,8 +62,9 @@ export const CoinbaseScan: React.FC<{
       onBack={onBack}
       onGetStarted={onGetStarted}
       qrCodeUri={qrCodeUri}
-      walletName={configuredWallet.meta.name}
-      walletIconURL={configuredWallet.meta.iconURL}
+      walletName={walletConfig.meta.name}
+      walletIconURL={walletConfig.meta.iconURL}
+      hideBackButton={hideBackButton}
     />
   );
 };

@@ -4,6 +4,15 @@ import type { GenericAuthWallet } from "@thirdweb-dev/wallets";
 import { Request } from "express";
 import { z } from "zod";
 
+export const PayloadBodySchema = z.object({
+  address: z.string(),
+  chainId: z.string().optional(),
+});
+
+export const ActiveBodySchema = z.object({
+  address: z.string(),
+});
+
 export const LoginPayloadBodySchema = z.object({
   payload: LoginPayloadOutputSchema,
 });
@@ -36,6 +45,7 @@ export type ThirdwebAuthConfig<
       | ((tokenId: string) => void)
       | ((tokenId: string) => Promise<void>);
     tokenDurationInSeconds?: number;
+    refreshIntervalInSeconds?: number;
   };
   cookieOptions?: {
     domain?: string;

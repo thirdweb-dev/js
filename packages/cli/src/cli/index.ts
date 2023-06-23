@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { detectExtensions } from "../common/feature-detector";
+import { detectProject } from "../common/project-detector";
 import { processProject } from "../common/processor";
 import { cliVersion, pkg } from "../constants/urls";
 import { info, logger, spinner } from "../core/helpers/logger";
@@ -8,7 +9,6 @@ import { twCreate } from "../create/command";
 import { deploy } from "../deploy";
 import { generate } from "../generate/command";
 import { findPackageInstallation } from "../helpers/detect-local-packages";
-import { install } from "../install/command";
 import { upload } from "../storage/command";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import chalk from "chalk";
@@ -17,6 +17,7 @@ import { Command } from "commander";
 import open from "open";
 import prompts from "prompts";
 import Cache from "sync-disk-cache";
+import { install } from "../install";
 
 const main = async () => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
@@ -203,6 +204,7 @@ const main = async () => {
     )
     .option("--nightly", "Install the nightly version of packages.")
     .option("--dev", "Install the dev version of packages")
+    .option("-d, --debug", "show debug logs")
     .action(async (path, options) => {
       await install(path, options);
     });
@@ -293,6 +295,7 @@ const main = async () => {
       "--dynamic",
       "Deploy a dynamic smart contract made up of extensions to blockchains",
     )
+    .option("--zksync", "Deploy on ZKSync")
     .action(async (options) => {
       const url = await deploy(options);
       if (url) {
@@ -397,13 +400,12 @@ const main = async () => {
   program
     .command("detect")
     .description(
-      "(deprecated) Compile contracts and detect implemented thirdweb contract extensions",
+      "Detect the type of project your are running and let you know what it is.",
     )
     .option("-p, --path <project-path>", "path to project", ".")
     .option("-d, --debug", "show debug logs")
-    .option("-a, --all", "run detection on all contracts")
     .action(async (options) => {
-      await detectExtensions(options);
+      await detectProject(options);
     });
 
   program

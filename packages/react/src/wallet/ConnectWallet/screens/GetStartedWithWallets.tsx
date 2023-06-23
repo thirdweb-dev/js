@@ -14,11 +14,8 @@ import { useWallets } from "@thirdweb-dev/react-core";
 export const GetStartedWithWallets: React.FC<{
   onBack: () => void;
 }> = ({ onBack }) => {
-  const configuredWallets = useWallets();
-  console.log({
-    configuredWallets,
-  });
-  const { meta } = configuredWallets[0];
+  const walletConfigs = useWallets();
+  const { meta } = walletConfigs[0];
 
   return (
     <GetStartedScreen

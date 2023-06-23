@@ -2,16 +2,20 @@ import { StyleSheet, View } from "react-native";
 import PocketWalletIcon from "../../assets/wallet";
 import BaseButton from "../base/BaseButton";
 import { WalletIcon } from "../base/WalletIcon";
-import { AbstractClientWallet, SmartWallet } from "@thirdweb-dev/wallets";
-import { Address } from "../base/Address";
+import {
+  AbstractClientWallet,
+  SmartWallet,
+  walletIds,
+} from "@thirdweb-dev/wallets";
+import { AddressDisplay } from "../base/AddressDisplay";
 import Text from "../base/Text";
 import { usePersonalWalletAddress } from "../../wallets/hooks/usePersonalWalletAddress";
-import { LocalWallet } from "../../wallets/wallets/local-wallet";
 import { useWalletContext, useWallet } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import { useSmartWallet } from "../../providers/context-provider";
 import RightArrowIcon from "../../assets/right-arrow";
-import { useTheme } from "@shopify/restyle";
+import ConnectAppField from "./ConnectAppField";
+import { useAppTheme } from "../../styles/hooks";
 
 export const SmartWalletAdditionalActions = ({
   onExportPress,
@@ -24,7 +28,7 @@ export const SmartWalletAdditionalActions = ({
   const [smartWalletAddress, setSmartWalletAddress] = useState<string>("");
   const [showSmartWallet, setShowSmartWallet] = useState(false);
   const activeWallet = useWallet();
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   const wallet = showSmartWallet
     ? smartWallet
@@ -76,7 +80,7 @@ export const SmartWalletAdditionalActions = ({
             <WalletIcon size={32} iconUri={wallet?.getMeta().iconURL || ""} />
           ) : null}
           <View style={styles.walletInfo}>
-            <Address
+            <AddressDisplay
               variant="bodyLarge"
               address={
                 showSmartWallet ? smartWalletAddress : personalWalletAddress
@@ -90,8 +94,11 @@ export const SmartWalletAdditionalActions = ({
           color={theme.colors.iconPrimary}
         />
       </BaseButton>
-      {wallet?.walletId === LocalWallet.id ||
-      activeWallet?.walletId === LocalWallet.id ? (
+      {!showSmartWallet && smartWallet?.enableConnectApp ? (
+        <ConnectAppField />
+      ) : null}
+      {wallet?.walletId === walletIds.localWallet ||
+      activeWallet?.walletId === walletIds.localWallet ? (
         <>
           <BaseButton
             backgroundColor="background"
@@ -102,10 +109,10 @@ export const SmartWalletAdditionalActions = ({
             onPress={onExportPress}
           >
             <>
-              <PocketWalletIcon size={16} />
+              <PocketWalletIcon width={16} height={16} />
               <View style={styles.exportWalletInfo}>
                 <Text variant="bodySmall">
-                  {wallet?.walletId === LocalWallet.id
+                  {wallet?.walletId === walletIds.localWallet
                     ? "Backup personal wallet"
                     : "Backup wallet"}
                 </Text>
@@ -119,7 +126,7 @@ export const SmartWalletAdditionalActions = ({
           </BaseButton>
           <Text variant="error">
             {
-              "This is a temporary guest wallet. Download a backup if you don't want to lose access to it."
+              "This is a temporary guest wallet. Download a backup if you don't want to loose access to it."
             }
           </Text>
         </>

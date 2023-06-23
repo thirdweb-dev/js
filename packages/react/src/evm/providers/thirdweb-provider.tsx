@@ -2,7 +2,7 @@ import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
   ThirdwebProviderCore,
   ThirdwebProviderCoreProps,
-  ConfiguredWallet,
+  WalletConfig,
 } from "@thirdweb-dev/react-core";
 import { WalletUIStatesProvider } from "./wallet-ui-states-provider";
 import { ConnectModal } from "../../wallet/ConnectWallet/ConnectModal";
@@ -30,7 +30,7 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
    * />
    * ```
    */
-  supportedWallets?: ConfiguredWallet[];
+  supportedWallets?: WalletConfig<any>[];
 }
 
 /**
@@ -63,7 +63,7 @@ export const ThirdwebProvider = <
   children,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
-  const wallets: ConfiguredWallet[] = supportedWallets || defaultWallets;
+  const wallets: WalletConfig[] = supportedWallets || defaultWallets;
 
   return (
     <WalletUIStatesProvider theme={theme}>

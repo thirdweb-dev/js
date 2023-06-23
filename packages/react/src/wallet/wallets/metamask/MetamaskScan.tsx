@@ -3,24 +3,31 @@ import {
   useCreateWalletInstance,
   useWalletContext,
 } from "@thirdweb-dev/react-core";
-import { useEffect, useState } from "react";
-
-import { MetaMaskWallet } from "@thirdweb-dev/wallets";
-import { ConfiguredWallet } from "@thirdweb-dev/react-core";
+import { useEffect, useRef, useState } from "react";
+import type { MetaMaskWallet } from "@thirdweb-dev/wallets";
+import type { WalletConfig } from "@thirdweb-dev/react-core";
 
 export const MetamaskScan: React.FC<{
   onBack: () => void;
   onGetStarted: () => void;
   onConnected: () => void;
-  configuredWallet: ConfiguredWallet;
-}> = ({ onBack, onConnected, onGetStarted, configuredWallet }) => {
+  walletConfig: WalletConfig<MetaMaskWallet>;
+}> = ({ onBack, onConnected, onGetStarted, walletConfig }) => {
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
-  const { setConnectedWallet, chainToConnect } = useWalletContext();
+  const { setConnectedWallet, chainToConnect, setConnectionStatus } =
+    useWalletContext();
 
+  const scanStarted = useRef(false);
   useEffect(() => {
-    const metamask = createInstance(configuredWallet) as MetaMaskWallet;
+    if (scanStarted.current) {
+      return;
+    }
+    scanStarted.current = true;
 
+    const metamask = createInstance(walletConfig);
+
+    setConnectionStatus("connecting");
     metamask.connectWithQrCode({
       chainId: chainToConnect?.chainId,
       onQrCodeUri(uri) {
@@ -36,7 +43,8 @@ export const MetamaskScan: React.FC<{
     setConnectedWallet,
     chainToConnect,
     onConnected,
-    configuredWallet,
+    walletConfig,
+    setConnectionStatus,
   ]);
 
   return (
@@ -44,8 +52,8 @@ export const MetamaskScan: React.FC<{
       onBack={onBack}
       onGetStarted={onGetStarted}
       qrCodeUri={qrCodeUri}
-      walletName={configuredWallet.meta.name}
-      walletIconURL={configuredWallet.meta.iconURL}
+      walletName={walletConfig.meta.name}
+      walletIconURL={walletConfig.meta.iconURL}
     />
   );
 };

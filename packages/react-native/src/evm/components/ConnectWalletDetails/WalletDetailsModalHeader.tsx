@@ -1,6 +1,6 @@
 import { Icon } from "../../assets/icon";
 import { useAppTheme } from "../../styles/hooks";
-import { Address } from "../base/Address";
+import { AddressDisplay } from "../base/AddressDisplay";
 import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
 import { WalletIcon } from "../base/WalletIcon";
@@ -9,6 +9,7 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import Box from "../base/Box";
 import CopyIcon from "../../assets/copy";
+import { useState } from "react";
 
 interface WalletDetailsModalHeaderProps {
   address: string;
@@ -21,15 +22,20 @@ export const WalletDetailsModalHeader = ({
   address,
   onDisconnectPress,
   onAddressCopied,
-  loading,
 }: WalletDetailsModalHeaderProps) => {
   const theme = useAppTheme();
   const balanceQuery = useBalance();
   const activeWallet = useWallet();
+  const [showLoading, setShowLoading] = useState(false);
 
   const onAddressPress = async () => {
     await Clipboard.setStringAsync(address);
     onAddressCopied?.();
+  };
+
+  const onDisconnectPressInternal = () => {
+    setShowLoading(true);
+    onDisconnectPress();
   };
 
   return (
@@ -49,7 +55,7 @@ export const WalletDetailsModalHeader = ({
             justifyContent="center"
             alignItems="center"
           >
-            <Address mr="xs" address={address} />
+            <AddressDisplay mr="xs" address={address} />
             <CopyIcon
               width={14}
               height={14}
@@ -57,18 +63,20 @@ export const WalletDetailsModalHeader = ({
             />
           </Box>
           <Text variant="bodySmallSecondary">
-            {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
+            {balanceQuery.data
+              ? Number(balanceQuery.data.displayValue).toFixed(3)
+              : ""}{" "}
             {balanceQuery.data?.symbol}
           </Text>
         </BaseButton>
-        {loading ? (
-          <ActivityIndicator size={18} color={theme.colors.iconHighlight} />
+        {showLoading ? (
+          <ActivityIndicator size="small" color={theme.colors.iconHighlight} />
         ) : (
           <Icon
             type="disconnect"
             width={18}
             height={18}
-            onPress={onDisconnectPress}
+            onPress={onDisconnectPressInternal}
             color={theme.colors.iconHighlight}
           />
         )}

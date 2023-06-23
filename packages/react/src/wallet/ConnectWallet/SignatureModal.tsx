@@ -5,7 +5,7 @@ import {
   ModalDescription,
   ModalTitle,
 } from "../../components/modalElements";
-import { useWallet } from "@thirdweb-dev/react-core";
+import { useWalletConfig } from "@thirdweb-dev/react-core";
 import { Img } from "../../components/Img";
 import { Spacer } from "../../components/Spacer";
 import { Spinner } from "../../components/Spinner";
@@ -15,7 +15,7 @@ export const SignatureModal: React.FC<{
   open: boolean;
   setOpen: (open: boolean) => void;
 }> = (props) => {
-  const wallet = useWallet();
+  const walletConfig = useWalletConfig();
 
   return (
     <Modal
@@ -26,11 +26,13 @@ export const SignatureModal: React.FC<{
       setOpen={props.setOpen}
     >
       <Container>
-        <Img
-          height={iconSize.xl}
-          src={wallet?.getMeta().iconURL as string}
-          width={iconSize.xl}
-        />
+        {walletConfig && (
+          <Img
+            height={iconSize.xl}
+            src={walletConfig.meta.iconURL}
+            width={iconSize.xl}
+          />
+        )}
 
         <Spacer y="xl" />
 
@@ -65,7 +67,7 @@ const TitleContainer = styled.div`
   }
 `;
 
-const Desc = styled(ModalDescription)`
+const Desc = /* @__PURE__ */ styled(ModalDescription)`
   ${media.mobile} {
     max-width: 240px;
     margin: 0 auto;

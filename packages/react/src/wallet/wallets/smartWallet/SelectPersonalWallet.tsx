@@ -12,16 +12,16 @@ import {
 import { iconSize, spacing } from "../../../design-system";
 import { WalletSelection } from "../../ConnectWallet/WalletSelector";
 import styled from "@emotion/styled";
-import { SmartConfiguredWallet } from "./types";
-import { ConfiguredWallet, useWallets } from "@thirdweb-dev/react-core";
+import { SmartWalletConfig } from "./types";
+import { WalletConfig } from "@thirdweb-dev/react-core";
 
 export const SelectPersonalWallet: React.FC<{
   onBack: () => void;
-  smartWallet: SmartConfiguredWallet;
-  personalWallets: ConfiguredWallet[];
-  selectWallet: (wallet: ConfiguredWallet) => void;
+  smartWallet: SmartWalletConfig;
+  personalWallets: WalletConfig[];
+  selectWallet: (wallet: WalletConfig) => void;
+  renderBackButton?: boolean;
 }> = (props) => {
-  const singleWallet = useWallets().length === 1;
   const guestWallet = props.personalWallets.find(
     (w) => w.id === walletIds.localWallet,
   );
@@ -32,7 +32,7 @@ export const SelectPersonalWallet: React.FC<{
 
   return (
     <>
-      {!singleWallet && <BackButton onClick={props.onBack} />}
+      {props.renderBackButton && <BackButton onClick={props.onBack} />}
       <IconContainer>
         <Img
           src={props.smartWallet.meta.iconURL}
@@ -63,7 +63,7 @@ export const SelectPersonalWallet: React.FC<{
       <Spacer y="lg" />
 
       <WalletSelection
-        configuredWallets={personalWallets}
+        walletConfigs={personalWallets}
         selectWallet={props.selectWallet}
       />
 
@@ -76,6 +76,7 @@ export const SelectPersonalWallet: React.FC<{
               onClick={() => {
                 props.selectWallet(guestWallet);
               }}
+              data-test="continue-as-guest-button"
             >
               Continue as guest
             </Button>

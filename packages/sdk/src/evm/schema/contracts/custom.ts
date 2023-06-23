@@ -1,10 +1,10 @@
 import { FileOrBufferOrStringSchema } from "../../../core/schema/shared";
-import { toSemver } from "../../common";
+import { toSemver } from "../../common/version-checker";
 import {
-  AddressOrEnsSchema,
   BigNumberishSchema,
   BigNumberTransformSchema,
-} from "../shared";
+} from "../shared/BigNumberSchema";
+import { AddressOrEnsSchema } from "../shared/AddressOrEnsSchema";
 import {
   CommonContractOutputSchema,
   CommonContractSchema,
@@ -21,9 +21,10 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const BYOCContractMetadataSchema = CommonContractSchema.catchall(
-  z.union([BigNumberTransformSchema, z.unknown()]),
-);
+export const BYOCContractMetadataSchema = /* @__PURE__ */ (() =>
+  CommonContractSchema.catchall(
+    z.union([BigNumberTransformSchema, z.unknown()]),
+  ))();
 
 /**
  * @internal
@@ -33,25 +34,28 @@ export type CustomContractMetadata = z.input<typeof BYOCContractMetadataSchema>;
 /**
  * @internal
  */
-export const CustomContractInput = BYOCContractMetadataSchema.merge(
-  CommonRoyaltySchema.merge(MerkleSchema).merge(CommonSymbolSchema).partial(),
-);
+export const CustomContractInput = /* @__PURE__ */ (() =>
+  BYOCContractMetadataSchema.merge(
+    CommonRoyaltySchema.merge(MerkleSchema).merge(CommonSymbolSchema).partial(),
+  ))();
 
 /**
  * @internal
  */
-export const CustomContractOutput = CommonContractOutputSchema.merge(
-  CommonRoyaltySchema.merge(MerkleSchema).merge(CommonSymbolSchema).partial(),
-);
+export const CustomContractOutput = /* @__PURE__ */ (() =>
+  CommonContractOutputSchema.merge(
+    CommonRoyaltySchema.merge(MerkleSchema).merge(CommonSymbolSchema).partial(),
+  ))();
 
 /**
  * @internal
  */
-export const CustomContractDeploy = CustomContractInput.merge(
-  CommonPlatformFeeSchema.merge(CommonPrimarySaleSchema)
-    .merge(CommonTrustedForwarderSchema)
-    .partial(),
-);
+export const CustomContractDeploy = /* @__PURE__ */ (() =>
+  CustomContractInput.merge(
+    CommonPlatformFeeSchema.merge(CommonPrimarySaleSchema)
+      .merge(CommonTrustedForwarderSchema)
+      .partial(),
+  ))();
 
 /**
  * @internal
@@ -65,37 +69,40 @@ export const CustomContractSchema = {
 /**
  * @internal
  */
-const AbiTypeBaseSchema = z
-  .object({
-    type: z.string(),
-    name: z.string().default(""),
-  })
-  .catchall(z.any());
+const AbiTypeBaseSchema = /* @__PURE__ */ (() =>
+  z
+    .object({
+      type: z.string(),
+      name: z.string().default(""),
+    })
+    .catchall(z.any()))();
 
 /**
  * @internal
  */
-export const AbiTypeSchema = AbiTypeBaseSchema.extend({
-  stateMutability: z.string().optional(),
-  components: z.array(AbiTypeBaseSchema).optional(),
-}).catchall(z.any());
+export const AbiTypeSchema = /* @__PURE__ */ (() =>
+  AbiTypeBaseSchema.extend({
+    stateMutability: z.string().optional(),
+    components: z.array(AbiTypeBaseSchema).optional(),
+  }).catchall(z.any()))();
 
 /**
  * @internal
  */
-export const AbiObjectSchema = z
-  .object({
-    type: z.string(),
-    name: z.string().default(""),
-    inputs: z.array(AbiTypeSchema).default([]),
-    outputs: z.array(AbiTypeSchema).default([]),
-  })
-  .catchall(z.any());
+export const AbiObjectSchema = /* @__PURE__ */ (() =>
+  z
+    .object({
+      type: z.string(),
+      name: z.string().default(""),
+      inputs: z.array(AbiTypeSchema).default([]),
+      outputs: z.array(AbiTypeSchema).default([]),
+    })
+    .catchall(z.any()))();
 
 /**
  * @internal
  */
-export const AbiSchema = z.array(AbiObjectSchema);
+export const AbiSchema = /* @__PURE__ */ z.array(AbiObjectSchema);
 // if we want to statically type this for external usage it has to *awlways* be the output type
 export type Abi = z.output<typeof AbiSchema>;
 
@@ -108,84 +115,124 @@ export type AbiInput = z.input<typeof AbiSchema>;
 /**
  * @internal
  */
-export const PreDeployMetadata = z
-  .object({
-    name: z.string(),
-    metadataUri: z.string(),
-    bytecodeUri: z.string(),
-    analytics: z.any().optional(),
-  })
-  .catchall(z.any());
+export const PreDeployMetadata = /* @__PURE__ */ (() =>
+  z
+    .object({
+      name: z.string(),
+      metadataUri: z.string(),
+      bytecodeUri: z.string(),
+      analytics: z.any().optional(),
+    })
+    .catchall(z.any()))();
 
 /**
  * @internal
  */
-export const ChainIdToAddressSchema = z.record(z.string(), z.string());
+export const ChainIdToAddressSchema = /* @__PURE__ */ (() =>
+  z.record(z.string(), z.string()))();
 
 /**
  * @internal
  */
-export const FactoryDeploymentSchema = z.object({
-  implementationAddresses: ChainIdToAddressSchema,
-  implementationInitializerFunction: z.string().default("initialize"),
-  factoryAddresses: ChainIdToAddressSchema.optional(),
-});
+export const CustomFactoryInput = /* @__PURE__ */ (() =>
+  z.object({
+    factoryFunction: z.string(),
+    params: z
+      .array(z.object({ name: z.string(), type: z.string() }))
+      .default([]),
+    customFactoryAddresses: ChainIdToAddressSchema,
+  }))();
 
 /**
  * @internal
  */
-export const ExtraPublishMetadataSchemaInput = z
-  .object({
-    version: z.string().refine(
-      (v) => {
-        try {
-          toSemver(v);
-          return true;
-        } catch (e) {
-          return false;
-        }
-      },
-      (out) => {
-        return {
-          message: `'${out}' is not a valid semantic version. Should be in the format of major.minor.patch. Ex: 0.4.1`,
-        };
-      },
-    ),
-    displayName: z.string().optional(),
-    description: z.string().optional(),
-    readme: z.string().optional(),
-    license: z.string().optional(),
-    changelog: z.string().optional(),
-    tags: z.array(z.string()).optional(),
-    audit: FileOrBufferOrStringSchema.nullable().optional(),
-    logo: FileOrBufferOrStringSchema.nullable().optional(),
-    isDeployableViaFactory: z.boolean().optional(),
-    isDeployableViaProxy: z.boolean().optional(),
-    factoryDeploymentData: FactoryDeploymentSchema.optional(),
-    constructorParams: z
-      .record(
-        z.string(),
-        z
-          .object({
-            displayName: z.string().optional(),
-            description: z.string().optional(),
-            defaultValue: z.string().optional(),
-          })
-          .catchall(z.any()),
-      )
-      .optional(),
-    compositeAbi: AbiSchema.optional(),
-  })
-  .catchall(z.any());
+export const FactoryDeploymentSchema = /* @__PURE__ */ (() =>
+  z.object({
+    implementationAddresses: ChainIdToAddressSchema,
+    implementationInitializerFunction: z.string().default("initialize"),
+    customFactoryInput: CustomFactoryInput.optional(),
+    factoryAddresses: ChainIdToAddressSchema.optional(),
+  }))();
 
 /**
  * @internal
  */
-export const ExtraPublishMetadataSchemaOutput =
+export const DeployTypeInput = /* @__PURE__ */ (() =>
+  z.union([
+    z.literal("standard"),
+    z.literal("autoFactory"),
+    z.literal("customFactory"),
+  ]))();
+
+/**
+ * @internal
+ */
+export const DeploymentNetworkInput = /* @__PURE__ */ (() =>
+  z.object({
+    allNetworks: z.boolean().optional(),
+    networksEnabled: z.array(z.number()).default([]),
+  }))();
+
+/**
+ * @internal
+ */
+export const ExtraPublishMetadataSchemaInput = /* @__PURE__ */ (() =>
+  z
+    .object({
+      version: z.string().refine(
+        (v) => {
+          try {
+            toSemver(v);
+            return true;
+          } catch (e) {
+            return false;
+          }
+        },
+        (out) => {
+          return {
+            message: `'${out}' is not a valid semantic version. Should be in the format of major.minor.patch. Ex: 0.4.1`,
+          };
+        },
+      ),
+      displayName: z.string().optional(),
+      description: z.string().optional(),
+      readme: z.string().optional(),
+      license: z.string().optional(),
+      changelog: z.string().optional(),
+      tags: z.array(z.string()).optional(),
+      audit: FileOrBufferOrStringSchema.nullable().optional(),
+      logo: FileOrBufferOrStringSchema.nullable().optional(),
+      isDeployableViaFactory: z.boolean().optional(),
+      isDeployableViaProxy: z.boolean().optional(),
+      factoryDeploymentData: FactoryDeploymentSchema.optional(),
+      deployType: DeployTypeInput.optional(),
+      networksForDeployment: DeploymentNetworkInput.optional(),
+      constructorParams: z
+        .record(
+          z.string(),
+          z
+            .object({
+              displayName: z.string().optional(),
+              description: z.string().optional(),
+              defaultValue: z.string().optional(),
+              hidden: z.boolean().optional(),
+            })
+            .catchall(z.any()),
+        )
+        .optional(),
+      compositeAbi: AbiSchema.optional(),
+    })
+    .catchall(z.any()))();
+
+/**
+ * @internal
+ */
+export const ExtraPublishMetadataSchemaOutput = /* @__PURE__ */ (() =>
   ExtraPublishMetadataSchemaInput.extend({
     audit: z.string().nullable().optional(),
     logo: z.string().nullable().optional(),
-  });
+  }))();
+
 export type ExtraPublishMetadata = z.input<
   typeof ExtraPublishMetadataSchemaInput
 >;
@@ -193,19 +240,19 @@ export type ExtraPublishMetadata = z.input<
 /**
  * @internal
  */
-export const FullPublishMetadataSchemaInput = PreDeployMetadata.merge(
-  ExtraPublishMetadataSchemaInput,
-).extend({
-  publisher: AddressOrEnsSchema.optional(),
-});
+export const FullPublishMetadataSchemaInput = /* @__PURE__ */ (() =>
+  PreDeployMetadata.merge(ExtraPublishMetadataSchemaInput).extend({
+    publisher: AddressOrEnsSchema.optional(),
+  }))();
+
 /**
  * @internal
  */
-export const FullPublishMetadataSchemaOutput = PreDeployMetadata.merge(
-  ExtraPublishMetadataSchemaOutput,
-).extend({
-  publisher: AddressOrEnsSchema.optional(),
-});
+export const FullPublishMetadataSchemaOutput = /* @__PURE__ */ (() =>
+  PreDeployMetadata.merge(ExtraPublishMetadataSchemaOutput).extend({
+    publisher: AddressOrEnsSchema.optional(),
+  }))();
+
 export type FullPublishMetadata = z.infer<
   typeof FullPublishMetadataSchemaOutput
 >;
@@ -213,70 +260,76 @@ export type FullPublishMetadata = z.infer<
 /**
  * @internal
  */
-export const ProfileSchemaInput = z.object({
-  name: z.string().optional(),
-  bio: z.string().optional(),
-  avatar: FileOrBufferOrStringSchema.nullable().optional(),
-  website: z.string().optional(),
-  twitter: z.string().optional(),
-  telegram: z.string().optional(),
-  facebook: z.string().optional(),
-  github: z.string().optional(),
-  medium: z.string().optional(),
-  linkedin: z.string().optional(),
-  reddit: z.string().optional(),
-  discord: z.string().optional(),
-});
-export const ProfileSchemaOutput = ProfileSchemaInput.extend({
-  avatar: z.string().nullable().optional(),
-});
+export const ProfileSchemaInput = /* @__PURE__ */ (() =>
+  z.object({
+    name: z.string().optional(),
+    bio: z.string().optional(),
+    avatar: FileOrBufferOrStringSchema.nullable().optional(),
+    website: z.string().optional(),
+    twitter: z.string().optional(),
+    telegram: z.string().optional(),
+    facebook: z.string().optional(),
+    github: z.string().optional(),
+    medium: z.string().optional(),
+    linkedin: z.string().optional(),
+    reddit: z.string().optional(),
+    discord: z.string().optional(),
+  }))();
+
+export const ProfileSchemaOutput = /* @__PURE__ */ (() =>
+  ProfileSchemaInput.extend({
+    avatar: z.string().nullable().optional(),
+  }))();
+
 export type ProfileMetadataInput = z.infer<typeof ProfileSchemaInput>;
 export type ProfileMetadata = z.infer<typeof ProfileSchemaOutput>;
 
 /**
  * @internal
  */
-export const PublishedContractSchema = z.object({
-  id: z.string(),
-  timestamp: BigNumberishSchema,
-  metadataUri: z.string(),
-});
+export const PublishedContractSchema = /* @__PURE__ */ (() =>
+  z.object({
+    id: z.string(),
+    timestamp: BigNumberishSchema,
+    metadataUri: z.string(),
+  }))();
 
 /**
  * @internal
  * Follows https://docs.soliditylang.org/en/v0.8.15/natspec-format.html
  */
-export const ContractInfoSchema = z.object({
-  title: z.string().optional(),
-  author: z.string().optional(),
-  details: z.string().optional(),
-  notice: z.string().optional(),
-});
+export const ContractInfoSchema = /* @__PURE__ */ (() =>
+  z.object({
+    title: z.string().optional(),
+    author: z.string().optional(),
+    details: z.string().optional(),
+    notice: z.string().optional(),
+  }))();
 
 /**
  * @internal
  */
-export const CompilerMetadataFetchedSchema = z.object({
-  name: z.string(),
-  abi: AbiSchema,
-  metadata: z.record(z.string(), z.any()),
-  info: ContractInfoSchema,
-  licenses: z
-    .array(z.string().optional())
-    .default([])
-    .transform((v) => {
-      return v.filter((license) => license !== undefined) as string[];
-    }),
-});
+export const CompilerMetadataFetchedSchema = /* @__PURE__ */ (() =>
+  z.object({
+    name: z.string(),
+    abi: AbiSchema,
+    metadata: z.record(z.string(), z.any()),
+    info: ContractInfoSchema,
+    licenses: z
+      .array(z.string().optional())
+      .default([])
+      .transform((v) => {
+        return v.filter((license) => license !== undefined) as string[];
+      }),
+  }))();
 
 /**
  * @internal
  */
-export const PreDeployMetadataFetchedSchema = PreDeployMetadata.merge(
-  CompilerMetadataFetchedSchema,
-).extend({
-  bytecode: z.string(),
-});
+export const PreDeployMetadataFetchedSchema = /* @__PURE__ */ (() =>
+  PreDeployMetadata.merge(CompilerMetadataFetchedSchema).extend({
+    bytecode: z.string(),
+  }))();
 
 export type PreDeployMetadataFetched = z.infer<
   typeof PreDeployMetadataFetchedSchema

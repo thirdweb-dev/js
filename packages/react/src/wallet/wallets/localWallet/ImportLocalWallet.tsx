@@ -16,25 +16,31 @@ import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { FormFooter } from "../../../components/formElements";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 import { LocalWalletModalHeader } from "./common";
-import { LocalConfiguredWallet } from "./types";
+import type { LocalWalletConfig } from "./types";
 
 export const ImportLocalWallet: React.FC<{
   onConnect: () => void;
   goBack: () => void;
-  localWallet: LocalConfiguredWallet;
+  localWalletConf: LocalWalletConfig;
+  persist: boolean;
 }> = (props) => {
   const [jsonString, setJsonString] = useState<string | undefined>();
-  const { setLocalWallet, meta } = useLocalWalletInfo(props.localWallet);
+  const { setLocalWallet, meta } = useLocalWalletInfo(
+    props.localWalletConf,
+    props.persist,
+  );
   const createWalletInstance = useCreateWalletInstance();
   const [password, setPassword] = useState("");
   const [isWrongPassword, setIsWrongPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [importedAddress, setImportedAddress] = useState<string | undefined>();
 
-  const { setConnectedWallet } = useWalletContext();
+  const { setConnectedWallet, setConnectionStatus } = useWalletContext();
 
   const handleImport = async () => {
-    const localWallet = createWalletInstance(props.localWallet) as LocalWallet;
+    const localWallet = createWalletInstance(
+      props.localWalletConf,
+    ) as LocalWallet;
     if (!localWallet || !jsonString) {
       throw new Error("Invalid state");
     }
@@ -49,6 +55,9 @@ export const ImportLocalWallet: React.FC<{
       setIsWrongPassword(true);
       return;
     }
+
+    setConnectionStatus("connecting");
+    await localWallet.connect();
 
     await localWallet.save({
       strategy: "encryptedJson",

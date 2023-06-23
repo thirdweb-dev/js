@@ -1,11 +1,6 @@
-import { NetworkInput } from "..";
-import { AmountSchema } from "../../../core/schema/shared";
-import { assertEnabled, detectContractFeature } from "../../common";
-import {
-  fetchCurrencyMetadata,
-  fetchCurrencyValue,
-} from "../../common/currency";
-import { resolveAddress } from "../../common/ens";
+import { assertEnabled } from "../../common/feature-detection/assertEnabled";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import {
   FEATURE_TOKEN,
@@ -15,20 +10,21 @@ import {
   FEATURE_TOKEN_SIGNATURE_MINTABLE,
   FEATURE_TOKEN_CLAIM_CONDITIONS_V2,
 } from "../../constants/erc20-features";
-import { Address, AddressOrEns, TokenMintInput } from "../../schema";
-import { Currency, CurrencyValue, Amount, ClaimOptions } from "../../types";
-import {
+import type { Address } from "../../schema/shared/Address";
+import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import type { TokenMintInput } from "../../schema/tokens/token";
+import type { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
+import type { CurrencyValue } from "../../types/currency";
+import type { Amount, Currency } from "../../types/currency";
+import type {
   BaseERC20,
   BaseSignatureMintERC20,
   BaseDropERC20,
 } from "../../types/eips";
-import { DetectableFeature } from "../interfaces/DetectableFeature";
+import type { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
-import { ContractWrapper } from "./contract-wrapper";
-import { Erc20Burnable } from "./erc-20-burnable";
-import { Erc20Droppable } from "./erc-20-droppable";
-import { Erc20Mintable } from "./erc-20-mintable";
-import { Erc20SignatureMintable } from "./erc-20-signature-mintable";
+import type { NetworkInput } from "../types";
+import type { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 import type {
   TokenERC20,
@@ -37,7 +33,15 @@ import type {
   IBurnableERC20,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers, BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
+import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+
+import { Erc20Burnable } from "./erc-20-burnable";
+import { Erc20Droppable } from "./erc-20-droppable";
+import { Erc20Mintable } from "./erc-20-mintable";
+import { Erc20SignatureMintable } from "./erc-20-signature-mintable";
+import { normalizeAmount } from "../../common/currency/normalizeAmount";
 
 /**
  * Standard ERC20 Token functions
@@ -238,7 +242,7 @@ export class Erc20<
    * ```
    * @twfeature ERC20
    */
-  transfer = buildTransactionFunction(
+  transfer = /* @__PURE__ */ buildTransactionFunction(
     async (to: AddressOrEns, amount: Amount) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -266,7 +270,7 @@ export class Erc20<
    * ```
    * @twfeature ERC20
    */
-  transferFrom = buildTransactionFunction(
+  transferFrom = /* @__PURE__ */ buildTransactionFunction(
     async (from: AddressOrEns, to: AddressOrEns, amount: Amount) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -293,7 +297,7 @@ export class Erc20<
    * ```
    * @twfeature ERC20
    */
-  setAllowance = buildTransactionFunction(
+  setAllowance = /* @__PURE__ */ buildTransactionFunction(
     async (spender: AddressOrEns, amount: Amount) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -328,22 +332,24 @@ export class Erc20<
    * await contract.erc20.transferBatch(data);
    * ```
    */
-  transferBatch = buildTransactionFunction(async (args: TokenMintInput[]) => {
-    const encoded = await Promise.all(
-      args.map(async (arg) => {
-        const amountWithDecimals = await this.normalizeAmount(arg.amount);
-        return this.contractWrapper.readContract.interface.encodeFunctionData(
-          "transfer",
-          [await resolveAddress(arg.toAddress), amountWithDecimals],
-        );
-      }),
-    );
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "multicall",
-      args: [encoded],
-    });
-  });
+  transferBatch = /* @__PURE__ */ buildTransactionFunction(
+    async (args: TokenMintInput[]) => {
+      const encoded = await Promise.all(
+        args.map(async (arg) => {
+          const amountWithDecimals = await this.normalizeAmount(arg.amount);
+          return this.contractWrapper.readContract.interface.encodeFunctionData(
+            "transfer",
+            [await resolveAddress(arg.toAddress), amountWithDecimals],
+          );
+        }),
+      );
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "multicall",
+        args: [encoded],
+      });
+    },
+  );
 
   ////// ERC20 Mintable Extension //////
 
@@ -359,7 +365,7 @@ export class Erc20<
    * ```
    * @twfeature ERC20Mintable
    */
-  mint = buildTransactionFunction(async (amount: Amount) => {
+  mint = /* @__PURE__ */ buildTransactionFunction(async (amount: Amount) => {
     return this.mintTo.prepare(
       await this.contractWrapper.getSignerAddress(),
       amount,
@@ -379,7 +385,7 @@ export class Erc20<
    * ```
    * @twfeature ERC20Mintable
    */
-  mintTo = buildTransactionFunction(
+  mintTo = /* @__PURE__ */ buildTransactionFunction(
     async (receiver: AddressOrEns, amount: Amount) => {
       return assertEnabled(this.mintable, FEATURE_TOKEN_MINTABLE).to.prepare(
         receiver,
@@ -432,12 +438,14 @@ export class Erc20<
    * ```
    * @twfeature ERC20BatchMintable
    */
-  mintBatchTo = buildTransactionFunction(async (args: TokenMintInput[]) => {
-    return assertEnabled(
-      this.mintable?.batch,
-      FEATURE_TOKEN_BATCH_MINTABLE,
-    ).to.prepare(args);
-  });
+  mintBatchTo = /* @__PURE__ */ buildTransactionFunction(
+    async (args: TokenMintInput[]) => {
+      return assertEnabled(
+        this.mintable?.batch,
+        FEATURE_TOKEN_BATCH_MINTABLE,
+      ).to.prepare(args);
+    },
+  );
 
   ////// ERC20 Burnable Extension //////
 
@@ -455,7 +463,7 @@ export class Erc20<
    * ```
    * @twfeature ERC20Burnable
    */
-  burn = buildTransactionFunction(async (amount: Amount) => {
+  burn = /* @__PURE__ */ buildTransactionFunction(async (amount: Amount) => {
     return assertEnabled(this.burnable, FEATURE_TOKEN_BURNABLE).tokens.prepare(
       amount,
     );
@@ -478,7 +486,7 @@ export class Erc20<
    * ```
    * @twfeature ERC20Burnable
    */
-  burnFrom = buildTransactionFunction(
+  burnFrom = /* @__PURE__ */ buildTransactionFunction(
     async (holder: AddressOrEns, amount: Amount) => {
       return assertEnabled(this.burnable, FEATURE_TOKEN_BURNABLE).from.prepare(
         holder,
@@ -510,7 +518,7 @@ export class Erc20<
    * @returns - The transaction receipt
    * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1
    */
-  claim = buildTransactionFunction(
+  claim = /* @__PURE__ */ buildTransactionFunction(
     async (amount: Amount, options?: ClaimOptions) => {
       return this.claimTo.prepare(
         await this.contractWrapper.getSignerAddress(),
@@ -541,7 +549,7 @@ export class Erc20<
    * @returns - The transaction receipt
    * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1
    */
-  claimTo = buildTransactionFunction(
+  claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       destinationAddress: AddressOrEns,
       amount: Amount,
@@ -616,8 +624,7 @@ export class Erc20<
    * @param amount
    */
   public async normalizeAmount(amount: Amount): Promise<BigNumber> {
-    const decimals = await this.contractWrapper.readContract.decimals();
-    return ethers.utils.parseUnits(AmountSchema.parse(amount), decimals);
+    return normalizeAmount(this.contractWrapper, amount);
   }
 
   /**

@@ -1,8 +1,8 @@
-import { BaseDropERC20 } from "../../types/eips";
-import { ContractWrapper } from "./contract-wrapper";
-import { Erc20 } from "./erc-20";
-import { Erc20ClaimableWithConditions } from "./erc-20-claimable-with-conditions";
+import type { BaseDropERC20 } from "../../types/eips";
+import type { ContractWrapper } from "./contract-wrapper";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import type { Erc20 } from "./erc-20";
+import { Erc20ClaimableWithConditions } from "./erc-20-claim-conditions";
 
 /**
  * Configure and claim ERC20 tokens
@@ -13,6 +13,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
  * await contract.token.drop.claim.to("0x...", quantity);
  * ```
  */
+
 export class Erc20Droppable {
   /**
    * Configure claim conditions

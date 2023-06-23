@@ -1,5 +1,97 @@
 # thirdweb
 
+## 0.10.24
+
+### Patch Changes
+
+- Updated dependencies [[`d9b7360d`](https://github.com/thirdweb-dev/js/commit/d9b7360d1d78abcdaca89aa35e66388cbc5eb26c), [`8a2d9204`](https://github.com/thirdweb-dev/js/commit/8a2d92046a416c99c6bfecf63a6fdb6cc02ea175), [`990c665d`](https://github.com/thirdweb-dev/js/commit/990c665de9e5c1070dc80fe0f1b434e251f70a94), [`c6f44722`](https://github.com/thirdweb-dev/js/commit/c6f44722f9d123db4e7c4c799fe8e0374a02107c), [`45ae105e`](https://github.com/thirdweb-dev/js/commit/45ae105ed3e48bfbf6be84aa12ecb0fb55a917b7), [`f41f1a29`](https://github.com/thirdweb-dev/js/commit/f41f1a2958a2cedcf0496c9a3ca284d0b98f1b89), [`bb7ca20e`](https://github.com/thirdweb-dev/js/commit/bb7ca20e49c5c374b12a4ed746a2ac3db488abd9), [`23d61cfe`](https://github.com/thirdweb-dev/js/commit/23d61cfeff2e5a885c511416d7491e7933ed404a), [`8941b226`](https://github.com/thirdweb-dev/js/commit/8941b22682d1b15a6e0d311b1e8548b95d6cfadf), [`e0ce4a37`](https://github.com/thirdweb-dev/js/commit/e0ce4a37596a91a072f8551e323fce6723113dcb)]:
+  - @thirdweb-dev/sdk@3.10.23
+  - @thirdweb-dev/chains@0.1.22
+
+## 0.10.23
+
+### Patch Changes
+
+- [#1184](https://github.com/thirdweb-dev/js/pull/1184) [`e7f1ce43`](https://github.com/thirdweb-dev/js/commit/e7f1ce43b04c6ea81fd05c02c8392a16c38d6053) Thanks [@Marfuen](https://github.com/Marfuen)! - Fix typo issues with python detectors
+
+- [#1074](https://github.com/thirdweb-dev/js/pull/1074) [`cc20f93e`](https://github.com/thirdweb-dev/js/commit/cc20f93e178d86ee2b3f39102bbb0811de211f05) Thanks [@Marfuen](https://github.com/Marfuen)! - Enhance CLI Install command and update chains
+
+- [#1154](https://github.com/thirdweb-dev/js/pull/1154) [`02d55a06`](https://github.com/thirdweb-dev/js/commit/02d55a063e7c53761d57e6cb6bf63ea78e454d70) Thanks [@beauwilliams](https://github.com/beauwilliams)! - fix: always use latest CLI version in CI
+
+- [#1171](https://github.com/thirdweb-dev/js/pull/1171) [`c0e2c945`](https://github.com/thirdweb-dev/js/commit/c0e2c9457f5ba992163b175f85b0f4b92b070f48) Thanks [@Marfuen](https://github.com/Marfuen)! - Minor bug fixes and improvements
+
+- [#1183](https://github.com/thirdweb-dev/js/pull/1183) [`224b7241`](https://github.com/thirdweb-dev/js/commit/224b7241dc82155d3207a2d16523ceaae5532f40) Thanks [@Marfuen](https://github.com/Marfuen)! - Python detectors bug fixes
+
+- Updated dependencies [[`cc20f93e`](https://github.com/thirdweb-dev/js/commit/cc20f93e178d86ee2b3f39102bbb0811de211f05), [`a430160e`](https://github.com/thirdweb-dev/js/commit/a430160e6b4771c03d97f6ede91f1aeaa043e50e), [`12b07aad`](https://github.com/thirdweb-dev/js/commit/12b07aad9ae3176daf9d05864247d4806a16c9d2), [`7d2a446e`](https://github.com/thirdweb-dev/js/commit/7d2a446ecef9c6c14959d31e9a66537783b9adac), [`8e28b0f5`](https://github.com/thirdweb-dev/js/commit/8e28b0f5e75596d29273ed80269bcee6d209adb4), [`01293857`](https://github.com/thirdweb-dev/js/commit/01293857fac8531bd94764203cd24b3daa4db51f), [`20bbad1a`](https://github.com/thirdweb-dev/js/commit/20bbad1abcb1ec573318d326b09278492a488abd)]:
+  - @thirdweb-dev/chains@0.1.21
+  - @thirdweb-dev/sdk@3.10.22
+
+## 0.10.22
+
+### Patch Changes
+
+- Updated dependencies [[`3bf7f375`](https://github.com/thirdweb-dev/js/commit/3bf7f375933cbd7dd8c682a66e8c67bbcb268bf7), [`16232de9`](https://github.com/thirdweb-dev/js/commit/16232de9eab9966e24e335929b2a3919346af265), [`8687d6ac`](https://github.com/thirdweb-dev/js/commit/8687d6ac3a363eae63eeb1959a953cbcd282d353), [`645b0303`](https://github.com/thirdweb-dev/js/commit/645b0303cc1a9cbb0a0e9cbd67d11c3b865e4584), [`522453fd`](https://github.com/thirdweb-dev/js/commit/522453fd568b8c350141a96f9f1c6d5a3ef74493), [`6803c3e9`](https://github.com/thirdweb-dev/js/commit/6803c3e97ca74eed19cd90095afde25b02150d51), [`56f85e57`](https://github.com/thirdweb-dev/js/commit/56f85e57df84bfa93e3230639c95d12466f8aec7), [`6a91b6a0`](https://github.com/thirdweb-dev/js/commit/6a91b6a0253bab5914d4ebdad951dd1c5d141fbc), [`a5f16b6d`](https://github.com/thirdweb-dev/js/commit/a5f16b6dc50b37920a6e5210b60aa6a1682ceb63), [`b6728603`](https://github.com/thirdweb-dev/js/commit/b6728603972ccd6c95108b25e8562807f0f95e19), [`ed47fd53`](https://github.com/thirdweb-dev/js/commit/ed47fd5310d11323080d984bca18a96fdef3a977)]:
+  - @thirdweb-dev/sdk@3.10.21
+  - @thirdweb-dev/chains@0.1.20
+
+## 0.10.21
+
+### Patch Changes
+
+- Updated dependencies [[`ce36322b`](https://github.com/thirdweb-dev/js/commit/ce36322b383af73905894b73f9409a146359ffb0), [`c60658ed`](https://github.com/thirdweb-dev/js/commit/c60658ed8c94867cca831b0d5535006da5b40aa6), [`aa9e952c`](https://github.com/thirdweb-dev/js/commit/aa9e952cb519a47ed112d2905b1f3787863035b6), [`564eaccf`](https://github.com/thirdweb-dev/js/commit/564eaccf480a81f36db43c782392595a5021e5ac), [`6aee0413`](https://github.com/thirdweb-dev/js/commit/6aee0413439b9ca408879bbb3c38c538c89d01af), [`e93aa70e`](https://github.com/thirdweb-dev/js/commit/e93aa70ef0093a2526404e11b7ddae8fb98c213b), [`51bbd3d1`](https://github.com/thirdweb-dev/js/commit/51bbd3d1bccbb92a1405ea50f6c178c091a90f20)]:
+  - @thirdweb-dev/sdk@3.10.20
+
+## 0.10.20
+
+### Patch Changes
+
+- Updated dependencies [[`23d90b3e`](https://github.com/thirdweb-dev/js/commit/23d90b3e779a5bfdb7058b8c51349d9c278fcbce), [`cc56037e`](https://github.com/thirdweb-dev/js/commit/cc56037e64560b9e0fc16eb0ac7cc2e47e2c9fdf), [`67450789`](https://github.com/thirdweb-dev/js/commit/67450789473b6008b86453ee4f4c7b99461223a6)]:
+  - @thirdweb-dev/sdk@3.10.19
+  - @thirdweb-dev/storage@1.1.4
+
+## 0.10.19
+
+### Patch Changes
+
+- [#1003](https://github.com/thirdweb-dev/js/pull/1003) [`d24a6146`](https://github.com/thirdweb-dev/js/commit/d24a6146d8a1c623c39687baf6f579e721ef99c6) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Add support for ZKSync
+
+- [#1066](https://github.com/thirdweb-dev/js/pull/1066) [`32cc5442`](https://github.com/thirdweb-dev/js/commit/32cc54423e51b22cb665bf6106c484dfb45206b3) Thanks [@adam-maj](https://github.com/adam-maj)! - Deduplicate addresses when running thirdweb generate
+
+- Updated dependencies [[`2f1df0b5`](https://github.com/thirdweb-dev/js/commit/2f1df0b5354a8ee55089b2c1e61c058788d890f1), [`189daf02`](https://github.com/thirdweb-dev/js/commit/189daf0280a90ed730200088948526a594da3408), [`afae0873`](https://github.com/thirdweb-dev/js/commit/afae0873b0e3f9741f5a9c44c5d255f38c6a9111), [`c6e74ef0`](https://github.com/thirdweb-dev/js/commit/c6e74ef0b00210f52e6778c548061376d3ba7001), [`ee4c7de2`](https://github.com/thirdweb-dev/js/commit/ee4c7de25cb63f99f33b90da8e26293bbfbe6f3e), [`f7b352a5`](https://github.com/thirdweb-dev/js/commit/f7b352a585a23726eaa3be116f65db56b005f4d8), [`4a1d7581`](https://github.com/thirdweb-dev/js/commit/4a1d75811058d6974616bdc12a6040cea5444e40), [`bdabbef7`](https://github.com/thirdweb-dev/js/commit/bdabbef71a2421a2dceb384f93bb6a59a3ddf007), [`59206233`](https://github.com/thirdweb-dev/js/commit/59206233e15ccfe3dc32047060055219d35938f2), [`98efd090`](https://github.com/thirdweb-dev/js/commit/98efd090f63cfd9dfed7b89b20b6e43db88cf75c), [`8eecf4c2`](https://github.com/thirdweb-dev/js/commit/8eecf4c2d5b0d6447ad5b9cdbf0269818bbb3498), [`bd86661f`](https://github.com/thirdweb-dev/js/commit/bd86661f54ca2f1eb09cbae35c704dc79be1b63a), [`d5651006`](https://github.com/thirdweb-dev/js/commit/d565100614d7d4e256554f998b8ce978a566051c), [`da576108`](https://github.com/thirdweb-dev/js/commit/da5761080288c3b325f54fb56c80f96405a1cb5d), [`c85810ee`](https://github.com/thirdweb-dev/js/commit/c85810eee318b10eee4ada61828adaa51f94ea6c), [`6fd10f94`](https://github.com/thirdweb-dev/js/commit/6fd10f94b469dc5659e2ff4ce92a5aff86f3c89d), [`5f1e6abb`](https://github.com/thirdweb-dev/js/commit/5f1e6abb391f5c58dbdb207f569b3dd0b5d4729c), [`a034b032`](https://github.com/thirdweb-dev/js/commit/a034b0321fd0113ed51d95d538b5c3020615c227)]:
+  - @thirdweb-dev/sdk@3.10.18
+  - @thirdweb-dev/chains@0.1.19
+
+## 0.10.18
+
+### Patch Changes
+
+- Updated dependencies [[`30e5593d`](https://github.com/thirdweb-dev/js/commit/30e5593dd1ce9abd809ad216a1cfce77b897093c)]:
+  - @thirdweb-dev/chains@0.1.18
+  - @thirdweb-dev/sdk@3.10.17
+
+## 0.10.17
+
+### Patch Changes
+
+- [#1037](https://github.com/thirdweb-dev/js/pull/1037) [`d5123044`](https://github.com/thirdweb-dev/js/commit/d51230441a097734be092c42b45dea07629e65fa) Thanks [@jnsdls](https://github.com/jnsdls)! - update ipfs gateways - add more fallbacks
+
+- Updated dependencies [[`d5123044`](https://github.com/thirdweb-dev/js/commit/d51230441a097734be092c42b45dea07629e65fa), [`3c8c5d56`](https://github.com/thirdweb-dev/js/commit/3c8c5d56f2a21c0918fede71061c6745f2956f83), [`907d97be`](https://github.com/thirdweb-dev/js/commit/907d97bedef7331148bdfe8b9bf1e19459282e4c)]:
+  - @thirdweb-dev/storage@1.1.3
+  - @thirdweb-dev/chains@0.1.17
+  - @thirdweb-dev/sdk@3.10.16
+
+## 0.10.16
+
+### Patch Changes
+
+- [#926](https://github.com/thirdweb-dev/js/pull/926) [`84fc3b6f`](https://github.com/thirdweb-dev/js/commit/84fc3b6fab112b91563348f1a88820bd49a2f9b3) Thanks [@Marfuen](https://github.com/Marfuen)! - Added detect-project command, reorganized folder structure for detecting, added many more detections.
+
+- [#926](https://github.com/thirdweb-dev/js/pull/926) [`84fc3b6f`](https://github.com/thirdweb-dev/js/commit/84fc3b6fab112b91563348f1a88820bd49a2f9b3) Thanks [@Marfuen](https://github.com/Marfuen)! - Added log to see detected app type to the "detect-project" command
+
+- Updated dependencies [[`e9b69300`](https://github.com/thirdweb-dev/js/commit/e9b69300d15b233609f1ed897256ec9a1eef3e28), [`49ec2d17`](https://github.com/thirdweb-dev/js/commit/49ec2d171ecb1c9240398b7b486a452eb9429979), [`799d98e8`](https://github.com/thirdweb-dev/js/commit/799d98e86258677ab72931fa8397aee653fe8b34), [`c3645c45`](https://github.com/thirdweb-dev/js/commit/c3645c451b5e9a0fcf651fa07eb0e31ebf1882ca), [`470e0a14`](https://github.com/thirdweb-dev/js/commit/470e0a144db6aa03e7789e231bbdfae43144f0e0), [`482f6d1b`](https://github.com/thirdweb-dev/js/commit/482f6d1b58ac99b331fc750d3eeb6082556fd526), [`e4356e76`](https://github.com/thirdweb-dev/js/commit/e4356e76d1506624afe2eb6feeaf57dc376f372f), [`9886c858`](https://github.com/thirdweb-dev/js/commit/9886c858d9c8d0f677aba6572dbf5cc6c876edf2), [`8db78299`](https://github.com/thirdweb-dev/js/commit/8db78299ea6cfb51d93b91bb1a351644a83c73d2)]:
+  - @thirdweb-dev/sdk@3.10.15
+  - @thirdweb-dev/chains@0.1.16
+
 ## 0.10.15
 
 ### Patch Changes

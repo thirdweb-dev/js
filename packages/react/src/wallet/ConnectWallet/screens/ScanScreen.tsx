@@ -8,7 +8,7 @@ import {
   ModalTitle,
 } from "../../../components/modalElements";
 import { fontSize, iconSize, spacing } from "../../../design-system";
-import { Theme } from "../../../design-system/index";
+import type { Theme } from "../../../design-system/index";
 import styled from "@emotion/styled";
 
 export const ScanScreen: React.FC<{
@@ -17,21 +17,24 @@ export const ScanScreen: React.FC<{
   qrCodeUri?: string;
   walletName: string;
   walletIconURL: string;
+  hideBackButton?: boolean;
 }> = (props) => {
   const walletName = props.walletName.toLowerCase().includes("wallet")
     ? props.walletName
     : `${props.walletName} wallet`;
   return (
     <>
-      <BackButton
-        onClick={props.onBack}
-        style={{
-          position: "absolute",
-          zIndex: 10,
-          left: spacing.lg,
-          top: spacing.lg,
-        }}
-      />
+      {!props.hideBackButton && (
+        <BackButton
+          onClick={props.onBack}
+          style={{
+            position: "absolute",
+            zIndex: 10,
+            left: spacing.lg,
+            top: spacing.lg,
+          }}
+        />
+      )}
       <div
         style={{
           textAlign: "center",

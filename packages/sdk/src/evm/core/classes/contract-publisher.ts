@@ -1,23 +1,21 @@
 import { DEFAULT_API_KEY } from "../../../core/constants/urls";
-import {
-  extractConstructorParams,
-  extractFunctions,
-  fetchContractMetadata,
-  fetchContractMetadataFromAddress,
-  fetchExtendedReleaseMetadata,
-  fetchPreDeployMetadata,
-  fetchRawPredeployMetadata,
-  fetchSourceFilesFromMetadata,
-  isIncrementalVersion,
-  resolveContractUriFromAddress,
-} from "../../common";
-import { resolveAddress } from "../../common/ens";
-import { getCompositePluginABI } from "../../common/plugin";
+import { resolveAddress } from "../../common/ens/resolveAddress";
+import { fetchPreDeployMetadata } from "../../common/feature-detection/fetchPreDeployMetadata";
+import { extractFunctions } from "../../common/feature-detection/extractFunctions";
+import { extractConstructorParams } from "../../common/feature-detection/extractConstructorParams";
+import { fetchExtendedReleaseMetadata } from "../../common/feature-detection/fetchExtendedReleaseMetadata";
+import { fetchRawPredeployMetadata } from "../../common/feature-detection/fetchRawPredeployMetadata";
+import { resolveContractUriFromAddress } from "../../common/feature-detection/resolveContractUriFromAddress";
+import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
+import { fetchContractMetadata } from "../../common/fetchContractMetadata";
+import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
+import { getCompositePluginABI } from "../../common/plugin/getCompositePluginABI";
 import { buildTransactionFunction } from "../../common/transactions";
-import { getChainProvider, getContractPublisherAddress } from "../../constants";
+import { isIncrementalVersion } from "../../common/version-checker";
+import { getContractPublisherAddress } from "../../constants/addresses/getContractPublisherAddress";
+import { getChainProvider } from "../../constants/urls";
 import {
   AbiFunction,
-  AddressOrEns,
   AbiSchema,
   ContractParam,
   ContractSource,
@@ -31,8 +29,9 @@ import {
   PublishedContract,
   PublishedContractFetched,
   PublishedContractSchema,
-  SDKOptions,
-} from "../../schema";
+} from "../../schema/contracts/custom";
+import { SDKOptions } from "../../schema/sdk-options";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { NetworkInput, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
@@ -230,7 +229,7 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @internal
    * @param profileMetadata
    */
-  updatePublisherProfile = buildTransactionFunction(
+  updatePublisherProfile = /* @__PURE__ */ buildTransactionFunction(
     async (profileMetadata: ProfileMetadataInput) => {
       const signer = this.getSigner();
       invariant(signer, "A signer is required");
@@ -352,7 +351,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     return undefined;
   }
 
-  publish = buildTransactionFunction(
+  publish = /* @__PURE__ */ buildTransactionFunction(
     async (
       predeployUri: string,
       extraMetadata: ExtraPublishMetadata,
@@ -467,7 +466,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     },
   );
 
-  unpublish = buildTransactionFunction(
+  unpublish = /* @__PURE__ */ buildTransactionFunction(
     async (
       publisher: AddressOrEns,
       contractId: string,

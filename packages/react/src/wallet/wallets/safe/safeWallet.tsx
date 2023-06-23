@@ -1,6 +1,6 @@
 import { SafeWallet } from "@thirdweb-dev/wallets";
 import {
-  ConfiguredWallet,
+  WalletConfig,
   ConnectUIProps,
   WalletOptions,
   useDisconnect,
@@ -9,79 +9,70 @@ import {
 import { defaultWallets } from "../defaultWallets";
 import { useState } from "react";
 import { SelectpersonalWallet } from "./SelectPersonalWallet";
-import { SafeWalletConfig, SafeWalletObj } from "./types";
+import type { SafeWalletConfigOptions, SafeWalletConfig } from "./types";
 import { SelectAccount } from "./SelectAccount";
 import { HeadlessConnectUI } from "../headlessConnectUI";
 
-export const safeWallet = (config?: SafeWalletConfig) => {
-  const configuredWallet = {
+export const safeWallet = (
+  config?: SafeWalletConfigOptions,
+): SafeWalletConfig => {
+  const personalWallets = config?.personalWallets || defaultWallets;
+  return {
     id: SafeWallet.id,
-    meta: {
-      name: "Safe",
-      iconURL:
-        "ipfs://QmbbyxDDmmLQh8DzzeUR6X6B75bESsNUFmbdvS3ZsQ2pN1/SafeToken.svg",
-    },
+    meta: SafeWallet.meta,
     create: (options: WalletOptions) => new SafeWallet({ ...options }),
-    config: {
-      personalWallets: config?.personalWallets || defaultWallets,
-    },
     connectUI(props) {
-      return <SafeConnectUI {...props} configuredWallet={configuredWallet} />;
+      return <SafeConnectUI {...props} personalWallets={personalWallets} />;
     },
     isInstalled() {
       return false;
     },
-  } satisfies SafeWalletObj;
-
-  return configuredWallet;
+    personalWallets: personalWallets,
+  };
 };
 
-type SafeConnectUIProps = ConnectUIProps & {
-  configuredWallet: ConfiguredWallet<SafeWallet, Required<SafeWalletConfig>>;
-};
-
-export const SafeConnectUI = (props: SafeConnectUIProps) => {
+export const SafeConnectUI = (
+  props: ConnectUIProps<SafeWallet> & { personalWallets: WalletConfig[] },
+) => {
   const activeWallet = useWallet();
-  const [personalConfiguredWallet, setPersonalConfiguredWallet] = useState<
-    ConfiguredWallet | undefined
+  const [personalWalletConfig, setPersonalWalletConfig] = useState<
+    WalletConfig | undefined
   >();
   const disconnect = useDisconnect();
 
-  if (personalConfiguredWallet) {
+  if (personalWalletConfig) {
     const _props = {
       close: () => {
-        setPersonalConfiguredWallet(undefined);
+        setPersonalWalletConfig(undefined);
         props.close(false); // do not reset
       },
       goBack: () => {
-        setPersonalConfiguredWallet(undefined);
+        setPersonalWalletConfig(undefined);
       },
       isOpen: props.isOpen,
       open: props.open,
       theme: props.theme,
+      walletConfig: personalWalletConfig,
+      supportedWallets: props.personalWallets,
+      selectionData: props.selectionData,
+      setSelectionData: props.setSelectionData,
     };
 
-    if (personalConfiguredWallet.connectUI) {
-      return <personalConfiguredWallet.connectUI {..._props} />;
+    if (personalWalletConfig.connectUI) {
+      return <personalWalletConfig.connectUI {..._props} />;
     }
 
-    return (
-      <HeadlessConnectUI
-        {..._props}
-        configuredWallet={personalConfiguredWallet}
-      />
-    );
+    return <HeadlessConnectUI {..._props} />;
   }
 
   if (!activeWallet) {
     return (
       <SelectpersonalWallet
-        personalWallets={props.configuredWallet.config.personalWallets}
+        personalWallets={props.personalWallets}
         onBack={props.goBack}
-        safeWallet={props.configuredWallet}
-        selectWallet={(wallet) => {
-          setPersonalConfiguredWallet(wallet);
-        }}
+        safeWallet={props.walletConfig}
+        selectWallet={setPersonalWalletConfig}
+        renderBackButton={props.supportedWallets.length > 1}
       />
     );
   }
@@ -90,7 +81,7 @@ export const SafeConnectUI = (props: SafeConnectUIProps) => {
     <SelectAccount
       onBack={disconnect}
       onConnect={props.close}
-      safeWallet={props.configuredWallet}
+      safeWalletConfig={props.walletConfig}
     />
   );
 };

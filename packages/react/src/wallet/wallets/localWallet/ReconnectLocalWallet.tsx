@@ -6,7 +6,7 @@ import {
   ModalTitle,
 } from "../../../components/modalElements";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
-import { useWalletContext, useWallets } from "@thirdweb-dev/react-core";
+import { WalletConfig, useWalletContext } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { FormFooter, Label } from "../../../components/formElements";
 import { spacing } from "../../../design-system";
@@ -18,12 +18,15 @@ import { CreateLocalWallet_Password } from "./CreateLocalWallet";
 import { OverrideConfirmation } from "./overrideConfirmation";
 import { ExportLocalWallet } from "./ExportLocalWallet";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
-import { LocalConfiguredWallet } from "./types";
+import type { LocalWalletConfig } from "./types";
 
 type ReconnectLocalWalletProps = {
   onConnect: () => void;
   goBack: () => void;
-  localWallet: LocalConfiguredWallet;
+  localWallet: LocalWalletConfig;
+  supportedWallets: WalletConfig[];
+  renderBackButton: boolean;
+  persist: boolean;
 };
 
 /**
@@ -35,15 +38,15 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isWrongPassword, setIsWrongPassword] = useState(false);
-  const { setConnectedWallet } = useWalletContext();
+  const { setConnectedWallet, setConnectionStatus } = useWalletContext();
   const [isConnecting, setIsConnecting] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
   const [showBackupConfirmation, setShowBackupConfirmation] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const { localWallet, meta, walletData } = useLocalWalletInfo(
     props.localWallet,
+    props.persist,
   );
-  const singleWallet = useWallets().length === 1;
 
   const savedAddress = walletData
     ? walletData === "loading"
@@ -58,7 +61,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
 
     return (
       <ExportLocalWallet
-        localWallet={localWallet}
+        localWalletConfig={props.localWallet}
         onBack={() => {
           setShowExport(false);
         }}
@@ -78,10 +81,6 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
         onBackup={() => {
           setShowExport(true);
         }}
-        onSkip={() => {
-          setShowBackupConfirmation(false);
-          setShowCreate(true);
-        }}
         onBack={() => {
           setShowBackupConfirmation(false);
         }}
@@ -92,11 +91,13 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
   if (showCreate) {
     return (
       <CreateLocalWallet_Password
-        localWallet={props.localWallet}
+        renderBackButton={props.supportedWallets.length > 1}
+        localWalletConf={props.localWallet}
         goBack={() => {
           setShowCreate(false);
         }}
         onConnect={props.onConnect}
+        persist={props.persist}
       />
     );
   }
@@ -112,6 +113,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
         password,
       });
 
+      setConnectionStatus("connecting");
       await localWallet.connect();
       setConnectedWallet(localWallet);
 
@@ -127,7 +129,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
       <LocalWalletModalHeader
         onBack={props.goBack}
         meta={meta}
-        hideBack={singleWallet}
+        hideBack={!props.renderBackButton}
       />
       <ModalTitle
         style={{
@@ -187,6 +189,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
           type={showPassword ? "text" : "password"}
           value={password}
           error={isWrongPassword ? "Wrong Password" : ""}
+          dataTest="current-password"
         />
 
         <Spacer y="lg" />

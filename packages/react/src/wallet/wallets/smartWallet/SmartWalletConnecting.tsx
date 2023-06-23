@@ -13,16 +13,17 @@ import { useIsHeadlessWallet } from "../../hooks/useIsHeadlessWallet";
 import styled from "@emotion/styled";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import {
-  useActiveChain,
+  useChain,
   useConnect,
   useConnectionStatus,
   useNetworkMismatch,
   useWalletContext,
   useWallet,
+  useSwitchChain,
 } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Flex } from "../../../components/basic";
-import { SmartConfiguredWallet } from "./types";
+import { SmartWalletConfig } from "./types";
 
 export const gnosisAddressPrefixToChainId = {
   eth: 1,
@@ -36,12 +37,12 @@ export const gnosisAddressPrefixToChainId = {
 export const SmartWalletConnecting: React.FC<{
   onBack: () => void;
   onConnect: () => void;
-  smartWallet: SmartConfiguredWallet;
+  smartWallet: SmartWalletConfig;
 }> = (props) => {
   const activeWallet = useWallet(); // personal wallet
 
   const connect = useConnect();
-  const connectedChain = useActiveChain();
+  const connectedChain = useChain();
   const targetChain = useWalletContext().activeChain;
 
   const mismatch = useNetworkMismatch();
@@ -55,6 +56,8 @@ export const SmartWalletConnecting: React.FC<{
 
   const { onConnect } = props;
   const connectStarted = useRef(false);
+
+  const switchChain = useSwitchChain();
 
   const handleConnect = useCallback(async () => {
     if (!activeWallet || !connectedChain || connectStarted.current) {
@@ -148,7 +151,7 @@ export const SmartWalletConnecting: React.FC<{
           setSwitchError(false);
           setSwitchingNetwork(true);
           try {
-            await activeWallet.switchChain(targetChain.chainId);
+            await switchChain(targetChain.chainId);
           } catch (e) {
             setSwitchError(true);
           } finally {

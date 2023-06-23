@@ -52,11 +52,13 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       entryPointAddress,
       bundlerUrl,
       paymasterAPI: this.config.gasless
-        ? getVerifyingPaymaster(
-            paymasterUrl,
-            entryPointAddress,
-            this.config.thirdwebApiKey,
-          )
+        ? this.config.paymasterAPI
+          ? this.config.paymasterAPI
+          : getVerifyingPaymaster(
+              paymasterUrl,
+              entryPointAddress,
+              this.config.thirdwebApiKey,
+            )
         : undefined,
       factoryAddress: config.factoryAddress,
       factoryInfo: config.factoryInfo || this.defaultFactoryInfo(),
@@ -85,14 +87,14 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   getProvider(): Promise<providers.Provider> {
     if (!this.aaProvider) {
-      throw new Error("Local Signer not connected");
+      throw new Error("Personal wallet not connected");
     }
     return Promise.resolve(this.aaProvider);
   }
 
   async getSigner(): Promise<ERC4337EthersSigner> {
     if (!this.aaProvider) {
-      throw new Error("Local Signer not connected");
+      throw new Error("Personal wallet not connected");
     }
     return Promise.resolve(this.aaProvider.getSigner());
   }
@@ -116,17 +118,29 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     this.aaProvider = undefined;
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  switchChain(chainId: number): Promise<void> {
-    throw new Error("Not supported.");
-  }
-  setupListeners(): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  updateChains(chains: Chain[]): void {
-    // throw new Error("Method not implemented.");
+
+  async switchChain(chainId: number): Promise<void> {
+    // TODO implement chain switching
+    const provider = await this.getProvider();
+    const currentChainId = (await provider.getNetwork()).chainId;
+    if (currentChainId !== chainId) {
+      // only throw if actually trying to switch chains
+      throw new Error("Not supported.");
+    }
   }
 
+  setupListeners(): Promise<void> {
+    return Promise.resolve();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  updateChains(chains: Chain[]): void {}
+
+  /**
+   * Execute a single transaction
+   * @param transactions
+   * @returns the transaction receipt
+   */
   async execute(transaction: Transaction): Promise<TransactionResult> {
     const signer = await this.getSigner();
     const tx = await signer.sendTransaction({
@@ -140,10 +154,14 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  /**
+   * Execute multiple transactions in a single batch
+   * @param transactions
+   * @returns the transaction receipt
+   */
   async executeBatch(transactions: Transaction[]): Promise<TransactionResult> {
     if (!this.accountApi) {
-      throw new Error("Account not connected");
+      throw new Error("Personal wallet not connected");
     }
     const signer = await this.getSigner();
     const targets = transactions.map((tx) => tx.getTarget());
@@ -168,6 +186,38 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     };
   }
 
+  /**
+   * Manually deploy the smart wallet contract. If already deployed this will throw an error.
+   * Note that this is not necessary as the smart wallet will be deployed automatically on the first transaction the user makes.
+   * @returns the transaction receipt
+   */
+  async deploy(): Promise<TransactionResult> {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    if (await this.accountApi.isAcountDeployed()) {
+      throw new Error("Smart wallet already deployed");
+    }
+    const signer = await this.getSigner();
+    const tx = await signer.sendTransaction({
+      to: await signer.getAddress(),
+      data: "0x",
+    });
+    const receipt = await tx.wait();
+    return { receipt };
+  }
+
+  /**
+   * Check if the smart wallet contract is deployed
+   * @returns true if the smart wallet contract is deployed
+   */
+  async isDeployed(): Promise<boolean> {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    return await this.accountApi.isAcountDeployed();
+  }
+
   private defaultFactoryInfo(): FactoryContractInfo {
     return {
       createAccount: async (factory: SmartContract, owner: string) => {
@@ -177,7 +227,16 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         ]);
       },
       getAccountAddress: async (factory, owner) => {
-        return factory.call("getAddress", [owner]);
+        try {
+          return await factory.call("getAddress", [
+            owner,
+            ethers.utils.toUtf8Bytes(""),
+          ]);
+        } catch (e) {
+          console.log("Falling back to old factory");
+          // TODO remove after a few versions
+          return factory.call("getAddress", [owner]);
+        }
       },
     };
   }

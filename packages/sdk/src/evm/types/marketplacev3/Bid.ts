@@ -1,4 +1,4 @@
-import { Address } from "../../schema";
+import { Address } from "../../schema/shared/Address";
 import { CurrencyValue } from "../currency";
 
 export interface Bid {

@@ -1,45 +1,53 @@
 import { Modal } from "../../components/Modal";
 import { WalletSelector } from "./WalletSelector";
 import {
-  ConfiguredWallet,
+  WalletConfig,
   useConnectionStatus,
+  useDisconnect,
   useWallet,
   useWallets,
 } from "@thirdweb-dev/react-core";
 import {
+  ModalConfigCtx,
+  SetModalConfigCtx,
   useIsWalletModalOpen,
-  useModalTheme,
   useSetIsWalletModalOpen,
 } from "../../evm/providers/wallet-ui-states-provider";
 import { ThemeProvider } from "@emotion/react";
 import { darkTheme, lightTheme } from "../../design-system";
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, useContext } from "react";
 import { GetStartedWithWallets } from "./screens/GetStartedWithWallets";
 import { reservedScreens } from "./constants";
 import { HeadlessConnectUI } from "../wallets/headlessConnectUI";
 
 export const ConnectModal = () => {
-  const modalTheme = useModalTheme();
-  const configuredWallets = useWallets();
+  const { theme, title } = useContext(ModalConfigCtx);
+  const walletConfigs = useWallets();
   const initialScreen =
-    configuredWallets.length > 1 ? reservedScreens.main : configuredWallets[0];
+    walletConfigs.length === 1 && !walletConfigs[0].selectUI
+      ? walletConfigs[0]
+      : reservedScreens.main;
 
-  const [screen, setScreen] = useState<string | ConfiguredWallet>(
-    initialScreen,
-  );
+  const [screen, setScreen] = useState<string | WalletConfig>(initialScreen);
   const isWalletModalOpen = useIsWalletModalOpen();
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
   const connectionStatus = useConnectionStatus();
   const wallet = useWallet();
+  const walletModalConfig = useContext(ModalConfigCtx);
+  const setWalletModalConfig = useContext(SetModalConfigCtx);
+  const disconnect = useDisconnect();
 
   const handleClose = useCallback(
     (reset = true) => {
       if (reset) {
         setScreen(initialScreen);
       }
+      if (connectionStatus === "connecting") {
+        disconnect();
+      }
       setIsWalletModalOpen(false);
     },
-    [setIsWalletModalOpen, initialScreen],
+    [setIsWalletModalOpen, initialScreen, connectionStatus, disconnect],
   );
 
   const handleBack = useCallback(() => {
@@ -49,9 +57,7 @@ export const ConnectModal = () => {
   const isWrapperConnected = !!wallet?.getPersonalWallet();
 
   const isWrapperScreen =
-    typeof screen !== "string" &&
-    "config" in screen &&
-    !!(screen.config as any).personalWallets;
+    typeof screen !== "string" && !!screen.personalWallets;
 
   const prevConnectionStatus = useRef(connectionStatus);
 
@@ -76,12 +82,15 @@ export const ConnectModal = () => {
     isWrapperConnected,
   ]);
 
+  const WalletConnectUI =
+    typeof screen !== "string" && (screen.connectUI || HeadlessConnectUI);
+
   return (
     <ThemeProvider
       theme={
-        typeof modalTheme === "object"
-          ? modalTheme
-          : modalTheme === "light"
+        typeof theme === "object"
+          ? theme
+          : theme === "light"
           ? lightTheme
           : darkTheme
       }
@@ -96,11 +105,15 @@ export const ConnectModal = () => {
           if (!value) {
             setScreen(initialScreen); // reset screen
           }
+          if (connectionStatus === "connecting") {
+            disconnect();
+          }
         }}
       >
         {screen === reservedScreens.main && (
           <WalletSelector
-            configuredWallets={configuredWallets}
+            title={title}
+            walletConfigs={walletConfigs}
             onGetStarted={() => {
               setScreen(reservedScreens.getStarted);
             }}
@@ -112,28 +125,24 @@ export const ConnectModal = () => {
           <GetStartedWithWallets onBack={handleBack} />
         )}
 
-        {typeof screen !== "string" && screen.connectUI && (
-          <screen.connectUI
-            theme={modalTheme}
+        {WalletConnectUI && (
+          <WalletConnectUI
+            supportedWallets={walletConfigs}
+            theme={theme}
             goBack={handleBack}
             close={handleClose}
             isOpen={isWalletModalOpen}
             open={() => {
               setIsWalletModalOpen(true);
             }}
-          />
-        )}
-
-        {typeof screen !== "string" && !screen.connectUI && (
-          <HeadlessConnectUI
-            theme={modalTheme}
-            goBack={handleBack}
-            close={handleClose}
-            isOpen={isWalletModalOpen}
-            open={() => {
-              setIsWalletModalOpen(true);
+            walletConfig={screen}
+            selectionData={walletModalConfig.data}
+            setSelectionData={(data) => {
+              setWalletModalConfig((config) => ({
+                ...config,
+                data,
+              }));
             }}
-            configuredWallet={screen}
           />
         )}
       </Modal>

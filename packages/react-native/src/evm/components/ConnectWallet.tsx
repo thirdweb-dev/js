@@ -1,17 +1,25 @@
-import { ThemeProvider, ThemeProviderProps } from "../styles/ThemeProvider";
-import { ConnectWalletDetails } from "./ConnectWalletDetails/ConnectWalletDetails";
-import { ConnectWalletFlow } from "./ConnectWalletFlow/ConnectWalletFlow";
+import { ThemeProvider } from "../styles/ThemeProvider";
+import { WalletDetailsButton } from "./ConnectWalletDetails/WalletDetailsButton";
 import { useAddress } from "@thirdweb-dev/react-core";
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Animated } from "react-native";
+import { ConnectWalletButton } from "./ConnectWalletFlow/ConnectWalletButton";
+import { ConnectWalletButtonProps } from "./ConnectWalletFlow/ConnectWalletButton";
 
 export type ConnectWalletProps = {
-  theme?: ThemeProviderProps["theme"];
-};
+  /**
+   * render a custom button to display the connected wallet details instead of the default button
+   */
+  detailsButton?: React.ReactElement;
+} & ConnectWalletButtonProps;
 
-export const ConnectWallet = ({ theme }: ConnectWalletProps) => {
+export const ConnectWallet = ({
+  detailsButton,
+  theme,
+  buttonTitle,
+  modalTitle,
+}: ConnectWalletProps) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
-
   const address = useAddress();
 
   useEffect(() => {
@@ -26,9 +34,16 @@ export const ConnectWallet = ({ theme }: ConnectWalletProps) => {
     <ThemeProvider theme={theme}>
       <Animated.View style={{ opacity: fadeAnim }}>
         {address ? (
-          <ConnectWalletDetails address={address} />
+          <WalletDetailsButton
+            address={address}
+            detailsButton={detailsButton}
+          />
         ) : (
-          <ConnectWalletFlow />
+          <ConnectWalletButton
+            modalTitle={modalTitle}
+            buttonTitle={buttonTitle}
+            theme={theme}
+          />
         )}
       </Animated.View>
     </ThemeProvider>

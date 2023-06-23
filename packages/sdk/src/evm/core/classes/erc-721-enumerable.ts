@@ -1,13 +1,13 @@
-import { NFT } from "../../../core/schema/nft";
-import { resolveAddress } from "../../common/ens";
-import { FEATURE_NFT_ENUMERABLE } from "../../constants/erc721-features";
-import { AddressOrEns } from "../../schema";
-import { BaseERC721 } from "../../types/eips";
+import type { NFT } from "../../../core/schema/nft";
+import { resolveAddress } from "../../common/ens/resolveAddress";
+import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import type { BaseERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { ContractWrapper } from "./contract-wrapper";
-import { Erc721 } from "./erc-721";
+import type { ContractWrapper } from "./contract-wrapper";
 import type { IERC721Enumerable } from "@thirdweb-dev/contracts-js";
 import { BigNumber } from "ethers";
+import { FEATURE_NFT_ENUMERABLE } from "../../constants/erc721-features";
+import type { Erc721 } from "./erc-721";
 
 /**
  * List owned ERC721 NFTs
@@ -20,6 +20,7 @@ import { BigNumber } from "ethers";
  * ```
  * @public
  */
+
 export class Erc721Enumerable implements DetectableFeature {
   featureName = FEATURE_NFT_ENUMERABLE.name;
   private contractWrapper: ContractWrapper<BaseERC721 & IERC721Enumerable>;

@@ -10,18 +10,17 @@ import {
   useCreateWalletInstance,
   useWalletContext,
 } from "@thirdweb-dev/react-core";
-import type { LocalConfiguredWallet } from "../../wallets/types/local-wallet";
 import { LocalWalletImportModal } from "./LocalWalletImportModal";
+import { LocalWallet } from "../../wallets/wallets/LocalWallet";
 
-type LocalWalletFlowUIProps = ConnectUIProps & {
-  localWallet: LocalConfiguredWallet;
+type LocalWalletFlowUIProps = ConnectUIProps<LocalWallet> & {
   onConnected?: (wallet: WalletInstance) => void;
 };
 
 export function LocalWalletFlow({
   goBack,
   close,
-  localWallet,
+  walletConfig,
   onConnected,
 }: LocalWalletFlowUIProps) {
   const [isImportModalVisible, setIsImportModalVisible] = useState(false);
@@ -40,7 +39,7 @@ export function LocalWalletFlow({
   const onConnectPressInternal = async () => {
     setIsCreatingWallet(true);
 
-    const localWalletInstance = await createInstance(localWallet);
+    const localWalletInstance = await createInstance(walletConfig);
     connect(localWalletInstance);
   };
 
@@ -69,6 +68,7 @@ export function LocalWalletFlow({
           minWidth={130}
           onPress={onConnectPressInternal}
           style={styles.connectWalletButton}
+          data-test="create-new-wallet-button"
         >
           {isCreatingWallet ? (
             <ActivityIndicator size="small" color="buttonTextColor" />
@@ -86,7 +86,6 @@ export function LocalWalletFlow({
 
       <LocalWalletImportModal
         isVisible={isImportModalVisible}
-        localWallet={localWallet}
         onWalletImported={connect}
         onClose={onImportModalClose}
       />

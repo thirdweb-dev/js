@@ -1,7 +1,5 @@
-import {
-  extractMinimalProxyImplementationAddress,
-  ThirdwebSDK,
-} from "../../src/evm";
+import { ThirdwebSDK } from "../../src/evm";
+import { extractMinimalProxyImplementationAddress } from "../../src/evm/common/feature-detection/extractMinimalProxyImplementationAddress";
 import { signers, sdk } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";

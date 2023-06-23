@@ -11,7 +11,7 @@ import {
   walletIds,
 } from "@thirdweb-dev/wallets";
 import {
-  ConfiguredWallet,
+  WalletConfig,
   WalletOptions as WalletOptionsRC,
 } from "@thirdweb-dev/react-core";
 
@@ -22,7 +22,6 @@ type CoinbaseWalletOptions = Omit<
 
 export class CoinbaseWallet extends AbstractClientWallet<CoinbaseWalletConnectorOptions> {
   static meta = {
-    id: "coinbase",
     name: "Coinbase Wallet",
     iconURL:
       "ipfs://QmcJBHopbwfJcLqJpX2xEufSS84aLbF7bHavYhaXUcrLaH/coinbase.svg",
@@ -82,6 +81,5 @@ export const coinbaseWallet = (config?: { callbackURL?: URL }) => {
     meta: CoinbaseWallet.meta,
     create: (options: WalletOptionsRC) =>
       new CoinbaseWallet({ ...options, callbackURL: callbackURLNonNull }),
-    config: config || {},
-  } satisfies ConfiguredWallet<CoinbaseWallet, { callbackURL?: URL }>;
+  } satisfies WalletConfig<CoinbaseWallet>;
 };
