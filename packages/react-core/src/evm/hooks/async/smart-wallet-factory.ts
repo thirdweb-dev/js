@@ -15,7 +15,7 @@ import {
   UseQueryResult,
 } from "@tanstack/react-query";
 import type {
-  AccountEvent, AddressOrEns, SmartContract,
+  AccountEvent, SmartContract,
 } from "@thirdweb-dev/sdk";
 import type { BytesLike } from "ethers";
 import invariant from "tiny-invariant";
@@ -74,7 +74,7 @@ export function useSmartWallets(
  */
 export function useSmartWalletsForAddress(
   contract: RequiredParam<SmartContract>,
-  address: AddressOrEns,
+  address: RequiredParam<WalletAddress>,
 ): UseQueryResult<string[]> {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
