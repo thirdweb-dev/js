@@ -1,5 +1,27 @@
 # @thirdweb-dev/wallets
 
+## 0.3.2
+
+### Patch Changes
+
+- [#1220](https://github.com/thirdweb-dev/js/pull/1220) [`3cb298ac`](https://github.com/thirdweb-dev/js/commit/3cb298ac4b04d295899b5ac77c7fc5869ec2f5f2) Thanks [@iketw](https://github.com/iketw)! - [RN/Wallets] Fix Coinbase wallet connection rejection error
+
+  Unhandled Rejections: We were rethrowing an error in an async function (connect) without any catch block to handle it. We were getting an Unhandled Promise Rejection, which lead to a crash in React Native when rejecting a connection from the Coinbase Wallet.
+
+- [#1213](https://github.com/thirdweb-dev/js/pull/1213) [`3ce5f9a0`](https://github.com/thirdweb-dev/js/commit/3ce5f9a0c3fc7e99b5abf691a87048ab8475f6b1) Thanks [@iketw](https://github.com/iketw)! - [ReactCore/Wallets] Improve error messages for wc and auth
+
+- [#1226](https://github.com/thirdweb-dev/js/pull/1226) [`a388d07a`](https://github.com/thirdweb-dev/js/commit/a388d07a3d449e56dc53fed9600931022f4a15e1) Thanks [@MananTank](https://github.com/MananTank)! - Add Magic Connect support
+
+- [#1214](https://github.com/thirdweb-dev/js/pull/1214) [`1ce8558d`](https://github.com/thirdweb-dev/js/commit/1ce8558df47186bcba5ee8564fdb04583bf115dd) Thanks [@iketw](https://github.com/iketw)! - [Wallets] Fix switchChain in WCV2 connector
+
+  WCV2 `blockExplorerUrls` field receives an array of urls but we were passing an array of blockExplorer objects, so adding a new chain was failing, hence switching chains was failing
+
+- [#1212](https://github.com/thirdweb-dev/js/pull/1212) [`60fb1889`](https://github.com/thirdweb-dev/js/commit/60fb18894372f14d9cd815fa9a239926d31bb273) Thanks [@MananTank](https://github.com/MananTank)! - Fix safeWallet tree-shaking
+
+- Updated dependencies [[`6816219a`](https://github.com/thirdweb-dev/js/commit/6816219ac13ae571a0c90db6ab389c319bc1f052), [`48065bcd`](https://github.com/thirdweb-dev/js/commit/48065bcd91c13e1f44d54343b5c6c2646b9e86e4), [`6aa6f7e0`](https://github.com/thirdweb-dev/js/commit/6aa6f7e0bd2313e2e1ad96dd41aad91e6694d380), [`f7f4f207`](https://github.com/thirdweb-dev/js/commit/f7f4f20737ac5d78424ca9c91220f00b85adde6b), [`d4d95507`](https://github.com/thirdweb-dev/js/commit/d4d95507130b2b5408bfaa73ef3b708ca00c773e), [`483e2b91`](https://github.com/thirdweb-dev/js/commit/483e2b910934d75276a68bae64d04c47cd7d57e3), [`c08e6ba9`](https://github.com/thirdweb-dev/js/commit/c08e6ba988ad97aa27d5868cec8abe3498d07a0a), [`3d615a62`](https://github.com/thirdweb-dev/js/commit/3d615a62d0a6801f6fb0e63f9b95c2f98446add1)]:
+  - @thirdweb-dev/chains@0.1.23
+  - @thirdweb-dev/sdk@3.10.24
+
 ## 0.3.1
 
 ### Patch Changes
