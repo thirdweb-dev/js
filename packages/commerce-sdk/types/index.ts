@@ -8,7 +8,6 @@ export type LoyaltyRewardsParams = {
   gaslessRelayerUrl?: string;
   chain: string;
   rewardAmount: number;
-  privateKey: string;
   shopifyAdminUrl: string;
   shopifyAccessToken: string;
 };
@@ -18,7 +17,6 @@ export type RewardTokensParams = {
   tokenContractAddress: string;
   rewardAmount: number;
   chain: string;
-  privateKey: string;
   sdkOptions?: SDKOptions;
 }
 

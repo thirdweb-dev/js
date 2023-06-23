@@ -10,13 +10,14 @@
   "author": "thirdweb eng <eng@thirdweb.com>",
   "dependencies": {
     "@preconstruct/cli": "^2.2.1",
-    "@thirdweb-dev/chains": "0.1.21",
-    "@thirdweb-dev/sdk": "3.10.22",
+    "@thirdweb-dev/chains": "workspace:*",
+    "@thirdweb-dev/sdk": "workspace:*",
+    "@thirdweb-dev/wallets": "workspace:*",
     "crypto": "^1.0.1",
     "next": "^13.2.4"
   },
   "devDependencies": {
-    "@thirdweb-dev/tsconfig": "workspace:0.1.7",
+    "@thirdweb-dev/tsconfig": "workspace:*",
     "ethers": "^5.7.2"
   },
   "scripts": {

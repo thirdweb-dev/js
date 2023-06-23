@@ -358,11 +358,14 @@ importers:
         specifier: ^2.2.1
         version: 2.3.0
       '@thirdweb-dev/chains':
-        specifier: 0.1.21
+        specifier: workspace:*
         version: link:../chains
       '@thirdweb-dev/sdk':
-        specifier: 3.10.22
+        specifier: workspace:*
         version: link:../sdk
+      '@thirdweb-dev/wallets':
+        specifier: workspace:*
+        version: link:../wallets
       crypto:
         specifier: ^1.0.1
         version: 1.0.1
@@ -371,7 +374,7 @@ importers:
         version: 13.2.4(@babel/core@7.21.3)(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@thirdweb-dev/tsconfig':
-        specifier: workspace:0.1.7
+        specifier: workspace:*
         version: link:../tw-tsconfig
       ethers:
         specifier: ^5.7.2

@@ -1,4 +1,5 @@
 import { SDKOptions, ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { LocalWallet } from "@thirdweb-dev/wallets";
 import crypto from "crypto";
 import { NextApiRequest } from "next";
 import { LoyaltyRewardsParams, ResponseBody, RewardTokensParams } from "../../../types";
@@ -18,7 +19,6 @@ import { getRawBody, shopifyFetchAdminAPI } from '../../lib/utils';
     tokenContractAddress: {{"contract_address"}},
     webhookSecret: {{"webhook_secret"}},
     chain: "goerli",
-    privateKey: {{"private_key"}},
     shopifyAdminUrl: {{"shopify_admin_url"}},
     shopifyAccessToken: {{"shopify_access_token"}},
   });
@@ -34,16 +34,13 @@ export async function rewardTokensOnPurchase({
   gaslessRelayerUrl,
   chain,
   rewardAmount,
-  privateKey,
   shopifyAdminUrl,
   shopifyAccessToken,
 }: LoyaltyRewardsParams) {
-  const secretKey = webhookSecret;
-
   const hmac = nextApiRequest.headers["x-shopify-hmac-sha256"];
   const body = await getRawBody(nextApiRequest);
   const hash = crypto
-    .createHmac("sha256", secretKey)
+    .createHmac("sha256", webhookSecret)
     .update(body)
     .digest("base64");
 
@@ -94,7 +91,6 @@ export async function rewardTokensOnPurchase({
           tokenContractAddress,
           rewardAmount,
           chain,
-          privateKey,
           sdkOptions
         })
         console.log(`Rewarding ${rewardAmount} points to wallet address: ${wallet}`, `tx: ${tx}`);
@@ -117,7 +113,6 @@ export async function rewardTokensOnPurchase({
  *   tokenContractAddress: {{"contract_address"}},
  *   amount: 100,
  *   chain: "goerli",
- *   privateKey: {{"private_key"}},
  * });
  * ```
  * @returns Transaction hash
@@ -129,11 +124,12 @@ export async function rewardTokens({
   tokenContractAddress,
   rewardAmount,
   chain,
-  privateKey,
   sdkOptions,
 }: RewardTokensParams) {
-  const sdk = ThirdwebSDK.fromPrivateKey(
-    privateKey,
+  const localWallet = new LocalWallet();
+
+  const sdk = await ThirdwebSDK.fromWallet(
+    localWallet,
     chain,
     sdkOptions,
   );
