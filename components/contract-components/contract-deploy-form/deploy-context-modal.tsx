@@ -159,6 +159,20 @@ export function getStepDeploy(
       : "This may take a few seconds.",
   };
 }
+export function getStepSetNFTMetadata(
+  requiresSignature = true,
+): DeployModalStep {
+  return {
+    title: "Setting NFT metadata",
+    description: (
+      <>
+        {requiresSignature
+          ? "Your wallet will prompt you to sign the transaction. "
+          : "This may take a few seconds."}
+      </>
+    ),
+  };
+}
 export function getStepAddToRegistry(
   requiresSignature = true,
 ): DeployModalStep {

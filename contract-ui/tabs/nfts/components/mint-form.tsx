@@ -96,15 +96,23 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
     watch,
     handleSubmit,
     formState: { errors, isDirty },
-  } = useForm<NFTMetadataInputLimited & { supply: number }>();
+  } = useForm<
+    NFTMetadataInputLimited & {
+      supply: number;
+      customImage: string;
+      customAnimationUrl: string;
+    }
+  >();
 
   const modalContext = useModalContext();
 
   const { onSuccess, onError } = useTxNotifications(
     sharedMetadataMutation
-      ? "Metadata Set successfully"
+      ? "NFT Metadata set successfully"
       : "NFT minted successfully",
-    "Failed to mint NFT",
+    sharedMetadataMutation
+      ? "Failed to set NFT Metadata"
+      : "Failed to mint NFT",
   );
 
   const setFile = (file: File) => {
@@ -191,6 +199,16 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
               return;
             }
 
+            const dataWithCustom = {
+              ...data,
+              ...(data.customImage && {
+                image: data.customImage,
+              }),
+              ...(data.customAnimationUrl && {
+                animation_url: data.customAnimationUrl,
+              }),
+            };
+
             if (lazyMintMutation) {
               trackEvent({
                 category: "nft",
@@ -199,7 +217,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
               });
               lazyMintMutation.mutate(
                 {
-                  metadatas: [parseAttributes(data)],
+                  metadatas: [parseAttributes(dataWithCustom)],
                 },
                 {
                   onSuccess: () => {
@@ -233,7 +251,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
               mintMutation.mutate(
                 {
                   to: address,
-                  metadata: parseAttributes(data),
+                  metadata: parseAttributes(dataWithCustom),
                   supply: data.supply,
                 },
                 {
@@ -265,7 +283,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                 action: "set-shared-metadata",
                 label: "attempt",
               });
-              sharedMetadataMutation.mutate(parseAttributes(data), {
+              sharedMetadataMutation.mutate(parseAttributes(dataWithCustom), {
                 onSuccess: () => {
                   trackEvent({
                     category: "nft",
@@ -371,20 +389,22 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                 register={register}
                 setValue={setValue}
               />
-              <Accordion
-                allowToggle={!(errors.background_color || errors.external_url)}
-                index={
-                  errors.background_color || errors.external_url
-                    ? [0]
-                    : undefined
-                }
-              >
-                <AccordionItem>
-                  <AccordionButton px={0} justifyContent="space-between">
-                    <Heading size="subtitle.md">Advanced Metadata</Heading>
-                    <AccordionIcon />
-                  </AccordionButton>
-                  <AccordionPanel px={0} as={Stack} spacing={6}>
+            </>
+          )}
+          <Accordion
+            allowToggle={!(errors.background_color || errors.external_url)}
+            index={
+              errors.background_color || errors.external_url ? [0] : undefined
+            }
+          >
+            <AccordionItem>
+              <AccordionButton px={0} justifyContent="space-between">
+                <Heading size="subtitle.md">Advanced Options</Heading>
+                <AccordionIcon />
+              </AccordionButton>
+              <AccordionPanel px={0} as={Stack} spacing={6}>
+                {!sharedMetadataMutation && (
+                  <>
                     <FormControl isInvalid={!!errors.background_color}>
                       <FormLabel>
                         Background Color <OpenSeaPropertyBadge />
@@ -413,11 +433,33 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                         </FormErrorMessage>
                       </FormControl>
                     )}
-                  </AccordionPanel>
-                </AccordionItem>
-              </Accordion>
-            </>
-          )}
+                  </>
+                )}
+                <FormControl isInvalid={!!errors.customImage}>
+                  <FormLabel>Image URL</FormLabel>
+                  <Input max="6" {...register("customImage")} />
+                  <FormHelperText>
+                    If you already have your NFT image preuploaded, you can set
+                    the URL or URI here.
+                  </FormHelperText>
+                  <FormErrorMessage>
+                    <>{errors?.customImage?.message}</>
+                  </FormErrorMessage>
+                </FormControl>
+                <FormControl isInvalid={!!errors.customAnimationUrl}>
+                  <FormLabel>Animation URL</FormLabel>
+                  <Input max="6" {...register("customAnimationUrl")} />
+                  <FormHelperText>
+                    If you already have your NFT Animation URL preuploaded, you
+                    can set the URL or URI here.
+                  </FormHelperText>
+                  <FormErrorMessage>
+                    <>{errors?.customAnimationUrl?.message}</>
+                  </FormErrorMessage>
+                </FormControl>
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
         </Stack>
       </DrawerBody>
       <DrawerFooter>

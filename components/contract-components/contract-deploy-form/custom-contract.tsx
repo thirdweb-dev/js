@@ -1,5 +1,6 @@
 import {
   useConstructorParamsFromABI,
+  useContractEnabledExtensions,
   useContractFullPublishMetadata,
   useContractPublishMetadataFromURI,
   useCustomContractDeployMutation,
@@ -197,10 +198,20 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     return false;
   };
 
+  const extensions = useContractEnabledExtensions(compilerMetadata.data?.abi);
+  const isErc721SharedMetadadata = extensions.some(
+    (extension) => extension.name === "ERC721SharedMetadata",
+  );
+
   const deploy = useCustomContractDeployMutation(
     ipfsHash,
     isImplementationDeploy,
-    { hasContractURI, hasRoyalty, hasPrimarySale, hasPlatformFee, isSplit },
+    {
+      hasContractURI,
+      hasRoyalty,
+      isSplit,
+      isErc721SharedMetadadata,
+    },
   );
 
   const router = useRouter();
@@ -208,6 +219,11 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     "Successfully deployed contract",
     "Failed to deploy contract",
   );
+
+  const transactionCount =
+    (transactions?.length || 0) +
+    (form.watch("addToDashboard") ? 1 : 0) +
+    (isErc721SharedMetadadata ? 1 : 0);
 
   return (
     <FormProvider {...form}>
@@ -469,13 +485,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
             isLoading={deploy.isLoading}
             isDisabled={!compilerMetadata.isSuccess || !selectedChain}
             colorScheme="blue"
-            transactionCount={
-              form.watch("addToDashboard")
-                ? transactions?.length
-                  ? transactions.length + 1
-                  : 2
-                : transactions?.length || 1
-            }
+            transactionCount={transactionCount}
           >
             Deploy Now
           </TransactionButton>
