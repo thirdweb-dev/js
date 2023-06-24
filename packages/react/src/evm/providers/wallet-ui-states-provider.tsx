@@ -8,16 +8,18 @@ type ModalConfig = {
   data: any;
 };
 
-const WalletModalOpen = createContext(false);
-const SetWalletModalOpen = createContext<BoolSetter | undefined>(undefined);
+const WalletModalOpen = /* @__PURE__ */ createContext(false);
+const SetWalletModalOpen = /* @__PURE__ */ createContext<
+  BoolSetter | undefined
+>(undefined);
 
-export const ModalConfigCtx = createContext<ModalConfig>({
+export const ModalConfigCtx = /* @__PURE__ */ createContext<ModalConfig>({
   title: "",
   theme: "dark",
   data: undefined,
 });
 
-export const SetModalConfigCtx = createContext<
+export const SetModalConfigCtx = /* @__PURE__ */ createContext<
   React.Dispatch<React.SetStateAction<ModalConfig>>
 >(() => {});
 

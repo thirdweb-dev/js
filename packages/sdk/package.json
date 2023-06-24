@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "3.10.21",
+  "version": "3.10.24",
   "description": "The main thirdweb SDK.",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/sdk",
   "license": "Apache-2.0",
@@ -127,6 +127,7 @@
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-thirdweb": "workspace:*",
+    "eslint-plugin-better-tree-shaking": "0.0.3",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-inclusive-language": "^2.2.0",
     "eslint-plugin-prettier": "^4.2.1",

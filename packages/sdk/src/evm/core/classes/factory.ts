@@ -19,7 +19,7 @@ import {
 } from "../../contracts";
 import { Address } from "../../schema/shared/Address";
 import { SDKOptions } from "../../schema/sdk-options";
-import type { DeployEvents } from "../../types/deploy";
+import type { DeployEvents, DeployOptions } from "../../types/deploy";
 import {
   DeploySchemaForPrebuiltContractType,
   PrebuiltContractType,
@@ -35,8 +35,8 @@ import {
   BigNumber,
   constants,
   Contract,
-  ContractInterface,
-  ethers,
+  type ContractInterface,
+  utils,
 } from "ethers";
 import { EventEmitter } from "eventemitter3";
 import invariant from "tiny-invariant";
@@ -77,7 +77,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     this.storage = storage;
   }
 
-  deploy = buildTransactionFunction(
+  deploy = /* @__PURE__ */ buildTransactionFunction(
     async <TContractType extends PrebuiltContractType>(
       contractType: TContractType,
       contractMetadata: z.input<
@@ -85,6 +85,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       >,
       eventEmitter: EventEmitter<DeployEvents>,
       version?: number,
+      options?: DeployOptions,
       onExecute?: () => void,
     ): Promise<Transaction<Address>> => {
       const contract = PREBUILT_CONTRACTS_MAP[contractType];
@@ -128,7 +129,9 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       );
 
       const blockNumber = await this.getProvider().getBlockNumber();
-      const salt = ethers.utils.formatBytes32String(blockNumber.toString());
+      const salt = options?.saltForProxyDeploy
+        ? utils.id(options.saltForProxyDeploy)
+        : utils.formatBytes32String(blockNumber.toString());
 
       return Transaction.fromContractWrapper({
         contractWrapper: this,
@@ -161,13 +164,14 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
   );
 
   // TODO once IContractFactory is implemented, this can be probably be moved to its own class
-  deployProxyByImplementation = buildTransactionFunction(
+  deployProxyByImplementation = /* @__PURE__ */ buildTransactionFunction(
     async (
       implementationAddress: Address,
       implementationAbi: ContractInterface,
       initializerFunction: string,
       initializerArgs: any[],
       eventEmitter: EventEmitter<DeployEvents>,
+      saltForProxyDeploy?: string,
       onExecute?: () => void,
     ): Promise<Transaction<Address>> => {
       const encodedFunc = Contract.getInterface(
@@ -175,14 +179,14 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       ).encodeFunctionData(initializerFunction, initializerArgs);
 
       const blockNumber = await this.getProvider().getBlockNumber();
+      const salt = saltForProxyDeploy
+        ? utils.id(saltForProxyDeploy)
+        : utils.formatBytes32String(blockNumber.toString());
+
       return Transaction.fromContractWrapper({
         contractWrapper: this,
         method: "deployProxyByImplementation",
-        args: [
-          implementationAddress,
-          encodedFunc,
-          ethers.utils.formatBytes32String(blockNumber.toString()),
-        ],
+        args: [implementationAddress, encodedFunc, salt],
         parse: (receipt) => {
           if (onExecute) {
             onExecute();
@@ -377,7 +381,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     contract: (typeof PREBUILT_CONTRACTS_MAP)[PrebuiltContractType],
     version?: number,
   ) {
-    const encodedType = ethers.utils.formatBytes32String(contract.name);
+    const encodedType = utils.formatBytes32String(contract.name);
     const chainId = await this.getChainID();
     const approvedImplementation = getApprovedImplementation(
       chainId,
@@ -404,7 +408,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     if (!name) {
       throw new Error(`Invalid contract type ${contractType}`);
     }
-    const encodedType = ethers.utils.formatBytes32String(name);
+    const encodedType = utils.formatBytes32String(name);
     return this.readContract.currentVersion(encodedType);
   }
 }

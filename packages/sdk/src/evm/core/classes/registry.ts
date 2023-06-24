@@ -31,7 +31,7 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
     );
   }
 
-  addContract = buildTransactionFunction(
+  addContract = /* @__PURE__ */ buildTransactionFunction(
     async (
       contractAddress: AddressOrEns,
     ): Promise<Transaction<TransactionResult>> => {
@@ -39,7 +39,7 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
     },
   );
 
-  addContracts = buildTransactionFunction(
+  addContracts = /* @__PURE__ */ buildTransactionFunction(
     async (
       contractAddresses: AddressOrEns[],
     ): Promise<Transaction<TransactionResult>> => {
@@ -62,7 +62,7 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
     },
   );
 
-  removeContract = buildTransactionFunction(
+  removeContract = /* @__PURE__ */ buildTransactionFunction(
     async (
       contractAddress: AddressOrEns,
     ): Promise<Transaction<TransactionResult>> => {
@@ -70,7 +70,7 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
     },
   );
 
-  removeContracts = buildTransactionFunction(
+  removeContracts = /* @__PURE__ */ buildTransactionFunction(
     async (
       contractAddresses: AddressOrEns[],
     ): Promise<Transaction<TransactionResult>> => {

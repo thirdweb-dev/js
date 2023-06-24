@@ -24,7 +24,7 @@ export const CONTRACT_ADDRESSES: Record<
     twRegistry: string;
     twBYOCRegistry: string;
   }
-> = {
+> = /* @__PURE__ */ {
   [ChainId.Mainnet]: {
     openzeppelinForwarder: OZ_DEFENDER_FORWARDER_ADDRESS,
     openzeppelinForwarderEOA: "0x76ce2CB1Ae48Fa067f4fb8c5f803111AE0B24BEA",
@@ -95,7 +95,7 @@ export const CONTRACT_ADDRESSES: Record<
     openzeppelinForwarderEOA: "0x4f247c69184ad61036EC2Bb3213b69F10FbEDe1F",
     biconomyForwarder: "0xfe0fa3C06d03bDC7fb49c892BbB39113B534fB57",
     twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
-    twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
+    twRegistry: TWRegistry_address,
     twBYOCRegistry: AddressZero,
   },
 
@@ -104,7 +104,7 @@ export const CONTRACT_ADDRESSES: Record<
     openzeppelinForwarderEOA: "0x119704314Ef304EaAAE4b3c7C9ABd59272A28310",
     biconomyForwarder: AddressZero,
     twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
-    twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
+    twRegistry: TWRegistry_address,
     twBYOCRegistry: AddressZero,
   },
   [ChainId.Optimism]: {
@@ -112,7 +112,7 @@ export const CONTRACT_ADDRESSES: Record<
     openzeppelinForwarderEOA: "0x7e80648EB2071E26937F9D42A513ccf4815fc702",
     biconomyForwarder: "0xefba8a2a82ec1fb1273806174f5e28fbb917cf95",
     twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
-    twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
+    twRegistry: TWRegistry_address,
     twBYOCRegistry: AddressZero,
   },
 
@@ -121,7 +121,7 @@ export const CONTRACT_ADDRESSES: Record<
     openzeppelinForwarderEOA: "0x119704314Ef304EaAAE4b3c7C9ABd59272A28310",
     biconomyForwarder: AddressZero,
     twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
-    twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
+    twRegistry: TWRegistry_address,
     twBYOCRegistry: AddressZero,
   },
   [ChainId.BinanceSmartChainMainnet]: {
@@ -130,7 +130,7 @@ export const CONTRACT_ADDRESSES: Record<
     biconomyForwarder: "0x86C80a8aa58e0A4fa09A69624c31Ab2a6CAD56b8",
     twBYOCRegistry: AddressZero,
     twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
-    twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
+    twRegistry: TWRegistry_address,
   },
   [ChainId.BinanceSmartChainTestnet]: {
     openzeppelinForwarder: "0x44bE9D54B9C8b5e57a3325E8Ec9154640e7c6955",
@@ -138,7 +138,7 @@ export const CONTRACT_ADDRESSES: Record<
     biconomyForwarder: "0x61456BF1715C1415730076BB79ae118E806E74d2",
     twBYOCRegistry: AddressZero,
     twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
-    twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
+    twRegistry: TWRegistry_address,
   },
   [ChainId.Hardhat]: {
     openzeppelinForwarder: AddressZero,

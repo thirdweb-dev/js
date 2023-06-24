@@ -22,7 +22,7 @@ import {
   PackOpenRequestedEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/IPackVRFDirect";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, type BigNumberish, utils } from "ethers";
 import type { NetworkInput, TransactionResultWithId } from "../types";
 import { ContractEvents } from "./contract-events";
 import { Transaction } from "./transactions";
@@ -80,7 +80,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * @returns
    * @twfeature PackVRF
    */
-  open = buildTransactionFunction(
+  open = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenId: BigNumberish,
       amount: BigNumberish = 1,
@@ -127,7 +127,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * @returns the random rewards from opening a pack
    * @twfeature PackVRF
    */
-  claimRewards = buildTransactionFunction(
+  claimRewards = /* @__PURE__ */ buildTransactionFunction(
     async (gasLimit = 500000): Promise<Transaction<Promise<PackRewards>>> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -169,7 +169,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
           );
           erc20Rewards.push({
             contractAddress: reward.assetContract,
-            quantityPerReward: ethers.utils
+            quantityPerReward: utils
               .formatUnits(reward.totalAmount, tokenMetadata.decimals)
               .toString(),
           });

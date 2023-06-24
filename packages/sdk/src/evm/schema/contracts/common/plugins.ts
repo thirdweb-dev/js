@@ -5,8 +5,9 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const PluginMapInput = z.object({
-  functionSelector: BytesLikeSchema,
-  functionSignature: z.string(),
-  pluginAddress: AddressOrEnsSchema,
-});
+export const PluginMapInput = /* @__PURE__ */ (() =>
+  z.object({
+    functionSelector: BytesLikeSchema,
+    functionSignature: z.string(),
+    pluginAddress: AddressOrEnsSchema,
+  }))();

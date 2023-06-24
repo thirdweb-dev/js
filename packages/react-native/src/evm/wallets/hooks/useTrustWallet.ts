@@ -12,7 +12,7 @@ export function useTrustWallet() {
   return useCallback(
     async (connectOptions?: { chainId?: number }) => {
       const { trustWallet } = await import("../wallets/trust-wallet");
-      connect(trustWallet(), connectOptions);
+      return connect(trustWallet(), connectOptions);
     },
     [connect],
   );

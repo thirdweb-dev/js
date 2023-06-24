@@ -12,7 +12,7 @@ import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
 import { isContractDeployed } from "./isContractDeployed";
 import { getInitBytecodeWithSalt } from "./getInitBytecodeWithSalt";
 import { computeDeploymentAddress } from "./computeDeploymentAddress";
-import { BytesLike, ethers } from "ethers";
+import { type BytesLike, utils, constants } from "ethers";
 import { getNativeTokenByChainId } from "../../constants/currency";
 import { PreDeployMetadataFetched } from "../../schema/contracts/custom";
 import { ConstructorParamMap } from "../../types/any-evm/deploy-data";
@@ -113,7 +113,7 @@ export async function encodeConstructorParamsForImplementation(
   );
   let constructorParamTypes = constructorParams.map((p) => {
     if (p.type === "tuple[]") {
-      return ethers.utils.ParamType.from(p);
+      return utils.ParamType.from(p);
     } else {
       return p.type;
     }
@@ -137,7 +137,7 @@ export async function encodeConstructorParamsForImplementation(
         let nativeTokenWrapperAddress =
           getNativeTokenByChainId(chainId).wrapped.address;
 
-        if (nativeTokenWrapperAddress === ethers.constants.AddressZero) {
+        if (nativeTokenWrapperAddress === constants.AddressZero) {
           const deploymentInfo = await computeDeploymentInfo(
             "infra",
             provider,
@@ -194,7 +194,7 @@ export async function encodeConstructorParamsForImplementation(
     }),
   );
 
-  const encodedArgs = ethers.utils.defaultAbiCoder.encode(
+  const encodedArgs = utils.defaultAbiCoder.encode(
     constructorParamTypes,
     constructorParamValues,
   );

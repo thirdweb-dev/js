@@ -94,7 +94,7 @@ interface ThirdwebSDKContext {
   desiredNetwork: string;
   _inProvider?: true;
 }
-const ThirdwebSDKContext = createContext<ThirdwebSDKContext>({
+const ThirdwebSDKContext = /* @__PURE__ */ createContext<ThirdwebSDKContext>({
   sdk: null,
   desiredNetwork: "unknown",
 });
