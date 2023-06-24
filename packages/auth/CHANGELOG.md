@@ -1,5 +1,32 @@
 # @thirdweb-dev/auth
 
+## 3.2.2
+
+### Patch Changes
+
+- Updated dependencies [[`3cb298ac`](https://github.com/thirdweb-dev/js/commit/3cb298ac4b04d295899b5ac77c7fc5869ec2f5f2), [`3ce5f9a0`](https://github.com/thirdweb-dev/js/commit/3ce5f9a0c3fc7e99b5abf691a87048ab8475f6b1), [`a388d07a`](https://github.com/thirdweb-dev/js/commit/a388d07a3d449e56dc53fed9600931022f4a15e1), [`1ce8558d`](https://github.com/thirdweb-dev/js/commit/1ce8558df47186bcba5ee8564fdb04583bf115dd), [`60fb1889`](https://github.com/thirdweb-dev/js/commit/60fb18894372f14d9cd815fa9a239926d31bb273)]:
+  - @thirdweb-dev/wallets@0.3.2
+
+## 3.2.1
+
+### Patch Changes
+
+- Updated dependencies [[`3d62278a`](https://github.com/thirdweb-dev/js/commit/3d62278aba79101ae1158fb726d6ddfed505c939)]:
+  - @thirdweb-dev/wallets@0.3.1
+
+## 3.2.0
+
+### Minor Changes
+
+- [#1150](https://github.com/thirdweb-dev/js/pull/1150) [`d60e544a`](https://github.com/thirdweb-dev/js/commit/d60e544a240b93312743e62096ee2dc77d0c1bd1) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for multipled logged in accounts and token refreshing to auth
+
+### Patch Changes
+
+- [#1165](https://github.com/thirdweb-dev/js/pull/1165) [`088f2567`](https://github.com/thirdweb-dev/js/commit/088f2567f615360edd44776b20ae0bedff250f43) Thanks [@adam-maj](https://github.com/adam-maj)! - Include chain id in login payload
+
+- Updated dependencies [[`654b8ab3`](https://github.com/thirdweb-dev/js/commit/654b8ab35184e02127a5a47f05d78606dd5b29ca), [`329bccec`](https://github.com/thirdweb-dev/js/commit/329bccec4b88b02db5bac6c1415158928843376a)]:
+  - @thirdweb-dev/wallets@0.3.0
+
 ## 3.1.1
 
 ### Patch Changes

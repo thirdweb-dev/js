@@ -3,7 +3,14 @@ import {
   EIP712StandardDomain,
   signTypedDataInternal,
 } from "./sign";
-import { BigNumber, BigNumberish, Contract, ethers, Signer } from "ethers";
+import {
+  BigNumber,
+  type BigNumberish,
+  Contract,
+  utils,
+  constants,
+  type Signer,
+} from "ethers";
 
 const NAME_ABI = [
   {
@@ -99,14 +106,11 @@ async function getChainDomainSeperator(
     name: domain.name,
     version: domain.version,
     verifyingContract: domain.verifyingContract,
-    salt: ethers.utils.hexZeroPad(
-      BigNumber.from(domain.chainId).toHexString(),
-      32,
-    ),
+    salt: utils.hexZeroPad(BigNumber.from(domain.chainId).toHexString(), 32),
   };
 
   if (
-    ethers.utils._TypedDataEncoder.hashDomain(polygonDomain) ===
+    utils._TypedDataEncoder.hashDomain(polygonDomain) ===
     contractDomainSeparator
   ) {
     return polygonDomain;
@@ -135,7 +139,7 @@ export async function signDAIPermit(
   });
 
   nonce = nonce || (await getSignerNonce(signer, currencyAddress)).toString();
-  deadline = deadline || ethers.constants.MaxUint256;
+  deadline = deadline || constants.MaxUint256;
 
   const message = {
     owner,
@@ -190,7 +194,7 @@ export async function signEIP2612Permit(
   });
 
   nonce = nonce || (await getSignerNonce(signer, currencyAddress)).toString();
-  deadline = deadline || ethers.constants.MaxUint256;
+  deadline = deadline || constants.MaxUint256;
 
   const message = {
     owner,

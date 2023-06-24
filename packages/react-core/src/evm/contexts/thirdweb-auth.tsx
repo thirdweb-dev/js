@@ -38,7 +38,7 @@ export interface ThirdwebAuthConfig {
 
 export interface ThirdwebAuthContext extends ThirdwebAuthConfig {}
 
-export const ThirdwebAuthContext = createContext<
+export const ThirdwebAuthContext = /* @__PURE__ */ createContext<
   ThirdwebAuthContext | undefined
 >(undefined);
 

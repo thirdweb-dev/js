@@ -1,5 +1,25 @@
 # @thirdweb-dev/chains
 
+## 0.1.23
+
+### Patch Changes
+
+- [#1229](https://github.com/thirdweb-dev/js/pull/1229) [`6816219a`](https://github.com/thirdweb-dev/js/commit/6816219ac13ae571a0c90db6ab389c319bc1f052) Thanks [@jnsdls](https://github.com/jnsdls)! - add/update chains
+
+## 0.1.22
+
+### Patch Changes
+
+- [#1192](https://github.com/thirdweb-dev/js/pull/1192) [`f41f1a29`](https://github.com/thirdweb-dev/js/commit/f41f1a2958a2cedcf0496c9a3ca284d0b98f1b89) Thanks [@jnsdls](https://github.com/jnsdls)! - fix arbitrum goerli infura url
+
+## 0.1.21
+
+### Patch Changes
+
+- [#1074](https://github.com/thirdweb-dev/js/pull/1074) [`cc20f93e`](https://github.com/thirdweb-dev/js/commit/cc20f93e178d86ee2b3f39102bbb0811de211f05) Thanks [@Marfuen](https://github.com/Marfuen)! - Enhance CLI Install command and update chains
+
+- [#1185](https://github.com/thirdweb-dev/js/pull/1185) [`8e28b0f5`](https://github.com/thirdweb-dev/js/commit/8e28b0f5e75596d29273ed80269bcee6d209adb4) Thanks [@jnsdls](https://github.com/jnsdls)! - add Zora Mainnet
+
 ## 0.1.20
 
 ### Patch Changes

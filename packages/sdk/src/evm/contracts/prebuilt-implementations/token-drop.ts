@@ -24,6 +24,7 @@ import type { CurrencyValue, Amount } from "../../types/currency";
 import { PrebuiltTokenDrop } from "../../types/eips";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { CallOverrides, constants } from "ethers";
+import { TOKEN_DROP_CONTRACT_ROLES } from "../contractRoles";
 
 /**
  * Create a Drop contract for a standard crypto token or cryptocurrency.
@@ -39,7 +40,7 @@ import { CallOverrides, constants } from "ethers";
  *
  */
 export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
-  static contractRoles = ["admin", "transfer"] as const;
+  static contractRoles = TOKEN_DROP_CONTRACT_ROLES;
 
   public abi: Abi;
   public metadata: ContractMetadata<
@@ -194,7 +195,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
    * @param amount - the amount of tokens to mint
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    */
-  claim = buildTransactionFunction(
+  claim = /* @__PURE__ */ buildTransactionFunction(
     async (amount: Amount, checkERC20Allowance = true) => {
       return this.claimTo.prepare(
         await this.contractWrapper.getSignerAddress(),
@@ -224,7 +225,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
    *
    * @returns - The transaction receipt
    */
-  claimTo = buildTransactionFunction(
+  claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       destinationAddress: AddressOrEns,
       amount: Amount,
@@ -242,7 +243,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
    * @param delegateeAddress - delegatee wallet address
    * @alpha
    */
-  delegateTo = buildTransactionFunction(
+  delegateTo = /* @__PURE__ */ buildTransactionFunction(
     async (delegateeAddress: AddressOrEns) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -265,9 +266,11 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
    * await contract.burnTokens(amount);
    * ```
    */
-  burnTokens = buildTransactionFunction(async (amount: Amount) => {
-    return this.erc20.burn.prepare(amount);
-  });
+  burnTokens = /* @__PURE__ */ buildTransactionFunction(
+    async (amount: Amount) => {
+      return this.erc20.burn.prepare(amount);
+    },
+  );
   /**
    * Burn Tokens
    *
@@ -284,7 +287,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
    * await contract.burnFrom(holderAddress, amount);
    * ```
    */
-  burnFrom = buildTransactionFunction(
+  burnFrom = /* @__PURE__ */ buildTransactionFunction(
     async (holder: AddressOrEns, amount: Amount) => {
       return this.erc20.burnFrom.prepare(holder, amount);
     },

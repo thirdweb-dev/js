@@ -7,10 +7,11 @@ import { ContractWrapper } from "./contract-wrapper";
 import { buildTransactionFunction } from "../../common/transactions";
 import { Transaction } from "./transactions";
 import { TransactionResultWithAddress } from "../types";
-import { BytesLike, ethers } from "ethers";
+import { type BytesLike, utils } from "ethers";
 import { AccountCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/AccountFactory";
 import type { AccountEvent } from "../../types/smart-wallet";
 import { isContractDeployed } from "../../common/any-evm-utils/isContractDeployed";
+import { EventQueryOptions } from "../../types";
 
 export class SmartWalletFactory<TContract extends IAccountFactory>
   implements DetectableFeature
@@ -52,7 +53,7 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
     admin: string,
     extraData?: BytesLike,
   ): Promise<string> {
-    let data: BytesLike = ethers.utils.toUtf8Bytes("");
+    let data: BytesLike = utils.toUtf8Bytes("");
     if (extraData) {
       data = extraData;
     }
@@ -103,11 +104,8 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
    *
    * @twfeature SmartWalletFactory
    */
-  public async getAllWallets(): Promise<AccountEvent[]> {
-    const filter = {
-      fromBlock: 0,
-      toBlock: "latest",
-    };
+  public async getAllWallets(eventFilter?: EventQueryOptions): Promise<AccountEvent[]> {
+    let filter = eventFilter ? eventFilter : { fromBlock: -20000 };
 
     const events = await this.events.getEvents("AccountCreated", filter);
 
@@ -152,7 +150,7 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
    *
    * @twfeature SmartWalletFactory
    */
-  createWallet = buildTransactionFunction(
+  createWallet = /* @__PURE__ */ buildTransactionFunction(
     async (
       walletAdmin: string,
       extraData?: BytesLike,
@@ -161,7 +159,7 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
         throw new Error(`Wallet already deployed for admin: ${walletAdmin}`);
       }
 
-      let data: BytesLike = ethers.utils.toUtf8Bytes("");
+      let data: BytesLike = utils.toUtf8Bytes("");
       if (extraData) {
         data = extraData;
       }

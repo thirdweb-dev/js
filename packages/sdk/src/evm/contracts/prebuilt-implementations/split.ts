@@ -26,6 +26,7 @@ import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, CallOverrides, Contract } from "ethers";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { ADMIN_ROLE } from "../contractRoles";
 
 /**
  * Create custom royalty splits to distribute funds.
@@ -42,7 +43,7 @@ import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
  * @public
  */
 export class Split implements UpdateableNetwork {
-  static contractRoles = ["admin"] as const;
+  static contractRoles = ADMIN_ROLE;
 
   private contractWrapper: ContractWrapper<SplitContract>;
   private storage: ThirdwebStorage;
@@ -310,13 +311,15 @@ export class Split implements UpdateableNetwork {
    *
    * @param walletAddress - The address to distributes the amount to
    */
-  withdraw = buildTransactionFunction(async (walletAddress: AddressOrEns) => {
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "release(address)",
-      args: [await resolveAddress(walletAddress)],
-    });
-  });
+  withdraw = /* @__PURE__ */ buildTransactionFunction(
+    async (walletAddress: AddressOrEns) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "release(address)",
+        args: [await resolveAddress(walletAddress)],
+      });
+    },
+  );
 
   /**
    * Triggers a transfer to account of the amount of a given currency they are owed.
@@ -324,7 +327,7 @@ export class Split implements UpdateableNetwork {
    * @param walletAddress - The address to distributes the amount to
    * @param tokenAddress - The address of the currency contract to distribute funds
    */
-  withdrawToken = buildTransactionFunction(
+  withdrawToken = /* @__PURE__ */ buildTransactionFunction(
     async (walletAddress: AddressOrEns, tokenAddress: AddressOrEns) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -347,7 +350,7 @@ export class Split implements UpdateableNetwork {
    * await contract.distribute();
    * ```
    */
-  distribute = buildTransactionFunction(async () => {
+  distribute = /* @__PURE__ */ buildTransactionFunction(async () => {
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
       method: "distribute()",
@@ -369,7 +372,7 @@ export class Split implements UpdateableNetwork {
    *
    * @param tokenAddress - The address of the currency contract to distribute funds
    */
-  distributeToken = buildTransactionFunction(
+  distributeToken = /* @__PURE__ */ buildTransactionFunction(
     async (tokenAddress: AddressOrEns) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,

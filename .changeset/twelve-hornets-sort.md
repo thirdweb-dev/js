@@ -2,4 +2,4 @@
 "@thirdweb-dev/sdk": patch
 ---
 
-Reduce circular dependencies
+Fix smartWalletFactory.getAllEvents

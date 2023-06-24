@@ -64,6 +64,7 @@ export * from "./any-evm-utils/predictThirdwebContractAddress";
 export * from "./any-evm-utils/getEncodedConstructorParamsForThirdwebContract";
 export * from "./any-evm-utils/getKeylessTxn";
 export * from "./any-evm-utils/deployCreate2Factory";
+export * from "./any-evm-utils/deployDirectDeterministic";
 export * from "./any-evm-utils/deployContractDeterministicRaw";
 export * from "./any-evm-utils/deployContractDeterministic";
 export * from "./any-evm-utils/getDeploymentInfo";

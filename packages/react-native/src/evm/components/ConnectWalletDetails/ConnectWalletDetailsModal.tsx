@@ -2,11 +2,12 @@ import { StyleSheet, View } from "react-native";
 import Box from "../base/Box";
 import { Toast } from "../base/Toast";
 import { ExportLocalWalletModal } from "./ExportLocalWalletModal";
-import { NetworkButton } from "./NetworkButton";
+import { NetworkButton } from "../base/NetworkButton";
 import { WalletDetailsModalHeader } from "./WalletDetailsModalHeader";
 import {
   useActiveChain,
   useDisconnect,
+  useSetConnectedWallet,
   useWallet,
 } from "@thirdweb-dev/react-core";
 import { SmartWallet, walletIds, LocalWallet } from "@thirdweb-dev/wallets";
@@ -20,6 +21,7 @@ import Text from "../base/Text";
 import { useModalState } from "../../providers/ui-context-provider";
 import { CLOSE_MODAL_STATE, WalletDetailsModal } from "../../utils/modalTypes";
 import { useAppTheme } from "../../styles/hooks";
+import { LocalWalletImportModal } from "../ConnectWalletFlow/LocalWalletImportModal";
 
 export const ConnectWalletDetailsModal = () => {
   const theme = useAppTheme();
@@ -29,8 +31,10 @@ export const ConnectWalletDetailsModal = () => {
   const disconnect = useDisconnect();
   const [smartWallet, setSmartWallet] = useSmartWallet();
   const [addressCopied, setAddressCopied] = useState(false);
+  const [isImportModalVisible, setIsImportModalVisible] = useState(false);
   const { modalState, setModalState } = useModalState();
   const { address } = (modalState as WalletDetailsModal).data;
+  const setConnectedWallet = useSetConnectedWallet();
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -67,6 +71,24 @@ export const ConnectWalletDetailsModal = () => {
     setAddressCopied(true);
   };
 
+  const onImportLocalWalletPress = () => {
+    setIsImportModalVisible(true);
+  };
+
+  const onImportModalClose = () => {
+    setIsImportModalVisible(false);
+  };
+
+  const onWalletImported = useCallback(
+    (localWalletInstance: LocalWallet) => {
+      activeWallet?.disconnect();
+      localWalletInstance.connect();
+
+      setConnectedWallet?.(localWalletInstance);
+    },
+    [activeWallet, setConnectedWallet],
+  );
+
   const getAdditionalActions = useCallback(() => {
     if (activeWallet?.walletId === SmartWallet.id || smartWallet) {
       return (
@@ -91,7 +113,7 @@ export const ConnectWalletDetailsModal = () => {
             onPress={onExportLocalWalletPress}
           >
             <>
-              <PocketWalletIcon size={16} />
+              <PocketWalletIcon width={16} height={16} />
               <View style={styles.exportWalletInfo}>
                 <Text variant="bodySmall">Backup wallet</Text>
               </View>
@@ -102,6 +124,33 @@ export const ConnectWalletDetailsModal = () => {
               color={theme.colors.iconPrimary}
             />
           </BaseButton>
+
+          <BaseButton
+            backgroundColor="background"
+            borderColor="border"
+            mb="sm"
+            justifyContent="space-between"
+            style={styles.exportWallet}
+            onPress={onImportLocalWalletPress}
+          >
+            <>
+              <PocketWalletIcon width={16} height={16} />
+              <View style={styles.exportWalletInfo}>
+                <Text variant="bodySmall">Import wallet</Text>
+              </View>
+            </>
+            <RightArrowIcon
+              height={10}
+              width={10}
+              color={theme.colors.iconPrimary}
+            />
+          </BaseButton>
+
+          <LocalWalletImportModal
+            isVisible={isImportModalVisible}
+            onWalletImported={onWalletImported}
+            onClose={onImportModalClose}
+          />
 
           {activeWallet?.walletId === LocalWallet.id ? (
             <Text variant="error">
@@ -117,7 +166,9 @@ export const ConnectWalletDetailsModal = () => {
     return null;
   }, [
     activeWallet?.walletId,
+    isImportModalVisible,
     onExportLocalWalletPress,
+    onWalletImported,
     smartWallet,
     theme.colors.iconPrimary,
   ]);

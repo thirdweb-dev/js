@@ -21,7 +21,7 @@ export const EOAForwarder = {
 /**
  * @internal
  */
-export const INFRA_CONTRACTS_MAP = {
+export const INFRA_CONTRACTS_MAP = /* @__PURE__ */ {
   [NativeTokenWrapper.contractType]: NativeTokenWrapper,
   [Forwarder.contractType]: Forwarder,
   [EOAForwarder.contractType]: EOAForwarder,

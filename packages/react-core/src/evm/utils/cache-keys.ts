@@ -121,6 +121,10 @@ export const cacheKeys = {
     smartWalletFactory: {
       getAll: (contractAddress: RequiredParam<ContractAddress>) =>
         createContractCacheKey(contractAddress, ["smartWalletFactory"]),
+      isSmartWalletDeployed: (contractAdress: RequiredParam<ContractAddress>, admin: RequiredParam<string>) =>
+        createContractCacheKey(contractAdress, ["isSmartWalletDeployed", admin]),
+      getAllForAddress: (contractAdress: RequiredParam<ContractAddress>, address: RequiredParam<string>) =>
+        createContractCacheKey(contractAdress, ["getAllForAddress", address]),
     },
 
     app: {
@@ -187,6 +191,14 @@ export const cacheKeys = {
               owner,
             ]),
         },
+      },
+      sharedMetadata: {
+        get: (
+          contractAddress: RequiredParam<ContractAddress>,
+        ) =>
+          createContractCacheKey(
+            contractAddress
+          ),
       },
       drop: {
         getAllUnclaimed: (

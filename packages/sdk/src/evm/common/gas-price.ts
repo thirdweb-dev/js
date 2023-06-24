@@ -1,6 +1,6 @@
 import { ChainId } from "../constants/chains/ChainId";
 import fetch from "cross-fetch";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, utils } from "ethers";
 
 /**
  * @internal
@@ -8,14 +8,15 @@ import { BigNumber, ethers } from "ethers";
 function getGasStationUrl(chainId: ChainId.Polygon | ChainId.Mumbai): string {
   switch (chainId) {
     case ChainId.Polygon:
-      return "https://gasstation-mainnet.matic.network/v2";
+      return "https://gasstation.polygon.technology/v2";
     case ChainId.Mumbai:
-      return "https://gasstation-mumbai.matic.today/v2";
+      return "https://gasstation-testnet.polygon.technology/v2";
   }
 }
 
-const MIN_POLYGON_GAS_PRICE = ethers.utils.parseUnits("31", "gwei");
-const MIN_MUMBAI_GAS_PRICE = ethers.utils.parseUnits("1", "gwei");
+const MIN_POLYGON_GAS_PRICE = /* @__PURE__ */ utils.parseUnits("31", "gwei");
+
+const MIN_MUMBAI_GAS_PRICE = /* @__PURE__ */ utils.parseUnits("1", "gwei");
 
 /**
  * @internal
@@ -46,7 +47,7 @@ export async function getPolygonGasPriorityFee(
     const priorityFee = data["fast"]["maxPriorityFee"];
     if (priorityFee > 0) {
       const fixedFee = parseFloat(priorityFee).toFixed(9);
-      return ethers.utils.parseUnits(fixedFee, "gwei");
+      return utils.parseUnits(fixedFee, "gwei");
     }
   } catch (e) {
     console.error("failed to fetch gas", e);

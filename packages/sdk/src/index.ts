@@ -1,4 +1,5 @@
 // handle browser vs node global
+// eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
 globalThis.global = globalThis;
 
 export type {

@@ -56,7 +56,7 @@ const QRCodeContainer = styled.div`
   box-shadow: ${shadow.md};
 `;
 
-const StyledReactQrCode = styled(ReactQrCode)`
+const StyledReactQrCode = /* @__PURE__ */ styled(ReactQrCode)`
   width: 200px;
   height: 200px;
   border-radius: ${radius.md};
@@ -67,7 +67,7 @@ const StyledReactQrCode = styled(ReactQrCode)`
   }
 `;
 
-const QRSkeleton = styled(Skeleton)`
+const QRSkeleton = /* @__PURE__ */ styled(Skeleton)`
   width: 200px;
   height: 200px;
   border-radius: ${radius.md};
