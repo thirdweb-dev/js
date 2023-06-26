@@ -1,7 +1,12 @@
 import { AccountsTable } from "./components/accounts-table";
 import { CreateAccountButton } from "./components/create-account-button";
 import { Box, ButtonGroup, Flex } from "@chakra-ui/react";
-import { useContract, useSmartWallets } from "@thirdweb-dev/react";
+import {
+  useAddress,
+  useContract,
+  useSmartWallets,
+  useSmartWalletsForAddress,
+} from "@thirdweb-dev/react";
 import { Card, Heading, LinkButton, Text } from "tw-components";
 
 interface AccountsPageProps {
@@ -13,6 +18,12 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({
 }) => {
   const contractQuery = useContract(contractAddress);
   const accountsQuery = useSmartWallets(contractQuery?.contract);
+  const address = useAddress();
+
+  const { data: smartWalletsForAddress } = useSmartWalletsForAddress(
+    contractQuery.contract,
+    address,
+  );
 
   if (contractQuery.isLoading) {
     return null;
@@ -52,7 +63,10 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({
           <CreateAccountButton contractQuery={contractQuery} />
         </ButtonGroup>
       </Flex>
-      <AccountsTable accountsQuery={accountsQuery} />
+      <AccountsTable
+        accountsQuery={accountsQuery}
+        smartWalletsForAddress={smartWalletsForAddress}
+      />
     </Flex>
   );
 };

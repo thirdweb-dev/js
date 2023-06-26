@@ -5,6 +5,10 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   Box,
   Divider,
   Flex,
@@ -308,6 +312,10 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
   const address = useAddress();
   const isMobile = useBreakpointValue({ base: true, md: false });
 
+  const isSmartWalletFactorry = enabledExtensions.some(
+    (extension) => extension.name === "SmartWalletFactory",
+  );
+
   const filteredData = useMemo(() => {
     if (!data) {
       return {};
@@ -363,6 +371,38 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
         gap={12}
       >
         <Flex flexDirection="column" gap={4}>
+          {isSmartWalletFactorry && (
+            <Alert
+              status="info"
+              borderRadius="md"
+              as={Flex}
+              flexDir="column"
+              alignItems="start"
+              gap={2}
+              mb={4}
+            >
+              <Flex justifyContent="start">
+                <AlertIcon />
+                <AlertTitle>Smart Wallet Factory</AlertTitle>
+              </Flex>
+              <AlertDescription>
+                The recommended way to implement your smart wallet factory is by
+                passing the address of the smart wallet factory to the
+                constructor of your smart wallet. This will allow you to use the
+                smart wallet factory to create new smart wallets.{" "}
+                <TrackedLink
+                  href="/dashboard/wallet"
+                  category="code-tab"
+                  label="smart-wallets"
+                  color="primary.500"
+                >
+                  Learn more
+                </TrackedLink>
+                .
+              </AlertDescription>
+            </Alert>
+          )}
+
           <Flex flexDir="column" gap={2} id="getting-started">
             <Heading size="title.md">
               Getting Started {chain ? `with ${chain.name}` : null}
