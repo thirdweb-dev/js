@@ -167,6 +167,7 @@ export {
   useTransferNFT,
   useAirdropNFT,
   useBurnNFT,
+  useSharedMetadata,
   useSetSharedMetadata,
 } from "./hooks/async/nft";
 
@@ -198,6 +199,7 @@ export {
   useIsSmartWalletDeployed,
   useSmartWallets,
   useCreateSmartWallet,
+  useSmartWalletsForAddress,
 } from "./hooks/async/smart-wallet-factory";
 
 // thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)

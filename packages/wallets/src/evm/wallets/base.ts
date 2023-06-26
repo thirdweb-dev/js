@@ -114,8 +114,12 @@ export abstract class AbstractClientWallet<
       throw new Error("Failed to auto connect to the wallet.");
     }
 
-    const address = await connector.connect(connectOptions);
-    return address;
+    try {
+      const address = await connector.connect(connectOptions);
+      return address;
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
   }
 
   async #subscribeToEvents(connector: Connector) {

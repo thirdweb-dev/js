@@ -13,8 +13,8 @@ import { z } from "zod";
  * @example
  * ```javascript
  * const contract = await sdk.getContract("{{contract_address}}");
- * const feeInfo = await contract.platformFee.get();
- * await contract.platformFee.set({
+ * const feeInfo = await contract.platformFees.get();
+ * await contract.platformFees.set({
  *   platform_fee_basis_points: 100, // 1% fee
  *   platform_fee_recipient: "0x..." // the fee recipient
  * })
@@ -36,7 +36,7 @@ export class ContractPlatformFee<TContract extends IPlatformFee>
    *
    * @example
    * ```javascript
-   * const feeInfo = await contract.platformFee.get();
+   * const feeInfo = await contract.platformFees.get();
    * console.log(feeInfo.platform_fee_recipient);
    * console.log(feeInfo.platform_fee_basis_points);
    * ```
@@ -56,7 +56,7 @@ export class ContractPlatformFee<TContract extends IPlatformFee>
    *
    * @example
    * ```javascript
-   * await contract.platformFee.set({
+   * await contract.platformFees.set({
    *   platform_fee_basis_points: 100, // 1% fee
    *   platform_fee_recipient: "0x..." // the fee recipient
    * })
