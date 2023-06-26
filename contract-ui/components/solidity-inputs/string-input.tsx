@@ -19,7 +19,8 @@ export const SolidityStringInput: React.FC<SolidityInputWithTypeProps> = ({
 
   const showButton =
     (nameOrInput?.toLowerCase().includes("uri") ||
-      nameOrInput?.toLowerCase().includes("ipfs")) &&
+      nameOrInput?.toLowerCase().includes("ipfs") ||
+      nameOrInput?.toLowerCase().includes("audit")) &&
     nameOrInput !== "_baseURIForTokens";
 
   return (

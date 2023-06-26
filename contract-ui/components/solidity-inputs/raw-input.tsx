@@ -51,6 +51,7 @@ export const SolidityRawInput: React.FC<SolidityInputWithTypeProps> = ({
         fontFamily="mono"
         placeholder={solidityType}
         {...(inputProps as TextareaProps)}
+        value={form.watch(inputName)}
         onChange={handleChange}
       />
       <FormHelperText>

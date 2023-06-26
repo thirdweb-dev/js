@@ -3,27 +3,23 @@ import {
   Box,
   Flex,
   FormControl,
-  Icon,
   Image,
   Input,
-  InputGroup,
-  InputRightElement,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
   Textarea,
-  Tooltip,
 } from "@chakra-ui/react";
 import { ExtraPublishMetadata } from "@thirdweb-dev/sdk";
 import { compare, validate } from "compare-versions";
 import { FileInput } from "components/shared/FileInput";
+import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { SelectOption } from "core-ui/batch-upload/lazy-mint-form/select-option";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { replaceIpfsUrl } from "lib/sdk";
 import { useFormContext } from "react-hook-form";
-import { FiTrash, FiUpload } from "react-icons/fi";
 import {
   Card,
   FormErrorMessage,
@@ -263,48 +259,11 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
           )}
           <FormControl isInvalid={!!form.formState.errors.audit}>
             <FormLabel>Audit report</FormLabel>
-            {form.watch("audit") instanceof File ? (
-              <InputGroup>
-                <Input
-                  isDisabled
-                  value={form.watch("audit")?.name}
-                  onChange={(e) => form.setValue("audit", e.target.value)}
-                  placeholder="ipfs://..."
-                />
-                <InputRightElement>
-                  <Icon
-                    as={FiTrash}
-                    cursor="pointer"
-                    color="red.300"
-                    _hover={{ color: "red.200" }}
-                    onClick={() => form.setValue("audit", "")}
-                  />
-                </InputRightElement>
-              </InputGroup>
-            ) : (
-              <InputGroup>
-                <Input
-                  value={form.watch("audit")?.name}
-                  onChange={(e) => form.setValue("audit", e.target.value)}
-                  placeholder="ipfs://..."
-                />
-                <InputRightElement>
-                  <Tooltip label="Upload file" shouldWrapChildren>
-                    <FileInput
-                      setValue={(file) => {
-                        form.setValue("audit", file);
-                      }}
-                    >
-                      <Icon
-                        as={FiUpload}
-                        color="gray.600"
-                        _hover={{ color: "gray.500" }}
-                      />
-                    </FileInput>
-                  </Tooltip>
-                </InputRightElement>
-              </InputGroup>
-            )}
+            <SolidityInput
+              solidityType="string"
+              {...form.register("audit")}
+              placeholder="ipfs://... or https://..."
+            />
             <FormHelperText>
               <Text size="body.sm">
                 You can add a IPFS hash or URL pointing to an audit report, or
