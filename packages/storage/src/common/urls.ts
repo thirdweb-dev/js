@@ -6,7 +6,6 @@ import { GatewayUrls } from "../types";
 export const DEFAULT_GATEWAY_URLS: GatewayUrls = {
   // Note: Gateway URLs should have trailing slashes (we clean this on user input)
   "ipfs://": [
-    "https://ipfs-2.thirdwebcdn.com/ipfs/",
     "https://ipfs-3.thirdwebcdn.com/ipfs/",
     "https://ipfs-4.thirdwebcdn.com/ipfs/",
     "https://ipfs-5.thirdwebcdn.com/ipfs/",
