@@ -1,11 +1,10 @@
 import { SDKOptions, ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { AbstractClientWallet } from "@thirdweb-dev/wallets";
-import crypto from "crypto";
 import { Signer } from 'ethers';
 import { NextApiRequest } from "next";
 import { LoyaltyRewardsParams, ResponseBody, RewardTokensParams } from "../../../types";
 import { GET_ORDER_BY_ID_QUERY } from "../../lib/queries";
-import { getRawBody, shopifyFetchAdminAPI } from '../../lib/utils';
+import { shopifyFetchAdminAPI, verifyWebhook } from '../../lib/utils';
 
 /**
  * Gift ERC20 loyalty tokens to a customer using their wallet address.
@@ -18,12 +17,14 @@ import { getRawBody, shopifyFetchAdminAPI } from '../../lib/utils';
  * const signer = new ethers.Wallet("{{private_key}}");
  * 
  * const txHash = await rewardPoints({
- *   signer: signer,
- *   nextApiRequest: {{next_api_request}},
- *   rewardAmount: 100,
- *   tokenContractAddress: {{"contract_address"}},
+ *   signerOrWallet: signer,
+ *   body: {{body}},
+ *   headers: {{headers}},
  *   webhookSecret: {{"webhook_secret"}},
+ *   tokenContractAddress: {{"contract_address"}},
+ *   gaslessRelayerUrl: {{"gasless_relayer_url"}},
  *   chain: "goerli",
+ *   rewardAmount: 100,
  *   shopifyAdminUrl: {{"shopify_admin_url"}},
  *   shopifyAccessToken: {{"shopify_access_token"}},
  * });
@@ -33,7 +34,8 @@ import { getRawBody, shopifyFetchAdminAPI } from '../../lib/utils';
  */
 
 export async function rewardTokensOnPurchase({
-  nextApiRequest,
+  body,
+  headers,
   webhookSecret,
   tokenContractAddress,
   gaslessRelayerUrl,
@@ -43,70 +45,71 @@ export async function rewardTokensOnPurchase({
   shopifyAccessToken,
   signerOrWallet,
 }: LoyaltyRewardsParams) {
-  const hmac = nextApiRequest.headers["x-shopify-hmac-sha256"];
-  const body = await getRawBody(nextApiRequest);
-  const hash = crypto
-    .createHmac("sha256", webhookSecret)
-    .update(body)
-    .digest("base64");
+  if (!body || !headers) {
+    throw new Error("Bad request - missing body or headers");
+  }
+  const hmac = headers["x-shopify-hmac-sha256"];
+  const shopifyOrderId = headers["x-shopify-order-id"];
 
-  // Compare our hash to Shopify's hash
-  if (hash === hmac) {
-    const shopifyOrderId = nextApiRequest.headers["x-shopify-order-id"];
+  if (!hmac) {
+    throw new Error("Bad request - missing HMAC header");
+  }
 
-    const response = await shopifyFetchAdminAPI({
-      shopifyAdminUrl,
-      shopifyAccessToken,
-      query: GET_ORDER_BY_ID_QUERY,
-      variables: {
-        id: `gid://shopify/Order/${shopifyOrderId}`,
+  const verified = verifyWebhook(body, headers, webhookSecret);
+  if (!verified) {
+    throw new Error("Bad request - HMAC verification failed");
+  }
+
+  const response = await shopifyFetchAdminAPI({
+    shopifyAdminUrl,
+    shopifyAccessToken,
+    query: GET_ORDER_BY_ID_QUERY,
+    variables: {
+      id: `gid://shopify/Order/${shopifyOrderId}`,
+    },
+  });
+
+  const respBody = response.body as ResponseBody;
+
+  if (!respBody.data.order.lineItems) {
+    throw new Error("Order did not contain any line items");
+  }
+
+  const itemsPurchased = respBody.data.order.lineItems.edges.map(
+    (edge) => edge.node,
+  );
+
+  let wallet = "";
+  try {
+    wallet =
+      itemsPurchased[0].customAttributes.find(
+        (e: any) => e.key === "wallet",
+      )?.value || "";
+  } catch (e) {
+    throw new Error("No wallet address found in order's custom attributes");
+  }
+
+  const sdkOptions: SDKOptions | undefined = gaslessRelayerUrl
+    ? {
+      gasless: {
+        openzeppelin: { relayerUrl: gaslessRelayerUrl },
       },
-    });
-
-    const respBody = response.body as ResponseBody;
-
-    if (!respBody.data.order.lineItems) {
-      throw new Error("Order did not contain any line items");
     }
+    : undefined;
 
-    const itemsPurchased = respBody.data.order.lineItems.edges.map(
-      (edge) => edge.node,
-    );
-
-    let wallet = "";
-    try {
-      wallet =
-        itemsPurchased[0].customAttributes.find(
-          (e: any) => e.key === "wallet",
-        )?.value || "";
-    } catch (e) {
-      throw new Error("No wallet address found in order's custom attributes");
-    }
-
-    const sdkOptions: SDKOptions | undefined = gaslessRelayerUrl
-      ? {
-        gasless: {
-          openzeppelin: { relayerUrl: gaslessRelayerUrl },
-        },
-      }
-      : undefined;
-
-    try {
-      const tx = await rewardTokens({
-        signerOrWallet,
-        wallet,
-        tokenContractAddress,
-        rewardAmount,
-        chain,
-        sdkOptions
-      })
-      console.log(`Rewarding ${rewardAmount} points to wallet address: ${wallet}`, `tx: ${tx}`);
-      return tx;
-    } catch (e) {
-      throw new Error(`Error rewarding points to wallet address: \n${e}`);
-    }
-  } else {
-    throw new Error("Forbidden");
+  try {
+    const tx = await rewardTokens({
+      signerOrWallet,
+      wallet,
+      tokenContractAddress,
+      rewardAmount,
+      chain,
+      sdkOptions
+    })
+    console.log(`Rewarding ${rewardAmount} points to wallet address: ${wallet}`, `tx: ${tx}`);
+    return tx;
+  } catch (e) {
+    throw new Error(`Error rewarding points to wallet address: \n${e}`);
   }
 };
 

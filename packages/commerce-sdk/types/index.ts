@@ -1,11 +1,11 @@
 import { SDKOptions } from "@thirdweb-dev/sdk";
 import { AbstractClientWallet } from "@thirdweb-dev/wallets";
 import { Signer } from 'ethers';
-import { NextApiRequest } from "next";
 
 export type LoyaltyRewardsParams = {
   signerOrWallet: Signer | AbstractClientWallet;
-  nextApiRequest: NextApiRequest;
+  body: Record<string, unknown>;
+  headers: {[key: string]: any}
   webhookSecret: string;
   tokenContractAddress: string;
   gaslessRelayerUrl?: string;

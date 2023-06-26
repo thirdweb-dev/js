@@ -1,3 +1,4 @@
+import { createHmac } from "crypto";
 import { Readable } from "stream";
 import { ShopifyFetchParams, ShopifyFetchResult } from "../../types";
 
@@ -58,4 +59,16 @@ async function fetchFromShopify(
       error: "Error receiving data",
     };
   }
+}
+
+export function verifyWebhook(data: any, headers: {[key: string]: any}, secret: string): boolean {
+    const hmacHeader = headers['x-shopify-hmac-sha256'];
+    if (!hmacHeader) {
+        return false;
+    }
+
+    const hmac = createHmac('sha256', secret);
+    const digest = hmac.update(JSON.stringify(data)).digest('base64');
+
+    return Buffer.from(digest).toString() === hmacHeader;
 }
