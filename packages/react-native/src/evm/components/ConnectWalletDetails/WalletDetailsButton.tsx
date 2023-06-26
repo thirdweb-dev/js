@@ -3,8 +3,7 @@ import BaseButton from "../base/BaseButton";
 import { ChainIcon } from "../base/ChainIcon";
 import Text from "../base/Text";
 import { WalletIcon } from "../base/WalletIcon";
-import { useWallet, useBalance } from "@thirdweb-dev/react-core";
-import { useActiveChain } from "@thirdweb-dev/react-core/evm";
+import { useWallet, useBalance, useChain } from "@thirdweb-dev/react-core";
 import { StyleSheet } from "react-native";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 import { useModalState } from "../../providers/ui-context-provider";
@@ -12,7 +11,7 @@ import Box from "../base/Box";
 
 export type ConnectWalletDetailsProps = {
   address: string;
-  detailsButton?: React.ReactElement;
+  detailsButton?: React.FC<{ onPress: () => void }>;
 };
 
 export const WalletDetailsButton = ({
@@ -20,7 +19,7 @@ export const WalletDetailsButton = ({
   detailsButton,
 }: ConnectWalletDetailsProps) => {
   const activeWallet = useWallet();
-  const chain = useActiveChain();
+  const chain = useChain();
   const balanceQuery = useBalance();
   const { setModalState } = useModalState();
 
@@ -38,15 +37,15 @@ export const WalletDetailsButton = ({
 
   return (
     <>
-      <BaseButton
-        backgroundColor="background"
-        borderColor="border"
-        style={styles.walletDetails}
-        onPress={onPress}
-      >
-        {detailsButton ? (
-          detailsButton
-        ) : (
+      {detailsButton ? (
+        detailsButton({ onPress })
+      ) : (
+        <BaseButton
+          backgroundColor="background"
+          borderColor="border"
+          style={styles.walletDetails}
+          onPress={onPress}
+        >
           <Box flex={1} flexDirection="row" justifyContent="space-between">
             <ChainIcon size={32} chainIconUrl={chain?.icon?.url} />
             <Box justifyContent="center" alignItems="flex-start">
@@ -70,8 +69,8 @@ export const WalletDetailsButton = ({
               iconUri={activeWallet?.getMeta().iconURL || ""}
             />
           </Box>
-        )}
-      </BaseButton>
+        </BaseButton>
+      )}
     </>
   );
 };

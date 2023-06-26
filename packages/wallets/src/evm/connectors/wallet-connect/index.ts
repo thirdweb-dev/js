@@ -314,6 +314,7 @@ export class WalletConnectConnector extends WagmiConnector<
         optionalEvents: OPTIONAL_EVENTS,
         chains: [defaultChain],
         optionalChains: optionalChains,
+
         metadata: {
           name: this.options.dappMetadata.name,
           description: this.options.dappMetadata.description || "",
@@ -330,6 +331,8 @@ export class WalletConnectConnector extends WagmiConnector<
           explorerDenyList: [],
         },
       });
+
+      this.#provider.session?.sessionProperties.
     }
   }
 
