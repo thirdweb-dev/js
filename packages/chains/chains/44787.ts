@@ -23,7 +23,7 @@ export default {
   "explorers": [
     {
       "name": "Celoscan",
-      "url": "https://celoscan.io",
+      "url": "https://alfajores.celoscan.io/",
       "standard": "EIP3091"
     }
   ],
