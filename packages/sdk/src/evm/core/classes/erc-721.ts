@@ -669,7 +669,7 @@ export class Erc721<
    * @param quantity - Quantity of the tokens you want to claim
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
-   * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1
+   * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC721ClaimZora
    */
   claim = /* @__PURE__ */ buildTransactionFunction(
     async (quantity: BigNumberish, options?: ClaimOptions) => {
@@ -701,7 +701,7 @@ export class Erc721<
    * @param quantity - Quantity of the tokens you want to claim
    * @param options
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
-   * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1
+   * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC721ClaimZora
    */
   claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
