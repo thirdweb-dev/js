@@ -4,7 +4,7 @@ import { Signer } from 'ethers';
 import { NextApiRequest } from "next";
 import { LoyaltyRewardsParams, ResponseBody, RewardTokensParams } from "../../../types";
 import { GET_ORDER_BY_ID_QUERY } from "../../lib/queries";
-import { shopifyFetchAdminAPI, verifyWebhook } from '../../lib/utils';
+import { getRawBody, shopifyFetchAdminAPI, verifyWebhook } from '../../lib/utils';
 
 /**
  * Gift ERC20 loyalty tokens to a customer using their wallet address.
@@ -226,3 +226,5 @@ export async function checkEligibility({
  * */
 
 // export async function generateDiscount();
+
+export { getRawBody };
