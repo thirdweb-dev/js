@@ -45,6 +45,7 @@ export async function rewardTokensOnPurchase({
   shopifyAccessToken,
   signerOrWallet,
 }: LoyaltyRewardsParams) {
+  console.log("rewardTokensOnPurchase", {body, headers, webhookSecret, tokenContractAddress, gaslessRelayerUrl, chain, rewardAmount, shopifyAdminUrl, shopifyAccessToken, signerOrWallet});
   if (!body || !headers) {
     throw new Error("Bad request - missing body or headers");
   }
