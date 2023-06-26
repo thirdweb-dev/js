@@ -11,7 +11,6 @@ import { type BytesLike, utils } from "ethers";
 import { AccountCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/AccountFactory";
 import type { AccountEvent } from "../../types/smart-wallet";
 import { isContractDeployed } from "../../common/any-evm-utils/isContractDeployed";
-import { EventQueryOptions } from "../../types";
 
 export class SmartWalletFactory<TContract extends IAccountFactory>
   implements DetectableFeature
@@ -104,14 +103,22 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
    *
    * @twfeature SmartWalletFactory
    */
-  public async getAllWallets(eventFilter?: EventQueryOptions): Promise<AccountEvent[]> {
-    let filter = eventFilter ? eventFilter : { fromBlock: -20000 };
+  public async getAllAccounts(): Promise<AccountEvent[]> {
+    const allAccounts =
+      await this.contractWrapper.readContract.getAllAccounts();
 
-    const events = await this.events.getEvents("AccountCreated", filter);
+    /**
+     * Note: an account can have multiple admins. In this function, we only return the first signer associated with
+     *       the account. This should be the admin that created the account, unless this admin has lost their admin status.
+     */
+    return await Promise.all(
+      allAccounts.map(async (account) => {
+        const assosiatedSigners = await this.getAssociatedSigners(account);
+        const admin = assosiatedSigners[0];
 
-    return events.map((event) => {
-      return { account: event.data.account, admin: event.data.accountAdmin };
-    });
+        return { account, admin };
+      }),
+    );
   }
 
   /**

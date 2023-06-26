@@ -14,13 +14,9 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
-import type {
-  AccountEvent, SmartContract,
-} from "@thirdweb-dev/sdk";
+import type { AccountEvent, SmartContract } from "@thirdweb-dev/sdk";
 import type { BytesLike } from "ethers";
 import invariant from "tiny-invariant";
-
-
 
 /** **********************/
 /**       READ HOOKS    **/
@@ -41,7 +37,7 @@ import invariant from "tiny-invariant";
  * @beta
  */
 export function useSmartWallets(
-  contract: RequiredParam<SmartContract>
+  contract: RequiredParam<SmartContract>,
 ): UseQueryResult<AccountEvent[]> {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
@@ -49,10 +45,10 @@ export function useSmartWallets(
     () => {
       requiredParamInvariant(contract, "No Contract instance provided");
       invariant(
-        contract.smartWalletFactory.getAllWallets,
-        "Contract instance does not support contract.smartWalletFactory.getAllWallets",
+        contract.smartWalletFactory.getAllAccounts,
+        "Contract instance does not support contract.smartWalletFactory.getAllAccounts",
       );
-      return contract.smartWalletFactory.getAllWallets();
+      return contract.smartWalletFactory.getAllAccounts();
     },
     { enabled: !!contract },
   );
@@ -78,7 +74,10 @@ export function useSmartWalletsForAddress(
 ): UseQueryResult<string[]> {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
-    cacheKeys.contract.smartWalletFactory.getAllForAddress(contractAddress, address),
+    cacheKeys.contract.smartWalletFactory.getAllForAddress(
+      contractAddress,
+      address,
+    ),
     () => {
       requiredParamInvariant(contract, "No Contract instance provided");
       invariant(
@@ -112,7 +111,10 @@ export function useIsSmartWalletDeployed(
 ): UseQueryResult<boolean> {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
-    cacheKeys.contract.smartWalletFactory.isSmartWalletDeployed(contractAddress, admin),
+    cacheKeys.contract.smartWalletFactory.isSmartWalletDeployed(
+      contractAddress,
+      admin,
+    ),
     () => {
       requiredParamInvariant(contract, "No Contract instance provided");
       invariant(
@@ -163,9 +165,7 @@ export function useIsSmartWalletDeployed(
  * @see {@link https://portal.thirdweb.com/react/react.usecreatesmartwallet?utm_source=sdk | Documentation}
  * @beta
  */
-export function useCreateSmartWallet(
-  contract: RequiredParam<SmartContract>,
-) {
+export function useCreateSmartWallet(contract: RequiredParam<SmartContract>) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
@@ -174,10 +174,7 @@ export function useCreateSmartWallet(
     async (admin: string, extraData?: BytesLike) => {
       requiredParamInvariant(contract, "contract is undefined");
 
-      return contract.smartWalletFactory.createWallet(
-        admin,
-        extraData,
-      );    
+      return contract.smartWalletFactory.createWallet(admin, extraData);
     },
     {
       onSettled: () =>
