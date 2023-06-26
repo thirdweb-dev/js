@@ -1,3 +1,5 @@
+import type { WalletConnectModalConfig } from "@walletconnect/modal";
+
 export type QRModalOptions = {
   /**
    * When using Web3Modal in standalone mode (without wagmi) you can define array of custom chains via this option.
@@ -18,7 +20,7 @@ export type QRModalOptions = {
    *
    * https://docs.walletconnect.com/2.0/web3modal/options#mobilewallets-optional
    */
-  mobileWallets?: MobileWallet[];
+  mobileWallets?: WalletConnectModalConfig['mobileWallets']
   /**
    * You can define an array of custom desktop or web based wallets.
    *
@@ -30,7 +32,7 @@ export type QRModalOptions = {
    *
    * https://docs.walletconnect.com/2.0/web3modal/options#desktopwallets-optional
    */
-  desktopWallets?: DesktopWallet[];
+  desktopWallets?: WalletConnectModalConfig['desktopWallets'];
   /**
    * Array of wallet id's and their logo mappings.
    *
@@ -149,62 +151,7 @@ export type QRModalOptions = {
    *
    * https://docs.walletconnect.com/2.0/web3modal/options#themevariables-optional
    */
-  themeVariables?: {
-    "--w3m-z-index"?: string;
-    "--w3m-accent-color"?: string;
-    "--w3m-accent-fill-color"?: string;
-    "--w3m-background-color"?: string;
-    "--w3m-background-image-url"?: string;
-    "--w3m-logo-image-url"?: string;
-    "--w3m-background-border-radius"?: string;
-    "--w3m-container-border-radius"?: string;
-    "--w3m-wallet-icon-border-radius"?: string;
-    "--w3m-wallet-icon-large-border-radius"?: string;
-    "--w3m-wallet-icon-small-border-radius"?: string;
-    "--w3m-input-border-radius"?: string;
-    "--w3m-notification-border-radius"?: string;
-    "--w3m-button-border-radius"?: string;
-    "--w3m-secondary-button-border-radius"?: string;
-    "--w3m-icon-button-border-radius"?: string;
-    "--w3m-button-hover-highlight-border-radius"?: string;
-    "--w3m-font-family"?: string;
-    "--w3m-text-big-bold-size"?: string;
-    "--w3m-text-big-bold-weight"?: string;
-    "--w3m-text-big-bold-line-height"?: string;
-    "--w3m-text-big-bold-letter-spacing"?: string;
-    "--w3m-text-big-bold-text-transform"?: string;
-    "--w3m-text-big-bold-font-family"?: string;
-    "--w3m-text-medium-regular-size"?: string;
-    "--w3m-text-medium-regular-weight"?: string;
-    "--w3m-text-medium-regular-line-height"?: string;
-    "--w3m-text-medium-regular-letter-spacing"?: string;
-    "--w3m-text-medium-regular-text-transform"?: string;
-    "--w3m-text-medium-regular-font-family"?: string;
-    "--w3m-text-small-regular-size"?: string;
-    "--w3m-text-small-regular-weight"?: string;
-    "--w3m-text-small-regular-line-height"?: string;
-    "--w3m-text-small-regular-letter-spacing"?: string;
-    "--w3m-text-small-regular-text-transform"?: string;
-    "--w3m-text-small-regular-font-family"?: string;
-    "--w3m-text-small-thin-size"?: string;
-    "--w3m-text-small-thin-weight"?: string;
-    "--w3m-text-small-thin-line-height"?: string;
-    "--w3m-text-small-thin-letter-spacing"?: string;
-    "--w3m-text-small-thin-text-transform"?: string;
-    "--w3m-text-small-thin-font-family"?: string;
-    "--w3m-text-xsmall-bold-size"?: string;
-    "--w3m-text-xsmall-bold-weight"?: string;
-    "--w3m-text-xsmall-bold-line-height"?: string;
-    "--w3m-text-xsmall-bold-letter-spacing"?: string;
-    "--w3m-text-xsmall-bold-text-transform"?: string;
-    "--w3m-text-xsmall-bold-font-family"?: string;
-    "--w3m-text-xsmall-regular-size"?: string;
-    "--w3m-text-xsmall-regular-weight"?: string;
-    "--w3m-text-xsmall-regular-line-height"?: string;
-    "--w3m-text-xsmall-regular-letter-spacing"?: string;
-    "--w3m-text-xsmall-regular-text-transform"?: string;
-    "--w3m-text-xsmall-regular-font-family"?: string;
-  };
+  themeVariables?: WalletConnectModalConfig['themeVariables']
   /**
    * Puts Web3Modal into dark or light mode. Defaults to user's system preference.
    *
@@ -213,19 +160,3 @@ export type QRModalOptions = {
   themeMode?: "dark" | "light";
 };
 
-export interface MobileWallet {
-  id: string;
-  name: string;
-  links: {
-    universal: string;
-    native?: string;
-  };
-}
-export interface DesktopWallet {
-  id: string;
-  name: string;
-  links: {
-    native: string;
-    universal: string;
-  };
-}
