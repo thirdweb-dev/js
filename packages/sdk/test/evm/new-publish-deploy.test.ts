@@ -1,11 +1,7 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { fastForwardTime, jsonProvider, sdk, signers } from "./before-setup";
+import { jsonProvider, sdk, signers, thirdwebFactory } from "./before-setup";
 import { expect, assert } from "chai";
-import {
-  ThirdwebSDK,
-  fetchAndCacheDeployMetadata,
-  fetchExtendedReleaseMetadata,
-} from "../../src/evm";
+import { ThirdwebSDK, fetchAndCacheDeployMetadata } from "../../src/evm";
 import { BigNumber } from "ethers";
 import { mockUploadWithCID } from "./mock/MockStorage";
 
@@ -16,8 +12,6 @@ describe("New Publish Flow", async () => {
     w4: SignerWithAddress;
 
   let realSDK: ThirdwebSDK;
-
-  before("", async () => {});
 
   beforeEach(async () => {
     await jsonProvider.send("hardhat_reset", []);
@@ -31,7 +25,6 @@ describe("New Publish Flow", async () => {
     let publishUriWithDirectDeploy: string;
     let publishUriWithCustomFactoryDeploy: string;
     let customFactoryPublishUri: string;
-    let publishUriWithAutoFactoryDeploy: string;
 
     before("", async () => {
       // https://thirdweb.com/thirdweb.eth/MyContract - v1.0.1
@@ -45,8 +38,6 @@ describe("New Publish Flow", async () => {
       // Split Main
       customFactoryPublishUri =
         "ipfs://QmZZUsE2hQbKc4pHPC3qjfXYrMvg8mceDqHxoQhgMudwau/";
-
-      publishUriWithAutoFactoryDeploy = "";
     });
     it("should deploy regular contract", async () => {
       const input = 27;
@@ -147,16 +138,42 @@ describe("New Publish Flow", async () => {
 
       expect(deployingAddress).to.equal(customFactoryAddress);
     });
-
-    it("should deploy with auto factory", async () => {});
   });
 
-  describe("Deploy re-published contract", async () => {});
+  describe("Deploy re-published contract", async () => {
+    let publishUriWithAutoFactoryDeploy: string;
+
+    before("", async () => {
+      // Multiwrap
+      publishUriWithAutoFactoryDeploy =
+        "ipfs://QmQBgncSxFwLKusgAzXVpaWTuJTfV5yL6vs3jYXzz89EaY/";
+    });
+
+    it("should deploy with auto factory", async () => {
+      const mockPublisher = process.env.contractPublisherAddress;
+      process.env.contractPublisherAddress =
+        "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+      // deploy contract via auto-factory
+      const adminAddress = await adminWallet.getAddress();
+      const contractAddress = await realSDK.deployer.deployContractFromUri(
+        publishUriWithAutoFactoryDeploy,
+        [adminAddress, "Multiwrap Auto", "MA", "", [], adminAddress, 5],
+      );
+
+      const multiwrap = await realSDK.getContract(contractAddress);
+      const bytecode = await realSDK.getProvider().getCode(contractAddress);
+      const name = await multiwrap.call("name");
+
+      expect(name).to.equal("Multiwrap Auto");
+      assert(bytecode.startsWith("0x363d3d373d3d3d363d73"));
+
+      process.env.contractPublisherAddress = mockPublisher;
+    });
+  });
 
   describe("Deploy old contract without re-publishing", async () => {
     let publishUriWithDirectDeploy: string;
     let publishUriWithFactoryDeploy: string;
-    let publishUriWithProxyDeploy: string;
 
     before("", async () => {
       // https://thirdweb.com/thirdweb.eth/MyContract - v1.0.0
@@ -166,10 +183,88 @@ describe("New Publish Flow", async () => {
       // https://thirdweb.com/thirdweb.eth/DropERC721 - v4.0.7
       publishUriWithFactoryDeploy =
         "ipfs://QmPASFEYVvUfXfztAHXNTcCqaJQcyr4RcLcW5F6BZsZvjg";
-      publishUriWithProxyDeploy = "";
+    });
+
+    it("should deploy regular contract", async () => {
+      const input = 27;
+      const contractAddress = await realSDK.deployer.deployContractFromUri(
+        publishUriWithDirectDeploy,
+        [input],
+      );
+      const contract = await realSDK.getContract(contractAddress);
+
+      const number: BigNumber = await contract.call("number");
+      const deployer: string = await contract.call("deployer");
+
+      expect(number.toNumber()).to.equal(input);
+      expect(deployer).to.equal(adminWallet.address);
+    });
+
+    it("should deploy via old factory", async () => {
+      // deploy implementation
+      const implementationAddress =
+        await realSDK.deployer.deployContractFromUri(
+          publishUriWithFactoryDeploy,
+          [],
+          { forceDirectDeploy: true },
+        );
+      await (
+        await thirdwebFactory.addImplementation(implementationAddress)
+      ).wait();
+
+      // Re-upload with mock storage, set implementation address for hardhat network
+      const { compilerMetadata, extendedMetadata } =
+        await fetchAndCacheDeployMetadata(
+          publishUriWithFactoryDeploy,
+          realSDK.storage,
+        );
+      await mockUploadWithCID(
+        compilerMetadata.metadataUri.replace("ipfs://", ""),
+        JSON.stringify(compilerMetadata.metadata),
+      );
+      await mockUploadWithCID("bytecode4", compilerMetadata.bytecode);
+      await mockUploadWithCID(
+        "cid4",
+        JSON.stringify({
+          ...extendedMetadata,
+          metadataUri: compilerMetadata.metadataUri,
+          bytecodeUri: "bytecode4",
+          factoryDeploymentData: {
+            ...extendedMetadata?.factoryDeploymentData,
+            implementationAddresses: {
+              "31337": implementationAddress,
+            },
+            factoryAddresses: {
+              "31337": process.env.factoryAddress,
+            },
+          },
+          version: "1.0.2",
+        }),
+      );
+
+      const adminAddress = await adminWallet.getAddress();
+      //note: here using sdk (with mock storage), instead of realSDK
+      const contractAddress = await sdk.deployer.deployContractFromUri("cid4", [
+        adminAddress,
+        "Drop Auto",
+        "DA",
+        "",
+        [],
+        adminAddress,
+        adminAddress,
+        5,
+        5,
+        adminAddress,
+      ]);
+
+      const drop = await sdk.getContract(contractAddress);
+      const bytecode = await sdk.getProvider().getCode(contractAddress);
+      const name = await drop.call("name");
+
+      expect(name).to.equal("Drop Auto");
+      assert(bytecode.startsWith("0x363d3d373d3d3d363d73"));
     });
   });
 
   // TODO: test any-evm vs standard chain deploys with same publish-uri
-  // TODO: test enabled/disabled networks with new publish
 });
