@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { Linking, StyleSheet, View } from "react-native";
 import Box from "../base/Box";
 import { Toast } from "../base/Toast";
 import { ExportLocalWalletModal } from "./ExportLocalWalletModal";
@@ -22,6 +22,8 @@ import { useModalState } from "../../providers/ui-context-provider";
 import { CLOSE_MODAL_STATE, WalletDetailsModal } from "../../utils/modalTypes";
 import { useAppTheme } from "../../styles/hooks";
 import { LocalWalletImportModal } from "../ConnectWalletFlow/LocalWalletImportModal";
+import { IconTextButton } from "../base/IconTextButton";
+import MoneyIcon from "../../assets/money";
 
 export const ConnectWalletDetailsModal = () => {
   const theme = useAppTheme();
@@ -192,6 +194,18 @@ export const ConnectWalletDetailsModal = () => {
         chainName={chain?.name || "Unknown Network"}
         onPress={onChangeNetworkPress}
       />
+      {chain?.testnet && chain?.faucets?.length ? (
+        <IconTextButton
+          mt="xs"
+          text="Request Testnet Funds"
+          icon={<MoneyIcon height={10} width={10} />}
+          onPress={() => {
+            if (chain?.faucets?.[0]) {
+              Linking.openURL(chain.faucets[0]);
+            }
+          }}
+        />
+      ) : null}
       {getAdditionalActions()}
       {addressCopied === true ? (
         <Toast text={"Address copied to clipboard"} />
