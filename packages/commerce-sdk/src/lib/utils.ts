@@ -64,7 +64,7 @@ async function fetchFromShopify(
 export function verifyWebhook(data: any, headers: {[key: string]: any}, secret: string): boolean {
     const hmacHeader = headers['x-shopify-hmac-sha256'];
     if (!hmacHeader) {
-        return false;
+      throw new Error("Bad request - missing HMAC header");
     }
 
     const hmac = createHmac('sha256', secret);

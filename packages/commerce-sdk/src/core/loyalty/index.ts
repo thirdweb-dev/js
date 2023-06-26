@@ -48,12 +48,8 @@ export async function rewardTokensOnPurchase({
   if (!body || !headers) {
     throw new Error("Bad request - missing body or headers");
   }
-  const hmac = headers["x-shopify-hmac-sha256"];
-  const shopifyOrderId = headers["x-shopify-order-id"];
 
-  if (!hmac) {
-    throw new Error("Bad request - missing HMAC header");
-  }
+  const shopifyOrderId = headers["x-shopify-order-id"];
 
   const verified = verifyWebhook(body, headers, webhookSecret);
   if (!verified) {
