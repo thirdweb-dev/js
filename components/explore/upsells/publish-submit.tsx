@@ -60,8 +60,7 @@ export const PublishUpsellCard: React.FC = () => {
             color="accent.100"
             borderColor="accent.900"
             borderWidth="1px"
-            href="https://thirdweb.typeform.com/to/rVvsAoqn#hubspot_utk=xxxxx&hubspot_page_name=xxxxx&hubspot_page_url=xxxxx"
-            isExternal
+            href="/contact-us"
             noIcon
             _hover={{
               bg: "transparent",

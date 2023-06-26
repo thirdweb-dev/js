@@ -239,7 +239,7 @@ const SolanaHackathon: ThirdwebNextPage = () => {
               {/* <Timer /> */}
 
               <LinkButton
-                href="https://thirdweb.typeform.com/to/jta0ye4M"
+                href="/contact-us"
                 onClick={() =>
                   trackEvent({
                     category: "solanathon",
@@ -257,7 +257,6 @@ const SolanaHackathon: ThirdwebNextPage = () => {
                 _hover={{
                   background: "rgba(255,255,255,0.9)!important",
                 }}
-                isExternal
                 noIcon
                 isDisabled
               >

@@ -104,7 +104,7 @@ const Publish: ThirdwebNextPage = () => {
             <Text color="white" size="body.lg">
               Do you want to feature your contracts alongside world-class
               protocols & engineers? Get your contract in front of the 70k+ web3
-              devs that visit this page every month. Get in touch!
+              devs that visit this page every month.
             </Text>
             <Flex gap="12px" direction={{ base: "column", md: "row" }}>
               <LinkButton
@@ -115,13 +115,12 @@ const Publish: ThirdwebNextPage = () => {
                 }}
                 bg="white"
                 color="black"
-                href="https://form.typeform.com/to/FAwehBFl"
-                isExternal
+                href="/contact-us"
                 noIcon
                 _hover={{ bg: "rgba(255,255,255,.8)" }}
                 boxShadow="0px 4px 4px rgba(0, 0, 0, 0.05)"
               >
-                Submit contract
+                Get In Touch
               </LinkButton>
               <LinkButton
                 as={TrackedLink}
