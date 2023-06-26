@@ -68,7 +68,7 @@ export function verifyWebhook(data: any, headers: {[key: string]: any}, secret: 
     }
 
     const hmac = createHmac('sha256', secret);
-    const digest = hmac.update(JSON.stringify(data)).digest('base64');
+    const digest = hmac.update(data).digest('base64');
 
     return Buffer.from(digest).toString() === hmacHeader;
 }

@@ -4,7 +4,7 @@ import { Signer } from 'ethers';
 
 export type LoyaltyRewardsParams = {
   signerOrWallet: Signer | AbstractClientWallet;
-  body: Record<string, unknown>;
+  body: Buffer;
   headers: {[key: string]: any}
   webhookSecret: string;
   tokenContractAddress: string;
