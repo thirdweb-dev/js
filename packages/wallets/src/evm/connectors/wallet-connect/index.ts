@@ -324,11 +324,7 @@ export class WalletConnectConnector extends WagmiConnector<
           this.chains.map((chain) => [chain.chainId, chain.rpc[0]]),
         ),
 
-        qrModalOptions: {
-          ...this.options.qrModalOptions,
-          explorerAllowList: [],
-          explorerDenyList: [],
-        },
+        qrModalOptions: this.options.qrModalOptions,
       });
     }
   }
