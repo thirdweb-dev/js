@@ -504,7 +504,7 @@ export function useEnglishAuctionWinningBid(
 ) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
-    cacheKeys.contract.marketplace.auction.getWinningBid(
+    cacheKeys.contract.marketplace.englishAuctions.getWinningBid(
       contractAddress,
       auctionId,
     ),
@@ -596,7 +596,7 @@ export function useBidBuffer(
 ) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
-    cacheKeys.contract.marketplace.getBidBufferBps(contractAddress),
+    cacheKeys.contract.marketplace.auction.getBidBufferBps(contractAddress, listingId),
     () => {
       requiredParamInvariant(contract, "No Contract instance provided");
 
@@ -647,7 +647,7 @@ export function useMinimumNextBid(
 ) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
-    cacheKeys.contract.marketplace.auction.getWinner(
+    cacheKeys.contract.marketplace.auction.getMinimumNextBid(
       contractAddress,
       listingId,
     ),
