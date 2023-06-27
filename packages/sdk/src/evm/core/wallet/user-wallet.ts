@@ -24,7 +24,7 @@ import {
 } from "ethers";
 import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
-import { BlockTag } from "@ethersproject/abstract-provider";
+import type { BlockTag } from "@ethersproject/abstract-provider";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import { isNativeToken } from "../../common/currency/isNativeToken";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
