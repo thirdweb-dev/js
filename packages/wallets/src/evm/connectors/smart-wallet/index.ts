@@ -36,14 +36,14 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   async initialize(personalWallet: EVMWallet) {
     const config = this.config;
-    const chain =
-      typeof config.chain === "string"
-        ? config.chain
-        : (config.chain as Chain).slug;
+    const originalProvider = getChainProvider(config.chain, {
+      thirdwebApiKey: config.thirdwebApiKey || DEFAULT_WALLET_API_KEY,
+    }) as providers.BaseProvider;
+    const chainId = (await originalProvider.getNetwork()).chainId;
     const bundlerUrl =
-      this.config.bundlerUrl || `https://${chain}.bundler.thirdweb.com`;
+      this.config.bundlerUrl || `https://${chainId}.bundler.thirdweb.com`;
     const paymasterUrl =
-      this.config.paymasterUrl || `https://${chain}.bundler.thirdweb.com`;
+      this.config.paymasterUrl || `https://${chainId}.bundler.thirdweb.com`;
     const entryPointAddress = config.entryPointAddress || ENTRYPOINT_ADDRESS;
     const localSigner = await personalWallet.getSigner();
     const providerConfig: ProviderConfig = {
@@ -65,9 +65,6 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       accountInfo: config.accountInfo || this.defaultAccountInfo(),
       thirdwebApiKey: config.thirdwebApiKey,
     };
-    const originalProvider = getChainProvider(config.chain, {
-      thirdwebApiKey: config.thirdwebApiKey || DEFAULT_WALLET_API_KEY,
-    }) as providers.BaseProvider;
     this.personalWallet = personalWallet;
     const accountApi = new AccountAPI(providerConfig, originalProvider);
     this.aaProvider = await create4337Provider(
