@@ -202,6 +202,12 @@ export {
   useSmartWalletsForAddress,
 } from "./hooks/async/smart-wallet-factory";
 
+// smart wallet
+export {
+  useSmartWalletSigners,
+  useSetSmartWalletSigners,
+} from "./hooks/async/smart-wallet";
+
 // thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)
 
 // auth hooks
