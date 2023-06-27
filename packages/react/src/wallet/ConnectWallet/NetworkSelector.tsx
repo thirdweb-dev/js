@@ -385,6 +385,17 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
   const [switchingChainId, setSwitchingChainId] = useState(-1);
   const [errorSwitchingChainId, setErrorSwitchingChainId] = useState(-1);
 
+  const close = props.close;
+
+  useEffect(() => {
+    // if switching and switched successfully - close modal
+    if (switchingChainId !== -1 && activeChainId === switchingChainId) {
+      if (close) {
+        close();
+      }
+    }
+  }, [switchingChainId, close, activeChainId]);
+
   const handleSwitch = async (chain: Chain) => {
     setErrorSwitchingChainId(-1);
     setSwitchingChainId(chain.chainId);
