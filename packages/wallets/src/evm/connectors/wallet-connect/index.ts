@@ -327,8 +327,6 @@ export class WalletConnectConnector extends WagmiConnector<
 
         qrModalOptions: this.options.qrModalOptions,
       });
-
-      this.#provider.session?.sessionProperties.
     }
   }
 
