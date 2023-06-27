@@ -44,6 +44,7 @@ export type ThirdwebAuthConfig<
     validateTokenId?:
       | ((tokenId: string) => void)
       | ((tokenId: string) => Promise<void>);
+    loginPayloadDurationInSeconds?: number;
     tokenDurationInSeconds?: number;
     refreshIntervalInSeconds?: number;
   };
