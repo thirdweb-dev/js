@@ -1,5 +1,18 @@
 # @thirdweb-dev/sdk
 
+## 3.10.25
+
+### Patch Changes
+
+- [#1233](https://github.com/thirdweb-dev/js/pull/1233) [`d498c79a`](https://github.com/thirdweb-dev/js/commit/d498c79a911d478077dfb8a2490eb1bf91523186) Thanks [@nkrishang](https://github.com/nkrishang)! - Fix smartWalletFactory.getAllEvents
+
+- [#1241](https://github.com/thirdweb-dev/js/pull/1241) [`9af346ee`](https://github.com/thirdweb-dev/js/commit/9af346eeada1037be27c8d3c9e1777f7be11a8ea) Thanks [@nkrishang](https://github.com/nkrishang)! - Use fn getAllAccounts instead of event logs AccountCreated
+
+- Updated dependencies [[`0c5b03b8`](https://github.com/thirdweb-dev/js/commit/0c5b03b8d6cc6a4e69bb2a4647d3626e69f1283c), [`9af346ee`](https://github.com/thirdweb-dev/js/commit/9af346eeada1037be27c8d3c9e1777f7be11a8ea)]:
+  - @thirdweb-dev/storage@1.1.5
+  - @thirdweb-dev/contracts-js@1.3.7
+  - @thirdweb-dev/chains@0.1.24
+
 ## 3.10.24
 
 ### Patch Changes

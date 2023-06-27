@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/contracts-js",
-  "version": "1.3.6",
+  "version": "1.3.7",
   "main": "dist/thirdweb-dev-contracts-js.cjs.js",
   "module": "dist/thirdweb-dev-contracts-js.esm.js",
   "browser": {
