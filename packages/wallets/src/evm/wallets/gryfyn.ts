@@ -2,17 +2,17 @@ import { AbstractClientWallet, WalletOptions } from "./base";
 import type { GryFynConnector as GryFynConnectorType } from "../connectors/gryfyn";
 import { Chain } from "@thirdweb-dev/chains";
 
-export type GrynFynWalletOptions = WalletOptions<{
+export type GryfynWalletOptions = WalletOptions<{
   apiKey: string;
   chains: Chain[];
 }>;
 
-export class GrynFynWallet extends AbstractClientWallet {
-  #options: GrynFynWalletOptions;
+export class GryfynWallet extends AbstractClientWallet {
+  #options: GryfynWalletOptions;
   #connector?: GryFynConnectorType;
 
-  constructor(options: GrynFynWalletOptions) {
-    super("GrynFynWallet", options);
+  constructor(options: GryfynWalletOptions) {
+    super("GryfynWallet", options);
     this.#options = options;
   }
 

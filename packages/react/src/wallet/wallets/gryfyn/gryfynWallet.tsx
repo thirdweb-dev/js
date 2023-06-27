@@ -1,18 +1,18 @@
 import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
-import { GrynFynWallet } from "@thirdweb-dev/wallets";
+import { GryfynWallet } from "@thirdweb-dev/wallets";
 
 export const gryfynWallet = (options: {
   apiKey: string;
-}): WalletConfig<GrynFynWallet> => {
+}): WalletConfig<GryfynWallet> => {
   return {
-    id: "GrynFynWallet",
+    id: "GryfynWallet",
     meta: {
-      name: "GrynFyn Wallet",
+      name: "Gryfyn Wallet",
       iconURL:
         "ipfs://QmTN1SvyadNdxKDy26cibRmHKLPH26C8daBZgsKFZbNVxw/gryfyn.svg",
     },
     create: (walletOptions: WalletOptions) => {
-      return new GrynFynWallet({ ...walletOptions, ...options });
+      return new GryfynWallet({ ...walletOptions, ...options });
     },
   };
 };

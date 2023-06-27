@@ -51,7 +51,7 @@ import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useWalletConfig } from "@thirdweb-dev/react-core";
 import type { LocalWalletConfig } from "../wallets/localWallet/types";
 // TEMPORARY
-import { GrynFynWallet } from "@thirdweb-dev/wallets";
+import { GryfynWallet } from "@thirdweb-dev/wallets";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -353,7 +353,7 @@ export const ConnectedWalletDetails: React.FC<{
 
         {/* TEMPORARY */}
         {/* Gryfyn wallet */}
-        {activeWallet && activeWallet instanceof GrynFynWallet && (
+        {activeWallet && activeWallet instanceof GryfynWallet && (
           <MenuLink
             target="_blank"
             onClick={async () => {
