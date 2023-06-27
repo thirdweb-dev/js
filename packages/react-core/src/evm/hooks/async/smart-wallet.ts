@@ -1,3 +1,4 @@
+import type { providers } from "ethers";
 import {
   RequiredParam,
   requiredParamInvariant,
@@ -10,6 +11,7 @@ import {
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import {
   useMutation,
+  UseMutationResult,
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
@@ -19,8 +21,6 @@ import type {
   SmartContract,
 } from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
-
-
 
 /** **********************/
 /**       READ HOOKS    **/
@@ -41,7 +41,7 @@ import invariant from "tiny-invariant";
  * @beta
  */
 export function useSmartWalletSigners(
-  contract: RequiredParam<SmartContract>
+  contract: RequiredParam<SmartContract>,
 ): UseQueryResult<SignerWithRestrictions[]> {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
@@ -97,7 +97,12 @@ export function useSmartWalletSigners(
  */
 export function useSetSmartWalletSigners(
   contract: RequiredParam<SmartContract>,
-) {
+): UseMutationResult<
+  { receipt: providers.TransactionReceipt },
+  unknown,
+  SignerWithRestrictionsBatchInput,
+  unknown
+> {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();

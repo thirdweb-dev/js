@@ -67,7 +67,6 @@
   "sideEffects:": false,
   "devDependencies": {
     "@babel/core": "^7.19.3",
-    "@ethersproject/abstract-provider": "^5.7.0",
     "@babel/preset-env": "^7.18.10",
     "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
@@ -113,10 +112,6 @@
     "@solana/web3.js": "^1.62.0",
     "ethers": ">=5.5.1",
     "react": ">=18.0.0"
-  },
-  "resolutions": {
-    "ansi-regex": "^6.0.1",
-    "typescript": "^4.6.2"
   },
   "peerDependenciesMeta": {
     "@solana/web3.js": {

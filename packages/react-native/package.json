@@ -44,10 +44,6 @@
     "react-native-svg": "^13.8.0",
     "tiny-invariant": "^1.2.0"
   },
-  "resolutions": {
-    "react-native-mmkv": "2.5.1",
-    "@magic-sdk/provider": "17.2.0"
-  },
   "devDependencies": {
     "@babel/core": "^7.19.3",
     "@babel/preset-env": "^7.1.6",
