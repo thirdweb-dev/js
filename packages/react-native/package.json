@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react-native",
-  "version": "0.2.20",
+  "version": "0.2.22",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react-native",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -43,10 +43,6 @@
     "react-native-modal": "^13.0.1",
     "react-native-svg": "^13.8.0",
     "tiny-invariant": "^1.2.0"
-  },
-  "resolutions": {
-    "react-native-mmkv": "2.5.1",
-    "@magic-sdk/provider": "17.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",

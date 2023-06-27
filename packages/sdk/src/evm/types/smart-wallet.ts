@@ -32,6 +32,17 @@ export type SignerWithRestrictions = {
   restrictions: AccessRestrictions;
 }
 
+export const SignerWithRestrictionsSchema = /* @__PURE__ */ z.object({
+  signer: AddressOrEnsSchema,
+  isAdmin: /* @__PURE__ */ z.boolean(),
+  restrictions: AccessRestrictionsSchema,
+});
+
+export type SignerWithRestrictionsInput = z.input<typeof SignerWithRestrictionsSchema>;
+
+export const SignerWithRestrictionsBatchSchema = /* @__PURE__ */ z.array(SignerWithRestrictionsSchema);
+export type SignerWithRestrictionsBatchInput = z.input<typeof SignerWithRestrictionsBatchSchema>;
+
 export type SignedAccountPermissionsPayload = {
   payload: IAccountPermissions.RoleRequestStruct;
   signature: BytesLike;

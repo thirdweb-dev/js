@@ -2,4 +2,4 @@
 "@thirdweb-dev/react-core": patch
 ---
 
-Add useSmartWalletsForAddress hook
+Add react hooks for smart wallet

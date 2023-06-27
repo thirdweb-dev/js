@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react",
-  "version": "3.14.1",
+  "version": "3.14.3",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -152,10 +152,6 @@
     "ethers": ">=5.5.1",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
-  },
-  "resolutions": {
-    "ansi-regex": "^6.0.1",
-    "typescript": "^4.6.2"
   },
   "peerDependenciesMeta": {
     "@solana/wallet-adapter-base": {

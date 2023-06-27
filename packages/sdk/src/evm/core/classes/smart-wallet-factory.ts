@@ -103,17 +103,22 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
    *
    * @twfeature SmartWalletFactory
    */
-  public async getAllWallets(): Promise<AccountEvent[]> {
-    const filter = {
-      fromBlock: 0,
-      toBlock: "latest",
-    };
+  public async getAllAccounts(): Promise<AccountEvent[]> {
+    const allAccounts =
+      await this.contractWrapper.readContract.getAllAccounts();
 
-    const events = await this.events.getEvents("AccountCreated", filter);
+    /**
+     * Note: an account can have multiple admins. In this function, we only return the first signer associated with
+     *       the account. This should be the admin that created the account, unless this admin has lost their admin status.
+     */
+    return await Promise.all(
+      allAccounts.map(async (account) => {
+        const assosiatedSigners = await this.getAssociatedSigners(account);
+        const admin = assosiatedSigners[0];
 
-    return events.map((event) => {
-      return { account: event.data.account, admin: event.data.accountAdmin };
-    });
+        return { account, admin };
+      }),
+    );
   }
 
   /**

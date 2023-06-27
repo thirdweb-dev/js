@@ -18,7 +18,7 @@ export const deployContractAndUploadMetadata = async (
   return deployed.address;
 };
 
-const mockUploadContractMetadata = async (
+export const mockUploadContractMetadata = async (
   contractName: string,
   address: string,
   abi: any,

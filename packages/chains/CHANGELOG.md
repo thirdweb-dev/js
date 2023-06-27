@@ -1,5 +1,17 @@
 # @thirdweb-dev/chains
 
+## 0.1.24
+
+### Patch Changes
+
+- [#1241](https://github.com/thirdweb-dev/js/pull/1241) [`9af346ee`](https://github.com/thirdweb-dev/js/commit/9af346eeada1037be27c8d3c9e1777f7be11a8ea) Thanks [@nkrishang](https://github.com/nkrishang)! - Use fn getAllAccounts instead of event logs AccountCreated
+
+## 0.1.23
+
+### Patch Changes
+
+- [#1229](https://github.com/thirdweb-dev/js/pull/1229) [`6816219a`](https://github.com/thirdweb-dev/js/commit/6816219ac13ae571a0c90db6ab389c319bc1f052) Thanks [@jnsdls](https://github.com/jnsdls)! - add/update chains
+
 ## 0.1.22
 
 ### Patch Changes
