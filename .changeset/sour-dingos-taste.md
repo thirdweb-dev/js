@@ -4,4 +4,6 @@
 "@thirdweb-dev/react": patch
 ---
 
-[RN/Wallets/React] Migrate wallets to WCV2 and remove WCV1 support
+Migrate wallets to WCV2 and remove WCV1 support.
+
+Please, check our changelogs for more info: https://blog.thirdweb.com/changelog/
