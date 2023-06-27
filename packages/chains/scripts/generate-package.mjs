@@ -146,6 +146,10 @@ function findSlug(chain) {
   if (slug === "base-goerli-testnet") {
     slug = "base-goerli";
   }
+  // optimisim rename handling
+  if (slug === "op") {
+    slug = "optimism";
+  }
   // end special cases
 
   takenSlugs[slug] = true;
