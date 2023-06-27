@@ -82,7 +82,7 @@ export class WalletConnectConnector extends WagmiConnector<
   constructor(config: { chains?: Chain[]; options: WalletConnectOptions }) {
     super({
       ...config,
-      options: { isNewChainsStale: true, ...config.options },
+      options: { isNewChainsStale: false, ...config.options },
     });
     this.#storage = config.options.storage;
     this.#createProvider();
@@ -120,17 +120,17 @@ export class WalletConnectConnector extends WagmiConnector<
 
       // If there no active session, or the chains are stale, connect.
       if (!provider.session || isChainsStale) {
-        const optionalChains = this.chains
-          .filter((chain) => chain.chainId !== targetChainId)
-          .map((optionalChain) => optionalChain.chainId);
+        // const optionalChains = this.chains
+        //   .filter((chain) => chain.chainId !== targetChainId)
+        //   .map((optionalChain) => optionalChain.chainId);
 
         this.emit("message", { type: "connecting" });
 
         await provider.connect({
           pairingTopic,
           chains: [targetChainId],
-          optionalChains:
-            optionalChains.length > 0 ? optionalChains : [targetChainId],
+          // optionalChains:
+          //   optionalChains.length > 0 ? optionalChains : [targetChainId],
         });
 
         this.#setRequestedChainsIds(this.chains.map(({ chainId }) => chainId));
@@ -322,7 +322,7 @@ export class WalletConnectConnector extends WagmiConnector<
           icons: [this.options.dappMetadata.logoUrl || ""],
         },
         rpcMap: Object.fromEntries(
-          this.chains.map((chain) => [chain.chainId, chain.rpc[0]]),
+          [this.chains[0]].map((chain) => [chain.chainId, chain.rpc[0]]),
         ),
 
         qrModalOptions: this.options.qrModalOptions,
