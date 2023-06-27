@@ -2,25 +2,37 @@ import { PRODUCTS, RESOURCES, SOLUTIONS } from "./DesktopMenu";
 import type { NavCardProps } from "./NavCard";
 import {
   Flex,
+  FlexProps,
   Icon,
   IconButton,
-  IconButtonProps,
   ListItem,
   UnorderedList,
   useDisclosure,
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { FiMenu } from "react-icons/fi";
-import { Drawer, Heading, TrackedLink } from "tw-components";
+import { Drawer, Heading, TrackedLink, TrackedLinkButton } from "tw-components";
 
-export const MobileMenu: React.FC<IconButtonProps> = (props) => {
+export const MobileMenu: React.FC<FlexProps> = (props) => {
   const disclosure = useDisclosure();
 
   return (
-    <>
+    <Flex gap={2} {...props}>
+      <TrackedLinkButton
+        bgColor="white"
+        _hover={{
+          bgColor: "white",
+          opacity: 0.8,
+        }}
+        color="black"
+        href="/contact-us"
+        category="landing-page"
+        label="contact-us"
+      >
+        Contact Us
+      </TrackedLinkButton>
       <IconButton
-        {...props}
-        aria-label="Menu"
+        aria-label="Homepage Menu"
         icon={<FiMenu />}
         variant="ghost"
         onClick={disclosure.onOpen}
@@ -48,7 +60,7 @@ export const MobileMenu: React.FC<IconButtonProps> = (props) => {
           />
         </Flex>
       </Drawer>
-    </>
+    </Flex>
   );
 };
 

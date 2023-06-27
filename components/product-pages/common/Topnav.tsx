@@ -51,10 +51,7 @@ export const HomepageTopNav: React.FC = () => {
           <Logo forceShowWordMark color="#fff" />
         </TrackedLink>
         <DesktopMenu />
-        <MobileMenu
-          aria-label="Homepage Menu"
-          display={{ base: "inherit", md: "none" }}
-        />
+        <MobileMenu display={{ base: "inherit", md: "none" }} />
       </Container>
     </Box>
   );
