@@ -2,6 +2,14 @@ import type { WalletConnectModalConfig } from "@walletconnect/modal";
 
 export type QRModalOptions = {
   /**
+   * When using Web3Modal in standalone mode (without wagmi) you can define array of custom chains via this option.
+   *
+   * Defaults to `undefined`
+   *
+   * https://docs.walletconnect.com/2.0/web3modal/options#standalonechains-optional
+   */
+    standaloneChains?: string[];
+  /**
    * You can define an array of custom mobile wallets.
    *
    * Note: you will also need to add appropriate wallet images in walletImages.
