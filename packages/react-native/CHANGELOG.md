@@ -1,5 +1,48 @@
 # @thirdweb-dev/react-native
 
+## 0.2.22
+
+### Patch Changes
+
+- [#1245](https://github.com/thirdweb-dev/js/pull/1245) [`d9fb134a`](https://github.com/thirdweb-dev/js/commit/d9fb134ad40ae067416625eb43cf3708f87db7b5) Thanks [@iketw](https://github.com/iketw)! - [RN]
+
+  - Added the option to import a new wallet in guest mode
+
+  - Added a "Request Testnet Funds" option when on testnets
+
+- [#1245](https://github.com/thirdweb-dev/js/pull/1245) [`d9fb134a`](https://github.com/thirdweb-dev/js/commit/d9fb134ad40ae067416625eb43cf3708f87db7b5) Thanks [@iketw](https://github.com/iketw)! - [ReactNative] Export more components for easy development
+
+  - IconTextButton
+    Component that renders an icon and a text inside a button with border:
+
+  ```javascript
+  <IconTextButton
+    mt="xs"
+    text="Switch Accounts"
+    icon={<SwitchIcon height={10} width={10} />}
+    onPress={() => {}}
+  />
+  ```
+
+  - NetworkButton: Used to render a Network
+
+  ```javascript
+  <NetworkButton
+    chainIconUrl={chain?.icon?.url || ""}
+    chainName={chain?.name || "Unknown Network"}
+    onPress={onChangeNetworkPress}
+  />
+  ```
+
+  - Exported all icons from the assets folder for external use
+
+- Updated dependencies [[`536b0f12`](https://github.com/thirdweb-dev/js/commit/536b0f1240ab446aac22cf547a4e09e73ee6bf7b), [`1d76334d`](https://github.com/thirdweb-dev/js/commit/1d76334dd3884703629835422f241d2825128f6f), [`b626782b`](https://github.com/thirdweb-dev/js/commit/b626782b0e8c6b76673472d3aee1c802dfb11b5f), [`d498c79a`](https://github.com/thirdweb-dev/js/commit/d498c79a911d478077dfb8a2490eb1bf91523186), [`0c5b03b8`](https://github.com/thirdweb-dev/js/commit/0c5b03b8d6cc6a4e69bb2a4647d3626e69f1283c), [`9af346ee`](https://github.com/thirdweb-dev/js/commit/9af346eeada1037be27c8d3c9e1777f7be11a8ea)]:
+  - @thirdweb-dev/wallets@0.3.3
+  - @thirdweb-dev/react-core@3.14.3
+  - @thirdweb-dev/sdk@3.10.25
+  - @thirdweb-dev/storage@1.1.5
+  - @thirdweb-dev/chains@0.1.24
+
 ## 0.2.21
 
 ### Patch Changes
