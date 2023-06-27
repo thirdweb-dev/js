@@ -355,12 +355,6 @@
     "magic-sdk": "^13.6.2",
     "web3-core": "1.5.2"
   },
-  "resolutions": {
-    "@walletconnect/ethereum-provider": "2.6.0",
-    "@walletconnect/core": "2.7.3",
-    "@walletconnect/types": "2.7.3",
-    "@walletconnect/utils": "2.7.3"
-  },
   "peerDependencies": {
     "@aws-sdk/client-secrets-manager": "^3.256.0",
     "@noble/ed25519": "^1.7.1",
