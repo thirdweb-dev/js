@@ -38,9 +38,9 @@ const Commerce: ThirdwebNextPage = () => {
   return (
     <ProductPage
       seo={{
-        title: "Commerce | Solutions",
+        title: "CommerceKit: The #1 Shopify SDK for Web3 eCommerce",
         description:
-          "Create web3 e-commerce apps, build token-gated websites, and sell NFTs to your audience—all with thirdweb's Shopify integration. Start here.",
+          "Build web3 eCommerce apps with token-gated websites, NFT loyalty programs, & digital collectibles on the blockchain. Try CommerceKit — it's free.",
         openGraph: {
           images: [
             {
