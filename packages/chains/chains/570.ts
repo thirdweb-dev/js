@@ -5,7 +5,8 @@ export default {
   "rpc": [
     "https://rollux.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.rollux.com",
-    "wss://rpc.rollux.com/wss"
+    "wss://rpc.rollux.com/wss",
+    "https://rpc.ankr.com/rollux/${ANKR_API_KEY}"
   ],
   "faucets": [
     "https://rollux.id/faucetapp"
