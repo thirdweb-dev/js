@@ -12,20 +12,6 @@ import { providers, utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";
 import { QRModalOptions } from "./qrModalOptions";
 
-const storageKeysToClean = [
-  "wc@2:client:0.3//proposal",
-  "wc@2:universal_provider:/namespaces",
-  // "wc@2:core:0.3//subscription",
-  // "wc@2:core:0.3//keychain",
-  // "wc@2:core:0.3//messages",
-  "wc@2:core:0.3//history",
-  "wc@2:client:0.3//session",
-  "wc@2:core:0.3//expirer",
-  // "wc@2:core:0.3//pairing",
-  "wc@2:universal_provider:/optionalNamespaces",
-  "wc@2:ethereum_provider:/chainId",
-];
-
 type WalletConnectOptions = {
   qrModalOptions?: QRModalOptions;
   projectId: string;
@@ -184,16 +170,6 @@ export class WalletConnectConnector extends WagmiConnector<
       this.#removeListeners();
       this.#setRequestedChainsIds([]);
     }
-
-    // todo: find a better way to clean up local storage
-    setTimeout(() => {
-      if ("localStorage" in globalThis) {
-        storageKeysToClean.forEach((key) => {
-          console.log("remove", key);
-          localStorage.removeItem(key);
-        });
-      }
-    }, 500);
   }
 
   async getAccount() {
