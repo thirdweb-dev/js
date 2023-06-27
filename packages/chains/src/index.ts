@@ -933,7 +933,7 @@ export { default as EthereumClassicTestnetKotti } from "../chains/6"
 export { default as Thaichain } from "../chains/7"
 export { default as Ubiq } from "../chains/8"
 export { default as UbiqNetworkTestnet } from "../chains/9"
-export { default as Op } from "../chains/10"
+export { default as Optimism } from "../chains/10"
 export { default as Metadium } from "../chains/11"
 export { default as MetadiumTestnet } from "../chains/12"
 export { default as DiodeTestnetStaging } from "../chains/13"
@@ -2790,7 +2790,7 @@ type ChainIdsBySlug = {
 "thaichain": 7,
 "ubiq": 8,
 "ubiq-network-testnet": 9,
-"op": 10,
+"optimism": 10,
 "metadium": 11,
 "metadium-testnet": 12,
 "diode-testnet-staging": 13,
