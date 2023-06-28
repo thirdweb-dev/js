@@ -1,5 +1,27 @@
 # @thirdweb-dev/wallets
 
+## 1.0.1
+
+### Patch Changes
+
+- [#1259](https://github.com/thirdweb-dev/js/pull/1259) [`efb3546e`](https://github.com/thirdweb-dev/js/commit/efb3546ec8268156be00301af28b9d83ecd5ab08) Thanks [@iketw](https://github.com/iketw)! - Fix. Respecting passed wallets if less then 50, otherwhise use defaults chains.
+
+## 1.0.0
+
+### Major Changes
+
+- [#1215](https://github.com/thirdweb-dev/js/pull/1215) [`3c5dc480`](https://github.com/thirdweb-dev/js/commit/3c5dc4804abc56b933ec45e9e1da11eb182296cc) Thanks [@iketw](https://github.com/iketw)! - Migrate wallets to WCV2 and remove WCV1 support.
+
+  Please, check our changelogs for more info: https://blog.thirdweb.com/changelog/
+
+### Patch Changes
+
+- [#1256](https://github.com/thirdweb-dev/js/pull/1256) [`ac3e019c`](https://github.com/thirdweb-dev/js/commit/ac3e019cd1776dbdb0d06b213420ad17586f678e) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - WCv2 and Paper support for WebGL Unity
+
+- Updated dependencies [[`ef4cb092`](https://github.com/thirdweb-dev/js/commit/ef4cb092192c58c9b292b29590b888f45f9fd23d), [`30ac3aef`](https://github.com/thirdweb-dev/js/commit/30ac3aef840bde51a61acf786c709cffd3c47354), [`620e89dc`](https://github.com/thirdweb-dev/js/commit/620e89dc25c91557e2164a602c7aedd733525087), [`0fd8aa04`](https://github.com/thirdweb-dev/js/commit/0fd8aa04a9424497758d13a51a72363edcc30e19)]:
+  - @thirdweb-dev/sdk@3.10.26
+  - @thirdweb-dev/chains@0.1.25
+
 ## 0.3.3
 
 ### Patch Changes

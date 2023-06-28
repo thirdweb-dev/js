@@ -10,6 +10,8 @@ export const ERROR_SUBSTRINGS = [
   "recovered sender mismatch",
   "transaction hash mismatch",
   "chainid no support",
+  "chainid (0)",
+  "chainid(0)",
 ];
 
 export const ERROR_SUBSTRINGS_COMPOSITE = [
