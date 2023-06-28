@@ -1,5 +1,11 @@
 # @thirdweb-dev/wallets
 
+## 1.0.1
+
+### Patch Changes
+
+- [#1259](https://github.com/thirdweb-dev/js/pull/1259) [`efb3546e`](https://github.com/thirdweb-dev/js/commit/efb3546ec8268156be00301af28b9d83ecd5ab08) Thanks [@iketw](https://github.com/iketw)! - Fix. Respecting passed wallets if less then 50, otherwhise use defaults chains.
+
 ## 1.0.0
 
 ### Major Changes
