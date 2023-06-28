@@ -445,8 +445,8 @@ export class WalletConnectConnector extends WagmiConnector<
   };
 
   protected onDisconnect = async () => {
-    await this.#setRequestedChainsIds([]);
-    await this.#storage.removeItem(LAST_USED_CHAIN_ID);
+    this.#setRequestedChainsIds([]);
+    this.#storage.removeItem(LAST_USED_CHAIN_ID);
     this.emit("disconnect");
   };
 
