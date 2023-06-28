@@ -1,5 +1,19 @@
 # @thirdweb-dev/react-native
 
+## 0.2.23
+
+### Patch Changes
+
+- [#1215](https://github.com/thirdweb-dev/js/pull/1215) [`3c5dc480`](https://github.com/thirdweb-dev/js/commit/3c5dc4804abc56b933ec45e9e1da11eb182296cc) Thanks [@iketw](https://github.com/iketw)! - Migrate wallets to WCV2 and remove WCV1 support.
+
+  Please, check our changelogs for more info: https://blog.thirdweb.com/changelog/
+
+- Updated dependencies [[`ef4cb092`](https://github.com/thirdweb-dev/js/commit/ef4cb092192c58c9b292b29590b888f45f9fd23d), [`06ca1c40`](https://github.com/thirdweb-dev/js/commit/06ca1c407dfee9d3d1fdaed1b6223ad0f9b8857b), [`620e89dc`](https://github.com/thirdweb-dev/js/commit/620e89dc25c91557e2164a602c7aedd733525087), [`ac3e019c`](https://github.com/thirdweb-dev/js/commit/ac3e019cd1776dbdb0d06b213420ad17586f678e), [`30ac3aef`](https://github.com/thirdweb-dev/js/commit/30ac3aef840bde51a61acf786c709cffd3c47354), [`3c5dc480`](https://github.com/thirdweb-dev/js/commit/3c5dc4804abc56b933ec45e9e1da11eb182296cc), [`ad7dae3b`](https://github.com/thirdweb-dev/js/commit/ad7dae3b163e61c7a6eb57f654885a7fdaa4cbb6), [`620e89dc`](https://github.com/thirdweb-dev/js/commit/620e89dc25c91557e2164a602c7aedd733525087), [`0fd8aa04`](https://github.com/thirdweb-dev/js/commit/0fd8aa04a9424497758d13a51a72363edcc30e19)]:
+  - @thirdweb-dev/sdk@3.10.26
+  - @thirdweb-dev/react-core@3.14.4
+  - @thirdweb-dev/wallets@1.0.0
+  - @thirdweb-dev/chains@0.1.25
+
 ## 0.2.22
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.2.41
+
+### Patch Changes
+
+- [#1256](https://github.com/thirdweb-dev/js/pull/1256) [`ac3e019c`](https://github.com/thirdweb-dev/js/commit/ac3e019cd1776dbdb0d06b213420ad17586f678e) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - WCv2 and Paper support for WebGL Unity
+
+- Updated dependencies [[`ef4cb092`](https://github.com/thirdweb-dev/js/commit/ef4cb092192c58c9b292b29590b888f45f9fd23d), [`d43f6171`](https://github.com/thirdweb-dev/js/commit/d43f6171d910e31b748b171b012174390aac3fff), [`ac3e019c`](https://github.com/thirdweb-dev/js/commit/ac3e019cd1776dbdb0d06b213420ad17586f678e), [`30ac3aef`](https://github.com/thirdweb-dev/js/commit/30ac3aef840bde51a61acf786c709cffd3c47354), [`3c5dc480`](https://github.com/thirdweb-dev/js/commit/3c5dc4804abc56b933ec45e9e1da11eb182296cc), [`620e89dc`](https://github.com/thirdweb-dev/js/commit/620e89dc25c91557e2164a602c7aedd733525087), [`0fd8aa04`](https://github.com/thirdweb-dev/js/commit/0fd8aa04a9424497758d13a51a72363edcc30e19)]:
+  - @thirdweb-dev/sdk@3.10.26
+  - @thirdweb-dev/auth@3.2.4
+  - @thirdweb-dev/wallets@1.0.0
+  - @thirdweb-dev/chains@0.1.25
+
 ## 0.2.40
 
 ### Patch Changes
