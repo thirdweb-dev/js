@@ -13,7 +13,7 @@ import { useCoinbaseWalletListener } from "./useCoinbaseWalletListener";
  */
 export function useCoinbaseWallet(callbackURL: string) {
   const connect = useConnect();
-  useCoinbaseWalletListener();
+  useCoinbaseWalletListener(true);
 
   return useCallback(
     async (connectOptions?: { chainId?: number; callbackURL: string }) => {
