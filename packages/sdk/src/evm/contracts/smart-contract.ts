@@ -299,30 +299,30 @@ export class SmartContract<
   }
 
   /**
-   * Smart Account Factory
+   * Account Factory
    *
-   * @remarks Create smart accounts and fetch data about them.
+   * @remarks Create accounts and fetch data about them.
    * @example
    * ```javascript
    *
-   * // Predict the address of the smart account that will be created for an admin.
+   * // Predict the address of the account that will be created for an admin.
    * const deterministicAddress = await contract.accountFactory.predictAccountAddress(admin, extraData);
    *
-   * // Create smart accounts
+   * // Create accounts
    * const tx = await contract.accountFactory.createAccount(admin, extraData);
    * // the same as `deterministicAddress`
    * const accountAddress = tx.address;
    *
-   * // Get all smart accounts created by the factory
+   * // Get all accounts created by the factory
    * const allAccounts = await contract.accountFactory.getAllAccounts();
    *
-   * // Get all smart accounts on which a signer has been given authority.
+   * // Get all accounts on which a signer has been given authority.
    * const associatedAccounts = await contract.accountFactory.getAssociatedAccounts(signer);
    *
-   * // Get all signers who have been given authority on a smart account.
+   * // Get all signers who have been given authority on a account.
    * const associatedSigners = await contract.accountFactory.getAssociatedSigners(accountAddress);
    *
-   * // Check whether a smart account has already been created for a given admin.
+   * // Check whether a account has already been created for a given admin.
    * const isAccountDeployed = await contract.accountFactory.isAccountDeployed(admin, extraData);
    * ```
    */
@@ -562,7 +562,7 @@ export class SmartContract<
     return undefined;
   }
 
-  // ========== Smart account features ==========
+  // ========== Account features ==========
 
   private detectAccountFactory() {
     if (
