@@ -121,10 +121,15 @@ export class WalletConnectConnector extends WagmiConnector<
       // If there no active session, or the chains are stale, connect.
       if (!provider.session || isChainsStale) {
         // defaultChains, passing ALL CHAINS hangs the connector
-        const optionalChains = [
-          1, 5, 84531, 137, 80001, 42161, 421613, 10, 420, 56, 97, 250, 4002,
-          43114, 43113, 1337,
-        ].filter((chainId) => chainId !== targetChainId);
+        // respect user's chains if less than 100
+        const optionalChains = (
+          this.chains.length > 50
+            ? [
+                1, 5, 84531, 137, 80001, 42161, 421613, 10, 420, 56, 97, 250,
+                4002, 43114, 43113, 1337,
+              ]
+            : this.chains.map(({ chainId }) => chainId)
+        ).filter((chainId) => chainId !== targetChainId);
 
         this.emit("message", { type: "connecting" });
 
