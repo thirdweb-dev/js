@@ -1,5 +1,98 @@
 # @thirdweb-dev/wallets
 
+## 1.0.2
+
+### Patch Changes
+
+- [#1263](https://github.com/thirdweb-dev/js/pull/1263) [`ed711c8c`](https://github.com/thirdweb-dev/js/commit/ed711c8cb2ed6a0deb1b2a5eeec06df1d4edc5e8) Thanks [@iketw](https://github.com/iketw)! - Pass a min set of chains if user passes more than 50 chains. We'll rely on "adding chains" for new chains
+
+- [#1255](https://github.com/thirdweb-dev/js/pull/1255) [`05a7495a`](https://github.com/thirdweb-dev/js/commit/05a7495a132aabab5f48abbdb80a468ff6f65df8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle passing RPC urls as chain in SmartWallet config
+
+- [#1265](https://github.com/thirdweb-dev/js/pull/1265) [`e78da6b3`](https://github.com/thirdweb-dev/js/commit/e78da6b36cfa6d954234820563201bf760186ed1) Thanks [@MananTank](https://github.com/MananTank)! - Wallet Connect v2 Corrections
+
+## 1.0.1
+
+### Patch Changes
+
+- [#1259](https://github.com/thirdweb-dev/js/pull/1259) [`efb3546e`](https://github.com/thirdweb-dev/js/commit/efb3546ec8268156be00301af28b9d83ecd5ab08) Thanks [@iketw](https://github.com/iketw)! - Fix. Respecting passed wallets if less then 50, otherwhise use defaults chains.
+
+## 1.0.0
+
+### Major Changes
+
+- [#1215](https://github.com/thirdweb-dev/js/pull/1215) [`3c5dc480`](https://github.com/thirdweb-dev/js/commit/3c5dc4804abc56b933ec45e9e1da11eb182296cc) Thanks [@iketw](https://github.com/iketw)! - Migrate wallets to WCV2 and remove WCV1 support.
+
+  Please, check our changelogs for more info: https://blog.thirdweb.com/changelog/
+
+### Patch Changes
+
+- [#1256](https://github.com/thirdweb-dev/js/pull/1256) [`ac3e019c`](https://github.com/thirdweb-dev/js/commit/ac3e019cd1776dbdb0d06b213420ad17586f678e) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - WCv2 and Paper support for WebGL Unity
+
+- Updated dependencies [[`ef4cb092`](https://github.com/thirdweb-dev/js/commit/ef4cb092192c58c9b292b29590b888f45f9fd23d), [`30ac3aef`](https://github.com/thirdweb-dev/js/commit/30ac3aef840bde51a61acf786c709cffd3c47354), [`620e89dc`](https://github.com/thirdweb-dev/js/commit/620e89dc25c91557e2164a602c7aedd733525087), [`0fd8aa04`](https://github.com/thirdweb-dev/js/commit/0fd8aa04a9424497758d13a51a72363edcc30e19)]:
+  - @thirdweb-dev/sdk@3.10.26
+  - @thirdweb-dev/chains@0.1.25
+
+## 0.3.3
+
+### Patch Changes
+
+- [#1237](https://github.com/thirdweb-dev/js/pull/1237) [`536b0f12`](https://github.com/thirdweb-dev/js/commit/536b0f1240ab446aac22cf547a4e09e73ee6bf7b) Thanks [@iketw](https://github.com/iketw)! - [React] Add Rainbow Wallet (implementing the WalletConnect wallet)
+
+  ```javascript
+  import { ThirdwebProvider, rainbowWallet } from "@thirdweb-dev/react";
+
+  const activeChain = "ethereum";
+
+  <ThirdwebProvider
+    activeChain={activeChain}
+    supportedWallets={[rainbowWallet()]}
+  >
+    <App />
+  </ThirdwebProvider>;
+  ```
+
+- [#1236](https://github.com/thirdweb-dev/js/pull/1236) [`b626782b`](https://github.com/thirdweb-dev/js/commit/b626782b0e8c6b76673472d3aee1c802dfb11b5f) Thanks [@iketw](https://github.com/iketw)! - [Wallets/React] Add Trust Wallet
+
+  ```javascript
+  import { ThirdwebProvider, trustWallet } from "@thirdweb-dev/react";
+
+  const activeChain = "mumbai";
+
+  <ThirdwebProvider
+    activeChain={activeChain}
+    autoSwitch={true}
+    supportedWallets={[trustWallet()]}
+  >
+    <App />
+  </ThirdwebProvider>;
+  ```
+
+- Updated dependencies [[`d498c79a`](https://github.com/thirdweb-dev/js/commit/d498c79a911d478077dfb8a2490eb1bf91523186), [`9af346ee`](https://github.com/thirdweb-dev/js/commit/9af346eeada1037be27c8d3c9e1777f7be11a8ea)]:
+  - @thirdweb-dev/sdk@3.10.25
+  - @thirdweb-dev/chains@0.1.24
+
+## 0.3.2
+
+### Patch Changes
+
+- [#1220](https://github.com/thirdweb-dev/js/pull/1220) [`3cb298ac`](https://github.com/thirdweb-dev/js/commit/3cb298ac4b04d295899b5ac77c7fc5869ec2f5f2) Thanks [@iketw](https://github.com/iketw)! - [RN/Wallets] Fix Coinbase wallet connection rejection error
+
+  Unhandled Rejections: We were rethrowing an error in an async function (connect) without any catch block to handle it. We were getting an Unhandled Promise Rejection, which lead to a crash in React Native when rejecting a connection from the Coinbase Wallet.
+
+- [#1213](https://github.com/thirdweb-dev/js/pull/1213) [`3ce5f9a0`](https://github.com/thirdweb-dev/js/commit/3ce5f9a0c3fc7e99b5abf691a87048ab8475f6b1) Thanks [@iketw](https://github.com/iketw)! - [ReactCore/Wallets] Improve error messages for wc and auth
+
+- [#1226](https://github.com/thirdweb-dev/js/pull/1226) [`a388d07a`](https://github.com/thirdweb-dev/js/commit/a388d07a3d449e56dc53fed9600931022f4a15e1) Thanks [@MananTank](https://github.com/MananTank)! - Add Magic Connect support
+
+- [#1214](https://github.com/thirdweb-dev/js/pull/1214) [`1ce8558d`](https://github.com/thirdweb-dev/js/commit/1ce8558df47186bcba5ee8564fdb04583bf115dd) Thanks [@iketw](https://github.com/iketw)! - [Wallets] Fix switchChain in WCV2 connector
+
+  WCV2 `blockExplorerUrls` field receives an array of urls but we were passing an array of blockExplorer objects, so adding a new chain was failing, hence switching chains was failing
+
+- [#1212](https://github.com/thirdweb-dev/js/pull/1212) [`60fb1889`](https://github.com/thirdweb-dev/js/commit/60fb18894372f14d9cd815fa9a239926d31bb273) Thanks [@MananTank](https://github.com/MananTank)! - Fix safeWallet tree-shaking
+
+- Updated dependencies [[`6816219a`](https://github.com/thirdweb-dev/js/commit/6816219ac13ae571a0c90db6ab389c319bc1f052), [`48065bcd`](https://github.com/thirdweb-dev/js/commit/48065bcd91c13e1f44d54343b5c6c2646b9e86e4), [`6aa6f7e0`](https://github.com/thirdweb-dev/js/commit/6aa6f7e0bd2313e2e1ad96dd41aad91e6694d380), [`f7f4f207`](https://github.com/thirdweb-dev/js/commit/f7f4f20737ac5d78424ca9c91220f00b85adde6b), [`d4d95507`](https://github.com/thirdweb-dev/js/commit/d4d95507130b2b5408bfaa73ef3b708ca00c773e), [`483e2b91`](https://github.com/thirdweb-dev/js/commit/483e2b910934d75276a68bae64d04c47cd7d57e3), [`c08e6ba9`](https://github.com/thirdweb-dev/js/commit/c08e6ba988ad97aa27d5868cec8abe3498d07a0a), [`3d615a62`](https://github.com/thirdweb-dev/js/commit/3d615a62d0a6801f6fb0e63f9b95c2f98446add1)]:
+  - @thirdweb-dev/chains@0.1.23
+  - @thirdweb-dev/sdk@3.10.24
+
 ## 0.3.1
 
 ### Patch Changes

@@ -25,6 +25,11 @@ export default async function handler(
     version: ctx.authOptions?.version,
     chainId: parsedPayload.data.chainId || ctx.authOptions?.chainId,
     resources: ctx.authOptions?.resources,
+    expirationTime: ctx.authOptions?.loginPayloadDurationInSeconds
+      ? new Date(
+          Date.now() + 1000 * ctx.authOptions.loginPayloadDurationInSeconds,
+        )
+      : undefined,
   });
 
   return res.status(200).json({ payload });

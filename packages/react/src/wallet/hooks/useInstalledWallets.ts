@@ -4,21 +4,21 @@ export function useInstalledWallets() {
   let isMetamaskInstalled = false;
   let isCoinbaseWalletInstalled = false;
   let isZerionWalletInstalled = false;
+  let isTrustWalletInstalled = false;
 
   if (assertWindowEthereum(globalThis.window)) {
-    isMetamaskInstalled = Boolean(globalThis.window.ethereum?.isMetaMask);
-    isCoinbaseWalletInstalled = Boolean(
-      globalThis.window.ethereum?.isCoinbaseWallet ||
-        globalThis.window.ethereum?.providers?.some((p) => p.isCoinbaseWallet),
-    );
-    isZerionWalletInstalled = Boolean(globalThis.window.ethereum?.isZerion);
+    isMetamaskInstalled = !!globalThis.window.ethereum?.isMetaMask;
+    isCoinbaseWalletInstalled =
+      !!globalThis.window.ethereum?.isCoinbaseWallet ||
+      !!globalThis.window.ethereum?.providers?.some((p) => p.isCoinbaseWallet);
+    isZerionWalletInstalled = !!globalThis.window.ethereum?.isZerion;
+    isTrustWalletInstalled = !!globalThis.window.ethereum?.isTrust;
   }
 
-  const installedWallets = {
+  return {
     metamask: isMetamaskInstalled,
     coinbaseWallet: isCoinbaseWalletInstalled,
+    trustWallet: isTrustWalletInstalled,
     zerionWallet: isZerionWalletInstalled,
   };
-
-  return installedWallets;
 }

@@ -13,10 +13,9 @@ import { createSnapshot } from "../snapshots";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
-  BigNumberish,
+  type BigNumberish,
   constants,
-  ethers,
-  providers,
+  type providers,
   utils,
 } from "ethers";
 import { normalizePriceValue } from "../currency/normalizePriceValue";
@@ -46,7 +45,7 @@ function compare(a: BigNumberish, b: BigNumberish) {
 export async function processSnapshotData(
   claimConditionInputs: ClaimConditionInput[],
   tokenDecimals: number,
-  provider: ethers.providers.Provider,
+  provider: providers.Provider,
   storage: ThirdwebStorage,
   snapshotFormatVersion: SnapshotFormatVersion,
 ) {

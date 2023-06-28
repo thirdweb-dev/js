@@ -81,6 +81,10 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
       throw new Error("Error connecting User");
     }
 
+    if (options?.chainId) {
+      this.switchChain(options.chainId);
+    }
+
     this.setupListeners();
     return this.getAddress();
   }

@@ -1,7 +1,10 @@
 import { ThemeProvider } from "../styles/ThemeProvider";
-import { WalletDetailsButton } from "./ConnectWalletDetails/WalletDetailsButton";
+import {
+  ConnectWalletDetailsProps,
+  WalletDetailsButton,
+} from "./ConnectWalletDetails/WalletDetailsButton";
 import { useAddress } from "@thirdweb-dev/react-core";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Animated } from "react-native";
 import { ConnectWalletButton } from "./ConnectWalletFlow/ConnectWalletButton";
 import { ConnectWalletButtonProps } from "./ConnectWalletFlow/ConnectWalletButton";
@@ -10,7 +13,7 @@ export type ConnectWalletProps = {
   /**
    * render a custom button to display the connected wallet details instead of the default button
    */
-  detailsButton?: React.ReactElement;
+  detailsButton?: ConnectWalletDetailsProps["detailsButton"];
 } & ConnectWalletButtonProps;
 
 export const ConnectWallet = ({

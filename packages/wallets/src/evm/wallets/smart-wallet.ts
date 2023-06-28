@@ -16,8 +16,6 @@ import {
 } from "../../core/types/walletConnect";
 import { WalletConnectV2Handler } from "../../core/WalletConnect/WalletConnectV2Handler";
 import { NoOpWalletConnectHandler } from "../../core/WalletConnect/constants";
-import { WalletConnectV1Handler } from "../../core/WalletConnect/WalletConnectV1Handler";
-import { createLocalStorage } from "../../core";
 
 // export types and utils for convenience
 export * from "../connectors/smart-wallet/types";
@@ -51,18 +49,11 @@ export class SmartWallet
 
     this.enableConnectApp = options?.enableConnectApp || false;
     this.#wcWallet = this.enableConnectApp
-      ? options?.wcVersion === "v1"
-        ? new WalletConnectV1Handler({
-            walletConnectWalletMetadata: options?.walletConnectWalletMetadata,
-            walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
-            walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
-            storage: options?.wcStorage || createLocalStorage("smart-wallet"),
-          })
-        : new WalletConnectV2Handler({
-            walletConnectWalletMetadata: options?.walletConnectWalletMetadata,
-            walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
-            walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
-          })
+      ? new WalletConnectV2Handler({
+          walletConnectWalletMetadata: options?.walletConnectWalletMetadata,
+          walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
+          walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
+        })
       : new NoOpWalletConnectHandler();
   }
 

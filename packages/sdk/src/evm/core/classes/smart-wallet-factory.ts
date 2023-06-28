@@ -7,7 +7,7 @@ import { ContractWrapper } from "./contract-wrapper";
 import { buildTransactionFunction } from "../../common/transactions";
 import { Transaction } from "./transactions";
 import { TransactionResultWithAddress } from "../types";
-import { BytesLike, ethers } from "ethers";
+import { type BytesLike, utils } from "ethers";
 import { AccountCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/AccountFactory";
 import type { AccountEvent } from "../../types/smart-wallet";
 import { isContractDeployed } from "../../common/any-evm-utils/isContractDeployed";
@@ -52,7 +52,7 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
     admin: string,
     extraData?: BytesLike,
   ): Promise<string> {
-    let data: BytesLike = ethers.utils.toUtf8Bytes("");
+    let data: BytesLike = utils.toUtf8Bytes("");
     if (extraData) {
       data = extraData;
     }
@@ -103,17 +103,22 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
    *
    * @twfeature SmartWalletFactory
    */
-  public async getAllWallets(): Promise<AccountEvent[]> {
-    const filter = {
-      fromBlock: 0,
-      toBlock: "latest",
-    };
+  public async getAllAccounts(): Promise<AccountEvent[]> {
+    const allAccounts =
+      await this.contractWrapper.readContract.getAllAccounts();
 
-    const events = await this.events.getEvents("AccountCreated", filter);
+    /**
+     * Note: an account can have multiple admins. In this function, we only return the first signer associated with
+     *       the account. This should be the admin that created the account, unless this admin has lost their admin status.
+     */
+    return await Promise.all(
+      allAccounts.map(async (account) => {
+        const assosiatedSigners = await this.getAssociatedSigners(account);
+        const admin = assosiatedSigners[0];
 
-    return events.map((event) => {
-      return { account: event.data.account, admin: event.data.accountAdmin };
-    });
+        return { account, admin };
+      }),
+    );
   }
 
   /**
@@ -161,7 +166,7 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
         throw new Error(`Wallet already deployed for admin: ${walletAdmin}`);
       }
 
-      let data: BytesLike = ethers.utils.toUtf8Bytes("");
+      let data: BytesLike = utils.toUtf8Bytes("");
       if (extraData) {
         data = extraData;
       }

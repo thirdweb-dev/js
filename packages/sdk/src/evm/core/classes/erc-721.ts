@@ -56,11 +56,11 @@ import type {
   TieredDrop,
   TokenERC721,
   Zora_IERC721Drop,
-  ISharedMetadata,
+  SharedMetadata,
+  OpenEditionERC721,
 } from "@thirdweb-dev/contracts-js";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
-
 import { Erc721LazyMintable } from "./erc-721-lazy-mintable";
 import { Erc721Mintable } from "./erc-721-mintable";
 import { Erc721Supply } from "./erc-721-supply";
@@ -669,7 +669,7 @@ export class Erc721<
    * @param quantity - Quantity of the tokens you want to claim
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
-   * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1
+   * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC721ClaimZora
    */
   claim = /* @__PURE__ */ buildTransactionFunction(
     async (quantity: BigNumberish, options?: ClaimOptions) => {
@@ -701,7 +701,7 @@ export class Erc721<
    * @param quantity - Quantity of the tokens you want to claim
    * @param options
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
-   * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1
+   * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC721ClaimZora
    */
   claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
@@ -774,11 +774,11 @@ export class Erc721<
    */
   public async totalClaimedSupply(): Promise<BigNumber> {
     const contract = this.contractWrapper;
-    if (hasFunction<DropERC721>("nextTokenIdToClaim", contract)) {
-      return contract.readContract.nextTokenIdToClaim();
-    }
     if (hasFunction<SignatureDrop>("totalMinted", contract)) {
       return contract.readContract.totalMinted();
+    }
+    if (hasFunction<DropERC721>("nextTokenIdToClaim", contract)) {
+      return contract.readContract.nextTokenIdToClaim();
     }
     throw new Error(
       "No function found on contract to get total claimed supply",
@@ -953,7 +953,17 @@ export class Erc721<
    */
   public async nextTokenIdToMint(): Promise<BigNumber> {
     if (hasFunction<TokenERC721>("nextTokenIdToMint", this.contractWrapper)) {
-      return await this.contractWrapper.readContract.nextTokenIdToMint();
+      let nextTokenIdToMint =
+        await this.contractWrapper.readContract.nextTokenIdToMint();
+      // handle open editions and contracts with startTokenId
+      if (
+        hasFunction<OpenEditionERC721>("startTokenId", this.contractWrapper)
+      ) {
+        nextTokenIdToMint = nextTokenIdToMint.sub(
+          await this.contractWrapper.readContract.startTokenId(),
+        );
+      }
+      return nextTokenIdToMint;
     } else if (hasFunction<TokenERC721>("totalSupply", this.contractWrapper)) {
       return await this.contractWrapper.readContract.totalSupply();
     } else {
@@ -1101,7 +1111,7 @@ export class Erc721<
 
   private detectErc721SharedMetadata(): Erc721SharedMetadata | undefined {
     if (
-      detectContractFeature<ISharedMetadata>(
+      detectContractFeature<SharedMetadata>(
         this.contractWrapper,
         "ERC721SharedMetadata",
       )

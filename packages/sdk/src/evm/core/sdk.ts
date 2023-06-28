@@ -95,7 +95,12 @@ import { DeploySchemaForPrebuiltContractType } from "../contracts";
 import { ContractFactory } from "./classes/factory";
 import { ContractRegistry } from "./classes/registry";
 import { DeployTransaction, Transaction } from "./classes/transactions";
-import { BytesLike, Contract, ethers } from "ethers";
+import {
+  type BytesLike,
+  Contract,
+  utils,
+  ContractFactory as ethersContractFactory,
+} from "ethers";
 import { EventEmitter } from "eventemitter3";
 import invariant from "tiny-invariant";
 import { z } from "zod";
@@ -103,7 +108,7 @@ import {
   DeploymentTransaction,
   PrecomputedDeploymentTransaction,
 } from "../types/any-evm/deploy-data";
-import { fetchContractMetadataFromAddress } from "../common";
+import { fetchContractMetadataFromAddress } from "../common/metadata-resolver";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -147,7 +152,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @example
    * ```javascript
    * // get a signer from somewhere (createRandom is being used purely for example purposes)
-   * const signer = ethers.Wallet.createRandom();
+   * const signer = Wallet.createRandom();
    *
    * // get an instance of the SDK with the signer already setup
    * const sdk = ThirdwebSDK.fromSigner(signer, "mainnet");
@@ -1486,7 +1491,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     async (
       publishMetadataUri: string,
       deployMetadata: DeployMetadata,
-      signer: ethers.Signer,
+      signer: Signer,
       initializerFunction: string,
       paramValues: any[],
       options?: DeployOptions,
@@ -1575,7 +1580,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     async (
       constructorParamValues: any[],
       deployMetadata: DeployMetadata,
-      signer: ethers.Signer,
+      signer: Signer,
       chainId: number,
     ): Promise<DeployTransaction> => {
       let customFactoryAddress = deployMetadata.extendedMetadata
@@ -1844,7 +1849,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       const bytecode = compilerMetadata.bytecode.startsWith("0x")
         ? compilerMetadata.bytecode
         : `0x${compilerMetadata.bytecode}`;
-      if (!ethers.utils.isHexString(bytecode)) {
+      if (!utils.isHexString(bytecode)) {
         throw new Error(`Contract bytecode is invalid.\n\n${bytecode}`);
       }
       const constructorParamTypes = extractConstructorParamsFromAbi(
@@ -1877,7 +1882,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       const signer = this.getSigner();
       const provider = this.getProvider();
       invariant(signer, "Signer is required to deploy contracts");
-      const factory = new ethers.ContractFactory(abi, bytecode).connect(signer);
+      const factory = new ethersContractFactory(abi, bytecode).connect(signer);
 
       return new DeployTransaction({
         args: constructorParams,

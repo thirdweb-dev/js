@@ -1,7 +1,7 @@
 import type { NativeToken } from "../types/currency";
 import { ChainId } from "./chains/ChainId";
 import { getSupportedChains } from "./chains/supportedChains";
-import { ethers } from "ethers";
+import { constants } from "ethers";
 
 /**
  * @public
@@ -221,7 +221,7 @@ export function getNativeTokenByChainId(chainId: ChainId): NativeToken {
       symbol: chain.nativeCurrency.symbol,
       decimals: 18,
       wrapped: {
-        address: ethers.constants.AddressZero,
+        address: constants.AddressZero,
         name: `Wrapped ${chain.nativeCurrency.name}`,
         symbol: `W${chain.nativeCurrency.symbol}`,
       },
@@ -233,7 +233,7 @@ export function getNativeTokenByChainId(chainId: ChainId): NativeToken {
       symbol: "ETH",
       decimals: 18,
       wrapped: {
-        address: ethers.constants.AddressZero,
+        address: constants.AddressZero,
         name: "Wrapped Ether",
         symbol: "WETH",
       },

@@ -1,6 +1,6 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Optimism",
+  "name": "OP Mainnet",
   "chain": "ETH",
   "rpc": [
     "https://optimism.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
