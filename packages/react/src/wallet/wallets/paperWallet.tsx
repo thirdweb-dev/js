@@ -1,4 +1,7 @@
-import { PaperWallet } from "@thirdweb-dev/wallets";
+import {
+  PaperWallet,
+  PaperWalletAdditionalOptions,
+} from "@thirdweb-dev/wallets";
 import {
   WalletConfig,
   WalletOptions,
@@ -11,7 +14,7 @@ import { Spinner } from "../../components/Spinner";
 import { Flex } from "../../components/basic";
 import { InputSelectionUI } from "./InputSelectionUI";
 
-type PaperConfig = { clientId: string };
+type PaperConfig = Omit<PaperWalletAdditionalOptions, "chain" | "chains">;
 
 export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
   return {

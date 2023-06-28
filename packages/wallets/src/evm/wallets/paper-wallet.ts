@@ -1,6 +1,6 @@
 import {
   PaperWalletConnectionArgs,
-  PaperWalletAdditionalOptions,
+  PaperWalletAdditionalOptions as PaperWalletAdditionalOptions_,
 } from "../connectors/paper/types";
 import { Connector } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
@@ -8,10 +8,12 @@ import type { Chain } from "@thirdweb-dev/chains";
 import type { PaperWalletConnector } from "../connectors/paper";
 import { walletIds } from "../constants/walletIds";
 
-export type PaperWalletOptions = WalletOptions<PaperWalletAdditionalOptions>;
+export type { PaperWalletAdditionalOptions } from "../connectors/paper/types";
+
+export type PaperWalletOptions = WalletOptions<PaperWalletAdditionalOptions_>;
 
 export class PaperWallet extends AbstractClientWallet<
-  PaperWalletAdditionalOptions,
+  PaperWalletAdditionalOptions_,
   PaperWalletConnectionArgs
 > {
   connector?: Connector;
@@ -28,8 +30,8 @@ export class PaperWallet extends AbstractClientWallet<
     return "Paper Wallet" as const;
   }
 
-  clientId: PaperWalletAdditionalOptions["clientId"];
-  chain: PaperWalletAdditionalOptions["chain"];
+  clientId: PaperWalletAdditionalOptions_["clientId"];
+  chain: PaperWalletAdditionalOptions_["chain"];
 
   constructor(options: PaperWalletOptions) {
     super(PaperWallet.id, {
@@ -47,6 +49,11 @@ export class PaperWallet extends AbstractClientWallet<
         clientId: this.clientId,
         chain: this.chain,
         chains: this.chains,
+        advanceOptions: {
+          recoveryShareManagement:
+            this.options?.advanceOptions?.recoveryShareManagement,
+        },
+        styles: this.options?.styles,
       });
     }
     return this.connector;
