@@ -196,17 +196,14 @@ export {
 
 // smart wallet factory
 export {
-  useIsSmartWalletDeployed,
-  useSmartWallets,
-  useCreateSmartWallet,
-  useSmartWalletsForAddress,
-} from "./hooks/async/smart-wallet-factory";
+  useIsAccountDeployed,
+  useAccounts,
+  useCreateAccount,
+  useAccountsForAddress,
+} from "./hooks/async/account-factory";
 
 // smart wallet
-export {
-  useSmartWalletSigners,
-  useSetSmartWalletSigners,
-} from "./hooks/async/smart-wallet";
+export { useAccountSigners, useSetAccountSigners } from "./hooks/async/account";
 
 // thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)
 

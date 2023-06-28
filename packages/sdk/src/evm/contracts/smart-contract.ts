@@ -14,8 +14,8 @@ import {
   FEATURE_PLATFORM_FEE,
   FEATURE_PRIMARY_SALE,
   FEATURE_ROYALTY,
-  FEATURE_SMART_WALLET_FACTORY,
-  FEATURE_SMART_WALLET,
+  FEATURE_ACCOUNT_FACTORY,
+  FEATURE_ACCOUNT,
 } from "../constants/thirdweb-features";
 import { Transaction } from "../core/classes/transactions";
 import { ContractAppURI } from "../core/classes/contract-appuri";
@@ -54,7 +54,7 @@ import type {
   EnglishAuctionsLogic,
   OffersLogic,
   IAccountFactory,
-  IAccountCore
+  IAccountCore,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides } from "ethers";
@@ -66,8 +66,8 @@ import { ContractOwner } from "../core/classes/contract-owner";
 import { MarketplaceV3DirectListings } from "../core/classes/marketplacev3-direct-listings";
 import { MarketplaceV3EnglishAuctions } from "../core/classes/marketplacev3-english-auction";
 import { MarketplaceV3Offers } from "../core/classes/marketplacev3-offers";
-import { SmartWalletFactory } from "../core/classes/smart-wallet-factory";
-import { SmartWallet } from "../core/classes/smart-wallet";
+import { AccountFactory } from "../core/classes/account-factory";
+import { Account } from "../core/classes/account";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -299,46 +299,40 @@ export class SmartContract<
   }
 
   /**
-   * Smart Wallet Factory
+   * Smart Account Factory
    *
-   * @remarks Create smart wallets and fetch data about them.
+   * @remarks Create smart accounts and fetch data about them.
    * @example
    * ```javascript
    *
-   * // Predict the address of the smart wallet that will be created for an admin.
-   * const deterministicAddress = await contract.smartWalletFactory.predictWalletAddress(admin, extraData);
+   * // Predict the address of the smart account that will be created for an admin.
+   * const deterministicAddress = await contract.accountFactory.predictAccountAddress(admin, extraData);
    *
-   * // Create smart wallets
-   * const tx = await contract.smartWalletFactory.createWallet(admin, extraData);
+   * // Create smart accounts
+   * const tx = await contract.accountFactory.createAccount(admin, extraData);
    * // the same as `deterministicAddress`
-   * const smartWalletAddress = tx.address;
+   * const accountAddress = tx.address;
    *
-   * // Get all smart wallets created by the factory
-   * const allWallets = await contract.smartWalletFactory.getAllWallets();
+   * // Get all smart accounts created by the factory
+   * const allAccounts = await contract.accountFactory.getAllAccounts();
    *
-   * // Get all smart wallets on which a signer has been given authority.
-   * const associatedWallets = await contract.smartWalletFactory.getAssociatedWallets(signer);
+   * // Get all smart accounts on which a signer has been given authority.
+   * const associatedAccounts = await contract.accountFactory.getAssociatedAccounts(signer);
    *
-   * // Get all signers who have been given authority on a smart wallet.
-   * const associatedSigners = await contract.smartWalletFactory.getAssociatedSigners(smartWalletAddress);
+   * // Get all signers who have been given authority on a smart account.
+   * const associatedSigners = await contract.accountFactory.getAssociatedSigners(accountAddress);
    *
-   * // Check whether a smart wallet has already been created for a given admin.
-   * const isWalletDeployed = await contract.smartWalletFactory.isWalletDeployed(admin, extraData);
+   * // Check whether a smart account has already been created for a given admin.
+   * const isAccountDeployed = await contract.accountFactory.isAccountDeployed(admin, extraData);
    * ```
    */
-  get smartWalletFactory(): SmartWalletFactory<IAccountFactory> {
-    return assertEnabled(
-      this.detectSmartWalletFactory(),
-      FEATURE_SMART_WALLET_FACTORY,
-    );
+  get accountFactory(): AccountFactory<IAccountFactory> {
+    return assertEnabled(this.detectAccountFactory(), FEATURE_ACCOUNT_FACTORY);
   }
 
   // TODO documentation
-  get smartWallet(): SmartWallet<IAccountCore> {
-    return assertEnabled(
-      this.detectSmartWallet(),
-      FEATURE_SMART_WALLET,
-    )
+  get account(): Account<IAccountCore> {
+    return assertEnabled(this.detectAccount(), FEATURE_ACCOUNT);
   }
 
   private _chainId: number;
@@ -570,23 +564,26 @@ export class SmartContract<
 
   // ========== Smart account features ==========
 
-  private detectSmartWalletFactory() {
+  private detectAccountFactory() {
     if (
       detectContractFeature<IAccountFactory>(
         this.contractWrapper,
-        FEATURE_SMART_WALLET_FACTORY.name,
+        FEATURE_ACCOUNT_FACTORY.name,
       )
     ) {
-      return new SmartWalletFactory(this.contractWrapper);
+      return new AccountFactory(this.contractWrapper);
     }
     return undefined;
   }
 
-  private detectSmartWallet() {
+  private detectAccount() {
     if (
-      detectContractFeature<IAccountCore>(this.contractWrapper, FEATURE_SMART_WALLET.name)
+      detectContractFeature<IAccountCore>(
+        this.contractWrapper,
+        FEATURE_ACCOUNT.name,
+      )
     ) {
-      return new SmartWallet(this.contractWrapper);
+      return new Account(this.contractWrapper);
     }
     return undefined;
   }
