@@ -1,5 +1,28 @@
 # @thirdweb-dev/auth
 
+## 3.2.5
+
+### Patch Changes
+
+- Updated dependencies [[`efb3546e`](https://github.com/thirdweb-dev/js/commit/efb3546ec8268156be00301af28b9d83ecd5ab08)]:
+  - @thirdweb-dev/wallets@1.0.1
+
+## 3.2.4
+
+### Patch Changes
+
+- [#1250](https://github.com/thirdweb-dev/js/pull/1250) [`d43f6171`](https://github.com/thirdweb-dev/js/commit/d43f6171d910e31b748b171b012174390aac3fff) Thanks [@adam-maj](https://github.com/adam-maj)! - Allow setting login payload validity duration
+
+- Updated dependencies [[`ac3e019c`](https://github.com/thirdweb-dev/js/commit/ac3e019cd1776dbdb0d06b213420ad17586f678e), [`3c5dc480`](https://github.com/thirdweb-dev/js/commit/3c5dc4804abc56b933ec45e9e1da11eb182296cc)]:
+  - @thirdweb-dev/wallets@1.0.0
+
+## 3.2.3
+
+### Patch Changes
+
+- Updated dependencies [[`536b0f12`](https://github.com/thirdweb-dev/js/commit/536b0f1240ab446aac22cf547a4e09e73ee6bf7b), [`b626782b`](https://github.com/thirdweb-dev/js/commit/b626782b0e8c6b76673472d3aee1c802dfb11b5f)]:
+  - @thirdweb-dev/wallets@0.3.3
+
 ## 3.2.2
 
 ### Patch Changes

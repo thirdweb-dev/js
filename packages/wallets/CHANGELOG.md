@@ -1,5 +1,66 @@
 # @thirdweb-dev/wallets
 
+## 1.0.1
+
+### Patch Changes
+
+- [#1259](https://github.com/thirdweb-dev/js/pull/1259) [`efb3546e`](https://github.com/thirdweb-dev/js/commit/efb3546ec8268156be00301af28b9d83ecd5ab08) Thanks [@iketw](https://github.com/iketw)! - Fix. Respecting passed wallets if less then 50, otherwhise use defaults chains.
+
+## 1.0.0
+
+### Major Changes
+
+- [#1215](https://github.com/thirdweb-dev/js/pull/1215) [`3c5dc480`](https://github.com/thirdweb-dev/js/commit/3c5dc4804abc56b933ec45e9e1da11eb182296cc) Thanks [@iketw](https://github.com/iketw)! - Migrate wallets to WCV2 and remove WCV1 support.
+
+  Please, check our changelogs for more info: https://blog.thirdweb.com/changelog/
+
+### Patch Changes
+
+- [#1256](https://github.com/thirdweb-dev/js/pull/1256) [`ac3e019c`](https://github.com/thirdweb-dev/js/commit/ac3e019cd1776dbdb0d06b213420ad17586f678e) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - WCv2 and Paper support for WebGL Unity
+
+- Updated dependencies [[`ef4cb092`](https://github.com/thirdweb-dev/js/commit/ef4cb092192c58c9b292b29590b888f45f9fd23d), [`30ac3aef`](https://github.com/thirdweb-dev/js/commit/30ac3aef840bde51a61acf786c709cffd3c47354), [`620e89dc`](https://github.com/thirdweb-dev/js/commit/620e89dc25c91557e2164a602c7aedd733525087), [`0fd8aa04`](https://github.com/thirdweb-dev/js/commit/0fd8aa04a9424497758d13a51a72363edcc30e19)]:
+  - @thirdweb-dev/sdk@3.10.26
+  - @thirdweb-dev/chains@0.1.25
+
+## 0.3.3
+
+### Patch Changes
+
+- [#1237](https://github.com/thirdweb-dev/js/pull/1237) [`536b0f12`](https://github.com/thirdweb-dev/js/commit/536b0f1240ab446aac22cf547a4e09e73ee6bf7b) Thanks [@iketw](https://github.com/iketw)! - [React] Add Rainbow Wallet (implementing the WalletConnect wallet)
+
+  ```javascript
+  import { ThirdwebProvider, rainbowWallet } from "@thirdweb-dev/react";
+
+  const activeChain = "ethereum";
+
+  <ThirdwebProvider
+    activeChain={activeChain}
+    supportedWallets={[rainbowWallet()]}
+  >
+    <App />
+  </ThirdwebProvider>;
+  ```
+
+- [#1236](https://github.com/thirdweb-dev/js/pull/1236) [`b626782b`](https://github.com/thirdweb-dev/js/commit/b626782b0e8c6b76673472d3aee1c802dfb11b5f) Thanks [@iketw](https://github.com/iketw)! - [Wallets/React] Add Trust Wallet
+
+  ```javascript
+  import { ThirdwebProvider, trustWallet } from "@thirdweb-dev/react";
+
+  const activeChain = "mumbai";
+
+  <ThirdwebProvider
+    activeChain={activeChain}
+    autoSwitch={true}
+    supportedWallets={[trustWallet()]}
+  >
+    <App />
+  </ThirdwebProvider>;
+  ```
+
+- Updated dependencies [[`d498c79a`](https://github.com/thirdweb-dev/js/commit/d498c79a911d478077dfb8a2490eb1bf91523186), [`9af346ee`](https://github.com/thirdweb-dev/js/commit/9af346eeada1037be27c8d3c9e1777f7be11a8ea)]:
+  - @thirdweb-dev/sdk@3.10.25
+  - @thirdweb-dev/chains@0.1.24
+
 ## 0.3.2
 
 ### Patch Changes

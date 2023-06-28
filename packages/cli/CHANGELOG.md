@@ -1,5 +1,24 @@
 # thirdweb
 
+## 0.10.27
+
+### Patch Changes
+
+- Updated dependencies [[`ef4cb092`](https://github.com/thirdweb-dev/js/commit/ef4cb092192c58c9b292b29590b888f45f9fd23d), [`30ac3aef`](https://github.com/thirdweb-dev/js/commit/30ac3aef840bde51a61acf786c709cffd3c47354), [`620e89dc`](https://github.com/thirdweb-dev/js/commit/620e89dc25c91557e2164a602c7aedd733525087), [`0fd8aa04`](https://github.com/thirdweb-dev/js/commit/0fd8aa04a9424497758d13a51a72363edcc30e19)]:
+  - @thirdweb-dev/sdk@3.10.26
+  - @thirdweb-dev/chains@0.1.25
+
+## 0.10.26
+
+### Patch Changes
+
+- [#1240](https://github.com/thirdweb-dev/js/pull/1240) [`1c7264b4`](https://github.com/thirdweb-dev/js/commit/1c7264b40330d068ece67df537a0f5db0f6aedca) Thanks [@Marfuen](https://github.com/Marfuen)! - Small bug fix for updating packages using --nightly
+
+- Updated dependencies [[`d498c79a`](https://github.com/thirdweb-dev/js/commit/d498c79a911d478077dfb8a2490eb1bf91523186), [`0c5b03b8`](https://github.com/thirdweb-dev/js/commit/0c5b03b8d6cc6a4e69bb2a4647d3626e69f1283c), [`9af346ee`](https://github.com/thirdweb-dev/js/commit/9af346eeada1037be27c8d3c9e1777f7be11a8ea)]:
+  - @thirdweb-dev/sdk@3.10.25
+  - @thirdweb-dev/storage@1.1.5
+  - @thirdweb-dev/chains@0.1.24
+
 ## 0.10.25
 
 ### Patch Changes

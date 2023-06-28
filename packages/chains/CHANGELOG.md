@@ -1,5 +1,19 @@
 # @thirdweb-dev/chains
 
+## 0.1.25
+
+### Patch Changes
+
+- [#1248](https://github.com/thirdweb-dev/js/pull/1248) [`620e89dc`](https://github.com/thirdweb-dev/js/commit/620e89dc25c91557e2164a602c7aedd733525087) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - update chains
+
+- [#1243](https://github.com/thirdweb-dev/js/pull/1243) [`0fd8aa04`](https://github.com/thirdweb-dev/js/commit/0fd8aa04a9424497758d13a51a72363edcc30e19) Thanks [@therealharpaljadeja](https://github.com/therealharpaljadeja)! - update chains
+
+## 0.1.24
+
+### Patch Changes
+
+- [#1241](https://github.com/thirdweb-dev/js/pull/1241) [`9af346ee`](https://github.com/thirdweb-dev/js/commit/9af346eeada1037be27c8d3c9e1777f7be11a8ea) Thanks [@nkrishang](https://github.com/nkrishang)! - Use fn getAllAccounts instead of event logs AccountCreated
+
 ## 0.1.23
 
 ### Patch Changes
