@@ -121,8 +121,8 @@ export class WalletConnectConnector extends WagmiConnector<
       // If there no active session, or the chains are stale, connect.
       if (!provider.session || isChainsStale) {
         const optionalChains = this.chains
-          .filter((chain) => chain.id !== targetChainId)
-          .map((optionalChain) => optionalChain.id);
+          .filter((chain) => chain.chainId !== targetChainId)
+          .map((optionalChain) => optionalChain.chainId);
 
         this.emit("message", { type: "connecting" });
 
