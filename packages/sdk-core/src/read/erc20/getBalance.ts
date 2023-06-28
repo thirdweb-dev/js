@@ -1,6 +1,6 @@
 import type { Chain } from "@thirdweb-dev/chains";
 import { createClient } from "../client";
-import { Address } from "viem";
+import { resolvePossibleEnsNamesToAddresses } from "../ens/resolve";
 
 // snipped of *just* the erc20 balanceOf function abi
 const ERC20_BALANCE_OF = [
@@ -25,7 +25,7 @@ const ERC20_BALANCE_OF = [
   },
 ] as const;
 
-export function getERC20Balance({
+export async function getERC20Balance({
   chain,
   address,
   tokenAddress,
@@ -34,10 +34,18 @@ export function getERC20Balance({
   address: string;
   tokenAddress: string;
 }) {
+  const [resolvedTokenAddress, resolvedAddress] =
+    await resolvePossibleEnsNamesToAddresses([tokenAddress, address]);
+  if (!resolvedTokenAddress) {
+    throw new Error(`Not a valid tokenAddress: ${tokenAddress}`);
+  }
+  if (!resolvedAddress) {
+    throw new Error(`Not a valid address: ${address}`);
+  }
   return createClient(chain).readContract({
-    address: tokenAddress as Address,
+    address: resolvedTokenAddress,
     abi: ERC20_BALANCE_OF,
     functionName: "balanceOf",
-    args: [address as Address],
+    args: [resolvedAddress],
   });
 }
