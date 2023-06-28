@@ -50,7 +50,12 @@ import type {
   TokenERC1155,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
+import {
+  BigNumber,
+  type BigNumberish,
+  type BytesLike,
+  constants,
+} from "ethers";
 import { ERC1155Claimable } from "./erc-1155-claimable";
 import { Erc1155ClaimableWithConditions } from "./erc-1155-claimable-with-conditions";
 
@@ -146,7 +151,7 @@ export class Erc1155<
       })),
     ]);
     return {
-      owner: ethers.constants.AddressZero,
+      owner: constants.AddressZero,
       metadata,
       type: "ERC1155",
       supply: supply.toString(),

@@ -6,7 +6,7 @@ import type {
   ClaimConditionInput,
   ClaimCondition,
 } from "../../types/claim-conditions/claim-conditions";
-import { ethers } from "ethers";
+import { utils } from "ethers";
 
 /**
  * @internal
@@ -27,7 +27,7 @@ export async function updateExistingClaimConditions(
   // merge input with existing claim condition
   const priceDecimals = existingConditions[index].currencyMetadata.decimals;
   const priceInWei = existingConditions[index].price;
-  const priceInTokens = ethers.utils.formatUnits(priceInWei, priceDecimals);
+  const priceInTokens = utils.formatUnits(priceInWei, priceDecimals);
 
   // merge existing (output format) with incoming (input format)
   const newConditionParsed = await ClaimConditionInputSchema.parseAsync({
@@ -49,7 +49,7 @@ export async function updateExistingClaimConditions(
     } else {
       newConditionAtIndex = existingOutput;
     }
-    const formattedPrice = ethers.utils.formatUnits(
+    const formattedPrice = utils.formatUnits(
       newConditionAtIndex.price,
       priceDecimals,
     );

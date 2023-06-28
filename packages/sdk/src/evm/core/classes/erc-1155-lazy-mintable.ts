@@ -12,7 +12,7 @@ import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers } from "ethers";
+import { type providers, utils } from "ethers";
 import { getPrebuiltInfo } from "../../common/legacy";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { BaseDelayedRevealERC1155 } from "../../types/eips";
@@ -124,7 +124,7 @@ export class Erc1155LazyMintable implements DetectableFeature {
         }
       }
 
-      const parse = (receipt: ethers.providers.TransactionReceipt) => {
+      const parse = (receipt: providers.TransactionReceipt) => {
         const event = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
           "TokensLazyMinted",
           receipt?.logs,
@@ -166,7 +166,7 @@ export class Erc1155LazyMintable implements DetectableFeature {
           args: [
             batch.length,
             `${baseUri.endsWith("/") ? baseUri : `${baseUri}/`}`,
-            ethers.utils.toUtf8Bytes(""),
+            utils.toUtf8Bytes(""),
           ],
           parse,
         });

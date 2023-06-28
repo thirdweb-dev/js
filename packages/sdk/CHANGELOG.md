@@ -1,5 +1,76 @@
 # @thirdweb-dev/sdk
 
+## 3.10.26
+
+### Patch Changes
+
+- [#1249](https://github.com/thirdweb-dev/js/pull/1249) [`ef4cb092`](https://github.com/thirdweb-dev/js/commit/ef4cb092192c58c9b292b29590b888f45f9fd23d) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update EIP155 error substrings for any evm deployments
+
+- [#1254](https://github.com/thirdweb-dev/js/pull/1254) [`30ac3aef`](https://github.com/thirdweb-dev/js/commit/30ac3aef840bde51a61acf786c709cffd3c47354) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fetch base64 NFTs
+
+- Updated dependencies [[`620e89dc`](https://github.com/thirdweb-dev/js/commit/620e89dc25c91557e2164a602c7aedd733525087), [`0fd8aa04`](https://github.com/thirdweb-dev/js/commit/0fd8aa04a9424497758d13a51a72363edcc30e19)]:
+  - @thirdweb-dev/chains@0.1.25
+
+## 3.10.25
+
+### Patch Changes
+
+- [#1233](https://github.com/thirdweb-dev/js/pull/1233) [`d498c79a`](https://github.com/thirdweb-dev/js/commit/d498c79a911d478077dfb8a2490eb1bf91523186) Thanks [@nkrishang](https://github.com/nkrishang)! - Fix smartWalletFactory.getAllEvents
+
+- [#1241](https://github.com/thirdweb-dev/js/pull/1241) [`9af346ee`](https://github.com/thirdweb-dev/js/commit/9af346eeada1037be27c8d3c9e1777f7be11a8ea) Thanks [@nkrishang](https://github.com/nkrishang)! - Use fn getAllAccounts instead of event logs AccountCreated
+
+- Updated dependencies [[`0c5b03b8`](https://github.com/thirdweb-dev/js/commit/0c5b03b8d6cc6a4e69bb2a4647d3626e69f1283c), [`9af346ee`](https://github.com/thirdweb-dev/js/commit/9af346eeada1037be27c8d3c9e1777f7be11a8ea)]:
+  - @thirdweb-dev/storage@1.1.5
+  - @thirdweb-dev/contracts-js@1.3.7
+  - @thirdweb-dev/chains@0.1.24
+
+## 3.10.24
+
+### Patch Changes
+
+- [#1222](https://github.com/thirdweb-dev/js/pull/1222) [`48065bcd`](https://github.com/thirdweb-dev/js/commit/48065bcd91c13e1f44d54343b5c6c2646b9e86e4) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Accept string for image/animation_url on shared metadata
+
+- [#1223](https://github.com/thirdweb-dev/js/pull/1223) [`6aa6f7e0`](https://github.com/thirdweb-dev/js/commit/6aa6f7e0bd2313e2e1ad96dd41aad91e6694d380) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - fix maxId in getAll for Open Edition contracts
+
+- [#1224](https://github.com/thirdweb-dev/js/pull/1224) [`f7f4f207`](https://github.com/thirdweb-dev/js/commit/f7f4f20737ac5d78424ca9c91220f00b85adde6b) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Better return type for get shared metadata
+
+- [#1218](https://github.com/thirdweb-dev/js/pull/1218) [`d4d95507`](https://github.com/thirdweb-dev/js/commit/d4d95507130b2b5408bfaa73ef3b708ca00c773e) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add get for shared metadata
+
+- [#1225](https://github.com/thirdweb-dev/js/pull/1225) [`483e2b91`](https://github.com/thirdweb-dev/js/commit/483e2b910934d75276a68bae64d04c47cd7d57e3) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Fix namespace for platform fees
+
+- [#1216](https://github.com/thirdweb-dev/js/pull/1216) [`c08e6ba9`](https://github.com/thirdweb-dev/js/commit/c08e6ba988ad97aa27d5868cec8abe3498d07a0a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix claim counts for Open Edition contracts
+
+- [#1188](https://github.com/thirdweb-dev/js/pull/1188) [`3d615a62`](https://github.com/thirdweb-dev/js/commit/3d615a62d0a6801f6fb0e63f9b95c2f98446add1) Thanks [@kienngo98](https://github.com/kienngo98)! - Abstract duplicated code; treeshake ethers.js imports
+
+- Updated dependencies [[`6816219a`](https://github.com/thirdweb-dev/js/commit/6816219ac13ae571a0c90db6ab389c319bc1f052)]:
+  - @thirdweb-dev/chains@0.1.23
+
+## 3.10.23
+
+### Patch Changes
+
+- [#1196](https://github.com/thirdweb-dev/js/pull/1196) [`d9b7360d`](https://github.com/thirdweb-dev/js/commit/d9b7360d1d78abcdaca89aa35e66388cbc5eb26c) Thanks [@MananTank](https://github.com/MananTank)! - refactor erc-721.ts, erc-1155.ts, erc-20.ts
+
+- [#1208](https://github.com/thirdweb-dev/js/pull/1208) [`8a2d9204`](https://github.com/thirdweb-dev/js/commit/8a2d92046a416c99c6bfecf63a6fdb6cc02ea175) Thanks [@sebas5384](https://github.com/sebas5384)! - Updated gas station URL
+
+- [#1134](https://github.com/thirdweb-dev/js/pull/1134) [`990c665d`](https://github.com/thirdweb-dev/js/commit/990c665de9e5c1070dc80fe0f1b434e251f70a94) Thanks [@nkrishang](https://github.com/nkrishang)! - Introduce SmartWallet sdk class
+
+- [#1199](https://github.com/thirdweb-dev/js/pull/1199) [`c6f44722`](https://github.com/thirdweb-dev/js/commit/c6f44722f9d123db4e7c4c799fe8e0374a02107c) Thanks [@MananTank](https://github.com/MananTank)! - Add eslint-plugin-better-tree-shaking for improved tree-shaking
+
+- [#1191](https://github.com/thirdweb-dev/js/pull/1191) [`45ae105e`](https://github.com/thirdweb-dev/js/commit/45ae105ed3e48bfbf6be84aa12ecb0fb55a917b7) Thanks [@kumaryash90](https://github.com/kumaryash90)! - OZ minimal forwarder addresses for zksync testnet and mainnet
+
+- [#1198](https://github.com/thirdweb-dev/js/pull/1198) [`bb7ca20e`](https://github.com/thirdweb-dev/js/commit/bb7ca20e49c5c374b12a4ed746a2ac3db488abd9) Thanks [@MananTank](https://github.com/MananTank)! - Better PURE annotations for tree shaking
+
+- [#1193](https://github.com/thirdweb-dev/js/pull/1193) [`23d61cfe`](https://github.com/thirdweb-dev/js/commit/23d61cfeff2e5a885c511416d7491e7933ed404a) Thanks [@jnsdls](https://github.com/jnsdls)! - add shared metadata extension (open edition)
+
+- [#1189](https://github.com/thirdweb-dev/js/pull/1189) [`8941b226`](https://github.com/thirdweb-dev/js/commit/8941b22682d1b15a6e0d311b1e8548b95d6cfadf) Thanks [@MananTank](https://github.com/MananTank)! - Add PURE annotations to improve tree-shaking
+
+- [#1197](https://github.com/thirdweb-dev/js/pull/1197) [`e0ce4a37`](https://github.com/thirdweb-dev/js/commit/e0ce4a37596a91a072f8551e323fce6723113dcb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - contract.erc721.claim(quantity) now supports Zora contracts
+
+- Updated dependencies [[`e0ce4a37`](https://github.com/thirdweb-dev/js/commit/e0ce4a37596a91a072f8551e323fce6723113dcb), [`990c665d`](https://github.com/thirdweb-dev/js/commit/990c665de9e5c1070dc80fe0f1b434e251f70a94), [`f41f1a29`](https://github.com/thirdweb-dev/js/commit/f41f1a2958a2cedcf0496c9a3ca284d0b98f1b89)]:
+  - @thirdweb-dev/contracts-js@1.3.6
+  - @thirdweb-dev/chains@0.1.22
+
 ## 3.10.22
 
 ### Patch Changes

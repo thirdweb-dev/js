@@ -39,7 +39,7 @@ import IERC20ABI from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import type { IDropClaimCondition_V2 } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC20_V2";
 import type { IClaimCondition } from "@thirdweb-dev/contracts-js/src/IDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, constants, ethers, utils } from "ethers";
+import { BigNumber, type BigNumberish, constants, utils } from "ethers";
 import deepEqual from "fast-deep-equal";
 import { legacyContractModelToAbstract } from "../../common/claim-conditions/legacyContractModelToAbstract";
 import { newContractModelToAbstract } from "../../common/claim-conditions/newContractModelToAbstract";
@@ -273,9 +273,7 @@ export class DropErc1155ClaimConditions<
     }
 
     // check for merkle root inclusion
-    const merkleRootArray = ethers.utils.stripZeros(
-      claimCondition.merkleRootHash,
-    );
+    const merkleRootArray = utils.stripZeros(claimCondition.merkleRootHash);
     const hasAllowList = merkleRootArray.length > 0;
     let allowListEntry: SnapshotEntryWithProof | null = null;
     if (hasAllowList) {
@@ -467,7 +465,7 @@ export class DropErc1155ClaimConditions<
   ): Promise<SnapshotEntryWithProof | null> {
     const claimCondition = await this.get(tokenId, claimConditionId);
     const merkleRoot = claimCondition.merkleRoot;
-    const merkleRootArray = ethers.utils.stripZeros(merkleRoot);
+    const merkleRootArray = utils.stripZeros(merkleRoot);
     if (merkleRootArray.length > 0) {
       const metadata = await this.metadata.get();
       const resolvedAddress = await resolveAddress(claimerAddress);
@@ -591,7 +589,7 @@ export class DropErc1155ClaimConditions<
               claimConditionsProcessed = [
                 {
                   startTime: new Date(0),
-                  currencyAddress: ethers.constants.AddressZero,
+                  currencyAddress: constants.AddressZero,
                   price: 0,
                   maxClaimableSupply: 0,
                   maxClaimablePerWallet: 0,
@@ -840,7 +838,7 @@ export class DropErc1155ClaimConditions<
           proof: claimVerification.proofs,
           maxQuantityInAllowlist: claimVerification.maxClaimable,
         } as IDropSinglePhase_V1.AllowlistProofStruct,
-        ethers.utils.toUtf8Bytes(""),
+        utils.toUtf8Bytes(""),
       ];
     }
     return [
@@ -855,7 +853,7 @@ export class DropErc1155ClaimConditions<
         pricePerToken: claimVerification.priceInProof,
         currency: claimVerification.currencyAddressInProof,
       } as IDropSinglePhase.AllowlistProofStruct,
-      ethers.utils.toUtf8Bytes(""),
+      utils.toUtf8Bytes(""),
     ];
   }
 

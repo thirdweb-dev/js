@@ -5,7 +5,7 @@ import type { SafeConnectionArgs } from "../connectors/safe/types";
 import type { SafeConnector as SafeConnectorType } from "../connectors/safe";
 import { walletIds } from "../constants/walletIds";
 
-export { SafeSupportedChainsSet } from "../connectors/safe";
+export { SafeSupportedChainsSet } from "../connectors/safe/constants";
 
 // re-export the connection args for convenience
 export type { SafeConnectionArgs } from "../connectors/safe/types";
