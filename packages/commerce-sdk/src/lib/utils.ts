@@ -1,8 +1,8 @@
 import { createHmac } from "crypto";
 import { Readable } from "stream";
-import { ShopifyFetchParams, ShopifyFetchResult } from "../../types";
+import { SendTokensParams, ShopifyFetchParams, ShopifyFetchResult } from "../../types";
 
-export async function getRawBody(readable: Readable): Promise<Buffer> {
+export async function getNextJsRawBody(readable: Readable): Promise<Buffer> {
   const chunks = [];
   for await (const chunk of readable) {
     chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
@@ -71,4 +71,59 @@ export function verifyWebhook(data: any, headers: {[key: string]: any}, secret: 
     const digest = hmac.update(data).digest('base64');
 
     return Buffer.from(digest).toString() === hmacHeader;
+}
+
+export async function sendTokensSync({
+  // apiUrl,
+  // chain,
+  tokenContract,
+  wallet,
+  rewardAmount,
+}: SendTokensParams) {
+  // Once web3api is ready, we can use this:
+  // const response = await fetch(`${apiUrl}/contracts/${chain}/${tokenContract.getAddress()}/erc20/transfer`, {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify({
+  //     wallet,
+  //     rewardAmount,
+  //   }),
+  // })
+  // const data = await response.json();
+  // console.log(`Rewarding ${rewardAmount} points to wallet address: ${wallet}`, `tx: ${data.result}`);
+  // return data.result;
+
+  const tx = await tokenContract.erc20.transfer(wallet, rewardAmount);
+  console.log(`Rewarding ${rewardAmount} points to wallet address: ${wallet}`, `tx: ${tx.receipt.transactionHash}`);
+  return tx.receipt.transactionHash;
+}
+
+export async function sendTokensAsync({ 
+  // apiUrl,
+  // chain,
+  tokenContract,
+  wallet,
+  rewardAmount
+  } : SendTokensParams) {
+  // Once web3api is ready, we can use this:
+  // const response = await fetch(`${apiUrl}/contract/${chain}/${tokenContract.getAddress()}/erc20/transfer`, {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify({
+  //     wallet,
+  //     rewardAmount,
+  //   }),
+  // })
+  // const data = await response.json();
+  // console.log(`Rewarding ${rewardAmount} points to wallet address: ${wallet}`, `tx: ${data.result}`);
+  // return data.result;
+
+  const preparedTx = await tokenContract.erc20.transfer.prepare(wallet, rewardAmount);
+  const tx = await preparedTx.send();
+  console.log(`Rewarding ${rewardAmount} points to wallet address: ${wallet}`, `tx: ${tx.hash}`);
+  return tx.hash;
 }

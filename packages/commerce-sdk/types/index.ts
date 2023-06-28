@@ -1,10 +1,19 @@
-import { SDKOptions } from "@thirdweb-dev/sdk";
+import { SDKOptions, Token } from "@thirdweb-dev/sdk";
 import { AbstractClientWallet } from "@thirdweb-dev/wallets";
 import { Signer } from 'ethers';
 
+export type SendTokensParams = {
+  // apiUrl: string; 
+  // chain: string; 
+  tokenContract: Token; 
+  wallet: string; 
+  rewardAmount: number;
+}
+
 export type LoyaltyRewardsParams = {
   signerOrWallet: Signer | AbstractClientWallet;
-  body: Buffer;
+  // apiUrl: string;
+  rawBody: Buffer;
   headers: {[key: string]: any}
   webhookSecret: string;
   tokenContractAddress: string;
@@ -17,11 +26,13 @@ export type LoyaltyRewardsParams = {
 
 export type RewardTokensParams = {
   signerOrWallet: Signer | AbstractClientWallet;
+  // apiUrl: string;
   wallet: string;
   tokenContractAddress: string;
   rewardAmount: number;
   chain: string;
   sdkOptions?: SDKOptions;
+  fromWebhook?: boolean;
 }
 
 export interface ShopifyFetchParams {

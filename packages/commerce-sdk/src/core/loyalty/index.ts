@@ -4,7 +4,7 @@ import { Signer } from 'ethers';
 import { NextApiRequest } from "next";
 import { LoyaltyRewardsParams, ResponseBody, RewardTokensParams } from "../../../types";
 import { GET_ORDER_BY_ID_QUERY } from "../../lib/queries";
-import { getRawBody, shopifyFetchAdminAPI, verifyWebhook } from '../../lib/utils';
+import { sendTokensAsync, sendTokensSync, shopifyFetchAdminAPI, verifyWebhook } from '../../lib/utils';
 
 /**
  * Gift ERC20 loyalty tokens to a customer using their wallet address.
@@ -18,7 +18,7 @@ import { getRawBody, shopifyFetchAdminAPI, verifyWebhook } from '../../lib/utils
  * 
  * const txHash = await rewardPoints({
  *   signerOrWallet: signer,
- *   body: {{body}},
+ *   rawBody: {{raw_body}},
  *   headers: {{headers}},
  *   webhookSecret: {{"webhook_secret"}},
  *   tokenContractAddress: {{"contract_address"}},
@@ -33,9 +33,10 @@ import { getRawBody, shopifyFetchAdminAPI, verifyWebhook } from '../../lib/utils
  * @public
  */
 
-export async function rewardTokensOnPurchase({
-  body,
+export async function rewardTokensWebhook({
+  rawBody,
   headers,
+  // apiUrl,
   webhookSecret,
   tokenContractAddress,
   gaslessRelayerUrl,
@@ -45,14 +46,13 @@ export async function rewardTokensOnPurchase({
   shopifyAccessToken,
   signerOrWallet,
 }: LoyaltyRewardsParams) {
-  console.log("rewardTokensOnPurchase", {body, headers, webhookSecret, tokenContractAddress, gaslessRelayerUrl, chain, rewardAmount, shopifyAdminUrl, shopifyAccessToken, signerOrWallet});
-  if (!body || !headers) {
-    throw new Error("Bad request - missing body or headers");
+  if (!rawBody || !headers) {
+    throw new Error("Bad request - missing rawBody or headers");
   }
 
   const shopifyOrderId = headers["x-shopify-order-id"];
 
-  const verified = verifyWebhook(body, headers, webhookSecret);
+  const verified = verifyWebhook(rawBody, headers, webhookSecret);
   if (!verified) {
     throw new Error("Bad request - HMAC verification failed");
   }
@@ -96,14 +96,15 @@ export async function rewardTokensOnPurchase({
 
   try {
     const tx = await rewardTokens({
+      // apiUrl,
       signerOrWallet,
       wallet,
       tokenContractAddress,
       rewardAmount,
       chain,
-      sdkOptions
+      sdkOptions,
+      fromWebhook: true,
     })
-    console.log(`Rewarding ${rewardAmount} points to wallet address: ${wallet}`, `tx: ${tx}`);
     return tx;
   } catch (e) {
     throw new Error(`Error rewarding points to wallet address: \n${e}`);
@@ -118,8 +119,10 @@ export async function rewardTokensOnPurchase({
  * const txHash = await sendTokens({
  *   wallet: "{{wallet_address}}",
  *   tokenContractAddress: {{"contract_address"}},
- *   amount: 100,
+ *   rewardAmount: 100,
  *   chain: "goerli",
+ *   sdkOptions: {{sdk_options}},
+ *   signerOrWallet: {{signer_or_wallet}},
  * });
  * ```
  * @returns Transaction hash
@@ -129,10 +132,12 @@ export async function rewardTokensOnPurchase({
 export async function rewardTokens({
   wallet,
   tokenContractAddress,
+  // apiUrl,
   rewardAmount,
   chain,
   sdkOptions,
   signerOrWallet,
+  fromWebhook = false,
 }: RewardTokensParams) {
   let sdk = undefined;
   if (signerOrWallet instanceof Signer) {
@@ -141,23 +146,39 @@ export async function rewardTokens({
       chain,
       sdkOptions,
     );
-  }
-
-  if (signerOrWallet instanceof AbstractClientWallet) {
+  } else if (signerOrWallet instanceof AbstractClientWallet) {
     sdk = await ThirdwebSDK.fromWallet(
       signerOrWallet,
       chain,
       sdkOptions,
     );
   }
-
   if (!sdk) return;
 
   const tokenContract = await sdk.getContract(tokenContractAddress, "token");
+  if (!tokenContract) {
+    throw new Error("Error getting token contract");
+  }
   try {
-    const tx = await tokenContract.erc20.transfer(wallet, rewardAmount);
-    console.log(`Rewarding ${rewardAmount} points to wallet address: ${wallet}`, `tx: ${tx.receipt.transactionHash}`);
-    return tx.receipt.transactionHash;
+    let txHash = "";
+    if (fromWebhook) {
+      txHash = await sendTokensAsync({
+        // apiUrl,
+        // chain,
+        tokenContract,
+        wallet,
+        rewardAmount,
+      })
+    } else {
+      txHash = await sendTokensSync({
+        // apiUrl,
+        // chain,
+        tokenContract,
+        wallet,
+        rewardAmount,
+      })
+    }
+    return txHash;
   } catch (e) {
     throw new Error(`Error rewarding points to wallet address: \n${e}`);
   }
@@ -226,5 +247,3 @@ export async function checkEligibility({
  * */
 
 // export async function generateDiscount();
-
-export { getRawBody };
