@@ -36,8 +36,8 @@ interface EmbedSetupProps {
   ercOrMarketplace: string;
 }
 
-const IPFS_URI = "bafybeia6l2k4sdewhklgmx7ls2agymvvvllxhr4addy27koxtypuecsgd4";
-const ERC721_IPFS_URI = "bafybeiaxqr22vtmr5eblmpqxhyi34j2ogygoljmd4cvj2xt4g33ogwlel4";
+const IPFS_URI = "ipfs://QmRJ7truQt9cA3xwmoXN1jj44pQspzLsLHmebHMR3verqn";
+const ERC721_IPFS_URI = `ipfs://QmVqtJwe7od5qrQSrQ7vHhevVpH25sE9eTff65ZM8hRDVm`;
 
 interface IframeSrcOptions {
   chain: string;
@@ -83,9 +83,10 @@ const buildIframeSrc = (
   ercOrMarketplace?: string,
   options?: IframeSrcOptions,
 ): string => {
-  const contractPath = ercOrMarketplace === "erc721" ? "" : `${ercOrMarketplace}.html`;
-  const contractEmbedHash = ercOrMarketplace === "erc721" ? ERC721_IPFS_URI : IPFS_URI;
- 
+  const contractPath =
+    ercOrMarketplace === "erc721" ? "" : `${ercOrMarketplace}.html`;
+  const contractEmbedHash =
+    ercOrMarketplace === "erc721" ? ERC721_IPFS_URI : IPFS_URI;
 
   if (!contract || !options || !contractEmbedHash) {
     return "";
@@ -106,7 +107,9 @@ const buildIframeSrc = (
     biconomyApiId,
   } = options;
 
-  const url = new URL(`https://${contractEmbedHash}.ipfs-public.thirdwebcdn.com/${contractPath}`);
+  const url = new URL(
+    `https://${contractEmbedHash}.ipfs-public.thirdwebcdn.com/${contractPath}`,
+  );
 
   url.searchParams.append("contract", contract.getAddress());
   url.searchParams.append("chain", chain);

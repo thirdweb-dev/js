@@ -195,10 +195,10 @@ const WALLETS = [
   },
   {
     name: "WalletConnect",
-    description: "Connect with WalletConnect (v1 & v2)",
+    description: "Connect with WalletConnect",
     iconUrl:
       "ipfs://QmX58KPRaTC9JYZ7KriuBzeoEaV2P9eZcA3qbFnTHZazKw/wallet-connect.svg",
-    link: "https://portal.thirdweb.com/wallet/wallet-connect-v1",
+    link: "https://portal.thirdweb.com/wallet/wallet-connect-v2",
   },
   {
     name: "Safe",

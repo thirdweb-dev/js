@@ -4,7 +4,7 @@ import {
   ThirdwebProvider,
   coinbaseWallet,
   metamaskWallet,
-  walletConnectV1,
+  walletConnect,
 } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
@@ -322,10 +322,10 @@ const wallet = new AwsSecretsManagerWallet({
   {
     id: "wallet-connect",
     name: "WalletConnect",
-    description: "Connect with WalletConnect (v1 & v2)",
+    description: "Connect with WalletConnect",
     iconUrl:
       "ipfs://QmX58KPRaTC9JYZ7KriuBzeoEaV2P9eZcA3qbFnTHZazKw/wallet-connect.svg",
-    link: "https://portal.thirdweb.com/wallet/wallet-connect-v1",
+    link: "https://portal.thirdweb.com/wallet/wallet-connect-v2",
     supportedLanguages: {
       javascript: `import { WalletConnect } from "@thirdweb-dev/wallets";
 
@@ -722,7 +722,7 @@ const ConnectWalletWithPreview: React.FC<ConnectWalletWithPreviewProps> = ({
               supportedWallets={[
                 metamaskWallet(),
                 coinbaseWallet(),
-                walletConnectV1(),
+                walletConnect(),
               ]}
             >
               <ConnectWallet
