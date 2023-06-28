@@ -82,6 +82,7 @@ let signers: SignerWithAddress[];
 let storage: ThirdwebStorage;
 let implementations: { [key in ContractType]?: string };
 let mock_weth_address: string;
+let thirdwebFactory: TWFactory;
 
 const fastForwardTime = async (timeInSeconds: number): Promise<void> => {
   const now = Math.floor(Date.now() / 1000);
@@ -133,6 +134,7 @@ export const mochaHooks = {
       .connect(signer)
       .deploy(trustedForwarderAddress, registry.address)) as TWFactory;
 
+    thirdwebFactory = await thirdwebFactoryDeployer.deployed();
     const deployTxFactory = thirdwebFactoryDeployer.deployTransaction;
     await deployTxFactory.wait();
     const thirdwebRegistryAddress = await thirdwebFactoryDeployer.registry();
@@ -391,4 +393,5 @@ export {
   storage,
   implementations,
   hardhatEthers,
+  thirdwebFactory,
 };
