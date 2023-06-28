@@ -6,7 +6,6 @@ import { AbstractClientWallet, WalletOptions } from "./base";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { TW_WC_PROJECT_ID } from "../constants/wc";
 import { walletIds } from "../constants/walletIds";
-import { Chain } from "@thirdweb-dev/chains";
 
 export type WC2_QRModalOptions = QRModalOptions;
 
@@ -39,8 +38,6 @@ export type WalletConnectOptions = {
   qrModalOptions?: WC2_QRModalOptions;
 };
 
-const MIN_CHAINS_IDS = [1, 137, 10, 42161, 56];
-
 export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
   #walletConnectConnector?: WalletConnectConnector;
   #provider?: WalletConnectProvider;
@@ -66,17 +63,6 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
     super(options?.walletId || WalletConnect.id, options);
     this.projectId = options?.projectId || TW_WC_PROJECT_ID;
     this.qrcode = options?.qrcode === false ? false : true;
-
-    // defaultChains, passing ALL CHAINS hangs the connector
-    // respect user's chains if less than 50
-    const finalChains =
-      this.chains.length > 50
-        ? (this.chains as Chain[]).filter((chain) =>
-            MIN_CHAINS_IDS.includes(chain.chainId),
-          )
-        : this.chains;
-
-    this.chains = finalChains;
   }
 
   protected async getConnector(): Promise<Connector> {
