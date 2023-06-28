@@ -56,7 +56,8 @@
   "dependencies": {
     "viem": "^1.2.0",
     "@thirdweb-dev/chains": "workspace:*",
-    "@thirdweb-dev/contracts-js": "workspace:*"
+    "@thirdweb-dev/contracts-js": "workspace:*",
+    "@thirdweb-dev/storage": "workspace:*"
   },
   "bugs": {
     "url": "https://github.com/thirdweb-dev/js/issues"

@@ -4,3 +4,4 @@ export {
   resolveAddressToEnsName,
   resolveEnsNameToAddress,
 } from "./read/ens/resolve";
+export { getERC721Token } from "./read/erc721/get";

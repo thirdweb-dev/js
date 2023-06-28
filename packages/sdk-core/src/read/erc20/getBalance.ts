@@ -2,7 +2,7 @@ import { resolvePossibleEnsNamesToAddresses } from "../ens/resolve";
 import type { Client } from "viem";
 import { readContract } from "viem/actions";
 
-// snipped of *just* the erc20 balanceOf function abi
+// snippet of *just* the erc20 balanceOf function abi
 const ERC20_BALANCE_OF = [
   {
     inputs: [
@@ -26,24 +26,24 @@ const ERC20_BALANCE_OF = [
 ] as const;
 
 export async function getERC20Balance({
-  client,
+  viemClient,
   address,
-  tokenAddress,
+  contractAddress,
 }: {
-  client: Client;
+  viemClient: Client;
   address: string;
-  tokenAddress: string;
+  contractAddress: string;
 }) {
-  const [resolvedTokenAddress, resolvedAddress] =
-    await resolvePossibleEnsNamesToAddresses([tokenAddress, address]);
-  if (!resolvedTokenAddress) {
-    throw new Error(`Not a valid tokenAddress: ${tokenAddress}`);
+  const [resolvedContractAddress, resolvedAddress] =
+    await resolvePossibleEnsNamesToAddresses([contractAddress, address]);
+  if (!resolvedContractAddress) {
+    throw new Error(`Not a valid contractAddress: ${contractAddress}`);
   }
   if (!resolvedAddress) {
     throw new Error(`Not a valid address: ${address}`);
   }
-  return readContract(client, {
-    address: resolvedTokenAddress,
+  return readContract(viemClient, {
+    address: resolvedContractAddress,
     abi: ERC20_BALANCE_OF,
     functionName: "balanceOf",
     args: [resolvedAddress],

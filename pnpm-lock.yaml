@@ -1115,6 +1115,9 @@ importers:
       '@thirdweb-dev/contracts-js':
         specifier: workspace:*
         version: link:../contracts-js
+      '@thirdweb-dev/storage':
+        specifier: workspace:*
+        version: link:../storage
       viem:
         specifier: ^1.2.0
         version: 1.2.0(typescript@5.0.4)
@@ -15849,7 +15852,7 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /eslint-module-utils@2.7.4(@typescript-eslint/parser@5.59.0)(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.3)(eslint@8.42.0):
+  /eslint-module-utils@2.7.4(@typescript-eslint/parser@5.59.0)(eslint-import-resolver-node@0.3.7)(eslint@8.42.0):
     resolution: {integrity: sha512-j4GT+rqzCoRKHwURX7pddtIPGySnX9Si/cgMI5ztrcqOPtk5dDEeZ34CQVPphnqkJytlc97Vuk05Um2mJ3gEQA==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -15874,7 +15877,6 @@ packages:
       debug: 3.2.7
       eslint: 8.42.0
       eslint-import-resolver-node: 0.3.7
-      eslint-import-resolver-typescript: 3.5.3(eslint-plugin-import@2.27.5)(eslint@8.42.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -15975,7 +15977,7 @@ packages:
       doctrine: 2.1.0
       eslint: 8.42.0
       eslint-import-resolver-node: 0.3.7
-      eslint-module-utils: 2.7.4(@typescript-eslint/parser@5.59.0)(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.3)(eslint@8.42.0)
+      eslint-module-utils: 2.7.4(@typescript-eslint/parser@5.59.0)(eslint-import-resolver-node@0.3.7)(eslint@8.42.0)
       has: 1.0.3
       is-core-module: 2.11.0
       is-glob: 4.0.3
