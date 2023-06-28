@@ -177,7 +177,7 @@ describe("Tiered Drop Contract", async () => {
     expect(nfts[0].metadata.name).to.equal("NFT #5");
   });
 
-  test.skip("metadata should reveal correctly", async () => {
+  it("metadata should reveal correctly", async () => {
     contract = await deployTieredDrop();
 
     const placeholder = {

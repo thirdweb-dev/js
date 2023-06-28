@@ -1,12 +1,12 @@
 import { ThirdwebSDK } from "../../src/evm";
 import { expectError, sdk } from "./before-setup";
 import { expect } from "chai";
-import { Wallet } from "ethers";
+import { ethers } from "ethers";
 
 describe("Error Handling", async () => {
-  test.skip("should throw proper error on account with no balance", async () => {
+  it("should throw proper error on account with no balance", async () => {
     const newSdk = ThirdwebSDK.fromSigner(
-      Wallet.createRandom().connect(sdk.getProvider()),
+      ethers.Wallet.createRandom().connect(sdk.getProvider()),
     );
 
     try {
