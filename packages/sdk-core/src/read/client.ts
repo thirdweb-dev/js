@@ -23,11 +23,13 @@ function convertChainToViemChain(chain: Chain): ViemChain {
 const cachedClients = new Map<string, PublicClient>();
 
 export function createClient(chain: Chain): PublicClient {
+  // TODO obviously not a real cache key, but it's good enough for now
   const cacheKey = JSON.stringify(chain);
   const cachedClient = cachedClients.get(cacheKey);
   if (cachedClient) {
     return cachedClient;
   }
+  // TODO allow overriding of this duh
   const transport = http(`https://${chain.chainId}.rpc.thirdweb.com`);
   const client = createPublicClient({
     transport,

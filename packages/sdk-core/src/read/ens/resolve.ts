@@ -1,17 +1,26 @@
 import { Ethereum } from "@thirdweb-dev/chains";
 import { createClient } from "../client";
-import { isAddress } from "viem";
+import { Client, isAddress } from "viem";
+import { getEnsAddress, getEnsName } from "viem/actions";
+
+let lazyMainnetClient: Client | null = null;
 
 export function resolveEnsNameToAddress(name: string) {
   if (isAddress(name)) {
     return Promise.resolve(name);
   }
-  return createClient(Ethereum).getEnsAddress({ name });
+  if (!lazyMainnetClient) {
+    lazyMainnetClient = createClient(Ethereum);
+  }
+  return getEnsAddress(lazyMainnetClient, { name });
 }
 
 export function resolveAddressToEnsName(address: string) {
   if (isAddress(address)) {
-    return createClient(Ethereum).getEnsName({ address });
+    if (!lazyMainnetClient) {
+      lazyMainnetClient = createClient(Ethereum);
+    }
+    return getEnsName(lazyMainnetClient, { address });
   }
   return Promise.resolve(null);
 }
