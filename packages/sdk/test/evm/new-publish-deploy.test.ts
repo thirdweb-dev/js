@@ -1,7 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { jsonProvider, sdk, signers, thirdwebFactory } from "./before-setup";
 import { expect, assert } from "chai";
-import { ThirdwebSDK } from "../../src/evm";
 import {
   Forwarder__factory,
   DropERC721__factory,
@@ -53,14 +52,9 @@ describe("New Publish Flow", async () => {
     bobWallet: SignerWithAddress,
     w4: SignerWithAddress;
 
-  let realSDK: ThirdwebSDK;
-
   beforeEach(async () => {
     await jsonProvider.send("hardhat_reset", []);
     [adminWallet, samWallet, bobWallet, , , , , w4] = signers;
-    realSDK = new ThirdwebSDK(adminWallet, {
-      gatewayUrls: ["https://gateway.ipfscdn.io/ipfs/"],
-    });
   });
   before("Mock upload infra contracts", async () => {
     // mock upload Forwarder
@@ -247,7 +241,7 @@ describe("New Publish Flow", async () => {
 
       const name = await contract.call("name");
       const owner = await contract.call("owner");
-      const code = await realSDK.getProvider().getCode(contractAddress);
+      const code = await sdk.getProvider().getCode(contractAddress);
 
       expect(name).to.equal("DropERC721 Minimal Proxy");
       expect(owner).to.equal(adminAddress);
@@ -303,10 +297,13 @@ describe("New Publish Flow", async () => {
       );
 
       // deploy implementation
-      const implementationAddress =
-        await realSDK.deployer.deployContractFromUri(mockPublishUri, [], {
+      const implementationAddress = await sdk.deployer.deployContractFromUri(
+        mockPublishUri,
+        [],
+        {
           forceDirectDeploy: true,
-        });
+        },
+      );
       await (
         await thirdwebFactory.addImplementation(implementationAddress)
       ).wait();
