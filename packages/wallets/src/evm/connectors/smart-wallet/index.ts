@@ -15,7 +15,6 @@ import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
 import { BigNumber, ethers, providers } from "ethers";
 import {
-  ChainOrRpc,
   ChainOrRpcUrl,
   getChainProvider,
   SmartContract,
@@ -255,14 +254,14 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     chainOrRpc: ChainOrRpcUrl,
     provider: ethers.providers.Provider,
   ): Promise<string> {
-    if (typeof chainOrRpc == "object") {
+    if (typeof chainOrRpc === "object") {
       return chainOrRpc.slug;
     }
-    if (typeof chainOrRpc == "number") {
+    if (typeof chainOrRpc === "number") {
       const chain = getChainByChainId(chainOrRpc);
       return chain.slug;
     }
-    if (typeof chainOrRpc == "string") {
+    if (typeof chainOrRpc === "string") {
       if (chainOrRpc.startsWith("http") || chainOrRpc.startsWith("ws")) {
         // if it's a url, try to get the chain id from the provider
         const chainId = (await provider.getNetwork()).chainId;
