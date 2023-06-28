@@ -9,7 +9,6 @@ import { Linking } from "react-native";
  */
 export function useCoinbaseWalletListener(enable: boolean) {
   useEffect(() => {
-    console.log("useCoinbaseWalletListener", enable);
     if (!enable) {
       return;
     }
