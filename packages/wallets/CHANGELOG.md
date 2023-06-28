@@ -1,5 +1,15 @@
 # @thirdweb-dev/wallets
 
+## 1.0.2
+
+### Patch Changes
+
+- [#1263](https://github.com/thirdweb-dev/js/pull/1263) [`ed711c8c`](https://github.com/thirdweb-dev/js/commit/ed711c8cb2ed6a0deb1b2a5eeec06df1d4edc5e8) Thanks [@iketw](https://github.com/iketw)! - Pass a min set of chains if user passes more than 50 chains. We'll rely on "adding chains" for new chains
+
+- [#1255](https://github.com/thirdweb-dev/js/pull/1255) [`05a7495a`](https://github.com/thirdweb-dev/js/commit/05a7495a132aabab5f48abbdb80a468ff6f65df8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle passing RPC urls as chain in SmartWallet config
+
+- [#1265](https://github.com/thirdweb-dev/js/pull/1265) [`e78da6b3`](https://github.com/thirdweb-dev/js/commit/e78da6b36cfa6d954234820563201bf760186ed1) Thanks [@MananTank](https://github.com/MananTank)! - Wallet Connect v2 Corrections
+
 ## 1.0.1
 
 ### Patch Changes
