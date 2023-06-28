@@ -19,7 +19,7 @@ import { SmartWallet } from "@thirdweb-dev/wallets/evm/wallets/smart-wallet";
 import { WalletConnect } from "@thirdweb-dev/wallets/evm/wallets/wallet-connect";
 import { PaperWallet } from "@thirdweb-dev/wallets/evm/wallets/paper-wallet";
 import { BigNumber } from "ethers";
-import { Ethereum, allChains } from "@thirdweb-dev/chains";
+import { Ethereum, allChains, defaultChains } from "@thirdweb-dev/chains";
 import type { ContractInterface, Signer } from "ethers";
 
 declare global {
@@ -158,7 +158,7 @@ class ThirdwebBridge implements TWBridge {
           walletInstance = new WalletConnect({
             projectId: sdkOptions.wallet?.walletConnectProjectId,
             dappMetadata,
-            chains: allChains,
+            chains: defaultChains,
           });
           break;
         case walletIds.coinbase:
