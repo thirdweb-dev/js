@@ -121,7 +121,7 @@ export class WalletConnectConnector extends WagmiConnector<
       // If there no active session, or the chains are stale, connect.
       if (!provider.session || isChainsStale) {
         // defaultChains, passing ALL CHAINS hangs the connector
-        // respect user's chains if less than 100
+        // respect user's chains if less than 50
         const optionalChains = (
           this.chains.length > 50
             ? [
