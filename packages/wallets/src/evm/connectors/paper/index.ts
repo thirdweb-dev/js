@@ -92,6 +92,7 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
   async disconnect(): Promise<void> {
     const paper = await this.#paper;
     await paper?.auth.logout();
+    this.#signer = undefined;
     this.user = null;
   }
 
