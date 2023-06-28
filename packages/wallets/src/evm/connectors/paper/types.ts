@@ -11,7 +11,7 @@ type PaperAdvanceOptions = {
 export type PaperWalletAdditionalOptions = {
   clientId: string;
   chain: Pick<Chain, "chainId" | "rpc">;
-  advanceOptions?: PaperAdvanceOptions;
+  advancedOptions?: PaperAdvanceOptions;
   styles?: PaperConstructorType<RecoveryShareManagement>["styles"];
 };
 
@@ -19,7 +19,7 @@ export interface PaperWalletConnectorOptions {
   clientId: string;
   chain: Pick<Chain, "chainId" | "rpc">;
   chains: Chain[];
-  advanceOptions?: PaperAdvanceOptions;
+  advancedOptions?: PaperAdvanceOptions;
   styles?: PaperConstructorType<RecoveryShareManagement>["styles"];
 }
 

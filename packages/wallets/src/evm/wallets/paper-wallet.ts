@@ -49,9 +49,9 @@ export class PaperWallet extends AbstractClientWallet<
         clientId: this.clientId,
         chain: this.chain,
         chains: this.chains,
-        advanceOptions: {
+        advancedOptions: {
           recoveryShareManagement:
-            this.options?.advanceOptions?.recoveryShareManagement,
+            this.options?.advancedOptions?.recoveryShareManagement,
         },
         styles: this.options?.styles,
       });

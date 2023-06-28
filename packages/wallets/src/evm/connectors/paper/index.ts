@@ -44,7 +44,7 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
               advancedOptions: {
                 // @ts-expect-error - Allow passing string instead of forcing enum
                 recoveryShareManagement:
-                  this.options.advanceOptions?.recoveryShareManagement,
+                  this.options.advancedOptions?.recoveryShareManagement,
               },
               clientId: this.options.clientId,
               chain: "Ethereum",
