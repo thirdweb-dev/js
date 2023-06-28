@@ -1,5 +1,16 @@
 # @thirdweb-dev/sdk
 
+## 3.10.26
+
+### Patch Changes
+
+- [#1249](https://github.com/thirdweb-dev/js/pull/1249) [`ef4cb092`](https://github.com/thirdweb-dev/js/commit/ef4cb092192c58c9b292b29590b888f45f9fd23d) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update EIP155 error substrings for any evm deployments
+
+- [#1254](https://github.com/thirdweb-dev/js/pull/1254) [`30ac3aef`](https://github.com/thirdweb-dev/js/commit/30ac3aef840bde51a61acf786c709cffd3c47354) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fetch base64 NFTs
+
+- Updated dependencies [[`620e89dc`](https://github.com/thirdweb-dev/js/commit/620e89dc25c91557e2164a602c7aedd733525087), [`0fd8aa04`](https://github.com/thirdweb-dev/js/commit/0fd8aa04a9424497758d13a51a72363edcc30e19)]:
+  - @thirdweb-dev/chains@0.1.25
+
 ## 3.10.25
 
 ### Patch Changes
