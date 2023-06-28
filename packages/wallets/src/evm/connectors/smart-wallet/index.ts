@@ -1,4 +1,4 @@
-import { Chain } from "@thirdweb-dev/chains";
+import { Chain, getChainByChainId } from "@thirdweb-dev/chains";
 import { ConnectParams, Connector } from "../../interfaces/connector";
 import { ERC4337EthersProvider } from "./lib/erc4337-provider";
 import { getVerifyingPaymaster } from "./lib/paymaster";
@@ -40,10 +40,14 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       thirdwebApiKey: config.thirdwebApiKey || DEFAULT_WALLET_API_KEY,
     }) as providers.BaseProvider;
     const chainId = (await originalProvider.getNetwork()).chainId;
+    const chain = getChainByChainId(chainId);
+    if (!chain) {
+      throw new Error(`Chain with chainId ${chainId} not supported`);
+    }
     const bundlerUrl =
-      this.config.bundlerUrl || `https://${chainId}.bundler.thirdweb.com`;
+      this.config.bundlerUrl || `https://${chain.slug}.bundler.thirdweb.com`;
     const paymasterUrl =
-      this.config.paymasterUrl || `https://${chainId}.bundler.thirdweb.com`;
+      this.config.paymasterUrl || `https://${chain.slug}.bundler.thirdweb.com`;
     const entryPointAddress = config.entryPointAddress || ENTRYPOINT_ADDRESS;
     const localSigner = await personalWallet.getSigner();
     const providerConfig: ProviderConfig = {
