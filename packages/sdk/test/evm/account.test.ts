@@ -4,8 +4,8 @@ import { assert, expect } from "chai";
 import {
   SignerWithRestrictions,
   AccessRestrictions,
-  SmartWallet,
-  SmartWalletFactory,
+  Account,
+  AccountFactory,
   SignerWithRestrictionsInput,
   SignerWithRestrictionsBatchInput,
 } from "../../src/evm";
@@ -23,9 +23,9 @@ import { IAccountCore, IAccountFactory } from "@thirdweb-dev/contracts-js";
 
 global.fetch = /* @__PURE__ */ require("cross-fetch");
 
-/* @__PURE__ */ describe("Smart wallets with wallet factory", function () {
-  let smartWalletFactory: SmartWalletFactory<IAccountFactory>;
-  let smartWallet: SmartWallet<IAccountCore>;
+/* @__PURE__ */ describe("Accounts with account factory", function () {
+  let accountFactory: AccountFactory<IAccountFactory>;
+  let account: Account<IAccountCore>;
 
   let adminWallet: SignerWithAddress;
 
@@ -66,64 +66,63 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
       adminWallet,
       [entrypoint.address],
     );
-    smartWalletFactory = (await sdk.getContract(factoryAddress))
-      .smartWalletFactory;
+    accountFactory = (await sdk.getContract(factoryAddress)).accountFactory;
   });
 
-  describe("Test: SmartWalletFactory actions", () => {
-    it("Should create a new wallet for the admin", async () => {
-      // Check before creating a smart wallet for `adminWallet`
-      const isDeployed = await smartWalletFactory.isWalletDeployed(
+  describe("Test: AccountFactory actions", () => {
+    it("Should create a new account for the admin", async () => {
+      // Check before creating a account for `adminWallet`
+      const isDeployed = await accountFactory.isAccountDeployed(
         adminWallet.address,
       );
       assert.isFalse(
         isDeployed,
-        "Smart wallet is should not be deployed for admin.",
+        "Account is should not be deployed for admin.",
       );
 
       const predictedAccountAddress: string =
-        await smartWalletFactory.predictWalletAddress(adminWallet.address);
+        await accountFactory.predictAccountAddress(adminWallet.address);
 
-      const allWalletsBefore = (await smartWalletFactory.getAllAccounts()).map(
-        (wallet) => wallet.account,
+      const allAccountsBefore = (await accountFactory.getAllAccounts()).map(
+        (wallet) => account.account,
       );
       assert.isFalse(
-        allWalletsBefore.includes(predictedAccountAddress),
+        allAccountsBefore.includes(predictedAccountAddress),
         "Account should not be deployed for admin already.",
       );
 
       assert.isTrue(
-        (await smartWalletFactory.getAssociatedSigners(predictedAccountAddress))
+        (await accountFactory.getAssociatedSigners(predictedAccountAddress))
           .length === 0,
         "Wallet should have no associated signers.",
       );
       assert.isTrue(
-        (await smartWalletFactory.getAssociatedWallets(adminWallet.address))
+        (await accountFactory.getAssociatedAccounts(adminWallet.address))
           .length === 0,
-        "Signer should have no associated wallets.",
+        "Signer should have no associated accounts.",
       );
 
-      // Create smart wallet for `adminWallet`
-      const tx = await smartWalletFactory.createWallet(adminWallet.address);
+      // Create account for `adminWallet`
+      const tx = await accountFactory.createAccount(adminWallet.address);
 
-      // Checks after creating a smart wallet for `adminWallet`
+      // Checks after creating a account for `adminWallet`
       assert.strictEqual(
         utils.getAddress(tx.address),
         utils.getAddress(predictedAccountAddress),
-        "Smart wallet address should match predicted address.",
+        "Account address should match predicted address.",
       );
       assert.isTrue(
-        await smartWalletFactory.isWalletDeployed(adminWallet.address),
-        "Smart wallet is should be deployed for admin.",
+        await accountFactory.isAccountDeployed(adminWallet.address),
+        "Account is should be deployed for admin.",
       );
 
-      const allWalletsAfter = await smartWalletFactory.getAllAccounts();
+      const allAccountsAfter = await accountFactory.getAllAccounts();
       assert.isTrue(
-        allWalletsAfter.length === 1,
-        "Only one wallet should be created on the factory.",
+        allAccountsAfter.length === 1,
+        "Only one account should be created on the factory.",
       );
 
-      const { account, admin } = allWalletsAfter.filter(
+      const { account, admin } = allAccountsAfter.filter(
         (wallet) =>
           utils.getAddress(wallet.account) ===
           utils.getAddress(predictedAccountAddress),
@@ -136,165 +135,161 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
       assert.strictEqual(
         utils.getAddress(admin),
         utils.getAddress(adminWallet.address),
-        "Correct admin for smart wallet.",
+        "Correct admin for account.",
       );
 
-      const associatedWallets = await smartWalletFactory.getAssociatedWallets(
+      const associatedAccounts = await accountFactory.getAssociatedAccounts(
         admin,
       );
-      const associatedSigner = await smartWalletFactory.getAssociatedSigners(
+      const associatedSigner = await accountFactory.getAssociatedSigners(
         account,
       );
 
       assert.isTrue(
-        associatedWallets.length === 1,
+        associatedAccounts.length === 1,
         "Wallet should have only the admin as an associated signer.",
       );
       assert.strictEqual(
         utils.getAddress(account),
-        utils.getAddress(associatedWallets[0]),
+        utils.getAddress(associatedAccounts[0]),
         "Wallet should have only the admin as an associated signer.",
       );
       assert.isTrue(
         associatedSigner.length === 1,
-        "Signer should have only the created wallet as an associated wallet.",
+        "Signer should have only the created account as an associated account.",
       );
       assert.strictEqual(
         utils.getAddress(admin),
         utils.getAddress(associatedSigner[0]),
-        "Signer should have only the created wallet as an associated wallet.",
+        "Signer should have only the created account as an associated account.",
       );
     });
 
-    it("Should throw if creating wallet for an admin who already has one", async () => {
-      // Create a wallet for admin
-      await smartWalletFactory.createWallet(adminWallet.address);
+    it("Should throw if creating account for an admin who already has one", async () => {
+      // Create a account for admin
+      await accountFactory.createAccount(adminWallet.address);
 
-      // Try creating another wallet for the same admin
+      // Try creating another account for the same admin
       try {
-        await smartWalletFactory.createWallet(adminWallet.address);
+        await accountFactory.createAccount(adminWallet.address);
         expect.fail();
       } catch (err: any) {
         expect(err.message).to.equal(
-          `Wallet already deployed for admin: ${adminWallet.address}`,
+          `Account already deployed for admin: ${adminWallet.address}`,
         );
       }
     });
   });
 
-  describe("Test: SmartWallet actions", () => {
+  describe("Test: Account actions", () => {
     beforeEach(async () => {
-      // Create a wallet for admin
-      const tx = await smartWalletFactory.createWallet(adminWallet.address);
-      const smartWalletAddress = tx.address;
+      // Create a account for admin
+      const tx = await accountFactory.createAccount(adminWallet.address);
+      const accountAddress = tx.address;
 
       sdk.updateSignerOrProvider(adminWallet);
       await mockUploadContractMetadata(
         "smart-wallet",
-        smartWalletAddress,
+        accountAddress,
         IAccountCoreAbi,
       );
 
-      smartWallet = (await sdk.getContract(smartWalletAddress)).smartWallet;
+      account = (await sdk.getContract(accountAddress)).account;
     });
 
-    it("Should be able to add another admin to the wallet.", async () => {
+    it("Should be able to add another admin to the account.", async () => {
       assert.isFalse(
-        await smartWallet.isAdmin(signer1Wallet.address),
-        "New signer1 should not be an admin on the smart wallet.",
+        await account.isAdmin(signer1Wallet.address),
+        "New signer1 should not be an admin on the account.",
       );
 
-      await smartWallet.grantAdminAccess(signer1Wallet.address);
+      await account.grantAdminAccess(signer1Wallet.address);
 
       assert.isTrue(
-        await smartWallet.isAdmin(signer1Wallet.address),
-        "New signer1 should be an admin on the smart wallet.",
+        await account.isAdmin(signer1Wallet.address),
+        "New signer1 should be an admin on the account.",
       );
 
       const isAdmin = (
-        (await smartWallet.getSignersWithRestrictions()).find(
+        (await account.getSignersWithRestrictions()).find(
           (result) =>
             utils.getAddress(result.signer) ===
             utils.getAddress(signer1Wallet.address),
         ) as SignerWithRestrictions
       ).isAdmin;
-      assert.isTrue(isAdmin, "New signer1 should be an admin on the wallet.");
+      assert.isTrue(isAdmin, "New signer1 should be an admin on the account.");
 
       assert.isTrue(
         (
-          await smartWalletFactory.getAssociatedSigners(
-            smartWallet.getAddress(),
-          )
+          await accountFactory.getAssociatedSigners(account.getAddress())
         ).includes(signer1Wallet.address),
-        "New signer1 is an associated signer of the wallet.",
+        "New signer1 is an associated signer of the account.",
       );
       assert.isTrue(
         (
-          await smartWalletFactory.getAssociatedWallets(signer1Wallet.address)
-        ).includes(smartWallet.getAddress()),
-        "Wallet is an associated wallet of the signer.",
+          await accountFactory.getAssociatedAccounts(signer1Wallet.address)
+        ).includes(account.getAddress()),
+        "Wallet is an associated account of the signer.",
       );
     });
 
-    it("Should be able to remove an admin from the wallet.", async () => {
-      await smartWallet.grantAdminAccess(signer1Wallet.address);
+    it("Should be able to remove an admin from the account.", async () => {
+      await account.grantAdminAccess(signer1Wallet.address);
       assert.isTrue(
-        await smartWallet.isAdmin(signer1Wallet.address),
-        "New signer1 should be an admin on the smart wallet.",
+        await account.isAdmin(signer1Wallet.address),
+        "New signer1 should be an admin on the account.",
       );
 
-      await smartWallet.revokeAdminAccess(signer1Wallet.address);
+      await account.revokeAdminAccess(signer1Wallet.address);
 
       assert.isFalse(
-        await smartWallet.isAdmin(signer1Wallet.address),
-        "New signer1 should not be an admin on the smart wallet.",
+        await account.isAdmin(signer1Wallet.address),
+        "New signer1 should not be an admin on the account.",
       );
 
       assert.isFalse(
-        (await smartWallet.getSignersWithRestrictions())
+        (await account.getSignersWithRestrictions())
           .map((result) => utils.getAddress(result.signer))
           .includes(signer1Wallet.address),
-        "New signer1 should not be an admin on the wallet.",
+        "New signer1 should not be an admin on the account.",
       );
 
       assert.isFalse(
         (
-          await smartWalletFactory.getAssociatedSigners(
-            smartWallet.getAddress(),
-          )
+          await accountFactory.getAssociatedSigners(account.getAddress())
         ).includes(signer1Wallet.address),
-        "New signer1 is not an associated signer of the wallet.",
+        "New signer1 is not an associated signer of the account.",
       );
       assert.isFalse(
         (
-          await smartWalletFactory.getAssociatedWallets(signer1Wallet.address)
-        ).includes(smartWallet.getAddress()),
-        "Wallet is not an associated wallet of the signer.",
+          await accountFactory.getAssociatedAccounts(signer1Wallet.address)
+        ).includes(account.getAddress()),
+        "Wallet is not an associated account of the signer.",
       );
     });
 
     it("Should be able to grant restricted access to a new signer.", async () => {
       const signersWithRestrictions =
-        await smartWallet.getSignersWithRestrictions();
+        await account.getSignersWithRestrictions();
       assert.isFalse(
         signersWithRestrictions
           .map((result) => utils.getAddress(result.signer))
           .includes(signer1Wallet.address),
-        "New signer should not already have access to the wallet.",
+        "New signer should not already have access to the account.",
       );
 
       // Grant access
-      await smartWallet.grantAccess(signer1Wallet.address, {
+      await account.grantAccess(signer1Wallet.address, {
         nativeTokenLimitPerTransaction: "1",
         approvedCallTargets: [adminWallet.address],
       });
 
       assert.isFalse(
-        await smartWallet.isAdmin(signer1Wallet.address),
-        "New signer1 should not be an admin on the smart wallet.",
+        await account.isAdmin(signer1Wallet.address),
+        "New signer1 should not be an admin on the account.",
       );
       const newSignerWithRestrictions =
-        await smartWallet.getSignersWithRestrictions();
+        await account.getSignersWithRestrictions();
       const restrictions = newSignerWithRestrictions.find(
         (result) =>
           utils.getAddress(result.signer) ===
@@ -304,7 +299,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
         newSignerWithRestrictions
           .map((result) => utils.getAddress(result.signer))
           .includes(signer1Wallet.address),
-        "New signer1 should be a signer on the wallet.",
+        "New signer1 should be a signer on the account.",
       );
       assert.strictEqual(
         restrictions.nativeTokenLimitPerTransaction.toString(),
@@ -324,30 +319,28 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
 
       assert.isTrue(
         (
-          await smartWalletFactory.getAssociatedSigners(
-            smartWallet.getAddress(),
-          )
+          await accountFactory.getAssociatedSigners(account.getAddress())
         ).includes(signer1Wallet.address),
-        "New signer1 is an associated signer of the wallet.",
+        "New signer1 is an associated signer of the account.",
       );
       assert.isTrue(
         (
-          await smartWalletFactory.getAssociatedWallets(signer1Wallet.address)
-        ).includes(smartWallet.getAddress()),
-        "Wallet is an associated wallet of the signer.",
+          await accountFactory.getAssociatedAccounts(signer1Wallet.address)
+        ).includes(account.getAddress()),
+        "Wallet is an associated account of the signer.",
       );
     });
 
     it("Should not be able to grant restricted access to a signer who already has access.", async () => {
       // Grant access to signer1
-      await smartWallet.grantAccess(signer1Wallet.address, {
+      await account.grantAccess(signer1Wallet.address, {
         nativeTokenLimitPerTransaction: "1",
         approvedCallTargets: [adminWallet.address],
       });
 
       // Try granting access to signer1 again
       try {
-        await smartWallet.grantAccess(signer1Wallet.address, {
+        await account.grantAccess(signer1Wallet.address, {
           approvedCallTargets: [adminWallet.address],
         });
         expect.fail();
@@ -358,57 +351,55 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
 
     it("Should be able to revoke restricted access from an authorized signer.", async () => {
       // Grant access to signer1
-      await smartWallet.grantAccess(signer1Wallet.address, {
+      await account.grantAccess(signer1Wallet.address, {
         nativeTokenLimitPerTransaction: "1",
         approvedCallTargets: [adminWallet.address],
       });
 
       // Revoke access
-      await smartWallet.revokeAccess(signer1Wallet.address);
+      await account.revokeAccess(signer1Wallet.address);
 
       const signersWithRestrictions =
-        await smartWallet.getSignersWithRestrictions();
+        await account.getSignersWithRestrictions();
       assert.isFalse(
         signersWithRestrictions
           .map((result) => utils.getAddress(result.signer))
           .includes(signer1Wallet.address),
-        "New signer should not have access to the wallet.",
+        "New signer should not have access to the account.",
       );
 
       assert.isFalse(
-        await smartWallet.isAdmin(signer1Wallet.address),
-        "New signer1 should not be an admin on the smart wallet.",
+        await account.isAdmin(signer1Wallet.address),
+        "New signer1 should not be an admin on the account.",
       );
 
       assert.isFalse(
         (
-          await smartWalletFactory.getAssociatedSigners(
-            smartWallet.getAddress(),
-          )
+          await accountFactory.getAssociatedSigners(account.getAddress())
         ).includes(signer1Wallet.address),
-        "New signer1 is not an associated signer of the wallet.",
+        "New signer1 is not an associated signer of the account.",
       );
       assert.isFalse(
         (
-          await smartWalletFactory.getAssociatedWallets(signer1Wallet.address)
-        ).includes(smartWallet.getAddress()),
-        "Wallet is not an associated wallet of the signer.",
+          await accountFactory.getAssociatedAccounts(signer1Wallet.address)
+        ).includes(account.getAddress()),
+        "Wallet is not an associated account of the signer.",
       );
     });
 
     it("Should not be able to revoke restricted access from a signer who doesn't have access.", async () => {
       const signersWithRestrictions =
-        await smartWallet.getSignersWithRestrictions();
+        await account.getSignersWithRestrictions();
       assert.isFalse(
         signersWithRestrictions
           .map((result) => utils.getAddress(result.signer))
           .includes(signer1Wallet.address),
-        "New signer should not already have access to the wallet.",
+        "New signer should not already have access to the account.",
       );
 
       // Try revoking access from signer1
       try {
-        await smartWallet.revokeAccess(signer1Wallet.address);
+        await account.revokeAccess(signer1Wallet.address);
         expect.fail();
       } catch (err: any) {
         expect(err.message).to.equal(`Signer does not have any access`);
@@ -417,18 +408,17 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
 
     it("Should be able to update access of an authorized signer.", async () => {
       // Grant access
-      await smartWallet.grantAccess(signer1Wallet.address, {
+      await account.grantAccess(signer1Wallet.address, {
         nativeTokenLimitPerTransaction: "1",
         approvedCallTargets: [adminWallet.address],
       });
 
       assert.isFalse(
-        await smartWallet.isAdmin(signer1Wallet.address),
-        "New signer1 should not be an admin on the smart wallet.",
+        await account.isAdmin(signer1Wallet.address),
+        "New signer1 should not be an admin on the account.",
       );
 
-      const signerWithRestrictions =
-        await smartWallet.getSignersWithRestrictions();
+      const signerWithRestrictions = await account.getSignersWithRestrictions();
       const restrictions = signerWithRestrictions.find(
         (result) =>
           utils.getAddress(result.signer) ===
@@ -438,7 +428,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
         signerWithRestrictions
           .map((result) => utils.getAddress(result.signer))
           .includes(signer1Wallet.address),
-        "New signer1 should be a signer on the wallet.",
+        "New signer1 should be a signer on the account.",
       );
       assert.strictEqual(
         restrictions.nativeTokenLimitPerTransaction.toString(),
@@ -457,18 +447,18 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
       );
 
       // Update access
-      await smartWallet.updateAccess(signer1Wallet.address, {
+      await account.updateAccess(signer1Wallet.address, {
         nativeTokenLimitPerTransaction: "3",
         approvedCallTargets: [signer2Wallet.address],
       });
 
       assert.isFalse(
-        await smartWallet.isAdmin(signer1Wallet.address),
-        "New signer1 should not be an admin on the smart wallet.",
+        await account.isAdmin(signer1Wallet.address),
+        "New signer1 should not be an admin on the account.",
       );
 
       const newSignerWithRestrictions =
-        await smartWallet.getSignersWithRestrictions();
+        await account.getSignersWithRestrictions();
       const newRestrictions = newSignerWithRestrictions.find(
         (result) =>
           utils.getAddress(result.signer) ===
@@ -478,7 +468,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
         newSignerWithRestrictions
           .map((result) => utils.getAddress(result.signer))
           .includes(signer1Wallet.address),
-        "New signer1 should be a signer on the wallet.",
+        "New signer1 should be a signer on the account.",
       );
       assert.strictEqual(
         newRestrictions.nativeTokenLimitPerTransaction.toString(),
@@ -499,17 +489,17 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
 
     it("Should not be able to update access of a signer who doesn't have access.", async () => {
       const signersWithRestrictions =
-        await smartWallet.getSignersWithRestrictions();
+        await account.getSignersWithRestrictions();
       assert.isFalse(
         signersWithRestrictions
           .map((result) => utils.getAddress(result.signer))
           .includes(signer1Wallet.address),
-        "New signer should not already have access to the wallet.",
+        "New signer should not already have access to the account.",
       );
 
       // Try updating access of signer1
       try {
-        await smartWallet.updateAccess(signer1Wallet.address, {
+        await account.updateAccess(signer1Wallet.address, {
           approvedCallTargets: [signer2Wallet.address],
         });
         expect.fail();
@@ -520,14 +510,12 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
 
     it("Should be able to append an approved target for an authorized signer.", async () => {
       // Grant access
-      await smartWallet.grantAccess(signer1Wallet.address, {
+      await account.grantAccess(signer1Wallet.address, {
         nativeTokenLimitPerTransaction: "1",
         approvedCallTargets: [adminWallet.address],
       });
 
-      const restrictions = (
-        await smartWallet.getSignersWithRestrictions()
-      ).find(
+      const restrictions = (await account.getSignersWithRestrictions()).find(
         (result) =>
           utils.getAddress(result.signer) ===
           utils.getAddress(signer1Wallet.address),
@@ -544,14 +532,12 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
       );
 
       // Append approved target
-      await smartWallet.approveTargetForSigner(
+      await account.approveTargetForSigner(
         signer1Wallet.address,
         signer2Wallet.address,
       );
 
-      const newRestrictions = (
-        await smartWallet.getSignersWithRestrictions()
-      ).find(
+      const newRestrictions = (await account.getSignersWithRestrictions()).find(
         (result) =>
           utils.getAddress(result.signer) ===
           utils.getAddress(signer1Wallet.address),
@@ -575,14 +561,12 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
 
     it("Should be able to remove an approved target for an authorized signer.", async () => {
       // Grant access
-      await smartWallet.grantAccess(signer1Wallet.address, {
+      await account.grantAccess(signer1Wallet.address, {
         nativeTokenLimitPerTransaction: "1",
         approvedCallTargets: [adminWallet.address, signer2Wallet.address],
       });
 
-      const restrictions = (
-        await smartWallet.getSignersWithRestrictions()
-      ).find(
+      const restrictions = (await account.getSignersWithRestrictions()).find(
         (result) =>
           utils.getAddress(result.signer) ===
           utils.getAddress(signer1Wallet.address),
@@ -604,14 +588,12 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
       );
 
       // Remove approved target
-      await smartWallet.disapproveTargetForSigner(
+      await account.disapproveTargetForSigner(
         signer1Wallet.address,
         signer2Wallet.address,
       );
 
-      const newRestrictions = (
-        await smartWallet.getSignersWithRestrictions()
-      ).find(
+      const newRestrictions = (await account.getSignersWithRestrictions()).find(
         (result) =>
           utils.getAddress(result.signer) ===
           utils.getAddress(signer1Wallet.address),
@@ -628,7 +610,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
       );
     });
 
-    it("Should be able to set access for the smart wallet in a batch.", async () => {
+    it("Should be able to set access for the account in a batch.", async () => {
       /**
        * All cases to test
        *
@@ -661,7 +643,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
       signersWithRestrictions.push(restrictionsSigner3);
 
       // Removing existing admin
-      await smartWallet.grantAdminAccess(signer4Wallet.address);
+      await account.grantAdminAccess(signer4Wallet.address);
 
       const restrictionsSigner4: SignerWithRestrictionsInput = {
         signer: signer4Wallet.address,
@@ -679,7 +661,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
       signersWithRestrictions.push(restrictionsSigner5);
 
       // Removing an existing scoped signer
-      await smartWallet.grantAccess(signer6Wallet.address, {
+      await account.grantAccess(signer6Wallet.address, {
         approvedCallTargets: [adminWallet.address],
       });
 
@@ -692,7 +674,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
 
       // Updating the restrictions of an existing scoped signer
 
-      await smartWallet.grantAccess(signer7Wallet.address, {
+      await account.grantAccess(signer7Wallet.address, {
         approvedCallTargets: [adminWallet.address],
       });
 
@@ -704,7 +686,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
       signersWithRestrictions.push(restrictionsSigner7);
 
       // Existing admin -> new scoped signer (demote)
-      await smartWallet.grantAdminAccess(signer8Wallet.address);
+      await account.grantAdminAccess(signer8Wallet.address);
 
       const restrictionsSigner8: SignerWithRestrictionsInput = {
         signer: signer8Wallet.address,
@@ -714,7 +696,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
       signersWithRestrictions.push(restrictionsSigner8);
 
       // Existing scoped signer -> new admin (promote)
-      await smartWallet.grantAccess(signer9Wallet.address, {
+      await account.grantAccess(signer9Wallet.address, {
         approvedCallTargets: [adminWallet.address],
       });
 
@@ -726,11 +708,11 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
       signersWithRestrictions.push(restrictionsSigner9);
 
       // Set access in batch
-      await smartWallet.setAccess(signersWithRestrictions);
+      await account.setAccess(signersWithRestrictions);
 
       // Now checking if permissions are set correctly
       const signersWithRestrictionsAfter =
-        await smartWallet.getSignersWithRestrictions();
+        await account.getSignersWithRestrictions();
 
       for (const restrictions of signersWithRestrictionsAfter) {
         switch (restrictions.signer) {
@@ -738,96 +720,96 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
           case adminWallet.address:
             assert.isTrue(
               restrictions.isAdmin,
-              "Admin wallet should be an admin.",
+              "Admin account should be an admin.",
             );
             break;
           // `signer3Wallet` should be an admin
           case signer3Wallet.address:
             assert.isTrue(
               restrictions.isAdmin,
-              "Signer3 wallet should be an admin.",
+              "Signer3 account should be an admin.",
             );
             break;
           // `signer4Wallet` should not be admin or scoped signer
           case signer4Wallet.address:
             assert.isFalse(
               restrictions.isAdmin,
-              "Signer4 wallet should not be an admin.",
+              "Signer4 account should not be an admin.",
             );
             assert.strictEqual(
               restrictions.restrictions.approvedCallTargets.length,
               0,
-              "Signer4 wallet should not have any approved call targets.",
+              "Signer4 account should not have any approved call targets.",
             );
             break;
           // `signer5Wallet` should be a scoped signer
           case signer5Wallet.address:
             assert.isFalse(
               restrictions.isAdmin,
-              "Signer5 wallet should not be an admin.",
+              "Signer5 account should not be an admin.",
             );
             assert.strictEqual(
               restrictions.restrictions.approvedCallTargets.length,
               1,
-              "Signer5 wallet should have one approved call target.",
+              "Signer5 account should have one approved call target.",
             );
             assert.strictEqual(
               restrictions.restrictions.approvedCallTargets[0],
               adminWallet.address,
-              "Signer5 wallet should have the expected approved call targets.",
+              "Signer5 account should have the expected approved call targets.",
             );
             break;
           // `signer6Wallet` should not be admin or scoped signer
           case signer6Wallet.address:
             assert.isFalse(
               restrictions.isAdmin,
-              "Signer6 wallet should not be an admin.",
+              "Signer6 account should not be an admin.",
             );
             assert.strictEqual(
               restrictions.restrictions.approvedCallTargets.length,
               0,
-              "Signer6 wallet should not have any approved call targets.",
+              "Signer6 account should not have any approved call targets.",
             );
             break;
           // `signer7Wallet` should be a scoped signer with its updated restrictions
           case signer7Wallet.address:
             assert.isFalse(
               restrictions.isAdmin,
-              "Signer7 wallet should not be an admin.",
+              "Signer7 account should not be an admin.",
             );
             assert.strictEqual(
               restrictions.restrictions.approvedCallTargets.length,
               1,
-              "Signer7 wallet should have one approved call target.",
+              "Signer7 account should have one approved call target.",
             );
             assert.strictEqual(
               restrictions.restrictions.approvedCallTargets[0],
               signer1Wallet.address,
-              "Signer7 wallet should have the expected approved call targets.",
+              "Signer7 account should have the expected approved call targets.",
             );
             break;
           // `signer8Wallet` should be a scoped signer
           case signer8Wallet.address:
             assert.isFalse(
               restrictions.isAdmin,
-              "Signer8 wallet should not be an admin.",
+              "Signer8 account should not be an admin.",
             );
             assert.strictEqual(
               restrictions.restrictions.approvedCallTargets.length,
               1,
-              "Signer8 wallet should have one approved call target.",
+              "Signer8 account should have one approved call target.",
             );
             assert.strictEqual(
               restrictions.restrictions.approvedCallTargets[0],
               adminWallet.address,
-              "Signer8 wallet should have the expected approved call targets.",
+              "Signer8 account should have the expected approved call targets.",
             );
             break;
           // `signer9Wallet` should be an admin
           case signer9Wallet.address:
             assert.isTrue(
               restrictions.isAdmin,
-              "Signer9 wallet should be an admin.",
+              "Signer9 account should be an admin.",
             );
             break;
           default:

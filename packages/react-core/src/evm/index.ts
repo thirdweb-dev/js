@@ -194,7 +194,7 @@ export {
   useBurnToken,
 } from "./hooks/async/token";
 
-// smart wallet factory
+// account factory
 export {
   useIsAccountDeployed,
   useAccounts,
@@ -202,7 +202,7 @@ export {
   useAccountsForAddress,
 } from "./hooks/async/account-factory";
 
-// smart wallet
+// account
 export { useAccountSigners, useSetAccountSigners } from "./hooks/async/account";
 
 // thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)
