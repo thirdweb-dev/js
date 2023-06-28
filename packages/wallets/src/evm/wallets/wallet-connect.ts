@@ -63,6 +63,13 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
     super(options?.walletId || WalletConnect.id, options);
     this.projectId = options?.projectId || TW_WC_PROJECT_ID;
     this.qrcode = options?.qrcode === false ? false : true;
+
+    // defaultChains, passing ALL CHAINS hangs the connector
+    // respect user's chains if less than 50
+    const finalChains =
+      this.chains.length > 50 ? this.chains.slice(0, 50) : this.chains;
+
+    this.chains = finalChains;
   }
 
   protected async getConnector(): Promise<Connector> {
