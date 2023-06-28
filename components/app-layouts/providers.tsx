@@ -10,6 +10,7 @@ import {
   coinbaseWallet,
   localWallet,
   metamaskWallet,
+  paperWallet,
   safeWallet,
   walletConnect,
 } from "@thirdweb-dev/react";
@@ -24,6 +25,25 @@ import { ComponentWithChildren } from "types/component-with-children";
 export interface DashboardThirdwebProviderProps {
   contractInfo?: EVMContractInfo;
 }
+
+const personalWallets = [
+  metamaskWallet(),
+  coinbaseWallet(),
+  walletConnect({
+    qrModalOptions: {
+      themeVariables: {
+        "--wcm-z-index": "10000",
+      },
+    },
+  }),
+  paperWallet({
+    clientId: "9a2f6238-c441-4bf4-895f-d13c2faf2ddb",
+    advancedOptions: {
+      recoveryShareManagement: "AWS_MANAGED",
+    },
+  }),
+  localWallet(),
+];
 
 export const DashboardThirdwebProvider: ComponentWithChildren<
   DashboardThirdwebProviderProps
@@ -64,17 +84,10 @@ export const DashboardThirdwebProvider: ComponentWithChildren<
       }}
       thirdwebApiKey={DASHBOARD_THIRDWEB_API_KEY}
       supportedWallets={[
-        metamaskWallet(),
-        coinbaseWallet(),
-        walletConnect({
-          qrModalOptions: {
-            themeVariables: {
-              "--wcm-z-index": "10000",
-            },
-          },
+        ...personalWallets,
+        safeWallet({
+          personalWallets,
         }),
-        safeWallet(),
-        localWallet(),
       ]}
       storageInterface={StorageSingleton}
       authConfig={{
