@@ -7,7 +7,7 @@
 
 <h1 align="center"><a href='https://thirdweb.com/'>thirdweb</a> JavaScript/TypeScript monorepo</h1>
 
-<p align="center">
+<p align="center">>
     <a href="https://github.com/thirdweb-dev/js/actions/workflows/build-test-lint.yml">
         <img alt="Build Status" src="https://github.com/thirdweb-dev/js/actions/workflows/build-test-lint.yml/badge.svg"/>
     </a>
