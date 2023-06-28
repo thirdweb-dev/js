@@ -120,9 +120,16 @@ export class WalletConnectConnector extends WagmiConnector<
 
       // If there no active session, or the chains are stale, connect.
       if (!provider.session || isChainsStale) {
-        const optionalChains = this.chains
-          .filter((chain) => chain.chainId !== targetChainId)
-          .map((optionalChain) => optionalChain.chainId);
+        // defaultChains, passing ALL CHAINS hangs the connector
+        // respect user's chains if less than 50
+        const optionalChains = (
+          this.chains.length > 50
+            ? [
+                1, 5, 84531, 137, 80001, 42161, 421613, 10, 420, 56, 97, 250,
+                4002, 43114, 43113, 1337,
+              ]
+            : this.chains.map(({ chainId }) => chainId)
+        ).filter((chainId) => chainId !== targetChainId);
 
         this.emit("message", { type: "connecting" });
 
@@ -133,7 +140,9 @@ export class WalletConnectConnector extends WagmiConnector<
             optionalChains.length > 0 ? optionalChains : [targetChainId],
         });
 
-        this.#setRequestedChainsIds(this.chains.map(({ chainId }) => chainId));
+        await this.#setRequestedChainsIds(
+          this.chains.map(({ chainId }) => chainId),
+        );
       }
 
       // If session exists and chains are authorized, enable provider for required chain
@@ -168,7 +177,7 @@ export class WalletConnectConnector extends WagmiConnector<
       }
     } finally {
       this.#removeListeners();
-      this.#setRequestedChainsIds([]);
+      await this.#setRequestedChainsIds([]);
     }
   }
 
@@ -267,7 +276,7 @@ export class WalletConnectConnector extends WagmiConnector<
         });
         const requestedChains = await this.#getRequestedChainsIds();
         requestedChains.push(chainId);
-        this.#setRequestedChainsIds(requestedChains);
+        await this.#setRequestedChainsIds(requestedChains);
       }
       await provider.request({
         method: "wallet_switchEthereumChain",
@@ -314,6 +323,7 @@ export class WalletConnectConnector extends WagmiConnector<
         optionalEvents: OPTIONAL_EVENTS,
         chains: [defaultChain],
         optionalChains: optionalChains,
+
         metadata: {
           name: this.options.dappMetadata.name,
           description: this.options.dappMetadata.description || "",
@@ -324,11 +334,7 @@ export class WalletConnectConnector extends WagmiConnector<
           this.chains.map((chain) => [chain.chainId, chain.rpc[0]]),
         ),
 
-        qrModalOptions: {
-          ...this.options.qrModalOptions,
-          explorerAllowList: [],
-          explorerDenyList: [],
-        },
+        qrModalOptions: this.options.qrModalOptions,
       });
     }
   }
@@ -403,8 +409,8 @@ export class WalletConnectConnector extends WagmiConnector<
     this.#provider.removeListener("connect", this.onConnect);
   }
 
-  #setRequestedChainsIds(chains: number[]) {
-    this.#storage.setItem(REQUESTED_CHAINS_KEY, JSON.stringify(chains));
+  async #setRequestedChainsIds(chains: number[]) {
+    await this.#storage.setItem(REQUESTED_CHAINS_KEY, JSON.stringify(chains));
   }
 
   async #getRequestedChainsIds(): Promise<number[]> {
@@ -438,16 +444,16 @@ export class WalletConnectConnector extends WagmiConnector<
     }
   };
 
-  protected onChainChanged = (chainId: number | string) => {
+  protected onChainChanged = async (chainId: number | string) => {
     const id = Number(chainId);
     const unsupported = this.isChainUnsupported(id);
-    this.#storage.setItem(LAST_USED_CHAIN_ID, String(chainId));
+    await this.#storage.setItem(LAST_USED_CHAIN_ID, String(chainId));
     this.emit("change", { chain: { id, unsupported } });
   };
 
-  protected onDisconnect = () => {
-    this.#setRequestedChainsIds([]);
-    this.#storage.removeItem(LAST_USED_CHAIN_ID);
+  protected onDisconnect = async () => {
+    await this.#setRequestedChainsIds([]);
+    await this.#storage.removeItem(LAST_USED_CHAIN_ID);
     this.emit("disconnect");
   };
 
