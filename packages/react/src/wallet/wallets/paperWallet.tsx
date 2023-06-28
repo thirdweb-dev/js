@@ -35,7 +35,8 @@ const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet>> = (props) => {
       placeholder="Enter your email address"
       name="email"
       type="email"
-      errorMessage={(input) => {
+      errorMessage={(_input) => {
+        const input = _input.replace(/\+/g, "");
         const emailRegex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
         const isValidEmail = emailRegex.test(input);
         if (!isValidEmail) {
