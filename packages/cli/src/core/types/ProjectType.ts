@@ -56,6 +56,7 @@ export type FrameworkType =
   | "revel"
   | "fiber"
   | "zenject"
+  | "vite"
   | "none";
 export type LibraryType =
   | "react"
