@@ -27,32 +27,32 @@ import invariant from "tiny-invariant";
 /** **********************/
 
 /**
- * Get all wallets
+ * Get all accounts
  *
  * @example
  * ```javascript
- * const { data: smartWallets, isLoading, error } = useSmartWalletSigners(contract);
+ * const { data: accounts, isLoading, error } = useAccountSigners(contract);
  * ```
  *
- * @param contract - an instance of a smart wallet
- * @returns a response object that includes an array of all signers of the provided smart wallet
- * @twfeature SmartWallet
- * @see {@link https://portal.thirdweb.com/react/react.usesmartwalletsigners?utm_source=sdk | Documentation}
+ * @param contract - an instance of a account
+ * @returns a response object that includes an array of all signers of the provided account
+ * @twfeature Account
+ * @see {@link https://portal.thirdweb.com/react/react.useaccountsigners?utm_source=sdk | Documentation}
  * @beta
  */
-export function useSmartWalletSigners(
+export function useAccountSigners(
   contract: RequiredParam<SmartContract>,
 ): UseQueryResult<SignerWithRestrictions[]> {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
-    cacheKeys.contract.smartWallet.signers(contractAddress),
+    cacheKeys.contract.account.signers(contractAddress),
     () => {
       requiredParamInvariant(contract, "No Contract instance provided");
       invariant(
-        contract.smartWallet.getSignersWithRestrictions,
-        "Contract instance does not support contract.smartWallet.getSignersWithRestrictions",
+        contract.account.getSignersWithRestrictions,
+        "Contract instance does not support contract.account.getSignersWithRestrictions",
       );
-      return contract.smartWallet.getSignersWithRestrictions();
+      return contract.account.getSignersWithRestrictions();
     },
     { enabled: !!contract },
   );
@@ -62,40 +62,40 @@ export function useSmartWalletSigners(
 /**     WRITE HOOKS     **/
 /** **********************/
 /**
- * Set the wallet's entire snapshot of permissions
+ * Set the account's entire snapshot of permissions
  *
  * @example
  * ```jsx
  * const Component = () => {
  *   const { contract } = useContract("{{contract_address}}");
  *   const {
- *     mutate: setSmartWalletSigners,
+ *     mutate: setAccountSigners,
  *     isLoading,
  *     error,
- *   } = useSetSmartWalletSigners(contract);
+ *   } = useSetAccountSigners(contract);
  *
  *   if (error) {
- *     console.error("failed to set smart wallet signers", error);
+ *     console.error("failed to set account signers", error);
  *   }
  *
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => setSmartWalletSigners("0x...")}
+ *       onClick={() => setAccountSigners("0x...")}
  *     >
- *       Set Smart Wallet Signers
+ *       Set Account Signers
  *     </button>
  *   );
  * };
  * ```
  *
- * @param contract - an instance of a smart wallet contract
- * @returns a mutation object that can be used to set the smart wallet signers
- * @twfeature SmartWallet
- * @see {@link https://portal.thirdweb.com/react/react.usesetsmartwalletsigners?utm_source=sdk | Documentation}
+ * @param contract - an instance of a account contract
+ * @returns a mutation object that can be used to set the account signers
+ * @twfeature Account
+ * @see {@link https://portal.thirdweb.com/react/react.usesetaccountsigners?utm_source=sdk | Documentation}
  * @beta
  */
-export function useSetSmartWalletSigners(
+export function useSetAccountSigners(
   contract: RequiredParam<SmartContract>,
 ): UseMutationResult<
   { receipt: providers.TransactionReceipt },
@@ -111,7 +111,7 @@ export function useSetSmartWalletSigners(
     async (permissionsSnapshot: SignerWithRestrictionsBatchInput) => {
       requiredParamInvariant(contract, "contract is undefined");
 
-      return contract.smartWallet.setAccess(permissionsSnapshot);
+      return contract.account.setAccess(permissionsSnapshot);
     },
     {
       onSettled: () =>

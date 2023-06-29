@@ -1,6 +1,6 @@
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
-import { FEATURE_SMART_WALLET } from "../../constants/thirdweb-features";
+import { FEATURE_ACCOUNT } from "../../constants/thirdweb-features";
 import { utils, BigNumber } from "ethers";
 import { Transaction } from "./transactions";
 
@@ -27,10 +27,10 @@ import { AddressOrEns } from "../../schema";
 import { resolveAddress } from "../../common";
 import { Signer } from "ethers";
 
-export class SmartWallet<TContract extends IAccountCore>
+export class Account<TContract extends IAccountCore>
   implements DetectableFeature
 {
-  featureName = FEATURE_SMART_WALLET.name;
+  featureName = FEATURE_ACCOUNT.name;
   private contractWrapper: ContractWrapper<IAccountCore>;
 
   private emptyRole: string =
@@ -87,7 +87,7 @@ export class SmartWallet<TContract extends IAccountCore>
   }
 
   /**
-   * Generate and sign a payload to grant or revoke a signer's access to the smart wallet.
+   * Generate and sign a payload to grant or revoke a signer's access to the account.
    *
    * @param signer - The address of the signer
    * @param roleAction - The address of the signer
@@ -137,7 +137,7 @@ export class SmartWallet<TContract extends IAccountCore>
   }
 
   /**
-   * Get the factory contract which deployed the smart wallet
+   * Get the factory contract which deployed the account
    *
    * @returns Returns the address of the factory
    *
@@ -161,16 +161,16 @@ export class SmartWallet<TContract extends IAccountCore>
    ********************************/
 
   /**
-   * Get whether a signer is an admin on the smart wallet.
+   * Get whether a signer is an admin on the account.
    *
    * @example
    * ```javascript
-   * const isAdmin = await contract.smartWallet.isAdmin(signer);
+   * const isAdmin = await contract.account.isAdmin(signer);
    * ```
-   * @param signer - The address of a signer of the smart wallet.
-   * @returns whether a signer is an admin on the smart wallet.
+   * @param signer - The address of a signer of the account.
+   * @returns whether a signer is an admin on the account.
    *
-   * @twfeature SmartWallet
+   * @twfeature Account
    */
   public async isAdmin(signerAddress: AddressOrEns): Promise<boolean> {
     const resolvedSignerAddress = await resolveAddress(signerAddress);
@@ -180,16 +180,16 @@ export class SmartWallet<TContract extends IAccountCore>
   }
 
   /**
-   * Get the restrictions under which a given signer can use the smart wallet.
+   * Get the restrictions under which a given signer can use the account.
    *
    * @example
    * ```javascript
-   * const restrictionsForSigner = await contract.smartWallet.getAccessRestrictions(signer);
+   * const restrictionsForSigner = await contract.account.getAccessRestrictions(signer);
    * ```
-   * @param signer - The address of a signer of the smart wallet.
-   * @returns the restrictions under which a given signer can use the smart wallet.
+   * @param signer - The address of a signer of the account.
+   * @returns the restrictions under which a given signer can use the account.
    *
-   * @twfeature SmartWallet
+   * @twfeature Account
    */
   public async getAccessRestrictions(
     signerAddress: AddressOrEns,
@@ -203,16 +203,16 @@ export class SmartWallet<TContract extends IAccountCore>
   }
 
   /**
-   * Get the deployer of the smart wallet
-   * @remarks Get the address of the EIP-4337 factory contract which deployed the smart wallet
+   * Get the deployer of the account
+   * @remarks Get the address of the EIP-4337 factory contract which deployed the account
    *
    * @example
    * ```javascript
-   * const factoryAddress = await contract.smartWallet.getFactoryAddress();
+   * const factoryAddress = await contract.account.getFactoryAddress();
    * ```
-   * @returns the address of the factory which deployed the smart wallet.
+   * @returns the address of the factory which deployed the account.
    *
-   * @twfeature SmartWallet
+   * @twfeature Account
    */
   public async getFactoryAddress(): Promise<string> {
     return this.contractWrapper.readContract.factory();
@@ -223,11 +223,11 @@ export class SmartWallet<TContract extends IAccountCore>
    *
    * @example
    * ```javascript
-   * const allSigners = await contract.smartWallet.getSignersWithRestrictions();
+   * const allSigners = await contract.account.getSignersWithRestrictions();
    * ```
-   * @returns all signers (admin or non-admin) of the smart wallet, along with their access restrictions.
+   * @returns all signers (admin or non-admin) of the account, along with their access restrictions.
    *
-   * @twfeature SmartWallet
+   * @twfeature Account
    */
   public async getSignersWithRestrictions(): Promise<SignerWithRestrictions[]> {
     // Get all associated signers.
@@ -250,19 +250,19 @@ export class SmartWallet<TContract extends IAccountCore>
    ********************************/
 
   /**
-   * Grant an address admin access to the smart wallet
+   * Grant an address admin access to the account
    *
-   * @remarks Grants an address admin access to the smart wallet. The admin will have complete authority over the smart wallet.
+   * @remarks Grants an address admin access to the account. The admin will have complete authority over the account.
    *
-   * @param signer - The address to be granted admin access to the smart wallet.
+   * @param signer - The address to be granted admin access to the account.
    *
    * @example
    * ```javascript
-   * const tx = await contract.smartWallet.grantAdminAccess(signer);
+   * const tx = await contract.account.grantAdminAccess(signer);
    * const receipt = tx.receipt();
    * ```
    *
-   * @twfeature SmartWallet
+   * @twfeature Account
    */
   grantAdminAccess = /* @__PURE__ */ buildTransactionFunction(
     async (signerAddress: AddressOrEns): Promise<Transaction> => {
@@ -276,19 +276,19 @@ export class SmartWallet<TContract extends IAccountCore>
   );
 
   /**
-   * Revoke an address' admin access to the smart wallet
+   * Revoke an address' admin access to the account
    *
-   * @remarks Revokes an address' admin access to the smart wallet.
+   * @remarks Revokes an address' admin access to the account.
    *
-   * @param signer - The address of an admin of the smart wallet.
+   * @param signer - The address of an admin of the account.
    *
    * @example
    * ```javascript
-   * const tx = await contract.smartWallet.revokeAdminAccess(signer);
+   * const tx = await contract.account.revokeAdminAccess(signer);
    * const receipt = tx.receipt();
    * ```
    *
-   * @twfeature SmartWallet
+   * @twfeature Account
    */
   revokeAdminAccess = /* @__PURE__ */ buildTransactionFunction(
     async (signerAddress: AddressOrEns): Promise<Transaction> => {
@@ -302,20 +302,20 @@ export class SmartWallet<TContract extends IAccountCore>
   );
 
   /**
-   * Grant an address access to the smart wallet with restrictions
+   * Grant an address access to the account with restrictions
    *
-   * @remarks Grants an address access to the smart wallet with certain restrictions.
+   * @remarks Grants an address access to the account with certain restrictions.
    *
-   * @param signer - The address to be granted access to the smart wallet.
-   * @param restrictions - The restrictions to be applied to the signer's use of the smart wallet.
+   * @param signer - The address to be granted access to the account.
+   * @param restrictions - The restrictions to be applied to the signer's use of the account.
    *
    * @example
    * ```javascript
-   * const tx = await contract.smartWallet.grantAccess(signer, restrictions);
+   * const tx = await contract.account.grantAccess(signer, restrictions);
    * const receipt = tx.receipt();
    * ```
    *
-   * @twfeature SmartWallet
+   * @twfeature Account
    */
   grantAccess = /* @__PURE__ */ buildTransactionFunction(
     async (
@@ -395,20 +395,20 @@ export class SmartWallet<TContract extends IAccountCore>
   );
 
   /**
-   * Approve an address as a call target for a given signer on the smart wallet
+   * Approve an address as a call target for a given signer on the account
    *
-   * @remarks Approves an address as a call target for a given signer on the smart wallet.
+   * @remarks Approves an address as a call target for a given signer on the account.
    *
-   * @param signer - A signer with restricted access to the smart wallet.
+   * @param signer - A signer with restricted access to the account.
    * @param target - The address to approve as a call target for the signer.
    *
    * @example
    * ```javascript
-   * const tx = await contract.smartWallet.approveTargetForSigner(signer, target);
+   * const tx = await contract.account.approveTargetForSigner(signer, target);
    * const receipt = tx.receipt();
    * ```
    *
-   * @twfeature SmartWallet
+   * @twfeature Account
    */
   approveTargetForSigner = /* @__PURE__ */ buildTransactionFunction(
     async (
@@ -444,20 +444,20 @@ export class SmartWallet<TContract extends IAccountCore>
   );
 
   /**
-   * Disapprove an address as a call target for a given signer on the smart wallet
+   * Disapprove an address as a call target for a given signer on the account
    *
-   * @remarks Disapprove an address as a call target for a given signer on the smart wallet.
+   * @remarks Disapprove an address as a call target for a given signer on the account.
    *
-   * @param signer - A signer with restricted access to the smart wallet.
+   * @param signer - A signer with restricted access to the account.
    * @param target - The address to disapprove as a call target for the signer.
    *
    * @example
    * ```javascript
-   * const tx = await contract.smartWallet.disapproveTargetForSigner(signer, target);
+   * const tx = await contract.account.disapproveTargetForSigner(signer, target);
    * const receipt = tx.receipt();
    * ```
    *
-   * @twfeature SmartWallet
+   * @twfeature Account
    */
   disapproveTargetForSigner = /* @__PURE__ */ buildTransactionFunction(
     async (
@@ -496,20 +496,20 @@ export class SmartWallet<TContract extends IAccountCore>
   );
 
   /**
-   * Update the restrictions of an address for using the smart wallet
+   * Update the restrictions of an address for using the account
    *
-   * @remarks Updates an address' access to the smart wallet.
+   * @remarks Updates an address' access to the account.
    *
-   * @param signer - The address whose access to the smart wallet is to be updated.
-   * @param restrictions - The restrictions to be applied to the signer's use of the smart wallet.
+   * @param signer - The address whose access to the account is to be updated.
+   * @param restrictions - The restrictions to be applied to the signer's use of the account.
    *
    * @example
    * ```javascript
-   * const tx = await contract.smartWallet.updateAccess(signer, restrictions);
+   * const tx = await contract.account.updateAccess(signer, restrictions);
    * const receipt = tx.receipt();
    * ```
    *
-   * @twfeature SmartWallet
+   * @twfeature Account
    */
   updateAccess = /* @__PURE__ */ buildTransactionFunction(
     async (
@@ -550,19 +550,19 @@ export class SmartWallet<TContract extends IAccountCore>
   );
 
   /**
-   * Revoke a scoped access address to the smart wallet
+   * Revoke a scoped access address to the account
    *
-   * @remarks Revokes an address' access to the smart wallet.
+   * @remarks Revokes an address' access to the account.
    *
-   * @param signer - The address whose access to the smart wallet is to be revoked.
+   * @param signer - The address whose access to the account is to be revoked.
    *
    * @example
    * ```javascript
-   * const tx = await contract.smartWallet.revokeAccess(signer);
+   * const tx = await contract.account.revokeAccess(signer);
    * const receipt = tx.receipt();
    * ```
    *
-   * @twfeature SmartWallet
+   * @twfeature Account
    */
   revokeAccess = /* @__PURE__ */ buildTransactionFunction(
     async (signerAddress: AddressOrEns): Promise<Transaction> => {
@@ -600,19 +600,19 @@ export class SmartWallet<TContract extends IAccountCore>
   );
 
   /**
-   * Set the wallet's entire snapshot of permissions
+   * Set the account's entire snapshot of permissions
    *
-   * @remarks Sets the wallet's entire snapshot of permissions.
+   * @remarks Sets the account's entire snapshot of permissions.
    *
-   * @param permissionsSnapshot - the snapshot to set as the wallet's entire permission snapshot.
+   * @param permissionsSnapshot - the snapshot to set as the account's entire permission snapshot.
    *
    * @example
    * ```javascript
-   * const tx = await contract.smartWallet.setAccess(permissionsSnapshot);
+   * const tx = await contract.account.setAccess(permissionsSnapshot);
    * const receipt = tx.receipt();
    * ```
    *
-   * @twfeature SmartWallet
+   * @twfeature Account
    */
   setAccess = /* @__PURE__ */ buildTransactionFunction(
     async (
