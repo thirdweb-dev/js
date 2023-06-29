@@ -2,4 +2,4 @@
 "@thirdweb-dev/chains": patch
 ---
 
-Sort RPCs in Chain object
+Do not change order or RPCs in `getChainRPCs` to Fix RPC override issue
