@@ -28,7 +28,7 @@ export function getChainRPCs(
     ...options,
   };
 
-  const sortedRPCs: string[] = [];
+  const processedRPCs: string[] = [];
 
   chain.rpc.forEach((rpc) => {
     // exclude RPC if mode mismatch
@@ -42,11 +42,11 @@ export function getChainRPCs(
 
     // Replace API_KEY placeholder with value
     if (thirdwebApiKey && rpc.includes("${THIRDWEB_API_KEY}")) {
-      sortedRPCs.push(rpc.replace("${THIRDWEB_API_KEY}", thirdwebApiKey));
+      processedRPCs.push(rpc.replace("${THIRDWEB_API_KEY}", thirdwebApiKey));
     } else if (infuraApiKey && rpc.includes("${INFURA_API_KEY}")) {
-      sortedRPCs.push(rpc.replace("${INFURA_API_KEY}", infuraApiKey));
+      processedRPCs.push(rpc.replace("${INFURA_API_KEY}", infuraApiKey));
     } else if (alchemyApiKey && rpc.includes("${ALCHEMY_API_KEY}")) {
-      sortedRPCs.push(rpc.replace("${ALCHEMY_API_KEY}", alchemyApiKey));
+      processedRPCs.push(rpc.replace("${ALCHEMY_API_KEY}", alchemyApiKey));
     }
 
     // exclude RPCs with unknown placeholder
@@ -56,17 +56,17 @@ export function getChainRPCs(
 
     // add as is
     else {
-      sortedRPCs.push(rpc);
+      processedRPCs.push(rpc);
     }
   });
 
-  if (sortedRPCs.length === 0) {
+  if (processedRPCs.length === 0) {
     throw new Error(
       `No RPC available for chainId "${chain.chainId}" with mode ${mode}`,
     );
   }
 
-  return sortedRPCs;
+  return processedRPCs;
 }
 
 /**
