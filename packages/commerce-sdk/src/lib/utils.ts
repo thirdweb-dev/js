@@ -1,6 +1,28 @@
+import { SDKOptions, ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { AbstractClientWallet } from "@thirdweb-dev/wallets";
 import { createHmac } from "crypto";
+import { ContractTransaction, Signer } from "ethers";
 import { Readable } from "stream";
-import { SendTokensParams, ShopifyFetchParams, ShopifyFetchResult } from "../../types";
+import { SendReceiptParams, SendTokensParams } from "../../types";
+import { ShopifyFetchParams, ShopifyFetchResult } from "../../types/shopify";
+
+export async function getSdkInstance (signerOrWallet: Signer | AbstractClientWallet, chain: string, sdkOptions?: SDKOptions) {
+  let sdk = undefined;
+  if (signerOrWallet instanceof Signer) {
+    sdk = ThirdwebSDK.fromSigner(
+      signerOrWallet,
+      chain,
+      sdkOptions,
+    );
+  } else if (signerOrWallet instanceof AbstractClientWallet) {
+    sdk = await ThirdwebSDK.fromWallet(
+      signerOrWallet,
+      chain,
+      sdkOptions,
+    );
+  }
+  return sdk;
+}
 
 export async function getNextJsRawBody(readable: Readable): Promise<Buffer> {
   const chunks = [];
@@ -74,56 +96,44 @@ export function verifyWebhook(data: any, headers: {[key: string]: any}, secret: 
 }
 
 export async function sendTokensSync({
-  // apiUrl,
-  // chain,
   tokenContract,
-  wallet,
+  receiver,
   rewardAmount,
-}: SendTokensParams) {
-  // Once web3api is ready, we can use this:
-  // const response = await fetch(`${apiUrl}/contracts/${chain}/${tokenContract.getAddress()}/erc20/transfer`, {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify({
-  //     wallet,
-  //     rewardAmount,
-  //   }),
-  // })
-  // const data = await response.json();
-  // console.log(`Rewarding ${rewardAmount} points to wallet address: ${wallet}`, `tx: ${data.result}`);
-  // return data.result;
-
-  const tx = await tokenContract.erc20.transfer(wallet, rewardAmount);
-  console.log(`Rewarding ${rewardAmount} points to wallet address: ${wallet}`, `tx: ${tx.receipt.transactionHash}`);
+}: SendTokensParams): Promise<ContractTransaction["hash"]> {
+  const tx = await tokenContract.erc20.transfer(receiver, rewardAmount);
+  console.log(`Rewarding ${rewardAmount} points to receiver address: ${receiver}`, `tx: ${tx.receipt.transactionHash}`);
   return tx.receipt.transactionHash;
 }
 
-export async function sendTokensAsync({ 
-  // apiUrl,
-  // chain,
+export async function sendTokensAsync({
   tokenContract,
-  wallet,
+  receiver,
   rewardAmount
-  } : SendTokensParams) {
-  // Once web3api is ready, we can use this:
-  // const response = await fetch(`${apiUrl}/contract/${chain}/${tokenContract.getAddress()}/erc20/transfer`, {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify({
-  //     wallet,
-  //     rewardAmount,
-  //   }),
-  // })
-  // const data = await response.json();
-  // console.log(`Rewarding ${rewardAmount} points to wallet address: ${wallet}`, `tx: ${data.result}`);
-  // return data.result;
-
-  const preparedTx = await tokenContract.erc20.transfer.prepare(wallet, rewardAmount);
+  } : SendTokensParams): Promise<ContractTransaction["hash"]> {
+  const preparedTx = await tokenContract.erc20.transfer.prepare(receiver, rewardAmount);
   const tx = await preparedTx.send();
-  console.log(`Rewarding ${rewardAmount} points to wallet address: ${wallet}`, `tx: ${tx.hash}`);
+  console.log(`Rewarding ${rewardAmount} points to receiver address: ${receiver}`, `tx: ${tx.hash}`);
+  return tx.hash;
+}
+
+export async function sendReceiptSync({
+  receiptContract,
+  receiver,
+  metadata
+}: SendReceiptParams): Promise<ContractTransaction["hash"]> {
+  const tx = await receiptContract.erc721.mintTo(receiver, metadata);
+  console.log(`Sending digital receipt to receiver address: ${receiver}`, `tx: ${tx.receipt.transactionHash}`);
+  return tx.receipt.transactionHash;
+}
+
+export async function sendReceiptAsync({
+  receiptContract,
+  receiver,
+  metadata
+}: SendReceiptParams): Promise<ContractTransaction["hash"]> {
+  const preparedTx = await receiptContract.erc721.mintTo.prepare(receiver, metadata);
+  preparedTx.encode();
+  const tx = await preparedTx.send();
+  console.log(`Sending digital receipt to receiver address: ${receiver}`, `tx: ${tx.hash}`);
   return tx.hash;
 }

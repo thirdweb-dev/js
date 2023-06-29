@@ -1,10 +1,8 @@
-import { SDKOptions, ThirdwebSDK } from "@thirdweb-dev/sdk";
-import { AbstractClientWallet } from "@thirdweb-dev/wallets";
-import { Signer } from 'ethers';
+import { SDKOptions } from "@thirdweb-dev/sdk";
 import { NextApiRequest } from "next";
-import { LoyaltyRewardsParams, ResponseBody, RewardTokensParams } from "../../../types";
-import { GET_ORDER_BY_ID_QUERY } from "../../lib/queries";
-import { sendTokensAsync, sendTokensSync, shopifyFetchAdminAPI, verifyWebhook } from '../../lib/utils';
+import { RewardTokensParams, RewardTokensWebhookParams, issueDigitalReceiptParams, issueDigitalReceiptWebhookParams } from "../../../types";
+import { getWalletFromOrder } from "../../lib/shopify";
+import { getSdkInstance, sendReceiptAsync, sendReceiptSync, sendTokensAsync, sendTokensSync, verifyWebhook } from '../../lib/utils';
 
 /**
  * Gift ERC20 loyalty tokens to a customer using their wallet address.
@@ -17,16 +15,16 @@ import { sendTokensAsync, sendTokensSync, shopifyFetchAdminAPI, verifyWebhook } 
  * const signer = new ethers.Wallet("{{private_key}}");
  * 
  * const txHash = await rewardPoints({
- *   signerOrWallet: signer,
  *   rawBody: {{raw_body}},
  *   headers: {{headers}},
- *   webhookSecret: {{"webhook_secret"}},
- *   tokenContractAddress: {{"contract_address"}},
- *   gaslessRelayerUrl: {{"gasless_relayer_url"}},
- *   chain: "goerli",
- *   rewardAmount: 100,
  *   shopifyAdminUrl: {{"shopify_admin_url"}},
  *   shopifyAccessToken: {{"shopify_access_token"}},
+ *   gaslessRelayerUrl: {{"gasless_relayer_url"}},
+ *   webhookSecret: {{"webhook_secret"}},
+ *   signerOrWallet: signer,
+ *   chain: "goerli",
+ *   tokenContractAddress: {{"contract_address"}},
+ *   rewardAmount: 100,
  * });
  * ```
  * @returns Transaction hash
@@ -36,55 +34,34 @@ import { sendTokensAsync, sendTokensSync, shopifyFetchAdminAPI, verifyWebhook } 
 export async function rewardTokensWebhook({
   rawBody,
   headers,
-  // apiUrl,
-  webhookSecret,
-  tokenContractAddress,
-  gaslessRelayerUrl,
-  chain,
-  rewardAmount,
   shopifyAdminUrl,
   shopifyAccessToken,
+  gaslessRelayerUrl,
+  webhookSecret,
   signerOrWallet,
-}: LoyaltyRewardsParams) {
+  chain,
+  tokenContractAddress,
+  rewardAmount,
+}: RewardTokensWebhookParams) {
   if (!rawBody || !headers) {
     throw new Error("Bad request - missing rawBody or headers");
   }
 
   const shopifyOrderId = headers["x-shopify-order-id"];
+  if (!shopifyOrderId) {
+    throw new Error("Bad request - missing Shopify order ID");
+  }
 
   const verified = verifyWebhook(rawBody, headers, webhookSecret);
   if (!verified) {
     throw new Error("Bad request - HMAC verification failed");
   }
 
-  const response = await shopifyFetchAdminAPI({
+  const { receiver } = await getWalletFromOrder({
     shopifyAdminUrl,
     shopifyAccessToken,
-    query: GET_ORDER_BY_ID_QUERY,
-    variables: {
-      id: `gid://shopify/Order/${shopifyOrderId}`,
-    },
+    shopifyOrderId,
   });
-
-  const respBody = response.body as ResponseBody;
-
-  if (!respBody.data.order.lineItems) {
-    throw new Error("Order did not contain any line items");
-  }
-
-  const itemsPurchased = respBody.data.order.lineItems.edges.map(
-    (edge) => edge.node,
-  );
-
-  let wallet = "";
-  try {
-    wallet =
-      itemsPurchased[0].customAttributes.find(
-        (e: any) => e.key === "wallet",
-      )?.value || "";
-  } catch (e) {
-    throw new Error("No wallet address found in order's custom attributes");
-  }
 
   const sdkOptions: SDKOptions | undefined = gaslessRelayerUrl
     ? {
@@ -96,9 +73,8 @@ export async function rewardTokensWebhook({
 
   try {
     const tx = await rewardTokens({
-      // apiUrl,
       signerOrWallet,
-      wallet,
+      receiver,
       tokenContractAddress,
       rewardAmount,
       chain,
@@ -130,30 +106,18 @@ export async function rewardTokensWebhook({
  * */
 
 export async function rewardTokens({
-  wallet,
+  receiver,
   tokenContractAddress,
-  // apiUrl,
   rewardAmount,
   chain,
   sdkOptions,
   signerOrWallet,
   fromWebhook = false,
 }: RewardTokensParams) {
-  let sdk = undefined;
-  if (signerOrWallet instanceof Signer) {
-    sdk = ThirdwebSDK.fromSigner(
-      signerOrWallet,
-      chain,
-      sdkOptions,
-    );
-  } else if (signerOrWallet instanceof AbstractClientWallet) {
-    sdk = await ThirdwebSDK.fromWallet(
-      signerOrWallet,
-      chain,
-      sdkOptions,
-    );
-  }
-  if (!sdk) return;
+  const sdk = await getSdkInstance(signerOrWallet, chain, sdkOptions);
+  if (!sdk) {
+    throw new Error("Error getting SDK instance");
+  };
 
   const tokenContract = await sdk.getContract(tokenContractAddress, "token");
   if (!tokenContract) {
@@ -163,18 +127,14 @@ export async function rewardTokens({
     let txHash = "";
     if (fromWebhook) {
       txHash = await sendTokensAsync({
-        // apiUrl,
-        // chain,
         tokenContract,
-        wallet,
+        receiver,
         rewardAmount,
       })
     } else {
       txHash = await sendTokensSync({
-        // apiUrl,
-        // chain,
         tokenContract,
-        wallet,
+        receiver,
         rewardAmount,
       })
     }
@@ -189,21 +149,151 @@ export async function rewardTokens({
  * 
  * @example
  * ```javascript
- * const receipt = await sendNFTReceipt({
- *  nextApiRequest: {{next_api_request}},
- *  contractAddress: {{"contract_address"}},
- *  webhookSecret: {{"webhook_secret"}},
- *  chain: "goerli",
- *  privateKey: {{"private_key"}},
- *  shopifyAdminUrl: {{"shopify_admin_url"}},
- *  shopifyAccessToken: {{"shopify_access_token"}},
+ * const txHash = await sendNFTReceiptWebhook({
+ *   rawBody: {{raw_body}},
+ *   headers: {{headers}},
+ *   shopifyAdminUrl: {{"shopify_admin_url"}},
+ *   shopifyAccessToken: {{"shopify_access_token"}},
+ *   gaslessRelayerUrl: {{"gasless_relayer_url"}},
+ *   webhookSecret: {{"webhook_secret"}},
+ *   signerOrWallet: signer,
+ *   chain: "goerli",
+ *   receiptContractAddress: {{"contract_address"}},
  * });
  * ```
  * @returns Transaction hash
  * @public
  * */
 
-// export async function sendNFTReceipt();
+export async function issueDigitalReceiptWebhook({
+  rawBody,
+  headers,
+  shopifyAdminUrl,
+  shopifyAccessToken,
+  gaslessRelayerUrl,
+  webhookSecret,
+  signerOrWallet,
+  chain,
+  receiptContractAddress,
+}: issueDigitalReceiptWebhookParams) {
+  if (!rawBody || !headers) {
+    throw new Error("Bad request - missing rawBody or headers");
+  }
+
+  const shopifyOrderId = headers["x-shopify-order-id"];
+
+  const verified = verifyWebhook(rawBody, headers, webhookSecret);
+  if (!verified) {
+    throw new Error("Bad request - HMAC verification failed");
+  }
+
+  const { receiver, itemsPurchased } = await getWalletFromOrder({
+    shopifyAdminUrl,
+    shopifyAccessToken,
+    shopifyOrderId,
+  });
+
+  const sdkOptions: SDKOptions | undefined = gaslessRelayerUrl
+    ? {
+      gasless: {
+        openzeppelin: { relayerUrl: gaslessRelayerUrl },
+      },
+    }
+    : undefined;
+
+  for (const item of itemsPurchased) {
+    // Grab the information of the product ordered
+    const product = item.variant.product;
+
+    // Set the metadata for the NFT to the product information
+    const metadata = {
+      name: product.title,
+      description: product.description,
+      image: product.featuredImage.url,
+      attributes: {
+        trait_type: "Amount",
+        value: item.quantity,
+      },
+    };
+
+    try {
+      const tx = await issueDigitalReceipt({
+        signerOrWallet,
+        chain,
+        receiver,
+        fromWebhook: true,
+        sdkOptions,
+        receiptContractAddress,
+        metadata,
+      })
+      return tx;
+    } catch (e) {
+      throw new Error(`Error rewarding points to wallet address: \n${e}`);
+    }
+  };
+};
+
+/**
+ * Issue a digital receipt to a specified receiver address.
+ * 
+ * @example
+ * ```javascript
+ * const metadata = {
+ *  name: "Digital Receipt",
+ *  description: "Digital Receipt",
+ *  image: "https://image.com",
+ * }
+ * const txHash = await issueDigitalReceipt({
+ *   signerOrWallet: {{signer_or_wallet}},
+ *   chain: "goerli",
+ *   wallet: "{{wallet_address}}",
+ *   sdkOptions: {{sdk_options}},
+ *   receiptContractAddress: {{"contract_address"}},
+ *   metadata,
+ * });
+ * ```
+ * @returns Transaction hash
+ * @public
+ * */
+
+export async function issueDigitalReceipt({
+  signerOrWallet,
+  chain,
+  receiver,
+  fromWebhook = false,
+  sdkOptions,
+  receiptContractAddress,
+  metadata,
+}: issueDigitalReceiptParams) {
+  const sdk = await getSdkInstance(signerOrWallet, chain, sdkOptions);
+  if (!sdk) {
+    throw new Error("Error getting SDK instance");
+  };
+
+  const receiptContract = await sdk.getContract(receiptContractAddress, "nft-collection");
+  if (!receiptContract) {
+    throw new Error("Error getting token contract");
+  }
+  try {
+    let txHash = "";
+    if (fromWebhook) {
+      txHash = await sendReceiptAsync({
+        receiptContract,
+        receiver,
+        metadata,
+      })
+    } else {
+      txHash = await sendReceiptSync({
+        receiptContract,
+        receiver,
+        metadata,
+      })
+    }
+    return txHash;
+  } catch (e) {
+    throw new Error(`Error sending receipt to receiver address ${receiver}: \n${e}`);
+  }
+};
 
 /**
  * Check customers eligibility for loyalty rewards.

@@ -1,85 +1,53 @@
-import { SDKOptions, Token } from "@thirdweb-dev/sdk";
+import { NFTCollection, NFTMetadataOrUri, SDKOptions, Token } from "@thirdweb-dev/sdk";
 import { AbstractClientWallet } from "@thirdweb-dev/wallets";
 import { Signer } from 'ethers';
 
-export type SendTokensParams = {
-  // apiUrl: string; 
-  // chain: string; 
-  tokenContract: Token; 
-  wallet: string; 
-  rewardAmount: number;
-}
-
-export type LoyaltyRewardsParams = {
-  signerOrWallet: Signer | AbstractClientWallet;
-  // apiUrl: string;
+type WebhookParams = {
   rawBody: Buffer;
   headers: {[key: string]: any}
-  webhookSecret: string;
-  tokenContractAddress: string;
+  shopifyAdminUrl: string;
+  shopifyAccessToken: string;
   gaslessRelayerUrl?: string;
-  chain: string;
-  rewardAmount: number;
-  shopifyAdminUrl: string;
-  shopifyAccessToken: string;
-};
-
-export type RewardTokensParams = {
+  webhookSecret: string;
   signerOrWallet: Signer | AbstractClientWallet;
-  // apiUrl: string;
-  wallet: string;
+  chain: string;
+}
+
+type StandardFunctionParams = {
+  signerOrWallet: Signer | AbstractClientWallet;
+  chain: string;
+  receiver: string;
+  fromWebhook?: boolean;
+  sdkOptions?: SDKOptions;
+}
+
+export type RewardTokensWebhookParams = WebhookParams & {
   tokenContractAddress: string;
   rewardAmount: number;
-  chain: string;
-  sdkOptions?: SDKOptions;
-  fromWebhook?: boolean;
-}
-
-export interface ShopifyFetchParams {
-  shopifyAdminUrl: string;
-  shopifyAccessToken: string;
-  query: string;
-  variables?: Record<string, unknown>;
-}
-
-export interface ShopifyFetchResult {
-  status: number;
-  body?: any;
-  error?: string;
-}
-
-export type ResponseBody = {
-  data: {
-    order: {
-      id: string;
-      tags: string[];
-      lineItems: {
-        edges: {
-          node: {
-            id: string;
-            quantity: number;
-            variant: {
-              id: string;
-              price: {
-                amount: number;
-              };
-              product: {
-                id: string;
-                title: string;
-                description: string;
-                featuredImage: {
-                  id: string;
-                  url: string;
-                };
-              }
-            };
-            customAttributes: {
-              key: string;
-              value: string;
-            }[];
-          };
-        }[];
-      };
-    };
-  };
 };
+
+export type RewardTokensParams = StandardFunctionParams & {
+  tokenContractAddress: string;
+  rewardAmount: number;
+}
+
+export type SendTokensParams = {
+  tokenContract: Token; 
+  receiver: string; 
+  rewardAmount: number;
+}
+
+export type issueDigitalReceiptWebhookParams = WebhookParams & {
+  receiptContractAddress: string;
+}
+
+export type issueDigitalReceiptParams = StandardFunctionParams & {
+  receiptContractAddress: string;
+  metadata: NFTMetadataOrUri;
+}
+
+export type SendReceiptParams = {
+  receiptContract: NFTCollection;
+  receiver: string;
+  metadata: NFTMetadataOrUri;
+}
