@@ -1,7 +1,7 @@
-import { spinner } from "../core/helpers/logger";
 import { BufferOrStringWithName, ThirdwebStorage } from "@thirdweb-dev/storage";
 import fs from "fs";
 import path from "path";
+import { spinner } from "../core/helpers/logger";
 
 function recurseFiles(
   uploadPath: string,
