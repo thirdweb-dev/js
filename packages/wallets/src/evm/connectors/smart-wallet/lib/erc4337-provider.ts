@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-parameter-properties */
-import { BigNumber, providers, Signer } from "ethers";
-import { hexValue, resolveProperties } from "ethers/lib/utils";
+import { BigNumber, providers, Signer, utils } from "ethers";
 
 import {
   EntryPoint,
@@ -134,7 +133,7 @@ export class ERC4337EthersProvider extends providers.BaseProvider {
   async constructUserOpTransactionResponse(
     userOp1: UserOperationStruct,
   ): Promise<providers.TransactionResponse> {
-    const userOp = await resolveProperties(userOp1);
+    const userOp = await utils.resolveProperties(userOp1);
     const userOpHash = await this.smartAccountAPI.getUserOpHash(userOp);
     const waitForUserOp = async (): Promise<providers.TransactionReceipt> =>
       await new Promise((resolve, reject) => {
@@ -154,7 +153,7 @@ export class ERC4337EthersProvider extends providers.BaseProvider {
       nonce: BigNumber.from(userOp.nonce).toNumber(),
       gasLimit: BigNumber.from(userOp.callGasLimit), // ??
       value: BigNumber.from(0),
-      data: hexValue(userOp.callData), // should extract the actual called method from this "execFromEntryPoint()" call
+      data: utils.hexValue(userOp.callData), // should extract the actual called method from this "execFromEntryPoint()" call
       chainId: this.chainId,
       wait: async (
         // eslint-disable-next-line @typescript-eslint/no-unused-vars

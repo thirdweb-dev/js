@@ -1,5 +1,4 @@
-import { providers } from "ethers";
-import { resolveProperties } from "ethers/lib/utils";
+import { providers, utils } from "ethers";
 import { UserOperationStruct } from "@account-abstraction/contracts";
 import { deepHexlify } from "@account-abstraction/utils";
 
@@ -55,7 +54,7 @@ export class HttpRpcClient {
    */
   async sendUserOpToBundler(userOp1: UserOperationStruct): Promise<string> {
     await this.initializing;
-    const hexifiedUserOp = deepHexlify(await resolveProperties(userOp1));
+    const hexifiedUserOp = deepHexlify(await utils.resolveProperties(userOp1));
     const jsonRequestData: [UserOperationStruct, string] = [
       hexifiedUserOp,
       this.entryPointAddress,
@@ -71,7 +70,7 @@ export class HttpRpcClient {
     userOp1: Partial<UserOperationStruct>,
   ): Promise<string> {
     await this.initializing;
-    const hexifiedUserOp = deepHexlify(await resolveProperties(userOp1));
+    const hexifiedUserOp = deepHexlify(await utils.resolveProperties(userOp1));
     const jsonRequestData: [UserOperationStruct, string] = [
       hexifiedUserOp,
       this.entryPointAddress,
@@ -93,7 +92,7 @@ export class HttpRpcClient {
     if (!DEBUG) {
       return;
     }
-    const userOp = await resolveProperties(userOp1);
+    const userOp = await utils.resolveProperties(userOp1);
     console.debug(
       "sending",
       method,
