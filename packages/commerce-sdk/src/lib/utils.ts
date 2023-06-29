@@ -3,7 +3,7 @@ import { AbstractClientWallet } from "@thirdweb-dev/wallets";
 import { createHmac } from "crypto";
 import { ContractTransaction, Signer } from "ethers";
 import { Readable } from "stream";
-import { SendReceiptParams, SendTokensParams } from "../../types";
+import { RedeemPointsParams, SendReceiptParams, SendTokensParams } from "../../types";
 import { ShopifyFetchParams, ShopifyFetchResult } from "../../types/shopify";
 
 export async function getSdkInstance (signerOrWallet: Signer | AbstractClientWallet, chain: string, sdkOptions?: SDKOptions) {
@@ -135,5 +135,26 @@ export async function sendReceiptAsync({
   preparedTx.encode();
   const tx = await preparedTx.send();
   console.log(`Sending digital receipt to receiver address: ${receiver}`, `tx: ${tx.hash}`);
+  return tx.hash;
+}
+
+export async function redeemPointsSync({
+  tokenContract,
+  receiver,
+  quantity,
+}: RedeemPointsParams): Promise<ContractTransaction["hash"]> {
+  const tx = await tokenContract.erc20.burnFrom(receiver, quantity);
+  console.log(`Redeemed ${quantity} points for address: ${receiver}`, `tx: ${tx.receipt.transactionHash}`);
+  return tx.receipt.transactionHash;
+}
+
+export async function redeemPointsAsync({
+  tokenContract,
+  receiver,
+  quantity,
+}: RedeemPointsParams): Promise<ContractTransaction["hash"]> {
+  const preparedTx = await tokenContract.erc20.burnFrom.prepare(receiver, quantity);
+  const tx = await preparedTx.send();
+  console.log(`Redeemed ${quantity} points for address: ${receiver}`, `tx: ${tx.hash}`);
   return tx.hash;
 }

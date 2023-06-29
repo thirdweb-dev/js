@@ -1,13 +1,12 @@
 import { SDKOptions } from "@thirdweb-dev/sdk";
-import { NextApiRequest } from "next";
-import { RewardTokensParams, RewardTokensWebhookParams, issueDigitalReceiptParams, issueDigitalReceiptWebhookParams } from "../../../types";
-import { getWalletFromOrder } from "../../lib/shopify";
-import { getSdkInstance, sendReceiptAsync, sendReceiptSync, sendTokensAsync, sendTokensSync, verifyWebhook } from '../../lib/utils';
+import { IssueDigitalReceiptParams, IssueDigitalReceiptWebhookParams, RedeemDiscountCodeParams, RewardTokensParams, RewardTokensWebhookParams } from "../../../types";
+import { generateDiscountCode, getWalletFromOrder } from "../../lib/shopify";
+import { getSdkInstance, redeemPointsSync, sendReceiptAsync, sendReceiptSync, sendTokensAsync, sendTokensSync, verifyWebhook } from '../../lib/utils';
 
 /**
- * Gift ERC20 loyalty tokens to a customer using their wallet address.
+ * Read the webhook information, grab the wallet address from an order and sends it the specified amount of tokens.
  * 
- * @description This function is used to gift loyalty tokens to a customer using their wallet address. The customer must have purchased and item from your store in order to receive the loyalty tokens. The function will check the order ID and verify that the customer has purchased an item from your store. If the customer has purchased an item from your store, the function will gift the customer the loyalty tokens.
+ * @description NOTE: This function relies on the headers information given from a Shopify webhook. The function will find the order by id and grab the wallet address from the custom attributes. If the wallet is found, the function will gift the specified amount of tokens to that wallet address.
  * 
  * @example
  * ```javascript
@@ -90,10 +89,12 @@ export async function rewardTokensWebhook({
 /**
  * Send tokens to specified wallet address.
  * 
+ * @description Send specified amount of tokens to specified wallet address.
+ * 
  * @example
  * ```javascript
  * const txHash = await sendTokens({
- *   wallet: "{{wallet_address}}",
+ *   receiver: "{{wallet_address}}",
  *   tokenContractAddress: {{"contract_address"}},
  *   rewardAmount: 100,
  *   chain: "goerli",
@@ -145,7 +146,9 @@ export async function rewardTokens({
 };
 
 /**
- * Generate and send an NFT receipt for a customer on item purchase.
+ * Read the webhook information, grab the wallet address from an order, generate a digital receipt and send it to that wallet.
+ * 
+ * @description NOTE: This function relies on the headers information given from a Shopify webhook. The function will find the order by id and grab the wallet address from the custom attributes. If the wallet is found, the function will generate a digital receipt and send it to that wallet address.
  * 
  * @example
  * ```javascript
@@ -175,7 +178,7 @@ export async function issueDigitalReceiptWebhook({
   signerOrWallet,
   chain,
   receiptContractAddress,
-}: issueDigitalReceiptWebhookParams) {
+}: IssueDigitalReceiptWebhookParams) {
   if (!rawBody || !headers) {
     throw new Error("Bad request - missing rawBody or headers");
   }
@@ -246,7 +249,7 @@ export async function issueDigitalReceiptWebhook({
  * const txHash = await issueDigitalReceipt({
  *   signerOrWallet: {{signer_or_wallet}},
  *   chain: "goerli",
- *   wallet: "{{wallet_address}}",
+ *   receiver: "{{wallet_address}}",
  *   sdkOptions: {{sdk_options}},
  *   receiptContractAddress: {{"contract_address"}},
  *   metadata,
@@ -264,7 +267,7 @@ export async function issueDigitalReceipt({
   sdkOptions,
   receiptContractAddress,
   metadata,
-}: issueDigitalReceiptParams) {
+}: IssueDigitalReceiptParams) {
   const sdk = await getSdkInstance(signerOrWallet, chain, sdkOptions);
   if (!sdk) {
     throw new Error("Error getting SDK instance");
@@ -296,11 +299,75 @@ export async function issueDigitalReceipt({
 };
 
 /**
- * Check customers eligibility for loyalty rewards.
+ * Check if a wallet has enough points to purchase a discount code and generate one if it does have points.
+ *
+ * @description This will check the amount of points a wallet has and if they have enough points for a reward, they can spend those points to get a discount code.
  * 
  * @example
  * ```javascript
- * const isEligible = await checkEligibility({
+ * const discountCode = await redeemDiscountCode({
+ *   signerOrWallet: {{signer_or_wallet}},
+ *   chain: "goerli",
+ *   receiver: "{{wallet_address}}",
+ *   sdkOptions: {{sdk_options}},
+ *   tokenContractAddress: {{"contract_address"}},
+ *   requiredPoints: 5000,
+ *   discountAmount: 50,
+ * });
+ * ```
+ * @returns Discount code or error
+ * @public
+ * */
+
+export async function rewardDiscount({
+  signerOrWallet,
+  chain,
+  receiver,
+  sdkOptions,
+  tokenContractAddress,
+  requiredPoints,
+  discountDollarAmount,
+  shopifyAdminUrl,
+  shopifyAccessToken,
+}: RedeemDiscountCodeParams) {
+  // Check if user has enough points to redeem a discount code.
+  const sdk = await getSdkInstance(signerOrWallet, chain, sdkOptions);
+  if (!sdk) {
+    throw new Error("Error getting SDK instance");
+  };
+
+  const tokenContract = await sdk.getContract(tokenContractAddress, "token");
+  const balance = await tokenContract.erc20.balanceOf(receiver);
+  const cleanValue = Number(balance.value);
+  if (cleanValue < requiredPoints) {
+    throw new Error("Wallet does not have enough points to redeem this discount code");
+  }
+  // Generate discount code for the amount of points.
+  const discountCode = await generateDiscountCode({
+    shopifyAdminUrl,
+    shopifyAccessToken,
+    discountDollarAmount,
+  })
+  // Burn the points from the wallet.
+  try {
+    await redeemPointsSync({
+      tokenContract,
+      receiver,
+      quantity: requiredPoints,
+    })
+  } catch (e) {
+    throw new Error(`Error redeeming points from wallet address ${receiver}: \n${e}`);
+  }
+  // Return the discount code.
+  return discountCode;
+};
+
+/**
+ * Check a wallets eligibility for loyalty rewards.
+ * 
+ * @example
+ * ```javascript
+ * const isEligible = await hasAccess({
  *  request: req,
  *  webhookSecret: secretKey,
  *  shopifyAdminUrl: {{"shopify_admin_url"}},
@@ -310,30 +377,6 @@ export async function issueDigitalReceipt({
  * @returns boolean
  * @public
  * */
-export async function checkEligibility({
-  request,
-  webhookSecret,
-}: {
-  request: NextApiRequest;
-  webhookSecret: string;
-}) {
-  return true;
-};
-
-
-/**
- * Generate a discount code for a customer.
- *
- * @example
- * ```javascript
- * const discountCode = await generateDiscount({
- *   wallet: {{"wallet_address"}},
- *   shopifyAdminUrl: {{"shopify_admin_url"}},
- *   shopifyAccessToken: {{"shopify_access_token"}},
- * });
- * ```
- * @returns Discount code
- * @public
- * */
-
-// export async function generateDiscount();
+// export async function hasAccess() {
+//   return true;
+// };

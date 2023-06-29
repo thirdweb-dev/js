@@ -30,3 +30,40 @@ export const GET_ORDER_BY_ID_QUERY = `#graphql
     }
   }
 `;
+
+export const GENERATE_BASIC_DISCOUNT_MUTATION = `#graphql
+  mutation discountAutomaticBasicCreate($automaticBasicDiscount: DiscountAutomaticBasicInput!) {
+    discountAutomaticBasicCreate(automaticBasicDiscount: $automaticBasicDiscount) {
+      automaticDiscountNode {
+        id
+        automaticDiscount {
+          ... on DiscountAutomaticBasic {
+            startsAt
+            endsAt
+            customerGets {
+              value {
+                ... on DiscountAmount {
+                  amount {
+                    amount
+                    currencyCode
+                  }
+                  appliesOnEachItem
+                }
+              }
+              items {
+                ... on AllDiscountItems {
+                  allItems
+                }
+              }
+            }
+          }
+        }
+      }
+      userErrors {
+        field
+        code
+        message
+      }
+    }
+  }
+`;

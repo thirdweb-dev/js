@@ -37,11 +37,11 @@ export type SendTokensParams = {
   rewardAmount: number;
 }
 
-export type issueDigitalReceiptWebhookParams = WebhookParams & {
+export type IssueDigitalReceiptWebhookParams = WebhookParams & {
   receiptContractAddress: string;
 }
 
-export type issueDigitalReceiptParams = StandardFunctionParams & {
+export type IssueDigitalReceiptParams = StandardFunctionParams & {
   receiptContractAddress: string;
   metadata: NFTMetadataOrUri;
 }
@@ -50,4 +50,18 @@ export type SendReceiptParams = {
   receiptContract: NFTCollection;
   receiver: string;
   metadata: NFTMetadataOrUri;
+}
+
+export type RedeemDiscountCodeParams = StandardFunctionParams & {
+  tokenContractAddress: string;
+  requiredPoints: number;
+  discountDollarAmount: number;
+  shopifyAdminUrl: string;
+  shopifyAccessToken: string;
+}
+
+export type RedeemPointsParams = {
+  tokenContract: Token;
+  receiver: string;
+  quantity: number;
 }
