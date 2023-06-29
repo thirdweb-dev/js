@@ -478,11 +478,13 @@ export function useCustomContractDeployMutation(
     hasContractURI,
     hasRoyalty,
     isSplit,
+    isVote,
     isErc721SharedMetadadata,
   }: {
     hasContractURI?: boolean;
     hasRoyalty?: boolean;
     isSplit?: boolean;
+    isVote?: boolean;
     isErc721SharedMetadadata?: boolean;
   } = {},
 ) {
@@ -542,6 +544,23 @@ export function useCustomContractDeployMutation(
             }),
             ...(hasRoyalty && {
               fee_recipient: data.deployParams._royaltyRecipient,
+            }),
+            ...(isSplit && {
+              recipients: data.recipients,
+            }),
+            ...(isVote && {
+              voting_delay_in_blocks: Number(
+                data.deployParams._initialVotingDelay,
+              ),
+              voting_period_in_blocks: Number(
+                data.deployParams._initialVotingPeriod,
+              ),
+              voting_token_address: data.deployParams._token,
+              voting_quorum_fraction: Number(
+                data.deployParams._initialVoteQuorumFraction,
+              ),
+              proposal_token_threshold:
+                data.deployParams._initialProposalThreshold,
             }),
           });
           if ("_name" in data.deployParams) {

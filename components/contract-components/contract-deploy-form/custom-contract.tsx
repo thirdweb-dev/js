@@ -175,6 +175,12 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     "_platformFeeRecipient" in formDeployParams;
   const isSplit =
     "_payees" in formDeployParams && "_shares" in formDeployParams;
+  const isVote =
+    "_initialVotingDelay" in formDeployParams &&
+    "_initialVotingPeriod" in formDeployParams &&
+    "_initialProposalThreshold" in formDeployParams &&
+    "_initialVoteQuorumFraction" in formDeployParams &&
+    "_token" in formDeployParams;
 
   const shouldHide = (paramKey: string) => {
     if (
@@ -210,6 +216,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       hasContractURI,
       hasRoyalty,
       isSplit,
+      isVote,
       isErc721SharedMetadadata,
     },
   );
