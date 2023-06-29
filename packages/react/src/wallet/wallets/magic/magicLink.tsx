@@ -79,7 +79,7 @@ const MagicSelectionUI: React.FC<
 
         if (isEmail && isEmailEnabled) {
           const emailRegex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
-          const isValidEmail = emailRegex.test(input);
+          const isValidEmail = emailRegex.test(input.replace(/\+/g, ""));
           if (!isValidEmail) {
             return "Invalid email address";
           }
