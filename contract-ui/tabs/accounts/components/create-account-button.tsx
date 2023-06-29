@@ -1,10 +1,10 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import {
+  useAccountsForAddress,
   useAddress,
   useContract,
-  useCreateSmartWallet,
-  useIsSmartWalletDeployed,
-  useSmartWalletsForAddress,
+  useCreateAccount,
+  useIsAccountDeployed,
 } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { LinkButton } from "tw-components";
@@ -17,17 +17,17 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
   contractQuery,
   ...restButtonProps
 }) => {
-  const { mutate: createAccount, isLoading } = useCreateSmartWallet(
+  const { mutate: createAccount, isLoading } = useCreateAccount(
     contractQuery?.contract,
   );
 
   const network = useDashboardEVMChainId();
   const address = useAddress();
-  const { data: isSmartWalletDeployed } = useIsSmartWalletDeployed(
+  const { data: isAccountDeployed } = useIsAccountDeployed(
     contractQuery.contract,
     address,
   );
-  const { data: smartWalletsForAddress } = useSmartWalletsForAddress(
+  const { data: accountsForAddress } = useAccountsForAddress(
     contractQuery.contract,
     address,
   );
@@ -36,10 +36,10 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
     return null;
   }
 
-  if (isSmartWalletDeployed && smartWalletsForAddress?.length) {
+  if (isAccountDeployed && accountsForAddress?.length) {
     return (
       <LinkButton
-        href={`/${network}/${smartWalletsForAddress[0]}`}
+        href={`/${network}/${accountsForAddress[0]}`}
         colorScheme="primary"
       >
         Go to Account
@@ -53,7 +53,7 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
       onClick={() => createAccount(address)}
       isLoading={isLoading}
       transactionCount={1}
-      isDisabled={isSmartWalletDeployed}
+      isDisabled={isAccountDeployed}
       {...restButtonProps}
     >
       Create Account

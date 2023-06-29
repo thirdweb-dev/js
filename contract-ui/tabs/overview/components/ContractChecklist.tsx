@@ -3,12 +3,12 @@ import {
   useIsMinter,
 } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import {
+  useAccounts,
   useBatchesToReveal,
   useClaimConditions,
   useClaimedNFTSupply,
   useNFTs,
   useSharedMetadata,
-  useSmartWallets,
   useTokenSupply,
 } from "@thirdweb-dev/react";
 import { SmartContract } from "@thirdweb-dev/sdk";
@@ -41,7 +41,7 @@ export const ContractChecklist: React.FC<ContractChecklistProps> = ({
   const claimConditions = useClaimConditions(contract);
   const erc20Supply = useTokenSupply(contract);
   const batchesToReveal = useBatchesToReveal(contract);
-  const smartWallets = useSmartWallets(contract);
+  const accounts = useAccounts(contract);
   const sharedMetadata = useSharedMetadata(contract);
 
   const steps: Step[] = [
@@ -186,7 +186,7 @@ export const ContractChecklist: React.FC<ContractChecklistProps> = ({
     });
   }
 
-  const isAccountFactory = detectFeatures(contract, ["SmartWalletFactory"]);
+  const isAccountFactory = detectFeatures(contract, ["AccountFactory"]);
   if (isAccountFactory) {
     steps.push({
       title: "First account created",
@@ -199,7 +199,7 @@ export const ContractChecklist: React.FC<ContractChecklistProps> = ({
           to create your first account.
         </Text>
       ),
-      completed: (smartWallets.data?.length || 0) > 0,
+      completed: (accounts.data?.length || 0) > 0,
     });
   }
 

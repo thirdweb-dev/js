@@ -2,10 +2,10 @@ import { AccountsTable } from "./components/accounts-table";
 import { CreateAccountButton } from "./components/create-account-button";
 import { Box, ButtonGroup, Flex } from "@chakra-ui/react";
 import {
+  useAccounts,
+  useAccountsForAddress,
   useAddress,
   useContract,
-  useSmartWallets,
-  useSmartWalletsForAddress,
 } from "@thirdweb-dev/react";
 import { Card, Heading, LinkButton, Text } from "tw-components";
 
@@ -17,10 +17,10 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({
   contractAddress,
 }) => {
   const contractQuery = useContract(contractAddress);
-  const accountsQuery = useSmartWallets(contractQuery?.contract);
+  const accountsQuery = useAccounts(contractQuery?.contract);
   const address = useAddress();
 
-  const { data: smartWalletsForAddress } = useSmartWalletsForAddress(
+  const { data: accountsForAddress } = useAccountsForAddress(
     contractQuery.contract,
     address,
   );
@@ -65,7 +65,7 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({
       </Flex>
       <AccountsTable
         accountsQuery={accountsQuery}
-        smartWalletsForAddress={smartWalletsForAddress}
+        accountsForAddress={accountsForAddress}
       />
     </Flex>
   );

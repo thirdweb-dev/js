@@ -1,6 +1,6 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { AccountEvent, useAddress, useSmartWallets } from "@thirdweb-dev/react";
+import { AccountEvent, useAccounts, useAddress } from "@thirdweb-dev/react";
 import { TWTable } from "components/shared/TWTable";
 import { useRouter } from "next/router";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
@@ -21,19 +21,19 @@ const columns = [
 ];
 
 interface AccountsTableProps {
-  accountsQuery: ReturnType<typeof useSmartWallets>;
-  smartWalletsForAddress?: string[];
+  accountsQuery: ReturnType<typeof useAccounts>;
+  accountsForAddress?: string[];
 }
 
 export const AccountsTable: React.FC<AccountsTableProps> = ({
   accountsQuery,
-  smartWalletsForAddress,
+  accountsForAddress,
 }) => {
   const router = useRouter();
   const network = useDashboardEVMChainId();
   const address = useAddress();
 
-  const defaultAccounts: AccountEvent[] = (smartWalletsForAddress || []).map(
+  const defaultAccounts: AccountEvent[] = (accountsForAddress || []).map(
     (account: string) => ({
       account,
       admin: address || "",

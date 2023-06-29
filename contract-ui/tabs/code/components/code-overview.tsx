@@ -321,8 +321,8 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
   const address = useAddress();
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  const isSmartWalletFactorry = enabledExtensions.some(
-    (extension) => extension.name === "SmartWalletFactory",
+  const isAccountFactory = enabledExtensions.some(
+    (extension) => extension.name === "AccountFactory",
   );
 
   const filteredData = useMemo(() => {
@@ -380,7 +380,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
         gap={12}
       >
         <Flex flexDirection="column" gap={4}>
-          {isSmartWalletFactorry && (
+          {isAccountFactory && (
             <Alert
               status="info"
               borderRadius="md"
