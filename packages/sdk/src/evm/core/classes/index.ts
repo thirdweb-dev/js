@@ -50,5 +50,5 @@ export * from "./contract-published-metadata";
 export * from "./contract-owner";
 export * from "./transactions";
 export * from "./contract-appuri";
-export * from "./smart-wallet";
-export * from "./smart-wallet-factory";
+export * from "./account";
+export * from "./account-factory";

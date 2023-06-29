@@ -61,6 +61,15 @@ export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
    * Whether or not to automatically switch to wallet's network to active chain
    */
   autoSwitch?: boolean;
+
+  /**
+   * Timeout for auto-connecting wallet in milliseconds
+   *
+   * If wallet fails to connect in this time, it will stop trying to connect and user will have to manually connect
+   *
+   * @defaultValue 15000
+   */
+  autoConnectTimeout?: number;
 }
 
 export const ThirdwebProviderCore = <TChains extends Chain[]>({
@@ -145,6 +154,7 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
         dAppMeta={dAppMeta}
         activeChain={activeChainWithKey}
         autoSwitch={props.autoSwitch}
+        autoConnectTimeout={props.autoConnectTimeout}
       >
         <ThirdwebSDKProviderWrapper
           queryClient={props.queryClient}

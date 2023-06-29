@@ -1,6 +1,6 @@
 import type { IAccountFactory } from "@thirdweb-dev/contracts-js";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { FEATURE_SMART_WALLET_FACTORY } from "../../constants/thirdweb-features";
+import { FEATURE_ACCOUNT_FACTORY } from "../../constants/thirdweb-features";
 
 import { ContractEvents } from "./contract-events";
 import { ContractWrapper } from "./contract-wrapper";
@@ -9,13 +9,13 @@ import { Transaction } from "./transactions";
 import { TransactionResultWithAddress } from "../types";
 import { type BytesLike, utils } from "ethers";
 import { AccountCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/AccountFactory";
-import type { AccountEvent } from "../../types/smart-wallet";
+import type { AccountEvent } from "../../types/account";
 import { isContractDeployed } from "../../common/any-evm-utils/isContractDeployed";
 
-export class SmartWalletFactory<TContract extends IAccountFactory>
+export class AccountFactory<TContract extends IAccountFactory>
   implements DetectableFeature
 {
-  featureName = FEATURE_SMART_WALLET_FACTORY.name;
+  featureName = FEATURE_ACCOUNT_FACTORY.name;
   private contractWrapper: ContractWrapper<IAccountFactory>;
 
   // utilities
@@ -36,19 +36,19 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
    *******************************/
 
   /**
-   * Get the deterministic address of the smart wallet that will be created
+   * Get the deterministic address of the account that will be created
    *
    * @example
    * ```javascript
-   * const walletAddress = await contract.smartWalletFactory.predictWalletAddress(admin);
+   * const accountAddress = await contract.accountFactory.predictAccountAddress(admin);
    * ```
-   * @param admin - The admin of the smart wallet.
-   * @param extraData - (Optional) Extra data to be passed to the smart wallet on creation.
-   * @returns the deterministic address of the smart wallet that will be created for the given admin.
+   * @param admin - The admin of the account.
+   * @param extraData - (Optional) Extra data to be passed to the account on creation.
+   * @returns the deterministic address of the account that will be created for the given admin.
    *
-   * @twfeature SmartWalletFactory
+   * @twfeature AccountFactory
    */
-  public async predictWalletAddress(
+  public async predictAccountAddress(
     admin: string,
     extraData?: BytesLike,
   ): Promise<string> {
@@ -60,48 +60,48 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
   }
 
   /**
-   * Get all signers who have authority on the given smart wallet
+   * Get all signers who have authority on the given account
    *
    * @example
    * ```javascript
-   * const allSigners = await contract.smartWalletFactory.getAssociatedSigners(admin);
+   * const allSigners = await contract.accountFactory.getAssociatedSigners(admin);
    * ```
-   * @param wallet - The smart wallet address.
-   * @returns all signers who have authority on the given smart wallet.
+   * @param account - The account address.
+   * @returns all signers who have authority on the given account.
    *
-   * @twfeature SmartWalletFactory
+   * @twfeature AccountFactory
    */
-  public async getAssociatedSigners(wallet: string): Promise<string[]> {
-    return this.contractWrapper.readContract.getSignersOfAccount(wallet);
+  public async getAssociatedSigners(account: string): Promise<string[]> {
+    return this.contractWrapper.readContract.getSignersOfAccount(account);
   }
 
   /**
-   * Get all wallets on which the given signer has authority
+   * Get all accounts on which the given signer has authority
    *
    * @example
    * ```javascript
-   * const allWallets = await contract.smartWalletFactory.getAssociatedWallets(admin);
+   * const allAccounts = await contract.accountFactory.getAssociatedAccounts(admin);
    * ```
-   * @param signer - The smart wallet address.
-   * @returns all wallets on which the given signer has authority.
+   * @param signer - The account address.
+   * @returns all accounts on which the given signer has authority.
    *
-   * @twfeature SmartWalletFactory
+   * @twfeature AccountFactory
    */
-  public async getAssociatedWallets(signer: string): Promise<string[]> {
+  public async getAssociatedAccounts(signer: string): Promise<string[]> {
     return this.contractWrapper.readContract.getAccountsOfSigner(signer);
   }
 
   /**
-   * Get all wallets
+   * Get all accounts
    *
    * @example
    * ```javascript
-   * const allWallets = await contract.smartWalletFactory.getAllWallets();
+   * const allAccounts = await contract.accountFactory.getAllAccounts();
    * ```
    *
-   * @returns all wallets created via the smart wallet factory.
+   * @returns all accounts created via the account factory.
    *
-   * @twfeature SmartWalletFactory
+   * @twfeature AccountFactory
    */
   public async getAllAccounts(): Promise<AccountEvent[]> {
     const allAccounts =
@@ -122,17 +122,17 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
   }
 
   /**
-   * Check if a smart wallet has been deployed for the given admin
+   * Check if a account has been deployed for the given admin
    *
-   * @param admin - The admin of the smart wallet.
-   * @param extraData - (Optional) Extra data to be passed to the smart wallet on creation.
-   * @returns whether the smart wallet has been deployed for the given admin.
+   * @param admin - The admin of the account.
+   * @param extraData - (Optional) Extra data to be passed to the account on creation.
+   * @returns whether the account has been deployed for the given admin.
    */
-  public async isWalletDeployed(
+  public async isAccountDeployed(
     admin: string,
     extraData?: BytesLike,
   ): Promise<boolean> {
-    const addr = await this.predictWalletAddress(admin, extraData);
+    const addr = await this.predictAccountAddress(admin, extraData);
     return isContractDeployed(addr, this.contractWrapper.getProvider());
   }
 
@@ -141,29 +141,29 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
    *******************************/
 
   /**
-   * Create a smart wallet
+   * Create a account
    *
-   * @remarks Create a smart wallet for an admin. The admin will have complete authority over the smart wallet.
+   * @remarks Create a account for an admin. The admin will have complete authority over the account.
    *
-   * @param admin - The admin of the smart wallet.
-   * @param extraData - (Optional) Extra data to be passed to the smart wallet on creation.
+   * @param admin - The admin of the account.
+   * @param extraData - (Optional) Extra data to be passed to the account on creation.
    *
    * @example
    *  ```javascript
-   * const tx = await contract.smartWalletFactory.createWallet(admin, extraData);
+   * const tx = await contract.accountFactory.createAccount(admin, extraData);
    * const receipt = tx.receipt();
-   * const smartWalletAddress = tx.address;
+   * const accountAddress = tx.address;
    * ```
    *
-   * @twfeature SmartWalletFactory
+   * @twfeature AccountFactory
    */
-  createWallet = /* @__PURE__ */ buildTransactionFunction(
+  createAccount = /* @__PURE__ */ buildTransactionFunction(
     async (
-      walletAdmin: string,
+      accountAdmin: string,
       extraData?: BytesLike,
     ): Promise<Transaction<TransactionResultWithAddress>> => {
-      if (await this.isWalletDeployed(walletAdmin, extraData)) {
-        throw new Error(`Wallet already deployed for admin: ${walletAdmin}`);
+      if (await this.isAccountDeployed(accountAdmin, extraData)) {
+        throw new Error(`Account already deployed for admin: ${accountAdmin}`);
       }
 
       let data: BytesLike = utils.toUtf8Bytes("");
@@ -174,7 +174,7 @@ export class SmartWalletFactory<TContract extends IAccountFactory>
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "createAccount",
-        args: [walletAdmin, data],
+        args: [accountAdmin, data],
         parse: (receipt) => {
           const event = this.contractWrapper.parseLogs<AccountCreatedEvent>(
             "AccountCreated",
