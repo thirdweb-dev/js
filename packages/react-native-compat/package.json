@@ -22,10 +22,10 @@
   },
   "dependencies": {
     "@ethersproject/shims": "^5.7.0",
-    "@walletconnect/react-native-compat": "^2.3.3",
+    "@walletconnect/react-native-compat": "^2.8.6",
     "base-64": "^1.0.0",
     "big-integer": "^1.6.51",
-    "react-native-get-random-values": "^1.8.0"
+    "react-native-get-random-values": "^1.9.0"
   },
   "peerDependencies": {
     "ethers": "^5.5.1",
@@ -34,12 +34,12 @@
   },
   "devDependencies": {
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "@types/node": "^18.0.0",
+    "@types/node": "^18.16.18",
     "babel-plugin-module-resolver": "^5.0.0",
     "eslint-config-thirdweb": "workspace:*",
     "ethers": "^5.7.2",
     "react": "^18.2.0",
-    "react-native": "^0.71.0",
-    "typescript": "^4.7.4"
+    "react-native": "^0.71.11",
+    "typescript": "^5.1.6"
   }
 }
