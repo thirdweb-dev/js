@@ -259,7 +259,7 @@ export class Marketplace implements UpdateableNetwork {
         (l.type === ListingType.Auction &&
           BigNumber.from(l.endTimeInEpochSeconds).gt(now) &&
           BigNumber.from(l.startTimeInEpochSeconds).lte(now)) ||
-        (l.type === ListingType.Direct && l.quantity > 0)
+        (l.type === ListingType.Direct && BigNumber.from(l.quantity).gt(0))
       );
     });
   }

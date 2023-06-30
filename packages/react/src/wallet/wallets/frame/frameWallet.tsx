@@ -19,10 +19,11 @@ export const frameWallet = (): WalletConfig<FrameWallet> => ({
   },
   connectUI: FrameConnectUI,
   isInstalled() {
-    if (assertWindowEthereum(globalThis.window)) {
+    const window_: Window | undefined = globalThis?.window;
+    if (assertWindowEthereum(window_)) {
       return (
-        globalThis.window.ethereum?.isFrame ||
-        globalThis.window.ethereum?.providers?.some((p) => p.isFrame) ||
+        window_.ethereum?.isFrame ||
+        window_.ethereum?.providers?.some((p) => p.isFrame) ||
         false
       );
     }

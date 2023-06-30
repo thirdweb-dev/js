@@ -44,7 +44,6 @@ import {
   type Signer,
   constants,
 } from "ethers";
-import { ConnectionInfo } from "ethers/lib/utils.js";
 import invariant from "tiny-invariant";
 import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
 import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
@@ -471,7 +470,7 @@ export class ContractWrapper<
     callOverrides: CallOverrides,
   ) {
     const provider = this.getProvider() as providers.Provider & {
-      connection?: ConnectionInfo;
+      connection?: utils.ConnectionInfo;
     };
 
     // Get metadata for transaction to populate into error

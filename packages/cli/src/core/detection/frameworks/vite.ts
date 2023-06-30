@@ -1,10 +1,10 @@
-import { LibraryDetector } from "../detector";
 import { existsSync, readFileSync } from "fs";
-import { LibraryType } from "../../types/ProjectType";
 import { parsePackageJson } from "../../../lib/utils";
+import { FrameworkType } from "../../types/ProjectType";
+import { FrameworkDetector } from "../detector";
 
-export default class ViteDetector implements LibraryDetector {
-  public libraryType: LibraryType = "vite";
+export default class ViteDetector implements FrameworkDetector {
+  public frameworkType: FrameworkType = "vite";
 
   public matches(path: string): boolean {
     const packageJsonPath = path + "/package.json";
@@ -16,7 +16,7 @@ export default class ViteDetector implements LibraryDetector {
     const packageJson = readFileSync(packageJsonPath);
     const { dependencies, devDependencies } = parsePackageJson(packageJson);
     const viteDependencyExists =
-      dependencies["vite"] || devDependencies["vite"] || false;
+      !!dependencies["vite"] || !!devDependencies["vite"] || false;
 
     return viteDependencyExists;
   }
