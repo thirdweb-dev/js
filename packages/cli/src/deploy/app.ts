@@ -35,19 +35,19 @@ export async function deployApp(distPath = "dist", projectPath = ".") {
       case "yarn":
         await runCommand("yarn", ["build"], true);
         if (detectedFramework === "next") {
-          await runCommand("yarn", ["export"], true);
+          await runCommand("yarn", ["next", "export"], true);
         }
         break;
       case "npm":
         await runCommand("npm", ["run", "build"], true);
         if (detectedFramework === "next") {
-          await runCommand("npm", ["run", "export"], true);
+          await runCommand("npx", ["next", "export"], true);
         }
         break;
       case "pnpm":
         await runCommand("pnpm", ["build"], true);
         if (detectedFramework === "next") {
-          await runCommand("pnpm", ["export"], true);
+          await runCommand("pnpm", ["next", "export"], true);
         }
         break;
       default:
