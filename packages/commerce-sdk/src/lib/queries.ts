@@ -40,20 +40,19 @@ export const GENERATE_BASIC_DISCOUNT_MUTATION = `#graphql
           ... on DiscountAutomaticBasic {
             startsAt
             endsAt
-            customerGets {
-              value {
-                ... on DiscountAmount {
-                  amount {
-                    amount
-                    currencyCode
-                  }
-                  appliesOnEachItem
+            minimumRequirement {
+              ... on DiscountMinimumQuantity {
+                greaterThanOrEqualToQuantity {
+                  amount
                 }
               }
+            }
+            customerGets {
               items {
-                ... on AllDiscountItems {
-                  allItems
-                }
+                all
+              }
+              value {
+                percentage
               }
             }
           }
@@ -66,4 +65,5 @@ export const GENERATE_BASIC_DISCOUNT_MUTATION = `#graphql
       }
     }
   }
-`;
+`
+;

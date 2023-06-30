@@ -338,9 +338,9 @@ export async function rewardDiscount({
 
   const tokenContract = await sdk.getContract(tokenContractAddress, "token");
   const balance = await tokenContract.erc20.balanceOf(receiver);
-  const cleanValue = Number(balance.value);
+  const cleanValue = Number(balance.displayValue);
   if (cleanValue < requiredPoints) {
-    throw new Error("Wallet does not have enough points to redeem this discount code");
+    throw new Error(`Wallet does not have enough points to redeem this discount code: ${receiver}`);
   }
   // Generate discount code for the amount of points.
   const discountCode = await generateDiscountCode({

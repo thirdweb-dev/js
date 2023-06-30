@@ -143,6 +143,7 @@ export async function redeemPointsSync({
   receiver,
   quantity,
 }: RedeemPointsParams): Promise<ContractTransaction["hash"]> {
+  console.log(`Redeeming ${quantity} points for address: ${receiver}`);
   const tx = await tokenContract.erc20.burnFrom(receiver, quantity);
   console.log(`Redeemed ${quantity} points for address: ${receiver}`, `tx: ${tx.receipt.transactionHash}`);
   return tx.receipt.transactionHash;

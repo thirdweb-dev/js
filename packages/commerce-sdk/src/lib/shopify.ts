@@ -60,18 +60,22 @@ export async function generateDiscountCode({
       query: GENERATE_BASIC_DISCOUNT_MUTATION,
       variables: {
         automaticBasicDiscount: {
-          title: "Discount",
+          title: `${discountDollarAmount}% off your order`,
           startsAt: new Date().toISOString(),
-          endsAt: new Date().toISOString() + 1000 * 60 * 60 * 24 * 7,
+          endsAt: null,
+          minimumRequirement: {
+            quantity: {
+              greaterThanOrEqualToQuantity: {
+                amount: 1,
+              }
+            }
+          },
           customerGets: {
             value: {
-              discountAmount: {
-                amount: (discountDollarAmount / 100),
-                appliesOnEachItem: true,
-              }
+              percentage: (discountDollarAmount / 100),
             },
             items: {
-              all: true
+              all: true,
             }
           }
         }
@@ -81,6 +85,6 @@ export async function generateDiscountCode({
     throw new Error(`Error generating discount from Shopify: \n${e}`);
   }
 
-  console.log(response.body);
+  // console.log(response.body);
   return response.body;
 };
