@@ -1,5 +1,15 @@
 # thirdweb
 
+## 0.10.28
+
+### Patch Changes
+
+- [#1274](https://github.com/thirdweb-dev/js/pull/1274) [`8fc5f204`](https://github.com/thirdweb-dev/js/commit/8fc5f204b00733089c02beee92c86b0f1fcac271) Thanks [@Marfuen](https://github.com/Marfuen)! - Added all detections for deploy command and some minor bug fixes
+
+- Updated dependencies [[`2b113539`](https://github.com/thirdweb-dev/js/commit/2b113539098384f910b3c4d54e1fde9d35a6f053), [`c9535715`](https://github.com/thirdweb-dev/js/commit/c95357158819abd42d4b0900ecc2fa40fcb957f8), [`5882091e`](https://github.com/thirdweb-dev/js/commit/5882091eab65978009a5a5305701f121851b10ad)]:
+  - @thirdweb-dev/sdk@3.10.27
+  - @thirdweb-dev/chains@0.1.26
+
 ## 0.10.27
 
 ### Patch Changes

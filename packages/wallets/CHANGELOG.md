@@ -1,5 +1,21 @@
 # @thirdweb-dev/wallets
 
+## 1.0.3
+
+### Patch Changes
+
+- [#1277](https://github.com/thirdweb-dev/js/pull/1277) [`2b113539`](https://github.com/thirdweb-dev/js/commit/2b113539098384f910b3c4d54e1fde9d35a6f053) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - remove ethers/lib/utils dependency
+
+- [#1267](https://github.com/thirdweb-dev/js/pull/1267) [`be606dd3`](https://github.com/thirdweb-dev/js/commit/be606dd3c93c1514834c1d970e864d7f949a07ab) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - set signer null when disconnecting paper to avoid exceptions on event callbacks
+
+- [#1269](https://github.com/thirdweb-dev/js/pull/1269) [`998e5217`](https://github.com/thirdweb-dev/js/commit/998e521733efd6a67e42f9bf0beab5fbdccf08ae) Thanks [@MananTank](https://github.com/MananTank)! - - Expose `advancedOptions` and `styles` for paper wallet
+  - Allow using "+" in paper email
+  - Allow using "+" in magic email
+  - Update Paper SDK version
+- Updated dependencies [[`2b113539`](https://github.com/thirdweb-dev/js/commit/2b113539098384f910b3c4d54e1fde9d35a6f053), [`c9535715`](https://github.com/thirdweb-dev/js/commit/c95357158819abd42d4b0900ecc2fa40fcb957f8), [`5882091e`](https://github.com/thirdweb-dev/js/commit/5882091eab65978009a5a5305701f121851b10ad)]:
+  - @thirdweb-dev/sdk@3.10.27
+  - @thirdweb-dev/chains@0.1.26
+
 ## 1.0.2
 
 ### Patch Changes

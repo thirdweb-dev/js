@@ -1,5 +1,11 @@
 # @thirdweb-dev/chains
 
+## 0.1.26
+
+### Patch Changes
+
+- [#1276](https://github.com/thirdweb-dev/js/pull/1276) [`5882091e`](https://github.com/thirdweb-dev/js/commit/5882091eab65978009a5a5305701f121851b10ad) Thanks [@MananTank](https://github.com/MananTank)! - Do not change order or RPCs in `getChainRPCs` to Fix RPC override issue
+
 ## 0.1.25
 
 ### Patch Changes
