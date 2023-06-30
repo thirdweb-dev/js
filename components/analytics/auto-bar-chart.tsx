@@ -1,5 +1,5 @@
 import { StackToolTip } from "./stack-tooltip";
-import { Box, BoxProps, useColorMode } from "@chakra-ui/react";
+import { Box, BoxProps, Select, Stack, useColorMode } from "@chakra-ui/react";
 import { useId, useMemo, useState } from "react";
 import {
   Bar,
@@ -27,7 +27,6 @@ export interface AutoBarChartProps<
   };
   showXAxis?: boolean;
   showYAxis?: boolean;
-  startEndOnly?: boolean;
 }
 
 const BAR_COLORS_LIGHT = [
@@ -80,7 +79,6 @@ export const AutoBarChart = <
   index,
   showXAxis,
   showYAxis,
-  startEndOnly,
   ...boxProps
 }: AutoBarChartProps<TData, TIndexKey>) => {
   const { colorMode } = useColorMode();
@@ -133,12 +131,7 @@ export const AutoBarChart = <
   return (
     <Box {...boxProps}>
       <ResponsiveContainer width="100%" height="100%">
-        <RechartsBarChart
-          data={data}
-          onMouseMove={() => {
-            // console.log(state);
-          }}
-        >
+        <RechartsBarChart data={data}>
           <defs>
             {categories.map((cat) => (
               <linearGradient
@@ -190,14 +183,11 @@ export const AutoBarChart = <
 
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
               const { time, ...values } = payload[0].payload;
-              const hoverValues = !hoverKey
-                ? values
-                : { [hoverKey]: values[hoverKey] };
-
               return (
                 <StackToolTip
                   time={payload[0]?.payload?.time}
-                  values={hoverValues}
+                  values={values}
+                  hoverKey={hoverKey}
                 />
               );
             }}
@@ -222,9 +212,9 @@ export const AutoBarChart = <
                 ? index.format(payload)
                 : index.type === "date"
                 ? new Date(payload).toLocaleDateString(undefined, {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "2-digit",
                   })
                 : payload
             }
@@ -240,14 +230,11 @@ export const AutoBarChart = <
             domain={["dataMin - 86400000", "dataMax + 86400000"]}
             type="number"
             tick={{ transform: "translate(0, 6)" }}
-            ticks={
-              startEndOnly
-                ? [
-                    sortedData[0][index.id],
-                    sortedData[data.length - 1][index.id],
-                  ]
-                : undefined
-            }
+            ticks={[
+              sortedData[0][index.id],
+              sortedData[Math.floor(sortedData.length / 2)][index.id],
+              sortedData[sortedData.length - 1][index.id],
+            ]}
           />
 
           <YAxis

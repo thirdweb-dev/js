@@ -1,8 +1,9 @@
-import { Flex, useColorMode } from "@chakra-ui/react";
+import { Flex, Portal, useColorMode } from "@chakra-ui/react";
 import { Heading, Text } from "tw-components";
 
 type CustomToolTipProps = {
   time: string;
+  hoverKey: string;
   values: Record<string, number>;
 };
 
@@ -15,6 +16,7 @@ const formattingOptions: Intl.DateTimeFormatOptions = {
 export const StackToolTip: React.FC<CustomToolTipProps> = ({
   time,
   values,
+  hoverKey,
 }) => {
   const { colorMode } = useColorMode();
 
@@ -46,16 +48,23 @@ export const StackToolTip: React.FC<CustomToolTipProps> = ({
       </Flex>
 
       <Flex direction="column" gap={0.5}>
-        {Object.entries(values).map(([key, value]) => (
-          <Text
-            key={key}
-            fontSize="12px"
-            color={colorMode === "dark" ? "white" : "#333"}
-          >
-            <strong>{key}: </strong>
-            {value.toLocaleString()}
-          </Text>
-        ))}
+        {Object.entries(values)
+          .reverse()
+          .map(([key, value]) => (
+            <Text
+              key={key}
+              fontSize="12px"
+              color={colorMode === "dark" ? "white" : "#333"}
+              opacity={hoverKey && key !== hoverKey ? 0.8 : 1}
+            >
+              {hoverKey && key !== hoverKey ? (
+                `${key}: `
+              ) : (
+                <strong>{key}: </strong>
+              )}
+              {value.toLocaleString()}
+            </Text>
+          ))}
       </Flex>
     </Flex>
   );

@@ -21,17 +21,10 @@ export const ChartContainer: ComponentWithChildren<ChartContainerProps> = ({
     <Flex direction="column">
       {chartTitle}
       <AspectRatio {...aspectRatioProps}>
-        {/* error boudnary to handle error cases */}
-        <ErrorBoundary
-          fallback={({ resetError }) => (
-            <ChartErrorState chartType={chartType} resetError={resetError} />
-          )}
-        >
-          {/* suspense to handle loading state */}
-          <Suspense fallback={<ChartLoadingState chartType={chartType} />}>
-            {children}
-          </Suspense>
-        </ErrorBoundary>
+        {/* suspense to handle loading state */}
+        <Suspense fallback={<ChartLoadingState chartType={chartType} />}>
+          {children}
+        </Suspense>
       </AspectRatio>
     </Flex>
   );

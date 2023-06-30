@@ -35,7 +35,6 @@ export interface BarChartProps<
 
   showXAxis?: boolean;
   showYAxis?: boolean;
-  startEndOnly?: boolean;
 }
 
 export const BarChart = <
@@ -47,7 +46,6 @@ export const BarChart = <
   categories,
   showXAxis,
   showYAxis,
-  startEndOnly,
   ...boxProps
 }: BarChartProps<TData, TIndexKey>) => {
   const { colorMode } = useColorMode();
@@ -139,9 +137,9 @@ export const BarChart = <
                 ? index.format(payload)
                 : index.type === "date"
                 ? new Date(payload).toLocaleDateString(undefined, {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "2-digit",
                   })
                 : payload
             }
@@ -157,11 +155,11 @@ export const BarChart = <
             domain={["dataMin - 86400000", "dataMax + 86400000"]}
             type="number"
             tick={{ transform: "translate(0, 6)" }}
-            ticks={
-              startEndOnly
-                ? [data[0][index.id], data[data.length - 1][index.id]]
-                : undefined
-            }
+            ticks={[
+              data[0][index.id],
+              data[Math.floor(data.length / 2)][index.id],
+              data[data.length - 1][index.id],
+            ]}
           />
 
           <YAxis

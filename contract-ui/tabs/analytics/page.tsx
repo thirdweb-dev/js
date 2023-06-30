@@ -45,7 +45,7 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
   const [startDate] = useState(
     (() => {
       const date = new Date();
-      date.setDate(date.getDate() - 14);
+      date.setDate(date.getDate() - 30);
       return date;
     })(),
   );
@@ -265,13 +265,7 @@ const AnalyticsChart: React.FC<AnalyticsChartProps> = ({
 
   if (categories === "auto") {
     return (
-      <AutoBarChart
-        data={data}
-        index={{ id: index }}
-        showXAxis
-        showYAxis
-        startEndOnly
-      />
+      <AutoBarChart data={data} index={{ id: index }} showXAxis showYAxis />
     );
   }
 
@@ -282,7 +276,6 @@ const AnalyticsChart: React.FC<AnalyticsChartProps> = ({
       categories={categories}
       showXAxis
       showYAxis
-      startEndOnly
     />
   );
 };
