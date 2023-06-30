@@ -714,7 +714,7 @@ const Lib = (() => {
               (n.currentSignEventId = -1),
               (n.loaderIFrame = null),
               (n.apiKey = t),
-              (n.API_ORIGIN = "https://loader.uat-testnet.metazens.xyz"),
+              (n.API_ORIGIN = "https://loader.wallet.gryfyn.io"),
               (n.src = "".concat(n.API_ORIGIN, "/iframe/").concat(t)),
               n.on("disconnect", function () {
                 (n.isLogin = !1),
@@ -1804,7 +1804,7 @@ const Lib = (() => {
           f = n(145),
           p = n(882),
           y = n(279),
-          m = "https://uat-testnet.metazens.xyz",
+          m = "https://wallet.gryfyn.io",
           g = { code: 4100, data: "", message: "Not login" };
         !(function (e) {
           (e.CONNECTED = "gryfyn_connected"),
@@ -1841,7 +1841,7 @@ const Lib = (() => {
               (r.loaderIFrame = null),
               (r.loaderWindows = null),
               (r.apiKey = t),
-              (r.API_ORIGIN = "https://loader.uat-testnet.metazens.xyz"),
+              (r.API_ORIGIN = "https://loader.wallet.gryfyn.io"),
               (r.defaultiFrameSrc = ""
                 .concat(r.API_ORIGIN, "/iframe/")
                 .concat(t)),
@@ -3324,7 +3324,7 @@ const Lib = (() => {
               (n.currentSignEventId = -1),
               (n.loaderIFrame = null),
               (n.apiKey = t),
-              (n.API_ORIGIN = "https://loader.uat-testnet.metazens.xyz"),
+              (n.API_ORIGIN = "https://loader.wallet.gryfyn.io"),
               (n.src = "".concat(n.API_ORIGIN, "/iframe/").concat(t)),
               n.on("disconnect", function () {
                 (n.isLogin = !1),
