@@ -44,7 +44,7 @@ import type { IDropClaimCondition_V2 } from "@thirdweb-dev/contracts-js/dist/dec
 import type { IDropSinglePhase } from "@thirdweb-dev/contracts-js/src/DropSinglePhase";
 import type { IClaimCondition } from "@thirdweb-dev/contracts-js/src/IDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, constants, ethers, utils } from "ethers";
+import { BigNumber, type BigNumberish, constants, utils } from "ethers";
 import deepEqual from "fast-deep-equal";
 import { fetchSnapshotEntryForAddress } from "../../common/claim-conditions/fetchSnapshotEntryForAddress";
 import { abstractContractModelToLegacy } from "../../common/claim-conditions/abstractContractModelToLegacy";
@@ -229,7 +229,7 @@ export class DropClaimConditions<
     let claimCondition: ClaimCondition;
 
     const decimals = await this.getTokenDecimals();
-    const quantityWithDecimals = ethers.utils.parseUnits(
+    const quantityWithDecimals = utils.parseUnits(
       AmountSchema.parse(quantity),
       decimals,
     );
@@ -265,7 +265,7 @@ export class DropClaimConditions<
     }
 
     if (claimCondition.availableSupply !== "unlimited") {
-      const supplyWithDecimals = ethers.utils.parseUnits(
+      const supplyWithDecimals = utils.parseUnits(
         claimCondition.availableSupply,
         decimals,
       );
@@ -276,9 +276,7 @@ export class DropClaimConditions<
     }
 
     // check for merkle root inclusion
-    const merkleRootArray = ethers.utils.stripZeros(
-      claimCondition.merkleRootHash,
-    );
+    const merkleRootArray = utils.stripZeros(claimCondition.merkleRootHash);
     const hasAllowList = merkleRootArray.length > 0;
     let allowListEntry: SnapshotEntryWithProof | null = null;
     if (hasAllowList) {
@@ -492,7 +490,7 @@ export class DropClaimConditions<
   ): Promise<SnapshotEntryWithProof | null> {
     const claimCondition = await this.get(claimConditionId);
     const merkleRoot = claimCondition.merkleRoot;
-    const merkleRootArray = ethers.utils.stripZeros(merkleRoot);
+    const merkleRootArray = utils.stripZeros(merkleRoot);
     if (merkleRootArray.length > 0) {
       const metadata = await this.metadata.get();
       const resolvedAddress = await resolveAddress(claimerAddress);
@@ -548,7 +546,7 @@ export class DropClaimConditions<
    * @param claimConditionInputs - The claim conditions
    * @param resetClaimEligibilityForAll - Whether to reset the state of who already claimed NFTs previously
    */
-  set = buildTransactionFunction(
+  set = /* @__PURE__ */ buildTransactionFunction(
     async (
       claimConditionInputs: ClaimConditionInput[],
       resetClaimEligibilityForAll = false,
@@ -563,7 +561,7 @@ export class DropClaimConditions<
           claimConditionsProcessed = [
             {
               startTime: new Date(0),
-              currencyAddress: ethers.constants.AddressZero,
+              currencyAddress: constants.AddressZero,
               price: 0,
               maxClaimableSupply: 0,
               maxClaimablePerWallet: 0,
@@ -716,7 +714,7 @@ export class DropClaimConditions<
    * @param index - the index of the claim condition to update, as given by the index from the result of `getAll()`
    * @param claimConditionInput - the new data to update, previous data will be retained
    */
-  update = buildTransactionFunction(
+  update = /* @__PURE__ */ buildTransactionFunction(
     async (
       index: number,
       claimConditionInput: ClaimConditionInput,
@@ -796,7 +794,7 @@ export class DropClaimConditions<
           proof: claimVerification.proofs,
           maxQuantityInAllowlist: claimVerification.maxClaimable,
         } as IDropSinglePhase_V1.AllowlistProofStruct,
-        ethers.utils.toUtf8Bytes(""),
+        utils.toUtf8Bytes(""),
       ];
     }
     return [
@@ -810,7 +808,7 @@ export class DropClaimConditions<
         pricePerToken: claimVerification.priceInProof,
         currency: claimVerification.currencyAddressInProof,
       } as IDropSinglePhase.AllowlistProofStruct,
-      ethers.utils.toUtf8Bytes(""),
+      utils.toUtf8Bytes(""),
     ];
   }
 

@@ -1,8 +1,8 @@
 import * as toml from "@iarna/toml";
-import { PackageManagerType } from "../core/types/ProjectType";
 import { existsSync, readFileSync } from "fs";
-import { runCommand } from "../create/helpers/run-command";
 import path from "path";
+import { PackageManagerType } from "../core/types/ProjectType";
+import { runCommand } from "../create/helpers/run-command";
 import { IProcessAppTypeArgs, IProcessContractAppTypeArgs } from "./types";
 
 export function convertDependenciesToStringFormat(dependenciesObject: object) {
@@ -174,7 +174,7 @@ export const installOrUpdate = async (packageManager: PackageManagerType, depend
     case "npm":
       runner = "npm";
       installCommand = ["install"];
-      updateCommand = ["update"]
+      updateCommand = ["install", "--legacy-peer-deps"]
       break;
     case "yarn":
       runner = "yarn";
@@ -223,7 +223,7 @@ export const installOrUpdate = async (packageManager: PackageManagerType, depend
   }
 
   if (typeOfAction === "install") {
-    if (!dependenciesToAdd.length) {return;}
+    if (!dependenciesToAdd.length) { return; }
     const commands = [...installCommand, ...dependenciesToAdd];
 
     await runCommand(runner, commands, printLogs);
@@ -233,7 +233,7 @@ export const installOrUpdate = async (packageManager: PackageManagerType, depend
     }
   }
   if (typeOfAction === "update") {
-    if (!dependenciesToUpdate.length) {return;}
+    if (!dependenciesToUpdate.length) { return; }
     const commands = [...updateCommand, ...dependenciesToUpdate];
     await runCommand(runner, commands, printLogs);
   }

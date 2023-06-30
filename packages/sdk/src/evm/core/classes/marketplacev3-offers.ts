@@ -212,7 +212,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the transaction receipt and the id of the newly created offer
    * @twfeature Offers
    */
-  makeOffer = buildTransactionFunction(
+  makeOffer = /* @__PURE__ */ buildTransactionFunction(
     async (
       offer: OfferInputParams,
     ): Promise<Transaction<TransactionResultWithId>> => {
@@ -280,13 +280,15 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the transaction receipt
    * @twfeature Offers
    */
-  cancelOffer = buildTransactionFunction(async (offerId: BigNumberish) => {
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "cancelOffer",
-      args: [offerId],
-    });
-  });
+  cancelOffer = /* @__PURE__ */ buildTransactionFunction(
+    async (offerId: BigNumberish) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "cancelOffer",
+        args: [offerId],
+      });
+    },
+  );
 
   /**
    * Accept an offer
@@ -303,29 +305,31 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the transaction receipt
    * @twfeature Offers
    */
-  acceptOffer = buildTransactionFunction(async (offerId: BigNumberish) => {
-    const offer = await this.validateOffer(BigNumber.from(offerId));
-    const { valid, error } = await this.isStillValidOffer(offer);
-    if (!valid) {
-      throw new Error(`Offer ${offerId} is no longer valid. ${error}`);
-    }
-    const overrides = (await this.contractWrapper.getCallOverrides()) || {};
+  acceptOffer = /* @__PURE__ */ buildTransactionFunction(
+    async (offerId: BigNumberish) => {
+      const offer = await this.validateOffer(BigNumber.from(offerId));
+      const { valid, error } = await this.isStillValidOffer(offer);
+      if (!valid) {
+        throw new Error(`Offer ${offerId} is no longer valid. ${error}`);
+      }
+      const overrides = (await this.contractWrapper.getCallOverrides()) || {};
 
-    await handleTokenApproval(
-      this.contractWrapper,
-      this.getAddress(),
-      offer.assetContractAddress,
-      offer.tokenId,
-      await this.contractWrapper.getSignerAddress(),
-    );
+      await handleTokenApproval(
+        this.contractWrapper,
+        this.getAddress(),
+        offer.assetContractAddress,
+        offer.tokenId,
+        await this.contractWrapper.getSignerAddress(),
+      );
 
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "acceptOffer",
-      args: [offerId],
-      overrides,
-    });
-  });
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "acceptOffer",
+        args: [offerId],
+        overrides,
+      });
+    },
+  );
 
   /** ******************************
    * PRIVATE FUNCTIONS

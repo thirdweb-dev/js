@@ -1,5 +1,5 @@
 import { Abi } from "../../schema/contracts/custom";
-import { ethers } from "ethers";
+import { utils } from "ethers";
 import { Plugin } from "../../types/plugins";
 
 function getFunctionSignature(fnInputs: any): string {
@@ -18,7 +18,7 @@ export function generatePluginFunctions(
   pluginAddress: string,
   pluginAbi: Abi,
 ): Plugin[] {
-  const pluginInterface = new ethers.utils.Interface(pluginAbi);
+  const pluginInterface = new utils.Interface(pluginAbi);
   const pluginFunctions: Plugin[] = [];
   // TODO - filter out common functions like _msgSender(), contractType(), etc.
   for (const fnFragment of Object.values(pluginInterface.functions)) {

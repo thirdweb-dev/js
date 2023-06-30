@@ -33,15 +33,17 @@ import fetch from "cross-fetch";
 import {
   BaseContract,
   BigNumber,
-  BytesLike,
-  CallOverrides,
+  type BytesLike,
+  type CallOverrides,
   Contract,
-  ContractInterface,
-  ContractTransaction,
-  ethers,
-  providers,
+  type ContractInterface,
+  type ContractTransaction,
+  utils,
+  type ContractFunction,
+  type providers,
+  type Signer,
+  constants,
 } from "ethers";
-import { ConnectionInfo } from "ethers/lib/utils.js";
 import invariant from "tiny-invariant";
 import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
 import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
@@ -144,7 +146,7 @@ export class ContractWrapper<
       const baseBlockFee =
         block && block.baseFeePerGas
           ? block.baseFeePerGas
-          : ethers.utils.parseUnits("1", "gwei");
+          : utils.parseUnits("1", "gwei");
       let defaultPriorityFee: BigNumber;
       if (chainId === ChainId.Mumbai || chainId === ChainId.Polygon) {
         // for polygon, get fee data from gas station
@@ -192,8 +194,8 @@ export class ContractWrapper<
         break;
     }
     let txGasPrice = defaultPriorityFeePerGas.add(extraTip);
-    const max = ethers.utils.parseUnits(maxGasPrice.toString(), "gwei"); // no more than max gas setting
-    const min = ethers.utils.parseUnits("2.5", "gwei"); // no less than 2.5 gwei
+    const max = utils.parseUnits(maxGasPrice.toString(), "gwei"); // no more than max gas setting
+    const min = utils.parseUnits("2.5", "gwei"); // no less than 2.5 gwei
     if (txGasPrice.gt(max)) {
       txGasPrice = max;
     }
@@ -224,7 +226,7 @@ export class ContractWrapper<
         break;
     }
     txGasPrice = txGasPrice.add(extraTip);
-    const max = ethers.utils.parseUnits(maxGasPrice.toString(), "gwei");
+    const max = utils.parseUnits(maxGasPrice.toString(), "gwei");
     if (txGasPrice.gt(max)) {
       txGasPrice = max;
     }
@@ -352,7 +354,7 @@ export class ContractWrapper<
       if (fn === "multicall" && Array.isArray(args[0]) && args[0].length > 0) {
         const from = await this.getSignerAddress();
         args[0] = args[0].map((tx: any) =>
-          ethers.utils.solidityPack(["bytes", "address"], [tx, from]),
+          utils.solidityPack(["bytes", "address"], [tx, from]),
         );
       }
 
@@ -414,9 +416,7 @@ export class ContractWrapper<
     args: any[],
     callOverrides: CallOverrides,
   ): Promise<ContractTransaction> {
-    const func: ethers.ContractFunction = (this.writeContract.functions as any)[
-      fn
-    ];
+    const func: ContractFunction = (this.writeContract.functions as any)[fn];
     if (!func) {
       throw new Error(`invalid function: "${fn.toString()}"`);
     }
@@ -469,8 +469,8 @@ export class ContractWrapper<
     args: any[],
     callOverrides: CallOverrides,
   ) {
-    const provider = this.getProvider() as ethers.providers.Provider & {
-      connection?: ConnectionInfo;
+    const provider = this.getProvider() as providers.Provider & {
+      connection?: utils.ConnectionInfo;
     };
 
     // Get metadata for transaction to populate into error
@@ -619,7 +619,7 @@ export class ContractWrapper<
   }
 
   public async signTypedData(
-    signer: ethers.Signer,
+    signer: Signer,
     domain: {
       name: string;
       version: string;
@@ -679,7 +679,7 @@ export class ContractWrapper<
     const provider = this.getProvider();
     invariant(signer && provider, "signer and provider must be set");
 
-    const forwarder = new ethers.Contract(
+    const forwarder = new Contract(
       getContractAddressByChainId(
         transaction.chainId,
         "biconomyForwarder",
@@ -696,7 +696,7 @@ export class ContractWrapper<
     const request = {
       from: transaction.from,
       to: transaction.to,
-      token: ethers.constants.AddressZero,
+      token: constants.AddressZero,
       txGas: transaction.gasLimit.toNumber(),
       tokenGasPrice: "0",
       batchId,
@@ -711,8 +711,8 @@ export class ContractWrapper<
       data: transaction.data,
     };
 
-    const hashToSign = ethers.utils.arrayify(
-      ethers.utils.solidityKeccak256(
+    const hashToSign = utils.arrayify(
+      utils.solidityKeccak256(
         [
           "address",
           "address",
@@ -733,7 +733,7 @@ export class ContractWrapper<
           request.batchId,
           request.batchNonce,
           request.deadline,
-          ethers.utils.keccak256(request.data),
+          utils.keccak256(request.data),
         ],
       ),
     );
@@ -872,7 +872,7 @@ export class ContractWrapper<
         amount,
       );
 
-      const { r, s, v } = ethers.utils.splitSignature(sig);
+      const { r, s, v } = utils.splitSignature(sig);
 
       message = {
         to: this.readContract.address,

@@ -39,6 +39,7 @@ export * from "./wallets/ethers";
 export * from "./wallets/private-key";
 export * from "./wallets/gryfyn";
 export * from "./wallets/zerion";
+export * from "./wallets/trust";
 
 export type { Chain } from "@thirdweb-dev/chains";
 

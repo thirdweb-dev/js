@@ -28,6 +28,7 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { PrebuiltEditionDrop } from "../../types/eips";
 import { ThirdwebStorage, UploadProgressEvent } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
+import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -44,7 +45,7 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
  * @public
  */
 export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
-  private static contractRoles = ["admin", "minter", "transfer"] as const;
+  private static contractRoles = NFT_BASE_CONTRACT_ROLES;
 
   public abi: Abi;
   public sales: ContractPrimarySale<PrebuiltEditionDrop>;
@@ -268,7 +269,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * @param metadatas - The metadata to include in the batch.
    * @param options - optional upload progress callback
    */
-  createBatch = buildTransactionFunction(
+  createBatch = /* @__PURE__ */ buildTransactionFunction(
     async (
       metadatas: NFTMetadataOrUri[],
       options?: {
@@ -327,7 +328,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    *
    * @returns - Receipt for the transaction
    */
-  claimTo = buildTransactionFunction(
+  claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       destinationAddress: AddressOrEns,
       tokenId: BigNumberish,
@@ -357,7 +358,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    *
    * @returns - Receipt for the transaction
    */
-  claim = buildTransactionFunction(
+  claim = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenId: BigNumberish,
       quantity: BigNumberish,
@@ -384,7 +385,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * const result = await contract.burnTokens(tokenId, amount);
    * ```
    */
-  burnTokens = buildTransactionFunction(
+  burnTokens = /* @__PURE__ */ buildTransactionFunction(
     async (tokenId: BigNumberish, amount: BigNumberish) => {
       return this.erc1155.burn.prepare(tokenId, amount);
     },

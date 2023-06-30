@@ -1,6 +1,6 @@
 import { NFTDrop, Token } from "../../src/solana";
 import { sdk } from "./before-setup";
-import { Keypair, PublicKey } from "@solana/web3.js";
+import { Keypair } from "@solana/web3.js";
 import { expect } from "chai";
 
 describe("NFTDrop ClaimConditions", async () => {

@@ -167,6 +167,8 @@ export {
   useTransferNFT,
   useAirdropNFT,
   useBurnNFT,
+  useSharedMetadata,
+  useSetSharedMetadata,
 } from "./hooks/async/nft";
 
 // roles
@@ -192,12 +194,16 @@ export {
   useBurnToken,
 } from "./hooks/async/token";
 
-// smart wallet factory
+// account factory
 export {
-  useIsSmartWalletDeployed,
-  useSmartWallets,
-  useCreateSmartWallet,
-} from "./hooks/async/smart-wallet-factory";
+  useIsAccountDeployed,
+  useAccounts,
+  useCreateAccount,
+  useAccountsForAddress,
+} from "./hooks/async/account-factory";
+
+// account
+export { useAccountSigners, useSetAccountSigners } from "./hooks/async/account";
 
 // thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)
 

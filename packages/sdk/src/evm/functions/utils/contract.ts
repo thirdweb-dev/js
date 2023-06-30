@@ -1,11 +1,11 @@
 import { getContractTypeForRemoteName } from "../../contracts";
 import { ContractType } from "../../contracts";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
-import { Contract, ethers } from "ethers";
+import { Contract, utils, type providers } from "ethers";
 
 type ResolveContractTypeParams = {
   address: string;
-  provider: ethers.providers.Provider;
+  provider: providers.Provider;
 };
 
 export async function resolveContractType(
@@ -17,7 +17,7 @@ export async function resolveContractType(
       IThirdwebContractABI,
       params.provider,
     );
-    const remoteContractType = ethers.utils
+    const remoteContractType = utils
       .toUtf8String(await contract.contractType())
       // eslint-disable-next-line no-control-regex
       .replace(/\x00/g, "");

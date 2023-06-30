@@ -4,7 +4,7 @@ export default {
   "chain": "ETC",
   "rpc": [
     "https://ethereum-classic-testnet-mordor.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://www.ethercluster.com/mordor"
+    "https://rpc.mordor.etccooperative.org"
   ],
   "faucets": [],
   "nativeCurrency": {

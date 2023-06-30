@@ -137,7 +137,7 @@ export class StandardErc1155<
    * await contract.transfer(toAddress, tokenId, amount);
    * ```
    */
-  transfer = buildTransactionFunction(
+  transfer = /* @__PURE__ */ buildTransactionFunction(
     async (
       to: AddressOrEns,
       tokenId: BigNumberish,
@@ -155,7 +155,7 @@ export class StandardErc1155<
    *
    * @internal
    */
-  setApprovalForAll = buildTransactionFunction(
+  setApprovalForAll = /* @__PURE__ */ buildTransactionFunction(
     async (operator: AddressOrEns, approved: boolean) => {
       return this.erc1155.setApprovalForAll.prepare(operator, approved);
     },
@@ -191,7 +191,7 @@ export class StandardErc1155<
    * await contract.airdrop(tokenId, addresses);
    * ```
    */
-  airdrop = buildTransactionFunction(
+  airdrop = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenId: BigNumberish,
       addresses: AirdropInput,

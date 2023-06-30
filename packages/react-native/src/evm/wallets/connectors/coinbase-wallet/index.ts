@@ -17,8 +17,7 @@ import {
   WagmiConnector,
 } from "@thirdweb-dev/wallets";
 import type { Address } from "abitype";
-import { providers } from "ethers";
-import { getAddress, hexValue } from "ethers/lib/utils.js";
+import { providers, utils } from "ethers";
 
 export type CoinbaseWalletConnectorOptions = WalletMobileSDKProviderOptions &
   ConfigurationParams & {
@@ -72,10 +71,10 @@ export class CoinbaseWalletConnector extends WagmiConnector<
 
       this.emit("message", { type: "connecting" });
 
-      const account = (await provider.request({
+      const accounts: string[] = await provider.request({
         method: "eth_requestAccounts",
         params: [],
-      })) as Address;
+      });
       // Switch to chain if provided
       let id = await this.getChainId();
       let unsupported = this.isChainUnsupported(id);
@@ -93,7 +92,7 @@ export class CoinbaseWalletConnector extends WagmiConnector<
       }
 
       return {
-        account,
+        account: accounts[0],
         chain: { id, unsupported },
         provider: new providers.Web3Provider(
           provider as unknown as providers.ExternalProvider,
@@ -130,7 +129,7 @@ export class CoinbaseWalletConnector extends WagmiConnector<
       throw new Error("No accounts found");
     }
     // return checksum address
-    return getAddress(accounts[0] as string);
+    return utils.getAddress(accounts[0] as string);
   }
 
   async getChainId() {
@@ -193,7 +192,7 @@ export class CoinbaseWalletConnector extends WagmiConnector<
 
   async switchChain(chainId: number): Promise<Chain> {
     const provider = await this.getProvider();
-    const id = hexValue(chainId);
+    const id = utils.hexValue(chainId);
 
     try {
       await provider.request({
@@ -279,7 +278,7 @@ export class CoinbaseWalletConnector extends WagmiConnector<
     if (accounts.length === 0) {
       this.emit("disconnect");
     } else {
-      this.emit("change", { account: getAddress(accounts[0] as string) });
+      this.emit("change", { account: utils.getAddress(accounts[0] as string) });
     }
   };
 

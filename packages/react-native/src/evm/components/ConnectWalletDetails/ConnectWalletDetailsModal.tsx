@@ -1,8 +1,8 @@
-import { StyleSheet, View } from "react-native";
+import { Linking, StyleSheet, View } from "react-native";
 import Box from "../base/Box";
 import { Toast } from "../base/Toast";
 import { ExportLocalWalletModal } from "./ExportLocalWalletModal";
-import { NetworkButton } from "./NetworkButton";
+import { NetworkButton } from "../base/NetworkButton";
 import { WalletDetailsModalHeader } from "./WalletDetailsModalHeader";
 import {
   useActiveChain,
@@ -22,6 +22,8 @@ import { useModalState } from "../../providers/ui-context-provider";
 import { CLOSE_MODAL_STATE, WalletDetailsModal } from "../../utils/modalTypes";
 import { useAppTheme } from "../../styles/hooks";
 import { LocalWalletImportModal } from "../ConnectWalletFlow/LocalWalletImportModal";
+import { IconTextButton } from "../base/IconTextButton";
+import MoneyIcon from "../../assets/money";
 
 export const ConnectWalletDetailsModal = () => {
   const theme = useAppTheme();
@@ -113,7 +115,7 @@ export const ConnectWalletDetailsModal = () => {
             onPress={onExportLocalWalletPress}
           >
             <>
-              <PocketWalletIcon size={16} />
+              <PocketWalletIcon width={16} height={16} />
               <View style={styles.exportWalletInfo}>
                 <Text variant="bodySmall">Backup wallet</Text>
               </View>
@@ -134,7 +136,7 @@ export const ConnectWalletDetailsModal = () => {
             onPress={onImportLocalWalletPress}
           >
             <>
-              <PocketWalletIcon size={16} />
+              <PocketWalletIcon width={16} height={16} />
               <View style={styles.exportWalletInfo}>
                 <Text variant="bodySmall">Import wallet</Text>
               </View>
@@ -192,6 +194,18 @@ export const ConnectWalletDetailsModal = () => {
         chainName={chain?.name || "Unknown Network"}
         onPress={onChangeNetworkPress}
       />
+      {chain?.testnet && chain?.faucets?.length ? (
+        <IconTextButton
+          mt="xs"
+          text="Request Testnet Funds"
+          icon={<MoneyIcon height={10} width={10} />}
+          onPress={() => {
+            if (chain?.faucets?.[0]) {
+              Linking.openURL(chain.faucets[0]);
+            }
+          }}
+        />
+      ) : null}
       {getAdditionalActions()}
       {addressCopied === true ? (
         <Toast text={"Address copied to clipboard"} />

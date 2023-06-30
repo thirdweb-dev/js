@@ -1,7 +1,7 @@
 import { Theme } from "../../styles/theme";
-import BaseButton from "../base/BaseButton";
-import { ChainIcon } from "../base/ChainIcon";
-import Text from "../base/Text";
+import BaseButton from "./BaseButton";
+import { ChainIcon } from "./ChainIcon";
+import Text from "./Text";
 import { StyleSheet } from "react-native";
 
 interface NetworkButtonProps {

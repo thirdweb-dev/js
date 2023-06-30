@@ -10,7 +10,7 @@ export default {
     format: "png",
   },
   rpc: [
-    "https://abritrum-goerli.infura.io/v3/${INFURA_API_KEY}",
+    "https://arbitrum-goerli.infura.io/v3/${INFURA_API_KEY}",
     "https://arb-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
   ],
 };

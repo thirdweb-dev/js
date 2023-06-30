@@ -9,40 +9,42 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const CommonContractSchema = /* @__PURE__ */ z.object({
-  name: z.string(),
-  symbol: z.string().optional(),
-  description: z.string().optional(),
-  image: FileOrBufferOrStringSchema.optional(),
-  external_link: z.string().url().optional(),
-});
+export const CommonContractSchema = /* @__PURE__ */ (() =>
+  z.object({
+    name: z.string(),
+    symbol: z.string().optional(),
+    description: z.string().optional(),
+    image: FileOrBufferOrStringSchema.optional(),
+    external_link: z.string().url().optional(),
+  }))();
 
 /**
  * @internal
  */
-export const CommonContractOutputSchema =
-  /* @__PURE__ */ CommonContractSchema.extend({
+export const CommonContractOutputSchema = /* @__PURE__ */ (() =>
+  CommonContractSchema.extend({
     image: z.string().optional(),
-  }).catchall(z.unknown());
+  }).catchall(z.unknown()))();
 
 /// NFT ///
 
 /**
  * @internal
  */
-export const CreatorInputSchema = /* @__PURE__ */ z.object({
-  address: z.string(),
-  share: PercentSchema,
-  verified: z.boolean().default(false),
-});
+export const CreatorInputSchema = /* @__PURE__ */ (() =>
+  z.object({
+    address: z.string(),
+    share: PercentSchema,
+    verified: z.boolean().default(false),
+  }))();
 
 /**
  * @internal
  */
-export const NFTCollectionMetadataInputSchema =
-  /* @__PURE__ */ CommonContractSchema.extend({
+export const NFTCollectionMetadataInputSchema = /* @__PURE__ */ (() =>
+  CommonContractSchema.extend({
     creators: z.array(CreatorInputSchema).default([]),
-  });
+  }))();
 
 /**
  * @internal
@@ -56,8 +58,8 @@ export type NFTCollectionMetadataInput = z.input<
 /**
  * @internal
  */
-export const TokenMetadataInputSchema =
-  /* @__PURE__ */ CommonContractSchema.extend({
+export const TokenMetadataInputSchema = /* @__PURE__ */ (() =>
+  CommonContractSchema.extend({
     decimals: z.number().default(9),
     initialSupply: AmountSchema.superRefine((val, context) => {
       // TODO remove this limitation when metaplex fixes https://github.com/metaplex-foundation/js/issues/421
@@ -69,7 +71,7 @@ export const TokenMetadataInputSchema =
         });
       }
     }),
-  });
+  }))();
 
 /**
  * @public
