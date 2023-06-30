@@ -40,7 +40,8 @@ export const MaxClaimablePerWalletInput: React.FC = () => {
           <>
             This value applies for <strong>all</strong> wallets
             {claimConditionType !== "public" &&
-              ", and can be overridden for specific wallets in the snapshot"}.
+              ", and can be overridden for specific wallets in the snapshot"}
+            .
           </>
         ) : null
       }

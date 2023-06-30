@@ -444,7 +444,7 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({
           return maxClaimable === "0" || !maxClaimable
             ? "Default"
             : maxClaimable === "unlimited"
-              ? "Unlimited"
+            ? "Unlimited"
             : maxClaimable;
         },
       },

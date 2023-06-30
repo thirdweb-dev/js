@@ -72,17 +72,17 @@ const StorageLanding: ThirdwebNextPage = () => {
             title="Simplifying web3 complexity"
             icon={require("/public/assets/product-pages/storage/hero-icon-1.png")}
           >
-            Save development time. We handling the complexities of decentralized
+            Save development time. We handle the complexities of decentralized
             file management for you. No need to worry about fetching from
-            multiple IPFS gateways, handling file and metadata upload formats,
-            etc.
+            multiple IPFS gateways, or handling file and metadata upload
+            formats.
           </ProductCard>
           <ProductCard
             title="Fast and high availability"
             icon={require("/public/assets/product-pages/storage/hero-icon-2.png")}
           >
             Get fast upload and download speeds for decentralized storage,
-            enabled by industry leading infrastructure. Upload and forget- we
+            enabled by industry leading infrastructure. Upload and forget — we
             ensure that your files are always accessible.
           </ProductCard>
           <ProductCard

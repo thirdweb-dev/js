@@ -29,7 +29,9 @@ export const CreatorInput: React.FC<CreatorInputProps> = ({
       label="Creator address"
       helperText={
         <>
-          This wallet address will be able to indefinitely claim. {isAdmin && "To use a different address, please connect a different wallet."}
+          This wallet address will be able to indefinitely claim.{" "}
+          {isAdmin &&
+            "To use a different address, please connect a different wallet."}
         </>
       }
     >
