@@ -1,5 +1,18 @@
 # @thirdweb-dev/react-core
 
+## 3.14.7
+
+### Patch Changes
+
+- [#1271](https://github.com/thirdweb-dev/js/pull/1271) [`c9535715`](https://github.com/thirdweb-dev/js/commit/c95357158819abd42d4b0900ecc2fa40fcb957f8) Thanks [@nkrishang](https://github.com/nkrishang)! - Rename smart wallets to account
+
+- [#1273](https://github.com/thirdweb-dev/js/pull/1273) [`edcd22d6`](https://github.com/thirdweb-dev/js/commit/edcd22d61236edb2832f9b2f9796e891d58cb145) Thanks [@MananTank](https://github.com/MananTank)! - Add `autoConnectTimeout` to `ThirdwebProvider` to timeout wallet autoconnect
+
+- Updated dependencies [[`2b113539`](https://github.com/thirdweb-dev/js/commit/2b113539098384f910b3c4d54e1fde9d35a6f053), [`c9535715`](https://github.com/thirdweb-dev/js/commit/c95357158819abd42d4b0900ecc2fa40fcb957f8), [`be606dd3`](https://github.com/thirdweb-dev/js/commit/be606dd3c93c1514834c1d970e864d7f949a07ab), [`5882091e`](https://github.com/thirdweb-dev/js/commit/5882091eab65978009a5a5305701f121851b10ad), [`998e5217`](https://github.com/thirdweb-dev/js/commit/998e521733efd6a67e42f9bf0beab5fbdccf08ae)]:
+  - @thirdweb-dev/wallets@1.0.3
+  - @thirdweb-dev/sdk@3.10.27
+  - @thirdweb-dev/chains@0.1.26
+
 ## 3.14.6
 
 ### Patch Changes

@@ -1,5 +1,19 @@
 # @thirdweb-dev/react-native
 
+## 0.2.26
+
+### Patch Changes
+
+- [#1270](https://github.com/thirdweb-dev/js/pull/1270) [`0d5503aa`](https://github.com/thirdweb-dev/js/commit/0d5503aae90d9cd7a7adcabad19f7f45d9a37063) Thanks [@iketw](https://github.com/iketw)! - Only handle Coinbase callback URL if Coinbase is added as a supportedWallet
+
+- [#1277](https://github.com/thirdweb-dev/js/pull/1277) [`2b113539`](https://github.com/thirdweb-dev/js/commit/2b113539098384f910b3c4d54e1fde9d35a6f053) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - remove ethers/lib/utils dependency
+
+- Updated dependencies [[`2b113539`](https://github.com/thirdweb-dev/js/commit/2b113539098384f910b3c4d54e1fde9d35a6f053), [`c9535715`](https://github.com/thirdweb-dev/js/commit/c95357158819abd42d4b0900ecc2fa40fcb957f8), [`be606dd3`](https://github.com/thirdweb-dev/js/commit/be606dd3c93c1514834c1d970e864d7f949a07ab), [`edcd22d6`](https://github.com/thirdweb-dev/js/commit/edcd22d61236edb2832f9b2f9796e891d58cb145), [`5882091e`](https://github.com/thirdweb-dev/js/commit/5882091eab65978009a5a5305701f121851b10ad), [`998e5217`](https://github.com/thirdweb-dev/js/commit/998e521733efd6a67e42f9bf0beab5fbdccf08ae)]:
+  - @thirdweb-dev/wallets@1.0.3
+  - @thirdweb-dev/sdk@3.10.27
+  - @thirdweb-dev/react-core@3.14.7
+  - @thirdweb-dev/chains@0.1.26
+
 ## 0.2.25
 
 ### Patch Changes

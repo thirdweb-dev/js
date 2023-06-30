@@ -1,5 +1,16 @@
 # @thirdweb-dev/sdk
 
+## 3.10.27
+
+### Patch Changes
+
+- [#1277](https://github.com/thirdweb-dev/js/pull/1277) [`2b113539`](https://github.com/thirdweb-dev/js/commit/2b113539098384f910b3c4d54e1fde9d35a6f053) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - remove ethers/lib/utils dependency
+
+- [#1271](https://github.com/thirdweb-dev/js/pull/1271) [`c9535715`](https://github.com/thirdweb-dev/js/commit/c95357158819abd42d4b0900ecc2fa40fcb957f8) Thanks [@nkrishang](https://github.com/nkrishang)! - Rename smart wallets to account
+
+- Updated dependencies [[`5882091e`](https://github.com/thirdweb-dev/js/commit/5882091eab65978009a5a5305701f121851b10ad)]:
+  - @thirdweb-dev/chains@0.1.26
+
 ## 3.10.26
 
 ### Patch Changes
