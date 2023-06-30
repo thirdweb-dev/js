@@ -1,5 +1,4 @@
-import { providers } from "ethers";
-import { getAddress, hexValue } from "ethers/lib/utils.js";
+import { providers, utils } from "ethers";
 import type Provider from "ethereum-provider";
 import type { Address } from "abitype";
 import type { Chain } from "@thirdweb-dev/chains";
@@ -76,7 +75,7 @@ export class FrameConnector extends WagmiConnector<
       const accounts: string[] = await provider.request({
         method: "eth_requestAccounts",
       });
-      const account = getAddress(accounts[0] as string);
+      const account = utils.getAddress(accounts[0] as string);
       // Switch to chain if provided
       let id = await this.getChainId();
       let unsupported = this.isChainUnsupported(id);
@@ -132,7 +131,7 @@ export class FrameConnector extends WagmiConnector<
       method: "eth_accounts",
     })) as string[];
     // return checksum address
-    return getAddress(accounts[0] as string);
+    return utils.getAddress(accounts[0] as string);
   }
 
   async getChainId() {
@@ -195,7 +194,7 @@ export class FrameConnector extends WagmiConnector<
     if (!provider) {
       throw new ConnectorNotFoundError();
     }
-    const chainIdHex = hexValue(chainId);
+    const chainIdHex = utils.hexValue(chainId);
 
     try {
       await Promise.all([
@@ -320,7 +319,7 @@ export class FrameConnector extends WagmiConnector<
       this.emit("disconnect");
     } else {
       this.emit("change", {
-        account: getAddress(accounts[0] as string),
+        account: utils.getAddress(accounts[0] as string),
       });
     }
   };

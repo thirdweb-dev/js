@@ -1,6 +1,5 @@
 import { LOCAL_NODE_PKEY, SmartContract, ThirdwebSDK } from "@thirdweb-dev/sdk";
-import { BigNumberish, BigNumber, ethers } from "ethers";
-import { arrayify, hexConcat } from "ethers/lib/utils";
+import { BigNumberish, BigNumber, ethers, utils } from "ethers";
 import { AccountApiParams } from "../types";
 import { BaseAccountAPI } from "./base-api";
 import { MINIMAL_ACCOUNT_ABI } from "./constants";
@@ -64,7 +63,7 @@ export class AccountAPI extends BaseAccountAPI {
     } catch (e) {
       console.error("Cost to deploy smart wallet: unknown", e);
     }
-    return hexConcat([factory.getAddress(), tx.encode()]);
+    return utils.hexConcat([factory.getAddress(), tx.encode()]);
   }
 
   async getFactoryContract() {
@@ -131,7 +130,9 @@ export class AccountAPI extends BaseAccountAPI {
   }
 
   async signUserOpHash(userOpHash: string): Promise<string> {
-    return await this.params.localSigner.signMessage(arrayify(userOpHash));
+    return await this.params.localSigner.signMessage(
+      utils.arrayify(userOpHash),
+    );
   }
 
   async isAcountDeployed() {
