@@ -5,6 +5,7 @@ export default {
   "rpc": [
     "https://rollux.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.rollux.com",
+    "https://rollux.public-rpc.com",
     "wss://rpc.rollux.com/wss",
     "https://rpc.ankr.com/rollux/${ANKR_API_KEY}"
   ],
