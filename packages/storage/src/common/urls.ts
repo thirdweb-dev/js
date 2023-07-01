@@ -1,5 +1,5 @@
 import { GatewayUrls } from "../types";
-import {normalizeCID} from "./cid";
+import {convertCidToV1} from "./cid";
 
 /**
  * @internal
@@ -7,11 +7,9 @@ import {normalizeCID} from "./cid";
 export const DEFAULT_GATEWAY_URLS: GatewayUrls = {
   // Note: Gateway URLs should have trailing slashes (we clean this on user input)
   "ipfs://": [
-    "https://*.ipfs-staging.thirdwebcdn.com/",
-    "https://cloudflare-ipfs.com/ipfs/",
-    "https://ipfs.io/ipfs/",
-    // TODO this one can become the default again once it's stable (no more VT issues)
-    "https://ipfs.thirdwebcdn.com/ipfs/",
+    "https://{cid}.ipfs-public.thirdwebcdn.com/{path}",
+    "https://cloudflare-ipfs.com/ipfs/{cid}/{path}",
+    "https://ipfs.io/ipfs/{cid}/{path}",
   ],
 };
 
@@ -43,17 +41,26 @@ export function parseGatewayUrls(
 /**
  * @internal
  */
-export function getUrlForCid(gatewayUrl: string, cid: string): string {
-  if (gatewayUrl.includes('ipfs-staging.thirdwebcdn.com')) {
-    const prefix = 'https://';
-    const suffix = '.ipfs-staging.thirdwebcdn.com/';
-    const parts = cid.split('/');
-    const hash = parts[0]
-    const normalizedHash = normalizeCID(hash)
-    const filePath = parts.slice(1).join('/');
-    return `${prefix}${normalizedHash}${suffix}${filePath}`;
+export function getGatewayUrlForCid(gatewayUrl: string, cid: string): string {
+  const parts = cid.split('/');
+  const hash = convertCidToV1(parts[0])
+  const filePath = parts.slice(1).join('/');
+
+  const cidV1 = convertCidToV1(cid);
+
+  let url = gatewayUrl;
+
+  // If the URL contains {cid} or {path} tokens, replace them with the CID and path
+  // Both tokens must be present for the URL to be valid
+  if (gatewayUrl.includes('{cid}') || gatewayUrl.includes('{path}')) {
+    url = url.replace("{cid}", cidV1).replace("{path}", filePath);
   }
-  return gatewayUrl.replace("{cid}", cid);
+  // If those tokens don't exist, use the canonical gateway URL format
+  else {
+    url += `${cidV1}/${filePath}`;
+  }
+
+  return url;
 }
 
 /**
@@ -68,7 +75,7 @@ export function prepareGatewayUrls(gatewayUrls?: GatewayUrls): GatewayUrls {
   for (const key of Object.keys(DEFAULT_GATEWAY_URLS)) {
     if (gatewayUrls && gatewayUrls[key]) {
       // Make sure that all user gateway URLs have trailing slashes
-      let cleanedGatewayUrls = gatewayUrls[key].map(
+      const cleanedGatewayUrls = gatewayUrls[key].map(
         (url) => url.replace(/\/$/, "") + "/",
       );
 

@@ -1,9 +1,9 @@
 import {FileOrBufferOrString} from "../types";
-import {DEFAULT_GATEWAY_URLS, getUrlForCid} from "./urls";
+import {DEFAULT_GATEWAY_URLS, getGatewayUrlForCid} from "./urls";
 import {isBufferOrStringWithName} from "./utils";
 import fetch from "cross-fetch";
 import {importer} from "ipfs-unixfs-importer";
-import {CID} from "multiformats/cid";
+import CIDTool from 'cid-tool'
 
 type CIDVersion = 0 | 1;
 type ContentWithPath = {
@@ -61,14 +61,14 @@ export async function getCID(
     dummyBlockstore as any,
     options,
   )) {
-    lastCid = cid.toV1().toString();
+    lastCid = cid;
   }
 
-  return lastCid;
+  return `${lastCid}`;
 }
 
 export async function isUploaded(cid: string) {
-  const url = getUrlForCid(DEFAULT_GATEWAY_URLS["ipfs://"][0], cid)
+  const url = getGatewayUrlForCid(DEFAULT_GATEWAY_URLS["ipfs://"][0], cid)
   const res = await fetch(`${url}${cid}`, {
     method: "HEAD",
     headers: {
@@ -79,10 +79,11 @@ export async function isUploaded(cid: string) {
   return res.ok;
 }
 
-export function normalizeCID(cid: string) {
+export function convertCidToV1(cid: string) {
   let normalized: string
   try {
-    normalized = CID.parse(cid).toV1().toString();
+    const hash = cid.split('/')[0]
+    normalized = CIDTool.base32(hash)
   }
   catch (e) {
     throw new Error(`The CID ${cid} is not valid.`)
