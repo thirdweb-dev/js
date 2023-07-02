@@ -1,16 +1,12 @@
 import { NetworkConfigFormData } from "../ConfigureNetworkForm";
 import { FormControl, Input } from "@chakra-ui/react";
-import { useAllChainsData } from "hooks/chains/allChains";
 import { UseFormReturn } from "react-hook-form";
-import { FormErrorMessage, FormLabel } from "tw-components";
+import { FormLabel } from "tw-components";
 
 export const ChainIdInput: React.FC<{
   form: UseFormReturn<NetworkConfigFormData, any>;
-}> = ({ form }) => {
-  const isCustom = form.watch("isCustom");
-  const { chainIdToChainRecord } = useAllChainsData();
-  const chainId = Number(form.watch("chainId"));
-
+  disabled: boolean;
+}> = ({ form, disabled }) => {
   return (
     <FormControl
       isRequired
@@ -18,7 +14,7 @@ export const ChainIdInput: React.FC<{
     >
       <FormLabel>Chain ID</FormLabel>
       <Input
-        disabled={!isCustom}
+        disabled={disabled}
         placeholder="e.g. 152"
         autoComplete="off"
         _placeholder={{
@@ -33,33 +29,8 @@ export const ChainIdInput: React.FC<{
         type="number"
         {...form.register("chainId", {
           required: true,
-          validate: {
-            taken: (str) => {
-              // if adding a custom network, validate that the chainId is not already taken
-
-              if (!isCustom) {
-                return true;
-              }
-              const _chainId = Number(str);
-              if (!_chainId) {
-                return true;
-              }
-
-              return !(_chainId in chainIdToChainRecord);
-            },
-          },
         })}
       />
-      <FormErrorMessage>
-        Can not use ChainID {`"${chainId}"`}.
-        {chainId && chainId in chainIdToChainRecord && (
-          <>
-            <br /> It is being used by {`"`}
-            {chainIdToChainRecord[chainId].name}
-            {`"`}
-          </>
-        )}
-      </FormErrorMessage>
     </FormControl>
   );
 };

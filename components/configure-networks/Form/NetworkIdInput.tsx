@@ -13,15 +13,13 @@ import {
 
 export const NetworkIDInput: React.FC<{
   form: UseFormReturn<NetworkConfigFormData, any>;
-  hidden: boolean;
-}> = ({ form, hidden }) => {
-  const isCustom = form.watch("isCustom");
+  disabled?: boolean;
+}> = ({ form, disabled }) => {
   const slug = form.watch("slug");
   const { slugToChainRecord } = useAllChainsData();
 
   return (
     <FormControl
-      hidden={hidden}
       isRequired
       mt={6}
       isInvalid={form.formState.errors.slug?.type === "taken"}
@@ -48,7 +46,7 @@ export const NetworkIDInput: React.FC<{
         />
       </FormLabel>
       <Input
-        disabled={!isCustom}
+        disabled={disabled}
         autoComplete="off"
         placeholder="e.g. ethereum"
         _placeholder={{
@@ -65,7 +63,7 @@ export const NetworkIDInput: React.FC<{
           required: true,
           validate: {
             taken: (_slug) => {
-              if (!isCustom) {
+              if (disabled) {
                 return true;
               }
 

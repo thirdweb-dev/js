@@ -2,6 +2,7 @@ import { ConfigureNetworkForm } from "./ConfigureNetworkForm";
 import { Box, useToast } from "@chakra-ui/react";
 import { StoredChain } from "contexts/configured-chains";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useAddRecentlyUsedChainId } from "hooks/chains/recentlyUsedChains";
 import { useModifyChain } from "hooks/chains/useModifyChain";
 import { useEditChain } from "hooks/networkConfigModal";
 import { Heading } from "tw-components";
@@ -26,6 +27,7 @@ interface ConfigureNetworksProps {
 
 export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
   const trackChainConfig = useChainConfigTrack();
+  const addRecentlyUsedChainId = useAddRecentlyUsedChainId();
   const modifyChain = useModifyChain();
   const editChain = useEditChain();
 
@@ -40,25 +42,25 @@ export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
     });
   };
 
-  const handleEdit = (chain: StoredChain) => {
-    if (props.onNetworkConfigured) {
-      props.onNetworkConfigured(chain);
-    }
-
+  const handleSubmit = (chain: StoredChain) => {
     modifyChain(chain);
-    trackChainConfig("update", chain);
-    successToast("Network Updated Successfully");
-  };
+    addRecentlyUsedChainId(chain.chainId);
 
-  const handleAdd = (chain: StoredChain) => {
-    modifyChain(chain);
-    trackChainConfig("add", chain);
+    if (chain.isCustom) {
+      if (props.onNetworkAdded) {
+        props.onNetworkAdded(chain);
+      }
 
-    if (props.onNetworkAdded) {
-      props.onNetworkAdded(chain);
+      trackChainConfig("add", chain);
+      successToast("Network Added Successfully");
+    } else {
+      if (props.onNetworkConfigured) {
+        props.onNetworkConfigured(chain);
+      }
+
+      trackChainConfig("update", chain);
+      successToast("Network Updated Successfully");
     }
-
-    successToast("Network Added Successfully");
   };
 
   return (
@@ -85,8 +87,7 @@ export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
         <Box mt={9}>
           <ConfigureNetworkForm
             editingChain={editChain}
-            variant="edit"
-            onSubmit={handleEdit}
+            onSubmit={handleSubmit}
           />
         </Box>
       )}
@@ -96,8 +97,7 @@ export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
         <ConfigureNetworkForm
           prefillSlug={props.prefillSlug}
           prefillChainId={props.prefillChainId}
-          onSubmit={handleAdd}
-          variant="custom"
+          onSubmit={handleSubmit}
         />
       )}
     </Box>

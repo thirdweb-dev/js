@@ -1,10 +1,12 @@
 import { ChainIdInput } from "./Form/ChainIdInput";
+import { ConfirmationPopover } from "./Form/ConfirmationPopover";
 import { IconUpload } from "./Form/IconUpload";
 import { NetworkIDInput } from "./Form/NetworkIdInput";
-import { RemoveButton } from "./Form/RemoveButton";
 import { RpcInput } from "./Form/RpcInput";
 import { TooltipBox } from "./Form/TooltipBox";
 import {
+  Alert,
+  AlertIcon,
   Flex,
   FormControl,
   Input,
@@ -15,9 +17,11 @@ import {
 } from "@chakra-ui/react";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { StoredChain } from "contexts/configured-chains";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { useSupportedChainsNameRecord } from "hooks/chains/configureChains";
+import { useRemoveChainModification } from "hooks/chains/useModifyChain";
 import { getDashboardChainRpc } from "lib/rpc";
-import { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button, FormErrorMessage, FormLabel, Text } from "tw-components";
 
@@ -27,7 +31,6 @@ export type NetworkConfigFormData = {
   chainId: string;
   currencySymbol: string;
   type: "testnet" | "mainnet";
-  isCustom: boolean;
   icon: string;
   slug: string;
 };
@@ -41,27 +44,22 @@ const nameToSlug = (name: string) =>
 
 interface NetworkConfigFormProps {
   editingChain?: StoredChain;
-  onSubmit: (chain: StoredChain) => void;
-  onRemove?: () => void;
   prefillSlug?: string;
   prefillChainId?: string;
   prefillName?: string;
-  variant: "custom" | "search" | "edit";
   onCustomClick?: (name: string) => void;
-  onEdit?: (chain: StoredChain) => void;
+  onSubmit: (chain: StoredChain) => void;
 }
 
 export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
   editingChain,
   onSubmit,
-  onRemove,
   prefillSlug,
   prefillChainId,
-  variant,
 }) => {
-  const [selectedChain, setSelectedChain] = useState<StoredChain | undefined>();
-  const [isSearchOpen, setIsSearchOpen] = useState(variant === "search");
   const configuredChainNameRecord = useSupportedChainsNameRecord();
+  const { chainIdToChainRecord } = useAllChainsData();
+  const removeChainModification = useRemoveChainModification();
 
   const form = useForm<NetworkConfigFormData>({
     values: {
@@ -72,12 +70,23 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
         : "" || prefillChainId || "",
       currencySymbol: editingChain?.nativeCurrency.symbol || "",
       type: editingChain?.testnet ? "testnet" : "mainnet",
-      isCustom: editingChain ? !!editingChain.isCustom : variant === "custom",
       icon: editingChain?.icon?.url || "",
       slug: editingChain?.slug || "",
     },
     mode: "onChange",
   });
+
+  const isFullyEditable =
+    !editingChain || editingChain?.isCustom || editingChain.isOverwritten;
+
+  const chainId = Number(form.watch("chainId"));
+  const isChainIdDirty = form.formState.dirtyFields.chainId;
+  const overwritingChain = isChainIdDirty && chainIdToChainRecord[chainId];
+
+  const editedFrom =
+    editingChain?.isModified || editingChain?.isOverwritten
+      ? chainIdToChainRecord[editingChain.chainId]
+      : undefined;
 
   // setup prefills
   useEffect(() => {
@@ -96,7 +105,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
         // return true to pass the validation, false to fail
 
         // ignore this validation if form is for edit screen
-        if (variant === "edit") {
+        if (editingChain) {
           return true;
         }
 
@@ -113,35 +122,22 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
     },
   });
 
-  const hideOtherFields = variant === "search" && !selectedChain;
-
-  function reset() {
-    form.reset();
-    setSelectedChain(undefined);
-    if (variant === "search") {
-      setIsSearchOpen(true);
-    }
-  }
-
   const handleSubmit = form.handleSubmit((data) => {
     let configuredNetwork: StoredChain;
 
-    // if user selected a chain from the list
-    // use that chain as base and override the values from the form
-    if (selectedChain) {
+    if (editingChain) {
       configuredNetwork = {
-        ...selectedChain,
+        ...editingChain,
         name: data.name,
-        isCustom: data.isCustom ? true : undefined,
         rpc: [data.rpcUrl],
         chainId: parseInt(data.chainId),
         nativeCurrency: {
-          ...selectedChain.nativeCurrency,
+          ...editingChain.nativeCurrency,
           symbol: data.currencySymbol,
         },
-        icon: selectedChain.icon
+        icon: editingChain.icon
           ? {
-              ...selectedChain.icon,
+              ...editingChain.icon,
               url: data.icon,
             }
           : {
@@ -154,10 +150,8 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
         testnet: data.type === "testnet",
       };
     } else {
-      // if user selected the custom option
       configuredNetwork = {
         name: data.name,
-        isCustom: data.isCustom ? true : undefined,
         rpc: [data.rpcUrl],
         chainId: parseInt(data.chainId),
         nativeCurrency: {
@@ -181,11 +175,37 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
       };
     }
 
-    onSubmit(configuredNetwork);
-
-    if (variant !== "edit") {
-      reset();
+    if (editingChain && editingChain.chainId !== configuredNetwork.chainId) {
+      removeChainModification(editingChain.chainId);
     }
+
+    if (overwritingChain) {
+      configuredNetwork.isOverwritten = true;
+      configuredNetwork.isCustom = false;
+      configuredNetwork.isModified = false;
+    } else {
+      if (editingChain) {
+        if (editingChain.isCustom) {
+          configuredNetwork.isOverwritten = false;
+          configuredNetwork.isCustom = true;
+          configuredNetwork.isModified = false;
+        } else if (editingChain.isOverwritten) {
+          configuredNetwork.isOverwritten = true;
+          configuredNetwork.isCustom = false;
+          configuredNetwork.isModified = false;
+        } else {
+          configuredNetwork.isCustom = false;
+          configuredNetwork.isModified = true;
+          configuredNetwork.isOverwritten = false;
+        }
+      } else {
+        configuredNetwork.isCustom = true;
+        configuredNetwork.isModified = false;
+        configuredNetwork.isOverwritten = false;
+      }
+    }
+
+    onSubmit(configuredNetwork);
   });
 
   const networkNameErrorMessage =
@@ -193,6 +213,22 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
     (form.formState.errors.name.type === "alreadyAdded"
       ? "Network already exists"
       : "Network name is required");
+
+  const disableSubmit = !form.formState.isDirty || !form.formState.isValid;
+
+  const submitBtn = (
+    <Button
+      background="bgBlack"
+      color="bgWhite"
+      _hover={{
+        background: "bgBlack",
+      }}
+      type={disableSubmit ? "submit" : overwritingChain ? "button" : "submit"}
+      disabled={disableSubmit}
+    >
+      {editingChain ? "Update Network" : "Add Network"}
+    </Button>
+  );
 
   return (
     <form
@@ -203,58 +239,50 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
       }}
     >
       {/* Network Name for Custom Network */}
-      {variant !== "search" && (
-        <FormControl isRequired isInvalid={!!networkNameErrorMessage}>
-          <FormLabel>Network name</FormLabel>
-          <Input
-            autoComplete="off"
-            placeholder="e.g. My Network"
-            _placeholder={{
-              fontWeight: 500,
-            }}
-            type="text"
-            onChange={(e) => {
-              const value = e.target.value;
+      <FormControl isRequired isInvalid={!!networkNameErrorMessage}>
+        <FormLabel>Network name</FormLabel>
+        <Input
+          autoComplete="off"
+          placeholder="e.g. My Network"
+          _placeholder={{
+            fontWeight: 500,
+          }}
+          type="text"
+          onChange={(e) => {
+            const value = e.target.value;
 
-              form.setValue("name", value, {
-                shouldValidate: true,
-                shouldDirty: true,
-              });
+            form.setValue("name", value, {
+              shouldValidate: true,
+              shouldDirty: true,
+            });
 
-              if (variant === "custom") {
-                if (!form.formState.dirtyFields.slug) {
-                  form.setValue("slug", nameToSlug(value), {
-                    shouldValidate: true,
-                  });
-                }
+            if (isFullyEditable) {
+              if (!form.formState.dirtyFields.slug) {
+                form.setValue("slug", nameToSlug(value), {
+                  shouldValidate: true,
+                });
               }
-            }}
-            ref={ref}
-          />
+            }
+          }}
+          ref={ref}
+        />
 
-          <FormErrorMessage>{networkNameErrorMessage}</FormErrorMessage>
-        </FormControl>
-      )}
+        <FormErrorMessage>{networkNameErrorMessage}</FormErrorMessage>
+      </FormControl>
 
       {/* Slug URL */}
-      <NetworkIDInput form={form} hidden={hideOtherFields} />
+      <NetworkIDInput form={form} disabled={!isFullyEditable} />
 
-      <Flex
-        hidden={hideOtherFields}
-        opacity={isSearchOpen ? "0.1" : "1"}
-        direction="column"
-        gap={8}
-        mt={8}
-      >
+      <Flex direction="column" gap={6} mt={6}>
         {/* Chain ID + Currency Symbol */}
         <SimpleGrid columns={{ md: 2, base: 1 }} gap={4}>
-          <ChainIdInput form={form} />
+          <ChainIdInput form={form} disabled={!isFullyEditable} />
 
           {/* Currency Symbol */}
           <FormControl isRequired>
             <FormLabel>Currency Symbol</FormLabel>
             <Input
-              disabled={!form.watch("isCustom")}
+              disabled={!isFullyEditable}
               placeholder="e.g. ETH"
               autoComplete="off"
               _placeholder={{
@@ -322,30 +350,51 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
         {/* RPC URL */}
         <RpcInput form={form} />
 
+        {overwritingChain && (
+          <Alert status="error" fontSize={"small"} borderRadius="md" p={3}>
+            <AlertIcon />
+            Chain ID {chainId} is being used by {`"${overwritingChain.name}"`}{" "}
+            <br />
+            Adding this network will overwrite it
+          </Alert>
+        )}
+
         {/* Buttons  */}
         <Flex
-          mt={8}
           gap={4}
           direction={{ base: "column", md: "row" }}
           justifyContent={{ base: "center", md: "flex-end" }}
         >
-          {/* Remove Button */}
-          {variant === "edit" && onRemove && (
-            <RemoveButton onRemove={onRemove} />
+          {/* Add / Update Button */}
+          {overwritingChain && !disableSubmit ? (
+            <ConfirmationPopover
+              onConfirm={handleSubmit}
+              prompt="Are you sure?"
+              confirmationText="Yes"
+              description={
+                <>
+                  This action can be reversed later by resetting this network
+                  {`'s`} config
+                </>
+              }
+            >
+              {submitBtn}
+            </ConfirmationPopover>
+          ) : (
+            submitBtn
           )}
 
-          {/* Add / Update Button */}
-          <Button
-            background="bgBlack"
-            color="bgWhite"
-            _hover={{
-              background: "bgBlack",
-            }}
-            type="submit"
-            disabled={variant === "edit" && !form.formState.isDirty}
-          >
-            {variant === "edit" ? "Update Network" : "Add Network"}
-          </Button>
+          {editedFrom && (
+            <Button
+              variant="outline"
+              onClick={() => {
+                onSubmit(editedFrom);
+                removeChainModification(editedFrom.chainId);
+              }}
+            >
+              Reset
+            </Button>
+          )}
         </Flex>
       </Flex>
     </form>
