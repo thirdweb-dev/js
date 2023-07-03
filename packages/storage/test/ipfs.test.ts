@@ -392,7 +392,7 @@ describe("IPFS", async () => {
     );
 
     expect(uri).to.equal(
-      getGatewayUrlForCid(DEFAULT_GATEWAY_URLS["ipfs://"][0], `bafybeiaqycj2td2u2qhmekxob67ghd4y6ndklizg2jfe7zj7wqvf6a5mlm/0`),
+      getGatewayUrlForCid(DEFAULT_GATEWAY_URLS["ipfs://"][0], `bafybeievw7sjobkf3xfkxl2a7lfo55w3jxwrcplavq7unykv4tb4zvnp64/0`),
     );
   });
 
