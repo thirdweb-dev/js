@@ -360,7 +360,7 @@ export const getStaticProps: GetStaticProps = async () => {
             if (contributor.login.indexOf("[bot]") >= 0) {
               return;
             }
-            // filter out cotributors that are in the filter list
+            // filter out contributors that are in the filter list
             if (filterOut.includes(contributor.login)) {
               return;
             }

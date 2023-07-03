@@ -1,4 +1,4 @@
-import { Flex, Portal, useColorMode } from "@chakra-ui/react";
+import { Flex, useColorMode } from "@chakra-ui/react";
 import { Heading, Text } from "tw-components";
 
 type CustomToolTipProps = {

@@ -323,7 +323,7 @@ const Base: ThirdwebNextPage = () => {
                 width="225"
                 height="36"
                 src="/assets/build/base/thirdweb.png"
-                alt="thirweb"
+                alt="thirdweb"
               />
               <Text size="body.2xl" color="#595959" transform="rotate(45deg)">
                 +

@@ -13,7 +13,9 @@ const Programs: ThirdwebNextPage = () => {
   return (
     <Flex gap={6} direction="column">
       <Heading>Programs</Heading>
-      <Text fontStyle="italic">Prebuilt solana progams for you to deploy.</Text>
+      <Text fontStyle="italic">
+        Prebuilt solana programs for you to deploy.
+      </Text>
       <Box id="program-table">
         <PublishedContractTable
           contractDetails={prebuiltSolContracts}

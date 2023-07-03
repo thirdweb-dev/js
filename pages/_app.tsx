@@ -80,7 +80,7 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
     posthog.register({
       tw_dashboard_version: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA,
     });
-    // defere session recording start by 2 seconds because it synchronously loads JS
+    // defer session recording start by 2 seconds because it synchronously loads JS
     const t = setTimeout(() => {
       posthog.startSessionRecording();
     }, 2_000);

@@ -90,7 +90,7 @@ const handler = async (
     }
   }
 
-  return res.status(400).json({ error: "unsuppored chain" });
+  return res.status(400).json({ error: "unsupported chain" });
 };
 
 export default handler;

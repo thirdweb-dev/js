@@ -142,7 +142,7 @@ export default async function handler(req: NextRequest) {
         {/* the actual component starts here */}
 
         <div tw="w-full h-full flex flex-col justify-between">
-          {/* title descritpion and profile image */}
+          {/* title description and profile image */}
           <div tw="flex flex-col w-full">
             <img
               alt=""

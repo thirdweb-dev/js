@@ -95,7 +95,7 @@ const { withSentryConfig } = require("@sentry/nextjs");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { withPlausibleProxy } = require("next-plausible");
 
-// we only want sentry on production enviroments
+// we only want sentry on production environments
 const wSentry =
   process.env.NODE_ENV === "production" ? withSentryConfig : (x) => x;
 

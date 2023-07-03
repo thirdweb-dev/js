@@ -1,5 +1,5 @@
 import { StackToolTip } from "./stack-tooltip";
-import { Box, BoxProps, Select, Stack, useColorMode } from "@chakra-ui/react";
+import { Box, BoxProps, useColorMode } from "@chakra-ui/react";
 import { useId, useMemo, useState } from "react";
 import {
   Bar,

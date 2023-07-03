@@ -335,7 +335,7 @@ const ChainPage: ThirdwebNextPage = ({
             </Heading>
           </ChainSectionElement>
         </SimpleGrid>
-        {/* only render rpc setction if we have an rpc for this chain */}
+        {/* only render rpc section if we have an rpc for this chain */}
         {chain.rpc?.[0] ? (
           <SimpleGrid columns={{ base: 6, md: 12 }} rowGap={12}>
             <ChainSectionElement

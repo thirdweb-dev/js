@@ -85,7 +85,7 @@ const TemplateContents: React.FC<TemplateContentsProps> = (props) => {
   );
 };
 
-// Use the "id" fields from the templates array of objects to create a mappign of contents for each template id
+// Use the "id" fields from the templates array of objects to create a mapping of contents for each template id
 const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
   {
     "nft-drop": (

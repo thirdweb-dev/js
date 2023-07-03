@@ -55,7 +55,7 @@ type EVMContractProps = {
 };
 
 const EVMContractPage: ThirdwebNextPage = () => {
-  // show optimistic UI first - assume chain is conifgured until proven otherwise
+  // show optimistic UI first - assume chain is configured until proven otherwise
   const [chainNotFound, setChainNotFound] = useState(false);
   const isSupportedChainsReady = useContext(SupportedChainsReadyContext);
 

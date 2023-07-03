@@ -1,6 +1,5 @@
-import { AreaChartErrorState, AreaChartLoadingState } from "./area-chart";
+import { AreaChartLoadingState } from "./area-chart";
 import { AspectRatio, AspectRatioProps, Flex } from "@chakra-ui/react";
-import { ErrorBoundary } from "@sentry/nextjs";
 import { Suspense } from "react";
 import { ComponentWithChildren } from "types/component-with-children";
 
@@ -44,12 +43,12 @@ export interface ChartErrorStateProps
   resetError: () => void;
 }
 
-const ChartErrorState: React.FC<ChartErrorStateProps> = ({
-  chartType,
-  resetError,
-}) => {
-  if (chartType === "area") {
-    return <AreaChartErrorState resetError={resetError} />;
-  }
-  return null;
-};
+// const ChartErrorState: React.FC<ChartErrorStateProps> = ({
+//   chartType,
+//   resetError,
+// }) => {
+//   if (chartType === "area") {
+//     return <AreaChartErrorState resetError={resetError} />;
+//   }
+//   return null;
+// };
