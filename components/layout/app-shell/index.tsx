@@ -11,7 +11,7 @@ import { Ethereum, Solana } from "@thirdweb-dev/chain-icons";
 import { CmdKSearch } from "components/cmd-k-search";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
 import { Logo } from "components/logo";
-import { SIDEBAR_TUNNEL_ID } from "core-ui/sidebar/tunnel";
+import { SIDEBAR_TUNNEL_ID, SIDEBAR_WIDTH } from "core-ui/sidebar/tunnel";
 import { useRouter } from "next/router";
 import { FiFile, FiGlobe, FiHelpCircle } from "react-icons/fi";
 import {
@@ -28,12 +28,14 @@ export interface AppShellProps {
   layout?: "custom-contract";
   ecosystem?: "evm" | "solana" | "either";
   noSEOOverride?: boolean;
+  hasSidebar?: boolean;
 }
 
 export const AppShell: ComponentWithChildren<AppShellProps> = ({
   children,
   layout,
   ecosystem,
+  hasSidebar,
 }) => {
   return (
     <Grid
@@ -54,7 +56,10 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
         top={0}
         zIndex="sticky"
         boxShadow="md"
-      />
+        w={{ md: hasSidebar ? SIDEBAR_WIDTH : "auto" }}
+      >
+        {" "}
+      </GridItem>
       <GridItem
         minH={{ base: "100vh", md: "unset" }}
         py={8}

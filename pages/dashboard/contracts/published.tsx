@@ -79,7 +79,7 @@ const Published: ThirdwebNextPage = () => {
 };
 
 Published.getLayout = (page, props) => (
-  <AppLayout ecosystem="evm" {...props}>
+  <AppLayout ecosystem="evm" {...props} hasSidebar={true}>
     <ContractsSidebar activePage="published" />
     {page}
   </AppLayout>

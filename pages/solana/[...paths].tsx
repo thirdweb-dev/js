@@ -66,7 +66,7 @@ SolanaProgramPage.pageId = PageId.DeployedProgram;
 SolanaProgramPage.getLayout = (page, pageProps: SolanaProgramProps) => {
   // app layout has to come first in both getLayout and fallback
   return (
-    <AppLayout layout={"custom-contract"} ecosystem="solana">
+    <AppLayout layout={"custom-contract"} ecosystem="solana" hasSidebar={true}>
       <SolanaProgramInfoProvider value={pageProps.programInfo}>
         {page}
       </SolanaProgramInfoProvider>
@@ -77,7 +77,7 @@ SolanaProgramPage.getLayout = (page, pageProps: SolanaProgramProps) => {
 // TODO better skeleton
 // app layout has to come first in both getLayout and fallback
 SolanaProgramPage.fallback = (
-  <AppLayout layout={"custom-contract"}>
+  <AppLayout layout={"custom-contract"} hasSidebar={true}>
     <Flex h="100%" justifyContent="center" alignItems="center">
       <Spinner size="xl" />
     </Flex>

@@ -73,7 +73,7 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
 };
 
 SettingsApiKeysPage.getLayout = (page, props) => (
-  <AppLayout {...props}>
+  <AppLayout {...props} hasSidebar={true}>
     <SettingsSidebar activePage="apiKeys" />
 
     {page}
