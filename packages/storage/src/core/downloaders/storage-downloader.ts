@@ -20,7 +20,6 @@ export class StorageDownloader implements IStorageDownloader {
     gatewayUrls: GatewayUrls,
     attempts = 0,
   ): Promise<Response> {
-
     if (attempts > 3) {
       throw new Error(
         "[FAILED_TO_DOWNLOAD_ERROR] Failed to download from URI - too many attempts failed.",
@@ -35,26 +34,22 @@ export class StorageDownloader implements IStorageDownloader {
         "[FAILED_TO_DOWNLOAD_ERROR] Unable to download from URI - all gateway URLs failed to respond.",
       );
     } else if (attempts > 0) {
-      console.warn(
-        `Retrying download with backup gateway URL: ${resolvedUri}`,
-      );
+      console.warn(`Retrying download with backup gateway URL: ${resolvedUri}`);
     }
 
-    const resOrErr =
-      await fetch(resolvedUri)
-        .catch(err => err)
+    const resOrErr = await fetch(resolvedUri).catch((err) => err);
 
     if (resOrErr.ok) {
-      return resOrErr
+      return resOrErr;
     }
 
     if (resOrErr instanceof Response) {
       if (resOrErr.status === 410) {
         // Don't retry if the content is blacklisted
         console.error(
-          `Request to ${resolvedUri} failed with status 403 - Forbidden. This content is probably blacklisted. Search VirusTotal for this URL: ${resolvedUri} `
+          `Request to ${resolvedUri} failed with status 403 - Forbidden. This content is probably blacklisted. Search VirusTotal for this URL: ${resolvedUri} `,
         );
-        return resOrErr
+        return resOrErr;
       }
 
       console.warn(
@@ -63,12 +58,10 @@ export class StorageDownloader implements IStorageDownloader {
 
       // Only retry if we see 408 or >= 500 that are likely to be resolved by trying another gateway
       if (resOrErr.status !== 408 && resOrErr.status < 500) {
-        return resOrErr
+        return resOrErr;
       }
     } else {
-      console.warn(
-        `Request to ${resolvedUri} failed with error`, resOrErr
-      );
+      console.warn(`Request to ${resolvedUri} failed with error`, resOrErr);
     }
 
     // Since the current gateway failed, recursively try the next one we know about

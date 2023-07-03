@@ -1,5 +1,5 @@
 import { BufferOrStringWithName, FileOrBuffer, GatewayUrls } from "../types";
-import {getGatewayUrlForCid} from "./urls";
+import { getGatewayUrlForCid } from "./urls";
 
 /**
  * @internal
@@ -89,8 +89,13 @@ export function isFileBufferOrStringEqual(input1: any, input2: any): boolean {
 /**
  * @internal
  */
-export function parseCidAndPath(gatewayUrl: string, uri: string): { cid?: string; path?: string } | undefined {
-  const regexString = gatewayUrl.replace("{cid}", "(?<cid>[^/]+)").replace("{path}", "(?<path>.*)");
+export function parseCidAndPath(
+  gatewayUrl: string,
+  uri: string,
+): { cid?: string; path?: string } | undefined {
+  const regexString = gatewayUrl
+    .replace("{cid}", "(?<cid>[^/]+)")
+    .replace("{path}", "(?<path>.*)");
   const regex = new RegExp(regexString);
   const match = uri.match(regex);
   if (match) {
@@ -115,10 +120,10 @@ export function replaceGatewayUrlWithScheme(
         // Given the url is a tokenized url, we need to lift the cid and the path from the uri
         const parsed = parseCidAndPath(gatewayUrl, uri);
         if (parsed?.cid && parsed?.path) {
-          return `${scheme}${parsed?.cid}/${parsed?.path}`
+          return `${scheme}${parsed?.cid}/${parsed?.path}`;
         } else {
           // If we can't lift the cid and path from the uri, we can't replace the gateway url, return the orig string
-          return uri
+          return uri;
         }
       } else if (uri.startsWith(gatewayUrl)) {
         return uri.replace(gatewayUrl, scheme);
@@ -148,7 +153,7 @@ export function replaceSchemeWithGatewayUrl(
     return uri;
   }
 
-  const path = uri.replace(scheme, '')
+  const path = uri.replace(scheme, "");
   return getGatewayUrlForCid(schemeGatewayUrls[index], path);
 }
 

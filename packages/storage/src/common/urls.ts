@@ -1,5 +1,5 @@
 import { GatewayUrls } from "../types";
-import CIDTool from 'cid-tool'
+import CIDTool from "cid-tool";
 
 /**
  * @internal
@@ -43,15 +43,15 @@ export function parseGatewayUrls(
  * @internal
  */
 export function getGatewayUrlForCid(gatewayUrl: string, cid: string): string {
-  const parts = cid.split('/');
-  const hash = convertCidToV1(parts[0])
-  const filePath = parts.slice(1).join('/');
+  const parts = cid.split("/");
+  const hash = convertCidToV1(parts[0]);
+  const filePath = parts.slice(1).join("/");
 
   let url = gatewayUrl;
 
   // If the URL contains {cid} or {path} tokens, replace them with the CID and path
   // Both tokens must be present for the URL to be valid
-  if (gatewayUrl.includes('{cid}') || gatewayUrl.includes('{path}')) {
+  if (gatewayUrl.includes("{cid}") || gatewayUrl.includes("{path}")) {
     url = url.replace("{cid}", hash).replace("{path}", filePath);
   }
   // If those tokens don't exist, use the canonical gateway URL format
@@ -92,13 +92,12 @@ export function prepareGatewayUrls(gatewayUrls?: GatewayUrls): GatewayUrls {
  * @internal
  */
 export function convertCidToV1(cid: string) {
-  let normalized: string
+  let normalized: string;
   try {
-    const hash = cid.split('/')[0]
-    normalized = CIDTool.base32(hash)
+    const hash = cid.split("/")[0];
+    normalized = CIDTool.base32(hash);
+  } catch (e) {
+    throw new Error(`The CID ${cid} is not valid.`);
   }
-  catch (e) {
-    throw new Error(`The CID ${cid} is not valid.`)
-  }
-  return normalized
+  return normalized;
 }

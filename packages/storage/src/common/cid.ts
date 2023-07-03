@@ -1,8 +1,8 @@
-import {FileOrBufferOrString} from "../types";
-import {DEFAULT_GATEWAY_URLS, getGatewayUrlForCid} from "./urls";
-import {isBufferOrStringWithName} from "./utils";
+import { FileOrBufferOrString } from "../types";
+import { DEFAULT_GATEWAY_URLS, getGatewayUrlForCid } from "./urls";
+import { isBufferOrStringWithName } from "./utils";
 import fetch from "cross-fetch";
-import {importer} from "ipfs-unixfs-importer";
+import { importer } from "ipfs-unixfs-importer";
 
 type CIDVersion = 0 | 1;
 type ContentWithPath = {
@@ -67,7 +67,7 @@ export async function getCID(
 }
 
 export async function isUploaded(cid: string) {
-  const url = getGatewayUrlForCid(DEFAULT_GATEWAY_URLS["ipfs://"][0], cid)
+  const url = getGatewayUrlForCid(DEFAULT_GATEWAY_URLS["ipfs://"][0], cid);
   const res = await fetch(`${url}${cid}`, {
     method: "HEAD",
     headers: {

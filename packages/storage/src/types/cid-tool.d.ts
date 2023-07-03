@@ -1,1 +1,1 @@
-declare module 'cid-tool';
+declare module "cid-tool";
