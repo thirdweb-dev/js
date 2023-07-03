@@ -129,12 +129,12 @@ const VerifyContractModal: React.FC<ConnectorModalProps> = ({
 
   const blockExplorerName =
     getBlockExplorerName(chainId) ||
-    (chainInfo && chainInfo.explorers?.[0].name) ||
+    (chainInfo && chainInfo.explorers?.[0]?.name) ||
     "";
 
   const blockExplorerUrl =
     getBlockExplorerUrl(chainId, contractAddress) ||
-    (chainInfo && chainInfo.explorers?.[0].url) ||
+    (chainInfo && chainInfo.explorers?.[0]?.url) ||
     "";
 
   return (
