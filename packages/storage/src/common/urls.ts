@@ -1,5 +1,5 @@
 import { GatewayUrls } from "../types";
-import {convertCidToV1} from "./cid";
+import CIDTool from 'cid-tool'
 
 /**
  * @internal
@@ -86,4 +86,19 @@ export function prepareGatewayUrls(gatewayUrls?: GatewayUrls): GatewayUrls {
   }
 
   return allGatewayUrls;
+}
+
+/**
+ * @internal
+ */
+export function convertCidToV1(cid: string) {
+  let normalized: string
+  try {
+    const hash = cid.split('/')[0]
+    normalized = CIDTool.base32(hash)
+  }
+  catch (e) {
+    throw new Error(`The CID ${cid} is not valid.`)
+  }
+  return normalized
 }

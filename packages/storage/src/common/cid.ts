@@ -3,7 +3,6 @@ import {DEFAULT_GATEWAY_URLS, getGatewayUrlForCid} from "./urls";
 import {isBufferOrStringWithName} from "./utils";
 import fetch from "cross-fetch";
 import {importer} from "ipfs-unixfs-importer";
-import CIDTool from 'cid-tool'
 
 type CIDVersion = 0 | 1;
 type ContentWithPath = {
@@ -77,16 +76,4 @@ export async function isUploaded(cid: string) {
     },
   });
   return res.ok;
-}
-
-export function convertCidToV1(cid: string) {
-  let normalized: string
-  try {
-    const hash = cid.split('/')[0]
-    normalized = CIDTool.base32(hash)
-  }
-  catch (e) {
-    throw new Error(`The CID ${cid} is not valid.`)
-  }
-  return normalized
 }
