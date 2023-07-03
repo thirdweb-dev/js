@@ -1,5 +1,7 @@
 /* eslint-disable no-useless-computed-key */
 
+const AddressZero = "0x0000000000000000000000000000000000000000";
+
 /**
  * @internal
  */
@@ -12,9 +14,14 @@ export const CONTRACT_ADDRESSES: Record<
   }
 > = {
   [280]: {
-    openzeppelinForwarder: "",
-    openzeppelinForwarderEOA: "",
-    biconomyForwarder: "",
+    openzeppelinForwarder: "0x12A305cc7168fa3b7B172fE53c57b9a22716F667",
+    openzeppelinForwarderEOA: AddressZero,
+    biconomyForwarder: AddressZero,
+  },
+  [324]: {
+    openzeppelinForwarder: "0x4e0C3577335961Ff800FFDA24981EB2F38D94483",
+    openzeppelinForwarderEOA: AddressZero,
+    biconomyForwarder: AddressZero,
   },
 };
 
@@ -62,4 +69,25 @@ export function getImplementation(
     }
   }
   return null;
+}
+
+/**
+ *
+ * @param chainId - chain id
+ * @returns the array of trusted forwarders for the given chain id
+ * @internal
+ */
+export function zkGetDefaultTrustedForwarders(
+  chainId: number,
+  contractName?: string,
+): string[] {
+  const biconomyForwarder = CONTRACT_ADDRESSES[chainId].biconomyForwarder;
+  const openzeppelinForwarder =
+    CONTRACT_ADDRESSES[chainId].openzeppelinForwarder;
+
+  return contractName && contractName === "Pack"
+    ? []
+    : [openzeppelinForwarder, biconomyForwarder].filter(
+        (a) => a !== AddressZero,
+      );
 }

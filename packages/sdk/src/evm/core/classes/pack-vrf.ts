@@ -22,7 +22,7 @@ import {
   PackOpenRequestedEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/IPackVRFDirect";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, type BigNumberish, utils } from "ethers";
 import type { NetworkInput, TransactionResultWithId } from "../types";
 import { ContractEvents } from "./contract-events";
 import { Transaction } from "./transactions";
@@ -169,7 +169,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
           );
           erc20Rewards.push({
             contractAddress: reward.assetContract,
-            quantityPerReward: ethers.utils
+            quantityPerReward: utils
               .formatUnits(reward.totalAmount, tokenMetadata.decimals)
               .toString(),
           });

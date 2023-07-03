@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 1.1.5
+
+### Patch Changes
+
+- [#1246](https://github.com/thirdweb-dev/js/pull/1246) [`0c5b03b8`](https://github.com/thirdweb-dev/js/commit/0c5b03b8d6cc6a4e69bb2a4647d3626e69f1283c) Thanks [@nessup](https://github.com/nessup)! - Remove the ipfs-2 gateway due to connectivity errors that seem to happen with certain ISPs
+
 ## 1.1.4
 
 ### Patch Changes

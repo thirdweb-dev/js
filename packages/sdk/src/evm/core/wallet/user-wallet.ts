@@ -14,16 +14,17 @@ import { NetworkInput, TransactionResult } from "../types";
 import type { IERC20 } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import {
-  BigNumberish,
+  type BigNumberish,
   BigNumber,
-  ethers,
-  providers,
-  Signer,
-  TypedDataField,
+  utils,
+  type providers,
+  type Signer,
+  type TypedDataField,
+  Wallet,
 } from "ethers";
 import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
-import { BlockTag } from "@ethersproject/abstract-provider";
+import type { BlockTag } from "@ethersproject/abstract-provider";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import { isNativeToken } from "../../common/currency/isNativeToken";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
@@ -264,9 +265,9 @@ export class UserWallet {
    * ```
    */
   public recoverAddress(message: string, signature: string): Address {
-    const messageHash = ethers.utils.hashMessage(message);
-    const messageHashBytes = ethers.utils.arrayify(messageHash);
-    return ethers.utils.recoverAddress(messageHashBytes, signature);
+    const messageHash = utils.hashMessage(message);
+    const messageHashBytes = utils.arrayify(messageHash);
+    return utils.recoverAddress(messageHashBytes, signature);
   }
 
   /**
@@ -291,10 +292,7 @@ export class UserWallet {
     const chainId = await this.getChainId();
     if (chainId === ChainId.Localhost || chainId === ChainId.Hardhat) {
       const localWallet = new UserWallet(
-        new ethers.Wallet(
-          LOCAL_NODE_PKEY,
-          getChainProvider(chainId, this.options),
-        ),
+        new Wallet(LOCAL_NODE_PKEY, getChainProvider(chainId, this.options)),
         this.options,
       );
       return localWallet.transfer(await this.getAddress(), amount);

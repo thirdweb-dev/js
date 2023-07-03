@@ -1,4 +1,4 @@
-import { BytesLike, ethers } from "ethers";
+import { type BytesLike, utils } from "ethers";
 
 /**
  *
@@ -31,7 +31,7 @@ export const ALL_ROLES = /* @__PURE__ */ Object.keys(roleMap) as Role[];
  */
 export function getRoleHash(role: Role): BytesLike {
   if (role === "admin") {
-    return ethers.utils.hexZeroPad([0], 32);
+    return utils.hexZeroPad([0], 32);
   }
-  return ethers.utils.id(roleMap[role]);
+  return utils.id(roleMap[role]);
 }

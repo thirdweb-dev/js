@@ -9,22 +9,7 @@ import {
 import safeCoreSdk from "@safe-global/safe-core-sdk";
 import safeEthersLib from "@safe-global/safe-ethers-lib";
 import { EVMWallet } from "../../interfaces";
-
-// excerpt from https://docs.gnosis-safe.io/backend/available-services
-const CHAIN_ID_TO_GNOSIS_SERVER_URL = {
-  // mainnet
-  1: "https://safe-transaction-mainnet.safe.global",
-  // avalanche
-  43114: "https://safe-transaction-avalanche.safe.global",
-  // polygon
-  137: "https://safe-transaction-polygon.safe.global",
-  // goerli
-  5: "https://safe-transaction-goerli.safe.global",
-  // bsc
-  56: "https://safe-transaction-bsc.safe.global",
-  // optimism
-  10: "https://safe-transaction-optimism.safe.global",
-} as const;
+import { CHAIN_ID_TO_GNOSIS_SERVER_URL } from "./constants";
 
 const CHAIN_ID_TO_SIGN_MESSAGE_LIB_ADDRESS = {
   // mainnet
@@ -82,9 +67,6 @@ const SIGN_MESSAGE_LIB_ABI = [
 ];
 
 const __IS_SERVER__ = typeof window === "undefined";
-
-export const SafeSupportedChainsSet = /* @__PURE__ */ (() =>
-  new Set(Object.keys(CHAIN_ID_TO_GNOSIS_SERVER_URL).map(Number)))();
 
 export class SafeConnector extends Connector<SafeConnectionArgs> {
   static supportedChains = /* @__PURE__ */ Object.keys(

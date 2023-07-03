@@ -10,7 +10,7 @@ import type { SnapshotInput } from "../types/claim-conditions/claim-conditions";
 import { convertQuantityToBigNumber } from "./claim-conditions/convertQuantityToBigNumber";
 import { fetchCurrencyMetadata } from "./currency/fetchCurrencyMetadata";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers, utils } from "ethers";
+import { constants, utils, type providers } from "ethers";
 import { MerkleTree } from "merkletreejs";
 import { parseSnapshotInputs } from "./parseSnapshotInputs";
 
@@ -105,7 +105,7 @@ export class ShardedMerkleTree {
               entry.price || "unlimited",
               currencyDecimals,
             ),
-            entry.currencyAddress || ethers.constants.AddressZero,
+            entry.currencyAddress || constants.AddressZero,
           ],
         );
     }
@@ -113,7 +113,7 @@ export class ShardedMerkleTree {
 
   static async fetchAndCacheDecimals(
     cache: Record<string, number>,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     currencyAddress?: string,
   ): Promise<number> {
     if (!currencyAddress) {
@@ -135,7 +135,7 @@ export class ShardedMerkleTree {
   static async buildAndUpload(
     snapshotInput: SnapshotInput,
     tokenDecimals: number,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
     snapshotFormatVersion: SnapshotFormatVersion,
     shardNybbles = SHARD_NYBBLES,
@@ -226,7 +226,7 @@ export class ShardedMerkleTree {
 
   public async getProof(
     address: string,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     snapshotFormatVersion: SnapshotFormatVersion,
   ): Promise<SnapshotEntryWithProof | null> {
     const shardId = address.slice(2, 2 + this.shardNybbles).toLowerCase();

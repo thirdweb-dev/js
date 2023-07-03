@@ -1,5 +1,37 @@
 # @thirdweb-dev/chains
 
+## 0.1.26
+
+### Patch Changes
+
+- [#1276](https://github.com/thirdweb-dev/js/pull/1276) [`5882091e`](https://github.com/thirdweb-dev/js/commit/5882091eab65978009a5a5305701f121851b10ad) Thanks [@MananTank](https://github.com/MananTank)! - Do not change order or RPCs in `getChainRPCs` to Fix RPC override issue
+
+## 0.1.25
+
+### Patch Changes
+
+- [#1248](https://github.com/thirdweb-dev/js/pull/1248) [`620e89dc`](https://github.com/thirdweb-dev/js/commit/620e89dc25c91557e2164a602c7aedd733525087) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - update chains
+
+- [#1243](https://github.com/thirdweb-dev/js/pull/1243) [`0fd8aa04`](https://github.com/thirdweb-dev/js/commit/0fd8aa04a9424497758d13a51a72363edcc30e19) Thanks [@therealharpaljadeja](https://github.com/therealharpaljadeja)! - update chains
+
+## 0.1.24
+
+### Patch Changes
+
+- [#1241](https://github.com/thirdweb-dev/js/pull/1241) [`9af346ee`](https://github.com/thirdweb-dev/js/commit/9af346eeada1037be27c8d3c9e1777f7be11a8ea) Thanks [@nkrishang](https://github.com/nkrishang)! - Use fn getAllAccounts instead of event logs AccountCreated
+
+## 0.1.23
+
+### Patch Changes
+
+- [#1229](https://github.com/thirdweb-dev/js/pull/1229) [`6816219a`](https://github.com/thirdweb-dev/js/commit/6816219ac13ae571a0c90db6ab389c319bc1f052) Thanks [@jnsdls](https://github.com/jnsdls)! - add/update chains
+
+## 0.1.22
+
+### Patch Changes
+
+- [#1192](https://github.com/thirdweb-dev/js/pull/1192) [`f41f1a29`](https://github.com/thirdweb-dev/js/commit/f41f1a2958a2cedcf0496c9a3ca284d0b98f1b89) Thanks [@jnsdls](https://github.com/jnsdls)! - fix arbitrum goerli infura url
+
 ## 0.1.21
 
 ### Patch Changes

@@ -1,5 +1,146 @@
 # @thirdweb-dev/react-native
 
+## 0.2.26
+
+### Patch Changes
+
+- [#1270](https://github.com/thirdweb-dev/js/pull/1270) [`0d5503aa`](https://github.com/thirdweb-dev/js/commit/0d5503aae90d9cd7a7adcabad19f7f45d9a37063) Thanks [@iketw](https://github.com/iketw)! - Only handle Coinbase callback URL if Coinbase is added as a supportedWallet
+
+- [#1277](https://github.com/thirdweb-dev/js/pull/1277) [`2b113539`](https://github.com/thirdweb-dev/js/commit/2b113539098384f910b3c4d54e1fde9d35a6f053) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - remove ethers/lib/utils dependency
+
+- Updated dependencies [[`2b113539`](https://github.com/thirdweb-dev/js/commit/2b113539098384f910b3c4d54e1fde9d35a6f053), [`c9535715`](https://github.com/thirdweb-dev/js/commit/c95357158819abd42d4b0900ecc2fa40fcb957f8), [`be606dd3`](https://github.com/thirdweb-dev/js/commit/be606dd3c93c1514834c1d970e864d7f949a07ab), [`edcd22d6`](https://github.com/thirdweb-dev/js/commit/edcd22d61236edb2832f9b2f9796e891d58cb145), [`5882091e`](https://github.com/thirdweb-dev/js/commit/5882091eab65978009a5a5305701f121851b10ad), [`998e5217`](https://github.com/thirdweb-dev/js/commit/998e521733efd6a67e42f9bf0beab5fbdccf08ae)]:
+  - @thirdweb-dev/wallets@1.0.3
+  - @thirdweb-dev/sdk@3.10.27
+  - @thirdweb-dev/react-core@3.14.7
+  - @thirdweb-dev/chains@0.1.26
+
+## 0.2.25
+
+### Patch Changes
+
+- Updated dependencies [[`ed711c8c`](https://github.com/thirdweb-dev/js/commit/ed711c8cb2ed6a0deb1b2a5eeec06df1d4edc5e8), [`05a7495a`](https://github.com/thirdweb-dev/js/commit/05a7495a132aabab5f48abbdb80a468ff6f65df8), [`e78da6b3`](https://github.com/thirdweb-dev/js/commit/e78da6b36cfa6d954234820563201bf760186ed1)]:
+  - @thirdweb-dev/wallets@1.0.2
+  - @thirdweb-dev/react-core@3.14.6
+
+## 0.2.24
+
+### Patch Changes
+
+- Updated dependencies [[`efb3546e`](https://github.com/thirdweb-dev/js/commit/efb3546ec8268156be00301af28b9d83ecd5ab08)]:
+  - @thirdweb-dev/wallets@1.0.1
+  - @thirdweb-dev/react-core@3.14.5
+
+## 0.2.23
+
+### Patch Changes
+
+- [#1215](https://github.com/thirdweb-dev/js/pull/1215) [`3c5dc480`](https://github.com/thirdweb-dev/js/commit/3c5dc4804abc56b933ec45e9e1da11eb182296cc) Thanks [@iketw](https://github.com/iketw)! - Migrate wallets to WCV2 and remove WCV1 support.
+
+  Please, check our changelogs for more info: https://blog.thirdweb.com/changelog/
+
+- Updated dependencies [[`ef4cb092`](https://github.com/thirdweb-dev/js/commit/ef4cb092192c58c9b292b29590b888f45f9fd23d), [`06ca1c40`](https://github.com/thirdweb-dev/js/commit/06ca1c407dfee9d3d1fdaed1b6223ad0f9b8857b), [`620e89dc`](https://github.com/thirdweb-dev/js/commit/620e89dc25c91557e2164a602c7aedd733525087), [`ac3e019c`](https://github.com/thirdweb-dev/js/commit/ac3e019cd1776dbdb0d06b213420ad17586f678e), [`30ac3aef`](https://github.com/thirdweb-dev/js/commit/30ac3aef840bde51a61acf786c709cffd3c47354), [`3c5dc480`](https://github.com/thirdweb-dev/js/commit/3c5dc4804abc56b933ec45e9e1da11eb182296cc), [`ad7dae3b`](https://github.com/thirdweb-dev/js/commit/ad7dae3b163e61c7a6eb57f654885a7fdaa4cbb6), [`620e89dc`](https://github.com/thirdweb-dev/js/commit/620e89dc25c91557e2164a602c7aedd733525087), [`0fd8aa04`](https://github.com/thirdweb-dev/js/commit/0fd8aa04a9424497758d13a51a72363edcc30e19)]:
+  - @thirdweb-dev/sdk@3.10.26
+  - @thirdweb-dev/react-core@3.14.4
+  - @thirdweb-dev/wallets@1.0.0
+  - @thirdweb-dev/chains@0.1.25
+
+## 0.2.22
+
+### Patch Changes
+
+- [#1245](https://github.com/thirdweb-dev/js/pull/1245) [`d9fb134a`](https://github.com/thirdweb-dev/js/commit/d9fb134ad40ae067416625eb43cf3708f87db7b5) Thanks [@iketw](https://github.com/iketw)! - [RN]
+
+  - Added the option to import a new wallet in guest mode
+
+  - Added a "Request Testnet Funds" option when on testnets
+
+- [#1245](https://github.com/thirdweb-dev/js/pull/1245) [`d9fb134a`](https://github.com/thirdweb-dev/js/commit/d9fb134ad40ae067416625eb43cf3708f87db7b5) Thanks [@iketw](https://github.com/iketw)! - [ReactNative] Export more components for easy development
+
+  - IconTextButton
+    Component that renders an icon and a text inside a button with border:
+
+  ```javascript
+  <IconTextButton
+    mt="xs"
+    text="Switch Accounts"
+    icon={<SwitchIcon height={10} width={10} />}
+    onPress={() => {}}
+  />
+  ```
+
+  - NetworkButton: Used to render a Network
+
+  ```javascript
+  <NetworkButton
+    chainIconUrl={chain?.icon?.url || ""}
+    chainName={chain?.name || "Unknown Network"}
+    onPress={onChangeNetworkPress}
+  />
+  ```
+
+  - Exported all icons from the assets folder for external use
+
+- Updated dependencies [[`536b0f12`](https://github.com/thirdweb-dev/js/commit/536b0f1240ab446aac22cf547a4e09e73ee6bf7b), [`1d76334d`](https://github.com/thirdweb-dev/js/commit/1d76334dd3884703629835422f241d2825128f6f), [`b626782b`](https://github.com/thirdweb-dev/js/commit/b626782b0e8c6b76673472d3aee1c802dfb11b5f), [`d498c79a`](https://github.com/thirdweb-dev/js/commit/d498c79a911d478077dfb8a2490eb1bf91523186), [`0c5b03b8`](https://github.com/thirdweb-dev/js/commit/0c5b03b8d6cc6a4e69bb2a4647d3626e69f1283c), [`9af346ee`](https://github.com/thirdweb-dev/js/commit/9af346eeada1037be27c8d3c9e1777f7be11a8ea)]:
+  - @thirdweb-dev/wallets@0.3.3
+  - @thirdweb-dev/react-core@3.14.3
+  - @thirdweb-dev/sdk@3.10.25
+  - @thirdweb-dev/storage@1.1.5
+  - @thirdweb-dev/chains@0.1.24
+
+## 0.2.21
+
+### Patch Changes
+
+- [#1220](https://github.com/thirdweb-dev/js/pull/1220) [`3cb298ac`](https://github.com/thirdweb-dev/js/commit/3cb298ac4b04d295899b5ac77c7fc5869ec2f5f2) Thanks [@iketw](https://github.com/iketw)! - [RN/Wallets] Fix Coinbase wallet connection rejection error
+
+  Unhandled Rejections: We were rethrowing an error in an async function (connect) without any catch block to handle it. We were getting an Unhandled Promise Rejection, which lead to a crash in React Native when rejecting a connection from the Coinbase Wallet.
+
+- Updated dependencies [[`6816219a`](https://github.com/thirdweb-dev/js/commit/6816219ac13ae571a0c90db6ab389c319bc1f052), [`48065bcd`](https://github.com/thirdweb-dev/js/commit/48065bcd91c13e1f44d54343b5c6c2646b9e86e4), [`3cb298ac`](https://github.com/thirdweb-dev/js/commit/3cb298ac4b04d295899b5ac77c7fc5869ec2f5f2), [`b5e1d3bb`](https://github.com/thirdweb-dev/js/commit/b5e1d3bb2b82785d6d3e5c899d27691bdb638625), [`6aa6f7e0`](https://github.com/thirdweb-dev/js/commit/6aa6f7e0bd2313e2e1ad96dd41aad91e6694d380), [`f7f4f207`](https://github.com/thirdweb-dev/js/commit/f7f4f20737ac5d78424ca9c91220f00b85adde6b), [`3ce5f9a0`](https://github.com/thirdweb-dev/js/commit/3ce5f9a0c3fc7e99b5abf691a87048ab8475f6b1), [`d4d95507`](https://github.com/thirdweb-dev/js/commit/d4d95507130b2b5408bfaa73ef3b708ca00c773e), [`a388d07a`](https://github.com/thirdweb-dev/js/commit/a388d07a3d449e56dc53fed9600931022f4a15e1), [`1ce8558d`](https://github.com/thirdweb-dev/js/commit/1ce8558df47186bcba5ee8564fdb04583bf115dd), [`483e2b91`](https://github.com/thirdweb-dev/js/commit/483e2b910934d75276a68bae64d04c47cd7d57e3), [`c08e6ba9`](https://github.com/thirdweb-dev/js/commit/c08e6ba988ad97aa27d5868cec8abe3498d07a0a), [`60fb1889`](https://github.com/thirdweb-dev/js/commit/60fb18894372f14d9cd815fa9a239926d31bb273), [`3d615a62`](https://github.com/thirdweb-dev/js/commit/3d615a62d0a6801f6fb0e63f9b95c2f98446add1)]:
+  - @thirdweb-dev/chains@0.1.23
+  - @thirdweb-dev/sdk@3.10.24
+  - @thirdweb-dev/wallets@0.3.2
+  - @thirdweb-dev/react-core@3.14.2
+
+## 0.2.20
+
+### Patch Changes
+
+- [#1202](https://github.com/thirdweb-dev/js/pull/1202) [`04416e7c`](https://github.com/thirdweb-dev/js/commit/04416e7c93d3b090fe0145ada6de5dbec211e29d) Thanks [@iketw](https://github.com/iketw)! - [RN] Return connection Promise in wallets hooks for better error handling
+
+- [#1205](https://github.com/thirdweb-dev/js/pull/1205) [`3ab7d1e9`](https://github.com/thirdweb-dev/js/commit/3ab7d1e97541ad5ff4f58ec2885fda9f9ab1a7c6) Thanks [@iketw](https://github.com/iketw)! - [RN] Added the option to import a new wallet in guest mode
+
+- [#1205](https://github.com/thirdweb-dev/js/pull/1205) [`3ab7d1e9`](https://github.com/thirdweb-dev/js/commit/3ab7d1e97541ad5ff4f58ec2885fda9f9ab1a7c6) Thanks [@iketw](https://github.com/iketw)! - [ReactNative] Export more components for easy development
+
+  - IconTextButton
+    Component that renders an icon and a text inside a button with border:
+
+  ```javascript
+  <IconTextButton
+    mt="xs"
+    text="Switch Accounts"
+    icon={<SwitchIcon height={10} width={10} />}
+    onPress={() => {}}
+  />
+  ```
+
+  - NetworkButton: Used to render a Network
+
+  ```javascript
+  <NetworkButton
+    chainIconUrl={chain?.icon?.url || ""}
+    chainName={chain?.name || "Unknown Network"}
+    onPress={onChangeNetworkPress}
+  />
+  ```
+
+  - Exported all icons from the assets folder for external use
+
+- Updated dependencies [[`d9b7360d`](https://github.com/thirdweb-dev/js/commit/d9b7360d1d78abcdaca89aa35e66388cbc5eb26c), [`8a2d9204`](https://github.com/thirdweb-dev/js/commit/8a2d92046a416c99c6bfecf63a6fdb6cc02ea175), [`990c665d`](https://github.com/thirdweb-dev/js/commit/990c665de9e5c1070dc80fe0f1b434e251f70a94), [`3d62278a`](https://github.com/thirdweb-dev/js/commit/3d62278aba79101ae1158fb726d6ddfed505c939), [`c6f44722`](https://github.com/thirdweb-dev/js/commit/c6f44722f9d123db4e7c4c799fe8e0374a02107c), [`45ae105e`](https://github.com/thirdweb-dev/js/commit/45ae105ed3e48bfbf6be84aa12ecb0fb55a917b7), [`f41f1a29`](https://github.com/thirdweb-dev/js/commit/f41f1a2958a2cedcf0496c9a3ca284d0b98f1b89), [`bb7ca20e`](https://github.com/thirdweb-dev/js/commit/bb7ca20e49c5c374b12a4ed746a2ac3db488abd9), [`23d61cfe`](https://github.com/thirdweb-dev/js/commit/23d61cfeff2e5a885c511416d7491e7933ed404a), [`8941b226`](https://github.com/thirdweb-dev/js/commit/8941b22682d1b15a6e0d311b1e8548b95d6cfadf), [`e0ce4a37`](https://github.com/thirdweb-dev/js/commit/e0ce4a37596a91a072f8551e323fce6723113dcb)]:
+  - @thirdweb-dev/sdk@3.10.23
+  - @thirdweb-dev/react-core@3.14.1
+  - @thirdweb-dev/wallets@0.3.1
+  - @thirdweb-dev/chains@0.1.22
+
 ## 0.2.19
 
 ### Patch Changes

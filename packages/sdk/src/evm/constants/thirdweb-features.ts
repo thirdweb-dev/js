@@ -128,7 +128,7 @@ export const FEATURE_PRIMARY_SALE = {
 
 export const FEATURE_PLATFORM_FEE = {
   name: "PlatformFee",
-  namespace: "platformFee",
+  namespace: "platformFees",
   docLinks: {
     sdk: "sdk.platformfee",
     contracts: "platformfee",
@@ -279,24 +279,24 @@ export const FEATURE_OFFERS = {
   features: {},
 } as const;
 
-export const FEATURE_SMART_WALLET_FACTORY = {
-  name: "SmartWalletFactory",
-  namespace: "smartwallet.factory",
+export const FEATURE_ACCOUNT_FACTORY = {
+  name: "AccountFactory",
+  namespace: "accountFactory",
   docLinks: {
     // TODO
-    sdk: "sdk.smartWalletFactory",
-    contracts: "smartWalletFactory",
+    sdk: "sdk.accountFactory",
+    contracts: "",
   },
   abis: [IAccountFactory],
   features: {},
 } as const;
 
-export const FEATURE_SMART_WALLET = {
-  name: "SmartWallet",
-  namespace: "smartwallet",
+export const FEATURE_ACCOUNT = {
+  name: "Account",
+  namespace: "account",
   docLinks: {
     // TODO
-    sdk: "",
+    sdk: "sdk.account",
     contracts: "",
   },
   abis: [IAccountCore],

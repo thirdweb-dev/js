@@ -1,11 +1,10 @@
-import { ethers, BigNumber, BigNumberish, providers } from "ethers";
+import { ethers, BigNumber, BigNumberish, providers, utils } from "ethers";
 import {
   EntryPoint,
   EntryPoint__factory,
   UserOperationStruct,
 } from "@account-abstraction/contracts";
 
-import { resolveProperties } from "ethers/lib/utils";
 import { NotPromise, packUserOp } from "@account-abstraction/utils";
 import {
   GasOverheads,
@@ -15,7 +14,11 @@ import {
 import { TransactionDetailsForUserOp } from "./transaction-details";
 import { getUserOpHashV06 } from "./utils";
 import { DUMMY_PAYMASTER_AND_DATA, SIG_SIZE } from "./paymaster";
-import { CeloAlfajoresTestnet, CeloBaklavaTestnet, Celo } from "@thirdweb-dev/chains"
+import {
+  CeloAlfajoresTestnet,
+  CeloBaklavaTestnet,
+  Celo,
+} from "@thirdweb-dev/chains";
 
 export interface BaseApiParams {
   provider: providers.Provider;
@@ -169,7 +172,7 @@ export abstract class BaseAccountAPI {
   async getPreVerificationGas(
     userOp: Partial<UserOperationStruct>,
   ): Promise<number> {
-    const p = await resolveProperties(userOp);
+    const p = await utils.resolveProperties(userOp);
     return calcPreVerificationGas(p, this.overheads);
   }
 
@@ -286,7 +289,11 @@ export abstract class BaseAccountAPI {
         const network = await this.provider.getNetwork();
         const chainId = network.chainId;
 
-        if (chainId === Celo.chainId || chainId === CeloAlfajoresTestnet.chainId || chainId === CeloBaklavaTestnet.chainId) {
+        if (
+          chainId === Celo.chainId ||
+          chainId === CeloAlfajoresTestnet.chainId ||
+          chainId === CeloBaklavaTestnet.chainId
+        ) {
           maxPriorityFeePerGas = maxFeePerGas;
         }
       }

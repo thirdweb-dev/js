@@ -11,7 +11,7 @@ import {
   EnglishAuctionInputParams,
   EnglishAuctionInputParamsSchema,
 } from "../../schema/marketplacev3/english-auctions";
-import type { MarketplaceFilter } from "../../types/marketplace";
+import type { MarketplaceFilterWithoutOfferor } from "../../types/marketplace";
 import { CurrencyValue, Price } from "../../types/currency";
 import { EnglishAuction, Bid } from "../../types/marketplacev3";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
@@ -30,7 +30,7 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import { NewAuctionEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IEnglishAuctions";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, ethers, constants } from "ethers";
+import { BigNumber, type BigNumberish, utils, constants } from "ethers";
 import invariant from "tiny-invariant";
 import { cleanCurrencyAddress } from "../../common/currency/cleanCurrencyAddress";
 import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
@@ -104,7 +104,7 @@ export class MarketplaceV3EnglishAuctions<
    * @returns the Auction object array
    * @twfeature EnglishAuctions
    */
-  public async getAll(filter?: MarketplaceFilter): Promise<EnglishAuction[]> {
+  public async getAll(filter?: MarketplaceFilterWithoutOfferor): Promise<EnglishAuction[]> {
     const totalAuctions = await this.getTotalCount();
 
     let start = BigNumber.from(filter?.start || 0).toNumber();
@@ -142,7 +142,7 @@ export class MarketplaceV3EnglishAuctions<
    * @twfeature EnglishAuctions
    */
   public async getAllValid(
-    filter?: MarketplaceFilter,
+    filter?: MarketplaceFilterWithoutOfferor,
   ): Promise<EnglishAuction[]> {
     const totalAuctions = await this.getTotalCount();
 
@@ -468,10 +468,7 @@ export class MarketplaceV3EnglishAuctions<
 
       return this.makeBid.prepare(
         auctionId,
-        ethers.utils.formatUnits(
-          auction.buyoutBidAmount,
-          currencyMetadata.decimals,
-        ),
+        utils.formatUnits(auction.buyoutBidAmount, currencyMetadata.decimals),
       );
     },
   );
@@ -888,7 +885,7 @@ export class MarketplaceV3EnglishAuctions<
 
   private async applyFilter(
     auctions: IEnglishAuctions.AuctionStructOutput[],
-    filter?: MarketplaceFilter,
+    filter?: MarketplaceFilterWithoutOfferor,
   ) {
     let rawAuctions = [...auctions];
 

@@ -35,8 +35,8 @@ import {
   BigNumber,
   constants,
   Contract,
-  ContractInterface,
-  ethers,
+  type ContractInterface,
+  utils,
 } from "ethers";
 import { EventEmitter } from "eventemitter3";
 import invariant from "tiny-invariant";
@@ -130,8 +130,8 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
 
       const blockNumber = await this.getProvider().getBlockNumber();
       const salt = options?.saltForProxyDeploy
-        ? ethers.utils.id(options.saltForProxyDeploy)
-        : ethers.utils.formatBytes32String(blockNumber.toString());
+        ? utils.id(options.saltForProxyDeploy)
+        : utils.formatBytes32String(blockNumber.toString());
 
       return Transaction.fromContractWrapper({
         contractWrapper: this,
@@ -180,8 +180,8 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
 
       const blockNumber = await this.getProvider().getBlockNumber();
       const salt = saltForProxyDeploy
-        ? ethers.utils.id(saltForProxyDeploy)
-        : ethers.utils.formatBytes32String(blockNumber.toString());
+        ? utils.id(saltForProxyDeploy)
+        : utils.formatBytes32String(blockNumber.toString());
 
       return Transaction.fromContractWrapper({
         contractWrapper: this,
@@ -381,7 +381,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     contract: (typeof PREBUILT_CONTRACTS_MAP)[PrebuiltContractType],
     version?: number,
   ) {
-    const encodedType = ethers.utils.formatBytes32String(contract.name);
+    const encodedType = utils.formatBytes32String(contract.name);
     const chainId = await this.getChainID();
     const approvedImplementation = getApprovedImplementation(
       chainId,
@@ -408,7 +408,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     if (!name) {
       throw new Error(`Invalid contract type ${contractType}`);
     }
-    const encodedType = ethers.utils.formatBytes32String(name);
+    const encodedType = utils.formatBytes32String(name);
     return this.readContract.currentVersion(encodedType);
   }
 }

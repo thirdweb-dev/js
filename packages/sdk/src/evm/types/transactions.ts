@@ -2,33 +2,41 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { TransactionResult } from "../core/types";
 import { SDKOptionsOutput } from "../schema/sdk-options";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers } from "ethers";
+import type {
+  providers,
+  Signer,
+  CallOverrides,
+  BaseContract,
+  Contract,
+  ContractInterface,
+  ContractFactory,
+} from "ethers";
 import EventEmitter from "eventemitter3";
 import { DeployEvents } from "./deploy";
 
 export type ParseTransactionReceipt<TResult = TransactionResult> =
-  | ((receipt: ethers.providers.TransactionReceipt) => TResult)
-  | ((receipt: ethers.providers.TransactionReceipt) => Promise<TResult>);
+  | ((receipt: providers.TransactionReceipt) => TResult)
+  | ((receipt: providers.TransactionReceipt) => Promise<TResult>);
 
 export type TransactionContextOptions = {
   args: any[];
-  provider: ethers.providers.Provider;
-  signer: ethers.Signer;
-  overrides?: ethers.CallOverrides;
+  provider: providers.Provider;
+  signer: Signer;
+  overrides?: CallOverrides;
   storage?: ThirdwebStorage;
 };
 
 type TransactionOptions<TResult = TransactionResult> = {
   method: string;
   args: any[];
-  overrides?: ethers.CallOverrides;
+  overrides?: CallOverrides;
   storage?: ThirdwebStorage;
   gasless?: SDKOptionsOutput["gasless"];
   parse?: ParseTransactionReceipt<TResult>;
 };
 
 export type TransactionOptionsWithContractWrapper<
-  TContract extends ethers.BaseContract,
+  TContract extends BaseContract,
   TResult = TransactionResult,
   TMethod extends keyof TContract["functions"] = keyof TContract["functions"],
 > = TransactionOptions<TResult> & {
@@ -41,20 +49,20 @@ export type TransactionOptionsWithContract<TResult = TransactionResult> = Omit<
   TransactionOptions<TResult>,
   "contract"
 > & {
-  contract: ethers.Contract;
-  provider: ethers.providers.Provider;
-  signer: ethers.Signer;
+  contract: Contract;
+  provider: providers.Provider;
+  signer: Signer;
 };
 
 export type TransactionOptionsWithContractInfo<TResult = TransactionResult> =
   Omit<TransactionOptionsWithContract<TResult>, "contract"> & {
-    provider: ethers.providers.Provider;
+    provider: providers.Provider;
     contractAddress: string;
-    contractAbi?: ethers.ContractInterface;
+    contractAbi?: ContractInterface;
   };
 
 export type DeployTransactionOptions = TransactionContextOptions & {
-  factory: ethers.ContractFactory;
+  factory: ContractFactory;
   // TODO: Remove once we make the breaking change of removing deploy listeners
   events?: EventEmitter<DeployEvents>;
 };
