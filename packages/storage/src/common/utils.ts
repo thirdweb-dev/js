@@ -159,7 +159,6 @@ export function replaceObjectGatewayUrlsWithSchemes<TData = unknown>(
   data: TData,
   gatewayUrls: GatewayUrls,
 ): TData {
-  console.log('replaceObjectGatewayUrlsWithSchemes', data, gatewayUrls)
   if (typeof data === "string") {
     return replaceGatewayUrlWithScheme(data, gatewayUrls) as any as TData;
   }
@@ -276,7 +275,6 @@ export function replaceObjectFilesWithUris(
     if (Array.isArray(data)) {
       return data.map((entry) => replaceObjectFilesWithUris(entry, uris));
     } else {
-      console.log('replacing object files with uris', data, uris)
       return Object.fromEntries(
         Object.entries(data).map(([key, value]) => [
           key,
