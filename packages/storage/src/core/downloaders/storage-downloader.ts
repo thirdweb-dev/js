@@ -20,6 +20,7 @@ export class StorageDownloader implements IStorageDownloader {
     gatewayUrls: GatewayUrls,
     attempts = 0,
   ): Promise<Response> {
+
     if (attempts > 3) {
       throw new Error(
         "[FAILED_TO_DOWNLOAD_ERROR] Failed to download from URI - too many attempts failed.",
@@ -33,18 +34,44 @@ export class StorageDownloader implements IStorageDownloader {
       throw new Error(
         "[FAILED_TO_DOWNLOAD_ERROR] Unable to download from URI - all gateway URLs failed to respond.",
       );
-    }
-
-    const res = await fetch(resolvedUri);
-
-    // If request to the current gateway fails, recursively try the next one we know about
-    if (res.status >= 500 || res.status === 403 || res.status === 408) {
+    } else if (attempts > 0) {
       console.warn(
-        `Request to ${resolvedUri} failed with status ${res.status} - ${res.statusText}`,
+        `Retrying download with backup gateway URL: ${resolvedUri}`,
       );
-      return this.download(uri, gatewayUrls, attempts + 1);
     }
 
-    return res;
+    const resOrErr =
+      await fetch(resolvedUri)
+        .catch(err => err)
+
+    if (resOrErr.ok) {
+      return resOrErr
+    }
+
+    if (resOrErr instanceof Response) {
+      if (resOrErr.status === 403) {
+        // Don't retry if the content is blacklisted
+        console.error(
+          `Request to ${resolvedUri} failed with status 403 - Forbidden. This content is probably blacklisted. Search VirusTotal for this URL: ${resolvedUri} `
+        );
+        return resOrErr
+      }
+
+      console.warn(
+        `Request to ${resolvedUri} failed with status ${resOrErr.status} - ${resOrErr.statusText}`,
+      );
+
+      // Only retry if we see 408 or >= 500 that are likely to be resolved by trying another gateway
+      if (resOrErr.status !== 408 && resOrErr.status < 500) {
+        return resOrErr
+      }
+    } else {
+      console.warn(
+        `Request to ${resolvedUri} failed with error`, resOrErr
+      );
+    }
+
+    // Since the current gateway failed, recursively try the next one we know about
+    return this.download(uri, gatewayUrls, attempts + 1);
   }
 }

@@ -7,6 +7,7 @@ import {convertCidToV1} from "./cid";
 export const DEFAULT_GATEWAY_URLS: GatewayUrls = {
   // Note: Gateway URLs should have trailing slashes (we clean this on user input)
   "ipfs://": [
+    "https://{cid}.ipfs.thirdwebstorage-staging.com/{path}",
     "https://{cid}.ipfs-public.thirdwebcdn.com/{path}",
     "https://cloudflare-ipfs.com/ipfs/{cid}/{path}",
     "https://ipfs.io/ipfs/{cid}/{path}",
@@ -46,18 +47,16 @@ export function getGatewayUrlForCid(gatewayUrl: string, cid: string): string {
   const hash = convertCidToV1(parts[0])
   const filePath = parts.slice(1).join('/');
 
-  const cidV1 = convertCidToV1(cid);
-
   let url = gatewayUrl;
 
   // If the URL contains {cid} or {path} tokens, replace them with the CID and path
   // Both tokens must be present for the URL to be valid
   if (gatewayUrl.includes('{cid}') || gatewayUrl.includes('{path}')) {
-    url = url.replace("{cid}", cidV1).replace("{path}", filePath);
+    url = url.replace("{cid}", hash).replace("{path}", filePath);
   }
   // If those tokens don't exist, use the canonical gateway URL format
   else {
-    url += `${cidV1}/${filePath}`;
+    url += `${hash}/${filePath}`;
   }
 
   return url;

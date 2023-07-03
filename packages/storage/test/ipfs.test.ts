@@ -67,6 +67,37 @@ describe("IPFS", async () => {
     expect(data.properties.length).to.equal(1);
   });
 
+  it ("Should retry download if gateways fail", async () => {
+    const storageWithBadGateways = new ThirdwebStorage({
+      gatewayUrls: {
+        "ipfs://": [
+          "http://thisshouldneverwork/",
+          "http://thisshouldalsoneverwork/",
+          ...DEFAULT_GATEWAY_URLS["ipfs://"]
+        ],
+      }
+    })
+
+    const uri = await storageWithBadGateways.upload(
+      {
+        name: "Goku",
+        description: "The strongest human in the world",
+        properties: [
+          {
+            name: "Strength",
+            value: "100",
+          },
+        ],
+      },
+      {
+        alwaysUpload: true,
+      },
+    );
+
+    const data = await storageWithBadGateways.download(uri);
+    expect(data.status).to.equal(200);
+  })
+
   it("Should batch upload strings with names", async () => {
     const uris = await storage.uploadBatch(
       [
@@ -361,7 +392,7 @@ describe("IPFS", async () => {
     );
 
     expect(uri).to.equal(
-      `ipfs://QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0`
+      getGatewayUrlForCid(DEFAULT_GATEWAY_URLS["ipfs://"][0], `bafybeiaqycj2td2u2qhmekxob67ghd4y6ndklizg2jfe7zj7wqvf6a5mlm/0`),
     );
   });
 

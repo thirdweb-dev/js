@@ -114,7 +114,12 @@ export function replaceGatewayUrlWithScheme(
       if (gatewayUrl.includes("{cid}")) {
         // Given the url is a tokenized url, we need to lift the cid and the path from the uri
         const parsed = parseCidAndPath(gatewayUrl, uri);
-        return `${scheme}${parsed?.cid}/${parsed?.path}`
+        if (parsed?.cid && parsed?.path) {
+          return `${scheme}${parsed?.cid}/${parsed?.path}`
+        } else {
+          // If we can't lift the cid and path from the uri, we can't replace the gateway url, return the orig string
+          return uri
+        }
       } else if (uri.startsWith(gatewayUrl)) {
         return uri.replace(gatewayUrl, scheme);
       }
