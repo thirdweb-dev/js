@@ -34,7 +34,7 @@ export const MarkdownRenderer: React.FC<
       {...restProps}
       remarkPlugins={[remarkGfm]}
       components={{
-        h1: (props) => (
+        h1: (props: any) => (
           <Heading
             as="h2"
             size="title.lg"
@@ -45,7 +45,7 @@ export const MarkdownRenderer: React.FC<
             {...props}
           />
         ),
-        h2: (props) => (
+        h2: (props: any) => (
           <Heading
             as="h3"
             size="title.md"
@@ -57,7 +57,7 @@ export const MarkdownRenderer: React.FC<
             {...props}
           />
         ),
-        h3: (props) => (
+        h3: (props: any) => (
           <Heading
             as="h4"
             size="title.sm"
@@ -66,7 +66,7 @@ export const MarkdownRenderer: React.FC<
             mt={4}
           />
         ),
-        h4: (props) => (
+        h4: (props: any) => (
           <Heading
             as="h5"
             size="subtitle.md"
@@ -75,7 +75,7 @@ export const MarkdownRenderer: React.FC<
             mt={4}
           />
         ),
-        h5: (props) => (
+        h5: (props: any) => (
           <Heading
             as="h6"
             size="subtitle.sm"
@@ -84,7 +84,7 @@ export const MarkdownRenderer: React.FC<
             mt={4}
           />
         ),
-        h6: (props) => (
+        h6: (props: any) => (
           <Heading
             as="p"
             size="label.md"
@@ -93,7 +93,7 @@ export const MarkdownRenderer: React.FC<
             mt={4}
           />
         ),
-        a: (props) => (
+        a: (props: any) => (
           <Link
             _dark={{
               color: "blue.400",
@@ -113,7 +113,7 @@ export const MarkdownRenderer: React.FC<
           />
         ),
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        code: ({ inline, ...props }) => {
+        code: ({ inline, ...props }: any) => {
           if (props?.className) {
             const language = props.className.replace("language-", "");
             return (
@@ -140,10 +140,10 @@ export const MarkdownRenderer: React.FC<
             />
           );
         },
-        p: (props) => (
+        p: (props: any) => (
           <Text size="body.md" mb={4} {...props} lineHeight={1.5} />
         ),
-        table: (props) => (
+        table: (props: any) => (
           <Box
             maxW="100%"
             overflowX="auto"
@@ -156,7 +156,7 @@ export const MarkdownRenderer: React.FC<
             <Table {...props} />
           </Box>
         ),
-        th: ({ children: c, ...props }) => (
+        th: ({ children: c, ...props }: any) => (
           <Th
             {...(props as unknown as any)}
             textAlign="left!important"
@@ -167,7 +167,7 @@ export const MarkdownRenderer: React.FC<
             </Text>
           </Th>
         ),
-        td: (props) => (
+        td: (props: any) => (
           <Td
             {...(props as unknown as any)}
             borderColor="borderColor"
@@ -175,9 +175,9 @@ export const MarkdownRenderer: React.FC<
             borderBottomWidth={"inherit"}
           />
         ),
-        thead: (props) => <Thead {...props} />,
-        tbody: (props) => <Tbody {...props} />,
-        tr: (props) => (
+        thead: (props: any) => <Thead {...props} />,
+        tbody: (props: any) => <Tbody {...props} />,
+        tr: (props: any) => (
           <Tr
             {...props}
             transition="all 0.1s"
@@ -186,11 +186,11 @@ export const MarkdownRenderer: React.FC<
           />
         ),
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ul: ({ ordered, ...props }) => <UnorderedList {...props} mb={4} />,
+        ul: ({ ordered, ...props }: any) => <UnorderedList {...props} mb={4} />,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ol: ({ ordered, ...props }) => <OrderedList {...props} mb={4} />,
+        ol: ({ ordered, ...props }: any) => <OrderedList {...props} mb={4} />,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        li: ({ children: c, ordered, ...props }) => (
+        li: ({ children: c, ordered, ...props }: any) => (
           <ListItem {...props}>
             <Text>{c}</Text>
           </ListItem>

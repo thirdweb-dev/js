@@ -16,10 +16,15 @@ import { DashboardSolanaNetwork } from "utils/solanaUtils";
 // use env var to set IPFS gateway or fallback to ipfscdn.io
 export const IPFS_GATEWAY_URL =
   (process.env.NEXT_PUBLIC_IPFS_GATEWAY_URL as string) ||
-  "https://ipfs.thirdwebstorage.com/ipfs";
+  "https://{cid}.ipfs.thirdwebstorage.com/{path}";
 
 export function replaceIpfsUrl(url: string) {
-  return StorageSingleton.resolveScheme(url);
+  try {
+    return StorageSingleton.resolveScheme(url);
+  } catch (err) {
+    console.error("error resolving ipfs url", url, err);
+    return url;
+  }
 }
 
 const ProxyHostNames = new Set<string>();
@@ -64,9 +69,7 @@ class SpecialDownloader implements IStorageDownloader {
 }
 
 export const StorageSingleton = new ThirdwebStorage({
-  gatewayUrls: {
-    "ipfs://": [IPFS_GATEWAY_URL],
-  },
+  gatewayUrls: [IPFS_GATEWAY_URL],
   downloader: new SpecialDownloader(),
 });
 

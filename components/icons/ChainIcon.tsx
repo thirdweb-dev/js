@@ -2,7 +2,7 @@ import { Image, forwardRef } from "@chakra-ui/react";
 import { replaceIpfsUrl } from "lib/sdk";
 
 const fallbackIcon = replaceIpfsUrl(
-  "ipfs:///QmU1r24UsmGg2w2RePz98zV5hR3CnjvakLZzB6yH4prPFh/globe.svg",
+  "ipfs://QmU1r24UsmGg2w2RePz98zV5hR3CnjvakLZzB6yH4prPFh/globe.svg",
 );
 
 type ChainIconProps = {
