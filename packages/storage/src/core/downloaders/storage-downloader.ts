@@ -43,11 +43,12 @@ export class StorageDownloader implements IStorageDownloader {
       return resOrErr;
     }
 
-    if (resOrErr instanceof Response) {
+    // can't use instanceof "Response" in node...
+    if ("status" in resOrErr) {
       if (resOrErr.status === 410 || resOrErr.status === 403) {
-        // Don't retry if the content is blacklisted
+        // Don't retry if the content is blocklisted
         console.error(
-          `Request to ${resolvedUri} failed because this content seems to be blacklisted. Search VirusTotal for this URL to confirm: ${resolvedUri} `,
+          `Request to ${resolvedUri} failed because this content seems to be blocklisted. Search VirusTotal for this URL to confirm: ${resolvedUri} `,
         );
         return resOrErr;
       }
@@ -56,7 +57,7 @@ export class StorageDownloader implements IStorageDownloader {
         `Request to ${resolvedUri} failed with status ${resOrErr.status} - ${resOrErr.statusText}`,
       );
 
-      // Only retry if we see 408 or >= 500 that are likely to be resolved by trying another gateway
+      // Don't retry if we see 408 or < 500 status codes that are likely to be resolved by trying another gateway
       if (resOrErr.status !== 408 && resOrErr.status < 500) {
         return resOrErr;
       }
