@@ -193,6 +193,8 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
         return JSON.stringify(item);
       });
 
+      console.log("*** metadata", metadata);
+
       uris = await this.uploader.uploadBatch(metadata, options);
     }
 
