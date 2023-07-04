@@ -1,5 +1,11 @@
 # @thirdweb-dev/contracts-js
 
+## 1.3.8
+
+### Patch Changes
+
+- [#1278](https://github.com/thirdweb-dev/js/pull/1278) [`8a389f12`](https://github.com/thirdweb-dev/js/commit/8a389f1295d2bf726059997ea0ca10cf0424f2a2) Thanks [@jnsdls](https://github.com/jnsdls)! - updated various dependencies
+
 ## 1.3.7
 
 ### Patch Changes
