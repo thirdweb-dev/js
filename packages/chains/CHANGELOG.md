@@ -1,5 +1,13 @@
 # @thirdweb-dev/chains
 
+## 0.1.27
+
+### Patch Changes
+
+- [#1278](https://github.com/thirdweb-dev/js/pull/1278) [`8a389f12`](https://github.com/thirdweb-dev/js/commit/8a389f1295d2bf726059997ea0ca10cf0424f2a2) Thanks [@jnsdls](https://github.com/jnsdls)! - updated various dependencies
+
+- [#1281](https://github.com/thirdweb-dev/js/pull/1281) [`a3bb17cb`](https://github.com/thirdweb-dev/js/commit/a3bb17cb33f033846fb3b4c8a0a4809ba76cab96) Thanks [@nkrishang](https://github.com/nkrishang)! - Handle ERC4337Signer correctly for signTypedData
+
 ## 0.1.26
 
 ### Patch Changes
