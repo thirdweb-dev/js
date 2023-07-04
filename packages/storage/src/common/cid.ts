@@ -68,7 +68,7 @@ export async function getCID(
 
 export async function isUploaded(cid: string) {
   const url = getGatewayUrlForCid(DEFAULT_GATEWAY_URLS["ipfs://"][0], cid);
-  const res = await fetch(`${url}${cid}`, {
+  const res = await fetch(url, {
     method: "HEAD",
     headers: {
       // tell the gateway to skip fetching from origin in order to fail fast on 404s and just re-upload in those cases
