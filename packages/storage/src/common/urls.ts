@@ -56,6 +56,10 @@ export function getGatewayUrlForCid(gatewayUrl: string, cid: string): string {
   if (gatewayUrl.includes("{cid}") && gatewayUrl.includes("{path}")) {
     url = url.replace("{cid}", hash).replace("{path}", filePath);
   }
+  // If the URL contains only the {cid} token, replace it with the CID
+  else if (gatewayUrl.includes("{cid}")) {
+    url = url.replace("{cid}", hash);
+  }
   // If those tokens don't exist, use the canonical gateway URL format
   else {
     url += `${hash}/${filePath}`;
