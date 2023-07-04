@@ -36,7 +36,7 @@ interface EmbedSetupProps {
 }
 
 // MAKE SURE THIS IS v1 emmbed hashes!!
-const IPFS_URI = "bafybeibl5uhjqhk74qhrtaw76hruylxcexcl2z36evkscw2jul254cuwje";
+const IPFS_URI = "bafybeic54udbggbhtn7nfjrrj7elrim4shfped7c3cco7neset7fdwpwmu";
 const ERC721_IPFS_URI = `bafybeidpp4d3znpjxlvlhitaylbqwmyk2gzcxazp5wkftvwu7r3lsyku2q`;
 
 interface IframeSrcOptions {
@@ -108,7 +108,7 @@ const buildIframeSrc = (
   } = options;
 
   const url = new URL(
-    `https://${contractEmbedHash}.ipfs-public.thirdwebcdn.com/${contractPath}`,
+    `https://${contractEmbedHash}.ipfs.thirdwebstorage.com/${contractPath}`,
   );
 
   url.searchParams.append("contract", contract.getAddress());
