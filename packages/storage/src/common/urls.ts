@@ -8,6 +8,8 @@ export const DEFAULT_GATEWAY_URLS: GatewayUrls = {
   // Note: Gateway URLs should have trailing slashes (we clean this on user input)
   "ipfs://": [
     "https://{cid}.ipfs.thirdwebstorage.com/{path}",
+    "https://{cid}.ipfs.thirdwebipfs.com/{path}",
+    "https://{cid}.ipfs.thirdwebgateway.com/{path}",
     "https://{cid}.ipfs-public.thirdwebcdn.com/{path}",
     "https://cloudflare-ipfs.com/ipfs/{cid}/{path}",
     "https://ipfs.io/ipfs/{cid}/{path}",
