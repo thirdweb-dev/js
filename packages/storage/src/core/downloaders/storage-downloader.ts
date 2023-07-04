@@ -44,10 +44,10 @@ export class StorageDownloader implements IStorageDownloader {
     }
 
     if (resOrErr instanceof Response) {
-      if (resOrErr.status === 410) {
+      if (resOrErr.status === 410 || resOrErr.status === 403) {
         // Don't retry if the content is blacklisted
         console.error(
-          `Request to ${resolvedUri} failed with status 403 - Forbidden. This content is probably blacklisted. Search VirusTotal for this URL: ${resolvedUri} `,
+          `Request to ${resolvedUri} failed because this content seems to be blacklisted. Search VirusTotal for this URL to confirm: ${resolvedUri} `,
         );
         return resOrErr;
       }
