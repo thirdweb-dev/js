@@ -89,19 +89,18 @@ export function isFileBufferOrStringEqual(input1: any, input2: any): boolean {
 /**
  * @internal
  */
-export function parseCidAndPath(
-  gatewayUrl: string,
-  uri: string,
-): { cid?: string; path?: string } | undefined {
+export function parseCidAndPath(gatewayUrl: string, uri: string): { cid?: string; path?: string; query?: string } | undefined {
   const regexString = gatewayUrl
     .replace("{cid}", "(?<cid>[^/]+)")
-    .replace("{path}", "(?<path>.*)");
+    .replace("{path}", "(?<path>[^?]+)")
+    .replace("{query}", "(?<query>.*)");
   const regex = new RegExp(regexString);
   const match = uri.match(regex);
   if (match) {
     const cid = match.groups?.cid;
     const path = match.groups?.path;
-    return { cid, path };
+    const query = match.groups?.query;
+    return { cid, path, query };
   }
 }
 
@@ -120,7 +119,8 @@ export function replaceGatewayUrlWithScheme(
         // Given the url is a tokenized url, we need to lift the cid and the path from the uri
         const parsed = parseCidAndPath(gatewayUrl, uri);
         if (parsed?.cid && parsed?.path) {
-          return `${scheme}${parsed?.cid}/${parsed?.path}`;
+          const queryString = parsed?.query ? `?${parsed?.query}` : "";
+          return `${scheme}${parsed?.cid}/${parsed?.path}${queryString}`;
         } else {
           // If we can't lift the cid and path from the uri, we can't replace the gateway url, return the orig string
           return uri;
