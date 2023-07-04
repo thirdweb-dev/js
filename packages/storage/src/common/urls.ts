@@ -53,7 +53,7 @@ export function getGatewayUrlForCid(gatewayUrl: string, cid: string): string {
 
   // If the URL contains {cid} or {path} tokens, replace them with the CID and path
   // Both tokens must be present for the URL to be valid
-  if (gatewayUrl.includes("{cid}") || gatewayUrl.includes("{path}")) {
+  if (gatewayUrl.includes("{cid}") && gatewayUrl.includes("{path}")) {
     url = url.replace("{cid}", hash).replace("{path}", filePath);
   }
   // If those tokens don't exist, use the canonical gateway URL format
@@ -76,8 +76,9 @@ export function prepareGatewayUrls(gatewayUrls?: GatewayUrls): GatewayUrls {
   for (const key of Object.keys(DEFAULT_GATEWAY_URLS)) {
     if (gatewayUrls && gatewayUrls[key]) {
       // Make sure that all user gateway URLs have trailing slashes
-      const cleanedGatewayUrls = gatewayUrls[key].map(
-        (url) => url.replace(/\/$/, "") + "/",
+      const cleanedGatewayUrls = gatewayUrls[key].map((url) =>
+        // don't add trailing slash if the URL contains {path} token
+        url.includes("{path}") ? url : url.replace(/\/$/, "") + "/",
       );
 
       allGatewayUrls[key] = [
