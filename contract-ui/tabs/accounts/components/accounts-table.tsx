@@ -1,22 +1,42 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
+import { Flex } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { AccountEvent, useAccounts, useAddress } from "@thirdweb-dev/react";
 import { TWTable } from "components/shared/TWTable";
 import { useRouter } from "next/router";
-import { AddressCopyButton } from "tw-components/AddressCopyButton";
+import { Text, TrackedCopyButton } from "tw-components";
+import { shortenIfAddress } from "utils/usedapp-external";
 
 const columnHelper = createColumnHelper<AccountEvent>();
 
 const columns = [
   columnHelper.accessor("account", {
-    header: "Smart Wallet",
+    header: "Account",
     cell: (info) => (
-      <AddressCopyButton address={info.getValue()} shortenAddress={false} />
+      <Flex gap={2} align="center">
+        <Text fontFamily="mono">{info.getValue()}</Text>
+        <TrackedCopyButton
+          value={info.getValue()}
+          category="accounts"
+          aria-label="Copy account address"
+          colorScheme="primary"
+        />
+      </Flex>
     ),
   }),
   columnHelper.accessor("admin", {
     header: "Admin",
-    cell: (info) => <AddressCopyButton address={info.getValue()} />,
+    cell: (info) => (
+      <Flex gap={2} align="center">
+        <Text fontFamily="mono">{shortenIfAddress(info.getValue())}</Text>
+        <TrackedCopyButton
+          value={info.getValue()}
+          category="accounts"
+          aria-label="Copy admin address"
+          colorScheme="primary"
+        />
+      </Flex>
+    ),
   }),
 ];
 

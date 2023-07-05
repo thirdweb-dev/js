@@ -7,6 +7,7 @@ import {
   useAddress,
   useContract,
 } from "@thirdweb-dev/react";
+import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { Card, Heading, LinkButton, Text } from "tw-components";
 
 interface AccountsPageProps {
@@ -20,6 +21,11 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({
   const accountsQuery = useAccounts(contractQuery?.contract);
   const address = useAddress();
 
+  const detectedFeature = extensionDetectedState({
+    contractQuery,
+    feature: ["AccountFactory"],
+  });
+
   const { data: accountsForAddress } = useAccountsForAddress(
     contractQuery.contract,
     address,
@@ -29,7 +35,7 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({
     return null;
   }
 
-  if (!contractQuery?.contract) {
+  if (!detectedFeature) {
     return (
       <Card as={Flex} flexDir="column" gap={3}>
         {/* TODO  extract this out into it's own component and make it better */}

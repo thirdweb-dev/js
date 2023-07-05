@@ -62,6 +62,9 @@ const LazyContractClaimConditionsPage = dynamic(() =>
 const LazyContractAccountsPage = dynamic(() =>
   import("../tabs/accounts/page").then(({ AccountsPage }) => AccountsPage),
 );
+const LazyContractAccountPage = dynamic(() =>
+  import("../tabs/account/page").then(({ AccountPage }) => AccountPage),
+);
 const LazyContractPermissionsPage = dynamic(() =>
   import("../tabs/permissions/page").then(
     ({ ContractPermissionsPage }) => ContractPermissionsPage,
@@ -219,6 +222,15 @@ export function useContractRouteConfig(
         feature: ["AccountFactory"],
       }),
       component: LazyContractAccountsPage,
+    },
+    {
+      title: "Account",
+      path: "account",
+      isEnabled: extensionDetectedState({
+        contractQuery,
+        feature: ["Account"],
+      }),
+      component: LazyContractAccountPage,
     },
     {
       title: "Permissions",
