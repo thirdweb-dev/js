@@ -27,8 +27,7 @@ import { AddressOrEns } from "../../schema";
 import { resolveAddress } from "../../common";
 
 export class SmartWallet<TContract extends IAccountCore>
-  implements DetectableFeature
-{
+  implements DetectableFeature {
   featureName = FEATURE_SMART_WALLET.name;
   private contractWrapper: ContractWrapper<IAccountCore>;
 
@@ -95,7 +94,7 @@ export class SmartWallet<TContract extends IAccountCore>
       validityEndTimestamp: BigNumber.from(
         Math.floor(
           new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 * 10).getTime() /
-            1000,
+          1000,
         ),
       ),
       uid: resolveOrGenerateId(undefined),

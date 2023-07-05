@@ -26,8 +26,7 @@ export type { PaymasterAPI } from "@account-abstraction/sdk";
 
 export class SmartWallet
   extends AbstractClientWallet<SmartWalletConfig, SmartWalletConnectionArgs>
-  implements IWalletConnectReceiver
-{
+  implements IWalletConnectReceiver {
   connector?: SmartWalletConnectorType;
 
   public enableConnectApp: boolean = false;
@@ -44,8 +43,8 @@ export class SmartWallet
     return "Smart Wallet" as const;
   }
 
-  constructor(options: WalletOptions<SmartWalletConfig>) {
-    super(SmartWallet.id, {
+  constructor(options: WalletOptions<SmartWalletConfig>, id?: string) {
+    super(id || SmartWallet.id, {
       ...options,
     });
 
@@ -53,16 +52,16 @@ export class SmartWallet
     this.#wcWallet = this.enableConnectApp
       ? options?.wcVersion === "v1"
         ? new WalletConnectV1Handler({
-            walletConnectWalletMetadata: options?.walletConnectWalletMetadata,
-            walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
-            walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
-            storage: options?.wcStorage || createLocalStorage("smart-wallet"),
-          })
+          walletConnectWalletMetadata: options?.walletConnectWalletMetadata,
+          walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
+          walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
+          storage: options?.wcStorage || createLocalStorage("smart-wallet"),
+        })
         : new WalletConnectV2Handler({
-            walletConnectWalletMetadata: options?.walletConnectWalletMetadata,
-            walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
-            walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
-          })
+          walletConnectWalletMetadata: options?.walletConnectWalletMetadata,
+          walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
+          walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
+        })
       : new NoOpWalletConnectHandler();
   }
 

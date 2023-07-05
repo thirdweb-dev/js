@@ -4,6 +4,7 @@ export const walletIds = {
   metamask: "metamask",
   localWallet: "localWallet",
   smartWallet: "smartWallet",
+  tokenBoundSmartWallet: "tokenBoundSmartWallet",
   safe: "safe",
   trust: "trust",
   walletConnectV1: "walletConnectV1",

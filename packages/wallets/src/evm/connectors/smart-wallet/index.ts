@@ -24,7 +24,7 @@ import { AccountAPI } from "./lib/account";
 import { DEFAULT_WALLET_API_KEY } from "../../constants/keys";
 
 export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
-  private config: SmartWalletConfig;
+  protected config: SmartWalletConfig;
   private aaProvider: ERC4337EthersProvider | undefined;
   private accountApi: AccountAPI | undefined;
   personalWallet?: EVMWallet;
@@ -55,10 +55,10 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         ? this.config.paymasterAPI
           ? this.config.paymasterAPI
           : getVerifyingPaymaster(
-              paymasterUrl,
-              entryPointAddress,
-              this.config.thirdwebApiKey,
-            )
+            paymasterUrl,
+            entryPointAddress,
+            this.config.thirdwebApiKey,
+          )
         : undefined,
       factoryAddress: config.factoryAddress,
       factoryInfo: config.factoryInfo || this.defaultFactoryInfo(),
@@ -134,7 +134,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  updateChains(chains: Chain[]): void {}
+  updateChains(chains: Chain[]): void { }
 
   /**
    * Execute a single transaction
@@ -218,7 +218,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     return await this.accountApi.isAcountDeployed();
   }
 
-  private defaultFactoryInfo(): FactoryContractInfo {
+  protected defaultFactoryInfo(): FactoryContractInfo {
     return {
       createAccount: async (factory: SmartContract, owner: string) => {
         return factory.prepare("createAccount", [
@@ -241,7 +241,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     };
   }
 
-  private defaultAccountInfo(): AccountContractInfo {
+  protected defaultAccountInfo(): AccountContractInfo {
     return {
       execute: async (account, target, value, data) => {
         return account.prepare("execute", [target, value, data]);
@@ -250,5 +250,9 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         return account.call("getNonce", []);
       },
     };
+  }
+
+  set factoryAddress(value: string) {
+    this.factoryAddress = value;
   }
 }
