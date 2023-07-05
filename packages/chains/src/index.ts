@@ -1849,7 +1849,7 @@ export { default as Pdc } from "../chains/666301171999"
 export { default as MolereumNetwork } from "../chains/6022140761023"
 export { default as Localhost } from "../chains/1337"
 export { default as XrpLedgerEvmDevnetSidechain } from "../chains/1440001"
-export { default as TaroTestnet } from "../chains/1582"
+export { default as BubsTestnet } from "../chains/1582"
 export { default as Omega } from "../chains/408"
 export { default as Opbnb } from "../chains/5611"
 export { default as ShardeumSphinxDapp1X } from "../chains/8081"
@@ -3712,7 +3712,7 @@ type ChainIdsBySlug = {
 "molereum-network": 6022140761023,
 "localhost": 1337,
 "xrp-ledger-evm-devnet-sidechain": 1440001,
-"taro-testnet": 1582,
+"bubs-testnet": 1582,
 "omega": 408,
 "opbnb": 5611,
 "shardeum-sphinx-dapp-1-x": 8081,
