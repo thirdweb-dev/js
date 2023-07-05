@@ -22,7 +22,12 @@ export const PriceInput: React.FC<PriceInputProps> = ({
 }) => {
   return (
     <InputGroup>
-      <NumberInput defaultValue={0} isDisabled={isDisabled} {...restInputProps}>
+      <NumberInput
+        defaultValue={0}
+        isDisabled={isDisabled}
+        min={0}
+        {...restInputProps}
+      >
         <NumberInputField
           value={value}
           onChange={(e) => onChange(e.target.value)}
