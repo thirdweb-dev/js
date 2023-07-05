@@ -12,9 +12,8 @@ import IThirdwebPrimarySaleAbi from "@thirdweb-dev/contracts-js/dist/abis/IPrima
 import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/dist/abis/IRoyalty.json";
 import IOwnableAbi from "@thirdweb-dev/contracts-js/dist/abis/Ownable.json";
 import IAccountFactory from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactory.json";
-import IAccount from "@thirdweb-dev/contracts-js/dist/abis/IAccount.json";
-import IAirdropERC20 from "@thirdweb-dev/contracts-js/dist/abis/IAirdropERC20.json";
 import IAccountCore from "@thirdweb-dev/contracts-js/dist/abis/IAccountCore.json";
+import IAirdropERC20 from "@thirdweb-dev/contracts-js/dist/abis/IAirdropERC20.json";
 
 export const getAllPluginsAbi = [
   {

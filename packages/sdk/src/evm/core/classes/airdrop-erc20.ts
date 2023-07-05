@@ -1,11 +1,4 @@
 import { NetworkInput } from "..";
-import { AmountSchema } from "../../../core/schema/shared";
-import { assertEnabled, detectContractFeature } from "../../common";
-import {
-  fetchCurrencyMetadata,
-  fetchCurrencyValue,
-} from "../../common/currency";
-import { resolveAddress } from "../../common/ens";
 import { buildTransactionFunction } from "../../common/transactions";
 import {
   FEATURE_TOKEN,
