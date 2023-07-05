@@ -82,7 +82,7 @@ const DashboardStorage: ThirdwebNextPage = () => {
                 fontFamily="mono"
                 overflow={{ base: "scroll", md: "inherit" }}
               >
-                https://ipfs.thirdwebcdn.com/ipfs/
+                https://ipfs.thirdwebstorage.com/ipfs/
               </Text>
               <Flex>
                 <Tooltip
@@ -98,7 +98,7 @@ const DashboardStorage: ThirdwebNextPage = () => {
                   shouldWrapChildren
                 >
                   <TrackedCopyButton
-                    value="https://ipfs.thirdwebcdn.com/ipfs/"
+                    value="https://ipfs.thirdwebstorage.com/ipfs/"
                     category="storage"
                     label="copy-cli-file-upload"
                     aria-label="Copy code"
@@ -220,7 +220,7 @@ console.info(uri);
 
 // Here we a URL with a gateway that we can look at in the browser
 const url = await storage.resolveScheme(uri);
-// This will log a URL like https://ipfs.thirdwebcdn.com/ipfs/QmWgbcjKWCXhaLzMz4gNBxQpAHktQK6MkLvBkKXbsoWEEy/0
+// This will log a URL like https://ipfs.thirdwebstorage.com/ipfs/QmWgbcjKWCXhaLzMz4gNBxQpAHktQK6MkLvBkKXbsoWEEy/0
 console.info(url);
 
 // You can also download the data from the uri

@@ -12,8 +12,6 @@ class ConsoleDocument extends Document {
           <link rel="dns-prefetch" href="https://a.thirdweb.com" />
           <link rel="preconnect" href="https://pl.thirdweb.com" />
           <link rel="dns-prefetch" href="https://pl.thirdweb.com" />
-          {/* prefetch domains we are likely to use */}
-          <link rel="dns-prefetch" href="https://ipfs-2.thirdwebcdn.com" />
         </Head>
         <body id="tw-body-root">
           <ColorModeScript

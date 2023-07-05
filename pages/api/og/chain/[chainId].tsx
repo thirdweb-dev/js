@@ -90,7 +90,7 @@ export default async function handler(req: NextRequest) {
 
   const iconUrl = chain.icon?.url.replace(
     "ipfs://",
-    "https://ipfs-2.thirdwebcdn.com/ipfs/",
+    "https://ipfs.thirdwebstorage.com/ipfs/",
   );
 
   const [inter400, inter500, inter700, imageData] = await Promise.all([
