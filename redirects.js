@@ -114,6 +114,11 @@ function redirects() {
       destination: "/settings/api-keys",
       permanent: true,
     },
+    {
+      source: "/template/nft-drop",
+      destination: "/template/erc721",
+      permanent: false,
+    },
   ];
 }
 

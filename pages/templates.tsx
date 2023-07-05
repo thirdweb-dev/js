@@ -31,7 +31,7 @@ export interface TemplateCardProps {
 
 export const templates: TemplateCardProps[] = [
   {
-    id: "nft-drop",
+    id: "erc721",
     title: "NFT Drop",
     homepage: "https://nft-drop.thirdweb-preview.com/",
     repo: "https://github.com/thirdweb-example/nft-drop",
