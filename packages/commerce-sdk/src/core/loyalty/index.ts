@@ -6,7 +6,7 @@ import { getSdkInstance, redeemPointsSync, sendReceiptAsync, sendReceiptSync, se
 /**
  * Read the webhook information, grab the wallet address from an order and sends it the specified amount of tokens.
  * 
- * @description NOTE: This function relies on the headers information given from a Shopify webhook. The function will find the order by id and grab the wallet address from the custom attributes. If the wallet is found, the function will gift the specified amount of tokens to that wallet address.
+ * @description This function relies on the headers information given from a Shopify webhook. The function will find the order by id and grab the wallet address from the custom attributes. If the wallet is found, the function will gift the specified amount of tokens to that wallet address.
  * 
  * @example
  * ```javascript
@@ -78,7 +78,7 @@ export async function rewardTokensWebhook({
       rewardAmount,
       chain,
       sdkOptions,
-      fromWebhook: true,
+      waitForResponse: true,
     })
     return tx;
   } catch (e) {
@@ -103,7 +103,7 @@ export async function rewardTokensWebhook({
  * });
  * ```
  * @returns Transaction hash
- * @public
+ * @private
  * */
 
 export async function rewardTokens({
@@ -113,7 +113,7 @@ export async function rewardTokens({
   chain,
   sdkOptions,
   signerOrWallet,
-  fromWebhook = false,
+  waitForResponse = false,
 }: RewardTokensParams) {
   const sdk = await getSdkInstance(signerOrWallet, chain, sdkOptions);
   if (!sdk) {
@@ -126,7 +126,7 @@ export async function rewardTokens({
   }
   try {
     let txHash = "";
-    if (fromWebhook) {
+    if (waitForResponse) {
       txHash = await sendTokensAsync({
         tokenContract,
         receiver,
@@ -148,7 +148,7 @@ export async function rewardTokens({
 /**
  * Read the webhook information, grab the wallet address from an order, generate a digital receipt and send it to that wallet.
  * 
- * @description NOTE: This function relies on the headers information given from a Shopify webhook. The function will find the order by id and grab the wallet address from the custom attributes. If the wallet is found, the function will generate a digital receipt and send it to that wallet address.
+ * @description This function relies on the headers information given from a Shopify webhook. The function will find the order by id and grab the wallet address from the custom attributes. If the wallet is found, the function will generate a digital receipt and send it to that wallet address.
  * 
  * @example
  * ```javascript
@@ -224,7 +224,7 @@ export async function issueDigitalReceiptWebhook({
         signerOrWallet,
         chain,
         receiver,
-        fromWebhook: true,
+        waitForResponse: true,
         sdkOptions,
         receiptContractAddress,
         metadata,
@@ -251,19 +251,19 @@ export async function issueDigitalReceiptWebhook({
  *   chain: "goerli",
  *   receiver: "{{wallet_address}}",
  *   sdkOptions: {{sdk_options}},
- *   receiptContractAddress: {{"contract_address"}},
+ *   receiptContractAddress: {{"contract_address"}}, // Must be an NFT Collection contract
  *   metadata,
  * });
  * ```
  * @returns Transaction hash
- * @public
+ * @private
  * */
 
 export async function issueDigitalReceipt({
   signerOrWallet,
   chain,
   receiver,
-  fromWebhook = false,
+  waitForResponse = false,
   sdkOptions,
   receiptContractAddress,
   metadata,
@@ -275,11 +275,11 @@ export async function issueDigitalReceipt({
 
   const receiptContract = await sdk.getContract(receiptContractAddress, "nft-collection");
   if (!receiptContract) {
-    throw new Error("Error getting token contract");
+    throw new Error("Error getting nft-collection contract");
   }
   try {
     let txHash = "";
-    if (fromWebhook) {
+    if (waitForResponse) {
       txHash = await sendReceiptAsync({
         receiptContract,
         receiver,
@@ -326,7 +326,7 @@ export async function rewardDiscount({
   sdkOptions,
   tokenContractAddress,
   requiredPoints,
-  discountDollarAmount,
+  discountPercentage,
   shopifyAdminUrl,
   shopifyAccessToken,
 }: RedeemDiscountCodeParams) {
@@ -346,8 +346,9 @@ export async function rewardDiscount({
   const discountCode = await generateDiscountCode({
     shopifyAdminUrl,
     shopifyAccessToken,
-    discountDollarAmount,
+    discountPercentage,
   })
+  console.log(`Discount code generated: ${JSON.stringify(discountCode, null, 2)}`);
   // Burn the points from the wallet.
   try {
     await redeemPointsSync({

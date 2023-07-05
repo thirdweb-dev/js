@@ -132,7 +132,6 @@ export async function sendReceiptAsync({
   metadata
 }: SendReceiptParams): Promise<ContractTransaction["hash"]> {
   const preparedTx = await receiptContract.erc721.mintTo.prepare(receiver, metadata);
-  preparedTx.encode();
   const tx = await preparedTx.send();
   console.log(`Sending digital receipt to receiver address: ${receiver}`, `tx: ${tx.hash}`);
   return tx.hash;
@@ -143,7 +142,6 @@ export async function redeemPointsSync({
   receiver,
   quantity,
 }: RedeemPointsParams): Promise<ContractTransaction["hash"]> {
-  console.log(`Redeeming ${quantity} points for address: ${receiver}`);
   const tx = await tokenContract.erc20.burnFrom(receiver, quantity);
   console.log(`Redeemed ${quantity} points for address: ${receiver}`, `tx: ${tx.receipt.transactionHash}`);
   return tx.receipt.transactionHash;

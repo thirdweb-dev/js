@@ -2,6 +2,10 @@ import { GenerateDiscountParams, GetWalletFromOrderParams, ResponseBody } from "
 import { GENERATE_BASIC_DISCOUNT_MUTATION, GET_ORDER_BY_ID_QUERY } from "./queries";
 import { shopifyFetchAdminAPI } from "./utils";
 
+function generateUniqueCode() {
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}
+
 export async function getWalletFromOrder({
   shopifyAdminUrl,
   shopifyAccessToken,
@@ -50,7 +54,7 @@ export async function getWalletFromOrder({
 export async function generateDiscountCode({
   shopifyAdminUrl,
   shopifyAccessToken,
-  discountDollarAmount,
+  discountPercentage,
 }: GenerateDiscountParams) {
   let response;
   try {
@@ -59,32 +63,34 @@ export async function generateDiscountCode({
       shopifyAccessToken,
       query: GENERATE_BASIC_DISCOUNT_MUTATION,
       variables: {
-        automaticBasicDiscount: {
-          title: `${discountDollarAmount}% off your order`,
+        basicCodeDiscount: {
+          title: `${discountPercentage}% off your order`,
+          code: generateUniqueCode(),
           startsAt: new Date().toISOString(),
           endsAt: null,
-          minimumRequirement: {
-            quantity: {
-              greaterThanOrEqualToQuantity: {
-                amount: 1,
-              }
-            }
+          customerSelection: {
+            all: true
           },
           customerGets: {
             value: {
-              percentage: (discountDollarAmount / 100),
+              percentage: discountPercentage / 100
             },
             items: {
-              all: true,
+              all: true
             }
-          }
+          },
+          appliesOncePerCustomer: true
         }
-      },
+      }
     });
   } catch (e) {
     throw new Error(`Error generating discount from Shopify: \n${e}`);
   }
 
-  // console.log(response.body);
-  return response.body;
+  if (!response.body.data.discountCodeBasicCreate) {
+    console.log(JSON.stringify(response.body, null, 2));
+    throw new Error("Error generating discount from Shopify");
+  }
+
+  return response.body.data.discountCodeBasicCreate.codeDiscountNode.codeDiscount.codes.nodes[0].code;
 };

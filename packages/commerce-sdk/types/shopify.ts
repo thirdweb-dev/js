@@ -1,7 +1,7 @@
 export interface GenerateDiscountParams {
   shopifyAdminUrl: string;
   shopifyAccessToken: string;
-  discountDollarAmount: number;
+  discountPercentage: number;
 }
 
 export interface GetWalletFromOrderParams {

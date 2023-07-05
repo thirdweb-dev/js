@@ -17,7 +17,7 @@ type StandardFunctionParams = {
   signerOrWallet: Signer | AbstractClientWallet;
   chain: string;
   receiver: string;
-  fromWebhook?: boolean;
+  waitForResponse?: boolean;
   sdkOptions?: SDKOptions;
 }
 
@@ -55,7 +55,7 @@ export type SendReceiptParams = {
 export type RedeemDiscountCodeParams = StandardFunctionParams & {
   tokenContractAddress: string;
   requiredPoints: number;
-  discountDollarAmount: number;
+  discountPercentage: number;
   shopifyAdminUrl: string;
   shopifyAccessToken: string;
 }
