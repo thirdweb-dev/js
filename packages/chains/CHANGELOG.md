@@ -1,5 +1,33 @@
 # @thirdweb-dev/chains
 
+## 0.1.27
+
+### Patch Changes
+
+- [#1278](https://github.com/thirdweb-dev/js/pull/1278) [`8a389f12`](https://github.com/thirdweb-dev/js/commit/8a389f1295d2bf726059997ea0ca10cf0424f2a2) Thanks [@jnsdls](https://github.com/jnsdls)! - updated various dependencies
+
+- [#1281](https://github.com/thirdweb-dev/js/pull/1281) [`a3bb17cb`](https://github.com/thirdweb-dev/js/commit/a3bb17cb33f033846fb3b4c8a0a4809ba76cab96) Thanks [@nkrishang](https://github.com/nkrishang)! - Handle ERC4337Signer correctly for signTypedData
+
+## 0.1.26
+
+### Patch Changes
+
+- [#1276](https://github.com/thirdweb-dev/js/pull/1276) [`5882091e`](https://github.com/thirdweb-dev/js/commit/5882091eab65978009a5a5305701f121851b10ad) Thanks [@MananTank](https://github.com/MananTank)! - Do not change order or RPCs in `getChainRPCs` to Fix RPC override issue
+
+## 0.1.25
+
+### Patch Changes
+
+- [#1248](https://github.com/thirdweb-dev/js/pull/1248) [`620e89dc`](https://github.com/thirdweb-dev/js/commit/620e89dc25c91557e2164a602c7aedd733525087) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - update chains
+
+- [#1243](https://github.com/thirdweb-dev/js/pull/1243) [`0fd8aa04`](https://github.com/thirdweb-dev/js/commit/0fd8aa04a9424497758d13a51a72363edcc30e19) Thanks [@therealharpaljadeja](https://github.com/therealharpaljadeja)! - update chains
+
+## 0.1.24
+
+### Patch Changes
+
+- [#1241](https://github.com/thirdweb-dev/js/pull/1241) [`9af346ee`](https://github.com/thirdweb-dev/js/commit/9af346eeada1037be27c8d3c9e1777f7be11a8ea) Thanks [@nkrishang](https://github.com/nkrishang)! - Use fn getAllAccounts instead of event logs AccountCreated
+
 ## 0.1.23
 
 ### Patch Changes

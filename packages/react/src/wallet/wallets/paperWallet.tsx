@@ -1,4 +1,7 @@
-import { PaperWallet } from "@thirdweb-dev/wallets";
+import {
+  PaperWallet,
+  PaperWalletAdditionalOptions,
+} from "@thirdweb-dev/wallets";
 import {
   WalletConfig,
   WalletOptions,
@@ -11,7 +14,7 @@ import { Spinner } from "../../components/Spinner";
 import { Flex } from "../../components/basic";
 import { InputSelectionUI } from "./InputSelectionUI";
 
-type PaperConfig = { clientId: string };
+type PaperConfig = Omit<PaperWalletAdditionalOptions, "chain" | "chains">;
 
 export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
   return {
@@ -32,7 +35,8 @@ const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet>> = (props) => {
       placeholder="Enter your email address"
       name="email"
       type="email"
-      errorMessage={(input) => {
+      errorMessage={(_input) => {
+        const input = _input.replace(/\+/g, "");
         const emailRegex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
         const isValidEmail = emailRegex.test(input);
         if (!isValidEmail) {

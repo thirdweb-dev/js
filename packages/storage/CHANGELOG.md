@@ -1,5 +1,27 @@
 # @thirdweb-dev/storage
 
+## 1.1.6
+
+### Patch Changes
+
+- [#1286](https://github.com/thirdweb-dev/js/pull/1286) [`2d088d36`](https://github.com/thirdweb-dev/js/commit/2d088d367ca54233836dc69712fd411ab7924205) Thanks [@jnsdls](https://github.com/jnsdls)! - fix double `//` case
+
+- [#1278](https://github.com/thirdweb-dev/js/pull/1278) [`8a389f12`](https://github.com/thirdweb-dev/js/commit/8a389f1295d2bf726059997ea0ca10cf0424f2a2) Thanks [@jnsdls](https://github.com/jnsdls)! - updated various dependencies
+
+- [#1232](https://github.com/thirdweb-dev/js/pull/1232) [`9daf0449`](https://github.com/thirdweb-dev/js/commit/9daf044926bf995ac8998929dbeca548c5eb8561) Thanks [@nessup](https://github.com/nessup)! - Switch over to the new `ipfs.thirdweb-storage.com` public gateway.
+  Better fallback logic for if a gateway is down.
+  Faster loading of files from the default gateway by skipping a roundtrip to redirect.
+
+- [#1285](https://github.com/thirdweb-dev/js/pull/1285) [`546353a4`](https://github.com/thirdweb-dev/js/commit/546353a479c11533818ef917c0f6b4d6f8f69872) Thanks [@jnsdls](https://github.com/jnsdls)! - add additional fallback gateways
+
+- [#1287](https://github.com/thirdweb-dev/js/pull/1287) [`0135a779`](https://github.com/thirdweb-dev/js/commit/0135a7790cf2acde6b701cb41ea10dd311da5ec3) Thanks [@jnsdls](https://github.com/jnsdls)! - fix uploaded-check
+
+## 1.1.5
+
+### Patch Changes
+
+- [#1246](https://github.com/thirdweb-dev/js/pull/1246) [`0c5b03b8`](https://github.com/thirdweb-dev/js/commit/0c5b03b8d6cc6a4e69bb2a4647d3626e69f1283c) Thanks [@nessup](https://github.com/nessup)! - Remove the ipfs-2 gateway due to connectivity errors that seem to happen with certain ISPs
+
 ## 1.1.4
 
 ### Patch Changes

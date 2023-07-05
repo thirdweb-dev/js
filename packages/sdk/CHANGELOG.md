@@ -1,5 +1,53 @@
 # @thirdweb-dev/sdk
 
+## 3.10.28
+
+### Patch Changes
+
+- [#1278](https://github.com/thirdweb-dev/js/pull/1278) [`8a389f12`](https://github.com/thirdweb-dev/js/commit/8a389f1295d2bf726059997ea0ca10cf0424f2a2) Thanks [@jnsdls](https://github.com/jnsdls)! - updated various dependencies
+
+- [#1281](https://github.com/thirdweb-dev/js/pull/1281) [`a3bb17cb`](https://github.com/thirdweb-dev/js/commit/a3bb17cb33f033846fb3b4c8a0a4809ba76cab96) Thanks [@nkrishang](https://github.com/nkrishang)! - Handle ERC4337Signer correctly for signTypedData
+
+- Updated dependencies [[`2d088d36`](https://github.com/thirdweb-dev/js/commit/2d088d367ca54233836dc69712fd411ab7924205), [`8a389f12`](https://github.com/thirdweb-dev/js/commit/8a389f1295d2bf726059997ea0ca10cf0424f2a2), [`9daf0449`](https://github.com/thirdweb-dev/js/commit/9daf044926bf995ac8998929dbeca548c5eb8561), [`546353a4`](https://github.com/thirdweb-dev/js/commit/546353a479c11533818ef917c0f6b4d6f8f69872), [`a3bb17cb`](https://github.com/thirdweb-dev/js/commit/a3bb17cb33f033846fb3b4c8a0a4809ba76cab96), [`0135a779`](https://github.com/thirdweb-dev/js/commit/0135a7790cf2acde6b701cb41ea10dd311da5ec3)]:
+  - @thirdweb-dev/storage@1.1.6
+  - @thirdweb-dev/contracts-js@1.3.8
+  - @thirdweb-dev/chains@0.1.27
+
+## 3.10.27
+
+### Patch Changes
+
+- [#1277](https://github.com/thirdweb-dev/js/pull/1277) [`2b113539`](https://github.com/thirdweb-dev/js/commit/2b113539098384f910b3c4d54e1fde9d35a6f053) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - remove ethers/lib/utils dependency
+
+- [#1271](https://github.com/thirdweb-dev/js/pull/1271) [`c9535715`](https://github.com/thirdweb-dev/js/commit/c95357158819abd42d4b0900ecc2fa40fcb957f8) Thanks [@nkrishang](https://github.com/nkrishang)! - Rename smart wallets to account
+
+- Updated dependencies [[`5882091e`](https://github.com/thirdweb-dev/js/commit/5882091eab65978009a5a5305701f121851b10ad)]:
+  - @thirdweb-dev/chains@0.1.26
+
+## 3.10.26
+
+### Patch Changes
+
+- [#1249](https://github.com/thirdweb-dev/js/pull/1249) [`ef4cb092`](https://github.com/thirdweb-dev/js/commit/ef4cb092192c58c9b292b29590b888f45f9fd23d) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update EIP155 error substrings for any evm deployments
+
+- [#1254](https://github.com/thirdweb-dev/js/pull/1254) [`30ac3aef`](https://github.com/thirdweb-dev/js/commit/30ac3aef840bde51a61acf786c709cffd3c47354) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fetch base64 NFTs
+
+- Updated dependencies [[`620e89dc`](https://github.com/thirdweb-dev/js/commit/620e89dc25c91557e2164a602c7aedd733525087), [`0fd8aa04`](https://github.com/thirdweb-dev/js/commit/0fd8aa04a9424497758d13a51a72363edcc30e19)]:
+  - @thirdweb-dev/chains@0.1.25
+
+## 3.10.25
+
+### Patch Changes
+
+- [#1233](https://github.com/thirdweb-dev/js/pull/1233) [`d498c79a`](https://github.com/thirdweb-dev/js/commit/d498c79a911d478077dfb8a2490eb1bf91523186) Thanks [@nkrishang](https://github.com/nkrishang)! - Fix smartWalletFactory.getAllEvents
+
+- [#1241](https://github.com/thirdweb-dev/js/pull/1241) [`9af346ee`](https://github.com/thirdweb-dev/js/commit/9af346eeada1037be27c8d3c9e1777f7be11a8ea) Thanks [@nkrishang](https://github.com/nkrishang)! - Use fn getAllAccounts instead of event logs AccountCreated
+
+- Updated dependencies [[`0c5b03b8`](https://github.com/thirdweb-dev/js/commit/0c5b03b8d6cc6a4e69bb2a4647d3626e69f1283c), [`9af346ee`](https://github.com/thirdweb-dev/js/commit/9af346eeada1037be27c8d3c9e1777f7be11a8ea)]:
+  - @thirdweb-dev/storage@1.1.5
+  - @thirdweb-dev/contracts-js@1.3.7
+  - @thirdweb-dev/chains@0.1.24
+
 ## 3.10.24
 
 ### Patch Changes

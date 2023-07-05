@@ -30,8 +30,6 @@ import {
   constants,
 } from "ethers";
 import { BigNumber } from "ethers";
-import { FormatTypes } from "ethers/lib/utils.js";
-import type { ConnectionInfo } from "ethers/lib/utils.js";
 import invariant from "tiny-invariant";
 import EventEmitter from "eventemitter3";
 import type { DeployEvents } from "../../types/deploy";
@@ -494,7 +492,7 @@ export class Transaction<
       try {
         // for dynamic contracts, add 30% to the gas limit to account for multiple delegate calls
         const abi = JSON.parse(
-          this.contract.interface.format(FormatTypes.json) as string,
+          this.contract.interface.format("json") as string,
         );
         if (isRouterContract(abi)) {
           overrides.gasLimit = overrides.gasLimit.mul(110).div(100);
@@ -663,7 +661,7 @@ export class Transaction<
    */
   private async transactionError(error: any) {
     const provider = this.provider as providers.Provider & {
-      connection?: ConnectionInfo;
+      connection?: utils.ConnectionInfo;
     };
 
     // Get metadata for transaction to populate into error
@@ -849,7 +847,7 @@ export class DeployTransaction extends TransactionContext {
    */
   private async deployError(error: any) {
     const provider = this.provider as providers.Provider & {
-      connection?: ConnectionInfo;
+      connection?: utils.ConnectionInfo;
     };
 
     // Get metadata for transaction to populate into error

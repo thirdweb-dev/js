@@ -1,4 +1,4 @@
-import { Chain } from "@thirdweb-dev/chains";
+import { Chain, getChainByChainId } from "@thirdweb-dev/chains";
 import { ConnectParams, Connector } from "../../interfaces/connector";
 import { ERC4337EthersProvider } from "./lib/erc4337-provider";
 import { getVerifyingPaymaster } from "./lib/paymaster";
@@ -15,6 +15,7 @@ import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
 import { BigNumber, ethers, providers } from "ethers";
 import {
+  ChainOrRpcUrl,
   getChainProvider,
   SmartContract,
   Transaction,
@@ -36,14 +37,14 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   async initialize(personalWallet: EVMWallet) {
     const config = this.config;
-    const chain =
-      typeof config.chain === "string"
-        ? config.chain
-        : (config.chain as Chain).slug;
+    const originalProvider = getChainProvider(config.chain, {
+      thirdwebApiKey: config.thirdwebApiKey || DEFAULT_WALLET_API_KEY,
+    }) as providers.BaseProvider;
+    const chainSlug = await this.getChainSlug(config.chain, originalProvider);
     const bundlerUrl =
-      this.config.bundlerUrl || `https://${chain}.bundler.thirdweb.com`;
+      this.config.bundlerUrl || `https://${chainSlug}.bundler.thirdweb.com`;
     const paymasterUrl =
-      this.config.paymasterUrl || `https://${chain}.bundler.thirdweb.com`;
+      this.config.paymasterUrl || `https://${chainSlug}.bundler.thirdweb.com`;
     const entryPointAddress = config.entryPointAddress || ENTRYPOINT_ADDRESS;
     const localSigner = await personalWallet.getSigner();
     const providerConfig: ProviderConfig = {
@@ -65,9 +66,6 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       accountInfo: config.accountInfo || this.defaultAccountInfo(),
       thirdwebApiKey: config.thirdwebApiKey,
     };
-    const originalProvider = getChainProvider(config.chain, {
-      thirdwebApiKey: config.thirdwebApiKey || DEFAULT_WALLET_API_KEY,
-    }) as providers.BaseProvider;
     this.personalWallet = personalWallet;
     const accountApi = new AccountAPI(providerConfig, originalProvider);
     this.aaProvider = await create4337Provider(
@@ -252,7 +250,28 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     };
   }
 
-  set factoryAddress(value: string) {
-    this.factoryAddress = value;
+  private async getChainSlug(
+    chainOrRpc: ChainOrRpcUrl,
+    provider: ethers.providers.Provider,
+  ): Promise<string> {
+    if (typeof chainOrRpc === "object") {
+      return chainOrRpc.slug;
+    }
+    if (typeof chainOrRpc === "number") {
+      const chain = getChainByChainId(chainOrRpc);
+      return chain.slug;
+    }
+    if (typeof chainOrRpc === "string") {
+      if (chainOrRpc.startsWith("http") || chainOrRpc.startsWith("ws")) {
+        // if it's a url, try to get the chain id from the provider
+        const chainId = (await provider.getNetwork()).chainId;
+        const chain = getChainByChainId(chainId);
+        return chain.slug;
+      }
+      // otherwise its the network name
+      return chainOrRpc;
+    } else {
+      throw new Error(`Invalid network: ${chainOrRpc}`);
+    }
   }
 }

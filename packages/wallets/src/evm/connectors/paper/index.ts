@@ -8,6 +8,7 @@ import type {
   AuthLoginReturnType,
   InitializedUser,
   PaperEmbeddedWalletSdk,
+  RecoveryShareManagement,
 } from "@paperxyz/embedded-wallet-service-sdk";
 import { UserStatus } from "@paperxyz/embedded-wallet-service-sdk";
 import type { Chain } from "@thirdweb-dev/chains";
@@ -39,9 +40,15 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
             "@paperxyz/embedded-wallet-service-sdk"
           );
           resolve(
-            new PaperEmbeddedWalletSdk({
+            new PaperEmbeddedWalletSdk<RecoveryShareManagement.USER_MANAGED>({
+              advancedOptions: {
+                // @ts-expect-error - Allow passing string instead of forcing enum
+                recoveryShareManagement:
+                  this.options.advancedOptions?.recoveryShareManagement,
+              },
               clientId: this.options.clientId,
-              chain: "Ethereum", // just pass Ethereum no matter what chain we are going to connect
+              chain: "Ethereum",
+              styles: this.options.styles,
             }),
           );
         } catch (err) {
@@ -81,6 +88,10 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
       throw new Error("Error connecting User");
     }
 
+    if (options?.chainId) {
+      this.switchChain(options.chainId);
+    }
+
     this.setupListeners();
     return this.getAddress();
   }
@@ -88,6 +99,7 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
   async disconnect(): Promise<void> {
     const paper = await this.#paper;
     await paper?.auth.logout();
+    this.#signer = undefined;
     this.user = null;
   }
 

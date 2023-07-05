@@ -65,7 +65,9 @@ export const ThirdwebProvider = <
   theme,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
-  useCoinbaseWalletListener();
+  useCoinbaseWalletListener(
+    !!supportedWallets.find((w) => w.id === walletIds.coinbase),
+  );
 
   const hasMagicConfig = useMemo(
     () => !!supportedWallets.find((wc) => wc.id === walletIds.magicLink),

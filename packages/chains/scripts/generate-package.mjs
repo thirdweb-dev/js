@@ -80,6 +80,33 @@ chains = chains
     };
   });
 
+/**
+ * Sort RPCs in chain
+ * @param {Chain} chain
+ */
+function sortRPCs(chain) {
+  const thirdwebRPCs = [];
+  const alchemyRPCs = [];
+  const infuraRPCs = [];
+  const otherRPCs = [];
+
+  chain.rpc.forEach((rpc) => {
+    if (rpc.includes("${THIRDWEB_API_KEY}")) {
+      thirdwebRPCs.push(rpc);
+    } else if (rpc.includes("${ALCHEMY_API_KEY}")) {
+      alchemyRPCs.push(rpc);
+    } else if (rpc.includes("${INFURA_API_KEY}")) {
+      infuraRPCs.push(rpc);
+    } else {
+      otherRPCs.push(rpc);
+    }
+  });
+
+  chain.rpc = [...thirdwebRPCs, ...infuraRPCs, ...alchemyRPCs, ...otherRPCs];
+}
+
+chains.forEach(sortRPCs);
+
 const imports = [];
 const exports = [];
 const exportNames = [];
@@ -145,6 +172,10 @@ function findSlug(chain) {
   }
   if (slug === "base-goerli-testnet") {
     slug = "base-goerli";
+  }
+  // optimisim rename handling
+  if (slug === "op") {
+    slug = "optimism";
   }
   // end special cases
 

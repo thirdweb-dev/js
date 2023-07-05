@@ -4,7 +4,7 @@ export default {
   "chain": "ETC",
   "rpc": [
     "https://ethereum-classic.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://www.ethercluster.com/etc"
+    "https://etc.rivet.link"
   ],
   "faucets": [
     "https://free-online-app.com/faucet-for-eth-evm-chains/?"

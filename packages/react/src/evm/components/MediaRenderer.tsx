@@ -431,7 +431,7 @@ export const MediaRenderer = /* @__PURE__ */ React.forwardRef<
           alt={alt}
         />
       );
-    } else if (videoOrImageSrc.mimeType === "text/html") {
+    } else if (videoOrImageSrc.mimeType.startsWith("text/html")) {
       return (
         <IframePlayer
           style={mergedStyle}

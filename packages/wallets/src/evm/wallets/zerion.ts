@@ -1,8 +1,10 @@
 import type { ZerionConnector } from "../connectors/zerion";
-import type { WalletConnectV1Connector as WalletConnectV1ConnectorType } from "../connectors/wallet-connect-v1";
+import type { WalletConnectConnector as WalletConnectConnectorType } from "../connectors/wallet-connect";
 import { Connector, WagmiAdapter } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import { assertWindowEthereum } from "../utils/assertWindowEthereum";
+import { TW_WC_PROJECT_ID } from "../constants/wc";
+import { QRModalOptions } from "../connectors/wallet-connect/qrModalOptions";
 
 type ConnectWithQrCodeArgs = {
   chainId?: number;
@@ -10,16 +12,38 @@ type ConnectWithQrCodeArgs = {
   onConnected: (accountAddress: string) => void;
 };
 
-export class ZerionWallet extends AbstractClientWallet {
+type ZerionAdditionalOptions = {
+  /**
+   * Whether to open the default Wallet Connect QR code Modal for connecting to Zerion Wallet on mobile if Zerion is not injected when calling connect().
+   */
+  qrcode?: boolean;
+
+  /**
+   * When connecting MetaMask using the QR Code - Wallet Connect connector is used which requires a project id.
+   * This project id is Your project’s unique identifier for wallet connect that can be obtained at cloud.walletconnect.com.
+   *
+   * https://docs.walletconnect.com/2.0/web3modal/options#projectid-required
+   */
+  projectId?: string;
+
+  /**
+   * options to customize the Wallet Connect QR Code Modal ( only relevant when qrcode is true )
+   *
+   * https://docs.walletconnect.com/2.0/web3modal/options
+   */
+  qrModalOptions?: QRModalOptions;
+};
+
+export class ZerionWallet extends AbstractClientWallet<ZerionAdditionalOptions> {
   connector?: Connector;
   zerionConnector?: ZerionConnector;
-  walletConnectConnector?: WalletConnectV1ConnectorType;
+  walletConnectConnector?: WalletConnectConnectorType;
   isInjected: boolean;
 
   static id = "zerion" as const;
   static meta = {
     name: "Zerion Wallet",
-    iconURL: "https://tokenlists-icons.s3.amazonaws.com/zerion.png",
+    iconURL: "ipfs://Qmb1LhNtMUkzbgk1V8ZiUSRXjMJGRkS5HH3R71KyRgjdBG/zerion.png",
     urls: {
       chrome: "https://zerion.io/extension",
       android: "https://link.zerion.io/901o6IN0jqb",
@@ -30,7 +54,7 @@ export class ZerionWallet extends AbstractClientWallet {
     return "Zerion Wallet";
   }
 
-  constructor(options?: WalletOptions) {
+  constructor(options?: WalletOptions<ZerionAdditionalOptions>) {
     super(ZerionWallet.id, options);
 
     if (assertWindowEthereum(globalThis.window)) {
@@ -55,21 +79,18 @@ export class ZerionWallet extends AbstractClientWallet {
         this.zerionConnector = zerionConnector;
         this.connector = new WagmiAdapter(zerionConnector);
       } else {
-        const { WalletConnectV1Connector } = await import(
-          "../connectors/wallet-connect-v1"
+        const { WalletConnectConnector } = await import(
+          "../connectors/wallet-connect"
         );
 
-        const walletConnectConnector = new WalletConnectV1Connector({
+        const walletConnectConnector = new WalletConnectConnector({
           chains: this.chains,
-          storage: this.walletStorage,
           options: {
-            clientMeta: {
-              name: this.dappMetadata.name,
-              description: this.dappMetadata.description || "",
-              url: this.dappMetadata.url,
-              icons: [this.dappMetadata.logoUrl || ""],
-            },
-            qrcode: false,
+            projectId: this.options?.projectId || TW_WC_PROJECT_ID, // TODO,
+            storage: this.walletStorage,
+            qrcode: this.options?.qrcode,
+            dappMetadata: this.dappMetadata,
+            qrModalOptions: this.options?.qrModalOptions,
           },
         });
 
@@ -92,16 +113,9 @@ export class ZerionWallet extends AbstractClientWallet {
     const wcProvider = await wcConnector.getProvider();
 
     // set a listener for display_uri event
-    wcProvider.connector.on(
-      "display_uri",
-      (error, payload: { params: string[] }) => {
-        options.onQrCodeUri(payload.params[0]);
-      },
-    );
-
-    // trigger the display_uri event to get the QR code
-    await wcProvider.enable();
-    // connected to app here
+    wcProvider.on("display_uri", (uri) => {
+      options.onQrCodeUri(uri);
+    });
 
     // trigger connect flow
     this.connect({ chainId: options.chainId }).then(options.onConnected);

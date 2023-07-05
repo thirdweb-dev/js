@@ -33,18 +33,39 @@ export class StorageDownloader implements IStorageDownloader {
       throw new Error(
         "[FAILED_TO_DOWNLOAD_ERROR] Unable to download from URI - all gateway URLs failed to respond.",
       );
+    } else if (attempts > 0) {
+      console.warn(`Retrying download with backup gateway URL: ${resolvedUri}`);
     }
 
-    const res = await fetch(resolvedUri);
+    const resOrErr = await fetch(resolvedUri).catch((err) => err);
 
-    // If request to the current gateway fails, recursively try the next one we know about
-    if (res.status >= 500 || res.status === 403 || res.status === 408) {
+    if (resOrErr.ok) {
+      return resOrErr;
+    }
+
+    // can't use instanceof "Response" in node...
+    if ("status" in resOrErr) {
+      if (resOrErr.status === 410 || resOrErr.status === 403) {
+        // Don't retry if the content is blocklisted
+        console.error(
+          `Request to ${resolvedUri} failed because this content seems to be blocklisted. Search VirusTotal for this URL to confirm: ${resolvedUri} `,
+        );
+        return resOrErr;
+      }
+
       console.warn(
-        `Request to ${resolvedUri} failed with status ${res.status} - ${res.statusText}`,
+        `Request to ${resolvedUri} failed with status ${resOrErr.status} - ${resOrErr.statusText}`,
       );
-      return this.download(uri, gatewayUrls, attempts + 1);
+
+      // Don't retry if we see 408 or < 500 status codes that are likely to be resolved by trying another gateway
+      if (resOrErr.status !== 408 && resOrErr.status < 500) {
+        return resOrErr;
+      }
+    } else {
+      console.warn(`Request to ${resolvedUri} failed with error`, resOrErr);
     }
 
-    return res;
+    // Since the current gateway failed, recursively try the next one we know about
+    return this.download(uri, gatewayUrls, attempts + 1);
   }
 }
