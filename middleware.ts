@@ -66,7 +66,7 @@ export function middleware(request: NextRequest) {
     if (!solNetwork) {
       return redirect(request, "/404");
     } else {
-      return rewrite(request, `/solana${pathname}`);
+      return rewrite(request, `/sol${pathname}`);
     }
   }
   // evm contract page
