@@ -1,8 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bubs Testnet",
+  "name": "Taro Testnet",
   "chain": "gETH",
-  "shortName": "Bubs",
+  "shortName": "Taro",
   "chainId": 1582,
   "testnet": true,
   "icon": {
@@ -12,8 +12,8 @@ export default {
     "height": 512
   },
   "rpc": [
-    "https://bubs-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://bubs-testnet.calderachain.xyz/http"
+    "https://taro-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://taro-testnet.calderachain.xyz/http"
   ],
   "nativeCurrency": {
     "decimals": 18,
@@ -22,15 +22,15 @@ export default {
   },
   "explorers": [
     {
-      "url": "https://explorer.bubstestnet.com",
-      "name": "Bubs Testnet Explorer",
+      "url": "https://explorer.tarotestnet.com",
+      "name": "Taro Testnet Explorer",
       "standard": "EIP3091"
     }
   ],
   "faucets": [
-    "https://bubstestnet.com"
+    "https://tarotestnet.com"
   ],
-  "infoURL": "https://bubstestnet.com",
+  "infoURL": "https://tarotestnet.com",
   "networkId": 1582,
-  "slug": "bubs-testnet"
+  "slug": "taro-testnet"
 } as const satisfies Chain;
