@@ -1,4 +1,4 @@
-import { Theme } from "../design-system";
+import type { Theme } from "../design-system";
 import { useClipboard } from "../evm/components/hooks/useCopyClipboard";
 import { ToolTip } from "./Tooltip";
 import styled from "@emotion/styled";
@@ -28,6 +28,6 @@ export const CopyIcon: React.FC<{
   );
 };
 
-const CheckIconStyled = styled(CheckIcon)<{ theme?: Theme }>`
+const CheckIconStyled = /* @__PURE__ */ styled(CheckIcon)<{ theme?: Theme }>`
   color: ${(p) => p.theme.icon.success};
 `;

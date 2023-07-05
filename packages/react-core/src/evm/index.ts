@@ -47,10 +47,8 @@ export type {
 } from "../core/types/wallet";
 
 // auth
-export {
-  ThirdwebAuthProvider,
-  useThirdwebAuthContext,
-} from "./contexts/thirdweb-auth";
+export { useThirdwebAuthContext } from "./contexts/thirdweb-auth";
+export { ThirdwebAuthProvider } from "./contexts/ThirdwebAuthProvider";
 export type {
   ThirdwebAuthConfig,
   ISecureStorage,
@@ -153,6 +151,7 @@ export {
   useExecuteAuctionSale,
   useOffers,
   useBuyNow,
+  useBuyDirectListing,
 } from "./hooks/async/marketplace";
 
 // nft
@@ -168,6 +167,8 @@ export {
   useTransferNFT,
   useAirdropNFT,
   useBurnNFT,
+  useSharedMetadata,
+  useSetSharedMetadata,
 } from "./hooks/async/nft";
 
 // roles
@@ -193,10 +194,27 @@ export {
   useBurnToken,
 } from "./hooks/async/token";
 
+// account factory
+export {
+  useIsAccountDeployed,
+  useAccounts,
+  useCreateAccount,
+  useAccountsForAddress,
+} from "./hooks/async/account-factory";
+
+// account
+export { useAccountSigners, useSetAccountSigners } from "./hooks/async/account";
+
 // thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)
 
 // auth hooks
-export { useLogin, useLogout, useUser, useAuth } from "./hooks/auth";
+export {
+  useLogin,
+  useLogout,
+  useUser,
+  useAuth,
+  useSwitchAccount,
+} from "./hooks/auth";
 export type { UserWithData } from "./hooks/auth";
 
 // contract hooks

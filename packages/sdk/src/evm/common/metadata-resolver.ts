@@ -1,20 +1,17 @@
-import { ThirdwebSDK } from "../core";
-import {
-  Abi,
-  PublishedMetadata,
-  AbiSchema,
-  ContractInfoSchema,
-  ContractSource,
-  Address,
-} from "../schema";
-import { resolveContractUriFromAddress } from "./feature-detection";
+import { Abi, PublishedMetadata } from "../schema/contracts/custom";
+import { Address } from "../schema/shared/Address";
+import { resolveContractUriFromAddress } from "./feature-detection/resolveContractUriFromAddress";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { providers } from "ethers";
+import { Contract, providers } from "ethers";
+import { fetchContractMetadata } from "./fetchContractMetadata";
+import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryLogic.json";
+import { getMultichainRegistryAddress } from "../constants/addresses/getMultichainRegistryAddress";
+import { getChainProvider } from "../constants/urls";
+import type { TWMultichainRegistryLogic } from "@thirdweb-dev/contracts-js";
 
 // Internal static cache
 const metadataCache: Record<string, PublishedMetadata> = {};
-// polygonSDK to fetch metadata from the multichain registry
-const polygonSDK = new ThirdwebSDK("polygon");
+let multichainRegistry: Contract | undefined = undefined;
 
 function getCacheKey(address: string, chainId: number) {
   return `${address}-${chainId}`;
@@ -59,17 +56,24 @@ export async function fetchContractMetadataFromAddress(
     }
     metadata = await fetchContractMetadata(compilerMetadataUri, storage);
   } catch (e) {
-    console.warn(
+    console.debug(
       "Failed to get Contract Metadata from IPFS, defaulting to onchain registry",
       e,
     );
     try {
       // try from multichain registry
-      const importedUri =
-        await polygonSDK.multiChainRegistry.getContractMetadataURI(
-          chainId,
-          address,
-        );
+      if (!multichainRegistry) {
+        multichainRegistry = new Contract(
+          getMultichainRegistryAddress(),
+          TWRegistryABI,
+          getChainProvider("polygon", {}),
+        ) as TWMultichainRegistryLogic;
+      }
+
+      const importedUri = await multichainRegistry.getMetadataUri(
+        chainId,
+        address,
+      );
       if (!importedUri) {
         throw new Error(
           `Could not resolve metadata for contract at ${address}`,
@@ -115,86 +119,4 @@ export async function fetchAbiFromAddress(
     // will fallback to embedded ABIs for prebuilts
   }
   return undefined;
-}
-
-/**
- * @internal
- * @param compilerMetadataUri
- * @param storage
- */
-export async function fetchContractMetadata(
-  compilerMetadataUri: string,
-  storage: ThirdwebStorage,
-): Promise<PublishedMetadata> {
-  const metadata = await storage.downloadJSON(compilerMetadataUri);
-  if (!metadata || !metadata.output) {
-    throw new Error(
-      `Could not resolve metadata for contract at ${compilerMetadataUri}`,
-    );
-  }
-  const abi = AbiSchema.parse(metadata.output.abi);
-  const compilationTarget = metadata.settings.compilationTarget;
-  const targets = Object.keys(compilationTarget);
-  const name = compilationTarget[targets[0]];
-  const info = ContractInfoSchema.parse({
-    title: metadata.output.devdoc.title,
-    author: metadata.output.devdoc.author,
-    details: metadata.output.devdoc.detail,
-    notice: metadata.output.userdoc.notice,
-  });
-  const licenses: string[] = [
-    ...new Set(
-      Object.entries(metadata.sources).map(([, src]) => (src as any).license),
-    ),
-  ];
-  return {
-    name,
-    abi,
-    metadata,
-    info,
-    licenses,
-  };
-}
-
-/**
- * @internal
- * @param publishedMetadata
- * @param storage
- */
-export async function fetchSourceFilesFromMetadata(
-  publishedMetadata: PublishedMetadata,
-  storage: ThirdwebStorage,
-): Promise<ContractSource[]> {
-  return await Promise.all(
-    Object.entries(publishedMetadata.metadata.sources).map(
-      async ([path, info]) => {
-        const urls = (info as any).urls as string[];
-        const ipfsLink = urls
-          ? urls.find((url) => url.includes("ipfs"))
-          : undefined;
-        if (ipfsLink) {
-          const ipfsHash = ipfsLink.split("ipfs/")[1];
-          // 3 sec timeout for sources that haven't been uploaded to ipfs
-          const timeout = new Promise<string>((_r, rej) =>
-            setTimeout(() => rej("timeout"), 3000),
-          );
-          const source = await Promise.race([
-            (await storage.download(`ipfs://${ipfsHash}`)).text(),
-            timeout,
-          ]);
-          return {
-            filename: path,
-            source,
-          };
-        } else {
-          return {
-            filename: path,
-            source:
-              (info as any).content ||
-              "Could not find source for this contract",
-          };
-        }
-      },
-    ),
-  );
 }

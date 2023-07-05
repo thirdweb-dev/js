@@ -1,10 +1,10 @@
-import { ethers } from "ethers";
+import { utils } from "ethers";
 import {
-  checkVerificationStatus,
-  verify,
   verifyThirdwebPrebuiltImplementation,
-} from "../../common";
-import { SDKOptions } from "../../schema";
+  checkVerificationStatus,
+} from "../../common/verification";
+import { verify } from "../../common/verification";
+import { SDKOptions } from "../../schema/sdk-options";
 import { ConstructorParamMap } from "../../types/any-evm/deploy-data";
 import { NetworkInput } from "../types";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
@@ -123,7 +123,7 @@ export class ContractVerifier extends RPCConnectionHandler {
         return arg.value;
       });
 
-      encodedArgs = ethers.utils.defaultAbiCoder.encode(
+      encodedArgs = utils.defaultAbiCoder.encode(
         paramTypes,
         paramValues,
       );

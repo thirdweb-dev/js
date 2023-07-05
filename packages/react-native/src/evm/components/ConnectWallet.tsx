@@ -1,36 +1,28 @@
-import { ThemeProvider, ThemeProviderProps } from "../styles/ThemeProvider";
-import { ConnectWalletDetails } from "./ConnectWalletDetails/ConnectWalletDetails";
-import { ConnectWalletFlow } from "./ConnectWalletFlow/ConnectWalletFlow";
+import { ThemeProvider } from "../styles/ThemeProvider";
+import {
+  ConnectWalletDetailsProps,
+  WalletDetailsButton,
+} from "./ConnectWalletDetails/WalletDetailsButton";
 import { useAddress } from "@thirdweb-dev/react-core";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Animated } from "react-native";
+import { ConnectWalletButton } from "./ConnectWalletFlow/ConnectWalletButton";
+import { ConnectWalletButtonProps } from "./ConnectWalletFlow/ConnectWalletButton";
 
 export type ConnectWalletProps = {
-  theme?: ThemeProviderProps["theme"];
-  /**
-   * Set a custom title for the button
-   * @default "Connect Wallet"
-   */
-  buttonTitle?: string;
-  /**
-   * Set a custom title for the Connect Wallet modal
-   * @default "Choose your wallet"
-   */
-  modalTitle?: string;
   /**
    * render a custom button to display the connected wallet details instead of the default button
    */
-  detailsButton?: React.ReactElement;
-};
+  detailsButton?: ConnectWalletDetailsProps["detailsButton"];
+} & ConnectWalletButtonProps;
 
 export const ConnectWallet = ({
-  buttonTitle,
   detailsButton,
-  modalTitle,
   theme,
+  buttonTitle,
+  modalTitle,
 }: ConnectWalletProps) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
-
   const address = useAddress();
 
   useEffect(() => {
@@ -45,14 +37,15 @@ export const ConnectWallet = ({
     <ThemeProvider theme={theme}>
       <Animated.View style={{ opacity: fadeAnim }}>
         {address ? (
-          <ConnectWalletDetails
+          <WalletDetailsButton
             address={address}
             detailsButton={detailsButton}
           />
         ) : (
-          <ConnectWalletFlow
-            buttonTitle={buttonTitle}
+          <ConnectWalletButton
             modalTitle={modalTitle}
+            buttonTitle={buttonTitle}
+            theme={theme}
           />
         )}
       </Animated.View>

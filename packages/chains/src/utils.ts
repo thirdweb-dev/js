@@ -28,59 +28,45 @@ export function getChainRPCs(
     ...options,
   };
 
-  const modeChains = chain.rpc.filter((rpc) => {
-    if (rpc.startsWith("http") && mode === "http") {
-      return true;
-    }
-    if (rpc.startsWith("ws") && mode === "ws") {
-      return true;
+  const processedRPCs: string[] = [];
+
+  chain.rpc.forEach((rpc) => {
+    // exclude RPC if mode mismatch
+    if (mode === "http" && !rpc.startsWith("http")) {
+      return;
     }
 
-    return false;
+    if (mode === "ws" && !rpc.startsWith("ws")) {
+      return;
+    }
+
+    // Replace API_KEY placeholder with value
+    if (thirdwebApiKey && rpc.includes("${THIRDWEB_API_KEY}")) {
+      processedRPCs.push(rpc.replace("${THIRDWEB_API_KEY}", thirdwebApiKey));
+    } else if (infuraApiKey && rpc.includes("${INFURA_API_KEY}")) {
+      processedRPCs.push(rpc.replace("${INFURA_API_KEY}", infuraApiKey));
+    } else if (alchemyApiKey && rpc.includes("${ALCHEMY_API_KEY}")) {
+      processedRPCs.push(rpc.replace("${ALCHEMY_API_KEY}", alchemyApiKey));
+    }
+
+    // exclude RPCs with unknown placeholder
+    else if (rpc.includes("${")) {
+      return;
+    }
+
+    // add as is
+    else {
+      processedRPCs.push(rpc);
+    }
   });
 
-  const thirdwebRPC = modeChains
-    .filter((rpc) => {
-      return rpc.includes("${THIRDWEB_API_KEY}") && thirdwebApiKey;
-    })
-    .map((rpc) =>
-      thirdwebApiKey ? rpc.replace("${THIRDWEB_API_KEY}", thirdwebApiKey) : rpc,
-    );
-
-  const alchemyRPC = modeChains
-    .filter((rpc) => {
-      return rpc.includes("${ALCHEMY_API_KEY}") && alchemyApiKey;
-    })
-    .map((rpc) =>
-      alchemyApiKey ? rpc.replace("${ALCHEMY_API_KEY}", alchemyApiKey) : rpc,
-    );
-
-  const infuraRPC = modeChains
-    .filter((rpc) => {
-      return rpc.includes("${INFURA_API_KEY}") && infuraApiKey;
-    })
-    .map((rpc) =>
-      infuraApiKey ? rpc.replace("${INFURA_API_KEY}", infuraApiKey) : rpc,
-    );
-
-  const allOtherRpcs = modeChains.filter((rpc) => {
-    return !rpc.includes("${");
-  });
-
-  const orderedRPCs = [
-    ...thirdwebRPC,
-    ...infuraRPC,
-    ...alchemyRPC,
-    ...allOtherRpcs,
-  ];
-
-  if (orderedRPCs.length === 0) {
+  if (processedRPCs.length === 0) {
     throw new Error(
       `No RPC available for chainId "${chain.chainId}" with mode ${mode}`,
     );
   }
 
-  return orderedRPCs;
+  return processedRPCs;
 }
 
 /**

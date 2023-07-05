@@ -1,4 +1,4 @@
-import { SDKOptions } from "../schema";
+import { SDKOptions } from "../schema/sdk-options";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 export function createStorage(

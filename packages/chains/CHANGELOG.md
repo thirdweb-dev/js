@@ -1,5 +1,112 @@
 # @thirdweb-dev/chains
 
+## 0.1.27
+
+### Patch Changes
+
+- [#1278](https://github.com/thirdweb-dev/js/pull/1278) [`8a389f12`](https://github.com/thirdweb-dev/js/commit/8a389f1295d2bf726059997ea0ca10cf0424f2a2) Thanks [@jnsdls](https://github.com/jnsdls)! - updated various dependencies
+
+- [#1281](https://github.com/thirdweb-dev/js/pull/1281) [`a3bb17cb`](https://github.com/thirdweb-dev/js/commit/a3bb17cb33f033846fb3b4c8a0a4809ba76cab96) Thanks [@nkrishang](https://github.com/nkrishang)! - Handle ERC4337Signer correctly for signTypedData
+
+## 0.1.26
+
+### Patch Changes
+
+- [#1276](https://github.com/thirdweb-dev/js/pull/1276) [`5882091e`](https://github.com/thirdweb-dev/js/commit/5882091eab65978009a5a5305701f121851b10ad) Thanks [@MananTank](https://github.com/MananTank)! - Do not change order or RPCs in `getChainRPCs` to Fix RPC override issue
+
+## 0.1.25
+
+### Patch Changes
+
+- [#1248](https://github.com/thirdweb-dev/js/pull/1248) [`620e89dc`](https://github.com/thirdweb-dev/js/commit/620e89dc25c91557e2164a602c7aedd733525087) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - update chains
+
+- [#1243](https://github.com/thirdweb-dev/js/pull/1243) [`0fd8aa04`](https://github.com/thirdweb-dev/js/commit/0fd8aa04a9424497758d13a51a72363edcc30e19) Thanks [@therealharpaljadeja](https://github.com/therealharpaljadeja)! - update chains
+
+## 0.1.24
+
+### Patch Changes
+
+- [#1241](https://github.com/thirdweb-dev/js/pull/1241) [`9af346ee`](https://github.com/thirdweb-dev/js/commit/9af346eeada1037be27c8d3c9e1777f7be11a8ea) Thanks [@nkrishang](https://github.com/nkrishang)! - Use fn getAllAccounts instead of event logs AccountCreated
+
+## 0.1.23
+
+### Patch Changes
+
+- [#1229](https://github.com/thirdweb-dev/js/pull/1229) [`6816219a`](https://github.com/thirdweb-dev/js/commit/6816219ac13ae571a0c90db6ab389c319bc1f052) Thanks [@jnsdls](https://github.com/jnsdls)! - add/update chains
+
+## 0.1.22
+
+### Patch Changes
+
+- [#1192](https://github.com/thirdweb-dev/js/pull/1192) [`f41f1a29`](https://github.com/thirdweb-dev/js/commit/f41f1a2958a2cedcf0496c9a3ca284d0b98f1b89) Thanks [@jnsdls](https://github.com/jnsdls)! - fix arbitrum goerli infura url
+
+## 0.1.21
+
+### Patch Changes
+
+- [#1074](https://github.com/thirdweb-dev/js/pull/1074) [`cc20f93e`](https://github.com/thirdweb-dev/js/commit/cc20f93e178d86ee2b3f39102bbb0811de211f05) Thanks [@Marfuen](https://github.com/Marfuen)! - Enhance CLI Install command and update chains
+
+- [#1185](https://github.com/thirdweb-dev/js/pull/1185) [`8e28b0f5`](https://github.com/thirdweb-dev/js/commit/8e28b0f5e75596d29273ed80269bcee6d209adb4) Thanks [@jnsdls](https://github.com/jnsdls)! - add Zora Mainnet
+
+## 0.1.20
+
+### Patch Changes
+
+- [#1140](https://github.com/thirdweb-dev/js/pull/1140) [`16232de9`](https://github.com/thirdweb-dev/js/commit/16232de9eab9966e24e335929b2a3919346af265) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update chains
+
+- [#1138](https://github.com/thirdweb-dev/js/pull/1138) [`645b0303`](https://github.com/thirdweb-dev/js/commit/645b0303cc1a9cbb0a0e9cbd67d11c3b865e4584) Thanks [@jcstein](https://github.com/jcstein)! - feat: create Taro Testnet
+
+## 0.1.19
+
+### Patch Changes
+
+- [#1065](https://github.com/thirdweb-dev/js/pull/1065) [`bd86661f`](https://github.com/thirdweb-dev/js/commit/bd86661f54ca2f1eb09cbae35c704dc79be1b63a) Thanks [@iketw](https://github.com/iketw)! - [Chains] update chains
+
+- [#1064](https://github.com/thirdweb-dev/js/pull/1064) [`c85810ee`](https://github.com/thirdweb-dev/js/commit/c85810eee318b10eee4ada61828adaa51f94ea6c) Thanks [@MananTank](https://github.com/MananTank)! - Do not cache signer in wallets
+
+- [#1047](https://github.com/thirdweb-dev/js/pull/1047) [`6fd10f94`](https://github.com/thirdweb-dev/js/commit/6fd10f94b469dc5659e2ff4ce92a5aff86f3c89d) Thanks [@MananTank](https://github.com/MananTank)! - Fix tree-shaking issue in `@thirdweb-dev/chains`
+
+- [#1090](https://github.com/thirdweb-dev/js/pull/1090) [`5f1e6abb`](https://github.com/thirdweb-dev/js/commit/5f1e6abb391f5c58dbdb207f569b3dd0b5d4729c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add base-goerli to default chains
+
+## 0.1.18
+
+### Patch Changes
+
+- [#1040](https://github.com/thirdweb-dev/js/pull/1040) [`30e5593d`](https://github.com/thirdweb-dev/js/commit/30e5593dd1ce9abd809ad216a1cfce77b897093c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update chains
+
+## 0.1.17
+
+### Patch Changes
+
+- [#1031](https://github.com/thirdweb-dev/js/pull/1031) [`3c8c5d56`](https://github.com/thirdweb-dev/js/commit/3c8c5d56f2a21c0918fede71061c6745f2956f83) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
+- [#1033](https://github.com/thirdweb-dev/js/pull/1033) [`907d97be`](https://github.com/thirdweb-dev/js/commit/907d97bedef7331148bdfe8b9bf1e19459282e4c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Added faucet for optimism goerli
+
+## 0.1.16
+
+### Patch Changes
+
+- [#996](https://github.com/thirdweb-dev/js/pull/996) [`c3645c45`](https://github.com/thirdweb-dev/js/commit/c3645c451b5e9a0fcf651fa07eb0e31ebf1882ca) Thanks [@MananTank](https://github.com/MananTank)! - - add `theme` in `ConfiguredWallet.connectUI`'s props - to use theme aware UI for wallets
+
+  - add `useWalletConfig` hook to get the `ConfiguredWallet` object for active wallet
+  - add hooks `useSetConnectedWallet`, `useSetConnectionStatus`
+  - rename `useActiveChain` to `useChain` - keep the `useActiveChain` also with deprecated tag
+  - make `useSafe` hook await-able by returning the promise of connect() call
+  - add hook `useSmartWallet`
+  - allow rendering custom wallet details button via `<ConnectWallet detailsButton={} />` prop
+  - Rename "Export" to "Backup" in local wallet UI
+
+- [#1011](https://github.com/thirdweb-dev/js/pull/1011) [`470e0a14`](https://github.com/thirdweb-dev/js/commit/470e0a144db6aa03e7789e231bbdfae43144f0e0) Thanks [@MananTank](https://github.com/MananTank)! - rename ConfiguredWallet to WalletConfig
+
+  ```diff
+  - import { ConfiguredWallet } from '@thirdweb-dev/react';
+  + import { WalletConfig } from '@thirdweb-dev/react';
+  ```
+
+- [#995](https://github.com/thirdweb-dev/js/pull/995) [`482f6d1b`](https://github.com/thirdweb-dev/js/commit/482f6d1b58ac99b331fc750d3eeb6082556fd526) Thanks [@iketw](https://github.com/iketw)! - [Chains] Update chains
+
+- [#989](https://github.com/thirdweb-dev/js/pull/989) [`8db78299`](https://github.com/thirdweb-dev/js/commit/8db78299ea6cfb51d93b91bb1a351644a83c73d2) Thanks [@iketw](https://github.com/iketw)! - [React/ReactNative] Updated useThirdwebWallet to useWalletContext
+
 ## 0.1.15
 
 ### Patch Changes

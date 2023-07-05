@@ -1,7 +1,4 @@
 import { Keypair } from "@solana/web3.js";
-import fs from "fs";
-import os from "os";
-import path from "path";
 import yaml from "yaml";
 
 /**
@@ -9,14 +6,14 @@ import yaml from "yaml";
  */
 function getConfig(): any {
   // Path to Solana CLI config file
-  const CONFIG_FILE_PATH = path.resolve(
-    os.homedir(),
+  const CONFIG_FILE_PATH = require("path").resolve(
+    require("os").homedir(),
     ".config",
     "solana",
     "cli",
     "config.yml",
   );
-  const configYml = fs.readFileSync(CONFIG_FILE_PATH, {
+  const configYml = require("fs").readFileSync(CONFIG_FILE_PATH, {
     encoding: "utf8",
   });
   return yaml.parse(configYml);
@@ -62,7 +59,9 @@ export function getPayer(): Keypair {
  * Create a Keypair from a secret key stored in file as bytes' array
  */
 export function createKeypairFromFile(filePath: string): Keypair {
-  const secretKeyString = fs.readFileSync(filePath, { encoding: "utf8" });
+  const secretKeyString = require("fs").readFileSync(filePath, {
+    encoding: "utf8",
+  });
   const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
   return Keypair.fromSecretKey(secretKey);
 }

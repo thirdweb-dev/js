@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-parameter-properties */
-import { BigNumberish, Event, providers } from "ethers";
+import { BigNumberish, Event, providers, utils } from "ethers";
 import { EntryPoint } from "@account-abstraction/contracts";
-import { defaultAbiCoder } from "ethers/lib/utils";
 
 /**
  * This class encapsulates Ethers.js listener function and necessary UserOperation details to
@@ -92,7 +91,7 @@ export class UserOperationEventListener {
       let message = revertReasonEvents[0].args.revertReason;
       if (message.startsWith("0x08c379a0")) {
         // Error(string)
-        message = defaultAbiCoder
+        message = utils.defaultAbiCoder
           .decode(["string"], "0x" + message.substring(10))
           .toString();
       }

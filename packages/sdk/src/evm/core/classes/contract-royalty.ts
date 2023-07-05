@@ -1,4 +1,4 @@
-import { hasFunction } from "../../common";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_ROYALTY } from "../../constants/thirdweb-features";
 import { CommonRoyaltySchema } from "../../schema/contracts/common";
@@ -102,7 +102,7 @@ export class ContractRoyalty<
    * @public
    * @twfeature Royalty
    */
-  setDefaultRoyaltyInfo = buildTransactionFunction(
+  setDefaultRoyaltyInfo = /* @__PURE__ */ buildTransactionFunction(
     async (
       royaltyData: z.input<typeof CommonRoyaltySchema>,
     ): Promise<
@@ -179,7 +179,7 @@ export class ContractRoyalty<
    * @public
    * @twfeature Royalty
    */
-  setTokenRoyaltyInfo = buildTransactionFunction(
+  setTokenRoyaltyInfo = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenId: BigNumberish,
       royaltyData: z.input<typeof CommonRoyaltySchema>,

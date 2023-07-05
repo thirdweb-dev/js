@@ -1,5 +1,5 @@
 import { darkTheme, iconSize, lightTheme, spacing } from "../../design-system";
-import { ConnectedWalletDetails, DropDownPosition } from "./Details";
+import { ConnectedWalletDetails, type DropDownPosition } from "./Details";
 import { ThemeProvider } from "@emotion/react";
 import {
   ThirdwebThemeContext,
@@ -20,12 +20,11 @@ import { Button } from "../../components/buttons";
 import { Spinner } from "../../components/Spinner";
 import styled from "@emotion/styled";
 import { fadeInAnimation } from "../../components/FadeIn";
-import type { LoginOptions } from "@thirdweb-dev/auth";
 import { LockIcon } from "./icons/LockIcon";
 import { Flex } from "../../components/basic";
 import { shortenAddress } from "../../evm/utils/addresses";
 import { SignatureModal } from "./SignatureModal";
-import { NetworkSelectorProps } from "./NetworkSelector";
+import type { NetworkSelectorProps } from "./NetworkSelector";
 
 type ConnectWalletProps = {
   className?: string;
@@ -42,7 +41,6 @@ type ConnectWalletProps = {
   detailsBtn?: () => JSX.Element;
   dropdownPosition?: DropDownPosition;
   auth?: {
-    loginOptions?: LoginOptions;
     loginOptional?: boolean;
     onLogin?: (token: string) => void;
     onLogout?: () => void;
@@ -86,7 +84,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   const signIn = async () => {
     try {
       setShowSignatureModal(true);
-      const token = await login(props.auth?.loginOptions);
+      const token = await login();
       props?.auth?.onLogin?.(token);
     } catch (err) {
       console.error("failed to log in", err);
@@ -153,6 +151,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
               });
               setIsWalletModalOpen(true);
             }}
+            data-test="connect-wallet-button"
           >
             {isLoading ? <Spinner size="sm" color="inverted" /> : btnTitle}
           </AnimatedButton>
@@ -176,6 +175,6 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   );
 };
 
-const AnimatedButton = styled(Button)`
+const AnimatedButton = /* @__PURE__ */ styled(Button)`
   animation: ${fadeInAnimation} 300ms ease;
 `;

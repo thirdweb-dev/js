@@ -7,9 +7,12 @@ import {
   CarbonPlayFilledAlt,
 } from "./Icons";
 import { useQuery } from "@tanstack/react-query";
-import { resolveIpfsUri, resolveMimeType } from "@thirdweb-dev/react-core";
+import {
+  resolveIpfsUri,
+  resolveMimeType,
+  useStorage,
+} from "@thirdweb-dev/react-core";
 import React, {
-  ReactNode,
   useEffect,
   useMemo,
   useRef,
@@ -17,49 +20,9 @@ import React, {
   lazy,
   Suspense,
 } from "react";
+import type { MediaRendererProps } from "./types";
 
-const ModelViewer = lazy(() => import("./ModelViewer"));
-
-export interface SharedMediaProps {
-  className?: string;
-  style?: React.CSSProperties;
-  width?: HTMLIFrameElement["width"];
-  height?: HTMLIFrameElement["height"];
-  /**
-   * Require user interaction to play the media. (default false)
-   */
-  requireInteraction?: boolean;
-  /**
-   * Show the media controls (where applicable) (default false)
-   */
-  controls?: HTMLVideoElement["controls"];
-
-  children?: ReactNode;
-
-  mimeType?: string;
-}
-
-/**
- *
- * The props for the {@link MediaRenderer} component.
- * @public
- */
-export interface MediaRendererProps extends SharedMediaProps {
-  /**
-   * The media source uri.
-   */
-  src?: string | null;
-  /**
-   * The alt text for the media.
-   */
-  alt?: string;
-  /**
-   * The media poster image uri. (if applicable)
-   */
-  poster?: string | null;
-  width?: string;
-  height?: string;
-}
+const ModelViewer = /* @__PURE__ */ lazy(() => import("./ModelViewer"));
 
 interface PlayButtonProps {
   onClick: () => void;
@@ -113,7 +76,10 @@ const PlayButton: React.FC<PlayButtonProps> = ({ onClick, isPlaying }) => {
   );
 };
 
-const VideoPlayer = React.forwardRef<HTMLVideoElement, MediaRendererProps>(
+const VideoPlayer = /* @__PURE__ */ React.forwardRef<
+  HTMLVideoElement,
+  MediaRendererProps
+>(
   (
     {
       src,
@@ -213,186 +179,189 @@ const VideoPlayer = React.forwardRef<HTMLVideoElement, MediaRendererProps>(
 
 VideoPlayer.displayName = "VideoPlayer";
 
-const AudioPlayer = React.forwardRef<HTMLAudioElement, MediaRendererProps>(
-  ({ src, alt, poster, style, height, width, ...restProps }, ref) => {
-    const audioRef = useRef<HTMLAudioElement>(null);
-    const [playing, setPlaying] = useState(false);
-    const [muted, setMuted] = useState(true);
+const AudioPlayer = /* @__PURE__ */ React.forwardRef<
+  HTMLAudioElement,
+  MediaRendererProps
+>(({ src, alt, poster, style, height, width, ...restProps }, ref) => {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [playing, setPlaying] = useState(false);
+  const [muted, setMuted] = useState(true);
 
-    useEffect(() => {
-      if (audioRef.current) {
-        if (playing) {
-          audioRef.current.play();
-        } else {
-          audioRef.current.pause();
-          audioRef.current.currentTime = 0;
-        }
+  useEffect(() => {
+    if (audioRef.current) {
+      if (playing) {
+        audioRef.current.play();
+      } else {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
       }
-    }, [playing]);
+    }
+  }, [playing]);
 
-    return (
-      <div style={{ position: "relative", ...style }} {...restProps}>
-        {poster ? (
-          <img
-            height={height}
-            width={width}
-            src={poster}
-            style={{
-              height: "100%",
-              width: "100%",
-              pointerEvents: "none",
-              objectFit: "contain",
-            }}
-            alt={alt}
-          />
-        ) : (
-          <div
-            style={{
-              width: "100%",
-              height: "100%",
-              display: "grid",
-              placeItems: "center",
-              pointerEvents: "none",
-              backgroundColor: "#fff",
-              color: "rgb(138, 147, 155)",
-            }}
-          >
-            <CarbonDocumentAudio style={{ height: "64px", width: "64px" }} />
-          </div>
-        )}
-
-        <PlayButton
-          onClick={() => {
-            setPlaying((prev) => !prev);
-            setMuted(false);
-          }}
-          isPlaying={playing}
-        />
-        <audio
-          ref={mergeRefs([audioRef, ref])}
-          src={src ?? undefined}
-          loop
-          playsInline
-          muted={muted}
-          preload="none"
-          controlsList="nodownload"
+  return (
+    <div style={{ position: "relative", ...style }} {...restProps}>
+      {poster ? (
+        <img
+          height={height}
+          width={width}
+          src={poster}
           style={{
-            position: "absolute",
-            opacity: 0,
-            pointerEvents: "none",
-            zIndex: -1,
-            visibility: "hidden",
-          }}
-        />
-      </div>
-    );
-  },
-);
-
-AudioPlayer.displayName = "AudioPlayer";
-
-const IframePlayer = React.forwardRef<HTMLIFrameElement, MediaRendererProps>(
-  ({ src, alt, poster, requireInteraction, style, ...restProps }, ref) => {
-    const [playing, setPlaying] = useState(!requireInteraction);
-
-    return (
-      <div style={{ position: "relative", ...style }} {...restProps}>
-        <iframe
-          src={playing ? src ?? undefined : undefined}
-          ref={ref}
-          style={{
-            objectFit: "contain",
-            zIndex: 1,
             height: "100%",
             width: "100%",
-            transition: "opacity .5s",
-            opacity: !poster ? 1 : playing ? 1 : 0,
+            pointerEvents: "none",
+            objectFit: "contain",
           }}
-          sandbox="allow-scripts"
-          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+          alt={alt}
         />
-        {poster && (
-          <img
-            src={poster}
-            style={{
-              objectFit: "contain",
-              pointerEvents: "none",
-              position: "absolute",
-              width: "100%",
-              height: "100%",
-              zIndex: 2,
-              transition: "opacity .5s",
-              opacity: playing ? 0 : 1,
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-            }}
-            alt={alt}
-          />
-        )}
-        <PlayButton
-          onClick={() => {
-            setPlaying((prev) => !prev);
-          }}
-          isPlaying={playing}
-        />
-      </div>
-    );
-  },
-);
-
-IframePlayer.displayName = "IframePlayer";
-
-const LinkPlayer = React.forwardRef<HTMLAnchorElement, MediaRendererProps>(
-  ({ src, alt, style, ...restProps }, ref) => {
-    return (
-      <div style={{ position: "relative", ...style }} {...restProps}>
+      ) : (
         <div
           style={{
             width: "100%",
             height: "100%",
             display: "grid",
             placeItems: "center",
+            pointerEvents: "none",
             backgroundColor: "#fff",
             color: "rgb(138, 147, 155)",
           }}
         >
-          <div
+          <CarbonDocumentAudio style={{ height: "64px", width: "64px" }} />
+        </div>
+      )}
+
+      <PlayButton
+        onClick={() => {
+          setPlaying((prev) => !prev);
+          setMuted(false);
+        }}
+        isPlaying={playing}
+      />
+      <audio
+        ref={mergeRefs([audioRef, ref])}
+        src={src ?? undefined}
+        loop
+        playsInline
+        muted={muted}
+        preload="none"
+        controlsList="nodownload"
+        style={{
+          position: "absolute",
+          opacity: 0,
+          pointerEvents: "none",
+          zIndex: -1,
+          visibility: "hidden",
+        }}
+      />
+    </div>
+  );
+});
+
+AudioPlayer.displayName = "AudioPlayer";
+
+const IframePlayer = /* @__PURE__ */ React.forwardRef<
+  HTMLIFrameElement,
+  MediaRendererProps
+>(({ src, alt, poster, requireInteraction, style, ...restProps }, ref) => {
+  const [playing, setPlaying] = useState(!requireInteraction);
+
+  return (
+    <div style={{ position: "relative", ...style }} {...restProps}>
+      <iframe
+        src={playing ? src ?? undefined : undefined}
+        ref={ref}
+        style={{
+          objectFit: "contain",
+          zIndex: 1,
+          height: "100%",
+          width: "100%",
+          transition: "opacity .5s",
+          opacity: !poster ? 1 : playing ? 1 : 0,
+        }}
+        sandbox="allow-scripts"
+        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+      />
+      {poster && (
+        <img
+          src={poster}
+          style={{
+            objectFit: "contain",
+            pointerEvents: "none",
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+            zIndex: 2,
+            transition: "opacity .5s",
+            opacity: playing ? 0 : 1,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+          }}
+          alt={alt}
+        />
+      )}
+      <PlayButton
+        onClick={() => {
+          setPlaying((prev) => !prev);
+        }}
+        isPlaying={playing}
+      />
+    </div>
+  );
+});
+
+IframePlayer.displayName = "IframePlayer";
+
+const LinkPlayer = /* @__PURE__ */ React.forwardRef<
+  HTMLAnchorElement,
+  MediaRendererProps
+>(({ src, alt, style, ...restProps }, ref) => {
+  return (
+    <div style={{ position: "relative", ...style }} {...restProps}>
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "grid",
+          placeItems: "center",
+          backgroundColor: "#fff",
+          color: "rgb(138, 147, 155)",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "8px",
+            alignItems: "center",
+            flexWrap: "nowrap",
+          }}
+        >
+          <CarbonDocumentUnknown
             style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "8px",
-              alignItems: "center",
-              flexWrap: "nowrap",
+              maxWidth: "128px",
+              minWidth: "48px",
+              width: "50%",
+              aspectRatio: "1",
             }}
+          />
+          <a
+            rel="noopener noreferrer"
+            style={{
+              textDecoration: "underline",
+              color: "rgb(138, 147, 155)",
+            }}
+            href={src ?? undefined}
+            target="_blank"
+            ref={ref as unknown as React.LegacyRef<HTMLAnchorElement>}
           >
-            <CarbonDocumentUnknown
-              style={{
-                maxWidth: "128px",
-                minWidth: "48px",
-                width: "50%",
-                aspectRatio: "1",
-              }}
-            />
-            <a
-              rel="noopener noreferrer"
-              style={{
-                textDecoration: "underline",
-                color: "rgb(138, 147, 155)",
-              }}
-              href={src ?? undefined}
-              target="_blank"
-              ref={ref as unknown as React.LegacyRef<HTMLAnchorElement>}
-            >
-              {alt || "File"}
-            </a>
-          </div>
+            {alt || "File"}
+          </a>
         </div>
       </div>
-    );
-  },
-);
+    </div>
+  );
+});
 
 LinkPlayer.displayName = "LinkPlayer";
 
@@ -417,7 +386,7 @@ LinkPlayer.displayName = "LinkPlayer";
  *
  * You can try switching out the `src` prop to different types of URLs and media types to explore the possibilities.
  */
-export const MediaRenderer = React.forwardRef<
+export const MediaRenderer = /* @__PURE__ */ React.forwardRef<
   HTMLMediaElement,
   MediaRendererProps
 >(
@@ -426,6 +395,7 @@ export const MediaRenderer = React.forwardRef<
       src,
       poster,
       alt,
+      gatewayUrl,
       requireInteraction = false,
       width = "300px",
       height = "300px",
@@ -441,8 +411,16 @@ export const MediaRenderer = React.forwardRef<
       height,
       ...style,
     };
-    const videoOrImageSrc = useResolvedMediaType(src ?? undefined, mimeType);
-    const possiblePosterSrc = useResolvedMediaType(poster ?? undefined);
+    const videoOrImageSrc = useResolvedMediaType(
+      src ?? undefined,
+      mimeType,
+      gatewayUrl,
+    );
+    const possiblePosterSrc = useResolvedMediaType(
+      poster ?? undefined,
+      undefined,
+      gatewayUrl,
+    );
 
     if (!videoOrImageSrc.mimeType) {
       return (
@@ -453,7 +431,7 @@ export const MediaRenderer = React.forwardRef<
           alt={alt}
         />
       );
-    } else if (videoOrImageSrc.mimeType === "text/html") {
+    } else if (videoOrImageSrc.mimeType.startsWith("text/html")) {
       return (
         <IframePlayer
           style={mergedStyle}
@@ -562,8 +540,25 @@ export interface MediaType {
  * }
  * ```
  */
-export function useResolvedMediaType(uri?: string, mimeType?: string) {
-  const resolvedUrl = useMemo(() => resolveIpfsUri(uri), [uri]);
+export function useResolvedMediaType(
+  uri?: string,
+  mimeType?: string,
+  gatewayUrl?: string,
+) {
+  const storage = useStorage();
+
+  const resolvedUrl = useMemo(
+    () =>
+      resolveIpfsUri(
+        uri,
+        gatewayUrl
+          ? { gatewayUrl }
+          : storage
+          ? { gatewayUrl: storage.gatewayUrls["ipfs://"][0] }
+          : undefined,
+      ),
+    [uri, storage, gatewayUrl],
+  );
   const resolvedMimType = useQuery(
     ["mime-type", resolvedUrl],
     () => resolveMimeType(resolvedUrl),

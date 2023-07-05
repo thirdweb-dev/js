@@ -65,7 +65,7 @@ const IconContainer = styled.div`
   }
 `;
 
-const Desc = styled(ModalDescription)`
+const Desc = /* @__PURE__ */ styled(ModalDescription)`
   ${media.mobile} {
     padding: 0 ${spacing.lg};
   }

@@ -1,11 +1,14 @@
-import { NetworkInput, Transaction, TransactionResult } from "..";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
-import { getMultichainRegistryAddress } from "../../constants/addresses";
-import { AddressOrEns } from "../../schema";
+import { getMultichainRegistryAddress } from "../../constants/addresses/getMultichainRegistryAddress";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { PublishedMetadata } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
-import { AddContractInput, ContractInput, DeployedContract } from "../../types";
+import type {
+  DeployedContract,
+  AddContractInput,
+  ContractInput,
+} from "../../types/registry";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
   TWMultichainRegistryRouter,
@@ -15,6 +18,8 @@ import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegi
 import TWRegistryRouterABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryRouter.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { constants, utils } from "ethers";
+import { Transaction } from "./transactions";
+import type { NetworkInput, TransactionResult } from "../types";
 
 /**
  * @internal
@@ -93,7 +98,7 @@ export class MultichainRegistry {
       }));
   }
 
-  addContract = buildTransactionFunction(
+  addContract = /* @__PURE__ */ buildTransactionFunction(
     async (
       contract: AddContractInput,
     ): Promise<Transaction<TransactionResult>> => {
@@ -101,7 +106,7 @@ export class MultichainRegistry {
     },
   );
 
-  addContracts = buildTransactionFunction(
+  addContracts = /* @__PURE__ */ buildTransactionFunction(
     async (
       contracts: AddContractInput[],
     ): Promise<Transaction<TransactionResult>> => {
@@ -126,7 +131,7 @@ export class MultichainRegistry {
     },
   );
 
-  removeContract = buildTransactionFunction(
+  removeContract = /* @__PURE__ */ buildTransactionFunction(
     async (
       contract: ContractInput,
     ): Promise<Transaction<TransactionResult>> => {
@@ -134,7 +139,7 @@ export class MultichainRegistry {
     },
   );
 
-  removeContracts = buildTransactionFunction(
+  removeContracts = /* @__PURE__ */ buildTransactionFunction(
     async (
       contracts: ContractInput[],
     ): Promise<Transaction<TransactionResult>> => {

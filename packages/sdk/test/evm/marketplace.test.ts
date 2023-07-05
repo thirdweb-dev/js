@@ -1,10 +1,8 @@
 import {
-  AuctionAlreadyStartedError,
   AuctionListing,
   DirectListing,
   Edition,
   EditionInitializer,
-  ListingNotFoundError,
   ListingType,
   Marketplace,
   MarketplaceInitializer,
@@ -14,8 +12,12 @@ import {
   Offer,
   Token,
   TokenInitializer,
-  WrongListingTypeError,
 } from "../../src/evm";
+import {
+  WrongListingTypeError,
+  ListingNotFoundError,
+  AuctionAlreadyStartedError,
+} from "../../src/evm/common/error";
 import { isWinningBid } from "../../src/evm/common/marketplace";
 import {
   expectError,

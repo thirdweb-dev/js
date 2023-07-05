@@ -64,7 +64,7 @@ import {
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ContractInterface, ethers } from "ethers";
 import hardhat from "hardhat";
-import { generatePluginFunctions } from "../../src/evm/common/plugin";
+import { generatePluginFunctions } from "../../src/evm/common/plugin/generatePluginFunctions";
 
 // it's there, trust me bro
 const hardhatEthers = (hardhat as any).ethers;
@@ -82,6 +82,7 @@ let signers: SignerWithAddress[];
 let storage: ThirdwebStorage;
 let implementations: { [key in ContractType]?: string };
 let mock_weth_address: string;
+let thirdwebFactory: TWFactory;
 
 const fastForwardTime = async (timeInSeconds: number): Promise<void> => {
   const now = Math.floor(Date.now() / 1000);
@@ -133,6 +134,7 @@ export const mochaHooks = {
       .connect(signer)
       .deploy(trustedForwarderAddress, registry.address)) as TWFactory;
 
+    thirdwebFactory = await thirdwebFactoryDeployer.deployed();
     const deployTxFactory = thirdwebFactoryDeployer.deployTransaction;
     await deployTxFactory.wait();
     const thirdwebRegistryAddress = await thirdwebFactoryDeployer.registry();
@@ -276,6 +278,7 @@ export const mochaHooks = {
             chainId: 31337,
             rpc: ["http://localhost:8545"],
             nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+            slug: "hardhat",
           },
         ],
       },
@@ -390,4 +393,5 @@ export {
   storage,
   implementations,
   hardhatEthers,
+  thirdwebFactory,
 };

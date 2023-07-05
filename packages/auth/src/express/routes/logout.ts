@@ -1,4 +1,4 @@
-import { getUser } from "../helpers/user";
+import { getActiveCookie, getUser } from "../helpers/user";
 import { ThirdwebAuthContext } from "../types";
 import { serialize } from "cookie";
 import { Request, Response } from "express";
@@ -14,6 +14,13 @@ export default async function handler(
     });
   }
 
+  const activeCookie = getActiveCookie(req);
+  if (!activeCookie) {
+    return res.status(400).json({
+      error: "No logged in user to logout.",
+    });
+  }
+
   if (ctx.callbacks?.onLogout) {
     const user = await getUser(req, ctx);
     if (user) {
@@ -24,7 +31,7 @@ export default async function handler(
   // Set the access token to 'none' and expire in 5 seconds
   res.setHeader(
     "Set-Cookie",
-    serialize("thirdweb_auth_token", "", {
+    serialize(activeCookie, "", {
       domain: ctx.cookieOptions?.domain,
       path: ctx.cookieOptions?.path || "/",
       sameSite: ctx.cookieOptions?.sameSite || "none",

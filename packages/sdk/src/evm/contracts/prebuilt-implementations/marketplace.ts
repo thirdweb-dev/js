@@ -1,11 +1,12 @@
 import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
-import { ListingNotFoundError } from "../../common";
-import { isNativeToken } from "../../common/currency";
+import { ListingNotFoundError } from "../../common/error";
+import { isNativeToken } from "../../common/currency/isNativeToken";
 import { mapOffer } from "../../common/marketplace";
 import { getRoleHash } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
-import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
-import { ContractAppURI } from "../../core";
+import { SUPPORTED_CHAIN_ID } from "../../constants/chains/SUPPORTED_CHAIN_ID";
+import { NATIVE_TOKENS } from "../../constants/currency";
+import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -23,7 +24,7 @@ import { ListingType } from "../../enums";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
-import { AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Price } from "../../types/currency";
 import { AuctionListing, DirectListing, Offer } from "../../types/marketplace";
 import { MarketplaceFilter } from "../../types/marketplace/MarketPlaceFilter";
@@ -33,6 +34,7 @@ import { NewOfferEventObject } from "@thirdweb-dev/contracts-js/dist/declaration
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 import invariant from "tiny-invariant";
+import { MARKETPLACE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -49,7 +51,7 @@ import invariant from "tiny-invariant";
  * @public
  */
 export class Marketplace implements UpdateableNetwork {
-  static contractRoles = ["admin", "lister", "asset"] as const;
+  static contractRoles = MARKETPLACE_CONTRACT_ROLES;
 
   public abi: Abi;
   private contractWrapper: ContractWrapper<MarketplaceContract>;
@@ -257,7 +259,7 @@ export class Marketplace implements UpdateableNetwork {
         (l.type === ListingType.Auction &&
           BigNumber.from(l.endTimeInEpochSeconds).gt(now) &&
           BigNumber.from(l.startTimeInEpochSeconds).lte(now)) ||
-        (l.type === ListingType.Direct && l.quantity > 0)
+        (l.type === ListingType.Direct && BigNumber.from(l.quantity).gt(0))
       );
     });
   }
@@ -382,7 +384,7 @@ export class Marketplace implements UpdateableNetwork {
    * @param quantityDesired - the quantity that you want to buy (for ERC1155 tokens)
    * @param receiver - optional receiver of the bought listing if different from the connected wallet (for direct listings only)
    */
-  buyoutListing = buildTransactionFunction(
+  buyoutListing = /* @__PURE__ */ buildTransactionFunction(
     async (
       listingId: BigNumberish,
       quantityDesired?: BigNumberish,
@@ -436,7 +438,7 @@ export class Marketplace implements UpdateableNetwork {
    * );
    * ```
    */
-  makeOffer = buildTransactionFunction(
+  makeOffer = /* @__PURE__ */ buildTransactionFunction(
     async (
       listingId: BigNumberish,
       pricePerToken: Price,
@@ -484,7 +486,7 @@ export class Marketplace implements UpdateableNetwork {
    * ```
    * @param bufferBps - the bps value
    */
-  setBidBufferBps = buildTransactionFunction(
+  setBidBufferBps = /* @__PURE__ */ buildTransactionFunction(
     async (bufferBps: BigNumberish) => {
       await this.roles.verify(
         ["admin"],
@@ -512,7 +514,7 @@ export class Marketplace implements UpdateableNetwork {
    * ```
    * @param bufferInSeconds - the seconds value
    */
-  setTimeBufferInSeconds = buildTransactionFunction(
+  setTimeBufferInSeconds = /* @__PURE__ */ buildTransactionFunction(
     async (bufferInSeconds: BigNumberish) => {
       await this.roles.verify(
         ["admin"],
@@ -534,7 +536,7 @@ export class Marketplace implements UpdateableNetwork {
    * It is possible to allow listing from multiple contract addresses.
    * @param contractAddress - the NFT contract address
    */
-  allowListingFromSpecificAssetOnly = buildTransactionFunction(
+  allowListingFromSpecificAssetOnly = /* @__PURE__ */ buildTransactionFunction(
     async (contractAddress: string) => {
       const encoded: string[] = [];
       const members = await this.roles.get("asset");
@@ -564,27 +566,29 @@ export class Marketplace implements UpdateableNetwork {
   /**
    * Allow listings from any NFT contract
    */
-  allowListingFromAnyAsset = buildTransactionFunction(async () => {
-    const encoded: string[] = [];
-    const members = await this.roles.get("asset");
-    for (const addr in members) {
+  allowListingFromAnyAsset = /* @__PURE__ */ buildTransactionFunction(
+    async () => {
+      const encoded: string[] = [];
+      const members = await this.roles.get("asset");
+      for (const addr in members) {
+        encoded.push(
+          this.encoder.encode("revokeRole", [getRoleHash("asset"), addr]),
+        );
+      }
       encoded.push(
-        this.encoder.encode("revokeRole", [getRoleHash("asset"), addr]),
+        this.encoder.encode("grantRole", [
+          getRoleHash("asset"),
+          constants.AddressZero,
+        ]),
       );
-    }
-    encoded.push(
-      this.encoder.encode("grantRole", [
-        getRoleHash("asset"),
-        constants.AddressZero,
-      ]),
-    );
 
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "multicall",
-      args: [encoded],
-    });
-  });
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "multicall",
+        args: [encoded],
+      });
+    },
+  );
 
   /** ******************************
    * PRIVATE FUNCTIONS

@@ -1,10 +1,9 @@
-import { ethers, providers } from "ethers";
+import { ethers, providers, utils } from "ethers";
 
 import { Bytes, Signer } from "ethers";
 import { ClientConfig } from "@account-abstraction/sdk";
 import { BaseAccountAPI } from "./base-api";
-import { ERC4337EthersProvider } from "./erc4337-provider";
-import { defineReadOnly, Deferrable } from "ethers/lib/utils";
+import type { ERC4337EthersProvider } from "./erc4337-provider";
 import { HttpRpcClient } from "./http-rpc-client";
 
 export class ERC4337EthersSigner extends Signer {
@@ -23,7 +22,7 @@ export class ERC4337EthersSigner extends Signer {
     smartAccountAPI: BaseAccountAPI,
   ) {
     super();
-    defineReadOnly(this, "provider", erc4337provider);
+    utils.defineReadOnly(this, "provider", erc4337provider);
     this.config = config;
     this.originalSigner = originalSigner;
     this.erc4337provider = erc4337provider;
@@ -35,7 +34,7 @@ export class ERC4337EthersSigner extends Signer {
 
   // This one is called by Contract. It signs the request and passes in to Provider to be sent.
   async sendTransaction(
-    transaction: Deferrable<providers.TransactionRequest>,
+    transaction: utils.Deferrable<providers.TransactionRequest>,
     batched: boolean = false,
   ): Promise<providers.TransactionResponse> {
     const tx = await ethers.utils.resolveProperties(transaction);
@@ -122,12 +121,23 @@ export class ERC4337EthersSigner extends Signer {
   }
 
   async signMessage(message: Bytes | string): Promise<string> {
+    const isNotDeployed = await this.smartAccountAPI.checkAccountPhantom();
+    if (isNotDeployed) {
+      console.log(
+        "Account contract not deployed yet. Deploying account before signing message",
+      );
+      const tx = await this.sendTransaction({
+        to: await this.getAddress(),
+        data: "0x",
+      });
+      await tx.wait();
+    }
     return await this.originalSigner.signMessage(message);
   }
 
   async signTransaction(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    transaction: Deferrable<providers.TransactionRequest>,
+    transaction: utils.Deferrable<providers.TransactionRequest>,
   ): Promise<string> {
     throw new Error("not implemented");
   }

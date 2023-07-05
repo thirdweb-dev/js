@@ -1,5 +1,31 @@
 # @thirdweb-dev/contracts-js
 
+## 1.3.8
+
+### Patch Changes
+
+- [#1278](https://github.com/thirdweb-dev/js/pull/1278) [`8a389f12`](https://github.com/thirdweb-dev/js/commit/8a389f1295d2bf726059997ea0ca10cf0424f2a2) Thanks [@jnsdls](https://github.com/jnsdls)! - updated various dependencies
+
+## 1.3.7
+
+### Patch Changes
+
+- [#1241](https://github.com/thirdweb-dev/js/pull/1241) [`9af346ee`](https://github.com/thirdweb-dev/js/commit/9af346eeada1037be27c8d3c9e1777f7be11a8ea) Thanks [@nkrishang](https://github.com/nkrishang)! - Use fn getAllAccounts instead of event logs AccountCreated
+
+## 1.3.6
+
+### Patch Changes
+
+- [#1197](https://github.com/thirdweb-dev/js/pull/1197) [`e0ce4a37`](https://github.com/thirdweb-dev/js/commit/e0ce4a37596a91a072f8551e323fce6723113dcb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Added Zora drop ABI
+
+- [#1134](https://github.com/thirdweb-dev/js/pull/1134) [`990c665d`](https://github.com/thirdweb-dev/js/commit/990c665de9e5c1070dc80fe0f1b434e251f70a94) Thanks [@nkrishang](https://github.com/nkrishang)! - Introduce SmartWallet sdk class
+
+## 1.3.5
+
+### Patch Changes
+
+- [#1095](https://github.com/thirdweb-dev/js/pull/1095) [`564eaccf`](https://github.com/thirdweb-dev/js/commit/564eaccf480a81f36db43c782392595a5021e5ac) Thanks [@nkrishang](https://github.com/nkrishang)! - Add SmartWalletFactory extension detection and logic
+
 ## 1.3.4
 
 ### Patch Changes

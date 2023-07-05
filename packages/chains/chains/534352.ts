@@ -2,6 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Scroll",
   "chain": "ETH",
+  "status": "incubating",
   "rpc": [],
   "faucets": [],
   "nativeCurrency": {

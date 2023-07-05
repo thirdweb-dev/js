@@ -1,9 +1,7 @@
-import {
-  detectContractFeature,
-  ExtensionNotImplementedError,
-  hasFunction,
-  fetchContractMetadataFromAddress,
-} from "../../common";
+import { ExtensionNotImplementedError } from "../../common/error";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
+import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_METADATA } from "../../constants/thirdweb-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
@@ -152,7 +150,7 @@ export class ContractMetadata<
    * @param metadata - the metadata to set
    * @twfeature ContractMetadata
    */
-  set = buildTransactionFunction(
+  set = /* @__PURE__ */ buildTransactionFunction(
     async (metadata: z.input<TSchema["input"]>) => {
       const uri = await this._parseAndUploadMetadata(metadata);
 
@@ -188,7 +186,7 @@ export class ContractMetadata<
    * @param metadata - the metadata to update
    * @twfeature ContractMetadata
    * */
-  update = buildTransactionFunction(
+  update = /* @__PURE__ */ buildTransactionFunction(
     async (metadata: Partial<z.input<TSchema["input"]>>) => {
       return await this.set.prepare({
         ...(await this.get()),

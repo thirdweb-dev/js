@@ -67,7 +67,7 @@ const TitleContainer = styled.div`
   }
 `;
 
-const Desc = styled(ModalDescription)`
+const Desc = /* @__PURE__ */ styled(ModalDescription)`
   ${media.mobile} {
     max-width: 240px;
     margin: 0 auto;

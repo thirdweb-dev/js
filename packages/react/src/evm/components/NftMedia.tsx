@@ -1,6 +1,7 @@
-import { MediaRenderer, SharedMediaProps } from "./MediaRenderer";
 import { NFTMetadata } from "@thirdweb-dev/sdk";
 import React from "react";
+import type { SharedMediaProps } from "./types";
+import { MediaRenderer } from "./MediaRenderer";
 
 /**
  * The props for the {@link ThirdwebNftMedia} component.
@@ -40,7 +41,7 @@ export interface ThirdwebNftMediaProps extends SharedMediaProps {
  * }
  * ```
  */
-export const ThirdwebNftMedia = React.forwardRef<
+export const ThirdwebNftMedia = /* @__PURE__ */ React.forwardRef<
   HTMLMediaElement,
   ThirdwebNftMediaProps
 >(({ metadata, width = "300px", height = "300px", style, ...props }, ref) => {

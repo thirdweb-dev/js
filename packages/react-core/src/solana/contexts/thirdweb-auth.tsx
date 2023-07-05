@@ -21,9 +21,9 @@ export interface ThirdwebAuthConfig {
 
 interface ThirdwebAuthContext extends ThirdwebAuthConfig {}
 
-const ThirdwebAuthContext = createContext<ThirdwebAuthContext | undefined>(
-  undefined,
-);
+const ThirdwebAuthContext = /* @__PURE__ */ createContext<
+  ThirdwebAuthContext | undefined
+>(undefined);
 
 export const ThirdwebAuthProvider: React.FC<
   PropsWithChildren<{ value?: ThirdwebAuthConfig }>

@@ -1,35 +1,33 @@
-import {
-  CommonNFTInput,
+import type {
   NFT,
   NFTMetadata,
-  NFTMetadataInput,
   NFTMetadataOrUri,
 } from "../../../core/schema/nft";
-import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
-import { getBaseUriFromBatch, uploadOrExtractURIs } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_TIERED_DROP } from "../../constants/erc721-features";
-import { GenericRequest } from "../../schema";
+import type { UploadProgressEvent } from "../../types/events";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import type { TransactionResultWithId } from "../types";
+import type { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
+import type { ISignatureAction, TieredDrop } from "@thirdweb-dev/contracts-js";
+import type { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumberish, utils } from "ethers";
+import { getBaseUriFromBatch, uploadOrExtractURIs } from "../../common/nft";
+import type { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
+import { CommonNFTInput, NFTMetadataInput } from "../../../core/schema/nft";
+import { GenericRequest } from "../../schema/contracts/common";
 import {
   TieredDropPayloadInput,
   TieredDropPayloadOutput,
   TieredDropPayloadSchema,
   TieredDropPayloadWithSignature,
 } from "../../schema/contracts/tiered-drop";
-import { UploadProgressEvent } from "../../types/events";
-import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { TransactionResultWithId } from "../types";
-import { ContractWrapper } from "./contract-wrapper";
-import { Erc721 } from "./erc-721";
-import type { TieredDrop, ISignatureAction } from "@thirdweb-dev/contracts-js";
-import {
-  TokensLazyMintedEvent,
-  TokensClaimedEvent,
-} from "@thirdweb-dev/contracts-js/dist/declarations/src/TieredDrop";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumberish, ethers } from "ethers";
+import { TokensClaimedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TieredDrop";
 import invariant from "tiny-invariant";
-import { Transaction } from "./transactions";
-import { buildTransactionFunction } from "../../common/transactions";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import type { Erc721 } from "./erc-721";
 
 export class Erc721TieredDrop implements DetectableFeature {
   featureName = FEATURE_NFT_TIERED_DROP.name;
@@ -114,7 +112,7 @@ export class Erc721TieredDrop implements DetectableFeature {
     return nfts;
   }
 
-  createBatchWithTier = buildTransactionFunction(
+  createBatchWithTier = /* @__PURE__ */ buildTransactionFunction(
     async (
       metadatas: NFTMetadataOrUri[],
       tier: string,
@@ -139,7 +137,7 @@ export class Erc721TieredDrop implements DetectableFeature {
           batch.length,
           baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
           tier,
-          ethers.utils.toUtf8Bytes(""),
+          utils.toUtf8Bytes(""),
         ],
         parse: (receipt) => {
           const event = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
@@ -163,7 +161,7 @@ export class Erc721TieredDrop implements DetectableFeature {
     },
   );
 
-  createDelayedRevealBatchWithTier = buildTransactionFunction(
+  createDelayedRevealBatchWithTier = /* @__PURE__ */ buildTransactionFunction(
     async (
       placeholder: NFTMetadataInput,
       metadatas: NFTMetadataInput[],
@@ -201,7 +199,7 @@ export class Erc721TieredDrop implements DetectableFeature {
       const baseUriId =
         await this.contractWrapper.readContract.getBaseURICount();
       const chainId = await this.contractWrapper.getChainID();
-      const hashedPassword = ethers.utils.solidityKeccak256(
+      const hashedPassword = utils.solidityKeccak256(
         ["string", "uint256", "uint256", "address"],
         [
           password,
@@ -213,16 +211,16 @@ export class Erc721TieredDrop implements DetectableFeature {
 
       const encryptedBaseUri =
         await this.contractWrapper.readContract.encryptDecrypt(
-          ethers.utils.toUtf8Bytes(baseUri),
+          utils.toUtf8Bytes(baseUri),
           hashedPassword,
         );
 
       let data: string;
-      const provenanceHash = ethers.utils.solidityKeccak256(
+      const provenanceHash = utils.solidityKeccak256(
         ["bytes", "bytes", "uint256"],
-        [ethers.utils.toUtf8Bytes(baseUri), hashedPassword, chainId],
+        [utils.toUtf8Bytes(baseUri), hashedPassword, chainId],
       );
-      data = ethers.utils.defaultAbiCoder.encode(
+      data = utils.defaultAbiCoder.encode(
         ["bytes", "bytes32"],
         [encryptedBaseUri, provenanceHash],
       );
@@ -258,13 +256,13 @@ export class Erc721TieredDrop implements DetectableFeature {
     },
   );
 
-  reveal = buildTransactionFunction(
+  reveal = /* @__PURE__ */ buildTransactionFunction(
     async (batchId: BigNumberish, password: string) => {
       if (!password) {
         throw new Error("Password is required");
       }
       const chainId = await this.contractWrapper.getChainID();
-      const key = ethers.utils.solidityKeccak256(
+      const key = utils.solidityKeccak256(
         ["string", "uint256", "uint256", "address"],
         [password, chainId, batchId, this.contractWrapper.readContract.address],
       );
@@ -393,7 +391,7 @@ export class Erc721TieredDrop implements DetectableFeature {
       payload.price,
       payload.currencyAddress,
     );
-    const data = ethers.utils.defaultAbiCoder.encode(
+    const data = utils.defaultAbiCoder.encode(
       [
         "string[]",
         "address",

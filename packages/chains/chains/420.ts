@@ -4,11 +4,13 @@ export default {
   "chain": "ETH",
   "rpc": [
     "https://optimism-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://opt-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://optimism-goerli.infura.io/v3/${INFURA_API_KEY}",
+    "https://opt-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://goerli.optimism.io/"
   ],
-  "faucets": [],
+  "faucets": [
+    "https://coinbase.com/faucets/optimism-goerli-faucet"
+  ],
   "nativeCurrency": {
     "name": "Goerli Ether",
     "symbol": "ETH",

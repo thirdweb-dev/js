@@ -8,22 +8,13 @@ import type {
   AuthLoginReturnType,
   InitializedUser,
   PaperEmbeddedWalletSdk,
+  RecoveryShareManagement,
 } from "@paperxyz/embedded-wallet-service-sdk";
 import { UserStatus } from "@paperxyz/embedded-wallet-service-sdk";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { providers, Signer } from "ethers";
 import { utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";
-
-export const PaperChainMap = {
-  1: "Ethereum",
-  5: "Goerli",
-  137: "Polygon",
-  80001: "Mumbai",
-  43114: "Avalanche",
-} as const;
-
-export type PaperSupportedChainId = keyof typeof PaperChainMap;
 
 export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
   readonly id: string = walletIds.paper;
@@ -45,23 +36,19 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
     if (!this.#paper) {
       this.#paper = new Promise(async (resolve, reject) => {
         try {
-          if (!(this.options.chain.chainId in PaperChainMap)) {
-            throw new Error(
-              "Unsupported chain id: " + this.options.chain.chainId,
-            );
-          }
-
           const { PaperEmbeddedWalletSdk } = await import(
             "@paperxyz/embedded-wallet-service-sdk"
           );
-          const chainName =
-            PaperChainMap[
-              this.options.chain.chainId as keyof typeof PaperChainMap
-            ];
           resolve(
-            new PaperEmbeddedWalletSdk({
+            new PaperEmbeddedWalletSdk<RecoveryShareManagement.USER_MANAGED>({
+              advancedOptions: {
+                // @ts-expect-error - Allow passing string instead of forcing enum
+                recoveryShareManagement:
+                  this.options.advancedOptions?.recoveryShareManagement,
+              },
               clientId: this.options.clientId,
-              chain: chainName,
+              chain: "Ethereum",
+              styles: this.options.styles,
             }),
           );
         } catch (err) {
@@ -101,6 +88,10 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
       throw new Error("Error connecting User");
     }
 
+    if (options?.chainId) {
+      this.switchChain(options.chainId);
+    }
+
     this.setupListeners();
     return this.getAddress();
   }
@@ -108,6 +99,7 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
   async disconnect(): Promise<void> {
     const paper = await this.#paper;
     await paper?.auth.logout();
+    this.#signer = undefined;
     this.user = null;
   }
 
@@ -167,20 +159,13 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
   }
 
   async switchChain(chainId: number): Promise<void> {
-    // check if chainId is supported or not
-    if (!(chainId in PaperChainMap)) {
-      throw new Error("Chain not supported");
-    }
-
-    const chainName = PaperChainMap[chainId as keyof typeof PaperChainMap];
-
     const chain = this.options.chains.find((c) => c.chainId === chainId);
     if (!chain) {
       throw new Error("Chain not configured");
     }
 
     // update chain in wallet
-    await this.user?.wallet.setChain({ chain: chainName });
+    await this.user?.wallet.setChain({ chain: "Ethereum" }); // just pass Ethereum no matter what chain we are going to connect
 
     // update signer
     this.#signer = await this.user?.wallet.getEthersJsSigner({
@@ -220,13 +205,10 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
     }
   };
 
-  protected isChainUnsupported(chainId: number) {
-    return !(chainId in PaperChainMap);
-  }
-
   protected onChainChanged = (chainId: number | string) => {
     const id = normalizeChainId(chainId);
-    const unsupported = this.isChainUnsupported(id);
+    const unsupported =
+      this.options.chains.findIndex((c) => c.chainId === id) === -1;
     this.emit("change", { chain: { id, unsupported } });
   };
 

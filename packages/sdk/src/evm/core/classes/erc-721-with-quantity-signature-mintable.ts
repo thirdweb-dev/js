@@ -1,5 +1,7 @@
-import { detectContractFeature, hasFunction } from "../../common";
-import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_SIGNATURE_MINTABLE_V2 } from "../../constants/erc721-features";
@@ -25,7 +27,7 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/SignatureDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, type providers } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -65,7 +67,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    * @param signedPayload - the previously generated payload and signature with {@link Erc721WithQuantitySignatureMintable.generate}
    * @twfeature ERC721SignatureMint
    */
-  mint = buildTransactionFunction(
+  mint = /* @__PURE__ */ buildTransactionFunction(
     async (
       signedPayload: SignedPayload721WithQuantitySignature,
     ): Promise<Transaction<TransactionResultWithId>> => {
@@ -73,7 +75,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
       const signature = signedPayload.signature;
 
       const overrides = await this.contractWrapper.getCallOverrides();
-      const parse = (receipt: ethers.providers.TransactionReceipt) => {
+      const parse = (receipt: providers.TransactionReceipt) => {
         const t =
           this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
             "TokensMintedWithSignature",
@@ -139,7 +141,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    * @param signedPayloads - the array of signed payloads to mint
    * @twfeature ERC721SignatureMint
    */
-  mintBatch = buildTransactionFunction(
+  mintBatch = /* @__PURE__ */ buildTransactionFunction(
     async (
       signedPayloads: SignedPayload721WithQuantitySignature[],
     ): Promise<Transaction<TransactionResultWithId[]>> => {

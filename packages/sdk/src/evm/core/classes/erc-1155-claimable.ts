@@ -1,9 +1,9 @@
-import { calculateClaimCost } from "../../common/claim-conditions";
-import { resolveAddress } from "../../common/ens";
+import { calculateClaimCost } from "../../common/claim-conditions/calculateClaimCost";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_CLAIM_CUSTOM } from "../../constants/erc1155-features";
-import { AddressOrEns } from "../../schema";
-import { ClaimOptions } from "../../types";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import type { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
@@ -84,7 +84,7 @@ export class ERC1155Claimable implements DetectableFeature {
    *
    * @returns - Receipt for the transaction
    */
-  to = buildTransactionFunction(
+  to = /* @__PURE__ */ buildTransactionFunction(
     async (
       destinationAddress: AddressOrEns,
       tokenId: BigNumberish,
