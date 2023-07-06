@@ -27,6 +27,7 @@ export interface TemplateCardProps {
   img: string;
   hoverBorderColor: string;
   tags: string[];
+  author: string;
 }
 
 export const templates: TemplateCardProps[] = [
@@ -40,6 +41,7 @@ export const templates: TemplateCardProps[] = [
     img: "/assets/templates/nft-drop.png",
     hoverBorderColor: "hsl(248deg 89% 79% / 15%)",
     tags: ["ERC721", "Custom Claim Conditions"],
+    author: "thirdweb",
   },
   {
     id: "marketplace-v3",
@@ -51,6 +53,7 @@ export const templates: TemplateCardProps[] = [
     img: "/assets/templates/marketplace.png",
     hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
     tags: ["Multi-currency", "Buy & Sell"],
+    author: "thirdweb",
   },
   {
     id: "nft-gallery",
@@ -62,6 +65,79 @@ export const templates: TemplateCardProps[] = [
     img: "/assets/templates/nft-gallery.png",
     hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
     tags: ["ERC721", "ERC1155"],
+    author: "thirdweb",
+  },
+  {
+    id: "cra-javascript-starter",
+    title: "CRA JavaScript Starter",
+    homepage: "https://cra-javascript-starter.thirdweb-example.com/",
+    repo: "https://github.com/thirdweb-example/cra-typescript-starter",
+    description:
+      "Starter kit to build with Create React App and thirdweb without additional initial configuration.",
+    img: "/assets/templates/starter.png",
+    hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
+    tags: ["React", "JavaScript", "Web"],
+    author: "thirdweb",
+  },
+  {
+    id: "cra-typescript-starter",
+    title: "CRA TypeScript Starter",
+    homepage: "https://cra-typescript-starter.thirdweb-example.com/",
+    repo: "https://github.com/thirdweb-example/cra-typescript-starter",
+    description:
+      "Starter kit to build with Create React App and thirdweb without additional initial configuration.",
+    img: "/assets/templates/starter.png",
+    hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
+    tags: ["React", "TypeScript", "Web"],
+    author: "thirdweb",
+  },
+  {
+    id: "next-javascript-starter",
+    title: "Next JavaScript Starter",
+    homepage: "https://next-javascript-starter.thirdweb-example.com/",
+    repo: "https://github.com/thirdweb-example/next-javascript-starter",
+    description:
+      "Starter kit to build with Next and thirdweb without additional initial configuration.",
+    img: "/assets/templates/starter.png",
+    hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
+    tags: ["Next", "JavaScript", "Web"],
+    author: "thirdweb",
+  },
+  {
+    id: "next-typescript-starter",
+    title: "Next TypeScript Starter",
+    homepage: "https://next-typescript-starter.thirdweb-example.com/",
+    repo: "https://github.com/thirdweb-example/next-typescript-starter",
+    description:
+      "Starter kit to build with Next and thirdweb without additional initial configuration.",
+    img: "/assets/templates/starter.png",
+    hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
+    tags: ["Next", "TypeScript", "Web"],
+    author: "thirdweb",
+  },
+  {
+    id: "vite-javascript-starter",
+    title: "Vite JavaScript Starter",
+    homepage: "https://vite-javascript-starter.thirdweb-example.com/",
+    repo: "https://github.com/thirdweb-example/vite-javascript-starter",
+    description:
+      "Starter kit to build with Vite and thirdweb without additional initial configuration.",
+    img: "/assets/templates/starter.png",
+    hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
+    tags: ["Vite", "TypeScript", "Web"],
+    author: "thirdweb",
+  },
+  {
+    id: "vite-typescript-starter",
+    title: "Vite TypeScript Starter",
+    homepage: "https://vite-typescript-starter.thirdweb-example.com/",
+    repo: "https://github.com/thirdweb-example/vite-typescript-starter",
+    description:
+      "Starter kit to build with Vite and thirdweb without additional initial configuration.",
+    img: "/assets/templates/starter.png",
+    hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
+    tags: ["Vite", "TypeScript", "Web"],
+    author: "thirdweb",
   },
 ];
 
@@ -72,6 +148,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
   img,
   hoverBorderColor,
   tags,
+  author,
 }) => {
   return (
     <Flex
