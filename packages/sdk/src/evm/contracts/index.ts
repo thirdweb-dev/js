@@ -11,6 +11,7 @@ import { SplitsContractSchema } from "../schema/contracts/splits";
 import { TokenErc1155ContractSchema } from "../schema/contracts/token-erc1155";
 import { TokenErc20ContractSchema } from "../schema/contracts/token-erc20";
 import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
+import { LoyaltyCardContractSchema } from "../schema/contracts/loyalty-card";
 import { Address } from "../schema/shared/Address";
 import { PackContractSchema } from "../schema/contracts/packs";
 import { SDKOptions } from "../schema/sdk-options";
@@ -46,6 +47,7 @@ const prebuiltContractTypes = {
   "signature-drop": "signature-drop",
   split: "split",
   "token-drop": "token-drop",
+  "loyalty-card": "loyalty-card",
 } as const;
 
 export type PrebuiltContractType = keyof typeof prebuiltContractTypes;
@@ -320,6 +322,48 @@ export const NFTCollectionInitializer = {
     // Deprecated - only needed for backwards compatibility with non-published contracts - should remove in v4
     return (
       await import("@thirdweb-dev/contracts-js/dist/abis/TokenERC721.json")
+    ).default;
+  },
+};
+
+export const LoyaltyCardInitializer = {
+  name: "LoyaltyCard" as const,
+  contractType: prebuiltContractTypes["loyalty-card"],
+  schema: LoyaltyCardContractSchema,
+  roles: NFT_BASE_CONTRACT_ROLES,
+
+  initialize: async (
+    ...[network, address, storage, options]: InitalizeParams
+  ) => {
+    const [, provider] = getSignerAndProvider(network, options);
+    const [abi, contract, _network] = await Promise.all([
+      LoyaltyCardInitializer.getAbi(address, provider, storage),
+      import("./prebuilt-implementations/loyalty-card"),
+      provider.getNetwork(),
+    ]);
+
+    return new contract.LoyaltyCard(
+      network,
+      address,
+      storage,
+      options,
+      abi,
+      _network.chainId,
+    );
+  },
+  getAbi: async (
+    address: Address,
+    provider: providers.Provider,
+    storage: ThirdwebStorage,
+  ) => {
+    const abi = await fetchAbiFromAddress(address, provider, storage);
+    if (abi) {
+      return abi;
+    }
+
+    // Deprecated - only needed for backwards compatibility with non-published contracts - should remove in v4
+    return (
+      await import("@thirdweb-dev/contracts-js/dist/abis/LoyaltyCard.json")
     ).default;
   },
 };
@@ -652,6 +696,7 @@ export const PREBUILT_CONTRACTS_MAP = /* @__PURE__ */ {
   [prebuiltContractTypes["token-drop"]]: TokenDropInitializer,
   [prebuiltContractTypes.token]: TokenInitializer,
   [prebuiltContractTypes.vote]: VoteInitializer,
+  [prebuiltContractTypes["loyalty-card"]]: LoyaltyCardInitializer,
 } as const;
 
 export const PREBUILT_CONTRACTS_APPURI_MAP = /* @__PURE__ */ {
@@ -674,6 +719,7 @@ export const PREBUILT_CONTRACTS_APPURI_MAP = /* @__PURE__ */ {
     "ipfs://QmbAgC8YwY36n8H2kuvSWsRisxDZ15QZw3xGZyk9aDvcv7/erc20.html",
   [prebuiltContractTypes.token]: "",
   [prebuiltContractTypes.vote]: "",
+  [prebuiltContractTypes["loyalty-card"]]: "",
 } as const;
 
 const SmartContract = {

@@ -27,6 +27,7 @@ import {
   FEATURE_NFT_TIERED_DROP,
   FEATURE_NFT_SIGNATURE_MINTABLE_V2,
   FEATURE_NFT_SHARED_METADATA,
+  FEATURE_NFT_LOYALTY_CARD,
 } from "../../constants/erc721-features";
 import type { Address } from "../../schema/shared/Address";
 import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
@@ -69,6 +70,7 @@ import { Erc721ClaimableWithConditions } from "./erc-721-claim-conditions";
 import { Erc721Claimable } from "./erc-721-claimable";
 import { Erc721SharedMetadata } from "./erc-721-shared-metadata";
 import { Erc721ClaimableZora } from "./erc-721-claim-zora";
+import { Erc721LoyaltyCard } from "./erc721-loyalty-card";
 
 /**
  * Standard ERC721 NFT functions
@@ -100,6 +102,7 @@ export class Erc721<
   private claimCustom: Erc721Claimable | undefined;
   private erc721SharedMetadata: Erc721SharedMetadata | undefined;
   private claimZora: Erc721ClaimableZora | undefined;
+  private loyaltyCard: Erc721LoyaltyCard | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: ThirdwebStorage;
 
@@ -603,6 +606,52 @@ export class Erc721<
       return assertEnabled(this.burnable, FEATURE_NFT_BURNABLE).token.prepare(
         tokenId,
       );
+    },
+  );
+
+  ////// ERC721 Loyalty Card Extension //////
+
+  /**
+   * Cancel loyalty card NFTs
+   *
+   * @remarks Cancel loyalty card NFTs held by the connected wallet
+   *
+   * @example
+   * ```javascript
+   * // The token ID of the loyalty card you want to cancel
+   * const tokenId = 0;
+   *
+   * const result = await contract.erc721.cancel(tokenId);
+   * ```
+   */
+  cancel = /* @__PURE__ */ buildTransactionFunction(
+    async (tokenId: BigNumberish) => {
+      return assertEnabled(
+        this.loyaltyCard,
+        FEATURE_NFT_LOYALTY_CARD,
+      ).cancel.prepare(tokenId);
+    },
+  );
+
+  /**
+   * Revoke loyalty card NFTs
+   *
+   * @remarks Revoke loyalty card NFTs held by some owner.
+   *
+   * @example
+   * ```javascript
+   * // The token ID of the loyalty card you want to revoke
+   * const tokenId = 0;
+   *
+   * const result = await contract.erc721.revoke(tokenId);
+   * ```
+   */
+  revoke = /* @__PURE__ */ buildTransactionFunction(
+    async (tokenId: BigNumberish) => {
+      return assertEnabled(
+        this.loyaltyCard,
+        FEATURE_NFT_LOYALTY_CARD,
+      ).revoke.prepare(tokenId);
     },
   );
 

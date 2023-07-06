@@ -74,6 +74,7 @@ import {
   TokenDropInitializer,
   TokenInitializer,
   VoteInitializer,
+  LoyaltyCardInitializer,
 } from "../contracts";
 import { Address } from "../schema/shared/Address";
 import type { CurrencyValue } from "../types/currency";
@@ -938,6 +939,35 @@ export class ContractDeployer extends RPCConnectionHandler {
     ): Promise<DeployTransaction> => {
       return await this.deployBuiltInContract.prepare(
         NFTDropInitializer.contractType,
+        metadata,
+        "latest",
+        options,
+      );
+    },
+  );
+
+  /**
+   * Deploys a new LoyaltyCard contract
+   *
+   * @remarks Deploys a LoyaltyCard contract and returns the address of the deployed contract
+   *
+   * @example
+   * ```javascript
+   * const contractAddress = await sdk.deployer.deployLoyaltyCard({
+   *   name: "My Loyalty Program",
+   *   primary_sale_recipient: "your-address",
+   * });
+   * ```
+   * @param metadata - the contract metadata
+   * @returns the address of the deployed contract
+   */
+  deployLoyaltyCard = /* @__PURE__ */ buildDeployTransactionFunction(
+    async (
+      metadata: NFTContractDeployMetadata,
+      options?: DeployOptions,
+    ): Promise<DeployTransaction> => {
+      return await this.deployBuiltInContract.prepare(
+        LoyaltyCardInitializer.contractType,
         metadata,
         "latest",
         options,
