@@ -2,7 +2,6 @@ import { Flex, Icon, Tooltip, useClipboard, useToast } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { FiCopy } from "react-icons/fi";
 import { Button, Card, Text } from "tw-components";
-import { shortenIfAddress } from "utils/usedapp-external";
 
 interface CopyApiKeyButtonProps {
   apiKey: string;
@@ -39,7 +38,9 @@ export const CopyApiKeyButton: React.FC<CopyApiKeyButtonProps> = ({
 
   return (
     <Flex gap={2} align="center">
-      <Text fontFamily="mono">{shortenIfAddress(apiKey)}</Text>
+      <Text fontFamily="mono">
+        {apiKey.substring(0, 12)}...{apiKey.substring(apiKey.length - 12)}
+      </Text>
       <Tooltip
         p={0}
         bg="transparent"
