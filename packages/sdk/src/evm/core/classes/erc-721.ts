@@ -70,7 +70,7 @@ import { Erc721ClaimableWithConditions } from "./erc-721-claim-conditions";
 import { Erc721Claimable } from "./erc-721-claimable";
 import { Erc721SharedMetadata } from "./erc-721-shared-metadata";
 import { Erc721ClaimableZora } from "./erc-721-claim-zora";
-import { Erc721LoyaltyCard } from "./erc721-loyalty-card";
+import { Erc721LoyaltyCard } from "./erc-721-loyalty-card";
 
 /**
  * Standard ERC721 NFT functions
