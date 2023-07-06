@@ -71,7 +71,7 @@ export class ERC4337EthersSigner extends Signer {
         errorMsg = `The bundler has failed to include UserOperation in a batch: ${errorIn.error}`;
       } else if (errorIn.body && typeof errorIn.body === "string") {
         const errorBody = JSON.parse(errorIn.body);
-        const errorStatus = errorIn.status || "500";
+        const errorStatus = errorIn.status || "UNKNOWN";
         const errorCode = errorBody?.code || "UNKNOWN";
 
         let failedOpMessage =
