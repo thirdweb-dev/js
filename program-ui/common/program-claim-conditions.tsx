@@ -84,7 +84,7 @@ const ClaimConditionsProgramForm: React.FC<{ address: string }> = ({
     }
     return {
       startTime: data.startTime ? new Date(data.startTime) : new Date(),
-      price: data.price.displayValue,
+      price: parseFloat(data.price.displayValue),
       currencyAddress: data.currencyAddress || "SOLANA_NATIVE_TOKEN",
       primarySaleRecipient: data.primarySaleRecipient,
       sellerFeeBasisPoints: data.sellerFeeBasisPoints,
