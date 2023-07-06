@@ -1,5 +1,30 @@
 # @thirdweb-dev/react-core
 
+## 3.14.8
+
+### Patch Changes
+
+- [#1278](https://github.com/thirdweb-dev/js/pull/1278) [`8a389f12`](https://github.com/thirdweb-dev/js/commit/8a389f1295d2bf726059997ea0ca10cf0424f2a2) Thanks [@jnsdls](https://github.com/jnsdls)! - updated various dependencies
+
+- Updated dependencies [[`2d088d36`](https://github.com/thirdweb-dev/js/commit/2d088d367ca54233836dc69712fd411ab7924205), [`8a389f12`](https://github.com/thirdweb-dev/js/commit/8a389f1295d2bf726059997ea0ca10cf0424f2a2), [`9daf0449`](https://github.com/thirdweb-dev/js/commit/9daf044926bf995ac8998929dbeca548c5eb8561), [`546353a4`](https://github.com/thirdweb-dev/js/commit/546353a479c11533818ef917c0f6b4d6f8f69872), [`a3bb17cb`](https://github.com/thirdweb-dev/js/commit/a3bb17cb33f033846fb3b4c8a0a4809ba76cab96), [`0135a779`](https://github.com/thirdweb-dev/js/commit/0135a7790cf2acde6b701cb41ea10dd311da5ec3)]:
+  - @thirdweb-dev/storage@1.1.6
+  - @thirdweb-dev/wallets@1.0.4
+  - @thirdweb-dev/chains@0.1.27
+  - @thirdweb-dev/sdk@3.10.28
+
+## 3.14.7
+
+### Patch Changes
+
+- [#1271](https://github.com/thirdweb-dev/js/pull/1271) [`c9535715`](https://github.com/thirdweb-dev/js/commit/c95357158819abd42d4b0900ecc2fa40fcb957f8) Thanks [@nkrishang](https://github.com/nkrishang)! - Rename smart wallets to account
+
+- [#1273](https://github.com/thirdweb-dev/js/pull/1273) [`edcd22d6`](https://github.com/thirdweb-dev/js/commit/edcd22d61236edb2832f9b2f9796e891d58cb145) Thanks [@MananTank](https://github.com/MananTank)! - Add `autoConnectTimeout` to `ThirdwebProvider` to timeout wallet autoconnect
+
+- Updated dependencies [[`2b113539`](https://github.com/thirdweb-dev/js/commit/2b113539098384f910b3c4d54e1fde9d35a6f053), [`c9535715`](https://github.com/thirdweb-dev/js/commit/c95357158819abd42d4b0900ecc2fa40fcb957f8), [`be606dd3`](https://github.com/thirdweb-dev/js/commit/be606dd3c93c1514834c1d970e864d7f949a07ab), [`5882091e`](https://github.com/thirdweb-dev/js/commit/5882091eab65978009a5a5305701f121851b10ad), [`998e5217`](https://github.com/thirdweb-dev/js/commit/998e521733efd6a67e42f9bf0beab5fbdccf08ae)]:
+  - @thirdweb-dev/wallets@1.0.3
+  - @thirdweb-dev/sdk@3.10.27
+  - @thirdweb-dev/chains@0.1.26
+
 ## 3.14.6
 
 ### Patch Changes

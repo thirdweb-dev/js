@@ -1,10 +1,9 @@
-import { ethers, providers } from "ethers";
+import { ethers, providers, utils } from "ethers";
 
 import { Bytes, Signer } from "ethers";
 import { ClientConfig } from "@account-abstraction/sdk";
 import { BaseAccountAPI } from "./base-api";
 import type { ERC4337EthersProvider } from "./erc4337-provider";
-import { defineReadOnly, Deferrable } from "ethers/lib/utils";
 import { HttpRpcClient } from "./http-rpc-client";
 
 export class ERC4337EthersSigner extends Signer {
@@ -23,7 +22,7 @@ export class ERC4337EthersSigner extends Signer {
     smartAccountAPI: BaseAccountAPI,
   ) {
     super();
-    defineReadOnly(this, "provider", erc4337provider);
+    utils.defineReadOnly(this, "provider", erc4337provider);
     this.config = config;
     this.originalSigner = originalSigner;
     this.erc4337provider = erc4337provider;
@@ -35,7 +34,7 @@ export class ERC4337EthersSigner extends Signer {
 
   // This one is called by Contract. It signs the request and passes in to Provider to be sent.
   async sendTransaction(
-    transaction: Deferrable<providers.TransactionRequest>,
+    transaction: utils.Deferrable<providers.TransactionRequest>,
     batched: boolean = false,
   ): Promise<providers.TransactionResponse> {
     const tx = await ethers.utils.resolveProperties(transaction);
@@ -66,34 +65,45 @@ export class ERC4337EthersSigner extends Signer {
 
   unwrapError(errorIn: any): Error {
     try {
+      let errorMsg = "Unknown Error";
+
       if (errorIn.error) {
-        const error = new Error(
-          `The bundler has failed to include UserOperation in a batch: ${errorIn.error}`,
-        );
-        error.stack = errorIn.stack;
-        return error;
-      }
-      if (errorIn.body && typeof errorIn.body === "object") {
+        errorMsg = `The bundler has failed to include UserOperation in a batch: ${errorIn.error}`;
+      } else if (errorIn.body && typeof errorIn.body === "string") {
         const errorBody = JSON.parse(errorIn.body);
-        let paymasterInfo: string = "";
-        let failedOpMessage: string | undefined =
-          errorBody?.error?.message || errorBody?.error?.data;
-        if (failedOpMessage?.includes("FailedOp") === true) {
+        const errorStatus = errorIn.status || "UNKNOWN";
+        const errorCode = errorBody?.code || "UNKNOWN";
+
+        let failedOpMessage =
+          errorBody?.error?.message ||
+          errorBody?.error?.data ||
+          errorBody?.error ||
+          errorIn.reason;
+
+        if (failedOpMessage?.includes("FailedOp")) {
+          let paymasterInfo: string = "";
           // TODO: better error extraction methods will be needed
           const matched = failedOpMessage.match(/FailedOp\((.*)\)/);
+
           if (matched) {
             const split = matched[1].split(",");
             paymasterInfo = `(paymaster address: ${split[1]})`;
             failedOpMessage = split[2];
           }
+
+          errorMsg = `The bundler has failed to include UserOperation in a batch: ${failedOpMessage} ${paymasterInfo}`;
+        } else {
+          errorMsg = `RPC error: ${failedOpMessage}
+Status: ${errorStatus}
+Code: ${errorCode}`;
         }
-        const error = new Error(
-          `The bundler has failed to include UserOperation in a batch: ${failedOpMessage} ${paymasterInfo}`,
-        );
-        error.stack = errorIn.stack;
-        return error;
       }
+
+      const error = new Error(errorMsg);
+      error.stack = errorIn.stack;
+      return error;
     } catch (error: any) {}
+
     return errorIn;
   }
 
@@ -138,7 +148,7 @@ export class ERC4337EthersSigner extends Signer {
 
   async signTransaction(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    transaction: Deferrable<providers.TransactionRequest>,
+    transaction: utils.Deferrable<providers.TransactionRequest>,
   ): Promise<string> {
     throw new Error("not implemented");
   }

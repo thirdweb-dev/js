@@ -1,5 +1,35 @@
 # @thirdweb-dev/react
 
+## 3.14.8
+
+### Patch Changes
+
+- [#1282](https://github.com/thirdweb-dev/js/pull/1282) [`7054f9f0`](https://github.com/thirdweb-dev/js/commit/7054f9f01691e1c942ffbec3ee8042218aadd126) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Fix issue #1201 - MediaRenderer HTML MimeType
+
+- [#1278](https://github.com/thirdweb-dev/js/pull/1278) [`8a389f12`](https://github.com/thirdweb-dev/js/commit/8a389f1295d2bf726059997ea0ca10cf0424f2a2) Thanks [@jnsdls](https://github.com/jnsdls)! - updated various dependencies
+
+- Updated dependencies [[`8a389f12`](https://github.com/thirdweb-dev/js/commit/8a389f1295d2bf726059997ea0ca10cf0424f2a2), [`a3bb17cb`](https://github.com/thirdweb-dev/js/commit/a3bb17cb33f033846fb3b4c8a0a4809ba76cab96)]:
+  - @thirdweb-dev/react-core@3.14.8
+  - @thirdweb-dev/wallets@1.0.4
+  - @thirdweb-dev/chains@0.1.27
+  - @thirdweb-dev/sdk@3.10.28
+
+## 3.14.7
+
+### Patch Changes
+
+- [#1210](https://github.com/thirdweb-dev/js/pull/1210) [`d794b8f9`](https://github.com/thirdweb-dev/js/commit/d794b8f9f41dbd7e461ef07d0808c5b6d2f85515) Thanks [@konojunya](https://github.com/konojunya)! - Add zerion to useInstalledWallets
+
+- [#1269](https://github.com/thirdweb-dev/js/pull/1269) [`998e5217`](https://github.com/thirdweb-dev/js/commit/998e521733efd6a67e42f9bf0beab5fbdccf08ae) Thanks [@MananTank](https://github.com/MananTank)! - - Expose `advancedOptions` and `styles` for paper wallet
+  - Allow using "+" in paper email
+  - Allow using "+" in magic email
+  - Update Paper SDK version
+- Updated dependencies [[`2b113539`](https://github.com/thirdweb-dev/js/commit/2b113539098384f910b3c4d54e1fde9d35a6f053), [`c9535715`](https://github.com/thirdweb-dev/js/commit/c95357158819abd42d4b0900ecc2fa40fcb957f8), [`be606dd3`](https://github.com/thirdweb-dev/js/commit/be606dd3c93c1514834c1d970e864d7f949a07ab), [`edcd22d6`](https://github.com/thirdweb-dev/js/commit/edcd22d61236edb2832f9b2f9796e891d58cb145), [`5882091e`](https://github.com/thirdweb-dev/js/commit/5882091eab65978009a5a5305701f121851b10ad), [`998e5217`](https://github.com/thirdweb-dev/js/commit/998e521733efd6a67e42f9bf0beab5fbdccf08ae)]:
+  - @thirdweb-dev/wallets@1.0.3
+  - @thirdweb-dev/sdk@3.10.27
+  - @thirdweb-dev/react-core@3.14.7
+  - @thirdweb-dev/chains@0.1.26
+
 ## 3.14.6
 
 ### Patch Changes

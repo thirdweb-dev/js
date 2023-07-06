@@ -5,7 +5,7 @@ import {
   MagicOptions,
 } from "./types";
 import type { Chain } from "@thirdweb-dev/chains";
-import { ethers, Signer } from "ethers";
+import { ethers, Signer, utils } from "ethers";
 import {
   // OAuthProvider,
   OAuthExtension,
@@ -17,7 +17,6 @@ import {
   SDKBase,
 } from "@magic-sdk/provider";
 import { Address } from "@thirdweb-dev/sdk";
-import { getAddress } from "ethers/lib/utils";
 import { Magic } from "magic-sdk";
 import type { AbstractProvider } from "web3-core";
 import { RPCProviderModule } from "@magic-sdk/provider/dist/types/modules/rpc-provider";
@@ -102,7 +101,7 @@ export abstract class MagicBaseConnector extends WagmiConnector<
     if (accounts.length === 0) {
       this.emit("disconnect");
     } else {
-      this.emit("change", { account: getAddress(accounts[0]) });
+      this.emit("change", { account: utils.getAddress(accounts[0]) });
     }
   }
 

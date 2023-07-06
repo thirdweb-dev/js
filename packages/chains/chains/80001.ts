@@ -11,8 +11,8 @@ export default {
   },
   "rpc": [
     "https://mumbai.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://polygon-mumbai.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://polygon-mumbai.infura.io/v3/${INFURA_API_KEY}",
+    "https://polygon-mumbai.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://matic-mumbai.chainstacklabs.com",
     "https://rpc-mumbai.maticvigil.com",
     "https://matic-testnet-archive-rpc.bwarelabs.com",
