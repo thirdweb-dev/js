@@ -3,9 +3,9 @@
 
 /** @type {Omit<Chain, "slug">} */
 export default {
-  name: "Taro Testnet",
+  name: "Bubs Testnet",
   chain: "gETH",
-  shortName: "Taro",
+  shortName: "Bubs",
   chainId: 1582,
   testnet: true,
   icon: {
@@ -14,7 +14,7 @@ export default {
     width: 512,
     height: 512,
   },
-  rpc: ["https://taro-testnet.calderachain.xyz/http"],
+  rpc: ["https://bubs.calderachain.xyz/http"],
   nativeCurrency: {
     decimals: 18,
     name: "Ether",
@@ -22,12 +22,12 @@ export default {
   },
   explorers: [
     {
-      url: "https://explorer.tarotestnet.com",
-      name: "Taro Testnet Explorer",
+      url: "https://explorer.bubstestnet.com",
+      name: "Bubs Testnet Explorer",
       standard: "EIP3091",
     },
   ],
-  faucets: ["https://tarotestnet.com"],
-  infoURL: "https://tarotestnet.com",
+  faucets: ["https://bubstestnet.com"],
+  infoURL: "https://bubstestnet.com",
   networkId: 1582,
 };
