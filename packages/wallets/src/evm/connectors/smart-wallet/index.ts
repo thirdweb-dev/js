@@ -15,12 +15,15 @@ import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
 import { BigNumber, ethers, providers } from "ethers";
 import {
+  ThirdwebSDK,
+  Account,
   ChainOrRpcUrl,
   getChainProvider,
   SmartContract,
   Transaction,
   TransactionResult,
 } from "@thirdweb-dev/sdk";
+import type { IAccountCore } from "@thirdweb-dev/contracts-js";
 import { AccountAPI } from "./lib/account";
 import { DEFAULT_WALLET_API_KEY } from "../../constants/keys";
 
@@ -135,6 +138,23 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   updateChains(chains: Chain[]): void {}
 
   /**
+   * Check whether the connected signer can execute a given transaction using the smart wallet.
+   * @param transaction the transaction to execute using the smart wallet.
+   * @returns whether the connected signer can execute the transaction using the smart wallet.
+   */
+  async hasPermissionToExecute(transaction: Transaction): Promise<boolean> {
+    const accountContract = await this.getAccountContract();
+    const signer = await this.getSigner();
+    const signerAddress = await signer.getAddress();
+
+    const restrictions = await accountContract.getAccessRestrictions(
+      signerAddress,
+    );
+
+    return restrictions.approvedCallTargets.includes(transaction.getTarget());
+  }
+
+  /**
    * Execute a single transaction
    * @param transactions
    * @returns the transaction receipt
@@ -214,6 +234,19 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       throw new Error("Personal wallet not connected");
     }
     return await this.accountApi.isAcountDeployed();
+  }
+
+  /**
+   * Get the underlying account smart contract of the smart wallet.
+   * @returns the account smart contract of the smart wallet.
+   */
+  async getAccountContract(): Promise<Account<IAccountCore>> {
+    const signer = await this.getSigner();
+    const network = (await (await this.getProvider()).getNetwork()).chainId;
+    const sdk = ThirdwebSDK.fromSigner(signer, network);
+
+    const contract = await sdk.getContract(await signer.getAddress());
+    return contract.account;
   }
 
   private defaultFactoryInfo(): FactoryContractInfo {

@@ -5,7 +5,7 @@ import type {
   SmartWalletConnectionArgs,
 } from "../connectors/smart-wallet/types";
 import type { SmartWalletConnector as SmartWalletConnectorType } from "../connectors/smart-wallet";
-import { Transaction, TransactionResult } from "@thirdweb-dev/sdk";
+import { Transaction, TransactionResult, Account } from "@thirdweb-dev/sdk";
 import { walletIds } from "../constants/walletIds";
 import {
   WCSession,
@@ -16,6 +16,7 @@ import {
 } from "../../core/types/walletConnect";
 import { WalletConnectV2Handler } from "../../core/WalletConnect/WalletConnectV2Handler";
 import { NoOpWalletConnectHandler } from "../../core/WalletConnect/constants";
+import type { IAccountCore } from "@thirdweb-dev/contracts-js";
 
 // export types and utils for convenience
 export * from "../connectors/smart-wallet/types";
@@ -80,6 +81,16 @@ export class SmartWallet
   }
 
   /**
+   * Check whether the connected signer can execute a given transaction using the smart wallet.
+   * @param transaction the transaction to execute using the smart wallet.
+   * @returns whether the connected signer can execute the transaction using the smart wallet.
+   */
+  async hasPermissionToExecute(transaction: Transaction): Promise<boolean> {
+    const connector = await this.getConnector();
+    return connector.hasPermissionToExecute(transaction);
+  }
+
+  /**
    * Execute a single transaction
    * @param transactions
    * @returns the transaction receipt
@@ -116,6 +127,15 @@ export class SmartWallet
   async isDeployed(): Promise<boolean> {
     const connector = await this.getConnector();
     return connector.isDeployed();
+  }
+
+  /**
+   * Get the underlying account smart contract of the smart wallet.
+   * @returns the account smart contract of the smart wallet.
+   */
+  async getAccountContract(): Promise<Account<IAccountCore>> {
+    const connector = await this.getConnector();
+    return connector.getAccountContract();
   }
 
   autoConnect(params: ConnectParams<SmartWalletConnectionArgs>) {

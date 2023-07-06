@@ -331,6 +331,7 @@
     "@safe-global/safe-ethers-lib": "^1.9.3",
     "@thirdweb-dev/chains": "workspace:*",
     "@thirdweb-dev/sdk": "workspace:*",
+    "@thirdweb-dev/contracts-js": "workspace:*",
     "@walletconnect/core": "^2.8.6",
     "@walletconnect/ethereum-provider": "^2.8.6",
     "@walletconnect/jsonrpc-utils": "^1.0.8",
