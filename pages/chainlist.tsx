@@ -2,7 +2,6 @@ import {
   Flex,
   GridItem,
   Icon,
-  IconButton,
   Input,
   InputGroup,
   InputLeftElement,
@@ -11,19 +10,16 @@ import {
   LinkOverlay,
   SimpleGrid,
   Spinner,
-  Tooltip,
 } from "@chakra-ui/react";
 import { Chain, allChains } from "@thirdweb-dev/chains";
-import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { AppLayout } from "components/app-layouts/app";
 import { ChainIcon } from "components/icons/ChainIcon";
 import Fuse from "fuse.js";
-import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { memo, useDeferredValue, useMemo, useState } from "react";
-import { FiArrowUpRight, FiCheckCircle, FiSearch } from "react-icons/fi";
+import { FiSearch } from "react-icons/fi";
 import {
   Card,
   Heading,
@@ -38,20 +34,10 @@ const TRACKING_CATEGORY = "chains";
 export const ChainsLanding: ThirdwebNextPage = (
   props: InferGetStaticPropsType<typeof getStaticProps>,
 ) => {
-  const configuredChainsRecord = useSupportedChainsRecord();
-
-  const chainsWithDashboardStatus: MinimalRPCChainWithDashboardStatus[] =
-    useMemo(() => {
-      return props.chains.map((c) => ({
-        ...c,
-        isAddedToDashboard: c.chainId in configuredChainsRecord,
-      }));
-    }, [props.chains, configuredChainsRecord]);
-
   const [searchTerm, setSearchTerm] = useState("");
 
   const fuse = useMemo(() => {
-    return new Fuse(chainsWithDashboardStatus, {
+    return new Fuse(props.chains, {
       keys: [
         {
           name: "name",
@@ -62,18 +48,23 @@ export const ChainsLanding: ThirdwebNextPage = (
           weight: 1,
         },
       ],
+      threshold: 0.2,
     });
-  }, [chainsWithDashboardStatus]);
+  }, [props.chains]);
 
   const deferredSearchTerm = useDeferredValue(searchTerm);
 
   const filteredChains = useMemo(() => {
     if (!deferredSearchTerm || !allChains.length) {
-      return chainsWithDashboardStatus || [];
+      return props.chains || [];
     }
 
-    return fuse.search(deferredSearchTerm).map((e) => e.item);
-  }, [chainsWithDashboardStatus, deferredSearchTerm, fuse]);
+    return fuse
+      .search(deferredSearchTerm, {
+        limit: 10,
+      })
+      .map((e) => e.item);
+  }, [props.chains, deferredSearchTerm, fuse]);
 
   const title = "Chainlist: RPCs, Block Explorers, Faucets";
   const description =
@@ -134,7 +125,7 @@ export const ChainsLanding: ThirdwebNextPage = (
 };
 
 export const SearchResults: React.FC<{
-  chains: MinimalRPCChainWithDashboardStatus[];
+  chains: MinimalRPCChain[];
 }> = memo(function SearchResults(props) {
   return (
     <SimpleGrid columns={{ base: 1, md: 3 }} gap={6}>
@@ -146,10 +137,17 @@ export const SearchResults: React.FC<{
 });
 
 const SearchResult: React.FC<{
-  chain: MinimalRPCChainWithDashboardStatus;
+  chain: MinimalRPCChain;
 }> = memo(function SearchResult({ chain }) {
   return (
-    <LinkBox position="relative" role="group" key={`chain_${chain.chainId}`}>
+    <LinkBox
+      position="relative"
+      role="group"
+      sx={{
+        contentVisibility: "auto",
+        containIntrinsicSize: "1px 195px",
+      }}
+    >
       <Card
         role="group"
         display="flex"
@@ -170,30 +168,6 @@ const SearchResult: React.FC<{
         position="relative"
         h="full"
       >
-        <IconButton
-          variant="solid"
-          icon={<Icon as={FiArrowUpRight} />}
-          size="sm"
-          p={0}
-          borderRadius="full"
-          position="absolute"
-          top={0}
-          right={0}
-          transform="translate(33%, -33%)"
-          aria-label="Open published contract"
-          opacity={0}
-          _dark={{
-            bg: "white",
-            color: "black",
-          }}
-          _light={{
-            bg: "black",
-            color: "white",
-          }}
-          _groupHover={{
-            opacity: 1,
-          }}
-        />
         <Flex justifyContent="space-between" align="center">
           <Flex align="center" gap={2}>
             <ChainIcon size={20} ipfsSrc={chain.iconUrl} />
@@ -207,25 +181,6 @@ const SearchResult: React.FC<{
               </Heading>
             </LinkOverlay>
           </Flex>
-          {/* we don't know this state until we're on the client so have to wrap in client only */}
-          <ClientOnly ssr={null}>
-            {chain.isAddedToDashboard ? (
-              <Tooltip
-                p={0}
-                bg="transparent"
-                boxShadow="none"
-                label={
-                  <Card py={2} px={4} bgColor="backgroundHighlight">
-                    <Text size="label.sm">Added to dashboard</Text>
-                  </Card>
-                }
-                borderRadius="lg"
-                shouldWrapChildren
-              >
-                <Icon as={FiCheckCircle} color="green.500" />
-              </Tooltip>
-            ) : null}
-          </ClientOnly>
         </Flex>
 
         <Flex flexDir="column" gap={1}>
@@ -279,10 +234,6 @@ type MinimalRPCChain = Pick<Chain, "slug" | "name" | "chainId"> & {
   iconUrl: string;
   symbol: string;
   hasRpc: boolean;
-};
-
-type MinimalRPCChainWithDashboardStatus = MinimalRPCChain & {
-  isAddedToDashboard: boolean;
 };
 
 interface DashboardRPCProps {
