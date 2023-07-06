@@ -52,9 +52,10 @@ export const RainbowConnectUI = (props: ConnectUIProps<WalletConnect>) => {
         onConnected={close}
         walletConfig={walletConfig}
         supportLink="https://rainbow.me/"
-        appUriPrepend={{
-          ios: "rainbow",
-          web: "rnbwapp.com",
+        appUriPrefix={{
+          ios: "rainbow://",
+          android: "https://rnbwapp.com/",
+          other: "https://rnbwapp.com/",
         }}
       />
     );

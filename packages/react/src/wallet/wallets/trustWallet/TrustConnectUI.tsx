@@ -69,9 +69,10 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
         onBack={props.goBack}
         onConnected={close}
         walletConfig={walletConfig}
-        appUriPrepend={{
-          ios: "trust",
-          web: "link.trustwallet.com",
+        appUriPrefix={{
+          ios: "trust://",
+          android: "https://link.trustwallet.com/",
+          other: "https://link.trustwallet.com/",
         }}
         supportLink="https://support.trustwallet.com/en/support/home"
       />

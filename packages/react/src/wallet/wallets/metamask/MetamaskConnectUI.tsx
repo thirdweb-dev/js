@@ -69,9 +69,10 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
         onBack={props.goBack}
         onConnected={close}
         walletConfig={walletConfig}
-        appUriPrepend={{
-          ios: "metamask",
-          web: "metamask.app.link",
+        appUriPrefix={{
+          ios: "metamask://",
+          android: "https://metamask.app.link/",
+          other: "https://metamask.app.link/",
         }}
         supportLink="https://support.metamask.io/hc/en-us/articles/4406430256539-User-Guide-Troubleshooting"
       />

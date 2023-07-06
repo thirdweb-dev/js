@@ -12,18 +12,13 @@ export const WCOpenURI: React.FC<{
   onBack: () => void;
   onConnected: () => void;
   walletConfig: WalletConfig<any>;
-  appUriPrepend: {
+  appUriPrefix: {
     ios: string;
-    web: string;
+    android: string;
+    other: string;
   };
   supportLink: string;
-}> = ({
-  onBack,
-  onConnected,
-  walletConfig,
-  appUriPrepend: appLink,
-  supportLink,
-}) => {
+}> = ({ onBack, onConnected, walletConfig, appUriPrefix, supportLink }) => {
   const createInstance = useCreateWalletInstance();
   const { setConnectedWallet, chainToConnect, setConnectionStatus } =
     useWalletContext();
@@ -42,15 +37,18 @@ export const WCOpenURI: React.FC<{
       chainId: chainToConnect?.chainId,
       onQrCodeUri(uri) {
         if (isAndroid()) {
-          window.open(uri, "_blank");
+          window.open(
+            `${appUriPrefix.android}wc?uri=${encodeURIComponent(uri)}`,
+            "_blank",
+          );
         } else if (isIOS()) {
           window.open(
-            `${appLink.ios}://wc?uri=${encodeURIComponent(uri)}`,
+            `${appUriPrefix.ios}wc?uri=${encodeURIComponent(uri)}`,
             "_blank",
           );
         } else {
           window.open(
-            `https://${appLink.web}/wc?uri=${encodeURIComponent(uri)}`,
+            `${appUriPrefix.other}wc?uri=${encodeURIComponent(uri)}`,
             "_blank",
           );
         }
@@ -67,7 +65,7 @@ export const WCOpenURI: React.FC<{
     onConnected,
     walletConfig,
     setConnectionStatus,
-    appLink,
+    appUriPrefix,
   ]);
 
   return (

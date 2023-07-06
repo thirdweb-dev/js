@@ -69,9 +69,10 @@ export const ZerionConnectUI = (props: ConnectUIProps<ZerionWallet>) => {
         onBack={props.goBack}
         onConnected={close}
         walletConfig={walletConfig}
-        appUriPrepend={{
-          ios: "zerion",
-          web: "link.zerion.io/pt3gdRP0njb",
+        appUriPrefix={{
+          ios: "zerion://",
+          android: "https://link.zerion.io/pt3gdRP0njb/",
+          other: "https://link.zerion.io/pt3gdRP0njb/",
         }}
         supportLink="https://help.zerion.io/en/"
       />
