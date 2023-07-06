@@ -5,10 +5,11 @@ import { isMobile } from "../../../evm/utils/isMobile";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { RainbowScan } from "./RainbowScan";
+import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
 
 export const RainbowConnectUI = (props: ConnectUIProps<WalletConnect>) => {
   const [screen, setScreen] = useState<
-    "connecting" | "scanning" | "get-started"
+    "connecting" | "scanning" | "get-started" | "open-wc-uri"
   >("connecting");
   const { walletConfig, close } = props;
   const connect = useConnect();
@@ -25,7 +26,7 @@ export const RainbowConnectUI = (props: ConnectUIProps<WalletConnect>) => {
     (async () => {
       // on mobile, open rainbow app link
       if (isMobile()) {
-        window.open("https://rnbwapp.com");
+        setScreen("open-wc-uri");
       } else {
         // on desktop, show the rainbow scan qr code
         setScreen("scanning");
@@ -40,6 +41,21 @@ export const RainbowConnectUI = (props: ConnectUIProps<WalletConnect>) => {
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
         supportLink="https://rainbow.me/"
+      />
+    );
+  }
+
+  if (screen === "open-wc-uri") {
+    return (
+      <WCOpenURI
+        onBack={props.goBack}
+        onConnected={close}
+        walletConfig={walletConfig}
+        supportLink="https://rainbow.me/"
+        appUriPrepend={{
+          ios: "rainbow",
+          web: "rnbwapp.com",
+        }}
       />
     );
   }

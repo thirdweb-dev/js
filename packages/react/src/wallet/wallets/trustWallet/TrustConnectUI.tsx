@@ -5,10 +5,11 @@ import { isMobile } from "../../../evm/utils/isMobile";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { TrustScan } from "./TrustScan";
+import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
 
 export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
   const [screen, setScreen] = useState<
-    "connecting" | "scanning" | "get-started"
+    "connecting" | "scanning" | "get-started" | "open-wc-uri"
   >("connecting");
   const { walletConfig, close } = props;
   const connect = useConnect();
@@ -42,7 +43,7 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
       else {
         // on mobile, open trust app link
         if (isMobile()) {
-          window.open("https://link.trustwallet.com");
+          setScreen("open-wc-uri");
         } else {
           // on desktop, show the trust scan qr code
           setScreen("scanning");
@@ -58,6 +59,21 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
         supportLink="https://community.trustwallet.com/c/helpcenter/8"
+      />
+    );
+  }
+
+  if (screen === "open-wc-uri") {
+    return (
+      <WCOpenURI
+        onBack={props.goBack}
+        onConnected={close}
+        walletConfig={walletConfig}
+        appUriPrepend={{
+          ios: "trust",
+          web: "link.trustwallet.com",
+        }}
+        supportLink="https://support.trustwallet.com/en/support/home"
       />
     );
   }
