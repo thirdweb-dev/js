@@ -50,7 +50,7 @@ export const WCOpenURI: React.FC<{
           );
         } else {
           window.open(
-            `https://${appLink.other}/wc?uri=${encodeURIComponent(uri)}`,
+            `https://${appLink.web}/wc?uri=${encodeURIComponent(uri)}`,
             "_blank",
           );
         }
