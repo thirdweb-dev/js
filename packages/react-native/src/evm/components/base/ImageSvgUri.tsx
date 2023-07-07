@@ -16,21 +16,13 @@ const ImageSvgUri = ({
 }) => {
   const resolvedImageUrl = resolveIpfsUri(imageUrl) || "";
 
-  const isSvg =
-    resolvedImageUrl.toLowerCase().endsWith(".svg") ||
-    (!resolvedImageUrl.toLowerCase().endsWith(".png") &&
-      !resolvedImageUrl.toLowerCase().endsWith(".jpg") &&
-      !resolvedImageUrl.toLowerCase().endsWith(".jpeg"));
-
   const [error, setError] = useState(false);
 
   if (!resolvedImageUrl || resolvedImageUrl === "") {
     return null;
   }
 
-  // always try to render svg if we cannot detect the url extension
-  // if error then try to render regular image
-  if (isSvg || error) {
+  if (error) {
     return (
       <SvgUri
         width={width}
@@ -40,11 +32,14 @@ const ImageSvgUri = ({
       />
     );
   } else {
+    // always try to render Image first, if error then try to render svg
+    // Image from RN handles onError better than SvgUri
     return (
       <Image
         alt={imageAlt}
         source={{ uri: resolvedImageUrl }}
         style={[{ width: width, height: height }]}
+        onError={() => setError(true)}
       />
     );
   }
