@@ -328,7 +328,7 @@ export function useContractMetadata<TContract extends ValidContractInstance>(
     cacheKeys.contract.metadata(contract?.getAddress()),
     async () => {
       requiredParamInvariant(contract, "contract is required");
-      return await contract.metadata.get();
+      return (await contract.metadata.get()) as any; // FIXME types
     },
     {
       enabled: !!contract,
