@@ -1,4 +1,15 @@
-import { DarkMode, Flex, Icon, LinkBox, SimpleGrid } from "@chakra-ui/react";
+import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  DarkMode,
+  Flex,
+  Icon,
+  LinkBox,
+  SimpleGrid,
+} from "@chakra-ui/react";
 import { Aurora } from "components/homepage/Aurora";
 import { ProductPage } from "components/product-pages/common/ProductPage";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
@@ -97,6 +108,40 @@ const repositories = [
     name: "Dynamic Contracts",
     description:
       "Architectural pattern for writing dynamic smart contracts in Solidity.",
+  },
+];
+
+const bounties = [
+  {
+    id: 0,
+    title: "Gas Optimizations",
+    description: (
+      <>
+        Gas optimization is a critical aspect of developing efficient and
+        cost-effective smart contracts on blockchain platforms. This bounty aims
+        to support optimizing gas usage for thirdweb&apos;s published smart
+        contracts, enhancing their performance, scalability, and
+        cost-effectiveness.
+      </>
+    ),
+    status: "open",
+    amount: "Up to $25,000",
+    link: "https://thirdweb.notion.site/Gas-Optimization-for-thirdweb-published-contracts-85d811de893b4bb8814bd8bbbd488cff?pvs=4",
+    linkText: "Read Guidelines",
+  },
+  {
+    id: 1,
+    title: "Security Vulnerabilities",
+    description: (
+      <>
+        Raise security vulnerability to our team using the guidelines outlined
+        in our bug bounty document below.
+      </>
+    ),
+    status: "open",
+    amount: "$100 - $20,000",
+    link: "https://thirdweb.notion.site/thirdweb-Bug-Bounty-Program-f78d1db776ab4f0e974c9da176fcf706?pvs=4",
+    linkText: "Read Guidelines",
   },
 ];
 
@@ -248,46 +293,95 @@ const OSS: ThirdwebNextPage = ({ contributors }: PageProps) => {
               </Flex>
             </Flex>
           </HomepageSection>
-
-          {contributors.length > 0 && (
-            <HomepageSection pb={32}>
-              <Heading size="display.sm" mb={12}>
-                Top Community Contributors
-              </Heading>
-              <SimpleGrid
-                columns={{ base: 2, md: 4 }}
-                gap={8}
-                justifyContent="space-evenly"
-              >
-                {contributors.slice(0, 12).map((contributor) => (
-                  <Flex
-                    key={contributor.login}
-                    flexDir="row"
-                    gap={2}
-                    alignItems="center"
-                  >
-                    <MaskedAvatar src={contributor.avatar_url} />
-                    <Flex key={contributor.login} flexDir="column" gap={1}>
-                      <TrackedLink
-                        href={`https://github.com/${contributor.login}`}
-                        isExternal
-                        category="team"
-                        label={contributor.login}
-                      >
-                        <Heading size="title.sm">@{contributor.login}</Heading>
-                      </TrackedLink>
-                      <Text size="label.md" color="gray.500">
-                        {contributor.contributions}{" "}
-                        {contributor.contributions === 1
-                          ? "contribution"
-                          : "contributions"}
-                      </Text>
-                    </Flex>
+          <HomepageSection pb={32}>
+            <Heading size="display.sm" mb={12}>
+              Top Community Contributors
+            </Heading>
+            <SimpleGrid
+              columns={{ base: 2, md: 4 }}
+              gap={8}
+              justifyContent="space-evenly"
+            >
+              {contributors.slice(0, 12).map((contributor) => (
+                <Flex
+                  key={contributor.login}
+                  flexDir="row"
+                  gap={2}
+                  alignItems="center"
+                >
+                  <MaskedAvatar src={contributor.avatar_url} />
+                  <Flex key={contributor.login} flexDir="column" gap={1}>
+                    <TrackedLink
+                      href={`https://github.com/${contributor.login}`}
+                      isExternal
+                      category="team"
+                      label={contributor.login}
+                    >
+                      <Heading size="title.sm">@{contributor.login}</Heading>
+                    </TrackedLink>
+                    <Text size="label.md" color="gray.500">
+                      {contributor.contributions}{" "}
+                      {contributor.contributions === 1
+                        ? "contribution"
+                        : "contributions"}
+                    </Text>
                   </Flex>
-                ))}
-              </SimpleGrid>
-            </HomepageSection>
-          )}
+                </Flex>
+              ))}
+            </SimpleGrid>
+          </HomepageSection>
+
+          <HomepageSection pb={32}>
+            <Heading size="display.sm" mb={12}>
+              Open Bounties
+            </Heading>
+
+            <Accordion allowToggle defaultIndex={[]}>
+              {bounties.map((bounty) => (
+                <AccordionItem
+                  key={bounty.id}
+                  background={"rgba(0,0,0,0.2)"}
+                  boxShadow="0 0 0 1px hsl(0deg 0% 100% / 15%)"
+                  borderRadius="12px"
+                  p={{ base: 6, md: 8 }}
+                  my={4}
+                >
+                  <AccordionButton justifyContent="space-between" py={2}>
+                    <Flex direction="column" alignItems="flex-start" gap={4}>
+                      <Heading size="label.lg" color="green.400">
+                        {bounty.amount}
+                      </Heading>
+                      <Heading size="label.lg">{bounty.title}</Heading>
+                    </Flex>
+                    <AccordionIcon />
+                  </AccordionButton>
+                  <AccordionPanel>
+                    <Text
+                      size="label.md"
+                      color="gray.500"
+                      mt={2}
+                      lineHeight={1.7}
+                    >
+                      {bounty.description}
+                    </Text>
+                    <LinkButton
+                      href={bounty.link}
+                      isExternal
+                      color="black"
+                      flexShrink={0}
+                      background="rgba(255,255,255,1)"
+                      _hover={{
+                        background: "rgba(255,255,255,0.9)!important",
+                      }}
+                      mt={6}
+                    >
+                      {bounty.linkText}
+                    </LinkButton>
+                  </AccordionPanel>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </HomepageSection>
 
           <HomepageSection pb={32}>
             <Heading size="display.sm" mb={12}>
@@ -315,13 +409,10 @@ OSS.pageId = PageId.OSS;
 export default OSS;
 
 export const getStaticProps: GetStaticProps = async () => {
-  // Array of accounts to be tracked
-  const accounts = ["thirdweb-dev", "thirdweb-example"];
+  const orgName = "thirdweb-dev";
 
   if (!process.env.GITHUB_API_TOKEN) {
-    return {
-      props: { contributors: [] },
-    };
+    throw new Error("Missing GITHUB_API_TOKEN");
   }
 
   const authHeader = {
@@ -330,70 +421,64 @@ export const getStaticProps: GetStaticProps = async () => {
     },
   };
 
+  // Fetch the list of all repositories belonging to the organization
+  const reposResponse = await fetch(
+    `https://api.github.com/orgs/${orgName}/repos?per_page=100`,
+    authHeader,
+  );
+
+  const reposData = (await reposResponse.json()) as GithubRepository[];
+
+  const repos = reposData
+    .filter((repo) => repo.fork === false)
+    .filter((repo) => repo.name !== "shopify-thirdweb-theme")
+    .map((repo) => repo.name);
+
   const contributors: Record<string, GithubContributor> = {};
 
-  await Promise.all(
-    accounts.map(async (account) => {
-      // Fetch the list of all repositories belonging to the account
-      const reposResponse = await fetch(
-        `https://api.github.com/orgs/${account}/repos?per_page=100`,
+  // fetch the contributors for each repository and aggregate them
+
+  const contributorData = await Promise.all(
+    repos.map(async (repo) => {
+      const response = await fetch(
+        `https://api.github.com/repos/${orgName}/${repo}/contributors`,
         authHeader,
       );
-      const reposData = (await reposResponse.json()) as GithubRepository[];
+      const data = (await response.json()) as GithubContributor[];
 
-      const repos = reposData
-        .filter((repo) => repo.fork === false)
-        .filter((repo) => repo.name !== "shopify-thirdweb-theme")
-        .map((repo) => repo.name);
-
-      // Fetch the list of all contributors for each repository and add up their contributions
-      await Promise.all(
-        repos.map(async (repo) => {
-          const response = await fetch(
-            `https://api.github.com/repos/${account}/${repo}/contributors`,
-            authHeader,
-          );
-          const data = (await response.json()) as GithubContributor[];
-
-          data.forEach((contributor) => {
-            // filter out bots
-            if (contributor.login.indexOf("[bot]") >= 0) {
-              return;
-            }
-            // filter out contributors that are in the filter list
-            if (filterOut.includes(contributor.login)) {
-              return;
-            }
-            // filter out contributors that have 0 contributions
-            if (contributor.contributions < 1) {
-              return;
-            }
-
-            const login = contributor.login;
-            const contributions = contributor.contributions;
-            if (contributors[login]) {
-              contributors[login].contributions += contributions;
-            } else {
-              contributors[login] = {
-                login,
-                avatar_url: contributor.avatar_url,
-                html_url: contributor.html_url,
-                contributions,
-              };
-            }
-          });
-        }),
-      );
+      return data;
     }),
   );
+
+  for (const data of contributorData) {
+    data.forEach((contributor) => {
+      const login = contributor.login;
+      const contributions = contributor.contributions;
+      if (contributors[login]) {
+        contributors[login].contributions += contributions;
+      } else {
+        contributors[login] = {
+          login,
+          avatar_url: contributor.avatar_url,
+          html_url: contributor.html_url,
+          contributions,
+        };
+      }
+    });
+  }
 
   // Sort the contributors by their contributions in descending order
   const sortedContributors = Object.values(contributors).sort(
     (a, b) => b.contributions - a.contributions,
   );
 
+  const filteredContributors = sortedContributors
+    .filter((contributor) => contributor.contributions > 0)
+    .filter((contributor) => contributor.login.indexOf("[bot]") === -1)
+    .filter((contributor) => !filterOut.includes(contributor.login));
+
   return {
-    props: { contributors: sortedContributors },
+    props: { contributors: filteredContributors },
     revalidate: 3600,
   };
 };
