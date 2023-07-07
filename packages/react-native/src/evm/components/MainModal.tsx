@@ -2,7 +2,6 @@ import { useModalState } from "../providers/ui-context-provider";
 import { ConnectWalletFlow } from "./ConnectWalletFlow/ConnectWalletFlow";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { useMemo } from "react";
-import { ConnectWalletDetailsModal } from "./ConnectWalletDetails/ConnectWalletDetailsModal";
 import { CLOSE_MODAL_STATE } from "../utils/modalTypes";
 import { ThemeProvider } from "../styles/ThemeProvider";
 import { useAppTheme } from "../styles/hooks";
@@ -24,8 +23,8 @@ export const MainModal = () => {
     switch (modalState?.view) {
       case "ConnectWalletFlow":
         return <ConnectWalletFlow />;
-      case "WalletDetails":
-        return <ConnectWalletDetailsModal />;
+      // case "WalletDetails":
+      //   return <ConnectWalletDetailsModal />;
       case "WalletConnectSessionRequestModal":
         return <SessionRequestModal />;
       case "WalletConnectSessionProposalModal":

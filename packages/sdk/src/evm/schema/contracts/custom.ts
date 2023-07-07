@@ -37,7 +37,7 @@ export type CustomContractMetadata = z.input<typeof BYOCContractMetadataSchema>;
 export const CustomContractInput = /* @__PURE__ */ (() =>
   BYOCContractMetadataSchema.merge(
     CommonRoyaltySchema.merge(MerkleSchema).merge(CommonSymbolSchema).partial(),
-  ))();
+  ).catchall(z.any()))();
 
 /**
  * @internal
@@ -45,7 +45,7 @@ export const CustomContractInput = /* @__PURE__ */ (() =>
 export const CustomContractOutput = /* @__PURE__ */ (() =>
   CommonContractOutputSchema.merge(
     CommonRoyaltySchema.merge(MerkleSchema).merge(CommonSymbolSchema).partial(),
-  ))();
+  ).catchall(z.any()))();
 
 /**
  * @internal

@@ -23,7 +23,7 @@ export const IconTextButton = ({
 }: IconTextProps) => {
   return (
     <BaseButton
-      p={p || "md"}
+      p={p || "sm"}
       backgroundColor="background"
       style={styles.networkContainer}
       onPress={onPress}
