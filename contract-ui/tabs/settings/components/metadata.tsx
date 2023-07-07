@@ -1,8 +1,16 @@
 import { SettingDetectedState } from "./detected-state";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
-import { Flex, FormControl, Input, Textarea } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  FormControl,
+  Icon,
+  IconButton,
+  Input,
+  Textarea,
+} from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMetadata, useUpdateMetadata } from "@thirdweb-dev/react";
+import { useContractMetadata, useUpdateMetadata } from "@thirdweb-dev/react";
 import {
   CommonContractSchema,
   ValidContractInstance,
@@ -13,9 +21,11 @@ import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useMemo } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { FiPlus, FiTrash } from "react-icons/fi";
 import {
+  Button,
   Card,
   FormErrorMessage,
   FormLabel,
@@ -23,6 +33,29 @@ import {
   Text,
 } from "tw-components";
 import { z } from "zod";
+
+const DashboardCommonContractSchema = CommonContractSchema.extend({
+  dashboard_social_urls: z.array(
+    z.object({
+      key: z.string(),
+      value: z.string(),
+    }),
+  ),
+});
+
+function extractDomain(url: string) {
+  try {
+    const parsedUrl = new URL(url);
+    const hostname = parsedUrl.hostname;
+    const hostnameWithoutWww = hostname.replace(/^www\./, "");
+    const segments = hostnameWithoutWww.split(".");
+    const domain =
+      segments.length > 2 ? segments[segments.length - 2] : segments[0];
+    return domain;
+  } catch (error) {
+    return null;
+  }
+}
 
 export const SettingsMetadata = <
   TContract extends ValidContractInstance | undefined,
@@ -34,25 +67,41 @@ export const SettingsMetadata = <
   detectedState: ExtensionDetectedState;
 }) => {
   const trackEvent = useTrack();
-  const metadata = useMetadata(contract);
+  const metadata = useContractMetadata(contract);
   const metadataMutation = useUpdateMetadata(contract);
+
+  const transformedQueryData = useMemo(() => {
+    return {
+      ...metadata.data,
+      name: metadata.data?.name || "",
+      dashboard_social_urls: Object.entries(
+        metadata.data?.social_urls || { twitter: "", discord: "" },
+      ).map(([key, value]) => ({ key, value })),
+    };
+  }, [metadata.data]);
+
   const {
+    control,
     setValue,
     register,
     watch,
     handleSubmit,
     formState,
     getFieldState,
-    reset,
-  } = useForm<z.input<typeof CommonContractSchema>>({
-    resolver: zodResolver(CommonContractSchema),
+  } = useForm<z.input<typeof DashboardCommonContractSchema>>({
+    resolver: zodResolver(DashboardCommonContractSchema),
+    defaultValues: transformedQueryData,
+    values: transformedQueryData,
+    resetOptions: {
+      keepDirty: true,
+      keepDirtyValues: true,
+    },
   });
-  useEffect(() => {
-    if (metadata.data && !formState.isDirty) {
-      reset(metadata.data);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formState.isDirty, metadata.data]);
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "dashboard_social_urls",
+  });
 
   const { onSuccess, onError } = useTxNotifications(
     "Successfully updated metadata",
@@ -65,30 +114,57 @@ export const SettingsMetadata = <
       <Flex
         as="form"
         onSubmit={handleSubmit((d) => {
+          const { dashboard_social_urls, ...data } = d;
+
+          const socialUrlsArray =
+            Object.keys(dashboard_social_urls || {}).length > 0
+              ? (dashboard_social_urls as unknown as {
+                  key: string;
+                  value: string;
+                }[])
+              : [];
+
+          const socialUrlsObj = socialUrlsArray.reduce<Record<string, string>>(
+            (obj, item) => {
+              const domain = extractDomain(item.value);
+              if (domain && item.value.trim() !== "") {
+                obj[domain] = item.value;
+              }
+              return obj;
+            },
+            {},
+          );
+
           trackEvent({
             category: "settings",
             action: "set-metadata",
             label: "attempt",
           });
-          metadataMutation.mutate(d, {
-            onSuccess: () => {
-              trackEvent({
-                category: "settings",
-                action: "set-metadata",
-                label: "success",
-              });
-              onSuccess();
+          metadataMutation.mutate(
+            {
+              ...data,
+              social_urls: socialUrlsObj,
             },
-            onError: (error) => {
-              trackEvent({
-                category: "settings",
-                action: "set-metadata",
-                label: "error",
-                error,
-              });
-              onError(error);
+            {
+              onSuccess: () => {
+                trackEvent({
+                  category: "settings",
+                  action: "set-metadata",
+                  label: "success",
+                });
+                onSuccess();
+              },
+              onError: (error) => {
+                trackEvent({
+                  category: "settings",
+                  action: "set-metadata",
+                  label: "error",
+                  error,
+                });
+                onError(error);
+              },
             },
-          });
+          );
         })}
         direction="column"
       >
@@ -164,6 +240,59 @@ export const SettingsMetadata = <
                 </FormErrorMessage>
               </FormControl>
             </Flex>
+          </Flex>
+          <Flex direction="column" gap={4}>
+            <FormControl
+              isDisabled={metadata.isLoading || metadataMutation.isLoading}
+            >
+              <FormLabel>Social URLs</FormLabel>
+            </FormControl>
+            {fields.map((item, index) => (
+              <Flex key={item.id}>
+                <FormControl
+                  isDisabled={metadata.isLoading || metadataMutation.isLoading}
+                >
+                  <FormLabel textTransform="capitalize">
+                    {item.key ||
+                      extractDomain(
+                        watch(`dashboard_social_urls.${index}.value`),
+                      ) ||
+                      "New URL"}
+                  </FormLabel>
+                  <Flex gap={2}>
+                    <Input
+                      isDisabled={
+                        metadata.isLoading || metadataMutation.isLoading
+                      }
+                      {...register(`dashboard_social_urls.${index}.value`)}
+                      type="url"
+                      placeholder="https://..."
+                    />
+                    <IconButton
+                      isDisabled={
+                        metadata.isLoading || metadataMutation.isLoading
+                      }
+                      icon={<Icon as={FiTrash} boxSize={5} />}
+                      aria-label="Remove row"
+                      onClick={() => remove(index)}
+                    />
+                  </Flex>
+                </FormControl>
+              </Flex>
+            ))}
+            <Box>
+              <Button
+                isDisabled={metadata.isLoading || metadataMutation.isLoading}
+                type="button"
+                size="sm"
+                colorScheme="primary"
+                borderRadius="md"
+                leftIcon={<Icon as={FiPlus} />}
+                onClick={() => append({ key: "", value: "" })}
+              >
+                Add URL
+              </Button>
+            </Box>
           </Flex>
         </Flex>
 
