@@ -74,7 +74,6 @@ import {
   TokenDropInitializer,
   TokenInitializer,
   VoteInitializer,
-  LoyaltyCardInitializer,
 } from "../contracts";
 import { Address } from "../schema/shared/Address";
 import type { CurrencyValue } from "../types/currency";
@@ -110,6 +109,8 @@ import {
   PrecomputedDeploymentTransaction,
 } from "../types/any-evm/deploy-data";
 import { fetchContractMetadataFromAddress } from "../common/metadata-resolver";
+import { LoyaltyCardContractDeploy } from "../schema/contracts/loyalty-card";
+import { getDefaultTrustedForwarders } from "../constants";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -966,10 +967,40 @@ export class ContractDeployer extends RPCConnectionHandler {
       metadata: NFTContractDeployMetadata,
       options?: DeployOptions,
     ): Promise<DeployTransaction> => {
-      return await this.deployBuiltInContract.prepare(
-        LoyaltyCardInitializer.contractType,
+      const parsedMetadata = await LoyaltyCardContractDeploy.parseAsync(
         metadata,
-        "latest",
+      );
+      const contractURI = await this.storage.upload(parsedMetadata);
+
+      const chainId = (await this.getProvider().getNetwork()).chainId;
+      const trustedForwarders = getDefaultTrustedForwarders(chainId);
+      // add default forwarders to any custom forwarders passed in
+      if (
+        metadata.trusted_forwarders &&
+        metadata.trusted_forwarders.length > 0
+      ) {
+        trustedForwarders.push(...metadata.trusted_forwarders);
+      }
+
+      const signerAddress = await this.getSigner()?.getAddress();
+
+      const deployArgs = [
+        signerAddress,
+        parsedMetadata.name,
+        parsedMetadata.symbol,
+        contractURI,
+        trustedForwarders,
+        parsedMetadata.primary_sale_recipient,
+        parsedMetadata.fee_recipient,
+        parsedMetadata.seller_fee_basis_points,
+        parsedMetadata.platform_fee_basis_points,
+        parsedMetadata.platform_fee_recipient,
+      ];
+
+      return await this.deployReleasedContract.prepare(
+        THIRDWEB_DEPLOYER,
+        "LoyaltyCard",
+        deployArgs,
         options,
       );
     },

@@ -22,9 +22,3 @@ export const LoyaltyCardContractDeploy =
   /* @__PURE__ */ LoyaltyCardContractInput.merge(CommonPlatformFeeSchema)
     .merge(CommonPrimarySaleSchema)
     .merge(CommonTrustedForwarderSchema);
-
-export const LoyaltyCardContractSchema = {
-  deploy: LoyaltyCardContractDeploy,
-  output: LoyaltyCardContractOutput,
-  input: LoyaltyCardContractInput,
-};

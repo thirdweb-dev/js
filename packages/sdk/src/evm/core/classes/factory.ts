@@ -4,7 +4,6 @@ import {
   EditionDropInitializer,
   EditionInitializer,
   getContractName,
-  LoyaltyCardInitializer,
   MarketplaceInitializer,
   MarketplaceV3Initializer,
   MultiwrapInitializer,
@@ -66,7 +65,6 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     [MarketplaceInitializer.contractType]: 2,
     [MarketplaceV3Initializer.contractType]: 1,
     [PackInitializer.contractType]: 2,
-    [LoyaltyCardInitializer.contractType]: 1,
   };
 
   constructor(
