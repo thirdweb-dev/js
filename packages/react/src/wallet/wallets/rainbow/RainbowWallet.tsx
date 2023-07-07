@@ -1,6 +1,7 @@
 import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { WalletConnect } from "@thirdweb-dev/wallets";
 import { RainbowConnectUI } from "./RainbowConnectUI";
+import { isMobile } from "../../../evm/utils/isMobile";
 
 type RainbowWalletOptions = {
   /**
@@ -23,12 +24,20 @@ export const rainbowWallet = (
         "ipfs://QmSZn47p4DVVBfzvg9BAX2EqwnPxkT1YAE7rUnrtd9CybQ/rainbow-logo.png",
     },
     create: (walletOptions: WalletOptions) => {
-      return new WalletConnect({
+      const wallet = new WalletConnect({
         ...walletOptions,
         walletId: "rainbow",
         projectId: options?.projectId,
         qrcode: false,
       });
+
+      if (isMobile()) {
+        wallet.on("wc_session_request_sent", () => {
+          window.open('rainbow://wc?uri=""', "_blank");
+        });
+      }
+
+      return wallet;
     },
     connectUI: RainbowConnectUI,
     isInstalled() {

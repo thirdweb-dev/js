@@ -106,6 +106,12 @@ export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptio
           },
         });
 
+        walletConnectConnector.getProvider().then((provider) => {
+          provider.signer.client.on("session_request_sent", () => {
+            this.emit("wc_session_request_sent");
+          });
+        });
+
         // need to save this for getting the QR code URI
         this.walletConnectConnector = walletConnectConnector;
         this.connector = new WagmiAdapter(walletConnectConnector);
