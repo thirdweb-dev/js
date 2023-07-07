@@ -22,8 +22,6 @@ const ImageSvgUri = ({
       !resolvedImageUrl.toLowerCase().endsWith(".jpg") &&
       !resolvedImageUrl.toLowerCase().endsWith(".jpeg"));
 
-  console.log("resolvedImageUrl", resolvedImageUrl);
-
   const [error, setError] = useState(false);
 
   if (!resolvedImageUrl || resolvedImageUrl === "") {
