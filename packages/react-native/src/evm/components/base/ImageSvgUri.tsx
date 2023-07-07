@@ -14,11 +14,15 @@ const ImageSvgUri = ({
   height: number;
   imageAlt?: string;
 }) => {
-  const isSvg =
-    imageUrl.toLowerCase().endsWith(".svg") ||
-    !imageUrl.toLowerCase().endsWith(".png") ||
-    !imageUrl.toLowerCase().endsWith(".jpg");
   const resolvedImageUrl = resolveIpfsUri(imageUrl) || "";
+
+  const isSvg =
+    resolvedImageUrl.toLowerCase().endsWith(".svg") ||
+    (!resolvedImageUrl.toLowerCase().endsWith(".png") &&
+      !resolvedImageUrl.toLowerCase().endsWith(".jpg") &&
+      !resolvedImageUrl.toLowerCase().endsWith(".jpeg"));
+
+  console.log("resolvedImageUrl", resolvedImageUrl);
 
   const [error, setError] = useState(false);
 
