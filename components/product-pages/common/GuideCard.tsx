@@ -7,7 +7,7 @@ interface GuideCardProps
   extends Pick<TrackedLinkProps, "category" | "label" | "trackingProps"> {
   image: string;
   title: string;
-  description: string;
+  description?: string;
   link: string;
   index: number;
 }

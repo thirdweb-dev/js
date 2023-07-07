@@ -279,6 +279,7 @@ const chakraTheme: Theme = extendTheme({
   sizes: {
     container: {
       page: "1170px",
+      hero: "1440px",
     },
   },
   semanticTokens: {

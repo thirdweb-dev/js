@@ -115,6 +115,7 @@ export enum PageId {
   SolutionsCommerce = "solutions-commerce",
   SolutionsGaming = "solutions-gaming",
   SolutionsMinting = "solutions-minting",
+  SolutionsLoyalty = "solutions-loyalty",
 
   // ---------------------------------------------------------------------------
   //  network pages

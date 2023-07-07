@@ -3,6 +3,7 @@ import { NavCardProps } from "./NavCard";
 import { Flex, Stack } from "@chakra-ui/react";
 import { FiShoppingCart } from "react-icons/fi";
 import { IoGameControllerOutline } from "react-icons/io5";
+import { MdOutlineLoyalty } from "react-icons/md";
 import { TfiStamp } from "react-icons/tfi";
 import { TrackedLink, TrackedLinkButton } from "tw-components";
 
@@ -145,6 +146,13 @@ export const SOLUTIONS: NavCardProps[] = [
     description: "Build and mint NFTs at scale easily",
     link: "/solutions/minting",
     iconType: TfiStamp,
+  },
+  {
+    name: "Loyalty",
+    label: "loyalty",
+    description: "Activate new customer experiences",
+    link: "/solutions/loyalty",
+    iconType: MdOutlineLoyalty,
   },
 ];
 
