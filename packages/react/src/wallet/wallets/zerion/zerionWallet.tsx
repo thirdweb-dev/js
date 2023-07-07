@@ -2,6 +2,7 @@ import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { ZerionWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
 import { ZerionConnectUI } from "./ZerionConnectUI";
 import { isMobile } from "../../../evm/utils/isMobile";
+import { openWindow } from "../../utils/openWindow";
 
 type ZerionkWalletOptions = {
   /**
@@ -28,7 +29,7 @@ export const zerionWallet = (
 
       if (isMobile()) {
         wallet.on("wc_session_request_sent", () => {
-          window.open(`zerion://wc?uri=""`, "_blank");
+          openWindow(`zerion://wc?uri=""`);
         });
       }
 

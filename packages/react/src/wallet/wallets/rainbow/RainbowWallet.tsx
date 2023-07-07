@@ -2,6 +2,7 @@ import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { WalletConnect } from "@thirdweb-dev/wallets";
 import { RainbowConnectUI } from "./RainbowConnectUI";
 import { isMobile } from "../../../evm/utils/isMobile";
+import { openWindow } from "../../utils/openWindow";
 
 type RainbowWalletOptions = {
   /**
@@ -33,7 +34,7 @@ export const rainbowWallet = (
 
       if (isMobile()) {
         wallet.on("wc_session_request_sent", () => {
-          window.open('rainbow://wc?uri=""', "_blank");
+          openWindow('rainbow://wc?uri=""');
         });
       }
 

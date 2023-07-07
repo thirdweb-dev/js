@@ -2,6 +2,7 @@ import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { TrustWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
 import { TrustConnectUI } from "./TrustConnectUI";
 import { isMobile } from "../../../evm/utils/isMobile";
+import { openWindow } from "../../utils/openWindow";
 
 type TrustWalletOptions = {
   /**
@@ -28,7 +29,7 @@ export const trustWallet = (
 
       if (isMobile()) {
         wallet.on("wc_session_request_sent", () => {
-          window.open(`trust://wc?uri=""`, "_blank");
+          openWindow(`trust://wc?uri=""`);
         });
       }
 

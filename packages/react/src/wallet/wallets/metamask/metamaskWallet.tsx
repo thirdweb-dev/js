@@ -2,6 +2,7 @@ import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { MetaMaskWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
 import { MetamaskConnectUI } from "./MetamaskConnectUI";
 import { isMobile } from "../../../evm/utils/isMobile";
+import { openWindow } from "../../utils/openWindow";
 
 type MetamaskWalletOptions = {
   /**
@@ -28,7 +29,7 @@ export const metamaskWallet = (
 
       if (isMobile()) {
         wallet.on("wc_session_request_sent", () => {
-          window.open(`metamask://wc?uri=""`, "_blank");
+          openWindow(`metamask://wc?uri=""`);
         });
       }
 

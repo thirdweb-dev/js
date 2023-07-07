@@ -7,6 +7,7 @@ import type { WalletConnect } from "@thirdweb-dev/wallets";
 import type { WalletConfig } from "@thirdweb-dev/react-core";
 import { isAndroid, isIOS } from "../../../evm/utils/isMobile";
 import { ConnectingScreen } from "./ConnectingScreen";
+import { openWindow } from "../../utils/openWindow";
 
 export const WCOpenURI: React.FC<{
   onBack: () => void;
@@ -37,20 +38,13 @@ export const WCOpenURI: React.FC<{
       chainId: chainToConnect?.chainId,
       onQrCodeUri(uri) {
         if (isAndroid()) {
-          window.open(
+          openWindow(
             `${appUriPrefix.android}wc?uri=${encodeURIComponent(uri)}`,
-            "_blank",
           );
         } else if (isIOS()) {
-          window.open(
-            `${appUriPrefix.ios}wc?uri=${encodeURIComponent(uri)}`,
-            "_blank",
-          );
+          openWindow(`${appUriPrefix.ios}wc?uri=${encodeURIComponent(uri)}`);
         } else {
-          window.open(
-            `${appUriPrefix.other}wc?uri=${encodeURIComponent(uri)}`,
-            "_blank",
-          );
+          openWindow(`${appUriPrefix.other}wc?uri=${encodeURIComponent(uri)}`);
         }
       },
       onConnected() {
