@@ -7,7 +7,7 @@ export class TrustWallet extends WalletConnectV2 {
   static meta = {
     name: "Trust Wallet",
     iconURL:
-      "https://registry.walletconnect.org/v2/logo/md/0528ee7e-16d1-4089-21e3-bbfb41933100",
+      "ipfs://QmNigQbXk7wKZwDcgN38Znj1ZZQ3JEG3DD6fUKLBU8SUTP/trust%20wallet.svg",
     links: {
       native: "trust:",
       universal: "https://link.trustwallet.com",
