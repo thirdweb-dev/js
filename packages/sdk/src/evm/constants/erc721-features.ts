@@ -17,6 +17,7 @@ import TieredDropAbi from "@thirdweb-dev/contracts-js/dist/abis/LazyMintWithTier
 import SharedMetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/SharedMetadata.json";
 import zora_IDropERC721 from "@thirdweb-dev/contracts-js/dist/abis/zora_IERC721Drop.json";
 import ILoyaltyCardAbi from "@thirdweb-dev/contracts-js/dist/abis/ILoyaltyCard.json";
+import INFTMetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/INFTMetadata.json";
 
 export const FEATURE_NFT_BURNABLE = {
   name: "ERC721Burnable",
@@ -224,6 +225,18 @@ export const FEATURE_NFT_LOYALTY_CARD = {
   features: {},
 } as const;
 
+export const FEATURE_NFT_UPDATABLE_METADATA = {
+  name: "ERC721UpdatableMetadata",
+  namespace: "nft.metadata",
+  docLinks: {
+    // TODO
+    sdk: "",
+    contracts: "",
+  },
+  abis: [INFTMetadataAbi],
+  features: {},
+} as const;
+
 export const FEATURE_NFT = /* @__PURE__ */ {
   name: "ERC721",
   namespace: "nft",
@@ -248,5 +261,6 @@ export const FEATURE_NFT = /* @__PURE__ */ {
     [FEATURE_NFT_CLAIM_PHASES_V2.name]: FEATURE_NFT_CLAIM_PHASES_V2,
     [FEATURE_NFT_SHARED_METADATA.name]: FEATURE_NFT_SHARED_METADATA,
     [FEATURE_NFT_LOYALTY_CARD.name]: FEATURE_NFT_LOYALTY_CARD,
+    [FEATURE_NFT_UPDATABLE_METADATA.name]: FEATURE_NFT_UPDATABLE_METADATA,
   },
 } as const;

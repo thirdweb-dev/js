@@ -28,6 +28,7 @@ import {
   FEATURE_NFT_SIGNATURE_MINTABLE_V2,
   FEATURE_NFT_SHARED_METADATA,
   FEATURE_NFT_LOYALTY_CARD,
+  FEATURE_NFT_UPDATABLE_METADATA,
 } from "../../constants/erc721-features";
 import type { Address } from "../../schema/shared/Address";
 import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
@@ -71,6 +72,7 @@ import { Erc721Claimable } from "./erc-721-claimable";
 import { Erc721SharedMetadata } from "./erc-721-shared-metadata";
 import { Erc721ClaimableZora } from "./erc-721-claim-zora";
 import { Erc721LoyaltyCard } from "./erc-721-loyalty-card";
+import { Erc721UpdatableMetadata } from "./erc-721-metadata";
 
 /**
  * Standard ERC721 NFT functions
@@ -103,6 +105,7 @@ export class Erc721<
   private erc721SharedMetadata: Erc721SharedMetadata | undefined;
   private claimZora: Erc721ClaimableZora | undefined;
   private loyaltyCard: Erc721LoyaltyCard | undefined;
+  private nftMetadata: Erc721UpdatableMetadata | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: ThirdwebStorage;
 
@@ -695,6 +698,32 @@ export class Erc721<
         this.lazyMintable,
         FEATURE_NFT_LAZY_MINTABLE,
       ).lazyMint.prepare(metadatas, options);
+    },
+  );
+
+  ////// ERC721 Metadata Extension //////
+
+  /**
+   * Update the metadata of an NFT
+   *
+   * @remarks Update the metadata of an NFT
+   *
+   * @example
+   * ```javascript
+   * // The token ID of the NFT whose metadata you want to update
+   * const tokenId = 0;
+   * // The new metadata
+   * const metadata = { name: "My NFT", description: "My NFT description""}
+   *
+   * await contract.erc721.update(tokenId, metadata);
+   * ```
+   */
+  update = /* @__PURE__ */ buildTransactionFunction(
+    async (tokenId: BigNumberish, metadata: NFTMetadataOrUri) => {
+      return assertEnabled(
+        this.nftMetadata,
+        FEATURE_NFT_UPDATABLE_METADATA,
+      ).update.prepare(tokenId, metadata);
     },
   );
 
