@@ -60,6 +60,8 @@ import type {
   Zora_IERC721Drop,
   SharedMetadata,
   OpenEditionERC721,
+  ILoyaltyCard,
+  INFTMetadata,
 } from "@thirdweb-dev/contracts-js";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
@@ -105,7 +107,7 @@ export class Erc721<
   private erc721SharedMetadata: Erc721SharedMetadata | undefined;
   private claimZora: Erc721ClaimableZora | undefined;
   private loyaltyCard: Erc721LoyaltyCard | undefined;
-  private nftMetadata: Erc721UpdatableMetadata | undefined;
+  private updatableMetadata: Erc721UpdatableMetadata | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: ThirdwebStorage;
 
@@ -131,6 +133,8 @@ export class Erc721<
     this.claimCustom = this.detectErc721Claimable();
     this.claimZora = this.detectErc721ClaimableZora();
     this.erc721SharedMetadata = this.detectErc721SharedMetadata();
+    this.loyaltyCard = this.detectErc721LoyaltyCard();
+    this.updatableMetadata = this.detectErc721UpdatableMetadata();
     this._chainId = chainId;
   }
 
@@ -721,7 +725,7 @@ export class Erc721<
   update = /* @__PURE__ */ buildTransactionFunction(
     async (tokenId: BigNumberish, metadata: NFTMetadataOrUri) => {
       return assertEnabled(
-        this.nftMetadata,
+        this.updatableMetadata,
         FEATURE_NFT_UPDATABLE_METADATA,
       ).update.prepare(tokenId, metadata);
     },
@@ -1195,6 +1199,30 @@ export class Erc721<
       )
     ) {
       return new Erc721SharedMetadata(this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  private detectErc721LoyaltyCard(): Erc721LoyaltyCard | undefined {
+    if (
+      detectContractFeature<ILoyaltyCard>(
+        this.contractWrapper,
+        "ERC721LoyaltyCard",
+      )
+    ) {
+      return new Erc721LoyaltyCard(this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectErc721UpdatableMetadata(): Erc721UpdatableMetadata | undefined {
+    if (
+      detectContractFeature<INFTMetadata>(
+        this.contractWrapper,
+        "ERC721UpdatableMetadata",
+      )
+    ) {
+      return new Erc721UpdatableMetadata(this.contractWrapper, this.storage);
     }
     return undefined;
   }
