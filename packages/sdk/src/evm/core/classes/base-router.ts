@@ -3,7 +3,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { buildTransactionFunction } from "../../common/transactions";
 import { Transaction } from "./transactions";
-import { Extension } from "../../types/extension";
+import { Extension, ExtensionMetadata } from "../../types/extension";
 import { FEATURE_BASE_ROUTER } from "../../constants/thirdweb-features";
 
 export class BaseRouterClass<TContract extends BaseRouter>
@@ -25,9 +25,15 @@ export class BaseRouterClass<TContract extends BaseRouter>
    * READ FUNCTIONS
    *******************************/
 
-  //   getDefaultExtensionSetAddress;
-
   //   getAllExtensions;
+  public async getAllExtensions(): Promise<ExtensionMetadata[]> {
+    const extensions: Extension[] =
+      await this.contractWrapper.readContract.getAllExtensions();
+
+    return extensions.map((extension) => extension.metadata);
+  }
+
+  //   getDefaultExtensionSetAddress;
 
   //   getExtension;
 
