@@ -16,6 +16,7 @@ import {
   FEATURE_ROYALTY,
   FEATURE_ACCOUNT_FACTORY,
   FEATURE_ACCOUNT,
+  FEATURE_BASE_ROUTER,
 } from "../constants/thirdweb-features";
 import { Transaction } from "../core/classes/transactions";
 import { ContractAppURI } from "../core/classes/contract-appuri";
@@ -55,6 +56,7 @@ import type {
   OffersLogic,
   IAccountFactory,
   IAccountCore,
+  BaseRouter,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides } from "ethers";
@@ -68,6 +70,7 @@ import { MarketplaceV3EnglishAuctions } from "../core/classes/marketplacev3-engl
 import { MarketplaceV3Offers } from "../core/classes/marketplacev3-offers";
 import { AccountFactory } from "../core/classes/account-factory";
 import { Account } from "../core/classes/account";
+import { BaseRouterClass } from "../core/classes/base-router";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -335,6 +338,10 @@ export class SmartContract<
     return assertEnabled(this.detectAccount(), FEATURE_ACCOUNT);
   }
 
+  get baseRouter(): BaseRouterClass<BaseRouter> {
+    return assertEnabled(this.detectBaseRouter(), FEATURE_BASE_ROUTER);
+  }
+
   private _chainId: number;
   get chainId() {
     return this._chainId;
@@ -558,6 +565,18 @@ export class SmartContract<
   private detectOffers() {
     if (detectContractFeature<OffersLogic>(this.contractWrapper, "Offers")) {
       return new MarketplaceV3Offers(this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  private detectBaseRouter() {
+    if (
+      detectContractFeature<BaseRouter>(
+        this.contractWrapper,
+        FEATURE_BASE_ROUTER.name,
+      )
+    ) {
+      return new BaseRouterClass(this.contractWrapper);
     }
     return undefined;
   }
