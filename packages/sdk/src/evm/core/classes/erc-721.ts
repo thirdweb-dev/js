@@ -630,6 +630,7 @@ export class Erc721<
    *
    * const result = await contract.erc721.cancel(tokenId);
    * ```
+   * @twfeature ERC721LoyaltyCard
    */
   cancel = /* @__PURE__ */ buildTransactionFunction(
     async (tokenId: BigNumberish) => {
@@ -652,6 +653,7 @@ export class Erc721<
    *
    * const result = await contract.erc721.revoke(tokenId);
    * ```
+   * @twfeature ERC721LoyaltyCard
    */
   revoke = /* @__PURE__ */ buildTransactionFunction(
     async (tokenId: BigNumberish) => {
@@ -721,6 +723,7 @@ export class Erc721<
    *
    * await contract.erc721.update(tokenId, metadata);
    * ```
+   * @twfeature ERC721UpdatableMetadata
    */
   update = /* @__PURE__ */ buildTransactionFunction(
     async (tokenId: BigNumberish, metadata: NFTMetadataOrUri) => {
