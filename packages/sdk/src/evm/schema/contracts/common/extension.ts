@@ -5,24 +5,27 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const ExtensionMetadataInput = z.object({
-  name: z.string(),
-  metadataURI: z.string(),
-  implementation: AddressSchema,
-});
+export const ExtensionMetadataInput = /* @__PURE__ */ (() =>
+  z.object({
+    name: z.string(),
+    metadataURI: z.string(),
+    implementation: AddressSchema,
+  }))();
 
 /**
  * @internal
  */
-export const ExtensionFunctionInput = z.object({
-  functionSelector: BytesLikeSchema,
-  functionSignature: z.string(),
-});
+export const ExtensionFunctionInput = /* @__PURE__ */ (() =>
+  z.object({
+    functionSelector: BytesLikeSchema,
+    functionSignature: z.string(),
+  }))();
 
 /**
  * @internal
  */
-export const ExtensionInput = z.object({
-  metadata: ExtensionMetadataInput,
-  functions: z.array(ExtensionFunctionInput),
-});
+export const ExtensionInput = /* @__PURE__ */ (() =>
+  z.object({
+    metadata: ExtensionMetadataInput,
+    functions: z.array(ExtensionFunctionInput),
+  }))();

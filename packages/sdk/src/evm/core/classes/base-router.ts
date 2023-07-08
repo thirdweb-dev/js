@@ -1,4 +1,4 @@
-import { BaseRouter } from "@thirdweb-dev/contracts-js";
+import type { BaseRouter } from "@thirdweb-dev/contracts-js";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { buildTransactionFunction } from "../../common/transactions";
