@@ -13,6 +13,7 @@ import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/dist/abis/IRoyalty.j
 import IOwnableAbi from "@thirdweb-dev/contracts-js/dist/abis/Ownable.json";
 import IAccountFactory from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactory.json";
 import IAccountCore from "@thirdweb-dev/contracts-js/dist/abis/IAccountCore.json";
+import BaseRouterAbi from "@thirdweb-dev/contracts-js/dist/abis/BaseRouter.json";
 
 export const getAllPluginsAbi = [
   {
@@ -300,5 +301,17 @@ export const FEATURE_ACCOUNT = {
     contracts: "",
   },
   abis: [IAccountCore],
+  features: {},
+} as const;
+
+export const FEATURE_BASE_ROUTER = {
+  name: "BaseRouter",
+  namespace: "baseRouter",
+  docLinks: {
+    // TODO
+    sdk: "",
+    contracts: "",
+  },
+  abis: [BaseRouterAbi],
   features: {},
 } as const;

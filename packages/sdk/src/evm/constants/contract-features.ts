@@ -66,6 +66,7 @@ import {
   FEATURE_EXTENSION_ROUTER,
   FEATURE_ACCOUNT,
   FEATURE_ACCOUNT_FACTORY,
+  FEATURE_BASE_ROUTER,
 } from "./thirdweb-features";
 
 /**
@@ -132,7 +133,8 @@ export type Feature =
   | typeof FEATURE_ENGLISH_AUCTIONS
   | typeof FEATURE_OFFERS
   | typeof FEATURE_ACCOUNT
-  | typeof FEATURE_ACCOUNT_FACTORY;
+  | typeof FEATURE_ACCOUNT_FACTORY
+  | typeof FEATURE_BASE_ROUTER;
 
 export type Extension = Feature;
 
@@ -178,4 +180,5 @@ export const SUPPORTED_FEATURES: Record<string, Feature> = /* @__PURE__ */ {
   [FEATURE_ACCOUNT.name]: FEATURE_ACCOUNT,
   [FEATURE_NFT_LOYALTY_CARD.name]: FEATURE_NFT_LOYALTY_CARD,
   [FEATURE_NFT_UPDATABLE_METADATA.name]: FEATURE_NFT_UPDATABLE_METADATA,
+  [FEATURE_BASE_ROUTER.name]: FEATURE_BASE_ROUTER,
 };
