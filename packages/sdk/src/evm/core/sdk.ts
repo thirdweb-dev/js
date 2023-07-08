@@ -710,7 +710,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           address,
           chainId,
           contractType: async () => "custom" as const,
-          metadata: async () => ({}),
+          metadata: async () => ({ name: "" }),
           extensions: async () => [],
         };
       }
@@ -743,7 +743,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           address,
           chainId,
           contractType: async () => "custom" as const,
-          metadata: async () => ({}),
+          metadata: async () => ({ name: "" }),
           extensions: async () => [],
         };
       }
