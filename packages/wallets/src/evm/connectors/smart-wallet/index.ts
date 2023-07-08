@@ -26,6 +26,7 @@ import {
 import type { IAccountCore } from "@thirdweb-dev/contracts-js";
 import { AccountAPI } from "./lib/account";
 import { DEFAULT_WALLET_API_KEY } from "../../constants/keys";
+import IAccountCoreAbi from "@thirdweb-dev/contracts-js/dist/abis/IAccountCore.json";
 
 export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   private config: SmartWalletConfig;
@@ -245,6 +246,9 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     const network = (await (await this.getProvider()).getNetwork()).chainId;
     const sdk = ThirdwebSDK.fromSigner(signer, network);
 
+    if (await this.isDeployed()) {
+      throw new Error("Account contract not deployed");
+    }
     const contract = await sdk.getContract(await signer.getAddress());
     return contract.account;
   }
