@@ -1,7 +1,7 @@
-import { SDKOptions, ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { SDKOptions, ThirdwebSDK, TransactionError } from "@thirdweb-dev/sdk";
 import { AbstractClientWallet } from "@thirdweb-dev/wallets";
 import { createHmac } from "crypto";
-import { ContractTransaction, Signer } from "ethers";
+import { ethers, ContractTransaction, Signer } from "ethers";
 import { Readable } from "stream";
 import { RedeemPointsParams, SendReceiptParams, SendTokensParams } from "../../types";
 import { ShopifyFetchParams, ShopifyFetchResult } from "../../types/shopify";
@@ -100,7 +100,12 @@ export async function sendTokensSync({
   receiver,
   rewardAmount,
 }: SendTokensParams): Promise<ContractTransaction["hash"]> {
-  const tx = await tokenContract.erc20.transfer(receiver, rewardAmount);
+  const payload = {
+    to: receiver,
+    quantity: rewardAmount,
+  };
+  const signedPayload = await tokenContract.erc20.signature.generate(payload);
+  const tx = await tokenContract.erc20.signature.mint(signedPayload);
   console.log(`Rewarding ${rewardAmount} points to receiver address: ${receiver}`, `tx: ${tx.receipt.transactionHash}`);
   return tx.receipt.transactionHash;
 }
@@ -108,12 +113,22 @@ export async function sendTokensSync({
 export async function sendTokensAsync({
   tokenContract,
   receiver,
-  rewardAmount
-  } : SendTokensParams): Promise<ContractTransaction["hash"]> {
-  const preparedTx = await tokenContract.erc20.transfer.prepare(receiver, rewardAmount);
-  const tx = await preparedTx.send();
-  console.log(`Rewarding ${rewardAmount} points to receiver address: ${receiver}`, `tx: ${tx.hash}`);
-  return tx.hash;
+  rewardAmount,
+} : SendTokensParams): Promise<ContractTransaction["hash"]> {
+  const payload = {
+    to: receiver,
+    quantity: rewardAmount,
+  };
+  try {
+    const signedPayload = await tokenContract.erc20.signature.generate(payload);
+    const preparedTx = await tokenContract.erc20.signature.mint.prepare(signedPayload);
+    const tx = await preparedTx.send();
+    console.log(`Rewarding ${rewardAmount} points to receiver address: ${receiver}`, `tx: ${tx.hash}`);
+    return tx.hash;
+  } catch (e) {
+    const err = e as TransactionError;
+    throw new Error(`Error sending tokens: ${err.message}`);
+  }
 }
 
 export async function sendReceiptSync({
@@ -142,7 +157,8 @@ export async function redeemPointsSync({
   receiver,
   quantity,
 }: RedeemPointsParams): Promise<ContractTransaction["hash"]> {
-  const tx = await tokenContract.erc20.burnFrom(receiver, quantity);
+  const etherQuantity = ethers.utils.parseEther(quantity.toString());
+  const tx = await tokenContract.call("revoke", [receiver, etherQuantity]);
   console.log(`Redeemed ${quantity} points for address: ${receiver}`, `tx: ${tx.receipt.transactionHash}`);
   return tx.receipt.transactionHash;
 }
@@ -152,7 +168,8 @@ export async function redeemPointsAsync({
   receiver,
   quantity,
 }: RedeemPointsParams): Promise<ContractTransaction["hash"]> {
-  const preparedTx = await tokenContract.erc20.burnFrom.prepare(receiver, quantity);
+  const etherQuantity = ethers.utils.parseEther(quantity.toString());
+  const preparedTx = tokenContract.prepare("revoke", [receiver, etherQuantity]);
   const tx = await preparedTx.send();
   console.log(`Redeemed ${quantity} points for address: ${receiver}`, `tx: ${tx.hash}`);
   return tx.hash;

@@ -1,6 +1,6 @@
-import { NFTCollection, NFTMetadataOrUri, SDKOptions, Token } from "@thirdweb-dev/sdk";
+import { NFTCollection, NFTMetadataOrUri, SDKOptions, SmartContract } from "@thirdweb-dev/sdk";
 import { AbstractClientWallet } from "@thirdweb-dev/wallets";
-import { Signer } from 'ethers';
+import { BaseContract, Signer } from 'ethers';
 
 type WebhookParams = {
   rawBody: Buffer;
@@ -22,17 +22,17 @@ type StandardFunctionParams = {
 }
 
 export type RewardTokensWebhookParams = WebhookParams & {
-  tokenContractAddress: string;
+  loyaltyPointsContractAddress: string;
   rewardAmount: number;
 };
 
 export type RewardTokensParams = StandardFunctionParams & {
-  tokenContractAddress: string;
+  loyaltyPointsContractAddress: string;
   rewardAmount: number;
 }
 
 export type SendTokensParams = {
-  tokenContract: Token; 
+  tokenContract: SmartContract<BaseContract>;
   receiver: string; 
   rewardAmount: number;
 }
@@ -53,7 +53,7 @@ export type SendReceiptParams = {
 }
 
 export type RedeemDiscountCodeParams = StandardFunctionParams & {
-  tokenContractAddress: string;
+  loyaltyPointsContractAddress: string;
   requiredPoints: number;
   discountPercentage: number;
   shopifyAdminUrl: string;
@@ -61,7 +61,7 @@ export type RedeemDiscountCodeParams = StandardFunctionParams & {
 }
 
 export type RedeemPointsParams = {
-  tokenContract: Token;
+  tokenContract: SmartContract<BaseContract>
   receiver: string;
   quantity: number;
 }

@@ -1,4 +1,4 @@
-import { SDKOptions } from "@thirdweb-dev/sdk";
+import { SDKOptions, TransactionError } from "@thirdweb-dev/sdk";
 import { IssueDigitalReceiptParams, IssueDigitalReceiptWebhookParams, RedeemDiscountCodeParams, RewardTokensParams, RewardTokensWebhookParams } from "../../../types";
 import { generateDiscountCode, getWalletFromOrder } from "../../lib/shopify";
 import { getSdkInstance, redeemPointsSync, sendReceiptAsync, sendReceiptSync, sendTokensAsync, sendTokensSync, verifyWebhook } from '../../lib/utils';
@@ -39,7 +39,7 @@ export async function rewardTokensWebhook({
   webhookSecret,
   signerOrWallet,
   chain,
-  tokenContractAddress,
+  loyaltyPointsContractAddress,
   rewardAmount,
 }: RewardTokensWebhookParams) {
   if (!rawBody || !headers) {
@@ -74,7 +74,7 @@ export async function rewardTokensWebhook({
     const tx = await rewardTokens({
       signerOrWallet,
       receiver,
-      tokenContractAddress,
+      loyaltyPointsContractAddress,
       rewardAmount,
       chain,
       sdkOptions,
@@ -82,7 +82,8 @@ export async function rewardTokensWebhook({
     })
     return tx;
   } catch (e) {
-    throw new Error(`Error rewarding points to wallet address: \n${e}`);
+    const err = e as TransactionError;
+    throw new Error(`Error sending tokens: ${err.message}`);
   }
 };
 
@@ -103,12 +104,12 @@ export async function rewardTokensWebhook({
  * });
  * ```
  * @returns Transaction hash
- * @private
+ * @public
  * */
 
 export async function rewardTokens({
   receiver,
-  tokenContractAddress,
+  loyaltyPointsContractAddress,
   rewardAmount,
   chain,
   sdkOptions,
@@ -120,7 +121,7 @@ export async function rewardTokens({
     throw new Error("Error getting SDK instance");
   };
 
-  const tokenContract = await sdk.getContract(tokenContractAddress, "token");
+  const tokenContract = await sdk.getContract(loyaltyPointsContractAddress);
   if (!tokenContract) {
     throw new Error("Error getting token contract");
   }
@@ -136,12 +137,13 @@ export async function rewardTokens({
       txHash = await sendTokensSync({
         tokenContract,
         receiver,
-        rewardAmount,
+        rewardAmount
       })
     }
     return txHash;
   } catch (e) {
-    throw new Error(`Error rewarding points to wallet address: \n${e}`);
+    const err = e as TransactionError;
+    throw new Error(`Error sending tokens: ${err.message}`);
   }
 };
 
@@ -256,7 +258,7 @@ export async function issueDigitalReceiptWebhook({
  * });
  * ```
  * @returns Transaction hash
- * @private
+ * @public
  * */
 
 export async function issueDigitalReceipt({
@@ -324,7 +326,7 @@ export async function rewardDiscount({
   chain,
   receiver,
   sdkOptions,
-  tokenContractAddress,
+  loyaltyPointsContractAddress,
   requiredPoints,
   discountPercentage,
   shopifyAdminUrl,
@@ -336,7 +338,7 @@ export async function rewardDiscount({
     throw new Error("Error getting SDK instance");
   };
 
-  const tokenContract = await sdk.getContract(tokenContractAddress, "token");
+  const tokenContract = await sdk.getContract(loyaltyPointsContractAddress);
   const balance = await tokenContract.erc20.balanceOf(receiver);
   const cleanValue = Number(balance.displayValue);
   if (cleanValue < requiredPoints) {
