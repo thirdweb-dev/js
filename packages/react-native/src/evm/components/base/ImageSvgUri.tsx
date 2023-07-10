@@ -1,4 +1,4 @@
-import { resolveIpfsUri } from "@thirdweb-dev/react-core";
+import { useStorage } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { Image } from "react-native";
 import { SvgUri } from "react-native-svg";
@@ -14,7 +14,10 @@ const ImageSvgUri = ({
   height: number;
   imageAlt?: string;
 }) => {
-  const resolvedImageUrl = resolveIpfsUri(imageUrl) || "";
+  const storage = useStorage();
+  const resolvedImageUrl = storage
+    ? storage.resolveScheme(imageUrl)
+    : imageUrl.replace("ipfs://", "https://ipfs.io/ipfs/");
 
   const [error, setError] = useState(false);
 
