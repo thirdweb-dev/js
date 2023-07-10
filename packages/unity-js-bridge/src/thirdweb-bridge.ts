@@ -28,8 +28,6 @@ declare global {
   }
 }
 
-const API_KEY =
-  "339d65590ba0fa79e4c8be0af33d64eda709e13652acb02c6be63f5a1fbef9c3";
 const SEPARATOR = "/";
 const SUB_SEPARATOR = "#";
 
