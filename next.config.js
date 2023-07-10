@@ -22,6 +22,10 @@ const securityHeaders = [
     value: "1; mode=block",
   },
   {
+    key: "X-Frame-Options",
+    value: "SAMEORIGIN",
+  },
+  {
     key: "Referrer-Policy",
     value: "origin-when-cross-origin",
   },
