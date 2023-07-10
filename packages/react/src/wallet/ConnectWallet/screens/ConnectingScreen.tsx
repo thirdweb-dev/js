@@ -16,10 +16,11 @@ export const ConnectingScreen: React.FC<{
   walletIconURL: string;
   walletName: string;
   supportLink: string;
+  hideBackButton: boolean;
 }> = (props) => {
   return (
     <>
-      <BackButton onClick={props.onBack} />
+      {!props.hideBackButton && <BackButton onClick={props.onBack} />}
       <IconContainer>
         <Img
           src={props.walletIconURL}

@@ -12,7 +12,8 @@ export const ZerionScan: React.FC<{
   onGetStarted: () => void;
   onConnected: () => void;
   walletConfig: WalletConfig<ZerionWallet>;
-}> = ({ onBack, onConnected, onGetStarted, walletConfig }) => {
+  hideBackButton: boolean;
+}> = ({ onBack, onConnected, onGetStarted, walletConfig, hideBackButton }) => {
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const { setConnectedWallet, chainToConnect, setConnectionStatus } =
@@ -49,6 +50,7 @@ export const ZerionScan: React.FC<{
 
   return (
     <ScanScreen
+      hideBackButton={hideBackButton}
       onBack={onBack}
       onGetStarted={onGetStarted}
       qrCodeUri={qrCodeUri}
